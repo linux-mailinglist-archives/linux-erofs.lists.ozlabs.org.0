@@ -1,36 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60C2B78C819
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Aug 2023 16:55:29 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25D5978CBB7
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Aug 2023 20:07:51 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=YxtfCmyF;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RZr7z0spTz30hM
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 00:55:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RZwPw3SDNz3bYc
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 04:07:48 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=YxtfCmyF;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RZr7l2sn0z30Dm
-	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Aug 2023 00:55:14 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VqrtK8X_1693320907;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VqrtK8X_1693320907)
-          by smtp.aliyun-inc.com;
-          Tue, 29 Aug 2023 22:55:08 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: hsiangkao@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v7 3/3] erofs-utils: mkfs: enable xattr name filter
-Date: Tue, 29 Aug 2023 22:55:04 +0800
-Message-Id: <20230829145504.93567-4-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230829145504.93567-1-jefflexu@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RZwPr2WBfz2ygT
+	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Aug 2023 04:07:44 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 15F5E63CA3;
+	Tue, 29 Aug 2023 18:07:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800F5C433C9;
+	Tue, 29 Aug 2023 18:07:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1693332460;
+	bh=1CDXNyUw4y5DM7LJfAZa2+z3r8AtGNR77PlV9HtaVY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YxtfCmyFcqxOrS5csGoLeHwtQZZi0BTPHpiieEle6peAvLC34LtDBRtsZbOE5Z2tV
+	 4J6HB2yhwNgWmoXi1CMJv4kKvd0/yR49rTUsQFN0vHTYJUSLNd1MYeksal5779NifC
+	 KEr2rSt2PkX25Mi/4ZXOZdNJ/oU7aUwVO5ETn9pzPMgcpkJsIDDktFWMqHvAobQ5PO
+	 7HpjoU4VXRhSJofe76+R/0CfCQ9kvYlvlPNGRL5xIamzQAG59LnSwzqIqQxSQnKp1E
+	 tTYTnzLpScWVTUqsLNWWI2lrWS0pSeBuTwTwTalbw9b+1AwTGxH1Om05rAROHKldph
+	 zKGVeqs4GroAQ==
+Date: Wed, 30 Aug 2023 02:07:35 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Jingbo Xu <jefflexu@linux.alibaba.com>
+Subject: Re: [PATCH v7 0/3] erofs-utils: introduce xattr name bloom filter
+Message-ID: <ZO4z5/l3bVC6aE+8@debian>
+Mail-Followup-To: Jingbo Xu <jefflexu@linux.alibaba.com>,
+	hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org
 References: <20230829145504.93567-1-jefflexu@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230829145504.93567-1-jefflexu@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -42,152 +63,137 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Introduce "-Exattr-name-filter" option to enable the xattr name bloom
-filter feature.
+On Tue, Aug 29, 2023 at 10:55:01PM +0800, Jingbo Xu wrote:
+> changes since v6:
+> - patch 1: polish license disclaimer; tweak included headers (Gao Xiang)
+> - patch 2: drop unused `EROFS_XATTR_NAME_LEN_MAX`; polish commit message
+>   (Gao Xiang)
+> - patch 3: add warning when failed to calculate hashbit; tweak code of
+>   assigning `header->h_name_filter` (Gao Xiang)
+>
 
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Applied with several update by hand, also I tend to append the following
+patch:
+
+From 3142cab6c82a779096abbd24d8bd1b9b555997ac Mon Sep 17 00:00:00 2001
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+Date: Wed, 30 Aug 2023 01:54:46 +0800
+Subject: [PATCH] erofs-utils: mkfs: enable xattr name filter feature by
+ default
+
+Turn it on by default since it's a compatible feature.  Instead,
+it can be disabled explicitly with "-E^xattr-name-filter".
+
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/config.h   |  1 +
- include/erofs/internal.h |  1 +
- lib/xattr.c              | 65 ++++++++++++++++++++++++++++++++++++++++
- mkfs/main.c              |  7 +++++
- 4 files changed, 74 insertions(+)
+ include/erofs/xattr.h |  2 +-
+ lib/inode.c           |  4 ++--
+ lib/xattr.c           |  6 +++++-
+ mkfs/main.c           | 13 +++++++++++--
+ 4 files changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 8f52d2c..c51f0cd 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -53,6 +53,7 @@ struct erofs_configure {
- 	bool c_ignore_mtime;
- 	bool c_showprogress;
- 	bool c_extra_ea_name_prefixes;
-+	bool c_xattr_name_filter;
+diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+index 748442a..cf02257 100644
+--- a/include/erofs/xattr.h
++++ b/include/erofs/xattr.h
+@@ -76,7 +76,7 @@ static inline unsigned int xattrblock_offset(struct erofs_inode *vi,
  
- #ifdef HAVE_LIBSELINUX
- 	struct selabel_handle *sehnd;
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 3e73eef..382024a 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -139,6 +139,7 @@ EROFS_FEATURE_FUNCS(fragments, incompat, INCOMPAT_FRAGMENTS)
- EROFS_FEATURE_FUNCS(dedupe, incompat, INCOMPAT_DEDUPE)
- EROFS_FEATURE_FUNCS(xattr_prefixes, incompat, INCOMPAT_XATTR_PREFIXES)
- EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
-+EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
+ int erofs_scan_file_xattrs(struct erofs_inode *inode);
+ int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
+-char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size);
++char *erofs_export_xattr_ibody(struct erofs_inode *inode);
+ int erofs_build_shared_xattrs_from_path(struct erofs_sb_info *sbi, const char *path);
  
- #define EROFS_I_EA_INITED	(1 << 0)
- #define EROFS_I_Z_INITED	(1 << 1)
+ int erofs_xattr_insert_name_prefix(const char *prefix);
+diff --git a/lib/inode.c b/lib/inode.c
+index d54f84f..85eacab 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -574,8 +574,8 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+ 	off += inode->inode_isize;
+ 
+ 	if (inode->xattr_isize) {
+-		char *xattrs = erofs_export_xattr_ibody(&inode->i_xattrs,
+-							inode->xattr_isize);
++		char *xattrs = erofs_export_xattr_ibody(inode);
++
+ 		if (IS_ERR(xattrs))
+ 			return false;
+ 
 diff --git a/lib/xattr.c b/lib/xattr.c
-index 46a301a..95f73a7 100644
+index 65dd9a0..0cab29f 100644
 --- a/lib/xattr.c
 +++ b/lib/xattr.c
-@@ -18,6 +18,7 @@
- #include "erofs/cache.h"
- #include "erofs/io.h"
- #include "erofs/fragments.h"
-+#include "erofs/xxhash.h"
- #include "liberofs_private.h"
- 
- #define EA_HASHTABLE_BITS 16
-@@ -783,6 +784,65 @@ out:
- 	return ret;
+@@ -843,8 +843,10 @@ static u32 erofs_xattr_filter_map(struct list_head *ixattrs)
+ 	return EROFS_XATTR_FILTER_DEFAULT & ~name_filter;
  }
  
-+
-+static int erofs_xattr_filter_hashbit(struct xattr_item *item)
-+{
-+	u8 prefix = item->prefix;
-+	const char *key = item->kvbuf;
-+	unsigned int len = item->len[0];
-+	char *name = NULL;
-+	uint32_t hashbit;
-+
-+	if (prefix & EROFS_XATTR_LONG_PREFIX) {
-+		struct ea_type_node *tnode;
-+		u16 prefix_len;
-+		int ret;
-+
-+		list_for_each_entry(tnode, &ea_name_prefixes, list) {
-+			if (tnode->index == item->prefix) {
-+				ret = asprintf(&name, "%s%.*s",
-+					       tnode->type.prefix, len, key);
-+				if (ret < 0)
-+					return -ENOMEM;
-+				break;
-+			}
-+		}
-+		if (!name)
-+			return -ENOENT;
-+
-+		if (!match_base_prefix(name, &prefix, &prefix_len)) {
-+			free(name);
-+			return -ENOENT;
-+		}
-+		key = name + prefix_len;
-+		len = strlen(key);
-+	}
-+
-+	hashbit = xxh32(key, len, EROFS_XATTR_FILTER_SEED + prefix) &
-+		  (EROFS_XATTR_FILTER_BITS - 1);
-+	if (name)
-+		free(name);
-+	return hashbit;
-+}
-+
-+static u32 erofs_xattr_filter_map(struct list_head *ixattrs)
-+{
-+	struct inode_xattr_node *node, *n;
-+	u32 name_filter;
-+	int hashbit;
-+
-+	name_filter = 0;
-+	list_for_each_entry_safe(node, n, ixattrs, list) {
-+		hashbit = erofs_xattr_filter_hashbit(node->item);
-+		if (hashbit < 0) {
-+			erofs_warn("fallback to xattr filter disabled");
-+			return 0;
-+		}
-+		name_filter |= (1UL << hashbit);
-+	}
-+	return EROFS_XATTR_FILTER_DEFAULT & ~name_filter;
-+}
-+
- char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size)
+-char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size)
++char *erofs_export_xattr_ibody(struct erofs_inode *inode)
  {
++	struct list_head *ixattrs = &inode->i_xattrs;
++	unsigned int size = inode->xattr_isize;
  	struct inode_xattr_node *node, *n;
-@@ -797,6 +857,11 @@ char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size)
- 	header = (struct erofs_xattr_ibody_header *)buf;
- 	header->h_shared_count = 0;
+ 	struct erofs_xattr_ibody_header *header;
+ 	LIST_HEAD(ilst);
+@@ -860,6 +862,8 @@ char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size)
+ 	if (cfg.c_xattr_name_filter) {
+ 		header->h_name_filter =
+ 			cpu_to_le32(erofs_xattr_filter_map(ixattrs));
++		if (header->h_name_filter)
++			erofs_sb_set_xattr_filter(inode->sbi);
+ 	}
  
-+	if (cfg.c_xattr_name_filter) {
-+		header->h_name_filter =
-+			cpu_to_le32(erofs_xattr_filter_map(ixattrs));
-+	}
-+
  	p = sizeof(struct erofs_xattr_ibody_header);
- 	list_for_each_entry_safe(node, n, ixattrs, list) {
- 		struct xattr_item *const item = node->item;
 diff --git a/mkfs/main.c b/mkfs/main.c
-index c03a7a8..fad80b1 100644
+index fad80b1..1d136a9 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -245,6 +245,13 @@ handle_fragment:
- 				return -EINVAL;
- 			cfg.c_dedupe = true;
+@@ -145,6 +145,7 @@ static int parse_extended_opts(const char *opts)
+ 
+ 	value = NULL;
+ 	for (token = opts; *token != '\0'; token = next) {
++		bool clear = false;
+ 		const char *p = strchr(token, ',');
+ 
+ 		next = NULL;
+@@ -168,6 +169,14 @@ static int parse_extended_opts(const char *opts)
+ 			vallen = 0;
  		}
-+
-+		if (MATCH_EXTENTED_OPT("xattr-name-filter", token, keylen)) {
-+			if (vallen)
+ 
++		if (token[0] == '^') {
++			if (keylen < 2)
 +				return -EINVAL;
-+			cfg.c_xattr_name_filter = true;
-+			erofs_sb_set_xattr_filter(&sbi);
++			++token;
++			--keylen;
++			clear = true;
 +		}
++
+ 		if (MATCH_EXTENTED_OPT("legacy-compress", token, keylen)) {
+ 			if (vallen)
+ 				return -EINVAL;
+@@ -249,8 +258,7 @@ handle_fragment:
+ 		if (MATCH_EXTENTED_OPT("xattr-name-filter", token, keylen)) {
+ 			if (vallen)
+ 				return -EINVAL;
+-			cfg.c_xattr_name_filter = true;
+-			erofs_sb_set_xattr_filter(&sbi);
++			cfg.c_xattr_name_filter = !clear;
+ 		}
  	}
  	return 0;
- }
+@@ -695,6 +703,7 @@ static void erofs_mkfs_default_options(void)
+ {
+ 	cfg.c_showprogress = true;
+ 	cfg.c_legacy_compress = false;
++	cfg.c_xattr_name_filter = true;
+ 	sbi.blkszbits = ilog2(EROFS_MAX_BLOCK_SIZE);
+ 	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_ZERO_PADDING;
+ 	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM |
 -- 
-2.19.1.6.gb485710b
+2.30.2
 
