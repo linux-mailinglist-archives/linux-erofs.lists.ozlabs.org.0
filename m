@@ -1,60 +1,55 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B80D178D137
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 02:43:51 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE29478D1B1
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 03:24:43 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=IsIDlNRf;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=VMCLMK1i;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rb5Bs4Q54z30PY
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 10:43:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rb6614Vblz30g8
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 11:24:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=IsIDlNRf;
+	dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=VMCLMK1i;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=ftp.linux.org.uk (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org)
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rb5Bk2XYXz2yV5
-	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Aug 2023 10:43:42 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 2110C61BB9;
-	Wed, 30 Aug 2023 00:43:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72A58C433CC;
-	Wed, 30 Aug 2023 00:43:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693356218;
-	bh=LyIf2T4m7Z+aGoOTC20QhjEHya5KDco7uKHcToK2QN0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IsIDlNRfFegBQz5apXf9Q9gjAuC8RqtGng+nYfYjX0S5SJxWLKbkP/MogQRo+SLWh
-	 08nrxChiobBJGOdvi1cvZ9Cxb2Pii/+6mcjLXiRCfGelk5Fzb7nFOM5cN1DYFxC+lb
-	 K0+wyy4lvPV7hwkO6kEPEPBXJN5ToQ7LqZEmRRmYaASuIjGr2KolOsqcxXfv9z9AFT
-	 U+YvwKGFpKZQuYKrSPBrKqS32L3Y2d5AV2LqhVdm8HiFMosr5io8ASM2xgBUjx2M+9
-	 p73bg3Y2GD+ffVCVZHTAzgHK5yijHsVB4GOG1GW7sSKXaED0tZT4jOsD9cxCZCytpG
-	 axe3lD1uk8SPA==
-Message-ID: <1005e30582138e203a99f49564e2ef244b8d56aa.camel@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rb65x2Zplz2yD4
+	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Aug 2023 11:24:33 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=UGL8Hs7wie/83TbDi9sHxBsPaDb/+1IP8lK74uZbCKw=; b=VMCLMK1iXxNHLo2tyoSLb1HI/I
+	ygrNcHqe5LWzcSOicXKiXv7+aZW1BJ7dB0vjqMCV0MnziRQDnoZOz3XgmiNQiiDnA13PUlmOVrxc4
+	WpSk9x7uA8R3KciGWN7qJ88utnJ3QSHSvYKWfoJJvhO0U1H1/cqwYZYmtvld8BDA8iqcXv8CBaGId
+	erqQdPcYkjIFz/hBJqwMuB/rDK2BOMTdgnlCwnIMFpdDxv6wkG8Wn7rLsnAYsC5D7sc1BRtVulXjw
+	RcKjf3m9ODmy0yW/y+LgeKEyGIU6PCqX4XrC83Co4MtcnJcvY9SuxDXgB2k0Ps8NGdX3ExJB41/fI
+	ibsynONQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1qb9v5-001yGw-2Z;
+	Wed, 30 Aug 2023 01:22:55 +0000
+Date: Wed, 30 Aug 2023 02:22:55 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Jeff Layton <jlayton@kernel.org>
 Subject: Re: [PATCH v6 1/7] fs: pass the request_mask to generic_fillattr
-From: Jeff Layton <jlayton@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Date: Tue, 29 Aug 2023 20:43:31 -0400
-In-Reply-To: <20230830000221.GB3390869@ZenIV>
+Message-ID: <20230830012255.GC3390869@ZenIV>
 References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
-	 <20230725-mgctime-v6-1-a794c2b7abca@kernel.org>
-	 <20230829224454.GA461907@ZenIV>
-	 <e1c4a6d5001d029548542a1f10425c5639ce28e4.camel@kernel.org>
-	 <20230830000221.GB3390869@ZenIV>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+ <20230725-mgctime-v6-1-a794c2b7abca@kernel.org>
+ <20230829224454.GA461907@ZenIV>
+ <e1c4a6d5001d029548542a1f10425c5639ce28e4.camel@kernel.org>
+ <20230830000221.GB3390869@ZenIV>
+ <1005e30582138e203a99f49564e2ef244b8d56aa.camel@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1005e30582138e203a99f49564e2ef244b8d56aa.camel@kernel.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -72,62 +67,57 @@ Cc: Latchesar Ionkov <lucho@ionkov.net>, Martin Brandenburg <martin@omnibond.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, 2023-08-30 at 01:02 +0100, Al Viro wrote:
-> On Tue, Aug 29, 2023 at 06:58:47PM -0400, Jeff Layton wrote:
-> > On Tue, 2023-08-29 at 23:44 +0100, Al Viro wrote:
-> > > On Tue, Jul 25, 2023 at 10:58:14AM -0400, Jeff Layton wrote:
-> > > > generic_fillattr just fills in the entire stat struct indiscriminat=
-ely
-> > > > today, copying data from the inode. There is at least one attribute
-> > > > (STATX_CHANGE_COOKIE) that can have side effects when it is reporte=
-d,
-> > > > and we're looking at adding more with the addition of multigrain
-> > > > timestamps.
-> > > >=20
-> > > > Add a request_mask argument to generic_fillattr and have most calle=
-rs
-> > > > just pass in the value that is passed to getattr. Have other caller=
-s
-> > > > (e.g. ksmbd) just pass in STATX_BASIC_STATS. Also move the setting =
-of
-> > > > STATX_CHANGE_COOKIE into generic_fillattr.
-> > >=20
-> > > Out of curiosity - how much PITA would it be to put request_mask into
-> > > kstat?  Set it in vfs_getattr_nosec() (and those get_file_..._info()
-> > > on smbd side) and don't bother with that kind of propagation boilerpl=
-ate
-> > > - just have generic_fillattr() pick it there...
-> > >=20
-> > > Reduces the patchset size quite a bit...
-> >=20
-> > It could be done. To do that right, I think we'd want to drop
-> > request_mask from the ->getattr prototype as well and just have
-> > everything use the mask in the kstat.
-> >=20
-> > I don't think it'd reduce the size of the patchset in any meaningful
-> > way, but it might make for a more sensible API over the long haul.
->=20
-> ->getattr() prototype change would be decoupled from that - for your
-> patchset you'd only need the field addition + setting in vfs_getattr_nose=
-c()
-> (and possibly in ksmbd), with the remainders of both series being
-> independent from each other.
->=20
-> What I suggest is
->=20
-> branchpoint -> field addition (trivial commit) -> argument removal
-> 		|
-> 		V
-> your series, starting with "use stat->request_mask in generic_fillattr()"
->=20
-> Total size would be about the same, but it would be easier to follow
-> the less trivial part of that.  Nothing in your branch downstream of
-> that touches any ->getattr() instances, so it should have no
-> conflicts with the argument removal side of things.
+On Tue, Aug 29, 2023 at 08:43:31PM -0400, Jeff Layton wrote:
+> On Wed, 2023-08-30 at 01:02 +0100, Al Viro wrote:
+> > On Tue, Aug 29, 2023 at 06:58:47PM -0400, Jeff Layton wrote:
+> > > On Tue, 2023-08-29 at 23:44 +0100, Al Viro wrote:
+> > > > On Tue, Jul 25, 2023 at 10:58:14AM -0400, Jeff Layton wrote:
+> > > > > generic_fillattr just fills in the entire stat struct indiscriminately
+> > > > > today, copying data from the inode. There is at least one attribute
+> > > > > (STATX_CHANGE_COOKIE) that can have side effects when it is reported,
+> > > > > and we're looking at adding more with the addition of multigrain
+> > > > > timestamps.
+> > > > > 
+> > > > > Add a request_mask argument to generic_fillattr and have most callers
+> > > > > just pass in the value that is passed to getattr. Have other callers
+> > > > > (e.g. ksmbd) just pass in STATX_BASIC_STATS. Also move the setting of
+> > > > > STATX_CHANGE_COOKIE into generic_fillattr.
+> > > > 
+> > > > Out of curiosity - how much PITA would it be to put request_mask into
+> > > > kstat?  Set it in vfs_getattr_nosec() (and those get_file_..._info()
+> > > > on smbd side) and don't bother with that kind of propagation boilerplate
+> > > > - just have generic_fillattr() pick it there...
+> > > > 
+> > > > Reduces the patchset size quite a bit...
+> > > 
+> > > It could be done. To do that right, I think we'd want to drop
+> > > request_mask from the ->getattr prototype as well and just have
+> > > everything use the mask in the kstat.
+> > > 
+> > > I don't think it'd reduce the size of the patchset in any meaningful
+> > > way, but it might make for a more sensible API over the long haul.
+> > 
+> > ->getattr() prototype change would be decoupled from that - for your
+> > patchset you'd only need the field addition + setting in vfs_getattr_nosec()
+> > (and possibly in ksmbd), with the remainders of both series being
+> > independent from each other.
+> > 
+> > What I suggest is
+> > 
+> > branchpoint -> field addition (trivial commit) -> argument removal
+> > 		|
+> > 		V
+> > your series, starting with "use stat->request_mask in generic_fillattr()"
+> > 
+> > Total size would be about the same, but it would be easier to follow
+> > the less trivial part of that.  Nothing in your branch downstream of
+> > that touches any ->getattr() instances, so it should have no
+> > conflicts with the argument removal side of things.
+> 
+> The only problem with this plan is that Linus has already merged this.
+> I've no issue with adding the request_mask to the kstat and removing it
+> as a separate parameter elsewhere, but I think we'll need to do it on
+> top of what's already been merged.
 
-The only problem with this plan is that Linus has already merged this.
-I've no issue with adding the request_mask to the kstat and removing it
-as a separate parameter elsewhere, but I think we'll need to do it on
-top of what's already been merged.
---=20
-Jeff Layton <jlayton@kernel.org>
+D'oh...  My apologies; I'll do a branch on top of that (and rebase on
+top of -rc1 once the window closes).
