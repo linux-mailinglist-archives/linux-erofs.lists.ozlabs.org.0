@@ -1,67 +1,37 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68DE378E318
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 01:16:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1693437402;
-	bh=zHtntQp4Bt6yhAvu/ACUB2cljoPXt28EJOYaW0l19aY=;
-	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=g9Y++ZC+PsiQVbrsbL4YcKrUVPG6LAjAoQIC6EX1vvM4oIavkdwpE1+9G0RDFHm4P
-	 saKafvBIrJdderzrGFJ8FJs6tA+dMXlVObw6DGo0hYrRqxpasIEuVXqfHKzq1o5guz
-	 BKFsbgqff5F8/X8seFC6G/R8oseGVJSdM+dQmpiKTzA+hlmCW3T4/ZNQYmsETbenFW
-	 +t4EfXfEkEu2n5w/9F90vTZwAlwDgsLv+nBTlQ/Kbe6kLi5SltgmgYWAxKflbQTial
-	 62qPoIeX6mxFXnmfjIs7FlsH/CUv9dlTBLbG5p570ap7R7jZKvSHaeH5rB4yWSYgjE
-	 +Eg51qje57jMw==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8459E78E34C
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 01:34:51 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RbgCt38Lnz2yt6
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 09:16:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rbgcm56Zpz2ys8
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 09:34:48 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20221208 header.b=599hsoqL;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::b49; helo=mail-yb1-xb49.google.com; envelope-from=3z83vzackc1g370l0b46ee6b4.2ecb8dkn-4he5ib8iji.epb01i.eh6@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RbgCl0h19z2yhM
-	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 09:16:34 +1000 (AEST)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d7b9187c0b1so87218276.1
-        for <linux-erofs@lists.ozlabs.org>; Wed, 30 Aug 2023 16:16:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693437392; x=1694042192;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zHtntQp4Bt6yhAvu/ACUB2cljoPXt28EJOYaW0l19aY=;
-        b=EWlnys2lazm2Cw9BlWGz8Dehe4GQnvxHtv9HCxQcSBxNeBBrGHdO2l5FLH0hlzYClL
-         V/Ls/ORAGOk/2z+8kkVki6xLOfXIyRMDleV/lLghieoPU1Y9zQT/bZWqGwa0f06nNP0T
-         +EJFQkGJ5rIV9rymTw81T7DpyM7Xeu5oJKHk2DC+C/oh0df7SJlP/7PGbvq0gQ4Mx7x6
-         UHXpdLmtnCmwdIed3DNRW0zxB5z8EyDaCGoFah46xflLFqRuvbvnbKqQCplUAeLd1Wya
-         701Gr+veXlcq9fjRAHgU4dqDnT035slcpJaeEW02Dto71JZns/UK0n50u4nBSYvO4cRi
-         USJw==
-X-Gm-Message-State: AOJu0YxszS44n+WOr37vnRQpc6A333U96xDfZxpqWoOUbfGAkZRstrT9
-	L6Jz5kYbkdmWF1yEDpnV6+rzMSvUeaVSF5tBdh1mjOor8p5DOGV3xQJ4c1qeMz3gUrDU5hxbepa
-	N9g7WeRw0/naHPMZhg/UH/7POn2RH4/dYgpEy3aIxyYlJkT+Jg80dAfC7KgoGz1ZE5IYcsoCH
-X-Google-Smtp-Source: AGHT+IFM0dnL0ixe7wA7F5hqNuSHN7T8AxnCd61y8RN4Tp37cazP+FeKqs0mcEdAda/edA/vAXom43timAaw
-X-Received: from dhavale-ctop.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:5e39])
- (user=dhavale job=sendgmr) by 2002:a25:2d0a:0:b0:d79:3b84:9997 with SMTP id
- t10-20020a252d0a000000b00d793b849997mr95613ybt.7.1693437391578; Wed, 30 Aug
- 2023 16:16:31 -0700 (PDT)
-Date: Wed, 30 Aug 2023 16:16:06 -0700
-In-Reply-To: <20230830231606.3783734-1-dhavale@google.com>
-Mime-Version: 1.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rbgch3zZJz2yDM
+	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 09:34:42 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Vqw4w7k_1693438475;
+Received: from 30.27.80.247(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vqw4w7k_1693438475)
+          by smtp.aliyun-inc.com;
+          Thu, 31 Aug 2023 07:34:36 +0800
+Message-ID: <2d3a4abe-c23c-795e-2042-0033a474bd95@linux.alibaba.com>
+Date: Thu, 31 Aug 2023 07:34:34 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.13.0
+Subject: Re: [PATCH v1 1/2] erofs-utils: Relax the hardchecks on the blocksize
+To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org
 References: <20230830231606.3783734-1-dhavale@google.com>
-X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
-Message-ID: <20230830231606.3783734-2-dhavale@google.com>
-Subject: [PATCH v1 2/2] erofs-utils: Set mkfs default blocksize based on
- current platform
-To: linux-erofs@lists.ozlabs.org, hsiangkao@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20230830231606.3783734-1-dhavale@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -73,36 +43,63 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Sandeep Dhavale <dhavale@google.com>
 Cc: kernel-team@android.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Set mkfs default blocksize to current platform pagesize.
-This means mkfs with default options will work on current
-platform. If we are building image for a platform for a different
-blocksize, we can override default with -b option up to
-EROFS_MAX_BLOCK_SIZE.
+Hi Sandeep,
 
-Signed-off-by: Sandeep Dhavale <dhavale@google.com>
----
- mkfs/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2023/8/31 07:16, Sandeep Dhavale wrote:
+> As erofs-utils supports different block sizes upto
+> EROFS_MAX_BLOCK_SIZE, relax the checks so same tools
+> can be used to create images for platforms where
+> page size can be greater than 4096.
+> 
+> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> ---
+>   lib/namei.c | 2 --
+>   mkfs/main.c | 9 +++++----
+>   2 files changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/lib/namei.c b/lib/namei.c
+> index 2bb1d4c..45dbcd3 100644
+> --- a/lib/namei.c
+> +++ b/lib/namei.c
+> @@ -144,8 +144,6 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+>   		vi->u.chunkbits = sbi->blkszbits +
+>   			(vi->u.chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
+>   	} else if (erofs_inode_is_data_compressed(vi->datalayout)) {
+> -		if (erofs_blksiz(vi->sbi) != EROFS_MAX_BLOCK_SIZE)
+> -			return -EOPNOTSUPP;
+>   		return z_erofs_fill_inode(vi);
+>   	}
+>   	return 0;
+> diff --git a/mkfs/main.c b/mkfs/main.c
+> index c03a7a8..37bf658 100644
+> --- a/mkfs/main.c
+> +++ b/mkfs/main.c
+> @@ -550,10 +550,11 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+>   		cfg.c_dbg_lvl = EROFS_ERR;
+>   		cfg.c_showprogress = false;
+>   	}
+> -	if (cfg.c_compr_alg[0] && erofs_blksiz(&sbi) != EROFS_MAX_BLOCK_SIZE) {
+> -		erofs_err("compression is unsupported for now with block size %u",
+> -			  erofs_blksiz(&sbi));
+> -		return -EINVAL;
+> +	if (cfg.c_compr_alg[0] && erofs_blksiz(&sbi) != getpagesize()) {
+> +		erofs_warn("subpage blocksize with compression is not yet "
+> +			"supported. Compressed image will only work with "
+> +			"arch pagesize = blocksize = %u bytes",
+> +			erofs_blksiz(&sbi));
+>   	}
 
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 37bf658..8c2c2e3 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -689,7 +689,7 @@ static void erofs_mkfs_default_options(void)
- {
- 	cfg.c_showprogress = true;
- 	cfg.c_legacy_compress = false;
--	sbi.blkszbits = ilog2(EROFS_MAX_BLOCK_SIZE);
-+	sbi.blkszbits = ilog2(getpagesize());
- 	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_ZERO_PADDING;
- 	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM |
- 			     EROFS_FEATURE_COMPAT_MTIME;
--- 
-2.42.0.283.g2d96d420d3-goog
+Thanks for the patches.
 
+I'm fine to relax  EROFS_MAX_BLOCK_SIZE check, yet could we
+add a check as erofs_blksiz <= EROFS_MAX_BLOCK_SIZE somewhere?
+
+Otherwise, we could suffer from stack overflow
+(if EROFS_MAX_BLOCK_SIZE is outdated or somewhat small...)
+
+Thanks,
+Gao Xiang
