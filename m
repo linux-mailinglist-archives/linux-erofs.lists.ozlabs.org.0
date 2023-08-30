@@ -2,54 +2,62 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE29478D1B1
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 03:24:43 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=VMCLMK1i;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id A03C078E317
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 01:16:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1693437390;
+	bh=Cg0sUiOxI0MDXHpxuayzueyStn3AV8t6PD5Vh4L+pIQ=;
+	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=j/fzIlrZbGedVw2TdW0C9IwRrJyeRliQ7E11/PEZio1onuoxMTcdpqISHcMMsOWaa
+	 yTuAiqUjA11EK1AR+f7321iGcUoqM/Fhh3Sij12kPNzI9rpA1ntOn1z8cCUZ/DPTLv
+	 zFjByo6Wl9zA12EgmX0PuvZRUY3M//2j7TzgJXV34Tm326r9iNOXZfpby9cGGdvwuo
+	 HdksBK8BW4Lj21IKKPvBuPBWkD7iRQ8VOv8auT54k8yQUlQKCBNMEH8u8Jc5M+f597
+	 8heiwDLdF1ciEETk5g+kXQxy4kcc4EXcUUWQ9T40W3ValK4L29S5/Z4Lfu4SApzppe
+	 AyR0wdIBTUBpA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rb6614Vblz30g8
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Aug 2023 11:24:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RbgCf0LBSz2ysC
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 09:16:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=VMCLMK1i;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20221208 header.b=wYW6pW+H;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=ftp.linux.org.uk (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org)
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::449; helo=mail-pf1-x449.google.com; envelope-from=3xs3vzackc08uyrcr2vx55x2v.t532z4be-v85w92z9a9.5g2rs9.58x@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rb65x2Zplz2yD4
-	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Aug 2023 11:24:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=UGL8Hs7wie/83TbDi9sHxBsPaDb/+1IP8lK74uZbCKw=; b=VMCLMK1iXxNHLo2tyoSLb1HI/I
-	ygrNcHqe5LWzcSOicXKiXv7+aZW1BJ7dB0vjqMCV0MnziRQDnoZOz3XgmiNQiiDnA13PUlmOVrxc4
-	WpSk9x7uA8R3KciGWN7qJ88utnJ3QSHSvYKWfoJJvhO0U1H1/cqwYZYmtvld8BDA8iqcXv8CBaGId
-	erqQdPcYkjIFz/hBJqwMuB/rDK2BOMTdgnlCwnIMFpdDxv6wkG8Wn7rLsnAYsC5D7sc1BRtVulXjw
-	RcKjf3m9ODmy0yW/y+LgeKEyGIU6PCqX4XrC83Co4MtcnJcvY9SuxDXgB2k0Ps8NGdX3ExJB41/fI
-	ibsynONQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1qb9v5-001yGw-2Z;
-	Wed, 30 Aug 2023 01:22:55 +0000
-Date: Wed, 30 Aug 2023 02:22:55 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH v6 1/7] fs: pass the request_mask to generic_fillattr
-Message-ID: <20230830012255.GC3390869@ZenIV>
-References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
- <20230725-mgctime-v6-1-a794c2b7abca@kernel.org>
- <20230829224454.GA461907@ZenIV>
- <e1c4a6d5001d029548542a1f10425c5639ce28e4.camel@kernel.org>
- <20230830000221.GB3390869@ZenIV>
- <1005e30582138e203a99f49564e2ef244b8d56aa.camel@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1005e30582138e203a99f49564e2ef244b8d56aa.camel@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RbgCZ6l5sz2yVd
+	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 09:16:25 +1000 (AEST)
+Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-68bec515fa9so188862b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Wed, 30 Aug 2023 16:16:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693437383; x=1694042183;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Cg0sUiOxI0MDXHpxuayzueyStn3AV8t6PD5Vh4L+pIQ=;
+        b=BiuhCkr+qSqExH0v2HGhq7gxC29iCWVeUbwyYyN1/YzNPKIYsJPuvuI/xiuL75NU+z
+         kM2DH27MuuBboTEbQIwjZKarpHjptp0Wi+m5RXZ+NNjKlIUp+JwJp1dQHS18RFdSthKm
+         CS0xJTNAhS3aR3hlR3KbK26jaBlMPDODB+E4IJ+05MpQHJaFDXNul6tRVui63taUhQeH
+         AwZA+m9jeTgr02fLB/LbP0yAzGcCF6lgpu9sdf4a7rolxjTSRZSIQRGXR9K+1mba1wt8
+         omnv3/wdlh3LDnPmG4h3p7ad0zpu2bq5jTRX7JAcnl+ja22tfyHYOA3ZB5GISRBe8uO4
+         dWcw==
+X-Gm-Message-State: AOJu0YxAdY8Sr06r0b69Mi2Q9AhODSxxvyYDWrgY1C58WWT4971laFyu
+	6IXhMpxMz4fbkgl4hUaUNDQVwDZfwC7HSMDH85hrC8gSqH/diV9DhLLhnW1QOtuDxIyu51KKu3k
+	0tB5SBPGSX33X52Hlz5awduOwMrD9WCa9mNooXDy+tmkWD48ubmizglwh5BxwxkJAJPafZN8Y
+X-Google-Smtp-Source: AGHT+IEtH7K7C9cH82KUHYq7QBzie6EccthcSDfHR8v37I73W8nYuk5CD3jL0ojjcHmtrtdyfxkE6fmgWGO1
+X-Received: from dhavale-ctop.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:5e39])
+ (user=dhavale job=sendgmr) by 2002:a05:6a00:21d1:b0:68c:4a78:d32e with SMTP
+ id t17-20020a056a0021d100b0068c4a78d32emr975007pfj.5.1693437382590; Wed, 30
+ Aug 2023 16:16:22 -0700 (PDT)
+Date: Wed, 30 Aug 2023 16:16:05 -0700
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+Message-ID: <20230830231606.3783734-1-dhavale@google.com>
+Subject: [PATCH v1 1/2] erofs-utils: Relax the hardchecks on the blocksize
+To: linux-erofs@lists.ozlabs.org, hsiangkao@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,63 +69,56 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Latchesar Ionkov <lucho@ionkov.net>, Martin Brandenburg <martin@omnibond.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, linux-xfs@vger.kernel.org, "Darrick J. Wong" <djwong@kernel.org>, Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, Dave Chinner <david@fromorbit.com>, David Howells <dhowells@redhat.com>, Chris Mason <clm@fb.com>, Andreas Dilger <adilger.kernel@dilger.ca>, Hans de Goede <hdegoede@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, codalist@coda.cs.cmu.edu, linux-afs@lists.infradead.org, Mike Marshall <hubcap@omnibond.com>, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Andreas Gruenbacher <agruenba@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>, Richard Weinberger <richard@nod.at>, Mark Fasheh <mark@fasheh.com>, Hugh Dickins <hughd@google.com>, Tyler Hicks <code@tyhicks.com>, cluster-devel@redhat.com, coda@cs.cmu.edu, linux-mm@kvack.org,
-  linux-f2fs-devel@lists.sourceforge.net, Ilya Dryomov <idryomov@gmail.com>, Iurii Zaikin <yzaikin@google.com>, Namjae Jeon <linkinjeon@kernel.org>, Trond Myklebust <trond.myklebust@hammerspace.com>, Shyam Prasad N <sprasad@microsoft.com>, ecryptfs@vger.kernel.org, Kees Cook <keescook@chromium.org>, ocfs2-devel@lists.linux.dev, Anthony Iliopoulos <ailiop@suse.com>, Josef Bacik <josef@toxicpanda.com>, Tom Talpey <tom@talpey.com>, Tejun Heo <tj@kernel.org>, Yue Hu <huyue2@coolpad.com>, Joel Becker <jlbec@evilplan.org>, linux-mtd@lists.infradead.org, David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, ceph-devel@vger.kernel.org, Xiubo Li <xiubli@redhat.com>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, Jan Harkes <jaharkes@cs.cmu.edu>, Christian Brauner <brauner@kernel.org>, linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, Joseph Qi <joseph.qi@linux.alibaba.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, v9fs@lists.linux.dev, ntfs3@lists.linux.dev, samba
- -technical@lists.samba.org, linux-kernel@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>, Steve French <sfrench@samba.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Luis Chamberlain <mcgrof@kernel.org>, devel@lists.orangefs.org, Anna Schumaker <anna@kernel.org>, Jan Kara <jack@suse.com>, Bob Peterson <rpeterso@redhat.com>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Sungjong Seo <sj1557.seo@samsung.com>, linux-erofs@lists.ozlabs.org, linux-nfs@vger.kernel.org, linux-btrfs@vger.kernel.org
+From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Sandeep Dhavale <dhavale@google.com>
+Cc: kernel-team@android.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Aug 29, 2023 at 08:43:31PM -0400, Jeff Layton wrote:
-> On Wed, 2023-08-30 at 01:02 +0100, Al Viro wrote:
-> > On Tue, Aug 29, 2023 at 06:58:47PM -0400, Jeff Layton wrote:
-> > > On Tue, 2023-08-29 at 23:44 +0100, Al Viro wrote:
-> > > > On Tue, Jul 25, 2023 at 10:58:14AM -0400, Jeff Layton wrote:
-> > > > > generic_fillattr just fills in the entire stat struct indiscriminately
-> > > > > today, copying data from the inode. There is at least one attribute
-> > > > > (STATX_CHANGE_COOKIE) that can have side effects when it is reported,
-> > > > > and we're looking at adding more with the addition of multigrain
-> > > > > timestamps.
-> > > > > 
-> > > > > Add a request_mask argument to generic_fillattr and have most callers
-> > > > > just pass in the value that is passed to getattr. Have other callers
-> > > > > (e.g. ksmbd) just pass in STATX_BASIC_STATS. Also move the setting of
-> > > > > STATX_CHANGE_COOKIE into generic_fillattr.
-> > > > 
-> > > > Out of curiosity - how much PITA would it be to put request_mask into
-> > > > kstat?  Set it in vfs_getattr_nosec() (and those get_file_..._info()
-> > > > on smbd side) and don't bother with that kind of propagation boilerplate
-> > > > - just have generic_fillattr() pick it there...
-> > > > 
-> > > > Reduces the patchset size quite a bit...
-> > > 
-> > > It could be done. To do that right, I think we'd want to drop
-> > > request_mask from the ->getattr prototype as well and just have
-> > > everything use the mask in the kstat.
-> > > 
-> > > I don't think it'd reduce the size of the patchset in any meaningful
-> > > way, but it might make for a more sensible API over the long haul.
-> > 
-> > ->getattr() prototype change would be decoupled from that - for your
-> > patchset you'd only need the field addition + setting in vfs_getattr_nosec()
-> > (and possibly in ksmbd), with the remainders of both series being
-> > independent from each other.
-> > 
-> > What I suggest is
-> > 
-> > branchpoint -> field addition (trivial commit) -> argument removal
-> > 		|
-> > 		V
-> > your series, starting with "use stat->request_mask in generic_fillattr()"
-> > 
-> > Total size would be about the same, but it would be easier to follow
-> > the less trivial part of that.  Nothing in your branch downstream of
-> > that touches any ->getattr() instances, so it should have no
-> > conflicts with the argument removal side of things.
-> 
-> The only problem with this plan is that Linus has already merged this.
-> I've no issue with adding the request_mask to the kstat and removing it
-> as a separate parameter elsewhere, but I think we'll need to do it on
-> top of what's already been merged.
+As erofs-utils supports different block sizes upto
+EROFS_MAX_BLOCK_SIZE, relax the checks so same tools
+can be used to create images for platforms where
+page size can be greater than 4096.
 
-D'oh...  My apologies; I'll do a branch on top of that (and rebase on
-top of -rc1 once the window closes).
+Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+---
+ lib/namei.c | 2 --
+ mkfs/main.c | 9 +++++----
+ 2 files changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/lib/namei.c b/lib/namei.c
+index 2bb1d4c..45dbcd3 100644
+--- a/lib/namei.c
++++ b/lib/namei.c
+@@ -144,8 +144,6 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ 		vi->u.chunkbits = sbi->blkszbits +
+ 			(vi->u.chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
+ 	} else if (erofs_inode_is_data_compressed(vi->datalayout)) {
+-		if (erofs_blksiz(vi->sbi) != EROFS_MAX_BLOCK_SIZE)
+-			return -EOPNOTSUPP;
+ 		return z_erofs_fill_inode(vi);
+ 	}
+ 	return 0;
+diff --git a/mkfs/main.c b/mkfs/main.c
+index c03a7a8..37bf658 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -550,10 +550,11 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		cfg.c_dbg_lvl = EROFS_ERR;
+ 		cfg.c_showprogress = false;
+ 	}
+-	if (cfg.c_compr_alg[0] && erofs_blksiz(&sbi) != EROFS_MAX_BLOCK_SIZE) {
+-		erofs_err("compression is unsupported for now with block size %u",
+-			  erofs_blksiz(&sbi));
+-		return -EINVAL;
++	if (cfg.c_compr_alg[0] && erofs_blksiz(&sbi) != getpagesize()) {
++		erofs_warn("subpage blocksize with compression is not yet "
++			"supported. Compressed image will only work with "
++			"arch pagesize = blocksize = %u bytes",
++			erofs_blksiz(&sbi));
+ 	}
+ 	if (pclustersize_max) {
+ 		if (pclustersize_max < erofs_blksiz(&sbi) ||
+-- 
+2.42.0.283.g2d96d420d3-goog
+
