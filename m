@@ -1,37 +1,34 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8C4C78E9C5
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 11:49:08 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3ACFA78EA34
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 12:30:07 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RbxFZ5vtBz3bT8
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 19:49:06 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rby8s0r2gz30fF
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 20:30:05 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RbxFS08Y0z3bT8
-	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 19:48:59 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vqxsgrf_1693475330;
-Received: from 30.97.49.22(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vqxsgrf_1693475330)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rby8k4hhdz2yVh
+	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 20:29:56 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VqxwZZY_1693477789;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VqxwZZY_1693477789)
           by smtp.aliyun-inc.com;
-          Thu, 31 Aug 2023 17:48:52 +0800
-Message-ID: <70e8cf13-7824-c54b-9b93-46b7302b9a5a@linux.alibaba.com>
-Date: Thu, 31 Aug 2023 17:48:50 +0800
+          Thu, 31 Aug 2023 18:29:50 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: hsiangkao@linux.alibaba.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2] erofs-utils: mkfs: enable xattr name filter feature by default
+Date: Thu, 31 Aug 2023 18:29:49 +0800
+Message-Id: <20230831102949.119605-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: Optimizing write_uncompressed_file_from_fd()
-To: Daan De Meyer <daan.j.demeyer@gmail.com>, linux-erofs@lists.ozlabs.org
-References: <CAO8sHcmZZORnrJXA=QzmGkYNkNWn7M+amAK_DZ19-WL4kLUvpw@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAO8sHcmZZORnrJXA=QzmGkYNkNWn7M+amAK_DZ19-WL4kLUvpw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,37 +43,137 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Daan,
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-On 2023/8/31 17:33, Daan De Meyer wrote:
-> Hi,
-> 
-> For hacking on systemd, we build disk images using mkosi, and use an erofs filesystem for the /usr directory. When hacking on systemd, we would like to be able to rebuild the disk image as fast as possible. One part of rebuilding the image that takes a while is generating the erofs filesystem. I had a look at the mkfs source code for erofs and noticed that in
-> write_uncompressed_file_from_fd(), there is no usage of FICLONERANGE or copy_file_range() to speed up copying data from the filesystem to the erofs filesystem. Would it be possible to use either of these to make copying data in mkfs.erofs faster when the data does not need to be compressed?
+Turn it on by default since it's a compatible feature.  Instead,
+it can be disabled explicitly with "-E^xattr-name-filter".
 
-Thanks for the email!
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+changes: flush inode bhs prior to erofs_mkfs_update_super_block(),
+otherwise the xattr filter feature bit may has not been set when
+erofs_mkfs_update_super_block() is called.
 
-Yes, that is indeed useful, actually mmap I/Os can be used
-to boost up write_uncompressed_file_from_fd () as well...
-Actually many enhancements are limited by the current
-development resource (multithreaded compression support might
-be the top-1 priority for userspace side from end users),
-but I have to resolve them one-by-one since EROFS is still a
-quite young project compared to other approaches and beyond
-the original targeted use cases (so most Android vendors won't
-pay any attention to improvements that are not critically
-important for their scenarios.)
+v1: https://lore.kernel.org/all/ZO4z5%2Fl3bVC6aE+8@debian/
+---
+ include/erofs/xattr.h |  2 +-
+ lib/inode.c           |  4 ++--
+ lib/xattr.c           |  6 +++++-
+ mkfs/main.c           | 19 +++++++++++++++++--
+ 4 files changed, 25 insertions(+), 6 deletions(-)
 
-I mostly focus on some kernel improvements since Google needs
-us to support 16k page size + 4k EROFS block size.  That is
-currently my top thing to resolve first...
+diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+index 748442a..cf02257 100644
+--- a/include/erofs/xattr.h
++++ b/include/erofs/xattr.h
+@@ -76,7 +76,7 @@ static inline unsigned int xattrblock_offset(struct erofs_inode *vi,
+ 
+ int erofs_scan_file_xattrs(struct erofs_inode *inode);
+ int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
+-char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size);
++char *erofs_export_xattr_ibody(struct erofs_inode *inode);
+ int erofs_build_shared_xattrs_from_path(struct erofs_sb_info *sbi, const char *path);
+ 
+ int erofs_xattr_insert_name_prefix(const char *prefix);
+diff --git a/lib/inode.c b/lib/inode.c
+index d54f84f..85eacab 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -574,8 +574,8 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+ 	off += inode->inode_isize;
+ 
+ 	if (inode->xattr_isize) {
+-		char *xattrs = erofs_export_xattr_ibody(&inode->i_xattrs,
+-							inode->xattr_isize);
++		char *xattrs = erofs_export_xattr_ibody(inode);
++
+ 		if (IS_ERR(xattrs))
+ 			return false;
+ 
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 65dd9a0..0cab29f 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -843,8 +843,10 @@ static u32 erofs_xattr_filter_map(struct list_head *ixattrs)
+ 	return EROFS_XATTR_FILTER_DEFAULT & ~name_filter;
+ }
+ 
+-char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size)
++char *erofs_export_xattr_ibody(struct erofs_inode *inode)
+ {
++	struct list_head *ixattrs = &inode->i_xattrs;
++	unsigned int size = inode->xattr_isize;
+ 	struct inode_xattr_node *node, *n;
+ 	struct erofs_xattr_ibody_header *header;
+ 	LIST_HEAD(ilst);
+@@ -860,6 +862,8 @@ char *erofs_export_xattr_ibody(struct list_head *ixattrs, unsigned int size)
+ 	if (cfg.c_xattr_name_filter) {
+ 		header->h_name_filter =
+ 			cpu_to_le32(erofs_xattr_filter_map(ixattrs));
++		if (header->h_name_filter)
++			erofs_sb_set_xattr_filter(inode->sbi);
+ 	}
+ 
+ 	p = sizeof(struct erofs_xattr_ibody_header);
+diff --git a/mkfs/main.c b/mkfs/main.c
+index fad80b1..843a658 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -145,6 +145,7 @@ static int parse_extended_opts(const char *opts)
+ 
+ 	value = NULL;
+ 	for (token = opts; *token != '\0'; token = next) {
++		bool clear = false;
+ 		const char *p = strchr(token, ',');
+ 
+ 		next = NULL;
+@@ -168,6 +169,14 @@ static int parse_extended_opts(const char *opts)
+ 			vallen = 0;
+ 		}
+ 
++		if (token[0] == '^') {
++			if (keylen < 2)
++				return -EINVAL;
++			++token;
++			--keylen;
++			clear = true;
++		}
++
+ 		if (MATCH_EXTENTED_OPT("legacy-compress", token, keylen)) {
+ 			if (vallen)
+ 				return -EINVAL;
+@@ -249,8 +258,7 @@ handle_fragment:
+ 		if (MATCH_EXTENTED_OPT("xattr-name-filter", token, keylen)) {
+ 			if (vallen)
+ 				return -EINVAL;
+-			cfg.c_xattr_name_filter = true;
+-			erofs_sb_set_xattr_filter(&sbi);
++			cfg.c_xattr_name_filter = !clear;
+ 		}
+ 	}
+ 	return 0;
+@@ -695,6 +703,7 @@ static void erofs_mkfs_default_options(void)
+ {
+ 	cfg.c_showprogress = true;
+ 	cfg.c_legacy_compress = false;
++	cfg.c_xattr_name_filter = true;
+ 	sbi.blkszbits = ilog2(EROFS_MAX_BLOCK_SIZE);
+ 	sbi.feature_incompat = EROFS_FEATURE_INCOMPAT_ZERO_PADDING;
+ 	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM |
+@@ -983,6 +992,12 @@ int main(int argc, char **argv)
+ 		erofs_iput(packed_inode);
+ 	}
+ 
++	/* flush all buffers except for the superblock */
++	if (!erofs_bflush(NULL)) {
++		err = -EIO;
++		goto exit;
++	}
++
+ 	err = erofs_mkfs_update_super_block(sb_bh, root_nid, &nblocks,
+ 					    packed_nid);
+ 	if (err)
+-- 
+2.19.1.6.gb485710b
 
-(quite limited by real world time...)
-
-Thanks,
-Gao Xiang
-
-> 
-> Cheers,
-> 
-> Daan De Meyer
