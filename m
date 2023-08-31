@@ -1,35 +1,41 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCDED78EC0E
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 13:31:31 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2AFEF78ED90
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 14:48:16 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RbzWj4xZ1z30dt
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 21:31:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rc1DG0cHmz3bTt
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 22:48:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.237; helo=smtp237.sjtu.edu.cn; envelope-from=lyy0627@sjtu.edu.cn; receiver=lists.ozlabs.org)
+Received: from smtp237.sjtu.edu.cn (smtp237.sjtu.edu.cn [202.120.2.237])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RbzWL2YdZz3bV7
-	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 21:31:10 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0Vqy4wi9_1693481464;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vqy4wi9_1693481464)
-          by smtp.aliyun-inc.com;
-          Thu, 31 Aug 2023 19:31:05 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19.y] erofs: ensure that the post-EOF tails are all zeroed
-Date: Thu, 31 Aug 2023 19:29:59 +0800
-Message-Id: <20230831112959.99884-7-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.4
-In-Reply-To: <20230831112959.99884-1-hsiangkao@linux.alibaba.com>
-References: <20230831112959.99884-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rc1D85Dc5z307h
+	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 22:48:06 +1000 (AEST)
+Received: from proxy189.sjtu.edu.cn (smtp189.sjtu.edu.cn [202.120.2.189])
+	by smtp237.sjtu.edu.cn (Postfix) with ESMTPS id 11ABC7FAC7;
+	Thu, 31 Aug 2023 20:48:00 +0800 (CST)
+Received: from [192.168.31.108] (unknown [139.227.253.35])
+	by proxy189.sjtu.edu.cn (Postfix) with ESMTPSA id 9F2513FC424;
+	Thu, 31 Aug 2023 20:47:53 +0800 (CST)
+Message-ID: <a47e744f-19df-46c6-96a9-cb6c7d000441@sjtu.edu.cn>
+Date: Thu, 31 Aug 2023 20:47:43 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7] erofs-utils: add support for fuse 2/3 lowlevel API
+To: Gao Xiang <hsiangkao@linux.alibaba.com>,
+ Huang Jianan <jnhuang95@gmail.com>, linux-erofs@lists.ozlabs.org
+References: <20230823115955.3679838-1-lyy0627@sjtu.edu.cn>
+ <CAJfKizqAuRTndcq+jQAAn=H2rD1bqcg6Mek0x4KHxrAfPwe2MQ@mail.gmail.com>
+ <54abca78-bdc7-9520-4e95-75f32f451a5c@sjtu.edu.cn>
+ <20bba3e8-9503-b116-df69-80046d40ba01@linux.alibaba.com>
+From: Li Yiyan <lyy0627@sjtu.edu.cn>
+In-Reply-To: <20bba3e8-9503-b116-df69-80046d40ba01@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -42,51 +48,84 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, keltargw <keltar.gw@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-commit e4c1cf523d820730a86cae2c6d55924833b6f7ac upstream.
+Hi Xiang,
 
-This was accidentally fixed up in commit e4c1cf523d82 but we can't
-take the full change due to other dependancy issues, so here is just
-the actual bugfix that is needed.
+Thank you for your reminder, I will reconsider the reply_err part.
 
-[Background]
+Here is more information about the workaround. It can be considered that
+the return of size=0 is an interface specification that users should follow.
 
-keltargw reported an issue [1] that with mmaped I/Os, sometimes the
-tail of the last page (after file ends) is not filled with zeroes.
+https://github.com/philips/attr/blob/master/getfattr/getfattr.c#L298
 
-The root cause is that such tail page could be wrongly selected for
-inplace I/Os so the zeroed part will then be filled with compressed
-data instead of zeroes.
+I will complete the modification of the lib in V8 and delete the workaround.
 
-A simple fix is to avoid doing inplace I/Os for such tail parts,
-actually that was already fixed upstream in commit e4c1cf523d82
-("erofs: tidy up z_erofs_do_read_page()") by accident.
+On 2023/8/31 19:05, Gao Xiang wrote:
+> 
+> 
+> On 2023/8/31 18:48, Li Yiyan wrote:
+> 
+> ...
+> 
+>>>> +
+>>>> +     vi->sbi = &sbi;
+>>>> +     vi->nid = (erofs_nid_t)ino;
+>>>> +     ret = erofs_read_inode_from_disk(vi);
+>>>> +     if (ret < 0) {
+>>>> +             fuse_reply_err(req, EIO);
+>>>
+>>> Maybe reply -ret? Since there are other errors in
+>>> erofs_read_inode_from_disk.
+>>
+>> No. As mentioned in declaration, param err represents the *positive* error value,
+>> or zero for success.
+> 
+> I think Jianan meant:
+>     if (ret < 0) {
+>         fuse_reply_err(req, -err);
+> 
+> instead.
+> 
+>>>
+> 
+> ...
+> 
+>>>
+>>>> +             return;
+>>>> +     }
+>>>> +
+>>>> +     if (bufsize == 0)
+>>>> +             bufsize = EROFSFUSE_XATTR_BUF_SIZE;
+>>>
+>>> Why do we need to reconfigure bufsize here? erofs_listxattr should
+>>> handle bufsize of 0.
+>>
+>>
+>> This is a workaround for the time being, I will propose a patch to modify the lib
+>> to solve this problem.
+>>
+>> As mentioned in https://man7.org/linux/man-pages/man2/listxattr.2.html:
+>>
+>> "If size is specified as zero, these calls return the current size of the list of
+>> extended attribute names ( and leave list unchanged). This can be used to determine
+>> the size of the buffer that should be supplied in a subsequent call."
+>>
+>> Therefore, buf=0 means that we need to use fuse_reply_xattr to return the requested
+>> size of the buffer. Only when buf is not 0 do we need to copy xattr to buffer.
+>> At present, the erofs_getxattr cannot solve this problem, so a workaround is
+>> made on the fuse layer to temporarily solve this problem and
+>> control the extent of the patch.
+> 
+> Are you sure that erofs_listxattr() cannot accept NULL buffers?
+> I'm totally confused.
+> 
+> Anyway, if erofs_listxattr() unmeet your requirement for whatever
+> reasons, please fix this instead.
+> 
+> Thanks,
+> Gao Xiang
 
-[1] https://lore.kernel.org/r/3ad8b469-25db-a297-21f9-75db2d6ad224@linux.alibaba.com
-
-Reported-by: keltargw <keltar.gw@gmail.com>
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- drivers/staging/erofs/unzip_vle.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index 83e4d9384bd2..7ccc4a18a900 100644
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -675,6 +675,8 @@ static int z_erofs_do_read_page(struct z_erofs_vle_frontend *fe,
- 	cur = end - min_t(unsigned, offset + end - map->m_la, end);
- 	if (unlikely(!(map->m_flags & EROFS_MAP_MAPPED))) {
- 		zero_user_segment(page, cur, end);
-+		++spiltted;
-+		tight = false;
- 		goto next_part;
- 	}
- 
--- 
-2.24.4
-
+Thanks,
+Yiyan
