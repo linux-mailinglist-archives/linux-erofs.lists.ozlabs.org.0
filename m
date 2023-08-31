@@ -2,26 +2,26 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 989F578E9C4
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 11:49:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E8C4C78E9C5
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 11:49:08 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RbxFR5TNmz30fm
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 19:48:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RbxFZ5vtBz3bT8
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 19:49:06 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RbxFJ6rwdz2yhL
-	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 19:48:51 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VqxqrXW_1693475323;
-Received: from 30.97.49.22(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VqxqrXW_1693475323)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RbxFS08Y0z3bT8
+	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 19:48:59 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vqxsgrf_1693475330;
+Received: from 30.97.49.22(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vqxsgrf_1693475330)
           by smtp.aliyun-inc.com;
-          Thu, 31 Aug 2023 17:48:44 +0800
-Message-ID: <e4901fc1-dd36-5867-1b89-900f64be82c6@linux.alibaba.com>
-Date: Thu, 31 Aug 2023 17:48:42 +0800
+          Thu, 31 Aug 2023 17:48:52 +0800
+Message-ID: <70e8cf13-7824-c54b-9b93-46b7302b9a5a@linux.alibaba.com>
+Date: Thu, 31 Aug 2023 17:48:50 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.13.0
@@ -54,7 +54,7 @@ On 2023/8/31 17:33, Daan De Meyer wrote:
 > For hacking on systemd, we build disk images using mkosi, and use an erofs filesystem for the /usr directory. When hacking on systemd, we would like to be able to rebuild the disk image as fast as possible. One part of rebuilding the image that takes a while is generating the erofs filesystem. I had a look at the mkfs source code for erofs and noticed that in
 > write_uncompressed_file_from_fd(), there is no usage of FICLONERANGE or copy_file_range() to speed up copying data from the filesystem to the erofs filesystem. Would it be possible to use either of these to make copying data in mkfs.erofs faster when the data does not need to be compressed?
 
-Thanks for the reply!
+Thanks for the email!
 
 Yes, that is indeed useful, actually mmap I/Os can be used
 to boost up write_uncompressed_file_from_fd () as well...
