@@ -2,58 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9781778F162
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 18:38:10 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=R2eMjMGc;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id DA27878F2F8
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 20:58:41 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rc6KX330hz3bwJ
-	for <lists+linux-erofs@lfdr.de>; Fri,  1 Sep 2023 02:38:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rc9Rg3NKvz3bvW
+	for <lists+linux-erofs@lfdr.de>; Fri,  1 Sep 2023 04:58:39 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=R2eMjMGc;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rb5K275glz2yV5;
-	Wed, 30 Aug 2023 10:49:10 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 727CE61187;
-	Wed, 30 Aug 2023 00:49:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15649C433C8;
-	Wed, 30 Aug 2023 00:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1693356547;
-	bh=Y6mimTT4f5bHTNOgMAPJs7UzoDd9JcRrnEgta8s7/7g=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=R2eMjMGcVP6twJXzPd3GjCC/QAkoBXyIXwyF0PetiX1VDQJtkSU/FrVUdLPhlHeJk
-	 dBHqNW4EShjtZaWh7sFQvaiUl3mq77UH9KDN3DI2snJ6o1c+81N9JuEjNxovdv+bSx
-	 sgcIB4JoE+RW7C4bNpHemTP/NmKBpTL7+v/S4iHTHVlduZjb2wd1jti+ZtvOSZrtwV
-	 l+HJJMf2BwuQ5fHlwOGaHAX0BTHl6xVSRaJy3EeRODk9yD0xK9grM4eFB73+9nNR6U
-	 SUPRRhBT9hKA3cHo92ct+4AiPcoeZ/GYLow2fGYu2g/oM5lHg/5skk6mbUINrwlVsy
-	 FRJBQs41w8qcA==
-Message-ID: <d73e7de5056a34578a193185770e46584450d8b7.camel@kernel.org>
-Subject: Re: [PATCH v2 08/92] fs: new helper: simple_rename_timestamp
-From: Jeff Layton <jlayton@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Date: Tue, 29 Aug 2023 20:48:48 -0400
-In-Reply-To: <20230830001917.GC461907@ZenIV>
-References: <20230705185812.579118-1-jlayton@kernel.org>
-	 <20230705185812.579118-3-jlayton@kernel.org>
-	 <20230830001917.GC461907@ZenIV>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rc9RZ6DL2z3bTj
+	for <linux-erofs@lists.ozlabs.org>; Fri,  1 Sep 2023 04:58:32 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R501e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vqz0VNO_1693508300;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vqz0VNO_1693508300)
+          by smtp.aliyun-inc.com;
+          Fri, 01 Sep 2023 02:58:26 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: lib: support importing xattrs for tarerofs
+Date: Fri,  1 Sep 2023 02:58:19 +0800
+Message-Id: <20230831185819.98592-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
-X-Mailman-Approved-At: Fri, 01 Sep 2023 02:38:00 +1000
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,39 +39,263 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: lucho@ionkov.net, rafael@kernel.org, djwong@kernel.org, al@alarsen.net, cmllamas@google.com, andrii@kernel.org, hughd@google.com, john.johansen@canonical.com, agordeev@linux.ibm.com, hch@lst.de, hubcap@omnibond.com, pc@manguebit.com, linux-xfs@vger.kernel.org, bvanassche@acm.org, jeffxu@chromium.org, mpe@ellerman.id.au, john@keeping.me.uk, yi.zhang@huawei.com, jmorris@namei.org, christophe.leroy@csgroup.eu, code@tyhicks.com, stern@rowland.harvard.edu, borntraeger@linux.ibm.com, devel@lists.orangefs.org, mirimmad17@gmail.com, sprasad@microsoft.com, jaharkes@cs.cmu.edu, linux-um@lists.infradead.org, npiggin@gmail.com, jlbec@evilplan.org, ericvh@kernel.org, surenb@google.com, trond.myklebust@hammerspace.com, anton@tuxera.com, brauner@kernel.org, wsa+renesas@sang-engineering.com, gregkh@linuxfoundation.org, stephen.smalley.work@gmail.com, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, lsahlber@redhat.com, senozhatsky@chromium.org, arve@android.com, chuck.lever@oracle.com, s
- vens@linux.ibm.com, jolsa@kernel.org, jack@suse.com, tj@kernel.org, akpm@linux-foundation.org, linux-trace-kernel@vger.kernel.org, xu.xin16@zte.com.cn, shaggy@kernel.org, penguin-kernel@i-love.sakura.ne.jp, zohar@linux.ibm.com, linux-mm@kvack.org, joel@joelfernandes.org, edumazet@google.com, sdf@google.com, jomajm@gmail.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, paul@paul-moore.com, leon@kernel.org, john.fastabend@gmail.com, mcgrof@kernel.org, chi.minghao@zte.com.cn, codalist@coda.cs.cmu.edu, selinux@vger.kernel.org, zhangpeng362@huawei.com, quic_ugoswami@quicinc.com, yhs@fb.com, yzaikin@google.com, linkinjeon@kernel.org, mhiramat@kernel.org, ecryptfs@vger.kernel.org, tkjos@android.com, madkar@cs.stonybrook.edu, gor@linux.ibm.com, yuzhe@nfschina.com, linuxppc-dev@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, miklos@szeredi.hu, huyue2@coolpad.com, jaegeuk@kernel.org, gargaditya08@live.com, maco@android.com, hirofumi@mail.parknet.co.jp, haoluo@google.com, tony.l
- uck@intel.com, tytso@mit.edu, nico@fluxnic.net, linux-ntfs-dev@lists.sourceforge.net, muchun.song@linux.dev, roberto.sassu@huawei.com, linux-f2fs-devel@lists.sourceforge.net, yang.yang29@zte.com.cn, gpiccoli@igalia.com, ebiederm@xmission.com, anna@kernel.org, quic_uaggarwa@quicinc.com, bwarrum@linux.ibm.com, mike.kravetz@oracle.com, jingyuwang_vip@163.com, linux-efi@vger.kernel.org, error27@gmail.com, martin@omnibond.com, trix@redhat.com, ocfs2-devel@lists.linux.dev, ast@kernel.org, sebastian.reichel@collabora.com, clm@fb.com, linux-mtd@lists.infradead.org, willy@infradead.org, marc.dionne@auristor.com, linux-afs@lists.infradead.org, raven@themaw.net, naohiro.aota@wdc.com, daniel@iogearbox.net, dennis.dalessandro@cornelisnetworks.com, linux-rdma@vger.kernel.org, quic_linyyuan@quicinc.com, coda@cs.cmu.edu, slava@dubeyko.com, idryomov@gmail.com, pabeni@redhat.com, adobriyan@gmail.com, serge@hallyn.com, chengzhihao1@huawei.com, axboe@kernel.dk, amir73il@gmail.com, linuszeng@tencent.com
- , keescook@chromium.org, arnd@arndb.de, autofs@vger.kernel.org, rostedt@goodmis.org, yifeliu@cs.stonybrook.edu, dlemoal@kernel.org, eparis@parisplace.org, ceph-devel@vger.kernel.org, yijiangshan@kylinos.cn, dhowells@redhat.com, linux-nfs@vger.kernel.org, linux-ext4@vger.kernel.org, kolga@netapp.com, song@kernel.org, samba-technical@lists.samba.org, sfrench@samba.org, jk@ozlabs.org, netdev@vger.kernel.org, rpeterso@redhat.com, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, ntfs3@lists.linux.dev, linux-erofs@lists.ozlabs.org, davem@davemloft.net, jfs-discussion@lists.sourceforge.net, princekumarmaurya06@gmail.com, ebiggers@google.com, neilb@suse.de, asmadeus@codewreck.org, linux_oss@crudebyte.com, me@bobcopeland.com, kpsingh@kernel.org, okanatov@gmail.com, almaz.alexandrovich@paragon-software.com, joseph.qi@linux.alibaba.com, hayama@lineo.co.jp, adilger.kernel@dilger.ca, mikulas@artax.karlin.mff.cuni.cz, shaozhengchao@huawei.com, chenzhongjin@huawei.com, ardb@kernel.org, anton.iv
- anov@cambridgegreys.com, agruenba@redhat.com, richard@nod.at, mark@fasheh.com, shr@devkernel.io, Dai.Ngo@oracle.com, cluster-devel@redhat.com, jgg@ziepe.ca, kuba@kernel.org, riel@surriel.com, salah.triki@gmail.com, dushistov@mail.ru, linux-cifs@vger.kernel.org, hca@linux.ibm.com, apparmor@lists.ubuntu.com, josef@toxicpanda.com, Liam.Howlett@oracle.com, tom@talpey.com, hdegoede@redhat.com, linux-hardening@vger.kernel.org, aivazian.tigran@gmail.com, dchinner@redhat.com, dsterba@suse.com, xiubli@redhat.com, konishi.ryusuke@gmail.com, jgross@suse.com, jth@kernel.org, rituagar@linux.ibm.com, luisbg@kernel.org, martin.lau@linux.dev, v9fs@lists.linux.dev, fmdefrancesco@gmail.com, linux-unionfs@vger.kernel.org, lrh2000@pku.edu.cn, linux-security-module@vger.kernel.org, ezk@cs.stonybrook.edu, linux@treblig.org, hannes@cmpxchg.org, phillip@squashfs.org.uk, johannes@sipsolutions.net, sj1557.seo@samsung.com, dwmw2@infradead.org, linux-karma-devel@lists.sourceforge.net, linux-btrfs@vger.kernel.o
- rg
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, 2023-08-30 at 01:19 +0100, Al Viro wrote:
-> On Wed, Jul 05, 2023 at 02:58:11PM -0400, Jeff Layton wrote:
->=20
-> > + * POSIX mandates that the old and new parent directories have their c=
-time and
-> > + * mtime updated, and that inodes of @old_dentry and @new_dentry (if a=
-ny), have
-> > + * their ctime updated.
->=20
-> APPLICATION USAGE
-> Some implementations mark for update the last file status change timestam=
-p
-> of renamed files and some do not. Applications which make use of the
-> last file status change timestamp may behave differently with respect
-> to renamed files unless they are designed to allow for either behavior.
->
-> So for children POSIX permits rather than mandates.  Doesn't really matte=
-r;
-> Linux behaviour had been to touch ctime on children since way back, if
-> not since the very beginning.
+`SCHILY.xattr.attr` indicates a POSIX.1-2001 coded version of the
+Linux extended attributes.  Let's dump such xattrs to erofs images.
 
-Mea culpa. You're quite correct. I'll plan to roll a small patch to
-update the comment over this function.
+In addition, `LIBARCHIVE.xattr` is also supported, which uses
+URL-Encoding instead of the binary form.
 
-Thanks!
---=20
-Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ include/erofs/tar.h |   1 +
+ lib/tar.c           | 169 ++++++++++++++++++++++++++++++++++++++++++--
+ mkfs/main.c         |   4 +-
+ 3 files changed, 169 insertions(+), 5 deletions(-)
+
+diff --git a/include/erofs/tar.h b/include/erofs/tar.h
+index d5648f6..b50db1d 100644
+--- a/include/erofs/tar.h
++++ b/include/erofs/tar.h
+@@ -13,6 +13,7 @@ extern "C"
+ 
+ struct erofs_pax_header {
+ 	struct stat st;
++	struct list_head xattrs;
+ 	bool use_mtime;
+ 	bool use_size;
+ 	bool use_uid;
+diff --git a/lib/tar.c b/lib/tar.c
+index 328ab98..c2fd07b 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -235,6 +235,131 @@ static struct erofs_dentry *tarerofs_get_dentry(struct erofs_inode *pwd, char *p
+ 	return d;
+ }
+ 
++struct tarerofs_xattr_item {
++	struct list_head list;
++	char *kv;
++	unsigned int len, namelen;
++};
++
++int tarerofs_insert_xattr(struct list_head *xattrs,
++			  char *kv, int namelen, int len, bool skip)
++{
++	struct tarerofs_xattr_item *item;
++	char *nv;
++
++	DBG_BUGON(namelen >= len);
++	list_for_each_entry(item, xattrs, list) {
++		if (!strncmp(item->kv, kv, namelen + 1)) {
++			if (skip)
++				return 0;
++			goto found;
++		}
++	}
++
++	item = malloc(sizeof(*item));
++	if (!item)
++		return -ENOMEM;
++	item->kv = NULL;
++	item->namelen = namelen;
++	namelen = 0;
++	list_add_tail(&item->list, xattrs);
++found:
++	nv = realloc(item->kv, len);
++	if (!nv)
++		return -ENOMEM;
++	item->kv = nv;
++	item->len = len;
++	memcpy(nv + namelen, kv + namelen, len - namelen);
++	return 0;
++}
++
++int tarerofs_merge_xattrs(struct list_head *dst, struct list_head *src)
++{
++	struct tarerofs_xattr_item *item;
++
++	list_for_each_entry(item, src, list) {
++		int ret;
++
++		ret = tarerofs_insert_xattr(dst, item->kv, item->namelen,
++					    item->len, true);
++		if (ret)
++			return ret;
++	}
++	return 0;
++}
++
++void tarerofs_remove_xattrs(struct list_head *xattrs)
++{
++	struct tarerofs_xattr_item *item, *n;
++
++	list_for_each_entry_safe(item, n, xattrs, list) {
++		DBG_BUGON(!item->kv);
++		free(item->kv);
++		list_del(&item->list);
++		free(item);
++	}
++}
++
++int tarerofs_apply_xattrs(struct erofs_inode *inode, struct list_head *xattrs)
++{
++	struct tarerofs_xattr_item *item;
++	int ret;
++
++	list_for_each_entry(item, xattrs, list) {
++		const char *v = item->kv + item->namelen + 1;
++		unsigned int vsz = item->len - item->namelen - 1;
++
++		if (item->len <= item->namelen - 1) {
++			DBG_BUGON(item->len < item->namelen - 1);
++			continue;
++		}
++		item->kv[item->namelen] = '\0';
++		erofs_dbg("Recording xattr(%s)=%s to file %s", item->kv, v,
++			  inode->i_srcpath);
++		ret = erofs_setxattr(inode, item->kv, v, vsz);
++		if (ret == -ENODATA)
++			erofs_err("Failed to set xattr(%s)=%s to file %s",
++				  item->kv, v, inode->i_srcpath);
++		else if (ret)
++			return ret;
++	}
++	return 0;
++}
++
++static const char lookup_table[65] =
++	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+,";
++
++static int base64_decode(const char *src, int len, u8 *dst)
++{
++	int i, bits = 0, ac = 0;
++	const char *p;
++	u8 *cp = dst;
++
++	if(!(len % 4)) {
++		/* Check for and ignore any end padding */
++		if (src[len - 2] == '=' && src[len - 1] == '=')
++			len -= 2;
++		else if (src[len - 1] == '=')
++			--len;
++	}
++
++	for (i = 0; i < len; i++) {
++		p = strchr(lookup_table, src[i]);
++		if (p == NULL || src[i] == 0)
++			return -2;
++		ac += (p - lookup_table) << bits;
++		bits += 6;
++		if (bits >= 8) {
++			*cp++ = ac & 0xff;
++			ac >>= 8;
++			bits -= 8;
++		}
++	}
++	if (ac)
++		return -1;
++	return cp - dst;
++}
++
+ int tarerofs_parse_pax_header(int fd, struct erofs_pax_header *eh, u32 size)
+ {
+ 	char *buf, *p;
+@@ -260,6 +385,7 @@ int tarerofs_parse_pax_header(int fd, struct erofs_pax_header *eh, u32 size)
+ 		}
+ 		kv = p + n;
+ 		p += len;
++		len -= n;
+ 
+ 		if (p[-1] != '\n') {
+ 			ret = -EIO;
+@@ -330,6 +456,32 @@ int tarerofs_parse_pax_header(int fd, struct erofs_pax_header *eh, u32 size)
+ 				}
+ 				eh->st.st_gid = lln;
+ 				eh->use_gid = true;
++			} else if (!strncmp(kv, "SCHILY.xattr.",
++				   sizeof("SCHILY.xattr.") - 1)) {
++				char *key = kv + sizeof("SCHILY.xattr.") - 1;
++
++				ret = tarerofs_insert_xattr(&eh->xattrs, key,
++						value - key - 1, len, false);
++				if (ret)
++					goto out;
++			} else if (!strncmp(kv, "LIBARCHIVE.xattr.",
++				   sizeof("LIBARCHIVE.xattr.") - 1)) {
++				char *key;
++				key = kv + sizeof("LIBARCHIVE.xattr.") - 1;
++
++				len -= (kv[len - 1] == '\0');
++				ret = base64_decode(value, len - (value - kv),
++						    (u8 *)value);
++				if (ret < 0) {
++					ret = -EFSCORRUPTED;
++					goto out;
++				}
++
++				ret = tarerofs_insert_xattr(&eh->xattrs, key,
++						value - key - 1,
++						value - key + ret, false);
++				if (ret)
++					goto out;
+ 			} else {
+ 				erofs_info("unrecognized pax keyword \"%s\", ignoring", kv);
+ 			}
+@@ -416,6 +568,7 @@ int tarerofs_parse_tar(struct erofs_inode *root, struct erofs_tarfile *tar)
+ 		eh.path = strdup(eh.path);
+ 	if (eh.link)
+ 		eh.link = strdup(eh.link);
++	init_list_head(&eh.xattrs);
+ 
+ restart:
+ 	rem = tar->offset & 511;
+@@ -723,15 +876,23 @@ new_inode:
+ 			}
+ 		}
+ 		inode->i_nlink++;
+-		ret = 0;
+-	} else if (!inode->i_nlink)
++	} else if (!inode->i_nlink) {
+ 		ret = erofs_init_empty_dir(inode);
+-	else
+-		ret = 0;
++		if (ret)
++			goto out;
++	}
++
++	ret = tarerofs_merge_xattrs(&eh.xattrs, &tar->global.xattrs);
++	if (ret)
++		goto out;
++
++	ret = tarerofs_apply_xattrs(inode, &eh.xattrs);
++
+ out:
+ 	if (eh.path != path)
+ 		free(eh.path);
+ 	free(eh.link);
++	tarerofs_remove_xattrs(&eh.xattrs);
+ 	return ret;
+ 
+ invalid_tar:
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 972d56c..c9ef134 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -133,7 +133,9 @@ static void usage(void)
+ }
+ 
+ static unsigned int pclustersize_packed, pclustersize_max;
+-static struct erofs_tarfile erofstar;
++static struct erofs_tarfile erofstar = {
++	.global.xattrs = LIST_HEAD_INIT(erofstar.global.xattrs)
++};
+ static bool tar_mode;
+ 
+ static int parse_extended_opts(const char *opts)
+-- 
+2.24.4
+
