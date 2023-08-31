@@ -2,38 +2,63 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F93078E6E9
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 08:59:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5325678E97C
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 11:34:04 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=bggoKpyh;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RbsVG32H9z30fk
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 16:59:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rbww92q5gz30fF
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Aug 2023 19:34:01 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20221208 header.b=bggoKpyh;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::52b; helo=mail-pg1-x52b.google.com; envelope-from=daan.j.demeyer@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RbsV65RPNz2yVR
-	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 16:59:40 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VqxItNL_1693465173;
-Received: from 30.97.49.22(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VqxItNL_1693465173)
-          by smtp.aliyun-inc.com;
-          Thu, 31 Aug 2023 14:59:34 +0800
-Message-ID: <3ad8b469-25db-a297-21f9-75db2d6ad224@linux.alibaba.com>
-Date: Thu, 31 Aug 2023 14:59:31 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rbww55F0zz2xjw
+	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 19:33:55 +1000 (AEST)
+Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-5654051b27fso492666a12.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 31 Aug 2023 02:33:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693474430; x=1694079230; darn=lists.ozlabs.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EmRkytoPf6VSmePcIhOH4M8AeHVJLU+nnd218jpJ1BA=;
+        b=bggoKpyhSy0meQLoMUsy5ftC6xyWF0L5gWMO5EyTeiqkliW/0c5L1KFiTMHVQKOlKo
+         qCeXMgwcOTRdnxJuLyEFOL1dGwKd+zgNzSEs+dgvxVAh/YwEimz/tRruYxacMlINNqzU
+         0TTYhxqL1mQhDzXPpXHhsitOowA8S2Wckp/cLm8WHttgt5EdIQuK8Aw2feBdutk/17kp
+         p7d2N7o7ePlzjS820C9Br64Rpud/rFg4LsZe4IkzZCL6YrPcLYdd8rk/v46vrq3uH6X2
+         /KVMBz1chy7nlYArRErmGKaKYgZlxzjTBV7Luia+qxULE98g7KhQv5lgrKvVNALp25wr
+         PKTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693474430; x=1694079230;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EmRkytoPf6VSmePcIhOH4M8AeHVJLU+nnd218jpJ1BA=;
+        b=e98GsN3milUpYqtxuxoVWrooGfvOwQqTmVsPQAHyrcz6bFxgmKWiABYp82nWHyHF/D
+         Bey200vuFTzCeeNXDekVyJB83srWG87rEz3u4WS020ipu71KxomlhkvQeW4/R8kr7O2a
+         6cGoqwnz77mPB0SQ3XHnLm7FYFuWB1gpo641qGMwSYUpPQ1jkZZjjKI86mdz4GgKTkRA
+         t3rSpvXWvZyQMXDTZKZMs6pCcD3KMIP1T6kd+lGWCum+VLlgL7Rpor8gEHuQu4V4lap5
+         Y+jmkfTTC+R/SGQWdSp3/ZEBRP7GbF//ANAiHZCuDxA0JXdeGiwetaaIAGLTM5w7DUeN
+         AZuQ==
+X-Gm-Message-State: AOJu0YzOJzFjqlSWGOAbc25mFIHQbFOWQsANAN9MTBfb29INIJPR4C8x
+	nWZDgkstREdXrQyFPnzyJxUkO+kClPyuFOPF07217bS5EIYGiaoJ
+X-Google-Smtp-Source: AGHT+IF4G1UNCk87B4seTdAg0W7GMy44Cy6rFQsVReZvcKAIA8/t1VqTRK1ee9d6B+KOyUBzx2IVafgQZV546O4uuyc=
+X-Received: by 2002:a17:90a:f18f:b0:26b:4e59:57e7 with SMTP id
+ bv15-20020a17090af18f00b0026b4e5957e7mr4401639pjb.43.1693474430444; Thu, 31
+ Aug 2023 02:33:50 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: EROFS sometimes not filling tail page with zeroes
-To: keltargw <keltar.gw@gmail.com>
-References: <CALFUNyn18RW6xx4KAuqexRYw=zezMQf=yy9-XN+_FOmaGjmgDA@mail.gmail.com>
- <8ff7509a-610a-bdcf-4163-31d2c0e24514@linux.alibaba.com>
- <CALFUNymd3kTVLKR8xBYa1BvDeEu=jmTagSzV7xe0x0gsFg_Uog@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CALFUNymd3kTVLKR8xBYa1BvDeEu=jmTagSzV7xe0x0gsFg_Uog@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Daan De Meyer <daan.j.demeyer@gmail.com>
+Date: Thu, 31 Aug 2023 11:33:39 +0200
+Message-ID: <CAO8sHcmZZORnrJXA=QzmGkYNkNWn7M+amAK_DZ19-WL4kLUvpw@mail.gmail.com>
+Subject: Optimizing write_uncompressed_file_from_fd()
+To: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="000000000000dce762060434bd6a"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -45,113 +70,42 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-(+cc erofs mailing list)
+--000000000000dce762060434bd6a
+Content-Type: text/plain; charset="UTF-8"
 
-On 2023/8/31 14:32, keltargw wrote:
-> My test program is this:
-> 
-> #include <stdio.h>
-> #include <fcntl.h>
-> #include <sys/types.h>
-> #include <sys/stat.h>
-> #include <unistd.h>
-> #include <sys/io.h>
-> #include <sys/mman.h>
-> 
-> int main(int argc, char const *argv[])
-> {
->      unsigned char *f;
->      int size;
->      struct stat s;
->      const char * file_name = argv[1];
->      int fd = open (argv[1], O_RDONLY);
->      if(!fd) {
->          return 0;
->      }
-> 
->      int status = fstat (fd, & s);
->      size = s.st_size;
->      if(!(s.st_mode & S_IFREG)) {
->          return 0;
->      }
-> 
->      f = (char *) mmap (0, size, PROT_READ, MAP_PRIVATE, fd, 0);
->      if(!f) {
->          return 0;
->      }
-> #if 0
->      for(int i = 0; i < 128; ++i) {
->          fprintf(stderr, "%x(%c) ", f[size+i-64], f[size+i-64]);
->      }
->      fprintf(stderr, "\n");
-> #endif
->      if(size % 4096 && f[size] != 0) {
->          fprintf(stderr, "%s failure\n", argv[1]);
->          return 1;
->      }
-> 
->      return 0;
-> }
-> 
-> 
-> I run it on known "wrong" files, or via `finderofs_mount_point -type f -exec ./mmap_test {} \;` for the entire file system.
-> 
-> The patch you suggested seems to fix the issue, it is no longer reproducible or any file.
+Hi,
 
-Actually I think this issue was fixed in commit e4c1cf523d82
-("erofs: tidy up z_erofs_do_read_page()") by accident:
+For hacking on systemd, we build disk images using mkosi, and use an erofs
+filesystem for the /usr directory. When hacking on systemd, we would like
+to be able to rebuild the disk image as fast as possible. One part of
+rebuilding the image that takes a while is generating the erofs filesystem.
+I had a look at the mkfs source code for erofs and noticed that in
+write_uncompressed_file_from_fd(), there is no usage of FICLONERANGE or
+copy_file_range() to speed up copying data from the filesystem to the erofs
+filesystem. Would it be possible to use either of these to make copying
+data in mkfs.erofs faster when the data does not need to be compressed?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git/commit/?id=e4c1cf523d820730a86cae2c6d55924833b6f7ac
+Cheers,
 
-So it seems that it will be fixed in v6.6-rc1.
+Daan De Meyer
 
-Let me find a way to backport this partial part to old LTS
-kernels.
+--000000000000dce762060434bd6a
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Gao Xiang
+<div dir=3D"ltr"><div>Hi,</div><div><br></div><div>For hacking on systemd, =
+we build disk images using mkosi, and use an erofs filesystem for the /usr =
+directory. When hacking on systemd, we would like to be able to rebuild the=
+ disk image as fast as possible. One part of rebuilding the image that take=
+s a while is generating the erofs filesystem. I had a look at the mkfs sour=
+ce code for erofs and noticed that in <br>write_uncompressed_file_from_fd()=
+, there is no usage of FICLONERANGE or copy_file_range() to speed up copyin=
+g data from the filesystem to the erofs filesystem. Would it be possible to=
+ use either of these to make copying data in mkfs.erofs faster when the dat=
+a does not need to be compressed?</div><div><br></div><div>Cheers,</div><di=
+v><br></div><div>Daan De Meyer<br></div></div>
 
-> 
-> Thanks!
-> 
-> 
-> On Thu, 31 Aug 2023 at 05:06, Gao Xiang <hsiangkao@linux.alibaba.com <mailto:hsiangkao@linux.alibaba.com>> wrote:
-> 
->     Hi,
-> 
->     On 2023/8/30 18:24, keltargw wrote:
->      > Hello. I'm not sure if you're the right person to ask this about, I noticed most of erofs commits are done by you. I noticed problematic behaviour of EROFS driver with LZ4 compression enabled: on some files, if I do mmap(), the tail of the last page (after file ends) is not filled with zeroes but contains something gabage-like. This breaks e.g. clang-cpp as it uses mmap extensively, if headers are stored in lz4-compressed erofs. In my observations, it happens if file is lz4 compressed but last segment (not sure what terminology is used there) is not. It happens all the times on e.g. `/usr/include/stdlib.h` and `/usr/include/wchar.h`, as well as `/usr/include/linux/fs.h` (but on this file it is triggered a bit differently), and many other files. In my test I packed my entire system to lz4hc erofs (different lz4 options trigger problem on different files) and mounted it to subdirectory, but I could reproduce it on different distros and on latest 6.5 kernel. It is not
->      > reproducible on uncompressed erofs.
->      > I've deduced the problem to this small patch, but while it fixes the problem it doesn't look like it is the best place to do zeroing. Could you take a look at it please?
-> 
->     I think it may have the issue but do you have some simple
->     mmap reproducer for me to try if any?  Otherwise, I have
->     to write a reproducer myself.
-> 
->      >
->      > If this is not appropriate way to communicate or I should've asked a different person, could you please direct me the right way?
-> 
->     Nope, I will check the issue.  Could you check if the
->     following diff fixes your problem:
-> 
->     diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
->     index de4f12152b62..9c9350eb1704 100644
->     --- a/fs/erofs/zdata.c
->     +++ b/fs/erofs/zdata.c
->     @@ -1038,6 +1038,8 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
->              cur = end - min_t(erofs_off_t, offset + end - map->m_la, end);
->              if (!(map->m_flags & EROFS_MAP_MAPPED)) {
->                      zero_user_segment(page, cur, end);
->     +               ++spiltted;
->     +               tight = false;
->                      goto next_part;
->              }
->              if (map->m_flags & EROFS_MAP_FRAGMENT) {
-> 
->     Thanks,
->     Gao Xiang
-> 
+--000000000000dce762060434bd6a--
