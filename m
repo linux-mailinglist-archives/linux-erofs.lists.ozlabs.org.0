@@ -2,33 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B130378FB64
-	for <lists+linux-erofs@lfdr.de>; Fri,  1 Sep 2023 11:47:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B3A4A790048
+	for <lists+linux-erofs@lfdr.de>; Fri,  1 Sep 2023 17:59:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RcY9b4gTNz3bV2
-	for <lists+linux-erofs@lfdr.de>; Fri,  1 Sep 2023 19:47:47 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RcjR14p9Nz3c2K
+	for <lists+linux-erofs@lfdr.de>; Sat,  2 Sep 2023 01:59:57 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RcY936s4Lz3byW
-	for <linux-erofs@lists.ozlabs.org>; Fri,  1 Sep 2023 19:47:19 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vr5QuC3_1693561634;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vr5QuC3_1693561634)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RcjQw41rRz2ytJ
+	for <linux-erofs@lists.ozlabs.org>; Sat,  2 Sep 2023 01:59:51 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vr6FLdT_1693583974;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vr6FLdT_1693583974)
           by smtp.aliyun-inc.com;
-          Fri, 01 Sep 2023 17:47:15 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: hsiangkao@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v5 8/8] erofs-utils: mkfs: add --keep-whiteout option for tarfs and rebuild mode
-Date: Fri,  1 Sep 2023 17:47:06 +0800
-Message-Id: <20230901094706.27539-9-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
-In-Reply-To: <20230901094706.27539-1-jefflexu@linux.alibaba.com>
-References: <20230901094706.27539-1-jefflexu@linux.alibaba.com>
+          Fri, 01 Sep 2023 23:59:43 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: bail out properly if erofs_iget_from_path(root) fails
+Date: Fri,  1 Sep 2023 23:59:32 +0800
+Message-Id: <20230901155932.105830-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.24.4
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -42,152 +39,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add "--keep-whiteout=[0|1]" option for tarfs and rebuild mode,
-controlling whether whiteout files are kept in the generated image.
+Or "Segmentation fault" can happen if errors are passed into
+erofs_igrab().
 
-This option is enabled by default for both tarfs and rebuild mode, i.e.
-as if "--keep-whiteout=1" is specified by default.
-
-To hide whiteout files, specify "--keep-whiteout=0" explicitly.
-
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Fixes: 21d84349e79a ("erofs-utils: rearrange on-disk metadata")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/config.h   |  1 +
- include/erofs/internal.h |  2 ++
- lib/config.c             |  1 +
- lib/inode.c              | 17 +++++++++++++++--
- lib/tar.c                |  2 --
- mkfs/main.c              | 12 ++++++++++++
- 6 files changed, 31 insertions(+), 4 deletions(-)
+ lib/inode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index c51f0cd..bea46a0 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -54,6 +54,7 @@ struct erofs_configure {
- 	bool c_showprogress;
- 	bool c_extra_ea_name_prefixes;
- 	bool c_xattr_name_filter;
-+	bool c_keep_whiteout;
- 
- #ifdef HAVE_LIBSELINUX
- 	struct selabel_handle *sehnd;
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index fcc0710..2fe7c44 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -427,6 +427,8 @@ static inline u32 erofs_crc32c(u32 crc, const u8 *in, size_t len)
- 	return crc;
- }
- 
-+#define EROFS_WHITEOUT_DEV	0
-+
- #ifdef __cplusplus
- }
- #endif
-diff --git a/lib/config.c b/lib/config.c
-index a3235c8..ae24a17 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -33,6 +33,7 @@ void erofs_init_configure(void)
- 	cfg.c_pclusterblks_max = 1;
- 	cfg.c_pclusterblks_def = 1;
- 	cfg.c_max_decompressed_extent_bytes = -1;
-+	cfg.c_keep_whiteout = true;
- }
- 
- void erofs_show_config(void)
 diff --git a/lib/inode.c b/lib/inode.c
-index f71a6ab..5ba87ad 100644
+index 85eacab..a3a643f 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
-@@ -1323,9 +1323,14 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name)
- 	return inode;
- }
+@@ -1228,10 +1228,11 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
+ 	LIST_HEAD(dirs);
+ 	struct erofs_inode *inode, *root, *parent;
  
-+static bool erofs_inode_is_whiteout(struct erofs_inode *inode)
-+{
-+	return S_ISCHR(inode->i_mode) && inode->u.i_rdev == EROFS_WHITEOUT_DEV;
-+}
-+
- int erofs_rebuild_dump_tree(struct erofs_inode *dir)
- {
--	struct erofs_dentry *d;
-+	struct erofs_dentry *d, *n;
- 	unsigned int nr_subdirs;
- 	int ret;
+-	root = erofs_igrab(erofs_iget_from_path(path, true));
++	root = erofs_iget_from_path(path, true);
+ 	if (IS_ERR(root))
+ 		return root;
  
-@@ -1369,8 +1374,16 @@ int erofs_rebuild_dump_tree(struct erofs_inode *dir)
- 	}
- 
- 	nr_subdirs = 0;
--	list_for_each_entry(d, &dir->i_subdirs, d_child)
-+	list_for_each_entry_safe(d, n, &dir->i_subdirs, d_child) {
-+		if (!cfg.c_keep_whiteout && erofs_inode_is_whiteout(d->inode)) {
-+			erofs_dbg("skip whiteout %s", d->inode->i_srcpath);
-+			list_del(&d->d_child);
-+			erofs_d_invalidate(d);
-+			free(d);
-+			continue;
-+		}
- 		++nr_subdirs;
-+	}
- 
- 	ret = erofs_prepare_dir_layout(dir, nr_subdirs);
- 	if (ret)
-diff --git a/lib/tar.c b/lib/tar.c
-index e0fe2a2..8cb392c 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -13,8 +13,6 @@
- #include "erofs/blobchunk.h"
- #include "erofs/rebuild.h"
- 
--#define EROFS_WHITEOUT_DEV	0
--
- static char erofs_libbuf[16384];
- 
- struct tar_header {
-diff --git a/mkfs/main.c b/mkfs/main.c
-index e296ea4..ba1406d 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -57,6 +57,7 @@ static struct option long_options[] = {
- 	{"gid-offset", required_argument, NULL, 17},
- 	{"tar", optional_argument, NULL, 20},
- 	{"aufs", no_argument, NULL, 21},
-+	{"keep-whiteout", required_argument, NULL, 22},
- 	{"mount-point", required_argument, NULL, 512},
- 	{"xattr-prefix", required_argument, NULL, 19},
- #ifdef WITH_ANDROID
-@@ -121,6 +122,7 @@ static void usage(void)
- 	      " --preserve-mtime      keep per-file modification time strictly\n"
- 	      " --aufs                replace aufs special files with overlayfs metadata\n"
- 	      " --tar=[fi]            generate an image from tarball(s)\n"
-+	      " --keep-whiteout=[01]  keep whiteout in tarfs or rebuild mode\n"
- 	      " --quiet               quiet execution (do not write anything to standard output.)\n"
- #ifndef NDEBUG
- 	      " --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
-@@ -538,6 +540,16 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		case 21:
- 			erofstar.aufs = true;
- 			break;
-+		case 22:
-+			if (!strcmp(optarg, "0"))
-+				cfg.c_keep_whiteout = false;
-+			else if (!strcmp(optarg, "1"))
-+				cfg.c_keep_whiteout = true;
-+			else {
-+				erofs_err("invalid keep-whiteout %s", optarg);
-+				return -EINVAL;
-+			}
-+			break;
- 		case 1:
- 			usage();
- 			exit(0);
++	(void)erofs_igrab(root);
+ 	root->i_parent = root;	/* rootdir mark */
+ 	root->subdirs_queued = 1;
+ 	list_add(&root->i_subdirs, &dirs);
 -- 
-2.19.1.6.gb485710b
+2.24.4
 
