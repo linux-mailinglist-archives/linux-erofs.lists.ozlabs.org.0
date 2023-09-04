@@ -1,56 +1,59 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D565B7916FF
-	for <lists+linux-erofs@lfdr.de>; Mon,  4 Sep 2023 14:18:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1693829929;
-	bh=nWkM5E8aVFjTpHfmPewiJjdmneSbNCZBSReAtLpqW1Q=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
-	 From;
-	b=Wevnr4FlkuZtqeOcjK2bSFLF9+mq8+y96Gw3+hU9/2NtIAhEZB7wp+K7riB52Pzud
-	 bt1k4FjsCZb1Tg5HryrhdAjfMlC/ui9R0HAH9zMk+2Q0bbgB/5idyHn8r0XAEQ3MG1
-	 CxJ7BvCpjWL35patDQfwUrV7YlkT0Qy6cFOlcOUIVwdAZAU87Q8KZK6fkMrnY146Vw
-	 DwUVomBy8QvlvfD+lc1S8oaFotWLcYDr/lBdX215cH6jzL7XVE0i+t5oBgqYzcsLbo
-	 QGZKKWgGkZuo69XKodpSVJN2y5CCvhm1CkmoZ/D/zeMbAtGoAwpvtDIL3wi3Dqi7cR
-	 FPxjkJHIpZW9w==
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 75909791CB6
+	for <lists+linux-erofs@lfdr.de>; Mon,  4 Sep 2023 20:20:09 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=K3gkbkhJ;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RfSNT1B8wz3bV7
-	for <lists+linux-erofs@lfdr.de>; Mon,  4 Sep 2023 22:18:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RfcPM0N8Vz3bWy
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Sep 2023 04:20:07 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=guoxuenan@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=K3gkbkhJ;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=patchwork-bot+f2fs@kernel.org; receiver=lists.ozlabs.org)
+X-Greylist: delayed 526 seconds by postgrey-1.37 at boromir; Tue, 05 Sep 2023 04:20:02 AEST
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RfSNL4knXz2xwD
-	for <linux-erofs@lists.ozlabs.org>; Mon,  4 Sep 2023 22:18:38 +1000 (AEST)
-Received: from kwepemi500019.china.huawei.com (unknown [172.30.72.53])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RfSHv2NdfzNn2D;
-	Mon,  4 Sep 2023 20:14:51 +0800 (CST)
-Received: from [10.174.177.238] (10.174.177.238) by
- kwepemi500019.china.huawei.com (7.221.188.117) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.31; Mon, 4 Sep 2023 20:18:30 +0800
-Message-ID: <e8d63bd1-c5cd-cef1-fd34-95ded77abc58@huawei.com>
-Date: Mon, 4 Sep 2023 20:18:29 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RfcPG1wJfz2yVg
+	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Sep 2023 04:20:02 +1000 (AEST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by sin.source.kernel.org (Postfix) with ESMTPS id 9BE26CE0F96;
+	Mon,  4 Sep 2023 18:11:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CC393C433CA;
+	Mon,  4 Sep 2023 18:11:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1693851068;
+	bh=KWuluqFF5yFV+lOCkFnoct0phRXw96Jca/CuZaTU2kY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=K3gkbkhJRwgpsacHeBsq0A7kucjUSGo8OzMP1ouPw/XPyf9sD5QK/Sf142+usc7ZE
+	 C827H7oMTO9xQURopm4EWqGoFioLBjSEY4gmbRDnvHI4L+ywXrxJRVy5ldQmRaAtfj
+	 1pffFi8IArgTV4dPuYUPdlhMXVuT7Hb/6kEuD4lj+4NJdrul8tjUb9OXjEUjpGn+jT
+	 2ndFdt5oPLx5wHtLQ20DiaB9Xl09djxp9OA/4zW9QgSOHR3JDKxABg9kMIgFr5Ox62
+	 wqlEdaiOf1aM8ubxkjKV3yvjnRyA83mc2npN6NfYoiPdtaZLbxGvWm4TgDkfWkglX8
+	 L2qkw/qB1Voxg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A2BE4C04E26;
+	Mon,  4 Sep 2023 18:11:08 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v2 RESEND] erofs-utils: fsck: refuse illegel filename
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
-References: <20230904095127.61351-1-hsiangkao@linux.alibaba.com>
- <20230904095311.65096-1-hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230904095311.65096-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.238]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500019.china.huawei.com (7.221.188.117)
-X-CFilter-Loop: Reflected
+Subject: Re: [f2fs-dev] [PATCH v7 00/13] fs: implement multigrain timestamps
+From: patchwork-bot+f2fs@kernel.org
+Message-Id:  <169385106866.19669.14483196627780303129.git-patchwork-notify@kernel.org>
+Date: Mon, 04 Sep 2023 18:11:08 +0000
+References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
+In-Reply-To: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,81 +65,60 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Guo Xuenan via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Guo Xuenan <guoxuenan@huawei.com>
+Cc: lucho@ionkov.net, martin@omnibond.com, almaz.alexandrovich@paragon-software.com, jack@suse.cz, linux-xfs@vger.kernel.org, djwong@kernel.org, asmadeus@codewreck.org, linux_oss@crudebyte.com, ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org, dhowells@redhat.com, clm@fb.com, adilger.kernel@dilger.ca, hdegoede@redhat.com, marc.dionne@auristor.com, codalist@coda.cs.cmu.edu, linux-afs@lists.infradead.org, hubcap@omnibond.com, pc@manguebit.com, linux-cifs@vger.kernel.org, ericvh@kernel.org, agruenba@redhat.com, miklos@szeredi.hu, richard@nod.at, mark@fasheh.com, hughd@google.com, bcodding@redhat.com, code@tyhicks.com, cluster-devel@redhat.com, coda@cs.cmu.edu, linux-mm@kvack.org, ntfs3@lists.linux.dev, idryomov@gmail.com, yzaikin@google.com, linkinjeon@kernel.org, trond.myklebust@hammerspace.com, sprasad@microsoft.com, amir73il@gmail.com, keescook@chromium.org, ocfs2-devel@lists.linux.dev, josef@toxicpanda.com, tom@talpey.com, tj@kernel.org, huyue2@coolpad.com, viro@zeniv.linux.o
+ rg.uk, ronniesahlberg@gmail.com, dsterba@suse.com, jaegeuk@kernel.org, ceph-devel@vger.kernel.org, xiubli@redhat.com, hirofumi@mail.parknet.co.jp, jaharkes@cs.cmu.edu, brauner@kernel.org, linux-ext4@vger.kernel.org, tytso@mit.edu, joseph.qi@linux.alibaba.com, gregkh@linuxfoundation.org, v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org, samba-technical@lists.samba.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, sfrench@samba.org, senozhatsky@chromium.org, mcgrof@kernel.org, devel@lists.orangefs.org, anna@kernel.org, jack@suse.com, rpeterso@redhat.com, linux-mtd@lists.infradead.org, akpm@linux-foundation.org, sj1557.seo@samsung.com, linux-erofs@lists.ozlabs.org, linux-nfs@vger.kernel.org, linux-btrfs@vger.kernel.org, jlbec@evilplan.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Xiang,
-On 2023/9/4 17:53, Gao Xiang wrote:
-> From: Guo Xuenan <guoxuenan@huawei.com>
->
-> In some crafted erofs images, fsck.erofs may write outside the
-> destination directory, which may be used to do some dangerous things.
->
-> This commit fixes by checking all directory entry names with a '/'
-> character when fscking.  Squashfs also met the same situation [1],
-> and have already fixed it here [2].
->
-> [1] https://github.com/plougher/squashfs-tools/issues/72
-> [2] https://github.com/plougher/squashfs-tools/commit/79b5a555058eef4e1e7ff220c344d39f8cd09646
-> Fixes: 412c8f908132 ("erofs-utils: fsck: add --extract=X support to extract to path X")
-> Signed-off-by: Guo Xuenan <guoxuenan@huawei.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> ---
-> v1: https://lore.kernel.org/r/20230531072612.2643983-2-guoxuenan@huawei.com
->
-> changes since v1:
->   - check this only if fsck is enabled (extraction and fsck is impacted);
->
->   - don't treat the middle '\0' as an illegel name since such cases are
->     actually reserved and can be handled properly.
->
->   lib/dir.c | 17 +++++++++++++++++
->   1 file changed, 17 insertions(+)
->
-> diff --git a/lib/dir.c b/lib/dir.c
-> index fff0bc0..3731f0c 100644
-> --- a/lib/dir.c
-> +++ b/lib/dir.c
-> @@ -4,6 +4,19 @@
->   #include "erofs/print.h"
->   #include "erofs/dir.h"
->   
-> +/* filename should not have a '/' in the name string */
-> +static bool erofs_validate_filename(const char *dname, int size)
-> +{
-> +	char *name = (char *)dname;
-> +
-> +	while (name - dname < size) {
-> +		if (*name == '/')
-> +			return false;
-> +		++name;
-> +	}
-> +	return true;
-> +}
-> +
->   static int traverse_dirents(struct erofs_dir_context *ctx,
->   			    void *dentry_blk, unsigned int lblk,
->   			    unsigned int next_nameoff, unsigned int maxsize,
-> @@ -102,6 +115,10 @@ static int traverse_dirents(struct erofs_dir_context *ctx,
->   				}
->   				break;
->   			}
-> +		} else if (fsck &&
-> +			   !erofs_validate_filename(de_name, de_namelen)) {
-> +			errmsg = "corrupted dirent with illegal filename";
-> +			goto out;
->   		}
->   		ret = ctx->cb(ctx);
->   		if (ret) {
-Reviewed-by： Guo Xuenan <guoxuenan@huawei.com>
+Hello:
 
-Thanks
-Xuenan
+This series was applied to jaegeuk/f2fs.git (dev)
+by Christian Brauner <brauner@kernel.org>:
 
+On Mon, 07 Aug 2023 15:38:31 -0400 you wrote:
+> The VFS always uses coarse-grained timestamps when updating the
+> ctime and mtime after a change. This has the benefit of allowing
+> filesystems to optimize away a lot metadata updates, down to around 1
+> per jiffy, even when a file is under heavy writes.
+> 
+> Unfortunately, this coarseness has always been an issue when we're
+> exporting via NFSv3, which relies on timestamps to validate caches. A
+> lot of changes can happen in a jiffy, so timestamps aren't sufficient to
+> help the client decide to invalidate the cache.
+> 
+> [...]
+
+Here is the summary with links:
+  - [f2fs-dev,v7,01/13] fs: remove silly warning from current_time
+    https://git.kernel.org/jaegeuk/f2fs/c/b3030e4f2344
+  - [f2fs-dev,v7,02/13] fs: pass the request_mask to generic_fillattr
+    https://git.kernel.org/jaegeuk/f2fs/c/0d72b92883c6
+  - [f2fs-dev,v7,03/13] fs: drop the timespec64 arg from generic_update_time
+    https://git.kernel.org/jaegeuk/f2fs/c/541d4c798a59
+  - [f2fs-dev,v7,04/13] btrfs: have it use inode_update_timestamps
+    https://git.kernel.org/jaegeuk/f2fs/c/bb7cc0a62e47
+  - [f2fs-dev,v7,05/13] fat: make fat_update_time get its own timestamp
+    (no matching commit)
+  - [f2fs-dev,v7,06/13] ubifs: have ubifs_update_time use inode_update_timestamps
+    (no matching commit)
+  - [f2fs-dev,v7,07/13] xfs: have xfs_vn_update_time gets its own timestamp
+    (no matching commit)
+  - [f2fs-dev,v7,08/13] fs: drop the timespec64 argument from update_time
+    (no matching commit)
+  - [f2fs-dev,v7,09/13] fs: add infrastructure for multigrain timestamps
+    https://git.kernel.org/jaegeuk/f2fs/c/ffb6cf19e063
+  - [f2fs-dev,v7,10/13] tmpfs: add support for multigrain timestamps
+    https://git.kernel.org/jaegeuk/f2fs/c/d48c33972916
+  - [f2fs-dev,v7,11/13] xfs: switch to multigrain timestamps
+    (no matching commit)
+  - [f2fs-dev,v7,12/13] ext4: switch to multigrain timestamps
+    https://git.kernel.org/jaegeuk/f2fs/c/0269b585868e
+  - [f2fs-dev,v7,13/13] btrfs: convert to multigrain timestamps
+    https://git.kernel.org/jaegeuk/f2fs/c/50e9ceef1d4f
+
+You are awesome, thank you!
 -- 
-Guo Xuenan [OS Kernel Lab]
------------------------------
-Email: guoxuenan@huawei.com
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
