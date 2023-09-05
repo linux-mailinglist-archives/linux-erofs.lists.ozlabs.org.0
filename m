@@ -2,30 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B62D7921C9
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Sep 2023 12:03:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E9077921CA
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Sep 2023 12:03:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rg1KT26PHz3bhp
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Sep 2023 20:03:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rg1KX27tVz301V
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Sep 2023 20:03:12 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rg1Jy64z5z3bhp
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rg1Jz29ZZz3bv2
 	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Sep 2023 20:02:42 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VrPVOvd_1693908156;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VrPVOvd_1693908156)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VrPV9f7_1693908157;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VrPV9f7_1693908157)
           by smtp.aliyun-inc.com;
-          Tue, 05 Sep 2023 18:02:37 +0800
+          Tue, 05 Sep 2023 18:02:38 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: hsiangkao@linux.alibaba.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v6 09/11] erofs-utils: lib: add erofs_inode_is_whiteout() helper
-Date: Tue,  5 Sep 2023 18:02:25 +0800
-Message-Id: <20230905100227.1072-10-jefflexu@linux.alibaba.com>
+Subject: [PATCH v6 10/11] erofs-utils: lib: set origin xattr on parent directory of whiteout
+Date: Tue,  5 Sep 2023 18:02:26 +0800
+Message-Id: <20230905100227.1072-11-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230905100227.1072-1-jefflexu@linux.alibaba.com>
 References: <20230905100227.1072-1-jefflexu@linux.alibaba.com>
@@ -45,53 +45,158 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add erofs_inode_is_whiteout() helper checking if given inode is a
-whiteout.
+Whiteouts will be exposed in the overlayfs mount if the whiteouts are
+from non-merged directory without origin xattr set on the directory.
+
+To fix this, set origin xattr (with empty value) on parent directory of
+whiteouts, marking the parent directory as copied-up to avoid exposing
+whiteouts in the overlayfs mount.
+
+To avoid setting multiple origin xattrs on the same directory when
+there are multiple whiteouts under the directory, enhance
+erofs_setxattr() so that it could skip duplicate xattrs.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- include/erofs/internal.h | 7 +++++++
- lib/tar.c                | 2 --
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ include/erofs/xattr.h |  3 ++-
+ lib/rebuild.c         |  6 ++++++
+ lib/tar.c             |  9 ++++++++-
+ lib/xattr.c           | 27 ++++++++++++++++++++++++---
+ 4 files changed, 40 insertions(+), 5 deletions(-)
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index fcc0710..5df689c 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -20,6 +20,7 @@ typedef unsigned short umode_t;
- #include "erofs_fs.h"
- #include <fcntl.h>
- #include <sys/types.h> /* for off_t definition */
-+#include <sys/stat.h> /* for S_ISCHR definition */
- #include <stdio.h>
+diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+index 9fa1ad1..62d0b8b 100644
+--- a/include/erofs/xattr.h
++++ b/include/erofs/xattr.h
+@@ -55,8 +55,9 @@ void erofs_xattr_prefixes_cleanup(struct erofs_sb_info *sbi);
+ int erofs_xattr_prefixes_init(struct erofs_sb_info *sbi);
  
- #ifndef PATH_MAX
-@@ -427,6 +428,12 @@ static inline u32 erofs_crc32c(u32 crc, const u8 *in, size_t len)
- 	return crc;
- }
+ int erofs_setxattr(struct erofs_inode *inode, char *key,
+-		   const void *value, size_t size);
++		   const void *value, size_t size, bool nodup);
+ int erofs_set_opaque_xattr(struct erofs_inode *inode);
++int erofs_set_origin_xattr(struct erofs_inode *inode);
+ int erofs_read_xattrs_from_disk(struct erofs_inode *inode);
  
-+#define EROFS_WHITEOUT_DEV	0
-+static inline bool erofs_inode_is_whiteout(struct erofs_inode *inode)
-+{
-+	return S_ISCHR(inode->i_mode) && inode->u.i_rdev == EROFS_WHITEOUT_DEV;
-+}
-+
  #ifdef __cplusplus
- }
- #endif
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+index 477d68d..b254dea 100644
+--- a/lib/rebuild.c
++++ b/lib/rebuild.c
+@@ -200,6 +200,12 @@ static int erofs_rebuild_fill_inode(struct erofs_inode *inode)
+ 
+ 	switch (inode->i_mode & S_IFMT) {
+ 	case S_IFCHR:
++		if (erofs_inode_is_whiteout(inode)) {
++			ret = erofs_set_origin_xattr(inode->i_parent);
++			if (ret)
++				break;
++		}
++		/* fallthrough */
+ 	case S_IFBLK:
+ 	case S_IFIFO:
+ 	case S_IFSOCK:
 diff --git a/lib/tar.c b/lib/tar.c
-index e0fe2a2..8cb392c 100644
+index 8cb392c..b75b723 100644
 --- a/lib/tar.c
 +++ b/lib/tar.c
-@@ -13,8 +13,6 @@
- #include "erofs/blobchunk.h"
- #include "erofs/rebuild.h"
+@@ -206,7 +206,7 @@ int tarerofs_apply_xattrs(struct erofs_inode *inode, struct list_head *xattrs)
+ 		item->kv[item->namelen] = '\0';
+ 		erofs_dbg("Recording xattr(%s)=\"%s\" (of %u bytes) to file %s",
+ 			  item->kv, v, vsz, inode->i_srcpath);
+-		ret = erofs_setxattr(inode, item->kv, v, vsz);
++		ret = erofs_setxattr(inode, item->kv, v, vsz, false);
+ 		if (ret == -ENODATA)
+ 			erofs_err("Failed to set xattr(%s)=%s to file %s",
+ 				  item->kv, v, inode->i_srcpath);
+@@ -740,6 +740,13 @@ new_inode:
+ 		inode->i_mode = (inode->i_mode & ~S_IFMT) | S_IFCHR;
+ 		inode->u.i_rdev = EROFS_WHITEOUT_DEV;
+ 		d->type = EROFS_FT_CHRDEV;
++		/*
++		 * Mark parent directory as copied-up to avoid exposing
++		 * whiteouts in the overlayfs mount.
++		 */
++		ret = erofs_set_origin_xattr(inode->i_parent);
++		if (ret)
++			goto out;
+ 	} else {
+ 		inode->i_mode = st.st_mode;
+ 		if (S_ISBLK(st.st_mode) || S_ISCHR(st.st_mode))
+diff --git a/lib/xattr.c b/lib/xattr.c
+index cc6a393..feafe96 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -57,12 +57,18 @@
+ #ifndef OVL_XATTR_OPAQUE_POSTFIX
+ #define OVL_XATTR_OPAQUE_POSTFIX "opaque"
+ #endif
++#ifndef OVL_XATTR_ORIGIN_POSTFIX
++#define OVL_XATTR_ORIGIN_POSTFIX "origin"
++#endif
+ #ifndef OVL_XATTR_TRUSTED_PREFIX
+ #define OVL_XATTR_TRUSTED_PREFIX XATTR_TRUSTED_PREFIX OVL_XATTR_NAMESPACE
+ #endif
+ #ifndef OVL_XATTR_OPAQUE
+ #define OVL_XATTR_OPAQUE OVL_XATTR_TRUSTED_PREFIX OVL_XATTR_OPAQUE_POSTFIX
+ #endif
++#ifndef OVL_XATTR_ORIGIN
++#define OVL_XATTR_ORIGIN OVL_XATTR_TRUSTED_PREFIX OVL_XATTR_ORIGIN_POSTFIX
++#endif
  
--#define EROFS_WHITEOUT_DEV	0
--
- static char erofs_libbuf[16384];
+ #define EA_HASHTABLE_BITS 16
  
- struct tar_header {
+@@ -455,11 +461,12 @@ err:
+ }
+ 
+ int erofs_setxattr(struct erofs_inode *inode, char *key,
+-		   const void *value, size_t size)
++		   const void *value, size_t size, bool nodup)
+ {
+ 	char *kvbuf;
+ 	unsigned int len[2];
+ 	struct xattr_item *item;
++	struct inode_xattr_node *node;
+ 	u8 prefix;
+ 	u16 prefixlen;
+ 
+@@ -481,12 +488,26 @@ int erofs_setxattr(struct erofs_inode *inode, char *key,
+ 	if (IS_ERR(item))
+ 		return PTR_ERR(item);
+ 
++	if (nodup) {
++		list_for_each_entry(node, &inode->i_xattrs, list) {
++			if (node->item == item) {
++				put_xattritem(item);
++				return 0;
++			}
++		}
++	}
++
+ 	return erofs_xattr_add(&inode->i_xattrs, item);
+ }
+ 
+ int erofs_set_opaque_xattr(struct erofs_inode *inode)
+ {
+-	return erofs_setxattr(inode, OVL_XATTR_OPAQUE, "y", 1);
++	return erofs_setxattr(inode, OVL_XATTR_OPAQUE, "y", 1, false);
++}
++
++int erofs_set_origin_xattr(struct erofs_inode *inode)
++{
++	return erofs_setxattr(inode, OVL_XATTR_ORIGIN, NULL, 0, true);
+ }
+ 
+ #ifdef WITH_ANDROID
+@@ -599,7 +620,7 @@ int erofs_read_xattrs_from_disk(struct erofs_inode *inode)
+ 			DBG_BUGON(ret != size);
+ 		}
+ 
+-		ret = erofs_setxattr(inode, key, value, size);
++		ret = erofs_setxattr(inode, key, value, size, false);
+ 		free(value);
+ 		if (ret)
+ 			break;
 -- 
 2.19.1.6.gb485710b
 
