@@ -2,30 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B87F7921C5
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Sep 2023 12:02:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D9A27921C6
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Sep 2023 12:03:02 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rg1KF0rfLz3c7n
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Sep 2023 20:02:57 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rg1KJ0PKCz3c89
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Sep 2023 20:03:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rg1Jt3Cklz301V
-	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Sep 2023 20:02:37 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VrPVOuS_1693908152;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VrPVOuS_1693908152)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rg1Jt4LGgz3bfK
+	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Sep 2023 20:02:38 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VrPSTng_1693908153;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0VrPSTng_1693908153)
           by smtp.aliyun-inc.com;
-          Tue, 05 Sep 2023 18:02:33 +0800
+          Tue, 05 Sep 2023 18:02:34 +0800
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 To: hsiangkao@linux.alibaba.com,
 	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v6 05/11] erofs-utils: lib: add erofs_insert_ihash() helper
-Date: Tue,  5 Sep 2023 18:02:21 +0800
-Message-Id: <20230905100227.1072-6-jefflexu@linux.alibaba.com>
+Subject: [PATCH v6 06/11] erofs-utils: lib: add erofs_rebuild_get_dentry() helper
+Date: Tue,  5 Sep 2023 18:02:22 +0800
+Message-Id: <20230905100227.1072-7-jefflexu@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20230905100227.1072-1-jefflexu@linux.alibaba.com>
 References: <20230905100227.1072-1-jefflexu@linux.alibaba.com>
@@ -45,59 +45,337 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add erofs_insert_ihash() helper inserting inode into inode hash table.
+Rename tarerofs_get_dentry() to erofs_rebuild_get_dentry().
 
-Also add prototypes of erofs_iget() and erofs_iget_by_nid() in the
-header file.
+Also make `whout` and 'opq' parameter optional when `aufs` is false.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- include/erofs/inode.h |  3 +++
- lib/inode.c           | 10 +++++++---
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ include/erofs/rebuild.h |  19 +++++++
+ lib/Makefile.am         |   3 +-
+ lib/rebuild.c           | 117 ++++++++++++++++++++++++++++++++++++++++
+ lib/tar.c               | 109 ++-----------------------------------
+ 4 files changed, 141 insertions(+), 107 deletions(-)
+ create mode 100644 include/erofs/rebuild.h
+ create mode 100644 lib/rebuild.c
 
-diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index e8a5670..1c602a8 100644
---- a/include/erofs/inode.h
-+++ b/include/erofs/inode.h
-@@ -25,6 +25,9 @@ u32 erofs_new_encode_dev(dev_t dev);
- unsigned char erofs_mode_to_ftype(umode_t mode);
- unsigned char erofs_ftype_to_dtype(unsigned int filetype);
- void erofs_inode_manager_init(void);
-+void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino);
-+struct erofs_inode *erofs_iget(dev_t dev, ino_t ino);
-+struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid);
- unsigned int erofs_iput(struct erofs_inode *inode);
- erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
- struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
-diff --git a/lib/inode.c b/lib/inode.c
-index a3a643f..8fab964 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -75,6 +75,12 @@ void erofs_inode_manager_init(void)
- 		init_list_head(&inode_hashtable[i]);
- }
- 
-+void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino)
+diff --git a/include/erofs/rebuild.h b/include/erofs/rebuild.h
+new file mode 100644
+index 0000000..92873c9
+--- /dev/null
++++ b/include/erofs/rebuild.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
++#ifndef __EROFS_REBUILD_H
++#define __EROFS_REBUILD_H
++
++#ifdef __cplusplus
++extern "C"
 +{
-+	list_add(&inode->i_hash,
-+		 &inode_hashtable[(ino ^ dev) % NR_INODE_HASHTABLE]);
++#endif
++
++#include "internal.h"
++
++struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
++		char *path, bool aufs, bool *whout, bool *opq);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 3e09516..8a45bd6 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -25,6 +25,7 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
+       $(top_srcdir)/include/erofs/compress_hints.h \
+       $(top_srcdir)/include/erofs/fragments.h \
+       $(top_srcdir)/include/erofs/xxhash.h \
++      $(top_srcdir)/include/erofs/rebuild.h \
+       $(top_srcdir)/lib/liberofs_private.h
+ 
+ noinst_HEADERS += compressor.h
+@@ -32,7 +33,7 @@ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+ 		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
+ 		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
+ 		      fragments.c rb_tree.c dedupe.c uuid_unparse.c uuid.c tar.c \
+-		      block_list.c xxhash.c
++		      block_list.c xxhash.c rebuild.c
+ 
+ liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
+ if ENABLE_LZ4
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+new file mode 100644
+index 0000000..7aaa071
+--- /dev/null
++++ b/lib/rebuild.c
+@@ -0,0 +1,117 @@
++// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
++#define _GNU_SOURCE
++#include <unistd.h>
++#include <stdlib.h>
++#include <string.h>
++#include "erofs/print.h"
++#include "erofs/inode.h"
++#include "erofs/rebuild.h"
++#include "erofs/internal.h"
++
++#ifdef HAVE_LINUX_AUFS_TYPE_H
++#include <linux/aufs_type.h>
++#else
++#define AUFS_WH_PFX		".wh."
++#define AUFS_DIROPQ_NAME	AUFS_WH_PFX ".opq"
++#define AUFS_WH_DIROPQ		AUFS_WH_PFX AUFS_DIROPQ_NAME
++#endif
++
++static struct erofs_dentry *erofs_rebuild_mkdir(struct erofs_inode *dir,
++						const char *s)
++{
++	struct erofs_inode *inode;
++	struct erofs_dentry *d;
++
++	inode = erofs_new_inode();
++	if (IS_ERR(inode))
++		return ERR_CAST(inode);
++
++	inode->i_mode = S_IFDIR | 0755;
++	inode->i_parent = dir;
++	inode->i_uid = getuid();
++	inode->i_gid = getgid();
++	inode->i_mtime = inode->sbi->build_time;
++	inode->i_mtime_nsec = inode->sbi->build_time_nsec;
++	erofs_init_empty_dir(inode);
++
++	d = erofs_d_alloc(dir, s);
++	if (!IS_ERR(d)) {
++		d->type = EROFS_FT_DIR;
++		d->inode = inode;
++	}
++	return d;
 +}
 +
- /* get the inode from the (source) inode # */
- struct erofs_inode *erofs_iget(dev_t dev, ino_t ino)
- {
-@@ -976,9 +982,7 @@ static int erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
- 		inode->inode_isize = sizeof(struct erofs_inode_compact);
- 	}
++struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
++		char *path, bool aufs, bool *whout, bool *opq)
++{
++	struct erofs_dentry *d = NULL;
++	unsigned int len = strlen(path);
++	char *s = path;
++
++	if (aufs) {
++		*whout = false;
++		*opq = false;
++	}
++
++	while (s < path + len) {
++		char *slash = memchr(s, '/', path + len - s);
++		if (slash) {
++			if (s == slash) {
++				while (*++s == '/');	/* skip '//...' */
++				continue;
++			}
++			*slash = '\0';
++		}
++
++		if (!memcmp(s, ".", 2)) {
++			/* null */
++		} else if (!memcmp(s, "..", 3)) {
++			pwd = pwd->i_parent;
++		} else {
++			struct erofs_inode *inode = NULL;
++
++			if (aufs && !slash) {
++				if (!memcmp(s, AUFS_WH_DIROPQ, sizeof(AUFS_WH_DIROPQ))) {
++					*opq = true;
++					break;
++				}
++				if (!memcmp(s, AUFS_WH_PFX, sizeof(AUFS_WH_PFX) - 1)) {
++					s += sizeof(AUFS_WH_PFX) - 1;
++					*whout = true;
++				}
++			}
++
++			list_for_each_entry(d, &pwd->i_subdirs, d_child) {
++				if (!strcmp(d->name, s)) {
++					if (d->type != EROFS_FT_DIR && slash)
++						return ERR_PTR(-EIO);
++					inode = d->inode;
++					break;
++				}
++			}
++
++			if (inode) {
++				pwd = inode;
++			} else if (!slash) {
++				d = erofs_d_alloc(pwd, s);
++				if (IS_ERR(d))
++					return d;
++				d->type = EROFS_FT_UNKNOWN;
++				d->inode = pwd;
++			} else {
++				d = erofs_rebuild_mkdir(pwd, s);
++				if (IS_ERR(d))
++					return d;
++				pwd = d->inode;
++			}
++		}
++		if (slash) {
++			*slash = '/';
++			s = slash + 1;
++		} else {
++			break;
++		}
++	}
++	return d;
++}
+diff --git a/lib/tar.c b/lib/tar.c
+index 5b63cf5..e0fe2a2 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -3,13 +3,6 @@
+ #include <stdlib.h>
+ #include <string.h>
+ #include <sys/stat.h>
+-#ifdef HAVE_LINUX_AUFS_TYPE_H
+-#include <linux/aufs_type.h>
+-#else
+-#define AUFS_WH_PFX		".wh."
+-#define AUFS_DIROPQ_NAME	AUFS_WH_PFX ".opq"
+-#define AUFS_WH_DIROPQ		AUFS_WH_PFX AUFS_DIROPQ_NAME
+-#endif
+ #include "erofs/print.h"
+ #include "erofs/cache.h"
+ #include "erofs/inode.h"
+@@ -18,6 +11,7 @@
+ #include "erofs/io.h"
+ #include "erofs/xattr.h"
+ #include "erofs/blobchunk.h"
++#include "erofs/rebuild.h"
  
--	list_add(&inode->i_hash,
--		 &inode_hashtable[(st->st_ino ^ st->st_dev) %
--				  NR_INODE_HASHTABLE]);
-+	erofs_insert_ihash(inode, st->st_dev, st->st_ino);
- 	return 0;
+ #define EROFS_WHITEOUT_DEV	0
+ 
+@@ -133,103 +127,6 @@ static long long tarerofs_parsenum(const char *ptr, int len)
+ 	return tarerofs_otoi(ptr, len);
  }
  
+-static struct erofs_dentry *tarerofs_mkdir(struct erofs_inode *dir, const char *s)
+-{
+-	struct erofs_inode *inode;
+-	struct erofs_dentry *d;
+-
+-	inode = erofs_new_inode();
+-	if (IS_ERR(inode))
+-		return ERR_CAST(inode);
+-
+-	inode->i_mode = S_IFDIR | 0755;
+-	inode->i_parent = dir;
+-	inode->i_uid = getuid();
+-	inode->i_gid = getgid();
+-	inode->i_mtime = inode->sbi->build_time;
+-	inode->i_mtime_nsec = inode->sbi->build_time_nsec;
+-	erofs_init_empty_dir(inode);
+-
+-	d = erofs_d_alloc(dir, s);
+-	if (!IS_ERR(d)) {
+-		d->type = EROFS_FT_DIR;
+-		d->inode = inode;
+-	}
+-	return d;
+-}
+-
+-static struct erofs_dentry *tarerofs_get_dentry(struct erofs_inode *pwd, char *path,
+-					        bool aufs, bool *whout, bool *opq)
+-{
+-	struct erofs_dentry *d = NULL;
+-	unsigned int len = strlen(path);
+-	char *s = path;
+-
+-	*whout = false;
+-	*opq = false;
+-
+-	while (s < path + len) {
+-		char *slash = memchr(s, '/', path + len - s);
+-		if (slash) {
+-			if (s == slash) {
+-				while (*++s == '/');	/* skip '//...' */
+-				continue;
+-			}
+-			*slash = '\0';
+-		}
+-
+-		if (!memcmp(s, ".", 2)) {
+-			/* null */
+-		} else if (!memcmp(s, "..", 3)) {
+-			pwd = pwd->i_parent;
+-		} else {
+-			struct erofs_inode *inode = NULL;
+-
+-			if (aufs && !slash) {
+-				if (!memcmp(s, AUFS_WH_DIROPQ, sizeof(AUFS_WH_DIROPQ))) {
+-					*opq = true;
+-					break;
+-				}
+-				if (!memcmp(s, AUFS_WH_PFX, sizeof(AUFS_WH_PFX) - 1)) {
+-					s += sizeof(AUFS_WH_PFX) - 1;
+-					*whout = true;
+-				}
+-			}
+-
+-			list_for_each_entry(d, &pwd->i_subdirs, d_child) {
+-				if (!strcmp(d->name, s)) {
+-					if (d->type != EROFS_FT_DIR && slash)
+-						return ERR_PTR(-EIO);
+-					inode = d->inode;
+-					break;
+-				}
+-			}
+-
+-			if (inode) {
+-				pwd = inode;
+-			} else if (!slash) {
+-				d = erofs_d_alloc(pwd, s);
+-				if (IS_ERR(d))
+-					return d;
+-				d->type = EROFS_FT_UNKNOWN;
+-				d->inode = pwd;
+-			} else {
+-				d = tarerofs_mkdir(pwd, s);
+-				if (IS_ERR(d))
+-					return d;
+-				pwd = d->inode;
+-			}
+-		}
+-		if (slash) {
+-			*slash = '/';
+-			s = slash + 1;
+-		} else {
+-			break;
+-		}
+-	}
+-	return d;
+-}
+-
+ struct tarerofs_xattr_item {
+ 	struct list_head list;
+ 	char *kv;
+@@ -767,7 +664,7 @@ restart:
+ 
+ 	erofs_dbg("parsing %s (mode %05o)", eh.path, st.st_mode);
+ 
+-	d = tarerofs_get_dentry(root, eh.path, tar->aufs, &whout, &opq);
++	d = erofs_rebuild_get_dentry(root, eh.path, tar->aufs, &whout, &opq);
+ 	if (IS_ERR(d)) {
+ 		ret = PTR_ERR(d);
+ 		goto out;
+@@ -800,7 +697,7 @@ restart:
+ 		}
+ 		d->inode = NULL;
+ 
+-		d2 = tarerofs_get_dentry(root, eh.link, tar->aufs, &dumb, &dumb);
++		d2 = erofs_rebuild_get_dentry(root, eh.link, tar->aufs, &dumb, &dumb);
+ 		if (IS_ERR(d2)) {
+ 			ret = PTR_ERR(d2);
+ 			goto out;
 -- 
 2.19.1.6.gb485710b
 
