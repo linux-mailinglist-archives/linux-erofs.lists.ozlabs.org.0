@@ -1,31 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BDAE37999F8
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Sep 2023 18:33:04 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E0F57999FA
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Sep 2023 18:33:11 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RjdnT3kvWz3by9
-	for <lists+linux-erofs@lfdr.de>; Sun, 10 Sep 2023 02:33:01 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rjdnc5cDgz3cCw
+	for <lists+linux-erofs@lfdr.de>; Sun, 10 Sep 2023 02:33:08 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RjdnN0xbTz3bVS
-	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Sep 2023 02:32:54 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VrfyqNa_1694277160;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VrfyqNa_1694277160)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RjdnP2D2xz2yVg
+	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Sep 2023 02:32:53 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VrfyqP7_1694277166;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VrfyqP7_1694277166)
           by smtp.aliyun-inc.com;
-          Sun, 10 Sep 2023 00:32:45 +0800
+          Sun, 10 Sep 2023 00:32:47 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v7 00/13] erofs-utils: mkfs: introduce rebuild mode
-Date: Sun, 10 Sep 2023 00:32:27 +0800
-Message-Id: <20230909163240.42057-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v7 01/13] erofs-utils: lib: remove unneeded NULL checks
+Date: Sun, 10 Sep 2023 00:32:28 +0800
+Message-Id: <20230909163240.42057-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
+In-Reply-To: <20230909163240.42057-1-hsiangkao@linux.alibaba.com>
+References: <20230909163240.42057-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -43,52 +45,40 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-v6: https://lore.kernel.org/r/20230905100227.1072-1-jefflexu@linux.alibaba.com
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-changes since v6:
- - several random fixes when testing with `--enable-debug`
- - better code arrangement.
+get_xattritem() will in no way return NULL.  Use DBG_BUGONs instead.
 
-I plan to use this version for testing.
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ lib/xattr.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Thanks,
-Gao Xiang
-
-Gao Xiang (2):
-  erofs-utils: lib: avoid exporting non-EROFS xattrs
-  erofs-utils: lib: always fix up xattr_isize even w/o xattrs
-
-Jingbo Xu (11):
-  erofs-utils: lib: remove unneeded NULL checks
-  erofs-utils: lib: add erofs_inode_is_whiteout() helper
-  erofs-utils: lib: set OVL_XATTR_ORIGIN for directories with whiteouts
-  erofs-utils: lib: add list_splice_tail() helper
-  erofs-utils: lib: make erofs_get_unhashed_chunk() global
-  erofs-utils: lib: add erofs_read_xattrs_from_disk() helper
-  erofs-utils: lib: add erofs_insert_ihash() helper
-  erofs-utils: lib: add erofs_rebuild_get_dentry() helper
-  erofs-utils: lib: add erofs_rebuild_load_tree() helper
-  erofs-utils: mkfs: introduce rebuild mode
-  erofs-utils: mkfs: add `--ovlfs-strip` option
-
- include/erofs/blobchunk.h |   2 +
- include/erofs/config.h    |   1 +
- include/erofs/inode.h     |   5 +-
- include/erofs/internal.h  |  18 +-
- include/erofs/list.h      |  20 ++
- include/erofs/rebuild.h   |  21 ++
- include/erofs/xattr.h     |  34 +---
- lib/Makefile.am           |   3 +-
- lib/blobchunk.c           |   2 +-
- lib/inode.c               |  29 ++-
- lib/rebuild.c             | 404 ++++++++++++++++++++++++++++++++++++++
- lib/tar.c                 | 125 ++----------
- lib/xattr.c               | 138 ++++++++++++-
- mkfs/main.c               | 225 ++++++++++++++++-----
- 14 files changed, 815 insertions(+), 212 deletions(-)
- create mode 100644 include/erofs/rebuild.h
- create mode 100644 lib/rebuild.c
-
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 0cab29f..2b7c634 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -437,8 +437,7 @@ int erofs_setxattr(struct erofs_inode *inode, char *key,
+ 	item = get_xattritem(prefix, kvbuf, len);
+ 	if (IS_ERR(item))
+ 		return PTR_ERR(item);
+-	if (!item)
+-		return 0;
++	DBG_BUGON(!item);
+ 
+ 	return erofs_xattr_add(&inode->i_xattrs, item);
+ }
+@@ -473,8 +472,7 @@ static int erofs_droid_xattr_set_caps(struct erofs_inode *inode)
+ 	item = get_xattritem(EROFS_XATTR_INDEX_SECURITY, kvbuf, len);
+ 	if (IS_ERR(item))
+ 		return PTR_ERR(item);
+-	if (!item)
+-		return 0;
++	DBG_BUGON(!item);
+ 
+ 	return erofs_xattr_add(&inode->i_xattrs, item);
+ }
 -- 
 2.24.4
 
