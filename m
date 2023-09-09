@@ -2,29 +2,29 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 545BA7999FF
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Sep 2023 18:33:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 45F89799A00
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Sep 2023 18:33:29 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rjdnw1wBrz3bY3
-	for <lists+linux-erofs@lfdr.de>; Sun, 10 Sep 2023 02:33:24 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rjdnz1bvcz3cGL
+	for <lists+linux-erofs@lfdr.de>; Sun, 10 Sep 2023 02:33:27 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rjdnc5Xd1z3cBJ
-	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Sep 2023 02:33:08 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VrfyqTu_1694277180;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VrfyqTu_1694277180)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rjdnd6qFvz3cGk
+	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Sep 2023 02:33:09 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VrfyqUx_1694277183;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VrfyqUx_1694277183)
           by smtp.aliyun-inc.com;
-          Sun, 10 Sep 2023 00:33:03 +0800
+          Sun, 10 Sep 2023 00:33:04 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v7 07/13] erofs-utils: lib: make erofs_get_unhashed_chunk() global
-Date: Sun, 10 Sep 2023 00:32:34 +0800
-Message-Id: <20230909163240.42057-8-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v7 08/13] erofs-utils: lib: add erofs_read_xattrs_from_disk() helper
+Date: Sun, 10 Sep 2023 00:32:35 +0800
+Message-Id: <20230909163240.42057-9-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20230909163240.42057-1-hsiangkao@linux.alibaba.com>
 References: <20230909163240.42057-1-hsiangkao@linux.alibaba.com>
@@ -47,41 +47,121 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-... so that it could be called from outside blobchunk.c later.
+Add erofs_read_xattrs_from_disk() helper to reading extended
+attributes from disk.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/blobchunk.h | 2 ++
- lib/blobchunk.c           | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ include/erofs/internal.h |  1 +
+ include/erofs/xattr.h    |  1 +
+ lib/xattr.c              | 69 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 71 insertions(+)
 
-diff --git a/include/erofs/blobchunk.h b/include/erofs/blobchunk.h
-index 010aee1..fb85d8e 100644
---- a/include/erofs/blobchunk.h
-+++ b/include/erofs/blobchunk.h
-@@ -14,6 +14,8 @@ extern "C"
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index ba4d6c6..c711c71 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -192,6 +192,7 @@ struct erofs_inode {
+ 	bool compressed_idata;
+ 	bool lazy_tailblock;
+ 	bool with_tmpfile;
++	bool opaque;
+ 	/* OVL: non-merge dir that may contain whiteout entries */
+ 	bool whiteouts;
  
- #include "erofs/internal.h"
+diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+index 2ecb18e..0364f24 100644
+--- a/include/erofs/xattr.h
++++ b/include/erofs/xattr.h
+@@ -58,6 +58,7 @@ int erofs_setxattr(struct erofs_inode *inode, char *key,
+ 		   const void *value, size_t size);
+ int erofs_set_opaque_xattr(struct erofs_inode *inode);
+ int erofs_set_origin_xattr(struct erofs_inode *inode);
++int erofs_read_xattrs_from_disk(struct erofs_inode *inode);
  
-+struct erofs_blobchunk *erofs_get_unhashed_chunk(unsigned int device_id,
-+		erofs_blk_t blkaddr, erofs_off_t sourceoffset);
- int erofs_blob_write_chunk_indexes(struct erofs_inode *inode, erofs_off_t off);
- int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd);
- int tarerofs_write_chunkes(struct erofs_inode *inode, erofs_off_t data_offset);
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index cada5bb..07f18bd 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -38,7 +38,7 @@ struct erofs_blobchunk erofs_holechunk = {
- };
- static LIST_HEAD(unhashed_blobchunks);
+ #ifdef __cplusplus
+ }
+diff --git a/lib/xattr.c b/lib/xattr.c
+index d755760..5ed0f0f 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -558,6 +558,75 @@ int erofs_scan_file_xattrs(struct erofs_inode *inode)
+ 	return erofs_droid_xattr_set_caps(inode);
+ }
  
--static struct erofs_blobchunk *erofs_get_unhashed_chunk(unsigned int device_id,
-+struct erofs_blobchunk *erofs_get_unhashed_chunk(unsigned int device_id,
- 		erofs_blk_t blkaddr, erofs_off_t sourceoffset)
++int erofs_read_xattrs_from_disk(struct erofs_inode *inode)
++{
++	ssize_t kllen;
++	char *keylst, *key;
++	int ret;
++
++	init_list_head(&inode->i_xattrs);
++	kllen = erofs_listxattr(inode, NULL, 0);
++	if (kllen < 0)
++		return kllen;
++	if (kllen <= 1)
++		return 0;
++
++	keylst = malloc(kllen);
++	if (!keylst)
++		return -ENOMEM;
++
++	ret = erofs_listxattr(inode, keylst, kllen);
++	if (ret < 0)
++		goto out;
++
++	for (key = keylst; key < keylst + kllen; key += strlen(key) + 1) {
++		void *value = NULL;
++		size_t size = 0;
++
++		if (!strcmp(key, OVL_XATTR_OPAQUE)) {
++			if (!S_ISDIR(inode->i_mode)) {
++				erofs_dbg("file %s: opaque xattr on non-dir",
++					  inode->i_srcpath);
++				ret = -EINVAL;
++				goto out;
++			}
++			inode->opaque = true;
++		}
++
++		ret = erofs_getxattr(inode, key, NULL, 0);
++		if (ret < 0)
++			goto out;
++		if (ret) {
++			size = ret;
++			value = malloc(size);
++			if (!value) {
++				ret = -ENOMEM;
++				goto out;
++			}
++
++			ret = erofs_getxattr(inode, key, value, size);
++			if (ret < 0) {
++				free(value);
++				goto out;
++			}
++			DBG_BUGON(ret != size);
++		} else if (S_ISDIR(inode->i_mode) &&
++			   !strcmp(key, OVL_XATTR_ORIGIN)) {
++			ret = 0;
++			inode->whiteouts = true;
++			continue;
++		}
++
++		ret = erofs_setxattr(inode, key, value, size);
++		free(value);
++		if (ret)
++			break;
++	}
++out:
++	free(keylst);
++	return ret;
++}
++
+ int erofs_prepare_xattr_ibody(struct erofs_inode *inode)
  {
- 	struct erofs_blobchunk *chunk;
+ 	int ret;
 -- 
 2.24.4
 
