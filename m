@@ -2,29 +2,29 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98CF17999F9
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Sep 2023 18:33:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CE2CA7999FB
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Sep 2023 18:33:13 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RjdnY3N3bz3bY3
-	for <lists+linux-erofs@lfdr.de>; Sun, 10 Sep 2023 02:33:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rjdng4fnmz3c5Y
+	for <lists+linux-erofs@lfdr.de>; Sun, 10 Sep 2023 02:33:11 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RjdnN5PT4z3bVS
-	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Sep 2023 02:32:56 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VrfyqPg_1694277167;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VrfyqPg_1694277167)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RjdnQ4jZkz2yVg
+	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Sep 2023 02:32:58 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VrfyqQt_1694277170;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VrfyqQt_1694277170)
           by smtp.aliyun-inc.com;
-          Sun, 10 Sep 2023 00:32:50 +0800
+          Sun, 10 Sep 2023 00:32:52 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v7 02/13] erofs-utils: lib: avoid exporting non-EROFS xattrs
-Date: Sun, 10 Sep 2023 00:32:29 +0800
-Message-Id: <20230909163240.42057-3-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v7 03/13] erofs-utils: lib: add erofs_inode_is_whiteout() helper
+Date: Sun, 10 Sep 2023 00:32:30 +0800
+Message-Id: <20230909163240.42057-4-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20230909163240.42057-1-hsiangkao@linux.alibaba.com>
 References: <20230909163240.42057-1-hsiangkao@linux.alibaba.com>
@@ -45,157 +45,56 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Move all non-EROFS xattr macros to xattr.c and introduce
-erofs_set_opaque_xattr() helper to hide all these details.
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
 
+Add erofs_inode_is_whiteout() helper to check if a given inode is
+a whiteout.
+
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/xattr.h | 32 +----------------------------
- lib/tar.c             |  7 +------
- lib/xattr.c           | 48 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 50 insertions(+), 37 deletions(-)
+ include/erofs/internal.h | 7 +++++++
+ lib/tar.c                | 2 --
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-index cf02257..59515d7 100644
---- a/include/erofs/xattr.h
-+++ b/include/erofs/xattr.h
-@@ -43,37 +43,6 @@ static inline unsigned int xattrblock_offset(struct erofs_inode *vi,
- 	(_size - sizeof(struct erofs_xattr_ibody_header)) / \
- 	sizeof(struct erofs_xattr_entry) + 1; })
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 382024a..ac82336 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -20,6 +20,7 @@ typedef unsigned short umode_t;
+ #include "erofs_fs.h"
+ #include <fcntl.h>
+ #include <sys/types.h> /* for off_t definition */
++#include <sys/stat.h> /* for S_ISCHR definition */
+ #include <stdio.h>
  
--#ifndef XATTR_SYSTEM_PREFIX
--#define XATTR_SYSTEM_PREFIX	"system."
--#endif
--#ifndef XATTR_SYSTEM_PREFIX_LEN
--#define XATTR_SYSTEM_PREFIX_LEN (sizeof(XATTR_SYSTEM_PREFIX) - 1)
--#endif
--#ifndef XATTR_USER_PREFIX
--#define XATTR_USER_PREFIX	"user."
--#endif
--#ifndef XATTR_USER_PREFIX_LEN
--#define XATTR_USER_PREFIX_LEN (sizeof(XATTR_USER_PREFIX) - 1)
--#endif
--#ifndef XATTR_SECURITY_PREFIX
--#define XATTR_SECURITY_PREFIX	"security."
--#endif
--#ifndef XATTR_SECURITY_PREFIX_LEN
--#define XATTR_SECURITY_PREFIX_LEN (sizeof(XATTR_SECURITY_PREFIX) - 1)
--#endif
--#ifndef XATTR_TRUSTED_PREFIX
--#define XATTR_TRUSTED_PREFIX	"trusted."
--#endif
--#ifndef XATTR_TRUSTED_PREFIX_LEN
--#define XATTR_TRUSTED_PREFIX_LEN (sizeof(XATTR_TRUSTED_PREFIX) - 1)
--#endif
--#ifndef XATTR_NAME_POSIX_ACL_ACCESS
--#define XATTR_NAME_POSIX_ACL_ACCESS "system.posix_acl_access"
--#endif
--#ifndef XATTR_NAME_POSIX_ACL_DEFAULT
--#define XATTR_NAME_POSIX_ACL_DEFAULT "system.posix_acl_default"
--#endif
--
- int erofs_scan_file_xattrs(struct erofs_inode *inode);
- int erofs_prepare_xattr_ibody(struct erofs_inode *inode);
- char *erofs_export_xattr_ibody(struct erofs_inode *inode);
-@@ -87,6 +56,7 @@ int erofs_xattr_prefixes_init(struct erofs_sb_info *sbi);
+ #ifndef PATH_MAX
+@@ -423,6 +424,12 @@ static inline u32 erofs_crc32c(u32 crc, const u8 *in, size_t len)
+ 	return crc;
+ }
  
- int erofs_setxattr(struct erofs_inode *inode, char *key,
- 		   const void *value, size_t size);
-+int erofs_set_opaque_xattr(struct erofs_inode *inode);
- 
++#define EROFS_WHITEOUT_DEV	0
++static inline bool erofs_inode_is_whiteout(struct erofs_inode *inode)
++{
++	return S_ISCHR(inode->i_mode) && inode->u.i_rdev == EROFS_WHITEOUT_DEV;
++}
++
  #ifdef __cplusplus
  }
+ #endif
 diff --git a/lib/tar.c b/lib/tar.c
-index 53196c1..5b63cf5 100644
+index 5b63cf5..c5dbef0 100644
 --- a/lib/tar.c
 +++ b/lib/tar.c
-@@ -19,11 +19,6 @@
+@@ -19,8 +19,6 @@
  #include "erofs/xattr.h"
  #include "erofs/blobchunk.h"
  
--#define OVL_XATTR_NAMESPACE "overlay."
--#define OVL_XATTR_TRUSTED_PREFIX XATTR_TRUSTED_PREFIX OVL_XATTR_NAMESPACE
--#define OVL_XATTR_OPAQUE_POSTFIX "opaque"
--#define OVL_XATTR_OPAQUE OVL_XATTR_TRUSTED_PREFIX OVL_XATTR_OPAQUE_POSTFIX
+-#define EROFS_WHITEOUT_DEV	0
 -
- #define EROFS_WHITEOUT_DEV	0
- 
  static char erofs_libbuf[16384];
-@@ -788,7 +783,7 @@ restart:
- 	} else if (opq) {
- 		DBG_BUGON(d->type == EROFS_FT_UNKNOWN);
- 		DBG_BUGON(!d->inode);
--		ret = erofs_setxattr(d->inode, OVL_XATTR_OPAQUE, "y", 1);
-+		ret = erofs_set_opaque_xattr(d->inode);
- 		goto out;
- 	} else if (th.typeflag == '1') {	/* hard link cases */
- 		struct erofs_dentry *d2;
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 2b7c634..bd03831 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -21,6 +21,49 @@
- #include "erofs/xxhash.h"
- #include "liberofs_private.h"
  
-+#ifndef XATTR_SYSTEM_PREFIX
-+#define XATTR_SYSTEM_PREFIX	"system."
-+#endif
-+#ifndef XATTR_SYSTEM_PREFIX_LEN
-+#define XATTR_SYSTEM_PREFIX_LEN (sizeof(XATTR_SYSTEM_PREFIX) - 1)
-+#endif
-+#ifndef XATTR_USER_PREFIX
-+#define XATTR_USER_PREFIX	"user."
-+#endif
-+#ifndef XATTR_USER_PREFIX_LEN
-+#define XATTR_USER_PREFIX_LEN (sizeof(XATTR_USER_PREFIX) - 1)
-+#endif
-+#ifndef XATTR_SECURITY_PREFIX
-+#define XATTR_SECURITY_PREFIX	"security."
-+#endif
-+#ifndef XATTR_SECURITY_PREFIX_LEN
-+#define XATTR_SECURITY_PREFIX_LEN (sizeof(XATTR_SECURITY_PREFIX) - 1)
-+#endif
-+#ifndef XATTR_TRUSTED_PREFIX
-+#define XATTR_TRUSTED_PREFIX	"trusted."
-+#endif
-+#ifndef XATTR_TRUSTED_PREFIX_LEN
-+#define XATTR_TRUSTED_PREFIX_LEN (sizeof(XATTR_TRUSTED_PREFIX) - 1)
-+#endif
-+#ifndef XATTR_NAME_POSIX_ACL_ACCESS
-+#define XATTR_NAME_POSIX_ACL_ACCESS "system.posix_acl_access"
-+#endif
-+#ifndef XATTR_NAME_POSIX_ACL_DEFAULT
-+#define XATTR_NAME_POSIX_ACL_DEFAULT "system.posix_acl_default"
-+#endif
-+#ifndef OVL_XATTR_NAMESPACE
-+#define OVL_XATTR_NAMESPACE "overlay."
-+#endif
-+#ifndef OVL_XATTR_OPAQUE_POSTFIX
-+#define OVL_XATTR_OPAQUE_POSTFIX "opaque"
-+#endif
-+#ifndef OVL_XATTR_TRUSTED_PREFIX
-+#define OVL_XATTR_TRUSTED_PREFIX XATTR_TRUSTED_PREFIX OVL_XATTR_NAMESPACE
-+#endif
-+#ifndef OVL_XATTR_OPAQUE
-+#define OVL_XATTR_OPAQUE OVL_XATTR_TRUSTED_PREFIX OVL_XATTR_OPAQUE_POSTFIX
-+#endif
-+
- #define EA_HASHTABLE_BITS 16
- 
- struct xattr_item {
-@@ -442,6 +485,11 @@ int erofs_setxattr(struct erofs_inode *inode, char *key,
- 	return erofs_xattr_add(&inode->i_xattrs, item);
- }
- 
-+int erofs_set_opaque_xattr(struct erofs_inode *inode)
-+{
-+	return erofs_setxattr(inode, OVL_XATTR_OPAQUE, "y", 1);
-+}
-+
- #ifdef WITH_ANDROID
- static int erofs_droid_xattr_set_caps(struct erofs_inode *inode)
- {
+ struct tar_header {
 -- 
 2.24.4
 
