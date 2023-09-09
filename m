@@ -1,30 +1,30 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45F89799A00
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Sep 2023 18:33:29 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59C14799A01
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Sep 2023 18:33:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rjdnz1bvcz3cGL
-	for <lists+linux-erofs@lfdr.de>; Sun, 10 Sep 2023 02:33:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rjdp21YQjz3cHS
+	for <lists+linux-erofs@lfdr.de>; Sun, 10 Sep 2023 02:33:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rjdnd6qFvz3cGk
-	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Sep 2023 02:33:09 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VrfyqUx_1694277183;
-Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VrfyqUx_1694277183)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rjdnh1pgsz3cJN
+	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Sep 2023 02:33:11 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R701e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VrfyqVQ_1694277185;
+Received: from e18g06460.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VrfyqVQ_1694277185)
           by smtp.aliyun-inc.com;
-          Sun, 10 Sep 2023 00:33:04 +0800
+          Sun, 10 Sep 2023 00:33:06 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v7 08/13] erofs-utils: lib: add erofs_read_xattrs_from_disk() helper
-Date: Sun, 10 Sep 2023 00:32:35 +0800
-Message-Id: <20230909163240.42057-9-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v7 09/13] erofs-utils: lib: add erofs_insert_ihash() helper
+Date: Sun, 10 Sep 2023 00:32:36 +0800
+Message-Id: <20230909163240.42057-10-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.4
 In-Reply-To: <20230909163240.42057-1-hsiangkao@linux.alibaba.com>
 References: <20230909163240.42057-1-hsiangkao@linux.alibaba.com>
@@ -47,121 +47,61 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-Add erofs_read_xattrs_from_disk() helper to reading extended
-attributes from disk.
+Add erofs_insert_ihash() helper inserting inode into inode hash table.
+
+Also add prototypes of erofs_iget() and erofs_iget_by_nid() in the
+header file.
 
 Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/internal.h |  1 +
- include/erofs/xattr.h    |  1 +
- lib/xattr.c              | 69 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 71 insertions(+)
+ include/erofs/inode.h |  3 +++
+ lib/inode.c           | 10 +++++++---
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index ba4d6c6..c711c71 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -192,6 +192,7 @@ struct erofs_inode {
- 	bool compressed_idata;
- 	bool lazy_tailblock;
- 	bool with_tmpfile;
-+	bool opaque;
- 	/* OVL: non-merge dir that may contain whiteout entries */
- 	bool whiteouts;
- 
-diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
-index 2ecb18e..0364f24 100644
---- a/include/erofs/xattr.h
-+++ b/include/erofs/xattr.h
-@@ -58,6 +58,7 @@ int erofs_setxattr(struct erofs_inode *inode, char *key,
- 		   const void *value, size_t size);
- int erofs_set_opaque_xattr(struct erofs_inode *inode);
- int erofs_set_origin_xattr(struct erofs_inode *inode);
-+int erofs_read_xattrs_from_disk(struct erofs_inode *inode);
- 
- #ifdef __cplusplus
- }
-diff --git a/lib/xattr.c b/lib/xattr.c
-index d755760..5ed0f0f 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -558,6 +558,75 @@ int erofs_scan_file_xattrs(struct erofs_inode *inode)
- 	return erofs_droid_xattr_set_caps(inode);
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index e8a5670..1c602a8 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -25,6 +25,9 @@ u32 erofs_new_encode_dev(dev_t dev);
+ unsigned char erofs_mode_to_ftype(umode_t mode);
+ unsigned char erofs_ftype_to_dtype(unsigned int filetype);
+ void erofs_inode_manager_init(void);
++void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino);
++struct erofs_inode *erofs_iget(dev_t dev, ino_t ino);
++struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid);
+ unsigned int erofs_iput(struct erofs_inode *inode);
+ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
+ struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
+diff --git a/lib/inode.c b/lib/inode.c
+index c976be3..3191843 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -75,6 +75,12 @@ void erofs_inode_manager_init(void)
+ 		init_list_head(&inode_hashtable[i]);
  }
  
-+int erofs_read_xattrs_from_disk(struct erofs_inode *inode)
++void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino)
 +{
-+	ssize_t kllen;
-+	char *keylst, *key;
-+	int ret;
-+
-+	init_list_head(&inode->i_xattrs);
-+	kllen = erofs_listxattr(inode, NULL, 0);
-+	if (kllen < 0)
-+		return kllen;
-+	if (kllen <= 1)
-+		return 0;
-+
-+	keylst = malloc(kllen);
-+	if (!keylst)
-+		return -ENOMEM;
-+
-+	ret = erofs_listxattr(inode, keylst, kllen);
-+	if (ret < 0)
-+		goto out;
-+
-+	for (key = keylst; key < keylst + kllen; key += strlen(key) + 1) {
-+		void *value = NULL;
-+		size_t size = 0;
-+
-+		if (!strcmp(key, OVL_XATTR_OPAQUE)) {
-+			if (!S_ISDIR(inode->i_mode)) {
-+				erofs_dbg("file %s: opaque xattr on non-dir",
-+					  inode->i_srcpath);
-+				ret = -EINVAL;
-+				goto out;
-+			}
-+			inode->opaque = true;
-+		}
-+
-+		ret = erofs_getxattr(inode, key, NULL, 0);
-+		if (ret < 0)
-+			goto out;
-+		if (ret) {
-+			size = ret;
-+			value = malloc(size);
-+			if (!value) {
-+				ret = -ENOMEM;
-+				goto out;
-+			}
-+
-+			ret = erofs_getxattr(inode, key, value, size);
-+			if (ret < 0) {
-+				free(value);
-+				goto out;
-+			}
-+			DBG_BUGON(ret != size);
-+		} else if (S_ISDIR(inode->i_mode) &&
-+			   !strcmp(key, OVL_XATTR_ORIGIN)) {
-+			ret = 0;
-+			inode->whiteouts = true;
-+			continue;
-+		}
-+
-+		ret = erofs_setxattr(inode, key, value, size);
-+		free(value);
-+		if (ret)
-+			break;
-+	}
-+out:
-+	free(keylst);
-+	return ret;
++	list_add(&inode->i_hash,
++		 &inode_hashtable[(ino ^ dev) % NR_INODE_HASHTABLE]);
 +}
 +
- int erofs_prepare_xattr_ibody(struct erofs_inode *inode)
+ /* get the inode from the (source) inode # */
+ struct erofs_inode *erofs_iget(dev_t dev, ino_t ino)
  {
- 	int ret;
+@@ -976,9 +982,7 @@ static int erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+ 		inode->inode_isize = sizeof(struct erofs_inode_compact);
+ 	}
+ 
+-	list_add(&inode->i_hash,
+-		 &inode_hashtable[(st->st_ino ^ st->st_dev) %
+-				  NR_INODE_HASHTABLE]);
++	erofs_insert_ihash(inode, st->st_dev, st->st_ino);
+ 	return 0;
+ }
+ 
 -- 
 2.24.4
 
