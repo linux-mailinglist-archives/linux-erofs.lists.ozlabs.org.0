@@ -2,30 +2,31 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07CE179C41F
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Sep 2023 05:27:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B66879C91C
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Sep 2023 10:00:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rl8Cf0jHZz3c4l
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Sep 2023 13:27:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RlGGk1TjNz3cCc
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Sep 2023 18:00:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rl8CV4ggMz2yh5
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Sep 2023 13:27:16 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vrv0RbX_1694489224;
-Received: from localhost.localdomain(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vrv0RbX_1694489224)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RlGGg13Cxz3c9m
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Sep 2023 18:00:25 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vrw-8Gm_1694505616;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vrw-8Gm_1694505616)
           by smtp.aliyun-inc.com;
-          Tue, 12 Sep 2023 11:27:11 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: lib: suppress a false-positive warning in kite-deflate
-Date: Tue, 12 Sep 2023 11:27:01 +0800
-Message-Id: <20230912032701.8288-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.40.1
+          Tue, 12 Sep 2023 16:00:16 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: hsiangkao@linux.alibaba.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/2] erofs-utils: lib: fix memleak in error path of erofs_build_shared_xattrs_from_path()
+Date: Tue, 12 Sep 2023 16:00:14 +0800
+Message-Id: <20230912080015.111464-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -39,40 +40,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-`gcc (Debian 13.2.0-2) 13.2.0` gives the following report:
+Free the allocated sorted_n[] buffer when error occurced.
 
-kite_deflate.c: In function 'kite_deflate_writeblock':
-kite_deflate.c:428:57: warning: 'distLevels' may be used uninitialized
-[-Wmaybe-uninitialized]
-428 |                                   fixed ? 5 :
-    distLevels[distSlot]);
-|                                                         ^
-kite_deflate.c:393:34: note: 'distLevels' was declared here
-  393 |         const u8 *litLenLevels, *distLevels;
-
-Actually, distLevels won't be used in the static-huffman mode.
-
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- lib/kite_deflate.c | 1 +
- 1 file changed, 1 insertion(+)
+ lib/xattr.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/lib/kite_deflate.c b/lib/kite_deflate.c
-index 91019e3..8667954 100644
---- a/lib/kite_deflate.c
-+++ b/lib/kite_deflate.c
-@@ -405,6 +405,7 @@ static void kite_deflate_writeblock(struct kite_deflate *s, bool fixed)
- 		distCodes = kstaticHuff_distCodes;
+diff --git a/lib/xattr.c b/lib/xattr.c
+index d755760..54a6ae2 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -800,11 +800,14 @@ int erofs_build_shared_xattrs_from_path(struct erofs_sb_info *sbi, const char *p
+ 	qsort(sorted_n, shared_xattrs_count, sizeof(n), comp_shared_xattr_item);
  
- 		litLenLevels = kstaticHuff_litLenLevels;
-+		distLevels = NULL;
+ 	buf = calloc(1, shared_xattrs_size);
+-	if (!buf)
++	if (!buf) {
++		free(sorted_n);
+ 		return -ENOMEM;
++	}
+ 
+ 	bh = erofs_balloc(XATTR, shared_xattrs_size, 0, 0);
+ 	if (IS_ERR(bh)) {
++		free(sorted_n);
+ 		free(buf);
+ 		return PTR_ERR(bh);
  	}
- 
- 	for (i = 0; i < s->symbols; ++i) {
 -- 
-2.40.1
+2.19.1.6.gb485710b
 
