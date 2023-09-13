@@ -1,58 +1,63 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC64779EA6D
-	for <lists+linux-erofs@lfdr.de>; Wed, 13 Sep 2023 16:06:41 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=AeJGmr0U;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8AED79F4C0
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 00:11:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1694643084;
+	bh=ua4m9TKUideDxIDrPoqZ00Kb+iGg2luSneYjcSm4H4A=;
+	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=m8C6EKUF49VG4G9Yz6cGN7VmsdxwTE+wdakIpSmsIlgxnCTM9hUx9ejgshUbaoCxH
+	 aTOShKXigzkS/9x9zkWEVjvAb061dvwT0KqN/3ZfU59N1fUP1lpwUj/6aTJbkUBtfe
+	 NKlZCG3/lSt0Ue+dXM8IuOK7pTYY+x3WmzDkWzivM1C4lxBYJAxGmNGNoRAfTfIBJV
+	 b5Py/sokbsASRHq4/oQFP/rCAOHx8AECouBu0S9cdxDJd7lHUTKcX5NrBlyNm4GcpT
+	 5Bf1a/rRDpYFoYsLIuUMCjQYxTwVYpOzlB85xzQ9rjPELvLIo2h0MBTjX454mUdr4n
+	 KLFWYLEMHkvBg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rm2Lj6XGmz3hwg
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 00:06:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RmF643ml3z3byh
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 08:11:24 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=AeJGmr0U;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=GnvjUD0b;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::54a; helo=mail-pg1-x54a.google.com; envelope-from=3htmczqckcyqdhavalegoogle.comlinux-erofslists.ozlabs.org@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rm1xH6LvMz3dWZ
-	for <linux-erofs@lists.ozlabs.org>; Wed, 13 Sep 2023 23:48:03 +1000 (AEST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by sin.source.kernel.org (Postfix) with ESMTPS id 94536CE1F1B;
-	Wed, 13 Sep 2023 13:48:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42C9DC433C8;
-	Wed, 13 Sep 2023 13:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1694612879;
-	bh=jJGp9xbCBBWiP4s30EbvcWuYmO9bPTRYaT7OCr64m2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AeJGmr0UIzigIAdUZQ7hx0hfdQxO6DwZ4luLBiBMlewROzpPyQRapfyhxKzm/n4nI
-	 mqFl7GisItYGem5YKljOIcL+vlT8HW4250OWDrsmdF+vzcg2jLeUcdO4USOp9i23X8
-	 NfIJ4v45AyRDEUCHwmG4wNZubqo4DL3eLDH712w0dLGo56jA0uhbxJzWFMzVzA3Wpm
-	 w7/e3hYsUCvhTzJsN+v5ZATHrU9pI6zH+0PQg0Wu1OiL2FjgrtuXb4aNmMTHyPWRoj
-	 tpC3ZratbOqaMB7prgsrayaI1NlNm5cM7DgvD7lXGraXP3knRbY9cKgzW/CKvacriH
-	 q3TMMsuH8j47A==
-Date: Wed, 13 Sep 2023 21:47:52 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Jingbo Xu <jefflexu@linux.alibaba.com>
-Subject: Re: [PATCH v8 8/8] erofs-utils: mkfs: add `--ovlfs-strip` option
-Message-ID: <ZQG9iBAACAz/XC1F@debian>
-Mail-Followup-To: Jingbo Xu <jefflexu@linux.alibaba.com>,
-	hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org
-References: <20230913120304.15741-1-jefflexu@linux.alibaba.com>
- <20230913120304.15741-9-jefflexu@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230913120304.15741-9-jefflexu@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RmF616n4lz2xdT
+	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Sep 2023 08:11:20 +1000 (AEST)
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-577c25cda99so174316a12.3
+        for <linux-erofs@lists.ozlabs.org>; Wed, 13 Sep 2023 15:11:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694643078; x=1695247878;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ua4m9TKUideDxIDrPoqZ00Kb+iGg2luSneYjcSm4H4A=;
+        b=Xpuz1d3ws2w05bW/IJ3ridc9SYt1fYVSgQtVgNG4nSWPWGxwT5oW60yLc3rn9Gs+UW
+         ZWNHRm8dKko3VPB+HJFQkPC+PdFtR46wXO2HYdS5TiwQaimwC0aB8hmkmXTihjwv40qQ
+         1uNmwj7iTxn6tlhGfcJqmuqpA5RTAW5yoVDPOIgU5yDj/9ZicnOCJ4mlUYOfk8q90WTt
+         Ilq3msKhJf7Vuv/cTOrwnfJe1gD/W6LNfzOUd7SSWsn1wmuDa6dts3rm8qncSMBWAuNs
+         qxFreSmTAFJreVpkAXccYuBoc3gsLb/eGKyFoRuI/5XxEGJfFeIF03EEJNfOu4bNeuLb
+         vyYA==
+X-Gm-Message-State: AOJu0YwHOEo1sj8RlYgg3BOInE7WnQEvgLCvKk7UOl8b/3w3s6hnAesl
+	oVNPWeuT7VDZUQWL/Mu6jxu6bDwLL1Fs92zpNPwz9x6SHweoLQ8IikR0qFLMJwJezMeG+zi/qO3
+	/BoMwViyI70ODjhVYhNlQGDSIdZ3Hg+ybVV6X1f8CqNB1tx3oXGaSEwJCTarTvuimL4ttlPj7
+X-Google-Smtp-Source: AGHT+IELzv9ozr6EzSKiM8QLJC35TO41AhzSSLArHn1n/DvOWEXTbfRD8jDOpy4STGbbT+ytN5b/29DrpkYI
+X-Received: from dhavale-ctop.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:5e39])
+ (user=dhavale job=sendgmr) by 2002:a63:3d4c:0:b0:56a:36ac:3238 with SMTP id
+ k73-20020a633d4c000000b0056a36ac3238mr97372pga.5.1694643077666; Wed, 13 Sep
+ 2023 15:11:17 -0700 (PDT)
+Date: Wed, 13 Sep 2023 15:10:57 -0700
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
+Message-ID: <20230913221104.429825-1-dhavale@google.com>
+Subject: [PATCH v1 0/7] Misc fixes in erofs-utils
+To: linux-erofs@lists.ozlabs.org, hsiangkao@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -64,38 +69,35 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org
+From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Sandeep Dhavale <dhavale@google.com>
+Cc: kernel-team@android.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Sep 13, 2023 at 08:03:03PM +0800, Jingbo Xu wrote:
-> Add `--ovlfs-strip=[0|1]` option for tarfs and rebuild mode for now
-> in order to control whether some overlayfs related stuffs (e.g.
-> whiteout files, OVL_XATTR_OPAQUE and OVL_XATTR_ORIGIN xattrs) are
-> finally stripped.
-> 
-> This option is disabled by default for mkfs, that is, the overlayfs
-> related stuffs described above are kept in the image by default.
-> 
-> Specify `--ovlfs-strip=1` explicitly to strip these stuffs.
-> 
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> ---
+Hi,
+Below series contains few small misc fixes found after running through clang
+static checker.
 
-...
+Sandeep Dhavale (7):
+  erofs-utils: fsck: Fix potential memory leak in error path
+  erofs-utils: lib: Remove redundant line to get padding
+  erofs-utils: lib: Fix memory leak if __erofs_battach() fails
+  erofs-utils: lib: Check for error from z_erofs_pack_file_from_fd()
+  erofs-utils: lib: Fix the memory leak in error path
+  erofs-utils: lib: Remove redundant assignment
+  erofs-utils: lib: tar: Initialize the variable to avoid using garbage
+    value
 
-> diff --git a/lib/xattr.c b/lib/xattr.c
-> index e3a1b44..fffccb4 100644
-> --- a/lib/xattr.c
-> +++ b/lib/xattr.c
-> @@ -499,11 +499,29 @@ int erofs_setxattr(struct erofs_inode *inode, char *key,
->  	return erofs_xattr_add(&inode->i_xattrs, item);
->  }
->  
-> +static void erofs_clearxattr(struct erofs_inode *inode, const char *key)
+ fsck/main.c      | 4 +++-
+ lib/blobchunk.c  | 1 -
+ lib/cache.c      | 4 +++-
+ lib/compress.c   | 2 ++
+ lib/decompress.c | 4 +++-
+ lib/namei.c      | 1 -
+ lib/tar.c        | 2 +-
+ 7 files changed, 12 insertions(+), 6 deletions(-)
 
-I rename it as erofs_removexattr().
+-- 
+2.42.0.283.g2d96d420d3-goog
 
-Thanks,
-Gao Xiang
