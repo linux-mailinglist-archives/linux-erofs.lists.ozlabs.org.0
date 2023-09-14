@@ -1,37 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08B3479F83E
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 04:36:58 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32EF579FADB
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 07:32:36 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RmM0R6Znwz3c5P
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 12:36:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RmQv44Jdxz3c7n
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 15:32:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RmM0N5JSTz2xdm
-	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Sep 2023 12:36:50 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R681e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0Vs0W4GX_1694659003;
-Received: from 30.97.48.222(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vs0W4GX_1694659003)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RmQtx546wz2yVl
+	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Sep 2023 15:32:23 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vs11jtm_1694669532;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vs11jtm_1694669532)
           by smtp.aliyun-inc.com;
-          Thu, 14 Sep 2023 10:36:44 +0800
-Message-ID: <7d5e0f81-4ccb-08f7-1e6f-e2d650a37f56@linux.alibaba.com>
-Date: Thu, 14 Sep 2023 10:36:42 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH v1 0/7] Misc fixes in erofs-utils
-To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org
-References: <20230913221104.429825-1-dhavale@google.com>
+          Thu, 14 Sep 2023 13:32:17 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230913221104.429825-1-dhavale@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: avoid flushing the image file on closing
+Date: Thu, 14 Sep 2023 13:32:11 +0800
+Message-Id: <20230914053211.1225452-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -43,39 +39,115 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: kernel-team@android.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Traditionally, truncating to small sizes will trigger some
+flush-on-close semantics to avoid the notorious NULL files.
 
+I'm not sure if it's our use case since:
+  1) we're creating new image files instead of reusing old ones;
+  2) it kills end-to-end performance in practice;
+  3) other programs like GNU TAR doesn't work as this too for
+     such meaningless comparsion;
 
-On 2023/9/14 06:10, Sandeep Dhavale wrote:
-> Hi,
-> Below series contains few small misc fixes found after running through clang
-> static checker.
+Let's work around it now.
 
-All these patches look good to me, will apply.
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ configure.ac |  2 ++
+ lib/io.c     | 40 ++++++++++++++++++++++++++++++++++------
+ 2 files changed, 36 insertions(+), 6 deletions(-)
 
-Thanks,
-Gao Xiang
+diff --git a/configure.ac b/configure.ac
+index a8cecd0..51ace67 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -190,6 +190,7 @@ AC_CHECK_HEADERS(m4_flatten([
+ 	sys/mman.h
+ 	sys/random.h
+ 	sys/stat.h
++	sys/statfs.h
+ 	sys/sysmacros.h
+ 	sys/time.h
+ 	unistd.h
+@@ -249,6 +250,7 @@ AC_CHECK_FUNCS(m4_flatten([
+ 	ftello64
+ 	pread64
+ 	pwrite64
++	fstatfs
+ 	strdup
+ 	strerror
+ 	strrchr
+diff --git a/lib/io.c b/lib/io.c
+index 1545436..eb9d876 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -20,7 +20,9 @@
+ #ifdef HAVE_LINUX_FALLOC_H
+ #include <linux/falloc.h>
+ #endif
+-
++#ifdef HAVE_SYS_STATFS_H
++#include <sys/statfs.h>
++#endif
+ #define EROFS_MODNAME	"erofs_io"
+ #include "erofs/print.h"
+ 
+@@ -55,9 +57,11 @@ void dev_close(struct erofs_sb_info *sbi)
+ 
+ int dev_open(struct erofs_sb_info *sbi, const char *dev)
+ {
++	bool again = false;
+ 	struct stat st;
+ 	int fd, ret;
+ 
++repeat:
+ 	fd = open(dev, O_RDWR | O_CREAT | O_BINARY, 0644);
+ 	if (fd < 0) {
+ 		erofs_err("failed to open(%s).", dev);
+@@ -82,11 +86,35 @@ int dev_open(struct erofs_sb_info *sbi, const char *dev)
+ 		sbi->devsz = round_down(sbi->devsz, erofs_blksiz(sbi));
+ 		break;
+ 	case S_IFREG:
+-		ret = ftruncate(fd, 0);
+-		if (ret) {
+-			erofs_err("failed to ftruncate(%s).", dev);
+-			close(fd);
+-			return -errno;
++		if (st.st_size) {
++#ifdef HAVE_SYS_STATFS_H
++			struct statfs stfs;
++
++			if (again)
++				return -ENOTEMPTY;
++
++#ifdef HAVE_FSTATFS
++			/*
++			 * fses like EXT4 and BTRFS will flush dirty blocks
++			 * after truncate(0) even after the writeback happens
++			 * (see kernel commit 7d8f9f7d150d and ccd2506bd431),
++			 * which is NOT our intention.  Let's work around this.
++			 */
++			if (!fstatfs(fd, &stfs) && (stfs.f_type == 0xEF53 ||
++					stfs.f_type == 0x9123683E)) {
++				close(fd);
++				unlink(dev);
++				again = true;
++				goto repeat;
++			}
++#endif
++#endif
++			ret = ftruncate(fd, 0);
++			if (ret) {
++				erofs_err("failed to ftruncate(%s).", dev);
++				close(fd);
++				return -errno;
++			}
+ 		}
+ 		/* INT64_MAX is the limit of kernel vfs */
+ 		sbi->devsz = INT64_MAX;
+-- 
+2.39.3
 
-> 
-> Sandeep Dhavale (7):
->    erofs-utils: fsck: Fix potential memory leak in error path
->    erofs-utils: lib: Remove redundant line to get padding
->    erofs-utils: lib: Fix memory leak if __erofs_battach() fails
->    erofs-utils: lib: Check for error from z_erofs_pack_file_from_fd()
->    erofs-utils: lib: Fix the memory leak in error path
->    erofs-utils: lib: Remove redundant assignment
->    erofs-utils: lib: tar: Initialize the variable to avoid using garbage
->      value
-> 
->   fsck/main.c      | 4 +++-
->   lib/blobchunk.c  | 1 -
->   lib/cache.c      | 4 +++-
->   lib/compress.c   | 2 ++
->   lib/decompress.c | 4 +++-
->   lib/namei.c      | 1 -
->   lib/tar.c        | 2 +-
->   7 files changed, 12 insertions(+), 6 deletions(-)
-> 
