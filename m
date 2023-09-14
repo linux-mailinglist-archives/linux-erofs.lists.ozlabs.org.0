@@ -1,38 +1,35 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6E0D79FD72
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 09:49:53 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD5D07A007C
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 11:39:28 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RmTxW2N8zz3dHF
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 17:49:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RmXMx3RKJz3bxY
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Sep 2023 19:39:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RmTxS2XtDz3cGq
-	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Sep 2023 17:49:46 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vs1V.TH_1694677779;
-Received: from 30.97.48.222(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vs1V.TH_1694677779)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RmXMr3PmZz3bT8
+	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Sep 2023 19:39:18 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vs2OG4p_1694684346;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vs2OG4p_1694684346)
           by smtp.aliyun-inc.com;
-          Thu, 14 Sep 2023 15:49:39 +0800
-Message-ID: <ec2ebae2-200d-6f9c-6989-4c889beb5cbd@linux.alibaba.com>
-Date: Thu, 14 Sep 2023 15:49:38 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.13.0
-Subject: Re: [PATCH v8 7/8] erofs-utils: mkfs: introduce rebuild mode
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20230913120304.15741-1-jefflexu@linux.alibaba.com>
- <20230913120304.15741-8-jefflexu@linux.alibaba.com>
+          Thu, 14 Sep 2023 17:39:11 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20230913120304.15741-8-jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2] erofs-utils: avoid flushing the image file on closing
+Date: Thu, 14 Sep 2023 17:39:05 +0800
+Message-Id: <20230914093905.1600316-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20230914053211.1225452-1-hsiangkao@linux.alibaba.com>
+References: <20230914053211.1225452-1-hsiangkao@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,71 +41,116 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Traditionally, truncating to small sizes will trigger some
+flush-on-close semantics to avoid the notorious NULL files.
 
+I'm not sure if it's our use case since:
+  1) we're creating new image files instead of reusing old ones;
+  2) it kills end-to-end performance in practice;
+  3) other programs like GNU TAR doesn't work as this too for
+     such meaningless comparsion;
 
-On 2023/9/13 20:03, Jingbo Xu wrote:
-> Introduce a new EXPERIMENTAL rebuild mode, which can be used to
-> generate a meta-only multidev manifest image with an overlayfs-like
-> merged tree from multiple specific EROFS images either of
-> 
-> tarerofs index mode (--tar=i):
-> 
->    mkfs.erofs --tar=i --aufs layer0.erofs layer0.tar
->    ...
->    mkfs.erofs --tar=i --aufs layerN.erofs layerN-1.tar
-> 
-> or mkfs.erofs uncompressed mode without inline data:
-> 
->    mkfs.erofs --tar=f -Enoinline_data --aufs layer0.erofs layer0.tar
->    ...
->    mkfs.erofs --tar=f -Enoinline_data --aufs layerN-1.erofs layerN-1.tar
-> 
-> To merge these layers, just type:
->    mkfs.erofs merged.erofs layer0.erofs ... layerN-1.erofs
-> 
-> It doesn't support compression and/or flat inline datalayout yet.
-> 
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Let's work around it now.
 
-As Jingbo reported, applying the following diff to fix the device table:
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+change since v1:
+ - fix macOS build error:
 
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 389bb1b..c5dda66 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -590,10 +590,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
-  
-  		if (rebuild_mode) {
-  			char *srcpath = cfg.c_src_path;
-+			struct erofs_sb_info *src;
-  
-  			do {
--				struct erofs_sb_info *src;
+ configure.ac |  2 ++
+ lib/io.c     | 41 +++++++++++++++++++++++++++++++++++------
+ 2 files changed, 37 insertions(+), 6 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index a8cecd0..51ace67 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -190,6 +190,7 @@ AC_CHECK_HEADERS(m4_flatten([
+ 	sys/mman.h
+ 	sys/random.h
+ 	sys/stat.h
++	sys/statfs.h
+ 	sys/sysmacros.h
+ 	sys/time.h
+ 	unistd.h
+@@ -249,6 +250,7 @@ AC_CHECK_FUNCS(m4_flatten([
+ 	ftello64
+ 	pread64
+ 	pwrite64
++	fstatfs
+ 	strdup
+ 	strerror
+ 	strrchr
+diff --git a/lib/io.c b/lib/io.c
+index 1545436..602ac68 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -20,7 +20,9 @@
+ #ifdef HAVE_LINUX_FALLOC_H
+ #include <linux/falloc.h>
+ #endif
 -
-  				src = calloc(1, sizeof(struct erofs_sb_info));
-  				if (!src) {
-  					erofs_rebuild_cleanup();
-@@ -823,7 +822,7 @@ static int erofs_rebuild_load_trees(struct erofs_inode *root)
-  	struct erofs_sb_info *src;
-  	unsigned int extra_devices = 0;
-  	erofs_blk_t nblocks;
--	int ret, i = 0;
-+	int ret;
-  
-  	list_for_each_entry(src, &rebuild_src_list, list) {
-  		ret = erofs_rebuild_load_tree(root, src);
-@@ -853,7 +852,7 @@ static int erofs_rebuild_load_trees(struct erofs_inode *root)
-  			nblocks = src->devs[0].blocks;
-  		else
-  			nblocks = src->primarydevice_blocks;
--		sbi.devs[i++].blocks = nblocks;
-+		sbi.devs[src->dev - 1].blocks = nblocks;
-  	}
-  	return 0;
-  }
++#ifdef HAVE_SYS_STATFS_H
++#include <sys/statfs.h>
++#endif
+ #define EROFS_MODNAME	"erofs_io"
+ #include "erofs/print.h"
+ 
+@@ -58,6 +60,11 @@ int dev_open(struct erofs_sb_info *sbi, const char *dev)
+ 	struct stat st;
+ 	int fd, ret;
+ 
++#if defined(HAVE_SYS_STATFS_H) && defined(HAVE_FSTATFS)
++	bool again = false;
++
++repeat:
++#endif
+ 	fd = open(dev, O_RDWR | O_CREAT | O_BINARY, 0644);
+ 	if (fd < 0) {
+ 		erofs_err("failed to open(%s).", dev);
+@@ -82,11 +89,33 @@ int dev_open(struct erofs_sb_info *sbi, const char *dev)
+ 		sbi->devsz = round_down(sbi->devsz, erofs_blksiz(sbi));
+ 		break;
+ 	case S_IFREG:
+-		ret = ftruncate(fd, 0);
+-		if (ret) {
+-			erofs_err("failed to ftruncate(%s).", dev);
+-			close(fd);
+-			return -errno;
++		if (st.st_size) {
++#if defined(HAVE_SYS_STATFS_H) && defined(HAVE_FSTATFS)
++			struct statfs stfs;
++
++			if (again)
++				return -ENOTEMPTY;
++
++			/*
++			 * fses like EXT4 and BTRFS will flush dirty blocks
++			 * after truncate(0) even after the writeback happens
++			 * (see kernel commit 7d8f9f7d150d and ccd2506bd431),
++			 * which is NOT our intention.  Let's work around this.
++			 */
++			if (!fstatfs(fd, &stfs) && (stfs.f_type == 0xEF53 ||
++					stfs.f_type == 0x9123683E)) {
++				close(fd);
++				unlink(dev);
++				again = true;
++				goto repeat;
++			}
++#endif
++			ret = ftruncate(fd, 0);
++			if (ret) {
++				erofs_err("failed to ftruncate(%s).", dev);
++				close(fd);
++				return -errno;
++			}
+ 		}
+ 		/* INT64_MAX is the limit of kernel vfs */
+ 		sbi->devsz = INT64_MAX;
 -- 
-2.19.1.6.gb485710b
+2.39.3
+
