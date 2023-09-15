@@ -2,31 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC4E97A1875
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Sep 2023 10:17:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BF7007A18B4
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Sep 2023 10:26:41 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rn6VX1zVWz3cGv
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Sep 2023 18:17:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rn6jW18ryz3cG0
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Sep 2023 18:26:39 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rn6VR4Mp6z3bq4
-	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Sep 2023 18:17:01 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vs6TcBd_1694765814;
-Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vs6TcBd_1694765814)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rn6jM3sQ6z3c1C
+	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Sep 2023 18:26:30 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vs6ZaH1_1694766380;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vs6ZaH1_1694766380)
           by smtp.aliyun-inc.com;
-          Fri, 15 Sep 2023 16:16:55 +0800
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: hsiangkao@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: mkfs: support flatdev for multi-blob images
-Date: Fri, 15 Sep 2023 16:16:54 +0800
-Message-Id: <20230915081654.33112-1-jefflexu@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
+          Fri, 15 Sep 2023 16:26:24 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: mkfs: pop up most recently used dentries for tarerofs
+Date: Fri, 15 Sep 2023 16:26:19 +0800
+Message-Id: <20230915082619.3533530-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -40,127 +39,92 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Since kernel commit 8b465fecc35a ("erofs: support flattened block device
-for multi-blob images"), the flatdev feature has been introduced to
-support mounting multi-blobs container image as a single block device.
+Each tar header keeps the full file path.  It's useful to move most
+recently used intermediate dirs to list heads.
 
-To enable this feature, the mapped_blkaddr of each device slot needs to
-be set properly to the offset of the device in the flat address space.
+User time of tarerofs index mode can be reduced by 19%.
 
-The kernel side requires a non-empty device tag to mount an image in
-flatdev mode.  The uuid of the source image is used as the corresponding
-device tag in rebuild mode.
-
-Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-v2: drop "-Eflatdev" option; always set mapped_blkaddr in device slot
----
- include/erofs/internal.h |  1 +
- lib/blobchunk.c          |  8 ++++++--
- lib/super.c              |  1 +
- mkfs/main.c              | 17 +++++++++++++----
- 4 files changed, 21 insertions(+), 6 deletions(-)
+ include/erofs/rebuild.h | 2 +-
+ lib/rebuild.c           | 9 +++++++--
+ lib/tar.c               | 5 +++--
+ 3 files changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 19b912b..616cd3a 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -54,6 +54,7 @@ extern struct erofs_sb_info sbi;
- struct erofs_buffer_head;
+diff --git a/include/erofs/rebuild.h b/include/erofs/rebuild.h
+index 3ac074c..e99ce74 100644
+--- a/include/erofs/rebuild.h
++++ b/include/erofs/rebuild.h
+@@ -10,7 +10,7 @@ extern "C"
+ #include "internal.h"
  
- struct erofs_device_info {
-+	u8 tag[64];
- 	u32 blocks;
- 	u32 mapped_blkaddr;
- };
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index aca616e..a599f3a 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -410,20 +410,24 @@ int erofs_mkfs_dump_blobs(struct erofs_sb_info *sbi)
- 	}
+ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
+-		char *path, bool aufs, bool *whout, bool *opq);
++		char *path, bool aufs, bool *whout, bool *opq, bool to_head);
  
- 	if (sbi->extra_devices) {
--		unsigned int i;
-+		unsigned int i, ret;
-+		erofs_blk_t nblocks;
+ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi);
  
-+		nblocks = erofs_mapbh(NULL);
- 		pos_out = erofs_btell(bh_devt, false);
- 		i = 0;
- 		do {
- 			struct erofs_deviceslot dis = {
-+				.mapped_blkaddr = cpu_to_le32(nblocks),
- 				.blocks = cpu_to_le32(sbi->devs[i].blocks),
- 			};
--			int ret;
- 
-+			memcpy(dis.tag, sbi->devs[i].tag, sizeof(dis.tag));
- 			ret = dev_write(sbi, &dis, pos_out, sizeof(dis));
- 			if (ret)
- 				return ret;
- 			pos_out += sizeof(dis);
-+			nblocks += sbi->devs[i].blocks;
- 		} while (++i < sbi->extra_devices);
- 		bh_devt->op = &erofs_drop_directly_bhops;
- 		erofs_bdrop(bh_devt, false);
-diff --git a/lib/super.c b/lib/super.c
-index ce97278..f952f7e 100644
---- a/lib/super.c
-+++ b/lib/super.c
-@@ -65,6 +65,7 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
- 
- 		sbi->devs[i].mapped_blkaddr = le32_to_cpu(dis.mapped_blkaddr);
- 		sbi->devs[i].blocks = le32_to_cpu(dis.blocks);
-+		memcpy(sbi->devs[i].tag, dis.tag, sizeof(dis.tag));
- 		sbi->total_blocks += sbi->devs[i].blocks;
- 		pos += EROFS_DEVT_SLOT_SIZE;
- 	}
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 4fa2d92..9327b6f 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -765,8 +765,15 @@ static void erofs_mkfs_default_options(void)
- 	sbi.feature_compat = EROFS_FEATURE_COMPAT_SB_CHKSUM |
- 			     EROFS_FEATURE_COMPAT_MTIME;
- 
--	/* generate a default uuid first */
--	erofs_uuid_generate(sbi.uuid);
-+	/*
-+	 * Generate a default uuid first.  In rebuild mode the uuid of the
-+	 * source image is used as the device slot's tag.  The kernel will
-+	 * identify the tag as empty and fail the mount if its first byte is
-+	 * zero.  Apply this constraint to uuid to work around it.
-+	 */
-+	do {
-+		erofs_uuid_generate(sbi.uuid);
-+	} while (!sbi.uuid[0]);
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+index 27a1df4..9751f0e 100644
+--- a/lib/rebuild.c
++++ b/lib/rebuild.c
+@@ -52,7 +52,7 @@ static struct erofs_dentry *erofs_rebuild_mkdir(struct erofs_inode *dir,
  }
  
- /* https://reproducible-builds.org/specs/source-date-epoch/ for more details */
-@@ -822,7 +829,7 @@ static int erofs_rebuild_load_trees(struct erofs_inode *root)
- 	struct erofs_sb_info *src;
- 	unsigned int extra_devices = 0;
- 	erofs_blk_t nblocks;
--	int ret;
-+	int ret, idx;
+ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
+-		char *path, bool aufs, bool *whout, bool *opq)
++		char *path, bool aufs, bool *whout, bool *opq, bool to_head)
+ {
+ 	struct erofs_dentry *d = NULL;
+ 	unsigned int len = strlen(path);
+@@ -100,6 +100,10 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
+ 			}
  
- 	list_for_each_entry(src, &rebuild_src_list, list) {
- 		ret = erofs_rebuild_load_tree(root, src);
-@@ -854,7 +861,9 @@ static int erofs_rebuild_load_trees(struct erofs_inode *root)
- 		else
- 			nblocks = src->primarydevice_blocks;
- 		DBG_BUGON(src->dev < 1);
--		sbi.devs[src->dev - 1].blocks = nblocks;
-+		idx = src->dev - 1;
-+		sbi.devs[idx].blocks = nblocks;
-+		memcpy(sbi.devs[idx].tag, src->uuid, sizeof(src->uuid));
- 	}
- 	return 0;
- }
+ 			if (inode) {
++				if (to_head) {
++					list_del(&d->d_child);
++					list_add(&d->d_child, &pwd->i_subdirs);
++				}
+ 				pwd = inode;
+ 			} else if (!slash) {
+ 				d = erofs_d_alloc(pwd, s);
+@@ -262,7 +266,8 @@ static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
+ 	erofs_dbg("parsing %s", path);
+ 	dname = path + strlen(parent->i_srcpath) + 1;
+ 
+-	d = erofs_rebuild_get_dentry(parent, dname, false, &dumb, &dumb);
++	d = erofs_rebuild_get_dentry(parent, dname, false,
++				     &dumb, &dumb, false);
+ 	if (IS_ERR(d)) {
+ 		ret = PTR_ERR(d);
+ 		goto out;
+diff --git a/lib/tar.c b/lib/tar.c
+index 0f0e7c5..9685fe5 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -662,7 +662,7 @@ restart:
+ 
+ 	erofs_dbg("parsing %s (mode %05o)", eh.path, st.st_mode);
+ 
+-	d = erofs_rebuild_get_dentry(root, eh.path, tar->aufs, &whout, &opq);
++	d = erofs_rebuild_get_dentry(root, eh.path, tar->aufs, &whout, &opq, true);
+ 	if (IS_ERR(d)) {
+ 		ret = PTR_ERR(d);
+ 		goto out;
+@@ -695,7 +695,8 @@ restart:
+ 		}
+ 		d->inode = NULL;
+ 
+-		d2 = erofs_rebuild_get_dentry(root, eh.link, tar->aufs, &dumb, &dumb);
++		d2 = erofs_rebuild_get_dentry(root, eh.link, tar->aufs,
++					      &dumb, &dumb, false);
+ 		if (IS_ERR(d2)) {
+ 			ret = PTR_ERR(d2);
+ 			goto out;
 -- 
-2.19.1.6.gb485710b
+2.39.3
 
