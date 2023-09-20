@@ -1,31 +1,33 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5C137A8C27
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 Sep 2023 20:59:42 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCA1A7A8C32
+	for <lists+linux-erofs@lfdr.de>; Wed, 20 Sep 2023 21:02:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RrSWc69Rcz3cDS
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Sep 2023 04:59:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RrSb052dsz3cD3
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Sep 2023 05:02:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RrSWW1ph1z3c8r
-	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Sep 2023 04:59:33 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VsVuC-h_1695236361;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VsVuC-h_1695236361)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RrSZs0sJnz2yGv
+	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Sep 2023 05:02:28 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VsVvKLJ_1695236542;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VsVvKLJ_1695236542)
           by smtp.aliyun-inc.com;
-          Thu, 21 Sep 2023 02:59:26 +0800
+          Thu, 21 Sep 2023 03:02:23 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: limit total shared xattrs of a single inode
-Date: Thu, 21 Sep 2023 02:59:20 +0800
-Message-Id: <20230920185920.1833079-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH RESEND] erofs-utils: mkfs: limit total shared xattrs of a single inode
+Date: Thu, 21 Sep 2023 03:02:20 +0800
+Message-Id: <20230920190220.1837650-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20230920185920.1833079-1-hsiangkao@linux.alibaba.com>
+References: <20230920185920.1833079-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -74,7 +76,7 @@ index 790547c..1ed796b 100644
  		struct xattr_item *item = node->item;
  
 -		if (item->shared_xattr_id >= 0) {
-+		if (item->shared_xattr_id >= 0 || h_shared_count < UCHAR_MAX) {
++		if (item->shared_xattr_id >= 0 && h_shared_count < UCHAR_MAX) {
 +			++h_shared_count;
  			ret += sizeof(__le32);
  			continue;
