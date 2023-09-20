@@ -2,29 +2,29 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 832817A89A9
-	for <lists+linux-erofs@lfdr.de>; Wed, 20 Sep 2023 18:41:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E5C137A8C27
+	for <lists+linux-erofs@lfdr.de>; Wed, 20 Sep 2023 20:59:42 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4RrPSX6QHqz3cCm
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Sep 2023 02:41:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4RrSWc69Rcz3cDS
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Sep 2023 04:59:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4RrPSR4R14z2yGv
-	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Sep 2023 02:41:41 +1000 (AEST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VsVaYri_1695228089;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VsVaYri_1695228089)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4RrSWW1ph1z3c8r
+	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Sep 2023 04:59:33 +1000 (AEST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VsVuC-h_1695236361;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VsVuC-h_1695236361)
           by smtp.aliyun-inc.com;
-          Thu, 21 Sep 2023 00:41:35 +0800
+          Thu, 21 Sep 2023 02:59:26 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: manpages: update new options of mkfs.erofs
-Date: Thu, 21 Sep 2023 00:41:28 +0800
-Message-Id: <20230920164128.1637554-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: mkfs: limit total shared xattrs of a single inode
+Date: Thu, 21 Sep 2023 02:59:20 +0800
+Message-Id: <20230920185920.1833079-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -43,78 +43,52 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
- -b block-size
- -E ^xattr-name-filter
- --gzip
- --tar=[fi]
- --xattr-prefix=X
+Don't output more than 255 shared xattrs for a single inode due to the
+EROFS on-disk format limitation.
 
+Fixes: 116ac0a254fc ("erofs-utils: introduce shared xattr support")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- man/mkfs.erofs.1 | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ lib/xattr.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index 1cfde28..5dd718d 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -26,6 +26,11 @@ compression level (1 to 12 for LZ4HC, 0 to 9 for LZMA and 100 to 109 for LZMA
- extreme compression) separated by a comma.  Alternative algorithms could be
- specified and separated by colons.
- .TP
-+.BI "\-b " block-size
-+Set the fundamental block size of the filesystem in bytes.  In other words,
-+specify the smallest amount of data that can be accessed at a time.  The
-+default is the system page size.  It cannot be less than 512 bytes.
-+.TP
- .BI "\-C " max-pcluster-size
- Specify the maximum size of compress physical cluster in bytes.
- This may cause the big pcluster feature to be enabled (Linux v5.13+).
-@@ -79,6 +84,9 @@ for compatibility with Linux pre-v5.4.
- .BI noinline_data
- Don't inline regular files to enable FSDAX for these files (Linux v5.15+).
- .TP
-+.B ^xattr-name-filter
-+Turn off/on xattr name filter to optimize negative xattr lookups (Linux v6.6+).
-+.TP
- .BI ztailpacking
- Pack the tail part (pcluster) of compressed files into its metadata to save
- more space and the tail part I/O. (Linux v5.17+)
-@@ -152,6 +160,9 @@ When this option is used together with
- the final file gids are
- set to \fIGID\fR + \fIGID-OFFSET\fR.
- .TP
-+.B \-\-gzip
-+Filter tarball streams through gzip.
-+.TP
- .B \-\-help
- Display help string and exit.
- .TP
-@@ -169,12 +180,24 @@ Use extended inodes instead of compact inodes if the file modification time
- would overflow compact inodes. This is the default. Overrides
- .BR --ignore-mtime .
- .TP
-+.B "\-\-tar=f"
-+Generate a full EROFS image from a tarball.
-+.TP
-+.B "\-\-tar=i"
-+Generate an meta-only EROFS image from a tarball.
-+.TP
- .BI "\-\-uid-offset=" UIDOFFSET
- Add \fIUIDOFFSET\fR to all file UIDs.
- When this option is used together with
- .BR --force-uid ,
- the final file uids are
- set to \fIUID\fR + \fIUIDOFFSET\fR.
-+.TP
-+.BI "\-\-xattr-prefix=" PREFIX
-+Specify a customized extended attribute namespace prefix for space saving,
-+e.g. "trusted.overlay.".  You may give multiple
-+.B --xattr-prefix
-+options. (Linux v6.4+)
- .SH AUTHOR
- This version of \fBmkfs.erofs\fR is written by Li Guifu <blucerlee@gmail.com>,
- Miao Xie <miaoxie@huawei.com> and Gao Xiang <xiang@kernel.org> with
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 790547c..1ed796b 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -665,6 +665,7 @@ int erofs_prepare_xattr_ibody(struct erofs_inode *inode)
+ 	int ret;
+ 	struct inode_xattr_node *node;
+ 	struct list_head *ixattrs = &inode->i_xattrs;
++	unsigned int h_shared_count;
+ 
+ 	if (list_empty(ixattrs)) {
+ 		inode->xattr_isize = 0;
+@@ -672,11 +673,13 @@ int erofs_prepare_xattr_ibody(struct erofs_inode *inode)
+ 	}
+ 
+ 	/* get xattr ibody size */
++	h_shared_count = 0;
+ 	ret = sizeof(struct erofs_xattr_ibody_header);
+ 	list_for_each_entry(node, ixattrs, list) {
+ 		struct xattr_item *item = node->item;
+ 
+-		if (item->shared_xattr_id >= 0) {
++		if (item->shared_xattr_id >= 0 || h_shared_count < UCHAR_MAX) {
++			++h_shared_count;
+ 			ret += sizeof(__le32);
+ 			continue;
+ 		}
+@@ -980,7 +983,8 @@ char *erofs_export_xattr_ibody(struct erofs_inode *inode)
+ 		list_del(&node->list);
+ 
+ 		/* move inline xattrs to the onstack list */
+-		if (item->shared_xattr_id < 0) {
++		if (item->shared_xattr_id < 0 ||
++		    header->h_shared_count >= UCHAR_MAX) {
+ 			list_add(&node->list, &ilst);
+ 			continue;
+ 		}
 -- 
 2.39.3
 
