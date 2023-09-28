@@ -1,52 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7190F7B09E3
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Sep 2023 18:21:44 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E6FD7B199D
+	for <lists+linux-erofs@lfdr.de>; Thu, 28 Sep 2023 13:05:15 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=K+SdxwDZ;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=B+LiYngF;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Rwhh62YvYz3cNQ
-	for <lists+linux-erofs@lfdr.de>; Thu, 28 Sep 2023 02:21:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Rx9cS6dQ7z3cg1
+	for <lists+linux-erofs@lfdr.de>; Thu, 28 Sep 2023 21:05:12 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=K+SdxwDZ;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=B+LiYngF;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rwhh10m8lz3cGk
-	for <linux-erofs@lists.ozlabs.org>; Thu, 28 Sep 2023 02:21:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Rx9c16NKFz3cPK
+	for <linux-erofs@lists.ozlabs.org>; Thu, 28 Sep 2023 21:04:49 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 89EFFCE1A9C;
-	Wed, 27 Sep 2023 16:21:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF3E3C433C7;
-	Wed, 27 Sep 2023 16:21:21 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 1B827615A9;
+	Thu, 28 Sep 2023 11:04:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C7B7C43391;
+	Thu, 28 Sep 2023 11:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1695831690;
-	bh=5fVqTod0fsU3D85/NgpH5eX11yWtVW2s8jme29QI3SA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K+SdxwDZhx8uxbb5abeHgPolVgmwSiIBL6/AzX/eEpmg7s5Jd1TwEPpueT17Z+y1i
-	 r/3aJFhGZoIRaqB+ADboLRaAQZpJm6SMvyfu5jpdUX9fmjLLqHrtdJHSnoHaBHBoNB
-	 1Ras0NDOeGzjZ5rjoNJ7hj3RFSgjPFHQeOCu0doiR1ZFlmc7Dtn7+Tg4yFYE5HRxY7
-	 FflbgLOEB1zCas3wjtrhbqXfzlZd6DZqKcBXDoRDLeETsNHRLxD2cXgjOH7guvx0ma
-	 AufPlRnLwdi+pMqoWiBGk6SGa+Snjtz53w/pXkwTjOc2fDnSaUxFN105snuKm+T14u
-	 FBsBAdYo6oMFA==
-Date: Wed, 27 Sep 2023 18:21:19 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v4 0/29] block: Make blkdev_get_by_*() return handle
-Message-ID: <20230927-prahlen-reintreten-93706074e58d@brauner>
-References: <20230818123232.2269-1-jack@suse.cz>
+	s=k20201202; t=1695899087;
+	bh=xLy8ovC/T/DJkHAEAuHt2zyXkBkARonBG5h9l4hgO0A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=B+LiYngFvmRQJSi8FMS9rA/4kkZ1X9bA5G4LPi7q6jnThxNY8Xq3HC/urRnR2qAiL
+	 JHvqriASpJ1H91QoeNbEM1ZaFMQrMunUWdE8MjbtWxamzNeIEE7R8r6HXliwW0NNQB
+	 UnQnoyL/b+fRkjeOgV+wOfJKUjXEx+hTD+PXptAQZ5K8x0BFGrs7qurgsxz3yvmMVt
+	 GgI2twG3wZUmigYXw/dIaoMnUMGbzqs2ow49shRLU0dwXY56zd3s4XZvC9E/n/hUX5
+	 ifNrA//wb4zsSWj5I6RHkHjqGp/0RRxK0LUdieb4g0/XR8KimcqW4rQPfj5lqKs2fv
+	 5FaZa0ddIgoBQ==
+From: Jeff Layton <jlayton@kernel.org>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 31/87] fs/erofs: convert to new inode {a,m}time accessors
+Date: Thu, 28 Sep 2023 07:02:40 -0400
+Message-ID: <20230928110413.33032-30-jlayton@kernel.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230928110413.33032-1-jlayton@kernel.org>
+References: <20230928110300.32891-1-jlayton@kernel.org>
+ <20230928110413.33032-1-jlayton@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230818123232.2269-1-jack@suse.cz>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,100 +62,29 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Dave Kleikamp <shaggy@kernel.org>, jfs-discussion@lists.sourceforge.net, "Darrick J. Wong" <djwong@kernel.org>, linux-nvme@lists.infradead.org, Joseph Qi <joseph.qi@linux.alibaba.com>, dm-devel@redhat.com, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, Jack Wang <jinpu.wang@ionos.com>, Alasdair Kergon <agk@redhat.com>, drbd-dev@lists.linbit.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, Sergey Senozhatsky <senozhatsky@chromium.org>, Christoph Hellwig <hch@infradead.org>, xen-devel@lists.xenproject.org, Christian Borntraeger <borntraeger@linux.ibm.com>, Kent Overstreet <kent.overstreet@gmail.com>, Sven Schnelle <svens@linux.ibm.com>, linux-pm@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>, Joern Engel <joern@lazybastard.org>, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, David Sterba <dsterba@suse.com>, Jaegeuk Kim <jaegeuk@kernel.org>, Trond Myklebust <trond.myklebust@hammers
- pace.com>, linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org, linux-ext4@vger.kernel.org, Ted Tso <tytso@mit.edu>, linux-mm@kvack.org, Song Liu <song@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com, Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, "Md. Haris Iqbal" <haris.iqbal@ionos.com>, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, 27 Sep 2023 11:34:07 +0200, Jan Kara wrote:
-> Create struct bdev_handle that contains all parameters that need to be
-> passed to blkdev_put() and provide bdev_open_* functions that return
-> this structure instead of plain bdev pointer. This will eventually allow
-> us to pass one more argument to blkdev_put() (renamed to bdev_release())
-> without too much hassle.
-> 
-> 
-> [...]
-
-> to ease review / testing. Christian, can you pull the patches to your tree
-> to get some exposure in linux-next as well? Thanks!
-
-Yep. So I did it slighly differently. I pulled in the btrfs prereqs and
-then applied your series on top of it so we get all the Link: tags right.
-I'm running tests right now. Please double-check.
-
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
+ fs/erofs/inode.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Applied to the vfs.super branch of the vfs/vfs.git tree.
-Patches in the vfs.super branch should appear in linux-next soon.
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index edc8ec7581b8..b8ad05b4509d 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -175,7 +175,8 @@ static void *erofs_read_inode(struct erofs_buf *buf,
+ 		vi->chunkbits = sb->s_blocksize_bits +
+ 			(vi->chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
+ 	}
+-	inode->i_mtime = inode->i_atime = inode_get_ctime(inode);
++	inode_set_mtime_to_ts(inode,
++			      inode_set_atime_to_ts(inode, inode_get_ctime(inode)));
+ 
+ 	inode->i_flags &= ~S_DAX;
+ 	if (test_opt(&sbi->opt, DAX_ALWAYS) && S_ISREG(inode->i_mode) &&
+-- 
+2.41.0
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.super
-
-[01/29] block: Provide bdev_open_* functions
-       https://git.kernel.org/vfs/vfs/c/b7c828aa0b3c
-[02/29] block: Use bdev_open_by_dev() in blkdev_open()
-        https://git.kernel.org/vfs/vfs/c/d4e36f27b45a
-[03/29] block: Use bdev_open_by_dev() in disk_scan_partitions() and blkdev_bszset()
-        https://git.kernel.org/vfs/vfs/c/5f9bd6764c7a
-[04/29] drdb: Convert to use bdev_open_by_path()
-        https://git.kernel.org/vfs/vfs/c/0220ca8e443d
-[05/29] pktcdvd: Convert to bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/7af10b889789
-[06/29] rnbd-srv: Convert to use bdev_open_by_path()
-        https://git.kernel.org/vfs/vfs/c/3d27892a4be7
-[07/29] xen/blkback: Convert to bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/26afb0ed10b3
-[08/29] zram: Convert to use bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/efc8e3f4c6dc
-[09/29] bcache: Convert to bdev_open_by_path()
-        https://git.kernel.org/vfs/vfs/c/dc893f51d24a
-[10/29] dm: Convert to bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/80c2267c6d07
-[11/29] md: Convert to bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/15db36126ca6
-[12/29] mtd: block2mtd: Convert to bdev_open_by_dev/path()
-        https://git.kernel.org/vfs/vfs/c/4c27234bf3ce
-[13/29] nvmet: Convert to bdev_open_by_path()
-        https://git.kernel.org/vfs/vfs/c/70cffddcc300
-[14/29] s390/dasd: Convert to bdev_open_by_path()
-        https://git.kernel.org/vfs/vfs/c/5581d03457f8
-[15/29] scsi: target: Convert to bdev_open_by_path()
-        https://git.kernel.org/vfs/vfs/c/43de7d844d47
-[16/29] PM: hibernate: Convert to bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/105ea4a2fd18
-[17/29] PM: hibernate: Drop unused snapshot_test argument
-        https://git.kernel.org/vfs/vfs/c/b589a66e3688
-[18/29] mm/swap: Convert to use bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/615af8e29233
-[19/29] fs: Convert to bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/5173192bcfe6
-[20/29] btrfs: Convert to bdev_open_by_path()
-        https://git.kernel.org/vfs/vfs/c/8cf64782764f
-[21/29] erofs: Convert to use bdev_open_by_path()
-        https://git.kernel.org/vfs/vfs/c/4d41880bf249
-[22/29] ext4: Convert to bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/f7507612395e
-[23/29] f2fs: Convert to bdev_open_by_dev/path()
-        https://git.kernel.org/vfs/vfs/c/d9ff8e3b6498
-[24/29] jfs: Convert to bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/459dc6376338
-[25/29] nfs/blocklayout: Convert to use bdev_open_by_dev/path()
-        https://git.kernel.org/vfs/vfs/c/5b1df9a40929
-[26/29] ocfs2: Convert to use bdev_open_by_dev()
-        https://git.kernel.org/vfs/vfs/c/b6b95acbd943
-[27/29] reiserfs: Convert to bdev_open_by_dev/path()
-        https://git.kernel.org/vfs/vfs/c/7e3615ff6119
-[28/29] xfs: Convert to bdev_open_by_path()
-        https://git.kernel.org/vfs/vfs/c/176ccb99e207
-[29/29] block: Remove blkdev_get_by_*() functions
-        https://git.kernel.org/vfs/vfs/c/953863a5a2ff
