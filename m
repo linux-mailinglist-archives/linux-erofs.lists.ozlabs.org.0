@@ -2,55 +2,54 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25C9A7B8B7A
-	for <lists+linux-erofs@lfdr.de>; Wed,  4 Oct 2023 20:54:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CC487BA958
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Oct 2023 20:43:52 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=SYXkeAxA;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=O4bE6FB4;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4S13lS70DBz3dF9
-	for <lists+linux-erofs@lfdr.de>; Thu,  5 Oct 2023 05:54:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4S1gSM31hBz3cPm
+	for <lists+linux-erofs@lfdr.de>; Fri,  6 Oct 2023 05:43:47 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=SYXkeAxA;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=O4bE6FB4;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
 Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4S13l44FSrz3cgW
-	for <linux-erofs@lists.ozlabs.org>; Thu,  5 Oct 2023 05:54:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4S1gSD5cNgz2yVL
+	for <linux-erofs@lists.ozlabs.org>; Fri,  6 Oct 2023 05:43:40 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 26D41CE1C02;
-	Wed,  4 Oct 2023 18:54:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB20DC433CC;
-	Wed,  4 Oct 2023 18:54:21 +0000 (UTC)
+	by sin.source.kernel.org (Postfix) with ESMTP id 4C205CE23D0;
+	Thu,  5 Oct 2023 18:43:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85F83C433C7;
+	Thu,  5 Oct 2023 18:43:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1696445662;
-	bh=NKCGSIQYRSxC2JawkYr7/YEsyOK3p0HchI8AY3G83h0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SYXkeAxA6GIsUxWdFXlhz0b1EoS94hY6W+5ZE496QCIGR6BNog3PmkPhDJUR+hf0F
-	 j94xjhCefWxR0P6uPlC/k3Dl2Tf/q4/w9SCwaLsjcO4KSdIuDi+f5MREUd9HpfyqN9
-	 qfTlqAupj6ao/VhswuFB8CVLXK9n4XTZJEphvPMq+0SjUf481wKGqONpaozmOTHz1F
-	 Zy5OpfvyMzcIwNvid3b9NbGYc0dfw1p97dDsxv9ZPr4QPACKm9TjV2aPM+i6gGwLUP
-	 1rYokv2LmDEv2qKfpNT1m7awfHwGPlaxpHCG2jVDxDzQvYe99QiwMJDIG/ujR7a91w
-	 XgxekVcEqySnA==
-From: Jeff Layton <jlayton@kernel.org>
-To: Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 32/89] erofs: convert to new timestamp accessors
-Date: Wed,  4 Oct 2023 14:52:17 -0400
-Message-ID: <20231004185347.80880-30-jlayton@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231004185347.80880-1-jlayton@kernel.org>
-References: <20231004185221.80802-1-jlayton@kernel.org>
- <20231004185347.80880-1-jlayton@kernel.org>
+	s=k20201202; t=1696531417;
+	bh=lchUuJLrFsc8/TMgoB73Wh7n7W4z8E63wQO7H0+zvY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O4bE6FB4vb+otwv+hpYSWK98SEiA225v6ahDboy2r4yamQzuJyCU8Y74sOB3N+agv
+	 roVyN0mOQeK5s8Elz0YRH+lkn0YCUWjngBqp5QHHW8AA2EsW18buMnTWOzQtjNdyNV
+	 uV+wVItqn0jkaYLjJsUM1oTx0NYBFgLu+NbK769hDtair+CblnZtZ4iDTe4wW+ERTo
+	 396Ty3Fv7/EmLvXXvXom3GmKOeX45/Zg2qx8L0Tpjha9vEtPMKOqRwSbyLRxTZZLg4
+	 FQCgZ+FNOqJsa6ct0ov7bFYG2xyDeOpX0JNZAzY5p8UVu6/lcVj4Vdnjynn+T+28wU
+	 81uDQ9l/XWaDQ==
+Date: Fri, 6 Oct 2023 02:43:29 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Erik =?utf-8?Q?Sj=C3=B6lund?= <erik.sjolund@gmail.com>
+Subject: Re: errno is set to a negative value in lib/tar.c
+Message-ID: <ZR8D0ara6HGoH1aB@debian>
+Mail-Followup-To: Erik =?utf-8?Q?Sj=C3=B6lund?= <erik.sjolund@gmail.com>,
+	linux-erofs@lists.ozlabs.org
+References: <CAB+1q0Q3+7s1Lt8uW6DWZ7vfjhEKhG7O7MAQhCuH-C10cr9F4g@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAB+1q0Q3+7s1Lt8uW6DWZ7vfjhEKhG7O7MAQhCuH-C10cr9F4g@mail.gmail.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,31 +61,37 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Convert to using the new inode timestamp accessor functions.
+Hi Erik,
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/erofs/inode.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Mon, Oct 02, 2023 at 07:36:08PM +0200, Erik Sjölund wrote:
+> Hi,
+> Does this patch make sense?
+> (I thought errno should be set to a non-negative value)
+> Best regards,
+> Erik Sjölund
 
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index edc8ec7581b8..b8ad05b4509d 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -175,7 +175,8 @@ static void *erofs_read_inode(struct erofs_buf *buf,
- 		vi->chunkbits = sb->s_blocksize_bits +
- 			(vi->chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
- 	}
--	inode->i_mtime = inode->i_atime = inode_get_ctime(inode);
-+	inode_set_mtime_to_ts(inode,
-+			      inode_set_atime_to_ts(inode, inode_get_ctime(inode)));
- 
- 	inode->i_flags &= ~S_DAX;
- 	if (test_opt(&sbi->opt, DAX_ALWAYS) && S_ISREG(inode->i_mode) &&
--- 
-2.41.0
+Thanks for the patch.
 
+I'm on vacation, sorry for late reply.  It looks good to me,
+I will address it when I'm back.
+
+Thanks,
+Gao Xiang
+
+> 
+> diff --git a/lib/tar.c b/lib/tar.c
+> index 0744972..8204939 100644
+> --- a/lib/tar.c
+> +++ b/lib/tar.c
+> @@ -241,7 +241,7 @@ static long long tarerofs_otoi(const char *ptr, int len)
+>         val = strtol(ptr, &endp, 8);
+>         if ((!val && endp == inp) |
+>              (*endp && *endp != ' '))
+> -               errno = -EINVAL;
+> +               errno = EINVAL;
+>         return val;
+>  }
