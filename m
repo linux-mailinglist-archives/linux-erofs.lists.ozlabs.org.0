@@ -2,34 +2,59 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4FC77D2C50
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Oct 2023 10:13:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CAEBB7D3927
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Oct 2023 16:19:09 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=b2Vc8SKh;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SDScH5XJqz3cQD
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Oct 2023 19:13:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SDckg4yYWz3bv3
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Oct 2023 01:19:07 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=b2Vc8SKh;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.7; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SDSc73QwBz2xX4
-	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Oct 2023 19:12:55 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vuh9U5N_1698048769;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vuh9U5N_1698048769)
-          by smtp.aliyun-inc.com;
-          Mon, 23 Oct 2023 16:12:51 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/3] erofs-utils: lib: propagate return code for erofs_bflush()
-Date: Mon, 23 Oct 2023 16:12:41 +0800
-Message-Id: <20231023081241.1946579-3-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20231023081241.1946579-1-hsiangkao@linux.alibaba.com>
-References: <20231023081241.1946579-1-hsiangkao@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SDckX1MwXz2xYt
+	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Oct 2023 01:18:58 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698070740; x=1729606740;
+  h=date:from:to:cc:subject:message-id;
+  bh=2RF+C9B9sqDrxLGkdfx8o6mLxWKuKnPD24Qp5MuiQfs=;
+  b=b2Vc8SKh3DFkPiMh5/3l4dJxl01by+04GXZKu6nx71B6SOt0Jfnuxxmu
+   oBLwoQMLRpyU6Ni2R81ohYTLsv0W5x/5YuvSeAyO7l5le+3m1qNOTHJr+
+   3tgEB2wCo+o/oQ+e2XE/ZXzR2r2gPP8iTCsK30rJ/bpbg+sR1UX7l3MDo
+   y3aVhr9gQsvSEo3r6IbFSF5wGcciMN6YlsyUT1a70WPCM4yTZh8YRuhPw
+   TSquz/wBO1D416PHOT89meclJ35PqNcdYcpGL+n/dGo5Q6YnOT3wRLDOH
+   6491iuYIXpLh+bm9eZa/EfHzpFO1cdlK678Uc00rUR7vZLoJfLMGOoUSB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="8404262"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="8404262"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Oct 2023 07:18:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10872"; a="901808790"
+X-IronPort-AV: E=Sophos;i="6.03,244,1694761200"; 
+   d="scan'208";a="901808790"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Oct 2023 07:16:36 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1quvlb-0006yH-2Q;
+	Mon, 23 Oct 2023 14:18:51 +0000
+Date: Mon, 23 Oct 2023 22:18:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 07ab480161171a81fa92bf518606cff4ee9ccdd6
+Message-ID: <202310232209.fCRz2URg-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -41,238 +66,179 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Instead of just using a boolean.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 07ab480161171a81fa92bf518606cff4ee9ccdd6  erofs: simplify compression configuration parser
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/cache.h |  8 ++++----
- lib/cache.c           | 21 ++++++++++++++-------
- lib/inode.c           | 18 +++++++++---------
- mkfs/main.c           | 14 +++++++-------
- 4 files changed, 34 insertions(+), 27 deletions(-)
+elapsed time: 1472m
 
-diff --git a/include/erofs/cache.h b/include/erofs/cache.h
-index 31f54a4..11fc6ab 100644
---- a/include/erofs/cache.h
-+++ b/include/erofs/cache.h
-@@ -30,7 +30,7 @@ struct erofs_buffer_block;
- #define DEVT		5
- 
- struct erofs_bhops {
--	bool (*flush)(struct erofs_buffer_head *bh);
-+	int (*flush)(struct erofs_buffer_head *bh);
- };
- 
- struct erofs_buffer_head {
-@@ -91,11 +91,11 @@ static inline erofs_off_t erofs_btell(struct erofs_buffer_head *bh, bool end)
- 		(end ? list_next_entry(bh, list)->off : bh->off);
- }
- 
--static inline bool erofs_bh_flush_generic_end(struct erofs_buffer_head *bh)
-+static inline int erofs_bh_flush_generic_end(struct erofs_buffer_head *bh)
- {
- 	list_del(&bh->list);
- 	free(bh);
--	return true;
-+	return 0;
- }
- 
- struct erofs_buffer_head *erofs_buffer_init(void);
-@@ -108,7 +108,7 @@ struct erofs_buffer_head *erofs_battach(struct erofs_buffer_head *bh,
- 					int type, unsigned int size);
- 
- erofs_blk_t erofs_mapbh(struct erofs_buffer_block *bb);
--bool erofs_bflush(struct erofs_buffer_block *bb);
-+int erofs_bflush(struct erofs_buffer_block *bb);
- 
- void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke);
- erofs_blk_t erofs_total_metablocks(void);
-diff --git a/lib/cache.c b/lib/cache.c
-index e3cf69e..393b275 100644
---- a/lib/cache.c
-+++ b/lib/cache.c
-@@ -21,7 +21,7 @@ static struct list_head mapped_buckets[META + 1][EROFS_MAX_BLOCK_SIZE];
- /* last mapped buffer block to accelerate erofs_mapbh() */
- static struct erofs_buffer_block *last_mapped_block = &blkh;
- 
--static bool erofs_bh_flush_drop_directly(struct erofs_buffer_head *bh)
-+static int erofs_bh_flush_drop_directly(struct erofs_buffer_head *bh)
- {
- 	return erofs_bh_flush_generic_end(bh);
- }
-@@ -30,9 +30,9 @@ const struct erofs_bhops erofs_drop_directly_bhops = {
- 	.flush = erofs_bh_flush_drop_directly,
- };
- 
--static bool erofs_bh_flush_skip_write(struct erofs_buffer_head *bh)
-+static int erofs_bh_flush_skip_write(struct erofs_buffer_head *bh)
- {
--	return false;
-+	return -EBUSY;
- }
- 
- const struct erofs_bhops erofs_skip_write_bhops = {
-@@ -366,7 +366,7 @@ static void erofs_bfree(struct erofs_buffer_block *bb)
- 	free(bb);
- }
- 
--bool erofs_bflush(struct erofs_buffer_block *bb)
-+int erofs_bflush(struct erofs_buffer_block *bb)
- {
- 	const unsigned int blksiz = erofs_blksiz(&sbi);
- 	struct erofs_buffer_block *p, *n;
-@@ -376,6 +376,7 @@ bool erofs_bflush(struct erofs_buffer_block *bb)
- 		struct erofs_buffer_head *bh, *nbh;
- 		unsigned int padding;
- 		bool skip = false;
-+		int ret;
- 
- 		if (p == bb)
- 			break;
-@@ -383,9 +384,15 @@ bool erofs_bflush(struct erofs_buffer_block *bb)
- 		blkaddr = __erofs_mapbh(p);
- 
- 		list_for_each_entry_safe(bh, nbh, &p->buffers.list, list) {
--			/* flush and remove bh */
--			if (!bh->op->flush(bh))
-+			if (bh->op == &erofs_skip_write_bhops) {
- 				skip = true;
-+				continue;
-+			}
-+
-+			/* flush and remove bh */
-+			ret = bh->op->flush(bh);
-+			if (ret < 0)
-+				return ret;
- 		}
- 
- 		if (skip)
-@@ -401,7 +408,7 @@ bool erofs_bflush(struct erofs_buffer_block *bb)
- 		erofs_dbg("block %u to %u flushed", p->blkaddr, blkaddr - 1);
- 		erofs_bfree(p);
- 	}
--	return true;
-+	return 0;
- }
- 
- void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke)
-diff --git a/lib/inode.c b/lib/inode.c
-index e68b9d1..bcdb4b8 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -136,6 +136,7 @@ unsigned int erofs_iput(struct erofs_inode *inode)
- 	list_for_each_entry_safe(d, t, &inode->i_subdirs, d_child)
- 		free(d);
- 
-+	free(inode->compressmeta);
- 	if (inode->eof_tailraw)
- 		free(inode->eof_tailraw);
- 	list_del(&inode->i_hash);
-@@ -505,7 +506,7 @@ int erofs_write_file(struct erofs_inode *inode, int fd, u64 fpos)
- 	return write_uncompressed_file_from_fd(inode, fd);
- }
- 
--static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
-+static int erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
- {
- 	struct erofs_inode *const inode = bh->fsprivate;
- 	struct erofs_sb_info *sbi = inode->sbi;
-@@ -597,19 +598,19 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
- 
- 	ret = dev_write(sbi, &u, off, inode->inode_isize);
- 	if (ret)
--		return false;
-+		return ret;
- 	off += inode->inode_isize;
- 
- 	if (inode->xattr_isize) {
- 		char *xattrs = erofs_export_xattr_ibody(inode);
- 
- 		if (IS_ERR(xattrs))
--			return false;
-+			return PTR_ERR(xattrs);
- 
- 		ret = dev_write(sbi, xattrs, off, inode->xattr_isize);
- 		free(xattrs);
- 		if (ret)
--			return false;
-+			return ret;
- 
- 		off += inode->xattr_isize;
- 	}
-@@ -618,15 +619,14 @@ static bool erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
- 		if (inode->datalayout == EROFS_INODE_CHUNK_BASED) {
- 			ret = erofs_blob_write_chunk_indexes(inode, off);
- 			if (ret)
--				return false;
-+				return ret;
- 		} else {
- 			/* write compression metadata */
- 			off = roundup(off, 8);
- 			ret = dev_write(sbi, inode->compressmeta, off,
- 					inode->extent_isize);
- 			if (ret)
--				return false;
--			free(inode->compressmeta);
-+				return ret;
- 		}
- 	}
- 
-@@ -737,7 +737,7 @@ noinline:
- 	return 0;
- }
- 
--static bool erofs_bh_flush_write_inline(struct erofs_buffer_head *bh)
-+static int erofs_bh_flush_write_inline(struct erofs_buffer_head *bh)
- {
- 	struct erofs_inode *const inode = bh->fsprivate;
- 	const erofs_off_t off = erofs_btell(bh, false);
-@@ -745,7 +745,7 @@ static bool erofs_bh_flush_write_inline(struct erofs_buffer_head *bh)
- 
- 	ret = dev_write(inode->sbi, inode->idata, off, inode->idata_size);
- 	if (ret)
--		return false;
-+		return ret;
- 
- 	inode->idata_size = 0;
- 	free(inode->idata);
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 6d2b700..637d1b9 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -1170,10 +1170,9 @@ int main(int argc, char **argv)
- 	}
- 
- 	/* flush all buffers except for the superblock */
--	if (!erofs_bflush(NULL)) {
--		err = -EIO;
-+	err = erofs_bflush(NULL);
-+	if (err)
- 		goto exit;
--	}
- 
- 	err = erofs_mkfs_update_super_block(sb_bh, root_nid, &nblocks,
- 					    packed_nid);
-@@ -1181,10 +1180,11 @@ int main(int argc, char **argv)
- 		goto exit;
- 
- 	/* flush all remaining buffers */
--	if (!erofs_bflush(NULL))
--		err = -EIO;
--	else
--		err = dev_resize(&sbi, nblocks);
-+	err = erofs_bflush(NULL);
-+	if (err)
-+		goto exit;
-+
-+	err = dev_resize(&sbi, nblocks);
- 
- 	if (!err && erofs_sb_has_sb_chksum(&sbi))
- 		err = erofs_mkfs_superblock_csum_set();
+configs tested: 156
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20231022   gcc  
+arc                   randconfig-001-20231023   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                         at91_dt_defconfig   gcc  
+arm                                 defconfig   gcc  
+arm                   randconfig-001-20231023   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20231023   gcc  
+i386         buildonly-randconfig-002-20231023   gcc  
+i386         buildonly-randconfig-003-20231023   gcc  
+i386         buildonly-randconfig-004-20231023   gcc  
+i386         buildonly-randconfig-005-20231023   gcc  
+i386         buildonly-randconfig-006-20231023   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231023   gcc  
+i386                  randconfig-002-20231023   gcc  
+i386                  randconfig-003-20231023   gcc  
+i386                  randconfig-004-20231023   gcc  
+i386                  randconfig-005-20231023   gcc  
+i386                  randconfig-006-20231023   gcc  
+i386                  randconfig-011-20231023   gcc  
+i386                  randconfig-012-20231023   gcc  
+i386                  randconfig-013-20231023   gcc  
+i386                  randconfig-014-20231023   gcc  
+i386                  randconfig-015-20231023   gcc  
+i386                  randconfig-016-20231023   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231022   gcc  
+loongarch             randconfig-001-20231023   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5208evb_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                    maltaup_xpa_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+powerpc                     ep8248e_defconfig   gcc  
+powerpc                          g5_defconfig   clang
+powerpc                        icon_defconfig   clang
+powerpc                      makalu_defconfig   gcc  
+powerpc                 mpc8313_rdb_defconfig   clang
+powerpc                 mpc8315_rdb_defconfig   clang
+powerpc                    sam440ep_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv             nommu_k210_sdcard_defconfig   gcc  
+riscv                 randconfig-001-20231023   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20231023   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                 randconfig-001-20231023   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-001-20231023   gcc  
+x86_64       buildonly-randconfig-002-20231023   gcc  
+x86_64       buildonly-randconfig-003-20231023   gcc  
+x86_64       buildonly-randconfig-004-20231023   gcc  
+x86_64       buildonly-randconfig-005-20231023   gcc  
+x86_64       buildonly-randconfig-006-20231023   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-001-20231023   gcc  
+x86_64                randconfig-002-20231023   gcc  
+x86_64                randconfig-003-20231023   gcc  
+x86_64                randconfig-004-20231023   gcc  
+x86_64                randconfig-005-20231023   gcc  
+x86_64                randconfig-006-20231023   gcc  
+x86_64                randconfig-011-20231023   gcc  
+x86_64                randconfig-012-20231023   gcc  
+x86_64                randconfig-013-20231023   gcc  
+x86_64                randconfig-014-20231023   gcc  
+x86_64                randconfig-015-20231023   gcc  
+x86_64                randconfig-016-20231023   gcc  
+x86_64                randconfig-071-20231023   gcc  
+x86_64                randconfig-072-20231023   gcc  
+x86_64                randconfig-073-20231023   gcc  
+x86_64                randconfig-074-20231023   gcc  
+x86_64                randconfig-075-20231023   gcc  
+x86_64                randconfig-076-20231023   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                    rhel-8.3-kselftests   gcc  
+x86_64                         rhel-8.3-kunit   gcc  
+x86_64                           rhel-8.3-ltp   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                  nommu_kc705_defconfig   gcc  
+
 -- 
-2.39.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
