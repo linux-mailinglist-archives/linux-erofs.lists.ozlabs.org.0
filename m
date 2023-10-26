@@ -1,69 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E0F97D7B4B
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Oct 2023 05:34:10 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19E127D7B54
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Oct 2023 05:43:02 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=f++MN0VY;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=ALMmmM9t;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SGBH42L4vz3vsf
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Oct 2023 14:34:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SGBTH6xLHz2ykV
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Oct 2023 14:42:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=f++MN0VY;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=ALMmmM9t;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42e; helo=mail-pf1-x42e.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::431; helo=mail-pf1-x431.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SGBD21DrWz3dKn
-	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Oct 2023 14:31:29 +1100 (AEDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-6b20a48522fso409841b3a.1
-        for <linux-erofs@lists.ozlabs.org>; Wed, 25 Oct 2023 20:31:29 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SGBTB3fP0z2xTm
+	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Oct 2023 14:42:52 +1100 (AEDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6bb4abb8100so409795b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Wed, 25 Oct 2023 20:42:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698291085; x=1698895885; darn=lists.ozlabs.org;
+        d=gmail.com; s=20230601; t=1698291769; x=1698896569; darn=lists.ozlabs.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pG/yiI8lmu5ttHIV4nGpRPyvwtSsNLtKzIlMaESEX5U=;
-        b=f++MN0VYdeRA2fFI8Qg1cibVh/vGutXa3VAK9Vi7gqMrduVhPFfhlFBD1dXktWyFsI
-         aM2H1t0amomuA1n16wpzeTKu3b2kk9kCNxK0Sh/7aLjkPMvPEXYuiaI2FaM70B5IDHAf
-         qR9/Ej3vgcKeleD/hGm57b4UVVaxRmBLrq07Z0NXGitAPmxUrsv5ab62YkIEnoP6mgxx
-         qYj2wa1HoOoX1auf9JuK5txmywMg4+YaBxdFfX5IJKjwfY1+pI82EsqhSmLOA6N6kojs
-         S2JwALMpY23KOD3hcNuM98tMXYOFdh0vad6phBhAghNFf2h2RS4eDNj1Z1hOwRXHNOwu
-         G5Ew==
+        bh=7hgyXtgeuM91v2O73kk15NKizTKA7Lbg0Ot69X2U/sA=;
+        b=ALMmmM9tSmN28lRuiFo+snl3N48Qp6sUTZX5aEvjhz11MUcXSwOb3VYl4m46GOhLrb
+         cTfp11qhGG1h0W1uIwPh6PNd6EhdZHep9kVi43zA2/HkYTTzVnt5xtUQVDPsFtk+mC9F
+         Sutol8uTcne1smzt5GWqX4KNqjuCmtQV6aBEYNHmqnXcvu8zjr8CMdoXSC1bo4Glc5vF
+         7myTl9y/SvP7o4j1Rjeo/6VGXYo4A2nSauh8QH8omk4CRPFdZOr9clTgqJWVoU+giUlz
+         u8959B25MnU/pjzaG67FdaW79TguZnWYBOko3vu8Q8XDHTDYRYR1slYVixNIKhBQt/Ic
+         dTtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698291085; x=1698895885;
+        d=1e100.net; s=20230601; t=1698291769; x=1698896569;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pG/yiI8lmu5ttHIV4nGpRPyvwtSsNLtKzIlMaESEX5U=;
-        b=HCuBuoIXUw0XY9OLc+UqpIMa+hRwukrBcmlNZ9aKOZcgZBxlmG5MSabjHrVTeA7I73
-         kXPI7NqQpjPGGv2hYIsXsIMPbN0fwx4A2OxvonzlNGbyhmeRmjJJQwGijHtrxSpnxBUU
-         6OXfdZDJl6BYo7Gsb3x1kzmZzvo55B6bY+2ctr3py3UGNfTDviyKRmEI/H7Kt8Jqc8zi
-         hYrIU0N5vj2wPAg8TWnnsJ2zqqBqkfu1cq0GkjPMjycp0ro+bz/0FvoR+9pRIgjGhiym
-         fLoJcdv1ngLMVOdhlj6rNYDsEE0rqg29BmofwYUuVKRqVxkyDX0dH1h9BkSYYOVkQHea
-         5Csg==
-X-Gm-Message-State: AOJu0Yxmm4yzC/Xq2Ca7yQYljsUu5o17c6fTxCxBd1Laj566mh+fJTR2
-	vzKOgCCV0nxLFKfl94Qn+i733NiAUzM=
-X-Google-Smtp-Source: AGHT+IH07xI4RkBOZRAYoV+NutElQZaay70zLfrIOC9VM5ODzrbszTCv4XfDw4XRZvP+OMTX1QjdVQ==
-X-Received: by 2002:a05:6a20:e115:b0:153:78c1:c40f with SMTP id kr21-20020a056a20e11500b0015378c1c40fmr9374574pzb.15.1698291085427;
-        Wed, 25 Oct 2023 20:31:25 -0700 (PDT)
+        bh=7hgyXtgeuM91v2O73kk15NKizTKA7Lbg0Ot69X2U/sA=;
+        b=fQWnP4LhJlPfPsfUEt6psmJygHSUByws8GXXI087Loh8FNHVuRUJkViQ8Uu44Eg6Sf
+         wpx5Pma5OcvUEEbHO/GveUEdiTHQgLfdmlPPRtVWyXPeFPJKojJoJDh09bA/9xhpQtB/
+         lprgEXQBCseCHAeD1t0gj2/tJcShVvs5vBg5zvzQOprMPlfv0DI49qI+dYCqiTd425J8
+         EkOIFBQxDANvJOMmYgISo20XDDFUzybxmcXuz4JC+AWKTQs2yufJtaJ9tVkBEd7xENH+
+         nzU6UphvfBYuFC5rk9haRyQ/KCUyAdyUjqNsQ2X684mGx/cOsCd1HMFj0Gr+EzG6CAR3
+         YyHQ==
+X-Gm-Message-State: AOJu0YzF6UH0o7e4TKOidnCxs5xdI82B4tuH0Iga1bzOGbJ0dBz/pUd8
+	V86JWemAgqK0ujnQQenLqDY=
+X-Google-Smtp-Source: AGHT+IHb1rT1mMR/a4wm/RAs/zjlnUHIOtmM+SDlLHDdDV0xv7S/22W13cSN2JKBOzR82eQ/upo57A==
+X-Received: by 2002:a05:6a00:1ad4:b0:68f:cc47:fcc8 with SMTP id f20-20020a056a001ad400b0068fcc47fcc8mr15418709pfv.14.1698291769506;
+        Wed, 25 Oct 2023 20:42:49 -0700 (PDT)
 Received: from localhost ([156.236.96.165])
-        by smtp.gmail.com with ESMTPSA id n14-20020a056a0007ce00b006c046a60580sm1385612pfu.21.2023.10.25.20.31.24
+        by smtp.gmail.com with ESMTPSA id h26-20020aa796da000000b0069343e474bcsm10128924pfq.104.2023.10.25.20.42.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 20:31:25 -0700 (PDT)
-Date: Thu, 26 Oct 2023 11:31:11 +0800
+        Wed, 25 Oct 2023 20:42:49 -0700 (PDT)
+Date: Thu, 26 Oct 2023 11:42:45 +0800
 From: Yue Hu <zbestahu@gmail.com>
 To: Ferry Meng <mengferry@linux.alibaba.com>
-Subject: Re: [PATCH 1/2] erofs: get rid of ROOT_NID()
-Message-ID: <20231026113052.00004950.zbestahu@gmail.com>
-In-Reply-To: <20231026021627.23284-1-mengferry@linux.alibaba.com>
+Subject: Re: [PATCH 2/2] erofs: tidy up redundant includes
+Message-ID: <20231026114245.00005aa4.zbestahu@gmail.com>
+In-Reply-To: <20231026021627.23284-2-mengferry@linux.alibaba.com>
 References: <20231026021627.23284-1-mengferry@linux.alibaba.com>
+	<20231026021627.23284-2-mengferry@linux.alibaba.com>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -83,10 +84,12 @@ Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, 26 Oct 2023 10:16:26 +0800
+On Thu, 26 Oct 2023 10:16:27 +0800
 Ferry Meng <mengferry@linux.alibaba.com> wrote:
 
-> Let's open code this helper for simplicity.
+> - Remove unused includes like <linux/parser.h> and <linux/prefetch.h>;
+> 
+> - Move common includes into "internal.h".
 > 
 > Signed-off-by: Ferry Meng <mengferry@linux.alibaba.com>
 
