@@ -2,55 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1291C7DBC54
-	for <lists+linux-erofs@lfdr.de>; Mon, 30 Oct 2023 16:04:14 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mJdyCBVb;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id 1415E7DC634
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Oct 2023 07:05:55 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SJxPR6z1Mz3cNk
-	for <lists+linux-erofs@lfdr.de>; Tue, 31 Oct 2023 02:04:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SKKPq2qncz3c3g
+	for <lists+linux-erofs@lfdr.de>; Tue, 31 Oct 2023 17:05:51 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mJdyCBVb;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.68.75; helo=ams.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SJxPN65Rmz3bwj
-	for <linux-erofs@lists.ozlabs.org>; Tue, 31 Oct 2023 02:04:08 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by ams.source.kernel.org (Postfix) with ESMTP id 075DCB8094D;
-	Mon, 30 Oct 2023 15:04:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B59E3C433C7;
-	Mon, 30 Oct 2023 15:04:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698678245;
-	bh=0d3/+GxGMdfOff0/hkwfnIJbNqj8qgEyQZNmJtkQDYA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mJdyCBVbD3Ow1xcl0bn96Gny34+Y0wRnViaDVV9tU9XqjRT4ZAqRr/dXVuU5w4bMn
-	 8zxuF6ZjskjGvpzcRGNwyhPYz+Et0/Zl7F/jaq1kYtI9ksHwGpNv/lHtDBMqwPifCx
-	 P/NZPic9P3Q4Chmxj/zrp04OWpIBxQLXoWZQy920m2Lo1yxaAbxH6OHNuD97DnYtXf
-	 cb5Qw6vd2sAQUwaSbWpMfmmcPMdr/PGG8Qy8t/J6gKgnk5D1h7UMeHsOZbi+MnUD1b
-	 /cLdbi1qyLsMFePON0KSbilKtsgIyFUTMByb9daofg39FthHsKPtoJ0DLGDqXg8dqT
-	 b2X3IcOHHbN4A==
-Message-ID: <a415467d-01a1-500e-130c-e240ffbbb00b@kernel.org>
-Date: Mon, 30 Oct 2023 23:04:04 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SKKPc0Kx8z2xpp
+	for <linux-erofs@lists.ozlabs.org>; Tue, 31 Oct 2023 17:05:37 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VvGHDFU_1698732325;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VvGHDFU_1698732325)
+          by smtp.aliyun-inc.com;
+          Tue, 31 Oct 2023 14:05:30 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: fix erofs_insert_workgroup() lockref usage
+Date: Tue, 31 Oct 2023 14:05:24 +0800
+Message-Id: <20231031060524.1103921-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH 2/2] erofs: tidy up redundant includes
-Content-Language: en-US
-To: Ferry Meng <mengferry@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20231026021627.23284-1-mengferry@linux.alibaba.com>
- <20231026021627.23284-2-mengferry@linux.alibaba.com>
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20231026021627.23284-2-mengferry@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,15 +39,66 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2023/10/26 10:16, Ferry Meng wrote:
-> - Remove unused includes like <linux/parser.h> and <linux/prefetch.h>;
-> 
-> - Move common includes into "internal.h".
-> 
-> Signed-off-by: Ferry Meng <mengferry@linux.alibaba.com>
+As Linus pointed out [1], lockref_put_return() is fundamentally
+designed to be something that can fail.  It behaves as a fastpath-only
+thing, and the failure case needs to be handled anyway.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+Actually, since the new pcluster was just allocated without being
+populated, it won't be accessed by others until it is inserted into
+XArray, so lockref helpers are actually unneeded here.
+
+Let's just set the proper reference count on initializing.
+
+[1] https://lore.kernel.org/r/CAHk-=whCga8BeQnJ3ZBh_Hfm9ctba_wpF444LpwRybVNMzO6Dw@mail.gmail.com
+Fixes: 7674a42f35ea ("erofs: use struct lockref to replace handcrafted approach")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/utils.c | 8 +-------
+ fs/erofs/zdata.c | 1 +
+ 2 files changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index cc6fb9e98899..4256a85719a1 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -77,12 +77,7 @@ struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
+ 	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+ 	struct erofs_workgroup *pre;
+ 
+-	/*
+-	 * Bump up before making this visible to others for the XArray in order
+-	 * to avoid potential UAF without serialized by xa_lock.
+-	 */
+-	lockref_get(&grp->lockref);
+-
++	DBG_BUGON(grp->lockref.count < 1);
+ repeat:
+ 	xa_lock(&sbi->managed_pslots);
+ 	pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
+@@ -96,7 +91,6 @@ struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
+ 			cond_resched();
+ 			goto repeat;
+ 		}
+-		lockref_put_return(&grp->lockref);
+ 		grp = pre;
+ 	}
+ 	xa_unlock(&sbi->managed_pslots);
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 036f610e044b..a7e6847f6f8f 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -796,6 +796,7 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
+ 		return PTR_ERR(pcl);
+ 
+ 	spin_lock_init(&pcl->obj.lockref.lock);
++	pcl->obj.lockref.count = 1;	/* one ref for this request */
+ 	pcl->algorithmformat = map->m_algorithmformat;
+ 	pcl->length = 0;
+ 	pcl->partial = true;
+-- 
+2.39.3
+
