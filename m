@@ -1,54 +1,60 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA2E27DDBE5
-	for <lists+linux-erofs@lfdr.de>; Wed,  1 Nov 2023 05:36:15 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72E117DE06F
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 Nov 2023 12:40:58 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OkjP2u2Y;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=k6Zt2Ytt;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SKvMs6SkDz3bwJ
-	for <lists+linux-erofs@lfdr.de>; Wed,  1 Nov 2023 15:36:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SL4p00jthz2yN3
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 Nov 2023 22:40:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OkjP2u2Y;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=k6Zt2Ytt;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=temperror (SPF Temporary Error: DNS Timeout) smtp.mailfrom=intel.com (client-ip=192.55.52.43; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SKvMl4XZWz2yVd
-	for <linux-erofs@lists.ozlabs.org>; Wed,  1 Nov 2023 15:36:03 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by ams.source.kernel.org (Postfix) with ESMTP id A0010B81690;
-	Wed,  1 Nov 2023 04:35:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E38EC433C7;
-	Wed,  1 Nov 2023 04:35:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1698813356;
-	bh=vx0Vtdnjqks3VndXdG5T8xg4RLh5/XDEGWMNvAZ2jjk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=OkjP2u2YTNSe0CcGUdxP+oWXWvQ5qDIpNM2mmtPSuJLjJDEm8Z3PyI2d6o5/iXB0D
-	 WTOmAkgZETD0V8tV6yzDEbm4s9Dk6QF+LtemeaM1VjpW0e7mrWau/WT0Cp5jCia32l
-	 FuqukziPY6Ve2BAHuD6GY3kpL8Tekg8KFjLhLDSzzrVt9/Yjcme13LEHtW+lzWDvzX
-	 w2jFnEYChCBXVfsI50tlIlD0jzYJ1n94ljj0wFag9WiyIBxDOpKSDl7l/icy6qP/LY
-	 11ewTZIiMiAuH2is3MyT+9it7uGsDZsE4bbL4eJcutwIArPDkwimxsFPRgtz4Wxck8
-	 l5AdejQvkKZfg==
-Date: Wed, 1 Nov 2023 12:35:44 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [GIT PULL] erofs updates for 6.7-rc1
-Message-ID: <ZUHVoP/682uPjvfj@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Jingbo Xu <jefflexu@linux.alibaba.com>, Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>, Tiwei Bie <tiwei.btw@antgroup.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SL4nl5shKz2xm3
+	for <linux-erofs@lists.ozlabs.org>; Wed,  1 Nov 2023 22:40:22 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1698838844; x=1730374844;
+  h=date:from:to:cc:subject:message-id;
+  bh=3mVZ1iUYiN04MLyfO9sAazVkElVckPTdIhGCpMNmtgw=;
+  b=k6Zt2YttPvCgvFO0rHN0vm/InFfPwlDH3cG5eHWoiKkU3y9ntL+H9j8X
+   gGcA5Xt8aGoBEl1R9JeaX/mxOWyExbwO2gO1JiawvVmaoL4RjJCXmEmJG
+   DP48WHoeoFCK2+rbLHE4wio55JTWpFFITdnW3l0g4Ecwwu+pqcM6aJBfP
+   fmM3aeVjxtH5hijaLj1bGlJaW8YWtuIsqm16HtvPOjXXZPx7XZWr9bsoG
+   Q+htFRcraqzvtmIPkoXLSUFRBALhCbNIrKC+9C7oMbZgWyJGMOSa5XRJI
+   szS5+KykRpR7NpQibbwkrIYLYorX14zOQeuxkrd8B2aPQg83HbieQhAfb
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="474719630"
+X-IronPort-AV: E=Sophos;i="6.03,268,1694761200"; 
+   d="scan'208";a="474719630"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2023 04:40:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10880"; a="760912044"
+X-IronPort-AV: E=Sophos;i="6.03,268,1694761200"; 
+   d="scan'208";a="760912044"
+Received: from lkp-server01.sh.intel.com (HELO 17d9e85e5079) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 01 Nov 2023 04:40:14 -0700
+Received: from kbuild by 17d9e85e5079 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1qy9a0-0000mO-21;
+	Wed, 01 Nov 2023 11:40:12 +0000
+Date: Wed, 01 Nov 2023 19:39:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 1a0ac8bd7a4fa5b2f4ef14c3b1e9d6e5a5faae06
+Message-ID: <202311011938.LNUXXgcx-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,73 +66,231 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Yue Hu <huyue2@coolpad.com>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 1a0ac8bd7a4fa5b2f4ef14c3b1e9d6e5a5faae06  erofs: fix erofs_insert_workgroup() lockref usage
 
-Could you consider this pull request for 6.7-rc1?
+elapsed time: 1459m
 
-Nothing exciting lands for this cycle, since we're still busying in
-developing support for sub-page blocks and large-folios of
-compressed data for new scenarios on Android.
+configs tested: 208
+configs skipped: 2
 
-In this cycle, MicroLZMA format is marked as stable, and there are
-minor cleanups around documentation and codebase.  In addition, it
-also fixes incorrect lockref usage in erofs_insert_workgroup().
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-All commits have been in -next and no potential merge conflict is
-observed.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     nsimosci_hs_defconfig   gcc  
+arc                   randconfig-001-20231031   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                         lpc18xx_defconfig   gcc  
+arm                        multi_v7_defconfig   gcc  
+arm                          pxa3xx_defconfig   gcc  
+arm                   randconfig-001-20231101   gcc  
+arm64                            allmodconfig   gcc  
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20231031   gcc  
+i386         buildonly-randconfig-001-20231101   gcc  
+i386         buildonly-randconfig-002-20231031   gcc  
+i386         buildonly-randconfig-002-20231101   gcc  
+i386         buildonly-randconfig-003-20231031   gcc  
+i386         buildonly-randconfig-003-20231101   gcc  
+i386         buildonly-randconfig-004-20231031   gcc  
+i386         buildonly-randconfig-004-20231101   gcc  
+i386         buildonly-randconfig-005-20231031   gcc  
+i386         buildonly-randconfig-005-20231101   gcc  
+i386         buildonly-randconfig-006-20231031   gcc  
+i386         buildonly-randconfig-006-20231101   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231031   gcc  
+i386                  randconfig-001-20231101   gcc  
+i386                  randconfig-002-20231031   gcc  
+i386                  randconfig-002-20231101   gcc  
+i386                  randconfig-003-20231031   gcc  
+i386                  randconfig-003-20231101   gcc  
+i386                  randconfig-004-20231031   gcc  
+i386                  randconfig-004-20231101   gcc  
+i386                  randconfig-005-20231031   gcc  
+i386                  randconfig-005-20231101   gcc  
+i386                  randconfig-006-20231031   gcc  
+i386                  randconfig-006-20231101   gcc  
+i386                  randconfig-011-20231031   gcc  
+i386                  randconfig-011-20231101   gcc  
+i386                  randconfig-012-20231031   gcc  
+i386                  randconfig-012-20231101   gcc  
+i386                  randconfig-013-20231031   gcc  
+i386                  randconfig-013-20231101   gcc  
+i386                  randconfig-014-20231031   gcc  
+i386                  randconfig-014-20231101   gcc  
+i386                  randconfig-015-20231031   gcc  
+i386                  randconfig-015-20231101   gcc  
+i386                  randconfig-016-20231031   gcc  
+i386                  randconfig-016-20231101   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231031   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5249evb_defconfig   gcc  
+m68k                       m5275evb_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                        bcm63xx_defconfig   clang
+mips                         cobalt_defconfig   gcc  
+mips                         db1xxx_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   gcc  
+powerpc                   currituck_defconfig   gcc  
+powerpc                     ep8248e_defconfig   gcc  
+powerpc                      katmai_defconfig   clang
+powerpc                    klondike_defconfig   gcc  
+powerpc                   lite5200b_defconfig   clang
+powerpc               mpc834x_itxgp_defconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20231031   gcc  
+riscv                 randconfig-001-20231101   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20231031   gcc  
+s390                  randconfig-001-20231101   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          polaris_defconfig   gcc  
+sh                          r7780mp_defconfig   gcc  
+sh                   secureedge5410_defconfig   gcc  
+sh                             sh03_defconfig   gcc  
+sh                           sh2007_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                 randconfig-001-20231101   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           alldefconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-001-20231031   gcc  
+x86_64       buildonly-randconfig-001-20231101   gcc  
+x86_64       buildonly-randconfig-002-20231031   gcc  
+x86_64       buildonly-randconfig-002-20231101   gcc  
+x86_64       buildonly-randconfig-003-20231031   gcc  
+x86_64       buildonly-randconfig-003-20231101   gcc  
+x86_64       buildonly-randconfig-004-20231031   gcc  
+x86_64       buildonly-randconfig-004-20231101   gcc  
+x86_64       buildonly-randconfig-005-20231031   gcc  
+x86_64       buildonly-randconfig-005-20231101   gcc  
+x86_64       buildonly-randconfig-006-20231031   gcc  
+x86_64       buildonly-randconfig-006-20231101   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-001-20231031   gcc  
+x86_64                randconfig-001-20231101   gcc  
+x86_64                randconfig-002-20231031   gcc  
+x86_64                randconfig-002-20231101   gcc  
+x86_64                randconfig-003-20231031   gcc  
+x86_64                randconfig-003-20231101   gcc  
+x86_64                randconfig-004-20231031   gcc  
+x86_64                randconfig-004-20231101   gcc  
+x86_64                randconfig-005-20231031   gcc  
+x86_64                randconfig-005-20231101   gcc  
+x86_64                randconfig-006-20231031   gcc  
+x86_64                randconfig-006-20231101   gcc  
+x86_64                randconfig-011-20231031   gcc  
+x86_64                randconfig-011-20231101   gcc  
+x86_64                randconfig-012-20231031   gcc  
+x86_64                randconfig-012-20231101   gcc  
+x86_64                randconfig-013-20231031   gcc  
+x86_64                randconfig-013-20231101   gcc  
+x86_64                randconfig-014-20231031   gcc  
+x86_64                randconfig-014-20231101   gcc  
+x86_64                randconfig-015-20231031   gcc  
+x86_64                randconfig-015-20231101   gcc  
+x86_64                randconfig-016-20231031   gcc  
+x86_64                randconfig-016-20231101   gcc  
+x86_64                randconfig-071-20231031   gcc  
+x86_64                randconfig-071-20231101   gcc  
+x86_64                randconfig-072-20231031   gcc  
+x86_64                randconfig-072-20231101   gcc  
+x86_64                randconfig-073-20231031   gcc  
+x86_64                randconfig-073-20231101   gcc  
+x86_64                randconfig-074-20231031   gcc  
+x86_64                randconfig-074-20231101   gcc  
+x86_64                randconfig-075-20231031   gcc  
+x86_64                randconfig-075-20231101   gcc  
+x86_64                randconfig-076-20231031   gcc  
+x86_64                randconfig-076-20231101   gcc  
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                    rhel-8.3-kselftests   gcc  
+x86_64                         rhel-8.3-kunit   gcc  
+x86_64                           rhel-8.3-ltp   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
 
-Thanks,
-Gao Xiang
-
-The following changes since commit 94f6f0550c625fab1f373bb86a6669b45e9748b3:
-
-  Linux 6.6-rc5 (2023-10-08 13:49:43 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.7-rc1
-
-for you to fetch changes up to 1a0ac8bd7a4fa5b2f4ef14c3b1e9d6e5a5faae06:
-
-  erofs: fix erofs_insert_workgroup() lockref usage (2023-10-31 18:59:49 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Fix inode metadata space layout documentation;
-
- - Avoid warning MicroLZMA format anymore;
-
- - Fix erofs_insert_workgroup() lockref usage;
-
- - Some cleanups.
-
-----------------------------------------------------------------
-Ferry Meng (2):
-      erofs: get rid of ROOT_NID()
-      erofs: tidy up redundant includes
-
-Gao Xiang (3):
-      erofs: don't warn MicroLZMA format anymore
-      erofs: simplify compression configuration parser
-      erofs: fix erofs_insert_workgroup() lockref usage
-
-Tiwei Bie (1):
-      erofs: fix inode metadata space layout description in documentation
-
- Documentation/filesystems/erofs.rst |  2 +-
- fs/erofs/Kconfig                    |  7 +---
- fs/erofs/compress.h                 |  6 +++
- fs/erofs/data.c                     |  2 -
- fs/erofs/decompressor.c             | 63 +++++++++++++++++++++++++++--
- fs/erofs/decompressor_deflate.c     |  6 +--
- fs/erofs/decompressor_lzma.c        |  7 +---
- fs/erofs/internal.h                 | 42 ++-----------------
- fs/erofs/super.c                    | 81 +++++--------------------------------
- fs/erofs/utils.c                    |  8 +---
- fs/erofs/zdata.c                    |  1 +
- 11 files changed, 89 insertions(+), 136 deletions(-)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
