@@ -1,33 +1,34 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B7B37DFB0D
-	for <lists+linux-erofs@lfdr.de>; Thu,  2 Nov 2023 20:41:48 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3C867E0E2A
+	for <lists+linux-erofs@lfdr.de>; Sat,  4 Nov 2023 08:00:49 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SLvQK63vZz3ck3
-	for <lists+linux-erofs@lfdr.de>; Fri,  3 Nov 2023 06:41:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SMpRK4C68z3bTN
+	for <lists+linux-erofs@lfdr.de>; Sat,  4 Nov 2023 18:00:45 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=lukeshu.com (client-ip=104.207.138.63; helo=mav.lukeshu.com; envelope-from=lukeshu@lukeshu.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 596 seconds by postgrey-1.37 at boromir; Fri, 03 Nov 2023 06:41:41 AEDT
-Received: from mav.lukeshu.com (mav.lukeshu.com [104.207.138.63])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
+X-Greylist: delayed 578 seconds by postgrey-1.37 at boromir; Sat, 04 Nov 2023 18:00:40 AEDT
+Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SLvQF3VBSz3bv3
-	for <linux-erofs@lists.ozlabs.org>; Fri,  3 Nov 2023 06:41:41 +1100 (AEDT)
-Received: from lukeshu-thinkpad-e15 (unknown [IPv6:2601:281:8200:4f:aee0:10ff:fe55:8023])
-	by mav.lukeshu.com (Postfix) with ESMTPSA id B928D80626;
-	Thu,  2 Nov 2023 15:31:44 -0400 (EDT)
-From: "Luke T. Shumaker" <lukeshu@lukeshu.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SMpRD1HDcz2yVv
+	for <linux-erofs@lists.ozlabs.org>; Sat,  4 Nov 2023 18:00:38 +1100 (AEDT)
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 8B91D1008CBC1
+	for <linux-erofs@lists.ozlabs.org>; Sat,  4 Nov 2023 14:50:48 +0800 (CST)
+Received: from zhaoyf.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id F3F9C37C94C;
+	Sat,  4 Nov 2023 14:50:46 +0800 (CST)
+From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/3] erofs-utils: fsck: Add -a, -A, and -y flags
-Date: Thu,  2 Nov 2023 13:31:22 -0600
-Message-ID: <20231102193122.140921-4-lukeshu@lukeshu.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231102193122.140921-1-lukeshu@lukeshu.com>
-References: <20231102193122.140921-1-lukeshu@lukeshu.com>
+Subject: [PATCH] erofs-utils: mkfs: fix potential memory leak
+Date: Sat,  4 Nov 2023 14:50:41 +0800
+Message-ID: <20231104065041.129680-1-zhaoyifan@sjtu.edu.cn>
+X-Mailer: git-send-email 2.42.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -41,90 +42,51 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: "Luke T. Shumaker" <lukeshu@umorpha.io>
+Cc: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: "Luke T. Shumaker" <lukeshu@umorpha.io>
+Valgrind reports 2 potential memory leaks in mkfs:
 
-Other fsck.${filesystem} commands generally take -a or -p and
-sometimes -A to automatically repair a filesystem, and -y to either
-repair agree to all prompts about repairing.
+    Command: mkfs.erofs -zlz4 test.img testdir/
 
-For example:
+    4 bytes in 1 blocks are still reachable in loss record 1 of 2
+       at 0x4841848: malloc (vg_replace_malloc.c:431)
+       by 0x49633DE: strdup (strdup.c:42)
+       by 0x10C483: mkfs_parse_compress_algs (main.c:287)
+       by 0x10C483: mkfs_parse_options_cfg (main.c:316)
+       by 0x10C483: main (main.c:936)
 
- - fsck.ext{2,3,4} takes -a or -p to repair, and -y to agree
- - fsck.xfs takes -y to repair; and -a, -A, or -p to silence a warning
-   about repairing
- - fsck.btrfs takes -a, -A, -p, or -y to silence a warning about repairing
+    34 bytes in 1 blocks are still reachable in loss record 2 of 2
+       at 0x4841848: malloc (vg_replace_malloc.c:431)
+       by 0x49633DE: strdup (strdup.c:42)
+       by 0x48FFE2B: realpath_stk (canonicalize.c:409)
+       by 0x48FFE2B: realpath@@GLIBC_2.3 (canonicalize.c:431)
+       by 0x10B7EB: mkfs_parse_options_cfg (main.c:587)
+       by 0x10B7EB: main (main.c:936)
 
-So, like fsck.btrfs, we should accept these flags as no-ops, for
-compatibility with programs that expect to be able to pass these to
-fsck.  In particular, Arch Linux's mkinitcpio (when fsck is enabled)
-unconditionally passes -a to `fsck`.
+Fix it by freeing the memory allocated by strdup() and realpath().
 
-Naturally, I'd have liked to include '-p' in the list, but it already
-does something different for fsck.erofs.  I'd like to call out the
-fsck.ext4 manual, which says:
-
-       -a   This option does the same thing as the -p option. It is
-            provided for backwards compatibility only; it is
-            suggested that people use -p option whenever possible.
-
-Signed-off-by: Luke T. Shumaker <lukeshu@umorpha.io>
+Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 ---
- fsck/main.c      | 8 +++++++-
- man/fsck.erofs.1 | 4 ++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ lib/config.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fsck/main.c b/fsck/main.c
-index aeea892..26cd131 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -98,6 +98,8 @@ static void usage(int argc, char **argv)
- 		" --extract[=X]          check if all files are well encoded, optionally\n"
- 		"                        extract to X\n"
- 		"\n"
-+		" -a, -A, -y             no-op, for compatibility with fsck of other filesystems\n"
-+		"\n"
- 		"Extraction options (--extract=X is required):\n"
- 		" --force                allow extracting to root\n"
- 		" --overwrite            overwrite files that already exist\n"
-@@ -124,7 +126,7 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
- 	int opt, ret;
- 	bool has_opt_preserve = false;
+diff --git a/lib/config.c b/lib/config.c
+index a3235c8..2ad0122 100644
+--- a/lib/config.c
++++ b/lib/config.c
+@@ -54,6 +54,10 @@ void erofs_exit_configure(void)
+ #endif
+ 	if (cfg.c_img_path)
+ 		free(cfg.c_img_path);
++	if (cfg.c_src_path)
++		free(cfg.c_src_path);
++	for (int i = 0; i < EROFS_MAX_COMPR_CFGS && cfg.c_compr_alg[i]; i++)
++		free(cfg.c_compr_alg[i]);
+ }
  
--	while ((opt = getopt_long(argc, argv, "Vd:ph",
-+	while ((opt = getopt_long(argc, argv, "Vd:phaAy",
- 				  long_options, NULL)) != -1) {
- 		switch (opt) {
- 		case 'V':
-@@ -144,6 +146,10 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
- 		case 'h':
- 			usage(argc, argv);
- 			exit(0);
-+		case 'a':
-+		case 'A':
-+		case 'y':
-+			break;
- 		case 2:
- 			fsckcfg.check_decomp = true;
- 			if (optarg) {
-diff --git a/man/fsck.erofs.1 b/man/fsck.erofs.1
-index a226995..c94fff9 100644
---- a/man/fsck.erofs.1
-+++ b/man/fsck.erofs.1
-@@ -34,6 +34,10 @@ so it might take too much time depending on the image.
- .TP
- \fB\-h\fR, \fB\-\-help\fR
- Display help string and exit.
-+.TP
-+\fB\-a\fR, \fB\-A\fR, \fB-y\R
-+These options do nothing at all; they are provided only for compatibility with
-+the fsck programs of other filesystems.
- .SH AUTHOR
- This version of \fBfsck.erofs\fR is written by
- Daeho Jeong <daehojeong@google.com>.
+ static unsigned int fullpath_prefix;	/* root directory prefix length */
 -- 
-2.42.0
+2.42.1
 
