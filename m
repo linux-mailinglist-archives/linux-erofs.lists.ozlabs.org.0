@@ -2,36 +2,34 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A79507E32CE
-	for <lists+linux-erofs@lfdr.de>; Tue,  7 Nov 2023 03:09:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B6DF7E352B
+	for <lists+linux-erofs@lfdr.de>; Tue,  7 Nov 2023 07:21:42 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SPWqG1wL1z2yVG
-	for <lists+linux-erofs@lfdr.de>; Tue,  7 Nov 2023 13:08:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SPdQr0TPNz3c2k
+	for <lists+linux-erofs@lfdr.de>; Tue,  7 Nov 2023 17:21:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SPWq60kzkz2yVG
-	for <linux-erofs@lists.ozlabs.org>; Tue,  7 Nov 2023 13:08:47 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R891e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0Vvs9x.H_1699322918;
-Received: from 30.97.49.17(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vvs9x.H_1699322918)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SPdQk5fcrz2yVG
+	for <linux-erofs@lists.ozlabs.org>; Tue,  7 Nov 2023 17:21:32 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vvt1Jo-_1699338080;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vvt1Jo-_1699338080)
           by smtp.aliyun-inc.com;
-          Tue, 07 Nov 2023 10:08:40 +0800
-Message-ID: <8f5106d4-eeb5-a1d9-4181-c8b2e470edc6@linux.alibaba.com>
-Date: Tue, 7 Nov 2023 10:08:37 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.0
-Subject: Re: Feature Request: Add --offset option to mkfs.erofs
-To: =?UTF-8?B?0J/QsNCy0LXQuyDQntGC0YfQtdGA0YbQvtCy?=
- <pavel.otchertsov@gmail.com>, linux-erofs@lists.ozlabs.org
-References: <CAAxnTOGTD2NkKnBphZ+vEr7NVnWvT0u02E+c8pN8ZVFcXp5uhg@mail.gmail.com>
+          Tue, 07 Nov 2023 14:21:24 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org,
+	pavel.otchertsov@gmail.com
+Subject: [PATCH] erofs-utils: mkfs,fsck,dump: support `--offset` option
+Date: Tue,  7 Nov 2023 14:21:17 +0800
+Message-Id: <20231107062117.2418170-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 In-Reply-To: <CAAxnTOGTD2NkKnBphZ+vEr7NVnWvT0u02E+c8pN8ZVFcXp5uhg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <CAAxnTOGTD2NkKnBphZ+vEr7NVnWvT0u02E+c8pN8ZVFcXp5uhg@mail.gmail.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -44,51 +42,271 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
+Add `--offset` option to allows users to specify an offset in the file
+where the filesystem will begin.
 
-On 2023/11/7 05:15, Павел Отчерцов wrote:
-> Dear EROFS Developers,
-> 
-> I hope this message finds you well. I am reaching out to propose a feature addition to the `erofs-utils` that I believe could benefit many users, including myself.
-> 
-> As you know, `mksquashfs` offers an `-offset` option which allows users to specify an offset in the file where the filesystem will begin.
-> This feature is particularly useful for embedding the SquashFS image into firmware images or other specific scenarios where filesystems must coexist with different data structures in a single image.
-> 
-> Currently, `mkfs.erofs` does not seem to support an equivalent option, which limits its utility in scenarios similar to those where `mksquashfs` is used.
-> The addition of an `--offset` option to `mkfs.erofs` could provide users with the flexibility to specify the starting offset of the filesystem within an image file.
-> 
-> The syntax for this could be as straightforward as:
-> 
-> ```sh
-> Copy code
-> mkfs.erofs --offset=<offset-in-bytes> <destination-img> <source-directory>
-> ```
-> 
-> This feature would align EROFS's functionality more closely with SquashFS, potentially broadening its use cases and adoption.
-> 
-> Currently, I can achieve a similar result by first creating an image file with the desired offset using `truncate`, and then concatenating the filesystem image to the offset image using `cat`, like so:
-> 
-> ```sh
-> truncate -s <offset-in-bytes> image_with_offset.img
-> cat erofs.img >> image_with_offset.img
-> ```
-> 
-> However, this method is more cumbersome and less efficient than having an integrated option in `mkfs.erofs`.
-> Implementing an `--offset` option would streamline the process and offer a more elegant and direct approach.
-> 
-> I understand that such features require time and resources to implement, and I appreciate the effort that goes into maintaining and improving open-source software.
-> I believe this feature could enhance EROFS's utility for many users and look forward to any possibility of its inclusion in future releases.
-> 
-> Thank you for your consideration and for the work you do to develop and maintain EROFS. Please let me know if I can provide further information or assist in any way.
+Suggested-by: Pavel Otchertsov <pavel.otchertsov@gmail.com>
+Closes: https://lore.kernel.org/r/CAAxnTOGTD2NkKnBphZ+vEr7NVnWvT0u02E+c8pN8ZVFcXp5uhg@mail.gmail.com
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+Hi Pavel,
+Could you check if the following patch resolves your requirement?
 
-Thanks for the reference! Let's implement this feature.
+ dump/main.c              | 11 +++++++++++
+ fsck/main.c              | 11 +++++++++++
+ fuse/main.c              |  5 ++---
+ include/erofs/config.h   |  3 ---
+ include/erofs/internal.h |  2 ++
+ lib/blobchunk.c          |  1 +
+ lib/io.c                 | 12 +++++++-----
+ mkfs/main.c              | 10 ++++++++++
+ 8 files changed, 44 insertions(+), 11 deletions(-)
 
-Thanks,
-Gao Xiang
+diff --git a/dump/main.c b/dump/main.c
+index 293093d..8da9cbc 100644
+--- a/dump/main.c
++++ b/dump/main.c
+@@ -80,6 +80,7 @@ static struct option long_options[] = {
+ 	{"device", required_argument, NULL, 3},
+ 	{"path", required_argument, NULL, 4},
+ 	{"ls", no_argument, NULL, 5},
++	{"offset", required_argument, NULL, 6},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -124,6 +125,7 @@ static void usage(int argc, char **argv)
+ 		" --device=X      specify an extra device to be used together\n"
+ 		" --ls            show directory contents (INODE required)\n"
+ 		" --nid=#         show the target inode info of nid #\n"
++		" --offset=#      skip # bytes at the beginning of IMAGE\n"
+ 		" --path=X        show the target inode info of path X\n",
+ 		argv[0]);
+ }
+@@ -136,6 +138,7 @@ static void erofsdump_print_version(void)
+ static int erofsdump_parse_options_cfg(int argc, char **argv)
+ {
+ 	int opt, err;
++	char *endptr;
+ 
+ 	while ((opt = getopt_long(argc, argv, "SVesh",
+ 				  long_options, NULL)) != -1) {
+@@ -177,6 +180,14 @@ static int erofsdump_parse_options_cfg(int argc, char **argv)
+ 		case 5:
+ 			dumpcfg.show_subdirectories = true;
+ 			break;
++		case 6:
++			err = strtoull(optarg, &endptr, 0);
++			if (*endptr != '\0') {
++				erofs_err("invalid disk offset %s", optarg);
++				return -EINVAL;
++			}
++			sbi.diskoffset = err;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+diff --git a/fsck/main.c b/fsck/main.c
+index 26cd131..1e45b61 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -48,6 +48,7 @@ static struct option long_options[] = {
+ 	{"no-preserve", no_argument, 0, 9},
+ 	{"no-preserve-owner", no_argument, 0, 10},
+ 	{"no-preserve-perms", no_argument, 0, 11},
++	{"offset", required_argument, 0, 12},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -97,6 +98,7 @@ static void usage(int argc, char **argv)
+ 		" --device=X             specify an extra device to be used together\n"
+ 		" --extract[=X]          check if all files are well encoded, optionally\n"
+ 		"                        extract to X\n"
++		" --offset=#             skip # bytes at the beginning of IMAGE\n"
+ 		"\n"
+ 		" -a, -A, -y             no-op, for compatibility with fsck of other filesystems\n"
+ 		"\n"
+@@ -123,6 +125,7 @@ static void erofsfsck_print_version(void)
+ 
+ static int erofsfsck_parse_options_cfg(int argc, char **argv)
+ {
++	char *endptr;
+ 	int opt, ret;
+ 	bool has_opt_preserve = false;
+ 
+@@ -216,6 +219,14 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
+ 			fsckcfg.preserve_perms = false;
+ 			has_opt_preserve = true;
+ 			break;
++		case 12:
++			ret = strtoull(optarg, &endptr, 0);
++			if (*endptr != '\0') {
++				erofs_err("invalid disk offset %s", optarg);
++				return -EINVAL;
++			}
++			sbi.diskoffset = ret;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+diff --git a/fuse/main.c b/fuse/main.c
+index 5b2c64d..f07165c 100644
+--- a/fuse/main.c
++++ b/fuse/main.c
+@@ -547,7 +547,7 @@ static void usage(void)
+ #endif
+ 	fputs("usage: [options] IMAGE MOUNTPOINT\n\n"
+ 	      "Options:\n"
+-	      "    --offset=#             skip # bytes when reading IMAGE\n"
++	      "    --offset=#             skip # bytes at the beginning of IMAGE\n"
+ 	      "    --dbglevel=#           set output message level to # (maximum 9)\n"
+ 	      "    --device=#             specify an extra device to be used together\n"
+ #if FUSE_MAJOR_VERSION < 3
+@@ -676,8 +676,7 @@ int main(int argc, char *argv[])
+ 	if (fusecfg.odebug && cfg.c_dbg_lvl < EROFS_DBG)
+ 		cfg.c_dbg_lvl = EROFS_DBG;
+ 
+-	cfg.c_offset = fusecfg.offset;
+-
++	sbi.diskoffset = fusecfg.offset;
+ 	ret = dev_open_ro(&sbi, fusecfg.disk);
+ 	if (ret) {
+ 		fprintf(stderr, "failed to open: %s\n", fusecfg.disk);
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index e342722..89fe522 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -83,9 +83,6 @@ struct erofs_configure {
+ 	char *fs_config_file;
+ 	char *block_list_file;
+ #endif
+-
+-	/* offset when reading multi partition images */
+-	u64 c_offset;
+ };
+ 
+ extern struct erofs_configure cfg;
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 4d794ae..78b9f32 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -110,6 +110,8 @@ struct erofs_sb_info {
+ 	struct erofs_xattr_prefix_item *xattr_prefixes;
+ 
+ 	int devfd, devblksz;
++	/* offset when reading multi-part images */
++	u64 diskoffset;
+ 	u64 devsz;
+ 	dev_t dev;
+ 	unsigned int nblobs;
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index e4d0bad..6d2501e 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -448,6 +448,7 @@ int erofs_mkfs_dump_blobs(struct erofs_sb_info *sbi)
+ 
+ 	pos_out = erofs_btell(bh, false);
+ 	remapped_base = erofs_blknr(sbi, pos_out);
++	pos_out += sbi->diskoffset;
+ 	if (blobfile) {
+ 		pos_in = 0;
+ 		ret = erofs_copy_file_range(fileno(blobfile), &pos_in,
+diff --git a/lib/io.c b/lib/io.c
+index c92f16c..85d5156 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -194,6 +194,7 @@ int dev_write(struct erofs_sb_info *sbi, const void *buf, u64 offset, size_t len
+ 		return -EINVAL;
+ 	}
+ 
++	offset += sbi->diskoffset;
+ 	if (offset >= sbi->devsz || len > sbi->devsz ||
+ 	    offset > sbi->devsz - len) {
+ 		erofs_err("Write posion[%" PRIu64 ", %zd] is too large beyond the end of device(%" PRIu64 ").",
+@@ -230,7 +231,7 @@ int dev_fillzero(struct erofs_sb_info *sbi, u64 offset, size_t len, bool padding
+ 
+ #if defined(HAVE_FALLOCATE) && defined(FALLOC_FL_PUNCH_HOLE)
+ 	if (!padding && fallocate(sbi->devfd, FALLOC_FL_PUNCH_HOLE |
+-				  FALLOC_FL_KEEP_SIZE, offset, len) >= 0)
++	    FALLOC_FL_KEEP_SIZE, offset + sbi->diskoffset, len) >= 0)
+ 		return 0;
+ #endif
+ 	while (len > erofs_blksiz(sbi)) {
+@@ -255,7 +256,7 @@ int dev_fsync(struct erofs_sb_info *sbi)
+ 	return 0;
+ }
+ 
+-int dev_resize(struct erofs_sb_info *sbi, unsigned int blocks)
++int dev_resize(struct erofs_sb_info *sbi, erofs_blk_t blocks)
+ {
+ 	int ret;
+ 	struct stat st;
+@@ -271,6 +272,7 @@ int dev_resize(struct erofs_sb_info *sbi, unsigned int blocks)
+ 	}
+ 
+ 	length = (u64)blocks * erofs_blksiz(sbi);
++	length += sbi->diskoffset;
+ 	if (st.st_size == length)
+ 		return 0;
+ 	if (st.st_size > length)
+@@ -281,7 +283,8 @@ int dev_resize(struct erofs_sb_info *sbi, unsigned int blocks)
+ 	if (fallocate(sbi->devfd, 0, st.st_size, length) >= 0)
+ 		return 0;
+ #endif
+-	return dev_fillzero(sbi, st.st_size, length, true);
++	return dev_fillzero(sbi, st.st_size - sbi->diskoffset,
++			    length, true);
+ }
+ 
+ int dev_read(struct erofs_sb_info *sbi, int device_id,
+@@ -292,8 +295,7 @@ int dev_read(struct erofs_sb_info *sbi, int device_id,
+ 	if (cfg.c_dry_run)
+ 		return 0;
+ 
+-	offset += cfg.c_offset;
+-
++	offset += sbi->diskoffset;
+ 	if (!buf) {
+ 		erofs_err("buf is NULL");
+ 		return -EINVAL;
+diff --git a/mkfs/main.c b/mkfs/main.c
+index f024026..ea871b2 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -71,6 +71,7 @@ static struct option long_options[] = {
+ #ifdef HAVE_ZLIB
+ 	{"gzip", no_argument, NULL, 517},
+ #endif
++	{"offset", required_argument, NULL, 518},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -151,6 +152,7 @@ static void usage(int argc, char **argv)
+ 		" --ignore-mtime        use build time instead of strict per-file modification time\n"
+ 		" --max-extent-bytes=#  set maximum decompressed extent size # in bytes\n"
+ 		" --preserve-mtime      keep per-file modification time strictly\n"
++		" --offset=#            skip # bytes at the beginning of IMAGE.\n"
+ 		" --aufs                replace aufs special files with overlayfs metadata\n"
+ 		" --tar=[fi]            generate an image from tarball(s)\n"
+ 		" --ovlfs-strip=<0,1>   strip overlayfs metadata in the target image (e.g. whiteouts)\n"
+@@ -571,6 +573,14 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		case 517:
+ 			gzip_supported = true;
+ 			break;
++		case 518:
++			i = strtoull(optarg, &endptr, 0);
++			if (*endptr != '\0') {
++				erofs_err("invalid disk offset %s", optarg);
++				return -EINVAL;
++			}
++			sbi.diskoffset = i;
++			break;
+ 		case 'V':
+ 			version();
+ 			exit(0);
+-- 
+2.39.3
 
-> 
-> Best regards,
-> Pavel Otchertsov <pavel.otchertsov@gmail.com <mailto:pavel.otchertsov@gmail.com>>
