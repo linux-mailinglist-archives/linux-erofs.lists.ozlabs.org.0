@@ -1,34 +1,31 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B6DF7E352B
-	for <lists+linux-erofs@lfdr.de>; Tue,  7 Nov 2023 07:21:42 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DA717E361F
+	for <lists+linux-erofs@lfdr.de>; Tue,  7 Nov 2023 08:56:19 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SPdQr0TPNz3c2k
-	for <lists+linux-erofs@lfdr.de>; Tue,  7 Nov 2023 17:21:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SPgX10rdRz3c3g
+	for <lists+linux-erofs@lfdr.de>; Tue,  7 Nov 2023 18:56:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SPdQk5fcrz2yVG
-	for <linux-erofs@lists.ozlabs.org>; Tue,  7 Nov 2023 17:21:32 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vvt1Jo-_1699338080;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vvt1Jo-_1699338080)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SPgWv2fJNz2yVR
+	for <linux-erofs@lists.ozlabs.org>; Tue,  7 Nov 2023 18:56:08 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VvtbHFA_1699343755;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VvtbHFA_1699343755)
           by smtp.aliyun-inc.com;
-          Tue, 07 Nov 2023 14:21:24 +0800
+          Tue, 07 Nov 2023 15:56:01 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org,
-	pavel.otchertsov@gmail.com
-Subject: [PATCH] erofs-utils: mkfs,fsck,dump: support `--offset` option
-Date: Tue,  7 Nov 2023 14:21:17 +0800
-Message-Id: <20231107062117.2418170-1-hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2] erofs-utils: mkfs,fsck,dump: support `--offset` option
+Date: Tue,  7 Nov 2023 15:55:55 +0800
+Message-Id: <20231107075555.2554444-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <CAAxnTOGTD2NkKnBphZ+vEr7NVnWvT0u02E+c8pN8ZVFcXp5uhg@mail.gmail.com>
-References: <CAAxnTOGTD2NkKnBphZ+vEr7NVnWvT0u02E+c8pN8ZVFcXp5uhg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -42,7 +39,7 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Pavel Otchertsov <pavel.otchertsov@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
@@ -53,21 +50,20 @@ Suggested-by: Pavel Otchertsov <pavel.otchertsov@gmail.com>
 Closes: https://lore.kernel.org/r/CAAxnTOGTD2NkKnBphZ+vEr7NVnWvT0u02E+c8pN8ZVFcXp5uhg@mail.gmail.com
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-Hi Pavel,
-Could you check if the following patch resolves your requirement?
+I plan to apply this version.
 
- dump/main.c              | 11 +++++++++++
- fsck/main.c              | 11 +++++++++++
+ dump/main.c              | 10 ++++++++++
+ fsck/main.c              | 10 ++++++++++
  fuse/main.c              |  5 ++---
  include/erofs/config.h   |  3 ---
  include/erofs/internal.h |  2 ++
  lib/blobchunk.c          |  1 +
  lib/io.c                 | 12 +++++++-----
- mkfs/main.c              | 10 ++++++++++
- 8 files changed, 44 insertions(+), 11 deletions(-)
+ mkfs/main.c              |  9 +++++++++
+ 8 files changed, 41 insertions(+), 11 deletions(-)
 
 diff --git a/dump/main.c b/dump/main.c
-index 293093d..8da9cbc 100644
+index 293093d..a89fc6b 100644
 --- a/dump/main.c
 +++ b/dump/main.c
 @@ -80,6 +80,7 @@ static struct option long_options[] = {
@@ -94,23 +90,22 @@ index 293093d..8da9cbc 100644
  
  	while ((opt = getopt_long(argc, argv, "SVesh",
  				  long_options, NULL)) != -1) {
-@@ -177,6 +180,14 @@ static int erofsdump_parse_options_cfg(int argc, char **argv)
+@@ -177,6 +180,13 @@ static int erofsdump_parse_options_cfg(int argc, char **argv)
  		case 5:
  			dumpcfg.show_subdirectories = true;
  			break;
 +		case 6:
-+			err = strtoull(optarg, &endptr, 0);
++			sbi.diskoffset = strtoull(optarg, &endptr, 0);
 +			if (*endptr != '\0') {
 +				erofs_err("invalid disk offset %s", optarg);
 +				return -EINVAL;
 +			}
-+			sbi.diskoffset = err;
 +			break;
  		default:
  			return -EINVAL;
  		}
 diff --git a/fsck/main.c b/fsck/main.c
-index 26cd131..1e45b61 100644
+index 26cd131..e5c37be 100644
 --- a/fsck/main.c
 +++ b/fsck/main.c
 @@ -48,6 +48,7 @@ static struct option long_options[] = {
@@ -137,17 +132,16 @@ index 26cd131..1e45b61 100644
  	int opt, ret;
  	bool has_opt_preserve = false;
  
-@@ -216,6 +219,14 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
+@@ -216,6 +219,13 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
  			fsckcfg.preserve_perms = false;
  			has_opt_preserve = true;
  			break;
 +		case 12:
-+			ret = strtoull(optarg, &endptr, 0);
++			sbi.diskoffset = strtoull(optarg, &endptr, 0);
 +			if (*endptr != '\0') {
 +				erofs_err("invalid disk offset %s", optarg);
 +				return -EINVAL;
 +			}
-+			sbi.diskoffset = ret;
 +			break;
  		default:
  			return -EINVAL;
@@ -215,7 +209,7 @@ index e4d0bad..6d2501e 100644
  		pos_in = 0;
  		ret = erofs_copy_file_range(fileno(blobfile), &pos_in,
 diff --git a/lib/io.c b/lib/io.c
-index c92f16c..85d5156 100644
+index c92f16c..bfae73a 100644
 --- a/lib/io.c
 +++ b/lib/io.c
 @@ -194,6 +194,7 @@ int dev_write(struct erofs_sb_info *sbi, const void *buf, u64 offset, size_t len
@@ -262,18 +256,25 @@ index c92f16c..85d5156 100644
  }
  
  int dev_read(struct erofs_sb_info *sbi, int device_id,
-@@ -292,8 +295,7 @@ int dev_read(struct erofs_sb_info *sbi, int device_id,
+@@ -292,8 +295,6 @@ int dev_read(struct erofs_sb_info *sbi, int device_id,
  	if (cfg.c_dry_run)
  		return 0;
  
 -	offset += cfg.c_offset;
 -
-+	offset += sbi->diskoffset;
  	if (!buf) {
  		erofs_err("buf is NULL");
  		return -EINVAL;
+@@ -301,6 +302,7 @@ int dev_read(struct erofs_sb_info *sbi, int device_id,
+ 
+ 	if (!device_id) {
+ 		fd = sbi->devfd;
++		offset += sbi->diskoffset;
+ 	} else {
+ 		if (device_id > sbi->nblobs) {
+ 			erofs_err("invalid device id %d", device_id);
 diff --git a/mkfs/main.c b/mkfs/main.c
-index f024026..ea871b2 100644
+index f024026..0517849 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
 @@ -71,6 +71,7 @@ static struct option long_options[] = {
@@ -292,17 +293,16 @@ index f024026..ea871b2 100644
  		" --aufs                replace aufs special files with overlayfs metadata\n"
  		" --tar=[fi]            generate an image from tarball(s)\n"
  		" --ovlfs-strip=<0,1>   strip overlayfs metadata in the target image (e.g. whiteouts)\n"
-@@ -571,6 +573,14 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+@@ -571,6 +573,13 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
  		case 517:
  			gzip_supported = true;
  			break;
 +		case 518:
-+			i = strtoull(optarg, &endptr, 0);
++			sbi.diskoffset = strtoull(optarg, &endptr, 0);
 +			if (*endptr != '\0') {
 +				erofs_err("invalid disk offset %s", optarg);
 +				return -EINVAL;
 +			}
-+			sbi.diskoffset = i;
 +			break;
  		case 'V':
  			version();
