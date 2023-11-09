@@ -1,51 +1,68 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0CAD7E60D7
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Nov 2023 00:06:26 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 056727E614E
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Nov 2023 01:12:44 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=korg header.b=Kb4LDRBs;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=MEWby0EO;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SQggh0Hpqz3bdm
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Nov 2023 10:06:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SQj8930pxz3c09
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Nov 2023 11:12:41 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux-foundation.org header.i=@linux-foundation.org header.a=rsa-sha256 header.s=korg header.b=Kb4LDRBs;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=MEWby0EO;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux-foundation.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=akpm@linux-foundation.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::129; helo=mail-lf1-x129.google.com; envelope-from=andreas.gruenbacher@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SQggV2MzSz2ykc
-	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Nov 2023 10:06:13 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id F12C3CE1261;
-	Wed,  8 Nov 2023 23:06:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDE81C433C8;
-	Wed,  8 Nov 2023 23:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1699484767;
-	bh=t8pBQSNPVR9LioM+HcvTKgJwQbCrujWjNwfm0VTaR5A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Kb4LDRBsnf32K7Vz06ikeb1CPOiJ1H15eXMnH9kxTJtY+bF3pXhcR2BSF6zYwQ9fK
-	 mgsr+P98qJyhfHSMhotMocwnZnya8dqNepcltfzM8d5SSPm+BeIy3OSTsEhS64I852
-	 xWfR27VQoZFdkB/pFGkyj8cEyQwskDqZcuVcGtAc=
-Date: Wed, 8 Nov 2023 15:06:06 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SQj852cmrz2yV8
+	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Nov 2023 11:12:36 +1100 (AEDT)
+Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-50943ccbbaeso377907e87.2
+        for <linux-erofs@lists.ozlabs.org>; Wed, 08 Nov 2023 16:12:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699488747; x=1700093547; darn=lists.ozlabs.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oxRjndTtkJZetvfezkXF/2987ikg4wY/3660b2uWMtk=;
+        b=MEWby0EOFK6QPnWrtog6Xa5CuDuFANlUkTL6qB2CMXg4UdOp1l6dmMZpSQpULOzTau
+         k4KKK7EfNy3r+tdMl6kw1EdiBA3tQ1VEccrjDcOBhmM9AJSiCSbYnalgCND6dMRqUPl7
+         +xRF6DIxRfmWN7jAmLqk2H2cmyxooiqmQstSDNujVYB0azuu6BVv6ygzYL4MikBG7hgc
+         cF0MT2rhxN9y1a8AIqjXcnFA3nrl7rBoIqkm5G+VKZNDZRYZxKFh5Iohm+EOnSt1BmK6
+         l+Wuz8794uRXL1gky2lLd7PLZba08KSOaitxMUnDwAWU1nnXLwvV1BTQMyZ4KQgnGmbY
+         QQng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699488747; x=1700093547;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oxRjndTtkJZetvfezkXF/2987ikg4wY/3660b2uWMtk=;
+        b=avw/i7Hl8Dyaq8S0zxBpasFuszPbmxVgPdXUgOP+4eZweUG52eOKKhE5Ir4uSKdGKl
+         MhFqyWVJEOhurYGkRX8oBdKNMwpbZe65qtRA3N1n9T3xrukVbaNF8felWnWM8egfZKfg
+         +Fx9SjiG/hLwH2NS9sHls03RnxECQNI9FPrDxAxX3OXLvUKwQo5cVysAhB5P59vPWC2V
+         CtEeSK9du1KIDbPVTyFCOKv9/sQz641oKyxtOzQC9goR1XgUiQcqvteFp7wUFUT+9tcj
+         HXp4+ZVpPGsJ7BqfueRB6RNHarH+Ydmx/wGn0PSTYUu3pIWEm2pS+fRqSX75SxEjI5Dq
+         ZErg==
+X-Gm-Message-State: AOJu0YxY6poVdLdCoA0VaHkDjaQwR0yLQC+IUwk9JOobh5pWbTXj1PfD
+	ZuKb/EdJ91OkdMiKMeKmgLU1xTJ6XJXSFlNtdrs=
+X-Google-Smtp-Source: AGHT+IGMym6s82sHBjvRZ1gVgP42jaL1JmjVcnC8voSpb7JFI9R5aRcHobWV5Dojv1Zry9WdFGNjuVaBWNGJSNkxkfg=
+X-Received: by 2002:a19:6713:0:b0:508:269d:1342 with SMTP id
+ b19-20020a196713000000b00508269d1342mr109419lfc.35.1699488746448; Wed, 08 Nov
+ 2023 16:12:26 -0800 (PST)
+MIME-Version: 1.0
+References: <20231107212643.3490372-1-willy@infradead.org> <20231107212643.3490372-2-willy@infradead.org>
+ <20231108150606.2ec3cafb290f757f0e4c92d8@linux-foundation.org>
+In-Reply-To: <20231108150606.2ec3cafb290f757f0e4c92d8@linux-foundation.org>
+From: =?UTF-8?Q?Andreas_Gr=C3=BCnbacher?= <andreas.gruenbacher@gmail.com>
+Date: Thu, 9 Nov 2023 01:12:15 +0100
+Message-ID: <CAHpGcMLU9CeX=P=718Gp=oYNnfbft_Mh1Nhdx45qWXY0DAf6Mg@mail.gmail.com>
 Subject: Re: [PATCH 1/3] mm: Add folio_zero_tail() and use it in ext4
-Message-Id: <20231108150606.2ec3cafb290f757f0e4c92d8@linux-foundation.org>
-In-Reply-To: <20231107212643.3490372-2-willy@infradead.org>
-References: <20231107212643.3490372-1-willy@infradead.org>
-	<20231107212643.3490372-2-willy@infradead.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+To: Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,72 +74,23 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, Andreas Gruenbacher <agruenba@redhat.com>, "Darrick J . Wong" <djwong@kernel.org>, gfs2@lists.linux.dev, Andreas Dilger <adilger.kernel@dilger.ca>, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: linux-xfs <linux-xfs@vger.kernel.org>, Theodore Ts'o <tytso@mit.edu>, Andreas Gruenbacher <agruenba@redhat.com>, "Darrick J . Wong" <djwong@kernel.org>, "Matthew Wilcox \(Oracle\)" <willy@infradead.org>, gfs2@lists.linux.dev, Andreas Dilger <adilger.kernel@dilger.ca>, Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>, linux-ext4 <linux-ext4@vger.kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue,  7 Nov 2023 21:26:40 +0000 "Matthew Wilcox (Oracle)" <willy@infradead.org> wrote:
+Andrew,
 
-> Instead of unmapping the folio after copying the data to it, then mapping
-> it again to zero the tail, provide folio_zero_tail() to zero the tail
-> of an already-mapped folio.
-> 
-> ...
+Andrew Morton <akpm@linux-foundation.org> schrieb am Do., 9. Nov. 2023, 00:06:
+> > +
+> > +     if (folio_test_highmem(folio)) {
+> > +             size_t max = PAGE_SIZE - offset_in_page(offset);
+> > +
+> > +             while (len > max) {
 >
-> --- a/include/linux/highmem.h
-> +++ b/include/linux/highmem.h
-> @@ -483,6 +483,44 @@ static inline void memcpy_to_folio(struct folio *folio, size_t offset,
->  	flush_dcache_folio(folio);
->  }
->  
-> +/**
-> + * folio_zero_tail - Zero the tail of a folio.
-> + * @folio: The folio to zero.
-> + * @kaddr: The address the folio is currently mapped to.
-> + * @offset: The byte offset in the folio to start zeroing at.
+> Shouldn't this be `while (len)'?  AFAICT this code can fail to clear
+> the final page.
 
-That's the argument ordering I would expect.
+not sure what you're seeing there, but this looks fine to me.
 
-> + * If you have already used kmap_local_folio() to map a folio, written
-> + * some data to it and now need to zero the end of the folio (and flush
-> + * the dcache), you can use this function.  If you do not have the
-> + * folio kmapped (eg the folio has been partially populated by DMA),
-> + * use folio_zero_range() or folio_zero_segment() instead.
-> + *
-> + * Return: An address which can be passed to kunmap_local().
-> + */
-> +static inline __must_check void *folio_zero_tail(struct folio *folio,
-> +		size_t offset, void *kaddr)
-
-While that is not.  addr,len is far more common that len,addr?
-
-> +{
-> +	size_t len = folio_size(folio) - offset;
-
-Calling it `remaining' would be more clear.
-
-> +
-> +	if (folio_test_highmem(folio)) {
-> +		size_t max = PAGE_SIZE - offset_in_page(offset);
-> +
-> +		while (len > max) {
-
-Shouldn't this be `while (len)'?  AFAICT this code can fail to clear
-the final page.
-
-> +			memset(kaddr, 0, max);
-> +			kunmap_local(kaddr);
-> +			len -= max;
-> +			offset += max;
-> +			max = PAGE_SIZE;
-> +			kaddr = kmap_local_folio(folio, offset);
-> +		}
-> +	}
-> +
-> +	memset(kaddr, 0, len);
-> +	flush_dcache_folio(folio);
-> +
-> +	return kaddr;
-> +}
-> +
-
+Thanks,
+Andreas
