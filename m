@@ -1,51 +1,51 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FEFA7E706D
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Nov 2023 18:38:03 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=LTik8qcE;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id F12C77E6A60
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Nov 2023 13:14:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1699532079;
+	bh=cWlERthZkFluDqgzovAJew6EH6I4A0e1oLoOETNAnyU=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=dXic7g/Ny1LTNz03G5+QKRBdutgpEvoXrQu8oU5/T2FODiM4h41ejNm/XM2TPUEDw
+	 nNW/1y/Fbna0YhvbPcWyOm0tz+DXguMA9NwSXT7C5hNxsnn4RHDA8RHOSBewq9NHPy
+	 4+AQ1sTl7DKf8Ezp/U8OdCicIwXB6eTtrK/ToVJ6uYrAuFrxvXNcOaiNhDKlLeRoqI
+	 xyKRoGH8LPAIxuBCnhWcfFxmxdTR7VL95IrS7e+bdwKUXtzoYWbbta/nLPWqbPruVo
+	 R52f7yJZwF3mHo+BtOJwdX3qOsYiSWpgCT+YZTvrwGtiCyIq1RYA9pTd7qMEJ4te88
+	 ZJPMyPTV0JAow==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SR8LJ6V1Vz3cJW
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Nov 2023 04:38:00 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SR19C6MmLz3c5P
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Nov 2023 23:14:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=LTik8qcE;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=infradead.org (client-ip=2001:8b0:10b:1236::1; helo=casper.infradead.org; envelope-from=willy@infradead.org; receiver=lists.ozlabs.org)
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=wozizhi@huawei.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 1212 seconds by postgrey-1.37 at boromir; Thu, 09 Nov 2023 23:14:32 AEDT
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SR8L81SZDz3c01
-	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Nov 2023 04:37:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/zf0lTxBuvebjd5FmP2bSMJ+hk6qswmHlp1nwkj6kdY=; b=LTik8qcEySCdMDCuz34d3k9ufZ
-	tIgcA/qhbd4WYY5aZm5G/BJ2NEhNKKXaDkYnnyUJAuigl/iM5tH7dRWI1ba0FvgpOqW7c+UKRpfQO
-	RAvQnxfo8z2qPObIHJq1IJUTFhywlpF+wEQWWVRfnLbA9X5PZ5R4vGG5iuNEzgl7f+vo12OLuGXhO
-	pe5VQDHRK0lqSD/ljuVimzlylfGVsSxVegB1RP+IXwbzxtIF3T+hEZfu9w1iPpvBgX/zKeVbg2U0w
-	3vP9mNvXcffxVjBoGzc7OKfxYwn6qUASlkThQRGRrWJ66Pbuyc7n5VoIx/fr++kivBB8bQPN2Cpqp
-	mkWfeIrA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1r18y9-008YXP-0x; Thu, 09 Nov 2023 17:37:29 +0000
-Date: Thu, 9 Nov 2023 17:37:28 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/3] mm: Add folio_zero_tail() and use it in ext4
-Message-ID: <ZU0Y2NEMMlkHYcr6@casper.infradead.org>
-References: <20231107212643.3490372-1-willy@infradead.org>
- <20231107212643.3490372-2-willy@infradead.org>
- <20231108150606.2ec3cafb290f757f0e4c92d8@linux-foundation.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SR1943SL1z2yVG
+	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Nov 2023 23:14:28 +1100 (AEDT)
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.53])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4SR0dK0KNgzmXH1;
+	Thu,  9 Nov 2023 19:50:29 +0800 (CST)
+Received: from localhost.localdomain (10.175.104.67) by
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Thu, 9 Nov 2023 19:53:41 +0800
+To: <xiang@kernel.org>, <chao@kernel.org>
+Subject: [PATCH -next V2] erofs: code clean up for function erofs_read_inode()
+Date: Fri, 10 Nov 2023 03:48:21 +0800
+Message-ID: <20231109194821.1719430-1-wozizhi@huawei.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231108150606.2ec3cafb290f757f0e4c92d8@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.67]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500020.china.huawei.com (7.185.36.49)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,42 +57,67 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, Andreas Gruenbacher <agruenba@redhat.com>, "Darrick J . Wong" <djwong@kernel.org>, gfs2@lists.linux.dev, Andreas Dilger <adilger.kernel@dilger.ca>, linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org
+From: WoZ1zh1 via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: WoZ1zh1 <wozizhi@huawei.com>
+Cc: yangerkun@huawei.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Nov 08, 2023 at 03:06:06PM -0800, Andrew Morton wrote:
-> >  
-> > +/**
-> > + * folio_zero_tail - Zero the tail of a folio.
-> > + * @folio: The folio to zero.
-> > + * @kaddr: The address the folio is currently mapped to.
-> > + * @offset: The byte offset in the folio to start zeroing at.
-> 
-> That's the argument ordering I would expect.
-> 
-> > + * If you have already used kmap_local_folio() to map a folio, written
-> > + * some data to it and now need to zero the end of the folio (and flush
-> > + * the dcache), you can use this function.  If you do not have the
-> > + * folio kmapped (eg the folio has been partially populated by DMA),
-> > + * use folio_zero_range() or folio_zero_segment() instead.
-> > + *
-> > + * Return: An address which can be passed to kunmap_local().
-> > + */
-> > +static inline __must_check void *folio_zero_tail(struct folio *folio,
-> > +		size_t offset, void *kaddr)
-> 
-> While that is not.  addr,len is far more common that len,addr?
+Because variables "die" and "copied" only appear in case
+EROFS_INODE_LAYOUT_EXTENDED, move them from the outer space into this
+case. Also, call "kfree(copied)" earlier to avoid double free in the
+"error_out" branch. Some cleanups, no logic changes.
 
-But that's not len!  That's offset-in-the-folio.  ie we're doing:
+Signed-off-by: WoZ1zh1 <wozizhi@huawei.com>
+---
+ fs/erofs/inode.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-memset(folio_address(folio) + offset, 0, folio_size(folio) - offset);
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index b8ad05b4509d..a388c93eec34 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -19,7 +19,6 @@ static void *erofs_read_inode(struct erofs_buf *buf,
+ 	erofs_blk_t blkaddr, nblks = 0;
+ 	void *kaddr;
+ 	struct erofs_inode_compact *dic;
+-	struct erofs_inode_extended *die, *copied = NULL;
+ 	unsigned int ifmt;
+ 	int err;
+ 
+@@ -53,6 +52,8 @@ static void *erofs_read_inode(struct erofs_buf *buf,
+ 
+ 	switch (erofs_inode_version(ifmt)) {
+ 	case EROFS_INODE_LAYOUT_EXTENDED:
++		struct erofs_inode_extended *die, *copied = NULL;
++
+ 		vi->inode_isize = sizeof(struct erofs_inode_extended);
+ 		/* check if the extended inode acrosses block boundary */
+ 		if (*ofs + vi->inode_isize <= sb->s_blocksize) {
+@@ -98,6 +99,7 @@ static void *erofs_read_inode(struct erofs_buf *buf,
+ 			inode->i_rdev = 0;
+ 			break;
+ 		default:
++			kfree(copied);
+ 			goto bogusimode;
+ 		}
+ 		i_uid_write(inode, le32_to_cpu(die->i_uid));
+@@ -117,7 +119,6 @@ static void *erofs_read_inode(struct erofs_buf *buf,
+ 			/* fill chunked inode summary info */
+ 			vi->chunkformat = le16_to_cpu(die->i_u.c.format);
+ 		kfree(copied);
+-		copied = NULL;
+ 		break;
+ 	case EROFS_INODE_LAYOUT_COMPACT:
+ 		vi->inode_isize = sizeof(struct erofs_inode_compact);
+@@ -197,7 +198,6 @@ static void *erofs_read_inode(struct erofs_buf *buf,
+ 	err = -EFSCORRUPTED;
+ err_out:
+ 	DBG_BUGON(1);
+-	kfree(copied);
+ 	erofs_put_metabuf(buf);
+ 	return ERR_PTR(err);
+ }
+-- 
+2.39.2
 
-If we were doing:
-
-memset(folio_address(folio), 0, len);
-
-then yes, your suggestion is the right order.
-
-Indeed, having the arguments in the current order would hopefully make
-filesystem authors realise that this _isn't_ "len".
