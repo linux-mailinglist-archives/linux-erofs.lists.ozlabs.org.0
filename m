@@ -1,89 +1,58 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9A347E7408
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Nov 2023 22:53:00 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=I7njR+5V;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ak1JROyP;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 843E47E76CC
+	for <lists+linux-erofs@lfdr.de>; Fri, 10 Nov 2023 02:47:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1699580838;
+	bh=VViQFbZYCwGWKyG7vJlPpUW1zoc3+u9HttIMozNqhxs=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=HYnYq+ypLmShS93djzXfhO+0NWeitbKOUA4Jv9nlRR2FxspAfJPPfEFrEpexq6jCq
+	 NQ5qSiMiaw7YI8Mwz9M7p+4yUZii8pb06U/6qgW+iYKro8H0oYT2LMyI7FmsoyXY90
+	 i+jIuxfWqDXOlHAJeIieaYIPVv/+nVWOeEN5AjZJig2xqgySQLotrr1NMMN0IkKjxc
+	 bvB1uFcdpp28AqwKjZoQbe+x6OayazZ9/3D9Vtrii76m5N+k4y0fohGxQ5WZxhWk8v
+	 sKK0+wk5++96O5PhAq7bHl+yyyBobIyZ8k1i1n6GTmQOPMDAiK0cbi+Hg1PCarRL45
+	 55OXQr7QgcEAw==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SRG0V5xP9z3bv3
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Nov 2023 08:52:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SRMBt32Zyz3cSQ
+	for <lists+linux-erofs@lfdr.de>; Fri, 10 Nov 2023 12:47:18 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=I7njR+5V;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ak1JROyP;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=agruenba@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=wozizhi@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SRG0R2bzHz2xFk
-	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Nov 2023 08:52:55 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699566771;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ooj0huzmXViB3IPA+8ZsWf/tvcP9vcxEUy2C65Cs8hg=;
-	b=I7njR+5VaSGAzjJKJG/tRQdCd+Vy6IlZzOaXnHS7TcA/N14Y6l0Iw/0U/5TrlowBXZcyDX
-	tvh0l4sxjL2sCegLJ4ikGAf20wlxJnLKwTmbf++ZFY4eCbfT12TvBe4eIcSvQGZFFpBel9
-	ntXSxo/riwSxOgiQCX/86jmq0fGyP1k=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1699566772;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ooj0huzmXViB3IPA+8ZsWf/tvcP9vcxEUy2C65Cs8hg=;
-	b=ak1JROyPuGl7SoLUOBOoUOyo4OpTBUH7khnv2mOE3wTU/K1fMr8w3/EVwWyvjc1LCq+Vr1
-	CjiqDURlYWNYJlejNlxiA29YD11+A9B+oWm6aWhEK+17A480y44s1VlC1/DhOdgJaipn95
-	cya7Eaa0OvdDDdit+aycfjURd22wwOo=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-435-IuS6_GxhPhKvKzJvBy_yUQ-1; Thu, 09 Nov 2023 16:52:50 -0500
-X-MC-Unique: IuS6_GxhPhKvKzJvBy_yUQ-1
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-1cc1397321fso13415985ad.3
-        for <linux-erofs@lists.ozlabs.org>; Thu, 09 Nov 2023 13:52:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699566769; x=1700171569;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ooj0huzmXViB3IPA+8ZsWf/tvcP9vcxEUy2C65Cs8hg=;
-        b=UT9uYShv8xSdQSfGQnJZqBpkWwDJpkH4VZfosqNryrBMwAKuGBMLnXPMCAsytld0kM
-         poKbRs3MPPYTMHXq4bimcJKwMi89aDRyoe1dQBjANMCLmmUz8mOy9n3sdh5l+4iFPqtJ
-         d5+o9QDjltiMqsPcwaP/L518A4qc6jXeXsT4Fv+mDKA3f8dxgpmTEzgWkNs7feZl0ZYK
-         IH3mFQNGzJS8tqD+3rp5o+NauQQ4eS7D9ggYVEuE1AnATz3v9y95N4uLFud667g4T0X7
-         Tk7ovb8dvYBLcOkPwyDNhl0ur0c4BRR2ALreuHMzzsQxfGo2eqvoLjNTkEpIM3MFTsh9
-         NTLQ==
-X-Gm-Message-State: AOJu0YzTRsL933kwmQGlmwS3MpLq2Ifezefh9LcYn4ZZtJUFd1S3NNA8
-	9hcNyF1+O6Bl08KKHLP0OwKpA1IZD1nLmb8C385qxosIGvUvAolxqTDTVV2lOH1dVasM3GHq5ch
-	mS+CoHMzdQVI+bPllgG3eQvOdPIzbFigSrWwMaacb
-X-Received: by 2002:a17:902:d2cf:b0:1cc:42b1:934b with SMTP id n15-20020a170902d2cf00b001cc42b1934bmr6973371plc.18.1699566769068;
-        Thu, 09 Nov 2023 13:52:49 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE2w5kiS+35bQf1w6M0QjE1cVW4EjHgMurxmQucKCpYNIosx46laiJfbx3QyQx2atURPUqY64X628qUAuI/IrU=
-X-Received: by 2002:a17:902:d2cf:b0:1cc:42b1:934b with SMTP id
- n15-20020a170902d2cf00b001cc42b1934bmr6973354plc.18.1699566768767; Thu, 09
- Nov 2023 13:52:48 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SRM4g6RSBz3dLd
+	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Nov 2023 12:41:55 +1100 (AEDT)
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.56])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4SRM3n51R2zfb83;
+	Fri, 10 Nov 2023 09:41:09 +0800 (CST)
+Received: from [10.174.176.88] (10.174.176.88) by
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.31; Fri, 10 Nov 2023 09:41:20 +0800
+Message-ID: <bd728618-222b-43ba-8b47-91e90624b49c@huawei.com>
+Date: Fri, 10 Nov 2023 09:41:19 +0800
 MIME-Version: 1.0
-References: <20231107212643.3490372-1-willy@infradead.org> <20231107212643.3490372-4-willy@infradead.org>
-In-Reply-To: <20231107212643.3490372-4-willy@infradead.org>
-From: Andreas Gruenbacher <agruenba@redhat.com>
-Date: Thu, 9 Nov 2023 22:52:37 +0100
-Message-ID: <CAHc6FU6-a5Xf1Zesj0Y9udXLaxg5nnK5t9GPxA_b5PHNU8brvw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] gfs2: Convert stuffed_readpage() to stuffed_read_folio()
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next V2] erofs: code clean up for function
+ erofs_read_inode()
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, <xiang@kernel.org>,
+	<chao@kernel.org>
+References: <20231109194821.1719430-1-wozizhi@huawei.com>
+ <4d4202a7-6648-9d2c-3f0b-079a165c2ebf@linux.alibaba.com>
+ <89069fa4-7347-4364-8793-1ce705a00b92@huawei.com>
+ <872a459d-449d-c057-625e-98c7c8b697ab@linux.alibaba.com>
+In-Reply-To: <872a459d-449d-c057-625e-98c7c8b697ab@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.176.88]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500020.china.huawei.com (7.185.36.49)
+X-CFilter-Loop: Reflected
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -95,104 +64,97 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-xfs@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, "Darrick J . Wong" <djwong@kernel.org>, gfs2@lists.linux.dev, Andreas Dilger <adilger.kernel@dilger.ca>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org
+From: Zizhi Wo via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Zizhi Wo <wozizhi@huawei.com>
+Cc: yangerkun@huawei.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Nov 7, 2023 at 10:27=E2=80=AFPM Matthew Wilcox (Oracle)
-<willy@infradead.org> wrote:
-> Use folio_fill_tail() to implement the unstuffing and folio_end_read()
-> to simultaneously mark the folio uptodate and unlock it.  Unifies a
-> couple of code paths.
->
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  fs/gfs2/aops.c | 37 +++++++++++++++++--------------------
->  1 file changed, 17 insertions(+), 20 deletions(-)
->
-> diff --git a/fs/gfs2/aops.c b/fs/gfs2/aops.c
-> index 9611bfceda4b..ba8742dc91f8 100644
-> --- a/fs/gfs2/aops.c
-> +++ b/fs/gfs2/aops.c
-> @@ -403,18 +403,18 @@ static int gfs2_jdata_writepages(struct address_spa=
-ce *mapping,
->  }
->
->  /**
-> - * stuffed_readpage - Fill in a Linux folio with stuffed file data
-> + * stuffed_read_folio - Fill in a Linux folio with stuffed file data
->   * @ip: the inode
->   * @folio: the folio
->   *
->   * Returns: errno
->   */
-> -static int stuffed_readpage(struct gfs2_inode *ip, struct folio *folio)
-> +static int stuffed_read_folio(struct gfs2_inode *ip, struct folio *folio=
-)
->  {
-> -       struct buffer_head *dibh;
-> -       size_t i_size =3D i_size_read(&ip->i_inode);
-> -       void *data;
-> -       int error;
-> +       struct buffer_head *dibh =3D NULL;
-> +       size_t dsize =3D i_size_read(&ip->i_inode);
-> +       void *from =3D NULL;
-> +       int error =3D 0;
->
->         /*
->          * Due to the order of unstuffing files and ->fault(), we can be
-> @@ -422,22 +422,20 @@ static int stuffed_readpage(struct gfs2_inode *ip, =
-struct folio *folio)
->          * so we need to supply one here. It doesn't happen often.
->          */
->         if (unlikely(folio->index)) {
-> -               folio_zero_range(folio, 0, folio_size(folio));
-> -               folio_mark_uptodate(folio);
-> -               return 0;
-> +               dsize =3D 0;
-> +       } else {
-> +               error =3D gfs2_meta_inode_buffer(ip, &dibh);
-> +               if (error)
-> +                       goto out;
-> +               from =3D dibh->b_data + sizeof(struct gfs2_dinode);
->         }
->
-> -       error =3D gfs2_meta_inode_buffer(ip, &dibh);
-> -       if (error)
-> -               return error;
-> -
-> -       data =3D dibh->b_data + sizeof(struct gfs2_dinode);
-> -       memcpy_to_folio(folio, 0, data, i_size);
-> -       folio_zero_range(folio, i_size, folio_size(folio) - i_size);
-> +       folio_fill_tail(folio, 0, from, dsize);
->         brelse(dibh);
-> -       folio_mark_uptodate(folio);
-> +out:
-> +       folio_end_read(folio, error =3D=3D 0);
->
-> -       return 0;
-> +       return error;
->  }
->
->  /**
-> @@ -456,8 +454,7 @@ static int gfs2_read_folio(struct file *file, struct =
-folio *folio)
->             (i_blocksize(inode) =3D=3D PAGE_SIZE && !folio_buffers(folio)=
-)) {
->                 error =3D iomap_read_folio(folio, &gfs2_iomap_ops);
->         } else if (gfs2_is_stuffed(ip)) {
-> -               error =3D stuffed_readpage(ip, folio);
-> -               folio_unlock(folio);
-> +               error =3D stuffed_read_folio(ip, folio);
->         } else {
->                 error =3D mpage_read_folio(folio, gfs2_block_map);
->         }
-> --
-> 2.42.0
->
 
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+
+在 2023/11/9 23:42, Gao Xiang 写道:
+> 
+> 
+> On 2023/11/9 21:45, Zizhi Wo wrote:
+>>
+>>
+>> 在 2023/11/9 21:14, Gao Xiang 写道:
+>>> Hi,
+>>>
+>>> On 2023/11/10 03:48, WoZ1zh1 wrote:
+>>>> Because variables "die" and "copied" only appear in case
+>>>> EROFS_INODE_LAYOUT_EXTENDED, move them from the outer space into this
+>>>> case. Also, call "kfree(copied)" earlier to avoid double free in the
+>>>> "error_out" branch. Some cleanups, no logic changes.
+>>>>
+>>>> Signed-off-by: WoZ1zh1 <wozizhi@huawei.com>
+>>>
+>>> Please help use your real name here...
+
+Oh, I'm sorry for the confusion I caused you. I have changed my name on
+.gitconfig.
+
+>>>
+>>>> ---
+>>>>   fs/erofs/inode.c | 6 +++---
+>>>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+>>>> index b8ad05b4509d..a388c93eec34 100644
+>>>> --- a/fs/erofs/inode.c
+>>>> +++ b/fs/erofs/inode.c
+>>>> @@ -19,7 +19,6 @@ static void *erofs_read_inode(struct erofs_buf *buf,
+>>>>       erofs_blk_t blkaddr, nblks = 0;
+>>>>       void *kaddr;
+>>>>       struct erofs_inode_compact *dic;
+>>>> -    struct erofs_inode_extended *die, *copied = NULL;
+>>>>       unsigned int ifmt;
+>>>>       int err;
+>>>> @@ -53,6 +52,8 @@ static void *erofs_read_inode(struct erofs_buf *buf,
+>>>>       switch (erofs_inode_version(ifmt)) {
+>>>>       case EROFS_INODE_LAYOUT_EXTENDED:
+>>>> +        struct erofs_inode_extended *die, *copied = NULL;
+>>>
+>>> Thanks for the patch, but in my own opinion:
+>>>
+>>> 1) It doesn't simplify the code
+>> OK, I'm sorry for the noise(;´༎ຶД༎ຶ`)
+>>>
+>>> 2) We'd like to avoid defining variables like this (in the
+>>>     switch block), and I even don't think this patch can compile.
+>> I tested this patch with gcc-12.2.1 locally and it compiled
+>> successfully. I'm not sure if this patch will fail in other environment
+>> with different compiler...
+> 
+> For example, it fails as below on gcc 10.2.1:
+> 
+> fs/erofs/inode.c: In function 'erofs_read_inode':
+> fs/erofs/inode.c:55:3: error: a label can only be part of a statement 
+> and a declaration is not a statement
+>     55 |   struct erofs_inode_extended *die, *copied = NULL;
+>        |   ^~~~~~
+> 
+Oh, I'm sorry about that! I still need to learn more. Thank you for your
+assistance!
 
 Thanks,
-Andreas
-
+Zizhi Wo
+>>
+>>> 3) The logic itself is also broken...
+> 
+> Maybe I was missing something, but this usage makes
+> me uneasy...
+> 
+> Thanks,
+> Gao Xiang
+> 
+>>
+>> Sorry, but I just don't understand why the logic itself is broken, and
+>> can you please explain more?
+>>
+>> Thanks,
+>> Zizhi Wo
+>>
+>>> Thanks,
+>>> Gao Xiang
+> 
