@@ -1,54 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 309427F0D04
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Nov 2023 08:51:57 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qH/Tr60a;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DD617F1835
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Nov 2023 17:10:25 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SYfpz0cg5z3cRk
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Nov 2023 18:51:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SYst70qb2z3c58
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 Nov 2023 03:10:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qH/Tr60a;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=neutral (access neither permitted nor denied) smtp.mailfrom=pobox.com (client-ip=202.82.82.2; helo=ghmg01.great-harvest.local; envelope-from=ahmadramcfacffa3@pobox.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 1323 seconds by postgrey-1.37 at boromir; Tue, 21 Nov 2023 03:10:19 AEDT
+Received: from GHMG01.great-harvest.local (marine.unionapex.com [202.82.82.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SYfpv4lMNz2ykc
-	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Nov 2023 18:51:51 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by ams.source.kernel.org (Postfix) with ESMTP id C797BB81050;
-	Mon, 20 Nov 2023 07:51:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30B43C433C8;
-	Mon, 20 Nov 2023 07:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700466701;
-	bh=6Dy5lixQag+5xA6J3MfdiClmJxKC1ANcF4CazvLin9s=;
-	h=Date:From:To:Cc:Subject:From;
-	b=qH/Tr60auyxGVkxJaxwaFjtFeS8eh/bLuYf0dSEc+0IrhpSn0NdDXuXI4fWclzdCc
-	 NYZjOSuA7HAZp7Q0taRR0FyW2khvO2esrsTCPMKYFk58lz4mLrX+C6Ykfh5ZtSsc6D
-	 Ulv9Xpkeh/Di5FZ8HdEZQwbLFkux2nr1msChzyDAAhVroljo2CB1Nlwx/F9mRXEWYj
-	 69eu7+MpLsAWgS1q2i5apGUD1nKhao+R0w3pDBD+hq2R11sT2GDtWh0hw/h+RPOY2r
-	 1SZjNBttBWEjllfaQplatzvwveiQqF+VWGp/S6/+ae/UYEntlZZWnDfVl/w/TcHL2E
-	 RaeIZzKAsA7LQ==
-Date: Mon, 20 Nov 2023 15:51:34 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: [GIT PULL] erofs fixes for 6.7-rc3
-Message-ID: <ZVsQBsV2GFTmy+iZ@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linuxfoundation.org>,
-	LKML <linux-kernel@vger.kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>, Jingbo Xu <jefflexu@linux.alibaba.com>,
-	linux-erofs@lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SYst32pfNz3bT8
+	for <linux-erofs@lists.ozlabs.org>; Tue, 21 Nov 2023 03:10:18 +1100 (AEDT)
+X-AuditID: c0a80a26-927612400000462b-29-655b7f410418
+Received: from [45.154.98.249] (Unknown_Domain [45.154.98.249])
+	(using TLS with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client did not present a certificate)
+	by GHMG01.great-harvest.local (Symantec Messaging Gateway) with SMTP id E4.F0.17963.14F7B556; Mon, 20 Nov 2023 23:46:09 +0800 (HKT)
+Content-Type: text/plain; charset="iso-8859-1"
+Message-ID: <E4.F0.17963.14F7B556@GHMG01.great-harvest.local>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Investment Expression of Interest (IEOI)
+To: linux-erofs@lists.ozlabs.org
+From: "Ramadan Ahmad" <Ahmadramcfacffa3@pobox.com>
+Date: Mon, 20 Nov 2023 16:46:07 +0100
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDJMWRmVeSWpSXmKPExsWiOyvpp65jfXSqwYRnOhZ79t1kdmD0OD9j
+	IWMAYxSXTUpqTmZZapG+XQJXxteO+SwFh5kr1k/bz9TA+JGpi5GTQ0LAROLchGdANheHkMAq
+	JokHl/tYQBLMAnoSN6ZOYQOxeQVsJS7/2MICYQtKnJz5BKpGW2LZwtfMXYwcQLaaxNeuEpCw
+	sIChxNMjVxlBbBEBBYmJJ84xg9hsAkYS7dPPgrWyCKhKbDl9hxXEFhJQlzg/9QrTBEaeWUg2
+	z0KybRaSbbMQti1gZFnFKOXu4etuYKiXXpSaWKKbkVhUllpcopeTn5yYs4kRGEAHVnCp7WD8
+	OOmj3iFGJg7GQ4wSHMxKIrzfhCJShXhTEiurUovy44tKc1KLDzFKc7AoifMGBEjFCwmkJ5ak
+	ZqemFqQWwWSZODilGphWPuCrLNSSOHnztO3Ke2sbz+ZP5ktLyGMr67PsCZ7cuv/D5677FTyH
+	m5mrw6ZUywgo2Osof0//O6edcSWHUBXfknUT6y6Y9vt/W7e2oqvC7Z3y9V/iods4udh0EzyT
+	1mwMY/yosy7UaGbglP7q1pnP67vu+C/hnHhgPsNBsd2+YT6W6Sdu8Wjt+vZD9/WBA1k6Jmx3
+	OxicdGavL23cYjF7l7GfNvsZuyTJwp0lK54u3n5lq3X/vGfLc8RUis8F3T/psv9RZFXO8+Ur
+	jFbssLxrHX08MkP9hXhxgOKzEG7nKPfPHOwtbo6KNt8384Yd9To4YU98/peri8w1j90x+hp1
+	RHRaTNCTDd5yf9ZLJSixFGckGmoxFxUnAgBSz3OYjwIAAA==
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,59 +53,22 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Yue Hu <huyue2@coolpad.com>
+Reply-To: finance@almnadrinvestment.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+Attn: linux-erofs@lists.ozlabs.org
+Date: 20-11-2023
+Subject: Investment Expression of Interest (IEOI)
 
-Could you consider these patches for 6.7-rc3?
+Dear Sir,
 
-One patch fixes a regression in fscache mode introduced in this cycle.
-Another patch adds EROFS webpages which contains more technical
-internals: <https://erofs.docs.kernel.org>.  The remaining one is a
-trivial cleanup.
+Having been referred to your investment by my team, we would be honored to =
+review your available investment projects for onward referral to my princip=
+al investors who can allocate capital for the financing of it.
 
-All commits have been in -next and no potential merge conflict is
-observed.
+kindly advise at your convenience
 
-Thanks,
-Gao Xiang
-
-The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
-
-  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.7-rc3-fixes
-
-for you to fetch changes up to 62b241efff99fc4d88a86f1c67c7516e31f432a3:
-
-  MAINTAINERS: erofs: add EROFS webpage (2023-11-17 19:55:46 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Tidy up erofs_read_inode() for simplicity;
-
- - Fix broken fscache mode due to NULL dereference of dif->bdev_handle;
-
- - Add the EROFS webpage to MAINTAINERS, documentation, and Kconfig.
-
-----------------------------------------------------------------
-Ferry Meng (1):
-      erofs: simplify erofs_read_inode()
-
-Gao Xiang (1):
-      MAINTAINERS: erofs: add EROFS webpage
-
-Jingbo Xu (1):
-      erofs: fix NULL dereference of dif->bdev_handle in fscache mode
-
- Documentation/filesystems/erofs.rst |  4 ++
- MAINTAINERS                         |  1 +
- fs/erofs/Kconfig                    |  2 +-
- fs/erofs/data.c                     |  5 +-
- fs/erofs/inode.c                    | 98 +++++++++++++------------------------
- 5 files changed, 44 insertions(+), 66 deletions(-)
+Best Regards,
+Ramadan Ahmad CFA
+Chartered Finance Investment Analyst
