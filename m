@@ -1,30 +1,59 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 294027F17ED
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Nov 2023 16:55:16 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF1947F3780
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 Nov 2023 21:33:55 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=g9cO+tJ8;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SYsXc42kTz3byh
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 Nov 2023 02:55:12 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SZbgh3HpLz3ckP
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Nov 2023 07:33:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=allprojectfundings.com (client-ip=91.199.147.229; helo=s770432.srvape.com; envelope-from=funding@allprojectfundings.com; receiver=lists.ozlabs.org)
-Received: from s770432.srvape.com (s770432.srvape.com [91.199.147.229])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SYsXQ0Rmxz30GC
-	for <linux-erofs@lists.ozlabs.org>; Tue, 21 Nov 2023 02:55:01 +1100 (AEDT)
-Received: from allprojectfundings.com (localhost [IPv6:::1])
-	by s770432.srvape.com (Postfix) with ESMTP id A020529BFC4
-	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Nov 2023 16:49:08 +0100 (CET)
-From: Amir Aziz <funding@allprojectfundings.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: We Can Finance Your Business / Projects
-Date: 20 Nov 2023 07:49:10 -0800
-Message-ID: <20231120074910.A8F219475376C390@allprojectfundings.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=g9cO+tJ8;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SZbgc6GbZz3cVS
+	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Nov 2023 07:33:48 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id 48F41CE1DD8;
+	Tue, 21 Nov 2023 20:33:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1744EC433C8;
+	Tue, 21 Nov 2023 20:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700598824;
+	bh=egAqlVYa/A/HI0HadKIhudt6IzD9eGNLvK0Ri4QfjTw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=g9cO+tJ8dqXbdCCNyztmmWUOTkV7lv0Wfy3GX6yA4DF7VbpAhk5oHQkhbX14Z8MtJ
+	 T2VCXyWlIby3Q19wppYlQ6ReCkDVbWYTVlDzQ+jnOUY8NSUrxAkrxBWaGW5GHPRsks
+	 RBrGfMAvzEwFR1XgLMpnU1MMxPvlWM+NmelN8mjTNsWJZs4TK27vcTFc3Dp2DBJJZa
+	 H/4WdVkA1E5zQzfVO6wEyMbEMSJTRcGdvmoDpzmBTJpRJhMvqeB1X0CH12gAa7aOTx
+	 G1z1puENxzdUMbV2YlETs/MaeMoOynDkqcan1Gq1APcg/BSZriLoNUY//nUUZazNFV
+	 afV0lf/wx6+5Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 045B8EAA95F;
+	Tue, 21 Nov 2023 20:33:44 +0000 (UTC)
+Subject: Re: [GIT PULL] erofs fixes for 6.7-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZVsQBsV2GFTmy+iZ@debian>
+References: <ZVsQBsV2GFTmy+iZ@debian>
+X-PR-Tracked-List-Id: Development of Linux EROFS file system <linux-erofs.lists.ozlabs.org>
+X-PR-Tracked-Message-Id: <ZVsQBsV2GFTmy+iZ@debian>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.7-rc3-fixes
+X-PR-Tracked-Commit-Id: 62b241efff99fc4d88a86f1c67c7516e31f432a3
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 6b65522316489ff0b2be65d00fbcecbc781017c9
+Message-Id: <170059882400.5512.9141675111276341675.pr-tracker-bot@kernel.org>
+Date: Tue, 21 Nov 2023 20:33:44 +0000
+To: Gao Xiang <xiang@kernel.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -36,22 +65,19 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: amiraziz@wealthconsultantmanagers.com
+Cc: Linus Torvalds <torvalds@linuxfoundation.org>, Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Greetings,
+The pull request you sent on Mon, 20 Nov 2023 15:51:34 +0800:
 
-We are a consultancy firm situated in Bahrain currently looking=20
-to finance new or existing projects in any industry.
+> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.7-rc3-fixes
 
-Currently we are sourcing for opportunities for our review and=20
-consideration and would be delighted to discuss further.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/6b65522316489ff0b2be65d00fbcecbc781017c9
 
-Please feel free to contact us if you wish to proceed via our=20
-email : amiraziz@wealthconsultantmanagers.com
+Thank you!
 
-Regards,
-Amir Aziz
-
-N:B We will never charge or ask for any upfront fees of any sort.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
