@@ -2,69 +2,70 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82F087F5ADD
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Nov 2023 10:12:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D54BD7F5ADE
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Nov 2023 10:13:01 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=E+By1CI3;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=XeP9NvIQ;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SbXSD31KPz3d9g
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Nov 2023 20:12:12 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SbXT04YNzz3d8N
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 Nov 2023 20:12:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=E+By1CI3;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=XeP9NvIQ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::629; helo=mail-pl1-x629.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::52b; helo=mail-pg1-x52b.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SbXS80GZSz2yhT
-	for <linux-erofs@lists.ozlabs.org>; Thu, 23 Nov 2023 20:12:06 +1100 (AEDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1cf8720c6b7so5133555ad.0
-        for <linux-erofs@lists.ozlabs.org>; Thu, 23 Nov 2023 01:12:06 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SbXSw6x4qz3bZM
+	for <linux-erofs@lists.ozlabs.org>; Thu, 23 Nov 2023 20:12:48 +1100 (AEDT)
+Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-5bd33a450fdso479303a12.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 23 Nov 2023 01:12:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700730724; x=1701335524; darn=lists.ozlabs.org;
+        d=gmail.com; s=20230601; t=1700730766; x=1701335566; darn=lists.ozlabs.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a72khHR5jiE9UfAcDPE13ZONUVgJ4dYyONT5/rJIE0A=;
-        b=E+By1CI3S/dAarJKNNpZiLXk2KeN3Ab5eGrrauVXz/TH7xn28q3OvBMiQWwi7fGlbi
-         UhbWBcMFFrIelW62MEZp6M+exKZ4bO2XPWq2rdSIaBlpj7aJx9hd3CjEiQXDapLFj3hZ
-         lf1fWqR8kPwKGdnCT6dF4n+ZAeiIa0I+rRw54EFzhY8H01zeCimDqdCuRnUIwauvo/9l
-         mYg6SPkia/27SOprv+1dpaufeYscKtn6G1ohjDDxOnu7P95jrJJQMYr8DeoGr11bk8xK
-         8PJSMDS2PvY3Hqm+TMP2skKkh2Hh6XBBp5zoCo9VPM6viv1Mb0srRJ24VBysJ3AevtAb
-         IsOA==
+        bh=NVN7Lm3QnNbj//OIUFLcvcVkFW66YIketLgRhLuAaTg=;
+        b=XeP9NvIQQ5dJbgBlGahKkNV22Z+Q1s6SsD84fTNDGb3RugeZ7Tc4cOLbFVhXovDwak
+         gKIsQQSUP0jiP5Ui8LlKOKi1dY4hFBsUUeN9W/Kilmg3O6yP7JVOr6GgZ5U82/9gWfD0
+         NaHXtx+8g+DgIsUPB4LwY5QjMPVo/xS0pQjeR5Z6PZmyacEl3+1+YCSVZpj0LT5baYwS
+         cNxzcVyetZs5Yfbvf+0Lyo+C7SLQl/1q/lIW3hDsvQXdX9l0GrAS9mbX4H9KiUItvIYr
+         Eu04itF9qLQWQrWYGKkJOsXXaWZo4X9VP0HEpKZE9KV3rTc/fWSUYBWbjkKz//805i+F
+         PZdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700730724; x=1701335524;
+        d=1e100.net; s=20230601; t=1700730766; x=1701335566;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a72khHR5jiE9UfAcDPE13ZONUVgJ4dYyONT5/rJIE0A=;
-        b=hm40fc0yn+NGdhx88R8DPN9vFwrhnZi/gB9ukAZSXMltAMGYNwbrKhdsoh6i9BKWwl
-         KJv7C6H/tvRkvJ9a/+LmGOxoYKByhsQFHk9EBZxgCVZX+b9UlVTWKFE8waoYxtk5Voe+
-         /rgVA8aapcTNZfShvtNoWNybDqFDaLnnDQiUaANZTkD5KNfEGvkzMmctYUvrhvVZ9MaC
-         FVUY0WZlzUC0Hk99aMJ1Ncw20pMvu2xcJQ+lyD42nQ2kfdnQj/M3Y9x2PBXszQH44c+1
-         ObI6a9tV2S1Qk1ATnrfiKLC1O21X1O/ssiMx5gJH5v7qtffXkl8OmkeO+2XXBAVFiW1J
-         8Nnw==
-X-Gm-Message-State: AOJu0YxPrEuN3O66HLtaMTy6jRKucn5HLaD/B7CI4k44PUlJKtAmETKk
-	H7XFq6tnhLixsJrrqTzBNsC4v7+7s3I=
-X-Google-Smtp-Source: AGHT+IERJ29gQhJ7wKoVGoUDg3TOKoglsDbs+a8oTGyz8QxnM8K1vEPzlMXZwk8xG/JJG96svRbjug==
-X-Received: by 2002:a17:903:44d:b0:1cf:7a4b:9dc6 with SMTP id iw13-20020a170903044d00b001cf7a4b9dc6mr3102587plb.61.1700730723698;
-        Thu, 23 Nov 2023 01:12:03 -0800 (PST)
+        bh=NVN7Lm3QnNbj//OIUFLcvcVkFW66YIketLgRhLuAaTg=;
+        b=UNBgeH7Y+VWmmJ6yupn1Nilv8J08LBMAMQbS8H7hjunciJwhxZjWr7UP0p+sfXKToA
+         APaSzuqWRmiPRqav1akuxTz921vKgYR7/CqZep7hyLvo2jsuJ0BhYs41f7WWZZ7W5jUn
+         2tUpk12LaH9aBlifxcFxW0JoECCsenlY1Fyly9+jB7ZjFONsGzM7z5zl7wIkkOBcee9y
+         pmgazpDDdXAP77dxFqxImoocPBvxkgrBt7eJah36WC4MChQjmNKO3CiXk3aF+G69FA4Y
+         5HPxNGkF7HHamVj2fvAkt/HNMB/F0H73+dt8phm0X40OV8ZOFMzi5QMzuT0hbVCduLeu
+         0xpQ==
+X-Gm-Message-State: AOJu0YyzBpSDkLwwDqT4Xh2thecZ1SkN2KqljM5yHYVTYwSdfX6e7ygk
+	lLouL7R7nZUcEKrs1TL7rEt6HLpKw8U=
+X-Google-Smtp-Source: AGHT+IG7qlwWMN6R5P0TIf1f+OvDFXLKL/RtGE5DQtcgkKL7oyicgIjpKwZWnPEgeN6VL04uJWKYJw==
+X-Received: by 2002:a05:6a20:c887:b0:188:1281:8994 with SMTP id hb7-20020a056a20c88700b0018812818994mr6667937pzb.35.1700730766336;
+        Thu, 23 Nov 2023 01:12:46 -0800 (PST)
 Received: from localhost ([156.236.96.172])
-        by smtp.gmail.com with ESMTPSA id a9-20020a170902ee8900b001b7f40a8959sm863694pld.76.2023.11.23.01.12.02
+        by smtp.gmail.com with ESMTPSA id b11-20020a170902b60b00b001b89466a5f4sm859697pls.105.2023.11.23.01.12.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Nov 2023 01:12:03 -0800 (PST)
-Date: Thu, 23 Nov 2023 17:11:59 +0800
+        Thu, 23 Nov 2023 01:12:46 -0800 (PST)
+Date: Thu, 23 Nov 2023 17:12:42 +0800
 From: Yue Hu <zbestahu@gmail.com>
 To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 1/2] erofs-utils: lib: fix up compact indexes for block
- size < 4096
-Message-ID: <20231123171159.00003646.zbestahu@gmail.com>
-In-Reply-To: <20231123052245.868698-1-hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH 2/2] erofs-utils: mkfs: support compact indexes for
+ smaller block sizes
+Message-ID: <20231123171242.000035e5.zbestahu@gmail.com>
+In-Reply-To: <20231123052245.868698-2-hsiangkao@linux.alibaba.com>
 References: <20231123052245.868698-1-hsiangkao@linux.alibaba.com>
+	<20231123052245.868698-2-hsiangkao@linux.alibaba.com>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -84,20 +85,11 @@ Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, 23 Nov 2023 13:22:44 +0800
+On Thu, 23 Nov 2023 13:22:45 +0800
 Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-> Previously, the block size always equaled to PAGE_SIZE in kernel,
-> therefore `lclusterbits` couldn't be less than 12.
-> 
-> Since sub-page compressed blocks are now considered, `lobits` for
-> a lcluster in each pack of compact indexes cannot always be
-> `lclusterbits` as before.  Otherwise, there is no enough room for
-> the special value `Z_EROFS_LI_D0_CBLKCNT`.
-> 
-> To support smaller block sizes, `lobits` for each compacted lcluster is
-> now calculated as:
->    lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1)
+> This commit also adds mkfs support of compact indexes for smaller
+> block sizes (less than 4096).
 > 
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
