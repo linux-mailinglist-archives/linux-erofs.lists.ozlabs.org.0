@@ -2,65 +2,69 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA5197F6AE2
-	for <lists+linux-erofs@lfdr.de>; Fri, 24 Nov 2023 04:36:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C05D87F6AE3
+	for <lists+linux-erofs@lfdr.de>; Fri, 24 Nov 2023 04:36:59 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=RB3UAbvX;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Q2TI299T;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Sc0yQ4Nj6z3dJ5
-	for <lists+linux-erofs@lfdr.de>; Fri, 24 Nov 2023 14:36:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Sc0yx4rM8z3dDP
+	for <lists+linux-erofs@lfdr.de>; Fri, 24 Nov 2023 14:36:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=RB3UAbvX;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Q2TI299T;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::102a; helo=mail-pj1-x102a.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::233; helo=mail-oi1-x233.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sc0yC6HV9z3d9s
-	for <linux-erofs@lists.ozlabs.org>; Fri, 24 Nov 2023 14:36:18 +1100 (AEDT)
-Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-282fcf7eef9so1075009a91.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 23 Nov 2023 19:36:17 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sc0yp4vvjz3d9s
+	for <linux-erofs@lists.ozlabs.org>; Fri, 24 Nov 2023 14:36:50 +1100 (AEDT)
+Received: by mail-oi1-x233.google.com with SMTP id 5614622812f47-3b2df2fb611so984060b6e.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 23 Nov 2023 19:36:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700796972; x=1701401772; darn=lists.ozlabs.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LGFbS2R4iN7EyhFoSRluoJ0emU8WaJipoXCym3fhSXw=;
-        b=RB3UAbvXDY3DsOEebjVqKqWEhO+d8xsHZKs5XrL0/Ad2aiulAhstCimFRp1DVJHNHg
-         pd2C1J28HQ6fFv0Pp1P32OsUC8ewxKPRN2j6dFBXqd/vx9lfh1FX+gXKTDIl4vdaH6s/
-         T1VBihJSrsS1jTvV5KMv+d62qz0YobmMjnzD8dPvfD/9RwKsqepBwfrthk1kE5Nbro8L
-         Io6Rv+g1yVBWBHBNSnZcGjvt5oXZqbX1fKXzZ2nSuIHZV7749y1GzIcbSP88Q4IdY9Bx
-         1qjEF/SZJ/o2Oc4DF3i6feji/3L1QOtmAD3t+asSGgr/likecN+LNyU4Sb260a4sxk60
-         Zefg==
+        d=gmail.com; s=20230601; t=1700797007; x=1701401807; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xcsY+IMFAarGFrkdruFo6tsfLtiA8oqgpJIXZRrXSkM=;
+        b=Q2TI299TMbRtjTg3YLQLu0YMRZGmOj7XVhG2w1ocKFdJq383hkESs9rd4smuQS1FG+
+         uI99L7QpdIP+RGtym26N1/zJuw0OzOk6BFcmTEUSSv17FZl7xy2eWqPOpj8Tg5Z7hKLC
+         0JMlodrgix0ICdnF7h5pZirCfb8GROhNyHu0UU4Gc61x38VjjlU4eTtlkb9Zwi2SGDtJ
+         aoua/H1tDSu+bcOtOCJMhczVwqHOH0nOH5R7VRRTzXbx24pKsGawcEhfELdB9Pq0V41x
+         LTnxN92U42I65lMXbauNtBMXho9hnxSUjLc8ayraveQM98cDd6swfWrSr2HU1od4IfBJ
+         /xRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700796972; x=1701401772;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LGFbS2R4iN7EyhFoSRluoJ0emU8WaJipoXCym3fhSXw=;
-        b=cfRCoK/POwzmQs4B+PMTCDLcHiOp6N2pQUVs5kdnbiHZKgGrCHTj892/Fl30GF4d5u
-         vp3TWZ4MXyX+fAQQ/xNxRvGvRA6n75HtBQ1F/82+HjnVCjUa5/Cv7fyFUskXiEkt2oAc
-         3SSo+7inbo6qO68JKSKl9rsTB9pvWToB9/61PehHkNEz5FQo7own64OT63aqTq3LA6Hv
-         dBa7HLbKUtw98NiOONZnh7wzNV/zpS6G3X6Ls7V/xtBG0KujTZ/ck82Chbpjk/nfUAgs
-         m9WATuGje0myAd/1nkIbfIwYAUpd2nwUbebGSwS+tcrK07greeheCokJr0e5lWFSSvLL
-         5SUw==
-X-Gm-Message-State: AOJu0Yw+PcofB+sfQeKZsnJRSNY3klnNpVcexovZ70rzj1kiRpvTMpyX
-	DTOh4aT2y2Y5VeL/8/O7diN5T2w2XMs=
-X-Google-Smtp-Source: AGHT+IH0IRltJsIj7pb2HIhiC08i16gP8SMjbAVHCO7SRpQ0UydQwsM66DJVdPiejaBWWYbhPqRMDg==
-X-Received: by 2002:a17:90b:1c8f:b0:280:3a0c:bf73 with SMTP id oo15-20020a17090b1c8f00b002803a0cbf73mr1447029pjb.26.1700796972390;
-        Thu, 23 Nov 2023 19:36:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700797007; x=1701401807;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xcsY+IMFAarGFrkdruFo6tsfLtiA8oqgpJIXZRrXSkM=;
+        b=vcKxG12Je056emCJc2W3r41zMd9EXWSLGkUW/FbNAfx4jk6enWLfh7VcWsVYiJFd8T
+         zd2oynYQyhiOVnYTkr9DU/3ZhnFVQyXeeZwWNnq4ndQZg6vohP7cye2H8tHLXMseBMh3
+         VlcJDTwE30j7RCZ7KArJFB/R/9jv/8Bez5qPgWvpDOAQoPvLOIvZ8D9H0/qc2ctyhXu1
+         1PAhSI60cRALs11+s0Gp63kkjnGWwmp4OvYa4oA2FzFTVCQPB5gSKBaXX4kmH6Y2g4SZ
+         eeaPeQHF134SVwZsswaNf4tQhkuZx3wobq3mvdAeQGrKs+ji96NWO5qKk3zDNczLe4UW
+         5EFw==
+X-Gm-Message-State: AOJu0YwAH4m148wgGIIOq2z5NiA6ELisPXgw7/W69ylIL7TRv4ie06gF
+	JXv6cNR+vgr0n7A2B8YTVcd5300H1IE=
+X-Google-Smtp-Source: AGHT+IFxthYPtTcTUHTtr196OPeEt30lKnk66ktjQV5s3WyXquZ0FtGaCZhev1y6oD0v7RAqhAX9kw==
+X-Received: by 2002:a05:6808:1188:b0:3a8:432a:ea13 with SMTP id j8-20020a056808118800b003a8432aea13mr1604809oil.46.1700797007375;
+        Thu, 23 Nov 2023 19:36:47 -0800 (PST)
 Received: from localhost.localdomain ([156.236.96.172])
-        by smtp.gmail.com with ESMTPSA id l9-20020a170902f68900b001c3a8b135ebsm2084288plg.282.2023.11.23.19.36.11
+        by smtp.gmail.com with ESMTPSA id d3-20020a63ed03000000b0058ee60f8e4dsm2088004pgi.34.2023.11.23.19.36.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Nov 2023 19:36:12 -0800 (PST)
+        Thu, 23 Nov 2023 19:36:47 -0800 (PST)
 From: Yue Hu <zbestahu@gmail.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/2] erofs-utils: tests: double-quote entries assignment in _check_xattrs
-Date: Fri, 24 Nov 2023 11:35:42 +0800
-Message-Id: <20231124033542.25977-1-zbestahu@gmail.com>
+Subject: [PATCH 2/2] erofs-utils: tests: fix build warning in test_LZ4_compress_HC_destSize
+Date: Fri, 24 Nov 2023 11:36:29 +0800
+Message-Id: <20231124033629.26035-1-zbestahu@gmail.com>
 X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,32 +82,42 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Yue Hu <huyue2@coolpad.com>
 
-Otherwise, may cause below error:
-
-./erofs/019: 353: local: include/erofs: bad variable name
-FAIL: erofs/019
-
-Additionally, adjust the `-type f` test before the `-printf` action to
-avoid retrieving non-regular file names.
+badlz4.c:72:58: warning: format ‘%d’ expects argument of type ‘int’, but argument 4 has type ‘long unsigned int’ [-Wformat=]
+   printf("test LZ4_compress_HC_destSize(%d) error (%d < %d)\n",
+                                                         ~^
+                                                         %ld
 
 Signed-off-by: Yue Hu <huyue2@coolpad.com>
 ---
- tests/common/rc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tests/src/badlz4.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tests/common/rc b/tests/common/rc
-index f234fdc..cdc72a9 100644
---- a/tests/common/rc
-+++ b/tests/common/rc
-@@ -350,7 +350,7 @@ _check_xattrs()
- {
- 	local dir1="$1"
- 	local dir2="$2"
--	local entries=`find $dir1 -mindepth 1 -printf '%P\n' -type f`
-+	local entries="`find $dir1 -mindepth 1 -type f -printf '%P\n'`"
+diff --git a/tests/src/badlz4.c b/tests/src/badlz4.c
+index f2f1f05..2a4a908 100644
+--- a/tests/src/badlz4.c
++++ b/tests/src/badlz4.c
+@@ -60,17 +60,18 @@ int test_LZ4_compress_HC_destSize(int inlen)
+ 	char buf[1642496];
+ 	int SrcSize = inlen;
+ 	char dst[4116];
++	int DstSize = sizeof(dst);
+ 	int compressed;
  
- 	for entry in $entries; do
- 		xattr1=`getfattr --absolute-names -d $dir1/$entry | tail -n+2`
+ 	void *ctx = LZ4_createStreamHC();
+ 
+ 	memset(buf, 0, inlen);
+ 	compressed = LZ4_compress_HC_destSize(ctx, buf, dst, &SrcSize,
+-					      sizeof(dst), 1);
++					      DstSize, 1);
+ 	LZ4_freeStreamHC(ctx);
+-	if (SrcSize <= sizeof(dst)) {
++	if (SrcSize <= DstSize) {
+ 		printf("test LZ4_compress_HC_destSize(%d) error (%d < %d)\n",
+-		       inlen, SrcSize, sizeof(dst));
++		       inlen, SrcSize, DstSize);
+ 		return 1;
+ 	}
+ 	printf("test LZ4_compress_HC_destSize(%d) OK\n", inlen);
 -- 
 2.17.1
 
