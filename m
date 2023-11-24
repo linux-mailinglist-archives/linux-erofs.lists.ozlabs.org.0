@@ -1,37 +1,76 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 440467F6BBE
-	for <lists+linux-erofs@lfdr.de>; Fri, 24 Nov 2023 06:40:54 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 819E07F77E5
+	for <lists+linux-erofs@lfdr.de>; Fri, 24 Nov 2023 16:33:57 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=NJ0nHM/A;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=NJ0nHM/A;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Sc3jw1PbVz3dJq
-	for <lists+linux-erofs@lfdr.de>; Fri, 24 Nov 2023 16:40:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ScJtC3JNgz3dRS
+	for <lists+linux-erofs@lfdr.de>; Sat, 25 Nov 2023 02:33:55 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=NJ0nHM/A;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=NJ0nHM/A;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sc3jp6b9lz3d8t
-	for <linux-erofs@lists.ozlabs.org>; Fri, 24 Nov 2023 16:40:45 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0Vx0HVdh_1700804439;
-Received: from 30.97.48.234(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vx0HVdh_1700804439)
-          by smtp.aliyun-inc.com;
-          Fri, 24 Nov 2023 13:40:40 +0800
-Message-ID: <5b98e92e-983f-0041-8829-c114959189f2@linux.alibaba.com>
-Date: Fri, 24 Nov 2023 13:40:38 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ScJt6758sz3dJp
+	for <linux-erofs@lists.ozlabs.org>; Sat, 25 Nov 2023 02:33:50 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700840027;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LbHOKemj3x3i/RRfgL4O8FQ7JtEapB4R9zBWaNJlTbY=;
+	b=NJ0nHM/AADA60iksTBEQKU7Xn3JJVtBEXwY7S+OjjPzxDwNpCAF97oqnrEqQ6z9S/A6TC6
+	yv/mfo0shfuksDaaapT52dnVyStJsCGGEFHLax2RLGmXgSAYPIuD/KCTY7JnMe7onJLwNI
+	E0Af3i2uOSyVcE8Xpe7tRNXoa3MTK6g=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1700840027;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LbHOKemj3x3i/RRfgL4O8FQ7JtEapB4R9zBWaNJlTbY=;
+	b=NJ0nHM/AADA60iksTBEQKU7Xn3JJVtBEXwY7S+OjjPzxDwNpCAF97oqnrEqQ6z9S/A6TC6
+	yv/mfo0shfuksDaaapT52dnVyStJsCGGEFHLax2RLGmXgSAYPIuD/KCTY7JnMe7onJLwNI
+	E0Af3i2uOSyVcE8Xpe7tRNXoa3MTK6g=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-345-oiTfhCSzPOGE4YlKer0wwg-1; Fri, 24 Nov 2023 10:33:43 -0500
+X-MC-Unique: oiTfhCSzPOGE4YlKer0wwg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DEF7B811E7E;
+	Fri, 24 Nov 2023 15:33:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.161])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id CEC1B2166B26;
+	Fri, 24 Nov 2023 15:33:40 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20231120041422.75170-1-zhujia.zj@bytedance.com>
+References: <20231120041422.75170-1-zhujia.zj@bytedance.com>
+To: Jia Zhu <zhujia.zj@bytedance.com>
+Subject: Re: [PATCH V6 RESEND 0/5] cachefiles: Introduce failover mechanism for on-demand mode
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: [PATCH] erofs-utils: update .gitignore for test results and tools
-To: Yue Hu <zbestahu@gmail.com>, linux-erofs@lists.ozlabs.org
-References: <20231124053059.29514-1-zbestahu@gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20231124053059.29514-1-zbestahu@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1172305.1700840020.1@warthog.procyon.org.uk>
+Date: Fri, 24 Nov 2023 15:33:40 +0000
+Message-ID: <1172306.1700840020@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -43,32 +82,9 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>
+Cc: linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Reviewed-by: David Howells <dhowells@redhat.com>
 
-
-On 2023/11/24 13:30, Yue Hu wrote:
-> From: Yue Hu <huyue2@coolpad.com>
-> 
-> No need to track these generated test files.
-> 
-> Signed-off-by: Yue Hu <huyue2@coolpad.com>
-> ---
->   .gitignore | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/.gitignore b/.gitignore
-> index 33e5d30..5b9ecd0 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -31,3 +31,6 @@ stamp-h1
->   /fuse/erofsfuse
->   /dump/dump.erofs
->   /fsck/fsck.erofs
-> +tests/results/
-> +tests/src/badlz4
-> +tests/src/fssum
-
-Thanks, applied.
