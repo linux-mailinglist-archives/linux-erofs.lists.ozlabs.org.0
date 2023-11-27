@@ -1,30 +1,30 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EBBE7F9931
-	for <lists+linux-erofs@lfdr.de>; Mon, 27 Nov 2023 07:22:20 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id E446B7F9933
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Nov 2023 07:22:22 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SdwVK5BYHz3cW2
-	for <lists+linux-erofs@lfdr.de>; Mon, 27 Nov 2023 17:22:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SdwVN664wz3cTD
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Nov 2023 17:22:20 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SdwV46hbMz3c2H
-	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 17:22:04 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4SdwTt1GbXz4f3kFh
-	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 14:21:54 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SdwV474ymz3cR9
+	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 17:22:02 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4SdwTv1mSlz4f3k5b
+	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 14:21:55 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 06F591A0C09
-	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 14:21:56 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 124611A0B7F
+	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 14:21:58 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDX2hB+NWRlrcU8CA--.57866S5;
-	Mon, 27 Nov 2023 14:21:55 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgDX2hB+NWRlrcU8CA--.57866S6;
+	Mon, 27 Nov 2023 14:21:57 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: hch@infradead.org,
 	ming.lei@redhat.com,
@@ -65,32 +65,32 @@ To: hch@infradead.org,
 	akpm@linux-foundation.org,
 	hare@suse.de,
 	p.raghav@samsung.com
-Subject: [PATCH block/for-next v2 01/16] block: add a new helper to get inode from block_device
-Date: Mon, 27 Nov 2023 14:21:01 +0800
-Message-Id: <20231127062116.2355129-2-yukuai1@huaweicloud.com>
+Subject: [PATCH block/for-next v2 02/16] xen/blkback: use new helper to get inode from block_device
+Date: Mon, 27 Nov 2023 14:21:02 +0800
+Message-Id: <20231127062116.2355129-3-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231127062116.2355129-1-yukuai1@huaweicloud.com>
 References: <20231127062116.2355129-1-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgDX2hB+NWRlrcU8CA--.57866S5
-X-Coremail-Antispam: 1UD129KBjvJXoW7uF1kur1UZFWfWw45tr1rtFb_yoW8Aw4rpF
-	nxGFy5GrWDWry2gF4vvw17Zry3K3W0k3y8JrZaqw4Y9ayUtr1IgF1ktr17Ary0vrZ3KF4j
-	gF1Y9rW8urWUC3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
-	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1UMIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
-	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUOR6z
-	UUUUU
+X-CM-TRANSID: cCh0CgDX2hB+NWRlrcU8CA--.57866S6
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw17KF4DGrW3uF4UJr4DCFg_yoW3KFX_XF
+	18urW7Zrn3Crsaka45uFs3Z340kw18ur4F9a1Iva4Sq34UCFW0v392vFn5Gr47XFWUG3Z0
+	y3WxXFW7tr4xJjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbDAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
+	0Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
+	v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1lIxkGc2
+	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
+	Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+	1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHbyAU
+	UUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -109,65 +109,27 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-block_devcie is allocated from bdev_alloc() by bdev_alloc_inode(), and
-currently block_device contains a pointer that point to the address of
-inode, while such inode is allocated together:
-
-bdev_alloc
- inode = new_inode()
-  // inode is &bdev_inode->vfs_inode
- bdev = I_BDEV(inode)
-  // bdev is &bdev_inode->bdev
- bdev->inode = inode
-
-Add a new helper to get address of inode from bdev by add operation
-instead of memory access, which is more efficiency.
+Which is more efficiency, and also prepare to remove the field
+'bd_inode' from block_device.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- block/bdev.c              |  5 -----
- include/linux/blk_types.h | 12 ++++++++++++
- 2 files changed, 12 insertions(+), 5 deletions(-)
+ drivers/block/xen-blkback/xenbus.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/block/bdev.c b/block/bdev.c
-index e4cfb7adb645..7509389095b7 100644
---- a/block/bdev.c
-+++ b/block/bdev.c
-@@ -30,11 +30,6 @@
- #include "../fs/internal.h"
- #include "blk.h"
+diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+index e34219ea2b05..e11f8123d213 100644
+--- a/drivers/block/xen-blkback/xenbus.c
++++ b/drivers/block/xen-blkback/xenbus.c
+@@ -105,7 +105,7 @@ static void xen_update_blkif_status(struct xen_blkif *blkif)
+ 		return;
+ 	}
+ 	invalidate_inode_pages2(
+-			blkif->vbd.bdev_handle->bdev->bd_inode->i_mapping);
++			bdev_inode(blkif->vbd.bdev_handle->bdev)->i_mapping);
  
--struct bdev_inode {
--	struct block_device bdev;
--	struct inode vfs_inode;
--};
--
- static inline struct bdev_inode *BDEV_I(struct inode *inode)
- {
- 	return container_of(inode, struct bdev_inode, vfs_inode);
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index d5c5e59ddbd2..06de8393dcd1 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -85,6 +85,18 @@ struct block_device {
- #define bdev_kobj(_bdev) \
- 	(&((_bdev)->bd_device.kobj))
- 
-+struct bdev_inode {
-+	struct block_device bdev;
-+	struct inode vfs_inode;
-+};
-+
-+static inline struct inode *bdev_inode(struct block_device *bdev)
-+{
-+	struct bdev_inode *bi = container_of(bdev, struct bdev_inode, bdev);
-+
-+	return &bi->vfs_inode;
-+}
-+
- /*
-  * Block error status values.  See block/blk-core:blk_errors for the details.
-  * Alpha cannot write a byte atomically, so we need to use 32-bit value.
+ 	for (i = 0; i < blkif->nr_rings; i++) {
+ 		ring = &blkif->rings[i];
 -- 
 2.39.2
 
