@@ -2,29 +2,29 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E446B7F9933
-	for <lists+linux-erofs@lfdr.de>; Mon, 27 Nov 2023 07:22:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E07E7F9938
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Nov 2023 07:22:26 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SdwVN664wz3cTD
-	for <lists+linux-erofs@lfdr.de>; Mon, 27 Nov 2023 17:22:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SdwVS1c23z3cWF
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Nov 2023 17:22:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SdwV474ymz3cR9
-	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 17:22:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SdwV50tLYz3cRD
+	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 17:22:04 +1100 (AEDT)
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4SdwTv1mSlz4f3k5b
-	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 14:21:55 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 124611A0B7F
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4SdwTy08zFz4f3kGG
 	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 14:21:58 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id D50641A0B89
+	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Nov 2023 14:21:59 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDX2hB+NWRlrcU8CA--.57866S6;
-	Mon, 27 Nov 2023 14:21:57 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgDX2hB+NWRlrcU8CA--.57866S7;
+	Mon, 27 Nov 2023 14:21:59 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: hch@infradead.org,
 	ming.lei@redhat.com,
@@ -65,20 +65,20 @@ To: hch@infradead.org,
 	akpm@linux-foundation.org,
 	hare@suse.de,
 	p.raghav@samsung.com
-Subject: [PATCH block/for-next v2 02/16] xen/blkback: use new helper to get inode from block_device
-Date: Mon, 27 Nov 2023 14:21:02 +0800
-Message-Id: <20231127062116.2355129-3-yukuai1@huaweicloud.com>
+Subject: [PATCH block/for-next v2 03/16] bcache: use new helper to get inode from block_device
+Date: Mon, 27 Nov 2023 14:21:03 +0800
+Message-Id: <20231127062116.2355129-4-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231127062116.2355129-1-yukuai1@huaweicloud.com>
 References: <20231127062116.2355129-1-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgDX2hB+NWRlrcU8CA--.57866S6
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw17KF4DGrW3uF4UJr4DCFg_yoW3KFX_XF
-	18urW7Zrn3Crsaka45uFs3Z340kw18ur4F9a1Iva4Sq34UCFW0v392vFn5Gr47XFWUG3Z0
-	y3WxXFW7tr4xJjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID: cCh0CgDX2hB+NWRlrcU8CA--.57866S7
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw1xZryrZw1UJr47Kw4kJFb_yoW3uFc_uF
+	4xZFy2g3yrKrn2vr45GwsavrWjy3WkuF4IqFW7tryavFy5Jr93Wry093W3Xr43WrsIkanx
+	CFyDGr45Aw109jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
 	9fnUUIcSsGvfJTRUUUbDAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUWwA2048vs2IY02
 	0Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
 	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
 	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
@@ -89,7 +89,7 @@ X-Coremail-Antispam: 1UD129KBjvdXoWrKw17KF4DGrW3uF4UJr4DCFg_yoW3KFX_XF
 	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1lIxkGc2
 	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
 	Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHbyAU
+	1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUd8n5U
 	UUUU=
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -114,22 +114,22 @@ Which is more efficiency, and also prepare to remove the field
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/block/xen-blkback/xenbus.c | 2 +-
+ drivers/md/bcache/super.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index e34219ea2b05..e11f8123d213 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -105,7 +105,7 @@ static void xen_update_blkif_status(struct xen_blkif *blkif)
- 		return;
- 	}
- 	invalidate_inode_pages2(
--			blkif->vbd.bdev_handle->bdev->bd_inode->i_mapping);
-+			bdev_inode(blkif->vbd.bdev_handle->bdev)->i_mapping);
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index bfe1685dbae5..3ab8bae049ee 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -171,7 +171,7 @@ static const char *read_super(struct cache_sb *sb, struct block_device *bdev,
+ 	struct page *page;
+ 	unsigned int i;
  
- 	for (i = 0; i < blkif->nr_rings; i++) {
- 		ring = &blkif->rings[i];
+-	page = read_cache_page_gfp(bdev->bd_inode->i_mapping,
++	page = read_cache_page_gfp(bdev_inode(bdev)->i_mapping,
+ 				   SB_OFFSET >> PAGE_SHIFT, GFP_KERNEL);
+ 	if (IS_ERR(page))
+ 		return "IO error";
 -- 
 2.39.2
 
