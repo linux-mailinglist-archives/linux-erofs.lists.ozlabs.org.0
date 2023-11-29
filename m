@@ -1,35 +1,74 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 467E27FC0FA
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 Nov 2023 19:05:00 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5932A7FCE5B
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Nov 2023 06:39:43 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=EM8PRE4Z;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Sfr2d5JHRz3cbB
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 Nov 2023 05:04:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Sg7SD61yNz3cW2
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Nov 2023 16:39:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=EM8PRE4Z;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::22f; helo=mail-oi1-x22f.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sfr2Y0bcrz3cW2
-	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Nov 2023 05:04:48 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VxLRJJv_1701194672;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VxLRJJv_1701194672)
-          by smtp.aliyun-inc.com;
-          Wed, 29 Nov 2023 02:04:33 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs: fix memory leak on short-lived bounced pages
-Date: Wed, 29 Nov 2023 02:04:31 +0800
-Message-Id: <20231128180431.4116991-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20231128175810.4105671-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sg7S56JmKz3c5j
+	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Nov 2023 16:39:32 +1100 (AEDT)
+Received: by mail-oi1-x22f.google.com with SMTP id 5614622812f47-3b565e35fedso3673725b6e.2
+        for <linux-erofs@lists.ozlabs.org>; Tue, 28 Nov 2023 21:39:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701236369; x=1701841169; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=odzHaB82SZdpybaH4ujfpl6ch16xiqGdapqSSbgzBkI=;
+        b=EM8PRE4ZbvWS9VztiLOLxUr06Z5IY1vgK8aNSBRzj1ZnfGAftlnvzq2Ll+lNicKqOp
+         iZCO6pqnUKX7dwdHGjaIdou2EldDHbW2UlOqUCvVDiJr/Nu7GRsHzthJrO+5LATU/+dR
+         Y1607YDGl+gbpaOC/OOKRlYL1QknPZHuwHXYWG+zNPCXExXTF9Jn/o2ibPUVCJCpS+pw
+         z/xYsXtMloYj7JVlpFBF+6rETVKOGLUX21DXOddEV/U7jCb7Czj+OrZyH5ZAQzpx7UzB
+         5LQUz94rZLETul85X1cnBzX1AtJO6OkSTXvOhEAwoJA7GQLrCX00VXePCz189bgD1zKq
+         enRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701236369; x=1701841169;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=odzHaB82SZdpybaH4ujfpl6ch16xiqGdapqSSbgzBkI=;
+        b=lvUnw9XPeCHSY5lr6j3txNyJb0PpUlQkdxw2/2Tix3bthZL3oOHvhNlorZKVMOalNe
+         WImJFdk0cfnVALS7F9VTGxLWcQXGLJ7y0nLUblPrlUSIXmfTeMmg7m1i9LHHTZU+PXJl
+         CoSR3SJXYTz/u6SIE4MI8CWRhf9Yp0wApKrhCQdXnMgcmP1Zt520eBevunB3wvC6NqoR
+         G+tFjgq28FMixU5X79MZsKz2IzP2o8Q3VLLSliXmnNiDnwTxKFDds226wMuNJU34819x
+         K0WpH+3Lu/Rq36D9wmaoRBGH9R+ATUpu59328xIzISekLhmB+c6g1pEJy6dcqf1KDrYL
+         m9Iw==
+X-Gm-Message-State: AOJu0Yz//OD7lp0vgvRBGomVWa/MMJP/BgI2ke6oDwu1iy6NUFI3sm7A
+	bWcTQHXV4sGg1feDjQcY+Zs=
+X-Google-Smtp-Source: AGHT+IGz8aGZVmu36Kmt61oqFIQCLjCV8dVstGF4hdOcUUg0GDOBZZrghen2rAaIuIBCohBpFEg9pg==
+X-Received: by 2002:a05:6808:4342:b0:3b8:8db8:d8b5 with SMTP id dx2-20020a056808434200b003b88db8d8b5mr2218303oib.58.1701236368872;
+        Tue, 28 Nov 2023 21:39:28 -0800 (PST)
+Received: from localhost ([156.236.96.172])
+        by smtp.gmail.com with ESMTPSA id e13-20020a631e0d000000b0057c44503835sm10337143pge.65.2023.11.28.21.39.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Nov 2023 21:39:28 -0800 (PST)
+Date: Wed, 29 Nov 2023 13:39:23 +0800
+From: Yue Hu <zbestahu@gmail.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH v2] erofs: fix memory leak on short-lived bounced pages
+Message-ID: <20231129133923.00005957.zbestahu@gmail.com>
+In-Reply-To: <20231128180431.4116991-1-hsiangkao@linux.alibaba.com>
 References: <20231128175810.4105671-1-hsiangkao@linux.alibaba.com>
+	<20231128180431.4116991-1-hsiangkao@linux.alibaba.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -41,47 +80,23 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Both MicroLZMA and DEFLATE algorithms can use short-lived pages on
-demand for overlap inplace I/O decompression.
+On Wed, 29 Nov 2023 02:04:31 +0800
+Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-However, those short-lived pages are actually added to
-`be->compressed_pages`.  Thus, it should be checked instead of
-`pcl->compressed_bvecs`.
+> Both MicroLZMA and DEFLATE algorithms can use short-lived pages on
+> demand for overlap inplace I/O decompression.
+> 
+> However, those short-lived pages are actually added to
+> `be->compressed_pages`.  Thus, it should be checked instead of
+> `pcl->compressed_bvecs`.
+> 
+> The LZ4 algorithm doesn't work like this, so it won't be impacted.
+> 
+> Fixes: 67139e36d970 ("erofs: introduce `z_erofs_parse_in_bvecs'")
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-The LZ4 algorithm doesn't work like this, so it won't be impacted.
-
-Fixes: 67139e36d970 ("erofs: introduce `z_erofs_parse_in_bvecs'")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-v2:
-  - should be `be->compressed_pages`.
-
- fs/erofs/zdata.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index a7e6847f6f8f..a33cd6757f98 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1309,12 +1309,11 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 		put_page(page);
- 	} else {
- 		for (i = 0; i < pclusterpages; ++i) {
--			page = pcl->compressed_bvecs[i].page;
-+			/* consider shortlived pages added when decompressing */
-+			page = be->compressed_pages[i];
- 
- 			if (erofs_page_is_managed(sbi, page))
- 				continue;
--
--			/* recycle all individual short-lived pages */
- 			(void)z_erofs_put_shortlivedpage(be->pagepool, page);
- 			WRITE_ONCE(pcl->compressed_bvecs[i].page, NULL);
- 		}
--- 
-2.39.3
-
+Reviewed-by: Yue Hu <huyue2@coolpad.com>
