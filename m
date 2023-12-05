@@ -2,42 +2,84 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22C8B804B2D
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Dec 2023 08:32:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D9A04805471
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Dec 2023 13:38:54 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Sksgb4j0Rz3cTD
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Dec 2023 18:32:27 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Sl0T82hFjz3d9L
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Dec 2023 23:38:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SksgR5bG5z3c3g
-	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Dec 2023 18:32:16 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VxtSpGf_1701761527;
-Received: from 30.97.48.243(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VxtSpGf_1701761527)
-          by smtp.aliyun-inc.com;
-          Tue, 05 Dec 2023 15:32:09 +0800
-Message-ID: <d7c7ea8c-6e2f-e8d8-88c3-4952c506ed13@linux.alibaba.com>
-Date: Tue, 5 Dec 2023 15:32:06 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sl0Sx1sQHz3cV4
+	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Dec 2023 23:38:39 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Sl0Sh17R5z4f3lCq
+	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Dec 2023 20:38:28 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id D27D41A07D2
+	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Dec 2023 20:38:32 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgDnNw7GGW9lr8E8Cw--.35507S4;
+	Tue, 05 Dec 2023 20:38:32 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	roger.pau@citrix.com,
+	colyli@suse.de,
+	kent.overstreet@gmail.com,
+	joern@lazybastard.org,
+	miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com,
+	sth@linux.ibm.com,
+	hoeppner@linux.ibm.com,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	jejb@linux.ibm.com,
+	martin.petersen@oracle.com,
+	clm@fb.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com,
+	nico@fluxnic.net,
+	xiang@kernel.org,
+	chao@kernel.org,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	agruenba@redhat.com,
+	jack@suse.com,
+	konishi.ryusuke@gmail.com,
+	willy@infradead.org,
+	akpm@linux-foundation.org,
+	hare@suse.de,
+	p.raghav@samsung.com
+Subject: [PATCH -next RFC 00/14] block: don't access bd_inode directly from other modules
+Date: Tue,  5 Dec 2023 20:37:14 +0800
+Message-Id: <20231205123728.1866699-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.1
-Subject: Re: Weird EROFS data corruption
-To: Juhyung Park <qkrwngud825@gmail.com>
-References: <CAD14+f2AVKf8Fa2OO1aAUdDNTDsVzzR6ctU_oJSmTyd6zSYR2Q@mail.gmail.com>
- <5a0e8b44-6feb-b489-cdea-e3be3811804a@linux.alibaba.com>
- <CAD14+f2G-buxTaWgb23DYW-HSd1sch6tJNKV2strt=toASZXQQ@mail.gmail.com>
- <649a3bc4-58bb-1dc8-85fb-a56e47b3d5c9@linux.alibaba.com>
- <CAD14+f1u6gnHLhGSoQxL9wLq9vDYse+Ac8zxep-O2E8hHreT2w@mail.gmail.com>
- <275f025d-e2f1-eaff-6af1-e909d370cee0@linux.alibaba.com>
- <CAD14+f3zgwgUugjnB7UGCYh4j3iXYsvv_DJ3yvwduA1xf3xn=A@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAD14+f3zgwgUugjnB7UGCYh4j3iXYsvv_DJ3yvwduA1xf3xn=A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgDnNw7GGW9lr8E8Cw--.35507S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4Utry8XFW7Zr18Jr43Wrg_yoW8WF1kpr
+	y3KF1fGr1Uu347Zaya9an7tryrJw4kGay7GF17t34rZr13JryfAr4ktrW8Ja48Jr9rXr4k
+	Xw1DtryFgr10gaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4U
+	JwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	fUoL0eDUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -49,81 +91,59 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yann Collet <yann.collet.73@gmail.com>, linux-erofs@lists.ozlabs.org, linux-crypto@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+Cc: linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, gfs2@lists.linux.dev, linux-scsi@vger.kernel.org, yukuai1@huaweicloud.com, yangerkun@huawei.com, yi.zhang@huawei.com, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcachefs@vger.kernel.org, linux-bcache@vger.kernel.org, linux-mtd@lists.infradead.org, yukuai3@huawei.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Juhyung,
+From: Yu Kuai <yukuai3@huawei.com>
 
-On 2023/12/4 11:41, Juhyung Park wrote:
+Patch 1 add some bdev apis, then follow up patches will use these apis
+to avoid access bd_inode directly, and hopefully the field bd_inode can
+be removed eventually(after figure out a way for fs/buffer.c).
 
-...
-> 
->>
->> - Could you share the full message about the output of `lscpu`?
-> 
-> Sure:
-> 
-> Architecture:            x86_64
->    CPU op-mode(s):        32-bit, 64-bit
->    Address sizes:         39 bits physical, 48 bits virtual
->    Byte Order:            Little Endian
-> CPU(s):                  8
->    On-line CPU(s) list:   0-7
-> Vendor ID:               GenuineIntel
->    BIOS Vendor ID:        Intel(R) Corporation
->    Model name:            11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz
->      BIOS Model name:     11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz None CPU
->                            @ 3.0GHz
->      BIOS CPU family:     198
->      CPU family:          6
->      Model:               140
->      Thread(s) per core:  2
->      Core(s) per socket:  4
->      Socket(s):           1
->      Stepping:            1
->      CPU(s) scaling MHz:  60%
->      CPU max MHz:         4800.0000
->      CPU min MHz:         400.0000
->      BogoMIPS:            5990.40
->      Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mc
->                           a cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss
->                           ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art
->                            arch_perfmon pebs bts rep_good nopl xtopology nonstop_
->                           tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes6
->                           4 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xt
->                           pr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_dead
->                           line_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowp
->                           refetch cpuid_fault epb cat_l2 cdp_l2 ssbd ibrs ibpb st
->                           ibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_
->                           ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid
->                            rdt_a avx512f avx512dq rdseed adx smap avx512ifma clfl
->                           ushopt clwb intel_pt avx512cd sha_ni avx512bw avx512vl
->                           xsaveopt xsavec xgetbv1 xsaves split_lock_detect dtherm
->                            ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp
->                            hwp_pkg_req vnmi avx512vbmi umip pku ospke avx512_vbmi
->                           2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg tme av
->                           x512_vpopcntdq rdpid movdiri movdir64b fsrm avx512_vp2i
+Yu Kuai (14):
+  block: add some bdev apis
+  xen/blkback: use bdev api in xen_update_blkif_status()
+  bcache: use bdev api in read_super()
+  mtd: block2mtd: use bdev apis
+  s390/dasd: use bdev api in dasd_format()
+  scsicam: use bdev api in scsi_bios_ptable()
+  bcachefs: remove dead function bdev_sectors()
+  btrfs: use bdev apis
+  cramfs: use bdev apis in cramfs_blkdev_read()
+  erofs: use bdev api
+  ext4: use bdev apis
+  jbd2: use bdev apis
+  gfs2: use bdev api
+  nilfs2: use bdev api in nilfs_attach_log_writer()
 
-Sigh, I've been thinking.  Here FSRM is the most significant difference between
-our environments, could you only try the following diff to see if there's any
-difference anymore? (without the previous disable patch.)
+ block/bdev.c                       | 116 +++++++++++++++++++++++++++++
+ block/bio.c                        |   1 +
+ block/blk.h                        |   2 -
+ drivers/block/xen-blkback/xenbus.c |   3 +-
+ drivers/md/bcache/super.c          |  11 ++-
+ drivers/mtd/devices/block2mtd.c    |  80 +++++++++-----------
+ drivers/s390/block/dasd_ioctl.c    |   5 +-
+ drivers/scsi/scsicam.c             |   3 +-
+ fs/bcachefs/util.h                 |   5 --
+ fs/btrfs/disk-io.c                 |  68 ++++++++---------
+ fs/btrfs/volumes.c                 |  17 ++---
+ fs/btrfs/zoned.c                   |  12 ++-
+ fs/cramfs/inode.c                  |  35 +++------
+ fs/erofs/data.c                    |  17 +++--
+ fs/erofs/internal.h                |   1 +
+ fs/ext4/dir.c                      |   6 +-
+ fs/ext4/ext4_jbd2.c                |   6 +-
+ fs/ext4/super.c                    |  27 +------
+ fs/gfs2/glock.c                    |   2 +-
+ fs/gfs2/ops_fstype.c               |   2 +-
+ fs/jbd2/journal.c                  |   3 +-
+ fs/jbd2/recovery.c                 |   6 +-
+ fs/nilfs2/segment.c                |   2 +-
+ include/linux/blkdev.h             |  27 +++++++
+ include/linux/buffer_head.h        |   5 +-
+ 25 files changed, 273 insertions(+), 189 deletions(-)
 
-diff --git a/arch/x86/lib/memmove_64.S b/arch/x86/lib/memmove_64.S
-index 1b60ae81ecd8..1b52a913233c 100644
---- a/arch/x86/lib/memmove_64.S
-+++ b/arch/x86/lib/memmove_64.S
-@@ -41,9 +41,7 @@ SYM_FUNC_START(__memmove)
-  #define CHECK_LEN	cmp $0x20, %rdx; jb 1f
-  #define MEMMOVE_BYTES	movq %rdx, %rcx; rep movsb; RET
-  .Lmemmove_begin_forward:
--	ALTERNATIVE_2 __stringify(CHECK_LEN), \
--		      __stringify(CHECK_LEN; MEMMOVE_BYTES), X86_FEATURE_ERMS, \
--		      __stringify(MEMMOVE_BYTES), X86_FEATURE_FSRM
-+	CHECK_LEN
-  
-  	/*
-  	 * movsq instruction have many startup latency
+-- 
+2.39.2
 
-Thanks,
-Gao Xiang
