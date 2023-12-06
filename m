@@ -2,38 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D0D08072B0
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Dec 2023 15:42:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 103A480733A
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Dec 2023 16:00:05 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=ojDk7+bv;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Slg8j6KjMz3cDk
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Dec 2023 01:41:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SlgYY4WNzz3cDy
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Dec 2023 02:00:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.237; helo=smtp237.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
-Received: from smtp237.sjtu.edu.cn (smtp237.sjtu.edu.cn [202.120.2.237])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=ojDk7+bv;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=infradead.org (client-ip=2001:8b0:10b:1236::1; helo=casper.infradead.org; envelope-from=willy@infradead.org; receiver=lists.ozlabs.org)
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Slg8b3XjGz3bws
-	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Dec 2023 01:41:49 +1100 (AEDT)
-Received: from proxy189.sjtu.edu.cn (smtp189.sjtu.edu.cn [202.120.2.189])
-	by smtp237.sjtu.edu.cn (Postfix) with ESMTPS id D2FFB7FA53;
-	Wed,  6 Dec 2023 22:41:36 +0800 (CST)
-Received: from [192.168.1.104] (unknown [111.186.0.119])
-	by proxy189.sjtu.edu.cn (Postfix) with ESMTPSA id 955C23FC532;
-	Wed,  6 Dec 2023 22:41:32 +0800 (CST)
-Message-ID: <26fcca1d-3bc3-4667-8806-ae9833c6a29e@sjtu.edu.cn>
-Date: Wed, 6 Dec 2023 22:41:30 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SlgYP318Nz2ykZ
+	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Dec 2023 01:59:50 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=s+7kV2NOaPEBmhFkJpDv/pC5Llv4VXEE9i8fdKbvmjw=; b=ojDk7+bvhmkVaj86d9uPvOhQaz
+	kbAJJlz3eiFA7yxHtxf02BCaqsNM5pS9C8k5lXRoPly3/N/e0u5QADIgtZKFOwGOJtwsI5ZzSsYPS
+	PKyktYqelsFB3E+G8W+4/yQSFmaQ2jHSWEigX57CwcwQszQ0bDoxOOqdU2sc0+ZoE3Ff1wwcpqslV
+	VWLgXJnu2MrDZGBo0sVLqXRdAvGI+d1WdlsXWEVkM0crARzZz5+nD3AR2Avd8/g6eRde0hkW/FoXX
+	agEz57imZpOlmdW73T5pzua0TfxBEP/xRZ/WXwPlD7/tpJRN5cqF7OvXJrtIdGRYW6omWvwYwBXvA
+	OJr6nVaw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rAtMN-002zkJ-Nc; Wed, 06 Dec 2023 14:58:47 +0000
+Date: Wed, 6 Dec 2023 14:58:47 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Subject: Re: [PATCH -next RFC 01/14] block: add some bdev apis
+Message-ID: <ZXCMJ9skAAgPm4z3@casper.infradead.org>
+References: <20231205123728.1866699-1-yukuai1@huaweicloud.com>
+ <20231205123728.1866699-2-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: fix lz4 inplace decompression
-Content-Language: en-US
-To: linux-erofs@lists.ozlabs.org
-References: <20231206045534.3920847-1-hsiangkao@linux.alibaba.com>
-From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-In-Reply-To: <20231206045534.3920847-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231205123728.1866699-2-yukuai1@huaweicloud.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -45,156 +56,65 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: qkrwngud825@gmail.com, Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: hoeppner@linux.ibm.com, vigneshr@ti.com, yi.zhang@huawei.com, gfs2@lists.linux.dev, clm@fb.com, adilger.kernel@dilger.ca, miquel.raynal@bootlin.com, agordeev@linux.ibm.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, agruenba@redhat.com, linux-scsi@vger.kernel.org, richard@nod.at, linux-bcachefs@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, jejb@linux.ibm.com, p.raghav@samsung.com, gor@linux.ibm.com, hca@linux.ibm.com, joern@lazybastard.org, josef@toxicpanda.com, colyli@suse.de, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, sth@linux.ibm.com, yukuai3@huawei.com, dsterba@suse.com, konishi.ryusuke@gmail.com, axboe@kernel.dk, tytso@mit.edu, martin.petersen@oracle.com, nico@fluxnic.net, yangerkun@huawei.com, linux-kernel@vger.kernel.org, kent.overstreet@gmail.com, hare@suse.de, jack@suse.com, linux-mtd@lists.infradead.org, akpm@linux-foundation.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, roger.pau@citrix.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi folks,
+On Tue, Dec 05, 2023 at 08:37:15PM +0800, Yu Kuai wrote:
+> +struct folio *bdev_read_folio(struct block_device *bdev, pgoff_t index)
+> +{
+> +	return read_mapping_folio(bdev->bd_inode->i_mapping, index, NULL);
+> +}
+> +EXPORT_SYMBOL_GPL(bdev_read_folio);
 
-I'm writing code for multi-threaded compression of erofs, and I also ran 
-into a weird bug where in-place decompression gives an incorrect result, 
-but erofsfuse decompression works fine.
+I'm coming to the opinion that 'index' is the wrong parameter here.
+Looking through all the callers of bdev_read_folio() in this patchset,
+they all have a position in bytes, and they all convert it to
+index for this call.  The API should probably be:
 
-I could reproduce the problem Juhyung encountered in my machine, and I 
-think my bug is caused by the same reason. Gao's patch successfully 
-fixes the problem that both Juhyung and I encountered in my machine.
+struct folio *bdev_read_folio(struct block_device *bdev, loff_t pos)
+{
+	return read_mapping_folio(bdev->bd_inode->i_mapping,
+			pos / PAGE_SIZE, NULL);
+}
 
+... and at some point, we'll get round to converting read_mapping_folio()
+to take its argument in loff_t.
 
-Tested-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+Similiarly for these two APIs:
 
+> +struct folio *bdev_read_folio_gfp(struct block_device *bdev, pgoff_t index,
+> +				  gfp_t gfp)
+> +struct folio *bdev_get_folio(struct block_device *bdev, pgoff_t index)
 
-Thanks,
+> +struct folio *bdev_find_or_create_folio(struct block_device *bdev,
+> +					pgoff_t index, gfp_t gfp)
+> +{
+> +	return __filemap_get_folio(bdev->bd_inode->i_mapping, index,
+> +				   FGP_LOCK | FGP_ACCESSED | FGP_CREAT, gfp);
+> +}
+> +EXPORT_SYMBOL_GPL(bdev_find_or_create_folio);
 
-Yifan Zhao
+This one probably shouldn't exist.  I've been converting callers of
+find_or_create_page() to call __filemap_get_folio; I suspect we
+should expose a __bdev_get_folio and have the callers use the FGP
+arguments directly, but I'm open to other opinions here.
 
-On 2023/12/6 12:55, Gao Xiang wrote:
-> Currently EROFS can map another compressed buffer for inplace
-> decompression, that was used to handle the cases that some pages of
-> compressed data are actually not in-place I/O.
->
-> However, like most simple LZ77 algorithms, LZ4 expects the compressed
-> data is arranged at the end of the decompressed buffer and it
-> explicitly uses memmove() to handle overlapping:
->    __________________________________________________________
->   |_ direction of decompression --> ____ |_ compressed data _|
->
-> Although EROFS arranges compressed data like this, it typically maps two
-> individual virtual buffers so the relative order is uncertain.
-> Previously, it was hardly observed since LZ4 only uses memmove() for
-> short overlapped literals and x86/arm64 memmove implementations seem to
-> completely cover it up and they don't have this issue.  Juhyung reported
-> that EROFS data corruption can be found on a new Intel x86 processor.
-> After some analysis, it seems that recent x86 processors with the new
-> FSRM feature expose this issue with "rep movsb".
->
-> Let's strictly use the decompressed buffer for lz4 inplace
-> decompression for now.  Later, as an useful improvement, we could try
-> to tie up these two buffers together in the correct order.
->
-> Reported-and-tested-by: Juhyung Park <qkrwngud825@gmail.com>
-> Closes: https://lore.kernel.org/r/CAD14+f2AVKf8Fa2OO1aAUdDNTDsVzzR6ctU_oJSmTyd6zSYR2Q@mail.gmail.com
-> Fixes: 0ffd71bcc3a0 ("staging: erofs: introduce LZ4 decompression inplace")
-> Fixes: 598162d05080 ("erofs: support decompress big pcluster for lz4 backend")
-> Cc: stable <stable@vger.kernel.org> # 5.4+
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> ---
-> changes since v1:
->   - address some nits pointed out by Juhyung.
->
->   fs/erofs/decompressor.c | 31 ++++++++++++++++---------------
->   1 file changed, 16 insertions(+), 15 deletions(-)
->
-> diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-> index 5ec11f5024b7..d08a6ee23ac5 100644
-> --- a/fs/erofs/decompressor.c
-> +++ b/fs/erofs/decompressor.c
-> @@ -121,11 +121,11 @@ static int z_erofs_lz4_prepare_dstpages(struct z_erofs_lz4_decompress_ctx *ctx,
->   }
->   
->   static void *z_erofs_lz4_handle_overlap(struct z_erofs_lz4_decompress_ctx *ctx,
-> -			void *inpage, unsigned int *inputmargin, int *maptype,
-> -			bool may_inplace)
-> +			void *inpage, void *out, unsigned int *inputmargin,
-> +			int *maptype, bool may_inplace)
->   {
->   	struct z_erofs_decompress_req *rq = ctx->rq;
-> -	unsigned int omargin, total, i, j;
-> +	unsigned int omargin, total, i;
->   	struct page **in;
->   	void *src, *tmp;
->   
-> @@ -135,12 +135,13 @@ static void *z_erofs_lz4_handle_overlap(struct z_erofs_lz4_decompress_ctx *ctx,
->   		    omargin < LZ4_DECOMPRESS_INPLACE_MARGIN(rq->inputsize))
->   			goto docopy;
->   
-> -		for (i = 0; i < ctx->inpages; ++i) {
-> -			DBG_BUGON(rq->in[i] == NULL);
-> -			for (j = 0; j < ctx->outpages - ctx->inpages + i; ++j)
-> -				if (rq->out[j] == rq->in[i])
-> -					goto docopy;
-> -		}
-> +		for (i = 0; i < ctx->inpages; ++i)
-> +			if (rq->out[ctx->outpages - ctx->inpages + i] !=
-> +			    rq->in[i])
-> +				goto docopy;
-> +		kunmap_local(inpage);
-> +		*maptype = 3;
-> +		return out + ((ctx->outpages - ctx->inpages) << PAGE_SHIFT);
->   	}
->   
->   	if (ctx->inpages <= 1) {
-> @@ -148,7 +149,6 @@ static void *z_erofs_lz4_handle_overlap(struct z_erofs_lz4_decompress_ctx *ctx,
->   		return inpage;
->   	}
->   	kunmap_local(inpage);
-> -	might_sleep();
->   	src = erofs_vm_map_ram(rq->in, ctx->inpages);
->   	if (!src)
->   		return ERR_PTR(-ENOMEM);
-> @@ -204,12 +204,12 @@ int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
->   }
->   
->   static int z_erofs_lz4_decompress_mem(struct z_erofs_lz4_decompress_ctx *ctx,
-> -				      u8 *out)
-> +				      u8 *dst)
->   {
->   	struct z_erofs_decompress_req *rq = ctx->rq;
->   	bool support_0padding = false, may_inplace = false;
->   	unsigned int inputmargin;
-> -	u8 *headpage, *src;
-> +	u8 *out, *headpage, *src;
->   	int ret, maptype;
->   
->   	DBG_BUGON(*rq->in == NULL);
-> @@ -230,11 +230,12 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_lz4_decompress_ctx *ctx,
->   	}
->   
->   	inputmargin = rq->pageofs_in;
-> -	src = z_erofs_lz4_handle_overlap(ctx, headpage, &inputmargin,
-> +	src = z_erofs_lz4_handle_overlap(ctx, headpage, dst, &inputmargin,
->   					 &maptype, may_inplace);
->   	if (IS_ERR(src))
->   		return PTR_ERR(src);
->   
-> +	out = dst + rq->pageofs_out;
->   	/* legacy format could compress extra data in a pcluster. */
->   	if (rq->partial_decoding || !support_0padding)
->   		ret = LZ4_decompress_safe_partial(src + inputmargin, out,
-> @@ -265,7 +266,7 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_lz4_decompress_ctx *ctx,
->   		vm_unmap_ram(src, ctx->inpages);
->   	} else if (maptype == 2) {
->   		erofs_put_pcpubuf(src);
-> -	} else {
-> +	} else if (maptype != 3) {
->   		DBG_BUGON(1);
->   		return -EFAULT;
->   	}
-> @@ -308,7 +309,7 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq,
->   	}
->   
->   dstmap_out:
-> -	ret = z_erofs_lz4_decompress_mem(&ctx, dst + rq->pageofs_out);
-> +	ret = z_erofs_lz4_decompress_mem(&ctx, dst);
->   	if (!dst_maptype)
->   		kunmap_local(dst);
->   	else if (dst_maptype == 2)
+> +void bdev_sync_readahead(struct block_device *bdev, struct file_ra_state *ra,
+> +			 struct file *file, pgoff_t index,
+> +			 unsigned long req_count)
+> +{
+> +	struct file_ra_state tmp_ra = {};
+> +
+> +	if (!ra) {
+> +		ra = &tmp_ra;
+> +		file_ra_state_init(ra, bdev->bd_inode->i_mapping);
+> +	}
+> +	page_cache_sync_readahead(bdev->bd_inode->i_mapping, ra, file, index,
+> +				  req_count);
+> +}
+
+I think the caller should always be passing in a valid file_ra_state.
+It's only cramfs that doesn't have one, and it really should!
+Not entirely sure about the arguments here; part of me says "bytes",
+but this is weird enough to maybe take arguments in pages.
