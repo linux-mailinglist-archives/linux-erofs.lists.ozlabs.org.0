@@ -1,30 +1,30 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B11CA806A6D
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Dec 2023 10:11:36 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2ACD6806A70
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Dec 2023 10:11:40 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SlWqV1fhCz3d8T
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Dec 2023 20:11:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SlWqY4bBfz3d95
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Dec 2023 20:11:37 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SlWqD3xLvz3cZ5
-	for <linux-erofs@lists.ozlabs.org>; Wed,  6 Dec 2023 20:11:19 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VxxSRQH_1701853874;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VxxSRQH_1701853874)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SlWqF0WFXz3cZ5
+	for <linux-erofs@lists.ozlabs.org>; Wed,  6 Dec 2023 20:11:20 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0VxxSRQT_1701853874;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VxxSRQT_1701853874)
           by smtp.aliyun-inc.com;
-          Wed, 06 Dec 2023 17:11:14 +0800
+          Wed, 06 Dec 2023 17:11:15 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/5] erofs: fix up compacted indexes for block size < 4096
-Date: Wed,  6 Dec 2023 17:10:55 +0800
-Message-Id: <20231206091057.87027-4-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 4/5] erofs: refine z_erofs_transform_plain() for sub-page block support
+Date: Wed,  6 Dec 2023 17:10:56 +0800
+Message-Id: <20231206091057.87027-5-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20231206091057.87027-1-hsiangkao@linux.alibaba.com>
 References: <20231206091057.87027-1-hsiangkao@linux.alibaba.com>
@@ -45,137 +45,119 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Previously, the block size always equaled to PAGE_SIZE, therefore
-`lclusterbits` couldn't be less than 12.
+Sub-page block support is still unusable even with previous commits if
+interlaced PLAIN pclusters exist.  Such pclusters can be found if the
+fragment feature is enabled.
 
-Since sub-page compressed blocks are now considered, `lobits` for
-a lcluster in each pack cannot always be `lclusterbits` as before.
-Otherwise, there is no enough room for the special value
-`Z_EROFS_LI_D0_CBLKCNT`.
+This commit tries to handle "the head part" of interlaced PLAIN
+pclusters first: it was once explained in commit fdffc091e6f9 ("erofs:
+support interlaced uncompressed data for compressed files").
 
-To support smaller block sizes, `lobits` for each compacted lcluster is
-now calculated as:
-   lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1)
+It uses a unique way for both shifted and interlaced PLAIN pclusters.
+As an added bonus, PLAIN pclusters larger than the block size is also
+supported now for the upcoming large lclusters.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/zmap.c | 32 ++++++++++++++------------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+ fs/erofs/decompressor.c | 81 ++++++++++++++++++++++++-----------------
+ 1 file changed, 48 insertions(+), 33 deletions(-)
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 7b55111fd533..9753875e41cb 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -82,29 +82,26 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 021be5feb1bc..5ec11f5024b7 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -319,43 +319,58 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq,
+ static int z_erofs_transform_plain(struct z_erofs_decompress_req *rq,
+ 				   struct page **pagepool)
+ {
+-	const unsigned int inpages = PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT;
+-	const unsigned int outpages =
++	const unsigned int nrpages_in =
++		PAGE_ALIGN(rq->pageofs_in + rq->inputsize) >> PAGE_SHIFT;
++	const unsigned int nrpages_out =
+ 		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+-	const unsigned int righthalf = min_t(unsigned int, rq->outputsize,
+-					     PAGE_SIZE - rq->pageofs_out);
+-	const unsigned int lefthalf = rq->outputsize - righthalf;
+-	const unsigned int interlaced_offset =
+-		rq->alg == Z_EROFS_COMPRESSION_SHIFTED ? 0 : rq->pageofs_out;
+-	u8 *src;
+-
+-	if (outpages > 2 && rq->alg == Z_EROFS_COMPRESSION_SHIFTED) {
+-		DBG_BUGON(1);
+-		return -EFSCORRUPTED;
+-	}
+-
+-	if (rq->out[0] == *rq->in) {
+-		DBG_BUGON(rq->pageofs_out);
+-		return 0;
++	const unsigned int bs = rq->sb->s_blocksize;
++	unsigned int cur = 0, ni = 0, no, pi, po, insz, cnt;
++	u8 *kin;
++
++	DBG_BUGON(rq->outputsize > rq->inputsize);
++	if (rq->alg == Z_EROFS_COMPRESSION_INTERLACED) {
++		cur = bs - (rq->pageofs_out & (bs - 1));
++		pi = (rq->pageofs_in + rq->inputsize - cur) & ~PAGE_MASK;
++		cur = min(cur, rq->outputsize);
++		if (cur && rq->out[0]) {
++			kin = kmap_local_page(rq->in[nrpages_in - 1]);
++			if (rq->out[0] == rq->in[nrpages_in - 1]) {
++				memmove(kin + rq->pageofs_out, kin + pi, cur);
++				flush_dcache_page(rq->out[0]);
++			} else {
++				memcpy_to_page(rq->out[0], rq->pageofs_out,
++					       kin + pi, cur);
++			}
++			kunmap_local(kin);
++		}
++		rq->outputsize -= cur;
+ 	}
+ 
+-	src = kmap_local_page(rq->in[inpages - 1]) + rq->pageofs_in;
+-	if (rq->out[0])
+-		memcpy_to_page(rq->out[0], rq->pageofs_out,
+-			       src + interlaced_offset, righthalf);
+-
+-	if (outpages > inpages) {
+-		DBG_BUGON(!rq->out[outpages - 1]);
+-		if (rq->out[outpages - 1] != rq->in[inpages - 1]) {
+-			memcpy_to_page(rq->out[outpages - 1], 0, src +
+-					(interlaced_offset ? 0 : righthalf),
+-				       lefthalf);
+-		} else if (!interlaced_offset) {
+-			memmove(src, src + righthalf, lefthalf);
+-			flush_dcache_page(rq->in[inpages - 1]);
+-		}
++	for (; rq->outputsize; rq->pageofs_in = 0, cur += PAGE_SIZE, ni++) {
++		insz = min(PAGE_SIZE - rq->pageofs_in, rq->outputsize);
++		rq->outputsize -= insz;
++		if (!rq->in[ni])
++			continue;
++		kin = kmap_local_page(rq->in[ni]);
++		pi = 0;
++		do {
++			no = (rq->pageofs_out + cur + pi) >> PAGE_SHIFT;
++			po = (rq->pageofs_out + cur + pi) & ~PAGE_MASK;
++			DBG_BUGON(no >= nrpages_out);
++			cnt = min(insz - pi, PAGE_SIZE - po);
++			if (rq->out[no] == rq->in[ni]) {
++				memmove(kin + po,
++					kin + rq->pageofs_in + pi, cnt);
++				flush_dcache_page(rq->out[no]);
++			} else if (rq->out[no]) {
++				memcpy_to_page(rq->out[no], po,
++					       kin + rq->pageofs_in + pi, cnt);
++			}
++			pi += cnt;
++		} while (pi < insz);
++		kunmap_local(kin);
+ 	}
+-	kunmap_local(src);
++	DBG_BUGON(ni > nrpages_in);
+ 	return 0;
  }
  
- static unsigned int decode_compactedbits(unsigned int lobits,
--					 unsigned int lomask,
- 					 u8 *in, unsigned int pos, u8 *type)
- {
- 	const unsigned int v = get_unaligned_le32(in + pos / 8) >> (pos & 7);
--	const unsigned int lo = v & lomask;
-+	const unsigned int lo = v & ((1 << lobits) - 1);
- 
- 	*type = (v >> lobits) & 3;
- 	return lo;
- }
- 
--static int get_compacted_la_distance(unsigned int lclusterbits,
-+static int get_compacted_la_distance(unsigned int lobits,
- 				     unsigned int encodebits,
- 				     unsigned int vcnt, u8 *in, int i)
- {
--	const unsigned int lomask = (1 << lclusterbits) - 1;
- 	unsigned int lo, d1 = 0;
- 	u8 type;
- 
- 	DBG_BUGON(i >= vcnt);
- 
- 	do {
--		lo = decode_compactedbits(lclusterbits, lomask,
--					  in, encodebits * i, &type);
-+		lo = decode_compactedbits(lobits, in, encodebits * i, &type);
- 
- 		if (type != Z_EROFS_LCLUSTER_TYPE_NONHEAD)
- 			return d1;
-@@ -123,15 +120,14 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- {
- 	struct erofs_inode *const vi = EROFS_I(m->inode);
- 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
--	const unsigned int lomask = (1 << lclusterbits) - 1;
--	unsigned int vcnt, base, lo, encodebits, nblk, eofs;
-+	unsigned int vcnt, base, lo, lobits, encodebits, nblk, eofs;
- 	int i;
- 	u8 *in, type;
- 	bool big_pcluster;
- 
- 	if (1 << amortizedshift == 4 && lclusterbits <= 14)
- 		vcnt = 2;
--	else if (1 << amortizedshift == 2 && lclusterbits == 12)
-+	else if (1 << amortizedshift == 2 && lclusterbits <= 12)
- 		vcnt = 16;
- 	else
- 		return -EOPNOTSUPP;
-@@ -140,6 +136,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	m->nextpackoff = round_down(pos, vcnt << amortizedshift) +
- 			 (vcnt << amortizedshift);
- 	big_pcluster = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1;
-+	lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1U);
- 	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
- 	eofs = erofs_blkoff(m->inode->i_sb, pos);
- 	base = round_down(eofs, vcnt << amortizedshift);
-@@ -147,15 +144,14 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 
- 	i = (eofs - base) >> amortizedshift;
- 
--	lo = decode_compactedbits(lclusterbits, lomask,
--				  in, encodebits * i, &type);
-+	lo = decode_compactedbits(lobits, in, encodebits * i, &type);
- 	m->type = type;
- 	if (type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
- 		m->clusterofs = 1 << lclusterbits;
- 
- 		/* figure out lookahead_distance: delta[1] if needed */
- 		if (lookahead)
--			m->delta[1] = get_compacted_la_distance(lclusterbits,
-+			m->delta[1] = get_compacted_la_distance(lobits,
- 						encodebits, vcnt, in, i);
- 		if (lo & Z_EROFS_LI_D0_CBLKCNT) {
- 			if (!big_pcluster) {
-@@ -174,8 +170,8 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 		 * of which lo saves delta[1] rather than delta[0].
- 		 * Hence, get delta[0] by the previous lcluster indirectly.
- 		 */
--		lo = decode_compactedbits(lclusterbits, lomask,
--					  in, encodebits * (i - 1), &type);
-+		lo = decode_compactedbits(lobits, in,
-+					  encodebits * (i - 1), &type);
- 		if (type != Z_EROFS_LCLUSTER_TYPE_NONHEAD)
- 			lo = 0;
- 		else if (lo & Z_EROFS_LI_D0_CBLKCNT)
-@@ -190,8 +186,8 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 		nblk = 1;
- 		while (i > 0) {
- 			--i;
--			lo = decode_compactedbits(lclusterbits, lomask,
--						  in, encodebits * i, &type);
-+			lo = decode_compactedbits(lobits, in,
-+						  encodebits * i, &type);
- 			if (type == Z_EROFS_LCLUSTER_TYPE_NONHEAD)
- 				i -= lo;
- 
-@@ -202,8 +198,8 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 		nblk = 0;
- 		while (i > 0) {
- 			--i;
--			lo = decode_compactedbits(lclusterbits, lomask,
--						  in, encodebits * i, &type);
-+			lo = decode_compactedbits(lobits, in,
-+						  encodebits * i, &type);
- 			if (type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
- 				if (lo & Z_EROFS_LI_D0_CBLKCNT) {
- 					--i;
 -- 
 2.39.3
 
