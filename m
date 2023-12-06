@@ -2,65 +2,32 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7951805AA9
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Dec 2023 18:04:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A52E580656F
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Dec 2023 04:08:26 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Sl6M55Rmqz3cZy
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Dec 2023 04:04:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SlMmR5kY0z3cTF
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Dec 2023 14:08:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=209.85.161.45; helo=mail-oo1-f45.google.com; envelope-from=bart.vanassche@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sl6M33s0Rz3cRk
-	for <linux-erofs@lists.ozlabs.org>; Wed,  6 Dec 2023 04:03:58 +1100 (AEDT)
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-58dd6d9ae96so2493093eaf.1
-        for <linux-erofs@lists.ozlabs.org>; Tue, 05 Dec 2023 09:03:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701795835; x=1702400635;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Kxt6CKccKyM2aD5KqaYbJ+5NRAtsSu20TdTe87tfro=;
-        b=mnSw9S3T6RDJe1wlIqMF5GpJ5/Hu5Shv24TQOjNAHmVRWm2Gry94IexKCTcNaKXIje
-         Pzox8Zt5++EDOG0qboGEpl96uWluCKZjtJe9ZFGNJyPCLsMjvkjzlpJbxdKdiWmW5kaS
-         PX+Sa0NybluTF+kT3y+ASFN78IBvdw/yMt9By13Zov5oDkXFaLNCn5XkWFavc8TNgQg/
-         X2rTuTf39ACrLdsBdKwUfOy+jpNbVpjTPWbwzCKEyNlb0JAN8jtkaigqayqBVVo7WQZI
-         rcWAVF9cMmwQxJDTIUwlE+h+4Z/tHTzT6pyB0DV1KvrULAr73hcpaedNI4jdV+vNNegz
-         d5XQ==
-X-Gm-Message-State: AOJu0YzUJzRx49WmMXRuGnZ4a0HA+HiZSUz9YVGLosRIgakB54QgOxQv
-	E8MRpn/6kNzmcSjQyKZntAc=
-X-Google-Smtp-Source: AGHT+IHREsBDTR/fguPuUAOPGrQJFqdX7+L934/9nqEfo9v3T6jgbM8x1qOuTAd7fOfx1S8tYfwMzA==
-X-Received: by 2002:a05:6358:6f95:b0:16e:43a1:6881 with SMTP id s21-20020a0563586f9500b0016e43a16881mr2252180rwn.26.1701795834695;
-        Tue, 05 Dec 2023 09:03:54 -0800 (PST)
-Received: from [172.20.2.177] (rrcs-173-197-90-226.west.biz.rr.com. [173.197.90.226])
-        by smtp.gmail.com with ESMTPSA id s25-20020a639259000000b00578afd8e012sm5146562pgn.92.2023.12.05.09.03.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Dec 2023 09:03:54 -0800 (PST)
-Message-ID: <189fa9b2-bcc8-4839-ac04-33a29bba9aaa@acm.org>
-Date: Tue, 5 Dec 2023 09:03:48 -0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SlMmG0sj2z3bq4
+	for <linux-erofs@lists.ozlabs.org>; Wed,  6 Dec 2023 14:08:11 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0VxwSR43_1701832079;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VxwSR43_1701832079)
+          by smtp.aliyun-inc.com;
+          Wed, 06 Dec 2023 11:08:03 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: fix lz4 inplace decompression
+Date: Wed,  6 Dec 2023 11:07:58 +0800
+Message-Id: <20231206030758.3760521-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next RFC 01/14] block: add some bdev apis
-Content-Language: en-US
-To: Yu Kuai <yukuai1@huaweicloud.com>, axboe@kernel.dk, roger.pau@citrix.com,
- colyli@suse.de, kent.overstreet@gmail.com, joern@lazybastard.org,
- miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
- sth@linux.ibm.com, hoeppner@linux.ibm.com, hca@linux.ibm.com,
- gor@linux.ibm.com, agordeev@linux.ibm.com, jejb@linux.ibm.com,
- martin.petersen@oracle.com, clm@fb.com, josef@toxicpanda.com,
- dsterba@suse.com, nico@fluxnic.net, xiang@kernel.org, chao@kernel.org,
- tytso@mit.edu, adilger.kernel@dilger.ca, agruenba@redhat.com, jack@suse.com,
- konishi.ryusuke@gmail.com, willy@infradead.org, akpm@linux-foundation.org,
- hare@suse.de, p.raghav@samsung.com
-References: <20231205123728.1866699-1-yukuai1@huaweicloud.com>
- <20231205123728.1866699-2-yukuai1@huaweicloud.com>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20231205123728.1866699-2-yukuai1@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -72,18 +39,135 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, gfs2@lists.linux.dev, linux-scsi@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcachefs@vger.kernel.org, linux-bcache@vger.kernel.org, linux-mtd@lists.infradead.org, yukuai3@huawei.com, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: Juhyung Park <qkrwngud825@gmail.com>, Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 12/5/23 04:37, Yu Kuai wrote:
-> +static inline u8 block_bits(struct block_device *bdev)
-> +{
-> +	return bdev->bd_inode->i_blkbits;
-> +}
+Currently EROFS can map another compressed buffer for inplace
+decompression, which was used to handle the cases that some pages of
+compressed data are actually not in-place I/O.
 
-This function needs a name that's more descriptive.
+However, like most simple LZ77 algorithms, LZ4 expects the compressed
+data is arranged at the end of the decompressed buffer and it
+explicitly uses memmove() to handle overlapping:
+  __________________________________________________________
+ |_ direction of decompression --> ____ |_ compressed data _|
 
-Thanks,
+Although EROFS arranges compressed data like this, it typically map two
+individual virtual buffers so the relative order is uncertain.
+Previously, it was hardly observed since LZ4 only uses memmove() for
+short overlapped literals and x86/arm64 memmove implementations seem to
+completely cover it up so they don't have this issue.  Juhyung reported
+that EROFS data corruption can be found on a new Intel x86 processor.
+After some analysis, it seems that recent x86 processors with the new
+FSRM feature expose this issue with "rep movsb".
 
-Bart.
+Let's strictly use the decompressed buffer for lz4 inplace
+decompression for now.  Later, as an useful improvement, we could try
+to tie up these two buffers together in the correct order.
+
+Reported-by: Juhyung Park <qkrwngud825@gmail.com>
+Closes: https://lore.kernel.org/r/CAD14+f2AVKf8Fa2OO1aAUdDNTDsVzzR6ctU_oJSmTyd6zSYR2Q@mail.gmail.com
+Fixes: 0ffd71bcc3a0 ("staging: erofs: introduce LZ4 decompression inplace")
+Fixes: 598162d05080 ("erofs: support decompress big pcluster for lz4 backend")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+Hi Juhyung,
+Please help check if this patch resolves your issue.
+Also, I will test it in various hardware configurations first as well.
+
+ fs/erofs/decompressor.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
+
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 5ec11f5024b7..5905d7c4d1db 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -121,11 +121,11 @@ static int z_erofs_lz4_prepare_dstpages(struct z_erofs_lz4_decompress_ctx *ctx,
+ }
+ 
+ static void *z_erofs_lz4_handle_overlap(struct z_erofs_lz4_decompress_ctx *ctx,
+-			void *inpage, unsigned int *inputmargin, int *maptype,
+-			bool may_inplace)
++			void *inpage, void *out, unsigned int *inputmargin,
++			int *maptype, bool may_inplace)
+ {
+ 	struct z_erofs_decompress_req *rq = ctx->rq;
+-	unsigned int omargin, total, i, j;
++	unsigned int omargin, total, i;
+ 	struct page **in;
+ 	void *src, *tmp;
+ 
+@@ -135,20 +135,19 @@ static void *z_erofs_lz4_handle_overlap(struct z_erofs_lz4_decompress_ctx *ctx,
+ 		    omargin < LZ4_DECOMPRESS_INPLACE_MARGIN(rq->inputsize))
+ 			goto docopy;
+ 
+-		for (i = 0; i < ctx->inpages; ++i) {
+-			DBG_BUGON(rq->in[i] == NULL);
+-			for (j = 0; j < ctx->outpages - ctx->inpages + i; ++j)
+-				if (rq->out[j] == rq->in[i])
+-					goto docopy;
+-		}
++		for (i = 0; i < ctx->inpages; ++i)
++			if (rq->out[ctx->outpages - ctx->inpages + i] !=
++			    rq->in[i])
++				goto docopy;
++		kunmap_local(inpage);
++		*maptype = 3;
++		return out + ((ctx->outpages - ctx->inpages) << PAGE_SHIFT);
+ 	}
+-
+ 	if (ctx->inpages <= 1) {
+ 		*maptype = 0;
+ 		return inpage;
+ 	}
+ 	kunmap_local(inpage);
+-	might_sleep();
+ 	src = erofs_vm_map_ram(rq->in, ctx->inpages);
+ 	if (!src)
+ 		return ERR_PTR(-ENOMEM);
+@@ -204,12 +203,12 @@ int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
+ }
+ 
+ static int z_erofs_lz4_decompress_mem(struct z_erofs_lz4_decompress_ctx *ctx,
+-				      u8 *out)
++				      u8 *dst)
+ {
+ 	struct z_erofs_decompress_req *rq = ctx->rq;
+ 	bool support_0padding = false, may_inplace = false;
+ 	unsigned int inputmargin;
+-	u8 *headpage, *src;
++	u8 *out = dst + rq->pageofs_out, *headpage, *src;
+ 	int ret, maptype;
+ 
+ 	DBG_BUGON(*rq->in == NULL);
+@@ -230,7 +229,7 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_lz4_decompress_ctx *ctx,
+ 	}
+ 
+ 	inputmargin = rq->pageofs_in;
+-	src = z_erofs_lz4_handle_overlap(ctx, headpage, &inputmargin,
++	src = z_erofs_lz4_handle_overlap(ctx, headpage, dst, &inputmargin,
+ 					 &maptype, may_inplace);
+ 	if (IS_ERR(src))
+ 		return PTR_ERR(src);
+@@ -265,7 +264,7 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_lz4_decompress_ctx *ctx,
+ 		vm_unmap_ram(src, ctx->inpages);
+ 	} else if (maptype == 2) {
+ 		erofs_put_pcpubuf(src);
+-	} else {
++	} else if (maptype != 3) {
+ 		DBG_BUGON(1);
+ 		return -EFAULT;
+ 	}
+@@ -308,7 +307,7 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq,
+ 	}
+ 
+ dstmap_out:
+-	ret = z_erofs_lz4_decompress_mem(&ctx, dst + rq->pageofs_out);
++	ret = z_erofs_lz4_decompress_mem(&ctx, dst);
+ 	if (!dst_maptype)
+ 		kunmap_local(dst);
+ 	else if (dst_maptype == 2)
+-- 
+2.39.3
+
