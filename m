@@ -1,54 +1,62 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AA7A807725
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Dec 2023 18:58:30 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jhEd/dyd;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BF0D807EE7
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Dec 2023 03:45:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SllWR4qpFz3cR9
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Dec 2023 04:58:27 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SlzCf3lrWz3cRy
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Dec 2023 13:45:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=jhEd/dyd;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+2d31c4bdfe93494595b7+7409+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SllWK2JLwz3c2b
-	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Dec 2023 04:58:18 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Snap78XnwhxghrXH/x5DQQflOIE581aXjQMNJjr942g=; b=jhEd/dydrVcA4CqjenXKvBzOhR
-	81C86OaTSZvOMqak9GSj26Gk4YbmuiZYqP7Inoay495Qv5aZdhoCk8XtjbZygZ3zFO1MW8qKrFi2H
-	jyJUerjxpHvoYivz2Tw0Fom0GZl5ibZD6cI47f6RLNKkoLSSNt8ndPXabCTs9v50CaHUmh6n8EwdV
-	h3a11wO9KMQTDIeK5z9Ompws1FrJbStRk/+i8NoSwEjnMVM2d8/eYZK+A65e+FB9FyAW6cFULMbV3
-	D4ZCe0VCUv3C54OOIhpqqs0icRWLiCRtInXdBESqtPRpMCqUFSNmSUQ2owjCoBA1ulhjzpRpsIDuc
-	qR59KN6w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAw9b-00AzA5-00;
-	Wed, 06 Dec 2023 17:57:47 +0000
-Date: Wed, 6 Dec 2023 09:57:46 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Theodore Ts'o <tytso@mit.edu>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SlzCV3jtQz3bt2
+	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Dec 2023 13:45:23 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4SlzCD2Wh9z4f3lDJ
+	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Dec 2023 10:45:12 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 19F981A0909
+	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Dec 2023 10:45:17 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgCnqxG5MXFllH3QCw--.13955S3;
+	Thu, 07 Dec 2023 10:45:16 +0800 (CST)
 Subject: Re: [PATCH -next RFC 01/14] block: add some bdev apis
-Message-ID: <ZXC2Gg7NPWu9MULx@infradead.org>
+To: Matthew Wilcox <willy@infradead.org>, Yu Kuai <yukuai1@huaweicloud.com>
 References: <20231205123728.1866699-1-yukuai1@huaweicloud.com>
  <20231205123728.1866699-2-yukuai1@huaweicloud.com>
- <ZXARKD0OmjLrvHmU@infradead.org>
- <20231206175038.GJ509422@mit.edu>
+ <ZXCMJ9skAAgPm4z3@casper.infradead.org>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <d195aba8-7b89-698f-b7a0-06b87ae01c21@huaweicloud.com>
+Date: Thu, 7 Dec 2023 10:45:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231206175038.GJ509422@mit.edu>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <ZXCMJ9skAAgPm4z3@casper.infradead.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgCnqxG5MXFllH3QCw--.13955S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxuF4Dury5Kr13Aw47Gr4Uurg_yoW5Ar4DpF
+	W8KFZ8JrW8Gr18ursrJa15Z3WFg34UJFW5ZrWxG343C3s0yr9akFWYgws0kayIv3yUJFs7
+	ZFWjvrW8WF1j9FJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9I14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_
+	WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
+	IYCTnIWIevJa73UjIFyTuYvjfUojjgUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,24 +68,98 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: hoeppner@linux.ibm.com, vigneshr@ti.com, yi.zhang@huawei.com, gfs2@lists.linux.dev, clm@fb.com, adilger.kernel@dilger.ca, miquel.raynal@bootlin.com, agordeev@linux.ibm.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, agruenba@redhat.com, linux-scsi@vger.kernel.org, richard@nod.at, willy@infradead.org, Christoph Hellwig <hch@infradead.org>, linux-bcachefs@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, Yu Kuai <yukuai1@huaweicloud.com>, jejb@linux.ibm.com, p.raghav@samsung.com, gor@linux.ibm.com, hca@linux.ibm.com, joern@lazybastard.org, josef@toxicpanda.com, colyli@suse.de, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, sth@linux.ibm.com, yukuai3@huawei.com, dsterba@suse.com, konishi.ryusuke@gmail.com, axboe@kernel.dk, martin.petersen@oracle.com, nico@fluxnic.net, yangerkun@huawei.com, linux-kernel@vger.kernel.org, kent.overstreet@gmail.com, hare@suse.de, jack@suse.com, linux-mtd@lists.infradead.org, akpm@linux-foundation.org,
-  linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, roger.pau@citrix.com
+Cc: hoeppner@linux.ibm.com, vigneshr@ti.com, yi.zhang@huawei.com, gfs2@lists.linux.dev, clm@fb.com, adilger.kernel@dilger.ca, miquel.raynal@bootlin.com, agordeev@linux.ibm.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, agruenba@redhat.com, linux-scsi@vger.kernel.org, richard@nod.at, linux-bcachefs@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, jejb@linux.ibm.com, p.raghav@samsung.com, gor@linux.ibm.com, hca@linux.ibm.com, joern@lazybastard.org, josef@toxicpanda.com, colyli@suse.de, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, sth@linux.ibm.com, "yukuai \(C\)" <yukuai3@huawei.com>, dsterba@suse.com, konishi.ryusuke@gmail.com, axboe@kernel.dk, tytso@mit.edu, martin.petersen@oracle.com, nico@fluxnic.net, yangerkun@huawei.com, linux-kernel@vger.kernel.org, kent.overstreet@gmail.com, hare@suse.de, jack@suse.com, linux-mtd@lists.infradead.org, akpm@linux-foundation.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, rog
+ er.pau@citrix.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Dec 06, 2023 at 12:50:38PM -0500, Theodore Ts'o wrote:
-> This was added because pulling a mounted a USB thumb drive (or a HDD
-> drops off the SATA bus) while the file system is mounted and actively
-> in use, would result in a kernel OOPS.  If that's no longer true,
-> that's great, but it would be good to test to make sure this is the
-> case....
+Hi,
 
-And, surprise, surprise - that didn't just affect ext4.  So I ended
-up fixing this properly in the block layer.
+ÔÚ 2023/12/06 22:58, Matthew Wilcox Ð´µÀ:
+> On Tue, Dec 05, 2023 at 08:37:15PM +0800, Yu Kuai wrote:
+>> +struct folio *bdev_read_folio(struct block_device *bdev, pgoff_t index)
+>> +{
+>> +	return read_mapping_folio(bdev->bd_inode->i_mapping, index, NULL);
+>> +}
+>> +EXPORT_SYMBOL_GPL(bdev_read_folio);
+> 
+> I'm coming to the opinion that 'index' is the wrong parameter here.
+> Looking through all the callers of bdev_read_folio() in this patchset,
+> they all have a position in bytes, and they all convert it to
+> index for this call.  The API should probably be:
+> 
+> struct folio *bdev_read_folio(struct block_device *bdev, loff_t pos)
+> {
+> 	return read_mapping_folio(bdev->bd_inode->i_mapping,
+> 			pos / PAGE_SIZE, NULL);
+> }
 
-> If we really want to remove it, I'd suggest doing this as a separate
-> commit, so that after we see syzbot reports, or users complaining
-> about kernel crashes, we can revert the removal if necessary.
+Thanks for reviewing this patchset! Okay, I'll convert to pass in "pos"
+in v2.
+> 
+> ... and at some point, we'll get round to converting read_mapping_folio()
+> to take its argument in loff_t.
+> 
+> Similiarly for these two APIs:
+> 
+>> +struct folio *bdev_read_folio_gfp(struct block_device *bdev, pgoff_t index,
+>> +				  gfp_t gfp)
+>> +struct folio *bdev_get_folio(struct block_device *bdev, pgoff_t index)
+> 
+>> +struct folio *bdev_find_or_create_folio(struct block_device *bdev,
+>> +					pgoff_t index, gfp_t gfp)
+>> +{
+>> +	return __filemap_get_folio(bdev->bd_inode->i_mapping, index,
+>> +				   FGP_LOCK | FGP_ACCESSED | FGP_CREAT, gfp);
+>> +}
+>> +EXPORT_SYMBOL_GPL(bdev_find_or_create_folio);
+> 
+> This one probably shouldn't exist.  I've been converting callers of
+> find_or_create_page() to call __filemap_get_folio; I suspect we
+> should expose a __bdev_get_folio and have the callers use the FGP
+> arguments directly, but I'm open to other opinions here.
 
-Yes, this should of course be separate, well documented commit.
+If nobody against this, I will expose single __bdev_get_folio() to use
+in v2.
+> 
+>> +void bdev_sync_readahead(struct block_device *bdev, struct file_ra_state *ra,
+>> +			 struct file *file, pgoff_t index,
+>> +			 unsigned long req_count)
+>> +{
+>> +	struct file_ra_state tmp_ra = {};
+>> +
+>> +	if (!ra) {
+>> +		ra = &tmp_ra;
+>> +		file_ra_state_init(ra, bdev->bd_inode->i_mapping);
+>> +	}
+>> +	page_cache_sync_readahead(bdev->bd_inode->i_mapping, ra, file, index,
+>> +				  req_count);
+>> +}
+> 
+> I think the caller should always be passing in a valid file_ra_state.
+> It's only cramfs that doesn't have one, and it really should!
+> Not entirely sure about the arguments here; part of me says "bytes",
+> but this is weird enough to maybe take arguments in pages.
+
+In fact, bdev_sync_readahead() is only called for cramfs and ext4.
+
+For ext4 it's used in ext4_readdir() so there is valid file_ra_state.
+
+Hoever, for cramfs it's used in cramfs_read(), and cramfs_read() is used
+for:
+
+1) cramfs_read_folio
+2) cramfs_readdir
+3) cramfs_lookup
+4) cramfs_read_super
+
+Looks like it's easy to pass in valid file_ra_state() for 1) and 2),
+however, I don't see an easy way to do this for 3) and 4).
+
+Thanks,
+Kuai
+
+> 
+> .
+> 
 
