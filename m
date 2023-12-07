@@ -2,61 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BF0D807EE7
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Dec 2023 03:45:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 49DCC808F0A
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Dec 2023 18:48:12 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mfGtSjYB;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SlzCf3lrWz3cRy
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Dec 2023 13:45:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SmMF45G9Sz3dRt
+	for <lists+linux-erofs@lfdr.de>; Fri,  8 Dec 2023 04:48:08 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=mfGtSjYB;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=134.134.136.100; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SlzCV3jtQz3bt2
-	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Dec 2023 13:45:23 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4SlzCD2Wh9z4f3lDJ
-	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Dec 2023 10:45:12 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 19F981A0909
-	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Dec 2023 10:45:17 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgCnqxG5MXFllH3QCw--.13955S3;
-	Thu, 07 Dec 2023 10:45:16 +0800 (CST)
-Subject: Re: [PATCH -next RFC 01/14] block: add some bdev apis
-To: Matthew Wilcox <willy@infradead.org>, Yu Kuai <yukuai1@huaweicloud.com>
-References: <20231205123728.1866699-1-yukuai1@huaweicloud.com>
- <20231205123728.1866699-2-yukuai1@huaweicloud.com>
- <ZXCMJ9skAAgPm4z3@casper.infradead.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <d195aba8-7b89-698f-b7a0-06b87ae01c21@huaweicloud.com>
-Date: Thu, 7 Dec 2023 10:45:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <ZXCMJ9skAAgPm4z3@casper.infradead.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgCnqxG5MXFllH3QCw--.13955S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxuF4Dury5Kr13Aw47Gr4Uurg_yoW5Ar4DpF
-	W8KFZ8JrW8Gr18ursrJa15Z3WFg34UJFW5ZrWxG343C3s0yr9akFWYgws0kayIv3yUJFs7
-	ZFWjvrW8WF1j9FJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9I14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_
-	WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-	IYCTnIWIevJa73UjIFyTuYvjfUojjgUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SmMDt2L59z3dMW
+	for <linux-erofs@lists.ozlabs.org>; Fri,  8 Dec 2023 04:47:55 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701971278; x=1733507278;
+  h=date:from:to:cc:subject:message-id;
+  bh=OA0oBFbi175SmHtYjmJhRkhem+rpotv9bvoXz4LQi+s=;
+  b=mfGtSjYBXY9GoRJF3L9ylc4a0Jf5ZWJ0SLD/9ukgdZrn2MMVC3pNYWrN
+   DMI2liwq0FUJU+EVgLX5TrowcNA54q68HYMHuMFRJuFUeV8k8JFkPNuMm
+   zBgYeMQI6ydVh18/xjQJ1trWTFo8lFG+AhzvvBHvXMqbWp9HS2qufWV1o
+   JZ7DkIQmYCgzNJLY1aLkMFmz26DSIj3rrFpGmshk1YAIrhmkRgmvpAFUD
+   ciKjzVpTOv+HtlkTUppKxHmfNaYSBnvdbiWxslKAJFAm8uPtRHkqpnsNI
+   jFJYnZFnA42DtbHgZSlOly6XaVV4yG87HuZ9BAnCARiV2Q/AyFX9jPC/h
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="460758385"
+X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
+   d="scan'208";a="460758385"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 09:47:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.04,258,1695711600"; 
+   d="scan'208";a="19791872"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orviesa001.jf.intel.com with ESMTP; 07 Dec 2023 09:47:42 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rBITK-000Ccz-2J;
+	Thu, 07 Dec 2023 17:47:38 +0000
+Date: Fri, 08 Dec 2023 01:47:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 06dc62fb1936f85e2e9c0eb53105a36915bc787c
+Message-ID: <202312080122.iCCXzSuE-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,98 +65,226 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: hoeppner@linux.ibm.com, vigneshr@ti.com, yi.zhang@huawei.com, gfs2@lists.linux.dev, clm@fb.com, adilger.kernel@dilger.ca, miquel.raynal@bootlin.com, agordeev@linux.ibm.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, agruenba@redhat.com, linux-scsi@vger.kernel.org, richard@nod.at, linux-bcachefs@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, jejb@linux.ibm.com, p.raghav@samsung.com, gor@linux.ibm.com, hca@linux.ibm.com, joern@lazybastard.org, josef@toxicpanda.com, colyli@suse.de, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, sth@linux.ibm.com, "yukuai \(C\)" <yukuai3@huawei.com>, dsterba@suse.com, konishi.ryusuke@gmail.com, axboe@kernel.dk, tytso@mit.edu, martin.petersen@oracle.com, nico@fluxnic.net, yangerkun@huawei.com, linux-kernel@vger.kernel.org, kent.overstreet@gmail.com, hare@suse.de, jack@suse.com, linux-mtd@lists.infradead.org, akpm@linux-foundation.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, rog
- er.pau@citrix.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 06dc62fb1936f85e2e9c0eb53105a36915bc787c  erofs: enable sub-page compressed block support
 
-ÔÚ 2023/12/06 22:58, Matthew Wilcox Ð´µÀ:
-> On Tue, Dec 05, 2023 at 08:37:15PM +0800, Yu Kuai wrote:
->> +struct folio *bdev_read_folio(struct block_device *bdev, pgoff_t index)
->> +{
->> +	return read_mapping_folio(bdev->bd_inode->i_mapping, index, NULL);
->> +}
->> +EXPORT_SYMBOL_GPL(bdev_read_folio);
-> 
-> I'm coming to the opinion that 'index' is the wrong parameter here.
-> Looking through all the callers of bdev_read_folio() in this patchset,
-> they all have a position in bytes, and they all convert it to
-> index for this call.  The API should probably be:
-> 
-> struct folio *bdev_read_folio(struct block_device *bdev, loff_t pos)
-> {
-> 	return read_mapping_folio(bdev->bd_inode->i_mapping,
-> 			pos / PAGE_SIZE, NULL);
-> }
+elapsed time: 1483m
 
-Thanks for reviewing this patchset! Okay, I'll convert to pass in "pos"
-in v2.
-> 
-> ... and at some point, we'll get round to converting read_mapping_folio()
-> to take its argument in loff_t.
-> 
-> Similiarly for these two APIs:
-> 
->> +struct folio *bdev_read_folio_gfp(struct block_device *bdev, pgoff_t index,
->> +				  gfp_t gfp)
->> +struct folio *bdev_get_folio(struct block_device *bdev, pgoff_t index)
-> 
->> +struct folio *bdev_find_or_create_folio(struct block_device *bdev,
->> +					pgoff_t index, gfp_t gfp)
->> +{
->> +	return __filemap_get_folio(bdev->bd_inode->i_mapping, index,
->> +				   FGP_LOCK | FGP_ACCESSED | FGP_CREAT, gfp);
->> +}
->> +EXPORT_SYMBOL_GPL(bdev_find_or_create_folio);
-> 
-> This one probably shouldn't exist.  I've been converting callers of
-> find_or_create_page() to call __filemap_get_folio; I suspect we
-> should expose a __bdev_get_folio and have the callers use the FGP
-> arguments directly, but I'm open to other opinions here.
+configs tested: 203
+configs skipped: 2
 
-If nobody against this, I will expose single __bdev_get_folio() to use
-in v2.
-> 
->> +void bdev_sync_readahead(struct block_device *bdev, struct file_ra_state *ra,
->> +			 struct file *file, pgoff_t index,
->> +			 unsigned long req_count)
->> +{
->> +	struct file_ra_state tmp_ra = {};
->> +
->> +	if (!ra) {
->> +		ra = &tmp_ra;
->> +		file_ra_state_init(ra, bdev->bd_inode->i_mapping);
->> +	}
->> +	page_cache_sync_readahead(bdev->bd_inode->i_mapping, ra, file, index,
->> +				  req_count);
->> +}
-> 
-> I think the caller should always be passing in a valid file_ra_state.
-> It's only cramfs that doesn't have one, and it really should!
-> Not entirely sure about the arguments here; part of me says "bytes",
-> but this is weird enough to maybe take arguments in pages.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-In fact, bdev_sync_readahead() is only called for cramfs and ext4.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20231207   gcc  
+arc                   randconfig-002-20231207   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                           h3600_defconfig   gcc  
+arm                      jornada720_defconfig   gcc  
+arm                        multi_v7_defconfig   gcc  
+arm                   randconfig-001-20231207   gcc  
+arm                   randconfig-002-20231207   gcc  
+arm                   randconfig-003-20231207   gcc  
+arm                   randconfig-004-20231207   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20231207   gcc  
+arm64                 randconfig-002-20231207   gcc  
+arm64                 randconfig-003-20231207   gcc  
+arm64                 randconfig-004-20231207   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20231207   gcc  
+csky                  randconfig-002-20231207   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20231207   gcc  
+i386         buildonly-randconfig-001-20231208   clang
+i386         buildonly-randconfig-002-20231207   gcc  
+i386         buildonly-randconfig-002-20231208   clang
+i386         buildonly-randconfig-003-20231207   gcc  
+i386         buildonly-randconfig-003-20231208   clang
+i386         buildonly-randconfig-004-20231207   gcc  
+i386         buildonly-randconfig-004-20231208   clang
+i386         buildonly-randconfig-005-20231207   gcc  
+i386         buildonly-randconfig-005-20231208   clang
+i386         buildonly-randconfig-006-20231207   gcc  
+i386         buildonly-randconfig-006-20231208   clang
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231207   gcc  
+i386                  randconfig-001-20231208   clang
+i386                  randconfig-002-20231207   gcc  
+i386                  randconfig-002-20231208   clang
+i386                  randconfig-003-20231207   gcc  
+i386                  randconfig-003-20231208   clang
+i386                  randconfig-004-20231207   gcc  
+i386                  randconfig-004-20231208   clang
+i386                  randconfig-005-20231207   gcc  
+i386                  randconfig-005-20231208   clang
+i386                  randconfig-006-20231207   gcc  
+i386                  randconfig-006-20231208   clang
+i386                  randconfig-011-20231207   clang
+i386                  randconfig-011-20231208   gcc  
+i386                  randconfig-012-20231207   clang
+i386                  randconfig-012-20231208   gcc  
+i386                  randconfig-013-20231207   clang
+i386                  randconfig-013-20231208   gcc  
+i386                  randconfig-014-20231207   clang
+i386                  randconfig-014-20231208   gcc  
+i386                  randconfig-015-20231207   clang
+i386                  randconfig-015-20231208   gcc  
+i386                  randconfig-016-20231207   clang
+i386                  randconfig-016-20231208   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231207   gcc  
+loongarch             randconfig-002-20231207   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                          hp300_defconfig   gcc  
+m68k                        m5272c3_defconfig   gcc  
+m68k                        mvme147_defconfig   gcc  
+m68k                        stmark2_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+mips                       bmips_be_defconfig   gcc  
+mips                           ci20_defconfig   gcc  
+mips                           ip27_defconfig   gcc  
+mips                      loongson3_defconfig   gcc  
+mips                         rt305x_defconfig   gcc  
+mips                   sb1250_swarm_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20231207   gcc  
+nios2                 randconfig-002-20231207   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20231207   gcc  
+parisc                randconfig-002-20231207   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                      ep88xc_defconfig   gcc  
+powerpc                   motionpro_defconfig   gcc  
+powerpc                     mpc83xx_defconfig   gcc  
+powerpc                      ppc40x_defconfig   gcc  
+powerpc               randconfig-001-20231207   gcc  
+powerpc               randconfig-002-20231207   gcc  
+powerpc               randconfig-003-20231207   gcc  
+powerpc                    socrates_defconfig   gcc  
+powerpc                     stx_gp3_defconfig   gcc  
+powerpc64             randconfig-001-20231207   gcc  
+powerpc64             randconfig-002-20231207   gcc  
+powerpc64             randconfig-003-20231207   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   clang
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20231207   gcc  
+riscv                 randconfig-002-20231207   gcc  
+riscv                          rv32_defconfig   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                         ap325rxa_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                         ecovec24_defconfig   gcc  
+sh                    randconfig-001-20231207   gcc  
+sh                    randconfig-002-20231207   gcc  
+sh                           se7722_defconfig   gcc  
+sh                           se7750_defconfig   gcc  
+sh                           se7780_defconfig   gcc  
+sh                              ul2_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20231207   gcc  
+sparc64               randconfig-002-20231207   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20231207   gcc  
+um                    randconfig-002-20231207   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20231207   gcc  
+x86_64       buildonly-randconfig-002-20231207   gcc  
+x86_64       buildonly-randconfig-003-20231207   gcc  
+x86_64       buildonly-randconfig-004-20231207   gcc  
+x86_64       buildonly-randconfig-005-20231207   gcc  
+x86_64       buildonly-randconfig-006-20231207   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-011-20231207   gcc  
+x86_64                randconfig-012-20231207   gcc  
+x86_64                randconfig-013-20231207   gcc  
+x86_64                randconfig-014-20231207   gcc  
+x86_64                randconfig-015-20231207   gcc  
+x86_64                randconfig-016-20231207   gcc  
+x86_64                randconfig-071-20231207   gcc  
+x86_64                randconfig-072-20231207   gcc  
+x86_64                randconfig-073-20231207   gcc  
+x86_64                randconfig-074-20231207   gcc  
+x86_64                randconfig-075-20231207   gcc  
+x86_64                randconfig-076-20231207   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20231207   gcc  
+xtensa                randconfig-002-20231207   gcc  
 
-For ext4 it's used in ext4_readdir() so there is valid file_ra_state.
-
-Hoever, for cramfs it's used in cramfs_read(), and cramfs_read() is used
-for:
-
-1) cramfs_read_folio
-2) cramfs_readdir
-3) cramfs_lookup
-4) cramfs_read_super
-
-Looks like it's easy to pass in valid file_ra_state() for 1) and 2),
-however, I don't see an easy way to do this for 3) and 4).
-
-Thanks,
-Kuai
-
-> 
-> .
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
