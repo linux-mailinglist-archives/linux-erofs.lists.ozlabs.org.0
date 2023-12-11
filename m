@@ -2,29 +2,29 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 81D3E80CD1C
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Dec 2023 15:07:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B104080CD23
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Dec 2023 15:08:00 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Spk9704Ggz30g2
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 01:07:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Spk9B1fR5z3cGg
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 01:07:58 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Spk8g5WMgz30Ql
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 01:07:31 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Spk8Y3bp1z4f3khR
-	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:25 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Spk8j22JJz30Ql
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 01:07:33 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Spk8c2BNcz4f3kKK
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:28 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id E600C1A0915
-	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:27 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 79ACC1A02F9
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:29 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDn6xGTF3dlDYFxDQ--.28013S10;
-	Mon, 11 Dec 2023 22:07:27 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgDn6xGTF3dlDYFxDQ--.28013S11;
+	Mon, 11 Dec 2023 22:07:28 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
 	roger.pau@citrix.com,
@@ -58,18 +58,18 @@ To: axboe@kernel.dk,
 	akpm@linux-foundation.org,
 	p.raghav@samsung.com,
 	hare@suse.de
-Subject: [PATCH RFC v2 for-6.8/block 06/18] scsicam: use bdev api in scsi_bios_ptable()
-Date: Mon, 11 Dec 2023 22:05:40 +0800
-Message-Id: <20231211140552.973290-7-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC v2 for-6.8/block 07/18] bcachefs: remove dead function bdev_sectors()
+Date: Mon, 11 Dec 2023 22:05:41 +0800
+Message-Id: <20231211140552.973290-8-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231211140552.973290-1-yukuai1@huaweicloud.com>
 References: <20231211140552.973290-1-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgDn6xGTF3dlDYFxDQ--.28013S10
-X-Coremail-Antispam: 1UD129KBjvdXoW7XFWrKrykKr43Jr15KryrCrg_yoW3urb_CF
-	WS9ryxWr18KFs7Kwn8tF47Zryvvan8XF1I9FWSqa4Svr1UXrn5Kw4vvr17Zr47Gr4kJ3Z3
-	CF17XrWakrsrujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID: cCh0CgDn6xGTF3dlDYFxDQ--.28013S11
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFyrKrWkuF1fAw4fZrWUurg_yoW3Wrc_KF
+	nY9F17Ww4SqF9Y93W2qr1vvr4Y93yDXrW2gFs0v3W7G3WDArZ5ZFZ5KrW5Zrsru397uFy7
+	X3yxJrW29ryFkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
 	9fnUUIcSsGvfJTRUUUbqkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
 	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
 	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
@@ -102,31 +102,29 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-Avoid to access bd_inode directly, prepare to remove bd_inode from
-block_devcie.
+bdev_sectors() is not used hence remove it.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/scsi/scsicam.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/bcachefs/util.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/scsi/scsicam.c b/drivers/scsi/scsicam.c
-index e2c7d8ef205f..9617d70c0ed1 100644
---- a/drivers/scsi/scsicam.c
-+++ b/drivers/scsi/scsicam.c
-@@ -32,11 +32,9 @@
-  */
- unsigned char *scsi_bios_ptable(struct block_device *dev)
- {
--	struct address_space *mapping = bdev_whole(dev)->bd_inode->i_mapping;
- 	unsigned char *res = NULL;
--	struct folio *folio;
-+	struct folio *folio = bdev_read_folio(bdev_whole(dev), 0);
+diff --git a/fs/bcachefs/util.h b/fs/bcachefs/util.h
+index 2984b57b2958..22a0acc1704f 100644
+--- a/fs/bcachefs/util.h
++++ b/fs/bcachefs/util.h
+@@ -516,11 +516,6 @@ static inline unsigned fract_exp_two(unsigned x, unsigned fract_bits)
+ void bch2_bio_map(struct bio *bio, void *base, size_t);
+ int bch2_bio_alloc_pages(struct bio *, size_t, gfp_t);
  
--	folio = read_mapping_folio(mapping, 0, NULL);
- 	if (IS_ERR(folio))
- 		return NULL;
- 
+-static inline sector_t bdev_sectors(struct block_device *bdev)
+-{
+-	return bdev->bd_inode->i_size >> 9;
+-}
+-
+ #define closure_bio_submit(bio, cl)					\
+ do {									\
+ 	closure_get(cl);						\
 -- 
 2.39.2
 
