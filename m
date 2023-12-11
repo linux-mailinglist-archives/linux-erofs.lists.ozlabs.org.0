@@ -1,30 +1,30 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3603280CD16
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Dec 2023 15:07:54 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81D3E80CD1C
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Dec 2023 15:07:57 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Spk935B7fz30fh
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 01:07:51 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Spk9704Ggz30g2
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 01:07:55 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Spk8f20PSz30Ql
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 01:07:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Spk8g5WMgz30Ql
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 01:07:31 +1100 (AEDT)
 Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Spk8Y1BTCz4f3kjf
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Spk8Y3bp1z4f3khR
 	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:25 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 583DD1A0A41
-	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:26 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id E600C1A0915
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:27 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDn6xGTF3dlDYFxDQ--.28013S9;
-	Mon, 11 Dec 2023 22:07:25 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgDn6xGTF3dlDYFxDQ--.28013S10;
+	Mon, 11 Dec 2023 22:07:27 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
 	roger.pau@citrix.com,
@@ -58,18 +58,18 @@ To: axboe@kernel.dk,
 	akpm@linux-foundation.org,
 	p.raghav@samsung.com,
 	hare@suse.de
-Subject: [PATCH RFC v2 for-6.8/block 05/18] s390/dasd: use bdev api in dasd_format()
-Date: Mon, 11 Dec 2023 22:05:39 +0800
-Message-Id: <20231211140552.973290-6-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC v2 for-6.8/block 06/18] scsicam: use bdev api in scsi_bios_ptable()
+Date: Mon, 11 Dec 2023 22:05:40 +0800
+Message-Id: <20231211140552.973290-7-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231211140552.973290-1-yukuai1@huaweicloud.com>
 References: <20231211140552.973290-1-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgDn6xGTF3dlDYFxDQ--.28013S9
-X-Coremail-Antispam: 1UD129KBjvdXoW7XFWrKF1rWw4UAw4kXFWkWFg_yoWfWrg_Zr
-	1fGryxtr1xCr9Ikr1YvF15Zr9Y9F1kWr4Svry3KryfXFnrXFsaq3ykuFW3JrZ7JayUG3s3
-	GF9rXw10yr15WjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID: cCh0CgDn6xGTF3dlDYFxDQ--.28013S10
+X-Coremail-Antispam: 1UD129KBjvdXoW7XFWrKrykKr43Jr15KryrCrg_yoW3urb_CF
+	WS9ryxWr18KFs7Kwn8tF47Zryvvan8XF1I9FWSqa4Svr1UXrn5Kw4vvr17Zr47Gr4kJ3Z3
+	CF17XrWakrsrujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
 	9fnUUIcSsGvfJTRUUUbqkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
 	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
 	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
@@ -107,25 +107,26 @@ block_devcie.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/s390/block/dasd_ioctl.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/scsi/scsicam.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/s390/block/dasd_ioctl.c b/drivers/s390/block/dasd_ioctl.c
-index 61b9675e2a67..bbfb958237e6 100644
---- a/drivers/s390/block/dasd_ioctl.c
-+++ b/drivers/s390/block/dasd_ioctl.c
-@@ -221,8 +221,9 @@ dasd_format(struct dasd_block *block, struct format_data_t *fdata)
- 	 * enabling the device later.
- 	 */
- 	if (fdata->start_unit == 0) {
--		block->gdp->part0->bd_inode->i_blkbits =
--			blksize_bits(fdata->blksize);
-+		rc = set_blocksize(block->gdp->part0, fdata->blksize);
-+		if (rc)
-+			return rc;
- 	}
+diff --git a/drivers/scsi/scsicam.c b/drivers/scsi/scsicam.c
+index e2c7d8ef205f..9617d70c0ed1 100644
+--- a/drivers/scsi/scsicam.c
++++ b/drivers/scsi/scsicam.c
+@@ -32,11 +32,9 @@
+  */
+ unsigned char *scsi_bios_ptable(struct block_device *dev)
+ {
+-	struct address_space *mapping = bdev_whole(dev)->bd_inode->i_mapping;
+ 	unsigned char *res = NULL;
+-	struct folio *folio;
++	struct folio *folio = bdev_read_folio(bdev_whole(dev), 0);
  
- 	rc = base->discipline->format_device(base, fdata, 1);
+-	folio = read_mapping_folio(mapping, 0, NULL);
+ 	if (IS_ERR(folio))
+ 		return NULL;
+ 
 -- 
 2.39.2
 
