@@ -1,61 +1,127 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24A1980CE1E
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Dec 2023 15:17:57 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 968AF80D310
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Dec 2023 17:59:21 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=KF7fZ16G;
+	dkim=fail reason="signature verification failed" header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=55atrZPO;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=KF7fZ16G;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=55atrZPO;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SpkNf4cL1z30fp
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 01:17:54 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Spnyt6nvfz30hQ
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 03:59:18 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=209.85.218.52; helo=mail-ej1-f52.google.com; envelope-from=ngompa13@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=KF7fZ16G;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=55atrZPO;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=KF7fZ16G;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=55atrZPO;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=2a07:de40:b251:101:10:150:64:1; helo=smtp-out1.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
+X-Greylist: delayed 404 seconds by postgrey-1.37 at boromir; Tue, 12 Dec 2023 03:59:11 AEDT
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2a07:de40:b251:101:10:150:64:1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SpkNX174Jz2xKQ
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 01:17:46 +1100 (AEDT)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a1c7d8f89a5so601518066b.2
-        for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 06:17:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702304262; x=1702909062;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+FeyufrOe65ZibAeQSako8BHcEODv5E1MPLsl6l5HtI=;
-        b=jLbvw7KwE2YKjwF/PmhCcXLsb83nS6j4/2i3+FYyKY7Z2ivT9Om1OgrZKz2ypj+BIc
-         4/0O2OZK50QEukFlctyWMROvOaV6DtmVsHzwW6ERQ6NXIE1IrWbQVVeyv0X3FGGe9VAv
-         lMzM/KcRdx7QdKAK+SH+TYd7GKWKUBIYgQvu5U+ieZqZmy0kAWyreH0o7ohK8scuF7wv
-         NhmpIR8lucCItLRWiFZjCuYkGUrFsjIeF7MeWE5TorAK27rueClxOY0hz2HtZdkvP56p
-         eVlrPtjOhhR58j5U0PEOVf9RA8OI9JBHAtH7HI4EHlM/liCOGF55DMU7mnfZx7rdt4Ir
-         eg1A==
-X-Gm-Message-State: AOJu0Yw97q4dmHOfqf/QN4RVxDLfQYm4okfKIFLIbf1tTVe9bGFhX3tU
-	AetQSreQXCCWGP/WSOfGfM2Hj+/0eoK1J6hY
-X-Google-Smtp-Source: AGHT+IHUXVK0isjcCAYXzIcfwXvR+5KHrtKpw9ClzOCPBJBT0t3KuR9dMvSaVWwJTY53ajCkxHmbpA==
-X-Received: by 2002:a17:907:3f08:b0:a1c:b3ce:25fe with SMTP id hq8-20020a1709073f0800b00a1cb3ce25femr2249702ejc.132.1702304261986;
-        Mon, 11 Dec 2023 06:17:41 -0800 (PST)
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
-        by smtp.gmail.com with ESMTPSA id tj3-20020a170907c24300b00a1b6cba8d20sm4817013ejc.122.2023.12.11.06.17.41
-        for <linux-erofs@lists.ozlabs.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Dec 2023 06:17:41 -0800 (PST)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-54cde11d0f4so6328923a12.2
-        for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 06:17:41 -0800 (PST)
-X-Received: by 2002:a05:6402:1a59:b0:54c:4837:a659 with SMTP id
- bf25-20020a0564021a5900b0054c4837a659mr2627320edb.70.1702304261586; Mon, 11
- Dec 2023 06:17:41 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Spnyl45VRz30YS
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 03:59:10 +1100 (AEDT)
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3A65722413;
+	Mon, 11 Dec 2023 16:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1702313538; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rKyChubYQOLUssFrI8/z8khe3/ZNZIgTAEz8GE5ZHf8=;
+	b=KF7fZ16GGZSNVIercO+eYb/zdHDuObhA9Onxa81BeqL3LeXtWEzJu+HqGO1kfleK3MMb9x
+	jUugKN6DhI5mx4QzBnf4JH10nshySFJYQzot/cnv9bMAHLqxdYshFuHfymm3WHOgnJ+pWp
+	7mgLY2fOp0ANNoP3kZ8g+YQPQxBLCuM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1702313538;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rKyChubYQOLUssFrI8/z8khe3/ZNZIgTAEz8GE5ZHf8=;
+	b=55atrZPOIWUHCEdWSl7m1h0isEhBA3PJTsKW7m5NfRjFtXZtvlPhx1kYCCQxQNMKERbIiQ
+	03X5sRIKKKs3qZCg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1702313538; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rKyChubYQOLUssFrI8/z8khe3/ZNZIgTAEz8GE5ZHf8=;
+	b=KF7fZ16GGZSNVIercO+eYb/zdHDuObhA9Onxa81BeqL3LeXtWEzJu+HqGO1kfleK3MMb9x
+	jUugKN6DhI5mx4QzBnf4JH10nshySFJYQzot/cnv9bMAHLqxdYshFuHfymm3WHOgnJ+pWp
+	7mgLY2fOp0ANNoP3kZ8g+YQPQxBLCuM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1702313538;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rKyChubYQOLUssFrI8/z8khe3/ZNZIgTAEz8GE5ZHf8=;
+	b=55atrZPOIWUHCEdWSl7m1h0isEhBA3PJTsKW7m5NfRjFtXZtvlPhx1kYCCQxQNMKERbIiQ
+	03X5sRIKKKs3qZCg==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 26D01134B0;
+	Mon, 11 Dec 2023 16:52:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id 1uB1CUI+d2XzFAAAn2gu4w
+	(envelope-from <jack@suse.cz>); Mon, 11 Dec 2023 16:52:18 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id A24EDA07E3; Mon, 11 Dec 2023 17:52:17 +0100 (CET)
+Date: Mon, 11 Dec 2023 17:52:17 +0100
+From: Jan Kara <jack@suse.cz>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Subject: Re: [PATCH RFC v2 for-6.8/block 01/18] block: add some bdev apis
+Message-ID: <20231211165217.fil437byq7w2vcp7@quack3>
+References: <20231211140552.973290-1-yukuai1@huaweicloud.com>
+ <20231211140552.973290-2-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
-References: <CAOgh=Fwb+JCTQ-iqzjq8st9qbvauxc4gqqafjWG2Xc08MeBabQ@mail.gmail.com>
-In-Reply-To: <CAOgh=Fwb+JCTQ-iqzjq8st9qbvauxc4gqqafjWG2Xc08MeBabQ@mail.gmail.com>
-From: Neal Gompa <neal@gompa.dev>
-Date: Mon, 11 Dec 2023 09:17:04 -0500
-X-Gmail-Original-Message-ID: <CAEg-Je_TFh9wF3K0JU2SPkskHB4A-KBkxVKKQ5yn1=PNSZQRdw@mail.gmail.com>
-Message-ID: <CAEg-Je_TFh9wF3K0JU2SPkskHB4A-KBkxVKKQ5yn1=PNSZQRdw@mail.gmail.com>
-Subject: Re: [RFC KERNEL] initoverlayfs - a scalable initial filesystem
-To: Eric Curtin <ecurtin@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231211140552.973290-2-yukuai1@huaweicloud.com>
+X-Spam-Level: 
+X-Spam-Score: -1.58
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-1.26 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-1.96)[94.82%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 R_RATELIMIT(0.00)[to_ip_from(RLg7z3ka1nnoi3zj4x13ixbdfk)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCPT_COUNT_GT_50(0.00)[50];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[kernel.dk,citrix.com,suse.de,gmail.com,lazybastard.org,bootlin.com,nod.at,ti.com,linux.ibm.com,oracle.com,fb.com,toxicpanda.com,suse.com,zeniv.linux.org.uk,kernel.org,fluxnic.net,mit.edu,dilger.ca,redhat.com,infradead.org,linux-foundation.org,samsung.com,vger.kernel.org,lists.xenproject.org,lists.infradead.org,lists.ozlabs.org,lists.linux.dev,huawei.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
+X-Spam-Score: -1.26
+Authentication-Results: smtp-out1.suse.de;
+	none
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -67,101 +133,31 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Colin Walters <walters@redhat.com>, Lokesh Mandvekar <lmandvek@redhat.com>, Stephen Smoogen <ssmoogen@redhat.com>, Yariv Rachmani <yrachman@redhat.com>, Brian Masney <bmasney@redhat.com>, Daniel Walsh <dwalsh@redhat.com>, Daan De Meyer <daan.j.demeyer@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-unionfs@vger.kernel.org, Pavol Brilla <pbrilla@redhat.com>, Eric Chanudet <echanude@redhat.com>, Alexander Larsson <alexl@redhat.com>, Lennart Poettering <lennart@poettering.net>, Btrfs BTRFS <linux-btrfs@vger.kernel.org>, linux-erofs@lists.ozlabs.org, Douglas Landgraf <dlandgra@redhat.com>, Luca Boccassi <bluca@debian.org>, =?UTF-8?B?UGV0ciDFoGFiYXRh?= <psabata@redhat.com>
+Cc: hoeppner@linux.ibm.com, vigneshr@ti.com, yi.zhang@huawei.com, gfs2@lists.linux.dev, clm@fb.com, adilger.kernel@dilger.ca, miquel.raynal@bootlin.com, agordeev@linux.ibm.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, agruenba@redhat.com, linux-scsi@vger.kernel.org, richard@nod.at, willy@infradead.org, linux-bcachefs@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, jejb@linux.ibm.com, p.raghav@samsung.com, gor@linux.ibm.com, hca@linux.ibm.com, joern@lazybastard.org, josef@toxicpanda.com, colyli@suse.de, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, viro@zeniv.linux.org.uk, yukuai3@huawei.com, dsterba@suse.com, konishi.ryusuke@gmail.com, axboe@kernel.dk, brauner@kernel.org, tytso@mit.edu, martin.petersen@oracle.com, nico@fluxnic.net, yangerkun@huawei.com, linux-kernel@vger.kernel.org, kent.overstreet@gmail.com, hare@suse.de, jack@suse.com, linux-fsdevel@vger.kernel.org, linux-mtd@lists.infradead.org, akpm@linux-foundation.org, r
+ oger.pau@citrix.com, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, sth@linux.ibm.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Dec 11, 2023 at 8:46=E2=80=AFAM Eric Curtin <ecurtin@redhat.com> wr=
-ote:
->
-> Hi All,
->
-> We have recently been working on something called initoverlayfs, which
-> we sent an RFC email to the systemd and dracut mailing lists to gather
-> feedback. This is an exploratory email as we are unsure if a solution
-> like this fits in userspace or kernelspace and we would like to gather
-> feedback from the community.
->
-> To describe this briefly, the idea is to use erofs+overlayfs as an
-> initial filesystem rather than an initramfs. The benefits are, we can
-> start userspace significantly faster as we do not have to unpack,
-> decompress and populate a tmpfs upfront, instead we can rely on
-> transparent decompression like lz4hc instead. What we believe is the
-> greater benefit, is that we can have less fear of initial filesystem
-> bloat, as when you are using transparent decompression you only pay
-> for decompressing the bytes you actually use.
->
-> We implemented the first version of this, by creating a small
-> initramfs that only contains storage drivers, udev and a couple of 100
-> lines of C code, just enough userspace to mount an erofs with
-> transient overlay. Then we build a second initramfs which has all the
-> contents of a normal everyday initramfs with all the bells and
-> whistles and convert this into an erofs.
->
-> Then at boot time you basically transition to this erofs+overlayfs in
-> userspace and everything works as normal as it would in a traditional
-> initramfs.
->
-> The current implementation looks like this:
->
-> ```
-> From the filesystem perspective (roughly):
->
-> fw -> bootloader -> kernel -> mini-initramfs -> initoverlayfs -> rootfs
->
-> From the process perspective (roughly):
->
-> fw -> bootloader -> kernel -> storage-init   -> init ----------------->
-> ```
->
-> But we have been asking the question whether we should be implementing
-> this in kernelspace so it looks more like:
->
-> ```
-> From the filesystem perspective (roughly):
->
-> fw -> bootloader -> kernel -> initoverlayfs -> rootfs
->
-> From the process perspective (roughly):
->
-> fw -> bootloader -> kernel -> init ----------------->
-> ```
->
-> The kind of questions we are asking are: Would it be possible to
-> implement this in kernelspace so we could just mount the initial
-> filesystem data as an erofs+overlayfs filesystem without unpacking,
-> decompressing, copying the data to a tmpfs, etc.? Could we memmap the
-> initramfs buffer and mount it like an erofs? What other considerations
-> should be taken into account?
->
-> Echo'ing Lennart we must also "keep in mind from the beginning how
-> authentication of every component of your process shall work" as
-> that's essential to a couple of different Linux distributions today.
->
-> We kept this email short because we want people to read it and avoid
-> duplicating information from elsewhere. The effort is described from
-> different perspectives in the systemd/dracut RFC email and github
-> README.md if you'd like to learn more, it's worth reading the
-> discussion in the systemd mailing list:
->
-> https://marc.info/?l=3Dsystemd-devel&m=3D170214639006704&w=3D2
->
-> https://github.com/containers/initoverlayfs/blob/main/README.md
->
-> We also received feedback informally in the community that it would be
-> nice if we could optionally use btrfs as an alternative.
->
-> Is mise le meas/Regards,
->
-> Eric Curtin
->
+On Mon 11-12-23 22:05:35, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
+> 
+> Those apis will be used for other modules, so that bd_inode won't be
+> accessed directly from other modules.
+> 
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 
-Adding linux-btrfs@ to the discussion, because I think it'd be useful
-to include them for what handling btrfs as an alternative to
-erofs+overlayfs would look like.
+...
 
+> +void bdev_associated_mapping(struct block_device *bdev,
+> +			     struct address_space *mapping)
+> +{
+> +	mapping->host = bdev->bd_inode;
+> +}
 
+Here I'm not sure - is the helper really a win? It seems a bit obscure to
+me. This initialization of another mapping for a bdev looks really special.
 
---
-=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
-=BC=81/ Always, there's only one truth!
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
