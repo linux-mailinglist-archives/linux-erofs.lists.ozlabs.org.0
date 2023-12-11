@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C9AB80CD0D
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Dec 2023 15:07:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3D5680CD09
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Dec 2023 15:07:41 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Spk8t3qPDz3bV7
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 01:07:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Spk8q3Q82z3bPV
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 01:07:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
@@ -14,17 +14,17 @@ Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Spk8c1XCmz30QJ
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Spk8c15r3z2ywC
 	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 01:07:27 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Spk8S3CFBz4f3kKN
-	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:20 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Spk8Q26wMz4f3lWB
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:18 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 9B8C61A09F2
-	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:21 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 3352A1A09D9
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:23 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDn6xGTF3dlDYFxDQ--.28013S6;
-	Mon, 11 Dec 2023 22:07:21 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgDn6xGTF3dlDYFxDQ--.28013S7;
+	Mon, 11 Dec 2023 22:07:22 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
 	roger.pau@citrix.com,
@@ -58,32 +58,32 @@ To: axboe@kernel.dk,
 	akpm@linux-foundation.org,
 	p.raghav@samsung.com,
 	hare@suse.de
-Subject: [PATCH RFC v2 for-6.8/block 02/18] xen/blkback: use bdev api in xen_update_blkif_status()
-Date: Mon, 11 Dec 2023 22:05:36 +0800
-Message-Id: <20231211140552.973290-3-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC v2 for-6.8/block 03/18] bcache: use bdev api in read_super()
+Date: Mon, 11 Dec 2023 22:05:37 +0800
+Message-Id: <20231211140552.973290-4-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231211140552.973290-1-yukuai1@huaweicloud.com>
 References: <20231211140552.973290-1-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgDn6xGTF3dlDYFxDQ--.28013S6
-X-Coremail-Antispam: 1UD129KBjvdXoW7XFW7tFW3Wr4xCFyrtrWfAFb_yoWfWFb_ZF
-	18urWxXrn7Crs0kayUuFs3Z3yv93WrurWF9ay2qFySqw1UXFWSq39FvFn5Gr47ZayUGws0
-	yF17uFW7tr4xXjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbDAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
-	0Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-	wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
-	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1lIxkGc2
-	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
-	Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHbyAU
-	UUUU=
+X-CM-TRANSID: cCh0CgDn6xGTF3dlDYFxDQ--.28013S7
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww17Zw4kZr48Xr13XF18Xwb_yoW8Jw4xpF
+	Z7uF9xZr48Gw17u3y8Zr4DZFyrK3srKFWUKa4xCw43ua43Jw1Y9rW5J34UG34rZr18WFs2
+	vF4rJr4xu3WUGFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1UMIIYrx
+	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
+	6r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r
+	4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUojjg
+	UUUUU
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -102,28 +102,46 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Yu Kuai <yukuai3@huawei.com>
 
-Avoid to access bd_inode directly, prepare to remove bd_inode from
-block_devcie.
+On the one hand covert to use folio while reading bdev inode, on the
+other hand prevent to access bd_inode directly.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/block/xen-blkback/xenbus.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/md/bcache/super.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
-index e34219ea2b05..e645afa4af57 100644
---- a/drivers/block/xen-blkback/xenbus.c
-+++ b/drivers/block/xen-blkback/xenbus.c
-@@ -104,8 +104,7 @@ static void xen_update_blkif_status(struct xen_blkif *blkif)
- 		xenbus_dev_error(blkif->be->dev, err, "block flush");
- 		return;
- 	}
--	invalidate_inode_pages2(
--			blkif->vbd.bdev_handle->bdev->bd_inode->i_mapping);
-+	invalidate_bdev(blkif->vbd.bdev_handle->bdev);
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index bfe1685dbae5..23892b32c582 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -168,14 +168,13 @@ static const char *read_super(struct cache_sb *sb, struct block_device *bdev,
+ {
+ 	const char *err;
+ 	struct cache_sb_disk *s;
+-	struct page *page;
++	struct folio *folio;
+ 	unsigned int i;
  
- 	for (i = 0; i < blkif->nr_rings; i++) {
- 		ring = &blkif->rings[i];
+-	page = read_cache_page_gfp(bdev->bd_inode->i_mapping,
+-				   SB_OFFSET >> PAGE_SHIFT, GFP_KERNEL);
+-	if (IS_ERR(page))
++	folio = bdev_read_folio(bdev, SB_OFFSET);
++	if (IS_ERR(folio))
+ 		return "IO error";
+-	s = page_address(page) + offset_in_page(SB_OFFSET);
++	s = folio_address(folio) + offset_in_folio(folio, SB_OFFSET);
+ 
+ 	sb->offset		= le64_to_cpu(s->offset);
+ 	sb->version		= le64_to_cpu(s->version);
+@@ -272,7 +271,7 @@ static const char *read_super(struct cache_sb *sb, struct block_device *bdev,
+ 	*res = s;
+ 	return NULL;
+ err:
+-	put_page(page);
++	folio_put(folio);
+ 	return err;
+ }
+ 
 -- 
 2.39.2
 
