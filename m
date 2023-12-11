@@ -2,81 +2,86 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36D7480CB53
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Dec 2023 14:46:58 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=KAKGMVM+;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WlQUe2d7;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id E265280CD06
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Dec 2023 15:07:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Spjht5Y0Pz30g2
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 00:46:54 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Spk8m31jgz30h2
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 01:07:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=KAKGMVM+;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WlQUe2d7;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=ecurtin@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Spjhk0htCz2yyT
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 00:46:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702302399;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=IFsLeKW3DW6BmxUhVRH0V3zQ/xj1O1MUYot7lQD78gA=;
-	b=KAKGMVM+aaLG+Z/tHzo+nAYkQtFNFw0TxP/umL9W6adG//OUMcBdyHs2PIVSG91lOJyYnC
-	EX6+zj706+EN2ZaBUzp7AHjDp7wXeE8pKM0/4Kohj8mjKmie+5VdQ29ubSrgDKzy/CW7go
-	gl3hmagqCN9uFy1SSt+Vd8B/hFRb5Hw=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702302400;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=IFsLeKW3DW6BmxUhVRH0V3zQ/xj1O1MUYot7lQD78gA=;
-	b=WlQUe2d7PLz03wTJDIjO4Q9r0kzAaUdCrVteOfqiC7pezBLRmZzdqfIlf/q7zhNp78Ol1g
-	y4Hxte0cMZq5KCDrRldAK8GAa1pgL5E/iL6kOLIp64oT5wSHJxa6KrRySaiZk0EnBVEZw1
-	Cie7Rq2jcdHyIEgVX3H3tTXXzgyQtOU=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-678-XYkcpqrROce6byiizW7D9g-1; Mon, 11 Dec 2023 08:46:36 -0500
-X-MC-Unique: XYkcpqrROce6byiizW7D9g-1
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-5c66a69ec8eso3967622a12.3
-        for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 05:46:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702302395; x=1702907195;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IFsLeKW3DW6BmxUhVRH0V3zQ/xj1O1MUYot7lQD78gA=;
-        b=RJwOSc0agHcZ9Ul5inbDYpDRbUxv24Ew5i+wRpOED5TqubF6zpavZGvSnQSXoxxRCW
-         0t7D+X0hk/umRcTZXDFXYg63fwQXq7gHFC3rtJeNvrbwovvYlJhB2PWyNT4Qs9dU9Sgn
-         5fYLUOLx7p4OtOIjSOAIzpTF65j6DNtMHX4k5UC9n0fNVL0d1oi7rNO3/W5xWVxCCUK2
-         9GEkdGLSp75WpBTltJ71wwqeTTtjmEI5ygKuD69h4MQLfqTP7jjCNC9u83W9DiYW2KCo
-         xSTtSFckWkpi8DQjDK5PFnPQuNtBD//b/pFd9XhJbovZEmygJ+n4XoVbGVQtxEV3vGiW
-         Gn1A==
-X-Gm-Message-State: AOJu0YzjmEz+erJz/mm0tBQz5ojzZnUpIdoF4pbRvRVWQ9tg4peGw1ox
-	sDDr8SAEFlCfUU9SCCat1b+XHmyaFMhJKy2ifKWFW0jAD8taCpB1+KdbpLHqW7287ZXu6EqdUDY
-	uBnG2eo5kAow1EkRkLN+uSusmEDOVDQnTHLrHYeQG
-X-Received: by 2002:a05:6a20:1604:b0:190:3b35:5999 with SMTP id l4-20020a056a20160400b001903b355999mr6160570pzj.9.1702302395309;
-        Mon, 11 Dec 2023 05:46:35 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHz/VpW74q862C/8B1Zq9q8sq1pAy3bkDkccmDflRYHJXOso3iqCrr4R+jnoGZVXq44EchwL0IzwxnZXOgg+J8=
-X-Received: by 2002:a05:6a20:1604:b0:190:3b35:5999 with SMTP id
- l4-20020a056a20160400b001903b355999mr6160548pzj.9.1702302394991; Mon, 11 Dec
- 2023 05:46:34 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Spk8c17vXz3020
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 01:07:26 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Spk8N0qSwz4f3kFg
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:16 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 8A4C11A0858
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Dec 2023 22:07:18 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgDn6xGTF3dlDYFxDQ--.28013S4;
+	Mon, 11 Dec 2023 22:07:17 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	roger.pau@citrix.com,
+	colyli@suse.de,
+	kent.overstreet@gmail.com,
+	joern@lazybastard.org,
+	miquel.raynal@bootlin.com,
+	richard@nod.at,
+	vigneshr@ti.com,
+	sth@linux.ibm.com,
+	hoeppner@linux.ibm.com,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	jejb@linux.ibm.com,
+	martin.petersen@oracle.com,
+	clm@fb.com,
+	josef@toxicpanda.com,
+	dsterba@suse.com,
+	viro@zeniv.linux.org.uk,
+	brauner@kernel.org,
+	nico@fluxnic.net,
+	xiang@kernel.org,
+	chao@kernel.org,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	agruenba@redhat.com,
+	jack@suse.com,
+	konishi.ryusuke@gmail.com,
+	willy@infradead.org,
+	akpm@linux-foundation.org,
+	p.raghav@samsung.com,
+	hare@suse.de
+Subject: [PATCH RFC v2 for-6.8/block 00/18] block: don't access bd_inode directly from other modules
+Date: Mon, 11 Dec 2023 22:05:34 +0800
+Message-Id: <20231211140552.973290-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-From: Eric Curtin <ecurtin@redhat.com>
-Date: Mon, 11 Dec 2023 13:45:58 +0000
-Message-ID: <CAOgh=Fwb+JCTQ-iqzjq8st9qbvauxc4gqqafjWG2Xc08MeBabQ@mail.gmail.com>
-Subject: [RFC KERNEL] initoverlayfs - a scalable initial filesystem
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-unionfs@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgDn6xGTF3dlDYFxDQ--.28013S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxXr48Ww4Utw47JFWDWFW7Arb_yoW5XFWfpr
+	13KF4fGr1UWryxZaya9a17tw1rG3WkGayUWFnIy34rZFW5AryfZrWktF1rJa4kXryxXr4k
+	Xw17JryrKr1jgaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvF14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4U
+	JwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	fUojjgUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -88,88 +93,84 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Colin Walters <walters@redhat.com>, Lokesh Mandvekar <lmandvek@redhat.com>, Stephen Smoogen <ssmoogen@redhat.com>, Yariv Rachmani <yrachman@redhat.com>, Brian Masney <bmasney@redhat.com>, Daniel Walsh <dwalsh@redhat.com>, Daan De Meyer <daan.j.demeyer@gmail.com>, Pavol Brilla <pbrilla@redhat.com>, Eric Chanudet <echanude@redhat.com>, Alexander Larsson <alexl@redhat.com>, Lennart Poettering <lennart@poettering.net>, Neal Gompa <neal@gompa.dev>, Douglas Landgraf <dlandgra@redhat.com>, Luca Boccassi <bluca@debian.org>, =?UTF-8?B?UGV0ciDFoGFiYXRh?= <psabata@redhat.com>
+Cc: linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, gfs2@lists.linux.dev, linux-scsi@vger.kernel.org, yukuai1@huaweicloud.com, yangerkun@huawei.com, yi.zhang@huawei.com, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcachefs@vger.kernel.org, linux-bcache@vger.kernel.org, linux-mtd@lists.infradead.org, yukuai3@huawei.com, linux-fsdevel@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi All,
+From: Yu Kuai <yukuai3@huawei.com>
 
-We have recently been working on something called initoverlayfs, which
-we sent an RFC email to the systemd and dracut mailing lists to gather
-feedback. This is an exploratory email as we are unsure if a solution
-like this fits in userspace or kernelspace and we would like to gather
-feedback from the community.
+Changes in v2:
+ - remove some bdev apis that is not necessary;
+ - pass in offset for bdev_read_folio() and __bdev_get_folio();
+ - remove bdev_gfp_constraint() and add a new helper in fs/buffer.c to
+ prevent access bd_indoe() directly from mapping_gfp_constraint() in
+ ext4.(patch 15, 16);
+ - remove block_device_ejected() from ext4.
 
-To describe this briefly, the idea is to use erofs+overlayfs as an
-initial filesystem rather than an initramfs. The benefits are, we can
-start userspace significantly faster as we do not have to unpack,
-decompress and populate a tmpfs upfront, instead we can rely on
-transparent decompression like lz4hc instead. What we believe is the
-greater benefit, is that we can have less fear of initial filesystem
-bloat, as when you are using transparent decompression you only pay
-for decompressing the bytes you actually use.
+Noted that following is not changed yet since v1:
+- Chirstoph suggested to remove invalidate_inode_pages2() from
+xen_update_blkif_status(), however, this sync_bdev() + invalidate_bdev()
+is used from many modules, and I'll leave this for later if we want to
+kill all of them.
+- Matthew suggested that pass in valid file_ra_state for cramfs,
+however, I don't see an easy way to do this for cramfs_lookup() and
+cramfs_read_super().
 
-We implemented the first version of this, by creating a small
-initramfs that only contains storage drivers, udev and a couple of 100
-lines of C code, just enough userspace to mount an erofs with
-transient overlay. Then we build a second initramfs which has all the
-contents of a normal everyday initramfs with all the bells and
-whistles and convert this into an erofs.
+Patch 1 add some bdev apis, then follow up patches will use these apis
+to avoid access bd_inode directly, and hopefully the field bd_inode can
+be removed eventually(after figure out a way for fs/buffer.c).
 
-Then at boot time you basically transition to this erofs+overlayfs in
-userspace and everything works as normal as it would in a traditional
-initramfs.
+Yu Kuai (18):
+  block: add some bdev apis
+  xen/blkback: use bdev api in xen_update_blkif_status()
+  bcache: use bdev api in read_super()
+  mtd: block2mtd: use bdev apis
+  s390/dasd: use bdev api in dasd_format()
+  scsicam: use bdev api in scsi_bios_ptable()
+  bcachefs: remove dead function bdev_sectors()
+  bio: export bio_add_folio_nofail()
+  btrfs: use bdev apis
+  cramfs: use bdev apis in cramfs_blkdev_read()
+  erofs: use bdev api
+  gfs2: use bdev api
+  nilfs2: use bdev api in nilfs_attach_log_writer()
+  jbd2: use bdev apis
+  buffer: add a new helper to read sb block
+  ext4: use new helper to read sb block
+  ext4: remove block_device_ejected()
+  ext4: use bdev apis
 
-The current implementation looks like this:
+ block/bdev.c                       | 70 ++++++++++++++++++++++++++
+ block/bio.c                        |  1 +
+ block/blk.h                        |  2 -
+ drivers/block/xen-blkback/xenbus.c |  3 +-
+ drivers/md/bcache/super.c          | 11 ++--
+ drivers/mtd/devices/block2mtd.c    | 81 +++++++++++++-----------------
+ drivers/s390/block/dasd_ioctl.c    |  5 +-
+ drivers/scsi/scsicam.c             |  4 +-
+ fs/bcachefs/util.h                 |  5 --
+ fs/btrfs/disk-io.c                 | 71 ++++++++++++--------------
+ fs/btrfs/volumes.c                 | 17 +++----
+ fs/btrfs/zoned.c                   | 15 +++---
+ fs/buffer.c                        | 68 +++++++++++++++++--------
+ fs/cramfs/inode.c                  | 36 +++++--------
+ fs/erofs/data.c                    | 18 ++++---
+ fs/erofs/internal.h                |  2 +
+ fs/ext4/dir.c                      |  6 +--
+ fs/ext4/ext4.h                     | 13 -----
+ fs/ext4/ext4_jbd2.c                |  6 +--
+ fs/ext4/inode.c                    |  8 +--
+ fs/ext4/super.c                    | 66 ++++--------------------
+ fs/ext4/symlink.c                  |  2 +-
+ fs/gfs2/glock.c                    |  2 +-
+ fs/gfs2/ops_fstype.c               |  2 +-
+ fs/jbd2/journal.c                  |  3 +-
+ fs/jbd2/recovery.c                 |  6 +--
+ fs/nilfs2/segment.c                |  2 +-
+ include/linux/blkdev.h             | 17 +++++++
+ include/linux/buffer_head.h        | 18 ++++++-
+ 29 files changed, 301 insertions(+), 259 deletions(-)
 
-```
-From the filesystem perspective (roughly):
-
-fw -> bootloader -> kernel -> mini-initramfs -> initoverlayfs -> rootfs
-
-From the process perspective (roughly):
-
-fw -> bootloader -> kernel -> storage-init   -> init ----------------->
-```
-
-But we have been asking the question whether we should be implementing
-this in kernelspace so it looks more like:
-
-```
-From the filesystem perspective (roughly):
-
-fw -> bootloader -> kernel -> initoverlayfs -> rootfs
-
-From the process perspective (roughly):
-
-fw -> bootloader -> kernel -> init ----------------->
-```
-
-The kind of questions we are asking are: Would it be possible to
-implement this in kernelspace so we could just mount the initial
-filesystem data as an erofs+overlayfs filesystem without unpacking,
-decompressing, copying the data to a tmpfs, etc.? Could we memmap the
-initramfs buffer and mount it like an erofs? What other considerations
-should be taken into account?
-
-Echo'ing Lennart we must also "keep in mind from the beginning how
-authentication of every component of your process shall work" as
-that's essential to a couple of different Linux distributions today.
-
-We kept this email short because we want people to read it and avoid
-duplicating information from elsewhere. The effort is described from
-different perspectives in the systemd/dracut RFC email and github
-README.md if you'd like to learn more, it's worth reading the
-discussion in the systemd mailing list:
-
-https://marc.info/?l=systemd-devel&m=170214639006704&w=2
-
-https://github.com/containers/initoverlayfs/blob/main/README.md
-
-We also received feedback informally in the community that it would be
-nice if we could optionally use btrfs as an alternative.
-
-Is mise le meas/Regards,
-
-Eric Curtin
+-- 
+2.39.2
 
