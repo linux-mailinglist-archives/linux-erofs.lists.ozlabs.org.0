@@ -1,38 +1,62 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1850280E077
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 01:51:18 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 608BA80E0CD
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 02:25:44 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Sq0RQ5Xwlz3bd6
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 11:51:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Sq1C94fPfz30PH
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 12:25:41 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sq0RJ6Xs6z2ywC
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 11:51:06 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0VyKKeJX_1702342257;
-Received: from 192.168.71.57(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VyKKeJX_1702342257)
-          by smtp.aliyun-inc.com;
-          Tue, 12 Dec 2023 08:50:59 +0800
-Message-ID: <941aff31-6aa4-4c37-bb94-547c46250304@linux.alibaba.com>
-Date: Tue, 12 Dec 2023 08:50:56 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sq1C51XBhz2yDS
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 12:25:34 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Sq1Bq1qXPz4f3lCm
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 09:25:23 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 2C8221A07EA
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 09:25:28 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgDn6hCEtndlu5ydDQ--.58697S3;
+	Tue, 12 Dec 2023 09:25:27 +0800 (CST)
+Subject: Re: [PATCH RFC v2 for-6.8/block 01/18] block: add some bdev apis
+To: Jan Kara <jack@suse.cz>, Yu Kuai <yukuai1@huaweicloud.com>
+References: <20231211140552.973290-1-yukuai1@huaweicloud.com>
+ <20231211140552.973290-2-yukuai1@huaweicloud.com>
+ <20231211165217.fil437byq7w2vcp7@quack3>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <7d2bfa29-f93d-def2-80a3-72af063b36b3@huaweicloud.com>
+Date: Tue, 12 Dec 2023 09:25:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC KERNEL] initoverlayfs - a scalable initial filesystem
-To: Eric Curtin <ecurtin@redhat.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linux-unionfs@vger.kernel.org, linux-erofs@lists.ozlabs.org
-References: <CAOgh=Fwb+JCTQ-iqzjq8st9qbvauxc4gqqafjWG2Xc08MeBabQ@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAOgh=Fwb+JCTQ-iqzjq8st9qbvauxc4gqqafjWG2Xc08MeBabQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20231211165217.fil437byq7w2vcp7@quack3>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgDn6hCEtndlu5ydDQ--.58697S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF4fJw47CF1rCry7Ww4DJwb_yoWfGrc_ZF
+	nakrWkWw1fJa18Kr4qyFs0vr1kWayrWr42vry8tanrX3yrXa92kFsrKr1Fkr45G3yqkrnx
+	uFn2gFyxJr10qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbaxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWrXVW8Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j
+	6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x0JUd8n5UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -44,122 +68,41 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: nvdimm@lists.linux.dev, Colin Walters <walters@redhat.com>, Lokesh Mandvekar <lmandvek@redhat.com>, Stephen Smoogen <ssmoogen@redhat.com>, Yariv Rachmani <yrachman@redhat.com>, Brian Masney <bmasney@redhat.com>, Daniel Walsh <dwalsh@redhat.com>, Daan De Meyer <daan.j.demeyer@gmail.com>, Pavol Brilla <pbrilla@redhat.com>, Eric Chanudet <echanude@redhat.com>, Alexander Larsson <alexl@redhat.com>, Lennart Poettering <lennart@poettering.net>, Neal Gompa <neal@gompa.dev>, Douglas Landgraf <dlandgra@redhat.com>, Luca Boccassi <bluca@debian.org>, =?UTF-8?Q?Petr_=C5=A0abata?= <psabata@redhat.com>
+Cc: hoeppner@linux.ibm.com, vigneshr@ti.com, yi.zhang@huawei.com, gfs2@lists.linux.dev, clm@fb.com, adilger.kernel@dilger.ca, miquel.raynal@bootlin.com, agordeev@linux.ibm.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, agruenba@redhat.com, linux-scsi@vger.kernel.org, richard@nod.at, willy@infradead.org, linux-bcachefs@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, jejb@linux.ibm.com, p.raghav@samsung.com, gor@linux.ibm.com, hca@linux.ibm.com, joern@lazybastard.org, josef@toxicpanda.com, colyli@suse.de, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, viro@zeniv.linux.org.uk, "yukuai \(C\)" <yukuai3@huawei.com>, dsterba@suse.com, konishi.ryusuke@gmail.com, axboe@kernel.dk, brauner@kernel.org, tytso@mit.edu, martin.petersen@oracle.com, nico@fluxnic.net, yangerkun@huawei.com, linux-kernel@vger.kernel.org, kent.overstreet@gmail.com, hare@suse.de, jack@suse.com, linux-fsdevel@vger.kernel.org, linux-mtd@lists.infradead.org, akpm@linux-
+ foundation.org, roger.pau@citrix.com, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, sth@linux.ibm.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 Hi,
 
-On 2023/12/11 21:45, Eric Curtin wrote:
-> Hi All,
+ÔÚ 2023/12/12 0:52, Jan Kara Ð´µÀ:
+> On Mon 11-12-23 22:05:35, Yu Kuai wrote:
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> Those apis will be used for other modules, so that bd_inode won't be
+>> accessed directly from other modules.
+>>
+>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 > 
-> We have recently been working on something called initoverlayfs, which
-> we sent an RFC email to the systemd and dracut mailing lists to gather
-> feedback. This is an exploratory email as we are unsure if a solution
-> like this fits in userspace or kernelspace and we would like to gather
-> feedback from the community.
+> ...
 > 
-> To describe this briefly, the idea is to use erofs+overlayfs as an
-> initial filesystem rather than an initramfs. The benefits are, we can
-> start userspace significantly faster as we do not have to unpack,
-> decompress and populate a tmpfs upfront, instead we can rely on
-> transparent decompression like lz4hc instead. What we believe is the
-> greater benefit, is that we can have less fear of initial filesystem
-> bloat, as when you are using transparent decompression you only pay
-> for decompressing the bytes you actually use.
+>> +void bdev_associated_mapping(struct block_device *bdev,
+>> +			     struct address_space *mapping)
+>> +{
+>> +	mapping->host = bdev->bd_inode;
+>> +}
 > 
-> We implemented the first version of this, by creating a small
-> initramfs that only contains storage drivers, udev and a couple of 100
-> lines of C code, just enough userspace to mount an erofs with
-> transient overlay. Then we build a second initramfs which has all the
-> contents of a normal everyday initramfs with all the bells and
-> whistles and convert this into an erofs.
-> 
-> Then at boot time you basically transition to this erofs+overlayfs in
-> userspace and everything works as normal as it would in a traditional
-> initramfs.
-> 
-> The current implementation looks like this:
-> 
-> ```
->  From the filesystem perspective (roughly):
-> 
-> fw -> bootloader -> kernel -> mini-initramfs -> initoverlayfs -> rootfs
-> 
->  From the process perspective (roughly):
-> 
-> fw -> bootloader -> kernel -> storage-init   -> init ----------------->
-> ```
-> 
-> But we have been asking the question whether we should be implementing
-> this in kernelspace so it looks more like:
-> 
-> ```
->  From the filesystem perspective (roughly):
-> 
-> fw -> bootloader -> kernel -> initoverlayfs -> rootfs
-> 
->  From the process perspective (roughly):
-> 
-> fw -> bootloader -> kernel -> init ----------------->
-> ```
-> 
-> The kind of questions we are asking are: Would it be possible to
-> implement this in kernelspace so we could just mount the initial
-> filesystem data as an erofs+overlayfs filesystem without unpacking,
-> decompressing, copying the data to a tmpfs, etc.? Could we memmap the
-> initramfs buffer and mount it like an erofs? What other considerations
-> should be taken into account?
+> Here I'm not sure - is the helper really a win? It seems a bit obscure to
+> me. This initialization of another mapping for a bdev looks really special.
 
-Since Linux 5.15, EROFS has supported FSDAX feature so that it can
-mount from persistent memory devices with `-o dax`.
-
-That is already used for virtualization cases like VM rootfs and
-container image passthrough with virtio-pmem [1] to share page cache
-memory between host and guest.
-
-For non-virtualization cases, I guess you could try to use `memmap`
-kernel option [2] to specify a memory region by bootloaders which
-contains an EROFS rootfs and a customized init for booting as
-erofs+overlayfs at least for `initoverlayfs`.  The main benefit is
-that the memory region specified by the bootloader can be directly
-used for mounting.  But I never tried if this option actually works.
-
-Furthermore, compared to traditional ramdisks, using direct address
-can avoid page cache totally for uncompressed files like it can
-just use unencoded data as mmaped memory.  For compressed files, it
-still needs page cache to support mmaped access but we could adapt
-more for persistent memory scenarios such as disable cache
-decompression compared to previous block devices.
-
-I'm not sure if it's worth implementing this in kernelspace since
-it's out of scope of an individual filesystem anyway.
-
-[1] https://www.qemu.org/docs/master/system/devices/virtio-pmem.html
-[2] https://docs.pmem.io/persistent-memory/getting-started-guide/creating-development-environments/linux-environments/linux-memmap
+Yes, I don't like this helper at all, but gfs2 is used this way, and I
+need this helper to remove 'bd_inode' from block_devcie later. I'm not
+familiar with gfs2 at all but perhaps it worth to dig deeper and figure
+out a proper way for gfs2.
 
 Thanks,
-Gao Xiang
+Kuai
+> 
+> 								Honza
+> 
 
-> 
-> Echo'ing Lennart we must also "keep in mind from the beginning how
-> authentication of every component of your process shall work" as
-> that's essential to a couple of different Linux distributions today.
-> 
-> We kept this email short because we want people to read it and avoid
-> duplicating information from elsewhere. The effort is described from
-> different perspectives in the systemd/dracut RFC email and github
-> README.md if you'd like to learn more, it's worth reading the
-> discussion in the systemd mailing list:
-> 
-> https://marc.info/?l=systemd-devel&m=170214639006704&w=2
-> 
-> https://github.com/containers/initoverlayfs/blob/main/README.md
-> 
-> We also received feedback informally in the community that it would be
-> nice if we could optionally use btrfs as an alternative.
-> 
-> Is mise le meas/Regards,
-> 
-> Eric Curtin
-> 
