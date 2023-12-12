@@ -1,37 +1,36 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C46380E9A0
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 12:08:31 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21B5580EB28
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 13:01:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SqG7Y50xJz3bxZ
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 22:08:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SqHJt4sYLz3bq4
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 23:01:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=lyy0627@sjtu.edu.cn; receiver=lists.ozlabs.org)
+X-Greylist: delayed 340 seconds by postgrey-1.37 at boromir; Tue, 12 Dec 2023 23:01:29 AEDT
+Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SqG7P5zQKz3bbW
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 22:08:14 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0VyMDz4f_1702379285;
-Received: from 30.97.49.22(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VyMDz4f_1702379285)
-          by smtp.aliyun-inc.com;
-          Tue, 12 Dec 2023 19:08:06 +0800
-Message-ID: <6d4a8db8-0930-4792-862f-e7fc59093387@linux.alibaba.com>
-Date: Tue, 12 Dec 2023 19:08:04 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SqHJn1HwLz3bpp
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 23:01:27 +1100 (AEDT)
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 6AAED1009A7CF
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 19:55:44 +0800 (CST)
+Received: from lee-WorkStation.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 2504A380C85;
+	Tue, 12 Dec 2023 19:55:07 +0800 (CST)
+From: Li Yiyan <lyy0627@sjtu.edu.cn>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2] erofs-utils: fuse: support FUSE 2/3 multi-thread
+Date: Tue, 12 Dec 2023 19:54:27 +0800
+Message-Id: <20231212115427.2779792-1-lyy0627@sjtu.edu.cn>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] erofs-utils: fuse: support FUSE 2/3 multi-threading
-To: Li Yiyan <mail.sjtu.edu.cn@proxy188.sjtu.edu.cn>,
- linux-erofs@lists.ozlabs.org
-References: <20231212073828.2623270-1-user@lee-WorkStation>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20231212073828.2623270-1-user@lee-WorkStation>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,85 +45,75 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Support multi-threading for erofsfuse and adjust the configure.ac
+to allow users of FUSE 3(> 3.2) to use API version 32, while maintaining
+compatibility with API version 30 for FUSE 3 (3.0/3.1) and API version
+26 for FUSE 2.
 
+Signed-off-by: Li Yiyan <lyy0627@sjtu.edu.cn>
+---
+ configure.ac |  8 +++++++-
+ fuse/main.c  | 21 +++++++++++++++++++--
+ 2 files changed, 26 insertions(+), 3 deletions(-)
 
-On 2023/12/12 15:38, Li Yiyan wrote:
-> From: Li Yiyan <lyy0627@sjtu.edu.cn>
-> 
-> Introduce multi-threading support for FUSE and adjust the configure.ac
-> to allow users of FUSE 3(> 3.2) to use API version 32, while maintaining
-> compatibility with API version 30 for FUSE 3 (3.0/3.1) and API version
-> 26 for FUSE 2.
-> 
-> Signed-off-by: Li Yiyan <lyy0627@sjtu.edu.cn>> ---
->   configure.ac |  8 +++++++-
->   fuse/main.c  | 19 +++++++++++++++++--
->   2 files changed, 24 insertions(+), 3 deletions(-)
-> 
-> diff --git a/configure.ac b/configure.ac
-> index 9294e0c..bf6e99f 100644
-> --- a/configure.ac
-> +++ b/configure.ac
-> @@ -343,7 +343,13 @@ AS_IF([test "x$enable_fuse" != "xno"], [
->     saved_LIBS="$LIBS"
->     saved_CPPFLAGS=${CPPFLAGS}
->     PKG_CHECK_MODULES([libfuse3], [fuse3 >= 3.0], [
-> -    AC_DEFINE([FUSE_USE_VERSION], [30], [used FUSE API version])
-> +    PKG_CHECK_MODULES([libfuse3_0], [fuse3 >= 3.0 fuse3 < 3.2], [
-> +      AC_DEFINE([FUSE_USE_VERSION], [30], [used FUSE API version])
-> +    ], [
-> +      PKG_CHECK_MODULES([libfuse3_2], [fuse3 >= 3.2], [
-> +        AC_DEFINE([FUSE_USE_VERSION], [32], [used FUSE API version])
-> +      ])
-> +    ])
->       CPPFLAGS="${libfuse3_CFLAGS} ${CPPFLAGS}"
->       LIBS="${libfuse3_LIBS} $LIBS"
->       AC_CHECK_LIB(fuse3, fuse_session_new, [], [
-> diff --git a/fuse/main.c b/fuse/main.c
-> index f07165c..77b2d50 100644
-> --- a/fuse/main.c
-> +++ b/fuse/main.c
-> @@ -699,7 +699,19 @@ int main(int argc, char *argv[])
->   		EROFSFUSE_MOUNT_MSG
->   		if (fuse_daemonize(opts.foreground) >= 0) {
->   			if (fuse_set_signal_handlers(se) >= 0) {
-> -				ret = fuse_session_loop(se);
-> +				if (opts.singlethread) {
-> +					ret = fuse_session_loop(se);
-> +				} else {
-> +#if FUSE_MINOR_VERSION < 2
+diff --git a/configure.ac b/configure.ac
+index 9294e0c..bf6e99f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -343,7 +343,13 @@ AS_IF([test "x$enable_fuse" != "xno"], [
+   saved_LIBS="$LIBS"
+   saved_CPPFLAGS=${CPPFLAGS}
+   PKG_CHECK_MODULES([libfuse3], [fuse3 >= 3.0], [
+-    AC_DEFINE([FUSE_USE_VERSION], [30], [used FUSE API version])
++    PKG_CHECK_MODULES([libfuse3_0], [fuse3 >= 3.0 fuse3 < 3.2], [
++      AC_DEFINE([FUSE_USE_VERSION], [30], [used FUSE API version])
++    ], [
++      PKG_CHECK_MODULES([libfuse3_2], [fuse3 >= 3.2], [
++        AC_DEFINE([FUSE_USE_VERSION], [32], [used FUSE API version])
++      ])
++    ])
+     CPPFLAGS="${libfuse3_CFLAGS} ${CPPFLAGS}"
+     LIBS="${libfuse3_LIBS} $LIBS"
+     AC_CHECK_LIB(fuse3, fuse_session_new, [], [
+diff --git a/fuse/main.c b/fuse/main.c
+index f07165c..32f59a3 100644
+--- a/fuse/main.c
++++ b/fuse/main.c
+@@ -699,7 +699,21 @@ int main(int argc, char *argv[])
+ 		EROFSFUSE_MOUNT_MSG
+ 		if (fuse_daemonize(opts.foreground) >= 0) {
+ 			if (fuse_set_signal_handlers(se) >= 0) {
+-				ret = fuse_session_loop(se);
++				if (opts.singlethread) {
++					ret = fuse_session_loop(se);
++				} else {
++#if FUSE_USE_VERSION == 30
++					ret = fuse_session_loop_mt(se, opts.clone_fd);
++#elif FUSE_USE_VERSION == 32
++					struct fuse_loop_config config = {
++						.clone_fd = opts.clone_fd,
++						.max_idle_threads = opts.max_idle_threads
++					};
++					ret = fuse_session_loop_mt(se, &config);
++#else
++#error "FUSE_USE_VERSION not supported"
++#endif
++				}
+ 				fuse_remove_signal_handlers(se);
+ 			}
+ 			fuse_session_unmount(se);
+@@ -717,7 +731,10 @@ int main(int argc, char *argv[])
+ 		if (fuse_daemonize(opts.foreground) != -1) {
+ 			if (fuse_set_signal_handlers(se) != -1) {
+ 				fuse_session_add_chan(se, ch);
+-				ret = fuse_session_loop(se);
++				if (opts.mt)
++					ret = fuse_session_loop_mt(se);
++				else
++					ret = fuse_session_loop(se);
+ 				fuse_remove_signal_handlers(se);
+ 				fuse_session_remove_chan(ch);
+ 			}
+-- 
+2.34.1
 
-Can we check FUSE_USE_VERSION directly?
-if FUSE_USE_VERSION is neither 30 or 32, let's raise a build error with
-
-#error unsupported FUSE_USE_VERSION
-
-instead.
-
-Thanks,
-Gao Xiang
-
-> +					ret = fuse_session_loop_mt(se, opts.clone_fd);
-> +#else
-> +					struct fuse_loop_config config = {
-> +						.clone_fd = opts.clone_fd,
-> +						.max_idle_threads = opts.max_idle_threads
-> +					};
-> +					ret = fuse_session_loop_mt(se, &config);
-> +#endif
-> +				}
->   				fuse_remove_signal_handlers(se);
->   			}
->   			fuse_session_unmount(se);
-> @@ -717,7 +729,10 @@ int main(int argc, char *argv[])
->   		if (fuse_daemonize(opts.foreground) != -1) {
->   			if (fuse_set_signal_handlers(se) != -1) {
->   				fuse_session_add_chan(se, ch);
-> -				ret = fuse_session_loop(se);
-> +				if (opts.mt)
-> +					ret = fuse_session_loop_mt(se);
-> +				else
-> +					ret = fuse_session_loop(se);
->   				fuse_remove_signal_handlers(se);
->   				fuse_session_remove_chan(ch);
->   			}
