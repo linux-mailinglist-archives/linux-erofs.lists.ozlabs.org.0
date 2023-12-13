@@ -1,88 +1,62 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4676680F905
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Dec 2023 22:18:27 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Cg4M+oo5;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Cg4M+oo5;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF25A810753
+	for <lists+linux-erofs@lfdr.de>; Wed, 13 Dec 2023 02:09:37 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SqWgN5CNlz3bTn
-	for <lists+linux-erofs@lfdr.de>; Wed, 13 Dec 2023 08:18:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Sqcp65f5kz3bt2
+	for <lists+linux-erofs@lfdr.de>; Wed, 13 Dec 2023 12:09:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Cg4M+oo5;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Cg4M+oo5;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=ecurtin@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SqWgC5ybWz2ykZ
-	for <linux-erofs@lists.ozlabs.org>; Wed, 13 Dec 2023 08:18:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702415889;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G0WO36JLXIv5AaAr7yVxA4KjLJZuBfSjRiR5T6MWPYU=;
-	b=Cg4M+oo5St/YzM0hIx8Mx6CIpuDTebAXspCV1MaMeB0e/zfXvPGMb2OsKNKx1EuVpwzGiE
-	LKhVwSdueKf6qbccrvjtm/iPy5ZqgCGJDp2UJPLdEc8GDic3VgogdSnHUyQ0RYuCzZeEAR
-	1S6k2qMdabU5xF+dYKAkPfmNZZx7V7s=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702415889;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=G0WO36JLXIv5AaAr7yVxA4KjLJZuBfSjRiR5T6MWPYU=;
-	b=Cg4M+oo5St/YzM0hIx8Mx6CIpuDTebAXspCV1MaMeB0e/zfXvPGMb2OsKNKx1EuVpwzGiE
-	LKhVwSdueKf6qbccrvjtm/iPy5ZqgCGJDp2UJPLdEc8GDic3VgogdSnHUyQ0RYuCzZeEAR
-	1S6k2qMdabU5xF+dYKAkPfmNZZx7V7s=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-609-EzCD-BOrOBKN1O4e6pFqCg-1; Tue, 12 Dec 2023 16:18:07 -0500
-X-MC-Unique: EzCD-BOrOBKN1O4e6pFqCg-1
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-5c668b87db3so2829825a12.3
-        for <linux-erofs@lists.ozlabs.org>; Tue, 12 Dec 2023 13:18:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702415886; x=1703020686;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G0WO36JLXIv5AaAr7yVxA4KjLJZuBfSjRiR5T6MWPYU=;
-        b=ZwJXNAgQljtRYuyWklG7hPDHhq0fWFh7idA4L634QCbSSEdLaOZLjNxkwSOHt6Y/Wx
-         nRvfHuk0ctGf32edWhomVYbZmcYAwfGAaCbP7z1meb6L+M4kBS02NrJsfOZN7qlaBqgT
-         fnmxlXEf1mbNn7NCilP1ch4A4hx4pGFjVe0/pJR45AkLy7iLQOR87CNXrtExiceHcRSP
-         dltTDX0GGLdk2LeItoDS1HFOzXxxTRmPpbIK28boNbmfTz+ucfS6BhuNjdqKiZ+a/WEu
-         cAjMX61ySaD6bCm3SbZRRj1IS4qMeB4cvlbIsDNxBtanqcZP59ViqLUrsxeMHkwLEnrO
-         noKw==
-X-Gm-Message-State: AOJu0YyzYMb2SjABlPFcXZEOd+Lj+vPt2hSqZeMfGI1eDho4CZZ2njIo
-	oHyRdJ0JIiTISlx0XNAbuhlH3rddmaZd9/5984DazYxzVKfrkUfbSGivjmPusK0snUQgUeLYmtk
-	wK9lmnc+nQ1i03kmjhFBCTIfF7LOhj4WTyzld47Ro
-X-Received: by 2002:a05:6a21:a5a4:b0:18f:fcc5:4c4f with SMTP id gd36-20020a056a21a5a400b0018ffcc54c4fmr3324485pzc.40.1702415886583;
-        Tue, 12 Dec 2023 13:18:06 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGaBUhsIKPiauenUWhA450tnBxmPri38tJ3FEk9h3f5UdGgkVU3xuISSVrM65CvHBeTYR1IOqNO0hPKmoRXyW0=
-X-Received: by 2002:a05:6a21:a5a4:b0:18f:fcc5:4c4f with SMTP id
- gd36-20020a056a21a5a400b0018ffcc54c4fmr3324464pzc.40.1702415886268; Tue, 12
- Dec 2023 13:18:06 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sqcnz2JTtz307y
+	for <linux-erofs@lists.ozlabs.org>; Wed, 13 Dec 2023 12:09:25 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Sqcnk5d1Dz4f3jrl
+	for <linux-erofs@lists.ozlabs.org>; Wed, 13 Dec 2023 09:09:14 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 488C41A0720
+	for <linux-erofs@lists.ozlabs.org>; Wed, 13 Dec 2023 09:09:17 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgBntQs5BHllRkz5DQ--.6696S3;
+	Wed, 13 Dec 2023 09:09:16 +0800 (CST)
+Subject: Re: [PATCH RFC v2 for-6.8/block 01/18] block: add some bdev apis
+To: Christoph Hellwig <hch@infradead.org>, Yu Kuai <yukuai1@huaweicloud.com>
+References: <20231211140552.973290-1-yukuai1@huaweicloud.com>
+ <20231211140552.973290-2-yukuai1@huaweicloud.com>
+ <ZXhdRhfr+JoWdhyj@infradead.org>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <893e2764-65a6-ef73-5ddf-95cd9f97cb19@huaweicloud.com>
+Date: Wed, 13 Dec 2023 09:09:13 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CAOgh=Fwb+JCTQ-iqzjq8st9qbvauxc4gqqafjWG2Xc08MeBabQ@mail.gmail.com>
- <941aff31-6aa4-4c37-bb94-547c46250304@linux.alibaba.com> <ZXgNQ85PdUKrQU1j@infradead.org>
- <58d175f8-a06e-4b00-95fe-1bd5a79106df@linux.alibaba.com> <ZXha1IxzRfhsRNOu@infradead.org>
-In-Reply-To: <ZXha1IxzRfhsRNOu@infradead.org>
-From: Eric Curtin <ecurtin@redhat.com>
-Date: Tue, 12 Dec 2023 21:17:29 +0000
-Message-ID: <CAOgh=Fw2TcOFgCz1HbU1E=_HGRnf1PTTG2Qp_nD1D9f083RwUA@mail.gmail.com>
-Subject: Re: [RFC KERNEL] initoverlayfs - a scalable initial filesystem
-To: Christoph Hellwig <hch@infradead.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ZXhdRhfr+JoWdhyj@infradead.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgBntQs5BHllRkz5DQ--.6696S3
+X-Coremail-Antispam: 1UD129KBjvdXoW7Gw4fJw1rAF1UKF4fJrWDJwb_yoWfurcEqr
+	n7Cryv9w1jvws5Wr4UKFy5JrWrJFWYyr43Xay8ta4Iq3s8Xa18Ar92ka48uas8Ww47Z3ZI
+	9FsxuFy8uF4fujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbaxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWrXVW8Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j
+	6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x0JUd8n5UUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -94,36 +68,42 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: nvdimm@lists.linux.dev, Colin Walters <walters@redhat.com>, Lokesh Mandvekar <lmandvek@redhat.com>, Stephen Smoogen <ssmoogen@redhat.com>, Yariv Rachmani <yrachman@redhat.com>, Brian Masney <bmasney@redhat.com>, Daniel Walsh <dwalsh@redhat.com>, Daan De Meyer <daan.j.demeyer@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-unionfs@vger.kernel.org, Pavol Brilla <pbrilla@redhat.com>, Eric Chanudet <echanude@redhat.com>, Alexander Larsson <alexl@redhat.com>, Lennart Poettering <lennart@poettering.net>, Gao Xiang <hsiangkao@linux.alibaba.com>, Neal Gompa <neal@gompa.dev>, linux-erofs@lists.ozlabs.org, Douglas Landgraf <dlandgra@redhat.com>, Luca Boccassi <bluca@debian.org>, =?UTF-8?B?UGV0ciDFoGFiYXRh?= <psabata@redhat.com>
+Cc: hoeppner@linux.ibm.com, vigneshr@ti.com, yi.zhang@huawei.com, gfs2@lists.linux.dev, clm@fb.com, adilger.kernel@dilger.ca, miquel.raynal@bootlin.com, agordeev@linux.ibm.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, agruenba@redhat.com, linux-scsi@vger.kernel.org, richard@nod.at, willy@infradead.org, linux-bcachefs@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, jejb@linux.ibm.com, p.raghav@samsung.com, gor@linux.ibm.com, hca@linux.ibm.com, joern@lazybastard.org, josef@toxicpanda.com, colyli@suse.de, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, viro@zeniv.linux.org.uk, "yukuai \(C\)" <yukuai3@huawei.com>, dsterba@suse.com, konishi.ryusuke@gmail.com, axboe@kernel.dk, brauner@kernel.org, tytso@mit.edu, martin.petersen@oracle.com, nico@fluxnic.net, yangerkun@huawei.com, linux-kernel@vger.kernel.org, kent.overstreet@gmail.com, hare@suse.de, jack@suse.com, linux-fsdevel@vger.kernel.org, linux-mtd@lists.infradead.org, akpm@linux-
+ foundation.org, roger.pau@citrix.com, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, sth@linux.ibm.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, 12 Dec 2023 at 13:06, Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Tue, Dec 12, 2023 at 03:50:25PM +0800, Gao Xiang wrote:
-> > I have no idea how it's faster than the current initramfs or initrd.
-> > So if it's really useful, maybe some numbers can be posted first
-> > with the current `memmap` hack and see it's worth going further with
-> > some new infrastructure like initdax.
->
-> Agreed.
->
+Hi,
 
-I was politely poked this morning to highlight the graphs on the
-initoverlayfs page, so as promised highlighting. That's not to say
-this is either kernelspace's or userspace's role to optimize, but it
-does prove there are benefits if we put some effort into optimizing
-early boot.
+ÔÚ 2023/12/12 21:16, Christoph Hellwig Ð´µÀ:
+>> +void invalidate_bdev_range(struct block_device *bdev, pgoff_t start,
+>> +			   pgoff_t end)
+>> +{
+>> +	invalidate_mapping_pages(bdev->bd_inode->i_mapping, start, end);
+>> +}
+>> +EXPORT_SYMBOL_GPL(invalidate_bdev_range);
+> 
+> Can we have kerneldoc comments for the new helpers please?
 
-https://github.com/containers/initoverlayfs
+Of course, will definitely do this in v3.
+> 
+>> +struct folio *__bdev_get_folio(struct block_device *bdev, loff_t pos,
+>> +			       fgf_t fgp_flags, gfp_t gfp)
+>> +{
+>> +	return __filemap_get_folio(bdev->bd_inode->i_mapping, pos >> PAGE_SHIFT,
+>> +				   fgp_flags, gfp);
+>> +}
+>> +EXPORT_SYMBOL_GPL(__bdev_get_folio);
+> 
+> It's a bit silly to have a __-prefixed API without a version that
+> doesn't have the prefix, so I'd prefer to drop it.  Unless willy has
+> a good argument for keeping it the same as the filemap API.
 
-With this approach systemd starts ~300ms faster on a Raspberry Pi 4
-with sd card, and this systemd instance has access to all the files
-that a traditional initramfs would. I did this test on a Raspberry Pi
-4 with NVMe drive over USB and the results were closer to a 500ms
-benefit in systemd start time.
+Ok, I'll drop it if willy doesn't against this.
 
-Is mise le meas/Regards,
-
-Eric Curtin
+Thanks,
+Kuai
+> 
+> .
+> 
 
