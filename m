@@ -1,50 +1,51 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E168E8133B7
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Dec 2023 15:58:39 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4A7A8133BF
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Dec 2023 16:00:20 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=RaU+CPXo;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=GDqOhTht;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Srb8F4Fryz3cWZ
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Dec 2023 01:58:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SrbBB3XKyz3cX4
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Dec 2023 02:00:18 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=RaU+CPXo;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=GDqOhTht;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Srb8650CLz2ys9
-	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Dec 2023 01:58:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SrbB52ZZBz3cSN
+	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Dec 2023 02:00:13 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 68F54622D9;
-	Thu, 14 Dec 2023 14:58:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A8F9C433C7;
-	Thu, 14 Dec 2023 14:58:26 +0000 (UTC)
+	by sin.source.kernel.org (Postfix) with ESMTP id A259FCE24E2;
+	Thu, 14 Dec 2023 15:00:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E51C433C7;
+	Thu, 14 Dec 2023 15:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702565907;
-	bh=/j5RpnUqat3bbDoOL84/V1VSN9mfM9Jec656vpK3jhQ=;
+	s=k20201202; t=1702566007;
+	bh=1YjS65z8+/pfGjEqHXCMW75YMXrkf8CXxmJj2AiwZhY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RaU+CPXo2IzhNayKhhg0hj6kZ30rrEafQAKlLZmyUKlJ/yyiLYYKQTaiBVMH0w3MK
-	 GQSL+8jgZQsnUyq1AeKYxRBPzhl0iOzJduB9pjmLh6rUanDrU4g5Svvdq34ESOdJaL
-	 /iiHW5gLSopn7z05jJFmyyQeqFhDzywKAc6HIJhMZDSCEbPJhBbzdSFGg2Hu8vvPhT
-	 sBgeBIDTkee8fChStFnygpuuPJbN0jpYrMAYotvffCa9sJLZDrilMDzRusyPnSsXdL
-	 JxvHDKevYzm43XzChV3G1H++JmlCpoWrk/3vFcOKSLRAy/qUfhd6zxrwQ3iLuqxFHs
-	 WUu+VzKfWd+4g==
-Message-ID: <ba7f825f-9a58-4a24-9b87-bbb0addc856c@kernel.org>
-Date: Thu, 14 Dec 2023 22:58:24 +0800
+	b=GDqOhThtvGROp4PSSxZkUah0QZE7Q1Kt4vyNMFrncdliBFkCDDm4ETYYrzhQGljSb
+	 PRp4/AY678LS6VHo3sIj946k+urm3FyM5N5Y3a43+HfiF1JN3lz1uk29BbW7GoT+Dc
+	 Rn+a0eKilpL+LIfaz0lIgYEYzLIR0iEA7C+gdTEpB8aEm4BK7274NjegNcAYStnBQg
+	 uZfLhPxjreTASYzcKnQH7ilIroLmxWhjy9ANr5sBXcCEMgH8gzatHXxthEHDdLQrET
+	 gonsUNeJDQCVQBVj74M8MbEDnX8sQN+Cv5LXpSRdX/z2DFTvU5lzwLC0Uol30cRDJ9
+	 +tRRPm1PfDyzA==
+Message-ID: <47790c53-cfe0-4731-99d6-cd6ec2fec9be@kernel.org>
+Date: Thu, 14 Dec 2023 23:00:07 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] erofs: basic sub-page compressed data support
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20231206091057.87027-1-hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH v2] erofs: fix memory leak on short-lived bounced pages
 Content-Language: en-US
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <20231128175810.4105671-1-hsiangkao@linux.alibaba.com>
+ <20231128180431.4116991-1-hsiangkao@linux.alibaba.com>
 From: Chao Yu <chao@kernel.org>
 Autocrypt: addr=chao@kernel.org; keydata=
  xsFNBFYs6bUBEADJuxYGZRMvAEySns+DKVtVQRKDYcHlmj+s9is35mtlhrLyjm35FWJY099R
@@ -88,7 +89,7 @@ Autocrypt: addr=chao@kernel.org; keydata=
  92Qh98hAj3cMFKtEVbLKJvrc2AO+mQlS7zl1qWblEhpZnXi05S1AoT0gDW2lwe54VfT3ySon
  8Klpbp5W4eEoY21tLwuNzgUMxmycfM4GaJWNCncKuMT4qGVQO9SPFs0vgUrdBUC5Pn5ZJ46X
  mZA0DUz0S8BJtYGI0DUC/jAKhIgy1vAx39y7sAshwu2VILa71tXJ
-In-Reply-To: <20231206091057.87027-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20231128180431.4116991-1-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -106,47 +107,19 @@ Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2023/12/6 17:10, Gao Xiang wrote:
-> Hi folks,
+On 2023/11/29 2:04, Gao Xiang wrote:
+> Both MicroLZMA and DEFLATE algorithms can use short-lived pages on
+> demand for overlap inplace I/O decompression.
 > 
-> Recently, there are two new cases so that we need to add a preliminary
-> sub-page block support for compressed files;
+> However, those short-lived pages are actually added to
+> `be->compressed_pages`.  Thus, it should be checked instead of
+> `pcl->compressed_bvecs`.
 > 
->   - As Android folks requested, Android ecosystem itself is now switching
->     to 16k page size for their arm64 devices.  They needs an option of
->     4k-block image compatibility on their new 16k devices;
+> The LZ4 algorithm doesn't work like this, so it won't be impacted.
 > 
->   - Some arm64 cloud servers use 64k page size for their optimized
->     workloads, but 4k-block EROFS container images need to be parsed too.
-> 
-> So this patchset mainly addresses the requirements above with a very
-> very simple approach as a start: just allocate short-lived temporary
-> buffers all the time to keep compressed data if sub-page blocks are
-> identified.  In other words, no inplace/cache decompression for
-> the preliminary support.
-> 
-> This patchset survives EROFS stress test on my own testfarms.
-
-Looks good to me, feel free to add:
+> Fixes: 67139e36d970 ("erofs: introduce `z_erofs_parse_in_bvecs'")
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Chao Yu <chao@kernel.org>
 
 Thanks,
-
-> 
-> Thanks,
-> Gao Xiang
-> 
-> Gao Xiang (5):
->    erofs: support I/O submission for sub-page compressed blocks
->    erofs: record `pclustersize` in bytes instead of pages
->    erofs: fix up compacted indexes for block size < 4096
->    erofs: refine z_erofs_transform_plain() for sub-page block support
->    erofs: enable sub-page compressed block support
-> 
->   fs/erofs/decompressor.c |  81 +++++++++------
->   fs/erofs/inode.c        |   6 +-
->   fs/erofs/zdata.c        | 224 ++++++++++++++++++----------------------
->   fs/erofs/zmap.c         |  32 +++---
->   4 files changed, 169 insertions(+), 174 deletions(-)
-> 
