@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0D0381B10F
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Dec 2023 10:00:47 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 331E681B112
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Dec 2023 10:00:54 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Swkt53v8rz3cNl
-	for <lists+linux-erofs@lfdr.de>; Thu, 21 Dec 2023 20:00:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SwktC6cFhz3cQq
+	for <lists+linux-erofs@lfdr.de>; Thu, 21 Dec 2023 20:00:51 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
@@ -14,17 +14,17 @@ Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Swkt25t1hz2yk6
-	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Dec 2023 20:00:42 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Swksv4tgkz4f3js9
-	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Dec 2023 17:00:35 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Swkt85CTVz2yk6
+	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Dec 2023 20:00:48 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Swkt21BbWz4f3jMV
+	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Dec 2023 17:00:42 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 7A5161A0B74
-	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Dec 2023 17:00:38 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id EDEC21A09FE
+	for <linux-erofs@lists.ozlabs.org>; Thu, 21 Dec 2023 17:00:44 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDX2Q+0_oNldxrvEA--.33944S4;
-	Thu, 21 Dec 2023 17:00:38 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgBXpQu6_oNlNxzvEA--.33831S4;
+	Thu, 21 Dec 2023 17:00:44 +0800 (CST)
 From: Yu Kuai <yukuai1@huaweicloud.com>
 To: axboe@kernel.dk,
 	roger.pau@citrix.com,
@@ -57,31 +57,31 @@ To: axboe@kernel.dk,
 	akpm@linux-foundation.org,
 	hare@suse.de,
 	p.raghav@samsung.com
-Subject: [PATCH RFC v3 for-6.8/block 12/17] nilfs2: use bdev api in nilfs_attach_log_writer()
-Date: Thu, 21 Dec 2023 16:58:39 +0800
-Message-Id: <20231221085839.1768763-1-yukuai1@huaweicloud.com>
+Subject: [PATCH RFC v3 for-6.8/block 13/17] jbd2: use bdev apis
+Date: Thu, 21 Dec 2023 16:58:46 +0800
+Message-Id: <20231221085846.1768977-1-yukuai1@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231221085712.1766333-1-yukuai1@huaweicloud.com>
 References: <20231221085712.1766333-1-yukuai1@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgDX2Q+0_oNldxrvEA--.33944S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw1xCF4xArWfGFy7ArW3Awb_yoW3Gwc_Xr
-	n5JrykWrWYqFZ3uw4DurZ0yryrA3W8Ka18Jry0kFyrGF4IyFZ5Cr1qvr45tayUursrXwn3
-	W3ZrWrZ8tr1UXjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbxxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr1j
-	6rxdM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
-	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8Jr1l
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Cr1j6rxdMIIF0xvE42xK8VAvwI8IcIk0rVW8JVW3JwCI42IY6I8E87Iv67AKxVW8
-	JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26F4UJVW0obIYCTnIWIevJa73UjIFyTuYvjfUoL
-	0eDUUUU
+X-CM-TRANSID: cCh0CgBXpQu6_oNlNxzvEA--.33831S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7AryDWFWftF1xCw18GF4Uurg_yoW8ZFyrpr
+	yUGas8CrZFvrW8XF1kGF4kJrWjga40vayUCFnF93Z2yw4Svr1avw18Kr13GFyYvFWFga1U
+	Xr1jyay8Kw4YgFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1U
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26F4UJVW0owCI42IY6xAIw20EY4v20xvaj40_JFI_Gr1lIxAIcVC2z280aVAFwI0_
+	Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7VUb
+	Mq2tUUUUU==
 X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -105,22 +105,55 @@ block_device.
 
 Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- fs/nilfs2/segment.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jbd2/journal.c  | 3 +--
+ fs/jbd2/recovery.c | 6 ++----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nilfs2/segment.c b/fs/nilfs2/segment.c
-index 55e31cc903d1..a1130e384937 100644
---- a/fs/nilfs2/segment.c
-+++ b/fs/nilfs2/segment.c
-@@ -2823,7 +2823,7 @@ int nilfs_attach_log_writer(struct super_block *sb, struct nilfs_root *root)
- 	if (!nilfs->ns_writer)
- 		return -ENOMEM;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index ed53188472f9..f1b5ffeaf02a 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -2003,8 +2003,7 @@ static int __jbd2_journal_erase(journal_t *journal, unsigned int flags)
+ 		byte_count = (block_stop - block_start + 1) *
+ 				journal->j_blocksize;
  
--	inode_attach_wb(nilfs->ns_bdev->bd_inode, NULL);
-+	bdev_attach_wb(nilfs->ns_bdev);
+-		truncate_inode_pages_range(journal->j_dev->bd_inode->i_mapping,
+-				byte_start, byte_stop);
++		truncate_bdev_range(journal->j_dev, 0, byte_start, byte_stop);
  
- 	err = nilfs_segctor_start_thread(nilfs->ns_writer);
- 	if (unlikely(err))
+ 		if (flags & JBD2_JOURNAL_FLUSH_DISCARD) {
+ 			err = blkdev_issue_discard(journal->j_dev,
+diff --git a/fs/jbd2/recovery.c b/fs/jbd2/recovery.c
+index 01f744cb97a4..6b6a2c4585fa 100644
+--- a/fs/jbd2/recovery.c
++++ b/fs/jbd2/recovery.c
+@@ -290,7 +290,6 @@ int jbd2_journal_recover(journal_t *journal)
+ 
+ 	struct recovery_info	info;
+ 	errseq_t		wb_err;
+-	struct address_space	*mapping;
+ 
+ 	memset(&info, 0, sizeof(info));
+ 	sb = journal->j_superblock;
+@@ -309,8 +308,7 @@ int jbd2_journal_recover(journal_t *journal)
+ 	}
+ 
+ 	wb_err = 0;
+-	mapping = journal->j_fs_dev->bd_inode->i_mapping;
+-	errseq_check_and_advance(&mapping->wb_err, &wb_err);
++	bdev_wb_err_check_and_advance(journal->j_fs_dev, &wb_err);
+ 	err = do_one_pass(journal, &info, PASS_SCAN);
+ 	if (!err)
+ 		err = do_one_pass(journal, &info, PASS_REVOKE);
+@@ -334,7 +332,7 @@ int jbd2_journal_recover(journal_t *journal)
+ 	err2 = sync_blockdev(journal->j_fs_dev);
+ 	if (!err)
+ 		err = err2;
+-	err2 = errseq_check_and_advance(&mapping->wb_err, &wb_err);
++	err2 = bdev_wb_err_check_and_advance(journal->j_fs_dev, &wb_err);
+ 	if (!err)
+ 		err = err2;
+ 	/* Make sure all replayed data is on permanent storage */
 -- 
 2.39.2
 
