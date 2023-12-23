@@ -1,79 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8065B81CA71
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Dec 2023 14:02:32 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=KnVASD5X;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=KnVASD5X;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 106F881D202
+	for <lists+linux-erofs@lfdr.de>; Sat, 23 Dec 2023 04:55:24 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4SxSBZ12GQz3cR8
-	for <lists+linux-erofs@lfdr.de>; Sat, 23 Dec 2023 00:02:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Sxr0m6DjXz2xrD
+	for <lists+linux-erofs@lfdr.de>; Sat, 23 Dec 2023 14:55:20 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=KnVASD5X;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=KnVASD5X;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4SxSBR1PFjz3c2F
-	for <linux-erofs@lists.ozlabs.org>; Sat, 23 Dec 2023 00:02:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703250138;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2kygMq0mAMv991cW3YZ7Hd3ppnOgYBjhmi7vw/LesYI=;
-	b=KnVASD5XV8titxuGCdCefAQy3tomOyV0j+Q5V3Ro/qqNYROo+8LowtfZhUj2sLBrJS7CmK
-	QrbNtC0YLDuQ0mjdFrjFEdxWuF+1tg0qgMXWJPKf8yOCpASnhxIeWjEcXOrLd5hwluI5WX
-	upxIWEwI4g9AMajdyiw81w7iW1d9As8=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703250138;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2kygMq0mAMv991cW3YZ7Hd3ppnOgYBjhmi7vw/LesYI=;
-	b=KnVASD5XV8titxuGCdCefAQy3tomOyV0j+Q5V3Ro/qqNYROo+8LowtfZhUj2sLBrJS7CmK
-	QrbNtC0YLDuQ0mjdFrjFEdxWuF+1tg0qgMXWJPKf8yOCpASnhxIeWjEcXOrLd5hwluI5WX
-	upxIWEwI4g9AMajdyiw81w7iW1d9As8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-15--QeBZETQMO6dAe6PTzC6cQ-1; Fri,
- 22 Dec 2023 08:02:12 -0500
-X-MC-Unique: -QeBZETQMO6dAe6PTzC6cQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5329D386914F;
-	Fri, 22 Dec 2023 13:02:11 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.39.195.169])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 82A9251E3;
-	Fri, 22 Dec 2023 13:02:07 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20231221132400.1601991-5-dhowells@redhat.com>
-References: <20231221132400.1601991-5-dhowells@redhat.com> <20231221132400.1601991-1-dhowells@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH] Fix EROFS Kconfig
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sxr0f6X3pz2xrD
+	for <linux-erofs@lists.ozlabs.org>; Sat, 23 Dec 2023 14:55:12 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=26;SR=0;TI=SMTPD_---0Vz0J.hE_1703303701;
+Received: from 30.212.153.241(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vz0J.hE_1703303701)
+          by smtp.aliyun-inc.com;
+          Sat, 23 Dec 2023 11:55:04 +0800
+Message-ID: <d50555e9-3b8e-41d4-bec6-317aaaec5ff0@linux.alibaba.com>
+Date: Sat, 23 Dec 2023 11:55:00 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2265064.1703250126.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 22 Dec 2023 13:02:06 +0000
-Message-ID: <2265065.1703250126@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] Fix EROFS Kconfig
+Content-Language: en-US
+To: David Howells <dhowells@redhat.com>, Gao Xiang <xiang@kernel.org>
+References: <20231221132400.1601991-5-dhowells@redhat.com>
+ <20231221132400.1601991-1-dhowells@redhat.com>
+ <2265065.1703250126@warthog.procyon.org.uk>
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <2265065.1703250126@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -85,26 +45,103 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Dominique Martinet <asmadeus@codewreck.org>, dhowells@redhat.com, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, Yue Hu <huyue2@coolpad.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Ilya Dryomov <idryomov@gmail.com>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, Yue Hu <huyue2@coolpad.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This needs an additional change (see attached).
+Hi,
+
+On 12/22/23 9:02 PM, David Howells wrote:
+> This needs an additional change (see attached).
+> 
+> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+> index 1d318f85232d..1949763e66aa 100644
+> --- a/fs/erofs/Kconfig
+> +++ b/fs/erofs/Kconfig
+> @@ -114,7 +114,8 @@ config EROFS_FS_ZIP_DEFLATE
+>  
+>  config EROFS_FS_ONDEMAND
+>  	bool "EROFS fscache-based on-demand read support"
+> -	depends on CACHEFILES_ONDEMAND && (EROFS_FS=m && FSCACHE || EROFS_FS=y && FSCACHE=y)
+> +	depends on CACHEFILES_ONDEMAND && FSCACHE && \
+> +		(EROFS_FS=m && NETFS_SUPPORT || EROFS_FS=y && NETFS_SUPPORT=y)
+>  	default n
+>  	help
+>  	  This permits EROFS to use fscache-backed data blobs with on-demand
+> 
+
+Thanks for the special reminder.  I noticed that it has been included in
+this commit[*] in the dev tree.
+
+[*]
+https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/commit/?h=netfs-lib&id=7472173cc3baf4a0bd8c803e56c37efdb8388f1c
+
+
+Besides I noticed an issue when trying to configure EROFS_FS_ONDEMAND.
+The above kconfig indicates that EROFS_FS_ONDEMAND depends on
+NETFS_SUPPORT, while NETFS_SUPPORT has no prompt in menuconfig and can
+only be selected by, e.g. fs/ceph/Kconfig:
+
+	config CEPH_FS
+        select NETFS_SUPPORT
+
+IOW EROFS_FS_ONDEMAND will not be prompted and has no way being
+configured if NETFS_SUPPORT itself is not selected by any other filesystem.
+
+
+I tried to fix this in following way:
 
 diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 1d318f85232d..1949763e66aa 100644
+index 1949763e66aa..5b7b71e537f1 100644
 --- a/fs/erofs/Kconfig
 +++ b/fs/erofs/Kconfig
-@@ -114,7 +114,8 @@ config EROFS_FS_ZIP_DEFLATE
- =
+@@ -5,6 +5,7 @@ config EROFS_FS
+        depends on BLOCK
+        select FS_IOMAP
+        select LIBCRC32C
++       select NETFS_SUPPORT if EROFS_FS_ONDEMAND
+        help
+          EROFS (Enhanced Read-Only File System) is a lightweight read-only
+          file system with modern designs (e.g. no buffer heads, inline
+@@ -114,8 +115,10 @@ config EROFS_FS_ZIP_DEFLATE
 
  config EROFS_FS_ONDEMAND
- 	bool "EROFS fscache-based on-demand read support"
--	depends on CACHEFILES_ONDEMAND && (EROFS_FS=3Dm && FSCACHE || EROFS_FS=3D=
-y && FSCACHE=3Dy)
-+	depends on CACHEFILES_ONDEMAND && FSCACHE && \
-+		(EROFS_FS=3Dm && NETFS_SUPPORT || EROFS_FS=3Dy && NETFS_SUPPORT=3Dy)
- 	default n
- 	help
- 	  This permits EROFS to use fscache-backed data blobs with on-demand
+        bool "EROFS fscache-based on-demand read support"
+-       depends on CACHEFILES_ONDEMAND && FSCACHE && \
+-               (EROFS_FS=m && NETFS_SUPPORT || EROFS_FS=y &&
+NETFS_SUPPORT=y)
++       depends on EROFS_FS
++       select FSCACHE
+        default n
+        help
+          This permits EROFS to use fscache-backed data blobs with on-demand
 
+
+But still the dependency for CACHEFILES_ONDEMAND and CACHEFILES can not
+be resolved.  Though CACHEFILES is not a must during the linking stage
+as EROFS only calls fscache APIs directly, CACHEFILES is indeed needed
+to ensure that the EROFS on-demand functionality works at runtime.
+
+If we let EROFS_FS_ONDEMAND select CACHEFILES_ONDEMAND, then only
+CACHEFILES_ONDEMAND will be selected while CACHEFILES can be still N.
+Maybe EROFS_FS_ONDEMAND needs to selct both CACHEFILES_ONDEMAND and
+CACHEFILES?
+
+Besides if we make EROFS_FS_ONDEMAND depends on CACHEFILES_ONDEMAND,
+then there will be a recursive dependency loop, as
+
+fs/netfs/Kconfig:3:error: recursive dependency detected!
+fs/netfs/Kconfig:3:	symbol NETFS_SUPPORT is selected by EROFS_FS_ONDEMAND
+fs/erofs/Kconfig:116:	symbol EROFS_FS_ONDEMAND depends on
+CACHEFILES_ONDEMAND
+fs/cachefiles/Kconfig:30:	symbol CACHEFILES_ONDEMAND depends on CACHEFILES
+fs/cachefiles/Kconfig:3:	symbol CACHEFILES depends on NETFS_SUPPORT
+
+
+Hi Xiang, any better idea?
+
+
+
+-- 
+Thanks,
+Jingbo
