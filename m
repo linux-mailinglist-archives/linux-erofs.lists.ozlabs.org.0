@@ -2,38 +2,59 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 106F881D202
-	for <lists+linux-erofs@lfdr.de>; Sat, 23 Dec 2023 04:55:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E887481D2AE
+	for <lists+linux-erofs@lfdr.de>; Sat, 23 Dec 2023 07:23:18 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=L6tgFf84;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Sxr0m6DjXz2xrD
-	for <lists+linux-erofs@lfdr.de>; Sat, 23 Dec 2023 14:55:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4SxvHQ61qWz3cGb
+	for <lists+linux-erofs@lfdr.de>; Sat, 23 Dec 2023 17:23:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=L6tgFf84;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.8; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Sxr0f6X3pz2xrD
-	for <linux-erofs@lists.ozlabs.org>; Sat, 23 Dec 2023 14:55:12 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=26;SR=0;TI=SMTPD_---0Vz0J.hE_1703303701;
-Received: from 30.212.153.241(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0Vz0J.hE_1703303701)
-          by smtp.aliyun-inc.com;
-          Sat, 23 Dec 2023 11:55:04 +0800
-Message-ID: <d50555e9-3b8e-41d4-bec6-317aaaec5ff0@linux.alibaba.com>
-Date: Sat, 23 Dec 2023 11:55:00 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Fix EROFS Kconfig
-Content-Language: en-US
-To: David Howells <dhowells@redhat.com>, Gao Xiang <xiang@kernel.org>
-References: <20231221132400.1601991-5-dhowells@redhat.com>
- <20231221132400.1601991-1-dhowells@redhat.com>
- <2265065.1703250126@warthog.procyon.org.uk>
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <2265065.1703250126@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4SxvHJ2fsXz2xqH
+	for <linux-erofs@lists.ozlabs.org>; Sat, 23 Dec 2023 17:23:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703312588; x=1734848588;
+  h=date:from:to:cc:subject:message-id;
+  bh=3DT6hc9yvi6haCY1YVFfl0YVY5yxqSXsGqrrINAd9xI=;
+  b=L6tgFf84SaAlXR3+13JpWXVSgIejPWoYtHUP5ot3VMKZZS6UwPbwaken
+   6zMqv3kxCKVSn6Y8FY0MnjrmTwzSDjgJ+rcHmHEOxiCLSeDjtilzKPEj/
+   D7WUbkX0EWehTDQ4RoSNHENJCNnBliyAuCjX0WmZHKGLGZ1IWJ4RHN/+F
+   cpuduwqzSrIp5zPGItwgRporfYAH3qWyKcG6g3//iVpNxf0R5sBWYeiLK
+   WAzZpn77H5blAOOfevk8wIwUVqOqeY8312hJ5aV0JIbM860ynDsL6agAN
+   vC6v9LrI6HnmKVwvdPYucs+V+JRss+s2cxQUKGXYG0DVdf2EAWYOqeBLR
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="9677312"
+X-IronPort-AV: E=Sophos;i="6.04,298,1695711600"; 
+   d="scan'208";a="9677312"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 22:22:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="1024461017"
+X-IronPort-AV: E=Sophos;i="6.04,298,1695711600"; 
+   d="scan'208";a="1024461017"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Dec 2023 22:22:33 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rGvP5-000AMz-0I;
+	Sat, 23 Dec 2023 06:22:31 +0000
+Date: Sat, 23 Dec 2023 14:22:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 652cdaa886e3ad1d051e5aef733c5a546171362f
+Message-ID: <202312231457.zWl60R4k-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -45,103 +66,87 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, Yue Hu <huyue2@coolpad.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 652cdaa886e3ad1d051e5aef733c5a546171362f  erofs: allow partially filled compressed bvecs
 
-On 12/22/23 9:02 PM, David Howells wrote:
-> This needs an additional change (see attached).
-> 
-> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-> index 1d318f85232d..1949763e66aa 100644
-> --- a/fs/erofs/Kconfig
-> +++ b/fs/erofs/Kconfig
-> @@ -114,7 +114,8 @@ config EROFS_FS_ZIP_DEFLATE
->  
->  config EROFS_FS_ONDEMAND
->  	bool "EROFS fscache-based on-demand read support"
-> -	depends on CACHEFILES_ONDEMAND && (EROFS_FS=m && FSCACHE || EROFS_FS=y && FSCACHE=y)
-> +	depends on CACHEFILES_ONDEMAND && FSCACHE && \
-> +		(EROFS_FS=m && NETFS_SUPPORT || EROFS_FS=y && NETFS_SUPPORT=y)
->  	default n
->  	help
->  	  This permits EROFS to use fscache-backed data blobs with on-demand
-> 
+elapsed time: 2343m
 
-Thanks for the special reminder.  I noticed that it has been included in
-this commit[*] in the dev tree.
+configs tested: 64
+configs skipped: 0
 
-[*]
-https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/commit/?h=netfs-lib&id=7472173cc3baf4a0bd8c803e56c37efdb8388f1c
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-
-Besides I noticed an issue when trying to configure EROFS_FS_ONDEMAND.
-The above kconfig indicates that EROFS_FS_ONDEMAND depends on
-NETFS_SUPPORT, while NETFS_SUPPORT has no prompt in menuconfig and can
-only be selected by, e.g. fs/ceph/Kconfig:
-
-	config CEPH_FS
-        select NETFS_SUPPORT
-
-IOW EROFS_FS_ONDEMAND will not be prompted and has no way being
-configured if NETFS_SUPPORT itself is not selected by any other filesystem.
-
-
-I tried to fix this in following way:
-
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 1949763e66aa..5b7b71e537f1 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -5,6 +5,7 @@ config EROFS_FS
-        depends on BLOCK
-        select FS_IOMAP
-        select LIBCRC32C
-+       select NETFS_SUPPORT if EROFS_FS_ONDEMAND
-        help
-          EROFS (Enhanced Read-Only File System) is a lightweight read-only
-          file system with modern designs (e.g. no buffer heads, inline
-@@ -114,8 +115,10 @@ config EROFS_FS_ZIP_DEFLATE
-
- config EROFS_FS_ONDEMAND
-        bool "EROFS fscache-based on-demand read support"
--       depends on CACHEFILES_ONDEMAND && FSCACHE && \
--               (EROFS_FS=m && NETFS_SUPPORT || EROFS_FS=y &&
-NETFS_SUPPORT=y)
-+       depends on EROFS_FS
-+       select FSCACHE
-        default n
-        help
-          This permits EROFS to use fscache-backed data blobs with on-demand
-
-
-But still the dependency for CACHEFILES_ONDEMAND and CACHEFILES can not
-be resolved.  Though CACHEFILES is not a must during the linking stage
-as EROFS only calls fscache APIs directly, CACHEFILES is indeed needed
-to ensure that the EROFS on-demand functionality works at runtime.
-
-If we let EROFS_FS_ONDEMAND select CACHEFILES_ONDEMAND, then only
-CACHEFILES_ONDEMAND will be selected while CACHEFILES can be still N.
-Maybe EROFS_FS_ONDEMAND needs to selct both CACHEFILES_ONDEMAND and
-CACHEFILES?
-
-Besides if we make EROFS_FS_ONDEMAND depends on CACHEFILES_ONDEMAND,
-then there will be a recursive dependency loop, as
-
-fs/netfs/Kconfig:3:error: recursive dependency detected!
-fs/netfs/Kconfig:3:	symbol NETFS_SUPPORT is selected by EROFS_FS_ONDEMAND
-fs/erofs/Kconfig:116:	symbol EROFS_FS_ONDEMAND depends on
-CACHEFILES_ONDEMAND
-fs/cachefiles/Kconfig:30:	symbol CACHEFILES_ONDEMAND depends on CACHEFILES
-fs/cachefiles/Kconfig:3:	symbol CACHEFILES depends on NETFS_SUPPORT
-
-
-Hi Xiang, any better idea?
-
-
+tested configs:
+arc                   randconfig-001-20231223   gcc  
+arc                   randconfig-002-20231223   gcc  
+arm                   randconfig-001-20231223   clang
+arm                   randconfig-002-20231223   clang
+arm                   randconfig-003-20231223   clang
+arm                   randconfig-004-20231223   clang
+arm64                 randconfig-001-20231223   clang
+arm64                 randconfig-002-20231223   clang
+arm64                 randconfig-003-20231223   clang
+arm64                 randconfig-004-20231223   clang
+csky                  randconfig-001-20231223   gcc  
+csky                  randconfig-002-20231223   gcc  
+hexagon               randconfig-001-20231223   clang
+hexagon               randconfig-002-20231223   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20231223   clang
+i386         buildonly-randconfig-002-20231223   clang
+i386         buildonly-randconfig-003-20231223   clang
+i386         buildonly-randconfig-004-20231223   clang
+i386         buildonly-randconfig-005-20231223   clang
+i386         buildonly-randconfig-006-20231223   clang
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231223   clang
+i386                  randconfig-002-20231223   clang
+i386                  randconfig-003-20231223   clang
+i386                  randconfig-004-20231223   clang
+i386                  randconfig-005-20231223   clang
+i386                  randconfig-006-20231223   clang
+i386                  randconfig-011-20231223   gcc  
+i386                  randconfig-012-20231223   gcc  
+i386                  randconfig-013-20231223   gcc  
+i386                  randconfig-014-20231223   gcc  
+i386                  randconfig-015-20231223   gcc  
+i386                  randconfig-016-20231223   gcc  
+loongarch             randconfig-001-20231223   gcc  
+loongarch             randconfig-002-20231223   gcc  
+nios2                 randconfig-001-20231223   gcc  
+nios2                 randconfig-002-20231223   gcc  
+parisc                randconfig-001-20231223   gcc  
+parisc                randconfig-002-20231223   gcc  
+powerpc               randconfig-001-20231223   clang
+powerpc               randconfig-002-20231223   clang
+powerpc               randconfig-003-20231223   clang
+powerpc64             randconfig-001-20231223   clang
+powerpc64             randconfig-002-20231223   clang
+powerpc64             randconfig-003-20231223   clang
+riscv                 randconfig-001-20231223   clang
+riscv                 randconfig-002-20231223   clang
+s390                  randconfig-001-20231223   gcc  
+s390                  randconfig-002-20231223   gcc  
+sh                    randconfig-001-20231223   gcc  
+sh                    randconfig-002-20231223   gcc  
+sparc64               randconfig-001-20231223   gcc  
+sparc64               randconfig-002-20231223   gcc  
+um                    randconfig-001-20231223   clang
+um                    randconfig-002-20231223   clang
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                randconfig-001-20231223   gcc  
+xtensa                randconfig-002-20231223   gcc  
 
 -- 
-Thanks,
-Jingbo
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
