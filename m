@@ -1,76 +1,76 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDF38823007
-	for <lists+linux-erofs@lfdr.de>; Wed,  3 Jan 2024 16:00:19 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24BDC82300A
+	for <lists+linux-erofs@lfdr.de>; Wed,  3 Jan 2024 16:00:26 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZcosswAf;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EgFHzTmB;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PKcc3oFd;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BTYeivIt;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4T4tDx3RRmz30Q3
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Jan 2024 02:00:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4T4tF35lT2z3bnL
+	for <lists+linux-erofs@lfdr.de>; Thu,  4 Jan 2024 02:00:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZcosswAf;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EgFHzTmB;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PKcc3oFd;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BTYeivIt;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4T4tDp0PxYz3bpk
-	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Jan 2024 02:00:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4T4tDt0fKzz3btj
+	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Jan 2024 02:00:13 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704294007;
+	s=mimecast20190719; t=1704294011;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZUPriBHgZCe048XAouZ6FVZlUrGVgRcZGkDmJ6vhI+o=;
-	b=ZcosswAfmwuQQDPOw/u+XeeOx1T9QEmw5bQsPu+2eaHVWQghGX+4v0Ohw65WDkCa1vRvrH
-	WBQc9uwCEP52J6hMbCRYzfFoksEbM1i1J4wbGGV9ik3D+xYqkH9Xo9DaWiw8ChX5jK+UoW
-	kFuiqPUeTPM4z3mQbRkheUySAX6hhdI=
+	bh=l/klC/ghutWIOc1+EVzXLrxXcGHqt0/sieVr6S5RVKE=;
+	b=PKcc3oFdjtuJktPx/Q9JV6aDZd72LiH+YYZzgii44amt9wGCPsNJJ77T6z8PSIOEUf5KUQ
+	g/Zos1dJKtCGWRrOsutw5Y/KcoVXKRbk6nzZ0pkT2VShd+HMypjiVg+Pl8tNZeecGdDxh1
+	ab2GRXfpeeaNlhRKUvwn+3TGFVXeSiw=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704294008;
+	s=mimecast20190719; t=1704294012;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZUPriBHgZCe048XAouZ6FVZlUrGVgRcZGkDmJ6vhI+o=;
-	b=EgFHzTmBMblyMhSmO5BX4Velo6kSGXgv2U13eqKcNgeLRDI7+vIZTZlN3uEKcjrPDIfi1e
-	OKlSxc7lH046KJc1CNCcv8YwqJUvMpe+9Oxe4TBMBHaViSY94t3BqdibhwrNYG+TxTpNav
-	SdgKebORIDhnZj/2XaF9ZLEHsV+kIDo=
+	bh=l/klC/ghutWIOc1+EVzXLrxXcGHqt0/sieVr6S5RVKE=;
+	b=BTYeivItSsmZwP7mfN3CAwkPP7F6hA+ulZAHP2EVFLOtCfO5XYGkPL2Tij0eyBiyGDV6Ku
+	LIAELf+2xRVXHnPkf5P88aAKTWBhWQ1GeY0phJE1DZUONoa7z/6Hx3WXv16OIqTUs0bPPX
+	P/CuGyTgAx5A/ZQfNrkyUgwygwk68tw=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-194-mFIdXobHMneufCW3dOaAMw-1; Wed, 03 Jan 2024 10:00:04 -0500
-X-MC-Unique: mFIdXobHMneufCW3dOaAMw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+ us-mta-14-L2AWb4usNJ6xafig_4JuOw-1; Wed, 03 Jan 2024 10:00:08 -0500
+X-MC-Unique: L2AWb4usNJ6xafig_4JuOw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7FA74185A780;
-	Wed,  3 Jan 2024 15:00:02 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C7D38F4126;
+	Wed,  3 Jan 2024 15:00:06 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.68])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0074C3C30;
-	Wed,  3 Jan 2024 14:59:58 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2DFEE2026D66;
+	Wed,  3 Jan 2024 15:00:03 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Jeff Layton <jlayton@kernel.org>,
 	Gao Xiang <hsiangkao@linux.alibaba.com>,
 	Dominique Martinet <asmadeus@codewreck.org>
-Subject: [PATCH 3/5] 9p: Do a couple of cleanups
-Date: Wed,  3 Jan 2024 14:59:27 +0000
-Message-ID: <20240103145935.384404-4-dhowells@redhat.com>
+Subject: [PATCH 4/5] 9p: Always update remote_i_size in stat2inode
+Date: Wed,  3 Jan 2024 14:59:28 +0000
+Message-ID: <20240103145935.384404-5-dhowells@redhat.com>
 In-Reply-To: <20240103145935.384404-1-dhowells@redhat.com>
 References: <20240103145935.384404-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -86,16 +86,11 @@ Cc: Latchesar Ionkov <lucho@ionkov.net>, Christian Schoenebeck <linux_oss@crudeb
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Do a couple of cleanups to 9p:
-
- (1) Remove a couple of unused variables.
-
- (2) Turn a BUG_ON() into a warning, consolidate with another warning and
-     make the warning message include the inode number rather than
-     whatever's in i_private (which will get hashed anyway).
+Always update remote_i_size in v9fs_stat2inode*() if the size is available,
+even if we are asked not to update i_isize
 
 Suggested-by: Dominique Martinet <asmadeus@codewreck.org>
-Link: https://lore.kernel.org/r/ZZULNQAZ0n0WQv7p@codewreck.org/
+Link: https://lore.kernel.org/r/ZZVctju5TEjS218p@codewreck.org/
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Eric Van Hensbergen <ericvh@kernel.org>
 cc: Latchesar Ionkov <lucho@ionkov.net>
@@ -104,52 +99,25 @@ cc: v9fs@lists.linux.dev
 cc: linux-cachefs@redhat.com
 cc: linux-fsdevel@vger.kernel.org
 ---
- fs/9p/vfs_addr.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ fs/9p/vfs_inode_dotl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index d8fb407189a0..f7f83eec3bcc 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -28,8 +28,6 @@
- 
- static void v9fs_upload_to_server(struct netfs_io_subrequest *subreq)
- {
--	struct inode *inode = subreq->rreq->inode;
--	struct v9fs_inode __maybe_unused *v9inode = V9FS_I(inode);
- 	struct p9_fid *fid = subreq->rreq->netfs_priv;
- 	int err;
- 
-@@ -98,15 +96,13 @@ static int v9fs_init_request(struct netfs_io_request *rreq, struct file *file)
- 
- 	if (file) {
- 		fid = file->private_data;
--		BUG_ON(!fid);
-+		if (!fid)
-+			goto no_fid;
- 		p9_fid_get(fid);
- 	} else {
- 		fid = v9fs_fid_find_inode(rreq->inode, writing, INVALID_UID, true);
--		if (!fid) {
--			WARN_ONCE(1, "folio expected an open fid inode->i_private=%p\n",
--				  rreq->inode->i_private);
--			return -EINVAL;
--		}
-+		if (!fid)
-+			goto no_fid;
- 	}
- 
- 	/* we might need to read from a fid that was opened write-only
-@@ -115,6 +111,11 @@ static int v9fs_init_request(struct netfs_io_request *rreq, struct file *file)
- 	WARN_ON(rreq->origin == NETFS_READ_FOR_WRITE && !(fid->mode & P9_ORDWR));
- 	rreq->netfs_priv = fid;
- 	return 0;
-+
-+no_fid:
-+	WARN_ONCE(1, "folio expected an open fid inode->i_ino=%lx\n",
-+		  rreq->inode->i_ino);
-+	return -EINVAL;
- }
- 
- /**
+diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
+index 3505227e1704..aa3a77bb5e86 100644
+--- a/fs/9p/vfs_inode_dotl.c
++++ b/fs/9p/vfs_inode_dotl.c
+@@ -684,10 +684,10 @@ v9fs_stat2inode_dotl(struct p9_stat_dotl *stat, struct inode *inode,
+ 			mode |= inode->i_mode & ~S_IALLUGO;
+ 			inode->i_mode = mode;
+ 		}
+-		if (!(flags & V9FS_STAT2INODE_KEEP_ISIZE) &&
+-		    stat->st_result_mask & P9_STATS_SIZE) {
++		if (stat->st_result_mask & P9_STATS_SIZE) {
+ 			v9inode->netfs.remote_i_size = stat->st_size;
+-			v9fs_i_size_write(inode, stat->st_size);
++			if (!(flags & V9FS_STAT2INODE_KEEP_ISIZE))
++				v9fs_i_size_write(inode, stat->st_size);
+ 		}
+ 		if (stat->st_result_mask & P9_STATS_BLOCKS)
+ 			inode->i_blocks = stat->st_blocks;
 
