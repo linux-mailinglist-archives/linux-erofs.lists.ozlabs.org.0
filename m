@@ -1,113 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5D91822CE2
-	for <lists+linux-erofs@lfdr.de>; Wed,  3 Jan 2024 13:22:17 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F12C822D5D
+	for <lists+linux-erofs@lfdr.de>; Wed,  3 Jan 2024 13:44:34 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1704284535;
-	bh=GZMQ6eKMIpVEgDOY8ufi3mPKvcs+wEB8yUY4nrbFC2M=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=ZCAMPAGaSpRCoW8BoONmFAGn/Nzu8Pyu5rNKf2AL0P3vO6fEJiFq1sQqoOg+/OxBx
-	 Sk/bS5zTkRuFC++TEXuS8RjTEh1zq8Yc3olhy2LukrKWutmAoGDF0zuYedwmGI1Cg1
-	 LKLhy34ONgohsiJdN1GMoIcN6+wtlDPrB2Ug+ByvZB25D5cG6KL31SyMRu6wUPk+jc
-	 9y0Ybt+7ir8o0iN85846mhAxdrVuBkijEaCn1jLcmhhbcAhDqwfpe8EqDVZy4w17Gl
-	 CPHFhJ7l2QieIdH5+uLtI6pmaILOwpqYDOiJPDW97NmxPqiJ5FFP0mKoKhsEAulQcI
-	 44txnVGcjlusQ==
+	s=201707; t=1704285871;
+	bh=bj54TpmxgEHPaSBWeSblcfH/Z6qZJA5GzkhKNBG0x/8=;
+	h=To:Subject:Date:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 From;
+	b=h/AlV1SHprXLCnw1+udN+gyYYT5YIVrIfCTV1VlLNRbYkyqBCJvjEBv5WrRVWpMtH
+	 rPrMRKyEU1oDHnn9uXqajN4HIl6vJOoZSKscH+tEnGa/CWrVDPbeNuw4yBX6UhqXxi
+	 6sqz2UNQqreCKiuhblFh0bfm+ICvN3LBldb/cxVpP/4gW69qLwosss34C5pEcX1BQX
+	 St1ewtLAo1MAGplYejkzlgt6+yGTNvJO4/XGsVer5ntzAx8xIV5My2C8rtccPEFMQy
+	 E6QEDDV0FKuFyMnbBc+4qFw8SjD8EXtZJJr1cLtRF1dUj7IsAYFCmTHqZYk7cesmCX
+	 l/78aXxbz4Zgw==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4T4pkb2TKGz3cZ2
-	for <lists+linux-erofs@lfdr.de>; Wed,  3 Jan 2024 23:22:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4T4qDH55Bbz3cTH
+	for <lists+linux-erofs@lfdr.de>; Wed,  3 Jan 2024 23:44:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=DHVWjSHu;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feae::721; helo=apc01-psa-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org)
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on20721.outbound.protection.outlook.com [IPv6:2a01:111:f400:feae::721])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4T4pkW5BKwz30Yb
-	for <linux-erofs@lists.ozlabs.org>; Wed,  3 Jan 2024 23:22:10 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DXHapBt3Cmt+5WXNDibNszjBhvx9b64d/YjL/dll8sje3Oy5afVqsJbey1zfDJdlpPKNhr+RCt7+W9HBoPpPXYFBgK1qE0bwLSyfnTHcG66ctfM1jdLBPsmRfHvAWd1p9m2HwlYXJye6+0hqTJg2iemckhmb+oT2UiV7oGTH/GlFu5dqqdiaG0EjdzEJ+MM7/CldkAdTv/jjkcjIVB7Dos8TdjWGNvW2cgguzjdVg7xEFYpG4hq+MSdtqWnAm0z/P4Ii7VEkv9PMpjMGJOFSqXA7z6fysdCfjgZsTckOPRDzD7fLMYIFmCqLjYhoHvLjRMEgDs5O+5jEauK7ai77HA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GZMQ6eKMIpVEgDOY8ufi3mPKvcs+wEB8yUY4nrbFC2M=;
- b=dTlZ7WconRq/Vulw3Fw6g5+OF/7K70aufOTLY0qfuKP5m1mdax0lPTfCalaKDMj9uSFpZNElWd9GHB50Nl6BNpcQ775dfLowFndfhKsDIh6RAhFB6fooqgjc1MN8ju5eQtezdDTrWvyQA55W1Mr9G6iHw2XXZ38GfCKn7A1XJR/c2L9wnJq/E28V6MitYD+X+vjCFufb+x25vhAETOrRCpcn/GnlJjTcv6lBBwcaSAPV735uyehMyXeVD22tcwg8uBjz3GDTEYMS/GHbDNxbDt2CkUun676HS/k387cZ8qRL/odiGva1IFDTSMIJnWZcUB6MQbP8KNnwW9L5YGikuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TY2PR06MB3342.apcprd06.prod.outlook.com (2603:1096:404:fb::23)
- by JH0PR06MB6343.apcprd06.prod.outlook.com (2603:1096:990:18::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.25; Wed, 3 Jan
- 2024 12:21:46 +0000
-Received: from TY2PR06MB3342.apcprd06.prod.outlook.com
- ([fe80::b403:721d:ec13:d457]) by TY2PR06MB3342.apcprd06.prod.outlook.com
- ([fe80::b403:721d:ec13:d457%5]) with mapi id 15.20.7135.023; Wed, 3 Jan 2024
- 12:21:46 +0000
-To: xiang@kernel.org
-Subject: [PATCH v4] erofs: make erofs_err() and erofs_info() support NULL sb parameter
-Date: Wed,  3 Jan 2024 05:32:02 -0700
-Message-Id: <20240103123202.3054718-1-guochunhai@vivo.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0038.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::15) To TY2PR06MB3342.apcprd06.prod.outlook.com
- (2603:1096:404:fb::23)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=xiaomi.com (client-ip=207.226.244.122; helo=outboundhk.mxmail.xiaomi.com; envelope-from=wangshuo16@xiaomi.com; receiver=lists.ozlabs.org)
+Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [207.226.244.122])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4T4qDB0SQ0z3cGY
+	for <linux-erofs@lists.ozlabs.org>; Wed,  3 Jan 2024 23:44:23 +1100 (AEDT)
+X-IronPort-AV: E=Sophos;i="6.04,327,1695657600"; 
+   d="scan'208,217";a="100482604"
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, "linux-erofs@lists.ozlabs.org"
+	<linux-erofs@lists.ozlabs.org>
+Subject: Re: [External Mail]Re: Request for Assistance: Decompressing EROFS
+ Image without Mounting
+Thread-Topic: [External Mail]Re: Request for Assistance: Decompressing EROFS
+ Image without Mounting
+Thread-Index: AQHaPkKT6ZWgsQR/kEqu8efuvQVYfQ==
+Date: Wed, 3 Jan 2024 12:44:21 +0000
+Message-ID: <OS3P286MB0755903C1870DAAAE9C6DFAAF060A@OS3P286MB0755.JPNP286.PROD.OUTLOOK.COM>
+References: <e751bfc68f524227ad8ad98faa8102af@xiaomi.com>
+ <1616817c-7759-41f1-8c6b-568fb7357212@linux.alibaba.com>
+ <5ee2a6ba360d40239d18845d0f21e31e@xiaomi.com>,<d049d7ac-4ae6-4fd0-96a4-7b0729fd3367@linux.alibaba.com>,<b798af03769c42c3a811b74e6a2489cc@xiaomi.com>
+In-Reply-To: <b798af03769c42c3a811b74e6a2489cc@xiaomi.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Content-Type: multipart/alternative;
+	boundary="_000_OS3P286MB0755903C1870DAAAE9C6DFAAF060AOS3P286MB0755JPNP_"
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TY2PR06MB3342:EE_|JH0PR06MB6343:EE_
-X-MS-Office365-Filtering-Correlation-Id: ec2cf9dd-efc4-4edf-24c8-08dc0c568d46
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	aBkw/M7De+3psvwP+ETP1HTvJLOE/juBg2oJ/3ZRKTuvaHEHQHIsHlNcjDinYFKxLulm673OHAg0XhmxtmlYopQ2ZBPdgckX0j8ggqvkviyM5u9acoMnzsv+cZPHiHOCsAUHFd2aJMmVolZXzDSDCGdycfa7wSyBS31Wu+f/qLCovjUXoUWxYlbUizPlFcPD/RcJMHUvGHO7nh7k7JSGll3uIlNDiqB5GPkgL0NsIpYnt6KyzQOJtft8z0TyKG+JLsWfchBu7ryng0CIAGanbH+x+jYZ2Ak+tgaM/xMuWqyLnh6xHo6KpfW4awqTyWBCsD2XJLA5N4jiSjlCxb7iyxJt10/q5XxShhe4A8RXhaMQEKhKTJwyVM1balHzv1h6sJ2bDyRqrZ9LRmQC8W52kJOq6T0Z+1sJgGz5mDVCq5Tip1mTUc4M6EyO+TLBYArRglT2U+rj5j7toLDnkWFo11cwv4AV9Ckw9x56Q4eSN5chas24UpJqHRxaeKrfkrGixKuaVXqK0mmL6YA6EwugyDVHsd6EZ5OqpxyPP0aF6iwm/4mNaH0aYAPNdvKKrrGFPykoG/AzxTbARpr/A/fSrjbVIGb3lEVXtzETvBOFUJOjPxSXySUeMtlY4C0ATBgZ
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR06MB3342.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(366004)(39860400002)(376002)(396003)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(1076003)(26005)(2616005)(83380400001)(107886003)(38100700002)(41300700001)(8936002)(316002)(8676002)(5660300002)(4326008)(2906002)(6666004)(6916009)(478600001)(6486002)(66946007)(52116002)(6506007)(66556008)(6512007)(66476007)(38350700005)(86362001)(36756003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?se60WUXyTjlmZmO82pPXKFCxAbeVidKlGvjjCgIKsayXtRQ51OfRT/TR6Ctr?=
- =?us-ascii?Q?5yXnIo56McdWJcAjJbXA94VU10dMUIbAqEwcdKpt3AdVYuTEbRHgRqgPbF1f?=
- =?us-ascii?Q?pG6wiG1M/FwvH/dUwAhswAmLLMb4SJz+wnAIvA5eCNZZKZa0pSHBlVY1YtMa?=
- =?us-ascii?Q?UTOHDpRwr+P9qcgo4fLeFsf/Psc3AYxyE+Ba/a90rZQ2OSUOdB2WX+cwPryv?=
- =?us-ascii?Q?/C5ofJFPBd7g1wCYU4BgZuNQ8HgVJEcmuJ2mrh739kF25Hx3dWtjHPK9hjxf?=
- =?us-ascii?Q?iLEJs3pw7Hiz2hC2jskyCZwf9BV4gO/ugdu8wTK7V31NY8EMlsriOA4A4sGP?=
- =?us-ascii?Q?9TQpGin6SuEezuH4mgJ0Anx+ieYGD2jXy3KUA1fjU97I5DvCML+Hf8xm0AE1?=
- =?us-ascii?Q?CX2IblljzmGRsT9/NhJfzMtbzBBbDM1X5I8cOZ7dPxR24G9KwBcHYQ3prUTh?=
- =?us-ascii?Q?6KLxC5hQPDohn6FDdJuHFPi+I/MB40OdYGiKWZ0DvSXQP+LwR94h+inbBInU?=
- =?us-ascii?Q?RNHh/B1nBzl455Gm6ZK/QlR218Zw9thNbKzaw42zebpNx07EXBCn/B+k7XU/?=
- =?us-ascii?Q?GkHqEuEFymRcc/iqKqWYBvK9/7aKBGU3Mvu7WNQFZkwABPCbCw98G6R5Xz5H?=
- =?us-ascii?Q?XYrXUfXN+zoFuz/7qNTDxrFDuz1MfxqmrpK3IP+NfFSi/6+abWvqbgglzTaE?=
- =?us-ascii?Q?QwNQDYhejpNCGw9pqOo07wslpBb+lbG2rypgBVqqOLBLMMH9MJCVNwKWEahk?=
- =?us-ascii?Q?Vh9wApf8n5a31lN3g25reQaxnDG/2Xi6Sqj1yNwysAWl/O6lEC67R6EX78HE?=
- =?us-ascii?Q?WfQxFGrSItya8y4RvEXkCRGkjvLSLSY+3vp1s8NO0SnAFMetxVDlA7msIWql?=
- =?us-ascii?Q?oB6u6orly4M61nO4/7UZezVvhilUtRhS658kxfrX9jh9/dqPA67rJ+sLu1bJ?=
- =?us-ascii?Q?8Xu0/obzYh+bYd09Nlxl9qTrMQuvzWf1KQjO1KE4Xe+kZnAiAXlLITLz63XJ?=
- =?us-ascii?Q?f3ZcKWdfzLN3mN859M7+TkJakN3IsCJNEZbOYn6rcttANtiaIHoBrtnNt3Pt?=
- =?us-ascii?Q?xa7rdEByz8cIQ0QfqNyhmcIx/Mbkvtvr8yFEFPrDnjbO6W3PxoYLh4yFUNvY?=
- =?us-ascii?Q?VLO/dq5AmOrsOoinFYIdFf4k2WcDfDxyGJtEAUI+YBvg7QwG/AIOzMs9u9gl?=
- =?us-ascii?Q?wS6FmzqwVDGWPM2+1lkPVeBsuj4Y4yvn8C0vSk12Z+IuaQT5e8sVxVpSlw7p?=
- =?us-ascii?Q?IwRxjxZrq+a6G07HGzyAi4Uiy+0wG30Aj7eUPJ/jLZDC7I3ecINLjaFF6aCY?=
- =?us-ascii?Q?shCgvykwhxu3wO7o+rXm4n9ny5NXZVQQmMgy52Dquyfmbm7M46VVI7nsTJ/C?=
- =?us-ascii?Q?12dCPfN03hwiHtjZxPWG1VsX6JNP+Ug+tMEZIlBQqkq2I50O0Mb3umAxAM0o?=
- =?us-ascii?Q?mAzDTEgg0p2FBQsaWMimODouqILCm4O9WlxF4PyOnOM0Xb5cunUXA5zIIhi8?=
- =?us-ascii?Q?bJj6bpiJGHmIpczO+m+SpWCea/LGScaaui/iCVFF9xXsDZZk2mbdvBoKpidO?=
- =?us-ascii?Q?kQevU+g1DE0J8aXwwqatld670qIb4Gfo47DZoqO5?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec2cf9dd-efc4-4edf-24c8-08dc0c568d46
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR06MB3342.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2024 12:21:45.7817
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: p9qWerfP/XixVQXr8ky1zfR2dkccPz79Buwu2AZe6sqUnaTxOd+pzN4GtiSouDI7WLGLNSsAFJRl0G8KTECHfg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR06MB6343
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -119,67 +58,187 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Chunhai Guo via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Chunhai Guo <guochunhai@vivo.com>
-Cc: Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org, huyue2@coolpad.com
+From: =?utf-8?b?546L56GVIHZpYSBMaW51eC1lcm9mcw==?= <linux-erofs@lists.ozlabs.org>
+Reply-To: =?gb2312?B?zfXLtg==?= <wangshuo16@xiaomi.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Make erofs_err() and erofs_info() support NULL sb parameter for more
-general usage.
+--_000_OS3P286MB0755903C1870DAAAE9C6DFAAF060AOS3P286MB0755JPNP_
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 
-Suggested-by: Gao Xiang <xiang@kernel.org>
-Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
----
-V3 -> V4: remove unnecessary '\n'
-V2 -> V3: convert pr_err() to erofs_err() in erofs codebase
-V1 -> V2: add erofs_info()
----
- fs/erofs/decompressor_deflate.c |  2 +-
- fs/erofs/super.c                | 10 ++++++++--
- 2 files changed, 9 insertions(+), 3 deletions(-)
+VGhlIGlzc3VlIGhhcyBiZWVuIHJlc29sdmVkOyBpdCB3YXMgZHVlIHRvIGEgbGFjayBvZiBzdXBw
+b3J0IGZvciB0aGUgbHo0IGxpYnJhcnkgb24gbXkgY29tcHV0ZXIuIFRoZSBzb3VyY2UgIGNvZGUg
+b2YgbWFzdGVyIGJyYW5jaCBoYXMgbm8gcHJvYmxlbS4gVGhhbmtzIHRvIHlvdXIgYXNzaXN0YW5j
+ZSwgYW5kIHRoYW5rcyBoZWxwIGZyb20gaHVhbmdqaWFuYW5AeGlhb21pLmNvbQ0KX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18NCreivP7IyzogzfXLtiA8d2FuZ3NodW8xNkB4aWFvbWku
+Y29tPg0Kt6LLzcqxvOQ6IFdlZG5lc2RheSwgSmFudWFyeSAzLCAyMDI0IDc6MjM6NDcgUE0NCsrV
+vP7IyzogR2FvIFhpYW5nIDxoc2lhbmdrYW9AbGludXguYWxpYmFiYS5jb20+OyBsaW51eC1lcm9m
+c0BsaXN0cy5vemxhYnMub3JnIDxsaW51eC1lcm9mc0BsaXN0cy5vemxhYnMub3JnPg0K1vfM4jog
+tPC4tDogtPC4tDogW0V4dGVybmFsIE1haWxdUmU6IFJlcXVlc3QgZm9yIEFzc2lzdGFuY2U6IERl
+Y29tcHJlc3NpbmcgRVJPRlMgSW1hZ2Ugd2l0aG91dCBNb3VudGluZw0KDQoNClRoYW5rIHlvdSBm
+b3IgeW91ciBzdWdnZXN0aW9ucy4gSSB3aWxsIHRyeSB0byBzZWVrIGFzc2lzdGFuY2UgZnJvbSBj
+b2xsZWFndWVzIHdpdGhpbiB0aGUgY29tcGFueS4gSSBhcHByZWNpYXRlIHlvdXIgaGVscC4NCg0K
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCreivP7IyzogR2FvIFhpYW5nIDxoc2lh
+bmdrYW9AbGludXguYWxpYmFiYS5jb20+DQq3osvNyrG85DogMjAyNMTqMdTCM8jVIDE5OjIxOjM5
+DQrK1bz+yMs6IM31y7Y7IGxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmcNCtb3zOI6IFJlOiC0
+8Li0OiBbRXh0ZXJuYWwgTWFpbF1SZTogUmVxdWVzdCBmb3IgQXNzaXN0YW5jZTogRGVjb21wcmVz
+c2luZyBFUk9GUyBJbWFnZSB3aXRob3V0IE1vdW50aW5nDQoNClvN4rK/08q8/l0gtMvTyrz+wLTU
+tNPa0KHD17mry77N4rK/o6zH6733yfe0psDtoaPI9LbU08q8/rCyyKvQ1LTm0smjrMfrvavTyrz+
+16q3orj4bWlzZWNAeGlhb21pLmNvbb340NC3tMChDQoNCk9uIDIwMjQvMS8zIDE5OjA5LCDN9cu2
+IHZpYSBMaW51eC1lcm9mcyB3cm90ZToNCj4gSGksDQo+DQo+DQo+IFRoYW5rcyBmb3IgeW91ciBy
+ZXBseSwgYW5kIEkgaGF2ZSB0cmllZCB0aGUgb3B0aW9uIHlvdSBzdWdnZXN0ZWQgYnV0IGZhaWxl
+ZC5Db3VsZCB5b3UgaGVscCBtZSB0byBzb2x2ZSBpdD8NCj4NCj4gRm9sbG93aW5nIGlzIHRoZSBy
+ZXN1bHQgb2YgZXhlY3V0aW5nIHRoZSBvcHRpb246DQo+DQo+DQo+DQo+DQo+IChJIGhhdmUgZG93
+bmxvYWRlZCB0aGUgc291cmNlIGNvZGUgZnJvbSBodHRwczovL2dpdGh1Yi5jb20vZXJvZnMvZXJv
+ZnMtdXRpbHMvdHJlZS9kZXYgPGh0dHBzOi8vZ2l0aHViLmNvbS9lcm9mcy9lcm9mcy11dGlscy90
+cmVlL2Rldj4sIGFuZCBtYWtlIGluc3RhbGwgb24gbXkgVWJ1bnR1MjAuMDQpDQoNCiAgLSBDb3Vs
+ZCB5b3UgdXNlIGEgbmV3ZXIgZGlzdHJpYnV0aW9uIGluc3RlYWQgc3VjaCBhcyBEZWJpYW4gMTI/
+DQpPdGhlcndpc2UgaXQgd2lsbCBiZSBtb3JlIGNvbXBsaWNhdGVkLCBiZWNhdXNlIGx6NC9sem1h
+IHdlcmVuJ3QNCmJ1aWxkLWluIGFjY29yZGluZyB0byB0aGUgc25hcHNob3QuDQoNCiAgLSBJdCBz
+aG91bGQgYmUgImZzY2suZXJvZnMgLS1leHRyYWN0PW1pX2V4dCBtaV9leHQuaW1nIg0KDQogIC0g
+QXMgZm9yIFhpYW9taSBDb3JwLCBpcyB0aGVyZSBzb21lIG90aGVyIGNvbGxlYWd1ZSB3aGljaCBj
+YW4NCmhlbHAgeW91IHJlc29sdmUgdGhpcz8NCg0KVGhhbmtzLA0KR2FvIFhpYW5nDQojLyoqKioq
+KrG+08q8/rywxuS4vbz+uqzT0NChw9e5q8u+tcSxo8Pc0MXPoqOsvfbP3tPat6LLzbj4yc/D5rXY
+1rfW0MHQs/a1xLj2yMu78si61+mho7371rnIzrrOxuTL+8jL0tTIzrrO0M7Kvcq508OjqLD8wKi1
+q7K7z97T2sirsr+78rK/t9a12NC5wrahori01sahorvyyaK3oqOpsb7Tyrz+1tC1xNDFz6Kho8jn
+ufvE+rTtytXBy7G+08q8/qOsx+vE+sGivLS157uwu/LTyrz+zajWqreivP7Iy7Kiyb6z/bG+08q8
+/qOhIFRoaXMgZS1tYWlsIGFuZCBpdHMgYXR0YWNobWVudHMgY29udGFpbiBjb25maWRlbnRpYWwg
+aW5mb3JtYXRpb24gZnJvbSBYSUFPTUksIHdoaWNoIGlzIGludGVuZGVkIG9ubHkgZm9yIHRoZSBw
+ZXJzb24gb3IgZW50aXR5IHdob3NlIGFkZHJlc3MgaXMgbGlzdGVkIGFib3ZlLiBBbnkgdXNlIG9m
+IHRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaGVyZWluIGluIGFueSB3YXkgKGluY2x1ZGluZywg
+YnV0IG5vdCBsaW1pdGVkIHRvLCB0b3RhbCBvciBwYXJ0aWFsIGRpc2Nsb3N1cmUsIHJlcHJvZHVj
+dGlvbiwgb3IgZGlzc2VtaW5hdGlvbikgYnkgcGVyc29ucyBvdGhlciB0aGFuIHRoZSBpbnRlbmRl
+ZCByZWNpcGllbnQocykgaXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcyBlLW1haWwg
+aW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBieSBwaG9uZSBvciBlbWFpbCBpbW1l
+ZGlhdGVseSBhbmQgZGVsZXRlIGl0ISoqKioqKi8jDQo=
 
-diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
-index daf3c1bdeab8..4a64a9c91dd3 100644
---- a/fs/erofs/decompressor_deflate.c
-+++ b/fs/erofs/decompressor_deflate.c
-@@ -70,7 +70,7 @@ int __init z_erofs_deflate_init(void)
- 	return 0;
- 
- out_failed:
--	pr_err("failed to allocate zlib workspace\n");
-+	erofs_err(NULL, "failed to allocate zlib workspace");
- 	z_erofs_deflate_exit();
- 	return -ENOMEM;
- }
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 3789d6224513..5f60f163bd56 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -27,7 +27,10 @@ void _erofs_err(struct super_block *sb, const char *func, const char *fmt, ...)
- 	vaf.fmt = fmt;
- 	vaf.va = &args;
- 
--	pr_err("(device %s): %s: %pV", sb->s_id, func, &vaf);
-+	if (sb)
-+		pr_err("(device %s): %s: %pV", sb->s_id, func, &vaf);
-+	else
-+		pr_err("%s: %pV", func, &vaf);
- 	va_end(args);
- }
- 
-@@ -41,7 +44,10 @@ void _erofs_info(struct super_block *sb, const char *func, const char *fmt, ...)
- 	vaf.fmt = fmt;
- 	vaf.va = &args;
- 
--	pr_info("(device %s): %pV", sb->s_id, &vaf);
-+	if (sb)
-+		pr_info("(device %s): %pV", sb->s_id, &vaf);
-+	else
-+		pr_info("%pV", &vaf);
- 	va_end(args);
- }
- 
--- 
-2.25.1
+--_000_OS3P286MB0755903C1870DAAAE9C6DFAAF060AOS3P286MB0755JPNP_
+Content-Type: text/html; charset="gb2312"
+Content-Transfer-Encoding: quoted-printable
 
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dgb2312">
+</head>
+<body>
+<div dir=3D"ltr">
+<div>
+<div dir=3D"ltr">The issue has been resolved; it was due to a lack of suppo=
+rt for the lz4 library on my computer. The source &nbsp;code<span style=3D"=
+font-size: inherit;">&nbsp;of master branch has no problem. Thanks to your =
+assistance, and thanks help from&nbsp;</span><span style=3D"font-size: inhe=
+rit;">huangjianan@xiaomi.com</span></div>
+</div>
+<div id=3D"ms-outlook-mobile-signature" dir=3D"ltr">
+<div dir=3D"ltr"></div>
+</div>
+</div>
+<hr style=3D"display:inline-block;width:98%" tabindex=3D"-1">
+<div id=3D"divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" st=
+yle=3D"font-size:11pt" color=3D"#000000"><b>=B7=A2=BC=FE=C8=CB:</b> =CD=F5=
+=CB=B6 &lt;wangshuo16@xiaomi.com&gt;<br>
+<b>=B7=A2=CB=CD=CA=B1=BC=E4:</b> Wednesday, January 3, 2024 7:23:47 PM<br>
+<b>=CA=D5=BC=FE=C8=CB:</b> Gao Xiang &lt;hsiangkao@linux.alibaba.com&gt;; l=
+inux-erofs@lists.ozlabs.org &lt;linux-erofs@lists.ozlabs.org&gt;<br>
+<b>=D6=F7=CC=E2:</b> =B4=F0=B8=B4: =B4=F0=B8=B4: [External Mail]Re: Request=
+ for Assistance: Decompressing EROFS Image without Mounting</font>
+<div>&nbsp;</div>
+</div>
+<style>
+<!--
+.x_EmailQuote
+	{margin-left:1pt;
+	padding-left:4pt;
+	border-left:#800000 2px solid}
+-->
+</style>
+<div>
+<meta content=3D"text/html; charset=3DUTF-8">
+<style type=3D"text/css" style=3D"">
+<!--
+p
+	{margin-top:0;
+	margin-bottom:0}
+-->
+</style>
+<div dir=3D"ltr">
+<div id=3D"x_x_divtagdefaultwrapper" dir=3D"ltr" style=3D"font-size:12pt; c=
+olor:#000000; font-family:Calibri,Helvetica,sans-serif">
+<p><span style=3D"color:rgb(55,65,81); font-size:16px">Thank you for your s=
+uggestions. I will try to seek assistance from colleagues within the compan=
+y. I appreciate your help.</span><br>
+</p>
+</div>
+<hr tabindex=3D"-1" style=3D"display:inline-block; width:98%">
+<div id=3D"x_x_divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif=
+" color=3D"#000000" style=3D"font-size:11pt"><b>=B7=A2=BC=FE=C8=CB:</b> Gao=
+ Xiang &lt;hsiangkao@linux.alibaba.com&gt;<br>
+<b>=B7=A2=CB=CD=CA=B1=BC=E4:</b> 2024=C4=EA1=D4=C23=C8=D5 19:21:39<br>
+<b>=CA=D5=BC=FE=C8=CB:</b> =CD=F5=CB=B6; linux-erofs@lists.ozlabs.org<br>
+<b>=D6=F7=CC=E2:</b> Re: =B4=F0=B8=B4: [External Mail]Re: Request for Assis=
+tance: Decompressing EROFS Image without Mounting</font>
+<div>&nbsp;</div>
+</div>
+</div>
+<font size=3D"2"><span style=3D"font-size:10pt">
+<div class=3D"x_PlainText">[=CD=E2=B2=BF=D3=CA=BC=FE] =B4=CB=D3=CA=BC=FE=C0=
+=B4=D4=B4=D3=DA=D0=A1=C3=D7=B9=AB=CB=BE=CD=E2=B2=BF=A3=AC=C7=EB=BD=F7=C9=F7=
+=B4=A6=C0=ED=A1=A3=C8=F4=B6=D4=D3=CA=BC=FE=B0=B2=C8=AB=D0=D4=B4=E6=D2=C9=A3=
+=AC=C7=EB=BD=AB=D3=CA=BC=FE=D7=AA=B7=A2=B8=F8misec@xiaomi.com=BD=F8=D0=D0=
+=B7=B4=C0=A1<br>
+<br>
+On 2024/1/3 19:09, =CD=F5=CB=B6 via Linux-erofs wrote:<br>
+&gt; Hi,<br>
+&gt;<br>
+&gt;<br>
+&gt; Thanks for your reply, and I have tried the option you suggested but f=
+ailed.Could you help me to solve it?<br>
+&gt;<br>
+&gt; Following is the result of executing the option:<br>
+&gt;<br>
+&gt;<br>
+&gt;<br>
+&gt;<br>
+&gt; (I have downloaded the source code from <a href=3D"https://github.com/=
+erofs/erofs-utils/tree/dev">
+https://github.com/erofs/erofs-utils/tree/dev</a> &lt;<a href=3D"https://gi=
+thub.com/erofs/erofs-utils/tree/dev">https://github.com/erofs/erofs-utils/t=
+ree/dev</a>&gt;, and make install on my Ubuntu20.04)<br>
+<br>
+&nbsp; - Could you use a newer distribution instead such as Debian 12?<br>
+Otherwise it will be more complicated, because lz4/lzma weren't<br>
+build-in according to the snapshot.<br>
+<br>
+&nbsp; - It should be &quot;fsck.erofs --extract=3Dmi_ext mi_ext.img&quot;<=
+br>
+<br>
+&nbsp; - As for Xiaomi Corp, is there some other colleague which can<br>
+help you resolve this?<br>
+<br>
+Thanks,<br>
+Gao Xiang<br>
+</div>
+</span></font></div>
+#/******=B1=BE=D3=CA=BC=FE=BC=B0=C6=E4=B8=BD=BC=FE=BA=AC=D3=D0=D0=A1=C3=D7=
+=B9=AB=CB=BE=B5=C4=B1=A3=C3=DC=D0=C5=CF=A2=A3=AC=BD=F6=CF=DE=D3=DA=B7=A2=CB=
+=CD=B8=F8=C9=CF=C3=E6=B5=D8=D6=B7=D6=D0=C1=D0=B3=F6=B5=C4=B8=F6=C8=CB=BB=F2=
+=C8=BA=D7=E9=A1=A3=BD=FB=D6=B9=C8=CE=BA=CE=C6=E4=CB=FB=C8=CB=D2=D4=C8=CE=BA=
+=CE=D0=CE=CA=BD=CA=B9=D3=C3=A3=A8=B0=FC=C0=A8=B5=AB=B2=BB=CF=DE=D3=DA=C8=AB=
+=B2=BF=BB=F2=B2=BF=B7=D6=B5=D8=D0=B9=C2=B6=A1=A2=B8=B4=D6=C6=A1=A2=BB=F2=C9=
+=A2=B7=A2=A3=A9=B1=BE=D3=CA=BC=FE=D6=D0=B5=C4=D0=C5=CF=A2=A1=A3=C8=E7=B9=FB=
+=C4=FA=B4=ED=CA=D5=C1=CB=B1=BE=D3=CA=BC=FE=A3=AC=C7=EB=C4=FA=C1=A2=BC=B4=B5=
+=E7=BB=B0=BB=F2=D3=CA=BC=FE=CD=A8=D6=AA=B7=A2=BC=FE=C8=CB=B2=A2=C9=BE=B3=FD=
+=B1=BE=D3=CA=BC=FE=A3=A1 This e-mail and its attachments contain confidenti=
+al information from XIAOMI, which is intended only for the person or entity=
+ whose address
+ is listed above. Any use of the information contained herein in any way (i=
+ncluding, but not limited to, total or partial disclosure, reproduction, or=
+ dissemination) by persons other than the intended recipient(s) is prohibit=
+ed. If you receive this e-mail in
+ error, please notify the sender by phone or email immediately and delete i=
+t!******/#
+</body>
+</html>
+
+--_000_OS3P286MB0755903C1870DAAAE9C6DFAAF060AOS3P286MB0755JPNP_--
