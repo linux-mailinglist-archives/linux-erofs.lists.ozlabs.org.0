@@ -1,62 +1,129 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E9EE8241C7
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Jan 2024 13:33:01 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E6898244C6
+	for <lists+linux-erofs@lfdr.de>; Thu,  4 Jan 2024 16:17:09 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=mHk6v/mP;
+	dkim=fail reason="signature verification failed" header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=6J4uw5uq;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=mHk6v/mP;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=6J4uw5uq;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4T5QwV64ndz3cVG
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Jan 2024 23:32:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4T5VYs3lJ3z3c5t
+	for <lists+linux-erofs@lfdr.de>; Fri,  5 Jan 2024 02:17:05 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=mHk6v/mP;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=6J4uw5uq;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=mHk6v/mP;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=6J4uw5uq;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=2a07:de40:b251:101:10:150:64:1; helo=smtp-out1.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2a07:de40:b251:101:10:150:64:1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4T5QwQ3ZDYz3bpk
-	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Jan 2024 23:32:52 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T5QwD6SBTz4f3jJ2
-	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Jan 2024 20:32:44 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id AAA6B1A0840
-	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Jan 2024 20:32:46 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgCnqxFrpZZlWpgFFg--.9161S3;
-	Thu, 04 Jan 2024 20:32:46 +0800 (CST)
-Subject: Re: [PATCH RFC v3 for-6.8/block 11/17] erofs: use bdev api
-To: Jan Kara <jack@suse.cz>, Yu Kuai <yukuai1@huaweicloud.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4T5VYm1bccz2yV3
+	for <linux-erofs@lists.ozlabs.org>; Fri,  5 Jan 2024 02:16:58 +1100 (AEDT)
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B3CFB21D82;
+	Thu,  4 Jan 2024 15:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704381415; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FMPvsZKYHk+D5kb1N2CM5rR4TjKGNh05qKhD/IuVB8c=;
+	b=mHk6v/mPh0nrF36XeRd9n1G+3dVH07YiQx9gWm/SG7NmXFbckEmPHT+psVuS+Q55O5Ewmm
+	fzZp736IzVr5FNkauue7PYolsCdGhN9oZfdxiUjjwUo5SvRhYKG4JdOSw0VhUWvKC+wi2H
+	9fs2A0RPq42k8lt/8HUXEBH2gHBffpc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704381415;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FMPvsZKYHk+D5kb1N2CM5rR4TjKGNh05qKhD/IuVB8c=;
+	b=6J4uw5uqBb70vbWXOXdU9583F4KrmBOAGYenVBa6jTwgLx70IbxaS5CKgObceVLtg+Uuvf
+	BlSynn3hFCWD0KCQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1704381415; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FMPvsZKYHk+D5kb1N2CM5rR4TjKGNh05qKhD/IuVB8c=;
+	b=mHk6v/mPh0nrF36XeRd9n1G+3dVH07YiQx9gWm/SG7NmXFbckEmPHT+psVuS+Q55O5Ewmm
+	fzZp736IzVr5FNkauue7PYolsCdGhN9oZfdxiUjjwUo5SvRhYKG4JdOSw0VhUWvKC+wi2H
+	9fs2A0RPq42k8lt/8HUXEBH2gHBffpc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1704381415;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FMPvsZKYHk+D5kb1N2CM5rR4TjKGNh05qKhD/IuVB8c=;
+	b=6J4uw5uqBb70vbWXOXdU9583F4KrmBOAGYenVBa6jTwgLx70IbxaS5CKgObceVLtg+Uuvf
+	BlSynn3hFCWD0KCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 88C6E13722;
+	Thu,  4 Jan 2024 15:16:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CnlcIefLlmUgTAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 04 Jan 2024 15:16:55 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 21D02A07EF; Thu,  4 Jan 2024 16:16:55 +0100 (CET)
+Date: Thu, 4 Jan 2024 16:16:55 +0100
+From: Jan Kara <jack@suse.cz>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Subject: Re: [PATCH RFC v3 for-6.8/block 02/17] xen/blkback: use bdev api in
+ xen_update_blkif_status()
+Message-ID: <20240104151655.oiqtn6onge2etlcn@quack3>
 References: <20231221085712.1766333-1-yukuai1@huaweicloud.com>
- <20231221085826.1768395-1-yukuai1@huaweicloud.com>
- <20240104120207.ig7tfc3mgckwkp2n@quack3>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <7f868579-f993-aaa1-b7d7-eccbe0b0173c@huaweicloud.com>
-Date: Thu, 4 Jan 2024 20:32:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ <20231221085712.1766333-3-yukuai1@huaweicloud.com>
+ <20240104110631.3vspsvxbbvcpdqdu@quack3>
+ <29bfcfc7-62b0-3876-78ce-f7ebe3506eb6@huaweicloud.com>
 MIME-Version: 1.0
-In-Reply-To: <20240104120207.ig7tfc3mgckwkp2n@quack3>
-Content-Type: text/plain; charset=gbk; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgCnqxFrpZZlWpgFFg--.9161S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJFy8ury3GFW8AF18AFy3twb_yoW5CFW7pF
-	y5CF1rGrWrXr9I9w1Igr1jvF4rta97tr48C3yxJw1FvayjqrySgFy0ywnxGF4jkr4vkr4I
-	qF12vryxuw4UKrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9q14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6rWU
-	JVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F
-	4UJbIYCTnIWIevJa73UjIFyTuYvjfUoL0eDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+In-Reply-To: <29bfcfc7-62b0-3876-78ce-f7ebe3506eb6@huaweicloud.com>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Score: 1.90
+X-Spam-Level: *
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [1.90 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 URIBL_BLOCKED(0.00)[suse.com:email,huawei.com:email];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 R_RATELIMIT(0.00)[to_ip_from(RLdan9jouj5dxnqx1npfmn4ucx)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[49];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,huawei.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[suse.cz,kernel.dk,citrix.com,suse.de,gmail.com,lazybastard.org,bootlin.com,nod.at,ti.com,linux.ibm.com,oracle.com,fb.com,toxicpanda.com,suse.com,zeniv.linux.org.uk,kernel.org,fluxnic.net,mit.edu,dilger.ca,infradead.org,linux-foundation.org,samsung.com,vger.kernel.org,lists.xenproject.org,lists.infradead.org,lists.ozlabs.org,huawei.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,101 +135,64 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: hoeppner@linux.ibm.com, vigneshr@ti.com, yi.zhang@huawei.com, clm@fb.com, adilger.kernel@dilger.ca, miquel.raynal@bootlin.com, agordeev@linux.ibm.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, richard@nod.at, willy@infradead.org, linux-bcachefs@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, jejb@linux.ibm.com, p.raghav@samsung.com, gor@linux.ibm.com, hca@linux.ibm.com, joern@lazybastard.org, josef@toxicpanda.com, colyli@suse.de, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, viro@zeniv.linux.org.uk, "yukuai \(C\)" <yukuai3@huawei.com>, dsterba@suse.com, konishi.ryusuke@gmail.com, axboe@kernel.dk, brauner@kernel.org, tytso@mit.edu, martin.petersen@oracle.com, nico@fluxnic.net, yangerkun@huawei.com, linux-kernel@vger.kernel.org, kent.overstreet@gmail.com, hare@suse.de, jack@suse.com, linux-fsdevel@vger.kernel.org, linux-mtd@lists.infradead.org, akpm@linux-foundation.org, roger.pau@citrix.com, linux
- -erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, sth@linux.ibm.com
+Cc: hoeppner@linux.ibm.com, Jan Kara <jack@suse.cz>, vigneshr@ti.com, yi.zhang@huawei.com, clm@fb.com, adilger.kernel@dilger.ca, miquel.raynal@bootlin.com, agordeev@linux.ibm.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, richard@nod.at, willy@infradead.org, linux-bcachefs@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, jejb@linux.ibm.com, p.raghav@samsung.com, gor@linux.ibm.com, hca@linux.ibm.com, joern@lazybastard.org, josef@toxicpanda.com, colyli@suse.de, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, viro@zeniv.linux.org.uk, "yukuai \(C\)" <yukuai3@huawei.com>, dsterba@suse.com, konishi.ryusuke@gmail.com, axboe@kernel.dk, brauner@kernel.org, tytso@mit.edu, martin.petersen@oracle.com, nico@fluxnic.net, yangerkun@huawei.com, linux-kernel@vger.kernel.org, kent.overstreet@gmail.com, hare@suse.de, jack@suse.com, linux-fsdevel@vger.kernel.org, linux-mtd@lists.infradead.org, akpm@linux-foundation.org, ro
+ ger.pau@citrix.com, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, sth@linux.ibm.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi, Jan!
+Hi Kuai!
 
-ÔÚ 2024/01/04 20:02, Jan Kara Ð´µÀ:
-> On Thu 21-12-23 16:58:26, Yu Kuai wrote:
->> From: Yu Kuai <yukuai3@huawei.com>
->>
->> Avoid to access bd_inode directly, prepare to remove bd_inode from
->> block_device.
->>
->> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+On Thu 04-01-24 20:19:05, Yu Kuai wrote:
+> åœ¨ 2024/01/04 19:06, Jan Kara å†™é“:
+> > On Thu 21-12-23 16:56:57, Yu Kuai wrote:
+> > > From: Yu Kuai <yukuai3@huawei.com>
+> > > 
+> > > Avoid to access bd_inode directly, prepare to remove bd_inode from
+> > > block_devcie.
+> > > 
+> > > Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> > > ---
+> > >   drivers/block/xen-blkback/xenbus.c | 3 +--
+> > >   1 file changed, 1 insertion(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/block/xen-blkback/xenbus.c b/drivers/block/xen-blkback/xenbus.c
+> > > index e34219ea2b05..e645afa4af57 100644
+> > > --- a/drivers/block/xen-blkback/xenbus.c
+> > > +++ b/drivers/block/xen-blkback/xenbus.c
+> > > @@ -104,8 +104,7 @@ static void xen_update_blkif_status(struct xen_blkif *blkif)
+> > >   		xenbus_dev_error(blkif->be->dev, err, "block flush");
+> > >   		return;
+> > >   	}
+> > > -	invalidate_inode_pages2(
+> > > -			blkif->vbd.bdev_handle->bdev->bd_inode->i_mapping);
+> > > +	invalidate_bdev(blkif->vbd.bdev_handle->bdev);
+> > 
+> > This function uses invalidate_inode_pages2() while invalidate_bdev() ends
+> > up using mapping_try_invalidate() and there are subtle behavioral
+> > differences between these two (for example invalidate_inode_pages2() tries
+> > to clean dirty pages using the ->launder_folio method). So I think you'll
+> > need helper like invalidate_bdev2() for this.
 > 
-> I'm not erofs maintainer but IMO this is quite ugly and grows erofs_buf
-> unnecessarily. I'd rather store 'sb' pointer in erofs_buf and then do the
-> right thing in erofs_bread() which is the only place that seems to care
-> about the erofs_is_fscache_mode() distinction... Also blkszbits is then
-> trivially sb->s_blocksize_bits so it would all seem much more
-> straightforward.
+> Thanks for reviewing this patch, I know the differenct between then,
+> what I don't understand is that why using invalidate_inode_pages2()
+> here.
 
-Thanks for your suggestion, I'll follow this unless Gao Xiang has other
-suggestions.
+Well, then the change in behavior should be at least noted in the
+changelog.
 
-Kuai
-> 
-> 								Honza
-> 
->> ---
->>   fs/erofs/data.c     | 18 ++++++++++++------
->>   fs/erofs/internal.h |  2 ++
->>   2 files changed, 14 insertions(+), 6 deletions(-)
->>
->> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
->> index c98aeda8abb2..bbe2fe199bf3 100644
->> --- a/fs/erofs/data.c
->> +++ b/fs/erofs/data.c
->> @@ -32,8 +32,8 @@ void erofs_put_metabuf(struct erofs_buf *buf)
->>   void *erofs_bread(struct erofs_buf *buf, erofs_blk_t blkaddr,
->>   		  enum erofs_kmap_type type)
->>   {
->> -	struct inode *inode = buf->inode;
->> -	erofs_off_t offset = (erofs_off_t)blkaddr << inode->i_blkbits;
->> +	u8 blkszbits = buf->inode ? buf->inode->i_blkbits : buf->blkszbits;
->> +	erofs_off_t offset = (erofs_off_t)blkaddr << blkszbits;
->>   	pgoff_t index = offset >> PAGE_SHIFT;
->>   	struct page *page = buf->page;
->>   	struct folio *folio;
->> @@ -43,7 +43,9 @@ void *erofs_bread(struct erofs_buf *buf, erofs_blk_t blkaddr,
->>   		erofs_put_metabuf(buf);
->>   
->>   		nofs_flag = memalloc_nofs_save();
->> -		folio = read_cache_folio(inode->i_mapping, index, NULL, NULL);
->> +		folio = buf->inode ?
->> +			read_mapping_folio(buf->inode->i_mapping, index, NULL) :
->> +			bdev_read_folio(buf->bdev, offset);
->>   		memalloc_nofs_restore(nofs_flag);
->>   		if (IS_ERR(folio))
->>   			return folio;
->> @@ -67,10 +69,14 @@ void *erofs_bread(struct erofs_buf *buf, erofs_blk_t blkaddr,
->>   
->>   void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb)
->>   {
->> -	if (erofs_is_fscache_mode(sb))
->> +	if (erofs_is_fscache_mode(sb)) {
->>   		buf->inode = EROFS_SB(sb)->s_fscache->inode;
->> -	else
->> -		buf->inode = sb->s_bdev->bd_inode;
->> +		buf->bdev = NULL;
->> +	} else {
->> +		buf->inode = NULL;
->> +		buf->bdev = sb->s_bdev;
->> +		buf->blkszbits = EROFS_SB(sb)->blkszbits;
->> +	}
->>   }
->>   
->>   void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
->> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
->> index b0409badb017..c9206351b485 100644
->> --- a/fs/erofs/internal.h
->> +++ b/fs/erofs/internal.h
->> @@ -224,8 +224,10 @@ enum erofs_kmap_type {
->>   
->>   struct erofs_buf {
->>   	struct inode *inode;
->> +	struct block_device *bdev;
->>   	struct page *page;
->>   	void *base;
->> +	u8 blkszbits;
->>   	enum erofs_kmap_type kmap_type;
->>   };
->>   #define __EROFS_BUF_INITIALIZER	((struct erofs_buf){ .page = NULL })
->> -- 
->> 2.39.2
->>
+> sync_blockdev() is just called and 0 is returned, I think in this
+> case it's safe to call invalidate_bdev() directly, or am I missing
+> other things?
 
+I still think there's a difference. invalidate_inode_pages2() also unmaps
+memory mappings which mapping_try_invalidate() does not do. That being said
+in xen_update_blkif_status() we seem to be bringing up a virtual block
+device so before this function is called, anybody would have hard time
+using anything in it. But this definitely needs a confirmation from Xen
+maintainers and a good documentation of the behavioral change in the
+changelog.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
