@@ -1,62 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1362D825205
-	for <lists+linux-erofs@lfdr.de>; Fri,  5 Jan 2024 11:32:18 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5DB582523B
+	for <lists+linux-erofs@lfdr.de>; Fri,  5 Jan 2024 11:38:35 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=a0U9IsNP;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4T60Bh6FjFz3cRP
-	for <lists+linux-erofs@lfdr.de>; Fri,  5 Jan 2024 21:32:12 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4T60L12fpbz3cc5
+	for <lists+linux-erofs@lfdr.de>; Fri,  5 Jan 2024 21:38:33 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=yukuai1@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=a0U9IsNP;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4T60BZ5DDVz30h8
-	for <linux-erofs@lists.ozlabs.org>; Fri,  5 Jan 2024 21:32:04 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4T60BJ0Bjlz4f3lW7
-	for <linux-erofs@lists.ozlabs.org>; Fri,  5 Jan 2024 18:31:52 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id BB8DB1A017F
-	for <linux-erofs@lists.ozlabs.org>; Fri,  5 Jan 2024 18:31:57 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-	by APP1 (Coremail) with SMTP id cCh0CgDX2xGZ2pdlGeddFg--.44050S3;
-	Fri, 05 Jan 2024 18:31:56 +0800 (CST)
-Subject: Re: [PATCH RFC v3 for-6.8/block 04/17] mtd: block2mtd: use bdev apis
-To: Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>
-References: <20231221085712.1766333-1-yukuai1@huaweicloud.com>
- <20231221085712.1766333-5-yukuai1@huaweicloud.com>
- <20240104112855.uci45hhqaiitmsir@quack3> <ZZedSYAedA05Oex2@infradead.org>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <28237ec3-c3c1-1f0c-5250-04a88845d4a6@huaweicloud.com>
-Date: Fri, 5 Jan 2024 18:31:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4T60Dy0Tw4z3cVJ
+	for <linux-erofs@lists.ozlabs.org>; Fri,  5 Jan 2024 21:34:10 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id DF30561877;
+	Fri,  5 Jan 2024 10:34:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24FFAC433C8;
+	Fri,  5 Jan 2024 10:34:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704450846;
+	bh=EsAKavy0GWz3zQK8s9XKK/HXklGdoTstOd7k03h30lA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a0U9IsNPozZgYWWC8Y3pbxdtD0bUsBDufoSawIQnDL4EB5ojEjF8Jth3vzIS13Ugc
+	 8oDY8Ljk/3UxhiGPHI4WgL28Kq9jwbpzPbHwFXm4b46X8qrKc7emGM8HHEBcWG4/Bo
+	 +RnrQJiWywula2Z1OaxnuocVUH/UEExziaBKPociI2OLHYUz0s+4nRRIn/L0e2Ywhs
+	 LInWrA0njjtH1PnP5nAU8yaKSPpufnb5xjukJ8xApXi7v5fCErk+w3EQxsQlRnz24K
+	 I3eIzBsYCbep9plLJghK6w6UOMSuRxr9SfQtKGughxU3wcO2fpVXi2MLdjjbfJWYfe
+	 mfVRRk6+CS6Pw==
+Date: Fri, 5 Jan 2024 11:33:58 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 0/5] netfs, cachefiles, 9p: Additional patches
+Message-ID: <20240105-packen-inspektion-71fac65bf899@brauner>
+References: <20240103145935.384404-1-dhowells@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <ZZedSYAedA05Oex2@infradead.org>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgDX2xGZ2pdlGeddFg--.44050S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7XryUXFWDtw1fXr4DKF17Jrb_yoWxuFgEgF
-	yvkFZrKa13JrZ2vFsxKw15tFZ2ya47Zry8JrW0qay7W3s5Xa9rG3WkGr13XF1qqan7WFnI
-	9r9FqayrKay2qjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbaxFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
-	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
-	17CEb7AF67AKxVWrXVW8Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWr
-	Zr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYx
-	BIdaVFxhVjvjDU0xZFpf9x0JUd8n5UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240103145935.384404-1-dhowells@redhat.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,33 +58,37 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: hoeppner@linux.ibm.com, vigneshr@ti.com, yi.zhang@huawei.com, clm@fb.com, adilger.kernel@dilger.ca, miquel.raynal@bootlin.com, agordeev@linux.ibm.com, linux-s390@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, richard@nod.at, willy@infradead.org, linux-bcachefs@vger.kernel.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, Yu Kuai <yukuai1@huaweicloud.com>, jejb@linux.ibm.com, p.raghav@samsung.com, gor@linux.ibm.com, hca@linux.ibm.com, joern@lazybastard.org, josef@toxicpanda.com, colyli@suse.de, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, viro@zeniv.linux.org.uk, "yukuai \(C\)" <yukuai3@huawei.com>, dsterba@suse.com, konishi.ryusuke@gmail.com, axboe@kernel.dk, brauner@kernel.org, tytso@mit.edu, martin.petersen@oracle.com, nico@fluxnic.net, yangerkun@huawei.com, linux-kernel@vger.kernel.org, kent.overstreet@gmail.com, hare@suse.de, jack@suse.com, linux-fsdevel@vger.kernel.org, linux-mtd@lists.infradead.org, akpm@linux-foundati
- on.org, roger.pau@citrix.com, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, sth@linux.ibm.com
+Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
-
-ÔÚ 2024/01/05 14:10, Christoph Hellwig Ð´µÀ:
-> On Thu, Jan 04, 2024 at 12:28:55PM +0100, Jan Kara wrote:
->> What do you think? Because when we are working with the folios it is rather
->> natural to use their mapping for dirty balancing?
+On Wed, Jan 03, 2024 at 02:59:24PM +0000, David Howells wrote:
+> Hi Christian, Jeff, Gao, Dominique,
 > 
-> The real problem is that block2mtd pokes way to deep into block
-> internals.
+> Here are some additional patches for my netfs-lib tree:
 > 
-> I think the saviour here is Christians series to replace the bdev handle
-> with a struct file, which will allow to use the normal file write path
-> here and get rid of the entire layering volation.
-
-Yes, looks like lots of patches from this set is not needed anymore.
-I'll stop sending v4 and just send some patches that is not related to
-'bd_inode' separately.
-
-Thanks,
-Kuai
-
+>  (1) Fix __cachefiles_prepare_write() to correctly validate against the DIO
+>      alignment.
 > 
-> .
+>  (2) 9p: Fix initialisation of the netfs_inode so that i_size is set before
+>      netfs_inode_init() is called.
 > 
+>  (3) 9p: Do a couple of cleanups (remove a couple of unused vars and turn a
+>      BUG_ON() into a warning).
+> 
+>  (4) 9p: Always update remote_i_size, even if we're asked not to update
+>      i_size in stat2inode.
+> 
+>  (5) 9p: Return the amount written in preference to an error if we wrote
+>      something.
+> 
+> David
+> 
+> The netfslib postings:
+> Link: https://lore.kernel.org/r/20231013160423.2218093-1-dhowells@redhat.com/ # v1
+> Link: https://lore.kernel.org/r/20231117211544.1740466-1-dhowells@redhat.com/ # v2
+> Link: https://lore.kernel.org/r/20231207212206.1379128-1-dhowells@redhat.com/ # v3
+> Link: https://lore.kernel.org/r/20231213152350.431591-1-dhowells@redhat.com/ # v4
+> Link: https://lore.kernel.org/r/20231221132400.1601991-1-dhowells@redhat.com/ # v5
 
+Pulled this into vfs.netfs. Thanks, David.
