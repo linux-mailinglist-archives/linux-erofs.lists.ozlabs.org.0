@@ -1,37 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC7F08260FE
-	for <lists+linux-erofs@lfdr.de>; Sat,  6 Jan 2024 19:11:46 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E447C826480
+	for <lists+linux-erofs@lfdr.de>; Sun,  7 Jan 2024 15:28:16 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=AwjER7Ox;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4T6pLS3ym6z3cTH
-	for <lists+linux-erofs@lfdr.de>; Sun,  7 Jan 2024 05:11:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4T7KL61jzDz3bNs
+	for <lists+linux-erofs@lfdr.de>; Mon,  8 Jan 2024 01:28:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
-Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=AwjER7Ox;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4T6pLP3hfmz2ytm
-	for <linux-erofs@lists.ozlabs.org>; Sun,  7 Jan 2024 05:11:41 +1100 (AEDT)
-Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
-	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 1C3DA1008CBC2
-	for <linux-erofs@lists.ozlabs.org>; Sun,  7 Jan 2024 02:11:40 +0800 (CST)
-Received: from zhaoyf.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
-	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id D993737C8F7
-	for <linux-erofs@lists.ozlabs.org>; Sun,  7 Jan 2024 02:11:38 +0800 (CST)
-From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/3] erofs-utils: mkfs: reorganize logic in erofs_compressor_init()
-Date: Sun,  7 Jan 2024 02:11:37 +0800
-Message-ID: <20240106181137.229118-1-zhaoyifan@sjtu.edu.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240106181040.228922-1-zhaoyifan@sjtu.edu.cn>
-References: <20240106181040.228922-1-zhaoyifan@sjtu.edu.cn>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4T7KKz2LBmz2xl6
+	for <linux-erofs@lists.ozlabs.org>; Mon,  8 Jan 2024 01:28:07 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 59F6360B9A;
+	Sun,  7 Jan 2024 14:28:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 027DDC433C8;
+	Sun,  7 Jan 2024 14:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704637681;
+	bh=1X8Ul3/Opyp81lNAQ1SojmK3B7nENWcPC3AhiW2tNXo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=AwjER7OxQTN4kEGqX4G0D8NVb3CQu5oecegYAWJPwbtMJHlLm+jBnt//mv3+dEOpn
+	 W2Rue0U8EcKxyrFUfuw3pqeta4+PcVj7O+K90bUuwMBqOUTaRfavGe4zigV+3mdP3H
+	 ZebUw+TrTcntfmexRxDz5Rk4PsPqN+p6weYRYSTei27KIcR9VFi6mqBKQqE/vyPu3N
+	 L6+oE6Vca/i4QW0G/HpH2wNKylHbnRtpOWUpTw/JulQPSIYsEo0pqvjza3/4IomHdj
+	 ATCrV12lkXbKRWg7naII7wX21j5s3ycyP5iZAbxJP6LA53YHW5zsZl5+TTYkfhk/Z3
+	 KmBNROPzxdP3w==
+Date: Sun, 7 Jan 2024 22:27:56 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linuxfoundation.org>
+Subject: [GIT PULL] erofs updates for 6.8-rc1
+Message-ID: <ZZq07DNl8EB/wlgK@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linuxfoundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>, Chao Yu <chao@kernel.org>,
+	Yue Hu <huyue2@coolpad.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -43,243 +60,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Yue Hu <huyue2@coolpad.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently, the initialization of compressors is weird: init() is called
-first, followed by setlevel(), then setdictsize(). The initialization
-process occurs in the last called setdictsize() for lzma, deflate, and
-libdeflate.
+Hi Linus,
 
-This patch reorders the three functions, with init() now being invoked
-last, allowing it to use the compression level and dictsize already set
-so that the behavior of the functions matches their names.
+Could you consider this pull request for 6.8-rc1?
 
-Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
----
- lib/compressor.c            |  8 ++++----
- lib/compressor_deflate.c    | 32 ++++++++++++++++----------------
- lib/compressor_libdeflate.c | 14 +++++++++-----
- lib/compressor_liblzma.c    | 34 +++++++++++++++++++---------------
- lib/compressor_lz4hc.c      |  5 ++++-
- 5 files changed, 52 insertions(+), 41 deletions(-)
+In this cycle, we'd like to enable basic sub-page compressed data
+support for Android ecosystem (for vendors to try out 16k page size
+with 4k-block images in their compatibility mode) as well as container
+images (so that 4k-block images can be parsed on arm64 cloud servers
+using 64k page size.)
 
-diff --git a/lib/compressor.c b/lib/compressor.c
-index 5061417..27b4077 100644
---- a/lib/compressor.c
-+++ b/lib/compressor.c
-@@ -100,10 +100,6 @@ int erofs_compressor_init(struct erofs_sb_info *sbi, struct erofs_compress *c,
- 		if (!erofs_algs[i].c)
- 			continue;
- 
--		ret = erofs_algs[i].c->init(c);
--		if (ret)
--			return ret;
--
- 		if (erofs_algs[i].c->setlevel) {
- 			ret = erofs_algs[i].c->setlevel(c, compression_level);
- 			if (ret)
-@@ -128,6 +124,10 @@ int erofs_compressor_init(struct erofs_sb_info *sbi, struct erofs_compress *c,
- 			c->dict_size = 0;
- 		}
- 
-+		ret = erofs_algs[i].c->init(c);
-+		if (ret)
-+			return ret;
-+
- 		if (!ret) {
- 			c->alg = &erofs_algs[i];
- 			return 0;
-diff --git a/lib/compressor_deflate.c b/lib/compressor_deflate.c
-index c95e53e..d9f8a91 100644
---- a/lib/compressor_deflate.c
-+++ b/lib/compressor_deflate.c
-@@ -36,7 +36,14 @@ static int compressor_deflate_exit(struct erofs_compress *c)
- 
- static int compressor_deflate_init(struct erofs_compress *c)
- {
--	c->private_data = NULL;
-+	if (c->private_data) {
-+		kite_deflate_end(c->private_data);
-+		c->private_data = NULL;
-+	}
-+
-+	c->private_data = kite_deflate_init(c->compression_level, c->dict_size);
-+	if (IS_ERR_VALUE(c->private_data))
-+		return PTR_ERR(c->private_data);
- 
- 	erofs_warn("EXPERIMENTAL DEFLATE algorithm in use. Use at your own risk!");
- 	erofs_warn("*Carefully* check filesystem data correctness to avoid corruption!");
-@@ -50,6 +57,11 @@ static int erofs_compressor_deflate_setlevel(struct erofs_compress *c,
- 	if (compression_level < 0)
- 		compression_level = erofs_compressor_deflate.default_level;
- 
-+	if (compression_level > erofs_compressor_deflate.best_level) {
-+		erofs_err("invalid compression level %d", compression_level);
-+		return -EINVAL;
-+	}
-+
- 	c->compression_level = compression_level;
- 	return 0;
- }
-@@ -57,26 +69,14 @@ static int erofs_compressor_deflate_setlevel(struct erofs_compress *c,
- static int erofs_compressor_deflate_setdictsize(struct erofs_compress *c,
- 						u32 dict_size)
- {
--	void *s;
--
--	if (c->private_data) {
--		kite_deflate_end(c->private_data);
--		c->private_data = NULL;
--	}
-+	if (dict_size == 0)
-+		dict_size = erofs_compressor_deflate.default_dictsize;
- 
- 	if (dict_size > erofs_compressor_deflate.max_dictsize) {
--		erofs_err("dict size %u is too large", dict_size);
-+		erofs_err("invalid dict size %u", dict_size);
- 		return -EINVAL;
- 	}
- 
--	if (dict_size == 0)
--		dict_size = erofs_compressor_deflate.default_dictsize;
--
--	s = kite_deflate_init(c->compression_level, dict_size);
--	if (IS_ERR(s))
--		return PTR_ERR(s);
--
--	c->private_data = s;
- 	c->dict_size = dict_size;
- 	return 0;
- }
-diff --git a/lib/compressor_libdeflate.c b/lib/compressor_libdeflate.c
-index c0b019a..ad5eeec 100644
---- a/lib/compressor_libdeflate.c
-+++ b/lib/compressor_libdeflate.c
-@@ -82,7 +82,10 @@ static int compressor_libdeflate_exit(struct erofs_compress *c)
- 
- static int compressor_libdeflate_init(struct erofs_compress *c)
- {
--	c->private_data = NULL;
-+	libdeflate_free_compressor(c->private_data);
-+	c->private_data = libdeflate_alloc_compressor(c->compression_level);
-+	if (!c->private_data)
-+		return -ENOMEM;
- 
- 	erofs_warn("EXPERIMENTAL libdeflate compressor in use. Use at your own risk!");
- 	return 0;
-@@ -94,10 +97,11 @@ static int erofs_compressor_libdeflate_setlevel(struct erofs_compress *c,
- 	if (compression_level < 0)
- 		compression_level = erofs_compressor_deflate.default_level;
- 
--	libdeflate_free_compressor(c->private_data);
--	c->private_data = libdeflate_alloc_compressor(compression_level);
--	if (!c->private_data)
--		return -ENOMEM;
-+	if (compression_level > erofs_compressor_deflate.best_level) {
-+		erofs_err("invalid compression level %d", compression_level);
-+		return -EINVAL;
-+	}
-+
- 	c->compression_level = compression_level;
- 	return 0;
- }
-diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
-index 5c7f830..0203a5c 100644
---- a/lib/compressor_liblzma.c
-+++ b/lib/compressor_liblzma.c
-@@ -55,18 +55,13 @@ static int erofs_compressor_liblzma_exit(struct erofs_compress *c)
- static int erofs_compressor_liblzma_setlevel(struct erofs_compress *c,
- 					     int compression_level)
- {
--	struct erofs_liblzma_context *ctx = c->private_data;
--	u32 preset;
--
- 	if (compression_level < 0)
--		preset = LZMA_PRESET_DEFAULT;
--	else if (compression_level >= 100)
--		preset = (compression_level - 100) | LZMA_PRESET_EXTREME;
--	else
--		preset = compression_level;
-+		compression_level = erofs_compressor_lzma.default_level;
- 
--	if (lzma_lzma_preset(&ctx->opt, preset))
-+	if (compression_level > erofs_compressor_lzma.best_level) {
-+		erofs_err("invalid compression level %d", compression_level);
- 		return -EINVAL;
-+	}
- 
- 	c->compression_level = compression_level;
- 	return 0;
-@@ -75,17 +70,14 @@ static int erofs_compressor_liblzma_setlevel(struct erofs_compress *c,
- static int erofs_compressor_liblzma_setdictsize(struct erofs_compress *c,
- 						u32 dict_size)
- {
--	struct erofs_liblzma_context *ctx = c->private_data;
-+	if (dict_size == 0)
-+		dict_size = erofs_compressor_lzma.default_dictsize;
- 
- 	if (dict_size > erofs_compressor_lzma.max_dictsize) {
--		erofs_err("dict size %u is too large", dict_size);
-+		erofs_err("invalid dict size %u", dict_size);
- 		return -EINVAL;
- 	}
- 
--	if (dict_size == 0)
--		dict_size = erofs_compressor_lzma.default_dictsize;
--
--	ctx->opt.dict_size = dict_size;
- 	c->dict_size = dict_size;
- 	return 0;
- }
-@@ -93,11 +85,23 @@ static int erofs_compressor_liblzma_setdictsize(struct erofs_compress *c,
- static int erofs_compressor_liblzma_init(struct erofs_compress *c)
- {
- 	struct erofs_liblzma_context *ctx;
-+	u32 preset;
- 
- 	ctx = malloc(sizeof(*ctx));
- 	if (!ctx)
- 		return -ENOMEM;
-+
- 	ctx->strm = (lzma_stream)LZMA_STREAM_INIT;
-+	if (c->compression_level < 0)
-+		preset = LZMA_PRESET_DEFAULT;
-+	else if (c->compression_level >= 100)
-+		preset = (c->compression_level - 100) | LZMA_PRESET_EXTREME;
-+	else
-+		preset = c->compression_level;
-+	if (lzma_lzma_preset(&ctx->opt, preset))
-+		return -EINVAL;
-+	ctx->opt.dict_size = c->dict_size;
-+
- 	c->private_data = ctx;
- 	erofs_warn("EXPERIMENTAL MicroLZMA feature in use. Use at your own risk!");
- 	erofs_warn("Note that it may take more time since the compressor is still single-threaded for now.");
-diff --git a/lib/compressor_lz4hc.c b/lib/compressor_lz4hc.c
-index b410e15..6fc8847 100644
---- a/lib/compressor_lz4hc.c
-+++ b/lib/compressor_lz4hc.c
-@@ -7,6 +7,7 @@
- #define LZ4_HC_STATIC_LINKING_ONLY (1)
- #include <lz4hc.h>
- #include "erofs/internal.h"
-+#include "erofs/print.h"
- #include "compressor.h"
- 
- #ifndef LZ4_DISTANCE_MAX	/* history window size */
-@@ -49,8 +50,10 @@ static int compressor_lz4hc_init(struct erofs_compress *c)
- static int compressor_lz4hc_setlevel(struct erofs_compress *c,
- 				     int compression_level)
- {
--	if (compression_level > LZ4HC_CLEVEL_MAX)
-+	if (compression_level > erofs_compressor_lz4hc.best_level) {
-+		erofs_err("invalid compression level %d", compression_level);
- 		return -EINVAL;
-+	}
- 
- 	c->compression_level = compression_level < 0 ?
- 		LZ4HC_CLEVEL_DEFAULT : compression_level;
--- 
-2.43.0
+In addition, there are several bugfixes and cleanups as usual.  All
+commits have been in -next for a while and no potential merge conflict
+is observed.
 
+Thanks,
+Gao Xiang
+
+The following changes since commit 2cc14f52aeb78ce3f29677c2de1f06c0e91471ab:
+
+  Linux 6.7-rc3 (2023-11-26 19:59:33 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.8-rc1
+
+for you to fetch changes up to 070aafcd2482dc31a12a3eda5d459c45496d6fb6:
+
+  erofs: make erofs_{err,info}() support NULL sb parameter (2024-01-04 00:23:13 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Add basic sub-page compressed data support;
+
+ - Fix a memory leak on MicroLZMA and DEFLATE compression;
+
+ - Fix a rare LZ4 inplace decompression issue on recent x86 CPUs;
+
+ - Two syzbot fixes around crafted images;
+
+ - Some cleanups.
+
+----------------------------------------------------------------
+Chunhai Guo (1):
+      erofs: make erofs_{err,info}() support NULL sb parameter
+
+Gao Xiang (10):
+      erofs: fix memory leak on short-lived bounced pages
+      erofs: fix lz4 inplace decompression
+      erofs: support I/O submission for sub-page compressed blocks
+      erofs: record `pclustersize` in bytes instead of pages
+      erofs: fix up compacted indexes for block size < 4096
+      erofs: fix ztailpacking for subpage compressed blocks
+      erofs: refine z_erofs_transform_plain() for sub-page block support
+      erofs: enable sub-page compressed block support
+      erofs: fix inconsistent per-file compression format
+      erofs: avoid debugging output for (de)compressed data
+
+Yue Hu (1):
+      erofs: allow partially filled compressed bvecs
+
+ fs/erofs/decompressor.c         | 122 +++++++++---------
+ fs/erofs/decompressor_deflate.c |   2 +-
+ fs/erofs/inode.c                |   6 +-
+ fs/erofs/super.c                |  10 +-
+ fs/erofs/zdata.c                | 267 ++++++++++++++++++----------------------
+ fs/erofs/zmap.c                 |  41 +++---
+ 6 files changed, 218 insertions(+), 230 deletions(-)
