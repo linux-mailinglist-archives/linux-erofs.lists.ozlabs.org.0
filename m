@@ -1,56 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EFA0829A6C
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jan 2024 13:26:43 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JR3zlrgY;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 09B3E829F45
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jan 2024 18:35:04 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4T96VS4vx5z3bnm
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jan 2024 23:26:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4T9FLF1nfJz3bsP
+	for <lists+linux-erofs@lfdr.de>; Thu, 11 Jan 2024 04:35:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JR3zlrgY;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=stoffel.org (client-ip=172.104.24.175; helo=mail.stoffel.org; envelope-from=john@stoffel.org; receiver=lists.ozlabs.org)
+X-Greylist: delayed 584 seconds by postgrey-1.37 at boromir; Thu, 11 Jan 2024 04:34:54 AEDT
+Received: from mail.stoffel.org (mail.stoffel.org [172.104.24.175])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4T96VK6bzGz2xHb
-	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Jan 2024 23:26:33 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by ams.source.kernel.org (Postfix) with ESMTP id 6E5E6B81AF1;
-	Wed, 10 Jan 2024 12:26:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09F79C433C7;
-	Wed, 10 Jan 2024 12:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704889589;
-	bh=XTnWr+9VNkl5OsNFjjoXhV8rPgRa0MXt2pzN1cgNXPc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JR3zlrgYA7lOCjs4GVYtYGYyhC/vRXJev678JjNXRRr0XulTWG1KJ/mclm7iTh7DN
-	 x3W1+kbs1qcwJ2O0R5ZOa7FadgSBgdaMd9Qk426qEXGAn0gGk+7C8j4j6E1x1iwRkv
-	 YwaGpkPWs4EwUxk798bJk/MlEhMVs2cLIHrzgXSxn7plFnKKIVCo8ivr+aRLMeop1R
-	 7gFJfyOH1M5IwGXmtWkDmdtNbAtOkI5Xr+aaSkRymagpnufZvqYBg0OEuKM4DLxvK5
-	 B7DRVsnSaOT5MvV9JPpArda/lCFoK9AvJ3R1c6sKFzlHyDmY99EykW5e8XzN1Htpyp
-	 I3g2Dm2XHa+Jw==
-Date: Wed, 10 Jan 2024 20:26:24 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: some update // Re: [GIT PULL] erofs updates for 6.8-rc1
-Message-ID: <ZZ6M8CCkunjfbt+/@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linuxfoundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Jingbo Xu <jefflexu@linux.alibaba.com>, Chao Yu <chao@kernel.org>,
-	Yue Hu <huyue2@coolpad.com>
-References: <ZZq07DNl8EB/wlgK@debian>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4T9FL60svFz3bPV
+	for <linux-erofs@lists.ozlabs.org>; Thu, 11 Jan 2024 04:34:54 +1100 (AEDT)
+Received: from quad.stoffel.org (097-095-183-072.res.spectrum.com [97.95.183.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mail.stoffel.org (Postfix) with ESMTPSA id 17DD91E12E;
+	Wed, 10 Jan 2024 12:25:07 -0500 (EST)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+	id A9991A8E30; Wed, 10 Jan 2024 12:25:06 -0500 (EST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZZq07DNl8EB/wlgK@debian>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-ID: <26014.54002.663705.978220@quad.stoffel.home>
+Date: Wed, 10 Jan 2024 12:25:06 -0500
+From: "John Stoffel" <john@stoffel.org>
+To: David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 1/4] netfs: Don't use certain internal folio_*() functions
+In-Reply-To: <20240109180117.1669008-2-dhowells@redhat.com>
+References: <20240109180117.1669008-1-dhowells@redhat.com>
+	<20240109180117.1669008-2-dhowells@redhat.com>
+X-Mailer: VM 8.2.0b under 28.2 (x86_64-pc-linux-gnu)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,154 +48,16 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Yue Hu <huyue2@coolpad.com>
+Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+>>>>> "David" == David Howells <dhowells@redhat.com> writes:
 
-Sorry, could you consider pull this tag "erofs-for-6.8-rc1-2" instead of
-the previous email one since commit de9bced860d4 ("erofs: fix
-inconsistent per-file compression format") was just found
-problematically on some LZMA images.
+> Filesystems should not be using folio->index not folio_index(folio)
+                     ^^^
 
-Since the previous email hasn't been processed, it'd be better to drop
-this problematic patch directly and submit a new fix later instead of
-fixing a fix commit.
+I think you have an extra 'not' in all four patch comments. 
 
-The description for this pull request is still as below:
-
-In this cycle, we'd like to enable basic sub-page compressed data
-support for Android ecosystem (for vendors to try out 16k page size
-with 4k-block images in their compatibility mode) as well as container
-images (so that 4k-block images can be parsed on arm64 cloud servers
-using 64k page size.)
-
-In addition, there are several bugfixes and cleanups as usual.  All
-commits have been in -next for a while and no potential merge conflict
-is observed.
-
-Sorry again,
-Gao Xiang
-
-The following changes since commit 2cc14f52aeb78ce3f29677c2de1f06c0e91471ab:
-
-  Linux 6.7-rc3 (2023-11-26 19:59:33 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.8-rc1-2
-
-for you to fetch changes up to aa12a790d31be14b289d5a2c6f41ca535fcc7841:
-
-  erofs: make erofs_{err,info}() support NULL sb parameter (2024-01-10 19:59:39 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Add basic sub-page compressed data support;
-
- - Fix a memory leak on MicroLZMA and DEFLATE compression;
-
- - Fix a rare LZ4 inplace decompression issue on recent x86 CPUs;
-
- - Fix a KASAN issue reported by syzbot around crafted images;
-
- - Some cleanups.
-
-----------------------------------------------------------------
-Chunhai Guo (1):
-      erofs: make erofs_{err,info}() support NULL sb parameter
-
-Gao Xiang (9):
-      erofs: fix memory leak on short-lived bounced pages
-      erofs: fix lz4 inplace decompression
-      erofs: support I/O submission for sub-page compressed blocks
-      erofs: record `pclustersize` in bytes instead of pages
-      erofs: fix up compacted indexes for block size < 4096
-      erofs: fix ztailpacking for subpage compressed blocks
-      erofs: refine z_erofs_transform_plain() for sub-page block support
-      erofs: enable sub-page compressed block support
-      erofs: avoid debugging output for (de)compressed data
-
-Yue Hu (1):
-      erofs: allow partially filled compressed bvecs
-
- fs/erofs/decompressor.c         | 120 +++++++++---------
- fs/erofs/decompressor_deflate.c |   2 +-
- fs/erofs/inode.c                |   6 +-
- fs/erofs/super.c                |  10 +-
- fs/erofs/zdata.c                | 267 ++++++++++++++++++----------------------
- fs/erofs/zmap.c                 |  32 +++--
- 6 files changed, 211 insertions(+), 226 deletions(-)
-
-
-On Sun, Jan 07, 2024 at 10:27:56PM +0800, Gao Xiang wrote:
-> Hi Linus,
-> 
-> Could you consider this pull request for 6.8-rc1?
-> 
-> In this cycle, we'd like to enable basic sub-page compressed data
-> support for Android ecosystem (for vendors to try out 16k page size
-> with 4k-block images in their compatibility mode) as well as container
-> images (so that 4k-block images can be parsed on arm64 cloud servers
-> using 64k page size.)
-> 
-> In addition, there are several bugfixes and cleanups as usual.  All
-> commits have been in -next for a while and no potential merge conflict
-> is observed.
-> 
-> Thanks,
-> Gao Xiang
-> 
-> The following changes since commit 2cc14f52aeb78ce3f29677c2de1f06c0e91471ab:
-> 
->   Linux 6.7-rc3 (2023-11-26 19:59:33 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.8-rc1
-> 
-> for you to fetch changes up to 070aafcd2482dc31a12a3eda5d459c45496d6fb6:
-> 
->   erofs: make erofs_{err,info}() support NULL sb parameter (2024-01-04 00:23:13 +0800)
-> 
-> ----------------------------------------------------------------
-> Changes since last update:
-> 
->  - Add basic sub-page compressed data support;
-> 
->  - Fix a memory leak on MicroLZMA and DEFLATE compression;
-> 
->  - Fix a rare LZ4 inplace decompression issue on recent x86 CPUs;
-> 
->  - Two syzbot fixes around crafted images;
-> 
->  - Some cleanups.
-> 
-> ----------------------------------------------------------------
-> Chunhai Guo (1):
->       erofs: make erofs_{err,info}() support NULL sb parameter
-> 
-> Gao Xiang (10):
->       erofs: fix memory leak on short-lived bounced pages
->       erofs: fix lz4 inplace decompression
->       erofs: support I/O submission for sub-page compressed blocks
->       erofs: record `pclustersize` in bytes instead of pages
->       erofs: fix up compacted indexes for block size < 4096
->       erofs: fix ztailpacking for subpage compressed blocks
->       erofs: refine z_erofs_transform_plain() for sub-page block support
->       erofs: enable sub-page compressed block support
->       erofs: fix inconsistent per-file compression format
->       erofs: avoid debugging output for (de)compressed data
-> 
-> Yue Hu (1):
->       erofs: allow partially filled compressed bvecs
-> 
->  fs/erofs/decompressor.c         | 122 +++++++++---------
->  fs/erofs/decompressor_deflate.c |   2 +-
->  fs/erofs/inode.c                |   6 +-
->  fs/erofs/super.c                |  10 +-
->  fs/erofs/zdata.c                | 267 ++++++++++++++++++----------------------
->  fs/erofs/zmap.c                 |  41 +++---
->  6 files changed, 218 insertions(+), 230 deletions(-)
+> and folio-> mapping, not folio_mapping() or folio_file_mapping() in
+> filesystem code.
