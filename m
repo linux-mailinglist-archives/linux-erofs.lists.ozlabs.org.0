@@ -2,24 +2,24 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1533382D51B
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jan 2024 09:34:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0569C82D51D
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jan 2024 09:34:58 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TD55h5K07z3bZK
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jan 2024 19:34:00 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TD56l6gDjz2xdX
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Jan 2024 19:34:55 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TD55X5Vtqz30RS
-	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Jan 2024 19:33:50 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W-eUMPj_1705307618;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W-eUMPj_1705307618)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TD56j0HLjz2xdX
+	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Jan 2024 19:34:52 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R401e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W-eSTCt_1705307687;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W-eSTCt_1705307687)
           by smtp.aliyun-inc.com;
-          Mon, 15 Jan 2024 16:33:44 +0800
+          Mon, 15 Jan 2024 16:34:48 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-cachefs@redhat.com,
 	linux-fsdevel@vger.kernel.org,
@@ -28,9 +28,11 @@ To: linux-cachefs@redhat.com,
 	Christian Brauner <christian@brauner.io>,
 	Jeff Layton <jlayton@kernel.org>
 Subject: [PATCH v2 3/4] erofs: Don't use certain internal folio_*() functions
-Date: Mon, 15 Jan 2024 16:33:37 +0800
-Message-Id: <20240115083337.1355191-1-hsiangkao@linux.alibaba.com>
+Date: Mon, 15 Jan 2024 16:34:45 +0800
+Message-Id: <20240115083445.1356899-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240109180117.1669008-4-dhowells@redhat.com>
+References: <20240109180117.1669008-4-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
