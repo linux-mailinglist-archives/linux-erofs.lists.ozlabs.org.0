@@ -1,55 +1,55 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76A5682E4C5
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jan 2024 01:25:37 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EFD082E4CB
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jan 2024 01:25:46 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=uYkZn6QS;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=PJFAW9fq;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TDVCg2jSrz3byl
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jan 2024 11:25:35 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TDVCr15X6z3by2
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jan 2024 11:25:44 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=uYkZn6QS;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=PJFAW9fq;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TDVBl28bRz3bnK
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jan 2024 11:24:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TDVCm1mVlz3bhD
+	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jan 2024 11:25:40 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id CD75660FA5;
-	Tue, 16 Jan 2024 00:24:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA47C433C7;
-	Tue, 16 Jan 2024 00:24:43 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 352B861010;
+	Tue, 16 Jan 2024 00:25:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25EECC43394;
+	Tue, 16 Jan 2024 00:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705364684;
-	bh=nJS/xUVs3DVD242EqR2wk6o4QyZNJsOWFys5JzDh3vo=;
+	s=k20201202; t=1705364738;
+	bh=MSEH59YR9chEdOpA6eOIdh14BxQmO+6NTx5igEosLdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uYkZn6QS7xVe1PmsrIkymBm0h1kmefl9VR1hNO0XW0BKaF8bxFbCOxYC80uM7h0/f
-	 06tJvQ+JrG8RN9WNIe4+mV+Z79n7QVqJ/1gfAj0r5Ir243jYwHo1kYipLimkUcsqXi
-	 rbhqmDpfjO7p6BhJPxvGz5T3kT34pAw8V4nTUBXfCFkUDERUh3KcqqfUhYIumryBHW
-	 zquuPFpg+kt+QQjOCEkgc73uv4kS6xzAnaZ0Ye/9CM8sr/KWpAxu8fJ3fe0Gl9PFCt
-	 JyvS7J7xCY96acH2NCDdD2uYRyvHcz7mRaVuwT47ZGC3aZwRr5xP3JQ87avZr3rU+u
-	 d9Vp6jTZTlwCQ==
+	b=PJFAW9fqAxqIXMHbGSFefLtIcq6M06AY/K/V+JtkSOB4g1YgwW0EuE3+FFTrIk0pZ
+	 KOd7PDvaAmv8oMJRmvCv1hd0cuLoYV0KvNNaCyG0Tc7kV4p75R+3Q7l08zKK5OpWw3
+	 Lgc36HFNWJ6rm2o5SAkokftaoQre/UhlytHB0uKZi2wlgAWiHQIfw6D2IEwEz7+Bez
+	 CyqlebOeemwe3+PdR3l3leY+46r6Z/1+OSppOSye/d14r69JR1FtoZoY7B1qfppMdc
+	 sCEnygueJOVPNqhMnob/Khs5nHLRXqSmumMgK/+wHoBtSfWCUCaHQ5B6VnMZIfI5oX
+	 GNdN+vNkQ+2JQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 13/19] erofs: fix ztailpacking for subpage compressed blocks
-Date: Mon, 15 Jan 2024 19:23:48 -0500
-Message-ID: <20240116002413.215163-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 09/14] erofs: fix ztailpacking for subpage compressed blocks
+Date: Mon, 15 Jan 2024 19:24:51 -0500
+Message-ID: <20240116002512.215607-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116002413.215163-1-sashal@kernel.org>
-References: <20240116002413.215163-1-sashal@kernel.org>
+In-Reply-To: <20240116002512.215607-1-sashal@kernel.org>
+References: <20240116002512.215607-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.12
+X-stable-base: Linux 6.1.73
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -83,25 +83,25 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index a7e6847f6f8f..c9ae96467d98 100644
+index 1b91ac5be961..914897d9aeac 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -815,7 +815,6 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
+@@ -652,7 +652,6 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
  
  	if (ztailpacking) {
  		pcl->obj.index = 0;	/* which indicates ztailpacking */
--		pcl->pageofs_in = erofs_blkoff(fe->inode->i_sb, map->m_pa);
+-		pcl->pageofs_in = erofs_blkoff(map->m_pa);
  		pcl->tailpacking_size = map->m_plen;
  	} else {
  		pcl->obj.index = map->m_pa >> PAGE_SHIFT;
-@@ -893,6 +892,7 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
- 		}
- 		get_page(map->buf.page);
- 		WRITE_ONCE(fe->pcl->compressed_bvecs[0].page, map->buf.page);
+@@ -852,6 +851,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 		get_page(fe->map.buf.page);
+ 		WRITE_ONCE(fe->pcl->compressed_bvecs[0].page,
+ 			   fe->map.buf.page);
 +		fe->pcl->pageofs_in = map->m_pa & ~PAGE_MASK;
  		fe->mode = Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE;
- 	}
- 	/* file-backed inplace I/O pages are traversed in reverse order */
+ 	} else {
+ 		/* bind cache first when cached decompression is preferred */
 -- 
 2.43.0
 
