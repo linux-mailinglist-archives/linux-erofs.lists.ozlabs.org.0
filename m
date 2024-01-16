@@ -1,48 +1,48 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C530B82E4AF
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jan 2024 01:24:32 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B05B282E4B0
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jan 2024 01:24:38 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dpZy0nH9;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=KKfdsbmc;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TDVBQ4z7Bz3bfS
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jan 2024 11:24:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TDVBX4cvLz3cB2
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jan 2024 11:24:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dpZy0nH9;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=KKfdsbmc;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TDV9N3qsQz3bhc
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jan 2024 11:23:36 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TDV9W70phz3bsT
+	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jan 2024 11:23:43 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 526C3CE18BA;
-	Tue, 16 Jan 2024 00:23:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5942C43394;
-	Tue, 16 Jan 2024 00:23:33 +0000 (UTC)
+	by sin.source.kernel.org (Postfix) with ESMTP id E9019CE18C3;
+	Tue, 16 Jan 2024 00:23:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E900C433C7;
+	Tue, 16 Jan 2024 00:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705364615;
-	bh=+kzaSbn5AcNZV9Az1XS8nKvGSGd1PbX1+x3zuomJV7Q=;
+	s=k20201202; t=1705364622;
+	bh=nJS/xUVs3DVD242EqR2wk6o4QyZNJsOWFys5JzDh3vo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dpZy0nH9Wm/HvuqhvtE78RQ47AzIAX8uhUncjBv8p29kXh6RRSIf3SwsVvW/CgsR6
-	 TwxN8RRoFRwuHoyy1LtsTtcZLvaQl8srdyBhT3ZV4DvXUNKNAtyAd5ryzuXXyv5Alu
-	 1oJeh0+cCwDCi3tzqdGjiKl8/Vo34auVO5A3/wAtnwLrprsI/MjOvvrxgYep+8CO6f
-	 WGPZXX+NwZnQjeS1WHRmgGPqvNmS1C5cFeU4hPDDATfhiB12hX8udyuJby5Z/GrN5W
-	 UOz33Dr2Gn23g+2WamdRRHoSvk84hHNDt7sAUiZyxsEe+CxlNlQJRm+9vdYWohzB5C
-	 2aavuETMeC4QA==
+	b=KKfdsbmcaUyZDxcU6GKzTqb7Xtdf2s7pPz0UJtzuYqs6he3DIPtOcTy02Hdz7LzaE
+	 8RRxBgNn6xODzSg5V50CSVCYVWSLBvTNoTNQW9ekcTksH/3BpkN87NUTrbLQ4QOq2K
+	 1LKryXot41ewC1CQaUJR3J8q7lvYJLP2krPkTXsoBYTE0XpETNOZ+zqETYcead3Oqz
+	 8PCpfrYAT3zmvjTaiggtf4/y8j6iOSdRttjjI+GiS5TZyMYasetHg4jsKp5Khdl5YN
+	 JEaOrA4l/MxJiJ/dumpNXWX4giid+K7ZiGdnubrtB9sOlKlxDRypaCsBR03ZJag/tS
+	 K45k629gmpdIQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.7 10/19] erofs: fix up compacted indexes for block size < 4096
-Date: Mon, 15 Jan 2024 19:22:46 -0500
-Message-ID: <20240116002311.214705-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.7 13/19] erofs: fix ztailpacking for subpage compressed blocks
+Date: Mon, 15 Jan 2024 19:22:49 -0500
+Message-ID: <20240116002311.214705-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240116002311.214705-1-sashal@kernel.org>
 References: <20240116002311.214705-1-sashal@kernel.org>
@@ -68,143 +68,40 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-[ Upstream commit 8d2517aaeea3ab8651bb517bca8f3c8664d318ea ]
+[ Upstream commit e5aba911dee5e20fa82efbe13e0af8f38ea459e7 ]
 
-Previously, the block size always equaled to PAGE_SIZE, therefore
-`lclusterbits` couldn't be less than 12.
+`pageofs_in` should be the compressed data offset of the page rather
+than of the block.
 
-Since sub-page compressed blocks are now considered, `lobits` for
-a lcluster in each pack cannot always be `lclusterbits` as before.
-Otherwise, there is no enough room for the special value
-`Z_EROFS_LI_D0_CBLKCNT`.
-
-To support smaller block sizes, `lobits` for each compacted lcluster is
-now calculated as:
-   lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1)
-
+Acked-by: Chao Yu <chao@kernel.org>
 Reviewed-by: Yue Hu <huyue2@coolpad.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Link: https://lore.kernel.org/r/20231206091057.87027-4-hsiangkao@linux.alibaba.com
+Link: https://lore.kernel.org/r/20231214161337.753049-1-hsiangkao@linux.alibaba.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/erofs/zmap.c | 32 ++++++++++++++------------------
- 1 file changed, 14 insertions(+), 18 deletions(-)
+ fs/erofs/zdata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 7b55111fd533..9753875e41cb 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -82,29 +82,26 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
- }
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index a7e6847f6f8f..c9ae96467d98 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -815,7 +815,6 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
  
- static unsigned int decode_compactedbits(unsigned int lobits,
--					 unsigned int lomask,
- 					 u8 *in, unsigned int pos, u8 *type)
- {
- 	const unsigned int v = get_unaligned_le32(in + pos / 8) >> (pos & 7);
--	const unsigned int lo = v & lomask;
-+	const unsigned int lo = v & ((1 << lobits) - 1);
- 
- 	*type = (v >> lobits) & 3;
- 	return lo;
- }
- 
--static int get_compacted_la_distance(unsigned int lclusterbits,
-+static int get_compacted_la_distance(unsigned int lobits,
- 				     unsigned int encodebits,
- 				     unsigned int vcnt, u8 *in, int i)
- {
--	const unsigned int lomask = (1 << lclusterbits) - 1;
- 	unsigned int lo, d1 = 0;
- 	u8 type;
- 
- 	DBG_BUGON(i >= vcnt);
- 
- 	do {
--		lo = decode_compactedbits(lclusterbits, lomask,
--					  in, encodebits * i, &type);
-+		lo = decode_compactedbits(lobits, in, encodebits * i, &type);
- 
- 		if (type != Z_EROFS_LCLUSTER_TYPE_NONHEAD)
- 			return d1;
-@@ -123,15 +120,14 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- {
- 	struct erofs_inode *const vi = EROFS_I(m->inode);
- 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
--	const unsigned int lomask = (1 << lclusterbits) - 1;
--	unsigned int vcnt, base, lo, encodebits, nblk, eofs;
-+	unsigned int vcnt, base, lo, lobits, encodebits, nblk, eofs;
- 	int i;
- 	u8 *in, type;
- 	bool big_pcluster;
- 
- 	if (1 << amortizedshift == 4 && lclusterbits <= 14)
- 		vcnt = 2;
--	else if (1 << amortizedshift == 2 && lclusterbits == 12)
-+	else if (1 << amortizedshift == 2 && lclusterbits <= 12)
- 		vcnt = 16;
- 	else
- 		return -EOPNOTSUPP;
-@@ -140,6 +136,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 	m->nextpackoff = round_down(pos, vcnt << amortizedshift) +
- 			 (vcnt << amortizedshift);
- 	big_pcluster = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1;
-+	lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1U);
- 	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
- 	eofs = erofs_blkoff(m->inode->i_sb, pos);
- 	base = round_down(eofs, vcnt << amortizedshift);
-@@ -147,15 +144,14 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 
- 	i = (eofs - base) >> amortizedshift;
- 
--	lo = decode_compactedbits(lclusterbits, lomask,
--				  in, encodebits * i, &type);
-+	lo = decode_compactedbits(lobits, in, encodebits * i, &type);
- 	m->type = type;
- 	if (type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
- 		m->clusterofs = 1 << lclusterbits;
- 
- 		/* figure out lookahead_distance: delta[1] if needed */
- 		if (lookahead)
--			m->delta[1] = get_compacted_la_distance(lclusterbits,
-+			m->delta[1] = get_compacted_la_distance(lobits,
- 						encodebits, vcnt, in, i);
- 		if (lo & Z_EROFS_LI_D0_CBLKCNT) {
- 			if (!big_pcluster) {
-@@ -174,8 +170,8 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 		 * of which lo saves delta[1] rather than delta[0].
- 		 * Hence, get delta[0] by the previous lcluster indirectly.
- 		 */
--		lo = decode_compactedbits(lclusterbits, lomask,
--					  in, encodebits * (i - 1), &type);
-+		lo = decode_compactedbits(lobits, in,
-+					  encodebits * (i - 1), &type);
- 		if (type != Z_EROFS_LCLUSTER_TYPE_NONHEAD)
- 			lo = 0;
- 		else if (lo & Z_EROFS_LI_D0_CBLKCNT)
-@@ -190,8 +186,8 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 		nblk = 1;
- 		while (i > 0) {
- 			--i;
--			lo = decode_compactedbits(lclusterbits, lomask,
--						  in, encodebits * i, &type);
-+			lo = decode_compactedbits(lobits, in,
-+						  encodebits * i, &type);
- 			if (type == Z_EROFS_LCLUSTER_TYPE_NONHEAD)
- 				i -= lo;
- 
-@@ -202,8 +198,8 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
- 		nblk = 0;
- 		while (i > 0) {
- 			--i;
--			lo = decode_compactedbits(lclusterbits, lomask,
--						  in, encodebits * i, &type);
-+			lo = decode_compactedbits(lobits, in,
-+						  encodebits * i, &type);
- 			if (type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
- 				if (lo & Z_EROFS_LI_D0_CBLKCNT) {
- 					--i;
+ 	if (ztailpacking) {
+ 		pcl->obj.index = 0;	/* which indicates ztailpacking */
+-		pcl->pageofs_in = erofs_blkoff(fe->inode->i_sb, map->m_pa);
+ 		pcl->tailpacking_size = map->m_plen;
+ 	} else {
+ 		pcl->obj.index = map->m_pa >> PAGE_SHIFT;
+@@ -893,6 +892,7 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
+ 		}
+ 		get_page(map->buf.page);
+ 		WRITE_ONCE(fe->pcl->compressed_bvecs[0].page, map->buf.page);
++		fe->pcl->pageofs_in = map->m_pa & ~PAGE_MASK;
+ 		fe->mode = Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE;
+ 	}
+ 	/* file-backed inplace I/O pages are traversed in reverse order */
 -- 
 2.43.0
 
