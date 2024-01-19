@@ -2,56 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D41B831CA4
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jan 2024 16:32:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id ECB35832366
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jan 2024 03:40:36 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=MKIroSt6;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=iHx1d36j;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TG6FN0Y1lz3btk
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jan 2024 02:32:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TGP4205NLz3bsS
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jan 2024 13:40:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=MKIroSt6;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=iHx1d36j;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org)
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TG6FH0qR2z2xTl
-	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jan 2024 02:32:35 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TGP3v17KKz3bZ6
+	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jan 2024 13:40:27 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 817ACCE1B3F;
-	Thu, 18 Jan 2024 15:32:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC7EAC433F1;
-	Thu, 18 Jan 2024 15:32:28 +0000 (UTC)
+	by ams.source.kernel.org (Postfix) with ESMTP id 43657B818F0;
+	Fri, 19 Jan 2024 02:40:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9E913C433F1;
+	Fri, 19 Jan 2024 02:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705591952;
-	bh=NH/52USESWX/025MLcTJ6cVm9KuDjzjd5hFj4uGgKqA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=MKIroSt6lXEKXaW8LCFPoSsCdjkVBNMdDh4OwkAUPMa+c4EeXxQZce1qojt4K+jRr
-	 zRPxQP/bhxY8ALNlY6DLgb1CfD9zdGxGXJLOKfJOJJkA8DA7ImEr5tGrVu2aMyLysj
-	 t0tuu2Eh/TOX4GmhS2m5JaWFUjVMLUbZKlxHNNBOPOd6LkTFG1zfMeC2C1o7Y5jIpT
-	 zynEbInLm74oT4C73gymPTjFaVj29z+ffyW18ObgO7XN91QrTC+ePQg/qvOQpyWOtw
-	 UhknVtn5vBVJAB5Z/WHPsKJsDvSV6krDZdqc9PEEUsuPwnkLuje+ZSXb7SGYichrxo
-	 4W4dCQJSw/5rw==
-Date: Thu, 18 Jan 2024 23:32:24 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linuxfoundation.org>
-Subject: [GIT PULL] erofs fixes for 6.8-rc1
-Message-ID: <ZalEiKJWhdH2D9JV@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linuxfoundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Yue Hu <huyue2@coolpad.com>, David Howells <dhowells@redhat.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>, Chao Yu <chao@kernel.org>,
-	Jingbo Xu <jefflexu@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+	s=k20201202; t=1705632021;
+	bh=3LQLFqkSRwpBdrvgaAJzv+QRr4GqaLfcGn2KjUktbXg=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=iHx1d36jRgOWao3gPv4TmShkzfW0+uDB+zPKNzHT/9qPlLrYxR2rVwlWBUNDx3sBc
+	 4IpLHSdr+nAPY2qI+sPeLzJz5Kjccq2ifPPmBJU2uS9LUPLYuOk7N3xe5HzkITOxAv
+	 D54rm9JGL/XLrdw8EpfcdfFsn9Ub6V2z80uWsAbIZL/AEvjYJAq5P0yuy25r6046Px
+	 fL1pqpf9grbKn7Su+ASoOb3aE+wJB6kZFa9GFPbsiEO5gcW9jIRCgzxDkl+Kw38/tB
+	 jKCNk9/wvYUto4Np2TzfuWTrF3F8HrQIydq4b4plXtoDrJNsVKkh9QQrb0J9rB8jCc
+	 Gw4rlupbTOZBw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 89958D8C987;
+	Fri, 19 Jan 2024 02:40:21 +0000 (UTC)
+Subject: Re: [GIT PULL] erofs fixes for 6.8-rc1
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <ZalEiKJWhdH2D9JV@debian>
+References: <ZalEiKJWhdH2D9JV@debian>
+X-PR-Tracked-List-Id: Development of Linux EROFS file system <linux-erofs.lists.ozlabs.org>
+X-PR-Tracked-Message-Id: <ZalEiKJWhdH2D9JV@debian>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.8-rc1-fixes
+X-PR-Tracked-Commit-Id: 2b872b0f466d2acb4491da845c66b49246d5cdf9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 6f3625006b157c5a460970ca4d651b100bfa67bf
+Message-Id: <170563202155.16016.7679623835755808959.pr-tracker-bot@kernel.org>
+Date: Fri, 19 Jan 2024 02:40:21 +0000
+To: Gao Xiang <xiang@kernel.org>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -63,55 +65,19 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>, Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org
+Cc: Christian Brauner <brauner@kernel.org>, Jeff Layton <jlayton@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>, Linus Torvalds <torvalds@linuxfoundation.org>, Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Linus,
+The pull request you sent on Thu, 18 Jan 2024 23:32:24 +0800:
 
-Could you consider this pull request for v6.8?
+> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.8-rc1-fixes
 
-It simply contains a fixed commit of the previous problematic one
-mentioned in [1] and a folio helper cleanup.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/6f3625006b157c5a460970ca4d651b100bfa67bf
 
-All commits have been in -next and no potential merge conflict is
-observed.
+Thank you!
 
-[1] https://lore.kernel.org/r/ZZ6M8CCkunjfbt+%2F@debian
-
-Thanks,
-Gao Xiang
-
-The following changes since commit 0dd3ee31125508cd67f7e7172247f05b7fd1753a:
-
-  Linux 6.7 (2024-01-07 12:18:38 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.8-rc1-fixes
-
-for you to fetch changes up to 2b872b0f466d2acb4491da845c66b49246d5cdf9:
-
-  erofs: Don't use certain unnecessary folio_*() functions (2024-01-15 23:52:52 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Fix a "BUG: kernel NULL pointer dereference" issue due to
-   inconsistent on-disk indices of compressed inodes against
-   per-sb `available_compr_algs` generated by Syzkaller;
-
- - Don't use certain unnecessary folio_*() helpers if the folio
-   type (page cache) is known.
-
-----------------------------------------------------------------
-David Howells (1):
-      erofs: Don't use certain unnecessary folio_*() functions
-
-Gao Xiang (1):
-      erofs: fix inconsistent per-file compression format
-
- fs/erofs/decompressor.c |  2 +-
- fs/erofs/fscache.c      |  6 +++---
- fs/erofs/zmap.c         | 23 +++++++++++++----------
- 3 files changed, 17 insertions(+), 14 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
