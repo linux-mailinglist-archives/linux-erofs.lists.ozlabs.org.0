@@ -1,37 +1,113 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D99228333F6
-	for <lists+linux-erofs@lfdr.de>; Sat, 20 Jan 2024 12:54:18 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DE38833515
+	for <lists+linux-erofs@lfdr.de>; Sat, 20 Jan 2024 15:45:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1705761940;
+	bh=7tSIAb0yBiCqkQ79rrgwNOWaLILklASzjFZq1oKt4V0=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=maH1mOi4Y3+ZxRDZuFaFwrXf/0eOgh9Z1bViHO7VhJfhwheEzB7LSbYRr8cdEprc7
+	 ANBM3wLP5c8R+56lsNBhmMxwJKU6Dz3m1z4mGktJdtKU8hRkeR4LYAm2JWagEh8472
+	 IfTAqQ6VepmT3Dfgpkh9Ddk0PmJJ1CgixdJPMSIean0MpH29bXvMIQRaSOrSgnWbh+
+	 bjApXpA6dtDup+v1L2sLlANg5N7ohl9YP4hdBTayXanl2I1bQshZQDVw0M/Az8uak3
+	 +1stJMWH6n0LK/zfeSWoFasdU1tZDbDntk/9dRlGzPQEggEvXYWy7QykQbwOwyTv88
+	 FIsoHkR58b/AQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4THFJS5qZNz3c1C
-	for <lists+linux-erofs@lfdr.de>; Sat, 20 Jan 2024 22:54:16 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4THK6D3W1Wz3c5j
+	for <lists+linux-erofs@lfdr.de>; Sun, 21 Jan 2024 01:45:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
-Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=Ff6akq3X;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feab::70e; helo=apc01-sg2-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org)
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2070e.outbound.protection.outlook.com [IPv6:2a01:111:f400:feab::70e])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4THFJQ2335z3bWH
-	for <linux-erofs@lists.ozlabs.org>; Sat, 20 Jan 2024 22:54:14 +1100 (AEDT)
-Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
-	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 0508710052F83
-	for <linux-erofs@lists.ozlabs.org>; Sat, 20 Jan 2024 19:53:43 +0800 (CST)
-Received: from zhaoyf.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
-	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id A8DAB380C9A
-	for <linux-erofs@lists.ozlabs.org>; Sat, 20 Jan 2024 19:53:19 +0800 (CST)
-From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v4 2/2] erofs-utils: mkfs: allow to specify dictionary size for compression algorithms
-Date: Sat, 20 Jan 2024 19:53:19 +0800
-Message-ID: <20240120115319.152366-1-zhaoyifan@sjtu.edu.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240106181040.228922-1-zhaoyifan@sjtu.edu.cn>
-References: <20240106181040.228922-1-zhaoyifan@sjtu.edu.cn>
-MIME-Version: 1.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4THK660NmVz3bqx
+	for <linux-erofs@lists.ozlabs.org>; Sun, 21 Jan 2024 01:45:32 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y47VYsQZ718XC22juadxzcxPNgASLFiKT0UYL1xfGQ5J4AKHcj/chErVHgW76eQkjgG4NuYzehA9f0Um2vOPxeqV7uqrZWvD7Pf7LhJj9qeJlb3bBc0T01NgZqSRABHcdFkf63IaNUxGlp6qHIhV39KsiMOvNUSXPmt1JOkQEj20jUE4ReyiXKNjzAZNyun3a00iDyULB3uFeBIyg8KPFi9ckuMqFQBhDwP6r3YmNMu8Nuy9sp4zqfTaGA5VwrobPxNrbJ4pBUAF+JGxAIXmpYOIyjTjkhoaK7zuIxe6Jc9lkLvLK7W/xVNNhOtuzT0w6YX3CHZCYuHvJrmnI1lB6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7tSIAb0yBiCqkQ79rrgwNOWaLILklASzjFZq1oKt4V0=;
+ b=e4TYsY2aXfgOmUbGtJucX4AVlgGY9DO5SO8w5/L/LMU+/1SGB+N2imlSjPOEt8Tv7nZ3JAhnVvq/vYAX1+dtEYdmGpNtmrLWrXk1RDqlI43v6G8eWsEXOEq42V1xj5N64sF5ffX2HIX7gIHS+UdNs8CszacsymP2hSK9EGsCjwFDXTAwvaMf/G6J02YiK7XDFrZMe/JcBfm0FR+ibaUA9qzJ0iiSj/Fhu3uR/0Ft0jlodZ4lOWyoCDrHLwgX9l8emo5wDnOIfsBiYz/BM1+DwbR+TspJTT4OCT1dMy/65VflpEqkmEc6BrU3NoMEwzaz00ameqqqBdGRQNnFDBCC+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TY2PR06MB3342.apcprd06.prod.outlook.com (2603:1096:404:fb::23)
+ by SG2PR06MB5059.apcprd06.prod.outlook.com (2603:1096:4:1c7::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.27; Sat, 20 Jan
+ 2024 14:45:08 +0000
+Received: from TY2PR06MB3342.apcprd06.prod.outlook.com
+ ([fe80::b403:721d:ec13:d457]) by TY2PR06MB3342.apcprd06.prod.outlook.com
+ ([fe80::b403:721d:ec13:d457%5]) with mapi id 15.20.7202.027; Sat, 20 Jan 2024
+ 14:45:07 +0000
+To: xiang@kernel.org
+Subject: [PATCH v2] erofs: relaxed temporary buffers allocation on readahead
+Date: Sat, 20 Jan 2024 07:55:51 -0700
+Message-Id: <20240120145551.1941483-1-guochunhai@vivo.com>
+X-Mailer: git-send-email 2.25.1
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI1PR02CA0018.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::7) To TY2PR06MB3342.apcprd06.prod.outlook.com
+ (2603:1096:404:fb::23)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY2PR06MB3342:EE_|SG2PR06MB5059:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5b5c8910-b04f-4607-0f38-08dc19c6657f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 	P4kganPSJ+Bf7hVEKFhF75x3d/H7U0pcjKMODXrdx2+SlJiQiMRgNUfCTNEihuwVkEnFJqVRxS3Glj+A+M9xcsk3nCCasnvTS9/XWzAs8NCZALXc8WwiJy0TIjsSR0di9lXhZmPgjESu7F3UdJZ7WRCTqybSm8Zruke9l8a41EpO9PkWZKRJ8HG3PQo3gOFco99Kq5Mq0386wPvthho6u64B/YPdia53f2BeTzsNa95GtOMqxvxnZAYdzPauGHpVunjLMVqherSlvQzPJl7p9AkgtAM4x3GLXgN0NNWMZre4A2ERdMAcVLNHsh79NY6Rx+ZQCqNcK23LmI4iZhq2K8xr026Gr37tWL7NBJs1U7RZ+v8BFLLFaIutXkBzWeF6p2aG8+VJDU7ZXQkZC+PtmhjYYI9b4TSNUjmAWzliqefFFd1VIfFenvcP1KBk33+C04EIPqzGv2GgLB1b9I6roVGx6IHUZMK+RZ6o12QlkzTBDjSKEv1i3xMc87akEcGkY7TqF7uMrdH/x6bhpGjNCQi66RKW9QfXpL7YllrfbIK/s1KpVxKHeYNTEoFVPjAIZSHCSLCkRUlYnhxusTtqRG3WokxqRPgKifYuHPMhaUsFzTQSiIgIEySgURo2p0R9
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR06MB3342.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(39860400002)(346002)(136003)(396003)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(2616005)(6506007)(1076003)(26005)(6512007)(107886003)(6666004)(52116002)(5660300002)(8676002)(83380400001)(4326008)(8936002)(41300700001)(966005)(6486002)(478600001)(45080400002)(66946007)(66476007)(66556008)(6916009)(316002)(2906002)(86362001)(36756003)(38100700002)(38350700005)(309714004);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?XtxPk+PlJeO5LArf0dc2p8ULGjMXAkFM/OdxGg6plug26rtl9UJoEOXPeZKr?=
+ =?us-ascii?Q?1OoLssYQD+RpsBewHmu0HoiBw8CM5Xs8aYtVUSavr/3M7D3EHAZQhxl6m14T?=
+ =?us-ascii?Q?3afGqWB5MhGjEaw4/aEdswPUMTA8XjVmqvEQydJwT0q9CJeZ2sIZtEiBizIf?=
+ =?us-ascii?Q?FSQ1KHmSHk5FUz9eddGGbwCdfh2WvvlvgTmZvOKJ2vz6neJOZaf29Qy5AGOB?=
+ =?us-ascii?Q?cc+bSjKyiLXc79xL3qkAnSNkT438IWNPhZ6oUI1pTBIQIzvwmXTaXAzbrAm4?=
+ =?us-ascii?Q?nA+FokzL3Jvgy0H7rCYE6C/R6IiJGPw+WcY/zswSpi2Oav/SXFcEiqmPX+P4?=
+ =?us-ascii?Q?Omnwx7zq06nmuRhAaHdjHbdU3xJ+Fd2ikF7CadSjugbcMzAZuTKnHVzxy+X4?=
+ =?us-ascii?Q?QavecQPDmZ8W6qRbkXoKDntRKCq063uwujYiWx8D1LEGWFSRded6z63RFSgD?=
+ =?us-ascii?Q?dibnxhkv34AiVWzu9kpaQfIRWOAgMCv52XGMGfgx1+e8JfnzDetXvjY9ZPWO?=
+ =?us-ascii?Q?S1KewqkLGBHtwHbERLgjwSutq4JBzObldXXlq3TTVARao+bL3ISde6YG2DSN?=
+ =?us-ascii?Q?oKXIFctsbsPAo02DX98eGSbIJK0+ckT3kgWqgyJtS2YPs1HV/gttqltZLVUN?=
+ =?us-ascii?Q?M/WLb/a8RwBToGokeo1tZkr3uPJDSze190hHUk8SClqEn96gkKH9spk24H77?=
+ =?us-ascii?Q?roZ5Re4nlxK7MU5+AhG3QztSdq6QsnkEDoAFv6SC9lQLAySHKP5P+bCXt4Ig?=
+ =?us-ascii?Q?+ORr/caSdxF55afQxgO7v6bQUMxkYg6f5RYBwUiiBy/fK1M8IzAMSj4IOnza?=
+ =?us-ascii?Q?8WBPjDSQHCjORLmAjgyZnvceBxQeWN78npsRZwLM7SWPB5I5at+rk6MGhsOl?=
+ =?us-ascii?Q?P7gTlxaD3g7EO1xWX8UZdNXByk/cuiYHhS0Jqx+9ubwBM6UuGN5BKWvERVI0?=
+ =?us-ascii?Q?av+kClw0iana1j/7ig/S1Vi1mejWMEHPM0KemFDy37WeYc4I/5yzVR0hAqkc?=
+ =?us-ascii?Q?9Pg1K0nMTnAyrp4a6qpsBVOy0p/MUsWbxa9zYM6qrWhvsjRq0kQGcOAiuXy1?=
+ =?us-ascii?Q?XuuoUfeJaZ7iYhVVccOvqsM9pc0EoPlv7GEA7pX0c3mrwgxS9MyUtzUbXp9+?=
+ =?us-ascii?Q?U3DXDuncxmK3lsY3XQJabf1F4Kd9722PisRrf28uw2gcjRVq9x+rIeM3kw8H?=
+ =?us-ascii?Q?gAWg1TDWCO3fB09QXktCro5OzifRQu4DLsT5au038zE3E2aUfyCYQc8TfioF?=
+ =?us-ascii?Q?qOAdoUR0Dfgm47PspVsDZX4+9zfIGMxByPu0xIt87FICFd3NSlcxC0Lgv8/m?=
+ =?us-ascii?Q?OLnOU1h3FoohrVUadkWsh+KM8GNm9r71sPRy2QK86bfI9BiJo+eg+Qs/VmsE?=
+ =?us-ascii?Q?JvD5BKAl7iKU0TgRTavo9TcDpB9Bl3ttC+z6wgTdZolTPa7BFGf0fNT2nGD7?=
+ =?us-ascii?Q?vKdJhJu8y5udB7SfZdbfANR6f38jWIWUoPlI8Cd0D5fQmjhnbmz1KIyvm4b7?=
+ =?us-ascii?Q?mgRPCwDISOPyQrYQ9VoArjKpINxI9uDWbuSsf17gRUO0Ol3RdBmw8i/iZUH1?=
+ =?us-ascii?Q?UbmakrNiJ1BbMMxbYxNLb8RcsBwP0W51kQijrSx2?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b5c8910-b04f-4607-0f38-08dc19c6657f
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR06MB3342.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2024 14:45:07.8486
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: U4jH9B2/rFYl11eev7xFlftFmOpz9OrtDbHMRijCkxTjuiR3bwUunZVnG3zVZp+HC/Qjn3+vDi4t4EHylb4MqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5059
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -43,554 +119,239 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Chunhai Guo via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Chunhai Guo <guochunhai@vivo.com>
+Cc: Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org, huyue2@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently, the dictionary size for compression algorithms is fixed. This
-patch allows to specify different ones with new -zX,dictsize=<dictsize>
-options.
+Even with inplace decompression, sometimes extra temporary buffers are
+still needed for decompression.  In low-memory scenarios, it would be
+better to try to allocate with GFP_NOWAIT on readahead first. That can
+help reduce the time spent on page allocation under memory pressure.
 
-This patch also changes the way to specify compression levels. Now, the
-compression level is specified with -zX,level=<level> options and could
-be specified together with dictsize. The old -zX,<level> form is still
-supported for compatibility.
+There is an average reduction of 21% in page allocation time under
+multi-app launch benchmark workload [1] on ARM64 Android devices running
+the 5.15 kernel with an 8-core CPU and 8GB of memory.
 
-Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+[1] https://lore.kernel.org/r/20240109074143.4138783-1-guochunhai@vivo.com
+
+Suggested-by: Gao Xiang <xiang@kernel.org>
+Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
 ---
- include/erofs/config.h   |  10 ++--
- lib/compress.c           |  33 ++++++++-----
- lib/compress_hints.c     |   2 +-
- lib/compressor.c         |  16 +++++-
- lib/compressor.h         |   6 ++-
- lib/compressor_deflate.c |  26 ++++++++--
- lib/compressor_liblzma.c |  34 ++++++++-----
- lib/config.c             |   4 +-
- lib/inode.c              |   2 +-
- mkfs/main.c              | 104 +++++++++++++++++++++++++++++++--------
- 10 files changed, 180 insertions(+), 57 deletions(-)
+ fs/erofs/compress.h             |  5 ++---
+ fs/erofs/decompressor.c         |  5 +++--
+ fs/erofs/decompressor_deflate.c | 19 +++++++++++++------
+ fs/erofs/decompressor_lzma.c    | 17 ++++++++++++-----
+ fs/erofs/zdata.c                | 16 ++++++++++++----
+ 5 files changed, 42 insertions(+), 20 deletions(-)
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 89fe522..eecf575 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -34,6 +34,12 @@ enum {
- 
- #define EROFS_MAX_COMPR_CFGS		64
- 
-+struct erofs_compr_opts {
-+	char *alg;
-+	int level;
-+	u32 dict_size;
-+};
-+
- struct erofs_configure {
- 	const char *c_version;
- 	int c_dbg_lvl;
-@@ -64,8 +70,7 @@ struct erofs_configure {
- 	char *c_src_path;
- 	char *c_blobdev_path;
- 	char *c_compress_hints_file;
--	char *c_compr_alg[EROFS_MAX_COMPR_CFGS];
--	int c_compr_level[EROFS_MAX_COMPR_CFGS];
-+	struct erofs_compr_opts c_compr_opts[EROFS_MAX_COMPR_CFGS];
- 	char c_force_inodeversion;
- 	char c_force_chunkformat;
- 	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
-@@ -73,7 +78,6 @@ struct erofs_configure {
- 
- 	u32 c_pclusterblks_max, c_pclusterblks_def, c_pclusterblks_packed;
- 	u32 c_max_decompressed_extent_bytes;
--	u32 c_dict_size;
- 	u64 c_unix_timestamp;
- 	u32 c_uid, c_gid;
- 	const char *mount_point;
-diff --git a/lib/compress.c b/lib/compress.c
-index 3ea735c..ea9d00d 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -1123,7 +1123,8 @@ err_free_meta:
- }
- 
- static int z_erofs_build_compr_cfgs(struct erofs_sb_info *sbi,
--				    struct erofs_buffer_head *sb_bh)
-+				    struct erofs_buffer_head *sb_bh,
-+				    u32 *max_dict_size)
- {
- 	struct erofs_buffer_head *bh = sb_bh;
- 	int ret = 0;
-@@ -1159,7 +1160,9 @@ static int z_erofs_build_compr_cfgs(struct erofs_sb_info *sbi,
- 		} __packed lzmaalg = {
- 			.size = cpu_to_le16(sizeof(struct z_erofs_lzma_cfgs)),
- 			.lzma = {
--				.dict_size = cpu_to_le32(cfg.c_dict_size),
-+				.dict_size = cpu_to_le32(
-+					max_dict_size
-+						[Z_EROFS_COMPRESSION_LZMA]),
- 			}
- 		};
- 
-@@ -1181,8 +1184,9 @@ static int z_erofs_build_compr_cfgs(struct erofs_sb_info *sbi,
- 		} __packed zalg = {
- 			.size = cpu_to_le16(sizeof(struct z_erofs_deflate_cfgs)),
- 			.z = {
--				.windowbits =
--					cpu_to_le32(ilog2(cfg.c_dict_size)),
-+				.windowbits = cpu_to_le32(ilog2(
-+					max_dict_size
-+						[Z_EROFS_COMPRESSION_DEFLATE])),
- 			}
- 		};
- 
-@@ -1202,11 +1206,14 @@ static int z_erofs_build_compr_cfgs(struct erofs_sb_info *sbi,
- int z_erofs_compress_init(struct erofs_sb_info *sbi, struct erofs_buffer_head *sb_bh)
- {
- 	int i, ret;
-+	u32 max_dict_size[Z_EROFS_COMPRESSION_MAX];
- 
--	for (i = 0; cfg.c_compr_alg[i]; ++i) {
-+	for (i = 0; cfg.c_compr_opts[i].alg; ++i) {
- 		struct erofs_compress *c = &erofs_ccfg[i].handle;
- 
--		ret = erofs_compressor_init(sbi, c, cfg.c_compr_alg[i], cfg.c_compr_level[i]);
-+		ret = erofs_compressor_init(sbi, c, cfg.c_compr_opts[i].alg,
-+					    cfg.c_compr_opts[i].level,
-+					    cfg.c_compr_opts[i].dict_size);
- 		if (ret)
- 			return ret;
- 
-@@ -1216,17 +1223,21 @@ int z_erofs_compress_init(struct erofs_sb_info *sbi, struct erofs_buffer_head *s
- 		sbi->available_compr_algs |= 1 << erofs_ccfg[i].algorithmtype;
- 		if (erofs_ccfg[i].algorithmtype != Z_EROFS_COMPRESSION_LZ4)
- 			erofs_sb_set_compr_cfgs(sbi);
-+		max_dict_size[erofs_ccfg[i].algorithmtype] =
-+			max(max_dict_size[erofs_ccfg[i].algorithmtype],
-+			    c->dict_size);
- 	}
- 
- 	/*
- 	 * if primary algorithm is empty (e.g. compression off),
- 	 * clear 0PADDING feature for old kernel compatibility.
- 	 */
--	if (!cfg.c_compr_alg[0] ||
--	    (cfg.c_legacy_compress && !strncmp(cfg.c_compr_alg[0], "lz4", 3)))
-+	if (!cfg.c_compr_opts[0].alg ||
-+	    (cfg.c_legacy_compress &&
-+	     !strncmp(cfg.c_compr_opts[0].alg, "lz4", 3)))
- 		erofs_sb_clear_lz4_0padding(sbi);
- 
--	if (!cfg.c_compr_alg[0])
-+	if (!cfg.c_compr_opts[0].alg)
- 		return 0;
- 
- 	/*
-@@ -1248,7 +1259,7 @@ int z_erofs_compress_init(struct erofs_sb_info *sbi, struct erofs_buffer_head *s
- 	}
- 
- 	if (erofs_sb_has_compr_cfgs(sbi))
--		return z_erofs_build_compr_cfgs(sbi, sb_bh);
-+		return z_erofs_build_compr_cfgs(sbi, sb_bh, max_dict_size);
- 	return 0;
- }
- 
-@@ -1256,7 +1267,7 @@ int z_erofs_compress_exit(void)
- {
- 	int i, ret;
- 
--	for (i = 0; cfg.c_compr_alg[i]; ++i) {
-+	for (i = 0; cfg.c_compr_opts[i].alg; ++i) {
- 		ret = erofs_compressor_exit(&erofs_ccfg[i].handle);
- 		if (ret)
- 			return ret;
-diff --git a/lib/compress_hints.c b/lib/compress_hints.c
-index afc9f8f..8b78f80 100644
---- a/lib/compress_hints.c
-+++ b/lib/compress_hints.c
-@@ -125,7 +125,7 @@ int erofs_load_compress_hints(struct erofs_sb_info *sbi)
- 		} else {
- 			ccfg = atoi(alg);
- 			if (ccfg >= EROFS_MAX_COMPR_CFGS ||
--			    !cfg.c_compr_alg[ccfg]) {
-+			    !cfg.c_compr_opts[ccfg].alg) {
- 				erofs_err("invalid compressing configuration \"%s\" at line %u",
- 					  alg, line);
- 				ret = -EINVAL;
-diff --git a/lib/compressor.c b/lib/compressor.c
-index 295aa47..9f8d220 100644
---- a/lib/compressor.c
-+++ b/lib/compressor.c
-@@ -78,7 +78,7 @@ int erofs_compress_destsize(const struct erofs_compress *c,
- }
- 
- int erofs_compressor_init(struct erofs_sb_info *sbi, struct erofs_compress *c,
--			  char *alg_name, int compression_level)
-+			  char *alg_name, int compression_level, u32 dict_size)
- {
- 	int ret, i;
- 
-@@ -116,6 +116,20 @@ int erofs_compressor_init(struct erofs_sb_info *sbi, struct erofs_compress *c,
- 				  alg_name);
- 			return -EINVAL;
- 		}
-+
-+		if (erofs_algs[i].c->setdictsize) {
-+			ret = erofs_algs[i].c->setdictsize(c, dict_size);
-+			if (ret) {
-+				erofs_err("failed to set dict size %u for %s",
-+					  dict_size, alg_name);
-+				return ret;
-+			}
-+		} else if (dict_size) {
-+			erofs_err("dict size is not supported for %s",
-+				  alg_name);
-+			return -EINVAL;
-+		}
-+
- 		if (!ret) {
- 			c->alg = &erofs_algs[i];
- 			return 0;
-diff --git a/lib/compressor.h b/lib/compressor.h
-index ec5485d..d8ccf2e 100644
---- a/lib/compressor.h
-+++ b/lib/compressor.h
-@@ -14,10 +14,13 @@ struct erofs_compress;
- struct erofs_compressor {
- 	int default_level;
- 	int best_level;
-+	u32 default_dictsize;
-+	u32 max_dictsize;
- 
- 	int (*init)(struct erofs_compress *c);
- 	int (*exit)(struct erofs_compress *c);
- 	int (*setlevel)(struct erofs_compress *c, int compression_level);
-+	int (*setdictsize)(struct erofs_compress *c, u32 dict_size);
- 
- 	int (*compress_destsize)(const struct erofs_compress *c,
- 				 const void *src, unsigned int *srcsize,
-@@ -39,6 +42,7 @@ struct erofs_compress {
- 
- 	unsigned int compress_threshold;
- 	unsigned int compression_level;
-+	unsigned int dict_size;
- 
- 	void *private_data;
- };
-@@ -56,7 +60,7 @@ int erofs_compress_destsize(const struct erofs_compress *c,
- 			    void *dst, unsigned int dstsize);
- 
- int erofs_compressor_init(struct erofs_sb_info *sbi, struct erofs_compress *c,
--			  char *alg_name, int compression_level);
-+			  char *alg_name, int compression_level, u32 dict_size);
- int erofs_compressor_exit(struct erofs_compress *c);
- 
- #endif
-diff --git a/lib/compressor_deflate.c b/lib/compressor_deflate.c
-index 4e5902e..aa2ff24 100644
---- a/lib/compressor_deflate.c
-+++ b/lib/compressor_deflate.c
-@@ -46,6 +46,16 @@ static int compressor_deflate_init(struct erofs_compress *c)
- 
- static int erofs_compressor_deflate_setlevel(struct erofs_compress *c,
- 					     int compression_level)
-+{
-+	if (compression_level < 0)
-+		compression_level = erofs_compressor_deflate.default_level;
-+
-+	c->compression_level = compression_level;
-+	return 0;
-+}
-+
-+static int erofs_compressor_deflate_setdictsize(struct erofs_compress *c,
-+						u32 dict_size)
- {
- 	void *s;
- 
-@@ -54,23 +64,31 @@ static int erofs_compressor_deflate_setlevel(struct erofs_compress *c,
- 		c->private_data = NULL;
- 	}
- 
--	if (compression_level < 0)
--		compression_level = erofs_compressor_deflate.default_level;
-+	if (dict_size > erofs_compressor_deflate.max_dictsize) {
-+		erofs_err("dict size %u is too large", dict_size);
-+		return -EINVAL;
-+	}
-+
-+	if (dict_size == 0)
-+		dict_size = erofs_compressor_deflate.default_dictsize;
- 
--	s = kite_deflate_init(compression_level, cfg.c_dict_size);
-+	s = kite_deflate_init(c->compression_level, dict_size);
- 	if (IS_ERR(s))
- 		return PTR_ERR(s);
- 
- 	c->private_data = s;
--	c->compression_level = compression_level;
-+	c->dict_size = dict_size;
- 	return 0;
- }
- 
- const struct erofs_compressor erofs_compressor_deflate = {
- 	.default_level = 1,
- 	.best_level = 9,
-+	.default_dictsize = 1 << 15,
-+	.max_dictsize = 1 << 15,
- 	.init = compressor_deflate_init,
- 	.exit = compressor_deflate_exit,
- 	.setlevel = erofs_compressor_deflate_setlevel,
-+	.setdictsize = erofs_compressor_deflate_setdictsize,
- 	.compress_destsize = deflate_compress_destsize,
- };
-diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
-index 0ed6f23..a9551e2 100644
---- a/lib/compressor_liblzma.c
-+++ b/lib/compressor_liblzma.c
-@@ -68,22 +68,29 @@ static int erofs_compressor_liblzma_setlevel(struct erofs_compress *c,
- 	if (lzma_lzma_preset(&ctx->opt, preset))
- 		return -EINVAL;
- 
--	/* XXX: temporary hack */
--	if (cfg.c_dict_size) {
--		if (cfg.c_dict_size > Z_EROFS_LZMA_MAX_DICT_SIZE) {
--			erofs_err("dict size %u is too large", cfg.c_dict_size);
--			return -EINVAL;
--		}
--		ctx->opt.dict_size = cfg.c_dict_size;
--	} else {
--		if (ctx->opt.dict_size > Z_EROFS_LZMA_MAX_DICT_SIZE)
--			ctx->opt.dict_size = Z_EROFS_LZMA_MAX_DICT_SIZE;
--		cfg.c_dict_size = ctx->opt.dict_size;
--	}
- 	c->compression_level = compression_level;
- 	return 0;
- }
- 
-+static int erofs_compressor_liblzma_setdictsize(struct erofs_compress *c,
-+						u32 dict_size)
-+{
-+	struct erofs_liblzma_context *ctx = c->private_data;
-+
-+	if (dict_size > erofs_compressor_lzma.max_dictsize ||
-+	    dict_size < 4096) {
-+		erofs_err("invalid dict size %u", dict_size);
-+		return -EINVAL;
-+	}
-+
-+	if (dict_size == 0)
-+		dict_size = erofs_compressor_lzma.default_dictsize;
-+
-+	ctx->opt.dict_size = dict_size;
-+	c->dict_size = dict_size;
-+	return 0;
-+}
-+
- static int erofs_compressor_liblzma_init(struct erofs_compress *c)
- {
- 	struct erofs_liblzma_context *ctx;
-@@ -101,9 +108,12 @@ static int erofs_compressor_liblzma_init(struct erofs_compress *c)
- const struct erofs_compressor erofs_compressor_lzma = {
- 	.default_level = LZMA_PRESET_DEFAULT,
- 	.best_level = 109,
-+	.default_dictsize = 8 * Z_EROFS_PCLUSTER_MAX_SIZE,
-+	.max_dictsize = Z_EROFS_LZMA_MAX_DICT_SIZE,
- 	.init = erofs_compressor_liblzma_init,
- 	.exit = erofs_compressor_liblzma_exit,
- 	.setlevel = erofs_compressor_liblzma_setlevel,
-+	.setdictsize = erofs_compressor_liblzma_setdictsize,
- 	.compress_destsize = erofs_liblzma_compress_destsize,
- };
- #endif
-diff --git a/lib/config.c b/lib/config.c
-index aa3dd1f..1096cd1 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -62,8 +62,8 @@ void erofs_exit_configure(void)
- 		free(cfg.c_img_path);
- 	if (cfg.c_src_path)
- 		free(cfg.c_src_path);
--	for (i = 0; i < EROFS_MAX_COMPR_CFGS && cfg.c_compr_alg[i]; i++)
--		free(cfg.c_compr_alg[i]);
-+	for (i = 0; i < EROFS_MAX_COMPR_CFGS && cfg.c_compr_opts[i].alg; i++)
-+		free(cfg.c_compr_opts[i].alg);
- }
- 
- static unsigned int fullpath_prefix;	/* root directory prefix length */
-diff --git a/lib/inode.c b/lib/inode.c
-index bcdb4b8..c6424c0 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -492,7 +492,7 @@ int erofs_write_file(struct erofs_inode *inode, int fd, u64 fpos)
- 		return erofs_blob_write_chunked_file(inode, fd, fpos);
- 	}
- 
--	if (cfg.c_compr_alg[0] && erofs_file_is_compressible(inode)) {
-+	if (cfg.c_compr_opts[0].alg && erofs_file_is_compressible(inode)) {
- 		ret = erofs_write_compressed_file(inode, fd);
- 		if (!ret || ret != -ENOSPC)
- 			return ret;
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 13fea41..acb2108 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -5,6 +5,7 @@
-  * Created by Li Guifu <bluce.liguifu@huawei.com>
-  */
- #define _GNU_SOURCE
-+#include <ctype.h>
- #include <time.h>
- #include <sys/time.h>
- #include <stdlib.h>
-@@ -108,24 +109,29 @@ static void usage(int argc, char **argv)
- 		" -b#                   set block size to # (# = page size by default)\n"
- 		" -d<0-9>               set output verbosity; 0=quiet, 9=verbose (default=%i)\n"
- 		" -x#                   set xattr tolerance to # (< 0, disable xattrs; default 2)\n"
--		" -zX[,Y][:...]         X=compressor (Y=compression level, optional)\n"
--		"                       alternative compressors can be separated by colons(:)\n"
--		"                       supported compressors and their level ranges are:\n",
-+		" -zX[,level=Y]         X=compressor (Y=compression level, Z=dictionary size, optional)\n"
-+		"    [,dictsize=Z]      alternative compressors can be separated by colons(:)\n"
-+		"    [:...]             supported compressors and their option ranges are:\n",
- 		argv[0], EROFS_WARN);
- 	while ((s = z_erofs_list_available_compressors(&i)) != NULL) {
--		printf("                           %s", s->name);
-+		char * const spaces = "                         ";
-+
-+		printf("%s%s\n", spaces, s->name);
- 		if (s->c->setlevel) {
- 			if (!strcmp(s->name, "lzma"))
- 				/* A little kludge to show the range as disjointed
- 				 * "0-9,100-109" instead of a continuous "0-109", and to
- 				 * state what those two subranges respectively mean.  */
--				printf("[<0-9,100-109>]\t0-9=normal, 100-109=extreme (default=%i)",
--				       s->c->default_level);
-+				printf("%s  [,level=<0-9,100-109>]\t0-9=normal, 100-109=extreme (default=%i)\n",
-+				       spaces, s->c->default_level);
- 			else
--				printf("[,<0-%i>]\t(default=%i)",
--				       s->c->best_level, s->c->default_level);
-+				printf("%s  [,level=<0-%i>]\t\t(default=%i)\n",
-+				       spaces, s->c->best_level, s->c->default_level);
-+		}
-+		if (s->c->setdictsize) {
-+			printf("%s  [,dictsize=<dictsize>]\t(default=%u, max=%u)\n",
-+			       spaces, s->c->default_dictsize, s->c->max_dictsize);
- 		}
--		putchar('\n');
- 	}
- 	printf(
- 		" -C#                   specify the size of compress physical cluster in bytes\n"
-@@ -304,27 +310,83 @@ handle_fragment:
- 	return 0;
- }
- 
-+static int mkfs_parse_one_compress_alg(char *alg,
-+				       struct erofs_compr_opts *copts)
-+{
-+	char *p, *q, *opt, *endptr;
-+
-+	copts->level = -1;
-+	copts->dict_size = 0;
-+
-+	p = strchr(alg, ',');
-+	if (p) {
-+		copts->alg = strndup(alg, p - alg);
-+
-+		/* support old '-zlzma,9' form */
-+		if (isdigit(*(p + 1))) {
-+			copts->level = strtol(p + 1, &endptr, 10);
-+			if (*endptr && *endptr != ',') {
-+				erofs_err("invalid compression level %s",
-+					  p + 1);
-+				return -EINVAL;
-+			}
-+			return 0;
-+		}
-+	} else {
-+		copts->alg = strdup(alg);
-+		return 0;
-+	}
-+
-+	opt = p + 1;
-+	while (opt) {
-+		q = strchr(opt, ',');
-+		if (q)
-+			*q = '\0';
-+
-+		if ((p = strstr(opt, "level="))) {
-+			p += strlen("level=");
-+			copts->level = strtol(p, &endptr, 10);
-+			if ((endptr == p) || (*endptr && *endptr != ',')) {
-+				erofs_err("invalid compression level %s", p);
-+				return -EINVAL;
-+			}
-+		} else if ((p = strstr(opt, "dictsize="))) {
-+			p += strlen("dictsize=");
-+			copts->dict_size = strtoul(p, &endptr, 10);
-+			if (*endptr == 'k' || *endptr == 'K')
-+				copts->dict_size <<= 10;
-+			else if (*endptr == 'm' || *endptr == 'M')
-+				copts->dict_size <<= 20;
-+			else if ((endptr == p) || (*endptr && *endptr != ',')) {
-+				erofs_err("invalid compression dictsize %s", p);
-+				return -EINVAL;
-+			}
-+		} else {
-+			erofs_err("invalid compression option %s", opt);
-+			return -EINVAL;
-+		}
-+
-+		opt = q ? q + 1 : NULL;
-+	}
-+
-+	return 0;
-+}
-+
- static int mkfs_parse_compress_algs(char *algs)
- {
- 	unsigned int i;
- 	char *s;
-+	int ret;
- 
- 	for (s = strtok(algs, ":"), i = 0; s; s = strtok(NULL, ":"), ++i) {
--		const char *lv;
+diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
+index 279933e007d2..7cc5841577b2 100644
+--- a/fs/erofs/compress.h
++++ b/fs/erofs/compress.h
+@@ -11,13 +11,12 @@
+ struct z_erofs_decompress_req {
+ 	struct super_block *sb;
+ 	struct page **in, **out;
 -
- 		if (i >= EROFS_MAX_COMPR_CFGS - 1) {
- 			erofs_err("too many algorithm types");
- 			return -EINVAL;
+ 	unsigned short pageofs_in, pageofs_out;
+ 	unsigned int inputsize, outputsize;
+ 
+-	/* indicate the algorithm will be used for decompression */
+-	unsigned int alg;
++	unsigned int alg;       /* the algorithm for decompression */
+ 	bool inplace_io, partial_decoding, fillgaps;
++	gfp_t gfp;      /* allocation flags for extra temporary buffers */
+ };
+ 
+ struct z_erofs_decompressor {
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 1d65b9f60a39..ef2b08ec9830 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -111,8 +111,9 @@ static int z_erofs_lz4_prepare_dstpages(struct z_erofs_lz4_decompress_ctx *ctx,
+ 			victim = availables[--top];
+ 			get_page(victim);
+ 		} else {
+-			victim = erofs_allocpage(pagepool,
+-						 GFP_KERNEL | __GFP_NOFAIL);
++			victim = erofs_allocpage(pagepool, rq->gfp);
++			if (!victim)
++				return -ENOMEM;
+ 			set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
+ 		}
+ 		rq->out[i] = victim;
+diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
+index 4a64a9c91dd3..b98872058abe 100644
+--- a/fs/erofs/decompressor_deflate.c
++++ b/fs/erofs/decompressor_deflate.c
+@@ -95,7 +95,7 @@ int z_erofs_load_deflate_config(struct super_block *sb,
+ }
+ 
+ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+-			       struct page **pagepool)
++			       struct page **pgpl)
+ {
+ 	const unsigned int nrpages_out =
+ 		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+@@ -158,8 +158,12 @@ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+ 			strm->z.avail_out = min_t(u32, outsz, PAGE_SIZE - pofs);
+ 			outsz -= strm->z.avail_out;
+ 			if (!rq->out[no]) {
+-				rq->out[no] = erofs_allocpage(pagepool,
+-						GFP_KERNEL | __GFP_NOFAIL);
++				rq->out[no] = erofs_allocpage(pgpl, rq->gfp);
++				if (!rq->out[no]) {
++					kout = NULL;
++					err = -ENOMEM;
++					break;
++				}
+ 				set_page_private(rq->out[no],
+ 						 Z_EROFS_SHORTLIVED_PAGE);
+ 			}
+@@ -211,8 +215,11 @@ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+ 
+ 			DBG_BUGON(erofs_page_is_managed(EROFS_SB(sb),
+ 							rq->in[j]));
+-			tmppage = erofs_allocpage(pagepool,
+-						  GFP_KERNEL | __GFP_NOFAIL);
++			tmppage = erofs_allocpage(pgpl, rq->gfp);
++			if (!tmppage) {
++				err = -ENOMEM;
++				goto failed;
++			}
+ 			set_page_private(tmppage, Z_EROFS_SHORTLIVED_PAGE);
+ 			copy_highpage(tmppage, rq->in[j]);
+ 			rq->in[j] = tmppage;
+@@ -230,7 +237,7 @@ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+ 			break;
+ 		}
+ 	}
+-
++failed:
+ 	if (zlib_inflateEnd(&strm->z) != Z_OK && !err)
+ 		err = -EIO;
+ 	if (kout)
+diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
+index 2dd14f99c1dc..6ca357d83cfa 100644
+--- a/fs/erofs/decompressor_lzma.c
++++ b/fs/erofs/decompressor_lzma.c
+@@ -148,7 +148,7 @@ int z_erofs_load_lzma_config(struct super_block *sb,
+ }
+ 
+ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+-			    struct page **pagepool)
++			    struct page **pgpl)
+ {
+ 	const unsigned int nrpages_out =
+ 		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+@@ -215,8 +215,11 @@ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+ 						   PAGE_SIZE - pageofs);
+ 			outlen -= strm->buf.out_size;
+ 			if (!rq->out[no] && rq->fillgaps) {	/* deduped */
+-				rq->out[no] = erofs_allocpage(pagepool,
+-						GFP_KERNEL | __GFP_NOFAIL);
++				rq->out[no] = erofs_allocpage(pgpl, rq->gfp);
++				if (!rq->out[no]) {
++					err = -ENOMEM;
++					break;
++				}
+ 				set_page_private(rq->out[no],
+ 						 Z_EROFS_SHORTLIVED_PAGE);
+ 			}
+@@ -258,8 +261,11 @@ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+ 
+ 			DBG_BUGON(erofs_page_is_managed(EROFS_SB(rq->sb),
+ 							rq->in[j]));
+-			tmppage = erofs_allocpage(pagepool,
+-						  GFP_KERNEL | __GFP_NOFAIL);
++			tmppage = erofs_allocpage(pgpl, rq->gfp);
++			if (!tmppage) {
++				err = -ENOMEM;
++				goto failed;
++			}
+ 			set_page_private(tmppage, Z_EROFS_SHORTLIVED_PAGE);
+ 			copy_highpage(tmppage, rq->in[j]);
+ 			rq->in[j] = tmppage;
+@@ -277,6 +283,7 @@ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+ 			break;
+ 		}
+ 	}
++failed:
+ 	if (no < nrpages_out && strm->buf.out)
+ 		kunmap(rq->out[no]);
+ 	if (ni < nrpages_in)
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 692c0c39be63..a293de2a60ed 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -82,6 +82,9 @@ struct z_erofs_pcluster {
+ 	/* L: indicate several pageofs_outs or not */
+ 	bool multibases;
+ 
++	/* L: whether extra buffer allocations are best-effort */
++	bool besteffort;
++
+ 	/* A: compressed bvecs (can be cached or inplaced pages) */
+ 	struct z_erofs_bvec compressed_bvecs[];
+ };
+@@ -964,7 +967,7 @@ static int z_erofs_read_fragment(struct super_block *sb, struct page *page,
+ }
+ 
+ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+-				struct page *page)
++				struct page *page, bool ra)
+ {
+ 	struct inode *const inode = fe->inode;
+ 	struct erofs_map_blocks *const map = &fe->map;
+@@ -1014,6 +1017,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 		err = z_erofs_pcluster_begin(fe);
+ 		if (err)
+ 			goto out;
++		fe->pcl->besteffort |= !ra;
+ 	}
+ 
+ 	/*
+@@ -1280,7 +1284,11 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
+ 					.inplace_io = overlapped,
+ 					.partial_decoding = pcl->partial,
+ 					.fillgaps = pcl->multibases,
++					.gfp = pcl->besteffort ?
++						GFP_KERNEL | __GFP_NOFAIL :
++						GFP_NOWAIT | __GFP_NORETRY
+ 				 }, be->pagepool);
++	pcl->besteffort = false;
+ 
+ 	/* must handle all compressed pages before actual file pages */
+ 	if (z_erofs_is_inline_pcluster(pcl)) {
+@@ -1785,7 +1793,7 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
+ 			if (PageUptodate(page))
+ 				unlock_page(page);
+ 			else
+-				(void)z_erofs_do_read_page(f, page);
++				(void)z_erofs_do_read_page(f, page, !!rac);
+ 			put_page(page);
  		}
  
--		lv = strchr(s, ',');
--		if (lv) {
--			cfg.c_compr_level[i] = atoi(lv + 1);
--			cfg.c_compr_alg[i] = strndup(s, lv - s);
--		} else {
--			cfg.c_compr_level[i] = -1;
--			cfg.c_compr_alg[i] = strdup(s);
--		}
-+		ret = mkfs_parse_one_compress_alg(s, &cfg.c_compr_opts[i]);
-+		if (ret)
-+			return ret;
- 	}
- 	return 0;
- }
-@@ -692,7 +754,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		cfg.c_showprogress = false;
- 	}
+@@ -1806,7 +1814,7 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
+ 	f.headoffset = (erofs_off_t)folio->index << PAGE_SHIFT;
  
--	if (cfg.c_compr_alg[0] && erofs_blksiz(&sbi) != getpagesize())
-+	if (cfg.c_compr_opts[0].alg && erofs_blksiz(&sbi) != getpagesize())
- 		erofs_warn("Please note that subpage blocksize with compression isn't yet supported in kernel. "
- 			   "This compressed image will only work with bs = ps = %u bytes",
- 			   erofs_blksiz(&sbi));
-@@ -1119,7 +1181,7 @@ int main(int argc, char **argv)
- 	}
+ 	z_erofs_pcluster_readmore(&f, NULL, true);
+-	err = z_erofs_do_read_page(&f, &folio->page);
++	err = z_erofs_do_read_page(&f, &folio->page, false);
+ 	z_erofs_pcluster_readmore(&f, NULL, false);
+ 	z_erofs_pcluster_end(&f);
  
- 	if (cfg.c_dedupe) {
--		if (!cfg.c_compr_alg[0]) {
-+		if (!cfg.c_compr_opts[0].alg) {
- 			erofs_err("Compression is not enabled.  Turn on chunk-based data deduplication instead.");
- 			cfg.c_chunkbits = sbi.blkszbits;
- 		} else {
+@@ -1847,7 +1855,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
+ 		folio = head;
+ 		head = folio_get_private(folio);
+ 
+-		err = z_erofs_do_read_page(&f, &folio->page);
++		err = z_erofs_do_read_page(&f, &folio->page, true);
+ 		if (err && err != -EINTR)
+ 			erofs_err(inode->i_sb, "readahead error at folio %lu @ nid %llu",
+ 				  folio->index, EROFS_I(inode)->nid);
 -- 
-2.43.0
+2.25.1
 
