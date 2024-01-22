@@ -1,56 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7598D8365B9
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jan 2024 15:44:11 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C22718367AE
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jan 2024 16:18:19 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rbCYmBLt;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=eF9eAoxR;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TJXzY2WmZz3bt5
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jan 2024 01:44:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TJYkx2q60z3bt5
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jan 2024 02:18:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rbCYmBLt;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=eF9eAoxR;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TJXzP03HRz3bbt
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jan 2024 01:44:00 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TJYkq4Q2bz3bmN
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jan 2024 02:18:11 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 84874611C5;
-	Mon, 22 Jan 2024 14:43:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6DB0C433C7;
-	Mon, 22 Jan 2024 14:43:54 +0000 (UTC)
+	by sin.source.kernel.org (Postfix) with ESMTP id 69FB7CE2B3F;
+	Mon, 22 Jan 2024 15:18:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 816C1C4166A;
+	Mon, 22 Jan 2024 15:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705934638;
-	bh=okSe00Plf0urDpy7xMnzOmvyVyrPmVJSvxNEVIQ9gyo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rbCYmBLtGU7jcVEHLqY8mJViCCeFdbnSkSezt6XhBxQd/01t73Mz7+YDNj/JVZ90U
-	 h8yfCER0idrxElrXoY754rURY4Cwj8gCFWocsxQRhd4JnNzkPGjN5UhivZz3fLCfpJ
-	 J25Y7IgJI7fZ23D71v7P0htUUIrDZcEXSp7ujveSupdBO3l73RWrifGBJJX/wVtetI
-	 4c5cdYWRJI5qMfMHrFBX7hbxtTaEpEZS30sFegdRHddze+871iZ4hcQ0DNVJM2LP3X
-	 HbsCVa26Db2yy48nWIhZHASl8uU/Y3niK/h5wZR+n2iUqW9KKDbxuGMH1r+1Bmzg/9
-	 dZ5ltFqAFHpyQ==
+	s=k20201202; t=1705936687;
+	bh=UQJgDJ1jQGsA5dFTTO+ji4AWSQKmt22PQx0vxvlz2bA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eF9eAoxRJf/brDqvElgArHmgdPeNAo8ieOCn2xi4ufFMxorFWtZ69VUCmexzh/sTP
+	 +BUe+qq0YinH8u65eRct5dmhzAWFFKqlNJaJq3gORFxSLqWHaK8bmTm7uGQKDIW2iI
+	 BieFkdBIEZ3SEyP0Q+8D/ZiNvX3lytbJYySqYooKSLLOUvw4G1RmIOTPeoEcZGNtiJ
+	 A97D5pgdGQt06pSe+FpwzwaOzXbKSAnn7bA+4Rf6cYXtmesshM9PUMKkTZOUiNwyI8
+	 ApQJ9IXiznE6UZvl7XLRgjAysbckvDqpYHK+EfVEDTPw5+WgadpXzK1+9wg+AQRyM9
+	 wZsFayL+0k0lw==
+Date: Mon, 22 Jan 2024 16:18:00 +0100
 From: Christian Brauner <brauner@kernel.org>
-To: netfs@lists.linux.dev,
-	David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 0/2] netfs, cachefiles: Update MAINTAINERS records
-Date: Mon, 22 Jan 2024 15:43:17 +0100
-Message-ID: <20240122-benennen-lastzug-8560ff9a85aa@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122115007.3820330-1-dhowells@redhat.com>
-References: <20240122115007.3820330-1-dhowells@redhat.com>
+To: David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 00/10] netfs, afs, cifs, cachefiles, erofs: Miscellaneous
+ fixes
+Message-ID: <20240122-bezwingen-kanister-b56f5bc1bc84@brauner>
+References: <20240122123845.3822570-1-dhowells@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1180; i=brauner@kernel.org; h=from:subject:message-id; bh=5wiNsvaXup0M7lS0bpBvZ1QaDid4vN5t5fSW7E6j0v4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSuqxd8sTntwGK1+pv1Wqdvf1h0sHr63/XfiqbHZSbUn Z7nFxbk0VHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRVA1Ghm6bneUf3F9MUHl+ VXbbTrG/+TlnZa7w9O47pZzuLXU3dTXD/4Dva27OE3jinqMqVpaoZeks2rBD87Cfq0CYx7lNwat X8wIA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240122123845.3822570-1-dhowells@redhat.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,40 +59,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-cifs@vger.kernel.org, Christian Brauner <brauner@kernel.org>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
+Cc: linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Christian Brauner <christian@brauner.io>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, 22 Jan 2024 11:49:59 +0000, David Howells wrote:
-> Update the MAINTAINERS records for netfs and cachefiles to reflect a change of
-> mailing list for both as Red Hat no longer archives the mailing list in a
-> publicly accessible place.
+On Mon, Jan 22, 2024 at 12:38:33PM +0000, David Howells wrote:
+> Hi Christian,
 > 
-> Also add Jeff Layton as a reviewer.
-
-Yay!
-
+> Here are some miscellaneous fixes for netfslib and a number of filesystems:
 > 
-> The patches are here:
+>  (1) Replace folio_index() with folio->index in netfs, afs and cifs.
 > 
-> [...]
+>  (2) Fix an oops in fscache_put_cache().
+> 
+>  (3) Fix error handling in netfs_perform_write().
+> 
+>  (4) Fix an oops in cachefiles when not using erofs ondemand mode.
+> 
+>  (5) In afs, hide silly-rename files from getdents() to avoid problems with
+>      tar and suchlike.
+> 
+>  (6) In afs, fix error handling in lookup with a bulk status fetch.
+> 
+>  (7) In afs, afs_dynroot_d_revalidate() is redundant, so remove it.
+> 
+>  (8) In afs, fix the RCU unlocking in afs_proc_addr_prefs_show().
+> 
+> The patches can also be found here:
+> 
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
 
-Applied to the vfs.netfs branch of the vfs/vfs.git tree.
-Patches in the vfs.netfs branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.netfs
-
-[1/2] netfs, cachefiles: Change mailing list
-      https://git.kernel.org/vfs/vfs/c/3c18703079b6
-[2/2] netfs: Add Jeff Layton as reviewer
-      https://git.kernel.org/vfs/vfs/c/d59da02d1ab6
+Thank you! I can pull this in right and will send a pr together with the
+other changes around Wednesday/Thursday for -rc2. So reviews before that
+would be nice.
