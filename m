@@ -1,40 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4AD68364B6
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jan 2024 14:48:38 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7598D8365B9
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jan 2024 15:44:11 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rbCYmBLt;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TJWlS3mFRz3bsr
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jan 2024 00:48:36 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TJXzY2WmZz3bt5
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Jan 2024 01:44:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rbCYmBLt;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TJWlP1Tg9z3bnL
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jan 2024 00:48:31 +1100 (AEDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0W.9eXi4_1705931303;
-Received: from 30.221.145.129(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W.9eXi4_1705931303)
-          by smtp.aliyun-inc.com;
-          Mon, 22 Jan 2024 21:48:24 +0800
-Message-ID: <7790423f-665e-44cc-b4ae-d3f3d2996af5@linux.alibaba.com>
-Date: Mon, 22 Jan 2024 21:48:23 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TJXzP03HRz3bbt
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Jan 2024 01:44:00 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 84874611C5;
+	Mon, 22 Jan 2024 14:43:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6DB0C433C7;
+	Mon, 22 Jan 2024 14:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705934638;
+	bh=okSe00Plf0urDpy7xMnzOmvyVyrPmVJSvxNEVIQ9gyo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rbCYmBLtGU7jcVEHLqY8mJViCCeFdbnSkSezt6XhBxQd/01t73Mz7+YDNj/JVZ90U
+	 h8yfCER0idrxElrXoY754rURY4Cwj8gCFWocsxQRhd4JnNzkPGjN5UhivZz3fLCfpJ
+	 J25Y7IgJI7fZ23D71v7P0htUUIrDZcEXSp7ujveSupdBO3l73RWrifGBJJX/wVtetI
+	 4c5cdYWRJI5qMfMHrFBX7hbxtTaEpEZS30sFegdRHddze+871iZ4hcQ0DNVJM2LP3X
+	 HbsCVa26Db2yy48nWIhZHASl8uU/Y3niK/h5wZR+n2iUqW9KKDbxuGMH1r+1Bmzg/9
+	 dZ5ltFqAFHpyQ==
+From: Christian Brauner <brauner@kernel.org>
+To: netfs@lists.linux.dev,
+	David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 0/2] netfs, cachefiles: Update MAINTAINERS records
+Date: Mon, 22 Jan 2024 15:43:17 +0100
+Message-ID: <20240122-benennen-lastzug-8560ff9a85aa@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122115007.3820330-1-dhowells@redhat.com>
+References: <20240122115007.3820330-1-dhowells@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/10] cachefiles, erofs: Fix NULL deref in when
- cachefiles is not doing ondemand-mode
-Content-Language: en-US
-To: David Howells <dhowells@redhat.com>,
- Christian Brauner <christian@brauner.io>
-References: <20240122123845.3822570-1-dhowells@redhat.com>
- <20240122123845.3822570-7-dhowells@redhat.com>
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <20240122123845.3822570-7-dhowells@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1180; i=brauner@kernel.org; h=from:subject:message-id; bh=5wiNsvaXup0M7lS0bpBvZ1QaDid4vN5t5fSW7E6j0v4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSuqxd8sTntwGK1+pv1Wqdvf1h0sHr63/XfiqbHZSbUn Z7nFxbk0VHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRVA1Ghm6bneUf3F9MUHl+ VXbbTrG/+TlnZa7w9O47pZzuLXU3dTXD/4Dva27OE3jinqMqVpaoZeks2rBD87Cfq0CYx7lNwat X8wIA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,95 +62,40 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, Yue Hu <huyue2@coolpad.com>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Marc Dionne <marc.dionne@auristor.com>
+Cc: linux-cifs@vger.kernel.org, Christian Brauner <brauner@kernel.org>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-
-
-On 1/22/24 8:38 PM, David Howells wrote:
-> cachefiles_ondemand_init_object() as called from cachefiles_open_file() and
-> cachefiles_create_tmpfile() does not check if object->ondemand is set
-> before dereferencing it, leading to an oops something like:
+On Mon, 22 Jan 2024 11:49:59 +0000, David Howells wrote:
+> Update the MAINTAINERS records for netfs and cachefiles to reflect a change of
+> mailing list for both as Red Hat no longer archives the mailing list in a
+> publicly accessible place.
 > 
-> 	RIP: 0010:cachefiles_ondemand_init_object+0x9/0x41
-> 	...
-> 	Call Trace:
-> 	 <TASK>
-> 	 cachefiles_open_file+0xc9/0x187
-> 	 cachefiles_lookup_cookie+0x122/0x2be
-> 	 fscache_cookie_state_machine+0xbe/0x32b
-> 	 fscache_cookie_worker+0x1f/0x2d
-> 	 process_one_work+0x136/0x208
-> 	 process_scheduled_works+0x3a/0x41
-> 	 worker_thread+0x1a2/0x1f6
-> 	 kthread+0xca/0xd2
-> 	 ret_from_fork+0x21/0x33
+> Also add Jeff Layton as a reviewer.
+
+Yay!
+
 > 
-> Fix this by making the calls to cachefiles_ondemand_init_object()
-> conditional.
+> The patches are here:
 > 
-> Fixes: 3c5ecfe16e76 ("cachefiles: extract ondemand info field from cachefiles_object")
-> Reported-by: Marc Dionne <marc.dionne@auristor.com>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Gao Xiang <xiang@kernel.org>
-> cc: Chao Yu <chao@kernel.org>
-> cc: Yue Hu <huyue2@coolpad.com>
-> cc: Jeffle Xu <jefflexu@linux.alibaba.com>
-> cc: linux-erofs@lists.ozlabs.org
-> cc: netfs@lists.linux.dev
-> cc: linux-fsdevel@vger.kernel.org
-> ---
->  fs/cachefiles/namei.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
-> index 7ade836beb58..180594d24c44 100644
-> --- a/fs/cachefiles/namei.c
-> +++ b/fs/cachefiles/namei.c
-> @@ -473,9 +473,11 @@ struct file *cachefiles_create_tmpfile(struct cachefiles_object *object)
->  	if (!cachefiles_mark_inode_in_use(object, file_inode(file)))
->  		WARN_ON(1);
->  
-> -	ret = cachefiles_ondemand_init_object(object);
-> -	if (ret < 0)
-> -		goto err_unuse;
-> +	if (object->ondemand) {
-> +		ret = cachefiles_ondemand_init_object(object);
-> +		if (ret < 0)
-> +			goto err_unuse;
-> +	}
+> [...]
 
-I'm not sure if object->ondemand shall be checked by the caller or
-inside cachefiles_ondemand_init_object(), as
-cachefiles_ondemand_clean_object() is also called without checking
-object->ondemand. cachefiles_ondemand_clean_object() won't trigger the
-NULL oops as the called cachefiles_ondemand_send_req() will actually
-checks that.
+Applied to the vfs.netfs branch of the vfs/vfs.git tree.
+Patches in the vfs.netfs branch should appear in linux-next soon.
 
-Anyway this patch looks good to me.  Thanks.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
->  
->  	ni_size = object->cookie->object_size;
->  	ni_size = round_up(ni_size, CACHEFILES_DIO_BLOCK_SIZE);
-> @@ -579,9 +581,11 @@ static bool cachefiles_open_file(struct cachefiles_object *object,
->  	}
->  	_debug("file -> %pd positive", dentry);
->  
-> -	ret = cachefiles_ondemand_init_object(object);
-> -	if (ret < 0)
-> -		goto error_fput;
-> +	if (object->ondemand) {
-> +		ret = cachefiles_ondemand_init_object(object);
-> +		if (ret < 0)
-> +			goto error_fput;
-> +	}
->  
->  	ret = cachefiles_check_auxdata(object, file);
->  	if (ret < 0)
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
--- 
-Thanks,
-Jingbo
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.netfs
+
+[1/2] netfs, cachefiles: Change mailing list
+      https://git.kernel.org/vfs/vfs/c/3c18703079b6
+[2/2] netfs: Add Jeff Layton as reviewer
+      https://git.kernel.org/vfs/vfs/c/d59da02d1ab6
