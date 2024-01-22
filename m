@@ -1,132 +1,39 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04E9F8359E0
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jan 2024 04:50:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1705895405;
-	bh=aQvtwXlYAU0VkcnwGjFGHAKYYhZ7NbDDpx7EaCbf1TU=;
-	h=To:Subject:Date:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=kRxdRVA77E2UlVEzpURLDFv8TJpUNK0TGb2Gv48r89vAr1q6tN8klbvcPRwHed4ZZ
-	 tXOYN6XzlEvM/jXOU3dyfsIbi1kCFd7yU2LE+Bctoptd3mfNBNTVLHcLcmBnLlUO+E
-	 8E0O9IaT9uumnICjnr5lpTJ1lHhHBgtwPnREoVT99EhU0yUaNtZoQcrzr84m1mVWNa
-	 MtrplV3kTr3QnQJgXYq2QDAgVO1/Ol9YWmo2dYmX76TTBTYksXcyoSXmpkgSHI+10K
-	 iFjgD7/cbitJ6WgCmc+PJQ2vWfU19znoQWWfv9VeRPwZ0CY8le3SxioM+1VICZQQt+
-	 B1TRiJnhgVk6g==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA44A835A17
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jan 2024 05:37:19 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TJGSs6R0fz3bnV
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jan 2024 14:50:05 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TJHWH1vZGz3bnt
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jan 2024 15:37:15 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=mTLkpVp0;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f400:feab::70e; helo=apc01-sg2-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org)
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2070e.outbound.protection.outlook.com [IPv6:2a01:111:f400:feab::70e])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TJGSk3X0Mz2yG9
-	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Jan 2024 14:49:56 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CqJIb0hObgFdWmJJcIMxbLawfO5JuQKDJq2/xNK2xA2dNzIbIE+G+b+HrgjWN4b0p58WqTjydwXoQY99smUeTg/0j/k2PF+nVN17bxOB2ZOyLyftPNj/V5NqOL5hBqh8eWZ9uTeDfDbaqti90ekbJnXnOBHx0I5H83ZZK5W0G2a6/Ymv8oZG38Y1XACYFETXSX+ALY67/9mztCdJpYU95jdopfNdCVJLj2l4ONxZvepMXXp8D4nTPLknNFMAdwDOXsGYAebAF5kAWnSUEOwsV/AitJ8zp387e7l44KCrQa8sb8fRcUhzyeGYJN04h2EjJ8fJvAsUfUVu9wEHhRyyOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aQvtwXlYAU0VkcnwGjFGHAKYYhZ7NbDDpx7EaCbf1TU=;
- b=QWVLaG144pLm8Q2hjOEuzO9/wXHAjuPcOBcP1n5i5McZ3m251QJUewgO+cTkIXPxR+4bJ/nTMJ79HF/aAgobzG1Px3BOlastD+kX0PdKjZuQbODdrmgSG95iZMN7BpollwRYI867ykhIuDnFKQuAEvi7LcXMXj3Zyd3NHNGASKL/V8hIE0I5UEbNcZfiATmX/ll09xz/Q8gzTSrXg7jZFPPeYkTjPJjqULbeAyyD5spFGpAfexOWupP7vIaBMyE6M/YB1gHyEu184cXwWchDINnVp4FZ0gKV7lKld/rlJgxKfiqCk836WWJmnjjVguFHXwX1smBd+Q9TE2bQLEM5Tw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-Received: from TY2PR06MB3342.apcprd06.prod.outlook.com (2603:1096:404:fb::23)
- by SI6PR06MB7534.apcprd06.prod.outlook.com (2603:1096:4:21c::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.30; Mon, 22 Jan
- 2024 03:49:34 +0000
-Received: from TY2PR06MB3342.apcprd06.prod.outlook.com
- ([fe80::b403:721d:ec13:d457]) by TY2PR06MB3342.apcprd06.prod.outlook.com
- ([fe80::b403:721d:ec13:d457%5]) with mapi id 15.20.7202.031; Mon, 22 Jan 2024
- 03:49:34 +0000
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, Chunhai Guo
-	<guochunhai@vivo.com>, "xiang@kernel.org" <xiang@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TJHWD1j6Rz309c
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Jan 2024 15:37:10 +1100 (AEDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R971e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W.0cDwF_1705898222;
+Received: from 30.97.48.216(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W.0cDwF_1705898222)
+          by smtp.aliyun-inc.com;
+          Mon, 22 Jan 2024 12:37:03 +0800
+Message-ID: <da8060aa-2ed4-404c-8f06-06e35a4f4d27@linux.alibaba.com>
+Date: Mon, 22 Jan 2024 12:37:01 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] erofs: relaxed temporary buffers allocation on
  readahead
-Thread-Topic: [PATCH v2] erofs: relaxed temporary buffers allocation on
- readahead
-Thread-Index: AQHaS69Dn7c0lZTvWk6XNTojszowdLDlGDgAgAAcboA=
-Date: Mon, 22 Jan 2024 03:49:34 +0000
-Message-ID: <0aae43b2-c37b-41c8-be3f-3ebf0bb3d052@vivo.com>
+To: Chunhai Guo <guochunhai@vivo.com>, "xiang@kernel.org" <xiang@kernel.org>
 References: <20240120145551.1941483-1-guochunhai@vivo.com>
  <cd64ee05-e8b2-4cd0-93e5-6bf787774d1f@linux.alibaba.com>
-In-Reply-To: <cd64ee05-e8b2-4cd0-93e5-6bf787774d1f@linux.alibaba.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY2PR06MB3342:EE_|SI6PR06MB7534:EE_
-x-ms-office365-filtering-correlation-id: e1e18916-0144-4756-dbb8-08dc1afd25df
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:  qd6GIKIWZovRNQutBBA4ht6IWafso10UGDBHgkISSR5QU0pq2gpYkt7EFL3/GVLu8jGJhxaDg2b7rzH1R90xUBZTwyUFIrzgkRIutmHuuzwyDj1N/d9q+AwTkBfSmZCwP5B0v0M7s4C7pfohOFYWkVXqhJpNlsrPpHEFwJ2rt+rCQ9gBPl/VSilnIe+rB8uJoHBTyUi85j8P1/kQsaDNYS9NrmsoG/R3rkvDnda3Y3uSQzongu5w8rldA8CT8U8n6AWOWlJTDHqN0HGx2dU0rhZSQbqav1bPXAbuPCTgh6rgqnTukfasUK2tuloDLj8Yt6IQbPxKMTD5NiJ7yCzwXU5Sl2fYbMKGdJA8KK4OLdEdN+zOMWUTHPb14rZei5J+97pSByKh51U0m2kkO339TkUzcpzoCfaFkpfuuuJJlmTIcIiGRP4AN+ZFC3WIo5URx+6fwsDZP8/DBy5sPBzx3zV0G+1eW48Lrd2v/g+PvTEKzBboqoDXhYlZOoGlolkhuhXPn3tlUwgMBfQ9lerzyJZOF8JMIwMrmtmnG1k1ZI+aSLoG2WvJnwpg31sD8UPuaHkuBT3z26sbHpv6t1WCROs8hbFPPcICBPTtZeZnGD5Mvlj4KxsMw4wcK19HcPfTzrSJQvhNQxV9d7ZbGLMaqp2DT9io3XEm9VIa6YYMOz0=
-x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR06MB3342.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(39860400002)(346002)(136003)(376002)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(41300700001)(31686004)(26005)(36756003)(45080400002)(53546011)(2616005)(6506007)(478600001)(71200400001)(83380400001)(38100700002)(122000001)(6512007)(38070700009)(66476007)(6486002)(966005)(66946007)(5660300002)(110136005)(316002)(54906003)(64756008)(66556008)(66446008)(76116006)(91956017)(8936002)(8676002)(2906002)(4326008)(86362001)(31696002)(45980500001)(309714004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:  =?utf-8?B?bnAwbDlhc0RxOFBMOGRyUEFOMFF3d3NaNndQUkx0empJZ3ZEYUxQakFFSXhZ?=
- =?utf-8?B?WjBTRWNpdUlCdjJyYk8va2gvWTlpSlJKWm53MG80THkxSWIzNUcwVk1lWkJD?=
- =?utf-8?B?VmNScWluY0NzQjZTOGJWbUV5TXQvblFvTVpKK3FsZXdxd014Nk05ZVdkVExt?=
- =?utf-8?B?a3FTaUg3L0JlN1hpbk40MHljeStmRVo4bUtRcFlia1dmSThHSVE3cmJQRzFL?=
- =?utf-8?B?cWsrdGFmYk5RbE8ydEc0b3ArZ3pnazZZVDl3SlMwR1ZzNVR0cDV1WDIvUitI?=
- =?utf-8?B?UXhyWU9zNHJFT1Vuc1B6c2JaMndGMTdWeEJQLy9HRzdkaDQ3RlNibTFKQkZu?=
- =?utf-8?B?L1RTMVJ2MjFLbUN2UjU4UTN3TXRvR2Y1dCtqOWZ4UStENTBYWHUwWEljcVZP?=
- =?utf-8?B?YmY5ZFNqb2MvWU1qZktwNWovZEZwUkp4OWIvdVducmJpa29EeURpdG42V3Nn?=
- =?utf-8?B?YlBrazUyS1VLNHdzWVdBOTYvWjVCMTRXenlkYWZtcFpyWnpkM01SWENXaXk5?=
- =?utf-8?B?UW1TTEgwU0dHQWFrb1pzemxQWjVTRktmNm0yS1Z4QXI2S21EMlpQeGZxbXhI?=
- =?utf-8?B?VVZWcHgySGwwbzZyYlhnaEkvS2xKdlpHemZBUjdKWnNiMlphRE1ZZW5WL2J3?=
- =?utf-8?B?em5rdkhNTGp3QzM4Q3o0ci9JekdVZTdmM2FJbEt3VHBNa3NLcTNmRjB0WEpp?=
- =?utf-8?B?eGdHekNRSUdUaXdRSXlXTGI0VUt4Zy9DYWEwQmFDSjV3aDNUREZ3UjI3bUFx?=
- =?utf-8?B?RU9Fd1crZGRBVlVVMHJmcm1uaFI3NXhkckg4S3VvZGdkZW9qekpoamJHUEdt?=
- =?utf-8?B?dHFIb1YrWjdPdGM4Skk5Tmh3azJNaUJVK0xUK0NFV2tGNnNDdUo0S3hIQkFz?=
- =?utf-8?B?enhVOWlBNVBHdkhnZzFOMVMzVmhKT0x4WC8ycEFnYW1lNXZuT1h4c0o4Q2lo?=
- =?utf-8?B?SWsvdU9MS0w2aTVLWE16Vk5Xd1RjRW1Jbk9CL1p3SWtqRkx5RW5VTjAzMkQz?=
- =?utf-8?B?cmRJZzVmK1lTL2ZROE5aUklXd3FLS2JsL0xLd3VMQW1jV3ZjbE4wM1VuN3hj?=
- =?utf-8?B?cjRSZzR3OG1tR1JMZW1WSnNuZWNLRDdnT1hLcURnTTA4RHJDaWs4WGxLUllO?=
- =?utf-8?B?Z2hKZXh2ekFYaS94dStiR0Mxc3FCQXpBQUp4M1V6TGhBYUVnM0kwSHpCRFdX?=
- =?utf-8?B?bmx1Q1I3Q3Myclg2VUZKM2JmcDViUmpYUFM1c01VYmh1ZncxRjNEK1M3clpn?=
- =?utf-8?B?QzNwby9ybTlWQ1VmSWd3eGswRXdRM210clNOcmtBMXNYaGRHZ1B3VkwxNEtv?=
- =?utf-8?B?S1FrR0tLYkthc1BxbzZVa1NtM0p1dDhWSmd2R25USUZQNTdLaUVWRmFMbTI2?=
- =?utf-8?B?aDc2QWlXSXlEcHJqOHdSMU9IVnF6K0FHZW9XRTFVT084QXJJdUVZL3FrbmtV?=
- =?utf-8?B?azFsUWdpY0NQQmc2eEN4MU5EeW9CRStnS2dPNlloR2U1WGZ0S3ovUVBNTnVm?=
- =?utf-8?B?cmc2dHBPZzcrQXNKbTVSQzh2RFZPODg4M29tRThLUDJlcXRxOW1KbFFGZDcr?=
- =?utf-8?B?WTdpSE1oV0hFQVU2dHUyWW9UWkhLRnBvS2pUUHJzVWVSY0c5Mldpc3diK04z?=
- =?utf-8?B?VVAzcVpaUWg0SEY4OVdyeHBuYjJ0QXh4Nkp4OFZTV1JKLzFmQktXYjNRQzh6?=
- =?utf-8?B?c1BpcmZ1OFNxaG9jNlJCRXZPR0VJZ2dzZGFnamRrc3ZyZ1RjbVRCTWZwYUJP?=
- =?utf-8?B?NGpOU1hDb3lRUGp0R0NPR1pSbDk2UUlFZFF1OTl0ZDZ2ZW1sTjlpYVdBaFVz?=
- =?utf-8?B?SEpDVnlLcGR2OHoxeC8veXNwSGtaZjdMamQ3dlIwWlorMEVYeDltcGhUQzBM?=
- =?utf-8?B?a3R1VnEzRzhUR2ZRYU0wV1VVakpjb0dMV2ZuY2xHYVpYK3JEY3F1RURlVFJa?=
- =?utf-8?B?SFlPNkErdkp0UGtIOFhlMWpyaU5aWExWaVBRRlRhM1loOUFETGorc24ydzZF?=
- =?utf-8?B?Wkp4TGorek5CNFRpWjR0Q09ieG44a0ZSenA4RXRPMlhTUk9CclcycUowVjJ1?=
- =?utf-8?B?ajBhV3V2QUtDT0xLdU4wVDVFM3NCM1VIbytQb1lDSW9ZK1RDVjZXUjcxUUpp?=
- =?utf-8?Q?2QBc=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B363542DA5E82345811027B5583C8661@apcprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR06MB3342.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1e18916-0144-4756-dbb8-08dc1afd25df
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2024 03:49:34.3772
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CFgHflhkmAioDBDF+Kl2lysA9NOxohoLM8jyDUa3zWO3dqJcr5wpXR2ndt2EXmtobiMgLqg1u8Sf4gXYJYXxIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI6PR06MB7534
+ <0aae43b2-c37b-41c8-be3f-3ebf0bb3d052@vivo.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <0aae43b2-c37b-41c8-be3f-3ebf0bb3d052@vivo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -138,227 +45,281 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Chunhai Guo via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Chunhai Guo <guochunhai@vivo.com>
 Cc: "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>, "huyue2@coolpad.com" <huyue2@coolpad.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-T24gMjAyNC8xLzIyIDEwOjA3LCBHYW8gWGlhbmcgd3JvdGU6DQo+IFvkvaDpgJrluLjkuI3kvJrm
-lLbliLDmnaXoh6ogaHNpYW5na2FvQGxpbnV4LmFsaWJhYmEuY29tIOeahOeUteWtkOmCruS7tuOA
-guivt+iuv+mXriBodHRwczovL2FrYS5tcy9MZWFybkFib3V0U2VuZGVySWRlbnRpZmljYXRpb27v
-vIzku6Xkuobop6Pov5nkuIDngrnkuLrku4DkuYjlvojph43opoFdDQo+DQo+IE9uIDIwMjQvMS8y
-MCAyMjo1NSwgQ2h1bmhhaSBHdW8gd3JvdGU6DQo+PiBFdmVuIHdpdGggaW5wbGFjZSBkZWNvbXBy
-ZXNzaW9uLCBzb21ldGltZXMgZXh0cmEgdGVtcG9yYXJ5IGJ1ZmZlcnMgYXJlDQo+PiBzdGlsbCBu
-ZWVkZWQgZm9yIGRlY29tcHJlc3Npb24uICBJbiBsb3ctbWVtb3J5IHNjZW5hcmlvcywgaXQgd291
-bGQgYmUNCj4+IGJldHRlciB0byB0cnkgdG8gYWxsb2NhdGUgd2l0aCBHRlBfTk9XQUlUIG9uIHJl
-YWRhaGVhZCBmaXJzdC4gVGhhdCBjYW4NCj4+IGhlbHAgcmVkdWNlIHRoZSB0aW1lIHNwZW50IG9u
-IHBhZ2UgYWxsb2NhdGlvbiB1bmRlciBtZW1vcnkgcHJlc3N1cmUuDQo+Pg0KPj4gVGhlcmUgaXMg
-YW4gYXZlcmFnZSByZWR1Y3Rpb24gb2YgMjElIGluIHBhZ2UgYWxsb2NhdGlvbiB0aW1lIHVuZGVy
-DQo+IEl0IHdvdWxkIGJlIGJldHRlciB0byBhZGQgYSB0YWJsZSB0byBzaG93IHRoZSBhYnNvbHV0
-ZSBudW1iZXJzIHRvbw0KPiAobGlrZSB3aGF0IHlvdSBkaWQgaW4gdGhlIGdsb2JhbCBwb29sIGNv
-bW1pdC4pICBJZiBpdCdzIHBvc3NpYmxlLCB0aGVyZQ0KPiBpcyBubyBuZWVkIHRvIHNlbmQgYSB1
-cGRhdGUgdmVyc2lvbiBmb3IgdGhpcywganVzdCByZXBseSB0aGUgdXBkYXRlZA0KPiBjb21taXQg
-bWVzc2FnZSBhbmQgSSB3aWxsIHVwZGF0ZSB0aGUgY29tbWl0IG1hbnVhbGx5Lg0KDQoNClRoZSB0
-YWJsZSBiZWxvdyBzaG93cyBkZXRhaWxlZCBudW1iZXJzLiBUaGUgcmVkdWN0aW9uIEkgbWVudGlv
-bmVkIGJlZm9yZQ0Kd2FzIG5vdCBhY2N1cmF0ZSBlbm91Z2guIFBsZWFzZSBoZWxwIGNvcnJlY3Qg
-dGhlIGltcHJvdmVtZW50IGZyb20gMjElIHRvDQoyMC4yMSUuDQoNCg0KKy0tLS0tLS0tLS0tLS0t
-Ky0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLSsNCnwgICAgICAgICAg
-ICAgIHwgdy9vIEdGUF9OT1dBSVQgfCB3LyBHRlBfTk9XQUlUIHwgIGRpZmYgICB8DQorLS0tLS0t
-LS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tKw0KfCBB
-dmVyYWdlIChtcykgfCAgICAgMzM2NCAgICAgICB8ICAgICAgMjY4NCAgICAgfCAtMjAuMjElIHwN
-CistLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0tLS0tLSstLS0tLS0t
-LS0rDQoNClRoYW5rcywNCg0KDQo+DQo+IE90aGVyd2lzZSBpdCBsb29rcyBnb29kIHRvIG1lLA0K
-Pg0KPiBUaGFua3MsDQo+IEdhbyBYaWFuZw0KPg0KPj4gbXVsdGktYXBwIGxhdW5jaCBiZW5jaG1h
-cmsgd29ya2xvYWQgWzFdIG9uIEFSTTY0IEFuZHJvaWQgZGV2aWNlcyBydW5uaW5nDQo+PiB0aGUg
-NS4xNSBrZXJuZWwgd2l0aCBhbiA4LWNvcmUgQ1BVIGFuZCA4R0Igb2YgbWVtb3J5Lg0KPj4NCj4+
-IFsxXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9yLzIwMjQwMTA5MDc0MTQzLjQxMzg3ODMtMS1n
-dW9jaHVuaGFpQHZpdm8uY29tDQo+Pg0KPj4gU3VnZ2VzdGVkLWJ5OiBHYW8gWGlhbmcgPHhpYW5n
-QGtlcm5lbC5vcmc+DQo+PiBTaWduZWQtb2ZmLWJ5OiBDaHVuaGFpIEd1byA8Z3VvY2h1bmhhaUB2
-aXZvLmNvbT4NCj4+IC0tLQ0KPj4gICAgZnMvZXJvZnMvY29tcHJlc3MuaCAgICAgICAgICAgICB8
-ICA1ICsrLS0tDQo+PiAgICBmcy9lcm9mcy9kZWNvbXByZXNzb3IuYyAgICAgICAgIHwgIDUgKysr
-LS0NCj4+ICAgIGZzL2Vyb2ZzL2RlY29tcHJlc3Nvcl9kZWZsYXRlLmMgfCAxOSArKysrKysrKysr
-KysrLS0tLS0tDQo+PiAgICBmcy9lcm9mcy9kZWNvbXByZXNzb3JfbHptYS5jICAgIHwgMTcgKysr
-KysrKysrKysrLS0tLS0NCj4+ICAgIGZzL2Vyb2ZzL3pkYXRhLmMgICAgICAgICAgICAgICAgfCAx
-NiArKysrKysrKysrKystLS0tDQo+PiAgICA1IGZpbGVzIGNoYW5nZWQsIDQyIGluc2VydGlvbnMo
-KyksIDIwIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9mcy9lcm9mcy9jb21wcmVz
-cy5oIGIvZnMvZXJvZnMvY29tcHJlc3MuaA0KPj4gaW5kZXggMjc5OTMzZTAwN2QyLi43Y2M1ODQx
-NTc3YjIgMTAwNjQ0DQo+PiAtLS0gYS9mcy9lcm9mcy9jb21wcmVzcy5oDQo+PiArKysgYi9mcy9l
-cm9mcy9jb21wcmVzcy5oDQo+PiBAQCAtMTEsMTMgKzExLDEyIEBADQo+PiAgICBzdHJ1Y3Qgel9l
-cm9mc19kZWNvbXByZXNzX3JlcSB7DQo+PiAgICAgICAgc3RydWN0IHN1cGVyX2Jsb2NrICpzYjsN
-Cj4+ICAgICAgICBzdHJ1Y3QgcGFnZSAqKmluLCAqKm91dDsNCj4+IC0NCj4+ICAgICAgICB1bnNp
-Z25lZCBzaG9ydCBwYWdlb2ZzX2luLCBwYWdlb2ZzX291dDsNCj4+ICAgICAgICB1bnNpZ25lZCBp
-bnQgaW5wdXRzaXplLCBvdXRwdXRzaXplOw0KPj4NCj4+IC0gICAgIC8qIGluZGljYXRlIHRoZSBh
-bGdvcml0aG0gd2lsbCBiZSB1c2VkIGZvciBkZWNvbXByZXNzaW9uICovDQo+PiAtICAgICB1bnNp
-Z25lZCBpbnQgYWxnOw0KPj4gKyAgICAgdW5zaWduZWQgaW50IGFsZzsgICAgICAgLyogdGhlIGFs
-Z29yaXRobSBmb3IgZGVjb21wcmVzc2lvbiAqLw0KPj4gICAgICAgIGJvb2wgaW5wbGFjZV9pbywg
-cGFydGlhbF9kZWNvZGluZywgZmlsbGdhcHM7DQo+PiArICAgICBnZnBfdCBnZnA7ICAgICAgLyog
-YWxsb2NhdGlvbiBmbGFncyBmb3IgZXh0cmEgdGVtcG9yYXJ5IGJ1ZmZlcnMgKi8NCj4+ICAgIH07
-DQo+Pg0KPj4gICAgc3RydWN0IHpfZXJvZnNfZGVjb21wcmVzc29yIHsNCj4+IGRpZmYgLS1naXQg
-YS9mcy9lcm9mcy9kZWNvbXByZXNzb3IuYyBiL2ZzL2Vyb2ZzL2RlY29tcHJlc3Nvci5jDQo+PiBp
-bmRleCAxZDY1YjlmNjBhMzkuLmVmMmIwOGVjOTgzMCAxMDA2NDQNCj4+IC0tLSBhL2ZzL2Vyb2Zz
-L2RlY29tcHJlc3Nvci5jDQo+PiArKysgYi9mcy9lcm9mcy9kZWNvbXByZXNzb3IuYw0KPj4gQEAg
-LTExMSw4ICsxMTEsOSBAQCBzdGF0aWMgaW50IHpfZXJvZnNfbHo0X3ByZXBhcmVfZHN0cGFnZXMo
-c3RydWN0IHpfZXJvZnNfbHo0X2RlY29tcHJlc3NfY3R4ICpjdHgsDQo+PiAgICAgICAgICAgICAg
-ICAgICAgICAgIHZpY3RpbSA9IGF2YWlsYWJsZXNbLS10b3BdOw0KPj4gICAgICAgICAgICAgICAg
-ICAgICAgICBnZXRfcGFnZSh2aWN0aW0pOw0KPj4gICAgICAgICAgICAgICAgfSBlbHNlIHsNCj4+
-IC0gICAgICAgICAgICAgICAgICAgICB2aWN0aW0gPSBlcm9mc19hbGxvY3BhZ2UocGFnZXBvb2ws
-DQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdGUF9L
-RVJORUwgfCBfX0dGUF9OT0ZBSUwpOw0KPj4gKyAgICAgICAgICAgICAgICAgICAgIHZpY3RpbSA9
-IGVyb2ZzX2FsbG9jcGFnZShwYWdlcG9vbCwgcnEtPmdmcCk7DQo+PiArICAgICAgICAgICAgICAg
-ICAgICAgaWYgKCF2aWN0aW0pDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1
-cm4gLUVOT01FTTsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgc2V0X3BhZ2VfcHJpdmF0ZSh2
-aWN0aW0sIFpfRVJPRlNfU0hPUlRMSVZFRF9QQUdFKTsNCj4+ICAgICAgICAgICAgICAgIH0NCj4+
-ICAgICAgICAgICAgICAgIHJxLT5vdXRbaV0gPSB2aWN0aW07DQo+PiBkaWZmIC0tZ2l0IGEvZnMv
-ZXJvZnMvZGVjb21wcmVzc29yX2RlZmxhdGUuYyBiL2ZzL2Vyb2ZzL2RlY29tcHJlc3Nvcl9kZWZs
-YXRlLmMNCj4+IGluZGV4IDRhNjRhOWM5MWRkMy4uYjk4ODcyMDU4YWJlIDEwMDY0NA0KPj4gLS0t
-IGEvZnMvZXJvZnMvZGVjb21wcmVzc29yX2RlZmxhdGUuYw0KPj4gKysrIGIvZnMvZXJvZnMvZGVj
-b21wcmVzc29yX2RlZmxhdGUuYw0KPj4gQEAgLTk1LDcgKzk1LDcgQEAgaW50IHpfZXJvZnNfbG9h
-ZF9kZWZsYXRlX2NvbmZpZyhzdHJ1Y3Qgc3VwZXJfYmxvY2sgKnNiLA0KPj4gICAgfQ0KPj4NCj4+
-ICAgIGludCB6X2Vyb2ZzX2RlZmxhdGVfZGVjb21wcmVzcyhzdHJ1Y3Qgel9lcm9mc19kZWNvbXBy
-ZXNzX3JlcSAqcnEsDQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBwYWdl
-ICoqcGFnZXBvb2wpDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBwYWdl
-ICoqcGdwbCkNCj4+ICAgIHsNCj4+ICAgICAgICBjb25zdCB1bnNpZ25lZCBpbnQgbnJwYWdlc19v
-dXQgPQ0KPj4gICAgICAgICAgICAgICAgUEFHRV9BTElHTihycS0+cGFnZW9mc19vdXQgKyBycS0+
-b3V0cHV0c2l6ZSkgPj4gUEFHRV9TSElGVDsNCj4+IEBAIC0xNTgsOCArMTU4LDEyIEBAIGludCB6
-X2Vyb2ZzX2RlZmxhdGVfZGVjb21wcmVzcyhzdHJ1Y3Qgel9lcm9mc19kZWNvbXByZXNzX3JlcSAq
-cnEsDQo+PiAgICAgICAgICAgICAgICAgICAgICAgIHN0cm0tPnouYXZhaWxfb3V0ID0gbWluX3Qo
-dTMyLCBvdXRzeiwgUEFHRV9TSVpFIC0gcG9mcyk7DQo+PiAgICAgICAgICAgICAgICAgICAgICAg
-IG91dHN6IC09IHN0cm0tPnouYXZhaWxfb3V0Ow0KPj4gICAgICAgICAgICAgICAgICAgICAgICBp
-ZiAoIXJxLT5vdXRbbm9dKSB7DQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICBycS0+
-b3V0W25vXSA9IGVyb2ZzX2FsbG9jcGFnZShwYWdlcG9vbCwNCj4+IC0gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBHRlBfS0VSTkVMIHwgX19HRlBfTk9GQUlMKTsN
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJxLT5vdXRbbm9dID0gZXJvZnNfYWxs
-b2NwYWdlKHBncGwsIHJxLT5nZnApOw0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-aWYgKCFycS0+b3V0W25vXSkgew0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBrb3V0ID0gTlVMTDsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgZXJyID0gLUVOT01FTTsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgYnJlYWs7DQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9DQo+PiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgc2V0X3BhZ2VfcHJpdmF0ZShycS0+b3V0W25vXSwNCj4+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFpfRVJPRlNf
-U0hPUlRMSVZFRF9QQUdFKTsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgfQ0KPj4gQEAgLTIx
-MSw4ICsyMTUsMTEgQEAgaW50IHpfZXJvZnNfZGVmbGF0ZV9kZWNvbXByZXNzKHN0cnVjdCB6X2Vy
-b2ZzX2RlY29tcHJlc3NfcmVxICpycSwNCj4+DQo+PiAgICAgICAgICAgICAgICAgICAgICAgIERC
-R19CVUdPTihlcm9mc19wYWdlX2lzX21hbmFnZWQoRVJPRlNfU0Ioc2IpLA0KPj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJxLT5pbltqXSkp
-Ow0KPj4gLSAgICAgICAgICAgICAgICAgICAgIHRtcHBhZ2UgPSBlcm9mc19hbGxvY3BhZ2UocGFn
-ZXBvb2wsDQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBHRlBfS0VSTkVMIHwgX19HRlBfTk9GQUlMKTsNCj4+ICsgICAgICAgICAgICAgICAgICAgICB0
-bXBwYWdlID0gZXJvZnNfYWxsb2NwYWdlKHBncGwsIHJxLT5nZnApOw0KPj4gKyAgICAgICAgICAg
-ICAgICAgICAgIGlmICghdG1wcGFnZSkgew0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgZXJyID0gLUVOT01FTTsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdvdG8g
-ZmFpbGVkOw0KPj4gKyAgICAgICAgICAgICAgICAgICAgIH0NCj4+ICAgICAgICAgICAgICAgICAg
-ICAgICAgc2V0X3BhZ2VfcHJpdmF0ZSh0bXBwYWdlLCBaX0VST0ZTX1NIT1JUTElWRURfUEFHRSk7
-DQo+PiAgICAgICAgICAgICAgICAgICAgICAgIGNvcHlfaGlnaHBhZ2UodG1wcGFnZSwgcnEtPmlu
-W2pdKTsNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgcnEtPmluW2pdID0gdG1wcGFnZTsNCj4+
-IEBAIC0yMzAsNyArMjM3LDcgQEAgaW50IHpfZXJvZnNfZGVmbGF0ZV9kZWNvbXByZXNzKHN0cnVj
-dCB6X2Vyb2ZzX2RlY29tcHJlc3NfcmVxICpycSwNCj4+ICAgICAgICAgICAgICAgICAgICAgICAg
-YnJlYWs7DQo+PiAgICAgICAgICAgICAgICB9DQo+PiAgICAgICAgfQ0KPj4gLQ0KPj4gK2ZhaWxl
-ZDoNCj4+ICAgICAgICBpZiAoemxpYl9pbmZsYXRlRW5kKCZzdHJtLT56KSAhPSBaX09LICYmICFl
-cnIpDQo+PiAgICAgICAgICAgICAgICBlcnIgPSAtRUlPOw0KPj4gICAgICAgIGlmIChrb3V0KQ0K
-Pj4gZGlmZiAtLWdpdCBhL2ZzL2Vyb2ZzL2RlY29tcHJlc3Nvcl9sem1hLmMgYi9mcy9lcm9mcy9k
-ZWNvbXByZXNzb3JfbHptYS5jDQo+PiBpbmRleCAyZGQxNGY5OWMxZGMuLjZjYTM1N2Q4M2NmYSAx
-MDA2NDQNCj4+IC0tLSBhL2ZzL2Vyb2ZzL2RlY29tcHJlc3Nvcl9sem1hLmMNCj4+ICsrKyBiL2Zz
-L2Vyb2ZzL2RlY29tcHJlc3Nvcl9sem1hLmMNCj4+IEBAIC0xNDgsNyArMTQ4LDcgQEAgaW50IHpf
-ZXJvZnNfbG9hZF9sem1hX2NvbmZpZyhzdHJ1Y3Qgc3VwZXJfYmxvY2sgKnNiLA0KPj4gICAgfQ0K
-Pj4NCj4+ICAgIGludCB6X2Vyb2ZzX2x6bWFfZGVjb21wcmVzcyhzdHJ1Y3Qgel9lcm9mc19kZWNv
-bXByZXNzX3JlcSAqcnEsDQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBwYWdl
-ICoqcGFnZXBvb2wpDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBwYWdlICoq
-cGdwbCkNCj4+ICAgIHsNCj4+ICAgICAgICBjb25zdCB1bnNpZ25lZCBpbnQgbnJwYWdlc19vdXQg
-PQ0KPj4gICAgICAgICAgICAgICAgUEFHRV9BTElHTihycS0+cGFnZW9mc19vdXQgKyBycS0+b3V0
-cHV0c2l6ZSkgPj4gUEFHRV9TSElGVDsNCj4+IEBAIC0yMTUsOCArMjE1LDExIEBAIGludCB6X2Vy
-b2ZzX2x6bWFfZGVjb21wcmVzcyhzdHJ1Y3Qgel9lcm9mc19kZWNvbXByZXNzX3JlcSAqcnEsDQo+
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBBR0Vf
-U0laRSAtIHBhZ2VvZnMpOw0KPj4gICAgICAgICAgICAgICAgICAgICAgICBvdXRsZW4gLT0gc3Ry
-bS0+YnVmLm91dF9zaXplOw0KPj4gICAgICAgICAgICAgICAgICAgICAgICBpZiAoIXJxLT5vdXRb
-bm9dICYmIHJxLT5maWxsZ2FwcykgeyAgICAgLyogZGVkdXBlZCAqLw0KPj4gLSAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcnEtPm91dFtub10gPSBlcm9mc19hbGxvY3BhZ2UocGFnZXBvb2ws
-DQo+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgR0ZQX0tF
-Uk5FTCB8IF9fR0ZQX05PRkFJTCk7DQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
-cS0+b3V0W25vXSA9IGVyb2ZzX2FsbG9jcGFnZShwZ3BsLCBycS0+Z2ZwKTsNCj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGlmICghcnEtPm91dFtub10pIHsNCj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgZXJyID0gLUVOT01FTTsNCj4+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB9DQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2V0X3BhZ2Vf
-cHJpdmF0ZShycS0+b3V0W25vXSwNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIFpfRVJPRlNfU0hPUlRMSVZFRF9QQUdFKTsNCj4+ICAgICAgICAgICAg
-ICAgICAgICAgICAgfQ0KPj4gQEAgLTI1OCw4ICsyNjEsMTEgQEAgaW50IHpfZXJvZnNfbHptYV9k
-ZWNvbXByZXNzKHN0cnVjdCB6X2Vyb2ZzX2RlY29tcHJlc3NfcmVxICpycSwNCj4+DQo+PiAgICAg
-ICAgICAgICAgICAgICAgICAgIERCR19CVUdPTihlcm9mc19wYWdlX2lzX21hbmFnZWQoRVJPRlNf
-U0IocnEtPnNiKSwNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBycS0+aW5bal0pKTsNCj4+IC0gICAgICAgICAgICAgICAgICAgICB0bXBw
-YWdlID0gZXJvZnNfYWxsb2NwYWdlKHBhZ2Vwb29sLA0KPj4gLSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgR0ZQX0tFUk5FTCB8IF9fR0ZQX05PRkFJTCk7DQo+
-PiArICAgICAgICAgICAgICAgICAgICAgdG1wcGFnZSA9IGVyb2ZzX2FsbG9jcGFnZShwZ3BsLCBy
-cS0+Z2ZwKTsNCj4+ICsgICAgICAgICAgICAgICAgICAgICBpZiAoIXRtcHBhZ2UpIHsNCj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVyciA9IC1FTk9NRU07DQo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBnb3RvIGZhaWxlZDsNCj4+ICsgICAgICAgICAgICAgICAgICAg
-ICB9DQo+PiAgICAgICAgICAgICAgICAgICAgICAgIHNldF9wYWdlX3ByaXZhdGUodG1wcGFnZSwg
-Wl9FUk9GU19TSE9SVExJVkVEX1BBR0UpOw0KPj4gICAgICAgICAgICAgICAgICAgICAgICBjb3B5
-X2hpZ2hwYWdlKHRtcHBhZ2UsIHJxLT5pbltqXSk7DQo+PiAgICAgICAgICAgICAgICAgICAgICAg
-IHJxLT5pbltqXSA9IHRtcHBhZ2U7DQo+PiBAQCAtMjc3LDYgKzI4Myw3IEBAIGludCB6X2Vyb2Zz
-X2x6bWFfZGVjb21wcmVzcyhzdHJ1Y3Qgel9lcm9mc19kZWNvbXByZXNzX3JlcSAqcnEsDQo+PiAg
-ICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOw0KPj4gICAgICAgICAgICAgICAgfQ0KPj4gICAg
-ICAgIH0NCj4+ICtmYWlsZWQ6DQo+PiAgICAgICAgaWYgKG5vIDwgbnJwYWdlc19vdXQgJiYgc3Ry
-bS0+YnVmLm91dCkNCj4+ICAgICAgICAgICAgICAgIGt1bm1hcChycS0+b3V0W25vXSk7DQo+PiAg
-ICAgICAgaWYgKG5pIDwgbnJwYWdlc19pbikNCj4+IGRpZmYgLS1naXQgYS9mcy9lcm9mcy96ZGF0
-YS5jIGIvZnMvZXJvZnMvemRhdGEuYw0KPj4gaW5kZXggNjkyYzBjMzliZTYzLi5hMjkzZGUyYTYw
-ZWQgMTAwNjQ0DQo+PiAtLS0gYS9mcy9lcm9mcy96ZGF0YS5jDQo+PiArKysgYi9mcy9lcm9mcy96
-ZGF0YS5jDQo+PiBAQCAtODIsNiArODIsOSBAQCBzdHJ1Y3Qgel9lcm9mc19wY2x1c3RlciB7DQo+
-PiAgICAgICAgLyogTDogaW5kaWNhdGUgc2V2ZXJhbCBwYWdlb2ZzX291dHMgb3Igbm90ICovDQo+
-PiAgICAgICAgYm9vbCBtdWx0aWJhc2VzOw0KPj4NCj4+ICsgICAgIC8qIEw6IHdoZXRoZXIgZXh0
-cmEgYnVmZmVyIGFsbG9jYXRpb25zIGFyZSBiZXN0LWVmZm9ydCAqLw0KPj4gKyAgICAgYm9vbCBi
-ZXN0ZWZmb3J0Ow0KPj4gKw0KPj4gICAgICAgIC8qIEE6IGNvbXByZXNzZWQgYnZlY3MgKGNhbiBi
-ZSBjYWNoZWQgb3IgaW5wbGFjZWQgcGFnZXMpICovDQo+PiAgICAgICAgc3RydWN0IHpfZXJvZnNf
-YnZlYyBjb21wcmVzc2VkX2J2ZWNzW107DQo+PiAgICB9Ow0KPj4gQEAgLTk2NCw3ICs5NjcsNyBA
-QCBzdGF0aWMgaW50IHpfZXJvZnNfcmVhZF9mcmFnbWVudChzdHJ1Y3Qgc3VwZXJfYmxvY2sgKnNi
-LCBzdHJ1Y3QgcGFnZSAqcGFnZSwNCj4+ICAgIH0NCj4+DQo+PiAgICBzdGF0aWMgaW50IHpfZXJv
-ZnNfZG9fcmVhZF9wYWdlKHN0cnVjdCB6X2Vyb2ZzX2RlY29tcHJlc3NfZnJvbnRlbmQgKmZlLA0K
-Pj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IHBhZ2UgKnBhZ2UpDQo+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgcGFnZSAqcGFnZSwgYm9vbCByYSkN
-Cj4+ICAgIHsNCj4+ICAgICAgICBzdHJ1Y3QgaW5vZGUgKmNvbnN0IGlub2RlID0gZmUtPmlub2Rl
-Ow0KPj4gICAgICAgIHN0cnVjdCBlcm9mc19tYXBfYmxvY2tzICpjb25zdCBtYXAgPSAmZmUtPm1h
-cDsNCj4+IEBAIC0xMDE0LDYgKzEwMTcsNyBAQCBzdGF0aWMgaW50IHpfZXJvZnNfZG9fcmVhZF9w
-YWdlKHN0cnVjdCB6X2Vyb2ZzX2RlY29tcHJlc3NfZnJvbnRlbmQgKmZlLA0KPj4gICAgICAgICAg
-ICAgICAgZXJyID0gel9lcm9mc19wY2x1c3Rlcl9iZWdpbihmZSk7DQo+PiAgICAgICAgICAgICAg
-ICBpZiAoZXJyKQ0KPj4gICAgICAgICAgICAgICAgICAgICAgICBnb3RvIG91dDsNCj4+ICsgICAg
-ICAgICAgICAgZmUtPnBjbC0+YmVzdGVmZm9ydCB8PSAhcmE7DQo+PiAgICAgICAgfQ0KPj4NCj4+
-ICAgICAgICAvKg0KPj4gQEAgLTEyODAsNyArMTI4NCwxMSBAQCBzdGF0aWMgaW50IHpfZXJvZnNf
-ZGVjb21wcmVzc19wY2x1c3RlcihzdHJ1Y3Qgel9lcm9mc19kZWNvbXByZXNzX2JhY2tlbmQgKmJl
-LA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLmlucGxhY2VfaW8g
-PSBvdmVybGFwcGVkLA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-LnBhcnRpYWxfZGVjb2RpbmcgPSBwY2wtPnBhcnRpYWwsDQo+PiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAuZmlsbGdhcHMgPSBwY2wtPm11bHRpYmFzZXMsDQo+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC5nZnAgPSBwY2wtPmJlc3RlZmZvcnQg
-Pw0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEdGUF9L
-RVJORUwgfCBfX0dGUF9OT0ZBSUwgOg0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIEdGUF9OT1dBSVQgfCBfX0dGUF9OT1JFVFJZDQo+PiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIH0sIGJlLT5wYWdlcG9vbCk7DQo+PiArICAgICBwY2wtPmJl
-c3RlZmZvcnQgPSBmYWxzZTsNCj4+DQo+PiAgICAgICAgLyogbXVzdCBoYW5kbGUgYWxsIGNvbXBy
-ZXNzZWQgcGFnZXMgYmVmb3JlIGFjdHVhbCBmaWxlIHBhZ2VzICovDQo+PiAgICAgICAgaWYgKHpf
-ZXJvZnNfaXNfaW5saW5lX3BjbHVzdGVyKHBjbCkpIHsNCj4+IEBAIC0xNzg1LDcgKzE3OTMsNyBA
-QCBzdGF0aWMgdm9pZCB6X2Vyb2ZzX3BjbHVzdGVyX3JlYWRtb3JlKHN0cnVjdCB6X2Vyb2ZzX2Rl
-Y29tcHJlc3NfZnJvbnRlbmQgKmYsDQo+PiAgICAgICAgICAgICAgICAgICAgICAgIGlmIChQYWdl
-VXB0b2RhdGUocGFnZSkpDQo+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5sb2Nr
-X3BhZ2UocGFnZSk7DQo+PiAgICAgICAgICAgICAgICAgICAgICAgIGVsc2UNCj4+IC0gICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICh2b2lkKXpfZXJvZnNfZG9fcmVhZF9wYWdlKGYsIHBhZ2Up
-Ow0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKHZvaWQpel9lcm9mc19kb19yZWFk
-X3BhZ2UoZiwgcGFnZSwgISFyYWMpOw0KPj4gICAgICAgICAgICAgICAgICAgICAgICBwdXRfcGFn
-ZShwYWdlKTsNCj4+ICAgICAgICAgICAgICAgIH0NCj4+DQo+PiBAQCAtMTgwNiw3ICsxODE0LDcg
-QEAgc3RhdGljIGludCB6X2Vyb2ZzX3JlYWRfZm9saW8oc3RydWN0IGZpbGUgKmZpbGUsIHN0cnVj
-dCBmb2xpbyAqZm9saW8pDQo+PiAgICAgICAgZi5oZWFkb2Zmc2V0ID0gKGVyb2ZzX29mZl90KWZv
-bGlvLT5pbmRleCA8PCBQQUdFX1NISUZUOw0KPj4NCj4+ICAgICAgICB6X2Vyb2ZzX3BjbHVzdGVy
-X3JlYWRtb3JlKCZmLCBOVUxMLCB0cnVlKTsNCj4+IC0gICAgIGVyciA9IHpfZXJvZnNfZG9fcmVh
-ZF9wYWdlKCZmLCAmZm9saW8tPnBhZ2UpOw0KPj4gKyAgICAgZXJyID0gel9lcm9mc19kb19yZWFk
-X3BhZ2UoJmYsICZmb2xpby0+cGFnZSwgZmFsc2UpOw0KPj4gICAgICAgIHpfZXJvZnNfcGNsdXN0
-ZXJfcmVhZG1vcmUoJmYsIE5VTEwsIGZhbHNlKTsNCj4+ICAgICAgICB6X2Vyb2ZzX3BjbHVzdGVy
-X2VuZCgmZik7DQo+Pg0KPj4gQEAgLTE4NDcsNyArMTg1NSw3IEBAIHN0YXRpYyB2b2lkIHpfZXJv
-ZnNfcmVhZGFoZWFkKHN0cnVjdCByZWFkYWhlYWRfY29udHJvbCAqcmFjKQ0KPj4gICAgICAgICAg
-ICAgICAgZm9saW8gPSBoZWFkOw0KPj4gICAgICAgICAgICAgICAgaGVhZCA9IGZvbGlvX2dldF9w
-cml2YXRlKGZvbGlvKTsNCj4+DQo+PiAtICAgICAgICAgICAgIGVyciA9IHpfZXJvZnNfZG9fcmVh
-ZF9wYWdlKCZmLCAmZm9saW8tPnBhZ2UpOw0KPj4gKyAgICAgICAgICAgICBlcnIgPSB6X2Vyb2Zz
-X2RvX3JlYWRfcGFnZSgmZiwgJmZvbGlvLT5wYWdlLCB0cnVlKTsNCj4+ICAgICAgICAgICAgICAg
-IGlmIChlcnIgJiYgZXJyICE9IC1FSU5UUikNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgZXJv
-ZnNfZXJyKGlub2RlLT5pX3NiLCAicmVhZGFoZWFkIGVycm9yIGF0IGZvbGlvICVsdSBAIG5pZCAl
-bGx1IiwNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvbGlvLT5pbmRleCwg
-RVJPRlNfSShpbm9kZSktPm5pZCk7DQoNCg0K
+
+
+On 2024/1/22 11:49, Chunhai Guo wrote:
+> On 2024/1/22 10:07, Gao Xiang wrote:
+>> [你通常不会收到来自 hsiangkao@linux.alibaba.com 的电子邮件。请访问 https://aka.ms/LearnAboutSenderIdentification，以了解这一点为什么很重要]
+>>
+>> On 2024/1/20 22:55, Chunhai Guo wrote:
+>>> Even with inplace decompression, sometimes extra temporary buffers are
+>>> still needed for decompression.  In low-memory scenarios, it would be
+>>> better to try to allocate with GFP_NOWAIT on readahead first. That can
+>>> help reduce the time spent on page allocation under memory pressure.
+>>>
+>>> There is an average reduction of 21% in page allocation time under
+>> It would be better to add a table to show the absolute numbers too
+>> (like what you did in the global pool commit.)  If it's possible, there
+>> is no need to send a update version for this, just reply the updated
+>> commit message and I will update the commit manually.
+> 
+> 
+> The table below shows detailed numbers. The reduction I mentioned before
+> was not accurate enough. Please help correct the improvement from 21% to
+> 20.21%.
+> 
+> 
+> +--------------+----------------+---------------+---------+
+> |              | w/o GFP_NOWAIT | w/ GFP_NOWAIT |  diff   |
+> +--------------+----------------+---------------+---------+
+> | Average (ms) |     3364       |      2684     | -20.21% |
+> +--------------+----------------+---------------+---------+
+
+Did it test without the 16k sliding window change?
+https://lore.kernel.org/linux-erofs/69711d55-f7a2-420b-9ba8-fa2921f66a4c@vivo.com
+
+Could you benchmark these two optimizations together to
+show the extreme optimized case without a global pool?
+With a new table if possible? I will add this to
+the commit message too.
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks,
+> 
+> 
+>>
+>> Otherwise it looks good to me,
+>>
+>> Thanks,
+>> Gao Xiang
+>>
+>>> multi-app launch benchmark workload [1] on ARM64 Android devices running
+>>> the 5.15 kernel with an 8-core CPU and 8GB of memory.
+>>>
+>>> [1] https://lore.kernel.org/r/20240109074143.4138783-1-guochunhai@vivo.com
+>>>
+>>> Suggested-by: Gao Xiang <xiang@kernel.org>
+>>> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+>>> ---
+>>>     fs/erofs/compress.h             |  5 ++---
+>>>     fs/erofs/decompressor.c         |  5 +++--
+>>>     fs/erofs/decompressor_deflate.c | 19 +++++++++++++------
+>>>     fs/erofs/decompressor_lzma.c    | 17 ++++++++++++-----
+>>>     fs/erofs/zdata.c                | 16 ++++++++++++----
+>>>     5 files changed, 42 insertions(+), 20 deletions(-)
+>>>
+>>> diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
+>>> index 279933e007d2..7cc5841577b2 100644
+>>> --- a/fs/erofs/compress.h
+>>> +++ b/fs/erofs/compress.h
+>>> @@ -11,13 +11,12 @@
+>>>     struct z_erofs_decompress_req {
+>>>         struct super_block *sb;
+>>>         struct page **in, **out;
+>>> -
+>>>         unsigned short pageofs_in, pageofs_out;
+>>>         unsigned int inputsize, outputsize;
+>>>
+>>> -     /* indicate the algorithm will be used for decompression */
+>>> -     unsigned int alg;
+>>> +     unsigned int alg;       /* the algorithm for decompression */
+>>>         bool inplace_io, partial_decoding, fillgaps;
+>>> +     gfp_t gfp;      /* allocation flags for extra temporary buffers */
+>>>     };
+>>>
+>>>     struct z_erofs_decompressor {
+>>> diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+>>> index 1d65b9f60a39..ef2b08ec9830 100644
+>>> --- a/fs/erofs/decompressor.c
+>>> +++ b/fs/erofs/decompressor.c
+>>> @@ -111,8 +111,9 @@ static int z_erofs_lz4_prepare_dstpages(struct z_erofs_lz4_decompress_ctx *ctx,
+>>>                         victim = availables[--top];
+>>>                         get_page(victim);
+>>>                 } else {
+>>> -                     victim = erofs_allocpage(pagepool,
+>>> -                                              GFP_KERNEL | __GFP_NOFAIL);
+>>> +                     victim = erofs_allocpage(pagepool, rq->gfp);
+>>> +                     if (!victim)
+>>> +                             return -ENOMEM;
+>>>                         set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
+>>>                 }
+>>>                 rq->out[i] = victim;
+>>> diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
+>>> index 4a64a9c91dd3..b98872058abe 100644
+>>> --- a/fs/erofs/decompressor_deflate.c
+>>> +++ b/fs/erofs/decompressor_deflate.c
+>>> @@ -95,7 +95,7 @@ int z_erofs_load_deflate_config(struct super_block *sb,
+>>>     }
+>>>
+>>>     int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+>>> -                            struct page **pagepool)
+>>> +                            struct page **pgpl)
+>>>     {
+>>>         const unsigned int nrpages_out =
+>>>                 PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+>>> @@ -158,8 +158,12 @@ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+>>>                         strm->z.avail_out = min_t(u32, outsz, PAGE_SIZE - pofs);
+>>>                         outsz -= strm->z.avail_out;
+>>>                         if (!rq->out[no]) {
+>>> -                             rq->out[no] = erofs_allocpage(pagepool,
+>>> -                                             GFP_KERNEL | __GFP_NOFAIL);
+>>> +                             rq->out[no] = erofs_allocpage(pgpl, rq->gfp);
+>>> +                             if (!rq->out[no]) {
+>>> +                                     kout = NULL;
+>>> +                                     err = -ENOMEM;
+>>> +                                     break;
+>>> +                             }
+>>>                                 set_page_private(rq->out[no],
+>>>                                                  Z_EROFS_SHORTLIVED_PAGE);
+>>>                         }
+>>> @@ -211,8 +215,11 @@ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+>>>
+>>>                         DBG_BUGON(erofs_page_is_managed(EROFS_SB(sb),
+>>>                                                         rq->in[j]));
+>>> -                     tmppage = erofs_allocpage(pagepool,
+>>> -                                               GFP_KERNEL | __GFP_NOFAIL);
+>>> +                     tmppage = erofs_allocpage(pgpl, rq->gfp);
+>>> +                     if (!tmppage) {
+>>> +                             err = -ENOMEM;
+>>> +                             goto failed;
+>>> +                     }
+>>>                         set_page_private(tmppage, Z_EROFS_SHORTLIVED_PAGE);
+>>>                         copy_highpage(tmppage, rq->in[j]);
+>>>                         rq->in[j] = tmppage;
+>>> @@ -230,7 +237,7 @@ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+>>>                         break;
+>>>                 }
+>>>         }
+>>> -
+>>> +failed:
+>>>         if (zlib_inflateEnd(&strm->z) != Z_OK && !err)
+>>>                 err = -EIO;
+>>>         if (kout)
+>>> diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
+>>> index 2dd14f99c1dc..6ca357d83cfa 100644
+>>> --- a/fs/erofs/decompressor_lzma.c
+>>> +++ b/fs/erofs/decompressor_lzma.c
+>>> @@ -148,7 +148,7 @@ int z_erofs_load_lzma_config(struct super_block *sb,
+>>>     }
+>>>
+>>>     int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+>>> -                         struct page **pagepool)
+>>> +                         struct page **pgpl)
+>>>     {
+>>>         const unsigned int nrpages_out =
+>>>                 PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
+>>> @@ -215,8 +215,11 @@ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+>>>                                                    PAGE_SIZE - pageofs);
+>>>                         outlen -= strm->buf.out_size;
+>>>                         if (!rq->out[no] && rq->fillgaps) {     /* deduped */
+>>> -                             rq->out[no] = erofs_allocpage(pagepool,
+>>> -                                             GFP_KERNEL | __GFP_NOFAIL);
+>>> +                             rq->out[no] = erofs_allocpage(pgpl, rq->gfp);
+>>> +                             if (!rq->out[no]) {
+>>> +                                     err = -ENOMEM;
+>>> +                                     break;
+>>> +                             }
+>>>                                 set_page_private(rq->out[no],
+>>>                                                  Z_EROFS_SHORTLIVED_PAGE);
+>>>                         }
+>>> @@ -258,8 +261,11 @@ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+>>>
+>>>                         DBG_BUGON(erofs_page_is_managed(EROFS_SB(rq->sb),
+>>>                                                         rq->in[j]));
+>>> -                     tmppage = erofs_allocpage(pagepool,
+>>> -                                               GFP_KERNEL | __GFP_NOFAIL);
+>>> +                     tmppage = erofs_allocpage(pgpl, rq->gfp);
+>>> +                     if (!tmppage) {
+>>> +                             err = -ENOMEM;
+>>> +                             goto failed;
+>>> +                     }
+>>>                         set_page_private(tmppage, Z_EROFS_SHORTLIVED_PAGE);
+>>>                         copy_highpage(tmppage, rq->in[j]);
+>>>                         rq->in[j] = tmppage;
+>>> @@ -277,6 +283,7 @@ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+>>>                         break;
+>>>                 }
+>>>         }
+>>> +failed:
+>>>         if (no < nrpages_out && strm->buf.out)
+>>>                 kunmap(rq->out[no]);
+>>>         if (ni < nrpages_in)
+>>> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+>>> index 692c0c39be63..a293de2a60ed 100644
+>>> --- a/fs/erofs/zdata.c
+>>> +++ b/fs/erofs/zdata.c
+>>> @@ -82,6 +82,9 @@ struct z_erofs_pcluster {
+>>>         /* L: indicate several pageofs_outs or not */
+>>>         bool multibases;
+>>>
+>>> +     /* L: whether extra buffer allocations are best-effort */
+>>> +     bool besteffort;
+>>> +
+>>>         /* A: compressed bvecs (can be cached or inplaced pages) */
+>>>         struct z_erofs_bvec compressed_bvecs[];
+>>>     };
+>>> @@ -964,7 +967,7 @@ static int z_erofs_read_fragment(struct super_block *sb, struct page *page,
+>>>     }
+>>>
+>>>     static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+>>> -                             struct page *page)
+>>> +                             struct page *page, bool ra)
+>>>     {
+>>>         struct inode *const inode = fe->inode;
+>>>         struct erofs_map_blocks *const map = &fe->map;
+>>> @@ -1014,6 +1017,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+>>>                 err = z_erofs_pcluster_begin(fe);
+>>>                 if (err)
+>>>                         goto out;
+>>> +             fe->pcl->besteffort |= !ra;
+>>>         }
+>>>
+>>>         /*
+>>> @@ -1280,7 +1284,11 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
+>>>                                         .inplace_io = overlapped,
+>>>                                         .partial_decoding = pcl->partial,
+>>>                                         .fillgaps = pcl->multibases,
+>>> +                                     .gfp = pcl->besteffort ?
+>>> +                                             GFP_KERNEL | __GFP_NOFAIL :
+>>> +                                             GFP_NOWAIT | __GFP_NORETRY
+>>>                                  }, be->pagepool);
+>>> +     pcl->besteffort = false;
+>>>
+>>>         /* must handle all compressed pages before actual file pages */
+>>>         if (z_erofs_is_inline_pcluster(pcl)) {
+>>> @@ -1785,7 +1793,7 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
+>>>                         if (PageUptodate(page))
+>>>                                 unlock_page(page);
+>>>                         else
+>>> -                             (void)z_erofs_do_read_page(f, page);
+>>> +                             (void)z_erofs_do_read_page(f, page, !!rac);
+>>>                         put_page(page);
+>>>                 }
+>>>
+>>> @@ -1806,7 +1814,7 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
+>>>         f.headoffset = (erofs_off_t)folio->index << PAGE_SHIFT;
+>>>
+>>>         z_erofs_pcluster_readmore(&f, NULL, true);
+>>> -     err = z_erofs_do_read_page(&f, &folio->page);
+>>> +     err = z_erofs_do_read_page(&f, &folio->page, false);
+>>>         z_erofs_pcluster_readmore(&f, NULL, false);
+>>>         z_erofs_pcluster_end(&f);
+>>>
+>>> @@ -1847,7 +1855,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
+>>>                 folio = head;
+>>>                 head = folio_get_private(folio);
+>>>
+>>> -             err = z_erofs_do_read_page(&f, &folio->page);
+>>> +             err = z_erofs_do_read_page(&f, &folio->page, true);
+>>>                 if (err && err != -EINTR)
+>>>                         erofs_err(inode->i_sb, "readahead error at folio %lu @ nid %llu",
+>>>                                   folio->index, EROFS_I(inode)->nid);
+> 
+> 
