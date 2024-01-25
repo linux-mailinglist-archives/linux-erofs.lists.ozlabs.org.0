@@ -1,106 +1,44 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 145F583B692
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jan 2024 02:34:23 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2DDD83C18C
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jan 2024 13:01:03 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kbcmM7/D;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TL3Jr1tqyz3bT8
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jan 2024 12:34:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TLKCx5S0mz3bvy
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Jan 2024 23:01:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=attendeetechexpodataanalysis.com (client-ip=2a01:111:f403:2020::600; helo=ind01-max-obe.outbound.protection.outlook.com; envelope-from=beth.dale@attendeetechexpodataanalysis.com; receiver=lists.ozlabs.org)
-Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01on20600.outbound.protection.outlook.com [IPv6:2a01:111:f403:2020::600])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kbcmM7/D;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TL3Jj3bsJz309c
-	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Jan 2024 12:34:11 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XPJvyXvaoeA75X/fb7WsilhLGGTsT+Tvvp69qSs1cZoYkxhZEU/3oQ6e6XWVLESsbajy9fDExToV0OmJASt5IfYNagJj+mHi7sqhSY9rbe51FoLi1gUjWpsVMy5CQ1mMOVrCz+/Ea28uwTqZHZJrtfOsjtMG2bQ790WxesPfOBnJe7407fPPiOTSf9hny5J+uzBJy9HgR2t8u+Ck6YyJcCMULFPkB3Vrni0GcgVHqeZcCa21cCqDSgoP/TaBJelpnxS2hOm1Wu/yfg/+T3avgl6lwGgZhxSx3ftzOl9bZHslKT23mc5nBy8VE4aXcLvKSYC2onssS0pu9QYRzmtBLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NtDX+Kmm80wnyB5U37B2DL/ra3jVgIOhG22hTa+/0IY=;
- b=eM5kw78G/mlZVy1iIAktCsU8GrHegU86lElPZUzjCJPEF+9OyUKQ6KxNMY/Fi51tAEreWyVxJLyH/O1YWxvF4XcfdWsTyL2WVAq7XVJ3gqpfrLO/tsNd04gLlTKyKNQ0OC2rViodfQGcoUNXf3hvY47sZfWZU3X0YmAqlAdwhAqkuhMrNe5gYrNs3PxLA6JazN1MOqi/2JabmlkMCmlKZ+KVhPsVagHwkMzP7QlYx17LSNuOF7JdTwpowqeewvyCreYGnasW7BWpWcj/a64g7aGc9NJFGgetEazBJDkvRIacm8/181szVb1SCCEhj0ltYIWs4m0sLOSCzrv17hSpZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=attendeetechexpodataanalysis.com; dmarc=pass action=none
- header.from=attendeetechexpodataanalysis.com; dkim=pass
- header.d=attendeetechexpodataanalysis.com; arc=none
-Received: from PN2P287MB2062.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1c2::10)
- by PN0P287MB2343.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:184::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Thu, 25 Jan
- 2024 01:33:48 +0000
-Received: from PN2P287MB2062.INDP287.PROD.OUTLOOK.COM
- ([fe80::c1f:f784:5845:4ee1]) by PN2P287MB2062.INDP287.PROD.OUTLOOK.COM
- ([fe80::c1f:f784:5845:4ee1%5]) with mapi id 15.20.7228.026; Thu, 25 Jan 2024
- 01:33:48 +0000
-From: Beth Dale <beth.dale@attendeetechexpodataanalysis.com>
-To: Sign And Digital UK 2024 <linux-erofs@lists.ozlabs.org>
-Subject: Lists - Sign And Digital UK 2024
-Thread-Topic: Lists - Sign And Digital UK 2024
-Thread-Index: AdpPLoo2hlLnhIDfScWKaavw3ZzOnw==
-Date: Thu, 25 Jan 2024 01:33:48 +0000
-Message-ID:  <PN2P287MB206234CE90421DFF2D2B35FA987A2@PN2P287MB2062.INDP287.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none
- header.from=attendeetechexpodataanalysis.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PN2P287MB2062:EE_|PN0P287MB2343:EE_
-x-ms-office365-filtering-correlation-id: 3f35a516-2bee-4ddc-0fdb-08dc1d45adb4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:  pDCAOxxYjhpfkMgM2Mz1ZSuGwVGNA7EIqZbanaaO6hdxtFtyoY9g4TUqx3g7CjvjJ1DKcaahMLnAoUrI5lpsU/VGS10a0oGPRZcYDc175nPJ7GUg1IOxDjlTr8ZhmcwJ8lKdIQ2jrwBsfYASaHEdgJysPsRR0zp6v6pFGKMTUcNdbNKdfSLTN2N2xC0LJ2DwhFzfu29QojLbJKYQ0+jlPC3mvbH35H1FQQT8ThpcEkvHphXqxTCW7IyJIP7IHuIAYjzp0UpMuvr2bj0c/NVapmgfaZ7POOMxPxKQi7QpApr0+T84OybrW9dITvQ6su6L5mAH0fKJAYHpzrPCmT4SzDL9UiOrchfYYm99CnD9tfT2IITq4FysOWdkhhTZMxeoAVaEdPPz56f/hobktkUU7F8+UzF8LcZPqmJoEhs88Tf1/Ti5a5w3yh9cuE/pVsCWg5vtkbq3TCZ/dLZsS3KHPs84wGt18HTWUtIuxMCHqi4gxjr6lkpvlJIWJkTDPry3UGSIlxYTlrlToy9yfSOXTs4LtiTU379UM+I5ls4tWrp2DG732sS5D9zC+W0wKRmMg6WWIwO/bCBa2uMCrlznbtQweGrqYL8AXuzkmAeyOhvvKmFVu4/SyxKYMIzFALME
-x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN2P287MB2062.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(396003)(366004)(136003)(376002)(39850400004)(346002)(34096005)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(38100700002)(83380400001)(66476007)(66946007)(6506007)(2906002)(71200400001)(9326002)(8936002)(44832011)(8676002)(64756008)(41300700001)(52536014)(4744005)(5660300002)(66556008)(478600001)(7696005)(6916009)(122000001)(66446008)(76116006)(316002)(9686003)(38070700009)(86362001)(33656002)(55016003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?pwHzE71Hp70Es/1Im3VVxRr4psifO9OLhBphp6S3cWca4CyQQkO5oXdtKSoe?=
- =?us-ascii?Q?bA01TwXD60KXv8QwHOHUmx0xo8HO8OfEC9ayc7MlUUCIO9NQUKVRalRwd1zU?=
- =?us-ascii?Q?H95UC2cBul+B1egraFlmLfhK8NKPFedxBJyGxWdEW9+AA4PsvugBxS9bRza4?=
- =?us-ascii?Q?NxSYmjK4arDZYv3qwJjoo0qrObXWz4mkfkP9+63j7JNHeyyRPGDSadjEMJ1F?=
- =?us-ascii?Q?o5DJztaTkGfjQvggSeVJNWYDjyLH9i1VQw52A15qHNi16QZDIYDk4inuAhOx?=
- =?us-ascii?Q?bPOrq69P1n7n3NYDgEJUFDyyYaNsZ9H9uP1ENf/OiryYRCIycc/ho/ytYg/N?=
- =?us-ascii?Q?rpkY5o06Qn2wDayuqajf8ow9+toNVaWFlky2eCl5UZ2RamZjh612OBBTaftR?=
- =?us-ascii?Q?7kdYEF3Uioi8wfgFkaeaA+q4ALHPTJ8w1vBXjdiMLEJ+rs+1NFDJXn2LBkly?=
- =?us-ascii?Q?TE+zMtBIoFLe7JN7UhiGrRSzmpCDT/lKdMp5z9yq4Jz/jv6j/QJdVhTmpeeb?=
- =?us-ascii?Q?EWWzK6BkotLW3/2VvC0P14bbhG9aGEuZ/1I3rzsQ3fj1TzeVAX1jeo/Rwxlw?=
- =?us-ascii?Q?DY94E288DaceEKtDG/kcmYevbrdrU0Iv6TcnN1mlwRdp7H3TsrkMjrgltStJ?=
- =?us-ascii?Q?kbdZk/cNaTalF/jA98cFXZ9b4Brgo/6tmzBcwYIscuWcXnlBEeTcMt0CxmGE?=
- =?us-ascii?Q?G65hJJt5AQKQdveAbIK3iO4stnUlBqOnDbJs5UuwOdzoeTXjSsfhEe8uDzmE?=
- =?us-ascii?Q?tLIHegpSgfSyXH/ppywpRBOR5gNnOyYhMID6B7sEVkiFVPTiFlAc1QwV1S5R?=
- =?us-ascii?Q?zPbJ7niufXQbOpsEvL9HT5hdZDEcsxf0kimo3hdrSaJRxpbMkV/vJCXYd4GW?=
- =?us-ascii?Q?olCW4JBcXL+BZ4o6pVWVT4cYZaAMAtP3xeRQcAN6alQEbZFqmWKwNRk1TQeC?=
- =?us-ascii?Q?NDsSjJY4cQz04dpiKpBS5jkqn0KELQB8ZmphVl2gd9UpXyNDFUO6FHYp+25U?=
- =?us-ascii?Q?k9lsRiZHtb3d53nGa96m4MWuoitps8aEazerYRXwRWERkImQV7Ua7sbX6pnA?=
- =?us-ascii?Q?fdlZ+vLi1E9uTEeGUNhFM5y9blXxMmmtfgDvoMph8Rmb8ouTzmK4vDyW1Q/p?=
- =?us-ascii?Q?UPqz1nRomnZVPC8tbe5DR/Hp5CDj64Z1xuI7bLngXZtMFgqHRdi/JhB2pdn2?=
- =?us-ascii?Q?TsZPkdYdIpDEO3D2ZV72FZI9TfRLmKdrdvx6SzyVlnZH8tZmMhzwXM8cozIH?=
- =?us-ascii?Q?8zJIuh9JAX2VCiWQkD5VyppaVbGpXIAs5DMW/0lCiC7wLbbd0H484s0TE1FR?=
- =?us-ascii?Q?+EQg3/rQuoQeAJwWCCzhy6NY7b+erQMNQbeIqGpSnzQHUtLfhYKnHTUn/FWY?=
- =?us-ascii?Q?rNGkBdBEkngHGqR6mx+pmhjwZrNcMgYkyklJ4QtjrjvkTUslxRn1eQHrEOu0?=
- =?us-ascii?Q?ABAADzKH7W0G0CihvwZyErfODtLGkyQwalbOpEtcPzdZQkLEAGo4yMv3vAL3?=
- =?us-ascii?Q?u9GcYogmnH0GhFaWjKE5RqxsptQ0ePRESGWbSCUY1DPPsx7CTdE/n9xEGYIQ?=
- =?us-ascii?Q?x8C2Z14xhEmmX+sqLZzVw6SdyjU3PqyDujeYgp8LkMkiDZziFio+p8y17Rnt?=
- =?us-ascii?Q?P9Zw0MjoIP/lDkzsLTooyWvJ7HP9DNER9/Q5lZVj3BQfMKjxJVHyLD3UMWGV?=
- =?us-ascii?Q?JWsWjoZpyzOsaG/ruHsOOhN3ahuqEpiX/tO9rco42k9pWbXc?=
-Content-Type: multipart/alternative;
-	boundary="_000_PN2P287MB206234CE90421DFF2D2B35FA987A2PN2P287MB2062INDP_"
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TLKCn5bGWz3bmH
+	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Jan 2024 23:00:51 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1706184046; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=Lg18pJRnC+ACcPyGG/CNpKDXLC2wHHOhz9Wm/T97nV0=;
+	b=kbcmM7/DBh9rXG1pbui4LNVqL9zofYvhN9mSizmGzgzFjYPNaej3hWUBCJM2cCWpBKdjhpbifAWAVXLVbxmRSL29ZtwlzfXEmq2ZiGw9v27AZgjoAne0Ogln23NeK9y5gqLHy3cZt7VZDtffOUBVwfiBnKHxaRwQxAFCLzjPy5k=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W.KNHKd_1706184040;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W.KNHKd_1706184040)
+          by smtp.aliyun-inc.com;
+          Thu, 25 Jan 2024 20:00:45 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: fix infinite loop due to a race of filling compressed_bvecs
+Date: Thu, 25 Jan 2024 20:00:39 +0800
+Message-Id: <20240125120039.3228103-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-X-OriginatorOrg: attendeetechexpodataanalysis.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PN2P287MB2062.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f35a516-2bee-4ddc-0fdb-08dc1d45adb4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jan 2024 01:33:48.3961
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3c799728-f86e-418b-a72a-e5d96b7f6288
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VrkhxutFDnokl5E0YCmv939pvkTxxd9ZrK6+zoK23f4VpUbjZVpnSL4GWFdCZJf4j8I7G30ImWFhcbUPsRvMm3YNARSamN1LCFKDHQsj5S3wFbM/5zDZ3ecM6pYOWKBPyTrE9pQm4ta27TmgVV1QCw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN0P287MB2343
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -112,137 +50,211 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---_000_PN2P287MB206234CE90421DFF2D2B35FA987A2PN2P287MB2062INDP_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+I encountered a race issue after lengthy (~594647 sec) stress tests on
+a 64k-page arm64 VM with several 4k-block EROFS images.  The timing
+is like below:
 
-Hi,
+z_erofs_try_inplace_io                  z_erofs_fill_bio_vec
+  cmpxchg(&compressed_bvecs[].page,
+          NULL, ..)
+                                        [access bufvec]
+  compressed_bvecs[] = *bvec;
 
-I just wanted to reach you out to inform you that Sign And Digital UK 2024 =
-list is available for you to acquire purchase with total 5,786 Contacts at =
-unlimited usage.
+Previously, z_erofs_submit_queue() just accessed bufvec->page only, so
+other fields in bufvec didn't matter.  After the subpage block support
+is landed, .offset and .end can be used too, but filling bufvec isn't
+an atomic operation which can cause inconsistency.
 
-If I can be of any further assistance, please, let me know. So, that I will=
- get back to you with the price and other details ASAP.
+Let's use a spinlock to keep the atomicity of each bufvec.  More
+specifically, just reuse the existing spinlock `pcl->obj.lockref.lock`
+since it's rarely used (also it takes a short time if even used) as long
+as the pcluster has a reference.
 
-Looking forward to hearing from you.
+Fixes: 192351616a9d ("erofs: support I/O submission for sub-page compressed blocks")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/zdata.c | 74 +++++++++++++++++++++++++-----------------------
+ 1 file changed, 38 insertions(+), 36 deletions(-)
 
-Kind Regards,
-Beth Dale - Demand Generation
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 583c062cd0e4..c1c77166b30f 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -563,21 +563,19 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe)
+ 			__GFP_NOMEMALLOC | __GFP_NORETRY | __GFP_NOWARN;
+ 	unsigned int i;
+ 
+-	if (i_blocksize(fe->inode) != PAGE_SIZE)
+-		return;
+-	if (fe->mode < Z_EROFS_PCLUSTER_FOLLOWED)
++	if (i_blocksize(fe->inode) != PAGE_SIZE ||
++	    fe->mode < Z_EROFS_PCLUSTER_FOLLOWED)
+ 		return;
+ 
+ 	for (i = 0; i < pclusterpages; ++i) {
+ 		struct page *page, *newpage;
+ 		void *t;	/* mark pages just found for debugging */
+ 
+-		/* the compressed page was loaded before */
++		/* Inaccurate check w/o locking to avoid unneeded lookups */
+ 		if (READ_ONCE(pcl->compressed_bvecs[i].page))
+ 			continue;
+ 
+ 		page = find_get_page(mc, pcl->obj.index + i);
+-
+ 		if (page) {
+ 			t = (void *)((unsigned long)page | 1);
+ 			newpage = NULL;
+@@ -597,9 +595,13 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe)
+ 			set_page_private(newpage, Z_EROFS_PREALLOCATED_PAGE);
+ 			t = (void *)((unsigned long)newpage | 1);
+ 		}
+-
+-		if (!cmpxchg_relaxed(&pcl->compressed_bvecs[i].page, NULL, t))
++		spin_lock(&pcl->obj.lockref.lock);
++		if (!pcl->compressed_bvecs[i].page) {
++			pcl->compressed_bvecs[i].page = t;
++			spin_unlock(&pcl->obj.lockref.lock);
+ 			continue;
++		}
++		spin_unlock(&pcl->obj.lockref.lock);
+ 
+ 		if (page)
+ 			put_page(page);
+@@ -718,31 +720,25 @@ int erofs_init_managed_cache(struct super_block *sb)
+ 	return 0;
+ }
+ 
+-static bool z_erofs_try_inplace_io(struct z_erofs_decompress_frontend *fe,
+-				   struct z_erofs_bvec *bvec)
+-{
+-	struct z_erofs_pcluster *const pcl = fe->pcl;
+-
+-	while (fe->icur > 0) {
+-		if (!cmpxchg(&pcl->compressed_bvecs[--fe->icur].page,
+-			     NULL, bvec->page)) {
+-			pcl->compressed_bvecs[fe->icur] = *bvec;
+-			return true;
+-		}
+-	}
+-	return false;
+-}
+-
+ /* callers must be with pcluster lock held */
+ static int z_erofs_attach_page(struct z_erofs_decompress_frontend *fe,
+ 			       struct z_erofs_bvec *bvec, bool exclusive)
+ {
++	struct z_erofs_pcluster *pcl = fe->pcl;
+ 	int ret;
+ 
+ 	if (exclusive) {
+ 		/* give priority for inplaceio to use file pages first */
+-		if (z_erofs_try_inplace_io(fe, bvec))
++		spin_lock(&pcl->obj.lockref.lock);
++		while (fe->icur > 0) {
++			if (pcl->compressed_bvecs[--fe->icur].page)
++				continue;
++			pcl->compressed_bvecs[fe->icur] = *bvec;
++			spin_unlock(&pcl->obj.lockref.lock);
+ 			return 0;
++		}
++		spin_unlock(&pcl->obj.lockref.lock);
++
+ 		/* otherwise, check if it can be used as a bvpage */
+ 		if (fe->mode >= Z_EROFS_PCLUSTER_FOLLOWED &&
+ 		    !fe->candidate_bvpage)
+@@ -1423,23 +1419,26 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ {
+ 	gfp_t gfp = mapping_gfp_mask(mc);
+ 	bool tocache = false;
+-	struct z_erofs_bvec *zbv = pcl->compressed_bvecs + nr;
++	struct z_erofs_bvec zbv;
+ 	struct address_space *mapping;
+-	struct page *page, *oldpage;
++	struct page *page;
+ 	int justfound, bs = i_blocksize(f->inode);
+ 
+ 	/* Except for inplace pages, the entire page can be used for I/Os */
+ 	bvec->bv_offset = 0;
+ 	bvec->bv_len = PAGE_SIZE;
+ repeat:
+-	oldpage = READ_ONCE(zbv->page);
+-	if (!oldpage)
++	spin_lock(&pcl->obj.lockref.lock);
++	zbv = pcl->compressed_bvecs[nr];
++	page = zbv.page;
++	justfound = (unsigned long)page & 1UL;
++	page = (struct page *)((unsigned long)page & ~1UL);
++	pcl->compressed_bvecs[nr].page = page;
++	spin_unlock(&pcl->obj.lockref.lock);
++	if (!page)
+ 		goto out_allocpage;
+ 
+-	justfound = (unsigned long)oldpage & 1UL;
+-	page = (struct page *)((unsigned long)oldpage & ~1UL);
+ 	bvec->bv_page = page;
+-
+ 	DBG_BUGON(z_erofs_is_shortlived_page(page));
+ 	/*
+ 	 * Handle preallocated cached pages.  We tried to allocate such pages
+@@ -1448,7 +1447,6 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ 	 */
+ 	if (page->private == Z_EROFS_PREALLOCATED_PAGE) {
+ 		set_page_private(page, 0);
+-		WRITE_ONCE(zbv->page, page);
+ 		tocache = true;
+ 		goto out_tocache;
+ 	}
+@@ -1459,9 +1457,9 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ 	 * therefore it is impossible for `mapping` to be NULL.
+ 	 */
+ 	if (mapping && mapping != mc) {
+-		if (zbv->offset < 0)
+-			bvec->bv_offset = round_up(-zbv->offset, bs);
+-		bvec->bv_len = round_up(zbv->end, bs) - bvec->bv_offset;
++		if (zbv.offset < 0)
++			bvec->bv_offset = round_up(-zbv.offset, bs);
++		bvec->bv_len = round_up(zbv.end, bs) - bvec->bv_offset;
+ 		return;
+ 	}
+ 
+@@ -1471,7 +1469,6 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ 
+ 	/* the cached page is still in managed cache */
+ 	if (page->mapping == mc) {
+-		WRITE_ONCE(zbv->page, page);
+ 		/*
+ 		 * The cached page is still available but without a valid
+ 		 * `->private` pcluster hint.  Let's reconnect them.
+@@ -1503,11 +1500,15 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ 	put_page(page);
+ out_allocpage:
+ 	page = erofs_allocpage(&f->pagepool, gfp | __GFP_NOFAIL);
+-	if (oldpage != cmpxchg(&zbv->page, oldpage, page)) {
++	spin_lock(&pcl->obj.lockref.lock);
++	if (pcl->compressed_bvecs[nr].page) {
+ 		erofs_pagepool_add(&f->pagepool, page);
++		spin_unlock(&pcl->obj.lockref.lock);
+ 		cond_resched();
+ 		goto repeat;
+ 	}
++	pcl->compressed_bvecs[nr].page = page;
++	spin_unlock(&pcl->obj.lockref.lock);
+ 	bvec->bv_page = page;
+ out_tocache:
+ 	if (!tocache || bs != PAGE_SIZE ||
+@@ -1685,6 +1686,7 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
+ 
+ 			if (cur + bvec.bv_len > end)
+ 				bvec.bv_len = end - cur;
++			DBG_BUGON(bvec.bv_len < sb->s_blocksize);
+ 			if (!bio_add_page(bio, bvec.bv_page, bvec.bv_len,
+ 					  bvec.bv_offset))
+ 				goto submit_bio_retry;
+-- 
+2.39.3
 
---_000_PN2P287MB206234CE90421DFF2D2B35FA987A2PN2P287MB2062INDP_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin-top:0cm;
-	margin-right:0cm;
-	margin-bottom:8.0pt;
-	margin-left:0cm;
-	line-height:106%;
-	font-size:11.0pt;
-	font-family:"Calibri",sans-serif;
-	mso-fareast-language:EN-US;}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:#0563C1;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:#954F72;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:"Calibri",sans-serif;
-	color:windowtext;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-family:"Calibri",sans-serif;
-	mso-fareast-language:EN-US;}
-@page WordSection1
-	{size:612.0pt 792.0pt;
-	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"EN-IN" link=3D"#0563C1" vlink=3D"#954F72">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
-e-height:normal">
-<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
-Roman&quot;,serif;color:#1F497D">Hi,<o:p></o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
-e-height:normal">
-<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
-Roman&quot;,serif;color:#1F497D"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
-e-height:normal">
-<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
-Roman&quot;,serif;color:#1F497D">I just wanted to reach you out to inform y=
-ou that
-<b>Sign And Digital UK 2024</b> list is available for you to acquire purcha=
-se with total
-<b>5,786</b> Contacts at unlimited usage.<o:p></o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
-e-height:normal">
-<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
-Roman&quot;,serif;color:#1F497D"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
-e-height:normal">
-<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
-Roman&quot;,serif;color:#1F497D">If I can be of any further assistance, ple=
-ase, let me know. So, that I will get back to you with the price and other =
-details ASAP.<o:p></o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
-e-height:normal">
-<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
-Roman&quot;,serif;color:#1F497D"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
-e-height:normal">
-<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
-Roman&quot;,serif;color:#1F497D">Looking forward to hearing from you.<o:p><=
-/o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
-e-height:normal">
-<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
-Roman&quot;,serif;color:#1F497D"><o:p>&nbsp;</o:p></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
-e-height:normal">
-<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
-Roman&quot;,serif;color:#1F497D">Kind Regards,<o:p></o:p></span></p>
-<p class=3D"MsoNormal"><span style=3D"font-size:12.0pt;line-height:106%;fon=
-t-family:&quot;Times New Roman&quot;,serif;color:#1F497D">Beth Dale -
-</span><span lang=3D"EN-GB" style=3D"font-size:12.0pt;line-height:106%;font=
--family:&quot;Times New Roman&quot;,serif;color:#1F497D">Demand Generation<=
-/span><o:p></o:p></p>
-</div>
-</body>
-</html>
-
---_000_PN2P287MB206234CE90421DFF2D2B35FA987A2PN2P287MB2062INDP_--
