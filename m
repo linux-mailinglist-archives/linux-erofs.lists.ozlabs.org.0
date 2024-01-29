@@ -2,53 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8344384077D
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jan 2024 14:54:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 477F28414FF
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jan 2024 22:16:19 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Dyd1SJm/;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=owLk9BdI;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TNqXc33hrz3bTn
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jan 2024 00:54:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TP1Lj4H6Nz30Q3
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jan 2024 08:16:13 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Dyd1SJm/;
+	dkim=pass (2048-bit key; unprotected) header.d=efficios.com header.i=@efficios.com header.a=rsa-sha256 header.s=smtpout1 header.b=owLk9BdI;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=efficios.com (client-ip=167.114.26.122; helo=smtpout.efficios.com; envelope-from=mathieu.desnoyers@efficios.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 542 seconds by postgrey-1.37 at boromir; Tue, 30 Jan 2024 08:16:02 AEDT
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TNqXY2zQbz30gJ
-	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Jan 2024 00:54:05 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id E14E5621E0;
-	Mon, 29 Jan 2024 13:54:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9078C433C7;
-	Mon, 29 Jan 2024 13:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706536442;
-	bh=oxnQVHjK16c3SXNOAjdh150De7InleBILFnsJkuVb2I=;
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TP1LV5TTRz2ykZ
+	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Jan 2024 08:16:01 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1706562410;
+	bh=/LtPwfaY3uvi/uQueiJk5XQ5+25aOGLyhq5zZA6ahe8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dyd1SJm/k5kdkc6EEeyiavgicku+98LjoK4Bq483kWInYTN9cx40JwhTkLVAgaYP2
-	 it+C/nBcfpr3NRzOTgOWBWkIM13Yek41pmj5bH773MkKRsrN/NwOSOyi9J/t8yYO25
-	 i/SQ1Yi7STfs8DutbEAX5joK9MGXOj1Jr122hEa1ZA8Ud6h2f0jOeRoW//73dkNuVi
-	 H2EZQZf5OPmvyzK9fwrBZkIgOF05TdjGf10I2yJ/yq6VBycQJ3qF48QJRUePqyToC9
-	 PCGX6rur5i6MdaWmVjP2Q1uysyuDBBo8TA4ydzdvlzUi/7jAXsG/LejmP7K1YLj8/q
-	 u7jG606WZF6jA==
-From: Christian Brauner <brauner@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 0/2] netfs: Miscellaneous fixes
-Date: Mon, 29 Jan 2024 14:53:39 +0100
-Message-ID: <20240129-kleeblatt-rosig-a28c8042fb2a@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240129094924.1221977-1-dhowells@redhat.com>
-References: <20240129094924.1221977-1-dhowells@redhat.com>
+	b=owLk9BdIvYMqzPMeQbF2d7yNSH3zTkRUuREg1aXHoA5/oKPsRDPqPidgGmIGg+ZMe
+	 uDiNO1/hYtcLl6AbcYMjONTAvJEsm6nwxQqyLcdJ/rEInjNK7h/7xuu18NXQG94k5M
+	 nDpyHDrTa9Es9c9pzOQ+TFHsELADk92a4djW5vooUTinmDn2l9YfYZTRGedTlpDb1b
+	 MI3xshUjIJfHBa1pLt/SmgLF6goBo2TIOsc/su8NScSwzwbLdoBVSgvIlqpOTOOubM
+	 FokMDNIjPddKGnlVW51N6DyLGp3GD1P7ThIgTTI/7EBNQcDz6UZ9lqZkBEx0WblNU7
+	 uTSeb4zKuNrPw==
+Received: from thinkos.internal.efficios.com (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TP17t029YzVXW;
+	Mon, 29 Jan 2024 16:06:49 -0500 (EST)
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Subject: [RFC PATCH 3/7] erofs: Use dax_is_supported()
+Date: Mon, 29 Jan 2024 16:06:27 -0500
+Message-Id: <20240129210631.193493-4-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240129210631.193493-1-mathieu.desnoyers@efficios.com>
+References: <20240129210631.193493-1-mathieu.desnoyers@efficios.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1172; i=brauner@kernel.org; h=from:subject:message-id; bh=oxnQVHjK16c3SXNOAjdh150De7InleBILFnsJkuVb2I=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRuX/vRz8V965um1m91CsbZ9wV2fJ18fZNu8T3XE+d8D xR7/fw5v6OUhUGMi0FWTJHFod0kXG45T8Vmo0wNmDmsTCBDGLg4BWAiKosY/pd1JPw3fzjxoP/G tS3fF8337FxYV/7w+G4zxcllZzuPveNl+MM788oSjU/qfNop+4+JHuhOX9S+rLtf7cDSszOc1zR +PMkMAA==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -61,36 +59,68 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-cifs@vger.kernel.org, Christian Brauner <brauner@kernel.org>, v9fs@lists.linux.dev, Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
+Cc: linux-arch@vger.kernel.org, nvdimm@lists.linux.dev, Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, Yue Hu <huyue2@coolpad.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-cxl@vger.kernel.org, linux-erofs@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, 29 Jan 2024 09:49:17 +0000, David Howells wrote:
-> Here are a couple of fixes for netfslib:
-> 
->  (1) Fix an i_dio_count leak on a DIO read starting beyond EOF.
-> 
->  (2) Fix a missing zero-length check in an unbuffered write causing 9p to
->      indicate EIO.
-> 
-> [...]
+Use dax_is_supported() to validate whether the architecture has
+virtually aliased data caches at mount time.
 
-Applied to the vfs.netfs branch of the vfs/vfs.git tree.
-Patches in the vfs.netfs branch should appear in linux-next soon.
+This is relevant for architectures which require a dynamic check
+to validate whether they have virtually aliased data caches
+(ARCH_HAS_CACHE_ALIASING_DYNAMIC=y).
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+Fixes: d92576f1167c ("dax: does not work correctly with virtual aliasing caches")
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Gao Xiang <xiang@kernel.org>
+Cc: Chao Yu <chao@kernel.org>
+Cc: Yue Hu <huyue2@coolpad.com>
+Cc: Jeffle Xu <jefflexu@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: linux-arch@vger.kernel.org
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: nvdimm@lists.linux.dev
+Cc: linux-cxl@vger.kernel.org
+---
+ fs/erofs/super.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 3789d6224513..bd88221f1ad7 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -419,9 +419,13 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
+ 
+ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
+ {
+-#ifdef CONFIG_FS_DAX
+ 	struct erofs_fs_context *ctx = fc->fs_private;
+ 
++	if (!dax_is_supported()) {
++		errorfc(fc, "dax options not supported");
++		return false;
++	}
++
+ 	switch (mode) {
+ 	case EROFS_MOUNT_DAX_ALWAYS:
+ 		warnfc(fc, "DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+@@ -436,10 +440,6 @@ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
+ 		DBG_BUGON(1);
+ 		return false;
+ 	}
+-#else
+-	errorfc(fc, "dax options not supported");
+-	return false;
+-#endif
+ }
+ 
+ static int erofs_fc_parse_param(struct fs_context *fc,
+-- 
+2.39.2
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.netfs
-
-[1/2] netfs: Fix i_dio_count leak on DIO read past i_size
-      https://git.kernel.org/vfs/vfs/c/a4bb694db189
-[2/2] netfs: Fix missing zero-length check in unbuffered write
-      https://git.kernel.org/vfs/vfs/c/2d6e065e2431
