@@ -2,55 +2,34 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5450845DE3
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Feb 2024 17:57:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FC41848CDD
+	for <lists+linux-erofs@lfdr.de>; Sun,  4 Feb 2024 11:33:50 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TQlSX1WgHz3cb5
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Feb 2024 03:57:16 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TSQpc36CLz3bsd
+	for <lists+linux-erofs@lfdr.de>; Sun,  4 Feb 2024 21:33:44 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.69; helo=mail-io1-f69.google.com; envelope-from=3ym27zqkbab8ntuf5gg9m5kkd8.bjjbg9pn9m7jio9io.7jh@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
+Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TQlSQ0n3Fz3cCG
-	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Feb 2024 03:57:08 +1100 (AEDT)
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7bfd755ae39so90420239f.1
-        for <linux-erofs@lists.ozlabs.org>; Thu, 01 Feb 2024 08:57:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706806624; x=1707411424;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NkceZr312rSmPmeH/wO2gbEfucSj+yo53mgsIX+3T38=;
-        b=MzY1DgasXXkqrUTxd1NZjmkySre31ZAkrulZ8jrdQXUPA4OtGr+zqQPmeaK2QOfAO/
-         ze9EgJ5rhPpCdOz/WpTW3yNc2IstyAmnrjSQRAC6bBbkxqHIjh9xdOsEV1qawmB3oS58
-         oqnP763aow/QFfyZCG/e9NDXtmEAXPkiKlMvqTzq0zKEGzTbjA7RDuUQxz2vF/Ma3R+J
-         ilF/splIplZl94wdKVghETdd65oQcfbKUKt7so3g5L02i4pzgzA9ABLc55Ck+bwdPqg8
-         XsTFfjjDrQB0ZxK+SqIONdBvJQYaMVy9vCSLBntWnaYsr8cToC9BvxXDJ5VEa7ICmU7b
-         tqtg==
-X-Gm-Message-State: AOJu0Yz4FPXAbQcL3GLxlhn6cGBTtozCzgUYcsid6090OX0NeLMhnc+U
-	CARJl/lu14GuydZ6taGLp0jIQVZ2NemSICwPSjTBc0T0eVtwTg6ZKXvsx/oUbWCakE0tl/IOf6n
-	HXxG7GNaz23Qj0hlf7dmc9k4GIzNXCdrc+KFgZZ3Lp4JiiElTKRoZ7aY=
-X-Google-Smtp-Source: AGHT+IGTPL9fBJcg+W8Pe7X31hLUkQPFC0gM12WQa4FAK42w9iOOzve7t2FvCYfF58CNCgOu04/bFgh5+TbhWr/4mDy4RE4CnECf
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TSQpS3pgmz30PH
+	for <linux-erofs@lists.ozlabs.org>; Sun,  4 Feb 2024 21:33:34 +1100 (AEDT)
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 08F8B1008880A;
+	Sun,  4 Feb 2024 18:33:22 +0800 (CST)
+Received: from zhaoyf.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 87312381F2D;
+	Sun,  4 Feb 2024 18:33:16 +0800 (CST)
+From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 0/7] erofs-utils: mkfs: introduce multi-threaded compression
+Date: Sun,  4 Feb 2024 18:33:10 +0800
+Message-ID: <20240204103310.141249-1-zhaoyifan@sjtu.edu.cn>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3f92:b0:7bf:a4e8:1bfe with SMTP id
- fb18-20020a0566023f9200b007bfa4e81bfemr71314iob.1.1706806624707; Thu, 01 Feb
- 2024 08:57:04 -0800 (PST)
-Date: Thu, 01 Feb 2024 08:57:04 -0800
-In-Reply-To: <ad9354d4-be00-4de4-aec8-ec9d56a9676c@linux.alibaba.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000090ebb6061054e22e@google.com>
-Subject: Re: [syzbot] [erofs?] KMSAN: uninit-value in z_erofs_lz4_decompress (3)
-From: syzbot <syzbot+88ad8b0517a9d3bb9dc8@syzkaller.appspotmail.com>
-To: chao@kernel.org, hsiangkao@linux.alibaba.com, huyue2@coolpad.com, 
-	jefflexu@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,368 +41,104 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: hsiangkao@linux.alibaba.com, Yifan Zhao <zhaoyifan@sjtu.edu.cn>, xin_tong@sjtu.edu.cn
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello,
+Hi all,
 
-syzbot tried to test the proposed patch but the build/boot failed:
+Currently, mkfs.erofs is single-threaded and the time-consuming process
+of creating EROFS images has emerged as a critical factor. Let's introduce
+multi-threaded compression to speed up the process. This patchset is based
+on the previous work of Gao Xiang and the multi-threading framework has
+been introduced in the first two patches. The following patches introduce
+inner-file and inter-file multi-threaded compression.
 
-[    T1] NFS: Registering the id_resolver key type
-[   20.847533][    T1] Key type id_resolver registered
-[   20.852991][    T1] Key type id_legacy registered
-[   20.859477][    T1] nfs4filelayout_init: NFSv4 File Layout Driver Regist=
-ering...
-[   20.868251][    T1] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Drive=
-r Registering...
-[   20.901326][    T1] Key type cifs.spnego registered
-[   20.907727][    T1] Key type cifs.idmap registered
-[   20.917413][    T1] ntfs: driver 2.1.32 [Flags: R/W].
-[   20.923298][    T1] ntfs3: Max link count 4000
-[   20.928297][    T1] ntfs3: Enabled Linux POSIX ACLs support
-[   20.934148][    T1] ntfs3: Read-only LZX/Xpress compression included
-[   20.941172][    T1] efs: 1.0a - http://aeschi.ch.eu.org/efs/
-[   20.947393][    T1] romfs: ROMFS MTD (C) 2007 Red Hat, Inc.
-[   20.953397][    T1] QNX4 filesystem 0.2.3 registered.
-[   20.958982][    T1] qnx6: QNX6 filesystem 1.0.0 registered.
-[   20.965985][    T1] fuse: init (API version 7.39)
-[   20.976858][    T1] orangefs_debugfs_init: called with debug mask: :none=
-: :0:
-[   20.985505][    T1] orangefs_init: module version upstream loaded
-[   20.993572][    T1] JFS: nTxBlock =3D 8192, nTxLock =3D 65536
-[   21.034087][    T1] SGI XFS with ACLs, security attributes, realtime, qu=
-ota, no debug enabled
-[   21.051635][    T1] 9p: Installing v9fs 9p2000 file system support
-[   21.058997][    T1] NILFS version 2 loaded
-[   21.063484][    T1] befs: version: 0.9.3
-[   21.068879][    T1] ocfs2: Registered cluster interface o2cb
-[   21.075961][    T1] ocfs2: Registered cluster interface user
-[   21.083257][    T1] OCFS2 User DLM kernel interface loaded
-[   21.102750][    T1] gfs2: GFS2 installed
-[   21.142225][    T1] ceph: loaded (mds proto 32)
-[   25.265679][    T1] NET: Registered PF_ALG protocol family
-[   25.271965][    T1] xor: automatically using best checksumming function =
-  avx      =20
-[   25.280055][    T1] async_tx: api initialized (async)
-[   25.285498][    T1] Key type asymmetric registered
-[   25.290927][    T1] Asymmetric key parser 'x509' registered
-[   25.296825][    T1] Asymmetric key parser 'pkcs8' registered
-[   25.302732][    T1] Key type pkcs7_test registered
-[   25.308482][    T1] Block layer SCSI generic (bsg) driver version 0.4 lo=
-aded (major 240)
-[   25.318600][    T1] io scheduler mq-deadline registered
-[   25.324054][    T1] io scheduler kyber registered
-[   25.331126][    T1] io scheduler bfq registered
-[   25.347558][    T1] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN=
-:00/input/input0
-[   25.363347][  T136] kworker/u4:0 (136) used greatest stack depth: 11000 =
-bytes left
-[   25.374100][    T1] ACPI: button: Power Button [PWRF]
-[   25.381760][    T1] input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN=
-:00/input/input1
-[   25.392277][    T1] ACPI: button: Sleep Button [SLPF]
-[   25.414526][    T1] ioatdma: Intel(R) QuickData Technology Driver 5.00
-[   25.499231][    T1] ACPI: \_SB_.LNKC: Enabled at IRQ 11
-[   25.505226][    T1] virtio-pci 0000:00:03.0: virtio_pci: leaving for leg=
-acy driver
-[   25.579195][    T1] ACPI: \_SB_.LNKD: Enabled at IRQ 10
-[   25.585070][    T1] virtio-pci 0000:00:04.0: virtio_pci: leaving for leg=
-acy driver
-[   25.662347][    T1] ACPI: \_SB_.LNKB: Enabled at IRQ 10
-[   25.668284][    T1] virtio-pci 0000:00:06.0: virtio_pci: leaving for leg=
-acy driver
-[   25.725221][    T1] virtio-pci 0000:00:07.0: virtio_pci: leaving for leg=
-acy driver
-[   26.750369][    T1] N_HDLC line discipline registered with maxframe=3D40=
-96
-[   26.758188][    T1] Serial: 8250/16550 driver, 4 ports, IRQ sharing enab=
-led
-[   26.770021][    T1] 00:03: ttyS0 at I/O 0x3f8 (irq =3D 4, base_baud =3D =
-115200) is a 16550A
-[   26.799322][    T1] 00:04: ttyS1 at I/O 0x2f8 (irq =3D 3, base_baud =3D =
-115200) is a 16550A
-[   26.828884][    T1] 00:05: ttyS2 at I/O 0x3e8 (irq =3D 6, base_baud =3D =
-115200) is a 16550A
-[   26.856640][    T1] 00:06: ttyS3 at I/O 0x2e8 (irq =3D 7, base_baud =3D =
-115200) is a 16550A
-[   26.903869][    T1] Non-volatile memory driver v1.3
-[   26.925949][    T1] Linux agpgart interface v0.103
-[   26.944845][    T1] ACPI: bus type drm_connector registered
-[   26.963460][    T1] [drm] Initialized vgem 1.0.0 20120112 for vgem on mi=
-nor 0
-[   26.985308][    T1] [drm] Initialized vkms 1.0.0 20180514 for vkms on mi=
-nor 1
-[   27.457414][    T1] Console: switching to colour frame buffer device 128=
-x48
-[   27.612960][    T1] platform vkms: [drm] fb0: vkmsdrmfb frame buffer dev=
-ice
-[   27.621207][    T1] usbcore: registered new interface driver udl
-[   27.785853][    T1] brd: module loaded
-[   27.962515][    T1] loop: module loaded
-[   28.204419][    T1] zram: Added device: zram0
-[   28.227930][    T1] null_blk: disk nullb0 created
-[   28.232984][    T1] null_blk: module loaded
-[   28.238841][    T1] Guest personality initialized and is inactive
-[   28.247691][    T1] VMCI host device registered (name=3Dvmci, major=3D10=
-, minor=3D118)
-[   28.255558][    T1] Initialized host personality
-[   28.261000][    T1] usbcore: registered new interface driver rtsx_usb
-[   28.269847][    T1] usbcore: registered new interface driver viperboard
-[   28.277538][    T1] usbcore: registered new interface driver dln2
-[   28.284724][    T1] usbcore: registered new interface driver pn533_usb
-[   28.297696][    T1] nfcsim 0.2 initialized
-[   28.302508][    T1] usbcore: registered new interface driver port100
-[   28.309540][    T1] usbcore: registered new interface driver nfcmrvl
-[   28.325751][    T1] Loading iSCSI transport class v2.0-870.
-[   28.358008][    T1] virtio_scsi virtio0: 1/0/0 default/read/poll queues
-[   28.395519][    T1] scsi host0: Virtio SCSI HBA
-[   28.917048][    T1] st: Version 20160209, fixed bufsize 32768, s/g segs =
-256
-[   28.933542][   T11] scsi 0:0:1:0: Direct-Access     Google   PersistentD=
-isk   1    PQ: 0 ANSI: 6
-[   28.978523][    T1] Rounding down aligned max_sectors from 4294967295 to=
- 4294967288
-[   28.988652][    T1] db_root: cannot open: /etc/target
-[   29.035870][    T1] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[   29.036118][    T1] BUG: KMSAN: use-after-free in __list_del_entry_valid=
-_or_report+0x19e/0x490
-[   29.036138][    T1]  __list_del_entry_valid_or_report+0x19e/0x490
-[   29.036138][    T1]  stack_depot_save_flags+0x3e7/0x7b0
-[   29.036138][    T1]  stack_depot_save+0x12/0x20
-[   29.036138][    T1]  ref_tracker_alloc+0x215/0x700
-[   29.036138][    T1]  netdev_hold+0xe2/0x120
-[   29.036138][    T1]  register_netdevice+0x1bc7/0x2170
-[   29.036138][    T1]  bond_create+0x138/0x2a0
-[   29.036138][    T1]  bonding_init+0x1a7/0x2d0
-[   29.036138][    T1]  do_one_initcall+0x216/0x960
-[   29.036138][    T1]  do_initcall_level+0x140/0x350
-[   29.036138][    T1]  do_initcalls+0xf0/0x1d0
-[   29.036138][    T1]  do_basic_setup+0x22/0x30
-[   29.036138][    T1]  kernel_init_freeable+0x300/0x4b0
-[   29.036138][    T1]  kernel_init+0x2f/0x7e0
-[   29.036138][    T1]  ret_from_fork+0x66/0x80
-[   29.036138][    T1]  ret_from_fork_asm+0x11/0x20
-[   29.036138][    T1]=20
-[   29.036138][    T1] Uninit was created at:
-[   29.036138][    T1]  free_unref_page_prepare+0xc1/0xad0
-[   29.036138][    T1]  free_unref_page+0x58/0x6d0
-[   29.036138][    T1]  __free_pages+0xb1/0x1f0
-[   29.036138][    T1]  thread_stack_free_rcu+0x97/0xb0
-[   29.036138][    T1]  rcu_core+0xa3c/0x1df0
-[   29.036138][    T1]  rcu_core_si+0x12/0x20
-[   29.036138][    T1]  __do_softirq+0x1b7/0x7c3
-[   29.036138][    T1]=20
-[   29.036138][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc2-=
-syzkaller-g6764c317b6bb #0
-[   29.036138][    T1] Hardware name: Google Google Compute Engine/Google C=
-ompute Engine, BIOS Google 01/25/2024
-[   29.036138][    T1] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[   29.036138][    T1] Disabling lock debugging due to kernel taint
-[   29.036138][    T1] Kernel panic - not syncing: kmsan.panic set ...
-[   29.036138][    T1] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B       =
-       6.8.0-rc2-syzkaller-g6764c317b6bb #0
-[   29.036138][    T1] Hardware name: Google Google Compute Engine/Google C=
-ompute Engine, BIOS Google 01/25/2024
-[   29.036138][    T1] Call Trace:
-[   29.036138][    T1]  <TASK>
-[   29.036138][    T1]  dump_stack_lvl+0x1bf/0x240
-[   29.036138][    T1]  dump_stack+0x1e/0x20
-[   29.036138][    T1]  panic+0x4de/0xc90
-[   29.036138][    T1]  kmsan_report+0x2d0/0x2d0
-[   29.036138][    T1]  ? cleanup_uevent_env+0x30/0x50
-[   29.036138][    T1]  ? netdev_queue_update_kobjects+0x3f5/0x870
-[   29.036138][    T1]  ? netdev_register_kobject+0x41e/0x520
-[   29.036138][    T1]  ? register_netdevice+0x198f/0x2170
-[   29.036138][    T1]  ? __msan_warning+0x96/0x110
-[   29.036138][    T1]  ? __list_del_entry_valid_or_report+0x19e/0x490
-[   29.036138][    T1]  ? stack_depot_save_flags+0x3e7/0x7b0
-[   29.036138][    T1]  ? stack_depot_save+0x12/0x20
-[   29.036138][    T1]  ? ref_tracker_alloc+0x215/0x700
-[   29.036138][    T1]  ? netdev_hold+0xe2/0x120
-[   29.036138][    T1]  ? register_netdevice+0x1bc7/0x2170
-[   29.036138][    T1]  ? bond_create+0x138/0x2a0
-[   29.036138][    T1]  ? bonding_init+0x1a7/0x2d0
-[   29.036138][    T1]  ? do_one_initcall+0x216/0x960
-[   29.036138][    T1]  ? do_initcall_level+0x140/0x350
-[   29.036138][    T1]  ? do_initcalls+0xf0/0x1d0
-[   29.036138][    T1]  ? do_basic_setup+0x22/0x30
-[   29.036138][    T1]  ? kernel_init_freeable+0x300/0x4b0
-[   29.036138][    T1]  ? kernel_init+0x2f/0x7e0
-[   29.036138][    T1]  ? ret_from_fork+0x66/0x80
-[   29.036138][    T1]  ? ret_from_fork_asm+0x11/0x20
-[   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   29.036138][    T1]  ? filter_irq_stacks+0x60/0x1a0
-[   29.036138][    T1]  ? stack_depot_save_flags+0x2c/0x7b0
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   29.036138][    T1]  __msan_warning+0x96/0x110
-[   29.036138][    T1]  __list_del_entry_valid_or_report+0x19e/0x490
-[   29.036138][    T1]  stack_depot_save_flags+0x3e7/0x7b0
-[   29.036138][    T1]  stack_depot_save+0x12/0x20
-[   29.036138][    T1]  ref_tracker_alloc+0x215/0x700
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? netdev_hold+0xe2/0x120
-[   29.036138][    T1]  ? register_netdevice+0x1bc7/0x2170
-[   29.036138][    T1]  ? bond_create+0x138/0x2a0
-[   29.036138][    T1]  ? bonding_init+0x1a7/0x2d0
-[   29.036138][    T1]  ? do_one_initcall+0x216/0x960
-[   29.036138][    T1]  ? do_initcall_level+0x140/0x350
-[   29.036138][    T1]  ? do_initcalls+0xf0/0x1d0
-[   29.036138][    T1]  ? do_basic_setup+0x22/0x30
-[   29.036138][    T1]  ? kernel_init_freeable+0x300/0x4b0
-[   29.036138][    T1]  ? kernel_init+0x2f/0x7e0
-[   29.036138][    T1]  ? ret_from_fork+0x66/0x80
-[   29.036138][    T1]  ? ret_from_fork_asm+0x11/0x20
-[   29.036138][    T1]  ? kmsan_internal_unpoison_memory+0x14/0x20
-[   29.036138][    T1]  netdev_hold+0xe2/0x120
-[   29.036138][    T1]  register_netdevice+0x1bc7/0x2170
-[   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   29.036138][    T1]  bond_create+0x138/0x2a0
-[   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   29.036138][    T1]  bonding_init+0x1a7/0x2d0
-[   29.036138][    T1]  ? spi_dln2_driver_init+0x40/0x40
-[   29.036138][    T1]  do_one_initcall+0x216/0x960
-[   29.036138][    T1]  ? spi_dln2_driver_init+0x40/0x40
-[   29.036138][    T1]  ? kmsan_get_metadata+0x60/0x1c0
-[   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   29.036138][    T1]  ? filter_irq_stacks+0x60/0x1a0
-[   29.036138][    T1]  ? stack_depot_save_flags+0x2c/0x7b0
-[   29.036138][    T1]  ? skip_spaces+0x8f/0xc0
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   29.036138][    T1]  ? parse_args+0x1511/0x15e0
-[   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
-[   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
-[   29.036138][    T1]  ? spi_dln2_driver_init+0x40/0x40
-[   29.036138][    T1]  do_initcall_level+0x140/0x350
-[   29.036138][    T1]  do_initcalls+0xf0/0x1d0
-[   29.036138][    T1]  ? arch_cpuhp_init_parallel_bringup+0xe0/0xe0
-[   29.036138][    T1]  do_basic_setup+0x22/0x30
-[   29.036138][    T1]  kernel_init_freeable+0x300/0x4b0
-[   29.036138][    T1]  ? rest_init+0x260/0x260
-[   29.036138][    T1]  kernel_init+0x2f/0x7e0
-[   29.036138][    T1]  ? rest_init+0x260/0x260
-[   29.036138][    T1]  ret_from_fork+0x66/0x80
-[   29.036138][    T1]  ? rest_init+0x260/0x260
-[   29.036138][    T1]  ret_from_fork_asm+0x11/0x20
-[   29.036138][    T1]  </TASK>
-[   29.036138][    T1] Kernel Offset: disabled
+The inner-file multi-threaded compression is implemented by dividing the
+input file into multiple segments and compressing them in parallel.
 
+The inter-file multi-threaded compression is implemented by compressing
+multiple files in parallel, and we let the main thread reaps the compressed
+files and writes them to the output image to ensure the reproducibility of
+the output image.
 
-syzkaller build log:
-go env (err=3D<nil>)
-GO111MODULE=3D'auto'
-GOARCH=3D'amd64'
-GOBIN=3D''
-GOCACHE=3D'/syzkaller/.cache/go-build'
-GOENV=3D'/syzkaller/.config/go/env'
-GOEXE=3D''
-GOEXPERIMENT=3D''
-GOFLAGS=3D''
-GOHOSTARCH=3D'amd64'
-GOHOSTOS=3D'linux'
-GOINSECURE=3D''
-GOMODCACHE=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod'
-GONOPROXY=3D''
-GONOSUMDB=3D''
-GOOS=3D'linux'
-GOPATH=3D'/syzkaller/jobs-2/linux/gopath'
-GOPRIVATE=3D''
-GOPROXY=3D'https://proxy.golang.org,direct'
-GOROOT=3D'/usr/local/go'
-GOSUMDB=3D'sum.golang.org'
-GOTMPDIR=3D''
-GOTOOLCHAIN=3D'auto'
-GOTOOLDIR=3D'/usr/local/go/pkg/tool/linux_amd64'
-GOVCS=3D''
-GOVERSION=3D'go1.21.4'
-GCCGO=3D'gccgo'
-GOAMD64=3D'v1'
-AR=3D'ar'
-CC=3D'gcc'
-CXX=3D'g++'
-CGO_ENABLED=3D'1'
-GOMOD=3D'/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.=
-mod'
-GOWORK=3D''
-CGO_CFLAGS=3D'-O2 -g'
-CGO_CPPFLAGS=3D''
-CGO_CXXFLAGS=3D'-O2 -g'
-CGO_FFLAGS=3D'-O2 -g'
-CGO_LDFLAGS=3D'-O2 -g'
-PKG_CONFIG=3D'pkg-config'
-GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
- -ffile-prefix-map=3D/tmp/go-build2170902610=3D/tmp/go-build -gno-record-gc=
-c-switches'
+This patchset is only a basic implementation without support for dedupe,
+(all-)fragments and ztailpacking features. We will add support for them
+in the future.
 
-git status (err=3D<nil>)
-HEAD detached at 373b66cd2
-nothing to commit, working tree clean
+The performance of the multi-threaded compression is tested on a Dell r740
+server with 2 Intel Xeon Gold 5215M CPUs (10 cores per CPU). We test the
+compression time of serveral workloads with lzma algorithm. The results are
+as follows:
 
+workload: enwik9 (1GB)
 
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:32: run command via tools/syz-env for best compatibility, see:
-Makefile:33: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
-s/syz-sysgen
-make .descriptions
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-bin/syz-sysgen
-touch .descriptions
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20240130-131205'" "-tags=
-=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-fuzzer=
- github.com/google/syzkaller/syz-fuzzer
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20240130-131205'" "-tags=
-=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execpr=
-og github.com/google/syzkaller/tools/syz-execprog
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20240130-131205'" "-tags=
-=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-stress=
- github.com/google/syzkaller/tools/syz-stress
-mkdir -p ./bin/linux_amd64
-gcc -o ./bin/linux_amd64/syz-executor executor/executor.cc \
-	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
-ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
-t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
-static-pie -fpermissive -w -DGOOS_linux=3D1 -DGOARCH_amd64=3D1 \
-	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"373b66cd2ba1fd05c72d0bbe16141fb287=
-fe2eb3\"
+| # of threads | Time (s) | Speedup |
+|--------------|----------|---------|
+| 1            |  216.08  | 1.00x   |
+| 2            |  110.15  | 1.96x   |
+| 4            |  57.22   | 3.78x   |
+| 8            |  31.4    | 6.88x   |
+| 16           |  16.99   | 12.72x  |
 
+workload: Linux-6.7-rc4 source (1.55GB)
 
-Error text is too large and was truncated, full error text is at:
-https://syzkaller.appspot.com/x/error.txt?x=3D12b5bad3e80000
+| # of threads | Time (s) | Speedup |
+|--------------|----------|---------|
+| 1            |  288.65  | 1.00x   |
+| 2            |  140.66  | 2.05x   |
+| 4            |  79.64   | 3.62x   |
+| 8            |  54.74   | 5.27x   |
+| 16           |  47.08   | 6.13x   |
 
+workload: Arch container with Xfce desktop (4.19GB)
 
-Tested on:
+| # of threads | Time (s) | Speedup |
+|--------------|----------|---------|
+| 1            |  834.26  | 1.00x   |
+| 2            |  430.73  | 1.94x   |
+| 4            |  267.96  | 3.11x   |
+| 8            |  205.67  | 4.06x   |
+| 16           |  183.26  | 4.55x   |
 
-commit:         6764c317 Merge tag 'scsi-fixes' of git://git.kernel.or..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Df8b2756f2e75608=
-e
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D88ad8b0517a9d3bb9=
-dc8
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
-n) 2.40
+Gao Xiang (2):
+  erofs-utils: introduce multi-threading framework
+  erofs-utils: add a helper to get available processors
 
-Note: no patches were applied.
+Yifan Zhao (5):
+  erofs-utils: mkfs: add --worker=# parameter
+  erofs-utils: mkfs: optionally print warning in erofs_compressor_init
+  erofs-utils: extend multi-threading framework for per-thread fields
+  erofs-utils: mkfs: introduce inner-file multi-threaded compression
+  erofs-utils: mkfs: introduce inter-file multi-threaded compression
+
+ configure.ac                |  17 +
+ include/erofs/compress.h    |  18 +
+ include/erofs/config.h      |   5 +
+ include/erofs/internal.h    |   6 +
+ include/erofs/list.h        |   8 +
+ include/erofs/queue.h       |  22 +
+ include/erofs/workqueue.h   |  48 +++
+ lib/Makefile.am             |   4 +
+ lib/compress.c              | 819 +++++++++++++++++++++++++++++-------
+ lib/compressor.c            |   7 +-
+ lib/compressor.h            |   5 +-
+ lib/compressor_deflate.c    |  10 +-
+ lib/compressor_libdeflate.c |   6 +-
+ lib/compressor_liblzma.c    |   9 +-
+ lib/compressor_lz4.c        |   2 +-
+ lib/compressor_lz4hc.c      |   2 +-
+ lib/config.c                |  16 +
+ lib/inode.c                 | 346 ++++++++++++---
+ lib/queue.c                 |  64 +++
+ lib/workqueue.c             | 222 ++++++++++
+ mkfs/main.c                 |  38 ++
+ 21 files changed, 1442 insertions(+), 232 deletions(-)
+ create mode 100644 include/erofs/queue.h
+ create mode 100644 include/erofs/workqueue.h
+ create mode 100644 lib/queue.c
+ create mode 100644 lib/workqueue.c
+
+-- 
+2.43.0
+
