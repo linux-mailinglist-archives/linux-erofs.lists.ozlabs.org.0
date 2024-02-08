@@ -2,101 +2,105 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C657084E2BB
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Feb 2024 15:00:36 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=RSMqu/kx;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id DB7CD84EA02
+	for <lists+linux-erofs@lfdr.de>; Thu,  8 Feb 2024 22:01:42 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TVzCN6nzsz3cBN
-	for <lists+linux-erofs@lfdr.de>; Fri,  9 Feb 2024 01:00:32 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TW8YJ67XHz3bcJ
+	for <lists+linux-erofs@lfdr.de>; Fri,  9 Feb 2024 08:01:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=RSMqu/kx;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=outlook.com (client-ip=2a01:111:f403:2818::801; helo=aus01-me3-obe.outbound.protection.outlook.com; envelope-from=i.pear@outlook.com; receiver=lists.ozlabs.org)
-Received: from AUS01-ME3-obe.outbound.protection.outlook.com (mail-me3aus01olkn20801.outbound.protection.outlook.com [IPv6:2a01:111:f403:2818::801])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=attendeetechexporegistration.com (client-ip=2a01:111:f403:2020::701; helo=ind01-max-obe.outbound.protection.outlook.com; envelope-from=helena.don@attendeetechexporegistration.com; receiver=lists.ozlabs.org)
+Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01on20701.outbound.protection.outlook.com [IPv6:2a01:111:f403:2020::701])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TVzCD62GRz309c
-	for <linux-erofs@lists.ozlabs.org>; Fri,  9 Feb 2024 01:00:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TW8Y96SsKz2xQH
+	for <linux-erofs@lists.ozlabs.org>; Fri,  9 Feb 2024 08:01:31 +1100 (AEDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bqvKUWQCao14CE5QpcBKsL4fsuJlO6D4qeNucfHvC4Ve48DgEloOtdizjr/dzndcOh9wFdRGc1xwJ79pOEkGftaaQdo9VCstHgFpsk90zfBWnROFBPBrQehyio/K3aUWFAcQhhXxEdj85HRBJykmFX9JZMI1Xfq5iU37i7eqrETqviyv/N9Tz/u2dqhKDkWtVjom9gG80joZtF/iLxNrGdZL8pQdfFNVLzPSQKr2YZnowbDZslXCP7ADIehc0A3MdZA2PffhCjUQKc6YCk9moyLhXwBUcQAnUYWvjmWIXHxLpCZmiba+wqSv77sCZz+azwFs+ZTXLlMTyoWGI4jwvA==
+ b=TjIe7zh27sMLSQgXdITodOBu6mtLSNV/F1V7F9wkyWhnPOMb8MalJ0l6ygG/K1x2Uo+vupXf7SXu5M5zXB3+5zeBQ4iC9Kpp9pv32UadSLq2tG/stO0j++I8VJkCd+bwfEkznIVVk8QdUNN0D/bK3OvvoPb13k8SCUXBFZkmXJJa7ccJzeTSW95BgbQe5ga2mCXjg5UG7n7hO0j4Pk1189bYcUH57JC34BLhkUzcGmZu3ohv7orNO2eV0KM3UzrLlbQub8dTEUjlX/esy59q6pBCvMacMF0EI4ROv8fpeb41SfI5vut6L6b1VzED3v6Sz4dKGbniV7LdMWeQVb0Sgw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FN2xKk5dSQooZ/40KhEfRlYQ3219SUck8lU24gVxNpU=;
- b=Q7yAezCIMdXg1xcfjWxw5PMQVP5mz00kon4eQyTJnf6KHx7hFRQF+OXetrKxBQAUvJkDBPYPBniFm3iM5xpjziDaJdRJvfeRKDmZW6AlBY8xFc+zxYpueEH3lqtoJ+ZC56bPAw6qQXpHI0pIr98f7MQ72HtqCr1doNt9Xewh6qeR8x2LbEwrDeUIRf2Q9cT59TfT5WbHaTnuYrpLJFePCgyeo2YWV6FWPEJN5+DLjHoLX9O+kkZFAgyOi1zCNtAopTxDyK8Bzeo2J7auWckd2LkL8Nx1YjT1o+kplSykyPL8ZWWE70aG2zz0fRivU2m3yXxi+GVmWXWFUXCnuMzInw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FN2xKk5dSQooZ/40KhEfRlYQ3219SUck8lU24gVxNpU=;
- b=RSMqu/kx6JSrTOYpVSmYwqysMmljYGkpoxViLu+ZLgaS+Az5L/lGw1Qj+6F5PK069DXj46Geq45Ho4QyRTWYByIaVOQRlkiQIdYrl1QLnG6cYFb5MMuh1c2c1iuWrp9HxFp1exwn1xXrGdk9w/RuqR6dpqYGMGbOw3XKXngQ0utf4SsB1l1IIjz0uMQKmRvhg7STpXGFV/A42mPqUrO4ilcRH34bf+VA69kmrXm4xPqaHvz/7Y5i48EFE4kQNl4YcPXISb02PXzda1dMBi0Sy1T/E00CQiEzN2BaM4vZbJU8mzOCzkJYkxJlUQRTEn+0sqajuPAXu7K4OaM2AN/W4A==
-Received: from SY6P282MB3193.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:164::22)
- by SY4P282MB3874.AUSP282.PROD.OUTLOOK.COM (2603:10c6:10:1ce::12) with
+ bh=yRJa45ei4ryetp5LKgD0kjJJfaSBfZIAaof32QlMtU0=;
+ b=ZpEa2rhDqzDKTUgP4P4LuJc4EVjgA+KXxqNuNXfBQ8HK1m6dsg+oUV+4QwqDU/vojQvPtdSV7CI0SUh2t9JpwrrJReRSvXs9eL8uOQ5lhfJBJYYd8+agcXfD91pKq+nJElNr2z5gyQBB4i2/lGJww1KvJBj4phxya8m/+i6Opf5S+S9LcxUi7uezYmQOAFqZahtiE5Zj2Fy0cdI49geyRQRpGq8phJE/ep+A2r6atC4pKCbKYrsMfp02f/PzGfg85BPnHf4Rec8CDrdDQzroYafxAN29iv2/Nth2OloT/F8NJ+MqvjQXfGQODTm+S/WnIvbtV5KG213BNDqIDorT5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=attendeetechexporegistration.com; dmarc=pass action=none
+ header.from=attendeetechexporegistration.com; dkim=pass
+ header.d=attendeetechexporegistration.com; arc=none
+Received: from PN3P287MB1070.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:173::12)
+ by MA0P287MB2199.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:11e::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.39; Thu, 8 Feb
- 2024 14:00:00 +0000
-Received: from SY6P282MB3193.AUSP282.PROD.OUTLOOK.COM
- ([fe80::812d:e51d:5eaf:594a]) by SY6P282MB3193.AUSP282.PROD.OUTLOOK.COM
- ([fe80::812d:e51d:5eaf:594a%4]) with mapi id 15.20.7249.039; Thu, 8 Feb 2024
- 14:00:00 +0000
-From: Tianyi Liu <i.pear@outlook.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: lib: fix incorrect usages of `erofs_strerror`
-Date: Thu,  8 Feb 2024 21:59:09 +0800
-Message-ID:  <SY6P282MB3193657433D35C3A7799CA5F9D442@SY6P282MB3193.AUSP282.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.43.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [IyOStKgAVhETbn3m16b2ycsv4QppN1ibUllSaAjCwzfoljQRDIy43A==]
-X-ClientProxiedBy: SG2PR01CA0118.apcprd01.prod.exchangelabs.com
- (2603:1096:4:40::22) To SY6P282MB3193.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:164::22)
-X-Microsoft-Original-Message-ID: <20240208135909.15167-1-i.pear@outlook.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.17; Thu, 8 Feb
+ 2024 21:01:08 +0000
+Received: from PN3P287MB1070.INDP287.PROD.OUTLOOK.COM
+ ([fe80::fda5:50a4:9b4e:83c7]) by PN3P287MB1070.INDP287.PROD.OUTLOOK.COM
+ ([fe80::fda5:50a4:9b4e:83c7%3]) with mapi id 15.20.7270.016; Thu, 8 Feb 2024
+ 21:01:08 +0000
+From: Helena Don <helena.don@attendeetechexporegistration.com>
+To: Sign And Digital UK 2024 <linux-erofs@lists.ozlabs.org>
+Subject: Lists - Sign And Digital UK 2024
+Thread-Topic: Lists - Sign And Digital UK 2024
+Thread-Index: Adpa0e8Gcwlu/gDRSjK6PyHj+mLlxQ==
+Date: Thu, 8 Feb 2024 21:01:08 +0000
+Message-ID:  <PN3P287MB1070EBA2FFFAB198D7AAA481F2442@PN3P287MB1070.INDP287.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none
+ header.from=attendeetechexporegistration.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3P287MB1070:EE_|MA0P287MB2199:EE_
+x-ms-office365-filtering-correlation-id: 97c6f710-1f39-426c-099d-08dc28e912bc
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:  LIg2p6T3Pi+AldQvZ+05HWFKd53U2KUGByot1lYkZhIN1HXg8fdyii2zMB5tbHRdoMHg8mUZ02r0rEEufIhZLHMsa+Zs8SjnbgilYtP8lk68LfY6AQvq301XVWqsPTo2ML/shwl3wuN40sNy2IWZg72qT4Yf4ItbtnGCxaGwOexPx7A2Ppp/3Fjk7+sN9o86QVaXfiHrXgxVraKp199hgORpcpNVH2tipb+k+usFn468ZQYDrgbLXz+oiDMGJpF9lJEM+j7wHAOhHUDjekhsP6T/4PUprpFLLMGxWQkVdvoeM9DYXaOKrvle8f0EHqEhU5g6CtrmeC6SE1sg4vrH+pcI1GLumQGaqIyTvoPlwKpo/wpsqbh/nfGkil0vrAuuxjsuzxfOAF0SvGOfX8G0o6ewu7JcufGRm7HiNTqSSvXkS6yWyMGsYotbB3TYVC0lKfa5HxxanK/8/Uqq1xFUtK957C/RCrgg4+b2mu8qkoZRcgj0AzC4okqCSkhh0+9lxewVdCjqeqLRmXmSA2ZaOYkP0MEIIexjETLrCxfHoRkZ2/M6bnfC3NKe40I/W3NyLo8sqtNDXrKK0jyGcbWH0L10kUnSE7n43jsG/i0a1I5JFrpuu4HcR8ToaSFUoCoW
+x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1070.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(366004)(346002)(136003)(39850400004)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(41300700001)(55016003)(558084003)(33656002)(86362001)(9686003)(38070700009)(478600001)(83380400001)(5660300002)(66946007)(8936002)(66476007)(6506007)(2906002)(316002)(52536014)(76116006)(8676002)(7696005)(38100700002)(66446008)(122000001)(66556008)(44832011)(71200400001)(64756008)(6916009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?EFAi4+DiSJCA6ryr7JPYOs9clQH7CupPP97b/5wZRC76Wgi9SRNDq9s7or3c?=
+ =?us-ascii?Q?VVG56RngPF0Tm3ZqCT/TRv9u8DMGmAEcax48VvAYnsMmKd1JIQJi5oJnLPa3?=
+ =?us-ascii?Q?UIJvflmX9xkBl2yx+5LHQvUMksP6AVH5YWD6LJ779PXmg81gZF8got/oNYWv?=
+ =?us-ascii?Q?g7em+iMYrq2bIkKToNTdSadA1wJs5UF1JFOMNGAvjbLbVawCuMf8zxbfdSxt?=
+ =?us-ascii?Q?SFrc/6eBRb5YfN2AuioFCrwzyjqhjCHnygGy50IrBZXah87re9QnwlWzIMlt?=
+ =?us-ascii?Q?9KBtJZ2o22QLMi6dKGNpJ48zYbl25Yq0EbTPIPzfHHD8Zb2lpksgRwBHS3Jt?=
+ =?us-ascii?Q?uP3mofFTSxErzLZTn0rRUVJNCS+yTPn5pIXmqxjprr6eFAYhyGaJm9VJH9Jz?=
+ =?us-ascii?Q?THJKNxh8obSQLtL+1oNnLd/N0A24OLutQk/sxlIuTtJjQh16gOxCHvCjV3FU?=
+ =?us-ascii?Q?F2ll9udb5DgQBh7Q9PeUtnX2vgmafkfd+TqzsBBQAjV9deHlpFE9+a9KwA4u?=
+ =?us-ascii?Q?aLTmnlTQBHm8lq+tssHg/SE9jR/c0KbiZgzeNLJEmN5LLwljQI9jWcwaRA9j?=
+ =?us-ascii?Q?vmKlF+t8+tg/c2WNFz53YpnBEMaVpx2xweVVlzmwH30lZjFGNLXeykJAFXRd?=
+ =?us-ascii?Q?SdOW+RqXYQvtkYyMnx0r7eyO8ODvBIgtNMQoclR5SndlMBdvQT0Wd9zeajtz?=
+ =?us-ascii?Q?0hfkst3BSmooFAlI+Zpn8XGRz5qcGZ+J9kHx6hw3mHI/zmohCqqFgHppD7DH?=
+ =?us-ascii?Q?qcH4g0tq3BYTZl/G7cEEH5H5Tu63uZAdyawEPeGUQSQtszpk0v0QNCiXGpHP?=
+ =?us-ascii?Q?0dSMvrGNMMFUMX3YL0batdU8/EDAZEvlpXQVAZk67bxzTpWdAAoGDQVpOYYz?=
+ =?us-ascii?Q?kFaGmucmDHxPSnwnC4u0NzlBRTDza6l5CjvJdM6/sRQQl7e3nfczkCXxzrsL?=
+ =?us-ascii?Q?WeXacT+gG0MIwSNfpV1WFw6fjYnMGKN+fpoIJkQJ+yuw+/1te72OEsgB/3wz?=
+ =?us-ascii?Q?4RhzafTGYDkVQuWanTVzp3uBjUWeoZg9TcKIS97LzKRfyZMEruif3vqj/BJR?=
+ =?us-ascii?Q?C/bdpUfh2nmOdzbvVQ9KU9RVzXvfOSGUff8V7vf94AgwhiIsoy/6/IXOB3GT?=
+ =?us-ascii?Q?eKSn5A43H125M9jqy0mXE/f6ECnTH3GzAb5plbfV+jbqkhespx4Zs1fpQwdb?=
+ =?us-ascii?Q?s4Zhnpz8MInI+MBCEerzGyp8EsyC4VylvoSO1GVwqu77wqaXQBqxKIvdUlZP?=
+ =?us-ascii?Q?E0wFwPH3NgC6qsXg8B7df1RqrCBiU/8PBObGl+uF6mSImkfa1whgwRehj3TL?=
+ =?us-ascii?Q?5QBkWW2utZ1Kgs4UA9z7dhejQLEjz9354vrW+1x5IpV6PNi8SKFpWthgP9hg?=
+ =?us-ascii?Q?8S8WFNwKAsFpvRy471pW0QRkvy3a/U/1/SV5TdGCPuQR/OmVV318DM11OO+k?=
+ =?us-ascii?Q?HMIKcqr0UujacneuP67dPfd3tFNjJa2dmK4aHaLjLXCZBoNf8YoWrJTwSpEZ?=
+ =?us-ascii?Q?rto3jUI1Pk2R8WV1VaClPRHsVUbhAhwyuY53ErmP4JyOQihcvFbqdpqt0WUt?=
+ =?us-ascii?Q?xBhcw2fPYDe8cTKg0/pVoFjCmQ8Q6SkttbGiGE4N0aZQO1lXWzfg3SGK+kOr?=
+ =?us-ascii?Q?P9YrAGzs9dG5aFJ5jFr8qo+rGNqTpaz4X9zN3VHT6HKfU07XOEBlu5GoPM4K?=
+ =?us-ascii?Q?sljzu0e5Yfnz3SRQPQbByllxXQfeqh4QrFGHYPkT/oBFJo5Q?=
+Content-Type: multipart/alternative;
+	boundary="_000_PN3P287MB1070EBA2FFFAB198D7AAA481F2442PN3P287MB1070INDP_"
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SY6P282MB3193:EE_|SY4P282MB3874:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b27d860-0b9f-4ac9-a125-08dc28ae3dc9
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 	Mnq1JdKNzBs5MFrKTUQqk4PMTfWgB/f5kjVasKcy6i3tE0CqvvLva2DhtskqPfeQ5FzzwOu6HUodR6N9tzqrOVb+JL+Fd1QNU3MLWLWlccdcjLDZ78l75PdwUtQaVD7yvG2Xq9T2QseZBx1yDRiety5AqnSWWbizpnvytIu+qFDgv81qmaf4zdxTQ5Bc3EhAX+1WLPtnOxhtOg6B3RLTt8sVLsqWKqWNVrHlf8dm08XnUfXqdjegtRjXZMtE9z2QsRLgtU64iUu+Ns94z/B48ut7dzOhxgZMwNaZZXyQfQyYBeFGMJ4biPR5+Sp8aikY9DsEHxeCsW+VVrSl7DS6Ux8G+VnGwNJW70NCWCYAoPZ3g6rYwuw8D0FW0UlXCrjsADSLUnN7E9Py1+RQBoTG4pT3n3fypF90nfkcCsHSv8YAJE3nwyaOrTxKiP1/WG5jXd8qVZZpk1BvFq8iQknai3m6I5qzDMvKhN0x5485C4QsIai18Ep/H8LyuSl7iFarH4SIFKxLe85cuX1y/ao58DZsSe6vw8sps99jn5/HaJN/YoT7bXs4bolp8xM3aCQkuVgN2Q+Ivjj7ydfHtYcHoiLdjAzmTuh4JgETQQdPSPGL4KQej9Sdrc03rAKxXutZ
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?oLfV4DrlIDP5wvdHxvn6TUIgmYsOVtMsm+OZvDxD/EgGi6lqiIL5c4wv1WQl?=
- =?us-ascii?Q?ilc6DQrOHJiXLEJDzu+fRM4ebE5kKohPo5apLPK+HpOpx9C/ulayxMygRn9Y?=
- =?us-ascii?Q?b0c1jrpOdVwtlxGK0tTi/RDsv6/HYvfg0Kv19Xjy88HJbU4oRO0ji9tqM3+c?=
- =?us-ascii?Q?K7kQL5So32KlnzZs9H70Rpdh+pcTEXvNi6vv/AQreNMAFpGeG4z94gGAYP5e?=
- =?us-ascii?Q?ZhCnO29m6clAB7aRm4QIMBthjH1CNpPqeIpEtg/QvEph22ko+sf4r4tA7pjZ?=
- =?us-ascii?Q?8fYl1xt8sg5CiQPPOoQLWFKdqdJqSxdNneZgKt26Yqk2nkLDlo6ImYGOz4aU?=
- =?us-ascii?Q?NFlHikPSrrrFz4li/W/WfVsPt/6Q1xCC/GS5fG7ToxrUpYnFQRFzrIeqYgZ2?=
- =?us-ascii?Q?MXRDA5ICBYjFXAvUg1oB9o71IHLDJ0r2GtNqaUfHuTJjPHg2RjjUE4xwdIrM?=
- =?us-ascii?Q?hgBsvTWvQtFFwA8RHXIeF6YOFvdju+FbVuJRNgatSNlzac564IPX35OY9VrH?=
- =?us-ascii?Q?qBtUxallhg0XTtB6L9OVfAOtsJBg5T+jY3YlQCh2fBFxnnctM/aSbG98kNqm?=
- =?us-ascii?Q?sjNUeT48N40VjB6/ojVf+Tx2/boUnpJJUnAV7jA5eVJmP03m96ZH8yev/61W?=
- =?us-ascii?Q?rF0tFUFjAddoOhkCyYsxIbaJ+2IuejijIu2RhgxOvGuZgzqNsB2+lJ1+paNd?=
- =?us-ascii?Q?fCOFe7UShtJZ/UTKOAngUMU/ZXty8b9EXgmB1Fk5V4hamGR9hKTynhVIaIge?=
- =?us-ascii?Q?wuc6ojf2GXd72AisU6U6KFyhdVKtVwkw/Ro7fSmXB4NCe/zmVStn2fjI26Ee?=
- =?us-ascii?Q?jN2Y3EArHMlVu4eWGPx2ydTUr2IlXov4P2vQ+D2vzeLhtfkYretYDb26ug/t?=
- =?us-ascii?Q?3ncpiiQMIxsjbAtjb7ORJGdXM7BloH0scMa2lm80Qj/Yq6Pl0oD5KakJDSkt?=
- =?us-ascii?Q?MpoI/nHtk+bA3uHLKZKA57c/tqp7wI0z07u4RHIDHxuj0vbgJMDnjaQWMNJF?=
- =?us-ascii?Q?iZwZOTn4IO2fVceDY3ok6fT1maYNVv6f74bNIoOvGxvS6BCsKnUgGdwja24B?=
- =?us-ascii?Q?utfqYteVoJ0tiEi1+KCgHBFOL8j6OLvWuTYC94lwUPfEdupfDKul4V5hXJC7?=
- =?us-ascii?Q?GUDr0c+gFHswiA+8IPYK701ZXxGLh6dU7pgHReLJpTAAP7ey5J7Tce8foLOs?=
- =?us-ascii?Q?QRQ9pZPBO8HADheOkRJTVEYMUW0TcT13LwpeLEQVolYa4JEIth0JJSZD+xlG?=
- =?us-ascii?Q?+DrAurG0vi5jNxLIj2lq?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b27d860-0b9f-4ac9-a125-08dc28ae3dc9
-X-MS-Exchange-CrossTenant-AuthSource: SY6P282MB3193.AUSP282.PROD.OUTLOOK.COM
+X-OriginatorOrg: attendeetechexporegistration.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2024 14:00:00.8399
+X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1070.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97c6f710-1f39-426c-099d-08dc28e912bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Feb 2024 21:01:08.6550
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SY4P282MB3874
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: fd07078c-50e9-47ca-8831-1e868d5e8384
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GRczGVYL7voVdiSsaCWFHAAi1R0lO1dbQUxps3XkVmx6ZnadhhWV1DTYIDo8pnxg7nVDw/inGGFQb13JC1dtmxim7XiZtlm/4PrBgIShvdDj4/vnzUPQHGjpmAwZBHVzegN7KWDUeHrG4pKl3JcZiQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB2199
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -108,59 +112,148 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Tianyi Liu <i.pear@outlook.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-`erofs_strerror` accepts a negative argument,
-so `errno` should be negatived before passing to it.
+--_000_PN3P287MB1070EBA2FFFAB198D7AAA481F2442PN3P287MB1070INDP_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Tianyi Liu <i.pear@outlook.com>
----
- lib/inode.c | 2 +-
- lib/tar.c   | 2 +-
- lib/xattr.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Hello,
 
-diff --git a/lib/inode.c b/lib/inode.c
-index c6424c0..2a9b18c 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -1146,7 +1146,7 @@ static int erofs_mkfs_build_tree(struct erofs_inode *dir, struct list_head *dirs
- 	_dir = opendir(dir->i_srcpath);
- 	if (!_dir) {
- 		erofs_err("failed to opendir at %s: %s",
--			  dir->i_srcpath, erofs_strerror(errno));
-+			  dir->i_srcpath, erofs_strerror(-errno));
- 		return -errno;
- 	}
- 
-diff --git a/lib/tar.c b/lib/tar.c
-index 8204939..ead74ba 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -106,7 +106,7 @@ int erofs_iostream_open(struct erofs_iostream *ios, int fd, int decoder)
- #ifdef HAVE_POSIX_FADVISE
- 			if (posix_fadvise(fd, 0, 0, POSIX_FADV_SEQUENTIAL))
- 				erofs_warn("failed to fadvise: %s, ignored.",
--					   erofs_strerror(errno));
-+					   erofs_strerror(-errno));
- #endif
- 		}
- 		ios->bufsize = 16384;
-diff --git a/lib/xattr.c b/lib/xattr.c
-index 77c8c3a..427933f 100644
---- a/lib/xattr.c
-+++ b/lib/xattr.c
-@@ -698,7 +698,7 @@ static int erofs_count_all_xattrs_from_path(const char *path)
- 	_dir = opendir(path);
- 	if (!_dir) {
- 		erofs_err("failed to opendir at %s: %s",
--			  path, erofs_strerror(errno));
-+			  path, erofs_strerror(-errno));
- 		return -errno;
- 	}
- 
--- 
-2.43.0
+This is to inform you that Sign And Digital UK 2024 Business list is availa=
+ble for you to acquire at unlimited usage.
 
+Please let me know if you would like to know the Counts, Value and other de=
+tails.
+
+Awaiting your response.
+
+Warm Regards,
+Helena Don- Demand Generation
+
+
+--_000_PN3P287MB1070EBA2FFFAB198D7AAA481F2442PN3P287MB1070INDP_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:0cm;
+	line-height:106%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-language:EN-US;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:#954F72;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri",sans-serif;
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-language:EN-US;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"EN-IN" link=3D"#0563C1" vlink=3D"#954F72">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<a name=3D"_Hlk156962497"><span lang=3D"EN-GB" style=3D"font-size:12.0pt;fo=
+nt-family:&quot;Times New Roman&quot;,serif;color:#1F497D">Hello,<o:p></o:p=
+></span></a></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span style=3D"mso-bookmark:_Hlk156962497"><span lang=3D"EN-GB" style=3D"fo=
+nt-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"=
+><o:p>&nbsp;</o:p></span></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span style=3D"mso-bookmark:_Hlk156962497"><span lang=3D"EN-GB" style=3D"fo=
+nt-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"=
+>This is to inform you that
+<b>Sign And Digital UK 2024</b> Business list is available for you to acqui=
+re at unlimited usage.<o:p></o:p></span></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span style=3D"mso-bookmark:_Hlk156962497"><span lang=3D"EN-GB" style=3D"fo=
+nt-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"=
+><o:p>&nbsp;</o:p></span></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span style=3D"mso-bookmark:_Hlk156962497"><span lang=3D"EN-GB" style=3D"fo=
+nt-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"=
+>Please let me know if you would like to know the Counts, Value and other d=
+etails.<o:p></o:p></span></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span style=3D"mso-bookmark:_Hlk156962497"><span lang=3D"EN-GB" style=3D"fo=
+nt-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"=
+><o:p>&nbsp;</o:p></span></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span style=3D"mso-bookmark:_Hlk156962497"><span lang=3D"EN-GB" style=3D"fo=
+nt-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"=
+>Awaiting your response.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<o:p></o:p></span></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span style=3D"mso-bookmark:_Hlk156962497"><span lang=3D"EN-GB" style=3D"fo=
+nt-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"=
+><o:p>&nbsp;</o:p></span></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span style=3D"mso-bookmark:_Hlk156962497"><span lang=3D"EN-GB" style=3D"fo=
+nt-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"=
+>Warm Regards,<o:p></o:p></span></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span style=3D"mso-bookmark:_Hlk156962497"><span style=3D"font-size:12.0pt;=
+font-family:&quot;Times New Roman&quot;,serif;color:#1F497D">Helena Don-
+</span></span><span style=3D"mso-bookmark:_Hlk156962497"><span lang=3D"EN-G=
+B" style=3D"font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;=
+color:#1F497D">Demand Generation</span></span><span lang=3D"EN-GB" style=3D=
+"font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F49=
+7D"><o:p></o:p></span></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+</div>
+</body>
+</html>
+
+--_000_PN3P287MB1070EBA2FFFAB198D7AAA481F2442PN3P287MB1070INDP_--
