@@ -1,79 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A28FA85A405
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Feb 2024 14:01:06 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6AB685B135
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 04:16:10 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WHTKpei2;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WHTKpei2;
+	dkim=pass (2048-bit key; unprotected) header.d=mbaynton-com.20230601.gappssmtp.com header.i=@mbaynton-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=JLagdATU;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TdjMh4Ly6z3cCr
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 00:01:04 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tf4L74xZVz3bwR
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 14:15:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WHTKpei2;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WHTKpei2;
+	dkim=pass (2048-bit key; unprotected) header.d=mbaynton-com.20230601.gappssmtp.com header.i=@mbaynton-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=JLagdATU;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=mbaynton.com (client-ip=2607:f8b0:4864:20::430; helo=mail-pf1-x430.google.com; envelope-from=mike@mbaynton.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TdjMX4VMSz2xWR
-	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Feb 2024 00:00:56 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708347653;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TwNcCYcnKDEqL3qwv8hEJSNKkkqFQa2yy0ZaFvuYG/I=;
-	b=WHTKpei2dDzPv87YFnrLdAD4IuLXDSN31x9SSJE5z9ETXQfJBbfzycTFWDI5FDYRlv5aL3
-	vwH+qw6ercpeWaT2LCEXJhs1fF26ggREOtNJnVnyV7a+Mh8sP7AnGyNvvKDB5jSQ0N2dGs
-	ZR+Dey+LO0/v9AAYN+JyQ4/5Okd38Jk=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1708347653;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TwNcCYcnKDEqL3qwv8hEJSNKkkqFQa2yy0ZaFvuYG/I=;
-	b=WHTKpei2dDzPv87YFnrLdAD4IuLXDSN31x9SSJE5z9ETXQfJBbfzycTFWDI5FDYRlv5aL3
-	vwH+qw6ercpeWaT2LCEXJhs1fF26ggREOtNJnVnyV7a+Mh8sP7AnGyNvvKDB5jSQ0N2dGs
-	ZR+Dey+LO0/v9AAYN+JyQ4/5Okd38Jk=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-401-EKdDHX6EOFScijXKBRs-bg-1; Mon,
- 19 Feb 2024 08:00:48 -0500
-X-MC-Unique: EKdDHX6EOFScijXKBRs-bg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 937BD1C05AA6;
-	Mon, 19 Feb 2024 13:00:47 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.15])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 14603AC0C;
-	Mon, 19 Feb 2024 13:00:45 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240217081431.796809-1-libaokun1@huawei.com>
-References: <20240217081431.796809-1-libaokun1@huawei.com>
-To: Christian Brauner <christian@brauner.io>
-Subject: Re: [PATCH RESEND] cachefiles: fix memory leak in cachefiles_add_cache()
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tf4L00RSTz3bYx
+	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Feb 2024 14:15:50 +1100 (AEDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6e47c503fb5so91519b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Mon, 19 Feb 2024 19:15:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mbaynton-com.20230601.gappssmtp.com; s=20230601; t=1708398947; x=1709003747; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D4lbBZAA3fKotutWYRHL2mPU65t47tAHmQ+P8uNa43k=;
+        b=JLagdATUFLvFY9M9Ayvo17TJHB9lTDDNWOK9i+nEJst3NHq95taZlVmT18R7SigeTJ
+         80nObHFW5VProgaiEL7nJet6tNqIYcIK9sy59i+ySYiclBBEEVg7l3mSOZBGVlrdjyyW
+         EzjU9LHQBJ1V3NuE7n0xY2B1iwF1cwJZraoUiwvQOlpfKqnRrT0nBcAFsF7t+Tm6fuIU
+         cxdu+ppHrU4NjznVVOsELBIZmNhDLidxIobmd5T+2vs9s3IWSn9vJb9bzSkUqhNln3yY
+         zRvub5cYEXMRSZhUp2nG1ETaymg6vDDIPUGpPyv63FFxyfjx82GTAwQYsYVbx6XfzAVB
+         LGYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708398947; x=1709003747;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=D4lbBZAA3fKotutWYRHL2mPU65t47tAHmQ+P8uNa43k=;
+        b=t063VwBb9vm2SuOl4lkRVtcb+IsWSY9MpesYsgV8vmKKSnVQiKkCDuF93gIzyN8DAP
+         y+vT/0iF5AJDd2FEVZ1OVge3IqizUcyvjEg5IMxJLQ36ACQ3Abz7ZMYo54uve3LshGIQ
+         XZzKbtfcorafJFYmVAKObSchA4+dl9MElA2omwKZDhmm98RkjJkesHEVY6Qwpk5G8pXq
+         p3Mtz4aG0+ULPT/oXH7SULdSQgNmU3GQocPK3ABmpCazDwPHkZo78uNzzA1nR/Wks9kx
+         OCedo8a0yEJEtr2worGYsinCmNBiNo2DtZZgs5DWlb0Pq64A8o2CW3M43Qw19pWD4F37
+         VtoQ==
+X-Gm-Message-State: AOJu0YyRv+foKqLUb4LWE1P0Un80lOLhD2A8tstVgJngZFALjSXSMXCd
+	WdCCKSGfQn66pXLVfebKPVMzPqx1cuiLEFZMNAwM46iilTSKIFu+88cZwQFEgebALvfxIyMMF5i
+	Nsz/xzNnau9KY+upuU56TR0LsfdDX/JjAg90K11AZdTxhHO4J
+X-Google-Smtp-Source: AGHT+IG51O8XVvSWUBvCPCeHCed2aEjN+dtH2YbPqOM2XAFxKF+bY8FkocU5CP3HJH++s5uoelPRO4LlEdTs8FMIyFQ=
+X-Received: by 2002:a05:6a20:4f05:b0:19e:8b31:f1ae with SMTP id
+ gi5-20020a056a204f0500b0019e8b31f1aemr13594036pzb.29.1708398946655; Mon, 19
+ Feb 2024 19:15:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <131232.1708347645.1@warthog.procyon.org.uk>
+References: <CAM56kJTupW_WZapYM6YzFLPtriYb5+FU-Y8-mYY8ETGYfQmG6g@mail.gmail.com>
+ <5d558d53-a1d8-4bfc-b2a3-a10cd941d786@linux.alibaba.com>
+In-Reply-To: <5d558d53-a1d8-4bfc-b2a3-a10cd941d786@linux.alibaba.com>
+From: Mike Baynton <mike@mbaynton.com>
+Date: Mon, 19 Feb 2024 21:15:35 -0600
+Message-ID: <CAM56kJSpyScSSodu9Liw-2Ws2NvXE8qEY1GpLa8oFFk1tOJDNA@mail.gmail.com>
+Subject: Re: Feature request: erofs-utils mkfs: Efficient way to pipe only
+ file metadata
+To: linux-erofs@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Feb 2024 13:00:45 +0000
-Message-ID: <131233.1708347645@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -85,53 +78,169 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: jlayton@kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, dhowells@redhat.com, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Christian,
+Hello Gao,
+Thanks for your quick reply and thoughts on the matter. Yeah, formats
+like those you referenced look like basically the right idea as well.
 
-Could you take this through your VFS tree please?
+I did just want to point out a few requirements I have that I'd wager
+would apply to anyone trying to use EROFS in the way I am. That is, to
+use EROFS as a layer of an overlay filesystem that includes inodes for
+each and every file required by an application or container, but that
+uses xattrs interpreted by overlayfs to point to specific files
+containing the desired data.
 
-> The following memory leak was reported after unbinding /dev/cachefiles:
-> =
+So the requirements are
+1. Format needs to support xattrs in the input to mkfs.erofs.
+2. Emphasis on performance of generating 10s of thousands of inodes
+and dentries.
 
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> unreferenced object 0xffff9b674176e3c0 (size 192):
->   comm "cachefilesd2", pid 680, jiffies 4294881224
->   hex dump (first 32 bytes):
->     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace (crc ea38a44b):
->     [<ffffffff8eb8a1a5>] kmem_cache_alloc+0x2d5/0x370
->     [<ffffffff8e917f86>] prepare_creds+0x26/0x2e0
->     [<ffffffffc002eeef>] cachefiles_determine_cache_security+0x1f/0x120
->     [<ffffffffc00243ec>] cachefiles_add_cache+0x13c/0x3a0
->     [<ffffffffc0025216>] cachefiles_daemon_write+0x146/0x1c0
->     [<ffffffff8ebc4a3b>] vfs_write+0xcb/0x520
->     [<ffffffff8ebc5069>] ksys_write+0x69/0xf0
->     [<ffffffff8f6d4662>] do_syscall_64+0x72/0x140
->     [<ffffffff8f8000aa>] entry_SYSCALL_64_after_hwframe+0x6e/0x76
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =
+1. is because you must set trusted.overlay.redirect and
+trusted.overlay.metacopy xattrs on each file. 2. is because those that
+land at EROFS for this versus, say, just writing tens of thousands of
+sparse files out to ext4, are probably here for the performance
+(Making this part of the startup process for a container seems likely
+for example, and container startups should be fast.)
 
-> Put the reference count of cache_cred in cachefiles_daemon_unbind() to
-> fix the problem. And also put cache_cred in cachefiles_add_cache() error
-> branch to avoid memory leaks.
-> =
+So I actually think tar's header and extended header records format is
+already better suited to the task. You can encode xattrs and, though
+it might not be a major slowdown, you avoid converting things like
+mode and file size to symbolic ascii representations and back. It's
+also reasonably easy to find software to assist in correctly
+generating these structures.
 
-> Fixes: 9ae326a69004 ("CacheFiles: A cache that backs onto a mounted file=
-system")
-> CC: stable@vger.kernel.org
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Regards,
+Mike
 
-and add:
-
-Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Acked-by: David Howells <dhowells@redhat.com>
-
+On Sun, Feb 18, 2024 at 10:44=E2=80=AFPM Gao Xiang <hsiangkao@linux.alibaba=
+.com> wrote:
+>
+> Hi Mike,
+>
+> On 2024/2/19 11:37, Mike Baynton wrote:
+> > Hello erofs developers,
+> > I am integrating erofs with overlayfs in a manner similar to what
+> > composefs is doing. So, I am interested in making erofs images
+> > containing only file metadata and extended attributes, but no file
+> > data, as in $ mkfs.erofs --tar=3Di (thanks for that!)
+>
+> Thanks for your interest in EROFS too.
+>
+> >
+> > However, I would like to construct the erofs image from a set of files
+> > selected dynamically by another program. This leads me to prefer
+> > sending an unseekable stream to mkfs.erofs so that file selection and
+> > image generation can run concurrently, instead of first making a
+> > complete tarball and then making the erofs image. In this case, it
+> > becomes necessary to transfer each file's worth of data through the
+> > stream after each header only so that the tarball reader in tar.c does
+> > not become desynchronized with the expected offset of the next tar
+> > header.
+>
+> I wonder if it's possible to use a modified prototype-like [1] format
+> which mkfs.xfs [2] currently supports with "-p".  This prototype can
+> be passed with a pipe instead.
+>
+> [1] http://uw714doc.sco.com/en/man/html.4/prototype.4.html
+> [2] https://man7.org/linux/man-pages/man8/mkfs.xfs.8.html
+>
+> >
+> > A very straightforward solution that seems to be working just fine for
+> > me is to simply introduce a new optarg for --tar that indicates the
+> > input data will be simply a series of tar headers / metadata without
+> > actual file data. This implies index mode and additionally prevents
+> > the skipping of inode.size worth of bytes after each header:
+> >
+> > diff --git a/include/erofs/tar.h b/include/erofs/tar.h
+> > index a76f740..3d40a0f 100644
+> > --- a/include/erofs/tar.h
+> > +++ b/include/erofs/tar.h
+> > @@ -46,7 +46,7 @@ struct erofs_tarfile {
+> >
+> >    int fd;
+> >    u64 offset;
+> > - bool index_mode, aufs;
+> > + bool index_mode, headeronly_mode, aufs;
+> >   };
+> >
+> >   void erofs_iostream_close(struct erofs_iostream *ios);
+> > diff --git a/lib/tar.c b/lib/tar.c
+> > index 8204939..e916395 100644
+> > --- a/lib/tar.c
+> > +++ b/lib/tar.c
+> > @@ -584,7 +584,7 @@ static int tarerofs_write_file_index(struct
+> > erofs_inode *inode,
+> >    ret =3D tarerofs_write_chunkes(inode, data_offset);
+> >    if (ret)
+> >    return ret;
+> > - if (erofs_iostream_lskip(&tar->ios, inode->i_size))
+> > + if (!tar->headeronly_mode && erofs_iostream_lskip(&tar->ios, inode->i=
+_size))
+> >    return -EIO;
+> >    return 0;
+> >   }
+> > diff --git a/mkfs/main.c b/mkfs/main.c
+> > index 6d2b700..a72d30e 100644
+> > --- a/mkfs/main.c
+> > +++ b/mkfs/main.c
+> > @@ -122,7 +122,7 @@ static void usage(void)
+> >          " --max-extent-bytes=3D#  set maximum decompressed extent size=
+ #
+> > in bytes\n"
+> >          " --preserve-mtime      keep per-file modification time strict=
+ly\n"
+> >          " --aufs                replace aufs special files with
+> > overlayfs metadata\n"
+> > -       " --tar=3D[fi]            generate an image from tarball(s)\n"
+> > +       " --tar=3D[fih]           generate an image from tarball(s) or
+> > tarball header data\n"
+> >          " --ovlfs-strip=3D[01]    strip overlayfs metadata in the targ=
+et
+> > image (e.g. whiteouts)\n"
+> >          " --quiet               quiet execution (do not write anything
+> > to standard output.)\n"
+> >   #ifndef NDEBUG
+> > @@ -514,11 +514,13 @@ static int mkfs_parse_options_cfg(int argc, char =
+*argv[])
+> >    cfg.c_extra_ea_name_prefixes =3D true;
+> >    break;
+> >    case 20:
+> > - if (optarg && (!strcmp(optarg, "i") ||
+> > - !strcmp(optarg, "0") || !memcmp(optarg, "0,", 2))) {
+> > + if (optarg && (!strcmp(optarg, "i") || (!strcmp(optarg, "h") ||
+> > + !strcmp(optarg, "0") || !memcmp(optarg, "0,", 2)))) {
+> >    erofstar.index_mode =3D true;
+> >    if (!memcmp(optarg, "0,", 2))
+> >    erofstar.mapfile =3D strdup(optarg + 2);
+> > + if (!strcmp(optarg, "h"))
+> > + erofstar.headeronly_mode =3D true;
+> >    }
+> >    tar_mode =3D true;
+> >    break;
+> >
+> > Using this requires generation of tarball-ish streams that can be
+> > slightly difficult to cajole tar libraries into creating, but it does
+> > work if you do it. I can imagine much more complex alternative ways to
+> > do this too, such as supporting sparse tar files or supporting some
+> > whole new input format.
+>
+> I think you could just fill zero to use the current index mode now.
+> But yes, it could be inefficient if some files are huge.
+>
+> >
+> > Would some version of this feature be interesting and useful? If so,
+> > is the simple way good enough? It wouldn't preclude future addition of
+> > things like a sparse tar reader.
+>
+> Yes, I think it's useful to support a simple prototype-like format, but
+> it might take time on my own since there are some other ongoing stuffs
+> to be landed (like multi-threading mkfs support.)
+>
+> Thanks,
+> Gao Xiang
+>
+> >
+> > Regards,
+> > Mike
