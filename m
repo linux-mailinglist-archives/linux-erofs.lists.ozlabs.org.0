@@ -1,46 +1,65 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2575185C246
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 18:17:32 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Ng8PrqEn;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F137985C466
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 20:12:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1708456338;
+	bh=bU90kCEdhdXywfoVlc2lzAzGm8wFNOTBAuo+9ULMyJM=;
+	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=A+OwZbr1V3iK/mGfVlYY7bk5sUpZdV1rBcQI+srlqgyRJdzCIkbkxF+ef2NuMeI9O
+	 yaUwv0She1ExCVmhk/Uag/nlsn7SNl8FEOhWQncpdiPC9BsT235MA/AQIUiMAVnBiZ
+	 +m5g5vw3Zz0yeeV2CaN90fBP5307C/EtBpiKnwT+W8Img5mJ9iIi0+PAm+Nx4WdZ+N
+	 NHKJ+9z9m0km8Ou+SOFwxbOir+zSnnj5Cl5uvKDU5zpSyFZlMaBvlkEaJGMY8/QpBo
+	 nS70zeHt55tjF5EywZHNxlSEO78nh9b01+T7ILhpAApYoT69nv1T7THFW//wXNritD
+	 15LllzsiASfEA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TfR160Nyxz3cQm
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Feb 2024 04:17:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TfTYZ4cDNz3cCb
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Feb 2024 06:12:18 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Ng8PrqEn;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=rtSPVDZX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::b4a; helo=mail-yb1-xb4a.google.com; envelope-from=3hvnuzqckcwmgkdydohjrrjoh.frpolqx0-hurivolvwv.r2odev.ruj@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TfR0r0SRtz3bwk
-	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Feb 2024 04:17:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1708449430; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=ZKGBYNSlVWOFcP6uVOsrOw06vgiP6BoADw0BaNqVF6A=;
-	b=Ng8PrqEnq9VVZySJgupnAx/NW3pfPqbpAgdhosbvCag091gV+ZiMA+1AN4/KY6Rhx3Sx8WRPs5NvdeoLzX6BLUivkGKEkcxAmCDFt4BSX33N3Q1Q3cRd0krJ3JPk34VpMiAddEntgePuomnR+FuCRyg6/8DhlnMDQd723M+uG/s=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W0xCsPA_1708449427;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W0xCsPA_1708449427)
-          by smtp.aliyun-inc.com;
-          Wed, 21 Feb 2024 01:17:08 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/2] erofs-utils: support liblzma auto-detection
-Date: Wed, 21 Feb 2024 01:17:00 +0800
-Message-Id: <20240220171700.3693176-2-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240220171700.3693176-1-hsiangkao@linux.alibaba.com>
-References: <20240220171700.3693176-1-hsiangkao@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TfTYV1NQ9z3br5
+	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Feb 2024 06:12:12 +1100 (AEDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-dcbee93a3e1so6928707276.3
+        for <linux-erofs@lists.ozlabs.org>; Tue, 20 Feb 2024 11:12:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708456327; x=1709061127;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bU90kCEdhdXywfoVlc2lzAzGm8wFNOTBAuo+9ULMyJM=;
+        b=KJUviEifGHfF4WrTiMybMK4Sp+kUQo8MYLBuebZm/pDANA2UxY8cd0V2J0yY8ApJCh
+         1my/C+Ej+ikCkr9iJ5lSxxlRnXxUit+iC/BRSiCkwsfj7hKfDs+fW1SYXYyqZhrxXX3o
+         EFKnadV7l2WC0ZrTtzOe03nB88W6obP1J2eyXFev8b5MMMq/coJBU/RgI6rHYaAMEpA0
+         G7Xa52CzZ4V8i6/ZCQmIrpDTqqqKwv1VhExUF4oSJ37fo6p9mBS0LasbHEWiIO4AYUv8
+         x05ArpCDfJHtUm3VWOC821dS6sq3/5yWBNROOvJ8RzpfBHye7PTfPNicWjiE56vJHUCz
+         oXqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVcOqTe34kikvZsV/9c6XowmVJ2JuZgK+RrIAzTeugYQQqNtM72HSnYazLmLbnDyjRZe0ae7pYsXsjP6XogLoXp6XvZrWduhru8ojQc
+X-Gm-Message-State: AOJu0YwEX769mZEIS6AkMusswy9n+N4msa6YMYpYNjPUuZz/tJr6RSbQ
+	c2qTKxwApBX4j8pruYHvcM3pAMJOVXwfObTrO/0/Fqk3Ry6KBL4QFkTqCDsnsCZPzrCzz88yevy
+	/FDnATw==
+X-Google-Smtp-Source: AGHT+IFgWEyzh6gqAlMtSgK/wXXqU4pIoql4Z5IpkPLY2RoDnc1t6RBLCmFcVpYqnlcf+nvulgO8DKFOkeQR
+X-Received: from dhavale-desktop.mtv.corp.google.com ([2620:15c:211:201:e64d:5a86:7ce2:3f59])
+ (user=dhavale job=sendgmr) by 2002:a81:fe07:0:b0:608:22c7:1269 with SMTP id
+ j7-20020a81fe07000000b0060822c71269mr1506123ywn.0.1708456326859; Tue, 20 Feb
+ 2024 11:12:06 -0800 (PST)
+Date: Tue, 20 Feb 2024 11:11:13 -0800
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+Message-ID: <20240220191114.3272126-1-dhavale@google.com>
+Subject: [PATCH v1] erofs: fix refcount on the metabuf used for inode lookup
+To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -52,118 +71,45 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Sandeep Dhavale <dhavale@google.com>
+Cc: kernel-team@android.com, linux-kernel@vger.kernel.org, stable@vger.kernel.org, quic_wenjieli@quicinc.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The new XZ Utils 5.4 is now available in most Linux distributions.
+In erofs_find_target_block() when erofs_dirnamecmp() returns 0,
+we do not assign the target metabuf. This causes the caller
+erofs_namei()'s erofs_put_metabuf() at the end to be not effective
+leaving the refcount on the page.
+As the page from metabuf (buf->page) is never put, such page cannot be
+migrated or reclaimed. Fix it now by putting the metabuf from
+previous loop and assigning the current metabuf to target before
+returning so caller erofs_namei() can do the final put as it was
+intended.
 
-Let's enable liblzma auto-detection as well as get rid of MicroLZMA
-EXPERIMENTAL warning.
-
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Fixes: 500edd095648 ("erofs: use meta buffers for inode lookup")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sandeep Dhavale <dhavale@google.com>
 ---
- configure.ac             | 54 ++++++++++++++++++----------------------
- lib/compressor_liblzma.c |  3 +--
- 2 files changed, 25 insertions(+), 32 deletions(-)
+ fs/erofs/namei.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/configure.ac b/configure.ac
-index cd14beb..87c8492 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -119,8 +119,8 @@ AC_ARG_ENABLE(lz4,
-    [enable_lz4="$enableval"], [enable_lz4="yes"])
+diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
+index d4f631d39f0f..bfe1c926436b 100644
+--- a/fs/erofs/namei.c
++++ b/fs/erofs/namei.c
+@@ -132,7 +132,10 @@ static void *erofs_find_target_block(struct erofs_buf *target,
  
- AC_ARG_ENABLE(lzma,
--   [AS_HELP_STRING([--enable-lzma], [enable LZMA compression support @<:@default=no@:>@])],
--   [enable_lzma="$enableval"], [enable_lzma="no"])
-+   [AS_HELP_STRING([--disable-lzma], [disable LZMA compression support @<:@default=auto@:>@])],
-+   [enable_lzma="$enableval"])
- 
- AC_ARG_WITH(zlib,
-    [AS_HELP_STRING([--without-zlib],
-@@ -161,14 +161,6 @@ AC_ARG_WITH(lz4-libdir,
- AC_ARG_VAR([LZ4_CFLAGS], [C compiler flags for lz4])
- AC_ARG_VAR([LZ4_LIBS], [linker flags for lz4])
- 
--AC_ARG_WITH(liblzma-incdir,
--   [AS_HELP_STRING([--with-liblzma-incdir=DIR], [liblzma include directory])], [
--   EROFS_UTILS_PARSE_DIRECTORY(["$withval"],[withval])])
--
--AC_ARG_WITH(liblzma-libdir,
--   [AS_HELP_STRING([--with-liblzma-libdir=DIR], [liblzma lib directory])], [
--   EROFS_UTILS_PARSE_DIRECTORY(["$withval"],[withval])])
--
- # Checks for header files.
- AC_CHECK_HEADERS(m4_flatten([
- 	dirent.h
-@@ -400,30 +392,32 @@ if test "x$enable_lz4" = "xyes"; then
-   CPPFLAGS=${saved_CPPFLAGS}
- fi
- 
--if test "x$enable_lzma" = "xyes"; then
-+# Configure liblzma
-+have_liblzma="no"
-+AS_IF([test "x$enable_lzma" != "xno"], [
-   saved_CPPFLAGS=${CPPFLAGS}
--  test -z "${with_liblzma_incdir}" ||
--    CPPFLAGS="-I$with_liblzma_incdir $CPPFLAGS"
--  AC_CHECK_HEADERS([lzma.h],[have_lzmah="yes"], [])
--
--  if test "x${have_lzmah}" = "xyes" ; then
-+  PKG_CHECK_MODULES([liblzma], [liblzma], [
-+    # Paranoia: don't trust the result reported by pkgconfig before trying out
-     saved_LIBS="$LIBS"
--    saved_LDFLAGS="$LDFLAGS"
--
--    test -z "${with_liblzma_libdir}" ||
--      LDFLAGS="-L$with_liblzma_libdir ${LDFLAGS}"
--    AC_CHECK_LIB(lzma, lzma_microlzma_encoder, [],
--      [AC_MSG_ERROR([Cannot find proper liblzma])])
--
--    AC_CHECK_DECL(lzma_microlzma_encoder, [have_liblzma="yes"],
--      [AC_MSG_ERROR([Cannot find proper liblzma])], [[
-+    saved_CPPFLAGS=${CPPFLAGS}
-+    CPPFLAGS="${liblzma_CFLAGS} ${CPPFLAGS}"
-+    LIBS="${liblzma_LIBS} $LIBS"
-+    AC_CHECK_HEADERS([lzma.h],[
-+      AC_CHECK_LIB(lzma, lzma_microlzma_encoder, [],
-+        [AC_MSG_ERROR([Cannot find proper liblzma])])
-+
-+      AC_CHECK_DECL(lzma_microlzma_encoder, [have_liblzma="yes"],
-+        [AC_MSG_ERROR([Cannot find proper liblzma])], [[
- #include <lzma.h>
--    ]])
--    LDFLAGS="${saved_LDFLAGS}"
-+      ]])
-+    ])
-     LIBS="${saved_LIBS}"
--  fi
--  CPPFLAGS="${saved_CPPFLAGS}"
--fi
-+    CPPFLAGS="${saved_CPPFLAGS}" ], [
-+    AS_IF([test "x$enable_lzma" = "xyes"], [
-+      AC_MSG_ERROR([Cannot find proper liblzma])
-+    ])
-+  ])
-+])
- 
- # Configure zlib
- have_zlib="no"
-diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
-index 7183b0b..712f44f 100644
---- a/lib/compressor_liblzma.c
-+++ b/lib/compressor_liblzma.c
-@@ -103,8 +103,7 @@ static int erofs_compressor_liblzma_init(struct erofs_compress *c)
- 	ctx->opt.dict_size = c->dict_size;
- 
- 	c->private_data = ctx;
--	erofs_warn("EXPERIMENTAL MicroLZMA feature in use. Use at your own risk!");
--	erofs_warn("Note that it may take more time since the compressor is still single-threaded for now.");
-+	erofs_warn("It may take a longer time since MicroLZMA is still single-threaded for now.");
- 	return 0;
- }
- 
+ 			if (!diff) {
+ 				*_ndirents = 0;
+-				goto out;
++				if (!IS_ERR(candidate))
++					erofs_put_metabuf(target);
++				*target = buf;
++				return de;
+ 			} else if (diff > 0) {
+ 				head = mid + 1;
+ 				startprfx = matched;
 -- 
-2.39.3
+2.44.0.rc0.258.g7320e95886-goog
 
