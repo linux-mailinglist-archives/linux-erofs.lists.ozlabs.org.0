@@ -1,55 +1,44 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CCCE85B830
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 10:51:43 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BD0A85C243
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 18:17:30 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HdGmA/T8;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=P8YuOQmo;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TfF6h71s4z3bwj
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 20:51:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TfR1034HPz3cDg
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Feb 2024 04:17:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HdGmA/T8;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=P8YuOQmo;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TfF6c0B0Sz2yts
-	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Feb 2024 20:51:36 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id A7ED061134;
-	Tue, 20 Feb 2024 09:51:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C02F3C433F1;
-	Tue, 20 Feb 2024 09:51:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708422692;
-	bh=TPGKN24CaFtGRIE0VeP5mwAzn+ZOxDeAL3aTzRUirss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HdGmA/T8Yh36xJUAh9kQ4QRKg7xEAQSuwUEa0iQfBV+TmOCP9i2ysDi55lCEigAVt
-	 iMT8PDu6Rsb3s5qii2+KygzOb/oCQ9TYhW7beSNZoJsCyQepfzdtxrVNl6qdJpDfM9
-	 ENot3D+ATZi+xZnx9fTxI67SE5FeCahLHb/4spD+As4ZJA9cprBz+57uYMwVLGHLxo
-	 dUoQEOj3B16cNb7kuh8ze8i6nhjOtYUO6nOlEpyjUfRbKUX24e7uigjhU/IF3uPzzV
-	 3e6/jprnSqfIlqBk7V1r9K0s6hbEbuvieS7jIy8VvBS7T/S/8Pa9u5ZtLGfGibQ3us
-	 f9XfJxph4bz1g==
-Date: Tue, 20 Feb 2024 10:51:26 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH 2/2] netfs: Fix missing zero-length check in unbuffered
- write
-Message-ID: <20240220-autoteile-enthoben-a9a16739b2b9@brauner>
-References: <20240129094924.1221977-1-dhowells@redhat.com>
- <20240129094924.1221977-3-dhowells@redhat.com>
- <960e015a-ec2e-42c2-bd9e-4aa47ab4ef2a@leemhuis.info>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TfR0r1Sc5z3brm
+	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Feb 2024 04:17:13 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708449429; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=zttsjv5i+qmayLOhfjU8SpN8ITzH3IOA9lmZxe5WOOg=;
+	b=P8YuOQmowK5FhiGuZLVaHTTvDdU7rR4/68pc5rNkC0kQrE1TYCvGoNl0HPCpcuWv2+MgHTsJQcStURuoWPsP3sPYIJ0IU3hPhplsgUC5bufTTn+gXHwJOqug4utSuVtZcVi5ZxoD/+66+zwOkFydw/E0RVmpRPiU7/Q0JplJfCc=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W0xCsNI_1708449421;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W0xCsNI_1708449421)
+          by smtp.aliyun-inc.com;
+          Wed, 21 Feb 2024 01:17:07 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/2] erofs-utils: support zlib auto-detection
+Date: Wed, 21 Feb 2024 01:16:59 +0800
+Message-Id: <20240220171700.3693176-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <960e015a-ec2e-42c2-bd9e-4aa47ab4ef2a@leemhuis.info>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,41 +50,72 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, Dominique Martinet <asmadeus@codewreck.org>, linux_oss@crudebyte.com, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Christian Brauner <christian@brauner.io>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Feb 19, 2024 at 09:38:33AM +0100, Linux regression tracking (Thorsten Leemhuis) wrote:
-> On 29.01.24 10:49, David Howells wrote:
-> > Fix netfs_unbuffered_write_iter() to return immediately if
-> > generic_write_checks() returns 0, indicating there's nothing to write.
-> > Note that netfs_file_write_iter() already does this.
-> > 
-> > Also, whilst we're at it, put in checks for the size being zero before we
-> > even take the locks.  Note that generic_write_checks() can still reduce the
-> > size to zero, so we still need that check.
-> > 
-> > Without this, a warning similar to the following is logged to dmesg:
-> > 
-> > 	netfs: Zero-sized write [R=1b6da]
-> > 
-> > and the syscall fails with EIO, e.g.:
-> > 
-> > 	/sbin/ldconfig.real: Writing of cache extension data failed: Input/output error
-> > 
-> > This can be reproduced on 9p by:
-> > 
-> > 	xfs_io -f -c 'pwrite 0 0' /xfstest.test/foo
-> > 
-> > Fixes: 153a9961b551 ("netfs: Implement unbuffered/DIO write support")
-> > Reported-by: Eric Van Hensbergen <ericvh@kernel.org>
-> > Link: https://lore.kernel.org/r/ZbQUU6QKmIftKsmo@FV7GG9FTHL/
-> 
-> David, thx for fixing Eric's regression, which I'm tracking.
-> 
-> Christian, just wondering: that patch afaics is sitting in vfs.netfs for
-> about three weeks now -- is that intentional or did it maybe fell
-> through the cracks somehow?
+Fix explicit `--with-zlib` so that it errors out when zlib
+is unavailable.
 
-I've moved it to vfs.fixes now and will send later this week. Thanks for
-the reminder!
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ configure.ac | 35 +++++++++++++++++++++++------------
+ 1 file changed, 23 insertions(+), 12 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index bf6e99f..cd14beb 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -124,7 +124,7 @@ AC_ARG_ENABLE(lzma,
+ 
+ AC_ARG_WITH(zlib,
+    [AS_HELP_STRING([--without-zlib],
+-      [Ignore presence of zlib inflate support @<:@default=enabled@:>@])])
++      [Ignore presence of zlib inflate support @<:@default=auto@:>@])])
+ 
+ AC_ARG_WITH(libdeflate,
+    [AS_HELP_STRING([--with-libdeflate],
+@@ -426,18 +426,29 @@ if test "x$enable_lzma" = "xyes"; then
+ fi
+ 
+ # Configure zlib
++have_zlib="no"
+ AS_IF([test "x$with_zlib" != "xno"], [
+-  PKG_CHECK_MODULES([zlib], [zlib])
+-  # Paranoia: don't trust the result reported by pkgconfig before trying out
+-  saved_LIBS="$LIBS"
+-  saved_CPPFLAGS=${CPPFLAGS}
+-  CPPFLAGS="${zlib_CFLAGS} ${CPPFLAGS}"
+-  LIBS="${zlib_LIBS} $LIBS"
+-  AC_CHECK_LIB(z, inflate, [
+-    have_zlib="yes" ], [
+-    AC_MSG_ERROR([zlib doesn't work properly])])
+-  LIBS="${saved_LIBS}"
+-  CPPFLAGS="${saved_CPPFLAGS}"], [have_zlib="no"])
++  PKG_CHECK_MODULES([zlib], [zlib], [
++    # Paranoia: don't trust the result reported by pkgconfig before trying out
++    saved_LIBS="$LIBS"
++    saved_CPPFLAGS=${CPPFLAGS}
++    CPPFLAGS="${zlib_CFLAGS} ${CPPFLAGS}"
++    LIBS="${zlib_LIBS} $LIBS"
++    AC_CHECK_HEADERS([zlib.h],[
++      AC_CHECK_LIB(z, inflate, [], [
++        AC_MSG_ERROR([zlib doesn't work properly])])
++      AC_CHECK_DECL(inflate, [have_zlib="yes"],
++        [AC_MSG_ERROR([zlib doesn't work properly])], [[
++#include <zlib.h>
++      ]])
++    ])
++    LIBS="${saved_LIBS}"
++    CPPFLAGS="${saved_CPPFLAGS}"], [
++    AS_IF([test "x$with_zlib" = "xyes"], [
++      AC_MSG_ERROR([Cannot find proper zlib])
++    ])
++  ])
++])
+ 
+ # Configure libdeflate
+ AS_IF([test "x$with_libdeflate" != "xno"], [
+-- 
+2.39.3
+
