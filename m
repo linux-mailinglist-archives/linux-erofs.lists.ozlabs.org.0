@@ -1,103 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4450885B1EF
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 05:27:01 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 247E185B325
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 07:50:59 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=EFO2bKQ0;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tf5w31dw1z3bwj
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 15:26:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tf9681qNtz3cZL
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Feb 2024 17:50:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=techxpo.org (client-ip=2a01:111:f403:2020::701; helo=ind01-max-obe.outbound.protection.outlook.com; envelope-from=iris.marsh@techxpo.org; receiver=lists.ozlabs.org)
-Received: from IND01-MAX-obe.outbound.protection.outlook.com (mail-maxind01on20701.outbound.protection.outlook.com [IPv6:2a01:111:f403:2020::701])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=EFO2bKQ0;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tf5vy1LbPz3br5
-	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Feb 2024 15:26:52 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QY0JuHyGakyZXAQ/4kObij0LZty7YNFxg+D1WSqxQrQp3KlcFhKLOjzRdNOHc5o+LZVvgArsdI+KbtiqzAHGoSJniAi5XQKoqLLvSpNbVGmxGES0OU0DDIazCu2w6p2JkQiIoBMtzSV+q+nXCOKyN5ZDdUON69lgyLavU73B4z6sZAHu9nzNAtqd23+At4tl8uyrQbSvshSuR2l+TlVkmod8AO7fcWHp6QvCfuXzPd9Eo3r5IVLGmZJhcmqSEZCMuvueBLucakdqc+0BVO3eLSKaHCpyLi7t3U/e1e1CV+zgQW1z8OFM3K1/xiUlhLZw96x18CO5Mx3roNQU2GqGtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A7uTXtGkNd8AKUH+bOrhfTSX5UF/hUJOo6A+UtJ88lY=;
- b=cScxUerXOZEEWXckEJ0S8BLPcIlPEt69SU/gt+MZl3qao2ePrMj4aNowHk04FHTTs/99lxoYO2Ph/519hsOOUADMFs6kc+yMJ+BmK1cVNc/nWg6ZrHEY8UxrzSvBDREiYwr+Vlqm1788kMNzpdhmaSQWJWeMOZE14ATy6o8X8dm+h8F5KwuAg7x19X3G/V63LXby0/Oma9H3psmClF5AL/heUXF1vTfujTKnBzWHhRKgOAVqi4MkhnzSxTI0kA1AS5OYQC2ZX0qdbOrmrQGxq1o3KouXiORP3l0Wb2fb1ZPyy7XH/gpN8tJHqm+4RZr+u7awsgZNeONxAKIM0sXGmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=techxpo.org; dmarc=pass action=none header.from=techxpo.org;
- dkim=pass header.d=techxpo.org; arc=none
-Received: from PN0P287MB0277.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:e4::14)
- by MA0P287MB3136.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:141::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.20; Tue, 20 Feb
- 2024 04:26:30 +0000
-Received: from PN0P287MB0277.INDP287.PROD.OUTLOOK.COM
- ([fe80::e4bd:b603:bb78:87a0]) by PN0P287MB0277.INDP287.PROD.OUTLOOK.COM
- ([fe80::e4bd:b603:bb78:87a0%3]) with mapi id 15.20.7316.018; Tue, 20 Feb 2024
- 04:26:30 +0000
-From: Iris Marsh <iris.marsh@techxpo.org>
-To: Sign And Digital UK 2024 <linux-erofs@lists.ozlabs.org>
-Subject: Lists - Sign And Digital UK 2024
-Thread-Topic: Lists - Sign And Digital UK 2024
-Thread-Index: AdpjtOvwd9wsk6W6SUeu4SYfm248wQ==
-Date: Tue, 20 Feb 2024 04:26:30 +0000
-Message-ID:  <PN0P287MB0277F88A7D45C69738DFAC0D99502@PN0P287MB0277.INDP287.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=techxpo.org;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PN0P287MB0277:EE_|MA0P287MB3136:EE_
-x-ms-office365-filtering-correlation-id: 79a6626c-26d8-4969-c75b-08dc31cc1cf6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:  VCvGzreBO7Ej+rskw824lsPwTRY4hlyMTPRBDLiRrVEgvkBey9FFBJN39Q2vUyE4AGZbNCVst1/Xo4o+DgcvjdoobzhVMIZXRIkuic0GMzo7/baeat2NdRMQXg3MdzQ1PDRwxki7qg9chL/HcrWEPuib+RtBdq4ZH8IpV6e5gmAxogX8K/p0P4DGGXpIg/7AUZnboF1Y+stvUw8xjg39FsNilQax4iSCzJgujKuDzUw+oM+987RTKICghtC4UQpHrMfnfnLJf2R+FNB0elkI51BaNW/ELVhbzQ6JyICuBkN87bwu83Vaf/L1TpoLmJXgjKi6uAmiDxtjowWTPi2sd6p4Y+tTvmN/wFk9YkTyHAHfXcsI74GsqbhrNlmTVrWbCw4OhRO9//NaydsIqxJImenkgJOvwJqCPWre0WjAn4smwW1KRPHUs1cCbDHvvCNXFRqCTCC39GZiGksjgwKqh2JQnbi8VkE87nGcaa1nSlN8Cztt5nwYCj0GsMFgXKmZW4gKbY1XkjAtHhcbijYh2PgVBBOiN1tG2+ChGWmXEip9ED5XOHw+74Gorxr7V8MAq32SdiyogSkIXh+fkK0T5WzgVjIJTT9XtXIUWI46PCCj4r5RqJyMsWWEVw0kZEWw
-x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN0P287MB0277.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?Zh8wbmnTViGVl75PR6/uCT+aLaXd9NyEe58sThkYRpbBPY9IsZIlA7U/mgpp?=
- =?us-ascii?Q?ocsKqko/1YJll6k5BrOm6fqntLK/FkrUVy4VV8wh067SMxupbgxVKIzaxyvB?=
- =?us-ascii?Q?kFPtgkT/yYVoPJbd2ABc262ikBIawFJ5AAQhqpTnQbp2zB2PRHVgBNdi+5vo?=
- =?us-ascii?Q?pAoAO4bDHt9+xgUEDgU/g45ADn5t68dPMW4WOsE4UMTr3FHTRd9K4gUKDr2b?=
- =?us-ascii?Q?zSyW/SP8B3rqrSByq7DATV42dzliu4VYgatKKKqQfLkLmHhu5SoFyXVRRYit?=
- =?us-ascii?Q?XwACXRnTJBDWT3Baydb7en1WBXUykfCaBVKmDmUgcbLGfMtjJ60J1kg9rVtw?=
- =?us-ascii?Q?ItKEZK3NpZ91pC17kWTDYX3VfdCCPKphMD4tzPLc20J7W009t6L8AXQsxGtK?=
- =?us-ascii?Q?mppf5eSfkCFQhVcAPM1YyjqoHHjzbWD4yxrtbh6JOsHSEw8Am4f8KgXESZ27?=
- =?us-ascii?Q?CiPUab/EbC1vFxkUVD57eY94zC6Rm0Kcb/ra4gbA0kQgY+u1gicxwHJcJFYo?=
- =?us-ascii?Q?UlTBQBX3oQ9H1+RLylpDDuHrk6lyk+Y7kOCTrAet0moUCsuIfan206ihMn4l?=
- =?us-ascii?Q?cJdSnvTo90SBhE8i7CBCK1PCqt4B72LOHvclqrDD2AwvcqjJ+Tdi6MjoV2qS?=
- =?us-ascii?Q?quGKunhcZkJUhVQZC13EFogHFHBUM30WfVBxY5yujk76B2Cbgr86yjcJEXGR?=
- =?us-ascii?Q?hnwxphEvBVkH0BiQcUNncP2WM+WHCVOuAU9x4ca/6xdZTvxHg2WdUS9kkv0a?=
- =?us-ascii?Q?nRD6fXfQQKomudWydXZv3hYrvA6UzC8hZjTRvx6NmbaIuFt0dEp8cXSRJJpU?=
- =?us-ascii?Q?cncJCP5Fw4kPBlboEiUuJ58ydRXRj2f8SwkksBjTtZ2Vn3WVdOHtfR/KKDxJ?=
- =?us-ascii?Q?UOcfo6Z2Lx4XSLxS7+vhtfM3upqV5v1p8TJ1O+J9ArbpXt3G6iMmPQ2oud7+?=
- =?us-ascii?Q?YjXPcnLAW1miUGzz/l2l7FpB+3XORD0w3OyGBZesWRVUBETie39oGIUyspIW?=
- =?us-ascii?Q?mIylDoiIQpsp5QfXZspufdgL9bf+JsN/pma10VCdv56WeejXKTk+toE8tAed?=
- =?us-ascii?Q?oBaGOpYQlv1VjhceEb1reIDWvXEMceg2RgcVycXkkep3gK4FSUO03VYjOK6x?=
- =?us-ascii?Q?QGC6FcnRALv7Yky5tMEMoruxFRG57BQ4XdIL9M+rs8WVd57zlsHmGBtqNOtt?=
- =?us-ascii?Q?rZm993SaqtZJnf+NmhEuVw9BcKe8FHBfN+KJ3snwubb6z72YuN4+iqkoy8lt?=
- =?us-ascii?Q?oovPud9Owr1HCwLnzBciXqJQkTzm4AMMQXa0K9gwXM2Qv2CiwIQy1dBqv4Gl?=
- =?us-ascii?Q?qTr3tkYo82IqK5OVnLQoJ6t7DS1TBBT8K6Oa49PgjW9tLR166ebjFaSuCR1f?=
- =?us-ascii?Q?nWKS6Ci3mZhP7KEMeQ7W/O8Xmj68qEihZsTNQdlDQoo6sx1h6Ahlt57gbxBv?=
- =?us-ascii?Q?kp9zdS8wHKxHvCA8Z6pDFehxi6XFackWWmIm6mnuTyKqXbHwczCWmYX6DSXL?=
- =?us-ascii?Q?Jnu8m2s5eGh1ep5KeVi6S2ykqyRXnjtpPa6z7LK74Q56W30ZHGxQUvptK/my?=
- =?us-ascii?Q?ax73WeZ6tCwN56mJ4+0QTmSgh7BMyz5iIXfDYYJVW7LuyonHmO2pykKEGAdg?=
- =?us-ascii?Q?kuNweOY1yTKukI7cVkIm66ovbLom+quXx+GNWjPzhRH0?=
-Content-Type: multipart/alternative;
-	boundary="_000_PN0P287MB0277F88A7D45C69738DFAC0D99502PN0P287MB0277INDP_"
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tf9606FR3z3cRB
+	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Feb 2024 17:50:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708411841; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Uu0JTbgDX+n2b6LlHjSeEKtpxD/BK+hGbl1jP9112HA=;
+	b=EFO2bKQ0duMiLL4ZRD7cDvHvHiG170bF3c72NHbPDiOD1IOt0v9J59KC8FTTcKZAP2hAnnMCIx3bc3c8sZ7dC/y8GaHcXFGN6buTrxsfRgslyBaOFBfBiSxMrqJC7kZd7wQNvmOR1iRpV6jhMSYoczKrkhtyY8Hj5sCUqKCh4UU=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W0vebgx_1708411838;
+Received: from 30.97.48.246(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W0vebgx_1708411838)
+          by smtp.aliyun-inc.com;
+          Tue, 20 Feb 2024 14:50:39 +0800
+Message-ID: <0b1a06a7-0caf-43a3-bd51-64a57565390e@linux.alibaba.com>
+Date: Tue, 20 Feb 2024 14:50:37 +0800
 MIME-Version: 1.0
-X-OriginatorOrg: techxpo.org
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PN0P287MB0277.INDP287.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79a6626c-26d8-4969-c75b-08dc31cc1cf6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2024 04:26:30.8216
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a84bdd94-8413-4b78-a8ff-80787d12c851
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TemsNPUc3/aasa0VOYf7B8y/s64DSuXp20uETRz9qaIbZd5ZSGSZjPAYkP+h3pF5O15pC5Gpdgfy/uxeng9TMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB3136
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [erofs?] KMSAN: uninit-value in z_erofs_lz4_decompress
+ (3)
+To: syzbot <syzbot+88ad8b0517a9d3bb9dc8@syzkaller.appspotmail.com>,
+ chao@kernel.org, huyue2@coolpad.com, jefflexu@linux.alibaba.com,
+ linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+ xiang@kernel.org
+References: <00000000000090ebb6061054e22e@google.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <00000000000090ebb6061054e22e@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -112,132 +61,308 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---_000_PN0P287MB0277F88A7D45C69738DFAC0D99502PN0P287MB0277INDP_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+#syz test git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-Hi there,
-
-We are pleased to inform you that Sign And Digital UK 2024 list is availabl=
-e for you to obatain at unlimited usage.
-
-If I can be of any further assistance, please, let me know. So, that I will=
- get back to you with the price and other details ASAP.
-
-Awaiting your response.
-
-Many thanks,
-
-Iris Marsh- Demand Generation
-
-
---_000_PN0P287MB0277F88A7D45C69738DFAC0D99502PN0P287MB0277INDP_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
-<style><!--
-/* Font Definitions */
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin-top:0cm;
-	margin-right:0cm;
-	margin-bottom:8.0pt;
-	margin-left:0cm;
-	line-height:106%;
-	font-size:11.0pt;
-	font-family:"Calibri",sans-serif;
-	mso-fareast-language:EN-US;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:"Calibri",sans-serif;
-	color:windowtext;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	mso-fareast-language:EN-US;}
-@page WordSection1
-	{size:612.0pt 792.0pt;
-	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
-div.WordSection1
-	{page:WordSection1;}
---></style><!--[if gte mso 9]><xml>
-<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
-<o:shapelayout v:ext=3D"edit">
-<o:idmap v:ext=3D"edit" data=3D"1" />
-</o:shapelayout></xml><![endif]-->
-</head>
-<body lang=3D"EN-IN" link=3D"#0563C1" vlink=3D"#954F72" style=3D"word-wrap:=
-break-word">
-<div class=3D"WordSection1">
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><a na=
-me=3D"_Hlk158255319"><span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-fa=
-mily:&quot;Times New Roman&quot;,serif;color:#1F497D">Hi there,<o:p></o:p><=
-/span></a></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><span=
- style=3D"mso-bookmark:_Hlk158255319"><span lang=3D"EN-GB" style=3D"font-si=
-ze:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"><o:p=
->&nbsp;</o:p></span></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><span=
- style=3D"mso-bookmark:_Hlk158255319"><span lang=3D"EN-GB" style=3D"font-si=
-ze:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D">We a=
-re pleased to inform you that
-<b>Sign And Digital UK 2024</b> list is available for you to obatain at unl=
-imited usage.<o:p></o:p></span></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><span=
- style=3D"mso-bookmark:_Hlk158255319"><span lang=3D"EN-GB" style=3D"font-si=
-ze:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"><o:p=
->&nbsp;</o:p></span></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><span=
- style=3D"mso-bookmark:_Hlk158255319"><span lang=3D"EN-GB" style=3D"font-si=
-ze:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D">If I=
- can be of any further assistance, please, let me know.
- So, that I will get back to you with the price and other details ASAP.<o:p=
-></o:p></span></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><span=
- style=3D"mso-bookmark:_Hlk158255319"><span lang=3D"EN-GB" style=3D"font-si=
-ze:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"><o:p=
->&nbsp;</o:p></span></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><span=
- style=3D"mso-bookmark:_Hlk158255319"><span lang=3D"EN-GB" style=3D"font-si=
-ze:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D">Awai=
-ting your response.<o:p></o:p></span></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><span=
- style=3D"mso-bookmark:_Hlk158255319"><span lang=3D"EN-GB" style=3D"font-si=
-ze:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"><o:p=
->&nbsp;</o:p></span></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><span=
- style=3D"mso-bookmark:_Hlk158255319"><span lang=3D"EN-GB" style=3D"font-si=
-ze:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D">Many=
- thanks,<o:p></o:p></span></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><span=
- style=3D"mso-bookmark:_Hlk158255319"><span lang=3D"EN-GB" style=3D"font-si=
-ze:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F497D"><o:p=
->&nbsp;</o:p></span></span></p>
-<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;line-height:normal"><span=
- style=3D"mso-bookmark:_Hlk158255319"><span style=3D"font-size:12.0pt;font-=
-family:&quot;Times New Roman&quot;,serif;color:#1F497D">Iris Marsh-
-</span></span><span style=3D"mso-bookmark:_Hlk158255319"><span lang=3D"EN-G=
-B" style=3D"font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;=
-color:#1F497D">Demand Generation</span></span><span lang=3D"EN-GB" style=3D=
-"font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:#1F49=
-7D"><o:p></o:p></span></p>
-<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
-</div>
-</body>
-</html>
-
---_000_PN0P287MB0277F88A7D45C69738DFAC0D99502PN0P287MB0277INDP_--
+On 2024/2/2 00:57, syzbot wrote:
+> Hello,
+> 
+> syzbot tried to test the proposed patch but the build/boot failed:
+> 
+> [    T1] NFS: Registering the id_resolver key type
+> [   20.847533][    T1] Key type id_resolver registered
+> [   20.852991][    T1] Key type id_legacy registered
+> [   20.859477][    T1] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+> [   20.868251][    T1] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
+> [   20.901326][    T1] Key type cifs.spnego registered
+> [   20.907727][    T1] Key type cifs.idmap registered
+> [   20.917413][    T1] ntfs: driver 2.1.32 [Flags: R/W].
+> [   20.923298][    T1] ntfs3: Max link count 4000
+> [   20.928297][    T1] ntfs3: Enabled Linux POSIX ACLs support
+> [   20.934148][    T1] ntfs3: Read-only LZX/Xpress compression included
+> [   20.941172][    T1] efs: 1.0a - http://aeschi.ch.eu.org/efs/
+> [   20.947393][    T1] romfs: ROMFS MTD (C) 2007 Red Hat, Inc.
+> [   20.953397][    T1] QNX4 filesystem 0.2.3 registered.
+> [   20.958982][    T1] qnx6: QNX6 filesystem 1.0.0 registered.
+> [   20.965985][    T1] fuse: init (API version 7.39)
+> [   20.976858][    T1] orangefs_debugfs_init: called with debug mask: :none: :0:
+> [   20.985505][    T1] orangefs_init: module version upstream loaded
+> [   20.993572][    T1] JFS: nTxBlock = 8192, nTxLock = 65536
+> [   21.034087][    T1] SGI XFS with ACLs, security attributes, realtime, quota, no debug enabled
+> [   21.051635][    T1] 9p: Installing v9fs 9p2000 file system support
+> [   21.058997][    T1] NILFS version 2 loaded
+> [   21.063484][    T1] befs: version: 0.9.3
+> [   21.068879][    T1] ocfs2: Registered cluster interface o2cb
+> [   21.075961][    T1] ocfs2: Registered cluster interface user
+> [   21.083257][    T1] OCFS2 User DLM kernel interface loaded
+> [   21.102750][    T1] gfs2: GFS2 installed
+> [   21.142225][    T1] ceph: loaded (mds proto 32)
+> [   25.265679][    T1] NET: Registered PF_ALG protocol family
+> [   25.271965][    T1] xor: automatically using best checksumming function   avx
+> [   25.280055][    T1] async_tx: api initialized (async)
+> [   25.285498][    T1] Key type asymmetric registered
+> [   25.290927][    T1] Asymmetric key parser 'x509' registered
+> [   25.296825][    T1] Asymmetric key parser 'pkcs8' registered
+> [   25.302732][    T1] Key type pkcs7_test registered
+> [   25.308482][    T1] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 240)
+> [   25.318600][    T1] io scheduler mq-deadline registered
+> [   25.324054][    T1] io scheduler kyber registered
+> [   25.331126][    T1] io scheduler bfq registered
+> [   25.347558][    T1] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+> [   25.363347][  T136] kworker/u4:0 (136) used greatest stack depth: 11000 bytes left
+> [   25.374100][    T1] ACPI: button: Power Button [PWRF]
+> [   25.381760][    T1] input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
+> [   25.392277][    T1] ACPI: button: Sleep Button [SLPF]
+> [   25.414526][    T1] ioatdma: Intel(R) QuickData Technology Driver 5.00
+> [   25.499231][    T1] ACPI: \_SB_.LNKC: Enabled at IRQ 11
+> [   25.505226][    T1] virtio-pci 0000:00:03.0: virtio_pci: leaving for legacy driver
+> [   25.579195][    T1] ACPI: \_SB_.LNKD: Enabled at IRQ 10
+> [   25.585070][    T1] virtio-pci 0000:00:04.0: virtio_pci: leaving for legacy driver
+> [   25.662347][    T1] ACPI: \_SB_.LNKB: Enabled at IRQ 10
+> [   25.668284][    T1] virtio-pci 0000:00:06.0: virtio_pci: leaving for legacy driver
+> [   25.725221][    T1] virtio-pci 0000:00:07.0: virtio_pci: leaving for legacy driver
+> [   26.750369][    T1] N_HDLC line discipline registered with maxframe=4096
+> [   26.758188][    T1] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+> [   26.770021][    T1] 00:03: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+> [   26.799322][    T1] 00:04: ttyS1 at I/O 0x2f8 (irq = 3, base_baud = 115200) is a 16550A
+> [   26.828884][    T1] 00:05: ttyS2 at I/O 0x3e8 (irq = 6, base_baud = 115200) is a 16550A
+> [   26.856640][    T1] 00:06: ttyS3 at I/O 0x2e8 (irq = 7, base_baud = 115200) is a 16550A
+> [   26.903869][    T1] Non-volatile memory driver v1.3
+> [   26.925949][    T1] Linux agpgart interface v0.103
+> [   26.944845][    T1] ACPI: bus type drm_connector registered
+> [   26.963460][    T1] [drm] Initialized vgem 1.0.0 20120112 for vgem on minor 0
+> [   26.985308][    T1] [drm] Initialized vkms 1.0.0 20180514 for vkms on minor 1
+> [   27.457414][    T1] Console: switching to colour frame buffer device 128x48
+> [   27.612960][    T1] platform vkms: [drm] fb0: vkmsdrmfb frame buffer device
+> [   27.621207][    T1] usbcore: registered new interface driver udl
+> [   27.785853][    T1] brd: module loaded
+> [   27.962515][    T1] loop: module loaded
+> [   28.204419][    T1] zram: Added device: zram0
+> [   28.227930][    T1] null_blk: disk nullb0 created
+> [   28.232984][    T1] null_blk: module loaded
+> [   28.238841][    T1] Guest personality initialized and is inactive
+> [   28.247691][    T1] VMCI host device registered (name=vmci, major=10, minor=118)
+> [   28.255558][    T1] Initialized host personality
+> [   28.261000][    T1] usbcore: registered new interface driver rtsx_usb
+> [   28.269847][    T1] usbcore: registered new interface driver viperboard
+> [   28.277538][    T1] usbcore: registered new interface driver dln2
+> [   28.284724][    T1] usbcore: registered new interface driver pn533_usb
+> [   28.297696][    T1] nfcsim 0.2 initialized
+> [   28.302508][    T1] usbcore: registered new interface driver port100
+> [   28.309540][    T1] usbcore: registered new interface driver nfcmrvl
+> [   28.325751][    T1] Loading iSCSI transport class v2.0-870.
+> [   28.358008][    T1] virtio_scsi virtio0: 1/0/0 default/read/poll queues
+> [   28.395519][    T1] scsi host0: Virtio SCSI HBA
+> [   28.917048][    T1] st: Version 20160209, fixed bufsize 32768, s/g segs 256
+> [   28.933542][   T11] scsi 0:0:1:0: Direct-Access     Google   PersistentDisk   1    PQ: 0 ANSI: 6
+> [   28.978523][    T1] Rounding down aligned max_sectors from 4294967295 to 4294967288
+> [   28.988652][    T1] db_root: cannot open: /etc/target
+> [   29.035870][    T1] =====================================================
+> [   29.036118][    T1] BUG: KMSAN: use-after-free in __list_del_entry_valid_or_report+0x19e/0x490
+> [   29.036138][    T1]  __list_del_entry_valid_or_report+0x19e/0x490
+> [   29.036138][    T1]  stack_depot_save_flags+0x3e7/0x7b0
+> [   29.036138][    T1]  stack_depot_save+0x12/0x20
+> [   29.036138][    T1]  ref_tracker_alloc+0x215/0x700
+> [   29.036138][    T1]  netdev_hold+0xe2/0x120
+> [   29.036138][    T1]  register_netdevice+0x1bc7/0x2170
+> [   29.036138][    T1]  bond_create+0x138/0x2a0
+> [   29.036138][    T1]  bonding_init+0x1a7/0x2d0
+> [   29.036138][    T1]  do_one_initcall+0x216/0x960
+> [   29.036138][    T1]  do_initcall_level+0x140/0x350
+> [   29.036138][    T1]  do_initcalls+0xf0/0x1d0
+> [   29.036138][    T1]  do_basic_setup+0x22/0x30
+> [   29.036138][    T1]  kernel_init_freeable+0x300/0x4b0
+> [   29.036138][    T1]  kernel_init+0x2f/0x7e0
+> [   29.036138][    T1]  ret_from_fork+0x66/0x80
+> [   29.036138][    T1]  ret_from_fork_asm+0x11/0x20
+> [   29.036138][    T1]
+> [   29.036138][    T1] Uninit was created at:
+> [   29.036138][    T1]  free_unref_page_prepare+0xc1/0xad0
+> [   29.036138][    T1]  free_unref_page+0x58/0x6d0
+> [   29.036138][    T1]  __free_pages+0xb1/0x1f0
+> [   29.036138][    T1]  thread_stack_free_rcu+0x97/0xb0
+> [   29.036138][    T1]  rcu_core+0xa3c/0x1df0
+> [   29.036138][    T1]  rcu_core_si+0x12/0x20
+> [   29.036138][    T1]  __do_softirq+0x1b7/0x7c3
+> [   29.036138][    T1]
+> [   29.036138][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc2-syzkaller-g6764c317b6bb #0
+> [   29.036138][    T1] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+> [   29.036138][    T1] =====================================================
+> [   29.036138][    T1] Disabling lock debugging due to kernel taint
+> [   29.036138][    T1] Kernel panic - not syncing: kmsan.panic set ...
+> [   29.036138][    T1] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B              6.8.0-rc2-syzkaller-g6764c317b6bb #0
+> [   29.036138][    T1] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/25/2024
+> [   29.036138][    T1] Call Trace:
+> [   29.036138][    T1]  <TASK>
+> [   29.036138][    T1]  dump_stack_lvl+0x1bf/0x240
+> [   29.036138][    T1]  dump_stack+0x1e/0x20
+> [   29.036138][    T1]  panic+0x4de/0xc90
+> [   29.036138][    T1]  kmsan_report+0x2d0/0x2d0
+> [   29.036138][    T1]  ? cleanup_uevent_env+0x30/0x50
+> [   29.036138][    T1]  ? netdev_queue_update_kobjects+0x3f5/0x870
+> [   29.036138][    T1]  ? netdev_register_kobject+0x41e/0x520
+> [   29.036138][    T1]  ? register_netdevice+0x198f/0x2170
+> [   29.036138][    T1]  ? __msan_warning+0x96/0x110
+> [   29.036138][    T1]  ? __list_del_entry_valid_or_report+0x19e/0x490
+> [   29.036138][    T1]  ? stack_depot_save_flags+0x3e7/0x7b0
+> [   29.036138][    T1]  ? stack_depot_save+0x12/0x20
+> [   29.036138][    T1]  ? ref_tracker_alloc+0x215/0x700
+> [   29.036138][    T1]  ? netdev_hold+0xe2/0x120
+> [   29.036138][    T1]  ? register_netdevice+0x1bc7/0x2170
+> [   29.036138][    T1]  ? bond_create+0x138/0x2a0
+> [   29.036138][    T1]  ? bonding_init+0x1a7/0x2d0
+> [   29.036138][    T1]  ? do_one_initcall+0x216/0x960
+> [   29.036138][    T1]  ? do_initcall_level+0x140/0x350
+> [   29.036138][    T1]  ? do_initcalls+0xf0/0x1d0
+> [   29.036138][    T1]  ? do_basic_setup+0x22/0x30
+> [   29.036138][    T1]  ? kernel_init_freeable+0x300/0x4b0
+> [   29.036138][    T1]  ? kernel_init+0x2f/0x7e0
+> [   29.036138][    T1]  ? ret_from_fork+0x66/0x80
+> [   29.036138][    T1]  ? ret_from_fork_asm+0x11/0x20
+> [   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
+> [   29.036138][    T1]  ? filter_irq_stacks+0x60/0x1a0
+> [   29.036138][    T1]  ? stack_depot_save_flags+0x2c/0x7b0
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
+> [   29.036138][    T1]  __msan_warning+0x96/0x110
+> [   29.036138][    T1]  __list_del_entry_valid_or_report+0x19e/0x490
+> [   29.036138][    T1]  stack_depot_save_flags+0x3e7/0x7b0
+> [   29.036138][    T1]  stack_depot_save+0x12/0x20
+> [   29.036138][    T1]  ref_tracker_alloc+0x215/0x700
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? netdev_hold+0xe2/0x120
+> [   29.036138][    T1]  ? register_netdevice+0x1bc7/0x2170
+> [   29.036138][    T1]  ? bond_create+0x138/0x2a0
+> [   29.036138][    T1]  ? bonding_init+0x1a7/0x2d0
+> [   29.036138][    T1]  ? do_one_initcall+0x216/0x960
+> [   29.036138][    T1]  ? do_initcall_level+0x140/0x350
+> [   29.036138][    T1]  ? do_initcalls+0xf0/0x1d0
+> [   29.036138][    T1]  ? do_basic_setup+0x22/0x30
+> [   29.036138][    T1]  ? kernel_init_freeable+0x300/0x4b0
+> [   29.036138][    T1]  ? kernel_init+0x2f/0x7e0
+> [   29.036138][    T1]  ? ret_from_fork+0x66/0x80
+> [   29.036138][    T1]  ? ret_from_fork_asm+0x11/0x20
+> [   29.036138][    T1]  ? kmsan_internal_unpoison_memory+0x14/0x20
+> [   29.036138][    T1]  netdev_hold+0xe2/0x120
+> [   29.036138][    T1]  register_netdevice+0x1bc7/0x2170
+> [   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
+> [   29.036138][    T1]  bond_create+0x138/0x2a0
+> [   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
+> [   29.036138][    T1]  bonding_init+0x1a7/0x2d0
+> [   29.036138][    T1]  ? spi_dln2_driver_init+0x40/0x40
+> [   29.036138][    T1]  do_one_initcall+0x216/0x960
+> [   29.036138][    T1]  ? spi_dln2_driver_init+0x40/0x40
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x60/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
+> [   29.036138][    T1]  ? filter_irq_stacks+0x60/0x1a0
+> [   29.036138][    T1]  ? stack_depot_save_flags+0x2c/0x7b0
+> [   29.036138][    T1]  ? skip_spaces+0x8f/0xc0
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
+> [   29.036138][    T1]  ? parse_args+0x1511/0x15e0
+> [   29.036138][    T1]  ? kmsan_get_metadata+0x146/0x1c0
+> [   29.036138][    T1]  ? kmsan_get_shadow_origin_ptr+0x4d/0xa0
+> [   29.036138][    T1]  ? spi_dln2_driver_init+0x40/0x40
+> [   29.036138][    T1]  do_initcall_level+0x140/0x350
+> [   29.036138][    T1]  do_initcalls+0xf0/0x1d0
+> [   29.036138][    T1]  ? arch_cpuhp_init_parallel_bringup+0xe0/0xe0
+> [   29.036138][    T1]  do_basic_setup+0x22/0x30
+> [   29.036138][    T1]  kernel_init_freeable+0x300/0x4b0
+> [   29.036138][    T1]  ? rest_init+0x260/0x260
+> [   29.036138][    T1]  kernel_init+0x2f/0x7e0
+> [   29.036138][    T1]  ? rest_init+0x260/0x260
+> [   29.036138][    T1]  ret_from_fork+0x66/0x80
+> [   29.036138][    T1]  ? rest_init+0x260/0x260
+> [   29.036138][    T1]  ret_from_fork_asm+0x11/0x20
+> [   29.036138][    T1]  </TASK>
+> [   29.036138][    T1] Kernel Offset: disabled
+> 
+> 
+> syzkaller build log:
+> go env (err=<nil>)
+> GO111MODULE='auto'
+> GOARCH='amd64'
+> GOBIN=''
+> GOCACHE='/syzkaller/.cache/go-build'
+> GOENV='/syzkaller/.config/go/env'
+> GOEXE=''
+> GOEXPERIMENT=''
+> GOFLAGS=''
+> GOHOSTARCH='amd64'
+> GOHOSTOS='linux'
+> GOINSECURE=''
+> GOMODCACHE='/syzkaller/jobs-2/linux/gopath/pkg/mod'
+> GONOPROXY=''
+> GONOSUMDB=''
+> GOOS='linux'
+> GOPATH='/syzkaller/jobs-2/linux/gopath'
+> GOPRIVATE=''
+> GOPROXY='https://proxy.golang.org,direct'
+> GOROOT='/usr/local/go'
+> GOSUMDB='sum.golang.org'
+> GOTMPDIR=''
+> GOTOOLCHAIN='auto'
+> GOTOOLDIR='/usr/local/go/pkg/tool/linux_amd64'
+> GOVCS=''
+> GOVERSION='go1.21.4'
+> GCCGO='gccgo'
+> GOAMD64='v1'
+> AR='ar'
+> CC='gcc'
+> CXX='g++'
+> CGO_ENABLED='1'
+> GOMOD='/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.mod'
+> GOWORK=''
+> CGO_CFLAGS='-O2 -g'
+> CGO_CPPFLAGS=''
+> CGO_CXXFLAGS='-O2 -g'
+> CGO_FFLAGS='-O2 -g'
+> CGO_LDFLAGS='-O2 -g'
+> PKG_CONFIG='pkg-config'
+> GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build2170902610=/tmp/go-build -gno-record-gcc-switches'
+> 
+> git status (err=<nil>)
+> HEAD detached at 373b66cd2
+> nothing to commit, working tree clean
+> 
+> 
+> tput: No value for $TERM and no -T specified
+> tput: No value for $TERM and no -T specified
+> Makefile:32: run command via tools/syz-env for best compatibility, see:
+> Makefile:33: https://github.com/google/syzkaller/blob/master/docs/contributing.md#using-syz-env
+> go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sys/syz-sysgen
+> make .descriptions
+> tput: No value for $TERM and no -T specified
+> tput: No value for $TERM and no -T specified
+> bin/syz-sysgen
+> touch .descriptions
+> GOOS=linux GOARCH=amd64 go build "-ldflags=-s -w -X github.com/google/syzkaller/prog.GitRevision=373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X 'github.com/google/syzkaller/prog.gitRevisionDate=20240130-131205'" "-tags=syz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-fuzzer github.com/google/syzkaller/syz-fuzzer
+> GOOS=linux GOARCH=amd64 go build "-ldflags=-s -w -X github.com/google/syzkaller/prog.GitRevision=373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X 'github.com/google/syzkaller/prog.gitRevisionDate=20240130-131205'" "-tags=syz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
+> GOOS=linux GOARCH=amd64 go build "-ldflags=-s -w -X github.com/google/syzkaller/prog.GitRevision=373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3 -X 'github.com/google/syzkaller/prog.gitRevisionDate=20240130-131205'" "-tags=syz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-stress github.com/google/syzkaller/tools/syz-stress
+> mkdir -p ./bin/linux_amd64
+> gcc -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+> 	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wframe-larger-than=16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-format-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -static-pie -fpermissive -w -DGOOS_linux=1 -DGOARCH_amd64=1 \
+> 	-DHOSTGOOS_linux=1 -DGIT_REVISION=\"373b66cd2ba1fd05c72d0bbe16141fb287fe2eb3\"
+> 
+> 
+> Error text is too large and was truncated, full error text is at:
+> https://syzkaller.appspot.com/x/error.txt?x=12b5bad3e80000
+> 
+> 
+> Tested on:
+> 
+> commit:         6764c317 Merge tag 'scsi-fixes' of git://git.kernel.or..
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=f8b2756f2e75608e
+> dashboard link: https://syzkaller.appspot.com/bug?extid=88ad8b0517a9d3bb9dc8
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> 
+> Note: no patches were applied.
