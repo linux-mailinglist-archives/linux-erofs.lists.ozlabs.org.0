@@ -1,65 +1,106 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D36CD85E96B
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Feb 2024 22:04:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1708549446;
-	bh=7SrJM1oyxiJBee5rhTbp+mwhYJ/a30jfajx9Ht8Agks=;
-	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=Msr3vybjSx3nDlzwL3SKAqtR1w0apjsg/jeZVMLN1NsWBOhQwEjAs0Nr22zA/5XRn
-	 9OwZZYFrA8epq0oUteux7WOp+o5HSU9Aoo3n6ylFT4fTGDApv0l+lHk+dKu5ueZoG8
-	 TCu8a+m0J05Z0P77yWRkeEQ0VMfkit4ZZbYtmPZLe79bSW/XnOI0f9BKEjx7Jmfc6h
-	 zbqMuCx3eS1UXP1mbAd7IGSm7bM3g2iSRBFOLVdPqMbYM5LLZDUU01ghppOwGdEjwk
-	 cm/f7+HbZlKMm9YlrWxFgbldW106dX2JO6a4FrTq8MJj3zh+PGWu9aTNp1+LQr1k2A
-	 /UNiNcwI+S/oQ==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A88685ECFE
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Feb 2024 00:31:22 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tg8065lP8z3bmy
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Feb 2024 08:04:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TgCG01kKmz3cRN
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Feb 2024 10:31:20 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=YfbAZmr5;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::b49; helo=mail-yb1-xb49.google.com; envelope-from=3omxwzqckc5m04xix813bb381.zb985ahk-1eb2f85fgf.bm8xyf.be3@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=attendeetechexpometricsanalyzer.com (client-ip=2a01:111:f403:2021::701; helo=ind01-bmx-obe.outbound.protection.outlook.com; envelope-from=cally.mood@attendeetechexpometricsanalyzer.com; receiver=lists.ozlabs.org)
+Received: from IND01-BMX-obe.outbound.protection.outlook.com (mail-bmxind01on20701.outbound.protection.outlook.com [IPv6:2a01:111:f403:2021::701])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tg7zy2dGQz2xWR
-	for <linux-erofs@lists.ozlabs.org>; Thu, 22 Feb 2024 08:03:57 +1100 (AEDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-dcc05887ee9so8672267276.1
-        for <linux-erofs@lists.ozlabs.org>; Wed, 21 Feb 2024 13:03:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708549434; x=1709154234;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7SrJM1oyxiJBee5rhTbp+mwhYJ/a30jfajx9Ht8Agks=;
-        b=r8CZTNR+CnQVGPx6IEU37i76WjGAlM09AxnmuTK/xRIdL4q9e/ZRp1Q5o/CQ8E7aVg
-         3R74LIlfR3FqQAahK8amn2QWljA7Af2JHTBJh+oSh0xj86hlRrbZgUu4pwIDO0m8Je7I
-         KGcyk0yRjXp/mDg8D0B2jBW3FEXK9JCMjYJl2KgUj4EjD9JHnxUHQqY8Q95zLNKwZwBo
-         ze5KnsCbGnlPf5LEK2i6GC48Kp+7h/C8Jq0T2hAa8pbgD0TRkb4K6raS516q0ZAGjwIU
-         LvSaf/hJpmMXe+fpqG/U9ElrTPS5Zrpq8BDHVGg+3z8NJ1xNMD/VZX+O6AquGf8zpy2p
-         kfUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMWm56mUlISB9qfavNyU2biru9cWrOOp8h2v2AuG77Yw4QbmPBz10urIa0JhcUL9otlcACB8B7ue0LtdrYvrus3D7HPleOUaeiD+xL
-X-Gm-Message-State: AOJu0YzqHjiR7QUNeCWa/rkBlEIT7WFtlJarwz3B+yXP+WY0DWU9x8Tz
-	j/s7eUBu2fLXvC0LJewEkC1Gq2Sow1TO5BDjsioQBQRmlUB3LYzBMZC4vpdYKod+gRKDx2vzVdq
-	ufSWjOw==
-X-Google-Smtp-Source: AGHT+IGfQ7tP0IsEPfMeTEUa+hP//eArvfxvolLuo29MkXjSjnUdg2wVPoB/uWCNVbaUgyFPLcxJaw3bv2eA
-X-Received: from dhavale-desktop.mtv.corp.google.com ([2620:15c:211:201:e195:1d33:bc5c:369a])
- (user=dhavale job=sendgmr) by 2002:a05:6902:1505:b0:dc6:c94e:fb85 with SMTP
- id q5-20020a056902150500b00dc6c94efb85mr19718ybu.2.1708549434314; Wed, 21 Feb
- 2024 13:03:54 -0800 (PST)
-Date: Wed, 21 Feb 2024 13:03:47 -0800
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
-Message-ID: <20240221210348.3667795-1-dhavale@google.com>
-Subject: [PATCH v2] erofs: fix refcount on the metabuf used for inode lookup
-To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TgCFw41kBz3c4V
+	for <linux-erofs@lists.ozlabs.org>; Thu, 22 Feb 2024 10:31:14 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IZzACGdbWE0S6uW84ZrVnHFISc/9JKJF+x8ReBj+JOAJqQd/dqNVb8vdKLbLG3XNY0K93kHJLlqs4YqMMwp0u0da/jKpoRhsk+D+42VIagfqW6dcoIWr1iIbueR8b0gE9cqkbmWhsUNcQFFYtjH0sfFjWXjB+r+qRSUU4zL1Rya3N1r9tPdctc6DJkMxPiDFt+yd1sFT5Em8fwMNEn3gje1GQpRMSat4nlF10u4pLYFtJvbKEjoEWdbjG7GyX/CGrxRFhVp/FByEKT2Dg/Glx7CqOmBzPsclxz41gbaVZ+buCV6Ke6nIvRFAx5gmIDMp654q8GJJUNXjMsn0Pcy1Rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MIJn5X0Qn8mGSLKgc/PWQNsZM4kwE9cIuzBZKOolEtg=;
+ b=dGy0O4p8zL7CDsjvJlDVuRvPx4F5KGp3Q0IQNuSwJ0HkJtyRqtbEav/KrV3IYEV+8E5k02bFuuFASAaZUdCLs5Ix47asbDSZ9StZUkv9DfTiRYmGfjY2xfUEEQJzzl6yBZpFPp3XDvS83/IP4jzBC5y48PClfAlF6kCR4qByZcO6XC1s/l4+/qx+8z/4YTPS05UVwQufEZc/xPWHFG/0eomkVuEp3gdAypsG/isNlHS88qQh/9jEb8eODIN35cskssQ8QKxJrKAhJ7Rrp2l2T0A9EkZZpf2DSAEmKN284nmUuXS2Xp56L1Qxro3nuPeLQ/SYhoH56ld9pt/paTa+Ig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=attendeetechexpometricsanalyzer.com; dmarc=pass action=none
+ header.from=attendeetechexpometricsanalyzer.com; dkim=pass
+ header.d=attendeetechexpometricsanalyzer.com; arc=none
+Received: from PN3P287MB1398.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:1a3::11)
+ by MA0P287MB1207.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:fc::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.22; Wed, 21 Feb
+ 2024 23:30:51 +0000
+Received: from PN3P287MB1398.INDP287.PROD.OUTLOOK.COM
+ ([fe80::eb88:21d5:b03a:21df]) by PN3P287MB1398.INDP287.PROD.OUTLOOK.COM
+ ([fe80::eb88:21d5:b03a:21df%4]) with mapi id 15.20.7316.023; Wed, 21 Feb 2024
+ 23:30:51 +0000
+From: Cally Mood <cally.mood@attendeetechexpometricsanalyzer.com>
+To: Sign And Digital UK 2024 <linux-erofs@lists.ozlabs.org>
+Subject: Lists - Sign And Digital UK 2024
+Thread-Topic: Lists - Sign And Digital UK 2024
+Thread-Index: AdplHf/Y1GDqajXATtGbFJscZsWIVw==
+Date: Wed, 21 Feb 2024 23:30:51 +0000
+Message-ID:  <PN3P287MB139898D3C715B50CC77690E99E572@PN3P287MB1398.INDP287.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none
+ header.from=attendeetechexpometricsanalyzer.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3P287MB1398:EE_|MA0P287MB1207:EE_
+x-ms-office365-filtering-correlation-id: 8d01a179-53e7-4b2c-df29-08dc33352423
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:  XLsJG7Sz5BcGMa1Ehb0ODr5Ck9VdbTr34N5pWRrDavg/oGFT+xUHInIWUv6qowQ+JrMWbs6ezqMfh7pdQWPfPmaWeGWmTCwXwGFK6kSvNPrlwycJEO1BEM0qwDLB+4Z3OweEGDYJssirRpMAfSJ6m9NcoQhWsdAZy36d3WXKqjRv2Uj9wmIWlV3ld2RoosT9mewV/tiH4gfBy2XTM/GiI29WmnREyBrS3zr3eYsu2oE+y4KILr01dBXpWqTDtK+NQzh5rLoS3Sa9GiSX+FrEFJnGM0kfIKLyrYCtm0BFPLh+74E/dTJIs8L2Ph/Luah3VQJsMIM3YnzbThzCG2xVpKGlDaqbGMkiAd3U4lxgjX64lUyXypl0++SM5l3me6bmLL1ivOJiVmIiN7GEJmkF0sSsk55WRQvvNRn4iC4PEQs6lbSRc+9FSkleTLJmG5KOpxP5jPAaHWd/RYq7BQ9wbsvI6yaNLk/CX+oL2nNtIit1usciw5frVCP4Vzc41dWOwO7w0Luq/QnTyp2B3U3JW7RAP9VWgomdOSINjy0rnCSUg7X2rkxCtmOiwGVGUP3LvCW94sH9PAUFZeH5c7SwiE1gnGLrXUbdjbPHjd1svZr3/He3zDH4ySDWxsY1FlVX
+x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1398.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?Vjj0sMA3KKt03ZsucZtY4dJoxAZY5uLPmxdpq10qZJi7LEE1klnqabNLAMN6?=
+ =?us-ascii?Q?5bynGM3CDgTy8LB3feKUHSPJnNwS2UnlUsDNKittxp9U85A/tRNaWOT7Jrml?=
+ =?us-ascii?Q?Sw3gg47htKXEHqPVOt89E6ofdfexlAPL05MAtQJ24NgJlgRsF1t9g4163FYV?=
+ =?us-ascii?Q?GxoOl5/bmYE7ZR0egI6yUObzQWvqACf5nXSmxFp9rZQ4v6R4p2IVpggFF67Q?=
+ =?us-ascii?Q?yOB2//kCpotLY5Th1XFP03ji/9kGqUpOu3DXrYxICOvjc5ZopVVnGVDcMvct?=
+ =?us-ascii?Q?zP8LzB3o3e5M2Q1TLgQYBoD5nVxd2aByNwf20pLkG27qD9khO3Uky//ExeB4?=
+ =?us-ascii?Q?qHzv6r7ECYRnGyXXYy594YnVx4pT3snTjbloIH85JFBDqO5LnbYM0WY071S/?=
+ =?us-ascii?Q?7MCnmAWUKphz16MTlVRbk+Seguw9TSRDxBXlvYqxVWeWtBTxiJbSjOxoIH2v?=
+ =?us-ascii?Q?f9+RmkKpaaguRiTxLQ2z5Sfatu2edQGJWCGqBtmtK1+PAi89Q0m8xFrsUaWl?=
+ =?us-ascii?Q?EraZ9xuaOmjCcNlERktzuTobYj3l3q2utH4zgfY5MZ8ksKLDiFALF1PasYvj?=
+ =?us-ascii?Q?gczgYDEbiwBQcAgCQ1cx0aJTHUr6qRIekT5F1jfIXrsYPFGWvIgetaaYopA1?=
+ =?us-ascii?Q?B0choT4VUU57vy3oZWJPbtgpydXHr58DbsGx2bgjeoOHbJvYHzWMDnreNeW0?=
+ =?us-ascii?Q?abXUfgHYIoxmkct+KKFS8lLtcrs33N8CdQE3e3FqrDQYIb1rvCgLcIGBwtWT?=
+ =?us-ascii?Q?h4NqOkVlJ/rdX9pkQ+vSvsrc4KjKg0y7ul8+yIHC0V6wlERUsLVqEVQvJyTQ?=
+ =?us-ascii?Q?8dMia55unc4YklbLx782IBuA3LE7rLlKHqXYJkPAbKf1vV1F0nq4byB6slU1?=
+ =?us-ascii?Q?kxdvVehG7ChSxMWXat6DZAvAWXmnTjF37o64qEraEOr+tTFNqk8UkgfLoSUX?=
+ =?us-ascii?Q?+MIQFfYE19/UOvmi3lH9FrHLDJ63sOJ2jOzkOQGqxYK4Chw8l5YI8oxr3hCl?=
+ =?us-ascii?Q?6ngxYBBbPDq5o8TOcm/ud2kdHFmpZX09z0R2A7KUNm8tN8HNX75caYF3Zf3G?=
+ =?us-ascii?Q?tJYA0+IrY8/cLUNXsw7nvwqqyQVWbiTlQ3FATWFb6bm6fv54OSJHCrVBxDAw?=
+ =?us-ascii?Q?pTW9wEKASh0JtNan8pBYdbOAS+kWfrxblJT0ZoFcC46k12uE5AAjjdVbxLLg?=
+ =?us-ascii?Q?6bMTGn2A1YsxSCkyxYOhNIyzb75PpmpDbPuZyCq7SDkSPvs+hM/6kPnGpQG5?=
+ =?us-ascii?Q?wN6380Dqe4F+fpeDNDQg789bGsxBABA6kN7al2MqKt9YJmvAZmuNl1Br3reu?=
+ =?us-ascii?Q?vEJAcVbM6v+PX13X5HeocQ2fzU9O8YE5LPWgQ+NJbh7v+fQ2HqpUQ5BlljvC?=
+ =?us-ascii?Q?vn1mZnJoA52ZS+pEA3cw2YA2HBuloLFwOhWrtgAZpXfDy/F7TPRK+i2uKRZM?=
+ =?us-ascii?Q?5Sbf4yrQemMmaLsHAM2tD9Lcwl0/TVXF3B2fc0ekzS9zp9qI5kdffRPEjO9a?=
+ =?us-ascii?Q?9IJ39Hbl8X6V9rtdjRdguR6HSunqAG/i3MY4AZPc67X01vVMywjQohmh4tuH?=
+ =?us-ascii?Q?Ul+2rV/e0TKCvNVQeV8hXLP9nxVdFuNV5VRK0i8zetW/B/9s75+8LXIBEp8Z?=
+ =?us-ascii?Q?oHTlcCSzvjlActYHYmzN0qGpy8yHf3xHHDyo95hsZ3zbFmN2j+N92BVSinnS?=
+ =?us-ascii?Q?W041Rrx/S1vPWYHsRCGlbDNX9IlOWdLpfn+voJPva0pIRFEK?=
+Content-Type: multipart/alternative;
+	boundary="_000_PN3P287MB139898D3C715B50CC77690E99E572PN3P287MB1398INDP_"
+MIME-Version: 1.0
+X-OriginatorOrg: attendeetechexpometricsanalyzer.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1398.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d01a179-53e7-4b2c-df29-08dc33352423
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2024 23:30:51.2018
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a657c127-39df-47cd-9412-cc7c046416e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HhbiEHeTIWsWiyLmQFogw6mrng8t2EXHJQJVoTX0qYrB15E/6qJykuZx6HPT1vKcbRpBCoGusN3/y6BTZeaPiMPSk3i8OqiNnuCyxrOoEfo07BN1qBY1AvXUrKzIBcbPD8SrRdxwlWkRM6eOh2kgiA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB1207
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -71,76 +112,146 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Sandeep Dhavale <dhavale@google.com>
-Cc: kernel-team@android.com, linux-kernel@vger.kernel.org, stable@vger.kernel.org, quic_wenjieli@quicinc.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In erofs_find_target_block() when erofs_dirnamecmp() returns 0,
-we do not assign the target metabuf. This causes the caller
-erofs_namei()'s erofs_put_metabuf() at the end to be not effective
-leaving the refcount on the page.
-As the page from metabuf (buf->page) is never put, such page cannot be
-migrated or reclaimed. Fix it now by putting the metabuf from
-previous loop and assigning the current metabuf to target before
-returning so caller erofs_namei() can do the final put as it was
-intended.
+--_000_PN3P287MB139898D3C715B50CC77690E99E572PN3P287MB1398INDP_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 500edd095648 ("erofs: use meta buffers for inode lookup")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sandeep Dhavale <dhavale@google.com>
----
-Changes since v1
-- Rearrange the cases as suggested by Gao so there is less duplication
-    of the code and it is more readable
+Hi,
 
- fs/erofs/namei.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+Hope you doing well
 
-diff --git a/fs/erofs/namei.c b/fs/erofs/namei.c
-index d4f631d39f0f..f0110a78acb2 100644
---- a/fs/erofs/namei.c
-+++ b/fs/erofs/namei.c
-@@ -130,24 +130,24 @@ static void *erofs_find_target_block(struct erofs_buf *target,
- 			/* string comparison without already matched prefix */
- 			diff = erofs_dirnamecmp(name, &dname, &matched);
- 
--			if (!diff) {
--				*_ndirents = 0;
--				goto out;
--			} else if (diff > 0) {
--				head = mid + 1;
--				startprfx = matched;
--
--				if (!IS_ERR(candidate))
--					erofs_put_metabuf(target);
--				*target = buf;
--				candidate = de;
--				*_ndirents = ndirents;
--			} else {
-+			if (diff < 0) {
- 				erofs_put_metabuf(&buf);
--
- 				back = mid - 1;
- 				endprfx = matched;
-+				continue;
-+			}
-+
-+			if (!IS_ERR(candidate))
-+				erofs_put_metabuf(target);
-+			*target = buf;
-+			if (!diff) {
-+				*_ndirents = 0;
-+				return de;
- 			}
-+			head = mid + 1;
-+			startprfx = matched;
-+			candidate = de;
-+			*_ndirents = ndirents;
- 			continue;
- 		}
- out:		/* free if the candidate is valid */
--- 
-2.44.0.rc0.258.g7320e95886-goog
+This is to inform you that buyers-list of Sign And Digital UK 2024 is avail=
+able-for-purchase with the total at 5786 contacts at unlimited-usage.
 
+Please let me know if you are interested. Accordingly, I will get back to y=
+ou with the cost and other details.
+
+Awaiting your response!
+
+Kind Regards,
+Cally Mood - Demand Generation
+
+
+--_000_PN3P287MB139898D3C715B50CC77690E99E572PN3P287MB1398INDP_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Word 15 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:8.0pt;
+	margin-left:0cm;
+	line-height:106%;
+	font-size:11.0pt;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-language:EN-US;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:#954F72;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri",sans-serif;
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-family:"Calibri",sans-serif;
+	mso-fareast-language:EN-US;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"EN-IN" link=3D"#0563C1" vlink=3D"#954F72">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D">Hi,<o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D">Hope you doing well<o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D">This is to inform you that buyers-list of =
+Sign And Digital UK 2024 is available-for-purchase with the total at 5786 c=
+ontacts at unlimited-usage.<o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D">Please let me know if you are interested. =
+Accordingly, I will get back to you with the cost and other details.<o:p></=
+o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D">Awaiting your response!
+<o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D"><o:p>&nbsp;</o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D">Kind Regards,<o:p></o:p></span></p>
+<p class=3D"MsoNormal" style=3D"margin-bottom:0cm;margin-bottom:.0001pt;lin=
+e-height:normal">
+<span lang=3D"EN-GB" style=3D"font-size:12.0pt;font-family:&quot;Times New =
+Roman&quot;,serif;color:#1F497D">Cally Mood - Demand Generation<o:p></o:p><=
+/span></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+</div>
+</body>
+</html>
+
+--_000_PN3P287MB139898D3C715B50CC77690E99E572PN3P287MB1398INDP_--
