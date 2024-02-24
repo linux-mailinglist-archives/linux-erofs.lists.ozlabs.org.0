@@ -2,44 +2,44 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F6178622E9
-	for <lists+linux-erofs@lfdr.de>; Sat, 24 Feb 2024 07:27:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF2348622EC
+	for <lists+linux-erofs@lfdr.de>; Sat, 24 Feb 2024 07:33:04 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tGqXzzcx;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=a6OpIpGP;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ThcNs1rxYz3vXM
-	for <lists+linux-erofs@lfdr.de>; Sat, 24 Feb 2024 17:27:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ThcWf377wz3vXM
+	for <lists+linux-erofs@lfdr.de>; Sat, 24 Feb 2024 17:33:02 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tGqXzzcx;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=a6OpIpGP;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
 Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ThcNj427Zz3cDr
-	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Feb 2024 17:26:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ThcWZ4ystz3cJW
+	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Feb 2024 17:32:57 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1708756015; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=4GEqWX6yU3+p/xenHNHEWR+mKGMypPUF4pv+LX4hbk0=;
-	b=tGqXzzcx2LPOFhuNHr2+ZHYaIsWHHzS/IQU2MMpwePRG5Ng0JIvKVI7rpMRAr8PFfflY1zV4QUULV6YQI6ukUPZyKUFUwc7lY/Ln3YNPcJouQ8az8Zo4tn8qoAM1epjgFsFlYxTMYcRH9Hyz/uQaG74LXYU2b+iH/5bldgmv+iY=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W16.xLk_1708756005;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W16.xLk_1708756005)
+	t=1708756374; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=ZxGSVLYB/zBTdOcMVRAjEhslYD8fvmcl12GLS3hOqto=;
+	b=a6OpIpGPrRmr+NyQPJd9LnXYXLy+c0CXl3FHP0xZSlzyC9T9bGFAIpiNTeg2ogmWp9ap7+C5iwaY08kRZNZ0LozfwCZKi73Yl9pLvC4tYu3EIKPTniYxWizHQNfd5BekWRbN/3m8w2lQOzZvBbMdWoKCyBgPA/PchSDVbmcyKFI=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W15zYPj_1708756371;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W15zYPj_1708756371)
           by smtp.aliyun-inc.com;
-          Sat, 24 Feb 2024 14:26:53 +0800
+          Sat, 24 Feb 2024 14:32:52 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
-Subject: [PATCH 5.15.y] erofs: fix lz4 inplace decompression
-Date: Sat, 24 Feb 2024 14:26:43 +0800
-Message-Id: <20240224062643.2099614-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 5.10.y] erofs: fix lz4 inplace decompression
+Date: Sat, 24 Feb 2024 14:32:48 +0800
+Message-Id: <20240224063248.2157885-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <2024012648-backwater-colt-7290@gregkh>
-References: <2024012648-backwater-colt-7290@gregkh>
+In-Reply-To: <2024012650-altitude-gush-572f@gregkh>
+References: <2024012650-altitude-gush-572f@gregkh>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -91,109 +91,103 @@ Tested-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 Link: https://lore.kernel.org/r/20231206045534.3920847-1-hsiangkao@linux.alibaba.com
 ---
-Adapt 5.15.y codebase due to non-trivial conflicts out of
+Adapt 5.10.y codebase due to non-trivial conflicts out of
 recent new features & cleanups.
 
 I've done my own EROFS tests, yet more test on new x86
 platform triggered by FSRM is helpful too.
 
- fs/erofs/decompressor.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+( This fix for 5.4.y codebase is still ongoing, and I will
+  post later. )
+
+ fs/erofs/decompressor.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
 diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 8193c14bb111..b4be6c524815 100644
+index f921580b56cb..36693924db18 100644
 --- a/fs/erofs/decompressor.c
 +++ b/fs/erofs/decompressor.c
-@@ -124,11 +124,11 @@ static int z_erofs_lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
- }
+@@ -24,7 +24,8 @@ struct z_erofs_decompressor {
+ 	 */
+ 	int (*prepare_destpages)(struct z_erofs_decompress_req *rq,
+ 				 struct list_head *pagepool);
+-	int (*decompress)(struct z_erofs_decompress_req *rq, u8 *out);
++	int (*decompress)(struct z_erofs_decompress_req *rq, u8 *out,
++			  u8 *obase);
+ 	char *name;
+ };
  
- static void *z_erofs_handle_inplace_io(struct z_erofs_decompress_req *rq,
--			void *inpage, unsigned int *inputmargin, int *maptype,
--			bool support_0padding)
-+		void *inpage, void *out, unsigned int *inputmargin, int *maptype,
-+		bool support_0padding)
- {
- 	unsigned int nrpages_in, nrpages_out;
--	unsigned int ofull, oend, inputsize, total, i, j;
-+	unsigned int ofull, oend, inputsize, total, i;
- 	struct page **in;
- 	void *src, *tmp;
- 
-@@ -143,12 +143,13 @@ static void *z_erofs_handle_inplace_io(struct z_erofs_decompress_req *rq,
- 		    ofull - oend < LZ4_DECOMPRESS_INPLACE_MARGIN(inputsize))
- 			goto docopy;
- 
--		for (i = 0; i < nrpages_in; ++i) {
--			DBG_BUGON(rq->in[i] == NULL);
--			for (j = 0; j < nrpages_out - nrpages_in + i; ++j)
--				if (rq->out[j] == rq->in[i])
--					goto docopy;
--		}
-+		for (i = 0; i < nrpages_in; ++i)
-+			if (rq->out[nrpages_out - nrpages_in + i] !=
-+			    rq->in[i])
-+				goto docopy;
-+		kunmap_atomic(inpage);
-+		*maptype = 3;
-+		return out + ((nrpages_out - nrpages_in) << PAGE_SHIFT);
- 	}
- 
- 	if (nrpages_in <= 1) {
-@@ -156,7 +157,6 @@ static void *z_erofs_handle_inplace_io(struct z_erofs_decompress_req *rq,
- 		return inpage;
- 	}
- 	kunmap_atomic(inpage);
--	might_sleep();
- 	src = erofs_vm_map_ram(rq->in, nrpages_in);
- 	if (!src)
- 		return ERR_PTR(-ENOMEM);
-@@ -193,10 +193,10 @@ static void *z_erofs_handle_inplace_io(struct z_erofs_decompress_req *rq,
- 	return src;
+@@ -114,10 +115,13 @@ static void *generic_copy_inplace_data(struct z_erofs_decompress_req *rq,
+ 	return tmp;
  }
  
 -static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
-+static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *dst)
++static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out,
++				  u8 *obase)
  {
- 	unsigned int inputmargin;
--	u8 *headpage, *src;
-+	u8 *out, *headpage, *src;
- 	bool support_0padding;
- 	int ret, maptype;
++	const uint nrpages_out = PAGE_ALIGN(rq->pageofs_out +
++					    rq->outputsize) >> PAGE_SHIFT;
+ 	unsigned int inputmargin, inlen;
+-	u8 *src;
++	u8 *src, *src2;
+ 	bool copied, support_0padding;
+ 	int ret;
  
-@@ -220,11 +220,12 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+@@ -125,6 +129,7 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 		return -EOPNOTSUPP;
+ 
+ 	src = kmap_atomic(*rq->in);
++	src2 = src;
+ 	inputmargin = 0;
+ 	support_0padding = false;
+ 
+@@ -148,16 +153,15 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 	if (rq->inplace_io) {
+ 		const uint oend = (rq->pageofs_out +
+ 				   rq->outputsize) & ~PAGE_MASK;
+-		const uint nr = PAGE_ALIGN(rq->pageofs_out +
+-					   rq->outputsize) >> PAGE_SHIFT;
+-
+ 		if (rq->partial_decoding || !support_0padding ||
+-		    rq->out[nr - 1] != rq->in[0] ||
++		    rq->out[nrpages_out - 1] != rq->in[0] ||
+ 		    rq->inputsize - oend <
+ 		      LZ4_DECOMPRESS_INPLACE_MARGIN(inlen)) {
+ 			src = generic_copy_inplace_data(rq, src, inputmargin);
+ 			inputmargin = 0;
+ 			copied = true;
++		} else {
++			src = obase + ((nrpages_out - 1) << PAGE_SHIFT);
+ 		}
  	}
  
- 	rq->inputsize -= inputmargin;
--	src = z_erofs_handle_inplace_io(rq, headpage, &inputmargin, &maptype,
--					support_0padding);
-+	src = z_erofs_handle_inplace_io(rq, headpage, dst, &inputmargin,
-+					&maptype, support_0padding);
- 	if (IS_ERR(src))
- 		return PTR_ERR(src);
- 
-+	out = dst + rq->pageofs_out;
- 	/* legacy format could compress extra data in a pcluster. */
- 	if (rq->partial_decoding || !support_0padding)
- 		ret = LZ4_decompress_safe_partial(src + inputmargin, out,
-@@ -253,7 +254,7 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
- 		vm_unmap_ram(src, PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT);
- 	} else if (maptype == 2) {
+@@ -187,7 +191,7 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 	if (copied)
  		erofs_put_pcpubuf(src);
--	} else {
-+	} else if (maptype != 3) {
- 		DBG_BUGON(1);
- 		return -EFAULT;
- 	}
-@@ -354,8 +355,7 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
+ 	else
+-		kunmap_atomic(src);
++		kunmap_atomic(src2);
+ 	return ret;
+ }
+ 
+@@ -257,7 +261,7 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
+ 			return PTR_ERR(dst);
+ 
+ 		rq->inplace_io = false;
+-		ret = alg->decompress(rq, dst);
++		ret = alg->decompress(rq, dst, NULL);
+ 		if (!ret)
+ 			copy_from_pcpubuf(rq->out, dst, rq->pageofs_out,
+ 					  rq->outputsize);
+@@ -291,7 +295,7 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
  	dst_maptype = 2;
  
  dstmap_out:
 -	ret = alg->decompress(rq, dst + rq->pageofs_out);
--
-+	ret = alg->decompress(rq, dst);
++	ret = alg->decompress(rq, dst + rq->pageofs_out, dst);
+ 
  	if (!dst_maptype)
  		kunmap_atomic(dst);
- 	else if (dst_maptype == 2)
 -- 
 2.39.3
 
