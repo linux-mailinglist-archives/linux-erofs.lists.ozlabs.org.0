@@ -1,40 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D22D861DE7
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Feb 2024 21:44:23 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F6178622E9
+	for <lists+linux-erofs@lfdr.de>; Sat, 24 Feb 2024 07:27:14 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tGqXzzcx;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ThMSP0wD7z3vd9
-	for <lists+linux-erofs@lfdr.de>; Sat, 24 Feb 2024 07:44:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ThcNs1rxYz3vXM
+	for <lists+linux-erofs@lfdr.de>; Sat, 24 Feb 2024 17:27:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=srs0=wkxo=ka=goodmis.org=rostedt@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tGqXzzcx;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ThMRl5Pfkz3dWl;
-	Sat, 24 Feb 2024 07:43:47 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id CAB6DCE2E6D;
-	Fri, 23 Feb 2024 20:43:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67DE0C43390;
-	Fri, 23 Feb 2024 20:43:39 +0000 (UTC)
-Date: Fri, 23 Feb 2024 15:45:32 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Subject: Re: [FYI][PATCH] tracing/treewide: Remove second parameter of
- __assign_str()
-Message-ID: <20240223154532.76475d82@gandalf.local.home>
-In-Reply-To: <20240223134653.524a5c9e@gandalf.local.home>
-References: <20240223125634.2888c973@gandalf.local.home>
-	<0aed6cf2-17ae-45aa-b7ff-03da932ea4e0@quicinc.com>
-	<20240223134653.524a5c9e@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ThcNj427Zz3cDr
+	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Feb 2024 17:26:59 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1708756015; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=4GEqWX6yU3+p/xenHNHEWR+mKGMypPUF4pv+LX4hbk0=;
+	b=tGqXzzcx2LPOFhuNHr2+ZHYaIsWHHzS/IQU2MMpwePRG5Ng0JIvKVI7rpMRAr8PFfflY1zV4QUULV6YQI6ukUPZyKUFUwc7lY/Ln3YNPcJouQ8az8Zo4tn8qoAM1epjgFsFlYxTMYcRH9Hyz/uQaG74LXYU2b+iH/5bldgmv+iY=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W16.xLk_1708756005;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W16.xLk_1708756005)
+          by smtp.aliyun-inc.com;
+          Sat, 24 Feb 2024 14:26:53 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: [PATCH 5.15.y] erofs: fix lz4 inplace decompression
+Date: Sat, 24 Feb 2024 14:26:43 +0800
+Message-Id: <20240224062643.2099614-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <2024012648-backwater-colt-7290@gregkh>
+References: <2024012648-backwater-colt-7290@gregkh>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,37 +53,147 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org, kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, brcm80211@lists.linux.dev, ath10k@lists.infradead.org, Julia Lawall <Julia.Lawall@inria.fr>, linux-s390@vger.kernel.org, dev@openvswitch.org, linux-cifs@vger.kernel.org, linux-rdma@vger.kernel.org, amd-gfx@lists.freedesktop.org, io-uring@vger.kernel.org, linux-bcachefs@vger.kernel.org, iommu@lists.linux.dev, ath11k@lists.infradead.org, linux-media@vger.kernel.org, linux-wpan@vger.kernel.org, linux-pm@vger.kernel.org, selinux@vger.kernel.org, linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org, linux-erofs@lists.ozlabs.org, virtualization@lists.linux.dev, linux-sound@vger.kernel.org, linux-block@vger.kernel.org, ocfs2-devel@lists.linux.dev, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, linux-cxl@vger.kernel.org, linux-tegra@vger.kernel.org, intel-xe@lists.freedesktop.org, linux-edac@vger.kernel.org, linux-hwmon@vger.kernel.org, brcm80211-dev-list.pdl@broa
- dcom.com, Linus Torvalds <torvalds@linux-foundation.org>, linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, ath12k@lists.infradead.org, tipc-discussion@lists.sourceforge.net, Masami Hiramatsu <mhiramat@kernel.org>, netdev@vger.kernel.org, bpf@vger.kernel.org, Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, freedreno@lists.freedesktop.org, linux-nfs@vger.kernel.org, linux-btrfs@vger.kernel.org
+Cc: Juhyung Park <qkrwngud825@gmail.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Yifan Zhao <zhaoyifan@sjtu.edu.cn>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, 23 Feb 2024 13:46:53 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+commit 3c12466b6b7bf1e56f9b32c366a3d83d87afb4de upstream.
 
-> Now one thing I could do is to not remove the parameter, but just add:
-> 
-> 	WARN_ON_ONCE((src) != __data_offsets->item##_ptr_);
-> 
-> in the __assign_str() macro to make sure that it's still the same that is
-> assigned. But I'm not sure how useful that is, and still causes burden to
-> have it. I never really liked the passing of the string in two places to
-> begin with.
+Currently EROFS can map another compressed buffer for inplace
+decompression, that was used to handle the cases that some pages of
+compressed data are actually not in-place I/O.
 
-Hmm, maybe I'll just add this patch for 6.9 and then in 6.10 do the
-parameter removal.
+However, like most simple LZ77 algorithms, LZ4 expects the compressed
+data is arranged at the end of the decompressed buffer and it
+explicitly uses memmove() to handle overlapping:
+  __________________________________________________________
+ |_ direction of decompression --> ____ |_ compressed data _|
 
--- Steve
+Although EROFS arranges compressed data like this, it typically maps two
+individual virtual buffers so the relative order is uncertain.
+Previously, it was hardly observed since LZ4 only uses memmove() for
+short overlapped literals and x86/arm64 memmove implementations seem to
+completely cover it up and they don't have this issue.  Juhyung reported
+that EROFS data corruption can be found on a new Intel x86 processor.
+After some analysis, it seems that recent x86 processors with the new
+FSRM feature expose this issue with "rep movsb".
 
-diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
-index 0c0f50bcdc56..7372e2c2a0c4 100644
---- a/include/trace/stages/stage6_event_callback.h
-+++ b/include/trace/stages/stage6_event_callback.h
-@@ -35,6 +35,7 @@ #define __assign_str(dst, src)
- 	do {								\
- 		char *__str__ = __get_str(dst);				\
- 		int __len__ = __get_dynamic_array_len(dst) - 1;		\
-+		WARN_ON_ONCE((src) != __data_offsets.dst##_ptr_); 	\
- 		memcpy(__str__, __data_offsets.dst##_ptr_ ? :		\
- 		       EVENT_NULL_STR, __len__);			\
- 		__str__[__len__] = '\0';				\
+Let's strictly use the decompressed buffer for lz4 inplace
+decompression for now.  Later, as an useful improvement, we could try
+to tie up these two buffers together in the correct order.
+
+Reported-and-tested-by: Juhyung Park <qkrwngud825@gmail.com>
+Closes: https://lore.kernel.org/r/CAD14+f2AVKf8Fa2OO1aAUdDNTDsVzzR6ctU_oJSmTyd6zSYR2Q@mail.gmail.com
+Fixes: 0ffd71bcc3a0 ("staging: erofs: introduce LZ4 decompression inplace")
+Fixes: 598162d05080 ("erofs: support decompress big pcluster for lz4 backend")
+Cc: stable <stable@vger.kernel.org> # 5.4+
+Tested-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Link: https://lore.kernel.org/r/20231206045534.3920847-1-hsiangkao@linux.alibaba.com
+---
+Adapt 5.15.y codebase due to non-trivial conflicts out of
+recent new features & cleanups.
+
+I've done my own EROFS tests, yet more test on new x86
+platform triggered by FSRM is helpful too.
+
+ fs/erofs/decompressor.c | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
+
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 8193c14bb111..b4be6c524815 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -124,11 +124,11 @@ static int z_erofs_lz4_prepare_destpages(struct z_erofs_decompress_req *rq,
+ }
+ 
+ static void *z_erofs_handle_inplace_io(struct z_erofs_decompress_req *rq,
+-			void *inpage, unsigned int *inputmargin, int *maptype,
+-			bool support_0padding)
++		void *inpage, void *out, unsigned int *inputmargin, int *maptype,
++		bool support_0padding)
+ {
+ 	unsigned int nrpages_in, nrpages_out;
+-	unsigned int ofull, oend, inputsize, total, i, j;
++	unsigned int ofull, oend, inputsize, total, i;
+ 	struct page **in;
+ 	void *src, *tmp;
+ 
+@@ -143,12 +143,13 @@ static void *z_erofs_handle_inplace_io(struct z_erofs_decompress_req *rq,
+ 		    ofull - oend < LZ4_DECOMPRESS_INPLACE_MARGIN(inputsize))
+ 			goto docopy;
+ 
+-		for (i = 0; i < nrpages_in; ++i) {
+-			DBG_BUGON(rq->in[i] == NULL);
+-			for (j = 0; j < nrpages_out - nrpages_in + i; ++j)
+-				if (rq->out[j] == rq->in[i])
+-					goto docopy;
+-		}
++		for (i = 0; i < nrpages_in; ++i)
++			if (rq->out[nrpages_out - nrpages_in + i] !=
++			    rq->in[i])
++				goto docopy;
++		kunmap_atomic(inpage);
++		*maptype = 3;
++		return out + ((nrpages_out - nrpages_in) << PAGE_SHIFT);
+ 	}
+ 
+ 	if (nrpages_in <= 1) {
+@@ -156,7 +157,6 @@ static void *z_erofs_handle_inplace_io(struct z_erofs_decompress_req *rq,
+ 		return inpage;
+ 	}
+ 	kunmap_atomic(inpage);
+-	might_sleep();
+ 	src = erofs_vm_map_ram(rq->in, nrpages_in);
+ 	if (!src)
+ 		return ERR_PTR(-ENOMEM);
+@@ -193,10 +193,10 @@ static void *z_erofs_handle_inplace_io(struct z_erofs_decompress_req *rq,
+ 	return src;
+ }
+ 
+-static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
++static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *dst)
+ {
+ 	unsigned int inputmargin;
+-	u8 *headpage, *src;
++	u8 *out, *headpage, *src;
+ 	bool support_0padding;
+ 	int ret, maptype;
+ 
+@@ -220,11 +220,12 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 	}
+ 
+ 	rq->inputsize -= inputmargin;
+-	src = z_erofs_handle_inplace_io(rq, headpage, &inputmargin, &maptype,
+-					support_0padding);
++	src = z_erofs_handle_inplace_io(rq, headpage, dst, &inputmargin,
++					&maptype, support_0padding);
+ 	if (IS_ERR(src))
+ 		return PTR_ERR(src);
+ 
++	out = dst + rq->pageofs_out;
+ 	/* legacy format could compress extra data in a pcluster. */
+ 	if (rq->partial_decoding || !support_0padding)
+ 		ret = LZ4_decompress_safe_partial(src + inputmargin, out,
+@@ -253,7 +254,7 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 		vm_unmap_ram(src, PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT);
+ 	} else if (maptype == 2) {
+ 		erofs_put_pcpubuf(src);
+-	} else {
++	} else if (maptype != 3) {
+ 		DBG_BUGON(1);
+ 		return -EFAULT;
+ 	}
+@@ -354,8 +355,7 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
+ 	dst_maptype = 2;
+ 
+ dstmap_out:
+-	ret = alg->decompress(rq, dst + rq->pageofs_out);
+-
++	ret = alg->decompress(rq, dst);
+ 	if (!dst_maptype)
+ 		kunmap_atomic(dst);
+ 	else if (dst_maptype == 2)
+-- 
+2.39.3
+
