@@ -1,76 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5425868A08
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Feb 2024 08:41:22 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA323868AF9
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Feb 2024 09:42:42 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=hf61yBQv;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VgL8rYEk;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TkTv15BbYz3vXw
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Feb 2024 18:41:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TkWFr2zXdz3d3W
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Feb 2024 19:42:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=hf61yBQv;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VgL8rYEk;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62d; helo=mail-pl1-x62d.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TkTtq1mnLz3dDq
-	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Feb 2024 18:41:06 +1100 (AEDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1d918008b99so30849385ad.3
-        for <linux-erofs@lists.ozlabs.org>; Mon, 26 Feb 2024 23:41:06 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TkWFl1Nz8z30h8
+	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Feb 2024 19:42:33 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709019665; x=1709624465; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=92+2TageH+FXGPhCUqujdzhw6qx31aFaK8t168mlTs0=;
-        b=hf61yBQvTvflDpTkewThsxTMa7Px4Z+IKlAkuNzzIzPrh0t2Z9oMLHlW4w9rhbcn4z
-         Dt8uA0X5ygItvpKQYWED9rWuZRi60Jq0/9cDPX78W+F+6YgQ6iWa3Lb3+u05c+yxMUnb
-         jsVBN6u6o2zwUkZN9JLABQbHzzuo5n2p8I4S8YO4d93EzgPysPTUjRqet/3GTlF7tumr
-         kGm9Tb5LLM+slLzxGfsIDpsdZk773zCd6HG88lZDKTPNAj5VJZiM258nQDOD5c8mHzPx
-         XmGKnn+0kz+ZMZ8CI8C7ldAEqb606Nw3F+5AQj41mhfqckFt5uOtqGatd3ymFgxs5Hgg
-         IRtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709019665; x=1709624465;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=92+2TageH+FXGPhCUqujdzhw6qx31aFaK8t168mlTs0=;
-        b=R98GMWGcbzBrPj2Ti1DJxPAiGmLfC9Vcply7+hEEOu11/1ecu3pxAV4CViPPLRNINB
-         xEKUqfqutmzeDpy1espRLMrJz2Z4jtG/7lZ07GZudO3/rPgzZmA6yPQVhWJAv87KQ1Gr
-         8ecnR3M/b44KQBgyG4kPQLRFlVVL9CWX8fpjd7DXI6f7n68o1s77DtvkO6rorC6ic+Vi
-         XBh/HkIVbaFpAaU4UE8CtZBgpMzlLDSzAGxPedOD/E4pfZg/WrFWXnpIrdgf47wkndDB
-         yRIMJgC9EuRPGlRQ1l2rUS4mO6/eWRbbx+UyK6dzCjy9h56CG4MtTu2z23eMUbfW2LRA
-         Vxew==
-X-Forwarded-Encrypted: i=1; AJvYcCV+k1PANEPnuqv6GTq6G0i1rR59MIO/0w29UTDcEYL2M/4mENvaZxNuXu7Urpd/bs+hpRk93Rczl4Qm0n9AzirA1jblS+pbYnEzOGRG
-X-Gm-Message-State: AOJu0YwZZtVj/8X0HFfz3OK63o6IDxpC5Z7QHi6daiGVsZoCeeSb9KtT
-	IbUrGwlr50pDu5Mhj+bWguR1J7gWHWB3ljb6VBnKjSo27lrk5S/G
-X-Google-Smtp-Source: AGHT+IGf9sMePHBxGTwQUOjRzd4Is4ynyjVANJdI0djeLhvJxopu5kQmD6jpIJ0tB7YYiUVeOn4UbQ==
-X-Received: by 2002:a17:903:2281:b0:1d9:ce46:6ebd with SMTP id b1-20020a170903228100b001d9ce466ebdmr10851750plh.16.1709019664319;
-        Mon, 26 Feb 2024 23:41:04 -0800 (PST)
-Received: from localhost ([156.236.96.164])
-        by smtp.gmail.com with ESMTPSA id l11-20020a17090270cb00b001dcc0d35018sm181197plt.112.2024.02.26.23.41.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 23:41:04 -0800 (PST)
-Date: Tue, 27 Feb 2024 15:40:57 +0800
-From: Yue Hu <zbestahu@gmail.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 6.1.y 1/2] erofs: simplify compression configuration
- parser
-Message-ID: <20240227153951.00000e5e.zbestahu@gmail.com>
-In-Reply-To: <80740042-8b16-40f6-b0a2-4e53670d6513@linux.alibaba.com>
-References: <5216b503054dbbb9fccf8faa280647c728e82726.1709000322.git.huyue2@coolpad.com>
-	<80740042-8b16-40f6-b0a2-4e53670d6513@linux.alibaba.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-w64-mingw32)
+	d=linux.alibaba.com; s=default;
+	t=1709023349; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=035NIOoiUNeYyHYvFRTUEdSkYo5AVa/T+t0yEy6j3Wc=;
+	b=VgL8rYEkD/HUpqoMBZfF3X5RomV5/WYIqZQW6UsPg3ZcMlrtznje15cmQWGZm1d586QIbj8WciLEIGMh7oSUgp+emglh/Ss586SAvqOZSLihBtlABqFpFAluslaqB+vzcWj+0IduyVssQ8CudTpa6UtlLyxR1yaxejVd4ma7P6Q=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W1MCR1g_1709023343;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W1MCR1g_1709023343)
+          by smtp.aliyun-inc.com;
+          Tue, 27 Feb 2024 16:42:27 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org,
+	Mike Baynton <mike@mbaynton.com>
+Subject: [PATCH v2] erofs-utils: mkfs: Support tar source without data
+Date: Tue, 27 Feb 2024 16:42:21 +0800
+Message-Id: <20240227084221.342635-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20359e03-f7aa-4531-b0d1-b76e9950f233@linux.alibaba.com>
+References: <20359e03-f7aa-4531-b0d1-b76e9950f233@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,335 +53,130 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: gregkh@linuxfoundation.org, Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, stable@vger.kernel.org, zhangwen@coolpad.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, 27 Feb 2024 11:00:01 +0800
-Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+From: Mike Baynton <mike@mbaynton.com>
 
-> Hi Yue,
-> 
-> On 2024/2/27 10:22, Yue Hu wrote:
-> > From: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > 
-> > [ Upstream commit efb4fb02cef3ab410b603c8f0e1c67f61d55f542 ]
-> > 
-> > Move erofs_load_compr_cfgs() into decompressor.c as well as introduce
-> > a callback instead of a hard-coded switch for each algorithm for
-> > simplicity.
-> > 
-> > Reviewed-by: Chao Yu <chao@kernel.org>
-> > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> > Link: https://lore.kernel.org/r/20231022130957.11398-1-xiang@kernel.org
-> > Stable-dep-of: 118a8cf504d7 ("erofs: fix inconsistent per-file compression format")
-> > Signed-off-by: Yue Hu <huyue2@coolpad.com>  
-> 
-> where is the real fix [patch 2/2]? It's needed to be posted
-> here too.
+This improves performance of meta-only image creation in cases where the
+source is a tarball stream that is not seekable. The writer may now use
+`--tar=headerball` and omit the file data. Previously, the stream writer
+was forced to send the file's size worth of null bytes or any data after
+each tar header which was simply discarded by mkfs.erofs.
 
-Already sent.
+Signed-off-by: Mike Baynton <mike@mbaynton.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
 
-> 
-> Thanks,
-> Gao Xiang
-> 
-> > ---
-> >   fs/erofs/compress.h          |  4 ++
-> >   fs/erofs/decompressor.c      | 60 ++++++++++++++++++++++++++++--
-> >   fs/erofs/decompressor_lzma.c |  4 +-
-> >   fs/erofs/internal.h          | 28 ++------------
-> >   fs/erofs/super.c             | 72 +++++-------------------------------
-> >   5 files changed, 76 insertions(+), 92 deletions(-)
-> > 
-> > diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-> > index 26fa170090b8..c4a3187bdb8f 100644
-> > --- a/fs/erofs/compress.h
-> > +++ b/fs/erofs/compress.h
-> > @@ -21,6 +21,8 @@ struct z_erofs_decompress_req {
-> >   };
-> >   
-> >   struct z_erofs_decompressor {
-> > +	int (*config)(struct super_block *sb, struct erofs_super_block *dsb,
-> > +		      void *data, int size);
-> >   	int (*decompress)(struct z_erofs_decompress_req *rq,
-> >   			  struct page **pagepool);
-> >   	char *name;
-> > @@ -93,6 +95,8 @@ int z_erofs_decompress(struct z_erofs_decompress_req *rq,
-> >   		       struct page **pagepool);
-> >   
-> >   /* prototypes for specific algorithms */
-> > +int z_erofs_load_lzma_config(struct super_block *sb,
-> > +			struct erofs_super_block *dsb, void *data, int size);
-> >   int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
-> >   			    struct page **pagepool);
-> >   #endif
-> > diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-> > index 0cfad74374ca..ae3cfd018d99 100644
-> > --- a/fs/erofs/decompressor.c
-> > +++ b/fs/erofs/decompressor.c
-> > @@ -24,11 +24,11 @@ struct z_erofs_lz4_decompress_ctx {
-> >   	unsigned int oend;
-> >   };
-> >   
-> > -int z_erofs_load_lz4_config(struct super_block *sb,
-> > -			    struct erofs_super_block *dsb,
-> > -			    struct z_erofs_lz4_cfgs *lz4, int size)
-> > +static int z_erofs_load_lz4_config(struct super_block *sb,
-> > +			    struct erofs_super_block *dsb, void *data, int size)
-> >   {
-> >   	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> > +	struct z_erofs_lz4_cfgs *lz4 = data;
-> >   	u16 distance;
-> >   
-> >   	if (lz4) {
-> > @@ -374,17 +374,71 @@ static struct z_erofs_decompressor decompressors[] = {
-> >   		.name = "interlaced"
-> >   	},
-> >   	[Z_EROFS_COMPRESSION_LZ4] = {
-> > +		.config = z_erofs_load_lz4_config,
-> >   		.decompress = z_erofs_lz4_decompress,
-> >   		.name = "lz4"
-> >   	},
-> >   #ifdef CONFIG_EROFS_FS_ZIP_LZMA
-> >   	[Z_EROFS_COMPRESSION_LZMA] = {
-> > +		.config = z_erofs_load_lzma_config,
-> >   		.decompress = z_erofs_lzma_decompress,
-> >   		.name = "lzma"
-> >   	},
-> >   #endif
-> >   };
-> >   
-> > +int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
-> > +{
-> > +	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> > +	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-> > +	unsigned int algs, alg;
-> > +	erofs_off_t offset;
-> > +	int size, ret = 0;
-> > +
-> > +	if (!erofs_sb_has_compr_cfgs(sbi)) {
-> > +		sbi->available_compr_algs = Z_EROFS_COMPRESSION_LZ4;
-> > +		return z_erofs_load_lz4_config(sb, dsb, NULL, 0);
-> > +	}
-> > +
-> > +	sbi->available_compr_algs = le16_to_cpu(dsb->u1.available_compr_algs);
-> > +	if (sbi->available_compr_algs & ~Z_EROFS_ALL_COMPR_ALGS) {
-> > +		erofs_err(sb, "unidentified algorithms %x, please upgrade kernel",
-> > +			  sbi->available_compr_algs & ~Z_EROFS_ALL_COMPR_ALGS);
-> > +		return -EOPNOTSUPP;
-> > +	}
-> > +
-> > +	offset = EROFS_SUPER_OFFSET + sbi->sb_size;
-> > +	alg = 0;
-> > +	for (algs = sbi->available_compr_algs; algs; algs >>= 1, ++alg) {
-> > +		void *data;
-> > +
-> > +		if (!(algs & 1))
-> > +			continue;
-> > +
-> > +		data = erofs_read_metadata(sb, &buf, &offset, &size);
-> > +		if (IS_ERR(data)) {
-> > +			ret = PTR_ERR(data);
-> > +			break;
-> > +		}
-> > +
-> > +		if (alg >= ARRAY_SIZE(decompressors) ||
-> > +		    !decompressors[alg].config) {
-> > +			erofs_err(sb, "algorithm %d isn't enabled on this kernel",
-> > +				  alg);
-> > +			ret = -EOPNOTSUPP;
-> > +		} else {
-> > +			ret = decompressors[alg].config(sb,
-> > +					dsb, data, size);
-> > +		}
-> > +
-> > +		kfree(data);
-> > +		if (ret)
-> > +			break;
-> > +	}
-> > +	erofs_put_metabuf(&buf);
-> > +	return ret;
-> > +}
-> > +
-> >   int z_erofs_decompress(struct z_erofs_decompress_req *rq,
-> >   		       struct page **pagepool)
-> >   {
-> > diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
-> > index 49addc345aeb..970464c4b676 100644
-> > --- a/fs/erofs/decompressor_lzma.c
-> > +++ b/fs/erofs/decompressor_lzma.c
-> > @@ -72,10 +72,10 @@ int z_erofs_lzma_init(void)
-> >   }
-> >   
-> >   int z_erofs_load_lzma_config(struct super_block *sb,
-> > -			     struct erofs_super_block *dsb,
-> > -			     struct z_erofs_lzma_cfgs *lzma, int size)
-> > +			struct erofs_super_block *dsb, void *data, int size)
-> >   {
-> >   	static DEFINE_MUTEX(lzma_resize_mutex);
-> > +	struct z_erofs_lzma_cfgs *lzma = data;
-> >   	unsigned int dict_size, i;
-> >   	struct z_erofs_lzma *strm, *head = NULL;
-> >   	int err;
-> > diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> > index d8d09fc3ed65..79a7a5815ea6 100644
-> > --- a/fs/erofs/internal.h
-> > +++ b/fs/erofs/internal.h
-> > @@ -471,6 +471,8 @@ struct erofs_map_dev {
-> >   
-> >   /* data.c */
-> >   extern const struct file_operations erofs_file_fops;
-> > +void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
-> > +			  erofs_off_t *offset, int *lengthp);
-> >   void erofs_unmap_metabuf(struct erofs_buf *buf);
-> >   void erofs_put_metabuf(struct erofs_buf *buf);
-> >   void *erofs_bread(struct erofs_buf *buf, struct inode *inode,
-> > @@ -565,9 +567,7 @@ void z_erofs_exit_zip_subsystem(void);
-> >   int erofs_try_to_free_all_cached_pages(struct erofs_sb_info *sbi,
-> >   				       struct erofs_workgroup *egrp);
-> >   int erofs_try_to_free_cached_page(struct page *page);
-> > -int z_erofs_load_lz4_config(struct super_block *sb,
-> > -			    struct erofs_super_block *dsb,
-> > -			    struct z_erofs_lz4_cfgs *lz4, int len);
-> > +int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb);
-> >   #else
-> >   static inline void erofs_shrinker_register(struct super_block *sb) {}
-> >   static inline void erofs_shrinker_unregister(struct super_block *sb) {}
-> > @@ -575,36 +575,14 @@ static inline int erofs_init_shrinker(void) { return 0; }
-> >   static inline void erofs_exit_shrinker(void) {}
-> >   static inline int z_erofs_init_zip_subsystem(void) { return 0; }
-> >   static inline void z_erofs_exit_zip_subsystem(void) {}
-> > -static inline int z_erofs_load_lz4_config(struct super_block *sb,
-> > -				  struct erofs_super_block *dsb,
-> > -				  struct z_erofs_lz4_cfgs *lz4, int len)
-> > -{
-> > -	if (lz4 || dsb->u1.lz4_max_distance) {
-> > -		erofs_err(sb, "lz4 algorithm isn't enabled");
-> > -		return -EINVAL;
-> > -	}
-> > -	return 0;
-> > -}
-> >   #endif	/* !CONFIG_EROFS_FS_ZIP */
-> >   
-> >   #ifdef CONFIG_EROFS_FS_ZIP_LZMA
-> >   int z_erofs_lzma_init(void);
-> >   void z_erofs_lzma_exit(void);
-> > -int z_erofs_load_lzma_config(struct super_block *sb,
-> > -			     struct erofs_super_block *dsb,
-> > -			     struct z_erofs_lzma_cfgs *lzma, int size);
-> >   #else
-> >   static inline int z_erofs_lzma_init(void) { return 0; }
-> >   static inline int z_erofs_lzma_exit(void) { return 0; }
-> > -static inline int z_erofs_load_lzma_config(struct super_block *sb,
-> > -			     struct erofs_super_block *dsb,
-> > -			     struct z_erofs_lzma_cfgs *lzma, int size) {
-> > -	if (lzma) {
-> > -		erofs_err(sb, "lzma algorithm isn't enabled");
-> > -		return -EINVAL;
-> > -	}
-> > -	return 0;
-> > -}
-> >   #endif	/* !CONFIG_EROFS_FS_ZIP */
-> >   
-> >   /* flags for erofs_fscache_register_cookie() */
-> > diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> > index bd8bf8fc2f5d..f2647126cb2f 100644
-> > --- a/fs/erofs/super.c
-> > +++ b/fs/erofs/super.c
-> > @@ -126,8 +126,8 @@ static bool check_layout_compatibility(struct super_block *sb,
-> >   
-> >   #ifdef CONFIG_EROFS_FS_ZIP
-> >   /* read variable-sized metadata, offset will be aligned by 4-byte */
-> > -static void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
-> > -				 erofs_off_t *offset, int *lengthp)
-> > +void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
-> > +			  erofs_off_t *offset, int *lengthp)
-> >   {
-> >   	u8 *buffer, *ptr;
-> >   	int len, i, cnt;
-> > @@ -159,64 +159,15 @@ static void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
-> >   	}
-> >   	return buffer;
-> >   }
-> > -
-> > -static int erofs_load_compr_cfgs(struct super_block *sb,
-> > -				 struct erofs_super_block *dsb)
-> > -{
-> > -	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> > -	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-> > -	unsigned int algs, alg;
-> > -	erofs_off_t offset;
-> > -	int size, ret = 0;
-> > -
-> > -	sbi->available_compr_algs = le16_to_cpu(dsb->u1.available_compr_algs);
-> > -	if (sbi->available_compr_algs & ~Z_EROFS_ALL_COMPR_ALGS) {
-> > -		erofs_err(sb, "try to load compressed fs with unsupported algorithms %x",
-> > -			  sbi->available_compr_algs & ~Z_EROFS_ALL_COMPR_ALGS);
-> > -		return -EINVAL;
-> > -	}
-> > -
-> > -	offset = EROFS_SUPER_OFFSET + sbi->sb_size;
-> > -	alg = 0;
-> > -	for (algs = sbi->available_compr_algs; algs; algs >>= 1, ++alg) {
-> > -		void *data;
-> > -
-> > -		if (!(algs & 1))
-> > -			continue;
-> > -
-> > -		data = erofs_read_metadata(sb, &buf, &offset, &size);
-> > -		if (IS_ERR(data)) {
-> > -			ret = PTR_ERR(data);
-> > -			break;
-> > -		}
-> > -
-> > -		switch (alg) {
-> > -		case Z_EROFS_COMPRESSION_LZ4:
-> > -			ret = z_erofs_load_lz4_config(sb, dsb, data, size);
-> > -			break;
-> > -		case Z_EROFS_COMPRESSION_LZMA:
-> > -			ret = z_erofs_load_lzma_config(sb, dsb, data, size);
-> > -			break;
-> > -		default:
-> > -			DBG_BUGON(1);
-> > -			ret = -EFAULT;
-> > -		}
-> > -		kfree(data);
-> > -		if (ret)
-> > -			break;
-> > -	}
-> > -	erofs_put_metabuf(&buf);
-> > -	return ret;
-> > -}
-> >   #else
-> > -static int erofs_load_compr_cfgs(struct super_block *sb,
-> > -				 struct erofs_super_block *dsb)
-> > +static int z_erofs_parse_cfgs(struct super_block *sb,
-> > +			      struct erofs_super_block *dsb)
-> >   {
-> > -	if (dsb->u1.available_compr_algs) {
-> > -		erofs_err(sb, "try to load compressed fs when compression is disabled");
-> > -		return -EINVAL;
-> > -	}
-> > -	return 0;
-> > +	if (!dsb->u1.available_compr_algs)
-> > +		return 0;
-> > +
-> > +	erofs_err(sb, "compression disabled, unable to mount compressed EROFS");
-> > +	return -EOPNOTSUPP;
-> >   }
-> >   #endif
-> >   
-> > @@ -398,10 +349,7 @@ static int erofs_read_superblock(struct super_block *sb)
-> >   	}
-> >   
-> >   	/* parse on-disk compression configurations */
-> > -	if (erofs_sb_has_compr_cfgs(sbi))
-> > -		ret = erofs_load_compr_cfgs(sb, dsb);
-> > -	else
-> > -		ret = z_erofs_load_lz4_config(sb, dsb, NULL, 0);
-> > +	ret = z_erofs_parse_cfgs(sb, dsb);
-> >   	if (ret < 0)
-> >   		goto out;
-> >     
+Hi Mike,
+  Just some minor changes for applying to -dev development codebase.
+Does it look good to you?
+  (I will apply this version to -experimental for testing.)
+
+ include/erofs/tar.h |  2 +-
+ lib/tar.c           |  2 +-
+ man/mkfs.erofs.1    | 23 +++++++++++++++++------
+ mkfs/main.c         |  9 +++++++--
+ 4 files changed, 26 insertions(+), 10 deletions(-)
+
+diff --git a/include/erofs/tar.h b/include/erofs/tar.h
+index be03d1b..e45b895 100644
+--- a/include/erofs/tar.h
++++ b/include/erofs/tar.h
+@@ -46,7 +46,7 @@ struct erofs_tarfile {
+ 
+ 	int fd;
+ 	u64 offset;
+-	bool index_mode, aufs;
++	bool index_mode, headeronly_mode, aufs;
+ };
+ 
+ void erofs_iostream_close(struct erofs_iostream *ios);
+diff --git a/lib/tar.c b/lib/tar.c
+index 1d764b2..7c14c06 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -589,7 +589,7 @@ static int tarerofs_write_file_index(struct erofs_inode *inode,
+ 	ret = tarerofs_write_chunkes(inode, data_offset);
+ 	if (ret)
+ 		return ret;
+-	if (erofs_iostream_lskip(&tar->ios, inode->i_size))
++	if (!tar->headeronly_mode && erofs_iostream_lskip(&tar->ios, inode->i_size))
+ 		return -EIO;
+ 	return 0;
+ }
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index f32dc26..41eb5fb 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -17,7 +17,7 @@ achieve high performance for embedded devices with limited memory since it has
+ unnoticable memory overhead and page cache thrashing.
+ .PP
+ mkfs.erofs is used to create such EROFS filesystem \fIDESTINATION\fR image file
+-from \fISOURCE\fR directory.
++from \fISOURCE\fR directory or tarball.
+ .SH OPTIONS
+ .TP
+ .BI "\-z " compression-algorithm \fR[\fP, # \fR][\fP: ... \fR]\fP
+@@ -186,11 +186,22 @@ Use extended inodes instead of compact inodes if the file modification time
+ would overflow compact inodes. This is the default. Overrides
+ .BR --ignore-mtime .
+ .TP
+-.B "\-\-tar=f"
+-Generate a full EROFS image from a tarball.
+-.TP
+-.B "\-\-tar=i"
+-Generate an meta-only EROFS image from a tarball.
++.BI "\-\-tar, \-\-tar="MODE
++Treat \fISOURCE\fR as a tarball or tarball-like "headerball" rather than as a
++directory.
++
++\fIMODE\fR may be one of \fBf\fR, \fBi\fR, or \fBheaderball\fR.
++
++\fBf\fR: Generate a full EROFS image from a regular tarball. (default)
++
++\fBi\fR: Generate a meta-only EROFS image from a regular tarball. Only
++metadata such as dentries, inodes, and xattrs will be added to the image,
++without file data. Uses for such images include as a layer in an overlay
++filesystem with other data-only layers.
++
++\fBheaderball\fR: Generate a meta-only EROFS image from a stream identical
++to a tarball except that file data is not present after each file header.
++It can improve performance especially when \fISOURCE\fR is not seekable.
+ .TP
+ .BI "\-\-uid-offset=" UIDOFFSET
+ Add \fIUIDOFFSET\fR to all file UIDs.
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 3191b89..c62d202 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -162,6 +162,9 @@ static void usage(int argc, char **argv)
+ 		" --preserve-mtime      keep per-file modification time strictly\n"
+ 		" --offset=#            skip # bytes at the beginning of IMAGE.\n"
+ 		" --aufs                replace aufs special files with overlayfs metadata\n"
++		" --tar=X               generate a full or index-only image from a tarball(-ish) source\n"
++		"                       (X = f|i|headerball; f=full mode, i=index mode,\n"
++		"                                            headerball=file data is omited in the source stream)\n"
+ 		" --tar=[fi]            generate an image from tarball(s)\n"
+ 		" --ovlfs-strip=<0,1>   strip overlayfs metadata in the target image (e.g. whiteouts)\n"
+ 		" --quiet               quiet execution (do not write anything to standard output.)\n"
+@@ -617,11 +620,13 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 			cfg.c_extra_ea_name_prefixes = true;
+ 			break;
+ 		case 20:
+-			if (optarg && (!strcmp(optarg, "i") ||
+-				!strcmp(optarg, "0") || !memcmp(optarg, "0,", 2))) {
++			if (optarg && (!strcmp(optarg, "i") || (!strcmp(optarg, "headerball") ||
++				!strcmp(optarg, "0") || !memcmp(optarg, "0,", 2)))) {
+ 				erofstar.index_mode = true;
+ 				if (!memcmp(optarg, "0,", 2))
+ 					erofstar.mapfile = strdup(optarg + 2);
++				if (!strcmp(optarg, "headerball"))
++					erofstar.headeronly_mode = true;
+ 			}
+ 			tar_mode = true;
+ 			break;
+-- 
+2.39.3
 
