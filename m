@@ -2,69 +2,69 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45722868793
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Feb 2024 04:11:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6DEA7868880
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Feb 2024 06:12:27 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=iRQ8uDs6;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=mbaynton-com.20230601.gappssmtp.com header.i=@mbaynton-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=LketC54J;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TkMw50FmZz3cgJ
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Feb 2024 14:11:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TkQbF1XQhz3cVv
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Feb 2024 16:12:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=iRQ8uDs6;
+	dkim=pass (2048-bit key; unprotected) header.d=mbaynton-com.20230601.gappssmtp.com header.i=@mbaynton-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=LketC54J;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::630; helo=mail-pl1-x630.google.com; envelope-from=zbestahu@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=mbaynton.com (client-ip=2607:f8b0:4864:20::d30; helo=mail-io1-xd30.google.com; envelope-from=mike@mbaynton.com; receiver=lists.ozlabs.org)
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TkMvx1Q4Mz3c5J
-	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Feb 2024 14:11:39 +1100 (AEDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1dc0e5b223eso31466865ad.1
-        for <linux-erofs@lists.ozlabs.org>; Mon, 26 Feb 2024 19:11:39 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TkQb51TK1z2xPY
+	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Feb 2024 16:12:17 +1100 (AEDT)
+Received: by mail-io1-xd30.google.com with SMTP id ca18e2360f4ac-7c7b8fb8ba6so107209239f.2
+        for <linux-erofs@lists.ozlabs.org>; Mon, 26 Feb 2024 21:12:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709003497; x=1709608297; darn=lists.ozlabs.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HYW+OiY7hrg9hJJVMV23BArQpEp+Mbu+faqphSzehlI=;
-        b=iRQ8uDs6ORCQ3upAu0st+vnbA/qKkp1JDuenWDX9ihCOilVLs1Z/ZpaIX89jq1pNo7
-         816co5epvb9MuAcpVlzyzAxvElOgUJbnoZe3vDr6LQLtcFJVARfG4y3gOkWjUTYrMlyo
-         8V42xfLUxZSQTkQhJjnK2cdxSreJJz8UzW6qCYpDf/zm9MjmNodkuG6/Cb8e/kojfYak
-         0qAWCjG68tGSvvX3X5wzgZUcBnMeXjKr6LSHFQ/a5mumcTPUiQDpxOdqa3iCD4RQ7n/B
-         2CqI21Rb0g8uf9gn7mU3INA7/Uyelbr+J3co5tL3V5iq7XmM9ZV1AnFh4PKRVlsHFKxM
-         Myrg==
+        d=mbaynton-com.20230601.gappssmtp.com; s=20230601; t=1709010732; x=1709615532; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t+TWs+H0ocrFopell/NtyO89SnJPjFyUYBDG/DVdENE=;
+        b=LketC54JyfllvT9OaXd9Bd98V2j9fCVHqORmQ8WoMI7/LguwxfD8S7Z3Q0DhOv02Wd
+         GwuQ0CPa6dq1G8n9ePlLzoACfk0p8uIE9q6Gqhsk0CmAyhxTXxUohLGiwDd97GHv8J6F
+         IBhyZTkF6Dr11njwRsPcSIof3gsbuCVxqF8c4bjTPnGdVYkmR5VHU2UuYaRjdzRS6JMY
+         i9S2MHvvMAciRIRG2lv9A6NikOzCb4tH8dRZxVxlSnd6X9WRD8orO00RRorlVXBasDFk
+         xxlEKJPkWrDBG2ipHIr3H65J7I3jpRYVoIbNt2qpYon+oZhGmH8JnfG8ANZ5Z4YVaqkE
+         aWwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709003497; x=1709608297;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HYW+OiY7hrg9hJJVMV23BArQpEp+Mbu+faqphSzehlI=;
-        b=od036qEJ/HGZkfJGQelZq0dw0ODPJP0oains2wxUMI1yKtIIaUpTM4Cgcw5Qj4x/nu
-         ON9AoJ1ye3CUWxwyhutYtV57Q+JDcrNzfuJf4LbY+6rGb1ZbrLbhXT1BUD4SDGvWkhAO
-         a0PT05ibqFXh+mUNLhHqN60kHiHKPQABjsHF49LUDlaVnFbgpVPRxZV4XJKsO7q4IC3N
-         3eDIE6/zuvh2t9n2q4j5JM0nxvxwPu7QNyJ11P4eyBIJROu5VTxv1eV5itUP+PoKjD8b
-         oBuPnD7uL74pge3ugeurGNBZ/Bok+PQ1vuciJoFqjRtbhZzLSokh+8oW3YIMj7GyWcfA
-         /1/w==
-X-Gm-Message-State: AOJu0YxipI2IyNr2pY2nSYGiMpSL+iSoc3+7JF1rbnbN9ZvRl8YHKtOH
-	Lhz2txdln7GurxmnnqdGDxhXYNdffSxXg+BXIm/dKyccESiOE0nH
-X-Google-Smtp-Source: AGHT+IG5TwA92YjHC6YzSfesOetS4sm25SxEZk8Cc+fmnvspNDF82viDZx2QNhdLGC+3FYFEbJKJPA==
-X-Received: by 2002:a17:903:246:b0:1dc:1e7c:cd3 with SMTP id j6-20020a170903024600b001dc1e7c0cd3mr9637251plh.47.1709003497035;
-        Mon, 26 Feb 2024 19:11:37 -0800 (PST)
-Received: from localhost.localdomain ([218.94.48.179])
-        by smtp.gmail.com with ESMTPSA id v22-20020a170902e8d600b001d7057c2fbasm402527plg.100.2024.02.26.19.11.34
+        d=1e100.net; s=20230601; t=1709010732; x=1709615532;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t+TWs+H0ocrFopell/NtyO89SnJPjFyUYBDG/DVdENE=;
+        b=RquZ3lwaUr2i0YwzvC1sK5aRyN1EJbHIcmrKWp7hFUIpYYdHuxqPhsyzm2WcPyA98L
+         91d0RV0eTfg5bv6GpB85FyTA5WQ4NKmKhIelz3mCjgD5pzML/3PNFhytTqb8HcojdfUH
+         6wAk5csPqCe8pBz+nC+MUbcBxkpIKPMVCji/fFfCgL3rqgTZ833nZjU0ib1ZhDK6hi4+
+         /B7TXnCmJGjD/FR6Ag2ke688d/G34hAWQAhoiGsdiIRHBhp1Z6Xoy3YOD6jBJiWGdxBh
+         vpF171ddst+e/JVBHFBqOM9DpKbJ3SBwoDga43Xg7HdLp038C5iLJVlLs/BP1wE9JMut
+         lwlw==
+X-Gm-Message-State: AOJu0Yx7ZWitaD27cYiHEb7vOfhgX+kbHwjjl4XUfm9IW0xmEGbszVMA
+	upv+wKs2vEWySvwjcDNw2nk9qJuuHuHLRlJ1qMlZ9O3VkSaE98XhrCKr9r6z7K58kjoNnU4JkOn
+	d
+X-Google-Smtp-Source: AGHT+IGTRw8aHQEAdiCLi6XRG/DEKU9l0HU+Po+QtJA5etojc4nMePU5pztu676Fmy+Dxu4eq0pRKw==
+X-Received: by 2002:a5e:834c:0:b0:7c7:d7fd:44d5 with SMTP id y12-20020a5e834c000000b007c7d7fd44d5mr3508929iom.12.1709010731674;
+        Mon, 26 Feb 2024 21:12:11 -0800 (PST)
+Received: from mike-laptop.lan.mbaynton.com ([2601:444:600:440:777a:c763:a1e5:964])
+        by smtp.gmail.com with ESMTPSA id f21-20020a02b795000000b004745ef63802sm1668720jam.49.2024.02.26.21.12.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 19:11:36 -0800 (PST)
-From: Yue Hu <zbestahu@gmail.com>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	hsiangkao@linux.alibaba.com
-Subject: [PATCH 6.1.y 2/2] erofs: fix inconsistent per-file compression format
-Date: Tue, 27 Feb 2024 11:11:12 +0800
-Message-Id: <c8c7503a90e89f6595205be21bfbda0cdfcb3a30.1709000322.git.huyue2@coolpad.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <5216b503054dbbb9fccf8faa280647c728e82726.1709000322.git.huyue2@coolpad.com>
-References: <5216b503054dbbb9fccf8faa280647c728e82726.1709000322.git.huyue2@coolpad.com>
+        Mon, 26 Feb 2024 21:12:11 -0800 (PST)
+From: Mike Baynton <mike@mbaynton.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: mkfs: Support tar source without data
+Date: Mon, 26 Feb 2024 23:11:54 -0600
+Message-Id: <20240227051154.4009326-1-mike@mbaynton.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -76,96 +76,130 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, zhangwen@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+This improves performance of meta-only image creation in cases where the
+source is a tarball stream that is not seekable. The writer may now use
+--tar=headerball and omit the file data. Previously, the stream writer was
+forced to send the file's size worth of null bytes or any data after each
+tar header which was simply discarded by mkfs.erofs.
 
-[ Upstream commit 118a8cf504d7dfa519562d000f423ee3ca75d2c4 ]
-
-EROFS can select compression algorithms on a per-file basis, and each
-per-file compression algorithm needs to be marked in the on-disk
-superblock for initialization.
-
-However, syzkaller can generate inconsistent crafted images that use
-an unsupported algorithmtype for specific inodes, e.g. use MicroLZMA
-algorithmtype even it's not set in `sbi->available_compr_algs`.  This
-can lead to an unexpected "BUG: kernel NULL pointer dereference" if
-the corresponding decompressor isn't built-in.
-
-Fix this by checking against `sbi->available_compr_algs` for each
-m_algorithmformat request.  Incorrect !erofs_sb_has_compr_cfgs preset
-bitmap is now fixed together since it was harmless previously.
-
-Reported-by: <bugreport@ubisectech.com>
-Fixes: 8f89926290c4 ("erofs: get compression algorithms directly on mapping")
-Fixes: 622ceaddb764 ("erofs: lzma compression support")
-Reviewed-by: Yue Hu <huyue2@coolpad.com>
-Link: https://lore.kernel.org/r/20240113150602.1471050-1-hsiangkao@linux.alibaba.com
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Yue Hu <huyue2@coolpad.com>
+Signed-off-by: Mike Baynton <mike@mbaynton.com>
 ---
- fs/erofs/decompressor.c |  2 +-
- fs/erofs/zmap.c         | 23 +++++++++++++----------
- 2 files changed, 14 insertions(+), 11 deletions(-)
+Sorry for the delay getting to this, it fulfills a feature request
+discussed a week or so ago:
+<https://lore.kernel.org/linux-erofs/5db6f727-00e1-4625-9914-3ffabfc8c43f@linux.alibaba.com>
+It sounded like we wanted the new option to be more verbose than just
+`h`, and I thought "headerball" hinted at what it is more than "header",
+but happy to change it if that's too weird!
 
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index ae3cfd018d99..1eefa4411e06 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -396,7 +396,7 @@ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
- 	int size, ret = 0;
+Thank you for your careful review, it's a simple change but this was
+motivated by necessity and isn't really my wheelhouse.
+
+ include/erofs/tar.h |  2 +-
+ lib/tar.c           |  2 +-
+ man/mkfs.erofs.1    | 23 +++++++++++++++++------
+ mkfs/main.c         |  9 ++++++---
+ 4 files changed, 25 insertions(+), 11 deletions(-)
+
+diff --git a/include/erofs/tar.h b/include/erofs/tar.h
+index a76f740..3d40a0f 100644
+--- a/include/erofs/tar.h
++++ b/include/erofs/tar.h
+@@ -46,7 +46,7 @@ struct erofs_tarfile {
  
- 	if (!erofs_sb_has_compr_cfgs(sbi)) {
--		sbi->available_compr_algs = Z_EROFS_COMPRESSION_LZ4;
-+		sbi->available_compr_algs = 1 << Z_EROFS_COMPRESSION_LZ4;
- 		return z_erofs_load_lz4_config(sb, dsb, NULL, 0);
- 	}
+ 	int fd;
+ 	u64 offset;
+-	bool index_mode, aufs;
++	bool index_mode, headeronly_mode, aufs;
+ };
  
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 0337b70b2dac..abcded1acd19 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -610,7 +610,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		.map = map,
- 	};
- 	int err = 0;
--	unsigned int lclusterbits, endoff;
-+	unsigned int lclusterbits, endoff, afmt;
- 	unsigned long initial_lcn;
- 	unsigned long long ofs, end;
- 
-@@ -700,17 +700,20 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 			err = -EFSCORRUPTED;
- 			goto unmap_out;
- 		}
--		if (vi->z_advise & Z_EROFS_ADVISE_INTERLACED_PCLUSTER)
--			map->m_algorithmformat =
--				Z_EROFS_COMPRESSION_INTERLACED;
--		else
--			map->m_algorithmformat =
--				Z_EROFS_COMPRESSION_SHIFTED;
--	} else if (m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_HEAD2) {
--		map->m_algorithmformat = vi->z_algorithmtype[1];
-+		afmt = vi->z_advise & Z_EROFS_ADVISE_INTERLACED_PCLUSTER ?
-+			Z_EROFS_COMPRESSION_INTERLACED :
-+			Z_EROFS_COMPRESSION_SHIFTED;
- 	} else {
--		map->m_algorithmformat = vi->z_algorithmtype[0];
-+		afmt = m.headtype == Z_EROFS_VLE_CLUSTER_TYPE_HEAD2 ?
-+			vi->z_algorithmtype[1] : vi->z_algorithmtype[0];
-+		if (!(EROFS_I_SB(inode)->available_compr_algs & (1 << afmt))) {
-+			erofs_err(inode->i_sb, "inconsistent algorithmtype %u for nid %llu",
-+				  afmt, vi->nid);
-+			err = -EFSCORRUPTED;
-+			goto unmap_out;
-+		}
- 	}
-+	map->m_algorithmformat = afmt;
- 
- 	if ((flags & EROFS_GET_BLOCKS_FIEMAP) ||
- 	    ((flags & EROFS_GET_BLOCKS_READMORE) &&
+ void erofs_iostream_close(struct erofs_iostream *ios);
+diff --git a/lib/tar.c b/lib/tar.c
+index 8204939..e916395 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -584,7 +584,7 @@ static int tarerofs_write_file_index(struct erofs_inode *inode,
+ 	ret = tarerofs_write_chunkes(inode, data_offset);
+ 	if (ret)
+ 		return ret;
+-	if (erofs_iostream_lskip(&tar->ios, inode->i_size))
++	if (!tar->headeronly_mode && erofs_iostream_lskip(&tar->ios, inode->i_size))
+ 		return -EIO;
+ 	return 0;
+ }
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index 00ac2ac..d488983 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -17,7 +17,7 @@ achieve high performance for embedded devices with limited memory since it has
+ unnoticable memory overhead and page cache thrashing.
+ .PP
+ mkfs.erofs is used to create such EROFS filesystem \fIDESTINATION\fR image file
+-from \fISOURCE\fR directory.
++from \fISOURCE\fR directory or tarball.
+ .SH OPTIONS
+ .TP
+ .BI "\-z " compression-algorithm \fR[\fP, # \fR][\fP: ... \fR]\fP
+@@ -180,11 +180,22 @@ Use extended inodes instead of compact inodes if the file modification time
+ would overflow compact inodes. This is the default. Overrides
+ .BR --ignore-mtime .
+ .TP
+-.B "\-\-tar=f"
+-Generate a full EROFS image from a tarball.
+-.TP
+-.B "\-\-tar=i"
+-Generate an meta-only EROFS image from a tarball.
++.BI "\-\-tar, \-\-tar="MODE
++Treat \fISOURCE\fR as a tarball or tarball-like "headerball" rather than as a
++directory.
++
++\fIMODE\fR may be one of \fBf\fR, \fBi\fR, or \fBheaderball\fR.
++
++\fBf\fR: Generate a full EROFS image from a regular tarball. (default)
++
++\fBi\fR: Generate a meta-only EROFS image from a regular tarball. Only
++metadata such as dentries, inodes, and xattrs will be added to the image,
++without file data. Uses for such images include as a layer in an overlay
++filesystem with other data-only layers.
++
++\fBheaderball\fR: Generate a meta-only EROFS image from a stream identical
++to a tarball except that file data is not present after each file header.
++Can improve performance especially when \fISOURCE\fR is not seekable.
+ .TP
+ .BI "\-\-uid-offset=" UIDOFFSET
+ Add \fIUIDOFFSET\fR to all file UIDs.
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 6d2b700..36e248a 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -122,7 +122,8 @@ static void usage(void)
+ 	      " --max-extent-bytes=#  set maximum decompressed extent size # in bytes\n"
+ 	      " --preserve-mtime      keep per-file modification time strictly\n"
+ 	      " --aufs                replace aufs special files with overlayfs metadata\n"
+-	      " --tar=[fi]            generate an image from tarball(s)\n"
++	      " --tar=[X]             generate a full or index-only image from a tarball(-ish) source\n"
++	      "                       X=f|i|headerball; f=full, i=index, headerball=tar w/o file data\n"
+ 	      " --ovlfs-strip=[01]    strip overlayfs metadata in the target image (e.g. whiteouts)\n"
+ 	      " --quiet               quiet execution (do not write anything to standard output.)\n"
+ #ifndef NDEBUG
+@@ -514,11 +515,13 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 			cfg.c_extra_ea_name_prefixes = true;
+ 			break;
+ 		case 20:
+-			if (optarg && (!strcmp(optarg, "i") ||
+-				!strcmp(optarg, "0") || !memcmp(optarg, "0,", 2))) {
++			if (optarg && (!strcmp(optarg, "i") || (!strcmp(optarg, "headerball") ||
++				!strcmp(optarg, "0") || !memcmp(optarg, "0,", 2)))) {
+ 				erofstar.index_mode = true;
+ 				if (!memcmp(optarg, "0,", 2))
+ 					erofstar.mapfile = strdup(optarg + 2);
++				if (!strcmp(optarg, "headerball"))
++					erofstar.headeronly_mode = true;
+ 			}
+ 			tar_mode = true;
+ 			break;
 -- 
-2.17.1
+2.34.1
 
