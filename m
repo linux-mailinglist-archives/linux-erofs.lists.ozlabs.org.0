@@ -2,48 +2,38 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58FB986ABC3
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Feb 2024 10:57:51 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=t4psRiYZ;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id 92B9D86B030
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Feb 2024 14:23:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tl8t31pNFz3vZc
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Feb 2024 20:57:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TlFRS1yQ3z3vd4
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Feb 2024 00:23:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=t4psRiYZ;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
+Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tl8sy0163z3vZK
-	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Feb 2024 20:57:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1709114253; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=EP8tnYSdQCPygB2wH6dQESI8xtY7wv+92KcxRwtz9AM=;
-	b=t4psRiYZ9XZwJLn+cHInFLOp2cV2F+hf0wFqG1Ov7/zHYdlGMwiLfgAEh9JHozi7uypua3rLoSOm4F7+cNCa15DWlgSYkmvJWqHgoeN+CUSkxkoLTX3IyoKOn5TCfZh+t6jf9PguSYzS+LzdxKccRjf3O4DauEVS3MwKinUMZIA=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W1PWlxl_1709114250;
-Received: from 30.97.48.212(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W1PWlxl_1709114250)
-          by smtp.aliyun-inc.com;
-          Wed, 28 Feb 2024 17:57:32 +0800
-Message-ID: <5968a9e0-7c02-4596-aae5-a04f5730c318@linux.alibaba.com>
-Date: Wed, 28 Feb 2024 17:57:30 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TlFQy5Flrz3vXk
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Feb 2024 00:23:04 +1100 (AEDT)
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 39E6C1008C721;
+	Wed, 28 Feb 2024 21:22:52 +0800 (CST)
+Received: from [192.168.25.134] (unknown [202.120.40.82])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 5D03337C969;
+	Wed, 28 Feb 2024 21:22:48 +0800 (CST)
+Content-Type: multipart/alternative;
+ boundary="------------mGv3ffdoapCw0RaRUGj7nJoT"
+Message-ID: <a8b23de9-1f35-48e9-a4af-8041bbd89739@sjtu.edu.cn>
+Date: Wed, 28 Feb 2024 21:22:48 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] erofs-utils: mkfs: introduce inner-file
- multi-threaded compression
-To: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-References: <20240225142759.340165-1-zhaoyifan@sjtu.edu.cn>
- <20240225142759.340165-5-zhaoyifan@sjtu.edu.cn>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240225142759.340165-5-zhaoyifan@sjtu.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] erofs-utils: lib: introduce atomic operations
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+References: <20240228082107.1014131-1-hsiangkao@linux.alibaba.com>
+Content-Language: en-US
+From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+In-Reply-To: <20240228082107.1014131-1-hsiangkao@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -59,374 +49,384 @@ Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+This is a multi-part message in MIME format.
+--------------mGv3ffdoapCw0RaRUGj7nJoT
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-On 2024/2/25 22:27, Yifan Zhao wrote:
-> Currently, the creation of EROFS compressed image creation is
-> single-threaded, which suffers from performance issues. This patch
-> attempts to address it by compressing the large file in parallel.
-> 
-> Specifically, each input file larger than 16MB is splited into segments,
-> and each worker thread compresses a segment as if it were a separate
-> file. Finally, the main thread merges all the compressed segments.
-> 
-> Multi-threaded compression is not compatible with -Ededupe,
-> -E(all-)fragments and -Eztailpacking for now.
-> 
-> Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-> Co-authored-by: Tong Xin <xin_tong@sjtu.edu.cn>
+On 2/28/24 16:21, Gao Xiang wrote:
+> Add some helpers (relaxed semantics) in order to prepare for the
+> upcoming multi-threaded support.
+>
+> For example, compressor may be initialized more than once in different
+> worker threads, resulting in noisy warnings.
+>
+> This patch makes sure that each message will be printed only once by
+> adding `__warnonce` atomic booleans to each erofs_compressor_init().
+>
+> Cc: Yifan Zhao<zhaoyifan@sjtu.edu.cn>
+> Signed-off-by: Gao Xiang<hsiangkao@linux.alibaba.com>
 > ---
->   include/erofs/compress.h |   1 +
->   lib/compress.c           | 690 ++++++++++++++++++++++++++++++++-------
->   lib/compressor.c         |   2 +
->   3 files changed, 575 insertions(+), 118 deletions(-)
-> 
-> diff --git a/include/erofs/compress.h b/include/erofs/compress.h
-> index 046640b..2699334 100644
-> --- a/include/erofs/compress.h
-> +++ b/include/erofs/compress.h
-> @@ -15,6 +15,7 @@ extern "C"
->   #include "internal.h"
->   
->   #define EROFS_CONFIG_COMPR_MAX_SZ           (4000 * 1024)
-> +#define EROFS_COMPR_QUEUE_SZ (EROFS_CONFIG_COMPR_MAX_SZ * 2)
->   
->   void z_erofs_drop_inline_pcluster(struct erofs_inode *inode);
->   int erofs_write_compressed_file(struct erofs_inode *inode, int fd);
-> diff --git a/lib/compress.c b/lib/compress.c
-> index 9611102..f98feae 100644
-> --- a/lib/compress.c
-> +++ b/lib/compress.c
-> @@ -8,6 +8,9 @@
->   #ifndef _LARGEFILE64_SOURCE
->   #define _LARGEFILE64_SOURCE
->   #endif
-> +#ifndef _GNU_SOURCE
-> +#define _GNU_SOURCE
-> +#endif
->   #include <string.h>
->   #include <stdlib.h>
->   #include <unistd.h>
-> @@ -20,6 +23,16 @@
->   #include "erofs/block_list.h"
->   #include "erofs/compress_hints.h"
->   #include "erofs/fragments.h"
-> +#ifdef EROFS_MT_ENABLED
-> +#include "erofs/workqueue.h"
-> +#endif
-> +#ifdef HAVE_LINUX_FALLOC_H
-> +#include <linux/falloc.h>
-> +#endif
+>   include/erofs/atomic.h      | 27 +++++++++++++++++++++++++++
+>   lib/compressor_deflate.c    | 11 ++++++++---
+>   lib/compressor_libdeflate.c |  6 +++++-
+>   lib/compressor_liblzma.c    |  5 ++++-
+>   4 files changed, 44 insertions(+), 5 deletions(-)
+>   create mode 100644 include/erofs/atomic.h
+>
+> diff --git a/include/erofs/atomic.h b/include/erofs/atomic.h
+> new file mode 100644
+> index 0000000..c486491
+> --- /dev/null
+> +++ b/include/erofs/atomic.h
+> @@ -0,0 +1,27 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +/*
+> + * Copyright (C) 2024 Alibaba Cloud
+> + */
+> +#ifndef __EROFS_ATOMIC_H
+> +#define __EROFS_ATOMIC_H
 > +
-> +#if defined(HAVE_FALLOCATE) && defined(FALLOC_FL_PUNCH_HOLE)
-> +#define USE_PER_WORKER_TMPFILE 1
-> +#endif
->   
->   /* compressing configuration specified by users */
->   struct erofs_compress_cfg {
-> @@ -33,29 +46,84 @@ struct z_erofs_extent_item {
->   	struct z_erofs_inmem_extent e;
->   };
->   
-> +struct z_erofs_file_compress_ctx {
+> +/*
+> + * Just use GCC/clang built-in functions for now
+> + * See:https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html
+> + */
+> +typedef unsigned long erofs_atomic_t;
 
-struct z_erofs_compressed_inode_ctx  would be better
+According to [1] *__atomic_test_and_set *should**only be used for 
+operands of type bool or char.
 
-> +	struct erofs_inode *inode;
-> +	int fd;
-> +	unsigned int pclustersize;
-> +
-> +	u32 tof_chksum;
-> +	bool fix_dedupedfrag;
-> +	bool fragemitted;
-> +};
-> +
->   struct z_erofs_vle_compress_ctx {
+[1] https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html
 
-I think we'd better to rename this as
+Maybe add
 
-struct z_erofs_compressed_segment_ctx
+/typedef bool erofs_atomic_bool_t;
+/
 
-> -	u8 queue[EROFS_CONFIG_COMPR_MAX_SZ * 2];
-> +	struct z_erofs_file_compress_ctx *fctx;
-> +
-> +	u8 *queue;
->   	struct list_head extents;
->   	struct z_erofs_extent_item *pivot;
->   
-> -	struct erofs_inode *inode;
-> -	struct erofs_compress_cfg *ccfg;
-> +	struct erofs_compress *chandle;
-> +	char *destbuf;
->   
-> -	u8 *metacur;
->   	unsigned int head, tail;
->   	erofs_off_t remaining;
-> -	unsigned int pclustersize;
->   	erofs_blk_t blkaddr;		/* pointing to the next blkaddr */
-> +	erofs_blk_t compressed_blocks;
->   	u16 clusterofs;
->   
-> -	u32 tof_chksum;
-> -	bool fix_dedupedfrag;
-> -	bool fragemitted;
-> +	int seg_num, seg_idx;
-> +	FILE *tmpfile;
-> +	off_t tmpfile_off;
-> +};
-> +
-> +struct z_erofs_write_index_ctx {
+for this purpose?
 
-why we need this structure, I'd like to fold it in
-
-struct z_erofs_compressed_inode_ctx.
-
-> +	struct erofs_inode *inode;
-> +	struct list_head *extents;
-> +	u16 clusterofs;
-> +	erofs_blk_t blkaddr, blkoff;
-
-I don't like this approach, let's just fix
-extents->blkaddr in a loop together.
-
-> +	u8 *metacur;
->   };
->   
-> +#ifdef EROFS_MT_ENABLED
-> +struct erofs_compress_wq_private {
-> +	bool init;
-> +	u8 *queue;
-> +	char *destbuf;
-> +	struct erofs_compress_cfg *ccfg;
-> +	FILE* tmpfile;
-> +};
-> +
-> +struct erofs_compress_work {
-> +	/* Note: struct erofs_work must be the first member */
-> +	struct erofs_work work;
-> +	struct z_erofs_vle_compress_ctx ctx;
-> +
-> +	unsigned int alg_id;
-> +	char *alg_name;
-> +	unsigned int comp_level;
-> +	unsigned int dict_size;
-> +
-> +	int ret;
-> +
-> +	struct erofs_compress_work *next;
-> +};
-> +
-> +static struct {
-> +	struct erofs_workqueue wq;
-> +	struct erofs_compress_work *idle;
-
-Does this need a mutex protection?
-
-> +	pthread_mutex_t mutex;
-> +	pthread_cond_t cond;
-> +	int nfini;
-> +} z_erofs_mt_ctrl;
-> +#endif
-> +
-> +static bool z_erofs_mt_enabled;
-> +static u8 *z_erofs_global_queue;
-> +
->   #define Z_EROFS_LEGACY_MAP_HEADER_SIZE	Z_EROFS_FULL_INDEX_ALIGN(0)
->   
-> -static void z_erofs_write_indexes_final(struct z_erofs_vle_compress_ctx *ctx)
-> +static void z_erofs_write_indexes_final(struct z_erofs_write_index_ctx *ctx)
->   {
->   	const unsigned int type = Z_EROFS_LCLUSTER_TYPE_PLAIN;
->   	struct z_erofs_lcluster_index di;
-> @@ -71,7 +139,7 @@ static void z_erofs_write_indexes_final(struct z_erofs_vle_compress_ctx *ctx)
->   	ctx->metacur += sizeof(di);
->   }
->   
-> -static void z_erofs_write_extent(struct z_erofs_vle_compress_ctx *ctx,
-> +static void z_erofs_write_extent(struct z_erofs_write_index_ctx *ctx,
->   				 struct z_erofs_inmem_extent *e)
->   {
->   	struct erofs_inode *inode = ctx->inode;
-> @@ -99,10 +167,15 @@ static void z_erofs_write_extent(struct z_erofs_vle_compress_ctx *ctx,
->   		di.di_advise = cpu_to_le16(advise);
->   
->   		if (inode->datalayout == EROFS_INODE_COMPRESSED_FULL &&
-> -		    !e->compressedblks)
-> +		    !e->compressedblks) {
->   			di.di_u.blkaddr = cpu_to_le32(inode->fragmentoff >> 32);
-> -		else
-> +		} else if (z_erofs_mt_enabled) {
-> +			di.di_u.blkaddr =
-> +				cpu_to_le32(ctx->blkaddr + ctx->blkoff);
-> +			ctx->blkoff += e->compressedblks;
-
-so we don't need this at all.
-
-> +		} else {
->   			di.di_u.blkaddr = cpu_to_le32(e->blkaddr);
-> +		}
->   		memcpy(ctx->metacur, &di, sizeof(di));
->   		ctx->metacur += sizeof(di);
->   
-> @@ -144,10 +217,15 @@ static void z_erofs_write_extent(struct z_erofs_vle_compress_ctx *ctx,
->   				Z_EROFS_LCLUSTER_TYPE_HEAD1;
->   
->   			if (inode->datalayout == EROFS_INODE_COMPRESSED_FULL &&
-> -			    !e->compressedblks)
-> +			    !e->compressedblks) {
->   				di.di_u.blkaddr = cpu_to_le32(inode->fragmentoff >> 32);
-> -			else
-> +			} else if (z_erofs_mt_enabled) {
-> +				di.di_u.blkaddr =
-> +					cpu_to_le32(ctx->blkaddr + ctx->blkoff);
-> +				ctx->blkoff += e->compressedblks;
-
-same here.
-
-> +			} else {
->   				di.di_u.blkaddr = cpu_to_le32(e->blkaddr);
-> +			}
->   
->   			if (e->partial) {
->   				DBG_BUGON(e->raw);
-> @@ -170,12 +248,12 @@ static void z_erofs_write_extent(struct z_erofs_vle_compress_ctx *ctx,
->   	ctx->clusterofs = clusterofs + count;
->   }
->   
-> -static void z_erofs_write_indexes(struct z_erofs_vle_compress_ctx *ctx)
-> +static void z_erofs_write_indexes(struct z_erofs_write_index_ctx *ctx)
->   {
->   	struct z_erofs_extent_item *ei, *n;
->   
->   	ctx->clusterofs = 0;
-> -	list_for_each_entry_safe(ei, n, &ctx->extents, list) {
-> +	list_for_each_entry_safe(ei, n, ctx->extents, list) {
->   		z_erofs_write_extent(ctx, &ei->e);
->   
->   		list_del(&ei->list);
-> @@ -188,11 +266,12 @@ static bool z_erofs_need_refill(struct z_erofs_vle_compress_ctx *ctx)
->   {
->   	const bool final = !ctx->remaining;
->   	unsigned int qh_aligned, qh_after;
-> +	struct erofs_inode *inode = ctx->fctx->inode;
->   
->   	if (final || ctx->head < EROFS_CONFIG_COMPR_MAX_SZ)
->   		return false;
->   
-> -	qh_aligned = round_down(ctx->head, erofs_blksiz(ctx->inode->sbi));
-> +	qh_aligned = round_down(ctx->head, erofs_blksiz(inode->sbi));
->   	qh_after = ctx->head - qh_aligned;
->   	memmove(ctx->queue, ctx->queue + qh_aligned, ctx->tail - qh_aligned);
->   	ctx->tail -= qh_aligned;
-> @@ -212,14 +291,13 @@ static void z_erofs_commit_extent(struct z_erofs_vle_compress_ctx *ctx,
->   
->   	list_add_tail(&ei->list, &ctx->extents);
->   	ctx->clusterofs = (ctx->clusterofs + ei->e.length) &
-> -			(erofs_blksiz(ctx->inode->sbi) - 1);
-> -
-> +			  (erofs_blksiz(ctx->fctx->inode->sbi) - 1);
->   }
->   
->   static int z_erofs_compress_dedupe(struct z_erofs_vle_compress_ctx *ctx,
->   				   unsigned int *len)
->   {
-> -	struct erofs_inode *inode = ctx->inode;
-> +	struct erofs_inode *inode = ctx->fctx->inode;
->   	const unsigned int lclustermask = (1 << inode->z_logical_clusterbits) - 1;
->   	struct erofs_sb_info *sbi = inode->sbi;
->   	struct z_erofs_extent_item *ei = ctx->pivot;
-> @@ -318,13 +396,14 @@ out:
->   static int write_uncompressed_extent(struct z_erofs_vle_compress_ctx *ctx,
->   				     unsigned int len, char *dst)
->   {
-> -	struct erofs_sb_info *sbi = ctx->inode->sbi;
-> +	struct erofs_inode *inode = ctx->fctx->inode;
-> +	struct erofs_sb_info *sbi = inode->sbi;
->   	unsigned int count = min(erofs_blksiz(sbi), len);
->   	unsigned int interlaced_offset, rightpart;
->   	int ret;
->   
->   	/* write interlaced uncompressed data if needed */
-> -	if (ctx->inode->z_advise & Z_EROFS_ADVISE_INTERLACED_PCLUSTER)
-> +	if (inode->z_advise & Z_EROFS_ADVISE_INTERLACED_PCLUSTER)
->   		interlaced_offset = ctx->clusterofs;
->   	else
->   		interlaced_offset = 0;
-> @@ -335,11 +414,19 @@ static int write_uncompressed_extent(struct z_erofs_vle_compress_ctx *ctx,
->   	memcpy(dst + interlaced_offset, ctx->queue + ctx->head, rightpart);
->   	memcpy(dst, ctx->queue + ctx->head + rightpart, count - rightpart);
->   
-> -	erofs_dbg("Writing %u uncompressed data to block %u",
-> -		  count, ctx->blkaddr);
-> -	ret = blk_write(sbi, dst, ctx->blkaddr, 1);
-> -	if (ret)
-> -		return ret;
-> +	if (ctx->tmpfile) {
-> +		erofs_dbg("Writing %u uncompressed data to tmpfile", count);
-> +		ret = fwrite(dst, erofs_blksiz(sbi), 1, ctx->tmpfile);
-> +		if (ret != 1)
-> +			return -EIO;
-> +		fflush(ctx->tmpfile);
-> +	} else {
-> +		erofs_dbg("Writing %u uncompressed data to block %u", count,
-> +			  ctx->blkaddr);
-> +		ret = blk_write(sbi, dst, ctx->blkaddr, 1);
-> +		if (ret)
-> +			return ret;
-> +	}
->   	return count;
->   }
->   
-> @@ -384,8 +471,8 @@ static void tryrecompress_trailing(struct z_erofs_vle_compress_ctx *ctx,
->   				   void *in, unsigned int *insize,
->   				   void *out, unsigned int *compressedsize)
->   {
-> -	struct erofs_sb_info *sbi = ctx->inode->sbi;
-> -	static char tmp[Z_EROFS_PCLUSTER_MAX_SIZE];
-> +	struct erofs_sb_info *sbi = ctx->fctx->inode->sbi;
-> +	char tmp[Z_EROFS_PCLUSTER_MAX_SIZE];
-
-does tryrecompress_trailing() work? if it doesn't work,
-let's leave the old code as-is.
-
->   	unsigned int count;
->   	int ret = *compressedsize;
->   
-> @@ -409,7 +496,7 @@ static void tryrecompress_trailing(struct z_erofs_vle_compress_ctx *ctx,
->   static bool z_erofs_fixup_deduped_fragment(struct z_erofs_vle_compress_ctx *ctx,
->   					   unsigned int len)
->   {
-> -	struct erofs_inode *inode = ctx->inode;
-> +	struct erofs_inode *inode = ctx->fctx->inode;
->   	struct erofs_sb_info *sbi = inode->sbi;
->   	const unsigned int newsize = ctx->remaining + len;
->   
-> @@ -417,9 +504,10 @@ static bool z_erofs_fixup_deduped_fragment(struct z_erofs_vle_compress_ctx *ctx,
->   
->   	/* try to fix again if it gets larger (should be rare) */
->   	if (inode->fragment_size < newsize) {
-> -		ctx->pclustersize = min_t(erofs_off_t, z_erofs_get_max_pclustersize(inode),
-> -					  roundup(newsize - inode->fragment_size,
-> -						  erofs_blksiz(sbi)));
-> +		ctx->fctx->pclustersize =
-> +			min_t(erofs_off_t, z_erofs_get_max_pclustersize(inode),
-> +			      roundup(newsize - inode->fragment_size,
-> +				      erofs_blksiz(sbi)));
->   		return false;
->   	}
->   
-> @@ -439,26 +527,31 @@ static bool z_erofs_fixup_deduped_fragment(struct z_erofs_vle_compress_ctx *ctx,
->   static int __z_erofs_compress_one(struct z_erofs_vle_compress_ctx *ctx,
->   				  struct z_erofs_inmem_extent *e)
->   {
-> -	static char dstbuf[EROFS_CONFIG_COMPR_MAX_SZ + EROFS_MAX_BLOCK_SIZE];
-> -	struct erofs_inode *inode = ctx->inode;
-> +	static char
-> +		global_dstbuf[EROFS_CONFIG_COMPR_MAX_SZ + EROFS_MAX_BLOCK_SIZE];
-> +	char *dstbuf = ctx->destbuf ? ctx->destbuf : global_dstbuf;
-
-	char *dstbuf = ctx->destbuf ? : global_dstbuf;
+Otherwise LGTM and I will include it in my patchset.
 
 
 Thanks,
-Gao Xiang
+
+Yifan Zhao
+
+> +
+> +#define erofs_atomic_read(ptr) ({ \
+> +	typeof(*ptr) __n;    \
+> +	__atomic_load(ptr, &__n, __ATOMIC_RELAXED); \
+> +__n;})
+> +
+> +#define erofs_atomic_set(ptr, n) do { \
+> +	typeof(*ptr) __n = (n);    \
+> +	__atomic_store(ptr, &__n, __ATOMIC_RELAXED); \
+> +} while(0)
+> +
+> +#define erofs_atomic_test_and_set(ptr) \
+> +	__atomic_test_and_set(ptr, __ATOMIC_RELAXED)
+> +
+> +#endif
+> diff --git a/lib/compressor_deflate.c b/lib/compressor_deflate.c
+> index 8629415..60bb2f6 100644
+> --- a/lib/compressor_deflate.c
+> +++ b/lib/compressor_deflate.c
+> @@ -7,6 +7,7 @@
+>   #include "erofs/print.h"
+>   #include "erofs/config.h"
+>   #include "compressor.h"
+> +#include "erofs/atomic.h"
+>   
+>   void *kite_deflate_init(int level, unsigned int dict_size);
+>   void kite_deflate_end(void *s);
+> @@ -36,6 +37,8 @@ static int compressor_deflate_exit(struct erofs_compress *c)
+>   
+>   static int compressor_deflate_init(struct erofs_compress *c)
+>   {
+> +	static erofs_atomic_t __warnonce;
+> +
+>   	if (c->private_data) {
+>   		kite_deflate_end(c->private_data);
+>   		c->private_data = NULL;
+> @@ -44,9 +47,11 @@ static int compressor_deflate_init(struct erofs_compress *c)
+>   	if (IS_ERR_VALUE(c->private_data))
+>   		return PTR_ERR(c->private_data);
+>   
+> -	erofs_warn("EXPERIMENTAL DEFLATE algorithm in use. Use at your own risk!");
+> -	erofs_warn("*Carefully* check filesystem data correctness to avoid corruption!");
+> -	erofs_warn("Please send a report to<linux-erofs@lists.ozlabs.org>  if something is wrong.");
+> +	if (!erofs_atomic_test_and_set(&__warnonce)) {
+> +		erofs_warn("EXPERIMENTAL DEFLATE algorithm in use. Use at your own risk!");
+> +		erofs_warn("*Carefully* check filesystem data correctness to avoid corruption!");
+> +		erofs_warn("Please send a report to<linux-erofs@lists.ozlabs.org>  if something is wrong.");
+> +	}
+>   	return 0;
+>   }
+>   
+> diff --git a/lib/compressor_libdeflate.c b/lib/compressor_libdeflate.c
+> index 62d93f7..f90d720 100644
+> --- a/lib/compressor_libdeflate.c
+> +++ b/lib/compressor_libdeflate.c
+> @@ -4,6 +4,7 @@
+>   #include "erofs/config.h"
+>   #include <libdeflate.h>
+>   #include "compressor.h"
+> +#include "erofs/atomic.h"
+>   
+>   static int libdeflate_compress_destsize(const struct erofs_compress *c,
+>   				        const void *src, unsigned int *srcsize,
+> @@ -82,12 +83,15 @@ static int compressor_libdeflate_exit(struct erofs_compress *c)
+>   
+>   static int compressor_libdeflate_init(struct erofs_compress *c)
+>   {
+> +	static erofs_atomic_t __warnonce;
+> +
+>   	libdeflate_free_compressor(c->private_data);
+>   	c->private_data = libdeflate_alloc_compressor(c->compression_level);
+>   	if (!c->private_data)
+>   		return -ENOMEM;
+>   
+> -	erofs_warn("EXPERIMENTAL libdeflate compressor in use. Use at your own risk!");
+> +	if (!erofs_atomic_test_and_set(&__warnonce))
+> +		erofs_warn("EXPERIMENTAL libdeflate compressor in use. Use at your own risk!");
+>   	return 0;
+>   }
+>   
+> diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
+> index 712f44f..e79717d 100644
+> --- a/lib/compressor_liblzma.c
+> +++ b/lib/compressor_liblzma.c
+> @@ -9,6 +9,7 @@
+>   #include "erofs/config.h"
+>   #include "erofs/print.h"
+>   #include "erofs/internal.h"
+> +#include "erofs/atomic.h"
+>   #include "compressor.h"
+>   
+>   struct erofs_liblzma_context {
+> @@ -85,6 +86,7 @@ static int erofs_compressor_liblzma_init(struct erofs_compress *c)
+>   {
+>   	struct erofs_liblzma_context *ctx;
+>   	u32 preset;
+> +	static erofs_atomic_t __warnonce;
+>   
+>   	ctx = malloc(sizeof(*ctx));
+>   	if (!ctx)
+> @@ -103,7 +105,8 @@ static int erofs_compressor_liblzma_init(struct erofs_compress *c)
+>   	ctx->opt.dict_size = c->dict_size;
+>   
+>   	c->private_data = ctx;
+> -	erofs_warn("It may take a longer time since MicroLZMA is still single-threaded for now.");
+> +	if (!erofs_atomic_test_and_set(&__warnonce))
+> +		erofs_warn("It may take a longer time since MicroLZMA is still single-threaded for now.");
+>   	return 0;
+>   }
+>   
+--------------mGv3ffdoapCw0RaRUGj7nJoT
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">On 2/28/24 16:21, Gao Xiang wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:20240228082107.1014131-1-hsiangkao@linux.alibaba.com">
+      <pre class="moz-quote-pre" wrap="">Add some helpers (relaxed semantics) in order to prepare for the
+upcoming multi-threaded support.
+
+For example, compressor may be initialized more than once in different
+worker threads, resulting in noisy warnings.
+
+This patch makes sure that each message will be printed only once by
+adding `__warnonce` atomic booleans to each erofs_compressor_init().
+
+Cc: Yifan Zhao <a class="moz-txt-link-rfc2396E" href="mailto:zhaoyifan@sjtu.edu.cn">&lt;zhaoyifan@sjtu.edu.cn&gt;</a>
+Signed-off-by: Gao Xiang <a class="moz-txt-link-rfc2396E" href="mailto:hsiangkao@linux.alibaba.com">&lt;hsiangkao@linux.alibaba.com&gt;</a>
+---
+ include/erofs/atomic.h      | 27 +++++++++++++++++++++++++++
+ lib/compressor_deflate.c    | 11 ++++++++---
+ lib/compressor_libdeflate.c |  6 +++++-
+ lib/compressor_liblzma.c    |  5 ++++-
+ 4 files changed, 44 insertions(+), 5 deletions(-)
+ create mode 100644 include/erofs/atomic.h
+
+diff --git a/include/erofs/atomic.h b/include/erofs/atomic.h
+new file mode 100644
+index 0000000..c486491
+--- /dev/null
++++ b/include/erofs/atomic.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
++/*
++ * Copyright (C) 2024 Alibaba Cloud
++ */
++#ifndef __EROFS_ATOMIC_H
++#define __EROFS_ATOMIC_H
++
++/*
++ * Just use GCC/clang built-in functions for now
++ * See: <a class="moz-txt-link-freetext" href="https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html">https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html</a>
++ */
++typedef unsigned long erofs_atomic_t;</pre>
+    </blockquote>
+    <p>According to [1] <strong class="def-name"
+style="font-family: monospace; font-weight: bold; font-size: larger; color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">__atomic_test_and_set
+      </strong><span class="def-name"
+style="font-family: monospace; font-size: larger; color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">should</span><strong
+        class="def-name"
+style="font-family: monospace; font-weight: bold; font-size: larger; color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">
+      </strong><span class="def-name"
+style="font-family: monospace; font-size: larger; color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">only
+        be used for operands of type bool or char.</span></p>
+    <p>[1]  <span style="white-space: pre-wrap"><a class="moz-txt-link-freetext" href="https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html">https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html</a></span></p>
+    <p><span class="def-name"
+style="font-family: monospace; font-size: larger; color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Maybe
+        add<br>
+      </span></p>
+    <p><i><span class="def-name"
+style="font-family: monospace; font-size: larger; color: rgb(0, 0, 0); font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">   
+          typedef bool erofs_atomic_bool_t;<br>
+        </span></i></p>
+    <p><span class="def-name"
+style="font-family: monospace; font-size: larger; color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">for
+        this purpose?<br>
+      </span></p>
+    <p><span class="def-name"
+style="font-family: monospace; font-size: larger; color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Otherwise
+        LGTM and I will include it in my patchset.</span></p>
+    <p><span class="def-name"
+style="font-family: monospace; font-size: larger; color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;"><br>
+      </span></p>
+    <p><span class="def-name"
+style="font-family: monospace; font-size: larger; color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Thanks,<br>
+      </span></p>
+    <p><span class="def-name"
+style="font-family: monospace; font-size: larger; color: rgb(0, 0, 0); font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; text-align: start; text-indent: 0px; text-transform: none; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">Yifan
+        Zhao</span></p>
+    <blockquote type="cite"
+      cite="mid:20240228082107.1014131-1-hsiangkao@linux.alibaba.com">
+      <pre class="moz-quote-pre" wrap="">
++
++#define erofs_atomic_read(ptr) ({ \
++	typeof(*ptr) __n;    \
++	__atomic_load(ptr, &amp;__n, __ATOMIC_RELAXED); \
++__n;})
++
++#define erofs_atomic_set(ptr, n) do { \
++	typeof(*ptr) __n = (n);    \
++	__atomic_store(ptr, &amp;__n, __ATOMIC_RELAXED); \
++} while(0)
++
++#define erofs_atomic_test_and_set(ptr) \
++	__atomic_test_and_set(ptr, __ATOMIC_RELAXED)
++
++#endif
+diff --git a/lib/compressor_deflate.c b/lib/compressor_deflate.c
+index 8629415..60bb2f6 100644
+--- a/lib/compressor_deflate.c
++++ b/lib/compressor_deflate.c
+@@ -7,6 +7,7 @@
+ #include "erofs/print.h"
+ #include "erofs/config.h"
+ #include "compressor.h"
++#include "erofs/atomic.h"
+ 
+ void *kite_deflate_init(int level, unsigned int dict_size);
+ void kite_deflate_end(void *s);
+@@ -36,6 +37,8 @@ static int compressor_deflate_exit(struct erofs_compress *c)
+ 
+ static int compressor_deflate_init(struct erofs_compress *c)
+ {
++	static erofs_atomic_t __warnonce;
++
+ 	if (c-&gt;private_data) {
+ 		kite_deflate_end(c-&gt;private_data);
+ 		c-&gt;private_data = NULL;
+@@ -44,9 +47,11 @@ static int compressor_deflate_init(struct erofs_compress *c)
+ 	if (IS_ERR_VALUE(c-&gt;private_data))
+ 		return PTR_ERR(c-&gt;private_data);
+ 
+-	erofs_warn("EXPERIMENTAL DEFLATE algorithm in use. Use at your own risk!");
+-	erofs_warn("*Carefully* check filesystem data correctness to avoid corruption!");
+-	erofs_warn("Please send a report to <a class="moz-txt-link-rfc2396E" href="mailto:linux-erofs@lists.ozlabs.org">&lt;linux-erofs@lists.ozlabs.org&gt;</a> if something is wrong.");
++	if (!erofs_atomic_test_and_set(&amp;__warnonce)) {
++		erofs_warn("EXPERIMENTAL DEFLATE algorithm in use. Use at your own risk!");
++		erofs_warn("*Carefully* check filesystem data correctness to avoid corruption!");
++		erofs_warn("Please send a report to <a class="moz-txt-link-rfc2396E" href="mailto:linux-erofs@lists.ozlabs.org">&lt;linux-erofs@lists.ozlabs.org&gt;</a> if something is wrong.");
++	}
+ 	return 0;
+ }
+ 
+diff --git a/lib/compressor_libdeflate.c b/lib/compressor_libdeflate.c
+index 62d93f7..f90d720 100644
+--- a/lib/compressor_libdeflate.c
++++ b/lib/compressor_libdeflate.c
+@@ -4,6 +4,7 @@
+ #include "erofs/config.h"
+ #include &lt;libdeflate.h&gt;
+ #include "compressor.h"
++#include "erofs/atomic.h"
+ 
+ static int libdeflate_compress_destsize(const struct erofs_compress *c,
+ 				        const void *src, unsigned int *srcsize,
+@@ -82,12 +83,15 @@ static int compressor_libdeflate_exit(struct erofs_compress *c)
+ 
+ static int compressor_libdeflate_init(struct erofs_compress *c)
+ {
++	static erofs_atomic_t __warnonce;
++
+ 	libdeflate_free_compressor(c-&gt;private_data);
+ 	c-&gt;private_data = libdeflate_alloc_compressor(c-&gt;compression_level);
+ 	if (!c-&gt;private_data)
+ 		return -ENOMEM;
+ 
+-	erofs_warn("EXPERIMENTAL libdeflate compressor in use. Use at your own risk!");
++	if (!erofs_atomic_test_and_set(&amp;__warnonce))
++		erofs_warn("EXPERIMENTAL libdeflate compressor in use. Use at your own risk!");
+ 	return 0;
+ }
+ 
+diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
+index 712f44f..e79717d 100644
+--- a/lib/compressor_liblzma.c
++++ b/lib/compressor_liblzma.c
+@@ -9,6 +9,7 @@
+ #include "erofs/config.h"
+ #include "erofs/print.h"
+ #include "erofs/internal.h"
++#include "erofs/atomic.h"
+ #include "compressor.h"
+ 
+ struct erofs_liblzma_context {
+@@ -85,6 +86,7 @@ static int erofs_compressor_liblzma_init(struct erofs_compress *c)
+ {
+ 	struct erofs_liblzma_context *ctx;
+ 	u32 preset;
++	static erofs_atomic_t __warnonce;
+ 
+ 	ctx = malloc(sizeof(*ctx));
+ 	if (!ctx)
+@@ -103,7 +105,8 @@ static int erofs_compressor_liblzma_init(struct erofs_compress *c)
+ 	ctx-&gt;opt.dict_size = c-&gt;dict_size;
+ 
+ 	c-&gt;private_data = ctx;
+-	erofs_warn("It may take a longer time since MicroLZMA is still single-threaded for now.");
++	if (!erofs_atomic_test_and_set(&amp;__warnonce))
++		erofs_warn("It may take a longer time since MicroLZMA is still single-threaded for now.");
+ 	return 0;
+ }
+ 
+</pre>
+    </blockquote>
+  </body>
+</html>
+
+--------------mGv3ffdoapCw0RaRUGj7nJoT--
