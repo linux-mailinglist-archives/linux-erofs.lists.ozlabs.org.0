@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FF6086B48A
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Feb 2024 17:17:48 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BF5B86B48E
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Feb 2024 17:18:00 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TlKJT5njRz3cy8
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Feb 2024 03:17:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TlKJk0Sm6z3cy8
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Feb 2024 03:17:58 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
@@ -14,19 +14,19 @@ Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TlKJQ5ldqz3bsQ
-	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Feb 2024 03:17:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TlKJg5XyFz3bsQ
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Feb 2024 03:17:55 +1100 (AEDT)
 Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
-	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 6495F1008EE03;
-	Thu, 29 Feb 2024 00:17:03 +0800 (CST)
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 732641008EE04;
+	Thu, 29 Feb 2024 00:17:04 +0800 (CST)
 Received: from zhaoyf.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
-	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id B2D4337C969;
-	Thu, 29 Feb 2024 00:17:00 +0800 (CST)
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 6A2AF37C986;
+	Thu, 29 Feb 2024 00:17:02 +0800 (CST)
 From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 To: hsiangkao@linux.alibaba.com
-Subject: [PATCH v4 3/5] erofs-utils: mkfs: add --worker=# parameter
-Date: Thu, 29 Feb 2024 00:16:50 +0800
-Message-ID: <20240228161652.1010997-4-zhaoyifan@sjtu.edu.cn>
+Subject: [PATCH v4 4/5] erofs-utils: lib: introduce atomic operations
+Date: Thu, 29 Feb 2024 00:16:51 +0800
+Message-ID: <20240228161652.1010997-5-zhaoyifan@sjtu.edu.cn>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240228161652.1010997-1-zhaoyifan@sjtu.edu.cn>
 References: <20240228161652.1010997-1-zhaoyifan@sjtu.edu.cn>
@@ -47,125 +47,154 @@ Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch introduces a --worker=# parameter for the incoming
-multi-threaded compression support. It also introduces a segment size
-used in multi-threaded compression, which has the default value 16MB
-and cannot be modified.
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-It also introduces a concept called `segment size` to split large files
-for multi-threading, which has the default value 16MB for now.
+Add some helpers (relaxed semantics) in order to prepare for the
+upcoming multi-threaded support.
 
+For example, compressor may be initialized more than once in different
+worker threads, resulting in noisy warnings.
+
+This patch makes sure that each message will be printed only once by
+adding `__warnonce` atomic booleans to each erofs_compressor_init().
+
+Cc: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 ---
- include/erofs/config.h |  4 ++++
- lib/config.c           |  4 ++++
- mkfs/main.c            | 38 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 46 insertions(+)
+ include/erofs/atomic.h      | 28 ++++++++++++++++++++++++++++
+ lib/compressor_deflate.c    | 11 ++++++++---
+ lib/compressor_libdeflate.c |  6 +++++-
+ lib/compressor_liblzma.c    |  5 ++++-
+ 4 files changed, 45 insertions(+), 5 deletions(-)
+ create mode 100644 include/erofs/atomic.h
 
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 73e3ac2..d2f91ff 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -75,6 +75,10 @@ struct erofs_configure {
- 	char c_force_chunkformat;
- 	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
- 	int c_inline_xattr_tolerance;
-+#ifdef EROFS_MT_ENABLED
-+	u64 c_segment_size;
-+	u32 c_mt_workers;
-+#endif
- 
- 	u32 c_pclusterblks_max, c_pclusterblks_def, c_pclusterblks_packed;
- 	u32 c_max_decompressed_extent_bytes;
-diff --git a/lib/config.c b/lib/config.c
-index 947a183..2530274 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -38,6 +38,10 @@ void erofs_init_configure(void)
- 	cfg.c_pclusterblks_max = 1;
- 	cfg.c_pclusterblks_def = 1;
- 	cfg.c_max_decompressed_extent_bytes = -1;
-+#ifdef EROFS_MT_ENABLED
-+	cfg.c_segment_size = 16ULL * 1024 * 1024;
-+	cfg.c_mt_workers = 1;
-+#endif
- 
- 	erofs_stdout_tty = isatty(STDOUT_FILENO);
- }
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 258c1ce..ce9c28b 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -74,6 +74,9 @@ static struct option long_options[] = {
- 	{"ungzip", optional_argument, NULL, 517},
- #endif
- 	{"offset", required_argument, NULL, 518},
-+#ifdef EROFS_MT_ENABLED
-+	{"workers", required_argument, NULL, 519},
-+#endif
- 	{0, 0, 0, 0},
- };
- 
-@@ -179,6 +182,9 @@ static void usage(int argc, char **argv)
- 		" --product-out=X       X=product_out directory\n"
- 		" --fs-config-file=X    X=fs_config file\n"
- 		" --block-list-file=X   X=block_list file\n"
-+#endif
-+#ifdef EROFS_MT_ENABLED
-+		" --workers=#            set the number of worker threads to # (default=1)\n"
- #endif
- 		);
- }
-@@ -408,6 +414,13 @@ static void erofs_rebuild_cleanup(void)
- 	rebuild_src_count = 0;
- }
- 
-+#ifdef EROFS_MT_ENABLED
-+static u32 mkfs_max_worker_num() {
-+	u32 ncpu = erofs_get_available_processors();
-+	return ncpu ? ncpu : 16;
-+}
-+#endif
+diff --git a/include/erofs/atomic.h b/include/erofs/atomic.h
+new file mode 100644
+index 0000000..214cdb1
+--- /dev/null
++++ b/include/erofs/atomic.h
+@@ -0,0 +1,28 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
++/*
++ * Copyright (C) 2024 Alibaba Cloud
++ */
++#ifndef __EROFS_ATOMIC_H
++#define __EROFS_ATOMIC_H
 +
- static int mkfs_parse_options_cfg(int argc, char *argv[])
++/*
++ * Just use GCC/clang built-in functions for now
++ * See: https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html
++ */
++typedef unsigned long erofs_atomic_t;
++typedef char erofs_atomic_bool_t;
++
++#define erofs_atomic_read(ptr) ({ \
++	typeof(*ptr) __n;    \
++	__atomic_load(ptr, &__n, __ATOMIC_RELAXED); \
++__n;})
++
++#define erofs_atomic_set(ptr, n) do { \
++	typeof(*ptr) __n = (n);    \
++	__atomic_store(ptr, &__n, __ATOMIC_RELAXED); \
++} while(0)
++
++#define erofs_atomic_test_and_set(ptr) \
++	__atomic_test_and_set(ptr, __ATOMIC_RELAXED)
++
++#endif
+diff --git a/lib/compressor_deflate.c b/lib/compressor_deflate.c
+index 8629415..e482224 100644
+--- a/lib/compressor_deflate.c
++++ b/lib/compressor_deflate.c
+@@ -7,6 +7,7 @@
+ #include "erofs/print.h"
+ #include "erofs/config.h"
+ #include "compressor.h"
++#include "erofs/atomic.h"
+ 
+ void *kite_deflate_init(int level, unsigned int dict_size);
+ void kite_deflate_end(void *s);
+@@ -36,6 +37,8 @@ static int compressor_deflate_exit(struct erofs_compress *c)
+ 
+ static int compressor_deflate_init(struct erofs_compress *c)
  {
- 	char *endptr;
-@@ -650,6 +663,21 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 				return -EINVAL;
- 			}
- 			break;
-+#ifdef EROFS_MT_ENABLED
-+		case 519:
-+			cfg.c_mt_workers = strtoul(optarg, &endptr, 0);
-+			if (errno || *endptr != '\0') {
-+				erofs_err("invalid worker number %s", optarg);
-+				return -EINVAL;
-+			}
-+			if (cfg.c_mt_workers > mkfs_max_worker_num()) {
-+				erofs_warn(
-+					"worker number %s is too large, setting to %ud",
-+					optarg, mkfs_max_worker_num());
-+				cfg.c_mt_workers = mkfs_max_worker_num();
-+			}
-+			break;
-+#endif
- 		case 'V':
- 			version();
- 			exit(0);
-@@ -803,6 +831,16 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		}
- 		cfg.c_pclusterblks_packed = pclustersize_packed >> sbi.blkszbits;
- 	}
++	static erofs_atomic_bool_t __warnonce;
 +
-+#ifdef EROFS_MT_ENABLED
-+	if (cfg.c_mt_workers > 1 &&
-+	    (cfg.c_dedupe || cfg.c_fragments || cfg.c_ztailpacking)) {
-+		cfg.c_mt_workers = 1;
-+		erofs_warn("Please note that dedupe/fragments/ztailpacking"
-+			   "is NOT supported in multi-threaded mode now, using worker=1.");
+ 	if (c->private_data) {
+ 		kite_deflate_end(c->private_data);
+ 		c->private_data = NULL;
+@@ -44,9 +47,11 @@ static int compressor_deflate_init(struct erofs_compress *c)
+ 	if (IS_ERR_VALUE(c->private_data))
+ 		return PTR_ERR(c->private_data);
+ 
+-	erofs_warn("EXPERIMENTAL DEFLATE algorithm in use. Use at your own risk!");
+-	erofs_warn("*Carefully* check filesystem data correctness to avoid corruption!");
+-	erofs_warn("Please send a report to <linux-erofs@lists.ozlabs.org> if something is wrong.");
++	if (!erofs_atomic_test_and_set(&__warnonce)) {
++		erofs_warn("EXPERIMENTAL DEFLATE algorithm in use. Use at your own risk!");
++		erofs_warn("*Carefully* check filesystem data correctness to avoid corruption!");
++		erofs_warn("Please send a report to <linux-erofs@lists.ozlabs.org> if something is wrong.");
 +	}
-+#endif
+ 	return 0;
+ }
+ 
+diff --git a/lib/compressor_libdeflate.c b/lib/compressor_libdeflate.c
+index 62d93f7..14cbce4 100644
+--- a/lib/compressor_libdeflate.c
++++ b/lib/compressor_libdeflate.c
+@@ -4,6 +4,7 @@
+ #include "erofs/config.h"
+ #include <libdeflate.h>
+ #include "compressor.h"
++#include "erofs/atomic.h"
+ 
+ static int libdeflate_compress_destsize(const struct erofs_compress *c,
+ 				        const void *src, unsigned int *srcsize,
+@@ -82,12 +83,15 @@ static int compressor_libdeflate_exit(struct erofs_compress *c)
+ 
+ static int compressor_libdeflate_init(struct erofs_compress *c)
+ {
++	static erofs_atomic_bool_t __warnonce;
 +
+ 	libdeflate_free_compressor(c->private_data);
+ 	c->private_data = libdeflate_alloc_compressor(c->compression_level);
+ 	if (!c->private_data)
+ 		return -ENOMEM;
+ 
+-	erofs_warn("EXPERIMENTAL libdeflate compressor in use. Use at your own risk!");
++	if (!erofs_atomic_test_and_set(&__warnonce))
++		erofs_warn("EXPERIMENTAL libdeflate compressor in use. Use at your own risk!");
+ 	return 0;
+ }
+ 
+diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
+index 712f44f..2f19a93 100644
+--- a/lib/compressor_liblzma.c
++++ b/lib/compressor_liblzma.c
+@@ -9,6 +9,7 @@
+ #include "erofs/config.h"
+ #include "erofs/print.h"
+ #include "erofs/internal.h"
++#include "erofs/atomic.h"
+ #include "compressor.h"
+ 
+ struct erofs_liblzma_context {
+@@ -85,6 +86,7 @@ static int erofs_compressor_liblzma_init(struct erofs_compress *c)
+ {
+ 	struct erofs_liblzma_context *ctx;
+ 	u32 preset;
++	static erofs_atomic_bool_t __warnonce;
+ 
+ 	ctx = malloc(sizeof(*ctx));
+ 	if (!ctx)
+@@ -103,7 +105,8 @@ static int erofs_compressor_liblzma_init(struct erofs_compress *c)
+ 	ctx->opt.dict_size = c->dict_size;
+ 
+ 	c->private_data = ctx;
+-	erofs_warn("It may take a longer time since MicroLZMA is still single-threaded for now.");
++	if (!erofs_atomic_test_and_set(&__warnonce))
++		erofs_warn("It may take a longer time since MicroLZMA is still single-threaded for now.");
  	return 0;
  }
  
