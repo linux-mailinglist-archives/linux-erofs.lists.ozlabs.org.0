@@ -1,71 +1,48 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E46486C559
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Feb 2024 10:34:24 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7563386C5D0
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Feb 2024 10:43:46 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=A/aKsg0F;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=lYdE9UL7;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TlmJY4zwkz3dT4
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Feb 2024 20:34:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TlmWN0XL2z3dS8
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Feb 2024 20:43:44 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=A/aKsg0F;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=lYdE9UL7;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=sijam.com (client-ip=2607:f8b0:4864:20::b2d; helo=mail-yb1-xb2d.google.com; envelope-from=asai@sijam.com; receiver=lists.ozlabs.org)
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TlmJS0hjHz3brC
-	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Feb 2024 20:34:15 +1100 (AEDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-dcc80d6004bso672354276.0
-        for <linux-erofs@lists.ozlabs.org>; Thu, 29 Feb 2024 01:34:15 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TlmWF5Hh7z2xQ7
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Feb 2024 20:43:35 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sijam-com.20230601.gappssmtp.com; s=20230601; t=1709199252; x=1709804052; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nhibCHMszhik6G8WLeIVE6eBDqoRnTSIe8Ohm/ky8I8=;
-        b=A/aKsg0FrE+ujufPCYirrd0qCtO3cXlwxcUVs2BTAz26W83wRFu9LhgKF3pVezaRIJ
-         cO27VB76kW276QXkTnK3cNCdbZmdzdfs8OwfDmHEmLnSq6J4eq2CkpuduHbQCS1m4YZD
-         n0hrfWlhqbzBYHIjYf/tXZQtdysydHJgWisPQPcfsLUZR2zVIipr3MNnqh2SvdQ0VM5H
-         rhTuRUZaUxU4N9Y9fMPodTSxfsnQT8+IFlp/6BcLu6MaFN0YV9sH9r9CwmByefkotekj
-         c0ZtHnsBlCI1NLm9xuwi2/wmu1QUPBwQBzQXBIce6oX10CT/QCqzg3vjNR16av4CdC/P
-         cddg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709199252; x=1709804052;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nhibCHMszhik6G8WLeIVE6eBDqoRnTSIe8Ohm/ky8I8=;
-        b=ObxcImx3d25RlWzXZYClSVRHpoIixSUvOYD2VVr18PxnqRS9Gsic2e2jvXhaTMW7hq
-         NnZljINsHgxyaV83suEUEOCnoSdV9aliLtedDlPpBN4mrtUfnh0G5+GclYaYhOOmTGzO
-         Ev9TZ1obGkP6W1vzc2qlEW/GqWXSBqb+kMLnGKlPUcxtZRRJa2l2BQyEaovnpA75NWKf
-         FuT9OViaiZG0dtwCVIa0CGw93BMBb/3QqrKeeMMvhx5HUI4kzLlBIkp9sjIQLKpJ3yK/
-         7lgtRnqpYYH01BgHJq63pm3vQlmZgrDBSEiayKHrLduLm1zJGPzMvsV2JiF4R1q8YTFy
-         8Npg==
-X-Gm-Message-State: AOJu0YzBGo+HMQrQHr6pSPDJLs+fUMAvDON9b5PMjwfORsTA+n6eRXoD
-	ou0YJyEIsiOcHOGyvwVs/UDt3ThRoZEZeMKgkLljBRJlfd8FtUWccD2mTsPYkCsBRe2Kj58MZYH
-	qjXsJedQUU3ZlGWuuAmTpDyxyvWjopjYhLnWhYqKbTOkj4QZXdt4=
-X-Google-Smtp-Source: AGHT+IFY/laeR1ERu087nVVoQxGrf9M4IAMcaBjNISnOBIodpUWaQHxOOoh1j/v+6Gi0niA2RRBB2xMn0m5Ac6016Hc=
-X-Received: by 2002:a5b:10f:0:b0:dbf:6267:eba4 with SMTP id
- 15-20020a5b010f000000b00dbf6267eba4mr1556730ybx.27.1709199252052; Thu, 29 Feb
- 2024 01:34:12 -0800 (PST)
+	d=linux.alibaba.com; s=default;
+	t=1709199810; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=H7smYOej/gCDLn4iRRG2PShQwg2I1/5H2EIEfeLmGxo=;
+	b=lYdE9UL7wKrrO1i+NAi9+9TX9ToUPLauoEnlQqGPXyDX83SbvUG6GKYTNgJz5EHeQs3GJW0FEth9Kx6IX3iLnttEziSBbg0b2PBhxyWz4RIyFtqtB67tqz/f8hDM5IqFVOXo7Iqx4oPzEX+kDUy4u2Q9v2g29051lYgJ/baUFK8=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W1SYXsT_1709199808;
+Received: from 30.97.48.246(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W1SYXsT_1709199808)
+          by smtp.aliyun-inc.com;
+          Thu, 29 Feb 2024 17:43:29 +0800
+Message-ID: <e7077c8d-bce6-422a-9c6e-e8f05a0aa457@linux.alibaba.com>
+Date: Thu, 29 Feb 2024 17:43:27 +0800
 MIME-Version: 1.0
-References: <20240225142759.340165-1-zhaoyifan@sjtu.edu.cn>
- <CAFoAo-+1crK3Oh7ftbWHk0WY7y-9=3ii3iX-W6anDvEfcgPJtg@mail.gmail.com> <a59dfa27-0961-472a-b7ed-57769123d430@sjtu.edu.cn>
-In-Reply-To: <a59dfa27-0961-472a-b7ed-57769123d430@sjtu.edu.cn>
-From: Noboru Asai <asai@sijam.com>
-Date: Thu, 29 Feb 2024 18:34:01 +0900
-Message-ID: <CAFoAo-KCoKneBm2F-didrKGKGVu--A0JH3gNqV0weanVwgScUw@mail.gmail.com>
-Subject: Re: [PATCH v3 0/4] erofs-utils: mkfs: introduce multi-threaded compression
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/5] erofs-utils: introduce multi-threading framework
 To: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20240228161652.1010997-1-zhaoyifan@sjtu.edu.cn>
+ <20240228161652.1010997-2-zhaoyifan@sjtu.edu.cn>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240228161652.1010997-2-zhaoyifan@sjtu.edu.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,79 +58,243 @@ Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-> We split the inter-file compression functionality as a separate patch
-> set for ease of review. It will be re-sent shortly (maybe a few days)
-> after we finish polishing the inner-file patch set.
->
-> I am sorry that the v2 patchset cannot be cleanly applied due to my
-> missteps, and I believe the latest one (v4) works. Thank you for your
-> testing!
+Hi Yifan,
 
-Thank you your explanation. I will test v4 and review it.
+On 2024/2/29 00:16, Yifan Zhao wrote:
+> Add a workqueue implementation for multi-threading support inspired by
+> xfsprogs.
+> 
+> Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+> Suggested-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+>   configure.ac              |  16 +++++
+>   include/erofs/internal.h  |   3 +
+>   include/erofs/workqueue.h |  37 +++++++++++
+>   lib/Makefile.am           |   4 ++
+>   lib/workqueue.c           | 132 ++++++++++++++++++++++++++++++++++++++
+>   5 files changed, 192 insertions(+)
+>   create mode 100644 include/erofs/workqueue.h
+>   create mode 100644 lib/workqueue.c
+> 
+> diff --git a/configure.ac b/configure.ac
+> index 4b59230..3ccd6bb 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -96,6 +96,14 @@ AC_DEFUN([EROFS_UTILS_PARSE_DIRECTORY],
+>   
+>   AC_ARG_VAR([MAX_BLOCK_SIZE], [The maximum block size which erofs-utils supports])
+>   
+> +AC_MSG_CHECKING([whether to enable multi-threading support])
+> +AC_ARG_ENABLE([multithreading],
+> +    AS_HELP_STRING([--enable-multithreading],
+> +                   [enable multi-threading support @<:@default=no@:>@]),
+> +    [enable_multithreading="$enableval"],
+> +    [enable_multithreading="no"])
+> +AC_MSG_RESULT([$enable_multithreading])
+> +
+>   AC_ARG_ENABLE([debug],
+>       [AS_HELP_STRING([--enable-debug],
+>                       [enable debugging mode @<:@default=no@:>@])],
+> @@ -280,6 +288,13 @@ AS_IF([test "x$MAX_BLOCK_SIZE" = "x"], [
+>                                [erofs_cv_max_block_size=4096]))
+>   ], [erofs_cv_max_block_size=$MAX_BLOCK_SIZE])
+>   
+> +# Configure multi-threading support
+> +AS_IF([test "x$enable_multithreading" != "xno"], [
+> +    AC_CHECK_HEADERS([pthread.h])
+> +    AC_CHECK_LIB([pthread], [pthread_mutex_lock], [], AC_MSG_ERROR([libpthread is required for multi-threaded build]))
+> +    AC_DEFINE(EROFS_MT_ENABLED, 1, [Enable multi-threading support])
+> +], [])
+> +
+>   # Configure debug mode
+>   AS_IF([test "x$enable_debug" != "xno"], [], [
+>     dnl Turn off all assert checking.
+> @@ -471,6 +486,7 @@ AS_IF([test "x$enable_fuzzing" != "xyes"], [], [
+>   AM_CONDITIONAL([ENABLE_FUZZING], [test "x${enable_fuzzing}" = "xyes"])
+>   
+>   # Set up needed symbols, conditionals and compiler/linker flags
+> +AM_CONDITIONAL([ENABLE_EROFS_MT], [test "x${enable_multithreading}" != "xno"])
+>   AM_CONDITIONAL([ENABLE_LZ4], [test "x${have_lz4}" = "xyes"])
+>   AM_CONDITIONAL([ENABLE_LZ4HC], [test "x${have_lz4hc}" = "xyes"])
+>   AM_CONDITIONAL([ENABLE_FUSE], [test "x${have_fuse}" = "xyes"])
+> diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+> index 82797e1..954aef4 100644
+> --- a/include/erofs/internal.h
+> +++ b/include/erofs/internal.h
+> @@ -22,6 +22,9 @@ typedef unsigned short umode_t;
+>   #include <sys/types.h> /* for off_t definition */
+>   #include <sys/stat.h> /* for S_ISCHR definition */
+>   #include <stdio.h>
+> +#ifdef HAVE_PTHREAD_H
+> +#include <pthread.h>
+> +#endif
+>   
+>   #ifndef PATH_MAX
+>   #define PATH_MAX        4096    /* # chars in a path name including nul */
+> diff --git a/include/erofs/workqueue.h b/include/erofs/workqueue.h
+> new file mode 100644
+> index 0000000..b4b3901
+> --- /dev/null
+> +++ b/include/erofs/workqueue.h
+> @@ -0,0 +1,37 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
+> +#ifndef __EROFS_WORKQUEUE_H
+> +#define __EROFS_WORKQUEUE_H
+> +
+> +#include "internal.h"
+> +
+> +struct erofs_work;
+> +
+> +typedef void erofs_wq_func_t(struct erofs_work *);
+> +typedef void erofs_wq_priv_fini_t(void *);
+> +
+> +struct erofs_work {
+> +	void (*func)(struct erofs_work *work);
+> +	struct erofs_work *next;
+> +	void *priv;
+> +};
+> +
+> +struct erofs_workqueue {
+> +	struct erofs_work *head, *tail;
+> +	pthread_mutex_t lock;
+> +	pthread_cond_t cond_empty;
+> +	pthread_cond_t cond_full;
+> +	pthread_t *workers;
+> +	unsigned int nworker;
+> +	unsigned int max_jobs;
+> +	unsigned int job_count;
+> +	bool shutdown;
+> +	size_t priv_size;
 
-2024=E5=B9=B42=E6=9C=8829=E6=97=A5(=E6=9C=A8) 13:33 Yifan Zhao <zhaoyifan@s=
-jtu.edu.cn>:
->
->
-> On 2/29/24 11:12, Noboru Asai wrote:
-> >> - remove inter-file compression support from this patchset
-> > Do you have any problems about inter-file compression functionarity?
-> > Or make steps (split this functionarity as separate patch set)?
-> > I'm testing v1 patch set and I have no problem like making wrong images=
- for now.
-> > (I couldn't apply v2 patch set without rejects.)
-> >
-> > 2024=E5=B9=B42=E6=9C=8825=E6=97=A5(=E6=97=A5) 23:28 Yifan Zhao <zhaoyif=
-an@sjtu.edu.cn>:
-> >
-> We split the inter-file compression functionality as a separate patch
-> set for ease of review. It will be re-sent shortly (maybe a few days)
-> after we finish polishing the inner-file patch set.
->
-> I am sorry that the v2 patchset cannot be cleanly applied due to my
-> missteps, and I believe the latest one (v4) works. Thank you for your
-> testing!
->
->
-> Thanks,
->
-> Yifan Zhao
->
-> >> change log since v2:
-> >> - squash per-worker tmpfile commit into previous PATCH
-> >> - give static global variable `erofs_` prefix
-> >> - remove inter-file compression support from this patchset
-> >> - introduce a new `z_erofs_file_compress_ctx` struct to divide the seg=
-ment
-> >>    context from the file context
-> >> - remove the patch related to pring warning from this patchset, which =
-may be
-> >>    supported later with atomic variables
-> >>
-> >> Gao Xiang (1):
-> >>    erofs-utils: add a helper to get available processors
-> >>
-> >> Yifan Zhao (3):
-> >>    erofs-utils: introduce multi-threading framework
-> >>    erofs-utils: mkfs: add --worker=3D# parameter
-> >>    erofs-utils: mkfs: introduce inner-file multi-threaded compression
-> >>
-> >>   configure.ac              |  17 +
-> >>   include/erofs/compress.h  |   1 +
-> >>   include/erofs/config.h    |   5 +
-> >>   include/erofs/internal.h  |   3 +
-> >>   include/erofs/workqueue.h |  37 ++
-> >>   lib/Makefile.am           |   4 +
-> >>   lib/compress.c            | 690 +++++++++++++++++++++++++++++++-----=
---
-> >>   lib/compressor.c          |   2 +
-> >>   lib/config.c              |  16 +
-> >>   lib/workqueue.c           | 132 ++++++++
-> >>   mkfs/main.c               |  38 +++
-> >>   11 files changed, 827 insertions(+), 118 deletions(-)
-> >>   create mode 100644 include/erofs/workqueue.h
-> >>   create mode 100644 lib/workqueue.c
-> >>
-> >> --
-> >> 2.44.0
-> >>
+I don't like this way honestly, how about
+	..
+	erofs_wq_func_t on_start, on_exit;
+	void *private;
+	..
+
+much like:
+https://www.gnu.org/software/libc/manual/html_node/Cleanups-on-Exit.html
+
+> +	erofs_wq_priv_fini_t *priv_fini;
+> +};
+> +
+> +int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
+> +			 unsigned int max_jobs, size_t priv_size,
+> +			 erofs_wq_priv_fini_t *priv_fini);
+> +int erofs_queue_work(struct erofs_workqueue *wq, struct erofs_work *work);
+> +int erofs_destroy_workqueue(struct erofs_workqueue *wq);
+> +#endif
+> \ No newline at end of file
+> diff --git a/lib/Makefile.am b/lib/Makefile.am
+> index 54b9c9c..7307f7b 100644
+> --- a/lib/Makefile.am
+> +++ b/lib/Makefile.am
+> @@ -53,3 +53,7 @@ liberofs_la_SOURCES += kite_deflate.c compressor_deflate.c
+>   if ENABLE_LIBDEFLATE
+>   liberofs_la_SOURCES += compressor_libdeflate.c
+>   endif
+> +if ENABLE_EROFS_MT
+> +liberofs_la_CFLAGS += -lpthread
+> +liberofs_la_SOURCES += workqueue.c
+> +endif
+> diff --git a/lib/workqueue.c b/lib/workqueue.c
+> new file mode 100644
+> index 0000000..138afd5
+> --- /dev/null
+> +++ b/lib/workqueue.c
+> @@ -0,0 +1,132 @@
+> +// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> +#include <pthread.h>
+> +#include <stdlib.h>
+> +#include "erofs/workqueue.h"
+> +
+> +static void *worker_thread(void *arg)
+> +{
+> +	struct erofs_workqueue *wq = arg;
+> +	struct erofs_work *work;
+> +	void *priv = NULL;
+> +
+> +	if (wq->priv_size) {
+> +		priv = calloc(wq->priv_size, 1);
+> +		assert(priv);
+> +	}
+
+	if (wq->on_start)
+		wq->on_start(wq);
+
+> +
+> +	while (true) {
+> +		pthread_mutex_lock(&wq->lock);
+> +
+> +		while (wq->job_count == 0 && !wq->shutdown)
+> +			pthread_cond_wait(&wq->cond_empty, &wq->lock);
+> +		if (wq->job_count == 0 && wq->shutdown) {
+> +			pthread_mutex_unlock(&wq->lock);
+> +			break;
+> +		}
+> +
+> +		work = wq->head;
+> +		wq->head = work->next;
+> +		if (!wq->head)
+> +			wq->tail = NULL;
+> +		wq->job_count--;
+> +
+> +		if (wq->job_count == wq->max_jobs - 1)
+> +			pthread_cond_broadcast(&wq->cond_full);
+> +
+> +		pthread_mutex_unlock(&wq->lock);
+> +
+> +		work->priv = priv;
+> +		work->func(work);
+> +	}
+> +
+> +	if (priv) {
+> +		assert(wq->priv_fini);
+> +		(wq->priv_fini)(priv);
+> +		free(priv);
+> +	}
+
+	if (wq->on_exit)
+		wq->on_exit(wq);
+
+> +
+> +	return NULL;
+> +}
+> +
+> +int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
+> +			 unsigned int max_jobs, size_t priv_size,
+> +			 erofs_wq_priv_fini_t *priv_fini)
+> +{
+> +	unsigned int i;
+> +
+> +	if (!wq || nworker <= 0 || max_jobs <= 0)
+> +		return -EINVAL;
+> +
+> +	wq->head = wq->tail = NULL;
+> +	wq->nworker = nworker;
+> +	wq->max_jobs = max_jobs;
+> +	wq->job_count = 0;
+> +	wq->shutdown = false;
+> +	wq->priv_size = priv_size;
+> +	wq->priv_fini = priv_fini;
+> +	pthread_mutex_init(&wq->lock, NULL);
+> +	pthread_cond_init(&wq->cond_empty, NULL);
+> +	pthread_cond_init(&wq->cond_full, NULL);
+> +
+> +	wq->workers = malloc(nworker * sizeof(pthread_t));
+> +	if (!wq->workers)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < nworker; i++) {
+> +		if (pthread_create(&wq->workers[i], NULL, worker_thread, wq)) {
+> +			while (i--)
+> +				pthread_cancel(wq->workers[i]);
+
+How about
+			while (i)
+				pthread_cancel(wq->workers[--i]);
+
+I preferred this since i won't be < 0.
+
+Thanks,
+Gao Xiang
