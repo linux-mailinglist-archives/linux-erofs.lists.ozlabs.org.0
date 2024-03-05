@@ -1,45 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FFCF871952
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Mar 2024 10:15:43 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BDF7872309
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Mar 2024 16:42:16 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VNIEPCTK;
+	dkim=pass (1024-bit key; unprotected) header.d=lj168.net header.i=@lj168.net header.a=rsa-sha1 header.s=mail header.b=ZIXd9tFu;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tpqfj1FXbz3dVK
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Mar 2024 20:15:41 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tq0Dk1qQrz3vZr
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Mar 2024 02:42:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VNIEPCTK;
+	dkim=pass (1024-bit key; unprotected) header.d=lj168.net header.i=@lj168.net header.a=rsa-sha1 header.s=mail header.b=ZIXd9tFu;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tpqf05wdYz2xPZ
-	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Mar 2024 20:15:03 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1709630100; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=Vme30tGzoG9Q13+YlWKekwuRS+55dVw55EvFDe7Rrgg=;
-	b=VNIEPCTK5qCEHAlZVCfGL/AebXwWHFsP13ZGsj2NGJEsiHFVw0PbLNFlmmuM7GTx+Aa1ENqJgaYj/R+6c4lb0BglaLALKyhaq7KqgrgkCqAUuuVh6/bYRabNF69+kf+21oq7lJjm2PMncC9p1hR3mYi0oQPSGdWjSKGP3OEA0xk=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W1tgGhY_1709630098;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W1tgGhY_1709630098)
-          by smtp.aliyun-inc.com;
-          Tue, 05 Mar 2024 17:14:59 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=lj168.net (client-ip=64.188.4.207; helo=zszhongguojie.com; envelope-from=ebikeyp@lj168.net; receiver=lists.ozlabs.org)
+X-Greylist: delayed 4247 seconds by postgrey-1.37 at boromir; Wed, 06 Mar 2024 02:42:08 AEDT
+Received: from zszhongguojie.com (zszhongguojie.com [64.188.4.207])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tq0Dc663pz3cN7
+	for <linux-erofs@lists.ozlabs.org>; Wed,  6 Mar 2024 02:42:08 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=mail; d=lj168.net;
+ h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
+ bh=95CHGiY2HLNxZ+bPt5ms4EkBJhI=;
+ b=ZIXd9tFuFFtzICWHx2PoF7/LBW9hXKYFGcJ689W4oLhZk3OyOK198odw9Gzpfb1ONYVbMf0iOTYK
+   Xw5yY75ZXGuJ/VcN+/ItDNvuEGdvvA5eJiBPs0DtZpyO2ZRkR2ShAoLYBkbKz2KyYNmq5iu2wMyV
+   ifuVTJgltH3orhIQZGM=
+DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=mail; d=lj168.net;
+ b=rtVFZ0UZexyFBBHZiK429dp6MWMXBKSFVI130UzqbudIdFX70JDjWTKMsvb23+dt/Cj975HO4WsW
+   6sZ7b4t5IvqcIANsSy64tKazXW/6ejgE5/MEeAZLvyuhSBFnLTG6HUcW3tCnH3JeH6UHgR+dFclZ
+   AMnwOjye2AlOb1VgJeE=;
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 6/6] erofs: refine managed cache operations to folios
-Date: Tue,  5 Mar 2024 17:14:48 +0800
-Message-Id: <20240305091448.1384242-6-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240305091448.1384242-1-hsiangkao@linux.alibaba.com>
-References: <20240305091448.1384242-1-hsiangkao@linux.alibaba.com>
+Subject: Mountain E-bike is here
+Message-ID: <df6bc2532aae3f2ca2ca8849b245cbf3@lj168.net>
+Date: Tue, 05 Mar 2024 14:46:09 +0100
+From: "Jeremy Dyson" <ebikeca@lj168.net>
 MIME-Version: 1.0
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -52,225 +49,77 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Reply-To: jeremydyson@lj168.net
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Convert erofs_try_to_free_all_cached_pages() and
-z_erofs_cache_release_folio().
-
-Besides, erofs_page_is_managed() is moved to zdata.c and renamed
-as erofs_folio_is_managed().
-
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/compress.h             |  7 ----
- fs/erofs/decompressor_deflate.c |  3 --
- fs/erofs/decompressor_lzma.c    |  3 --
- fs/erofs/internal.h             |  4 +--
- fs/erofs/utils.c                |  2 +-
- fs/erofs/zdata.c                | 63 ++++++++++++++++-----------------
- 6 files changed, 34 insertions(+), 48 deletions(-)
-
-diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-index 7cc5841577b2..333587ba6183 100644
---- a/fs/erofs/compress.h
-+++ b/fs/erofs/compress.h
-@@ -81,13 +81,6 @@ static inline bool z_erofs_put_shortlivedpage(struct page **pagepool,
- 	return true;
- }
- 
--#define MNGD_MAPPING(sbi)	((sbi)->managed_cache->i_mapping)
--static inline bool erofs_page_is_managed(const struct erofs_sb_info *sbi,
--					 struct page *page)
--{
--	return page->mapping == MNGD_MAPPING(sbi);
--}
--
- int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
- 			 unsigned int padbufsize);
- extern const struct z_erofs_decompressor erofs_decompressors[];
-diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
-index b98872058abe..81e65c453ef0 100644
---- a/fs/erofs/decompressor_deflate.c
-+++ b/fs/erofs/decompressor_deflate.c
-@@ -212,9 +212,6 @@ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
- 
- 			if (rq->out[no] != rq->in[j])
- 				continue;
--
--			DBG_BUGON(erofs_page_is_managed(EROFS_SB(sb),
--							rq->in[j]));
- 			tmppage = erofs_allocpage(pgpl, rq->gfp);
- 			if (!tmppage) {
- 				err = -ENOMEM;
-diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
-index 6ca357d83cfa..4b28dc130c9f 100644
---- a/fs/erofs/decompressor_lzma.c
-+++ b/fs/erofs/decompressor_lzma.c
-@@ -258,9 +258,6 @@ int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
- 
- 			if (rq->out[no] != rq->in[j])
- 				continue;
--
--			DBG_BUGON(erofs_page_is_managed(EROFS_SB(rq->sb),
--							rq->in[j]));
- 			tmppage = erofs_allocpage(pgpl, rq->gfp);
- 			if (!tmppage) {
- 				err = -ENOMEM;
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index b0409badb017..65db0250f146 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -467,8 +467,8 @@ int __init erofs_init_shrinker(void);
- void erofs_exit_shrinker(void);
- int __init z_erofs_init_zip_subsystem(void);
- void z_erofs_exit_zip_subsystem(void);
--int erofs_try_to_free_all_cached_pages(struct erofs_sb_info *sbi,
--				       struct erofs_workgroup *egrp);
-+int erofs_try_to_free_all_cached_folios(struct erofs_sb_info *sbi,
-+					struct erofs_workgroup *egrp);
- int z_erofs_map_blocks_iter(struct inode *inode, struct erofs_map_blocks *map,
- 			    int flags);
- void *erofs_get_pcpubuf(unsigned int requiredpages);
-diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-index e146d09151af..518bdd69c823 100644
---- a/fs/erofs/utils.c
-+++ b/fs/erofs/utils.c
-@@ -129,7 +129,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
- 	 * the XArray. Otherwise some cached pages could be still attached to
- 	 * the orphan old workgroup when the new one is available in the tree.
- 	 */
--	if (erofs_try_to_free_all_cached_pages(sbi, grp))
-+	if (erofs_try_to_free_all_cached_folios(sbi, grp))
- 		goto out;
- 
- 	/*
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 63990c8192f2..c1bd4d8392eb 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -119,6 +119,12 @@ static inline unsigned int z_erofs_pclusterpages(struct z_erofs_pcluster *pcl)
- 	return PAGE_ALIGN(pcl->pclustersize) >> PAGE_SHIFT;
- }
- 
-+#define MNGD_MAPPING(sbi)	((sbi)->managed_cache->i_mapping)
-+static bool erofs_folio_is_managed(struct erofs_sb_info *sbi, struct folio *fo)
-+{
-+	return fo->mapping == MNGD_MAPPING(sbi);
-+}
-+
- /*
-  * bit 30: I/O error occurred on this folio
-  * bit 0 - 29: remaining parts to complete this folio
-@@ -611,9 +617,9 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe)
- 		fe->mode = Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE;
- }
- 
--/* called by erofs_shrinker to get rid of all compressed_pages */
--int erofs_try_to_free_all_cached_pages(struct erofs_sb_info *sbi,
--				       struct erofs_workgroup *grp)
-+/* called by erofs_shrinker to get rid of all cached compressed bvecs */
-+int erofs_try_to_free_all_cached_folios(struct erofs_sb_info *sbi,
-+					struct erofs_workgroup *grp)
- {
- 	struct z_erofs_pcluster *const pcl =
- 		container_of(grp, struct z_erofs_pcluster, obj);
-@@ -621,27 +627,22 @@ int erofs_try_to_free_all_cached_pages(struct erofs_sb_info *sbi,
- 	int i;
- 
- 	DBG_BUGON(z_erofs_is_inline_pcluster(pcl));
--	/*
--	 * refcount of workgroup is now freezed as 0,
--	 * therefore no need to worry about available decompression users.
--	 */
-+	/* There is no actice user since the pcluster is now freezed */
- 	for (i = 0; i < pclusterpages; ++i) {
--		struct page *page = pcl->compressed_bvecs[i].page;
-+		struct folio *folio = pcl->compressed_bvecs[i].folio;
- 
--		if (!page)
-+		if (!folio)
- 			continue;
- 
--		/* block other users from reclaiming or migrating the page */
--		if (!trylock_page(page))
-+		/* Avoid reclaiming or migrating this folio */
-+		if (!folio_trylock(folio))
- 			return -EBUSY;
- 
--		if (!erofs_page_is_managed(sbi, page))
-+		if (!erofs_folio_is_managed(sbi, folio))
- 			continue;
--
--		/* barrier is implied in the following 'unlock_page' */
--		WRITE_ONCE(pcl->compressed_bvecs[i].page, NULL);
--		detach_page_private(page);
--		unlock_page(page);
-+		pcl->compressed_bvecs[i].folio = NULL;
-+		folio_detach_private(folio);
-+		folio_unlock(folio);
- 	}
- 	return 0;
- }
-@@ -658,20 +659,17 @@ static bool z_erofs_cache_release_folio(struct folio *folio, gfp_t gfp)
- 
- 	ret = false;
- 	spin_lock(&pcl->obj.lockref.lock);
--	if (pcl->obj.lockref.count > 0)
--		goto out;
--
--	DBG_BUGON(z_erofs_is_inline_pcluster(pcl));
--	for (i = 0; i < pclusterpages; ++i) {
--		if (pcl->compressed_bvecs[i].page == &folio->page) {
--			WRITE_ONCE(pcl->compressed_bvecs[i].page, NULL);
--			ret = true;
--			break;
-+	if (pcl->obj.lockref.count <= 0) {
-+		DBG_BUGON(z_erofs_is_inline_pcluster(pcl));
-+		for (i = 0; i < pclusterpages; ++i) {
-+			if (pcl->compressed_bvecs[i].folio == folio) {
-+				pcl->compressed_bvecs[i].folio = NULL;
-+				folio_detach_private(folio);
-+				ret = true;
-+				break;
-+			}
- 		}
- 	}
--	if (ret)
--		folio_detach_private(folio);
--out:
- 	spin_unlock(&pcl->obj.lockref.lock);
- 	return ret;
- }
-@@ -1201,7 +1199,7 @@ static int z_erofs_parse_in_bvecs(struct z_erofs_decompress_backend *be,
- 		be->compressed_pages[i] = page;
- 
- 		if (z_erofs_is_inline_pcluster(pcl) ||
--		    erofs_page_is_managed(EROFS_SB(be->sb), page)) {
-+		    erofs_folio_is_managed(EROFS_SB(be->sb), page_folio(page))) {
- 			if (!PageUptodate(page))
- 				err = -EIO;
- 			continue;
-@@ -1286,7 +1284,8 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 			/* consider shortlived pages added when decompressing */
- 			page = be->compressed_pages[i];
- 
--			if (!page || erofs_page_is_managed(sbi, page))
-+			if (!page ||
-+			    erofs_folio_is_managed(sbi, page_folio(page)))
- 				continue;
- 			(void)z_erofs_put_shortlivedpage(be->pagepool, page);
- 			WRITE_ONCE(pcl->compressed_bvecs[i].page, NULL);
-@@ -1573,7 +1572,7 @@ static void z_erofs_submissionqueue_endio(struct bio *bio)
- 
- 		DBG_BUGON(folio_test_uptodate(folio));
- 		DBG_BUGON(z_erofs_page_is_invalidated(&folio->page));
--		if (!erofs_page_is_managed(EROFS_SB(q->sb), &folio->page))
-+		if (!erofs_folio_is_managed(EROFS_SB(q->sb), folio))
- 			continue;
- 
- 		if (!err)
--- 
-2.39.3
+<html>
+<head>
+</head>
+<body>
+Hello,<br /> <br /> We are delighted to showcase our premier innovation in
+cycling technology: the 26-inch Mountain E-bike, <br />crafted with
+precision by our team of experts to transform your riding experience.<br />
+<br /> As a professional e-bike manufacturer with years of industry
+expertise, we are deeply committed to quality and excellence. <br />Our
+state-of-the-art facility is dedicated to producing superior e-bikes that
+blend cutting-edge technology with exceptional reliability. <br />Each
+model is a testament to our passion for innovation and our dedication to
+providing cyclists with the tools they need to explore new horizons.<br />
+<br /> Our latest creation is a testament to our unwavering commitment to
+excellence. <br />It features a detachable 36V 13Ah battery that offers a
+substantial travel range of 35-55 miles on a single charge at a
+pedal-assist setting that conserves energy. <br />Equipped with a robust
+350W brushless geared motor, this e-bike reaches speeds up to 20MPH,
+offering the perfect blend of power and endurance for any journey, <br
+/>whether it be your daily commute or a thrilling mountain trail.<br /><br
+/>Should you be interested in acquiring one or multiple e-bikes from our
+collection, please furnish us with your shipping address, and we will make
+arrangements for shipment.<br />Housed in Germany, our warehouse enables
+expedited delivery to all European destinations within a span of 3-7
+days.<br /><br /><img
+src="https://www.courtsmammouth.mu/68333-large_default/champion-hl8612-250-watts-025kw-red-26-alloy-frame-electric-bike.jpg"
+width="800" height="800" /><br /><br /><span>Should you be interested in
+acquiring one or multiple e-bikes from our collection, please furnish us
+with your shipping address, and we will make arrangements for shipment. <br
+/>Housed in Germany, our warehouse enables expedited delivery to all
+European destinations within a span of 3-7 days.</span><br /> <br /> With
+options to engage either throttle or pedal assist modes that come in six
+levels of power assistance, our e-bike is designed to cater to your unique
+cycling style. <br />Transitioning between modes is seamless, allowing you
+to effortlessly tap into the extra power when needed, such as when
+maneuvering through bustling streets or ascending steep terrain.<br /> <br
+/> Our e-bike showcases a detailed LCD display for monitoring gear
+position, speed, and mileage, providing you with intelligent feedback as
+you ride. <br />The bike's backbone is built from high-strength carbon
+steel and aluminum alloy, ensuring a ride that is both stable and agile.
+<br />A versatile 21-speed transmission system, reliable disc brakes for
+safety, and durable double-walled rims are just a few of the features that
+make our e-bike a standout <br />choice for both novice and seasoned
+riders.<br /> <br /> To ensure good maintenance, our e-bikes come with
+intuitively designed connectors for all electrical components, making
+replacements straightforward and user-friendly. <br />This innovative
+approach eliminates the need for complicated wiring work, allowing for
+quick and easy component changes.<br /> <br /> Upon delivery, you'll find
+your e-bike 85 percent pre-assembled, with only a few simple steps left to
+complete before you can begin your riding adventure. <br />To further
+assist you, we've provided a helpful assembly video on the product page.
+Rest assured, your purchase is also protected by a one-year service
+warranty <br />covering the electric motor, battery, and more, ensuring
+your peace of mind.<br /> <br /> Embark on an unparalleled journey with our
+sophisticated 26-inch Mountain E-bike and discover the fusion of power,
+flexibility, and convenience that awaits.<br /> <br /> If this exceptional
+product piques your interest, please provide us with your shipping address,
+and we will ensure your e-bike is dispatched swiftly. <br />Our efficient
+distribution network based in Germany guarantees that your order will
+arrive at your doorstep within 3-7 days across Europe.<br /> <br /> We
+eagerly await the opportunity to serve you and are confident that our
+e-bike will exceed your expectations, providing you with an unrivaled
+cycling experience. <br />For any further inquiries or special requests, do
+not hesitate to contact us. We are here to support you on your electric
+biking journey.<br /> <br /> With warmest regards and anticipation for your
+exploration,<br />Thanks,<br />Jeremy Dyson<br />From our ebike factory<br
+/><br />
+</body>
+</html>
 
