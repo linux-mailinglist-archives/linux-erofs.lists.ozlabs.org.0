@@ -1,40 +1,40 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6BDF7872309
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Mar 2024 16:42:16 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 726EB8724A8
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Mar 2024 17:47:07 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=lj168.net header.i=@lj168.net header.a=rsa-sha1 header.s=mail header.b=ZIXd9tFu;
+	dkim=pass (1024-bit key; unprotected) header.d=lj168.net header.i=@lj168.net header.a=rsa-sha1 header.s=mail header.b=SYiv9O7w;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tq0Dk1qQrz3vZr
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Mar 2024 02:42:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tq1gY1gzpz3vXp
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Mar 2024 03:47:05 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=lj168.net header.i=@lj168.net header.a=rsa-sha1 header.s=mail header.b=ZIXd9tFu;
+	dkim=pass (1024-bit key; unprotected) header.d=lj168.net header.i=@lj168.net header.a=rsa-sha1 header.s=mail header.b=SYiv9O7w;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=lj168.net (client-ip=64.188.4.207; helo=zszhongguojie.com; envelope-from=ebikeyp@lj168.net; receiver=lists.ozlabs.org)
-X-Greylist: delayed 4247 seconds by postgrey-1.37 at boromir; Wed, 06 Mar 2024 02:42:08 AEDT
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=lj168.net (client-ip=64.188.4.207; helo=zszhongguojie.com; envelope-from=ebikejg@lj168.net; receiver=lists.ozlabs.org)
+X-Greylist: delayed 7415 seconds by postgrey-1.37 at boromir; Wed, 06 Mar 2024 03:47:00 AEDT
 Received: from zszhongguojie.com (zszhongguojie.com [64.188.4.207])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tq0Dc663pz3cN7
-	for <linux-erofs@lists.ozlabs.org>; Wed,  6 Mar 2024 02:42:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tq1gS1qQLz3bnt
+	for <linux-erofs@lists.ozlabs.org>; Wed,  6 Mar 2024 03:47:00 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=mail; d=lj168.net;
  h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
  bh=95CHGiY2HLNxZ+bPt5ms4EkBJhI=;
- b=ZIXd9tFuFFtzICWHx2PoF7/LBW9hXKYFGcJ689W4oLhZk3OyOK198odw9Gzpfb1ONYVbMf0iOTYK
-   Xw5yY75ZXGuJ/VcN+/ItDNvuEGdvvA5eJiBPs0DtZpyO2ZRkR2ShAoLYBkbKz2KyYNmq5iu2wMyV
-   ifuVTJgltH3orhIQZGM=
+ b=SYiv9O7wCyyEWexUm0T1rIdJ+ry60g5IbfMPA6BXKyB0kFzGNwQZ1QUip7BS4iBUT0BGo8oULTdZ
+   04Ox6qUaMyXPPruqQ89NZy1B/3rV6Kd319KnHKDx9xyHZlFo68HXVIgvIRIqnz3UtBKJuFWNe+sk
+   rh38zwNOTNvtbSV9SXw=
 DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=mail; d=lj168.net;
- b=rtVFZ0UZexyFBBHZiK429dp6MWMXBKSFVI130UzqbudIdFX70JDjWTKMsvb23+dt/Cj975HO4WsW
-   6sZ7b4t5IvqcIANsSy64tKazXW/6ejgE5/MEeAZLvyuhSBFnLTG6HUcW3tCnH3JeH6UHgR+dFclZ
-   AMnwOjye2AlOb1VgJeE=;
+ b=GcyH8CvI3xtnVJMzTFmBBgimU4HFfLpCZA7kDyqriGeOzmEFxifp2VPZYOHIiSII3BST0IfdmSmV
+   SVWQRwAbehzyo+Og/42Zy7heVtEUDbfkduHmIE+YUd6aTc/BM3QnwzXbabWR6ytKwLeIqirp6WB3
+   bxu2SkZ1ZlO5p22jj08=;
 To: linux-erofs@lists.ozlabs.org
 Subject: Mountain E-bike is here
-Message-ID: <df6bc2532aae3f2ca2ca8849b245cbf3@lj168.net>
-Date: Tue, 05 Mar 2024 14:46:09 +0100
-From: "Jeremy Dyson" <ebikeca@lj168.net>
+Message-ID: <8140fcc33567a7b34454057e210745b3@lj168.net>
+Date: Tue, 05 Mar 2024 15:07:49 +0100
+From: "Jeremy Dyson" <ebikejg@lj168.net>
 MIME-Version: 1.0
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
