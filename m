@@ -1,42 +1,44 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A39F871949
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Mar 2024 10:15:14 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B57E787194E
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Mar 2024 10:15:31 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=T8L5hA07;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=sJJeWO6R;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tpqf76sHzz3dT8
-	for <lists+linux-erofs@lfdr.de>; Tue,  5 Mar 2024 20:15:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4TpqfT3m8lz3dVf
+	for <lists+linux-erofs@lfdr.de>; Tue,  5 Mar 2024 20:15:29 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=T8L5hA07;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=sJJeWO6R;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tpqdz0rSkz2xcs
-	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Mar 2024 20:15:00 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tpqdy6X9Cz2xb2
+	for <linux-erofs@lists.ozlabs.org>; Tue,  5 Mar 2024 20:15:01 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1709630095; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=4tRsgiXWNN9mlTyxXmeapNYFeEWm+OEQOBRVCP5FFws=;
-	b=T8L5hA0752qxU7MjgANrFPpZKf8hwFYxi5pmT46+vW0y3ZoJM/JUQvwam3MdnWhnQsoj5xmd9Df+Hvn4UKYsK8UpjKwQl+l+ORXXEFEc3umKPCsAwoBK4M3f6Ty4KFlxBeNWOgb6nLpBm+QRafaiV0+Ysf/a8YNDPUI60Rkoaiw=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W1tgGeK_1709630089;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W1tgGeK_1709630089)
+	t=1709630098; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=GFDbGG8sHGCt0S8InIcbIqzI0LPCx+wjhzefgM3ZHC8=;
+	b=sJJeWO6RHeJJ7W4CDFPENlVB4WF21HfSPgVRkyc67xApg07HMwixiyEBi69jMPFaZJwr8kzNrjxmXP9rx/wFCiO6zZVYTSqlQzAK5dAAnj1R3RXvfsXspFp7aHRSpSRDr7IDcZUFNMsLxYSKzQYIQS6hbTboj/Fc0+HJV4FtotM=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W1tgGg5_1709630094;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W1tgGg5_1709630094)
           by smtp.aliyun-inc.com;
-          Tue, 05 Mar 2024 17:14:54 +0800
+          Tue, 05 Mar 2024 17:14:55 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/6] erofs: convert z_erofs_onlinepage_.* to folios
-Date: Tue,  5 Mar 2024 17:14:43 +0800
-Message-Id: <20240305091448.1384242-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/6] erofs: convert z_erofs_do_read_page() to folios
+Date: Tue,  5 Mar 2024 17:14:44 +0800
+Message-Id: <20240305091448.1384242-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240305091448.1384242-1-hsiangkao@linux.alibaba.com>
+References: <20240305091448.1384242-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -54,142 +56,115 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Online folios are locked file-backed folios which will eventually
-keep decoded (e.g. decompressed) data of each inode for end users to
-utilize.  It may belong to a few pclusters and contain other data (e.g.
-compressed data for inplace I/Os) temporarily in a time-sharing manner
-to reduce memory footprints for low-ended storage devices with high
-latencies under heary I/O pressure.
-
-Apart from folio_end_read() usage, it's a straight-forward conversion.
+It is a straight-forward conversion. Besides, it's renamed as
+z_erofs_scan_folio().
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-Some trivial folio conversions for compressed inodes aiming for v6.9.
-
- fs/erofs/zdata.c | 50 +++++++++++++++++++++---------------------------
- 1 file changed, 22 insertions(+), 28 deletions(-)
+ fs/erofs/zdata.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
 diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index ff0aa72b0db3..5013fcd4965a 100644
+index 5013fcd4965a..c25074657708 100644
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -117,46 +117,39 @@ static inline unsigned int z_erofs_pclusterpages(struct z_erofs_pcluster *pcl)
+@@ -955,21 +955,20 @@ static int z_erofs_read_fragment(struct super_block *sb, struct page *page,
+ 	return 0;
  }
  
- /*
-- * bit 30: I/O error occurred on this page
-- * bit 0 - 29: remaining parts to complete this page
-+ * bit 30: I/O error occurred on this folio
-+ * bit 0 - 29: remaining parts to complete this folio
-  */
--#define Z_EROFS_PAGE_EIO			(1 << 30)
-+#define Z_EROFS_FOLIO_EIO			(1 << 30)
- 
--static inline void z_erofs_onlinepage_init(struct page *page)
-+static void z_erofs_onlinefolio_init(struct folio *folio)
+-static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+-				struct page *page, bool ra)
++static int z_erofs_scan_folio(struct z_erofs_decompress_frontend *fe,
++			      struct folio *folio, bool ra)
  {
- 	union {
- 		atomic_t o;
--		unsigned long v;
-+		void *v;
- 	} u = { .o = ATOMIC_INIT(1) };
- 
--	set_page_private(page, u.v);
--	smp_wmb();
--	SetPagePrivate(page);
-+	folio->private = u.v;	/* valid only if file-backed folio is locked */
- }
- 
--static inline void z_erofs_onlinepage_split(struct page *page)
-+static void z_erofs_onlinefolio_split(struct folio *folio)
- {
--	atomic_inc((atomic_t *)&page->private);
-+	atomic_inc((atomic_t *)&folio->private);
- }
- 
--static void z_erofs_onlinepage_endio(struct page *page, int err)
-+static void z_erofs_onlinefolio_end(struct folio *folio, int err)
- {
- 	int orig, v;
- 
--	DBG_BUGON(!PagePrivate(page));
--
- 	do {
--		orig = atomic_read((atomic_t *)&page->private);
--		v = (orig - 1) | (err ? Z_EROFS_PAGE_EIO : 0);
--	} while (atomic_cmpxchg((atomic_t *)&page->private, orig, v) != orig);
-+		orig = atomic_read((atomic_t *)&folio->private);
-+		v = (orig - 1) | (err ? Z_EROFS_FOLIO_EIO : 0);
-+	} while (atomic_cmpxchg((atomic_t *)&folio->private, orig, v) != orig);
- 
--	if (!(v & ~Z_EROFS_PAGE_EIO)) {
--		set_page_private(page, 0);
--		ClearPagePrivate(page);
--		if (!(v & Z_EROFS_PAGE_EIO))
--			SetPageUptodate(page);
--		unlock_page(page);
--	}
-+	if (v & ~Z_EROFS_FOLIO_EIO)
-+		return;
-+	folio->private = 0;
-+	folio_end_read(folio, !(v & Z_EROFS_FOLIO_EIO));
- }
- 
- #define Z_EROFS_ONSTACK_PAGES		32
-@@ -965,6 +958,7 @@ static int z_erofs_read_fragment(struct super_block *sb, struct page *page,
- static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 				struct page *page, bool ra)
- {
-+	struct folio *folio = page_folio(page);
+-	struct folio *folio = page_folio(page);
  	struct inode *const inode = fe->inode;
  	struct erofs_map_blocks *const map = &fe->map;
- 	const loff_t offset = page_offset(page);
-@@ -973,7 +967,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+-	const loff_t offset = page_offset(page);
+-	const unsigned int bs = i_blocksize(inode);
++	const loff_t offset = folio_pos(folio);
++	const unsigned int bs = i_blocksize(inode), fs = folio_size(folio);
+ 	bool tight = true, exclusive;
  	unsigned int cur, end, len, split;
  	int err = 0;
  
--	z_erofs_onlinepage_init(page);
-+	z_erofs_onlinefolio_init(folio);
+ 	z_erofs_onlinefolio_init(folio);
  	split = 0;
- 	end = PAGE_SIZE;
+-	end = PAGE_SIZE;
++	end = fs;
  repeat:
-@@ -1035,7 +1029,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 	if (err)
- 		goto out;
+ 	if (offset + end - 1 < map->m_la ||
+ 	    offset + end - 1 >= map->m_la + map->m_llen) {
+@@ -986,7 +985,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 	++split;
  
--	z_erofs_onlinepage_split(page);
-+	z_erofs_onlinefolio_split(folio);
- 	if (fe->pcl->pageofs_out != (map->m_la & ~PAGE_MASK))
- 		fe->pcl->multibases = true;
- 	if (fe->pcl->length < offset + end - map->m_la) {
-@@ -1056,7 +1050,7 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
- 		goto repeat;
+ 	if (!(map->m_flags & EROFS_MAP_MAPPED)) {
+-		zero_user_segment(page, cur, end);
++		folio_zero_segment(folio, cur, end);
+ 		tight = false;
+ 		goto next_part;
+ 	}
+@@ -995,8 +994,8 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 		erofs_off_t fpos = offset + cur - map->m_la;
  
- out:
--	z_erofs_onlinepage_endio(page, err);
-+	z_erofs_onlinefolio_end(folio, err);
- 	return err;
- }
+ 		len = min_t(unsigned int, map->m_llen - fpos, end - cur);
+-		err = z_erofs_read_fragment(inode->i_sb, page, cur, cur + len,
+-				EROFS_I(inode)->z_fragmentoff + fpos);
++		err = z_erofs_read_fragment(inode->i_sb, &folio->page, cur,
++			cur + len, EROFS_I(inode)->z_fragmentoff + fpos);
+ 		if (err)
+ 			goto out;
+ 		tight = false;
+@@ -1011,18 +1010,18 @@ static int z_erofs_do_read_page(struct z_erofs_decompress_frontend *fe,
+ 	}
  
-@@ -1159,7 +1153,7 @@ static void z_erofs_fill_other_copies(struct z_erofs_decompress_backend *be,
- 			cur += len;
+ 	/*
+-	 * Ensure the current partial page belongs to this submit chain rather
++	 * Ensure the current partial folio belongs to this submit chain rather
+ 	 * than other concurrent submit chains or the noio(bypass) chain since
+-	 * those chains are handled asynchronously thus the page cannot be used
++	 * those chains are handled asynchronously thus the folio cannot be used
+ 	 * for inplace I/O or bvpage (should be processed in a strict order.)
+ 	 */
+ 	tight &= (fe->mode > Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE);
+-	exclusive = (!cur && ((split <= 1) || (tight && bs == PAGE_SIZE)));
++	exclusive = (!cur && ((split <= 1) || (tight && bs == fs)));
+ 	if (cur)
+ 		tight &= (fe->mode >= Z_EROFS_PCLUSTER_FOLLOWED);
+ 
+ 	err = z_erofs_attach_page(fe, &((struct z_erofs_bvec) {
+-					.page = page,
++					.page = &folio->page,
+ 					.offset = offset - map->m_la,
+ 					.end = end,
+ 				  }), exclusive);
+@@ -1789,7 +1788,7 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
+ 			if (PageUptodate(page))
+ 				unlock_page(page);
+ 			else
+-				(void)z_erofs_do_read_page(f, page, !!rac);
++				z_erofs_scan_folio(f, page_folio(page), !!rac);
+ 			put_page(page);
  		}
- 		kunmap_local(dst);
--		z_erofs_onlinepage_endio(bvi->bvec.page, err);
-+		z_erofs_onlinefolio_end(page_folio(bvi->bvec.page), err);
- 		list_del(p);
- 		kfree(bvi);
- 	}
-@@ -1316,7 +1310,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 		/* recycle all individual short-lived pages */
- 		if (z_erofs_put_shortlivedpage(be->pagepool, page))
- 			continue;
--		z_erofs_onlinepage_endio(page, err);
-+		z_erofs_onlinefolio_end(page_folio(page), err);
- 	}
  
- 	if (be->decompressed_pages != be->onstack_pages)
+@@ -1810,7 +1809,7 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
+ 	f.headoffset = (erofs_off_t)folio->index << PAGE_SHIFT;
+ 
+ 	z_erofs_pcluster_readmore(&f, NULL, true);
+-	err = z_erofs_do_read_page(&f, &folio->page, false);
++	err = z_erofs_scan_folio(&f, folio, false);
+ 	z_erofs_pcluster_readmore(&f, NULL, false);
+ 	z_erofs_pcluster_end(&f);
+ 
+@@ -1851,7 +1850,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
+ 		folio = head;
+ 		head = folio_get_private(folio);
+ 
+-		err = z_erofs_do_read_page(&f, &folio->page, true);
++		err = z_erofs_scan_folio(&f, folio, true);
+ 		if (err && err != -EINTR)
+ 			erofs_err(inode->i_sb, "readahead error at folio %lu @ nid %llu",
+ 				  folio->index, EROFS_I(inode)->nid);
 -- 
 2.39.3
 
