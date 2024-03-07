@@ -1,61 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15266874A61
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 10:08:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1709802520;
-	bh=NzYUxrkDYLYIk+Whz/nhovSA9OS9dsMHAJHShcPyP3Y=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=VWZYp2FROeFrzYNW+ll1ObUMw8Z+bpPeUMjXtOkVTg6uet3/BptWb/l5O8pp+8kvd
-	 73Z0JgsvOLDad+FJUH+aR/sEybcAbSNBugJsH5Y1sj+7zUdiMKADdiXIayooH//BSY
-	 C1nPkx/QQN7KO2gYJvDstfH2oqLjUqpb7zWAlZQqgzxvIgiB/+J3EFQ5fIMo0toGmj
-	 NCNsuqfZUc52Z/rZ5NNypYXxcMjG81khptUWSiUWQDcCYKpSqNY3TPLe+WIOTGO+Fm
-	 k7zAIMRBxdmzY+/fwjW3Q7+tBua6ge94ATsC6IQQ70R/OjyF8uGWrxA8RmR21vECXZ
-	 /pzLANr/MkKvg==
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 990E0874A87
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 10:17:30 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qOf2mOnh;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tr3Ph5fmbz3dXT
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 20:08:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tr3br2nSSz3dXT
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 20:17:28 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=libaokun1@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qOf2mOnh;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tr3Pb4n4Qz3cF4
-	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Mar 2024 20:08:35 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Tr3Ls2yX2zXhsC;
-	Thu,  7 Mar 2024 17:06:13 +0800 (CST)
-Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4F4981400DD;
-	Thu,  7 Mar 2024 17:08:30 +0800 (CST)
-Received: from [10.174.177.174] (10.174.177.174) by
- dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 7 Mar 2024 17:08:29 +0800
-Message-ID: <84a79c06-692a-25b8-b95c-21e565eced19@huawei.com>
-Date: Thu, 7 Mar 2024 17:08:29 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tr3bl1Dpdz3dTw
+	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Mar 2024 20:17:23 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id D5BA0CE242A;
+	Thu,  7 Mar 2024 09:17:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C408CC433C7;
+	Thu,  7 Mar 2024 09:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709803039;
+	bh=+bGKQg2gdBxm1YSwaAYyFYRWm9IZnY03uaFZhMfjE40=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qOf2mOnhYvFMR3Gr6UCsDFgVUTfl4wkxaG4IFdwzxK+nZKyaUnPuNjb4EYHcBbIJA
+	 +BVyjXtwwzHgrfRRkh85dvtYTxSKXdpNl3tRz6mIIcxxZwEmHgxlZq6bMgPYd9/9w1
+	 ysvl5fTNZWK3jOXGgNYLQvvc3+v57zl2ZMvw25uSqckg+IDfUClhPhAVA52R4kH2zp
+	 2PP3veU2WuzWLMUsKTfCuzZDY3clWbg1os4RDEk5v6xEUGEShh1KwyG4ajqrbjS95U
+	 b5Vo8BrnyysKHo/crizgwVrVihJ68oE9pFSzGHdrsMme2BPphTy3A0++tAGAIPx2m0
+	 6oxbE7mroTBZQ==
+Date: Thu, 7 Mar 2024 10:17:13 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
 Subject: Re: [PATCH] erofs: fix lockdep false positives on initializing
  erofs_pseudo_mnt
-Content-Language: en-US
-To: Al Viro <viro@zeniv.linux.org.uk>
+Message-ID: <20240307-segmentieren-sitzkissen-5086f5e1f99f@brauner>
 References: <20240307024459.883044-1-libaokun1@huawei.com>
- <20240307050717.GB538574@ZenIV>
- <7e9746db-033e-64d0-a3d5-9d341c66cec7@huawei.com>
- <20240307072112.GC538574@ZenIV> <20240307084608.GD538574@ZenIV>
-In-Reply-To: <20240307084608.GD538574@ZenIV>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.174]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500021.china.huawei.com (7.185.36.21)
+ <f9e30004-6691-4171-abc5-7e286d9ccec6@linux.alibaba.com>
+ <7e262242-d90d-4f61-a217-f156219eaa4d@linux.alibaba.com>
+ <38934cc4-58da-47b4-a120-00a2f3a56836@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <38934cc4-58da-47b4-a120-00a2f3a56836@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -67,46 +63,123 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Baokun Li via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Baokun Li <libaokun1@huawei.com>
-Cc: chengzhihao1@huawei.com, yangerkun@huawei.com, linux-kernel@vger.kernel.org, huyue2@coolpad.com, yukuai3@huawei.com, linux-erofs@lists.ozlabs.org
+Cc: chengzhihao1@huawei.com, yangerkun@huawei.com, linux-kernel@vger.kernel.org, huyue2@coolpad.com, Al Viro <viro@zeniv.linux.org.uk>, yukuai3@huawei.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/3/7 16:46, Al Viro wrote:
-> On Thu, Mar 07, 2024 at 07:21:12AM +0000, Al Viro wrote:
->> On Thu, Mar 07, 2024 at 03:06:49PM +0800, Baokun Li wrote:
->>>>> +int erofs_anon_register_fs(void)
->>>>> +{
->>>>> +	return register_filesystem(&erofs_anon_fs_type);
->>>>> +}
->>>> What for?  The only thing it gives you is an ability to look it up by
->>>> name.  Which is completely pointless, IMO,
->>> The helper function here is to avoid extern erofs_anon_fs_type(), because
->>> we define it in fscache.c, but also use it in super.c. Moreover, we don't
->>> need
->>> to register it when CONFIG_EROFS_FS_ONDEMAND is not enabled, so we
->> You don't need to register it at all.
->>
->> The one and only effect of register_filesystem() is making file_system_type
->> instance visible to get_fs_type() (and making it show up in /proc/filesystems).
->>
->> That's it.  If you want to have it looked up by name (e.g. for userland
->> mounts), you need to register.  If not, you do not need to do that.
->>
->> Note that kern_mount() take a pointer to struct file_system_type,
->> not its (string) name.  So all you get from registration is an extra line
->> in /proc/filesystems.  What's the point?
-> PS: at one point I considered renaming it to something that would sound
-> less vague, but the best variant I'd been able to come up with was
-> "publish_filesystem()", which is not much better and has an extra problem -
-> how do you describe the reverse of that?  "withdraw_filesystem()"?
-> Decided that it wasn't worth the amount of noise and headache...
-I feel the emphasis on "fs_name" rather than "filesystem" is less
-likely to be misunderstood. What do you think about renaming
-to add_fs_name/remove_fs_name?
+On Thu, Mar 07, 2024 at 12:18:52PM +0800, Gao Xiang wrote:
+> Hi,
+> 
+> (try to +Cc Christian and Al here...)
+> 
+> On 2024/3/7 11:41, Jingbo Xu wrote:
+> > Hi Baokun,
+> > 
+> > Thanks for catching this!
+> > 
+> > 
+> > On 3/7/24 10:52 AM, Gao Xiang wrote:
+> > > Hi Baokun,
+> > > 
+> > > On 2024/3/7 10:44, Baokun Li wrote:
+> > > > Lockdep reported the following issue when mounting erofs with a
+> > > > domain_id:
+> > > > 
+> > > > ============================================
+> > > > WARNING: possible recursive locking detected
+> > > > 6.8.0-rc7-xfstests #521 Not tainted
+> > > > --------------------------------------------
+> > > > mount/396 is trying to acquire lock:
+> > > > ffff907a8aaaa0e0 (&type->s_umount_key#50/1){+.+.}-{3:3},
+> > > >                          at: alloc_super+0xe3/0x3d0
+> > > > 
+> > > > but task is already holding lock:
+> > > > ffff907a8aaa90e0 (&type->s_umount_key#50/1){+.+.}-{3:3},
+> > > >                          at: alloc_super+0xe3/0x3d0
+> > > > 
+> > > > other info that might help us debug this:
+> > > >    Possible unsafe locking scenario:
+> > > > 
+> > > >          CPU0
+> > > >          ----
+> > > >     lock(&type->s_umount_key#50/1);
+> > > >     lock(&type->s_umount_key#50/1);
+> > > > 
+> > > >    *** DEADLOCK ***
+> > > > 
+> > > >    May be due to missing lock nesting notation
+> > > > 
+> > > > 2 locks held by mount/396:
+> > > >    #0: ffff907a8aaa90e0 (&type->s_umount_key#50/1){+.+.}-{3:3},
+> > > >              at: alloc_super+0xe3/0x3d0
+> > > >    #1: ffffffffc00e6f28 (erofs_domain_list_lock){+.+.}-{3:3},
+> > > >              at: erofs_fscache_register_fs+0x3d/0x270 [erofs]
+> > > > 
+> > > > stack backtrace:
+> > > > CPU: 1 PID: 396 Comm: mount Not tainted 6.8.0-rc7-xfstests #521
+> > > > Call Trace:
+> > > >    <TASK>
+> > > >    dump_stack_lvl+0x64/0xb0
+> > > >    validate_chain+0x5c4/0xa00
+> > > >    __lock_acquire+0x6a9/0xd50
+> > > >    lock_acquire+0xcd/0x2b0
+> > > >    down_write_nested+0x45/0xd0
+> > > >    alloc_super+0xe3/0x3d0
+> > > >    sget_fc+0x62/0x2f0
+> > > >    vfs_get_super+0x21/0x90
+> > > >    vfs_get_tree+0x2c/0xf0
+> > > >    fc_mount+0x12/0x40
+> > > >    vfs_kern_mount.part.0+0x75/0x90
+> > > >    kern_mount+0x24/0x40
+> > > >    erofs_fscache_register_fs+0x1ef/0x270 [erofs]
+> > > >    erofs_fc_fill_super+0x213/0x380 [erofs]
+> > > > 
+> > > > This is because the file_system_type of both erofs and the pseudo-mount
+> > > > point of domain_id is erofs_fs_type, so two successive calls to
+> > > > alloc_super() are considered to be using the same lock and trigger the
+> > > > warning above.
+> > > > 
+> > > > Therefore add a nodev file_system_type named erofs_anon_fs_type to
+> > > > silence this complaint. In addition, to reduce code coupling, refactor
+> > > > out the erofs_anon_init_fs_context() and erofs_kill_pseudo_sb() functions
+> > > > and move the erofs_pseudo_mnt related code to fscache.c.
+> > > > 
+> > > > Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> > > 
+> > > IMHO, in the beginning, I'd like to avoid introducing another fs type
+> > > for erofs to share (meta)data between filesystems since it will cause
+> > > churn, could we use some alternative way to resolve this?
+> > 
+> > Yeah as Gao Xiang said, this is initially intended to avoid introducing
+> > anothoer file_system_type, say erofs_anon_fs_type.
+> > 
+> > What we need is actually a method of allocating anonymous inode as a
+> > sentinel identifying each blob.  There is indeed a global mount, i.e.
+> > anon_inode_mnt, for allocating anonymous inode/file specifically.  At
+> > the time the share domain feature is introduced, there's only one
+> > anonymous inode, i.e. anon_inode_inode, and all the allocated anonymous
+> > files are bound to this single anon_inode_inode.  Thus we decided to
+> > implement a erofs internal pseudo mount for this usage.
+> > 
+> > But I noticed that we can now allocate unique anonymous inodes from
+> > anon_inode_mnt since commit e7e832c ("fs: add LSM-supporting anon-inode
+> > interface"), though the new interface is initially for LSM usage.
+> 
+> Yes, as summary, EROFS now maintains a bunch of anon inodes among
+> all different filesystem instances, so that like
+> 
+> blob sharing or
+> page cache sharing across filesystems can be done.
+> 
+> In brief, I think the following patch is a good idea but it
+> hasn't been landed until now:
+> https://lore.kernel.org/r/20210309155348.974875-3-hch@lst.de
+> 
+> Other than that, is it a good idea to introduce another fs type
+> (like erofs_anon_fs_type) for such usage?
 
--- 
-With Best Regards,
-Baokun Li
-.
+It depends. If you're allocating a lot of inodes then having a separate
+filesystem type for erofs makes sense. If it's just a few then it
+probably doesn't matter. If you need custom inode operations for these
+anonymous inodes then it also makes sense to have a separate filesystem
+type.
