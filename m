@@ -1,55 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5350E87456E
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 02:05:08 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AA3D87457A
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 02:07:14 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ZiH6G+ET;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jrCNbtB5;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tqrgj5jbkz3bw2
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 12:05:05 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tqrk74lZnz3c2K
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 12:07:11 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ZiH6G+ET;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jrCNbtB5;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tqrgf3g1Lz3bmy
-	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Mar 2024 12:05:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tqrk41WfKz3btQ
+	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Mar 2024 12:07:08 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 03C75CE1CB0;
-	Thu,  7 Mar 2024 01:04:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B37C433F1;
-	Thu,  7 Mar 2024 01:04:54 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 9535161BB0;
+	Thu,  7 Mar 2024 01:07:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F6A7C433F1;
+	Thu,  7 Mar 2024 01:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709773497;
-	bh=KRNYnI2A/lUFgun5k7wE4UrYIdybMwijj6R/qDSCeZ4=;
+	s=k20201202; t=1709773625;
+	bh=4bqWptoKbnRgrpqaRERXOF58F2B3DTRxO8EnLm4nMi4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZiH6G+ETOyZM0VO7hul+UjqZ0cYMlFKz+QsJhq3ppKDKymEUXtDnBLms4P7OCsC2M
-	 5sUs/ok9+Ksl4YgYSKgO7CEjCVpchJJXXYE9rSym7HaIJplf6NDjspxxs3rIR+X4io
-	 c7SOh5NfSnUypMyoRfXH2Rmi284It9KRuhEr8Yg2Djrbk5wa3JW21Y2pLjsU7Gdfwx
-	 ISIJC9idx9S2Q5cEKgCvC6+qv5ge8F0byi1sTF9479I6p5rql+vXlT0pUWZ5LFN3oU
-	 uchyWcXWEidmNjniEptrGgPjucWdG6FhYpWjaQss5S34drn9FYgBtjQJYDW8cGIr91
-	 /SOUdWPc7iBew==
-Message-ID: <b0c76d40-7cd0-46da-b4fb-1ee3f9fdd0e1@kernel.org>
-Date: Thu, 7 Mar 2024 09:04:50 +0800
+	b=jrCNbtB5YcSuEDMNq1BjhKJby+ulYRhhfEgvyaD6HS83j6LLzr4zGgEum1aMRBPuI
+	 bV3ZqX/QGlLYpzAuXjV2syAfOSsMspXu+++FJ6AddCtrWXg1vgtknrlRHyt1MuptGl
+	 DiNEnMUvG54BNfY8Z0CYT2qahjhlM7IcISZHkepKoPMjXPt1M9F4vI9MLCOg/gRbMW
+	 YT3oeSDCQ4AFaUyKpuxJVN1MJib+7weIJLayFbKDCst0gaO6YBVOZup3advBOCUzQo
+	 oOuIsyhSAGkmt8LB4v3bfbDR1rWzpcAEW/kNBL3XcMyxQ8YzzTEbYuZH5Jpm2vb/Fn
+	 wDjmX6zgF4g/A==
+Message-ID: <b3601f0d-c315-4763-bbab-4174fe0af713@kernel.org>
+Date: Thu, 7 Mar 2024 09:07:01 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: fix uninitialized page cache reported by KMSAN
+Subject: Re: [PATCH] erofs: apply proper VMA alignment for memory mapped files
+ on THP
 Content-Language: en-US
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <ab2a337d-c2dd-437d-9ab8-e3b837f1ff1a@I-love.SAKURA.ne.jp>
- <20240304035339.425857-1-hsiangkao@linux.alibaba.com>
+References: <20240306053138.2240206-1-hsiangkao@linux.alibaba.com>
+ <30300dc7-3063-4e09-bb21-22951ec23a38@linux.alibaba.com>
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20240304035339.425857-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <30300dc7-3063-4e09-bb21-22951ec23a38@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,26 +62,39 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: syzbot+7bc44a489f0ef0670bd5@syzkaller.appspotmail.com, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>, syzkaller-bugs@googlegroups.com, LKML <linux-kernel@vger.kernel.org>, Roberto Sassu <roberto.sassu@huaweicloud.com>, linux-fsdevel@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/3/4 11:53, Gao Xiang wrote:
-> syzbot reports a KMSAN reproducer [1] which generates a crafted
-> filesystem image and causes IMA to read uninitialized page cache.
+On 2024/3/6 14:51, Gao Xiang wrote:
 > 
-> Later, (rq->outputsize > rq->inputsize) will be formally supported
-> after either large uncompressed pclusters (> block size) or big
-> lclusters are landed.  However, currently there is no way to generate
-> such filesystems by using mkfs.erofs.
 > 
-> Thus, let's mark this condition as unsupported for now.
+> On 2024/3/6 13:31, Gao Xiang wrote:
+>> There are mainly two reasons that thp_get_unmapped_area() should be
+>> used for EROFS as other filesystems:
+>>
+>>   - It's needed to enable PMD mappings as a FSDAX filesystem, see
+>>     commit 74d2fad1334d ("thp, dax: add thp_get_unmapped_area for pmd
+>>     mappings");
+>>
+>>   - It's useful together with CONFIG_READ_ONLY_THP_FOR_FS which enables
+>>     THPs for read-only mmapped files (e.g. shared libraries) even without
+>>     FSDAX.  See commit 1854bc6e2420 ("mm/readahead: Align file mappings
+>>     for non-DAX").
 > 
-> [1] https://lore.kernel.org/r/0000000000002be12a0611ca7ff8@google.com
+> Refine this part as
 > 
-> Reported-by: syzbot+7bc44a489f0ef0670bd5@syzkaller.appspotmail.com
-> Fixes: 1ca01520148a ("erofs: refine z_erofs_transform_plain() for sub-page block support")
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+>   - It's useful together with large folios and CONFIG_READ_ONLY_THP_FOR_FS
+>     which enable THPs for mmapped files (e.g. shared libraries) even without
+>     ...
+> 
+>>
+>> Fixes: 06252e9ce05b ("erofs: dax support for non-tailpacking regular file")
+> 
+> Fixes: ce529cc25b18 ("erofs: enable large folios for iomap mode")
+> Fixes: be62c5198861 ("erofs: enable large folios for fscache mode")
+> 
+>> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Chao Yu <chao@kernel.org>
 
