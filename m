@@ -1,59 +1,51 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A6768746CD
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 04:31:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1709782291;
-	bh=iYFOllAuOcUfaX+FmOYbqRJCEteOg9veh7T9Yz+e6sw=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=djFCJMtY+asdzMVJAFATrS4n3Xc6kpPyLFhi0Fd5+01/dbdzI+VUCIJ5m+/RumLmk
-	 R2YXxpZI1M7c0wefu0al7F1wXn6R7qUEPYUPnDIKxSG8gOPrv78b78n90dO0z6AG1o
-	 B5iJvi/Q2GNsHctSCjGmBhu68X+rJPcH9k4kxEJhNxDJkzXHL+tL4BcC2NWV2YMgvx
-	 UGT9/YKoRk6TjNwzv2DodCgoKTGqUiy5RHcab6ZZknQMelN4+N+c38MmeVEvtZuj8y
-	 17Lzer+Q+JjSW0quR/w7IbF6tkwnT2Gd8JYtFW1VKwvXUTueb3hre7AC2CD/ZMTZRn
-	 eOBnDx9LnJy3w==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEC748746F1
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 04:42:15 +0100 (CET)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NLt5Jh1G;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tqvwg0tJTz3dT8
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 14:31:31 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tqw8x232Pz3dTL
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Mar 2024 14:42:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=libaokun1@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NLt5Jh1G;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TqvwZ2jcHz3bsw
-	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Mar 2024 14:31:23 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TqvwF0TKXz1FJCs;
-	Thu,  7 Mar 2024 11:31:09 +0800 (CST)
-Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
-	by mail.maildlp.com (Postfix) with ESMTPS id E8B98180062;
-	Thu,  7 Mar 2024 11:31:17 +0800 (CST)
-Received: from [10.174.177.174] (10.174.177.174) by
- dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 7 Mar 2024 11:31:17 +0800
-Message-ID: <7e9a15b9-f841-a7d4-7f72-7aee9cefb0f0@huawei.com>
-Date: Thu, 7 Mar 2024 11:31:16 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tqw8s03Vgz3cF4
+	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Mar 2024 14:42:02 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1709782916; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=q4PBY43ikf/oTLhUi+LnbpgksNhIyzwTQbdt2BgU8vs=;
+	b=NLt5Jh1GouhHpAX93lgbRSiajLVZOR0p4Lnj1jcRlwzmM8lAnd+vCzVSLpfezr5BfTcVjzXsQG5MHXDDR1XnhReWjOqM03roHupJbv6ma7hv8rEiaZJH6rYfx6bNhtukIzNMkwCKV8Zu2iZljikwJFfU3RZDtDoIe1lHrzGHAXc=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0W1zLd.n_1709782913;
+Received: from 30.221.148.124(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W1zLd.n_1709782913)
+          by smtp.aliyun-inc.com;
+          Thu, 07 Mar 2024 11:41:55 +0800
+Message-ID: <7e262242-d90d-4f61-a217-f156219eaa4d@linux.alibaba.com>
+Date: Thu, 7 Mar 2024 11:41:52 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] erofs: fix lockdep false positives on initializing
  erofs_pseudo_mnt
 Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, Baokun Li
+ <libaokun1@huawei.com>, linux-erofs@lists.ozlabs.org
 References: <20240307024459.883044-1-libaokun1@huawei.com>
  <f9e30004-6691-4171-abc5-7e286d9ccec6@linux.alibaba.com>
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
 In-Reply-To: <f9e30004-6691-4171-abc5-7e286d9ccec6@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.174]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500021.china.huawei.com (7.185.36.21)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,19 +57,20 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Baokun Li via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Baokun Li <libaokun1@huawei.com>
 Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, huyue2@coolpad.com, yukuai3@huawei.com, chengzhihao1@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Xiang,
+Hi Baokun,
 
-On 2024/3/7 10:52, Gao Xiang wrote:
+Thanks for catching this!
+
+
+On 3/7/24 10:52 AM, Gao Xiang wrote:
 > Hi Baokun,
->
+> 
 > On 2024/3/7 10:44, Baokun Li wrote:
->> Lockdep reported the following issue when mounting erofs with a 
+>> Lockdep reported the following issue when mounting erofs with a
 >> domain_id:
 >>
 >> ============================================
@@ -136,37 +129,30 @@ On 2024/3/7 10:52, Gao Xiang wrote:
 >>
 >> Therefore add a nodev file_system_type named erofs_anon_fs_type to
 >> silence this complaint. In addition, to reduce code coupling, refactor
->> out the erofs_anon_init_fs_context() and erofs_kill_pseudo_sb() 
->> functions
+>> out the erofs_anon_init_fs_context() and erofs_kill_pseudo_sb() functions
 >> and move the erofs_pseudo_mnt related code to fscache.c.
 >>
 >> Signed-off-by: Baokun Li <libaokun1@huawei.com>
->
+> 
 > IMHO, in the beginning, I'd like to avoid introducing another fs type
 > for erofs to share (meta)data between filesystems since it will cause
 > churn, could we use some alternative way to resolve this?
->
-> Or Jingbo might have some other ideas?
->
-> Thanks,
-> Gao Xiang
 
-The usual way to avoid this kind of false positive is to add a subclass to
-the lock, but s_umount is allocated, initialised and locked in 
-alloc_super(),
-so we can't find a place to set the subclass.
+Yeah as Gao Xiang said, this is initially intended to avoid introducing
+anothoer file_system_type, say erofs_anon_fs_type.
 
-Alternatively, kern_mount(&erofs_fs_type) could be moved to
-erofs_module_init() or erofs_fc_parse_param() to avoid s_umount nesting,
-but that would have looked a bit strange.
+What we need is actually a method of allocating anonymous inode as a
+sentinel identifying each blob.  There is indeed a global mount, i.e.
+anon_inode_mnt, for allocating anonymous inode/file specifically.  At
+the time the share domain feature is introduced, there's only one
+anonymous inode, i.e. anon_inode_inode, and all the allocated anonymous
+files are bound to this single anon_inode_inode.  Thus we decided to
+implement a erofs internal pseudo mount for this usage.
 
-So the final choice was to add a new file_system_type to avoid this false
-positive. Since you don't like the idea of adding a new file_system_type,
-do you think it would be ok to move kern_mount(&erofs_fs_type) to
-erofs_module_init() or erofs_fc_parse_param()?
+But I noticed that we can now allocate unique anonymous inodes from
+anon_inode_mnt since commit e7e832c ("fs: add LSM-supporting anon-inode
+interface"), though the new interface is initially for LSM usage.
 
-Thanks!
 -- 
-With Best Regards,
-Baokun Li
-.
+Thanks,
+Jingbo
