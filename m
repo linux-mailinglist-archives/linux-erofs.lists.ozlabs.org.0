@@ -2,51 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E211C8774BE
-	for <lists+linux-erofs@lfdr.de>; Sun, 10 Mar 2024 02:07:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BD8788774C0
+	for <lists+linux-erofs@lfdr.de>; Sun, 10 Mar 2024 02:09:18 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JIfCDKGm;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=fz2Qe9eT;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Tshbc4gDlz3d2Y
-	for <lists+linux-erofs@lfdr.de>; Sun, 10 Mar 2024 12:07:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tshd83wzVz3d2Y
+	for <lists+linux-erofs@lfdr.de>; Sun, 10 Mar 2024 12:09:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JIfCDKGm;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=fz2Qe9eT;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
 Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TshbX6KTTz2x9T
-	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Mar 2024 12:07:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tshd50yfPz30YR
+	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Mar 2024 12:09:13 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 88D34CE0AFA;
-	Sun, 10 Mar 2024 01:07:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CB6FC433C7;
-	Sun, 10 Mar 2024 01:07:50 +0000 (UTC)
+	by sin.source.kernel.org (Postfix) with ESMTP id A6E35CE0AFA;
+	Sun, 10 Mar 2024 01:09:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4932EC433C7;
+	Sun, 10 Mar 2024 01:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710032870;
-	bh=zo55FRunLbNZ0mh+h996GwsvC6svab2r9qI5V26neLE=;
+	s=k20201202; t=1710032950;
+	bh=Q8EFRaCrSNuDWMDU1mx9VgcVnpDcUlTY7wMZ/CXtpTo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JIfCDKGmmyfP/yhlNlUaojIzXojM+Ua94asNs/9afQNVjHnPYgJkf0DIeTsZCtQTY
-	 7qmyjj/nQb/urQ6E69ZfyAsWLm6uIexAOoD70d4DXCHMrrN8R8Qm+ycl7me0OvXWjx
-	 Yjg/uRBlm0h3pA456HuBP+4L5PmaNHnRtijcC7k/Lw8SQRdjnzoQDMFA2YWfRfPi6/
-	 fOtXJuxqL9DhmICD3WScAc0AAsYWoXZ7BZuFvpvUWltW1ybUL9i3aTM40av06X/Znc
-	 ej2dPqcfbgErJrz7zdqO9TQCpsjnbF970apnwHBMTX+k2FxCY/5baDPHjTfY3cF0PX
-	 fl0mhWMO7OlzQ==
-Message-ID: <d8ed48b3-cb79-4856-9e5d-1c3f421d620b@kernel.org>
-Date: Sun, 10 Mar 2024 09:07:51 +0800
+	b=fz2Qe9eTK4kcDj3S2fVdZn3juJGpVYdcR1CYW1fimAHmu70s46Ru/UpkhtwBNAsZw
+	 odbLUvoAOWLcFkhvDm93Ddeegws3T6zCVqB9G9ZHOZZAa2i+eJqHddr6CJ1Eq3XaID
+	 HZDrFwrPShlqbaq2SVVmYJ4E3Pk6ibJ7FB6FtoK0mrCGBZMf4AoacXrkO/4oxkzNT6
+	 urEXoUIEFhpWxcMJlJPD/hP3NXgXmzS3r2BE0t9+oVgndOYd8jyXAvvrut3ip23r6a
+	 +RWTA9lLxnBBPJOkHJ0tP9DIMBMqjFXCt4BT7jVYlT757ptWMVTA0SFkZO7rbYHB8U
+	 9RBjvZ8n112MA==
+Message-ID: <776717ac-f433-46b9-ad4a-97bde6f392e1@kernel.org>
+Date: Sun, 10 Mar 2024 09:09:12 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/6] erofs: convert z_erofs_submissionqueue_endio() to
- folios
+Subject: Re: [PATCH 6/6] erofs: refine managed cache operations to folios
 Content-Language: en-US
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 References: <20240305091448.1384242-1-hsiangkao@linux.alibaba.com>
- <20240305091448.1384242-5-hsiangkao@linux.alibaba.com>
+ <20240305091448.1384242-6-hsiangkao@linux.alibaba.com>
 From: Chao Yu <chao@kernel.org>
 Autocrypt: addr=chao@kernel.org; keydata=
  xsFNBFYs6bUBEADJuxYGZRMvAEySns+DKVtVQRKDYcHlmj+s9is35mtlhrLyjm35FWJY099R
@@ -90,7 +89,7 @@ Autocrypt: addr=chao@kernel.org; keydata=
  92Qh98hAj3cMFKtEVbLKJvrc2AO+mQlS7zl1qWblEhpZnXi05S1AoT0gDW2lwe54VfT3ySon
  8Klpbp5W4eEoY21tLwuNzgUMxmycfM4GaJWNCncKuMT4qGVQO9SPFs0vgUrdBUC5Pn5ZJ46X
  mZA0DUz0S8BJtYGI0DUC/jAKhIgy1vAx39y7sAshwu2VILa71tXJ
-In-Reply-To: <20240305091448.1384242-5-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240305091448.1384242-6-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -109,8 +108,11 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 On 2024/3/5 17:14, Gao Xiang wrote:
-> Use bio_for_each_folio() to iterate over each folio in the bio and
-> there is no large folios for now.
+> Convert erofs_try_to_free_all_cached_pages() and
+> z_erofs_cache_release_folio().
+> 
+> Besides, erofs_page_is_managed() is moved to zdata.c and renamed
+> as erofs_folio_is_managed().
 > 
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
