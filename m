@@ -2,58 +2,53 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D69A8779C1
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Mar 2024 03:11:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 81EB5878E2C
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Mar 2024 06:30:23 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=EdVTsnZA;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=g50xcMcl;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TtKyM1Hgsz3cxn
-	for <lists+linux-erofs@lfdr.de>; Mon, 11 Mar 2024 13:11:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Tv2KT2Qp2z3d32
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Mar 2024 16:30:21 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=EdVTsnZA;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=g50xcMcl;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.18; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TtKyD3dZQz3bsd
-	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Mar 2024 13:11:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710123077; x=1741659077;
-  h=date:from:to:cc:subject:message-id;
-  bh=66a7OV76SsBoxyeJU+O9z9hX0X6vRbQUFGev3R9UuLU=;
-  b=EdVTsnZAjmDfauBT9FIT1LtJb+oQrKJIt8ja9iY7wuGurUBvth7XF+5X
-   CkIwvc5m53jOybLQ7koBtlCd0LhJK8IIaB6KA4K5xufiy8WGaA8jvid+G
-   LhGWwszyBLcyP41QleCqTO8m54A9D+d/ZnxHoFBsKZPKRfcVU/i27TaSP
-   +zABLChmcj0EYz8bjQ3KxLICqDY3hF2j3R17swBdcswlKfqUEUZo+s9a0
-   aFuMR7Ooq0Fn8GPC09bLGDGhy00QLcCKa/EVW5Tm1NjcVZtgQG0ATCgWc
-   Xv6y9Kd4FzEsBsZ1n1C0Bgel9nh4TPHUNsZcROaipMUIzEOdELDwBcwO3
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11009"; a="4613711"
-X-IronPort-AV: E=Sophos;i="6.07,115,1708416000"; 
-   d="scan'208";a="4613711"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2024 19:11:11 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,115,1708416000"; 
-   d="scan'208";a="11453007"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 10 Mar 2024 19:11:09 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rjV86-0008p9-2F;
-	Mon, 11 Mar 2024 02:11:06 +0000
-Date: Mon, 11 Mar 2024 10:10:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- a1bafc3109d713ed83f73d61ba5cb1e6fd80fdbc
-Message-ID: <202403111028.qiIYBA2t-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Tv2KM3D48z3cGL
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Mar 2024 16:30:15 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id EA70361088;
+	Tue, 12 Mar 2024 05:30:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174CCC433C7;
+	Tue, 12 Mar 2024 05:30:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710221412;
+	bh=+5tJ6mr9tb2opb0sZ3KJ72ZbRYxwxwwtGK/uof+Odac=;
+	h=Date:From:To:Cc:Subject:From;
+	b=g50xcMclHzBKkWk78XJ7i0kFHtqEM5x9dPd21nc+3/TGTWvaKkzJm/ocmaJmZ7hJU
+	 Ghm2uvn4jVlBkC6ldqSJKOA3KD7BJBwNLi/gSiyYfa2f+Q6l4GpJmNPnsrt4igyCxt
+	 mAd/DSMjub+0gran8cVEX3CQPh0yE+cUBcpGPOrIKQqfpuWUAVKbM0TqtrVbua6B9I
+	 KR+FNxD5qXxDf6JUX/rJdBfmnOvQ/yQofQ7IrOlcCjzjSokbVLrwKhoDD6LaQEt/DH
+	 oAwkdD3D/Zm7fxZWGZjelACW9xtvNj24K4gJjnYKvjFNd365YMqC2b1PKsS4h2szU/
+	 OXMkXAJDZg0hQ==
+Date: Tue, 12 Mar 2024 13:30:06 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linuxfoundation.org>
+Subject: [GIT PULL] erofs updates for 6.9-rc1
+Message-ID: <Ze/oXlaiQfdspyNX@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linuxfoundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Jingbo Xu <jefflexu@linux.alibaba.com>,
+	Baokun Li <libaokun1@huawei.com>, Chao Yu <chao@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,250 +60,74 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: a1bafc3109d713ed83f73d61ba5cb1e6fd80fdbc  erofs: support compressed inodes over fscache
+Hi Linus,
 
-elapsed time: 871m
+Could you consider this pull request for 6.9-rc1?
 
-configs tested: 227
-configs skipped: 5
+In this cycle, we'd like to introduce compressed inode support over
+fscache since a lot of native EROFS images are explicitly compressed
+so that EROFS over fscache can be more widely used even without
+Dragonfly Nydus [1].
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Apart from that, there are some folio conversions for compressed
+inodes available as well as a lockdep false positive fix.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs101_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240310   gcc  
-arc                   randconfig-002-20240310   gcc  
-arc                        vdk_hs38_defconfig   gcc  
-arm                              alldefconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm                                 defconfig   clang
-arm                      jornada720_defconfig   clang
-arm                            qcom_defconfig   clang
-arm                   randconfig-001-20240310   gcc  
-arm                   randconfig-002-20240310   gcc  
-arm                   randconfig-003-20240310   gcc  
-arm                   randconfig-004-20240310   gcc  
-arm                        shmobile_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240310   clang
-arm64                 randconfig-002-20240310   gcc  
-arm64                 randconfig-003-20240310   clang
-arm64                 randconfig-004-20240310   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240310   gcc  
-csky                  randconfig-002-20240310   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240310   clang
-hexagon               randconfig-002-20240310   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240310   clang
-i386         buildonly-randconfig-002-20240310   clang
-i386         buildonly-randconfig-003-20240310   clang
-i386         buildonly-randconfig-004-20240310   clang
-i386         buildonly-randconfig-005-20240310   gcc  
-i386         buildonly-randconfig-006-20240310   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240310   gcc  
-i386                  randconfig-002-20240310   gcc  
-i386                  randconfig-003-20240310   clang
-i386                  randconfig-004-20240310   gcc  
-i386                  randconfig-005-20240310   gcc  
-i386                  randconfig-006-20240310   gcc  
-i386                  randconfig-011-20240310   clang
-i386                  randconfig-012-20240310   clang
-i386                  randconfig-013-20240310   clang
-i386                  randconfig-014-20240310   clang
-i386                  randconfig-015-20240310   clang
-i386                  randconfig-016-20240310   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240310   gcc  
-loongarch             randconfig-002-20240310   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                         apollo_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5208evb_defconfig   gcc  
-m68k                       m5249evb_defconfig   gcc  
-m68k                          multi_defconfig   gcc  
-m68k                            q40_defconfig   gcc  
-m68k                        stmark2_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                        bcm63xx_defconfig   clang
-mips                     cu1000-neo_defconfig   gcc  
-mips                           gcw0_defconfig   clang
-mips                           ip22_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240310   gcc  
-nios2                 randconfig-002-20240310   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                       virt_defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240310   gcc  
-parisc                randconfig-002-20240310   gcc  
-parisc64                            defconfig   gcc  
-powerpc                    adder875_defconfig   gcc  
-powerpc                     akebono_defconfig   clang
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                     ep8248e_defconfig   gcc  
-powerpc                     ksi8560_defconfig   gcc  
-powerpc                 mpc8315_rdb_defconfig   clang
-powerpc               mpc834x_itxgp_defconfig   clang
-powerpc                    mvme5100_defconfig   gcc  
-powerpc                      pcm030_defconfig   clang
-powerpc                     ppa8548_defconfig   gcc  
-powerpc               randconfig-001-20240310   gcc  
-powerpc               randconfig-002-20240310   clang
-powerpc               randconfig-003-20240310   clang
-powerpc                    socrates_defconfig   gcc  
-powerpc                     tqm5200_defconfig   gcc  
-powerpc64             randconfig-001-20240310   gcc  
-powerpc64             randconfig-002-20240310   gcc  
-powerpc64             randconfig-003-20240310   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv             nommu_k210_sdcard_defconfig   gcc  
-riscv                 randconfig-001-20240310   gcc  
-riscv                 randconfig-002-20240310   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240310   clang
-s390                  randconfig-002-20240310   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                         ap325rxa_defconfig   gcc  
-sh                         apsh4a3a_defconfig   gcc  
-sh                        apsh4ad0a_defconfig   gcc  
-sh                                  defconfig   gcc  
-sh                ecovec24-romimage_defconfig   gcc  
-sh                             espt_defconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                    randconfig-001-20240310   gcc  
-sh                    randconfig-002-20240310   gcc  
-sh                          rsk7264_defconfig   gcc  
-sh                           se7750_defconfig   gcc  
-sh                             sh03_defconfig   gcc  
-sh                          urquell_defconfig   gcc  
-sparc                            alldefconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240310   gcc  
-sparc64               randconfig-002-20240310   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240310   gcc  
-um                    randconfig-002-20240310   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240310   clang
-x86_64       buildonly-randconfig-001-20240311   clang
-x86_64       buildonly-randconfig-002-20240310   gcc  
-x86_64       buildonly-randconfig-002-20240311   clang
-x86_64       buildonly-randconfig-003-20240310   clang
-x86_64       buildonly-randconfig-003-20240311   clang
-x86_64       buildonly-randconfig-004-20240310   gcc  
-x86_64       buildonly-randconfig-005-20240310   clang
-x86_64       buildonly-randconfig-005-20240311   clang
-x86_64       buildonly-randconfig-006-20240310   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240310   clang
-x86_64                randconfig-001-20240311   clang
-x86_64                randconfig-002-20240310   gcc  
-x86_64                randconfig-002-20240311   clang
-x86_64                randconfig-003-20240310   gcc  
-x86_64                randconfig-004-20240310   gcc  
-x86_64                randconfig-005-20240310   clang
-x86_64                randconfig-006-20240310   gcc  
-x86_64                randconfig-006-20240311   clang
-x86_64                randconfig-011-20240310   gcc  
-x86_64                randconfig-011-20240311   clang
-x86_64                randconfig-012-20240310   clang
-x86_64                randconfig-012-20240311   clang
-x86_64                randconfig-013-20240310   clang
-x86_64                randconfig-013-20240311   clang
-x86_64                randconfig-014-20240310   gcc  
-x86_64                randconfig-015-20240310   clang
-x86_64                randconfig-015-20240311   clang
-x86_64                randconfig-016-20240310   gcc  
-x86_64                randconfig-071-20240310   gcc  
-x86_64                randconfig-072-20240310   gcc  
-x86_64                randconfig-072-20240311   clang
-x86_64                randconfig-073-20240310   gcc  
-x86_64                randconfig-073-20240311   clang
-x86_64                randconfig-074-20240310   gcc  
-x86_64                randconfig-075-20240310   clang
-x86_64                randconfig-075-20240311   clang
-x86_64                randconfig-076-20240310   gcc  
-x86_64                randconfig-076-20240311   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
-xtensa                randconfig-001-20240310   gcc  
-xtensa                randconfig-002-20240310   gcc  
-xtensa                         virt_defconfig   gcc  
+All commits have been in -next and no potential merge conflict is
+observed.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[1] https://nydus.dev
+
+Thanks,
+Gao Xiang
+
+The following changes since commit 90d35da658da8cff0d4ecbb5113f5fac9d00eb72:
+
+  Linux 6.8-rc7 (2024-03-03 13:02:52 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.9-rc1
+
+for you to fetch changes up to a1bafc3109d713ed83f73d61ba5cb1e6fd80fdbc:
+
+  erofs: support compressed inodes over fscache (2024-03-10 18:41:32 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Some folio conversions for compressed inodes;
+
+ - Add compressed inode support over fscache;
+
+ - Fix lockdep false positives of erofs_pseudo_mnt.
+
+----------------------------------------------------------------
+Baokun Li (1):
+      erofs: fix lockdep false positives on initializing erofs_pseudo_mnt
+
+Gao Xiang (6):
+      erofs: convert z_erofs_onlinepage_.* to folios
+      erofs: convert z_erofs_do_read_page() to folios
+      erofs: get rid of `justfound` debugging tag
+      erofs: convert z_erofs_fill_bio_vec() to folios
+      erofs: convert z_erofs_submissionqueue_endio() to folios
+      erofs: refine managed cache operations to folios
+
+Jingbo Xu (2):
+      erofs: make iov_iter describe target buffers over fscache
+      erofs: support compressed inodes over fscache
+
+ fs/erofs/compress.h             |   7 -
+ fs/erofs/decompressor_deflate.c |   3 -
+ fs/erofs/decompressor_lzma.c    |   3 -
+ fs/erofs/fscache.c              | 297 +++++++++++++++++++++++++---------------
+ fs/erofs/inode.c                |  14 +-
+ fs/erofs/internal.h             |   9 +-
+ fs/erofs/super.c                |  30 +---
+ fs/erofs/utils.c                |   2 +-
+ fs/erofs/zdata.c                | 287 ++++++++++++++++++--------------------
+ 9 files changed, 335 insertions(+), 317 deletions(-)
