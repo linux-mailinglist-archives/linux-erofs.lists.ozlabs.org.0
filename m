@@ -1,47 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7163F87C7A2
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Mar 2024 03:40:13 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0525E87C7CA
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Mar 2024 04:00:19 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=SKaVu0CU;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=fcfKqZvb;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4TwpPh38dTz3dRp
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Mar 2024 13:40:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Twprw5V2Lz3vf4
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Mar 2024 14:00:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=SKaVu0CU;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=fcfKqZvb;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4TwpPW47GJz30fm
-	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Mar 2024 13:39:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1710470393; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=zEy8W075luBy8ifAubr/Fv30yov9aR129TeKrpXesTs=;
-	b=SKaVu0CUF7dAwkJpRDSqJ9jRhjprUf3bLfzSLXDwsoeJFHafIak7BdXt7SRssNgkWRFhS9olW1P46LaI9/3/IK44q2OTr+IzK/ISkG4IHRlxBQ/KnUojUfcnXyVwWWQPhOGOM8pIVxXwzM+I4NAbIrkFbifMinRZg6AMdQWeDLw=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W2UV3YJ_1710470390;
-Received: from 30.221.132.166(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W2UV3YJ_1710470390)
-          by smtp.aliyun-inc.com;
-          Fri, 15 Mar 2024 10:39:51 +0800
-Message-ID: <cf279f15-f094-47b4-aa5d-0948d43dbbee@linux.alibaba.com>
-Date: Fri, 15 Mar 2024 10:39:50 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4TwpqZ2C7Yz3ddR
+	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Mar 2024 13:59:06 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id DCF8FCE1F52;
+	Fri, 15 Mar 2024 02:59:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F8AAC433C7;
+	Fri, 15 Mar 2024 02:58:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710471540;
+	bh=qXwkEeaqeKDKD2TfToeMulydtYdY4J94j5SABNK7Rcs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fcfKqZvb5UrJHQjPhuVJO4CleCyL+p3TZYKAsKfbcp3lvlbMgzG7HNZA8+c5MgU0y
+	 OJM3MEWswFoRTuWsEjsy2g7k5TxYkgCZeLU30kvFscS5TamWw/060mP/6vEBdLZk2S
+	 PKfoIYqe/yt+YUvY8do97prbAk3iAyPqJf4QJ8LLklMcLYaHrinM6V59QDnkpqv7Qw
+	 VI07NO6yHDre02yHmFbPbYQBIpnQoKN2DumijMkIhtsXqzBbspGqfi7P/cFk1FeEd5
+	 thXTsyWz/xC09T0E3HFD7gySqBfMJ/OQEj1UbH4o3VdXwqkzJgzfHUBOnpFlLy3Pu/
+	 YsNc6tIeiK9Fw==
+Message-ID: <e558d9ba-9444-4cd1-804c-fd678dac46a1@kernel.org>
+Date: Fri, 15 Mar 2024 10:58:56 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 5/5] erofs-utils: mkfs: introduce inner-file
- multi-threaded compression
-To: Yifan Zhao <zhaoyifan@sjtu.edu.cn>, linux-erofs@lists.ozlabs.org
-References: <20240314123754.1548878-1-zhaoyifan@sjtu.edu.cn>
- <20240314123754.1548878-6-zhaoyifan@sjtu.edu.cn>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240314123754.1548878-6-zhaoyifan@sjtu.edu.cn>
+Subject: Re: [PATCH] MAINTAINERS: erofs: add myself as reviewer
+Content-Language: en-US
+To: Sandeep Dhavale <dhavale@google.com>
+References: <20240314231407.1000541-1-dhavale@google.com>
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20240314231407.1000541-1-dhavale@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -55,31 +60,19 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org, kernel-team@android.com, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On 2024/3/15 7:14, Sandeep Dhavale via Linux-erofs wrote:
+> I have been contributing to erofs for sometime and I would like to help
+> with code reviews as well.
 
+Thank you for the effort and looks good to me. :)
 
-On 2024/3/14 20:37, Yifan Zhao wrote:
-> Currently, the creation of EROFS compressed image creation is
-> single-threaded, which suffers from performance issues. This patch
-> attempts to address it by compressing the large file in parallel.
 > 
-> Specifically, each input file larger than 16MB is splited into segments,
-> and each worker thread compresses a segment as if it were a separate
-> file. Finally, the main thread merges all the compressed segments.
-> 
-> Multi-threaded compression is not compatible with -Ededupe,
-> -E(all-)fragments and -Eztailpacking for now.
-> 
-> Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-> Co-authored-by: Tong Xin <xin_tong@sjtu.edu.cn>
+> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
 
-I did some updates yesterday and I just posted v7.
-
-BTW, I also found an issue that the output cannot be stablized with
-"mkfs.erofs -zlz4hc,12 --worker=72" and enwik9 dataset.  I'm still
-looking into that since it's an unexpected behavior.
+Acked-by: Chao Yu <chao@kernel.org>
 
 Thanks,
-Gao Xiang
