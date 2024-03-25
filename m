@@ -2,59 +2,43 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 845C6888457
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Mar 2024 01:37:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CE5A78884CC
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Mar 2024 01:51:48 +0100 (CET)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=T6iTqyP3;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=h60W55IK;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4V2vBt6YGNz3cZ8
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Mar 2024 11:36:54 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4V2vX24BJGz3cZ8
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Mar 2024 11:51:46 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=T6iTqyP3;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=h60W55IK;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4V2vBq4KQ9z30fp
-	for <linux-erofs@lists.ozlabs.org>; Mon, 25 Mar 2024 11:36:51 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 937EC60C67;
-	Mon, 25 Mar 2024 00:36:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0046C433F1;
-	Mon, 25 Mar 2024 00:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711327008;
-	bh=ADKAmQUOaYHldXWJswv5b4u4EPWPvg9ByIPOXE0+E3k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T6iTqyP39S1pX5fGsw1LZXl6ncapNQezHvfHTeLJKS30LaTeYj6Z8MK+IwejcJ7Qv
-	 Ig5G2+lUW6oHG/tlb+3GHga0k7qqwiEZS7p3mYTMTOZFF8+jXGwV9Yr4tl8iEF2R85
-	 11p0kcn/DQBATlZz4j0vY/TZ/ySkPRAPhA2iW38wOz+7P2MMTQRYlyDuUOEY9aLRDp
-	 avlSB1StyP2g6OEXIze3qGnkGppCcdd5j51SfERaJHPNaOMp2lA8SIMfQXljP2ppSU
-	 IoZ19Endl2ecX4Z648yNiXD1LLz3cHDU1D81+9y31t/FS+C3EmHNicM53f0DoUQi4x
-	 vI0t1EGf3fusw==
-Date: Mon, 25 Mar 2024 08:36:43 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 6.6 329/638] erofs: Convert to use bdev_open_by_path()
-Message-ID: <ZgDHG8Ucl3EkY4ZS@debian>
-Mail-Followup-To: Sasha Levin <sashal@kernel.org>,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Jan Kara <jack@suse.cz>, Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org,
-	Christoph Hellwig <hch@lst.de>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Christian Brauner <brauner@kernel.org>
-References: <20240324230116.1348576-1-sashal@kernel.org>
- <20240324230116.1348576-330-sashal@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4V2vWx1Gn1z2yhZ
+	for <linux-erofs@lists.ozlabs.org>; Mon, 25 Mar 2024 11:51:39 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1711327894; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=CpPQ5+N9JSD3TuX+GeGtJ95cCrFjaJOvUAapG+YGKlQ=;
+	b=h60W55IK81oC3i5IBZmgXV2GFoVOXNcJISHjJ820RYDmWr5K30E4IZ4xeGUYqZzh3jO1DO46lDxAKuzpwOaCDTebG47UNM6l09g0Edc9ojvVw8XgrUFRZGAWLd+yh998LhO6MSDUAR6Ck/dDJJp1JWUmqAiSE0Hqavh5hpzbcpU=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W37scbo_1711327880;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W37scbo_1711327880)
+          by smtp.aliyun-inc.com;
+          Mon, 25 Mar 2024 08:51:32 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: drop experimental warning for FSDAX
+Date: Mon, 25 Mar 2024 08:51:16 +0800
+Message-Id: <20240325005116.106351-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240324230116.1348576-330-sashal@kernel.org>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,38 +50,30 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
+As EXT4/XFS filesystems, FSDAX functionality is considered to be stable.
+Let's drop this warning.
 
-On Sun, Mar 24, 2024 at 06:56:06PM -0400, Sasha Levin wrote:
-> From: Jan Kara <jack@suse.cz>
-> 
-> [ Upstream commit 49845720080dff0afd5813eaebf0758b01b6312c ]
-> 
-> Convert erofs to use bdev_open_by_path() and pass the handle around.
-> 
-> CC: Gao Xiang <xiang@kernel.org>
-> CC: Chao Yu <chao@kernel.org>
-> CC: linux-erofs@lists.ozlabs.org
-> Acked-by: Christoph Hellwig <hch@lst.de>
-> Acked-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> Reviewed-by: Christian Brauner <brauner@kernel.org>
-> Signed-off-by: Jan Kara <jack@suse.cz>
-> Link: https://lore.kernel.org/r/20230927093442.25915-21-jack@suse.cz
-> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> Stable-dep-of: 0f28be64d132 ("erofs: fix lockdep false positives on initializing erofs_pseudo_mnt")
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/super.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-I don't think it's necessary to be backported to v6.6 as well as
-the previous one "block: Provide bdev_open_* functions".
-
-The patch
-"erofs: fix lockdep false positives on initializing erofs_pseudo_mnt"
-should be manually backported instead.
-
-Thanks,
-Gao Xiang
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 6fbb1fba2d31..fc60a5a7794f 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -430,7 +430,6 @@ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
+ 
+ 	switch (mode) {
+ 	case EROFS_MOUNT_DAX_ALWAYS:
+-		warnfc(fc, "DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+ 		set_opt(&ctx->opt, DAX_ALWAYS);
+ 		clear_opt(&ctx->opt, DAX_NEVER);
+ 		return true;
+-- 
+2.39.3
 
