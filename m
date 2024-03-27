@@ -2,41 +2,30 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3AA5688D374
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Mar 2024 01:46:42 +0100 (CET)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Y83+cpVk;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id B366F88DA27
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Mar 2024 10:22:29 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4V47K82cd7z3dSr
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Mar 2024 11:46:36 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4V4LmM3hGpz3ddR
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Mar 2024 20:22:27 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Y83+cpVk;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=lukeshu.com (client-ip=104.207.138.63; helo=mav.lukeshu.com; envelope-from=lukeshu@lukeshu.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 574 seconds by postgrey-1.37 at boromir; Wed, 27 Mar 2024 20:22:23 AEDT
+Received: from mav.lukeshu.com (mav.lukeshu.com [104.207.138.63])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4V47Jz6y1qz3cVG
-	for <linux-erofs@lists.ozlabs.org>; Wed, 27 Mar 2024 11:46:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1711500381; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=paY48OCnKroS9THiyRJRfxByCLJ7MJGymmhFQObtgMk=;
-	b=Y83+cpVk3+ajP3CQlg0a8mur8Ahuw/2lVEbDpQDiQwFoPX/h9KC0Jo8syqqmxvDTOS2t2zMf9ldBiKpur6SGOto9RcYJNhaunfbY7NOW01Z75whMYGKEaACpJUi3pE57yiM0RXR93MfESn1wd8hxQoeRSzoRICDgWCUHDht0jKE=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R581e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W3MiOFi_1711500374;
-Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W3MiOFi_1711500374)
-          by smtp.aliyun-inc.com;
-          Wed, 27 Mar 2024 08:46:19 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4V4LmH0PQbz3cM4
+	for <linux-erofs@lists.ozlabs.org>; Wed, 27 Mar 2024 20:22:23 +1100 (AEDT)
+Received: from lukeshu-thinkpad-e15 (unknown [IPv6:2601:281:8200:4f:aee0:10ff:fe55:8023])
+	by mav.lukeshu.com (Postfix) with ESMTPSA id EEC308067A;
+	Wed, 27 Mar 2024 05:12:44 -0400 (EDT)
+From: Luke Shumaker <lukeshu@lukeshu.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: fix compression fallback in tarerofs mode
-Date: Wed, 27 Mar 2024 08:46:14 +0800
-Message-Id: <20240327004614.1465889-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
+Subject: [PATCH 1/1] doc: magic: Fix the 'clear' example
+Date: Wed, 27 Mar 2024 03:12:39 -0600
+Message-ID: <20240327091239.4141736-1-lukeshu@lukeshu.com>
+X-Mailer: git-send-email 2.44.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -50,33 +39,35 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The return value of `lseek(fd, fpos, SEEK_SET)` can overflow the `int`
-type.  Fix this.
+From: "Luke T. Shumaker" <lukeshu@lukeshu.com>
 
-Fixes: 376fb2dbe66d ("erofs-utils: lib: introduce diskbuf")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/inode.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ doc/magic.man | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/inode.c b/lib/inode.c
-index 4c29aa7..ba0419f 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -497,8 +497,7 @@ int erofs_write_file(struct erofs_inode *inode, int fd, u64 fpos)
- 		if (!ret || ret != -ENOSPC)
- 			return ret;
- 
--		ret = lseek(fd, fpos, SEEK_SET);
--		if (ret < 0)
-+		if (lseek(fd, fpos, SEEK_SET) < 0)
- 			return -errno;
- 	}
- 
+diff --git a/doc/magic.man b/doc/magic.man
+index b9845f5c..2ee28774 100644
+--- a/doc/magic.man
++++ b/doc/magic.man
+@@ -1,5 +1,5 @@
+ .\" $File: magic.man,v 1.107 2024/03/01 02:57:32 christos Exp $
+-.Dd February 29, 2024
++.Dd March 27, 2024
+ .Dt MAGIC __FSECTION__
+ .Os
+ .\" install as magic.4 on USG, magic.5 on V7, Berkeley and Linux systems.
+@@ -764,7 +764,7 @@ If you have a list of known values at a particular continuation level,
+ and you want to provide a switch-like default case:
+ .Bd -literal -offset indent
+ # clear that continuation level match
+-\*[Gt]18	clear
++\*[Gt]18	clear	x
+ \*[Gt]18	lelong	1	one
+ \*[Gt]18	lelong	2	two
+ \*[Gt]18	default	x
 -- 
-2.39.3
+2.44.0
 
