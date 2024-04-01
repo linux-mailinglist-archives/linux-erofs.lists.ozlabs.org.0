@@ -1,111 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E792F8932F2
-	for <lists+linux-erofs@lfdr.de>; Sun, 31 Mar 2024 18:31:50 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 34D37893BA2
+	for <lists+linux-erofs@lfdr.de>; Mon,  1 Apr 2024 15:54:13 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=VugHsG2Y;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=c29yWJov;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4V705w4xJKz3dSn
-	for <lists+linux-erofs@lfdr.de>; Mon,  1 Apr 2024 03:31:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4V7XYZ6dqTz3d44
+	for <lists+linux-erofs@lfdr.de>; Tue,  2 Apr 2024 00:54:10 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.dev header.i=@linux.dev header.a=rsa-sha256 header.s=key1 header.b=VugHsG2Y;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=c29yWJov;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=softfail (domain owner discourages use of this host) smtp.mailfrom=linux.dev (client-ip=62.96.220.36; helo=a.mx.secunet.com; envelope-from=vadim.fedorenko@linux.dev; receiver=lists.ozlabs.org)
-X-Greylist: delayed 372 seconds by postgrey-1.37 at boromir; Mon, 01 Apr 2024 03:31:39 AEDT
-Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=horms@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4V705l0pxFz3c7s
-	for <linux-erofs@lists.ozlabs.org>; Mon,  1 Apr 2024 03:31:39 +1100 (AEDT)
-Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id 371B7207D1;
-	Sun, 31 Mar 2024 18:25:17 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id WUSdENQcNLv9; Sun, 31 Mar 2024 18:25:15 +0200 (CEST)
-Received: from mailout1.secunet.com (mailout1.secunet.com [62.96.220.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id EF8B7207E4;
-	Sun, 31 Mar 2024 18:25:14 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com EF8B7207E4
-Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout1.secunet.com (Postfix) with ESMTP id DE83D800053;
-	Sun, 31 Mar 2024 18:25:14 +0200 (CEST)
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 31 Mar 2024 18:25:14 +0200
-Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
- 15.1.2507.17; Sun, 31 Mar 2024 16:23:39 +0000
-X-sender: <netdev+bounces-83486-steffen.klassert=secunet.com@vger.kernel.org>
-X-Receiver: <steffen.klassert@secunet.com>
- ORCPT=rfc822;steffen.klassert@secunet.com NOTIFY=NEVER;
- X-ExtendedProps=BQAVABYAAgAAAAUAFAARAPDFCS25BAlDktII2g02frgPADUAAABNaWNyb3NvZnQuRXhjaGFuZ2UuVHJhbnNwb3J0LkRpcmVjdG9yeURhdGEuSXNSZXNvdXJjZQIAAAUAagAJAAEAAAAAAAAABQAWAAIAAAUAQwACAAAFAEYABwADAAAABQBHAAIAAAUAEgAPAGIAAAAvbz1zZWN1bmV0L291PUV4Y2hhbmdlIEFkbWluaXN0cmF0aXZlIEdyb3VwIChGWURJQk9IRjIzU1BETFQpL2NuPVJlY2lwaWVudHMvY249U3RlZmZlbiBLbGFzc2VydDY4YwUACwAXAL4AAACheZxkHSGBRqAcAp3ukbifQ049REI2LENOPURhdGFiYXNlcyxDTj1FeGNoYW5nZSBBZG1pbmlzdHJhdGl2ZSBHcm91cCAoRllESUJPSEYyM1NQRExUKSxDTj1BZG1pbmlzdHJhdGl2ZSBHcm91cHMsQ049c2VjdW5ldCxDTj1NaWNyb3NvZnQgRXhjaGFuZ2UsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1zZWN1bmV0LERDPWRlBQAOABEABiAS9uuMOkqzwmEZDvWNNQUAHQAPAAwAAABtYngtZXNzZW4tMDIFADwAAgAADwA2AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50LkRpc3BsYXlOYW1lDwARAAAAS2xhc3NlcnQsIFN0ZWZmZW4FAAwAAgAABQBsAAIAAAUAWAAXAEoAAADwxQktuQQJQ5LSCNoNNn64Q049S2xhc3NlcnQgU3RlZmZlbixPVT1Vc2VycyxPVT1NaWdyYXRpb24sREM9c2VjdW5ldCxEQz1kZQUAJgACAAEFACIADwAxAAAAQXV0b1Jlc3BvbnNlU3VwcHJlc3M6IDANClRyYW5zbWl0SGlzdG9ye
-	TogRmFsc2UNCg8ALwAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuRXhwYW5zaW9uR3JvdXBUeXBlDwAVAAAATWVtYmVyc0dyb3VwRXhwYW5zaW9uBQAjAAIAAQ==
-X-CreatedBy: MSExchange15
-X-HeloDomain: a.mx.secunet.com
-X-ExtendedProps: BQBjAAoA+Zbp8x1Q3AgFAGEACAABAAAABQA3AAIAAA8APAAAAE1pY3Jvc29mdC5FeGNoYW5nZS5UcmFuc3BvcnQuTWFpbFJlY2lwaWVudC5Pcmdhbml6YXRpb25TY29wZREAAAAAAAAAAAAAAAAAAAAAAAUASQACAAEFAGIACgAfAAAAj4oAAAUABAAUIAEAAAAcAAAAc3RlZmZlbi5rbGFzc2VydEBzZWN1bmV0LmNvbQUABgACAAEFACkAAgABDwAJAAAAQ0lBdWRpdGVkAgABBQACAAcAAQAAAAUAAwAHAAAAAAAFAAUAAgABBQBkAA8AAwAAAEh1Yg==
-X-Source: SMTP:Default MBX-DRESDEN-01
-X-SourceIPAddress: 62.96.220.36
-X-EndOfInjectedXHeaders: 27491
-X-Virus-Scanned: by secunet
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.199.223; helo=ny.mirrors.kernel.org; envelope-from=netdev+bounces-83486-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 29E82201E5
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VugHsG2Y"
-X-Original-To: netdev@vger.kernel.org
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
-ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711760782; cv=none; b=dASfLrrkRxmD6WmYvcvyTFgLXAgqW4qcP8FwVw/FT8ajSayU1k2jNzB6oEhlAk4YxWiFWUStYosH2VKaROBs5wKHQh4Rsxe59gs4L4KuJN+VlHKDa1iIm9ShtgGS6jAthHnsiMpAE+me1GueQZILnQSEjyu5ZoBpE9mg1Ojzukk=
-ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711760782; c=relaxed/simple;
-	bh=0Tab6a8G72hAdQQTifWJdxmg84+y/tA9VvkWPFI9VQA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J9cTiVFLYlA2DR+fBNIsoiV/11LbFxExG+qAmCsON2fksIZjZEAFWqHQx2zJk8Dqn3t/Quqw4LH8Yjb2qqlthM0L82RcciykTG9EQ9SPWlqiRoPPhuerZSz/amNX1IgyImsufFdXk4+oiQpzCA0LsWzVgTdTI9x4oenmDhjahZI=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VugHsG2Y; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Message-ID: <08dd01e3-c45e-47d9-bcde-55f7d1edc480@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711760777;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BFgFwDTUylEnErMgQV0Ufr9/Ufnl/0omKSnqywixpVg=;
-	b=VugHsG2Y5vYBP20CvcOMmGaEI/5A/PvLnTsQTtTA0ZebTuac4nORyH8iRZe/CwFs5RLRhJ
-	4Ih/prbwbd8/OSA0Wv9Z9Z9JdeLOJUf8/vLW1xeGCG/2qNeI4CXYcIw3EixotT7o6oviEg
-	ZM4gfY/Y4bUjm5TsY8pyZBWQLZ0Jv74=
-Date: Fri, 29 Mar 2024 18:06:09 -0700
-Precedence: bulk
-X-Mailing-List: netdev@vger.kernel.org
-MIME-Version: 1.0
-Subject: Re: [PATCH 19/26] netfs: New writeback implementation
-Content-Language: en-US
-To: Naveen Mamindlapalli <naveenm@marvell.com>,
- David Howells <dhowells@redhat.com>, Christian Brauner
- <christian@brauner.io>, Jeff Layton <jlayton@kernel.org>,
- Gao Xiang <hsiangkao@linux.alibaba.com>,
- Dominique Martinet <asmadeus@codewreck.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4V7XYR51M4z3bmN
+	for <linux-erofs@lists.ozlabs.org>; Tue,  2 Apr 2024 00:54:03 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id 7EE14CE10C2;
+	Mon,  1 Apr 2024 13:53:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA0CC433C7;
+	Mon,  1 Apr 2024 13:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711979638;
+	bh=dmYCendNfZLK2ZYRN4P3XHXSgHmLS9K4qfGr3Ifd3v0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=c29yWJov1MPD3KNJnAc3J10X31RIJx5rJ8pZ9aMASTtRIDHTlXt3YBkMhR/2MmTeW
+	 zKg7sKvzusvvzXvEpqIv8nO9JilxGOlGDD9rpErvCQJiT/+cOIdnykZR54Pb5hp73A
+	 n3db2XvRlrrFuw27hXNlQVFklZF/bwBt1Tvksi8eyn/LaeBo2QoMfURHysv0Ra+tcm
+	 5GNCZFCSDd/aMOWF7fV3ver/b2jE5QU8+WhPmhCzIjV1dmrOHawVXzxIdY9jTI6kkp
+	 3RzhX7bCaKGHmMTJC3G9ZTma+EDhOVW6r/AdWBj3gvJJLSd3U3a0S7GGRMCCfrXnpN
+	 BcEw/0JlvpOew==
+Date: Mon, 1 Apr 2024 14:53:51 +0100
+From: Simon Horman <horms@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 26/26] netfs, afs: Use writeback retry to deal with
+ alternate keys
+Message-ID: <20240401135351.GD26556@kernel.org>
 References: <20240328163424.2781320-1-dhowells@redhat.com>
- <20240328163424.2781320-20-dhowells@redhat.com>
- <SJ2PR18MB5635A86C024316BC5E57B79EA23A2@SJ2PR18MB5635.namprd18.prod.outlook.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <SJ2PR18MB5635A86C024316BC5E57B79EA23A2@SJ2PR18MB5635.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+ <20240328163424.2781320-27-dhowells@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328163424.2781320-27-dhowells@redhat.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
+Precedence: list
 List-Id: Development of Linux EROFS file system <linux-erofs.lists.ozlabs.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=unsubscribe>
@@ -114,164 +60,117 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Latchesar Ionkov <lucho@ionkov.net>, Christian Schoenebeck <linux_oss@crudebyte.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>, Marc Dionne <marc.dionne@auristor.com>, "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>, Paulo Alcantara <pc@manguebit.com>, "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>, Eric Van Hensbergen <ericvh@kernel.org>, "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "v9fs@lists.linux.dev" <v9fs@lists.linux.dev>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "netfs@lists.linux.dev" <netfs@lists.linux.dev>, "
- linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
+Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 29/03/2024 10:34, Naveen Mamindlapalli wrote:
->> -----Original Message-----
->> From: David Howells <dhowells@redhat.com>
->> Sent: Thursday, March 28, 2024 10:04 PM
->> To: Christian Brauner <christian@brauner.io>; Jeff Layton <jlayton@kernel.org>;
->> Gao Xiang <hsiangkao@linux.alibaba.com>; Dominique Martinet
->> <asmadeus@codewreck.org>
->> Cc: David Howells <dhowells@redhat.com>; Matthew Wilcox
->> <willy@infradead.org>; Steve French <smfrench@gmail.com>; Marc Dionne
->> <marc.dionne@auristor.com>; Paulo Alcantara <pc@manguebit.com>; Shyam
->> Prasad N <sprasad@microsoft.com>; Tom Talpey <tom@talpey.com>; Eric Van
->> Hensbergen <ericvh@kernel.org>; Ilya Dryomov <idryomov@gmail.com>;
->> netfs@lists.linux.dev; linux-cachefs@redhat.com; linux-afs@lists.infradead.org;
->> linux-cifs@vger.kernel.org; linux-nfs@vger.kernel.org; ceph-
->> devel@vger.kernel.org; v9fs@lists.linux.dev; linux-erofs@lists.ozlabs.org; linux-
->> fsdevel@vger.kernel.org; linux-mm@kvack.org; netdev@vger.kernel.org; linux-
->> kernel@vger.kernel.org; Latchesar Ionkov <lucho@ionkov.net>; Christian
->> Schoenebeck <linux_oss@crudebyte.com>
->> Subject: [PATCH 19/26] netfs: New writeback implementation
->>
->> The current netfslib writeback implementation creates writeback requests of
->> contiguous folio data and then separately tiles subrequests over the space
->> twice, once for the server and once for the cache.  This creates a few
->> issues:
->>
->>   (1) Every time there's a discontiguity or a change between writing to only
->>       one destination or writing to both, it must create a new request.
->>       This makes it harder to do vectored writes.
->>
->>   (2) The folios don't have the writeback mark removed until the end of the
->>       request - and a request could be hundreds of megabytes.
->>
->>   (3) In future, I want to support a larger cache granularity, which will
->>       require aggregation of some folios that contain unmodified data (which
->>       only need to go to the cache) and some which contain modifications
->>       (which need to be uploaded and stored to the cache) - but, currently,
->>       these are treated as discontiguous.
->>
->> There's also a move to get everyone to use writeback_iter() to extract
->> writable folios from the pagecache.  That said, currently writeback_iter()
->> has some issues that make it less than ideal:
->>
->>   (1) there's no way to cancel the iteration, even if you find a "temporary"
->>       error that means the current folio and all subsequent folios are going
->>       to fail;
->>
->>   (2) there's no way to filter the folios being written back - something
->>       that will impact Ceph with it's ordered snap system;
->>
->>   (3) and if you get a folio you can't immediately deal with (say you need
->>       to flush the preceding writes), you are left with a folio hanging in
->>       the locked state for the duration, when really we should unlock it and
->>       relock it later.
->>
->> In this new implementation, I use writeback_iter() to pump folios,
->> progressively creating two parallel, but separate streams and cleaning up
->> the finished folios as the subrequests complete.  Either or both streams
->> can contain gaps, and the subrequests in each stream can be of variable
->> size, don't need to align with each other and don't need to align with the
->> folios.
->>
->> Indeed, subrequests can cross folio boundaries, may cover several folios or
->> a folio may be spanned by multiple folios, e.g.:
->>
->>           +---+---+-----+-----+---+----------+
->> Folios:  |   |   |     |     |   |          |
->>           +---+---+-----+-----+---+----------+
->>
->>             +------+------+     +----+----+
->> Upload:    |      |      |.....|    |    |
->>             +------+------+     +----+----+
->>
->>           +------+------+------+------+------+
->> Cache:   |      |      |      |      |      |
->>           +------+------+------+------+------+
->>
->> The progressive subrequest construction permits the algorithm to be
->> preparing both the next upload to the server and the next write to the
->> cache whilst the previous ones are already in progress.  Throttling can be
->> applied to control the rate of production of subrequests - and, in any
->> case, we probably want to write them to the server in ascending order,
->> particularly if the file will be extended.
->>
->> Content crypto can also be prepared at the same time as the subrequests and
->> run asynchronously, with the prepped requests being stalled until the
->> crypto catches up with them.  This might also be useful for transport
->> crypto, but that happens at a lower layer, so probably would be harder to
->> pull off.
->>
->> The algorithm is split into three parts:
->>
->>   (1) The issuer.  This walks through the data, packaging it up, encrypting
->>       it and creating subrequests.  The part of this that generates
->>       subrequests only deals with file positions and spans and so is usable
->>       for DIO/unbuffered writes as well as buffered writes.
->>
->>   (2) The collector. This asynchronously collects completed subrequests,
->>       unlocks folios, frees crypto buffers and performs any retries.  This
->>       runs in a work queue so that the issuer can return to the caller for
->>       writeback (so that the VM can have its kswapd thread back) or async
->>       writes.
->>
->>   (3) The retryer.  This pauses the issuer, waits for all outstanding
->>       subrequests to complete and then goes through the failed subrequests
->>       to reissue them.  This may involve reprepping them (with cifs, the
->>       credits must be renegotiated, and a subrequest may need splitting),
->>       and doing RMW for content crypto if there's a conflicting change on
->>       the server.
->>
->> [!] Note that some of the functions are prefixed with "new_" to avoid
->> clashes with existing functions.  These will be renamed in a later patch
->> that cuts over to the new algorithm.
->>
->> Signed-off-by: David Howells <dhowells@redhat.com>
->> cc: Jeff Layton <jlayton@kernel.org>
->> cc: Eric Van Hensbergen <ericvh@kernel.org>
->> cc: Latchesar Ionkov <lucho@ionkov.net>
->> cc: Dominique Martinet <asmadeus@codewreck.org>
->> cc: Christian Schoenebeck <linux_oss@crudebyte.com>
->> cc: Marc Dionne <marc.dionne@auristor.com>
->> cc: v9fs@lists.linux.dev
->> cc: linux-afs@lists.infradead.org
->> cc: netfs@lists.linux.dev
->> cc: linux-fsdevel@vger.kernel.org
+On Thu, Mar 28, 2024 at 04:34:18PM +0000, David Howells wrote:
 
-[..snip..]
+...
 
->> +/*
->> + * Begin a write operation for writing through the pagecache.
->> + */
->> +struct netfs_io_request *new_netfs_begin_writethrough(struct kiocb *iocb, size_t
->> len)
->> +{
->> +	struct netfs_io_request *wreq = NULL;
->> +	struct netfs_inode *ictx = netfs_inode(file_inode(iocb->ki_filp));
->> +
->> +	mutex_lock(&ictx->wb_lock);
->> +
->> +	wreq = netfs_create_write_req(iocb->ki_filp->f_mapping, iocb->ki_filp,
->> +				      iocb->ki_pos, NETFS_WRITETHROUGH);
->> +	if (IS_ERR(wreq))
->> +		mutex_unlock(&ictx->wb_lock);
->> +
->> +	wreq->io_streams[0].avail = true;
->> +	trace_netfs_write(wreq, netfs_write_trace_writethrough);
-> 
-> Missing mutex_unlock() before return.
-> 
+> +void afs_issue_write(struct netfs_io_subrequest *subreq)
+>  {
+> +	struct netfs_io_request *wreq = subreq->rreq;
+>  	struct afs_operation *op;
+> -	struct afs_wb_key *wbk = NULL;
+> -	loff_t size = iov_iter_count(iter);
+> +	struct afs_vnode *vnode = AFS_FS_I(wreq->inode);
+> +	unsigned long long pos = subreq->start + subreq->transferred;
+> +	size_t len = subreq->len - subreq->transferred;
+>  	int ret = -ENOKEY;
+>  
+> -	_enter("%s{%llx:%llu.%u},%llx,%llx",
+> +	_enter("R=%x[%x],%s{%llx:%llu.%u},%llx,%zx",
+> +	       wreq->debug_id, subreq->debug_index,
+>  	       vnode->volume->name,
+>  	       vnode->fid.vid,
+>  	       vnode->fid.vnode,
+>  	       vnode->fid.unique,
+> -	       size, pos);
+> +	       pos, len);
+>  
+> -	ret = afs_get_writeback_key(vnode, &wbk);
+> -	if (ret) {
+> -		_leave(" = %d [no keys]", ret);
+> -		return ret;
+> -	}
+> +#if 0 // Error injection
+> +	if (subreq->debug_index == 3)
+> +		return netfs_write_subrequest_terminated(subreq, -ENOANO, false);
+>  
+> -	op = afs_alloc_operation(wbk->key, vnode->volume);
+> -	if (IS_ERR(op)) {
+> -		afs_put_wb_key(wbk);
+> -		return -ENOMEM;
+> +	if (!test_bit(NETFS_SREQ_RETRYING, &subreq->flags)) {
+> +		set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
+> +		return netfs_write_subrequest_terminated(subreq, -EAGAIN, false);
+>  	}
+> +#endif
+> +
+> +	op = afs_alloc_operation(wreq->netfs_priv, vnode->volume);
+> +	if (IS_ERR(op))
+> +		return netfs_write_subrequest_terminated(subreq, -EAGAIN, false);
+>  
+>  	afs_op_set_vnode(op, 0, vnode);
+> -	op->file[0].dv_delta = 1;
+> +	op->file[0].dv_delta	= 1;
+>  	op->file[0].modification = true;
+> -	op->store.pos = pos;
+> -	op->store.size = size;
+> -	op->flags |= AFS_OPERATION_UNINTR;
+> -	op->ops = &afs_store_data_operation;
+> +	op->store.pos		= pos;
+> +	op->store.size		= len,
 
-mutex_unlock() happens in new_netfs_end_writethrough()
+nit: this is probably more intuitively written using len;
 
-> Thanks,
-> Naveen
-> 
+> +	op->flags		|= AFS_OPERATION_UNINTR;
+> +	op->ops			= &afs_store_data_operation;
+>  
+> -try_next_key:
+>  	afs_begin_vnode_operation(op);
+>  
+> -	op->store.write_iter = iter;
+> -	op->store.i_size = max(pos + size, vnode->netfs.remote_i_size);
+> -	op->mtime = inode_get_mtime(&vnode->netfs.inode);
+> +	op->store.write_iter	= &subreq->io_iter;
+> +	op->store.i_size	= umax(pos + len, vnode->netfs.remote_i_size);
+> +	op->mtime		= inode_get_mtime(&vnode->netfs.inode);
+>  
+>  	afs_wait_for_operation(op);
+> -
+> -	switch (afs_op_error(op)) {
+> +	ret = afs_put_operation(op);
+> +	switch (ret) {
+>  	case -EACCES:
+>  	case -EPERM:
+>  	case -ENOKEY:
+>  	case -EKEYEXPIRED:
+>  	case -EKEYREJECTED:
+>  	case -EKEYREVOKED:
+> -		_debug("next");
+> -
+> -		ret = afs_get_writeback_key(vnode, &wbk);
+> -		if (ret == 0) {
+> -			key_put(op->key);
+> -			op->key = key_get(wbk->key);
+> -			goto try_next_key;
+> -		}
+> +		/* If there are more keys we can try, use the retry algorithm
+> +		 * to rotate the keys.
+> +		 */
+> +		if (wreq->netfs_priv2)
+> +			set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
+>  		break;
+>  	}
+>  
+> -	afs_put_wb_key(wbk);
+> -	_leave(" = %d", afs_op_error(op));
+> -	return afs_put_operation(op);
+> +	netfs_write_subrequest_terminated(subreq, ret < 0 ? ret : subreq->len, false);
+>  }
+>  
+>  /*
 
-
+...
