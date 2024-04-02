@@ -1,47 +1,44 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16B3D894886
-	for <lists+linux-erofs@lfdr.de>; Tue,  2 Apr 2024 02:46:19 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7E5C8949C7
+	for <lists+linux-erofs@lfdr.de>; Tue,  2 Apr 2024 04:59:25 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CgQ5I/Jm;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=QGX6+Yy+;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4V7q206ZS2z3cVG
-	for <lists+linux-erofs@lfdr.de>; Tue,  2 Apr 2024 11:46:16 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4V7szY6Kfkz3d2j
+	for <lists+linux-erofs@lfdr.de>; Tue,  2 Apr 2024 13:59:21 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CgQ5I/Jm;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=QGX6+Yy+;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4V7q1t6g0Hz3bsX
-	for <linux-erofs@lists.ozlabs.org>; Tue,  2 Apr 2024 11:46:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4V7szQ1cgsz3bpp
+	for <linux-erofs@lists.ozlabs.org>; Tue,  2 Apr 2024 13:59:11 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1712018764; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=N+sabjCEwa704M2BmDGTJCw/At3vN1ynjj204Qasdyg=;
-	b=CgQ5I/Jmha8Y8aP0ucW0KFVVkx1rRByIuG+YPAWJ2MeDn7s9efWYOGtWKlYcoSV/kB6g9DCTqKlCO7UzxdGJbafefTBvFACiv+r2ycSiIWYIRez6ZaSMtPAsgO63GNO1qszz3P2LuPL6hSCHMwh3pAKAJ9Gm6hCoBYiLwf29dnA=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W3m9fRr_1712018761;
-Received: from 192.168.3.4(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W3m9fRr_1712018761)
+	t=1712026746; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=DxxTh+utFrSgADXALpjyz9hZthEtHg6B9SAU/aXdWfI=;
+	b=QGX6+Yy+WNNOw+rYEx0COHYmk/NAmjLQiQNtaypuLNbHMT/HUK/H/hKSLkgB9JnhiYaG6O8aazD/wR8BfRV0TP4YiXlXtSF/I85sM2MwirGNMM5NGHEo+vhY5RE83xcUHoRaxKU5EPLB3+aHJNDbfq76IunYWgjZBxkjuvvriek=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W3mj7mk_1712026739;
+Received: from e69b19392.et15sqa.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W3mj7mk_1712026739)
           by smtp.aliyun-inc.com;
-          Tue, 02 Apr 2024 08:46:03 +0800
-Message-ID: <928d39ae-6400-43af-a7a8-54735def2e97@linux.alibaba.com>
-Date: Tue, 2 Apr 2024 08:46:01 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] erofs: rename utils.c to zutil.c
-To: Chunhai Guo <guochunhai@vivo.com>, xiang@kernel.org
-References: <20240401135550.2550043-1-guochunhai@vivo.com>
+          Tue, 02 Apr 2024 10:59:04 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240401135550.2550043-1-guochunhai@vivo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: set opaque flag for directories in tarerofs mode
+Date: Tue,  2 Apr 2024 10:58:58 +0800
+Message-Id: <20240402025858.1729161-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -53,22 +50,34 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, huyue2@coolpad.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Opaque dir flag is needed if the tar tree is used immediately for
+the upcoming append mode.
 
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ lib/tar.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-On 2024/4/1 21:55, Chunhai Guo wrote:
-> Currently, utils.c is only useful if CONFIG_EROFS_FS_ZIP is on.
-> So let's rename as zutil.c as well as avoid its inclusion if
-> CONFIG_EROFS_FS_ZIP is explicitly disabled.
-> 
-> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
-> Suggested-by: Gao Xiang <xiang@kernel.org>
+diff --git a/lib/tar.c b/lib/tar.c
+index 7c271f6..b45657d 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -909,6 +909,11 @@ restart:
+ 	} else if (opq) {
+ 		DBG_BUGON(d->type == EROFS_FT_UNKNOWN);
+ 		DBG_BUGON(!d->inode);
++		/*
++		 * needed if the tar tree is used soon, thus we have no chance
++		 * to generate it from xattrs.  No impact to mergefs.
++		 */
++		d->inode->opaque = true;
+ 		ret = erofs_set_opaque_xattr(d->inode);
+ 		goto out;
+ 	} else if (th->typeflag == '1') {	/* hard link cases */
+-- 
+2.39.3
 
-Looks good to me,
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
