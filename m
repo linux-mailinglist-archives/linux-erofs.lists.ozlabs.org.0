@@ -1,55 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E60878950B3
-	for <lists+linux-erofs@lfdr.de>; Tue,  2 Apr 2024 12:49:10 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81A6589522A
+	for <lists+linux-erofs@lfdr.de>; Tue,  2 Apr 2024 13:45:10 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=s3pKIoou;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=el/RDzDt;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4V84Pb1Z0Nz3dRs
-	for <lists+linux-erofs@lfdr.de>; Tue,  2 Apr 2024 21:49:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4V85fD2QNtz3dSp
+	for <lists+linux-erofs@lfdr.de>; Tue,  2 Apr 2024 22:45:08 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=s3pKIoou;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=el/RDzDt;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4V84PT662cz3d2K
-	for <linux-erofs@lists.ozlabs.org>; Tue,  2 Apr 2024 21:49:01 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id B399460C8A;
-	Tue,  2 Apr 2024 10:48:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B1F0C433C7;
-	Tue,  2 Apr 2024 10:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712054937;
-	bh=0o849oaUCS/1to/11XOBsrrHkZ6HnWiwjHhXX1XawsY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s3pKIoouIXwXD4lmoPfSlZSDJZnmmtOa1RUJNiFaCXHRyfUJWBCybV99rJXm7gV8y
-	 T7Fjk4lyWWWjVz2Gcq+2fNAoTMJnNX/2F2ImxDn9loGZaAaUiIrrOGUofL9i7svfdk
-	 XAdlme0aallBdCc4GUuODtk5GZtLEzaPI3vng58HDE2HBNIlc4c6Bq3f6hazpMeaEx
-	 Xgj2CoKMoSLbndyirg0YejiKL0ZEAGFUReEzmqbp1wYq+3/s1f3ZCIqrcblHvsWe1U
-	 u/Fu8N++N778FF1N0TJzW8msw8oIsVzOMv/4cCc32kKXWGv+qqR4NqN76QQvHhbwO4
-	 xB4Ir5cVjt1jw==
-From: Christian Brauner <brauner@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 00/26] netfs, afs, 9p, cifs: Rework netfs to use ->writepages() to copy to cache
-Date: Tue,  2 Apr 2024 12:48:39 +0200
-Message-ID: <20240402-angezapft-geltung-eedf20c747b6@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240328163424.2781320-1-dhowells@redhat.com>
-References: <20240328163424.2781320-1-dhowells@redhat.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4V85f63XBfz3cCx
+	for <linux-erofs@lists.ozlabs.org>; Tue,  2 Apr 2024 22:44:59 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1712058294; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=2LlP5A3jA4i6BC9C1h7o21bfuQpjLNLxWPXmD86XwE0=;
+	b=el/RDzDtdj6PmTojt5aX1n6nfzrfjDtSEbjzhfdpHWdcQz+K89U+ROKLpR2s7MCYwVHYSg4btae2a3JU5wrEj06D1YpLnV9THxydyigojtTLE4TthOwX+r4QCgLR35DytPv3Vdb5ey/J1XsIaYxYMLWngolymhSsZ/3A3Bky/UQ=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W3oKOU1_1712058291;
+Received: from 30.97.48.168(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W3oKOU1_1712058291)
+          by smtp.aliyun-inc.com;
+          Tue, 02 Apr 2024 19:44:52 +0800
+Message-ID: <9daf9d31-cb12-4c8d-b53e-ff837bd14b7a@linux.alibaba.com>
+Date: Tue, 2 Apr 2024 19:44:50 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1071; i=brauner@kernel.org; h=from:subject:message-id; bh=0o849oaUCS/1to/11XOBsrrHkZ6HnWiwjHhXX1XawsY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRxP+pcP3O9duihh7ft/O8vis97k3zynpVeQfGsW8E7b q56dXSyVUcpC4MYF4OsmCKLQ7tJuNxynorNRpkaMHNYmUCGMHBxCsBEuNwYGTasXTr9sKjU3hPX Ei5oGyxbtVov5EPVyh7dA8dse88LRt5l+M2u8X9Xtd2ZVVnejNGvL9xPN9z30XT+j+sXvgWrTvz jocYCAA==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs: add a reserved buffer pool for lz4 decompression
+To: Chunhai Guo <guochunhai@vivo.com>, xiang@kernel.org
+References: <20240402084525.2624202-1-guochunhai@vivo.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240402084525.2624202-1-guochunhai@vivo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,35 +53,140 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, linux-nfs@vger.kernel.org, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <brauner@kernel.org>, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, huyue2@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, 28 Mar 2024 16:33:52 +0000, David Howells wrote:
-> The primary purpose of these patches is to rework the netfslib writeback
-> implementation such that pages read from the cache are written to the cache
-> through ->writepages(), thereby allowing the fscache page flag to be
-> retired.
+
+
+On 2024/4/2 16:45, Chunhai Guo wrote:
+> This adds a special global buffer pool (in the end) for reserved pages.
 > 
-> The reworking also:
+> Using a reserved pool for LZ4 decompression significantly reduces the
+> time spent on extra temporary page allocation for the extreme cases in
+> low memory scenarios.
 > 
-> [...]
+> The table below shows the reduction in time spent on page allocation for
+> LZ4 decompression when using a reserved pool. The results were obtained
+> from multi-app launch benchmarks on ARM64 Android devices running the
+> 5.15 kernel with an 8-core CPU and 8GB of memory. In the benchmark, we
+> launched 16 frequently-used apps, and the camera app was the last one in
+> each round. The data in the table is the average time of camera app for
+> each round.
+> 
+> After using the reserved pool, there was an average improvement of 150ms
+> in the overall launch time of our camera app, which was obtained from
+> the systrace log.
+> 
+> +--------------+---------------+--------------+---------+
+> |              | w/o page pool | w/ page pool |  diff   |
+> +--------------+---------------+--------------+---------+
+> | Average (ms) |     3434      |      21      | -99.38% |
+> +--------------+---------------+--------------+---------+
+> 
+> Based on the benchmark logs, 64 pages are sufficient for 95% of
+> scenarios. This value can be adjusted from the module parameter.
+> The default value is 0.
+> 
+> This pool is currently only used for the LZ4 decompressor, but it can be
+> applied to more decompressors if needed.
+> 
+> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+> ---
+>   fs/erofs/decompressor.c |  2 +-
+>   fs/erofs/internal.h     |  6 ++++-
+>   fs/erofs/zutil.c        | 59 ++++++++++++++++++++++++++++++-----------
+>   3 files changed, 50 insertions(+), 17 deletions(-)
+> 
+> diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+> index e1239d886984..d2fe8130819e 100644
+> --- a/fs/erofs/decompressor.c
+> +++ b/fs/erofs/decompressor.c
+> @@ -111,7 +111,7 @@ static int z_erofs_lz4_prepare_dstpages(struct z_erofs_lz4_decompress_ctx *ctx,
+>   			victim = availables[--top];
+>   			get_page(victim);
+>   		} else {
+> -			victim = erofs_allocpage(pagepool, rq->gfp);
+> +			victim = __erofs_allocpage(pagepool, rq->gfp, true);
+>   			if (!victim)
+>   				return -ENOMEM;
+>   			set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 1caa5d702835..664f6f7c971f 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -445,7 +445,11 @@ void erofs_unregister_sysfs(struct super_block *sb);
+>   int __init erofs_init_sysfs(void);
+>   void erofs_exit_sysfs(void);
+>   
+> -struct page *erofs_allocpage(struct page **pagepool, gfp_t gfp);
+> +struct page *__erofs_allocpage(struct page **pagepool, gfp_t gfp, bool tryrsv);
+> +static inline struct page *erofs_allocpage(struct page **pagepool, gfp_t gfp)
+> +{
+> +	return __erofs_allocpage(pagepool, gfp, false);
+> +}
+>   static inline void erofs_pagepool_add(struct page **pagepool, struct page *page)
+>   {
+>   	set_page_private(page, (unsigned long)*pagepool);
+> diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
+> index 14440c0bf64e..b45ca0b8b547 100644
+> --- a/fs/erofs/zutil.c
+> +++ b/fs/erofs/zutil.c
+> @@ -12,10 +12,12 @@ struct z_erofs_gbuf {
+>   	unsigned int nrpages;
+>   };
+>   
+> -static struct z_erofs_gbuf *z_erofs_gbufpool;
+> -static unsigned int z_erofs_gbuf_count, z_erofs_gbuf_nrpages;
+> +static struct z_erofs_gbuf *z_erofs_gbufpool, *z_erofs_rsvbuf;
+> +static unsigned int z_erofs_gbuf_count, z_erofs_gbuf_nrpages,
+> +		z_erofs_rsv_nrpages;
+>   
+>   module_param_named(global_buffers, z_erofs_gbuf_count, uint, 0444);
+> +module_param_named(reserved_pages, z_erofs_rsv_nrpages, uint, 0444);
+>   
+>   static atomic_long_t erofs_global_shrink_cnt;	/* for all mounted instances */
+>   /* protected by 'erofs_sb_list_lock' */
+> @@ -117,19 +119,28 @@ int z_erofs_gbuf_growsize(unsigned int nrpages)
+>   
+>   int __init z_erofs_gbuf_init(void)
+>   {
+> -	unsigned int i = num_possible_cpus();
+> +	unsigned int i, total = num_possible_cpus();
+>   
+> -	if (!z_erofs_gbuf_count)
+> -		z_erofs_gbuf_count = i;
+> -	else
+> -		z_erofs_gbuf_count = min(z_erofs_gbuf_count, i);
+> +	if (z_erofs_gbuf_count)
+> +		total = min(z_erofs_gbuf_count, total);
+> +	z_erofs_gbuf_count = total;
+>   
+> -	z_erofs_gbufpool = kcalloc(z_erofs_gbuf_count,
+> -			sizeof(*z_erofs_gbufpool), GFP_KERNEL);
+> +	/* The last (special) global buffer is the reserved buffer */
+> +	total += !!z_erofs_rsv_nrpages;
+> +
+> +	z_erofs_gbufpool = kcalloc(total, sizeof(*z_erofs_gbufpool),
+> +				   GFP_KERNEL);
+>   	if (!z_erofs_gbufpool)
+>   		return -ENOMEM;
+>   
+> -	for (i = 0; i < z_erofs_gbuf_count; ++i)
+> +	if (z_erofs_rsv_nrpages) {
+> +		z_erofs_rsvbuf = &z_erofs_gbufpool[total - 1];
+> +		z_erofs_rsvbuf->pages = kcalloc(z_erofs_rsv_nrpages,
+> +				sizeof(*z_erofs_rsvbuf->pages), GFP_KERNEL);
+> +		if (!z_erofs_rsvbuf->pages)
+> +			z_erofs_rsvbuf = NULL;
 
-Pulled from netfs-writeback which contains the minor fixes pointed out.
+It'd be better to reset z_erofs_rsv_nrpages to 0, since it can be
+fetched from `/sys/module/erofs/parameters`, as:
 
----
+		if (!z_erofs_rsvbuf->pages) {
+			z_erofs_rsvbuf = NULL;
+			z_erofs_rsv_nrpages = 0;
+		}
 
-Applied to the vfs.netfs branch of the vfs/vfs.git tree.
-Patches in the vfs.netfs branch should appear in linux-next soon.
-
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.netfs
+Thanks,
+Gao Xiang
