@@ -2,47 +2,33 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17DB889657F
-	for <lists+linux-erofs@lfdr.de>; Wed,  3 Apr 2024 09:10:40 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d8BfBe8A;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id D69AF8969EC
+	for <lists+linux-erofs@lfdr.de>; Wed,  3 Apr 2024 11:04:58 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4V8bW15hwVz3cZR
-	for <lists+linux-erofs@lfdr.de>; Wed,  3 Apr 2024 18:10:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4V8f2w4nZ4z3d2B
+	for <lists+linux-erofs@lfdr.de>; Wed,  3 Apr 2024 20:04:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d8BfBe8A;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=lst.de (client-ip=213.95.11.211; helo=verein.lst.de; envelope-from=hch@lst.de; receiver=lists.ozlabs.org)
+X-Greylist: delayed 323 seconds by postgrey-1.37 at boromir; Wed, 03 Apr 2024 20:04:49 AEDT
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4V8bVs4WNGz30N8
-	for <linux-erofs@lists.ozlabs.org>; Wed,  3 Apr 2024 18:10:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1712128224; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=18xhFpEEmP70q6IAUCBAVvfI09DuqR5gxP2Zlq+wxL8=;
-	b=d8BfBe8As9lonZNo4t9KKC76lg4FpE+yt+ecxFR6dEwNA6DII8igwsu0KcOK9pQL7+rxPFGdpWoracMFgunN30ma3trK7vsulu+7plnb7kJYk+3fU7qxJCN/QmCRbgti7vMaJZWNY51TYx+ATtJP/w22WSPA+WJTtBCSdDjYFHo=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R781e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W3qrrp._1712128222;
-Received: from 30.97.48.165(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W3qrrp._1712128222)
-          by smtp.aliyun-inc.com;
-          Wed, 03 Apr 2024 15:10:23 +0800
-Message-ID: <ff9feb33-bf02-4a03-bce9-f886574e63c1@linux.alibaba.com>
-Date: Wed, 3 Apr 2024 15:10:21 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4V8f2n1lmVz30NP
+	for <linux-erofs@lists.ozlabs.org>; Wed,  3 Apr 2024 20:04:49 +1100 (AEDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 5FBB968BFE; Wed,  3 Apr 2024 10:59:18 +0200 (CEST)
+Date: Wed, 3 Apr 2024 10:59:18 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH 15/26] mm: Export writeback_iter()
+Message-ID: <20240403085918.GA1178@lst.de>
+References: <20240328163424.2781320-1-dhowells@redhat.com> <20240328163424.2781320-16-dhowells@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs-utils: lib: Fix calculation of minextblks when
- working with sparse files
-To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org
-References: <20240403070700.1716252-1-dhavale@google.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240403070700.1716252-1-dhavale@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240328163424.2781320-16-dhowells@redhat.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,23 +40,12 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: kernel-team@android.com
+Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Christoph Hellwig <hch@lst.de>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Thu, Mar 28, 2024 at 04:34:07PM +0000, David Howells wrote:
+> Export writeback_iter() so that it can be used by netfslib as a module.
 
+EXPORT_SYMBOL_GPL, please.
 
-On 2024/4/3 15:07, Sandeep Dhavale wrote:
-> When we work with sparse files (files with holes), we need to consider
-> when the contiguous data block starts after each hole to correctly calculate
-> minextblks so we can merge consecutive chunks later.
-> Now that we need to recalculate minextblks multiple places, put the logic
-> in helper function for avoiding repetition and easier reading.
-> 
-> Fixes: 7b46f7a0160a (erofs-utils: lib: merge consecutive chunks if possible)
-> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
-
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
