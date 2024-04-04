@@ -1,67 +1,75 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5683F897CC8
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Apr 2024 01:57:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1712188671;
-	bh=0mcsDjNylWyuv4Nhacz1I77t7TX/D70Z7uILDGBoM7c=;
-	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=BTTrb7VyLAXl4gyk3wFStH5EVPAKHEWr9f+EMzIYNPLuamLol8/FfHraNF5QY17jo
-	 fCDGxSIt7MV5nnRW616H46VDz4A3f44HPj5YxkBO5BMbEfq0dobGP64l7ZAPo8G/D2
-	 gSbAmY6c/3YErmbkneq0Y1Ug+khQN0TBEgVUMCUstk+HcMe5XbPXntFVorGkWdHQg6
-	 tjDU5p9raeKKv50wqtj30o7QNAi/AU8Lzb/cIPe62ZTvPp8TdFREB/2I4b/g6HyS+6
-	 0CofcDZIvvcp+SDPq1TzraT8wfw/8qQ3Q4Y/4hfX5H7BsMpRPdkSxO7FmV73NPOomc
-	 xdUMF3KsKDKzA==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D2D35898280
+	for <lists+linux-erofs@lfdr.de>; Thu,  4 Apr 2024 09:52:20 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JynSReqH;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JynSReqH;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4V91sC0ZQmz3dkm
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Apr 2024 10:57:51 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4V9DNd5ZFrz3dX4
+	for <lists+linux-erofs@lfdr.de>; Thu,  4 Apr 2024 18:52:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=blURlzo/;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JynSReqH;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JynSReqH;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::1149; helo=mail-yw1-x1149.google.com; envelope-from=38uwnzgckczsaexsxibdlldib.zljifkru-bolcpifpqp.lwixyp.lod@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4V91s10BZwz2yt0
-	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Apr 2024 10:57:40 +1100 (AEDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-61510f72bb3so7785217b3.0
-        for <linux-erofs@lists.ozlabs.org>; Wed, 03 Apr 2024 16:57:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712188658; x=1712793458;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0mcsDjNylWyuv4Nhacz1I77t7TX/D70Z7uILDGBoM7c=;
-        b=fEcYzVoeWEKGJVZ/50bFAsMFN48UCFkYpQWWq7cbI+qLxEx0qzX9ilq/RxRylECSvy
-         nfXYDi7n2soL0T+AcNZ6PiMOHzLldDpCHbu5Y1oerz7lj4EabGKZNtvFFz7h1FqDeBmm
-         dRQZPZKxyqkvI4FHtW3oWe10tqCeGukWaED2dDkg/5RzEXedzgksIuBMeFlQE41p0Gyu
-         zRTmsppEur7OAyuMBLhecRIJW9JVA1kkHfADYEL9jUHVgBTIN7JXScpTn9FWVIVvSKeM
-         nXzaYnrAMlR/9TtPAZEjJ4G8dhI5OfC5H6RWf1LtyDccb97rPcPb1mQhN2UQcGePBA+e
-         zlgg==
-X-Gm-Message-State: AOJu0YyfyXP0Da7P3DBc/ocOBHUOdlKPVRp5eFZUmsN1UTWM7aRCI5Md
-	lYKROaRYtlECIPEA6FhhvaPO3ok3zkRD2eRgkLHjJITLEoq0Woj01S0aGqfporDpPanUrTh7E+x
-	7guIdCW8iBaB0fblpt7j2WlcG6rILfGgBkKvJr/XzoI516aqGcnHLhra9HHx41/9h77Mukmlnra
-	03iuxCCu+gIYvOjj2z0gOuEEEU6uGo65dTZKp/mEsXqEs5Kw==
-X-Google-Smtp-Source: AGHT+IHfZqaR+beKY8kxOJyI2qezCxSyOCHGIEkd/83hStCq23ZO+XHL7RSRl/AmVrfQJ3bMGbelGJPRkwh2
-X-Received: from dhavale-desktop.mtv.corp.google.com ([2620:15c:211:201:70db:9f14:826f:fa92])
- (user=dhavale job=sendgmr) by 2002:a81:848e:0:b0:611:5ed0:228e with SMTP id
- u136-20020a81848e000000b006115ed0228emr272157ywf.4.1712188658350; Wed, 03 Apr
- 2024 16:57:38 -0700 (PDT)
-Date: Wed,  3 Apr 2024 16:57:24 -0700
-In-Reply-To: <20240403235724.1919539-1-dhavale@google.com>
-Mime-Version: 1.0
-References: <20240403235724.1919539-1-dhavale@google.com>
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240403235724.1919539-2-dhavale@google.com>
-Subject: [PATCH 1/1] erofs-utils: lib: treat data blocks filled with 0s as a hole
-To: linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4V9DNV2RMWz3cCx
+	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Apr 2024 18:52:09 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712217126;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C9vFcjZDN/Fxaa0QMjaZwgnMDGjE5U9a9cC8FQf1Wik=;
+	b=JynSReqH7GVV4Avzw5P2189yTaOH04vzGoSJVK7X9ar4yrgiho6aa3C4Pq4Nkqn8QVp0dZ
+	UDMbw1xIbViPccYO5VxW0yBkR17VTFa64pXQNRd8xHe9972ZE+R5K1HQ4Kea7leQsbIJn4
+	snNSNflmmLRbXzsYjMedLkCmoVaDmks=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712217126;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C9vFcjZDN/Fxaa0QMjaZwgnMDGjE5U9a9cC8FQf1Wik=;
+	b=JynSReqH7GVV4Avzw5P2189yTaOH04vzGoSJVK7X9ar4yrgiho6aa3C4Pq4Nkqn8QVp0dZ
+	UDMbw1xIbViPccYO5VxW0yBkR17VTFa64pXQNRd8xHe9972ZE+R5K1HQ4Kea7leQsbIJn4
+	snNSNflmmLRbXzsYjMedLkCmoVaDmks=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-668-4vRV2FK2MnqAak7lNxvr5w-1; Thu,
+ 04 Apr 2024 03:52:01 -0400
+X-MC-Unique: 4vRV2FK2MnqAak7lNxvr5w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A8E333806736;
+	Thu,  4 Apr 2024 07:52:00 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 739012166B33;
+	Thu,  4 Apr 2024 07:51:56 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20240328163424.2781320-22-dhowells@redhat.com>
+References: <20240328163424.2781320-22-dhowells@redhat.com> <20240328163424.2781320-1-dhowells@redhat.com>
+Subject: Re: [PATCH 21/26] netfs, 9p: Implement helpers for new write code
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3655510.1712217111.1@warthog.procyon.org.uk>
+Date: Thu, 04 Apr 2024 08:51:51 +0100
+Message-ID: <3655511.1712217111@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -73,67 +81,15 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Sandeep Dhavale <dhavale@google.com>
-Cc: hsiangkao@linux.alibaba.com, kernel-team@android.com
+Cc: Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, dhowells@redhat.com, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add optimization to treat data blocks filled with 0s as a hole.
-Even though diskspace savings are comparable to chunk based or dedupe,
-having no block assigned saves us redundant disk IOs during read.
+David Howells <dhowells@redhat.com> wrote:
 
-This patch detects if the block is filled with zeros and marks
-chunk as erofs_holechunk so there is no physical block assigned.
+> +	size_t len = subreq->len - subreq->transferred;
 
-Signed-off-by: Sandeep Dhavale <dhavale@google.com>
----
- lib/blobchunk.c | 25 ++++++++++++++++++++++++-
- 1 file changed, 24 insertions(+), 1 deletion(-)
+This actually needs to be 'int len' because of the varargs packet formatter.
 
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index 641e3d4..8535058 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -232,6 +232,21 @@ static void erofs_update_minextblks(struct erofs_sb_info *sbi,
- 		*minextblks = lb;
- }
- 
-+static bool erofs_is_buf_zeros(void *buf, unsigned long len)
-+{
-+	int i, words;
-+	const unsigned long *words_buf = buf;
-+	words = len / sizeof(unsigned long);
-+
-+	DBG_BUGON(len % sizeof(unsigned long));
-+
-+	for (i = 0; i < words; i++) {
-+		if (words_buf[i])
-+			return false;
-+	}
-+	return true;
-+}
-+
- int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd,
- 				  erofs_off_t startoff)
- {
-@@ -323,7 +338,15 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd,
- 			ret = -EIO;
- 			goto err;
- 		}
--
-+		if (len == chunksize && erofs_is_buf_zeros(chunkdata, len)) {
-+			/* if data is all zeros, treat this block as hole */
-+			*(void **)idx++ = &erofs_holechunk;
-+			erofs_update_minextblks(sbi, interval_start, pos,
-+						&minextblks);
-+			interval_start = pos + len;
-+			lastch = NULL;
-+			continue;
-+		}
- 		chunk = erofs_blob_getchunk(sbi, chunkdata, len);
- 		if (IS_ERR(chunk)) {
- 			ret = PTR_ERR(chunk);
--- 
-2.44.0.478.gd926399ef9-goog
+David
 
