@@ -1,59 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29777899A78
-	for <lists+linux-erofs@lfdr.de>; Fri,  5 Apr 2024 12:15:56 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=caMJ71mm;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8CD9C89A879
+	for <lists+linux-erofs@lfdr.de>; Sat,  6 Apr 2024 04:35:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1712370938;
+	bh=8mVW/ekjQr33/sjQ6CxwStHJHhIljSFhy4fNln9/wuI=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:From;
+	b=JRv9ZNayGBgN0x3g2d0qtzu04m4bHhIfpbt0L/SCLMnbdE7mwa/6WiUDT3TzmGVNx
+	 z2XFhzHLpr7E7tSKVnaQg5/40idTLfXn5zBtBCHwZXT1ngANkHv4VfxcVODzf8r4Tg
+	 OCzCm0LfE/ORrvVIi5ADhG6r4r7KYKq2m8yahLkXo3iDLjTRiu6iU1YUo8si04QXm6
+	 g6wXLSEMPcHT7+mucpG34+Cp+QkoQNCFasUFfQvVU+45/Wgfdw9Kfjgo3fPd27O2o1
+	 JwJ7woIKzmjxY2X3lgWoCa9RZboey06iDY1csgp8j4ae2elCs+Cu1yZqYPILoZS2I2
+	 oY67GAhDCDDsQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4V9vWs6bl2z3vdc
-	for <lists+linux-erofs@lfdr.de>; Fri,  5 Apr 2024 21:15:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VBKGL2WDGz3vYs
+	for <lists+linux-erofs@lfdr.de>; Sat,  6 Apr 2024 13:35:38 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=caMJ71mm;
+	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=nyI0381+;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.202; helo=out203-205-221-202.mail.qq.com; envelope-from=1156140554@qq.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 1829 seconds by postgrey-1.37 at boromir; Sat, 06 Apr 2024 13:35:30 AEDT
+Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4V9vWm21bZz3vcS
-	for <linux-erofs@lists.ozlabs.org>; Fri,  5 Apr 2024 21:15:48 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id B88CD618BF;
-	Fri,  5 Apr 2024 10:15:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F21BC433F1;
-	Fri,  5 Apr 2024 10:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712312144;
-	bh=yIHeOwT1Z+4CwFKwe4RcKGCjnk0s2xBp+R1BOpUfFsg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=caMJ71mmy73c69ZyZyNX4wS/2d8Gtly6EtzykUIE0yXHbrAMwv7eMWt2apQEno6io
-	 8Ny3HtFvTnC9Gaz97HDodO14jUPgFC3leggZFXx05N0QdQvMLPMYwokSZFQfHYbZxp
-	 O/nEAmSn8QWyea3nkipZVjXjYGJ9KgFkOeQnWOkMeRzcnwCDzqKGT2YLEgcy1zW6DW
-	 epW118aIRpl+hKttSW1y64jhg1CcH5IhVBH6IsGyDznq/8k7bxLKOAjx7fl1UZW+BT
-	 erfELlSyjrxr9gChb3R7X47yIZZ6/lr6monLIC+TD0k2YntQu2xsEIQ2MH1kiRPpGw
-	 NigJI7ozoCNng==
-Date: Fri, 5 Apr 2024 12:15:34 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 15/26] mm: Export writeback_iter()
-Message-ID: <20240405-kanarienvogel-besuchen-63c433180767@brauner>
-References: <20240403124124.GA19085@lst.de>
- <20240403101422.GA7285@lst.de>
- <20240403085918.GA1178@lst.de>
- <20240328163424.2781320-1-dhowells@redhat.com>
- <20240328163424.2781320-16-dhowells@redhat.com>
- <3235934.1712139047@warthog.procyon.org.uk>
- <3300438.1712141700@warthog.procyon.org.uk>
- <3326107.1712149095@warthog.procyon.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3326107.1712149095@warthog.procyon.org.uk>
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4VBKGB4P3Jz3cZK
+	for <linux-erofs@lists.ozlabs.org>; Sat,  6 Apr 2024 13:35:25 +1100 (AEDT)
+X-QQ-FEAT: Xqh9UYnCrXDr993iO2PrFyhz8aSgZ8rQ
+X-QQ-SSF: 0000000000000080000000000000
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-XMAILINFO: MJDh6FyLHdqf14K+5x9wIHKMQvwZAPaHA7lGJkNrSDJdMfA+I+fvAtjsoivW38
+	 KiIRMmnOz4kPP3CObxjn+EYw/reXQYMt7kzdsWqesbZLNmc++PwxjlPzEt7caHezhuCcgWn6D4jsl
+	 10zuNhYHjLafftCZX4zC6GcrLqTWejfpe/3EfE0cfrdExIkiIb/BSsdZzonIi+pARIQYjjHHWiHMN
+	 S/XJgXmMVDvUzV4ZJJsj1sGa0eMr6I+GE0SCjiSrKZuoEYrg2a1QfR9Zo23vuH9ZvQPOsq+piRFR0
+	 grr3+7nxiRMlMHG26jxAI8aYNnsaFeNDou0TPVgPArNy2RHsgxsDTiQpQn7YWfq2Zh3PekMWswUZW
+	 Q3jhI9cJ+0g958VLPw2IqhPjXhOWLOkVQsP7p8mpoRan0i5nrRpo2gA0Yu965YrwTdZ1mbMvkil6x
+	 FA04sz0JaH/4wvVLQaCbe9tsmYt2grdfd1lsWVcPB7S+iNQQd/2puvZYlJ9H+2rdqaPLN+CudFABC
+	 4riWR1q9lVcC7a2RA3FP9KYQxp5S/tXbkIrzd6v1qRbJfJeXhjHZJXs12Z5ew5u+iuie7oCGfrCC6
+	 OIe2f3/x6jDMaCNzqcHdGm1xOW6cCiY2hkPuPyntmd7fUenFP1BM8J6Apu0pzgOkjg1NGPNj4aoHA
+	 7gWvJ9MpKEpp8fcH+fBP/c1xzXF+1dNShEarcwYkCniTdYsbD1W7kxeIL08D9GkstBrsrwH/3gfcj
+	 YPn7/kmldoelLtXHoGmt45oimoH8q30WzYndIZllC0WeEQAClr9R5FGqQQs3Uu0LEk63b7wKALrfd
+	 laBVAmSuimAR6vLcXFCkgoY3KMhSlx3LEv3saDWniFsW6gL5ROhTFMDNWyWg4BTQT8+yq5DGeVdgB
+	 uCPh2lbSmssca6ECJSluF0MqpvlV6TQLkpxoBPJEtZAyqHurEhx/EqmL8gC5VpLkC6NNzPM1kgruf
+	 vBdAMKTuXOVDkWf2AQ
+X-HAS-ATTACH: no
+X-QQ-BUSINESS-ORIGIN: 2
+X-Originating-IP: 218.12.157.17
+X-QQ-STYLE: 
+X-QQ-mid: webmail268t1712369021t4021500
+To: "=?gb18030?B?bGludXgtZXJvZnM=?=" <linux-erofs@lists.ozlabs.org>
+Subject: =?gb18030?B?xPq6w6OsztLU2jIwMjTE6r+0tb3By8nnx/i1xL+q?=
+ =?gb18030?B?1LTP7sS/?=
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_6610AD7D_139A1AB8_7CD8C1ED"
+Content-Transfer-Encoding: 8Bit
+Date: Sat, 6 Apr 2024 10:03:41 +0800
+X-Priority: 3
+Message-ID: <tencent_75345952C247D3E1F26BC00629354C648A08@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,25 +76,31 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Christoph Hellwig <hch@lst.de>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+From: =?utf-8?b?5a2f56Wl5a6HIHZpYSBMaW51eC1lcm9mcw==?= <linux-erofs@lists.ozlabs.org>
+Reply-To: =?gb18030?B?w8/P6dPu?= <1156140554@qq.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Apr 03, 2024 at 01:58:15PM +0100, David Howells wrote:
-> Christoph Hellwig <hch@lst.de> wrote:
-> 
-> > > So why are we bothering with EXPORT_SYMBOL at all?  Why don't you just
-> > > send a patch replace all of them with EXPORT_SYMBOL_GPL()?
-> > 
-> > No my business.
-> 
-> Clearly it is as you're gradually replacing APIs with stuff that is GPL'd.
-> 
-> > But if you want to side track this let me just put this in here:
-> > 
-> > NAK to the non-GPL EXPORT of writeback_iter().
-> 
-> Very well, I'll switch that export to GPL.  Christian, if you can amend that
-> patch in your tree?
+This is a multi-part message in MIME format.
 
-Sorted yesterday night!
+------=_NextPart_6610AD7D_139A1AB8_7CD8C1ED
+Content-Type: text/plain;
+	charset="gb18030"
+Content-Transfer-Encoding: base64
+
+xPq6w6OsuNDQu8T6sNnDptau1tDUxLbB1eK33dPKvP4NCs7Sz+vXydGvz8LJ58f409DDu9PQ
+UVHIurvy1d9WWMi60b2jrM7SttTV4rj2z+7Ev7rcuNDQy8iko6zP68rU18XX9rXjubHP16Gj
+DQrXo7rD
+
+------=_NextPart_6610AD7D_139A1AB8_7CD8C1ED
+Content-Type: text/html;
+	charset="gb18030"
+Content-Transfer-Encoding: base64
+
+PG1ldGEgaHR0cC1lcXVpdj0iQ29udGVudC1UeXBlIiBjb250ZW50PSJ0ZXh0L2h0bWw7IGNo
+YXJzZXQ9R0IxODAzMCI+PGRpdj7E+rrDo6y40NC7xPqw2cOm1q7W0NTEtsHV4rfd08q8/jwv
+ZGl2PjxkaXY+ztLP69fJ0a/Pwsnnx/jT0MO709BRUci6u/LV31ZYyLrRvaOsztK21NXiuPbP
+7sS/uty40NDLyKSjrM/rytTXxdf2teO5sc/XoaM8L2Rpdj48ZGl2PtejusM8L2Rpdj4=
+
+------=_NextPart_6610AD7D_139A1AB8_7CD8C1ED--
+
