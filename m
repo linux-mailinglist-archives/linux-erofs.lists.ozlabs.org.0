@@ -1,54 +1,65 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62A9189CBA4
-	for <lists+linux-erofs@lfdr.de>; Mon,  8 Apr 2024 20:23:52 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69FF889CDDE
+	for <lists+linux-erofs@lfdr.de>; Mon,  8 Apr 2024 23:55:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1712613303;
+	bh=amcZSzW3yyTzEXypL37TcjBNZBV4M3dWgOvIguTbuzI=;
+	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=ltNCKvdu+Gi+wt2TkqzqpfE9jS+Pbwt8qqxZAAeYMwZ0kqQq2JuxL+7cG5xX1LFKd
+	 ht3aEAj8PXVxGgcDa1TCzDQJpox82K375pK4t3DGQYEM3UtEDUDzz8ZDkXzMUklv49
+	 ATre6bnbZqIQh4tNDD2qJGCfp4axfB10xYZU8VcFEB3cNZ8oMfpkGKZKtq2lfmKNdd
+	 mlUyd/J+dVsLVtUYF+4Ldx8G9igGL4ve01uMmBKA0ITB9h/wvEog0NivUfAp5dRyAT
+	 ir1LKtfWirXYZ/eJqOop+X7Y2Kunn72kbtsD3Gg6WkWLOcMknBsNunv3xVUqFGs6JB
+	 A69c8u/NIt8vA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VCyCR24lxz3dWc
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Apr 2024 04:23:47 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VD2vC1C1Nz3vbd
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Apr 2024 07:55:03 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.70; helo=mail-io1-f70.google.com; envelope-from=3kjyuzgkbab8ntuf5gg9m5kkd8.bjjbg9pn9m7jio9io.7jh@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=OwwstqlY;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::1149; helo=mail-yw1-x1149.google.com; envelope-from=3jgcuzgckc3scgzuzkdfnnfkd.bnlkhmtw-dqnerkhrsr.nykzar.nqf@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VCyCM01Myz3brC
-	for <linux-erofs@lists.ozlabs.org>; Tue,  9 Apr 2024 04:23:41 +1000 (AEST)
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d5ea080228so87525939f.1
-        for <linux-erofs@lists.ozlabs.org>; Mon, 08 Apr 2024 11:23:41 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VD2rV5FJPz3vZ0
+	for <linux-erofs@lists.ozlabs.org>; Tue,  9 Apr 2024 07:52:41 +1000 (AEST)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-61510f72bb3so83963757b3.0
+        for <linux-erofs@lists.ozlabs.org>; Mon, 08 Apr 2024 14:52:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712600618; x=1713205418;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+        d=1e100.net; s=20230601; t=1712613156; x=1713217956;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=UUm+szSw9U0u1lY4JPbXO6oWA47+/M/JaLciS0pEX4E=;
-        b=F+jDRbOjQMD4J4eLGfPBEEsNO/L9OC9BAnVG5wqaB6mZ6a/SYQXkN7JX4gP0Q8RHpu
-         h464VPeZtkxnI6LOFdJ0+uEADpra83a71TsIRDsHq8PTeHB+/n+yVwWIO1uD8xXXoGrp
-         bZk4LDJWv25QMUfytVUIn3ApoJccVhMMQHPApFF/eFQNcr8XjUdfMKqU0mBekILk8+jg
-         Y1sFSBrCMFFxA6wP+HMVohl1nJQMooP2ux4hhRbr41VSyCuuFCaG7+hLkqfcyNsQD4y+
-         0ID1KqX02uZPSiHTRCSSllTC8v7MGC+UEeZELs54NaFaKCEsrC+pmrxt/fzRrsZ+cQmg
-         0Nwg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnWNzSIbVt7ZBDRufEHEBnNEpX2vENFpIZXvMP7YQrMEEWzC1Dvm44O33B0yqQ3EW3xs6N4VIvOG/fRkrBkPMJl9NMUiCJEP/moR2q
-X-Gm-Message-State: AOJu0YwdL1abJ5b5JjYRdGH7q3i1lMrt9Vmw5ljIVIayvKBY+zEent30
-	BdFVYkwmiHi+II9mgiI0s0j9ZeTbbGGf++TdmIpx06wgDWoEbspDg1rxFgVz0WpRLP0tQ7oUWKe
-	q95TMieBk++adWHASrg4rR/JF0L6Q3j5qjqWjbXjd1L/qOnrOOtEIbfU=
-X-Google-Smtp-Source: AGHT+IHdjussmaRyBPs04lU7GBZ+PrtUKgjd+cUrfJsMAVsMdC+0EmkTXDfvReJM3rOZuGh+P149w/69p1SsPv3AYNkODL9CXpXP
-MIME-Version: 1.0
-X-Received: by 2002:a05:6602:1691:b0:7c8:264d:5e98 with SMTP id
- s17-20020a056602169100b007c8264d5e98mr16146iow.0.1712600618673; Mon, 08 Apr
- 2024 11:23:38 -0700 (PDT)
-Date: Mon, 08 Apr 2024 11:23:38 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000084b9dd061599e789@google.com>
-Subject: [syzbot] [erofs?] BUG: using smp_processor_id() in preemptible code
- in z_erofs_get_gbuf
-From: syzbot <syzbot+27cc650ef45b379dfe5a@syzkaller.appspotmail.com>
-To: chao@kernel.org, dhavale@google.com, huyue2@coolpad.com, 
-	jefflexu@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, xiang@kernel.org
+        bh=amcZSzW3yyTzEXypL37TcjBNZBV4M3dWgOvIguTbuzI=;
+        b=Soa4b740Ut0yS7weoVMltDDwuYfzSCl5u64C+rCPJZP8QjikRXFknk7cXBxYBvceat
+         CnGZdCtUfH+plWM/lXsbaGWYfYJ4FSeXsiCZmrIAof+KKpvOnLYcZgOd9vZ3rRJPMFbf
+         JPvrmjZetN732FAii62HwAxlDh8DOsIw47bvKiNdvBICH/+pQQoCG/R7EFOvvtSASOlF
+         1lGFD73lh2KYSmBqDDCNHUowx4DwkKINEELkKoNivHSQzbPJQ5tfWR6UJ7O2hl86nEmV
+         J/C8aKXx+c1RhvTVTgdlr20MN53B/O+hBUCAD8YpkzWroIMgJ7UJeoCyO6DCFj4xiC3+
+         zSMQ==
+X-Gm-Message-State: AOJu0Yzslz0VKNfCcSduBINIA5oLCsxD20eeHhtpyiUtlBxy2FHfaFSW
+	QodV/RreoAo3tNVW0yY5M+nvI0Fz8amLtin2QoqKKwdskueVNwH2YH31B72Qu/TSrXdTRxtqvYD
+	vuXzGoA==
+X-Google-Smtp-Source: AGHT+IEkq+yrPhgyYDRCrGfUbGremKSvF9Tls/NyM9Ex8fLO1ww0uaL+bHkVzWJv2HGc6KYIwiPvmzeEyS36
+X-Received: from dhavale-desktop.mtv.corp.google.com ([2620:15c:211:201:9081:5db7:4b17:a606])
+ (user=dhavale job=sendgmr) by 2002:a81:ff05:0:b0:615:12a5:49c9 with SMTP id
+ k5-20020a81ff05000000b0061512a549c9mr2538367ywn.3.1712613156122; Mon, 08 Apr
+ 2024 14:52:36 -0700 (PDT)
+Date: Mon,  8 Apr 2024 14:52:29 -0700
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
+Message-ID: <20240408215231.3376659-1-dhavale@google.com>
+Subject: [PATCH v1] erofs: use raw_smp_processor_id() to get buffer from
+ global buffer pool
+To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
+	Chunhai Guo <guochunhai@vivo.com>
 Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -61,76 +72,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Sandeep Dhavale <dhavale@google.com>
+Cc: kernel-team@android.com, syzbot+27cc650ef45b379dfe5a@syzkaller.appspotmail.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello,
+erofs will decompress in the preemptible context (kworker or per cpu
+thread). As smp_processor_id() cannot be used in preemptible contexts,
+use raw_smp_processor_id() instead to index into global buffer pool.
 
-syzbot found the following issue on:
-
-HEAD commit:    2b3d5988ae2c Add linux-next specific files for 20240404
-git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=150f9d29180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9c48fd2523cdee5e
-dashboard link: https://syzkaller.appspot.com/bug?extid=27cc650ef45b379dfe5a
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a60955180000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d08115180000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/136270ed2c7b/disk-2b3d5988.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/466d2f7c1952/vmlinux-2b3d5988.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7dfaf3959891/bzImage-2b3d5988.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/2026b83172a2/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
 Reported-by: syzbot+27cc650ef45b379dfe5a@syzkaller.appspotmail.com
-
-BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u9:1/4483
-caller is z_erofs_gbuf_id fs/erofs/zutil.c:31 [inline]
-caller is z_erofs_get_gbuf+0x2c/0xd0 fs/erofs/zutil.c:39
-CPU: 0 PID: 4483 Comm: kworker/u9:1 Not tainted 6.9.0-rc2-next-20240404-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Workqueue: erofs_worker z_erofs_decompressqueue_work
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
- check_preemption_disabled+0x10e/0x120 lib/smp_processor_id.c:49
- z_erofs_gbuf_id fs/erofs/zutil.c:31 [inline]
- z_erofs_get_gbuf+0x2c/0xd0 fs/erofs/zutil.c:39
- z_erofs_lz4_handle_overlap fs/erofs/decompressor.c:162 [inline]
- z_erofs_lz4_decompress_mem fs/erofs/decompressor.c:234 [inline]
- z_erofs_lz4_decompress+0xe42/0x17b0 fs/erofs/decompressor.c:307
- z_erofs_decompress_pcluster fs/erofs/zdata.c:1260 [inline]
- z_erofs_decompress_queue+0x1e30/0x3960 fs/erofs/zdata.c:1345
- z_erofs_decompressqueue_work+0x99/0xe0 fs/erofs/zdata.c:1360
- process_one_work kernel/workqueue.c:3218 [inline]
- process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3299
- worker_thread+0x86d/0xd70 kernel/workqueue.c:3380
-
-
+Fixes: 7a7513292cc6 ("erofs: rename per-CPU buffers to global buffer pool and make it configurable")
+Signed-off-by: Sandeep Dhavale <dhavale@google.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ fs/erofs/zutil.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
+index b9b99158bb4e..036024bce9f7 100644
+--- a/fs/erofs/zutil.c
++++ b/fs/erofs/zutil.c
+@@ -30,7 +30,7 @@ static struct shrinker *erofs_shrinker_info;
+ 
+ static unsigned int z_erofs_gbuf_id(void)
+ {
+-	return smp_processor_id() % z_erofs_gbuf_count;
++	return raw_smp_processor_id() % z_erofs_gbuf_count;
+ }
+ 
+ void *z_erofs_get_gbuf(unsigned int requiredpages)
+-- 
+2.44.0.478.gd926399ef9-goog
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
