@@ -1,80 +1,55 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DB2789C8E0
-	for <lists+linux-erofs@lfdr.de>; Mon,  8 Apr 2024 17:53:38 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=c+U1MNMc;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=c+U1MNMc;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62A9189CBA4
+	for <lists+linux-erofs@lfdr.de>; Mon,  8 Apr 2024 20:23:52 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VCtt75593z3dX6
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Apr 2024 01:53:35 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VCyCR24lxz3dWc
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Apr 2024 04:23:47 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=c+U1MNMc;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=c+U1MNMc;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.70; helo=mail-io1-f70.google.com; envelope-from=3kjyuzgkbab8ntuf5gg9m5kkd8.bjjbg9pn9m7jio9io.7jh@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VCtt50TYTz3dLQ
-	for <linux-erofs@lists.ozlabs.org>; Tue,  9 Apr 2024 01:53:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712591609;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CFuGX1yyoTN69ecCATsVj4UhORzkDiRUWoktVVAJ3+Q=;
-	b=c+U1MNMcronALfEpB5Zr1rXSWmZ0HD1wh9Y97r8RsGwJ1f3rJ+DaY40cp/ZWKAm4tw1msE
-	nM0hAQ9CvZebPOF2x43lZrsksp4IW3sjlzazi+DqzNv/y0WJoNuWAWGZ45Yn9CLLd/FMEB
-	13gba6Axg2vIJDn/dfbJb4MmkehDoX8=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1712591609;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CFuGX1yyoTN69ecCATsVj4UhORzkDiRUWoktVVAJ3+Q=;
-	b=c+U1MNMcronALfEpB5Zr1rXSWmZ0HD1wh9Y97r8RsGwJ1f3rJ+DaY40cp/ZWKAm4tw1msE
-	nM0hAQ9CvZebPOF2x43lZrsksp4IW3sjlzazi+DqzNv/y0WJoNuWAWGZ45Yn9CLLd/FMEB
-	13gba6Axg2vIJDn/dfbJb4MmkehDoX8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-137-HJAhESVFMaKi_61YaghcgA-1; Mon, 08 Apr 2024 11:53:27 -0400
-X-MC-Unique: HJAhESVFMaKi_61YaghcgA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EEA2C90ACC7;
-	Mon,  8 Apr 2024 15:53:25 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 084C62033AC1;
-	Mon,  8 Apr 2024 15:53:21 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240328163424.2781320-24-dhowells@redhat.com>
-References: <20240328163424.2781320-24-dhowells@redhat.com> <20240328163424.2781320-1-dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-    Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH 23/26] netfs: Cut over to using new writeback code
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VCyCM01Myz3brC
+	for <linux-erofs@lists.ozlabs.org>; Tue,  9 Apr 2024 04:23:41 +1000 (AEST)
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7d5ea080228so87525939f.1
+        for <linux-erofs@lists.ozlabs.org>; Mon, 08 Apr 2024 11:23:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712600618; x=1713205418;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UUm+szSw9U0u1lY4JPbXO6oWA47+/M/JaLciS0pEX4E=;
+        b=F+jDRbOjQMD4J4eLGfPBEEsNO/L9OC9BAnVG5wqaB6mZ6a/SYQXkN7JX4gP0Q8RHpu
+         h464VPeZtkxnI6LOFdJ0+uEADpra83a71TsIRDsHq8PTeHB+/n+yVwWIO1uD8xXXoGrp
+         bZk4LDJWv25QMUfytVUIn3ApoJccVhMMQHPApFF/eFQNcr8XjUdfMKqU0mBekILk8+jg
+         Y1sFSBrCMFFxA6wP+HMVohl1nJQMooP2ux4hhRbr41VSyCuuFCaG7+hLkqfcyNsQD4y+
+         0ID1KqX02uZPSiHTRCSSllTC8v7MGC+UEeZELs54NaFaKCEsrC+pmrxt/fzRrsZ+cQmg
+         0Nwg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnWNzSIbVt7ZBDRufEHEBnNEpX2vENFpIZXvMP7YQrMEEWzC1Dvm44O33B0yqQ3EW3xs6N4VIvOG/fRkrBkPMJl9NMUiCJEP/moR2q
+X-Gm-Message-State: AOJu0YwdL1abJ5b5JjYRdGH7q3i1lMrt9Vmw5ljIVIayvKBY+zEent30
+	BdFVYkwmiHi+II9mgiI0s0j9ZeTbbGGf++TdmIpx06wgDWoEbspDg1rxFgVz0WpRLP0tQ7oUWKe
+	q95TMieBk++adWHASrg4rR/JF0L6Q3j5qjqWjbXjd1L/qOnrOOtEIbfU=
+X-Google-Smtp-Source: AGHT+IHdjussmaRyBPs04lU7GBZ+PrtUKgjd+cUrfJsMAVsMdC+0EmkTXDfvReJM3rOZuGh+P149w/69p1SsPv3AYNkODL9CXpXP
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <877901.1712591597.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Apr 2024 16:53:17 +0100
-Message-ID: <877902.1712591597@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+X-Received: by 2002:a05:6602:1691:b0:7c8:264d:5e98 with SMTP id
+ s17-20020a056602169100b007c8264d5e98mr16146iow.0.1712600618673; Mon, 08 Apr
+ 2024 11:23:38 -0700 (PDT)
+Date: Mon, 08 Apr 2024 11:23:38 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000084b9dd061599e789@google.com>
+Subject: [syzbot] [erofs?] BUG: using smp_processor_id() in preemptible code
+ in z_erofs_get_gbuf
+From: syzbot <syzbot+27cc650ef45b379dfe5a@syzkaller.appspotmail.com>
+To: chao@kernel.org, dhavale@google.com, huyue2@coolpad.com, 
+	jefflexu@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, xiang@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -86,66 +61,76 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, dhowells@redhat.com, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-David Howells <dhowells@redhat.com> wrote:
+Hello,
 
-> +		/* Wait for writeback to complete.  The writeback engine owns
-> +		 * the info in folio->private and may change it until it
-> +		 * removes the WB mark.
-> +		 */
-> +		if (folio_wait_writeback_killable(folio)) {
-> +			ret =3D written ? -EINTR : -ERESTARTSYS;
-> +			goto error_folio_unlock;
-> +		}
-> +
+syzbot found the following issue on:
 
-It turns out that this really kills performance with fio with as many jobs=
- as
-cpus.  It's taking up to around 8x longer to complete a pwrite() on averag=
-e
-and perf shows a 30% of the CPU cycles are being spent in contention on th=
-e
-i_rwsem.
+HEAD commit:    2b3d5988ae2c Add linux-next specific files for 20240404
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=150f9d29180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9c48fd2523cdee5e
+dashboard link: https://syzkaller.appspot.com/bug?extid=27cc650ef45b379dfe5a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a60955180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10d08115180000
 
-The reason this was added here is that writeback cannot take the folio loc=
-k in
-order to clean up folio->private without risking deadlock vs the truncatio=
-n
-routines (IIRC).
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/136270ed2c7b/disk-2b3d5988.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/466d2f7c1952/vmlinux-2b3d5988.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/7dfaf3959891/bzImage-2b3d5988.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/2026b83172a2/mount_0.gz
 
-I can mitigate this by skipping the wait if folio->private is not set and =
-if
-we're not going to attach anything there (see attached).  Note that if
-writeout is ongoing and there is nothing attached to ->private, then we sh=
-ould
-not be engaging write-streaming mode and attaching a new netfs_folio (and =
-if
-we did, we'd flush the page and wait for it anyway).
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+27cc650ef45b379dfe5a@syzkaller.appspotmail.com
 
-The other possibility is if we have a writeback group to set.  This only
-applies to ceph for the moment and is something that will need dealing wit=
-h
-if/when ceph is made to use this code.
+BUG: using smp_processor_id() in preemptible [00000000] code: kworker/u9:1/4483
+caller is z_erofs_gbuf_id fs/erofs/zutil.c:31 [inline]
+caller is z_erofs_get_gbuf+0x2c/0xd0 fs/erofs/zutil.c:39
+CPU: 0 PID: 4483 Comm: kworker/u9:1 Not tainted 6.9.0-rc2-next-20240404-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Workqueue: erofs_worker z_erofs_decompressqueue_work
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ check_preemption_disabled+0x10e/0x120 lib/smp_processor_id.c:49
+ z_erofs_gbuf_id fs/erofs/zutil.c:31 [inline]
+ z_erofs_get_gbuf+0x2c/0xd0 fs/erofs/zutil.c:39
+ z_erofs_lz4_handle_overlap fs/erofs/decompressor.c:162 [inline]
+ z_erofs_lz4_decompress_mem fs/erofs/decompressor.c:234 [inline]
+ z_erofs_lz4_decompress+0xe42/0x17b0 fs/erofs/decompressor.c:307
+ z_erofs_decompress_pcluster fs/erofs/zdata.c:1260 [inline]
+ z_erofs_decompress_queue+0x1e30/0x3960 fs/erofs/zdata.c:1345
+ z_erofs_decompressqueue_work+0x99/0xe0 fs/erofs/zdata.c:1360
+ process_one_work kernel/workqueue.c:3218 [inline]
+ process_scheduled_works+0xa2c/0x1830 kernel/workqueue.c:3299
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3380
 
-David
+
 ---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index 1eff9413eb1b..279b296f8014 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -255,7 +255,8 @@ ssize_t netfs_perform_write(struct kiocb *iocb, struct=
- iov_iter *iter,
- 		 * the info in folio->private and may change it until it
- 		 * removes the WB mark.
- 		 */
--		if (folio_wait_writeback_killable(folio)) {
-+		if (folio_get_private(folio) &&
-+		    folio_wait_writeback_killable(folio)) {
- 			ret =3D written ? -EINTR : -ERESTARTSYS;
- 			goto error_folio_unlock;
- 		}
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
