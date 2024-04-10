@@ -2,63 +2,57 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B72D889E594
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Apr 2024 00:14:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1712700895;
-	bh=RH5GzvAm797MYUBVHafoSyKwx0jQDdQTZNcpnLrte2M=;
-	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=UHwyBbknbUirQa5aphFYtKkX4p6HekiJrDuKHEZ+wWeOjRZCX7ZLzqNlc/ECsfPBM
-	 2nBuQ5qI8nnFiF77boXrYPMgNyaF6b+hRpe/hycJbGyezngc5T64w+sMRB4vFb/W8F
-	 IVuaLcDFrA9JAyeEeMdOk/qvKPLKgHDg3nTH0Nj0PjjeYlUwn5/g4eBWZK/0icSqPe
-	 LLXVBM44UKClKqb3UhY6ei2K72tn4Gxxv8wDazICZ5wvfp8Mx3kE2AGswfDTkldkTJ
-	 1aame0DvqR25MZptgRiZgmSdalb4+rMUU8wLk2cdxLWP16CjLHH/+dVbfgcw37fDZp
-	 NjbWd5YTlQ8AQ==
+	by mail.lfdr.de (Postfix) with ESMTPS id 59A7B89E9A1
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Apr 2024 07:19:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VDgHg3bClz3d2W
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Apr 2024 08:14:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VDrjH1Xkfz3d2g
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Apr 2024 15:19:15 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=KvAmdZ2J;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::b4a; helo=mail-yb1-xb4a.google.com; envelope-from=30l0vzgckc9k8c5q5g9bjjbg9.7jhgdips-9mjangdnon.jug56n.jmb@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.72; helo=mail-io1-f72.google.com; envelope-from=3rsewzgkbabggmn8y992fydd61.4cc492ig2f0cbh2bh.0ca@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VDgHX5gTqz3bs0
-	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Apr 2024 08:14:46 +1000 (AEST)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-dc64f63d768so10242812276.2
-        for <linux-erofs@lists.ozlabs.org>; Tue, 09 Apr 2024 15:14:46 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VDrj70tkHz3bWH
+	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Apr 2024 15:19:05 +1000 (AEST)
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7d5e2b1cfabso294712239f.0
+        for <linux-erofs@lists.ozlabs.org>; Tue, 09 Apr 2024 22:19:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712700881; x=1713305681;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RH5GzvAm797MYUBVHafoSyKwx0jQDdQTZNcpnLrte2M=;
-        b=mVv9B6gyPTI2VkRAJ3EIOlNz9NU2/v86nNwfBWnsISf0i4pxYwYCBr3smbmhWnNcaf
-         0c6YXuqJXsrqshJzWtKzXjFfW27K6sb2C9fZayETYE7wlJgw2mb1I9PRuPqnFQG9Jkr6
-         Fm99vh5ZBZEsCXB8OaUjkiPcIRP9toiJvueZs22kmjklolE9VMbiD+zGT7eeiBNdwshK
-         O+WZmtl9mAK8as2l1/H60snuJJfsMIVomw3RdkSMfKL+IlJthMYS0Ir/16JJPevxkskg
-         I0Xz1KqXd+8I07IcuYlgaFP9uUXyceaMxREuTZixStOkf3uZecGYTbjxHovw+sj0Bg0Q
-         aCxw==
-X-Gm-Message-State: AOJu0YxXhK6UAwZWLdP4OLcxnY+9oQga/b9pIf1mBCPucirua/qAZr33
-	B4LF4VdRFpZs4Yb1LTlIGA6tubrcDO0uYa0U0yXpHo7Kbxb4OwE7i/heymqxxb5nAaHeoTwtA0I
-	CISsxKme8a9JCNn5+w7beuP4o3o9ePugKPV4OfDbAKJzyepD4LgBNadplk99eqPwOP1KB7oFlYO
-	chX3hIWLx2TLGoGZOs4vDWOwri9ugW69tvV3zg0XrMEBavzA==
-X-Google-Smtp-Source: AGHT+IHy9NG5ns6Z+zpM0egVErcWI2HdLZiZyvgDH1qJfaiVLGmbat5zE8ENlSY5Cab2ZxND1M2C47wFUWN8
-X-Received: from dhavale-desktop.mtv.corp.google.com ([2620:15c:211:201:be:e476:7493:2b53])
- (user=dhavale job=sendgmr) by 2002:a05:6902:1820:b0:dc7:9218:df47 with SMTP
- id cf32-20020a056902182000b00dc79218df47mr291986ybb.5.1712700880914; Tue, 09
- Apr 2024 15:14:40 -0700 (PDT)
-Date: Tue,  9 Apr 2024 15:14:30 -0700
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.478.gd926399ef9-goog
-Message-ID: <20240409221430.3897453-1-dhavale@google.com>
-Subject: [PATCH v2] erofs-utils: lib: treat data blocks filled with 0s as a hole
-To: linux-erofs@lists.ozlabs.org
+        d=1e100.net; s=20230601; t=1712726342; x=1713331142;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cW/rWKUZySv/3ojdJiq8kb1g4EtY5k0JGAdJpiXserk=;
+        b=q3wAcXbkjX9LY0e5YLuWFJsewJThcwsc96i69rS6YwtPWkJhY2kto4LoQIHwyOnkoe
+         Yx4rsyua0+B2R2yRcTY/Ufq7TtwlD2KHm0K2SDkqtbKtD/X7G/zSy6rE4zlQ/6ZWY4lh
+         tJuH6UtWzMfIkCvDKPgzFZ3kEBx8SHDNRtZ3T9OeQnQ6EWw6uvCMNrM7qmc8NbAhZqil
+         +sSRAgGZqO1DamLTfqGWf5eCGHV2pRbDq3T9ZZuLhtH1up/9pFYEmG0s3KPOHDn16mq3
+         2RNH5kykNXhGpAtAzwJJ2Ddbux6z0KfC2KVM+zVwpI2YiWZqSlzGfVDHhRisViJaR+bd
+         M8/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW9+T+7vm4yUwiaXX6Hs/m2N2IISHij19dwmQoPXr8TqZtUqBgex60toKH4+EDJol8kr+JYuUoqX9svTjmYh/hwYuLmXTwhGtCfza7d
+X-Gm-Message-State: AOJu0YxQBcgD/+weHWINUMsXcoecWdXUb6BIEpqx0HFRSuBclmM9roaw
+	wR/ZbPmA1fMnHhW10aI+r7UqWinIXwcZqjS3NHpB0f6STs7cmExTexfUl0Emlv14Z+Uq8GWaXfj
+	5qrnCdYLuRASCDBng1QnYQ3uwd1/mC6BsdshQ+20+gWzn8f8Gp188C1c=
+X-Google-Smtp-Source: AGHT+IF4/g69lYp6nKSnpVSqQ9XAYqwyrIcX7muYfZNRsPaOd8C4CFfg20nXgkxot2rNZ8hkZ0YH01goaQ5i8gS/5Nl7/AnVlVD4
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1aad:b0:369:f7ca:a361 with SMTP id
+ l13-20020a056e021aad00b00369f7caa361mr97775ilv.1.1712726341935; Tue, 09 Apr
+ 2024 22:19:01 -0700 (PDT)
+Date: Tue, 09 Apr 2024 22:19:01 -0700
+In-Reply-To: <8b9e2dc7-adef-4a2a-8284-f4885d3361bb@linux.alibaba.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000035775f0615b72d01@google.com>
+Subject: Re: [syzbot] [erofs?] BUG: using smp_processor_id() in preemptible
+ code in z_erofs_get_gbuf
+From: syzbot <syzbot+27cc650ef45b379dfe5a@syzkaller.appspotmail.com>
+To: chao@kernel.org, dhavale@google.com, hsiangkao@linux.alibaba.com, 
+	huyue2@coolpad.com, jefflexu@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, xiang@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,129 +64,361 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Sandeep Dhavale <dhavale@google.com>
-Cc: hsiangkao@linux.alibaba.com, kernel-team@android.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add optimization to treat data blocks filled with 0s as a hole.
-Even though diskspace savings are comparable to chunk based or dedupe,
-having no block assigned saves us redundant disk IOs during read.
+Hello,
 
-To detect blocks filled with zeros during chunking, we insert block
-filled with zeros (zerochunk) in the hashmap. If we detect a possible
-dedupe, we map it to the hole so there is no physical block assigned.
+syzbot tried to test the proposed patch but the build/boot failed:
 
-Signed-off-by: Sandeep Dhavale <dhavale@google.com>
----
-Changes since v1:
-	- Instead of checking every block for 0s word by word,
-	  add a zerochunk in blobs during init. So we effectively
-	  detect the zero blocks by comparing the hash.
- include/erofs/blobchunk.h |  2 +-
- lib/blobchunk.c           | 41 ++++++++++++++++++++++++++++++++++++---
- mkfs/main.c               |  2 +-
- 3 files changed, 40 insertions(+), 5 deletions(-)
+rd
+[    7.642260][    T1] usbcore: registered new interface driver dln2
+[    7.645615][    T1] usbcore: registered new interface driver pn533_usb
+[    7.653071][    T1] nfcsim 0.2 initialized
+[    7.654695][    T1] usbcore: registered new interface driver port100
+[    7.656867][    T1] usbcore: registered new interface driver nfcmrvl
+[    7.665132][    T1] Loading iSCSI transport class v2.0-870.
+[    7.683597][    T1] virtio_scsi virtio0: 1/0/0 default/read/poll queues
+[    7.695844][    T1] ------------[ cut here ]------------
+[    7.697288][    T1] refcount_t: decrement hit 0; leaking memory.
+[    7.699005][    T1] WARNING: CPU: 0 PID: 1 at lib/refcount.c:31 refcount=
+_warn_saturate+0xfa/0x1d0
+[    7.701375][    T1] Modules linked in:
+[    7.702534][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc2-=
+syzkaller-00004-g38bac6fb80a8 #0
+[    7.704651][    T1] Hardware name: Google Google Compute Engine/Google C=
+ompute Engine, BIOS Google 03/27/2024
+[    7.706586][    T1] RIP: 0010:refcount_warn_saturate+0xfa/0x1d0
+[    7.707973][    T1] Code: b2 00 00 00 e8 07 c9 e9 fc 5b 5d c3 cc cc cc c=
+c e8 fb c8 e9 fc c6 05 11 fa e7 0a 01 90 48 c7 c7 20 37 1f 8c e8 07 64 ac f=
+c 90 <0f> 0b 90 90 eb d9 e8 db c8 e9 fc c6 05 ee f9 e7 0a 01 90 48 c7 c7
+[    7.711681][    T1] RSP: 0000:ffffc90000066e18 EFLAGS: 00010246
+[    7.713246][    T1] RAX: 80ca843c79c95400 RBX: ffff888020c7401c RCX: fff=
+f8880166d0000
+[    7.715799][    T1] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000=
+0000000000000
+[    7.718268][    T1] RBP: 0000000000000004 R08: ffffffff8157ffc2 R09: fff=
+ffbfff1c39af8
+[    7.720624][    T1] R10: dffffc0000000000 R11: fffffbfff1c39af8 R12: fff=
+fea0000843dc0
+[    7.722734][    T1] R13: ffffea0000843dc8 R14: 1ffffd40001087b9 R15: 000=
+0000000000000
+[    7.725099][    T1] FS:  0000000000000000(0000) GS:ffff8880b9400000(0000=
+) knlGS:0000000000000000
+[    7.726800][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    7.728599][    T1] CR2: ffff88823ffff000 CR3: 000000000e134000 CR4: 000=
+00000003506f0
+[    7.731733][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
+0000000000000
+[    7.733755][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
+0000000000400
+[    7.736386][    T1] Call Trace:
+[    7.737123][    T1]  <TASK>
+[    7.738006][    T1]  ? __warn+0x163/0x4e0
+[    7.740239][    T1]  ? refcount_warn_saturate+0xfa/0x1d0
+[    7.741359][    T1]  ? report_bug+0x2b3/0x500
+[    7.742315][    T1]  ? refcount_warn_saturate+0xfa/0x1d0
+[    7.744221][    T1]  ? handle_bug+0x3e/0x70
+[    7.745585][    T1]  ? exc_invalid_op+0x1a/0x50
+[    7.746621][    T1]  ? asm_exc_invalid_op+0x1a/0x20
+[    7.747841][    T1]  ? __warn_printk+0x292/0x360
+[    7.749317][    T1]  ? refcount_warn_saturate+0xfa/0x1d0
+[    7.751175][    T1]  ? refcount_warn_saturate+0xf9/0x1d0
+[    7.753784][    T1]  __free_pages_ok+0xc60/0xd90
+[    7.755034][    T1]  make_alloc_exact+0xa3/0xf0
+[    7.756224][    T1]  vring_alloc_queue_split+0x20a/0x600
+[    7.757834][    T1]  ? __pfx_vring_alloc_queue_split+0x10/0x10
+[    7.758900][    T1]  ? vp_find_vqs+0x4c/0x4e0
+[    7.759818][    T1]  ? virtscsi_probe+0x3ea/0xf60
+[    7.761405][    T1]  ? virtio_dev_probe+0x991/0xaf0
+[    7.763004][    T1]  ? really_probe+0x2b8/0xad0
+[    7.764204][    T1]  ? driver_probe_device+0x50/0x430
+[    7.765429][    T1]  vring_create_virtqueue_split+0xc6/0x310
+[    7.766771][    T1]  ? ret_from_fork+0x4b/0x80
+[    7.767981][    T1]  ? __pfx_vring_create_virtqueue_split+0x10/0x10
+[    7.769915][    T1]  vring_create_virtqueue+0xca/0x110
+[    7.771623][    T1]  ? __pfx_vp_notify+0x10/0x10
+[    7.773424][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    7.775021][    T1]  setup_vq+0xe9/0x2d0
+[    7.775787][    T1]  ? __pfx_vp_notify+0x10/0x10
+[    7.776793][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    7.778866][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    7.780614][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    7.782273][    T1]  vp_setup_vq+0xbf/0x330
+[    7.783410][    T1]  ? __pfx_vp_config_changed+0x10/0x10
+[    7.784986][    T1]  ? ioread16+0x2f/0x90
+[    7.786652][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    7.788199][    T1]  vp_find_vqs_msix+0x8b2/0xc80
+[    7.789141][    T1]  vp_find_vqs+0x4c/0x4e0
+[    7.790440][    T1]  virtscsi_init+0x8db/0xd00
+[    7.791488][    T1]  ? __pfx_virtscsi_init+0x10/0x10
+[    7.792682][    T1]  ? __pfx_default_calc_sets+0x10/0x10
+[    7.794430][    T1]  ? scsi_host_alloc+0xa57/0xea0
+[    7.795521][    T1]  ? vp_get+0xfd/0x140
+[    7.796236][    T1]  virtscsi_probe+0x3ea/0xf60
+[    7.797138][    T1]  ? __pfx_virtscsi_probe+0x10/0x10
+[    7.798431][    T1]  ? kernfs_add_one+0x156/0x8b0
+[    7.800087][    T1]  ? virtio_no_restricted_mem_acc+0x9/0x10
+[    7.800985][    T1]  ? virtio_features_ok+0x10c/0x270
+[    7.801835][    T1]  virtio_dev_probe+0x991/0xaf0
+[    7.804175][    T1]  ? __pfx_virtio_dev_probe+0x10/0x10
+[    7.805887][    T1]  really_probe+0x2b8/0xad0
+[    7.807150][    T1]  __driver_probe_device+0x1a2/0x390
+[    7.808227][    T1]  driver_probe_device+0x50/0x430
+[    7.809376][    T1]  __driver_attach+0x45f/0x710
+[    7.810502][    T1]  ? __pfx___driver_attach+0x10/0x10
+[    7.811607][    T1]  bus_for_each_dev+0x239/0x2b0
+[    7.812602][    T1]  ? __pfx___driver_attach+0x10/0x10
+[    7.813726][    T1]  ? __pfx_bus_for_each_dev+0x10/0x10
+[    7.814800][    T1]  ? do_raw_spin_unlock+0x13c/0x8b0
+[    7.816656][    T1]  bus_add_driver+0x347/0x620
+[    7.817772][    T1]  driver_register+0x23a/0x320
+[    7.818808][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    7.819842][    T1]  virtio_scsi_init+0x65/0xe0
+[    7.820896][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    7.822020][    T1]  do_one_initcall+0x248/0x880
+[    7.822891][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    7.823925][    T1]  ? __pfx_lockdep_hardirqs_on_prepare+0x10/0x10
+[    7.825313][    T1]  ? __pfx_do_one_initcall+0x10/0x10
+[    7.826394][    T1]  ? __pfx_parse_args+0x10/0x10
+[    7.827532][    T1]  ? do_initcalls+0x1c/0x80
+[    7.828853][    T1]  ? rcu_is_watching+0x15/0xb0
+[    7.830432][    T1]  do_initcall_level+0x157/0x210
+[    7.831313][    T1]  do_initcalls+0x3f/0x80
+[    7.832573][    T1]  kernel_init_freeable+0x435/0x5d0
+[    7.833476][    T1]  ? __pfx_kernel_init_freeable+0x10/0x10
+[    7.834461][    T1]  ? __pfx_lockdep_hardirqs_on_prepare+0x10/0x10
+[    7.836095][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    7.837265][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    7.838679][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    7.839592][    T1]  kernel_init+0x1d/0x2b0
+[    7.840621][    T1]  ret_from_fork+0x4b/0x80
+[    7.841417][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    7.842402][    T1]  ret_from_fork_asm+0x1a/0x30
+[    7.843630][    T1]  </TASK>
+[    7.844181][    T1] Kernel panic - not syncing: kernel: panic_on_warn se=
+t ...
+[    7.845673][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.9.0-rc2-=
+syzkaller-00004-g38bac6fb80a8 #0
+[    7.847124][    T1] Hardware name: Google Google Compute Engine/Google C=
+ompute Engine, BIOS Google 03/27/2024
+[    7.848661][    T1] Call Trace:
+[    7.848661][    T1]  <TASK>
+[    7.848661][    T1]  dump_stack_lvl+0x241/0x360
+[    7.848661][    T1]  ? __pfx_dump_stack_lvl+0x10/0x10
+[    7.848661][    T1]  ? __pfx__printk+0x10/0x10
+[    7.848661][    T1]  ? _printk+0xd5/0x120
+[    7.848661][    T1]  ? vscnprintf+0x5d/0x90
+[    7.848661][    T1]  panic+0x349/0x860
+[    7.848661][    T1]  ? __warn+0x172/0x4e0
+[    7.858266][    T1]  ? __pfx_panic+0x10/0x10
+[    7.858266][    T1]  ? show_trace_log_lvl+0x4e6/0x520
+[    7.858266][    T1]  ? ret_from_fork_asm+0x1a/0x30
+[    7.858266][    T1]  __warn+0x346/0x4e0
+[    7.858266][    T1]  ? refcount_warn_saturate+0xfa/0x1d0
+[    7.858266][    T1]  report_bug+0x2b3/0x500
+[    7.858266][    T1]  ? refcount_warn_saturate+0xfa/0x1d0
+[    7.858266][    T1]  handle_bug+0x3e/0x70
+[    7.868191][    T1]  exc_invalid_op+0x1a/0x50
+[    7.868191][    T1]  asm_exc_invalid_op+0x1a/0x20
+[    7.868191][    T1] RIP: 0010:refcount_warn_saturate+0xfa/0x1d0
+[    7.868191][    T1] Code: b2 00 00 00 e8 07 c9 e9 fc 5b 5d c3 cc cc cc c=
+c e8 fb c8 e9 fc c6 05 11 fa e7 0a 01 90 48 c7 c7 20 37 1f 8c e8 07 64 ac f=
+c 90 <0f> 0b 90 90 eb d9 e8 db c8 e9 fc c6 05 ee f9 e7 0a 01 90 48 c7 c7
+[    7.868191][    T1] RSP: 0000:ffffc90000066e18 EFLAGS: 00010246
+[    7.878283][    T1] RAX: 80ca843c79c95400 RBX: ffff888020c7401c RCX: fff=
+f8880166d0000
+[    7.878283][    T1] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000=
+0000000000000
+[    7.878283][    T1] RBP: 0000000000000004 R08: ffffffff8157ffc2 R09: fff=
+ffbfff1c39af8
+[    7.878283][    T1] R10: dffffc0000000000 R11: fffffbfff1c39af8 R12: fff=
+fea0000843dc0
+[    7.878283][    T1] R13: ffffea0000843dc8 R14: 1ffffd40001087b9 R15: 000=
+0000000000000
+[    7.878283][    T1]  ? __warn_printk+0x292/0x360
+[    7.888190][    T1]  ? refcount_warn_saturate+0xf9/0x1d0
+[    7.888190][    T1]  __free_pages_ok+0xc60/0xd90
+[    7.888190][    T1]  make_alloc_exact+0xa3/0xf0
+[    7.888190][    T1]  vring_alloc_queue_split+0x20a/0x600
+[    7.888190][    T1]  ? __pfx_vring_alloc_queue_split+0x10/0x10
+[    7.888190][    T1]  ? vp_find_vqs+0x4c/0x4e0
+[    7.888190][    T1]  ? virtscsi_probe+0x3ea/0xf60
+[    7.888190][    T1]  ? virtio_dev_probe+0x991/0xaf0
+[    7.898282][    T1]  ? really_probe+0x2b8/0xad0
+[    7.898282][    T1]  ? driver_probe_device+0x50/0x430
+[    7.898282][    T1]  vring_create_virtqueue_split+0xc6/0x310
+[    7.898282][    T1]  ? ret_from_fork+0x4b/0x80
+[    7.898282][    T1]  ? __pfx_vring_create_virtqueue_split+0x10/0x10
+[    7.898282][    T1]  vring_create_virtqueue+0xca/0x110
+[    7.898282][    T1]  ? __pfx_vp_notify+0x10/0x10
+[    7.898282][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    7.908146][    T1]  setup_vq+0xe9/0x2d0
+[    7.908146][    T1]  ? __pfx_vp_notify+0x10/0x10
+[    7.908146][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    7.908146][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    7.908146][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    7.908146][    T1]  vp_setup_vq+0xbf/0x330
+[    7.908146][    T1]  ? __pfx_vp_config_changed+0x10/0x10
+[    7.908146][    T1]  ? ioread16+0x2f/0x90
+[    7.908146][    T1]  ? __pfx_virtscsi_ctrl_done+0x10/0x10
+[    7.918266][    T1]  vp_find_vqs_msix+0x8b2/0xc80
+[    7.918266][    T1]  vp_find_vqs+0x4c/0x4e0
+[    7.918266][    T1]  virtscsi_init+0x8db/0xd00
+[    7.918266][    T1]  ? __pfx_virtscsi_init+0x10/0x10
+[    7.918266][    T1]  ? __pfx_default_calc_sets+0x10/0x10
+[    7.918266][    T1]  ? scsi_host_alloc+0xa57/0xea0
+[    7.918266][    T1]  ? vp_get+0xfd/0x140
+[    7.918266][    T1]  virtscsi_probe+0x3ea/0xf60
+[    7.918266][    T1]  ? __pfx_virtscsi_probe+0x10/0x10
+[    7.918266][    T1]  ? kernfs_add_one+0x156/0x8b0
+[    7.918266][    T1]  ? virtio_no_restricted_mem_acc+0x9/0x10
+[    7.928228][    T1]  ? virtio_features_ok+0x10c/0x270
+[    7.928228][    T1]  virtio_dev_probe+0x991/0xaf0
+[    7.928228][    T1]  ? __pfx_virtio_dev_probe+0x10/0x10
+[    7.928228][    T1]  really_probe+0x2b8/0xad0
+[    7.928228][    T1]  __driver_probe_device+0x1a2/0x390
+[    7.928228][    T1]  driver_probe_device+0x50/0x430
+[    7.928228][    T1]  __driver_attach+0x45f/0x710
+[    7.928228][    T1]  ? __pfx___driver_attach+0x10/0x10
+[    7.928228][    T1]  bus_for_each_dev+0x239/0x2b0
+[    7.928228][    T1]  ? __pfx___driver_attach+0x10/0x10
+[    7.928228][    T1]  ? __pfx_bus_for_each_dev+0x10/0x10
+[    7.938278][    T1]  ? do_raw_spin_unlock+0x13c/0x8b0
+[    7.938278][    T1]  bus_add_driver+0x347/0x620
+[    7.938278][    T1]  driver_register+0x23a/0x320
+[    7.938278][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    7.938278][    T1]  virtio_scsi_init+0x65/0xe0
+[    7.938278][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    7.938278][    T1]  do_one_initcall+0x248/0x880
+[    7.938278][    T1]  ? __pfx_virtio_scsi_init+0x10/0x10
+[    7.948187][    T1]  ? __pfx_lockdep_hardirqs_on_prepare+0x10/0x10
+[    7.948187][    T1]  ? __pfx_do_one_initcall+0x10/0x10
+[    7.948187][    T1]  ? __pfx_parse_args+0x10/0x10
+[    7.948187][    T1]  ? do_initcalls+0x1c/0x80
+[    7.948187][    T1]  ? rcu_is_watching+0x15/0xb0
+[    7.948187][    T1]  do_initcall_level+0x157/0x210
+[    7.948187][    T1]  do_initcalls+0x3f/0x80
+[    7.948187][    T1]  kernel_init_freeable+0x435/0x5d0
+[    7.948187][    T1]  ? __pfx_kernel_init_freeable+0x10/0x10
+[    7.948187][    T1]  ? __pfx_lockdep_hardirqs_on_prepare+0x10/0x10
+[    7.948187][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    7.958283][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    7.958283][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    7.958283][    T1]  kernel_init+0x1d/0x2b0
+[    7.958283][    T1]  ret_from_fork+0x4b/0x80
+[    7.958283][    T1]  ? __pfx_kernel_init+0x10/0x10
+[    7.958283][    T1]  ret_from_fork_asm+0x1a/0x30
+[    7.958283][    T1]  </TASK>
+[    7.958283][    T1] Kernel Offset: disabled
+[    7.958283][    T1] Rebooting in 86400 seconds..
 
-diff --git a/include/erofs/blobchunk.h b/include/erofs/blobchunk.h
-index a674640..ebe2efe 100644
---- a/include/erofs/blobchunk.h
-+++ b/include/erofs/blobchunk.h
-@@ -23,7 +23,7 @@ int erofs_write_zero_inode(struct erofs_inode *inode);
- int tarerofs_write_chunkes(struct erofs_inode *inode, erofs_off_t data_offset);
- int erofs_mkfs_dump_blobs(struct erofs_sb_info *sbi);
- void erofs_blob_exit(void);
--int erofs_blob_init(const char *blobfile_path);
-+int erofs_blob_init(const char *blobfile_path, erofs_off_t chunksize);
- int erofs_mkfs_init_devices(struct erofs_sb_info *sbi, unsigned int devices);
- 
- #ifdef __cplusplus
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index 641e3d4..87c153f 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -323,13 +323,21 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd,
- 			ret = -EIO;
- 			goto err;
- 		}
--
- 		chunk = erofs_blob_getchunk(sbi, chunkdata, len);
- 		if (IS_ERR(chunk)) {
- 			ret = PTR_ERR(chunk);
- 			goto err;
- 		}
- 
-+		if (chunk->blkaddr == erofs_holechunk.blkaddr) {
-+			*(void **)idx++ = &erofs_holechunk;
-+			erofs_update_minextblks(sbi, interval_start, pos,
-+						&minextblks);
-+			interval_start = pos + len;
-+			lastch = NULL;
-+			continue;
-+		}
-+
- 		if (lastch && (lastch->device_id != chunk->device_id ||
- 		    erofs_pos(sbi, lastch->blkaddr) + lastch->chunksize !=
- 		    erofs_pos(sbi, chunk->blkaddr))) {
-@@ -540,7 +548,34 @@ void erofs_blob_exit(void)
- 	}
- }
- 
--int erofs_blob_init(const char *blobfile_path)
-+static int erofs_insert_zerochunk(erofs_off_t chunksize)
-+{
-+	u8 *zeros;
-+	struct erofs_blobchunk *chunk;
-+	u8 sha256[32];
-+	unsigned int hash;
-+
-+	zeros = calloc(1, chunksize);
-+	if (!zeros)
-+		return -ENOMEM;
-+
-+	erofs_sha256(zeros, chunksize, sha256);
-+	hash = memhash(sha256, sizeof(sha256));
-+	chunk = malloc(sizeof(struct erofs_blobchunk));
-+	if (!chunk)
-+		return -ENOMEM;
-+
-+	chunk->chunksize = chunksize;
-+	/* treat chunk filled with zeros as hole */
-+	chunk->blkaddr = erofs_holechunk.blkaddr;
-+	memcpy(chunk->sha256, sha256, sizeof(sha256));
-+
-+	hashmap_entry_init(&chunk->ent, hash);
-+	hashmap_add(&blob_hashmap, chunk);
-+	return 0;
-+}
-+
-+int erofs_blob_init(const char *blobfile_path, erofs_off_t chunksize)
- {
- 	if (!blobfile_path) {
- #ifdef HAVE_TMPFILE64
-@@ -557,7 +592,7 @@ int erofs_blob_init(const char *blobfile_path)
- 		return -EACCES;
- 
- 	hashmap_init(&blob_hashmap, erofs_blob_hashmap_cmp, 0);
--	return 0;
-+	return erofs_insert_zerochunk(chunksize);
- }
- 
- int erofs_mkfs_init_devices(struct erofs_sb_info *sbi, unsigned int devices)
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 2fb4a57..d632f74 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -1255,7 +1255,7 @@ int main(int argc, char **argv)
- 	}
- 
- 	if (cfg.c_chunkbits) {
--		err = erofs_blob_init(cfg.c_blobdev_path);
-+		err = erofs_blob_init(cfg.c_blobdev_path, 1 << cfg.c_chunkbits);
- 		if (err)
- 			return 1;
- 	}
--- 
-2.44.0.478.gd926399ef9-goog
 
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs-2/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/usr/local/go'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/usr/local/go/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.21.4'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.=
+mod'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build2267282665=3D/tmp/go-build -gno-record-gc=
+c-switches'
+
+git status (err=3D<nil>)
+HEAD detached at 0ee3535ea
+nothing to commit, working tree clean
+
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D0ee3535ea8ff21d50e44372bb1cfd147e299ab5b -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20240404-085507'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-fuzzer=
+ github.com/google/syzkaller/syz-fuzzer
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D0ee3535ea8ff21d50e44372bb1cfd147e299ab5b -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20240404-085507'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execpr=
+og github.com/google/syzkaller/tools/syz-execprog
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D0ee3535ea8ff21d50e44372bb1cfd147e299ab5b -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20240404-085507'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-stress=
+ github.com/google/syzkaller/tools/syz-stress
+mkdir -p ./bin/linux_amd64
+gcc -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
+ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
+t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
+static-pie -fpermissive -w -DGOOS_linux=3D1 -DGOARCH_amd64=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"0ee3535ea8ff21d50e44372bb1cfd147e2=
+99ab5b\"
+
+
+Error text is too large and was truncated, full error text is at:
+https://syzkaller.appspot.com/x/error.txt?x=3D16dbfd89180000
+
+
+Tested on:
+
+commit:         38bac6fb erofs: add a reserved buffer pool for lz4 dec..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.g=
+it dev
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D51cdcd4a8f33256=
+9
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D27cc650ef45b379df=
+e5a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
+n) 2.40
+
+Note: no patches were applied.
