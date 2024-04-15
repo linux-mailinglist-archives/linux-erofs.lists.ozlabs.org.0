@@ -2,52 +2,52 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 726718A4DE0
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Apr 2024 13:41:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E82C8A4DEE
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Apr 2024 13:43:26 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jt0qHc9S;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qIicrhuN;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VJ4xk1tB3z3dVb
-	for <lists+linux-erofs@lfdr.de>; Mon, 15 Apr 2024 21:41:14 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VJ50D2m2gz3dVb
+	for <lists+linux-erofs@lfdr.de>; Mon, 15 Apr 2024 21:43:24 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jt0qHc9S;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qIicrhuN;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJ4xf2Cggz3cT2
-	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Apr 2024 21:41:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJ50820Ybz3cT2
+	for <linux-erofs@lists.ozlabs.org>; Mon, 15 Apr 2024 21:43:20 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id A339FCE0A3A;
-	Mon, 15 Apr 2024 11:41:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5C24C113CC;
-	Mon, 15 Apr 2024 11:41:04 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 7A1F660C5D;
+	Mon, 15 Apr 2024 11:43:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01CD8C113CC;
+	Mon, 15 Apr 2024 11:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713181267;
-	bh=X1zkxYLiNJHWnkZuJe9zjxI4v/kKlai8RkWKf/rxHUs=;
+	s=k20201202; t=1713181397;
+	bh=6Yaid9xDfwjELTQIfyJ+zA8UAIs3+vEcOQtQc9nMTqo=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=jt0qHc9SAeBADTj1zz91cR3/y4890l4yJO/OStAwWSPIL6745pnt35yZoF+qQuhMP
-	 ArfuuZEMJ2WDvC0ME37Jt4+OZfRHlIBF7zZzAGeff9SOEFCxxCF2ufRpqcbP6RMtDG
-	 w2jxooGFbxb3hN8mWfEDqyAl32RpUv8y4aFd9LolvUVYKaxxWb6YIXHz+PxHdRhpev
-	 emvsXZjI02h04gI4p0Kr1zKZmLnyH6LJPx+VNKpIdIhWWMaJKpH8GXhygCGrFYPg2D
-	 ok4ctgdJOuKvz8wjPjR8sgSiKoXMunXCzC9vD8N68p1btUAQ8AF3h6S8ScHZzFNdGR
-	 kSS9cotcceaMw==
-Message-ID: <3570373a3db66151033a3667cb8c28bbf8bc505b.camel@kernel.org>
-Subject: Re: [PATCH 09/26] mm: Provide a means of invalidation without using
+	b=qIicrhuNJXnQIvA5i6Jg4L0608HqLPbvuDhw7WCilllSPxWi7EfSJUwBoq/iCUtuI
+	 G0+hpBhAM7MTcnDVSEQYMxLAIwJqdkwJEGsqHsiZ026ur6GLHq8ZlUe7BBCYwIlydI
+	 TbxWvPI9NE6HrxDsvtq1YZ6VMOBC8b5Aa9LUmfMuABL+ClSDC+HemKNyLKmAnebUB2
+	 YHO5EnPEAiEHzDdC2tM/ghi6x3xCdRDQBQV66XlopqeNkvVVhLy9tjUwyd5HxVtVQp
+	 7WfM87WaD4JdW6eY/ke+uNFB2dH4p6G/7QmeNyyVpTNsqah3pwiIcSNxuK5wiLsn0u
+	 nujZh9nwzfMKw==
+Message-ID: <9b7de2417924192fb411744171015877c1d4c677.camel@kernel.org>
+Subject: Re: [PATCH 11/26] 9p: Use alternative invalidation to using
  launder_folio
 From: Jeff Layton <jlayton@kernel.org>
 To: David Howells <dhowells@redhat.com>, Christian Brauner
 	 <christian@brauner.io>, Gao Xiang <hsiangkao@linux.alibaba.com>, Dominique
 	Martinet <asmadeus@codewreck.org>
-Date: Mon, 15 Apr 2024 07:41:03 -0400
-In-Reply-To: <20240328163424.2781320-10-dhowells@redhat.com>
+Date: Mon, 15 Apr 2024 07:43:14 -0400
+In-Reply-To: <20240328163424.2781320-12-dhowells@redhat.com>
 References: <20240328163424.2781320-1-dhowells@redhat.com>
-	 <20240328163424.2781320-10-dhowells@redhat.com>
+	 <20240328163424.2781320-12-dhowells@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -72,132 +72,54 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>, Matthew Wilcox <willy@infradead.org>, Christoph Hellwig <hch@lst.de>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Ilya Dryomov <idryomov@gmail.com>, devel@lists.orangefs.org, Shyam Prasad N <sprasad@microsoft.com>, Christian Brauner <brauner@kernel.org>, Tom Talpey <tom@talpey.com>, Alexander Viro <viro@zeniv.linux.org.uk>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Trond Myklebust <trond.myklebust@hammerspace.com>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org
+Cc: Latchesar Ionkov <lucho@ionkov.net>, Christian Schoenebeck <linux_oss@crudebyte.com>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 On Thu, 2024-03-28 at 16:34 +0000, David Howells wrote:
-> Implement a replacement for launder_folio.  The key feature of
-> invalidate_inode_pages2() is that it locks each folio individually, unmap=
-s
-> it to prevent mmap'd accesses interfering and calls the ->launder_folio()
-> address_space op to flush it.  This has problems: firstly, each folio is
-> written individually as one or more small writes; secondly, adjacent foli=
-os
-> cannot be added so easily into the laundry; thirdly, it's yet another op =
-to
-> implement.
->=20
-> Instead, use the invalidate lock to cause anyone wanting to add a folio t=
-o
-> the inode to wait, then unmap all the folios if we have mmaps, then,
-> conditionally, use ->writepages() to flush any dirty data back and then
-> discard all pages.
->=20
-> The invalidate lock prevents ->read_iter(), ->write_iter() and faulting
-> through mmap all from adding pages for the duration.
+> Use writepages-based flushing invalidation instead of
+> invalidate_inode_pages2() and ->launder_folio().  This will allow
+> ->launder_folio() to be removed eventually.
 >=20
 > Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Matthew Wilcox <willy@infradead.org>
-> cc: Miklos Szeredi <miklos@szeredi.hu>
-> cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-> cc: Christoph Hellwig <hch@lst.de>
-> cc: Andrew Morton <akpm@linux-foundation.org>
-> cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> cc: Christian Brauner <brauner@kernel.org>
+> cc: Eric Van Hensbergen <ericvh@kernel.org>
+> cc: Latchesar Ionkov <lucho@ionkov.net>
+> cc: Dominique Martinet <asmadeus@codewreck.org>
+> cc: Christian Schoenebeck <linux_oss@crudebyte.com>
 > cc: Jeff Layton <jlayton@kernel.org>
-> cc: linux-mm@kvack.org
-> cc: linux-fsdevel@vger.kernel.org
-> cc: netfs@lists.linux.dev
 > cc: v9fs@lists.linux.dev
-> cc: linux-afs@lists.infradead.org
-> cc: ceph-devel@vger.kernel.org
-> cc: linux-cifs@vger.kernel.org
-> cc: linux-nfs@vger.kernel.org
-> cc: devel@lists.orangefs.org
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
 > ---
->  include/linux/pagemap.h |  1 +
->  mm/filemap.c            | 46 +++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 47 insertions(+)
+>  fs/9p/vfs_addr.c | 2 --
+>  1 file changed, 2 deletions(-)
 >=20
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index 2df35e65557d..4eb3d4177a53 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -40,6 +40,7 @@ int filemap_fdatawait_keep_errors(struct address_space =
-*mapping);
->  int filemap_fdatawait_range(struct address_space *, loff_t lstart, loff_=
-t lend);
->  int filemap_fdatawait_range_keep_errors(struct address_space *mapping,
->  		loff_t start_byte, loff_t end_byte);
-> +int filemap_invalidate_inode(struct inode *inode, bool flush);
+> diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+> index 047855033d32..5a943c122d83 100644
+> --- a/fs/9p/vfs_addr.c
+> +++ b/fs/9p/vfs_addr.c
+> @@ -89,7 +89,6 @@ static int v9fs_init_request(struct netfs_io_request *r=
+req, struct file *file)
+>  	bool writing =3D (rreq->origin =3D=3D NETFS_READ_FOR_WRITE ||
+>  			rreq->origin =3D=3D NETFS_WRITEBACK ||
+>  			rreq->origin =3D=3D NETFS_WRITETHROUGH ||
+> -			rreq->origin =3D=3D NETFS_LAUNDER_WRITE ||
+>  			rreq->origin =3D=3D NETFS_UNBUFFERED_WRITE ||
+>  			rreq->origin =3D=3D NETFS_DIO_WRITE);
 > =20
->  static inline int filemap_fdatawait(struct address_space *mapping)
->  {
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 25983f0f96e3..087f685107a5 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -4134,6 +4134,52 @@ bool filemap_release_folio(struct folio *folio, gf=
-p_t gfp)
->  }
->  EXPORT_SYMBOL(filemap_release_folio);
-> =20
-> +/**
-> + * filemap_invalidate_inode - Invalidate/forcibly write back an inode's =
-pagecache
-> + * @inode: The inode to flush
-> + * @flush: Set to write back rather than simply invalidate.
-> + *
-> + * Invalidate all the folios on an inode, possibly writing them back fir=
-st.
-> + * Whilst the operation is undertaken, the invalidate lock is held to pr=
-event
-> + * new folios from being installed.
-> + */
-> +int filemap_invalidate_inode(struct inode *inode, bool flush)
-> +{
-> +	struct address_space *mapping =3D inode->i_mapping;
-> +
-> +	if (!mapping || !mapping->nrpages)
-> +		goto out;
-> +
-> +	/* Prevent new folios from being added to the inode. */
-> +	filemap_invalidate_lock(mapping);
-> +
-> +	if (!mapping->nrpages)
-> +		goto unlock;
-> +
-> +	unmap_mapping_pages(mapping, 0, ULONG_MAX, false);
-> +
-> +	/* Write back the data if we're asked to. */
-> +	if (flush) {
-> +		struct writeback_control wbc =3D {
-> +			.sync_mode	=3D WB_SYNC_ALL,
-> +			.nr_to_write	=3D LONG_MAX,
-> +			.range_start	=3D 0,
-> +			.range_end	=3D LLONG_MAX,
-> +		};
-> +
-> +		filemap_fdatawrite_wbc(mapping, &wbc);
-> +	}
-> +
-> +	/* Wait for writeback to complete on all folios and discard. */
-> +	truncate_inode_pages_range(mapping, 0, LLONG_MAX);
-> +
-> +unlock:
-> +	filemap_invalidate_unlock(mapping);
-> +out:
-> +	return filemap_check_errors(mapping);
-> +}
-> +EXPORT_SYMBOL(filemap_invalidate_inode);
-> +
->  #ifdef CONFIG_CACHESTAT_SYSCALL
->  /**
->   * filemap_cachestat() - compute the page cache statistics of a mapping
->=20
+> @@ -141,7 +140,6 @@ const struct address_space_operations v9fs_addr_opera=
+tions =3D {
+>  	.dirty_folio		=3D netfs_dirty_folio,
+>  	.release_folio		=3D netfs_release_folio,
+>  	.invalidate_folio	=3D netfs_invalidate_folio,
+> -	.launder_folio		=3D netfs_launder_folio,
+>  	.direct_IO		=3D noop_direct_IO,
+>  	.writepages		=3D netfs_writepages,
+>  };
 >=20
 
-I'd have liked to have seen the first caller of this function too.
+Shouldn't this include a call to filemap_invalidate_inode? Is just
+removing launder_folio enough to do this?
+
 --=20
 Jeff Layton <jlayton@kernel.org>
