@@ -1,72 +1,76 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 035A38A7701
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 23:49:50 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1BA88A77EB
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Apr 2024 00:41:15 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=UYB8R0F3;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jk4tJJuf;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jk4tJJuf;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VJyPR53lpz3dXM
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Apr 2024 07:49:47 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VJzXk0KQqz3d4D
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Apr 2024 08:41:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=UYB8R0F3;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jk4tJJuf;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jk4tJJuf;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::42b; helo=mail-wr1-x42b.google.com; envelope-from=paulenes252@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJyPK6g5cz3bqC
-	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Apr 2024 07:49:41 +1000 (AEST)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-346406a5fb9so3812179f8f.1
-        for <linux-erofs@lists.ozlabs.org>; Tue, 16 Apr 2024 14:49:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713304178; x=1713908978; darn=lists.ozlabs.org;
-        h=reply-to:date:from:to:subject:content-description
-         :content-transfer-encoding:mime-version:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PeJSQjXoeRPXw3p8u9TEscDTfpHxwIvs9oTVQ3qAsQg=;
-        b=UYB8R0F33MHzfxZw/eq6OGo2o3Y/BaFMZfeeiM7AnTTozidgbRNzNIY7sliSqUdBYS
-         NmCADr/YQSBgAsH1HcqLrcCpTOkv6Or78SBS37x/2ts/WYr+asm0PV3+Hzc3ZaooEjUq
-         AvQJ1HjxD2xDA4ghcwAla2gklBnVr/5iEeCxI60G7jMb7DBAG7ZwuZgwqZDSIlOlTjGs
-         QtTA3/TPSDmHuv5Bk5iya7Jnxg87O8EDE6Guh/gNCJiIfBk37NnerRPOsTuXsDdkTa6t
-         FGgzkahpOR5HYGlXtFMKFfh6hIsXlS0NrbbbrdsuxF1nQrkhNUVklF19NzM/7ATUSjEM
-         ZTfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713304178; x=1713908978;
-        h=reply-to:date:from:to:subject:content-description
-         :content-transfer-encoding:mime-version:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PeJSQjXoeRPXw3p8u9TEscDTfpHxwIvs9oTVQ3qAsQg=;
-        b=srbqgPMyeE86pVHCb5GuK4NWvsa3b0AOmq530DGVlQdnYUh/XEhKOf63ONqsNOGWmA
-         b8UqgXrerQ/F3XPKrYXHjJb4ey+mw7IeVNNcaJZRqhkfb/waYMgCbs7hkK5Ox7qTVUb1
-         391sbnRnk6yf6VU2NAAI6/zdoDF8a5attTEI5RfCOZZkStKn+oetDV8N+0xJexEBWAVT
-         skPQOVrTXmJ11/tZxfQH11oDjr6RW2lQUOaW/vMalAZp5F9fmuqWRoNGrQ4qke9e/Sy1
-         WaQ4vCiKpP+ILT6FFO39nlR1JHWoEDhWefZaW1eUNTs4ymcUFj2SnSHze6iaRuCiftlF
-         HpSA==
-X-Gm-Message-State: AOJu0YwQH1CkVACLo99G4glwpu64OccYR+Bli6WubQRJfL0dWkY2HWh0
-	BbamUKQlAoVGGDa7W+fnk7JoYhRZ0pimM9tKYYubLCe/21ByApydPQ6rk7OiKvaE6NPh
-X-Google-Smtp-Source: AGHT+IGcW/UTCjKpB69VbiybMGoHy0KKdqmmz9mmjxCwm12/uG56fyANPvRYusQq5cGSZGBV3JeMTw==
-X-Received: by 2002:a5d:4250:0:b0:343:f3d9:a9d5 with SMTP id s16-20020a5d4250000000b00343f3d9a9d5mr9331710wrr.10.1713304177762;
-        Tue, 16 Apr 2024 14:49:37 -0700 (PDT)
-Received: from [192.168.8.102] ([154.120.104.13])
-        by smtp.gmail.com with ESMTPSA id m1-20020adfa3c1000000b00347497cdf17sm11133975wrb.74.2024.04.16.14.49.34
-        for <linux-erofs@lists.ozlabs.org>
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Tue, 16 Apr 2024 14:49:37 -0700 (PDT)
-Message-ID: <661ef271.df0a0220.31304.1c75@mx.google.com>
-Content-Type: text/plain; charset="iso-8859-1"
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJzXY2zlSz3c9N
+	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Apr 2024 08:40:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713307254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N5nwDmbhe++pDB3bapq0vGCRdzBr3y4GS9c/nfTtZFY=;
+	b=Jk4tJJufgQknmnMhP5+X/FfuNKSApglDE0HCFWXGQ5CLF5YltzWETjuiEe8T1ocR0vvMh4
+	9VRQhht1g6JhqR2PnxRp7VuZuSD+vy+s+2/fBVZy3uSbubMyEKozPel1Ws+wLBABPGq10r
+	2/v5pQCg6NBxxiI7/F61B7dbZ8BwXbw=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713307254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N5nwDmbhe++pDB3bapq0vGCRdzBr3y4GS9c/nfTtZFY=;
+	b=Jk4tJJufgQknmnMhP5+X/FfuNKSApglDE0HCFWXGQ5CLF5YltzWETjuiEe8T1ocR0vvMh4
+	9VRQhht1g6JhqR2PnxRp7VuZuSD+vy+s+2/fBVZy3uSbubMyEKozPel1Ws+wLBABPGq10r
+	2/v5pQCg6NBxxiI7/F61B7dbZ8BwXbw=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-282-Ck5vkIIGNTuza5woUV3wRQ-1; Tue,
+ 16 Apr 2024 18:40:49 -0400
+X-MC-Unique: Ck5vkIIGNTuza5woUV3wRQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F39E21C05149;
+	Tue, 16 Apr 2024 22:40:47 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.10])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6583339DCA;
+	Tue, 16 Apr 2024 22:40:44 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <CAH2r5msFoGAE79pS5bEt5T8a60LU82mdjNdpfe0bG4YpvY8t-g@mail.gmail.com>
+References: <CAH2r5msFoGAE79pS5bEt5T8a60LU82mdjNdpfe0bG4YpvY8t-g@mail.gmail.com> <20240328163424.2781320-1-dhowells@redhat.com> <20240328163424.2781320-2-dhowells@redhat.com> <39de1e2ac2ae6a535e23faccd304d7c5459054a2.camel@kernel.org> <2345944.1713186234@warthog.procyon.org.uk>
+To: Steve French <smfrench@gmail.com>
+Subject: Re: [PATCH 01/26] cifs: Fix duplicate fscache cookie warnings
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Very Urgent Reply!!!!
-To: linux-erofs@lists.ozlabs.org
-From: "Dip Paul Enes" <paulenes252@gmail.com>
-Date: Tue, 16 Apr 2024 22:49:21 +0100
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2754965.1713307239.1@warthog.procyon.org.uk>
+Date: Tue, 16 Apr 2024 23:40:39 +0100
+Message-ID: <2754966.1713307239@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,52 +82,16 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: dipmorgan7@gmail.com
+Cc: Dominique Martinet <asmadeus@codewreck.org>, dhowells@redhat.com, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-cachefs@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <nspmangalore@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, Rohith Surabattula <rohiths.msft@gmail.com>, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Steve French <sfrench@samba.org>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Attention Sir/Madam,
+Steve French <smfrench@gmail.com> wrote:
 
-I hope this message finds you well. I am writing to inform you of some exci=
-ting news regarding the delivery of your consignment. Diplomat James Morgan=
-, who has been mandated by our company to ensure the safe and prompt delive=
-ry of your consignment, has just arrived in your city.
+> Should this be merged independently (and sooner? in rc5?)
 
-I am delighted to inform you that Diplomat James Morgan has successfully co=
-mpleted all the necessary procedures and documentation for the swift releas=
-e and delivery of your consignment. He brings with him years of experience =
-and expertise in handling diplomatic deliveries, and we are confident that =
-he will ensure the successful completion of this important transaction.
+It's already upstream through the cifs tree and I've dropped it from my
+branch.
 
-Given the significance of the consignment to you, we have arranged for Dipl=
-omat James Morgan to personally oversee its delivery to your designated loc=
-ation. His professionalism, attention to detail, and commitment to providin=
-g excellent customer service make him the ideal choice for this crucial tas=
-k.
+David
 
-We understand that you have eagerly been awaiting the arrival of your consi=
-gnment, and we apologize for any delays or inconveniences you may have expe=
-rienced during this process. Rest assured that we are doing everything in o=
-ur power to make sure your consignment arrives in perfect condition and wit=
-hin the shortest possible time frame.
-
-Diplomat James Morgan will contact you directly to arrange a convenient del=
-ivery date and time. Please ensure that you are available to receive the co=
-nsignment or designate a trusted representative who can accept it on your b=
-ehalf. You may be required to provide valid identification upon delivery, a=
-s per standard protocol.
-
-Should you have any questions or concerns, please do not hesitate to reach =
-out to me directly at dipmorgan7@gmail.com. Your satisfaction is our top pr=
-iority, and we are committed to resolving any issues you may have promptly =
-and effectively.
-
-Thank you for choosing our services for the delivery of your consignment. W=
-e appreciate your trust in our company and assure you that we will continue=
- to strive for excellence throughout this process.
-
-Wishing you a seamless delivery experience and a pleasant day ahead.
-
-Warm regards,
-
-Dip James Morgan
