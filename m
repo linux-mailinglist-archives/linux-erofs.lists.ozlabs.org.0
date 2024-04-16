@@ -2,38 +2,37 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B3FB8A69F9
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 13:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 082AC8A6A09
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 13:58:40 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VJjCf4WJBz3vbr
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 21:55:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VJjHK5fWGz3vbC
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 21:58:37 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
 Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJjCX2nWDz3vZ0
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Apr 2024 21:55:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJjHH1Qdyz3bWH
+	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Apr 2024 21:58:35 +1000 (AEST)
 Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
-	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 8120610087433;
-	Tue, 16 Apr 2024 19:55:08 +0800 (CST)
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id D9D291008C2C2;
+	Tue, 16 Apr 2024 19:58:32 +0800 (CST)
 Received: from [192.168.25.134] (unknown [202.120.40.82])
-	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 0AF5537C91F;
-	Tue, 16 Apr 2024 19:55:06 +0800 (CST)
-Message-ID: <ce75bc76-b950-4280-a040-8b9a284b122e@sjtu.edu.cn>
-Date: Tue, 16 Apr 2024 19:55:05 +0800
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 6007B37C91F;
+	Tue, 16 Apr 2024 19:58:30 +0800 (CST)
+Message-ID: <559882e2-8b8d-4dd3-890e-63e9c998d200@sjtu.edu.cn>
+Date: Tue, 16 Apr 2024 19:58:30 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/8] erofs-utils: rearrange several fields for
- multi-threaded mkfs
+Subject: Re: [PATCH 2/8] erofs-utils: lib: prepare for later deferred work
 To: Gao Xiang <xiang@kernel.org>
 References: <20240416080419.32491-1-xiang@kernel.org>
- <20240416080419.32491-4-xiang@kernel.org>
+ <20240416080419.32491-2-xiang@kernel.org>
 Content-Language: en-US
 From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-In-Reply-To: <20240416080419.32491-4-xiang@kernel.org>
+In-Reply-To: <20240416080419.32491-2-xiang@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -55,191 +54,126 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 On 4/16/24 4:04 PM, Gao Xiang wrote:
 > From: Gao Xiang <hsiangkao@linux.alibaba.com>
 >
-> They should be located in `struct z_erofs_compress_ictx`.
+> Split out ordered metadata operations and add the following helpers:
+>
+>   - erofs_mkfs_jobfn()
+>
+>   - erofs_mkfs_go()
+>
+> to handle these mkfs job items for multi-threadding support.
 >
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 > ---
->   lib/compress.c | 55 ++++++++++++++++++++++++++++----------------------
->   1 file changed, 31 insertions(+), 24 deletions(-)
+>   lib/inode.c | 68 +++++++++++++++++++++++++++++++++++++++++++++--------
+>   1 file changed, 58 insertions(+), 10 deletions(-)
 >
-> diff --git a/lib/compress.c b/lib/compress.c
-> index a2e0d0f..72f33d2 100644
-> --- a/lib/compress.c
-> +++ b/lib/compress.c
-> @@ -38,6 +38,7 @@ struct z_erofs_extent_item {
->   
->   struct z_erofs_compress_ictx {		/* inode context */
->   	struct erofs_inode *inode;
-> +	struct erofs_compress_cfg *ccfg;
->   	int fd;
->   	u64 fpos;
->   
-> @@ -49,6 +50,14 @@ struct z_erofs_compress_ictx {		/* inode context */
->   	u8 *metacur;
->   	struct list_head extents;
->   	u16 clusterofs;
-> +
-> +	int seg_num;
-> +
-> +#if EROFS_MT_ENABLED
-> +	pthread_mutex_t mutex;
-> +	pthread_cond_t cond;
-> +	int nfini;
-> +#endif
->   };
->   
->   struct z_erofs_compress_sctx {		/* segment context */
-> @@ -68,7 +77,7 @@ struct z_erofs_compress_sctx {		/* segment context */
->   	erofs_blk_t blkaddr;		/* pointing to the next blkaddr */
->   	u16 clusterofs;
->   
-> -	int seg_num, seg_idx;
-> +	int seg_idx;
->   
->   	void *membuf;
->   	erofs_off_t memoff;
-> @@ -99,8 +108,6 @@ static struct {
->   	struct erofs_workqueue wq;
->   	struct erofs_compress_work *idle;
->   	pthread_mutex_t mutex;
-I think `mutex` should also be removed. Do you miss it?
-> -	pthread_cond_t cond;
-> -	int nfini;
->   } z_erofs_mt_ctrl;
->   #endif
->   
-> @@ -512,7 +519,7 @@ static int __z_erofs_compress_one(struct z_erofs_compress_sctx *ctx,
->   	struct erofs_compress *const h = ctx->chandle;
->   	unsigned int len = ctx->tail - ctx->head;
->   	bool is_packed_inode = erofs_is_packed_inode(inode);
-> -	bool tsg = (ctx->seg_idx + 1 >= ctx->seg_num), final = !ctx->remaining;
-> +	bool tsg = (ctx->seg_idx + 1 >= ictx->seg_num), final = !ctx->remaining;
->   	bool may_packing = (cfg.c_fragments && tsg && final &&
->   			    !is_packed_inode && !z_erofs_mt_enabled);
->   	bool may_inline = (cfg.c_ztailpacking && tsg && final && !may_packing);
-> @@ -1196,7 +1203,8 @@ void z_erofs_mt_workfn(struct erofs_work *work, void *tlsp)
->   	struct erofs_compress_work *cwork = (struct erofs_compress_work *)work;
->   	struct erofs_compress_wq_tls *tls = tlsp;
->   	struct z_erofs_compress_sctx *sctx = &cwork->ctx;
-> -	struct erofs_inode *inode = sctx->ictx->inode;
-> +	struct z_erofs_compress_ictx *ictx = sctx->ictx;
-> +	struct erofs_inode *inode = ictx->inode;
->   	struct erofs_sb_info *sbi = inode->sbi;
->   	int ret = 0;
->   
-> @@ -1223,10 +1231,10 @@ void z_erofs_mt_workfn(struct erofs_work *work, void *tlsp)
->   
->   out:
->   	cwork->errcode = ret;
-> -	pthread_mutex_lock(&z_erofs_mt_ctrl.mutex);
-> -	++z_erofs_mt_ctrl.nfini;
-> -	pthread_cond_signal(&z_erofs_mt_ctrl.cond);
-> -	pthread_mutex_unlock(&z_erofs_mt_ctrl.mutex);
-> +	pthread_mutex_lock(&ictx->mutex);
-> +	++ictx->nfini;
-> +	pthread_cond_signal(&ictx->cond);
-> +	pthread_mutex_unlock(&ictx->mutex);
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 55969d9..8ef0604 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -1133,6 +1133,57 @@ static int erofs_mkfs_handle_nondirectory(struct erofs_inode *inode)
+>   	return 0;
 >   }
 >   
->   int z_erofs_merge_segment(struct z_erofs_compress_ictx *ictx,
-> @@ -1260,16 +1268,19 @@ int z_erofs_merge_segment(struct z_erofs_compress_ictx *ictx,
->   }
->   
->   int z_erofs_mt_compress(struct z_erofs_compress_ictx *ictx,
-> -			struct erofs_compress_cfg *ccfg,
->   			erofs_blk_t blkaddr,
->   			erofs_blk_t *compressed_blocks)
->   {
->   	struct erofs_compress_work *cur, *head = NULL, **last = &head;
-> +	struct erofs_compress_cfg *ccfg = ictx->ccfg;
->   	struct erofs_inode *inode = ictx->inode;
->   	int nsegs = DIV_ROUND_UP(inode->i_size, cfg.c_segment_size);
->   	int ret, i;
->   
-> -	z_erofs_mt_ctrl.nfini = 0;
-> +	ictx->seg_num = nsegs;
-> +	ictx->nfini = 0;
-> +	pthread_mutex_init(&ictx->mutex, NULL);
-> +	pthread_cond_init(&ictx->cond, NULL);
->   
->   	for (i = 0; i < nsegs; i++) {
->   		if (z_erofs_mt_ctrl.idle) {
-> @@ -1286,7 +1297,6 @@ int z_erofs_mt_compress(struct z_erofs_compress_ictx *ictx,
->   
->   		cur->ctx = (struct z_erofs_compress_sctx) {
->   			.ictx = ictx,
-> -			.seg_num = nsegs,
->   			.seg_idx = i,
->   			.pivot = &dummy_pivot,
->   		};
-> @@ -1308,11 +1318,10 @@ int z_erofs_mt_compress(struct z_erofs_compress_ictx *ictx,
->   		erofs_queue_work(&z_erofs_mt_ctrl.wq, &cur->work);
->   	}
->   
-> -	pthread_mutex_lock(&z_erofs_mt_ctrl.mutex);
-> -	while (z_erofs_mt_ctrl.nfini != nsegs)
-> -		pthread_cond_wait(&z_erofs_mt_ctrl.cond,
-> -				  &z_erofs_mt_ctrl.mutex);
-> -	pthread_mutex_unlock(&z_erofs_mt_ctrl.mutex);
-> +	pthread_mutex_lock(&ictx->mutex);
-> +	while (ictx->nfini < ictx->seg_num)
-> +		pthread_cond_wait(&ictx->cond, &ictx->mutex);
-> +	pthread_mutex_unlock(&ictx->mutex);
->   
->   	ret = 0;
->   	while (head) {
-> @@ -1346,7 +1355,6 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
->   	struct erofs_buffer_head *bh;
->   	static struct z_erofs_compress_ictx ctx;
->   	static struct z_erofs_compress_sctx sctx;
-> -	struct erofs_compress_cfg *ccfg;
->   	erofs_blk_t blkaddr, compressed_blocks = 0;
->   	int ret;
->   	bool ismt = false;
-> @@ -1381,8 +1389,8 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
->   		}
->   	}
->   #endif
-> -	ccfg = &erofs_ccfg[inode->z_algorithmtype[0]];
-> -	inode->z_algorithmtype[0] = ccfg[0].algorithmtype;
-> +	ctx.ccfg = &erofs_ccfg[inode->z_algorithmtype[0]];
-> +	inode->z_algorithmtype[0] = ctx.ccfg->algorithmtype;
->   	inode->z_algorithmtype[1] = 0;
->   
->   	inode->idata_size = 0;
-> @@ -1421,16 +1429,16 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
->   #ifdef EROFS_MT_ENABLED
->   	} else if (z_erofs_mt_enabled && inode->i_size > cfg.c_segment_size) {
->   		ismt = true;
-> -		ret = z_erofs_mt_compress(&ctx, ccfg, blkaddr, &compressed_blocks);
-> +		ret = z_erofs_mt_compress(&ctx, blkaddr, &compressed_blocks);
->   		if (ret)
->   			goto err_free_idata;
->   #endif
->   	} else {
-> +		ctx.seg_num = 1;
->   		sctx.queue = g_queue;
->   		sctx.destbuf = NULL;
-> -		sctx.chandle = &ccfg->handle;
-> +		sctx.chandle = &ctx.ccfg->handle;
->   		sctx.remaining = inode->i_size - inode->fragment_size;
-> -		sctx.seg_num = 1;
->   		sctx.seg_idx = 0;
->   		sctx.pivot = &dummy_pivot;
->   		sctx.pclustersize = z_erofs_get_max_pclustersize(inode);
-> @@ -1621,7 +1629,6 @@ int z_erofs_compress_init(struct erofs_sb_info *sbi, struct erofs_buffer_head *s
->   #ifdef EROFS_MT_ENABLED
->   	if (cfg.c_mt_workers > 1) {
->   		pthread_mutex_init(&z_erofs_mt_ctrl.mutex, NULL);
+> +enum erofs_mkfs_jobtype {	/* ordered job types */
+> +	EROFS_MKFS_JOB_NDIR,
+> +	EROFS_MKFS_JOB_DIR,
+> +	EROFS_MKFS_JOB_DIR_BH,
+> +};
+> +
+> +struct erofs_mkfs_jobitem {
+> +	enum erofs_mkfs_jobtype type;
+> +	union {
+> +		struct erofs_inode *inode;
+> +	} u;
+> +};
+> +
+> +static int erofs_mkfs_jobfn(struct erofs_mkfs_jobitem *item)
+> +{
+> +	struct erofs_inode *inode = item->u.inode;
+> +	int ret;
+> +
+> +	if (item->type == EROFS_MKFS_JOB_NDIR)
+> +		return erofs_mkfs_handle_nondirectory(inode);
+> +
+> +	if (item->type == EROFS_MKFS_JOB_DIR) {
+> +		ret = erofs_prepare_inode_buffer(inode);
+> +		if (ret)
+> +			return ret;
+> +		inode->bh->op = &erofs_skip_write_bhops;
+> +		if (IS_ROOT(inode))
+> +			erofs_fixup_meta_blkaddr(inode);
 
-Remove this line too.
+I think this 2 line above does not exist in the logic replaced by 
+`erofs_mkfs_jobfn`, should it appear in this patch, or need further 
+explanation in the commit msg?
 
 
 Thanks,
 
 Yifan Zhao
 
-> -		pthread_cond_init(&z_erofs_mt_ctrl.cond, NULL);
->   		ret = erofs_alloc_workqueue(&z_erofs_mt_ctrl.wq,
->   					    cfg.c_mt_workers,
->   					    cfg.c_mt_workers << 2,
+> +		return 0;
+> +	}
+> +
+> +	if (item->type == EROFS_MKFS_JOB_DIR_BH) {
+> +		erofs_write_dir_file(inode);
+> +		erofs_write_tail_end(inode);
+> +		inode->bh->op = &erofs_write_inode_bhops;
+> +		erofs_iput(inode);
+> +		return 0;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+> +int erofs_mkfs_go(struct erofs_sb_info *sbi,
+> +		  enum erofs_mkfs_jobtype type, void *elem, int size)
+> +{
+> +	struct erofs_mkfs_jobitem item;
+> +
+> +	item.type = type;
+> +	memcpy(&item.u, elem, size);
+> +	return erofs_mkfs_jobfn(&item);
+> +}
+> +
+>   static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
+>   {
+>   	DIR *_dir;
+> @@ -1213,11 +1264,7 @@ static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
+>   	else
+>   		dir->i_nlink = i_nlink;
+>   
+> -	ret = erofs_prepare_inode_buffer(dir);
+> -	if (ret)
+> -		return ret;
+> -	dir->bh->op = &erofs_skip_write_bhops;
+> -	return 0;
+> +	return erofs_mkfs_go(dir->sbi, EROFS_MKFS_JOB_DIR, &dir, sizeof(dir));
+>   
+>   err_closedir:
+>   	closedir(_dir);
+> @@ -1243,7 +1290,8 @@ static int erofs_mkfs_handle_inode(struct erofs_inode *inode)
+>   		return ret;
+>   
+>   	if (!S_ISDIR(inode->i_mode))
+> -		ret = erofs_mkfs_handle_nondirectory(inode);
+> +		ret = erofs_mkfs_go(inode->sbi, EROFS_MKFS_JOB_NDIR,
+> +				    &inode, sizeof(inode));
+>   	else
+>   		ret = erofs_mkfs_handle_directory(inode);
+>   	erofs_info("file %s dumped (mode %05o)", erofs_fspath(inode->i_srcpath),
+> @@ -1302,10 +1350,10 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
+>   		}
+>   		*last = dumpdir;	/* fixup the last (or the only) one */
+>   		dumpdir = head;
+> -		erofs_write_dir_file(dir);
+> -		erofs_write_tail_end(dir);
+> -		dir->bh->op = &erofs_write_inode_bhops;
+> -		erofs_iput(dir);
+> +		err = erofs_mkfs_go(dir->sbi, EROFS_MKFS_JOB_DIR_BH,
+> +				    &dir, sizeof(dir));
+> +		if (err)
+> +			return ERR_PTR(err);
+>   	} while (dumpdir);
+>   
+>   	return root;
