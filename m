@@ -2,71 +2,60 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C8F48A5F85
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 02:58:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1713229125;
-	bh=z5SK7S2VhEiXxhwEiJuw/hgNQSU9au6u6OsDRuqOGr0=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=dsabHDzYc+7qM03bx0RQ3GhMjNwu7zohAfJpONeJKhcTGSa2SfRwnLDk2HO0OZ80R
-	 mpOyuUR4Q6Ie7h4Ghsc2UvGIeMVaCt/ICLbvPf4r8VolDBBCCdtK4bM/b0QuTxYGui
-	 AEWSpPZi0FRn/BtNu6JoilQ+auTsV7cRbwBjUbM1STWOs+Cmi4L5xgqJa4MxGCOqLF
-	 h6x1nQY6JZJEmYW1tt/H3NJ/1JLZz+JN7+Kw2qTuEgnBFnfPuvrzdN970qFGfxHd2C
-	 spfH7OoMBe2Ac5114LetBx1m6mptRR+2ij4jI5Z3qvCYMfnm+P8n1voqc0wJbahAVo
-	 H/6goQXCaGVKw==
+	by mail.lfdr.de (Postfix) with ESMTPS id 899EE8A5F80
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 02:57:54 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=MAPfjboq;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VJQdx1lT4z3d36
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 10:58:45 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VJQcs40z3z3dKG
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 10:57:49 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=gmx.com header.i=hsiangkao@gmx.com header.a=rsa-sha256 header.s=s31663417 header.b=pjumrHDl;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=MAPfjboq;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmx.com (client-ip=212.227.15.15; helo=mout.gmx.net; envelope-from=hsiangkao@gmx.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 314 seconds by postgrey-1.37 at boromir; Tue, 16 Apr 2024 10:58:36 AEST
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJQdm53qcz2xPV
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Apr 2024 10:58:35 +1000 (AEST)
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from debian ([209.37.221.130]) by mail.gmx.net (mrgmx005
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1Mo6qv-1sY6fL3JAR-00papO; Tue, 16
- Apr 2024 02:53:05 +0200
-Date: Tue, 16 Apr 2024 08:52:58 +0800
-To: Sandeep Dhavale <dhavale@google.com>
-Subject: Re: [PATCH v2] erofs-utils: dump: print filesystem blocksize
-Message-ID: <Zh3L6o+LSrvMiVkx@debian>
-Mail-Followup-To: Sandeep Dhavale <dhavale@google.com>,
-	linux-erofs@lists.ozlabs.org, xiang@kernel.org,
-	hsiangkao@linux.alibaba.com, kernel-team@android.com
-References: <20240415183538.2012717-1-dhavale@google.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJQck6rxxz3cRd
+	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Apr 2024 10:57:42 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id CE37860EF0;
+	Tue, 16 Apr 2024 00:57:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4398FC113CC;
+	Tue, 16 Apr 2024 00:57:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713229060;
+	bh=e+mZ8gSzLwQyrTBa4o3G3i7rgdxAvvnf8ZmX93KlrW4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MAPfjboqItuLZRgArjOyRoVElAn/2mJFMZi1IqSXjmlOVjdECxiubReZqWyREN+oy
+	 MC2KnpMq96rgwh4houoreP/85lJPdcFWxbyQMWKR2NvZruAp11HegcpIPkDKLT9F4A
+	 lIKuvOP5wzhl8sx6zWdEfyZtv8CjfQqUcif9TtwlQH6zvRA3lAJCMqXxYqLhS6x3+S
+	 bAN4tH+t+H6KRiMQbmHOshcr5JKBCFBbSWanTf4q7iS/KDQX/CAE58WUZTW7y1nyPy
+	 CvWNSa6xiZmd2l8SJh0470bR67G4OiGXUEb3hxvaSgOvuYeXsP2adwiO/qpINC4kN5
+	 P1Gq+kWKLykEw==
+Date: Tue, 16 Apr 2024 08:57:38 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Baokun Li <libaokun1@huawei.com>,
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH] erofs: set SB_NODEV sb_flags when mounting with fsid
+Message-ID: <Zh3NAgWvNASTZSea@debian>
+Mail-Followup-To: Baokun Li <libaokun1@huawei.com>,
+	Christian Brauner <brauner@kernel.org>,
+	linux-erofs@lists.ozlabs.org, xiang@kernel.org, chao@kernel.org,
+	huyue2@coolpad.com, jefflexu@linux.alibaba.com,
+	viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+	yangerkun@huawei.com, houtao1@huawei.com
+References: <20240415121746.1207242-1-libaokun1@huawei.com>
+ <20240415-betagten-querlatte-feb727ed56c1@brauner>
+ <15ab9875-5123-7bc2-bb25-fc683129ad9e@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240415183538.2012717-1-dhavale@google.com>
-X-Provags-ID: V03:K1:Q/UhyJF1cNGP4ZOEnnFm7vPO5esySI61vw37ykhPpHd/HkutzbD
- o18ugYO+iLbkeJTD5UJ855e1x/CrTESAuBFEe5VIR7YRcCeSW2BS3VUOE6U9eOVkEIG54Ek
- ybCTIQFOiHFnn5XtHkJHdzMr5VoKC4tcsPlNGaFdx0Z26qIcrVqBXqccUlbQRZokN7P9Gh+
- 76u1lcRn+eprhCCrJKv8Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Th4L+N8iiOo=;0qLtV3ej8rK6EpS00p4cB35su26
- 6S+FBu4A2x5VkUgVQvIcyHtPUSWDx0J3DJ3ngAIbXDIAsiuvUCay6gCj+DCwPfkG5kxpgY0fK
- MmXk2lexK95WVn0OJKKQ/5stDeiqu7gIu04LwqifIC/zjpVoVbsJMM5cbLLP35QmqsTUGDUv4
- 3c6Ev5EG937flryjmsLeDgnKCotCqhLl94HGQJ9zQdLi5EUf3g9mgXcJ429Ba83PkY22Fevhm
- cDk+AHuKomA2Npdrs9Jg8fOopJDChKZjH8+Vw95uFUvGdi74R6qGxQCZ5vteJ79ltnQtS1s4r
- xxqHJH/MBQuoSyD2bFZMoRlyNJxbBywmp316Y0i2YuLx2A4Bp4iDlDq8CbP1yKCJE1NH3XGQX
- d81imE7jGqpcMNhcUe8ahK8aKidvKqJrhnVYenELQ1wCO6Jr9JuEaRB7aq6QOSzJ5pAIsL6p1
- aNhZegfMA+YcJrl/5OG/1zbhmX093fgrsVP0Hm3eSZBbF1aj/JZPQoTmlMH9krzQI/MjXzFkZ
- 0bQZ7ZEkz0oU4x7cHDOavKO8/qe3+Ala+BMpwrI44Fg23fSOAZYmqqxFyb8BIg7diF5kc0NQh
- KGD2bpdqqlveuqG/RL8GULFLAPGMXQ3tSLStwYJYQbJ0yUIUxd1yL05VVNbiJpXYyLfdzRIKd
- EJdhvLjypA7JHSTDx/t5uzW0oBKLPnj67rSj9EuJzH2U9T3ktMbN7KkPWapscMz3ojseb1j0e
- 1LFxnXAMWR//Rn77wyn/U2Dg9cBYpqFOlBEspuOa9vwrMoIU35KWZVM1xfuqWSJIzVUTHSX+2
- Yx9Ao6FFul1P/AN2a34Oblk0QHAqOTLl6hpvQ8vwRp51A=
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <15ab9875-5123-7bc2-bb25-fc683129ad9e@huawei.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,62 +67,71 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <hsiangkao@gmx.com>
-Cc: hsiangkao@linux.alibaba.com, kernel-team@android.com, linux-erofs@lists.ozlabs.org
+Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, huyue2@coolpad.com, viro@zeniv.linux.org.uk, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Sandeep,
+Hi Christian, Baokun,
 
-On Mon, Apr 15, 2024 at 11:35:38AM -0700, Sandeep Dhavale wrote:
-> mkfs.erofs supports creating filesystem images with different
-> blocksizes. Add filesystem blocksize in super block dump so
-> its easier to inspect the filesystem.
->
-> The field is added after FS magic, so the output now looks like:
->
-> Filesystem magic number:                      0xE0F5E1E2
-> Filesystem blocksize:                         65536
-> Filesystem blocks:                            21
-> Filesystem inode metadata start block:        0
-> Filesystem shared xattr metadata start block: 0
-> Filesystem root nid:                          36
-> Filesystem lz4_max_distance:                  65535
-> Filesystem sb_extslots:                       0
-> Filesystem inode count:                       10
-> Filesystem created:                           Fri Apr 12 15:43:40 2024
-> Filesystem features:                          sb_csum mtime 0padding
-> Filesystem UUID:                              a84a2acc-08d8-4b72-8b8c-b8=
-11a815fa07
->
-> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
-> ---
-> Changes since v2:
-> 	- Moved the field after FS magic as suggested by Gao
->  dump/main.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/dump/main.c b/dump/main.c
-> index a89fc6b..928909d 100644
-> --- a/dump/main.c
-> +++ b/dump/main.c
-> @@ -633,6 +633,8 @@ static void erofsdump_show_superblock(void)
->
->  	fprintf(stdout, "Filesystem magic number:                      0x%04X\=
-n",
->  			EROFS_SUPER_MAGIC_V1);
-> +	fprintf(stdout, "Filesystem blocksize:                         %llu\n"=
-,
-> +			erofs_blksiz(&sbi) | 0ULL);
+On Mon, Apr 15, 2024 at 11:23:58PM +0800, Baokun Li wrote:
+> On 2024/4/15 21:38, Christian Brauner wrote:
+> > On Mon, Apr 15, 2024 at 08:17:46PM +0800, Baokun Li wrote:
+> > > When erofs_kill_sb() is called in block dev based mode, s_bdev may not have
+> > > been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled, it will
+> > > be mistaken for fscache mode, and then attempt to free an anon_dev that has
+> > > never been allocated, triggering the following warning:
+> > > 
+> > > ============================================
+> > > ida_free called for id=0 which is not allocated.
+> > > WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
+> > > Modules linked in:
+> > > CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
+> > > RIP: 0010:ida_free+0x134/0x140
+> > > Call Trace:
+> > >   <TASK>
+> > >   erofs_kill_sb+0x81/0x90
+> > >   deactivate_locked_super+0x35/0x80
+> > >   get_tree_bdev+0x136/0x1e0
+> > >   vfs_get_tree+0x2c/0xf0
+> > >   do_new_mount+0x190/0x2f0
+> > >   [...]
+> > > ============================================
+> > > 
+> > > To avoid this problem, add SB_NODEV to fc->sb_flags after successfully
+> > > parsing the fsid, and then the superblock inherits this flag when it is
+> > > allocated, so that the sb_flags can be used to distinguish whether it is
+> > > in block dev based mode when calling erofs_kill_sb().
+> > > 
+> > > Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> > > ---
+> > >   fs/erofs/super.c | 7 +++----
+> > >   1 file changed, 3 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> > > index b21bd8f78dc1..7539ce7d64bc 100644
+> > > --- a/fs/erofs/super.c
+> > > +++ b/fs/erofs/super.c
+> > > @@ -520,6 +520,7 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+> > >   		ctx->fsid = kstrdup(param->string, GFP_KERNEL);
+> > >   		if (!ctx->fsid)
+> > >   			return -ENOMEM;
+> > > +		fc->sb_flags |= SB_NODEV;
+> > Hm, I wouldn't do it this way. That's an abuse of that flag imho.
+> > Record the information in the erofs_fs_context if you need to.
+> The stack diagram that triggers the problem is as follows, the call to
+> erofs_kill_sb() fails before fill_super() has been executed, and we can
+> only use super_block to determine whether it is currently in nodev
+> fscahe mode or block device based mode. So if it is recorded in
+> erofs_fs_context (aka fc->fs_private), we can't access the recorded data
+> unless we pass fc into erofs_kill_sb() as well.
+> 
 
-Could we use `%u` for `erofs_blksiz(&sbi)`? since currently EROFS
-block size isn't possible to be larger than PAGE_SIZE.
+If I understand correctly, from the discussion above, I think
+there exists a gap between alloc_super() and sb->s_bdev is set.
+But .kill_sb() can be called between them and fc is not passed
+into .kill_sb().
 
-Even if block size > page size is supported, I think we should
-not consider too large blocksizes.
-
-Otherwise it looks good to me.
+I'm not sure how to resolve it in EROFS itself, anyway...
 
 Thanks,
 Gao Xiang
