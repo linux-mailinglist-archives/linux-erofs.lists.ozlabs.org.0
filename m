@@ -2,39 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 082AC8A6A09
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 13:58:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 506DD8A6B0E
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 14:35:24 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HUiOn/P4;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VJjHK5fWGz3vbC
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 21:58:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VJk5k0h05z3fCg
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 22:35:22 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
-Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HUiOn/P4;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJjHH1Qdyz3bWH
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Apr 2024 21:58:35 +1000 (AEST)
-Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
-	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id D9D291008C2C2;
-	Tue, 16 Apr 2024 19:58:32 +0800 (CST)
-Received: from [192.168.25.134] (unknown [202.120.40.82])
-	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 6007B37C91F;
-	Tue, 16 Apr 2024 19:58:30 +0800 (CST)
-Message-ID: <559882e2-8b8d-4dd3-890e-63e9c998d200@sjtu.edu.cn>
-Date: Tue, 16 Apr 2024 19:58:30 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJk5f5btkz3cDd
+	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Apr 2024 22:35:18 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id BF25D61142;
+	Tue, 16 Apr 2024 12:35:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91289C2BD10;
+	Tue, 16 Apr 2024 12:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713270915;
+	bh=W4gLhMYBW/ZraqK7XK4tE2RzWIlDbdedkPsX1xzYe0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HUiOn/P45P7AqQvb9DGoA46RI6Y3Bl/s7pkU1WdZnMWPoj6yI5YTN9NOXZp7/epLP
+	 hqMAnRkkSlC5UxSJNVAmoSvMNiPnnB3Z2qUM8mZY47HQdEUNN3dmODIODlT3vEEqxd
+	 VDH223ob+kLNrtfjxCsD4BmrNld36LU7UL74VHXWwih/kkKwLRUvxtxJlk9kW1KaoT
+	 0xF4R3Q/RJoX7dk8OSCfGH3AKQIL6F0xuh/y6nkm1f9tXpIjCyv4rqxUYzQM/u/dLn
+	 yMJ/Me88KP87/6Ka+l4PVnVZPW5uezNyzTtNuw6LHlqSHjjIDdc6pwqt/IACzX8Pr6
+	 f8kGJoAt4o4KA==
+Date: Tue, 16 Apr 2024 14:35:08 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Baokun Li <libaokun1@huawei.com>
+Subject: Re: [PATCH] erofs: set SB_NODEV sb_flags when mounting with fsid
+Message-ID: <20240416-blumig-dachgeschoss-bc683f4ef1bf@brauner>
+References: <20240415121746.1207242-1-libaokun1@huawei.com>
+ <20240415-betagten-querlatte-feb727ed56c1@brauner>
+ <15ab9875-5123-7bc2-bb25-fc683129ad9e@huawei.com>
+ <Zh3NAgWvNASTZSea@debian>
+ <e70a28b4-074e-c48a-b717-3e17f1aae61d@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/8] erofs-utils: lib: prepare for later deferred work
-To: Gao Xiang <xiang@kernel.org>
-References: <20240416080419.32491-1-xiang@kernel.org>
- <20240416080419.32491-2-xiang@kernel.org>
-Content-Language: en-US
-From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-In-Reply-To: <20240416080419.32491-2-xiang@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="egxumnqaekjz7vjs"
+Content-Disposition: inline
+In-Reply-To: <e70a28b4-074e-c48a-b717-3e17f1aae61d@huawei.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -46,134 +62,155 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, huyue2@coolpad.com, viro@zeniv.linux.org.uk, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 
-On 4/16/24 4:04 PM, Gao Xiang wrote:
-> From: Gao Xiang <hsiangkao@linux.alibaba.com>
->
-> Split out ordered metadata operations and add the following helpers:
->
->   - erofs_mkfs_jobfn()
->
->   - erofs_mkfs_go()
->
-> to handle these mkfs job items for multi-threadding support.
->
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> ---
->   lib/inode.c | 68 +++++++++++++++++++++++++++++++++++++++++++++--------
->   1 file changed, 58 insertions(+), 10 deletions(-)
->
-> diff --git a/lib/inode.c b/lib/inode.c
-> index 55969d9..8ef0604 100644
-> --- a/lib/inode.c
-> +++ b/lib/inode.c
-> @@ -1133,6 +1133,57 @@ static int erofs_mkfs_handle_nondirectory(struct erofs_inode *inode)
->   	return 0;
->   }
->   
-> +enum erofs_mkfs_jobtype {	/* ordered job types */
-> +	EROFS_MKFS_JOB_NDIR,
-> +	EROFS_MKFS_JOB_DIR,
-> +	EROFS_MKFS_JOB_DIR_BH,
-> +};
-> +
-> +struct erofs_mkfs_jobitem {
-> +	enum erofs_mkfs_jobtype type;
-> +	union {
-> +		struct erofs_inode *inode;
-> +	} u;
-> +};
-> +
-> +static int erofs_mkfs_jobfn(struct erofs_mkfs_jobitem *item)
-> +{
-> +	struct erofs_inode *inode = item->u.inode;
-> +	int ret;
-> +
-> +	if (item->type == EROFS_MKFS_JOB_NDIR)
-> +		return erofs_mkfs_handle_nondirectory(inode);
-> +
-> +	if (item->type == EROFS_MKFS_JOB_DIR) {
-> +		ret = erofs_prepare_inode_buffer(inode);
-> +		if (ret)
-> +			return ret;
-> +		inode->bh->op = &erofs_skip_write_bhops;
-> +		if (IS_ROOT(inode))
-> +			erofs_fixup_meta_blkaddr(inode);
+--egxumnqaekjz7vjs
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-I think this 2 line above does not exist in the logic replaced by 
-`erofs_mkfs_jobfn`, should it appear in this patch, or need further 
-explanation in the commit msg?
+> > I'm not sure how to resolve it in EROFS itself, anyway...
+
+Instead of allocating the erofs_sb_info in fill_super() allocate it
+during erofs_get_tree() and then you can ensure that you always have the
+info you need available during erofs_kill_sb(). See the appended
+(untested) patch.
+
+--egxumnqaekjz7vjs
+Content-Type: text/x-diff; charset=utf-8
+Content-Disposition: attachment;
+	filename="0001-erofs-reliably-distinguish-block-based-and-fscache-m.patch"
+
+From e4f586a41748b6edc05aca36d49b7b39e55def81 Mon Sep 17 00:00:00 2001
+From: Christian Brauner <brauner@kernel.org>
+Date: Mon, 15 Apr 2024 20:17:46 +0800
+Subject: [PATCH] erofs: reliably distinguish block based and fscache mode
+
+When erofs_kill_sb() is called in block dev based mode, s_bdev may not have
+been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled, it will
+be mistaken for fscache mode, and then attempt to free an anon_dev that has
+never been allocated, triggering the following warning:
+
+============================================
+ida_free called for id=0 which is not allocated.
+WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
+Modules linked in:
+CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
+RIP: 0010:ida_free+0x134/0x140
+Call Trace:
+ <TASK>
+ erofs_kill_sb+0x81/0x90
+ deactivate_locked_super+0x35/0x80
+ get_tree_bdev+0x136/0x1e0
+ vfs_get_tree+0x2c/0xf0
+ do_new_mount+0x190/0x2f0
+ [...]
+============================================
+
+Instead of allocating the erofs_sb_info in fill_super() allocate it
+during erofs_get_tree() and ensure that erofs can always have the info
+available during erofs_kill_sb().
+
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+ fs/erofs/super.c | 29 ++++++++++++++++-------------
+ 1 file changed, 16 insertions(+), 13 deletions(-)
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index c0eb139adb07..4ed80154edf8 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -581,7 +581,7 @@ static const struct export_operations erofs_export_ops = {
+ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ {
+ 	struct inode *inode;
+-	struct erofs_sb_info *sbi;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 	struct erofs_fs_context *ctx = fc->fs_private;
+ 	int err;
+ 
+@@ -590,15 +590,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_maxbytes = MAX_LFS_FILESIZE;
+ 	sb->s_op = &erofs_sops;
+ 
+-	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+-	if (!sbi)
+-		return -ENOMEM;
+-
+ 	sb->s_fs_info = sbi;
+ 	sbi->opt = ctx->opt;
+ 	sbi->devs = ctx->devs;
+ 	ctx->devs = NULL;
+-	sbi->fsid = ctx->fsid;
+ 	ctx->fsid = NULL;
+ 	sbi->domain_id = ctx->domain_id;
+ 	ctx->domain_id = NULL;
+@@ -707,8 +702,15 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ static int erofs_fc_get_tree(struct fs_context *fc)
+ {
+ 	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi;
++
++	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
++	if (!sbi)
++		return -ENOMEM;
+ 
+-	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->fsid)
++	fc->s_fs_info = sbi;
++	sbi->fsid = ctx->fsid;
++	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+ 		return get_tree_nodev(fc, erofs_fc_fill_super);
+ 
+ 	return get_tree_bdev(fc, erofs_fc_fill_super);
+@@ -762,11 +764,15 @@ static void erofs_free_dev_context(struct erofs_dev_context *devs)
+ static void erofs_fc_free(struct fs_context *fc)
+ {
+ 	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = fc->s_fs_info;
+ 
+ 	erofs_free_dev_context(ctx->devs);
+ 	kfree(ctx->fsid);
+ 	kfree(ctx->domain_id);
+ 	kfree(ctx);
++
++	if (sbi)
++		kfree(sbi);
+ }
+ 
+ static const struct fs_context_operations erofs_context_ops = {
+@@ -783,6 +789,7 @@ static int erofs_init_fs_context(struct fs_context *fc)
+ 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
++
+ 	ctx->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
+ 	if (!ctx->devs) {
+ 		kfree(ctx);
+@@ -799,17 +806,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
+ 
+ static void erofs_kill_sb(struct super_block *sb)
+ {
+-	struct erofs_sb_info *sbi;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 
+-	if (erofs_is_fscache_mode(sb))
++	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+ 		kill_anon_super(sb);
+ 	else
+ 		kill_block_super(sb);
+ 
+-	sbi = EROFS_SB(sb);
+-	if (!sbi)
+-		return;
+-
+ 	erofs_free_dev_context(sbi->devs);
+ 	fs_put_dax(sbi->dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
+-- 
+2.43.0
 
 
-Thanks,
-
-Yifan Zhao
-
-> +		return 0;
-> +	}
-> +
-> +	if (item->type == EROFS_MKFS_JOB_DIR_BH) {
-> +		erofs_write_dir_file(inode);
-> +		erofs_write_tail_end(inode);
-> +		inode->bh->op = &erofs_write_inode_bhops;
-> +		erofs_iput(inode);
-> +		return 0;
-> +	}
-> +	return -EINVAL;
-> +}
-> +
-> +int erofs_mkfs_go(struct erofs_sb_info *sbi,
-> +		  enum erofs_mkfs_jobtype type, void *elem, int size)
-> +{
-> +	struct erofs_mkfs_jobitem item;
-> +
-> +	item.type = type;
-> +	memcpy(&item.u, elem, size);
-> +	return erofs_mkfs_jobfn(&item);
-> +}
-> +
->   static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
->   {
->   	DIR *_dir;
-> @@ -1213,11 +1264,7 @@ static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
->   	else
->   		dir->i_nlink = i_nlink;
->   
-> -	ret = erofs_prepare_inode_buffer(dir);
-> -	if (ret)
-> -		return ret;
-> -	dir->bh->op = &erofs_skip_write_bhops;
-> -	return 0;
-> +	return erofs_mkfs_go(dir->sbi, EROFS_MKFS_JOB_DIR, &dir, sizeof(dir));
->   
->   err_closedir:
->   	closedir(_dir);
-> @@ -1243,7 +1290,8 @@ static int erofs_mkfs_handle_inode(struct erofs_inode *inode)
->   		return ret;
->   
->   	if (!S_ISDIR(inode->i_mode))
-> -		ret = erofs_mkfs_handle_nondirectory(inode);
-> +		ret = erofs_mkfs_go(inode->sbi, EROFS_MKFS_JOB_NDIR,
-> +				    &inode, sizeof(inode));
->   	else
->   		ret = erofs_mkfs_handle_directory(inode);
->   	erofs_info("file %s dumped (mode %05o)", erofs_fspath(inode->i_srcpath),
-> @@ -1302,10 +1350,10 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
->   		}
->   		*last = dumpdir;	/* fixup the last (or the only) one */
->   		dumpdir = head;
-> -		erofs_write_dir_file(dir);
-> -		erofs_write_tail_end(dir);
-> -		dir->bh->op = &erofs_write_inode_bhops;
-> -		erofs_iput(dir);
-> +		err = erofs_mkfs_go(dir->sbi, EROFS_MKFS_JOB_DIR_BH,
-> +				    &dir, sizeof(dir));
-> +		if (err)
-> +			return ERR_PTR(err);
->   	} while (dumpdir);
->   
->   	return root;
+--egxumnqaekjz7vjs--
