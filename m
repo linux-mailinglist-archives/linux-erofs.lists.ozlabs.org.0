@@ -2,70 +2,70 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02B0E8A5DDE
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 00:51:57 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=bBs9/Wfo;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C8F48A5F85
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 02:58:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1713229125;
+	bh=z5SK7S2VhEiXxhwEiJuw/hgNQSU9au6u6OsDRuqOGr0=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=dsabHDzYc+7qM03bx0RQ3GhMjNwu7zohAfJpONeJKhcTGSa2SfRwnLDk2HO0OZ80R
+	 mpOyuUR4Q6Ie7h4Ghsc2UvGIeMVaCt/ICLbvPf4r8VolDBBCCdtK4bM/b0QuTxYGui
+	 AEWSpPZi0FRn/BtNu6JoilQ+auTsV7cRbwBjUbM1STWOs+Cmi4L5xgqJa4MxGCOqLF
+	 h6x1nQY6JZJEmYW1tt/H3NJ/1JLZz+JN7+Kw2qTuEgnBFnfPuvrzdN970qFGfxHd2C
+	 spfH7OoMBe2Ac5114LetBx1m6mptRR+2ij4jI5Z3qvCYMfnm+P8n1voqc0wJbahAVo
+	 H/6goQXCaGVKw==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VJMqX6bhsz3cgg
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 08:51:52 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VJQdx1lT4z3d36
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Apr 2024 10:58:45 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=bBs9/Wfo;
+	dkim=pass (2048-bit key; secure) header.d=gmx.com header.i=hsiangkao@gmx.com header.a=rsa-sha256 header.s=s31663417 header.b=pjumrHDl;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::12a; helo=mail-lf1-x12a.google.com; envelope-from=smfrench@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmx.com (client-ip=212.227.15.15; helo=mout.gmx.net; envelope-from=hsiangkao@gmx.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 314 seconds by postgrey-1.37 at boromir; Tue, 16 Apr 2024 10:58:36 AEST
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJMqS2SGkz3c9y
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Apr 2024 08:51:46 +1000 (AEST)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-516d0162fa1so4728197e87.3
-        for <linux-erofs@lists.ozlabs.org>; Mon, 15 Apr 2024 15:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713221500; x=1713826300; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=63WuSgSRy34JNOa9pVcP0sGLwbzNT5xJkZeCbwGkCUE=;
-        b=bBs9/Wfo15FO90ODSB86St/1Y95KRyzHKVZ7CIxube5+RpHzs10ylbZIQ/bU/5tq8w
-         dHPCNFFP46RjktQUVtUAPn2Al0t9SijfHmEYHtGrmRWjMPqpEpsZItTJ4+nZNbSKPP/d
-         gt+20VrNqKQE8CJsUF/2uESEJDS0jilDPAMPvTt7iVqy1fRV0f+9slN2sW5FFlZvpEQb
-         plDH3AiOrGPIJvemfPf2lSiLgyFVd7Nft2nyQMH0sNAuOfTt5nqFDkBM0a/6DFTPHlne
-         DwFsspMnqogZIs96ArpmKg4rFbRzWu9di6LS9c73+bJ/1FaEKYoH8ePiHyPhz8XDCGiO
-         tlzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713221500; x=1713826300;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=63WuSgSRy34JNOa9pVcP0sGLwbzNT5xJkZeCbwGkCUE=;
-        b=DqN/vegmYRX5IPsxHvwvWB6E87jRKsoAkOYsaV8J3b69/ZHdfugTEJn3e/dFGJVK0Q
-         7ldzb2VQZEleNOxtdvJEGRk6RaUrS/rEPD7pNUuEBJc3Xydc904aBf65TUrUaDMBHWfB
-         YdPXSDQo+k2zwCU2ovtyTqs+wA/KEGYH8VVn/+RDllrXWP5JCCFzJnEvmmMpcHEq9Yfp
-         xsirDH1BUMkf3QRdDfNFGL0AWOZofSYURcawoBjwL5E7grpho2UmbmAQPvxjPVbIH6T3
-         12LHp50xB1NeRHI0y2zHY3gLFkpzxQcfxvTQb884xt0LOcnJR3bpE9DW5scLaI3iXdPm
-         1pMw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8WKmaI2LBgy9JLSwrgY+1KXadsKj50hzg1cxBOs1vHmdh2g5c6kheD4OntgdRyIZnKHJ9tNSY7lrng+rl9GzR+J52MPm8LB9FYum6
-X-Gm-Message-State: AOJu0YysizhJ3ObNgUYujOqdXYHYB69us4GhfgRip8NCwkHk9TI/Ytzp
-	IdoaM5QBHXRE7Mt0cah3uPx6mXzu29Agq+0QqyuUSfvA+peeBzAoA5JpEQxlfa623WLVC9UVDMh
-	ABW8dJ58lClahdbG0xHZib3ls5M4=
-X-Google-Smtp-Source: AGHT+IF8RFFMQuN5vGtuRwBPhuh0oAZccy2g38TQjUdEv5QNHmaH/Tohq78D8IN9/9jH1PsE9dc35dj2/YRmRw43rn8=
-X-Received: by 2002:a19:5f1e:0:b0:516:b07a:5b62 with SMTP id
- t30-20020a195f1e000000b00516b07a5b62mr8309996lfb.54.1713221500147; Mon, 15
- Apr 2024 15:51:40 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VJQdm53qcz2xPV
+	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Apr 2024 10:58:35 +1000 (AEST)
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from debian ([209.37.221.130]) by mail.gmx.net (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1Mo6qv-1sY6fL3JAR-00papO; Tue, 16
+ Apr 2024 02:53:05 +0200
+Date: Tue, 16 Apr 2024 08:52:58 +0800
+To: Sandeep Dhavale <dhavale@google.com>
+Subject: Re: [PATCH v2] erofs-utils: dump: print filesystem blocksize
+Message-ID: <Zh3L6o+LSrvMiVkx@debian>
+Mail-Followup-To: Sandeep Dhavale <dhavale@google.com>,
+	linux-erofs@lists.ozlabs.org, xiang@kernel.org,
+	hsiangkao@linux.alibaba.com, kernel-team@android.com
+References: <20240415183538.2012717-1-dhavale@google.com>
 MIME-Version: 1.0
-References: <20240328163424.2781320-1-dhowells@redhat.com> <20240328163424.2781320-2-dhowells@redhat.com>
- <39de1e2ac2ae6a535e23faccd304d7c5459054a2.camel@kernel.org> <2345944.1713186234@warthog.procyon.org.uk>
-In-Reply-To: <2345944.1713186234@warthog.procyon.org.uk>
-From: Steve French <smfrench@gmail.com>
-Date: Mon, 15 Apr 2024 17:51:30 -0500
-Message-ID: <CAH2r5msFoGAE79pS5bEt5T8a60LU82mdjNdpfe0bG4YpvY8t-g@mail.gmail.com>
-Subject: Re: [PATCH 01/26] cifs: Fix duplicate fscache cookie warnings
-To: David Howells <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240415183538.2012717-1-dhavale@google.com>
+X-Provags-ID: V03:K1:Q/UhyJF1cNGP4ZOEnnFm7vPO5esySI61vw37ykhPpHd/HkutzbD
+ o18ugYO+iLbkeJTD5UJ855e1x/CrTESAuBFEe5VIR7YRcCeSW2BS3VUOE6U9eOVkEIG54Ek
+ ybCTIQFOiHFnn5XtHkJHdzMr5VoKC4tcsPlNGaFdx0Z26qIcrVqBXqccUlbQRZokN7P9Gh+
+ 76u1lcRn+eprhCCrJKv8Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Th4L+N8iiOo=;0qLtV3ej8rK6EpS00p4cB35su26
+ 6S+FBu4A2x5VkUgVQvIcyHtPUSWDx0J3DJ3ngAIbXDIAsiuvUCay6gCj+DCwPfkG5kxpgY0fK
+ MmXk2lexK95WVn0OJKKQ/5stDeiqu7gIu04LwqifIC/zjpVoVbsJMM5cbLLP35QmqsTUGDUv4
+ 3c6Ev5EG937flryjmsLeDgnKCotCqhLl94HGQJ9zQdLi5EUf3g9mgXcJ429Ba83PkY22Fevhm
+ cDk+AHuKomA2Npdrs9Jg8fOopJDChKZjH8+Vw95uFUvGdi74R6qGxQCZ5vteJ79ltnQtS1s4r
+ xxqHJH/MBQuoSyD2bFZMoRlyNJxbBywmp316Y0i2YuLx2A4Bp4iDlDq8CbP1yKCJE1NH3XGQX
+ d81imE7jGqpcMNhcUe8ahK8aKidvKqJrhnVYenELQ1wCO6Jr9JuEaRB7aq6QOSzJ5pAIsL6p1
+ aNhZegfMA+YcJrl/5OG/1zbhmX093fgrsVP0Hm3eSZBbF1aj/JZPQoTmlMH9krzQI/MjXzFkZ
+ 0bQZ7ZEkz0oU4x7cHDOavKO8/qe3+Ala+BMpwrI44Fg23fSOAZYmqqxFyb8BIg7diF5kc0NQh
+ KGD2bpdqqlveuqG/RL8GULFLAPGMXQ3tSLStwYJYQbJ0yUIUxd1yL05VVNbiJpXYyLfdzRIKd
+ EJdhvLjypA7JHSTDx/t5uzW0oBKLPnj67rSj9EuJzH2U9T3ktMbN7KkPWapscMz3ojseb1j0e
+ 1LFxnXAMWR//Rn77wyn/U2Dg9cBYpqFOlBEspuOa9vwrMoIU35KWZVM1xfuqWSJIzVUTHSX+2
+ Yx9Ao6FFul1P/AN2a34Oblk0QHAqOTLl6hpvQ8vwRp51A=
 Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -78,39 +78,62 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-cachefs@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <nspmangalore@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, Rohith Surabattula <rohiths.msft@gmail.com>, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Steve French <sfrench@samba.org>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <hsiangkao@gmx.com>
+Cc: hsiangkao@linux.alibaba.com, kernel-team@android.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Should this be merged independently (and sooner? in rc5?)
+Hi Sandeep,
 
-On Mon, Apr 15, 2024 at 8:04=E2=80=AFAM David Howells <dhowells@redhat.com>=
- wrote:
+On Mon, Apr 15, 2024 at 11:35:38AM -0700, Sandeep Dhavale wrote:
+> mkfs.erofs supports creating filesystem images with different
+> blocksizes. Add filesystem blocksize in super block dump so
+> its easier to inspect the filesystem.
 >
-> Jeff Layton <jlayton@kernel.org> wrote:
+> The field is added after FS magic, so the output now looks like:
 >
-> > > +struct cifs_fscache_inode_key {
-> > > +
-> > > +   __le64  uniqueid;       /* server inode number */
-> > > +   __le64  createtime;     /* creation time on server */
-> > > +   u8      type;           /* S_IFMT file type */
-> > > +} __packed;
-> > > +
-> >
-> > Interesting. So the uniqueid of the inode is not unique within the fs?
-> > Or are the clients are mounting shares that span multiple filesystems?
-> > Or, are we looking at a situation where the uniqueid is being quickly
-> > reused for new inodes after the original inode is unlinked?
+> Filesystem magic number:                      0xE0F5E1E2
+> Filesystem blocksize:                         65536
+> Filesystem blocks:                            21
+> Filesystem inode metadata start block:        0
+> Filesystem shared xattr metadata start block: 0
+> Filesystem root nid:                          36
+> Filesystem lz4_max_distance:                  65535
+> Filesystem sb_extslots:                       0
+> Filesystem inode count:                       10
+> Filesystem created:                           Fri Apr 12 15:43:40 2024
+> Filesystem features:                          sb_csum mtime 0padding
+> Filesystem UUID:                              a84a2acc-08d8-4b72-8b8c-b8=
+11a815fa07
 >
-> The problem is that it's not unique over time.  creat(); unlink(); creat(=
-);
-> may yield a repeat of the uniqueid.  It's like i_ino in that respect.
+> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> ---
+> Changes since v2:
+> 	- Moved the field after FS magic as suggested by Gao
+>  dump/main.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> David
+> diff --git a/dump/main.c b/dump/main.c
+> index a89fc6b..928909d 100644
+> --- a/dump/main.c
+> +++ b/dump/main.c
+> @@ -633,6 +633,8 @@ static void erofsdump_show_superblock(void)
 >
+>  	fprintf(stdout, "Filesystem magic number:                      0x%04X\=
+n",
+>  			EROFS_SUPER_MAGIC_V1);
+> +	fprintf(stdout, "Filesystem blocksize:                         %llu\n"=
+,
+> +			erofs_blksiz(&sbi) | 0ULL);
 
+Could we use `%u` for `erofs_blksiz(&sbi)`? since currently EROFS
+block size isn't possible to be larger than PAGE_SIZE.
 
---=20
+Even if block size > page size is supported, I think we should
+not consider too large blocksizes.
+
+Otherwise it looks good to me.
+
 Thanks,
-
-Steve
+Gao Xiang
