@@ -1,60 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7533A8A7B0F
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Apr 2024 05:26:34 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CEC08A7C9A
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Apr 2024 08:54:58 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1713324392;
-	bh=8kaLg8Q9JIbpEHXO/hXIQSAI33272QFNpBk1I/533tg=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=hisu4uD4otnchQG/nrsi9aDtUXs8HnZMdEtGz/6R23d6+o4Ih6eXBxwttAH1qPAfh
-	 YPnRmNZ5ASP0rvesCd1PW0HVmF+SBK4MutON6aceEwloAqotFA9+ncG9k4ntxhjK2R
-	 sFJShEemoGJru3k1eKFxN+0jda+jKLW66i5ow8nucMglKMoP6oBNTu/JkEm1uOmGE4
-	 AJTP+nI/57CH9K9WLV6dKlZLvMkLdrBzDNVP1PyivqmQKMFdelgdPNdM2uhcFDTda5
-	 HOsI38gXky/D9lUly9FNZE/PXB/Mt0STifSCso3E4KtMNHD6gCzN3pUqaORyAG8YPE
-	 x4l4gn5grQGYA==
+	s=201707; t=1713336895;
+	bh=SdD2UHHc0m2CStUM4v9MUx7aVjIF7P7uKWtzPEgyptw=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=lVU8+UNhpLJtlQOVDlujPY6lk6I10b938i8TKxw+XpogseBGqUXavTHsf2q0Q+dDW
+	 GoqRIbOdcqeRmXs2uMU2FUI/Bx57X2cmEgwV4HpYKe7Sln19JSb4BASpjmfr47i+Jd
+	 h2SvOUXSXT6fG24YtXfha71kJGdAYeiFQrOm/sf5/FUDnuQXHZIUsQ16Oy24XhhASd
+	 ICqCCX0Ll4p4cZoo9CeoT6DqBkIzoSt5Q0j2Jr3QB7zTpGa91sHfUcplgP4yVjQ+6j
+	 cXG2tBXNZIYs3eQ91JFKQhsdDH7YWpj7XzgkKc/Y7V/dstvtIoHV3yemtH79Y3M79B
+	 6g9CgkcTbnKJA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VK5t0156sz3dRp
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Apr 2024 13:26:32 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VKBVR34QJz3dTs
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Apr 2024 16:54:55 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.35; helo=szxga07-in.huawei.com; envelope-from=libaokun1@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=libaokun1@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VK5sv5Kx0z3bmY
-	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Apr 2024 13:26:24 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VK5pJ759Sz1RDd9;
-	Wed, 17 Apr 2024 11:23:20 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VKBVH1Ygrz2y71
+	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Apr 2024 16:54:43 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VKBT51YpFz1HCMD;
+	Wed, 17 Apr 2024 14:53:45 +0800 (CST)
 Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
-	by mail.maildlp.com (Postfix) with ESMTPS id 262A91A016C;
-	Wed, 17 Apr 2024 11:26:19 +0800 (CST)
-Received: from [10.174.177.174] (10.174.177.174) by
- dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 17 Apr 2024 11:26:18 +0800
-Message-ID: <47247f78-eafb-cb4f-495f-e91a647c3f3c@huawei.com>
-Date: Wed, 17 Apr 2024 11:26:18 +0800
+	by mail.maildlp.com (Postfix) with ESMTPS id BDA291400D9;
+	Wed, 17 Apr 2024 14:54:38 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by dggpeml500021.china.huawei.com
+ (7.185.36.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 17 Apr
+ 2024 14:54:38 +0800
+To: <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH v2] erofs: reliably distinguish block based and fscache mode
+Date: Wed, 17 Apr 2024 14:55:13 +0800
+Message-ID: <20240417065513.3409744-1-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH] erofs: set SB_NODEV sb_flags when mounting with fsid
-Content-Language: en-US
-To: Christian Brauner <brauner@kernel.org>, <xiang@kernel.org>
-References: <20240415121746.1207242-1-libaokun1@huawei.com>
- <20240415-betagten-querlatte-feb727ed56c1@brauner>
- <15ab9875-5123-7bc2-bb25-fc683129ad9e@huawei.com> <Zh3NAgWvNASTZSea@debian>
- <e70a28b4-074e-c48a-b717-3e17f1aae61d@huawei.com>
- <20240416-blumig-dachgeschoss-bc683f4ef1bf@brauner> <Zh6QC0++kpUUL5nf@debian>
- <779ff32f-3f3b-c602-5da8-c88b361716ac@huawei.com> <Zh898uJW0AFtE0Rk@debian>
-In-Reply-To: <Zh898uJW0AFtE0Rk@debian>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.174]
+Content-Type: text/plain
+X-Originating-IP: [10.175.127.227]
 X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  dggpeml500021.china.huawei.com (7.185.36.21)
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -70,99 +60,152 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Baokun Li via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Baokun Li <libaokun1@huawei.com>
-Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, huyue2@coolpad.com, viro@zeniv.linux.org.uk, linux-erofs@lists.ozlabs.org
+Cc: brauner@kernel.org, yangerkun@huawei.com, linux-kernel@vger.kernel.org, huyue2@coolpad.com, viro@zeniv.linux.org.uk
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/4/17 11:11, Gao Xiang wrote:
-> On Wed, Apr 17, 2024 at 10:59:53AM +0800, Baokun Li wrote:
->> On 2024/4/16 22:49, Gao Xiang wrote:
->>> On Tue, Apr 16, 2024 at 02:35:08PM +0200, Christian Brauner wrote:
->>>>>> I'm not sure how to resolve it in EROFS itself, anyway...
->>>> Instead of allocating the erofs_sb_info in fill_super() allocate it
->>>> during erofs_get_tree() and then you can ensure that you always have the
->>>> info you need available during erofs_kill_sb(). See the appended
->>>> (untested) patch.
->>> Hi Christian,
->>>
->>> Yeah, that is a good way I think.  Although sbi will be allocated
->>> unconditionally instead but that is minor.
->>>
->>> I'm on OSSNA this week, will test this patch more when returning.
->>>
->>> Hi Baokun,
->>>
->>> Could you also check this on your side?
->>>
->>> Thanks,
->>> Gao Xiang
->> Hi Xiang,
->>
->> This patch does fix the initial problem.
->>
->>
->> Hi Christian,
->>
->> Thanks for the patch, this is a good idea. Just with nits below.
->> Otherwise feel free to add.
->>
->> Reviewed-and-tested-by: Baokun Li <libaokun1@huawei.com>
->>>>   From e4f586a41748b6edc05aca36d49b7b39e55def81 Mon Sep 17 00:00:00 2001
->>>> From: Christian Brauner <brauner@kernel.org>
->>>> Date: Mon, 15 Apr 2024 20:17:46 +0800
->>>> Subject: [PATCH] erofs: reliably distinguish block based and fscache mode
->>>>
->> SNIP
->>
->>>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
->>>> index c0eb139adb07..4ed80154edf8 100644
->>>> --- a/fs/erofs/super.c
->>>> +++ b/fs/erofs/super.c
->>>> @@ -581,7 +581,7 @@ static const struct export_operations erofs_export_ops = {
->>>>    static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->>>>    {
->>>>    	struct inode *inode;
->>>> -	struct erofs_sb_info *sbi;
->>>> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
->>>>    	struct erofs_fs_context *ctx = fc->fs_private;
->>>>    	int err;
->>>> @@ -590,15 +590,10 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->>>>    	sb->s_maxbytes = MAX_LFS_FILESIZE;
->>>>    	sb->s_op = &erofs_sops;
->>>> -	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
->>>> -	if (!sbi)
->>>> -		return -ENOMEM;
->>>> -
->>>>    	sb->s_fs_info = sbi;
->> This line is no longer needed.
->>>>    	sbi->opt = ctx->opt;
->>>>    	sbi->devs = ctx->devs;
->>>>    	ctx->devs = NULL;
->>>> -	sbi->fsid = ctx->fsid;
->>>>    	ctx->fsid = NULL;
->>>>    	sbi->domain_id = ctx->domain_id;
->>>>    	ctx->domain_id = NULL;
->> Since erofs_sb_info is now allocated in erofs_fc_get_tree(), why not
->> encapsulate the above lines as erofs_ctx_to_info() helper function
->> to be called in erofs_fc_get_tree()？Then erofs_fc_fill_super() wouldn't
->> have to use erofs_fs_context and would prevent the fsid from being
->> freed twice.
-> Hi Baokun,
->
-> I'm not sure if Christian has enough time to polish the whole
-> codebase (I'm happy if do so).  Basically, that is just a hint
-> to the issue, if you have more time, I guess you could also help
-> revive this patch together (also because you also have a real
-> EROFS test environment).
->
-> Let me also check this next week after OSSNA travelling.
->
-> Thanks,
-> Gao Xiang
+When erofs_kill_sb() is called in block dev based mode, s_bdev may not have
+been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled, it will
+be mistaken for fscache mode, and then attempt to free an anon_dev that has
+never been allocated, triggering the following warning:
 
-Hi Xiang,
+============================================
+ida_free called for id=0 which is not allocated.
+WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
+Modules linked in:
+CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
+RIP: 0010:ida_free+0x134/0x140
+Call Trace:
+ <TASK>
+ erofs_kill_sb+0x81/0x90
+ deactivate_locked_super+0x35/0x80
+ get_tree_bdev+0x136/0x1e0
+ vfs_get_tree+0x2c/0xf0
+ do_new_mount+0x190/0x2f0
+ [...]
+============================================
 
-Ok, then I will polish the patch and send it out as a v2.
+Instead of allocating the erofs_sb_info in fill_super() allocate it
+during erofs_get_tree() and ensure that erofs can always have the info
+available during erofs_kill_sb().
 
-Thanks,
-Baokun
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+Changes since v1:
+  Allocate and initialise fc->s_fs_info in erofs_fc_get_tree() instead of
+  modifying fc->sb_flags.
+
+V1: https://lore.kernel.org/r/20240415121746.1207242-1-libaokun1@huawei.com/
+
+ fs/erofs/super.c | 51 ++++++++++++++++++++++++++----------------------
+ 1 file changed, 28 insertions(+), 23 deletions(-)
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index b21bd8f78dc1..4104280be2ea 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -581,8 +581,7 @@ static const struct export_operations erofs_export_ops = {
+ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ {
+ 	struct inode *inode;
+-	struct erofs_sb_info *sbi;
+-	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 	int err;
+ 
+ 	sb->s_magic = EROFS_SUPER_MAGIC;
+@@ -590,19 +589,6 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_maxbytes = MAX_LFS_FILESIZE;
+ 	sb->s_op = &erofs_sops;
+ 
+-	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+-	if (!sbi)
+-		return -ENOMEM;
+-
+-	sb->s_fs_info = sbi;
+-	sbi->opt = ctx->opt;
+-	sbi->devs = ctx->devs;
+-	ctx->devs = NULL;
+-	sbi->fsid = ctx->fsid;
+-	ctx->fsid = NULL;
+-	sbi->domain_id = ctx->domain_id;
+-	ctx->domain_id = NULL;
+-
+ 	sbi->blkszbits = PAGE_SHIFT;
+ 	if (erofs_is_fscache_mode(sb)) {
+ 		sb->s_blocksize = PAGE_SIZE;
+@@ -704,11 +690,32 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	return 0;
+ }
+ 
+-static int erofs_fc_get_tree(struct fs_context *fc)
++static void erofs_ctx_to_info(struct fs_context *fc)
+ {
+ 	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = fc->s_fs_info;
++
++	sbi->opt = ctx->opt;
++	sbi->devs = ctx->devs;
++	ctx->devs = NULL;
++	sbi->fsid = ctx->fsid;
++	ctx->fsid = NULL;
++	sbi->domain_id = ctx->domain_id;
++	ctx->domain_id = NULL;
++}
+ 
+-	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->fsid)
++static int erofs_fc_get_tree(struct fs_context *fc)
++{
++	struct erofs_sb_info *sbi;
++
++	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
++	if (!sbi)
++		return -ENOMEM;
++
++	fc->s_fs_info = sbi;
++	erofs_ctx_to_info(fc);
++
++	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+ 		return get_tree_nodev(fc, erofs_fc_fill_super);
+ 
+ 	return get_tree_bdev(fc, erofs_fc_fill_super);
+@@ -767,6 +774,7 @@ static void erofs_fc_free(struct fs_context *fc)
+ 	kfree(ctx->fsid);
+ 	kfree(ctx->domain_id);
+ 	kfree(ctx);
++	kfree(fc->s_fs_info);
+ }
+ 
+ static const struct fs_context_operations erofs_context_ops = {
+@@ -783,6 +791,7 @@ static int erofs_init_fs_context(struct fs_context *fc)
+ 	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
++
+ 	ctx->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
+ 	if (!ctx->devs) {
+ 		kfree(ctx);
+@@ -799,17 +808,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
+ 
+ static void erofs_kill_sb(struct super_block *sb)
+ {
+-	struct erofs_sb_info *sbi;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 
+-	if (erofs_is_fscache_mode(sb))
++	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+ 		kill_anon_super(sb);
+ 	else
+ 		kill_block_super(sb);
+ 
+-	sbi = EROFS_SB(sb);
+-	if (!sbi)
+-		return;
+-
+ 	erofs_free_dev_context(sbi->devs);
+ 	fs_put_dax(sbi->dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
+-- 
+2.31.1
+
