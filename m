@@ -1,76 +1,35 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE2A28A810E
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Apr 2024 12:36:41 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=UL0lg2KW;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=UL0lg2KW;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D45928A864E
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Apr 2024 16:43:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VKHQH49x9z3dVq
-	for <lists+linux-erofs@lfdr.de>; Wed, 17 Apr 2024 20:36:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VKNv54Q18z3cNQ
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 00:43:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=UL0lg2KW;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=UL0lg2KW;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
+Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VKHQB1hfjz3cWB
-	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Apr 2024 20:36:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713350190;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oIJdAoOJD1/uhXCiQOPpdfvotOmhyFiedfiW/yeHsWQ=;
-	b=UL0lg2KWK3+VKr1Pn7gY8XtWvNI4WaFAgfYPneyGzeCEZIWa0LcGVSm9cHgkr5uB1xzraN
-	FNAAqe26cAfZSquzhOPnUaDOXr/n2HvoSVu+GxmzbZt+HRDd//P1sie6rZoocg/lodb2uB
-	f9/l75O0eWU30S6KtmSZnLyak2o/APE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713350190;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oIJdAoOJD1/uhXCiQOPpdfvotOmhyFiedfiW/yeHsWQ=;
-	b=UL0lg2KWK3+VKr1Pn7gY8XtWvNI4WaFAgfYPneyGzeCEZIWa0LcGVSm9cHgkr5uB1xzraN
-	FNAAqe26cAfZSquzhOPnUaDOXr/n2HvoSVu+GxmzbZt+HRDd//P1sie6rZoocg/lodb2uB
-	f9/l75O0eWU30S6KtmSZnLyak2o/APE=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-361-tzkEwGWLMWac2hfcSazMmA-1; Wed,
- 17 Apr 2024 06:36:24 -0400
-X-MC-Unique: tzkEwGWLMWac2hfcSazMmA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 65AB738041CC;
-	Wed, 17 Apr 2024 10:36:23 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.200])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 2FDF82026962;
-	Wed, 17 Apr 2024 10:36:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <87d451ff8cd030a380b522b4dfc56ca42c9de444.camel@kernel.org>
-References: <87d451ff8cd030a380b522b4dfc56ca42c9de444.camel@kernel.org> <20240328163424.2781320-1-dhowells@redhat.com> <20240328163424.2781320-25-dhowells@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH 24/26] netfs: Remove the old writeback code
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VKNtz4Chbz3cGK
+	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Apr 2024 00:43:21 +1000 (AEST)
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 6F08010087427
+	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Apr 2024 22:43:12 +0800 (CST)
+Received: from zhaoyf.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 0E62637C91F;
+	Wed, 17 Apr 2024 22:43:10 +0800 (CST)
+From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: mkfs: skip the redundant write for ztailpacking block
+Date: Wed, 17 Apr 2024 22:42:51 +0800
+Message-ID: <20240417144251.1845355-1-zhaoyifan@sjtu.edu.cn>
+X-Mailer: git-send-email 2.44.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <98240.1713350175.1@warthog.procyon.org.uk>
-Date: Wed, 17 Apr 2024 11:36:15 +0100
-Message-ID: <98241.1713350175@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,20 +41,101 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, dhowells@redhat.com, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, linux-cachefs@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Jeff Layton <jlayton@kernel.org> wrote:
+z_erofs_merge_segment() doesn't consider the ztailpacking block in the
+extent list and unnecessarily writes it back to the disk. This patch
+fixes this issue by introducing a new `inlined` field in the struct
+`z_erofs_inmem_extent`.
 
-> #23 and #24 should probably be merged. I don't see any reason to do the
-> two-step of ifdef'ing out the code and then removing it. Just go for it
-> at this point in the series.
+Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+---
+ include/erofs/dedupe.h | 2 +-
+ lib/compress.c         | 8 ++++++++
+ lib/dedupe.c           | 1 +
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-I would prefer to keep the ~500 line patch that's rearranging the plumbing
-separate from the ~1200 line patch that just deletes a load of lines to make
-the cutover patch easier to review.  I guess that comes down to a matter of
-preference.
-
-David
+diff --git a/include/erofs/dedupe.h b/include/erofs/dedupe.h
+index 153bd4c..4cbfb2c 100644
+--- a/include/erofs/dedupe.h
++++ b/include/erofs/dedupe.h
+@@ -16,7 +16,7 @@ struct z_erofs_inmem_extent {
+ 	erofs_blk_t blkaddr;
+ 	unsigned int compressedblks;
+ 	unsigned int length;
+-	bool raw, partial;
++	bool raw, partial, inlined;
+ };
+ 
+ struct z_erofs_dedupe_ctx {
+diff --git a/lib/compress.c b/lib/compress.c
+index 74c5707..41628e7 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -572,6 +572,7 @@ nocompression:
+ 		 */
+ 		e->compressedblks = 1;
+ 		e->raw = true;
++		e->inlined = false;
+ 	} else if (may_packing && len == e->length &&
+ 		   compressedsize < ctx->pclustersize &&
+ 		   (!inode->fragment_size || ictx->fix_dedupedfrag)) {
+@@ -582,6 +583,7 @@ frag_packing:
+ 			return ret;
+ 		e->compressedblks = 0; /* indicate a fragment */
+ 		e->raw = false;
++		e->inlined = false;
+ 		ictx->fragemitted = true;
+ 	/* tailpcluster should be less than 1 block */
+ 	} else if (may_inline && len == e->length && compressedsize < blksz) {
+@@ -600,6 +602,7 @@ frag_packing:
+ 			return ret;
+ 		e->compressedblks = 1;
+ 		e->raw = false;
++		e->inlined = true;
+ 	} else {
+ 		unsigned int tailused, padding;
+ 
+@@ -652,6 +655,7 @@ frag_packing:
+ 				return ret;
+ 		}
+ 		e->raw = false;
++		e->inlined = false;
+ 		may_inline = false;
+ 		may_packing = false;
+ 	}
+@@ -1151,6 +1155,9 @@ int z_erofs_merge_segment(struct z_erofs_compress_ictx *ictx,
+ 		ei->e.blkaddr = sctx->blkaddr;
+ 		sctx->blkaddr += ei->e.compressedblks;
+ 
++		if (ei->e.inlined)
++			continue;
++
+ 		ret2 = blk_write(sbi, sctx->membuf + blkoff * erofs_blksiz(sbi),
+ 				 ei->e.blkaddr, ei->e.compressedblks);
+ 		blkoff += ei->e.compressedblks;
+@@ -1374,6 +1381,7 @@ int erofs_write_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
+ 			.compressedblks = 0,
+ 			.raw = false,
+ 			.partial = false,
++			.inlined = false,
+ 			.blkaddr = sctx.blkaddr,
+ 		};
+ 		init_list_head(&ei->list);
+diff --git a/lib/dedupe.c b/lib/dedupe.c
+index 19a1c8d..aaaccb5 100644
+--- a/lib/dedupe.c
++++ b/lib/dedupe.c
+@@ -138,6 +138,7 @@ int z_erofs_dedupe_match(struct z_erofs_dedupe_ctx *ctx)
+ 		ctx->e.partial = e->partial ||
+ 			(window_size + extra < e->original_length);
+ 		ctx->e.raw = e->raw;
++		ctx->e.inlined = false;
+ 		ctx->e.blkaddr = e->compressed_blkaddr;
+ 		ctx->e.compressedblks = e->compressed_blks;
+ 		return 0;
+-- 
+2.44.0
 
