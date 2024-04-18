@@ -2,63 +2,70 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F3588A8FC3
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 02:01:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1713398469;
-	bh=VxC5jxhKrCityl/AkBM42Nv0lXHF7RQqmrz5UVWtpE4=;
-	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=nM/sfNATw3dBNPDSW56sI9Wr/0QSsM+fA/nw+zxQnhlja8Rt9H6wBe9q+3ytLVqeQ
-	 Czc+l+0rZ7ygM7chPP0oV6UC4MQK4cU3+i8p7TpQpHcoKbw0c16XliuAav2jvrsnBF
-	 GZ5ca5NI32Ol8/WK7ArBTqoTrZ3MqGujgzSouXyq1P7gISrD4MFAuwxdT09S+F6k9/
-	 7LCT3kOsNcmdZN/339dkYkzKyZSHPEKo34Q+3/7cD/7c66b3F1byQnvxrRvyv+qxUn
-	 xgRIIm2nikAm/2OfX8ArO673hRMJ+g1yS7E1w9hZyT/c4MqgKy3G/yesMDQdI4ukT1
-	 WbC+id2Ve6igg==
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CDC88A905D
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 03:09:45 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=kBFTKp9L;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VKdGY6PDzz3cRB
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 10:01:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VKfnf3pk4z3cRt
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 11:09:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=3N+tTi1v;
+	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=kBFTKp9L;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::b4a; helo=mail-yb1-xb4a.google.com; envelope-from=3uwigzgckczgxbupufyaiiafy.wigfchor-ylizmfcmnm.itfuvm.ila@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=sijam.com (client-ip=2607:f8b0:4864:20::1129; helo=mail-yw1-x1129.google.com; envelope-from=asai@sijam.com; receiver=lists.ozlabs.org)
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VKdGQ0yyqz3bs0
-	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Apr 2024 10:01:00 +1000 (AEST)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ddaf2f115f2so575580276.3
-        for <linux-erofs@lists.ozlabs.org>; Wed, 17 Apr 2024 17:01:00 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VKfnY4hWWz3cNQ
+	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Apr 2024 11:09:37 +1000 (AEST)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-617f8a59a24so2683317b3.1
+        for <linux-erofs@lists.ozlabs.org>; Wed, 17 Apr 2024 18:09:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sijam-com.20230601.gappssmtp.com; s=20230601; t=1713402573; x=1714007373; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BoXdVN0/O9LFpnc8OiMEwQuJa6xf8yALBMBa/gVZvq4=;
+        b=kBFTKp9LvW2YndeRpv5oFK55vCy3g38Fyp550aHFcnHvppmkzlu1w2iREFkDq4e68Y
+         wcxBUJ1zxgIkhgWikX1yxjy35vII736siUfiYM9QZp5xSU/JeHYX9PEsqm1/Zes4MSDk
+         KL7JkyTM0DeVGEaWoIRT3AVzChvhznodM1hqkKvYasSiTmlPW0xqYIvqA3Z2uKkk0fDn
+         yrbhW/odsgMdu3qSyJlKNDE0brnGBgFeTjE1LgL6XhyEZ/9y5Qz6at8TZ1IQBVmd0FTw
+         3GlmMh8Ce9lqF7JW5iX2ojvR/kiq2bxbFMmZ3YdAj6shrs5ARrFJl8d+2ao1BQXOY1GH
+         jNZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713398457; x=1714003257;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VxC5jxhKrCityl/AkBM42Nv0lXHF7RQqmrz5UVWtpE4=;
-        b=G5ETNCC4Y+SIz+BReXs2YUVivnpt9qoeGLjg2mF1AifTw/PrYINQN/8OhIBvxXrnje
-         2OO906Bv7UFHSAbeTJ1I92+96uEiyU93HXk2RU+uvhXFxQk5WJ30A65cgEvu18SftfVy
-         bJHZoDlZ1Jo/ilJ+kvX5SzgxdBn4FvHVkzxcdFhynN24nnInB1i9pWLUyqtLF43i0OzJ
-         1jURvPpbZvGxxDJak7S7sYR/s32s4tyGuQrQ6zdchI8Gr9Jed35HXxJ1Xqhh3OsNifiM
-         MZYK1Kw34pLyyIOzsZtsSEBWDVAvsDeSTtVPSyDuE0Vn60GYsVnuv4GYYLXV2WPoHfSY
-         VOGw==
-X-Gm-Message-State: AOJu0Yw2sRiXtv+AL8n7rVu6mXrXPGnlJh/xIfbFHyHf1pLBHGanjPCH
-	hMS0FDhMNWHHTG48c2j5DtkmNO7R1WWh4TfQAK24zm830MS5FbWSdVKU88l7WRmkJnC46e07Vqg
-	JjIlBUcSbSNR/Pe4F2J9SgI2/l42eL2lGhec3pJ9PemP8r5k7D5qLqAz3apThmq9KBqZkeQoYKS
-	6zbXn7dwFIr2kuTFnJ7o/2OpgTcrb2jkuUWfP6xC3l9uMVew==
-X-Google-Smtp-Source: AGHT+IHzgxK1Zzpcu3D8uyMwjQqFbVFYiS4SNtW+8RLyVzYX35Ojjo7wPAM61TS48bX/VjEymV+Lf3QjLA5x
-X-Received: from dhavale-desktop.mtv.corp.google.com ([2620:15c:211:201:75ed:d8bf:5101:cbc8])
- (user=dhavale job=sendgmr) by 2002:a05:6902:1005:b0:dcb:fb69:eadc with SMTP
- id w5-20020a056902100500b00dcbfb69eadcmr122680ybt.6.1713398457548; Wed, 17
- Apr 2024 17:00:57 -0700 (PDT)
-Date: Wed, 17 Apr 2024 17:00:54 -0700
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.44.0.683.g7961c838ac-goog
-Message-ID: <20240418000054.2769023-1-dhavale@google.com>
-Subject: [PATCH v3] erofs-utils: dump: print filesystem blocksize
-To: linux-erofs@lists.ozlabs.org
+        d=1e100.net; s=20230601; t=1713402573; x=1714007373;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BoXdVN0/O9LFpnc8OiMEwQuJa6xf8yALBMBa/gVZvq4=;
+        b=LrGzUOUL1bk+HlIYSefMKk2Cg4P71KSy3m7UU/GGaqzOOFsZiUChmrkJvvIRhehkQP
+         sQhq3UyrII9x5+yEsXJnE+lUsHX8i2oeJ60qGCDD7w9ilOTeADSDKyICZITVhY3FRNIK
+         1340qsWIacbq/MMWE7cwCLzHuHU8bIK/DdWRiNE/LZ9OPzQVJfziGPtwIx3au6trgWEz
+         RScYl3wSo/D1Kbq58lPqksBDCF7z/V56ZT3gNEMdC/RAD00kjTIhZ6bzNuYfiHzEqRhw
+         oWO/v0yV4crRg7DEUiRa2kGTr/QKQxVycS2T2atyMq9KjxVq709dMSaklXbneyDmxR0f
+         DcAQ==
+X-Gm-Message-State: AOJu0Yz6+YUALKKkLX4Rxrl+1lSSDvt08wgkMo+nEOybcdR6noz26SSW
+	mKbKUTrHYav+z6GvbxV9rHqBvrjOvOllT7wrxTwcz6FhqyTM0UYYm6yAQbibg72g1qyeoyxJAMc
+	teBjpjS3C8aTk5LzOw7eLBJ6Ia81lYpVzu4Wzkg==
+X-Google-Smtp-Source: AGHT+IFPiBN0WGe9h9FgYJHXsp/VRcU8Hppblv++Ty1jGZHe+d/fAZQ1f+LnY4+aFXnGsUVDyKu6/QGC7PI70a/Ykm4=
+X-Received: by 2002:a05:690c:fc7:b0:611:7132:e6ba with SMTP id
+ dg7-20020a05690c0fc700b006117132e6bamr1175309ywb.40.1713402572995; Wed, 17
+ Apr 2024 18:09:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20240417144251.1845355-1-zhaoyifan@sjtu.edu.cn>
+In-Reply-To: <20240417144251.1845355-1-zhaoyifan@sjtu.edu.cn>
+From: Noboru Asai <asai@sijam.com>
+Date: Thu, 18 Apr 2024 10:09:22 +0900
+Message-ID: <CAFoAo-KboSBKuna87DWQMjphVPorgnYiMMEAf5PPwEhD4hZv=w@mail.gmail.com>
+Subject: Re: [PATCH] erofs-utils: mkfs: skip the redundant write for
+ ztailpacking block
+To: Yifan Zhao <zhaoyifan@sjtu.edu.cn>, Gao Xiang <hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,54 +77,115 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Sandeep Dhavale <dhavale@google.com>
-Cc: hsiangkao@linux.alibaba.com, kernel-team@android.com
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-mkfs.erofs supports creating filesystem images with different
-blocksizes. Add filesystem blocksize in super block dump so
-its easier to inspect the filesystem.
+In this patch, the value of blkaddr in z_erofs_lcluster_index
+corresponding to the ztailpacking block in the extent list
+is invalid value. It looks that the linux kernel doesn't refer to this
+value, but what value is correct?
+0 or -1 (EROFS_NULL_ADDR) or don't care?
 
-The field is added after FS magic, so the output now looks like:
-
-Filesystem magic number:                      0xE0F5E1E2
-Filesystem blocksize:                         65536
-Filesystem blocks:                            21
-Filesystem inode metadata start block:        0
-Filesystem shared xattr metadata start block: 0
-Filesystem root nid:                          36
-Filesystem lz4_max_distance:                  65535
-Filesystem sb_extslots:                       0
-Filesystem inode count:                       10
-Filesystem created:                           Wed Apr 17 16:53:10 2024
-Filesystem features:                          sb_csum mtime 0padding
-Filesystem UUID:                              e66f6dd1-6882-48c3-9770-fee7c4841a93
-
-Signed-off-by: Sandeep Dhavale <dhavale@google.com>
----
-Changes since v2:
-	- Use %u to print the FS blocksize as we don't expect it to be
-	  very large as suggested by Gao
-Changes since v1:
-	- Moved the field after FS magic as suggested by Gao
- dump/main.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/dump/main.c b/dump/main.c
-index a89fc6b..dd2c620 100644
---- a/dump/main.c
-+++ b/dump/main.c
-@@ -633,6 +633,8 @@ static void erofsdump_show_superblock(void)
- 
- 	fprintf(stdout, "Filesystem magic number:                      0x%04X\n",
- 			EROFS_SUPER_MAGIC_V1);
-+	fprintf(stdout, "Filesystem blocksize:                         %u\n",
-+			erofs_blksiz(&sbi));
- 	fprintf(stdout, "Filesystem blocks:                            %llu\n",
- 			sbi.total_blocks | 0ULL);
- 	fprintf(stdout, "Filesystem inode metadata start block:        %u\n",
--- 
-2.44.0.683.g7961c838ac-goog
-
+2024=E5=B9=B44=E6=9C=8817=E6=97=A5(=E6=B0=B4) 23:43 Yifan Zhao <zhaoyifan@s=
+jtu.edu.cn>:
+>
+> z_erofs_merge_segment() doesn't consider the ztailpacking block in the
+> extent list and unnecessarily writes it back to the disk. This patch
+> fixes this issue by introducing a new `inlined` field in the struct
+> `z_erofs_inmem_extent`.
+>
+> Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+> ---
+>  include/erofs/dedupe.h | 2 +-
+>  lib/compress.c         | 8 ++++++++
+>  lib/dedupe.c           | 1 +
+>  3 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/erofs/dedupe.h b/include/erofs/dedupe.h
+> index 153bd4c..4cbfb2c 100644
+> --- a/include/erofs/dedupe.h
+> +++ b/include/erofs/dedupe.h
+> @@ -16,7 +16,7 @@ struct z_erofs_inmem_extent {
+>         erofs_blk_t blkaddr;
+>         unsigned int compressedblks;
+>         unsigned int length;
+> -       bool raw, partial;
+> +       bool raw, partial, inlined;
+>  };
+>
+>  struct z_erofs_dedupe_ctx {
+> diff --git a/lib/compress.c b/lib/compress.c
+> index 74c5707..41628e7 100644
+> --- a/lib/compress.c
+> +++ b/lib/compress.c
+> @@ -572,6 +572,7 @@ nocompression:
+>                  */
+>                 e->compressedblks =3D 1;
+>                 e->raw =3D true;
+> +               e->inlined =3D false;
+>         } else if (may_packing && len =3D=3D e->length &&
+>                    compressedsize < ctx->pclustersize &&
+>                    (!inode->fragment_size || ictx->fix_dedupedfrag)) {
+> @@ -582,6 +583,7 @@ frag_packing:
+>                         return ret;
+>                 e->compressedblks =3D 0; /* indicate a fragment */
+>                 e->raw =3D false;
+> +               e->inlined =3D false;
+>                 ictx->fragemitted =3D true;
+>         /* tailpcluster should be less than 1 block */
+>         } else if (may_inline && len =3D=3D e->length && compressedsize <=
+ blksz) {
+> @@ -600,6 +602,7 @@ frag_packing:
+>                         return ret;
+>                 e->compressedblks =3D 1;
+>                 e->raw =3D false;
+> +               e->inlined =3D true;
+>         } else {
+>                 unsigned int tailused, padding;
+>
+> @@ -652,6 +655,7 @@ frag_packing:
+>                                 return ret;
+>                 }
+>                 e->raw =3D false;
+> +               e->inlined =3D false;
+>                 may_inline =3D false;
+>                 may_packing =3D false;
+>         }
+> @@ -1151,6 +1155,9 @@ int z_erofs_merge_segment(struct z_erofs_compress_i=
+ctx *ictx,
+>                 ei->e.blkaddr =3D sctx->blkaddr;
+>                 sctx->blkaddr +=3D ei->e.compressedblks;
+>
+> +               if (ei->e.inlined)
+> +                       continue;
+> +
+>                 ret2 =3D blk_write(sbi, sctx->membuf + blkoff * erofs_blk=
+siz(sbi),
+>                                  ei->e.blkaddr, ei->e.compressedblks);
+>                 blkoff +=3D ei->e.compressedblks;
+> @@ -1374,6 +1381,7 @@ int erofs_write_compressed_file(struct erofs_inode =
+*inode, int fd, u64 fpos)
+>                         .compressedblks =3D 0,
+>                         .raw =3D false,
+>                         .partial =3D false,
+> +                       .inlined =3D false,
+>                         .blkaddr =3D sctx.blkaddr,
+>                 };
+>                 init_list_head(&ei->list);
+> diff --git a/lib/dedupe.c b/lib/dedupe.c
+> index 19a1c8d..aaaccb5 100644
+> --- a/lib/dedupe.c
+> +++ b/lib/dedupe.c
+> @@ -138,6 +138,7 @@ int z_erofs_dedupe_match(struct z_erofs_dedupe_ctx *c=
+tx)
+>                 ctx->e.partial =3D e->partial ||
+>                         (window_size + extra < e->original_length);
+>                 ctx->e.raw =3D e->raw;
+> +               ctx->e.inlined =3D false;
+>                 ctx->e.blkaddr =3D e->compressed_blkaddr;
+>                 ctx->e.compressedblks =3D e->compressed_blks;
+>                 return 0;
+> --
+> 2.44.0
+>
