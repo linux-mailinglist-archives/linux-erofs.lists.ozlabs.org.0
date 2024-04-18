@@ -2,65 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35F498A94C1
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 10:16:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1713428209;
-	bh=6qWnj4obAcTvQMCgYdRMt9nssa3rL5eUCYUbogT0ivw=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
-	 From;
-	b=CBj5Qubk58YljZ3T7/lSXUU3KALi6jF2q6SHiNJ1EK5pSCAiX87lsGr6kUOVhn6q3
-	 BZ4+AH2W9gsp4/NRtr9q67QrgnG9bQPu5ybSBKqCyJ/F+vhkY0gtvL4j26rlkM+o8+
-	 ZSVKYLfM0dQ71xHBgk5DA3PJYx+uuiRSMPf5VUfuq/WNSQIKaJcVb7fX8clUm71liG
-	 IqjhbRyj8GLYeMGE5bfWejWhldcpSMmpzQjU8NbMoGtuo/laOeOLNY1icloOfe71Nd
-	 cVqUEO0hj7obwa+ziArSQBQWpWPKXET3eK5ngUEhyfcfoRnD9XIyAi0NqwQz5686/Y
-	 E3HiiiJmjnKNg==
+	by mail.lfdr.de (Postfix) with ESMTPS id DEA9B8A99B2
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 14:23:38 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dLG8ULSz;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VKrGT5vBBz3cVq
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 18:16:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VKxlD03gRz3cTZ
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 22:23:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.255; helo=szxga08-in.huawei.com; envelope-from=libaokun1@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dLG8ULSz;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VKrGL2Ylqz3cMX
-	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Apr 2024 18:16:38 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VKrBp38mxz1R8ZS;
-	Thu, 18 Apr 2024 16:13:38 +0800 (CST)
-Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
-	by mail.maildlp.com (Postfix) with ESMTPS id 01E07180073;
-	Thu, 18 Apr 2024 16:16:32 +0800 (CST)
-Received: from [10.174.177.174] (10.174.177.174) by
- dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 18 Apr 2024 16:16:31 +0800
-Message-ID: <bd839e9f-d3f2-f99d-34f7-e819a84c51cf@huawei.com>
-Date: Thu, 18 Apr 2024 16:16:31 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VKxl55lj3z2xqq
+	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Apr 2024 22:23:29 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id 4947BCE1814;
+	Thu, 18 Apr 2024 12:23:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9A1C113CC;
+	Thu, 18 Apr 2024 12:23:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713443004;
+	bh=09HCCYBGXjhljy/86wM4VxKFXqQxH/NcS1SeI0z2J7s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=dLG8ULSzxLBFoDnLwoiOjzh20WomcZ03V1f9wZD/icc6VGh7PMuUI5exIDuvjvbyy
+	 Bc469iAxmW00c4Z/ylSvlp+w6AsoCyhnl53saURbw91Qn+4bbkUAmETYfQBMK0wJhu
+	 P74ekbKhtVWHTLnI0GduNwMWrvnfs3RLlieCKaUrj6MolSI77MxrLhClTq8FIraE/A
+	 Wij2dxBA8QdkDICAKwnKT6LJsXW72FF9Y6xlmcfDL1d8dDFiAFPKWXT6Rlx6w7ICf5
+	 zOP6e+MiJ6oC0ntSN0HfJrC3L/xK3s1kuXVjbciAT2fJvCNvxPTsjY33U0VRw0dTxd
+	 a6ODwsM6tzoGA==
+From: Gao Xiang <xiang@kernel.org>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2] erofs-utils: mkfs: skip the redundant write for ztailpacking block
+Date: Thu, 18 Apr 2024 20:23:12 +0800
+Message-Id: <20240418122312.99282-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH v2] erofs: reliably distinguish block based and fscache
- mode
-Content-Language: en-US
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>,
-	<xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
-	<viro@zeniv.linux.org.uk>, <brauner@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <yangerkun@huawei.com>, <houtao1@huawei.com>,
-	Baokun Li <libaokun1@huawei.com>
-References: <20240417065513.3409744-1-libaokun1@huawei.com>
- <71e66b02-9c2b-4981-83e1-8af72d6c0975@linux.alibaba.com>
- <7fdf4bff-2d3d-bdc0-5446-caa58aeca314@huawei.com>
- <fb65c7d0-c348-409e-b977-07616d28b279@linux.alibaba.com>
- <48b21671-19ae-0dbd-96cd-7300fd600c9b@huawei.com> <ZiDQgmN0hC2uIiPA@debian>
-In-Reply-To: <ZiDQgmN0hC2uIiPA@debian>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.174]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500021.china.huawei.com (7.185.36.21)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -72,92 +56,114 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Baokun Li via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Baokun Li <libaokun1@huawei.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Yifan Zhao <zhaoyifan@sjtu.edu.cn>, 20240417144251.1845355-1-zhaoyifan@sjtu.edu.cn
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/4/18 15:49, Gao Xiang wrote:
-> Hi,
->
-> On Thu, Apr 18, 2024 at 02:12:39PM +0800, Baokun Li wrote:
->> On 2024/4/18 13:50, Jingbo Xu wrote:
->>> On 4/18/24 11:36 AM, Baokun Li wrote:
->>>> On 2024/4/18 10:16, Jingbo Xu wrote:
->>>>> Hi Baokun,
->>>>>
->>>>> Thanks for catching this and move forward fixing this!
->>>> Hi Jingbo，
->>>>
->>>> Thanks for your review！
->>>>
->>>>> On 4/17/24 2:55 PM, Baokun Li wrote:
+From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 
-SNIP
+z_erofs_merge_segment() doesn't consider the ztailpacking block in the
+extent list and unnecessarily writes it back to the disk. This patch
+fixes this issue by introducing a new `inlined` field in the struct
+`z_erofs_inmem_extent`.
 
->>>>>
->>>>> Instead of allocating the erofs_sb_info in fill_super() allocate it
->>>>> during erofs_get_tree() and ensure that erofs can always have the info
->>>>> available during erofs_kill_sb().
->>>>> I'm not sure if allocating erofs_sb_info in erofs_init_fs_context() will
->>>>> be better, as I see some filesystems (e.g. autofs) do this way.  Maybe
->>>>> another potential advantage of doing this way is that erofs_fs_context
->>>>> is not needed anymore and we can use sbi directly.
->>>> Yes, except for some extra memory usage when remounting,
->>>> this idea sounds great. Let me send a version of v3 to get rid
->>>> of erofs_fs_context.
->>> I'm not sure if Gao Xaing also prefers this.  I think it would be better
->>> to wait and listen for his thoughts before we sending v3.
->>   Okay, there's no rush on this.
-> I checked days ago, for example, XFS is also worked in this way.
-> And .reconfigure() needs to be carefully handled too.
+Fixes: 830b27bc2334 ("erofs-utils: mkfs: introduce inner-file multi-threaded compression")
+Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+[ Gao Xiang: simplify a bit. ]
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+v2:
+  Yifan's patch is almost correct, it just has minor changes.
+ include/erofs/dedupe.h |  2 +-
+ lib/compress.c         | 14 +++++++++++---
+ lib/dedupe.c           |  1 +
+ 3 files changed, 13 insertions(+), 4 deletions(-)
 
-Ok, I'll implement it in the next iteration.
-
->>>>>> +static void erofs_ctx_to_info(struct fs_context *fc)
->>>>>>     {
->>>>>>         struct erofs_fs_context *ctx = fc->fs_private;
->>>>>> +    struct erofs_sb_info *sbi = fc->s_fs_info;
->>>>>> +
->>>>>> +    sbi->opt = ctx->opt;
->>>>>> +    sbi->devs = ctx->devs;
->>>>>> +    ctx->devs = NULL;
->>>>>> +    sbi->fsid = ctx->fsid;
->>>>>> +    ctx->fsid = NULL;
->>>>>> +    sbi->domain_id = ctx->domain_id;
->>>>>> +    ctx->domain_id = NULL;
->>>>>> +}
->>>>> I'm not sure if abstracting this logic into a seperate helper really
->>>>> helps understanding the code as the logic itself is quite simple and
->>>>> easy to be understood. Usually it's a hint of over-abstraction when a
->>>>> simple helper has only one caller.
->>>>>
->>>> Static functions that have only one caller are compiled inline, so we
->>>> don't have to worry about how that affects the code.
->>>>
->>>> The reason these codes are encapsulated in a separate function is so
->>>> that the code reader understands that these codes are integrated
->>>> as a whole, and that we shouldn't have to move one or two of these
->>>> lines individually.
->>>>
->>>> But after we get rid of erofs_fs_context, those won't be needed
->>>> anymore.
->>> Yeah, I understand. It's only coding style concerns.
->>>
->>>
->>>
->> Okay, thanks！
-> I'm fine to get rid of those (erofs_fs_context) as long as the codebase
-> is more clearer and simple.  BTW, for the current codebase, I also think
-> it's unneeded to have a separate helper called once without extra actual
-> meaning...
->
-> Thanks,
-> Gao Xiang
->
-Ok, this helper function will be gone in the next iteration.
-
-Thanks for the review!
+diff --git a/include/erofs/dedupe.h b/include/erofs/dedupe.h
+index 153bd4c..4cbfb2c 100644
+--- a/include/erofs/dedupe.h
++++ b/include/erofs/dedupe.h
+@@ -16,7 +16,7 @@ struct z_erofs_inmem_extent {
+ 	erofs_blk_t blkaddr;
+ 	unsigned int compressedblks;
+ 	unsigned int length;
+-	bool raw, partial;
++	bool raw, partial, inlined;
+ };
+ 
+ struct z_erofs_dedupe_ctx {
+diff --git a/lib/compress.c b/lib/compress.c
+index 74c5707..b084446 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -305,6 +305,7 @@ static int z_erofs_compress_dedupe(struct z_erofs_compress_sctx *ctx,
+ 		if (z_erofs_dedupe_match(&dctx))
+ 			break;
+ 
++		DBG_BUGON(dctx.e.inlined);
+ 		delta = ctx->queue + ctx->head - dctx.cur;
+ 		/*
+ 		 * For big pcluster dedupe, leave two indices at least to store
+@@ -519,6 +520,7 @@ static int __z_erofs_compress_one(struct z_erofs_compress_sctx *ctx,
+ 	unsigned int compressedsize;
+ 	int ret;
+ 
++	*e = (struct z_erofs_inmem_extent){};
+ 	if (len <= ctx->pclustersize) {
+ 		if (!final || !len)
+ 			return 1;
+@@ -553,16 +555,18 @@ static int __z_erofs_compress_one(struct z_erofs_compress_sctx *ctx,
+ 		if (may_inline && len < blksz) {
+ 			ret = z_erofs_fill_inline_data(inode,
+ 					ctx->queue + ctx->head, len, true);
++			if (ret < 0)
++				return ret;
++			e->inlined = true;
+ 		} else {
+ 			may_inline = false;
+ 			may_packing = false;
+ nocompression:
+ 			/* TODO: reset clusterofs to 0 if permitted */
+ 			ret = write_uncompressed_extent(ctx, len, dst);
++			if (ret < 0)
++				return ret;
+ 		}
+-
+-		if (ret < 0)
+-			return ret;
+ 		e->length = ret;
+ 
+ 		/*
+@@ -598,6 +602,7 @@ frag_packing:
+ 				compressedsize, false);
+ 		if (ret < 0)
+ 			return ret;
++		e->inlined = true;
+ 		e->compressedblks = 1;
+ 		e->raw = false;
+ 	} else {
+@@ -1151,6 +1156,9 @@ int z_erofs_merge_segment(struct z_erofs_compress_ictx *ictx,
+ 		ei->e.blkaddr = sctx->blkaddr;
+ 		sctx->blkaddr += ei->e.compressedblks;
+ 
++		/* skip write data but leave blkaddr for inline fallback */
++		if (ei->e.inlined)
++			continue;
+ 		ret2 = blk_write(sbi, sctx->membuf + blkoff * erofs_blksiz(sbi),
+ 				 ei->e.blkaddr, ei->e.compressedblks);
+ 		blkoff += ei->e.compressedblks;
+diff --git a/lib/dedupe.c b/lib/dedupe.c
+index 19a1c8d..aaaccb5 100644
+--- a/lib/dedupe.c
++++ b/lib/dedupe.c
+@@ -138,6 +138,7 @@ int z_erofs_dedupe_match(struct z_erofs_dedupe_ctx *ctx)
+ 		ctx->e.partial = e->partial ||
+ 			(window_size + extra < e->original_length);
+ 		ctx->e.raw = e->raw;
++		ctx->e.inlined = false;
+ 		ctx->e.blkaddr = e->compressed_blkaddr;
+ 		ctx->e.compressedblks = e->compressed_blks;
+ 		return 0;
 -- 
-With Best Regards,
-Baokun Li
+2.30.2
+
