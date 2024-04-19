@@ -1,50 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEA9B8A99B2
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 14:23:38 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C2658AA6BE
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Apr 2024 03:58:17 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dLG8ULSz;
+	dkim=pass (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=ELoJdR7Z;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VKxlD03gRz3cTZ
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Apr 2024 22:23:36 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VLHqB3VqYz3cby
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Apr 2024 11:58:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dLG8ULSz;
+	dkim=pass (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=ELoJdR7Z;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=konsulko.com (client-ip=2607:f8b0:4864:20::832; helo=mail-qt1-x832.google.com; envelope-from=trini@konsulko.com; receiver=lists.ozlabs.org)
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VKxl55lj3z2xqq
-	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Apr 2024 22:23:29 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 4947BCE1814;
-	Thu, 18 Apr 2024 12:23:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B9A1C113CC;
-	Thu, 18 Apr 2024 12:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713443004;
-	bh=09HCCYBGXjhljy/86wM4VxKFXqQxH/NcS1SeI0z2J7s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dLG8ULSzxLBFoDnLwoiOjzh20WomcZ03V1f9wZD/icc6VGh7PMuUI5exIDuvjvbyy
-	 Bc469iAxmW00c4Z/ylSvlp+w6AsoCyhnl53saURbw91Qn+4bbkUAmETYfQBMK0wJhu
-	 P74ekbKhtVWHTLnI0GduNwMWrvnfs3RLlieCKaUrj6MolSI77MxrLhClTq8FIraE/A
-	 Wij2dxBA8QdkDICAKwnKT6LJsXW72FF9Y6xlmcfDL1d8dDFiAFPKWXT6Rlx6w7ICf5
-	 zOP6e+MiJ6oC0ntSN0HfJrC3L/xK3s1kuXVjbciAT2fJvCNvxPTsjY33U0VRw0dTxd
-	 a6ODwsM6tzoGA==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: mkfs: skip the redundant write for ztailpacking block
-Date: Thu, 18 Apr 2024 20:23:12 +0800
-Message-Id: <20240418122312.99282-1-xiang@kernel.org>
-X-Mailer: git-send-email 2.30.2
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VLHq169Zkz3cMX
+	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Apr 2024 11:58:04 +1000 (AEST)
+Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-4365c1451d4so8072941cf.2
+        for <linux-erofs@lists.ozlabs.org>; Thu, 18 Apr 2024 18:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=konsulko.com; s=google; t=1713491879; x=1714096679; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IFSiTIQscVIy/Xo6kH5F5feYZZbjIP/kSXDnFx09UyE=;
+        b=ELoJdR7ZgOym1uBY8fXIzJIkl9HyJyL/q6vHc2TwE321DTKeZPZEnORprynEBJ8H9F
+         Zvp0dORc1ofWzOn1bSBra/AQWSq4NQBE5rU6b7CKeMgHgccv9wQu8cSjTyEs/2s5rAr3
+         eoB2gjqYAuxMtsKTNubnnt2qO12SWB76IVyEw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713491879; x=1714096679;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IFSiTIQscVIy/Xo6kH5F5feYZZbjIP/kSXDnFx09UyE=;
+        b=qAWo40O62VRrifkbqYLMGZ1pCscVVgucUeXljkw1jCFPvgvPKcQDCqzO2DekhSePM6
+         5QWyKzo1lqU4AUsdhHClTBShsasyfpYzrWKJTkHPSHZyvDDUJK5us0gCDzqVQYKiNjy8
+         41DvvsZxb5LR7ano52rV1WaD4J3qwlnI3LVZ4LjGRYoW+yRAhGl0YHv9o8zuU4FkeGEt
+         wPoYC6rDXKW8UWGnHXtS5xfMu/7u2RIYX/GztqtXea+7Bmck+5dwAq9SfbGR4K+8DJxE
+         0hvRmYc5+kp1hJusn2+jSfaV97CQj3ysDy3EQo/76ApLChbDuTOglAHMvonjUWt4mzXM
+         HCBQ==
+X-Gm-Message-State: AOJu0YwitMlPaeSoXLn8JzD5h43zsxNy/ZyBnuKsrjyT2Rzly/E/zh2I
+	LCYsJm9D3kW13Xw25LoHakHD1L2ymCDDctyMKHzYwwFTskzSr3AI037ANOjpCIs=
+X-Google-Smtp-Source: AGHT+IFnwGzIWTlUslHxEytXkDz1I10WNvJSuxNg5GZ9zGgR1Dm+/8hwyIcINq/FXuTHz1v8DXmjLA==
+X-Received: by 2002:a0c:c252:0:b0:69b:20c6:a3f1 with SMTP id w18-20020a0cc252000000b0069b20c6a3f1mr684064qvh.53.1713491879582;
+        Thu, 18 Apr 2024 18:57:59 -0700 (PDT)
+Received: from [127.0.1.1] ([187.144.98.216])
+        by smtp.gmail.com with ESMTPSA id b4-20020a0cf044000000b0069b1e2f3074sm1167777qvl.98.2024.04.18.18.57.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 18:57:59 -0700 (PDT)
+From: Tom Rini <trini@konsulko.com>
+To: u-boot@lists.denx.de, Jianan Huang <jnhuang95@gmail.com>
+In-Reply-To: <20240414150414.231027-1-jnhuang95@gmail.com>
+References: <20240414150414.231027-1-jnhuang95@gmail.com>
+Subject: Re: [PATCH] fs/erofs: add DEFLATE algorithm support
+Message-Id: <171349187833.1524174.11798846969773429798.b4-ty@konsulko.com>
+Date: Thu, 18 Apr 2024 19:57:58 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,114 +76,22 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Yifan Zhao <zhaoyifan@sjtu.edu.cn>, 20240417144251.1845355-1-zhaoyifan@sjtu.edu.cn
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+On Sun, 14 Apr 2024 23:04:14 +0800, Jianan Huang wrote:
 
-z_erofs_merge_segment() doesn't consider the ztailpacking block in the
-extent list and unnecessarily writes it back to the disk. This patch
-fixes this issue by introducing a new `inlined` field in the struct
-`z_erofs_inmem_extent`.
+> This patch adds DEFLATE compression algorithm support. It's a good choice
+> to trade off between compression ratios and performance compared to LZ4.
+> Alternatively, DEFLATE could be used for some specific files since EROFS
+> supports multiple compression algorithms in one image.
+> 
+> 
 
-Fixes: 830b27bc2334 ("erofs-utils: mkfs: introduce inner-file multi-threaded compression")
-Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-[ Gao Xiang: simplify a bit. ]
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-v2:
-  Yifan's patch is almost correct, it just has minor changes.
- include/erofs/dedupe.h |  2 +-
- lib/compress.c         | 14 +++++++++++---
- lib/dedupe.c           |  1 +
- 3 files changed, 13 insertions(+), 4 deletions(-)
+Applied to u-boot/master, thanks!
 
-diff --git a/include/erofs/dedupe.h b/include/erofs/dedupe.h
-index 153bd4c..4cbfb2c 100644
---- a/include/erofs/dedupe.h
-+++ b/include/erofs/dedupe.h
-@@ -16,7 +16,7 @@ struct z_erofs_inmem_extent {
- 	erofs_blk_t blkaddr;
- 	unsigned int compressedblks;
- 	unsigned int length;
--	bool raw, partial;
-+	bool raw, partial, inlined;
- };
- 
- struct z_erofs_dedupe_ctx {
-diff --git a/lib/compress.c b/lib/compress.c
-index 74c5707..b084446 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -305,6 +305,7 @@ static int z_erofs_compress_dedupe(struct z_erofs_compress_sctx *ctx,
- 		if (z_erofs_dedupe_match(&dctx))
- 			break;
- 
-+		DBG_BUGON(dctx.e.inlined);
- 		delta = ctx->queue + ctx->head - dctx.cur;
- 		/*
- 		 * For big pcluster dedupe, leave two indices at least to store
-@@ -519,6 +520,7 @@ static int __z_erofs_compress_one(struct z_erofs_compress_sctx *ctx,
- 	unsigned int compressedsize;
- 	int ret;
- 
-+	*e = (struct z_erofs_inmem_extent){};
- 	if (len <= ctx->pclustersize) {
- 		if (!final || !len)
- 			return 1;
-@@ -553,16 +555,18 @@ static int __z_erofs_compress_one(struct z_erofs_compress_sctx *ctx,
- 		if (may_inline && len < blksz) {
- 			ret = z_erofs_fill_inline_data(inode,
- 					ctx->queue + ctx->head, len, true);
-+			if (ret < 0)
-+				return ret;
-+			e->inlined = true;
- 		} else {
- 			may_inline = false;
- 			may_packing = false;
- nocompression:
- 			/* TODO: reset clusterofs to 0 if permitted */
- 			ret = write_uncompressed_extent(ctx, len, dst);
-+			if (ret < 0)
-+				return ret;
- 		}
--
--		if (ret < 0)
--			return ret;
- 		e->length = ret;
- 
- 		/*
-@@ -598,6 +602,7 @@ frag_packing:
- 				compressedsize, false);
- 		if (ret < 0)
- 			return ret;
-+		e->inlined = true;
- 		e->compressedblks = 1;
- 		e->raw = false;
- 	} else {
-@@ -1151,6 +1156,9 @@ int z_erofs_merge_segment(struct z_erofs_compress_ictx *ictx,
- 		ei->e.blkaddr = sctx->blkaddr;
- 		sctx->blkaddr += ei->e.compressedblks;
- 
-+		/* skip write data but leave blkaddr for inline fallback */
-+		if (ei->e.inlined)
-+			continue;
- 		ret2 = blk_write(sbi, sctx->membuf + blkoff * erofs_blksiz(sbi),
- 				 ei->e.blkaddr, ei->e.compressedblks);
- 		blkoff += ei->e.compressedblks;
-diff --git a/lib/dedupe.c b/lib/dedupe.c
-index 19a1c8d..aaaccb5 100644
---- a/lib/dedupe.c
-+++ b/lib/dedupe.c
-@@ -138,6 +138,7 @@ int z_erofs_dedupe_match(struct z_erofs_dedupe_ctx *ctx)
- 		ctx->e.partial = e->partial ||
- 			(window_size + extra < e->original_length);
- 		ctx->e.raw = e->raw;
-+		ctx->e.inlined = false;
- 		ctx->e.blkaddr = e->compressed_blkaddr;
- 		ctx->e.compressedblks = e->compressed_blks;
- 		return 0;
 -- 
-2.30.2
+Tom
+
 
