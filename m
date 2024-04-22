@@ -1,55 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2791C8AAE9D
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Apr 2024 14:36:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1713530210;
-	bh=/xjXoZT+/AWpteKgxZ8p8VlQ3bN9FDLQHg9H4Dbp1sg=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=g6p1ooIp2i7HrKLL980Yu0aOI7kqSMoD0gkJgzzE6q4IeKgq5CIjVwZUV4NY8UGsa
-	 FqWjbL4iKvtv3u2vv3dW083E1/CMzRumpaiElcycWmhnfosjgK3jabbxGlcvuvEbSg
-	 n41I+B2jVCCxqRtcN+BBVtJtaa3N9YRW+vLYWpn7p75s1++vMieUObJcs5eVSE3lpc
-	 1W62W5rgPPEXgSuON4N4nIXiBd7J2NW00A/49F+sShjVsxKl0Bd7PkCb9oBcSD/tVa
-	 Yu6QNsL8ouxlw7ghv+314F5mOcjsggefxzGE1jxAtIyM5mUY6linDmOtEdanpTZoRu
-	 GiVCgmOS+E+FA==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66E248AC26D
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Apr 2024 02:35:43 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=U97SeULQ;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VLZ016s7vz3dF9
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Apr 2024 22:36:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VN5rV5Rphz3cSd
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Apr 2024 10:35:38 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=libaokun1@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=U97SeULQ;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VLYzN1kKhz3cy8
-	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Apr 2024 22:36:14 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VLYv64GCmzwT1V;
-	Fri, 19 Apr 2024 20:32:34 +0800 (CST)
-Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
-	by mail.maildlp.com (Postfix) with ESMTPS id F41A218007D;
-	Fri, 19 Apr 2024 20:35:39 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by dggpeml500021.china.huawei.com
- (7.185.36.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 19 Apr
- 2024 20:35:39 +0800
-To: <linux-erofs@lists.ozlabs.org>
-Subject: [PATCH -next v3 2/2] erofs: reliably distinguish block based and fscache mode
-Date: Fri, 19 Apr 2024 20:36:11 +0800
-Message-ID: <20240419123611.947084-3-libaokun1@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240419123611.947084-1-libaokun1@huawei.com>
-References: <20240419123611.947084-1-libaokun1@huawei.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VN5rP1QwXz3bTt
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Apr 2024 10:35:33 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id AA4DA60C07;
+	Mon, 22 Apr 2024 00:35:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 706C4C113CE;
+	Mon, 22 Apr 2024 00:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713746130;
+	bh=d9SkvCVIdBDLu+jTB3Jz/ywbUfcy+/+yN/31VZylbg0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=U97SeULQuwo/hNtwd2j7/f+pr7ssM901vYbPR7A8fiZsg9Dq8mXZ03dtGiCYffvGw
+	 7jQHcYX2032Ys/ZO59NCyzIO/h1cpCQMJbUIh2XDjj1YV6fs5yCE55OOmJ4OKoV8fO
+	 oY4gV74St9+DUIl5kmMFbr2eJsJkcryNMi/xPg86Pi6EpMyD1b8DpMx9mDYr/PREJI
+	 rFIgm52jzgLzM0bXVoDL8tMQlJmD7XQULQsZUNOsoBVY7g1f5tcvFP3TXS19ECXif4
+	 YDHAFcytOJPOVXUZ9VLuQ7fL5TMLMkxNjAzmw0zTXb0X+f/qPd0mt2g3fNiyPH9+TO
+	 cbd3wgMsQY+tA==
+From: Gao Xiang <xiang@kernel.org>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2 1/8] erofs-utils: use erofs_atomic_t for inode->i_count
+Date: Mon, 22 Apr 2024 08:34:43 +0800
+Message-Id: <20240422003450.19132-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500021.china.huawei.com (7.185.36.21)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,68 +56,97 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Baokun Li via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Baokun Li <libaokun1@huawei.com>
-Cc: brauner@kernel.org, yangerkun@huawei.com, linux-kernel@vger.kernel.org, huyue2@coolpad.com, viro@zeniv.linux.org.uk
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Christian Brauner <brauner@kernel.org>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-When erofs_kill_sb() is called in block dev based mode, s_bdev may not
-have been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled,
-it will be mistaken for fscache mode, and then attempt to free an anon_dev
-that has never been allocated, triggering the following warning:
+Since `inode->i_count` can be touched for more than one thread if
+multi-threading is enabled.
 
-============================================
-ida_free called for id=0 which is not allocated.
-WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
-Modules linked in:
-CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
-RIP: 0010:ida_free+0x134/0x140
-Call Trace:
- <TASK>
- erofs_kill_sb+0x81/0x90
- deactivate_locked_super+0x35/0x80
- get_tree_bdev+0x136/0x1e0
- vfs_get_tree+0x2c/0xf0
- do_new_mount+0x190/0x2f0
- [...]
-============================================
-
-Now when erofs_kill_sb() is called, erofs_sb_info must have been
-initialised, so use sbi->fsid to distinguish between the two modes.
-
-Signed-off-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/super.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+patchset v1->v2:
+ - Fix `--all-fragments` functionality;
+ - Fix issues pointed out by Yifan. 
 
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 21faa49bc970..30b49b2eee53 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -789,17 +789,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
+ include/erofs/atomic.h   | 10 ++++++++++
+ include/erofs/inode.h    |  2 +-
+ include/erofs/internal.h |  3 ++-
+ lib/inode.c              |  5 +++--
+ 4 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/include/erofs/atomic.h b/include/erofs/atomic.h
+index 214cdb1..f28687e 100644
+--- a/include/erofs/atomic.h
++++ b/include/erofs/atomic.h
+@@ -25,4 +25,14 @@ __n;})
+ #define erofs_atomic_test_and_set(ptr) \
+ 	__atomic_test_and_set(ptr, __ATOMIC_RELAXED)
  
- static void erofs_kill_sb(struct super_block *sb)
++#define erofs_atomic_add_return(ptr, i) \
++	__atomic_add_fetch(ptr, i, __ATOMIC_RELAXED)
++
++#define erofs_atomic_sub_return(ptr, i) \
++	__atomic_sub_fetch(ptr, i, __ATOMIC_RELAXED)
++
++#define erofs_atomic_inc_return(ptr) erofs_atomic_add_return(ptr, 1)
++
++#define erofs_atomic_dec_return(ptr) erofs_atomic_sub_return(ptr, 1)
++
+ #endif
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index d5a732a..5d6bc98 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -17,7 +17,7 @@ extern "C"
+ 
+ static inline struct erofs_inode *erofs_igrab(struct erofs_inode *inode)
  {
--	struct erofs_sb_info *sbi;
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
+-	++inode->i_count;
++	(void)erofs_atomic_inc_return(&inode->i_count);
+ 	return inode;
+ }
  
--	if (erofs_is_fscache_mode(sb))
-+	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
- 		kill_anon_super(sb);
- 	else
- 		kill_block_super(sb);
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 4cd2059..f31e548 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -25,6 +25,7 @@ typedef unsigned short umode_t;
+ #ifdef HAVE_PTHREAD_H
+ #include <pthread.h>
+ #endif
++#include "atomic.h"
  
--	sbi = EROFS_SB(sb);
--	if (!sbi)
--		return;
--
- 	erofs_free_dev_context(sbi->devs);
- 	fs_put_dax(sbi->dax_dev, NULL);
- 	erofs_fscache_unregister_fs(sb);
+ #ifndef PATH_MAX
+ #define PATH_MAX        4096    /* # chars in a path name including nul */
+@@ -169,7 +170,7 @@ struct erofs_inode {
+ 		/* (mkfs.erofs) next pointer for directory dumping */
+ 		struct erofs_inode *next_dirwrite;
+ 	};
+-	unsigned int i_count;
++	erofs_atomic_t i_count;
+ 	struct erofs_sb_info *sbi;
+ 	struct erofs_inode *i_parent;
+ 
+diff --git a/lib/inode.c b/lib/inode.c
+index 7508c74..55969d9 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -129,9 +129,10 @@ struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid)
+ unsigned int erofs_iput(struct erofs_inode *inode)
+ {
+ 	struct erofs_dentry *d, *t;
++	unsigned long got = erofs_atomic_dec_return(&inode->i_count);
+ 
+-	if (inode->i_count > 1)
+-		return --inode->i_count;
++	if (got >= 1)
++		return got;
+ 
+ 	list_for_each_entry_safe(d, t, &inode->i_subdirs, d_child)
+ 		free(d);
 -- 
-2.31.1
+2.30.2
 
