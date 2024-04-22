@@ -2,51 +2,127 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2B518AC274
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Apr 2024 02:36:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A900D8AC745
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Apr 2024 10:41:38 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qvgmKmKc;
+	dkim=pass (2048-bit key; unprotected) header.d=themaw.net header.i=@themaw.net header.a=rsa-sha256 header.s=fm2 header.b=KwS2Eouj;
+	dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=kuIZt+wt;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VN5sd4F1rz3cbF
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Apr 2024 10:36:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VNJdD24dDz3cWP
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Apr 2024 18:41:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qvgmKmKc;
+	dkim=pass (2048-bit key; unprotected) header.d=themaw.net header.i=@themaw.net header.a=rsa-sha256 header.s=fm2 header.b=KwS2Eouj;
+	dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm3 header.b=kuIZt+wt;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=themaw.net (client-ip=103.168.172.156; helo=fhigh5-smtp.messagingengine.com; envelope-from=raven@themaw.net; receiver=lists.ozlabs.org)
+X-Greylist: delayed 589 seconds by postgrey-1.37 at boromir; Mon, 22 Apr 2024 18:41:25 AEST
+Received: from fhigh5-smtp.messagingengine.com (fhigh5-smtp.messagingengine.com [103.168.172.156])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VN5sD4nMXz3cYh
-	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Apr 2024 10:36:16 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 4707ACE0A08;
-	Mon, 22 Apr 2024 00:36:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A268FC113CE;
-	Mon, 22 Apr 2024 00:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713746174;
-	bh=QICbJ7UqhyFwd6fIGwl5Lstc2T3f5UvoBCXpjc0uqTc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qvgmKmKcP928a5v6Ke6FZZFeyCLZxNFRjQFoxyHPHCl4pwwIRcRjSH85uttChv960
-	 abHODhZrzuoGEcICaSy9lCVW88Yz7jVSc5YsqWWBa+ee2KYJHtnTg5RWjQ5rhb/76Z
-	 J2ZC6RlHio4KwITJ5KPGCXNDarLNcq8EUPRUMHNuOaRFs5dK76wl2mNH0j2Bu4dlC1
-	 /xH14k2/qfj1rm7fAzGAWFa31gWIyH7/wGH734281D8+0pYx3tMYua+5PJJNgdSGwW
-	 CwvJgE1AvQz6TWAWOCUSJZrsFRFimSdS72HpU2bYlqFrUzvVRqfjZQmmbc9zsYBPW2
-	 yP/IxhN1dSlQw==
-From: Gao Xiang <xiang@kernel.org>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 8/8] erofs-utils: mkfs: enable inter-file multi-threaded compression
-Date: Mon, 22 Apr 2024 08:34:50 +0800
-Message-Id: <20240422003450.19132-8-xiang@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240422003450.19132-1-xiang@kernel.org>
-References: <20240422003450.19132-1-xiang@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VNJd12tGGz3c05
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Apr 2024 18:41:25 +1000 (AEST)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailfhigh.nyi.internal (Postfix) with ESMTP id 7BDE911400C8
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Apr 2024 04:31:32 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Mon, 22 Apr 2024 04:31:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm2; t=1713774692; x=1713861092; bh=S6W69gqQ1/
+	wcz1X8nRN/pIJur4CHtm1ll5JPZJTXF4o=; b=KwS2Eouj4avy8IstbjXjut7jPU
+	2+hmoSpVE3mcxpFcbx5uLMiZaiAttAbWc2DcdO0XyMTbEJDhTSLCrSkfFSboJ0Nu
+	ZHunbb4gG735yokmD7xeTP15Qn6ArfgorkJRhBNrl5T77Mz7H2aLwhUzwVEorcZ8
+	AdkXfmtKrCnTfKp0rGoJaEdGUKEuCIrurYPAbD/fAF3cLolkcv6xdHazyP9ElY3S
+	etA2fbyUDqoHLPtIUZiwdm9DVlvO1xSwKWkyhAnh4tr9vczwLAC2Yw3avZGx/U3g
+	geLYzJvH6jMzKKzoe8zoVl3pUDl3I0ORr8ChqQZvR1PYLdUcLJZrInR6Wdyg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1713774692; x=1713861092; bh=S6W69gqQ1/wcz1X8nRN/pIJur4CH
+	tm1ll5JPZJTXF4o=; b=kuIZt+wtu/VYPDnHdhcYcxGFCGz+eKKHgug/djylKqTq
+	IF9TKM/lS/7FoMC4gIhTAkii0P7U5kbhJuw3hRl2xc3MczbmTi735iroJIaQ2RRH
+	T39ASdsPGZMl3NsW/qgT3MsQ/A0LfNY7DFS8bIp9Eq047NCcqxEP3ewa2XW7G6xe
+	ViRhe9SqPuVNYnv9uBR1HclqU4cBn/vQikIRvbjLkWblsE972jhY5s5xw4MB/MeC
+	sHNFOeJq8YZQuI4moIvApK7CkJ44gh9PARb/45FsYIf9pTJtK6P+V5BOMJanI8J+
+	syz+rMEyNIHVJPNcuCvaY0yE8xt3c0U7Ea+ERVfywg==
+X-ME-Sender: <xms:ZCAmZqXSi7G89pZJ7I4rUGPUNLIXOE6rLBMPSpBbm9Ep6WWqK8DZmQ>
+    <xme:ZCAmZmkK28VSUd3WkhJ11CT0WqIn0t0-j4mbylXlGSr7oQE9YT4GuTtO255y5n6Ii
+    s4PRr2d-OMu>
+X-ME-Received: <xmr:ZCAmZuYcyqdqkrA7-fMRmboKYmJ8jkJSx8qC1D5vgAU9bWySI5HZgacjFb5H4ffTjbwN2JMwkg8uVBrAg6noZSghnV-ZfEbAobDAMYluKosydhUGNbCJaXDE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrudekledgtdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefkffggfgfvhffutgfgsehtjeertd
+    dtvdejnecuhfhrohhmpefkrghnucfmvghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgv
+    theqnecuggftrfgrthhtvghrnhepfeejjeefvedukeeffedtgeetleduffekuedtteejke
+    elgedtjefgieekuddukeffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomheprhgrvhgvnhesthhhvghmrgifrdhnvght
+X-ME-Proxy: <xmx:ZCAmZhVe8GOut7O4qcTCu9ALvL4fKyT5daRp1U91jTrKpCXo_JxgZg>
+    <xmx:ZCAmZkmxfq-CGCGTlMwfZ84scZ75teUBLF-58PgQG2ZHMsmwilVNNw>
+    <xmx:ZCAmZmeua8rSYNoyXTEvg-jrw3mQYN6YvBUt6ZMFCYFCrXQo7gUC9A>
+    <xmx:ZCAmZmFdG3pgGABEfWdjmZX1QsGfpQpKRCLSMViZppqui9z2XcNE5Q>
+    <xmx:ZCAmZruwi1h5EuVI5Q1OBMlMxIszC7Vz2WUU7k2YaMh92of3JAK9YK7l>
+Feedback-ID: i31e841b0:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA for
+ <linux-erofs@lists.ozlabs.org>; Mon, 22 Apr 2024 04:31:31 -0400 (EDT)
+Message-ID: <20d564ff-bc61-42ef-ada2-2c2433f362fa@themaw.net>
+Date: Mon, 22 Apr 2024 16:31:24 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-erofs@lists.ozlabs.org
+From: Ian Kent <raven@themaw.net>
+Subject: Trying to work with the tests
+Autocrypt: addr=raven@themaw.net;
+ keydata= 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
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -58,206 +134,149 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+I'm new to the list so Hi to all,
 
-Dispatch deferred ops in another per-sb worker thread.  Note that
-deferred ops are strictly FIFOed.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/internal.h |   6 ++
- lib/inode.c              | 119 ++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 123 insertions(+), 2 deletions(-)
+I'm working with a heavily patched 5.14 kernel and I've gathered 
+together patches to bring erofs
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index f31e548..ecbbdf6 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -71,6 +71,7 @@ struct erofs_xattr_prefix_item {
- 
- #define EROFS_PACKED_NID_UNALLOCATED	-1
- 
-+struct erofs_mkfs_dfops;
- struct erofs_sb_info {
- 	struct erofs_device_info *devs;
- 	char *devname;
-@@ -124,6 +125,11 @@ struct erofs_sb_info {
- 	struct list_head list;
- 
- 	u64 saved_by_deduplication;
-+
-+#ifdef EROFS_MT_ENABLED
-+	pthread_t dfops_worker;
-+	struct erofs_mkfs_dfops *mkfs_dfops;
-+#endif
- };
- 
- /* make sure that any user of the erofs headers has atleast 64bit off_t type */
-diff --git a/lib/inode.c b/lib/inode.c
-index 6ad66bf..cf22bbe 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -1165,6 +1165,7 @@ enum erofs_mkfs_jobtype {	/* ordered job types */
- 	EROFS_MKFS_JOB_NDIR,
- 	EROFS_MKFS_JOB_DIR,
- 	EROFS_MKFS_JOB_DIR_BH,
-+	EROFS_MKFS_JOB_MAX
- };
- 
- struct erofs_mkfs_jobitem {
-@@ -1203,6 +1204,73 @@ static int erofs_mkfs_jobfn(struct erofs_mkfs_jobitem *item)
- 	return -EINVAL;
- }
- 
-+#ifdef EROFS_MT_ENABLED
-+
-+struct erofs_mkfs_dfops {
-+	pthread_t worker;
-+	pthread_mutex_t lock;
-+	pthread_cond_t full, empty;
-+	struct erofs_mkfs_jobitem *queue;
-+	unsigned int entries, head, tail;
-+};
-+
-+#define EROFS_MT_QUEUE_SIZE 128
-+
-+void *erofs_mkfs_pop_jobitem(struct erofs_mkfs_dfops *q)
-+{
-+	struct erofs_mkfs_jobitem *item;
-+
-+	pthread_mutex_lock(&q->lock);
-+	while (q->head == q->tail)
-+		pthread_cond_wait(&q->empty, &q->lock);
-+
-+	item = q->queue + q->head;
-+	q->head = (q->head + 1) & (q->entries - 1);
-+
-+	pthread_cond_signal(&q->full);
-+	pthread_mutex_unlock(&q->lock);
-+	return item;
-+}
-+
-+void *z_erofs_mt_dfops_worker(void *arg)
-+{
-+	struct erofs_sb_info *sbi = arg;
-+	int ret = 0;
-+
-+	while (1) {
-+		struct erofs_mkfs_jobitem *item;
-+
-+		item = erofs_mkfs_pop_jobitem(sbi->mkfs_dfops);
-+		if (item->type >= EROFS_MKFS_JOB_MAX)
-+			break;
-+		ret = erofs_mkfs_jobfn(item);
-+		if (ret)
-+			break;
-+	}
-+	pthread_exit((void *)(uintptr_t)ret);
-+}
-+
-+int erofs_mkfs_go(struct erofs_sb_info *sbi,
-+		  enum erofs_mkfs_jobtype type, void *elem, int size)
-+{
-+	struct erofs_mkfs_jobitem *item;
-+	struct erofs_mkfs_dfops *q = sbi->mkfs_dfops;
-+
-+	pthread_mutex_lock(&q->lock);
-+
-+	while (((q->tail + 1) & (q->entries - 1)) == q->head)
-+		pthread_cond_wait(&q->full, &q->lock);
-+
-+	item = q->queue + q->tail;
-+	item->type = type;
-+	memcpy(&item->u, elem, size);
-+	q->tail = (q->tail + 1) & (q->entries - 1);
-+
-+	pthread_cond_signal(&q->empty);
-+	pthread_mutex_unlock(&q->lock);
-+	return 0;
-+}
-+#else
- int erofs_mkfs_go(struct erofs_sb_info *sbi,
- 		  enum erofs_mkfs_jobtype type, void *elem, int size)
- {
-@@ -1212,6 +1280,7 @@ int erofs_mkfs_go(struct erofs_sb_info *sbi,
- 	memcpy(&item.u, elem, size);
- 	return erofs_mkfs_jobfn(&item);
- }
-+#endif
- 
- static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
- {
-@@ -1344,7 +1413,11 @@ static int erofs_mkfs_handle_inode(struct erofs_inode *inode)
- 	return ret;
- }
- 
--struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
-+#ifndef EROFS_MT_ENABLED
-+#define __erofs_mkfs_build_tree_from_path erofs_mkfs_build_tree_from_path
-+#endif
-+
-+struct erofs_inode *__erofs_mkfs_build_tree_from_path(const char *path)
- {
- 	struct erofs_inode *root, *dumpdir;
- 	int err;
-@@ -1399,10 +1472,52 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
- 		if (err)
- 			return ERR_PTR(err);
- 	} while (dumpdir);
--
- 	return root;
- }
- 
-+#ifdef EROFS_MT_ENABLED
-+struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
-+{
-+	struct erofs_mkfs_dfops *q;
-+	struct erofs_inode *root;
-+	int err;
-+
-+	q = malloc(sizeof(*q));
-+	if (!q)
-+		return ERR_PTR(-ENOMEM);
-+
-+	q->entries = EROFS_MT_QUEUE_SIZE;
-+	q->queue = malloc(q->entries * sizeof(*q->queue));
-+	if (!q->queue) {
-+		free(q);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	pthread_mutex_init(&q->lock, NULL);
-+	pthread_cond_init(&q->empty, NULL);
-+	pthread_cond_init(&q->full, NULL);
-+
-+	q->head = 0;
-+	q->tail = 0;
-+	sbi.mkfs_dfops = q;
-+	err = pthread_create(&sbi.dfops_worker, NULL,
-+			     z_erofs_mt_dfops_worker, &sbi);
-+	if (err)
-+		goto fail;
-+	root = __erofs_mkfs_build_tree_from_path(path);
-+
-+	erofs_mkfs_go(&sbi, ~0, NULL, 0);
-+	err = pthread_join(sbi.dfops_worker, NULL);
-+
-+fail:
-+	pthread_cond_destroy(&q->empty);
-+	pthread_cond_destroy(&q->full);
-+	pthread_mutex_destroy(&q->lock);
-+	free(q->queue);
-+	free(q);
-+	return err ? ERR_PTR(err) : root;
-+}
-+#endif
-+
- struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name)
- {
- 	struct stat st;
--- 
-2.30.2
+up to 5.19 and I'm trying to run the erofs and fscache tests from a 
+checkout of the 1.7.1 repo.
+
+(branch experimental-tests-fscache) and I have a couple of fails I can't 
+quite work out so I'm
+
+hoping for a little halp.
+
+
+For those familiar with erofs development and history it may look like 
+some patches are missing
+
+but they may have already been present in the source tree I'm working 
+with ... so just ask if
+
+you spot anything ...
+
+
+Current set of patches I have is (the patch name corresponds to commit 
+title, more or less):
+
++ erofs-clear-compacted_2b-if-compacted_4b_initial-gt-totalidx.patch
++ erofs-add-support-for-the-full-decompressed-length.patch
++ erofs-add-fiemap-support-with-iomap.patch
++ 
+erofs-remove-the-mapping-parameter-from-erofs_try_to_free_cached_page.patch
++ erofs-directly-use-wrapper-erofs_page_is_managed-when-shrinking.patch
++ erofs-dax-support-for-non-tailpacking-regular-file.patch
++ erofs-fix-deadlock-when-shrink-erofs-slab.patch
++ erofs-remove-useless-cache-strategy-of-DELAYEDALLOC.patch
++ erofs-fix-unsafe-pagevec-reuse-of-hooked-pclusters.patch
++ erofs-remove-the-fast-path-of-per-CPU-buffer-decompression.patch
++ erofs-decouple-basic-mount-options-from-fs_context.patch
++ erofs-add-multiple-device-support.patch
++ erofs-get-compression-algorithms-directly-on-mapping.patch
++ erofs-introduce-the-secondary-compression-head.patch
++ erofs-introduce-readmore-decompression-strategy.patch
++ erofs-rename-some-generic-methods-in-decompressor.patch
++ 
+libxz-Avoid-overlapping-memcpy-with-invalid-input-with-in-place-decompression.patch
++ libxz-Add-MicroLZMA-decoder.patch
++ erofs-lzma-compression-support.patch
++ erofs-get-rid-of-lru-usage.patch
++ erofs-dont-trigger-WARN-when-decompression-fails.patch
++ erofs-rename-lz4_0pading-to-zero_padding.patch
++ erofs-add-sysfs-interface.patch
++ erofs-add-sysfs-node-to-control-sync-decompression-strategy.patch
++ erofs-Replace-zero-length-array-with-flexible-array-member.patch
++ erofs-clean-up-erofs_map_blocks-tracepoints.patch
++ erofs-tidy-up-z_erofs_lz4_decompress.patch
++ erofs-introduce-z_erofs_fixup_insize.patch
++ erofs-support-unaligned-data-decompression.patch
++ erofs-support-inline-data-decompression.patch
++ erofs-add-on-disk-compressed-tail-packing-inline-support.patch
++ erofs-introduce-meta-buffer-operations.patch
++ erofs-use-meta-buffers-for-inode-operations.patch
++ erofs-use-meta-buffers-for-super-operations.patch
++ erofs-use-meta-buffers-for-xattr-operations.patch
++ erofs-use-meta-buffers-for-zmap-operations.patch
++ erofs-fix-fsdax-partition-offset-handling.patch
++ erofs-avoid-unnecessary-z_erofs-decompressqueue_work-declaration.patch
++ erofs-fix-small-compressed-files-inlining.patch
++ erofs-fix-ztailpacking-on-gt-4GiB-filesystems.patch
++ erofs-use-meta-buffers-for-erofs_read_superblock.patch
++ erofs-get-rid-of-struct-z_erofs_collector.patch
++ erofs-clean-up-preload_compressed_pages.patch
++ erofs-silence-warnings-related-to-impossible-m_plen.patch
++ erofs-clean-up-z_erofs_extent_lookback.patch
++ erofs-refine-managed-inode-stuffs.patch
++ erofs-add-sanity-check-0for-kobject-in-erofs_unregister_sysfs.patch
++ erofs-use-meta-buffers-for-reading-directories.patch
++ erofs-use-meta-buffers-for-inode-lookup.patch
++ erofs-rename-ctime-to-mtime.patch
++ erofs-Convert-from-invalidatepage-to-invalidate_folio.patch
++ erofs-fix-use-after-free-of-on-stack-io.patch
++ erofs-Convert-erofs-zdata-to-read_folio.patch
++ erofs-Convert-to-release_folio.patch
++ erofs-do-not-prompt-for-risk-any-more-when-using-big-pcluster.patch
++ erofs-remove-obsoleted-comments.patch
++ erofs-refine-on-disk-definition-comments.patch
++ erofs-fix-buffer-copy-overflow-of-ztailpacking-feature.patch
++ erofs-make-filesystem-exportable.patch
++ erofs-support-idmapped-mounts.patch
++ cachefiles-document-on-demand-read-mode.patch
++ erofs-make-erofs_map_blocks-generally-available.patch
++ erofs-add-fscache-mode-check-helper.patch
++ erofs-register-fscache-volume.patch
++ erofs-add-fscache-context-helper-functions.patch
++ erofs-add-anonymous-inode-caching-metadata-for-data-blobs.patch
++ erofs-add-erofs_fscache_read_folios-helper.patch
++ erofs-register-fscache-context-for-primary-data-blob.patch
++ erofs-register-fscache-context-for-extra-data-blobs.patch
++ erofs-implement-fscache-based-metadata-read.patch
++ erofs-implement-fscache-based-data-read-for-non-inline-layout.patch
++ erofs-implement-fscache-based-data-read-for-inline-layout.patch
++ erofs-implement-fscache-based-data-readahead.patch
++ erofs-add-fsid-mount-option.patch
++ erofs-change-to-use-asynchronous-io-for-fscache-readpage_readahead.patch
++ erofs-scan-devices-from-device-table.patch
++ erofs-leave-compressed-inodes-unsupported-in-fscache-mode-for-now.patch
++ erofs-fix-crash-when-enable-tracepoint-cachefiles_prep_read.patch
++ erofs-get-rid-of-struct-z_erofs_collection.patch
++ erofs-get-rid-of-label-restart_now.patch
++ erofs-simplify-z_erofs_pcluster_readmore.patch
++ erofs-fix-backmost-member-of-z_erofs_decompress_frontend.patch
++ erofs-missing-hunks.patch
+
+
+The last patch consists of what looks like a few hunks added by Linus to 
+complete a folio pull
+
+request that came in at the same time as the 5.19 erofs merge request. I 
+know the list of
+
+patches isn't very useful but it should give some idea of what I have 
+and maybe someone can
+
+spot a missing patch or so.
+
+
+Anyway, my failing tests are erofs/021, erofs/022, erofs/024 and 
+fscache/005.
+
+erofs/018 does not run due to "lzma compression is disabled, skipped." 
+message which I think
+
+is too old a version of xz.
+
+
+Any insight into cases that could cause these tests to fail would be 
+much appreciated.
+
+
+Ian
+
+
 
