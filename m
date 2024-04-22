@@ -2,47 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66E248AC26D
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Apr 2024 02:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0801E8AC26E
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Apr 2024 02:35:58 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=U97SeULQ;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=l5vyXNIO;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VN5rV5Rphz3cSd
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Apr 2024 10:35:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VN5rq4zcCz3cSq
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Apr 2024 10:35:55 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=U97SeULQ;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=l5vyXNIO;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VN5rP1QwXz3bTt
-	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Apr 2024 10:35:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VN5rl4b9Pz2yk7
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Apr 2024 10:35:51 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id AA4DA60C07;
-	Mon, 22 Apr 2024 00:35:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 706C4C113CE;
-	Mon, 22 Apr 2024 00:35:29 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 2AC8A60C3E;
+	Mon, 22 Apr 2024 00:35:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E4EC3277B;
+	Mon, 22 Apr 2024 00:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713746130;
-	bh=d9SkvCVIdBDLu+jTB3Jz/ywbUfcy+/+yN/31VZylbg0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=U97SeULQuwo/hNtwd2j7/f+pr7ssM901vYbPR7A8fiZsg9Dq8mXZ03dtGiCYffvGw
-	 7jQHcYX2032Ys/ZO59NCyzIO/h1cpCQMJbUIh2XDjj1YV6fs5yCE55OOmJ4OKoV8fO
-	 oY4gV74St9+DUIl5kmMFbr2eJsJkcryNMi/xPg86Pi6EpMyD1b8DpMx9mDYr/PREJI
-	 rFIgm52jzgLzM0bXVoDL8tMQlJmD7XQULQsZUNOsoBVY7g1f5tcvFP3TXS19ECXif4
-	 YDHAFcytOJPOVXUZ9VLuQ7fL5TMLMkxNjAzmw0zTXb0X+f/qPd0mt2g3fNiyPH9+TO
-	 cbd3wgMsQY+tA==
+	s=k20201202; t=1713746147;
+	bh=fKEQxFHofuZRcWVDl6uEOJ9gXdYLZbAm5n9OBxFgQuc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=l5vyXNIOHXiqrg2rTDC/4ClO6PpyvL3vQvWX+PhN7ytFr3OOfNz1HW+jtH2NI4+WW
+	 WWpmUekErETAHLDDSnZQEceUi3uyFuwICZlrS51D7CRiEvXrKgPd085oXd4/vxk5Jt
+	 g0TiLPJ9Vg/dnVj2l+ChKVjPY4cK5JYobCRVeDJXzN+2+d1UhUKYCv6w1AbDlfkEqr
+	 ONfRsApCrDa19W/GvtuLGXv5oeWMO8YXp37dT10orlIlbB+ZXvTCQt5g5Jdn9EvQpP
+	 Qvr+0rP0GEM7VCocC1hp2b3Mp1jrLi9PQ+ltUMRb69F4R3kiIooRB36wCaMjUsVit2
+	 cvxsCHCW5OdVA==
 From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 1/8] erofs-utils: use erofs_atomic_t for inode->i_count
-Date: Mon, 22 Apr 2024 08:34:43 +0800
-Message-Id: <20240422003450.19132-1-xiang@kernel.org>
+Subject: [PATCH v2 2/8] erofs-utils: lib: prepare for later deferred work
+Date: Mon, 22 Apr 2024 08:34:44 +0800
+Message-Id: <20240422003450.19132-2-xiang@kernel.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240422003450.19132-1-xiang@kernel.org>
+References: <20240422003450.19132-1-xiang@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -62,91 +64,127 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Since `inode->i_count` can be touched for more than one thread if
-multi-threading is enabled.
+Split out ordered metadata operations and add the following helpers:
+
+ - erofs_mkfs_jobfn()
+
+ - erofs_mkfs_go()
+
+to handle these mkfs job items for multi-threadding support.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-patchset v1->v2:
- - Fix `--all-fragments` functionality;
- - Fix issues pointed out by Yifan. 
+ lib/inode.c | 69 ++++++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 58 insertions(+), 11 deletions(-)
 
- include/erofs/atomic.h   | 10 ++++++++++
- include/erofs/inode.h    |  2 +-
- include/erofs/internal.h |  3 ++-
- lib/inode.c              |  5 +++--
- 4 files changed, 16 insertions(+), 4 deletions(-)
-
-diff --git a/include/erofs/atomic.h b/include/erofs/atomic.h
-index 214cdb1..f28687e 100644
---- a/include/erofs/atomic.h
-+++ b/include/erofs/atomic.h
-@@ -25,4 +25,14 @@ __n;})
- #define erofs_atomic_test_and_set(ptr) \
- 	__atomic_test_and_set(ptr, __ATOMIC_RELAXED)
- 
-+#define erofs_atomic_add_return(ptr, i) \
-+	__atomic_add_fetch(ptr, i, __ATOMIC_RELAXED)
-+
-+#define erofs_atomic_sub_return(ptr, i) \
-+	__atomic_sub_fetch(ptr, i, __ATOMIC_RELAXED)
-+
-+#define erofs_atomic_inc_return(ptr) erofs_atomic_add_return(ptr, 1)
-+
-+#define erofs_atomic_dec_return(ptr) erofs_atomic_sub_return(ptr, 1)
-+
- #endif
-diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index d5a732a..5d6bc98 100644
---- a/include/erofs/inode.h
-+++ b/include/erofs/inode.h
-@@ -17,7 +17,7 @@ extern "C"
- 
- static inline struct erofs_inode *erofs_igrab(struct erofs_inode *inode)
- {
--	++inode->i_count;
-+	(void)erofs_atomic_inc_return(&inode->i_count);
- 	return inode;
- }
- 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 4cd2059..f31e548 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -25,6 +25,7 @@ typedef unsigned short umode_t;
- #ifdef HAVE_PTHREAD_H
- #include <pthread.h>
- #endif
-+#include "atomic.h"
- 
- #ifndef PATH_MAX
- #define PATH_MAX        4096    /* # chars in a path name including nul */
-@@ -169,7 +170,7 @@ struct erofs_inode {
- 		/* (mkfs.erofs) next pointer for directory dumping */
- 		struct erofs_inode *next_dirwrite;
- 	};
--	unsigned int i_count;
-+	erofs_atomic_t i_count;
- 	struct erofs_sb_info *sbi;
- 	struct erofs_inode *i_parent;
- 
 diff --git a/lib/inode.c b/lib/inode.c
-index 7508c74..55969d9 100644
+index 55969d9..1ff05e1 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
-@@ -129,9 +129,10 @@ struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid)
- unsigned int erofs_iput(struct erofs_inode *inode)
+@@ -1133,6 +1133,57 @@ static int erofs_mkfs_handle_nondirectory(struct erofs_inode *inode)
+ 	return 0;
+ }
+ 
++enum erofs_mkfs_jobtype {	/* ordered job types */
++	EROFS_MKFS_JOB_NDIR,
++	EROFS_MKFS_JOB_DIR,
++	EROFS_MKFS_JOB_DIR_BH,
++};
++
++struct erofs_mkfs_jobitem {
++	enum erofs_mkfs_jobtype type;
++	union {
++		struct erofs_inode *inode;
++	} u;
++};
++
++static int erofs_mkfs_jobfn(struct erofs_mkfs_jobitem *item)
++{
++	struct erofs_inode *inode = item->u.inode;
++	int ret;
++
++	if (item->type == EROFS_MKFS_JOB_NDIR)
++		return erofs_mkfs_handle_nondirectory(inode);
++
++	if (item->type == EROFS_MKFS_JOB_DIR) {
++		ret = erofs_prepare_inode_buffer(inode);
++		if (ret)
++			return ret;
++		inode->bh->op = &erofs_skip_write_bhops;
++		if (IS_ROOT(inode))	/* assign root NID */
++			erofs_fixup_meta_blkaddr(inode);
++		return 0;
++	}
++
++	if (item->type == EROFS_MKFS_JOB_DIR_BH) {
++		erofs_write_dir_file(inode);
++		erofs_write_tail_end(inode);
++		inode->bh->op = &erofs_write_inode_bhops;
++		erofs_iput(inode);
++		return 0;
++	}
++	return -EINVAL;
++}
++
++int erofs_mkfs_go(struct erofs_sb_info *sbi,
++		  enum erofs_mkfs_jobtype type, void *elem, int size)
++{
++	struct erofs_mkfs_jobitem item;
++
++	item.type = type;
++	memcpy(&item.u, elem, size);
++	return erofs_mkfs_jobfn(&item);
++}
++
+ static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
  {
- 	struct erofs_dentry *d, *t;
-+	unsigned long got = erofs_atomic_dec_return(&inode->i_count);
+ 	DIR *_dir;
+@@ -1213,11 +1264,7 @@ static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
+ 	else
+ 		dir->i_nlink = i_nlink;
  
--	if (inode->i_count > 1)
--		return --inode->i_count;
-+	if (got >= 1)
-+		return got;
+-	ret = erofs_prepare_inode_buffer(dir);
+-	if (ret)
+-		return ret;
+-	dir->bh->op = &erofs_skip_write_bhops;
+-	return 0;
++	return erofs_mkfs_go(dir->sbi, EROFS_MKFS_JOB_DIR, &dir, sizeof(dir));
  
- 	list_for_each_entry_safe(d, t, &inode->i_subdirs, d_child)
- 		free(d);
+ err_closedir:
+ 	closedir(_dir);
+@@ -1243,7 +1290,8 @@ static int erofs_mkfs_handle_inode(struct erofs_inode *inode)
+ 		return ret;
+ 
+ 	if (!S_ISDIR(inode->i_mode))
+-		ret = erofs_mkfs_handle_nondirectory(inode);
++		ret = erofs_mkfs_go(inode->sbi, EROFS_MKFS_JOB_NDIR,
++				    &inode, sizeof(inode));
+ 	else
+ 		ret = erofs_mkfs_handle_directory(inode);
+ 	erofs_info("file %s dumped (mode %05o)", erofs_fspath(inode->i_srcpath),
+@@ -1268,7 +1316,6 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
+ 	err = erofs_mkfs_handle_inode(root);
+ 	if (err)
+ 		return ERR_PTR(err);
+-	erofs_fixup_meta_blkaddr(root);
+ 
+ 	do {
+ 		int err;
+@@ -1302,10 +1349,10 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
+ 		}
+ 		*last = dumpdir;	/* fixup the last (or the only) one */
+ 		dumpdir = head;
+-		erofs_write_dir_file(dir);
+-		erofs_write_tail_end(dir);
+-		dir->bh->op = &erofs_write_inode_bhops;
+-		erofs_iput(dir);
++		err = erofs_mkfs_go(dir->sbi, EROFS_MKFS_JOB_DIR_BH,
++				    &dir, sizeof(dir));
++		if (err)
++			return ERR_PTR(err);
+ 	} while (dumpdir);
+ 
+ 	return root;
 -- 
 2.30.2
 
