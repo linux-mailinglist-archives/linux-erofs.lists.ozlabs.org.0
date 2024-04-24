@@ -1,44 +1,44 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0CD38B002F
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 05:52:45 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC17D8B0043
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 05:56:47 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VPQ6z2mpFz3cDw
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:52:43 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VPQCd499Rz3cWq
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:56:45 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPQ6w46Yhz3bpd
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 13:52:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPQCR38r6z30N8
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 13:56:34 +1000 (AEST)
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VPPmV2XvLz4f3jd8
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:36:42 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VPPmT19nVz4f3p0d
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:36:41 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id DD8A21A10C5
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:36:49 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 5C1251A10C5
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:36:50 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHZQ5Nfihmarc3Kw--.25590S8;
-	Wed, 24 Apr 2024 11:36:49 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgBHZQ5Nfihmarc3Kw--.25590S9;
+	Wed, 24 Apr 2024 11:36:50 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev
-Subject: [PATCH 4/5] cachefiles: correct the return value of cachefiles_check_volume_xattr()
-Date: Wed, 24 Apr 2024 11:27:31 +0800
-Message-Id: <20240424032732.2711487-5-libaokun@huaweicloud.com>
+Subject: [PATCH 5/5] cachefiles: correct the return value of cachefiles_check_auxdata()
+Date: Wed, 24 Apr 2024 11:27:32 +0800
+Message-Id: <20240424032732.2711487-6-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240424032732.2711487-1-libaokun@huaweicloud.com>
 References: <20240424032732.2711487-1-libaokun@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgBHZQ5Nfihmarc3Kw--.25590S8
-X-Coremail-Antispam: 1UD129KBjvdXoWrZFyrAFW5Cw4xuw4kZF13urg_yoWkZwc_uF
-	9xAF4UZrs3Gr48JrsrAa42qrWSqr1UCwn8Jr1Yva13tws8KrW5XFWDtr9xAr17Wr4DK3Wq
-	kryxZF13Xr9FgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+X-CM-TRANSID: cCh0CgBHZQ5Nfihmarc3Kw--.25590S9
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFykurWUAF4kCF4DAr4xWFg_yoWfKFX_uF
+	Z7Ar4xXr4fGr4kJwsrA3y2qrWvqr1xAwn8Kr1Fgry2yw1aqFZ8XFWDtr98Ar1UWr4UK3WD
+	trZ7ZF13WF9FgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
 	9fnUUIcSsGvfJTRUUUbPAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
 	6r1F6r1fM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
 	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
@@ -50,7 +50,7 @@ X-Coremail-Antispam: 1UD129KBjvdXoWrZFyrAFW5Cw4xuw4kZF13urg_yoWkZwc_uF
 	IY04v7M4kE6xkIj40Ew7xC0wCY1x0264kExVAvwVAq07x20xyl42xK82IYc2Ij64vIr41l
 	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
 	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4
+	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4
 	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
 	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUpVbPUUUUU==
 X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
@@ -71,38 +71,31 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Baokun Li <libaokun1@huawei.com>
 
-In cachefiles_check_volume_xattr(), the error returned by vfs_getxattr is
-not passed to ret, so it ends up returning -ESTALE, which leads to an
-endless loop as follows:
+Pass the error code to ret when xlen < 0 to avoid misleading the caller.
 
-cachefiles_acquire_volume
-retry:
-  cachefiles_check_volume_xattr
-  // return -ESTALE
-  cachefiles_bury_object
-  //  EIO causes rename failure
-  goto retry;
-
-So pass the error code to ret when xlen < 0 to avoid the above problem.
-
-Fixes: 32e150037dce ("fscache, cachefiles: Store the volume coherency data")
+Fixes: 72b957856b0c ("cachefiles: Implement metadata/coherency data storage in xattrs")
 Signed-off-by: Baokun Li <libaokun1@huawei.com>
 ---
- fs/cachefiles/xattr.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/cachefiles/xattr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/fs/cachefiles/xattr.c b/fs/cachefiles/xattr.c
-index bcb6173943ee..20e4a4391090 100644
+index 20e4a4391090..4dd8a993c60a 100644
 --- a/fs/cachefiles/xattr.c
 +++ b/fs/cachefiles/xattr.c
-@@ -252,6 +252,7 @@ int cachefiles_check_volume_xattr(struct cachefiles_volume *volume)
- 		xlen = vfs_getxattr(&nop_mnt_idmap, dentry, cachefiles_xattr_cache, buf, len);
- 	if (xlen != len) {
- 		if (xlen < 0) {
+@@ -110,9 +110,11 @@ int cachefiles_check_auxdata(struct cachefiles_object *object, struct file *file
+ 	if (xlen == 0)
+ 		xlen = vfs_getxattr(&nop_mnt_idmap, dentry, cachefiles_xattr_cache, buf, tlen);
+ 	if (xlen != tlen) {
+-		if (xlen < 0)
++		if (xlen < 0) {
 +			ret = xlen;
- 			trace_cachefiles_vfs_error(NULL, d_inode(dentry), xlen,
+ 			trace_cachefiles_vfs_error(object, file_inode(file), xlen,
  						   cachefiles_trace_getxattr_error);
- 			if (xlen == -EIO)
++		}
+ 		if (xlen == -EIO)
+ 			cachefiles_io_error_obj(
+ 				object,
 -- 
 2.39.2
 
