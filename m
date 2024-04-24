@@ -2,54 +2,57 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 502178B000C
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 05:48:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 514248B000A
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 05:48:49 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VPQ2Y010Lz3cZs
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:48:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VPQ2R01lcz3cLL
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:48:47 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPQ2D5DMvz3btk
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPQ2D54Xrz3bsj
 	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 13:48:34 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VPQ1y2Gylz4f3kFJ
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:48:22 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VPQ213rpfz4f3jkT
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:48:25 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id D3A311A0175
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:48:29 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 61F141A09E0
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:48:30 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBELgShmKXE4Kw--.6143S4;
-	Wed, 24 Apr 2024 11:48:29 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBELgShmKXE4Kw--.6143S5;
+	Wed, 24 Apr 2024 11:48:30 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev
-Subject: [PATCH 00/12] cachefiles: some bugfixes and cleanups for ondemand requests
-Date: Wed, 24 Apr 2024 11:39:04 +0800
-Message-Id: <20240424033916.2748488-1-libaokun@huaweicloud.com>
+Subject: [PATCH 01/12] cachefiles: remove request from xarry during flush requests
+Date: Wed, 24 Apr 2024 11:39:05 +0800
+Message-Id: <20240424033916.2748488-2-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240424033916.2748488-1-libaokun@huaweicloud.com>
+References: <20240424033916.2748488-1-libaokun@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgCXaBELgShmKXE4Kw--.6143S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw18JFyfJFWDXrWDtFW8JFb_yoW8ZFyfpF
-	WSya4akry8Wr42g3s7Ar4rJryrA3yfAF9Fgr12g34UA3s8Xr1YvryIyr15XFy5CrZrGr42
-	qw18uF92q34qv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBa14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUWVWUuwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAI
-	w20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
-	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JU7uc_UUUUU=
+X-CM-TRANSID: cCh0CgCXaBELgShmKXE4Kw--.6143S5
+X-Coremail-Antispam: 1UD129KBjvdXoWrAF4DAFWfWr4kAry8Aw4ruFg_yoWxGwb_uF
+	ZrArWkXrs3Gwn7A3y3ZryDXF4jqw48Ar13Cr15KF43A3sxJry5CF4qqr95XayUC34j9FZr
+	Zw1kZF1Yqr1qgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbPkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6r1F6r1fM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGwA2048vs2IY02
+	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
+	v7M4kE6xkIj40Ew7xC0wCY1x0264kExVAvwVAq07x20xyl42xK82IYc2Ij64vIr41l4I8I
+	3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+	WUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
+	wI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjTRMWlvUUUUU
 X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -68,53 +71,25 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Baokun Li <libaokun1@huawei.com>
 
-Hello everyone!
+This prevents concurrency from causing access to a freed req.
 
-Recently we found some bugs while doing tests on cachefiles ondemand mode,
-and this patchset is a fix for some of those issues. The following is a
-brief overview of the patches, see the patches for more details.
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+ fs/cachefiles/daemon.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Patch 1-5: Holding reference counts of reqs and objects on read requests
-to avoid malicious restore leading to use-after-free.
-
-Patch 6-10: Add some consistency checks to copen/cread/get_fd to avoid
-malicious copen/cread/close fd injections causing use-after-free or hung.
-
-Patch 11: When cache is marked as CACHEFILES_DEAD, flush all requests,
-otherwise the kernel may be hung. since this state is irreversible, the
-daemon can read open requests but cannot copen.
-
-Patch 12: Allow interrupting a read request being processed by killing
-the read process as a way of avoiding hung in some special cases.
-
-Comments and questions are, as always, welcome.
-
-Thanks,
-Baokun
-
-Baokun Li (11):
-  cachefiles: remove request from xarry during flush requests
-  cachefiles: remove err_put_fd tag in cachefiles_ondemand_daemon_read()
-  cachefiles: fix slab-use-after-free in cachefiles_ondemand_get_fd()
-  cachefiles: fix slab-use-after-free in
-    cachefiles_ondemand_daemon_read()
-  cachefiles: add output string to cachefiles_obj_[get|put]_ondemand_fd
-  cachefiles: add consistency check for copen/cread
-  cachefiles: add spin_lock for cachefiles_ondemand_info
-  cachefiles: never get a new anon fd if ondemand_id is valid
-  cachefiles: defer exposing anon_fd until after copy_to_user() succeeds
-  cachefiles: flush all requests after setting CACHEFILES_DEAD
-  cachefiles: make on-demand read killable
-
-Zizhi Wo (1):
-  cachefiles: Set object to close if ondemand_id < 0 in copen
-
- fs/cachefiles/daemon.c            |   3 +-
- fs/cachefiles/internal.h          |   5 +
- fs/cachefiles/ondemand.c          | 199 +++++++++++++++++++++---------
- include/trace/events/cachefiles.h |   8 +-
- 4 files changed, 158 insertions(+), 57 deletions(-)
-
+diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+index 6465e2574230..ccb7b707ea4b 100644
+--- a/fs/cachefiles/daemon.c
++++ b/fs/cachefiles/daemon.c
+@@ -159,6 +159,7 @@ static void cachefiles_flush_reqs(struct cachefiles_cache *cache)
+ 	xa_for_each(xa, index, req) {
+ 		req->error = -EIO;
+ 		complete(&req->done);
++		__xa_erase(xa, index);
+ 	}
+ 	xa_unlock(xa);
+ 
 -- 
 2.39.2
 
