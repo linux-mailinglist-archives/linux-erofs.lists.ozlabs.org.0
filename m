@@ -1,48 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 396668AFFA9
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 05:29:51 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=vU9Pf8Z4;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB61E8AFFE9
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 05:43:46 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VPPcV2LMbz3c0H
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:29:46 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VPPwc3mXYz3cFN
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:43:44 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=vU9Pf8Z4;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPPcN25bXz2xqq
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 13:29:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713929373; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=6+3vy5RW94Ou/P4a51UJp53U0IfxqdYqVf/uzowYFLE=;
-	b=vU9Pf8Z4Souqdsrz79+lf1Lg/uPbteXg1ktHvxgmGmerLHCoKYsPFqT7hnUbdBPE75PCAh0A9vxf8lqHRZ9UuOPQUabu9DhJHVSDGqP5koxEqiSi4FyjXhFSx538mO6N9iJ4nL59NcpximtnAK/CSiM2vdOmknj+/8X9U2nfo+E=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067109;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W5Alj4X_1713929369;
-Received: from 30.97.48.214(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W5Alj4X_1713929369)
-          by smtp.aliyun-inc.com;
-          Wed, 24 Apr 2024 11:29:30 +0800
-Message-ID: <871467f7-1218-4c13-ae47-13e89bbbe0cc@linux.alibaba.com>
-Date: Wed, 24 Apr 2024 11:29:28 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPPwK2ktZz3btk
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 13:43:28 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VPPw40dCdz4f3kGG
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:43:16 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 9BB171A0E09
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:43:23 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBHafyhmuSA4Kw--.57541S4;
+	Wed, 24 Apr 2024 11:43:23 +0800 (CST)
+From: libaokun@huaweicloud.com
+To: netfs@lists.linux.dev
+Subject: [PATCH 0/5] cachefiles: some bugfixes for clean object/send req/poll
+Date: Wed, 24 Apr 2024 11:34:04 +0800
+Message-Id: <20240424033409.2735257-1-libaokun@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next] erofs: modify the error message when
- prepare_ondemand_read failed
-To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org, chao@kernel.org
-References: <20240424023945.420828-1-lihongbo22@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240424023945.420828-1-lihongbo22@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgBHGBHafyhmuSA4Kw--.57541S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7JF48GFW7Xr43Xr1DXrW5KFg_yoW8JF4rpF
+	Wav3W3JFy8Wr12kws3Zw1rJrWrC3s3ZF9rtF47XrykArn8XF1FvrW0yrn8ZFyUCrZ7Gw42
+	gw48WF929wn0v3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUWVWUuwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU0_-PUUUUU
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,41 +62,49 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: huyue2@coolpad.com, linux-erofs mailing list <linux-erofs@lists.ozlabs.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: libaokun@huaweicloud.com, jlayton@kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+From: Baokun Li <libaokun1@huawei.com>
 
-(+cc linux-erofs & LKML)
+Hello everyone!
 
-On 2024/4/24 10:39, Hongbo Li wrote:
-> When prepare_ondemand_read failed, wrong error message is printed.
-> The prepare_read is also implemented in cachefiles, so we amend it.
-> 
-> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+Recently we found some bugs while doing tests on cachefiles ondemand mode,
+and this patchset is a fix for some of those issues. The following is a
+brief overview of the patches, see the patches for more details.
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Patch 1-3: After an object has been cleaned up, make sure it has no
+outstanding requests and that the corresponding ondemand_object_worker
+has exited, otherwise it may use-after-free.
 
-Could you resend the patch with proper mailing list cced with my
-"reviewed-by:" tag?  So I could apply with "b4" tool.
+Patch 4: Cyclic allocation of msg_id to avoid msg_id reuse misleading
+the daemon to cause hung.
+
+Patch 5: Hold xas_lock during polling to avoid dereferencing reqs causing
+use-after-free.
+
+Comments and questions are, as always, welcome.
 
 Thanks,
-Gao Xiang
+Baokun
 
-> ---
->   fs/erofs/fscache.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-> index 8aff1a724805..62da538d91cb 100644
-> --- a/fs/erofs/fscache.c
-> +++ b/fs/erofs/fscache.c
-> @@ -151,7 +151,7 @@ static int erofs_fscache_read_io_async(struct fscache_cookie *cookie,
->   		if (WARN_ON(len == 0))
->   			source = NETFS_INVALID_READ;
->   		if (source != NETFS_READ_FROM_CACHE) {
-> -			erofs_err(NULL, "prepare_read failed (source %d)", source);
-> +			erofs_err(NULL, "prepare_ondemand_read failed (source %d)", source);
->   			return -EIO;
->   		}
->   
+Baokun Li (3):
+  cachefiles: stop sending new request when dropping object
+  cachefiles: flush all requests for the object that is being dropped
+  cachefiles: cyclic allocation of msg_id to avoid reuse
+
+Hou Tao (1):
+  cachefiles: flush ondemand_object_worker during clean object
+
+Jingbo Xu (1):
+  cachefiles: add missing lock protection when polling
+
+ fs/cachefiles/daemon.c   |   4 +-
+ fs/cachefiles/internal.h |   3 +
+ fs/cachefiles/ondemand.c | 120 ++++++++++++++++++++++++++-------------
+ 3 files changed, 86 insertions(+), 41 deletions(-)
+
+-- 
+2.39.2
+
