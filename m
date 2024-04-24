@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CEDEE8B0042
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 05:56:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 158598B0044
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 05:56:51 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VPQCZ3gH7z3cBx
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:56:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VPQCh5VKlz3ckg
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:56:48 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
@@ -14,42 +14,45 @@ Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPQCR3C7cz30gK
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPQCR3ctdz3bpd
 	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 13:56:34 +1000 (AEST)
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VPPmQ5ldLz4f3l1y
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:36:38 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VPPmR1wrTz4f3mHK
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:36:39 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 03B661A0C7E
+	by mail.maildlp.com (Postfix) with ESMTP id 7588A1A0C85
 	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:36:48 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHZQ5Nfihmarc3Kw--.25590S4;
-	Wed, 24 Apr 2024 11:36:47 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgBHZQ5Nfihmarc3Kw--.25590S5;
+	Wed, 24 Apr 2024 11:36:48 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev
-Subject: [PATCH 0/5] cachefiles: some bugfixes for withdraw and xattr
-Date: Wed, 24 Apr 2024 11:27:27 +0800
-Message-Id: <20240424032732.2711487-1-libaokun@huaweicloud.com>
+Subject: [PATCH 1/5] netfs, fscache: export fscache_put_volume() and add fscache_try_get_volume()
+Date: Wed, 24 Apr 2024 11:27:28 +0800
+Message-Id: <20240424032732.2711487-2-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240424032732.2711487-1-libaokun@huaweicloud.com>
+References: <20240424032732.2711487-1-libaokun@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgBHZQ5Nfihmarc3Kw--.25590S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7uw18JFyfJFWDXrWkWFyfZwb_yoW8Gw45pF
-	WayF43Jry8W3y7Gw1fAr15Jr1rA3s3JF1vg347Wr18Awn5Xr1jqF1Iyr15ZFW5ury7Jws2
-	q3WUKFy7Ww1jy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUWVWUuwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUtrc3UUUUU==
+X-CM-TRANSID: cCh0CgBHZQ5Nfihmarc3Kw--.25590S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw17ur1rJw1kWw1rCr1rWFg_yoW5Cr1Dp3
+	srCrn7KF48Xw1xGw45Xw47Zrn3Z3yDKan7G348Gw15Cw4xtr15XF12yw15AF13A34UJrWI
+	yF1Utryjgw1UZr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUWVWUuwAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwAKzVCY07xG64k0F24lc7CjxVAKzI0EY4vE52x082I5MxAIw28IcxkI7VAKI48JMxC2
+	0s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+	0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20x
+	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8
+	JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7sRi9a97UUUUU==
 X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -68,44 +71,86 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Baokun Li <libaokun1@huawei.com>
 
-Hello everyone!
+Export fscache_put_volume() and add fscache_try_get_volume()
+helper function to allow cachefiles to get/put fscache_volume
+via linux/fscache-cache.h.
 
-Recently we found some bugs while doing tests on cachefiles ondemand mode,
-and this patchset is a fix for some of those issues. The following is a
-brief overview of the patches, see the patches for more details.
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+ fs/netfs/fscache_volume.c     | 14 ++++++++++++++
+ fs/netfs/internal.h           |  2 --
+ include/linux/fscache-cache.h |  6 ++++++
+ 3 files changed, 20 insertions(+), 2 deletions(-)
 
-Patch 1-2: Add fscache_try_get_volume() helper function to avoid
-fscache_volume use-after-free on cache withdrawal.
-
-Patch 3: Fix cachefiles_lookup_cookie() and cachefiles_withdraw_cache()
-concurrency causing cachefiles_volume use-after-free.
-
-Patch 4-5: Propagate error codes returned by vfs_getxattr() to avoid
-endless loops.
-
-Comments and questions are, as always, welcome.
-
-Thanks,
-Baokun
-
-Baokun Li (5):
-  netfs, fscache: export fscache_put_volume() and add
-    fscache_try_get_volume()
-  cachefiles: fix slab-use-after-free in fscache_withdraw_volume()
-  cachefiles: fix slab-use-after-free in cachefiles_withdraw_cookie()
-  cachefiles: correct the return value of
-    cachefiles_check_volume_xattr()
-  cachefiles: correct the return value of cachefiles_check_auxdata()
-
- fs/cachefiles/cache.c          | 45 +++++++++++++++++++++++++++++++++-
- fs/cachefiles/volume.c         |  1 -
- fs/cachefiles/xattr.c          |  5 +++-
- fs/netfs/fscache_volume.c      | 14 +++++++++++
- fs/netfs/internal.h            |  2 --
- include/linux/fscache-cache.h  |  6 +++++
- include/trace/events/fscache.h |  4 +++
- 7 files changed, 72 insertions(+), 5 deletions(-)
-
+diff --git a/fs/netfs/fscache_volume.c b/fs/netfs/fscache_volume.c
+index cdf991bdd9de..cb75c07b5281 100644
+--- a/fs/netfs/fscache_volume.c
++++ b/fs/netfs/fscache_volume.c
+@@ -27,6 +27,19 @@ struct fscache_volume *fscache_get_volume(struct fscache_volume *volume,
+ 	return volume;
+ }
+ 
++struct fscache_volume *fscache_try_get_volume(struct fscache_volume *volume,
++					      enum fscache_volume_trace where)
++{
++	int ref;
++
++	if (!__refcount_inc_not_zero(&volume->ref, &ref))
++		return NULL;
++
++	trace_fscache_volume(volume->debug_id, ref + 1, where);
++	return volume;
++}
++EXPORT_SYMBOL(fscache_try_get_volume);
++
+ static void fscache_see_volume(struct fscache_volume *volume,
+ 			       enum fscache_volume_trace where)
+ {
+@@ -420,6 +433,7 @@ void fscache_put_volume(struct fscache_volume *volume,
+ 			fscache_free_volume(volume);
+ 	}
+ }
++EXPORT_SYMBOL(fscache_put_volume);
+ 
+ /*
+  * Relinquish a volume representation cookie.
+diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
+index ec7045d24400..edf9b2a180ca 100644
+--- a/fs/netfs/internal.h
++++ b/fs/netfs/internal.h
+@@ -326,8 +326,6 @@ extern const struct seq_operations fscache_volumes_seq_ops;
+ 
+ struct fscache_volume *fscache_get_volume(struct fscache_volume *volume,
+ 					  enum fscache_volume_trace where);
+-void fscache_put_volume(struct fscache_volume *volume,
+-			enum fscache_volume_trace where);
+ bool fscache_begin_volume_access(struct fscache_volume *volume,
+ 				 struct fscache_cookie *cookie,
+ 				 enum fscache_access_trace why);
+diff --git a/include/linux/fscache-cache.h b/include/linux/fscache-cache.h
+index bdf7f3eddf0a..4c91a019972b 100644
+--- a/include/linux/fscache-cache.h
++++ b/include/linux/fscache-cache.h
+@@ -19,6 +19,7 @@
+ enum fscache_cache_trace;
+ enum fscache_cookie_trace;
+ enum fscache_access_trace;
++enum fscache_volume_trace;
+ 
+ enum fscache_cache_state {
+ 	FSCACHE_CACHE_IS_NOT_PRESENT,	/* No cache is present for this name */
+@@ -97,6 +98,11 @@ extern void fscache_withdraw_cookie(struct fscache_cookie *cookie);
+ 
+ extern void fscache_io_error(struct fscache_cache *cache);
+ 
++extern struct fscache_volume *
++fscache_try_get_volume(struct fscache_volume *volume,
++		       enum fscache_volume_trace where);
++extern void fscache_put_volume(struct fscache_volume *volume,
++			       enum fscache_volume_trace where);
+ extern void fscache_end_volume_access(struct fscache_volume *volume,
+ 				      struct fscache_cookie *cookie,
+ 				      enum fscache_access_trace why);
 -- 
 2.39.2
 
