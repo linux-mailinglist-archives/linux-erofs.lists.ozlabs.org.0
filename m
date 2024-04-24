@@ -2,47 +2,68 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AE618B008C
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 06:30:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D46808B009B
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 06:34:55 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yHY/nhQt;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=AVdBskLN;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VPQy20bhTz3cBG
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 14:30:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VPR3d3jLKz3cLL
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 14:34:53 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yHY/nhQt;
+	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=AVdBskLN;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=sijam.com (client-ip=2607:f8b0:4864:20::22e; helo=mail-oi1-x22e.google.com; envelope-from=asai@sijam.com; receiver=lists.ozlabs.org)
+Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPQxt4Mb0z3bZN
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 14:29:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPR3W28Mvz2ykn
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 14:34:47 +1000 (AEST)
+Received: by mail-oi1-x22e.google.com with SMTP id 5614622812f47-3c74abe247bso2118661b6e.3
+        for <linux-erofs@lists.ozlabs.org>; Tue, 23 Apr 2024 21:34:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1713932987; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=IM9801pvB5uZHmd1rEJHc3tA7W/DHFfufzGQLjxpri4=;
-	b=yHY/nhQtgsnSpFL3y+F4odnJJrx2WiQvrRQmwpG9X+E5Z/8Oa3T0j+QR0LRVUfAM4KOwz8TjAbCyFLY21OEdYbghxDKtOkeuSvrBqfYp4uMPdh5euuW/7Z/c3YPaVynC75CY+qvcZTKjr5Rwo/5B2Jng0DaC9nVFD5d94G9KYUg=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067109;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0W5B7uD2_1713932984;
-Received: from 30.97.48.214(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W5B7uD2_1713932984)
-          by smtp.aliyun-inc.com;
-          Wed, 24 Apr 2024 12:29:45 +0800
-Message-ID: <de9d403c-c4ed-46c5-a572-18dc48bbd204@linux.alibaba.com>
-Date: Wed, 24 Apr 2024 12:29:44 +0800
+        d=sijam-com.20230601.gappssmtp.com; s=20230601; t=1713933283; x=1714538083; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WanqcPdj0b+2wTBEDuxwVutyNWhiV6rbLHSYnXBdLNY=;
+        b=AVdBskLNc0O4bisSfxHnfJr1uSLayLqVeHuYzt7qymRgJ6fbLSzpXjiJZOB+l+l2JY
+         fPy7mj1mRLd0q5J+plBs/2PXCOIrDyanV6eKtUdwSWo/I1j3KoXaMDAwceNTRtSsvagl
+         STtn0cSWyxymQUfhn8sYAUrP6vKNIAiOdPAO8qiNBai/n5u/QupqxyeJV4HihJ9d/oWp
+         lYuUhz8cWyBnFGViOB70Pv2tdKe603/fDzrDqJBFj/C8nVSwXdvGNyFn14+SBOukMpfO
+         XlP/4a4btPR6RnseMHv5QDpRJ6WPtc4YWEBoe09qrGENlLxq6GoTBgpDQmlC9loBJE4C
+         15sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713933283; x=1714538083;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WanqcPdj0b+2wTBEDuxwVutyNWhiV6rbLHSYnXBdLNY=;
+        b=ugbDIhZbJNTWthBxtjNENJFWLjSDdmsLG4XPinZpINBfepYKP4nObX8tuwxM4ZZa/+
+         nw8nmauWzW8ueCITL2kVPGKZBGk9dyszf/XJgvdKDQEqQ/6ajhEX+NIPhjMkUGXkDW0r
+         c6IbBnk7qXxserR5NSsaeYU/seoVAB8e2ni18bZSBK1yvkN09kn/YXhBwlq+ZS878pHw
+         L1i6knTjfc8derNT3iw9Zmjn4my7Ybn3V1A9SUmWhcWFw2xmHRSF3QG5CZTJOXFqLvFV
+         UAaf2emWrgjtzQwdm41tq2MGPZGw/5t/uq4lBxQSS2DFRilw8DK7O5me2G4TpD5ytc3k
+         TdVA==
+X-Gm-Message-State: AOJu0Yw9lYH7ssJTqi9lIGw0dkvFwB1JHo10ERJhlOqCoTFifYciDMMx
+	dagfRWKPVb88F7kVaM4CxFqRvHh+OwEag48O9dv5QogGRJ6UtXZRr+yq6pCLHf8=
+X-Google-Smtp-Source: AGHT+IG495kMC3zMakxf7K/eu3imdsvQFZhxn1UgM/0PJc27yQAOjPnPQCUtB96cvYgHjfjYvqU2aw==
+X-Received: by 2002:a05:6808:686:b0:3c8:3771:6cdc with SMTP id k6-20020a056808068600b003c837716cdcmr1192167oig.45.1713933282921;
+        Tue, 23 Apr 2024 21:34:42 -0700 (PDT)
+Received: from elric.localdomain (i121-112-72-48.s41.a027.ap.plala.or.jp. [121.112.72.48])
+        by smtp.gmail.com with ESMTPSA id b186-20020a62cfc3000000b006ecf56cb55fsm11204836pfg.96.2024.04.23.21.34.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 21:34:42 -0700 (PDT)
+From: Noboru Asai <asai@sijam.com>
+To: hsiangkao@linux.alibaba.com
+Subject: [PATCH] erofs-utils: add missing block counting
+Date: Wed, 24 Apr 2024 13:34:13 +0900
+Message-ID: <20240424043413.90179-1-asai@sijam.com>
+X-Mailer: git-send-email 2.44.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] cachefiles: add missing lock protection when polling
-To: libaokun@huaweicloud.com, netfs@lists.linux.dev
-References: <20240424033409.2735257-1-libaokun@huaweicloud.com>
- <20240424033409.2735257-6-libaokun@huaweicloud.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240424033409.2735257-6-libaokun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,64 +75,29 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Joseph Qi <joseph.qi@linux.alibaba.com>, jlayton@kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Baokun,
+Add missing block counting when the data to be inlined is not inlined.
 
-On 2024/4/24 11:34, libaokun@huaweicloud.com wrote:
-> From: Jingbo Xu <jefflexu@linux.alibaba.com>
-> 
-> Add missing lock protection in poll routine when iterating xarray,
-> otherwise:
-> 
-> Even with RCU read lock held, only the slot of the radix tree is
-> ensured to be pinned there, while the data structure (e.g. struct
-> cachefiles_req) stored in the slot has no such guarantee.  The poll
-> routine will iterate the radix tree and dereference cachefiles_req
-> accordingly.  Thus RCU read lock is not adequate in this case and
-> spinlock is needed here.
-> 
-> Fixes: b817e22b2e91 ("cachefiles: narrow the scope of triggering EPOLLIN events in ondemand mode")
-> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Noboru Asai <asai@sijam.com>
+---
+ lib/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'm not sure why this patch didn't send upstream,
-https://gitee.com/anolis/cloud-kernel/commit/324ecaaa10fefb0e3d94b547e3170e40b90cda1f
+diff --git a/lib/inode.c b/lib/inode.c
+index cf22bbe..727dcee 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -840,6 +840,7 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
+ 		inode->idata_size = 0;
+ 		free(inode->idata);
+ 		inode->idata = NULL;
++		inode->u.i_blocks += 1;
+ 
+ 		erofs_droid_blocklist_write_tail_end(inode, erofs_blknr(sbi, pos));
+ 	}
+-- 
+2.44.0
 
-But since we're now working on upstreaming, so let's drop
-the previous in-house review tags..
-
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
-
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
-> ---
->   fs/cachefiles/daemon.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
-> index 6465e2574230..73ed2323282a 100644
-> --- a/fs/cachefiles/daemon.c
-> +++ b/fs/cachefiles/daemon.c
-> @@ -365,14 +365,14 @@ static __poll_t cachefiles_daemon_poll(struct file *file,
->   
->   	if (cachefiles_in_ondemand_mode(cache)) {
->   		if (!xa_empty(&cache->reqs)) {
-> -			rcu_read_lock();
-> +			xas_lock(&xas);
->   			xas_for_each_marked(&xas, req, ULONG_MAX, CACHEFILES_REQ_NEW) {
->   				if (!cachefiles_ondemand_is_reopening_read(req)) {
->   					mask |= EPOLLIN;
->   					break;
->   				}
->   			}
-> -			rcu_read_unlock();
-> +			xas_unlock(&xas);
->   		}
->   	} else {
->   		if (test_bit(CACHEFILES_STATE_CHANGED, &cache->flags))
