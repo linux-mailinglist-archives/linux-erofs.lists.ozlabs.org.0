@@ -2,54 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADD628B0777
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 12:38:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 995F18B083A
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:22:12 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hQL7PsFQ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=OchN7d8Q;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VPb6q2fHhz3dCV
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 20:38:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VPc5Z27jHz3cWs
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 21:22:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hQL7PsFQ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=OchN7d8Q;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPb6f55B9z3cFw
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 20:38:02 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 7EE11CE140C;
-	Wed, 24 Apr 2024 10:37:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F297AC113CE;
-	Wed, 24 Apr 2024 10:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713955078;
-	bh=DpJg2cHrz08AXmNf/xWkLpE+4eBBr+TUNVOWo5vuWQI=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=hQL7PsFQvtIWcL0MF4rCLjmbZbEUNCOUkyU2kkgh6XD/DURp/q+VV9UqPGO2AkvuE
-	 BiUM0F1YDzJpF6Yidw22B41cVKoVzXuSR+HzfWNipkRtSbgRiwASRF+ZX+2lee4K6K
-	 df/ZuQHiSCCk1vjPYpDAaaT/FpYzqrQZfNuKRvomdjAWv4Kp8/CAaXlxmkbedODfTH
-	 nfpQySViRhdoUrfv1TkdUEghn2CjwRaZeHT23H8ClOkViD9OnNa38NgQp2x7lCRnxr
-	 i7DNfDMW8hici63+gGTOpdZMoRkHveJ26SiMmvt8+Gn1GAggb2t5JZfRmOJleo9vx8
-	 tae3ygehVIhcQ==
-Date: Wed, 24 Apr 2024 18:37:55 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Noboru Asai <asai@sijam.com>, linux-erofs@lists.ozlabs.org
-Subject: Re: [PATCH v2] erofs-utils: add missing block counting
-Message-ID: <ZijhA4IJFSO7FYUy@debian>
-Mail-Followup-To: Noboru Asai <asai@sijam.com>,
-	linux-erofs@lists.ozlabs.org
-References: <20240424055923.107209-1-asai@sijam.com>
- <288873a1-f594-4f5b-b3a1-881ad7ced1cf@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPc5P1Xtpz3cRr
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 21:21:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1713957713; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Ng39GRBnsItm8XR2jbJ/4RhY77ypkbK0TVgWZrO11AY=;
+	b=OchN7d8Q++PqNj2XDVYkkCzdr4YuUVn/C+8WtxzVhr4oc6cwhNiXdA7B17C2u064uyRUCfFsPCn616+yrFa5+yf9NNuLW4jhOplNfXL+NnJRjpOxWBUF33VxLsiTMnTvIsQc87gKEs8iEAoBv837J2+RgJPYW1JZ9y8TflcFnIU=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R471e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W5C6jzC_1713957710;
+Received: from 30.221.147.25(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W5C6jzC_1713957710)
+          by smtp.aliyun-inc.com;
+          Wed, 24 Apr 2024 19:21:51 +0800
+Message-ID: <1c18da0e-b0cb-4eb2-9eab-19a68fa416cd@linux.alibaba.com>
+Date: Wed, 24 Apr 2024 19:21:50 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <288873a1-f594-4f5b-b3a1-881ad7ced1cf@linux.alibaba.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH -next] erofs: modify the error message when
+ prepare_ondemand_read failed
+To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org, chao@kernel.org
+References: <20240424084247.759432-1-lihongbo22@huawei.com>
+Content-Language: en-US
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <20240424084247.759432-1-lihongbo22@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,57 +55,41 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: huyue2@coolpad.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Apr 24, 2024 at 02:15:58PM +0800, Gao Xiang wrote:
-> 
-> 
-> On 2024/4/24 13:59, Noboru Asai wrote:
-> > Add missing block counting when the data to be inlined is not inlined.
-> > 
-> > ---
-> > v2:
-> > - move from erofs_write_tail_end() to erofs_prepare_tail_block()
-> > 
-> > Signed-off-by: Noboru Asai <asai@sijam.com>
+
+
+On 4/24/24 4:42 PM, Hongbo Li wrote:
+> When prepare_ondemand_read failed, wrong error message is printed.
+> The prepare_read is also implemented in cachefiles, so we amend it.
 > 
 > Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> ---
+>  fs/erofs/fscache.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Thanks,
-> Gao Xiang
+> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+> index 8aff1a724805..62da538d91cb 100644
+> --- a/fs/erofs/fscache.c
+> +++ b/fs/erofs/fscache.c
+> @@ -151,7 +151,7 @@ static int erofs_fscache_read_io_async(struct fscache_cookie *cookie,
+>  		if (WARN_ON(len == 0))
+>  			source = NETFS_INVALID_READ;
+>  		if (source != NETFS_READ_FROM_CACHE) {
+> -			erofs_err(NULL, "prepare_read failed (source %d)", source);
+> +			erofs_err(NULL, "prepare_ondemand_read failed (source %d)", source);
+>  			return -EIO;
+>  		}
+>  
 
-I applied the following version since v2 caused CI failure:
-https://github.com/erofs/erofsnightly/actions/runs/8812585654
 
+LGTM.
 
-From 89e76dda5fd4956709bbb88b76063ef165fa3882 Mon Sep 17 00:00:00 2001
-From: Noboru Asai <asai@sijam.com>
-Date: Wed, 24 Apr 2024 14:59:23 +0900
-Subject: [PATCH] erofs-utils: add missing block counting
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-Add missing block counting when the data to be inlined is not inlined.
-
-Signed-off-by: Noboru Asai <asai@sijam.com>
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- lib/inode.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/lib/inode.c b/lib/inode.c
-index 7508c74..896a257 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -664,6 +664,8 @@ static int erofs_prepare_tail_block(struct erofs_inode *inode)
- 	} else {
- 		inode->lazy_tailblock = true;
- 	}
-+	if (is_inode_layout_compression(inode))
-+		inode->u.i_blocks += 1;
- 	return 0;
- }
- 
 -- 
-2.30.2
-
+Thanks,
+Jingbo
