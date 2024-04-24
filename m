@@ -2,11 +2,11 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 647B38B000F
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 05:49:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 696E28B0010
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 05:49:07 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VPQ2k0glQz3cjv
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:49:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VPQ2n12K8z3cLL
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Apr 2024 13:49:05 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
@@ -14,31 +14,31 @@ Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPQ2F5TNxz3cDk
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 13:48:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPQ2G1jWPz3cNt
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 13:48:38 +1000 (AEST)
 Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VPQ222hngz4f3knq
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VPQ226Tlnz4f3knv
 	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:48:26 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id E1D581A016E
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:48:33 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 6F1D51A0175
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 11:48:34 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBELgShmKXE4Kw--.6143S12;
-	Wed, 24 Apr 2024 11:48:33 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBELgShmKXE4Kw--.6143S13;
+	Wed, 24 Apr 2024 11:48:34 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev
-Subject: [PATCH 08/12] cachefiles: never get a new anon fd if ondemand_id is valid
-Date: Wed, 24 Apr 2024 11:39:12 +0800
-Message-Id: <20240424033916.2748488-9-libaokun@huaweicloud.com>
+Subject: [PATCH 09/12] cachefiles: defer exposing anon_fd until after copy_to_user() succeeds
+Date: Wed, 24 Apr 2024 11:39:13 +0800
+Message-Id: <20240424033916.2748488-10-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240424033916.2748488-1-libaokun@huaweicloud.com>
 References: <20240424033916.2748488-1-libaokun@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgCXaBELgShmKXE4Kw--.6143S12
-X-Coremail-Antispam: 1UD129KBjvJXoWxAr1DJryUKF48CFyDKrW8tFb_yoW5Cw48pF
-	WakF9xKryxuF4xWrZ7Aan5XryFy3ykZFnrWa4ag34rAFn0gr1rZr1Utr13ZF15A3sIgrsr
-	ta1UWF9xtw1qk3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: cCh0CgCXaBELgShmKXE4Kw--.6143S13
+X-Coremail-Antispam: 1UD129KBjvJXoWxGFyfGw15WryUKFWxuFyfJFb_yoWruFWfpF
+	WakFy3Kry8WFW8ur97ArZ8XFyfA34kA3ZrW3s0g34rArnIgryYvr10yr98uF15Ar97Grsx
+	ta1UuF93Gr1jy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUQI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWUWVWUuwAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -71,100 +71,149 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Baokun Li <libaokun1@huawei.com>
 
-Now every time the daemon reads an open request, it requests a new anon fd
-and ondemand_id. With the introduction of "restore", it is possible to read
-the same open request more than once, and therefore have multiple anon fd's
-for the same object.
+After installing the anonymous fd, we can now see it in userland and close
+it. However, at this point we may not have gotten the reference count of
+the cache, but we will put it during colse fd, so this may cause a cache
+UAF.
 
-To avoid this, allocate a new anon fd only if no anon fd has been allocated
-(ondemand_id == 0) or if the previously allocated anon fd has been closed
-(ondemand_id == -1). Returns an error if ondemand_id is valid, letting the
-daemon know that the current userland restore logic is abnormal and needs
-to be checked.
+To avoid this, we will make the anonymous fd accessible to the userland by
+executing fd_install() after copy_to_user() has succeeded, and by this
+point we must have already grabbed the reference count of the cache.
 
+Suggested-by: Hou Tao <houtao1@huawei.com>
 Signed-off-by: Baokun Li <libaokun1@huawei.com>
 ---
- fs/cachefiles/ondemand.c | 34 ++++++++++++++++++++++++++++------
- 1 file changed, 28 insertions(+), 6 deletions(-)
+ fs/cachefiles/ondemand.c | 53 +++++++++++++++++++++++++---------------
+ 1 file changed, 33 insertions(+), 20 deletions(-)
 
 diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index b5e6a851ef04..0cf63bfedc9e 100644
+index 0cf63bfedc9e..7c2d43104120 100644
 --- a/fs/cachefiles/ondemand.c
 +++ b/fs/cachefiles/ondemand.c
-@@ -14,11 +14,18 @@ static int cachefiles_ondemand_fd_release(struct inode *inode,
- 					  struct file *file)
- {
- 	struct cachefiles_object *object = file->private_data;
--	struct cachefiles_cache *cache = object->volume->cache;
--	struct cachefiles_ondemand_info *info = object->ondemand;
-+	struct cachefiles_cache *cache;
-+	struct cachefiles_ondemand_info *info;
- 	int object_id;
- 	struct cachefiles_req *req;
--	XA_STATE(xas, &cache->reqs, 0);
-+	XA_STATE(xas, NULL, 0);
-+
-+	if (!object)
-+		return 0;
-+
-+	info = object->ondemand;
-+	cache = object->volume->cache;
-+	xas.xa = &cache->reqs;
+@@ -4,6 +4,11 @@
+ #include <linux/uio.h>
+ #include "internal.h"
  
- 	xa_lock(&cache->reqs);
- 	spin_lock(&info->lock);
-@@ -269,22 +276,39 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
++struct anon_file {
++	struct file *file;
++	int fd;
++};
++
+ static inline void cachefiles_req_put(struct cachefiles_req *req)
+ {
+ 	if (refcount_dec_and_test(&req->ref))
+@@ -244,14 +249,14 @@ int cachefiles_ondemand_restore(struct cachefiles_cache *cache, char *args)
+ 	return 0;
+ }
+ 
+-static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
++static int cachefiles_ondemand_get_fd(struct cachefiles_req *req,
++				      struct anon_file *anon_file)
+ {
+ 	struct cachefiles_object *object;
+ 	struct cachefiles_cache *cache;
+ 	struct cachefiles_open *load;
+-	struct file *file;
+ 	u32 object_id;
+-	int ret, fd;
++	int ret;
+ 
+ 	object = cachefiles_grab_object(req->object,
+ 			cachefiles_obj_get_ondemand_fd);
+@@ -263,16 +268,16 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+ 	if (ret < 0)
+ 		goto err;
+ 
+-	fd = get_unused_fd_flags(O_WRONLY);
+-	if (fd < 0) {
+-		ret = fd;
++	anon_file->fd = get_unused_fd_flags(O_WRONLY);
++	if (anon_file->fd < 0) {
++		ret = anon_file->fd;
+ 		goto err_free_id;
+ 	}
+ 
+-	file = anon_inode_getfile("[cachefiles]", &cachefiles_ondemand_fd_fops,
+-				  object, O_WRONLY);
+-	if (IS_ERR(file)) {
+-		ret = PTR_ERR(file);
++	anon_file->file = anon_inode_getfile("[cachefiles]",
++				&cachefiles_ondemand_fd_fops, object, O_WRONLY);
++	if (IS_ERR(anon_file->file)) {
++		ret = PTR_ERR(anon_file->file);
  		goto err_put_fd;
  	}
  
-+	spin_lock(&object->ondemand->lock);
-+	if (object->ondemand->ondemand_id > 0) {
-+		spin_unlock(&object->ondemand->lock);
-+		ret = -EEXIST;
-+		/* Avoid performing cachefiles_ondemand_fd_release(). */
-+		file->private_data = NULL;
-+		goto err_put_file;
-+	}
-+
- 	file->f_mode |= FMODE_PWRITE | FMODE_LSEEK;
- 	fd_install(fd, file);
+@@ -281,15 +286,14 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+ 		spin_unlock(&object->ondemand->lock);
+ 		ret = -EEXIST;
+ 		/* Avoid performing cachefiles_ondemand_fd_release(). */
+-		file->private_data = NULL;
++		anon_file->file->private_data = NULL;
+ 		goto err_put_file;
+ 	}
+ 
+-	file->f_mode |= FMODE_PWRITE | FMODE_LSEEK;
+-	fd_install(fd, file);
++	anon_file->file->f_mode |= FMODE_PWRITE | FMODE_LSEEK;
  
  	load = (void *)req->msg.data;
- 	load->fd = fd;
+-	load->fd = fd;
++	load->fd = anon_file->fd;
  	object->ondemand->ondemand_id = object_id;
-+	spin_unlock(&object->ondemand->lock);
+ 	spin_unlock(&object->ondemand->lock);
  
- 	cachefiles_get_unbind_pincount(cache);
- 	trace_cachefiles_ondemand_open(object, &req->msg, load);
+@@ -298,9 +302,11 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
  	return 0;
  
-+err_put_file:
-+	fput(file);
+ err_put_file:
+-	fput(file);
++	fput(anon_file->file);
++	anon_file->file = NULL;
  err_put_fd:
- 	put_unused_fd(fd);
+-	put_unused_fd(fd);
++	put_unused_fd(anon_file->fd);
++	anon_file->fd = ret;
  err_free_id:
  	xa_erase(&cache->ondemand_ids, object_id);
  err:
-+	spin_lock(&object->ondemand->lock);
-+	/* Avoid marking an opened object as closed. */
-+	if (object->ondemand->ondemand_id <= 0)
-+		cachefiles_ondemand_set_object_close(object);
-+	spin_unlock(&object->ondemand->lock);
- 	cachefiles_put_object(object, cachefiles_obj_put_ondemand_fd);
- 	return ret;
- }
-@@ -367,10 +391,8 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+@@ -357,6 +363,7 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+ 	struct cachefiles_msg *msg;
+ 	size_t n;
+ 	int ret = 0;
++	struct anon_file anon_file;
+ 	XA_STATE(xas, &cache->reqs, cache->req_id_next);
+ 
+ 	xa_lock(&cache->reqs);
+@@ -390,7 +397,7 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+ 	xa_unlock(&cache->reqs);
  
  	if (msg->opcode == CACHEFILES_OP_OPEN) {
- 		ret = cachefiles_ondemand_get_fd(req);
--		if (ret) {
--			cachefiles_ondemand_set_object_close(req->object);
-+		if (ret)
+-		ret = cachefiles_ondemand_get_fd(req);
++		ret = cachefiles_ondemand_get_fd(req, &anon_file);
+ 		if (ret)
  			goto out;
--		}
  	}
- 
+@@ -398,10 +405,16 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
  	msg->msg_id = xas.xa_index;
+ 	msg->object_id = req->object->ondemand->ondemand_id;
+ 
+-	if (copy_to_user(_buffer, msg, n) != 0) {
++	if (copy_to_user(_buffer, msg, n) != 0)
+ 		ret = -EFAULT;
+-		if (msg->opcode == CACHEFILES_OP_OPEN)
+-			close_fd(((struct cachefiles_open *)msg->data)->fd);
++
++	if (msg->opcode == CACHEFILES_OP_OPEN) {
++		if (ret < 0) {
++			fput(anon_file.file);
++			put_unused_fd(anon_file.fd);
++			goto out;
++		}
++		fd_install(anon_file.fd, anon_file.file);
+ 	}
+ out:
+ 	cachefiles_put_object(req->object, cachefiles_obj_put_read_req);
 -- 
 2.39.2
 
