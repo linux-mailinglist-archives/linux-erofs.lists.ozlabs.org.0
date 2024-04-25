@@ -1,64 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEA848B1879
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Apr 2024 03:34:07 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D07D8B1909
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Apr 2024 04:48:55 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=Gp3tO7Hr;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VPz0Y1RN5z3cgk
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Apr 2024 11:34:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VQ0fs0fwYz3d42
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Apr 2024 12:48:53 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=Gp3tO7Hr;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=sijam.com (client-ip=2607:f8b0:4864:20::b2f; helo=mail-yb1-xb2f.google.com; envelope-from=asai@sijam.com; receiver=lists.ozlabs.org)
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VPz0P53nlz30N8
-	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Apr 2024 11:33:54 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VPz043cBVz4f3khr
-	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Apr 2024 09:33:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 1714E1A016E
-	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Apr 2024 09:33:48 +0800 (CST)
-Received: from [10.174.177.174] (unknown [10.174.177.174])
-	by APP1 (Coremail) with SMTP id cCh0CgBnOBH4silm_UuKKw--.41818S3;
-	Thu, 25 Apr 2024 09:33:47 +0800 (CST)
-Message-ID: <178d23c8-40cc-f975-7043-68c0d5e15786@huaweicloud.com>
-Date: Thu, 25 Apr 2024 09:33:44 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VQ0fl5ZH7z3cgk
+	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Apr 2024 12:48:46 +1000 (AEST)
+Received: by mail-yb1-xb2f.google.com with SMTP id 3f1490d57ef6-de56d4bb72bso630415276.2
+        for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 19:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sijam-com.20230601.gappssmtp.com; s=20230601; t=1714013324; x=1714618124; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a0uVHoorN+j2eB+OLfGCY/voveCGSZaKvdKTatXKctI=;
+        b=Gp3tO7Hr/wKnB7pjfqeVWKDlk+GjHZrh++WnbUCLAH7LWP52c60la2Oo1Q1fQYuCyi
+         AVqc+nF3oOvr2RV372pQuUIRwm4tRyWRf1cU6VUGAOX3AcTos3G9TRFynbhRpY/GcWuO
+         qC8MstcABQsPMJ2qWUrBIkXzaNcplhOCXs4tEC/XIn+k95eSGAcXz6fLbhAh7Sl03WSp
+         FQE914oTfhmRtVeEQYQ8G/jaGvGBL+/TLajj15e+a2wYTebUUVOwVNOsUGm4z1OzTFGY
+         /PXWP+bCWiZUXfskXge2IrFHLA9lEoq2CooUFz/2xKSS8H8qIFLfBsQ1z985kTgjYmqa
+         3+nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714013324; x=1714618124;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a0uVHoorN+j2eB+OLfGCY/voveCGSZaKvdKTatXKctI=;
+        b=K4xI/nzTL49eFe1S/D6kB7I3KWuW5L9zk+VpCXbTYUHh2yO2qAsmriuKNc1pJtvTUx
+         NiWFDRFoucv1VXMZaJDI5oBm7+iX5al/pB4S0a8SVUKC9pxMw0OriXtSH37YSsiJDFAV
+         HaCtbmq0Ao0yYnrH+A2hJW8mGzhOov37xqbyXB1V4DVNFPMON4OpeJDwvAqHbd0VxH3j
+         6MqmEy9GvGR2tVVc0Mn+TZkbfn5+Ywo922L0EXNpc75pAZoixnhfoQYEvq99fooVf+eG
+         BSRx1VlTIxWjvS6wHYspWDRCXBtuhPEkmeGbUTjNbhXwaiAuvVbIb1C9OrIhKi41lnd4
+         vfCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqpo3w/5m67NxtGZPzoCW4ByFKR2HVt8V2FQEzsCzkV1CttwhUtzocijiJvgqmgbTI0enkyR16z0cnU3XqXvfd1htv4xcvRbmBQZkw
+X-Gm-Message-State: AOJu0Yw62UthVc6rxmD9R0uTuWns3yuKjcrh6Z60uF4r+kEvibrNM2Ch
+	pNKnXt/4FuFZ35eT3f2wyuoz8C5M5/w1NvrZVRAqufWIsZRGjeGEZET4yPWtHNytaf8x/lQPdbr
+	UTfhlODcNv252bHTwdk8wo2rNko8vmfpoWmrtPg==
+X-Google-Smtp-Source: AGHT+IG+TQZWbmROmUuvsGBWm+rjKBmwldm3wkHakx0mK1CGc/Wz5JiHdqTdR7brEr1x+ImIdTDIJU9/DSOz0lKKnZE=
+X-Received: by 2002:a25:db02:0:b0:dd1:3909:bdd with SMTP id
+ g2-20020a25db02000000b00dd139090bddmr3723670ybf.65.1714013324301; Wed, 24 Apr
+ 2024 19:48:44 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH 03/12] cachefiles: fix slab-use-after-free in
- cachefiles_ondemand_get_fd()
-Content-Language: en-US
-To: Jia Zhu <zhujia.zj@bytedance.com>, netfs@lists.linux.dev
-References: <20240424033916.2748488-1-libaokun@huaweicloud.com>
- <20240424033916.2748488-4-libaokun@huaweicloud.com>
- <34ba3b5c-638c-4622-8bcb-a2ef74b22f69@bytedance.com>
-From: Baokun Li <libaokun@huaweicloud.com>
-In-Reply-To: <34ba3b5c-638c-4622-8bcb-a2ef74b22f69@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgBnOBH4silm_UuKKw--.41818S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3ZrWDWw48tF4ftw18uF1Utrb_yoWDuryDpF
-	ZayFy7Jry8WrykGr1UJr1UJryrJryUJ3WDXr18XFy8Ar4DAr1Yqr1UXr1jgF1UGr48Ar4U
-	Jr1UGr9rZr17JrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUWVWUuwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
-	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
+References: <20240424055923.107209-1-asai@sijam.com> <288873a1-f594-4f5b-b3a1-881ad7ced1cf@linux.alibaba.com>
+ <ZijhA4IJFSO7FYUy@debian>
+In-Reply-To: <ZijhA4IJFSO7FYUy@debian>
+From: Noboru Asai <asai@sijam.com>
+Date: Thu, 25 Apr 2024 11:48:33 +0900
+Message-ID: <CAFoAo-JvXBe39dLuWVPqb6OTwFMKJOfeqcZ=3QsYCusKsR4-tA@mail.gmail.com>
+Subject: Re: [PATCH v2] erofs-utils: add missing block counting
+To: Noboru Asai <asai@sijam.com>, linux-erofs@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,253 +78,69 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: libaokun@huaweicloud.com, jlayton@kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Jia,
+Hi Gao,
 
-On 2024/4/24 22:55, Jia Zhu wrote:
->
->
-> 在 2024/4/24 11:39, libaokun@huaweicloud.com 写道:
->> From: Baokun Li <libaokun1@huawei.com>
->>
->> We got the following issue in a fuzz test of randomly issuing the 
->> restore
->> command:
->>
->> ==================================================================
->> BUG: KASAN: slab-use-after-free in 
->> cachefiles_ondemand_daemon_read+0x609/0xab0
->> Write of size 4 at addr ffff888109164a80 by task ondemand-04-dae/4962
->>
->> CPU: 11 PID: 4962 Comm: ondemand-04-dae Not tainted 6.8.0-rc7-dirty #542
->> Call Trace:
->>   kasan_report+0x94/0xc0
->>   cachefiles_ondemand_daemon_read+0x609/0xab0
->>   vfs_read+0x169/0xb50
->>   ksys_read+0xf5/0x1e0
->>
->> Allocated by task 626:
->>   __kmalloc+0x1df/0x4b0
->>   cachefiles_ondemand_send_req+0x24d/0x690
->>   cachefiles_create_tmpfile+0x249/0xb30
->>   cachefiles_create_file+0x6f/0x140
->>   cachefiles_look_up_object+0x29c/0xa60
->>   cachefiles_lookup_cookie+0x37d/0xca0
->>   fscache_cookie_state_machine+0x43c/0x1230
->>   [...]
->>
->> Freed by task 626:
->>   kfree+0xf1/0x2c0
->>   cachefiles_ondemand_send_req+0x568/0x690
->>   cachefiles_create_tmpfile+0x249/0xb30
->>   cachefiles_create_file+0x6f/0x140
->>   cachefiles_look_up_object+0x29c/0xa60
->>   cachefiles_lookup_cookie+0x37d/0xca0
->>   fscache_cookie_state_machine+0x43c/0x1230
->>   [...]
->> ==================================================================
->>
->> Following is the process that triggers the issue:
->>
->>       mount  |   daemon_thread1    |    daemon_thread2
->> ------------------------------------------------------------
->>   cachefiles_ondemand_init_object
->>    cachefiles_ondemand_send_req
->>     REQ_A = kzalloc(sizeof(*req) + data_len)
->>     wait_for_completion(&REQ_A->done)
->>
->>              cachefiles_daemon_read
->>               cachefiles_ondemand_daemon_read
->>                REQ_A = cachefiles_ondemand_select_req
->>                cachefiles_ondemand_get_fd
->>                copy_to_user(_buffer, msg, n)
->>              process_open_req(REQ_A)
->>                                    ------ restore ------
->>                                    cachefiles_ondemand_restore
->>                                    xas_for_each(&xas, req, ULONG_MAX)
->>                                     xas_set_mark(&xas, 
->> CACHEFILES_REQ_NEW);
->>
->>                                    cachefiles_daemon_read
->> cachefiles_ondemand_daemon_read
->>                                      REQ_A = 
->> cachefiles_ondemand_select_req
->>
->>               write(devfd, ("copen %u,%llu", msg->msg_id, size));
->>               cachefiles_ondemand_copen
->>                xa_erase(&cache->reqs, id)
->>                complete(&REQ_A->done)
->>     kfree(REQ_A)
->> cachefiles_ondemand_get_fd(REQ_A)
->>                                       fd = get_unused_fd_flags
->>                                       file = anon_inode_getfile
->>                                       fd_install(fd, file)
->>                                       load = (void *)REQ_A->msg.data;
->>                                       load->fd = fd;
->>                                       // load UAF !!!
->>
->> This issue is caused by issuing a restore command when the daemon is 
->> still
->> alive, which results in a request being processed multiple times thus
->> triggering a UAF. So to avoid this problem, add an additional reference
->> count to cachefiles_req, which is held while waiting and reading, and 
->> then
->> released when the waiting and reading is over.
->
-> Hi Baokun,
-> Thank you for catching this issue. Shall we fix this by following steps:
-> cachefiles_ondemand_fd_release()
->     xas_for_each(req)
->         if req is not CACHEFILES_OP_READ
->             flush
->
-> cachefiles_ondemand_restore()
->     xas_for_each(req)
->         if req is not CACHEFILES_REQ_NEW && op is (OPEN or CLOSE)
->             reset req to CACHEFILES_REQ_NEW
->
-> By implementing these steps:
-> 1. In real daemon failover case： only pending read reqs will be
-> reserved. cachefiles_ondemand_select_req will reopen the object by
-> processing READ req.
-> 2. In daemon alive case： Only read reqs will be reset to
-> CACHEFILES_REQ_NEW.
->
-This way, in the fialover case, some processes that are being mounted
-will fail, which is contrary to our intention of making the user senseless.
-In my opinion, it's better to keep making users senseless.
+Oh, sorry.
+I knew to access i_blkaddr on uncompressed file, but it didn't occur
+on the file system for testing, so I overlooked it.
+ I needed to be careful.
 
-Thanks,
-Baokun
+2024=E5=B9=B44=E6=9C=8824=E6=97=A5(=E6=B0=B4) 19:38 Gao Xiang <xiang@kernel=
+.org>:
 >
->>
->> Note that since there is only one reference count for waiting, we 
->> need to
->> avoid the same request being completed multiple times, so we can only
->> complete the request if it is successfully removed from the xarray.
->>
->> Fixes: e73fa11a356c ("cachefiles: add restore command to recover 
->> inflight ondemand read requests")
->> Suggested-by: Hou Tao <houtao1@huawei.com>
->> Signed-off-by: Baokun Li <libaokun1@huawei.com>
->> ---
->>   fs/cachefiles/internal.h |  1 +
->>   fs/cachefiles/ondemand.c | 44 ++++++++++++++++++++++------------------
->>   2 files changed, 25 insertions(+), 20 deletions(-)
->>
->> diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
->> index d33169f0018b..7745b8abc3aa 100644
->> --- a/fs/cachefiles/internal.h
->> +++ b/fs/cachefiles/internal.h
->> @@ -138,6 +138,7 @@ static inline bool 
->> cachefiles_in_ondemand_mode(struct cachefiles_cache *cache)
->>   struct cachefiles_req {
->>       struct cachefiles_object *object;
->>       struct completion done;
->> +    refcount_t ref;
->>       int error;
->>       struct cachefiles_msg msg;
->>   };
->> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
->> index fd49728d8bae..56d12fe4bf73 100644
->> --- a/fs/cachefiles/ondemand.c
->> +++ b/fs/cachefiles/ondemand.c
->> @@ -4,6 +4,12 @@
->>   #include <linux/uio.h>
->>   #include "internal.h"
->>   +static inline void cachefiles_req_put(struct cachefiles_req *req)
->> +{
->> +    if (refcount_dec_and_test(&req->ref))
->> +        kfree(req);
->> +}
->> +
->>   static int cachefiles_ondemand_fd_release(struct inode *inode,
->>                         struct file *file)
->>   {
->> @@ -299,7 +305,6 @@ ssize_t cachefiles_ondemand_daemon_read(struct 
->> cachefiles_cache *cache,
->>   {
->>       struct cachefiles_req *req;
->>       struct cachefiles_msg *msg;
->> -    unsigned long id = 0;
->>       size_t n;
->>       int ret = 0;
->>       XA_STATE(xas, &cache->reqs, cache->req_id_next);
->> @@ -330,41 +335,39 @@ ssize_t cachefiles_ondemand_daemon_read(struct 
->> cachefiles_cache *cache,
->>         xas_clear_mark(&xas, CACHEFILES_REQ_NEW);
->>       cache->req_id_next = xas.xa_index + 1;
->> +    refcount_inc(&req->ref);
->>       xa_unlock(&cache->reqs);
->>   -    id = xas.xa_index;
->> -
->>       if (msg->opcode == CACHEFILES_OP_OPEN) {
->>           ret = cachefiles_ondemand_get_fd(req);
->>           if (ret) {
->> cachefiles_ondemand_set_object_close(req->object);
->> -            goto error;
->> +            goto out;
->>           }
->>       }
->>   -    msg->msg_id = id;
->> +    msg->msg_id = xas.xa_index;
->>       msg->object_id = req->object->ondemand->ondemand_id;
->>         if (copy_to_user(_buffer, msg, n) != 0) {
->>           ret = -EFAULT;
->>           if (msg->opcode == CACHEFILES_OP_OPEN)
->>               close_fd(((struct cachefiles_open *)msg->data)->fd);
->> -        goto error;
->>       }
->> -
->> -    /* CLOSE request has no reply */
->> -    if (msg->opcode == CACHEFILES_OP_CLOSE) {
->> -        xa_erase(&cache->reqs, id);
->> -        complete(&req->done);
->> +out:
->> +    /* Remove error request and CLOSE request has no reply */
->> +    if (ret || msg->opcode == CACHEFILES_OP_CLOSE) {
->> +        xas_reset(&xas);
->> +        xas_lock(&xas);
->> +        if (xas_load(&xas) == req) {
->> +            req->error = ret;
->> +            complete(&req->done);
->> +            xas_store(&xas, NULL);
->> +        }
->> +        xas_unlock(&xas);
->>       }
->> -
->> -    return n;
->> -
->> -error:
->> -    xa_erase(&cache->reqs, id);
->> -    req->error = ret;
->> -    complete(&req->done);
->> -    return ret;
->> +    cachefiles_req_put(req);
->> +    return ret ? ret : n;
->>   }
->>     typedef int (*init_req_fn)(struct cachefiles_req *req, void 
->> *private);
->> @@ -394,6 +397,7 @@ static int cachefiles_ondemand_send_req(struct 
->> cachefiles_object *object,
->>           goto out;
->>       }
->>   +    refcount_set(&req->ref, 1);
->>       req->object = object;
->>       init_completion(&req->done);
->>       req->msg.opcode = opcode;
->> @@ -455,7 +459,7 @@ static int cachefiles_ondemand_send_req(struct 
->> cachefiles_object *object,
->>       wake_up_all(&cache->daemon_pollwq);
->>       wait_for_completion(&req->done);
->>       ret = req->error;
->> -    kfree(req);
->> +    cachefiles_req_put(req);
->>       return ret;
->>   out:
->>       /* Reset the object to close state in error handling path.
-
-
+> On Wed, Apr 24, 2024 at 02:15:58PM +0800, Gao Xiang wrote:
+> >
+> >
+> > On 2024/4/24 13:59, Noboru Asai wrote:
+> > > Add missing block counting when the data to be inlined is not inlined=
+.
+> > >
+> > > ---
+> > > v2:
+> > > - move from erofs_write_tail_end() to erofs_prepare_tail_block()
+> > >
+> > > Signed-off-by: Noboru Asai <asai@sijam.com>
+> >
+> > Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> >
+> > Thanks,
+> > Gao Xiang
+>
+> I applied the following version since v2 caused CI failure:
+> https://github.com/erofs/erofsnightly/actions/runs/8812585654
+>
+>
+> From 89e76dda5fd4956709bbb88b76063ef165fa3882 Mon Sep 17 00:00:00 2001
+> From: Noboru Asai <asai@sijam.com>
+> Date: Wed, 24 Apr 2024 14:59:23 +0900
+> Subject: [PATCH] erofs-utils: add missing block counting
+>
+> Add missing block counting when the data to be inlined is not inlined.
+>
+> Signed-off-by: Noboru Asai <asai@sijam.com>
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+>  lib/inode.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 7508c74..896a257 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -664,6 +664,8 @@ static int erofs_prepare_tail_block(struct erofs_inod=
+e *inode)
+>         } else {
+>                 inode->lazy_tailblock =3D true;
+>         }
+> +       if (is_inode_layout_compression(inode))
+> +               inode->u.i_blocks +=3D 1;
+>         return 0;
+>  }
+>
+> --
+> 2.30.2
+>
