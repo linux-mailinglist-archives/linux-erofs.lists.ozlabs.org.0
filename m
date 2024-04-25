@@ -2,71 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D07D8B1909
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Apr 2024 04:48:55 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=Gp3tO7Hr;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id DFCF58B1945
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Apr 2024 05:13:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1714014832;
+	bh=45q2opjjuUYEePVm3ifdMLHGn3JYGUOldjvko9Req9k=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=iOhhpRfRVGrN2oNCfeaA/P/rDFokahNcjAuL5VuSDvTL9qFQZB8/6NFv3p52o8CTt
+	 5o6Wf26vyoYjIFz9inmbRO4yFo8Vrg7M5RfBRfpLEHVL9quETRyx7MtE2lhhW+XFsF
+	 SUc6DK0ZTcW5Q8IwrAu/7yd5898tg23nOxR/Jfu+VJ677CVqK7cmlKCwYGeDeS27zV
+	 J9K2Q9wixMMuKtG2yOXgvSuHNowbaHH/Ys4s6qJQc4N/ovxmbg39sC63ZNfsFEmNUi
+	 oq3h+icZ83YcJKhy0xc97RGMVWVKmHDxdz0p4Wy+EiOd2b4uX7fzyKvgVp4JZ5L0Nd
+	 uCxliBEHD/WoA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VQ0fs0fwYz3d42
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Apr 2024 12:48:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VQ1Ch3tC5z3dFm
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Apr 2024 13:13:52 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=Gp3tO7Hr;
+	dkim=pass (2048-bit key; unprotected) header.d=bytedance.com header.i=@bytedance.com header.a=rsa-sha256 header.s=google header.b=I2ij9fKe;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=sijam.com (client-ip=2607:f8b0:4864:20::b2f; helo=mail-yb1-xb2f.google.com; envelope-from=asai@sijam.com; receiver=lists.ozlabs.org)
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bytedance.com (client-ip=2607:f8b0:4864:20::1031; helo=mail-pj1-x1031.google.com; envelope-from=zhujia.zj@bytedance.com; receiver=lists.ozlabs.org)
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VQ0fl5ZH7z3cgk
-	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Apr 2024 12:48:46 +1000 (AEST)
-Received: by mail-yb1-xb2f.google.com with SMTP id 3f1490d57ef6-de56d4bb72bso630415276.2
-        for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 19:48:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sijam-com.20230601.gappssmtp.com; s=20230601; t=1714013324; x=1714618124; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a0uVHoorN+j2eB+OLfGCY/voveCGSZaKvdKTatXKctI=;
-        b=Gp3tO7Hr/wKnB7pjfqeVWKDlk+GjHZrh++WnbUCLAH7LWP52c60la2Oo1Q1fQYuCyi
-         AVqc+nF3oOvr2RV372pQuUIRwm4tRyWRf1cU6VUGAOX3AcTos3G9TRFynbhRpY/GcWuO
-         qC8MstcABQsPMJ2qWUrBIkXzaNcplhOCXs4tEC/XIn+k95eSGAcXz6fLbhAh7Sl03WSp
-         FQE914oTfhmRtVeEQYQ8G/jaGvGBL+/TLajj15e+a2wYTebUUVOwVNOsUGm4z1OzTFGY
-         /PXWP+bCWiZUXfskXge2IrFHLA9lEoq2CooUFz/2xKSS8H8qIFLfBsQ1z985kTgjYmqa
-         3+nw==
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VQ1CW22sDz3cRk
+	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Apr 2024 13:13:40 +1000 (AEST)
+Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-2a4b457769eso473826a91.2
+        for <linux-erofs@lists.ozlabs.org>; Wed, 24 Apr 2024 20:13:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714013324; x=1714618124;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a0uVHoorN+j2eB+OLfGCY/voveCGSZaKvdKTatXKctI=;
-        b=K4xI/nzTL49eFe1S/D6kB7I3KWuW5L9zk+VpCXbTYUHh2yO2qAsmriuKNc1pJtvTUx
-         NiWFDRFoucv1VXMZaJDI5oBm7+iX5al/pB4S0a8SVUKC9pxMw0OriXtSH37YSsiJDFAV
-         HaCtbmq0Ao0yYnrH+A2hJW8mGzhOov37xqbyXB1V4DVNFPMON4OpeJDwvAqHbd0VxH3j
-         6MqmEy9GvGR2tVVc0Mn+TZkbfn5+Ywo922L0EXNpc75pAZoixnhfoQYEvq99fooVf+eG
-         BSRx1VlTIxWjvS6wHYspWDRCXBtuhPEkmeGbUTjNbhXwaiAuvVbIb1C9OrIhKi41lnd4
-         vfCg==
-X-Forwarded-Encrypted: i=1; AJvYcCWqpo3w/5m67NxtGZPzoCW4ByFKR2HVt8V2FQEzsCzkV1CttwhUtzocijiJvgqmgbTI0enkyR16z0cnU3XqXvfd1htv4xcvRbmBQZkw
-X-Gm-Message-State: AOJu0Yw62UthVc6rxmD9R0uTuWns3yuKjcrh6Z60uF4r+kEvibrNM2Ch
-	pNKnXt/4FuFZ35eT3f2wyuoz8C5M5/w1NvrZVRAqufWIsZRGjeGEZET4yPWtHNytaf8x/lQPdbr
-	UTfhlODcNv252bHTwdk8wo2rNko8vmfpoWmrtPg==
-X-Google-Smtp-Source: AGHT+IG+TQZWbmROmUuvsGBWm+rjKBmwldm3wkHakx0mK1CGc/Wz5JiHdqTdR7brEr1x+ImIdTDIJU9/DSOz0lKKnZE=
-X-Received: by 2002:a25:db02:0:b0:dd1:3909:bdd with SMTP id
- g2-20020a25db02000000b00dd139090bddmr3723670ybf.65.1714013324301; Wed, 24 Apr
- 2024 19:48:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1714014817; x=1714619617;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=45q2opjjuUYEePVm3ifdMLHGn3JYGUOldjvko9Req9k=;
+        b=cXzAuN9RGb4zthlhqhD/Td4QGz37AgoVR7j8RCvuShb4nu7bQMoxguLyAC/1WuK3aa
+         cUqg+nyiz9ZZNUuX+Amw0hkDg8do4P/Nb65GxoImofGxUreZtdnuXoJXfSGOG5mO0bFr
+         jMBTHxKmYpUTnB/NZxNJwoTTumGGTE9OAYTZlO9TltFXA4DRW/HyhVxIW+lejqMgW63q
+         x+tgmgv3mt6rtLP8ncuMdPS4MrAKy46uyx5p8QghFyZTUqiJ3wNiJasCfhEwTrdhoSJk
+         zbBKr3siHDHz55qdkZT+vu/bkODPMQd2lHfSj4ZUrdQCLJDpWjtHwroB4csInKscSo3B
+         yUGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUeGMIXAinT8CQokL1rF6CHmlbxyGxUEJwAySQAlKl3hStJEz7MOzZhb1kiqzg/13leOndMttAbeLlWaEE2JHg6pkjMUykbdL6Icwja
+X-Gm-Message-State: AOJu0YzI8w57W/58oYvDh2h5p3DdndO9FenOajalunC8HrFnGWtD5pLQ
+	yPQQjFMT/FM1CoHIXn9MFbJ7x0xwS2p+PM+SOE7rriIUvHSfA/cH/FSbR7sSbm4=
+X-Google-Smtp-Source: AGHT+IEuq2nC3+NrQjBJkDqAEPYGH85KMdEqJehJWR0o0NQ3qmkCAsRYPwQPdvh8mGs6423pdhVCfA==
+X-Received: by 2002:a17:90a:6b47:b0:2ad:6294:7112 with SMTP id x7-20020a17090a6b4700b002ad62947112mr4177222pjl.14.1714014817331;
+        Wed, 24 Apr 2024 20:13:37 -0700 (PDT)
+Received: from [10.3.132.118] ([61.213.176.5])
+        by smtp.gmail.com with ESMTPSA id gk1-20020a17090b118100b002a5290ad3d4sm11981013pjb.3.2024.04.24.20.13.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Apr 2024 20:13:36 -0700 (PDT)
+Message-ID: <6c04aab1-44d7-464c-8080-b06d5c0f16ee@bytedance.com>
+Date: Thu, 25 Apr 2024 11:13:30 +0800
 MIME-Version: 1.0
-References: <20240424055923.107209-1-asai@sijam.com> <288873a1-f594-4f5b-b3a1-881ad7ced1cf@linux.alibaba.com>
- <ZijhA4IJFSO7FYUy@debian>
-In-Reply-To: <ZijhA4IJFSO7FYUy@debian>
-From: Noboru Asai <asai@sijam.com>
-Date: Thu, 25 Apr 2024 11:48:33 +0900
-Message-ID: <CAFoAo-JvXBe39dLuWVPqb6OTwFMKJOfeqcZ=3QsYCusKsR4-tA@mail.gmail.com>
-Subject: Re: [PATCH v2] erofs-utils: add missing block counting
-To: Noboru Asai <asai@sijam.com>, linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/12] cachefiles: remove request from xarry during flush
+ requests
+To: libaokun@huaweicloud.com, netfs@lists.linux.dev
+References: <20240424033916.2748488-1-libaokun@huaweicloud.com>
+ <20240424033916.2748488-2-libaokun@huaweicloud.com>
+In-Reply-To: <20240424033916.2748488-2-libaokun@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,69 +78,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Jia Zhu via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Jia Zhu <zhujia.zj@bytedance.com>
+Cc: jlayton@kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Gao,
 
-Oh, sorry.
-I knew to access i_blkaddr on uncompressed file, but it didn't occur
-on the file system for testing, so I overlooked it.
- I needed to be careful.
 
-2024=E5=B9=B44=E6=9C=8824=E6=97=A5(=E6=B0=B4) 19:38 Gao Xiang <xiang@kernel=
-.org>:
->
-> On Wed, Apr 24, 2024 at 02:15:58PM +0800, Gao Xiang wrote:
-> >
-> >
-> > On 2024/4/24 13:59, Noboru Asai wrote:
-> > > Add missing block counting when the data to be inlined is not inlined=
-.
-> > >
-> > > ---
-> > > v2:
-> > > - move from erofs_write_tail_end() to erofs_prepare_tail_block()
-> > >
-> > > Signed-off-by: Noboru Asai <asai@sijam.com>
-> >
-> > Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> >
-> > Thanks,
-> > Gao Xiang
->
-> I applied the following version since v2 caused CI failure:
-> https://github.com/erofs/erofsnightly/actions/runs/8812585654
->
->
-> From 89e76dda5fd4956709bbb88b76063ef165fa3882 Mon Sep 17 00:00:00 2001
-> From: Noboru Asai <asai@sijam.com>
-> Date: Wed, 24 Apr 2024 14:59:23 +0900
-> Subject: [PATCH] erofs-utils: add missing block counting
->
-> Add missing block counting when the data to be inlined is not inlined.
->
-> Signed-off-by: Noboru Asai <asai@sijam.com>
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+在 2024/4/24 11:39, libaokun@huaweicloud.com 写道:
+> From: Baokun Li <libaokun1@huawei.com>
+> 
+> This prevents concurrency from causing access to a freed req.
+> 
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+
+Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
+
 > ---
->  lib/inode.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/lib/inode.c b/lib/inode.c
-> index 7508c74..896a257 100644
-> --- a/lib/inode.c
-> +++ b/lib/inode.c
-> @@ -664,6 +664,8 @@ static int erofs_prepare_tail_block(struct erofs_inod=
-e *inode)
->         } else {
->                 inode->lazy_tailblock =3D true;
->         }
-> +       if (is_inode_layout_compression(inode))
-> +               inode->u.i_blocks +=3D 1;
->         return 0;
->  }
->
-> --
-> 2.30.2
->
+>   fs/cachefiles/daemon.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+> index 6465e2574230..ccb7b707ea4b 100644
+> --- a/fs/cachefiles/daemon.c
+> +++ b/fs/cachefiles/daemon.c
+> @@ -159,6 +159,7 @@ static void cachefiles_flush_reqs(struct cachefiles_cache *cache)
+>   	xa_for_each(xa, index, req) {
+>   		req->error = -EIO;
+>   		complete(&req->done);
+> +		__xa_erase(xa, index);
+>   	}
+>   	xa_unlock(xa);
+>   
