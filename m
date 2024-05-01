@@ -1,66 +1,67 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCA1E8B8441
-	for <lists+linux-erofs@lfdr.de>; Wed,  1 May 2024 04:16:52 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C0F98B8455
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 May 2024 04:24:36 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=fWeX5qHX;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=Y++/s7iL;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VTgg63VwDz3cSM
-	for <lists+linux-erofs@lfdr.de>; Wed,  1 May 2024 12:16:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VTgr16k5wz3cQX
+	for <lists+linux-erofs@lfdr.de>; Wed,  1 May 2024 12:24:33 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=fWeX5qHX;
+	dkim=pass (2048-bit key; unprotected) header.d=sijam-com.20230601.gappssmtp.com header.i=@sijam-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=Y++/s7iL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=sijam.com (client-ip=2607:f8b0:4864:20::436; helo=mail-pf1-x436.google.com; envelope-from=asai@sijam.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=sijam.com (client-ip=2607:f8b0:4864:20::62a; helo=mail-pl1-x62a.google.com; envelope-from=asai@sijam.com; receiver=lists.ozlabs.org)
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VTgfv5Sk5z2xbC
-	for <linux-erofs@lists.ozlabs.org>; Wed,  1 May 2024 12:16:38 +1000 (AEST)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-6ee0642f718so351698b3a.0
-        for <linux-erofs@lists.ozlabs.org>; Tue, 30 Apr 2024 19:16:38 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VTgqy526pz2xHK
+	for <linux-erofs@lists.ozlabs.org>; Wed,  1 May 2024 12:24:29 +1000 (AEST)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1e40042c13eso43867565ad.2
+        for <linux-erofs@lists.ozlabs.org>; Tue, 30 Apr 2024 19:24:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sijam-com.20230601.gappssmtp.com; s=20230601; t=1714529794; x=1715134594; darn=lists.ozlabs.org;
+        d=sijam-com.20230601.gappssmtp.com; s=20230601; t=1714530267; x=1715135067; darn=lists.ozlabs.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5haz21yR4hpgCaVy10GDfzhYcReI5QYdpnKMGaUSa20=;
-        b=fWeX5qHX0YvXqyCHNfsIFcsla8pi640Ib6NSUM4Jg3EpXqHUul44y2QwoDVS5G+ao4
-         QnDrOPPxd6/KCgo06u2pnhVOmelZAWGWc4IlLQVqnqmLf9BdhrBYX4n4+auVovvzRSnU
-         wA+0226/8pMuTDID+48g748+c4qjwQGbczxdG4x4Z/HY0ILDOmkdO+f088njhiuUbVMP
-         M0BhN9ZE+HTPX6Fpp2ACQ9UPaSwOrtNzBMWTiRII6vGDkqIDpPmAKcXKFUtJCO40zA+p
-         5utnvxnw2fwaIb3dD3rY3UBS7cRckEteOgHTluAoIrxTuIf/mPL3eppnPZvaATNN6PD9
-         OKAA==
+        bh=32f1ZCVs2gJe254KMGVTpOHvGyTNbH4XQHR5SD3X1yI=;
+        b=Y++/s7iL5PVr3XKYB4VZ2b/PhVTNEN2gB4tREeHeBOMfKlDR7xiRd9W5DJGlumToYt
+         cyFWz3+VrdUj6aONu1rcruFhC/4qjChuplW/Xaq9ZmS/jwZMOWkz123mVBc/CIamRHcr
+         FfICTL2MO379cO4jSR2pO+vGcX+IMd1FIcoLJsnVVWToVEbCh/3peq2OGwreec6cvo9G
+         iusRrsSfNVcXY8Hogq8tVfVWe61TsaNZShORJhYYLRY8oxJNVxJ6NNKCCnqbPG9ZrSWT
+         N79VlT2PlaWSPoNdDKAtkl5mCPYlRmb5ribNl3QA2ivg9wOLXdI70IEY6LvpJPSV0L/m
+         UtUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714529794; x=1715134594;
+        d=1e100.net; s=20230601; t=1714530267; x=1715135067;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5haz21yR4hpgCaVy10GDfzhYcReI5QYdpnKMGaUSa20=;
-        b=GvLKV+CYA5XxoEWfW76S04L5DVwnKCg5u+BiJuRP5gsZA+fXoRbWjyiftCQjdI3rtu
-         2OTNXdA/dp8Tf6cEpbl6u69YcRjelojjHGvOGCAOVykBZMgNMfM/E/xLONgT6Mh84Y9f
-         6bAE1bCRmzJ76iLzUjldMoMYn4kGkSaKfSLE8eIuqU5sJBF4s0K+xTHHEenEZFIqZ8EE
-         oez7KDldRdhdPX3Gd7mXfm/CcrWkvJR74Qn58J9NpulM18TaQIk8GN10NzSoO8e8jwuv
-         WBZ8p8KKJtDdZs/MvqUTojey4SY2G9PV+FQJwzs6scFkYrqirWpEanaovVckFw61UuFw
-         UCSQ==
-X-Gm-Message-State: AOJu0Yx6czIL91NVmUIEOaEV3gctbmN5/wN0fsOZajXMOdTBPKebHAGj
-	Vrv1GcknpOmXFyMI/3nIIa0ajNeylBRsnjh2IAJeaXrjuhmxB7PHQZT0FcKGkPE=
-X-Google-Smtp-Source: AGHT+IG1ESpdbGVW8M5nn/Ac1UoX97jTX/cMbe9l2gINS1rxGiDe6u2nL1RxeR3sAAR94NhFMTlepQ==
-X-Received: by 2002:a05:6a20:da9d:b0:1a8:2cd1:e493 with SMTP id iy29-20020a056a20da9d00b001a82cd1e493mr2019076pzb.29.1714529793791;
-        Tue, 30 Apr 2024 19:16:33 -0700 (PDT)
+        bh=32f1ZCVs2gJe254KMGVTpOHvGyTNbH4XQHR5SD3X1yI=;
+        b=dosYn7Ua320jYiaEzqxU6Oq7agsYJLbQ1l/YB3SDW+pUt/Vg36Wini7MHpIM/5pkQ4
+         yVuoGB84RI+ODMRSaoxizFv/9QxkRB055tOyjokz50QvodvUoo6ZyD+d6HOutEMKghrZ
+         /I8Atdzqgi+AWGewJn9UvKNriL2fagFSn1bf1O4gqi4J7QpvUPk1L7NelZnCxFmoBY+Y
+         KsQ0kytlKfUvl1fAV5+d94eH9XD8IcgHbioNfr+gzpT1vC3qBZz8rxNhLDm0heJ0gLW7
+         MG5mRRcnbh6AXO1ysvux800D2GFaB1A6JbUEVZKxLaGiLaBSxORjCajni6TtTZ8DC0b+
+         CavQ==
+X-Gm-Message-State: AOJu0YzhW3Zw3pErp7IQB3PAHcQ43qSvgXPgUz4R5zZsbIo3zUwQVk2M
+	FeDhdz1sjWhEsafS7LI+D9HuAPu0eFHygnolh6pmzIZsf1vKvTIzvzTvBSrosKzfb4fS4M+JiAx
+	fGfE=
+X-Google-Smtp-Source: AGHT+IGEh5PUPz5U3ySpehLR1dPp3g2I5U523yOQ9UD0kI/GmmHCdnerg6qmes6etVPwRMYVu0Ww8w==
+X-Received: by 2002:a17:902:ce0f:b0:1e3:e081:d29b with SMTP id k15-20020a170902ce0f00b001e3e081d29bmr1447148plg.45.1714530266934;
+        Tue, 30 Apr 2024 19:24:26 -0700 (PDT)
 Received: from elric.localdomain (i121-112-72-48.s41.a027.ap.plala.or.jp. [121.112.72.48])
-        by smtp.gmail.com with ESMTPSA id b21-20020aa78715000000b006f3f062c4f4sm6382886pfo.136.2024.04.30.19.16.32
+        by smtp.gmail.com with ESMTPSA id q6-20020a170902dac600b001eb03a2bb0asm8895621plx.53.2024.04.30.19.24.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 19:16:33 -0700 (PDT)
+        Tue, 30 Apr 2024 19:24:26 -0700 (PDT)
 From: Noboru Asai <asai@sijam.com>
 To: hsiangkao@linux.alibaba.com
 Subject: [PATCH] erofs-utils: optimize pthread_cond_signal calling
-Date: Wed,  1 May 2024 11:16:24 +0900
-Message-ID: <20240501021624.1865253-1-asai@sijam.com>
+Date: Wed,  1 May 2024 11:24:20 +0900
+Message-ID: <20240501022420.1881305-1-asai@sijam.com>
 X-Mailer: git-send-email 2.44.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -83,22 +84,21 @@ Call pthread_cond_signal once per file.
 
 Signed-off-by: Noboru Asai <asai@sijam.com>
 ---
- lib/compress.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ lib/compress.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/lib/compress.c b/lib/compress.c
-index 7fef698..29307a1 100644
+index 7fef698..5c25ca8 100644
 --- a/lib/compress.c
 +++ b/lib/compress.c
-@@ -1261,8 +1261,9 @@ void z_erofs_mt_workfn(struct erofs_work *work, void *tlsp)
+@@ -1261,8 +1261,8 @@ void z_erofs_mt_workfn(struct erofs_work *work, void *tlsp)
  out:
  	cwork->errcode = ret;
  	pthread_mutex_lock(&ictx->mutex);
 -	++ictx->nfini;
 -	pthread_cond_signal(&ictx->cond);
-+	if (++ictx->nfini == ictx->seg_num) {
++	if (++ictx->nfini == ictx->seg_num)
 +		pthread_cond_signal(&ictx->cond);
-+	}
  	pthread_mutex_unlock(&ictx->mutex);
  }
  
