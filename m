@@ -1,49 +1,49 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D73B8BF111
-	for <lists+linux-erofs@lfdr.de>; Wed,  8 May 2024 01:16:37 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C38268BF138
+	for <lists+linux-erofs@lfdr.de>; Wed,  8 May 2024 01:20:10 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uFE1kAj1;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qiCoEdOJ;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VYvKv0Gbkz3cRs
-	for <lists+linux-erofs@lfdr.de>; Wed,  8 May 2024 09:16:35 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VYvQ00GDWz3cRs
+	for <lists+linux-erofs@lfdr.de>; Wed,  8 May 2024 09:20:08 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uFE1kAj1;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qiCoEdOJ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VYvKn00NGz30VS
-	for <linux-erofs@lists.ozlabs.org>; Wed,  8 May 2024 09:16:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VYvPs27HDz30W9
+	for <linux-erofs@lists.ozlabs.org>; Wed,  8 May 2024 09:20:00 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1715123781; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=ot252tbl7SBLqukvaIH9QV/q4GG5yoGHVQJ2MVuayfg=;
-	b=uFE1kAj1sgYPaKoxasT0XFYdfkxloM74i1UCl9anTgWz8ASmxbJsgLtN1hexzsy2XXp2hdf7Wy+G+zc0kTEUZfNuUa3y2X4teABio1p2V1mY3u7iYF1+dsEm6RNK8fU3vohJdLqDaRhoK9DAkRruNGR+08rEGwYnFaYR3ZhE2B4=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033022160150;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W61JUjF_1715123777;
-Received: from 30.25.231.12(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W61JUjF_1715123777)
+	t=1715123997; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=e0zrxwPcAb6kwy18tLfS3CmdjXGu2j+7ybZ31BCE1es=;
+	b=qiCoEdOJ9kv4VhbwYhDX70xPsoN1I84vneWpwkBibPFFwxl8bpOfIHJSJlVSPuR/SDDjhWZe4dMwJrhtQZDiL70YSzjI3bs/tmsoNN6nLDLyTHxRJgzyL90YSLQPAJ6cDHCqlUsFZffTYxDaq0ly0OS2k5Kpy7p2va3qGLkEsYw=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W61IPVB_1715123993;
+Received: from 30.25.231.12(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W61IPVB_1715123993)
           by smtp.aliyun-inc.com;
-          Wed, 08 May 2024 07:16:19 +0800
-Message-ID: <bcd90345-18ea-486b-9e6b-352b2f2d2e08@linux.alibaba.com>
-Date: Wed, 8 May 2024 07:16:17 +0800
+          Wed, 08 May 2024 07:19:55 +0800
+Message-ID: <aca15d22-e2f9-4d09-b022-f290d9c902c9@linux.alibaba.com>
+Date: Wed, 8 May 2024 07:19:52 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH AUTOSEL 6.6 21/43] erofs: reliably distinguish block based
+Subject: Re: [PATCH AUTOSEL 6.8 26/52] erofs: reliably distinguish block based
  and fscache mode
 To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20240507231033.393285-1-sashal@kernel.org>
- <20240507231033.393285-21-sashal@kernel.org>
+ stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20240507230800.392128-1-sashal@kernel.org>
+ <20240507230800.392128-26-sashal@kernel.org>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240507231033.393285-21-sashal@kernel.org>
+In-Reply-To: <20240507230800.392128-26-sashal@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -63,7 +63,7 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 Hi,
 
-On 2024/5/8 07:09, Sasha Levin wrote:
+On 2024/5/8 07:06, Sasha Levin wrote:
 > From: Christian Brauner <brauner@kernel.org>
 > 
 > [ Upstream commit 7af2ae1b1531feab5d38ec9c8f472dc6cceb4606 ]
@@ -101,10 +101,13 @@ On 2024/5/8 07:09, Sasha Levin wrote:
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 > Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Please help drop this patch, you should backport the dependency
-commit 07abe43a28b2 ("erofs: get rid of erofs_fs_context")
 
-in advance.
+Please help drop this patch for now too, you should backport
+the dependency commit
+07abe43a28b2 ("erofs: get rid of erofs_fs_context") in advance.
+
+Otherwise it doesn't work and break the functionality.
 
 Thanks,
 Gao Xiang
+
