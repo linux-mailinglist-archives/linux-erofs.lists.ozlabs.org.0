@@ -2,55 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD85C8BF099
-	for <lists+linux-erofs@lfdr.de>; Wed,  8 May 2024 01:09:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D1F58BF0C1
+	for <lists+linux-erofs@lfdr.de>; Wed,  8 May 2024 01:11:22 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JbIzx5eJ;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hqQkP0bB;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VYv9B2S3jz3cSH
-	for <lists+linux-erofs@lfdr.de>; Wed,  8 May 2024 09:09:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VYvCr0d27z3cSH
+	for <lists+linux-erofs@lfdr.de>; Wed,  8 May 2024 09:11:20 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JbIzx5eJ;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hqQkP0bB;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VYv932rwkz30Vx
-	for <linux-erofs@lists.ozlabs.org>; Wed,  8 May 2024 09:08:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VYvCm6c5tz30WV
+	for <linux-erofs@lists.ozlabs.org>; Wed,  8 May 2024 09:11:16 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id EB51C61985;
-	Tue,  7 May 2024 23:08:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A19EEC2BBFC;
-	Tue,  7 May 2024 23:08:49 +0000 (UTC)
+	by sin.source.kernel.org (Postfix) with ESMTP id EA961CE1741;
+	Tue,  7 May 2024 23:11:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 218DEC4AF63;
+	Tue,  7 May 2024 23:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715123330;
-	bh=yqfzzvv4Vb9iFfLKiQtmvaF2w1b07asZiGiRgAATLho=;
+	s=k20201202; t=1715123474;
+	bh=vSS8ckXDKosjRvmfUEUfLwEc+gkRcWIIO5CcIp/zg/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JbIzx5eJKTFtd8mz8HF0R4R/P6SAOmLhIHt4kKOWURjuYoby+AnzZ8LRuBKzIY1wb
-	 Tk0Zs6dtIyXxYAGdFuWs5hoGGpzthL4lKN4Ft8sIvZEEda96aK+gdOHYuXkElXlJsq
-	 4BFKfolgOVLVcQNH106WiswGC4138586ZMJuYLfUrc+Dy0rU+PNzoMrTYRyil3QL4a
-	 Wb5QtgQ7++6QvgwKrrZMPKqj4MyPBaxuGnbQI3BLF+JN89lVEZ97TO0Vqm+rF2NrUV
-	 9aPqUAxnwuxdgVTzqFGAW/yjDg9Q4gxK/Jl1ed3DuHHY0YBSiWXsKcCYNQVF5yX9R6
-	 jq1xLURwTtpcQ==
+	b=hqQkP0bBY+tGJ+vKdJPkp5Pjp/37CjTBX6gQnBys91pA5B5yQYHXc2K5Plcp610Xz
+	 XuKATXgnNIWpVwZ4azuwyfANM/bZJeRWnxkWjMwBXnc1/Iy+sIUxAO1Q0BMdLYxKKA
+	 HTVelDipo76nke+j6rmpVv8QAN/O3vpLk2pbIXcegygidL45Tx/tCwlWWwib10sKQi
+	 5cNd9+NiysyI1rrdZk981ODCYoEEFdt9jAU6zySTSAGt/8W5ujBQqfvZjaRL7WqfWe
+	 ZiR4dJTBXgBp6b7wmgMtb/UfBGWGG54794OtyBjtaytfXbsnnyIDNlYehwmIsSHxrg
+	 8aJdAmKUB+YtQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 26/52] erofs: reliably distinguish block based and fscache mode
-Date: Tue,  7 May 2024 19:06:52 -0400
-Message-ID: <20240507230800.392128-26-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 21/43] erofs: reliably distinguish block based and fscache mode
+Date: Tue,  7 May 2024 19:09:42 -0400
+Message-ID: <20240507231033.393285-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240507230800.392128-1-sashal@kernel.org>
-References: <20240507230800.392128-1-sashal@kernel.org>
+In-Reply-To: <20240507231033.393285-1-sashal@kernel.org>
+References: <20240507231033.393285-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.9
+X-stable-base: Linux 6.6.30
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -108,10 +108,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 24788c230b494..020495168b124 100644
+index c9f9a43197db6..6a785b95121f1 100644
 --- a/fs/erofs/super.c
 +++ b/fs/erofs/super.c
-@@ -800,17 +800,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
+@@ -796,17 +796,13 @@ static int erofs_init_fs_context(struct fs_context *fc)
  
  static void erofs_kill_sb(struct super_block *sb)
  {
