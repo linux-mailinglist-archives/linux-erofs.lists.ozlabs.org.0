@@ -1,12 +1,12 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21EB68BDE5A
-	for <lists+linux-erofs@lfdr.de>; Tue,  7 May 2024 11:33:10 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD4598BE0DA
+	for <lists+linux-erofs@lfdr.de>; Tue,  7 May 2024 13:20:35 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VYY3T6wdpz3cHN
-	for <lists+linux-erofs@lfdr.de>; Tue,  7 May 2024 19:32:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VYbRf2g1Qz3dRP
+	for <lists+linux-erofs@lfdr.de>; Tue,  7 May 2024 21:20:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
@@ -15,50 +15,47 @@ Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VYY3P5WRXz30TB
-	for <linux-erofs@lists.ozlabs.org>; Tue,  7 May 2024 19:32:46 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VYY334Zb7z4f3lWH
-	for <linux-erofs@lists.ozlabs.org>; Tue,  7 May 2024 17:32:31 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VYbRV6pw1z3cCb
+	for <linux-erofs@lists.ozlabs.org>; Tue,  7 May 2024 21:20:20 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VYbRC1m03z4f3kkb
+	for <linux-erofs@lists.ozlabs.org>; Tue,  7 May 2024 19:20:07 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 6D4391A0179
-	for <linux-erofs@lists.ozlabs.org>; Tue,  7 May 2024 17:32:41 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 84FB41A08D4
+	for <linux-erofs@lists.ozlabs.org>; Tue,  7 May 2024 19:20:12 +0800 (CST)
 Received: from [10.174.177.174] (unknown [10.174.177.174])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBE19Tlmph79Lw--.16187S3;
-	Tue, 07 May 2024 17:32:41 +0800 (CST)
-Message-ID: <e0c5708c-67c0-770b-6dd4-d85102bf6600@huaweicloud.com>
-Date: Tue, 7 May 2024 17:32:37 +0800
+	by APP1 (Coremail) with SMTP id cCh0CgBnOBFoDjpmOyUEMA--.18524S3;
+	Tue, 07 May 2024 19:20:12 +0800 (CST)
+Message-ID: <a6d89482-6f81-29d1-3e9f-4772ffbb56af@huaweicloud.com>
+Date: Tue, 7 May 2024 19:20:08 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.1.2
-Subject: Re: [PATCH 08/12] cachefiles: never get a new anon fd if ondemand_id
- is valid
+Subject: Re: [PATCH 0/5] cachefiles: some bugfixes for withdraw and xattr
 Content-Language: en-US
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, netfs@lists.linux.dev
-References: <20240424033916.2748488-1-libaokun@huaweicloud.com>
- <20240424033916.2748488-9-libaokun@huaweicloud.com>
- <625acc9e-b871-4912-965e-82fe3f9228d7@linux.alibaba.com>
+To: netfs@lists.linux.dev, dhowells@redhat.com, jlayton@kernel.org
+References: <20240424032732.2711487-1-libaokun@huaweicloud.com>
 From: Baokun Li <libaokun@huaweicloud.com>
-In-Reply-To: <625acc9e-b871-4912-965e-82fe3f9228d7@linux.alibaba.com>
+In-Reply-To: <20240424032732.2711487-1-libaokun@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: cCh0CgCXaBE19Tlmph79Lw--.16187S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxAFW5Zr4kXFy8Zw4fZr1fZwb_yoWrur4DpF
-	Way3W3KFyxWF1xWrZ7AFs5WFyFy34kZFnrWa4aga4UArn09r1fZr17trnxZFn8A3s7Wrsr
-	tF4UWr9xKw1qk3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgBnOBFoDjpmOyUEMA--.18524S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7tFy5Kr17Wr4fKryUWw4kWFg_yoW8Ww4DpF
+	Wayr4ayry8W397Gwn3ArsxJr1rA393JF1vgw17Wr1DAwn5Xr1YqryIyr15ZFyUuryUGws3
+	t3WjgFy3Ww1UA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
-	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
-	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
-	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
-	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
-	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+	Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUoOJ5UU
+	UUU
 X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -71,131 +68,59 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: libaokun@huaweicloud.com, yangerkun <yangerkun@huawei.com>, jlayton@kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: libaokun@huaweicloud.com, yangerkun <yangerkun@huawei.com>, linux-kernel@vger.kernel.org, linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Jingbo,
+Hi David,
+Hi Jeff,
 
-On 2024/5/6 11:09, Jingbo Xu wrote:
->
-> On 4/24/24 11:39 AM, libaokun@huaweicloud.com wrote:
->> From: Baokun Li <libaokun1@huawei.com>
->>
->> Now every time the daemon reads an open request, it requests a new anon fd
->> and ondemand_id. With the introduction of "restore", it is possible to read
->> the same open request more than once, and therefore have multiple anon fd's
->> for the same object.
->>
->> To avoid this, allocate a new anon fd only if no anon fd has been allocated
->> (ondemand_id == 0) or if the previously allocated anon fd has been closed
->> (ondemand_id == -1). Returns an error if ondemand_id is valid, letting the
->> daemon know that the current userland restore logic is abnormal and needs
->> to be checked.
-> I have no obvious preference on strengthening this on kernel side or
-> not.  Could you explain more about what will happen if the daemon gets
-> several distinct anon fd corresponding to one same object?  IMHO the
-> daemon should expect the side effect if it issues a 'restore' command
-> when the daemon doesn't crash.  IOW, it's something that shall be fixed
-> or managed either on the kernel side, or on the daemon side.
-If the anon_fd is not unique, the daemon will only close the anon_fd
-corresponding to the newest object_id during drop_object, and the
-other anon_fds will not be closed until the daemon exits.
+Could you please take time to take a look at this series?  I'd 
+appreciated it
+if I could get some feedback and comments.
 
-However, the anon_fd holds the reference count of the object, so the
-object will not be freed, and the cookie will also not be freed. So
-mounting a same-named image at this point will cause a hung task
-in fscache_hash_cookie() by waiting for the cookie to unhash.
-
-The object_id and anon_fd of an object are supposed to be unique
-under normal circumstances, this patch just provides that guarantee
-even in the case of an exception.
-
-Thank you very much for the review!
-
-Regards,
+Thanks,
 Baokun
->> ---
->>   fs/cachefiles/ondemand.c | 34 ++++++++++++++++++++++++++++------
->>   1 file changed, 28 insertions(+), 6 deletions(-)
->>
->> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
->> index b5e6a851ef04..0cf63bfedc9e 100644
->> --- a/fs/cachefiles/ondemand.c
->> +++ b/fs/cachefiles/ondemand.c
->> @@ -14,11 +14,18 @@ static int cachefiles_ondemand_fd_release(struct inode *inode,
->>   					  struct file *file)
->>   {
->>   	struct cachefiles_object *object = file->private_data;
->> -	struct cachefiles_cache *cache = object->volume->cache;
->> -	struct cachefiles_ondemand_info *info = object->ondemand;
->> +	struct cachefiles_cache *cache;
->> +	struct cachefiles_ondemand_info *info;
->>   	int object_id;
->>   	struct cachefiles_req *req;
->> -	XA_STATE(xas, &cache->reqs, 0);
->> +	XA_STATE(xas, NULL, 0);
->> +
->> +	if (!object)
->> +		return 0;
->> +
->> +	info = object->ondemand;
->> +	cache = object->volume->cache;
->> +	xas.xa = &cache->reqs;
->>   
->>   	xa_lock(&cache->reqs);
->>   	spin_lock(&info->lock);
->> @@ -269,22 +276,39 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
->>   		goto err_put_fd;
->>   	}
->>   
->> +	spin_lock(&object->ondemand->lock);
->> +	if (object->ondemand->ondemand_id > 0) {
->> +		spin_unlock(&object->ondemand->lock);
->> +		ret = -EEXIST;
->> +		/* Avoid performing cachefiles_ondemand_fd_release(). */
->> +		file->private_data = NULL;
->> +		goto err_put_file;
->> +	}
->> +
->>   	file->f_mode |= FMODE_PWRITE | FMODE_LSEEK;
->>   	fd_install(fd, file);
->>   
->>   	load = (void *)req->msg.data;
->>   	load->fd = fd;
->>   	object->ondemand->ondemand_id = object_id;
->> +	spin_unlock(&object->ondemand->lock);
->>   
->>   	cachefiles_get_unbind_pincount(cache);
->>   	trace_cachefiles_ondemand_open(object, &req->msg, load);
->>   	return 0;
->>   
->> +err_put_file:
->> +	fput(file);
->>   err_put_fd:
->>   	put_unused_fd(fd);
->>   err_free_id:
->>   	xa_erase(&cache->ondemand_ids, object_id);
->>   err:
->> +	spin_lock(&object->ondemand->lock);
->> +	/* Avoid marking an opened object as closed. */
->> +	if (object->ondemand->ondemand_id <= 0)
->> +		cachefiles_ondemand_set_object_close(object);
->> +	spin_unlock(&object->ondemand->lock);
->>   	cachefiles_put_object(object, cachefiles_obj_put_ondemand_fd);
->>   	return ret;
->>   }
->> @@ -367,10 +391,8 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
->>   
->>   	if (msg->opcode == CACHEFILES_OP_OPEN) {
->>   		ret = cachefiles_ondemand_get_fd(req);
->> -		if (ret) {
->> -			cachefiles_ondemand_set_object_close(req->object);
->> +		if (ret)
->>   			goto out;
->> -		}
->>   	}
->>   
->>   	msg->msg_id = xas.xa_index;
 
+On 2024/4/24 11:27, libaokun@huaweicloud.com wrote:
+> From: Baokun Li <libaokun1@huawei.com>
+>
+> Hello everyone!
+>
+> Recently we found some bugs while doing tests on cachefiles ondemand mode,
+> and this patchset is a fix for some of those issues. The following is a
+> brief overview of the patches, see the patches for more details.
+>
+> Patch 1-2: Add fscache_try_get_volume() helper function to avoid
+> fscache_volume use-after-free on cache withdrawal.
+>
+> Patch 3: Fix cachefiles_lookup_cookie() and cachefiles_withdraw_cache()
+> concurrency causing cachefiles_volume use-after-free.
+>
+> Patch 4-5: Propagate error codes returned by vfs_getxattr() to avoid
+> endless loops.
+>
+> Comments and questions are, as always, welcome.
+>
+> Thanks,
+> Baokun
+>
+> Baokun Li (5):
+>    netfs, fscache: export fscache_put_volume() and add
+>      fscache_try_get_volume()
+>    cachefiles: fix slab-use-after-free in fscache_withdraw_volume()
+>    cachefiles: fix slab-use-after-free in cachefiles_withdraw_cookie()
+>    cachefiles: correct the return value of
+>      cachefiles_check_volume_xattr()
+>    cachefiles: correct the return value of cachefiles_check_auxdata()
+>
+>   fs/cachefiles/cache.c          | 45 +++++++++++++++++++++++++++++++++-
+>   fs/cachefiles/volume.c         |  1 -
+>   fs/cachefiles/xattr.c          |  5 +++-
+>   fs/netfs/fscache_volume.c      | 14 +++++++++++
+>   fs/netfs/internal.h            |  2 --
+>   include/linux/fscache-cache.h  |  6 +++++
+>   include/trace/events/fscache.h |  4 +++
+>   7 files changed, 72 insertions(+), 5 deletions(-)
+>
 
