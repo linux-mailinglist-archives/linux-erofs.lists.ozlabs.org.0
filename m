@@ -1,47 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 990FC8C6323
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 May 2024 10:57:04 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 023E48C6326
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 May 2024 10:57:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VfRtQ0tNhz3cHH
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 May 2024 18:57:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VfRtb3dvFz3cWD
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 May 2024 18:57:11 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VfRt03zNxz3c1w
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VfRt06TCyz3c2K
 	for <linux-erofs@lists.ozlabs.org>; Wed, 15 May 2024 18:56:40 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VfRsl6DGkz4f3jJH
-	for <linux-erofs@lists.ozlabs.org>; Wed, 15 May 2024 16:56:27 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VfRsm3NpWz4f3jJB
+	for <linux-erofs@lists.ozlabs.org>; Wed, 15 May 2024 16:56:28 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 8822D1A130D
-	for <linux-erofs@lists.ozlabs.org>; Wed, 15 May 2024 16:56:36 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 2278C1A017F
+	for <linux-erofs@lists.ozlabs.org>; Wed, 15 May 2024 16:56:37 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxC7eERm68LgMg--.42328S15;
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxC7eERm68LgMg--.42328S16;
 	Wed, 15 May 2024 16:56:36 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev,
 	dhowells@redhat.com,
 	jlayton@kernel.org
-Subject: [PATCH v2 11/12] cachefiles: flush all requests after setting CACHEFILES_DEAD
-Date: Wed, 15 May 2024 16:46:00 +0800
-Message-Id: <20240515084601.3240503-12-libaokun@huaweicloud.com>
+Subject: [PATCH v2 12/12] cachefiles: make on-demand read killable
+Date: Wed, 15 May 2024 16:46:01 +0800
+Message-Id: <20240515084601.3240503-13-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240515084601.3240503-1-libaokun@huaweicloud.com>
 References: <20240515084601.3240503-1-libaokun@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgDHlxC7eERm68LgMg--.42328S15
-X-Coremail-Antispam: 1UD129KBjvJXoW7KFWrXr13Zry8Zw1kuFy8Xwb_yoW5JF4kpF
-	Way3WUGry09r4qgw1kArZ8J34rJ3sxJF4qgw1UX3s5Arn0vr15Xr1IyryY9F15JrWrGa13
-	tr1jgFy7Z34jyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: cCh0CgDHlxC7eERm68LgMg--.42328S16
+X-Coremail-Antispam: 1UD129KBjvJXoW7uFW7JryDCF4DJr4kXFy7Jrb_yoW8WF45pF
+	Waka45KFykuF4I9r93J3WUX34Sy3ykAFnrWrySqrW3AwsIqrnYvr18t3WYqF43A395WrW3
+	tr95KFyxK3Wjq3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUmY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -74,61 +74,57 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: Baokun Li <libaokun1@huawei.com>
 
-In ondemand mode, when the daemon is processing an open request, if the
-kernel flags the cache as CACHEFILES_DEAD, the cachefiles_daemon_write()
-will always return -EIO, so the daemon can't pass the copen to the kernel.
-Then the kernel process that is waiting for the copen triggers a hung_task.
+Replacing wait_for_completion() with wait_for_completion_killable() in
+cachefiles_ondemand_send_req() allows us to kill processes that might
+trigger a hunk_task if the daemon is abnormal.
 
-Since the DEAD state is irreversible, it can only be exited by closing
-/dev/cachefiles. Therefore, after calling cachefiles_io_error() to mark
-the cache as CACHEFILES_DEAD, if in ondemand mode, flush all requests to
-avoid the above hungtask. We may still be able to read some of the cached
-data before closing the fd of /dev/cachefiles.
+But now only CACHEFILES_OP_READ is killable, because OP_CLOSE and OP_OPEN
+is initiated from kworker context and the signal is prohibited in these
+kworker.
 
-Note that this relies on the patch that adds reference counting to the req,
-otherwise it may UAF.
+Note that when the req in xas changes, i.e. xas_load(&xas) != req, it
+means that a process will complete the current request soon, so wait
+again for the request to be completed.
 
-Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
+Suggested-by: Hou Tao <houtao1@huawei.com>
 Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
 ---
- fs/cachefiles/daemon.c   | 2 +-
- fs/cachefiles/internal.h | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ fs/cachefiles/ondemand.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
-index ccb7b707ea4b..06cdf1a8a16f 100644
---- a/fs/cachefiles/daemon.c
-+++ b/fs/cachefiles/daemon.c
-@@ -133,7 +133,7 @@ static int cachefiles_daemon_open(struct inode *inode, struct file *file)
- 	return 0;
- }
+diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+index a511d0a89109..bdc2d6dbadce 100644
+--- a/fs/cachefiles/ondemand.c
++++ b/fs/cachefiles/ondemand.c
+@@ -544,8 +544,25 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
+ 		goto out;
  
--static void cachefiles_flush_reqs(struct cachefiles_cache *cache)
-+void cachefiles_flush_reqs(struct cachefiles_cache *cache)
- {
- 	struct xarray *xa = &cache->reqs;
- 	struct cachefiles_req *req;
-diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index 45c8bed60538..6845a90cdfcc 100644
---- a/fs/cachefiles/internal.h
-+++ b/fs/cachefiles/internal.h
-@@ -188,6 +188,7 @@ extern int cachefiles_has_space(struct cachefiles_cache *cache,
-  * daemon.c
-  */
- extern const struct file_operations cachefiles_daemon_fops;
-+extern void cachefiles_flush_reqs(struct cachefiles_cache *cache);
- extern void cachefiles_get_unbind_pincount(struct cachefiles_cache *cache);
- extern void cachefiles_put_unbind_pincount(struct cachefiles_cache *cache);
- 
-@@ -426,6 +427,8 @@ do {							\
- 	pr_err("I/O Error: " FMT"\n", ##__VA_ARGS__);	\
- 	fscache_io_error((___cache)->cache);		\
- 	set_bit(CACHEFILES_DEAD, &(___cache)->flags);	\
-+	if (cachefiles_in_ondemand_mode(___cache))	\
-+		cachefiles_flush_reqs(___cache);	\
- } while (0)
- 
- #define cachefiles_io_error_obj(object, FMT, ...)			\
+ 	wake_up_all(&cache->daemon_pollwq);
+-	wait_for_completion(&req->done);
+-	ret = req->error;
++wait:
++	ret = wait_for_completion_killable(&req->done);
++	if (!ret) {
++		ret = req->error;
++	} else {
++		xas_reset(&xas);
++		xas_lock(&xas);
++		if (xas_load(&xas) == req) {
++			xas_store(&xas, NULL);
++			ret = -EINTR;
++		}
++		xas_unlock(&xas);
++
++		/* Someone will complete it soon. */
++		if (ret != -EINTR) {
++			cpu_relax();
++			goto wait;
++		}
++	}
+ 	cachefiles_req_put(req);
+ 	return ret;
+ out:
 -- 
 2.39.2
 
