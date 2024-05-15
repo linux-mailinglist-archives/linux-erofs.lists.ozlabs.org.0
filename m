@@ -1,45 +1,43 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA4858C601A
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 May 2024 07:17:07 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C05B68C62FF
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 May 2024 10:42:23 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=OOzrNsFL;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=E68sqUrR;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VfM0c337Cz3blN
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 May 2024 15:17:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VfRYS3wzvz3c4P
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 May 2024 18:42:20 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=OOzrNsFL;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=E68sqUrR;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VfM0S2pq0z2y71
-	for <linux-erofs@lists.ozlabs.org>; Wed, 15 May 2024 15:16:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VfRYH54Plz30WW
+	for <linux-erofs@lists.ozlabs.org>; Wed, 15 May 2024 18:42:09 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1715750209; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=rTRSLU1iJhPevKRKH7taG+0N/VMep8zl/Y2w13xeZ08=;
-	b=OOzrNsFLKVZ2mDubX9xTnwSQs5sAtSzFlCUy1Ow9Hp+KMw6BnWEZBPk9rtAVHaaSvlB9gvulNe21K3ZYRlL1J9oWZfPwAXKqYacTCTdYde/4aPQn/t+O+U1zqr3umyT0xg1jroVDApIJEMgAlCCZ0yw/oETLTeWMSAFiFmG2ya0=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W6Wsm35_1715750202;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W6Wsm35_1715750202)
+	t=1715762524; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=oDM6hqRSr+q/uoscxZ5nSTdRu2kTicrUEFIneGEob2Q=;
+	b=E68sqUrRAH9/Q/jh0JfWjp5Im7vyAc0AxYwdxJB3P6myhycL/QB/tBtQeNpESCLi9SvVyqYinMltdEgM9fAjh7Mcqsnqmf1S3//CvEkbksvEUBtZ2SgrHcu2CvwQLoDymcb58FlAWGx7ogtZCtre+2KmLVb2zEtGnJF09/KQhj0=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W6XR5Ll_1715762517;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W6XR5Ll_1715762517)
           by smtp.aliyun-inc.com;
-          Wed, 15 May 2024 13:16:48 +0800
+          Wed, 15 May 2024 16:42:02 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v3] erofs-utils: add preliminary zstd support [x]
-Date: Wed, 15 May 2024 13:16:41 +0800
-Message-Id: <20240515051641.3929058-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: unify the tree traversal for the rebuild mode
+Date: Wed, 15 May 2024 16:41:56 +0800
+Message-Id: <20240515084156.4191479-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240509153912.617125-1-hsiangkao@linux.alibaba.com>
-References: <20240509153912.617125-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -57,500 +55,610 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch just adds a preliminary Zstandard support to erofs-utils
-since currently Zstandard doesn't support fixed-sized output compression
-officially.  Mkfs could take more time to finish but it works at least.
-
-The built-in zstd compressor for erofs-utils is slowly WIP, therefore
-apparently it will take more efforts.
-
-[ TODO: Later I tend to add another way to generate fixed-sized input
-        pclusters temporarily for relatively large pcluster sizes as
-        an option since it will have minor impacts to the results. ]
+Let's drop the legacy approach and `tarerofs` will be applied too.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-changes since v2:
- - use ZSTD_compress2() since only this can enable the previous applied
-   parameters. 
+ include/erofs/internal.h |   7 +-
+ lib/diskbuf.c            |  14 +-
+ lib/inode.c              | 384 ++++++++++++++++++++++-----------------
+ 3 files changed, 232 insertions(+), 173 deletions(-)
 
- configure.ac             |  35 ++++++++++
- dump/Makefile.am         |   3 +-
- fsck/Makefile.am         |   6 +-
- fuse/Makefile.am         |   2 +-
- include/erofs_fs.h       |  10 +++
- lib/Makefile.am          |   3 +
- lib/compress.c           |  24 +++++++
- lib/compressor.c         |   8 +++
- lib/compressor.h         |   1 +
- lib/compressor_libzstd.c | 143 +++++++++++++++++++++++++++++++++++++++
- lib/decompress.c         |  67 ++++++++++++++++++
- mkfs/Makefile.am         |   2 +-
- 12 files changed, 299 insertions(+), 5 deletions(-)
- create mode 100644 lib/compressor_libzstd.c
-
-diff --git a/configure.ac b/configure.ac
-index 4a940a8..1560f84 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -139,6 +139,10 @@ AC_ARG_WITH(libdeflate,
-       [Enable and build with libdeflate inflate support @<:@default=disabled@:>@])], [],
-       [with_libdeflate="no"])
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index ecbbdf6..46345e0 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -290,7 +290,12 @@ static inline unsigned int erofs_inode_datalayout(unsigned int value)
+ 			      EROFS_I_DATALAYOUT_BITS);
+ }
  
-+AC_ARG_WITH(libzstd,
-+   [AS_HELP_STRING([--with-libzstd],
-+      [Enable and build with of libzstd support @<:@default=auto@:>@])])
+-#define IS_ROOT(x)	((x) == (x)->i_parent)
++static inline struct erofs_inode *erofs_parent_inode(struct erofs_inode *inode)
++{
++	return (void *)((unsigned long)inode->i_parent & ~1UL);
++}
 +
- AC_ARG_ENABLE(fuse,
-    [AS_HELP_STRING([--enable-fuse], [enable erofsfuse @<:@default=no@:>@])],
-    [enable_fuse="$enableval"], [enable_fuse="no"])
-@@ -474,6 +478,32 @@ AS_IF([test "x$with_libdeflate" != "xno"], [
-   LIBS="${saved_LIBS}"
-   CPPFLAGS="${saved_CPPFLAGS}"], [have_libdeflate="no"])
++#define IS_ROOT(x)	((x) == erofs_parent_inode(x))
  
-+# Configure libzstd
-+have_libzstd="no"
-+AS_IF([test "x$with_libzstd" != "xno"], [
-+  PKG_CHECK_MODULES([libzstd], [libzstd >= 1.4.0], [
-+    # Paranoia: don't trust the result reported by pkgconfig before trying out
-+    saved_LIBS="$LIBS"
-+    saved_CPPFLAGS=${CPPFLAGS}
-+    CPPFLAGS="${libzstd_CFLAGS} ${CPPFLAGS}"
-+    LIBS="${libzstd_LIBS} $LIBS"
-+    AC_CHECK_HEADERS([zstd.h],[
-+      AC_CHECK_LIB(zstd, ZSTD_compress2, [], [
-+        AC_MSG_ERROR([libzstd doesn't work properly])])
-+      AC_CHECK_DECL(ZSTD_compress2, [have_libzstd="yes"],
-+        [AC_MSG_ERROR([libzstd doesn't work properly])], [[
-+#include <zstd.h>
-+      ]])
-+      AC_CHECK_FUNCS([ZSTD_getFrameContentSize])
-+    ])
-+    LIBS="${saved_LIBS}"
-+    CPPFLAGS="${saved_CPPFLAGS}"], [
-+    AS_IF([test "x$with_libzstd" = "xyes"], [
-+      AC_MSG_ERROR([Cannot find proper libzstd])
-+    ])
-+  ])
-+])
-+
- # Enable 64-bit off_t
- CFLAGS+=" -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
+ struct erofs_dentry {
+ 	struct list_head d_child;	/* child of parent list */
+diff --git a/lib/diskbuf.c b/lib/diskbuf.c
+index 8205ba5..e5889df 100644
+--- a/lib/diskbuf.c
++++ b/lib/diskbuf.c
+@@ -10,7 +10,7 @@
  
-@@ -494,6 +524,7 @@ AM_CONDITIONAL([ENABLE_LZ4HC], [test "x${have_lz4hc}" = "xyes"])
- AM_CONDITIONAL([ENABLE_FUSE], [test "x${have_fuse}" = "xyes"])
- AM_CONDITIONAL([ENABLE_LIBLZMA], [test "x${have_liblzma}" = "xyes"])
- AM_CONDITIONAL([ENABLE_LIBDEFLATE], [test "x${have_libdeflate}" = "xyes"])
-+AM_CONDITIONAL([ENABLE_LIBZSTD], [test "x${have_libzstd}" = "xyes"])
+ /* A simple approach to avoid creating too many temporary files */
+ static struct erofs_diskbufstrm {
+-	u64 count;
++	erofs_atomic_t count;
+ 	u64 tailoffset, devpos;
+ 	int fd;
+ 	unsigned int alignsize;
+@@ -25,8 +25,6 @@ int erofs_diskbuf_getfd(struct erofs_diskbuf *db, u64 *fpos)
+ 	if (!strm)
+ 		return -1;
+ 	offset = db->offset + strm->devpos;
+-	if (lseek(strm->fd, offset, SEEK_SET) != offset)
+-		return -E2BIG;
+ 	if (fpos)
+ 		*fpos = offset;
+ 	return strm->fd;
+@@ -46,7 +44,7 @@ int erofs_diskbuf_reserve(struct erofs_diskbuf *db, int sid, u64 *off)
+ 	if (off)
+ 		*off = db->offset + strm->devpos;
+ 	db->sp = strm;
+-	++strm->count;
++	(void)erofs_atomic_inc_return(&strm->count);
+ 	strm->locked = true;	/* TODO: need a real lock for MT */
+ 	return strm->fd;
+ }
+@@ -66,8 +64,8 @@ void erofs_diskbuf_close(struct erofs_diskbuf *db)
+ 	struct erofs_diskbufstrm *strm = db->sp;
  
- if test "x$have_uuid" = "xyes"; then
-   AC_DEFINE([HAVE_LIBUUID], 1, [Define to 1 if libuuid is found])
-@@ -539,6 +570,10 @@ if test "x$have_libdeflate" = "xyes"; then
-   AC_DEFINE([HAVE_LIBDEFLATE], 1, [Define to 1 if libdeflate is found])
- fi
+ 	DBG_BUGON(!strm);
+-	DBG_BUGON(strm->count <= 1);
+-	--strm->count;
++	DBG_BUGON(erofs_atomic_read(&strm->count) <= 1);
++	(void)erofs_atomic_dec_return(&strm->count);
+ 	db->sp = NULL;
+ }
  
-+if test "x$have_libzstd" = "xyes"; then
-+  AC_DEFINE([HAVE_LIBZSTD], 1, [Define to 1 if libzstd is found])
-+fi
-+
- # Dump maximum block size
- AS_IF([test "x$erofs_cv_max_block_size" = "x"],
-       [$erofs_cv_max_block_size = 4096], [])
-diff --git a/dump/Makefile.am b/dump/Makefile.am
-index aed20c2..09c483e 100644
---- a/dump/Makefile.am
-+++ b/dump/Makefile.am
-@@ -7,4 +7,5 @@ AM_CPPFLAGS = ${libuuid_CFLAGS}
- dump_erofs_SOURCES = main.c
- dump_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- dump_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS}
-+	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} \
-+	${libzstd_LIBS}
-diff --git a/fsck/Makefile.am b/fsck/Makefile.am
-index d024405..70eacc0 100644
---- a/fsck/Makefile.am
-+++ b/fsck/Makefile.am
-@@ -7,7 +7,8 @@ AM_CPPFLAGS = ${libuuid_CFLAGS}
- fsck_erofs_SOURCES = main.c
- fsck_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS}
-+	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} \
-+	${libzstd_LIBS}
+@@ -122,7 +120,7 @@ int erofs_diskbuf_init(unsigned int nstrms)
+ 			return -ENOSPC;
+ setupone:
+ 		strm->tailoffset = 0;
+-		strm->count = 1;
++		erofs_atomic_set(&strm->count, 1);
+ 		if (fstat(strm->fd, &st))
+ 			return -errno;
+ 		strm->alignsize = max_t(u32, st.st_blksize, getpagesize());
+@@ -138,7 +136,7 @@ void erofs_diskbuf_exit(void)
+ 		return;
  
- if ENABLE_FUZZING
- noinst_PROGRAMS   = fuzz_erofsfsck
-@@ -15,5 +16,6 @@ fuzz_erofsfsck_SOURCES = main.c
- fuzz_erofsfsck_CFLAGS = -Wall -I$(top_srcdir)/include -DFUZZING
- fuzz_erofsfsck_LDFLAGS = -fsanitize=address,fuzzer
- fuzz_erofsfsck_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
--	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS}
-+	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} \
-+	${libzstd_LIBS}
- endif
-diff --git a/fuse/Makefile.am b/fuse/Makefile.am
-index c63efcd..7eae5f6 100644
---- a/fuse/Makefile.am
-+++ b/fuse/Makefile.am
-@@ -7,4 +7,4 @@ erofsfuse_SOURCES = main.c
- erofsfuse_CFLAGS = -Wall -I$(top_srcdir)/include
- erofsfuse_CFLAGS += ${libfuse2_CFLAGS} ${libfuse3_CFLAGS} ${libselinux_CFLAGS}
- erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la ${libfuse2_LIBS} ${libfuse3_LIBS} ${liblz4_LIBS} \
--	${libselinux_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS}
-+	${libselinux_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} ${libzstd_LIBS}
-diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index eba6c26..907f3d8 100644
---- a/include/erofs_fs.h
-+++ b/include/erofs_fs.h
-@@ -304,6 +304,7 @@ enum {
- 	Z_EROFS_COMPRESSION_LZ4		= 0,
- 	Z_EROFS_COMPRESSION_LZMA	= 1,
- 	Z_EROFS_COMPRESSION_DEFLATE	= 2,
-+	Z_EROFS_COMPRESSION_ZSTD	= 3,
- 	Z_EROFS_COMPRESSION_MAX
+ 	for (strm = dbufstrm; strm->fd >= 0; ++strm) {
+-		DBG_BUGON(strm->count != 1);
++		DBG_BUGON(erofs_atomic_read(&strm->count) != 1);
+ 
+ 		close(strm->fd);
+ 		strm->fd = -1;
+diff --git a/lib/inode.c b/lib/inode.c
+index 44d684f..8ec87e6 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -264,7 +264,7 @@ int erofs_init_empty_dir(struct erofs_inode *dir)
+ 	d = erofs_d_alloc(dir, "..");
+ 	if (IS_ERR(d))
+ 		return PTR_ERR(d);
+-	d->inode = erofs_igrab(dir->i_parent);
++	d->inode = erofs_igrab(erofs_parent_inode(dir));
+ 	d->type = EROFS_FT_DIR;
+ 
+ 	dir->i_nlink = 2;
+@@ -494,29 +494,6 @@ int erofs_write_unencoded_file(struct erofs_inode *inode, int fd, u64 fpos)
+ 	return write_uncompressed_file_from_fd(inode, fd);
+ }
+ 
+-int erofs_write_file(struct erofs_inode *inode, int fd, u64 fpos)
+-{
+-	DBG_BUGON(!inode->i_size);
+-
+-	if (cfg.c_compr_opts[0].alg && erofs_file_is_compressible(inode)) {
+-		void *ictx;
+-		int ret;
+-
+-		ictx = erofs_begin_compressed_file(inode, fd, fpos);
+-		if (IS_ERR(ictx))
+-			return PTR_ERR(ictx);
+-
+-		ret = erofs_write_compressed_file(ictx);
+-		if (ret != -ENOSPC)
+-			return ret;
+-
+-		if (lseek(fd, fpos, SEEK_SET) < 0)
+-			return -errno;
+-	}
+-	/* fallback to all data uncompressed */
+-	return erofs_write_unencoded_file(inode, fd, fpos);
+-}
+-
+ static int erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+ {
+ 	struct erofs_inode *const inode = bh->fsprivate;
+@@ -1113,6 +1090,7 @@ struct erofs_mkfs_job_ndir_ctx {
+ 	struct erofs_inode *inode;
+ 	void *ictx;
+ 	int fd;
++	u64 fpos;
  };
- #define Z_EROFS_ALL_COMPR_ALGS		((1 << Z_EROFS_COMPRESSION_MAX) - 1)
-@@ -330,6 +331,15 @@ struct z_erofs_deflate_cfgs {
- 	u8 reserved[5];
- } __packed;
  
-+/* 6 bytes (+ length field = 8 bytes) */
-+struct z_erofs_zstd_cfgs {
-+	u8 format;
-+	u8 windowlog;		/* windowLog - ZSTD_WINDOWLOG_ABSOLUTEMIN(10) */
-+	u8 reserved[4];
-+} __packed;
-+
-+#define Z_EROFS_ZSTD_MAX_DICT_SIZE	Z_EROFS_PCLUSTER_MAX_SIZE
-+
- /*
-  * bit 0 : COMPACTED_2B indexes (0 - off; 1 - on)
-  *  e.g. for 4k logical cluster size,      4B        if compacted 2B is off;
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index b3bea74..2cb4cab 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -53,6 +53,9 @@ liberofs_la_SOURCES += kite_deflate.c compressor_deflate.c
- if ENABLE_LIBDEFLATE
- liberofs_la_SOURCES += compressor_libdeflate.c
- endif
-+if ENABLE_LIBZSTD
-+liberofs_la_SOURCES += compressor_libzstd.c
-+endif
- if ENABLE_EROFS_MT
- liberofs_la_LDFLAGS = -lpthread
- liberofs_la_SOURCES += workqueue.c
-diff --git a/lib/compress.c b/lib/compress.c
-index e3e4c21..f783236 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -1655,6 +1655,30 @@ static int z_erofs_build_compr_cfgs(struct erofs_sb_info *sbi,
- 				sizeof(zalg));
- 		bh->op = &erofs_drop_directly_bhops;
- 	}
-+#ifdef HAVE_LIBZSTD
-+	if (sbi->available_compr_algs & (1 << Z_EROFS_COMPRESSION_ZSTD)) {
-+		struct {
-+			__le16 size;
-+			struct z_erofs_zstd_cfgs z;
-+		} __packed zalg = {
-+			.size = cpu_to_le16(sizeof(struct z_erofs_zstd_cfgs)),
-+			.z = {
-+				.windowlog =
-+					ilog2(max_dict_size[Z_EROFS_COMPRESSION_ZSTD]) - 10,
-+			}
-+		};
-+
-+		bh = erofs_battach(bh, META, sizeof(zalg));
-+		if (IS_ERR(bh)) {
-+			DBG_BUGON(1);
-+			return PTR_ERR(bh);
+ static int erofs_mkfs_job_write_file(struct erofs_mkfs_job_ndir_ctx *ctx)
+@@ -1121,18 +1099,31 @@ static int erofs_mkfs_job_write_file(struct erofs_mkfs_job_ndir_ctx *ctx)
+ 	int ret;
+ 
+ 	if (ctx->ictx) {
++		if (inode->with_diskbuf &&
++		    lseek(ctx->fd, ctx->fpos, SEEK_SET) < 0) {
++			ret = -errno;
++			goto out;
 +		}
-+		erofs_mapbh(bh->block);
-+		ret = dev_write(sbi, &zalg, erofs_btell(bh, false),
-+				sizeof(zalg));
-+		bh->op = &erofs_drop_directly_bhops;
++
+ 		ret = erofs_write_compressed_file(ctx->ictx);
+ 		if (ret != -ENOSPC)
+ 			goto out;
+-		if (lseek(ctx->fd, 0, SEEK_SET) < 0) {
++		if (lseek(ctx->fd, ctx->fpos, SEEK_SET) < 0) {
+ 			ret = -errno;
+ 			goto out;
+ 		}
+ 	}
+ 	/* fallback to all data uncompressed */
+-	ret = erofs_write_unencoded_file(inode, ctx->fd, 0);
++	ret = erofs_write_unencoded_file(inode, ctx->fd, ctx->fpos);
+ out:
+-	close(ctx->fd);
++	if (inode->with_diskbuf) {
++		erofs_diskbuf_close(inode->i_diskbuf);
++		free(inode->i_diskbuf);
++		inode->i_diskbuf = NULL;
++		inode->with_diskbuf = false;
++	} else {
++		close(ctx->fd);
 +	}
-+#endif
  	return ret;
  }
  
-diff --git a/lib/compressor.c b/lib/compressor.c
-index 175259e..24c99ac 100644
---- a/lib/compressor.c
-+++ b/lib/compressor.c
-@@ -37,6 +37,14 @@ static const struct erofs_algorithm erofs_algs[] = {
- 	{ "libdeflate", &erofs_compressor_libdeflate,
- 	  Z_EROFS_COMPRESSION_DEFLATE, true },
- #endif
-+
-+	{ "zstd",
-+#ifdef HAVE_LIBZSTD
-+		&erofs_compressor_libzstd,
-+#else
-+		NULL,
-+#endif
-+	  Z_EROFS_COMPRESSION_ZSTD, false },
- };
+@@ -1142,17 +1133,21 @@ static int erofs_mkfs_handle_nondirectory(struct erofs_mkfs_job_ndir_ctx *ctx)
+ 	int ret = 0;
  
- int z_erofs_get_compress_algorithm_id(const struct erofs_compress *c)
-diff --git a/lib/compressor.h b/lib/compressor.h
-index 96f2d21..59d525d 100644
---- a/lib/compressor.h
-+++ b/lib/compressor.h
-@@ -53,6 +53,7 @@ extern const struct erofs_compressor erofs_compressor_lz4hc;
- extern const struct erofs_compressor erofs_compressor_lzma;
- extern const struct erofs_compressor erofs_compressor_deflate;
- extern const struct erofs_compressor erofs_compressor_libdeflate;
-+extern const struct erofs_compressor erofs_compressor_libzstd;
+ 	if (S_ISLNK(inode->i_mode)) {
+-		char *const symlink = malloc(inode->i_size);
+-
+-		if (!symlink)
+-			return -ENOMEM;
+-		ret = readlink(inode->i_srcpath, symlink, inode->i_size);
+-		if (ret < 0) {
+-			free(symlink);
+-			return -errno;
++		char *symlink = inode->i_link;
++
++		if (!symlink) {
++			symlink = malloc(inode->i_size);
++			if (!symlink)
++				return -ENOMEM;
++			ret = readlink(inode->i_srcpath, symlink, inode->i_size);
++			if (ret < 0) {
++				free(symlink);
++				return -errno;
++			}
+ 		}
+ 		ret = erofs_write_file_from_buffer(inode, symlink);
+ 		free(symlink);
++		inode->i_link = NULL;
+ 	} else if (inode->i_size) {
+ 		ret = erofs_mkfs_job_write_file(ctx);
+ 	}
+@@ -1371,6 +1366,43 @@ err_closedir:
+ 	return ret;
+ }
  
- int z_erofs_get_compress_algorithm_id(const struct erofs_compress *c);
- int erofs_compress_destsize(const struct erofs_compress *c,
-diff --git a/lib/compressor_libzstd.c b/lib/compressor_libzstd.c
-new file mode 100644
-index 0000000..223806e
---- /dev/null
-+++ b/lib/compressor_libzstd.c
-@@ -0,0 +1,143 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-+#include "erofs/internal.h"
-+#include "erofs/print.h"
-+#include "erofs/config.h"
-+#include <zstd.h>
-+#include <zstd_errors.h>
-+#include <alloca.h>
-+#include "compressor.h"
-+#include "erofs/atomic.h"
-+
-+static int libzstd_compress_destsize(const struct erofs_compress *c,
-+				     const void *src, unsigned int *srcsize,
-+				     void *dst, unsigned int dstsize)
++static int erofs_rebuild_handle_directory(struct erofs_inode *dir)
 +{
-+	ZSTD_CCtx *cctx = c->private_data;
-+	size_t l = 0;		/* largest input that fits so far */
-+	size_t l_csize = 0;
-+	size_t r = *srcsize + 1; /* smallest input that doesn't fit so far */
-+	size_t m;
-+	u8 *fitblk_buffer = alloca(dstsize + 32);
++	struct erofs_dentry *d, *n;
++	unsigned int nr_subdirs, i_nlink;
++	int ret;
 +
-+	m = dstsize * 4;
-+	for (;;) {
-+		size_t csize;
-+
-+		m = max(m, l + 1);
-+		m = min(m, r - 1);
-+
-+		csize = ZSTD_compress2(cctx, fitblk_buffer,
-+				       dstsize + 32, src, m);
-+		if (ZSTD_isError(csize)) {
-+			if (ZSTD_getErrorCode(csize) == ZSTD_error_dstSize_tooSmall)
-+				goto doesnt_fit;
-+			return -EFAULT;
++	nr_subdirs = 0;
++	i_nlink = 2;
++	list_for_each_entry_safe(d, n, &dir->i_subdirs, d_child) {
++		if (cfg.c_ovlfs_strip && erofs_inode_is_whiteout(d->inode)) {
++			erofs_dbg("remove whiteout %s", d->inode->i_srcpath);
++			list_del(&d->d_child);
++			erofs_d_invalidate(d);
++			free(d);
++			continue;
 +		}
-+
-+		if (csize > 0 && csize <= dstsize) {
-+			/* Fits */
-+			memcpy(dst, fitblk_buffer, csize);
-+			l = m;
-+			l_csize = csize;
-+			if (r <= l + 1 || csize + 1 >= dstsize)
-+				break;
-+			/*
-+			 * Estimate needed input prefix size based on current
-+			 * compression ratio.
-+			 */
-+			m = (dstsize * m) / csize;
-+		} else {
-+doesnt_fit:
-+			/* Doesn't fit */
-+			r = m;
-+			if (r <= l + 1)
-+				break;
-+			m = (l + r) / 2;
-+		}
++		i_nlink += S_ISDIR(d->inode->i_mode);
++		++nr_subdirs;
 +	}
-+	*srcsize = l;
-+	return l_csize;
++
++	ret = erofs_prepare_dir_layout(dir, nr_subdirs);
++	if (ret)
++		return ret;
++
++	/*
++	 * if there're too many subdirs as compact form, set nlink=1
++	 * rather than upgrade to use extented form instead.
++	 */
++	if (i_nlink > USHRT_MAX &&
++	    dir->inode_isize == sizeof(struct erofs_inode_compact))
++		dir->i_nlink = 1;
++	else
++		dir->i_nlink = i_nlink;
++
++	return erofs_mkfs_go(dir->sbi, EROFS_MKFS_JOB_DIR, &dir, sizeof(dir));
 +}
 +
-+static int compressor_libzstd_exit(struct erofs_compress *c)
-+{
-+	if (!c->private_data)
-+		return -EINVAL;
-+	ZSTD_freeCCtx(c->private_data);
-+	return 0;
-+}
-+
-+static int erofs_compressor_libzstd_setlevel(struct erofs_compress *c,
-+					     int compression_level)
-+{
-+	if (compression_level > erofs_compressor_libzstd.best_level) {
-+		erofs_err("invalid compression level %d", compression_level);
-+		return -EINVAL;
-+	}
-+	c->compression_level = compression_level;
-+	return 0;
-+}
-+
-+static int erofs_compressor_libzstd_setdictsize(struct erofs_compress *c,
-+						u32 dict_size)
-+{
-+	if (!dict_size) {
-+		if (erofs_compressor_libzstd.default_dictsize) {
-+			dict_size = erofs_compressor_libzstd.default_dictsize;
-+		} else {
-+			dict_size = min_t(u32, Z_EROFS_ZSTD_MAX_DICT_SIZE,
-+					  cfg.c_mkfs_pclustersize_max << 3);
-+			dict_size = 1 << ilog2(dict_size);
-+		}
-+	}
-+	if (dict_size != 1 << ilog2(dict_size) ||
-+	    dict_size > Z_EROFS_ZSTD_MAX_DICT_SIZE) {
-+		erofs_err("invalid dictionary size %u", dict_size);
-+		return -EINVAL;
-+	}
-+	c->dict_size = dict_size;
-+	return 0;
-+}
-+
-+static int compressor_libzstd_init(struct erofs_compress *c)
-+{
-+	static erofs_atomic_bool_t __warnonce;
-+	ZSTD_CCtx *cctx = c->private_data;
-+	size_t err;
-+
-+	ZSTD_freeCCtx(cctx);
-+	cctx = ZSTD_createCCtx();
-+	if (!cctx)
-+		return -ENOMEM;
-+
-+	err = ZSTD_CCtx_setParameter(cctx, ZSTD_c_compressionLevel, c->compression_level);
-+	if (ZSTD_isError(err)) {
-+		erofs_err("failed to set compression level: %s",
-+			  ZSTD_getErrorName(err));
-+		return -EINVAL;
-+	}
-+	err = ZSTD_CCtx_setParameter(cctx, ZSTD_c_windowLog, ilog2(c->dict_size));
-+	if (ZSTD_isError(err)) {
-+		erofs_err("failed to set window log: %s", ZSTD_getErrorName(err));
-+		return -EINVAL;
-+	}
-+	c->private_data = cctx;
-+
-+	if (!erofs_atomic_test_and_set(&__warnonce)) {
-+		erofs_warn("EXPERIMENTAL libzstd compressor in use. Note that `fitblk` isn't supported by upstream zstd for now.");
-+		erofs_warn("Therefore it will takes more time in order to get the optimal result.");
-+		erofs_info("You could clarify further needs in zstd repository <https://github.com/facebook/zstd/issues> for reference too.");
-+	}
-+	return 0;
-+}
-+
-+const struct erofs_compressor erofs_compressor_libzstd = {
-+	.default_level = ZSTD_CLEVEL_DEFAULT,
-+	.best_level = 22,
-+	.max_dictsize = Z_EROFS_ZSTD_MAX_DICT_SIZE,
-+	.init = compressor_libzstd_init,
-+	.exit = compressor_libzstd_exit,
-+	.setlevel = erofs_compressor_libzstd_setlevel,
-+	.setdictsize = erofs_compressor_libzstd_setdictsize,
-+	.compress_destsize = libzstd_compress_destsize,
-+};
-diff --git a/lib/decompress.c b/lib/decompress.c
-index fe8a40c..58ce7e5 100644
---- a/lib/decompress.c
-+++ b/lib/decompress.c
-@@ -9,6 +9,69 @@
- #include "erofs/err.h"
- #include "erofs/print.h"
+ static int erofs_mkfs_handle_inode(struct erofs_inode *inode)
+ {
+ 	char *trimmed;
+@@ -1415,27 +1447,89 @@ static int erofs_mkfs_handle_inode(struct erofs_inode *inode)
+ 	return ret;
+ }
  
-+#ifdef HAVE_LIBZSTD
-+#include <zstd.h>
-+#include <zstd_errors.h>
-+
-+/* also a very preliminary userspace version */
-+static int z_erofs_decompress_zstd(struct z_erofs_decompress_req *rq)
+-#ifndef EROFS_MT_ENABLED
+-#define __erofs_mkfs_build_tree_from_path erofs_mkfs_build_tree_from_path
+-#endif
++static int erofs_rebuild_handle_inode(struct erofs_inode *inode)
 +{
-+	struct erofs_sb_info *sbi = rq->sbi;
-+	int ret = 0;
-+	char *dest = rq->out;
-+	char *src = rq->in;
-+	char *buff = NULL;
-+	unsigned int inputmargin = 0;
-+	unsigned long long total;
++	char *trimmed;
++	int ret;
 +
-+	while (!src[inputmargin & (erofs_blksiz(sbi) - 1)])
-+		if (!(++inputmargin & (erofs_blksiz(sbi) - 1)))
-+			break;
++	trimmed = erofs_trim_for_progressinfo(erofs_fspath(inode->i_srcpath),
++					      sizeof("Processing  ...") - 1);
++	erofs_update_progressinfo("Processing %s ...", trimmed);
++	free(trimmed);
 +
-+	if (inputmargin >= rq->inputsize)
-+		return -EFSCORRUPTED;
-+
-+#ifdef HAVE_ZSTD_GETFRAMECONTENTSIZE
-+	total = ZSTD_getFrameContentSize(src + inputmargin,
-+					 rq->inputsize - inputmargin);
-+	if (total == ZSTD_CONTENTSIZE_UNKNOWN ||
-+	    total == ZSTD_CONTENTSIZE_ERROR)
-+		return -EFSCORRUPTED;
-+#else
-+	total = ZSTD_getDecompressedSize(src + inputmargin,
-+					 rq->inputsize - inputmargin);
-+#endif
-+	if (rq->decodedskip || total != rq->decodedlength) {
-+		buff = malloc(total);
-+		if (!buff)
-+			return -ENOMEM;
-+		dest = buff;
++	if (erofs_should_use_inode_extended(inode)) {
++		if (cfg.c_force_inodeversion == FORCE_INODE_COMPACT) {
++			erofs_err("file %s cannot be in compact form",
++				  inode->i_srcpath);
++			return -EINVAL;
++		}
++		inode->inode_isize = sizeof(struct erofs_inode_extended);
++	} else {
++		inode->inode_isize = sizeof(struct erofs_inode_compact);
 +	}
 +
-+	ret = ZSTD_decompress(dest, total,
-+			      src + inputmargin, rq->inputsize - inputmargin);
-+	if (ZSTD_isError(ret)) {
-+		erofs_err("ZSTD decompress failed %d: %s", ZSTD_getErrorCode(ret),
-+			  ZSTD_getErrorName(ret));
-+		ret = -EIO;
-+		goto out;
-+	}
++	/* strip all unnecessary overlayfs xattrs when ovlfs_strip is enabled */
++	if (cfg.c_ovlfs_strip)
++		erofs_clear_opaque_xattr(inode);
++	else if (inode->whiteouts)
++		erofs_set_origin_xattr(inode);
 +
-+	if (ret != (int)total) {
-+		erofs_err("ZSTD decompress length mismatch %d, expected %d",
-+			  ret, total);
-+		goto out;
++	ret = erofs_prepare_xattr_ibody(inode);
++	if (ret < 0)
++		return ret;
++
++	if (!S_ISDIR(inode->i_mode)) {
++		struct erofs_mkfs_job_ndir_ctx ctx = { .inode = inode };
+ 
+-struct erofs_inode *__erofs_mkfs_build_tree_from_path(const char *path)
++		if (!S_ISLNK(inode->i_mode) && inode->i_size) {
++			DBG_BUGON(!inode->with_diskbuf);
++			ctx.fd = erofs_diskbuf_getfd(inode->i_diskbuf, &ctx.fpos);
++			if (ctx.fd < 0)
++				return ret;
++
++			if (cfg.c_compr_opts[0].alg &&
++			    erofs_file_is_compressible(inode)) {
++				ctx.ictx = erofs_begin_compressed_file(inode,
++							ctx.fd, ctx.fpos);
++				if (IS_ERR(ctx.ictx))
++					return PTR_ERR(ctx.ictx);
++			}
++		}
++		ret = erofs_mkfs_go(inode->sbi, EROFS_MKFS_JOB_NDIR,
++				    &ctx, sizeof(ctx));
++	} else {
++		ret = erofs_rebuild_handle_directory(inode);
 +	}
-+	if (rq->decodedskip || total != rq->decodedlength)
-+		memcpy(rq->out, dest + rq->decodedskip,
-+		       rq->decodedlength - rq->decodedskip);
-+out:
-+	if (buff)
-+		free(buff);
++	erofs_info("file %s dumped (mode %05o)", erofs_fspath(inode->i_srcpath),
++		   inode->i_mode);
 +	return ret;
 +}
++
++static bool erofs_inode_visited(struct erofs_inode *inode)
+ {
+-	struct erofs_inode *root, *dumpdir;
+-	int err;
++	return (unsigned long)inode->i_parent & 1UL;
++}
+ 
+-	root = erofs_iget_from_path(path, true);
+-	if (IS_ERR(root))
+-		return root;
++static void erofs_mark_parent_inode(struct erofs_inode *inode,
++				    struct erofs_inode *dir)
++{
++	inode->i_parent = (void *)((unsigned long)dir | 1);
++}
++
++static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild)
++{
++	struct erofs_inode *dumpdir;
++	int err;
+ 
+-	root->i_parent = root;	/* rootdir mark */
++	erofs_mark_parent_inode(root, root);	/* rootdir mark */
+ 	root->next_dirwrite = NULL;
+ 	(void)erofs_igrab(root);
+ 	dumpdir = root;
+ 
+-	err = erofs_mkfs_handle_inode(root);
++	err = !rebuild ? erofs_mkfs_handle_inode(root) :
++			erofs_rebuild_handle_inode(root);
+ 	if (err)
+-		return ERR_PTR(err);
++		return err;
+ 
+ 	do {
+ 		int err;
+@@ -1450,21 +1544,25 @@ struct erofs_inode *__erofs_mkfs_build_tree_from_path(const char *path)
+ 
+ 			if (is_dot_dotdot(d->name))
+ 				continue;
+-			if (inode->i_parent) {
+-				++inode->i_nlink;
+-			} else {
+-				inode->i_parent = dir;
+ 
+-				err = erofs_mkfs_handle_inode(inode);
+-				if (err) {
+-					root = ERR_PTR(err);
++			if (!erofs_inode_visited(inode)) {
++				DBG_BUGON(rebuild &&
++					  erofs_parent_inode(inode) != dir);
++				erofs_mark_parent_inode(inode, dir);
++
++				if (!rebuild)
++					err = erofs_mkfs_handle_inode(inode);
++				else
++					err = erofs_rebuild_handle_inode(inode);
++				if (err)
+ 					break;
+-				}
+ 				if (S_ISDIR(inode->i_mode)) {
+ 					*last = inode;
+ 					last = &inode->next_dirwrite;
+ 					(void)erofs_igrab(inode);
+ 				}
++			} else if (!rebuild) {
++				++inode->i_nlink;
+ 			}
+ 		}
+ 		*last = dumpdir;	/* fixup the last (or the only) one */
+@@ -1472,28 +1570,61 @@ struct erofs_inode *__erofs_mkfs_build_tree_from_path(const char *path)
+ 		err = erofs_mkfs_go(dir->sbi, EROFS_MKFS_JOB_DIR_BH,
+ 				    &dir, sizeof(dir));
+ 		if (err)
+-			return ERR_PTR(err);
++			return err;
+ 	} while (dumpdir);
+ 
+-	return root;
++	return err;
+ }
+ 
+-#ifdef EROFS_MT_ENABLED
+-struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
++struct erofs_mkfs_buildtree_ctx {
++	union {
++		const char *path;
++		struct erofs_inode *root;
++	} u;
++	bool from_path;
++};
++#ifndef EROFS_MT_ENABLED
++#define __erofs_mkfs_build_tree erofs_mkfs_build_tree
 +#endif
 +
- #ifdef HAVE_LIBDEFLATE
- /* if libdeflate is available, use libdeflate instead. */
- #include <libdeflate.h>
-@@ -322,6 +385,10 @@ int z_erofs_decompress(struct z_erofs_decompress_req *rq)
- #if defined(HAVE_ZLIB) || defined(HAVE_LIBDEFLATE)
- 	if (rq->alg == Z_EROFS_COMPRESSION_DEFLATE)
- 		return z_erofs_decompress_deflate(rq);
-+#endif
-+#ifdef HAVE_LIBZSTD
-+	if (rq->alg == Z_EROFS_COMPRESSION_ZSTD)
-+		return z_erofs_decompress_zstd(rq);
- #endif
- 	return -EOPNOTSUPP;
++static int __erofs_mkfs_build_tree(struct erofs_mkfs_buildtree_ctx *ctx)
+ {
+-	struct erofs_mkfs_dfops *q;
+ 	struct erofs_inode *root;
+ 	int err;
+ 
++	if (ctx->from_path) {
++		root = erofs_iget_from_path(ctx->u.path, true);
++		if (IS_ERR(root))
++			return PTR_ERR(root);
++	} else {
++		root = ctx->u.root;
++	}
++
++	err = erofs_mkfs_dump_tree(root, !ctx->from_path);
++	if (err) {
++		if (ctx->from_path)
++			erofs_iput(root);
++		return err;
++	}
++	ctx->u.root = root;
++	return 0;
++}
++
++#ifdef EROFS_MT_ENABLED
++static int erofs_mkfs_build_tree(struct erofs_mkfs_buildtree_ctx *ctx)
++{
++	struct erofs_mkfs_dfops *q;
++	int err, err2;
++
+ 	q = malloc(sizeof(*q));
+ 	if (!q)
+-		return ERR_PTR(-ENOMEM);
++		return -ENOMEM;
+ 
+ 	q->entries = EROFS_MT_QUEUE_SIZE;
+ 	q->queue = malloc(q->entries * sizeof(*q->queue));
+ 	if (!q->queue) {
+ 		free(q);
+-		return ERR_PTR(-ENOMEM);
++		return -ENOMEM;
+ 	}
+ 	pthread_mutex_init(&q->lock, NULL);
+ 	pthread_cond_init(&q->empty, NULL);
+@@ -1506,10 +1637,12 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
+ 			     z_erofs_mt_dfops_worker, &sbi);
+ 	if (err)
+ 		goto fail;
+-	root = __erofs_mkfs_build_tree_from_path(path);
+ 
++	err = __erofs_mkfs_build_tree(ctx);
+ 	erofs_mkfs_go(&sbi, ~0, NULL, 0);
+-	err = pthread_join(sbi.dfops_worker, NULL);
++	err2 = pthread_join(sbi.dfops_worker, NULL);
++	if (!err)
++		err = err2;
+ 
+ fail:
+ 	pthread_cond_destroy(&q->empty);
+@@ -1517,10 +1650,32 @@ fail:
+ 	pthread_mutex_destroy(&q->lock);
+ 	free(q->queue);
+ 	free(q);
+-	return err ? ERR_PTR(err) : root;
++	return err;
  }
-diff --git a/mkfs/Makefile.am b/mkfs/Makefile.am
-index dd75485..af97e39 100644
---- a/mkfs/Makefile.am
-+++ b/mkfs/Makefile.am
-@@ -7,4 +7,4 @@ mkfs_erofs_SOURCES = main.c
- mkfs_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
- 	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} \
--	${libdeflate_LIBS}
-+	${libdeflate_LIBS} ${libzstd_LIBS}
+ #endif
+ 
++struct erofs_inode *erofs_mkfs_build_tree_from_path(const char *path)
++{
++	struct erofs_mkfs_buildtree_ctx ctx = {
++		.from_path = true,
++		.u.path = path,
++	};
++	int err;
++
++	err = erofs_mkfs_build_tree(&ctx);
++	if (err)
++		return ERR_PTR(err);
++	return ctx.u.root;
++}
++
++int erofs_rebuild_dump_tree(struct erofs_inode *root)
++{
++	return erofs_mkfs_build_tree(&((struct erofs_mkfs_buildtree_ctx) {
++		.from_path = false,
++		.u.root = root,
++	}));
++}
++
+ struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name)
+ {
+ 	struct stat st;
+@@ -1578,102 +1733,3 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name)
+ 	erofs_write_tail_end(inode);
+ 	return inode;
+ }
+-
+-int erofs_rebuild_dump_tree(struct erofs_inode *dir)
+-{
+-	struct erofs_dentry *d, *n;
+-	unsigned int nr_subdirs;
+-	int ret;
+-
+-	if (erofs_should_use_inode_extended(dir)) {
+-		if (cfg.c_force_inodeversion == FORCE_INODE_COMPACT) {
+-			erofs_err("file %s cannot be in compact form",
+-				  dir->i_srcpath);
+-			return -EINVAL;
+-		}
+-		dir->inode_isize = sizeof(struct erofs_inode_extended);
+-	} else {
+-		dir->inode_isize = sizeof(struct erofs_inode_compact);
+-	}
+-
+-	/* strip all unnecessary overlayfs xattrs when ovlfs_strip is enabled */
+-	if (cfg.c_ovlfs_strip)
+-		erofs_clear_opaque_xattr(dir);
+-	else if (dir->whiteouts)
+-		erofs_set_origin_xattr(dir);
+-
+-	ret = erofs_prepare_xattr_ibody(dir);
+-	if (ret < 0)
+-		return ret;
+-
+-	if (!S_ISDIR(dir->i_mode)) {
+-		if (dir->bh)
+-			return 0;
+-		if (S_ISLNK(dir->i_mode)) {
+-			ret = erofs_write_file_from_buffer(dir, dir->i_link);
+-			free(dir->i_link);
+-			dir->i_link = NULL;
+-		} else if (dir->with_diskbuf) {
+-			u64 fpos;
+-
+-			ret = erofs_diskbuf_getfd(dir->i_diskbuf, &fpos);
+-			if (ret >= 0)
+-				ret = erofs_write_file(dir, ret, fpos);
+-			erofs_diskbuf_close(dir->i_diskbuf);
+-			free(dir->i_diskbuf);
+-			dir->i_diskbuf = NULL;
+-			dir->with_diskbuf = false;
+-		} else {
+-			ret = 0;
+-		}
+-		if (ret)
+-			return ret;
+-		ret = erofs_prepare_inode_buffer(dir);
+-		if (ret)
+-			return ret;
+-		erofs_write_tail_end(dir);
+-		return 0;
+-	}
+-
+-	nr_subdirs = 0;
+-	list_for_each_entry_safe(d, n, &dir->i_subdirs, d_child) {
+-		if (cfg.c_ovlfs_strip && erofs_inode_is_whiteout(d->inode)) {
+-			erofs_dbg("remove whiteout %s", d->inode->i_srcpath);
+-			list_del(&d->d_child);
+-			erofs_d_invalidate(d);
+-			free(d);
+-			continue;
+-		}
+-		++nr_subdirs;
+-	}
+-
+-	ret = erofs_prepare_dir_layout(dir, nr_subdirs);
+-	if (ret)
+-		return ret;
+-
+-	ret = erofs_prepare_inode_buffer(dir);
+-	if (ret)
+-		return ret;
+-	dir->bh->op = &erofs_skip_write_bhops;
+-
+-	if (IS_ROOT(dir))
+-		erofs_fixup_meta_blkaddr(dir);
+-
+-	list_for_each_entry(d, &dir->i_subdirs, d_child) {
+-		struct erofs_inode *inode;
+-
+-		if (is_dot_dotdot(d->name))
+-			continue;
+-
+-		inode = erofs_igrab(d->inode);
+-		ret = erofs_rebuild_dump_tree(inode);
+-		dir->i_nlink += (erofs_mode_to_ftype(inode->i_mode) == EROFS_FT_DIR);
+-		erofs_iput(inode);
+-		if (ret)
+-			return ret;
+-	}
+-	erofs_write_dir_file(dir);
+-	erofs_write_tail_end(dir);
+-	dir->bh->op = &erofs_write_inode_bhops;
+-	return 0;
+-}
 -- 
 2.39.3
 
