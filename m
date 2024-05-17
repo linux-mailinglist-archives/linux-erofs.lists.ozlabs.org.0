@@ -1,64 +1,119 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EDCF8C83F3
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 May 2024 11:39:36 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A2538C845A
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 May 2024 11:58:13 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Q7nnnXKo;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=aqPS27rf;
+	dkim=fail reason="signature verification failed" header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ybHcdzif;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=aqPS27rf;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ybHcdzif;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VghkY3nMjz30WW
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 May 2024 19:39:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Vgj830d43z30VS
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 May 2024 19:58:11 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Q7nnnXKo;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=aqPS27rf;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ybHcdzif;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=aqPS27rf;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=ybHcdzif;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=rafael@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.de (client-ip=2a07:de40:b251:101:10:150:64:1; helo=smtp-out1.suse.de; envelope-from=tiwai@suse.de; receiver=lists.ozlabs.org)
+X-Greylist: delayed 455 seconds by postgrey-1.37 at boromir; Fri, 17 May 2024 19:58:06 AEST
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2a07:de40:b251:101:10:150:64:1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vghjf4Q5Rz2ysf;
-	Fri, 17 May 2024 19:38:46 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 6388D61888;
-	Fri, 17 May 2024 09:38:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 766FBC4AF08;
-	Fri, 17 May 2024 09:38:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715938719;
-	bh=vcW+W1wogmO6WY+GSQu3IAR/P96Rw6SpWddj5psVWwk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Q7nnnXKoCoZCRE9y8qfd0GjlbgMZcow94ZBAhyo/a3WB7eilpoBw2+BvdmX0v1BZf
-	 e7OVkid9omI+gvcN303kxsn1XDNSTYdJqgftO+q7xqgbBFEfRALDNx6MNApEOaSItp
-	 R/U+wW3wKfdgVg1pSTt+l5Ktt5O2287ep0H8zh6uS0rANv32EVrNlYH0N2LN0Wkz4S
-	 7JyAvYOZKqMfev4RirENIqVjY9S2NBz5t0xMnmDlB0lD8J6a25LhI7NPYbYJS3uooO
-	 gi0eyy/jJtvOQvPPH73HE5rAvo90fxUfGOyoScW2xWZLVtSxLMRh/mH25kBaP3Lv2i
-	 C+gw9xG0H/JCg==
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5b27c804765so229614eaf.3;
-        Fri, 17 May 2024 02:38:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXCb+TyZRvvsdfV0Bjjgf4JVswVOjPmr++2bWG/LQdURBYqj5tXCQb1KMYPeBn/p8GCYVmmoigafWvZWox6fj9NYxZT/LNTo/kka1rliQtAaENyPzr/fia1aadDBxXL624Bmln/zp+fr2Lubw==
-X-Gm-Message-State: AOJu0Yw+e/ZUB6u28qkevuM3YKkpuqTEycIkhHrZT5oL1O88lUqa6u4Q
-	oF5BJhRjxg9pE0frA/oaIC0GPjAEhnsx6vpm9sZxtSGr+WF1PhcR72tpfGYwsKje8P5GciP32ep
-	WljRe5QWXpbMbGBIO5sDD4CZXKr4=
-X-Google-Smtp-Source: AGHT+IGDE99s+s68qJbXMtkzFnMd5s/9OBNB6sR0+sCICB0PpLHU9X3BbBFmCRlDywLZhowLPWB9T1lJ6YvckXBFFDs=
-X-Received: by 2002:a05:6820:2602:b0:5b2:8017:fb68 with SMTP id
- 006d021491bc7-5b2815cd95fmr22153827eaf.0.1715938718475; Fri, 17 May 2024
- 02:38:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20240516133454.681ba6a0@rorschach.local.home>
-In-Reply-To: <20240516133454.681ba6a0@rorschach.local.home>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 17 May 2024 11:38:25 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hGNNvUq-BNHynaWr-5YVC6ugki81R70SG4uu34Rk-Mew@mail.gmail.com>
-Message-ID: <CAJZ5v0hGNNvUq-BNHynaWr-5YVC6ugki81R70SG4uu34Rk-Mew@mail.gmail.com>
-Subject: Re: [PATCH] tracing/treewide: Remove second parameter of __assign_str()
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vgj7y5YxQz2xjQ
+	for <linux-erofs@lists.ozlabs.org>; Fri, 17 May 2024 19:58:06 +1000 (AEST)
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6034E37344;
+	Fri, 17 May 2024 09:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1715939422; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8jfFpRbNQ4JylrNPf/Ju6XAY6qQjrc+0U9vxW7VwdqA=;
+	b=aqPS27rfYVOIlQYJQqRWN1OB2KuGqplKO0xASvAy99Em1LNhKAq/Z45rrmqOfomt6ymSXF
+	OiEv1bW+ZdpI213w3TR/RlpBxADCOtSoygZG2IWVCeRjyU7fk9xYWgYywcz+IS9+rfxp20
+	iBC1DT09pzE+KgT4PXFcXk6IVt2gReU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1715939422;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8jfFpRbNQ4JylrNPf/Ju6XAY6qQjrc+0U9vxW7VwdqA=;
+	b=ybHcdzifmrWaHz4fudlW6TywmF4wPptrNP5A3fPjgJZxiNP8yysPTURMY+P9YDVx2v+UNY
+	h72YrP3bBg//bVBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1715939422; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8jfFpRbNQ4JylrNPf/Ju6XAY6qQjrc+0U9vxW7VwdqA=;
+	b=aqPS27rfYVOIlQYJQqRWN1OB2KuGqplKO0xASvAy99Em1LNhKAq/Z45rrmqOfomt6ymSXF
+	OiEv1bW+ZdpI213w3TR/RlpBxADCOtSoygZG2IWVCeRjyU7fk9xYWgYywcz+IS9+rfxp20
+	iBC1DT09pzE+KgT4PXFcXk6IVt2gReU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1715939422;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8jfFpRbNQ4JylrNPf/Ju6XAY6qQjrc+0U9vxW7VwdqA=;
+	b=ybHcdzifmrWaHz4fudlW6TywmF4wPptrNP5A3fPjgJZxiNP8yysPTURMY+P9YDVx2v+UNY
+	h72YrP3bBg//bVBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3DB2D13991;
+	Fri, 17 May 2024 09:50:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id rHjlDV0oR2boBwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Fri, 17 May 2024 09:50:21 +0000
+Date: Fri, 17 May 2024 11:50:38 +0200
+Message-ID: <87r0e0zs0h.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
 To: Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] tracing/treewide: Remove second parameter of __assign_str()
+In-Reply-To: <20240516133454.681ba6a0@rorschach.local.home>
+References: <20240516133454.681ba6a0@rorschach.local.home>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-1.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	R_RATELIMIT(0.00)[to_ip_from(RL6rcqepr6awpd9qb5xxedoiwq)];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[50];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[efficios.com:email,inria.fr:email,imap1.dmz-prg2.suse.org:helo,suse.de:email,goodmis.org:email,linux-foundation.org:email]
+X-Spam-Score: -1.80
+X-Spam-Flag: NO
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -75,60 +130,61 @@ Cc: linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org, kvm@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, May 16, 2024 at 7:35=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
+On Thu, 16 May 2024 19:34:54 +0200,
+Steven Rostedt wrote:
+> 
 > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
->
+> 
 > [
 >    This is a treewide change. I will likely re-create this patch again in
->    the second week of the merge window of v6.10 and submit it then. Hopin=
-g
+>    the second week of the merge window of v6.10 and submit it then. Hoping
 >    to keep the conflicts that it will cause to a minimum.
 > ]
->
+> 
 > With the rework of how the __string() handles dynamic strings where it
 > saves off the source string in field in the helper structure[1], the
 > assignment of that value to the trace event field is stored in the helper
 > value and does not need to be passed in again.
->
+> 
 > This means that with:
->
+> 
 >   __string(field, mystring)
->
+> 
 > Which use to be assigned with __assign_str(field, mystring), no longer
 > needs the second parameter and it is unused. With this, __assign_str()
 > will now only get a single parameter.
->
+> 
 > There's over 700 users of __assign_str() and because coccinelle does not
 > handle the TRACE_EVENT() macro I ended up using the following sed script:
->
+> 
 >   git grep -l __assign_str | while read a ; do
->       sed -e 's/\(__assign_str([^,]*[^ ,]\) *,[^;]*/\1)/' $a > /tmp/test-=
-file;
+>       sed -e 's/\(__assign_str([^,]*[^ ,]\) *,[^;]*/\1)/' $a > /tmp/test-file;
 >       mv /tmp/test-file $a;
 >   done
->
+> 
 > I then searched for __assign_str() that did not end with ';' as those
-> were multi line assignments that the sed script above would fail to catch=
-.
->
+> were multi line assignments that the sed script above would fail to catch.
+> 
 > Note, the same updates will need to be done for:
->
+> 
 >   __assign_str_len()
 >   __assign_rel_str()
 >   __assign_rel_str_len()
->
-> I tested this with both an allmodconfig and an allyesconfig (build only f=
-or both).
->
-> [1] https://lore.kernel.org/linux-trace-kernel/20240222211442.634192653@g=
-oodmis.org/
->
+> 
+> I tested this with both an allmodconfig and an allyesconfig (build only for both).
+> 
+> [1] https://lore.kernel.org/linux-trace-kernel/20240222211442.634192653@goodmis.org/
+> 
 > Cc: Masami Hiramatsu <mhiramat@kernel.org>
 > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 > Cc: Linus Torvalds <torvalds@linux-foundation.org>
 > Cc: Julia Lawall <Julia.Lawall@inria.fr>
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org> # for thermal
+For the sound part
+Acked-by: Takashi Iwai <tiwai@suse.de>
+
+
+thanks,
+
+Takashi
