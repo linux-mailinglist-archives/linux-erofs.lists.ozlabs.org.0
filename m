@@ -1,49 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5B6D8C8A13
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 May 2024 18:24:07 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26F018C8B30
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 May 2024 19:37:38 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=F8J6rGhR;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=JYKmb3xW;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VgsjK2f3gz3cLL
-	for <lists+linux-erofs@lfdr.de>; Sat, 18 May 2024 02:24:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VgvL74CjRz3cPX
+	for <lists+linux-erofs@lfdr.de>; Sat, 18 May 2024 03:37:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=F8J6rGhR;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=JYKmb3xW;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=djwong@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::633; helo=mail-pl1-x633.google.com; envelope-from=groeck7@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VgshR3Tjqz30TG;
-	Sat, 18 May 2024 02:23:19 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 3056CCE1B3A;
-	Fri, 17 May 2024 16:23:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70342C2BD10;
-	Fri, 17 May 2024 16:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715962993;
-	bh=uNwlZVn0k6bBYrUn2NOTbtyZjAe9hAwPUWGNLiaSzKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F8J6rGhR6abMw+H3e0sNsBE3c0HR9drUMq7zelYKMTQHa0vv/MIG2W8+/hD/7XTI+
-	 9VkRoCKMyZzVY3LjQAv7zTKPKrfWjp+PaYpWL+HZIXKwJ9PpfHkWCOm8/AnprKJTiS
-	 x71fH3FEiRuBcJ7Snaffb4mCRWAYWAV32gCoEeO44TUBKDap7ZLHPJJXjD0QMTmCNO
-	 ZUj+MK/eDva4zMj4VegTwZ0y/H/lyuO2Nk/KqN8YnLbubwD8YFqugReL9OgeiAJUxc
-	 u0pTJlCPPo4/7T1+KTMYWfO14b9TwwHb+K7KeD4YmO6RNA3DpP+PsNxwbeXmOHuVhd
-	 +qE7xoo2PLRTA==
-Date: Fri, 17 May 2024 09:23:12 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VgvKD3wQLz2xWS;
+	Sat, 18 May 2024 03:36:46 +1000 (AEST)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1eeabda8590so15115195ad.0;
+        Fri, 17 May 2024 10:36:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715967399; x=1716572199; darn=lists.ozlabs.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rzMfxbAB8QJEcJdIySGROcUOqAKXWq8nqUdcExbi1Zk=;
+        b=JYKmb3xWmtU1aAMhOenfYW0U6OIr9YXCfYPQhXxdjh2rzsNVfrY2affuaSQNZ2vTFw
+         9V49paFhXT93a7M7VHjmuv59ZWrEms5RPaIWnHbNzvo2y4Yk5ev9fOJ0dfktV4qP5ENA
+         qS88+GIjn76DEGVFF03gWY5nDoseiC8GfLbPMdyjXPA9Y7n/UJ0ywcr2S+/z9fs6cA/b
+         4WLn6pukv9YEi4YkGFE8kpU9FmTfQckbzSe9yRfhUsPSYNVDQeV8AiUSQ038k+Oz8GX6
+         kGeS3nNJvMtdT2eLbFMU3kbS2XaEvkNPX1hL1y31SkPpZOVNBO6YdDynjDuE52B1PDPE
+         zU7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715967399; x=1716572199;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rzMfxbAB8QJEcJdIySGROcUOqAKXWq8nqUdcExbi1Zk=;
+        b=gqGICmiMYZ9Cy3o7dOS2sgvT7CD/5ed3/h4eFaaLK6Dy/WQo+rHL85m+odbeK1aUT4
+         SvKS3XFumYeTZqUEA6AM/1MA+ct+PFTEbmLgkmdxysSuMfXIsBiSvSoF5Wl8S76MmNgU
+         h9rOmhZGowPdbwNu88qJRarCfVKA4da8E/kL1sn+2hSoA4sNL8kXxdMBpjfCQzNZlfF5
+         iQSkA+RNWtIU77zoCKvGdPZW4fOjenKLwz1zdNPpTDFLpavInmJcPBHVkrv3QR9T5/WJ
+         gstKTP4yfVS2pPdH3PpHqBIXqcTbcbKgBB7GCYBBHeEF4u0NdCjPYdjt4ldiE69Zh3ky
+         mPQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWum3ywveRLpbZBjK3hq7lYOGQ6tArc8h5QcYkehTuQAp+vLUM+DhouHrwsICjL0ItmLW8tr1TizSgtS49x8zVQTyE7bguGSKH978B9otTmnhPrEm2NjCj3AGOKw8KkVN7wlVeLjaxOd39yEw==
+X-Gm-Message-State: AOJu0YzYW2PMVM35m5ChbYBZq55fqCvWMe8rTAdaVaIMD0htw4r0C4N0
+	rSLlE6f3qnDd+h8DurJY0uJT7wfKII+PaO9hZaIIdLKSAwmhpgxG
+X-Google-Smtp-Source: AGHT+IHJ9PZtASiLb9HJkYrHy1DRhdQlVEuKbRr0NYIRv4Tx+av91BIA0wx1gBcIQQlm9sd2COIQnQ==
+X-Received: by 2002:a17:90a:9606:b0:2b9:a299:928e with SMTP id 98e67ed59e1d1-2b9a29994c9mr10436893a91.24.1715967398710;
+        Fri, 17 May 2024 10:36:38 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b67105666csm15749258a91.8.2024.05.17.10.36.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 May 2024 10:36:38 -0700 (PDT)
+Date: Fri, 17 May 2024 10:36:37 -0700
+From: Guenter Roeck <linux@roeck-us.net>
 To: Steven Rostedt <rostedt@goodmis.org>
 Subject: Re: [PATCH] tracing/treewide: Remove second parameter of
  __assign_str()
-Message-ID: <20240517162312.GZ360919@frogsfrogsfrogs>
+Message-ID: <5080f4c5-e0b3-4c2e-9732-f673d7e6ca66@roeck-us.net>
 References: <20240516133454.681ba6a0@rorschach.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -98,25 +119,20 @@ On Thu, May 16, 2024 at 01:34:54PM -0400, Steven Rostedt wrote:
 > I then searched for __assign_str() that did not end with ';' as those
 > were multi line assignments that the sed script above would fail to catch.
 > 
-> Note, the same updates will need to be done for:
-> 
->   __assign_str_len()
->   __assign_rel_str()
->   __assign_rel_str_len()
-> 
-> I tested this with both an allmodconfig and an allyesconfig (build only for both).
-> 
-> [1] https://lore.kernel.org/linux-trace-kernel/20240222211442.634192653@goodmis.org/
-> 
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Julia Lawall <Julia.Lawall@inria.fr>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-/me finds this pretty magical, but such is the way of macros.
-Thanks for being much smarter about them than me. :)
+Building csky:allmodconfig (and others) ... failed
+--------------
+Error log:
+In file included from include/trace/trace_events.h:419,
+                 from include/trace/define_trace.h:102,
+                 from drivers/cxl/core/trace.h:737,
+                 from drivers/cxl/core/trace.c:8:
+drivers/cxl/core/./trace.h:383:1: error: macro "__assign_str" passed 2 arguments, but takes just 1
 
-Acked-by: Darrick J. Wong <djwong@kernel.org>	# xfs
+This is with the patch applied on top of v6.9-8410-gff2632d7d08e.
+So far that seems to be the only build failure.
+Introduced with commit 6aec00139d3a8 ("cxl/core: Add region info to
+cxl_general_media and cxl_dram events"). Guess we'll see more of those
+towards the end of the commit window.
 
---D
+Guenter
