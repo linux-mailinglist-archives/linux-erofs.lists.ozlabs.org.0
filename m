@@ -1,77 +1,78 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9953D8C8BF7
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 May 2024 20:00:41 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1878B8C8F2D
+	for <lists+linux-erofs@lfdr.de>; Sat, 18 May 2024 03:26:12 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=UqAGHBEG;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=mUcTrddI;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Vgvrl0HTXz30Wf
-	for <lists+linux-erofs@lfdr.de>; Sat, 18 May 2024 04:00:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Vh5kn45mSz3cWY
+	for <lists+linux-erofs@lfdr.de>; Sat, 18 May 2024 11:26:09 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=UqAGHBEG;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=mUcTrddI;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::630; helo=mail-pl1-x630.google.com; envelope-from=groeck7@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::c30; helo=mail-oo1-xc30.google.com; envelope-from=groeck7@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vgvrc4CsYz30TX;
-	Sat, 18 May 2024 04:00:30 +1000 (AEST)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1ec92e355bfso18116385ad.3;
-        Fri, 17 May 2024 11:00:30 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vh5js3h0hz2yvx;
+	Sat, 18 May 2024 11:25:19 +1000 (AEST)
+Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-5b2a66dce8fso1468741eaf.1;
+        Fri, 17 May 2024 18:25:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715968827; x=1716573627; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=w/StxRW/VLxGkt1YAzvKzW9ayexnITae0WPMFzYawxM=;
-        b=UqAGHBEGihAQd2aHEHcH4j7iFTC9L8MVUb6QrVl49U6zR6seeNVx+Gu8mryMO9zeEG
-         0Aj4DWJcEV3W1640/uLw0LHYxGCJ/mKbqK5fQbB6zJYHJFzKU0LBeJ6y0YYo2MpbYJuN
-         HG6t6tsyoY75vaNPT9RTYEK6NYFEEoAaMR+JNKooB5NUAWXUg+Yj8MCAYuUDgjnJoo6H
-         7pE4TeP0gsSZX1nSdY/HZYisfyJ+AKSwX4AW7AOVEQfVK3NyzUABcI+ojZO2jXfkIGie
-         kEoRjSRLlzQTQSP1mteXLBnJa4z7qv+TRkKGrzs58vdltC6diZrOB5FUe9KNKXuHX60d
-         asiw==
+        d=gmail.com; s=20230601; t=1715995511; x=1716600311; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=cJqjedwoYcqSzJKmZSEwT+6hVhtxWLfg/8QtauvSdx4=;
+        b=mUcTrddI20R2dGRUJ082SSasDeC0pDntvDAEMIwSlvzzAiJR2RaB5UK8npBRhTURHH
+         yGGCjNHgDHMmbcbTrN7gsdOGQFMqONlTXDSa/2rFJbkr+Gg6QoWAy1EzDr3j0LPxkjz8
+         qRYDFZYgDh4CdabJsPOGY8nsdNVd/2+wBLL5Krzz/Q6Rs1Onbvjdve3jEG1E/0er1OgO
+         xuKQHc5os5URlQKsgNprbk/wCyT3w/XdGDfTQ3wE32wDvTrw1EQRtql8WXGqZIoE+Sx+
+         8ap+LfxANk4vqWpvnUkdBLuhmBSTKv53HxR9Gn9gScHWN7IaDRKtP8jOAn91VQmtC1zp
+         hBtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715968827; x=1716573627;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1715995511; x=1716600311;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w/StxRW/VLxGkt1YAzvKzW9ayexnITae0WPMFzYawxM=;
-        b=QGO/3oHh+ybb7IO28wCK7e6Fz6oQLcaOHl5CzmRtUPYdwKI5xTle2fKQdTuOWmu5vB
-         X0GbsJv6pn4kxNqh8C/tj30/Y3l6tL3FTODkuViHsrdd8swgUf9+i8M1jniF8hVmRss+
-         lfLfiyz7A1oXKYoiJ91pyEsn+61OVMoVOH5kKD2N4VAiN09fOJAJF0L8eC866+uWKkxV
-         43RmiknNvxtUn+KT5GFcNzQnA4OrSdurH9zMt+X5R8BWqotWbGLiye2+UAde+vmEvkoE
-         Wcd1MLR79lbT9TxACWQS0OvhW9lZE2q0IREglcyHShMj1SPkypZbPnsmDU0k5ixOhfAd
-         ssPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDu6SKgU3AJrSBTGLUBXABInrOR1RCpOvS33RtYAzELixMsn5YuScZdRkXh9qPxUsF4hEG4bcVszMlDMsXczpBvlJRNEouuH+T085dZcaooMuYq/CIUl1yBduU/oMMGTX0+vT5xPolOWOc5w==
-X-Gm-Message-State: AOJu0YzXSNAtdpShTuDgPoTEreh317lPYjJaPLPnObqxQczgSKKguAm1
-	aWXKJSmPNMopWO8O4gtoImBtj8InSTRGVycsXUgGV/VX7W+7O3sIsSaKcw==
-X-Google-Smtp-Source: AGHT+IGZDVzcY7OCALKn8Hd9OAI6XcssKSQlDPeH3SNH0EqlCaPwK+7ssdLCEtEMxDGdIwihVzJtAg==
-X-Received: by 2002:a17:903:120e:b0:1e4:6519:816d with SMTP id d9443c01a7336-1ef43f51feamr267718025ad.48.1715968827236;
-        Fri, 17 May 2024 11:00:27 -0700 (PDT)
+        bh=cJqjedwoYcqSzJKmZSEwT+6hVhtxWLfg/8QtauvSdx4=;
+        b=YQowbCVUf+L37/0oS+3vq7VnR4Pep+bnZDHu12szY2U+ek4C34GXxCREaqPy+bEMkV
+         zbnKuJNsz7PC65hSd3gqVb2+gNnZG9see5pV5P9plwlsDBz4drx3zLrd2WUS6nfVv7U3
+         lIrEjBgm76fi+6F/N6QT8Ii4mYe5oHVAu10wIS9sH+X7WvYWexDTjfGAWQH4dk2RnW32
+         evskra9bhRkliC5hNMEuvKk916OTU7iHPf5k1obDGx4mc2YzmoxdwR6/RtoRGIGahNra
+         2mfAxG+ssch13Z83dMP9yGt+ukoMyMJ9k2yRIGgz16otP0tEmt16nNCWSQGDsB0xlQ5P
+         xmiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQnTLsdHf1zGjn4lrr/Kw25KXMbQDUHmyPYKk+AiOibueCTD7peqGronounoPSz8dxmtCib902zQCRnvpLsCigdfZqxSy0E5SvX4+rLmjdMepFjCO6Rz+uy1iuiiLW3wJS4DrLgFf+qL98Xg==
+X-Gm-Message-State: AOJu0YzoSTIpSYJZuKCFBzGA4l4fQykSfoUdMpKYFoZxlblschbDybIB
+	T4aiKJDlWQYJcBeF9zeUDH4YWR7yG7Llf/Y+hlXYV2StJlJ0m9at
+X-Google-Smtp-Source: AGHT+IFRaG5+veBhAS+2oO1Mq9a7mnKgK9vX9unu3cCbE/KbyDzrBjSt084GN8tso2cWg108BqN4VA==
+X-Received: by 2002:a05:6870:a3d2:b0:240:c8ff:c96a with SMTP id 586e51a60fabf-241728fc1damr27553351fac.27.1715995510785;
+        Fri, 17 May 2024 18:25:10 -0700 (PDT)
 Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf30bfesm159992895ad.175.2024.05.17.11.00.23
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a66316sm15339938b3a.35.2024.05.17.18.25.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 May 2024 11:00:26 -0700 (PDT)
-Message-ID: <5cff0ff0-48d1-49f8-84f4-bb33571fdf16@roeck-us.net>
-Date: Fri, 17 May 2024 11:00:22 -0700
+        Fri, 17 May 2024 18:25:09 -0700 (PDT)
+Message-ID: <64db2b94-edb3-4ea3-87cf-bb91746869e6@roeck-us.net>
+Date: Fri, 17 May 2024 18:25:06 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] tracing/treewide: Remove second parameter of
  __assign_str()
+From: Guenter Roeck <linux@roeck-us.net>
 To: Steven Rostedt <rostedt@goodmis.org>
 References: <20240516133454.681ba6a0@rorschach.local.home>
  <5080f4c5-e0b3-4c2e-9732-f673d7e6ca66@roeck-us.net>
  <20240517134834.43e726dd@gandalf.local.home>
+ <5cff0ff0-48d1-49f8-84f4-bb33571fdf16@roeck-us.net>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
  RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
@@ -115,9 +116,9 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240517134834.43e726dd@gandalf.local.home>
+In-Reply-To: <5cff0ff0-48d1-49f8-84f4-bb33571fdf16@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -134,41 +135,48 @@ Cc: linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org, kvm@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 5/17/24 10:48, Steven Rostedt wrote:
-> On Fri, 17 May 2024 10:36:37 -0700
-> Guenter Roeck <linux@roeck-us.net> wrote:
-> 
->> Building csky:allmodconfig (and others) ... failed
->> --------------
->> Error log:
->> In file included from include/trace/trace_events.h:419,
->>                   from include/trace/define_trace.h:102,
->>                   from drivers/cxl/core/trace.h:737,
->>                   from drivers/cxl/core/trace.c:8:
->> drivers/cxl/core/./trace.h:383:1: error: macro "__assign_str" passed 2 arguments, but takes just 1
+On 5/17/24 11:00, Guenter Roeck wrote:
+> On 5/17/24 10:48, Steven Rostedt wrote:
+>> On Fri, 17 May 2024 10:36:37 -0700
+>> Guenter Roeck <linux@roeck-us.net> wrote:
 >>
->> This is with the patch applied on top of v6.9-8410-gff2632d7d08e.
->> So far that seems to be the only build failure.
->> Introduced with commit 6aec00139d3a8 ("cxl/core: Add region info to
->> cxl_general_media and cxl_dram events"). Guess we'll see more of those
->> towards the end of the commit window.
+>>> Building csky:allmodconfig (and others) ... failed
+>>> --------------
+>>> Error log:
+>>> In file included from include/trace/trace_events.h:419,
+>>>                   from include/trace/define_trace.h:102,
+>>>                   from drivers/cxl/core/trace.h:737,
+>>>                   from drivers/cxl/core/trace.c:8:
+>>> drivers/cxl/core/./trace.h:383:1: error: macro "__assign_str" passed 2 arguments, but takes just 1
+>>>
+>>> This is with the patch applied on top of v6.9-8410-gff2632d7d08e.
+>>> So far that seems to be the only build failure.
+>>> Introduced with commit 6aec00139d3a8 ("cxl/core: Add region info to
+>>> cxl_general_media and cxl_dram events"). Guess we'll see more of those
+>>> towards the end of the commit window.
+>>
+>> Looks like I made this patch just before this commit was pulled into
+>> Linus's tree.
+>>
+>> Which is why I'll apply and rerun the above again probably on Tuesday of
+>> next week against Linus's latest.
+>>
+>> This patch made it through both an allyesconfig and an allmodconfig, but on
+>> the commit I had applied it to, which was:
+>>
+>>    1b294a1f3561 ("Merge tag 'net-next-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next")
+>>
+>> I'll be compiling those two builds after I update it then.
+>>
 > 
-> Looks like I made this patch just before this commit was pulled into
-> Linus's tree.
-> 
-> Which is why I'll apply and rerun the above again probably on Tuesday of
-> next week against Linus's latest.
-> 
-> This patch made it through both an allyesconfig and an allmodconfig, but on
-> the commit I had applied it to, which was:
-> 
->    1b294a1f3561 ("Merge tag 'net-next-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next")
-> 
-> I'll be compiling those two builds after I update it then.
+> I am currently repeating my test builds with the above errors fixed.
+> That should take a couple of hours. I'll let you know how it goes.
 > 
 
-I am currently repeating my test builds with the above errors fixed.
-That should take a couple of hours. I'll let you know how it goes.
+There are no more build failures caused by this patch after fixing the above
+errors.
+
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
 Guenter
 
