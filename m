@@ -2,55 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTP id ABEF58C9C1D
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 May 2024 13:31:37 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZRWlrIKp;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTP id 6F3A98C9C66
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 May 2024 13:46:37 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VjZw75m30z3cj7
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 May 2024 21:24:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VjbBn0CkZz3cfy
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 May 2024 21:37:05 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZRWlrIKp;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VjZvz55Dyz3cYk
-	for <linux-erofs@lists.ozlabs.org>; Mon, 20 May 2024 21:24:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716204249; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=e5msGpPJDfpNozD6dX0TXGDkIn5t6CljDiGOFY3+f8E=;
-	b=ZRWlrIKplW1YPjLd05G9+f+tm8g6XYzuhfjvg3YpjE61faO8TNVdmVePsn751grmQA222UszBEuvIMM9CiMIBjplNb8Zbp8YOOeHs+ujwbX0F704RA4gJjnuPqUGTLGoqCnOUlkmp3oGg/X98WSQoQMIhvRaAODS67uSQDnnLPY=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067109;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W6s..ub_1716204246;
-Received: from 30.97.48.204(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W6s..ub_1716204246)
-          by smtp.aliyun-inc.com;
-          Mon, 20 May 2024 19:24:08 +0800
-Message-ID: <e57ae68f-29c3-41ac-bf16-f11d546dd958@linux.alibaba.com>
-Date: Mon, 20 May 2024 19:24:06 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VjbBf4xsvz3cXR
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 May 2024 21:36:56 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VjbBP32Xdz4f3jkJ
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 May 2024 19:36:45 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 284821A0C48
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 May 2024 19:36:51 +0800 (CST)
+Received: from [10.174.177.174] (unknown [10.174.177.174])
+	by APP1 (Coremail) with SMTP id cCh0CgAn9g7PNUtm6nK8NA--.6529S3;
+	Mon, 20 May 2024 19:36:50 +0800 (CST)
+Message-ID: <a9e39b5f-4397-056e-7f6c-b1a1847429dd@huaweicloud.com>
+Date: Mon, 20 May 2024 19:36:47 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/12] cachefiles: never get a new anonymous fd if
- ondemand_id is valid
-To: Baokun Li <libaokun@huaweicloud.com>,
- Jingbo Xu <jefflexu@linux.alibaba.com>, netfs@lists.linux.dev,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH v2 09/12] cachefiles: defer exposing anon_fd until after
+ copy_to_user() succeeds
+Content-Language: en-US
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, netfs@lists.linux.dev,
  dhowells@redhat.com, jlayton@kernel.org
 References: <20240515084601.3240503-1-libaokun@huaweicloud.com>
- <20240515084601.3240503-9-libaokun@huaweicloud.com>
- <f4d24738-76a2-4998-9a28-493599cd7eae@linux.alibaba.com>
- <d62b162d-acb3-2fa7-085e-79da3278091a@huaweicloud.com>
- <a3ca2292-0218-45f6-8afe-4319a10b69e2@linux.alibaba.com>
- <5b1b2719-2123-9218-97b4-ccda8b5cb3b4@huaweicloud.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <5b1b2719-2123-9218-97b4-ccda8b5cb3b4@huaweicloud.com>
+ <20240515084601.3240503-10-libaokun@huaweicloud.com>
+ <db7ae78c-857b-45ba-94dc-63c02757e0b2@linux.alibaba.com>
+From: Baokun Li <libaokun@huaweicloud.com>
+In-Reply-To: <db7ae78c-857b-45ba-94dc-63c02757e0b2@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: cCh0CgAn9g7PNUtm6nK8NA--.6529S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Ww43ur4fZw43CFW5XF1fJFb_yoWxJr1kpF
+	WakFW3KFy8WFW8urn7AFZ8XFySy3y8A3ZrW34Fga4rArnFgryF9r1jkr98uF15Ar97Grs3
+	tF4UCr97Gr1jy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9214x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3
+	Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYx
+	BIdaVFxhVjvjDU0xZFpf9x0JUq38nUUUUU=
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,50 +72,188 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, yukuai3@huawei.com, linux-erofs@lists.ozlabs.org
+Cc: libaokun@huaweicloud.com, yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-
-
-On 2024/5/20 19:14, Baokun Li wrote:
-> On 2024/5/20 17:24, Jingbo Xu wrote:
+On 2024/5/20 17:39, Jingbo Xu wrote:
+>
+> On 5/15/24 4:45 PM, libaokun@huaweicloud.com wrote:
+>> From: Baokun Li <libaokun1@huawei.com>
 >>
->> On 5/20/24 5:07 PM, Baokun Li wrote:
->>> On 2024/5/20 16:43, Jingbo Xu wrote:
->>>> On 5/15/24 4:45 PM, libaokun@huaweicloud.com wrote:
->>>>> From: Baokun Li <libaokun1@huawei.com>
->>>>>
-> SNIP
->>>>>
->>>>> To avoid this, allocate a new anonymous fd only if no anonymous fd has
->>>>> been allocated (ondemand_id == 0) or if the previously allocated
->>>>> anonymous
->>>>> fd has been closed (ondemand_id == -1). Moreover, returns an error if
->>>>> ondemand_id is valid, letting the daemon know that the current userland
->>>>> restore logic is abnormal and needs to be checked.
->>>>>
->>>>> Fixes: c8383054506c ("cachefiles: notify the user daemon when looking
->>>>> up cookie")
->>>>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
->>>> The LOCs of this fix is quite under control.  But still it seems that
->>>> the worst consequence is that the (potential) malicious daemon gets
->>>> hung.  No more effect to the system or other processes.  Or does a
->>>> non-malicious daemon have any chance having the same issue?
->>> If we enable hung_task_panic, it may cause panic to crash the server.
->> Then this issue has nothing to do with this patch?  As long as a
->> malicious daemon doesn't close the anonymous fd after umounting, then I
->> guess a following attempt of mounting cookie with the same name will
->> also wait and hung there?
+>> After installing the anonymous fd, we can now see it in userland and close
+>> it. However, at this point we may not have gotten the reference count of
+>> the cache, but we will put it during colse fd, so this may cause a cache
+>> UAF.
 >>
-> Yes, a daemon that only reads requests but doesn't process them will
-> cause hung，but the daemon will obey the basic constraints when we
-> test it.
+>> So grab the cache reference count before fd_install(). In addition, by
+>> kernel convention, fd is taken over by the user land after fd_install(),
+>> and the kernel should not call close_fd() after that, i.e., it should call
+>> fd_install() after everything is ready, thus fd_install() is called after
+>> copy_to_user() succeeds.
+>>
+>> Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
+>> Suggested-by: Hou Tao <houtao1@huawei.com>
+>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+>> ---
+>>   fs/cachefiles/ondemand.c | 53 +++++++++++++++++++++++++---------------
+>>   1 file changed, 33 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+>> index d2d4e27fca6f..3a36613e00a7 100644
+>> --- a/fs/cachefiles/ondemand.c
+>> +++ b/fs/cachefiles/ondemand.c
+>> @@ -4,6 +4,11 @@
+>>   #include <linux/uio.h>
+>>   #include "internal.h"
+>>   
+>> +struct anon_file {
+>> +	struct file *file;
+>> +	int fd;
+>> +};
+>> +
+>>   static inline void cachefiles_req_put(struct cachefiles_req *req)
+>>   {
+>>   	if (refcount_dec_and_test(&req->ref))
+>> @@ -263,14 +268,14 @@ int cachefiles_ondemand_restore(struct cachefiles_cache *cache, char *args)
+>>   	return 0;
+>>   }
+>>   
+>
+>> -static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+>> +static int cachefiles_ondemand_get_fd(struct cachefiles_req *req,
+>> +				      struct anon_file *anon_file)
+>
+> How about:
+>
+> int cachefiles_ondemand_get_fd(struct cachefiles_req *req, int *fd,
+> struct file *file) ?
+>
+> It isn't worth introducing a new structure as it is used only for
+> parameter passing.
+>
+It's just a different code style preference, and internally we think
 
-If we'd really like to enhanace this ("hung_task_panic"), I think
-you'd better to switch wait_for_completion() to
-wait_for_completion_killable() at least IMHO anyway.
+it makes the code look clearer when encapsulated this way.
 
-Thanks,
-Gao Xiang
+>>   {
+>>   	struct cachefiles_object *object;
+>>   	struct cachefiles_cache *cache;
+>>   	struct cachefiles_open *load;
+>> -	struct file *file;
+>>   	u32 object_id;
+>> -	int ret, fd;
+>> +	int ret;
+>>   
+>>   	object = cachefiles_grab_object(req->object,
+>>   			cachefiles_obj_get_ondemand_fd);
+>> @@ -282,16 +287,16 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+>>   	if (ret < 0)
+>>   		goto err;
+>>   
+>> -	fd = get_unused_fd_flags(O_WRONLY);
+>> -	if (fd < 0) {
+>> -		ret = fd;
+>> +	anon_file->fd = get_unused_fd_flags(O_WRONLY);
+>> +	if (anon_file->fd < 0) {
+>> +		ret = anon_file->fd;
+>>   		goto err_free_id;
+>>   	}
+>>   
+>> -	file = anon_inode_getfile("[cachefiles]", &cachefiles_ondemand_fd_fops,
+>> -				  object, O_WRONLY);
+>> -	if (IS_ERR(file)) {
+>> -		ret = PTR_ERR(file);
+>> +	anon_file->file = anon_inode_getfile("[cachefiles]",
+>> +				&cachefiles_ondemand_fd_fops, object, O_WRONLY);
+>> +	if (IS_ERR(anon_file->file)) {
+>> +		ret = PTR_ERR(anon_file->file);
+>>   		goto err_put_fd;
+>>   	}
+>>   
+>> @@ -299,16 +304,15 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+>>   	if (object->ondemand->ondemand_id > 0) {
+>>   		spin_unlock(&object->ondemand->lock);
+>>   		/* Pair with check in cachefiles_ondemand_fd_release(). */
+>> -		file->private_data = NULL;
+>> +		anon_file->file->private_data = NULL;
+>>   		ret = -EEXIST;
+>>   		goto err_put_file;
+>>   	}
+>>   
+>> -	file->f_mode |= FMODE_PWRITE | FMODE_LSEEK;
+>> -	fd_install(fd, file);
+>> +	anon_file->file->f_mode |= FMODE_PWRITE | FMODE_LSEEK;
+>>   
+>>   	load = (void *)req->msg.data;
+>> -	load->fd = fd;
+>> +	load->fd = anon_file->fd;
+>>   	object->ondemand->ondemand_id = object_id;
+>>   	spin_unlock(&object->ondemand->lock);
+>>   
+>> @@ -317,9 +321,11 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+>>   	return 0;
+>>   
+>>   err_put_file:
+>> -	fput(file);
+>> +	fput(anon_file->file);
+>> +	anon_file->file = NULL;
+> When cachefiles_ondemand_get_fd() returns failure, anon_file->file is
+> not used, and thus I don't think it is worth resetting anon_file->file
+> to NULL. Or we could assign fd and struct file at the very end when all
+> succeed.
+Nulling pointers that are no longer in use is a safer coding convention,
+which goes some way to avoiding double free or use-after-free.
+Moreover it's in the error branch, so it doesn't cost anything.
+>>   err_put_fd:
+>> -	put_unused_fd(fd);
+>> +	put_unused_fd(anon_file->fd);
+>> +	anon_file->fd = ret;
+> Ditto.
+>
+>>   err_free_id:
+>>   	xa_erase(&cache->ondemand_ids, object_id);
+>>   err:
+>> @@ -376,6 +382,7 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+>>   	struct cachefiles_msg *msg;
+>>   	size_t n;
+>>   	int ret = 0;
+>> +	struct anon_file anon_file;
+>>   	XA_STATE(xas, &cache->reqs, cache->req_id_next);
+>>   
+>>   	xa_lock(&cache->reqs);
+>> @@ -409,7 +416,7 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+>>   	xa_unlock(&cache->reqs);
+>>   
+>>   	if (msg->opcode == CACHEFILES_OP_OPEN) {
+>> -		ret = cachefiles_ondemand_get_fd(req);
+>> +		ret = cachefiles_ondemand_get_fd(req, &anon_file);
+>>   		if (ret)
+>>   			goto out;
+>>   	}
+>> @@ -417,10 +424,16 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+>>   	msg->msg_id = xas.xa_index;
+>>   	msg->object_id = req->object->ondemand->ondemand_id;
+>>   
+>> -	if (copy_to_user(_buffer, msg, n) != 0) {
+>> +	if (copy_to_user(_buffer, msg, n) != 0)
+>>   		ret = -EFAULT;
+>> -		if (msg->opcode == CACHEFILES_OP_OPEN)
+>> -			close_fd(((struct cachefiles_open *)msg->data)->fd);
+>> +
+>> +	if (msg->opcode == CACHEFILES_OP_OPEN) {
+>> +		if (ret < 0) {
+>> +			fput(anon_file.file);
+>> +			put_unused_fd(anon_file.fd);
+>> +			goto out;
+>> +		}
+>> +		fd_install(anon_file.fd, anon_file.file);
+>>   	}
+>>   out:
+>>   	cachefiles_put_object(req->object, cachefiles_obj_put_read_req);
+
+
+-- 
+With Best Regards,
+Baokun Li
 
