@@ -2,56 +2,66 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTP id E58398C9F4B
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 May 2024 17:06:44 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=cOVuLHw2;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTP id 1B3B38CA1FE
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 May 2024 20:31:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1716229514;
+	bh=ZdzEvfu1PEpJBwHmOIv154V3jtL1pSQeI6RYwYyKYZk=;
+	h=References:In-Reply-To:Date:Subject:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=dfQUJD2U6VtA5C7C/hCQgxvXcDd+Ln0uTbniJBZW2m4HgmrLb7mUkK/6mrsMwfSA2
+	 bttTd4Y4t4oLXq8M8UcdQ5TCRYznhjYn4bKgoYJSb1zrOaoohxjHEY1Fy1qAw3AKMU
+	 BIayV+P/6zOrG6EAE8f9D8uuhrxxaC4D/YKWAlr4LLhPiT+SQbZiiPJzU5oEtWK4b7
+	 4AW5FUJMPtCNWjognHXg1/ukdK8Ra5Iwm5MZ4Q90xDt582ArqO35fAk2IZWoWROJyh
+	 jKXBjr7BpGvVUlRDXnCGWNUnPe6eaCAkjAZDRgbaqBHi0DJWd+yl6B36xo3nUtj0x1
+	 jDV5AMGL7msyg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Vjgd669yBz3cl9
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 May 2024 00:56:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VjmFk63f5z3dTN
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 May 2024 04:25:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=cOVuLHw2;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=aOXN5jUs;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=google.com (client-ip=2a00:1450:4864:20::42d; helo=mail-wr1-x42d.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org)
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vjgcy3wZdz2xPZ
-	for <linux-erofs@lists.ozlabs.org>; Tue, 21 May 2024 00:56:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716216986; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=woW0egPVHo7vV4ioncHQH2/4MJ0iNGLsOFQNC6nWlWc=;
-	b=cOVuLHw2kUK5kBghXYJu0fH5hYx8XEvFaBp8SYquOQSvudnuTpQ+glrWs/j7/79M09Gn1EP4KAMWZmLwGTylld1kUUEUTVp6vd12x1cdS567bDrujR9jJTXby7FuYNmyHJyL9IoUBXvp6Vpuq15Fu+Ghkf7CYuFFlNHhF7bqhb8=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W6ulvwZ_1716216984;
-Received: from 192.168.3.4(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W6ulvwZ_1716216984)
-          by smtp.aliyun-inc.com;
-          Mon, 20 May 2024 22:56:25 +0800
-Message-ID: <b75ec357-4189-4ea6-8f16-b0e2923921fd@linux.alibaba.com>
-Date: Mon, 20 May 2024 22:56:23 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VjmFZ6nDCz3cZx
+	for <linux-erofs@lists.ozlabs.org>; Tue, 21 May 2024 04:25:05 +1000 (AEST)
+Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-34da4d6f543so2566890f8f.3
+        for <linux-erofs@lists.ozlabs.org>; Mon, 20 May 2024 11:25:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716229498; x=1716834298;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZdzEvfu1PEpJBwHmOIv154V3jtL1pSQeI6RYwYyKYZk=;
+        b=cgEOb2aqR/nurKi7mNC7/lpqTeQ8bk4qXWDVrmcb9JNi9xTTbizlfqfzlN1/caQw6s
+         yAJ4yKr6XM9EWj6r7+rTQTvx9ogTBw9bZGnh3MCl/AUoAFMToPAgDMK+0Bi2SZ7n13Gy
+         y8FCjNzYDq7uIbEyG96DyoK44PIURAyTJUd/qlwBpf1RFJLR9viNZfLTILk4dRKcb+HO
+         t//LP6KbPORm/z1QxWhfXVMX2MAalL8sbWP6QP2yZuHplpyiqP+enpO9zjbs0BKIAHJS
+         qJYNdMQEuGZMQByooIc8fM/uivR4q8G1xtny0q/VPg2fUdPvoXWWZzruYDbebNYimcb4
+         d8VA==
+X-Gm-Message-State: AOJu0YyGfAIrWKykWsl5NYIYto+eL9rnAh00wX1PEH4r6a91/1L6EOjJ
+	jO8t/qzhSMHCZQwekkj0J/x0cUi2tZYMvpZwKJLxezPbDkteSe5av1dV7uD+eIj9vUTIDGFccem
+	Bw+12c129KIgVBsiz/xbnPjrI9tF2EbbOTuUt
+X-Google-Smtp-Source: AGHT+IHip0D1CwulZkUqzgTRHd4h9KDYjqLHoifTqfHumIM8JPr9kA/cIoKnvUx1OIyjr1GSqMOBTklaXEOXcjT5FEw=
+X-Received: by 2002:a05:6000:1a8d:b0:351:b882:4e2b with SMTP id
+ ffacd0b85a97d-351b8824ef3mr21104096f8f.63.1716229497450; Mon, 20 May 2024
+ 11:24:57 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] cachefiles: cyclic allocation of msg_id to avoid
- reuse
-To: Baokun Li <libaokun@huaweicloud.com>, Jeff Layton <jlayton@kernel.org>,
- netfs@lists.linux.dev, dhowells@redhat.com
-References: <20240515125136.3714580-1-libaokun@huaweicloud.com>
- <20240515125136.3714580-5-libaokun@huaweicloud.com>
- <f449f710b7e1ba725ec9f73cace6c1289b9225b6.camel@kernel.org>
- <d3f5d0c4-eda7-87e3-5938-487ab9ff6b81@huaweicloud.com>
- <4b1584787dd54bb95d700feae1ca498c40429551.camel@kernel.org>
- <a4d57830-2bde-901f-72c4-e1a3f714faa5@huaweicloud.com>
- <d82277a4-aeab-4eb7-bdfd-377edd8b8737@linux.alibaba.com>
- <bc76e529-7904-0650-7fa9-dc5561ff6668@huaweicloud.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <bc76e529-7904-0650-7fa9-dc5561ff6668@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240520090106.2898681-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240520090106.2898681-1-hsiangkao@linux.alibaba.com>
+Date: Mon, 20 May 2024 11:24:44 -0700
+Message-ID: <CAB=BE-Qr5mukXPPqqduH2Rr3cBrkP_WUiJ1udhtfmmrHFmObcQ@mail.gmail.com>
+Subject: Re: [PATCH] erofs: avoid allocating DEFLATE streams before mounting
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -63,248 +73,130 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, yukuai3@huawei.com, linux-erofs@lists.ozlabs.org
+From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Sandeep Dhavale <dhavale@google.com>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Baokun,
+On Mon, May 20, 2024 at 2:06=E2=80=AFAM Gao Xiang <hsiangkao@linux.alibaba.=
+com> wrote:
+>
+> Currently, each DEFLATE stream takes one 32 KiB permanent internal
+> window buffer even if there is no running instance which uses DEFLATE
+> algorithm.
+>
+> It's unexpected and wasteful on embedded devices with limited resources
+> and servers with hundreds of CPU cores if DEFLATE is enabled but unused.
+>
+> Fixes: ffa09b3bd024 ("erofs: DEFLATE compression support")
+> Cc: <stable@vger.kernel.org> # 6.6+
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-On 2024/5/20 21:24, Baokun Li wrote:
-> On 2024/5/20 20:54, Gao Xiang wrote:
->>
->>
->> On 2024/5/20 20:42, Baokun Li wrote:
->>> On 2024/5/20 18:04, Jeff Layton wrote:
->>>> On Mon, 2024-05-20 at 12:06 +0800, Baokun Li wrote:
->>>>> Hi Jeff,
->>>>>
->>>>> Thank you very much for your review!
->>>>>
->>>>> On 2024/5/19 19:11, Jeff Layton wrote:
->>>>>> On Wed, 2024-05-15 at 20:51 +0800, libaokun@huaweicloud.com wrote:
->>>>>>> From: Baokun Li <libaokun1@huawei.com>
->>>>>>>
->>>>>>> Reusing the msg_id after a maliciously completed reopen request may cause
->>>>>>> a read request to remain unprocessed and result in a hung, as shown below:
->>>>>>>
->>>>>>>          t1       |      t2       |      t3
->>>>>>> -------------------------------------------------
->>>>>>> cachefiles_ondemand_select_req
->>>>>>>    cachefiles_ondemand_object_is_close(A)
->>>>>>>    cachefiles_ondemand_set_object_reopening(A)
->>>>>>>    queue_work(fscache_object_wq, &info->work)
->>>>>>>                   ondemand_object_worker
->>>>>>>                    cachefiles_ondemand_init_object(A)
->>>>>>>                     cachefiles_ondemand_send_req(OPEN)
->>>>>>>                       // get msg_id 6
->>>>>>> wait_for_completion(&req_A->done)
->>>>>>> cachefiles_ondemand_daemon_read
->>>>>>>    // read msg_id 6 req_A
->>>>>>>    cachefiles_ondemand_get_fd
->>>>>>>    copy_to_user
->>>>>>>                                   // Malicious completion msg_id 6
->>>>>>>                                   copen 6,-1
->>>>>>> cachefiles_ondemand_copen
->>>>>>> complete(&req_A->done)
->>>>>>>                                    // will not set the object to close
->>>>>>>                                    // because ondemand_id && fd is valid.
->>>>>>>
->>>>>>>                   // ondemand_object_worker() is done
->>>>>>>                   // but the object is still reopening.
->>>>>>>
->>>>>>>                                   // new open req_B
->>>>>>> cachefiles_ondemand_init_object(B)
->>>>>>> cachefiles_ondemand_send_req(OPEN)
->>>>>>>                                    // reuse msg_id 6
->>>>>>> process_open_req
->>>>>>>    copen 6,A.size
->>>>>>>    // The expected failed copen was executed successfully
->>>>>>>
->>>>>>> Expect copen to fail, and when it does, it closes fd, which sets the
->>>>>>> object to close, and then close triggers reopen again. However, due to
->>>>>>> msg_id reuse resulting in a successful copen, the anonymous fd is not
->>>>>>> closed until the daemon exits. Therefore read requests waiting for reopen
->>>>>>> to complete may trigger hung task.
->>>>>>>
->>>>>>> To avoid this issue, allocate the msg_id cyclically to avoid reusing the
->>>>>>> msg_id for a very short duration of time.
->>>>>>>
->>>>>>> Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
->>>>>>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
->>>>>>> ---
->>>>>>>    fs/cachefiles/internal.h |  1 +
->>>>>>>    fs/cachefiles/ondemand.c | 20 ++++++++++++++++----
->>>>>>>    2 files changed, 17 insertions(+), 4 deletions(-)
->>>>>>>
->>>>>>> diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
->>>>>>> index 8ecd296cc1c4..9200c00f3e98 100644
->>>>>>> --- a/fs/cachefiles/internal.h
->>>>>>> +++ b/fs/cachefiles/internal.h
->>>>>>> @@ -128,6 +128,7 @@ struct cachefiles_cache {
->>>>>>>        unsigned long            req_id_next;
->>>>>>>        struct xarray            ondemand_ids;    /* xarray for ondemand_id allocation */
->>>>>>>        u32                ondemand_id_next;
->>>>>>> +    u32                msg_id_next;
->>>>>>>    };
->>>>>>>    static inline bool cachefiles_in_ondemand_mode(struct cachefiles_cache *cache)
->>>>>>> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
->>>>>>> index f6440b3e7368..b10952f77472 100644
->>>>>>> --- a/fs/cachefiles/ondemand.c
->>>>>>> +++ b/fs/cachefiles/ondemand.c
->>>>>>> @@ -433,20 +433,32 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
->>>>>>>            smp_mb();
->>>>>>>            if (opcode == CACHEFILES_OP_CLOSE &&
->>>>>>> - !cachefiles_ondemand_object_is_open(object)) {
->>>>>>> + !cachefiles_ondemand_object_is_open(object)) {
->>>>>>> WARN_ON_ONCE(object->ondemand->ondemand_id == 0);
->>>>>>>                xas_unlock(&xas);
->>>>>>>                ret = -EIO;
->>>>>>>                goto out;
->>>>>>>            }
->>>>>>> -        xas.xa_index = 0;
->>>>>>> +        /*
->>>>>>> +         * Cyclically find a free xas to avoid msg_id reuse that would
->>>>>>> +         * cause the daemon to successfully copen a stale msg_id.
->>>>>>> +         */
->>>>>>> +        xas.xa_index = cache->msg_id_next;
->>>>>>>            xas_find_marked(&xas, UINT_MAX, XA_FREE_MARK);
->>>>>>> +        if (xas.xa_node == XAS_RESTART) {
->>>>>>> +            xas.xa_index = 0;
->>>>>>> +            xas_find_marked(&xas, cache->msg_id_next - 1, XA_FREE_MARK);
->>>>>>> +        }
->>>>>>>            if (xas.xa_node == XAS_RESTART)
->>>>>>>                xas_set_err(&xas, -EBUSY);
->>>>>>> +
->>>>>>>            xas_store(&xas, req);
->>>>>>> -        xas_clear_mark(&xas, XA_FREE_MARK);
->>>>>>> -        xas_set_mark(&xas, CACHEFILES_REQ_NEW);
->>>>>>> +        if (xas_valid(&xas)) {
->>>>>>> +            cache->msg_id_next = xas.xa_index + 1;
->>>>>> If you have a long-standing stuck request, could this counter wrap
->>>>>> around and you still end up with reuse?
->>>>> Yes, msg_id_next is declared to be of type u32 in the hope that when
->>>>> xa_index == UINT_MAX, a wrap around occurs so that msg_id_next
->>>>> goes to zero. Limiting xa_index to no more than UINT_MAX is to avoid
->>>>> the xarry being too deep.
->>>>>
->>>>> If msg_id_next is equal to the id of a long-standing stuck request
->>>>> after the wrap-around, it is true that the reuse in the above problem
->>>>> may also occur.
->>>>>
->>>>> But I feel that a long stuck request is problematic in itself, it means
->>>>> that after we have sent 4294967295 requests, the first one has not
->>>>> been processed yet, and even if we send a million requests per
->>>>> second, this one hasn't been completed for more than an hour.
->>>>>
->>>>> We have a keep-alive process that pulls the daemon back up as
->>>>> soon as it exits, and there is a timeout mechanism for requests in
->>>>> the daemon to prevent the kernel from waiting for long periods
->>>>> of time. In other words, we should avoid the situation where
->>>>> a request is stuck for a long period of time.
->>>>>
->>>>> If you think UINT_MAX is not enough, perhaps we could raise
->>>>> the maximum value of msg_id_next to ULONG_MAX?
->>>>>> Maybe this should be using
->>>>>> ida_alloc/free instead, which would prevent that too?
->>>>>>
->>>>> The id reuse here is that the kernel has finished the open request
->>>>> req_A and freed its id_A and used it again when sending the open
->>>>> request req_B, but the daemon is still working on req_A, so the
->>>>> copen id_A succeeds but operates on req_B.
->>>>>
->>>>> The id that is being used by the kernel will not be allocated here
->>>>> so it seems that ida _alloc/free does not prevent reuse either,
->>>>> could you elaborate a bit more how this works?
->>>>>
->>>> ida_alloc and free absolutely prevent reuse while the id is in use.
->>>> That's sort of the point of those functions. Basically it uses a set of
->>>> bitmaps in an xarray to track which IDs are in use, so ida_alloc only
->>>> hands out values which are not in use. See the comments over
->>>> ida_alloc_range() in lib/idr.c.
->>>>
->>> Thank you for the explanation!
->>>
->>> The logic now provides the same guarantees as ida_alloc/free.
->>> The "reused" id, indeed, is no longer in use in the kernel, but it is still
->>> in use in the userland, so a multi-threaded daemon could be handling
->>> two different requests for the same msg_id at the same time.
->>>
->>> Previously, the logic for allocating msg_ids was to start at 0 and look
->>> for a free xas.index, so it was possible for an id to be allocated to a
->>> new request just as the id was being freed.
->>>
->>> With the change to cyclic allocation, the kernel will not use the same
->>> id again until INT_MAX requests have been sent, and during the time
->>> it takes to send requests, the daemon has enough time to process
->>> requests whose ids are still in use by the daemon, but have already
->>> been freed in the kernel.
->>
->> Again, If I understand correctly, I think the main point
->> here is
->>
->> wait_for_completion(&req_A->done)
->>
->> which could hang due to some malicious deamon.  But I think it
->> should be switched to wait_for_completion_killable() instead. *
->> It's up to users to kill the mount instance if there is a
->> malicious user daemon.
->>
->> So in that case, hung task will not be triggered anymore, and
->> you don't need to care about cyclic allocation too.
->>
->> Thanks,
->> Gao Xiang
-> Hi Xiang,
-> 
-> The problem is not as simple as you think.
-> 
-> If you make it killable, it just won't trigger a hung task in
-> cachefiles_ondemand_send_req(), and the process waiting for the
-> resource in question will also be hung.
-> 
-> * When the open/read request in the mount process gets stuck,
->    the sync/drop cache will trigger a hung task panic in iterate_supers()
->    as it waits for sb->umount to be unlocked.
-> * After umount, anonymous fd is not closed causing a hung task panic
->    in fscache_hash_cookie() because of waiting for cookie unhash.
-> * The dentry is in a loop up state, because the read request is not being
->    processed, another process looking for the same dentry is waiting for
->    the previous lookup to finish, which triggers a hung task panic in
->    d_alloc_parallel().
+LGTM.
 
-
-As for your sb->umount, d_alloc_parallel() or even i_rwsem,
-which are all currently unkillable, also see some previous
-threads like:
-
-https://lore.kernel.org/linux-fsdevel/CAJfpegu6v1fRAyLvFLOPUSAhx5aAGvPGjBWv-TDQjugqjUA_hQ@mail.gmail.com/T/#u
-
-I don't think it's the issue of on-demand cachefiles, even
-NVMe or virtio-blk or networking can be stuck in
-.lookup, fill_sb or whatever.
-
-Which can makes sb->umount, d_alloc_parallel() or even
-i_rwsem unkillable.
-
-> 
-> Can all this be made killable?
-
-I can understand your hung_task_panic concern but it
-sounds like a workaround to me anyway.
+Reviewed-by: Sandeep Dhavale <dhavale@google.com>
 
 Thanks,
-Gao Xiang
+Sandeep.
 
-> 
-> Thanks,
-> Baokun
->>
->>>
->>> Regards,
->>> Baokun
->>>>>>> + xas_clear_mark(&xas, XA_FREE_MARK);
->>>>>>> +            xas_set_mark(&xas, CACHEFILES_REQ_NEW);
->>>>>>> +        }
->>>>>>>            xas_unlock(&xas);
->>>>>>>        } while (xas_nomem(&xas, GFP_KERNEL));
->>>>>>>
+> ---
+>  fs/erofs/decompressor_deflate.c | 55 +++++++++++++++++----------------
+>  1 file changed, 29 insertions(+), 26 deletions(-)
+>
+> diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_defl=
+ate.c
+> index 81e65c453ef0..3a3461561a3c 100644
+> --- a/fs/erofs/decompressor_deflate.c
+> +++ b/fs/erofs/decompressor_deflate.c
+> @@ -46,39 +46,15 @@ int __init z_erofs_deflate_init(void)
+>         /* by default, use # of possible CPUs instead */
+>         if (!z_erofs_deflate_nstrms)
+>                 z_erofs_deflate_nstrms =3D num_possible_cpus();
+> -
+> -       for (; z_erofs_deflate_avail_strms < z_erofs_deflate_nstrms;
+> -            ++z_erofs_deflate_avail_strms) {
+> -               struct z_erofs_deflate *strm;
+> -
+> -               strm =3D kzalloc(sizeof(*strm), GFP_KERNEL);
+> -               if (!strm)
+> -                       goto out_failed;
+> -
+> -               /* XXX: in-kernel zlib cannot shrink windowbits currently=
+ */
+> -               strm->z.workspace =3D vmalloc(zlib_inflate_workspacesize(=
+));
+> -               if (!strm->z.workspace) {
+> -                       kfree(strm);
+> -                       goto out_failed;
+> -               }
+> -
+> -               spin_lock(&z_erofs_deflate_lock);
+> -               strm->next =3D z_erofs_deflate_head;
+> -               z_erofs_deflate_head =3D strm;
+> -               spin_unlock(&z_erofs_deflate_lock);
+> -       }
+>         return 0;
+> -
+> -out_failed:
+> -       erofs_err(NULL, "failed to allocate zlib workspace");
+> -       z_erofs_deflate_exit();
+> -       return -ENOMEM;
+>  }
+>
+>  int z_erofs_load_deflate_config(struct super_block *sb,
+>                         struct erofs_super_block *dsb, void *data, int si=
+ze)
+>  {
+>         struct z_erofs_deflate_cfgs *dfl =3D data;
+> +       static DEFINE_MUTEX(deflate_resize_mutex);
+> +       static bool inited;
+>
+>         if (!dfl || size < sizeof(struct z_erofs_deflate_cfgs)) {
+>                 erofs_err(sb, "invalid deflate cfgs, size=3D%u", size);
+> @@ -89,9 +65,36 @@ int z_erofs_load_deflate_config(struct super_block *sb=
+,
+>                 erofs_err(sb, "unsupported windowbits %u", dfl->windowbit=
+s);
+>                 return -EOPNOTSUPP;
+>         }
+> +       mutex_lock(&deflate_resize_mutex);
+> +       if (!inited) {
+> +               for (; z_erofs_deflate_avail_strms < z_erofs_deflate_nstr=
+ms;
+> +                    ++z_erofs_deflate_avail_strms) {
+> +                       struct z_erofs_deflate *strm;
+> +
+> +                       strm =3D kzalloc(sizeof(*strm), GFP_KERNEL);
+> +                       if (!strm)
+> +                               goto failed;
+> +                       /* XXX: in-kernel zlib cannot customize windowbit=
+s */
+> +                       strm->z.workspace =3D vmalloc(zlib_inflate_worksp=
+acesize());
+> +                       if (!strm->z.workspace) {
+> +                               kfree(strm);
+> +                               goto failed;
+> +                       }
+>
+> +                       spin_lock(&z_erofs_deflate_lock);
+> +                       strm->next =3D z_erofs_deflate_head;
+> +                       z_erofs_deflate_head =3D strm;
+> +                       spin_unlock(&z_erofs_deflate_lock);
+> +               }
+> +               inited =3D true;
+> +       }
+> +       mutex_unlock(&deflate_resize_mutex);
+>         erofs_info(sb, "EXPERIMENTAL DEFLATE feature in use. Use at your =
+own risk!");
+>         return 0;
+> +failed:
+> +       mutex_unlock(&deflate_resize_mutex);
+> +       z_erofs_deflate_exit();
+> +       return -ENOMEM;
+>  }
+>
+>  int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+> --
+> 2.39.3
+>
