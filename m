@@ -2,57 +2,44 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ABBE8CA692
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 May 2024 05:01:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC1DF8CA838
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 May 2024 08:56:43 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CVLrRw61;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gSbmZ02n;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VjzXg00cGz3fmv
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 May 2024 12:53:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Vk4pJ73PWz3fyS
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 May 2024 16:51:04 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CVLrRw61;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gSbmZ02n;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VjzXW3d0Bz3dTx
-	for <linux-erofs@lists.ozlabs.org>; Tue, 21 May 2024 12:53:44 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vk4p044pvz3frB
+	for <linux-erofs@lists.ozlabs.org>; Tue, 21 May 2024 16:50:46 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1716260019; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=C6+2SGWtEsiv4yDPMdsLJIjpofJxi5cWwH1qGfi1jJc=;
-	b=CVLrRw616l4371oaqZqF7b6UtcKb91IkdRCz8HM5JG6mL4xFJD5mo5nKul/JVDvh1p1JOIqRcvFpfgDhd6o0CGaNaQxnkhnzrYuhW0gh41mavREgrm9rgE39f7eJPO6e6yarebuNTLQJpKkoYAPatDNEEALYQP1ZpJkB2c1hXMM=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W6vzjor_1716260012;
-Received: from 30.97.48.219(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W6vzjor_1716260012)
+	t=1716274241; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=bcLcSpygRskX8FbZ85z5VIkgvrvkWEO0qut+0yi1ja8=;
+	b=gSbmZ02nB4KbS1EYEATkWZ9YyN/hn7CeMwKq70K5LnFaukukIJ+Qekip6FFQipUrCrTm8Vgw5AlokiHtZ6PYZVIBOlxExUtF39ikeResaM+2KMAiNdnHMPVQWsbaMN8rQ751ryz15MndsQOPkrWkRp/R5LAOgLJTwtQO/XtTdw0=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045046011;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W6wiTe1_1716274234;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W6wiTe1_1716274234)
           by smtp.aliyun-inc.com;
-          Tue, 21 May 2024 10:53:37 +0800
-Message-ID: <0702ac5b-4c25-440a-a877-bbb1b0afe949@linux.alibaba.com>
-Date: Tue, 21 May 2024 10:53:31 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] cachefiles: cyclic allocation of msg_id to avoid
- reuse
-To: Baokun Li <libaokun@huaweicloud.com>, Jeff Layton <jlayton@kernel.org>,
- netfs@lists.linux.dev, dhowells@redhat.com
-References: <20240515125136.3714580-1-libaokun@huaweicloud.com>
- <20240515125136.3714580-5-libaokun@huaweicloud.com>
- <f449f710b7e1ba725ec9f73cace6c1289b9225b6.camel@kernel.org>
- <d3f5d0c4-eda7-87e3-5938-487ab9ff6b81@huaweicloud.com>
- <4b1584787dd54bb95d700feae1ca498c40429551.camel@kernel.org>
- <a4d57830-2bde-901f-72c4-e1a3f714faa5@huaweicloud.com>
- <d82277a4-aeab-4eb7-bdfd-377edd8b8737@linux.alibaba.com>
- <bc76e529-7904-0650-7fa9-dc5561ff6668@huaweicloud.com>
- <b75ec357-4189-4ea6-8f16-b0e2923921fd@linux.alibaba.com>
- <f4319b36-0f94-d648-0fe6-7f279db5db5d@huaweicloud.com>
+          Tue, 21 May 2024 14:50:38 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <f4319b36-0f94-d648-0fe6-7f279db5db5d@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 6.8.y 1/2] erofs: get rid of erofs_fs_context
+Date: Tue, 21 May 2024 14:50:31 +0800
+Message-Id: <20240521065032.4192363-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -65,261 +52,301 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, yukuai3@huawei.com, linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+From: Baokun Li <libaokun1@huawei.com>
 
+commit 07abe43a28b2c660f726d66f5470f7f114f9643a upstream.
 
-On 2024/5/21 10:36, Baokun Li wrote:
-> On 2024/5/20 22:56, Gao Xiang wrote:
->> Hi Baokun,
->>
->> On 2024/5/20 21:24, Baokun Li wrote:
->>> On 2024/5/20 20:54, Gao Xiang wrote:
->>>>
->>>>
->>>> On 2024/5/20 20:42, Baokun Li wrote:
->>>>> On 2024/5/20 18:04, Jeff Layton wrote:
->>>>>> On Mon, 2024-05-20 at 12:06 +0800, Baokun Li wrote:
->>>>>>> Hi Jeff,
->>>>>>>
->>>>>>> Thank you very much for your review!
->>>>>>>
->>>>>>> On 2024/5/19 19:11, Jeff Layton wrote:
->>>>>>>> On Wed, 2024-05-15 at 20:51 +0800, libaokun@huaweicloud.com wrote:
->>>>>>>>> From: Baokun Li <libaokun1@huawei.com>
->>>>>>>>>
->>>>>>>>> Reusing the msg_id after a maliciously completed reopen request may cause
->>>>>>>>> a read request to remain unprocessed and result in a hung, as shown below:
->>>>>>>>>
->>>>>>>>>          t1       |      t2       |      t3
->>>>>>>>> -------------------------------------------------
->>>>>>>>> cachefiles_ondemand_select_req
->>>>>>>>>    cachefiles_ondemand_object_is_close(A)
->>>>>>>>>    cachefiles_ondemand_set_object_reopening(A)
->>>>>>>>>    queue_work(fscache_object_wq, &info->work)
->>>>>>>>>                   ondemand_object_worker
->>>>>>>>> cachefiles_ondemand_init_object(A)
->>>>>>>>> cachefiles_ondemand_send_req(OPEN)
->>>>>>>>>                       // get msg_id 6
->>>>>>>>> wait_for_completion(&req_A->done)
->>>>>>>>> cachefiles_ondemand_daemon_read
->>>>>>>>>    // read msg_id 6 req_A
->>>>>>>>>    cachefiles_ondemand_get_fd
->>>>>>>>>    copy_to_user
->>>>>>>>>                                   // Malicious completion msg_id 6
->>>>>>>>>                                   copen 6,-1
->>>>>>>>> cachefiles_ondemand_copen
->>>>>>>>> complete(&req_A->done)
->>>>>>>>>                                    // will not set the object to close
->>>>>>>>>                                    // because ondemand_id && fd is valid.
->>>>>>>>>
->>>>>>>>>                   // ondemand_object_worker() is done
->>>>>>>>>                   // but the object is still reopening.
->>>>>>>>>
->>>>>>>>>                                   // new open req_B
->>>>>>>>> cachefiles_ondemand_init_object(B)
->>>>>>>>> cachefiles_ondemand_send_req(OPEN)
->>>>>>>>>                                    // reuse msg_id 6
->>>>>>>>> process_open_req
->>>>>>>>>    copen 6,A.size
->>>>>>>>>    // The expected failed copen was executed successfully
->>>>>>>>>
->>>>>>>>> Expect copen to fail, and when it does, it closes fd, which sets the
->>>>>>>>> object to close, and then close triggers reopen again. However, due to
->>>>>>>>> msg_id reuse resulting in a successful copen, the anonymous fd is not
->>>>>>>>> closed until the daemon exits. Therefore read requests waiting for reopen
->>>>>>>>> to complete may trigger hung task.
->>>>>>>>>
->>>>>>>>> To avoid this issue, allocate the msg_id cyclically to avoid reusing the
->>>>>>>>> msg_id for a very short duration of time.
->>>>>>>>>
->>>>>>>>> Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
->>>>>>>>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
->>>>>>>>> ---
->>>>>>>>>    fs/cachefiles/internal.h |  1 +
->>>>>>>>>    fs/cachefiles/ondemand.c | 20 ++++++++++++++++----
->>>>>>>>>    2 files changed, 17 insertions(+), 4 deletions(-)
->>>>>>>>>
->>>>>>>>> diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
->>>>>>>>> index 8ecd296cc1c4..9200c00f3e98 100644
->>>>>>>>> --- a/fs/cachefiles/internal.h
->>>>>>>>> +++ b/fs/cachefiles/internal.h
->>>>>>>>> @@ -128,6 +128,7 @@ struct cachefiles_cache {
->>>>>>>>>        unsigned long            req_id_next;
->>>>>>>>>        struct xarray            ondemand_ids;    /* xarray for ondemand_id allocation */
->>>>>>>>>        u32                ondemand_id_next;
->>>>>>>>> +    u32                msg_id_next;
->>>>>>>>>    };
->>>>>>>>>    static inline bool cachefiles_in_ondemand_mode(struct cachefiles_cache *cache)
->>>>>>>>> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
->>>>>>>>> index f6440b3e7368..b10952f77472 100644
->>>>>>>>> --- a/fs/cachefiles/ondemand.c
->>>>>>>>> +++ b/fs/cachefiles/ondemand.c
->>>>>>>>> @@ -433,20 +433,32 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
->>>>>>>>>            smp_mb();
->>>>>>>>>            if (opcode == CACHEFILES_OP_CLOSE &&
->>>>>>>>> - !cachefiles_ondemand_object_is_open(object)) {
->>>>>>>>> + !cachefiles_ondemand_object_is_open(object)) {
->>>>>>>>> WARN_ON_ONCE(object->ondemand->ondemand_id == 0);
->>>>>>>>>                xas_unlock(&xas);
->>>>>>>>>                ret = -EIO;
->>>>>>>>>                goto out;
->>>>>>>>>            }
->>>>>>>>> -        xas.xa_index = 0;
->>>>>>>>> +        /*
->>>>>>>>> +         * Cyclically find a free xas to avoid msg_id reuse that would
->>>>>>>>> +         * cause the daemon to successfully copen a stale msg_id.
->>>>>>>>> +         */
->>>>>>>>> +        xas.xa_index = cache->msg_id_next;
->>>>>>>>>            xas_find_marked(&xas, UINT_MAX, XA_FREE_MARK);
->>>>>>>>> +        if (xas.xa_node == XAS_RESTART) {
->>>>>>>>> +            xas.xa_index = 0;
->>>>>>>>> +            xas_find_marked(&xas, cache->msg_id_next - 1, XA_FREE_MARK);
->>>>>>>>> +        }
->>>>>>>>>            if (xas.xa_node == XAS_RESTART)
->>>>>>>>>                xas_set_err(&xas, -EBUSY);
->>>>>>>>> +
->>>>>>>>>            xas_store(&xas, req);
->>>>>>>>> -        xas_clear_mark(&xas, XA_FREE_MARK);
->>>>>>>>> -        xas_set_mark(&xas, CACHEFILES_REQ_NEW);
->>>>>>>>> +        if (xas_valid(&xas)) {
->>>>>>>>> +            cache->msg_id_next = xas.xa_index + 1;
->>>>>>>> If you have a long-standing stuck request, could this counter wrap
->>>>>>>> around and you still end up with reuse?
->>>>>>> Yes, msg_id_next is declared to be of type u32 in the hope that when
->>>>>>> xa_index == UINT_MAX, a wrap around occurs so that msg_id_next
->>>>>>> goes to zero. Limiting xa_index to no more than UINT_MAX is to avoid
->>>>>>> the xarry being too deep.
->>>>>>>
->>>>>>> If msg_id_next is equal to the id of a long-standing stuck request
->>>>>>> after the wrap-around, it is true that the reuse in the above problem
->>>>>>> may also occur.
->>>>>>>
->>>>>>> But I feel that a long stuck request is problematic in itself, it means
->>>>>>> that after we have sent 4294967295 requests, the first one has not
->>>>>>> been processed yet, and even if we send a million requests per
->>>>>>> second, this one hasn't been completed for more than an hour.
->>>>>>>
->>>>>>> We have a keep-alive process that pulls the daemon back up as
->>>>>>> soon as it exits, and there is a timeout mechanism for requests in
->>>>>>> the daemon to prevent the kernel from waiting for long periods
->>>>>>> of time. In other words, we should avoid the situation where
->>>>>>> a request is stuck for a long period of time.
->>>>>>>
->>>>>>> If you think UINT_MAX is not enough, perhaps we could raise
->>>>>>> the maximum value of msg_id_next to ULONG_MAX?
->>>>>>>> Maybe this should be using
->>>>>>>> ida_alloc/free instead, which would prevent that too?
->>>>>>>>
->>>>>>> The id reuse here is that the kernel has finished the open request
->>>>>>> req_A and freed its id_A and used it again when sending the open
->>>>>>> request req_B, but the daemon is still working on req_A, so the
->>>>>>> copen id_A succeeds but operates on req_B.
->>>>>>>
->>>>>>> The id that is being used by the kernel will not be allocated here
->>>>>>> so it seems that ida _alloc/free does not prevent reuse either,
->>>>>>> could you elaborate a bit more how this works?
->>>>>>>
->>>>>> ida_alloc and free absolutely prevent reuse while the id is in use.
->>>>>> That's sort of the point of those functions. Basically it uses a set of
->>>>>> bitmaps in an xarray to track which IDs are in use, so ida_alloc only
->>>>>> hands out values which are not in use. See the comments over
->>>>>> ida_alloc_range() in lib/idr.c.
->>>>>>
->>>>> Thank you for the explanation!
->>>>>
->>>>> The logic now provides the same guarantees as ida_alloc/free.
->>>>> The "reused" id, indeed, is no longer in use in the kernel, but it is still
->>>>> in use in the userland, so a multi-threaded daemon could be handling
->>>>> two different requests for the same msg_id at the same time.
->>>>>
->>>>> Previously, the logic for allocating msg_ids was to start at 0 and look
->>>>> for a free xas.index, so it was possible for an id to be allocated to a
->>>>> new request just as the id was being freed.
->>>>>
->>>>> With the change to cyclic allocation, the kernel will not use the same
->>>>> id again until INT_MAX requests have been sent, and during the time
->>>>> it takes to send requests, the daemon has enough time to process
->>>>> requests whose ids are still in use by the daemon, but have already
->>>>> been freed in the kernel.
->>>>
->>>> Again, If I understand correctly, I think the main point
->>>> here is
->>>>
->>>> wait_for_completion(&req_A->done)
->>>>
->>>> which could hang due to some malicious deamon.  But I think it
->>>> should be switched to wait_for_completion_killable() instead. *
->>>> It's up to users to kill the mount instance if there is a
->>>> malicious user daemon.
->>>>
->>>> So in that case, hung task will not be triggered anymore, and
->>>> you don't need to care about cyclic allocation too.
->>>>
->>>> Thanks,
->>>> Gao Xiang
->>> Hi Xiang,
->>>
->>> The problem is not as simple as you think.
->>>
->>> If you make it killable, it just won't trigger a hung task in
->>> cachefiles_ondemand_send_req(), and the process waiting for the
->>> resource in question will also be hung.
->>>
->>> * When the open/read request in the mount process gets stuck,
->>>    the sync/drop cache will trigger a hung task panic in iterate_supers()
->>>    as it waits for sb->umount to be unlocked.
->>> * After umount, anonymous fd is not closed causing a hung task panic
->>>    in fscache_hash_cookie() because of waiting for cookie unhash.
->>> * The dentry is in a loop up state, because the read request is not being
->>>    processed, another process looking for the same dentry is waiting for
->>>    the previous lookup to finish, which triggers a hung task panic in
->>>    d_alloc_parallel().
->>
->>
->> As for your sb->umount, d_alloc_parallel() or even i_rwsem,
->> which are all currently unkillable, also see some previous
->> threads like:
->>
->> https://lore.kernel.org/linux-fsdevel/CAJfpegu6v1fRAyLvFLOPUSAhx5aAGvPGjBWv-TDQjugqjUA_hQ@mail.gmail.com/T/#u
->>
->> I don't think it's the issue of on-demand cachefiles, even
->> NVMe or virtio-blk or networking can be stuck in
->> .lookup, fill_sb or whatever.
->>
->> Which can makes sb->umount, d_alloc_parallel() or even
->> i_rwsem unkillable.
->>
-> Everyone and every company has different requirements for quality,
-> and if you don't think these hung_task_panic are problems, I respect
-> your opinion.
-> 
-> But the company I work for has much higher requirements for quality,
-> and it's not acceptable to leave these issues that have been tested out
-> unresolved.
->>>
->>> Can all this be made killable?
->>
->> I can understand your hung_task_panic concern but it
->> sounds like a workaround to me anyway.
->>
->> Thanks,
->> Gao Xiang
->>
->  From the current perspective, cyclic allocation is a valid solution to
-> the current msg_id collision problem, and it also makes it fairer to
-> copy out requests than it was before.
+Instead of allocating the erofs_sb_info in fill_super() allocate it during
+erofs_init_fs_context() and ensure that erofs can always have the info
+available during erofs_kill_sb(). After this erofs_fs_context is no longer
+needed, replace ctx with sbi, no functional changes.
 
-Okay, for this patch, I agree it's better than none and it can
-indeed cause fairer requests, so
-
+Suggested-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Link: https://lore.kernel.org/r/20240419123611.947084-2-libaokun1@huawei.com
+[ Gao Xiang: trivial conflict due to a warning message. ]
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/internal.h |   7 ---
+ fs/erofs/super.c    | 116 ++++++++++++++++++++------------------------
+ 2 files changed, 53 insertions(+), 70 deletions(-)
 
-Thanks,
-Gao Xiang
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 410f5af62354..c69174675caf 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -84,13 +84,6 @@ struct erofs_dev_context {
+ 	bool flatdev;
+ };
+ 
+-struct erofs_fs_context {
+-	struct erofs_mount_opts opt;
+-	struct erofs_dev_context *devs;
+-	char *fsid;
+-	char *domain_id;
+-};
+-
+ /* all filesystem-wide lz4 configurations */
+ struct erofs_sb_lz4_info {
+ 	/* # of pages needed for EROFS lz4 rolling decompression */
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 24788c230b49..8d7a3abb9c1b 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -370,18 +370,18 @@ static int erofs_read_superblock(struct super_block *sb)
+ 	return ret;
+ }
+ 
+-static void erofs_default_options(struct erofs_fs_context *ctx)
++static void erofs_default_options(struct erofs_sb_info *sbi)
+ {
+ #ifdef CONFIG_EROFS_FS_ZIP
+-	ctx->opt.cache_strategy = EROFS_ZIP_CACHE_READAROUND;
+-	ctx->opt.max_sync_decompress_pages = 3;
+-	ctx->opt.sync_decompress = EROFS_SYNC_DECOMPRESS_AUTO;
++	sbi->opt.cache_strategy = EROFS_ZIP_CACHE_READAROUND;
++	sbi->opt.max_sync_decompress_pages = 3;
++	sbi->opt.sync_decompress = EROFS_SYNC_DECOMPRESS_AUTO;
+ #endif
+ #ifdef CONFIG_EROFS_FS_XATTR
+-	set_opt(&ctx->opt, XATTR_USER);
++	set_opt(&sbi->opt, XATTR_USER);
+ #endif
+ #ifdef CONFIG_EROFS_FS_POSIX_ACL
+-	set_opt(&ctx->opt, POSIX_ACL);
++	set_opt(&sbi->opt, POSIX_ACL);
+ #endif
+ }
+ 
+@@ -426,17 +426,17 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
+ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
+ {
+ #ifdef CONFIG_FS_DAX
+-	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = fc->s_fs_info;
+ 
+ 	switch (mode) {
+ 	case EROFS_MOUNT_DAX_ALWAYS:
+ 		warnfc(fc, "DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
+-		set_opt(&ctx->opt, DAX_ALWAYS);
+-		clear_opt(&ctx->opt, DAX_NEVER);
++		set_opt(&sbi->opt, DAX_ALWAYS);
++		clear_opt(&sbi->opt, DAX_NEVER);
+ 		return true;
+ 	case EROFS_MOUNT_DAX_NEVER:
+-		set_opt(&ctx->opt, DAX_NEVER);
+-		clear_opt(&ctx->opt, DAX_ALWAYS);
++		set_opt(&sbi->opt, DAX_NEVER);
++		clear_opt(&sbi->opt, DAX_ALWAYS);
+ 		return true;
+ 	default:
+ 		DBG_BUGON(1);
+@@ -451,7 +451,7 @@ static bool erofs_fc_set_dax_mode(struct fs_context *fc, unsigned int mode)
+ static int erofs_fc_parse_param(struct fs_context *fc,
+ 				struct fs_parameter *param)
+ {
+-	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = fc->s_fs_info;
+ 	struct fs_parse_result result;
+ 	struct erofs_device_info *dif;
+ 	int opt, ret;
+@@ -464,9 +464,9 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 	case Opt_user_xattr:
+ #ifdef CONFIG_EROFS_FS_XATTR
+ 		if (result.boolean)
+-			set_opt(&ctx->opt, XATTR_USER);
++			set_opt(&sbi->opt, XATTR_USER);
+ 		else
+-			clear_opt(&ctx->opt, XATTR_USER);
++			clear_opt(&sbi->opt, XATTR_USER);
+ #else
+ 		errorfc(fc, "{,no}user_xattr options not supported");
+ #endif
+@@ -474,16 +474,16 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 	case Opt_acl:
+ #ifdef CONFIG_EROFS_FS_POSIX_ACL
+ 		if (result.boolean)
+-			set_opt(&ctx->opt, POSIX_ACL);
++			set_opt(&sbi->opt, POSIX_ACL);
+ 		else
+-			clear_opt(&ctx->opt, POSIX_ACL);
++			clear_opt(&sbi->opt, POSIX_ACL);
+ #else
+ 		errorfc(fc, "{,no}acl options not supported");
+ #endif
+ 		break;
+ 	case Opt_cache_strategy:
+ #ifdef CONFIG_EROFS_FS_ZIP
+-		ctx->opt.cache_strategy = result.uint_32;
++		sbi->opt.cache_strategy = result.uint_32;
+ #else
+ 		errorfc(fc, "compression not supported, cache_strategy ignored");
+ #endif
+@@ -505,27 +505,27 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 			kfree(dif);
+ 			return -ENOMEM;
+ 		}
+-		down_write(&ctx->devs->rwsem);
+-		ret = idr_alloc(&ctx->devs->tree, dif, 0, 0, GFP_KERNEL);
+-		up_write(&ctx->devs->rwsem);
++		down_write(&sbi->devs->rwsem);
++		ret = idr_alloc(&sbi->devs->tree, dif, 0, 0, GFP_KERNEL);
++		up_write(&sbi->devs->rwsem);
+ 		if (ret < 0) {
+ 			kfree(dif->path);
+ 			kfree(dif);
+ 			return ret;
+ 		}
+-		++ctx->devs->extra_devices;
++		++sbi->devs->extra_devices;
+ 		break;
+ #ifdef CONFIG_EROFS_FS_ONDEMAND
+ 	case Opt_fsid:
+-		kfree(ctx->fsid);
+-		ctx->fsid = kstrdup(param->string, GFP_KERNEL);
+-		if (!ctx->fsid)
++		kfree(sbi->fsid);
++		sbi->fsid = kstrdup(param->string, GFP_KERNEL);
++		if (!sbi->fsid)
+ 			return -ENOMEM;
+ 		break;
+ 	case Opt_domain_id:
+-		kfree(ctx->domain_id);
+-		ctx->domain_id = kstrdup(param->string, GFP_KERNEL);
+-		if (!ctx->domain_id)
++		kfree(sbi->domain_id);
++		sbi->domain_id = kstrdup(param->string, GFP_KERNEL);
++		if (!sbi->domain_id)
+ 			return -ENOMEM;
+ 		break;
+ #else
+@@ -582,8 +582,7 @@ static const struct export_operations erofs_export_ops = {
+ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ {
+ 	struct inode *inode;
+-	struct erofs_sb_info *sbi;
+-	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 	int err;
+ 
+ 	sb->s_magic = EROFS_SUPER_MAGIC;
+@@ -591,19 +590,6 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_maxbytes = MAX_LFS_FILESIZE;
+ 	sb->s_op = &erofs_sops;
+ 
+-	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
+-	if (!sbi)
+-		return -ENOMEM;
+-
+-	sb->s_fs_info = sbi;
+-	sbi->opt = ctx->opt;
+-	sbi->devs = ctx->devs;
+-	ctx->devs = NULL;
+-	sbi->fsid = ctx->fsid;
+-	ctx->fsid = NULL;
+-	sbi->domain_id = ctx->domain_id;
+-	ctx->domain_id = NULL;
+-
+ 	sbi->blkszbits = PAGE_SHIFT;
+ 	if (erofs_is_fscache_mode(sb)) {
+ 		sb->s_blocksize = PAGE_SIZE;
+@@ -707,9 +693,9 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 
+ static int erofs_fc_get_tree(struct fs_context *fc)
+ {
+-	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = fc->s_fs_info;
+ 
+-	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && ctx->fsid)
++	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+ 		return get_tree_nodev(fc, erofs_fc_fill_super);
+ 
+ 	return get_tree_bdev(fc, erofs_fc_fill_super);
+@@ -719,19 +705,19 @@ static int erofs_fc_reconfigure(struct fs_context *fc)
+ {
+ 	struct super_block *sb = fc->root->d_sb;
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
+-	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *new_sbi = fc->s_fs_info;
+ 
+ 	DBG_BUGON(!sb_rdonly(sb));
+ 
+-	if (ctx->fsid || ctx->domain_id)
++	if (new_sbi->fsid || new_sbi->domain_id)
+ 		erofs_info(sb, "ignoring reconfiguration for fsid|domain_id.");
+ 
+-	if (test_opt(&ctx->opt, POSIX_ACL))
++	if (test_opt(&new_sbi->opt, POSIX_ACL))
+ 		fc->sb_flags |= SB_POSIXACL;
+ 	else
+ 		fc->sb_flags &= ~SB_POSIXACL;
+ 
+-	sbi->opt = ctx->opt;
++	sbi->opt = new_sbi->opt;
+ 
+ 	fc->sb_flags |= SB_RDONLY;
+ 	return 0;
+@@ -762,12 +748,15 @@ static void erofs_free_dev_context(struct erofs_dev_context *devs)
+ 
+ static void erofs_fc_free(struct fs_context *fc)
+ {
+-	struct erofs_fs_context *ctx = fc->fs_private;
++	struct erofs_sb_info *sbi = fc->s_fs_info;
++
++	if (!sbi)
++		return;
+ 
+-	erofs_free_dev_context(ctx->devs);
+-	kfree(ctx->fsid);
+-	kfree(ctx->domain_id);
+-	kfree(ctx);
++	erofs_free_dev_context(sbi->devs);
++	kfree(sbi->fsid);
++	kfree(sbi->domain_id);
++	kfree(sbi);
+ }
+ 
+ static const struct fs_context_operations erofs_context_ops = {
+@@ -779,21 +768,22 @@ static const struct fs_context_operations erofs_context_ops = {
+ 
+ static int erofs_init_fs_context(struct fs_context *fc)
+ {
+-	struct erofs_fs_context *ctx;
++	struct erofs_sb_info *sbi;
+ 
+-	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+-	if (!ctx)
++	sbi = kzalloc(sizeof(*sbi), GFP_KERNEL);
++	if (!sbi)
+ 		return -ENOMEM;
+-	ctx->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
+-	if (!ctx->devs) {
+-		kfree(ctx);
++
++	sbi->devs = kzalloc(sizeof(struct erofs_dev_context), GFP_KERNEL);
++	if (!sbi->devs) {
++		kfree(sbi);
+ 		return -ENOMEM;
+ 	}
+-	fc->fs_private = ctx;
++	fc->s_fs_info = sbi;
+ 
+-	idr_init(&ctx->devs->tree);
+-	init_rwsem(&ctx->devs->rwsem);
+-	erofs_default_options(ctx);
++	idr_init(&sbi->devs->tree);
++	init_rwsem(&sbi->devs->rwsem);
++	erofs_default_options(sbi);
+ 	fc->ops = &erofs_context_ops;
+ 	return 0;
+ }
+-- 
+2.39.3
 
-> 
-> Thanks!
-> 
