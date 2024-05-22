@@ -2,63 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTP id A7A688CA90B
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 May 2024 09:36:37 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YxaeygPH;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTP id 467EB8CBA1F
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 May 2024 05:56:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Vk5gz6KC7z3gGS
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 May 2024 17:30:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Vkcl72HTcz3gFK
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 May 2024 13:50:11 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=YxaeygPH;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vk5gt2NTYz3gG5
-	for <linux-erofs@lists.ozlabs.org>; Tue, 21 May 2024 17:30:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1716276635; x=1747812635;
-  h=date:from:to:cc:subject:message-id;
-  bh=l0o/xodVvCp0pfFcWQYJPvEDjV8MSd863I9M1zLFRSE=;
-  b=YxaeygPHoyA0PrB40opos8/apBMEeRKpy8QKKSNuDgDRrrpvRvTdc/Ha
-   nZ5Wf7BJccIP0Kl9OS6ygGztbDATpr9gAxNgk3gUoB5tdobDIzZ8v1trz
-   dgE0eDl4fwhrKcbgru5CBm6xQ2G3xsJPlSXeqNSi708BZ0ZUo0Siij/Av
-   KkL25dgmJSzopIMHUK17N3qgtDeL2K50NR5puwzxK3z6VaIsc7uD08vse
-   XIIIuf55Jon3nwbAMHMEg2paGqalmQS2MflzO6Al66Flu8DpNXwp+Amiw
-   F6b3NdPn8miSknRsPBPCA4GBIV3HG+1t0/6JHUAVH6LbSGxHVv1yYVdf7
-   Q==;
-X-CSE-ConnectionGUID: DjLdqY0OSs6tpekuAIFVcQ==
-X-CSE-MsgGUID: h503qauhQFKByJj/PdAicA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11078"; a="12289448"
-X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
-   d="scan'208";a="12289448"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2024 00:30:25 -0700
-X-CSE-ConnectionGUID: +W4fwJEOTByjTPb+cV1DEg==
-X-CSE-MsgGUID: AATv25cqS6+2LFRxxyvEwA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,177,1712646000"; 
-   d="scan'208";a="32799841"
-Received: from unknown (HELO 108735ec233b) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 21 May 2024 00:30:24 -0700
-Received: from kbuild by 108735ec233b with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s9Jwz-00063X-38;
-	Tue, 21 May 2024 07:30:21 +0000
-Date: Tue, 21 May 2024 15:29:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 80eb4f62056d6ae709bdd0636ab96ce660f494b2
-Message-ID: <202405211547.q1sDoIzj-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vkcky61svz3g0q
+	for <linux-erofs@lists.ozlabs.org>; Wed, 22 May 2024 13:50:01 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vkckd6B08z4f3jXt
+	for <linux-erofs@lists.ozlabs.org>; Wed, 22 May 2024 11:49:45 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id C74D11A0906
+	for <linux-erofs@lists.ozlabs.org>; Wed, 22 May 2024 11:49:54 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHGBFea01mxlBXNQ--.57627S4;
+	Wed, 22 May 2024 11:49:52 +0800 (CST)
+From: libaokun@huaweicloud.com
+To: netfs@lists.linux.dev,
+	dhowells@redhat.com,
+	jlayton@kernel.org
+Subject: [PATCH v3 00/12] cachefiles: some bugfixes and cleanups for ondemand requests
+Date: Wed, 22 May 2024 19:42:56 +0800
+Message-Id: <20240522114308.2402121-1-libaokun@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgBHGBFea01mxlBXNQ--.57627S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr18JFyUXF47JFy3uw4xCrg_yoW5tw4fpF
+	WSk3Wakr18Wr48C3s7Ar4fJryrG3yxAF9FgrnFq34DZwn8Xr1FvrW0qr1Yqas8CrZ7Gw4a
+	q3WUuas7tw1q93DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB214x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK62vIxIIY0VWUZVW8XwA2ocxC64kIII
+	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xv
+	wVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4
+	x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG
+	64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r
+	1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAq
+	YI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6x
+	kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRuWlkUUUUU
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -70,162 +65,95 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: libaokun@huaweicloud.com, yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 80eb4f62056d6ae709bdd0636ab96ce660f494b2  erofs: avoid allocating DEFLATE streams before mounting
+From: Baokun Li <libaokun1@huawei.com>
 
-elapsed time: 734m
+Hi all!
 
-configs tested: 139
-configs skipped: 3
+This is the third version of this patch series. The new version has no
+functional changes compared to the previous one, so I've kept the previous
+Acked-by and Reviewed-by, so please let me know if you have any objections.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thank you, Jia Zhu and Jingbo Xu, Jeff Layton, Gao Xiang, for the feedback
+in the previous version.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240521   gcc  
-arc                   randconfig-002-20240521   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240521   gcc  
-arm                   randconfig-002-20240521   gcc  
-arm                   randconfig-003-20240521   clang
-arm                   randconfig-004-20240521   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240521   clang
-arm64                 randconfig-002-20240521   gcc  
-arm64                 randconfig-003-20240521   clang
-arm64                 randconfig-004-20240521   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240521   gcc  
-csky                  randconfig-002-20240521   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240521   clang
-hexagon               randconfig-002-20240521   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240521   clang
-i386         buildonly-randconfig-002-20240521   clang
-i386         buildonly-randconfig-003-20240521   gcc  
-i386         buildonly-randconfig-004-20240521   clang
-i386         buildonly-randconfig-005-20240521   gcc  
-i386         buildonly-randconfig-006-20240521   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240521   gcc  
-i386                  randconfig-002-20240521   clang
-i386                  randconfig-003-20240521   gcc  
-i386                  randconfig-004-20240521   gcc  
-i386                  randconfig-005-20240521   gcc  
-i386                  randconfig-006-20240521   clang
-i386                  randconfig-011-20240521   gcc  
-i386                  randconfig-012-20240521   clang
-i386                  randconfig-013-20240521   clang
-i386                  randconfig-014-20240521   clang
-i386                  randconfig-015-20240521   clang
-i386                  randconfig-016-20240521   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240521   gcc  
-loongarch             randconfig-002-20240521   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240521   gcc  
-nios2                 randconfig-002-20240521   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240521   gcc  
-parisc                randconfig-002-20240521   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc               randconfig-001-20240521   clang
-powerpc               randconfig-002-20240521   gcc  
-powerpc               randconfig-003-20240521   clang
-powerpc64             randconfig-001-20240521   clang
-powerpc64             randconfig-002-20240521   gcc  
-powerpc64             randconfig-003-20240521   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240521   clang
-riscv                 randconfig-002-20240521   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240521   clang
-s390                  randconfig-002-20240521   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240521   gcc  
-sh                    randconfig-002-20240521   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240521   gcc  
-sparc64               randconfig-002-20240521   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240521   gcc  
-um                    randconfig-002-20240521   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64                              defconfig   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240521   gcc  
-xtensa                randconfig-002-20240521   gcc  
+We've been testing ondemand mode for cachefiles since January, and we're
+almost done. We hit a lot of issues during the testing period, and this
+patch set fixes some of the issues related to ondemand requests.
+The patches have passed internal testing without regression.
+
+The following is a brief overview of the patches, see the patches for
+more details.
+
+Patch 1-5: Holding reference counts of reqs and objects on read requests
+to avoid malicious restore leading to use-after-free.
+
+Patch 6-10: Add some consistency checks to copen/cread/get_fd to avoid
+malicious copen/cread/close fd injections causing use-after-free or hung.
+
+Patch 11: When cache is marked as CACHEFILES_DEAD, flush all requests,
+otherwise the kernel may be hung. since this state is irreversible, the
+daemon can read open requests but cannot copen.
+
+Patch 12: Allow interrupting a read request being processed by killing
+the read process as a way of avoiding hung in some special cases.
+
+Comments and questions are, as always, welcome.
+Please let me know what you think.
+
+Thanks,
+Baokun
+
+Changes since v2:
+  * Collect Acked-by from Jeff Layton.(Thanks for your ack!)
+  * Collect RVB from Gao Xiang and Jingbo Xu.(Thanks for your review!)
+  * Pathch 9: Rename anon_file to ondemand_anon_file to avoid possible
+    conflicts with generic code.
+  * Pathch 12: Add cachefiles_ondemand_finish_req() helper function to
+    simplify the code.
+  * Adjust the patch order as suggested to facilitate backporting to
+    the STABLE version.
+    * The current patch 1 is the previous patch 5;
+    * The current patch 5 is the previous patch 2;
+
+Changes since v1:
+  * Collect RVB from Jia Zhu and Jingbo Xu.(Thanks for your review!)
+  * Pathch 1: Add Fixes tag and enrich the commit message.
+  * Pathch 7: Add function graph comments.
+  * Pathch 8: Update commit message and comments.
+  * Pathch 9: Enriched commit msg.
+
+[V1]: https://lore.kernel.org/all/20240424033916.2748488-1-libaokun@huaweicloud.com
+[V2]: https://lore.kernel.org/all/20240515084601.3240503-1-libaokun@huaweicloud.com
+
+
+Baokun Li (11):
+  cachefiles: add output string to cachefiles_obj_[get|put]_ondemand_fd
+  cachefiles: remove requests from xarray during flushing requests
+  cachefiles: fix slab-use-after-free in cachefiles_ondemand_get_fd()
+  cachefiles: fix slab-use-after-free in
+    cachefiles_ondemand_daemon_read()
+  cachefiles: remove err_put_fd label in
+    cachefiles_ondemand_daemon_read()
+  cachefiles: add consistency check for copen/cread
+  cachefiles: add spin_lock for cachefiles_ondemand_info
+  cachefiles: never get a new anonymous fd if ondemand_id is valid
+  cachefiles: defer exposing anon_fd until after copy_to_user() succeeds
+  cachefiles: flush all requests after setting CACHEFILES_DEAD
+  cachefiles: make on-demand read killable
+
+Zizhi Wo (1):
+  cachefiles: Set object to close if ondemand_id < 0 in copen
+
+ fs/cachefiles/daemon.c            |   3 +-
+ fs/cachefiles/internal.h          |   5 +
+ fs/cachefiles/ondemand.c          | 217 ++++++++++++++++++++++--------
+ include/trace/events/cachefiles.h |   8 +-
+ 4 files changed, 176 insertions(+), 57 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
+
