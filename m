@@ -2,65 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C79B8CDBC5
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 May 2024 23:11:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8471C8CDBC4
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 May 2024 23:11:38 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1716498118;
-	bh=D3TGBYS4I1uMWqtuBv6VS2lwGxgaWWfPy0VXsYNJ+Qg=;
+	s=201707; t=1716498124;
+	bh=bWgje+W+4iPJ/gcyjBf/WjqMUfPsTuxvtzT/TU33XFw=;
 	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=Qe/bGGFc/Jej6c2ROtUKNfvOO1vPD6U7whT57dYL3FYEh/y8xrmgqASqhyaOVSzTq
-	 LgO9nBUGaaJcJZUuzlMzlFSwPIbPs54gkstoo8qqDu5wTr12dcKMvDa2hYBJJdzibx
-	 7NgcGwFGVBKuohv6j/QZbcipdthYCVntopIYNImawKivV8G+ecKu1E7LURZzRi3Nwy
-	 8Rrfjl7BdnhJcDhuz4b6nG+Fwjh7yaI7F9AapjkWst9SyP4LUIZUno10E5H5V4Hn4H
-	 IQNdTqUhaYKtp3KYSm13uGANeei3b+iVmCIXqB/eH08FlTFwbysj/ihjf5CJtnpvkb
-	 pS9i2FBXclUoQ==
+	b=FT9bA6+VRrPv+3jbB1co+kStOzn8DRtg02tR/6L6rzop9GTF2kQnVq8q+jdutsnvN
+	 gNsd6/0jh+ebHCt1Yd4KF2nDIa4bnP5hHU3Z2rSrPxf1ScEQQCVgbg0xEnRiodruVc
+	 Sl4I9t6IpH2K0YPy6vk7KDWjdP0oXiqSl7sEcRnq2dpptGyplVDJrKI0jdCdTfLhiE
+	 OkZkqHjqoFTSnMOUxCJ3MAOlXmtcc+BhKwkNLLVX35fTh2KVHarjpIoMxZiRC725U7
+	 71O70HVTyHJQggFcBSWFVhDXm1N01e3KW/Xg2UrHKi1/ayQ2COhDwotFO2ysCEHsZn
+	 Rsbxj0rl2ve1g==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VlgbB0G0sz87Rl
-	for <lists+linux-erofs@lfdr.de>; Fri, 24 May 2024 07:01:58 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VlgbJ0g2jz87TS
+	for <lists+linux-erofs@lfdr.de>; Fri, 24 May 2024 07:02:04 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=cEgiB+Kb;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=eRNoy23S;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::114a; helo=mail-yw1-x114a.google.com; envelope-from=3tq5pzgckc4sswpap0tv33v0t.r310x29c-t63u70x787.3e0pq7.36v@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::b49; helo=mail-yb1-xb49.google.com; envelope-from=3ua5pzgckc44vzsds3wy66y3w.u64305cf-w96xa30aba.6h3sta.69y@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vlgb16qFzz3wRR
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vlgb16K8Kz3vYd
 	for <linux-erofs@lists.ozlabs.org>; Fri, 24 May 2024 07:01:48 +1000 (AEST)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-627ecbeb30eso39469567b3.0
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-df4d82f868bso5664739276.3
         for <linux-erofs@lists.ozlabs.org>; Thu, 23 May 2024 14:01:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716498103; x=1717102903;
+        d=1e100.net; s=20230601; t=1716498106; x=1717102906;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D3TGBYS4I1uMWqtuBv6VS2lwGxgaWWfPy0VXsYNJ+Qg=;
-        b=tt/J+fw82n7ZbyZ3LYg5fw9iOrP/w+cJPRC7frwU4shXjoYfoVcWIqn9an3BGok5A0
-         fAjmp9betHLWznRdmAR3OUDMcHAwoVaNLvxnZDylw5GADX9/yXgj5u0nlCXvrl74Oasg
-         jQ3KpnXhMvS/YHRHh+9Ozeg+gn/9xKRSCZi/pTQPICOeySSs/aWyLJYSEjk3aaETruzI
-         bYt+47TiwDXgx3LKRS7qfystiTnr8d4jxDfMrCy7LLHSCGMiatFT0Yui0RbRxd10dWLR
-         +LI13o5kdSqZ6G8jrx8N4tGRkHo2n6et3XFA3mZf9s8wALMZqQeP+yNpBRR4+XtwUnSG
-         zIwg==
-X-Gm-Message-State: AOJu0YzMH0FYWmg00X8P0kiQ+ZmXdn2B5iflvPpv+kC/vNWvk38IS87x
-	GooGNBEtzOPhnRh7QIBeCbm0s7nHuLIPMd+qeqdoELcKwIgsvM2gMkVEMUIRJcxcA8hyV1zZhLE
-	2dHk5BEg2Nz2rlL5Z0o77VPBGS92GvXASVi+Rh88uH163THlTUnZHyFjznpz7SdQeOmItHoAYo/
-	vtqbbm0pTqCvb3MyzxvmSlV2JP1MTV36YIGeZvIhrqIut3Qw==
-X-Google-Smtp-Source: AGHT+IEOzrkL7uD4TRJSa159RRmQLvarDINzMp5CdkUGJT8Y/LTAZw/aJj3Zv2gIk+ObD6fbIXlXb4vxjqXB
+        bh=bWgje+W+4iPJ/gcyjBf/WjqMUfPsTuxvtzT/TU33XFw=;
+        b=J8zwhzaaLELHkRFk2goANiWPgkclQzWVCvnbdoI14GqWsmpf3THlQoeuA/WjrJEB2g
+         gAcQJ4PsCf7AX8e2KotnM4wbzgVbGAKRyAbRlTHAlauly/s8TWI5u92mrvnoRTlKW5Xx
+         Ut3WIK4aSkn/Zs3TY6iO/PBAd+u1Mjb5YVBnte8FpSINclDz3IV1V2bfpqK3XWJuFsGG
+         w8Gm/B/koj/vSYrHKy23aQQHlh4gNTZqu6megtWV/1j5uYjvfzzEBh6FMX6azLt72DDT
+         UVmljGohCE42VT4X9rK3ynZgI6EeNkvrc3ebPuZGCzVqo9njxwhbZevPY0i2WVQ2COL1
+         Zv5w==
+X-Gm-Message-State: AOJu0Ywy9E0WiZ0B49WWlINHaDKSz+tTLJ1nzZ+kZFzpu396nO/agf4W
+	z5ZYE/T8AgMaaZw2CrDRDMcAVynBmjOrB0Gvk4gNRoPAiImQ1fKMoouDJZIdG8h6yL+yeAxDKB8
+	9bSk3RUlHbNUZk4qP/wMy0uXK9Pdqr6giatk16c5gPHeZ2589GfyRK6rR/HO/+hps42+Z6blNFG
+	Lsp3mhlxeI6Cjh2RPItI7brkAOq3ndBuHNiIwc7Iz6L1YR/g==
+X-Google-Smtp-Source: AGHT+IEXzTA28OnOYJMSHgQCu73jtvt06c2S3r0jpkORoknU9B9lq/Kbk/QStKkCaw7atz+uf1uRtYoIGnl0
 X-Received: from dhavale-desktop.mtv.corp.google.com ([2620:15c:211:201:a2ff:32db:ca12:f9f5])
- (user=dhavale job=sendgmr) by 2002:a05:6902:f85:b0:df4:a381:5cc9 with SMTP id
- 3f1490d57ef6-df7721e4523mr89591276.8.1716498102961; Thu, 23 May 2024 14:01:42
- -0700 (PDT)
-Date: Thu, 23 May 2024 14:01:30 -0700
+ (user=dhavale job=sendgmr) by 2002:a05:6902:1007:b0:dee:663a:340d with SMTP
+ id 3f1490d57ef6-df772212d93mr94247276.11.1716498105688; Thu, 23 May 2024
+ 14:01:45 -0700 (PDT)
+Date: Thu, 23 May 2024 14:01:31 -0700
 In-Reply-To: <20240523210131.3126753-1-dhavale@google.com>
 Mime-Version: 1.0
 References: <20240523210131.3126753-1-dhavale@google.com>
 X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <20240523210131.3126753-2-dhavale@google.com>
-Subject: [PATCH 1/2] erofs-utils: lib: provide helper to disable hashmap shrinking
+Message-ID: <20240523210131.3126753-3-dhavale@google.com>
+Subject: [PATCH 2/2] erofs-utils: lib: improve freeing hashmap in erofs_blob_exit()
 To: linux-erofs@lists.ozlabs.org
 Content-Type: text/plain; charset="UTF-8"
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -80,30 +80,59 @@ Cc: hsiangkao@linux.alibaba.com, kernel-team@android.com, junbeom.yeom@samsung.c
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This helper sets hasmap.shrink_at to 0. This is helpful to iterate over
-hashmap using hashmap_iter_next() and use hashmap_remove() in single
-pass efficeintly.
+Depending on size of the filesystem being built there can be huge number
+of elements in the hashmap. Currently we call hashmap_iter_first() in
+while loop to iterate and free the elements. However technically
+correct, this is inefficient in 2 aspects.
+
+- As we are iterating the elements for removal, we do not need overhead of
+rehashing.
+- Second part which contributes hugely to the performance is using
+hashmap_iter_first() as it starts scanning from index 0 throwing away
+the previous successful scan. For sparsely populated hashmap this becomes
+O(n^2) in worst case.
+
+Lets fix this by disabling hashmap shrink which avoids rehashing
+and use hashmap_iter_next() which is now guaranteed to iterate over
+all the elements while removing while avoiding the performance pitfalls
+of using hashmap_iter_first().
+
+Test with random data shows performance improvement as:
+
+fs_size  Before   After
+1G 	 23s 	  7s
+2G 	 81s      15s
+4G	 272s     31s
+8G 	 1252s	  61s
 
 Signed-off-by: Sandeep Dhavale <dhavale@google.com>
 ---
- include/erofs/hashmap.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ lib/blobchunk.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/include/erofs/hashmap.h b/include/erofs/hashmap.h
-index d25092d..484948e 100644
---- a/include/erofs/hashmap.h
-+++ b/include/erofs/hashmap.h
-@@ -97,6 +97,10 @@ static inline void *hashmap_iter_first(struct hashmap *map,
- 	return hashmap_iter_next(iter);
- }
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index 645bcc1..8082aa4 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -548,11 +548,17 @@ void erofs_blob_exit(void)
+ 	if (blobfile)
+ 		fclose(blobfile);
  
-+static inline void hashmap_disable_shrink(struct hashmap * map)
-+{
-+	map->shrink_at = 0;
-+}
- /* string interning */
- const void *memintern(const void *data, size_t len);
- static inline const char *strintern(const char *string)
+-	while ((e = hashmap_iter_first(&blob_hashmap, &iter))) {
++	/* Disable hashmap shrink, effectively disabling rehash.
++	 * This way we can iterate over entire hashmap efficiently
++	 * and safely by using hashmap_iter_next() */
++	hashmap_disable_shrink(&blob_hashmap);
++	e = hashmap_iter_first(&blob_hashmap, &iter);
++	while (e) {
+ 		bc = container_of((struct hashmap_entry *)e,
+ 				  struct erofs_blobchunk, ent);
+ 		DBG_BUGON(hashmap_remove(&blob_hashmap, e) != e);
+ 		free(bc);
++		e = hashmap_iter_next(&iter);
+ 	}
+ 	DBG_BUGON(hashmap_free(&blob_hashmap));
+ 
 -- 
 2.45.1.288.g0e0cd299f1-goog
 
