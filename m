@@ -2,61 +2,44 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTP id A51DA8CBA3E
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 May 2024 06:11:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7D038CCAE7
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 May 2024 05:01:42 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wCEbwlNZ;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Vkd5Y6Pstz3g9x
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 May 2024 14:06:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VlCVP4wTbz78s6
+	for <lists+linux-erofs@lfdr.de>; Thu, 23 May 2024 12:56:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wCEbwlNZ;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vkd5S1Wksz3g69
-	for <linux-erofs@lists.ozlabs.org>; Wed, 22 May 2024 14:06:03 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vkd5B4GDpz4f3jdH
-	for <linux-erofs@lists.ozlabs.org>; Wed, 22 May 2024 12:05:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 807001A01B9
-	for <linux-erofs@lists.ozlabs.org>; Wed, 22 May 2024 12:05:59 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgBHZQ4ib01ms1VYNQ--.24441S9;
-	Wed, 22 May 2024 12:05:59 +0800 (CST)
-From: libaokun@huaweicloud.com
-To: netfs@lists.linux.dev,
-	dhowells@redhat.com,
-	jlayton@kernel.org
-Subject: [PATCH RESEND 5/5] cachefiles: correct the return value of cachefiles_check_auxdata()
-Date: Wed, 22 May 2024 19:59:11 +0800
-Message-Id: <20240522115911.2403021-6-libaokun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240522115911.2403021-1-libaokun@huaweicloud.com>
-References: <20240522115911.2403021-1-libaokun@huaweicloud.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VlCVH2P9bz78rh
+	for <linux-erofs@lists.ozlabs.org>; Thu, 23 May 2024 12:56:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1716432960; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=OafFSAKGS/yPXL/ahcsJ0Px3w3V7Fmuu853k/LZsAtY=;
+	b=wCEbwlNZ23l/qR1Et+o4ni+PJzxi3JIcTI0a6ATFo0ldFgTOWjuZqmtSuRsPpZD0is6JmY7Bb0aRRYUWnfHCYJMy6fReVaOqj4Xie6zBxGWMspQ5eLcrUCqDqe91AfrX99VPtOfdiGu6XIXHfo/EKIalLSVdOBXIgRXsB3E4dv0=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032014031;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W716Hru_1716432951;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W716Hru_1716432951)
+          by smtp.aliyun-inc.com;
+          Thu, 23 May 2024 10:55:58 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: lib: fix uncompressed packed inode
+Date: Thu, 23 May 2024 10:55:50 +0800
+Message-Id: <20240523025550.2447091-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: cCh0CgBHZQ4ib01ms1VYNQ--.24441S9
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFykurWUAF4kCF4DAr4xWFg_yoWfKFX_uF
-	Z7Ar4xXr4fGr4kJwsrA3y2qrWvqr1xAwn8Kr1Fgry2yw1aqFZ8XFWDtr98Ar1UWr4UK3WD
-	trZ7ZF13WF9FgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbmkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M28IrcIa0xkI8V
-	A2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJ
-	M28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2I
-	x0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK
-	6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
-	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20V
-	AGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7sREMKZDUUUUU==
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,37 +51,59 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: libaokun@huaweicloud.com, yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Baokun Li <libaokun1@huawei.com>
+Currently, packed inode can be used in the unencoded way too such
+as xattr prefixes.
 
-Pass the error code to ret when xlen < 0 to avoid misleading the caller.
-
-Fixes: 72b957856b0c ("cachefiles: Implement metadata/coherency data storage in xattrs")
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/cachefiles/xattr.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/inode.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/fs/cachefiles/xattr.c b/fs/cachefiles/xattr.c
-index 20e4a4391090..4dd8a993c60a 100644
---- a/fs/cachefiles/xattr.c
-+++ b/fs/cachefiles/xattr.c
-@@ -110,9 +110,11 @@ int cachefiles_check_auxdata(struct cachefiles_object *object, struct file *file
- 	if (xlen == 0)
- 		xlen = vfs_getxattr(&nop_mnt_idmap, dentry, cachefiles_xattr_cache, buf, tlen);
- 	if (xlen != tlen) {
--		if (xlen < 0)
-+		if (xlen < 0) {
-+			ret = xlen;
- 			trace_cachefiles_vfs_error(object, file_inode(file), xlen,
- 						   cachefiles_trace_getxattr_error);
-+		}
- 		if (xlen == -EIO)
- 			cachefiles_io_error_obj(
- 				object,
+diff --git a/lib/inode.c b/lib/inode.c
+index cbe0810..cd48e55 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -1710,24 +1710,24 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(int fd, const char *name)
+ 		inode->nid = inode->sbi->packed_nid;
+ 	}
+ 
+-	ictx = erofs_begin_compressed_file(inode, fd, 0);
+-	if (IS_ERR(ictx))
+-		return ERR_CAST(ictx);
++	if (cfg.c_compr_opts[0].alg &&
++	    erofs_file_is_compressible(inode)) {
++		ictx = erofs_begin_compressed_file(inode, fd, 0);
++		if (IS_ERR(ictx))
++			return ERR_CAST(ictx);
++
++		DBG_BUGON(!ictx);
++		ret = erofs_write_compressed_file(ictx);
++		if (ret && ret != -ENOSPC)
++			 return ERR_PTR(ret);
+ 
+-	DBG_BUGON(!ictx);
+-	ret = erofs_write_compressed_file(ictx);
+-	if (ret == -ENOSPC) {
+ 		ret = lseek(fd, 0, SEEK_SET);
+ 		if (ret < 0)
+ 			return ERR_PTR(-errno);
+-
+-		ret = write_uncompressed_file_from_fd(inode, fd);
+ 	}
+-
+-	if (ret) {
+-		DBG_BUGON(ret == -ENOSPC);
++	ret = write_uncompressed_file_from_fd(inode, fd);
++	if (ret)
+ 		return ERR_PTR(ret);
+-	}
+ 	erofs_prepare_inode_buffer(inode);
+ 	erofs_write_tail_end(inode);
+ 	return inode;
 -- 
-2.39.2
+2.39.3
 
