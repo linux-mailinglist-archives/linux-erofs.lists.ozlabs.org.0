@@ -1,60 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTP id 43D368CE8F2
-	for <lists+linux-erofs@lfdr.de>; Fri, 24 May 2024 18:51:40 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTP id 28F238CE8FA
+	for <lists+linux-erofs@lfdr.de>; Fri, 24 May 2024 19:01:41 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=STgF2q6O;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qSffPACe;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Vm9ry5sntz87gX
-	for <lists+linux-erofs@lfdr.de>; Sat, 25 May 2024 02:45:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VmB182JF8z87h4
+	for <lists+linux-erofs@lfdr.de>; Sat, 25 May 2024 02:52:44 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=STgF2q6O;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qSffPACe;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vm9rp6sKmz87dd
-	for <linux-erofs@lists.ozlabs.org>; Sat, 25 May 2024 02:45:30 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 9851163215;
-	Fri, 24 May 2024 16:45:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6A278C32789;
-	Fri, 24 May 2024 16:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716569127;
-	bh=ozTP1Gzp6c9BpT25/+sBCPNKeJIm8Q21Qstys50GJCs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=STgF2q6O6KFzjP9KG6Lkslrs3yQ119HQlsBpTVdMqvUWYrVrvDxL1mrmILCZxqh2k
-	 EZKsCWaNCzYIR/qZ+WmpXrx+2Wvn6HugHK/YPSe33XR1CMLyWGGhI4NP0jvzuiSi7W
-	 sOzRNGYxxPKoLd5QsUl0CcEdMi2JetiKvkMIysHSBQUqCDe8ArxIpNvq8DeabGNS6b
-	 ygUfDl3ez70nP9g2KiH4Kxq9laF+U5rhMlEm09xH1oiwHSvoWduXD88CDS2xpCqW4b
-	 titNqbmZEha7DsGn/9VNfdKXN5U8wfa4u4XONs2ZDgORou6HGK8eJ/EwPoHJMQuDB6
-	 mn3NGnGZUZUBA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 5CC56C4332E;
-	Fri, 24 May 2024 16:45:27 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs more updates for 6.10-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZlCc2s0h0H1v16er@debian>
-References: <ZlCc2s0h0H1v16er@debian>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZlCc2s0h0H1v16er@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.10-rc1-2
-X-PR-Tracked-Commit-Id: 80eb4f62056d6ae709bdd0636ab96ce660f494b2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dcb9f48667824399e496113f2374d08e6aa59770
-Message-Id: <171656912737.29701.1703227778398439623.pr-tracker-bot@kernel.org>
-Date: Fri, 24 May 2024 16:45:27 +0000
-To: Gao Xiang <xiang@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VmB110qP5z87dh
+	for <linux-erofs@lists.ozlabs.org>; Sat, 25 May 2024 02:52:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1716569550; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=oEGxQAUE0MnIa16lz0T+YQTooC61PSJ4eiZXc9Khk/Q=;
+	b=qSffPACe/HSCQzncsv4vfQ537Ka4tcT0q6AXG4C3PJjE7+cjvGnsQIrB/OGvOcFFKDAV+wmWEzn8VvNmrMfMMc6DWy6D3LPUYY8N2M+MHRHmpgaW9I9IlWJMNjD7FG0gAqlWh0sUox4K2ouBvKIpniAb3rFVEUap2CDwxymm3+M=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W77S4p8_1716569546;
+Received: from 192.168.2.4(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W77S4p8_1716569546)
+          by smtp.aliyun-inc.com;
+          Sat, 25 May 2024 00:52:28 +0800
+Message-ID: <a9f890d4-555b-488f-85f8-8b22fdfd257b@linux.alibaba.com>
+Date: Sat, 25 May 2024 00:52:26 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/5] lib/lz4: update LZ4 decompressor module
+To: Jonathan Liu <net147@gmail.com>, Huang Jianan <jnhuang95@gmail.com>
+References: <20220226070551.9833-1-jnhuang95@gmail.com>
+ <20220226070551.9833-3-jnhuang95@gmail.com>
+ <CANwerB2SBe1+0sW1OXHEfSMA1z-vyAvLfAqVOKdsM-ap=KYbCA@mail.gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <CANwerB2SBe1+0sW1OXHEfSMA1z-vyAvLfAqVOKdsM-ap=KYbCA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,19 +56,47 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Hongzhen Luo <hongzhen@linux.alibaba.com>, Al Viro <viro@zeniv.linux.org.uk>, linux-erofs@lists.ozlabs.org
+Cc: u-boot@lists.denx.de, linux-erofs@lists.ozlabs.org, trini@konsulko.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Fri, 24 May 2024 21:57:46 +0800:
+Hi,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.10-rc1-2
+On 2024/5/24 22:26, Jonathan Liu wrote:
+> Hi Jianan,
+> 
+> On Sat, 26 Feb 2022 at 18:05, Huang Jianan <jnhuang95@gmail.com> wrote:
+>>
+>> Update the LZ4 compression module based on LZ4 v1.8.3 in order to
+>> use the newest LZ4_decompress_safe_partial() which can now decode
+>> exactly the nb of bytes requested.
+>>
+>> Signed-off-by: Huang Jianan <jnhuang95@gmail.com>
+> 
+> I noticed after this commit LZ4 decompression is slower.
+> ulz4fn function call takes 1.209670 seconds with this commit.
+> After reverting this commit, the ulz4fn function call takes 0.587032 seconds.
+> 
+> I am decompressing a LZ4 compressed kernel (compressed with lz4 v1.9.4
+> using -9 option for maximum compression) on RK3399.
+> 
+> Any ideas why it is slower with this commit and how the performance
+> regression can be fixed?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dcb9f48667824399e496113f2374d08e6aa59770
+Just the quick glance, I think the issue may be due to memcpy/memmove
+since it seems the main difference between these two codebases
+(I'm not sure which LZ4 version the old codebase was based on) and
+the new version mainly relies on memcpy/memmove instead of its own
+versions.
 
-Thank you!
+Would you mind to check the assembly how memcpy/memset is generated
+on your platform?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+Gao Xiang
+
+> 
+> Thanks.
+> 
+> Regards,
+> Jonathan
