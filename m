@@ -1,68 +1,66 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTP id 8471C8CDBC4
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 May 2024 23:11:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1716498124;
-	bh=bWgje+W+4iPJ/gcyjBf/WjqMUfPsTuxvtzT/TU33XFw=;
-	h=Date:In-Reply-To:References:Subject:To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=FT9bA6+VRrPv+3jbB1co+kStOzn8DRtg02tR/6L6rzop9GTF2kQnVq8q+jdutsnvN
-	 gNsd6/0jh+ebHCt1Yd4KF2nDIa4bnP5hHU3Z2rSrPxf1ScEQQCVgbg0xEnRiodruVc
-	 Sl4I9t6IpH2K0YPy6vk7KDWjdP0oXiqSl7sEcRnq2dpptGyplVDJrKI0jdCdTfLhiE
-	 OkZkqHjqoFTSnMOUxCJ3MAOlXmtcc+BhKwkNLLVX35fTh2KVHarjpIoMxZiRC725U7
-	 71O70HVTyHJQggFcBSWFVhDXm1N01e3KW/Xg2UrHKi1/ayQ2COhDwotFO2ysCEHsZn
-	 Rsbxj0rl2ve1g==
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTP id 784BA8CDF86
+	for <lists+linux-erofs@lfdr.de>; Fri, 24 May 2024 04:36:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VlgbJ0g2jz87TS
-	for <lists+linux-erofs@lfdr.de>; Fri, 24 May 2024 07:02:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VlprB0GJDz78Lh
+	for <lists+linux-erofs@lfdr.de>; Fri, 24 May 2024 12:28:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=eRNoy23S;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--dhavale.bounces.google.com (client-ip=2607:f8b0:4864:20::b49; helo=mail-yb1-xb49.google.com; envelope-from=3ua5pzgckc44vzsds3wy66y3w.u64305cf-w96xa30aba.6h3sta.69y@flex--dhavale.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vlgb16K8Kz3vYd
-	for <linux-erofs@lists.ozlabs.org>; Fri, 24 May 2024 07:01:48 +1000 (AEST)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-df4d82f868bso5664739276.3
-        for <linux-erofs@lists.ozlabs.org>; Thu, 23 May 2024 14:01:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716498106; x=1717102906;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bWgje+W+4iPJ/gcyjBf/WjqMUfPsTuxvtzT/TU33XFw=;
-        b=J8zwhzaaLELHkRFk2goANiWPgkclQzWVCvnbdoI14GqWsmpf3THlQoeuA/WjrJEB2g
-         gAcQJ4PsCf7AX8e2KotnM4wbzgVbGAKRyAbRlTHAlauly/s8TWI5u92mrvnoRTlKW5Xx
-         Ut3WIK4aSkn/Zs3TY6iO/PBAd+u1Mjb5YVBnte8FpSINclDz3IV1V2bfpqK3XWJuFsGG
-         w8Gm/B/koj/vSYrHKy23aQQHlh4gNTZqu6megtWV/1j5uYjvfzzEBh6FMX6azLt72DDT
-         UVmljGohCE42VT4X9rK3ynZgI6EeNkvrc3ebPuZGCzVqo9njxwhbZevPY0i2WVQ2COL1
-         Zv5w==
-X-Gm-Message-State: AOJu0Ywy9E0WiZ0B49WWlINHaDKSz+tTLJ1nzZ+kZFzpu396nO/agf4W
-	z5ZYE/T8AgMaaZw2CrDRDMcAVynBmjOrB0Gvk4gNRoPAiImQ1fKMoouDJZIdG8h6yL+yeAxDKB8
-	9bSk3RUlHbNUZk4qP/wMy0uXK9Pdqr6giatk16c5gPHeZ2589GfyRK6rR/HO/+hps42+Z6blNFG
-	Lsp3mhlxeI6Cjh2RPItI7brkAOq3ndBuHNiIwc7Iz6L1YR/g==
-X-Google-Smtp-Source: AGHT+IEXzTA28OnOYJMSHgQCu73jtvt06c2S3r0jpkORoknU9B9lq/Kbk/QStKkCaw7atz+uf1uRtYoIGnl0
-X-Received: from dhavale-desktop.mtv.corp.google.com ([2620:15c:211:201:a2ff:32db:ca12:f9f5])
- (user=dhavale job=sendgmr) by 2002:a05:6902:1007:b0:dee:663a:340d with SMTP
- id 3f1490d57ef6-df772212d93mr94247276.11.1716498105688; Thu, 23 May 2024
- 14:01:45 -0700 (PDT)
-Date: Thu, 23 May 2024 14:01:31 -0700
-In-Reply-To: <20240523210131.3126753-1-dhavale@google.com>
-Mime-Version: 1.0
-References: <20240523210131.3126753-1-dhavale@google.com>
-X-Mailer: git-send-email 2.45.1.288.g0e0cd299f1-goog
-Message-ID: <20240523210131.3126753-3-dhavale@google.com>
-Subject: [PATCH 2/2] erofs-utils: lib: improve freeing hashmap in erofs_blob_exit()
-To: linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vlpr44ZVBz78LR
+	for <linux-erofs@lists.ozlabs.org>; Fri, 24 May 2024 12:28:34 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vlpqm5TrBz4f3jLh
+	for <linux-erofs@lists.ozlabs.org>; Fri, 24 May 2024 10:28:20 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 9BEF71A0199
+	for <linux-erofs@lists.ozlabs.org>; Fri, 24 May 2024 10:28:26 +0800 (CST)
+Received: from [10.174.177.174] (unknown [10.174.177.174])
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g5G+09mNr8LNg--.19950S3;
+	Fri, 24 May 2024 10:28:26 +0800 (CST)
+Message-ID: <c2e331a1-8293-0055-3314-738530db3822@huaweicloud.com>
+Date: Fri, 24 May 2024 10:28:22 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH v3 06/12] cachefiles: add consistency check for
+ copen/cread
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, netfs@lists.linux.dev,
+ dhowells@redhat.com, jlayton@kernel.org
+References: <20240522114308.2402121-1-libaokun@huaweicloud.com>
+ <20240522114308.2402121-7-libaokun@huaweicloud.com>
+ <11f10862-9149-49c7-bac4-f0c1e0601b23@linux.alibaba.com>
+Content-Language: en-US
+From: Baokun Li <libaokun@huaweicloud.com>
+In-Reply-To: <11f10862-9149-49c7-bac4-f0c1e0601b23@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgAX5g5G+09mNr8LNg--.19950S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWw4rCr4fWr45tw1xZF4fZrb_yoWrAF4rpF
+	WayayakFy8uF1xKr97JF95W34Fy3s3AFsxWr93ta4UArnxur1Fvryft34UZF1UZwsYgr4I
+	qw42gF9rGr1jv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+	sGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -74,65 +72,118 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Sandeep Dhavale <dhavale@google.com>
-Cc: hsiangkao@linux.alibaba.com, kernel-team@android.com, junbeom.yeom@samsung.com
+Cc: libaokun@huaweicloud.com, yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Depending on size of the filesystem being built there can be huge number
-of elements in the hashmap. Currently we call hashmap_iter_first() in
-while loop to iterate and free the elements. However technically
-correct, this is inefficient in 2 aspects.
+Hi Jingbo,
 
-- As we are iterating the elements for removal, we do not need overhead of
-rehashing.
-- Second part which contributes hugely to the performance is using
-hashmap_iter_first() as it starts scanning from index 0 throwing away
-the previous successful scan. For sparsely populated hashmap this becomes
-O(n^2) in worst case.
+Thanks for the review!
 
-Lets fix this by disabling hashmap shrink which avoids rehashing
-and use hashmap_iter_next() which is now guaranteed to iterate over
-all the elements while removing while avoiding the performance pitfalls
-of using hashmap_iter_first().
+On 2024/5/23 22:28, Jingbo Xu wrote:
+>
+> On 5/22/24 7:43 PM, libaokun@huaweicloud.com wrote:
+>> From: Baokun Li <libaokun1@huawei.com>
+>>
+>> This prevents malicious processes from completing random copen/cread
+>> requests and crashing the system. Added checks are listed below:
+>>
+>>    * Generic, copen can only complete open requests, and cread can only
+>>      complete read requests.
+>>    * For copen, ondemand_id must not be 0, because this indicates that the
+>>      request has not been read by the daemon.
+>>    * For cread, the object corresponding to fd and req should be the same.
+>>
+>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+>> Acked-by: Jeff Layton <jlayton@kernel.org>
+>> ---
+>>   fs/cachefiles/ondemand.c | 27 ++++++++++++++++++++-------
+>>   1 file changed, 20 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+>> index bb94ef6a6f61..898fab68332b 100644
+>> --- a/fs/cachefiles/ondemand.c
+>> +++ b/fs/cachefiles/ondemand.c
+>> @@ -82,12 +82,12 @@ static loff_t cachefiles_ondemand_fd_llseek(struct file *filp, loff_t pos,
+>>   }
+>>   
+>>   static long cachefiles_ondemand_fd_ioctl(struct file *filp, unsigned int ioctl,
+>> -					 unsigned long arg)
+>> +					 unsigned long id)
+>>   {
+>>   	struct cachefiles_object *object = filp->private_data;
+>>   	struct cachefiles_cache *cache = object->volume->cache;
+>>   	struct cachefiles_req *req;
+>> -	unsigned long id;
+>> +	XA_STATE(xas, &cache->reqs, id);
+>>   
+>>   	if (ioctl != CACHEFILES_IOC_READ_COMPLETE)
+>>   		return -EINVAL;
+>> @@ -95,10 +95,15 @@ static long cachefiles_ondemand_fd_ioctl(struct file *filp, unsigned int ioctl,
+>>   	if (!test_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags))
+>>   		return -EOPNOTSUPP;
+>>   
+>> -	id = arg;
+>> -	req = xa_erase(&cache->reqs, id);
+>> -	if (!req)
+>> +	xa_lock(&cache->reqs);
+>> +	req = xas_load(&xas);
+>> +	if (!req || req->msg.opcode != CACHEFILES_OP_READ ||
+>> +	    req->object != object) {
+>> +		xa_unlock(&cache->reqs);
+>>   		return -EINVAL;
+>> +	}
+>> +	xas_store(&xas, NULL);
+>> +	xa_unlock(&cache->reqs);
+>>   
+>>   	trace_cachefiles_ondemand_cread(object, id);
+>>   	complete(&req->done);
+>> @@ -126,6 +131,7 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
+>>   	unsigned long id;
+>>   	long size;
+>>   	int ret;
+>> +	XA_STATE(xas, &cache->reqs, 0);
+>>   
+>>   	if (!test_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags))
+>>   		return -EOPNOTSUPP;
+>> @@ -149,9 +155,16 @@ int cachefiles_ondemand_copen(struct cachefiles_cache *cache, char *args)
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> -	req = xa_erase(&cache->reqs, id);
+>> -	if (!req)
+>> +	xa_lock(&cache->reqs);
+>> +	xas.xa_index = id;
+>> +	req = xas_load(&xas);
+>> +	if (!req || req->msg.opcode != CACHEFILES_OP_OPEN ||
+>> +	    !req->object->ondemand->ondemand_id) {
+> For a valid opened object, I think ondemand_id shall > 0.  When the
+> copen is for the object which is in the reopening state, ondemand_id can
+> be CACHEFILES_ONDEMAND_ID_CLOSED (actually -1)?
+If ondemand_id is -1, there are two scenarios:
+  * This could be a restore/reopen request that has not yet get_fd;
+  * The request is being processed by the daemon but its anonymous
+     fd has been closed.
 
-Test with random data shows performance improvement as:
+In the first case, there is no argument for not allowing copen.
+In the latter case, however, the closing of an anonymous fd may
+not be malicious, so if a copen delete request fails, the OPEN
+request will not be processed until RESTORE lets it be processed
+by the daemon again. However, RESTORE is not a frequent operation,
+so if only one anonymous fd is accidentally closed, this may result
+in a hung.
 
-fs_size  Before   After
-1G 	 23s 	  7s
-2G 	 81s      15s
-4G	 272s     31s
-8G 	 1252s	  61s
+So in later patches, we ensure that fd is valid (i.e. ondemand_id > 0)
+when setting the object to OPEN state and do not prevent it
+from removing the request here.
 
-Signed-off-by: Sandeep Dhavale <dhavale@google.com>
----
- lib/blobchunk.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+If ondemand_id is 0, then it can be confirmed that the req has not
+been initialised, so the copen must be malicious at this point, so it
+is not allowed to complete the request. This is an instantaneous
+state, and the request can be processed normally after the daemon
+has read it properly. So there won't be any side effects here.
 
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index 645bcc1..8082aa4 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -548,11 +548,17 @@ void erofs_blob_exit(void)
- 	if (blobfile)
- 		fclose(blobfile);
- 
--	while ((e = hashmap_iter_first(&blob_hashmap, &iter))) {
-+	/* Disable hashmap shrink, effectively disabling rehash.
-+	 * This way we can iterate over entire hashmap efficiently
-+	 * and safely by using hashmap_iter_next() */
-+	hashmap_disable_shrink(&blob_hashmap);
-+	e = hashmap_iter_first(&blob_hashmap, &iter);
-+	while (e) {
- 		bc = container_of((struct hashmap_entry *)e,
- 				  struct erofs_blobchunk, ent);
- 		DBG_BUGON(hashmap_remove(&blob_hashmap, e) != e);
- 		free(bc);
-+		e = hashmap_iter_next(&iter);
- 	}
- 	DBG_BUGON(hashmap_free(&blob_hashmap));
- 
 -- 
-2.45.1.288.g0e0cd299f1-goog
+With Best Regards,
+Baokun Li
 
