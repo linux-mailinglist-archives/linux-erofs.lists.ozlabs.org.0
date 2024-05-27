@@ -1,72 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTP id 23DEC8CF43A
-	for <lists+linux-erofs@lfdr.de>; Sun, 26 May 2024 14:26:41 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTP id F32A08D021B
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 May 2024 15:46:44 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=XMCQDk1K;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tLI0cYgv;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VnHrd673tz3g02
-	for <lists+linux-erofs@lfdr.de>; Sun, 26 May 2024 22:19:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VnxX21MnJz990b
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 May 2024 23:37:06 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=XMCQDk1K;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tLI0cYgv;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1136; helo=mail-yw1-x1136.google.com; envelope-from=jnhuang95@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=jefflexu@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VnHrV6NqKz3fpn
-	for <linux-erofs@lists.ozlabs.org>; Sun, 26 May 2024 22:19:06 +1000 (AEST)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-62a0894f1d3so14701517b3.1
-        for <linux-erofs@lists.ozlabs.org>; Sun, 26 May 2024 05:19:06 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VnxRm4hvhz88p6
+	for <linux-erofs@lists.ozlabs.org>; Mon, 27 May 2024 23:33:22 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716725938; x=1717330738; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+7/yqqV4fvCMwT/nb7pNdFIuAIxY/5zMbVmiGBnrhhU=;
-        b=XMCQDk1KSINSaF0kY/ry1CWjXmC4sdKvEGxlitOdlVFe0K7Au1yQ3I5r7iIg+N2+3P
-         l6jivgW5X3DwOZTy8YNn8LK0/lD8zsYzEUCvodp0ZQlhvY0nr5kDEMvkJ2Ho2t2x034r
-         coA7aLDt/b9VAy04yfF8gfb0QprExVNQ7Nv8wDxKRbDu7QHW6MbO1TrMBpJjRnq6HmSC
-         nqtf5JydOl4tXqIpXzIvBLZq2uOfS6vhcpF9Oa5i8DT1i5Z+48P/oOK/s/h9f7A1orV9
-         ebWQZbw+kh0BRxFQSZUyIpzp2Exj0HhM/+977nKR3yuezxq8OebSlvchhYuhgnB0GNel
-         cQrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716725938; x=1717330738;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+7/yqqV4fvCMwT/nb7pNdFIuAIxY/5zMbVmiGBnrhhU=;
-        b=TOax8XdjeI7ApVvKz6HiOzFKnTRKsJQ6u1QrkC1w5uvFED2IzXOt+WeI37Y9Y0IX/x
-         0gWbOw9GDn7LGYRCYQVND4Dwq2f0YpqGIDxGQLDZY6Y48gsPqpyJxq8S7x+YNi2qyzXs
-         DoWc1A4OtqV0CccwiB2IpR5kb3+zdsHMqVrb0TWmYsrEd5omhqrSV7jjGeEH6ynF3+Fi
-         Z7rnAwosBvX271zmzrQYzl+Z8sM+7JorUdUjCuxLRF6E/x1Kbx7PfnfICjdj8d3ay2jY
-         1uFOGKQKXPz18KE3AYqFAwTnr7X1Lhjbu/COmbq1kRtTXmom+TFLqTPPIgiSuFoF9bPU
-         41cg==
-X-Forwarded-Encrypted: i=1; AJvYcCXIdAgJwW/Pr6aZLMPc4eJV46aZrl4WMuzfj2zYX/b2jPfoY9rKhJhHO3oMvyzbGYDvTxUIMmzli3xHuZEnykI7FB+qvyMgpVVp/eGO
-X-Gm-Message-State: AOJu0YwzNl/gkODDzvZqnafcPiSgzXdzz5seQirHmZ0wEvEwEf+StbCz
-	UCYCSmoG3lhrdODOHYzDVSlFLQ6CO5FkIDu1cr3sXPzKvLuGosFn+mKw6wCb/AgABYl8+TzvbxD
-	XZ3zs/ltVwuFwNf+OQ59B1up1QeRsgvR4TZ4=
-X-Google-Smtp-Source: AGHT+IHOuAAv6EiQgMzalyTyA/WlNVzy889P156PVLrK+erFHJRqnQ6Z2m1nlwGAobUCant/lbfqYiE/ZIqDjCJ8i4I=
-X-Received: by 2002:a05:690c:6e07:b0:622:f7df:aa0a with SMTP id
- 00721157ae682-6283496bccemr68852227b3.22.1716725937912; Sun, 26 May 2024
- 05:18:57 -0700 (PDT)
+	d=linux.alibaba.com; s=default;
+	t=1716816797; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=QidiVXUMnt6iKGOAcp6fa76mjoIKCzmR0QWL2hdQF5E=;
+	b=tLI0cYgvk1qUW0BwqcLi3UJMlV5UJWz1xddTxAjOd+J4TshD5yU/uHLbSRKcuaLGAEGmcJ/6a9/bcNwvcObtdl00YJIeXftr/JfyscS1WOGkBI7QlF1izsIiIeTNwl8jJ4B8v5TZdUo/SY1TLfrwubIhZVA5OBf8pb0LxIOtyM4=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W7LT3at_1716816793;
+Received: from 192.168.31.58(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W7LT3at_1716816793)
+          by smtp.aliyun-inc.com;
+          Mon, 27 May 2024 21:33:15 +0800
+Message-ID: <0fbf98a5-bcb9-4276-bf41-62cd0401afc6@linux.alibaba.com>
+Date: Mon, 27 May 2024 21:33:11 +0800
 MIME-Version: 1.0
-References: <20220226070551.9833-1-jnhuang95@gmail.com> <20220226070551.9833-3-jnhuang95@gmail.com>
- <CANwerB2SBe1+0sW1OXHEfSMA1z-vyAvLfAqVOKdsM-ap=KYbCA@mail.gmail.com>
- <a9f890d4-555b-488f-85f8-8b22fdfd257b@linux.alibaba.com> <CANwerB1G8n57AfQ3CaH82CBPzQ8nvV=-Y5xRK6sVdnUZdj+SKw@mail.gmail.com>
-In-Reply-To: <CANwerB1G8n57AfQ3CaH82CBPzQ8nvV=-Y5xRK6sVdnUZdj+SKw@mail.gmail.com>
-From: Jianan Huang <jnhuang95@gmail.com>
-Date: Sun, 26 May 2024 20:18:50 +0800
-Message-ID: <CAJfKizq3sof9dh=KSdoJBvgydSK7AUy3_ns6ms8pchyOrLE+0A@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] lib/lz4: update LZ4 decompressor module
-To: Jonathan Liu <net147@gmail.com>
-Content-Type: multipart/alternative; boundary="000000000000b4c59806195a67fd"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 06/12] cachefiles: add consistency check for
+ copen/cread
+To: Baokun Li <libaokun@huaweicloud.com>, netfs@lists.linux.dev,
+ dhowells@redhat.com, jlayton@kernel.org
+References: <20240522114308.2402121-1-libaokun@huaweicloud.com>
+ <20240522114308.2402121-7-libaokun@huaweicloud.com>
+ <11f10862-9149-49c7-bac4-f0c1e0601b23@linux.alibaba.com>
+ <c2e331a1-8293-0055-3314-738530db3822@huaweicloud.com>
+Content-Language: en-US
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+In-Reply-To: <c2e331a1-8293-0055-3314-738530db3822@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,615 +60,129 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, u-boot@lists.denx.de, linux-erofs@lists.ozlabs.org, trini@konsulko.com
+Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---000000000000b4c59806195a67fd
-Content-Type: text/plain; charset="UTF-8"
-
-Hi Jonathan,
-
-Could you please try the following patch ? It replaces all memcpy() calls
-in lz4 with __builtin_memcpy().
-
-diff --git a/lib/lz4.c b/lib/lz4.c
-index d365dc727c..2afe31c1c3 100644
---- a/lib/lz4.c
-+++ b/lib/lz4.c
-@@ -34,6 +34,8 @@
- #include <asm/unaligned.h>
- #include <u-boot/lz4.h>
-
-+#define LZ4_memcpy(dst, src, size) __builtin_memcpy(dst, src, size)
-+
- #define FORCE_INLINE inline __attribute__((always_inline))
-
- static FORCE_INLINE u16 LZ4_readLE16(const void *src)
-@@ -215,7 +217,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
-    && likely((endOnInput ? ip < shortiend : 1) &
-      (op <= shortoend))) {
-  /* Copy the literals */
-- memcpy(op, ip, endOnInput ? 16 : 8);
-+ LZ4_memcpy(op, ip, endOnInput ? 16 : 8);
-  op += length; ip += length;
-
-  /*
-@@ -234,9 +236,9 @@ static FORCE_INLINE int LZ4_decompress_generic(
-     (offset >= 8) &&
-     (dict == withPrefix64k || match >= lowPrefix)) {
-  /* Copy the match. */
-- memcpy(op + 0, match + 0, 8);
-- memcpy(op + 8, match + 8, 8);
-- memcpy(op + 16, match + 16, 2);
-+ LZ4_memcpy(op + 0, match + 0, 8);
-+ LZ4_memcpy(op + 8, match + 8, 8);
-+ LZ4_memcpy(op + 16, match + 16, 2);
-  op += length + MINMATCH;
-  /* Both stages worked, load the next token. */
-  continue;
-@@ -416,7 +418,7 @@ _copy_match:
-  size_t const copySize = (size_t)(lowPrefix - match);
-  size_t const restSize = length - copySize;
-
-- memcpy(op, dictEnd - copySize, copySize);
-+ LZ4_memcpy(op, dictEnd - copySize, copySize);
-  op += copySize;
-  if (restSize > (size_t)(op - lowPrefix)) {
-  /* overlap copy */
-@@ -426,7 +428,7 @@ _copy_match:
-  while (op < endOfMatch)
-  *op++ = *copyFrom++;
-  } else {
-- memcpy(op, lowPrefix, restSize);
-+ LZ4_memcpy(op, lowPrefix, restSize);
-  op += restSize;
-  }
-  }
-@@ -452,7 +454,7 @@ _copy_match:
-  while (op < copyEnd)
-  *op++ = *match++;
-  } else {
-- memcpy(op, match, mlen);
-+ LZ4_memcpy(op, match, mlen);
-  }
-  op = copyEnd;
-  if (op == oend)
-@@ -466,7 +468,7 @@ _copy_match:
-  op[2] = match[2];
-  op[3] = match[3];
-  match += inc32table[offset];
-- memcpy(op + 4, match, 4);
-+ LZ4_memcpy(op + 4, match, 4);
-  match -= dec64table[offset];
-  } else {
-  LZ4_copy8(op, match);
-diff --git a/lib/lz4_wrapper.c b/lib/lz4_wrapper.c
-index 4d48e7b0e8..e09c8d7057 100644
---- a/lib/lz4_wrapper.c
-+++ b/lib/lz4_wrapper.c
-@@ -80,7 +80,7 @@ int ulz4fn(const void *src, size_t srcn, void *dst,
-size_t *dstn)
-
-  if (block_header & LZ4F_BLOCKUNCOMPRESSED_FLAG) {
-  size_t size = min((ptrdiff_t)block_size, (ptrdiff_t)(end - out));
-- memcpy(out, in, size);
-+ LZ4_memcpy(out, in, size);
-  out += size;
-  if (size < block_size) {
-  ret = -ENOBUFS; /* output overrun */
 
 
+On 5/24/24 10:28 AM, Baokun Li wrote:
+> Hi Jingbo,
+> 
+> Thanks for the review!
+> 
+> On 2024/5/23 22:28, Jingbo Xu wrote:
+>>
+>> On 5/22/24 7:43 PM, libaokun@huaweicloud.com wrote:
+>>> From: Baokun Li <libaokun1@huawei.com>
+>>>
+>>> This prevents malicious processes from completing random copen/cread
+>>> requests and crashing the system. Added checks are listed below:
+>>>
+>>>    * Generic, copen can only complete open requests, and cread can only
+>>>      complete read requests.
+>>>    * For copen, ondemand_id must not be 0, because this indicates
+>>> that the
+>>>      request has not been read by the daemon.
+>>>    * For cread, the object corresponding to fd and req should be the
+>>> same.
+>>>
+>>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+>>> Acked-by: Jeff Layton <jlayton@kernel.org>
+>>> ---
+>>>   fs/cachefiles/ondemand.c | 27 ++++++++++++++++++++-------
+>>>   1 file changed, 20 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+>>> index bb94ef6a6f61..898fab68332b 100644
+>>> --- a/fs/cachefiles/ondemand.c
+>>> +++ b/fs/cachefiles/ondemand.c
+>>> @@ -82,12 +82,12 @@ static loff_t
+>>> cachefiles_ondemand_fd_llseek(struct file *filp, loff_t pos,
+>>>   }
+>>>     static long cachefiles_ondemand_fd_ioctl(struct file *filp,
+>>> unsigned int ioctl,
+>>> -                     unsigned long arg)
+>>> +                     unsigned long id)
+>>>   {
+>>>       struct cachefiles_object *object = filp->private_data;
+>>>       struct cachefiles_cache *cache = object->volume->cache;
+>>>       struct cachefiles_req *req;
+>>> -    unsigned long id;
+>>> +    XA_STATE(xas, &cache->reqs, id);
+>>>         if (ioctl != CACHEFILES_IOC_READ_COMPLETE)
+>>>           return -EINVAL;
+>>> @@ -95,10 +95,15 @@ static long cachefiles_ondemand_fd_ioctl(struct
+>>> file *filp, unsigned int ioctl,
+>>>       if (!test_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags))
+>>>           return -EOPNOTSUPP;
+>>>   -    id = arg;
+>>> -    req = xa_erase(&cache->reqs, id);
+>>> -    if (!req)
+>>> +    xa_lock(&cache->reqs);
+>>> +    req = xas_load(&xas);
+>>> +    if (!req || req->msg.opcode != CACHEFILES_OP_READ ||
+>>> +        req->object != object) {
+>>> +        xa_unlock(&cache->reqs);
+>>>           return -EINVAL;
+>>> +    }
+>>> +    xas_store(&xas, NULL);
+>>> +    xa_unlock(&cache->reqs);
+>>>         trace_cachefiles_ondemand_cread(object, id);
+>>>       complete(&req->done);
+>>> @@ -126,6 +131,7 @@ int cachefiles_ondemand_copen(struct
+>>> cachefiles_cache *cache, char *args)
+>>>       unsigned long id;
+>>>       long size;
+>>>       int ret;
+>>> +    XA_STATE(xas, &cache->reqs, 0);
+>>>         if (!test_bit(CACHEFILES_ONDEMAND_MODE, &cache->flags))
+>>>           return -EOPNOTSUPP;
+>>> @@ -149,9 +155,16 @@ int cachefiles_ondemand_copen(struct
+>>> cachefiles_cache *cache, char *args)
+>>>       if (ret)
+>>>           return ret;
+>>>   -    req = xa_erase(&cache->reqs, id);
+>>> -    if (!req)
+>>> +    xa_lock(&cache->reqs);
+>>> +    xas.xa_index = id;
+>>> +    req = xas_load(&xas);
+>>> +    if (!req || req->msg.opcode != CACHEFILES_OP_OPEN ||
+>>> +        !req->object->ondemand->ondemand_id) {
+>> For a valid opened object, I think ondemand_id shall > 0.  When the
+>> copen is for the object which is in the reopening state, ondemand_id can
+>> be CACHEFILES_ONDEMAND_ID_CLOSED (actually -1)?
+> If ondemand_id is -1, there are two scenarios:
+>  * This could be a restore/reopen request that has not yet get_fd;
+>  * The request is being processed by the daemon but its anonymous
+>     fd has been closed.
+> 
+> In the first case, there is no argument for not allowing copen.
+> In the latter case, however, the closing of an anonymous fd may
+> not be malicious, so if a copen delete request fails, the OPEN
+> request will not be processed until RESTORE lets it be processed
+> by the daemon again. However, RESTORE is not a frequent operation,
+> so if only one anonymous fd is accidentally closed, this may result
+> in a hung.
+> 
+> So in later patches, we ensure that fd is valid (i.e. ondemand_id > 0)
+> when setting the object to OPEN state and do not prevent it
+> from removing the request here.
+> 
+> If ondemand_id is 0, then it can be confirmed that the req has not
+> been initialised, so the copen must be malicious at this point, so it
+> is not allowed to complete the request. This is an instantaneous
+> state, and the request can be processed normally after the daemon
+> has read it properly. So there won't be any side effects here.
+> 
+
+case 1 is literally illegal, while case 2 is permissible but has no way
+to be distinguished from case 1.  As the patch itself is only
+best-effort, so it LGTM.
+
+Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+
+
+-- 
 Thanks,
-
-Jianan
-On 2024/5/26 16:06, Jonathan Liu wrote:
-
-Hi Gao,
-
-On Sat, 25 May 2024 at 02:52, Gao Xiang <hsiangkao@linux.alibaba.com>
-<hsiangkao@linux.alibaba.com> wrote:
-
-Hi,
-
-On 2024/5/24 22:26, Jonathan Liu wrote:
-
-Hi Jianan,
-
-On Sat, 26 Feb 2022 at 18:05, Huang Jianan <jnhuang95@gmail.com>
-<jnhuang95@gmail.com> wrote:
-
-Update the LZ4 compression module based on LZ4 v1.8.3 in order to
-use the newest LZ4_decompress_safe_partial() which can now decode
-exactly the nb of bytes requested.
-
-Signed-off-by: Huang Jianan <jnhuang95@gmail.com> <jnhuang95@gmail.com>
-
-I noticed after this commit LZ4 decompression is slower.
-ulz4fn function call takes 1.209670 seconds with this commit.
-After reverting this commit, the ulz4fn function call takes 0.587032 seconds.
-
-I am decompressing a LZ4 compressed kernel (compressed with lz4 v1.9.4
-using -9 option for maximum compression) on RK3399.
-
-Any ideas why it is slower with this commit and how the performance
-regression can be fixed?
-
-Just the quick glance, I think the issue may be due to memcpy/memmove
-since it seems the main difference between these two codebases
-(I'm not sure which LZ4 version the old codebase was based on) and
-the new version mainly relies on memcpy/memmove instead of its own
-versions.
-
-
-Would you mind to check the assembly how memcpy/memset is generated
-on your platform?
-
-Here is the assembly (-mcpu=cortex-a72.cortex-a53 -march=armv8-a+crc+crypto):
-000000000028220c <memset>:
-#if !CONFIG_IS_ENABLED(TINY_MEMSET)
-        unsigned long cl = 0;
-        int i;
-
-        /* do it one word at a time (32 bits or 64 bits) while possible */
-        if ( ((ulong)s & (sizeof(*sl) - 1)) == 0) {
-  28220c:       f2400803        ands    x3, x0, #0x7
-  282210:       540002c1        b.ne    282268 <memset+0x5c>  // b.any
-                for (i = 0; i < sizeof(*sl); i++) {
-                        cl <<= 8;
-                        cl |= c & 0xff;
-  282214:       92401c26        and     x6, x1, #0xff
-        unsigned long cl = 0;
-  282218:       d2800004        mov     x4, #0x0                        // #0
-  28221c:       52800105        mov     w5, #0x8                        // #8
-                        cl |= c & 0xff;
-  282220:       aa0420c4        orr     x4, x6, x4, lsl #8
-                for (i = 0; i < sizeof(*sl); i++) {
-  282224:       710004a5        subs    w5, w5, #0x1
-  282228:       54ffffc1        b.ne    282220 <memset+0x14>  // b.any
-                }
-                while (count >= sizeof(*sl)) {
-  28222c:       cb030045        sub     x5, x2, x3
-  282230:       f1001cbf        cmp     x5, #0x7
-  282234:       54000148        b.hi    28225c <memset+0x50>  // b.pmore
-  282238:       d343fc43        lsr     x3, x2, #3
-  28223c:       928000e4        mov     x4, #0xfffffffffffffff8         // #-8
-  282240:       9b047c63        mul     x3, x3, x4
-  282244:       8b030042        add     x2, x2, x3
-  282248:       cb030003        sub     x3, x0, x3
-        unsigned long *sl = (unsigned long *) s;
-  28224c:       d2800004        mov     x4, #0x0                        // #0
-                        count -= sizeof(*sl);
-                }
-        }
-#endif  /* fill 8 bits at a time */
-        s8 = (char *)sl;
-        while (count--)
-  282250:       eb04005f        cmp     x2, x4
-  282254:       540000e1        b.ne    282270 <memset+0x64>  // b.any
-                *s8++ = c;
-
-        return s;
-}
-  282258:       d65f03c0        ret
-                        *sl++ = cl;
-  28225c:       f8236804        str     x4, [x0, x3]
-                        count -= sizeof(*sl);
-  282260:       91002063        add     x3, x3, #0x8
-  282264:       17fffff2        b       28222c <memset+0x20>
-        unsigned long *sl = (unsigned long *) s;
-  282268:       aa0003e3        mov     x3, x0
-  28226c:       17fffff8        b       28224c <memset+0x40>
-                *s8++ = c;
-  282270:       38246861        strb    w1, [x3, x4]
-  282274:       91000484        add     x4, x4, #0x1
-  282278:       17fffff6        b       282250 <memset+0x44>
-
-000000000028227c <memcpy>:
-__used void * memcpy(void *dest, const void *src, size_t count)
-{
-        unsigned long *dl = (unsigned long *)dest, *sl = (unsigned long *)src;
-        char *d8, *s8;
-
-        if (src == dest)
-  28227c:       eb01001f        cmp     x0, x1
-  282280:       54000100        b.eq    2822a0 <memcpy+0x24>  // b.none
-                return dest;
-
-        /* while all data is aligned (common case), copy a word at a time */
-        if ( (((ulong)dest | (ulong)src) & (sizeof(*dl) - 1)) == 0) {
-  282284:       aa010003        orr     x3, x0, x1
-  282288:       f2400863        ands    x3, x3, #0x7
-  28228c:       54000120        b.eq    2822b0 <memcpy+0x34>  // b.none
-  282290:       aa0003e4        mov     x4, x0
-  282294:       d2800003        mov     x3, #0x0                        // #0
-                }
-        }
-        /* copy the reset one byte at a time */
-        d8 = (char *)dl;
-        s8 = (char *)sl;
-        while (count--)
-  282298:       eb03005f        cmp     x2, x3
-  28229c:       540001e1        b.ne    2822d8 <memcpy+0x5c>  // b.any
-                *d8++ = *s8++;
-
-        return dest;
-}
-  2822a0:       d65f03c0        ret
-                        *dl++ = *sl++;
-  2822a4:       f8636824        ldr     x4, [x1, x3]
-  2822a8:       f8236804        str     x4, [x0, x3]
-                        count -= sizeof(*dl);
-  2822ac:       91002063        add     x3, x3, #0x8
-                while (count >= sizeof(*dl)) {
-  2822b0:       cb030044        sub     x4, x2, x3
-  2822b4:       f1001c9f        cmp     x4, #0x7
-  2822b8:       54ffff68        b.hi    2822a4 <memcpy+0x28>  // b.pmore
-  2822bc:       d343fc43        lsr     x3, x2, #3
-  2822c0:       928000e4        mov     x4, #0xfffffffffffffff8         // #-8
-  2822c4:       9b047c63        mul     x3, x3, x4
-  2822c8:       8b030042        add     x2, x2, x3
-  2822cc:       cb030004        sub     x4, x0, x3
-  2822d0:       cb030021        sub     x1, x1, x3
-  2822d4:       17fffff0        b       282294 <memcpy+0x18>
-                *d8++ = *s8++;
-  2822d8:       38636825        ldrb    w5, [x1, x3]
-  2822dc:       38236885        strb    w5, [x4, x3]
-  2822e0:       91000463        add     x3, x3, #0x1
-  2822e4:       17ffffed        b       282298 <memcpy+0x1c>
-
-
-I tried enabling CONFIG_USE_ARCH_MEMCPY=y, CONFIG_USE_ARCH_MEMSET=y in
-the .config (but leaving it disabled in SPL/TPL) and it results in
-Synchronous Abort:
-U-Boot SPL 2024.04 (Apr 02 2024 - 10:58:58 +0000)
-Trying to boot from MMC1
-NOTICE:  BL31: v1.3(release):8f40012ab
-NOTICE:  BL31: Built : 14:20:53, Feb 16 2023
-NOTICE:  BL31: Rockchip release version: v1.1
-INFO:    GICv3 with legacy support detected. ARM GICV3 driver initialized in EL3
-INFO:    Using opteed sec cpu_context!
-INFO:    boot cpu mask: 0
-INFO:    plat_rockchip_pmu_init(1203): pd status 3e
-INFO:    BL31: Initializing runtime services
-WARNING: No OPTEE provided by BL2 boot loader, Booting device without
-OPTEE initialization. SMC`s destined for OPTEE will return SMC_UNK
-ERROR:   Error initializing runtime service opteed_fast
-INFO:    BL31: Preparing for EL3 exit to normal world
-INFO:    Entry point address = 0x200000
-INFO:    SPSR = 0x3c9
-"Synchronous Abort" handler, esr 0x96000021, far 0x2957e1
-elr: 000000000020233c lr : 000000000026a388
-x0 : 00000000002fbf38 x1 : 00000000002957e1
-x2 : 0000000000000008 x3 : 0000000000000065
-x4 : 00000000002957e9 x5 : 00000000002fbf40
-x6 : 0000000000000065 x7 : 0000000000000003
-x8 : 00000000002c7960 x9 : 000000000000ffd0
-x10: 00000000002fbc5c x11: 00000000000132e8
-x12: 00000000002fbce8 x13: 00000000002c7960
-x14: 00000000002c7960 x15: 0000000000000000
-x16: 0000000000000000 x17: 0000000000000000
-x18: 00000000002fbe30 x19: 0000000000000007
-x20: 00000000002957d8 x21: 0000000000000009
-x22: 000000000029d189 x23: 0000000000000020
-x24: 00000000002fbf38 x25: 00000000002957e7
-x26: 00000000002957b2 x27: 0000000000007fff
-x28: 0000000000000000 x29: 00000000002fbcc0
-
-Code: a9001c06 a93f34ac d65f03c0 361800c2 (f9400026)
-Resetting CPU ...
-
-resetting ...
-
-
-Thanks,
-Gao Xiang
-
-Regards,
-Jonathan
-
---000000000000b4c59806195a67fd
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><u></u>
-
- =20
-   =20
- =20
-  <div>
-    <p>Hi Jonathan,</p><p>Could you please try the following patch ? It rep=
-laces all memcpy() calls in lz4 with __builtin_memcpy().<br></p><p>diff --g=
-it a/lib/lz4.c b/lib/lz4.c<br>index d365dc727c..2afe31c1c3 100644<br>--- a/=
-lib/lz4.c<br>+++ b/lib/lz4.c<br>@@ -34,6 +34,8 @@<br>=C2=A0#include &lt;asm=
-/unaligned.h&gt;<br>=C2=A0#include &lt;u-boot/lz4.h&gt;<br>=C2=A0<br>+#defi=
-ne LZ4_memcpy(dst, src, size) __builtin_memcpy(dst, src, size)<br>+<br>=C2=
-=A0#define FORCE_INLINE inline __attribute__((always_inline))<br>=C2=A0<br>=
-=C2=A0static FORCE_INLINE u16 LZ4_readLE16(const void *src)<br>@@ -215,7 +2=
-17,7 @@ static FORCE_INLINE int LZ4_decompress_generic(<br>=C2=A0		 =C2=A0 =
-&amp;&amp; likely((endOnInput ? ip &lt; shortiend : 1) &amp;<br>=C2=A0			 =
-=C2=A0 =C2=A0 (op &lt;=3D shortoend))) {<br>=C2=A0			/* Copy the literals *=
-/<br>-			memcpy(op, ip, endOnInput ? 16 : 8);<br>+			LZ4_memcpy(op, ip, end=
-OnInput ? 16 : 8);<br>=C2=A0			op +=3D length; ip +=3D length;<br>=C2=A0<br=
->=C2=A0			/*<br>@@ -234,9 +236,9 @@ static FORCE_INLINE int LZ4_decompress_=
-generic(<br>=C2=A0			 =C2=A0 =C2=A0(offset &gt;=3D 8) &amp;&amp;<br>=C2=A0	=
-		 =C2=A0 =C2=A0(dict =3D=3D withPrefix64k || match &gt;=3D lowPrefix)) {<b=
-r>=C2=A0				/* Copy the match. */<br>-				memcpy(op + 0, match + 0, 8);<br>=
--				memcpy(op + 8, match + 8, 8);<br>-				memcpy(op + 16, match + 16, 2);<=
-br>+				LZ4_memcpy(op + 0, match + 0, 8);<br>+				LZ4_memcpy(op + 8, match =
-+ 8, 8);<br>+				LZ4_memcpy(op + 16, match + 16, 2);<br>=C2=A0				op +=3D l=
-ength + MINMATCH;<br>=C2=A0				/* Both stages worked, load the next token. =
-*/<br>=C2=A0				continue;<br>@@ -416,7 +418,7 @@ _copy_match:<br>=C2=A0				=
-size_t const copySize =3D (size_t)(lowPrefix - match);<br>=C2=A0				size_t =
-const restSize =3D length - copySize;<br>=C2=A0<br>-				memcpy(op, dictEnd =
-- copySize, copySize);<br>+				LZ4_memcpy(op, dictEnd - copySize, copySize)=
-;<br>=C2=A0				op +=3D copySize;<br>=C2=A0				if (restSize &gt; (size_t)(op=
- - lowPrefix)) {<br>=C2=A0					/* overlap copy */<br>@@ -426,7 +428,7 @@ _c=
-opy_match:<br>=C2=A0					while (op &lt; endOfMatch)<br>=C2=A0						*op++ =
-=3D *copyFrom++;<br>=C2=A0				} else {<br>-					memcpy(op, lowPrefix, restS=
-ize);<br>+					LZ4_memcpy(op, lowPrefix, restSize);<br>=C2=A0					op +=3D r=
-estSize;<br>=C2=A0				}<br>=C2=A0			}<br>@@ -452,7 +454,7 @@ _copy_match:<b=
-r>=C2=A0				while (op &lt; copyEnd)<br>=C2=A0					*op++ =3D *match++;<br>=
-=C2=A0			} else {<br>-				memcpy(op, match, mlen);<br>+				LZ4_memcpy(op, m=
-atch, mlen);<br>=C2=A0			}<br>=C2=A0			op =3D copyEnd;<br>=C2=A0			if (op =
-=3D=3D oend)<br>@@ -466,7 +468,7 @@ _copy_match:<br>=C2=A0			op[2] =3D matc=
-h[2];<br>=C2=A0			op[3] =3D match[3];<br>=C2=A0			match +=3D inc32table[off=
-set];<br>-			memcpy(op + 4, match, 4);<br>+			LZ4_memcpy(op + 4, match, 4);=
-<br>=C2=A0			match -=3D dec64table[offset];<br>=C2=A0		} else {<br>=C2=A0		=
-	LZ4_copy8(op, match);<br>diff --git a/lib/lz4_wrapper.c b/lib/lz4_wrapper.=
-c<br>index 4d48e7b0e8..e09c8d7057 100644<br>--- a/lib/lz4_wrapper.c<br>+++ =
-b/lib/lz4_wrapper.c<br>@@ -80,7 +80,7 @@ int ulz4fn(const void *src, size_t=
- srcn, void *dst, size_t *dstn)<br>=C2=A0<br>=C2=A0		if (block_header &amp;=
- LZ4F_BLOCKUNCOMPRESSED_FLAG) {<br>=C2=A0			size_t size =3D min((ptrdiff_t)=
-block_size, (ptrdiff_t)(end - out));<br>-			memcpy(out, in, size);<br>+			L=
-Z4_memcpy(out, in, size);<br>=C2=A0			out +=3D size;<br>=C2=A0			if (size &=
-lt; block_size) {<br>=C2=A0				ret =3D -ENOBUFS;	/* output overrun */<br></=
-p><p><br></p><p>Thanks,</p><p>Jianan</p>
-    <div>On 2024/5/26 16:06, Jonathan Liu wrote:<br>
-    </div>
-    <blockquote type=3D"cite">
-      <pre>Hi Gao,
-
-On Sat, 25 May 2024 at 02:52, Gao Xiang <a href=3D"mailto:hsiangkao@linux.a=
-libaba.com" target=3D"_blank">&lt;hsiangkao@linux.alibaba.com&gt;</a> wrote=
-:
-</pre>
-      <blockquote type=3D"cite">
-        <pre>Hi,
-
-On 2024/5/24 22:26, Jonathan Liu wrote:
-</pre>
-        <blockquote type=3D"cite">
-          <pre>Hi Jianan,
-
-On Sat, 26 Feb 2022 at 18:05, Huang Jianan <a href=3D"mailto:jnhuang95@gmai=
-l.com" target=3D"_blank">&lt;jnhuang95@gmail.com&gt;</a> wrote:
-</pre>
-          <blockquote type=3D"cite">
-            <pre>Update the LZ4 compression module based on LZ4 v1.8.3 in o=
-rder to
-use the newest LZ4_decompress_safe_partial() which can now decode
-exactly the nb of bytes requested.
-
-Signed-off-by: Huang Jianan <a href=3D"mailto:jnhuang95@gmail.com" target=
-=3D"_blank">&lt;jnhuang95@gmail.com&gt;</a>
-</pre>
-          </blockquote>
-          <pre>I noticed after this commit LZ4 decompression is slower.
-ulz4fn function call takes 1.209670 seconds with this commit.
-After reverting this commit, the ulz4fn function call takes 0.587032 second=
-s.
-
-I am decompressing a LZ4 compressed kernel (compressed with lz4 v1.9.4
-using -9 option for maximum compression) on RK3399.
-
-Any ideas why it is slower with this commit and how the performance
-regression can be fixed?
-</pre>
-        </blockquote>
-        <pre>Just the quick glance, I think the issue may be due to memcpy/=
-memmove
-since it seems the main difference between these two codebases
-(I&#39;m not sure which LZ4 version the old codebase was based on) and
-the new version mainly relies on memcpy/memmove instead of its own
-versions.
-
-</pre>
-      </blockquote>
-      <pre></pre>
-      <blockquote type=3D"cite">
-        <pre>Would you mind to check the assembly how memcpy/memset is gene=
-rated
-on your platform?
-</pre>
-      </blockquote>
-      <pre>Here is the assembly (-mcpu=3Dcortex-a72.cortex-a53 -march=3Darm=
-v8-a+crc+crypto):
-000000000028220c &lt;memset&gt;:
-#if !CONFIG_IS_ENABLED(TINY_MEMSET)
-        unsigned long cl =3D 0;
-        int i;
-
-        /* do it one word at a time (32 bits or 64 bits) while possible */
-        if ( ((ulong)s &amp; (sizeof(*sl) - 1)) =3D=3D 0) {
-  28220c:       f2400803        ands    x3, x0, #0x7
-  282210:       540002c1        <a href=3D"http://b.ne" target=3D"_blank">b=
-.ne</a>    282268 &lt;memset+0x5c&gt;  // b.any
-                for (i =3D 0; i &lt; sizeof(*sl); i++) {
-                        cl &lt;&lt;=3D 8;
-                        cl |=3D c &amp; 0xff;
-  282214:       92401c26        and     x6, x1, #0xff
-        unsigned long cl =3D 0;
-  282218:       d2800004        mov     x4, #0x0                        // =
-#0
-  28221c:       52800105        mov     w5, #0x8                        // =
-#8
-                        cl |=3D c &amp; 0xff;
-  282220:       aa0420c4        orr     x4, x6, x4, lsl #8
-                for (i =3D 0; i &lt; sizeof(*sl); i++) {
-  282224:       710004a5        subs    w5, w5, #0x1
-  282228:       54ffffc1        <a href=3D"http://b.ne" target=3D"_blank">b=
-.ne</a>    282220 &lt;memset+0x14&gt;  // b.any
-                }
-                while (count &gt;=3D sizeof(*sl)) {
-  28222c:       cb030045        sub     x5, x2, x3
-  282230:       f1001cbf        cmp     x5, #0x7
-  282234:       54000148        b.hi    28225c &lt;memset+0x50&gt;  // b.pm=
-ore
-  282238:       d343fc43        lsr     x3, x2, #3
-  28223c:       928000e4        mov     x4, #0xfffffffffffffff8         // =
-#-8
-  282240:       9b047c63        mul     x3, x3, x4
-  282244:       8b030042        add     x2, x2, x3
-  282248:       cb030003        sub     x3, x0, x3
-        unsigned long *sl =3D (unsigned long *) s;
-  28224c:       d2800004        mov     x4, #0x0                        // =
-#0
-                        count -=3D sizeof(*sl);
-                }
-        }
-#endif  /* fill 8 bits at a time */
-        s8 =3D (char *)sl;
-        while (count--)
-  282250:       eb04005f        cmp     x2, x4
-  282254:       540000e1        <a href=3D"http://b.ne" target=3D"_blank">b=
-.ne</a>    282270 &lt;memset+0x64&gt;  // b.any
-                *s8++ =3D c;
-
-        return s;
-}
-  282258:       d65f03c0        ret
-                        *sl++ =3D cl;
-  28225c:       f8236804        str     x4, [x0, x3]
-                        count -=3D sizeof(*sl);
-  282260:       91002063        add     x3, x3, #0x8
-  282264:       17fffff2        b       28222c &lt;memset+0x20&gt;
-        unsigned long *sl =3D (unsigned long *) s;
-  282268:       aa0003e3        mov     x3, x0
-  28226c:       17fffff8        b       28224c &lt;memset+0x40&gt;
-                *s8++ =3D c;
-  282270:       38246861        strb    w1, [x3, x4]
-  282274:       91000484        add     x4, x4, #0x1
-  282278:       17fffff6        b       282250 &lt;memset+0x44&gt;
-
-000000000028227c &lt;memcpy&gt;:
-__used void * memcpy(void *dest, const void *src, size_t count)
-{
-        unsigned long *dl =3D (unsigned long *)dest, *sl =3D (unsigned long=
- *)src;
-        char *d8, *s8;
-
-        if (src =3D=3D dest)
-  28227c:       eb01001f        cmp     x0, x1
-  282280:       54000100        b.eq    2822a0 &lt;memcpy+0x24&gt;  // b.no=
-ne
-                return dest;
-
-        /* while all data is aligned (common case), copy a word at a time *=
-/
-        if ( (((ulong)dest | (ulong)src) &amp; (sizeof(*dl) - 1)) =3D=3D 0)=
- {
-  282284:       aa010003        orr     x3, x0, x1
-  282288:       f2400863        ands    x3, x3, #0x7
-  28228c:       54000120        b.eq    2822b0 &lt;memcpy+0x34&gt;  // b.no=
-ne
-  282290:       aa0003e4        mov     x4, x0
-  282294:       d2800003        mov     x3, #0x0                        // =
-#0
-                }
-        }
-        /* copy the reset one byte at a time */
-        d8 =3D (char *)dl;
-        s8 =3D (char *)sl;
-        while (count--)
-  282298:       eb03005f        cmp     x2, x3
-  28229c:       540001e1        <a href=3D"http://b.ne" target=3D"_blank">b=
-.ne</a>    2822d8 &lt;memcpy+0x5c&gt;  // b.any
-                *d8++ =3D *s8++;
-
-        return dest;
-}
-  2822a0:       d65f03c0        ret
-                        *dl++ =3D *sl++;
-  2822a4:       f8636824        ldr     x4, [x1, x3]
-  2822a8:       f8236804        str     x4, [x0, x3]
-                        count -=3D sizeof(*dl);
-  2822ac:       91002063        add     x3, x3, #0x8
-                while (count &gt;=3D sizeof(*dl)) {
-  2822b0:       cb030044        sub     x4, x2, x3
-  2822b4:       f1001c9f        cmp     x4, #0x7
-  2822b8:       54ffff68        b.hi    2822a4 &lt;memcpy+0x28&gt;  // b.pm=
-ore
-  2822bc:       d343fc43        lsr     x3, x2, #3
-  2822c0:       928000e4        mov     x4, #0xfffffffffffffff8         // =
-#-8
-  2822c4:       9b047c63        mul     x3, x3, x4
-  2822c8:       8b030042        add     x2, x2, x3
-  2822cc:       cb030004        sub     x4, x0, x3
-  2822d0:       cb030021        sub     x1, x1, x3
-  2822d4:       17fffff0        b       282294 &lt;memcpy+0x18&gt;
-                *d8++ =3D *s8++;
-  2822d8:       38636825        ldrb    w5, [x1, x3]
-  2822dc:       38236885        strb    w5, [x4, x3]
-  2822e0:       91000463        add     x3, x3, #0x1
-  2822e4:       17ffffed        b       282298 &lt;memcpy+0x1c&gt;
-
-
-I tried enabling CONFIG_USE_ARCH_MEMCPY=3Dy, CONFIG_USE_ARCH_MEMSET=3Dy in
-the .config (but leaving it disabled in SPL/TPL) and it results in
-Synchronous Abort:
-U-Boot SPL 2024.04 (Apr 02 2024 - 10:58:58 +0000)
-Trying to boot from MMC1
-NOTICE:  BL31: v1.3(release):8f40012ab
-NOTICE:  BL31: Built : 14:20:53, Feb 16 2023
-NOTICE:  BL31: Rockchip release version: v1.1
-INFO:    GICv3 with legacy support detected. ARM GICV3 driver initialized i=
-n EL3
-INFO:    Using opteed sec cpu_context!
-INFO:    boot cpu mask: 0
-INFO:    plat_rockchip_pmu_init(1203): pd status 3e
-INFO:    BL31: Initializing runtime services
-WARNING: No OPTEE provided by BL2 boot loader, Booting device without
-OPTEE initialization. SMC`s destined for OPTEE will return SMC_UNK
-ERROR:   Error initializing runtime service opteed_fast
-INFO:    BL31: Preparing for EL3 exit to normal world
-INFO:    Entry point address =3D 0x200000
-INFO:    SPSR =3D 0x3c9
-&quot;Synchronous Abort&quot; handler, esr 0x96000021, far 0x2957e1
-elr: 000000000020233c lr : 000000000026a388
-x0 : 00000000002fbf38 x1 : 00000000002957e1
-x2 : 0000000000000008 x3 : 0000000000000065
-x4 : 00000000002957e9 x5 : 00000000002fbf40
-x6 : 0000000000000065 x7 : 0000000000000003
-x8 : 00000000002c7960 x9 : 000000000000ffd0
-x10: 00000000002fbc5c x11: 00000000000132e8
-x12: 00000000002fbce8 x13: 00000000002c7960
-x14: 00000000002c7960 x15: 0000000000000000
-x16: 0000000000000000 x17: 0000000000000000
-x18: 00000000002fbe30 x19: 0000000000000007
-x20: 00000000002957d8 x21: 0000000000000009
-x22: 000000000029d189 x23: 0000000000000020
-x24: 00000000002fbf38 x25: 00000000002957e7
-x26: 00000000002957b2 x27: 0000000000007fff
-x28: 0000000000000000 x29: 00000000002fbcc0
-
-Code: a9001c06 a93f34ac d65f03c0 361800c2 (f9400026)
-Resetting CPU ...
-
-resetting ...
-
-</pre>
-      <blockquote type=3D"cite">
-        <pre>Thanks,
-Gao Xiang
-</pre>
-      </blockquote>
-      <pre>Regards,
-Jonathan
-</pre>
-    </blockquote>
-  </div>
-
-</div>
-
---000000000000b4c59806195a67fd--
+Jingbo
