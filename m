@@ -1,54 +1,59 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTP id D67EB8D1E1A
-	for <lists+linux-erofs@lfdr.de>; Tue, 28 May 2024 16:11:45 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTP id A40658D3541
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 May 2024 13:16:45 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WsWgYbDU;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jXGyI0ee;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VpZ4X2hDrz3vhc
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 May 2024 00:03:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Vq66c3W53z78LW
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 May 2024 21:07:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WsWgYbDU;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=jXGyI0ee;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VpZ4M2ZzYz3vfQ
-	for <linux-erofs@lists.ozlabs.org>; Wed, 29 May 2024 00:03:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1716905019; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=79tr0toqRxuZD9zZgwTwuWowyiSDx/hWTymnEjq5Tt8=;
-	b=WsWgYbDUiGRzS072LxENxe3K5TvVZ9aoIJ/TDs117Tu37BYdrZF3LOupDBDWBgKUjN0saRuAA1WQWJaEzkEXFJLB4LFuQokfRyt/xuFOp2kc/h6Jn0ZupO/doVOJ7Z7NC6NmihKPB9jZaYRpydQc2kIp0nuhaw9soiwa16aFA2c=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W7PuAtK_1716905014;
-Received: from 192.168.3.4(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7PuAtK_1716905014)
-          by smtp.aliyun-inc.com;
-          Tue, 28 May 2024 22:03:35 +0800
-Message-ID: <94442247-76c5-4fe4-9c86-32cc45e9bd68@linux.alibaba.com>
-Date: Tue, 28 May 2024 22:03:34 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vq66R2M86z78KN
+	for <linux-erofs@lists.ozlabs.org>; Wed, 29 May 2024 21:07:27 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 4908362821;
+	Wed, 29 May 2024 11:07:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A6A5C2BD10;
+	Wed, 29 May 2024 11:07:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716980844;
+	bh=Zz5dcUJAjpstTHPJIb+etUveMtW/6Scwi5EQeOUJ7ds=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=jXGyI0eek+m4h8vLzCcIeqL3BResayzbn/9eq4eQdmX8aGvdadTDSyYhHbcWZ7SMc
+	 oCHQG0OQdVbEsJSt3B2AbSXznOQSRzoJwEN5Cox/MdZ7LUZKIyLN+E5lH0+PfCsDRN
+	 TGZF/nVM1sP/Icm7ACn92c6W04cxE/awFZkGYgQQSmtOOVLCVu9Iv12oMrqxF1myES
+	 esvfCOgGZhdP02mrWdKyYm4BDL9W/A90oxT6Sb4FeOwgsoS00ldMD3kE2DTm4w+oFq
+	 Mox9gT62Xm9LJZdYY3YHlfGoF/FY4TJfAmVS6NUnNN+yAmO3a8yUWCXmg2lkxK737+
+	 ENQfbJjqd1Ecw==
+From: Christian Brauner <brauner@kernel.org>
+To: netfs@lists.linux.dev,
+	dhowells@redhat.com,
+	jlayton@kernel.org,
+	libaokun@huaweicloud.com
+Subject: Re: [PATCH v3 00/12] cachefiles: some bugfixes and cleanups for ondemand requests
+Date: Wed, 29 May 2024 13:07:07 +0200
+Message-ID: <20240529-lehrling-verordnen-e5040aa65017@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240522114308.2402121-1-libaokun@huaweicloud.com>
+References: <20240522114308.2402121-1-libaokun@huaweicloud.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/5] lib/lz4: update LZ4 decompressor module
-To: Jonathan Liu <net147@gmail.com>, Jianan Huang <jnhuang95@gmail.com>
-References: <20220226070551.9833-1-jnhuang95@gmail.com>
- <20220226070551.9833-3-jnhuang95@gmail.com>
- <CANwerB2SBe1+0sW1OXHEfSMA1z-vyAvLfAqVOKdsM-ap=KYbCA@mail.gmail.com>
- <a9f890d4-555b-488f-85f8-8b22fdfd257b@linux.alibaba.com>
- <CANwerB1G8n57AfQ3CaH82CBPzQ8nvV=-Y5xRK6sVdnUZdj+SKw@mail.gmail.com>
- <CAJfKizq3sof9dh=KSdoJBvgydSK7AUy3_ns6ms8pchyOrLE+0A@mail.gmail.com>
- <CANwerB0vB6BgChgjQ389tno4rxaxtGCQv8ssvtjLHSZbUPGVXA@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CANwerB0vB6BgChgjQ389tno4rxaxtGCQv8ssvtjLHSZbUPGVXA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2670; i=brauner@kernel.org; h=from:subject:message-id; bh=Zz5dcUJAjpstTHPJIb+etUveMtW/6Scwi5EQeOUJ7ds=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSF80RPn/nywh92lrKCzP0rxB1+/17elKrM5+26rmBZ2 JZzUuuNOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZy34zhr8yErrj9TWUn1tkq PQysO1zQo8TAtoQhRa5EiEvt1a/+cIa/0uzH707ymRFnFLm2c8ElhUNcmVJXtrkVOp/hF5hcbfK ECwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,425 +65,62 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: u-boot@lists.denx.de, linux-erofs@lists.ozlabs.org, trini@konsulko.com
+Cc: Christian Brauner <brauner@kernel.org>, yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, yukuai3@huawei.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Wed, 22 May 2024 19:42:56 +0800, libaokun@huaweicloud.com wrote:
+> From: Baokun Li <libaokun1@huawei.com>
+> 
+> Hi all!
+> 
+> This is the third version of this patch series. The new version has no
+> functional changes compared to the previous one, so I've kept the previous
+> Acked-by and Reviewed-by, so please let me know if you have any objections.
+> 
+> [...]
 
+So I've taken that as a fixes series which should probably make it upstream
+rather sooner than later. Correct?
 
-On 2024/5/28 21:28, Jonathan Liu wrote:
-> Hi Jianan,
-> 
-> Here are the LZ4 decompression times I got running "time unlz4 ..." on
-> Rock 4 SE with RK3399 CPU.
-> 
-> v2024.04: 1.329 seconds
-> v2024.04 with 26c7fdadcb7 ("lib/lz4: update LZ4 decompressor module")
-> reverted: 0.665 seconds
-> v2024.04 with your patch: 1.216 seconds
-> 
-> I managed to get better performance by optimizing it myself.
-> v2024.04 with my patch: 0.785 seconds
-> 
-> With my patch, it makes no difference if I use __builtin_memcpy or
-> memcpy in lz4.c and lz4_wrapper.c so I just left it using memcpy.
-> It is still slower than reverting the LZ4 update though.
+---
 
-I'm not sure what's the old version come from, but from the copyright
-itself it seems some earlier 2015 version.  Note that there is no
-absolute outperform between old version and new version, old version
-may be lack of some necessary boundary check or lead to some msan
-warning or something, like a new commit of year 2016:
-https://github.com/lz4/lz4/commit/f094f531441140f10fd461ba769f49d10f5cd581
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-		/* costs ~1%; silence an msan warning when offset == 0 */
-		/*
-		 * note : when partialDecoding, there is no guarantee that
-		 * at least 4 bytes remain available in output buffer
-		 */
-		if (!partialDecoding) {
-			assert(oend > op);
-			assert(oend - op >= 4);
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-			LZ4_write32(op, (U32)offset);
-		}
-For the example above, you could completely remove the line above if
-you don't care about such warning, as it claims ~1% performance loss.
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-Also since no u-boot user uses in-place decompression and if
-you memmove() doesn't behave well, you could update the
-following line
-			/*
-			 * supports overlapping memory regions; only matters
-			 * for in-place decompression scenarios
-			 */
-			memmove(op, ip, length);
-into memcpy() instead.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
 
-The new lz4 codebase relies on memcpy() / memmove() code optimization
-more than old version, if memcpy() assembly doesn't generate well on
-your platform, it might have some issue.
-
-Thanks,
-Gao Xiang
-
-> 
-> My patch:
-> --- a/lib/lz4.c
-> +++ b/lib/lz4.c
-> @@ -41,6 +41,16 @@ static FORCE_INLINE u16 LZ4_readLE16(const void *src)
->          return get_unaligned_le16(src);
->   }
-> 
-> +static FORCE_INLINE void LZ4_copy2(void *dst, const void *src)
-> +{
-> + put_unaligned(get_unaligned((const u16 *)src), (u16 *)dst);
-> +}
-> +
-> +static FORCE_INLINE void LZ4_copy4(void *dst, const void *src)
-> +{
-> + put_unaligned(get_unaligned((const u32 *)src), (u32 *)dst);
-> +}
-> +
->   static FORCE_INLINE void LZ4_copy8(void *dst, const void *src)
->   {
->          put_unaligned(get_unaligned((const u64 *)src), (u64 *)dst);
-> @@ -215,7 +225,10 @@ static FORCE_INLINE int LZ4_decompress_generic(
->                     && likely((endOnInput ? ip < shortiend : 1) &
->                               (op <= shortoend))) {
->                          /* Copy the literals */
-> -                   memcpy(op, ip, endOnInput ? 16 : 8);
-> +                 LZ4_copy8(op, ip);
-> +                 if (endOnInput)
-> +                         LZ4_copy8(op + 8, ip + 8);
-> +
->                          op += length; ip += length;
-> 
->                          /*
-> @@ -234,9 +247,9 @@ static FORCE_INLINE int LZ4_decompress_generic(
->                              (offset >= 8) &&
->                              (dict == withPrefix64k || match >= lowPrefix)) {
->                                  /* Copy the match. */
-> -                           memcpy(op + 0, match + 0, 8);
-> -                           memcpy(op + 8, match + 8, 8);
-> -                           memcpy(op + 16, match + 16, 2);
-> +                         LZ4_copy8(op, match);
-> +                         LZ4_copy8(op + 8, match + 8);
-> +                         LZ4_copy2(op + 16, match + 16);
->                                  op += length + MINMATCH;
->                                  /* Both stages worked, load the next token. */
->                                  continue;
-> @@ -466,7 +479,7 @@ _copy_match:
->                          op[2] = match[2];
->                          op[3] = match[3];
->                          match += inc32table[offset];
-> -                   memcpy(op + 4, match, 4);
-> +                 LZ4_copy4(op + 4, match);
->                          match -= dec64table[offset];
->                  } else {
->                          LZ4_copy8(op, match);
-> 
-> Let me know if you have any further suggestions.
-> 
-> Thanks.
-> 
-> Regards,
-> Jonathan
-> 
-> On Sun, 26 May 2024 at 22:18, Jianan Huang <jnhuang95@gmail.com> wrote:
->>
->> Hi Jonathan,
->>
->> Could you please try the following patch ? It replaces all memcpy() calls in lz4 with __builtin_memcpy().
->>
->> diff --git a/lib/lz4.c b/lib/lz4.c
->> index d365dc727c..2afe31c1c3 100644
->> --- a/lib/lz4.c
->> +++ b/lib/lz4.c
->> @@ -34,6 +34,8 @@
->>   #include <asm/unaligned.h>
->>   #include <u-boot/lz4.h>
->>
->> +#define LZ4_memcpy(dst, src, size) __builtin_memcpy(dst, src, size)
->> +
->>   #define FORCE_INLINE inline __attribute__((always_inline))
->>
->>   static FORCE_INLINE u16 LZ4_readLE16(const void *src)
->> @@ -215,7 +217,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
->>      && likely((endOnInput ? ip < shortiend : 1) &
->>        (op <= shortoend))) {
->>    /* Copy the literals */
->> - memcpy(op, ip, endOnInput ? 16 : 8);
->> + LZ4_memcpy(op, ip, endOnInput ? 16 : 8);
->>    op += length; ip += length;
->>
->>    /*
->> @@ -234,9 +236,9 @@ static FORCE_INLINE int LZ4_decompress_generic(
->>       (offset >= 8) &&
->>       (dict == withPrefix64k || match >= lowPrefix)) {
->>    /* Copy the match. */
->> - memcpy(op + 0, match + 0, 8);
->> - memcpy(op + 8, match + 8, 8);
->> - memcpy(op + 16, match + 16, 2);
->> + LZ4_memcpy(op + 0, match + 0, 8);
->> + LZ4_memcpy(op + 8, match + 8, 8);
->> + LZ4_memcpy(op + 16, match + 16, 2);
->>    op += length + MINMATCH;
->>    /* Both stages worked, load the next token. */
->>    continue;
->> @@ -416,7 +418,7 @@ _copy_match:
->>    size_t const copySize = (size_t)(lowPrefix - match);
->>    size_t const restSize = length - copySize;
->>
->> - memcpy(op, dictEnd - copySize, copySize);
->> + LZ4_memcpy(op, dictEnd - copySize, copySize);
->>    op += copySize;
->>    if (restSize > (size_t)(op - lowPrefix)) {
->>    /* overlap copy */
->> @@ -426,7 +428,7 @@ _copy_match:
->>    while (op < endOfMatch)
->>    *op++ = *copyFrom++;
->>    } else {
->> - memcpy(op, lowPrefix, restSize);
->> + LZ4_memcpy(op, lowPrefix, restSize);
->>    op += restSize;
->>    }
->>    }
->> @@ -452,7 +454,7 @@ _copy_match:
->>    while (op < copyEnd)
->>    *op++ = *match++;
->>    } else {
->> - memcpy(op, match, mlen);
->> + LZ4_memcpy(op, match, mlen);
->>    }
->>    op = copyEnd;
->>    if (op == oend)
->> @@ -466,7 +468,7 @@ _copy_match:
->>    op[2] = match[2];
->>    op[3] = match[3];
->>    match += inc32table[offset];
->> - memcpy(op + 4, match, 4);
->> + LZ4_memcpy(op + 4, match, 4);
->>    match -= dec64table[offset];
->>    } else {
->>    LZ4_copy8(op, match);
->> diff --git a/lib/lz4_wrapper.c b/lib/lz4_wrapper.c
->> index 4d48e7b0e8..e09c8d7057 100644
->> --- a/lib/lz4_wrapper.c
->> +++ b/lib/lz4_wrapper.c
->> @@ -80,7 +80,7 @@ int ulz4fn(const void *src, size_t srcn, void *dst, size_t *dstn)
->>
->>    if (block_header & LZ4F_BLOCKUNCOMPRESSED_FLAG) {
->>    size_t size = min((ptrdiff_t)block_size, (ptrdiff_t)(end - out));
->> - memcpy(out, in, size);
->> + LZ4_memcpy(out, in, size);
->>    out += size;
->>    if (size < block_size) {
->>    ret = -ENOBUFS; /* output overrun */
->>
->>
->> Thanks,
->>
->> Jianan
->>
->> On 2024/5/26 16:06, Jonathan Liu wrote:
->>
->> Hi Gao,
->>
->> On Sat, 25 May 2024 at 02:52, Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->>
->> Hi,
->>
->> On 2024/5/24 22:26, Jonathan Liu wrote:
->>
->> Hi Jianan,
->>
->> On Sat, 26 Feb 2022 at 18:05, Huang Jianan <jnhuang95@gmail.com> wrote:
->>
->> Update the LZ4 compression module based on LZ4 v1.8.3 in order to
->> use the newest LZ4_decompress_safe_partial() which can now decode
->> exactly the nb of bytes requested.
->>
->> Signed-off-by: Huang Jianan <jnhuang95@gmail.com>
->>
->> I noticed after this commit LZ4 decompression is slower.
->> ulz4fn function call takes 1.209670 seconds with this commit.
->> After reverting this commit, the ulz4fn function call takes 0.587032 seconds.
->>
->> I am decompressing a LZ4 compressed kernel (compressed with lz4 v1.9.4
->> using -9 option for maximum compression) on RK3399.
->>
->> Any ideas why it is slower with this commit and how the performance
->> regression can be fixed?
->>
->> Just the quick glance, I think the issue may be due to memcpy/memmove
->> since it seems the main difference between these two codebases
->> (I'm not sure which LZ4 version the old codebase was based on) and
->> the new version mainly relies on memcpy/memmove instead of its own
->> versions.
->>
->> Would you mind to check the assembly how memcpy/memset is generated
->> on your platform?
->>
->> Here is the assembly (-mcpu=cortex-a72.cortex-a53 -march=armv8-a+crc+crypto):
->> 000000000028220c <memset>:
->> #if !CONFIG_IS_ENABLED(TINY_MEMSET)
->>          unsigned long cl = 0;
->>          int i;
->>
->>          /* do it one word at a time (32 bits or 64 bits) while possible */
->>          if ( ((ulong)s & (sizeof(*sl) - 1)) == 0) {
->>    28220c:       f2400803        ands    x3, x0, #0x7
->>    282210:       540002c1        b.ne    282268 <memset+0x5c>  // b.any
->>                  for (i = 0; i < sizeof(*sl); i++) {
->>                          cl <<= 8;
->>                          cl |= c & 0xff;
->>    282214:       92401c26        and     x6, x1, #0xff
->>          unsigned long cl = 0;
->>    282218:       d2800004        mov     x4, #0x0                        // #0
->>    28221c:       52800105        mov     w5, #0x8                        // #8
->>                          cl |= c & 0xff;
->>    282220:       aa0420c4        orr     x4, x6, x4, lsl #8
->>                  for (i = 0; i < sizeof(*sl); i++) {
->>    282224:       710004a5        subs    w5, w5, #0x1
->>    282228:       54ffffc1        b.ne    282220 <memset+0x14>  // b.any
->>                  }
->>                  while (count >= sizeof(*sl)) {
->>    28222c:       cb030045        sub     x5, x2, x3
->>    282230:       f1001cbf        cmp     x5, #0x7
->>    282234:       54000148        b.hi    28225c <memset+0x50>  // b.pmore
->>    282238:       d343fc43        lsr     x3, x2, #3
->>    28223c:       928000e4        mov     x4, #0xfffffffffffffff8         // #-8
->>    282240:       9b047c63        mul     x3, x3, x4
->>    282244:       8b030042        add     x2, x2, x3
->>    282248:       cb030003        sub     x3, x0, x3
->>          unsigned long *sl = (unsigned long *) s;
->>    28224c:       d2800004        mov     x4, #0x0                        // #0
->>                          count -= sizeof(*sl);
->>                  }
->>          }
->> #endif  /* fill 8 bits at a time */
->>          s8 = (char *)sl;
->>          while (count--)
->>    282250:       eb04005f        cmp     x2, x4
->>    282254:       540000e1        b.ne    282270 <memset+0x64>  // b.any
->>                  *s8++ = c;
->>
->>          return s;
->> }
->>    282258:       d65f03c0        ret
->>                          *sl++ = cl;
->>    28225c:       f8236804        str     x4, [x0, x3]
->>                          count -= sizeof(*sl);
->>    282260:       91002063        add     x3, x3, #0x8
->>    282264:       17fffff2        b       28222c <memset+0x20>
->>          unsigned long *sl = (unsigned long *) s;
->>    282268:       aa0003e3        mov     x3, x0
->>    28226c:       17fffff8        b       28224c <memset+0x40>
->>                  *s8++ = c;
->>    282270:       38246861        strb    w1, [x3, x4]
->>    282274:       91000484        add     x4, x4, #0x1
->>    282278:       17fffff6        b       282250 <memset+0x44>
->>
->> 000000000028227c <memcpy>:
->> __used void * memcpy(void *dest, const void *src, size_t count)
->> {
->>          unsigned long *dl = (unsigned long *)dest, *sl = (unsigned long *)src;
->>          char *d8, *s8;
->>
->>          if (src == dest)
->>    28227c:       eb01001f        cmp     x0, x1
->>    282280:       54000100        b.eq    2822a0 <memcpy+0x24>  // b.none
->>                  return dest;
->>
->>          /* while all data is aligned (common case), copy a word at a time */
->>          if ( (((ulong)dest | (ulong)src) & (sizeof(*dl) - 1)) == 0) {
->>    282284:       aa010003        orr     x3, x0, x1
->>    282288:       f2400863        ands    x3, x3, #0x7
->>    28228c:       54000120        b.eq    2822b0 <memcpy+0x34>  // b.none
->>    282290:       aa0003e4        mov     x4, x0
->>    282294:       d2800003        mov     x3, #0x0                        // #0
->>                  }
->>          }
->>          /* copy the reset one byte at a time */
->>          d8 = (char *)dl;
->>          s8 = (char *)sl;
->>          while (count--)
->>    282298:       eb03005f        cmp     x2, x3
->>    28229c:       540001e1        b.ne    2822d8 <memcpy+0x5c>  // b.any
->>                  *d8++ = *s8++;
->>
->>          return dest;
->> }
->>    2822a0:       d65f03c0        ret
->>                          *dl++ = *sl++;
->>    2822a4:       f8636824        ldr     x4, [x1, x3]
->>    2822a8:       f8236804        str     x4, [x0, x3]
->>                          count -= sizeof(*dl);
->>    2822ac:       91002063        add     x3, x3, #0x8
->>                  while (count >= sizeof(*dl)) {
->>    2822b0:       cb030044        sub     x4, x2, x3
->>    2822b4:       f1001c9f        cmp     x4, #0x7
->>    2822b8:       54ffff68        b.hi    2822a4 <memcpy+0x28>  // b.pmore
->>    2822bc:       d343fc43        lsr     x3, x2, #3
->>    2822c0:       928000e4        mov     x4, #0xfffffffffffffff8         // #-8
->>    2822c4:       9b047c63        mul     x3, x3, x4
->>    2822c8:       8b030042        add     x2, x2, x3
->>    2822cc:       cb030004        sub     x4, x0, x3
->>    2822d0:       cb030021        sub     x1, x1, x3
->>    2822d4:       17fffff0        b       282294 <memcpy+0x18>
->>                  *d8++ = *s8++;
->>    2822d8:       38636825        ldrb    w5, [x1, x3]
->>    2822dc:       38236885        strb    w5, [x4, x3]
->>    2822e0:       91000463        add     x3, x3, #0x1
->>    2822e4:       17ffffed        b       282298 <memcpy+0x1c>
->>
->>
->> I tried enabling CONFIG_USE_ARCH_MEMCPY=y, CONFIG_USE_ARCH_MEMSET=y in
->> the .config (but leaving it disabled in SPL/TPL) and it results in
->> Synchronous Abort:
->> U-Boot SPL 2024.04 (Apr 02 2024 - 10:58:58 +0000)
->> Trying to boot from MMC1
->> NOTICE:  BL31: v1.3(release):8f40012ab
->> NOTICE:  BL31: Built : 14:20:53, Feb 16 2023
->> NOTICE:  BL31: Rockchip release version: v1.1
->> INFO:    GICv3 with legacy support detected. ARM GICV3 driver initialized in EL3
->> INFO:    Using opteed sec cpu_context!
->> INFO:    boot cpu mask: 0
->> INFO:    plat_rockchip_pmu_init(1203): pd status 3e
->> INFO:    BL31: Initializing runtime services
->> WARNING: No OPTEE provided by BL2 boot loader, Booting device without
->> OPTEE initialization. SMC`s destined for OPTEE will return SMC_UNK
->> ERROR:   Error initializing runtime service opteed_fast
->> INFO:    BL31: Preparing for EL3 exit to normal world
->> INFO:    Entry point address = 0x200000
->> INFO:    SPSR = 0x3c9
->> "Synchronous Abort" handler, esr 0x96000021, far 0x2957e1
->> elr: 000000000020233c lr : 000000000026a388
->> x0 : 00000000002fbf38 x1 : 00000000002957e1
->> x2 : 0000000000000008 x3 : 0000000000000065
->> x4 : 00000000002957e9 x5 : 00000000002fbf40
->> x6 : 0000000000000065 x7 : 0000000000000003
->> x8 : 00000000002c7960 x9 : 000000000000ffd0
->> x10: 00000000002fbc5c x11: 00000000000132e8
->> x12: 00000000002fbce8 x13: 00000000002c7960
->> x14: 00000000002c7960 x15: 0000000000000000
->> x16: 0000000000000000 x17: 0000000000000000
->> x18: 00000000002fbe30 x19: 0000000000000007
->> x20: 00000000002957d8 x21: 0000000000000009
->> x22: 000000000029d189 x23: 0000000000000020
->> x24: 00000000002fbf38 x25: 00000000002957e7
->> x26: 00000000002957b2 x27: 0000000000007fff
->> x28: 0000000000000000 x29: 00000000002fbcc0
->>
->> Code: a9001c06 a93f34ac d65f03c0 361800c2 (f9400026)
->> Resetting CPU ...
->>
->> resetting ...
->>
->> Thanks,
->> Gao Xiang
->>
->> Regards,
->> Jonathan
+[01/12] cachefiles: add output string to cachefiles_obj_[get|put]_ondemand_fd
+        https://git.kernel.org/vfs/vfs/c/cc5ac966f261
+[02/12] cachefiles: remove requests from xarray during flushing requests
+        https://git.kernel.org/vfs/vfs/c/0fc75c5940fa
+[03/12] cachefiles: fix slab-use-after-free in cachefiles_ondemand_get_fd()
+        https://git.kernel.org/vfs/vfs/c/de3e26f9e5b7
+[04/12] cachefiles: fix slab-use-after-free in cachefiles_ondemand_daemon_read()
+        https://git.kernel.org/vfs/vfs/c/da4a82741606
+[05/12] cachefiles: remove err_put_fd label in cachefiles_ondemand_daemon_read()
+        https://git.kernel.org/vfs/vfs/c/3e6d704f02aa
+[06/12] cachefiles: add consistency check for copen/cread
+        https://git.kernel.org/vfs/vfs/c/a26dc49df37e
+[07/12] cachefiles: add spin_lock for cachefiles_ondemand_info
+        https://git.kernel.org/vfs/vfs/c/0a790040838c
+[08/12] cachefiles: never get a new anonymous fd if ondemand_id is valid
+        https://git.kernel.org/vfs/vfs/c/4988e35e95fc
+[09/12] cachefiles: defer exposing anon_fd until after copy_to_user() succeeds
+        https://git.kernel.org/vfs/vfs/c/4b4391e77a6b
+[10/12] cachefiles: Set object to close if ondemand_id < 0 in copen
+        https://git.kernel.org/vfs/vfs/c/4f8703fb3482
+[11/12] cachefiles: flush all requests after setting CACHEFILES_DEAD
+        https://git.kernel.org/vfs/vfs/c/85e833cd7243
+[12/12] cachefiles: make on-demand read killable
+        https://git.kernel.org/vfs/vfs/c/bc9dde615546
