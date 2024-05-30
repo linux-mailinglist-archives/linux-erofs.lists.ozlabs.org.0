@@ -1,44 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60A288D4856
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4E0FD8D4855
 	for <lists+linux-erofs@lfdr.de>; Thu, 30 May 2024 11:22:33 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JhW+tIA1;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=RA+tE6l3;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Vqgkl5Dhhz30ft
-	for <lists+linux-erofs@lfdr.de>; Thu, 30 May 2024 19:22:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Vqgks65GLz3cVy
+	for <lists+linux-erofs@lfdr.de>; Thu, 30 May 2024 19:22:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JhW+tIA1;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=RA+tE6l3;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VqgkZ5f1hz3cCt
-	for <linux-erofs@lists.ozlabs.org>; Thu, 30 May 2024 19:22:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vqgkb4lZpz3cLQ
+	for <linux-erofs@lists.ozlabs.org>; Thu, 30 May 2024 19:22:15 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1717060928; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=HC3QeNIhf5e5Wu+RbydEahoJp6GbOb1Ol6v/8D88RQI=;
-	b=JhW+tIA18W7uqBpALs79kWMos41xzijjlhkqtITXMX4tHIwef1DhKjByrM5eSCvzr6PwWpyxrmU9AheW6CwL+WlFC444gMt0sq5C++oqzqaijIdgjRjtT/e29025ATCQUKcOYtK1upjJMxSTMygap662M7b1PFmg+M/pJnGg4/M=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W7WbjK6_1717060922;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7WbjK6_1717060922)
+	t=1717060931; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=LAV4iRoaUKQi+wmPNV5IZ7VOkrMEu/ZXWD6411daKG0=;
+	b=RA+tE6l3JbvwuQERo6ZXQL9bqt3tgbUhZJaAr82tt/1rwKTCet3n0aVg6WFIqsPPzaGqpjJR8tMJ8XZlE89YKEvfswS/FqlWoIZtThI8Wem7oJ58twAOHm44eqPThqcBKS8RclKr2AzGNYrZ4bVfYsigd8X2ColmbiT/deLx04I=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W7WbjN._1717060927;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7WbjN._1717060927)
           by smtp.aliyun-inc.com;
-          Thu, 30 May 2024 17:22:06 +0800
+          Thu, 30 May 2024 17:22:09 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: stable@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 6.9.y] erofs: avoid allocating DEFLATE streams before mounting
-Date: Thu, 30 May 2024 17:21:59 +0800
-Message-Id: <20240530092201.16873-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 6.8.y] erofs: avoid allocating DEFLATE streams before mounting
+Date: Thu, 30 May 2024 17:22:00 +0800
+Message-Id: <20240530092201.16873-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240530092201.16873-1-hsiangkao@linux.alibaba.com>
+References: <20240530092201.16873-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -75,7 +77,7 @@ Link: https://lore.kernel.org/r/20240520090106.2898681-1-hsiangkao@linux.alibaba
  1 file changed, 29 insertions(+), 26 deletions(-)
 
 diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
-index 81e65c453ef0..3a3461561a3c 100644
+index b98872058abe..26350c5b040e 100644
 --- a/fs/erofs/decompressor_deflate.c
 +++ b/fs/erofs/decompressor_deflate.c
 @@ -46,39 +46,15 @@ int __init z_erofs_deflate_init(void)
