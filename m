@@ -1,48 +1,30 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D43778D4857
-	for <lists+linux-erofs@lfdr.de>; Thu, 30 May 2024 11:22:38 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=f2SE/A4K;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 936628D55A5
+	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2024 00:45:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Vqgl00b8hz3cVP
-	for <lists+linux-erofs@lfdr.de>; Thu, 30 May 2024 19:22:36 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Vr1Y66BGfz3fq4
+	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2024 08:45:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=f2SE/A4K;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=unlimited-email.com
+Authentication-Results: lists.ozlabs.org; spf=permerror (SPF Permanent Error: include has trivial recursion: include:unlimited-email.com) smtp.mailfrom=unlimited-email.com (client-ip=151.80.203.165; helo=smtp.unlimited-email.com; envelope-from=yourname@unlimited-email.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 559 seconds by postgrey-1.37 at boromir; Fri, 31 May 2024 08:26:41 AEST
+Received: from smtp.unlimited-email.com (ip165.ip-151-80-203.eu [151.80.203.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vqgkd1yyBz3cLQ
-	for <linux-erofs@lists.ozlabs.org>; Thu, 30 May 2024 19:22:16 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1717060932; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=KSowKF1yk2HrBD5wWxaTcKui5ikFhcGrTJRBSctfjpk=;
-	b=f2SE/A4KTsoFKSjXRSCK2m2RFycHbUXxyJZCaVZAtYSc5hpPav595N5hF4Xc6ggQevMw5WtCztyW1nJjf0jZIs7pVZqLdyw4URDaxjedyhTwJE+ozESq9bXu1pJxwVrSm3k4ZloPnAzgipge0c0jheqKv2OVA4zCm4gZ6fOvy6w=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W7WbjNt_1717060930;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7WbjNt_1717060930)
-          by smtp.aliyun-inc.com;
-          Thu, 30 May 2024 17:22:11 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: stable@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 6.6.y] erofs: avoid allocating DEFLATE streams before mounting
-Date: Thu, 30 May 2024 17:22:01 +0800
-Message-Id: <20240530092201.16873-3-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240530092201.16873-1-hsiangkao@linux.alibaba.com>
-References: <20240530092201.16873-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vr17j0gGDz3dLB
+	for <linux-erofs@lists.ozlabs.org>; Fri, 31 May 2024 08:26:40 +1000 (AEST)
+From: Zala<yourname@unlimited-email.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: Inquiry
+Date: 31 May 2024 05:17:14 +0700
+Message-ID: <20240531051714.B237113AA701B7D8@unlimited-email.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,112 +36,61 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Gao Xiang <hsiangkao@linux.alibaba.com>
+Reply-To: zala@lists.ozlabs.org, mlakar@starexlc.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-commit 80eb4f62056d6ae709bdd0636ab96ce660f494b2 upstream.
+<!DOCTYPE HTML>
 
-Currently, each DEFLATE stream takes one 32 KiB permanent internal
-window buffer even if there is no running instance which uses DEFLATE
-algorithm.
+<html><head><title></title>
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+</head>
+<body style=3D"margin: 0.4em;">
+<p style=3D'background: white; margin: 0px 0cm 15pt; padding: 0cm; border: =
+currentColor; border-image: none; color: rgb(0, 0, 0); text-transform: none=
+; text-indent: 0px; letter-spacing: normal; font-family: -apple-system, Bli=
+nkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif, "Apple Co=
+lor Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; font-size: 13px; font-styl=
+e: normal; font-weight: 400; word-spacing: 0px; white-space: normal; orphan=
+s: 2; widows: 2; font-variant-ligatures: normal;=20
+font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-decoration-=
+thickness: initial; text-decoration-style: initial; text-decoration-color: =
+initial;'><span style=3D'color: rgb(13, 13, 13); font-family: "Segoe UI", s=
+ans-serif;'>Hello</span></p>
+<p style=3D'background: white; margin: 0px 0cm 15pt; padding: 0cm; border: =
+currentColor; border-image: none; color: rgb(0, 0, 0); text-transform: none=
+; text-indent: 0px; letter-spacing: normal; font-family: -apple-system, Bli=
+nkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif, "Apple Co=
+lor Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; font-size: 13px; font-styl=
+e: normal; font-weight: 400; word-spacing: 0px; white-space: pre-wrap; box-=
+sizing: border-box; orphans: 2; widows: 2;=20
+font-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-str=
+oke-width: 0px; text-decoration-thickness: initial; text-decoration-style: =
+initial; text-decoration-color: initial;'><span style=3D'color: rgb(13, 13,=
+ 13); font-family: "Segoe UI", sans-serif;'>We are interested in partnering=
+ with you concerning your merchandise. Would you mind sending us comprehens=
+ive price quotes and instructions for placing orders via email? Eagerly ant=
+icipating your reply.</span></p>
+<p style=3D'background: white; margin: 0px 0cm 0cm; padding: 0cm; border: c=
+urrentColor; border-image: none; color: rgb(0, 0, 0); text-transform: none;=
+ text-indent: 0px; letter-spacing: normal; font-family: -apple-system, Blin=
+kMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif, "Apple Col=
+or Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; font-size: 13px; font-style=
+: normal; font-weight: 400; word-spacing: 0px; white-space: pre-wrap; box-s=
+izing: border-box; orphans: 2; widows: 2;=20
+font-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-str=
+oke-width: 0px; text-decoration-thickness: initial; text-decoration-style: =
+initial; text-decoration-color: initial;'><span style=3D'color: rgb(13, 13,=
+ 13); font-family: "Segoe UI", sans-serif;'>Best regards,<br><br>Zala Mlaka=
+r.<br><br>Purchase &amp; Logistics Department<br>starexlc Import / Export S=
+=2EL.<br>Email: </span><span style=3D"color: black;">
+<a class=3D"mailto-link" style=3D"color: rgb(60, 97, 170); text-decoration:=
+ underline;" href=3D"mailto:zala.mlakar@starexlc.com" target=3D"_blank"><sp=
+an style=3D'padding: 0cm; border: 1pt solid rgb(227, 227, 227); border-imag=
+e: none; font-family: "Segoe UI", sans-serif; text-decoration: none;'>zala.=
+mlakar@starexlc.com</span></a></span><span style=3D'color: rgb(13, 13, 13);=
+ font-family: "Segoe UI", sans-serif;'><br>Head Office: Rte de la Longeraie=
+ 8, 1220 Morges, Switzerland</span></p>
 
-It's unexpected and wasteful on embedded devices with limited resources
-and servers with hundreds of CPU cores if DEFLATE is enabled but unused.
 
-Fixes: ffa09b3bd024 ("erofs: DEFLATE compression support")
-Cc: <stable@vger.kernel.org> # 6.6+
-Reviewed-by: Sandeep Dhavale <dhavale@google.com>
-Link: https://lore.kernel.org/r/20240520090106.2898681-1-hsiangkao@linux.alibaba.com
-[ Gao Xiang: resolve trivial conflicts. ]
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/decompressor_deflate.c | 55 +++++++++++++++++----------------
- 1 file changed, 29 insertions(+), 26 deletions(-)
-
-diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
-index 0e1946a6bda5..aac2c837ef35 100644
---- a/fs/erofs/decompressor_deflate.c
-+++ b/fs/erofs/decompressor_deflate.c
-@@ -47,39 +47,15 @@ int __init z_erofs_deflate_init(void)
- 	/* by default, use # of possible CPUs instead */
- 	if (!z_erofs_deflate_nstrms)
- 		z_erofs_deflate_nstrms = num_possible_cpus();
--
--	for (; z_erofs_deflate_avail_strms < z_erofs_deflate_nstrms;
--	     ++z_erofs_deflate_avail_strms) {
--		struct z_erofs_deflate *strm;
--
--		strm = kzalloc(sizeof(*strm), GFP_KERNEL);
--		if (!strm)
--			goto out_failed;
--
--		/* XXX: in-kernel zlib cannot shrink windowbits currently */
--		strm->z.workspace = vmalloc(zlib_inflate_workspacesize());
--		if (!strm->z.workspace) {
--			kfree(strm);
--			goto out_failed;
--		}
--
--		spin_lock(&z_erofs_deflate_lock);
--		strm->next = z_erofs_deflate_head;
--		z_erofs_deflate_head = strm;
--		spin_unlock(&z_erofs_deflate_lock);
--	}
- 	return 0;
--
--out_failed:
--	pr_err("failed to allocate zlib workspace\n");
--	z_erofs_deflate_exit();
--	return -ENOMEM;
- }
- 
- int z_erofs_load_deflate_config(struct super_block *sb,
- 			struct erofs_super_block *dsb, void *data, int size)
- {
- 	struct z_erofs_deflate_cfgs *dfl = data;
-+	static DEFINE_MUTEX(deflate_resize_mutex);
-+	static bool inited;
- 
- 	if (!dfl || size < sizeof(struct z_erofs_deflate_cfgs)) {
- 		erofs_err(sb, "invalid deflate cfgs, size=%u", size);
-@@ -90,9 +66,36 @@ int z_erofs_load_deflate_config(struct super_block *sb,
- 		erofs_err(sb, "unsupported windowbits %u", dfl->windowbits);
- 		return -EOPNOTSUPP;
- 	}
-+	mutex_lock(&deflate_resize_mutex);
-+	if (!inited) {
-+		for (; z_erofs_deflate_avail_strms < z_erofs_deflate_nstrms;
-+		     ++z_erofs_deflate_avail_strms) {
-+			struct z_erofs_deflate *strm;
-+
-+			strm = kzalloc(sizeof(*strm), GFP_KERNEL);
-+			if (!strm)
-+				goto failed;
-+			/* XXX: in-kernel zlib cannot customize windowbits */
-+			strm->z.workspace = vmalloc(zlib_inflate_workspacesize());
-+			if (!strm->z.workspace) {
-+				kfree(strm);
-+				goto failed;
-+			}
- 
-+			spin_lock(&z_erofs_deflate_lock);
-+			strm->next = z_erofs_deflate_head;
-+			z_erofs_deflate_head = strm;
-+			spin_unlock(&z_erofs_deflate_lock);
-+		}
-+		inited = true;
-+	}
-+	mutex_unlock(&deflate_resize_mutex);
- 	erofs_info(sb, "EXPERIMENTAL DEFLATE feature in use. Use at your own risk!");
- 	return 0;
-+failed:
-+	mutex_unlock(&deflate_resize_mutex);
-+	z_erofs_deflate_exit();
-+	return -ENOMEM;
- }
- 
- int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
--- 
-2.39.3
-
+</body></html>
