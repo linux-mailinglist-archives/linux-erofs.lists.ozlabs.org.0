@@ -2,50 +2,45 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTP id B90688D3976
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 May 2024 16:36:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 60A288D4856
+	for <lists+linux-erofs@lfdr.de>; Thu, 30 May 2024 11:22:33 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nA44ULb5;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JhW+tIA1;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VqBZw5q0vz78n6
-	for <lists+linux-erofs@lfdr.de>; Thu, 30 May 2024 00:28:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Vqgkl5Dhhz30ft
+	for <lists+linux-erofs@lfdr.de>; Thu, 30 May 2024 19:22:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nA44ULb5;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JhW+tIA1;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VqBZn3X5kz3w42
-	for <linux-erofs@lists.ozlabs.org>; Thu, 30 May 2024 00:28:46 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VqgkZ5f1hz3cCt
+	for <linux-erofs@lists.ozlabs.org>; Thu, 30 May 2024 19:22:12 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1716992920; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Oje62Ov6FUBQ4DHAsaEy7GE8Yt2ouQ/knXBYAIm0bWE=;
-	b=nA44ULb5xJ6tFuy3VlrLqB30VPIl+K8JluatXFs6eG7c21ZvZkM+GYJjGisEx0Y8Qk1mEj/Gm2ecu4zQ6njC/uUZrvnlmn6g/WstrIx5AeSdrhG0kHW9OXBVXOTr+J7fdiWWBmOSwkx7YVyfKnEpJzvx4Y0gtVwno/4scY2TrF0=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0W7U1T.u_1716992916;
-Received: from 192.168.3.4(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7U1T.u_1716992916)
+	t=1717060928; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=HC3QeNIhf5e5Wu+RbydEahoJp6GbOb1Ol6v/8D88RQI=;
+	b=JhW+tIA18W7uqBpALs79kWMos41xzijjlhkqtITXMX4tHIwef1DhKjByrM5eSCvzr6PwWpyxrmU9AheW6CwL+WlFC444gMt0sq5C++oqzqaijIdgjRjtT/e29025ATCQUKcOYtK1upjJMxSTMygap662M7b1PFmg+M/pJnGg4/M=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W7WbjK6_1717060922;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7WbjK6_1717060922)
           by smtp.aliyun-inc.com;
-          Wed, 29 May 2024 22:28:37 +0800
-Message-ID: <2dc48e89-cd3f-4736-8847-4d23bcad27e5@linux.alibaba.com>
-Date: Wed, 29 May 2024 22:28:35 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 00/12] cachefiles: some bugfixes and cleanups for
- ondemand requests
-To: Christian Brauner <brauner@kernel.org>, netfs@lists.linux.dev,
- dhowells@redhat.com, jlayton@kernel.org, libaokun@huaweicloud.com
-References: <20240522114308.2402121-1-libaokun@huaweicloud.com>
- <20240529-lehrling-verordnen-e5040aa65017@brauner>
+          Thu, 30 May 2024 17:22:06 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240529-lehrling-verordnen-e5040aa65017@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 6.9.y] erofs: avoid allocating DEFLATE streams before mounting
+Date: Thu, 30 May 2024 17:21:59 +0800
+Message-Id: <20240530092201.16873-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,73 +52,111 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, yukuai3@huawei.com, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Christian,
+commit 80eb4f62056d6ae709bdd0636ab96ce660f494b2 upstream.
 
-On 2024/5/29 19:07, Christian Brauner wrote:
-> On Wed, 22 May 2024 19:42:56 +0800, libaokun@huaweicloud.com wrote:
->> From: Baokun Li <libaokun1@huawei.com>
->>
->> Hi all!
->>
->> This is the third version of this patch series. The new version has no
->> functional changes compared to the previous one, so I've kept the previous
->> Acked-by and Reviewed-by, so please let me know if you have any objections.
->>
->> [...]
-> 
-> So I've taken that as a fixes series which should probably make it upstream
-> rather sooner than later. Correct?
+Currently, each DEFLATE stream takes one 32 KiB permanent internal
+window buffer even if there is no running instance which uses DEFLATE
+algorithm.
 
-Yeah, many thanks for picking these up!  AFAIK, they've already been
-landed downstream for a while so it'd be much better to address
-these upstream. :-)
+It's unexpected and wasteful on embedded devices with limited resources
+and servers with hundreds of CPU cores if DEFLATE is enabled but unused.
 
-Thanks,
-Gao Xiang
+Fixes: ffa09b3bd024 ("erofs: DEFLATE compression support")
+Cc: <stable@vger.kernel.org> # 6.6+
+Reviewed-by: Sandeep Dhavale <dhavale@google.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Link: https://lore.kernel.org/r/20240520090106.2898681-1-hsiangkao@linux.alibaba.com
+---
+ fs/erofs/decompressor_deflate.c | 55 +++++++++++++++++----------------
+ 1 file changed, 29 insertions(+), 26 deletions(-)
 
-> 
-> ---
-> 
-> Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-> Patches in the vfs.fixes branch should appear in linux-next soon.
-> 
-> Please report any outstanding bugs that were missed during review in a
-> new review to the original patch series allowing us to drop it.
-> 
-> It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> patch has now been applied. If possible patch trailers will be updated.
-> 
-> Note that commit hashes shown below are subject to change due to rebase,
-> trailer updates or similar. If in doubt, please check the listed branch.
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> branch: vfs.fixes
-> 
-> [01/12] cachefiles: add output string to cachefiles_obj_[get|put]_ondemand_fd
->          https://git.kernel.org/vfs/vfs/c/cc5ac966f261
-> [02/12] cachefiles: remove requests from xarray during flushing requests
->          https://git.kernel.org/vfs/vfs/c/0fc75c5940fa
-> [03/12] cachefiles: fix slab-use-after-free in cachefiles_ondemand_get_fd()
->          https://git.kernel.org/vfs/vfs/c/de3e26f9e5b7
-> [04/12] cachefiles: fix slab-use-after-free in cachefiles_ondemand_daemon_read()
->          https://git.kernel.org/vfs/vfs/c/da4a82741606
-> [05/12] cachefiles: remove err_put_fd label in cachefiles_ondemand_daemon_read()
->          https://git.kernel.org/vfs/vfs/c/3e6d704f02aa
-> [06/12] cachefiles: add consistency check for copen/cread
->          https://git.kernel.org/vfs/vfs/c/a26dc49df37e
-> [07/12] cachefiles: add spin_lock for cachefiles_ondemand_info
->          https://git.kernel.org/vfs/vfs/c/0a790040838c
-> [08/12] cachefiles: never get a new anonymous fd if ondemand_id is valid
->          https://git.kernel.org/vfs/vfs/c/4988e35e95fc
-> [09/12] cachefiles: defer exposing anon_fd until after copy_to_user() succeeds
->          https://git.kernel.org/vfs/vfs/c/4b4391e77a6b
-> [10/12] cachefiles: Set object to close if ondemand_id < 0 in copen
->          https://git.kernel.org/vfs/vfs/c/4f8703fb3482
-> [11/12] cachefiles: flush all requests after setting CACHEFILES_DEAD
->          https://git.kernel.org/vfs/vfs/c/85e833cd7243
-> [12/12] cachefiles: make on-demand read killable
->          https://git.kernel.org/vfs/vfs/c/bc9dde615546
+diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
+index 81e65c453ef0..3a3461561a3c 100644
+--- a/fs/erofs/decompressor_deflate.c
++++ b/fs/erofs/decompressor_deflate.c
+@@ -46,39 +46,15 @@ int __init z_erofs_deflate_init(void)
+ 	/* by default, use # of possible CPUs instead */
+ 	if (!z_erofs_deflate_nstrms)
+ 		z_erofs_deflate_nstrms = num_possible_cpus();
+-
+-	for (; z_erofs_deflate_avail_strms < z_erofs_deflate_nstrms;
+-	     ++z_erofs_deflate_avail_strms) {
+-		struct z_erofs_deflate *strm;
+-
+-		strm = kzalloc(sizeof(*strm), GFP_KERNEL);
+-		if (!strm)
+-			goto out_failed;
+-
+-		/* XXX: in-kernel zlib cannot shrink windowbits currently */
+-		strm->z.workspace = vmalloc(zlib_inflate_workspacesize());
+-		if (!strm->z.workspace) {
+-			kfree(strm);
+-			goto out_failed;
+-		}
+-
+-		spin_lock(&z_erofs_deflate_lock);
+-		strm->next = z_erofs_deflate_head;
+-		z_erofs_deflate_head = strm;
+-		spin_unlock(&z_erofs_deflate_lock);
+-	}
+ 	return 0;
+-
+-out_failed:
+-	erofs_err(NULL, "failed to allocate zlib workspace");
+-	z_erofs_deflate_exit();
+-	return -ENOMEM;
+ }
+ 
+ int z_erofs_load_deflate_config(struct super_block *sb,
+ 			struct erofs_super_block *dsb, void *data, int size)
+ {
+ 	struct z_erofs_deflate_cfgs *dfl = data;
++	static DEFINE_MUTEX(deflate_resize_mutex);
++	static bool inited;
+ 
+ 	if (!dfl || size < sizeof(struct z_erofs_deflate_cfgs)) {
+ 		erofs_err(sb, "invalid deflate cfgs, size=%u", size);
+@@ -89,9 +65,36 @@ int z_erofs_load_deflate_config(struct super_block *sb,
+ 		erofs_err(sb, "unsupported windowbits %u", dfl->windowbits);
+ 		return -EOPNOTSUPP;
+ 	}
++	mutex_lock(&deflate_resize_mutex);
++	if (!inited) {
++		for (; z_erofs_deflate_avail_strms < z_erofs_deflate_nstrms;
++		     ++z_erofs_deflate_avail_strms) {
++			struct z_erofs_deflate *strm;
++
++			strm = kzalloc(sizeof(*strm), GFP_KERNEL);
++			if (!strm)
++				goto failed;
++			/* XXX: in-kernel zlib cannot customize windowbits */
++			strm->z.workspace = vmalloc(zlib_inflate_workspacesize());
++			if (!strm->z.workspace) {
++				kfree(strm);
++				goto failed;
++			}
+ 
++			spin_lock(&z_erofs_deflate_lock);
++			strm->next = z_erofs_deflate_head;
++			z_erofs_deflate_head = strm;
++			spin_unlock(&z_erofs_deflate_lock);
++		}
++		inited = true;
++	}
++	mutex_unlock(&deflate_resize_mutex);
+ 	erofs_info(sb, "EXPERIMENTAL DEFLATE feature in use. Use at your own risk!");
+ 	return 0;
++failed:
++	mutex_unlock(&deflate_resize_mutex);
++	z_erofs_deflate_exit();
++	return -ENOMEM;
+ }
+ 
+ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+-- 
+2.39.3
+
