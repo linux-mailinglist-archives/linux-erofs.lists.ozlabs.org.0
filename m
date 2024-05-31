@@ -2,29 +2,44 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 936628D55A5
-	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2024 00:45:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 69DA78D5B44
+	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2024 09:13:29 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ytt5hVCL;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Vr1Y66BGfz3fq4
-	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2024 08:45:14 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VrDqV3x33z30Vg
+	for <lists+linux-erofs@lfdr.de>; Fri, 31 May 2024 17:13:26 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=unlimited-email.com
-Authentication-Results: lists.ozlabs.org; spf=permerror (SPF Permanent Error: include has trivial recursion: include:unlimited-email.com) smtp.mailfrom=unlimited-email.com (client-ip=151.80.203.165; helo=smtp.unlimited-email.com; envelope-from=yourname@unlimited-email.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 559 seconds by postgrey-1.37 at boromir; Fri, 31 May 2024 08:26:41 AEST
-Received: from smtp.unlimited-email.com (ip165.ip-151-80-203.eu [151.80.203.165])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ytt5hVCL;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vr17j0gGDz3dLB
-	for <linux-erofs@lists.ozlabs.org>; Fri, 31 May 2024 08:26:40 +1000 (AEST)
-From: Zala<yourname@unlimited-email.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VrDqP5Gk0z30TQ
+	for <linux-erofs@lists.ozlabs.org>; Fri, 31 May 2024 17:13:19 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1717139595; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=WM3Rg1h0DrawDYVJN1u6ngtwfxcI8REMLabAot8GUQs=;
+	b=ytt5hVCLU0V6b+Zppayo8UFE7ySV76SewTXArCCJme4CceR+FAD4X5caA3uA9j8GVpVDTBn0qGEGIc5gV1vpfysLZ28jBe6iKp25N5xpThbQWWRthrC3Q8yHaRu7vgrCl5DxvFE2Dzye+MMvdB83BvdOnM2q2abkqlX1ntTN1eQ=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W7Z34sw_1717139588;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7Z34sw_1717139588)
+          by smtp.aliyun-inc.com;
+          Fri, 31 May 2024 15:13:13 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: Inquiry
-Date: 31 May 2024 05:17:14 +0700
-Message-ID: <20240531051714.B237113AA701B7D8@unlimited-email.com>
+Subject: [PATCH] erofs-utils: lib: fix incorrect xattr sharing
+Date: Fri, 31 May 2024 15:13:05 +0800
+Message-Id: <20240531071305.1183728-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-Content-Type: text/html
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -36,61 +51,54 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: zala@lists.ozlabs.org, mlakar@starexlc.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<!DOCTYPE HTML>
+There are off-by-one issues after refactoring, and the size of kvbuf
+should be calculated by EROFS_XATTR_KVSIZE instead.
 
-<html><head><title></title>
-<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
-</head>
-<body style=3D"margin: 0.4em;">
-<p style=3D'background: white; margin: 0px 0cm 15pt; padding: 0cm; border: =
-currentColor; border-image: none; color: rgb(0, 0, 0); text-transform: none=
-; text-indent: 0px; letter-spacing: normal; font-family: -apple-system, Bli=
-nkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif, "Apple Co=
-lor Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; font-size: 13px; font-styl=
-e: normal; font-weight: 400; word-spacing: 0px; white-space: normal; orphan=
-s: 2; widows: 2; font-variant-ligatures: normal;=20
-font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-decoration-=
-thickness: initial; text-decoration-style: initial; text-decoration-color: =
-initial;'><span style=3D'color: rgb(13, 13, 13); font-family: "Segoe UI", s=
-ans-serif;'>Hello</span></p>
-<p style=3D'background: white; margin: 0px 0cm 15pt; padding: 0cm; border: =
-currentColor; border-image: none; color: rgb(0, 0, 0); text-transform: none=
-; text-indent: 0px; letter-spacing: normal; font-family: -apple-system, Bli=
-nkMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif, "Apple Co=
-lor Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; font-size: 13px; font-styl=
-e: normal; font-weight: 400; word-spacing: 0px; white-space: pre-wrap; box-=
-sizing: border-box; orphans: 2; widows: 2;=20
-font-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-str=
-oke-width: 0px; text-decoration-thickness: initial; text-decoration-style: =
-initial; text-decoration-color: initial;'><span style=3D'color: rgb(13, 13,=
- 13); font-family: "Segoe UI", sans-serif;'>We are interested in partnering=
- with you concerning your merchandise. Would you mind sending us comprehens=
-ive price quotes and instructions for placing orders via email? Eagerly ant=
-icipating your reply.</span></p>
-<p style=3D'background: white; margin: 0px 0cm 0cm; padding: 0cm; border: c=
-urrentColor; border-image: none; color: rgb(0, 0, 0); text-transform: none;=
- text-indent: 0px; letter-spacing: normal; font-family: -apple-system, Blin=
-kMacSystemFont, "Helvetica Neue", "Segoe UI", Arial, sans-serif, "Apple Col=
-or Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; font-size: 13px; font-style=
-: normal; font-weight: 400; word-spacing: 0px; white-space: pre-wrap; box-s=
-izing: border-box; orphans: 2; widows: 2;=20
-font-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-str=
-oke-width: 0px; text-decoration-thickness: initial; text-decoration-style: =
-initial; text-decoration-color: initial;'><span style=3D'color: rgb(13, 13,=
- 13); font-family: "Segoe UI", sans-serif;'>Best regards,<br><br>Zala Mlaka=
-r.<br><br>Purchase &amp; Logistics Department<br>starexlc Import / Export S=
-=2EL.<br>Email: </span><span style=3D"color: black;">
-<a class=3D"mailto-link" style=3D"color: rgb(60, 97, 170); text-decoration:=
- underline;" href=3D"mailto:zala.mlakar@starexlc.com" target=3D"_blank"><sp=
-an style=3D'padding: 0cm; border: 1pt solid rgb(227, 227, 227); border-imag=
-e: none; font-family: "Segoe UI", sans-serif; text-decoration: none;'>zala.=
-mlakar@starexlc.com</span></a></span><span style=3D'color: rgb(13, 13, 13);=
- font-family: "Segoe UI", sans-serif;'><br>Head Office: Rte de la Longeraie=
- 8, 1220 Morges, Switzerland</span></p>
+Fixes: 5df285cf405d ("erofs-utils: lib: refactor extended attribute name prefixes")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ lib/xattr.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 427933f..0f6fbe2 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -166,14 +166,6 @@ static unsigned int BKDRHash(char *str, unsigned int len)
+ 	return hash;
+ }
+ 
+-static unsigned int xattr_item_hash(char *buf, unsigned int len[2],
+-				    unsigned int hash[2])
+-{
+-	hash[0] = BKDRHash(buf, len[0]);	/* key */
+-	hash[1] = BKDRHash(buf + len[0], len[1]);	/* value */
+-	return hash[0] ^ hash[1];
+-}
+-
+ static unsigned int put_xattritem(struct xattr_item *item)
+ {
+ 	if (item->count > 1)
+@@ -188,11 +180,13 @@ static struct xattr_item *get_xattritem(char *kvbuf, unsigned int len[2])
+ 	struct ea_type_node *tnode;
+ 	unsigned int hash[2], hkey;
+ 
+-	hkey = xattr_item_hash(kvbuf, len, hash);
++	hash[0] = BKDRHash(kvbuf, len[0]);
++	hash[1] = BKDRHash(kvbuf + EROFS_XATTR_KSIZE(len), len[1]);
++	hkey = hash[0] ^ hash[1];
+ 	hash_for_each_possible(ea_hashtable, item, node, hkey) {
+ 		if (item->len[0] == len[0] && item->len[1] == len[1] &&
+ 		    item->hash[0] == hash[0] && item->hash[1] == hash[1] &&
+-		    !memcmp(kvbuf, item->kvbuf, len[0] + len[1])) {
++		    !memcmp(kvbuf, item->kvbuf, EROFS_XATTR_KVSIZE(len))) {
+ 			free(kvbuf);
+ 			++item->count;
+ 			return item;
+-- 
+2.39.3
 
-</body></html>
