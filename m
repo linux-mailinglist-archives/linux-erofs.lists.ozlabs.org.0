@@ -2,44 +2,44 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A6978FCC36
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jun 2024 14:15:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5607B8FCCF0
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jun 2024 14:32:57 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JzfoFd+J;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NrL7jYZC;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VvRHJ1yq8z3c5q
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jun 2024 22:15:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VvRgp3DD0z3c2K
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jun 2024 22:32:54 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JzfoFd+J;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NrL7jYZC;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VvRH975fPz30WY
-	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jun 2024 22:14:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VvRgg4734z30Vg
+	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jun 2024 22:32:44 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1717589696; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=aY1o8IvOgNZU1a86eZrgOSeqaXpc6vsya1P8MX8eLL8=;
-	b=JzfoFd+Je8h2hLl+hWydLpx2VbXhwj564J3bA19NP0Z5Hab54oD1ua1E5LL3G6wKwXk94TDTg2D7haPNmvoHkjI6/kt9PbR6PFJnttF9n/Eh9D5TqxHM8a3wyZp9/v3JjZ/4ynuQ7WNtymbo15mTclhJJsRU/hhXEzUqgt/+6xc=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W7v6Fbw_1717589694;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7v6Fbw_1717589694)
+	t=1717590761; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=apZomJ5MEvdPEryUk1Hpv5A8gN9to4PC5p4OMFDUWTE=;
+	b=NrL7jYZCFBwxaeKrvdf7KQeuQmOLimHZBU8MxfyfnK5q1XltmiRytZaq+2tvPFJ5smmO6VW8bXpgeDV3/5X608CDP4Kq5njLMJjbXNLilBWnGai1SocCX9gKdOdacrDwVwExBiKYeOXE6eQN9JrVD659la/QPHVJ3hM6HzIdc54=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W7v72lM_1717590754;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7v72lM_1717590754)
           by smtp.aliyun-inc.com;
-          Wed, 05 Jun 2024 20:14:55 +0800
+          Wed, 05 Jun 2024 20:32:39 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/2] erofs-utils: support Intel Query Processing Library
-Date: Wed,  5 Jun 2024 20:14:48 +0800
-Message-Id: <20240605121448.3816160-2-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 2/2] erofs-utils: support Intel Query Processing Library
+Date: Wed,  5 Jun 2024 20:32:33 +0800
+Message-Id: <20240605123233.3833332-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240605121448.3816160-1-hsiangkao@linux.alibaba.com>
-References: <20240605121448.3816160-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240605121448.3816160-2-hsiangkao@linux.alibaba.com>
+References: <20240605121448.3816160-2-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -83,7 +83,7 @@ Single-threaded decompression:
 | libdeflate (4k) |    1048576     |  374816768   |   1.862    |
 | libdeflate (4k) |     65536      |  376057856   |   1.859    |
 | libdeflate (4k) |      4096      |  399749120   |   2.203    |
-| libdeflate      |    1048576     |  373563392   |   1.318    |
+| libdeflate      |    1048576     |  323457024   |   1.318    |
 | libdeflate      |     65536      |  328712192   |   1.358    |
 | libdeflate      |      4096      |  389943296   |   2.103    |
 | Zstd            |      N/A       |  312548986   |   1.047    |
@@ -114,16 +114,21 @@ Zstd 1.5.6: [ zstd -k ] [ zstd -k --fast ]
 Cc: "Feghali, Wajdi K" <wajdi.k.feghali@intel.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
+changes since v1:
+ - Fix a wrong image size number in commit message;
+ - Minor configure.ac fix.
+
  configure.ac             |  37 +++++++++
  dump/Makefile.am         |   2 +-
  fsck/Makefile.am         |   4 +-
+ fuse/Makefile.am         |   3 +-
  include/erofs/internal.h |   1 +
  lib/decompress.c         | 167 ++++++++++++++++++++++++++++++++++++++-
  mkfs/Makefile.am         |   2 +-
- 6 files changed, 208 insertions(+), 5 deletions(-)
+ 7 files changed, 210 insertions(+), 6 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 1989bca..51d4f65 100644
+index 1989bca..cfbde43 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -143,6 +143,11 @@ AC_ARG_WITH(libzstd,
@@ -155,7 +160,7 @@ index 1989bca..51d4f65 100644
 +      AC_CHECK_LIB(qpl, qpl_execute_job, [], [
 +        AC_MSG_ERROR([libqpl doesn't work properly])])
 +      AC_CHECK_DECL(qpl_execute_job, [have_qpl="yes"],
-+        [AC_MSG_ERROR([libzstd doesn't work properly])], [[
++        [AC_MSG_ERROR([libqpl doesn't work properly])], [[
 +#include <qpl/qpl.h>
 +      ]])
 +    ])
@@ -221,6 +226,17 @@ index 70eacc0..5bdee4d 100644
 -	${libzstd_LIBS}
 +	${libzstd_LIBS} ${libqpl_LIBS}
  endif
+diff --git a/fuse/Makefile.am b/fuse/Makefile.am
+index 7eae5f6..2fd9b6d 100644
+--- a/fuse/Makefile.am
++++ b/fuse/Makefile.am
+@@ -7,4 +7,5 @@ erofsfuse_SOURCES = main.c
+ erofsfuse_CFLAGS = -Wall -I$(top_srcdir)/include
+ erofsfuse_CFLAGS += ${libfuse2_CFLAGS} ${libfuse3_CFLAGS} ${libselinux_CFLAGS}
+ erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la ${libfuse2_LIBS} ${libfuse3_LIBS} ${liblz4_LIBS} \
+-	${libselinux_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} ${libzstd_LIBS}
++	${libselinux_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} ${libzstd_LIBS} \
++	${libqpl_LIBS}
 diff --git a/include/erofs/internal.h b/include/erofs/internal.h
 index d52bcc6..2067cb9 100644
 --- a/include/erofs/internal.h
@@ -234,7 +250,7 @@ index d52bcc6..2067cb9 100644
  
  /* make sure that any user of the erofs headers has atleast 64bit off_t type */
 diff --git a/lib/decompress.c b/lib/decompress.c
-index 2842f51..a265bd0 100644
+index 2842f51..1e22f9f 100644
 --- a/lib/decompress.c
 +++ b/lib/decompress.c
 @@ -77,6 +77,163 @@ out:
