@@ -1,42 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05D918FC302
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jun 2024 07:26:10 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA5248FC3B9
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jun 2024 08:33:53 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=m/rdxgrY;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=SxfbOdRu;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VvGCD3GdQz3dJn
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jun 2024 15:26:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VvHjM5XbPz3cQX
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Jun 2024 16:33:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=m/rdxgrY;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=SxfbOdRu;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VvGC26w8Xz3d89
-	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jun 2024 15:25:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VvHjF1YxRz3020
+	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Jun 2024 16:33:35 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1717565143; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=fkoeLUHJsz6gJ1n1h8xkM5sbGGvR8Yw3PD7u+sqAt6Y=;
-	b=m/rdxgrYaxjGsLDhqrm5bsvI4JdQzU64++Fk2bLg2sUdIM3S4+aSSIFdmWhtloh9nJwlyEJNQ5egH9yBF18y8fV6Tr2KpCuRA/V0Q78ZzI4USWWcIveQGtmJx+xR2ZwuYh8qYePf20vYb1xDBQj3eiOsAKsmgC6dV21CG/FJrbs=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hongzhen@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W7t8SHQ_1717565141;
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0W7t8SHQ_1717565141)
+	t=1717569210; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=CPk111OCXbH5fFnDfOejdn77bYxjPQXWYhe4xzlnF5s=;
+	b=SxfbOdRuyxB6twKkVQZyt/5ARU7XPaPhPz0fJadPgSKRa2K0YxbQ1nfSbSxrV2SdYT6ltoEYS4ZnRPh8IiOmxD9j1OwFlT3hwh+QTpiEXeIypLSarc+BUL7r+LXCSYu9/jebMR8WkxVip7DukzxRl3vkD6NNYpdB7sN8FB8TbnQ=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W7tQV6Y_1717569193;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7tQV6Y_1717569193)
           by smtp.aliyun-inc.com;
-          Wed, 05 Jun 2024 13:25:42 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+          Wed, 05 Jun 2024 14:33:26 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Subject: [PATCH v3] erofs-utils: introduce the I/O manager
-Date: Wed,  5 Jun 2024 13:25:35 +0800
-Message-Id: <20240605052535.773798-1-hongzhen@linux.alibaba.com>
+Date: Wed,  5 Jun 2024 14:33:12 +0800
+Message-Id: <20240605063312.3480769-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -51,24 +51,26 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Hongzhen Luo <hongzhen@linux.alibaba.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Hongzhen Luo <hongzhen@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
 
 Introduce the I/O manager to provide a more flexible way to specify
 the virtual storage.
 
 Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-v3: Removed the unnecessary pointer `private_data`.
-v2: https://lore.kernel.org/all/20240604121029.4030290-1-hongzhen@linux.alibaba.com/
-v1: https://lore.kernel.org/all/20240604093556.3883585-1-hongzhen@linux.alibaba.com/
----
+changes since v2:
+ - rename "struct erofs_io_manager" to "struct erofs_iomgr_ops";
+
  dump/main.c              |   8 +--
  fsck/main.c              |  14 ++---
  fuse/main.c              |   8 +--
  include/erofs/internal.h |   1 +
- include/erofs/io.h       |  44 +++++++++-----
+ include/erofs/io.h       |  54 +++++++++++------
  lib/blobchunk.c          |   4 +-
  lib/cache.c              |   2 +-
  lib/compress.c           |  14 ++---
@@ -79,11 +81,11 @@ v1: https://lore.kernel.org/all/20240604093556.3883585-1-hongzhen@linux.alibaba.
  lib/super.c              |   4 +-
  lib/xattr.c              |  14 ++---
  lib/zmap.c               |   4 +-
- mkfs/main.c              |  16 ++---
- 16 files changed, 203 insertions(+), 88 deletions(-)
+ mkfs/main.c              |  17 +++---
+ 16 files changed, 209 insertions(+), 93 deletions(-)
 
 diff --git a/dump/main.c b/dump/main.c
-index dd2c620..82542a0 100644
+index 50f4662..4502e15 100644
 --- a/dump/main.c
 +++ b/dump/main.c
 @@ -167,7 +167,7 @@ static int erofsdump_parse_options_cfg(int argc, char **argv)
@@ -211,19 +213,19 @@ index 32f59a3..f0a00a1 100644
  	free(opts.mountpoint);
  	fuse_opt_free_args(&args);
 diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 46345e0..a06f13b 100644
+index 9fdff71..eae5fef 100644
 --- a/include/erofs/internal.h
 +++ b/include/erofs/internal.h
-@@ -130,6 +130,7 @@ struct erofs_sb_info {
+@@ -131,6 +131,7 @@ struct erofs_sb_info {
  	pthread_t dfops_worker;
  	struct erofs_mkfs_dfops *mkfs_dfops;
  #endif
-+	struct erofs_io_manager *io_manager;
++	struct erofs_iomgr_ops *io_ops;
  };
  
  /* make sure that any user of the erofs headers has atleast 64bit off_t type */
 diff --git a/include/erofs/io.h b/include/erofs/io.h
-index 4db5716..8ee372f 100644
+index 4db5716..36500a4 100644
 --- a/include/erofs/io.h
 +++ b/include/erofs/io.h
 @@ -22,38 +22,54 @@ extern "C"
@@ -236,21 +238,24 @@ index 4db5716..8ee372f 100644
 -int dev_open_ro(struct erofs_sb_info *sbi, const char *dev);
 -void dev_close(struct erofs_sb_info *sbi);
 -int dev_write(struct erofs_sb_info *sbi, const void *buf,
+-	      u64 offset, size_t len);
+-int dev_read(struct erofs_sb_info *sbi, int device_id,
+-	     void *buf, u64 offset, size_t len);
+-int dev_fillzero(struct erofs_sb_info *sbi, u64 offset,
+-		 size_t len, bool padding);
+-int dev_fsync(struct erofs_sb_info *sbi);
+-int dev_resize(struct erofs_sb_info *sbi, erofs_blk_t nblocks);
 +void erofs_blob_closeall(struct erofs_sb_info *sbi);
 +int erofs_blob_open_ro(struct erofs_sb_info *sbi, const char *dev);
 +int erofs_dev_open(struct erofs_sb_info *sbi, const char *devname);
 +int erofs_dev_open_ro(struct erofs_sb_info *sbi, const char *dev);
 +void erofs_dev_close(struct erofs_sb_info *sbi);
 +int erofs_dev_write(struct erofs_sb_info *sbi, const void *buf,
- 	      u64 offset, size_t len);
--int dev_read(struct erofs_sb_info *sbi, int device_id,
++		    u64 offset, size_t len);
 +int erofs_dev_read(struct erofs_sb_info *sbi, int device_id,
- 	     void *buf, u64 offset, size_t len);
--int dev_fillzero(struct erofs_sb_info *sbi, u64 offset,
++		   void *buf, u64 offset, size_t len);
 +int erofs_dev_fillzero(struct erofs_sb_info *sbi, u64 offset,
- 		 size_t len, bool padding);
--int dev_fsync(struct erofs_sb_info *sbi);
--int dev_resize(struct erofs_sb_info *sbi, erofs_blk_t nblocks);
++		       size_t len, bool padding);
 +int erofs_dev_fsync(struct erofs_sb_info *sbi);
 +int erofs_dev_resize(struct erofs_sb_info *sbi, erofs_blk_t nblocks);
  
@@ -259,8 +264,9 @@ index 4db5716..8ee372f 100644
  			      size_t length);
  
 -static inline int blk_write(struct erofs_sb_info *sbi, const void *buf,
+-			    erofs_blk_t blkaddr, u32 nblocks)
 +static inline int erofs_blk_write(struct erofs_sb_info *sbi, const void *buf,
- 			    erofs_blk_t blkaddr, u32 nblocks)
++				  erofs_blk_t blkaddr, u32 nblocks)
  {
 -	return dev_write(sbi, buf, erofs_pos(sbi, blkaddr),
 +	return erofs_dev_write(sbi, buf, erofs_pos(sbi, blkaddr),
@@ -268,24 +274,25 @@ index 4db5716..8ee372f 100644
  }
  
 -static inline int blk_read(struct erofs_sb_info *sbi, int device_id, void *buf,
+-			   erofs_blk_t start, u32 nblocks)
 +static inline int erofs_blk_read(struct erofs_sb_info *sbi, int device_id, void *buf,
- 			   erofs_blk_t start, u32 nblocks)
++				 erofs_blk_t start, u32 nblocks)
  {
 -	return dev_read(sbi, device_id, buf, erofs_pos(sbi, start),
 +	return erofs_dev_read(sbi, device_id, buf, erofs_pos(sbi, start),
  			erofs_pos(sbi, nblocks));
  }
  
-+struct erofs_io_manager {
++struct erofs_iomgr_ops {
 +	int (*open)(struct erofs_sb_info *sbi, const char *devname);
 +	int (*open_ro)(struct erofs_sb_info *sbi, const char *dev);
 +	int (*blob_open_ro)(struct erofs_sb_info *sbi, const char *dev);
 +	int (*read)(struct erofs_sb_info *sbi, int device_id,
-+		void *buf, u64 offset, size_t len);
++		    void *buf, u64 offset, size_t len);
 +	int (*write)(struct erofs_sb_info *sbi, const void *buf,
-+		u64 offset, size_t len);
++		     u64 offset, size_t len);
 +	int (*fillzero)(struct erofs_sb_info *sbi, u64 offset,
-+		size_t len, bool padding);
++			size_t len, bool padding);
 +	int (*fsync)(struct erofs_sb_info *sbi);
 +	int (*resize)(struct erofs_sb_info *sbi, erofs_blk_t nblocks);
 +	void (*close)(struct erofs_sb_info *sbi);
@@ -530,7 +537,7 @@ index cd48e55..909cb53 100644
  					   false);
  			if (ret)
 diff --git a/lib/io.c b/lib/io.c
-index bfae73a..fe9730e 100644
+index bfae73a..0e21bdf 100644
 --- a/lib/io.c
 +++ b/lib/io.c
 @@ -46,7 +46,7 @@ static int dev_get_blkdev_size(int fd, u64 *bytes)
@@ -648,49 +655,49 @@ index bfae73a..fe9730e 100644
 +
 +void erofs_blob_closeall(struct erofs_sb_info *sbi)
 +{
-+	if (sbi->io_manager && !sbi->io_manager->blob_closeall)
++	if (sbi->io_ops && !sbi->io_ops->blob_closeall)
 +		return;
 +
-+	if (sbi->io_manager)
-+		sbi->io_manager->blob_closeall(sbi);
++	if (sbi->io_ops)
++		sbi->io_ops->blob_closeall(sbi);
 +	else
 +		builtin_blob_closeall(sbi);
 +}
 +
 +int erofs_blob_open_ro(struct erofs_sb_info *sbi, const char *dev)
 +{
-+	if (sbi->io_manager && !sbi->io_manager->blob_open_ro)
++	if (sbi->io_ops && !sbi->io_ops->blob_open_ro)
 +		return -EOPNOTSUPP;
 +
-+	return sbi->io_manager ? sbi->io_manager->blob_open_ro(sbi, dev) :
++	return sbi->io_ops ? sbi->io_ops->blob_open_ro(sbi, dev) :
 +		builtin_blob_open_ro(sbi, dev);
 +}
 +
 +int erofs_dev_open(struct erofs_sb_info *sbi, const char *devname)
 +{
-+	if (sbi->io_manager && !sbi->io_manager->open)
++	if (sbi->io_ops && !sbi->io_ops->open)
 +		return -EOPNOTSUPP;
 +
-+	return sbi->io_manager ? sbi->io_manager->open(sbi, devname) :
++	return sbi->io_ops ? sbi->io_ops->open(sbi, devname) :
 +		builtin_dev_open(sbi, devname);
 +}
 +
 +int erofs_dev_open_ro(struct erofs_sb_info *sbi, const char *dev)
 +{
-+	if (sbi->io_manager && !sbi->io_manager->open_ro)
++	if (sbi->io_ops && !sbi->io_ops->open_ro)
 +		return -EOPNOTSUPP;
 +
-+	return sbi->io_manager ?  sbi->io_manager->open_ro(sbi, dev) :
++	return sbi->io_ops ? sbi->io_ops->open_ro(sbi, dev) :
 +		builtin_dev_open_ro(sbi, dev);
 +}
 +
 +void erofs_dev_close(struct erofs_sb_info *sbi)
 +{
-+	if (sbi->io_manager && !sbi->io_manager->close)
++	if (sbi->io_ops && !sbi->io_ops->close)
 +		return;
 +
-+	if (sbi->io_manager)
-+		sbi->io_manager->close(sbi);
++	if (sbi->io_ops)
++		sbi->io_ops->close(sbi);
 +	else
 +		builtin_dev_close(sbi);
 +}
@@ -698,49 +705,49 @@ index bfae73a..fe9730e 100644
 +int erofs_dev_write(struct erofs_sb_info *sbi, const void *buf,
 +		    u64 offset, size_t len)
 +{
-+	if (sbi->io_manager && !sbi->io_manager->write)
++	if (sbi->io_ops && !sbi->io_ops->write)
 +		return -EOPNOTSUPP;
 +
-+	return sbi->io_manager ? sbi->io_manager->write(sbi, buf, offset, len) :
++	return sbi->io_ops ? sbi->io_ops->write(sbi, buf, offset, len) :
 +		builtin_dev_write(sbi, buf, offset, len);
 +}
 +
 +int erofs_dev_read(struct erofs_sb_info *sbi, int device_id,
 +		   void *buf, u64 offset, size_t len)
 +{
-+	if (sbi->io_manager && !sbi->io_manager->read)
++	if (sbi->io_ops && !sbi->io_ops->read)
 +		return -EOPNOTSUPP;
 +
-+	return sbi->io_manager ? sbi->io_manager->read(sbi, device_id, buf, offset, len) :
++	return sbi->io_ops ? sbi->io_ops->read(sbi, device_id, buf, offset, len) :
 +		builtin_dev_read(sbi, device_id, buf, offset, len);
 +}
 +
 +int erofs_dev_fillzero(struct erofs_sb_info *sbi, u64 offset,
 +		       size_t len, bool padding)
 +{
-+	if (sbi->io_manager && !sbi->io_manager->fillzero)
++	if (sbi->io_ops && !sbi->io_ops->fillzero)
 +		return -EOPNOTSUPP;
 +
-+	if (sbi->io_manager && sbi->io_manager->fillzero)
-+		return sbi->io_manager->fillzero(sbi, offset, len, padding);
++	if (sbi->io_ops && sbi->io_ops->fillzero)
++		return sbi->io_ops->fillzero(sbi, offset, len, padding);
 +	return builtin_dev_fillzero(sbi, offset, len, padding);
 +}
 +
 +int erofs_dev_fsync(struct erofs_sb_info *sbi)
 +{
-+	if (sbi->io_manager && !sbi->io_manager->fsync)
++	if (sbi->io_ops && !sbi->io_ops->fsync)
 +		return 0;
 +
-+	return sbi->io_manager ? sbi->io_manager->fsync(sbi) :
++	return sbi->io_ops ? sbi->io_ops->fsync(sbi) :
 +		builtin_dev_fsync(sbi);
 +}
 +
 +int erofs_dev_resize(struct erofs_sb_info *sbi, erofs_blk_t nblocks)
 +{
-+	if (sbi->io_manager && !sbi->io_manager->resize)
++	if (sbi->io_ops && !sbi->io_ops->resize)
 +		return 0;
 +
-+	return sbi->io_manager ? sbi->io_manager->resize(sbi, nblocks) :
++	return sbi->io_ops ? sbi->io_ops->resize(sbi, nblocks) :
 +		builtin_dev_resize(sbi, nblocks);
 +}
 diff --git a/lib/namei.c b/lib/namei.c
@@ -766,7 +773,7 @@ index 294d7a3..bdc78c5 100644
  			       sizeof(*die) - sizeof(*dic));
  		if (ret < 0)
 diff --git a/lib/super.c b/lib/super.c
-index f952f7e..674ee1a 100644
+index 4d16d29..774b7bd 100644
 --- a/lib/super.c
 +++ b/lib/super.c
 @@ -56,7 +56,7 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
@@ -877,7 +884,7 @@ index 2ec8505..d75174e 100644
  		return -EIO;
  
 diff --git a/mkfs/main.c b/mkfs/main.c
-index 347efe6..9638eb6 100644
+index 347efe6..30f263d 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
 @@ -501,7 +501,7 @@ static void erofs_rebuild_cleanup(void)
@@ -907,16 +914,17 @@ index 347efe6..9638eb6 100644
  	free(buf);
  	erofs_bdrop(bh, false);
  	return ret;
-@@ -996,7 +996,7 @@ static int erofs_mkfs_superblock_csum_set(void)
+@@ -996,7 +996,8 @@ static int erofs_mkfs_superblock_csum_set(void)
  	unsigned int len;
  	struct erofs_super_block *sb;
  
 -	ret = blk_read(&sbi, 0, buf, 0, erofs_blknr(&sbi, EROFS_SUPER_END) + 1);
-+	ret = erofs_blk_read(&sbi, 0, buf, 0, erofs_blknr(&sbi, EROFS_SUPER_END) + 1);
++	ret = erofs_blk_read(&sbi, 0, buf, 0,
++			     erofs_blknr(&sbi, EROFS_SUPER_END) + 1);
  	if (ret) {
  		erofs_err("failed to read superblock to set checksum: %s",
  			  erofs_strerror(ret));
-@@ -1026,7 +1026,7 @@ static int erofs_mkfs_superblock_csum_set(void)
+@@ -1026,7 +1027,7 @@ static int erofs_mkfs_superblock_csum_set(void)
  	/* set up checksum field to erofs_super_block */
  	sb->checksum = cpu_to_le32(crc);
  
@@ -925,7 +933,7 @@ index 347efe6..9638eb6 100644
  	if (ret) {
  		erofs_err("failed to write checksummed superblock: %s",
  			  erofs_strerror(ret));
-@@ -1221,7 +1221,7 @@ int main(int argc, char **argv)
+@@ -1221,7 +1222,7 @@ int main(int argc, char **argv)
  		sbi.build_time_nsec = t.tv_usec;
  	}
  
@@ -934,7 +942,7 @@ index 347efe6..9638eb6 100644
  	if (err) {
  		fprintf(stderr, "Try '%s --help' for more information.\n", argv[0]);
  		return 1;
-@@ -1452,7 +1452,7 @@ int main(int argc, char **argv)
+@@ -1452,7 +1453,7 @@ int main(int argc, char **argv)
  	if (err)
  		goto exit;
  
@@ -943,7 +951,7 @@ index 347efe6..9638eb6 100644
  
  	if (!err && erofs_sb_has_sb_chksum(&sbi))
  		err = erofs_mkfs_superblock_csum_set();
-@@ -1460,7 +1460,7 @@ exit:
+@@ -1460,7 +1461,7 @@ exit:
  	z_erofs_compress_exit();
  	z_erofs_dedupe_exit();
  	erofs_blocklist_close();
