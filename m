@@ -2,49 +2,44 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D3FF8FE0A5
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Jun 2024 10:11:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BF41D8FE4E0
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Jun 2024 13:07:39 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gaZZh2O/;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FAqSHLgi;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VvxqH2JPVz3d9t
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Jun 2024 18:11:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Vw1kw0rqyz3dBs
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Jun 2024 21:07:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gaZZh2O/;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FAqSHLgi;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vvxq60Lvxz3cyd
-	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Jun 2024 18:10:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vw1kn2yj4z3cy9
+	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Jun 2024 21:07:27 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1717661453; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=9zY6F6dImF/etY0wWv/u+Vy6VO20JzjAaThufS5Hi5w=;
-	b=gaZZh2O/gq0wvSJ++LIVcsdNgCwBZq0KajbVI8JV886nwYBZfb7xQ1oCX89I8oYACDsR4cg6SQyVIy1Rp6/vQej3xGVRe8h+hq7pR3xKvoMHn8GKQasYVjZ+Nt5UAlUZEYKNbJtgUfgI6NhzYQHg9V2gtDJ4bFrozNkkMbrnxf8=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R851e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W7xWQ90_1717661450;
-Received: from 30.97.48.170(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W7xWQ90_1717661450)
+	t=1717672043; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=P+X1pmkOjtNEUBbzLQ9wluSpTiAJDobnbvYxJ0ye54U=;
+	b=FAqSHLgiSsydBjzTezIKkl444/Wg+7DbhaU2GhxRL/9OBfJUBLJxxPy7cMzd1xz0ByBswCI7/vxUeHudn+XLeIEiR5hv0e4TwETd3/+YBg0bdY8S1sMOeN5w8ErOzaeIuV+K7CT39YORE8EbJyDfw7fTlwvL48yZ0uR9EWaa9Fk=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R491e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033022160150;MF=hongzhen@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W7y5bMu_1717672041;
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0W7y5bMu_1717672041)
           by smtp.aliyun-inc.com;
-          Thu, 06 Jun 2024 16:10:52 +0800
-Message-ID: <6e382603-7bb6-4b49-87e5-59d6f7c4dc5d@linux.alibaba.com>
-Date: Thu, 6 Jun 2024 16:10:49 +0800
+          Thu, 06 Jun 2024 19:07:22 +0800
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: introduce erofs_vfile
+Date: Thu,  6 Jun 2024 19:07:20 +0800
+Message-Id: <20240606110720.2380365-1-hongzhen@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: support external crypto for decompression
-To: tao.zeng@amlogic.com, Gao Xiang <xiang@kernel.org>,
- Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
- Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>
-References: <20240606-erofs-decompression-v1-1-ec5f31396e04@amlogic.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240606-erofs-decompression-v1-1-ec5f31396e04@amlogic.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,304 +51,1015 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Hongzhen Luo <hongzhen@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
+The current implementation of reading/writing in erofs is through
+file descriptors. The `erofs_vfile` provides a more flexible way
+to perform I/O control.
 
-On 2024/6/6 15:53, Tao Zeng via B4 Relay wrote:
-> From: Tao Zeng <tao.zeng@amlogic.com>
-> 
-> Some SoCs have hardware decompressors which using private algorithms,
-> which can be used for accelerating decompression for EROFS, but
-> current EROFS decompressor architecture do not support external
-> decompressors, this change adds a crypto layer interface for decompression
-> and can be used to hook SoC vendor's decompressor by crypto name. Soc
-> vendors can develop their own code which can be added to crypto layer.
+Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+---
+ dump/main.c              |   8 +--
+ fsck/main.c              |  14 ++--
+ fuse/main.c              |   8 +--
+ include/erofs/internal.h |  23 +++++-
+ include/erofs/io.h       |  30 ++++----
+ lib/blobchunk.c          |   6 +-
+ lib/cache.c              |   2 +-
+ lib/compress.c           |  14 ++--
+ lib/data.c               |  10 +--
+ lib/diskbuf.c            |   4 +-
+ lib/inode.c              |  18 ++---
+ lib/io.c                 | 151 ++++++++++++++++++++++++++++++++-------
+ lib/namei.c              |   4 +-
+ lib/super.c              |   4 +-
+ lib/xattr.c              |  14 ++--
+ lib/zmap.c               |   4 +-
+ mkfs/main.c              |  16 ++---
+ 17 files changed, 225 insertions(+), 105 deletions(-)
 
-There are several fundamental points with this stuff.
+diff --git a/dump/main.c b/dump/main.c
+index dd2c620..82542a0 100644
+--- a/dump/main.c
++++ b/dump/main.c
+@@ -167,7 +167,7 @@ static int erofsdump_parse_options_cfg(int argc, char **argv)
+ 			usage(argc, argv);
+ 			exit(0);
+ 		case 3:
+-			err = blob_open_ro(&sbi, optarg);
++			err = erofs_blob_open_ro(&sbi, optarg);
+ 			if (err)
+ 				return err;
+ 			++sbi.extra_devices;
+@@ -685,7 +685,7 @@ int main(int argc, char **argv)
+ 		goto exit;
+ 	}
+ 
+-	err = dev_open_ro(&sbi, cfg.c_img_path);
++	err = erofs_dev_open_ro(&sbi, cfg.c_img_path);
+ 	if (err) {
+ 		erofs_err("failed to open image file");
+ 		goto exit;
+@@ -718,9 +718,9 @@ int main(int argc, char **argv)
+ exit_put_super:
+ 	erofs_put_super(&sbi);
+ exit_dev_close:
+-	dev_close(&sbi);
++	erofs_dev_close(&sbi);
+ exit:
+-	blob_closeall(&sbi);
++	erofs_blob_closeall(&sbi);
+ 	erofs_exit_configure();
+ 	return err;
+ }
+diff --git a/fsck/main.c b/fsck/main.c
+index 4dcb49d..be400ff 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -184,7 +184,7 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
+ 			}
+ 			break;
+ 		case 3:
+-			ret = blob_open_ro(&sbi, optarg);
++			ret = erofs_blob_open_ro(&sbi, optarg);
+ 			if (ret)
+ 				return ret;
+ 			++sbi.extra_devices;
+@@ -312,7 +312,7 @@ static int erofs_check_sb_chksum(void)
+ 	struct erofs_super_block *sb;
+ 	int ret;
+ 
+-	ret = blk_read(&sbi, 0, buf, 0, 1);
++	ret = erofs_blk_read(&sbi, 0, buf, 0, 1);
+ 	if (ret) {
+ 		erofs_err("failed to read superblock to check checksum: %d",
+ 			  ret);
+@@ -360,7 +360,7 @@ static int erofs_verify_xattr(struct erofs_inode *inode)
+ 	}
+ 
+ 	addr = erofs_iloc(inode) + inode->inode_isize;
+-	ret = dev_read(sbi, 0, buf, addr, xattr_hdr_size);
++	ret = erofs_dev_read(sbi, 0, buf, addr, xattr_hdr_size);
+ 	if (ret < 0) {
+ 		erofs_err("failed to read xattr header @ nid %llu: %d",
+ 			  inode->nid | 0ULL, ret);
+@@ -390,7 +390,7 @@ static int erofs_verify_xattr(struct erofs_inode *inode)
+ 	while (remaining > 0) {
+ 		unsigned int entry_sz;
+ 
+-		ret = dev_read(sbi, 0, buf, addr, xattr_entry_size);
++		ret = erofs_dev_read(sbi, 0, buf, addr, xattr_entry_size);
+ 		if (ret) {
+ 			erofs_err("failed to read xattr entry @ nid %llu: %d",
+ 				  inode->nid | 0ULL, ret);
+@@ -966,7 +966,7 @@ int main(int argc, char *argv[])
+ 	cfg.c_dbg_lvl = -1;
+ #endif
+ 
+-	err = dev_open_ro(&sbi, cfg.c_img_path);
++	err = erofs_dev_open_ro(&sbi, cfg.c_img_path);
+ 	if (err) {
+ 		erofs_err("failed to open image file");
+ 		goto exit;
+@@ -1022,9 +1022,9 @@ exit_hardlink:
+ exit_put_super:
+ 	erofs_put_super(&sbi);
+ exit_dev_close:
+-	dev_close(&sbi);
++	erofs_dev_close(&sbi);
+ exit:
+-	blob_closeall(&sbi);
++	erofs_blob_closeall(&sbi);
+ 	erofs_exit_configure();
+ 	return err ? 1 : 0;
+ }
+diff --git a/fuse/main.c b/fuse/main.c
+index 32f59a3..f0a00a1 100644
+--- a/fuse/main.c
++++ b/fuse/main.c
+@@ -574,7 +574,7 @@ static int optional_opt_func(void *data, const char *arg, int key,
+ 
+ 	switch (key) {
+ 	case 1:
+-		ret = blob_open_ro(&sbi, arg + sizeof("--device=") - 1);
++		ret = erofs_blob_open_ro(&sbi, arg + sizeof("--device=") - 1);
+ 		if (ret)
+ 			return -1;
+ 		++sbi.extra_devices;
+@@ -677,7 +677,7 @@ int main(int argc, char *argv[])
+ 		cfg.c_dbg_lvl = EROFS_DBG;
+ 
+ 	sbi.diskoffset = fusecfg.offset;
+-	ret = dev_open_ro(&sbi, fusecfg.disk);
++	ret = erofs_dev_open_ro(&sbi, fusecfg.disk);
+ 	if (ret) {
+ 		fprintf(stderr, "failed to open: %s\n", fusecfg.disk);
+ 		goto err_fuse_free_args;
+@@ -747,8 +747,8 @@ int main(int argc, char *argv[])
+ err_super_put:
+ 	erofs_put_super(&sbi);
+ err_dev_close:
+-	blob_closeall(&sbi);
+-	dev_close(&sbi);
++	erofs_blob_closeall(&sbi);
++	erofs_dev_close(&sbi);
+ err_fuse_free_args:
+ 	free(opts.mountpoint);
+ 	fuse_opt_free_args(&args);
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 46345e0..4c0c855 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -71,6 +71,26 @@ struct erofs_xattr_prefix_item {
+ 
+ #define EROFS_PACKED_NID_UNALLOCATED	-1
+ 
++struct erofs_vops;
++struct erofs_vfile {
++	int fd;
++	struct erofs_vops *ops;
++};
++
++struct erofs_vops {
++	int (*open)(struct erofs_vfile *vf);
++	int (*open_ro)(struct erofs_vfile *vf);
++	int (*read)(struct erofs_vfile *vf, void *buf, u64 offset, size_t len);
++	int (*write)(struct erofs_vfile *vf, const void *buf, u64 offset, size_t len);
++	int (*fillzero)(struct erofs_vfile *vf, u64 offset, size_t len, bool padding);
++	int (*fsync)(struct erofs_vfile *vf);
++	int (*resize)(struct erofs_vfile *vf, u64 sz);
++	void (*close)(struct erofs_vfile *vf);
++	ssize_t (*copy_file_range)(int fd_in, erofs_off_t *off_in,
++			      struct erofs_vfile *vf, erofs_off_t *off_out,
++			      size_t length);	
++};
++
+ struct erofs_mkfs_dfops;
+ struct erofs_sb_info {
+ 	struct erofs_device_info *devs;
+@@ -114,7 +134,8 @@ struct erofs_sb_info {
+ 	u8 xattr_prefix_count;
+ 	struct erofs_xattr_prefix_item *xattr_prefixes;
+ 
+-	int devfd, devblksz;
++	struct erofs_vfile vf;
++	int devblksz;
+ 	/* offset when reading multi-part images */
+ 	u64 diskoffset;
+ 	u64 devsz;
+diff --git a/include/erofs/io.h b/include/erofs/io.h
+index 4db5716..0baf7eb 100644
+--- a/include/erofs/io.h
++++ b/include/erofs/io.h
+@@ -22,35 +22,35 @@ extern "C"
+ #define O_BINARY	0
+ #endif
+ 
+-void blob_closeall(struct erofs_sb_info *sbi);
+-int blob_open_ro(struct erofs_sb_info *sbi, const char *dev);
+-int dev_open(struct erofs_sb_info *sbi, const char *devname);
+-int dev_open_ro(struct erofs_sb_info *sbi, const char *dev);
+-void dev_close(struct erofs_sb_info *sbi);
+-int dev_write(struct erofs_sb_info *sbi, const void *buf,
++void erofs_blob_closeall(struct erofs_sb_info *sbi);
++int erofs_blob_open_ro(struct erofs_sb_info *sbi, const char *dev);
++int erofs_dev_open(struct erofs_sb_info *sbi, const char *devname);
++int erofs_dev_open_ro(struct erofs_sb_info *sbi, const char *dev);
++void erofs_dev_close(struct erofs_sb_info *sbi);
++int erofs_dev_write(struct erofs_sb_info *sbi, const void *buf,
+ 	      u64 offset, size_t len);
+-int dev_read(struct erofs_sb_info *sbi, int device_id,
++int erofs_dev_read(struct erofs_sb_info *sbi, int device_id,
+ 	     void *buf, u64 offset, size_t len);
+-int dev_fillzero(struct erofs_sb_info *sbi, u64 offset,
++int erofs_dev_fillzero(struct erofs_sb_info *sbi, u64 offset,
+ 		 size_t len, bool padding);
+-int dev_fsync(struct erofs_sb_info *sbi);
+-int dev_resize(struct erofs_sb_info *sbi, erofs_blk_t nblocks);
++int erofs_dev_fsync(struct erofs_sb_info *sbi);
++int erofs_dev_resize(struct erofs_sb_info *sbi, erofs_blk_t nblocks);
+ 
+ ssize_t erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
+-			      int fd_out, erofs_off_t *off_out,
++			      struct erofs_vfile *vf, erofs_off_t *off_out,
+ 			      size_t length);
+ 
+-static inline int blk_write(struct erofs_sb_info *sbi, const void *buf,
++static inline int erofs_blk_write(struct erofs_sb_info *sbi, const void *buf,
+ 			    erofs_blk_t blkaddr, u32 nblocks)
+ {
+-	return dev_write(sbi, buf, erofs_pos(sbi, blkaddr),
++	return erofs_dev_write(sbi, buf, erofs_pos(sbi, blkaddr),
+ 			 erofs_pos(sbi, nblocks));
+ }
+ 
+-static inline int blk_read(struct erofs_sb_info *sbi, int device_id, void *buf,
++static inline int erofs_blk_read(struct erofs_sb_info *sbi, int device_id, void *buf,
+ 			   erofs_blk_t start, u32 nblocks)
+ {
+-	return dev_read(sbi, device_id, buf, erofs_pos(sbi, start),
++	return erofs_dev_read(sbi, device_id, buf, erofs_pos(sbi, start),
+ 			erofs_pos(sbi, nblocks));
+ }
+ 
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index 8082aa4..f800e10 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -195,7 +195,7 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 					0 : extent_end - extent_start,
+ 					   first_extent, true);
+ 
+-	return dev_write(inode->sbi, inode->chunkindexes, off, inode->extent_isize);
++	return erofs_dev_write(inode->sbi, inode->chunkindexes, off, inode->extent_isize);
+ }
+ 
+ int erofs_blob_mergechunks(struct erofs_inode *inode, unsigned int chunkbits,
+@@ -506,7 +506,7 @@ int erofs_mkfs_dump_blobs(struct erofs_sb_info *sbi)
+ 			};
+ 
+ 			memcpy(dis.tag, sbi->devs[i].tag, sizeof(dis.tag));
+-			ret = dev_write(sbi, &dis, pos_out, sizeof(dis));
++			ret = erofs_dev_write(sbi, &dis, pos_out, sizeof(dis));
+ 			if (ret)
+ 				return ret;
+ 			pos_out += sizeof(dis);
+@@ -529,7 +529,7 @@ int erofs_mkfs_dump_blobs(struct erofs_sb_info *sbi)
+ 	if (blobfile) {
+ 		pos_in = 0;
+ 		ret = erofs_copy_file_range(fileno(blobfile), &pos_in,
+-				sbi->devfd, &pos_out, datablob_size);
++				&sbi->vf, &pos_out, datablob_size);
+ 		ret = ret < datablob_size ? -EIO : 0;
+ 	} else {
+ 		ret = 0;
+diff --git a/lib/cache.c b/lib/cache.c
+index 0a88061..f65f956 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -400,7 +400,7 @@ int erofs_bflush(struct erofs_buffer_block *bb)
+ 
+ 		padding = blksiz - (p->buffers.off & (blksiz - 1));
+ 		if (padding != blksiz)
+-			dev_fillzero(&sbi, erofs_pos(&sbi, blkaddr) - padding,
++			erofs_dev_fillzero(&sbi, erofs_pos(&sbi, blkaddr) - padding,
+ 				     padding, true);
+ 
+ 		if (p->type != DATA)
+diff --git a/lib/compress.c b/lib/compress.c
+index f783236..12368eb 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -407,7 +407,7 @@ static int write_uncompressed_extent(struct z_erofs_compress_sctx *ctx,
+ 	} else {
+ 		erofs_dbg("Writing %u uncompressed data to block %u", count,
+ 			  ctx->blkaddr);
+-		ret = blk_write(sbi, dst, ctx->blkaddr, 1);
++		ret = erofs_blk_write(sbi, dst, ctx->blkaddr, 1);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -659,7 +659,7 @@ frag_packing:
+ 			erofs_dbg("Writing %u compressed data to %u of %u blocks",
+ 				  e->length, ctx->blkaddr, e->compressedblks);
+ 
+-			ret = blk_write(sbi, dst - padding, ctx->blkaddr,
++			ret = erofs_blk_write(sbi, dst - padding, ctx->blkaddr,
+ 					e->compressedblks);
+ 			if (ret)
+ 				return ret;
+@@ -1288,7 +1288,7 @@ int z_erofs_merge_segment(struct z_erofs_compress_ictx *ictx,
+ 		/* skip write data but leave blkaddr for inline fallback */
+ 		if (ei->e.inlined || !ei->e.compressedblks)
+ 			continue;
+-		ret2 = blk_write(sbi, sctx->membuf + blkoff * erofs_blksiz(sbi),
++		ret2 = erofs_blk_write(sbi, sctx->membuf + blkoff * erofs_blksiz(sbi),
+ 				 ei->e.blkaddr, ei->e.compressedblks);
+ 		blkoff += ei->e.compressedblks;
+ 		if (ret2) {
+@@ -1603,7 +1603,7 @@ static int z_erofs_build_compr_cfgs(struct erofs_sb_info *sbi,
+ 			return PTR_ERR(bh);
+ 		}
+ 		erofs_mapbh(bh->block);
+-		ret = dev_write(sbi, &lz4alg, erofs_btell(bh, false),
++		ret = erofs_dev_write(sbi, &lz4alg, erofs_btell(bh, false),
+ 				sizeof(lz4alg));
+ 		bh->op = &erofs_drop_directly_bhops;
+ 	}
+@@ -1627,7 +1627,7 @@ static int z_erofs_build_compr_cfgs(struct erofs_sb_info *sbi,
+ 			return PTR_ERR(bh);
+ 		}
+ 		erofs_mapbh(bh->block);
+-		ret = dev_write(sbi, &lzmaalg, erofs_btell(bh, false),
++		ret = erofs_dev_write(sbi, &lzmaalg, erofs_btell(bh, false),
+ 				sizeof(lzmaalg));
+ 		bh->op = &erofs_drop_directly_bhops;
+ 	}
+@@ -1651,7 +1651,7 @@ static int z_erofs_build_compr_cfgs(struct erofs_sb_info *sbi,
+ 			return PTR_ERR(bh);
+ 		}
+ 		erofs_mapbh(bh->block);
+-		ret = dev_write(sbi, &zalg, erofs_btell(bh, false),
++		ret = erofs_dev_write(sbi, &zalg, erofs_btell(bh, false),
+ 				sizeof(zalg));
+ 		bh->op = &erofs_drop_directly_bhops;
+ 	}
+@@ -1674,7 +1674,7 @@ static int z_erofs_build_compr_cfgs(struct erofs_sb_info *sbi,
+ 			return PTR_ERR(bh);
+ 		}
+ 		erofs_mapbh(bh->block);
+-		ret = dev_write(sbi, &zalg, erofs_btell(bh, false),
++		ret = erofs_dev_write(sbi, &zalg, erofs_btell(bh, false),
+ 				sizeof(zalg));
+ 		bh->op = &erofs_drop_directly_bhops;
+ 	}
+diff --git a/lib/data.c b/lib/data.c
+index c139e0c..5a79615 100644
+--- a/lib/data.c
++++ b/lib/data.c
+@@ -95,7 +95,7 @@ int erofs_map_blocks(struct erofs_inode *inode,
+ 	pos = roundup(erofs_iloc(vi) + vi->inode_isize +
+ 		      vi->xattr_isize, unit) + unit * chunknr;
+ 
+-	err = blk_read(sbi, 0, buf, erofs_blknr(sbi, pos), 1);
++	err = erofs_blk_read(sbi, 0, buf, erofs_blknr(sbi, pos), 1);
+ 	if (err < 0)
+ 		return -EIO;
+ 
+@@ -176,7 +176,7 @@ int erofs_read_one_data(struct erofs_inode *inode, struct erofs_map_blocks *map,
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = dev_read(sbi, mdev.m_deviceid, buffer, mdev.m_pa + offset, len);
++	ret = erofs_dev_read(sbi, mdev.m_deviceid, buffer, mdev.m_pa + offset, len);
+ 	if (ret < 0)
+ 		return -EIO;
+ 	return 0;
+@@ -266,7 +266,7 @@ int z_erofs_read_one_data(struct erofs_inode *inode,
+ 		return ret;
+ 	}
+ 
+-	ret = dev_read(sbi, mdev.m_deviceid, raw, mdev.m_pa, map->m_plen);
++	ret = erofs_dev_read(sbi, mdev.m_deviceid, raw, mdev.m_pa, map->m_plen);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -417,7 +417,7 @@ static void *erofs_read_metadata_bdi(struct erofs_sb_info *sbi,
+ 	u8 data[EROFS_MAX_BLOCK_SIZE];
+ 
+ 	*offset = round_up(*offset, 4);
+-	ret = blk_read(sbi, 0, data, erofs_blknr(sbi, *offset), 1);
++	ret = erofs_blk_read(sbi, 0, data, erofs_blknr(sbi, *offset), 1);
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 	len = le16_to_cpu(*(__le16 *)(data + erofs_blkoff(sbi, *offset)));
+@@ -433,7 +433,7 @@ static void *erofs_read_metadata_bdi(struct erofs_sb_info *sbi,
+ 	for (i = 0; i < len; i += cnt) {
+ 		cnt = min_t(int, erofs_blksiz(sbi) - erofs_blkoff(sbi, *offset),
+ 			    len - i);
+-		ret = blk_read(sbi, 0, data, erofs_blknr(sbi, *offset), 1);
++		ret = erofs_blk_read(sbi, 0, data, erofs_blknr(sbi, *offset), 1);
+ 		if (ret) {
+ 			free(buffer);
+ 			return ERR_PTR(ret);
+diff --git a/lib/diskbuf.c b/lib/diskbuf.c
+index e5889df..a38a781 100644
+--- a/lib/diskbuf.c
++++ b/lib/diskbuf.c
+@@ -106,8 +106,8 @@ int erofs_diskbuf_init(unsigned int nstrms)
+ 		/* try to use the devfd for regfiles on stream 0 */
+ 		if (strm == dbufstrm && sbi.devsz == INT64_MAX) {
+ 			strm->devpos = 1ULL << 40;
+-			if (!ftruncate(sbi.devfd, strm->devpos << 1)) {
+-				strm->fd = dup(sbi.devfd);
++			if (!ftruncate(sbi.vf.fd, strm->devpos << 1)) {
++				strm->fd = dup(sbi.vf.fd);
+ 				if (lseek(strm->fd, strm->devpos,
+ 					  SEEK_SET) != strm->devpos)
+ 					return -EIO;
+diff --git a/lib/inode.c b/lib/inode.c
+index cd48e55..909cb53 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -315,7 +315,7 @@ static int write_dirblock(struct erofs_sb_info *sbi,
+ 	char buf[EROFS_MAX_BLOCK_SIZE];
+ 
+ 	fill_dirblock(buf, erofs_blksiz(sbi), q, head, end);
+-	return blk_write(sbi, buf, blkaddr, 1);
++	return erofs_blk_write(sbi, buf, blkaddr, 1);
+ }
+ 
+ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode)
+@@ -413,7 +413,7 @@ int erofs_write_file_from_buffer(struct erofs_inode *inode, char *buf)
+ 		return ret;
+ 
+ 	if (nblocks)
+-		blk_write(sbi, buf, inode->u.i_blkaddr, nblocks);
++		erofs_blk_write(sbi, buf, inode->u.i_blkaddr, nblocks);
+ 	inode->idata_size = inode->i_size % erofs_blksiz(sbi);
+ 	if (inode->idata_size) {
+ 		inode->idata = malloc(inode->idata_size);
+@@ -456,7 +456,7 @@ static int write_uncompressed_file_from_fd(struct erofs_inode *inode, int fd)
+ 			return -EAGAIN;
+ 		}
+ 
+-		ret = blk_write(sbi, buf, inode->u.i_blkaddr + i, 1);
++		ret = erofs_blk_write(sbi, buf, inode->u.i_blkaddr + i, 1);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -584,7 +584,7 @@ static int erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+ 		BUG_ON(1);
+ 	}
+ 
+-	ret = dev_write(sbi, &u, off, inode->inode_isize);
++	ret = erofs_dev_write(sbi, &u, off, inode->inode_isize);
+ 	if (ret)
+ 		return ret;
+ 	off += inode->inode_isize;
+@@ -595,7 +595,7 @@ static int erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+ 		if (IS_ERR(xattrs))
+ 			return PTR_ERR(xattrs);
+ 
+-		ret = dev_write(sbi, xattrs, off, inode->xattr_isize);
++		ret = erofs_dev_write(sbi, xattrs, off, inode->xattr_isize);
+ 		free(xattrs);
+ 		if (ret)
+ 			return ret;
+@@ -611,7 +611,7 @@ static int erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
+ 		} else {
+ 			/* write compression metadata */
+ 			off = roundup(off, 8);
+-			ret = dev_write(sbi, inode->compressmeta, off,
++			ret = erofs_dev_write(sbi, inode->compressmeta, off,
+ 					inode->extent_isize);
+ 			if (ret)
+ 				return ret;
+@@ -733,7 +733,7 @@ static int erofs_bh_flush_write_inline(struct erofs_buffer_head *bh)
+ 	const erofs_off_t off = erofs_btell(bh, false);
+ 	int ret;
+ 
+-	ret = dev_write(inode->sbi, inode->idata, off, inode->idata_size);
++	ret = erofs_dev_write(inode->sbi, inode->idata, off, inode->idata_size);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -804,13 +804,13 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
+ 			/* pad 0'ed data for the other cases */
+ 			zero_pos = pos + inode->idata_size;
+ 		}
+-		ret = dev_write(sbi, inode->idata, pos, inode->idata_size);
++		ret = erofs_dev_write(sbi, inode->idata, pos, inode->idata_size);
+ 		if (ret)
+ 			return ret;
+ 
+ 		DBG_BUGON(inode->idata_size > erofs_blksiz(sbi));
+ 		if (inode->idata_size < erofs_blksiz(sbi)) {
+-			ret = dev_fillzero(sbi, zero_pos,
++			ret = erofs_dev_fillzero(sbi, zero_pos,
+ 					   erofs_blksiz(sbi) - inode->idata_size,
+ 					   false);
+ 			if (ret)
+diff --git a/lib/io.c b/lib/io.c
+index bfae73a..82019b0 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -46,16 +46,16 @@ static int dev_get_blkdev_size(int fd, u64 *bytes)
+ 	return -errno;
+ }
+ 
+-void dev_close(struct erofs_sb_info *sbi)
++static void builtin_dev_close(struct erofs_sb_info *sbi)
+ {
+-	close(sbi->devfd);
++	close(sbi->vf.fd);
+ 	free(sbi->devname);
+ 	sbi->devname = NULL;
+-	sbi->devfd   = -1;
++	sbi->vf.fd = -1;
+ 	sbi->devsz   = 0;
+ }
+ 
+-int dev_open(struct erofs_sb_info *sbi, const char *dev)
++static int builtin_dev_open(struct erofs_sb_info *sbi, const char *dev)
+ {
+ 	struct stat st;
+ 	int fd, ret;
+@@ -132,13 +132,13 @@ repeat:
+ 		close(fd);
+ 		return -ENOMEM;
+ 	}
+-	sbi->devfd = fd;
++	sbi->vf.fd = fd;
+ 
+ 	erofs_info("successfully to open %s", dev);
+ 	return 0;
+ }
+ 
+-void blob_closeall(struct erofs_sb_info *sbi)
++static void builtin_blob_closeall(struct erofs_sb_info *sbi)
+ {
+ 	unsigned int i;
+ 
+@@ -147,7 +147,7 @@ void blob_closeall(struct erofs_sb_info *sbi)
+ 	sbi->nblobs = 0;
+ }
+ 
+-int blob_open_ro(struct erofs_sb_info *sbi, const char *dev)
++static int builtin_blob_open_ro(struct erofs_sb_info *sbi, const char *dev)
+ {
+ 	int fd = open(dev, O_RDONLY | O_BINARY);
+ 
+@@ -163,7 +163,7 @@ int blob_open_ro(struct erofs_sb_info *sbi, const char *dev)
+ }
+ 
+ /* XXX: temporary soluation. Disk I/O implementation needs to be refactored. */
+-int dev_open_ro(struct erofs_sb_info *sbi, const char *dev)
++static int builtin_dev_open_ro(struct erofs_sb_info *sbi, const char *dev)
+ {
+ 	int fd = open(dev, O_RDONLY | O_BINARY);
+ 
+@@ -177,12 +177,12 @@ int dev_open_ro(struct erofs_sb_info *sbi, const char *dev)
+ 		close(fd);
+ 		return -ENOMEM;
+ 	}
+-	sbi->devfd = fd;
++	sbi->vf.fd = fd;
+ 	sbi->devsz = INT64_MAX;
+ 	return 0;
+ }
+ 
+-int dev_write(struct erofs_sb_info *sbi, const void *buf, u64 offset, size_t len)
++static int builtin_dev_write(struct erofs_sb_info *sbi, const void *buf, u64 offset, size_t len)
+ {
+ 	int ret;
+ 
+@@ -203,9 +203,9 @@ int dev_write(struct erofs_sb_info *sbi, const void *buf, u64 offset, size_t len
+ 	}
+ 
+ #ifdef HAVE_PWRITE64
+-	ret = pwrite64(sbi->devfd, buf, len, (off64_t)offset);
++	ret = pwrite64(sbi->vf.fd, buf, len, (off64_t)offset);
+ #else
+-	ret = pwrite(sbi->devfd, buf, len, (off_t)offset);
++	ret = pwrite(sbi->vf.fd, buf, len, (off_t)offset);
+ #endif
+ 	if (ret != (int)len) {
+ 		if (ret < 0) {
+@@ -221,7 +221,7 @@ int dev_write(struct erofs_sb_info *sbi, const void *buf, u64 offset, size_t len
+ 	return 0;
+ }
+ 
+-int dev_fillzero(struct erofs_sb_info *sbi, u64 offset, size_t len, bool padding)
++static int builtin_dev_fillzero(struct erofs_sb_info *sbi, u64 offset, size_t len, bool padding)
+ {
+ 	static const char zero[EROFS_MAX_BLOCK_SIZE] = {0};
+ 	int ret;
+@@ -230,25 +230,25 @@ int dev_fillzero(struct erofs_sb_info *sbi, u64 offset, size_t len, bool padding
+ 		return 0;
+ 
+ #if defined(HAVE_FALLOCATE) && defined(FALLOC_FL_PUNCH_HOLE)
+-	if (!padding && fallocate(sbi->devfd, FALLOC_FL_PUNCH_HOLE |
++	if (!padding && fallocate(sbi->vf.fd, FALLOC_FL_PUNCH_HOLE |
+ 	    FALLOC_FL_KEEP_SIZE, offset + sbi->diskoffset, len) >= 0)
+ 		return 0;
+ #endif
+ 	while (len > erofs_blksiz(sbi)) {
+-		ret = dev_write(sbi, zero, offset, erofs_blksiz(sbi));
++		ret = erofs_dev_write(sbi, zero, offset, erofs_blksiz(sbi));
+ 		if (ret)
+ 			return ret;
+ 		len -= erofs_blksiz(sbi);
+ 		offset += erofs_blksiz(sbi);
+ 	}
+-	return dev_write(sbi, zero, offset, len);
++	return erofs_dev_write(sbi, zero, offset, len);
+ }
+ 
+-int dev_fsync(struct erofs_sb_info *sbi)
++static int builtin_dev_fsync(struct erofs_sb_info *sbi)
+ {
+ 	int ret;
+ 
+-	ret = fsync(sbi->devfd);
++	ret = fsync(sbi->vf.fd);
+ 	if (ret) {
+ 		erofs_err("Could not fsync device!!!");
+ 		return -EIO;
+@@ -256,7 +256,7 @@ int dev_fsync(struct erofs_sb_info *sbi)
+ 	return 0;
+ }
+ 
+-int dev_resize(struct erofs_sb_info *sbi, erofs_blk_t blocks)
++static int builtin_dev_resize(struct erofs_sb_info *sbi, erofs_blk_t blocks)
+ {
+ 	int ret;
+ 	struct stat st;
+@@ -265,7 +265,7 @@ int dev_resize(struct erofs_sb_info *sbi, erofs_blk_t blocks)
+ 	if (cfg.c_dry_run || sbi->devsz != INT64_MAX)
+ 		return 0;
+ 
+-	ret = fstat(sbi->devfd, &st);
++	ret = fstat(sbi->vf.fd, &st);
+ 	if (ret) {
+ 		erofs_err("failed to fstat.");
+ 		return -errno;
+@@ -276,18 +276,18 @@ int dev_resize(struct erofs_sb_info *sbi, erofs_blk_t blocks)
+ 	if (st.st_size == length)
+ 		return 0;
+ 	if (st.st_size > length)
+-		return ftruncate(sbi->devfd, length);
++		return ftruncate(sbi->vf.fd, length);
+ 
+ 	length = length - st.st_size;
+ #if defined(HAVE_FALLOCATE)
+-	if (fallocate(sbi->devfd, 0, st.st_size, length) >= 0)
++	if (fallocate(sbi->vf.fd, 0, st.st_size, length) >= 0)
+ 		return 0;
+ #endif
+-	return dev_fillzero(sbi, st.st_size - sbi->diskoffset,
++	return erofs_dev_fillzero(sbi, st.st_size - sbi->diskoffset,
+ 			    length, true);
+ }
+ 
+-int dev_read(struct erofs_sb_info *sbi, int device_id,
++static int builtin_dev_read(struct erofs_sb_info *sbi, int device_id,
+ 	     void *buf, u64 offset, size_t len)
+ {
+ 	int read_count, fd;
+@@ -301,7 +301,7 @@ int dev_read(struct erofs_sb_info *sbi, int device_id,
+ 	}
+ 
+ 	if (!device_id) {
+-		fd = sbi->devfd;
++		fd = sbi->vf.fd;
+ 		offset += sbi->diskoffset;
+ 	} else {
+ 		if (device_id > sbi->nblobs) {
+@@ -408,7 +408,7 @@ static ssize_t __erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
+ 	return copied;
+ }
+ 
+-ssize_t erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
++static ssize_t builtin_copy_file_range(int fd_in, erofs_off_t *off_in,
+ 			      int fd_out, erofs_off_t *off_out,
+ 			      size_t length)
+ {
+@@ -430,3 +430,102 @@ out:
+ #endif
+ 	return __erofs_copy_file_range(fd_in, off_in, fd_out, off_out, length);
+ }
++
++void erofs_blob_closeall(struct erofs_sb_info *sbi)
++{
++	builtin_blob_closeall(sbi);
++}
++
++int erofs_blob_open_ro(struct erofs_sb_info *sbi, const char *dev)
++{
++	return builtin_blob_open_ro(sbi, dev);
++}
++
++int erofs_dev_open(struct erofs_sb_info *sbi, const char *devname)
++{
++	if (sbi->vf.ops && !sbi->vf.ops->open)
++		return -EOPNOTSUPP;
++
++	return sbi->vf.ops ? sbi->vf.ops->open(&sbi->vf) :
++		builtin_dev_open(sbi, devname);
++}
++
++int erofs_dev_open_ro(struct erofs_sb_info *sbi, const char *dev)
++{
++	if (sbi->vf.ops && !sbi->vf.ops->open_ro)
++		return -EOPNOTSUPP;
++
++	return sbi->vf.ops ? sbi->vf.ops->open_ro(&sbi->vf) :
++		builtin_dev_open_ro(sbi, dev);
++}
++
++void erofs_dev_close(struct erofs_sb_info *sbi)
++{
++	if (sbi->vf.ops && !sbi->vf.ops->close)
++		return;
++
++	if (sbi->vf.ops)
++		sbi->vf.ops->close(&sbi->vf);
++	else
++		builtin_dev_close(sbi);
++}
++
++int erofs_dev_write(struct erofs_sb_info *sbi, const void *buf,
++	      u64 offset, size_t len)
++{
++	if (sbi->vf.ops && !sbi->vf.ops->write)
++		return -EOPNOTSUPP;
++
++	return sbi->vf.ops ? sbi->vf.ops->write(&sbi->vf, buf, offset, len) :
++		builtin_dev_write(sbi, buf, offset, len);
++}
++
++int erofs_dev_read(struct erofs_sb_info *sbi, int device_id,
++	     void *buf, u64 offset, size_t len)
++{
++	if (sbi->vf.ops && !sbi->vf.ops->read)
++		return -EOPNOTSUPP;
++
++	return sbi->vf.ops ? sbi->vf.ops->read(&sbi->vf, buf, offset, len) :
++		builtin_dev_read(sbi, device_id, buf, offset, len);
++}
++
++int erofs_dev_fillzero(struct erofs_sb_info *sbi, u64 offset,
++		 size_t len, bool padding)
++{
++	if (sbi->vf.ops && !sbi->vf.ops->fillzero)
++		return -EOPNOTSUPP;
++
++	return sbi->vf.ops ? sbi->vf.ops->fillzero(&sbi->vf, offset, len, padding) :
++		builtin_dev_fillzero(sbi, offset, len, padding);
++}
++
++int erofs_dev_fsync(struct erofs_sb_info *sbi)
++{
++	if (sbi->vf.ops && !sbi->vf.ops->fsync)
++		return -EOPNOTSUPP;
++
++	return sbi->vf.ops ? sbi->vf.ops->fsync(&sbi->vf) :
++		builtin_dev_fsync(sbi);
++}
++
++int erofs_dev_resize(struct erofs_sb_info *sbi, erofs_blk_t nblocks)
++{
++	if (sbi->vf.ops && !sbi->vf.ops->resize)
++		return -EOPNOTSUPP;
++
++	return sbi->vf.ops ? sbi->vf.ops->resize(&sbi->vf,
++			(u64)nblocks * (u64)erofs_blksiz(sbi)) :
++			builtin_dev_resize(sbi, nblocks);
++}
++
++ssize_t erofs_copy_file_range(int fd_in, erofs_off_t *off_in,
++			      struct erofs_vfile *vf, erofs_off_t *off_out,
++			      size_t length)
++{
++	if (vf->ops && !vf->ops->copy_file_range)
++		return -EOPNOTSUPP;
++
++	return vf->ops ? vf->ops->copy_file_range(fd_in, off_in, vf, off_out, length) :
++		builtin_copy_file_range(fd_in, off_in, vf->fd, off_out, length);
++}
+\ No newline at end of file
+diff --git a/lib/namei.c b/lib/namei.c
+index 294d7a3..bdc78c5 100644
+--- a/lib/namei.c
++++ b/lib/namei.c
+@@ -34,7 +34,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ 	DBG_BUGON(!sbi);
+ 	inode_loc = erofs_iloc(vi);
+ 
+-	ret = dev_read(sbi, 0, buf, inode_loc, sizeof(*dic));
++	ret = erofs_dev_read(sbi, 0, buf, inode_loc, sizeof(*dic));
+ 	if (ret < 0)
+ 		return -EIO;
+ 
+@@ -51,7 +51,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ 	case EROFS_INODE_LAYOUT_EXTENDED:
+ 		vi->inode_isize = sizeof(struct erofs_inode_extended);
+ 
+-		ret = dev_read(sbi, 0, buf + sizeof(*dic),
++		ret = erofs_dev_read(sbi, 0, buf + sizeof(*dic),
+ 			       inode_loc + sizeof(*dic),
+ 			       sizeof(*die) - sizeof(*dic));
+ 		if (ret < 0)
+diff --git a/lib/super.c b/lib/super.c
+index f952f7e..674ee1a 100644
+--- a/lib/super.c
++++ b/lib/super.c
+@@ -56,7 +56,7 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
+ 		struct erofs_deviceslot dis;
+ 		int ret;
+ 
+-		ret = dev_read(sbi, 0, &dis, pos, sizeof(dis));
++		ret = erofs_dev_read(sbi, 0, &dis, pos, sizeof(dis));
+ 		if (ret < 0) {
+ 			free(sbi->devs);
+ 			sbi->devs = NULL;
+@@ -79,7 +79,7 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
+ 	int ret;
+ 
+ 	sbi->blkszbits = ilog2(EROFS_MAX_BLOCK_SIZE);
+-	ret = blk_read(sbi, 0, data, 0, erofs_blknr(sbi, sizeof(data)));
++	ret = erofs_blk_read(sbi, 0, data, 0, erofs_blknr(sbi, sizeof(data)));
+ 	if (ret < 0) {
+ 		erofs_err("cannot read erofs superblock: %d", ret);
+ 		return -EIO;
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 427933f..e7417e1 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -931,7 +931,7 @@ int erofs_build_shared_xattrs_from_path(struct erofs_sb_info *sbi, const char *p
+ 	shared_xattrs_list = sorted_n[0];
+ 	free(sorted_n);
+ 	bh->op = &erofs_drop_directly_bhops;
+-	ret = dev_write(sbi, buf, erofs_btell(bh, false), shared_xattrs_size);
++	ret = erofs_dev_write(sbi, buf, erofs_btell(bh, false), shared_xattrs_size);
+ 	free(buf);
+ 	erofs_bdrop(bh, false);
+ out:
+@@ -1054,7 +1054,7 @@ static int init_inode_xattrs(struct erofs_inode *vi)
+ 	it.blkaddr = erofs_blknr(sbi, erofs_iloc(vi) + vi->inode_isize);
+ 	it.ofs = erofs_blkoff(sbi, erofs_iloc(vi) + vi->inode_isize);
+ 
+-	ret = blk_read(sbi, 0, it.page, it.blkaddr, 1);
++	ret = erofs_blk_read(sbi, 0, it.page, it.blkaddr, 1);
+ 	if (ret < 0)
+ 		return -EIO;
+ 
+@@ -1074,7 +1074,7 @@ static int init_inode_xattrs(struct erofs_inode *vi)
+ 			/* cannot be unaligned */
+ 			DBG_BUGON(it.ofs != erofs_blksiz(sbi));
+ 
+-			ret = blk_read(sbi, 0, it.page, ++it.blkaddr, 1);
++			ret = erofs_blk_read(sbi, 0, it.page, ++it.blkaddr, 1);
+ 			if (ret < 0) {
+ 				free(vi->xattr_shared_xattrs);
+ 				vi->xattr_shared_xattrs = NULL;
+@@ -1120,7 +1120,7 @@ static inline int xattr_iter_fixup(struct xattr_iter *it)
+ 
+ 	it->blkaddr += erofs_blknr(sbi, it->ofs);
+ 
+-	ret = blk_read(sbi, 0, it->page, it->blkaddr, 1);
++	ret = erofs_blk_read(sbi, 0, it->page, it->blkaddr, 1);
+ 	if (ret < 0)
+ 		return -EIO;
+ 
+@@ -1147,7 +1147,7 @@ static int inline_xattr_iter_pre(struct xattr_iter *it,
+ 	it->blkaddr = erofs_blknr(sbi, erofs_iloc(vi) + inline_xattr_ofs);
+ 	it->ofs = erofs_blkoff(sbi, erofs_iloc(vi) + inline_xattr_ofs);
+ 
+-	ret = blk_read(sbi, 0, it->page, it->blkaddr, 1);
++	ret = erofs_blk_read(sbi, 0, it->page, it->blkaddr, 1);
+ 	if (ret < 0)
+ 		return -EIO;
+ 
+@@ -1374,7 +1374,7 @@ static int shared_getxattr(struct erofs_inode *vi, struct getxattr_iter *it)
+ 		it->it.ofs = xattrblock_offset(vi, vi->xattr_shared_xattrs[i]);
+ 
+ 		if (!i || blkaddr != it->it.blkaddr) {
+-			ret = blk_read(vi->sbi, 0, it->it.page, blkaddr, 1);
++			ret = erofs_blk_read(vi->sbi, 0, it->it.page, blkaddr, 1);
+ 			if (ret < 0)
+ 				return -EIO;
+ 
+@@ -1530,7 +1530,7 @@ static int shared_listxattr(struct erofs_inode *vi, struct listxattr_iter *it)
+ 
+ 		it->it.ofs = xattrblock_offset(vi, vi->xattr_shared_xattrs[i]);
+ 		if (!i || blkaddr != it->it.blkaddr) {
+-			ret = blk_read(vi->sbi, 0, it->it.page, blkaddr, 1);
++			ret = erofs_blk_read(vi->sbi, 0, it->it.page, blkaddr, 1);
+ 			if (ret < 0)
+ 				return -EIO;
+ 
+diff --git a/lib/zmap.c b/lib/zmap.c
+index 2ec8505..d75174e 100644
+--- a/lib/zmap.c
++++ b/lib/zmap.c
+@@ -43,7 +43,7 @@ static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
+ 		return 0;
+ 
+ 	pos = round_up(erofs_iloc(vi) + vi->inode_isize + vi->xattr_isize, 8);
+-	ret = dev_read(sbi, 0, buf, pos, sizeof(buf));
++	ret = erofs_dev_read(sbi, 0, buf, pos, sizeof(buf));
+ 	if (ret < 0)
+ 		return -EIO;
+ 
+@@ -133,7 +133,7 @@ static int z_erofs_reload_indexes(struct z_erofs_maprecorder *m,
+ 	if (map->index == eblk)
+ 		return 0;
+ 
+-	ret = blk_read(m->inode->sbi, 0, mpage, eblk, 1);
++	ret = erofs_blk_read(m->inode->sbi, 0, mpage, eblk, 1);
+ 	if (ret < 0)
+ 		return -EIO;
+ 
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 12321ed..4bc04b3 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -501,7 +501,7 @@ static void erofs_rebuild_cleanup(void)
+ 	list_for_each_entry_safe(src, n, &rebuild_src_list, list) {
+ 		list_del(&src->list);
+ 		erofs_put_super(src);
+-		dev_close(src);
++		erofs_dev_close(src);
+ 		free(src);
+ 	}
+ 	rebuild_src_count = 0;
+@@ -882,7 +882,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 					return -ENOMEM;
+ 				}
+ 
+-				err = dev_open_ro(src, srcpath);
++				err = erofs_dev_open_ro(src, srcpath);
+ 				if (err) {
+ 					free(src);
+ 					erofs_rebuild_cleanup();
+@@ -982,7 +982,7 @@ int erofs_mkfs_update_super_block(struct erofs_buffer_head *bh,
+ 	}
+ 	memcpy(buf + EROFS_SUPER_OFFSET, &sb, sizeof(sb));
+ 
+-	ret = dev_write(&sbi, buf, erofs_btell(bh, false), EROFS_SUPER_END);
++	ret = erofs_dev_write(&sbi, buf, erofs_btell(bh, false), EROFS_SUPER_END);
+ 	free(buf);
+ 	erofs_bdrop(bh, false);
+ 	return ret;
+@@ -996,7 +996,7 @@ static int erofs_mkfs_superblock_csum_set(void)
+ 	unsigned int len;
+ 	struct erofs_super_block *sb;
+ 
+-	ret = blk_read(&sbi, 0, buf, 0, erofs_blknr(&sbi, EROFS_SUPER_END) + 1);
++	ret = erofs_blk_read(&sbi, 0, buf, 0, erofs_blknr(&sbi, EROFS_SUPER_END) + 1);
+ 	if (ret) {
+ 		erofs_err("failed to read superblock to set checksum: %s",
+ 			  erofs_strerror(ret));
+@@ -1026,7 +1026,7 @@ static int erofs_mkfs_superblock_csum_set(void)
+ 	/* set up checksum field to erofs_super_block */
+ 	sb->checksum = cpu_to_le32(crc);
+ 
+-	ret = blk_write(&sbi, buf, 0, 1);
++	ret = erofs_blk_write(&sbi, buf, 0, 1);
+ 	if (ret) {
+ 		erofs_err("failed to write checksummed superblock: %s",
+ 			  erofs_strerror(ret));
+@@ -1221,7 +1221,7 @@ int main(int argc, char **argv)
+ 		sbi.build_time_nsec = t.tv_usec;
+ 	}
+ 
+-	err = dev_open(&sbi, cfg.c_img_path);
++	err = erofs_dev_open(&sbi, cfg.c_img_path);
+ 	if (err) {
+ 		fprintf(stderr, "Try '%s --help' for more information.\n", argv[0]);
+ 		return 1;
+@@ -1452,7 +1452,7 @@ int main(int argc, char **argv)
+ 	if (err)
+ 		goto exit;
+ 
+-	err = dev_resize(&sbi, nblocks);
++	err = erofs_dev_resize(&sbi, nblocks);
+ 
+ 	if (!err && erofs_sb_has_sb_chksum(&sbi))
+ 		err = erofs_mkfs_superblock_csum_set();
+@@ -1460,7 +1460,7 @@ exit:
+ 	z_erofs_compress_exit();
+ 	z_erofs_dedupe_exit();
+ 	erofs_blocklist_close();
+-	dev_close(&sbi);
++	erofs_dev_close(&sbi);
+ 	erofs_cleanup_compress_hints();
+ 	erofs_cleanup_exclude_rules();
+ 	if (cfg.c_chunkbits)
+-- 
+2.39.3
 
-First, I think using crypto APIs to support hardware accelerators
-_may_ be fine (I also plan to use crypto APIs for Intel IAA
-accelerator), as long as you contribute your SoC accelerator
-implementation upstream.
-
-Using crypto APIs for out-of-tree external drivers as workaround
-doesn't work on my side (or I guess the whole Linux project).
-
-> 
-> Signed-off-by: Tao Zeng <tao.zeng@amlogic.com>
-> ---
->   fs/erofs/Kconfig                |  19 +++
->   fs/erofs/Makefile               |   1 +
->   fs/erofs/compress.h             |  28 ++++
->   fs/erofs/decompressor.c         |   7 +
->   fs/erofs/decompressor_cryptor.c | 306 ++++++++++++++++++++++++++++++++++++++++
->   fs/erofs/erofs_fs.h             |  14 ++
->   fs/erofs/internal.h             |   4 +
->   fs/erofs/super.c                |   8 +-
->   8 files changed, 386 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-> index 7dcdce660cac..72e29041244b 100644
-> --- a/fs/erofs/Kconfig
-> +++ b/fs/erofs/Kconfig
-> @@ -127,6 +127,25 @@ config EROFS_FS_ZIP_ZSTD
->   
->   	  If unsure, say N.
->   
-> +config EROFS_FS_ZIP_CRYPTO
-> +	bool "EROFS external crypto decompress support"
-
-	bool "EROFS crypto decompressor support"
-
-> +	depends on EROFS_FS_ZIP
-> +	help
-> +	  Saying Y here to support external crypto for decompressing EROFS
-> +	  file systems. Some SoCs have hardware decompressor with private
-> +	  algorithm, which can be used for accelarating decompression of
-
-	Sorry upstream Linux doesn't support private out-of-tree algorithms.
-
-> +	  EROFS. This config enables external cryptos.
-
-	help
-	  Saying Y here to use specific crypto decompressors to decompress
-	  EROFS file systems instead of software implementation, which can
-	  be used for offloading asynchronous requests to accelerators.
-
-	  If unsure, say N.
-
-> +
-> +	  If unsure, say N.
-> +
-> +config EROFS_CRYPTO_MAX_DISTANCE_PAGES
-> +	int "EROFS max distance pages for crypto usage"
-> +	default 32
-> +	help
-> +	  This config defines max distance pages for external crypto. Crypto
-> +	  layer will use this value to grow up PCP buffers.
-> +	  The default value is 128KB(32 pages).
-
-No, I don't think it's of any use for accelerators.
-
-> +
->   config EROFS_FS_ONDEMAND
->   	bool "EROFS fscache-based on-demand read support"
->   	depends on EROFS_FS
-> diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-> index 097d672e6b14..d2dc5e2d20bd 100644
-> --- a/fs/erofs/Makefile
-> +++ b/fs/erofs/Makefile
-> @@ -7,4 +7,5 @@ erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o
->   erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
->   erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
->   erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
-> +erofs-$(CONFIG_EROFS_FS_ZIP_CRYPTO) += decompressor_cryptor.o
->   erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
-> diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-> index 19d53c30c8af..8236775563a5 100644
-> --- a/fs/erofs/compress.h
-> +++ b/fs/erofs/compress.h
-> @@ -98,4 +98,32 @@ int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
->   			       struct page **pagepool);
->   int z_erofs_zstd_decompress(struct z_erofs_decompress_req *rq,
->   			    struct page **pgpl);
-> +
-> +#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
-> +/* for external cryto decompress */
-> +int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
-> +			      struct page **pagepool);
-> +int z_erofs_load_crypto_config(struct super_block *sb,
-> +			       struct erofs_super_block *dsb,
-> +			       void *data, int size);
-> +#else
-> +static inline int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
-> +					    struct page **pagepool)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline int z_erofs_load_crypto_config(struct super_block *sb,
-> +					     struct erofs_super_block *dsb,
-> +					     void *data,
-> +					     int size);
-> +{
-> +	if (crypto) {
-> +		erofs_err(sb, "crypto algorithm isn't enabled");
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +#endif
-> +
->   #endif
-> diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-> index 9d85b6c11c6b..83fde9e974e3 100644
-> --- a/fs/erofs/decompressor.c
-> +++ b/fs/erofs/decompressor.c
-> @@ -406,6 +406,13 @@ const struct z_erofs_decompressor erofs_decompressors[] = {
->   		.name = "zstd"
->   	},
->   #endif
-> +#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
-> +	[Z_EROFS_COMPRESSION_CRYPTO] = {
-> +		.config = z_erofs_load_crypto_config,
-> +		.decompress = z_erofs_crypto_decompress,
-> +		.name = "crypto"
-> +	},
-> +#endif
->   };
->   
->   int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
-> diff --git a/fs/erofs/decompressor_cryptor.c b/fs/erofs/decompressor_cryptor.c
-> new file mode 100644
-> index 000000000000..87df4d285ad1
-> --- /dev/null
-> +++ b/fs/erofs/decompressor_cryptor.c
-> @@ -0,0 +1,306 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2024 Amlogic, Inc. All rights reserved.
-> + */
-> +#include <linux/types.h>
-> +#include <linux/vmalloc.h>
-> +#include <linux/mm.h>
-> +#include <linux/slab.h>
-> +#include <linux/highmem.h>
-> +#include <linux/xz.h>
-> +#include <linux/module.h>
-> +#include <linux/crypto.h>
-> +#include "compress.h"
-> +#include "internal.h"
-> +
-> +static int crypto_max_distance_pages;
-> +
-> +int z_erofs_load_crypto_config(struct super_block *sb,
-> +			       struct erofs_super_block *dsb,
-> +			       void *data, int size)
-> +{
-> +	struct erofs_sb_info *sbi;
-> +	struct z_erofs_crypto_cfgs *crypto = (struct z_erofs_crypto_cfgs *)data;
-> +	int max_pages;
-> +
-> +	sbi = EROFS_SB(sb);
-> +	if (!sbi)
-> +		return -EINVAL;
-> +
-> +	if (sbi->crypto) {
-> +		erofs_err(sb, "already have crypto\n");
-> +		return -EINVAL;
-> +	}
-> +	if (crypto) {
-> +		max_pages = BIT(crypto->max_distance) / PAGE_SIZE;
-> +		if (max_pages > CONFIG_EROFS_CRYPTO_MAX_DISTANCE_PAGES) {
-> +			erofs_err(sb, "bad max distance:%d\n", max_pages);
-> +			return -EINVAL;
-> +		}
-> +
-> +		if (max_pages > crypto_max_distance_pages)
-> +			crypto_max_distance_pages = max_pages;
-> +		sbi->crypto = crypto_alloc_comp(crypto->crypto_name, 0, 0);
-> +		if (IS_ERR(sbi->crypto)) {
-> +			erofs_err(sb, "failed to alloc cryto %s\n",
-> +				  crypto->crypto_name);
-> +			return PTR_ERR(sbi->crypto);
-> +		}
-> +		erofs_info(sb, "max pcluster:%d, distance:%d, %d, crypto:%s\n",
-> +			   crypto->max_pclusterblks,
-> +			   crypto->max_distance, crypto_max_distance_pages,
-> +			   crypto->crypto_name);
-> +		return z_erofs_gbuf_growsize(crypto_max_distance_pages);
-
-That is optimized for LZ4,  I don't think it's useful for hardware accelerators.
-
-
-> +	} else {
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static void *z_erofs_crypto_handle_inplace_io(struct z_erofs_decompress_req *rq,
-> +					      void *inpage,
-> +					      unsigned int *inputmargin,
-> +					      int *maptype,
-> +					      bool support_0padding)
-> +{
-> +	unsigned int nrpages_in, nrpages_out;
-
-...
-
-
-Same here.
-
-> +	return src;
-> +}
-> +
-> +static int z_erofs_crypto_decompress_mem(struct z_erofs_decompress_req *rq, u8 *out)
-> +{
-
-..
-Same here.
-
-> +	return ret;
-> +}
-> +
-> +/*
-> + * Fill all gaps with bounce pages if it's a sparse page list. Also check if
-> + * all physical pages are consecutive, which can be seen for moderate CR.
-> + */
-> +static int z_erofs_crypto_prepare_dstpages(struct z_erofs_decompress_req *rq,
-> +					   struct page **pagepool)
-> +{
-
-
-..
-Same here.
-
-
-> +	}
-> +	return kaddr ? 1 : 0;
-> +}
-> +
-
-...
-
-> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-> index 6c0c270c42e1..993b7a1b656f 100644
-> --- a/fs/erofs/erofs_fs.h
-> +++ b/fs/erofs/erofs_fs.h
-> @@ -297,6 +297,10 @@ enum {
->   	Z_EROFS_COMPRESSION_LZMA	= 1,
->   	Z_EROFS_COMPRESSION_DEFLATE	= 2,
->   	Z_EROFS_COMPRESSION_ZSTD	= 3,
-> +#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
-> +	/* for generic crypto framework */
-> +	Z_EROFS_COMPRESSION_CRYPTO	= 4,
-> +#endif
-
-crypto is NOT a new algorithm, please maintain a mapping
-(crypto decompressor <-> algorithm) with existing algrithms.
-
->   	Z_EROFS_COMPRESSION_MAX
->   };
->   #define Z_EROFS_ALL_COMPR_ALGS		((1 << Z_EROFS_COMPRESSION_MAX) - 1)
-> @@ -330,6 +334,16 @@ struct z_erofs_zstd_cfgs {
->   	u8 reserved[4];
->   } __packed;
->   
-> +#ifdef CONFIG_EROFS_FS_ZIP_CRYPTO
-> +/* 16 bytes */
-> +struct z_erofs_crypto_cfgs {
-> +	char   crypto_name[8];
-> +	__le16 max_distance;
-> +	__le16 max_pclusterblks;
-> +	u8     reserved[4];
-> +} __packed;
-> +#endif
-
-Same here, no needed.
-
-Thanks,
-Gao Xiang
