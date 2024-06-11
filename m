@@ -2,44 +2,182 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB969903830
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jun 2024 11:54:16 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JL5ahJUN;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D1A7903863
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jun 2024 12:08:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1718100525;
+	bh=kiyMn9uueDZZj5IrlDKCyU7iKHQXHPSlaR5VX15MNtM=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=IglUKzcV1LQ3ZrYTZt53r4yNMAn8jaAJP8XTrU0snYt8EquM14icD9Nqgvwuu74Wy
+	 CUAwImnslsJMjWsa7pOCnfOyRZLboPngXosrVKk49pT7pPxJYOfkQ9a7EfYTLPg4kt
+	 Y3J/Fdqcjd032SXK/YFAnJfQtqoNFxh9ASt0w5dEbng7X2V3kbPz5Fq+bkPYy+jeGT
+	 Z4KptHbHy6frSTyCa7wMOtazYfziyosXrOK5DaSO0KxpdaQdZCb1FbaV0welAyACL/
+	 jqduxYEASbXSHLX256tCZk7S288NXxfJ8SiPc+Z/uV25PEuWsBMU7Q0PDhB9k6CKoq
+	 yUoSRCoEc1Syw==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Vz3sx6fkJz3cTG
-	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jun 2024 19:54:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Vz4Bj1Jg5z3cTM
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Jun 2024 20:08:45 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JL5ahJUN;
+	dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2023-11-20 header.b=EqewTNnn;
+	dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=mJsyujlb;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=oracle.com (client-ip=205.220.177.32; helo=mx0b-00069f02.pphosted.com; envelope-from=john.g.garry@oracle.com; receiver=lists.ozlabs.org)
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vz3ss31fxz3cM2
-	for <linux-erofs@lists.ozlabs.org>; Tue, 11 Jun 2024 19:54:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1718099644; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=Bu+2os632kKfUU8RuRxkKvIGBs2hE6TRj7Ukp0CgVZg=;
-	b=JL5ahJUNNbFhcYck3fhNY6sDvI1TWDIt7ocLaTXhVE2xDUd1+RmjJYq9Qs+Lx33BXcTraTOY/wGo8Ea68OtfbI2pEU11DX2jhLBxEZX/CsRjrN2qq+YxvtvE103kOT0VIo/y8PRNvXw6Y97TKmgvAwG0WwZKEv1tm7CN0OCe8OY=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R461e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=hongzhen@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W8G1urj_1718099642;
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0W8G1urj_1718099642)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Jun 2024 17:54:03 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: add I/O control for tarerofs stream via `erofs_vfile`
-Date: Tue, 11 Jun 2024 17:53:58 +0800
-Message-Id: <20240611095359.294925-1-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Vz4Bc5qj4z3cFN
+	for <linux-erofs@lists.ozlabs.org>; Tue, 11 Jun 2024 20:08:38 +1000 (AEST)
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45B7fO9X026892;
+	Tue, 11 Jun 2024 10:08:25 GMT
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ymh1gcj2f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Jun 2024 10:08:25 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 45B8AEDH014236;
+	Tue, 11 Jun 2024 10:08:24 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2044.outbound.protection.outlook.com [104.47.55.44])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3yncetqnp5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Jun 2024 10:08:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DzCuA+gmaFOAkGW7GGnoXODbVExfie8Rvr66qhrwPUxGidQgB2SmBhd0M+/Yi3egpmgPDXFibeDo8CZY8LizuUEMYKs9aS0+VtJDdz44ZnBqL0ySp2BXJdS5Kd9MqoCuqVqs0bZZSadpinATBU6K7c7ELpT8ie/aH4nR4Upk1qnob8tWwrN1i0yy+Euf/7+Zo+/UiRmePaEzQE0h7AhHnOd9BMRfz9DVLIBq70KQkrXUDrbblIzuex/Ln1BvjGb4ekDjCdbKeDs+fNDmAMNaYctuHmBbdklgrmps1ogBAQ9W3iidOAsHmqPPL24+dLi3O7GD1QwLBLi5R1SP7cDoWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kiyMn9uueDZZj5IrlDKCyU7iKHQXHPSlaR5VX15MNtM=;
+ b=AhNT6/ETfn5kTjuO6x17FPH8wUVdfgp9sLcFgvgqIvDBNZbrSW4NqZqhZObTsbpdUzr4TPnYV0QcBdFE+6NmEAvfK+AfylVTSjtIiq3QVDzScd1jgcSNcGaTMd9QmraJBLEzAIZuLA4vWuZQYmA8l4elIA5mV8iRAHGCpbtD2Yn4qar+3YJjxbuZeOj8mYlcpZl2/9EOZ7+qICrJ+wjxWeU1e1Umd3bv16CBMl0MC2y7PIG9cPILWecgz+08HEfLHPtYPthYoJglzST9wQQReMvYk47cPt51eTDtiddJAMLxT13B+bcZ9c3D7ajYlBbz/ltD2Jo2jCKVXMdyYC8ATw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by BY5PR10MB4162.namprd10.prod.outlook.com (2603:10b6:a03:20c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7633.37; Tue, 11 Jun
+ 2024 10:08:20 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%6]) with mapi id 15.20.7633.036; Tue, 11 Jun 2024
+ 10:08:20 +0000
+Message-ID: <4c6da37f-c5ea-4008-8250-a75f3b65427e@oracle.com>
+Date: Tue, 11 Jun 2024 11:08:13 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 13/22] xfs: Unmap blocks according to forcealign
+To: dchinner@redhat.com
+References: <20240607143919.2622319-1-john.g.garry@oracle.com>
+ <20240607143919.2622319-14-john.g.garry@oracle.com>
+Content-Language: en-US
+Organization: Oracle Corporation
+In-Reply-To: <20240607143919.2622319-14-john.g.garry@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0244.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a7::15) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|BY5PR10MB4162:EE_
+X-MS-Office365-Filtering-Correlation-Id: af32a3c1-9c48-40ef-826f-08dc89fe6b9f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015|7416005;
+X-Microsoft-Antispam-Message-Info: 	=?utf-8?B?Z1ByL2pkU0JkV2FOa2ZaeTBmcTIvZjQvNFpPWUovd1hucFRiY3preGQvQnRv?=
+ =?utf-8?B?RVJTVDB1Tkt2OXhER1BneVhybUk5NHo1MHdWUmE3cFU3NVpmSjdXN0JkKzd4?=
+ =?utf-8?B?bkFNc2YwYkVRRDJtalVhRjk2NENZRk5SZWorNUpZSGFKb3VLWVlweVRiODVK?=
+ =?utf-8?B?eEJlR1lBNktwR1M2cWNMenpsSDZQRUZYcldkWElBc290c2lUNDNrVGdKa0di?=
+ =?utf-8?B?azJBekd0OGlQVjN2b29FanhMYjVPSzdCcHVVdVorQWFxd1ZoODhUazloUk5u?=
+ =?utf-8?B?RHlZbysvbWVWVG92bnZoeHBoSnJ2a3E2bHVzc3JPRVpxcGhRZmZnOEViSFJv?=
+ =?utf-8?B?SWNwbHhRZG9kZjNkZE5ESVJta05NLzNOYU9pbU1uTW92L0ZDdzF1UWZrWmxv?=
+ =?utf-8?B?U1Z5OXFUektTRTZCcU50NFBYMUtXaWt1UG9lbHA4Mm1RcGo3N3BPcEU2M3Ru?=
+ =?utf-8?B?cFhqTDVSMVhPWkRNcGM1QXNMTVRIYmF3R053QWtiNkVEaFVOa0d5Nkxid3Jh?=
+ =?utf-8?B?c2JHUStBQ254blh2dlV4VTVVbnN4RWJFZ2VRdFkzbmlSUVpIR2NIK0xraHYx?=
+ =?utf-8?B?ZW9XNmptTklrZFYySi9GbEQyalkxVWxsc3o4MklWVnRaZ21GNWZSZUp3S2sy?=
+ =?utf-8?B?RXZjaG0zNWs0UHd3Wk9QTWxpNmszUjdZSkp6QW40cG5yUFV5QUd2MUU5Ujhi?=
+ =?utf-8?B?K09yOGtsOFZ1d0xHc1cwVGJNcUJJV2VtMTZaMUI4SzRSWkFMekxYc2N6UEd0?=
+ =?utf-8?B?YklDUHVtN2RKYWhvOGg1aDc3RTI4dURkYysydTJHbUdKbWs3eXhUTjFsdktt?=
+ =?utf-8?B?MTk4T1FVMHBPYkhzV1JHTFkwVnI5dCsxT05rWVlpaVpEWXBKMnIwcTNMUXFa?=
+ =?utf-8?B?ekxWRklxN1JvemVQVzl1dFkxQmlQNHNQNjBrdkMxbDRxT2xjTEE5S0NsdUVo?=
+ =?utf-8?B?c1JsdTMrMDQvcHdhaEhuNkhDMnd2bHBRbWpjdjEvY01IeE1MUEFpVlkvTllv?=
+ =?utf-8?B?SWRsR0E2NmxXRktyM080NmI4bWhOY0pydFB4SnprZnJHd0xxa1lGMm1Kc3Ew?=
+ =?utf-8?B?NGUwdUp3b3JmTmxvN0xRRFlzOGJTUDFnUUJ2WFgrUFBKRUFadENsWENPTnFI?=
+ =?utf-8?B?aTJlczBNZUY0NjdkODY4R1Y0SE1oUUZ1REQ1Y2xoK29oajFoR2xxdHVrRm9V?=
+ =?utf-8?B?K3ZSRFlJTXdkSEo1RXFhVmh3UnBMTnc2dVc5R25xb2l2THFtdEJXMmhZMENx?=
+ =?utf-8?B?Q0lwaFVEMTU5SXErT0IzRnRxV3NqTERwK3JyM1lYaVdkeVpJdVQrV1JoSGdG?=
+ =?utf-8?B?bnJsTHBpdEMyWTZxcmJibjBRWEFxVU1kdTN5QzZmV3poNlNadjRXb3VSVXNa?=
+ =?utf-8?B?Y1BiT1dlbWFUN3BNeUwrV2NxdFR6UFpGbTEzWkNTajVCdFg0bFJ3bWZEanZv?=
+ =?utf-8?B?THBaVTVYN1NzZmsrOW9zcUNrWkl6WG1MQ25mZVlSNE5EcnFWamdLYmtvR3Nt?=
+ =?utf-8?B?VFJXS0dqTDQ4ZDZVaWZKTDMyc3BSUGM1QVRmOTBsNVpORnR3U08zTXpSNGxJ?=
+ =?utf-8?B?b2syTzk1VjVncExCaEdSVVJpT3pCS2RURmp6SXBidkx0dFhiQVE0UmxCWWEr?=
+ =?utf-8?B?bHBKN2s1bDJoSEFFblZMbUhWQmVnM0JTdGw1Tk1CTnh3Z3dQUVBxaEIxRmdt?=
+ =?utf-8?B?by83a1pxYm9iNjZJdTN4d09PeE8wMWhjSUliOWlqa0lvdGZnRkNLRVNMUjdo?=
+ =?utf-8?Q?b7N9GpkmgKDWNevej8=3D?=
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?L1pjMzkxR2dnUHlzS2R4bFlVdFFUSEdkNy93NlBWeVBaREcrWEhxdWxsSThN?=
+ =?utf-8?B?T3dmSXpvVWdGSGNQbzZFVlBLazJUMVpMOWNwMk15NEJGQ0FVc2JIVHQrMWhB?=
+ =?utf-8?B?QUJSd3FTMXQ5aHdHb211MTU0MVJlMUhkY1VudlgrWkRJZ2dOZWE1VkxaTnoy?=
+ =?utf-8?B?ZFViYWhReEo5NEJ5OEtrMmMxRlJad3pUTGFLZUU4WXhic0RGWFM5SHNzMHFN?=
+ =?utf-8?B?VG1QcE5VV0xHV3IySzJKZnMrV2c2azJzbWxRams0SjlWVklLUDhXMDFqazFV?=
+ =?utf-8?B?Y2xHTGJTTUI3dVZ1czdneDBJWmorSk0xVXAwKzNZK2crQVJ2aFhVYzhCK3ZT?=
+ =?utf-8?B?QVNLVVB3QmZXcEJpNnNmbUNraEg0cGZJREkyZ3JVY0FZQmFYNEZ4VFJ0R3Mv?=
+ =?utf-8?B?d1BSZjlvOEUva2hPVVRGYlUrQ2NPOUNTTzFsM1N6TVRNdThLam92aFhHMEsr?=
+ =?utf-8?B?dlhEUEZQQm9FOU9hSHBjajhvT2JDL2RLeGczQ3U1enQrY1puaVFQeVZ3eEpJ?=
+ =?utf-8?B?YjlJVDNraVorNEhPQjFLNUdERHhRbFd2RHFjR0NJeWwzbUdrY3V4bW8wK0Vz?=
+ =?utf-8?B?ZWx1dGxRNitmNlJ3ekZMaUNTRlR4dkUyM09WcENFU2lRY3p6TURBUmFhMkpt?=
+ =?utf-8?B?SEhnKy9kRmNPdGc5TzdPSEFlTFlpUEpSU25VRVB3dmgxRmIxQTNZVDNMUmRj?=
+ =?utf-8?B?YzZaT2VtTEdkUlVhZDljUzM4cFdDOFhtUWxPMk5RcHZvVjFuWWdZeHdXUS9C?=
+ =?utf-8?B?cTl5d2lja3N6c1dhbG9hRjRZMnE4ckI3M013VGpVa2x5SGhjeXA4NEdHNS84?=
+ =?utf-8?B?NW1wd1lOVFBqRGFidHBSek9obkw1T05hN2F2Q2hsRCt1TDMxWHhvWmp0S2dG?=
+ =?utf-8?B?UDZiOVBWWXZCR3RUTVhuYUYwb01iTllHNm9pYnBhYkc2bUwrSlVYVW1lckRM?=
+ =?utf-8?B?WVo4ek5pc0FDK0QrV2drTXB4alE5VzF1WUY2bzhMVkt0ajZyMitrNSs0UVRR?=
+ =?utf-8?B?SCtWNUZQdEg0UDBWaDNCNU5TMCsxNzY2SE5PMEp4aEV4bis5UWt6Q3NTeGhp?=
+ =?utf-8?B?Tlo1UURlOVd2V0h2TFhGd2svb1NSUVhUMmF4Wm4wdjJNZ2U3K29nMnlpYWRX?=
+ =?utf-8?B?ditVbEFYNTlMNHREVTMxNlVRZENwMHQwTW9lOGFwZno2WVlOMk1SU2tTaXNh?=
+ =?utf-8?B?NkFZUUpob2YwMGlPaDJrd2VIZnRDUWdNNVI0by9IbGdYWHpYKzVOWWFSVEV5?=
+ =?utf-8?B?dUMrRTVFUE0wM1d5a0xRUVBwTC9aRWZXVXlCWHdGbzlzUHJacXNVb1R3NUph?=
+ =?utf-8?B?S0hEZ0doTXg0aEtJd1pHZk90Rm9vOSt3U29OQVl2S3UwcnE3TlZUSzNKSFZV?=
+ =?utf-8?B?YWhpd3ppSEhMa0w0RkJvUEdTa0lGR0NOMlJaQStnR21abzBONXl3akozWTBZ?=
+ =?utf-8?B?Yzhyai9pcFVUYWRlMS9kSGtLckUrbHd0R2VrSWhzVHVNVW80YnFpc0o1RmQy?=
+ =?utf-8?B?cEtVYVNtd1pJaFNGd0NoSy9hbGptZmtaVTFZOGJuTGNzdVlhMmpPWkZOdGRu?=
+ =?utf-8?B?UFdDN3J2MjZIOUZ1OFV4czI0WWd4UTFWOVNhM1drY1J4ZEgrZmFnc1lldms5?=
+ =?utf-8?B?OHhxaDkzSlhXc2QrSVRLMjNnUkp3a2RHZzVkZXY3MmxlZGI3OHEya24yRnFs?=
+ =?utf-8?B?eFN6R1FTZFJLQ2FkNHZTcnlGem5QZ0U0R2ovbXdTWmZManZwYytSTlpLbHJv?=
+ =?utf-8?B?TDdQMXhYTktXK3dSNW1UQm41dEE1YmNwRSs0WVIvV1ZmT09qUnR6djQ4T3FY?=
+ =?utf-8?B?eHEzNjN0T3R0OHNjekZuT1VoM0ZsbW44NXQ0Tm5MM1V3Z2YvSTBZcitKVjVL?=
+ =?utf-8?B?bndmWXVKejhTVHpwUTZTYXk4b0xmMHZVQ1liak1NK2xsYUNZNFNuM040MVdi?=
+ =?utf-8?B?TjFIektHc3FNNEhNQXZtZ0pIYXcveEpvNzdYMGhBMU9XUkp2aEMxcFVkV3dN?=
+ =?utf-8?B?Y3phUTBQczVEb0RZU1N5Rmtya3FaUllWeTNONVZVWDNVekJsQ2lva1pIZDhD?=
+ =?utf-8?B?Q1p5dWp2ZU8xNDFxaWxvK29xa2NuZy95VW16a014SUUvUXh5TXlXS2k0WWQ4?=
+ =?utf-8?B?NC9CSXI0SjU2Z0paQkkxQVVFTGFhRWRNVzJFSTRkWGIzbFFLdkpQVjJqVzB6?=
+ =?utf-8?B?eWc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 	PHIR7+kDiBA/C3E0yiqDs+3lmLGFVtYuBWX8m1ApbHT12IDWOmtt7xzFh1ZSVOF9gzFyJ17Rq2qN8w+URYiigj55f5eELp+7AjN6VBHoLq0Al4z9WchCz5dio2z6nllOKsPvgh8BZMhlrZ3RwdLXd+Tq50QguPLZc1RiljkRnFNbdtB42r4BfmVr1OFw1mGvc0L9QpMu5Zc/r8WUpg62fFJ8xSUw7rlaFF/eGwql3eKyt7WBJgoB9ZzKgMfGhWyehPoQXyeI1wob8ce/lYh5GxAoc0iF3Q4LHUI+k8ZlYvqV4IJux0mJkQOjY6vogomyjz+3zHEqtcCJ0245rE01y+/dzPJQn79TrpJCvl2veE3SexVn9Y7rBwgCT813hnSrApwoFePLTCpdaS6JqyyOk5Ee92V+iIZXMFVk83YEtVT4fGkaEiVOZPlgQPQO5DH+k3YZTnezZBr8qEnhoGKLgOxxU1GNwV67YT+PSAs1fzupswMDRllHfexwlKhqQkvHGic818+q4E7Md4uONIH3Bs7dv75pGSYnqQd9EuzcdZPF54O09DRS3GzGRpy7NXOhlVkjEUhCcfCDn4Grq963gqtmKrfz+qSdh6Elw0iqW20=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af32a3c1-9c48-40ef-826f-08dc89fe6b9f
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2024 10:08:20.2941
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: O9qaB3a67xwsxLy4yGn0n6oXZExP4sH+tpqTWM7bcPSq8i/YTWFwbpcnG2vUvNaGijF1KdvIrvbHANgNRU1Llw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4162
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-11_06,2024-06-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ phishscore=0 bulkscore=0 malwarescore=0 spamscore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2406110076
+X-Proofpoint-ORIG-GUID: xQLl-Z5qdh4yrA8fvoEXImeQHFLOy4gr
+X-Proofpoint-GUID: xQLl-Z5qdh4yrA8fvoEXImeQHFLOy4gr
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -51,179 +189,118 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Hongzhen Luo <hongzhen@linux.alibaba.com>
+From: John Garry via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: John Garry <john.g.garry@oracle.com>
+Cc: ritesh.list@gmail.com, djwong@kernel.org, gfs2@lists.linux.dev, mikulas@artax.karlin.mff.cuni.cz, hch@lst.de, agruenba@redhat.com, miklos@szeredi.hu, linux-ext4@vger.kernel.org, catherine.hoang@oracle.com, linux-block@vger.kernel.org, viro@zeniv.linux.org.uk, axboe@kernel.dk, brauner@kernel.org, tytso@mit.edu, martin.petersen@oracle.com, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, mcgrof@kernel.org, jack@suse.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, chandan.babu@oracle.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This adds I/O control for tarerofs stream.
+On 07/06/2024 15:39, John Garry wrote:
+> For when forcealign is enabled, blocks in an inode need to be unmapped
+> according to extent alignment, like what is already done for rtvol.
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>   fs/xfs/libxfs/xfs_bmap.c | 33 ++++++++++++++++++++++++++++-----
+>   1 file changed, 28 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> index c9cf138e13c4..2b6d5ebd8b4f 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.c
+> +++ b/fs/xfs/libxfs/xfs_bmap.c
+> @@ -5380,6 +5380,20 @@ xfs_bmap_del_extent_real(
+>   	return 0;
+>   }
+>   
+> +static xfs_extlen_t
+> +xfs_bunmapi_align(
+> +	struct xfs_inode	*ip,
+> +	xfs_fsblock_t		bno)
+> +{
+> +	if (xfs_inode_has_forcealign(ip)) {
+> +		if (is_power_of_2(ip->i_extsize))
+> +			return bno & (ip->i_extsize - 1);
+> +		return do_div(bno, ip->i_extsize);
+> +	}
+> +	ASSERT(XFS_IS_REALTIME_INODE(ip));
+> +	return xfs_rtb_to_rtxoff(ip->i_mount, bno);
+> +}
 
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
----
-v2: Add I/O control for tarerofs stream and move the function `erofs_read_from_fd` to io.c
-v1: https://lore.kernel.org/all/20240611075445.178659-1-hongzhen@linux.alibaba.com/
----
- include/erofs/io.h  |  4 ++++
- include/erofs/tar.h |  2 +-
- lib/io.c            | 40 ++++++++++++++++++++++++++++++++++++++++
- lib/tar.c           | 34 +++++-----------------------------
- 4 files changed, 50 insertions(+), 30 deletions(-)
+This following updated version of xfs_bunmapi_align() seems to fix the 
+issue reported in 
+https://lore.kernel.org/linux-xfs/d96c6e91-44f0-41c5-bebc-a092dc8a8406@oracle.com/
 
-diff --git a/include/erofs/io.h b/include/erofs/io.h
-index c82dfdf..01147d7 100644
---- a/include/erofs/io.h
-+++ b/include/erofs/io.h
-@@ -30,6 +30,8 @@ struct erofs_vfops {
- 	int (*fsync)(struct erofs_vfile *vf);
- 	int (*fallocate)(struct erofs_vfile *vf, u64 offset, size_t len, bool pad);
- 	int (*ftruncate)(struct erofs_vfile *vf, u64 length);
-+	int (*read)(struct erofs_vfile *vf, void *buf, size_t len);
-+	u64 (*lseek)(struct erofs_vfile *vf, u64 offset, int whence);
- };
- 
- struct erofs_vfile {
-@@ -43,6 +45,8 @@ int erofs_io_fsync(struct erofs_vfile *vf);
- int erofs_io_fallocate(struct erofs_vfile *vf, u64 offset, size_t len, bool pad);
- int erofs_io_ftruncate(struct erofs_vfile *vf, u64 length);
- int erofs_io_pread(struct erofs_vfile *vf, void *buf, u64 offset, size_t len);
-+int erofs_io_read(struct erofs_vfile *vf, void *buf, size_t len);
-+u64 erofs_io_lseek(struct erofs_vfile *vf, u64 offset, int whence);
- 
- ssize_t erofs_copy_file_range(int fd_in, u64 *off_in, int fd_out, u64 *off_out,
- 			      size_t length);
-diff --git a/include/erofs/tar.h b/include/erofs/tar.h
-index b5c966b..e1de0df 100644
---- a/include/erofs/tar.h
-+++ b/include/erofs/tar.h
-@@ -39,7 +39,7 @@ struct erofs_iostream_liblzma {
- 
- struct erofs_iostream {
- 	union {
--		int fd;			/* original fd */
-+		struct erofs_vfile vf;
- 		void *handler;
- #ifdef HAVE_LIBLZMA
- 		struct erofs_iostream_liblzma *lzma;
-diff --git a/lib/io.c b/lib/io.c
-index 2db384c..0919951 100644
---- a/lib/io.c
-+++ b/lib/io.c
-@@ -420,3 +420,43 @@ out:
- #endif
- 	return __erofs_copy_file_range(fd_in, off_in, fd_out, off_out, length);
- }
-+
-+s64 erofs_read_from_fd(int fd, void *buf, u64 bytes)
-+{
-+	s64 i = 0;
-+
-+	while (bytes) {
-+		int len = bytes > INT_MAX ? INT_MAX : bytes;
-+		int ret;
-+
-+		ret = read(fd, buf + i, len);
-+		if (ret < 1) {
-+			if (ret == 0) {
-+				break;
-+			} else if (errno != EINTR) {
-+				erofs_err("failed to read : %s\n",
-+					  strerror(errno));
-+				return -errno;
-+			}
-+		}
-+		bytes -= ret;
-+		i += ret;
-+        }
-+        return i;
-+}
-+
-+int erofs_io_read(struct erofs_vfile *vf, void *buf, size_t len)
-+{
-+	if (vf->ops)
-+		return vf->ops->read(vf, buf, len);
-+
-+	return erofs_read_from_fd(vf->fd, buf, len);
-+}
-+
-+u64 erofs_io_lseek(struct erofs_vfile *vf, u64 offset, int whence)
-+{
-+	if (vf->ops)
-+		return vf->ops->lseek(vf, offset, whence);
-+
-+	return lseek(vf->fd, offset, whence);
-+}
-diff --git a/lib/tar.c b/lib/tar.c
-index 3514381..6202d35 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -39,30 +39,6 @@ struct tar_header {
- 	char padding[12];	/* 500-512 (pad to exactly the 512 byte) */
- };
- 
--s64 erofs_read_from_fd(int fd, void *buf, u64 bytes)
--{
--	s64 i = 0;
--
--	while (bytes) {
--		int len = bytes > INT_MAX ? INT_MAX : bytes;
--		int ret;
--
--		ret = read(fd, buf + i, len);
--		if (ret < 1) {
--			if (ret == 0) {
--				break;
--			} else if (errno != EINTR) {
--				erofs_err("failed to read : %s\n",
--					  strerror(errno));
--				return -errno;
--			}
--		}
--		bytes -= ret;
--		i += ret;
--        }
--        return i;
--}
--
- void erofs_iostream_close(struct erofs_iostream *ios)
- {
- 	free(ios->buffer);
-@@ -79,7 +55,7 @@ void erofs_iostream_close(struct erofs_iostream *ios)
- #endif
- 		return;
- 	}
--	close(ios->fd);
-+	close(ios->vf.fd);
- }
- 
- int erofs_iostream_open(struct erofs_iostream *ios, int fd, int decoder)
-@@ -119,7 +95,7 @@ int erofs_iostream_open(struct erofs_iostream *ios, int fd, int decoder)
- 		return -EOPNOTSUPP;
- #endif
- 	} else {
--		ios->fd = fd;
-+		ios->vf.fd = fd;
- 		fsz = lseek(fd, 0, SEEK_END);
- 		if (fsz <= 0) {
- 			ios->feof = !fsz;
-@@ -218,8 +194,8 @@ int erofs_iostream_read(struct erofs_iostream *ios, void **buf, u64 bytes)
- 			return -EOPNOTSUPP;
- #endif
- 		} else {
--			ret = erofs_read_from_fd(ios->fd, ios->buffer + rabytes,
--						 ios->bufsize - rabytes);
-+			ret = erofs_io_read(&ios->vf, ios->buffer + rabytes,
-+					    ios->bufsize - rabytes);
- 			if (ret < 0)
- 				return ret;
- 			ios->tail += ret;
-@@ -271,7 +247,7 @@ int erofs_iostream_lskip(struct erofs_iostream *ios, u64 sz)
- 		return sz;
- 
- 	if (ios->sz && likely(ios->dumpfd < 0)) {
--		s64 cur = lseek(ios->fd, sz, SEEK_CUR);
-+		s64 cur = erofs_io_lseek(&ios->vf, sz, SEEK_CUR);
- 
- 		if (cur > ios->sz)
- 			return cur - ios->sz;
--- 
-2.39.3
+static xfs_extlen_t
+xfs_bunmapi_align(
+         struct xfs_inode        *ip,
+         xfs_fsblock_t           fsbno)
+{
+         if (xfs_inode_has_forcealign(ip)) {
+                 struct xfs_mount        *mp = ip->i_mount;
+                 xfs_agblock_t           agbno = XFS_FSB_TO_AGBNO(mp, 
+fsbno);
+
+                 if (is_power_of_2(ip->i_extsize))
+                         return agbno & (ip->i_extsize - 1);
+                 return do_div(agbno, ip->i_extsize);
+         }
+         ASSERT(XFS_IS_REALTIME_INODE(ip));
+         return xfs_rtb_to_rtxoff(ip->i_mount, fsbno);
+}
+
+
+> +
+>   /*
+>    * Unmap (remove) blocks from a file.
+>    * If nexts is nonzero then the number of extents to remove is limited to
+> @@ -5402,6 +5416,7 @@ __xfs_bunmapi(
+>   	struct xfs_bmbt_irec	got;		/* current extent record */
+>   	struct xfs_ifork	*ifp;		/* inode fork pointer */
+>   	int			isrt;		/* freeing in rt area */
+> +	int			isforcealign;	/* freeing for inode with forcealign */
+>   	int			logflags;	/* transaction logging flags */
+>   	xfs_extlen_t		mod;		/* rt extent offset */
+>   	struct xfs_mount	*mp = ip->i_mount;
+> @@ -5439,6 +5454,8 @@ __xfs_bunmapi(
+>   	}
+>   	XFS_STATS_INC(mp, xs_blk_unmap);
+>   	isrt = xfs_ifork_is_realtime(ip, whichfork);
+> +	isforcealign = (whichfork != XFS_ATTR_FORK) &&
+> +			xfs_inode_has_forcealign(ip);
+>   	end = start + len;
+>   
+>   	if (!xfs_iext_lookup_extent_before(ip, ifp, &end, &icur, &got)) {
+> @@ -5490,11 +5507,10 @@ __xfs_bunmapi(
+>   		if (del.br_startoff + del.br_blockcount > end + 1)
+>   			del.br_blockcount = end + 1 - del.br_startoff;
+>   
+> -		if (!isrt || (flags & XFS_BMAPI_REMAP))
+> +		if ((!isrt && !isforcealign) || (flags & XFS_BMAPI_REMAP))
+>   			goto delete;
+>   
+> -		mod = xfs_rtb_to_rtxoff(mp,
+> -				del.br_startblock + del.br_blockcount);
+> +		mod = xfs_bunmapi_align(ip, del.br_startblock + del.br_blockcount);
+>   		if (mod) {
+>   			/*
+>   			 * Realtime extent not lined up at the end.
+> @@ -5542,9 +5558,16 @@ __xfs_bunmapi(
+>   			goto nodelete;
+>   		}
+>   
+> -		mod = xfs_rtb_to_rtxoff(mp, del.br_startblock);
+> +		mod = xfs_bunmapi_align(ip, del.br_startblock);
+>   		if (mod) {
+> -			xfs_extlen_t off = mp->m_sb.sb_rextsize - mod;
+> +			xfs_extlen_t off;
+> +
+> +			if (isforcealign) {
+> +				off = ip->i_extsize - mod;
+> +			} else {
+> +				ASSERT(isrt);
+> +				off = mp->m_sb.sb_rextsize - mod;
+> +			}
+>   
+>   			/*
+>   			 * Realtime extent is lined up at the end but not
 
