@@ -2,42 +2,44 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA3C8905867
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Jun 2024 18:18:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F7BC90586E
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Jun 2024 18:19:16 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=UB7TJZYK;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kqeeavzV;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4VzrMK5n8Pz3dK1
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jun 2024 02:18:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4VzrMj2mMHz3dTf
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Jun 2024 02:19:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=UB7TJZYK;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kqeeavzV;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4VzrM640SDz3d3Q
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4VzrM65kcXz3dK1
 	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Jun 2024 02:18:41 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
 	t=1718209115; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=KfSv4c0xrCIqNMrV0wF+BFyR0swrK/FAsRYao5AXy48=;
-	b=UB7TJZYK+A9a9rYf75m1YIKkchyQ7HQHBLY3wSwV3GA3cd+iZXnooRwV9MhAWBnFB3kqTabf1eedkEW22LRKd6I+Vn+Vskql9nlVsQqbMzhv5D1C6INZn4Im2tLIQyd6fH+k650Ctua88CGoeaIYlUtnY8CUYRGz6GpayHmPaZ4=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033022160150;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W8LOtR0_1718209107;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W8LOtR0_1718209107)
+	bh=P2GiRpaIhCkFId5QR4OigI0Ro6bAqWQfKy2kN7ULgHc=;
+	b=kqeeavzV09P07/XNXSFNaXMMoZk2VOU51H2UqKDQyZtMvjq45EiOXUIqY0IVo/NC742OwJA1ekBpsbRYSI/eTz7q34UCCcxfvfmgLH0J10HVPqMmwFO0Fk7F2RjSneY8tYbo0tThMV0b/ZCz1QYl8chWaCv9t+ybrJp66sGYKiA=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R601e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067109;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W8LOtT6_1718209112;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W8LOtT6_1718209112)
           by smtp.aliyun-inc.com;
-          Thu, 13 Jun 2024 00:18:32 +0800
+          Thu, 13 Jun 2024 00:18:34 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/5] erofs-utils: lib: get rid of erofs_prepare_dir_layout()
-Date: Thu, 13 Jun 2024 00:18:22 +0800
-Message-Id: <20240612161826.711279-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/5] erofs-utils: lib: use filesystem UUID if the device name is not specified
+Date: Thu, 13 Jun 2024 00:18:23 +0800
+Message-Id: <20240612161826.711279-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240612161826.711279-1-hsiangkao@linux.alibaba.com>
+References: <20240612161826.711279-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -55,118 +57,57 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Just open-code the previous erofs_prepare_dir_file() and rename
-`erofs_prepare_dir_layout()` to `erofs_prepare_dir_file()`.
-
-No logic changes.
+The device name is not always valid.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/inode.c | 70 ++++++++++++++++++++++++-----------------------------
- 1 file changed, 31 insertions(+), 39 deletions(-)
+ lib/rebuild.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/lib/inode.c b/lib/inode.c
-index 7d4ccc4..09bf76b 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -208,8 +208,30 @@ static int comp_subdir(const void *a, const void *b)
- 	return strcmp(da->name, db->name);
- }
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+index 618067a..c25d222 100644
+--- a/lib/rebuild.c
++++ b/lib/rebuild.c
+@@ -15,6 +15,7 @@
+ #include "erofs/xattr.h"
+ #include "erofs/blobchunk.h"
+ #include "erofs/internal.h"
++#include "liberofs_uuid.h"
  
--static int erofs_prepare_dir_layout(struct erofs_inode *dir,
--				    unsigned int nr_subdirs)
-+int erofs_init_empty_dir(struct erofs_inode *dir)
-+{
-+	struct erofs_dentry *d;
-+
-+	/* dot is pointed to the current dir inode */
-+	d = erofs_d_alloc(dir, ".");
-+	if (IS_ERR(d))
-+		return PTR_ERR(d);
-+	d->inode = erofs_igrab(dir);
-+	d->type = EROFS_FT_DIR;
-+
-+	/* dotdot is pointed to the parent dir */
-+	d = erofs_d_alloc(dir, "..");
-+	if (IS_ERR(d))
-+		return PTR_ERR(d);
-+	d->inode = erofs_igrab(erofs_parent_inode(dir));
-+	d->type = EROFS_FT_DIR;
-+
-+	dir->i_nlink = 2;
-+	return 0;
-+}
-+
-+static int erofs_prepare_dir_file(struct erofs_inode *dir,
-+				  unsigned int nr_subdirs)
+ #ifdef HAVE_LINUX_AUFS_TYPE_H
+ #include <linux/aufs_type.h>
+@@ -375,16 +376,17 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi)
  {
- 	struct erofs_sb_info *sbi = dir->sbi;
- 	struct erofs_dentry *d, *n, **sorted_d;
-@@ -248,41 +270,6 @@ static int erofs_prepare_dir_layout(struct erofs_inode *dir,
- 	return 0;
- }
+ 	struct erofs_inode inode = {};
+ 	struct erofs_rebuild_dir_context ctx;
++	char uuid_str[37];
++	char *fsid = sbi->devname;
+ 	int ret;
  
--int erofs_init_empty_dir(struct erofs_inode *dir)
--{
--	struct erofs_dentry *d;
--
--	/* dot is pointed to the current dir inode */
--	d = erofs_d_alloc(dir, ".");
--	if (IS_ERR(d))
--		return PTR_ERR(d);
--	d->inode = erofs_igrab(dir);
--	d->type = EROFS_FT_DIR;
--
--	/* dotdot is pointed to the parent dir */
--	d = erofs_d_alloc(dir, "..");
--	if (IS_ERR(d))
--		return PTR_ERR(d);
--	d->inode = erofs_igrab(erofs_parent_inode(dir));
--	d->type = EROFS_FT_DIR;
--
--	dir->i_nlink = 2;
--	return 0;
--}
--
--int erofs_prepare_dir_file(struct erofs_inode *dir, unsigned int nr_subdirs)
--{
--	int ret;
--
--	ret = erofs_init_empty_dir(dir);
--	if (ret)
--		return ret;
--
--	/* sort subdirs */
--	nr_subdirs += 2;
--	return erofs_prepare_dir_layout(dir, nr_subdirs);
--}
--
- static void fill_dirblock(char *buf, unsigned int size, unsigned int q,
- 			  struct erofs_dentry *head, struct erofs_dentry *end)
- {
-@@ -1358,7 +1345,11 @@ static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
+-	if (!sbi->devname) {
+-		erofs_err("failed to find a device for rebuilding");
+-		return -EINVAL;
++	if (!fsid) {
++		erofs_uuid_unparse_lower(sbi->uuid, uuid_str);
++		fsid = uuid_str;
  	}
- 	closedir(_dir);
- 
--	ret = erofs_prepare_dir_file(dir, nr_subdirs);
-+	ret = erofs_init_empty_dir(dir);
-+	if (ret)
-+		return ret;
-+
-+	ret = erofs_prepare_dir_file(dir, nr_subdirs + 2); /* sort subdirs */
- 	if (ret)
+-
+ 	ret = erofs_read_superblock(sbi);
+ 	if (ret) {
+-		erofs_err("failed to read superblock of %s", sbi->devname);
++		erofs_err("failed to read superblock of %s", fsid);
  		return ret;
- 
-@@ -1399,7 +1390,8 @@ static int erofs_rebuild_handle_directory(struct erofs_inode *dir)
- 		++nr_subdirs;
  	}
  
--	ret = erofs_prepare_dir_layout(dir, nr_subdirs);
-+	DBG_BUGON(nr_subdirs < i_nlink);
-+	ret = erofs_prepare_dir_file(dir, nr_subdirs);
- 	if (ret)
+@@ -392,7 +394,7 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi)
+ 	inode.sbi = sbi;
+ 	ret = erofs_read_inode_from_disk(&inode);
+ 	if (ret) {
+-		erofs_err("failed to read root inode of %s", sbi->devname);
++		erofs_err("failed to read root inode of %s", fsid);
  		return ret;
- 
+ 	}
+ 	inode.i_srcpath = strdup("/");
 -- 
 2.39.3
 
