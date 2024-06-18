@@ -1,48 +1,45 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0390990A2EC
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Jun 2024 05:42:09 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 862A390C3F7
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Jun 2024 08:49:32 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=V/qIb3jj;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=S6jWSNzP;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W2bKl64CBz3cND
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Jun 2024 13:42:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W3HRQ24lHz3cGM
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Jun 2024 16:49:22 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=V/qIb3jj;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=S6jWSNzP;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W2bKg2J3vz30Tk
-	for <linux-erofs@lists.ozlabs.org>; Mon, 17 Jun 2024 13:41:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W3HRF1nDDz30Th
+	for <linux-erofs@lists.ozlabs.org>; Tue, 18 Jun 2024 16:49:11 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1718595713; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=3oS6DckOHa8L6y1HyDu6cf3t6/c2M95QKlrEzkdFpC8=;
-	b=V/qIb3jjcoUhjIiQPly6WcGLisw/LNyMt/EykUCZVCQR6/hTCBD/YnS2OydgQmDXQK5dtVqqpFI1kM1JIYfKIANqAo25ggokewbnNLPjS9QR51mOKfc/qLMHVjsN47K0oU6i7FVHAehSWNWoQ5OJfMes12RFhch/rO40OXzMF+0=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033022160150;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W8X5zLk_1718595710;
-Received: from 30.97.48.206(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W8X5zLk_1718595710)
+	t=1718693346; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=CciUQxoolnlB7Edb+kfDodmquYfXjDz8hy8rE0APuD4=;
+	b=S6jWSNzPZfo9e9acCi5RRPmkm05RFUhw7PP3FbCoQvzZ/vcb5DjiNcG6Cv0kL3jQ3MLSoXFfSC0Fn4nVG/grju4r+3u/IfpIcK7URhsD2EYRt3mog6zt4u37jbxGOovwSPH/aOEo3n9rwWQlQ/VUfnxDI2qnBmk9AXlsEsiqNr8=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W8jEqwu_1718693340;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W8jEqwu_1718693340)
           by smtp.aliyun-inc.com;
-          Mon, 17 Jun 2024 11:41:51 +0800
-Message-ID: <00872cd1-722c-4c7b-b69c-284d941d08ec@linux.alibaba.com>
-Date: Mon, 17 Jun 2024 11:41:50 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: fix the erofs_io_pread and erofs_io_pwrite
-To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20240617023433.3446706-1-hongzhen@linux.alibaba.com>
+          Tue, 18 Jun 2024 14:49:05 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240617023433.3446706-1-hongzhen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/9] erofs-utils: simplify erofs_insert_ihash
+Date: Tue, 18 Jun 2024 14:48:51 +0800
+Message-Id: <20240618064859.4117858-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -54,86 +51,87 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Get rid of unnecessary arguments for simplicity.
 
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ include/erofs/inode.h |  2 +-
+ lib/inode.c           | 16 +++++++---------
+ lib/rebuild.c         |  2 +-
+ 3 files changed, 9 insertions(+), 11 deletions(-)
 
-On 2024/6/17 10:34, Hongzhen Luo wrote:
-> When `vf->ops` is not null, `vf->ops->pread` returns the
-> number of bytes successfully read, which is inconsistent
-> with the semantics of `erofs_io_pread`. Similar situation
-> occurs in `erofs_io_pwrite`. This fixes this issue.
-> 
-> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index 3bdc2b4..557150c 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -26,7 +26,7 @@ unsigned char erofs_mode_to_ftype(umode_t mode);
+ umode_t erofs_ftype_to_mode(unsigned int ftype, unsigned int perm);
+ unsigned char erofs_ftype_to_dtype(unsigned int filetype);
+ void erofs_inode_manager_init(void);
+-void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino);
++void erofs_insert_ihash(struct erofs_inode *inode);
+ struct erofs_inode *erofs_iget(dev_t dev, ino_t ino);
+ struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid);
+ unsigned int erofs_iput(struct erofs_inode *inode);
+diff --git a/lib/inode.c b/lib/inode.c
+index 1ec73fe..e27399d 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -94,10 +94,11 @@ void erofs_inode_manager_init(void)
+ 		init_list_head(&inode_hashtable[i]);
+ }
+ 
+-void erofs_insert_ihash(struct erofs_inode *inode, dev_t dev, ino_t ino)
++void erofs_insert_ihash(struct erofs_inode *inode)
+ {
+-	list_add(&inode->i_hash,
+-		 &inode_hashtable[(ino ^ dev) % NR_INODE_HASHTABLE]);
++	unsigned int nr = (inode->i_ino[1] ^ inode->dev) % NR_INODE_HASHTABLE;
++
++	list_add(&inode->i_hash, &inode_hashtable[nr]);
+ }
+ 
+ /* get the inode from the (source) inode # */
+@@ -991,11 +992,6 @@ static int erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+ 	if (!inode->i_srcpath)
+ 		return -ENOMEM;
+ 
+-	if (!S_ISDIR(inode->i_mode)) {
+-		inode->dev = st->st_dev;
+-		inode->i_ino[1] = st->st_ino;
+-	}
+-
+ 	if (erofs_should_use_inode_extended(inode)) {
+ 		if (cfg.c_force_inodeversion == FORCE_INODE_COMPACT) {
+ 			erofs_err("file %s cannot be in compact form",
+@@ -1007,7 +1003,9 @@ static int erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+ 		inode->inode_isize = sizeof(struct erofs_inode_compact);
+ 	}
+ 
+-	erofs_insert_ihash(inode, st->st_dev, st->st_ino);
++	inode->dev = st->st_dev;
++	inode->i_ino[1] = st->st_ino;
++	erofs_insert_ihash(inode);
+ 	return 0;
+ }
+ 
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+index 806d8b2..b9bced2 100644
+--- a/lib/rebuild.c
++++ b/lib/rebuild.c
+@@ -346,7 +346,7 @@ static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
+ 				goto out;
+ 			}
+ 
+-			erofs_insert_ihash(inode, inode->dev, inode->i_ino[1]);
++			erofs_insert_ihash(inode);
+ 			parent = dir = inode;
+ 		}
+ 
+-- 
+2.39.3
 
-I think virtual files don't need to handle short read/write
-(or they need to handle those themselves.)
-
-
-> ---
->   lib/io.c | 26 ++++++++++++++++----------
->   1 file changed, 16 insertions(+), 10 deletions(-)
-> 
-> diff --git a/lib/io.c b/lib/io.c
-> index c523f00..52a74dc 100644
-> --- a/lib/io.c
-> +++ b/lib/io.c
-> @@ -34,15 +34,18 @@ ssize_t erofs_io_pwrite(struct erofs_vfile *vf, const void *buf,
->   	if (unlikely(cfg.c_dry_run))
->   		return 0;
-
-But I think we might need to fix those return values for
-non-virtual files (return the written bytes.)
-
->   
-> -	if (vf->ops)
-> -		return vf->ops->pwrite(vf, buf, pos, len);
-> -
->   	pos += vf->offset;
->   	do {
->   #ifdef HAVE_PWRITE64
-> -		ret = pwrite64(vf->fd, buf, len, (off64_t)pos);
-> +		if (vf->ops)
-> +			ret = vf->ops->pwrite(vf, buf, pos, len);
-> +		else
-> +			ret = pwrite64(vf->fd, buf, len, (off64_t)pos);
->   #else
-> -		ret = pwrite(vf->fd, buf, len, (off_t)pos);
-> +		if (vf->ops)
-> +			ret = vf->ops->pwrite(vf, buf, pos, len);
-> +		else
-> +			ret = pwrite(vf->fd, buf, len, (off_t)pos);
->   #endif
->   		if (ret <= 0) {
->   			erofs_err("failed to write: %s", strerror(errno));
-> @@ -130,15 +133,18 @@ ssize_t erofs_io_pread(struct erofs_vfile *vf, void *buf, u64 pos, size_t len)
->   	if (unlikely(cfg.c_dry_run))
->   		return 0;
-
-Same here.
-
-Thanks,
-Gao Xiang
-
->   
-> -	if (vf->ops)
-> -		return vf->ops->pread(vf, buf, pos, len);
-> -
->   	pos += vf->offset;
->   	do {
->   #ifdef HAVE_PREAD64
-> -		ret = pread64(vf->fd, buf, len, (off64_t)pos);
-> +		if (vf->ops)
-> +			ret = vf->ops->pread(vf, buf, pos, len);
-> +		else
-> +			ret = pread64(vf->fd, buf, len, (off64_t)pos);
->   #else
-> -		ret = pread(vf->fd, buf, len, (off_t)pos);
-> +		if (vf->ops)
-> +			ret = vf->ops->pread(vf, buf, pos, len);
-> +		else
-> +			ret = pread(vf->fd, buf, len, (off_t)pos);
->   #endif
->   		if (ret <= 0) {
->   			if (!ret) {
