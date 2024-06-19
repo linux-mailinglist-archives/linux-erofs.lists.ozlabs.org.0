@@ -1,45 +1,45 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4032E90E963
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Jun 2024 13:27:16 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8016490E9E2
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Jun 2024 13:41:53 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=Me8iKtJQ;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=oJEK0SC2;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W41YY003Nz3dDh
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Jun 2024 21:27:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W41tQ0w79z3cZ4
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Jun 2024 21:41:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=Me8iKtJQ;
+	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=oJEK0SC2;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
 Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W41YR43Vfz3cSH
-	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Jun 2024 21:27:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W41tL0dQ2z3cTh
+	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Jun 2024 21:41:45 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 327AFCE1C96;
-	Wed, 19 Jun 2024 11:27:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BA94C2BBFC;
-	Wed, 19 Jun 2024 11:27:03 +0000 (UTC)
+	by sin.source.kernel.org (Postfix) with ESMTP id 5FD18CE1DC3;
+	Wed, 19 Jun 2024 11:41:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 223B6C2BBFC;
+	Wed, 19 Jun 2024 11:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718796424;
-	bh=0hOuCVZMzu4EPGwSP4jUUH6lE8b0tGGjf5OMxmllJmk=;
+	s=korg; t=1718797302;
+	bh=aETZJ6QFcxWCmeFR+2UkzJ4h4YY19n/zh9NWSvVXkk4=;
 	h=Subject:To:Cc:From:Date:From;
-	b=Me8iKtJQiDc2nu1kUCmqyR0+YGIFIu0fiMHPJ88h0v2BToXuLHuXIude7JuhRF0X2
-	 bGFXV623Pvby25ovCOk4S116vpy3a9ZiFNqZUCZzg9r7ZUx1kzPWDrc7jDLm1U3gaN
-	 Ei+X290iCIFBD56ShHx4BT6ffPuvmEbBIrMGw5eQ=
-Subject: Patch "cachefiles, erofs: Fix NULL deref in when cachefiles is not doing ondemand-mode" has been added to the 6.6-stable tree
+	b=oJEK0SC27Esx4fkprBwSTtsEuoYR8IousQi1erSqsL2D0sw8YhesWngQA5XIEfzr2
+	 o93CnKxCYpY6qWpdQZyWAC7az+6L4XwrRmzcAAY34oOEvYbkRSEvd1QFIb5QJW8GSI
+	 KqyJ7HzQGvxAKh6/1rknIq/P0uhXhn58ZRjj/BDo=
+Subject: Patch "cachefiles, erofs: Fix NULL deref in when cachefiles is not doing ondemand-mode" has been added to the 6.1-stable tree
 To: chao@kernel.org,dhowells@redhat.com,gregkh@linuxfoundation.org,huyue2@coolpad.com,jefflexu@linux.alibaba.com,linux-erofs@lists.ozlabs.org,marc.dionne@auristor.com,netfs@lists.linux.dev,xiang@kernel.org
 From: <gregkh@linuxfoundation.org>
-Date: Wed, 19 Jun 2024 13:27:01 +0200
-Message-ID: <2024061901-dangle-idealism-cf51@gregkh>
+Date: Wed, 19 Jun 2024 13:41:39 +0200
+Message-ID: <2024061939-liability-failing-7856@gregkh>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
@@ -65,12 +65,12 @@ This is a note to let you know that I've just added the patch titled
 
     cachefiles, erofs: Fix NULL deref in when cachefiles is not doing ondemand-mode
 
-to the 6.6-stable tree which can be found at:
+to the 6.1-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
      cachefiles-erofs-fix-null-deref-in-when-cachefiles-is-not-doing-ondemand-mode.patch
-and it can be found in the queue-6.6 subdirectory.
+and it can be found in the queue-6.1 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
@@ -137,8 +137,8 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 Patches currently in stable-queue which might be from dhowells@redhat.com are
 
-queue-6.6/cachefiles-resend-an-open-request-if-the-read-reques.patch
-queue-6.6/cachefiles-add-restore-command-to-recover-inflight-o.patch
-queue-6.6/cachefiles-introduce-object-ondemand-state.patch
-queue-6.6/cachefiles-extract-ondemand-info-field-from-cachefil.patch
-queue-6.6/cachefiles-erofs-fix-null-deref-in-when-cachefiles-is-not-doing-ondemand-mode.patch
+queue-6.1/cachefiles-resend-an-open-request-if-the-read-reques.patch
+queue-6.1/cachefiles-add-restore-command-to-recover-inflight-o.patch
+queue-6.1/cachefiles-introduce-object-ondemand-state.patch
+queue-6.1/cachefiles-extract-ondemand-info-field-from-cachefil.patch
+queue-6.1/cachefiles-erofs-fix-null-deref-in-when-cachefiles-is-not-doing-ondemand-mode.patch
