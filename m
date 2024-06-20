@@ -2,54 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54AD09113AC
-	for <lists+linux-erofs@lfdr.de>; Thu, 20 Jun 2024 22:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A72CB91146A
+	for <lists+linux-erofs@lfdr.de>; Thu, 20 Jun 2024 23:24:16 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; secure) header.d=codewreck.org header.i=@codewreck.org header.a=rsa-sha256 header.s=2 header.b=ALJdfkXV;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=FlQZkEWX;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W4t0s1FjNz3cY8
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 06:50:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W4tlx2DGBz3cY5
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 07:24:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=codewreck.org header.i=@codewreck.org header.a=rsa-sha256 header.s=2 header.b=ALJdfkXV;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=FlQZkEWX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=codewreck.org (client-ip=62.210.214.84; helo=submarine.notk.org; envelope-from=asmadeus@codewreck.org; receiver=lists.ozlabs.org)
-X-Greylist: delayed 883 seconds by postgrey-1.37 at boromir; Fri, 21 Jun 2024 06:50:16 AEST
-Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W4t0m63Tqz30VT
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2024 06:50:16 +1000 (AEST)
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 8A5F214C2DD;
-	Thu, 20 Jun 2024 22:50:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1718916615;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VLVCmMswFYW/yptkreRA4q0clrbQSOEC9H3udI4LuGU=;
-	b=ALJdfkXV4jYbTnxVURz9T/eVwi75e+Jpzd/NnEdNtowVW0EPginJ+UR6WjORHnH38deSjd
-	uJwnIU9Cj7KamD9RuKu8/mGuiDvl4zepXXeiSbVTriN0efe9Ugz46seuDEdUL9p7r7KRLr
-	P7bpbNTjSYBxjIuPaVX1MWKzMKecMwktnyLawuNoID0Mbc/ddEMnIWkpd3XG+6pyYH418a
-	3W/N9t5Qfs/oTZaI9U3i3KvnPFWdkdWReTPrI5Iv2PcSTYiBLmAJf7px1y70cBjtciXJPK
-	i5woghwPVaymjTFrWRyF7a/0NAHSSLe6Bk1rVFeZVi+wKnfbRR0RGgGH6UokHw==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 39921304;
-	Thu, 20 Jun 2024 20:50:04 +0000 (UTC)
-Date: Fri, 21 Jun 2024 05:49:49 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 06/17] 9p: Enable multipage folios
-Message-ID: <ZnSV7TmLpmucb8el@codewreck.org>
-References: <20240620173137.610345-1-dhowells@redhat.com>
- <20240620173137.610345-7-dhowells@redhat.com>
- <ZnSSaeLo8dY7cu3W@codewreck.org>
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=djwong@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W4tlr5zWFz3cWN
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2024 07:24:08 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id AF130620DD;
+	Thu, 20 Jun 2024 21:24:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 578C8C2BD10;
+	Thu, 20 Jun 2024 21:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718918642;
+	bh=J2GqEQCdBgJeMDsHOUD3ggS0L8MaxCNWl/BVWnLRCW8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FlQZkEWXuYjG3lBPD+CbeqHswxAsU7y4iss7QjmrwwSkTw2iU3E6o6btinmhwPHrD
+	 lSF/mb5wOLfVwxtjYYm93dMIUn1hfwPO7/uvnuUvaMGfIVTVH8Kn/kMXsydRkfKkKk
+	 +q9uKCYgckPzfqcC2uHLzy4ZEe1BFH/G9Q8G00qfYW4ZlnjgKp1D8f5mbTBTzHet3f
+	 KJRe02ZO01MDudREL9gtQdj64PgKYAVNDPPdkW0hXvesX4jdchaliSxKMN5OssSrSq
+	 Ecnj4xZ09k4NozRYTQARzo3zXOkrOETiUmVHdKRiMwF75ak/8AVeIkVdoL0kbhtqfE
+	 xzqtOujZzBqdw==
+Date: Thu, 20 Jun 2024 14:24:01 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Subject: Re: [PATCH v4 01/22] fs: Add generic_atomic_write_valid_size()
+Message-ID: <20240620212401.GA3058325@frogsfrogsfrogs>
+References: <20240607143919.2622319-1-john.g.garry@oracle.com>
+ <20240607143919.2622319-2-john.g.garry@oracle.com>
+ <20240612211040.GJ2764752@frogsfrogsfrogs>
+ <a123946e-1df2-48da-b120-67b50c3aa9f5@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZnSSaeLo8dY7cu3W@codewreck.org>
+In-Reply-To: <a123946e-1df2-48da-b120-67b50c3aa9f5@oracle.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,25 +62,117 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Latchesar Ionkov <lucho@ionkov.net>, Christian Schoenebeck <linux_oss@crudebyte.com>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: ritesh.list@gmail.com, gfs2@lists.linux.dev, mikulas@artax.karlin.mff.cuni.cz, hch@lst.de, agruenba@redhat.com, miklos@szeredi.hu, linux-ext4@vger.kernel.org, catherine.hoang@oracle.com, linux-block@vger.kernel.org, viro@zeniv.linux.org.uk, dchinner@redhat.com, axboe@kernel.dk, brauner@kernel.org, tytso@mit.edu, martin.petersen@oracle.com, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, mcgrof@kernel.org, jack@suse.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, chandan.babu@oracle.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Dominique Martinet wrote on Fri, Jun 21, 2024 at 05:34:49AM +0900:
-> David Howells wrote on Thu, Jun 20, 2024 at 06:31:24PM +0100:
-> > Enable support for multipage folios on the 9P filesystem.  This is all
-> > handled through netfslib and is already enabled on AFS and CIFS also.
+On Thu, Jun 13, 2024 at 08:35:53AM +0100, John Garry wrote:
+> On 12/06/2024 22:10, Darrick J. Wong wrote:
+> > On Fri, Jun 07, 2024 at 02:38:58PM +0000, John Garry wrote:
+> > > Add a generic helper for FSes to validate that an atomic write is
+> > > appropriately sized (along with the other checks).
+> > > 
+> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
+> > > ---
+> > >   include/linux/fs.h | 12 ++++++++++++
+> > >   1 file changed, 12 insertions(+)
+> > > 
+> > > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > > index 069cbab62700..e13d34f8c24e 100644
+> > > --- a/include/linux/fs.h
+> > > +++ b/include/linux/fs.h
+> > > @@ -3645,4 +3645,16 @@ bool generic_atomic_write_valid(loff_t pos, struct iov_iter *iter)
+> > >   	return true;
+> > >   }
+> > > +static inline
+> > > +bool generic_atomic_write_valid_size(loff_t pos, struct iov_iter *iter,
+> > > +				unsigned int unit_min, unsigned int unit_max)
+> > > +{
+> > > +	size_t len = iov_iter_count(iter);
+> > > +
+> > > +	if (len < unit_min || len > unit_max)
+> > > +		return false;
+> > > +
+> > > +	return generic_atomic_write_valid(pos, iter);
+> > > +}
+> > 
+> > Now that I look back at "fs: Initial atomic write support" I wonder why
+> > not pass the iocb and the iov_iter instead of pos and the iov_iter?
 > 
-> Since this is fairly unrelated to the other patches let's take this
-> through the 9p tree as well - I'll run some quick tests to verify writes
-> go from 4k to something larger
+> The original user of generic_atomic_write_valid() [blkdev_dio_unaligned() or
+> blkdev_dio_invalid() with the rename] used these same args, so I just went
+> with that.
 
-(huh, my memory is rotten, we were already aggregating writes at some
-point without this. Oh, well, at least it doesn't seem to blow up)
+Don't let the parameter types of static blockdev helpers determine the
+VFS API that filesystems need to implement untorn writes.
 
-> and it doesn't blow up immediately and push it out for 6.11
+In the block layer enablement patch, this could easily be:
 
-Queued for -next.
+bool generic_atomic_write_valid(const struct kiocb *iocb,
+				const struct iov_iter *iter)
+{
+	size_t len = iov_iter_count(iter);
 
--- 
-Dominique Martinet | Asmadeus
+	if (!iter_is_ubuf(iter))
+		return false;
+
+	if (!is_power_of_2(len))
+		return false;
+
+	if (!IS_ALIGNED(iocb->ki_pos, len))
+		return false;
+
+	return true;
+}
+
+Then this becomes:
+
+bool generic_atomic_write_valid_size(const struct kiocb *iocb,
+				     const struct iov_iter *iter,
+				     unsigned int unit_min,
+				     unsigned int unit_max)
+{
+	size_t len = iov_iter_count(iter);
+
+	if (len < unit_min || len > unit_max)
+		return false;
+
+	return generic_atomic_write_valid(iocb, iter);
+}
+
+Yes, that means you have to rearrange the calling conventions of
+blkdev_dio_invalid a little bit, but the first two arguments match
+->read_iter and ->write_iter.  Filesystem writers can see that the first
+two arguments are the first two parameters to foofs_write_iter() and
+focus on the hard part, which is figuring out unit_{min,max}.
+
+static ssize_t
+xfs_file_dio_write(
+	struct kiocb		*iocb,
+	struct iov_iter		*from)
+{
+...
+	if ((iocb->ki_flags & IOCB_ATOMIC) &&
+	    !generic_atomic_write_valid_size(iocb, from,
+			i_blocksize(inode),
+			XFS_FSB_TO_B(mp, ip->i_extsize)))
+		return -EINVAL;
+	}
+
+
+> > And can these be collapsed into a single generic_atomic_write_checks()
+> > function?
+> 
+> bdev file operations would then need to use
+> generic_atomic_write_valid_size(), and there is no unit_min and unit_max
+> size there, apart from bdev awu min and max. And if I checked them, we would
+> be duplicating checks (of awu min and max) in the block layer.
+
+Fair enough, I concede this point.
+
+--D
+
+> 
+> Cheers,
+> John
+> 
