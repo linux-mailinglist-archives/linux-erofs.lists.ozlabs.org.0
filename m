@@ -1,77 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E84C9910EB5
-	for <lists+linux-erofs@lfdr.de>; Thu, 20 Jun 2024 19:33:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8055F910EB8
+	for <lists+linux-erofs@lfdr.de>; Thu, 20 Jun 2024 19:33:26 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=grFVj+j7;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=grFVj+j7;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=UvQWKUzf;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=VcOdI4K7;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W4ndM4KvVz3bYc
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 03:33:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W4ndb14Gpz3cT9
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 03:33:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=grFVj+j7;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=grFVj+j7;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=UvQWKUzf;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=VcOdI4K7;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W4ndD0N6Mz30W0
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2024 03:33:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W4ndW3hRVz2xQH
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2024 03:33:19 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718904782;
+	s=mimecast20190719; t=1718904797;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JsgLdDMxlbFRDEl04HJEi9WqLkbVt68ZbQT1Q/QXXG4=;
-	b=grFVj+j7e0wG1NaeCTt4T2Bmd290GQyhCKAsP18rrsiHVwauZBr0iy15O70OmA4FEprvIv
-	Px7W2Ot8b1q7G3qpNt7YvF0e4puKSYrPZs8i5Sy4TVpcYTogScKecR2toIG4Lt+fzR+6oQ
-	CCet5u82HED1j3esQcNZwUoQQNprTe8=
+	bh=Ts5ZCKmEyEPwC8pHpdqPl9OxtkpjpqDkyGOj4sN+myw=;
+	b=UvQWKUzfuQ3IO5MlDBMNI1ap5zxzhO0+jz9b2M3/PdKIJqpi5zTeM84YCjIuiRFtYCwwxe
+	Xos7MTdSFsY9oujJz5K5gcClizDdWQkoVGMVaOqxm1l4uFUlxpF34zjgZMVCe+PNBTtP97
+	ChthCSLesdaYnN6dFPLJnPhsSKRQjMA=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718904782;
+	s=mimecast20190719; t=1718904798;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=JsgLdDMxlbFRDEl04HJEi9WqLkbVt68ZbQT1Q/QXXG4=;
-	b=grFVj+j7e0wG1NaeCTt4T2Bmd290GQyhCKAsP18rrsiHVwauZBr0iy15O70OmA4FEprvIv
-	Px7W2Ot8b1q7G3qpNt7YvF0e4puKSYrPZs8i5Sy4TVpcYTogScKecR2toIG4Lt+fzR+6oQ
-	CCet5u82HED1j3esQcNZwUoQQNprTe8=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=Ts5ZCKmEyEPwC8pHpdqPl9OxtkpjpqDkyGOj4sN+myw=;
+	b=VcOdI4K7XaoPKWwZ2CTjVklO0uYPlaBltIPw/3G/ZNf5rcjx3CE6Yy6+oe+8/Bvosi2pd0
+	4CeIP/cFuY8tZd3v3a0ilLeNSdzUgpYW1PzHRP68lYk+WSJG8WgJTArjA/jE+QR7HXQQpr
+	UoSNveiL8MceN+UdLFNm8o4TK4sgKlQ=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-324-4DqBux0nMw2-JdVI-Ia2qg-1; Thu,
- 20 Jun 2024 13:32:58 -0400
-X-MC-Unique: 4DqBux0nMw2-JdVI-Ia2qg-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-378-OqI8PTsvNIisGVH6w9IAGQ-1; Thu,
+ 20 Jun 2024 13:33:14 -0400
+X-MC-Unique: OqI8PTsvNIisGVH6w9IAGQ-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D829719560AD;
-	Thu, 20 Jun 2024 17:32:55 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2C42B1956056;
+	Thu, 20 Jun 2024 17:33:03 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.39.195.156])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C147319560B0;
-	Thu, 20 Jun 2024 17:32:49 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 340171955E80;
+	Thu, 20 Jun 2024 17:32:56 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
 	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH 08/17] netfs: Delete some xarray-wangling functions that aren't used
-Date: Thu, 20 Jun 2024 18:31:26 +0100
-Message-ID: <20240620173137.610345-9-dhowells@redhat.com>
+Subject: [PATCH 09/17] cifs: Defer read completion
+Date: Thu, 20 Jun 2024 18:31:27 +0100
+Message-ID: <20240620173137.610345-10-dhowells@redhat.com>
 In-Reply-To: <20240620173137.610345-1-dhowells@redhat.com>
 References: <20240620173137.610345-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -87,130 +87,70 @@ Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, Shyam Prasa
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Delete some xarray-based buffer wangling functions that are intended for
-use with bounce buffering, but aren't used because bounce-buffering got
-deferred to a later patch series.  Now, however, the intention is to use
-something other than an xarray to do this.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
 ---
- fs/netfs/internal.h |  9 -----
- fs/netfs/misc.c     | 81 ---------------------------------------------
- 2 files changed, 90 deletions(-)
+ fs/smb/client/smb2pdu.c      | 15 ++++++++++++---
+ include/trace/events/netfs.h |  7 +++++--
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
-index 42443d99967d..a44d480a0fa2 100644
---- a/fs/netfs/internal.h
-+++ b/fs/netfs/internal.h
-@@ -63,15 +63,6 @@ static inline void netfs_proc_del_rreq(struct netfs_io_request *rreq) {}
- /*
-  * misc.c
-  */
--#define NETFS_FLAG_PUT_MARK		BIT(0)
--#define NETFS_FLAG_PAGECACHE_MARK	BIT(1)
--int netfs_xa_store_and_mark(struct xarray *xa, unsigned long index,
--			    struct folio *folio, unsigned int flags,
--			    gfp_t gfp_mask);
--int netfs_add_folios_to_buffer(struct xarray *buffer,
--			       struct address_space *mapping,
--			       pgoff_t index, pgoff_t to, gfp_t gfp_mask);
--void netfs_clear_buffer(struct xarray *buffer);
+diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
+index 38a06e8a0f90..e213cecd5094 100644
+--- a/fs/smb/client/smb2pdu.c
++++ b/fs/smb/client/smb2pdu.c
+@@ -4484,6 +4484,16 @@ smb2_new_read_req(void **buf, unsigned int *total_len,
+ 	return rc;
+ }
  
- /*
-  * objects.c
-diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
-index bc1fc54fb724..83e644bd518f 100644
---- a/fs/netfs/misc.c
-+++ b/fs/netfs/misc.c
-@@ -8,87 +8,6 @@
- #include <linux/swap.h>
- #include "internal.h"
++static void smb2_readv_worker(struct work_struct *work)
++{
++	struct cifs_io_subrequest *rdata =
++		container_of(work, struct cifs_io_subrequest, subreq.work);
++
++	netfs_subreq_terminated(&rdata->subreq,
++				(rdata->result == 0 || rdata->result == -EAGAIN) ?
++				rdata->got_bytes : rdata->result, true);
++}
++
+ static void
+ smb2_readv_callback(struct mid_q_entry *mid)
+ {
+@@ -4578,9 +4588,8 @@ smb2_readv_callback(struct mid_q_entry *mid)
+ 			rdata->result = 0;
+ 	}
+ 	rdata->credits.value = 0;
+-	netfs_subreq_terminated(&rdata->subreq,
+-				(rdata->result == 0 || rdata->result == -EAGAIN) ?
+-				rdata->got_bytes : rdata->result, true);
++	INIT_WORK(&rdata->subreq.work, smb2_readv_worker);
++	queue_work(cifsiod_wq, &rdata->subreq.work);
+ 	release_mid(mid);
+ 	add_credits(server, &credits, 0);
+ }
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index fc5dbd19f120..db603a4e22cd 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -412,6 +412,7 @@ TRACE_EVENT(netfs_folio,
+ 		    __field(ino_t,			ino)
+ 		    __field(pgoff_t,			index)
+ 		    __field(unsigned int,		nr)
++		    __field(bool,			ra_trigger)
+ 		    __field(enum netfs_folio_trace,	why)
+ 			     ),
  
--/*
-- * Attach a folio to the buffer and maybe set marks on it to say that we need
-- * to put the folio later and twiddle the pagecache flags.
-- */
--int netfs_xa_store_and_mark(struct xarray *xa, unsigned long index,
--			    struct folio *folio, unsigned int flags,
--			    gfp_t gfp_mask)
--{
--	XA_STATE_ORDER(xas, xa, index, folio_order(folio));
--
--retry:
--	xas_lock(&xas);
--	for (;;) {
--		xas_store(&xas, folio);
--		if (!xas_error(&xas))
--			break;
--		xas_unlock(&xas);
--		if (!xas_nomem(&xas, gfp_mask))
--			return xas_error(&xas);
--		goto retry;
--	}
--
--	if (flags & NETFS_FLAG_PUT_MARK)
--		xas_set_mark(&xas, NETFS_BUF_PUT_MARK);
--	if (flags & NETFS_FLAG_PAGECACHE_MARK)
--		xas_set_mark(&xas, NETFS_BUF_PAGECACHE_MARK);
--	xas_unlock(&xas);
--	return xas_error(&xas);
--}
--
--/*
-- * Create the specified range of folios in the buffer attached to the read
-- * request.  The folios are marked with NETFS_BUF_PUT_MARK so that we know that
-- * these need freeing later.
-- */
--int netfs_add_folios_to_buffer(struct xarray *buffer,
--			       struct address_space *mapping,
--			       pgoff_t index, pgoff_t to, gfp_t gfp_mask)
--{
--	struct folio *folio;
--	int ret;
--
--	if (to + 1 == index) /* Page range is inclusive */
--		return 0;
--
--	do {
--		/* TODO: Figure out what order folio can be allocated here */
--		folio = filemap_alloc_folio(readahead_gfp_mask(mapping), 0);
--		if (!folio)
--			return -ENOMEM;
--		folio->index = index;
--		ret = netfs_xa_store_and_mark(buffer, index, folio,
--					      NETFS_FLAG_PUT_MARK, gfp_mask);
--		if (ret < 0) {
--			folio_put(folio);
--			return ret;
--		}
--
--		index += folio_nr_pages(folio);
--	} while (index <= to && index != 0);
--
--	return 0;
--}
--
--/*
-- * Clear an xarray buffer, putting a ref on the folios that have
-- * NETFS_BUF_PUT_MARK set.
-- */
--void netfs_clear_buffer(struct xarray *buffer)
--{
--	struct folio *folio;
--	XA_STATE(xas, buffer, 0);
--
--	rcu_read_lock();
--	xas_for_each_marked(&xas, folio, ULONG_MAX, NETFS_BUF_PUT_MARK) {
--		folio_put(folio);
--	}
--	rcu_read_unlock();
--	xa_destroy(buffer);
--}
--
- /**
-  * netfs_dirty_folio - Mark folio dirty and pin a cache object for writeback
-  * @mapping: The mapping the folio belongs to.
+@@ -420,11 +421,13 @@ TRACE_EVENT(netfs_folio,
+ 		    __entry->why = why;
+ 		    __entry->index = folio_index(folio);
+ 		    __entry->nr = folio_nr_pages(folio);
++		    __entry->ra_trigger = folio_test_readahead(folio);
+ 			   ),
+ 
+-	    TP_printk("i=%05lx ix=%05lx-%05lx %s",
++	    TP_printk("i=%05lx ix=%05lx-%05lx %s%s",
+ 		      __entry->ino, __entry->index, __entry->index + __entry->nr - 1,
+-		      __print_symbolic(__entry->why, netfs_folio_traces))
++		      __print_symbolic(__entry->why, netfs_folio_traces),
++		      __entry->ra_trigger ? " *RA*" : "")
+ 	    );
+ 
+ TRACE_EVENT(netfs_write_iter,
 
