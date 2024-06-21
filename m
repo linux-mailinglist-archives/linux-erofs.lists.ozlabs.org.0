@@ -1,48 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AD4D911BD8
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 08:33:59 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B9F6911BCF
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 08:31:52 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1718951636;
-	bh=xaoPyb93L8PR3FDD4HMCthq+UJVY09NZxiHpIIv3g5M=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=HqZBXbvou8oJnt4lJ24Wg+UzP/CzLwOtk8RFL4W3nWciqbBFI0MCjSN3C//URyEyG
-	 66bzDn1h4S+wPgyWeKdqmIaziKsqzUyO19Fb8fDDFgdogZA1Hb7ichi9YzkquTfdjH
-	 QdS/SROi5wL2XFs7sN7nwRq7g84rzMVWz8u3drfk1esor+sgpvQyw/ijsg8EuHG5qM
-	 Jqy7wkSuMWVuZ0lG2RKfyfQj7k2ZGlI07aHGQ9wck1v+UcviJ7HgOdR9t5V3hYBa6V
-	 ERbcX8koivLTWyeMFmtRYVt4SrciA9lLgOv/XHwSvnuJhuLOkItgy2xfu4wwFTXbw8
-	 HP+s6x5xoZOoA==
+	s=201707; t=1718951508;
+	bh=MqfSMqccXAm/XJp99RXb4t5BLqEZBGtjSrOSJi32K08=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=GxM5rcXYye1XJmhYxVUNIcZXi1GTrNUW+w5AYDfMS6n/qb5CPrn40tpvdZv9Ta+ys
+	 umv0tAixGWaLk205V8IioJDaXMF4IlGmYqJmQF2RcUmkXkNZQYLUNymB3YLd+GfFXx
+	 e/Pcf1B4yVFsiQgooeHeDlNd+4O4oSoKOHO9vazNiJvO5rsiQRdOdro3KNlTYGvsry
+	 NEoDJcYV1h4EHD/v7TlzVsJdV4R/dC/D3LxnqUrCJSLBoEEm1UwObD9Y978hkOyYLp
+	 a1LRw4Zd+SSHRQ0eeE5EURhOWfzV36CRM2K9lTbRLGSD7Ne/7xSD3qO3LcFBAhpauu
+	 Gv3LvvmTvRzhA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W56yD08gfz3cXT
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 16:33:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W56vm4Y31z3cTl
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 16:31:48 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=szxga03-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 967 seconds by postgrey-1.37 at boromir; Fri, 21 Jun 2024 16:31:41 AEST
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W56y85GSQz30Vb
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2024 16:33:52 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W56Rx0GDLzZcGh;
-	Fri, 21 Jun 2024 14:11:09 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W56vd3MNFz30Vb
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2024 16:31:40 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4W56Sn5hhgzPpbC;
+	Fri, 21 Jun 2024 14:11:53 +0800 (CST)
 Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7694E18006E;
-	Fri, 21 Jun 2024 14:15:26 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8AA7F1400C8;
+	Fri, 21 Jun 2024 14:15:28 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
  (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 21 Jun
- 2024 14:15:26 +0800
+ 2024 14:15:28 +0800
 To: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
 	<jefflexu@linux.alibaba.com>, <dhavale@google.com>, <dhowells@redhat.com>
-Subject: [PATCH 0/2] support query ondemand feature for erofs and cachefiles
-Date: Fri, 21 Jun 2024 14:18:06 +0800
-Message-ID: <20240621061808.1585253-1-lihongbo22@huawei.com>
+Subject: [PATCH 1/2] erofs: support query erofs ondemand feature by sysfs interface
+Date: Fri, 21 Jun 2024 14:18:07 +0800
+Message-ID: <20240621061808.1585253-2-lihongbo22@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240621061808.1585253-1-lihongbo22@huawei.com>
+References: <20240621061808.1585253-1-lihongbo22@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,33 +70,48 @@ Cc: netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org, lihongbo22@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi all!
+Erofs over fscache depands on the config CONFIG_EROFS_FS_ONDEMAND
+in erofs. There is no way to check whether this feature is supported
+or not in userspace. We introduce sysfs file `erofs_ondemand` for
+user checking current features. Here is the example:
 
-These two patches is used to support query ondemand feature
-for erofs and cachefiles modules. Since erofs over fscache
-introduces CONFIG_EROFS_FS_ONDEMAND and CONFIG_CACHEFILES_ONDEMAND,
-we cannot know whether the kernel supports this feature or not
-in userspace. So we introduce the sysfs interface for users'
-applications to obtain this.
+[Before]
+$ cat /sys/fs/erofs/features/erofs_ondemand
+cat: /sys/fs/erofs/features/erofs_ondemand: No such file or directory
 
-Comments and questions are, as always, welcome.
-Please let me know what you think.
+[After]
+$ cat /sys/fs/erofs/features/erofs_ondemand
+supported
 
-Thanks,
-Hongbo
+Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+---
+ fs/erofs/sysfs.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Hongbo Li (2):
-  erofs: support query erofs ondemand feature by sysfs interface
-  cachefiles: support query cachefiles ondemand feature
-
- fs/cachefiles/Makefile   |   3 +-
- fs/cachefiles/internal.h |   7 +++
- fs/cachefiles/main.c     |   7 +++
- fs/cachefiles/sysfs.c    | 101 +++++++++++++++++++++++++++++++++++++++
- fs/erofs/sysfs.c         |   6 +++
- 5 files changed, 123 insertions(+), 1 deletion(-)
- create mode 100644 fs/cachefiles/sysfs.c
-
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index 435e515c0792..1b3d77583f76 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -78,6 +78,9 @@ EROFS_ATTR_FEATURE(sb_chksum);
+ EROFS_ATTR_FEATURE(ztailpacking);
+ EROFS_ATTR_FEATURE(fragments);
+ EROFS_ATTR_FEATURE(dedupe);
++#if IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND)
++EROFS_ATTR_FEATURE(erofs_ondemand);
++#endif
+ 
+ static struct attribute *erofs_feat_attrs[] = {
+ 	ATTR_LIST(zero_padding),
+@@ -90,6 +93,9 @@ static struct attribute *erofs_feat_attrs[] = {
+ 	ATTR_LIST(ztailpacking),
+ 	ATTR_LIST(fragments),
+ 	ATTR_LIST(dedupe),
++#if IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND)
++	ATTR_LIST(erofs_ondemand),
++#endif
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(erofs_feat);
 -- 
 2.34.1
 
