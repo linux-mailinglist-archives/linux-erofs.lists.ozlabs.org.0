@@ -1,56 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A72CB91146A
-	for <lists+linux-erofs@lfdr.de>; Thu, 20 Jun 2024 23:24:16 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8DD4911B18
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 08:13:28 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=FlQZkEWX;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=x4pCUMcG;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W4tlx2DGBz3cY5
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 07:24:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W56VY2mY9z3cXk
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Jun 2024 16:13:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=FlQZkEWX;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=x4pCUMcG;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=djwong@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W4tlr5zWFz3cWN
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2024 07:24:08 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id AF130620DD;
-	Thu, 20 Jun 2024 21:24:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 578C8C2BD10;
-	Thu, 20 Jun 2024 21:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718918642;
-	bh=J2GqEQCdBgJeMDsHOUD3ggS0L8MaxCNWl/BVWnLRCW8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FlQZkEWXuYjG3lBPD+CbeqHswxAsU7y4iss7QjmrwwSkTw2iU3E6o6btinmhwPHrD
-	 lSF/mb5wOLfVwxtjYYm93dMIUn1hfwPO7/uvnuUvaMGfIVTVH8Kn/kMXsydRkfKkKk
-	 +q9uKCYgckPzfqcC2uHLzy4ZEe1BFH/G9Q8G00qfYW4ZlnjgKp1D8f5mbTBTzHet3f
-	 KJRe02ZO01MDudREL9gtQdj64PgKYAVNDPPdkW0hXvesX4jdchaliSxKMN5OssSrSq
-	 Ecnj4xZ09k4NozRYTQARzo3zXOkrOETiUmVHdKRiMwF75ak/8AVeIkVdoL0kbhtqfE
-	 xzqtOujZzBqdw==
-Date: Thu, 20 Jun 2024 14:24:01 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Subject: Re: [PATCH v4 01/22] fs: Add generic_atomic_write_valid_size()
-Message-ID: <20240620212401.GA3058325@frogsfrogsfrogs>
-References: <20240607143919.2622319-1-john.g.garry@oracle.com>
- <20240607143919.2622319-2-john.g.garry@oracle.com>
- <20240612211040.GJ2764752@frogsfrogsfrogs>
- <a123946e-1df2-48da-b120-67b50c3aa9f5@oracle.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W56V50BPsz3cYm
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Jun 2024 16:12:58 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1718950374; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=iB/A/Qq6amO1V5BhXGisSPR8Aku38FckxhkwxheVDK4=;
+	b=x4pCUMcGjEIvnj2qRe4jllW0tTI+lvTVuD2RLJ3m06a41Ysb0n8FWafWstP+f2EGAV2q0KH6kum5gCbv8RoxL3oKHL7eXOL53qOGv2hnLJcqfWpf7eAFf/YKJ+rKxiSEorHlvNpfdofCUCj3HerTj+XmmKg7hagRv1PIkJyDrfY=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045075189;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W8vDhzr_1718950368;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W8vDhzr_1718950368)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Jun 2024 14:12:53 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2] erofs-utils: optimize write_uncompressed_file_from_fd()
+Date: Fri, 21 Jun 2024 14:12:46 +0800
+Message-Id: <20240621061246.3973096-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240620081329.2753803-1-hsiangkao@linux.alibaba.com>
+References: <20240620081329.2753803-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a123946e-1df2-48da-b120-67b50c3aa9f5@oracle.com>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,117 +53,176 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: ritesh.list@gmail.com, gfs2@lists.linux.dev, mikulas@artax.karlin.mff.cuni.cz, hch@lst.de, agruenba@redhat.com, miklos@szeredi.hu, linux-ext4@vger.kernel.org, catherine.hoang@oracle.com, linux-block@vger.kernel.org, viro@zeniv.linux.org.uk, dchinner@redhat.com, axboe@kernel.dk, brauner@kernel.org, tytso@mit.edu, martin.petersen@oracle.com, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org, mcgrof@kernel.org, jack@suse.com, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org, chandan.babu@oracle.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Daan De Meyer <daan.j.demeyer@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, Jun 13, 2024 at 08:35:53AM +0100, John Garry wrote:
-> On 12/06/2024 22:10, Darrick J. Wong wrote:
-> > On Fri, Jun 07, 2024 at 02:38:58PM +0000, John Garry wrote:
-> > > Add a generic helper for FSes to validate that an atomic write is
-> > > appropriately sized (along with the other checks).
-> > > 
-> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
-> > > ---
-> > >   include/linux/fs.h | 12 ++++++++++++
-> > >   1 file changed, 12 insertions(+)
-> > > 
-> > > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > > index 069cbab62700..e13d34f8c24e 100644
-> > > --- a/include/linux/fs.h
-> > > +++ b/include/linux/fs.h
-> > > @@ -3645,4 +3645,16 @@ bool generic_atomic_write_valid(loff_t pos, struct iov_iter *iter)
-> > >   	return true;
-> > >   }
-> > > +static inline
-> > > +bool generic_atomic_write_valid_size(loff_t pos, struct iov_iter *iter,
-> > > +				unsigned int unit_min, unsigned int unit_max)
-> > > +{
-> > > +	size_t len = iov_iter_count(iter);
-> > > +
-> > > +	if (len < unit_min || len > unit_max)
-> > > +		return false;
-> > > +
-> > > +	return generic_atomic_write_valid(pos, iter);
-> > > +}
-> > 
-> > Now that I look back at "fs: Initial atomic write support" I wonder why
-> > not pass the iocb and the iov_iter instead of pos and the iov_iter?
-> 
-> The original user of generic_atomic_write_valid() [blkdev_dio_unaligned() or
-> blkdev_dio_invalid() with the rename] used these same args, so I just went
-> with that.
+Utilize copy offloading to speed up copying data from the source
+filesystem to the target EROFS filesystem.
 
-Don't let the parameter types of static blockdev helpers determine the
-VFS API that filesystems need to implement untorn writes.
+This method improves build speed by approximately 9% (tested with
+Linux 5.4.140 source code dataset).
 
-In the block layer enablement patch, this could easily be:
+Reported-by: Daan De Meyer <daan.j.demeyer@gmail.com>
+Closes: https://lore.kernel.org/r/CAO8sHcmZZORnrJXA=QzmGkYNkNWn7M+amAK_DZ19-WL4kLUvpw@mail.gmail.com
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+changes since v1:
+ - Fix macos build error:
+    https://github.com/erofs/erofsnightly/actions/runs/9607090927
+ - Fix unexpected lseek related to diskbuf:
+    https://github.com/erofs/erofsnightly/actions/runs/9607047368
 
-bool generic_atomic_write_valid(const struct kiocb *iocb,
-				const struct iov_iter *iter)
-{
-	size_t len = iov_iter_count(iter);
+ configure.ac       |  2 ++
+ include/erofs/io.h |  4 ++++
+ lib/inode.c        | 23 +++++++----------------
+ lib/io.c           | 45 +++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 58 insertions(+), 16 deletions(-)
 
-	if (!iter_is_ubuf(iter))
-		return false;
+diff --git a/configure.ac b/configure.ac
+index dc5f787..945e254 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -204,6 +204,7 @@ AC_CHECK_HEADERS(m4_flatten([
+ 	sys/ioctl.h
+ 	sys/mman.h
+ 	sys/random.h
++	sys/sendfile.h
+ 	sys/stat.h
+ 	sys/statfs.h
+ 	sys/sysmacros.h
+@@ -267,6 +268,7 @@ AC_CHECK_FUNCS(m4_flatten([
+ 	pwrite64
+ 	posix_fadvise
+ 	fstatfs
++	sendfile
+ 	strdup
+ 	strerror
+ 	strrchr
+diff --git a/include/erofs/io.h b/include/erofs/io.h
+index d3a487f..84e4bc6 100644
+--- a/include/erofs/io.h
++++ b/include/erofs/io.h
+@@ -33,6 +33,8 @@ struct erofs_vfops {
+ 	ssize_t (*read)(struct erofs_vfile *vf, void *buf, size_t len);
+ 	off_t (*lseek)(struct erofs_vfile *vf, u64 offset, int whence);
+ 	int (*fstat)(struct erofs_vfile *vf, struct stat *buf);
++	int (*xcopy)(struct erofs_vfile *vout, off_t pos,
++		     struct erofs_vfile *vin, int len);
+ };
+ 
+ struct erofs_vfile {
+@@ -52,6 +54,8 @@ off_t erofs_io_lseek(struct erofs_vfile *vf, u64 offset, int whence);
+ 
+ ssize_t erofs_copy_file_range(int fd_in, u64 *off_in, int fd_out, u64 *off_out,
+ 			      size_t length);
++int erofs_io_xcopy(struct erofs_vfile *vout, off_t pos,
++		   struct erofs_vfile *vin, int len);
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/lib/inode.c b/lib/inode.c
+index 60a076a..866c2ee 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -514,30 +514,21 @@ static bool erofs_file_is_compressible(struct erofs_inode *inode)
+ static int write_uncompressed_file_from_fd(struct erofs_inode *inode, int fd)
+ {
+ 	int ret;
+-	unsigned int nblocks, i;
++	unsigned int nblocks;
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 
+ 	inode->datalayout = EROFS_INODE_FLAT_INLINE;
+-	nblocks = inode->i_size / erofs_blksiz(sbi);
++	nblocks = inode->i_size >> sbi->blkszbits;
+ 
+ 	ret = __allocate_inode_bh_data(inode, nblocks, DATA);
+ 	if (ret)
+ 		return ret;
+ 
+-	for (i = 0; i < nblocks; ++i) {
+-		char buf[EROFS_MAX_BLOCK_SIZE];
+-
+-		ret = read(fd, buf, erofs_blksiz(sbi));
+-		if (ret != erofs_blksiz(sbi)) {
+-			if (ret < 0)
+-				return -errno;
+-			return -EAGAIN;
+-		}
+-
+-		ret = erofs_blk_write(sbi, buf, inode->u.i_blkaddr + i, 1);
+-		if (ret)
+-			return ret;
+-	}
++	ret = erofs_io_xcopy(&sbi->bdev, erofs_pos(sbi, inode->u.i_blkaddr),
++			     &((struct erofs_vfile){ .fd = fd }),
++			     erofs_pos(sbi, nblocks));
++	if (ret)
++		return ret;
+ 
+ 	/* read the tail-end data */
+ 	inode->idata_size = inode->i_size % erofs_blksiz(sbi);
+diff --git a/lib/io.c b/lib/io.c
+index a2ef344..c2f8fe7 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -477,6 +477,10 @@ ssize_t erofs_io_read(struct erofs_vfile *vf, void *buf, size_t bytes)
+         return i;
+ }
+ 
++#ifdef HAVE_SYS_SENDFILE_H
++#include <sys/sendfile.h>
++#endif
++
+ off_t erofs_io_lseek(struct erofs_vfile *vf, u64 offset, int whence)
+ {
+ 	if (vf->ops)
+@@ -484,3 +488,44 @@ off_t erofs_io_lseek(struct erofs_vfile *vf, u64 offset, int whence)
+ 
+ 	return lseek(vf->fd, offset, whence);
+ }
++
++int erofs_io_xcopy(struct erofs_vfile *vout, off_t pos,
++		   struct erofs_vfile *vin, int len)
++{
++	if (vout->ops)
++		return vout->ops->xcopy(vout, pos, vin, len);
++
++#if defined(HAVE_SYS_SENDFILE_H) && defined(HAVE_SENDFILE)
++	if (len && !vin->ops) {		/* try to use sendfile() */
++		off_t ret;
++
++		ret = lseek(vout->fd, pos, SEEK_SET);
++		if (ret == pos) {
++			ret = sendfile(vout->fd, vin->fd, NULL, len);
++			if (ret > 0) {
++				pos += ret;
++				len -= ret;
++				if (!len)
++					return 0;
++			}
++		}
++	}
++#endif
++
++	do {
++		char buf[32768];
++		int ret = min_t(int, len, sizeof(buf));
++
++		ret = erofs_io_read(vin, buf, ret);
++		if (ret < 0)
++			return ret;
++		if (ret > 0) {
++			ret = erofs_io_pwrite(vout, buf, pos, ret);
++			if (ret < 0)
++				return ret;
++			pos += ret;
++		}
++		len -= ret;
++	} while (len);
++	return 0;
++}
+-- 
+2.39.3
 
-	if (!is_power_of_2(len))
-		return false;
-
-	if (!IS_ALIGNED(iocb->ki_pos, len))
-		return false;
-
-	return true;
-}
-
-Then this becomes:
-
-bool generic_atomic_write_valid_size(const struct kiocb *iocb,
-				     const struct iov_iter *iter,
-				     unsigned int unit_min,
-				     unsigned int unit_max)
-{
-	size_t len = iov_iter_count(iter);
-
-	if (len < unit_min || len > unit_max)
-		return false;
-
-	return generic_atomic_write_valid(iocb, iter);
-}
-
-Yes, that means you have to rearrange the calling conventions of
-blkdev_dio_invalid a little bit, but the first two arguments match
-->read_iter and ->write_iter.  Filesystem writers can see that the first
-two arguments are the first two parameters to foofs_write_iter() and
-focus on the hard part, which is figuring out unit_{min,max}.
-
-static ssize_t
-xfs_file_dio_write(
-	struct kiocb		*iocb,
-	struct iov_iter		*from)
-{
-...
-	if ((iocb->ki_flags & IOCB_ATOMIC) &&
-	    !generic_atomic_write_valid_size(iocb, from,
-			i_blocksize(inode),
-			XFS_FSB_TO_B(mp, ip->i_extsize)))
-		return -EINVAL;
-	}
-
-
-> > And can these be collapsed into a single generic_atomic_write_checks()
-> > function?
-> 
-> bdev file operations would then need to use
-> generic_atomic_write_valid_size(), and there is no unit_min and unit_max
-> size there, apart from bdev awu min and max. And if I checked them, we would
-> be duplicating checks (of awu min and max) in the block layer.
-
-Fair enough, I concede this point.
-
---D
-
-> 
-> Cheers,
-> John
-> 
