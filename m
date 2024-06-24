@@ -2,50 +2,53 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D6D99142E2
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Jun 2024 08:37:36 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FHr++eHl;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FB9F914305
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Jun 2024 08:53:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1719211984;
+	bh=8Nb75vHFgKpC+zWlhq3PV82ykPYQt9OtwrmrV+N9Bcc=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=kjJ4sqmauVcrxwpatSCIfhthlheAVq8ty821vp7bYg+ZoAuvtLTpXJvHDRkUFUvJ9
+	 zJSbdAVPmrR27QZze/RdWLtaxdLI3tSx9xXn/4nJ/XiVwQZfl3aHsNhd5CPyXaPwTL
+	 xUi1JGHpwArJKa+Eg0WkKTW0lZqiqthv4IFwLmO0UDH/KlGytfAGLTbtZdGmCmIJmL
+	 NLJodF0vsygwyzVmJvohDhJ0pSbECM9D+hY8xDUzO0Hukhjru8oVLgb5z3eSoOxV7V
+	 URaNnRKI7jqxaXbcs0DWAochylDRwJgcr8JsAtdqBsUHTZVgjXe+mkxkIigpVb6/Rp
+	 mjKG76Aa8fo7w==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W6yv10jz9z3cGS
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Jun 2024 16:37:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W6zDw0k1Pz3cSq
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Jun 2024 16:53:04 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FHr++eHl;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.255; helo=szxga08-in.huawei.com; envelope-from=huangxiaojia2@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W6ytx3sgLz30VJ
-	for <linux-erofs@lists.ozlabs.org>; Mon, 24 Jun 2024 16:37:28 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1719211046; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=32Dq1ei0TpOjlntaFkXPDM0XjjYUvUHaXm0NcC8Peo4=;
-	b=FHr++eHl7qD6SCTeri9jaIuAz5w180dLRPvH1PcAZodJ03YJ+RM5fEBS87ubRhl5ASqNue+x1iXzYupM4B5VdgeCEAK14tHdcyXaN9KBG7rQF/IaW4yOHibmjCrGT65DJC2Ia4vAqJHmg4xqugcAqHa5mZxq7mZ9fIVs3kiPBGA=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R711e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W94DJdA_1719211043;
-Received: from 30.97.48.156(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W94DJdA_1719211043)
-          by smtp.aliyun-inc.com;
-          Mon, 24 Jun 2024 14:37:24 +0800
-Message-ID: <453a4339-56ef-48ad-8536-111f6be144d7@linux.alibaba.com>
-Date: Mon, 24 Jun 2024 14:37:23 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W6zDr637Zz30VX
+	for <linux-erofs@lists.ozlabs.org>; Mon, 24 Jun 2024 16:53:00 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4W6ykx4xhBz1SDXd;
+	Mon, 24 Jun 2024 14:30:33 +0800 (CST)
+Received: from dggpemm500021.china.huawei.com (unknown [7.185.36.109])
+	by mail.maildlp.com (Postfix) with ESMTPS id E8590140156;
+	Mon, 24 Jun 2024 14:34:54 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemm500021.china.huawei.com
+ (7.185.36.109) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Mon, 24 Jun
+ 2024 14:34:54 +0800
+To: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
+	<jefflexu@linux.alibaba.com>, <dhavale@google.com>, <yuehaibing@huawei.com>
+Subject: [PATCH -next] erofs: add support for FS_IOC_GETFSSYSFSPATH
+Date: Mon, 24 Jun 2024 14:38:01 +0800
+Message-ID: <20240624063801.2476116-1-huangxiaojia2@huawei.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next] erofs: convert to use super_set_uuid to support for
- FS_IOC_GETFSUUID
-To: Huang Xiaojia <huangxiaojia2@huawei.com>, xiang@kernel.org,
- chao@kernel.org, huyue2@coolpad.com, jefflexu@linux.alibaba.com,
- dhavale@google.com, yuehaibing@huawei.com
-References: <20240624063704.2476070-1-huangxiaojia2@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240624063704.2476070-1-huangxiaojia2@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500021.china.huawei.com (7.185.36.109)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,38 +60,33 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Huang Xiaojia via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Huang Xiaojia <huangxiaojia2@huawei.com>
 Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+FS_IOC_GETFSSYSFSPATH ioctl exposes /sys/fs path of a given filesystem,
+potentially standarizing sysfs reporting. This patch add support for
+FS_IOC_GETFSSYSFSPATH for erofs, "erofs/<dev>" will be outpt.
 
+Signed-off-by: Huang Xiaojia <huangxiaojia2@huawei.com>
+---
+ fs/erofs/super.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 2024/6/24 14:37, Huang Xiaojia wrote:
-> FS_IOC_GETFSUUID ioctl exposes the uuid of a filesystem. To support
-> the ioctl, init sb->s_uuid with super_set_uuid().
-> 
-> Signed-off-by: Huang Xiaojia <huangxiaojia2@huawei.com>
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 1b91d9513013..19dfc1bd3666 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -643,6 +643,7 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 		sb->s_flags |= SB_POSIXACL;
+ 	else
+ 		sb->s_flags &= ~SB_POSIXACL;
++	super_set_sysfs_name_bdev(sb);
+ 
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	xa_init(&sbi->managed_pslots);
+-- 
+2.34.1
 
-Thanks for fixing:
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
-
-> ---
->   fs/erofs/super.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index c93bd24d2771..1b91d9513013 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -343,7 +343,7 @@ static int erofs_read_superblock(struct super_block *sb)
->   	sbi->build_time = le64_to_cpu(dsb->build_time);
->   	sbi->build_time_nsec = le32_to_cpu(dsb->build_time_nsec);
->   
-> -	memcpy(&sb->s_uuid, dsb->uuid, sizeof(dsb->uuid));
-> +	super_set_uuid(sb, (void *)dsb->uuid, sizeof(dsb->uuid));
->   
->   	ret = strscpy(sbi->volume_name, dsb->volume_name,
->   		      sizeof(dsb->volume_name));
