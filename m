@@ -1,51 +1,45 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2075D915B70
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jun 2024 03:02:58 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C7E8915D25
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jun 2024 05:10:26 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FUS1bQto;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NdenH/qF;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W7RQQ3Rn4z3cZn
-	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jun 2024 11:02:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W7VFQ4QKsz3cYh
+	for <lists+linux-erofs@lfdr.de>; Tue, 25 Jun 2024 13:10:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FUS1bQto;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NdenH/qF;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W7RQJ72DWz2xjL
-	for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jun 2024 11:02:46 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W7VFK3Snrz3cBN
+	for <linux-erofs@lists.ozlabs.org>; Tue, 25 Jun 2024 13:10:11 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1719277362; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Lwl4mROnTtmAvWH/rz1uCxV8+8BE7k/ToLx83D9L/Dg=;
-	b=FUS1bQtoSgIIudFTI6Ylf2YJh2cGDSFIxk4YwGRRVZ1fEZif2JzvQg72fXRXAKBinSvk6OG1TN9vCLy25Cr1Ys75tXr2Leiqo7Mi3dYIC9Reu9D9aTrm7llsogK1XtTrD5+SkUqyfCQPff6kWDvRH9QxnxftOq5a6EBU7u4abnw=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W9DR4Ql_1719277360;
-Received: from 192.168.3.4(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W9DR4Ql_1719277360)
+	t=1719285007; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=xB7sbjcB1SSSxmLjd/P3h2jvSXFwLYntzSP4STTcDCE=;
+	b=NdenH/qFTeYoCDRLUPAp41r0N/xg4yskrrtFSpY8+2/IPKcQAwQmOqFwF9BaNoYgErjnQEaKGGj3Su5oHa9MQWTB9PhqlnLgeIuZbpkdu0/o5YdYwcxQORwSgLMdo1PefpmtA5GLG2tlvbU3CpzcvulswfEkFQD3vTDKIQF3bMg=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=hongzhen@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0W9E.VEQ_1719285006;
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0W9E.VEQ_1719285006)
           by smtp.aliyun-inc.com;
-          Tue, 25 Jun 2024 09:02:41 +0800
-Message-ID: <00e92d3f-7bdd-44b8-8a2f-ea07fd47d040@linux.alibaba.com>
-Date: Tue, 25 Jun 2024 09:02:40 +0800
+          Tue, 25 Jun 2024 11:10:07 +0800
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: move erofs_sb_csum_set() and erofs_mkfs_alloc_root() into lib/ for external use
+Date: Tue, 25 Jun 2024 11:10:05 +0800
+Message-Id: <20240625031005.1334796-1-hongzhen@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] erofs: fix possible memory leak in z_erofs_gbuf_exit()
-To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- Yue Hu <huyue2@coolpad.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
- Chunhai Guo <guochunhai@vivo.com>
-References: <20240624220206.3373197-1-dhavale@google.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240624220206.3373197-1-dhavale@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,53 +51,245 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
+Cc: Hongzhen Luo <hongzhen@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+---
+ include/erofs/inode.h    |  1 +
+ include/erofs/internal.h |  1 +
+ lib/inode.c              | 16 +++++++++
+ lib/super.c              | 47 ++++++++++++++++++++++++
+ mkfs/main.c              | 77 +++++-----------------------------------
+ 5 files changed, 73 insertions(+), 69 deletions(-)
 
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index 2af8e6c..604161c 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -45,6 +45,7 @@ struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_sb_info *sbi,
+ struct erofs_inode *erofs_mkfs_build_special_from_fd(struct erofs_sb_info *sbi,
+ 						     int fd, const char *name);
+ int erofs_fixup_root_inode(struct erofs_inode *root);
++struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi);
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 8ed5b0e..361477a 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -403,6 +403,7 @@ void erofs_put_super(struct erofs_sb_info *sbi);
+ int erofs_writesb(struct erofs_sb_info *sbi, struct erofs_buffer_head *sb_bh,
+ 		  erofs_blk_t *blocks);
+ struct erofs_buffer_head *erofs_reserve_sb(struct erofs_sb_info *sbi);
++int erofs_enable_sb_chksum(struct erofs_sb_info *sbi, u32 *crc);
+ 
+ /* namei.c */
+ int erofs_read_inode_from_disk(struct erofs_inode *vi);
+diff --git a/lib/inode.c b/lib/inode.c
+index 60a076a..68f16f4 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -1986,3 +1986,19 @@ int erofs_fixup_root_inode(struct erofs_inode *root)
+ 	free(ibuf);
+ 	return err;
+ }
++
++struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi)
++{
++	struct erofs_inode *root;
++
++	root = erofs_new_inode(sbi);
++	if (IS_ERR(root))
++		return root;
++	root->i_srcpath = strdup("/");
++	root->i_mode = S_IFDIR | 0777;
++	root->i_parent = root;
++	root->i_mtime = root->sbi->build_time;
++	root->i_mtime_nsec = root->sbi->build_time_nsec;
++	erofs_init_empty_dir(root);
++	return root;
++}
+diff --git a/lib/super.c b/lib/super.c
+index 69c57c8..7579875 100644
+--- a/lib/super.c
++++ b/lib/super.c
+@@ -232,3 +232,50 @@ err_bdrop:
+ 	erofs_bdrop(bh, true);
+ 	return ERR_PTR(err);
+ }
++
++int erofs_enable_sb_chksum(struct erofs_sb_info *sbi, u32 *crc)
++{
++	int ret;
++	u8 buf[EROFS_MAX_BLOCK_SIZE];
++	unsigned int len;
++	struct erofs_super_block *sb;
++
++	ret = erofs_blk_read(sbi, 0, buf, 0, erofs_blknr(sbi, EROFS_SUPER_END) + 1);
++	if (ret) {
++		erofs_err("failed to read superblock to set checksum: %s",
++			  erofs_strerror(ret));
++		return ret;
++	}
++
++	/*
++	 * skip the first 1024 bytes, to allow for the installation
++	 * of x86 boot sectors and other oddities.
++	 */
++	sb = (struct erofs_super_block *)(buf + EROFS_SUPER_OFFSET);
++
++	if (le32_to_cpu(sb->magic) != EROFS_SUPER_MAGIC_V1) {
++		erofs_err("internal error: not an erofs valid image");
++		return -EFAULT;
++	}
++
++	/* turn on checksum feature */
++	sb->feature_compat = cpu_to_le32(le32_to_cpu(sb->feature_compat) |
++					 EROFS_FEATURE_COMPAT_SB_CHKSUM);
++	if (erofs_blksiz(sbi) > EROFS_SUPER_OFFSET)
++		len = erofs_blksiz(sbi) - EROFS_SUPER_OFFSET;
++	else
++		len = erofs_blksiz(sbi);
++	*crc = erofs_crc32c(~0, (u8 *)sb, len);
++
++	/* set up checksum field to erofs_super_block */
++	sb->checksum = cpu_to_le32(*crc);
++
++	ret = erofs_blk_write(sbi, buf, 0, 1);
++	if (ret) {
++		erofs_err("failed to write checksummed superblock: %s",
++			  erofs_strerror(ret));
++		return ret;
++	}
++
++	return 0;
++}
+diff --git a/mkfs/main.c b/mkfs/main.c
+index e20e8c0..28a271d 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -975,55 +975,6 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 	return 0;
+ }
+ 
+-static int erofs_mkfs_superblock_csum_set(void)
+-{
+-	int ret;
+-	u8 buf[EROFS_MAX_BLOCK_SIZE];
+-	u32 crc;
+-	unsigned int len;
+-	struct erofs_super_block *sb;
+-
+-	ret = erofs_blk_read(&sbi, 0, buf, 0, erofs_blknr(&sbi, EROFS_SUPER_END) + 1);
+-	if (ret) {
+-		erofs_err("failed to read superblock to set checksum: %s",
+-			  erofs_strerror(ret));
+-		return ret;
+-	}
+-
+-	/*
+-	 * skip the first 1024 bytes, to allow for the installation
+-	 * of x86 boot sectors and other oddities.
+-	 */
+-	sb = (struct erofs_super_block *)(buf + EROFS_SUPER_OFFSET);
+-
+-	if (le32_to_cpu(sb->magic) != EROFS_SUPER_MAGIC_V1) {
+-		erofs_err("internal error: not an erofs valid image");
+-		return -EFAULT;
+-	}
+-
+-	/* turn on checksum feature */
+-	sb->feature_compat = cpu_to_le32(le32_to_cpu(sb->feature_compat) |
+-					 EROFS_FEATURE_COMPAT_SB_CHKSUM);
+-	if (erofs_blksiz(&sbi) > EROFS_SUPER_OFFSET)
+-		len = erofs_blksiz(&sbi) - EROFS_SUPER_OFFSET;
+-	else
+-		len = erofs_blksiz(&sbi);
+-	crc = erofs_crc32c(~0, (u8 *)sb, len);
+-
+-	/* set up checksum field to erofs_super_block */
+-	sb->checksum = cpu_to_le32(crc);
+-
+-	ret = erofs_blk_write(&sbi, buf, 0, 1);
+-	if (ret) {
+-		erofs_err("failed to write checksummed superblock: %s",
+-			  erofs_strerror(ret));
+-		return ret;
+-	}
+-
+-	erofs_info("superblock checksum 0x%08x written", crc);
+-	return 0;
+-}
+-
+ static void erofs_mkfs_default_options(void)
+ {
+ 	cfg.c_showprogress = true;
+@@ -1075,22 +1026,6 @@ void erofs_show_progs(int argc, char *argv[])
+ 		printf("%s %s\n", basename(argv[0]), cfg.c_version);
+ }
+ 
+-static struct erofs_inode *erofs_mkfs_alloc_root(struct erofs_sb_info *sbi)
+-{
+-	struct erofs_inode *root;
+-
+-	root = erofs_new_inode(sbi);
+-	if (IS_ERR(root))
+-		return root;
+-	root->i_srcpath = strdup("/");
+-	root->i_mode = S_IFDIR | 0777;
+-	root->i_parent = root;
+-	root->i_mtime = root->sbi->build_time;
+-	root->i_mtime_nsec = root->sbi->build_time_nsec;
+-	erofs_init_empty_dir(root);
+-	return root;
+-}
+-
+ static int erofs_mkfs_rebuild_load_trees(struct erofs_inode *root)
+ {
+ 	struct erofs_sb_info *src;
+@@ -1198,6 +1133,7 @@ int main(int argc, char **argv)
+ 	erofs_blk_t nblocks;
+ 	struct timeval t;
+ 	FILE *packedfile = NULL;
++	u32 crc;
+ 
+ 	erofs_init_configure();
+ 	erofs_mkfs_default_options();
+@@ -1390,7 +1326,7 @@ int main(int argc, char **argv)
+ 	erofs_inode_manager_init();
+ 
+ 	if (tar_mode) {
+-		root = erofs_mkfs_alloc_root(&sbi);
++		root = erofs_rebuild_make_root(&sbi);
+ 		if (IS_ERR(root)) {
+ 			err = PTR_ERR(root);
+ 			goto exit;
+@@ -1405,7 +1341,7 @@ int main(int argc, char **argv)
+ 		if (err < 0)
+ 			goto exit;
+ 	} else if (rebuild_mode) {
+-		root = erofs_mkfs_alloc_root(&sbi);
++		root = erofs_rebuild_make_root(&sbi);
+ 		if (IS_ERR(root)) {
+ 			err = PTR_ERR(root);
+ 			goto exit;
+@@ -1471,8 +1407,11 @@ int main(int argc, char **argv)
+ 
+ 	err = erofs_dev_resize(&sbi, nblocks);
+ 
+-	if (!err && erofs_sb_has_sb_chksum(&sbi))
+-		err = erofs_mkfs_superblock_csum_set();
++	if (!err && erofs_sb_has_sb_chksum(&sbi)) {
++		err = erofs_enable_sb_chksum(&sbi, &crc);
++		if (!err)
++			erofs_info("superblock checksum 0x%08x written", crc);
++	}
+ exit:
+ 	if (root)
+ 		erofs_iput(root);
+-- 
+2.39.3
 
-On 2024/6/25 06:02, Sandeep Dhavale wrote:
-> Because we incorrectly reused of variable `i` in `z_erofs_gbuf_exit()`
-> for inner loop, we may exit early from outer loop resulting in memory
-> leak. Fix this by using separate variable for iterating through inner loop.
-> 
-> Fixes: f36f3010f676 ("erofs: rename per-CPU buffers to global buffer pool and make it configurable")
-> 
-> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
-
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
-
-> ---
->   fs/erofs/zutil.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
-> index 036024bce9f7..b80f612867c2 100644
-> --- a/fs/erofs/zutil.c
-> +++ b/fs/erofs/zutil.c
-> @@ -148,7 +148,7 @@ int __init z_erofs_gbuf_init(void)
->   
->   void z_erofs_gbuf_exit(void)
->   {
-> -	int i;
-> +	int i, j;
->   
->   	for (i = 0; i < z_erofs_gbuf_count + (!!z_erofs_rsvbuf); ++i) {
->   		struct z_erofs_gbuf *gbuf = &z_erofs_gbufpool[i];
-> @@ -161,9 +161,9 @@ void z_erofs_gbuf_exit(void)
->   		if (!gbuf->pages)
->   			continue;
->   
-> -		for (i = 0; i < gbuf->nrpages; ++i)
-> -			if (gbuf->pages[i])
-> -				put_page(gbuf->pages[i]);
-> +		for (j = 0; j < gbuf->nrpages; ++j)
-> +			if (gbuf->pages[j])
-> +				put_page(gbuf->pages[j]);
->   		kfree(gbuf->pages);
->   		gbuf->pages = NULL;
->   	}
