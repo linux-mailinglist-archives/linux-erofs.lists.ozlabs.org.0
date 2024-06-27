@@ -2,50 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68AF891A305
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jun 2024 11:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C7BE591A477
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jun 2024 13:01:52 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=UZLWmbdv;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=MexA7hH0;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W8v2Q5qCbz3cXH
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jun 2024 19:50:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W8wcV1bHHz3cVb
+	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jun 2024 21:01:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=UZLWmbdv;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=MexA7hH0;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W8v2L49yKz30Tk
-	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jun 2024 19:50:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1719481829; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=n657smd75R4ol18sEwRDkb5Q7LHWhQRaO1iMFOoiAHc=;
-	b=UZLWmbdvSyv0bLmBhJmkAZaItXtE2Xtp/MD8BYUqMI3lZ431SzHnJo891V96fF2RQ3gyHDkPEEaolzK04UPuOkib87wQvgN0v7U9Y9JsF0WFR0CrYtl7219iQsgFatQBsS3ezJqBxU9dJ8OWV2SeRd4mM/1uV2ebAbEXtniZblg=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0W9MRWjn_1719481827;
-Received: from 30.97.48.200(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W9MRWjn_1719481827)
-          by smtp.aliyun-inc.com;
-          Thu, 27 Jun 2024 17:50:27 +0800
-Message-ID: <2a427366-0f63-4024-a3b3-759a4f902061@linux.alibaba.com>
-Date: Thu, 27 Jun 2024 17:50:26 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W8wcP4Z1mz3cCM
+	for <linux-erofs@lists.ozlabs.org>; Thu, 27 Jun 2024 21:01:41 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 25C9261E21;
+	Thu, 27 Jun 2024 11:01:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B160AC2BBFC;
+	Thu, 27 Jun 2024 11:01:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719486099;
+	bh=d9XGZ2kB3Lt/GXYoN+EjaPRKIEPhF2tefw/+D8t0oTk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=MexA7hH0tR2F5X8b5EtDn8VpN0iKLpq2+zUi+ASp/gJhQ9pDdNkbgSnjSMxfjnbVI
+	 +7JdDiFaosrI0SnEFNDJ6ceQaZDimYzg+BE6ZT4jj0vZgSUiuNRl099Zj5RIbgJ9cp
+	 y75CKiI+N14qArASzJEwkeE+OWOpRdkM/+HFwRqZnNR7tPwtuPq8R0iQJnktkEloUb
+	 iiCma2tk1xTbOPrzZibllYTBJmWxFY7rQzy009mFggg6ePVLMWbAe5Z0Ry6LwUV1Je
+	 Tt7x+MgWKu5ax0tO9xBuBidj7OxuM6lI4gKmC1To0SgC2nJBbic/SxGHeUyizZTH/W
+	 oqrqnMYU1yQgw==
+Message-ID: <5bb711c4bbc59ea9fff486a86acce13880823e7b.camel@kernel.org>
+Subject: Re: [PATCH v2 2/5] cachefiles: flush all requests for the object
+ that is being dropped
+From: Jeff Layton <jlayton@kernel.org>
+To: libaokun@huaweicloud.com, netfs@lists.linux.dev, dhowells@redhat.com
+Date: Thu, 27 Jun 2024 07:01:37 -0400
+In-Reply-To: <20240515125136.3714580-3-libaokun@huaweicloud.com>
+References: <20240515125136.3714580-1-libaokun@huaweicloud.com>
+	 <20240515125136.3714580-3-libaokun@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6.6] erofs: fix NULL dereference of dif->bdev_handle in
- fscache mode
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Hongbo Li <lihongbo22@huawei.com>, gregkh@linuxfoundation.org
-References: <20240627091345.3569167-1-lihongbo22@huawei.com>
- <c1426293-7a86-49fd-a807-d577438a7828@huawei.com>
- <9e81761d-e769-4b14-b72c-77b74e707364@linux.alibaba.com>
-In-Reply-To: <9e81761d-e769-4b14-b72c-77b74e707364@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -57,46 +62,72 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: brauner@kernel.org, jack@suse.cz, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
+Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Wed, 2024-05-15 at 20:51 +0800, libaokun@huaweicloud.com wrote:
+> From: Baokun Li <libaokun1@huawei.com>
+>=20
+> Because after an object is dropped, requests for that object are
+> useless,
+> flush them to avoid causing other problems.
+>=20
+> This prepares for the later addition of cancel_work_sync(). After the
+> reopen requests is generated, flush it to avoid cancel_work_sync()
+> blocking by waiting for daemon to complete the reopen requests.
+>=20
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> ---
+> =C2=A0fs/cachefiles/ondemand.c | 19 +++++++++++++++++++
+> =C2=A01 file changed, 19 insertions(+)
+>=20
+> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+> index 73da4d4eaa9b..d24bff43499b 100644
+> --- a/fs/cachefiles/ondemand.c
+> +++ b/fs/cachefiles/ondemand.c
+> @@ -564,12 +564,31 @@ int cachefiles_ondemand_init_object(struct
+> cachefiles_object *object)
+> =C2=A0
+> =C2=A0void cachefiles_ondemand_clean_object(struct cachefiles_object
+> *object)
+> =C2=A0{
+> +	unsigned long index;
+> +	struct cachefiles_req *req;
+> +	struct cachefiles_cache *cache;
+> +
+> =C2=A0	if (!object->ondemand)
+> =C2=A0		return;
+> =C2=A0
+> =C2=A0	cachefiles_ondemand_send_req(object, CACHEFILES_OP_CLOSE, 0,
+> =C2=A0			cachefiles_ondemand_init_close_req, NULL);
+> +
+> +	if (!object->ondemand->ondemand_id)
+> +		return;
+> +
+> +	/* Flush all requests for the object that is being dropped.
+> */
 
+I wouldn't call this a "Flush". In the context of writeback, that
+usually means that we're writing out pages now in order to do something
+else. In this case, it looks like you're more canceling these requests
+since you're marking them with an error and declaring them complete.
 
-On 2024/6/27 17:35, Gao Xiang wrote:
-> 
-> 
-> On 2024/6/27 17:11, Hongbo Li wrote:
+> +	cache =3D object->volume->cache;
+> +	xa_lock(&cache->reqs);
+> =C2=A0	cachefiles_ondemand_set_object_dropping(object);
+> +	xa_for_each(&cache->reqs, index, req) {
+> +		if (req->object =3D=3D object) {
+> +			req->error =3D -EIO;
+> +			complete(&req->done);
+> +			__xa_erase(&cache->reqs, index);
+> +		}
+> +	}
+> +	xa_unlock(&cache->reqs);
+> =C2=A0}
+> =C2=A0
+> =C2=A0int cachefiles_ondemand_init_obj_info(struct cachefiles_object
+> *object,
 
-..
-
->>
->> The reason is the same with 8bd90b6ae7856("erofs: fix NULL dereference of dif->bdev_handle in fscache mode") in mainline. So we should backport this
->> patch into stable linux-6.6.y to avoid this bug.
-> 
-> Yes, commit 8bd90b6ae785 should be backported to
-> Linux 6.6.y LTS immediately.
-
-BTW, It seems that
-
-commit "erofs: Convert to use bdev_open_by_path()" was
-backported as a dependency since v6.6.23 even I
-explicitly commented that this patch is unnecessary
-and I tend to manually backport instead as below:
-
-https://lore.kernel.org/r/ZgDHG8Ucl3EkY4ZS@debian
-
-
-However, my comment was eventually ignored and
-some other related fix like
-"erofs: fix NULL dereference of dif->bdev_handle in fscache mode"
-
-wasn't backported along with
-"erofs: Convert to use bdev_open_by_path()"
-
-So the affected 6.6 LTS versions seem to be
-v6.6.23 ~ v6.6.35 (current)
-
-Thanks,
-Gao Xiang
-
+--=20
+Jeff Layton <jlayton@kernel.org>
