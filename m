@@ -2,61 +2,63 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FBE091BD93
-	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2024 13:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B06191C3AA
+	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2024 18:23:04 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=LQTFi2pA;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W9YMB4xRCz3cXR
-	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2024 21:37:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W9ghf1TM8z3cXC
+	for <lists+linux-erofs@lfdr.de>; Sat, 29 Jun 2024 02:22:58 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=LQTFi2pA;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.11; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W9YM622t3z30fM
-	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 21:37:20 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9YLn2lGCz4f3kkD
-	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 19:37:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 8BCD71A0572
-	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 19:37:12 +0800 (CST)
-Received: from [10.174.177.174] (unknown [10.174.177.174])
-	by APP1 (Coremail) with SMTP id cCh0CgBXgHxjoH5mMEhDAg--.18518S3;
-	Fri, 28 Jun 2024 19:37:10 +0800 (CST)
-Message-ID: <3536f485-e496-4042-a231-c43a567cee7b@huaweicloud.com>
-Date: Fri, 28 Jun 2024 19:37:06 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/9] cachefiles: random bugfixes
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W9ghV3KMmz3cBx
+	for <linux-erofs@lists.ozlabs.org>; Sat, 29 Jun 2024 02:22:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719591772; x=1751127772;
+  h=date:from:to:cc:subject:message-id;
+  bh=zf7QArC0cf3q1fYb34uc5TFqKzgUM31polS+I19RT1E=;
+  b=LQTFi2pAt8+bYBFzp3267OzYBXGnKzAWTB/AULoB7MHqADKYtn4lQpXi
+   jos+VLGCDiqS1krNABhYycHlaY5IkssBWgsuRYvaXEUoEX04cOV99SWgx
+   HAKiLzEatzdZvEqtmKwmu+vlvs/wpKnxWfwslG9yraOJf7wXKuaCoW2a3
+   cD4LoMoEDRRbmKLI0T2sWZmOCapM3YuBblHlJV5nlLIXo4CkffAJv1G6w
+   h05emU880tha46dIWaLMwUZbM823cBIPxkDta+CRUkUqbIt5rjZQqt9CV
+   wOj61tDxgiBYFRxWM5GHGiYkvYlMRj2VefZLEPj3Flyfrnv3BpZuKqR0C
+   A==;
+X-CSE-ConnectionGUID: LE9fErOFT3acg9QNmZhDCw==
+X-CSE-MsgGUID: h9ZnXv/MRm6ZmTfPsxgThA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="27372023"
+X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
+   d="scan'208";a="27372023"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 09:22:45 -0700
+X-CSE-ConnectionGUID: qz6iQHIHSkCaZU5ikFFFlQ==
+X-CSE-MsgGUID: 1G7kUjTjQD6rDG6i9gzwvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
+   d="scan'208";a="49127815"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 28 Jun 2024 09:22:44 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sNEMz-000HMF-1s;
+	Fri, 28 Jun 2024 16:22:41 +0000
+Date: Sat, 29 Jun 2024 00:22:00 +0800
+From: kernel test robot <lkp@intel.com>
 To: Gao Xiang <hsiangkao@linux.alibaba.com>
-References: <20240628062930.2467993-1-libaokun@huaweicloud.com>
- <ce6a7e15-5bea-413a-951e-b252319e1dfd@linux.alibaba.com>
-Content-Language: en-US
-From: Baokun Li <libaokun@huaweicloud.com>
-In-Reply-To: <ce6a7e15-5bea-413a-951e-b252319e1dfd@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: cCh0CgBXgHxjoH5mMEhDAg--.18518S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxuryDuF4UJrW5Aw4UCw1DGFg_yoW5CF4rpF
-	Wakay5KFWkWry0kws2yr4xtF4Fy3yxXFnrGr1rWr1UC3s8XF1IyrZakw1Yvas5Cr4fGw4a
-	vr4jvas3AryqyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-	c2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Gr0_
-	Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQvt
-	AUUUUU=
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBV1jkIANfAAAsT
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ cc69a681b2573e8865e29758f1a5b284328efb2d
+Message-ID: <202406290058.nKXPnPbt-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -68,85 +70,193 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Christian Brauner <brauner@kernel.org>, yangerkun@huawei.com, jlayton@kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com, Baokun Li <libaokun@huaweicloud.com>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Xiang,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: cc69a681b2573e8865e29758f1a5b284328efb2d  erofs: convert to use super_set_uuid to support for FS_IOC_GETFSUUID
 
-On 2024/6/28 15:39, Gao Xiang wrote:
-> Hi Baokun,
->
-> On 2024/6/28 14:29, libaokun@huaweicloud.com wrote:
->> From: Baokun Li <libaokun1@huawei.com>
->>
->> Hi all!
->>
->> This is the third version of this patch series, in which another 
->> patch set
->> is subsumed into this one to avoid confusing the two patch sets.
->> (https://patchwork.kernel.org/project/linux-fsdevel/list/?series=854914)
->>
->> Thank you, Jia Zhu, Gao Xiang, Jeff Layton, for the feedback in the
->> previous version.
->>
->> We've been testing ondemand mode for cachefiles since January, and we're
->> almost done. We hit a lot of issues during the testing period, and this
->> patch series fixes some of the issues. The patches have passed internal
->> testing without regression.
->>
->> The following is a brief overview of the patches, see the patches for
->> more details.
->>
->> Patch 1-2: Add fscache_try_get_volume() helper function to avoid
->> fscache_volume use-after-free on cache withdrawal.
->>
->> Patch 3: Fix cachefiles_lookup_cookie() and cachefiles_withdraw_cache()
->> concurrency causing cachefiles_volume use-after-free.
->>
->> Patch 4: Propagate error codes returned by vfs_getxattr() to avoid
->> endless loops.
->>
->> Patch 5-7: A read request waiting for reopen could be closed maliciously
->> before the reopen worker is executing or waiting to be scheduled. So
->> ondemand_object_worker() may be called after the info and object and 
->> even
->> the cache have been freed and trigger use-after-free. So use
->> cancel_work_sync() in cachefiles_ondemand_clean_object() to cancel the
->> reopen worker or wait for it to finish. Since it makes no sense to wait
->> for the daemon to complete the reopen request, to avoid this pointless
->> operation blocking cancel_work_sync(), Patch 1 avoids request generation
->> by the DROPPING state when the request has not been sent, and Patch 2
->> flushes the requests of the current object before cancel_work_sync().
->>
->> Patch 8: Cyclic allocation of msg_id to avoid msg_id reuse misleading
->> the daemon to cause hung.
->>
->> Patch 9: Hold xas_lock during polling to avoid dereferencing reqs 
->> causing
->> use-after-free. This issue was triggered frequently in our tests, and we
->> found that anolis 5.10 had fixed it. So to avoid failing the test, this
->> patch is pushed upstream as well.
->>
->> Comments and questions are, as always, welcome.
->> Please let me know what you think.
->
-> Patch 4-9 looks good to me, and they are independent to patch 1-3
-> so personally I guess they could go upstream in advance.
+elapsed time: 3292m
 
-Thank you for your review!
+configs tested: 170
+configs skipped: 2
 
-Indeed, the first three patches have no dependencies on the later
-ones, and the later ones can be merged in first.
->
-> I hope the way to fix cachefiles in patch 1-4 could be also
-> confirmed by David and Jeff since they relates the generic
-> cachefiles logic anyway.
-Yes, the first four patches modify the generic process for cachefiles,
-and it would be great if David and Jeff could take a look at those.
-The logic for patches 2 and 3 is a bit more complex, so the review
-may take some time.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Cheers,
-Baokun
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                               defconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240628   gcc-13.2.0
+arc                   randconfig-002-20240628   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                     am200epdkit_defconfig   gcc-13.2.0
+arm                         bcm2835_defconfig   gcc-13.2.0
+arm                     davinci_all_defconfig   gcc-13.2.0
+arm                                 defconfig   gcc-13.2.0
+arm                        multi_v5_defconfig   gcc-13.2.0
+arm                         mv78xx0_defconfig   gcc-13.2.0
+arm                        mvebu_v7_defconfig   gcc-13.2.0
+arm                           omap1_defconfig   gcc-13.2.0
+arm                   randconfig-001-20240628   gcc-13.2.0
+arm                   randconfig-002-20240628   gcc-13.2.0
+arm                   randconfig-003-20240628   gcc-13.2.0
+arm                   randconfig-004-20240628   gcc-13.2.0
+arm                           tegra_defconfig   gcc-13.2.0
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                            allyesconfig   clang-19
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240628   gcc-13.2.0
+arm64                 randconfig-002-20240628   gcc-13.2.0
+arm64                 randconfig-003-20240628   gcc-13.2.0
+arm64                 randconfig-004-20240628   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+csky                  randconfig-001-20240628   gcc-13.2.0
+csky                  randconfig-002-20240628   gcc-13.2.0
+i386                             allmodconfig   clang-18
+i386                              allnoconfig   clang-18
+i386                             allyesconfig   clang-18
+i386         buildonly-randconfig-001-20240628   gcc-10
+i386         buildonly-randconfig-002-20240628   gcc-10
+i386         buildonly-randconfig-003-20240628   gcc-10
+i386         buildonly-randconfig-004-20240628   gcc-10
+i386         buildonly-randconfig-005-20240628   gcc-10
+i386         buildonly-randconfig-006-20240628   gcc-10
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240628   gcc-10
+i386                  randconfig-002-20240628   gcc-10
+i386                  randconfig-003-20240628   gcc-10
+i386                  randconfig-004-20240628   gcc-10
+i386                  randconfig-005-20240628   gcc-10
+i386                  randconfig-006-20240628   gcc-10
+i386                  randconfig-011-20240628   gcc-10
+i386                  randconfig-012-20240628   gcc-10
+i386                  randconfig-013-20240628   gcc-10
+i386                  randconfig-014-20240628   gcc-10
+i386                  randconfig-015-20240628   gcc-10
+i386                  randconfig-016-20240628   gcc-10
+loongarch                        allmodconfig   gcc-13.2.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240628   gcc-13.2.0
+loongarch             randconfig-002-20240628   gcc-13.2.0
+m68k                             allmodconfig   gcc-13.2.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-13.2.0
+m68k                                defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-13.2.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-13.2.0
+microblaze                          defconfig   gcc-13.2.0
+mips                             allmodconfig   clang-19
+mips                              allnoconfig   gcc-13.2.0
+mips                             allyesconfig   clang-19
+mips                          ath79_defconfig   gcc-13.2.0
+mips                        qi_lb60_defconfig   gcc-13.2.0
+nios2                            allmodconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                            allyesconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240628   gcc-13.2.0
+nios2                 randconfig-002-20240628   gcc-13.2.0
+openrisc                         allmodconfig   gcc-13.2.0
+openrisc                          allnoconfig   gcc-13.2.0
+openrisc                         allyesconfig   gcc-13.2.0
+openrisc                            defconfig   gcc-13.2.0
+parisc                           allmodconfig   gcc-13.2.0
+parisc                            allnoconfig   gcc-13.2.0
+parisc                           allyesconfig   gcc-13.2.0
+parisc                              defconfig   gcc-13.2.0
+parisc                randconfig-001-20240628   gcc-13.2.0
+parisc                randconfig-002-20240628   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-13.2.0
+powerpc                           allnoconfig   gcc-13.2.0
+powerpc                          allyesconfig   gcc-13.2.0
+powerpc                    amigaone_defconfig   gcc-13.2.0
+powerpc                    klondike_defconfig   gcc-13.2.0
+powerpc                    mvme5100_defconfig   gcc-13.2.0
+powerpc                      ppc44x_defconfig   gcc-13.2.0
+powerpc               randconfig-001-20240628   gcc-13.2.0
+powerpc               randconfig-002-20240628   gcc-13.2.0
+powerpc               randconfig-003-20240628   gcc-13.2.0
+powerpc64             randconfig-001-20240628   gcc-13.2.0
+powerpc64             randconfig-002-20240628   gcc-13.2.0
+powerpc64             randconfig-003-20240628   gcc-13.2.0
+riscv                            allmodconfig   gcc-13.2.0
+riscv                             allnoconfig   gcc-13.2.0
+riscv                            allyesconfig   gcc-13.2.0
+riscv                               defconfig   gcc-13.2.0
+riscv                 randconfig-001-20240628   gcc-13.2.0
+riscv                 randconfig-002-20240628   gcc-13.2.0
+s390                              allnoconfig   gcc-13.2.0
+s390                                defconfig   gcc-13.2.0
+s390                  randconfig-001-20240628   gcc-13.2.0
+s390                  randconfig-002-20240628   gcc-13.2.0
+sh                                allnoconfig   gcc-13.2.0
+sh                                  defconfig   gcc-13.2.0
+sh                          lboxre2_defconfig   gcc-13.2.0
+sh                    randconfig-001-20240628   gcc-13.2.0
+sh                    randconfig-002-20240628   gcc-13.2.0
+sh                          rsk7264_defconfig   gcc-13.2.0
+sh                        sh7785lcr_defconfig   gcc-13.2.0
+sparc                            allyesconfig   gcc-13.2.0
+sparc64                          allmodconfig   gcc-13.2.0
+sparc64                          allyesconfig   gcc-13.2.0
+sparc64                             defconfig   gcc-13.2.0
+sparc64               randconfig-001-20240628   gcc-13.2.0
+sparc64               randconfig-002-20240628   gcc-13.2.0
+um                                allnoconfig   gcc-13.2.0
+um                                  defconfig   gcc-13.2.0
+um                             i386_defconfig   gcc-13.2.0
+um                    randconfig-001-20240628   gcc-13.2.0
+um                    randconfig-002-20240628   gcc-13.2.0
+um                           x86_64_defconfig   gcc-13.2.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240628   gcc-13
+x86_64       buildonly-randconfig-002-20240628   gcc-13
+x86_64       buildonly-randconfig-003-20240628   gcc-13
+x86_64       buildonly-randconfig-004-20240628   gcc-13
+x86_64       buildonly-randconfig-005-20240628   gcc-13
+x86_64       buildonly-randconfig-006-20240628   gcc-13
+x86_64                              defconfig   clang-18
+x86_64                                  kexec   clang-18
+x86_64                randconfig-001-20240628   gcc-13
+x86_64                randconfig-002-20240628   gcc-13
+x86_64                randconfig-003-20240628   gcc-13
+x86_64                randconfig-004-20240628   gcc-13
+x86_64                randconfig-005-20240628   gcc-13
+x86_64                randconfig-006-20240628   gcc-13
+x86_64                randconfig-011-20240628   gcc-13
+x86_64                randconfig-012-20240628   gcc-13
+x86_64                randconfig-013-20240628   gcc-13
+x86_64                randconfig-014-20240628   gcc-13
+x86_64                randconfig-015-20240628   gcc-13
+x86_64                randconfig-016-20240628   gcc-13
+x86_64                randconfig-071-20240628   gcc-13
+x86_64                randconfig-072-20240628   gcc-13
+x86_64                randconfig-073-20240628   gcc-13
+x86_64                randconfig-074-20240628   gcc-13
+x86_64                randconfig-075-20240628   gcc-13
+x86_64                randconfig-076-20240628   gcc-13
+x86_64                          rhel-8.3-func   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+x86_64                               rhel-8.3   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                           allyesconfig   gcc-13.2.0
+xtensa                randconfig-001-20240628   gcc-13.2.0
+xtensa                randconfig-002-20240628   gcc-13.2.0
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
