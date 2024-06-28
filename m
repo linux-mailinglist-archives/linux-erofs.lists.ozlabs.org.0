@@ -2,46 +2,46 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7E6791B718
-	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2024 08:31:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E64591B719
+	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2024 08:31:46 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W9QZM31B5z3cHH
-	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2024 16:31:39 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W9QZQ5Frsz3cZB
+	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2024 16:31:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W9QYl42NWz3cF6
-	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 16:31:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W9QYm138yz3cHH
+	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 16:31:08 +1000 (AEST)
 Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9QYY5Fq5z4f3jYh
-	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 14:30:57 +0800 (CST)
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9QYT25YTz4f3l1m
+	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 14:30:53 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id DFFDB1A0568
-	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 14:31:04 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 863691A0568
+	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 14:31:05 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP2 (Coremail) with SMTP id Syh0CgBXwIWfWH5mZZVAAg--.52859S12;
-	Fri, 28 Jun 2024 14:31:04 +0800 (CST)
+	by APP2 (Coremail) with SMTP id Syh0CgBXwIWfWH5mZZVAAg--.52859S13;
+	Fri, 28 Jun 2024 14:31:05 +0800 (CST)
 From: libaokun@huaweicloud.com
 To: netfs@lists.linux.dev,
 	dhowells@redhat.com,
 	jlayton@kernel.org
-Subject: [PATCH v3 8/9] cachefiles: cyclic allocation of msg_id to avoid reuse
-Date: Fri, 28 Jun 2024 14:29:29 +0800
-Message-Id: <20240628062930.2467993-9-libaokun@huaweicloud.com>
+Subject: [PATCH v3 9/9] cachefiles: add missing lock protection when polling
+Date: Fri, 28 Jun 2024 14:29:30 +0800
+Message-Id: <20240628062930.2467993-10-libaokun@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240628062930.2467993-1-libaokun@huaweicloud.com>
 References: <20240628062930.2467993-1-libaokun@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: Syh0CgBXwIWfWH5mZZVAAg--.52859S12
-X-Coremail-Antispam: 1UD129KBjvJXoWxCrWUurW3Ary8Cr17KrykXwb_yoWrGF18pF
-	WakFy7Kry8WF42krZ7ZF4kJrWrG34kZFsrWrWFqryvyrn0vr1rZr1Utr1rXFyUA3ySgF42
-	qw48uasrt342y3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: Syh0CgBXwIWfWH5mZZVAAg--.52859S13
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF4rWr4Dtr4furW3uw4rZrb_yoW8WrWfpF
+	WSya45try8ur48uF1qv3WkA34FyaykGa4DW3ykXwsIv3srXr15XF1Sk34a9rn5Jr4kAF43
+	Jw15KF9xA3yUA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -54,9 +54,9 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxCrWUurW3Ary8Cr17KrykXwb_yoWrGF18pF
 	JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1V
 	AFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xII
 	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcV
-	C2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVj
+	C2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVj
 	vjDU0xZFpf9x0JUB89_UUUUU=
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBV1jkH-xKAABsF
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBV1jkH-xKAADsH
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -72,115 +72,49 @@ Cc: brauner@kernel.org, yangerkun@huawei.com, linux-kernel@vger.kernel.org, linu
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: Baokun Li <libaokun1@huawei.com>
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-Reusing the msg_id after a maliciously completed reopen request may cause
-a read request to remain unprocessed and result in a hung, as shown below:
+Add missing lock protection in poll routine when iterating xarray,
+otherwise:
 
-       t1       |      t2       |      t3
--------------------------------------------------
-cachefiles_ondemand_select_req
- cachefiles_ondemand_object_is_close(A)
- cachefiles_ondemand_set_object_reopening(A)
- queue_work(fscache_object_wq, &info->work)
-                ondemand_object_worker
-                 cachefiles_ondemand_init_object(A)
-                  cachefiles_ondemand_send_req(OPEN)
-                    // get msg_id 6
-                    wait_for_completion(&req_A->done)
-cachefiles_ondemand_daemon_read
- // read msg_id 6 req_A
- cachefiles_ondemand_get_fd
- copy_to_user
-                                // Malicious completion msg_id 6
-                                copen 6,-1
-                                cachefiles_ondemand_copen
-                                 complete(&req_A->done)
-                                 // will not set the object to close
-                                 // because ondemand_id && fd is valid.
+Even with RCU read lock held, only the slot of the radix tree is
+ensured to be pinned there, while the data structure (e.g. struct
+cachefiles_req) stored in the slot has no such guarantee.  The poll
+routine will iterate the radix tree and dereference cachefiles_req
+accordingly.  Thus RCU read lock is not adequate in this case and
+spinlock is needed here.
 
-                // ondemand_object_worker() is done
-                // but the object is still reopening.
-
-                                // new open req_B
-                                cachefiles_ondemand_init_object(B)
-                                 cachefiles_ondemand_send_req(OPEN)
-                                 // reuse msg_id 6
-process_open_req
- copen 6,A.size
- // The expected failed copen was executed successfully
-
-Expect copen to fail, and when it does, it closes fd, which sets the
-object to close, and then close triggers reopen again. However, due to
-msg_id reuse resulting in a successful copen, the anonymous fd is not
-closed until the daemon exits. Therefore read requests waiting for reopen
-to complete may trigger hung task.
-
-To avoid this issue, allocate the msg_id cyclically to avoid reusing the
-msg_id for a very short duration of time.
-
-Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
+Fixes: b817e22b2e91 ("cachefiles: narrow the scope of triggering EPOLLIN events in ondemand mode")
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 Signed-off-by: Baokun Li <libaokun1@huawei.com>
-Acked-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jia Zhu <zhujia.zj@bytedance.com>
 Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Acked-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/cachefiles/internal.h |  1 +
- fs/cachefiles/ondemand.c | 20 ++++++++++++++++----
- 2 files changed, 17 insertions(+), 4 deletions(-)
+ fs/cachefiles/daemon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index a1a1d25e9514..7b99bd98de75 100644
---- a/fs/cachefiles/internal.h
-+++ b/fs/cachefiles/internal.h
-@@ -129,6 +129,7 @@ struct cachefiles_cache {
- 	unsigned long			req_id_next;
- 	struct xarray			ondemand_ids;	/* xarray for ondemand_id allocation */
- 	u32				ondemand_id_next;
-+	u32				msg_id_next;
- };
+diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+index 06cdf1a8a16f..89b11336a836 100644
+--- a/fs/cachefiles/daemon.c
++++ b/fs/cachefiles/daemon.c
+@@ -366,14 +366,14 @@ static __poll_t cachefiles_daemon_poll(struct file *file,
  
- static inline bool cachefiles_in_ondemand_mode(struct cachefiles_cache *cache)
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index 1d5b970206d0..470c96658385 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -528,20 +528,32 @@ static int cachefiles_ondemand_send_req(struct cachefiles_object *object,
- 		smp_mb();
- 
- 		if (opcode == CACHEFILES_OP_CLOSE &&
--			!cachefiles_ondemand_object_is_open(object)) {
-+		    !cachefiles_ondemand_object_is_open(object)) {
- 			WARN_ON_ONCE(object->ondemand->ondemand_id == 0);
- 			xas_unlock(&xas);
- 			ret = -EIO;
- 			goto out;
+ 	if (cachefiles_in_ondemand_mode(cache)) {
+ 		if (!xa_empty(&cache->reqs)) {
+-			rcu_read_lock();
++			xas_lock(&xas);
+ 			xas_for_each_marked(&xas, req, ULONG_MAX, CACHEFILES_REQ_NEW) {
+ 				if (!cachefiles_ondemand_is_reopening_read(req)) {
+ 					mask |= EPOLLIN;
+ 					break;
+ 				}
+ 			}
+-			rcu_read_unlock();
++			xas_unlock(&xas);
  		}
- 
--		xas.xa_index = 0;
-+		/*
-+		 * Cyclically find a free xas to avoid msg_id reuse that would
-+		 * cause the daemon to successfully copen a stale msg_id.
-+		 */
-+		xas.xa_index = cache->msg_id_next;
- 		xas_find_marked(&xas, UINT_MAX, XA_FREE_MARK);
-+		if (xas.xa_node == XAS_RESTART) {
-+			xas.xa_index = 0;
-+			xas_find_marked(&xas, cache->msg_id_next - 1, XA_FREE_MARK);
-+		}
- 		if (xas.xa_node == XAS_RESTART)
- 			xas_set_err(&xas, -EBUSY);
-+
- 		xas_store(&xas, req);
--		xas_clear_mark(&xas, XA_FREE_MARK);
--		xas_set_mark(&xas, CACHEFILES_REQ_NEW);
-+		if (xas_valid(&xas)) {
-+			cache->msg_id_next = xas.xa_index + 1;
-+			xas_clear_mark(&xas, XA_FREE_MARK);
-+			xas_set_mark(&xas, CACHEFILES_REQ_NEW);
-+		}
- 		xas_unlock(&xas);
- 	} while (xas_nomem(&xas, GFP_KERNEL));
- 
+ 	} else {
+ 		if (test_bit(CACHEFILES_STATE_CHANGED, &cache->flags))
 -- 
 2.39.2
 
