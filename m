@@ -1,44 +1,66 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3A33E91B02E
-	for <lists+linux-erofs@lfdr.de>; Thu, 27 Jun 2024 22:11:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1719519097;
-	bh=JnaKfv127YvhBINMY/JJehxPbvWJFjggeiuzjmM5mak=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=nVWJHA20GjqBW2392g6LACvPOJwh78l8wQsrdazVxIyaGSJj4RZSRZgUAjmVt4Tvk
-	 Rc20mzr5nzMwrEo+aYMNmcwHCLXuTCDzxqCHjYyFivbQk7+4/ZcV3c41ywZZmnhcfC
-	 grLubBgFdF/Blmq9pP7OMp737AVTPJklvxnT/kF8njpEIilDQcv9VIJckferdCVGqZ
-	 YL0DwSLe7Dr5uCgYAJfSaGL3YqnEgaJzkRhjAUfiHPcMXOd/4AG9c8GCX6JvOKgf6f
-	 1rjrUqKKI7UVml23hmL9Rs2XrfAjbv7ChOAM380k2+FB7DqhXq92+oaiERiTpxuasF
-	 l7lOWCMVo/2Jg==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B64091B485
+	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2024 03:09:36 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4W98px4dxmz3cYb
-	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2024 06:11:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4W9HQh2mznz3fr1
+	for <lists+linux-erofs@lfdr.de>; Fri, 28 Jun 2024 11:09:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=permerror header.from=xiyman.ooguy.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=xiyman.ooguy.com header.i=info@xiyman.ooguy.com header.a=rsa-sha256 header.s=default header.b=UQBWWfq2;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=xiyman.ooguy.com (client-ip=98.142.240.143; helo=mail0.xiyman.ooguy.com; envelope-from=info@xiyman.ooguy.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 605 seconds by postgrey-1.37 at boromir; Fri, 28 Jun 2024 06:11:33 AEST
-Received: from mail0.xiyman.ooguy.com (unknown [98.142.240.143])
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4W98ps5jgsz3cBG
-	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 06:11:33 +1000 (AEST)
-To: linux-erofs@lists.ozlabs.org
-Subject: RE: Looking for a Trustworthy Business partnership
-Date: 27 Jun 2024 21:51:44 +0200
-Message-ID: <20240627215144.2D40344600687878@xiyman.ooguy.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4W9HQZ6gZJz3fnW
+	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 11:09:25 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4W9HQG5vqQz4f3jZ0
+	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 09:09:10 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id F3B2C1A0170
+	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Jun 2024 09:09:17 +0800 (CST)
+Received: from [10.174.177.174] (unknown [10.174.177.174])
+	by APP1 (Coremail) with SMTP id cCh0CgAnUn45DX5mgaIaAg--.2390S3;
+	Fri, 28 Jun 2024 09:09:17 +0800 (CST)
+Message-ID: <b68920cc-28ab-4e8b-994a-93f4148b4b8b@huaweicloud.com>
+Date: Fri, 28 Jun 2024 09:09:13 +0800
 MIME-Version: 1.0
-Content-Type: text/html
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] cachefiles: flush all requests for the object that
+ is being dropped
+To: Christian Brauner <brauner@kernel.org>
+References: <20240515125136.3714580-1-libaokun@huaweicloud.com>
+ <20240515125136.3714580-3-libaokun@huaweicloud.com>
+ <5bb711c4bbc59ea9fff486a86acce13880823e7b.camel@kernel.org>
+ <e40b80fc-52b8-4f89-800a-3ffa0034a072@huaweicloud.com>
+ <20240627-beizeiten-hecht-0efad69e0e38@brauner>
+Content-Language: en-US
+From: Baokun Li <libaokun@huaweicloud.com>
+In-Reply-To: <20240627-beizeiten-hecht-0efad69e0e38@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgAnUn45DX5mgaIaAg--.2390S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7KFy3Gr1rZr18AFy3XFyUAwb_yoW8KFyUpF
+	Waya4akFW8ur17Crn2vF1YvrySy3s3ArnrXr1aqryjyrs0qrna9r1Iqr1DuF1DJrs3Gr4I
+	qr4UWF93GryqyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkE14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j
+	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUQvt
+	AUUUUU=
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAgAHBV1jkHrAYQABs0
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -50,26 +72,66 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Tomas Kaplan via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Tomas Kaplan <luihaabestad@gmail.com>
-Cc: Tomas Kaplan <info@xiyman.ooguy.com>
+Cc: Baokun Li <libaokun@huaweicloud.com>, yangerkun@huawei.com, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, hsiangkao@linux.alibaba.com, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<!DOCTYPE HTML>
+On 2024/6/27 23:18, Christian Brauner wrote:
+> On Thu, Jun 27, 2024 at 07:20:16PM GMT, Baokun Li wrote:
+>> On 2024/6/27 19:01, Jeff Layton wrote:
+>>> On Wed, 2024-05-15 at 20:51 +0800, libaokun@huaweicloud.com wrote:
+>>>> From: Baokun Li <libaokun1@huawei.com>
+>>>>
+>>>> Because after an object is dropped, requests for that object are
+>>>> useless,
+>>>> flush them to avoid causing other problems.
+>>>>
+>>>> This prepares for the later addition of cancel_work_sync(). After the
+>>>> reopen requests is generated, flush it to avoid cancel_work_sync()
+>>>> blocking by waiting for daemon to complete the reopen requests.
+>>>>
+>>>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+>>>> ---
+>>>>    fs/cachefiles/ondemand.c | 19 +++++++++++++++++++
+>>>>    1 file changed, 19 insertions(+)
+>>>>
+>>>> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+>>>> index 73da4d4eaa9b..d24bff43499b 100644
+>>>> --- a/fs/cachefiles/ondemand.c
+>>>> +++ b/fs/cachefiles/ondemand.c
+>>>> @@ -564,12 +564,31 @@ int cachefiles_ondemand_init_object(struct
+>>>> cachefiles_object *object)
+>>>>    void cachefiles_ondemand_clean_object(struct cachefiles_object
+>>>> *object)
+>>>>    {
+>>>> +	unsigned long index;
+>>>> +	struct cachefiles_req *req;
+>>>> +	struct cachefiles_cache *cache;
+>>>> +
+>>>>    	if (!object->ondemand)
+>>>>    		return;
+>>>>    	cachefiles_ondemand_send_req(object, CACHEFILES_OP_CLOSE, 0,
+>>>>    			cachefiles_ondemand_init_close_req, NULL);
+>>>> +
+>>>> +	if (!object->ondemand->ondemand_id)
+>>>> +		return;
+>>>> +
+>>>> +	/* Flush all requests for the object that is being dropped.
+>>>> */
+>>> I wouldn't call this a "Flush". In the context of writeback, that
+>>> usually means that we're writing out pages now in order to do something
+>>> else. In this case, it looks like you're more canceling these requests
+>>> since you're marking them with an error and declaring them complete.
+>> Makes sense, I'll update 'flush' to 'cancel' in the comment and subject.
+>>
+>> I am not a native speaker of English, so some of the expressions may
+>> not be accurate, thank you for correcting me.
+> Can you please resend all patch series that we're supposed to take for
+> this cycle, please?
+Sure, I'm organising to combine the two patch series today and
+send it out as v3.
 
-<html><head><title></title>
-<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
-</head>
-<body style=3D"margin: 0.4em;"><p>Hello!!</p><p>
-My name is Tomas Kaplan, and I work as a Research and Procurement Pharmacis=
-t for a pharmaceutical firm. I'm writing to extend a business request to yo=
-u.&nbsp; I'm searching for a reputable entrepreneur or individual to repres=
-ent my company in acquiring some of the basic raw materials used in the man=
-ufacturing of high-quality antiviral vacciness, cancer treatment, and other=
- life-saving medicines. I am assuring you that good profits will be earned =
-from the commission that will be paid to=20
-middle-person(s).</p><p>I will supply you with exclusive information upon y=
-our acceptance.</p><p>I am awaiting your response so that I can supply you =
-with more information.</p><p><br>Regards</p><p>Tomas Kaplan<br></p></body><=
-/html>
+-- 
+With Best Regards,
+Baokun Li
+
