@@ -1,60 +1,62 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8395C92CB17
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jul 2024 08:30:24 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0372B92CB03
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jul 2024 08:27:13 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1720593022;
+	s=201707; t=1720592821;
 	bh=nDS999X3woD0Ttghx8sXn9X+YATNWOvzSuz77GsKBlQ=;
 	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
 	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=ADFZYl5ygdbbInY+Q/zaa5FdNrteLMKuThTb9/aF7nJYZhCWvlrSbmoCI54tTrYfL
-	 4CLGVmPmQmoeYx0cOmMibD9XEo/EOeAyhzIB33Ee7u4H7bdWON/hYMczCh5H2XWM7P
-	 Q9U2URDOYBUlS94zc8Dnwg646v1BQ2ikDj/k+sli4nLe7RRYng8ojIxBng5VRR8YM6
-	 G6o5+62cfhlzlMcMK/YRDl7GFKJPdOFOYC/GjaQrnM686nSDSyxsxWWMtRxel2QvJO
-	 5ShMMoBQ+CcqfJMcGsGYeNhdAMyZe3ezuZ72RW63QfIfPsaVpO6hQjpsg5x0FGsL3Q
-	 Px3i6yXXJ3ESg==
+	b=ZWXCWrQn0iHho64nY3eQTZjcZRANCYKdVjXpiwl7HsM3PudTCO+d6v9PJcpJcZDZF
+	 igBS+81h3WYeqri4WFiYgi7cma3ATgfw4Y9D23/WDoTCKgv+OvmFCko6GWEZ1GKbn1
+	 7HA19/8s2nErP0fRgBBISCdWTEx4FFa67yrPHPR6y+ZtiDhPIFcTzchQHAgjJgZn6G
+	 OvSr6rrfEbJj+BWZS9NIREFyXCdGYOCYUBiuOei40s/baeBg7VkP2D4U+AYU64x/JI
+	 6D4jdP4LV7juPn1yCMaVwBJNEltpg9+pVxJMyJR16na8yegJNQa6CR7QJ066ZijyNG
+	 NUOBCgh7q3URg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WJnzL1yDrz3cY1
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jul 2024 16:30:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WJnvT1lgdz3cY1
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jul 2024 16:27:01 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=g5oZiRfO;
+	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=J81S87gV;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.155; helo=out203-205-221-155.mail.qq.com; envelope-from=sa.z@qq.com; receiver=lists.ozlabs.org)
-Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=162.62.57.49; helo=out162-62-57-49.mail.qq.com; envelope-from=sa.z@qq.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 249 seconds by postgrey-1.37 at boromir; Wed, 10 Jul 2024 16:26:51 AEST
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4WJnzC4cY1z30Np
-	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Jul 2024 16:30:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4WJnvH2kxhz3c3H
+	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Jul 2024 16:26:48 +1000 (AEST)
 Received: from localhost.localdomain ([140.210.195.243])
-	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
-	id 2643B269; Wed, 10 Jul 2024 14:09:36 +0800
-X-QQ-mid: xmsmtpt1720591776t398gu2ri
-Message-ID: <tencent_5904FA7E5C4B484EA73E5D1B33C35885AA06@qq.com>
-X-QQ-XMAILINFO: MyirvGjpKb1jEeXAaJFtAIh/4XjEJwAZGOrmMbEVrjEz0XjAr9VEJSQSjPswGB
-	 ZgGRQYgM+SNWnLhS9iGqlAibITHaBHJqvjVI8DO6pgPj6t2HTfSCvWy4VewAbJ65lQxMXNP/4qYP
-	 /EKRkED5CX2YKpvv/2Sw8vbun27b0qno0PCkJsJhI+QKEPT5WGB5Bz8Gnm23xrhXCWh7wJq/PQKT
-	 07CazWxoV8A5J1Bbt7HwO7CIkz2OP/oWOb3IhYROEzbGhrVOHXJDjxpWLKSUG2ADkHU7BUtPAAh7
-	 /mzyFWdkexfEmT7RF8bDvCE9WoA714RjEY5KkvIw5zdmg3XDzK9HNDN+mM+x3GRBKhqHfG+kbBPe
-	 1Odzt040t0YWZETzERc7Xqp+nrhBoOUo6VROR8xHYZ3/Vh+TzYPPjky+gkmuWe054ihxjuDyKKbG
-	 p/mibyaCfmC1GDfqddmD9Dt26N2Fmlsuu82EcyYjWxlLI+30nEAqwmX5t4BHZnzyhWOvcyrwdQRd
-	 /aP4rBRjgj8PEZjt3sAZLxOsqW3HqRBIEtqf3UABISm3uIE3o18QDEIfpmIOJnbUHWN2WMfmaDpF
-	 ljOlC5MQsuX+a1MPgiOE3EjC++TskdZoxDvb6Cm2hEPckuZk3v/mEefe8PiCNmpxfSX6PB0Hv0TV
-	 6bHktFj00PaUXfcBYuuo4LnNrC0gNodnYSykoceIuZw4M92Yk3JurmQm3P+ZEdl/xbLVlyAze5tg
-	 FMlxAs+f0zyjqXsbrwXXLt+kVQGl3n71t7W83k7nr0jp5bD4r11xIelzIKSa48bh723fSsuOkC2m
-	 ndm3T5hVSxQdzaYuXa0Jjsp/YNWTAJqV60jkctkUaU041afZOUoO0WV/InTvKliLrldFNyg9XLQT
-	 I817QX9dlCSnOj+3SE1GFUgqw5gcCanbMdLFVekzx07m+bHQ60/IOWl/s0T/AEGpQa078lQ5nF
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 37AB527A; Wed, 10 Jul 2024 14:13:58 +0800
+X-QQ-mid: xmsmtpt1720592038t9geaa93e
+Message-ID: <tencent_1745AA30E8E771EF21C49D597421CCF36308@qq.com>
+X-QQ-XMAILINFO: NG7xP+P+sy64uTTgsB+ewRkLqEa3idv7m7MGHzo4EwVTE+vTK8k0dE8HMRi/YE
+	 aPA+urvapYvmVhJDNksm5SV506JCF4iAJ+WdckH/Ex0NokHTk7foWElAcVHzaV3w6sZGhfdmfTtD
+	 JG4tU1OkgOssNoyOo27Ogheac+qM04+Nk0krJWG9btuJgLBlX4gKO4vqVbk6OelLIwbjf22G77wz
+	 5cGlH3QLGiM5V/kME/XXt7oxpiTOHfbmpd3eaOgxjQm77DSpn3mcSwPrFGO/xLLFcvtKJmkeO2DJ
+	 HCFZmGf4F8C5XS0K4FMGWAEB4Bk/Mh6ggdd7uM/AeE+5Oam/XxFJmjiRgHl2nfxttQlx7XNJNsTv
+	 7zE2nZhJLh01AdYqfie4aosM5xo1sfZGZDCCYaVxFNifnnPgD4DdyxlFgoeTaqrp4/bVQjzVcFv+
+	 7ICxkbADtNmwSR1rhfgztyk7wK9HE6/4KyXmzGYspeyQdr2qOO7Rk8vKLkVEWcxUpf+mRwnChkkw
+	 xC1Hjomx9VwpBN/KVgngEu8tX3+ADfmfwvXoRC3VQFx9O99JyyXMCYod3W1pqCVoT20Uhire2d/d
+	 a0dV/EFfb4vwDyWyDuoDuvcDa6a8HpqgaWetNUO/k5c3V1+5tHrT/IOHAWd6PjWyMuGQB6ijfi+9
+	 yuJspxHRCfokRQez/7c5Vmvox4cssReM+g94tu3EViJt8QMoZgSuicT5McuG2vq4s7YSU7TV9SoR
+	 +HjjmQIv7qSMzPlpAoYzl21hLfPdYea0ISgUlX9ojyxAips+wqQ8gtmZaTZtXlL/Pu5SChNszk/d
+	 QoaHwb+D+hfrRJY0YLGOrrpq7MYqhQcINtwKSvoeeP0zFRUfxBRdxEbR/U2D5KFc7zFZYgKP74sO
+	 e457Olkre/92EjuvgPNfpL6ON4JiPOJ4bn0XQL+GbrN0clTJTbX/fYroKkSEzTFQRWbdwmHu13Jk
+	 hD0p94x+rAPmvJdfdGqvRpfDi+wxc+KUqsUL5n5Yk=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
 To: linux-erofs@lists.ozlabs.org,
 	xiang@kernel.org,
 	chao@kernel.org
-Subject: [PATCH 1/1] Add OCI register operation
-Date: Wed, 10 Jul 2024 14:09:29 +0800
-X-OQ-MSGID: <20240710060929.2685798-1-sa.z@qq.com>
+Subject: [PATCH v2] Add OCI register operation
+Date: Wed, 10 Jul 2024 14:13:52 +0800
+X-OQ-MSGID: <20240710061352.2686253-1-sa.z@qq.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
