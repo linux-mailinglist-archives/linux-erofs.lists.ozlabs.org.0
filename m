@@ -1,46 +1,63 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7261B92B428
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Jul 2024 11:41:33 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZPorx5f+;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8395C92CB17
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jul 2024 08:30:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1720593022;
+	bh=nDS999X3woD0Ttghx8sXn9X+YATNWOvzSuz77GsKBlQ=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=ADFZYl5ygdbbInY+Q/zaa5FdNrteLMKuThTb9/aF7nJYZhCWvlrSbmoCI54tTrYfL
+	 4CLGVmPmQmoeYx0cOmMibD9XEo/EOeAyhzIB33Ee7u4H7bdWON/hYMczCh5H2XWM7P
+	 Q9U2URDOYBUlS94zc8Dnwg646v1BQ2ikDj/k+sli4nLe7RRYng8ojIxBng5VRR8YM6
+	 G6o5+62cfhlzlMcMK/YRDl7GFKJPdOFOYC/GjaQrnM686nSDSyxsxWWMtRxel2QvJO
+	 5ShMMoBQ+CcqfJMcGsGYeNhdAMyZe3ezuZ72RW63QfIfPsaVpO6hQjpsg5x0FGsL3Q
+	 Px3i6yXXJ3ESg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WJGGM1y8mz3cjt
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Jul 2024 19:41:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WJnzL1yDrz3cY1
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Jul 2024 16:30:22 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZPorx5f+;
+	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=g5oZiRfO;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.155; helo=out203-205-221-155.mail.qq.com; envelope-from=sa.z@qq.com; receiver=lists.ozlabs.org)
+Received: from out203-205-221-155.mail.qq.com (out203-205-221-155.mail.qq.com [203.205.221.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WJGG6434Lz3cYY
-	for <linux-erofs@lists.ozlabs.org>; Tue,  9 Jul 2024 19:41:18 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1720518074; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=riNJyWxRa1VzSquqPBMbNCMrZG4NCzYH+P5oXM3guIM=;
-	b=ZPorx5f+/zAAitGhNnUAmox2wJucedecyoMgQx+MDJ6EsAZVQ9OSBf1aHnnuhbmpXOOMHrEHaaj3O82GtDMVFOV0NDDkh2Vk+adekK+oeElZXt1t9GgqnHEM3noSXkjqS4F+qoChxB4rt7X7Ido7uv4IHcRjiW7eHasvHjRR5j4=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0WABZZp6_1720518072;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WABZZp6_1720518072)
-          by smtp.aliyun-inc.com;
-          Tue, 09 Jul 2024 17:41:13 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/3] erofs: tidy up stream decompressors
-Date: Tue,  9 Jul 2024 17:41:06 +0800
-Message-ID: <20240709094106.3018109-3-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20240709094106.3018109-1-hsiangkao@linux.alibaba.com>
-References: <20240709094106.3018109-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4WJnzC4cY1z30Np
+	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Jul 2024 16:30:15 +1000 (AEST)
+Received: from localhost.localdomain ([140.210.195.243])
+	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
+	id 2643B269; Wed, 10 Jul 2024 14:09:36 +0800
+X-QQ-mid: xmsmtpt1720591776t398gu2ri
+Message-ID: <tencent_5904FA7E5C4B484EA73E5D1B33C35885AA06@qq.com>
+X-QQ-XMAILINFO: MyirvGjpKb1jEeXAaJFtAIh/4XjEJwAZGOrmMbEVrjEz0XjAr9VEJSQSjPswGB
+	 ZgGRQYgM+SNWnLhS9iGqlAibITHaBHJqvjVI8DO6pgPj6t2HTfSCvWy4VewAbJ65lQxMXNP/4qYP
+	 /EKRkED5CX2YKpvv/2Sw8vbun27b0qno0PCkJsJhI+QKEPT5WGB5Bz8Gnm23xrhXCWh7wJq/PQKT
+	 07CazWxoV8A5J1Bbt7HwO7CIkz2OP/oWOb3IhYROEzbGhrVOHXJDjxpWLKSUG2ADkHU7BUtPAAh7
+	 /mzyFWdkexfEmT7RF8bDvCE9WoA714RjEY5KkvIw5zdmg3XDzK9HNDN+mM+x3GRBKhqHfG+kbBPe
+	 1Odzt040t0YWZETzERc7Xqp+nrhBoOUo6VROR8xHYZ3/Vh+TzYPPjky+gkmuWe054ihxjuDyKKbG
+	 p/mibyaCfmC1GDfqddmD9Dt26N2Fmlsuu82EcyYjWxlLI+30nEAqwmX5t4BHZnzyhWOvcyrwdQRd
+	 /aP4rBRjgj8PEZjt3sAZLxOsqW3HqRBIEtqf3UABISm3uIE3o18QDEIfpmIOJnbUHWN2WMfmaDpF
+	 ljOlC5MQsuX+a1MPgiOE3EjC++TskdZoxDvb6Cm2hEPckuZk3v/mEefe8PiCNmpxfSX6PB0Hv0TV
+	 6bHktFj00PaUXfcBYuuo4LnNrC0gNodnYSykoceIuZw4M92Yk3JurmQm3P+ZEdl/xbLVlyAze5tg
+	 FMlxAs+f0zyjqXsbrwXXLt+kVQGl3n71t7W83k7nr0jp5bD4r11xIelzIKSa48bh723fSsuOkC2m
+	 ndm3T5hVSxQdzaYuXa0Jjsp/YNWTAJqV60jkctkUaU041afZOUoO0WV/InTvKliLrldFNyg9XLQT
+	 I817QX9dlCSnOj+3SE1GFUgqw5gcCanbMdLFVekzx07m+bHQ60/IOWl/s0T/AEGpQa078lQ5nF
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+To: linux-erofs@lists.ozlabs.org,
+	xiang@kernel.org,
+	chao@kernel.org
+Subject: [PATCH 1/1] Add OCI register operation
+Date: Wed, 10 Jul 2024 14:09:29 +0800
+X-OQ-MSGID: <20240710060929.2685798-1-sa.z@qq.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -53,686 +70,506 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+From: saz97 via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: saz97 <sa.z@qq.com>
+Cc: saz97 <sa.z@qq.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Just use a generic helper to prepare buffers for all supported
-stream decompressors, eliminating similar logic.
+This patch adds support for handling OCI registry operations in the EROFS. The following functionalities are included:
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+1. `oci_registry_read`: Reads data from the OCI registry memory structure.
+2. `oci_registry_pread`: Reads data from a specified offset within the OCI registry memory structure.
+3. `oci_registry_lseek`: Adjusts the file offset within the OCI registry memory structure.
+4. `open_oci_registry`: Main function to handle the opening of the OCI registry.
+
+These changes include the following adjustments:
+- Renaming structures and functions to follow the EROFS naming conventions.
+
+Signed-off-by: Changzhi Xie <sa.z@qq.com>
 ---
- fs/erofs/compress.h             |  15 ++++
- fs/erofs/decompressor.c         |  83 ++++++++++++++++++
- fs/erofs/decompressor_deflate.c | 131 +++++++---------------------
- fs/erofs/decompressor_lzma.c    | 148 ++++++++++----------------------
- fs/erofs/decompressor_zstd.c    | 136 ++++++++---------------------
- 5 files changed, 209 insertions(+), 304 deletions(-)
+ include/erofs/io.h |   1 -
+ lib/oci_registry.c | 183 ++++++++++++++++++---------------------------
+ 2 files changed, 73 insertions(+), 111 deletions(-)
 
-diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
-index 601f533c9649..526edc0a7d2d 100644
---- a/fs/erofs/compress.h
-+++ b/fs/erofs/compress.h
-@@ -88,6 +88,21 @@ extern const struct z_erofs_decompressor z_erofs_deflate_decomp;
- extern const struct z_erofs_decompressor z_erofs_zstd_decomp;
- extern const struct z_erofs_decompressor *z_erofs_decomp[];
- 
-+struct z_erofs_stream_dctx {
-+	struct z_erofs_decompress_req *rq;
-+	unsigned int inpages, outpages;	/* # of {en,de}coded pages */
-+	int no, ni;			/* the current {en,de}coded page # */
-+
-+	unsigned int avail_out;		/* remaining bytes in the decoded buffer */
-+	unsigned int inbuf_pos, inbuf_sz;
-+					/* current status of the encoded buffer */
-+	u8 *kin, *kout;			/* buffer mapped pointers */
-+	void *bounce;			/* bounce buffer for inplace I/Os */
-+	bool bounced;			/* is the bounce buffer used now? */
-+};
-+
-+int z_erofs_stream_switch_bufs(struct z_erofs_stream_dctx *dctx, void **dst,
-+			       void **src, struct page **pgpl);
- int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
- 			 unsigned int padbufsize);
- int __init z_erofs_init_decompressor(void);
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index b22fce114061..eac9e415194b 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -372,6 +372,89 @@ static int z_erofs_transform_plain(struct z_erofs_decompress_req *rq,
- 	return 0;
- }
- 
-+int z_erofs_stream_switch_bufs(struct z_erofs_stream_dctx *dctx, void **dst,
-+			       void **src, struct page **pgpl)
-+{
-+	struct z_erofs_decompress_req *rq = dctx->rq;
-+	struct super_block *sb = rq->sb;
-+	struct page **pgo, *tmppage;
-+	unsigned int j;
-+
-+	if (!dctx->avail_out) {
-+		if (++dctx->no >= dctx->outpages || !rq->outputsize) {
-+			erofs_err(sb, "insufficient space for decompressed data");
-+			return -EFSCORRUPTED;
-+		}
-+
-+		if (dctx->kout)
-+			kunmap_local(dctx->kout);
-+		dctx->avail_out = min(rq->outputsize, PAGE_SIZE - rq->pageofs_out);
-+		rq->outputsize -= dctx->avail_out;
-+		pgo = &rq->out[dctx->no];
-+		if (!*pgo && rq->fillgaps) {		/* deduped */
-+			*pgo = erofs_allocpage(pgpl, rq->gfp);
-+			if (!*pgo) {
-+				dctx->kout = NULL;
-+				return -ENOMEM;
-+			}
-+			set_page_private(*pgo, Z_EROFS_SHORTLIVED_PAGE);
-+		}
-+		if (*pgo) {
-+			dctx->kout = kmap_local_page(*pgo);
-+			*dst = dctx->kout + rq->pageofs_out;
-+		} else {
-+			*dst = dctx->kout = NULL;
-+		}
-+		rq->pageofs_out = 0;
-+	}
-+
-+	if (dctx->inbuf_pos == dctx->inbuf_sz && rq->inputsize) {
-+		if (++dctx->ni >= dctx->inpages) {
-+			erofs_err(sb, "invalid compressed data");
-+			return -EFSCORRUPTED;
-+		}
-+		if (dctx->kout) /* unlike kmap(), take care of the orders */
-+			kunmap_local(dctx->kout);
-+		kunmap_local(dctx->kin);
-+
-+		dctx->inbuf_sz = min_t(u32, rq->inputsize, PAGE_SIZE);
-+		rq->inputsize -= dctx->inbuf_sz;
-+		dctx->kin = kmap_local_page(rq->in[dctx->ni]);
-+		*src = dctx->kin;
-+		dctx->bounced = false;
-+		if (dctx->kout) {
-+			j = (u8 *)*dst - dctx->kout;
-+			dctx->kout = kmap_local_page(rq->out[dctx->no]);
-+			*dst = dctx->kout + j;
-+		}
-+		dctx->inbuf_pos = 0;
-+	}
-+
-+	/*
-+	 * Handle overlapping: Use the given bounce buffer if the input data is
-+	 * under processing; Or utilize short-lived pages from the on-stack page
-+	 * pool, where pages are shared among the same request.  Note that only
-+	 * a few inplace I/O pages need to be doubled.
-+	 */
-+	if (!dctx->bounced && rq->out[dctx->no] == rq->in[dctx->ni]) {
-+		memcpy(dctx->bounce, *src, dctx->inbuf_sz);
-+		*src = dctx->bounce;
-+		dctx->bounced = true;
-+	}
-+
-+	for (j = dctx->ni + 1; j < dctx->inpages; ++j) {
-+		if (rq->out[dctx->no] != rq->in[j])
-+			continue;
-+		tmppage = erofs_allocpage(pgpl, rq->gfp);
-+		if (!tmppage)
-+			return -ENOMEM;
-+		set_page_private(tmppage, Z_EROFS_SHORTLIVED_PAGE);
-+		copy_highpage(tmppage, rq->in[j]);
-+		rq->in[j] = tmppage;
-+	}
-+	return 0;
-+}
-+
- const struct z_erofs_decompressor *z_erofs_decomp[] = {
- 	[Z_EROFS_COMPRESSION_SHIFTED] = &(const struct z_erofs_decompressor) {
- 		.decompress = z_erofs_transform_plain,
-diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
-index 79232ef15654..5070d2fcc737 100644
---- a/fs/erofs/decompressor_deflate.c
-+++ b/fs/erofs/decompressor_deflate.c
-@@ -100,24 +100,23 @@ static int z_erofs_load_deflate_config(struct super_block *sb,
- static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
- 				      struct page **pgpl)
- {
--	const unsigned int nrpages_out =
--		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
--	const unsigned int nrpages_in =
--		PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT;
- 	struct super_block *sb = rq->sb;
--	unsigned int insz, outsz, pofs;
-+	struct z_erofs_stream_dctx dctx = {
-+		.rq = rq,
-+		.inpages = PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT,
-+		.outpages = PAGE_ALIGN(rq->pageofs_out + rq->outputsize)
-+				>> PAGE_SHIFT,
-+		.no = -1, .ni = 0,
-+	};
- 	struct z_erofs_deflate *strm;
--	u8 *kin, *kout = NULL;
--	bool bounced = false;
--	int no = -1, ni = 0, j = 0, zerr, err;
-+	int zerr, err;
- 
- 	/* 1. get the exact DEFLATE compressed size */
--	kin = kmap_local_page(*rq->in);
--	err = z_erofs_fixup_insize(rq, kin + rq->pageofs_in,
--			min_t(unsigned int, rq->inputsize,
--			      sb->s_blocksize - rq->pageofs_in));
-+	dctx.kin = kmap_local_page(*rq->in);
-+	err = z_erofs_fixup_insize(rq, dctx.kin + rq->pageofs_in,
-+			min(rq->inputsize, sb->s_blocksize - rq->pageofs_in));
- 	if (err) {
--		kunmap_local(kin);
-+		kunmap_local(dctx.kin);
- 		return err;
- 	}
- 
-@@ -134,102 +133,35 @@ static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
- 	spin_unlock(&z_erofs_deflate_lock);
- 
- 	/* 3. multi-call decompress */
--	insz = rq->inputsize;
--	outsz = rq->outputsize;
- 	zerr = zlib_inflateInit2(&strm->z, -MAX_WBITS);
- 	if (zerr != Z_OK) {
- 		err = -EIO;
- 		goto failed_zinit;
- 	}
- 
--	pofs = rq->pageofs_out;
--	strm->z.avail_in = min_t(u32, insz, PAGE_SIZE - rq->pageofs_in);
--	insz -= strm->z.avail_in;
--	strm->z.next_in = kin + rq->pageofs_in;
-+	rq->fillgaps = true;	/* DEFLATE doesn't support NULL output buffer */
-+	strm->z.avail_in = min(rq->inputsize, PAGE_SIZE - rq->pageofs_in);
-+	rq->inputsize -= strm->z.avail_in;
-+	strm->z.next_in = dctx.kin + rq->pageofs_in;
- 	strm->z.avail_out = 0;
-+	dctx.bounce = strm->bounce;
- 
- 	while (1) {
--		if (!strm->z.avail_out) {
--			if (++no >= nrpages_out || !outsz) {
--				erofs_err(sb, "insufficient space for decompressed data");
--				err = -EFSCORRUPTED;
--				break;
--			}
+diff --git a/include/erofs/io.h b/include/erofs/io.h
+index e8b6008..f53abed 100644
+--- a/include/erofs/io.h
++++ b/include/erofs/io.h
+@@ -16,7 +16,6 @@ extern "C"
+ #define _GNU_SOURCE
+ #endif
+ #include <unistd.h>
 -
--			if (kout)
--				kunmap_local(kout);
--			strm->z.avail_out = min_t(u32, outsz, PAGE_SIZE - pofs);
--			outsz -= strm->z.avail_out;
--			if (!rq->out[no]) {
--				rq->out[no] = erofs_allocpage(pgpl, rq->gfp);
--				if (!rq->out[no]) {
--					kout = NULL;
--					err = -ENOMEM;
--					break;
--				}
--				set_page_private(rq->out[no],
--						 Z_EROFS_SHORTLIVED_PAGE);
--			}
--			kout = kmap_local_page(rq->out[no]);
--			strm->z.next_out = kout + pofs;
--			pofs = 0;
--		}
--
--		if (!strm->z.avail_in && insz) {
--			if (++ni >= nrpages_in) {
--				erofs_err(sb, "invalid compressed data");
--				err = -EFSCORRUPTED;
--				break;
--			}
--
--			if (kout) { /* unlike kmap(), take care of the orders */
--				j = strm->z.next_out - kout;
--				kunmap_local(kout);
--			}
--			kunmap_local(kin);
--			strm->z.avail_in = min_t(u32, insz, PAGE_SIZE);
--			insz -= strm->z.avail_in;
--			kin = kmap_local_page(rq->in[ni]);
--			strm->z.next_in = kin;
--			bounced = false;
--			if (kout) {
--				kout = kmap_local_page(rq->out[no]);
--				strm->z.next_out = kout + j;
--			}
--		}
--
--		/*
--		 * Handle overlapping: Use bounced buffer if the compressed
--		 * data is under processing; Or use short-lived pages from the
--		 * on-stack pagepool where pages share among the same request
--		 * and not _all_ inplace I/O pages are needed to be doubled.
--		 */
--		if (!bounced && rq->out[no] == rq->in[ni]) {
--			memcpy(strm->bounce, strm->z.next_in, strm->z.avail_in);
--			strm->z.next_in = strm->bounce;
--			bounced = true;
--		}
--
--		for (j = ni + 1; j < nrpages_in; ++j) {
--			struct page *tmppage;
--
--			if (rq->out[no] != rq->in[j])
--				continue;
--			tmppage = erofs_allocpage(pgpl, rq->gfp);
--			if (!tmppage) {
--				err = -ENOMEM;
--				goto failed;
--			}
--			set_page_private(tmppage, Z_EROFS_SHORTLIVED_PAGE);
--			copy_highpage(tmppage, rq->in[j]);
--			rq->in[j] = tmppage;
--		}
-+		dctx.avail_out = strm->z.avail_out;
-+		dctx.inbuf_sz = strm->z.avail_in;
-+		err = z_erofs_stream_switch_bufs(&dctx,
-+					(void **)&strm->z.next_out,
-+					(void **)&strm->z.next_in, pgpl);
-+		if (err)
-+			break;
-+		strm->z.avail_out = dctx.avail_out;
-+		strm->z.avail_in = dctx.inbuf_sz;
+ #include "defs.h"
  
- 		zerr = zlib_inflate(&strm->z, Z_SYNC_FLUSH);
--		if (zerr != Z_OK || !(outsz + strm->z.avail_out)) {
-+		if (zerr != Z_OK || !(rq->outputsize + strm->z.avail_out)) {
- 			if (zerr == Z_OK && rq->partial_decoding)
- 				break;
--			if (zerr == Z_STREAM_END && !outsz)
-+			if (zerr == Z_STREAM_END && !rq->outputsize)
- 				break;
- 			erofs_err(sb, "failed to decompress %d in[%u] out[%u]",
- 				  zerr, rq->inputsize, rq->outputsize);
-@@ -237,13 +169,12 @@ static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
- 			break;
- 		}
- 	}
--failed:
- 	if (zlib_inflateEnd(&strm->z) != Z_OK && !err)
- 		err = -EIO;
--	if (kout)
--		kunmap_local(kout);
-+	if (dctx.kout)
-+		kunmap_local(dctx.kout);
- failed_zinit:
--	kunmap_local(kin);
-+	kunmap_local(dctx.kin);
- 	/* 4. push back DEFLATE stream context to the global list */
- 	spin_lock(&z_erofs_deflate_lock);
- 	strm->next = z_erofs_deflate_head;
-diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
-index 80e735dc8406..06a722b85a45 100644
---- a/fs/erofs/decompressor_lzma.c
-+++ b/fs/erofs/decompressor_lzma.c
-@@ -5,7 +5,6 @@
- struct z_erofs_lzma {
- 	struct z_erofs_lzma *next;
- 	struct xz_dec_microlzma *state;
--	struct xz_buf buf;
- 	u8 bounce[PAGE_SIZE];
+ #ifndef O_BINARY
+diff --git a/lib/oci_registry.c b/lib/oci_registry.c
+index 37fe357..3c21e2d 100644
+--- a/lib/oci_registry.c
++++ b/lib/oci_registry.c
+@@ -10,24 +10,23 @@
+ #define MANIFEST_MODE 3
+ #define BLOB_MODE 4 
+ 
+-struct MemoryStruct {
++struct erofs_oci_registry_memory {
+     char *memory;
+     size_t size;
  };
  
-@@ -150,23 +149,25 @@ static int z_erofs_load_lzma_config(struct super_block *sb,
- static int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
- 				   struct page **pgpl)
- {
--	const unsigned int nrpages_out =
--		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
--	const unsigned int nrpages_in =
--		PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT;
--	unsigned int inlen, outlen, pageofs;
-+	struct super_block *sb = rq->sb;
-+	struct z_erofs_stream_dctx dctx = {
-+		.rq = rq,
-+		.inpages = PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT,
-+		.outpages = PAGE_ALIGN(rq->pageofs_out + rq->outputsize)
-+				>> PAGE_SHIFT,
-+		.no = -1, .ni = 0,
-+	};
-+	struct xz_buf buf = {};
- 	struct z_erofs_lzma *strm;
--	u8 *kin;
--	bool bounced = false;
--	int no, ni, j, err = 0;
-+	enum xz_ret xz_err;
-+	int err;
+-CURLM *get_multi_handle() {
++CURLM *erofs_oci_registry_get_multi_handle(void) {
+     static CURLM *multi_handle = NULL;
+-    if (multi_handle == NULL) {
++    if (multi_handle == NULL) 
+         multi_handle = curl_multi_init();
+-    }
+     return multi_handle;
+ }
  
- 	/* 1. get the exact LZMA compressed size */
--	kin = kmap(*rq->in);
--	err = z_erofs_fixup_insize(rq, kin + rq->pageofs_in,
--			min_t(unsigned int, rq->inputsize,
--			      rq->sb->s_blocksize - rq->pageofs_in));
-+	dctx.kin = kmap_local_page(*rq->in);
-+	err = z_erofs_fixup_insize(rq, dctx.kin + rq->pageofs_in,
-+			min(rq->inputsize, sb->s_blocksize - rq->pageofs_in));
- 	if (err) {
--		kunmap(*rq->in);
-+		kunmap_local(dctx.kin);
- 		return err;
- 	}
+-static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
++static size_t erofs_oci_registry_write_callback(void *contents, size_t size, size_t nmemb, void *userp) {
+     size_t realSize = size * nmemb;
+-    struct MemoryStruct *mem = (struct MemoryStruct *)userp;
++    struct erofs_oci_registry_memory *mem = (struct erofs_oci_registry_memory *)userp;
  
-@@ -183,108 +184,45 @@ static int z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
- 	spin_unlock(&z_erofs_lzma_lock);
+-    char *ptr = realloc(mem->memory, mem->size + realSize + 1); // +1 for null terminator
++    char *ptr = realloc(mem->memory, mem->size + realSize + 1); 
+     if (ptr == NULL) {
+         fprintf(stderr, "realloc failed\n");
+         return 0;
+@@ -36,54 +35,41 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
+     mem->memory = ptr;
+     memcpy(&(mem->memory[mem->size]), contents, realSize);
+     mem->size += realSize;
+-    mem->memory[mem->size] = 0; // Null terminator
++    mem->memory[mem->size] = 0;
+     return realSize;
+ }
  
- 	/* 3. multi-call decompress */
--	inlen = rq->inputsize;
--	outlen = rq->outputsize;
--	xz_dec_microlzma_reset(strm->state, inlen, outlen,
-+	xz_dec_microlzma_reset(strm->state, rq->inputsize, rq->outputsize,
- 			       !rq->partial_decoding);
--	pageofs = rq->pageofs_out;
--	strm->buf.in = kin + rq->pageofs_in;
--	strm->buf.in_pos = 0;
--	strm->buf.in_size = min_t(u32, inlen, PAGE_SIZE - rq->pageofs_in);
--	inlen -= strm->buf.in_size;
--	strm->buf.out = NULL;
--	strm->buf.out_pos = 0;
--	strm->buf.out_size = 0;
--
--	for (ni = 0, no = -1;;) {
--		enum xz_ret xz_err;
--
--		if (strm->buf.out_pos == strm->buf.out_size) {
--			if (strm->buf.out) {
--				kunmap(rq->out[no]);
--				strm->buf.out = NULL;
--			}
--
--			if (++no >= nrpages_out || !outlen) {
--				erofs_err(rq->sb, "decompressed buf out of bound");
--				err = -EFSCORRUPTED;
--				break;
--			}
--			strm->buf.out_pos = 0;
--			strm->buf.out_size = min_t(u32, outlen,
--						   PAGE_SIZE - pageofs);
--			outlen -= strm->buf.out_size;
--			if (!rq->out[no] && rq->fillgaps) {	/* deduped */
--				rq->out[no] = erofs_allocpage(pgpl, rq->gfp);
--				if (!rq->out[no]) {
--					err = -ENOMEM;
--					break;
--				}
--				set_page_private(rq->out[no],
--						 Z_EROFS_SHORTLIVED_PAGE);
--			}
--			if (rq->out[no])
--				strm->buf.out = kmap(rq->out[no]) + pageofs;
--			pageofs = 0;
--		} else if (strm->buf.in_pos == strm->buf.in_size) {
--			kunmap(rq->in[ni]);
--
--			if (++ni >= nrpages_in || !inlen) {
--				erofs_err(rq->sb, "compressed buf out of bound");
--				err = -EFSCORRUPTED;
--				break;
--			}
--			strm->buf.in_pos = 0;
--			strm->buf.in_size = min_t(u32, inlen, PAGE_SIZE);
--			inlen -= strm->buf.in_size;
--			kin = kmap(rq->in[ni]);
--			strm->buf.in = kin;
--			bounced = false;
--		}
-+	buf.in_size = min(rq->inputsize, PAGE_SIZE - rq->pageofs_in);
-+	rq->inputsize -= buf.in_size;
-+	buf.in = dctx.kin + rq->pageofs_in,
-+	dctx.bounce = strm->bounce;
-+	do {
-+		dctx.avail_out = buf.out_size - buf.out_pos;
-+		dctx.inbuf_sz = buf.in_size;
-+		dctx.inbuf_pos = buf.in_pos;
-+		err = z_erofs_stream_switch_bufs(&dctx, (void **)&buf.out,
-+						 (void **)&buf.in, pgpl);
-+		if (err)
-+			break;
+ ssize_t oci_registry_read(struct erofs_vfile *vf, void *buf, size_t len) {
+-    // 取出指向 MemoryStruct 的指针
+-    struct MemoryStruct *memoryStruct = (struct MemoryStruct *)(vf->payload);
++    struct erofs_oci_registry_memory *memoryStruct = (struct erofs_oci_registry_memory *)(vf->payload);
  
--		/*
--		 * Handle overlapping: Use bounced buffer if the compressed
--		 * data is under processing; Otherwise, Use short-lived pages
--		 * from the on-stack pagepool where pages share with the same
--		 * request.
--		 */
--		if (!bounced && rq->out[no] == rq->in[ni]) {
--			memcpy(strm->bounce, strm->buf.in, strm->buf.in_size);
--			strm->buf.in = strm->bounce;
--			bounced = true;
-+		if (buf.out_size == buf.out_pos) {
-+			buf.out_size = dctx.avail_out;
-+			buf.out_pos = 0;
- 		}
--		for (j = ni + 1; j < nrpages_in; ++j) {
--			struct page *tmppage;
-+		buf.in_size = dctx.inbuf_sz;
-+		buf.in_pos = dctx.inbuf_pos;
+-    // 检查读取长度是否超出 memory 的大小
+     if (len > memoryStruct->size) {
+-        len = memoryStruct->size; // 限制读取长度为 memory 的大小
++        len = memoryStruct->size;
+     }
  
--			if (rq->out[no] != rq->in[j])
--				continue;
--			tmppage = erofs_allocpage(pgpl, rq->gfp);
--			if (!tmppage) {
--				err = -ENOMEM;
--				goto failed;
--			}
--			set_page_private(tmppage, Z_EROFS_SHORTLIVED_PAGE);
--			copy_highpage(tmppage, rq->in[j]);
--			rq->in[j] = tmppage;
--		}
--		xz_err = xz_dec_microlzma_run(strm->state, &strm->buf);
--		DBG_BUGON(strm->buf.out_pos > strm->buf.out_size);
--		DBG_BUGON(strm->buf.in_pos > strm->buf.in_size);
-+		xz_err = xz_dec_microlzma_run(strm->state, &buf);
-+		DBG_BUGON(buf.out_pos > buf.out_size);
-+		DBG_BUGON(buf.in_pos > buf.in_size);
+-    // 将 memoryStruct->memory 中的数据拷贝到 buf 中
+     memcpy(buf, memoryStruct->memory, len);
  
- 		if (xz_err != XZ_OK) {
--			if (xz_err == XZ_STREAM_END && !outlen)
-+			if (xz_err == XZ_STREAM_END && !rq->outputsize)
- 				break;
--			erofs_err(rq->sb, "failed to decompress %d in[%u] out[%u]",
-+			erofs_err(sb, "failed to decompress %d in[%u] out[%u]",
- 				  xz_err, rq->inputsize, rq->outputsize);
- 			err = -EFSCORRUPTED;
- 			break;
- 		}
--	}
--failed:
--	if (no < nrpages_out && strm->buf.out)
--		kunmap(rq->out[no]);
--	if (ni < nrpages_in)
--		kunmap(rq->in[ni]);
-+	} while (1);
+-    // 返回实际读取的字节数
+     return len;
+ }
+ 
+ ssize_t oci_registry_pread(struct erofs_vfile *vf, void *buf, u64 offset, size_t len) {
+-    // 取出指向 MemoryStruct 的指针
+-    struct MemoryStruct *memoryStruct = (struct MemoryStruct *)(vf->payload);
++    struct erofs_oci_registry_memory *memoryStruct = (struct erofs_oci_registry_memory *)(vf->payload);
+ 
+-    // 检查 offset 是否超出 memory 的大小
+-    if (offset >= memoryStruct->size) {
+-        return 0; // 如果 offset 超出大小，返回0表示没有读取任何数据
+-    }
++    if (offset >= memoryStruct->size)
++        return 0;
+ 
+-    // 检查读取长度是否超出 memory 剩余的大小
+-    if (offset + len > memoryStruct->size) {
+-        len = memoryStruct->size - offset; // 限制读取长度为 memory 剩余的大小
+-    }
++    if (offset + len > memoryStruct->size)
++        len = memoryStruct->size - offset;
+ 
+-    // 将 memoryStruct->memory 中从 offset 开始的数据拷贝到 buf 中
+     memcpy(buf, memoryStruct->memory + offset, len);
+ 
+-    // 返回实际读取的字节数
+     return len;
+ }
+ 
+ off_t oci_registry_lseek(struct erofs_vfile *vf, u64 offset, int whence) {
+-    // 取出指向 MemoryStruct 的指针
+-    struct MemoryStruct *memoryStruct = (struct MemoryStruct *)(vf->payload);
++    struct erofs_oci_registry_memory *memoryStruct = (struct erofs_oci_registry_memory *)(vf->payload);
+ 
+     u64 new_offset = 0;
+ 
+-    // 根据 whence 参数计算新的偏移量
+     switch (whence) {
+         case SEEK_SET:
+             new_offset = offset;
+@@ -95,22 +81,18 @@ off_t oci_registry_lseek(struct erofs_vfile *vf, u64 offset, int whence) {
+             new_offset = memoryStruct->size + offset;
+             break;
+         default:
+-            return -1; // 无效的 whence 参数
++            return -1;
+     }
+ 
+-    // 检查新的偏移量是否超出文件大小
+-    if (new_offset > memoryStruct->size) {
+-        return -1; // 超出文件大小，返回错误
+-    }
++    if (new_offset > memoryStruct->size)
++        return -1;
+ 
+-    // 更新结构体中的偏移量
+     vf->offset = new_offset;
+ 
+-    // 返回新的偏移量
+     return new_offset;
+ }
+ 
+-char *get_token(struct MemoryStruct *data) {
++char *erofs_oci_registry_get_token(struct erofs_oci_registry_memory *data) {
+     if (data->memory == NULL) {
+         fprintf(stderr, "No data received\n");
+         return NULL;
+@@ -138,29 +120,24 @@ char *get_token(struct MemoryStruct *data) {
+     strcat(auth_header, token);
+ 
+     json_object_put(parsed_json);
+-    //printf("Token: %s\n", auth_header);
+     free(data->memory);
+     data->memory = NULL;
+     data->size = 0;
+     return auth_header;
+ }
+ 
+-// 获取镜像索引函数
+-char *get_image_index(struct MemoryStruct *data, const char *arch, const char *os, char *mediaType) {
+-    // 检查是否接收到数据
++char *erofs_oci_registry_get_image_index(struct erofs_oci_registry_memory *data, const char *arch, const char *os, char *mediaType) {
+     if (data->memory == NULL) {
+         fprintf(stderr, "No data receive\n");
+         return NULL;
+     }
+ 
+-    // 解析 JSON 数据
+     json_object *parsed_json = json_tokener_parse(data->memory);
+     if (parsed_json == NULL) {
+         fprintf(stderr, "Parse JSON failed\n");
+         return NULL;
+     }
+ 
+-    // 获取 manifests 数组
+     json_object *manifests_array;
+     if (!json_object_object_get_ex(parsed_json, "manifests", &manifests_array)) {
+         fprintf(stderr, "Can not JSON find manifests\n");
+@@ -168,32 +145,26 @@ char *get_image_index(struct MemoryStruct *data, const char *arch, const char *o
+         return NULL;
+     }
+ 
+-    // 遍历 manifests 数组
+     int len = json_object_array_length(manifests_array);
+     for (int i = 0; i < len; i++) {
+         json_object *manifest = json_object_array_get_idx(manifests_array, i);
+         json_object *platform_json;
+         
+-        // 检查 platform 对象
+         if (json_object_object_get_ex(manifest, "platform", &platform_json)) {
+             json_object *arch_json, *os_json, *digest_json, *mediaType_json;
+             
+-            // 获取 architecture, os 和 digest
+             if (json_object_object_get_ex(platform_json, "architecture", &arch_json) &&
+                 json_object_object_get_ex(platform_json, "os", &os_json) &&
+                 json_object_object_get_ex(manifest, "digest", &digest_json)) {
+                 
+                 const char *manifest_arch = json_object_get_string(arch_json);
+                 const char *manifest_os = json_object_get_string(os_json);
+-                //printf("image_index[%d]: arch = %s, os = %s\n", i, manifest_arch, manifest_os);
+ 
+-                // 检查是否匹配指定的架构和操作系统
+                 if (strcmp(manifest_arch, arch) == 0 && strcmp(manifest_os, os) == 0) {
+                     char *digest = strdup(json_object_get_string(digest_json));
+                     if (json_object_object_get_ex(manifest, "mediaType", &mediaType_json)) {
+                         const char* manifest_mediaType = json_object_get_string(mediaType_json);
+                         sprintf(mediaType, "Accept: %s", manifest_mediaType);
+-                        //printf("mediaType: %s\n", mediaType);
+                     }
+                     json_object_put(parsed_json);
+                     free(data->memory);
+@@ -205,7 +176,6 @@ char *get_image_index(struct MemoryStruct *data, const char *arch, const char *o
+         }
+     }
+ 
+-    // 释放 JSON 对象和内存
+     json_object_put(parsed_json);
+     free(data->memory);
+     data->memory = NULL;
+@@ -215,7 +185,7 @@ char *get_image_index(struct MemoryStruct *data, const char *arch, const char *o
+     return NULL;
+ }
+ 
+-char* get_manifest(struct MemoryStruct *data, char *mediaType, int count) {
++char* erofs_oci_registry_get_manifest(struct erofs_oci_registry_memory *data, char *mediaType, int count) {
+     json_object *parsed_json = json_tokener_parse(data->memory);
+     if (!parsed_json) {
+         fprintf(stderr, "Failed to parse JSON\n");
+@@ -240,14 +210,13 @@ char* get_manifest(struct MemoryStruct *data, char *mediaType, int count) {
+     json_object *layer = json_object_array_get_idx(layers_array, count);
+     json_object *digest_json, *mediaType_json;
+     char *digest = NULL;
+-    if (!json_object_object_get_ex(layer, "digest", &digest_json)) {
++    if (!json_object_object_get_ex(layer, "digest", &digest_json))
+         fprintf(stderr, "Digest not found in layer #%d\n", count);
+-    } else {
++    else {
+         digest = strdup(json_object_get_string(digest_json));
+         if (json_object_object_get_ex(layer, "mediaType", &mediaType_json)) {
+             const char* manifest_mediaType = json_object_get_string(mediaType_json);
+             sprintf(mediaType, "Accept: %s", manifest_mediaType);
+-            //printf("mediaType: %s\n", mediaType);
+         }
+     }
+ 
+@@ -255,7 +224,7 @@ char* get_manifest(struct MemoryStruct *data, char *mediaType, int count) {
+     return digest;
+ }
+ 
+-void curl_io(CURLM *multi_handle, int *still_running) {
++void erofs_oci_registry_curl_io(CURLM *multi_handle, int *still_running) {
+     CURLMcode mc;
+     do {
+         mc = curl_multi_perform(multi_handle, still_running);
+@@ -265,7 +234,7 @@ void curl_io(CURLM *multi_handle, int *still_running) {
+         }
+         if (*still_running) {
+             int numfds;
+-            mc = curl_multi_poll(multi_handle, NULL, 0, 1000, &numfds); // wait for 1 second
++            mc = curl_multi_poll(multi_handle, NULL, 0, 1000, &numfds);
+             if (mc != CURLM_OK) {
+                 fprintf(stderr, "curl_multi_poll failed: %s\n", curl_multi_strerror(mc));
+                 break;
+@@ -274,11 +243,11 @@ void curl_io(CURLM *multi_handle, int *still_running) {
+     } while (*still_running > 0);
+ }
+ 
+-struct MemoryStruct* curl_setopt(CURLM *multi_handle, CURL* curl, const char* auth_header, const char* mediaType, const char* url, int mode){
+-    struct MemoryStruct *data = malloc(sizeof(struct MemoryStruct));
++struct erofs_oci_registry_memory* erofs_oci_registry_curl_setopt(CURLM *multi_handle, CURL* curl, const char* auth_header, const char* mediaType, const char* url, int mode){
++    struct erofs_oci_registry_memory *data = malloc(sizeof(struct erofs_oci_registry_memory));
+     struct curl_slist *headers = NULL;
+     if (data == NULL) {
+-        fprintf(stderr, "Failed to allocate memory for MemoryStruct\n");
++        fprintf(stderr, "Failed to allocate memory for erofs_oci_registry_memory\n");
+         return NULL;
+     }
+     data->memory = NULL;
+@@ -286,15 +255,13 @@ struct MemoryStruct* curl_setopt(CURLM *multi_handle, CURL* curl, const char* au
+     switch (mode)
+     {
+         case TOKEN_MODE:
+-            //printf("TOKEN_MODE operation\n");
+-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
++            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, erofs_oci_registry_write_callback);
+             curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)data);
+             curl_easy_setopt(curl, CURLOPT_URL, url);
+             curl_multi_add_handle(multi_handle, curl);
+             break;
+         case IMAGE_INDEX_MODE:
+-            //printf("IMAGE_INDEX_MODE operation\n");
+-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
++            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, erofs_oci_registry_write_callback);
+             curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)data);
+             headers = curl_slist_append(headers, auth_header);
+             curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+@@ -302,8 +269,7 @@ struct MemoryStruct* curl_setopt(CURLM *multi_handle, CURL* curl, const char* au
+             curl_multi_add_handle(multi_handle, curl);
+             break;
+         case MANIFEST_MODE:
+-            //printf("MANIFEST_MODE operation\n");
+-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
++            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, erofs_oci_registry_write_callback);
+             curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)data);
+             headers = curl_slist_append(headers, auth_header);
+             headers = curl_slist_append(headers, mediaType);
+@@ -312,8 +278,7 @@ struct MemoryStruct* curl_setopt(CURLM *multi_handle, CURL* curl, const char* au
+             curl_multi_add_handle(multi_handle, curl);		
+             break;
+         case BLOB_MODE:
+-            //printf("BLOB_MODE operation\n");
+-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
++            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, erofs_oci_registry_write_callback);
+             curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)data);
+             headers = curl_slist_append(headers, auth_header);
+             headers = curl_slist_append(headers, mediaType);
+@@ -338,10 +303,9 @@ struct erofs_vfile* open_oci_registry(const char* url) {
+     char mediaType_blob[512];
+     char url_blob[512];
+     int digest = 0;
+-    int still_running; // For curl_multi_perform
++    int still_running;
+     int mode = 0;
+ 
+-    // 解析出repository和url_front
+     const char* repo_start = strstr(url, "/library/");
+     if (repo_start == NULL) {
+         printf("Invalid URL: missing /library/\n");
+@@ -361,48 +325,42 @@ struct erofs_vfile* open_oci_registry(const char* url) {
+     strncpy(url_front, url, repo_start - url);
+     url_front[repo_start - url] = '\0';
+ 
+-    //获取token
+     char url_token[512];
+     snprintf(url_token, sizeof(url_token), "https://auth.docker.io/token?service=registry.docker.io&scope=repository:library/%s:pull", repository);
+     CURL* curl_token = curl_easy_init();
+-    struct MemoryStruct* data_token = curl_setopt(get_multi_handle(), curl_token, NULL, NULL, url_token, TOKEN_MODE);
+-    curl_io(get_multi_handle(), &still_running);
+-    char *token_header = get_token(data_token);
+-    curl_multi_remove_handle(get_multi_handle(), curl_token);
++    struct erofs_oci_registry_memory* data_token = erofs_oci_registry_curl_setopt(erofs_oci_registry_get_multi_handle(), curl_token, NULL, NULL, url_token, TOKEN_MODE);
++    erofs_oci_registry_curl_io(erofs_oci_registry_get_multi_handle(), &still_running);
++    char *token_header = erofs_oci_registry_get_token(data_token);
++    curl_multi_remove_handle(erofs_oci_registry_get_multi_handle(), curl_token);
+     curl_easy_cleanup(curl_token);
+-    if (data_token) free(data_token);
++    if (data_token) 
++        free(data_token);
+ 
+     const char* blob_start = strstr(repo_end, "/blobs/");
+     if (blob_start != NULL) {
+-        // 获取 digest
+         const char* digest_start = blob_start + strlen("/blobs/");
+         const char* digest_end = strchr(digest_start, '/');
+-        if (digest_end == NULL) {
++        if (digest_end == NULL)
+             digest_end = digest_start + strlen(digest_start);
+-        }
 +
-+	if (dctx.kout)
-+		kunmap_local(dctx.kout);
-+	kunmap_local(dctx.kin);
- 	/* 4. push back LZMA stream context to the global list */
- 	spin_lock(&z_erofs_lzma_lock);
- 	strm->next = z_erofs_lzma_head;
-diff --git a/fs/erofs/decompressor_zstd.c b/fs/erofs/decompressor_zstd.c
-index 49415bc40d7c..7e177304967e 100644
---- a/fs/erofs/decompressor_zstd.c
-+++ b/fs/erofs/decompressor_zstd.c
-@@ -138,27 +138,26 @@ static int z_erofs_load_zstd_config(struct super_block *sb,
- static int z_erofs_zstd_decompress(struct z_erofs_decompress_req *rq,
- 				   struct page **pgpl)
- {
--	const unsigned int nrpages_out =
--		PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
--	const unsigned int nrpages_in =
--		PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT;
--	zstd_dstream *stream;
- 	struct super_block *sb = rq->sb;
--	unsigned int insz, outsz, pofs;
--	struct z_erofs_zstd *strm;
-+	struct z_erofs_stream_dctx dctx = {
-+		.rq = rq,
-+		.inpages = PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT,
-+		.outpages = PAGE_ALIGN(rq->pageofs_out + rq->outputsize)
-+				>> PAGE_SHIFT,
-+		.no = -1, .ni = 0,
-+	};
- 	zstd_in_buffer in_buf = { NULL, 0, 0 };
- 	zstd_out_buffer out_buf = { NULL, 0, 0 };
--	u8 *kin, *kout = NULL;
--	bool bounced = false;
--	int no = -1, ni = 0, j = 0, zerr, err;
-+	struct z_erofs_zstd *strm;
-+	zstd_dstream *stream;
-+	int zerr, err;
+         strncpy(digest_value, digest_start, digest_end - digest_start);
+         digest_value[digest_end - digest_start] = '\0';
  
- 	/* 1. get the exact compressed size */
--	kin = kmap_local_page(*rq->in);
--	err = z_erofs_fixup_insize(rq, kin + rq->pageofs_in,
--			min_t(unsigned int, rq->inputsize,
--			      sb->s_blocksize - rq->pageofs_in));
-+	dctx.kin = kmap_local_page(*rq->in);
-+	err = z_erofs_fixup_insize(rq, dctx.kin + rq->pageofs_in,
-+			min(rq->inputsize, sb->s_blocksize - rq->pageofs_in));
- 	if (err) {
--		kunmap_local(kin);
-+		kunmap_local(dctx.kin);
- 		return err;
- 	}
+-        // 获取 mediaType
+         const char* mediaType_start = strstr(digest_end, "Accept: ");
+-        if (mediaType_start != NULL) {
++        if (mediaType_start != NULL) 
+             strcpy(mediaType_value, mediaType_start);
+-        } else {
++        else 
+             strcpy(mediaType_value, "");
+-        }
  
-@@ -166,109 +165,48 @@ static int z_erofs_zstd_decompress(struct z_erofs_decompress_req *rq,
- 	strm = z_erofs_isolate_strms(false);
+-        // 构建url_blob
+         snprintf(url_blob, sizeof(url_blob), "%s%s/blobs/%s", url_front, repository, digest_value);
+         mode = 1;
+         goto pull_blob_mode;
+     } 
+     else {
+-        // 设置默认值
+         strcpy(arch, "amd64");
+         strcpy(os, "linux");
+         digest = 0;
  
- 	/* 3. multi-call decompress */
--	insz = rq->inputsize;
--	outsz = rq->outputsize;
- 	stream = zstd_init_dstream(z_erofs_zstd_max_dictsize, strm->wksp, strm->wkspsz);
- 	if (!stream) {
- 		err = -EIO;
- 		goto failed_zinit;
- 	}
+-        // 继续解析arch, os, digest
+         const char* params = repo_end + 1;
+         while (params && *params != '\0') {
+             if (strncmp(params, "arch-", 5) == 0) {
+@@ -433,7 +391,8 @@ struct erofs_vfile* open_oci_registry(const char* url) {
+                 break;
+             } else {
+                 params = strchr(params, '/');
+-                if (params) params++;
++                if (params) 
++                    params++;
+             }
+         }
+ 	/*
+@@ -443,45 +402,48 @@ struct erofs_vfile* open_oci_registry(const char* url) {
+         printf("OS: %s\n", os);
+         printf("Digest: %d\n", digest);
+ 	*/
+-        //获取image index中的digest
+         char url_image_index[512], mediaType[512];
+         snprintf(url_image_index, sizeof(url_image_index), "%s%s/manifests/latest", url_front, repository);
+         CURL* curl_image_index = curl_easy_init();
+-        struct MemoryStruct* data_image_index = curl_setopt(get_multi_handle(), curl_image_index, token_header, NULL, url_image_index, IMAGE_INDEX_MODE);
+-        curl_io(get_multi_handle(), &still_running);
+-        char* digest_image_index = get_image_index(data_image_index, arch, os, mediaType);
+-        //printf("digest_image_index = %s\n", digest_image_index);
+-        if (data_image_index) free(data_image_index);
+-        curl_multi_remove_handle(get_multi_handle(), curl_image_index);
++        struct erofs_oci_registry_memory* data_image_index = erofs_oci_registry_curl_setopt(erofs_oci_registry_get_multi_handle(), curl_image_index, token_header, NULL, url_image_index, IMAGE_INDEX_MODE);
++        erofs_oci_registry_curl_io(erofs_oci_registry_get_multi_handle(), &still_running);
++        char* digest_image_index = erofs_oci_registry_get_image_index(data_image_index, arch, os, mediaType);
++        if (data_image_index) 
++            free(data_image_index);
++        
++        curl_multi_remove_handle(erofs_oci_registry_get_multi_handle(), curl_image_index);
+         curl_easy_cleanup(curl_image_index);
  
--	pofs = rq->pageofs_out;
--	in_buf.size = min_t(u32, insz, PAGE_SIZE - rq->pageofs_in);
--	insz -= in_buf.size;
--	in_buf.src = kin + rq->pageofs_in;
-+	rq->fillgaps = true;	/* ZSTD doesn't support NULL output buffer */
-+	in_buf.size = min_t(u32, rq->inputsize, PAGE_SIZE - rq->pageofs_in);
-+	rq->inputsize -= in_buf.size;
-+	in_buf.src = dctx.kin + rq->pageofs_in;
-+	dctx.bounce = strm->bounce;
-+
- 	do {
--		if (out_buf.size == out_buf.pos) {
--			if (++no >= nrpages_out || !outsz) {
--				erofs_err(sb, "insufficient space for decompressed data");
--				err = -EFSCORRUPTED;
--				break;
--			}
-+		dctx.avail_out = out_buf.size - out_buf.pos;
-+		dctx.inbuf_sz = in_buf.size;
-+		dctx.inbuf_pos = in_buf.pos;
-+		err = z_erofs_stream_switch_bufs(&dctx, &out_buf.dst,
-+						 (void **)&in_buf.src, pgpl);
-+		if (err)
-+			break;
+-        //获取manifest中的digest
+         char url_manifest[512];
+         snprintf(url_manifest, sizeof(url_manifest), "%s%s/manifests/%s", url_front, repository, digest_image_index);
+-        if (digest_image_index) free(digest_image_index);
++        if (digest_image_index) 
++            free(digest_image_index);
++        
+         CURL* curl_manifest = curl_easy_init();
+-        struct MemoryStruct* data_manifest = curl_setopt(get_multi_handle(), curl_manifest, token_header, mediaType, url_manifest, MANIFEST_MODE);
+-        curl_io(get_multi_handle(), &still_running);
+-        char* digest_manifest = get_manifest(data_manifest, mediaType_blob, digest);
+-        //printf("digest_manifest = %s\n", digest_manifest);
+-        if (data_manifest) free(data_manifest);
+-        curl_multi_remove_handle(get_multi_handle(), curl_manifest);
++        struct erofs_oci_registry_memory* data_manifest = erofs_oci_registry_curl_setopt(erofs_oci_registry_get_multi_handle(), curl_manifest, token_header, mediaType, url_manifest, MANIFEST_MODE);
++        erofs_oci_registry_curl_io(erofs_oci_registry_get_multi_handle(), &still_running);
++        char* digest_manifest = erofs_oci_registry_get_manifest(data_manifest, mediaType_blob, digest);
++        if (data_manifest) 
++            free(data_manifest);
++        
++        curl_multi_remove_handle(erofs_oci_registry_get_multi_handle(), curl_manifest);
+         curl_easy_cleanup(curl_manifest);
  
--			if (kout)
--				kunmap_local(kout);
--			out_buf.size = min_t(u32, outsz, PAGE_SIZE - pofs);
--			outsz -= out_buf.size;
--			if (!rq->out[no]) {
--				rq->out[no] = erofs_allocpage(pgpl, rq->gfp);
--				if (!rq->out[no]) {
--					kout = NULL;
--					err = -ENOMEM;
--					break;
--				}
--				set_page_private(rq->out[no],
--						 Z_EROFS_SHORTLIVED_PAGE);
--			}
--			kout = kmap_local_page(rq->out[no]);
--			out_buf.dst = kout + pofs;
-+		if (out_buf.size == out_buf.pos) {
-+			out_buf.size = dctx.avail_out;
- 			out_buf.pos = 0;
--			pofs = 0;
- 		}
-+		in_buf.size = dctx.inbuf_sz;
-+		in_buf.pos = dctx.inbuf_pos;
+-        //获取blob
+         snprintf(url_blob, sizeof(url_blob), "%s%s/blobs/%s", url_front, repository, digest_manifest);
+-        if (digest_manifest) free(digest_manifest);
++        if (digest_manifest) 
++            free(digest_manifest);
+     }
  
--		if (in_buf.size == in_buf.pos && insz) {
--			if (++ni >= nrpages_in) {
--				erofs_err(sb, "invalid compressed data");
--				err = -EFSCORRUPTED;
--				break;
--			}
--
--			if (kout) /* unlike kmap(), take care of the orders */
--				kunmap_local(kout);
--			kunmap_local(kin);
--			in_buf.size = min_t(u32, insz, PAGE_SIZE);
--			insz -= in_buf.size;
--			kin = kmap_local_page(rq->in[ni]);
--			in_buf.src = kin;
--			in_buf.pos = 0;
--			bounced = false;
--			if (kout) {
--				j = (u8 *)out_buf.dst - kout;
--				kout = kmap_local_page(rq->out[no]);
--				out_buf.dst = kout + j;
--			}
--		}
--
--		/*
--		 * Handle overlapping: Use bounced buffer if the compressed
--		 * data is under processing; Or use short-lived pages from the
--		 * on-stack pagepool where pages share among the same request
--		 * and not _all_ inplace I/O pages are needed to be doubled.
--		 */
--		if (!bounced && rq->out[no] == rq->in[ni]) {
--			memcpy(strm->bounce, in_buf.src, in_buf.size);
--			in_buf.src = strm->bounce;
--			bounced = true;
--		}
--
--		for (j = ni + 1; j < nrpages_in; ++j) {
--			struct page *tmppage;
--
--			if (rq->out[no] != rq->in[j])
--				continue;
--			tmppage = erofs_allocpage(pgpl, rq->gfp);
--			if (!tmppage) {
--				err = -ENOMEM;
--				goto failed;
--			}
--			set_page_private(tmppage, Z_EROFS_SHORTLIVED_PAGE);
--			copy_highpage(tmppage, rq->in[j]);
--			rq->in[j] = tmppage;
--		}
- 		zerr = zstd_decompress_stream(stream, &out_buf, &in_buf);
--		if (zstd_is_error(zerr) || (!zerr && outsz)) {
-+		if (zstd_is_error(zerr) || (!zerr && rq->outputsize)) {
- 			erofs_err(sb, "failed to decompress in[%u] out[%u]: %s",
- 				  rq->inputsize, rq->outputsize,
- 				  zerr ? zstd_get_error_name(zerr) : "unexpected end of stream");
- 			err = -EFSCORRUPTED;
- 			break;
- 		}
--	} while (outsz || out_buf.pos < out_buf.size);
--failed:
--	if (kout)
--		kunmap_local(kout);
-+	} while (rq->outputsize || out_buf.pos < out_buf.size);
-+
-+	if (dctx.kout)
-+		kunmap_local(dctx.kout);
- failed_zinit:
--	kunmap_local(kin);
-+	kunmap_local(dctx.kin);
- 	/* 4. push back ZSTD stream context to the global list */
- 	spin_lock(&z_erofs_zstd_lock);
- 	strm->next = z_erofs_zstd_head;
+ pull_blob_mode:
+     CURL* curl_blob = curl_easy_init();
+-    struct MemoryStruct* data_blob;
++    struct erofs_oci_registry_memory* data_blob;
+     if (mode == 1)
+-    data_blob = curl_setopt(get_multi_handle(), curl_blob, token_header, mediaType_value, url_blob, BLOB_MODE);
++        data_blob = erofs_oci_registry_curl_setopt(erofs_oci_registry_get_multi_handle(), curl_blob, token_header, mediaType_value, url_blob, BLOB_MODE);
+     else
+-    data_blob = curl_setopt(get_multi_handle(), curl_blob, token_header, mediaType_blob, url_blob, BLOB_MODE);
+-    curl_io(get_multi_handle(), &still_running); 
+-    curl_multi_remove_handle(get_multi_handle(), curl_blob);
++        data_blob = erofs_oci_registry_curl_setopt(erofs_oci_registry_get_multi_handle(), curl_blob, token_header, mediaType_blob, url_blob, BLOB_MODE);
++    
++    erofs_oci_registry_curl_io(erofs_oci_registry_get_multi_handle(), &still_running); 
++    curl_multi_remove_handle(erofs_oci_registry_get_multi_handle(), curl_blob);
+     curl_easy_cleanup(curl_blob);
+ 
+     struct erofs_vfile* vf = malloc(sizeof(struct erofs_vfile));
+@@ -489,7 +451,7 @@ pull_blob_mode:
+     vf->ops->read = oci_registry_read;
+     vf->ops->pread = oci_registry_pread;
+     vf->ops->lseek = oci_registry_lseek;
+-    *((struct MemoryStruct**)(vf->payload)) = data_blob;
++    *((struct erofs_oci_registry_memory**)(vf->payload)) = data_blob;
+ 
+     if (mode == 1) {
+     /*
+@@ -504,7 +466,8 @@ pull_blob_mode:
+     
+     
+     
+-    if (token_header) free(token_header);
++    if (token_header) 
++        free(token_header);
+     printf("%s is open\n",repository);
+     return vf;
+ }
 -- 
-2.43.5
+2.25.1
 
