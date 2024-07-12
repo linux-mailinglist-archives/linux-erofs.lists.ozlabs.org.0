@@ -2,44 +2,47 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A974692F657
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jul 2024 09:40:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F075192F690
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jul 2024 09:54:35 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=n9St7oin;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MDzlZc/T;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WL3RB3Jtzz3cWG
-	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jul 2024 17:40:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WL3lY5S1Lz3cVW
+	for <lists+linux-erofs@lfdr.de>; Fri, 12 Jul 2024 17:54:33 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=n9St7oin;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MDzlZc/T;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WL3R35XFvz3bdV
-	for <linux-erofs@lists.ozlabs.org>; Fri, 12 Jul 2024 17:40:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WL3lT4qJqz3bX3
+	for <linux-erofs@lists.ozlabs.org>; Fri, 12 Jul 2024 17:54:27 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1720770008; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=ckyKZ95ueCHGaVcEQGSEYi70Mvt9bE1/YjcrwqL2qLA=;
-	b=n9St7oin0qazFKXBQJxdAtsWFJHZIB7q0/sVv6fvrcG0U4DxH9TeVNzscBujv7CFKj+veakrP+8n/SKUfvcH9hL+rsSTriok4/YKUScxfEw5i+TtnHnkfTvt2ZxTcuz4JPhdVeN0CUiwh6hFqCJy2qfvgbdUtKMRMjDKXWzNQeU=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0WANQfJx_1720770003;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WANQfJx_1720770003)
+	t=1720770864; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=2Av3VBo8BdL+Q9gmY5fp68RKQOtD5x+jb+gsKell5z4=;
+	b=MDzlZc/TQFCJOGPVi7/bvb10jT6yrBdqAzIceOdhkOOleVboS9Al30QAah4Jpq3rdIX+pI7X4suA6hGuX7eu1sa+JC8qtjMHEtuX9V1WeY7kHht298Kc/cuELT7AdwFx+H/TeDPfT8EwTu+dgbJ6NnoyduJEdA9Q1yqMaKZlIS0=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032014031;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WANKU5a_1720770862;
+Received: from 30.97.48.113(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WANKU5a_1720770862)
           by smtp.aliyun-inc.com;
-          Fri, 12 Jul 2024 15:40:07 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: support ddtaridx format informally
-Date: Fri, 12 Jul 2024 15:40:02 +0800
-Message-ID: <20240712074002.2838944-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+          Fri, 12 Jul 2024 15:54:23 +0800
+Message-ID: <b1cea2f6-fee3-4375-ba40-19a5362a3145@linux.alibaba.com>
+Date: Fri, 12 Jul 2024 15:54:21 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs: support ddtaridx format informally
+To: linux-erofs@lists.ozlabs.org
+References: <20240712074002.2838944-1-hsiangkao@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240712074002.2838944-1-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -51,121 +54,10 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Yifan Yuan <tuji.yyf@alibaba-inc.com>
+Cc: Yifan Yuan <tuji.yyf@alibaba-inc.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-`ddtaridx` is a customized tar meta-only format implemented in
-Alibaba's OverlayBD project [1].
+Sorry, the subject line should be
 
-Please don't use it externally if you have no idea of this except for
-the OverlayBD project.  It will be removed if some better way exists.
-
-[1] https://github.com/containerd/overlaybd
-Cc: Yifan Yuan <tuji.yyf@alibaba-inc.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/tar.h |  1 +
- lib/tar.c           | 32 ++++++++++++--------------------
- 2 files changed, 13 insertions(+), 20 deletions(-)
-
-diff --git a/include/erofs/tar.h b/include/erofs/tar.h
-index 403f3a8..6fa72eb 100644
---- a/include/erofs/tar.h
-+++ b/include/erofs/tar.h
-@@ -61,6 +61,7 @@ struct erofs_tarfile {
- 	int fd;
- 	u64 offset;
- 	bool index_mode, headeronly_mode, rvsp_mode, aufs;
-+	bool ddtaridx_mode;
- };
- 
- void erofs_iostream_close(struct erofs_iostream *ios);
-diff --git a/lib/tar.c b/lib/tar.c
-index 5e2c5b8..142c42e 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -611,19 +611,6 @@ static int tarerofs_write_file_data(struct erofs_inode *inode,
- 	return 0;
- }
- 
--static int tarerofs_write_file_index(struct erofs_inode *inode,
--		struct erofs_tarfile *tar, erofs_off_t data_offset)
--{
--	int ret;
--
--	ret = tarerofs_write_chunkes(inode, data_offset);
--	if (ret)
--		return ret;
--	if (erofs_iostream_lskip(&tar->ios, inode->i_size))
--		return -EIO;
--	return 0;
--}
--
- int tarerofs_parse_tar(struct erofs_inode *root, struct erofs_tarfile *tar)
- {
- 	char path[PATH_MAX];
-@@ -631,7 +618,7 @@ int tarerofs_parse_tar(struct erofs_inode *root, struct erofs_tarfile *tar)
- 	struct erofs_sb_info *sbi = root->sbi;
- 	bool whout, opq, e = false;
- 	struct stat st;
--	erofs_off_t tar_offset, data_offset;
-+	erofs_off_t tar_offset, dataoff;
- 
- 	struct tar_header *th;
- 	struct erofs_dentry *d;
-@@ -691,7 +678,7 @@ restart:
- 		cksum += (unsigned int)((u8*)th)[j];
- 		ckksum += (int)((char*)th)[j];
- 	}
--	if (csum != cksum && csum != ckksum) {
-+	if (!tar->ddtaridx_mode && csum != cksum && csum != ckksum) {
- 		erofs_err("chksum mismatch @ %llu", tar_offset);
- 		ret = -EBADMSG;
- 		goto out;
-@@ -770,7 +757,7 @@ restart:
- 			path[--j] = '\0';
- 	}
- 
--	data_offset = tar->offset;
-+	dataoff = tar->offset;
- 	tar->offset += st.st_size;
- 	switch(th->typeflag) {
- 	case '0':
-@@ -860,7 +847,7 @@ restart:
- 
- 	/* EROFS metadata index referring to the original tar data */
- 	if (tar->index_mode && sbi->extra_devices &&
--	    erofs_blkoff(sbi, data_offset)) {
-+	    erofs_blkoff(sbi, dataoff)) {
- 		erofs_err("invalid tar data alignment @ %llu", tar_offset);
- 		ret = -EIO;
- 		goto out;
-@@ -985,16 +972,21 @@ new_inode:
- 		} else if (inode->i_size) {
- 			if (tar->headeronly_mode) {
- 				ret = erofs_write_zero_inode(inode);
-+			} else if (tar->ddtaridx_mode) {
-+				dataoff = le64_to_cpu(*(__le64 *)(th->devmajor));
-+				ret = tarerofs_write_chunkes(inode, dataoff);
- 			} else if (tar->rvsp_mode) {
- 				inode->datasource = EROFS_INODE_DATA_SOURCE_RESVSP;
--				inode->i_ino[1] = data_offset;
-+				inode->i_ino[1] = dataoff;
- 				if (erofs_iostream_lskip(&tar->ios, inode->i_size))
- 					ret = -EIO;
- 				else
- 					ret = 0;
- 			} else if (tar->index_mode) {
--				ret = tarerofs_write_file_index(inode, tar,
--								data_offset);
-+				ret = tarerofs_write_chunkes(inode, dataoff);
-+				if (!ret && erofs_iostream_lskip(&tar->ios,
-+								 inode->i_size))
-+					ret = -EIO;
- 			} else {
- 				ret = tarerofs_write_file_data(inode, tar);
- 			}
--- 
-2.43.5
-
+"erofs-utils: tar: support ddtaridx format informally"
