@@ -2,53 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D24D9326BA
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 14:41:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1721133697;
-	bh=JOc2QL0GlG8CTcOQi5uj8bth7V5mZgOnE0ctJCvfx6c=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=JzPLwYIxdxl26cmflFv8irgienQDgJA/2VPZZQomNw0goeW98jlG+IBaba8eC83Ks
-	 +tjNC0uyQzw8yJIKSsLx4nRlQmlSFOzCux/vtyWLk3Ey2qi4WdECqqcr/J8UQMkfMg
-	 WWP0JIcltaBVr3rR0hBCDH7RtqQxUCT2+EM6QknGGbqn9+oTpFr/P1nNmLVJ+Bhu1f
-	 WwM5L6U++eDMLtNaIj9SUpnWF3OdcyM7wVHrDRyRXXXqKoe+9q7F5g9DOVjfVTulXI
-	 J6tqEHlIH/kTuF9VlolZRQVRNbqTEjkcfcGSjfKH/4fmFILcd7Fs0hJ0LHTsknNBSG
-	 JK0ZqQDUEJRug==
+	by mail.lfdr.de (Postfix) with ESMTPS id A26D6932874
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 16:27:32 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mdfRkfKL;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WNdwx0J9Yz3dFB
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 22:41:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WNhH643fTz3fvH
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Jul 2024 00:27:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mdfRkfKL;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WNdwr1pRcz3cZF
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jul 2024 22:41:28 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WNdpW0Nc1zxSgK;
-	Tue, 16 Jul 2024 20:36:03 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id C0ABE14041A;
-	Tue, 16 Jul 2024 20:40:53 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
- (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 16 Jul
- 2024 20:40:53 +0800
-To: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
-	<jefflexu@linux.alibaba.com>, <dhavale@google.com>, <dhowells@redhat.com>
-Subject: [PATCH] erofs: support STATX_DIOALIGN
-Date: Tue, 16 Jul 2024 20:45:34 +0800
-Message-ID: <20240716124534.2358151-1-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WNhF52CN4z3fmr
+	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Jul 2024 00:25:45 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id 48645CE132C;
+	Tue, 16 Jul 2024 14:25:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 843BFC4AF09;
+	Tue, 16 Jul 2024 14:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721139943;
+	bh=uTOKARrI0amTe1Gt8kLzCi//Pwc6qVnGSFYkz8442p0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=mdfRkfKLE57Rl+/oSnU+wjJUkoAL8U4neZ8REm/ZOga1hOpPnAKxRI96YGSD/Dbp1
+	 Y7JGV5FqY/cUB45EueKn5LkmcsHhaAvvk6QqBQqHcf57hXuIZxyrU2VtXjcl500bS5
+	 KN5Jf7c6WD7elJ1oZ/kyRUwOR0DBa8fH5W0RcHRY6a+LGAaojTnlN9Qw2V0SJc1uAf
+	 0Tw88zFNAIM9OSuHjx+FuFlNPXmmIUuvb0H3YS4wo4znd/FdjZlQtpd9xXwf8yBiA3
+	 nrWPvlpy2r6+XUcklpjNQ/1LpQVk239Fbds+yj+rfjV/Px/7ZSEri2UdsR0SoYNKTD
+	 vkFZuXFLaVSvQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.9 10/22] erofs: ensure m_llen is reset to 0 if metadata is invalid
+Date: Tue, 16 Jul 2024 10:24:17 -0400
+Message-ID: <20240716142519.2712487-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240716142519.2712487-1-sashal@kernel.org>
+References: <20240716142519.2712487-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.9.9
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500022.china.huawei.com (7.185.36.66)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,67 +63,46 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Hongbo Li via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: Sasha Levin <sashal@kernel.org>, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add support for STATX_DIOALIGN to erofs, so that direct I/O
-alignment restrictions are exposed to userspace in a generic
-way.
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-[Before]
-```
-./statx_test /mnt/erofs/testfile
-statx(/mnt/erofs/testfile) = 0
-dio mem align:0
-dio offset align:0
-```
+[ Upstream commit 9b32b063be1001e322c5f6e01f2a649636947851 ]
 
-[After]
-```
-./statx_test /mnt/erofs/testfile
-statx(/mnt/erofs/testfile) = 0
-dio mem align:512
-dio offset align:512
-```
+Sometimes, the on-disk metadata might be invalid due to user
+interrupts, storage failures, or other unknown causes.
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+In that case, z_erofs_map_blocks_iter() may still return a valid
+m_llen while other fields remain invalid (e.g., m_plen can be 0).
+
+Due to the return value of z_erofs_scan_folio() in some path will
+be ignored on purpose, the following z_erofs_scan_folio() could
+then use the invalid value by accident.
+
+Let's reset m_llen to 0 to prevent this.
+
+Link: https://lore.kernel.org/r/20240629185743.2819229-1-hsiangkao@linux.alibaba.com
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/erofs/inode.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ fs/erofs/zmap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 5f6439a63af7..9325a6f0058a 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -342,6 +342,25 @@ int erofs_getattr(struct mnt_idmap *idmap, const struct path *path,
- 	stat->attributes_mask |= (STATX_ATTR_COMPRESSED |
- 				  STATX_ATTR_IMMUTABLE);
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index e313c936351d5..6bd435a565f61 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -723,6 +723,8 @@ int z_erofs_map_blocks_iter(struct inode *inode, struct erofs_map_blocks *map,
  
-+	/*
-+	 * Return the DIO alignment restrictions if requested.
-+	 *
-+	 * In erofs, STATX_DIOALIGN is not supported in ondemand mode and
-+	 * the compressed file, so in these cases we report no DIO support.
-+	 */
-+	if ((request_mask & STATX_DIOALIGN) && S_ISREG(inode->i_mode)) {
-+		stat->result_mask |= STATX_DIOALIGN;
-+		if (!erofs_is_fscache_mode(inode->i_sb) &&
-+			!erofs_inode_is_data_compressed(EROFS_I(inode)->datalayout)) {
-+			struct block_device *bdev = inode->i_sb->s_bdev;
-+			unsigned int bsize = (bdev) ? bdev_logical_block_size(bdev) :
-+						i_blocksize(inode);
-+
-+			stat->dio_mem_align = bsize;
-+			stat->dio_offset_align = bsize;
-+		}
-+	}
-+
- 	generic_fillattr(idmap, request_mask, inode, stat);
- 	return 0;
+ 	err = z_erofs_do_map_blocks(inode, map, flags);
+ out:
++	if (err)
++		map->m_llen = 0;
+ 	trace_z_erofs_map_blocks_iter_exit(inode, map, flags, err);
+ 	return err;
  }
 -- 
-2.34.1
+2.43.0
 
