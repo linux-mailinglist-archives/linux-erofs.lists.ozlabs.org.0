@@ -2,73 +2,52 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19DA1932084
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 08:44:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D701993208C
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 08:46:40 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=LoczcjE0;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=mjfFPjVN;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WNV0K0Chrz3cYx
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 16:44:01 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WNV3L5Fhqz3cZy
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 16:46:38 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=LoczcjE0;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=mjfFPjVN;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::130; helo=mail-lf1-x130.google.com; envelope-from=huangzhaoyang@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WNV0D5CkKz3cSy
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jul 2024 16:43:56 +1000 (AEST)
-Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-52e96d4986bso5181516e87.3
-        for <linux-erofs@lists.ozlabs.org>; Mon, 15 Jul 2024 23:43:56 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WNV3F5HzDz2ysc
+	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jul 2024 16:46:32 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721112233; x=1721717033; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=81jG28CWsfaL3mFq2gzxdqQy1x0CRQo5VzvKgT/IDNs=;
-        b=LoczcjE05BUktfS8gk2mF2CALzXGN/K+gTHsTf11OeUy9+GY2v5dk2L3fiDXpNO7PT
-         kJb9vaZCHLR/h/H+hBi4+RaSLBYfCHLrWcsrtWxcgZod3gm3Fi5PJfN83ldVXLiTyr/t
-         4XBAj29VhUP3fx1BRlsHDEroDOHwHZ0HLukFLOeFRt5trY6Ll85wxPElPmXGkOuAtVtO
-         h2DUZS4AfYEOEQ0YM3v1uqgf4gS92TuOyIuNvhxx1xOihB/jVj9YbTR/1bQfqJMB0x8n
-         cx4hKPt5Y+HbV6h2BfhXQBJ2HakCtiEuOsnmDDUrFnfaMFwRnEQjyBCPCJTKzXm6TrLL
-         lQyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721112233; x=1721717033;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=81jG28CWsfaL3mFq2gzxdqQy1x0CRQo5VzvKgT/IDNs=;
-        b=Vn5VjBr57NBivzHSsWRYfnwJkSCvhjBWKH/zjkeWPQbFwPQpV27kiDMhMntM/RjgZs
-         JeV7ueMzD4QHog5E3/Rei25z8J8vYldNzc8Z5rvD61kjSj6K+F9SCARa95OU32Hc8IZe
-         BN0qX1bBHVVl9fylQEfcsbElaVqpORAOytA1KsEvommxDDlF5F+WfPnzg0T26Xui22yG
-         gG2f9Adla9KvJMKg19BxYgYP8Um/j3Z+dF+916F6RGssQ3BO1gd/GHmdtjJ1J9aqWtA+
-         Y8RSuIuqLbexYaPqIQ3u/hobAJDy48UHA9MePbBW4r849RjBbsQo6V5IVQngJ5/wK2MK
-         prIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWQV1dhfk/hNVegAbHrETGeLHqKmok7kuPsUkwEjbbNVg/zyUr0GPsWe0k4zjLzEL5p23naSt1sY9GleilgTKy/eZXWB3wHKJ8yTge7
-X-Gm-Message-State: AOJu0YyKAZ0qjCoD+3f5uuQMqz3Mo/PgSYzyADTWUIUs1BDMlwogaRjm
-	QgCggr4xGTAbKaQEeFOVhBV7P8fe7SBZcSjMd9d+s3jKuOTefQJbm5gEI2uPdejt7wYBgUVnYfS
-	5qTSqU87ArYiQnwwKdVPR6Iz8L10=
-X-Google-Smtp-Source: AGHT+IHqJrxnUJ/XrcDc9iYLmkssnZak8lHjCbqY3rHSFFMHkNoHKHHvOFHq06IO7qmwVSBlPOOOSyDaK9bjKCBpf4E=
-X-Received: by 2002:a05:6512:1254:b0:52c:dfa7:53a0 with SMTP id
- 2adb3069b0e04-52edf02c1d1mr678856e87.48.1721112232002; Mon, 15 Jul 2024
- 23:43:52 -0700 (PDT)
+	d=linux.alibaba.com; s=default;
+	t=1721112389; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=3VjkPs1ND3ZkbMZwPcFQ6dQO7g+M9DvU25mbr2pS8LQ=;
+	b=mjfFPjVNYK4Wps804ia13gu8m0vSEewXLJLfJ1//Te35L+M39Kf0Yv+S95r84IFqLV3g2NbGPVuSE4UR+Gwcp5LJi4jNeMNyGyhejm4wtRMvFtZ/Kl+AK0wQyU2a5EupKFmukNQcKWED/NXKxbfKsPnZymb7WhWRjSa1kLQ/X9E=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R941e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0WAgYxGS_1721112385;
+Received: from 30.97.48.217(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WAgYxGS_1721112385)
+          by smtp.aliyun-inc.com;
+          Tue, 16 Jul 2024 14:46:26 +0800
+Message-ID: <dedea322-c2c5-4e1b-b5c6-0889a78c19fa@linux.alibaba.com>
+Date: Tue, 16 Jul 2024 14:46:25 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs: fix schedule while atomic caused by gfp of
+ erofs_allocpage
+To: Zhaoyang Huang <huangzhaoyang@gmail.com>
 References: <20240716054414.2446134-1-zhaoyang.huang@unisoc.com>
- <d3629955-71e5-442f-ad19-e2a4e1e9b04c@linux.alibaba.com> <CAGWkznEpn0NNTiYL-VYohcmboQ-kTDssiGZyi84BXf5i8+KA-Q@mail.gmail.com>
+ <d3629955-71e5-442f-ad19-e2a4e1e9b04c@linux.alibaba.com>
+ <CAGWkznEpn0NNTiYL-VYohcmboQ-kTDssiGZyi84BXf5i8+KA-Q@mail.gmail.com>
  <a41d38bb-756a-4773-8d87-b43b0c5ed9a9@linux.alibaba.com>
-In-Reply-To: <a41d38bb-756a-4773-8d87-b43b0c5ed9a9@linux.alibaba.com>
-From: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date: Tue, 16 Jul 2024 14:43:40 +0800
-Message-ID: <CAGWkznH4h=B1iUHps6r6DKhx2xt-Pn3-Pd1_fFjabeun6rmO_Q@mail.gmail.com>
-Subject: Re: [PATCH] fs: fix schedule while atomic caused by gfp of erofs_allocpage
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ <CAGWkznH4h=B1iUHps6r6DKhx2xt-Pn3-Pd1_fFjabeun6rmO_Q@mail.gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <CAGWkznH4h=B1iUHps6r6DKhx2xt-Pn3-Pd1_fFjabeun6rmO_Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -84,83 +63,41 @@ Cc: linux-kernel@vger.kernel.org, "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, 
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Jul 16, 2024 at 2:20=E2=80=AFPM Gao Xiang <hsiangkao@linux.alibaba.=
-com> wrote:
->
->
->
-> On 2024/7/16 14:14, Zhaoyang Huang wrote:
-> > On Tue, Jul 16, 2024 at 1:50=E2=80=AFPM Gao Xiang <hsiangkao@linux.alib=
-aba.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2024/7/16 13:44, zhaoyang.huang wrote:
-> >>> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> >>>
-> >>> scheduling while atomic was reported as below where the schedule_time=
-out
-> >>> comes from too_many_isolated when doing direct_reclaim. Fix this by
-> >>> masking GFP_DIRECT_RECLAIM from gfp.
-> >>>
-> >>> [  175.610416][  T618] BUG: scheduling while atomic: kworker/u16:6/61=
-8/0x00000000
-> >>> [  175.643480][  T618] CPU: 2 PID: 618 Comm: kworker/u16:6 Tainted: G
-> >>> [  175.645791][  T618] Workqueue: loop20 loop_workfn
-> >>> [  175.646394][  T618] Call trace:
-> >>> [  175.646785][  T618]  dump_backtrace+0xf4/0x140
-> >>> [  175.647345][  T618]  show_stack+0x20/0x2c
-> >>> [  175.647846][  T618]  dump_stack_lvl+0x60/0x84
-> >>> [  175.648394][  T618]  dump_stack+0x18/0x24
-> >>> [  175.648895][  T618]  __schedule_bug+0x64/0x90
-> >>> [  175.649445][  T618]  __schedule+0x680/0x9b8
-> >>> [  175.649970][  T618]  schedule+0x130/0x1b0
-> >>> [  175.650470][  T618]  schedule_timeout+0xac/0x1d0
-> >>> [  175.651050][  T618]  schedule_timeout_uninterruptible+0x24/0x34
-> >>> [  175.651789][  T618]  __alloc_pages_slowpath+0x8dc/0x121c
-> >>> [  175.652455][  T618]  __alloc_pages+0x294/0x2fc
-> >>> [  175.653011][  T618]  erofs_allocpage+0x48/0x58
-> >>> [  175.653572][  T618]  z_erofs_runqueue+0x314/0x8a4
-> >>> [  175.654161][  T618]  z_erofs_readahead+0x258/0x318
-> >>> [  175.654761][  T618]  read_pages+0x88/0x394
-> >>> [  175.655275][  T618]  page_cache_ra_unbounded+0x1cc/0x23c
-> >>> [  175.655939][  T618]  page_cache_ra_order+0x27c/0x33c
-> >>> [  175.656559][  T618]  ondemand_readahead+0x224/0x334
-> >>> [  175.657169][  T618]  page_cache_async_ra+0x60/0x9c
-> >>> [  175.657767][  T618]  filemap_get_pages+0x19c/0x7cc
-> >>> [  175.658367][  T618]  filemap_read+0xf0/0x484
-> >>> [  175.658901][  T618]  generic_file_read_iter+0x4c/0x15c
-> >>> [  175.659543][  T618]  do_iter_read+0x224/0x348
-> >>> [  175.660100][  T618]  vfs_iter_read+0x24/0x38
-> >>> [  175.660635][  T618]  loop_process_work+0x408/0xa68
-> >>> [  175.661236][  T618]  loop_workfn+0x28/0x34
-> >>> [  175.661751][  T618]  process_scheduled_works+0x254/0x4e8
-> >>> [  175.662417][  T618]  worker_thread+0x24c/0x33c
-> >>> [  175.662974][  T618]  kthread+0x110/0x1b8
-> >>> [  175.663465][  T618]  ret_from_fork+0x10/0x20
-> >>>
-> >>> Signed-off-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> >>
-> >> I don't see why it's an atomic context,
-> >> so this patch is incorrect.
-> > Sorry, I should provide more details. page_cache_ra_unbounded() will
-> > call filemap_invalidate_lock_shared(mapping) to ensure the integrity
-> > of page cache during readahead, which will disable preempt.
->
-> Why a rwsem sleepable lock disable preemption?
-emm, that's the original design of down_read()
 
-> context should be always non-atomic context, which is applied
-> to all kernel filesystems.
- AFAICT, filemap_fault/read have added the folios of readahead to page
-cache which means the aops->readahead basically just need to map the
-block to this folios and then launch the bio. The erofs is a little
-bit different to others as it has to alloc_pages for decompression
-when doing this.
->
-> Thanks,
-> Gao Xiang
->
-> >>
-> >> Thanks,
-> >> Gao Xiang
+
+On 2024/7/16 14:43, Zhaoyang Huang wrote:
+> On Tue, Jul 16, 2024 at 2:20 PM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+>>
+>>
+>>
+
+...
+
+>>>>
+>>>> I don't see why it's an atomic context,
+>>>> so this patch is incorrect.
+>>> Sorry, I should provide more details. page_cache_ra_unbounded() will
+>>> call filemap_invalidate_lock_shared(mapping) to ensure the integrity
+>>> of page cache during readahead, which will disable preempt.
+>>
+>> Why a rwsem sleepable lock disable preemption?
+> emm, that's the original design of down_read()
+
+No.
+
+> 
+>> context should be always non-atomic context, which is applied
+>> to all kernel filesystems.
+>   AFAICT, filemap_fault/read have added the folios of readahead to page
+> cache which means the aops->readahead basically just need to map the
+> block to this folios and then launch the bio. The erofs is a little
+> bit different to others as it has to alloc_pages for decompression
+> when doing this.
+
+Interesting.  The whole .readahead is sleepable, including
+submit block I/Os to storage.
+
+Nacked-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+
+Thanks,
+Gao Xiang
