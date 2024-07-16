@@ -1,56 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 951A7932173
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 09:47:24 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KgTiz0fx;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46DB5932590
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 13:26:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1721129213;
+	bh=YnPHcTqXqwT1025fNiBx/OxmlJST3Jab8WaXuDNl3Z8=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=AtnY5WuPLm2M0OEK2P9Tp9wdftblimoj0TEiFt8TT/xSG+0BTzSeKUTlvIWZ7V5Zy
+	 NJF6hXhkBnrSbJ+ymUH0jMnEmydzdWUboIYiP4m4QzUDT6S1Jo4/uXvT393wfJ/VxG
+	 ZuqQnaYVqpJwDuZPd4iKcl6+r3PZeKFYv68S/kMmSBldQnVXhJaZ0MImHVYSwAzfoR
+	 sv38XLMlOsoGy+kIJSdON3hYjuC8Ub38StI5zR9mv3neRdP39uRXUgteCJPeGk8fTy
+	 S1rmsyh2SDv58MrMGHmsD6WHkfiA3VQEnGScimaNA+UliGqcbM4Qwfw7CPJVaAoWb2
+	 LNPsmChVSpCbg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WNWPQ3jSxz3cZs
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 17:47:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WNcGj1Phzz3dKX
+	for <lists+linux-erofs@lfdr.de>; Tue, 16 Jul 2024 21:26:53 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KgTiz0fx;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=huangxiaojia2@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WNWPJ6zC7z30Wb
-	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jul 2024 17:47:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1721116031; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=4VfzmAJpP7nz/o/ANl9MNmfc56+6S+wZTPx7LzliYxw=;
-	b=KgTiz0fxV07Euu1dOTz0sDuPMc5VZJMyccFsD0x/MUUACcwiqlF1yEGZ1FXg7WBZvR5xyBlbnoMyV6STB2Ut75GWGwjG/grEZtp8++MlYmBzJx8StyDpGwXs544rpm/FSOdNfETRMZTZ1LZx1PQb9DtIsbqGZqZqap0PxlGjg90=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045220184;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0WAgjKX0_1721116029;
-Received: from 30.97.48.217(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WAgjKX0_1721116029)
-          by smtp.aliyun-inc.com;
-          Tue, 16 Jul 2024 15:47:10 +0800
-Message-ID: <2c3e0012-9a41-4e00-bd4a-95374803de8e@linux.alibaba.com>
-Date: Tue, 16 Jul 2024 15:47:09 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WNcDZ18yvz3dJs
+	for <linux-erofs@lists.ozlabs.org>; Tue, 16 Jul 2024 21:24:58 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WNc9R19X6z1HFJv;
+	Tue, 16 Jul 2024 19:22:19 +0800 (CST)
+Received: from dggpemm500021.china.huawei.com (unknown [7.185.36.109])
+	by mail.maildlp.com (Postfix) with ESMTPS id 90A7E1A016C;
+	Tue, 16 Jul 2024 19:24:51 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by dggpemm500021.china.huawei.com
+ (7.185.36.109) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 16 Jul
+ 2024 19:24:51 +0800
+To: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
+	<jefflexu@linux.alibaba.com>, <dhavale@google.com>, <yuehaibing@huawei.com>
+Subject: [PATCH-next v2] erofs: add support for FS_IOC_GETFSSYSFSPATH
+Date: Tue, 16 Jul 2024 19:29:39 +0800
+Message-ID: <20240716112939.2355999-1-huangxiaojia2@huawei.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs: fix schedule while atomic caused by gfp of
- erofs_allocpage
-To: Zhaoyang Huang <huangzhaoyang@gmail.com>
-References: <20240716054414.2446134-1-zhaoyang.huang@unisoc.com>
- <d3629955-71e5-442f-ad19-e2a4e1e9b04c@linux.alibaba.com>
- <CAGWkznEpn0NNTiYL-VYohcmboQ-kTDssiGZyi84BXf5i8+KA-Q@mail.gmail.com>
- <a41d38bb-756a-4773-8d87-b43b0c5ed9a9@linux.alibaba.com>
- <CAGWkznH4h=B1iUHps6r6DKhx2xt-Pn3-Pd1_fFjabeun6rmO_Q@mail.gmail.com>
- <dedea322-c2c5-4e1b-b5c6-0889a78c19fa@linux.alibaba.com>
- <8754d1f7-1180-4a7a-a2c5-40aa9147fad6@linux.alibaba.com>
- <CAGWkznEUAJGzAD5iJ-wrwW=N4tYb1SGQtDZY7hwzwrum5QxGTQ@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAGWkznEUAJGzAD5iJ-wrwW=N4tYb1SGQtDZY7hwzwrum5QxGTQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.73]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500021.china.huawei.com (7.185.36.109)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -62,63 +60,58 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Yue Hu <huyue2@coolpad.com>, linux-erofs@lists.ozlabs.org, steve.kang@unisoc.com
+From: Huang Xiaojia via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Huang Xiaojia <huangxiaojia2@huawei.com>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+FS_IOC_GETFSSYSFSPATH ioctl exposes /sys/fs path of a given filesystem,
+potentially standarizing sysfs reporting. This patch add support for
+FS_IOC_GETFSSYSFSPATH for erofs, "erofs/<dev>" will be outpt for bdev
+case, and "erofs/[domain_id,]<fs_id>" will be output for non-bdev case.
 
+Signed-off-by: Huang Xiaojia <huangxiaojia2@huawei.com>
+---
+v2: handle non-bdev case.
+v1: https://lore.kernel.org/all/20240624063801.2476116-1-huangxiaojia2@huawei.com/
+---
+ fs/erofs/super.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-On 2024/7/16 15:41, Zhaoyang Huang wrote:
-> On Tue, Jul 16, 2024 at 2:50 PM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->>
->>
->>
->> On 2024/7/16 14:46, Gao Xiang wrote:
->>>
->>>
->>> On 2024/7/16 14:43, Zhaoyang Huang wrote:
->>>> On Tue, Jul 16, 2024 at 2:20 PM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->>>>>
->>>>>
->>>>>
->>>
->>> ...
->>>
->>>>>>>
->>>>>>> I don't see why it's an atomic context,
->>>>>>> so this patch is incorrect.
->>>>>> Sorry, I should provide more details. page_cache_ra_unbounded() will
->>>>>> call filemap_invalidate_lock_shared(mapping) to ensure the integrity
->>>>>> of page cache during readahead, which will disable preempt.
->>>>>
->>>>> Why a rwsem sleepable lock disable preemption?
->>>> emm, that's the original design of down_read()
->>>
->>> No.
->>>
->>>>
->>>>> context should be always non-atomic context, which is applied
->>>>> to all kernel filesystems.
->>>>    AFAICT, filemap_fault/read have added the folios of readahead to page
->>>> cache which means the aops->readahead basically just need to map the
->>>> block to this folios and then launch the bio. The erofs is a little
->>>> bit different to others as it has to alloc_pages for decompression
->>>> when doing this.
->>>
->>> Interesting.  The whole .readahead is sleepable, including
->>> submit block I/Os to storage.
->>
->> Also, please don't imagine your stack trace if it's a non-upstream
->> kernel.
-> ok, it should be caused by a vendor hook function of the android
-> system. sorry for interrupting by my stupid.
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 1b91d9513013..a24b6907363c 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -576,6 +576,20 @@ static const struct export_operations erofs_export_ops = {
+ 	.get_parent = erofs_get_parent,
+ };
+ 
++static void erofs_set_sysfs_name(struct super_block *sb)
++{
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
++
++	if (erofs_is_fscache_mode(sb)) {
++		if (sbi->domain_id)
++			super_set_sysfs_name_generic(sb, "%s,%s", sbi->domain_id, sbi->fsid);
++		else
++			super_set_sysfs_name_generic(sb, "%s", sbi->fsid);
++	} else {
++		super_set_sysfs_name_id(sb);
++	}
++}
++
+ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ {
+ 	struct inode *inode;
+@@ -643,6 +657,7 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 		sb->s_flags |= SB_POSIXACL;
+ 	else
+ 		sb->s_flags &= ~SB_POSIXACL;
++	erofs_set_sysfs_name(sb);
+ 
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	xa_init(&sbi->managed_pslots);
+-- 
+2.34.1
 
-okay, thanks for confirmation.
-
-Also more words may be useful here:  Note that .readahead doesn't
-just map the block to this folios.  Even an uncompressed fs could
-allocate/read (submit+wait) meta folio/blocks to get the block
-mapping from these meta blocks and sleep in this context.
-
-Thanks,
-Gao Xiang
