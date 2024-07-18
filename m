@@ -2,53 +2,54 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4C37934580
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2024 03:01:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CADB9934669
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2024 04:28:42 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1721264474;
-	bh=yL9Rgbv1ecuZXfRox8G09T5HJKePIOW50iSZglQcOaM=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=XcHVVOxCFsoBVh0HIUBHpqU+sWNi9PK22WBOxaYUxIdO3AYBVCCfattRgdgRSO9GR
-	 xpLOXHPoGd1G3Zs80trE0v+nXfA848t5keFM2F0DmJgZpt0kK3wGNJR9rZ82CuAmrF
-	 JUTymELzzQv2yiZjeX30RRvtHbQ/U6cLVgAEJEgoTkL8bZjHY7Vz68+zUE9zTLcb5c
-	 zNR3mtpp+PaOricBSsf7loBUBrKooRcFpSRabQ1GbnpkPw/r7QCR6LdnN7EaX8+x2m
-	 kPvcBmCchoQORcuTCtqFCYk+GNuwnvluFnXbGkS7EvZwH4tEA0INJ9cvboAI+lTwEs
-	 A9AuMs8/l0VVA==
+	s=201707; t=1721269720;
+	bh=0vf63klHSWGHwH+IfEvGYu5JkdQbUnQTNFIpFP6Cu6I=;
+	h=To:Subject:Date:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=Rcn/f82AKlMHottdLArPHZJmadb/TGYagW8gE/WY00FDYLETX4MGjFAdAsHpOpeiH
+	 ZH5i44fUqH5/CNZBlLRJPvePrhzxL4V7kpFeVv+gKM0Afj/8LC1wd2H69oQlcTbyD3
+	 QUoicQxua88r57QvWxlHs/TWkenwuVAglH4QBryT/0A6ma1O5gCW835AQFjUU8PtJz
+	 qV+f6lKE4l8aOuHibMzoFfAVKEE2XXW556ZI87wzaBHDIBGq35A6Q7uZBLxZwbiUie
+	 LvjYBuaX2CFnuLoUZyRTFzO+mzAmscHy4U2Dqp4fge2O8CMvzRZHaV8oOerp233ANy
+	 OjtQ283+torRg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WPZHt39rgz3cXK
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2024 11:01:14 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WPcDm0Fj6z3cbg
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Jul 2024 12:28:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WPZHk0ZJ8z3cTj
-	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jul 2024 11:01:01 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WPZFW05w1zdhH7;
-	Thu, 18 Jul 2024 08:59:11 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 10AF9140416;
-	Thu, 18 Jul 2024 09:00:55 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by dggpeml500022.china.huawei.com
- (7.185.36.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 18 Jul
- 2024 09:00:54 +0800
-To: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
-	<jefflexu@linux.alibaba.com>, <dhavale@google.com>, <dhowells@redhat.com>
-Subject: [PATCH] erofs: support direct IO for ondemand mode
-Date: Thu, 18 Jul 2024 09:05:45 +0800
-Message-ID: <20240718010545.2869515-1-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.34.1
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=xiaomi.com (client-ip=118.143.206.90; helo=outboundhk.mxmail.xiaomi.com; envelope-from=xiaomiaosen@xiaomi.com; receiver=lists.ozlabs.org)
+Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [118.143.206.90])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WPcDg2F9gz30WB
+	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Jul 2024 12:28:33 +1000 (AEST)
+X-CSE-ConnectionGUID: PcsXdnHIQWK4oSn+cImfBQ==
+X-CSE-MsgGUID: tBlQCCPfRbyaY0B0LXAZVQ==
+X-IronPort-AV: E=Sophos;i="6.09,216,1716220800"; 
+   d="scan'208,217";a="91036373"
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, Sandeep Dhavale
+	<dhavale@google.com>
+Subject: =?utf-8?B?562U5aSNOiBbRXh0ZXJuYWwgTWFpbF1SZTogSXNzdWUgb2YgZXJvZnMgdXNl?=
+ =?utf-8?Q?_zstd?=
+Thread-Topic: [External Mail]Re: Issue of erofs use zstd
+Thread-Index: AQHa1ok6MCt3CZVf7k2MUCitVDDsfbH24jaAgAP1rQCAABtyAIAA0xok
+Date: Thu, 18 Jul 2024 02:28:28 +0000
+Message-ID: <d3663e66b7c14fa7bc931fe53116d7a3@xiaomi.com>
+References: <0a71474744854fcf967e99666e8eab38@xiaomi.com>
+ <f630cbad-d653-44e7-8d31-3cbb90899401@linux.alibaba.com>
+ <CAB=BE-RKg1sV7BdCOQi-q90U-EdepBYVE2JXGurrbQXD+DLgZA@mail.gmail.com>,<15929409-cb08-45dc-ac5c-4e3017482498@linux.alibaba.com>
+In-Reply-To: <15929409-cb08-45dc-ac5c-4e3017482498@linux.alibaba.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.237.8.19]
+Content-Type: multipart/alternative;
+	boundary="_000_d3663e66b7c14fa7bc931fe53116d7a3xiaomicom_"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500022.china.huawei.com (7.185.36.66)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,200 +61,143 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Hongbo Li via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+From: =?utf-8?b?6IKW5re85qOuIHZpYSBMaW51eC1lcm9mcw==?= <linux-erofs@lists.ozlabs.org>
+Reply-To: =?utf-8?B?6IKW5re85qOu?= <xiaomiaosen@xiaomi.com>
+Cc: "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-erofs over fscache cannot handle the direct read io. When the file
-is opened with O_DIRECT flag, -EINVAL will reback. We support the
-DIO in erofs over fscache by bypassing the erofs page cache and
-reading target data into ubuf from fscache's file directly.
+--_000_d3663e66b7c14fa7bc931fe53116d7a3xiaomicom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-The alignment for buffer memory, offset and size now is restricted
-by erofs, since `i_blocksize` is enough for the under filesystems.
+SGkgR2FvIFhpYW5nLFNhbmRlZXAgRGhhdmFsZQ0KDQoNClRoYW5rcyBmb3IgeW91ciBzdWdnZXN0
+aW9ucyAhDQoNCkkgaGF2ZSBmaXggdGhpcyBpc3N1ZTpUaGUgb2xkIHpzdGQgaGF2ZSByZW1vdmVk
+LCBidXQgc29tZSAgbG9kIHpzdGQgbGliKHNvKSBzdGlsbCAgYWxpdmUgaW4gdXNyL2xpYi8sIHRo
+YXQgY2F1c2UgdGhpcyBpc3N1ZS4NCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18N
+CuWPkeS7tuS6ujogR2FvIFhpYW5nIDxoc2lhbmdrYW9AbGludXguYWxpYmFiYS5jb20+DQrlj5Hp
+gIHml7bpl7Q6IDIwMjTlubQ35pyIMTjml6UgNTo0OTo1NA0K5pS25Lu25Lq6OiBTYW5kZWVwIERo
+YXZhbGUNCuaKhOmAgTog6IKW5re85qOuOyBsaW51eC1lcm9mc0BsaXN0cy5vemxhYnMub3JnDQrk
+uLvpopg6IFtFeHRlcm5hbCBNYWlsXVJlOiBJc3N1ZSBvZiBlcm9mcyB1c2UgenN0ZA0KDQpb5aSW
+6YOo6YKu5Lu2XSDmraTpgq7ku7bmnaXmupDkuo7lsI/nsbPlhazlj7jlpJbpg6jvvIzor7fosKjm
+hY7lpITnkIbjgILoi6Xlr7npgq7ku7blronlhajmgKflrZjnlpHvvIzor7flsIbpgq7ku7bovazl
+j5Hnu5ltaXNlY0B4aWFvbWkuY29t6L+b6KGM5Y+N6aaIDQoNCk9uIDIwMjQvNy8xOCAwNDoxMSwg
+U2FuZGVlcCBEaGF2YWxlIHdyb3RlOg0KPiBPbiBNb24sIEp1bCAxNSwgMjAyNCBhdCAxMjo0M+KA
+r0FNIEdhbyBYaWFuZyA8aHNpYW5na2FvQGxpbnV4LmFsaWJhYmEuY29tPiB3cm90ZToNCj4+DQo+
+Pg0KPj4NCj4+IE9uIDIwMjQvNy8xNSAxNTozMywg6IKW5re85qOuIHZpYSBMaW51eC1lcm9mcyB3
+cm90ZToNCj4+PiBIaSBHYW9YaWFuZywNCj4+Pg0KPj4+DQo+Pj4gV2UganVzdCB1cGRhdGUgdGhl
+IGxhc3QgZXJvZnMgdmVyc2lvbiwgYW5kIHdhbnQgdG8gdGVzdCB0aGUgenN0ZCBjb21wcmVzcyBm
+ZWF0dXJlLg0KPj4+DQo+Pj4gQnV0IGl0IHdpbGwgdGhyb3cgc29tZSBlcnJvciB3aGVuIHVzaW5n
+IHRoZSBta2ZzLmVyb2ZzIG1ha2luZyB0aGUgbmV3IGltYWdlLCBjb3VsZCB5b3UgaGVscCB0byBj
+aGVjaz8gdGhhbmtzIQ0KPj4NCj4+IFBsZWFzZSBmaXggeW91ciBvd24gZW52aXJvbm1lbnQgaXNz
+dWUgeW91cnNlbGYsIHRoYW5rcy4NCj4+DQo+PiBUaGlzIG1haWxpbmcgbGlzdCBpcyBub3QgdXNl
+ZCBmb3IgZGlzY3Vzc2luZyBzdWNoIG91dC1vZi10b3BpYyBpc3N1ZS4NCj4+DQo+PiBUaGFua3Ms
+DQo+PiBHYW8gWGlhbmcNCj4gVGhpcyBtYXkgYmUgZHVlIHRvIGhhdmluZyBtdWx0aXBsZSB2ZXJz
+aW9ucyBvZiB6c3RkIGxpYiBhdmFpbGFibGUgaW4NCj4geW91ciBlbnZpcm9ubWVudC4gUGxlYXNl
+IGNoZWNrIHdoaWNoIG9uZSBpdCBpcyBsaW5raW5nIHdpdGggYW5kIHdoaWNoDQo+IG9uZSBpdCBp
+cyBsb2FkaW5nLg0KDQpBZ3JlZWQsIGFueXdheSwgY3VycmVudGx5IGVyb2ZzLXV0aWxzIHVzZXMg
+cGtnLWNvbmZpZyB0byBnZW5lcmF0ZQ0KbGlua2VyIGZsYWdzLCBidXQgaXQgbWF5IGhhdmUgbm8g
+d2F5IHRvIHdoYXQgbGlicmFyeSB2ZXJzaW9uIGlzDQpmaW5hbGx5IGxvYWRlZC4NCg0KVGhhbmtz
+LA0KR2FvIFhpYW5nDQoNCj4NCj4gVGhhbmtzLA0KPiBTYW5kZWVwLg0KIy8qKioqKirmnKzpgq7k
+u7blj4rlhbbpmYTku7blkKvmnInlsI/nsbPlhazlj7jnmoTkv53lr4bkv6Hmga/vvIzku4XpmZDk
+uo7lj5HpgIHnu5nkuIrpnaLlnLDlnYDkuK3liJflh7rnmoTkuKrkurrmiJbnvqTnu4TjgILnpoHm
+raLku7vkvZXlhbbku5bkurrku6Xku7vkvZXlvaLlvI/kvb/nlKjvvIjljIXmi6zkvYbkuI3pmZDk
+uo7lhajpg6jmiJbpg6jliIblnLDms4TpnLLjgIHlpI3liLbjgIHmiJbmlaPlj5HvvInmnKzpgq7k
+u7bkuK3nmoTkv6Hmga/jgILlpoLmnpzmgqjplJnmlLbkuobmnKzpgq7ku7bvvIzor7fmgqjnq4vl
+jbPnlLXor53miJbpgq7ku7bpgJrnn6Xlj5Hku7bkurrlubbliKDpmaTmnKzpgq7ku7bvvIEgVGhp
+cyBlLW1haWwgYW5kIGl0cyBhdHRhY2htZW50cyBjb250YWluIGNvbmZpZGVudGlhbCBpbmZvcm1h
+dGlvbiBmcm9tIFhJQU9NSSwgd2hpY2ggaXMgaW50ZW5kZWQgb25seSBmb3IgdGhlIHBlcnNvbiBv
+ciBlbnRpdHkgd2hvc2UgYWRkcmVzcyBpcyBsaXN0ZWQgYWJvdmUuIEFueSB1c2Ugb2YgdGhlIGlu
+Zm9ybWF0aW9uIGNvbnRhaW5lZCBoZXJlaW4gaW4gYW55IHdheSAoaW5jbHVkaW5nLCBidXQgbm90
+IGxpbWl0ZWQgdG8sIHRvdGFsIG9yIHBhcnRpYWwgZGlzY2xvc3VyZSwgcmVwcm9kdWN0aW9uLCBv
+ciBkaXNzZW1pbmF0aW9uKSBieSBwZXJzb25zIG90aGVyIHRoYW4gdGhlIGludGVuZGVkIHJlY2lw
+aWVudChzKSBpcyBwcm9oaWJpdGVkLiBJZiB5b3UgcmVjZWl2ZSB0aGlzIGUtbWFpbCBpbiBlcnJv
+ciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGJ5IHBob25lIG9yIGVtYWlsIGltbWVkaWF0ZWx5
+IGFuZCBkZWxldGUgaXQhKioqKioqLyMNCg==
 
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
----
- fs/erofs/data.c    |  3 ++
- fs/erofs/fscache.c | 95 +++++++++++++++++++++++++++++++++++++++++++---
- 2 files changed, 93 insertions(+), 5 deletions(-)
+--_000_d3663e66b7c14fa7bc931fe53116d7a3xiaomicom_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 8be60797ea2f..dbfafe358de4 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -391,6 +391,9 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 		     iov_iter_alignment(to)) & blksize_mask)
- 			return -EINVAL;
- 
-+		if (erofs_is_fscache_mode(inode->i_sb))
-+			return generic_file_read_iter(iocb, to);
-+
- 		return iomap_dio_rw(iocb, to, &erofs_iomap_ops,
- 				    NULL, 0, NULL, 0);
- 	}
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index fda16eedafb5..f5a09b168539 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -35,6 +35,8 @@ struct erofs_fscache_io {
- 
- struct erofs_fscache_rq {
- 	struct address_space	*mapping;	/* The mapping being accessed */
-+	struct iov_iter		*iter;		/* dst buf for direct io */
-+	struct completion	done;		/* for synced direct io */
- 	loff_t			start;		/* Start position */
- 	size_t			len;		/* Length of the request */
- 	size_t			submitted;	/* Length of submitted */
-@@ -76,7 +78,11 @@ static void erofs_fscache_req_put(struct erofs_fscache_rq *req)
- {
- 	if (!refcount_dec_and_test(&req->ref))
- 		return;
--	erofs_fscache_req_complete(req);
-+
-+	if (req->iter)
-+		complete(&req->done);
-+	else
-+		erofs_fscache_req_complete(req);
- 	kfree(req);
- }
- 
-@@ -88,6 +94,7 @@ static struct erofs_fscache_rq *erofs_fscache_req_alloc(struct address_space *ma
- 	if (!req)
- 		return NULL;
- 	req->mapping = mapping;
-+	req->iter = NULL;
- 	req->start = start;
- 	req->len = len;
- 	refcount_set(&req->ref, 1);
-@@ -253,6 +260,55 @@ static int erofs_fscache_meta_read_folio(struct file *data, struct folio *folio)
- 	return ret;
- }
- 
-+static int erofs_fscache_data_dio_read(struct erofs_fscache_rq *req)
-+{
-+	struct address_space *mapping = req->mapping;
-+	struct inode *inode = mapping->host;
-+	struct super_block *sb = inode->i_sb;
-+	struct iov_iter *iter = req->iter;
-+	struct erofs_fscache_io *io;
-+	struct erofs_map_blocks map;
-+	struct erofs_map_dev mdev;
-+	loff_t pos = req->start + req->submitted;
-+	size_t count;
-+	int ret;
-+
-+	map.m_la = pos;
-+	ret = erofs_map_blocks(inode, &map);
-+	if (ret)
-+		return ret;
-+
-+	count = req->len - req->submitted;
-+	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-+		iov_iter_zero(count, iter);
-+		req->submitted += count;
-+		return 0;
-+	}
-+
-+	count = min_t(size_t, map.m_llen - (pos - map.m_la), count);
-+	DBG_BUGON(!count || count % PAGE_SIZE);
-+
-+	mdev = (struct erofs_map_dev) {
-+		.m_deviceid = map.m_deviceid,
-+		.m_pa = map.m_pa,
-+	};
-+	ret = erofs_map_dev(sb, &mdev);
-+	if (ret)
-+		return ret;
-+
-+	io = erofs_fscache_req_io_alloc(req);
-+	if (!io)
-+		return -ENOMEM;
-+
-+	iov_iter_ubuf(&io->iter, ITER_DEST, iter->ubuf + iter->iov_offset, count);
-+	ret = erofs_fscache_read_io_async(mdev.m_fscache->cookie, mdev.m_pa + (pos - map.m_la), io);
-+	iov_iter_advance(iter, io->iter.iov_offset);
-+	erofs_fscache_req_io_put(io);
-+
-+	req->submitted += count;
-+	return ret;
-+}
-+
- static int erofs_fscache_data_read_slice(struct erofs_fscache_rq *req)
- {
- 	struct address_space *mapping = req->mapping;
-@@ -324,12 +380,13 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_rq *req)
- 	return ret;
- }
- 
--static int erofs_fscache_data_read(struct erofs_fscache_rq *req)
-+static int erofs_fscache_data_read(struct erofs_fscache_rq *req, bool direct)
- {
- 	int ret;
- 
- 	do {
--		ret = erofs_fscache_data_read_slice(req);
-+		ret = (direct) ? erofs_fscache_data_dio_read(req)
-+				: erofs_fscache_data_read_slice(req);
- 		if (ret)
- 			req->error = ret;
- 	} while (!ret && req->submitted < req->len);
-@@ -348,7 +405,7 @@ static int erofs_fscache_read_folio(struct file *file, struct folio *folio)
- 		return -ENOMEM;
- 	}
- 
--	ret = erofs_fscache_data_read(req);
-+	ret = erofs_fscache_data_read(req, false);
- 	erofs_fscache_req_put(req);
- 	return ret;
- }
-@@ -369,8 +426,35 @@ static void erofs_fscache_readahead(struct readahead_control *rac)
- 	while (readahead_folio(rac))
- 		;
- 
--	erofs_fscache_data_read(req);
-+	erofs_fscache_data_read(req, false);
-+	erofs_fscache_req_put(req);
-+}
-+
-+static ssize_t erofs_fscache_directIO(struct kiocb *iocb, struct iov_iter *iter)
-+{
-+	struct file *file = iocb->ki_filp;
-+	size_t count = iov_iter_count(iter);
-+	struct erofs_fscache_rq *req;
-+	struct completion *ctr;
-+	ssize_t rsize;
-+	int ret;
-+
-+	if (unlikely(iov_iter_rw(iter) == WRITE))
-+		return -EROFS;
-+
-+	req = erofs_fscache_req_alloc(file->f_mapping, iocb->ki_pos, count);
-+	if (!req)
-+		return -ENOMEM;
-+
-+	req->iter = iter;
-+	init_completion(&req->done);
-+	ctr = &req->done;
-+	ret = erofs_fscache_data_read(req, true);
-+	rsize = (ret == 0) ? (ssize_t)req->submitted : ret;
- 	erofs_fscache_req_put(req);
-+	wait_for_completion(ctr);
-+
-+	return rsize;
- }
- 
- static const struct address_space_operations erofs_fscache_meta_aops = {
-@@ -380,6 +464,7 @@ static const struct address_space_operations erofs_fscache_meta_aops = {
- const struct address_space_operations erofs_fscache_access_aops = {
- 	.read_folio = erofs_fscache_read_folio,
- 	.readahead = erofs_fscache_readahead,
-+	.direct_IO = erofs_fscache_directIO,
- };
- 
- static void erofs_fscache_domain_put(struct erofs_domain *domain)
--- 
-2.34.1
+PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
+dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRvciIgY29udGVu
+dD0iTWljcm9zb2Z0IEV4Y2hhbmdlIFNlcnZlciI+DQo8IS0tIGNvbnZlcnRlZCBmcm9tIHRleHQg
+LS0+PHN0eWxlPjwhLS0gLkVtYWlsUXVvdGUgeyBtYXJnaW4tbGVmdDogMXB0OyBwYWRkaW5nLWxl
+ZnQ6IDRwdDsgYm9yZGVyLWxlZnQ6ICM4MDAwMDAgMnB4IHNvbGlkOyB9IC0tPjwvc3R5bGU+DQo8
+L2hlYWQ+DQo8Ym9keT4NCjxtZXRhIGNvbnRlbnQ9InRleHQvaHRtbDsgY2hhcnNldD1VVEYtOCI+
+DQo8c3R5bGUgdHlwZT0idGV4dC9jc3MiIHN0eWxlPSIiPg0KPCEtLQ0KcA0KCXttYXJnaW4tdG9w
+OjA7DQoJbWFyZ2luLWJvdHRvbTowfQ0KLS0+DQo8L3N0eWxlPg0KPGRpdiBkaXI9Imx0ciI+DQo8
+ZGl2IGlkPSJ4X2RpdnRhZ2RlZmF1bHR3cmFwcGVyIiBkaXI9Imx0ciIgc3R5bGU9ImZvbnQtc2l6
+ZToxMnB0OyBjb2xvcjojMDAwMDAwOyBmb250LWZhbWlseTpDYWxpYnJpLEhlbHZldGljYSxzYW5z
+LXNlcmlmIj4NCjxwPkhpJm5ic3A7PHNwYW4gc3R5bGU9ImNvbG9yOnJnYigzMywzMywzMyk7IGZv
+bnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhlaSBVSSZxdW90OywmcXVvdDtNaWNyb3NvZnQg
+WWFIZWkmcXVvdDss5b6u6L2v6ZuF6buRLFNpbVN1bizlrovkvZMsc2Fucy1zZXJpZixzZXJpZixF
+bW9qaUZvbnQ7IGZvbnQtc2l6ZToxMy4zMzMzcHgiPkdhbyBYaWFuZyw8c3Bhbj5TYW5kZWVwIERo
+YXZhbGU8L3NwYW4+PC9zcGFuPjwvcD4NCjxwPjxzcGFuIHN0eWxlPSJjb2xvcjpyZ2IoMzMsMzMs
+MzMpOyBmb250LWZhbWlseTomcXVvdDtNaWNyb3NvZnQgWWFIZWkgVUkmcXVvdDssJnF1b3Q7TWlj
+cm9zb2Z0IFlhSGVpJnF1b3Q7LOW+rui9r+mbhem7kSxTaW1TdW4s5a6L5L2TLHNhbnMtc2VyaWYs
+c2VyaWYsRW1vamlGb250OyBmb250LXNpemU6MTMuMzMzM3B4Ij48c3Bhbj48YnI+DQo8L3NwYW4+
+PC9zcGFuPjwvcD4NCjxwPjxmb250IGNvbG9yPSIjMjEyMTIxIiBmYWNlPSJNaWNyb3NvZnQgWWFI
+ZWkgVUksIE1pY3Jvc29mdCBZYUhlaSwg5b6u6L2v6ZuF6buRLCBTaW1TdW4sIOWui+S9kywgc2Fu
+cy1zZXJpZiwgc2VyaWYsIEVtb2ppRm9udCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMy4zMzMz
+cHgiPlRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9ucyZuYnNwOyE8L3NwYW4+PC9mb250PjwvcD4N
+CjxwPjxmb250IGNvbG9yPSIjMjEyMTIxIiBmYWNlPSJNaWNyb3NvZnQgWWFIZWkgVUksIE1pY3Jv
+c29mdCBZYUhlaSwg5b6u6L2v6ZuF6buRLCBTaW1TdW4sIOWui+S9kywgc2Fucy1zZXJpZiwgc2Vy
+aWYsIEVtb2ppRm9udCI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMy4zMzMzcHgiPkkgaGF2ZSBm
+aXggdGhpcyBpc3N1ZTo8c3BhbiBzdHlsZT0iZm9udC1mYW1pbHk6Q2FsaWJyaSxIZWx2ZXRpY2Es
+c2Fucy1zZXJpZixzZXJpZixFbW9qaUZvbnQ7IGZvbnQtc2l6ZToxNnB4Ij5UaGUmbmJzcDtvbGQN
+CiB6c3RkIGhhdmUgcmVtb3ZlZCwgYnV0IHNvbWUmbmJzcDsgbG9kJm5ic3A7enN0ZCZuYnNwO2xp
+Yihzbykgc3RpbGwmbmJzcDsgYWxpdmUgaW4gdXNyL2xpYi8sJm5ic3A7dGhhdCBjYXVzZSB0aGlz
+IGlzc3VlLjwvc3Bhbj48L3NwYW4+PC9mb250PjwvcD4NCjwvZGl2Pg0KPGhyIHRhYmluZGV4PSIt
+MSIgc3R5bGU9ImRpc3BsYXk6aW5saW5lLWJsb2NrOyB3aWR0aDo5OCUiPg0KPGRpdiBpZD0ieF9k
+aXZScGx5RndkTXNnIiBkaXI9Imx0ciI+PGZvbnQgZmFjZT0iQ2FsaWJyaSwgc2Fucy1zZXJpZiIg
+Y29sb3I9IiMwMDAwMDAiIHN0eWxlPSJmb250LXNpemU6MTFwdCI+PGI+5Y+R5Lu25Lq6OjwvYj4g
+R2FvIFhpYW5nICZsdDtoc2lhbmdrYW9AbGludXguYWxpYmFiYS5jb20mZ3Q7PGJyPg0KPGI+5Y+R
+6YCB5pe26Ze0OjwvYj4gMjAyNOW5tDfmnIgxOOaXpSA1OjQ5OjU0PGJyPg0KPGI+5pS25Lu25Lq6
+OjwvYj4gU2FuZGVlcCBEaGF2YWxlPGJyPg0KPGI+5oqE6YCBOjwvYj4g6IKW5re85qOuOyBsaW51
+eC1lcm9mc0BsaXN0cy5vemxhYnMub3JnPGJyPg0KPGI+5Li76aKYOjwvYj4gW0V4dGVybmFsIE1h
+aWxdUmU6IElzc3VlIG9mIGVyb2ZzIHVzZSB6c3RkPC9mb250Pg0KPGRpdj4mbmJzcDs8L2Rpdj4N
+CjwvZGl2Pg0KPC9kaXY+DQo8Zm9udCBzaXplPSIyIj48c3BhbiBzdHlsZT0iZm9udC1zaXplOjEw
+cHQ7Ij4NCjxkaXYgY2xhc3M9IlBsYWluVGV4dCI+W+WklumDqOmCruS7tl0g5q2k6YKu5Lu25p2l
+5rqQ5LqO5bCP57Gz5YWs5Y+45aSW6YOo77yM6K+36LCo5oWO5aSE55CG44CC6Iul5a+56YKu5Lu2
+5a6J5YWo5oCn5a2Y55aR77yM6K+35bCG6YKu5Lu26L2s5Y+R57uZbWlzZWNAeGlhb21pLmNvbei/
+m+ihjOWPjemmiDxicj4NCjxicj4NCk9uIDIwMjQvNy8xOCAwNDoxMSwgU2FuZGVlcCBEaGF2YWxl
+IHdyb3RlOjxicj4NCiZndDsgT24gTW9uLCBKdWwgMTUsIDIwMjQgYXQgMTI6NDPigK9BTSBHYW8g
+WGlhbmcgJmx0O2hzaWFuZ2thb0BsaW51eC5hbGliYWJhLmNvbSZndDsgd3JvdGU6PGJyPg0KJmd0
+OyZndDs8YnI+DQomZ3Q7Jmd0Ozxicj4NCiZndDsmZ3Q7PGJyPg0KJmd0OyZndDsgT24gMjAyNC83
+LzE1IDE1OjMzLCDogpbmt7zmo64gdmlhIExpbnV4LWVyb2ZzIHdyb3RlOjxicj4NCiZndDsmZ3Q7
+Jmd0OyBIaSBHYW9YaWFuZyw8YnI+DQomZ3Q7Jmd0OyZndDs8YnI+DQomZ3Q7Jmd0OyZndDs8YnI+
+DQomZ3Q7Jmd0OyZndDsgV2UganVzdCB1cGRhdGUgdGhlIGxhc3QgZXJvZnMgdmVyc2lvbiwgYW5k
+IHdhbnQgdG8gdGVzdCB0aGUgenN0ZCBjb21wcmVzcyBmZWF0dXJlLjxicj4NCiZndDsmZ3Q7Jmd0
+Ozxicj4NCiZndDsmZ3Q7Jmd0OyBCdXQgaXQgd2lsbCB0aHJvdyBzb21lIGVycm9yIHdoZW4gdXNp
+bmcgdGhlIG1rZnMuZXJvZnMgbWFraW5nIHRoZSBuZXcgaW1hZ2UsIGNvdWxkIHlvdSBoZWxwIHRv
+IGNoZWNrPyB0aGFua3MhPGJyPg0KJmd0OyZndDs8YnI+DQomZ3Q7Jmd0OyBQbGVhc2UgZml4IHlv
+dXIgb3duIGVudmlyb25tZW50IGlzc3VlIHlvdXJzZWxmLCB0aGFua3MuPGJyPg0KJmd0OyZndDs8
+YnI+DQomZ3Q7Jmd0OyBUaGlzIG1haWxpbmcgbGlzdCBpcyBub3QgdXNlZCBmb3IgZGlzY3Vzc2lu
+ZyBzdWNoIG91dC1vZi10b3BpYyBpc3N1ZS48YnI+DQomZ3Q7Jmd0Ozxicj4NCiZndDsmZ3Q7IFRo
+YW5rcyw8YnI+DQomZ3Q7Jmd0OyBHYW8gWGlhbmc8YnI+DQomZ3Q7IFRoaXMgbWF5IGJlIGR1ZSB0
+byBoYXZpbmcgbXVsdGlwbGUgdmVyc2lvbnMgb2YgenN0ZCBsaWIgYXZhaWxhYmxlIGluPGJyPg0K
+Jmd0OyB5b3VyIGVudmlyb25tZW50LiBQbGVhc2UgY2hlY2sgd2hpY2ggb25lIGl0IGlzIGxpbmtp
+bmcgd2l0aCBhbmQgd2hpY2g8YnI+DQomZ3Q7IG9uZSBpdCBpcyBsb2FkaW5nLjxicj4NCjxicj4N
+CkFncmVlZCwgYW55d2F5LCBjdXJyZW50bHkgZXJvZnMtdXRpbHMgdXNlcyBwa2ctY29uZmlnIHRv
+IGdlbmVyYXRlPGJyPg0KbGlua2VyIGZsYWdzLCBidXQgaXQgbWF5IGhhdmUgbm8gd2F5IHRvIHdo
+YXQgbGlicmFyeSB2ZXJzaW9uIGlzPGJyPg0KZmluYWxseSBsb2FkZWQuPGJyPg0KPGJyPg0KVGhh
+bmtzLDxicj4NCkdhbyBYaWFuZzxicj4NCjxicj4NCiZndDs8YnI+DQomZ3Q7IFRoYW5rcyw8YnI+
+DQomZ3Q7IFNhbmRlZXAuPGJyPg0KPC9kaXY+DQo8L3NwYW4+PC9mb250PiMvKioqKioq5pys6YKu
+5Lu25Y+K5YW26ZmE5Lu25ZCr5pyJ5bCP57Gz5YWs5Y+455qE5L+d5a+G5L+h5oGv77yM5LuF6ZmQ
+5LqO5Y+R6YCB57uZ5LiK6Z2i5Zyw5Z2A5Lit5YiX5Ye655qE5Liq5Lq65oiW576k57uE44CC56aB
+5q2i5Lu75L2V5YW25LuW5Lq65Lul5Lu75L2V5b2i5byP5L2/55So77yI5YyF5ous5L2G5LiN6ZmQ
+5LqO5YWo6YOo5oiW6YOo5YiG5Zyw5rOE6Zyy44CB5aSN5Yi244CB5oiW5pWj5Y+R77yJ5pys6YKu
+5Lu25Lit55qE5L+h5oGv44CC5aaC5p6c5oKo6ZSZ5pS25LqG5pys6YKu5Lu277yM6K+35oKo56uL
+5Y2z55S16K+d5oiW6YKu5Lu26YCa55+l5Y+R5Lu25Lq65bm25Yig6Zmk5pys6YKu5Lu277yBIFRo
+aXMgZS1tYWlsIGFuZCBpdHMgYXR0YWNobWVudHMgY29udGFpbiBjb25maWRlbnRpYWwgaW5mb3Jt
+YXRpb24gZnJvbSBYSUFPTUksIHdoaWNoIGlzIGludGVuZGVkIG9ubHkgZm9yIHRoZSBwZXJzb24g
+b3INCiBlbnRpdHkgd2hvc2UgYWRkcmVzcyBpcyBsaXN0ZWQgYWJvdmUuIEFueSB1c2Ugb2YgdGhl
+IGluZm9ybWF0aW9uIGNvbnRhaW5lZCBoZXJlaW4gaW4gYW55IHdheSAoaW5jbHVkaW5nLCBidXQg
+bm90IGxpbWl0ZWQgdG8sIHRvdGFsIG9yIHBhcnRpYWwgZGlzY2xvc3VyZSwgcmVwcm9kdWN0aW9u
+LCBvciBkaXNzZW1pbmF0aW9uKSBieSBwZXJzb25zIG90aGVyIHRoYW4gdGhlIGludGVuZGVkIHJl
+Y2lwaWVudChzKSBpcyBwcm9oaWJpdGVkLiBJZiB5b3UNCiByZWNlaXZlIHRoaXMgZS1tYWlsIGlu
+IGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgYnkgcGhvbmUgb3IgZW1haWwgaW1tZWRp
+YXRlbHkgYW5kIGRlbGV0ZSBpdCEqKioqKiovIw0KPC9ib2R5Pg0KPC9odG1sPg0K
 
+--_000_d3663e66b7c14fa7bc931fe53116d7a3xiaomicom_--
