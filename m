@@ -1,47 +1,48 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E291A9374E9
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jul 2024 10:16:44 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1A729374F0
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jul 2024 10:19:14 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=XwLzyqjX;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JpmX0r2H;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WQMvt5Z1dz3cXG
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jul 2024 18:16:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WQMyl5dqbz3cXG
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jul 2024 18:19:11 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=XwLzyqjX;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JpmX0r2H;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WQMvq0ZNyz3bNs
-	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jul 2024 18:16:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WQMyg69pKz3bNs
+	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jul 2024 18:19:06 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1721376995; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=hIzAQRI5BQe3gx+Bgk6OFVhN7G3gaLHQVeW1D4tLnXc=;
-	b=XwLzyqjXCaxzMcRas28uOiISEsGM+MGiLA8nM7J0BumBJdYiTv0rudcgooO7iPh2em50KUKyJ2UfFyLv6fZe/5V/GVWFfF5AAh/81AzxJcC/Lw9Qz5meboHHxVqDSGNzbC+o4p9jhjNxLH1ZDiS9Cr0jAxwMeJs5QPXsGBht1rI=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WAr3Dzb_1721376992;
-Received: from 30.97.48.203(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WAr3Dzb_1721376992)
+	t=1721377143; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=NQxfvuv/x3tpOXeDldbXM6cGd/sXYA4MiM9VFkgBA34=;
+	b=JpmX0r2HgtvVLzNc0/jJsMEEez071apvftNEpXYJQaY6tKcTo4z1cFQANHTV6Clj2N6h/+K8ZfmBuyWLxBRLKHVRtBhqG4ehkzoyWFTGa7cVY5aiaxPjrGzFWSZG2YCANHzEA4h9f/dwjigWXWdflXvtTJ/Z4Ibxw6DJJl8NUsI=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WAr9wl5_1721377141;
+Received: from 30.97.48.203(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WAr9wl5_1721377141)
           by smtp.aliyun-inc.com;
-          Fri, 19 Jul 2024 16:16:33 +0800
-Message-ID: <61cef90a-5722-47c9-948d-94767243ec05@linux.alibaba.com>
-Date: Fri, 19 Jul 2024 16:16:32 +0800
+          Fri, 19 Jul 2024 16:19:02 +0800
+Message-ID: <86b8dca3-65bb-4f15-b0a4-c1fbdf80381f@linux.alibaba.com>
+Date: Fri, 19 Jul 2024 16:19:00 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] erofs-utils: lib: add bloom filter
+Subject: Re: [PATCH 3/3] erofs-utils: lib: enhance erofs_rebuild_get_dentry
+ with bloom filter
 To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 References: <20240718054025.427439-1-hongzhen@linux.alibaba.com>
- <20240718054025.427439-2-hongzhen@linux.alibaba.com>
+ <20240718054025.427439-3-hongzhen@linux.alibaba.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240718054025.427439-2-hongzhen@linux.alibaba.com>
+In-Reply-To: <20240718054025.427439-3-hongzhen@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -61,203 +62,177 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 
 On 2024/7/18 13:40, Hongzhen Luo wrote:
-> Introduce following bloom filter helpers:
+> Add a bloom filter to exclude entries that are not in `pwd->i_subdirs`,
+> thereby improving the performance of `erofs_rebuild_get_dentry`. Below
+> are the results for different # of files in the same directory:
 > 
-> 	erofs_bloom_init
-> 	erofs_bloom_add
-> 	erofs_bloom_test
-> 	erofs_bloom_exit
+> +---------+--------------------+
+> | # files | time reduction (%) |
+> +---------+--------------------+
+> |   1e4   |         55%        |
+> +---------+--------------------+
+> |   1e5   |         98%        |
+> +---------+--------------------+
+> |   2e5   |         98%        |
+> +---------+--------------------+
+> |   3e5   |         99%        |
+> +---------+--------------------+
 > 
 > Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
 > ---
->   include/erofs/bloom_filter.h | 30 ++++++++++++
->   include/erofs/internal.h     |  2 +
->   lib/Makefile.am              |  2 +-
->   lib/bloom_filter.c           | 92 ++++++++++++++++++++++++++++++++++++
->   4 files changed, 125 insertions(+), 1 deletion(-)
->   create mode 100644 include/erofs/bloom_filter.h
->   create mode 100644 lib/bloom_filter.c
+>   lib/rebuild.c | 61 ++++++++++++++++++++++++++++++++++++++++++++-------
+>   lib/super.c   |  2 ++
+>   mkfs/main.c   |  4 ++++
+>   3 files changed, 59 insertions(+), 8 deletions(-)
 > 
-> diff --git a/include/erofs/bloom_filter.h b/include/erofs/bloom_filter.h
-> new file mode 100644
-> index 0000000..a0915e4
-> --- /dev/null
-> +++ b/include/erofs/bloom_filter.h
-> @@ -0,0 +1,30 @@
-> +/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-> +#ifndef __EROFS_BLOOM_FILTER_H
-> +#define __EROFS_BLOOM_FILTER_H
-> +
-> +#ifdef __cplusplus
-> +extern "C"
-> +{
-> +#endif
-> +
-> +#include "internal.h"
-> +#include "bitops.h"
-> +
-> +struct erofs_bloom_filter {
-> +        struct bitmap bmap;
-> +        unsigned long bitmap_mask;
-> +        u32 hash_seed;
-> +        u32 nr_funcs;
-> +};
-> +
-> +int erofs_bloom_init(struct erofs_sb_info *sbi, u32 nr_funcs,
-> +                     unsigned long entries, u32 seed);
-> +long erofs_bloom_add(struct erofs_sb_info *sbi, void *data, size_t length);
-> +long erofs_bloom_test(struct erofs_sb_info *sbi, void *data, size_t length);
-> +void erofs_bloom_exit(struct erofs_sb_info *sbi);
-> +
-> +#ifdef __cplusplus
-> +}
-> +#endif
-> +
-> +#endif
-> \ No newline at end of file
-
-What editor are you using?  It lacks a blank line at the end of line.
-
-
-> diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-> index 708e51e..d3dd676 100644
-> --- a/include/erofs/internal.h
-> +++ b/include/erofs/internal.h
-> @@ -74,6 +74,7 @@ struct erofs_xattr_prefix_item {
->   #define EROFS_PACKED_NID_UNALLOCATED	-1
->   
->   struct erofs_mkfs_dfops;
-> +struct erofs_bloom_filter;
->   struct erofs_sb_info {
->   	struct erofs_device_info *devs;
->   	char *devname;
-> @@ -134,6 +135,7 @@ struct erofs_sb_info {
->   #endif
->   	struct erofs_bufmgr *bmgr;
->   	bool useqpl;
-> +	struct erofs_bloom_filter *bf;
->   };
->   
->   #define EROFS_SUPER_END (EROFS_SUPER_OFFSET + sizeof(struct erofs_super_block))
-> diff --git a/lib/Makefile.am b/lib/Makefile.am
-> index 6b52470..78140e7 100644
-> --- a/lib/Makefile.am
-> +++ b/lib/Makefile.am
-> @@ -35,7 +35,7 @@ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
->   		      namei.c data.c compress.c compressor.c zmap.c decompress.c \
->   		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
->   		      fragments.c dedupe.c uuid_unparse.c uuid.c tar.c \
-> -		      block_list.c xxhash.c rebuild.c diskbuf.c
-> +		      block_list.c xxhash.c rebuild.c diskbuf.c bloom_filter.c
->   
->   liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
->   if ENABLE_LZ4
-> diff --git a/lib/bloom_filter.c b/lib/bloom_filter.c
-> new file mode 100644
-> index 0000000..c460261
-> --- /dev/null
-> +++ b/lib/bloom_filter.c
-> @@ -0,0 +1,92 @@
-> +// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+> diff --git a/lib/rebuild.c b/lib/rebuild.c
+> index 9e8bf8f..3fd3ea0 100644
+> --- a/lib/rebuild.c
+> +++ b/lib/rebuild.c
+> @@ -15,6 +15,7 @@
+>   #include "erofs/xattr.h"
+>   #include "erofs/blobchunk.h"
+>   #include "erofs/internal.h"
 > +#include "erofs/bloom_filter.h"
-> +#include "xxhash.h"
-> +#include <stdlib.h>
-> +
-> +static u32 erofs_bloom_hash(struct erofs_bloom_filter *bf, void *data,
-> +                            size_t length, u32 index)
-> +{
-> +        u32 h;
-> +
-> +        h = xxh32(data, length, bf->hash_seed + index);
-> +        return h & bf->bitmap_mask;
-> +}
-> +
-> +/* The optimal bit array size that minimizes the false positive is
-> + * m * k / ln(2) where m is the # of elements inserted into the bloom
-> + * filter and k is the # of hash functions. Here, 1.44 is used to approximate
-> + * 1 / ln(2).
-> + */
+>   #include "liberofs_uuid.h"
+>   
+>   #ifdef HAVE_LINUX_AUFS_TYPE_H
+> @@ -62,14 +63,48 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
+>   		char *path, bool aufs, bool *whout, bool *opq, bool to_head)
+>   {
+>   	struct erofs_dentry *d = NULL;
+> -	unsigned int len = strlen(path);
+> -	char *s = path;
+> +	unsigned int len, p = 0;
+> +	char *s;
+> +	struct erofs_sb_info *sbi = pwd->sbi;
+> +	char buf[4096];
+>   
+>   	*whout = false;
+>   	*opq = false;
+>   
+> +	s = pwd->i_srcpath;
+> +	len = strlen(pwd->i_srcpath);
+> +	/* normalize the pwd path, e.g., /./../xxx/yyy -> /xxx/yyy */
+> +	buf[p++] = '/';
+> +	while (s < pwd->i_srcpath + len) {
 
-Wrong comment style.
+Why should we need that?
 
-> +int erofs_bloom_init(struct erofs_sb_info *sbi, u32 nr_funcs,
-> +                     unsigned long entries, u32 seed)
-> +{
-> +        struct erofs_bloom_filter *bf;
-> +
-> +        bf = calloc(1, sizeof(struct erofs_bloom_filter));
-> +        if (!bf)
-> +                return -EINVAL;
-> +
-> +        bf->nr_funcs = nr_funcs;
-> +        bf->hash_seed = seed;
-> +        bf->bmap.size = roundup_pow_of_two(((long)(entries * nr_funcs * 1.44)));
-> +        bf->bitmap_mask = bf->bmap.size - 1;
-> +        bf->bmap.map = calloc(BITS_TO_LONGS(bf->bmap.size), sizeof(long));
-> +        if (!bf->bmap.map) {
-> +                free(bf);
-> +                return -ENOMEM;
-> +        }
-> +        sbi->bf = bf;
-> +
-> +        return 0;
-> +}
-> +
-> +long erofs_bloom_add(struct erofs_sb_info *sbi, void *data, size_t length)
-> +{
-> +        u32 i, h;
-> +        struct erofs_bloom_filter *bf;
 
-reverse chrismas tree makes this better, like:
-	struct erofs_bloom_filter *bf;
-	u32 i, h;
+> +		char *slash = memchr(s, '/', pwd->i_srcpath + len - s);
+> +		if (slash) {
+> +			if (s == slash) {
+> +				while(*++s == '/');
+> +				continue;;
+> +			}
+> +			*slash = '\0';
+> +		}
+> +		if (memcmp(s, ".", 2) && memcmp(s, "..", 3)) {
+> +			memcpy(buf + p, s, strlen(s));
+> +			p += strlen(s);
+> +			buf[p++] = '/';
+> +
+> +		}
+> +		if (slash) {
+> +			*slash = '/';
+> +			s = slash + 1;
+> +		} else{
+> +			break;
+> +		}
+> +	}
+> +	if (buf[p - 1] != '/')
+> +		buf[p++] = '/';
+> +
+> +	s = path;
+> +	len = strlen(path);
+>   	while (s < path + len) {
+>   		char *slash = memchr(s, '/', path + len - s);
+> +		int bloom, slen;
+>   
+>   		if (slash) {
+>   			if (s == slash) {
+> @@ -97,13 +132,19 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
+>   				}
+>   			}
+>   
+> -			list_for_each_entry(d, &pwd->i_subdirs, d_child) {
+> -				if (!strcmp(d->name, s)) {
+> -					if (d->type != EROFS_FT_DIR && slash)
+> -						return ERR_PTR(-EIO);
+> -					inode = d->inode;
+> -					break;
+> +			slen = strlen(s);
+> +			memcpy(buf + p, s, slen);
+> +			p += slen;
+> +			if ((bloom = erofs_bloom_test(sbi, buf, p)) > 0) {
+> +				list_for_each_entry(d, &pwd->i_subdirs, d_child) {
+> +					if (!strcmp(d->name, s)) {
+> +						if (d->type != EROFS_FT_DIR && slash)
+> +							return ERR_PTR(-EIO);
+> +						inode = d->inode;
+> +						break;
+> +					}
+>   				}
+> +
+>   			}
+>   
+>   			if (inode) {
+> @@ -124,6 +165,10 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
+>   					return d;
+>   				pwd = d->inode;
+>   			}
+> +			if (!bloom && erofs_bloom_add(sbi, buf, p))
+> +				return ERR_PTR(-EINVAL);
+> +			if (slash)
+> +				buf[p++] = '/';
+>   		}
+>   		if (slash) {
+>   			*slash = '/';
+> diff --git a/lib/super.c b/lib/super.c
+> index 45233c4..7289236 100644
+> --- a/lib/super.c
+> +++ b/lib/super.c
+> @@ -7,6 +7,7 @@
+>   #include "erofs/print.h"
+>   #include "erofs/xattr.h"
+>   #include "erofs/cache.h"
+> +#include "erofs/bloom_filter.h"
+>   
+>   static bool check_layout_compatibility(struct erofs_sb_info *sbi,
+>   				       struct erofs_super_block *dsb)
+> @@ -153,6 +154,7 @@ void erofs_put_super(struct erofs_sb_info *sbi)
+>   		erofs_buffer_exit(sbi->bmgr);
+>   		sbi->bmgr = NULL;
+>   	}
+> +	erofs_bloom_exit(sbi);
+>   }
+>   
+>   int erofs_writesb(struct erofs_sb_info *sbi, struct erofs_buffer_head *sb_bh,
+> diff --git a/mkfs/main.c b/mkfs/main.c
+> index 20f12fc..27a2ea0 100644
+> --- a/mkfs/main.c
+> +++ b/mkfs/main.c
+> @@ -31,6 +31,7 @@
+>   #include "../lib/liberofs_private.h"
+>   #include "../lib/liberofs_uuid.h"
+>   #include "../lib/compressor.h"
+> +#include "erofs/bloom_filter.h"
+>   
+>   static struct option long_options[] = {
+>   	{"version", no_argument, 0, 'V'},
+> @@ -1344,6 +1345,9 @@ int main(int argc, char **argv)
+>   	}
+>   
+>   	erofs_inode_manager_init();
+> +	srand(time(NULL));
+> +	/* 1000000 should be enough */
+> +	erofs_bloom_init(&g_sbi, 5, 1000000, rand());
 
-> +
-> +        bf = sbi->bf;
-> +        if (!bf)
-> +                return -EINVAL;
-> +
-> +        for (i = 0; i < bf->nr_funcs; i ++) {
-> +                h = erofs_bloom_hash(bf, data, length, i);
-> +                set_bit(h, bf->bmap.map);
-> +        }
-> +
-> +        return 0;
-> +}
-> +
-> +/*
-> + * Return negative error code on failure, 0 if the key is not in the bloom filter
-> + * and 1 if the key might be in the bloom filter.
-> + */
-> +long erofs_bloom_test(struct erofs_sb_info *sbi, void *data, size_t length)
-> +{
-> +        u32 i, h;
-> +        struct erofs_bloom_filter *bf;
-> +
-> +        bf = sbi->bf;
-> +        if (!bf)
-> +                return -EINVAL;
-> +
-> +        for (i = 0; i < bf->nr_funcs; i ++) {
-> +                h = erofs_bloom_hash(bf, data, length, i);
-> +                if (!test_bit(h, bf->bmap.map))
-> +                        return 0;
-> +        }
-> +
-> +        return 1;
-> +}
-> +
-> +void erofs_bloom_exit(struct erofs_sb_info *sbi)
-> +{
-> +        if (sbi->bf) {
-> +                if (sbi->bf->bmap.map) {
-> +                        free(sbi->bf->bmap.map);
-> +                        sbi->bf->bmap.map = NULL;
-> +                }
-> +                free(sbi->bf);
-> +                sbi->bf = NULL;
-> +        }
-> +}
-> \ No newline at end of file
+I don't want to add any new init function anymore, please wrap
+all init functions into a common one.
 
-Same here.
+Also what's the meaning of hard-coded 1000000?
+
+Thanks,
+Gao Xiang
