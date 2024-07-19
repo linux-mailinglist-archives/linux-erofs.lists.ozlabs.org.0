@@ -1,50 +1,64 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1A729374F0
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jul 2024 10:19:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3A1A937D71
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jul 2024 23:12:02 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JpmX0r2H;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NG8k7SiH;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WQMyl5dqbz3cXG
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Jul 2024 18:19:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WQj6R3Hzcz3cRr
+	for <lists+linux-erofs@lfdr.de>; Sat, 20 Jul 2024 07:11:59 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JpmX0r2H;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NG8k7SiH;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.10; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WQMyg69pKz3bNs
-	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Jul 2024 18:19:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1721377143; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=NQxfvuv/x3tpOXeDldbXM6cGd/sXYA4MiM9VFkgBA34=;
-	b=JpmX0r2HgtvVLzNc0/jJsMEEez071apvftNEpXYJQaY6tKcTo4z1cFQANHTV6Clj2N6h/+K8ZfmBuyWLxBRLKHVRtBhqG4ehkzoyWFTGa7cVY5aiaxPjrGzFWSZG2YCANHzEA4h9f/dwjigWXWdflXvtTJ/Z4Ibxw6DJJl8NUsI=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R981e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WAr9wl5_1721377141;
-Received: from 30.97.48.203(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WAr9wl5_1721377141)
-          by smtp.aliyun-inc.com;
-          Fri, 19 Jul 2024 16:19:02 +0800
-Message-ID: <86b8dca3-65bb-4f15-b0a4-c1fbdf80381f@linux.alibaba.com>
-Date: Fri, 19 Jul 2024 16:19:00 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] erofs-utils: lib: enhance erofs_rebuild_get_dentry
- with bloom filter
-To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20240718054025.427439-1-hongzhen@linux.alibaba.com>
- <20240718054025.427439-3-hongzhen@linux.alibaba.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240718054025.427439-3-hongzhen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WQj6L0G9Dz30Wn
+	for <linux-erofs@lists.ozlabs.org>; Sat, 20 Jul 2024 07:11:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721423514; x=1752959514;
+  h=date:from:to:cc:subject:message-id;
+  bh=BWlWWyqBepejBYPr9zakYG9IGkVJbFpiqLD+N08HI4M=;
+  b=NG8k7SiHEzUggfFLld8S7DxInZK2T30uFV+sZ6u/TKBtXiX31cFwUqRN
+   QN+UcLRlGGcwBRxuKTXia8N1Ss8MMbu2eVoZEdj8RB5yQ5c2q/rtiEBEf
+   dAbp/mBmAAmI/1kYHDTJSpJjghyZ/NinumKJcDy2Dit8cqQf2z+1/WCp0
+   oFY7Jq1Xa+Oz3YQC/j4/asoHK0Urk3FheNe3PP1+OemSOeGde5F1v4PII
+   yx65RFNQFhBtpBo3XAbXLKdhbTInGsZUzpFhrPg3yPb20ei4HrMNG9hJ5
+   NbQx7LgP9Fxp8I7wM1Jblh389fmVQraQUBJ/+47MAWIKt7Xv2+PvdQ0aa
+   w==;
+X-CSE-ConnectionGUID: 1gA8EPBdTZOljJOTwI5fBg==
+X-CSE-MsgGUID: xJcwISLHRSK0ATFKXikugQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11138"; a="36497327"
+X-IronPort-AV: E=Sophos;i="6.09,221,1716274800"; 
+   d="scan'208";a="36497327"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2024 14:11:46 -0700
+X-CSE-ConnectionGUID: 2pK3dortQRO/CA48dGVQ6Q==
+X-CSE-MsgGUID: yO6ZJ5dATgWm1JRGMwQelw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,221,1716274800"; 
+   d="scan'208";a="51133104"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 19 Jul 2024 14:11:45 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sUutC-000iZm-18;
+	Fri, 19 Jul 2024 21:11:42 +0000
+Date: Sat, 20 Jul 2024 05:11:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ 8a3d6d57d111818c835c466d62e14b5ae313b8a6
+Message-ID: <202407200559.saE2SUOT-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,183 +70,220 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: 8a3d6d57d111818c835c466d62e14b5ae313b8a6  erofs: support STATX_DIOALIGN
 
+elapsed time: 1113m
 
-On 2024/7/18 13:40, Hongzhen Luo wrote:
-> Add a bloom filter to exclude entries that are not in `pwd->i_subdirs`,
-> thereby improving the performance of `erofs_rebuild_get_dentry`. Below
-> are the results for different # of files in the same directory:
-> 
-> +---------+--------------------+
-> | # files | time reduction (%) |
-> +---------+--------------------+
-> |   1e4   |         55%        |
-> +---------+--------------------+
-> |   1e5   |         98%        |
-> +---------+--------------------+
-> |   2e5   |         98%        |
-> +---------+--------------------+
-> |   3e5   |         99%        |
-> +---------+--------------------+
-> 
-> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
-> ---
->   lib/rebuild.c | 61 ++++++++++++++++++++++++++++++++++++++++++++-------
->   lib/super.c   |  2 ++
->   mkfs/main.c   |  4 ++++
->   3 files changed, 59 insertions(+), 8 deletions(-)
-> 
-> diff --git a/lib/rebuild.c b/lib/rebuild.c
-> index 9e8bf8f..3fd3ea0 100644
-> --- a/lib/rebuild.c
-> +++ b/lib/rebuild.c
-> @@ -15,6 +15,7 @@
->   #include "erofs/xattr.h"
->   #include "erofs/blobchunk.h"
->   #include "erofs/internal.h"
-> +#include "erofs/bloom_filter.h"
->   #include "liberofs_uuid.h"
->   
->   #ifdef HAVE_LINUX_AUFS_TYPE_H
-> @@ -62,14 +63,48 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
->   		char *path, bool aufs, bool *whout, bool *opq, bool to_head)
->   {
->   	struct erofs_dentry *d = NULL;
-> -	unsigned int len = strlen(path);
-> -	char *s = path;
-> +	unsigned int len, p = 0;
-> +	char *s;
-> +	struct erofs_sb_info *sbi = pwd->sbi;
-> +	char buf[4096];
->   
->   	*whout = false;
->   	*opq = false;
->   
-> +	s = pwd->i_srcpath;
-> +	len = strlen(pwd->i_srcpath);
-> +	/* normalize the pwd path, e.g., /./../xxx/yyy -> /xxx/yyy */
-> +	buf[p++] = '/';
-> +	while (s < pwd->i_srcpath + len) {
+configs tested: 197
+configs skipped: 4
 
-Why should we need that?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig   gcc-13.2.0
+alpha                            allyesconfig   gcc-13.3.0
+alpha                               defconfig   gcc-13.2.0
+arc                              alldefconfig   gcc-13.2.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                          axs101_defconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240719   gcc-13.2.0
+arc                   randconfig-002-20240719   gcc-13.2.0
+arm                              allmodconfig   gcc-13.2.0
+arm                               allnoconfig   gcc-13.2.0
+arm                              allyesconfig   gcc-13.2.0
+arm                                 defconfig   gcc-13.2.0
+arm                   randconfig-001-20240719   gcc-13.2.0
+arm                   randconfig-002-20240719   gcc-13.2.0
+arm                   randconfig-003-20240719   gcc-13.2.0
+arm                   randconfig-004-20240719   gcc-13.2.0
+arm                         s3c6400_defconfig   gcc-13.2.0
+arm64                            allmodconfig   gcc-13.2.0
+arm64                             allnoconfig   gcc-13.2.0
+arm64                               defconfig   gcc-13.2.0
+arm64                 randconfig-001-20240719   gcc-13.2.0
+arm64                 randconfig-002-20240719   gcc-13.2.0
+arm64                 randconfig-003-20240719   gcc-13.2.0
+arm64                 randconfig-004-20240719   gcc-13.2.0
+csky                              allnoconfig   gcc-13.2.0
+csky                                defconfig   gcc-13.2.0
+csky                  randconfig-001-20240719   gcc-13.2.0
+csky                  randconfig-002-20240719   gcc-13.2.0
+hexagon                          allmodconfig   clang-19
+hexagon                          allyesconfig   clang-19
+i386                             allmodconfig   clang-18
+i386                             allmodconfig   gcc-13
+i386                              allnoconfig   clang-18
+i386                              allnoconfig   gcc-13
+i386                             allyesconfig   clang-18
+i386                             allyesconfig   gcc-13
+i386         buildonly-randconfig-001-20240719   clang-18
+i386         buildonly-randconfig-002-20240719   clang-18
+i386         buildonly-randconfig-003-20240719   clang-18
+i386         buildonly-randconfig-003-20240719   gcc-10
+i386         buildonly-randconfig-004-20240719   clang-18
+i386         buildonly-randconfig-005-20240719   clang-18
+i386         buildonly-randconfig-005-20240719   gcc-10
+i386         buildonly-randconfig-006-20240719   clang-18
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240719   clang-18
+i386                  randconfig-002-20240719   clang-18
+i386                  randconfig-003-20240719   clang-18
+i386                  randconfig-004-20240719   clang-18
+i386                  randconfig-004-20240719   gcc-13
+i386                  randconfig-005-20240719   clang-18
+i386                  randconfig-006-20240719   clang-18
+i386                  randconfig-011-20240719   clang-18
+i386                  randconfig-012-20240719   clang-18
+i386                  randconfig-013-20240719   clang-18
+i386                  randconfig-014-20240719   clang-18
+i386                  randconfig-015-20240719   clang-18
+i386                  randconfig-015-20240719   gcc-13
+i386                  randconfig-016-20240719   clang-18
+i386                  randconfig-016-20240719   gcc-13
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-13.2.0
+loongarch                           defconfig   gcc-13.2.0
+loongarch             randconfig-001-20240719   gcc-13.2.0
+loongarch             randconfig-002-20240719   gcc-13.2.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-13.2.0
+m68k                             allyesconfig   gcc-14.1.0
+m68k                         amcore_defconfig   gcc-13.2.0
+m68k                                defconfig   gcc-13.2.0
+m68k                          sun3x_defconfig   gcc-13.2.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-13.2.0
+microblaze                       allyesconfig   gcc-14.1.0
+microblaze                          defconfig   gcc-13.2.0
+mips                              allnoconfig   gcc-13.2.0
+mips                         bigsur_defconfig   gcc-13.2.0
+mips                       bmips_be_defconfig   gcc-13.2.0
+mips                      fuloong2e_defconfig   gcc-13.2.0
+mips                           ip28_defconfig   gcc-13.2.0
+mips                      maltaaprp_defconfig   gcc-13.2.0
+mips                        maltaup_defconfig   gcc-13.2.0
+mips                   sb1250_swarm_defconfig   gcc-13.2.0
+nios2                             allnoconfig   gcc-13.2.0
+nios2                               defconfig   gcc-13.2.0
+nios2                 randconfig-001-20240719   gcc-13.2.0
+nios2                 randconfig-002-20240719   gcc-13.2.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                           allyesconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+parisc                generic-32bit_defconfig   gcc-13.2.0
+parisc                randconfig-001-20240719   gcc-13.2.0
+parisc                randconfig-002-20240719   gcc-13.2.0
+parisc64                            defconfig   gcc-13.2.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                          allyesconfig   clang-19
+powerpc                          allyesconfig   gcc-14.1.0
+powerpc                    amigaone_defconfig   gcc-13.2.0
+powerpc                    gamecube_defconfig   gcc-13.2.0
+powerpc                   lite5200b_defconfig   gcc-13.2.0
+powerpc                 mpc837x_rdb_defconfig   gcc-13.2.0
+powerpc                     powernv_defconfig   gcc-13.2.0
+powerpc                      ppc64e_defconfig   gcc-13.2.0
+powerpc               randconfig-001-20240719   gcc-13.2.0
+powerpc               randconfig-002-20240719   gcc-13.2.0
+powerpc               randconfig-003-20240719   gcc-13.2.0
+powerpc64             randconfig-001-20240719   gcc-13.2.0
+powerpc64             randconfig-002-20240719   gcc-13.2.0
+powerpc64             randconfig-003-20240719   gcc-13.2.0
+riscv                            allmodconfig   clang-19
+riscv                            allmodconfig   gcc-14.1.0
+riscv                             allnoconfig   gcc-14.1.0
+riscv                            allyesconfig   clang-19
+riscv                            allyesconfig   gcc-14.1.0
+riscv                               defconfig   gcc-14.1.0
+riscv             nommu_k210_sdcard_defconfig   gcc-13.2.0
+riscv                 randconfig-001-20240719   gcc-13.2.0
+riscv                 randconfig-002-20240719   gcc-13.2.0
+s390                             allmodconfig   clang-19
+s390                              allnoconfig   clang-19
+s390                              allnoconfig   gcc-14.1.0
+s390                             allyesconfig   clang-19
+s390                             allyesconfig   gcc-14.1.0
+s390                                defconfig   gcc-14.1.0
+s390                  randconfig-001-20240719   gcc-13.2.0
+s390                  randconfig-002-20240719   gcc-13.2.0
+sh                               allmodconfig   gcc-14.1.0
+sh                                allnoconfig   gcc-13.2.0
+sh                               allyesconfig   gcc-14.1.0
+sh                                  defconfig   gcc-14.1.0
+sh                ecovec24-romimage_defconfig   gcc-13.2.0
+sh                     magicpanelr2_defconfig   gcc-13.2.0
+sh                          r7785rp_defconfig   gcc-13.2.0
+sh                    randconfig-001-20240719   gcc-13.2.0
+sh                    randconfig-002-20240719   gcc-13.2.0
+sh                           se7705_defconfig   gcc-13.2.0
+sh                           se7712_defconfig   gcc-13.2.0
+sh                        sh7763rdp_defconfig   gcc-13.2.0
+sh                   sh7770_generic_defconfig   gcc-13.2.0
+sh                             shx3_defconfig   gcc-13.2.0
+sh                              ul2_defconfig   gcc-13.2.0
+sparc                            allmodconfig   gcc-14.1.0
+sparc64                             defconfig   gcc-14.1.0
+sparc64               randconfig-001-20240719   gcc-13.2.0
+sparc64               randconfig-002-20240719   gcc-13.2.0
+um                               allmodconfig   clang-19
+um                               allmodconfig   gcc-13.3.0
+um                                allnoconfig   clang-17
+um                                allnoconfig   gcc-14.1.0
+um                               allyesconfig   gcc-13
+um                               allyesconfig   gcc-13.3.0
+um                                  defconfig   gcc-14.1.0
+um                             i386_defconfig   gcc-14.1.0
+um                    randconfig-001-20240719   gcc-13.2.0
+um                    randconfig-002-20240719   gcc-13.2.0
+um                           x86_64_defconfig   gcc-14.1.0
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240719   gcc-13
+x86_64       buildonly-randconfig-002-20240719   gcc-13
+x86_64       buildonly-randconfig-003-20240719   gcc-13
+x86_64       buildonly-randconfig-004-20240719   gcc-13
+x86_64       buildonly-randconfig-005-20240719   gcc-13
+x86_64       buildonly-randconfig-006-20240719   gcc-13
+x86_64                              defconfig   clang-18
+x86_64                              defconfig   gcc-13
+x86_64                randconfig-001-20240719   gcc-13
+x86_64                randconfig-002-20240719   gcc-13
+x86_64                randconfig-003-20240719   gcc-13
+x86_64                randconfig-004-20240719   gcc-13
+x86_64                randconfig-005-20240719   gcc-13
+x86_64                randconfig-006-20240719   gcc-13
+x86_64                randconfig-011-20240719   gcc-13
+x86_64                randconfig-012-20240719   gcc-13
+x86_64                randconfig-013-20240719   gcc-13
+x86_64                randconfig-014-20240719   gcc-13
+x86_64                randconfig-015-20240719   gcc-13
+x86_64                randconfig-016-20240719   gcc-13
+x86_64                randconfig-071-20240719   gcc-13
+x86_64                randconfig-072-20240719   gcc-13
+x86_64                randconfig-073-20240719   gcc-13
+x86_64                randconfig-074-20240719   gcc-13
+x86_64                randconfig-075-20240719   gcc-13
+x86_64                randconfig-076-20240719   gcc-13
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-13.2.0
+xtensa                randconfig-001-20240719   gcc-13.2.0
+xtensa                randconfig-002-20240719   gcc-13.2.0
+xtensa                         virt_defconfig   gcc-13.2.0
 
-> +		char *slash = memchr(s, '/', pwd->i_srcpath + len - s);
-> +		if (slash) {
-> +			if (s == slash) {
-> +				while(*++s == '/');
-> +				continue;;
-> +			}
-> +			*slash = '\0';
-> +		}
-> +		if (memcmp(s, ".", 2) && memcmp(s, "..", 3)) {
-> +			memcpy(buf + p, s, strlen(s));
-> +			p += strlen(s);
-> +			buf[p++] = '/';
-> +
-> +		}
-> +		if (slash) {
-> +			*slash = '/';
-> +			s = slash + 1;
-> +		} else{
-> +			break;
-> +		}
-> +	}
-> +	if (buf[p - 1] != '/')
-> +		buf[p++] = '/';
-> +
-> +	s = path;
-> +	len = strlen(path);
->   	while (s < path + len) {
->   		char *slash = memchr(s, '/', path + len - s);
-> +		int bloom, slen;
->   
->   		if (slash) {
->   			if (s == slash) {
-> @@ -97,13 +132,19 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
->   				}
->   			}
->   
-> -			list_for_each_entry(d, &pwd->i_subdirs, d_child) {
-> -				if (!strcmp(d->name, s)) {
-> -					if (d->type != EROFS_FT_DIR && slash)
-> -						return ERR_PTR(-EIO);
-> -					inode = d->inode;
-> -					break;
-> +			slen = strlen(s);
-> +			memcpy(buf + p, s, slen);
-> +			p += slen;
-> +			if ((bloom = erofs_bloom_test(sbi, buf, p)) > 0) {
-> +				list_for_each_entry(d, &pwd->i_subdirs, d_child) {
-> +					if (!strcmp(d->name, s)) {
-> +						if (d->type != EROFS_FT_DIR && slash)
-> +							return ERR_PTR(-EIO);
-> +						inode = d->inode;
-> +						break;
-> +					}
->   				}
-> +
->   			}
->   
->   			if (inode) {
-> @@ -124,6 +165,10 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
->   					return d;
->   				pwd = d->inode;
->   			}
-> +			if (!bloom && erofs_bloom_add(sbi, buf, p))
-> +				return ERR_PTR(-EINVAL);
-> +			if (slash)
-> +				buf[p++] = '/';
->   		}
->   		if (slash) {
->   			*slash = '/';
-> diff --git a/lib/super.c b/lib/super.c
-> index 45233c4..7289236 100644
-> --- a/lib/super.c
-> +++ b/lib/super.c
-> @@ -7,6 +7,7 @@
->   #include "erofs/print.h"
->   #include "erofs/xattr.h"
->   #include "erofs/cache.h"
-> +#include "erofs/bloom_filter.h"
->   
->   static bool check_layout_compatibility(struct erofs_sb_info *sbi,
->   				       struct erofs_super_block *dsb)
-> @@ -153,6 +154,7 @@ void erofs_put_super(struct erofs_sb_info *sbi)
->   		erofs_buffer_exit(sbi->bmgr);
->   		sbi->bmgr = NULL;
->   	}
-> +	erofs_bloom_exit(sbi);
->   }
->   
->   int erofs_writesb(struct erofs_sb_info *sbi, struct erofs_buffer_head *sb_bh,
-> diff --git a/mkfs/main.c b/mkfs/main.c
-> index 20f12fc..27a2ea0 100644
-> --- a/mkfs/main.c
-> +++ b/mkfs/main.c
-> @@ -31,6 +31,7 @@
->   #include "../lib/liberofs_private.h"
->   #include "../lib/liberofs_uuid.h"
->   #include "../lib/compressor.h"
-> +#include "erofs/bloom_filter.h"
->   
->   static struct option long_options[] = {
->   	{"version", no_argument, 0, 'V'},
-> @@ -1344,6 +1345,9 @@ int main(int argc, char **argv)
->   	}
->   
->   	erofs_inode_manager_init();
-> +	srand(time(NULL));
-> +	/* 1000000 should be enough */
-> +	erofs_bloom_init(&g_sbi, 5, 1000000, rand());
-
-I don't want to add any new init function anymore, please wrap
-all init functions into a common one.
-
-Also what's the meaning of hard-coded 1000000?
-
-Thanks,
-Gao Xiang
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
