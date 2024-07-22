@@ -1,45 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 14AFB938931
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jul 2024 08:54:17 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B4E4938936
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jul 2024 08:54:21 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=LUJ4X4zJ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fQqoy+sL;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WS9xJ6Nbmz3cTw
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jul 2024 16:54:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WS9xR2Cbmz3cRF
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Jul 2024 16:54:19 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=LUJ4X4zJ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fQqoy+sL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WS9xB1pl1z30VY
-	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Jul 2024 16:54:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WS9xB2wYvz3cLk
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Jul 2024 16:54:04 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1721631239; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=xD94dOxY+nku6Q6W3voJyiFwb4COK0rvj1QCMB+mCzs=;
-	b=LUJ4X4zJjvAer+6OjlcNqvdGpE3/atBgU5rFusdKaJEJZgnyb9AImkkaftGQF6NqDTlmwDkra/GZ/ADf91aHuU/QhqNqUHYi0PmaOxT0zfLBaSmHPwFJyND/0XnTp/SFB+52L0hncp3w31qeIP9c89vf0KhB42w6HwEdeiGGgho=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045220184;MF=hongzhen@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WB-Gf3C_1721631237;
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WB-Gf3C_1721631237)
+	t=1721631241; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=RGzY8llNaVFF5WchIo4RCyvPyCJLandnnqEim1jg6sM=;
+	b=fQqoy+sLUtwCQFYqKEpnJXRIN7s8APuP2Y0EHhKeWMmePQg/pbk0PekoD8UPynfM9ctsy4tb3SnFqht0nr8oWZtghklY4SlE2FZwVusBU4/kgugd5RPSZzhefEanlASO4f7yhl/LqiF0WTDbvALLPtH1LaRkOPKRM4khs6Yt66s=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hongzhen@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WB-l.uZ_1721631238;
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WB-l.uZ_1721631238)
           by smtp.aliyun-inc.com;
-          Mon, 22 Jul 2024 14:53:58 +0800
+          Mon, 22 Jul 2024 14:53:59 +0800
 From: Hongzhen Luo <hongzhen@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH RFC 0/4] erofs: introduce page cache share feature
-Date: Mon, 22 Jul 2024 14:53:50 +0800
-Message-ID: <20240722065355.1396365-1-hongzhen@linux.alibaba.com>
+Subject: [PATCH RFC 1/4] erofs: move `struct erofs_anon_fs_type` to super.c
+Date: Mon, 22 Jul 2024 14:53:51 +0800
+Message-ID: <20240722065355.1396365-2-hongzhen@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20240722065355.1396365-1-hongzhen@linux.alibaba.com>
+References: <20240722065355.1396365-1-hongzhen@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -55,182 +56,90 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-[Background]
-================
-Currently, reading files with different paths (or names) but the same
-content will consume multiple copies of the page cache, even if the
-content of these page caches is the same. For example, reading identical
-files (e.g., *.so files) from two different minor versions of container
-images will cost multiple copies of the same page cache, since different
-containers have different mount points. Therefore, sharing the page cache
-for files with the same content can save memory.
+Prepare for the upcoming page cache share feature.
 
-[Implementation]
-================
-During the mkfs phase, file content is hashed and the hash value is 
-stored in the `user.fingerprint` extended attribute. Inodes of files
-with the same `user.fingerprint` are mapped to an anonymous inode, whose
-page cache stores the actual contents. In this way, a single copy of the
-anonymous inode's page cache can serve read requests from several files
-mapped to it. The following describes the relationship between the anonymous
-inode and inodes with the same content:
+Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+---
+ fs/erofs/fscache.c  | 13 -------------
+ fs/erofs/internal.h |  2 ++
+ fs/erofs/super.c    | 13 +++++++++++++
+ 3 files changed, 15 insertions(+), 13 deletions(-)
 
-                        page cache                            
-                   ┌────┬────┬────┬──────┐                    
-             ┌────►│    │    │ ...│      │                    
-             │     └────┴────┴────┴──────┘                    
-             │                                                
-             │                                                
-             │      i_private                                 
-          ┌──┴────────┬───┐                                   
-       ┌─►│ ano_inode │   │                                   
-       │  └───────────┴─┬─┘                                   
-       │                │                                     
-       │       ┌────────┘                                     
-mapped │       ▼                                              
-  to   │  ┌──────────┬───┬─────┐                              
-       │  │erofs_pcs │cur│ list│                              
-       │  └──────────┴─┬─┴───┬─┘                              
-       │               │     │                                
-       │     ┌─────────┘     │                                
-       │     │               │                                
-       │     │    ┌──────────┘                                
-       │     │    │                                           
-       │     ▼    ▼                                           
-       │  ┌────────┐       ┌────────┐               ┌────────┐
-       └──┤        │ ────► │        │ ───►      ──► │        │
-          │        │       │        │      ...      │        │
-          └────────┘ ◄──── └────────┘ ◄───      ◄── └────────┘
-                                                              
-            inode_1          inode_2                  inode_n 
-
-In the above diagram, the `i_private` (protected by `i_lock`) field of the
-anonymous inode points to the `struct erofs_pcs` structure:
-
-struct erofs_pcs {
-	struct erofs_inode *cur;
-	struct rw_semaphore rw_sem;
-	struct mutex list_mutex;
-	struct list_head list;
-};
-
-where the `list` field points to a list of inodes that are mapped to the
-anonymous inode and has the same `user.fingerprint` field. The `cur` field
-points to the first inode in the inode list, which is used for I/O
-mapping (iomap) related operations. 
-
-When an inode is created, it is added to the inode list pointed to by the
-`erofs_pcs` structure corresponding to the anonymous inode; similarly, when
-the inode is destroyed, it is removed from the inode list. Note that if the
-inode is the one pointed to by `cur`, then it is necessary to acquire the
-read-write semaphore `rw_sem` to maintain synchronization, in case the inode
-is being used for iomap operations elsewhere. 
-
-[Effect]
-================
-I conducted experiments on two aspects across two different minor versions of
-container images:
-
-1. reading all files in two different minor versions of container images 
-
-2. run workloads or use the default entrypoint within the containers^[1]
-
-Below is the memory usage for reading all files in two different minor
-versions of container images:
-
-+-------------------+------------------+-------------+---------------+
-|       Image       | Page Cache Share | Memory (MB) |    Memory     |
-|                   |                  |             | Reduction (%) |
-+-------------------+------------------+-------------+---------------+
-|                   |        No        |     241     |       -       |
-|       redis       +------------------+-------------+---------------+
-|   7.2.4 & 7.2.5   |        Yes       |     163     |      33%      |
-+-------------------+------------------+-------------+---------------+
-|                   |        No        |     872     |       -       |
-|      postgres     +------------------+-------------+---------------+
-|    16.1 & 16.2    |        Yes       |     630     |      28%      |
-+-------------------+------------------+-------------+---------------+
-|                   |        No        |     2771    |       -       |
-|     tensorflow    +------------------+-------------+---------------+
-|  1.11.0 & 2.11.1  |        Yes       |     2340    |      16%      |
-+-------------------+------------------+-------------+---------------+
-|                   |        No        |     926     |       -       |
-|       mysql       +------------------+-------------+---------------+
-|  8.0.11 & 8.0.12  |        Yes       |     735     |      21%      |
-+-------------------+------------------+-------------+---------------+
-|                   |        No        |     390     |       -       |
-|       nginx       +------------------+-------------+---------------+
-|   7.2.4 & 7.2.5   |        Yes       |     219     |      44%      |
-+-------------------+------------------+-------------+---------------+
-|       tomcat      |        No        |     924     |       -       |
-| 10.1.25 & 10.1.26 +------------------+-------------+---------------+
-|                   |        Yes       |     474     |      49%      |
-+-------------------+------------------+-------------+---------------+
-
-Additionally, the table below shows the runtime memory usage of the
-container:
-
-+-------------------+------------------+-------------+---------------+
-|       Image       | Page Cache Share | Memory (MB) |    Memory     |
-|                   |                  |             | Reduction (%) |
-+-------------------+------------------+-------------+---------------+
-|                   |        No        |     34.9    |       -       |
-|       redis       +------------------+-------------+---------------+
-|   7.2.4 & 7.2.5   |        Yes       |     33.6    |       4%      |
-+-------------------+------------------+-------------+---------------+
-|                   |        No        |    149.1    |       -       |
-|      postgres     +------------------+-------------+---------------+
-|    16.1 & 16.2    |        Yes       |      95     |      37%      |
-+-------------------+------------------+-------------+---------------+
-|                   |        No        |    1027.9   |       -       |
-|     tensorflow    +------------------+-------------+---------------+
-|  1.11.0 & 2.11.1  |        Yes       |    934.3    |      10%      |
-+-------------------+------------------+-------------+---------------+
-|                   |        No        |    155.0    |       -       |
-|       mysql       +------------------+-------------+---------------+
-|  8.0.11 & 8.0.12  |        Yes       |    139.1    |      11%      |
-+-------------------+------------------+-------------+---------------+
-|                   |        No        |     25.4    |       -       |
-|       nginx       +------------------+-------------+---------------+
-|   7.2.4 & 7.2.5   |        Yes       |     18.8    |      26%      |
-+-------------------+------------------+-------------+---------------+
-|       tomcat      |        No        |     186     |       -       |
-| 10.1.25 & 10.1.26 +------------------+-------------+---------------+
-|                   |        Yes       |      99     |      47%      |
-+-------------------+------------------+-------------+---------------+
-
-It can be observed that when reading all the files in the image, the reduced
-memory usage varies from 16% to 49%, depending on the specific image.
-Additionally, the container's runtime memory usage reduction ranges from 4%
-to 47%.
-
-[1] Below are the workload for these images:
-      - redis: redis-benchmark
-      - postgres: sysbench
-      - tensorflow: app.py of tensorflow.python.platform
-      - mysql: sysbench
-      - nginx: wrk
-      - tomcat: default entrypoint
-
-Hongzhen Luo (4):
-  erofs: move `struct erofs_anon_fs_type` to super.c
-  erofs: expose erofs_iomap_{begin, end}
-  erofs: introduce page cache share feature
-  erofs: apply the page cache share feature
-
- fs/erofs/Kconfig           |  10 ++
- fs/erofs/Makefile          |   1 +
- fs/erofs/data.c            |   9 +-
- fs/erofs/fscache.c         |  13 +-
- fs/erofs/inode.c           |  17 ++
- fs/erofs/internal.h        |   8 +
- fs/erofs/pagecache_share.c | 318 +++++++++++++++++++++++++++++++++++++
- fs/erofs/pagecache_share.h |  23 +++
- fs/erofs/super.c           |  40 +++++
- 9 files changed, 425 insertions(+), 14 deletions(-)
- create mode 100644 fs/erofs/pagecache_share.c
- create mode 100644 fs/erofs/pagecache_share.h
-
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index fda16eedafb5..826b2893acb2 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -3,7 +3,6 @@
+  * Copyright (C) 2022, Alibaba Cloud
+  * Copyright (C) 2022, Bytedance Inc. All rights reserved.
+  */
+-#include <linux/pseudo_fs.h>
+ #include <linux/fscache.h>
+ #include "internal.h"
+ 
+@@ -13,18 +12,6 @@ static LIST_HEAD(erofs_domain_list);
+ static LIST_HEAD(erofs_domain_cookies_list);
+ static struct vfsmount *erofs_pseudo_mnt;
+ 
+-static int erofs_anon_init_fs_context(struct fs_context *fc)
+-{
+-	return init_pseudo(fc, EROFS_SUPER_MAGIC) ? 0 : -ENOMEM;
+-}
+-
+-static struct file_system_type erofs_anon_fs_type = {
+-	.owner		= THIS_MODULE,
+-	.name           = "pseudo_erofs",
+-	.init_fs_context = erofs_anon_init_fs_context,
+-	.kill_sb        = kill_anon_super,
+-};
+-
+ struct erofs_fscache_io {
+ 	struct netfs_cache_resources cres;
+ 	struct iov_iter		iter;
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 736607675396..3f1984664dac 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -387,6 +387,8 @@ extern const struct file_operations erofs_dir_fops;
+ 
+ extern const struct iomap_ops z_erofs_iomap_report_ops;
+ 
++extern struct file_system_type erofs_anon_fs_type;
++
+ /* flags for erofs_fscache_register_cookie() */
+ #define EROFS_REG_COOKIE_SHARE		0x0001
+ #define EROFS_REG_COOKIE_NEED_NOEXIST	0x0002
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 35268263aaed..5ae597c18e75 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -10,6 +10,7 @@
+ #include <linux/fs_context.h>
+ #include <linux/fs_parser.h>
+ #include <linux/exportfs.h>
++#include <linux/pseudo_fs.h>
+ #include "xattr.h"
+ 
+ #define CREATE_TRACE_POINTS
+@@ -832,6 +833,18 @@ static struct file_system_type erofs_fs_type = {
+ };
+ MODULE_ALIAS_FS("erofs");
+ 
++static int erofs_anon_init_fs_context(struct fs_context *fc)
++{
++	return init_pseudo(fc, EROFS_SUPER_MAGIC) ? 0 : -ENOMEM;
++}
++
++struct file_system_type erofs_anon_fs_type = {
++	.owner		= THIS_MODULE,
++	.name           = "pseudo_erofs",
++	.init_fs_context = erofs_anon_init_fs_context,
++	.kill_sb        = kill_anon_super,
++};
++
+ static int __init erofs_module_init(void)
+ {
+ 	int err;
 -- 
 2.43.5
 
