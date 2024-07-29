@@ -2,56 +2,72 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA3E593F95E
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jul 2024 17:28:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BE23293FA75
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jul 2024 18:20:38 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=iVfdxkA+;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=fOpjleMg;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=fOpjleMg;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WXj1b4Trvz3cZ4
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jul 2024 01:28:35 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WXk9c2TsKz3cds
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jul 2024 02:20:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=iVfdxkA+;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=fOpjleMg;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=fOpjleMg;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WXj1V54KWz30T7
-	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Jul 2024 01:28:30 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 690B2CE0B45;
-	Mon, 29 Jul 2024 15:28:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBBB4C32786;
-	Mon, 29 Jul 2024 15:28:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722266907;
-	bh=4znxeB30JZL1ANv2iJsfkWtOwMksV8fxflsn+hLKFt4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iVfdxkA+7IEIpDIK+ZU61EtpKu68/EFIwJcs+hLVWc/3dVZunRkyUOAyZzDIdwh4k
-	 0+FG/fvKY55vz38KDFW9R6c2YmzJq8snQyUqSOtvILjF8QhJlfQ5JFDP2KSFilCUhZ
-	 MljjzwmbJ50mmwTbSUsxl2M85X4KdftejDSs0LW1UvZrOgql1zkE9l1xtx6VbKyIri
-	 yvkvX9TDIJj4y3sU3lpgESICtwtn7tRRPm2XMvLOWhyqSry9S+XwbdmumxkEdcJCxG
-	 oJmdOvSoB3pqhkhnMKpxw00ojrL/GoPFDKwzBjfzZwSKDrtSXXrNBorFWOu55XBz4o
-	 aZVsVhk3Iom6Q==
-Date: Mon, 29 Jul 2024 17:28:22 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] vfs: Fix potential circular locking through setxattr()
- and removexattr()
-Message-ID: <20240729-gespickt-negativ-c1ce987e3c07@brauner>
-References: <20240723104533.mznf3svde36w6izp@quack3>
- <2136178.1721725194@warthog.procyon.org.uk>
- <2147168.1721743066@warthog.procyon.org.uk>
- <20240724133009.6st3vmk5ondigbj7@quack3>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WXk9X1bPzz3cW3
+	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Jul 2024 02:20:29 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722270025;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DvXomQdGvyRIG4lEnvJDoKu3S4z81D4SNbDuP6bJxR8=;
+	b=fOpjleMgs4B19aD9Dm0LfYejSocTPWS2WC+Ubw+3QxjwDsaN1GkvBT2ogEps1OMZkijIhR
+	PykWtcdoRtlZdOBLrSXi5un73SyklmJVtxRQ9RF9UgFgpts0OcgT4bto9/Qs2ql5JM+J7G
+	oVmy7LLYE3uvmK6I+CE0KCSgPg3XdLc=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1722270025;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DvXomQdGvyRIG4lEnvJDoKu3S4z81D4SNbDuP6bJxR8=;
+	b=fOpjleMgs4B19aD9Dm0LfYejSocTPWS2WC+Ubw+3QxjwDsaN1GkvBT2ogEps1OMZkijIhR
+	PykWtcdoRtlZdOBLrSXi5un73SyklmJVtxRQ9RF9UgFgpts0OcgT4bto9/Qs2ql5JM+J7G
+	oVmy7LLYE3uvmK6I+CE0KCSgPg3XdLc=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-277-GK5lTh9JNCCiXxwe-IyT3A-1; Mon,
+ 29 Jul 2024 12:20:21 -0400
+X-MC-Unique: GK5lTh9JNCCiXxwe-IyT3A-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E49D1955F42;
+	Mon, 29 Jul 2024 16:20:13 +0000 (UTC)
+Received: from warthog.procyon.org.uk.com (unknown [10.42.28.216])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D295119560AE;
+	Mon, 29 Jul 2024 16:20:05 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Steve French <smfrench@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH 00/24] netfs: Read/write improvements
+Date: Mon, 29 Jul 2024 17:19:29 +0100
+Message-ID: <20240729162002.3436763-1-dhowells@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240724133009.6st3vmk5ondigbj7@quack3>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -63,229 +79,161 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, Shyam Prasad N <sprasad@microsoft.com>, linux-cifs@vger.kernel.org, netdev@vger.kernel.org, Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org, linux-mm@kvack.org, netfs@lists.linux.dev, Marc Dionne <marc.dionne@auristor.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Eric Van Hensbergen <ericvh@kernel.org>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Jul 24, 2024 at 03:30:09PM GMT, Jan Kara wrote:
-> On Tue 23-07-24 14:57:46, David Howells wrote:
-> > Jan Kara <jack@suse.cz> wrote:
-> > 
-> > > Well, it seems like you are trying to get rid of the dependency
-> > > sb_writers->mmap_sem. But there are other places where this dependency is
-> > > created, in particular write(2) path is a place where it would be very
-> > > difficult to get rid of it (you take sb_writers, then do all the work
-> > > preparing the write and then you copy user data into page cache which
-> > > may require mmap_sem).
-> > >
-> > > ...
-> > > 
-> > > This is the problematic step - from quite deep in the locking chain holding
-> > > invalidate_lock and having PG_Writeback set you suddently jump to very outer
-> > > locking context grabbing sb_writers. Now AFAICT this is not a real deadlock
-> > > problem because the locks are actually on different filesystems, just
-> > > lockdep isn't able to see this. So I don't think you will get rid of these
-> > > lockdep splats unless you somehow manage to convey to lockdep that there's
-> > > the "upper" fs (AFS in this case) and the "lower" fs (the one behind
-> > > cachefiles) and their locks are different.
-> > 
-> > I'm not sure you're correct about that.  If you look at the lockdep splat:
-> > 
-> > >  -> #2 (sb_writers#14){.+.+}-{0:0}:
-> > 
-> > The sb_writers lock is "personalised" to the filesystem type (the "#14"
-> > annotation) which is set here:
-> > 
-> > 	for (i = 0; i < SB_FREEZE_LEVELS; i++) {
-> > 		if (__percpu_init_rwsem(&s->s_writers.rw_sem[i],
-> > 					sb_writers_name[i],
-> > 					&type->s_writers_key[i]))  <----
-> > 			goto fail;
-> > 	}
-> > 
-> > in fs/super.c.
-> 
-> Right, forgot about that. Thanks for correction! So after pondering about
-> this some more, this is actually a real problem and deadlockable. See
-> below.
-> 
-> > I think the problem is (1) that on one side, you've got, say, sys_setxattr()
-> > taking an sb_writers lock and then accessing a userspace buffer, which (a) may
-> > take mm->mmap_lock and vma->vm_lock and (b) may cause reading or writeback
-> > from the netfs-based filesystem via an mmapped xattr name buffer].
-> 
-> Yes, we agree on that. I was just pointing out that:
-> 
-> vfs_write()
->   file_start_write() -> grabs sb_writers
->   generic_file_write_iter()
->     generic_perform_write()
->       fault_in_iov_iter_readable()
-> 
-> is another path which enforces exactly the same lock ordering.
-> 
-> > Then (2) on the other side, you have a read or a write to the network
-> > filesystem through netfslib which may invoke the cache, which may require
-> > cachefiles to check the xattr on the cache file and maybe set/remove it -
-> > which requires the sb_writers lock on the cache filesystem.
-> > 
-> > So if ->read_folio(), ->readahead() or ->writepages() can ever be called with
-> > mm->mmap_lock or vma->vm_lock held, netfslib may call down to cachefiles and
-> > ultimately, it should[*] then take the sb_writers lock on the backing
-> > filesystem to perform xattr manipulation.
-> 
-> Well, ->read_folio() under mm->mmap_lock is a standard thing to happen in a
-> page fault. Now grabbing sb_writers (of any filesystem) in that path is
-> problematic and can deadlock though:
-> 
-> page fault
->   grab mm->mmap_lock
->   filemap_fault()
->     if (unlikely(!folio_test_uptodate(folio))) {
->       filemap_read_folio() on fs A
->         now if you grab sb_writers on fs B:
-> 			freeze_super() on fs B		write(2) on fs B
-> 							  sb_start_write(fs B)
-> 			  sb->s_writers.frozen = SB_FREEZE_WRITE;
-> 			  sb_wait_write(sb, SB_FREEZE_WRITE);
-> 			    - waits for write
-> 	sb_start_write(fs B) - blocked behind freeze_super()
-> 							  generic_perform_write()
-> 							    fault_in_iov_iter_readable()
-> 							      page fault
-> 							        grab mm->mmap_lock
-> 								  => deadlock
-> 
-> Now this is not the deadlock your lockdep trace is showing but it is a
-> similar one. Like:
-> 
-> filemap_invalidate() on fs A	freeze_super() on fs B	page fault on fs A	write(2) on fs B
->   filemap_invalidate_lock()				  lock mm->mmap_lock	  sb_start_write(fs B)
->   filemap_fdatawrite_wbc()				  filemap_fault()
->     afs_writepages()					    filemap_invalidate_lock_shared()
->       cachefiles_issue_write()				      => blocks behind filemap_invalidate()
-> 				  sb->s_writers.frozen = SB_FREEZE_WRITE;
-> 				  sb_wait_write(sb, SB_FREEZE_WRITE);
-> 				    => blocks behind write(2)
->         sb_start_write() on fs B
-> 	  => blocks behind freeze_super()
-> 							  			  generic_perform_write()
-> 										    fault_in_iov_iter_readable()
-> 										      page fault
-> 										        grab mm->mmap_lock
-> 											  => deadlock
-> 
-> So I still maintain that grabbing sb_start_write() from quite deep within
-> locking hierarchy (like from writepages when having pages locked, but even
-> holding invalidate_lock is enough for the problems) is problematic and
-> prone to deadlocks.
-> 
-> > [*] I say "should" because at the moment cachefiles calls vfs_set/removexattr
-> >     functions which *don't* take this lock (which is a bug).  Is this an error
-> >     on the part of vfs_set/removexattr()?  Should they take this lock
-> >     analogously with vfs_truncate() and vfs_iocb_iter_write()?
-> > 
-> > However, as it doesn't it manages to construct a locking chain via the
-> > mapping.invalidate_lock, the afs vnode->validate_lock and something in execve
-> > that I don't exactly follow.
-> > 
-> > 
-> > I wonder if this is might be deadlockable by a multithreaded process (ie. so
-> > they share the mm locks) where one thread is writing to a cached file whilst
-> > another thread is trying to set/remove the xattr on that file.
-> 
-> Yep, see above. Now the hard question is how to fix this because what you
-> are doing seems to be inherent in how cachefiles fs is designed to work.
+Hi Christian, Steve, Willy,
 
-So one idea may be to create a private mount for cachefiles and then claim
-write access when that private mount is created and retaining that write access
-for the duration of cachefiles being run. See my draft patch below.
+This set of patches includes one fscache fix and one cachefiles fix
 
-Right now things are as follows (roughly). Say cachefiles uses a directory of
-the rootfs e.g., /mnt/cache-dir/ then cache->mnt points to /.
+ (1) Fix a cookie access race in fscache.
 
-With my patch this becomes:
+ (2) Fix the setxattr/removexattr syscalls to pull their arguments into
+     kernel space before taking the sb_writers lock to avoid a deadlock
+     against mm->mmap_lock.
 
-mnt["/mnt/cache-dir"] = clone_private_mnt("/mnt/cache-dir");
+A couple of adjustments to the /proc/fs/netfs/stats file:
 
-so cache->mnt points to "/mnt/cache-dir". That shouldn't be an issue though.
+ (3) All the netfs stats lines begin 'Netfs:'.  Change this to something a
+     bit more useful.
 
-The more interesting changes in behavior come from mount properties. For
-example, when
+ (4) Add a couple of stats counters to track the numbers of skips and waits
+     on the per-inode writeback serialisation lock to make it easier to
+     check for this as a source of performance loss.
 
-mount --bind /mnt/cache-dir /opt/
+Some miscellaneous bits:
 
-is created and /opt is used for cachefiles. When the bind-mount of
-/mnt/cache-dir at /opt is made read-only it becomes read-only for cachefiles as
-well.
+ (5) Reduce the number of conditional branches in netfs_perform_write().
 
-But with an internal private mount that's no longer true. The internal mount
-cannot be mounted read-only from userspace. Arguably, that would have been the
-correct semantics right from the start similar to what overlayfs is doing.
+ (6) Move the CIFS_INO_MODIFIED_ATTR flag to the netfs_inode struct and
+     remove cifs_post_modify().
 
-However, the bigger semantic change would come from claiming write access when
-the private mount is created. Claiming write access for as long as cachefiles
-is running means that that the filesystem that is used cannot be remounted
-read-only because mnt_hold_writers() would tell you to get lost. That
-might be ok though. It just is something that should only be done with
-capable(CAP_SYS_ADMIN) which cachefiles requires anyway.
+ (7) Move the max_len/max_nr_segs members from netfs_io_subrequest to
+     netfs_io_request as they're only needed for one subreq at a time.
 
-I think the bigger issue might be freezing. Not because of the type of
-operation but because freeze_super() would wait in sb_wait_write(sb,
-SB_FREEZE_WRITE) until all writes finish and obviously they won't if
-cachefiles just keeps running. That means you might hang forever.
+ (8) Add an 'unknown' source value for tracing purposes.
 
-One way to get around this last issue might be to introduce
-SB_FREEZE_WRITE_LONGTERM which cachefiles can use (might even be able to
-do that without a private mount then) and have freeze return with an
-error in case long-term write access is claimed.
+ (9) Remove NETFS_COPY_TO_CACHE as it's no longer used.
 
-So anyway, trade-offs to be considered here. I just thought I throw this
-out as a potential solution.
+(10) Set the request work function up front at allocation time.
 
-/* draft, sketch */
+(11) Use bh-disabling spinlocks for rreq->lock as cachefiles completion may
+     be run from block-filesystem DIO completion in softirq context.
 
-diff --git a/fs/cachefiles/cache.c b/fs/cachefiles/cache.c
-index 9fb06dc16520..acbb5b95a9d1 100644
---- a/fs/cachefiles/cache.c
-+++ b/fs/cachefiles/cache.c
-@@ -20,6 +20,7 @@ int cachefiles_add_cache(struct cachefiles_cache *cache)
-        struct path path;
-        struct kstatfs stats;
-        struct dentry *graveyard, *cachedir, *root;
-+       struct vfsmount *mnt;
-        const struct cred *saved_cred;
-        int ret;
+Then there's the main performance enhancing changes:
 
-@@ -41,6 +42,20 @@ int cachefiles_add_cache(struct cachefiles_cache *cache)
-        if (ret < 0)
-                goto error_open_root;
+(12) Define a structure, struct folio_queue, and a new iterator type,
+     ITER_FOLIOQ, to hold a buffer as a replacement for ITER_XARRAY.  See
+     that patch for questions about naming and form.
 
-+       mnt = clone_private_mount(&path);
-+       if (IS_ERR(mnt)) {
-+               path_put(&path);
-+               goto error_unsupported;
-+       }
-+
-+       ret = mnt_want_write(mnt);
-+       if (ret) {
-+               mntput(mnt);
-+               path_put(&path);
-+               goto error_unsupported;
-+       }
-+
-+       mntput(path.mnt);
-        cache->mnt = path.mnt;
-        root = path.dentry;
+(13) Make cifs RDMA support ITER_FOLIOQ.
 
-diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
-index 89b11336a836..c3f0a5e6bdb5 100644
---- a/fs/cachefiles/daemon.c
-+++ b/fs/cachefiles/daemon.c
-@@ -816,6 +816,7 @@ static void cachefiles_daemon_unbind(struct cachefiles_cache *cache)
+(14) Add a function to reset the iterator in a subrequest.
 
-        cachefiles_put_directory(cache->graveyard);
-        cachefiles_put_directory(cache->store);
-+       mnt_drop_write(cache->mnt);
-        mntput(cache->mnt);
-        put_cred(cache->cache_cred);
+(15) Use folio queues in the write-side helpers instead of xarrays.
+
+(16) Simplify the write-side helpers to use sheaves to skip gaps rather than
+     trying to work out where gaps are.
+
+(17) In afs, make the read subrequests asynchronous, putting them into work
+     items to allow the next patch to do progressive unlocking/reading.
+
+(18) Overhaul the read-side helpers to improve performance.
+
+(19) Remove fs/netfs/io.c.
+
+(20) Fix the caching of a partial block at the end of a file.
+
+(21) Allow a store to be cancelled.
+
+Then some changes for cifs to make it use folio queues instead of xarrays
+for crypto bufferage:
+
+(22) Use raw iteration functions rather than manually coding iteration when
+     hashing data.
+
+(23) Switch to using folio_queue for crypto buffers.
+
+(24) Remove the xarray bits.
+
+David
+
+David Howells (23):
+  cachefiles: Fix non-taking of sb_writers around set/removexattr
+  netfs: Adjust labels in /proc/fs/netfs/stats
+  netfs: Record contention stats for writeback lock
+  netfs: Reduce number of conditional branches in netfs_perform_write()
+  netfs, cifs: Move CIFS_INO_MODIFIED_ATTR to netfs_inode
+  netfs: Move max_len/max_nr_segs from netfs_io_subrequest to
+    netfs_io_stream
+  netfs: Reserve netfs_sreq_source 0 as unset/unknown
+  netfs: Remove NETFS_COPY_TO_CACHE
+  netfs: Set the request work function upon allocation
+  netfs: Use bh-disabling spinlocks for rreq->lock
+  mm: Define struct folio_queue and ITER_FOLIOQ to handle a sequence of
+    folios
+  cifs: Provide the capability to extract from ITER_FOLIOQ to RDMA SGEs
+  netfs: Use new folio_queue data type and iterator instead of xarray
+    iter
+  netfs: Provide an iterator-reset function
+  netfs: Simplify the writeback code
+  afs: Make read subreqs async
+  netfs: Speed up buffered reading
+  netfs: Remove fs/netfs/io.c
+  cachefiles, netfs: Fix write to partial block at EOF
+  netfs: Cancel dirty folios that have no storage destination
+  cifs: Use iterate_and_advance*() routines directly for hashing
+  cifs: Switch crypto buffer to use a folio_queue rather than an xarray
+  cifs: Don't support ITER_XARRAY
+
+Max Kellermann (1):
+  fs/netfs/fscache_cookie: add missing "n_accesses" check
+
+ fs/9p/vfs_addr.c             |   5 +-
+ fs/afs/file.c                |  29 +-
+ fs/afs/fsclient.c            |   9 +-
+ fs/afs/write.c               |   4 +-
+ fs/afs/yfsclient.c           |   9 +-
+ fs/cachefiles/io.c           |  19 +-
+ fs/cachefiles/xattr.c        |  34 +-
+ fs/ceph/addr.c               |  72 ++--
+ fs/netfs/Makefile            |   3 +-
+ fs/netfs/buffered_read.c     | 677 ++++++++++++++++++++++++-----------
+ fs/netfs/buffered_write.c    | 309 ++++++++--------
+ fs/netfs/direct_read.c       | 147 +++++++-
+ fs/netfs/fscache_cookie.c    |   4 +
+ fs/netfs/internal.h          |  33 +-
+ fs/netfs/io.c                | 647 ---------------------------------
+ fs/netfs/iterator.c          |  50 +++
+ fs/netfs/main.c              |   6 +-
+ fs/netfs/misc.c              |  94 +++++
+ fs/netfs/objects.c           |  16 +-
+ fs/netfs/read_collect.c      | 540 ++++++++++++++++++++++++++++
+ fs/netfs/read_retry.c        | 256 +++++++++++++
+ fs/netfs/stats.c             |  23 +-
+ fs/netfs/write_collect.c     | 243 ++++---------
+ fs/netfs/write_issue.c       |  92 ++---
+ fs/nfs/fscache.c             |  19 +-
+ fs/nfs/fscache.h             |   7 +-
+ fs/smb/client/cifsencrypt.c  | 144 +-------
+ fs/smb/client/cifsglob.h     |   3 +-
+ fs/smb/client/cifssmb.c      |   6 +-
+ fs/smb/client/file.c         |  71 ++--
+ fs/smb/client/smb2ops.c      | 218 ++++++-----
+ fs/smb/client/smb2pdu.c      |  10 +-
+ fs/smb/client/smbdirect.c    |  82 +++--
+ include/linux/folio_queue.h  | 138 +++++++
+ include/linux/iov_iter.h     | 104 ++++++
+ include/linux/netfs.h        |  44 ++-
+ include/linux/uio.h          |  18 +
+ include/trace/events/netfs.h | 140 ++++++--
+ lib/iov_iter.c               | 229 +++++++++++-
+ lib/kunit_iov_iter.c         | 259 ++++++++++++++
+ lib/scatterlist.c            |  69 +++-
+ 41 files changed, 3175 insertions(+), 1707 deletions(-)
+ delete mode 100644 fs/netfs/io.c
+ create mode 100644 fs/netfs/read_collect.c
+ create mode 100644 fs/netfs/read_retry.c
+ create mode 100644 include/linux/folio_queue.h
+
