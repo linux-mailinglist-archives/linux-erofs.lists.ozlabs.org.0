@@ -2,59 +2,56 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD2DB93F6E1
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jul 2024 15:42:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1722260560;
-	bh=mT36S81F+py13C/St0uDEH0HFj55QKl/cTYhhfqqSHY=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=iM9kDGKwW+n5hsZBh4e+UO/JanP5EYK8tVPLO3KqOv4kwpSKcaYcrzRoPIAEY5gKw
-	 YZnbGQogcY6veCcl7hJ1EiYTekGDm49LZ62EyV+AmTHQm1zavOMMJJQcnmAY1sbXtm
-	 2RzkGc0v6przTg/NxQds6YnJa4K+SrDbGmBhAU/epyRAmImZXswUpzwMXN4boWAHw1
-	 tsBHVExE0b7/d4D1EkNG6TlvMnclZCQea0Ac97k0xOua13YeZRIZd9UnoHtpDfbnOq
-	 1A1Zpx8juULxDr2x6OwAk/HWVMx2hfgMsXqqUvU3NFBOXnNXuLu01sMciIr5CrgQ1a
-	 7+aUWGJPhv2jw==
+	by mail.lfdr.de (Postfix) with ESMTPS id BA3E593F95E
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jul 2024 17:28:37 +0200 (CEST)
+Authentication-Results: lists.ozlabs.org;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=iVfdxkA+;
+	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WXfgN68YPz3cYF
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Jul 2024 23:42:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WXj1b4Trvz3cZ4
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jul 2024 01:28:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=iVfdxkA+;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WXfgJ0Brbz3cDT
-	for <linux-erofs@lists.ozlabs.org>; Mon, 29 Jul 2024 23:42:32 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WXfdz43WKznbgq;
-	Mon, 29 Jul 2024 21:41:27 +0800 (CST)
-Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2D0CB1800D0;
-	Mon, 29 Jul 2024 21:42:24 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 29 Jul 2024 21:42:23 +0800
-Message-ID: <a2ee262c-e021-4273-a8e7-9b919b60b8c5@huawei.com>
-Date: Mon, 29 Jul 2024 21:42:23 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WXj1V54KWz30T7
+	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Jul 2024 01:28:30 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id 690B2CE0B45;
+	Mon, 29 Jul 2024 15:28:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBBB4C32786;
+	Mon, 29 Jul 2024 15:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722266907;
+	bh=4znxeB30JZL1ANv2iJsfkWtOwMksV8fxflsn+hLKFt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iVfdxkA+7IEIpDIK+ZU61EtpKu68/EFIwJcs+hLVWc/3dVZunRkyUOAyZzDIdwh4k
+	 0+FG/fvKY55vz38KDFW9R6c2YmzJq8snQyUqSOtvILjF8QhJlfQ5JFDP2KSFilCUhZ
+	 MljjzwmbJ50mmwTbSUsxl2M85X4KdftejDSs0LW1UvZrOgql1zkE9l1xtx6VbKyIri
+	 yvkvX9TDIJj4y3sU3lpgESICtwtn7tRRPm2XMvLOWhyqSry9S+XwbdmumxkEdcJCxG
+	 oJmdOvSoB3pqhkhnMKpxw00ojrL/GoPFDKwzBjfzZwSKDrtSXXrNBorFWOu55XBz4o
+	 aZVsVhk3Iom6Q==
+Date: Mon, 29 Jul 2024 17:28:22 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] vfs: Fix potential circular locking through setxattr()
+ and removexattr()
+Message-ID: <20240729-gespickt-negativ-c1ce987e3c07@brauner>
+References: <20240723104533.mznf3svde36w6izp@quack3>
+ <2136178.1721725194@warthog.procyon.org.uk>
+ <2147168.1721743066@warthog.procyon.org.uk>
+ <20240724133009.6st3vmk5ondigbj7@quack3>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: support direct IO for ondemand mode
-Content-Language: en-US
-To: Jingbo Xu <jefflexu@linux.alibaba.com>, <xiang@kernel.org>,
-	<chao@kernel.org>, <huyue2@coolpad.com>, <dhavale@google.com>,
-	<dhowells@redhat.com>
-References: <20240726020627.2873693-1-lihongbo22@huawei.com>
- <96478e11-a473-47cc-af7b-1b5c079cf12d@linux.alibaba.com>
-In-Reply-To: <96478e11-a473-47cc-af7b-1b5c079cf12d@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500022.china.huawei.com (7.185.36.66)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240724133009.6st3vmk5ondigbj7@quack3>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -66,263 +63,229 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Hongbo Li via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Wed, Jul 24, 2024 at 03:30:09PM GMT, Jan Kara wrote:
+> On Tue 23-07-24 14:57:46, David Howells wrote:
+> > Jan Kara <jack@suse.cz> wrote:
+> > 
+> > > Well, it seems like you are trying to get rid of the dependency
+> > > sb_writers->mmap_sem. But there are other places where this dependency is
+> > > created, in particular write(2) path is a place where it would be very
+> > > difficult to get rid of it (you take sb_writers, then do all the work
+> > > preparing the write and then you copy user data into page cache which
+> > > may require mmap_sem).
+> > >
+> > > ...
+> > > 
+> > > This is the problematic step - from quite deep in the locking chain holding
+> > > invalidate_lock and having PG_Writeback set you suddently jump to very outer
+> > > locking context grabbing sb_writers. Now AFAICT this is not a real deadlock
+> > > problem because the locks are actually on different filesystems, just
+> > > lockdep isn't able to see this. So I don't think you will get rid of these
+> > > lockdep splats unless you somehow manage to convey to lockdep that there's
+> > > the "upper" fs (AFS in this case) and the "lower" fs (the one behind
+> > > cachefiles) and their locks are different.
+> > 
+> > I'm not sure you're correct about that.  If you look at the lockdep splat:
+> > 
+> > >  -> #2 (sb_writers#14){.+.+}-{0:0}:
+> > 
+> > The sb_writers lock is "personalised" to the filesystem type (the "#14"
+> > annotation) which is set here:
+> > 
+> > 	for (i = 0; i < SB_FREEZE_LEVELS; i++) {
+> > 		if (__percpu_init_rwsem(&s->s_writers.rw_sem[i],
+> > 					sb_writers_name[i],
+> > 					&type->s_writers_key[i]))  <----
+> > 			goto fail;
+> > 	}
+> > 
+> > in fs/super.c.
+> 
+> Right, forgot about that. Thanks for correction! So after pondering about
+> this some more, this is actually a real problem and deadlockable. See
+> below.
+> 
+> > I think the problem is (1) that on one side, you've got, say, sys_setxattr()
+> > taking an sb_writers lock and then accessing a userspace buffer, which (a) may
+> > take mm->mmap_lock and vma->vm_lock and (b) may cause reading or writeback
+> > from the netfs-based filesystem via an mmapped xattr name buffer].
+> 
+> Yes, we agree on that. I was just pointing out that:
+> 
+> vfs_write()
+>   file_start_write() -> grabs sb_writers
+>   generic_file_write_iter()
+>     generic_perform_write()
+>       fault_in_iov_iter_readable()
+> 
+> is another path which enforces exactly the same lock ordering.
+> 
+> > Then (2) on the other side, you have a read or a write to the network
+> > filesystem through netfslib which may invoke the cache, which may require
+> > cachefiles to check the xattr on the cache file and maybe set/remove it -
+> > which requires the sb_writers lock on the cache filesystem.
+> > 
+> > So if ->read_folio(), ->readahead() or ->writepages() can ever be called with
+> > mm->mmap_lock or vma->vm_lock held, netfslib may call down to cachefiles and
+> > ultimately, it should[*] then take the sb_writers lock on the backing
+> > filesystem to perform xattr manipulation.
+> 
+> Well, ->read_folio() under mm->mmap_lock is a standard thing to happen in a
+> page fault. Now grabbing sb_writers (of any filesystem) in that path is
+> problematic and can deadlock though:
+> 
+> page fault
+>   grab mm->mmap_lock
+>   filemap_fault()
+>     if (unlikely(!folio_test_uptodate(folio))) {
+>       filemap_read_folio() on fs A
+>         now if you grab sb_writers on fs B:
+> 			freeze_super() on fs B		write(2) on fs B
+> 							  sb_start_write(fs B)
+> 			  sb->s_writers.frozen = SB_FREEZE_WRITE;
+> 			  sb_wait_write(sb, SB_FREEZE_WRITE);
+> 			    - waits for write
+> 	sb_start_write(fs B) - blocked behind freeze_super()
+> 							  generic_perform_write()
+> 							    fault_in_iov_iter_readable()
+> 							      page fault
+> 							        grab mm->mmap_lock
+> 								  => deadlock
+> 
+> Now this is not the deadlock your lockdep trace is showing but it is a
+> similar one. Like:
+> 
+> filemap_invalidate() on fs A	freeze_super() on fs B	page fault on fs A	write(2) on fs B
+>   filemap_invalidate_lock()				  lock mm->mmap_lock	  sb_start_write(fs B)
+>   filemap_fdatawrite_wbc()				  filemap_fault()
+>     afs_writepages()					    filemap_invalidate_lock_shared()
+>       cachefiles_issue_write()				      => blocks behind filemap_invalidate()
+> 				  sb->s_writers.frozen = SB_FREEZE_WRITE;
+> 				  sb_wait_write(sb, SB_FREEZE_WRITE);
+> 				    => blocks behind write(2)
+>         sb_start_write() on fs B
+> 	  => blocks behind freeze_super()
+> 							  			  generic_perform_write()
+> 										    fault_in_iov_iter_readable()
+> 										      page fault
+> 										        grab mm->mmap_lock
+> 											  => deadlock
+> 
+> So I still maintain that grabbing sb_start_write() from quite deep within
+> locking hierarchy (like from writepages when having pages locked, but even
+> holding invalidate_lock is enough for the problems) is problematic and
+> prone to deadlocks.
+> 
+> > [*] I say "should" because at the moment cachefiles calls vfs_set/removexattr
+> >     functions which *don't* take this lock (which is a bug).  Is this an error
+> >     on the part of vfs_set/removexattr()?  Should they take this lock
+> >     analogously with vfs_truncate() and vfs_iocb_iter_write()?
+> > 
+> > However, as it doesn't it manages to construct a locking chain via the
+> > mapping.invalidate_lock, the afs vnode->validate_lock and something in execve
+> > that I don't exactly follow.
+> > 
+> > 
+> > I wonder if this is might be deadlockable by a multithreaded process (ie. so
+> > they share the mm locks) where one thread is writing to a cached file whilst
+> > another thread is trying to set/remove the xattr on that file.
+> 
+> Yep, see above. Now the hard question is how to fix this because what you
+> are doing seems to be inherent in how cachefiles fs is designed to work.
 
+So one idea may be to create a private mount for cachefiles and then claim
+write access when that private mount is created and retaining that write access
+for the duration of cachefiles being run. See my draft patch below.
 
-On 2024/7/29 20:09, Jingbo Xu wrote:
-> 
-> 
-> On 7/26/24 10:06 AM, Hongbo Li wrote:
->> erofs over fscache cannot handle the direct read io. When the file
->> is opened with O_DIRECT flag, -EINVAL will reback. We support the
->> DIO in erofs over fscache by bypassing the erofs page cache and
->> reading target data into ubuf from fscache's file directly.
->>
->> The alignment for buffer memory, offset and size now is restricted
->> by erofs, since `i_blocksize` is enough for the under filesystems.
->>
->> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
->>
->> ---
->> v2:
->>    - Change the directIO helper name to erofs_fscache_direct_io
->>    - Add some io interception when begin direct io
->>    - Optimize the direct io logical in erofs_fscache_data_read_slice
->>
->> v1:
->>    - https://lore.kernel.org/linux-erofs/6f1a5c1c-d44d-4561-9377-b935ff4531f2@huawei.com/T/#t
->> ---
->>   fs/erofs/data.c    |  3 ++
->>   fs/erofs/fscache.c | 84 +++++++++++++++++++++++++++++++++++++++++-----
->>   2 files changed, 78 insertions(+), 9 deletions(-)
->>
->> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
->> index 8be60797ea2f..dbfafe358de4 100644
->> --- a/fs/erofs/data.c
->> +++ b/fs/erofs/data.c
->> @@ -391,6 +391,9 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
->>   		     iov_iter_alignment(to)) & blksize_mask)
->>   			return -EINVAL;
->>   
->> +		if (erofs_is_fscache_mode(inode->i_sb))
->> +			return generic_file_read_iter(iocb, to);
->> +
->>   		return iomap_dio_rw(iocb, to, &erofs_iomap_ops,
->>   				    NULL, 0, NULL, 0);
->>   	}
->> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
->> index fda16eedafb5..e3e6c579eb81 100644
->> --- a/fs/erofs/fscache.c
->> +++ b/fs/erofs/fscache.c
->> @@ -35,6 +35,8 @@ struct erofs_fscache_io {
->>   
->>   struct erofs_fscache_rq {
->>   	struct address_space	*mapping;	/* The mapping being accessed */
->> +	struct iov_iter		*iter;		/* Destination for direct io */
->> +	struct completion	done;		/* Sync for direct io */
->>   	loff_t			start;		/* Start position */
->>   	size_t			len;		/* Length of the request */
->>   	size_t			submitted;	/* Length of submitted */
->> @@ -76,7 +78,11 @@ static void erofs_fscache_req_put(struct erofs_fscache_rq *req)
->>   {
->>   	if (!refcount_dec_and_test(&req->ref))
->>   		return;
->> -	erofs_fscache_req_complete(req);
->> +
->> +	if (req->iter)
->> +		complete(&req->done);
->> +	else
->> +		erofs_fscache_req_complete(req);
->>   	kfree(req);
->>   }
->>   
->> @@ -88,6 +94,7 @@ static struct erofs_fscache_rq *erofs_fscache_req_alloc(struct address_space *ma
->>   	if (!req)
->>   		return NULL;
->>   	req->mapping = mapping;
->> +	req->iter = NULL;
->>   	req->start = start;
->>   	req->len = len;
->>   	refcount_set(&req->ref, 1);
->> @@ -258,6 +265,7 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_rq *req)
->>   	struct address_space *mapping = req->mapping;
->>   	struct inode *inode = mapping->host;
->>   	struct super_block *sb = inode->i_sb;
->> +	struct iov_iter *dest_iter = req->iter;
->>   	struct erofs_fscache_io *io;
->>   	struct erofs_map_blocks map;
->>   	struct erofs_map_dev mdev;
->> @@ -270,33 +278,45 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_rq *req)
->>   	if (ret)
->>   		return ret;
->>   
->> +	count = req->len - req->submitted;
->>   	if (map.m_flags & EROFS_MAP_META) {
->>   		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
->>   		struct iov_iter iter;
->> -		size_t size = map.m_llen;
->> +		struct iov_iter *iterp;
->> +		size_t size = min_t(size_t, map.m_llen, count);
->>   		void *src;
->> +		ssize_t filled = 0;
->>   
->>   		src = erofs_read_metabuf(&buf, sb, map.m_pa, EROFS_KMAP);
->>   		if (IS_ERR(src))
->>   			return PTR_ERR(src);
->>   
->>   		iov_iter_xarray(&iter, ITER_DEST, &mapping->i_pages, pos, PAGE_SIZE);
->> -		if (copy_to_iter(src, size, &iter) != size) {
->> +		iterp = (dest_iter) ?: &iter;
-> 
-> Could we also reuse erofs_fscache_rq->iter for the non-direct-IO case?
-> That is, initializing erofs_fscache_rq->iter before calling
-> erofs_fscache_data_read() just like what erofs_fscache_direct_io() does,
-> so that we don't need disturbing the iter here inside
-> erofs_fscache_data_read_slice().
-> 
->> +		if (copy_to_iter(src, size, iterp) != size) {
->>   			erofs_put_metabuf(&buf);
->>   			return -EFAULT;
->>   		}
->> -		iov_iter_zero(PAGE_SIZE - size, &iter);
->> +
->> +		filled += size;
->> +		if (!dest_iter) {
->> +			iov_iter_zero(PAGE_SIZE - size, iterp);
->> +			filled += (PAGE_SIZE - size);
->> +		}
->> +
-> 
-> Don't we need also zeroing the remaining part for direct IO, e.g. when
-> direct reading the last inlined part of a file of
-> EROFS_INODE_FLAT_INLINE layout?
-> 
-When direct IO, iter pointer the userspace buffer. When direct reading 
-the last inlined part of a file, only the target length of buffer (valid 
-data) can be written. If we zeroing the remaining part, we may read the 
-extra data that not below to this file. This is different with copying 
-data to page cache.
->>   		erofs_put_metabuf(&buf);
->> -		req->submitted += PAGE_SIZE;
->> +		req->submitted += filled;
->>   		return 0;
->>   	}
->>   
->> -	count = req->len - req->submitted;
->>   	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
->>   		struct iov_iter iter;
->>   
->> -		iov_iter_xarray(&iter, ITER_DEST, &mapping->i_pages, pos, count);
->> -		iov_iter_zero(count, &iter);
->> +		if (!dest_iter) {
->> +			iov_iter_xarray(&iter, ITER_DEST, &mapping->i_pages, pos, count);
->> +			iov_iter_zero(count, &iter);
->> +		}
->> +
-> 
-> Ditto.  Don't we need handling the unmapped case for direct IO, e.g.
-> when direct reading a sparse file?
-> 
-Do you mean that this flag represents the file with the hole?
- From the code, it seems the file is at the end. Maybe I misunderstood 
-this flag.
-> 
->>   		req->submitted += count;
->>   		return 0;
->>   	}
->> @@ -315,9 +335,17 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_rq *req)
->>   	io = erofs_fscache_req_io_alloc(req);
->>   	if (!io)
->>   		return -ENOMEM;
->> -	iov_iter_xarray(&io->iter, ITER_DEST, &mapping->i_pages, pos, count);
->> +
->> +	if (dest_iter)
->> +		iov_iter_ubuf(&io->iter, ITER_DEST,
->> +			dest_iter->ubuf + dest_iter->iov_offset, count);
->> +	else
->> +		iov_iter_xarray(&io->iter, ITER_DEST, &mapping->i_pages, pos, count);
->> +
->>   	ret = erofs_fscache_read_io_async(mdev.m_fscache->cookie,
->>   			mdev.m_pa + (pos - map.m_la), io);
->> +	if (dest_iter)
->> +		iov_iter_advance(dest_iter, io->iter.iov_offset);
->>   	erofs_fscache_req_io_put(io);
->>   
->>   	req->submitted += count;
->> @@ -373,6 +401,43 @@ static void erofs_fscache_readahead(struct readahead_control *rac)
->>   	erofs_fscache_req_put(req);
->>   }
->>   
->> +static ssize_t erofs_fscache_direct_io(struct kiocb *iocb, struct iov_iter *iter)
->> +{
->> +	struct file *file = iocb->ki_filp;
->> +	size_t count = iov_iter_count(iter);
->> +	size_t i_size = i_size_read(file->f_inode);
->> +	struct erofs_fscache_rq *req;
->> +	struct completion *ctr;
->> +	ssize_t rsize;
->> +	int ret;
->> +
->> +	if (unlikely(iov_iter_rw(iter) == WRITE))
->> +		return -EROFS;
-> 
-> We will get here by no way since .write_iter() is not implemented at
-> all, right?
-> 
-Yeah, you are right.
->> +
->> +	if (unlikely(iocb->ki_pos >= i_size))
->> +		return 0;
->> +
->> +	if (count + iocb->ki_pos > i_size)
->> +		count = i_size - iocb->ki_pos;
->> +
->> +	if (!count)
->> +		return 0;
->> +
->> +	req = erofs_fscache_req_alloc(file->f_mapping, iocb->ki_pos, count);
->> +	if (!req)
->> +		return -ENOMEM;
->> +
->> +	req->iter = iter;
->> +	init_completion(&req->done);
->> +	ctr = &req->done;
->> +	ret = erofs_fscache_data_read(req);
->> +	rsize = (ret == 0) ? (ssize_t)req->submitted : ret;
->> +	erofs_fscache_req_put(req);
-> 
-> If we get error in erofs_fscache_data_read(), the above
-> erofs_fscache_req_put() will put the last reference of erofs_fscache_rq
-> and free the erofs_fscache_rq structure.  Then the following
-> wait_for_completion() will cause UAF.
-Yeah, there is indeed a UAF issue. I thought I could just use the 
-temporary variable `ctr` to keep the ref, but is in stack space and 
-doesn't work.
+Right now things are as follows (roughly). Say cachefiles uses a directory of
+the rootfs e.g., /mnt/cache-dir/ then cache->mnt points to /.
 
+With my patch this becomes:
 
+mnt["/mnt/cache-dir"] = clone_private_mnt("/mnt/cache-dir");
 
-Thanks,
-Hongbo
-> 
->> +	wait_for_completion(ctr);
->> +
->> +	return rsize;
->> +}
->> +
->>   static const struct address_space_operations erofs_fscache_meta_aops = {
->>   	.read_folio = erofs_fscache_meta_read_folio,
->>   };
->> @@ -380,6 +445,7 @@ static const struct address_space_operations erofs_fscache_meta_aops = {
->>   const struct address_space_operations erofs_fscache_access_aops = {
->>   	.read_folio = erofs_fscache_read_folio,
->>   	.readahead = erofs_fscache_readahead,
->> +	.direct_IO = erofs_fscache_direct_io,
->>   };
->>   
->>   static void erofs_fscache_domain_put(struct erofs_domain *domain)
-> 
+so cache->mnt points to "/mnt/cache-dir". That shouldn't be an issue though.
+
+The more interesting changes in behavior come from mount properties. For
+example, when
+
+mount --bind /mnt/cache-dir /opt/
+
+is created and /opt is used for cachefiles. When the bind-mount of
+/mnt/cache-dir at /opt is made read-only it becomes read-only for cachefiles as
+well.
+
+But with an internal private mount that's no longer true. The internal mount
+cannot be mounted read-only from userspace. Arguably, that would have been the
+correct semantics right from the start similar to what overlayfs is doing.
+
+However, the bigger semantic change would come from claiming write access when
+the private mount is created. Claiming write access for as long as cachefiles
+is running means that that the filesystem that is used cannot be remounted
+read-only because mnt_hold_writers() would tell you to get lost. That
+might be ok though. It just is something that should only be done with
+capable(CAP_SYS_ADMIN) which cachefiles requires anyway.
+
+I think the bigger issue might be freezing. Not because of the type of
+operation but because freeze_super() would wait in sb_wait_write(sb,
+SB_FREEZE_WRITE) until all writes finish and obviously they won't if
+cachefiles just keeps running. That means you might hang forever.
+
+One way to get around this last issue might be to introduce
+SB_FREEZE_WRITE_LONGTERM which cachefiles can use (might even be able to
+do that without a private mount then) and have freeze return with an
+error in case long-term write access is claimed.
+
+So anyway, trade-offs to be considered here. I just thought I throw this
+out as a potential solution.
+
+/* draft, sketch */
+
+diff --git a/fs/cachefiles/cache.c b/fs/cachefiles/cache.c
+index 9fb06dc16520..acbb5b95a9d1 100644
+--- a/fs/cachefiles/cache.c
++++ b/fs/cachefiles/cache.c
+@@ -20,6 +20,7 @@ int cachefiles_add_cache(struct cachefiles_cache *cache)
+        struct path path;
+        struct kstatfs stats;
+        struct dentry *graveyard, *cachedir, *root;
++       struct vfsmount *mnt;
+        const struct cred *saved_cred;
+        int ret;
+
+@@ -41,6 +42,20 @@ int cachefiles_add_cache(struct cachefiles_cache *cache)
+        if (ret < 0)
+                goto error_open_root;
+
++       mnt = clone_private_mount(&path);
++       if (IS_ERR(mnt)) {
++               path_put(&path);
++               goto error_unsupported;
++       }
++
++       ret = mnt_want_write(mnt);
++       if (ret) {
++               mntput(mnt);
++               path_put(&path);
++               goto error_unsupported;
++       }
++
++       mntput(path.mnt);
+        cache->mnt = path.mnt;
+        root = path.dentry;
+
+diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+index 89b11336a836..c3f0a5e6bdb5 100644
+--- a/fs/cachefiles/daemon.c
++++ b/fs/cachefiles/daemon.c
+@@ -816,6 +816,7 @@ static void cachefiles_daemon_unbind(struct cachefiles_cache *cache)
+
+        cachefiles_put_directory(cache->graveyard);
+        cachefiles_put_directory(cache->store);
++       mnt_drop_write(cache->mnt);
+        mntput(cache->mnt);
+        put_cred(cache->cache_cred);
