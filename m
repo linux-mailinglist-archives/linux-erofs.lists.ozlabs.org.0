@@ -1,56 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27FE194122F
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jul 2024 14:45:50 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 178B1941237
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jul 2024 14:46:12 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mirid8/P;
+	dkim=fail reason="signature verification failed" (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=SDQ+YgGh;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WYFMD5BvCz3cnR
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jul 2024 22:45:44 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WYFMf2wrrz3cnt
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Jul 2024 22:46:06 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mirid8/P;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=SDQ+YgGh;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WYFM82Jfrz3cVW
-	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Jul 2024 22:45:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WYFMZ5h3zz2y8W
+	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Jul 2024 22:46:02 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 291DC61E46;
-	Tue, 30 Jul 2024 12:45:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17877C32782;
-	Tue, 30 Jul 2024 12:45:34 +0000 (UTC)
+	by sin.source.kernel.org (Postfix) with ESMTP id 10899CE1021;
+	Tue, 30 Jul 2024 12:46:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99367C4AF0C;
+	Tue, 30 Jul 2024 12:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722343537;
-	bh=j0dc/I1mH+hKG7ByUM1XwvbAYo0En9mwk7eUWGGkTms=;
+	s=k20201202; t=1722343559;
+	bh=IZKSodE4x39prW/QSJJpCsqXEdDhgbfD4jO8l1kXIEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mirid8/P1bemUtuVCZHxUKCLruTbwCiENWdLoiwD7rvwVu0kNrLoBr7Mwld3q0gEj
-	 JcKcIR9vTBor86OGrQY2WaHhZOUA+cJiKfWB0radWjhHoHZEnVldACUnhVooUEMS3F
-	 R1xVDO8l0Pda3Vho5TVY4Qmmro2iA0Og2f4O2cLVSkBauE7BLTKlwO/37YaM+t+J5/
-	 rUKp43VrgON3TWCHCPj+2+oVMsxCRqg2iU8wB3NHdTEYR26fXNaJuclwEWo/7t4gT2
-	 P6y88lPGYJqsRPNNSkRP128mS5eakN3fGWFYEG1BxdNHDzqK09vq1TJEoEauSBBXZH
-	 bwQgijFfBVU+g==
+	b=SDQ+YgGh6EY8NxfUB+FbaKJG29nIjxbFFTFQM36lXFiZsE5A+nM/IaPd/3QkGLunS
+	 cj15WO0balSsNJFjHakWghVb4EchQ+S+DdgWH8WSS8+nRTiHltQQVPQ4Bl3HB0Ca0e
+	 DeB1pNfUJmBW1ar2eqT0VB82hx+B8v/cZRZTtXLTy9vQ2Ypr5tOEgcxGcuwaTXVkyK
+	 8swZcj8d5kn5Kp6UPwZafMbrTAYFet1dbhGY6k6QqUyzORydtmkEgINVhkbd62mVk4
+	 7Q3CuOkZ8crqdAW7+6GI5UGFd+B6IBZFDwZS+ptgecO5i2manCYMuPbeEY590ZQImk
+	 b+COxxJu40+QA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.10 7/7] vfs: Fix potential circular locking through setxattr() and removexattr()
-Date: Tue, 30 Jul 2024 08:45:13 -0400
-Message-ID: <20240730124519.3093607-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 7/7] vfs: Fix potential circular locking through setxattr() and removexattr()
+Date: Tue, 30 Jul 2024 08:45:37 -0400
+Message-ID: <20240730124542.3095044-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240730124519.3093607-1-sashal@kernel.org>
-References: <20240730124519.3093607-1-sashal@kernel.org>
+In-Reply-To: <20240730124542.3095044-1-sashal@kernel.org>
+References: <20240730124542.3095044-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.10.2
+X-stable-base: Linux 6.6.43
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -263,10 +263,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 48 insertions(+), 43 deletions(-)
 
 diff --git a/fs/xattr.c b/fs/xattr.c
-index f8b643f91a981..7672ce5486c53 100644
+index efd4736bc94b0..c20046548f218 100644
 --- a/fs/xattr.c
 +++ b/fs/xattr.c
-@@ -630,10 +630,9 @@ int do_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
+@@ -631,10 +631,9 @@ int do_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
  			ctx->kvalue, ctx->size, ctx->flags);
  }
  
@@ -280,7 +280,7 @@ index f8b643f91a981..7672ce5486c53 100644
  {
  	struct xattr_name kname;
  	struct xattr_ctx ctx = {
-@@ -643,33 +642,20 @@ setxattr(struct mnt_idmap *idmap, struct dentry *d,
+@@ -644,33 +643,20 @@ setxattr(struct mnt_idmap *idmap, struct dentry *d,
  		.kname    = &kname,
  		.flags    = flags,
  	};
@@ -317,7 +317,7 @@ index f8b643f91a981..7672ce5486c53 100644
  		mnt_drop_write(path.mnt);
  	}
  	path_put(&path);
-@@ -677,6 +663,9 @@ static int path_setxattr(const char __user *pathname,
+@@ -678,6 +664,9 @@ static int path_setxattr(const char __user *pathname,
  		lookup_flags |= LOOKUP_REVAL;
  		goto retry;
  	}
@@ -327,7 +327,7 @@ index f8b643f91a981..7672ce5486c53 100644
  	return error;
  }
  
-@@ -697,20 +686,32 @@ SYSCALL_DEFINE5(lsetxattr, const char __user *, pathname,
+@@ -698,20 +687,32 @@ SYSCALL_DEFINE5(lsetxattr, const char __user *, pathname,
  SYSCALL_DEFINE5(fsetxattr, int, fd, const char __user *, name,
  		const void __user *,value, size_t, size, int, flags)
  {
@@ -367,7 +367,7 @@ index f8b643f91a981..7672ce5486c53 100644
  	return error;
  }
  
-@@ -899,9 +900,17 @@ SYSCALL_DEFINE3(flistxattr, int, fd, char __user *, list, size_t, size)
+@@ -900,9 +901,17 @@ SYSCALL_DEFINE3(flistxattr, int, fd, char __user *, list, size_t, size)
   * Extended attribute REMOVE operations
   */
  static long
@@ -387,7 +387,7 @@ index f8b643f91a981..7672ce5486c53 100644
  	int error;
  	char kname[XATTR_NAME_MAX + 1];
  
-@@ -910,25 +919,13 @@ removexattr(struct mnt_idmap *idmap, struct dentry *d,
+@@ -911,25 +920,13 @@ removexattr(struct mnt_idmap *idmap, struct dentry *d,
  		error = -ERANGE;
  	if (error < 0)
  		return error;
@@ -414,7 +414,7 @@ index f8b643f91a981..7672ce5486c53 100644
  		mnt_drop_write(path.mnt);
  	}
  	path_put(&path);
-@@ -954,15 +951,23 @@ SYSCALL_DEFINE2(lremovexattr, const char __user *, pathname,
+@@ -955,15 +952,23 @@ SYSCALL_DEFINE2(lremovexattr, const char __user *, pathname,
  SYSCALL_DEFINE2(fremovexattr, int, fd, const char __user *, name)
  {
  	struct fd f = fdget(fd);
