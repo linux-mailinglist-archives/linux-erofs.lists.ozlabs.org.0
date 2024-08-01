@@ -2,44 +2,57 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A56D944A90
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Aug 2024 13:44:46 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IwAx2xJg;
-	dkim-atps=neutral
+	by mail.lfdr.de (Postfix) with ESMTPS id 3AABD944B99
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Aug 2024 14:44:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1722516235;
+	bh=Z1ucF1NX9NHht+ZI/Y/Lmmg2sgZKjUXqx1pTEFe+Lz4=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=Ae7VSHUoVlUt/33/uIQJshafrRC2KPrA6jJD+PfQQ+cInqdvD9OtRurOboMtxQQgT
+	 oI+7+zMpLnBC569CAA9Qf6yoBOFaVzrgoFV0OvnEIaaK/e+bIS0G2KS+pxLzmDMFt8
+	 nXQR4zGPnaMx6aXRTm2Qo2HL5sP1CgrNzkDryH3xnSoNEv1Cgd0DUzNURyMgJUMsKu
+	 dyzpHNZVT5W5+JcpWX4OgFoh1giSEnCHeK5lUDN/9qwDkKtCeEA5lC68y5azm2/euI
+	 ZQ5qk9sHXFuFc4DdpJAak9jcC4zPNwe0YTQ+fTv/TdsdcrjdDz7OYa4+0w7cDPqH2V
+	 db4QyjYZEC+DQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WZRvw326Tz3dRP
-	for <lists+linux-erofs@lfdr.de>; Thu,  1 Aug 2024 21:44:44 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WZTDC2b3dz3dRK
+	for <lists+linux-erofs@lfdr.de>; Thu,  1 Aug 2024 22:43:55 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IwAx2xJg;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WZRvq3hq8z3dDT
-	for <linux-erofs@lists.ozlabs.org>; Thu,  1 Aug 2024 21:44:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1722512672; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=9F8GmYp/RGw8uK6DMS1OG48p0p7T1vaOlFIRzG6bjSI=;
-	b=IwAx2xJg2TzTQQG+nPt/2i2ZBUEiNNwhljRDe25aB9dXCj8kkmX2GoCBd2Kt9KN2O31uZk0A5McljS3yttVgOg8AICIPph7d8NeaBQmv/JC1EIILfjWxqUuwKOMQOVs4gveWxmClFl72wDGTCtR1Aq1kuyBQj9nvLGVs+ZimZqA=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=hongzhen@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0WBt3qv7_1722512671;
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WBt3qv7_1722512671)
-          by smtp.aliyun-inc.com;
-          Thu, 01 Aug 2024 19:44:31 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: simplify readdir operation
-Date: Thu,  1 Aug 2024 19:44:30 +0800
-Message-ID: <20240801114430.2182356-1-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WZTD56WVyz3cLl
+	for <linux-erofs@lists.ozlabs.org>; Thu,  1 Aug 2024 22:43:44 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WZTBh6WklzncQd;
+	Thu,  1 Aug 2024 20:42:36 +0800 (CST)
+Received: from dggpeml500022.china.huawei.com (unknown [7.185.36.66])
+	by mail.maildlp.com (Postfix) with ESMTPS id 07DA618006C;
+	Thu,  1 Aug 2024 20:43:38 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 1 Aug 2024 20:43:37 +0800
+Message-ID: <5796c9ad-04ba-4226-ad28-75b265a4157b@huawei.com>
+Date: Thu, 1 Aug 2024 20:43:37 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 2/2] erofs: apply the page cache share feature
+Content-Language: en-US
+To: Hongzhen Luo <hongzhen@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
+References: <20240731080704.678259-1-hongzhen@linux.alibaba.com>
+ <20240731080704.678259-3-hongzhen@linux.alibaba.com>
+In-Reply-To: <20240731080704.678259-3-hongzhen@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500022.china.huawei.com (7.185.36.66)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -51,124 +64,136 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Hongbo Li via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Hongbo Li <lihongbo22@huawei.com>
 Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
- - Use i_size instead of i_size_read() due to immutable fses;
 
- - Get rid of an unneeded goto since erofs_fill_dentries() also works;
 
- - Remove unnecessary lines.
+On 2024/7/31 16:07, Hongzhen Luo wrote:
+> This modifies relevant functions to apply the page cache
+> share feature.
+> 
+> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+> ---
+> v2: Make adjustments based on the latest implementation.
+> v1: https://lore.kernel.org/all/20240722065355.1396365-5-hongzhen@linux.alibaba.com/
+> ---
+>   fs/erofs/inode.c | 23 +++++++++++++++++++++++
+>   fs/erofs/super.c | 23 +++++++++++++++++++++++
+>   2 files changed, 46 insertions(+)
+> 
+> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+> index 5f6439a63af7..9f1e7332cff9 100644
+> --- a/fs/erofs/inode.c
+> +++ b/fs/erofs/inode.c
+> @@ -5,6 +5,7 @@
+>    * Copyright (C) 2021, Alibaba Cloud
+>    */
+>   #include "xattr.h"
+> +#include "pagecache_share.h"
+>   
+>   #include <trace/events/erofs.h>
+>   
+> @@ -229,10 +230,22 @@ static int erofs_fill_inode(struct inode *inode)
+>   	switch (inode->i_mode & S_IFMT) {
+>   	case S_IFREG:
+>   		inode->i_op = &erofs_generic_iops;
+> +#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
+> +		erofs_pcs_fill_inode(inode);
+> +#endif
+>   		if (erofs_inode_is_data_compressed(vi->datalayout))
+>   			inode->i_fop = &generic_ro_fops;
+> +#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
+> +		else {
+If the compress data is not support, the erofs_pcs_fill_inode should 
+fill the fingerprint in this branch only.
+> +			if (vi->fprt_len > 0)
+> +				inode->i_fop = &erofs_pcs_file_fops;
+> +			else
+> +				inode->i_fop = &erofs_file_fops;
+> +		}
+> +#else
+>   		else
+>   			inode->i_fop = &erofs_file_fops;
+> +#endif
+>   		break;
+>   	case S_IFDIR:
+>   		inode->i_op = &erofs_dir_iops;
+> @@ -325,6 +338,16 @@ struct inode *erofs_iget(struct super_block *sb, erofs_nid_t nid)
+>   			return ERR_PTR(err);
+>   		}
+>   		unlock_new_inode(inode);
+> +#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
+> +		if ((inode->i_mode & S_IFMT) == S_IFREG &&may be S_ISREG macro is better.
 
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
----
-v3: Add change log.
-v2: https://lore.kernel.org/all/20240801112622.2164029-1-hongzhen@linux.alibaba.com/
-    - Fix the broken patch v1
-v1: https://lore.kernel.org/all/20cbea9c-3b3f-40f7-be01-bd9de52e3134@linux.alibaba.com/
----
- fs/erofs/dir.c      | 35 ++++++++++++-----------------------
- fs/erofs/internal.h |  2 +-
- 2 files changed, 13 insertions(+), 24 deletions(-)
-
-diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
-index 2193a6710c8f..c3b90abdee37 100644
---- a/fs/erofs/dir.c
-+++ b/fs/erofs/dir.c
-@@ -8,19 +8,15 @@
- 
- static int erofs_fill_dentries(struct inode *dir, struct dir_context *ctx,
- 			       void *dentry_blk, struct erofs_dirent *de,
--			       unsigned int nameoff, unsigned int maxsize)
-+			       unsigned int nameoff0, unsigned int maxsize)
- {
--	const struct erofs_dirent *end = dentry_blk + nameoff;
-+	const struct erofs_dirent *end = dentry_blk + nameoff0;
- 
- 	while (de < end) {
--		const char *de_name;
-+		unsigned char d_type = fs_ftype_to_dtype(de->file_type);
-+		unsigned int nameoff = le16_to_cpu(de->nameoff);
-+		const char *de_name = (char *)dentry_blk + nameoff;
- 		unsigned int de_namelen;
--		unsigned char d_type;
--
--		d_type = fs_ftype_to_dtype(de->file_type);
--
--		nameoff = le16_to_cpu(de->nameoff);
--		de_name = (char *)dentry_blk + nameoff;
- 
- 		/* the last dirent in the block? */
- 		if (de + 1 >= end)
-@@ -52,21 +48,20 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
- 	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
- 	struct super_block *sb = dir->i_sb;
- 	unsigned long bsz = sb->s_blocksize;
--	const size_t dirsize = i_size_read(dir);
--	unsigned int i = erofs_blknr(sb, ctx->pos);
- 	unsigned int ofs = erofs_blkoff(sb, ctx->pos);
- 	int err = 0;
- 	bool initial = true;
- 
- 	buf.mapping = dir->i_mapping;
--	while (ctx->pos < dirsize) {
-+	while (ctx->pos < dir->i_size) {
-+		erofs_off_t dbstart = ctx->pos - ofs;
- 		struct erofs_dirent *de;
- 		unsigned int nameoff, maxsize;
- 
--		de = erofs_bread(&buf, erofs_pos(sb, i), EROFS_KMAP);
-+		de = erofs_bread(&buf, dbstart, EROFS_KMAP);
- 		if (IS_ERR(de)) {
- 			erofs_err(sb, "fail to readdir of logical block %u of nid %llu",
--				  i, EROFS_I(dir)->nid);
-+				  erofs_blknr(sb, dbstart), EROFS_I(dir)->nid);
- 			err = PTR_ERR(de);
- 			break;
- 		}
-@@ -79,25 +74,19 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
- 			break;
- 		}
- 
--		maxsize = min_t(unsigned int, dirsize - ctx->pos + ofs, bsz);
--
-+		maxsize = min_t(unsigned int, dir->i_size - dbstart, bsz);
- 		/* search dirents at the arbitrary position */
- 		if (initial) {
- 			initial = false;
--
- 			ofs = roundup(ofs, sizeof(struct erofs_dirent));
--			ctx->pos = erofs_pos(sb, i) + ofs;
--			if (ofs >= nameoff)
--				goto skip_this;
-+			ctx->pos = dbstart + ofs;
- 		}
- 
- 		err = erofs_fill_dentries(dir, ctx, de, (void *)de + ofs,
- 					  nameoff, maxsize);
- 		if (err)
- 			break;
--skip_this:
--		ctx->pos = erofs_pos(sb, i) + maxsize;
--		++i;
-+		ctx->pos = dbstart + maxsize;
- 		ofs = 0;
- 	}
- 	erofs_put_metabuf(&buf);
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 736607675396..45dc15ebd870 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -220,7 +220,7 @@ struct erofs_buf {
- };
- #define __EROFS_BUF_INITIALIZER	((struct erofs_buf){ .page = NULL })
- 
--#define erofs_blknr(sb, addr)	((addr) >> (sb)->s_blocksize_bits)
-+#define erofs_blknr(sb, addr)	((erofs_blk_t)((addr) >> (sb)->s_blocksize_bits))
- #define erofs_blkoff(sb, addr)	((addr) & ((sb)->s_blocksize - 1))
- #define erofs_pos(sb, blk)	((erofs_off_t)(blk) << (sb)->s_blocksize_bits)
- #define erofs_iblks(i)	(round_up((i)->i_size, i_blocksize(i)) >> (i)->i_blkbits)
--- 
-2.43.5
-
+> +		    EROFS_I(inode)->fprt_len > 0) {
+Perhaps this logic need to be enclosed within unlock_new_inode.
+> +			err = erofs_pcs_add(inode);
+> +			if (err) {
+> +				iget_failed(inode);
+> +				return ERR_PTR(err);
+> +			}
+> +		}
+> +#endif
+>   	}
+>   	return inode;
+>   }
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 35268263aaed..a42e65ef7fc7 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -11,6 +11,7 @@
+>   #include <linux/fs_parser.h>
+>   #include <linux/exportfs.h>
+>   #include "xattr.h"
+> +#include "pagecache_share.h"
+>   
+>   #define CREATE_TRACE_POINTS
+>   #include <trace/events/erofs.h>
+> @@ -95,6 +96,10 @@ static struct inode *erofs_alloc_inode(struct super_block *sb)
+>   
+>   	/* zero out everything except vfs_inode */
+>   	memset(vi, 0, offsetof(struct erofs_inode, vfs_inode));
+> +#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
+> +	INIT_LIST_HEAD(&vi->pcs_list);
+> +	init_rwsem(&vi->pcs_rwsem);
+> +#endif
+>   	return &vi->vfs_inode;
+>   }
+>   
+> @@ -108,6 +113,21 @@ static void erofs_free_inode(struct inode *inode)
+>   	kmem_cache_free(erofs_inode_cachep, vi);
+>   }
+>   
+> +#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
+> +static void erofs_destroy_inode(struct inode *inode)
+> +{
+> +	struct erofs_inode *vi = EROFS_I(inode);
+> +
+> +	if ((inode->i_mode & S_IFMT) == S_IFREG &&
+using S_ISREG macro is better.
+> +	    EROFS_I(inode)->fprt_len > 0) {
+> +		if (erofs_pcs_remove(inode))
+> +			erofs_err(inode->i_sb, "pcs: fail to remove inode.");
+> +		kfree(vi->fprt);
+> +		vi->fprt = NULL;
+> +	}
+> +}
+> +#endif
+> +
+>   static bool check_layout_compatibility(struct super_block *sb,
+>   				       struct erofs_super_block *dsb)
+>   {
+> @@ -937,6 +957,9 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
+>   const struct super_operations erofs_sops = {
+>   	.put_super = erofs_put_super,
+>   	.alloc_inode = erofs_alloc_inode,
+> +#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
+> +	.destroy_inode = erofs_destroy_inode,
+> +#endif
+>   	.free_inode = erofs_free_inode,
+>   	.statfs = erofs_statfs,
+>   	.show_options = erofs_show_options,
