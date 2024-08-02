@@ -1,42 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F786945625
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Aug 2024 03:56:02 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C848E945624
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Aug 2024 03:55:55 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wauqxh8m;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qgtKSzwE;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WZpp82LXlz3dTm
-	for <lists+linux-erofs@lfdr.de>; Fri,  2 Aug 2024 11:56:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WZpp15FLdz3dGt
+	for <lists+linux-erofs@lfdr.de>; Fri,  2 Aug 2024 11:55:53 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wauqxh8m;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qgtKSzwE;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WZpnm6m8gz3d9g
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WZpnm6hrZz3ck2
 	for <linux-erofs@lists.ozlabs.org>; Fri,  2 Aug 2024 11:55:39 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
 	t=1722563736; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=lCkFEkeGkuj6Zmm0KfVmWqJ7/lKSBVZP6JUeSEXtu2o=;
-	b=wauqxh8mUO8CQ0KMGBGiygNze3SRDtEPnBNf6Ci5QY8+trwt9gDFtnHa0Nh8cH35ukPY74LWGAFhbBU76617LxSSfEHi0Ne1bD5AY/D9hPYUJnjn3yKeRLkpFeYUrfgzZgzvrM829r0Kagai+u8w1Qt/E+0zdtBvboXq+2/2mzA=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067109;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WBvVrAW_1722563733;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WBvVrAW_1722563733)
+	bh=r6Xia3c95nYmQAMm0vQ+U5YX5eUhHfMQBeyP0G1CWBY=;
+	b=qgtKSzwENzUklw2++hjjnt8o1Vx44mB9fGcN/g7UcZxnuDuUOQOYxku4+FNOMQq80d8wAw9JRO8VdW0jW/vRNZL9u0R3l3mrPVVQIiYTBri/0+7VQf3JYV8oLkPlA4Xcd1oChl6YF9ZZOUP2SV9jaAT7+OqwjxMd2USr5+XPkdI=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R901e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WBvVrBH_1722563734;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WBvVrBH_1722563734)
           by smtp.aliyun-inc.com;
-          Fri, 02 Aug 2024 09:55:34 +0800
+          Fri, 02 Aug 2024 09:55:35 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/3] erofs-utils: lib: fix out-of-bounds in erofs_io_xcopy()
-Date: Fri,  2 Aug 2024 09:55:26 +0800
-Message-ID: <20240802015527.2113797-2-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 3/3] erofs-utils: lib: fix fd leak on failure in erofs_dev_open()
+Date: Fri,  2 Aug 2024 09:55:27 +0800
+Message-ID: <20240802015527.2113797-3-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20240802015527.2113797-1-hsiangkao@linux.alibaba.com>
 References: <20240802015527.2113797-1-hsiangkao@linux.alibaba.com>
@@ -57,57 +57,28 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Coverity-id: 502334
+Coverity-id: 502356
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/io.h | 4 ++--
- lib/io.c           | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ lib/io.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/erofs/io.h b/include/erofs/io.h
-index f53abed..d9b33d2 100644
---- a/include/erofs/io.h
-+++ b/include/erofs/io.h
-@@ -34,7 +34,7 @@ struct erofs_vfops {
- 	off_t (*lseek)(struct erofs_vfile *vf, u64 offset, int whence);
- 	int (*fstat)(struct erofs_vfile *vf, struct stat *buf);
- 	int (*xcopy)(struct erofs_vfile *vout, off_t pos,
--		     struct erofs_vfile *vin, int len, bool noseek);
-+		     struct erofs_vfile *vin, unsigned int len, bool noseek);
- };
- 
- /* don't extend this; instead, use payload for any extra information */
-@@ -61,7 +61,7 @@ off_t erofs_io_lseek(struct erofs_vfile *vf, u64 offset, int whence);
- ssize_t erofs_copy_file_range(int fd_in, u64 *off_in, int fd_out, u64 *off_out,
- 			      size_t length);
- int erofs_io_xcopy(struct erofs_vfile *vout, off_t pos,
--		   struct erofs_vfile *vin, int len, bool noseek);
-+		   struct erofs_vfile *vin, unsigned int len, bool noseek);
- 
- #ifdef __cplusplus
- }
 diff --git a/lib/io.c b/lib/io.c
-index 9167321..4937db5 100644
+index 4937db5..6bfae69 100644
 --- a/lib/io.c
 +++ b/lib/io.c
-@@ -490,7 +490,7 @@ off_t erofs_io_lseek(struct erofs_vfile *vf, u64 offset, int whence)
- }
+@@ -258,8 +258,10 @@ repeat:
+ #if defined(HAVE_SYS_STATFS_H) && defined(HAVE_FSTATFS)
+ 			struct statfs stfs;
  
- int erofs_io_xcopy(struct erofs_vfile *vout, off_t pos,
--		   struct erofs_vfile *vin, int len, bool noseek)
-+		   struct erofs_vfile *vin, unsigned int len, bool noseek)
- {
- 	if (vout->ops)
- 		return vout->ops->xcopy(vout, pos, vin, len, noseek);
-@@ -519,7 +519,7 @@ int erofs_io_xcopy(struct erofs_vfile *vout, off_t pos,
+-			if (again)
++			if (again) {
++				close(fd);
+ 				return -ENOTEMPTY;
++			}
  
- 	do {
- 		char buf[32768];
--		int ret = min_t(int, len, sizeof(buf));
-+		int ret = min_t(unsigned int, len, sizeof(buf));
- 
- 		ret = erofs_io_read(vin, buf, ret);
- 		if (ret < 0)
+ 			/*
+ 			 * fses like EXT4 and BTRFS will flush dirty blocks
 -- 
 2.43.5
 
