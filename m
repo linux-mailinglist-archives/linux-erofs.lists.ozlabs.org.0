@@ -1,49 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B3D09488D4
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2024 07:09:06 +0200 (CEST)
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ISnOfSKR;
-	dkim-atps=neutral
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A321948C93
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2024 12:07:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1722938839;
+	bh=kwkiJ1lNi4hls3SmDSCczz9y9QcS5IyD1HENBRZAL6k=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:From;
+	b=gYngj2Ph+mU1fBDRSOhUCyhfZtl00ThGW7xfCYtBoCHgyPQzQX21qYK8S1Y1q0zzg
+	 bOjvJBBMlQTSzaG76oqRJYGFJcAeFgzyBBN7PyUlLqASyCoE1g0MoIkZxL+zP5js/E
+	 VRqisWRVBO7/wmsRaHzDsMwg1gf5hpvWU9JRaIq2Hcj+ZIpFTjiUAOE20PmFwDH4Lt
+	 nYYhKENmVKyBWnysu9PQJAgNpxSQ+MZ+lTHHWyRHn4r4vN9i+Qf6WA0tkC8PEE0AW9
+	 /s18lifzus2XXFWivUwkdsTFXKuoMNlggk8EF34F93avcEytCQtna2qv72eXcAdnrl
+	 8QVChySWjtrWQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WdLv25jWCz3cb1
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2024 15:09:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WdTWC3Mcqz3cXV
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 Aug 2024 20:07:19 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ISnOfSKR;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=162.62.57.210; helo=out162-62-57-210.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 3392 seconds by postgrey-1.37 at boromir; Tue, 06 Aug 2024 20:07:05 AEST
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WdLtw38g4z3cND
-	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Aug 2024 15:08:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1722920930; h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:From;
-	bh=7qzV1C9+fUr/GxKNQqJ+GFcSjWPnwbgyhXZaifNLDd4=;
-	b=ISnOfSKR+A/l91fCS0jZd9tTvOcXjbNbqjb8mzY4YLLfd/QcMIWzCs3t4d9vRlv0vxVprFwsdqKmgCcGN6YpHJ1+xd3KXM/vc7HoNuKqPNr68vYEPfyvGJPUHlKoTcvmpCdUpyrLpM32sPRfecvWrD0c0HxSYu8lGNdIq6jJM2Y=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067111;MF=hongzhen@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WCE8S6J_1722920928;
-Received: from 30.221.132.245(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WCE8S6J_1722920928)
-          by smtp.aliyun-inc.com;
-          Tue, 06 Aug 2024 13:08:49 +0800
-Content-Type: multipart/alternative;
- boundary="------------LCZV4Y5mskrBGtPO2RIofz5b"
-Message-ID: <f829e10f-ffd2-4907-899d-cd2ca40718a8@linux.alibaba.com>
-Date: Tue, 6 Aug 2024 13:08:47 +0800
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4WdTVx49PZz30T8
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 Aug 2024 20:06:57 +1000 (AEST)
+Received: from kyrie-virtual-machine.localdomain ([36.7.196.21])
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id CFAE608; Tue, 06 Aug 2024 17:03:15 +0800
+X-QQ-mid: xmsmtpt1722934995th3a4owe6
+Message-ID: <tencent_0AD6FCF0EDA0644C00A48AEFCC344D0B8306@qq.com>
+X-QQ-XMAILINFO: NAuAIaytDrXpXOm3TdgIlMWnN5QYeofBmSr8z+v5NLUl8wfvf60Mh9dCCZvWtw
+	 OlEeuSeMDuECRs7ugX8nJ3y9f8zFHMuejtDR3Mp2i7aps8vnP80hdVl54U7D5tDCWe3hU1X2KGjh
+	 lJQ2L9UVnd8tt0Y/ZkP7102aWZkG1a28RUtEa7EQdFL5fY3yA6clcUo8xABlr53HR0DzO+QBI/7j
+	 JgtJgd0wiQ2EXU1VH7X28AX+2eKL1UxQOKJeTdUIC7AvHP817kcPCsgsuNWnKGKHOpZzEVNX4O0e
+	 Y6Bul5oS6YRXbWHhD2iL1vfJaN+IU7E9zFt+ryd7mZnbckk+iUGwYpscYD2K+eDYl5tQNp86a/oE
+	 3Ac8j4vPbpWJMeUmOCZCEFE72GfNKkO+TjUcUbcGjOlTWZvulTKm6txa1OBrglwT7XcxRZpXHZpi
+	 ek52GyVOuMB6FJDf0WoFcC/mI0CnlCnYtdHQrsy1rxTmfutWlnY0bHVx1uL3BCowfZmLLffnX7oU
+	 HFJUOC8BCAWXoLS9f0LN2w4yG4KUQb1vREVqLSGhEIciLV1ln8K8jsdEyZ372moz92MVxsbjx/pS
+	 39VzaIMlOSz8BV2uEmE10LNVIBpBr2MdG5nvmQPEkVBy2ggiCfGoA4u9eslR8Y8X2etKCxhBYlct
+	 I7i/WGC14zAGfVVRtKCyWH7YHTrWrc8ZN8X0lKjRH8ruSJOkulKOJh7PKYZqfdUNFrGStBr3GJEL
+	 +ilkeOtKH12TvE9itN4zLaEXNcMbtWuovcqkdt1Wi7Ggt4i2eVDG6m6uBia8wLkZa8mJefZyrR3t
+	 SkRAgTfLwbi+UkT5i2aETgbsWHnAffu+prglw2tl3XeKoPW6WpHsZ4WPZu0ElRZyj4Rvp6ijTWIS
+	 8HxQ78l3NR9kz9iQeKUrWglgsI7NecK1E04wMviJqLzK3XYvvFepu1t5cnT7pZOlgWccUCMpvLrE
+	 3OrKfamgXJRQ6WVFIVn7g3OHY4RHeoK9yJih+P7cssnGeGZjyNoN7NskAAiwRFA0NZcBAoGmNvmO
+	 Q5S1lrxMVbeXpnxoh4
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: tests: add compression algorithms check for tests
+Date: Tue,  6 Aug 2024 17:02:48 +0800
+X-OQ-MSGID: <20240806090247.1633248-1-kyr1ewang@qq.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: lib: fix potential overflow issue
-To: Sandeep Dhavale <dhavale@google.com>
-References: <20240805032510.2637488-1-hongzhen@linux.alibaba.com>
- <CAB=BE-Q=wWXuai+pMgQMEBe0oODRNM7MVkzu5bZ2K60JmXZv2w@mail.gmail.com>
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-In-Reply-To: <CAB=BE-Q=wWXuai+pMgQMEBe0oODRNM7MVkzu5bZ2K60JmXZv2w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -55,190 +67,144 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+From: Jiawei Wang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Jiawei Wang <kyr1ewang@qq.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This is a multi-part message in MIME format.
---------------LCZV4Y5mskrBGtPO2RIofz5b
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+_require_erofs_compression is added to check whether the compression
+algorithms are supported in the test environment before starting tests.
 
-
-On 2024/8/6 02:39, Sandeep Dhavale wrote:
-> On Sun, Aug 4, 2024 at 8:25 PM Hongzhen Luo<hongzhen@linux.alibaba.com>  wrote:
->> Coverity-id: 502377
->>
->> Signed-off-by: Hongzhen Luo<hongzhen@linux.alibaba.com>
->> ---
->>   lib/kite_deflate.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/lib/kite_deflate.c b/lib/kite_deflate.c
->> index a5ebd66..e52e382 100644
->> --- a/lib/kite_deflate.c
->> +++ b/lib/kite_deflate.c
->> @@ -817,7 +817,8 @@ static const struct kite_matchfinder_cfg {
->>   /* 9 */ {32, 258, 258, 4096, true},    /* maximum compression */
->>   };
->>
->> -static int kite_mf_init(struct kite_matchfinder *mf, int wsiz, int level)
->> +static int kite_mf_init(struct kite_matchfinder *mf, unsigned int wsiz,
->> +                       int level)
->>   {
->>          const struct kite_matchfinder_cfg *cfg;
->>
->> --
->> 2.43.5
->>
-> Hi Hongzhen,
-> Can you please explain to me where the potential overflow is? Checkers
-> can be smart so easy for me to miss.
-> I see a below check in kitle_me_init()
->
->      if (wsiz > kHistorySize32 || (1 << ilog2(wsiz)) != wsiz)
->            return -EINVAL;
->
-> So any larger value than kHistorySize32 which is (1U << 15) is already
-> rejected. So what overflow case is this int => unsigned int type
-> conversion solving?
->
-> Thanks,
-> Sandeep.
-
-Hi Sandeep,
-
-The coverity tool says that for code `mf->chain = 
-malloc(sizeof(mf->chain[0]) * wsiz);` there is a potential overflow issue:
-
-overflow_const: Expression 4UL * wsiz, which is equal to 
-18446744065119617024, where wsiz is known to be equal to -2147483648, 
-overflows the type that receives it, an unsigned integer 64 bits wide.
-
-For example, when `wsiz` is set to -1, it is converted to an unsigned 
-long value of 18446744073709551615, and multiplying this by 4 would lead 
-to an overflow error. Consequently, I have defined wsiz as unsigned int, 
-which has a maximum value of 4294967295. After converting this to 
-unsigned long and multiplying by 4, an overflow will not occur.
-
-In practical applications, however, `wsiz` would not take on such odd 
-values.
-
+Signed-off-by: Jiawei Wang <kyr1ewang@qq.com>
 ---
+ tests/common/rc | 16 ++++++++++++++++
+ tests/erofs/008 |  2 ++
+ tests/erofs/009 |  2 ++
+ tests/erofs/010 |  2 ++
+ tests/erofs/011 |  2 ++
+ tests/erofs/017 |  2 ++
+ tests/erofs/018 |  2 ++
+ tests/erofs/024 |  2 ++
+ 8 files changed, 30 insertions(+)
 
-Thanks,
-
-Hongzhen Luo
-
---------------LCZV4Y5mskrBGtPO2RIofz5b
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    <p><br>
-    </p>
-    <div class="moz-cite-prefix">On 2024/8/6 02:39, Sandeep Dhavale
-      wrote:<br>
-    </div>
-    <blockquote type="cite"
-cite="mid:CAB=BE-Q=wWXuai+pMgQMEBe0oODRNM7MVkzu5bZ2K60JmXZv2w@mail.gmail.com">
-      <pre class="moz-quote-pre" wrap="">On Sun, Aug 4, 2024 at 8:25 PM Hongzhen Luo <a class="moz-txt-link-rfc2396E" href="mailto:hongzhen@linux.alibaba.com">&lt;hongzhen@linux.alibaba.com&gt;</a> wrote:
-</pre>
-      <blockquote type="cite">
-        <pre class="moz-quote-pre" wrap="">
-Coverity-id: 502377
-
-Signed-off-by: Hongzhen Luo <a class="moz-txt-link-rfc2396E" href="mailto:hongzhen@linux.alibaba.com">&lt;hongzhen@linux.alibaba.com&gt;</a>
----
- lib/kite_deflate.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/lib/kite_deflate.c b/lib/kite_deflate.c
-index a5ebd66..e52e382 100644
---- a/lib/kite_deflate.c
-+++ b/lib/kite_deflate.c
-@@ -817,7 +817,8 @@ static const struct kite_matchfinder_cfg {
- /* 9 */ {32, 258, 258, 4096, true},    /* maximum compression */
- };
-
--static int kite_mf_init(struct kite_matchfinder *mf, int wsiz, int level)
-+static int kite_mf_init(struct kite_matchfinder *mf, unsigned int wsiz,
-+                       int level)
+diff --git a/tests/common/rc b/tests/common/rc
+index 0ace9d0..1c3f1d6 100644
+--- a/tests/common/rc
++++ b/tests/common/rc
+@@ -148,6 +148,22 @@ _require_fscache()
+ 	[ -x $CACHEFILESD_PROG ] || _notrun "cachefilesd not built"
+ }
+ 
++_require_erofs_compression()
++{
++	local opt="$*"
++	local random_dir="$tmp/$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)"
++	
++	mkdir -p $random_dir/test $random_dir/mnt > /dev/null 2>&1
++	truncate -s 1m $random_dir/test/file > /dev/null 2>&1
++	
++	eval "$MKFS_EROFS_PROG $opt $random_dir/tmp.erofs $random_dir/test" >> /dev/null 2>&1
++	_try_mount $random_dir/tmp.erofs $random_dir/mnt || \
++		_notrun "fail to mount filesystem in _require_erofs_compression"
++	_do_unmount $random_dir/mnt
++    
++	rm -rf $random_dir
++}
++
+ # Do the actual mkfs work.
+ _do_mkfs()
  {
-        const struct kite_matchfinder_cfg *cfg;
+diff --git a/tests/erofs/008 b/tests/erofs/008
+index aa8ba1d..cd3929c 100755
+--- a/tests/erofs/008
++++ b/tests/erofs/008
+@@ -27,6 +27,8 @@ echo "QA output created by $seq"
+ [ -z "$lz4_on" ] && \
+ 	_notrun "lz4 compression is disabled, skipped."
+ 	
++_require_erofs_compression "-zlz4"
++
+ if [ -z $SCRATCH_DEV ]; then
+ 	SCRATCH_DEV=$tmp/erofs_$seq.img
+ 	rm -f SCRATCH_DEV
+diff --git a/tests/erofs/009 b/tests/erofs/009
+index 2ce0e0a..b3ad210 100755
+--- a/tests/erofs/009
++++ b/tests/erofs/009
+@@ -27,6 +27,8 @@ echo "QA output created by $seq"
+ [ -z "$lz4hc_on" ] && \
+ 	_notrun "lz4hc compression is disabled, skipped."
+ 	
++_require_erofs_compression "-zlz4hc"
++
+ if [ -z $SCRATCH_DEV ]; then
+ 	SCRATCH_DEV=$tmp/erofs_$seq.img
+ 	rm -f SCRATCH_DEV
+diff --git a/tests/erofs/010 b/tests/erofs/010
+index a4f4180..2782fb6 100755
+--- a/tests/erofs/010
++++ b/tests/erofs/010
+@@ -27,6 +27,8 @@ echo "QA output created by $seq"
+ [ -z "$lz4_on" ] && \
+ 	_notrun "lz4 compression is disabled, skipped."
+ 
++_require_erofs_compression "-zlz4"
++
+ if [ -z $SCRATCH_DEV ]; then
+ 	SCRATCH_DEV=$tmp/erofs_$seq.img
+ 	rm -f SCRATCH_DEV
+diff --git a/tests/erofs/011 b/tests/erofs/011
+index 945998b..bd5d933 100755
+--- a/tests/erofs/011
++++ b/tests/erofs/011
+@@ -27,6 +27,8 @@ echo "QA output created by $seq"
+ [ -z "$lz4hc_on" ] && \
+ 	_notrun "lz4hc compression is disabled, skipped."
+ 	
++_require_erofs_compression "-zlz4hc"
++
+ if [ -z $SCRATCH_DEV ]; then
+ 	SCRATCH_DEV=$tmp/erofs_$seq.img
+ 	rm -f SCRATCH_DEV
+diff --git a/tests/erofs/017 b/tests/erofs/017
+index 0ba391f..9e7553c 100755
+--- a/tests/erofs/017
++++ b/tests/erofs/017
+@@ -27,6 +27,8 @@ echo "QA output created by $seq"
+ [ -z "$lz4_on" ] && \
+ 	_notrun "lz4 compression is disabled, skipped."
+ 	
++_require_erofs_compression "-zlz4"
++
+ if [ -z $SCRATCH_DEV ]; then
+ 	SCRATCH_DEV=$tmp/erofs_$seq.img
+ 	rm -f SCRATCH_DEV
+diff --git a/tests/erofs/018 b/tests/erofs/018
+index b6de58d..47b8d52 100755
+--- a/tests/erofs/018
++++ b/tests/erofs/018
+@@ -27,6 +27,8 @@ echo "QA output created by $seq"
+ [ -z "$lzma_on" ] && \
+ 	_notrun "lzma compression is disabled, skipped."
+ 	
++_require_erofs_compression "-zlzma"
++
+ if [ -z $SCRATCH_DEV ]; then
+ 	SCRATCH_DEV=$tmp/erofs_$seq.img
+ 	rm -f SCRATCH_DEV
+diff --git a/tests/erofs/024 b/tests/erofs/024
+index e2cbeba..f477c04 100755
+--- a/tests/erofs/024
++++ b/tests/erofs/024
+@@ -27,6 +27,8 @@ echo "QA output created by $seq"
+ [ -z "$deflate_on" ] && \
+ 	_notrun "deflate compression is disabled, skipped."
+ 	
++_require_erofs_compression "-zdeflate,9"
++
+ if [ -z $SCRATCH_DEV ]; then
+ 	SCRATCH_DEV=$tmp/erofs_$seq.img
+ 	rm -f SCRATCH_DEV
+-- 
+2.34.1
 
---
-2.43.5
-
-</pre>
-      </blockquote>
-      <pre class="moz-quote-pre" wrap="">
-Hi Hongzhen,
-Can you please explain to me where the potential overflow is? Checkers
-can be smart so easy for me to miss.
-I see a below check in kitle_me_init()
-
-    if (wsiz &gt; kHistorySize32 || (1 &lt;&lt; ilog2(wsiz)) != wsiz)
-          return -EINVAL;
-
-So any larger value than kHistorySize32 which is (1U &lt;&lt; 15) is already
-rejected. So what overflow case is this int =&gt; unsigned int type
-conversion solving?
-
-Thanks,
-Sandeep.
-</pre>
-    </blockquote>
-    <p>Hi <span style="white-space: pre-wrap">Sandeep</span>,</p>
-    <p>The coverity tool says that for code `<span
-        id="xref-L-4513213-1993-2" class="xref xref-L-4513213-268"
-style="cursor: pointer; border-width: 1px; border-style: solid; border-color: transparent transparent rgb(204, 204, 204); color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">mf</span><span
-style="color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">-&gt;</span><span
-        id="xref-L-4513213-1299-3" class="xref xref-L-4513213-223"
-style="cursor: pointer; border-width: 1px; border-style: solid; border-color: transparent transparent rgb(204, 204, 204); color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">chain</span><span
-style="color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"> = </span><span
-        id="xref-705860012-2-4" class="xref xref-173298888"
-style="cursor: pointer; border-width: 1px; border-style: solid; border-color: transparent transparent rgb(204, 204, 204); color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">malloc</span><span
-style="color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">(</span><span
-        class="keyword"
-style="font-weight: 700; color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">sizeof</span><span
-style="color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">(</span><span
-        id="xref-L-4513213-635-2" class="xref xref-L-4513213-268"
-style="cursor: pointer; border-width: 1px; border-style: solid; border-color: transparent transparent rgb(204, 204, 204); color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">mf</span><span
-style="color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">-&gt;</span><span
-        id="xref-L-4513213-69-2" class="xref xref-L-4513213-223"
-style="cursor: pointer; border-width: 1px; border-style: solid; border-color: transparent transparent rgb(204, 204, 204); color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">chain</span><span
-style="color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">[</span><span
-        class="literal"
-style="color: rgb(63, 78, 222); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">0</span><span
-style="color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">]) * </span><span
-        id="xref-L-4513213-1237-2" class="xref xref-L-4513213-269"
-style="cursor: pointer; border-width: 1px; border-style: solid; border-color: transparent transparent rgb(204, 204, 204); color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;">wsiz</span><span
-style="color: rgb(0, 0, 0); font-family: Consolas, &quot;Andale Mono WT&quot;, &quot;Andale Mono&quot;, &quot;Lucida Console&quot;, &quot;Lucida Sans Typewriter&quot;, &quot;DejaVu Sans Mono&quot;, &quot;Bitstream Vera Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Nimbus Mono L&quot;, Monaco, &quot;Courier New&quot;, Courier, monospace; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: nowrap; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">);</span>`
-      there is a potential overflow issue:</p>
-    <p>overflow_const: Expression 4UL * wsiz, which is equal to
-      18446744065119617024, where wsiz is known to be equal to
-      -2147483648, overflows the type that receives it, an unsigned
-      integer 64 bits wide.</p>
-    <p>For example, when `wsiz` is set to -1, it is converted to an
-      unsigned long value of 18446744073709551615, and multiplying this
-      by 4 would lead to an overflow error. Consequently, I have defined
-      wsiz as unsigned int, which has a maximum value of 4294967295.
-      After converting this to unsigned long and multiplying by 4, an
-      overflow will not occur.</p>
-    <p>In practical applications, however, `wsiz` would not take on such
-      odd values.</p>
-    <p>---<br>
-    </p>
-    <p>Thanks,</p>
-    <p>Hongzhen Luo<br>
-    </p>
-  </body>
-</html>
-
---------------LCZV4Y5mskrBGtPO2RIofz5b--
