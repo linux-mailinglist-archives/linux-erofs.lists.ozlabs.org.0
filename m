@@ -1,43 +1,43 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A784D94B002
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 Aug 2024 20:52:47 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EC0294B022
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 Aug 2024 20:57:39 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1723056765;
-	bh=suJBVpDXr1kUA9ccGtfWe9EdBvn4vAXKB/WD0d1K4cQ=;
+	s=201707; t=1723057057;
+	bh=gOPQGdtnmYG6nVB7XCwQfq01fCEGxevaiVLjDVjH29I=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=lC/rjsVBV74MWwZvgidVuNZgG3ZS5jLkAR7ZG2d9evjNa1Q6dZBarIReVEjab9/G/
-	 IEarETKv2j3yxRy0CErZe3HOySKR5nNHgjNbbY+c49V0Zhu/u9SmhN9Uafwz4ke/wz
-	 tZ07/caYGYMb0yQyYfr3IQN4hAZP2pWIJA6AdyYt/GpWf2zSAGlsUDW0Y1tLqFxFQK
-	 L3uFc5Liw06FfQo/bzdG1zUixWomMy/WHdi6bX1fRrhCT98TaEM5WD0C07fWYyh9i5
-	 NRCkHnvGXX0Xm546Hgq9E0RmV1f8DrxTq694i93FCAPjd0A3WSPFz+J8KfG5lePS/4
-	 /vpoYG9Cyzkzw==
+	b=N6NNN9EcO3lmDcJNbwMy79WIQBiJ0S5EUw53/F/QzJuwbE/SJRiiVAWjzkWOFaHzt
+	 t89vXU3O+n3odr2fmdjWIQCFWJbFQUsy5jxJPuIH2LM62kfbqYN4DzVKP224E0xPRP
+	 MmPddr2woxa3x+Si9x4+IOnBlTef8y5sNonEAn8eAFSDEzPB2gP5orEwe5mFgukE7Y
+	 JMubOx7zq0FY6xNSw+SkVpaTp900W/9Puk4vjkMKMmpDRydkb4AwMcVG62Lmqndd4Z
+	 Yfj+/awN4dCpmpDi9UAXmmUGDaE7faYlVrXe2WtHh0HoXrA2TwlkTXcITQ4sOxQvHw
+	 7RJBsVnppCr/Q==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WfK713g2lz3dL2
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Aug 2024 04:52:45 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WfKDd1wvVz3dJV
+	for <lists+linux-erofs@lfdr.de>; Thu,  8 Aug 2024 04:57:37 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=cEUqUI3b;
+	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=Zw5/h6pY;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=tlmp.cc (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org)
 Received: from mail.tlmp.cc (unknown [148.135.17.20])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WfK6k3s4Hz3d8M
-	for <linux-erofs@lists.ozlabs.org>; Thu,  8 Aug 2024 04:52:30 +1000 (AEST)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CA57F6990A;
-	Wed,  7 Aug 2024 14:47:22 -0400 (EDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WfKDV3LS5z3d8M
+	for <linux-erofs@lists.ozlabs.org>; Thu,  8 Aug 2024 04:57:30 +1000 (AEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1BF2468D8C;
+	Wed,  7 Aug 2024 14:47:31 -0400 (EDT)
 To: hsiangkao@linux.alibaba.com
-Subject: [RFC PATCH 1/3] erofs: add erofs_sys crate
-Date: Thu,  8 Aug 2024 02:47:01 +0800
-Message-ID: <20240807184703.722206-2-toolmanp@tlmp.cc>
+Subject: [RFC PATCH 2/3] erofs: add implementation for erofs_sys
+Date: Thu,  8 Aug 2024 02:47:02 +0800
+Message-ID: <20240807184703.722206-3-toolmanp@tlmp.cc>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240807184703.722206-1-toolmanp@tlmp.cc>
 References: <20240807184703.722206-1-toolmanp@tlmp.cc>
@@ -61,2569 +61,876 @@ Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This commit imports a erofs rust implementation from the following repo [1].
-This crate introduces several key traits with only transparent access,
-it does not support compression backend. In kernel, the folio source is used
-as the memory backend for this filesystem implementation.
+Implements Inode, InodeCollection, MemorySource in Kernel Space.
+Exposes VFS Compatible Function Pointers to the Kernel Space.
 
-Also this crate provides helper function for Box operations
-to bridge the difference between heap allocations API from userspace.
+Note that currently vfs abstraction support is not completed,
+a lot of c bindings are used here.
 
-However, since in-tree crate support is not yet completed, currently
-the crate is imported as a module to the rust code.
-
-[1]: https://github.com/ToolmanP/erofs-rs
+This commit also provides some helper functions to be exported
+to rust so that rust can call inline functions not generated by bindgen.
 
 Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
 ---
- fs/erofs/rust/erofs_sys/alloc_helper.rs      |  57 ++
- fs/erofs/rust/erofs_sys/compression.rs       |  18 +
- fs/erofs/rust/erofs_sys/data.rs              | 640 +++++++++++++++++++
- fs/erofs/rust/erofs_sys/data/uncompressed.rs |  61 ++
- fs/erofs/rust/erofs_sys/devices.rs           |  53 ++
- fs/erofs/rust/erofs_sys/dir.rs               |  83 +++
- fs/erofs/rust/erofs_sys/inode.rs             | 407 ++++++++++++
- fs/erofs/rust/erofs_sys/map.rs               |  28 +
- fs/erofs/rust/erofs_sys/operations.rs        |  96 +++
- fs/erofs/rust/erofs_sys/superblock.rs        | 554 ++++++++++++++++
- fs/erofs/rust/erofs_sys/superblock/file.rs   | 114 ++++
- fs/erofs/rust/erofs_sys/superblock/mem.rs    | 156 +++++
- fs/erofs/rust/erofs_sys/xattrs.rs            | 175 +++++
- 13 files changed, 2442 insertions(+)
- create mode 100644 fs/erofs/rust/erofs_sys/alloc_helper.rs
- create mode 100644 fs/erofs/rust/erofs_sys/compression.rs
- create mode 100644 fs/erofs/rust/erofs_sys/data.rs
- create mode 100644 fs/erofs/rust/erofs_sys/data/uncompressed.rs
- create mode 100644 fs/erofs/rust/erofs_sys/devices.rs
- create mode 100644 fs/erofs/rust/erofs_sys/dir.rs
- create mode 100644 fs/erofs/rust/erofs_sys/inode.rs
- create mode 100644 fs/erofs/rust/erofs_sys/map.rs
- create mode 100644 fs/erofs/rust/erofs_sys/operations.rs
- create mode 100644 fs/erofs/rust/erofs_sys/superblock.rs
- create mode 100644 fs/erofs/rust/erofs_sys/superblock/file.rs
- create mode 100644 fs/erofs/rust/erofs_sys/superblock/mem.rs
- create mode 100644 fs/erofs/rust/erofs_sys/xattrs.rs
+ fs/erofs/erofs_rust.rs                | 294 ++++++++++++++++++++++++++
+ fs/erofs/erofs_rust_bindings.h        |  47 ++++
+ fs/erofs/erofs_rust_helper.c          | 107 ++++++++++
+ fs/erofs/erofs_rust_helper.h          |  40 ++++
+ fs/erofs/rust/erofs_sys.rs            |  67 ++++++
+ fs/erofs/rust/kinode.rs               | 103 +++++++++
+ fs/erofs/rust/kinode/kinode_helper.rs |  26 +++
+ fs/erofs/rust/mod.rs                  |   6 +
+ fs/erofs/rust/sources.rs              |   5 +
+ fs/erofs/rust/sources/mm.rs           |  62 ++++++
+ fs/erofs/rust/sources/page_helper.rs  |  12 ++
+ 11 files changed, 769 insertions(+)
+ create mode 100644 fs/erofs/erofs_rust.rs
+ create mode 100644 fs/erofs/erofs_rust_bindings.h
+ create mode 100644 fs/erofs/erofs_rust_helper.c
+ create mode 100644 fs/erofs/erofs_rust_helper.h
+ create mode 100644 fs/erofs/rust/erofs_sys.rs
+ create mode 100644 fs/erofs/rust/kinode.rs
+ create mode 100644 fs/erofs/rust/kinode/kinode_helper.rs
+ create mode 100644 fs/erofs/rust/mod.rs
+ create mode 100644 fs/erofs/rust/sources.rs
+ create mode 100644 fs/erofs/rust/sources/mm.rs
+ create mode 100644 fs/erofs/rust/sources/page_helper.rs
 
-diff --git a/fs/erofs/rust/erofs_sys/alloc_helper.rs b/fs/erofs/rust/erofs_sys/alloc_helper.rs
+diff --git a/fs/erofs/erofs_rust.rs b/fs/erofs/erofs_rust.rs
 new file mode 100644
-index 000000000000..931abfa71c45
+index 000000000000..c46876ded0ef
 --- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/alloc_helper.rs
-@@ -0,0 +1,57 @@
++++ b/fs/erofs/erofs_rust.rs
+@@ -0,0 +1,294 @@
 +// Copyright 2024 Yiyang Wu
 +// SPDX-License-Identifier: MIT or GPL-2.0-only
 +
-+/// This module provides helper functions for the alloc crate
-+/// Note that in linux kernel, the allocation is fallible however in userland it is not.
-+/// Since most of the functions depend on infallible allocation, here we provide helper functions
-+/// so that most of codes don't need to be changed.
-+
-+#[cfg(CONFIG_EROFS_FS = "y")]
-+use kernel::prelude::*;
-+
-+use alloc::boxed::Box;
-+use alloc::vec::Vec;
-+
-+pub(crate) fn push_vec<T>(v: &mut Vec<T>, value: T) {
-+    match () {
-+        #[cfg(CONFIG_EROFS_FS = "y")]
-+        () => {
-+            v.push(value, GFP_KERNEL).unwrap();
-+        }
-+        #[cfg(not(CONFIG_EROFS_FS = "y"))]
-+        () => {
-+            v.push(value);
-+        }
-+    }
-+}
-+
-+pub(crate) fn extend_from_slice<T: Clone>(v: &mut Vec<T>, slice: &[T]) {
-+    match () {
-+        #[cfg(CONFIG_EROFS_FS = "y")]
-+        () => {
-+            v.extend_from_slice(slice, GFP_KERNEL).unwrap();
-+        }
-+        #[cfg(not(CONFIG_EROFS_FS = "y"))]
-+        () => {
-+            v.extend_from_slice(slice);
-+        }
-+    }
-+}
-+
-+pub(crate) fn heap_alloc<T>(value: T) -> Box<T> {
-+    match () {
-+        #[cfg(CONFIG_EROFS_FS = "y")]
-+        () => Box::new(value, GFP_KERNEL).unwrap(),
-+        #[cfg(not(CONFIG_EROFS_FS = "y"))]
-+        () => Box::new(value),
-+    }
-+}
-+
-+pub(crate) fn vec_with_capacity<T>(capacity: usize) -> Vec<T> {
-+    match () {
-+        #[cfg(CONFIG_EROFS_FS = "y")]
-+        () => Vec::with_capacity(capacity, GFP_KERNEL).unwrap(),
-+        #[cfg(not(CONFIG_EROFS_FS = "y"))]
-+        () => Vec::with_capacity(capacity),
-+    }
-+}
-diff --git a/fs/erofs/rust/erofs_sys/compression.rs b/fs/erofs/rust/erofs_sys/compression.rs
-new file mode 100644
-index 000000000000..6a7d84722350
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/compression.rs
-@@ -0,0 +1,18 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+
-+#[derive(Debug, Clone, Copy)]
-+#[repr(C)]
-+pub(crate) enum SuperblockCompressionInfo {
-+    AvailableComprAlgs(u16),
-+    Lz4MaxDistance(u16),
-+}
++//! EROFS Rust Kernel Module Helpers Implementation
++//! This is only for experimental purpose. This is not guaranteed to work.
++//! Note that this module must be rewritten after the rust VFS abstraction is merged.
++//! Currently a lot of c bindings are used which violate the principles provided by Rust-For-Linux
 +
 +#[allow(dead_code)]
-+pub(crate) enum InodeCompressionInfo {}
++#[allow(missing_docs)]
++pub(crate) mod rust;
++use core::ffi::c_void;
++use core::ptr::NonNull;
++use kernel::bindings::{
++    address_space, d_make_root, d_obtain_alias, d_splice_alias, dentry, dir_context, file, inode,
++    inode_init_once, super_block,
++};
++use kernel::types::ForeignOwnable;
++use kernel::{
++    container_of,
++    prelude::{Box, Vec},
++};
++use rust::{
++    erofs_sys::{
++        alloc_helper::*,
++        data::uncompressed::*,
++        data::*,
++        inode::*,
++        map::*,
++        operations::*,
++        superblock::{mem::*, *},
++        *,
++    },
++    kinode::{KernelInode, KernelInodeCollection},
++    sources::mm::FolioSource,
++};
 +
-+impl Default for SuperblockCompressionInfo {
-+    fn default() -> Self {
-+        Self::AvailableComprAlgs(0)
-+    }
-+}
-diff --git a/fs/erofs/rust/erofs_sys/data.rs b/fs/erofs/rust/erofs_sys/data.rs
-new file mode 100644
-index 000000000000..b047cf55d89f
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/data.rs
-@@ -0,0 +1,640 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+pub(crate) mod uncompressed;
++/// This is just a log prefix for kernel module so that pr_info can be used
++pub const __LOG_PREFIX: &[u8] = b"erofs_rust: \0";
 +
-+use alloc::boxed::Box;
-+use alloc::vec::Vec;
++/// KernelSuperblockInfo defined by embedded Kernel Inode
++pub(crate) type KernelSuperblockInfo = SuperblockInfo<KernelInode, KernelInodeCollection>;
 +
-+use super::alloc_helper::*;
-+use super::dir::*;
-+use super::inode::*;
-+use super::map::*;
-+use super::superblock::*;
-+use super::*;
-+
-+use crate::round;
-+
-+#[derive(Debug)]
-+pub(crate) enum SourceError {
-+    Dummy,
-+    OutBound,
-+}
-+
-+#[derive(Debug)]
-+pub(crate) enum BackendError {
-+    Dummy,
-+}
-+
-+pub(crate) type SourceResult<T> = Result<T, SourceError>;
-+pub(crate) type BackendResult<T> = Result<T, BackendError>;
-+
-+/// Represent some sort of generic data source. This cound be file, memory or even network.
-+/// Note that users should never use this directly please use backends instead.
-+pub(crate) trait Source {
-+    fn fill(&self, data: &mut [u8], offset: Off) -> SourceResult<u64>;
-+    fn get_temp_buffer(&self, offset: Off, maxsize: Off) -> SourceResult<TempBuffer> {
-+        let mut block: Page = EROFS_PAGE;
-+        let pa = PageAddress::from(offset);
-+        self.fill(&mut block, pa.page)
-+            .map(|sz| TempBuffer::new(block, pa.pg_off as usize, sz.min(maxsize) as usize))
-+    }
++/// Allocating a rust implementation of super_block_info c_void when calling from fill_super
++/// Note that this function needs a fixed address_space before we can use the vfs vtable to bind the
++/// operations. This is left as it is for now.
++#[no_mangle]
++pub unsafe extern "C" fn erofs_alloc_sbi_rust(
++    sb: NonNull<super_block>,
++    address_space: NonNull<address_space>,
++) -> *const c_void {
++    //  We have to use heap_alloc here to erase the signature of MemFileSystem
++    let sb = heap_alloc(SuperblockInfo::new(
++        heap_alloc(MemFileSystem::new(UncompressedBackend::new(
++            FolioSource::new(address_space),
++        ))),
++        KernelInodeCollection::new(sb),
++    ));
++    return sb.into_foreign();
 +}
 +
-+/// Represents a file source.
-+pub(crate) trait FileSource: Source {}
-+
-+// Represents a memory source. Note that as_buf and as_buf_mut should only represent memory within
-+// a page. Cross page memory is not supported and treated as an error.
-+pub(crate) trait PageSource<'a>: Source {
-+    fn as_buf(&'a self, offset: Off, len: Off) -> SourceResult<RefBuffer<'a>>;
-+    fn as_buf_mut(&'a mut self, offset: Off, len: Off) -> SourceResult<RefBufferMut<'a>>;
++/// SAFETY:
++/// Cast the c_void back to KernelSuperblockInfo.
++/// This seems to prune to some concurrency issues
++/// but the fact is that only KernelInodeCollection field can have mutability.
++/// However, it's backed by the original iget_locked5 and it's already preventing
++/// any concurrency issues. So it's safe to be casted mutable here even if it's not backed by
++/// Arc/Mutex instead of using generic method from Foriegn Ownable which only provides
++/// immutable reference casting.
++fn as_sbi(f: *mut c_void) -> &'static mut KernelSuperblockInfo {
++    unsafe { &mut *(f as *mut KernelSuperblockInfo) }
 +}
 +
-+/// Represents a generic data access backend that is backed by some sort of data source.
-+/// This often has temporary buffers to decompress the data from the data source.
-+/// The method signatures are the same as those of the Source trait.
-+pub(crate) trait Backend {
-+    fn fill(&self, data: &mut [u8], offset: Off) -> BackendResult<u64>;
-+    fn get_temp_buffer(&self, offset: Off, maxsize: Off) -> BackendResult<TempBuffer>;
++/// Free the KernelSuperblockInfo that was embedded into the superblock in the c implementation
++#[no_mangle]
++pub unsafe extern "C" fn erofs_free_sbi_rust(sb: *mut super_block) {
++    // this will simply get dropped immediately after receiving the ownership.
++    unsafe { drop(Box::<KernelSuperblockInfo>::from_foreign((*sb).s_fs_info)) };
 +}
 +
-+/// Represents a file backend whose source is a file.
-+pub(crate) trait FileBackend: Backend {}
-+
-+/// Represents a memory backend whose source is memory.
-+pub(crate) trait MemoryBackend<'a>: Backend {
-+    fn as_buf(&'a self, offset: Off, len: Off) -> BackendResult<RefBuffer<'a>>;
-+    fn as_buf_mut(&'a mut self, offset: Off, len: Off) -> BackendResult<RefBufferMut<'a>>;
++/// A helper sturct to map blocks for iomap_begin because iomap is not generated by bindgen
++#[repr(C)]
++pub struct ErofsRustMap {
++    m_pa: u64,
++    m_la: u64,
++    m_plen: u64,
++    m_llen: u64,
++    m_flags: u32,
++    inline_data: *const core::ffi::c_void,
++    private: *const core::ffi::c_void,
 +}
 +
-+/// Represents a TempBuffer which owns a temporary on-stack/on-heap buffer.
-+/// Note that file or network backend can only use this since they can't access the data from the
-+/// memory directly.
-+pub(crate) struct TempBuffer {
-+    block: Page,
-+    start: usize,
-+    maxsize: usize,
++/// Lookup function for dentry-inode lookup replacement
++#[no_mangle]
++pub unsafe extern "C" fn erofs_lookup_rust(
++    k_inode: *mut inode,
++    dentry: *mut dentry,
++    _flags: u32,
++) -> *mut dentry {
++    // SAFETY: We are sure that the inode is a Kernel Inode since alloc_inode is called
++    let inode = unsafe { &*container_of!(k_inode, KernelInode, k_inode) };
++    let erofs_sbi = as_sbi(unsafe { (*(*k_inode).i_sb).s_fs_info });
++
++    // SAFETY: this is backed by qstr which is c representation of a valid slice.
++    let name = unsafe {
++        core::str::from_utf8_unchecked(core::slice::from_raw_parts(
++            (*dentry).d_name.name,
++            (*dentry).d_name.__bindgen_anon_1.__bindgen_anon_1.len as usize,
++        ))
++    };
++
++    let k_inode: *mut inode = dir_lookup(
++        erofs_sbi.filesystem.as_ref(),
++        &mut erofs_sbi.inodes,
++        inode,
++        name,
++    )
++    .map_or(core::ptr::null_mut(), |result| result.k_inode.as_mut_ptr());
++
++    // SAFETY: We are sure that the inner k_inode has already been initialized
++    unsafe { d_splice_alias(k_inode, dentry) }
 +}
 +
-+/// Represents a buffer trait which can yield its internal reference or be casted as an iterator of
-+/// DirEntries.
-+pub(crate) trait Buffer {
-+    fn content(&self) -> &[u8];
-+    fn iter_dir(&self) -> DirCollection<'_> {
-+        DirCollection::new(self.content())
-+    }
++/// Get parent inode
++#[no_mangle]
++pub unsafe extern "C" fn erofs_get_parent_rust(child: *mut dentry) -> *mut dentry {
++    // SAFETY: We are sure that the inode is a Kernel Inode since alloc_inode is called
++    let k_inode = unsafe { (*child).d_inode };
++    let erofs_sbi = as_sbi(unsafe { (*(*k_inode).i_sb).s_fs_info });
++    let inode = unsafe { &*container_of!(k_inode, KernelInode, k_inode) };
++
++    let k_inode: *mut inode = dir_lookup(
++        erofs_sbi.filesystem.as_ref(),
++        &mut erofs_sbi.inodes,
++        inode,
++        "..",
++    )
++    .map_or(core::ptr::null_mut(), |result| result.k_inode.as_mut_ptr());
++
++    // SAFETY: We are sure that the inner k_inode has already been initialized
++    unsafe { d_obtain_alias(k_inode) }
 +}
 +
-+/// Represents a mutable buffer trait which can yield its internal mutable reference.
-+pub(crate) trait BufferMut: Buffer {
-+    fn content_mut(&mut self) -> &mut [u8];
-+}
-+
-+impl TempBuffer {
-+    pub(crate) fn new(block: Page, start: usize, maxsize: usize) -> Self {
-+        Self {
-+            block,
-+            start,
-+            maxsize,
-+        }
-+    }
-+    pub(crate) const fn empty() -> Self {
-+        Self {
-+            block: EROFS_PAGE,
-+            start: 0,
-+            maxsize: 0,
-+        }
-+    }
-+}
-+
-+impl Buffer for TempBuffer {
-+    fn content(&self) -> &[u8] {
-+        &self.block[self.start..self.start + self.maxsize]
-+    }
-+}
-+
-+impl BufferMut for TempBuffer {
-+    fn content_mut(&mut self) -> &mut [u8] {
-+        &mut self.block[self.start..self.maxsize + self.start]
-+    }
-+}
-+
-+/// Represents a buffer that holds a reference to a slice of data that
-+/// is borrowed from the thin air.
-+pub(crate) struct RefBuffer<'a> {
-+    buf: &'a [u8],
-+    start: usize,
-+    len: usize,
-+    put_buf: fn(*mut core::ffi::c_void),
-+}
-+
-+impl Buffer for [u8] {
-+    fn content(&self) -> &[u8] {
-+        self
-+    }
-+}
-+
-+impl BufferMut for [u8] {
-+    fn content_mut(&mut self) -> &mut [u8] {
-+        self
-+    }
-+}
-+
-+impl<'a> Buffer for RefBuffer<'a> {
-+    fn content(&self) -> &[u8] {
-+        &self.buf[self.start..self.start + self.len]
-+    }
-+}
-+
-+impl<'a> RefBuffer<'a> {
-+    pub(crate) fn new(
-+        buf: &'a [u8],
-+        start: usize,
-+        len: usize,
-+        put_buf: fn(*mut core::ffi::c_void),
-+    ) -> Self {
-+        Self {
-+            buf,
-+            start,
-+            len,
-+            put_buf,
-+        }
-+    }
-+}
-+
-+impl<'a> Drop for RefBuffer<'a> {
-+    fn drop(&mut self) {
-+        (self.put_buf)(self.buf.as_ptr() as *mut core::ffi::c_void)
-+    }
-+}
-+
-+/// Represents a mutable buffer that holds a reference to a slice of data
-+/// that is borrowed from the thin air.
-+pub(crate) struct RefBufferMut<'a> {
-+    buf: &'a mut [u8],
-+    start: usize,
-+    len: usize,
-+    put_buf: fn(*mut core::ffi::c_void),
-+}
-+
-+impl<'a> RefBufferMut<'a> {
-+    pub(crate) fn new(
-+        buf: &'a mut [u8],
-+        start: usize,
-+        len: usize,
-+        put_buf: fn(*mut core::ffi::c_void),
-+    ) -> Self {
-+        Self {
-+            buf,
-+            start,
-+            len,
-+            put_buf,
-+        }
-+    }
-+}
-+
-+impl<'a> Buffer for RefBufferMut<'a> {
-+    fn content(&self) -> &[u8] {
-+        &self.buf[self.start..self.start + self.len]
-+    }
-+}
-+
-+impl<'a> BufferMut for RefBufferMut<'a> {
-+    fn content_mut(&mut self) -> &mut [u8] {
-+        &mut self.buf[self.start..self.start + self.len]
-+    }
-+}
-+
-+impl<'a> Drop for RefBufferMut<'a> {
-+    fn drop(&mut self) {
-+        (self.put_buf)(self.buf.as_mut_ptr() as *mut core::ffi::c_void)
-+    }
-+}
-+
-+/// Iterates over the data map represented by an inode.
-+pub(crate) struct MapIter<'a, 'b, FS, I>
-+where
-+    FS: FileSystem<I>,
-+    I: Inode,
-+{
-+    sbi: &'a FS,
-+    inode: &'b I,
-+    offset: Off,
-+    len: Off,
-+}
-+
-+impl<'a, 'b, FS, I> MapIter<'a, 'b, FS, I>
-+where
-+    FS: FileSystem<I>,
-+    I: Inode,
-+{
-+    pub(crate) fn new(sbi: &'a FS, inode: &'b I, offset: Off) -> Self {
-+        Self {
-+            sbi,
-+            inode,
-+            offset,
-+            len: inode.info().file_size(),
-+        }
-+    }
-+}
-+
-+impl<'a, 'b, FS, I> Iterator for MapIter<'a, 'b, FS, I>
-+where
-+    FS: FileSystem<I>,
-+    I: Inode,
-+{
-+    type Item = Map;
-+    fn next(&mut self) -> Option<Self::Item> {
-+        if self.offset >= self.len {
-+            None
-+        } else {
-+            let mut m = self.sbi.map(self.inode, self.offset);
-+            let pa = PageAddress::from(m.physical.start);
-+            let len = m.physical.len.min(pa.pg_len);
-+            m.physical.len = len;
-+            m.logical.len = len;
-+            self.offset += len;
-+            Some(m)
-+        }
-+    }
-+}
-+
-+pub(crate) trait BufferMapIter<'a>: Iterator<Item = Box<dyn Buffer + 'a>> {}
-+
-+pub(crate) struct TempBufferMapIter<'a, 'b, FS, B, I>
-+where
-+    FS: FileSystem<I>,
-+    B: FileBackend,
-+    I: Inode,
-+{
-+    backend: &'a B,
-+    map_iter: MapIter<'a, 'b, FS, I>,
-+}
-+
-+impl<'a, 'b, FS, B, I> TempBufferMapIter<'a, 'b, FS, B, I>
-+where
-+    FS: FileSystem<I>,
-+    B: FileBackend,
-+    I: Inode,
-+{
-+    pub(crate) fn new(backend: &'a B, map_iter: MapIter<'a, 'b, FS, I>) -> Self {
-+        Self { backend, map_iter }
-+    }
-+}
-+
-+impl<'a, 'b, FS, B, I> Iterator for TempBufferMapIter<'a, 'b, FS, B, I>
-+where
-+    FS: FileSystem<I>,
-+    B: FileBackend,
-+    I: Inode,
-+{
-+    type Item = Box<dyn Buffer + 'a>;
-+    fn next(&mut self) -> Option<Self::Item> {
-+        match self.map_iter.next() {
-+            Some(m) => {
-+                if m.logical.len < EROFS_PAGE_SZ as Off {
-+                    let mut block = EROFS_PAGE;
-+                    match self
-+                        .backend
-+                        .fill(&mut block[0..m.physical.len as usize], m.physical.start)
-+                    {
-+                        Ok(rlen) => Some(heap_alloc(TempBuffer::new(block, 0, rlen as usize))),
-+                        Err(_) => None,
-+                    }
-+                } else {
-+                    match self
-+                        .backend
-+                        .get_temp_buffer(m.physical.start, m.logical.len)
-+                    {
-+                        Ok(buffer) => Some(heap_alloc(buffer)),
-+                        Err(_) => None,
-+                    }
-+                }
-+            }
-+            None => None,
-+        }
-+    }
-+}
-+
-+impl<'a, 'b, FS, B, I> BufferMapIter<'a> for TempBufferMapIter<'a, 'b, FS, B, I>
-+where
-+    FS: FileSystem<I>,
-+    B: FileBackend,
-+    I: Inode,
-+{
-+}
-+
-+pub(crate) struct RefMapIter<'a, 'b, FS, B, I>
-+where
-+    FS: FileSystem<I>,
-+    B: MemoryBackend<'a>,
-+    I: Inode,
-+{
-+    backend: &'a B,
-+    map_iter: MapIter<'a, 'b, FS, I>,
-+}
-+
-+impl<'a, 'b, FS, B, I> RefMapIter<'a, 'b, FS, B, I>
-+where
-+    FS: FileSystem<I>,
-+    B: MemoryBackend<'a>,
-+    I: Inode,
-+{
-+    pub(crate) fn new(backend: &'a B, map_iter: MapIter<'a, 'b, FS, I>) -> Self {
-+        Self { backend, map_iter }
-+    }
-+}
-+
-+impl<'a, 'b, FS, B, I> Iterator for RefMapIter<'a, 'b, FS, B, I>
-+where
-+    FS: FileSystem<I>,
-+    B: MemoryBackend<'a>,
-+    I: Inode,
-+{
-+    type Item = Box<dyn Buffer + 'a>;
-+    fn next(&mut self) -> Option<Self::Item> {
-+        match self.map_iter.next() {
-+            Some(m) => match self
-+                .backend
-+                .as_buf(m.physical.start, m.physical.len.min(EROFS_PAGE_SZ))
-+            {
-+                Ok(buf) => Some(heap_alloc(buf)),
-+                Err(_) => None,
-+            },
-+            None => None,
-+        }
-+    }
-+}
-+
-+impl<'a, 'b, FS, B, I> BufferMapIter<'a> for RefMapIter<'a, 'b, FS, B, I>
-+where
-+    FS: FileSystem<I>,
-+    B: MemoryBackend<'a>,
-+    I: Inode,
-+{
-+}
-+
-+pub(crate) struct ContinuousTempBufferIter<'a, B>
-+where
-+    B: FileBackend,
-+{
-+    backend: &'a B,
-+    offset: Off,
-+    len: Off,
-+}
-+
-+impl<'a, B> ContinuousTempBufferIter<'a, B>
-+where
-+    B: FileBackend,
-+{
-+    pub(crate) fn new(backend: &'a B, offset: Off, len: Off) -> Self {
-+        Self {
-+            backend,
-+            offset,
-+            len,
-+        }
-+    }
-+}
-+
-+impl<'a, B> Iterator for ContinuousTempBufferIter<'a, B>
-+where
-+    B: FileBackend,
-+{
-+    type Item = Box<dyn Buffer + 'a>;
-+    fn next(&mut self) -> Option<Self::Item> {
-+        if self.len == 0 {
-+            return None;
-+        }
-+
-+        let result: Option<Self::Item> = self
-+            .backend
-+            .get_temp_buffer(self.offset, self.len)
-+            .map_or_else(
-+                |_| None,
-+                |buffer| {
-+                    self.offset += buffer.content().len() as Off;
-+                    self.len -= buffer.content().len() as Off;
-+                    Some(heap_alloc(buffer) as Box<dyn Buffer + 'a>)
-+                },
++/// Readdir
++#[no_mangle]
++pub unsafe extern "C" fn erofs_readdir_rust(f: *mut file, ctx: *mut dir_context) -> i32 {
++    let inode = unsafe { &*container_of!((*f).f_inode, KernelInode, k_inode) };
++    let vnode = unsafe { (*f).f_inode };
++    let sb = unsafe { (*vnode).i_sb };
++    let erofs_sbi = as_sbi(unsafe { (*sb).s_fs_info });
++    let offset = unsafe { (*ctx).pos };
++    erofs_sbi
++        .filesystem
++        .fill_dentries(inode, offset as Off, &mut |dir, pos| unsafe {
++            // inline expansion from dir_emit
++            (*ctx).actor.unwrap()(
++                ctx,
++                dir.name.as_ptr().cast(),
++                dir.name.len() as i32,
++                pos as i64,
++                dir.desc.nid as u64,
++                dir.desc.file_type as u32,
 +            );
-+        result
-+    }
-+}
-+
-+pub(crate) struct ContinuousRefIter<'a, B>
-+where
-+    B: MemoryBackend<'a>,
-+{
-+    backend: &'a B,
-+    offset: Off,
-+    len: Off,
-+    first: bool,
-+}
-+
-+impl<'a, B> ContinuousRefIter<'a, B>
-+where
-+    B: MemoryBackend<'a>,
-+{
-+    pub(crate) fn new(backend: &'a B, offset: Off, len: Off) -> Self {
-+        Self {
-+            backend,
-+            offset,
-+            len,
-+            first: true,
-+        }
-+    }
-+}
-+
-+/// Represents a basic iterator over a range of bytes from data backends.
-+/// Note that this is skippable and can be used to move the iterator's cursor forward.
-+pub(crate) trait ContinousBufferIter<'a>: Iterator<Item = Box<dyn Buffer + 'a>> {
-+    fn advance_off(&mut self, offset: Off);
-+}
-+
-+impl<'a, B> ContinousBufferIter<'a> for ContinuousTempBufferIter<'a, B>
-+where
-+    B: FileBackend,
-+{
-+    fn advance_off(&mut self, offset: Off) {
-+        self.offset += offset;
-+        self.len -= offset;
-+    }
-+}
-+
-+impl<'a, B> Iterator for ContinuousRefIter<'a, B>
-+where
-+    B: MemoryBackend<'a>,
-+{
-+    type Item = Box<dyn Buffer + 'a>;
-+    fn next(&mut self) -> Option<Self::Item> {
-+        if self.len == 0 {
-+            return None;
-+        }
-+
-+        let pa = PageAddress::from(self.offset);
-+        let len = pa.pg_len.min(self.len);
-+        let result: Option<Self::Item> = self.backend.as_buf(self.offset, len).map_or_else(
-+            |_| None,
-+            |x| {
-+                self.offset += x.content().len() as Off;
-+                self.len -= x.content().len() as Off;
-+                Some(heap_alloc(x) as Box<dyn Buffer + 'a>)
-+            },
-+        );
-+        result
-+    }
-+}
-+
-+impl<'a, B> ContinousBufferIter<'a> for ContinuousRefIter<'a, B>
-+where
-+    B: MemoryBackend<'a>,
-+{
-+    fn advance_off(&mut self, offset: Off) {
-+        self.offset += offset;
-+        self.len -= offset
-+    }
-+}
-+
-+/// This is used as a iterator to read the metadata buffer. The metadata buffer is a continous 4
-+/// bytes aligned collection of integers. This is used primarily when reading an inode's xattrs
-+/// indexe.
-+pub(crate) struct MetadataBufferIter<'a> {
-+    backend: &'a dyn Backend,
-+    buffer: TempBuffer,
-+    offset: Off,
-+    total: usize,
-+}
-+
-+impl<'a> MetadataBufferIter<'a> {
-+    pub(crate) fn new(backend: &'a dyn Backend, offset: Off, total: usize) -> Self {
-+        Self {
-+            backend,
-+            buffer: TempBuffer::empty(),
-+            offset,
-+            total,
-+        }
-+    }
-+}
-+
-+impl<'a> Iterator for MetadataBufferIter<'a> {
-+    type Item = Vec<u8>;
-+    fn next(&mut self) -> Option<Self::Item> {
-+        if self.total == 0 {
-+            return None;
-+        }
-+
-+        if self.buffer.start == self.buffer.maxsize {
-+            self.buffer = self
-+                .backend
-+                .get_temp_buffer(self.offset, EROFS_PAGE_SZ)
-+                .unwrap();
-+            self.offset += self.buffer.maxsize as Off;
-+        }
-+
-+        let data = self.buffer.content();
-+        let size = u16::from_le_bytes([data[0], data[1]]) as usize;
-+        let mut result: Vec<u8> = Vec::new();
-+        extend_from_slice(&mut result, &data[2..size + 2]);
-+        self.buffer.start = round!(UP, self.buffer.start + size + 2, 4);
-+        self.total -= 1;
-+        Some(result)
-+    }
-+}
-+
-+/// Represents a skippable continuous buffer iterator. This is used primarily for reading the
-+/// extended attributes. Since the key-value is flattened out in its original format.
-+pub(crate) struct SkippableContinousIter<'a> {
-+    iter: Box<dyn ContinousBufferIter<'a> + 'a>,
-+    data: Box<dyn Buffer + 'a>,
-+    d_off: Off,
-+}
-+
-+impl<'a> SkippableContinousIter<'a> {
-+    pub(crate) fn new(mut iter: Box<dyn ContinousBufferIter<'a> + 'a>) -> Self {
-+        let data = iter.next().unwrap();
-+        Self {
-+            iter,
-+            data,
-+            d_off: 0,
-+        }
-+    }
-+    pub(crate) fn skip(&mut self, offset: Off) {
-+        let d_len = self.data.content().len() as Off - self.d_off;
-+
-+        if offset < d_len {
-+            self.d_off += offset;
-+        } else {
-+            self.d_off = 0;
-+            self.iter.advance_off(d_len);
-+            self.data = self.iter.next().unwrap();
-+        }
-+    }
-+
-+    pub(crate) fn read(&mut self, buf: &mut [u8]) {
-+        let mut d_len = self.data.content().len() as Off - self.d_off;
-+        let mut b_off = 0 as Off;
-+        let b_len = buf.len() as Off;
-+        if d_len != 0 && d_len >= b_len {
-+            buf.clone_from_slice(
-+                &self.data.content()[self.d_off as usize..(self.d_off + b_len) as usize],
-+            );
-+            self.d_off += b_len;
-+        } else {
-+            buf[b_off as usize..(b_off + d_len) as usize]
-+                .copy_from_slice(&self.data.content()[self.d_off as usize..]);
-+            b_off += d_len;
-+            while b_off < b_len {
-+                self.d_off = 0;
-+                self.data = self.iter.next().unwrap();
-+                d_len = self.data.content().len() as Off;
-+                if d_len >= b_len - b_off {
-+                    buf[b_off as usize..]
-+                        .copy_from_slice(&self.data.content()[..(b_len - b_off) as usize]);
-+                    self.d_off = b_len - b_off;
-+                    return;
-+                } else {
-+                    buf[b_off as usize..(b_off + d_len) as usize]
-+                        .copy_from_slice(self.data.content());
-+                    b_off += d_len;
-+                }
-+            }
-+        }
-+    }
-+
-+    pub(crate) fn try_cmp(&mut self, buf: &[u8]) -> Result<(), u64> {
-+        let d_len = self.data.content().len() as Off - self.d_off;
-+        let b_len = buf.len() as Off;
-+        let mut b_off = 0 as Off;
-+
-+        if d_len != 0 && d_len >= b_len {
-+            if self.data.content()[self.d_off as usize..(self.d_off + b_len) as usize]
-+                == buf[0..b_len as usize]
-+            {
-+                Ok(())
-+            } else {
-+                Err(b_len)
-+            }
-+        } else {
-+            if d_len != 0 {
-+                let cmp_len = d_len.min(b_len);
-+                b_off += cmp_len;
-+                if self.data.content()[self.d_off as usize..(self.d_off + cmp_len) as usize]
-+                    != buf[0..cmp_len as usize]
-+                {
-+                    return Err(b_off);
-+                }
-+            }
-+            while b_off < b_len {
-+                self.d_off = 0;
-+                self.data = self.iter.next().unwrap();
-+                let d_len = self.data.content().len() as Off;
-+                let cmp_len = d_len.min(b_len - b_off);
-+                b_off += cmp_len;
-+                if self.data.content()[0..cmp_len as usize] != buf[b_off as usize..] {
-+                    return Err(b_off);
-+                }
-+            }
-+            Ok(())
-+        }
-+    }
-+}
-diff --git a/fs/erofs/rust/erofs_sys/data/uncompressed.rs b/fs/erofs/rust/erofs_sys/data/uncompressed.rs
-new file mode 100644
-index 000000000000..7b194c5d5e39
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/data/uncompressed.rs
-@@ -0,0 +1,61 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+
-+use super::*;
-+
-+pub(crate) struct UncompressedBackend<T>
-+where
-+    T: Source,
-+{
-+    source: T,
-+}
-+
-+impl<T> Backend for UncompressedBackend<T>
-+where
-+    T: Source,
-+{
-+    fn fill(&self, data: &mut [u8], offset: Off) -> BackendResult<u64> {
-+        self.source
-+            .fill(data, offset)
-+            .map_or_else(|_| Err(BackendError::Dummy), Ok)
-+    }
-+    fn get_temp_buffer(&self, offset: Off, maxsize: Off) -> BackendResult<TempBuffer> {
-+        match self.source.get_temp_buffer(offset, maxsize) {
-+            Ok(buffer) => Ok(buffer),
-+            Err(_) => Err(BackendError::Dummy),
-+        }
-+    }
-+}
-+
-+impl<T> FileBackend for UncompressedBackend<T> where T: Source {}
-+
-+impl<'a, T> MemoryBackend<'a> for UncompressedBackend<T>
-+where
-+    T: PageSource<'a>,
-+{
-+    fn as_buf(&'a self, offset: Off, len: Off) -> BackendResult<RefBuffer<'a>> {
-+        self.source
-+            .as_buf(offset, len)
-+            .map_err(|_| BackendError::Dummy)
-+    }
-+    fn as_buf_mut(&'a mut self, offset: Off, len: Off) -> BackendResult<RefBufferMut<'a>> {
-+        self.source
-+            .as_buf_mut(offset, len)
-+            .map_err(|_| BackendError::Dummy)
-+    }
-+}
-+
-+impl<T: Source> UncompressedBackend<T> {
-+    pub(crate) fn new(source: T) -> Self {
-+        Self { source }
-+    }
-+}
-+
-+impl<T> From<T> for UncompressedBackend<T>
-+where
-+    T: Source,
-+{
-+    fn from(value: T) -> Self {
-+        Self::new(value)
-+    }
-+}
-diff --git a/fs/erofs/rust/erofs_sys/devices.rs b/fs/erofs/rust/erofs_sys/devices.rs
-new file mode 100644
-index 000000000000..ea951f2ef517
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/devices.rs
-@@ -0,0 +1,53 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+
-+use super::alloc_helper::*;
-+use super::data::*;
-+use alloc::vec::Vec;
-+
-+#[derive(Copy, Clone, Debug)]
-+pub(crate) struct DeviceSpec {
-+    pub(crate) tags: [u8; 64],
-+    pub(crate) blocks: u32,
-+    pub(crate) mapped_blocks: u32,
-+}
-+
-+#[derive(Copy, Clone, Debug)]
-+#[repr(C)]
-+pub(crate) struct DeviceSlot {
-+    tags: [u8; 64],
-+    blocks: u32,
-+    mapped_blocks: u32,
-+    reserved: [u8; 56],
-+}
-+
-+pub(crate) struct DeviceInfo {
-+    pub(crate) mask: u16,
-+    pub(crate) specs: Vec<DeviceSpec>,
-+}
-+
-+pub(crate) fn get_device_infos<'a>(iter: &mut (dyn ContinousBufferIter<'a> + 'a)) -> DeviceInfo {
-+    let mut specs = Vec::new();
-+    for data in iter {
-+        let slots = unsafe {
-+            core::slice::from_raw_parts(
-+                data.content().as_ptr() as *const DeviceSlot,
-+                data.content().len() >> 7,
-+            )
-+        };
-+        for slot in slots {
-+            push_vec(
-+                &mut specs,
-+                DeviceSpec {
-+                    tags: slot.tags,
-+                    blocks: slot.blocks,
-+                    mapped_blocks: slot.mapped_blocks,
-+                },
-+            );
-+        }
-+    }
-+    DeviceInfo {
-+        mask: specs.len().next_power_of_two() as u16,
-+        specs,
-+    }
-+}
-diff --git a/fs/erofs/rust/erofs_sys/dir.rs b/fs/erofs/rust/erofs_sys/dir.rs
-new file mode 100644
-index 000000000000..e60fa69329e9
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/dir.rs
-@@ -0,0 +1,83 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+
-+/// On-disk Directory Descriptor Format for EROFS
-+/// Documented on [EROFS Directory](https://erofs.docs.kernel.org/en/latest/core_ondisk.html#directories)
-+#[repr(C, packed)]
-+pub(crate) struct DirentDesc {
-+    pub(crate) nid: u64,
-+    pub(crate) nameoff: u16,
-+    pub(crate) file_type: u8,
-+    pub(crate) reserved: u8,
-+}
-+
-+/// In memory representation of a real directory entry.
-+pub(crate) struct Dirent<'a> {
-+    pub(crate) desc: &'a DirentDesc,
-+    pub(crate) name: &'a [u8],
-+}
-+
-+/// Create a collection of directory entries from a buffer.
-+/// This is a helper struct to iterate over directory entries.
-+pub(crate) struct DirCollection<'a> {
-+    data: &'a [u8],
-+    offset: usize,
-+    total: usize,
-+}
-+
-+impl<'a> DirCollection<'a> {
-+    pub(crate) fn new(buffer: &'a [u8]) -> Self {
-+        let desc: &DirentDesc = unsafe { &*(buffer.as_ptr() as *const DirentDesc) };
-+        Self {
-+            data: buffer,
-+            offset: 0,
-+            total: desc.nameoff as usize / core::mem::size_of::<DirentDesc>(),
-+        }
-+    }
-+    pub(crate) fn dirent(&self, index: usize) -> Option<Dirent<'a>> {
-+        //SAFETY: Note that DirentDesc is yet another ffi-safe type and the size of Block is larger
-+        //than that of DirentDesc. It's safe to allow this unsafe cast.
-+        let descs: &'a [DirentDesc] = unsafe {
-+            core::slice::from_raw_parts(self.data.as_ptr() as *const DirentDesc, self.total)
-+        };
-+        if index >= self.total {
-+            None
-+        } else if index == self.total - 1 {
-+            let len = self.data.len() - descs[self.total - 1].nameoff as usize;
-+            Some(Dirent {
-+                desc: &descs[index],
-+                name: &self.data
-+                    [descs[index].nameoff as usize..(descs[index].nameoff as usize) + len],
-+            })
-+        } else {
-+            let len = (descs[index + 1].nameoff - descs[index].nameoff) as usize;
-+            Some(Dirent {
-+                desc: &descs[index],
-+                name: &self.data
-+                    [descs[index].nameoff as usize..(descs[index].nameoff as usize) + len],
-+            })
-+        }
-+    }
-+    pub(crate) fn skip_dir(&mut self, offset: usize) {
-+        self.offset += offset;
-+    }
-+    pub(crate) fn total(&self) -> usize {
-+        self.total
-+    }
-+}
-+
-+impl<'a> Iterator for DirCollection<'a> {
-+    type Item = Dirent<'a>;
-+    fn next(&mut self) -> Option<Self::Item> {
-+        self.dirent(self.offset).map(|x| {
-+            self.offset += 1;
-+            x
-+        })
-+    }
-+}
-+
-+impl<'a> Dirent<'a> {
-+    pub(crate) fn dirname(&self) -> &'a [u8] {
-+        self.name
-+    }
-+}
-diff --git a/fs/erofs/rust/erofs_sys/inode.rs b/fs/erofs/rust/erofs_sys/inode.rs
-new file mode 100644
-index 000000000000..18710deef85a
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/inode.rs
-@@ -0,0 +1,407 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+
-+use super::superblock::*;
-+use super::*;
-+use core::mem::size_of;
-+
-+/// Represents the compact bitfield of the Erofs Inode format.
-+#[repr(transparent)]
-+#[derive(Clone, Copy)]
-+pub(crate) struct Format(u16);
-+
-+/// The Version of the Inode which represents whether this inode is extended or compact.
-+/// Extended inodes have more infos about nlinks + mtime.
-+/// This is documented in https://erofs.docs.kernel.org/en/latest/core_ondisk.html#inodes
-+#[repr(C)]
-+#[derive(Clone, Copy)]
-+pub(crate) enum Version {
-+    Compat,
-+    Extended,
-+    Unknown,
-+}
-+
-+/// Represents the data layout backed by the Inode.
-+/// As Documented in https://erofs.docs.kernel.org/en/latest/core_ondisk.html#inode-data-layouts
-+#[repr(C)]
-+#[derive(Clone, Copy, PartialEq)]
-+pub(crate) enum Layout {
-+    FlatPlain,
-+    CompressedFull,
-+    FlatInline,
-+    CompressedCompact,
-+    Chunk,
-+    Unknown,
-+}
-+
-+#[repr(C)]
-+#[allow(non_camel_case_types)]
-+#[derive(Clone, Copy, Debug, PartialEq)]
-+pub(crate) enum Type {
-+    Regular,
-+    Directory,
-+    Link,
-+    Character,
-+    Block,
-+    Fifo,
-+    Socket,
-+    Unknown,
-+}
-+
-+/// This is format extracted from i_format bit representation.
-+/// This includes various infos and specs about the inode.
-+impl Format {
-+    pub(crate) fn version(&self) -> Version {
-+        match (self.0) & ((1 << 1) - 1) {
-+            0 => Version::Compat,
-+            1 => Version::Extended,
-+            _ => Version::Unknown,
-+        }
-+    }
-+
-+    pub(crate) fn layout(&self) -> Layout {
-+        match (self.0 >> 1) & ((1 << 3) - 1) {
-+            0 => Layout::FlatPlain,
-+            1 => Layout::CompressedFull,
-+            2 => Layout::FlatInline,
-+            3 => Layout::CompressedCompact,
-+            4 => Layout::Chunk,
-+            _ => Layout::Unknown,
-+        }
-+    }
-+}
-+
-+/// Represents the compact inode which resides on-disk.
-+/// This is documented in https://erofs.docs.kernel.org/en/latest/core_ondisk.html#inodes
-+#[repr(C)]
-+#[derive(Clone, Copy)]
-+pub(crate) struct CompactInodeInfo {
-+    pub(crate) i_format: Format,
-+    pub(crate) i_xattr_icount: u16,
-+    pub(crate) i_mode: u16,
-+    pub(crate) i_nlink: u16,
-+    pub(crate) i_size: u32,
-+    pub(crate) i_reserved: [u8; 4],
-+    pub(crate) i_u: [u8; 4],
-+    pub(crate) i_ino: u32,
-+    pub(crate) i_uid: u16,
-+    pub(crate) i_gid: u16,
-+    pub(crate) i_reserved2: [u8; 4],
-+}
-+
-+/// Represents the extended inode which resides on-disk.
-+/// This is documented in https://erofs.docs.kernel.org/en/latest/core_ondisk.html#inodes
-+#[repr(C)]
-+#[derive(Clone, Copy)]
-+pub(crate) struct ExtendedInodeInfo {
-+    pub(crate) i_format: Format,
-+    pub(crate) i_xattr_icount: u16,
-+    pub(crate) i_mode: u16,
-+    pub(crate) i_reserved: [u8; 2],
-+    pub(crate) i_size: u64,
-+    pub(crate) i_u: [u8; 4],
-+    pub(crate) i_ino: u32,
-+    pub(crate) i_uid: u32,
-+    pub(crate) i_gid: u32,
-+    pub(crate) i_mtime: u64,
-+    pub(crate) i_mtime_nsec: u32,
-+    pub(crate) i_nlink: u32,
-+    pub(crate) i_reserved2: [u8; 16],
-+}
-+
-+/// Represents the inode info which is either compact or extended.
-+#[derive(Clone, Copy)]
-+pub(crate) enum InodeInfo {
-+    Extended(ExtendedInodeInfo),
-+    Compact(CompactInodeInfo),
-+}
-+
-+pub(crate) const CHUNK_BLKBITS_MASK: u16 = 0x1f;
-+pub(crate) const CHUNK_FORMAT_INDEXES: u16 = 0x20;
-+
-+/// Represents on-disk chunk index of the file backing inode.
-+#[repr(C)]
-+pub(crate) struct ChunkIndex {
-+    pub(crate) advise: u16,
-+    pub(crate) device_id: u16,
-+    pub(crate) blkaddr: u32,
-+}
-+
-+impl From<[u8; 8]> for ChunkIndex {
-+    fn from(u: [u8; 8]) -> Self {
-+        let advise = u16::from_le_bytes([u[0], u[1]]);
-+        let device_id = u16::from_le_bytes([u[2], u[3]]);
-+        let blkaddr = u32::from_le_bytes([u[4], u[5], u[6], u[7]]);
-+        ChunkIndex {
-+            advise,
-+            device_id,
-+            blkaddr,
-+        }
-+    }
-+}
-+
-+/// Represents the data spec of the inode which is either consequentive raw blocks or in sparse chunk format.
-+#[derive(Clone, Copy, Debug)]
-+pub(crate) enum DataSpec {
-+    RawBlk(u32),
-+    ChunkFormat(u16),
-+}
-+
-+/// Represents the inode spec which is either data or device.
-+#[derive(Clone, Copy, Debug)]
-+pub(crate) enum Spec {
-+    Data(DataSpec),
-+    Device(u32),
-+    Unknown,
-+}
-+
-+/// Convert the spec from the format of the inode based on the layout.
-+impl Spec {
-+    pub(crate) fn data(u: &[u8; 4], layout: Layout) -> Self {
-+        match layout {
-+            Layout::FlatInline | Layout::FlatPlain => {
-+                Spec::Data(DataSpec::RawBlk(u32::from_le_bytes(*u)))
-+            }
-+            Layout::Chunk => {
-+                let chunkformat = u16::from_le_bytes([u[0], u[1]]);
-+                Spec::Data(DataSpec::ChunkFormat(chunkformat))
-+            }
-+            _ => Spec::Unknown,
-+        }
-+    }
-+}
-+
-+/// Helper functions for Inode Info.
-+impl InodeInfo {
-+    pub(crate) fn ino(&self) -> u32 {
-+        match self {
-+            Self::Extended(extended) => extended.i_ino,
-+            Self::Compact(compact) => compact.i_ino,
-+        }
-+    }
-+
-+    pub(crate) fn format(&self) -> Format {
-+        match self {
-+            Self::Extended(extended) => extended.i_format,
-+            Self::Compact(compact) => compact.i_format,
-+        }
-+    }
-+
-+    pub(crate) fn file_size(&self) -> Off {
-+        match self {
-+            Self::Extended(extended) => extended.i_size,
-+            Self::Compact(compact) => compact.i_size as u64,
-+        }
-+    }
-+
-+    pub(crate) fn inode_size(&self) -> Off {
-+        match self {
-+            Self::Extended(_) => 64,
-+            Self::Compact(_) => 32,
-+        }
-+    }
-+
-+    pub(crate) fn xattr_size(&self) -> Off {
-+        match self {
-+            Self::Extended(extended) => 12 + 4 * (extended.i_xattr_icount as u64 - 1),
-+            Self::Compact(_) => 0,
-+        }
-+    }
-+
-+    pub(crate) fn xattr_count(&self) -> u16 {
-+        match self {
-+            Self::Extended(extended) => extended.i_xattr_icount,
-+            Self::Compact(compact) => compact.i_xattr_icount,
-+        }
-+    }
-+
-+    pub(crate) fn spec(&self) -> Spec {
-+        let mode = match self {
-+            Self::Extended(extended) => extended.i_mode,
-+            Self::Compact(compact) => compact.i_mode,
-+        };
-+
-+        let u = match self {
-+            Self::Extended(extended) => &extended.i_u,
-+            Self::Compact(compact) => &compact.i_u,
-+        };
-+
-+        match mode & 0o170000 {
-+            0o40000 => Spec::data(u, self.format().layout()),
-+            0o100000 => Spec::data(u, self.format().layout()),
-+            0o120000 => Spec::data(u, self.format().layout()), // Real Data
-+            0o10000 => Spec::Device(0),                        // FIFO
-+            0o140000 => Spec::Device(0),                       // Socket
-+            0o60000 => unimplemented!(),                       // Block
-+            0o20000 => unimplemented!(),                       // Character
-+            _ => Spec::Unknown,
-+        }
-+    }
-+
-+    pub(crate) fn inode_type(&self) -> Type {
-+        let mode = match self {
-+            Self::Extended(extended) => extended.i_mode,
-+            Self::Compact(compact) => compact.i_mode,
-+        };
-+        match mode & 0o170000 {
-+            0o40000 => Type::Directory, // Directory
-+            0o100000 => Type::Regular,  // Regular File
-+            0o120000 => Type::Link,     // Symbolic Link
-+            0o10000 => Type::Fifo,      // FIFO
-+            0o140000 => Type::Socket,   // Socket
-+            0o60000 => Type::Block,     // Block
-+            0o20000 => Type::Character, // Character
-+            _ => Type::Unknown,
-+        }
-+    }
-+}
-+
-+pub(crate) type CompactInodeInfoBuf = [u8; size_of::<CompactInodeInfo>()];
-+pub(crate) type ExtendedInodeInfoBuf = [u8; size_of::<ExtendedInodeInfo>()];
-+pub(crate) const DEFAULT_INODE_BUF: ExtendedInodeInfoBuf = [0; size_of::<ExtendedInodeInfo>()];
-+
-+pub(crate) trait Inode: Sized {
-+    fn new(
-+        _sb: &SuperBlock,
-+        info: InodeInfo,
-+        nid: Nid,
-+        xattrs_header: xattrs::MemEntryIndexHeader,
-+    ) -> Self;
-+    fn info(&self) -> &InodeInfo;
-+    fn xattrs_header(&self) -> &xattrs::MemEntryIndexHeader;
-+    fn nid(&self) -> Nid;
-+}
-+
-+#[derive(Debug)]
-+pub(crate) enum InodeError {
-+    VersionError,
-+    UnknownError,
-+}
-+
-+type InodeResult<T> = Result<T, InodeError>;
-+
-+impl TryFrom<CompactInodeInfoBuf> for CompactInodeInfo {
-+    type Error = InodeError;
-+    fn try_from(value: CompactInodeInfoBuf) -> Result<Self, Self::Error> {
-+        //SAFETY: all the types present are ffi-safe. safe to cast here since only [u8;64] could be
-+        //passed into this function and it's definitely safe.
-+        let inode: CompactInodeInfo = Self {
-+            i_format: Format(u16::from_le_bytes(value[0..2].try_into().unwrap())),
-+            i_xattr_icount: u16::from_le_bytes(value[2..4].try_into().unwrap()),
-+            i_mode: u16::from_le_bytes(value[4..6].try_into().unwrap()),
-+            i_nlink: u16::from_le_bytes(value[6..8].try_into().unwrap()),
-+            i_size: u32::from_le_bytes(value[8..12].try_into().unwrap()),
-+            i_reserved: value[12..16].try_into().unwrap(),
-+            i_u: value[16..20].try_into().unwrap(),
-+            i_ino: u32::from_le_bytes(value[20..24].try_into().unwrap()),
-+            i_uid: u16::from_le_bytes(value[24..26].try_into().unwrap()),
-+            i_gid: u16::from_le_bytes(value[26..28].try_into().unwrap()),
-+            i_reserved2: value[28..32].try_into().unwrap(),
-+        };
-+        let ifmt = &inode.i_format;
-+        match ifmt.version() {
-+            Version::Compat => Ok(inode),
-+            Version::Extended => Err(InodeError::VersionError),
-+            _ => Err(InodeError::UnknownError),
-+        }
-+    }
-+}
-+
-+impl TryFrom<ExtendedInodeInfoBuf> for InodeInfo {
-+    type Error = InodeError;
-+    fn try_from(value: ExtendedInodeInfoBuf) -> Result<Self, Self::Error> {
-+        let compact_buf: CompactInodeInfoBuf = value[0..32].try_into().unwrap();
-+        let r: Result<CompactInodeInfo, Self::Error> = CompactInodeInfo::try_from(compact_buf);
-+
-+        match r {
-+            Ok(compact) => Ok(InodeInfo::Compact(compact)),
-+            Err(e) => match e {
-+                //SAFETY: Note that try_into will return VersionError. This suggests that current
-+                //buffer contains the extended inode. Since the types used are FFI-safe, it's safe
-+                //to transtmute it here.
-+                InodeError::VersionError => Ok(InodeInfo::Extended(ExtendedInodeInfo {
-+                    i_format: Format(u16::from_le_bytes(value[0..2].try_into().unwrap())),
-+                    i_xattr_icount: u16::from_le_bytes(value[2..4].try_into().unwrap()),
-+                    i_mode: u16::from_le_bytes(value[4..6].try_into().unwrap()),
-+                    i_reserved: value[6..8].try_into().unwrap(),
-+                    i_size: u64::from_le_bytes(value[8..16].try_into().unwrap()),
-+                    i_u: value[16..20].try_into().unwrap(),
-+                    i_ino: u32::from_le_bytes(value[20..24].try_into().unwrap()),
-+                    i_uid: u32::from_le_bytes(value[24..28].try_into().unwrap()),
-+                    i_gid: u32::from_le_bytes(value[28..32].try_into().unwrap()),
-+                    i_mtime: u64::from_le_bytes(value[32..40].try_into().unwrap()),
-+                    i_mtime_nsec: u32::from_le_bytes(value[40..44].try_into().unwrap()),
-+                    i_nlink: u32::from_le_bytes(value[44..48].try_into().unwrap()),
-+                    i_reserved2: value[48..64].try_into().unwrap(),
-+                })),
-+                _ => Err(e),
-+            },
-+        }
-+    }
-+}
-+
-+pub(crate) trait InodeCollection {
-+    type I: Inode + Sized;
-+
-+    fn iget(&mut self, nid: Nid, filesystem: &dyn FileSystem<Self::I>) -> &mut Self::I;
-+}
-+
-+#[cfg(test)]
-+pub(crate) mod tests {
-+
-+    extern crate std;
-+    use super::*;
-+    use crate::xattrs;
-+    use std::collections::{hash_map::Entry, HashMap};
-+
-+    #[test]
-+    fn test_inode_size() {
-+        assert_eq!(core::mem::size_of::<CompactInodeInfo>(), 32);
-+        assert_eq!(core::mem::size_of::<ExtendedInodeInfo>(), 64);
-+    }
-+
-+    pub(crate) struct SimpleInode {
-+        info: InodeInfo,
-+        xattr_header: xattrs::MemEntryIndexHeader,
-+        nid: Nid,
-+    }
-+
-+    impl Inode for SimpleInode {
-+        fn new(
-+            _sb: &SuperBlock,
-+            info: InodeInfo,
-+            nid: Nid,
-+            xattr_header: xattrs::MemEntryIndexHeader,
-+        ) -> Self {
-+            Self {
-+                info,
-+                xattr_header,
-+                nid,
-+            }
-+        }
-+        fn xattrs_header(&self) -> &xattrs::MemEntryIndexHeader {
-+            &self.xattr_header
-+        }
-+        fn nid(&self) -> Nid {
-+            self.nid
-+        }
-+        fn info(&self) -> &InodeInfo {
-+            &self.info
-+        }
-+    }
-+
-+    impl InodeCollection for HashMap<Nid, SimpleInode> {
-+        type I = SimpleInode;
-+        fn iget(&mut self, nid: Nid, f: &dyn FileSystem<Self::I>) -> &mut Self::I {
-+            match self.entry(nid) {
-+                Entry::Vacant(v) => v.insert(Self::I::new(
-+                    f.superblock(),
-+                    f.read_inode_info(nid),
-+                    nid,
-+                    f.read_inode_xattrs_index(nid),
-+                )),
-+                Entry::Occupied(o) => o.into_mut(),
-+            }
-+        }
-+    }
-+}
-diff --git a/fs/erofs/rust/erofs_sys/map.rs b/fs/erofs/rust/erofs_sys/map.rs
-new file mode 100644
-index 000000000000..bf75981bcd4a
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/map.rs
-@@ -0,0 +1,28 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+
-+use super::*;
-+
-+pub(crate) const MAP_MAPPED: u32 = 0x0001;
-+pub(crate) const MAP_META: u32 = 0x0002;
-+pub(crate) const MAP_ENCODED: u32 = 0x0004;
-+pub(crate) const MAP_FULL_MAPPED: u32 = 0x0008;
-+pub(crate) const MAP_FRAGMENT: u32 = 0x0010;
-+pub(crate) const MAP_PARTIAL_REF: u32 = 0x0020;
-+
-+#[derive(Debug, Default)]
-+#[repr(C)]
-+pub(crate) struct AddressMap {
-+    pub(crate) start: Off,
-+    pub(crate) len: Off,
-+}
-+
-+#[derive(Debug, Default)]
-+#[repr(C)]
-+pub(crate) struct Map {
-+    pub(crate) logical: AddressMap,
-+    pub(crate) physical: AddressMap,
-+    pub(crate) device_id: u16,
-+    pub(crate) algorithm_format: u16,
-+    pub(crate) flags: u32,
-+}
-diff --git a/fs/erofs/rust/erofs_sys/operations.rs b/fs/erofs/rust/erofs_sys/operations.rs
-new file mode 100644
-index 000000000000..afb6e232fde5
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/operations.rs
-@@ -0,0 +1,96 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+
-+use alloc::vec::Vec;
-+
-+use super::alloc_helper::*;
-+use super::data::*;
-+use super::inode::*;
-+use super::superblock::*;
-+use super::xattrs;
-+use super::*;
-+
-+// Because of the brain dead features of borrow-checker, it cannot statically analyze which part of the struct is exclusively borrowed.
-+// Refactor out the real file operations, so that we can make sure things will get compiled.
-+
-+pub(crate) fn read_inode<'a, I, C>(
-+    filesystem: &'a dyn FileSystem<I>,
-+    collection: &'a mut C,
-+    nid: Nid,
-+) -> &'a mut I
-+where
-+    I: Inode,
-+    C: InodeCollection<I = I>,
-+{
-+    collection.iget(nid, filesystem)
-+}
-+
-+pub(crate) fn ilookup<'a, I, C>(
-+    filesystem: &'a dyn FileSystem<I>,
-+    collection: &'a mut C,
-+    name: &str,
-+) -> Option<&'a mut I>
-+where
-+    I: Inode,
-+    C: InodeCollection<I = I>,
-+{
-+    let mut nid = filesystem.superblock().root_nid as Nid;
-+    for part in name.split('/') {
-+        if part.is_empty() {
-+            continue;
-+        }
-+        let inode = read_inode(filesystem, collection, nid); // this part collection is reborrowed for shorter
-+                                                             // lifetime inside the loop;
-+        nid = filesystem.find_nid(inode, part)?
-+    }
-+    Some(read_inode(filesystem, collection, nid))
-+}
-+
-+pub(crate) fn dir_walk<'a, I, C>(
-+    filesystem: &'a dyn FileSystem<I>,
-+    collection: &'a mut C,
-+    inode: &I,
-+    name: &str,
-+) -> Option<&'a mut I>
-+where
-+    I: Inode,
-+    C: InodeCollection<I = I>,
-+{
-+    let mut nid = inode.nid();
-+    for part in name.split('/') {
-+        if part.is_empty() {
-+            continue;
-+        }
-+        let inode = read_inode(filesystem, collection, nid); // this part collection is reborrowed for shorter
-+                                                             // lifetime inside the loop;
-+        nid = filesystem.find_nid(inode, part)?
-+    }
-+    Some(read_inode(filesystem, collection, nid))
-+}
-+
-+pub(crate) fn dir_lookup<'a, I, C>(
-+    filesystem: &'a dyn FileSystem<I>,
-+    collection: &'a mut C,
-+    inode: &I,
-+    name: &str,
-+) -> Option<&'a mut I>
-+where
-+    I: Inode,
-+    C: InodeCollection<I = I>,
-+{
-+    filesystem
-+        .find_nid(inode, name)
-+        .map(|nid| read_inode(filesystem, collection, nid))
-+}
-+
-+pub(crate) fn get_xattr_prefixes(sb: &SuperBlock, backend: &dyn Backend) -> Vec<xattrs::Prefix> {
-+    let mut result: Vec<xattrs::Prefix> = Vec::new();
-+    for data in MetadataBufferIter::new(
-+        backend,
-+        (sb.xattr_prefix_start << 2) as Off,
-+        sb.xattr_prefix_count as usize,
-+    ) {
-+        push_vec(&mut result, xattrs::Prefix(data));
-+    }
-+    result
-+}
-diff --git a/fs/erofs/rust/erofs_sys/superblock.rs b/fs/erofs/rust/erofs_sys/superblock.rs
-new file mode 100644
-index 000000000000..452e0aefb4f6
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/superblock.rs
-@@ -0,0 +1,554 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+
-+use alloc::boxed::Box;
-+use alloc::vec::Vec;
-+
-+use crate::round;
-+
-+use super::alloc_helper::*;
-+use super::data::*;
-+use super::devices::*;
-+use super::dir::*;
-+use super::inode::*;
-+use super::map::*;
-+use super::xattrs;
-+use super::xattrs::*;
-+use super::*;
-+
-+use core::mem::size_of;
-+
-+pub(crate) mod file;
-+pub(crate) mod mem;
-+
-+#[derive(Debug, Clone, Copy, Default)]
-+#[repr(C)]
-+pub(crate) struct SuperBlock {
-+    pub(crate) magic: u32,
-+    pub(crate) checksum: i32,
-+    pub(crate) feature_compat: i32,
-+    pub(crate) blkszbits: u8,
-+    pub(crate) sb_extslots: u8,
-+    pub(crate) root_nid: i16,
-+    pub(crate) inos: i64,
-+    pub(crate) build_time: i64,
-+    pub(crate) build_time_nsec: i32,
-+    pub(crate) blocks: i32,
-+    pub(crate) meta_blkaddr: u32,
-+    pub(crate) xattr_blkaddr: u32,
-+    pub(crate) uuid: [u8; 16],
-+    pub(crate) volume_name: [u8; 16],
-+    pub(crate) feature_incompat: i32,
-+    pub(crate) compression: i16,
-+    pub(crate) extra_devices: i16,
-+    pub(crate) devt_slotoff: i16,
-+    pub(crate) dirblkbits: u8,
-+    pub(crate) xattr_prefix_count: u8,
-+    pub(crate) xattr_prefix_start: i32,
-+    pub(crate) packed_nid: i64,
-+    pub(crate) xattr_filter_reserved: u8,
-+    pub(crate) reserved: [u8; 23],
-+}
-+
-+// SAFETY: SuperBlock uses all ffi-safe types.
-+impl TryFrom<&[u8]> for SuperBlock {
-+    type Error = core::array::TryFromSliceError;
-+    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-+        value[0..128].try_into()
-+    }
-+}
-+
-+// SAFETY: SuperBlock uses all ffi-safe types.
-+impl From<[u8; 128]> for SuperBlock {
-+    fn from(value: [u8; 128]) -> Self {
-+        Self {
-+            magic: u32::from_le_bytes(value[0..4].try_into().unwrap()),
-+            checksum: i32::from_le_bytes(value[4..8].try_into().unwrap()),
-+            feature_compat: i32::from_le_bytes(value[8..12].try_into().unwrap()),
-+            blkszbits: value[12],
-+            sb_extslots: value[13],
-+            root_nid: i16::from_le_bytes(value[14..16].try_into().unwrap()),
-+            inos: i64::from_le_bytes(value[16..24].try_into().unwrap()),
-+            build_time: i64::from_le_bytes(value[24..32].try_into().unwrap()),
-+            build_time_nsec: i32::from_le_bytes(value[32..36].try_into().unwrap()),
-+            blocks: i32::from_le_bytes(value[36..40].try_into().unwrap()),
-+            meta_blkaddr: u32::from_le_bytes(value[40..44].try_into().unwrap()),
-+            xattr_blkaddr: u32::from_le_bytes(value[44..48].try_into().unwrap()),
-+            uuid: value[48..64].try_into().unwrap(),
-+            volume_name: value[64..80].try_into().unwrap(),
-+            feature_incompat: i32::from_le_bytes(value[80..84].try_into().unwrap()),
-+            compression: i16::from_le_bytes(value[84..86].try_into().unwrap()),
-+            extra_devices: i16::from_le_bytes(value[86..88].try_into().unwrap()),
-+            devt_slotoff: i16::from_le_bytes(value[88..90].try_into().unwrap()),
-+            dirblkbits: value[90],
-+            xattr_prefix_count: value[91],
-+            xattr_prefix_start: i32::from_le_bytes(value[92..96].try_into().unwrap()),
-+            packed_nid: i64::from_le_bytes(value[96..104].try_into().unwrap()),
-+            xattr_filter_reserved: value[104],
-+            reserved: value[105..128].try_into().unwrap(),
-+        }
-+    }
-+}
-+
-+pub(crate) type SuperBlockBuf = [u8; size_of::<SuperBlock>()];
-+pub(crate) const SUPERBLOCK_EMPTY_BUF: SuperBlockBuf = [0; size_of::<SuperBlock>()];
-+
-+pub(crate) trait FileSystem<I>
-+where
-+    I: Inode,
-+{
-+    fn superblock(&self) -> &SuperBlock;
-+    fn device_info(&self) -> &DeviceInfo;
-+    fn backend(&self) -> &dyn Backend;
-+    fn blknr(&self, pos: Off) -> Blk {
-+        (pos >> self.superblock().blkszbits) as Blk
-+    }
-+
-+    fn blkpos(&self, blk: Blk) -> Off {
-+        (blk as Off) << self.superblock().blkszbits
-+    }
-+
-+    fn blkoff(&self, offset: Off) -> Off {
-+        offset & (self.blksz() - 1)
-+    }
-+
-+    fn blksz(&self) -> Off {
-+        1 << self.superblock().blkszbits
-+    }
-+
-+    fn blk_round_up(&self, addr: Off) -> Blk {
-+        ((addr + self.blksz() - 1) >> self.superblock().blkszbits) as Blk
-+    }
-+
-+    fn iloc(&self, nid: Nid) -> Off {
-+        let sb = &self.superblock();
-+        self.blkpos(sb.meta_blkaddr) + ((nid as Off) << (5 as Off))
-+    }
-+
-+    fn read_inode_info(&self, nid: Nid) -> InodeInfo {
-+        let offset = self.iloc(nid);
-+        let mut buf: ExtendedInodeInfoBuf = DEFAULT_INODE_BUF;
-+        self.backend().fill(&mut buf, offset).unwrap();
-+        InodeInfo::try_from(buf).unwrap()
-+    }
-+
-+    fn xattr_prefixes(&self) -> &Vec<xattrs::Prefix>;
-+
-+    // Currently we eagerly initialized all xattrs;
-+    //
-+    fn read_inode_xattrs_index(&self, nid: Nid) -> xattrs::MemEntryIndexHeader {
-+        let offset = self.iloc(nid);
-+        let pa = PageAddress::from(offset);
-+
-+        let mut buf = EROFS_PAGE;
-+        let mut indexes: Vec<u32> = Vec::new();
-+
-+        let rlen = self
-+            .backend()
-+            .fill(&mut buf[0..pa.pg_len as usize], offset)
-+            .unwrap();
-+
-+        let header: xattrs::DiskEntryIndexHeader =
-+            unsafe { *(buf.as_ptr() as *const xattrs::DiskEntryIndexHeader) };
-+        let inline_count =
-+            (((rlen - xattrs::XATTRS_HEADER_SIZE) >> 2) as usize).min(header.shared_count as usize);
-+        let outbound_count = header.shared_count as usize - inline_count;
-+
-+        extend_from_slice(&mut indexes, unsafe {
-+            core::slice::from_raw_parts(
-+                (buf[xattrs::XATTRS_HEADER_SIZE as usize..pa.pg_len as usize])
-+                    .as_ptr()
-+                    .cast(),
-+                inline_count,
-+            )
++            (*ctx).pos = pos as i64;
 +        });
-+
-+        if outbound_count == 0 {
-+            xattrs::MemEntryIndexHeader {
-+                name_filter: header.name_filter,
-+                shared_indexes: indexes,
-+            }
-+        } else {
-+            for block in self.continous_iter(
-+                round!(UP, offset, EROFS_PAGE_SZ),
-+                (outbound_count << 2) as Off,
-+            ) {
-+                let data = block.content();
-+                extend_from_slice(&mut indexes, unsafe {
-+                    core::slice::from_raw_parts(data.as_ptr().cast(), data.len() >> 2)
-+                });
-+            }
-+            xattrs::MemEntryIndexHeader {
-+                name_filter: header.name_filter,
-+                shared_indexes: indexes,
-+            }
-+        }
-+    }
-+    fn flatmap(&self, inode: &I, offset: Off, inline: bool) -> Map {
-+        let nblocks = self.blk_round_up(inode.info().file_size());
-+
-+        let blkaddr = match inode.info().spec() {
-+            Spec::Data(ds) => match ds {
-+                DataSpec::RawBlk(blkaddr) => blkaddr,
-+                _ => unimplemented!(),
-+            },
-+            _ => unimplemented!(),
-+        };
-+
-+        let lastblk = if inline { nblocks - 1 } else { nblocks };
-+        let len = inode.info().file_size() - offset;
-+        if offset < self.blkpos(lastblk) {
-+            Map {
-+                logical: AddressMap { start: offset, len },
-+                physical: AddressMap {
-+                    start: self.blkpos(blkaddr) + offset,
-+                    len,
-+                },
-+                algorithm_format: 0,
-+                device_id: 0,
-+                flags: MAP_MAPPED,
-+            }
-+        } else if inline {
-+            Map {
-+                logical: AddressMap { start: offset, len },
-+                physical: AddressMap {
-+                    start: self.iloc(inode.nid())
-+                        + inode.info().inode_size()
-+                        + inode.info().xattr_size()
-+                        + self.blkoff(offset),
-+                    len,
-+                },
-+                algorithm_format: 0,
-+                device_id: 0,
-+                flags: MAP_MAPPED | MAP_META,
-+            }
-+        } else {
-+            unimplemented!()
-+        }
-+    }
-+
-+    fn chunk_map(&self, inode: &I, offset: Off) -> Map {
-+        let cs = match inode.info().spec() {
-+            Spec::Data(ds) => match ds {
-+                DataSpec::ChunkFormat(cs) => cs,
-+                _ => unimplemented!(),
-+            },
-+            _ => unimplemented!(),
-+        };
-+        let chunkbits = ((cs & CHUNK_BLKBITS_MASK) + self.superblock().blkszbits as u16) as Off;
-+
-+        let chunknr = offset >> chunkbits;
-+        if cs & CHUNK_FORMAT_INDEXES != 0 {
-+            let unit = size_of::<ChunkIndex>() as Off;
-+            let pos = round!(
-+                UP,
-+                self.iloc(inode.nid())
-+                    + inode.info().inode_size()
-+                    + inode.info().xattr_size()
-+                    + unit * chunknr,
-+                unit
-+            );
-+            let mut buf = [0u8; size_of::<ChunkIndex>()];
-+            self.backend().fill(&mut buf, pos).unwrap();
-+            let chunk_index = ChunkIndex::from(buf);
-+
-+            if chunk_index.blkaddr == u32::MAX {
-+                Map::default()
-+            } else {
-+                Map {
-+                    logical: AddressMap {
-+                        start: chunknr << chunkbits,
-+                        len: 1 << chunkbits,
-+                    },
-+                    physical: AddressMap {
-+                        start: self.blkpos(chunk_index.blkaddr),
-+                        len: 1 << chunkbits,
-+                    },
-+                    algorithm_format: 0,
-+                    device_id: chunk_index.device_id & self.device_info().mask,
-+                    flags: MAP_MAPPED,
-+                }
-+            }
-+        } else {
-+            let unit = 4;
-+            let pos = round!(
-+                UP,
-+                self.iloc(inode.nid())
-+                    + inode.info().inode_size()
-+                    + inode.info().xattr_size()
-+                    + unit * chunknr,
-+                unit
-+            );
-+            let mut buf = [0u8; 4];
-+            self.backend().fill(&mut buf, pos).unwrap();
-+            let blkaddr = u32::from_le_bytes(buf);
-+            if blkaddr == u32::MAX {
-+                Map::default()
-+            } else {
-+                Map {
-+                    logical: AddressMap {
-+                        start: chunknr << chunkbits,
-+                        len: 1 << chunkbits,
-+                    },
-+                    physical: AddressMap {
-+                        start: self.blkpos(blkaddr),
-+                        len: 1 << chunkbits,
-+                    },
-+                    algorithm_format: 0,
-+                    device_id: 0,
-+                    flags: MAP_MAPPED,
-+                }
-+            }
-+        }
-+    }
-+
-+    fn map(&self, inode: &I, offset: Off) -> Map {
-+        match inode.info().format().layout() {
-+            Layout::FlatInline => self.flatmap(inode, offset, true),
-+            Layout::FlatPlain => self.flatmap(inode, offset, false),
-+            Layout::Chunk => self.chunk_map(inode, offset),
-+            _ => todo!(),
-+        }
-+    }
-+
-+    // TODO:: Remove the Box<dyn Iterator> here
-+    // Maybe create another wrapper type and we implement the Iterator there?
-+    // Seems unachievable because of static dispatch of Buffer is not allowed at compile time
-+    // If we want to have trait object that can be exported to c_void
-+    // Leave it as it is for tradeoffs
-+
-+    fn mapped_iter<'b, 'a: 'b>(
-+        &'a self,
-+        inode: &'b I,
-+        offset: Off,
-+    ) -> Box<dyn BufferMapIter<'a> + 'b>;
-+
-+    fn continous_iter<'a>(&'a self, offset: Off, len: Off)
-+        -> Box<dyn ContinousBufferIter<'a> + 'a>;
-+
-+    fn fill_dentries(&self, inode: &I, offset: Off, emitter: &mut dyn FnMut(Dirent<'_>, Off)) {
-+        if offset > inode.info().file_size() {
-+            return;
-+        }
-+
-+        let map_offset = round!(DOWN, offset, self.blksz());
-+        let blk_offset = round!(UP, self.blkoff(offset), size_of::<DirentDesc>() as Off);
-+
-+        let mut map_iter = self.mapped_iter(inode, map_offset);
-+        let first_buf = map_iter.next().unwrap();
-+        let mut collection = first_buf.iter_dir();
-+
-+        let mut pos: Off = map_offset + blk_offset;
-+
-+        if blk_offset as usize / size_of::<DirentDesc>() <= collection.total() {
-+            collection.skip_dir(blk_offset as usize / size_of::<DirentDesc>());
-+            for dirent in collection {
-+                emitter(dirent, pos);
-+                pos += size_of::<DirentDesc>() as Off;
-+            }
-+        }
-+
-+        pos = round!(UP, pos, self.blksz());
-+
-+        for buf in map_iter {
-+            for dirent in buf.iter_dir() {
-+                emitter(dirent, pos);
-+                pos += size_of::<DirentDesc>() as Off;
-+            }
-+            pos = round!(UP, pos, self.blksz());
-+        }
-+    }
-+
-+    fn find_nid(&self, inode: &I, name: &str) -> Option<Nid> {
-+        for buf in self.mapped_iter(inode, 0) {
-+            for dirent in buf.iter_dir() {
-+                if dirent.dirname() == name.as_bytes() {
-+                    return Some(dirent.desc.nid);
-+                }
-+            }
-+        }
-+        None
-+    }
-+
-+    fn get_xattr(&self, inode: &I, index: u32, name: &[u8], buffer: &mut [u8]) -> bool {
-+        let count = inode.info().xattr_count();
-+        let shared_count = inode.xattrs_header().shared_indexes.len();
-+        let inline_count = count as usize - shared_count;
-+
-+        let inline_offset = self.iloc(inode.nid())
-+            + inode.info().inode_size() as Off
-+            + size_of::<DiskEntryIndexHeader>() as Off
-+            + shared_count as Off * 4;
-+
-+        {
-+            let mut inline_provider =
-+                SkippableContinousIter::new(self.continous_iter(inline_offset, u64::MAX));
-+            for _ in 0..inline_count {
-+                let header = inline_provider.get_entry_header();
-+                if inline_provider.get_xattr_value(
-+                    self.xattr_prefixes(),
-+                    &header,
-+                    name,
-+                    index,
-+                    buffer,
-+                ) {
-+                    return true;
-+                }
-+            }
-+        }
-+
-+        for index in inode.xattrs_header().shared_indexes.iter() {
-+            let mut provider = SkippableContinousIter::new(self.continous_iter(
-+                self.blkpos(self.superblock().xattr_blkaddr) + (*index as Off) * 4,
-+                u64::MAX,
-+            ));
-+            let header = provider.get_entry_header();
-+            if provider.get_xattr_value(self.xattr_prefixes(), &header, name, *index, buffer) {
-+                return true;
-+            }
-+        }
-+        false
-+    }
-+
-+    fn list_xattrs(&self, inode: &I, buffer: &mut [u8]) {
-+        let count = inode.info().xattr_count();
-+        let shared_count = inode.xattrs_header().shared_indexes.len();
-+        let inline_count = count as usize - shared_count;
-+        let inline_offset = self.iloc(inode.nid())
-+            + inode.info().inode_size() as Off
-+            + size_of::<DiskEntryIndexHeader>() as Off
-+            + shared_count as Off * 4;
-+
-+        let mut offset = 0;
-+        {
-+            let mut inline_provider =
-+                SkippableContinousIter::new(self.continous_iter(inline_offset, u64::MAX));
-+            for _ in 0..inline_count {
-+                let header = inline_provider.get_entry_header();
-+                offset += inline_provider.get_xattr_name(
-+                    self.xattr_prefixes(),
-+                    &header,
-+                    &mut buffer[offset..],
-+                );
-+            }
-+        }
-+
-+        for index in inode.xattrs_header().shared_indexes.iter() {
-+            let mut provider = SkippableContinousIter::new(self.continous_iter(
-+                self.blkpos(self.superblock().xattr_blkaddr) + (*index as Off) * 4,
-+                u64::MAX,
-+            ));
-+            let header = provider.get_entry_header();
-+            offset +=
-+                provider.get_xattr_name(self.xattr_prefixes(), &header, &mut buffer[offset..]);
-+        }
-+    }
++    unsafe { (*ctx).pos = inode.info().file_size() as i64 }
++    0
 +}
 +
-+pub(crate) struct SuperblockInfo<I, C>
-+where
-+    I: Inode,
-+    C: InodeCollection<I = I>,
-+{
-+    pub(crate) filesystem: Box<dyn FileSystem<I>>,
-+    pub(crate) inodes: C,
-+}
++/// MapBlocks used for iomap_begin
++#[no_mangle]
++pub unsafe extern "C" fn erofs_iomap_begin_rust(k_inode: *mut inode, map: *mut ErofsRustMap) {
++    let erofs_sbi = as_sbi(unsafe { (*(*k_inode).i_sb).s_fs_info });
++    let k_inode = unsafe { &*container_of!(k_inode, KernelInode, k_inode) };
++    let m = erofs_sbi.filesystem.map(k_inode, unsafe { (*map).m_la });
 +
-+impl<I, C> SuperblockInfo<I, C>
-+where
-+    I: Inode,
-+    C: InodeCollection<I = I>,
-+{
-+    pub(crate) fn new(fs: Box<dyn FileSystem<I>>, c: C) -> Self {
-+        Self {
-+            filesystem: fs,
-+            inodes: c,
-+        }
++    unsafe {
++        (*map).m_pa = m.physical.start;
++        (*map).m_la = m.logical.start;
++        (*map).m_plen = m.physical.len;
++        (*map).m_llen = m.logical.len;
++        (*map).m_flags = m.flags;
 +    }
-+}
-+
-+#[cfg(test)]
-+pub(crate) mod tests {
-+    extern crate std;
-+
-+    use alloc::string::ToString;
-+
-+    use super::*;
-+    use crate::inode::tests::*;
-+    use crate::operations::*;
-+    use hex_literal::hex;
-+    use sha2::{Digest, Sha512};
-+    use std::collections::HashMap;
-+    use std::format;
-+    use std::fs::File;
-+    use std::path::Path;
-+    use std::vec;
-+
-+    pub(crate) const SB_MAGIC: u32 = 0xE0F5E1E2;
-+
-+    pub(crate) type SimpleBufferedFileSystem =
-+        SuperblockInfo<SimpleInode, HashMap<Nid, SimpleInode>>;
-+
-+    pub(crate) fn load_fixtures() -> impl Iterator<Item = File> {
-+        vec![512, 1024, 2048, 4096].into_iter().map(|num| {
-+            let mut s = env!("CARGO_MANIFEST_DIR").to_string();
-+            s.push_str(&format!("/tests/sample_{num}.img"));
-+            File::options()
-+                .read(true)
-+                .write(true)
-+                .open(Path::new(&s))
-+                .unwrap()
-+        })
-+    }
-+
-+    fn test_superblock_def(sbi: &mut SimpleBufferedFileSystem) {
-+        assert_eq!(sbi.filesystem.superblock().magic, SB_MAGIC);
-+    }
-+
-+    fn test_filesystem_ilookup(sbi: &mut SimpleBufferedFileSystem) {
-+        const LIPSUM_HEX: [u8;64] = hex!("6846740fd4c03c86524d39e0012ec8eb1e4b87e8a90c65227904148bc0e4d0592c209151a736946133cd57f7ec59c4e8a445e7732322dda9ce356f8d0100c4ca");
-+        const LIPSUM_FILE_SIZE: u64 = 5060;
-+        const LIPSUM_TYPE: Type = Type::Regular;
-+        let inode = ilookup(&*sbi.filesystem, &mut sbi.inodes, "/texts/lipsum.txt").unwrap();
-+        assert_eq!(inode.info().inode_type(), LIPSUM_TYPE);
-+        assert_eq!(inode.info().file_size(), LIPSUM_FILE_SIZE);
-+
-+        let mut hasher = Sha512::new();
-+        for block in sbi.filesystem.mapped_iter(inode, 0) {
-+            hasher.update(block.content());
-+        }
-+        let result = hasher.finalize();
-+        assert_eq!(result[..], LIPSUM_HEX);
-+    }
-+
-+    fn test_continous_iter(sbi: &mut SimpleBufferedFileSystem) {
-+        const README_HEX: [u8; 64] = hex!("99fffc75aec028f417d9782fffed6c5d877a29ad1b16fc62bfeb168cdaf8db6db2bad1814904cd0fa18a2396c2c618041682a010601f4052b9895138d4ed6f16");
-+        const README_FILE_SIZE: u64 = 38;
-+        const README_TYPE: Type = Type::Regular;
-+        let inode = ilookup(&*sbi.filesystem, &mut sbi.inodes, "/README.md").unwrap();
-+        assert_eq!(inode.info().inode_type(), README_TYPE);
-+        assert_eq!(inode.info().file_size(), README_FILE_SIZE);
-+        let map = sbi.filesystem.map(inode, 0);
-+
-+        let mut hasher = Sha512::new();
-+        for block in sbi
++    if m.flags & MAP_META != 0 && m.logical.len != 0 {
++        let buffer = erofs_sbi
 +            .filesystem
-+            .continous_iter(map.physical.start, map.physical.len)
-+        {
-+            hasher.update(block.content());
++            .continous_iter(m.physical.start, m.physical.len)
++            .next()
++            .unwrap();
++        unsafe {
++            (*map).inline_data = buffer.content().as_ptr().cast();
++            (*map).private = heap_alloc(buffer).into_foreign();
 +        }
-+        let result = hasher.finalize();
-+        assert_eq!(result[..], README_HEX);
-+    }
-+
-+    pub(crate) fn test_filesystem(sbi: &mut SimpleBufferedFileSystem) {
-+        test_superblock_def(sbi);
-+        test_filesystem_ilookup(sbi);
-+        test_continous_iter(sbi);
-+    }
-+
-+    #[test]
-+    fn test_superblock_size() {
-+        assert_eq!(core::mem::size_of::<SuperBlock>(), 128);
-+    }
-+}
-diff --git a/fs/erofs/rust/erofs_sys/superblock/file.rs b/fs/erofs/rust/erofs_sys/superblock/file.rs
-new file mode 100644
-index 000000000000..812a8046f0dc
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/superblock/file.rs
-@@ -0,0 +1,114 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+
-+use self::operations::get_xattr_prefixes;
-+
-+use super::*;
-+
-+pub(crate) struct ImageFileSystem<B>
-+// Only support standard file/device io. Not a continguous region of memory.
-+where
-+    B: FileBackend,
-+{
-+    backend: B,
-+    prefixes: Vec<xattrs::Prefix>,
-+    sb: SuperBlock,
-+    device_info: DeviceInfo,
-+}
-+
-+impl<I, B> FileSystem<I> for ImageFileSystem<B>
-+where
-+    B: FileBackend,
-+    I: Inode,
-+{
-+    fn superblock(&self) -> &SuperBlock {
-+        &self.sb
-+    }
-+    fn backend(&self) -> &dyn Backend {
-+        &self.backend
-+    }
-+
-+    fn mapped_iter<'b, 'a: 'b>(
-+        &'a self,
-+        inode: &'b I,
-+        offset: Off,
-+    ) -> Box<dyn BufferMapIter<'a> + 'b> {
-+        heap_alloc(TempBufferMapIter::new(
-+            &self.backend,
-+            MapIter::new(self, inode, offset),
-+        ))
-+    }
-+    fn continous_iter<'a>(
-+        &'a self,
-+        offset: Off,
-+        len: Off,
-+    ) -> Box<dyn ContinousBufferIter<'a> + 'a> {
-+        heap_alloc(ContinuousTempBufferIter::new(&self.backend, offset, len))
-+    }
-+    fn xattr_prefixes(&self) -> &Vec<xattrs::Prefix> {
-+        &self.prefixes
-+    }
-+    fn device_info(&self) -> &DeviceInfo {
-+        &self.device_info
-+    }
-+}
-+
-+impl<T> ImageFileSystem<T>
-+where
-+    T: FileBackend,
-+{
-+    pub(crate) fn new(backend: T) -> Self {
-+        let mut buf = SUPERBLOCK_EMPTY_BUF;
-+        backend.fill(&mut buf, EROFS_SUPER_OFFSET).unwrap();
-+        let sb: SuperBlock = buf.into();
-+        let prefixes = get_xattr_prefixes(&sb, &backend);
-+
-+        let device_info = get_device_infos(&mut ContinuousTempBufferIter::new(
-+            &backend,
-+            sb.devt_slotoff as Off * 128,
-+            sb.extra_devices as Off * 128,
-+        ));
-+
-+        Self {
-+            backend,
-+            sb,
-+            prefixes,
-+            device_info,
++    } else {
++        unsafe {
++            (*map).inline_data = core::ptr::null_mut();
++            (*map).private = core::ptr::null_mut();
 +        }
 +    }
 +}
 +
-+#[cfg(test)]
-+mod tests {
-+    extern crate alloc;
-+    extern crate std;
-+    use super::*;
-+    use crate::inode::tests::*;
-+    use crate::superblock::tests::*;
-+    use crate::superblock::uncompressed::*;
-+    use alloc::boxed::Box;
-+    use std::collections::HashMap;
-+    use std::fs::File;
-+    use std::os::unix::fs::FileExt;
-+
-+    impl Source for File {
-+        fn fill(&self, data: &mut [u8], offset: Off) -> SourceResult<u64> {
-+            self.read_at(data, offset)
-+                .map_or(Err(SourceError::Dummy), |size| Ok(size as u64))
-+        }
-+    }
-+
-+    impl FileSource for File {}
-+
-+    #[test]
-+    fn test_uncompressed_img_filesystem() {
-+        for file in load_fixtures() {
-+            let mut sbi: SuperblockInfo<SimpleInode, HashMap<Nid, SimpleInode>> =
-+                SuperblockInfo::new(
-+                    Box::new(ImageFileSystem::new(UncompressedBackend::new(file))),
-+                    HashMap::new(),
-+                );
-+            test_filesystem(&mut sbi);
-+        }
-+    }
-+}
-diff --git a/fs/erofs/rust/erofs_sys/superblock/mem.rs b/fs/erofs/rust/erofs_sys/superblock/mem.rs
-new file mode 100644
-index 000000000000..c5bb5135dc85
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/superblock/mem.rs
-@@ -0,0 +1,156 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-only
-+
-+use self::operations::get_xattr_prefixes;
-+
-+use super::*;
-+
-+// Memory Mapped Device/File so we need to have some external lifetime on the backend trait.
-+// Note that we do not want the lifetime to infect the MemFileSystem which may have a impact on
-+// the content iter below. Just use HRTB to dodge the borrow checker.
-+
-+pub(crate) struct MemFileSystem<T>
-+where
-+    T: for<'a> MemoryBackend<'a>,
-+{
-+    backend: T,
-+    sb: SuperBlock,
-+    prefixes: Vec<xattrs::Prefix>,
-+    device_info: DeviceInfo,
-+}
-+
-+impl<I, T> FileSystem<I> for MemFileSystem<T>
-+where
-+    T: for<'a> MemoryBackend<'a>,
-+    I: Inode,
-+{
-+    fn superblock(&self) -> &SuperBlock {
-+        &self.sb
-+    }
-+    fn backend(&self) -> &dyn Backend {
-+        &self.backend
-+    }
-+
-+    fn mapped_iter<'b, 'a: 'b>(
-+        &'a self,
-+        inode: &'b I,
-+        offset: Off,
-+    ) -> Box<dyn BufferMapIter<'a> + 'b> {
-+        heap_alloc(RefMapIter::new(
-+            &self.backend,
-+            MapIter::new(self, inode, offset),
-+        ))
-+    }
-+    fn continous_iter<'a>(
-+        &'a self,
-+        offset: Off,
-+        len: Off,
-+    ) -> Box<dyn ContinousBufferIter<'a> + 'a> {
-+        heap_alloc(ContinuousRefIter::new(&self.backend, offset, len))
-+    }
-+    fn xattr_prefixes(&self) -> &Vec<xattrs::Prefix> {
-+        &self.prefixes
-+    }
-+    fn device_info(&self) -> &DeviceInfo {
-+        &self.device_info
-+    }
-+}
-+
-+impl<T> MemFileSystem<T>
-+where
-+    T: for<'a> MemoryBackend<'a>,
-+{
-+    pub(crate) fn new(backend: T) -> Self {
-+        let mut buf = SUPERBLOCK_EMPTY_BUF;
-+        backend.fill(&mut buf, EROFS_SUPER_OFFSET).unwrap();
-+        let sb: SuperBlock = buf.into();
-+        let prefixes = get_xattr_prefixes(&sb, &backend);
-+        let device_info = get_device_infos(&mut ContinuousRefIter::new(
-+            &backend,
-+            sb.devt_slotoff as Off * 128,
-+            sb.extra_devices as Off * 128,
-+        ));
-+        Self {
-+            backend,
-+            sb,
-+            prefixes,
-+            device_info,
++/// iomap_end
++#[no_mangle]
++pub unsafe extern "C" fn erofs_iomap_end_rust(map: *mut ErofsRustMap) {
++    unsafe {
++        if !(*map).private.is_null() {
++            drop(Box::<Box<dyn Buffer + 'static>>::from_foreign(
++                (*map).private,
++            ))
 +        }
 +    }
 +}
 +
-+#[cfg(test)]
-+mod tests {
-+    extern crate std;
-+    use super::*;
-+    use crate::data::RefBuffer;
-+    use crate::inode::tests::*;
-+    use crate::superblock::tests::*;
-+    use crate::superblock::uncompressed::*;
-+    use crate::superblock::PageSource;
-+    use crate::Off;
-+    use memmap2::MmapMut;
-+    use std::collections::HashMap;
++/// Map blocks in inline mode exported for iget5_locked to be actually functional
++#[no_mangle]
++pub unsafe extern "C" fn erofs_iget5_eq_rust(kinode: *const c_void, opaque: *const c_void) -> i32 {
++    let nid = unsafe { *(opaque as *const Nid) };
++    let inode = unsafe { container_of!(kinode, KernelInode, k_inode) };
++    (unsafe { (*inode).nid() == nid }) as i32
++}
 +
-+    // Impl MmapMut to simulate a in-memory image/filesystem
-+    impl Source for MmapMut {
-+        fn fill(&self, data: &mut [u8], offset: Off) -> SourceResult<u64> {
-+            self.as_buf(offset, data.len() as u64).map(|buf| {
-+                let len = buf.content().len();
-+                data[..len].clone_from_slice(buf.content());
-+                len as Off
-+            })
-+        }
++/// init_once replacement
++#[no_mangle]
++pub unsafe extern "C" fn erofs_inode_init_once_rust(ptr: *const c_void) {
++    let inode = unsafe { &mut *(ptr as *mut KernelInode) };
++    unsafe { inode_init_once(inode.k_inode.as_mut_ptr()) }
++}
++
++/// iget replacement
++#[no_mangle]
++pub unsafe extern "C" fn erofs_iget_rust(sb: *mut super_block, nid: Nid) -> *mut inode {
++    let erofs_sbi = as_sbi(unsafe { (*sb).s_fs_info });
++    read_inode(erofs_sbi.filesystem.as_ref(), &mut erofs_sbi.inodes, nid)
++        .k_inode
++        .as_mut_ptr()
++}
++
++///make_root_call for setting up the root dentry for superblock
++#[no_mangle]
++pub unsafe extern "C" fn erofs_make_root_rust(sb: *mut super_block) -> *mut dentry {
++    let erofs_sbi = as_sbi(unsafe { (*sb).s_fs_info });
++    unsafe {
++        d_make_root(
++            read_inode(
++                erofs_sbi.filesystem.as_ref(),
++                &mut erofs_sbi.inodes,
++                erofs_sbi.filesystem.superblock().root_nid as u64,
++            )
++            .k_inode
++            .as_mut_ptr(),
++        )
 +    }
++}
 +
-+    impl<'a> PageSource<'a> for MmapMut {
-+        fn as_buf(&'a self, offset: crate::Off, len: crate::Off) -> SourceResult<RefBuffer<'a>> {
-+            let pa = PageAddress::from(offset);
-+            if pa.pg_off + len > EROFS_PAGE_SZ {
-+                Err(SourceError::OutBound)
-+            } else {
-+                let rlen = len.min(self.len() as u64 - offset);
-+                let buf =
-+                    &self[(pa.page as usize)..self.len().min((pa.page + EROFS_PAGE_SZ) as usize)];
-+                Ok(RefBuffer::new(
-+                    buf,
-+                    pa.pg_off as usize,
-+                    rlen as usize,
-+                    |_| {},
-+                ))
++/// get_symlink_data_inline
++#[no_mangle]
++pub unsafe extern "C" fn erofs_get_inline_symlink_data_rust(k_inode: *mut inode) -> *mut c_void {
++    let inode = unsafe { &*container_of!(k_inode, KernelInode, k_inode) };
++    let erofs_sbi = as_sbi(unsafe { (*(*k_inode).i_sb).s_fs_info });
++
++    if inode.info().format().layout() != Layout::FlatInline
++        || inode.info().inode_size() >= erofs_sbi.filesystem.blksz()
++    {
++        core::ptr::null_mut()
++    } else {
++        let mut cursor: usize = 0;
++        let mut symlink: Vec<u8> = vec_with_capacity(inode.info().inode_size() as usize + 1);
++        for block in erofs_sbi.filesystem.mapped_iter(inode, 0) {
++            let data = block.content();
++            let len = data.len();
++            unsafe {
++                symlink
++                    .as_mut_ptr()
++                    .add(cursor)
++                    .copy_from(data.as_ptr(), len);
 +            }
++            cursor += len;
 +        }
 +
-+        fn as_buf_mut(&'a mut self, offset: Off, len: Off) -> SourceResult<RefBufferMut<'a>> {
-+            let pa = PageAddress::from(offset);
-+            let maxsize = self.len();
-+            if pa.pg_off + len > EROFS_PAGE_SZ {
-+                Err(SourceError::OutBound)
-+            } else {
-+                let rlen = len.min(self.len() as u64 - offset);
-+                let buf =
-+                    &mut self[(pa.page as usize)..maxsize.min((pa.page + EROFS_PAGE_SZ) as usize)];
-+                Ok(RefBufferMut::new(
-+                    buf,
-+                    pa.pg_off as usize,
-+                    rlen as usize,
-+                    |_| {},
-+                ))
-+            }
++        unsafe {
++            *(symlink.as_mut_ptr().add(cursor)) = '\0' as u8;
 +        }
-+    }
 +
-+    #[test]
-+    fn test_uncompressed_mmap_filesystem() {
-+        for file in load_fixtures() {
-+            let mut sbi: SuperblockInfo<SimpleInode, HashMap<Nid, SimpleInode>> =
-+                SuperblockInfo::new(
-+                    Box::new(MemFileSystem::new(UncompressedBackend::new(unsafe {
-+                        MmapMut::map_mut(&file).unwrap()
-+                    }))),
-+                    HashMap::new(),
-+                );
-+            test_filesystem(&mut sbi);
-+        }
++        symlink.leak().as_mut_ptr().cast()
 +    }
 +}
-diff --git a/fs/erofs/rust/erofs_sys/xattrs.rs b/fs/erofs/rust/erofs_sys/xattrs.rs
++
++/// Exposed as the inode_size which is used as a param to guide the kmem_cache_create.
++#[no_mangle]
++pub static EROFS_INODE_SIZE: Off = core::mem::size_of::<KernelInode>() as Off;
++
++/// Exposed as the inode_offset so that when freeing the inode, the correct offset can be used.
++#[no_mangle]
++pub static EROFS_INODE_OFFSET: Off = core::mem::offset_of!(KernelInode, k_inode) as Off;
+diff --git a/fs/erofs/erofs_rust_bindings.h b/fs/erofs/erofs_rust_bindings.h
 new file mode 100644
-index 000000000000..26912c597560
+index 000000000000..8193e18bd7e2
 --- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/xattrs.rs
-@@ -0,0 +1,175 @@
++++ b/fs/erofs/erofs_rust_bindings.h
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// EROFS Rust Bindings Before VFS Patch Sets for Rust
++
++#ifndef EROFS_RUST_BINDINGS_H
++#define EROFS_RUST_BINDINGS_H
++
++#include <linux/fs.h>
++#include <linux/dax.h>
++#include <linux/dcache.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/pagemap.h>
++#include <linux/bio.h>
++#include <linux/magic.h>
++#include <linux/slab.h>
++#include <linux/vmalloc.h>
++#include <linux/iomap.h>
++
++#include "erofs_fs.h"
++
++struct erofs_rust_map {
++	__le64 m_pa;
++	__le64 m_la;
++	__le64 m_plen;
++	__le64 m_llen;
++	__le32 m_flags;
++	void *inline_data;
++	void *private;
++};
++
++extern const __le64 EROFS_INODE_SIZE;
++extern const __le64 EROFS_INODE_OFFSET;
++extern struct dentry *erofs_lookup_rust(struct inode *inode,
++					struct dentry *dentry,
++					unsigned int flags);
++extern int erofs_readdir_rust(struct file *f, struct dir_context *ctx);
++extern void *erofs_alloc_sbi_rust(struct super_block *sb,
++				  struct address_space *address_space);
++extern void erofs_free_sbi_rust(struct super_block *sb);
++extern void erofs_inode_init_once_rust(void *ptr);
++extern void erofs_iomap_begin_rust(struct inode *inode,
++				   struct erofs_rust_map *m);
++extern void erofs_iomap_end_rust(struct erofs_rust_map *m);
++extern struct inode *erofs_iget_rust(struct super_block *sb, ino_t ino);
++extern struct dentry *erofs_get_parent_rust(struct dentry *child);
++extern struct dentry *erofs_make_root_rust(struct super_block *sb);
++#endif
+diff --git a/fs/erofs/erofs_rust_helper.c b/fs/erofs/erofs_rust_helper.c
+new file mode 100644
+index 000000000000..faf1377ec4ca
+--- /dev/null
++++ b/fs/erofs/erofs_rust_helper.c
+@@ -0,0 +1,107 @@
++#include "erofs_rust_helper.h"
++
++void *erofs_get_page(void *mapping, pgoff_t index)
++{
++	unsigned int nofs_flag;
++	struct folio *folio;
++	struct page *page;
++
++	nofs_flag = memalloc_nofs_save();
++	folio = read_cache_folio((struct address_space *)mapping, index, NULL,
++				 NULL);
++	memalloc_nofs_restore(nofs_flag);
++	page = folio_file_page(folio, index);
++	return kmap_local_page(page);
++}
++
++void erofs_put_page(void *address)
++{
++	kunmap_local(address);
++	put_page(virt_to_page(address));
++}
++
++extern int erofs_iget5_eq_rust(void *inode, void *opaque);
++
++static ino_t erofs_squash_ino(erofs_nid_t nid)
++{
++	ino_t ino = (ino_t)nid;
++
++	if (sizeof(ino_t) < sizeof(erofs_nid_t))
++		ino ^= nid >> (sizeof(erofs_nid_t) - sizeof(ino_t)) * 8;
++	return ino;
++}
++
++static int erofs_iget5_eq(struct inode *inode, void *opaque)
++{
++	return erofs_iget5_eq_rust(inode, opaque);
++}
++
++static int erofs_iget5_set(struct inode *inode, void *opaque)
++{
++	const erofs_nid_t nid = *(erofs_nid_t *)opaque;
++	inode->i_ino = nid;
++	return 0;
++}
++
++void erofs_init_inode_unlock(struct inode *inode,
++			     const struct erofs_inode_init_param_rust *param)
++{
++	inode->i_mode = param->i_mode;
++	inode->i_size = param->i_size;
++	i_uid_write(inode, param->i_uid);
++	i_gid_write(inode, param->i_gid);
++	set_nlink(inode, param->i_nlink);
++	inode_set_ctime(inode, param->i_mtime, param->i_mtime_nsec);
++	inode_set_mtime_to_ts(
++		inode, inode_set_atime_to_ts(inode, inode_get_ctime(inode)));
++
++	switch (inode->i_mode & S_IFMT) {
++	case S_IFREG:
++		inode->i_op = &erofs_generic_iops;
++		inode->i_fop = &erofs_file_fops;
++		break;
++	case S_IFDIR:
++		inode->i_op = &erofs_dir_iops;
++		inode->i_fop = &erofs_dir_fops;
++		inode_nohighmem(inode);
++		break;
++	case S_IFLNK:
++		inode->i_link = erofs_get_inline_symlink_data_rust(inode);
++		if (inode->i_link != NULL)
++			inode->i_op = &erofs_fast_symlink_iops;
++		else
++			inode->i_op = &erofs_symlink_iops;
++		inode_nohighmem(inode);
++		break;
++	case S_IFCHR:
++	case S_IFBLK:
++	case S_IFIFO:
++	case S_IFSOCK:
++		inode->i_op = &erofs_generic_iops;
++		init_special_inode(inode, inode->i_mode, inode->i_rdev);
++		break;
++	default:
++		panic("Not supported");
++	}
++
++	inode->i_mapping->a_ops = &erofs_raw_access_aops;
++	inode->i_blocks = param->i_blocks;
++	mapping_set_large_folios(inode->i_mapping);
++#ifdef CONFIG_EROFS_FS_ONDEMAND
++	if (erofs_is_fscache_mode(inode->i_sb))
++		inode->i_mapping->a_ops = &erofs_fscache_access_aops;
++#endif
++	unlock_new_inode(inode);
++}
++
++struct inode *erofs_iget_locked_noinit(struct super_block *sb, erofs_nid_t nid,
++				       int *is_new)
++{
++	struct inode *inode;
++
++	inode = iget5_locked(sb, erofs_squash_ino(nid), erofs_iget5_eq,
++			     erofs_iget5_set, &nid);
++
++	*is_new = inode->i_state & I_NEW;
++	return inode;
++}
+diff --git a/fs/erofs/erofs_rust_helper.h b/fs/erofs/erofs_rust_helper.h
+new file mode 100644
+index 000000000000..b9f0175bc319
+--- /dev/null
++++ b/fs/erofs/erofs_rust_helper.h
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: GPL-2.0-only
++// This is a helper header to dodge the missing static inline in bindgen
++
++#ifndef __EROFS_RUST_HELPER_H
++#define __EROFS_RUST_HELPER_H
++
++#include <linux/fs.h>
++#include <linux/dax.h>
++#include <linux/dcache.h>
++#include <linux/mm.h>
++#include <linux/module.h>
++#include <linux/pagemap.h>
++#include <linux/bio.h>
++#include <linux/magic.h>
++#include <linux/slab.h>
++#include <linux/vmalloc.h>
++#include <linux/iomap.h>
++
++#include "internal.h"
++
++
++struct erofs_inode_init_param_rust {
++	__le16 i_mode;
++	__le32 i_uid;
++	__le32 i_gid;
++	__le32 i_nlink;
++	__le32 i_mtime_nsec;
++	__le64 i_mtime;
++	__le64 i_size;
++	__le64 i_blocks;
++};
++void *erofs_get_page(void *mapping, pgoff_t index);
++void erofs_put_page(void *address);
++void erofs_init_inode_unlock(struct inode *inode, const struct erofs_inode_init_param_rust *param);
++struct inode *erofs_iget_locked_noinit(struct super_block *sb, erofs_nid_t nid,
++				int *init);
++
++void *erofs_get_inline_symlink_data_rust(struct inode *inode);
++
++#endif
+diff --git a/fs/erofs/rust/erofs_sys.rs b/fs/erofs/rust/erofs_sys.rs
+new file mode 100644
+index 000000000000..8ac02c95b7f0
+--- /dev/null
++++ b/fs/erofs/rust/erofs_sys.rs
+@@ -0,0 +1,67 @@
++#![allow(dead_code)]
 +// Copyright 2024 Yiyang Wu
 +// SPDX-License-Identifier: MIT or GPL-2.0-only
 +
-+use super::data::*;
-+use super::*;
++//! A pure Rust implementation of the EROFS filesystem.
++//! Technical Details are documented in the [EROFS Documentation](https://erofs.docs.kernel.org/en/latest/)
 +
-+use alloc::vec::Vec;
++pub(crate) const EROFS_PAGE_SZ: u64 = 4096;
++pub(crate) const EROFS_PAGE: Page = [0; EROFS_PAGE_SZ as usize];
++pub(crate) const EROFS_SUPER_OFFSET: Off = 1024;
++pub(crate) const EROFS_PAGE_BITS: u64 = 12;
++pub(crate) const EROFS_PAGE_MASK: u64 = EROFS_PAGE_SZ - 1;
 +
-+/// The header of the xattr entry index.
-+/// This is used to describe the superblock's xattrs collection.
-+#[derive(Clone, Copy)]
-+#[repr(C)]
-+pub(crate) struct DiskEntryIndexHeader {
-+    pub(crate) name_filter: u32,
-+    pub(crate) shared_count: u8,
-+    pub(crate) reserved: [u8; 7],
++pub(crate) struct PageAddress {
++    pub(crate) page: u64,
++    pub(crate) pg_index: u64,
++    pub(crate) pg_off: u64,
++    pub(crate) pg_len: u64,
 +}
 +
-+impl From<[u8; 12]> for DiskEntryIndexHeader {
-+    fn from(value: [u8; 12]) -> Self {
-+        unsafe { core::mem::transmute(value) }
++impl From<u64> for PageAddress {
++    fn from(address: u64) -> Self {
++        PageAddress {
++            page: (address >> EROFS_PAGE_BITS) << EROFS_PAGE_BITS,
++            pg_index: address >> EROFS_PAGE_BITS,
++            pg_off: address & EROFS_PAGE_MASK,
++            pg_len: EROFS_PAGE_SZ - (address & EROFS_PAGE_MASK),
++        }
 +    }
 +}
 +
-+pub(crate) const XATTRS_HEADER_SIZE: u64 = core::mem::size_of::<DiskEntryIndexHeader>() as u64;
++// It's unavoidable to import alloc here. Since there are so many backends there and if we want to
++// to use trait object to export Filesystem pointer. The alloc crate here is necessary.
 +
-+/// Represented as a inmemory memory entry index header used by SuperBlockInfo.
-+pub(crate) struct MemEntryIndexHeader {
-+    pub(crate) name_filter: u32,
-+    pub(crate) shared_indexes: Vec<u32>,
-+}
++#[cfg(not(CONFIG_EROFS_FS = "y"))]
++extern crate alloc;
 +
-+/// This is on-disk representation of xattrs entry header.
-+/// This is used to describe one extended attribute.
-+#[repr(C)]
-+#[derive(Clone, Copy)]
-+pub(crate) struct EntryHeader {
-+    pub(crate) name_len: u8,
-+    pub(crate) name_index: u8,
-+    pub(crate) value_len: u16,
-+}
++/// Erofs Operates on the block/page size of 4096 we respect that.
++pub(crate) type Page = [u8; EROFS_PAGE_SZ as usize];
++/// Erofs requires block index to a 32 bit unsigned integer.
++pub(crate) type Blk = u32;
++/// Erofs requires normal offset to be a 64bit unsigned integer.
++pub(crate) type Off = u64;
++/// Erofs requires inode nid to be a 64bit unsigned integer.
++pub(crate) type Nid = u64;
 +
-+impl From<[u8; 4]> for EntryHeader {
-+    fn from(value: [u8; 4]) -> Self {
-+        unsafe { core::mem::transmute(value) }
-+    }
-+}
++pub(crate) mod alloc_helper;
++pub(crate) mod compression;
++pub(crate) mod data;
++pub(crate) mod devices;
++pub(crate) mod dir;
++pub(crate) mod inode;
++pub(crate) mod map;
++pub(crate) mod operations;
++pub(crate) mod superblock;
++pub(crate) mod xattrs;
 +
-+/// This is real index data of the xattrs entry index.
-+pub(crate) struct Prefix(pub(crate) Vec<u8>);
-+
-+impl Prefix {
-+    fn index(&self) -> u8 {
-+        self.0[0]
-+    }
-+    fn name(&self) -> &[u8] {
-+        &self.0[1..]
-+    }
-+}
-+
-+pub(crate) trait XAttrsEntryProvider {
-+    fn get_entry_header(&mut self) -> EntryHeader;
-+    fn get_xattr_name(&mut self, pfs: &[Prefix], header: &EntryHeader, buffer: &mut [u8]) -> usize;
-+    fn get_xattr_value(
-+        &mut self,
-+        pfs: &[Prefix],
-+        header: &EntryHeader,
-+        name: &[u8],
-+        index: u32,
-+        buffer: &mut [u8],
-+    ) -> bool;
-+    fn fill_xattr_value(&mut self, data: &mut [u8]);
-+}
-+
-+pub(crate) const EROFS_XATTR_LONG_PREFIX: u8 = 0x80;
-+pub(crate) const EROFS_XATTR_LONG_MASK: u8 = 0x7f;
-+
-+#[allow(unused_macros)]
-+macro_rules! static_cstr {
-+    ($l:expr) => {
-+        unsafe { ::core::ffi::CStr::from_bytes_with_nul_unchecked(concat!($l, "\0").as_bytes()) }
++/// Helper macro to round up or down a number.
++#[macro_export]
++macro_rules! round {
++    (UP, $x: expr, $y: expr) => {
++        ($x + $y - 1) / $y * $y
++    };
++    (DOWN, $x: expr, $y: expr) => {
++        ($x / $y) * $y
 +    };
 +}
+diff --git a/fs/erofs/rust/kinode.rs b/fs/erofs/rust/kinode.rs
+new file mode 100644
+index 000000000000..16f58c3814a5
+--- /dev/null
++++ b/fs/erofs/rust/kinode.rs
+@@ -0,0 +1,103 @@
++// Copyright 2024 Yiyang Wu
++// SPDX-License-Identifier: MIT or GPL-2.0-only
 +
-+/// Supported xattr prefixes
-+pub(crate) const EROFS_XATTRS_PREFIXS: [(&str, usize); 7] = [
-+    ("", 0),
-+    ("user.", 5),
-+    ("system.posix_acl_access", 24),
-+    ("system.posix_acl_default", 25),
-+    ("trusted.", 8),
-+    ("", 0),
-+    ("security.", 9),
-+];
++pub(crate) mod kinode_helper;
 +
-+/// An iterator to read xattrs by comparing the entry's name one by one and reads its value
-+/// correspondingly.
-+impl<'a> XAttrsEntryProvider for SkippableContinousIter<'a> {
-+    fn get_entry_header(&mut self) -> EntryHeader {
-+        let mut buf: [u8; 4] = [0; 4];
-+        self.read(&mut buf);
-+        EntryHeader::from(buf)
-+    }
++use core::mem::MaybeUninit;
++use core::ptr::NonNull;
 +
-+    fn get_xattr_name(&mut self, pfs: &[Prefix], header: &EntryHeader, buffer: &mut [u8]) -> usize {
-+        let n_len = if header.name_index & EROFS_XATTR_LONG_PREFIX != 0 {
-+            let pf = pfs
-+                .get((header.name_index & EROFS_XATTR_LONG_MASK) as usize)
-+                .unwrap();
-+            let pf_index = pf.index();
-+            let (prefix, p_len) = EROFS_XATTRS_PREFIXS[pf_index as usize];
-+            buffer[..p_len].copy_from_slice(&prefix.as_bytes()[..p_len]);
-+            buffer[p_len..pf.name().len() + p_len].copy_from_slice(pf.name());
-+            p_len + pf.name().len()
-+        } else {
-+            let (prefix, p_len) = EROFS_XATTRS_PREFIXS[header.name_index as usize];
-+            buffer[..p_len].copy_from_slice(&prefix.as_bytes()[..p_len]);
-+            p_len
-+        };
-+        self.read(&mut buffer[n_len..n_len + header.name_len as usize]);
-+        n_len + header.name_len as usize
-+    }
-+    fn get_xattr_value(
-+        &mut self,
-+        pfs: &[Prefix],
-+        header: &EntryHeader,
-+        name: &[u8],
-+        index: u32,
-+        buffer: &mut [u8],
-+    ) -> bool {
-+        let n_len = name.len();
-+        let skip_off = header.name_len as Off + header.value_len as Off;
-+        let n_off = if header.name_index & EROFS_XATTR_LONG_PREFIX != 0 {
-+            let infix_index = (header.name_index & EROFS_XATTR_LONG_MASK) as usize;
-+            if infix_index >= pfs.len() {
-+                return false;
-+            }
++use super::erofs_sys::inode::*;
++use super::erofs_sys::superblock::*;
++use super::erofs_sys::xattrs::*;
++use super::erofs_sys::*;
 +
-+            let pf = pfs.get(infix_index).unwrap();
++use kernel::bindings::{inode, super_block};
++use kernel::container_of;
++use kinode_helper::*;
 +
-+            let infix_len = pf.name().len();
++#[repr(C)]
++pub(crate) struct KernelInode {
++    pub(crate) info: MaybeUninit<InodeInfo>,
++    pub(crate) xattrs_header: MaybeUninit<MemEntryIndexHeader>,
++    pub(crate) nid: MaybeUninit<Nid>,
++    pub(crate) k_inode: MaybeUninit<inode>,
++}
 +
-+            if index != pf.index() as u32 || n_len != infix_len + header.name_len as usize {
-+                return false;
-+            }
-+            if name[..infix_len] != *pf.name() {
-+                return false;
-+            }
-+
-+            infix_len
-+        } else {
-+            if header.name_index as u32 != index || header.name_len as usize != name.len() {
-+                return false;
-+            }
-+            0
-+        };
-+        match self.try_cmp(&name[n_off..]) {
-+            Ok(()) => {
-+                self.fill_xattr_value(&mut buffer[..header.value_len as usize]);
-+                true
-+            }
-+            Err(off) => {
-+                self.skip(skip_off - off as Off);
-+                false
-+            }
++impl Inode for KernelInode {
++    fn new(
++        _sb: &SuperBlock,
++        _info: InodeInfo,
++        _nid: Nid,
++        _xattrs_header: xattrs::MemEntryIndexHeader,
++    ) -> Self {
++        Self {
++            info: MaybeUninit::uninit(),
++            xattrs_header: MaybeUninit::uninit(),
++            nid: MaybeUninit::uninit(),
++            k_inode: MaybeUninit::uninit(),
 +        }
 +    }
-+
-+    fn fill_xattr_value(&mut self, data: &mut [u8]) {
-+        self.read(data);
++    fn nid(&self) -> Nid {
++        unsafe { self.nid.assume_init() }
++    }
++    fn info(&self) -> &InodeInfo {
++        unsafe { self.info.assume_init_ref() }
++    }
++    fn xattrs_header(&self) -> &xattrs::MemEntryIndexHeader {
++        unsafe { self.xattrs_header.assume_init_ref() }
 +    }
 +}
 +
-+#[cfg(test)]
-+pub(crate) mod tests {}
++pub(crate) struct KernelInodeCollection {
++    sb: NonNull<super_block>,
++}
++
++impl InodeCollection for KernelInodeCollection {
++    type I = KernelInode;
++    fn iget(&mut self, nid: Nid, f: &dyn FileSystem<Self::I>) -> &mut Self::I {
++        let mut is_new: i32 = 0;
++        let k_inode = unsafe { iget_locked(self.sb.as_ptr().cast(), nid, &mut is_new as *mut i32) };
++        let inode: &mut KernelInode =
++            unsafe { &mut *(container_of!(k_inode, KernelInode, k_inode) as *mut KernelInode) };
++
++        if is_new != 0 {
++            let info = f.read_inode_info(nid);
++            inode.info.write(info.clone());
++            inode.xattrs_header.write(f.read_inode_xattrs_index(nid));
++            inode.nid.write(nid);
++            let sb = f.superblock();
++            let param = match info {
++                InodeInfo::Compact(compact) => ErofsInodeInitParam {
++                    i_mode: compact.i_mode,
++                    i_uid: compact.i_uid as u32,
++                    i_gid: compact.i_gid as u32,
++                    i_nlink: compact.i_nlink as u32,
++                    i_mtime_nsec: sb.build_time_nsec as u32,
++                    i_mtime: sb.build_time as u64,
++                    i_size: compact.i_size as u64,
++                    i_blocks: compact.i_size as u64 >> ((sb.blkszbits - 9) as u64),
++                },
++                InodeInfo::Extended(extended) => ErofsInodeInitParam {
++                    i_mode: extended.i_mode,
++                    i_uid: extended.i_uid,
++                    i_gid: extended.i_gid,
++                    i_nlink: extended.i_nlink,
++                    i_mtime_nsec: extended.i_mtime_nsec as u32,
++                    i_mtime: extended.i_mtime as u64,
++                    i_size: extended.i_size as u64,
++                    i_blocks: extended.i_size >> ((sb.blkszbits - 9) as u64),
++                },
++            };
++            unsafe {
++                iget_unlock(k_inode, &param as *const ErofsInodeInitParam);
++            }
++        }
++        return inode;
++    }
++}
++
++impl KernelInodeCollection {
++    pub(crate) fn new(sb: NonNull<super_block>) -> Self {
++        Self { sb }
++    }
++}
+diff --git a/fs/erofs/rust/kinode/kinode_helper.rs b/fs/erofs/rust/kinode/kinode_helper.rs
+new file mode 100644
+index 000000000000..56c22a393aa0
+--- /dev/null
++++ b/fs/erofs/rust/kinode/kinode_helper.rs
+@@ -0,0 +1,26 @@
++// Copyright 2024 Yiyang Wu
++// SPDX-License-Identifier: MIT or GPL-2.0-only
++
++use super::super::erofs_sys::Off;
++use core::ffi::{c_int, c_void};
++
++#[repr(C)]
++pub(crate) struct ErofsInodeInitParam {
++    pub(crate) i_mode: u16,
++    pub(crate) i_uid: u32,
++    pub(crate) i_gid: u32,
++    pub(crate) i_nlink: u32,
++    pub(crate) i_mtime_nsec: u32,
++    pub(crate) i_mtime: u64,
++    pub(crate) i_size: u64,
++    pub(crate) i_blocks: u64
++}
++
++extern "C" {
++
++    #[link_name = "erofs_init_inode_unlock"]
++    pub(crate) fn iget_unlock(inode: *mut c_void, param: *const ErofsInodeInitParam);
++
++    #[link_name = "erofs_iget_locked_noinit"]
++    pub(crate) fn iget_locked(sb: *mut c_void, nid: Off, is_new: *mut c_int) -> *mut c_void;
++}
+diff --git a/fs/erofs/rust/mod.rs b/fs/erofs/rust/mod.rs
+new file mode 100644
+index 000000000000..5ca116294f51
+--- /dev/null
++++ b/fs/erofs/rust/mod.rs
+@@ -0,0 +1,6 @@
++// Copyright 2024 Yiyang Wu
++// SPDX-License-Identifier: MIT or GPL-2.0-only
++
++pub(crate) mod erofs_sys;
++pub(crate) mod kinode;
++pub(crate) mod sources;
+diff --git a/fs/erofs/rust/sources.rs b/fs/erofs/rust/sources.rs
+new file mode 100644
+index 000000000000..16bd37b80166
+--- /dev/null
++++ b/fs/erofs/rust/sources.rs
+@@ -0,0 +1,5 @@
++// Copyright 2024 Yiyang Wu
++// SPDX-License-Identifier: MIT or GPL-2.0-only
++
++pub(crate) mod mm;
++mod page_helper;
+diff --git a/fs/erofs/rust/sources/mm.rs b/fs/erofs/rust/sources/mm.rs
+new file mode 100644
+index 000000000000..6176adfb2a76
+--- /dev/null
++++ b/fs/erofs/rust/sources/mm.rs
+@@ -0,0 +1,62 @@
++// Copyright 2024 Yiyang Wu
++// SPDX-License-Identifier: MIT or GPL-2.0-only
++use super::super::erofs_sys::data::*;
++use super::super::erofs_sys::*;
++use super::page_helper::*;
++
++use core::{
++    ffi::{c_ulong, c_void},
++    ptr::NonNull,
++    unimplemented,
++};
++
++use kernel::bindings::address_space;
++
++pub(crate) struct FolioSource {
++    address_space: NonNull<address_space>,
++}
++
++impl FolioSource {
++    pub(crate) fn new(address_space: NonNull<address_space>) -> Self {
++        Self { address_space }
++    }
++}
++
++impl Source for FolioSource {
++    fn fill(&self, data: &mut [u8], offset: Off) -> SourceResult<u64> {
++        self.as_buf(offset, data.len() as u64).map(|buf| {
++            data[..buf.content().len()].clone_from_slice(buf.content());
++            buf.content().len() as Off
++        })
++    }
++}
++
++fn put_page_safe(buf: *mut c_void) {
++    unsafe { put_page(buf) }
++}
++
++fn try_get_page(address_space: *mut c_void, index: c_ulong) -> SourceResult<*mut c_void> {
++    let ptr = unsafe { get_page(address_space, index as c_ulong) };
++    if !ptr.is_null() {
++        Ok(ptr)
++    } else {
++        Err(SourceError::Dummy)
++    }
++}
++
++impl<'a> PageSource<'a> for FolioSource {
++    fn as_buf(&'a self, offset: Off, len: Off) -> SourceResult<RefBuffer<'a>> {
++        let pa = PageAddress::from(offset);
++        if pa.pg_off + len > EROFS_PAGE_SZ {
++            return Err(SourceError::OutBound);
++        }
++        try_get_page(self.address_space.as_ptr().cast(), pa.pg_index as c_ulong).map(|ptr| {
++            let buf: &'a [u8] =
++                unsafe { core::slice::from_raw_parts(ptr as *const u8, EROFS_PAGE_SZ as usize) };
++            RefBuffer::new(buf, pa.pg_off as usize, len as usize, put_page_safe)
++        })
++    }
++    fn as_buf_mut(&'a mut self, _offset: Off, _len: Off) -> SourceResult<RefBufferMut<'a>> {
++        unimplemented!()
++    }
++}
+diff --git a/fs/erofs/rust/sources/page_helper.rs b/fs/erofs/rust/sources/page_helper.rs
+new file mode 100644
+index 000000000000..c451021aa70f
+--- /dev/null
++++ b/fs/erofs/rust/sources/page_helper.rs
+@@ -0,0 +1,12 @@
++// Copyright 2024 Yiyang Wu
++// SPDX-License-Identifier: MIT or GPL-2.0-only
++
++use core::ffi::{c_ulong, c_void};
++
++extern "C" {
++    #[link_name = "erofs_put_page"]
++    pub(crate) fn put_page(addr: *mut c_void);
++
++    #[link_name = "erofs_get_page"]
++    pub(crate) fn get_page(mapping: *mut c_void, index: c_ulong) -> *mut c_void;
++}
 -- 
 2.45.2
 
