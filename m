@@ -1,42 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35FE294B612
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Aug 2024 07:08:47 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46C4894B9EA
+	for <lists+linux-erofs@lfdr.de>; Thu,  8 Aug 2024 11:45:47 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ETDsLyyi;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yUp/15MP;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WfZnk1kFwz3dKG
-	for <lists+linux-erofs@lfdr.de>; Thu,  8 Aug 2024 15:08:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WfhxP12sPz2xps
+	for <lists+linux-erofs@lfdr.de>; Thu,  8 Aug 2024 19:45:45 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ETDsLyyi;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yUp/15MP;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WfZnd0Bpzz2xWV
-	for <linux-erofs@lists.ozlabs.org>; Thu,  8 Aug 2024 15:08:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WfhxF1bQqz2xjL
+	for <linux-erofs@lists.ozlabs.org>; Thu,  8 Aug 2024 19:45:34 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1723093709; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=OEH8Uc1CUtUX4e6BkJEPNHDv3uXUJVvRdg4AGU332dw=;
-	b=ETDsLyyiM1JZv6LLURYrQCCEiErEmHKb4Osq7aqxU37B3WSW93jGPrsRpr2SAfqAOjfT6afEjeU7kpsab2bGkN+fWJPgghIoyeVWa08fLkVtOM14k8himUmOmdBkZzfeQdvY9Mqoh/8dFjjebqsW3RNFCZRJGSqMxY+3uyvVJo4=
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WCLJTtq_1723093699;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WCLJTtq_1723093699)
+	t=1723110330; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=EG1nMrzevU6Lm3XeAcfukiKVK9FuNF2XX0RPJcZ349g=;
+	b=yUp/15MPN0PichM0FP9hsgPXCtKAbDCY0jK4nwkJVYI4E6isLqC3z7Xd9eFphwbyJs+VToP2fZF+WXq1GU3UvU4PuOT/BJXkJMPaTM1EzSZUSQ7vLAauFlIbYrjTca/RKR15HcVgz6YtY5O5a9V2XoBcZzx3Y9ZAmwDIHXkVbQY=
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R351e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=2;SR=0;TI=SMTPD_---0WCMCJqY_1723110323;
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WCMCJqY_1723110323)
           by smtp.aliyun-inc.com;
-          Thu, 08 Aug 2024 13:08:27 +0800
+          Thu, 08 Aug 2024 17:45:27 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: update README for the upcoming 1.8
-Date: Thu,  8 Aug 2024 13:08:18 +0800
-Message-ID: <20240808050818.1822583-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: mkfs: add `--mkfs-time` option
+Date: Thu,  8 Aug 2024 17:45:22 +0800
+Message-ID: <20240808094522.2161075-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -55,136 +55,131 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add descriptions to multi-threaded compression and reproducible builds.
+Some users need a fixed build time in the superblock for reproducible
+builds rather than a fixed timestamp everywhere.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- README | 94 +++++++++++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 67 insertions(+), 27 deletions(-)
+ include/erofs/config.h |  1 +
+ man/mkfs.erofs.1       | 14 ++++++++++++--
+ mkfs/main.c            | 18 ++++++++++++++++--
+ 3 files changed, 29 insertions(+), 4 deletions(-)
 
-diff --git a/README b/README
-index e224b23..077b62b 100644
---- a/README
-+++ b/README
-@@ -54,51 +54,91 @@ mkfs.erofs
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index 56650e3..ae366c1 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -27,6 +27,7 @@ enum {
+ };
  
- Two main kinds of EROFS images can be generated: (un)compressed images.
+ enum {
++	TIMESTAMP_UNSPECIFIED,
+ 	TIMESTAMP_NONE,
+ 	TIMESTAMP_FIXED,
+ 	TIMESTAMP_CLAMPING,
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index 3bff41d..d599fac 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -100,8 +100,10 @@ Set the volume label for the filesystem to
+ The maximum length of the volume label is 16 bytes.
+ .TP
+ .BI "\-T " #
+-Set all files to the given UNIX timestamp. Reproducible builds require setting
+-all to a specific one. By default, the source file's modification time is used.
++Specify a UNIX timestamp for image creation time for reproducible builds.
++If \fI--mkfs-time\fR is not specified, it will behave as \fI--all-time\fR:
++setting all files to the specified UNIX timestamp instead of using the
++modification times of the source files.
+ .TP
+ .BI "\-U " UUID
+ Set the universally unique identifier (UUID) of the filesystem to
+@@ -112,6 +114,10 @@ like this: "c1b9d5a2-f162-11cf-9ece-0020afc76f16".
+ .B \-\-all-root
+ Make all files owned by root.
+ .TP
++.B \-\-all-time
++(used together with \fB-T\fR) set all files to the fixed timestamp. This is the
++default.
++.TP
+ .BI "\-\-blobdev " file
+ Specify an extra blob device to store chunk-based data.
+ .TP
+@@ -177,6 +183,10 @@ can reduce total metadata size. Implied by
+ .BI "\-\-max-extent-bytes " #
+ Specify maximum decompressed extent size in bytes.
+ .TP
++.B \-\-mkfs-time
++(used together with \fB-T\fR) the given timestamp is only applied to the build
++time.
++.TP
+ .B "\-\-preserve-mtime"
+ Use extended inodes instead of compact inodes if the file modification time
+ would overflow compact inodes. This is the default. Overrides
+diff --git a/mkfs/main.c b/mkfs/main.c
+index aba5ce4..b7129eb 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -82,6 +82,8 @@ static struct option long_options[] = {
+ 	{"clean", optional_argument, NULL, 522},
+ 	{"incremental", optional_argument, NULL, 523},
+ 	{"root-xattr-isize", required_argument, NULL, 524},
++	{"mkfs-time", no_argument, NULL, 525},
++	{"all-time", no_argument, NULL, 526},
+ 	{0, 0, 0, 0},
+ };
  
-- - For uncompressed images, there will be none of compresssed files in
--   these images.  However, it can decide whether the tail block of a
--   file should be inlined or not properly [1].
-+ - For uncompressed images, there will be no compressed files in these
-+   images.  However, an EROFS image can contain files which consist of
-+   various aligned data blocks and then a tail that is stored inline in
-+   order to compact images [1].
+@@ -150,7 +152,9 @@ static void usage(int argc, char **argv)
+ 		" -C#                   specify the size of compress physical cluster in bytes\n"
+ 		" -EX[,...]             X=extended options\n"
+ 		" -L volume-label       set the volume label (maximum 16)\n"
+-		" -T#                   set a fixed UNIX timestamp # to all files\n"
++		" -T#                   specify a fixed UNIX timestamp # as build time\n"
++		"    --all-time         the timestamp is also applied to all files (default)\n"
++		"    --mkfs-time        the timestamp is applied as build time only\n"
+ 		" -UX                   use a given filesystem UUID\n"
+ 		" --all-root            make all files owned by root\n"
+ 		" --blobdev=X           specify an extra device X to store chunked data\n"
+@@ -548,6 +552,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 	int opt, i, err;
+ 	bool quiet = false;
+ 	int tarerofs_decoder = 0;
++	bool has_timestamp = false;
  
-- - For compressed images, it'll try to use the given algorithms first
-+ - For compressed images, it will try to use the given algorithms first
-    for each regular file and see if storage space can be saved with
--   compression. If not, fallback to an uncompressed file.
-+   compression. If not, it will fall back to an uncompressed file.
- 
--How to generate EROFS images (LZ4 for Linux 5.3+, LZMA for Linux 5.16+)
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+Note that EROFS supports per-file compression configuration, proper
-+configuration options need to be enabled to parse compressed files by
-+the Linux kernel.
- 
--Currently lz4(hc) and lzma are available for compression, e.g.
-+How to generate EROFS images
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 	while ((opt = getopt_long(argc, argv, "C:E:L:T:U:b:d:x:z:Vh",
+ 				  long_options, NULL)) != -1) {
+@@ -607,7 +612,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 				erofs_err("invalid UNIX timestamp %s", optarg);
+ 				return -EINVAL;
+ 			}
+-			cfg.c_timeinherit = TIMESTAMP_FIXED;
++			has_timestamp = true;
+ 			break;
+ 		case 'U':
+ 			if (erofs_uuid_parse(optarg, fixeduuid)) {
+@@ -829,6 +834,12 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 				return -EINVAL;
+ 			}
+ 			break;
++		case 525:
++			cfg.c_timeinherit = TIMESTAMP_NONE;
++			break;
++		case 526:
++			cfg.c_timeinherit = TIMESTAMP_FIXED;
++			break;
+ 		case 'V':
+ 			version();
+ 			exit(0);
+@@ -984,6 +995,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		}
+ 		cfg.c_mkfs_pclustersize_packed = pclustersize_packed;
+ 	}
 +
-+Compression algorithms could be specified with the command-line option
-+`-z` to build a compressed EROFS image from a local directory:
-  $ mkfs.erofs -zlz4hc foo.erofs.img foo/
++	if (has_timestamp && cfg.c_timeinherit == TIMESTAMP_UNSPECIFIED)
++		cfg.c_timeinherit = TIMESTAMP_FIXED;
+ 	return 0;
+ }
  
--Or leave all files uncompressed as an option:
-+Supported algorithms by the Linux kernel:
-+ - LZ4 (Linux 5.3+);
-+ - LZMA (Linux 5.16+);
-+ - DEFLATE (Linux 6.6+);
-+ - Zstandard (Linux 6.10+).
-+
-+Alternatively, generate an uncompressed EROFS from a local directory:
-  $ mkfs.erofs foo.erofs.img foo/
- 
--In addition, you could specify a higher compression level to get a
--(slightly) better compression ratio than the default level, e.g.
-+Additionally, you can specify a higher compression level to get a
-+(slightly) smaller image than the default level:
-  $ mkfs.erofs -zlz4hc,12 foo.erofs.img foo/
- 
--Note that all compressors are still single-threaded for now, thus it
--could take more time on the multiprocessor platform. Multi-threaded
--approach is already in our TODO list.
-+Multi-threaded support can be explicitly enabled with the ./configure
-+option `--enable-multithreading`; otherwise, single-threaded compression
-+will be used for now.  It may take more time on multiprocessor platforms
-+if multi-threaded support is not enabled.
-+
-+Currently, both `-Efragments` (not `-Eall-fragments`) and `-Ededupe`
-+don't support multi-threading due to time limitations.
-+
-+Reproducible builds
-+~~~~~~~~~~~~~~~~~~~
-+
-+Reproducible builds are typically used for verification and security,
-+ensuring the same binaries/distributions to be reproduced in a
-+deterministic way.
-+
-+Images generated by the same version of `mkfs.erofs` will be identical
-+to previous runs if the same input is specified, and the same options
-+are used.
-+
-+Specifically, variable timestamps and filesystem UUIDs can result in
-+unreproducible EROFS images.  `-T` and `-U` can be used to fix them.
- 
- How to generate EROFS big pcluster images (Linux 5.13+)
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
--In order to get much better compression ratios (thus better sequential
--read performance for common storage devices), big pluster feature has
--been introduced since linux-5.13, which is not forward-compatible with
--old kernels.
--
--In details, -C is used to specify the maximum size of each big pcluster
--in bytes, e.g.
-+By default, EROFS formatter compresses data into separate one-block
-+(e.g. 4KiB) filesystem physical clusters for outstanding random read
-+performance.  In other words, each EROFS filesystem block can be
-+independently decompressed.  However, other similar filesystems
-+typically compress data into "blocks" of 128KiB or more for much smaller
-+images.  Users may prefer smaller images for archiving purposes, even if
-+random performance is compromised with those configurations, and even
-+worse when using 4KiB blocks.
-+
-+In order to fulfill users' needs, big plusters has been introduced
-+since Linux 5.13, in which each physical clusters will be more than one
-+blocks.
-+
-+Specifically, `-C` is used to specify the maximum size of each pcluster
-+in bytes:
-  $ mkfs.erofs -zlz4hc -C65536 foo.erofs.img foo/
- 
--So in that case, pcluster size can be 64KiB at most.
-+Thus, in this case, pcluster sizes can be up to 64KiB.
- 
--Note that large pcluster size can cause bad random performance, so
--please evaluate carefully in advance. Or make your own per-(sub)file
--compression strategies according to file access patterns if needed.
-+Note that large pcluster size can degrade random performance (though it
-+may improve sequential read performance for typical storage devices), so
-+please evaluate carefully in advance.  Alternatively, you can make
-+per-(sub)file compression strategies according to file access patterns
-+if needed.
- 
--How to generate EROFS images with multiple algorithms (Linux 5.16+)
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+How to generate EROFS images with multiple algorithms
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- It's possible to generate an EROFS image with files in different
- algorithms due to various purposes.  For example, LZMA for archival
 -- 
 2.43.5
 
