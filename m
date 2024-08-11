@@ -2,40 +2,40 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CB3794D457
-	for <lists+linux-erofs@lfdr.de>; Fri,  9 Aug 2024 18:15:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1361094E06E
+	for <lists+linux-erofs@lfdr.de>; Sun, 11 Aug 2024 10:10:36 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Vy4ua+kT;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uo+AOaD6;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WgTY62BB3z2ypm
-	for <lists+linux-erofs@lfdr.de>; Sat, 10 Aug 2024 02:15:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WhVh934CHz2yGh
+	for <lists+linux-erofs@lfdr.de>; Sun, 11 Aug 2024 18:10:33 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Vy4ua+kT;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uo+AOaD6;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WgTY14JGBz2yYy
-	for <linux-erofs@lists.ozlabs.org>; Sat, 10 Aug 2024 02:15:47 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WhVh02W6Gz2xXL
+	for <linux-erofs@lists.ozlabs.org>; Sun, 11 Aug 2024 18:10:21 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1723220143; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=wgFf7IPkfjASt2zPLrFZ3J1oOisxBxtUd2W0zJY0DPI=;
-	b=Vy4ua+kTrY+pKiA4qbNPaFPV6XowPerHbQrwH8Xl5PAJNS2svE11zT82HGZKpIj9/p5+yp87cZCUwzV9E/jENY6vx21hXP1IWY7TuXQM+TtGjcdL57Y8eiGvldBq6GVyI24N4cnoiSprq1Gz1acGTsjAMDvggpbBFIL/q7XNtB0=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WCQfCN5_1723220137)
+	t=1723363817; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=mPkHNjRyg+HGiitC/TNRieKRUbeYbLh7yHbQOFSZU9Y=;
+	b=uo+AOaD6d+M7slmMEz8Zf4CpgIF7NDR7u5F4ClmF9X87ZhXO/DPV8oU5myXrOF5y/5rgnMA9NBjfKwqpxAY38tDtq20ZrAMMFUwHo4Ds5iMZHTg1ZE3X1Fmq3Zt0W+Xo6iGGdV9ZokmQGLgyCsigd9PQd702GtCH7tQ3d1DoVO4=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WCUexhS_1723363815)
           by smtp.aliyun-inc.com;
-          Sat, 10 Aug 2024 00:15:42 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+          Sun, 11 Aug 2024 16:10:16 +0800
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: lib: fix heap-buffer-overflow on read
-Date: Sat, 10 Aug 2024 00:15:36 +0800
-Message-ID: <20240809161536.3961647-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: lib: add support for symlink file in erofs_ilookup()
+Date: Sun, 11 Aug 2024 16:09:57 +0800
+Message-ID: <20240811080957.2179279-1-hongzhen@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -50,95 +50,74 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Wrap up into kite_mf_hc3_skip() for now.
+When the `path` contains symbolic links, erofs_ilookup() does not
+function properly. This adds support for symlink files.
 
-Fixes: 861037f4fc15 ("erofs-utils: add a built-in DEFLATE compressor")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
 ---
- lib/kite_deflate.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ lib/namei.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/lib/kite_deflate.c b/lib/kite_deflate.c
-index e52e382..8581834 100644
---- a/lib/kite_deflate.c
-+++ b/lib/kite_deflate.c
-@@ -746,7 +746,7 @@ int kite_mf_getmatches_hc3(struct kite_matchfinder *mf, u16 depth, u16 bestlen)
- 	unsigned int v, hv, i, k, p, wsiz;
+diff --git a/lib/namei.c b/lib/namei.c
+index 6f35ee6..dce2991 100644
+--- a/lib/namei.c
++++ b/lib/namei.c
+@@ -195,6 +195,22 @@ struct nameidata {
+ 	unsigned int	ftype;
+ };
  
- 	if (mf->end - cur < bestlen + 1)
--		return 0;
-+		return -1;
- 
- 	v = get_unaligned((u16 *)cur);
- 	hv = v ^ crc_ccitt_table[cur[2]];
-@@ -795,6 +795,14 @@ int kite_mf_getmatches_hc3(struct kite_matchfinder *mf, u16 depth, u16 bestlen)
- 	return k - 1;
- }
- 
-+static void kite_mf_hc3_skip(struct kite_matchfinder *mf)
++static int link_path_walk(const char *name, struct nameidata *nd);
++
++static int step_into_link(struct nameidata *nd, struct erofs_inode *vi)
 +{
-+	if (kite_mf_getmatches_hc3(mf, 0, 2) >= 0)
-+		return;
-+	mf->offset++;
-+	/* mf->cyclic_pos = (mf->cyclic_pos + 1) & (mf->wsiz - 1); */
++	char buf[EROFS_MAX_BLOCK_SIZE];
++	int err;
++
++	if (vi->i_size > EROFS_MAX_BLOCK_SIZE)
++		return -EINVAL;
++	memset(buf, 0, sizeof(buf));
++	err = erofs_pread(vi, buf, vi->i_size, 0);
++	if (err)
++		return err;
++	return link_path_walk(buf, nd);
 +}
 +
- /* let's align with zlib */
- static const struct kite_matchfinder_cfg {
- 	u16  good_length;	/* reduce lazy search above this match length */
-@@ -1057,7 +1065,7 @@ static bool kite_deflate_fast(struct kite_deflate *s)
- 		int matches = kite_mf_getmatches_hc3(mf, mf->depth,
- 				kMatchMinLen - 1);
+ int erofs_namei(struct nameidata *nd, const char *name, unsigned int len)
+ {
+ 	erofs_nid_t nid = nd->nid;
+@@ -233,6 +249,11 @@ int erofs_namei(struct nameidata *nd, const char *name, unsigned int len)
+ 			return PTR_ERR(de);
  
--		if (matches) {
-+		if (matches > 0) {
- 			unsigned int len = mf->matches[matches].len;
- 			unsigned int dist = mf->matches[matches].dist;
- 
-@@ -1072,7 +1080,7 @@ static bool kite_deflate_fast(struct kite_deflate *s)
- 			s->pos_in += len;
- 			/* skip the rest bytes */
- 			while (--len)
--				(void)kite_mf_getmatches_hc3(mf, 0, 0);
-+				kite_mf_hc3_skip(mf);
- 		} else {
- nomatch:
- 			mf->matches[0].dist = s->in[s->pos_in];
-@@ -1115,17 +1123,19 @@ static bool kite_deflate_slow(struct kite_deflate *s)
- 		if (len0 < mf->max_lazy) {
- 			matches = kite_mf_getmatches_hc3(mf, mf->depth >>
- 				(len0 >= mf->good_len), len0);
--			if (matches) {
-+			if (matches > 0) {
- 				len = mf->matches[matches].len;
- 				if (len == kMatchMinLen &&
- 				    mf->matches[matches].dist > ZLIB_DISTANCE_TOO_FAR) {
- 					matches = 0;
- 					len = kMatchMinLen - 1;
- 				}
-+			} else {
-+				matches = 0;
- 			}
- 		} else {
- 			matches = 0;
--			(void)kite_mf_getmatches_hc3(mf, 0, 0);
-+			kite_mf_hc3_skip(mf);
+ 		if (de) {
++			vi.nid = de->nid;
++			ret = erofs_read_inode_from_disk(&vi);
++			if (S_ISLNK(vi.i_mode)) {
++				return step_into_link(nd, &vi);
++			}
+ 			nd->nid = le64_to_cpu(de->nid);
+ 			return 0;
  		}
+@@ -243,7 +264,8 @@ int erofs_namei(struct nameidata *nd, const char *name, unsigned int len)
  
- 		if (len < len0) {
-@@ -1136,7 +1146,7 @@ static bool kite_deflate_slow(struct kite_deflate *s)
- 			s->pos_in += --len0;
- 			/* skip the rest bytes */
- 			while (--len0)
--				(void)kite_mf_getmatches_hc3(mf, 0, 0);
-+				kite_mf_hc3_skip(mf);
- 			s->prev_valid = false;
- 			s->prev_longest = 0;
- 		} else {
+ static int link_path_walk(const char *name, struct nameidata *nd)
+ {
+-	nd->nid = nd->sbi->root_nid;
++	if (*name == '/')
++		nd->nid = nd->sbi->root_nid;
+ 
+ 	while (*name == '/')
+ 		name++;
+@@ -274,6 +296,7 @@ int erofs_ilookup(const char *path, struct erofs_inode *vi)
+ 	int ret;
+ 	struct nameidata nd = { .sbi = vi->sbi };
+ 
++	nd.nid = nd.sbi->root_nid;
+ 	ret = link_path_walk(path, &nd);
+ 	if (ret)
+ 		return ret;
 -- 
 2.43.5
 
