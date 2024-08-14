@@ -2,68 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6D24951E9F
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2024 17:33:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 97A39951F2A
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Aug 2024 17:54:25 +0200 (CEST)
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Iwa431p6;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=XT0MBFDy;
 	dkim-atps=neutral
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WkXMp5BhJz2yY1
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Aug 2024 01:33:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WkXqz3PVqz2yYK
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Aug 2024 01:54:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Iwa431p6;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=XT0MBFDy;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42f; helo=mail-pf1-x42f.google.com; envelope-from=wata2ki@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2001:4860:4864:20::2d; helo=mail-oa1-x2d.google.com; envelope-from=wata2ki@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-oa1-x2d.google.com (mail-oa1-x2d.google.com [IPv6:2001:4860:4864:20::2d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WkXMk0vW5z2yQG
-	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Aug 2024 01:33:20 +1000 (AEST)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-7106cf5771bso5144182b3a.2
-        for <linux-erofs@lists.ozlabs.org>; Wed, 14 Aug 2024 08:33:20 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WkXqw054Mz2xbd
+	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Aug 2024 01:54:18 +1000 (AEST)
+Received: by mail-oa1-x2d.google.com with SMTP id 586e51a60fabf-26ff21d82e4so21063fac.2
+        for <linux-erofs@lists.ozlabs.org>; Wed, 14 Aug 2024 08:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723649595; x=1724254395; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        d=gmail.com; s=20230601; t=1723650852; x=1724255652; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
         bh=8CBbdt04VN9MIN6YiVqw6FZADv51lDxxXMU1yp5uycs=;
-        b=Iwa431p6qs4evmhU8ikx9/v5Yztrm2N6MxQnVJp/GXbOQg1+hnvf+7dMXN9SFfSp3k
-         drG/nUV4dHDET8WdWGZZ0Yeak5IlRsWPTqIFEk6zagepn3k72CgzUoSN9keZrePJSjJs
-         uHK/z49aMKqwkxk5UcmQse6+i02PsnSTwJMs1QcapBUDLtjgrbb3tJjF0cNgJLE54d49
-         gQygF02I0GyigIVrAlYHkn+YQs1aYYGDLJq20GrgRZyz6VxgbythUFWpDKsKOrkp9GqA
-         k7Tgm/1qJCu1aKqJ8pDbWde27Dcd2GoCq278/FB/pNumXQm/j2qBlqeFGxqboyLMuyrJ
-         2ycg==
+        b=XT0MBFDyxvLqSA5ItWgdksnuRttRKV/ca7LVJ+VrO/aMBxRaj4boJEOVkPKtQwOh9n
+         WzxiN76NKOHtO5W00Nv8jL7RWOZ7eNOfmvcKhW1HDUDuLozW15ulWlo4e0yMIqGjj/tU
+         0IK+3FRXqVjIOUYnzXEYCQUkZ77YPMEERHMVyRtAWC0RTUyq5ldmGaFshRD2RWHb1/Yb
+         sn8qq9lO36lEKaK1hCcpGz88jvyvyueP7MvE5daKAWXgwr1DLyQ9pcQ0ODEZ68fIWzEw
+         jZ6PIaFg+hQ5oFZKFKljyQoCE93F/n/I2hbWDFqPsvjJZ6l5kBiwNWSbacQBlc+xv934
+         C8lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723649595; x=1724254395;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
+        d=1e100.net; s=20230601; t=1723650852; x=1724255652;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
         bh=8CBbdt04VN9MIN6YiVqw6FZADv51lDxxXMU1yp5uycs=;
-        b=NaSp4Wqh0vsKVo+UzZ0V6F+SpmJfTc7O4rt2mzE1PhCjfZKiPBHEBZxCcemtZ0VHKj
-         wRb9xX6yZYSBjAM4VQ7MXbQdWaQTqalRlgC9xovefjpwOx9oJl24VOGpLcNWKyFUNzlo
-         2zkNfBg3DyqGQHJnLWtsnl/iZqe5UPKy70hezVR2dmiITwdLjEj90OMfW6HIvlaIWJ9o
-         HFcst7Z6gTDqarCWeCt0+YXO1fQCuoR0s8xrEYTTWfZN2UlnMEf+/AQQn8y+5Fo8jpfq
-         PRK8cp5U4SKb8YoE9gck3e3z52gOwYiH8tlXrkJgLwC/32S7tDxPYYfRIfn64gCZqN4v
-         RxFg==
-X-Gm-Message-State: AOJu0YxY9jETBWhAe7L3RWVmJ+IaIIR/qXo3irTR3cDQ14mAT+i88Ljl
-	WKErGXTib/cb0/fFG50UUfEHoEFbW1y49zSvaEXQG6QEXIIfXnKQrvG7wBrd
-X-Google-Smtp-Source: AGHT+IHmWQwK/5LYG7M1PBU6LchKm5Iw0j3mMqHiC+hG6uuVT1avPGBx3YHQfIZ8iv9eitQlzARJZA==
-X-Received: by 2002:a05:6a00:9284:b0:70d:262e:7279 with SMTP id d2e1a72fcca58-712670f6a54mr3613616b3a.3.1723649595145;
-        Wed, 14 Aug 2024 08:33:15 -0700 (PDT)
+        b=bYDgYVY8FDeLhtY7A5wMA334/ohwYqV7jvTre0mtBjTgC04sE5EELl4dBdjKGtM1Yp
+         FuoJGoI/wE0+DIAvoEdsuXwNmsep8nKcYbFIHNV+T7/1WM/a6h/yDeJ937g/AMBL/wmJ
+         syLNtrA/6HhkA5JvMk0/W6cjyNCkN37eaX/D5f3muJAw7xJRAGMjfe5rYO1B4vp8YhEw
+         GXwxrzzbLcMJ9AVeRrmwuG1549JAMtkv4u2i1Dc4o7IYQFj79xdDLNxNYVkPYs97kTPP
+         L/5DZ3CU+QXI2agDJEZTnpu0lSflYteubMH+9oBrQFlp/blx1HZuoUrSD4UpNbo6I6+j
+         hRXQ==
+X-Gm-Message-State: AOJu0YxcNNnnTQjb3O+BwXfxs1gZA/1I8m1XfHdLhAw2k+5Aukl1PUWC
+	061rESmtehs571qqbeb8+SpUbDb3uz0pV4YIsTh+sjlRczX5bcR30N8/Yf74
+X-Google-Smtp-Source: AGHT+IGv70UA0xncFwbu6bOywyyQg4s0vtPQVsPTKCm0sxAB6ojUxIQKGZUsVq0N7ZlShsNfwkh4Gg==
+X-Received: by 2002:a05:6871:297:b0:25e:24d5:4d6b with SMTP id 586e51a60fabf-26fe5cb1399mr3188730fac.50.1723650852406;
+        Wed, 14 Aug 2024 08:54:12 -0700 (PDT)
 Received: from localhost.localdomain (222-229-106-196.catv.medias.ne.jp. [222.229.106.196])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-710e5a8a5c3sm7715641b3a.176.2024.08.14.08.33.13
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-710e5ac46edsm7501744b3a.220.2024.08.14.08.54.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2024 08:33:14 -0700 (PDT)
+        Wed, 14 Aug 2024 08:54:12 -0700 (PDT)
 From: Naoto Yamaguchi <wata2ki@gmail.com>
 X-Google-Original-From: Naoto Yamaguchi <naoto.yamaguchi@aisin.co.jp>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] Adjust volume label maximum length to the kernel implementation
-Date: Thu, 15 Aug 2024 00:32:38 +0900
-Message-ID: <20240814153256.18230-1-naoto.yamaguchi@aisin.co.jp>
+Subject: [PATCH v2] erofs-utils: adjust volume label maximum length to the kernel implementation
+Date: Thu, 15 Aug 2024 00:53:30 +0900
+Message-ID: <20240814155353.19076-1-naoto.yamaguchi@aisin.co.jp>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240814153256.18230-1-naoto.yamaguchi@aisin.co.jp>
+References: <20240814153256.18230-1-naoto.yamaguchi@aisin.co.jp>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
