@@ -2,66 +2,66 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5BC2995910F
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2024 01:21:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B8236959112
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2024 01:21:40 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WpQT92ckDz2yPS
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2024 09:21:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WpQTG5KH0z2yM6
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2024 09:21:38 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HfNARwPO;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HfNARwPO;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=NTx8y2UC;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=AjxUT9w7;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WpQT6676Lz2y8q
-	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2024 09:21:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WpQTD1q5sz2xJV
+	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2024 09:21:36 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724196088;
+	s=mimecast20190719; t=1724196092;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=i1WfTcBSz40dFfs4YPek5T5SHQcjJbpn4yprFOLb05E=;
-	b=HfNARwPOrZ1QjDDz7F+L6XRu5/fbc1oqKOPejC3gLKxjsrYtMmFZnHlJzIqnzs5nIgkUdK
-	FulJEKARDt87SetIzbBe8MFk8eCYYyeIOlfvBPYOP3z3CZMfz60aTyWgXpgg1WjRMiFBK5
-	AuYdb3v/hm7g5gVe+kwuBlM2wIXWJtI=
+	bh=LLNXobqu9Lr51n4CzgcItZvbbRppxWdYVF89daxGYJk=;
+	b=NTx8y2UCGrDpOXgoO+Q6ezrh6GJxZhFkcobLfiufpCOr7ewr7d2gqa/4zJZ8U/KVGjA3hN
+	5FEus/lnc0prLV1tb52ZvbbVUHGVtMtjDFe67EVAsoY0wL8e8onRX8OvC3o8OL2mfTuGaq
+	f07Q3JJXSOBbJqJB19tRTKALuan3Epw=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724196088;
+	s=mimecast20190719; t=1724196093;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=i1WfTcBSz40dFfs4YPek5T5SHQcjJbpn4yprFOLb05E=;
-	b=HfNARwPOrZ1QjDDz7F+L6XRu5/fbc1oqKOPejC3gLKxjsrYtMmFZnHlJzIqnzs5nIgkUdK
-	FulJEKARDt87SetIzbBe8MFk8eCYYyeIOlfvBPYOP3z3CZMfz60aTyWgXpgg1WjRMiFBK5
-	AuYdb3v/hm7g5gVe+kwuBlM2wIXWJtI=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=LLNXobqu9Lr51n4CzgcItZvbbRppxWdYVF89daxGYJk=;
+	b=AjxUT9w7f423TfXyGz36GTvbBWHM8FDTmdYVGwHZo7qVCqdclE75JVjld/bCQ4Rmswy43Z
+	BscwszPu9DOeNLC+kg7HQHHfI7GBOXemxarQ1ZwlQu+HKzd+Hx5KBCTmWPVkLiCIZD8ygU
+	qgIk1gJVGJtIw1Jj7Hx47QeQ6vA5bOQ=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-515-qlsSCgy2P9econK9DfSahQ-1; Tue,
- 20 Aug 2024 19:21:23 -0400
-X-MC-Unique: qlsSCgy2P9econK9DfSahQ-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-34-12CfHN9WNkObG7tnXd9WhA-1; Tue,
+ 20 Aug 2024 19:21:29 -0400
+X-MC-Unique: 12CfHN9WNkObG7tnXd9WhA-1
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EBEED1955D48;
-	Tue, 20 Aug 2024 23:21:19 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3436B195608A;
+	Tue, 20 Aug 2024 23:21:25 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.30])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8A1AE1955E8C;
-	Tue, 20 Aug 2024 23:21:14 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 09A0F1955E8C;
+	Tue, 20 Aug 2024 23:21:20 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
-Subject: [PATCH 1/4] mm: Fix missing folio invalidation calls during truncation
-Date: Wed, 21 Aug 2024 00:20:55 +0100
-Message-ID: <20240820232105.3792638-2-dhowells@redhat.com>
+Subject: [PATCH 2/4] afs: Fix post-setattr file edit to do truncation correctly
+Date: Wed, 21 Aug 2024 00:20:56 +0100
+Message-ID: <20240820232105.3792638-3-dhowells@redhat.com>
 In-Reply-To: <20240820232105.3792638-1-dhowells@redhat.com>
 References: <20240820232105.3792638-1-dhowells@redhat.com>
 MIME-Version: 1.0
@@ -82,20 +82,21 @@ Cc: Pankaj Raghav <p.raghav@samsung.com>, linux-cifs@vger.kernel.org, linux-nfs@
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-When AS_RELEASE_ALWAYS is set on a mapping, the ->release_folio() and
-->invalidate_folio() calls should be invoked even if PG_private and
-PG_private_2 aren't set.  This is used by netfslib to keep track of the
-point above which reads can be skipped in favour of just zeroing pagecache
-locally.
+At the end of an kAFS RPC operation, there is an "edit" phase (originally
+intended for post-directory modification ops to edit the local image) that
+the setattr VFS op uses to fix up the pagecache if the RPC that requested
+truncation of a file was successful.
 
-There are a couple of places in truncation in which invalidation is only
-called when folio_has_private() is true.  Fix these to check
-folio_needs_release() instead.
+afs_setattr_edit_file() calls truncate_setsize() which sets i_size, expands
+the pagecache if needed and truncates the pagecache.  The first two of
+those, however, are redundant as they've already been done by
+afs_setattr_success() under the io_lock and the first is also done under
+the callback lock (cb_lock).
 
-Without this, the generic/075 and generic/112 xfstests (both fsx-based
-tests) fail with minimum folio size patches applied[1].
+Fix afs_setattr_edit_file() to call truncate_pagecache() instead (which is
+called by truncate_setsize(), thereby skipping the redundant parts.
 
-Fixes: b4fa966f03b7 ("mm, netfs, fscache: stop read optimisation when folio removed from pagecache")
+Fixes: 100ccd18bb41 ("netfs: Optimise away reads above the point at which there can be no data")
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Matthew Wilcox (Oracle) <willy@infradead.org>
 cc: Pankaj Raghav <p.raghav@samsung.com>
@@ -105,31 +106,34 @@ cc: linux-afs@lists.infradead.org
 cc: netfs@lists.linux.dev
 cc: linux-mm@kvack.org
 cc: linux-fsdevel@vger.kernel.org
-Link: https://lore.kernel.org/r/20240815090849.972355-1-kernel@pankajraghav.com/ [1]
 ---
- mm/truncate.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/afs/inode.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/mm/truncate.c b/mm/truncate.c
-index 4d61fbdd4b2f..0668cd340a46 100644
---- a/mm/truncate.c
-+++ b/mm/truncate.c
-@@ -157,7 +157,7 @@ static void truncate_cleanup_folio(struct folio *folio)
- 	if (folio_mapped(folio))
- 		unmap_mapping_folio(folio);
+diff --git a/fs/afs/inode.c b/fs/afs/inode.c
+index 3acf5e050072..a95e77670b49 100644
+--- a/fs/afs/inode.c
++++ b/fs/afs/inode.c
+@@ -695,13 +695,18 @@ static void afs_setattr_edit_file(struct afs_operation *op)
+ {
+ 	struct afs_vnode_param *vp = &op->file[0];
+ 	struct afs_vnode *vnode = vp->vnode;
++	struct inode *inode = &vnode->netfs.inode;
  
--	if (folio_has_private(folio))
-+	if (folio_needs_release(folio))
- 		folio_invalidate(folio, 0, folio_size(folio));
+ 	if (op->setattr.attr->ia_valid & ATTR_SIZE) {
+ 		loff_t size = op->setattr.attr->ia_size;
+-		loff_t i_size = op->setattr.old_i_size;
++		loff_t old = op->setattr.old_i_size;
++
++		/* Note: inode->i_size was updated by afs_apply_status() inside
++		 * the I/O and callback locks.
++		 */
  
- 	/*
-@@ -219,7 +219,7 @@ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
- 	if (!mapping_inaccessible(folio->mapping))
- 		folio_zero_range(folio, offset, length);
- 
--	if (folio_has_private(folio))
-+	if (folio_needs_release(folio))
- 		folio_invalidate(folio, offset, length);
- 	if (!folio_test_large(folio))
- 		return true;
+-		if (size != i_size) {
+-			truncate_setsize(&vnode->netfs.inode, size);
++		if (size != old) {
++			truncate_pagecache(inode, size);
+ 			netfs_resize_file(&vnode->netfs, size, true);
+ 			fscache_resize_cookie(afs_vnode_cache(vnode), size);
+ 		}
 
