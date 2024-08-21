@@ -2,47 +2,47 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBA1B959320
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2024 05:03:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C0F4D959326
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2024 05:06:23 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1724209392;
-	bh=vuUo3UEj9fnbwQnnQJAsNMzx8jBe7i1aIZUDN38h84k=;
+	s=201707; t=1724209581;
+	bh=aL1dROMTpGVBsvL1gz2cYJ8AMMW+Biqu4NInJ2vcCLY=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=OG9eRQnKsECcW8iO0TifgJIVupjw1Dx1dGjME5ySUgo+QmAIaLiaHRo8dkQyVrdo+
-	 CxChu3wDpyHsD7tDI/G0e6YzHEYnH8Jsgjh50D1RLZlqKGQPtgrZaOCIkLOEuFurnR
-	 T8b/B5N87BpdmbZAw2UHMCCk4q5tEqgvy+CSCGK46PefrFnE6gW7JmQUpzU69um1x5
-	 H/jCU80TzPHiAr6sNA8eAzsi2Y8tzf5pxp00EUoH2FBmoVMzMuQbmzwrnYhyki4SxB
-	 0zPqfI3McgA6YkqkAiEed6Lq+uAhixUXHC/+mPL+C364UxUKYXNmj+Aeqhno4sokix
-	 /OBYWHYHMednQ==
+	b=R6ywVGjBxeaonsmjDQ30nqPigsScrCHaemHYk9smqW9yeNPoXYGgQyX9tAHw9GiSS
+	 jfoVx1fz3hMI/sXJSKXVF3qbIjq5QwEvOYfshUSSRoxYhwSnpsjIREYPdjT+rK69pG
+	 Bn2vVDCJqdD6wMmVHtmQzixA2EEi5iemc4xP6EXUH46WCyL1Lurjwl/rR5FChS9+g8
+	 cIFeie2abpl8J+owZOFC74kxlxJnE8DovfhIRDPlyCO2z1KxRmjT/y3M0+flsjCG1k
+	 PP9q8VNEe564RFlrFYd0/fKhjAB9WIedO88gmkwF4uWve0dpSD/xrI142Gt3s68VrV
+	 01AKui+nNEP3A==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WpWNw1Kqbz2ykn
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2024 13:03:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WpWSY5SFLz2yGX
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Aug 2024 13:06:21 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.188
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=wozizhi@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=wozizhi@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WpWNr2zF8z2xtQ
-	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2024 13:03:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WpWSW20sQz2xKd
+	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Aug 2024 13:06:19 +1000 (AEST)
 Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WpW0j5V5TzhXty;
-	Wed, 21 Aug 2024 10:45:41 +0800 (CST)
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WpW2J2y81zyQDd;
+	Wed, 21 Aug 2024 10:47:04 +0800 (CST)
 Received: from kwepemf100017.china.huawei.com (unknown [7.202.181.16])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2BB841401F4;
-	Wed, 21 Aug 2024 10:47:42 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 375D01401F4;
+	Wed, 21 Aug 2024 10:47:43 +0800 (CST)
 Received: from localhost.localdomain (10.175.104.67) by
  kwepemf100017.china.huawei.com (7.202.181.16) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 21 Aug 2024 10:47:40 +0800
+ 15.2.1544.11; Wed, 21 Aug 2024 10:47:42 +0800
 To: <netfs@lists.linux.dev>, <dhowells@redhat.com>, <jlayton@kernel.org>
-Subject: [PATCH 3/8] cachefiles: Fix missing pos updates in cachefiles_ondemand_fd_write_iter()
-Date: Wed, 21 Aug 2024 10:42:56 +0800
-Message-ID: <20240821024301.1058918-4-wozizhi@huawei.com>
+Subject: [PATCH 4/8] cachefiles: Clear invalid cache data in advance
+Date: Wed, 21 Aug 2024 10:42:57 +0800
+Message-ID: <20240821024301.1058918-5-wozizhi@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240821024301.1058918-1-wozizhi@huawei.com>
 References: <20240821024301.1058918-1-wozizhi@huawei.com>
@@ -69,40 +69,78 @@ Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kerne
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In the erofs on-demand loading scenario, read and write operations are
-usually delivered through "off" and "len" contained in read req in user
-mode. Naturally, pwrite is used to specify a specific offset to complete
-write operations.
+In the current on-demand loading scenario, when umount is called, the
+cachefiles_commit_tmpfile() is invoked. When checking the inode
+corresponding to object->file is inconsistent with the dentry,
+cachefiles_unlink() is called to perform cleanup to prevent invalid data
+from occupying space.
 
-However, if the write(not pwrite) syscall is called multiple times in the
-read-ahead scenario, we need to manually update ki_pos after each write
-operation to update file->f_pos.
+The above operation does not apply to the first mount, because the cache
+dentry generated by the first mount must be negative. Moreover, there is no
+need to clear it during the first umount because this part of the data may
+be reusable in the future. But the problem is that, the clean operation can
+currently only be called through cachefiles_withdraw_cookie(), in other
+words the redundant data does not cleaned until the second umount. This
+means that during the second mount, the old cache data generated from the
+first mount still occupies space. So if the user does not manually clean up
+the previous cache before the next mount, it may return insufficient space
+during the second mount phase.
 
-This step is currently missing from the cachefiles_ondemand_fd_write_iter
-function, added to address this issue.
+This patch adds an additional cleanup process in the cachefiles_open_file()
+function. When the auxdata check fails, the remaining old cache data is no
+longer needed, the file and dentry corresponding to the object are also
+put. As there is no need to clear it until umount, we can directly clear it
+during the mount process.
 
-Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
 Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
 ---
- fs/cachefiles/ondemand.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/cachefiles/namei.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index bdd321017f1c..38ca6dce8ef2 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -77,8 +77,10 @@ static ssize_t cachefiles_ondemand_fd_write_iter(struct kiocb *kiocb,
- 
- 	trace_cachefiles_ondemand_fd_write(object, file_inode(file), pos, len);
- 	ret = __cachefiles_write(object, file, pos, iter, NULL, NULL);
--	if (!ret)
-+	if (!ret) {
- 		ret = len;
-+		kiocb->ki_pos += ret;
+diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
+index f53977169db4..70b0b3477085 100644
+--- a/fs/cachefiles/namei.c
++++ b/fs/cachefiles/namei.c
+@@ -542,7 +542,7 @@ static bool cachefiles_create_file(struct cachefiles_object *object)
+  * stale.
+  */
+ static bool cachefiles_open_file(struct cachefiles_object *object,
+-				 struct dentry *dentry)
++				 struct dentry *dir, struct dentry *dentry)
+ {
+ 	struct cachefiles_cache *cache = object->volume->cache;
+ 	struct file *file;
+@@ -601,10 +601,18 @@ static bool cachefiles_open_file(struct cachefiles_object *object,
+ check_failed:
+ 	fscache_cookie_lookup_negative(object->cookie);
+ 	cachefiles_unmark_inode_in_use(object, file);
+-	fput(file);
+-	dput(dentry);
+-	if (ret == -ESTALE)
++	__fput_sync(file);
++	if (ret == -ESTALE) {
++		/* When the auxdata check fails, the remaining old cache data
++		 * is no longer needed, and we will clear it here first.
++		 */
++		inode_lock_nested(d_inode(dir), I_MUTEX_PARENT);
++		cachefiles_unlink(cache, object, dir, dentry, FSCACHE_OBJECT_IS_STALE);
++		inode_unlock(d_inode(dir));
++		dput(dentry);
+ 		return cachefiles_create_file(object);
 +	}
++	dput(dentry);
+ 	return false;
  
- 	return ret;
- }
+ error_fput:
+@@ -654,7 +662,7 @@ bool cachefiles_look_up_object(struct cachefiles_object *object)
+ 		goto new_file;
+ 	}
+ 
+-	if (!cachefiles_open_file(object, dentry))
++	if (!cachefiles_open_file(object, fan, dentry))
+ 		return false;
+ 
+ 	_leave(" = t [%lu]", file_inode(object->file)->i_ino);
 -- 
 2.39.2
 
