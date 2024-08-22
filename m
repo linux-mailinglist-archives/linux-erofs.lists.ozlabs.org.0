@@ -2,44 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7844295ADD0
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Aug 2024 08:42:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F83695AF3B
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Aug 2024 09:26:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1724311573;
+	bh=C/+NLf+4NmWXhYPXUyY7lrUc4FWmMTlvlsI89tUU4vc=;
+	h=To:Subject:Date:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=cwysaCh0hgZ1bo+guB2L9qu4RpJsOrdURbvLRmNCO82KLm1E/sPrJSjj+lyW/5xQB
+	 aib/mC9hmBq/pW+LS+xSfP0yCqBtoyDTDtVjGi3QlCO1LyCFijQEqKNaOV74LGllZ0
+	 Cew1CaTW/Aue54M+Eo/42tx8tD0I+jzOQGJTmzTnjXhCmzMhUFZMCSy3m8TEZ1kCzk
+	 FRYbyyP13PShO4jLLDKk02nn0OE1K0TaQQgygM18qD8cnYqqp8PCk5R7kwbRkos+p6
+	 WWvRO3661pfCzaW6CBmiLV99YTR+x7y80sAEZchT6pnKqVr1fFD7uJUIiwBMqV2wSb
+	 5rXplb8h/Tf7w==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WqDCb43Kmz2yjR
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Aug 2024 16:42:35 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WqF9x58YXz301n
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Aug 2024 17:26:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=faXicmcq;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WqDCX5Tgpz2yGf
-	for <linux-erofs@lists.ozlabs.org>; Thu, 22 Aug 2024 16:42:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1724308946; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=/TEjJg1I0GY/zm8x44TBeZAab8V/IW5s160lNw1qqcU=;
-	b=faXicmcqJCScqkXsnk2cT2pEWOej/pqEF+Ww0DxroOqT8JjBEE43YCqlkR8vhn7RmJ2JK8Hi2HmfV4dMXO7TWvf0bvfd+UwqkNDxG7AL6h/dIlnyU8ZrYUsiYTBZ0xNpHmPt1CiIzstyMBxJ9rybb74skKMbe/8YUX0tJOCrSMA=
-Received: from 30.221.130.46(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WDOEXYB_1724308943)
-          by smtp.aliyun-inc.com;
-          Thu, 22 Aug 2024 14:42:24 +0800
-Message-ID: <517ca52f-7886-4e05-a977-59094892422f@linux.alibaba.com>
-Date: Thu, 22 Aug 2024 14:42:23 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Prevent entering an infinite loop when i is 0
-To: liujinbao1 <jinbaoliu365@gmail.com>, xiang@kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=118.143.206.90
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=xiaomi.com (client-ip=118.143.206.90; helo=outboundhk.mxmail.xiaomi.com; envelope-from=liujinbao1@xiaomi.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 62 seconds by postgrey-1.37 at boromir; Thu, 22 Aug 2024 17:26:09 AEST
+Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [118.143.206.90])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WqF9s5GpXz2ykC
+	for <linux-erofs@lists.ozlabs.org>; Thu, 22 Aug 2024 17:26:09 +1000 (AEST)
+X-CSE-ConnectionGUID: MS3fqLLJTd6XpQgpePWjaQ==
+X-CSE-MsgGUID: SRQ8m/ZuSnuNgxnVrCFPNg==
+X-IronPort-AV: E=Sophos;i="6.10,166,1719849600"; 
+   d="scan'208,217";a="94257370"
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: =?utf-8?B?562U5aSNOiBbRXh0ZXJuYWwgTWFpbF1SZTogW1BBVENIXSBQcmV2ZW50IGVu?=
+ =?utf-8?Q?tering_an_infinite_loop_when_i_is_0?=
+Thread-Topic: [External Mail]Re: [PATCH] Prevent entering an infinite loop
+ when i is 0
+Thread-Index: AQHa9F51Mj+vP2qRQUGYjXArGLo4BrIy3b2A
+Date: Thu, 22 Aug 2024 07:24:58 +0000
+Message-ID: <b8bf4c1e70af4a7d89bf8531170d17d0@xiaomi.com>
 References: <20240822062749.4012080-1-jinbaoliu365@gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240822062749.4012080-1-jinbaoliu365@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <517ca52f-7886-4e05-a977-59094892422f@linux.alibaba.com>
+In-Reply-To: <517ca52f-7886-4e05-a977-59094892422f@linux.alibaba.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.237.8.18]
+Content-Type: multipart/alternative;
+	boundary="_000_b8bf4c1e70af4a7d89bf8531170d17d0xiaomicom_"
+MIME-Version: 1.0
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -51,65 +62,260 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, liujinbao1 <liujinbao1@xiaomi.com>
+From: =?utf-8?b?5YiY6YeR5a6dIHZpYSBMaW51eC1lcm9mcw==?= <linux-erofs@lists.ozlabs.org>
+Reply-To: =?utf-8?B?5YiY6YeR5a6d?= <liujinbao1@xiaomi.com>
+Cc: =?utf-8?B?6ams5oyv5Y2O?= <mazhenhua@xiaomi.com>, "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi,
+--_000_b8bf4c1e70af4a7d89bf8531170d17d0xiaomicom_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-On 2024/8/22 14:27, liujinbao1 wrote:
-> From: liujinbao1 <liujinbao1@xiaomi.com>
-> 
-> When i=0 and err is not equal to 0,
-> the while(-1) loop will enter into an
-> infinite loop. This patch avoids this issue.
+PkhpLA0KPg0KPk9uIDIwMjQvOC8yMiAxNDoyNywgbGl1amluYmFvMSB3cm90ZToNCj4+IEZyb206
+IGxpdWppbmJhbzEgPGxpdWppbmJhbzFAeGlhb21pLmNvbT4NCj4+DQo+PiBXaGVuIGk9MCBhbmQg
+ZXJyIGlzIG5vdCBlcXVhbCB0byAwLA0KPj4gdGhlIHdoaWxlKC0xKSBsb29wIHdpbGwgZW50ZXIg
+aW50byBhbg0KPj4gaW5maW5pdGUgbG9vcC4gVGhpcyBwYXRjaCBhdm9pZHMgdGhpcyBpc3N1ZS4N
+Cj4NCj5NaXNzaW5nIHlvdXIgU2lnbmVkLW9mZi1ieSBoZXJlLg0KPg0KPj4gLS0tDQo+PiAgIGZz
+L2Vyb2ZzL2RlY29tcHJlc3Nvci5jIHwgMiArKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
+cnRpb25zKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2ZzL2Vyb2ZzL2RlY29tcHJlc3Nvci5jIGIv
+ZnMvZXJvZnMvZGVjb21wcmVzc29yLmMgaW5kZXgNCj4+IGMyMjUzYjZhNTQxNi4uMWIyYjhjYzc5
+MTFjIDEwMDY0NA0KPj4gLS0tIGEvZnMvZXJvZnMvZGVjb21wcmVzc29yLmMNCj4+ICsrKyBiL2Zz
+L2Vyb2ZzL2RlY29tcHJlc3Nvci5jDQo+PiBAQCAtNTM5LDYgKzUzOSw4IEBAIGludCBfX2luaXQg
+el9lcm9mc19pbml0X2RlY29tcHJlc3Nvcih2b2lkKQ0KPj4gICAgICAgZm9yIChpID0gMDsgaSA8
+IFpfRVJPRlNfQ09NUFJFU1NJT05fTUFYOyArK2kpIHsNCj4+ICAgICAgICAgICAgICAgZXJyID0g
+el9lcm9mc19kZWNvbXBbaV0gPyB6X2Vyb2ZzX2RlY29tcFtpXS0+aW5pdCgpIDogMDsNCj4+ICAg
+ICAgICAgICAgICAgaWYgKGVycikgew0KPj4gKyAgICAgICAgICAgICAgICAgICAgIGlmICghaSkN
+Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBlcnI7DQo+PiAgICAgICAg
+ICAgICAgICAgICAgICAgd2hpbGUgKC0taSkNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIGlmICh6X2Vyb2ZzX2RlY29tcFtpXSkNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgel9lcm9mc19kZWNvbXBbaV0tPmV4aXQoKTsNCj4NCj4NCj5UaGFua3MgZm9y
+IGNhdGNoaW5nIHRoaXMsIGhvdyBhYm91dCB0aGUgZm9sbG93aW5nIGRpZmYgKHNwYWNlLWRlbWFn
+ZWQpLg0KPg0KPklmIGl0IGxvb2tzIGdvb2QgdG8geW91LCBjb3VsZCB5b3UgcGxlYXNlIHNlbmQg
+YW5vdGhlciB2ZXJzaW9uPw0KDQpTdXJlLCBJIGNhbiBkbyB0aGF0Lg0KDQo+ZGlmZiAtLWdpdCBh
+L2ZzL2Vyb2ZzL2RlY29tcHJlc3Nvci5jIGIvZnMvZXJvZnMvZGVjb21wcmVzc29yLmMgaW5kZXgg
+YzIyNTNiNmE1NDE2Li5jOWIyYmMxMzA5ZDIgMTAwNjQ0DQo+LS0tIGEvZnMvZXJvZnMvZGVjb21w
+cmVzc29yLmMNCj4rKysgYi9mcy9lcm9mcy9kZWNvbXByZXNzb3IuYw0KPkBAIC01MzQsMTggKzUz
+NCwxNiBAQCBpbnQgel9lcm9mc19wYXJzZV9jZmdzKHN0cnVjdCBzdXBlcl9ibG9jayAqc2IsIHN0
+cnVjdCBlcm9mc19zdXBlcl9ibG9jayAqZHNiKQ0KPg0KPiAgaW50IF9faW5pdCB6X2Vyb2ZzX2lu
+aXRfZGVjb21wcmVzc29yKHZvaWQpDQo+ICB7DQo+LSAgICAgICBpbnQgaSwgZXJyOw0KPisgICAg
+ICAgaW50IGksIGVyciA9IDA7DQo+DQo+ICAgICAgICAgZm9yIChpID0gMDsgaSA8IFpfRVJPRlNf
+Q09NUFJFU1NJT05fTUFYOyArK2kpIHsNCj4gICAgICAgICAgICAgICAgIGVyciA9IHpfZXJvZnNf
+ZGVjb21wW2ldID8gel9lcm9mc19kZWNvbXBbaV0tPmluaXQoKSA6IDA7DQo+LSAgICAgICAgICAg
+ICAgIGlmIChlcnIpIHsNCj4rICAgICAgICAgICAgICAgaWYgKGVyciAmJiBpKQ0KPiAgICAgICAg
+ICAgICAgICAgICAgICAgICB3aGlsZSAoLS1pKQ0KPiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIGlmICh6X2Vyb2ZzX2RlY29tcFtpXSkNCj4gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHpfZXJvZnNfZGVjb21wW2ldLT5leGl0KCk7DQo+LSAgICAgICAgICAg
+ICAgICAgICAgICAgcmV0dXJuIGVycjsNCj4tICAgICAgICAgICAgICAgfQ0KPiAgICAgICAgIH0N
+Cj4tICAgICAgIHJldHVybiAwOw0KPisgICAgICAgcmV0dXJuIGVycjsNCj4gIH0NCj4NCiMvKioq
+Kioq5pys6YKu5Lu25Y+K5YW26ZmE5Lu25ZCr5pyJ5bCP57Gz5YWs5Y+455qE5L+d5a+G5L+h5oGv
+77yM5LuF6ZmQ5LqO5Y+R6YCB57uZ5LiK6Z2i5Zyw5Z2A5Lit5YiX5Ye655qE5Liq5Lq65oiW576k
+57uE44CC56aB5q2i5Lu75L2V5YW25LuW5Lq65Lul5Lu75L2V5b2i5byP5L2/55So77yI5YyF5ous
+5L2G5LiN6ZmQ5LqO5YWo6YOo5oiW6YOo5YiG5Zyw5rOE6Zyy44CB5aSN5Yi244CB5oiW5pWj5Y+R
+77yJ5pys6YKu5Lu25Lit55qE5L+h5oGv44CC5aaC5p6c5oKo6ZSZ5pS25LqG5pys6YKu5Lu277yM
+6K+35oKo56uL5Y2z55S16K+d5oiW6YKu5Lu26YCa55+l5Y+R5Lu25Lq65bm25Yig6Zmk5pys6YKu
+5Lu277yBIFRoaXMgZS1tYWlsIGFuZCBpdHMgYXR0YWNobWVudHMgY29udGFpbiBjb25maWRlbnRp
+YWwgaW5mb3JtYXRpb24gZnJvbSBYSUFPTUksIHdoaWNoIGlzIGludGVuZGVkIG9ubHkgZm9yIHRo
+ZSBwZXJzb24gb3IgZW50aXR5IHdob3NlIGFkZHJlc3MgaXMgbGlzdGVkIGFib3ZlLiBBbnkgdXNl
+IG9mIHRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaGVyZWluIGluIGFueSB3YXkgKGluY2x1ZGlu
+ZywgYnV0IG5vdCBsaW1pdGVkIHRvLCB0b3RhbCBvciBwYXJ0aWFsIGRpc2Nsb3N1cmUsIHJlcHJv
+ZHVjdGlvbiwgb3IgZGlzc2VtaW5hdGlvbikgYnkgcGVyc29ucyBvdGhlciB0aGFuIHRoZSBpbnRl
+bmRlZCByZWNpcGllbnQocykgaXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcyBlLW1h
+aWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBieSBwaG9uZSBvciBlbWFpbCBp
+bW1lZGlhdGVseSBhbmQgZGVsZXRlIGl0ISoqKioqKi8jDQo=
 
-Missing your Signed-off-by here.
+--_000_b8bf4c1e70af4a7d89bf8531170d17d0xiaomicom_
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-> ---
->   fs/erofs/decompressor.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-> index c2253b6a5416..1b2b8cc7911c 100644
-> --- a/fs/erofs/decompressor.c
-> +++ b/fs/erofs/decompressor.c
-> @@ -539,6 +539,8 @@ int __init z_erofs_init_decompressor(void)
->   	for (i = 0; i < Z_EROFS_COMPRESSION_MAX; ++i) {
->   		err = z_erofs_decomp[i] ? z_erofs_decomp[i]->init() : 0;
->   		if (err) {
-> +			if (!i)
-> +				return err;
->   			while (--i)
->   				if (z_erofs_decomp[i])
->   					z_erofs_decomp[i]->exit();
+PGh0bWwgeG1sbnM6dj0idXJuOnNjaGVtYXMtbWljcm9zb2Z0LWNvbTp2bWwiIHhtbG5zOm89InVy
+bjpzY2hlbWFzLW1pY3Jvc29mdC1jb206b2ZmaWNlOm9mZmljZSIgeG1sbnM6dz0idXJuOnNjaGVt
+YXMtbWljcm9zb2Z0LWNvbTpvZmZpY2U6d29yZCIgeG1sbnM6bT0iaHR0cDovL3NjaGVtYXMubWlj
+cm9zb2Z0LmNvbS9vZmZpY2UvMjAwNC8xMi9vbW1sIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv
+VFIvUkVDLWh0bWw0MCI+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIg
+Y29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRv
+ciIgY29udGVudD0iTWljcm9zb2Z0IFdvcmQgMTUgKGZpbHRlcmVkIG1lZGl1bSkiPg0KPHN0eWxl
+PjwhLS0NCi8qIEZvbnQgRGVmaW5pdGlvbnMgKi8NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6
+IkNhbWJyaWEgTWF0aCI7DQoJcGFub3NlLTE6MiA0IDUgMyA1IDQgNiAzIDIgNDt9DQpAZm9udC1m
+YWNlDQoJe2ZvbnQtZmFtaWx5Ouetiee6vzsNCglwYW5vc2UtMToyIDEgNiAwIDMgMSAxIDEgMSAx
+O30NCkBmb250LWZhY2UNCgl7Zm9udC1mYW1pbHk6IlxA562J57q/IjsNCglwYW5vc2UtMToyIDEg
+NiAwIDMgMSAxIDEgMSAxO30NCi8qIFN0eWxlIERlZmluaXRpb25zICovDQpwLk1zb05vcm1hbCwg
+bGkuTXNvTm9ybWFsLCBkaXYuTXNvTm9ybWFsDQoJe21hcmdpbjowY207DQoJbWFyZ2luLWJvdHRv
+bTouMDAwMXB0Ow0KCXRleHQtYWxpZ246anVzdGlmeTsNCgl0ZXh0LWp1c3RpZnk6aW50ZXItaWRl
+b2dyYXBoOw0KCWZvbnQtc2l6ZToxMC41cHQ7DQoJZm9udC1mYW1pbHk6562J57q/O30NCmE6bGlu
+aywgc3Bhbi5Nc29IeXBlcmxpbmsNCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOiMw
+NTYzQzE7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQphOnZpc2l0ZWQsIHNwYW4uTXNv
+SHlwZXJsaW5rRm9sbG93ZWQNCgl7bXNvLXN0eWxlLXByaW9yaXR5Ojk5Ow0KCWNvbG9yOiM5NTRG
+NzI7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQpzcGFuLkVtYWlsU3R5bGUxNw0KCXtt
+c28tc3R5bGUtdHlwZTpwZXJzb25hbC1jb21wb3NlOw0KCWZvbnQtZmFtaWx5Ouetiee6vzsNCglj
+b2xvcjp3aW5kb3d0ZXh0O30NCi5Nc29DaHBEZWZhdWx0DQoJe21zby1zdHlsZS10eXBlOmV4cG9y
+dC1vbmx5O30NCi8qIFBhZ2UgRGVmaW5pdGlvbnMgKi8NCkBwYWdlIFdvcmRTZWN0aW9uMQ0KCXtz
+aXplOjYxMi4wcHQgNzkyLjBwdDsNCgltYXJnaW46NzIuMHB0IDkwLjBwdCA3Mi4wcHQgOTAuMHB0
+O30NCmRpdi5Xb3JkU2VjdGlvbjENCgl7cGFnZTpXb3JkU2VjdGlvbjE7fQ0KLS0+PC9zdHlsZT48
+IS0tW2lmIGd0ZSBtc28gOV0+PHhtbD4NCjxvOnNoYXBlZGVmYXVsdHMgdjpleHQ9ImVkaXQiIHNw
+aWRtYXg9IjEwMjYiIC8+DQo8L3htbD48IVtlbmRpZl0tLT48IS0tW2lmIGd0ZSBtc28gOV0+PHht
+bD4NCjxvOnNoYXBlbGF5b3V0IHY6ZXh0PSJlZGl0Ij4NCjxvOmlkbWFwIHY6ZXh0PSJlZGl0IiBk
+YXRhPSIxIiAvPg0KPC9vOnNoYXBlbGF5b3V0PjwveG1sPjwhW2VuZGlmXS0tPg0KPC9oZWFkPg0K
+PGJvZHkgbGFuZz0iWkgtQ04iIGxpbms9IiMwNTYzQzEiIHZsaW5rPSIjOTU0RjcyIiBzdHlsZT0i
+dGV4dC1qdXN0aWZ5LXRyaW06cHVuY3R1YXRpb24iPg0KPGRpdiBjbGFzcz0iV29yZFNlY3Rpb24x
+Ij4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7SGksPG86cD48
+L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMi
+PiZndDs8bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
+c3BhbiBsYW5nPSJFTi1VUyI+Jmd0O09uIDIwMjQvOC8yMiAxNDoyNywgbGl1amluYmFvMSB3cm90
+ZTo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5n
+PSJFTi1VUyI+Jmd0OyZndDsgRnJvbTogbGl1amluYmFvMSAmbHQ7bGl1amluYmFvMUB4aWFvbWku
+Y29tJmd0OzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFu
+IGxhbmc9IkVOLVVTIj4mZ3Q7Jmd0OzxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNs
+YXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7Jmd0OyBXaGVuIGk9MCBhbmQg
+ZXJyIGlzIG5vdCBlcXVhbCB0byAwLDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJN
+c29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7Jmd0OyB0aGUgd2hpbGUoLTEpIGxvb3Ag
+d2lsbCBlbnRlciBpbnRvIGFuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDsmZ3Q7IGluZmluaXRlIGxvb3AuIFRoaXMgcGF0
+Y2ggYXZvaWRzIHRoaXMgaXNzdWUuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDs8bzpwPiZuYnNwOzwvbzpwPjwvc3Bhbj48
+L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jmd0O01pc3Npbmcg
+eW91ciBTaWduZWQtb2ZmLWJ5IGhlcmUuPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9
+Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDs8bzpwPiZuYnNwOzwvbzpwPjwvc3Bh
+bj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jmd0OyZndDsg
+LS0tPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFu
+Zz0iRU4tVVMiPiZndDsmZ3Q7Jm5ic3A7Jm5ic3A7IGZzL2Vyb2ZzL2RlY29tcHJlc3Nvci5jIHwg
+MiAmIzQzOyYjNDM7PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDsmZ3Q7Jm5ic3A7Jm5ic3A7IDEgZmlsZSBjaGFuZ2VkLCAy
+IGluc2VydGlvbnMoJiM0MzspPG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDsmZ3Q7PG86cD4mbmJzcDs8L286cD48L3NwYW4+
+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDsmZ3Q7IGRp
+ZmYgLS1naXQgYS9mcy9lcm9mcy9kZWNvbXByZXNzb3IuYyBiL2ZzL2Vyb2ZzL2RlY29tcHJlc3Nv
+ci5jIGluZGV4DQo8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48
+c3BhbiBsYW5nPSJFTi1VUyI+Jmd0OyZndDsgYzIyNTNiNmE1NDE2Li4xYjJiOGNjNzkxMWMgMTAw
+NjQ0PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFu
+Zz0iRU4tVVMiPiZndDsmZ3Q7IC0tLSBhL2ZzL2Vyb2ZzL2RlY29tcHJlc3Nvci5jPG86cD48L286
+cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZn
+dDsmZ3Q7ICYjNDM7JiM0MzsmIzQzOyBiL2ZzL2Vyb2ZzL2RlY29tcHJlc3Nvci5jPG86cD48L286
+cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZn
+dDsmZ3Q7IEBAIC01MzksNiAmIzQzOzUzOSw4IEBAIGludCBfX2luaXQgel9lcm9mc19pbml0X2Rl
+Y29tcHJlc3Nvcih2b2lkKTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3Jt
+YWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyBmb3IgKGkgPSAwOyBpICZsdDsgWl9FUk9GU19DT01QUkVTU0lPTl9NQVg7ICYj
+NDM7JiM0MztpKSB7PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+
+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDsmZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGVy
+ciA9IHpfZXJvZnNfZGVjb21wW2ldID8gel9lcm9mc19kZWNvbXBbaV0tJmd0O2luaXQoKSA6IDA7
+PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0i
+RU4tVVMiPiZndDsmZ3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGlmIChlcnIpIHs8bzpw
+PjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1V
+UyI+Jmd0OyZndDsgJiM0MzsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgaWYgKCFpKTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxw
+IGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7Jmd0OyAmIzQzOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyByZXR1cm4g
+ZXJyOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxh
+bmc9IkVOLVVTIj4mZ3Q7Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB3aGlsZSAoLS1pKTxvOnA+PC9v
+OnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4m
+Z3Q7Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyBpZiAoel9lcm9mc19kZWNvbXBbaV0pPG86cD48L286cD48L3NwYW4+
+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDsmZ3Q7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHpf
+ZXJvZnNfZGVjb21wW2ldLSZndDtleGl0KCk7PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xh
+c3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDs8bzpwPiZuYnNwOzwvbzpwPjwv
+c3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jmd0Ozxv
+OnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxh
+bmc9IkVOLVVTIj4mZ3Q7VGhhbmtzIGZvciBjYXRjaGluZyB0aGlzLCBob3cgYWJvdXQgdGhlIGZv
+bGxvd2luZyBkaWZmIChzcGFjZS1kZW1hZ2VkKS48bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBj
+bGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jmd0OzxvOnA+Jm5ic3A7PC9vOnA+
+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7
+SWYgaXQgbG9va3MgZ29vZCB0byB5b3UsIGNvdWxkIHlvdSBwbGVhc2Ugc2VuZCBhbm90aGVyIHZl
+cnNpb24/PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4g
+bGFuZz0iRU4tVVMiPjxvOnA+Jm5ic3A7PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29O
+b3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj5TdXJlLCBJIGNhbiBkbyB0aGF0LjxvOnA+PC9vOnA+
+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj48bzpw
+PiZuYnNwOzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5n
+PSJFTi1VUyI+Jmd0O2RpZmYgLS1naXQgYS9mcy9lcm9mcy9kZWNvbXByZXNzb3IuYyBiL2ZzL2Vy
+b2ZzL2RlY29tcHJlc3Nvci5jIGluZGV4IGMyMjUzYjZhNTQxNi4uYzliMmJjMTMwOWQyIDEwMDY0
+NDxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9
+IkVOLVVTIj4mZ3Q7LS0tIGEvZnMvZXJvZnMvZGVjb21wcmVzc29yLmM8bzpwPjwvbzpwPjwvc3Bh
+bj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jmd0OyYjNDM7
+JiM0MzsmIzQzOyBiL2ZzL2Vyb2ZzL2RlY29tcHJlc3Nvci5jPG86cD48L286cD48L3NwYW4+PC9w
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDtAQCAtNTM0LDE4
+ICYjNDM7NTM0LDE2IEBAIGludCB6X2Vyb2ZzX3BhcnNlX2NmZ3Moc3RydWN0IHN1cGVyX2Jsb2Nr
+ICpzYiwgc3RydWN0IGVyb2ZzX3N1cGVyX2Jsb2NrICpkc2IpPG86cD48L286cD48L3NwYW4+PC9w
+Pg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDs8bzpwPiZuYnNw
+OzwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1V
+UyI+Jmd0OyZuYnNwOyBpbnQgX19pbml0IHpfZXJvZnNfaW5pdF9kZWNvbXByZXNzb3Iodm9pZCk8
+bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJF
+Ti1VUyI+Jmd0OyZuYnNwOyB7PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05v
+cm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDstJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7IGludCBpLCBlcnI7PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDsmIzQzOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyBpbnQgaSwgZXJyID0gMDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8
+cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jmd0OzxvOnA+Jm5ic3A7PC9v
+OnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4m
+Z3Q7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGZvciAo
+aSA9IDA7IGkgJmx0OyBaX0VST0ZTX0NPTVBSRVNTSU9OX01BWDsgJiM0MzsmIzQzO2kpIHs8bzpw
+PjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1V
+UyI+Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBlcnIgPSB6X2Vy
+b2ZzX2RlY29tcFtpXSA/IHpfZXJvZnNfZGVjb21wW2ldLSZndDtpbml0KCkgOiAwOzxvOnA+PC9v
+OnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4m
+Z3Q7LSZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBpZiAoZXJyKSB7PG86cD48L286cD48L3Nw
+YW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDsmIzQz
+OyZuYnNwOyAmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDtpZiAoZXJyICZhbXA7JmFtcDsgaSk8bzpwPjwv
+bzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+
+Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyB3aGlsZSAoLS1pKTxvOnA+PC9vOnA+
+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IGlmICh6X2Vyb2ZzX2RlY29tcFtpXSk8bzpwPjwvbzpwPjwv
+c3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFsIj48c3BhbiBsYW5nPSJFTi1VUyI+Jmd0OyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyB6X2Vyb2ZzX2RlY29tcFtpXS0mZ3Q7ZXhpdCgpOzxvOnA+PC9vOnA+PC9zcGFu
+PjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7LSZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyByZXR1cm4gZXJyOzxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNz
+PSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7LSZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyB9PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1zb05vcm1hbCI+PHNw
+YW4gbGFuZz0iRU4tVVMiPiZndDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsmbmJzcDsgfTxvOnA+PC9vOnA+PC9zcGFuPjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwi
+PjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7LSZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyByZXR1cm4gMDs8bzpwPjwvbzpwPjwvc3Bhbj48L3A+DQo8cCBjbGFzcz0iTXNvTm9ybWFs
+Ij48c3BhbiBsYW5nPSJFTi1VUyI+Jmd0OyYjNDM7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7IHJldHVybiBlcnI7PG86cD48L286cD48L3NwYW4+PC9wPg0KPHAgY2xhc3M9Ik1z
+b05vcm1hbCI+PHNwYW4gbGFuZz0iRU4tVVMiPiZndDsmbmJzcDsgfTxvOnA+PC9vOnA+PC9zcGFu
+PjwvcD4NCjxwIGNsYXNzPSJNc29Ob3JtYWwiPjxzcGFuIGxhbmc9IkVOLVVTIj4mZ3Q7PG86cD4m
+bmJzcDs8L286cD48L3NwYW4+PC9wPg0KPC9kaXY+DQojLyoqKioqKuacrOmCruS7tuWPiuWFtumZ
+hOS7tuWQq+acieWwj+exs+WFrOWPuOeahOS/neWvhuS/oeaBr++8jOS7hemZkOS6juWPkemAgee7
+meS4iumdouWcsOWdgOS4reWIl+WHuueahOS4quS6uuaIlue+pOe7hOOAguemgeatouS7u+S9leWF
+tuS7luS6uuS7peS7u+S9leW9ouW8j+S9v+eUqO+8iOWMheaLrOS9huS4jemZkOS6juWFqOmDqOaI
+lumDqOWIhuWcsOazhOmcsuOAgeWkjeWItuOAgeaIluaVo+WPke+8ieacrOmCruS7tuS4reeahOS/
+oeaBr+OAguWmguaenOaCqOmUmeaUtuS6huacrOmCruS7tu+8jOivt+aCqOeri+WNs+eUteivneaI
+lumCruS7tumAmuefpeWPkeS7tuS6uuW5tuWIoOmZpOacrOmCruS7tu+8gSBUaGlzIGUtbWFpbCBh
+bmQgaXRzIGF0dGFjaG1lbnRzIGNvbnRhaW4gY29uZmlkZW50aWFsIGluZm9ybWF0aW9uIGZyb20g
+WElBT01JLCB3aGljaCBpcyBpbnRlbmRlZCBvbmx5IGZvciB0aGUgcGVyc29uIG9yIGVudGl0eSB3
+aG9zZSBhZGRyZXNzDQogaXMgbGlzdGVkIGFib3ZlLiBBbnkgdXNlIG9mIHRoZSBpbmZvcm1hdGlv
+biBjb250YWluZWQgaGVyZWluIGluIGFueSB3YXkgKGluY2x1ZGluZywgYnV0IG5vdCBsaW1pdGVk
+IHRvLCB0b3RhbCBvciBwYXJ0aWFsIGRpc2Nsb3N1cmUsIHJlcHJvZHVjdGlvbiwgb3IgZGlzc2Vt
+aW5hdGlvbikgYnkgcGVyc29ucyBvdGhlciB0aGFuIHRoZSBpbnRlbmRlZCByZWNpcGllbnQocykg
+aXMgcHJvaGliaXRlZC4gSWYgeW91IHJlY2VpdmUgdGhpcyBlLW1haWwgaW4NCiBlcnJvciwgcGxl
+YXNlIG5vdGlmeSB0aGUgc2VuZGVyIGJ5IHBob25lIG9yIGVtYWlsIGltbWVkaWF0ZWx5IGFuZCBk
+ZWxldGUgaXQhKioqKioqLyMNCjwvYm9keT4NCjwvaHRtbD4NCg==
 
-
-Thanks for catching this, how about the following diff (space-demaged).
-
-If it looks good to you, could you please send another version?
-
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index c2253b6a5416..c9b2bc1309d2 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -534,18 +534,16 @@ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
-
-  int __init z_erofs_init_decompressor(void)
-  {
--       int i, err;
-+       int i, err = 0;
-
-         for (i = 0; i < Z_EROFS_COMPRESSION_MAX; ++i) {
-                 err = z_erofs_decomp[i] ? z_erofs_decomp[i]->init() : 0;
--               if (err) {
-+               if (err && i)
-                         while (--i)
-                                 if (z_erofs_decomp[i])
-                                         z_erofs_decomp[i]->exit();
--                       return err;
--               }
-         }
--       return 0;
-+       return err;
-  }
+--_000_b8bf4c1e70af4a7d89bf8531170d17d0xiaomicom_--
