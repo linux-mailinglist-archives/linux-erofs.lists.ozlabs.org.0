@@ -1,81 +1,81 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCF5395D2A6
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Aug 2024 18:12:43 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2645695D2A9
+	for <lists+linux-erofs@lfdr.de>; Fri, 23 Aug 2024 18:12:50 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wr4px5NJRz305C
-	for <lists+linux-erofs@lfdr.de>; Sat, 24 Aug 2024 02:12:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wr4q417vYz302P
+	for <lists+linux-erofs@lfdr.de>; Sat, 24 Aug 2024 02:12:48 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724429559;
-	cv=none; b=CRuraRQILqYKG0kN6qxge84e9aAfANhrNp4I5RNS5CHKOauNb06hyrvAngy8DCcarHDAJb0vus0RN1Fos7Rk6pmUgIM1HAhm6irTGDpkkFKnWrVtrYah41uZBAuEQSxtqUwaD3va7lPCvqFCtbFCWumcW9kp+Diis+Er6CTieJLHVFzDeYtkE5zsV/uXcloWpoimUannCIi8RW/bI6zNqWPJERfZWQ4rQF7vNdPsPk0pbnbD6/545/7NhCTWMYGPMNshTkHgEg/yCvZTJQ6F1SEaA8Ek2BFUIvq9cRe+6ias7VklLJNC7mgjsc5I5r3MRj8Ph/lkImKLn98CBW8C8w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724429566;
+	cv=none; b=FBrSYi5lGuKlky/4sh53r1NmgaCKgnC57NQKCq46Znyip03Nfanh6i/wkTiKBlj2WRrnjt34ZOSIz8YiqygrHOPJFJND2jqz1fkF5VaV+fXK1BVy7y9ggjbRWJr2u6LDpbHiwYWTVbYgkYtpIuoA6xO02vSkzoTynUlBiob7DBynVCwBPFLnxUZsJzkSIASJgr7YUTBHui95QPdp0A7BeryYGgCeRRim4rdeG02RmfxwtdnKndjAjbcU9iqEdfPb3rGOnHc06+4KTkd1KEF4oOnpBsvCpud2+DXhN/mdJNEhqFyhFIgEb5FEa8/Wr5kb1cFiXXgwIxXklcpcG/GqJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1724429559; c=relaxed/relaxed;
-	bh=/lptOZHiOn8uWw0ALny7F0H/3F9qROuXGja+3Wq36Fc=;
+	t=1724429566; c=relaxed/relaxed;
+	bh=UF1dQkOHc38/CxHdvA+HTnp1kknbAHEKTFkwj9qcOQo=;
 	h=DKIM-Signature:DKIM-Signature:Received:X-MC-Unique:Received:
 	 Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:X-Scanned-By; b=i4e6K6Gi943v14GTiAdqdpWMht6COGXSuSC8U7XsrIHG5ICft8/mCQmZdqhe0Q8D4LpRS2T9+VjlJBxzX6IsMCZNeiUYGWzPYXWTVd3d4jNHNOYzFUr1/xidKdK/+X20Na4uun4DaX1ar7dezdiairK/ECRKiUibfomqEEFUHHy3EApzloyJvmcr5ACpT6AEmbpZ8JGfTy0SAS2WDvYI51GXUJgmGOvPHqsmwbAMdhxgmUElc3TLZDsX0G56eCpFygTtaCxeEifUYzCwk62r8WTZyxy+QRJ/83D3+QkGzPcc1yw0tUSC+o49S0fKnuiEL7oMupOJjn+UilQyjHZHWg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FSeIQ/1S; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FSeIQ/1S; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version:Content-Transfer-Encoding:X-Scanned-By; b=ZXfLB3Z3++7RdPbzuNZTYqVrIXxbA9alOZQPWDIKVlGVAd7G76SLj+a0T5K6gEahLBFG/GQo1/IxAdDz02UyMtVzB6mo4IrEL63J9n4aO+FsNpQwTglL+YV0ezrxF6vV8MsxkhfiOVzAApfRlH0kxyk46j0NP4NO9eKqOxKMGniKO4QmsGNPwBDyRZKRPx/sA7dcKasA4GK628zpKmHOnbm0DkchoTOFGbEirTU+aFl62pLJ9Mja0YnFuo4aulyVY+cZVRUDjm/b8W2rqtIvGru2Abp8zjgsTvGzbOGS8Hd/3kHSUy7guvGtotXxDIXkEIbUi7wFsJmOId20y/NL3Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=B4jNADsy; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=B4jNADsy; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FSeIQ/1S;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FSeIQ/1S;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=B4jNADsy;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=B4jNADsy;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wr4pt5jrsz2yyT
-	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Aug 2024 02:12:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wr4q14ZF1z2yh1
+	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Aug 2024 02:12:45 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724429555;
+	s=mimecast20190719; t=1724429562;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/lptOZHiOn8uWw0ALny7F0H/3F9qROuXGja+3Wq36Fc=;
-	b=FSeIQ/1S6WubLC2MJLz4kevIdK3OMBRzGng5mKyAeLrvpo990YnIH0zgTnLPlawgF7e+s5
-	x+JwEdDkUe4SX7KTnhKhNVEGmtYg4vJpb2QdYKeJ/qr61/7hOAbS0M18bXoUzJhnJ3WVNM
-	ZWXInEowbu8qJodKJHVLATeCiTi+fgk=
+	bh=UF1dQkOHc38/CxHdvA+HTnp1kknbAHEKTFkwj9qcOQo=;
+	b=B4jNADsyyUT10rwVOUheZYf9TMziINehSlVUcl2UlTxjqBFP4fELN2WWHDintqE0DXdhk3
+	6reXGxbWXoPSUBTSHKMYI3N9Zm9uCLMf07FNM1kLyy2SWnLDLXeIBUlVQYDhT0/YfsF5kK
+	oYqqhPIn9Thg2mnHkT4d5YcWqBzWYpY=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724429555;
+	s=mimecast20190719; t=1724429562;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/lptOZHiOn8uWw0ALny7F0H/3F9qROuXGja+3Wq36Fc=;
-	b=FSeIQ/1S6WubLC2MJLz4kevIdK3OMBRzGng5mKyAeLrvpo990YnIH0zgTnLPlawgF7e+s5
-	x+JwEdDkUe4SX7KTnhKhNVEGmtYg4vJpb2QdYKeJ/qr61/7hOAbS0M18bXoUzJhnJ3WVNM
-	ZWXInEowbu8qJodKJHVLATeCiTi+fgk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=UF1dQkOHc38/CxHdvA+HTnp1kknbAHEKTFkwj9qcOQo=;
+	b=B4jNADsyyUT10rwVOUheZYf9TMziINehSlVUcl2UlTxjqBFP4fELN2WWHDintqE0DXdhk3
+	6reXGxbWXoPSUBTSHKMYI3N9Zm9uCLMf07FNM1kLyy2SWnLDLXeIBUlVQYDhT0/YfsF5kK
+	oYqqhPIn9Thg2mnHkT4d5YcWqBzWYpY=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-224-zwK_gHXDOoy8ylOCoGXt0g-1; Fri,
- 23 Aug 2024 12:12:33 -0400
-X-MC-Unique: zwK_gHXDOoy8ylOCoGXt0g-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-99-8smGqBV2N5OacPwQdgxAmQ-1; Fri,
+ 23 Aug 2024 12:12:39 -0400
+X-MC-Unique: 8smGqBV2N5OacPwQdgxAmQ-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 65F331954B06;
-	Fri, 23 Aug 2024 16:12:30 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 571C51955D4E;
+	Fri, 23 Aug 2024 16:12:36 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.30])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 699EC19560A3;
-	Fri, 23 Aug 2024 16:12:25 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 11C6819560AA;
+	Fri, 23 Aug 2024 16:12:31 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
-Subject: [PATCH 2/5] netfs, cifs: Improve some debugging bits
-Date: Fri, 23 Aug 2024 17:12:03 +0100
-Message-ID: <20240823161209.434705-3-dhowells@redhat.com>
+Subject: [PATCH 3/5] netfs: Fix missing iterator reset on retry of short read
+Date: Fri, 23 Aug 2024 17:12:04 +0100
+Message-ID: <20240823161209.434705-4-dhowells@redhat.com>
 In-Reply-To: <20240823161209.434705-1-dhowells@redhat.com>
 References: <20240823161209.434705-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -91,14 +91,10 @@ Cc: Pankaj Raghav <p.raghav@samsung.com>, linux-cifs@vger.kernel.org, linux-nfs@
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Improve some debugging bits:
+Fix netfs_rreq_perform_resubmissions() to reset before retrying a short
+read, otherwise the wrong part of the output buffer will be used.
 
- (1) The netfslib _debug() macro doesn't need a newline in its format
-     string.
-
- (2) Display the request debug ID and subrequest index in messages emitted
-     in smb2_adjust_credits() to make it easier to reference in traces.
-
+Fixes: 92b6cc5d1e7c ("netfs: Add iov_iters to (sub)requests to describe various buffers")
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Steve French <sfrench@samba.org>
 cc: Paulo Alcantara <pc@manguebit.com>
@@ -107,47 +103,19 @@ cc: linux-cifs@vger.kernel.org
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
 ---
- fs/netfs/io.c           | 2 +-
- fs/smb/client/smb2ops.c | 8 +++++---
- 2 files changed, 6 insertions(+), 4 deletions(-)
+ fs/netfs/io.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/fs/netfs/io.c b/fs/netfs/io.c
-index d6510a9385dc..605b667fe3a6 100644
+index 605b667fe3a6..d6ada4eba744 100644
 --- a/fs/netfs/io.c
 +++ b/fs/netfs/io.c
-@@ -270,7 +270,7 @@ static void netfs_reset_subreq_iter(struct netfs_io_request *rreq,
- 	if (count == remaining)
- 		return;
- 
--	_debug("R=%08x[%u] ITER RESUB-MISMATCH %zx != %zx-%zx-%llx %x\n",
-+	_debug("R=%08x[%u] ITER RESUB-MISMATCH %zx != %zx-%zx-%llx %x",
- 	       rreq->debug_id, subreq->debug_index,
- 	       iov_iter_count(&subreq->io_iter), subreq->transferred,
- 	       subreq->len, rreq->i_size,
-diff --git a/fs/smb/client/smb2ops.c b/fs/smb/client/smb2ops.c
-index 763a17e62750..20e674990760 100644
---- a/fs/smb/client/smb2ops.c
-+++ b/fs/smb/client/smb2ops.c
-@@ -316,7 +316,8 @@ smb2_adjust_credits(struct TCP_Server_Info *server,
- 				      cifs_trace_rw_credits_no_adjust_up);
- 		trace_smb3_too_many_credits(server->CurrentMid,
- 				server->conn_id, server->hostname, 0, credits->value - new_val, 0);
--		cifs_server_dbg(VFS, "request has less credits (%d) than required (%d)",
-+		cifs_server_dbg(VFS, "R=%x[%x] request has less credits (%d) than required (%d)",
-+				subreq->rreq->debug_id, subreq->subreq.debug_index,
- 				credits->value, new_val);
- 
- 		return -EOPNOTSUPP;
-@@ -338,8 +339,9 @@ smb2_adjust_credits(struct TCP_Server_Info *server,
- 		trace_smb3_reconnect_detected(server->CurrentMid,
- 			server->conn_id, server->hostname, scredits,
- 			credits->value - new_val, in_flight);
--		cifs_server_dbg(VFS, "trying to return %d credits to old session\n",
--			 credits->value - new_val);
-+		cifs_server_dbg(VFS, "R=%x[%x] trying to return %d credits to old session\n",
-+				subreq->rreq->debug_id, subreq->subreq.debug_index,
-+				credits->value - new_val);
- 		return -EAGAIN;
+@@ -315,6 +315,7 @@ static bool netfs_rreq_perform_resubmissions(struct netfs_io_request *rreq)
+ 			netfs_read_from_server(rreq, subreq);
+ 		} else if (test_bit(NETFS_SREQ_SHORT_IO, &subreq->flags)) {
+ 			__set_bit(NETFS_SREQ_RETRYING, &subreq->flags);
++			netfs_reset_subreq_iter(rreq, subreq);
+ 			netfs_rreq_short_read(rreq, subreq);
+ 		}
  	}
- 
 
