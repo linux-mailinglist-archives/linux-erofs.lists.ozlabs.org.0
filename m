@@ -1,75 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1CC195CC7E
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Aug 2024 14:39:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1724416797;
-	bh=fkSO6JL8PT/t58c13PbpvvWXwVCAr2TOUzEK6SQmUmE=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=oJHu067ysgmIw77JBQj61UIvav2ZHpsd72nW/ZwlhbpyY4YkN1AnSDk6lcgwzktNb
-	 k0YHZFERl9eGU1P8ana2OUDmtz0Cxq1BtvphxVcgD/26opUjfmhBBpm2uP3VFbG2zN
-	 klsMNY+htyYL2xaffjAe3+h7eLHc9e0fw26j1RHlgxlWvw5e6VFcCoucgkbgoKXXvC
-	 Y45CBc9S608zGsxNvL5Tna8vKrnK0BKlfkBXobAxt4a02CPfORzUtm2dqlKrjnVzp+
-	 Z4GFTLk6adSBFR2SbonXF20NvXyW+0ubxlsF5LyDeUKRWgKjlGTbhl3Wf06lx5iLLq
-	 j/TxsTXIweyjA==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EDB195D2A3
+	for <lists+linux-erofs@lfdr.de>; Fri, 23 Aug 2024 18:12:34 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wr05T0Xkpz3009
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Aug 2024 22:39:57 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wr4pm0CHkz301x
+	for <lists+linux-erofs@lfdr.de>; Sat, 24 Aug 2024 02:12:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:40e1:4800::1"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724416795;
-	cv=none; b=b0bLlR5VTrpR+nNT8tLVScgMAc7gn2A6z0qdE3rQfBAGKwsk+SwyqKnabit3uyvfQmmbkMmFyhsPJzYQmnJ4rXBw/TpEpR8S099sFob//XG5UXxWZkwdaKbKQo29swq49kctENQV1IFO6qzcTakiPy/a8745GTxgccNaLgYDFCEufoGnSR1lUs9qP5YeOTFZi+tcOS3HCUcoiOhwkXwzGqVWhIEaGxMolyTSk3h65S1Ip2F/F5gpkMBwz/G6asbB2OACBtm2lY+8bS59Nbr7pJHq7x2Ak/pQqqHnEYY6Ah2auwfTNkx9ADndMSNDiQKBYkj2Ad6CPPn0RbpFpQ9aeA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724429550;
+	cv=none; b=jMBpkPuJKQN+E6YiRTpn0HWvIOEtFr6wyyhAmnCusW2WFWa0LkKJt8KEQ+gx6jrmkcKg93a3iUinIdd1nY0U1PFDB4GoogtIGMPg9bbotXc4YnxSUEJFDdo7nDEhYpPJzFp6FRh8A2hByDro7m3XhCMu7+1wwGwUU+47Dz/PXFQHlcwXhWKCTqGcXtBH2gXF6AJZxraJ8rJta0fNDL04M+Ocg9WNlU/JiPJuk5P+kfLy0dtIxNhS++xwFADiCgQPFmw2A+LIjXj95p0O+JrQURrNBsK4aO122rI+EDPlvbqhE54lWN4IK8aQcSPbvB0VO9myXGUAZSF7InxyTt67oQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1724416795; c=relaxed/relaxed;
-	bh=fkSO6JL8PT/t58c13PbpvvWXwVCAr2TOUzEK6SQmUmE=;
-	h=Received:Received:DKIM-Signature:From:To:Cc:Subject:Date:
-	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Type:X-Developer-Signature:X-Developer-Key:
-	 Content-Transfer-Encoding; b=BNSlTeBZuaZVG3Jy9kn5d+bJ+B507RPIzxsRg+i6vPLvSSWpPdLW38qEA06WNis1OOPlJ1guDC1f9cc1EwLEi6kjhDfpEkFnJI1kwtkNLyUmT3yH9wv+8n5RDu230zsO+7INIMVGK44WJS8bJTNStqRPRdmyG6mllKx9f5BBrtsE64WdVjSp8YSmvRGsoOvkwcYTcv/H3Fb1wNAKQuQS5pwWIx8nMsZyUQqyZAFvkqq7zFtsuUvf17nE1tTgWPGg2TcBlp86tWDbCKG6xHktawt0pb6kZ7sEOdHoRn+tH+71cHhjm9er8mdV4sx/Lbe5NgEOycVdid4x9c2bIoJJeg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Tqr7a4k+; dkim-atps=neutral; spf=pass (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1724429550; c=relaxed/relaxed;
+	bh=HWel4fAjhn1F/3o1FewTt4dI8XNtgDdoQ8ZZC3V8mew=;
+	h=DKIM-Signature:DKIM-Signature:Received:X-MC-Unique:Received:
+	 Received:From:To:Cc:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:X-Scanned-By; b=jIcIlGYunmZryPsgIdBDTkoqM45X1Birx6hyN0XZX4KsiEeaSsaseVm3lBhw0WuL2eYCVBnC8564ek0UYLA77Y9CdHkgAxe/6rOO305e/N5HsSQ3yBxXXse+S18BybN9wqg8t0M0dAmfz1uVNl83805ubkzdtZ3t2C/QNt4Zi4PYbuDNCUSewqYVhd3swoEnhZkOCwZB0vvbUwf2ZJ//F3oQTA+lwL1zTU0T3eYoMuHS6PqyHWAXdHiWFP1GFELFameEvBBZQRF++UDnYciAavNOxeWR/15AWPlksrarisprzjKPi6nvZLNja0YcQoVuV4yB5ae+RRT7tggQDJ+Ymg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=AVwJu+SL; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=AVwJu+SL; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Tqr7a4k+;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=AVwJu+SL;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=AVwJu+SL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:40e1:4800::1; helo=sin.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wr05R0hYzz2ywS
-	for <linux-erofs@lists.ozlabs.org>; Fri, 23 Aug 2024 22:39:55 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sin.source.kernel.org (Postfix) with ESMTP id 5F62DCE115A;
-	Fri, 23 Aug 2024 12:39:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 292C2C32786;
-	Fri, 23 Aug 2024 12:39:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724416788;
-	bh=OQN7Mf7HQDUQaFApg1+V9RgbCzXwyxIPK7zuLgztQ10=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tqr7a4k+ccRM4DsoOY2ydy+JCEJZDrohUYfQJAvlzdh5t8ixJwsUBY0DES6Rl/oKr
-	 VbmP+9k+07wMjNk+o+6XDCeUoaTgI+jsXsnIn3Y+JR/tF5scYDamudVnGlgnKYE1Zj
-	 B9eyNR1aQwtl8u76hHA5tLSIpbqRml4b4IBNw3J2On5pNEYSKjCjIZVWrKKwFhcMIR
-	 5IgtarUhZ2Zksg/LALvyQdsi9YCec95qCJzNSZySlA/dzymJPqm59ggAOXaNvY7Q9R
-	 cr1VJYKZNJqn/sTSV9L9HnTyWNLdfrm5bUTvSFNM9zUDFDpMCtQLsWpMFM+lFU02tB
-	 ay6weNJME3dSA==
-To: David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 0/2] netfs, cifs: DIO read and read-retry fixes
-Date: Fri, 23 Aug 2024 14:39:34 +0200
-Message-ID: <20240823-relation-offiziell-fda6c4626508@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240822220650.318774-1-dhowells@redhat.com>
-References: <20240822220650.318774-1-dhowells@redhat.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wr4pj3c5qz2yJ9
+	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Aug 2024 02:12:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724429542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HWel4fAjhn1F/3o1FewTt4dI8XNtgDdoQ8ZZC3V8mew=;
+	b=AVwJu+SL4XqgrOYdQ/5E0vIrGo17+bxTVgCaAgvcl8fP3+PHKzZidQtEY4cm9WNQZVXewl
+	VmyVW4IUw+rmaojMFn4+sEd9UEozSsZ8DpLrExjUhSaIgMsWCuUeZdwEdse0u9xedWXvY3
+	rV9f46OyjGxFe7O/3d6AW+UTsA1HdxM=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724429542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=HWel4fAjhn1F/3o1FewTt4dI8XNtgDdoQ8ZZC3V8mew=;
+	b=AVwJu+SL4XqgrOYdQ/5E0vIrGo17+bxTVgCaAgvcl8fP3+PHKzZidQtEY4cm9WNQZVXewl
+	VmyVW4IUw+rmaojMFn4+sEd9UEozSsZ8DpLrExjUhSaIgMsWCuUeZdwEdse0u9xedWXvY3
+	rV9f46OyjGxFe7O/3d6AW+UTsA1HdxM=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-173-pE1nOUCvOMGmvIxiOZwJjA-1; Fri,
+ 23 Aug 2024 12:12:19 -0400
+X-MC-Unique: pE1nOUCvOMGmvIxiOZwJjA-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6137B1954B06;
+	Fri, 23 Aug 2024 16:12:16 +0000 (UTC)
+Received: from warthog.procyon.org.uk.com (unknown [10.42.28.30])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 047D71955F41;
+	Fri, 23 Aug 2024 16:12:11 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Subject: [PATCH 0/5] netfs, cifs: Further fixes
+Date: Fri, 23 Aug 2024 17:12:01 +0100
+Message-ID: <20240823161209.434705-1-dhowells@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1333; i=brauner@kernel.org; h=from:subject:message-id; bh=OQN7Mf7HQDUQaFApg1+V9RgbCzXwyxIPK7zuLgztQ10=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSdaOZRKjvtxCkjtZRpcoliflzLrNA9yto3dz9n4D2cN mNb+YKqjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIl8bGFkmKibfHdXY2p8D2P7 gt4dxrZNMYKPfzS8Mpxuoqb24KpAIiPD/M//2mKuxJza36Alxn+QTc3k9y63rq8fDFb8+Hsssus eOwA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,39 +83,49 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Christian Brauner via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Christian Brauner <brauner@kernel.org>
-Cc: Pankaj Raghav <p.raghav@samsung.com>, linux-cifs@vger.kernel.org, Christian Brauner <brauner@kernel.org>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
+Cc: Pankaj Raghav <p.raghav@samsung.com>, linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Thu, 22 Aug 2024 23:06:47 +0100, David Howells wrote:
-> Here are a couple of fixes to DIO read handling and the retrying of reads,
-> particularly in relation to cifs.
-> 
->  (1) Fix the missing credit renegotiation in cifs on the retrying of reads.
->      The credits we had ended with the original read (or the last retry)
->      and to perform a new read we need more credits otherwise the server
->      can reject our read with EINVAL.
-> 
-> [...]
+Hi Christian, Steve,
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+Here are some more fixes to cifs and one to netfs:
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+ (1) Fix cifs FALLOC_FL_PUNCH_HOLE support as best I can.  If it's going to
+     punch a hole in dirty data in the pagecacne, invalidating that data
+     may result in the EOF not being moved correctly.  The set-zero and the
+     eof-move RPC ops really need compounding to avoid third-party
+     interference.
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+ (2) Adjust three debugging output statements.  Not strictly a fix, so
+     could be dropped.  Including the subreq ID in some extra debug lines
+     helps a bit, though.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+ (3) Fix netfslib's short read retry to reset the buffer iterator otherwise
+     the wrong part of the buffer may get written on.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
+ (4) Further fix the early EOF detection in cifs read.
 
-[1/2] cifs: Fix lack of credit renegotiation on read retry
-      https://git.kernel.org/vfs/vfs/c/82d55e76bf2f
-[2/2] netfs, cifs: Fix handling of short DIO read
-      https://git.kernel.org/vfs/vfs/c/942ad91e2956
+ (5) Further fixes for cifs credit handling.
+
+The patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
+
+Thanks,
+David
+
+David Howells (5):
+  cifs: Fix FALLOC_FL_PUNCH_HOLE support
+  netfs, cifs: Improve some debugging bits
+  netfs: Fix missing iterator reset on retry of short read
+  cifs: Fix short read handling
+  cifs: Fix credit handling
+
+ fs/netfs/io.c           |  3 ++-
+ fs/smb/client/file.c    |  9 +++++++++
+ fs/smb/client/smb2ops.c | 34 ++++++++++++++++++++++++++++++----
+ fs/smb/client/smb2pdu.c | 12 ++----------
+ fs/smb/client/trace.h   |  1 +
+ 5 files changed, 44 insertions(+), 15 deletions(-)
+
