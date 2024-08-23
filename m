@@ -1,81 +1,81 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76A6D95D2AF
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Aug 2024 18:12:59 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B16895D2B1
+	for <lists+linux-erofs@lfdr.de>; Fri, 23 Aug 2024 18:13:02 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wr4qF3yvNz302D
-	for <lists+linux-erofs@lfdr.de>; Sat, 24 Aug 2024 02:12:57 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wr4qJ0KYbz309c
+	for <lists+linux-erofs@lfdr.de>; Sat, 24 Aug 2024 02:13:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724429575;
-	cv=none; b=YGw4kkixIs6AVtcKAhzx1bTmXevgbUEBfHNqKxYJ5orazXUMz+FBIiur/zlcrPV9t4/XG56e1mWpPajHIRED1RFfYbgRedAoI9kEaECqY2zzfRsPUIhNS+zCjJ032+Vkc383v11FJdbrzaQzdqJrSljz9Rr9aRa7+a25CZQOI/+ejvQAHPhgyIGqLCcD7VLmna2JGTkwPDFYWUASUv5TquCUMYHj/FVhwbN+f5rzQimff+ONvPVfyyItdhbd/ca6fWfPyt0s9pfb8PswqZ1rrNyQtDVsklYF/wn0ta9xjhOXADChhpnBu8BMdn0sMFa9GSrifkBPatFX1dP6PSVvdA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724429578;
+	cv=none; b=Hb3pqQ1k4qIevLoKkwv4wLcPHfUzpWZ5ZSsPuuTedFU+RRvoMDXHnTyjtGgasLcoGQ0nXPTot6FRnAXQz35z5lreuX4ha7dqvn3ALE1md8IjunDjq+f3dqaqS5DaAM7PhOo82H4lx7eG5PXtnAjIv+0RgdWCkld9WOZMRBMdP64AHlP+DVHKYO+mivxj3gaIjDmFLmRR8V0TWHajgOPTNk/YlTpN4Tt6SqFvDtAjDIrgw3Ko7UtOtyUowpKQBp9myyW+UcV2zoed7jPx9v8kHgq1FZfEm/q1GWFWiA3jiAuCHf7ilqG6hVwMpQtXtJQr1YyuPHRA7+U0op3uxWhV7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1724429575; c=relaxed/relaxed;
-	bh=C4kdxje9pJwe2F8kxgsN+SQonQ75sAMbOz8YwNBazmI=;
+	t=1724429578; c=relaxed/relaxed;
+	bh=FBChvUZyQ988u9TYFlpOvF0mis7ud805n023OENZupc=;
 	h=DKIM-Signature:DKIM-Signature:Received:X-MC-Unique:Received:
 	 Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:X-Scanned-By; b=KWImCYUMAJHGI4fhGcXL8OMGkBpl4U24Qtu+zU8Ue3WqCx9ObQSVgbTEw1o5mItoqy5I3aQoc7hG2QD5EYOuTnGrXK1XMzZrk85onDqtw/aMRfHGqLKbiPwLasIeF+PX+si+r+lrjNpg2zz5NI73BSbuaFjFe38DAybtrPRJzPVvki1TRusZI3S8KghKTqr5JlS8U63xc8BE3QTWr40mhy82nJdI7Y3LWPQZKV6bEUjVzl1QXK6YQgzR4YZfeD6R0R92uikGo7KO+vLoCFt6IB6RnwP6DqdyuZ8+N0zrQt97LAmF/dCd9pASAdOdJ5LqXVJzKlTgvc+YiKPH/nnXRA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LpWj2SkP; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TwLEnlth; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version:Content-Transfer-Encoding:X-Scanned-By; b=ecPpR/syYAKb2xwAWSCjAbJQMdNwQNdxMRpehl5Wq8zUzyc2SaDhe2gv8d5zlWfNthwD1SqGcolc4Lc3pgNx7KZGYajbuIhzHhgsf4jPUrUWu+MXQ7Yuvx3akqXnpLj1TQ7nuH55FrvpKk8brw5Maw3Cyzc+mMNmPK33+YK6pAbdP0MaJJX290I9Ylm83e1i69KzLGXP1vVVeZhKVAIVwZ/hqw3e5eLAXVhP9dHHQhlvi5QYFgEdoqnVIS/fSFM42W2SqgzIuflmAZD6oqpLrnc4hZdxrzXuxOSJU4+zb81Cg4MTQbsTmrkmcO68dkFrTLyR9muHn2P75ocC2M7lKw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Z2BxGL2X; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Z2BxGL2X; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LpWj2SkP;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=TwLEnlth;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Z2BxGL2X;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Z2BxGL2X;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wr4qB6xPLz2ytN
-	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Aug 2024 02:12:54 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wr4qG17bkz2yyT
+	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Aug 2024 02:12:57 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724429571;
+	s=mimecast20190719; t=1724429575;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=C4kdxje9pJwe2F8kxgsN+SQonQ75sAMbOz8YwNBazmI=;
-	b=LpWj2SkP51jpUmkjArjNRAdXzF9hZhS/XCQwcbfMJ5Dv6DNul3TkRGeA/VBqXAOSSaGLY6
-	3eSmKPU43PAwi5Ue9CsxbVZRAtobdLsuCu6nHWj6AERw6wwEkUnVf7ewW5dkYA44mCBq1R
-	7ECo28grhBTUnRaCfNtoLwZ0Xst5I18=
+	bh=FBChvUZyQ988u9TYFlpOvF0mis7ud805n023OENZupc=;
+	b=Z2BxGL2XOhofL8edwfiYtjisYD28KWHnNRxyxaGgCnEliUSaa8gwlqYGAjm2oHELG0lCv0
+	kH0IWMh+sdiONQasJL2pbBVl60gAlybRaWJUj1u0cihcfl6ragyjIemilxd7LGEUd3mnE/
+	VQm4kBhbmk5M3QrdiQcWWcvUL7OcAQM=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724429572;
+	s=mimecast20190719; t=1724429575;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=C4kdxje9pJwe2F8kxgsN+SQonQ75sAMbOz8YwNBazmI=;
-	b=TwLEnlthX9rOYg98Xon+OSkg5xRz/p7wVSuwbQ/jpwwxsgvac5mFOsUIeSQJt961EcZI0/
-	M5CdDRImWTSBCOFGoyCW1a0HRG4xk8Z0CqGIcJT/860mL62GJDR5PamOdzE7Ttg77OfEKi
-	5In9uMtQJ/tr8yqwgDeQ7mCFohXSNI0=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=FBChvUZyQ988u9TYFlpOvF0mis7ud805n023OENZupc=;
+	b=Z2BxGL2XOhofL8edwfiYtjisYD28KWHnNRxyxaGgCnEliUSaa8gwlqYGAjm2oHELG0lCv0
+	kH0IWMh+sdiONQasJL2pbBVl60gAlybRaWJUj1u0cihcfl6ragyjIemilxd7LGEUd3mnE/
+	VQm4kBhbmk5M3QrdiQcWWcvUL7OcAQM=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-542-tWlcgTiVMRa8lhTgu6q_UA-1; Fri,
- 23 Aug 2024 12:12:44 -0400
-X-MC-Unique: tWlcgTiVMRa8lhTgu6q_UA-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-640-HzxncWQrPICf3GrzTUMYmQ-1; Fri,
+ 23 Aug 2024 12:12:49 -0400
+X-MC-Unique: HzxncWQrPICf3GrzTUMYmQ-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CFCD01955D47;
-	Fri, 23 Aug 2024 16:12:41 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3CFB61954B02;
+	Fri, 23 Aug 2024 16:12:47 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.30])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9B46D19560A3;
-	Fri, 23 Aug 2024 16:12:37 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 368AE19560A3;
+	Fri, 23 Aug 2024 16:12:43 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
-Subject: [PATCH 4/5] cifs: Fix short read handling
-Date: Fri, 23 Aug 2024 17:12:05 +0100
-Message-ID: <20240823161209.434705-5-dhowells@redhat.com>
+Subject: [PATCH 5/5] cifs: Fix credit handling
+Date: Fri, 23 Aug 2024 17:12:06 +0100
+Message-ID: <20240823161209.434705-6-dhowells@redhat.com>
 In-Reply-To: <20240823161209.434705-1-dhowells@redhat.com>
 References: <20240823161209.434705-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -91,11 +91,20 @@ Cc: Pankaj Raghav <p.raghav@samsung.com>, linux-cifs@vger.kernel.org, linux-nfs@
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Fix smb2_readv_callback() to always take -ENODATA as indicating we hit EOF
-and to always set the NETFS_SREQ_HIT_EOF flag rather than only doing it
-under some circumstances.
+Fix some bits of credit handling:
 
-Fixes: 942ad91e2956 ("netfs, cifs: Fix handling of short DIO read")
+ (1) Use the ->actual_len value rather than the total subrequest length in
+     smb2_adjust_credits() so that we don't trip the error message that we
+     don't have sufficient credits allocated in a retry.
+
+ (2) Set wdata->actual_len in writes as smb2_adjust_credits() now expects to
+     see it set.
+
+ (3) Reset the in_flight_check flag on a retry as we're doing a new read.
+
+ (4) Add a missing credit resubmission trace.
+
+Fixes: 82d55e76bf2f ("cifs: Fix lack of credit renegotiation on read retry")
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Steve French <sfrench@samba.org>
 cc: Paulo Alcantara <pc@manguebit.com>
@@ -104,30 +113,61 @@ cc: linux-cifs@vger.kernel.org
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
 ---
- fs/smb/client/smb2pdu.c | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ fs/smb/client/file.c    | 9 +++++++++
+ fs/smb/client/smb2ops.c | 2 +-
+ fs/smb/client/trace.h   | 1 +
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
-index e182fdbec887..9829784e8ec5 100644
---- a/fs/smb/client/smb2pdu.c
-+++ b/fs/smb/client/smb2pdu.c
-@@ -4601,16 +4601,8 @@ smb2_readv_callback(struct mid_q_entry *mid)
- 				     rdata->got_bytes);
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index 493c16e7c4ab..b94802438c62 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -111,6 +111,7 @@ static void cifs_issue_write(struct netfs_io_subrequest *subreq)
+ 		goto fail;
+ 	}
  
- 	if (rdata->result == -ENODATA) {
--		/* We may have got an EOF error because fallocate
--		 * failed to enlarge the file.
--		 */
--		if (rdata->subreq.start + rdata->subreq.transferred < rdata->subreq.rreq->i_size)
--			rdata->result = 0;
--		if (rdata->subreq.start + rdata->subreq.transferred + rdata->got_bytes >=
--		    ictx->remote_i_size) {
--			__set_bit(NETFS_SREQ_HIT_EOF, &rdata->subreq.flags);
--			rdata->result = 0;
--		}
-+		__set_bit(NETFS_SREQ_HIT_EOF, &rdata->subreq.flags);
-+		rdata->result = 0;
- 	} else {
- 		if (rdata->got_bytes < rdata->actual_len &&
- 		    rdata->subreq.start + rdata->subreq.transferred + rdata->got_bytes ==
++	wdata->actual_len = wdata->subreq.len;
+ 	rc = adjust_credits(wdata->server, wdata, cifs_trace_rw_credits_issue_write_adjust);
+ 	if (rc)
+ 		goto fail;
+@@ -227,6 +228,14 @@ static void cifs_req_issue_read(struct netfs_io_subrequest *subreq)
+ 						   &rdata->credits);
+ 		if (rc)
+ 			goto out;
++
++		rdata->credits.in_flight_check = 1;
++
++		trace_smb3_rw_credits(rdata->rreq->debug_id,
++				      rdata->subreq.debug_index,
++				      rdata->credits.value,
++				      server->credits, server->in_flight, 0,
++				      cifs_trace_rw_credits_read_resubmit);
+ 	}
+ 
+ 	if (req->cfile->invalidHandle) {
+diff --git a/fs/smb/client/smb2ops.c b/fs/smb/client/smb2ops.c
+index 20e674990760..5090088ba727 100644
+--- a/fs/smb/client/smb2ops.c
++++ b/fs/smb/client/smb2ops.c
+@@ -301,7 +301,7 @@ smb2_adjust_credits(struct TCP_Server_Info *server,
+ 		    unsigned int /*enum smb3_rw_credits_trace*/ trace)
+ {
+ 	struct cifs_credits *credits = &subreq->credits;
+-	int new_val = DIV_ROUND_UP(subreq->subreq.len, SMB2_MAX_BUFFER_SIZE);
++	int new_val = DIV_ROUND_UP(subreq->actual_len, SMB2_MAX_BUFFER_SIZE);
+ 	int scredits, in_flight;
+ 
+ 	if (!credits->value || credits->value == new_val)
+diff --git a/fs/smb/client/trace.h b/fs/smb/client/trace.h
+index 0f0c10c7ada7..8e9964001e2a 100644
+--- a/fs/smb/client/trace.h
++++ b/fs/smb/client/trace.h
+@@ -30,6 +30,7 @@
+ 	EM(cifs_trace_rw_credits_old_session,		"old-session") \
+ 	EM(cifs_trace_rw_credits_read_response_add,	"rd-resp-add") \
+ 	EM(cifs_trace_rw_credits_read_response_clear,	"rd-resp-clr") \
++	EM(cifs_trace_rw_credits_read_resubmit,		"rd-resubmit") \
+ 	EM(cifs_trace_rw_credits_read_submit,		"rd-submit  ") \
+ 	EM(cifs_trace_rw_credits_write_prepare,		"wr-prepare ") \
+ 	EM(cifs_trace_rw_credits_write_response_add,	"wr-resp-add") \
 
