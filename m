@@ -2,49 +2,72 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74E1A95FFB7
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2024 05:23:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9881595FFF3
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2024 05:48:03 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WtCYD6Fhwz2yRD
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2024 13:23:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WtD5s1YFcz2yRD
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Aug 2024 13:48:01 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.110
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724728990;
-	cv=none; b=M3uXqrIupFUa075pTM7XZO80/xmssgM7wY/+BcOpfCn3isIpS1t19eoWIH6tkjThtQ5Bb3OqjhcnR00qqh1r/kU0gOu4o3ALvvTzT6xMYiKrz5TnizNuETHToPvUIHVcIHt2Khmdn1rLSI8gNxAeDpqyN8H4xq30f8Yu8JsiMVshpQdw13XRUXMNeXjAtMcUGHyx1+5bjxXHUAY2QsBbqJWvKs6ulR26ELGuW9c+2JSDPJB3dVQFG3YDN7vvApPW5KVqxXL+UZWhujTvEJYRE1FzD71vGVEBx0aXtKupHxPELjWu7s/Eba47GE9Fx83o+tb1TEJGTEZO1BWkEJcbuw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.56
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724730478;
+	cv=none; b=Y4ViCnK9uCdyF+/uJ4ojt2aCyk6zA8KDDmxqtIXc43yhk2ALrsgD9GtZMtrWjN89A/2XNE3KNEByfOJ+RS7GRreWDMKs5J/dsXQ/MHTXutr9/s/HX2vvi4dAlb9DbGfhdE+TgHzztywgd1BmxaJtxSPWcuuLzZlLShydzi89YZvSSL3vZBm5SxtzUOYPLVbzi3r1/9ZnPAJ01bn9bSknJNg8SU2ft8hRrLi2fO4hRkQBB8ntzfUvXF8sh1CxEiijm8CeKqmOzWl9VQRaNf6Ul2bhGR6fQA8uGOSSFVb2JUlGJFaSQDVB7CEcXg216nEDLYad35pUF+mw/Anv31rAmg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1724728990; c=relaxed/relaxed;
-	bh=RlqcbGoTA3Os/3f34aZcUnV8x+cRIptIbQSZrp+W7Z4=;
-	h=DKIM-Signature:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=FEkOJJtfDj37hAgmzblfx8LzJ/VpOjHGtzw5oX3xg8kAUGgpSlzJopKoSuP2tOmQVJqYFr1fV2D4nobvlsNazg2VuKqS7Nui9v9OhfDGFjcNt3ixdza1jozr+UVftmJPGpHPrF2PCqnSF9am/msZXt5JaU/3pOQJqwjYrbWReWQKzsezAI61hh0G6l/QjQ/1xBZiOqIdnF2Tviqvoqx9csyN75EpULpaAR7+gg34Um09LGx1MTbFOS3uFPZxuYKzw8ow2Bkub/bCeJa4CRYi0tYIemnWXIzTIpR4um/gM6+Jyn+zLBzzXggoMFWDajLq661Ao8/9vsk3pSK4h5AP4A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Kz5n7H1/; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Kz5n7H1/;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	t=1724730478; c=relaxed/relaxed;
+	bh=QJdnbHHYMPw5RsyzHB99sp/ysEtaidWqO/onJKNe568=;
+	h=Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo; b=EIFgSnSsgso4y83tbdcaMRqxsJ/IMyITdkFKY8W7zv0eaz/4IR/cLf5+VvIdcr4D161KwTYxxtalFH/WLS5YzhqZ/7vKEuEvesZ97Lm194DoMg/gyqBhqh8Sv4iCtUoOivSoBXCRB0rztDBBWvI1i6fWxEoS5ZqEVrGSZJmENimqn00a6hWReuaCR2ls5/3uQU7VuGAoV9sK9z4YjWlN4VgQdASls03Sab/ggcFSVEWmWewIhV4+f9g5iCB5+TeaP6T29NIOcdXmGosY7AYyoBjKF6ofG4Af6ZBQGNEzwx8eUA543/tsNvO88ZDOSGfSdVUNcFRcSKI7ueqALlRmUg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org) smtp.mailfrom=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.56; helo=dggsgout12.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WtCY80sWMz2xfK
-	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Aug 2024 13:23:05 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1724728981; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=RlqcbGoTA3Os/3f34aZcUnV8x+cRIptIbQSZrp+W7Z4=;
-	b=Kz5n7H1/5HjI2vTPzPWYl/Nz8TmAGkcJaiJbhtPJgHgQRksKJn96UwG8mYm56fcxuAYz2CVx5/OBLW/F7LTbGuesYReKCLAOeYIV/OtWlhAA/4dYMhEdyvYRsBdgKj1WmDc9/34NhQJ2FmHQELQwmos/yeNg8jRgXE4ZJEtui1Y=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WDl2vrm_1724728980)
-          by smtp.aliyun-inc.com;
-          Tue, 27 Aug 2024 11:23:00 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v4] erofs-utils: fix invalid argument type in erofs_err()
-Date: Tue, 27 Aug 2024 11:22:40 +0800
-Message-ID: <20240827032240.1869284-1-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WtD5n73rQz2xrk
+	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Aug 2024 13:47:54 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WtD5K12Q5z4f3jM1
+	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Aug 2024 11:47:33 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id A28EB1A058E
+	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Aug 2024 11:47:47 +0800 (CST)
+Received: from [10.174.177.174] (unknown [10.174.177.174])
+	by APP4 (Coremail) with SMTP id gCh0CgB37IJfTM1m5shTCw--.52889S3;
+	Tue, 27 Aug 2024 11:47:47 +0800 (CST)
+Message-ID: <5b7455f8-4637-4ec0-a016-233827131fb2@huaweicloud.com>
+Date: Tue, 27 Aug 2024 11:47:43 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cachefiles: fix dentry leak in cachefiles_open_file()
+To: Markus Elfring <Markus.Elfring@web.de>
+References: <20240826040018.2990763-1-libaokun@huaweicloud.com>
+ <467d9b9b-34b4-4a94-95c1-1d41f0a91e05@web.de>
+Content-Language: en-US
+From: Baokun Li <libaokun@huaweicloud.com>
+In-Reply-To: <467d9b9b-34b4-4a94-95c1-1d41f0a91e05@web.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgB37IJfTM1m5shTCw--.52889S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7GryUWF4kGw4rZFWUKFyDWrg_yoW8Jr4UpF
+	Way3WUKryfWr4UKr4kAa1Fvw1F9397WFs0q3W3Wr9rAan0qryYvr12grn0qF98AryDJr42
+	qa1j9a43X3yUJFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	aFAJUUUUU==
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAIBWbMPH9KgwAAss
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -56,136 +79,53 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Christian Brauner <brauner@kernel.org>, Yang Erkun <yangerkun@huawei.com>, Jeff Layton <jlayton@kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Howells <dhowells@redhat.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org, stable@kernel.org, Yu Kuai <yukuai3@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Coverity-id: 502374, 502367, 502362, 502348, 502342, 502341,
-	     502340, 502358
+On 2024/8/26 21:55, Markus Elfring wrote:
+> …
+>> Add the missing dput() to cachefiles_open_file() for a quick fix.
+> I suggest to use a goto chain accordingly.
+>
+>
+> …
 
-Fix several issues found by Coverity regarding "Invalid type in argument
-for printf format specifier".
+Hi Markus,
 
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
----
-v4: Changes since v3: Only modify the parts reported by Coverity, while leaving the rest as-is. 
-v3: https://lore.kernel.org/all/20240814045501.1675174-1-hongzhen@linux.alibaba.com/
-v2: https://lore.kernel.org/all/20240814033813.1605825-1-hongzhen@linux.alibaba.com/
-v1: https://lore.kernel.org/all/20240813121003.780870-1-hongzhen@linux.alibaba.com/
----
- fsck/main.c     |  4 ++--
- lib/blobchunk.c |  3 ++-
- lib/compress.c  |  4 ++--
- lib/fragments.c | 10 +++++-----
- lib/super.c     |  3 ++-
- mkfs/main.c     |  2 +-
- 6 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/fsck/main.c b/fsck/main.c
-index 28f1e7e..89d87fb 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -807,8 +807,8 @@ static int erofsfsck_dirent_iter(struct erofs_dir_context *ctx)
- 	curr_pos = prev_pos;
- 
- 	if (prev_pos + ctx->de_namelen >= PATH_MAX) {
--		erofs_err("unable to fsck since the path is too long (%u)",
--			  curr_pos + ctx->de_namelen);
-+		erofs_err("unable to fsck since the path is too long (%llu)",
-+			  (curr_pos + ctx->de_namelen) | 0ULL);
- 		return -EOPNOTSUPP;
- 	}
- 
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index 2835755..33dadd5 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -95,7 +95,8 @@ static struct erofs_blobchunk *erofs_blob_getchunk(struct erofs_sb_info *sbi,
- 		chunk->device_id = 0;
- 	chunk->blkaddr = erofs_blknr(sbi, blkpos);
- 
--	erofs_dbg("Writing chunk (%u bytes) to %u", chunksize, chunk->blkaddr);
-+	erofs_dbg("Writing chunk (%llu bytes) to %u", chunksize | 0ULL,
-+		  chunk->blkaddr);
- 	ret = fwrite(buf, chunksize, 1, blobfile);
- 	if (ret == 1) {
- 		padding = erofs_blkoff(sbi, chunksize);
-diff --git a/lib/compress.c b/lib/compress.c
-index 8655e78..17e7112 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -497,8 +497,8 @@ static bool z_erofs_fixup_deduped_fragment(struct z_erofs_compress_sctx *ctx,
- 	inode->fragmentoff += inode->fragment_size - newsize;
- 	inode->fragment_size = newsize;
- 
--	erofs_dbg("Reducing fragment size to %u at %llu",
--		  inode->fragment_size, inode->fragmentoff | 0ULL);
-+	erofs_dbg("Reducing fragment size to %llu at %llu",
-+		  inode->fragment_size | 0ULL, inode->fragmentoff | 0ULL);
- 
- 	/* it's the end */
- 	DBG_BUGON(ctx->tail - ctx->head + ctx->remaining != newsize);
-diff --git a/lib/fragments.c b/lib/fragments.c
-index 7591718..bdbd33d 100644
---- a/lib/fragments.c
-+++ b/lib/fragments.c
-@@ -138,7 +138,7 @@ static int z_erofs_fragments_dedupe_find(struct erofs_inode *inode, int fd,
- 	inode->fragment_size = deduped;
- 	inode->fragmentoff = pos;
- 
--	erofs_dbg("Dedupe %u tail data at %llu", inode->fragment_size,
-+	erofs_dbg("Dedupe %llu tail data at %llu", inode->fragment_size | 0ULL,
- 		  inode->fragmentoff | 0ULL);
- out:
- 	free(data);
-@@ -283,8 +283,8 @@ int z_erofs_pack_file_from_fd(struct erofs_inode *inode, int fd,
- 		goto out;
- 	}
- 
--	erofs_dbg("Recording %u fragment data at %lu", inode->fragment_size,
--		  inode->fragmentoff);
-+	erofs_dbg("Recording %llu fragment data at %lu",
-+		  inode->fragment_size | 0ULL, inode->fragmentoff);
- 
- 	if (memblock)
- 		rc = z_erofs_fragments_dedupe_insert(memblock,
-@@ -316,8 +316,8 @@ int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
- 	if (fwrite(data, len, 1, packedfile) != 1)
- 		return -EIO;
- 
--	erofs_dbg("Recording %u fragment data at %lu", inode->fragment_size,
--		  inode->fragmentoff);
-+	erofs_dbg("Recording %llu fragment data at %lu",
-+		  inode->fragment_size | 0ULL, inode->fragmentoff);
- 
- 	ret = z_erofs_fragments_dedupe_insert(data, len, inode->fragmentoff,
- 					      tofcrc);
-diff --git a/lib/super.c b/lib/super.c
-index 32e10cd..d4cea50 100644
---- a/lib/super.c
-+++ b/lib/super.c
-@@ -213,7 +213,8 @@ struct erofs_buffer_head *erofs_reserve_sb(struct erofs_bufmgr *bmgr)
- 
- 	bh = erofs_balloc(bmgr, META, 0, 0, 0);
- 	if (IS_ERR(bh)) {
--		erofs_err("failed to allocate super: %s", PTR_ERR(bh));
-+		erofs_err("failed to allocate super: %s",
-+			  erofs_strerror(PTR_ERR(bh)));
- 		return bh;
- 	}
- 	bh->op = &erofs_skip_write_bhops;
-diff --git a/mkfs/main.c b/mkfs/main.c
-index b7129eb..1027fc6 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -274,7 +274,7 @@ static int erofs_mkfs_feat_set_fragments(bool en, const char *val,
- 		u64 i = strtoull(val, &endptr, 0);
- 
- 		if (endptr - val != vallen) {
--			erofs_err("invalid pcluster size %s for the packed file %s", val);
-+			erofs_err("invalid pcluster size %s for the packed file", val);
- 			return -EINVAL;
- 		}
- 		pclustersize_packed = i;
+Thanks for the suggestion, but I think the current solution is simple
+enough that we don't need to add a label to it.
+
+Actually, at first I was going to release the reference count of the
+dentry uniformly in cachefiles_look_up_object() and delete all dput()
+in cachefiles_open_file(), but this may conflict when backporting
+the code to stable. So just keep it simple to facilitate backporting
+to stable.
+
+Thanks,
+Baokun
+>> +++ b/fs/cachefiles/namei.c
+>> @@ -554,6 +554,7 @@ static bool cachefiles_open_file(struct cachefiles_object *object,
+>>   	if (!cachefiles_mark_inode_in_use(object, d_inode(dentry))) {
+>>   		pr_notice("cachefiles: Inode already in use: %pd (B=%lx)\n",
+>>   			  dentry, d_inode(dentry)->i_ino);
+>> +		dput(dentry);
+>>   		return false;
+> Please replace two statements by the statement “goto put_dentry;”.
+>
+>
+> …
+>> error:
+>> 	cachefiles_do_unmark_inode_in_use(object, d_inode(dentry));
+> +put_dentry:
+>> 	dput(dentry);
+>> 	return false;
+>> }
+> Regards,
+> Markus
+
 -- 
-2.43.5
+With Best Regards,
+Baokun Li
 
