@@ -1,74 +1,73 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90BB29628F5
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 15:42:37 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 95867962995
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 16:01:49 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1724852554;
-	bh=4CsmiWXScsxhSTHVOAU2k2pMHatNvIBL8O5G+Rx1q5Y=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	s=201707; t=1724853707;
+	bh=FkxFFVdwX1/bT3jf5ugN2YTPZ65TkfFpCS/ghepAw8o=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=LpWFfTH4LoPq3qm1TJ/cXoTjfQngQYA7IKy/bgBoAZT8WAfSePPLuAGO6MOfd8w7I
-	 432zwyuRCZ78kKd7/y7RLHw+b2ZbufKp5fE24xrz5MwGSsE2WOtho+uDA244opqmNv
-	 PXiBA13qM1b6MQF7WXHZPiYI4VEDqLdaykNchaQbULREraeVptfPgVUi5O0Ovuahz6
-	 y1CoyRCxxdp2yn+zmRR9YmQuts/N1xLOlzFoVxtXIFi39ZX4L64LWIbuBQtpf7ovlv
-	 Ys9WSIztgcbH21gYARbYynIteK5Elxyemgg6APsBYBl+Ngl7u6NwhuGAYMQoKheaKn
-	 Ga4nqpjQCgFng==
+	b=ZVNiv3+94i494OX9xEEYF+WPKnMPQxg8Ww3phRipi9EBBFYBXcoDrntudl/GjZzGs
+	 2oZ5T9MyGo5uoKCiXv1LsXK0qA5VuegzAZQC5/+J2hg19b5z82e9FXYlVXb0adRNDN
+	 nvqLVyXURSqr8NBtWUvbDncT5haiy/pWcikfv6d+sNe4XDvqMBIPeH4v7V6t2jL8ig
+	 ssX4G8Aj2l3O6xenpEqIS6paH+jT6iNBamm945eWPAS3UP5E+E9A58NIiIdz2T5YAq
+	 yJnq1n1Xmg7agVjP+lDly3aNZaVZEojUtJb7MpsiC6mPHXzMTpCl977kx32L89cyZM
+	 7iIdZVNXZguqg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wv5FQ1V4Yz2ykZ
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 23:42:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wv5gb2DHGz2ykT
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 00:01:47 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724852552;
-	cv=none; b=axemKmfB1gx0lDDBIh/jdfB08SJx8Z5fUcah6DP10SZRk4p/Qb6+FljojIAckZY/jjUz8ASfDpXoRtM0P2WFYfI+8/4x55C96xPTjNa2qgeaIIMnRs9AfNl13b6WRGDzjiS08GKzcjQWLSh70DbzNPYN4UFGNvuTAljb2W5E5uJccAaZtpoz1TBhsUnf9YF83LOWRAQ+pao8SkGxLfcHguAj3ahPYFqOHILKOqRezj5MRItPZvxU1J8Qjgl34XoPSB+FwPBXmqeVQKVsL0ReazA/uYCuHF+aP/gUQx6PVhUdCfbkH4ew8+MmTGWhxoN1YrDkNDSU76ex5oOcPZbPTA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724853704;
+	cv=none; b=cbofeE5PijUtOb9+m1j0y3TeB2JD1NvP1s3oouZqO/t+jV+d36l7dIb2PhLNFvkhc786ti98g39ZMI5nPqiYy6TGtxwdFHt9C+U2e5OojuO9A1kOOoQnQmQRp6cN+SzAXSjAXy/HYYGLDGrFjgsXGFWYrYgrO6DHRl+tDUw0enCQsqwtkSczYLp36TARi5TyJf6J7EcN5sP+/hRQhc4hrnKf0QcVX9Nn1POIX4dfZTc3QfHVb0DpYfgNUv1drzHznM1gbIFks41mLe2HcHcrLFbUs8eG42n60Lf92y6DOkx+HbWm0Fdlz8R4vvsf5lWwSYEw3GfYmNXwJCOY8Mi8oQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1724852552; c=relaxed/relaxed;
-	bh=4CsmiWXScsxhSTHVOAU2k2pMHatNvIBL8O5G+Rx1q5Y=;
-	h=Received:Received:DKIM-Signature:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=I/gQfVN0Tn1EdT6DqUgrXajg8BhCktDsE4iLLhaUQBWn5ode5gOsXNLY+VB1Exy8buz9Knb0MfPq1Zg7V0PZh7kENmcv/EJPkE+O9vrWf78p99N3nXEk/4y5mL+mXymqnt9XFSxjMUpn/ZA2YmJoLdDq0zKr+ffozlN6ewFsN8cwGA56TDkgmZc5il9UOdXKujCiEucUni9/2udeGM+ijut5K9K0pUWPhTxu9iyCCk5+vlPz+uAn4Qg3h/COvngBRMuqhx0e2ycCO6ppi4TELsnnE27it5EsM14sGbpet78TKsdGzI9GbPg7eT9n+0+vZfqMJQpYRZOhdv00vRmxNg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=izPSZ7ol; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=izPSZ7ol;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1724853704; c=relaxed/relaxed;
+	bh=FkxFFVdwX1/bT3jf5ugN2YTPZ65TkfFpCS/ghepAw8o=;
+	h=X-Greylist:Received:Received:Received:Message-ID:Date:
+	 MIME-Version:User-Agent:Subject:To:CC:References:Content-Language:
+	 From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 X-Originating-IP:X-ClientProxiedBy; b=cNWReRSjJCZzz8kOAX1e34DG6LlIp8v/Pvf7U+sW89umK6nXG81QAVmFGw00OM1+IquofpvUtcNj+FilxesyXtKLG+7TSfDJGWVBd1aIusnqUJOHxyh1hZSTKgrb0GTa/YPg8c8mH1a0mfTgmISc5R3OOegWbfwVtmC9ppVwNfZOmHLDxRR4h1emHZA01BzM7f4HYl8RyqZdtCNbpopIAC/pKc5aVTMwFYvy5nXfHOpNkJgGQULJqMyW4qQ1Whbwo2ynDlFrhuOq7M2KzuFGr1U6xiWwjD5GGTFhGwsn/BzUdghJMPGPkOZCrs0di1cJvhSgxTVH71HjzNH+kkv2TA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=libaokun1@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=libaokun1@huawei.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 1110 seconds by postgrey-1.37 at boromir; Thu, 29 Aug 2024 00:01:29 AEST
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wv5FM6yBzz2xdX
-	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Aug 2024 23:42:31 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id C460FA40BA3;
-	Wed, 28 Aug 2024 13:42:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4E87C55DF2;
-	Wed, 28 Aug 2024 13:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724852240;
-	bh=Nwfs3yfaGGyfcG5dJ5lnEqC4M+ztIXz0KzLCPLezTec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=izPSZ7ol/PohfSmOweUqSXMko8ZTEPHGZfHXUIsi2RP3lpEVM/G+vFKV/ACwpkaS5
-	 hFE08LtePrNuFEshcL9aIbQslaCjTwVecGwp2xUVrUwSbBRf1q+iSB8S8uGnGuOnYN
-	 icXCLbFhXRF2UaWeVtojUd345KHrrfY/dPbzCbMbvvbJUc+oVVWjWzfM51/dsNapP5
-	 MtH0GBOuRLnB3UE/60ci9ZKpIOjCUyUDHgZ148q18YRVitmP2YM0mA7uFp75JaM7L0
-	 sQ72IgHlgZt9Dztnc/o8mdexjEKbuQfSTvJVBhRgwmjyDA0occw2qHMKfmDrRaLdEt
-	 EvXvFOgLiANTw==
-Date: Wed, 28 Aug 2024 15:37:14 +0200
-To: Baokun Li <libaokun@huaweicloud.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wv5gF6KM0z2xZj
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 00:01:26 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Wv5Db5c8FzyRBl;
+	Wed, 28 Aug 2024 21:41:51 +0800 (CST)
+Received: from dggpeml100021.china.huawei.com (unknown [7.185.36.148])
+	by mail.maildlp.com (Postfix) with ESMTPS id 42D35180105;
+	Wed, 28 Aug 2024 21:42:22 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.174) by dggpeml100021.china.huawei.com
+ (7.185.36.148) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 28 Aug
+ 2024 21:42:21 +0800
+Message-ID: <a64ff81d-3b3d-44e8-9a1d-0d226dca2c8a@huawei.com>
+Date: Wed, 28 Aug 2024 21:42:21 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] netfs: Delete subtree of 'fs/netfs' when netfs module
  exits
-Message-ID: <20240828-federn-testreihe-97c4f6ec5772@brauner>
+To: Christian Brauner <brauner@kernel.org>
 References: <20240826113404.3214786-1-libaokun@huaweicloud.com>
  <20240828-fuhren-platzen-fc6210881103@brauner>
  <b003bb7c-7af0-484f-a6d9-da15b09e3a96@huaweicloud.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b003bb7c-7af0-484f-a6d9-da15b09e3a96@huaweicloud.com>
+ <20240828-federn-testreihe-97c4f6ec5772@brauner>
+Content-Language: en-US
+In-Reply-To: <20240828-federn-testreihe-97c4f6ec5772@brauner>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.174]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml100021.china.huawei.com (7.185.36.148)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -80,41 +79,28 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Christian Brauner via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Christian Brauner <brauner@kernel.org>
-Cc: yangerkun@huawei.com, jlayton@kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com
+From: Baokun Li via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Baokun Li <libaokun1@huawei.com>
+Cc: Baokun Li <libaokun@huaweicloud.com>, yangerkun@huawei.com, jlayton@kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Aug 28, 2024 at 08:13:54PM GMT, Baokun Li wrote:
-> On 2024/8/28 19:22, Christian Brauner wrote:
-> > On Mon, 26 Aug 2024 19:34:04 +0800, libaokun@huaweicloud.com wrote:
-> > > In netfs_init() or fscache_proc_init(), we create dentry under 'fs/netfs',
-> > > but in netfs_exit(), we only delete the proc entry of 'fs/netfs' without
-> > > deleting its subtree. This triggers the following WARNING:
-> > > 
-> > > ==================================================================
-> > > remove_proc_entry: removing non-empty directory 'fs/netfs', leaking at least 'requests'
-> > > WARNING: CPU: 4 PID: 566 at fs/proc/generic.c:717 remove_proc_entry+0x160/0x1c0
-> > > Modules linked in: netfs(-)
-> > > CPU: 4 UID: 0 PID: 566 Comm: rmmod Not tainted 6.11.0-rc3 #860
-> > > RIP: 0010:remove_proc_entry+0x160/0x1c0
-> > > Call Trace:
-> > >   <TASK>
-> > >   netfs_exit+0x12/0x620 [netfs]
-> > >   __do_sys_delete_module.isra.0+0x14c/0x2e0
-> > >   do_syscall_64+0x4b/0x110
-> > >   entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> > > ==================================================================
-> 
-> Hi Christian,
-> 
-> 
-> Thank you for applying this patch!
-> 
-> I just realized that the parentheses are in the wrong place here,
-> could you please help me correct them?
-> > > Therefore use remove_proc_subtree instead() of remove_proc_entry() to
-> ^^ remove_proc_subtree() instead
+On 2024/8/28 21:37, Christian Brauner wrote:
+>> Hi Christian,
+>>
+>>
+>> Thank you for applying this patch!
+>>
+>> I just realized that the parentheses are in the wrong place here,
+>> could you please help me correct them?
+>>>> Therefore use remove_proc_subtree instead() of remove_proc_entry() to
+>> ^^ remove_proc_subtree() instead
+> Sure, done.
+>
+Thanks a lot!
 
-Sure, done.
+
+Cheers,
+Baokun
+
+
