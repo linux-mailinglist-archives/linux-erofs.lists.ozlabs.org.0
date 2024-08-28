@@ -2,52 +2,76 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 33A659625DB
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 13:20:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C261F9625EA
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 13:22:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1724844162;
+	bh=BLXiieZ22RUqz5tnd6awFZS3axEO2JGwX9GeaYR51I8=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=BQfr/fITBs4QdBKI2GvU1FB7irNwO39IrxyMOR38+HbQdER7nOxmmczC0ZJGRQ/6w
+	 OX1nRQeXy7+YCqFLQ1rRryfHX2LXfzskdO1LaVRXZHggg4zf8rYm7o+5KBRhrnKVV7
+	 nKffiYXAmg5h5fogThkHfiFuznHWpSrvAU8n4s5y6bEOuMzJQM4LknTb95SHMa6wH5
+	 WCeIIeMcvo7xwpPSiytui+zy68f4o1WK9G2j9I58iIrRkWNDZUU9NfG4IvMzFzsGGe
+	 8osycV4Fboo2jDh+nwyV+TAiYNByLNh0AsA1y9WpM2nClvZbbv7Y3r8frjEEbFe9kV
+	 8IRkK+wzl7HWw==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wv25C6WvPz30RK
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 21:20:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wv2823MQCz2yk3
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 21:22:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724844010;
-	cv=none; b=km7xrMwhUuYS5hjVoFKlgdbIm+jsbxowH6bJl37PEdNWMJtrdqCNStkioiNayTm5Uf5FOA/efnLQES9tROi25rUT4JcjE2LcVoGcdpCjuTz1y5je+2XxSpfQW7qXzGVjocXS2nGhdRfP3dK9KuyKRSmjsphkfdb8gBjdnqndFFZ5HOhB4kA98ZaieggZV1iLSaw7xoPmTtoELFWsksRDqX5ZCKcLnKY8d7GrjPbfrd64YzYcZFvy8A5v+wz/AzBE06KVAv797TGO1RcUA2iGOIAV7N1W93W0RDcDwzdCKc16nEBs18uWofdacX0YzkHichBcm5Q1tfGjyn79KXWXQA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=145.40.73.55
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724844160;
+	cv=none; b=i0RSR5uJGoCRIUWxMtyux+NPojBEFxovQoxaikHlUghCUnz5g811OcrJvWd9u6TY4NLTqwptu4+X4NLARt0HX62AzjhwI985vjeGWdBB+a50FAU6l69ubxjqDI5+NgSJCQrp50hvgB4rMBAH+Gg82Y/fnvCPwhvgQ6dutGNB7KUOydyOoS7FUF9iSvos2XZuy8RFvffUNII1TceRDBIW8cl9Q/bbiqBmOHBncYBPJ+c/Cnv75IAu8MnzLSsyY8CFcxJu3lgB4GnYPly5dg1ZoGe1fPSidA/QQUibpk9a7+MEuNi9dl69tKj2WuU4/nwMwMTF2lJOVaABOu5g3VSUKA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1724844010; c=relaxed/relaxed;
-	bh=9t26X20wOk6RC/v/5buWxmWBy5+YEGCpdhBhX53OLoo=;
-	h=DKIM-Signature:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:In-Reply-To:References:MIME-Version:
-	 Content-Transfer-Encoding; b=Pomx978I0aHML+uYGvA3n4WvpF+2+f5MhELjk2zObXa1xEA8h1TAufBvrreqlij6ZOJ/MJEvtDj3c4/ct5sCq8i0Byn+mUgc/ZtYaCONeRbtsr+JRBjf5S83HdU/YIdAGBrk/gjbBV7bWuNqWpwp9u3qnMWOraPNsqNq00mweS6mEMtRbdkDpfcrN6fTHqdi3zWqdChtMbo4L/+RwK3FciRSWfvGD/D5pCFGfrsciWLrISoeOHF1r+M5RwqEIrs8wT7To3tAfwCjl8VX6wfIW8In7GXLYakZHq8nzUHUJ8LQLl0VTspRHZloOW4lcWxPe0zyCQ25/v1dLoDKL/LnhA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wstjfw6T; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1724844160; c=relaxed/relaxed;
+	bh=BLXiieZ22RUqz5tnd6awFZS3axEO2JGwX9GeaYR51I8=;
+	h=Received:Received:DKIM-Signature:From:To:Cc:Subject:Date:
+	 Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Type:X-Developer-Signature:X-Developer-Key:
+	 Content-Transfer-Encoding; b=J3vRcRXJBvk0WDLq6GGv8TS6WhRxwZnD6mB+zINxOQxvFcZEnnZTa7P6K1F2VAwWNfbJ1q6pAQ243hZS72Uvm2GKCA2PF3Hv7sQ/daWN+p9uncqkfUfx0WzIwjsqTnpZ2ohccoD0/p1KiKO2tuS54V2X6nWl0sbSUXWDupXyqoPh4KMVM9u8z2K886p4QkYS1tS9u9etidp/e2m2PgbxtrkylH2AUgn160ZhN7m6XyersBprZhhd9wHzV2sEnbJSMD8x+cOhmwRR0jkLOAN+9ojY8gjfeCTVWKGAqzeuGnb0FJQDJXFTKaRRvZZa88yLbbCbZHWumDf6j/4kQp991w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=CnksQoqo; dkim-atps=neutral; spf=pass (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wstjfw6T;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=CnksQoqo;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=145.40.73.55; helo=sin.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wv2561gqMz2xy3
-	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Aug 2024 21:20:09 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1724844006; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=9t26X20wOk6RC/v/5buWxmWBy5+YEGCpdhBhX53OLoo=;
-	b=wstjfw6TvPHsYeX1Uz69gPMf1pSogUsRkCsYRb/xJ7UzKleuG/srJJCAmsmfKoSLDpJVdiHVRfJKSZ2daVX6W8dDuTF4cya+cD6pRFFrsSQPInR62Z7rhwopjjTs5JToFuaNriaWQUpZP1M644zeBY02vVasZ7WZmFcM/ONzL3o=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WDpbUPx_1724844004)
-          by smtp.aliyun-inc.com;
-          Wed, 28 Aug 2024 19:20:05 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org,
-	lihongbo22@huawei.com
-Subject: [PATCH RFC v3 3/3] erofs: apply the page cache share feature
-Date: Wed, 28 Aug 2024 19:19:59 +0800
-Message-ID: <20240828111959.3677011-4-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20240828111959.3677011-1-hongzhen@linux.alibaba.com>
-References: <20240828111959.3677011-1-hongzhen@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wv2800kqNz2xsH
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Aug 2024 21:22:40 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sin.source.kernel.org (Postfix) with ESMTP id BD6D4CE1340;
+	Wed, 28 Aug 2024 11:22:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3164AC98EC1;
+	Wed, 28 Aug 2024 11:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724844157;
+	bh=Nf3PEb3R2fEBVAcqaU+NbEMYg0L6+wEFWBzFvK14wyk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CnksQoqoxVFIKKsZi0byoMoAlvfMilDr9GmU3TSdrR57167Ow0qcTcOBIwCBpiEiF
+	 9A5RVEWTfgtnYs2iehI43J2kFfJtBS/TtIS862NDTN+2JE2R+cM1Kb6yGHuEUh1oIg
+	 jVdhJBw1rO7fc0n8zuqaLsggnHa8JajsE1vzY9du9y3EEnqJ4ZqE0HRbmuvKHFBq+y
+	 OYssINTq1TTl8zzHUx02vK9gWvdvaA0AHrA7gTYIii8fWVZsVdHOrNT5BbndKD5k17
+	 RFVkHMwJiY+n7CFkjc8bok6sb7NmP3E6Mm+49dN8Kx2mTA3z+LtD+76+sFoSMGSG1E
+	 wUrew8yfxFgBg==
+To: netfs@lists.linux.dev,
+	dhowells@redhat.com,
+	jlayton@kernel.org,
+	libaokun@huaweicloud.com
+Subject: Re: [PATCH] netfs: Delete subtree of 'fs/netfs' when netfs module exits
+Date: Wed, 28 Aug 2024 13:22:25 +0200
+Message-ID: <20240828-fuhren-platzen-fc6210881103@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240826113404.3214786-1-libaokun@huaweicloud.com>
+References: <20240826113404.3214786-1-libaokun@huaweicloud.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1707; i=brauner@kernel.org; h=from:subject:message-id; bh=Nf3PEb3R2fEBVAcqaU+NbEMYg0L6+wEFWBzFvK14wyk=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSd5yj+XHu7QM5zVi/D7FsC/Qyf+y9GKRm3KrjPrIutv Lme48ftjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgInkiTEyTEn+oXj92MfjrwUr pv1YM5Mn7ZDOv4Lsd/FtT7nFrvDF3WJkeKOWkj2/ae92kcK+YOc572qO/CuuM7y5rFjuQ1LzpMX crAA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -60,241 +84,47 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+From: Christian Brauner via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Christian Brauner <brauner@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, yukuai3@huawei.com, linux-erofs@lists.ozlabs.org, stable@kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This modifies relevant functions to apply the page cache
-share feature.
+On Mon, 26 Aug 2024 19:34:04 +0800, libaokun@huaweicloud.com wrote:
+> In netfs_init() or fscache_proc_init(), we create dentry under 'fs/netfs',
+> but in netfs_exit(), we only delete the proc entry of 'fs/netfs' without
+> deleting its subtree. This triggers the following WARNING:
+> 
+> ==================================================================
+> remove_proc_entry: removing non-empty directory 'fs/netfs', leaking at least 'requests'
+> WARNING: CPU: 4 PID: 566 at fs/proc/generic.c:717 remove_proc_entry+0x160/0x1c0
+> Modules linked in: netfs(-)
+> CPU: 4 UID: 0 PID: 566 Comm: rmmod Not tainted 6.11.0-rc3 #860
+> RIP: 0010:remove_proc_entry+0x160/0x1c0
+> Call Trace:
+>  <TASK>
+>  netfs_exit+0x12/0x620 [netfs]
+>  __do_sys_delete_module.isra.0+0x14c/0x2e0
+>  do_syscall_64+0x4b/0x110
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> ==================================================================
+> 
+> [...]
 
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
----
-v3: Reimplement and add support for compressed files.
-v2: https://lore.kernel.org/all/20240731080704.678259-3-hongzhen@linux.alibaba.com/
-v1: https://lore.kernel.org/all/20240722065355.1396365-5-hongzhen@linux.alibaba.com/
----
- fs/erofs/data.c  | 34 +++++++++++++++++++++++++++++++++-
- fs/erofs/inode.c | 12 ++++++++++++
- fs/erofs/super.c | 29 +++++++++++++++++++++++++++++
- fs/erofs/zdata.c | 32 ++++++++++++++++++++++++++++++++
- 4 files changed, 106 insertions(+), 1 deletion(-)
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 1b7eba38ba1e..ef27b934115f 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -347,12 +347,44 @@ int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
-  */
- static int erofs_read_folio(struct file *file, struct folio *folio)
- {
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+	struct erofs_inode *vi = NULL;
-+	int ret;
-+
-+	if (file && file->private_data) {
-+		vi = file->private_data;
-+		if (vi->ano_inode == file_inode(file))
-+			folio->mapping->host = &vi->vfs_inode;
-+		else
-+			vi = NULL;
-+	}
-+	ret = iomap_read_folio(folio, &erofs_iomap_ops);
-+	if (vi)
-+		folio->mapping->host = file_inode(file);
-+	return ret;
-+#else
- 	return iomap_read_folio(folio, &erofs_iomap_ops);
-+#endif
- }
--
- static void erofs_readahead(struct readahead_control *rac)
- {
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+	struct erofs_inode *vi = NULL;
-+	struct file *file = rac->file;
-+
-+	if (file && file->private_data) {
-+		vi = file->private_data;
-+		if (vi->ano_inode == file_inode(file))
-+			rac->mapping->host = &vi->vfs_inode;
-+		else
-+			vi = NULL;
-+	}
-+	iomap_readahead(rac, &erofs_iomap_ops);
-+	if (vi)
-+		rac->mapping->host = file_inode(file);
-+#else
- 	return iomap_readahead(rac, &erofs_iomap_ops);
-+#endif
- }
- 
- static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 43c09aae2afc..1811f73478b4 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2021, Alibaba Cloud
-  */
- #include "xattr.h"
-+#include "pagecache_share.h"
- 
- #include <trace/events/erofs.h>
- 
-@@ -229,10 +230,21 @@ static int erofs_fill_inode(struct inode *inode)
- 	switch (inode->i_mode & S_IFMT) {
- 	case S_IFREG:
- 		inode->i_op = &erofs_generic_iops;
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+		erofs_pcs_fill_inode(inode);
-+		if (vi->ano_inode)
-+			inode->i_fop = &erofs_pcs_file_fops;
-+		else if (erofs_inode_is_data_compressed(vi->datalayout))
-+			inode->i_fop = &generic_ro_fops;
-+		else
-+			inode->i_fop = &erofs_file_fops;
-+#else
- 		if (erofs_inode_is_data_compressed(vi->datalayout))
- 			inode->i_fop = &generic_ro_fops;
- 		else
- 			inode->i_fop = &erofs_file_fops;
-+#endif
-+
- 		break;
- 	case S_IFDIR:
- 		inode->i_op = &erofs_dir_iops;
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 36291feaa5f6..c61779fe2e3a 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -12,6 +12,7 @@
- #include <linux/exportfs.h>
- #include <linux/pseudo_fs.h>
- #include "xattr.h"
-+#include "pagecache_share.h"
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/erofs.h>
-@@ -103,6 +104,12 @@ static void erofs_free_inode(struct inode *inode)
- {
- 	struct erofs_inode *vi = EROFS_I(inode);
- 
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+	if (S_ISREG(inode->i_mode) &&  vi->ano_inode) {
-+		iput(vi->ano_inode);
-+		vi->ano_inode = NULL;
-+	}
-+#endif
- 	if (inode->i_op == &erofs_fast_symlink_iops)
- 		kfree(inode->i_link);
- 	kfree(vi->xattr_shared_xattrs);
-@@ -701,6 +708,12 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	if (err)
- 		return err;
- 
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+	err = erofs_pcs_init_mnt();
-+	if (err)
-+		return err;
-+#endif
-+
- 	erofs_info(sb, "mounted with root inode @ nid %llu.", sbi->root_nid);
- 	return 0;
- }
-@@ -811,6 +824,9 @@ static void erofs_kill_sb(struct super_block *sb)
- 	else
- 		kill_block_super(sb);
- 
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+	erofs_pcs_free_mnt();
-+#endif
- 	erofs_free_dev_context(sbi->devs);
- 	fs_put_dax(sbi->dax_dev, NULL);
- 	erofs_fscache_unregister_fs(sb);
-@@ -849,8 +865,21 @@ static struct file_system_type erofs_fs_type = {
- };
- MODULE_ALIAS_FS("erofs");
- 
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+static void erofs_free_anon_inode(struct inode *inode)
-+{
-+	if (inode->i_private) {
-+		kfree(inode->i_private);
-+		inode->i_private = NULL;
-+	}
-+}
-+#endif
-+
- static const struct super_operations erofs_anon_sops = {
- 	.statfs	= simple_statfs,
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+	.free_inode = erofs_free_anon_inode,
-+#endif
- };
- 
- static int erofs_anon_init_fs_context(struct fs_context *fc)
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 424f656cd765..cd3cabfef462 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -1802,6 +1802,17 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
- 
- static int z_erofs_read_folio(struct file *file, struct folio *folio)
- {
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+	struct erofs_inode *vi = NULL;
-+
-+	if (file && file->private_data) {
-+		vi = file->private_data;
-+		if (vi->ano_inode == file_inode(file))
-+			folio->mapping->host = &vi->vfs_inode;
-+		else
-+			vi = NULL;
-+	}
-+#endif
- 	struct inode *const inode = folio->mapping->host;
- 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
- 	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
-@@ -1824,11 +1835,27 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
- 
- 	erofs_put_metabuf(&f.map.buf);
- 	erofs_release_pages(&f.pagepool);
-+
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+	if (vi)
-+		folio->mapping->host = file_inode(file);
-+#endif
- 	return err;
- }
- 
- static void z_erofs_readahead(struct readahead_control *rac)
- {
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+	struct erofs_inode *vi = NULL;
-+
-+	if (rac->file && rac->file->private_data) {
-+		vi = rac->file->private_data;
-+		if (vi->ano_inode == file_inode(rac->file))
-+			rac->mapping->host = &vi->vfs_inode;
-+		else
-+			vi = NULL;
-+	}
-+#endif
- 	struct inode *const inode = rac->mapping->host;
- 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
- 	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
-@@ -1863,6 +1890,11 @@ static void z_erofs_readahead(struct readahead_control *rac)
- 	z_erofs_runqueue(&f, z_erofs_is_sync_decompress(sbi, nr_folios), true);
- 	erofs_put_metabuf(&f.map.buf);
- 	erofs_release_pages(&f.pagepool);
-+
-+#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-+	if (vi)
-+		rac->mapping->host = file_inode(rac->file);
-+#endif
- }
- 
- const struct address_space_operations z_erofs_aops = {
--- 
-2.43.5
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] netfs: Delete subtree of 'fs/netfs' when netfs module exits
+      https://git.kernel.org/vfs/vfs/c/0aef59b3eabb
