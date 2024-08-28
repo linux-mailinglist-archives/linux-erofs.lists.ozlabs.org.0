@@ -2,75 +2,73 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCB5D962649
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 13:47:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1724845622;
-	bh=M9H3cmWIhxcYHesHqGjL9yLjjaE0Sjuz4VP0wEL0R1w=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=B5S1qN3MEOK/IxSGESIwPX1oP62OUZ3HQpruHtdr7HDFgVuA9T12fpb8UFeQFtezE
-	 Pm5SXi7DQEDiiukKBa6wCv+NU2NsS5Lnp4xpGWLpGnxgAhp/mod2yNLxLHfRmmLt08
-	 oud0XKzwn9ApntGvRirJySoE55VQnZINbD0dAGdvnwffdBJ5lqWMmlqmAd9s4KdLyo
-	 VpJIx8pW0agCl0EXKrAr17kgpnv82E/DWvrykPAV81I9mUJY2x7JKhfZSZjc/y0eUz
-	 3FO2Kl7HRBw3SWnoEkKTmucfIvp1u/585mV/oywwmjx095+X7FZIyAte2s87xSMib/
-	 OtSl9ZzzJ7lsw==
+	by mail.lfdr.de (Postfix) with ESMTPS id F3ADA9626A0
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 14:13:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wv2h65WKKz2yk3
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 21:47:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wv3G24kbFz2yj3
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 22:12:58 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2001:67c:2050:0:465::101"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724845621;
-	cv=none; b=ModNSCkrXvizz7JiFy9M3GQ7CXsdx/LzwNyHP/Wc7yP7TfPPdqsWOPRTe2DWo5VvfvPrDm+fFGwspe2oYxSak/DCq2ElAalQnNzYO0DpY5SMArvRZWx8YpzHyCzd7342iDKaT7gY7Y6jQ3Kh/8/auirEbbAobsjB9mr0iV/iuNsjAgiZ+jwZ7AEVFFNiLkrTDU0X13UBL5eXvf9tmClJn1FT+fOknyIgEz4iBvOHFfJgNgu73ZX+UbOhT9YQTcvtj3edbqN5hCa2wpUBbKEGFyCz3hKwdr7z8jfKt0qngxReEhBZw+UZAN5HjBcIAXhlMtqaoC0uf7ZfHaFOj8z+og==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.51
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724847176;
+	cv=none; b=XX6TfsrxyE1UmtQn0wN+jmLtnbKiAikA48betaByNeH+mtdnkNPReEOMp6h9h9WsQANJ0ldZDRaCPWlWsY88rgsHnUV9Geeydq1/goEn1xNYUs/oVcsrgsaU5Ett8qO4+v19UeWyxOt8JJ9IVGr98jd81NjPqP2A6whctIKjQ3ok2zpnnFyR/jWnN86VjFnT4fyS6XhrcR3umTqauNNqp1BY4I+/yVTGIjqPcO73edHBbd/dQX0nOFgnJXXsLdR0qD8mc7F96Wp2KcAv/2oUQC7WDaFLcUUHT62hjOfEHGWqsqyRBhkPZnKQ8XqfV/+p5fHy2mZ2JoU7FPUph747eA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1724845621; c=relaxed/relaxed;
-	bh=M9H3cmWIhxcYHesHqGjL9yLjjaE0Sjuz4VP0wEL0R1w=;
-	h=X-Greylist:Received:DKIM-Signature:Date:From:To:Cc:Subject:
-	 Message-ID:References:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=gYpVTXF2MjrP3sOcwKEZLiuvQhuZfAGHBkdXAqFnd/2oB8WjKD2RpJ+Wpq6QZaVo2bqgJyHnTMsgSFvykbAGbYdiCKMQVfdGKbmUpsnzjZaGa1gAVzbrkCSQ29jrGWBarGx0xOK5CIQ2IN3uC49JD1W8f7F7VnH3j6J7CAMKEkABFUL910Zn/it26gkz6XpeGDQiOHJMDTv33V6Oc+lW8TxR+ukGMm0AwDsN1SePNsYy3zGi69bHMIw2T1hOXy06TG3TOfkNv/Aw1QnTOxrBJ14QDXTKu6YerTsh8dsL2BEal3U0b3JC5u6GnHmRB64zS6l/as8IMQlWvr3aN8NJuQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; dkim=pass (2048-bit key; unprotected) header.d=pankajraghav.com header.i=@pankajraghav.com header.a=rsa-sha256 header.s=MBO0001 header.b=mJLhydL7; dkim-atps=neutral; spf=pass (client-ip=2001:67c:2050:0:465::101; helo=mout-p-101.mailbox.org; envelope-from=kernel@pankajraghav.com; receiver=lists.ozlabs.org) smtp.mailfrom=pankajraghav.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=pankajraghav.com header.i=@pankajraghav.com header.a=rsa-sha256 header.s=MBO0001 header.b=mJLhydL7;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=pankajraghav.com (client-ip=2001:67c:2050:0:465::101; helo=mout-p-101.mailbox.org; envelope-from=kernel@pankajraghav.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 517 seconds by postgrey-1.37 at boromir; Wed, 28 Aug 2024 21:47:01 AEST
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050:0:465::101])
+	t=1724847176; c=relaxed/relaxed;
+	bh=Yy/8o7EAwDdVAuBYYecMQiTuPWHk5mSP3winHB3UasY=;
+	h=Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo; b=Wds1oSzxjhzL8UFcAT4FevibC0pExb3wOMdLTiWspxNz4jxU6oijAXSwfs+yWmjvVtcQdZPrSBsZ5QkiB01p07QGYX2I+1HDjVmKBlotVRJkNpTea6JeumPVAmHdj5QEsUNev9U24EIAMWHvW8yLA0wwCZha1aun0aqoqw8JeeiPNe1FRL3ub05La80V00PpxMywwm5lFacK5P2u0xoPNEKHIBkRQgTWsM+czpvd0YpHSluQuzz7fJa92emXz7jjNE7mSl4kcWYqHc1b24oYqCDQdSZwYhKSbz3S8dhgAA/9U2nIShaYo3bE8cRE6JoDWxaLCBpHeJzHnb5RHnv2bw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org) smtp.mailfrom=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wv2h50FC5z2xH9
-	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Aug 2024 21:47:00 +1000 (AEST)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Wv2Tr0lJSz9smc;
-	Wed, 28 Aug 2024 13:38:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1724845088;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M9H3cmWIhxcYHesHqGjL9yLjjaE0Sjuz4VP0wEL0R1w=;
-	b=mJLhydL76GrRuW737D6RbtsIACkQniYpae63FPhyPs9Pee+QHLNrfzj/Dn6gSl2+qVcAck
-	MVhc292Hk0qoYqRGPD9zpnjIJaX8d5O1yrEGSsYMHhB1+EF4LynKehX/Qv4NwsOAORThkP
-	k5bWZcHdv0PyZBZcaqlBvqgtANUpntIsXofOCzDNTvyXHhr67zhJgWGQGo5atd0XckJdjA
-	rR8WlNWo6KNpCx03tSIETgCaJaWlHH6X25OSelFFa9ulW6U63lsK1ZpkkPI1xPEYndn84+
-	YFzGD2FOYgW6xaGMmQg8fuRa8gQKRsMbN/YCojlBlhbfJL6rkfQG9gO0UIpgVg==
-Date: Wed, 28 Aug 2024 11:38:02 +0000
-To: David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 1/9] mm: Fix missing folio invalidation calls during
- truncation
-Message-ID: <20240828113802.xw5wzlq2hxrquclb@quentin>
-References: <20240823200819.532106-1-dhowells@redhat.com>
- <20240823200819.532106-2-dhowells@redhat.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wv3FB0RKxz2xs1
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Aug 2024 22:12:12 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Wv3DG3Ybdz4f3nT6
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Aug 2024 20:11:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id F04641A16E8
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Aug 2024 20:11:41 +0800 (CST)
+Received: from [10.174.177.174] (unknown [10.174.177.174])
+	by APP4 (Coremail) with SMTP id gCh0CgCHr4X7E89mFlHTCw--.41618S3;
+	Wed, 28 Aug 2024 20:11:41 +0800 (CST)
+Message-ID: <89b6b6ae-f805-43be-86ca-d3fb06ad8fec@huaweicloud.com>
+Date: Wed, 28 Aug 2024 20:11:39 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240823200819.532106-2-dhowells@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] netfs: Delete subtree of 'fs/netfs' when netfs module
+ exits
+To: David Howells <dhowells@redhat.com>
+References: <20240826113404.3214786-1-libaokun@huaweicloud.com>
+ <952423.1724841455@warthog.procyon.org.uk>
+Content-Language: en-US
+From: Baokun Li <libaokun@huaweicloud.com>
+In-Reply-To: <952423.1724841455@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: gCh0CgCHr4X7E89mFlHTCw--.41618S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Cry7Kw4xZr1xGFykXFy5Jwb_yoW8Ww4rpa
+	4ku34xCr18WryUJF4fJw1jvr4UZF4UGF1UJ3s7Gr1UJ3W7Aw18X3WF9F45AF9FkF1UAF45
+	t3WUtr1vyr1UZ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvE14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+	evJa73UjIFyTuYvjfUOv38UUUUU
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAgAJBWbO4BkSYgABsu
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -82,81 +80,53 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: "Pankaj Raghav \(Samsung\) via Linux-erofs" <linux-erofs@lists.ozlabs.org>
-Reply-To: "Pankaj Raghav \(Samsung\)" <kernel@pankajraghav.com>
-Cc: Pankaj Raghav <p.raghav@samsung.com>, Paulo Alcantara <pc@manguebit.com>, linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Marc Dionne <marc.dionne@auristor.com>, Steve French <sfrench@samba.org>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Christian Brauner <christian@brauner.io>
+Cc: brauner@kernel.org, yangerkun@huawei.com, jlayton@kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org, linux-fsdevel@vger.kernel.org, hsiangkao@linux.alibaba.com, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com, Baokun Li <libaokun@huaweicloud.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Fri, Aug 23, 2024 at 09:08:09PM +0100, David Howells wrote:
-> When AS_RELEASE_ALWAYS is set on a mapping, the ->release_folio() and
-> ->invalidate_folio() calls should be invoked even if PG_private and
-> PG_private_2 aren't set.  This is used by netfslib to keep track of the
-Should we update the comment in pagemap? 
+Hi David,
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 55b254d951da..18dd6174e6cc 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -204,7 +204,8 @@ enum mapping_flags {
-        AS_EXITING      = 4,    /* final truncate in progress */
-        /* writeback related tags are not used */
-        AS_NO_WRITEBACK_TAGS = 5,
--       AS_RELEASE_ALWAYS = 6,  /* Call ->release_folio(), even if no private data */
-+       AS_RELEASE_ALWAYS = 6,  /* Call ->release_folio() and ->invalidate_folio,
-+                                  even if no private data */
-        AS_STABLE_WRITES = 7,   /* must wait for writeback before modifying
-                                   folio contents */
-        AS_INACCESSIBLE = 8,    /* Do not attempt direct R/W access to the mapping */
+On 2024/8/28 18:37, David Howells wrote:
+> libaokun@huaweicloud.com wrote:
+>
+>> In netfs_init() or fscache_proc_init(), we create dentry under 'fs/netfs',
+>> but in netfs_exit(), we only delete the proc entry of 'fs/netfs' without
+>> deleting its subtree. This triggers the following WARNING:
+>>
+>> ==================================================================
+>> remove_proc_entry: removing non-empty directory 'fs/netfs', leaking at least 'requests'
+>> WARNING: CPU: 4 PID: 566 at fs/proc/generic.c:717 remove_proc_entry+0x160/0x1c0
+>> Modules linked in: netfs(-)
+>> CPU: 4 UID: 0 PID: 566 Comm: rmmod Not tainted 6.11.0-rc3 #860
+>> RIP: 0010:remove_proc_entry+0x160/0x1c0
+>> Call Trace:
+>>   <TASK>
+>>   netfs_exit+0x12/0x620 [netfs]
+>>   __do_sys_delete_module.isra.0+0x14c/0x2e0
+>>   do_syscall_64+0x4b/0x110
+>>   entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>> ==================================================================
+>>
+>> Therefore use remove_proc_subtree instead() of remove_proc_entry() to
+>> fix the above problem.
+>>
+>> Fixes: 7eb5b3e3a0a5 ("netfs, fscache: Move /proc/fs/fscache to /proc/fs/netfs and put in a symlink")
+>> Cc: stable@kernel.org
+>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> Should remove_proc_entry() just remove the entire subtree anyway?
+Yeah, in general, when we remove a proc entry, we don't care if it has
+subtrees. But I'm not sure if there are certain scenarios where entries
+must be removed in a certain order .
+>
+> But you can add:
+>
+> 	Acked-by: David Howells <dhowells@redhat.com>
+>
+> David
 
-> point above which reads can be skipped in favour of just zeroing pagecache
-> locally.
-> 
-> There are a couple of places in truncation in which invalidation is only
-> called when folio_has_private() is true.  Fix these to check
-> folio_needs_release() instead.
-> 
-> Without this, the generic/075 and generic/112 xfstests (both fsx-based
-> tests) fail with minimum folio size patches applied[1].
-> 
-> Fixes: b4fa966f03b7 ("mm, netfs, fscache: stop read optimisation when folio removed from pagecache")
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Matthew Wilcox (Oracle) <willy@infradead.org>
-> cc: Pankaj Raghav <p.raghav@samsung.com>
-> cc: Jeff Layton <jlayton@kernel.org>
-> cc: Marc Dionne <marc.dionne@auristor.com>
-> cc: linux-afs@lists.infradead.org
-> cc: netfs@lists.linux.dev
-> cc: linux-mm@kvack.org
-> cc: linux-fsdevel@vger.kernel.org
-> Link: https://lore.kernel.org/r/20240815090849.972355-1-kernel@pankajraghav.com/ [1]
-> ---
->  mm/truncate.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/truncate.c b/mm/truncate.c
-> index 4d61fbdd4b2f..0668cd340a46 100644
-> --- a/mm/truncate.c
-> +++ b/mm/truncate.c
-> @@ -157,7 +157,7 @@ static void truncate_cleanup_folio(struct folio *folio)
->  	if (folio_mapped(folio))
->  		unmap_mapping_folio(folio);
->  
-> -	if (folio_has_private(folio))
-> +	if (folio_needs_release(folio))
->  		folio_invalidate(folio, 0, folio_size(folio));
->  
->  	/*
-> @@ -219,7 +219,7 @@ bool truncate_inode_partial_folio(struct folio *folio, loff_t start, loff_t end)
->  	if (!mapping_inaccessible(folio->mapping))
->  		folio_zero_range(folio, offset, length);
->  
-> -	if (folio_has_private(folio))
-> +	if (folio_needs_release(folio))
->  		folio_invalidate(folio, offset, length);
->  	if (!folio_test_large(folio))
->  		return true;
-> 
+Thanks for your ack!
 
 -- 
-Pankaj Raghav
+With Best Regards,
+Baokun Li
+
