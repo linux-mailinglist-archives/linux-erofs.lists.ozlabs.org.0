@@ -2,77 +2,53 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 781DE96444F
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 14:23:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CE7E79644AC
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 14:36:43 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WvgSC1rFGz2yy7
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 22:23:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wvgkx3NcHz2yy9
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 22:36:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::42b"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724934232;
-	cv=none; b=C5+vE4A+2A6A8g7AG3iXJQQJ54UxnZlZx5BCgKt1EuoedEjyGJ9F8seLqcYbWIE9LFZssIaSeXMM8q2bl1altQcJsV9vpPneDvdos9L4MhT0fagxs8jCeyMRPj+TLA+eLmGqk7D3GSoUVWr0rufZrst71dvG6nW93kOBXuljlfKBJATnyX5fyK5G43VQg+6Eg5AgX4F2hF9P4vpHVNK5XeUDMvBNMBAvgFNS8iwD4C0vATduQo2bRSRlc2+Khd0T7ymHiNL8kQKgknUDJP2XAhVm/yjT1ZwncUHI5Bag34Pfsqn5bb3MH+Z7xZa/SbpYRviRZsqa7nxJpjI3ZLD1Vw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724934999;
+	cv=none; b=PhbEi4i2Lso4px8bMSXbNev8eCaB6DRShVcdHFYF6yIszNQIAT4uI3s87emv9gySRZ6YaXij5WBK4E6KrUaMnW5AUBRVcyD9v3iMiT7DAZpqP5NpVHK87Cl9Vau3h1Q1I/tem8kO/AfvAkq2sxZh6bUcW8O1Hajhv7c7qh439rE4dJlL2wIW3WUqPtlPWSS1b2TaEq1RMDzm/0DLuaUSumJXZVRO0xMWafqrXvswEEFjRNG7LOz+9Zu20v8bPK+m8oU0Z+R57srOYVC0fkOkO+FJ7KjXpZoIxlfw0WDOT3lcLKfgVpmBeuVjY8vuJPrunv05W4iLFUjKtgX5djb20w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1724934232; c=relaxed/relaxed;
-	bh=TwpOWs5TRY3li1WZexMIRENKzcNMtUnsc6PFnx6LYbw=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
-	 To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding; b=OkwL9VHl8xeLKvbpnEIRk1FFwdf8XSx1d8u4wdZVlBgboBgC7+Aetaeersh6/ClthYXYujJVHViKQGcVDkuKWrVspPIzjoWp4h856ZHP5Yx9TWyT4UeUOkinZ9TTQ4A5t3wTOaQZpTiC3hg4tlBrxJGLwxqQno+mYY1f3uFEs1OMXBe8ZZChyGjFsc0wNf7xjUf5utp6tt+J8S1poklY7hP45X/UfDcnxu9laAzITHa2gVSTQvHDfHEFL3p0WauN9P7th+qDc+sd+arI164FkTaZD30Ba3Fmsr8lFcbeD7WMnKlojdy6/tEJV5MqqDJTlq/I9aHFghz0k7eBybwfrg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=VVN6yfzS; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::42b; helo=mail-pf1-x42b.google.com; envelope-from=jinbaoliu365@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1724934999; c=relaxed/relaxed;
+	bh=VINzfzPx21qCy+WyvNibHQxd8FKqrqu0GcqrQzlXHUU=;
+	h=DKIM-Signature:Received:Message-ID:Date:MIME-Version:User-Agent:
+	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=oULVPc/MziBrLfTEC3mqBZpECl+f6xYznoqEB9+6Jk0stlOldlhmoy42vv1li/wFOt6Tnr1oc+HktlJ+LDwsS8lgXCSqvDijqk3Ef/PblIMFTY8JN43iLZuu8xHZJiha9u0kDuigmY2qz4XznSuUaVr+4IcLXqG2uyGwFXbufXvJoDn/jLLD7BrH7VqkgeHqBqDPRLqTtOcHp2D68/5LupMLDmGPoUk47sjbzCvCD0NDyA9+fWGrk4VtCQo5tnK329U9Ew5leKjuwv4ImgGMDLQy+a3EkEgE253IY1s+eplZozew93qZ8CDsr5nCGfC6RPaOdzaWiTbd2uExVLNEEw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kdM3EkFu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=VVN6yfzS;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kdM3EkFu;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42b; helo=mail-pf1-x42b.google.com; envelope-from=jinbaoliu365@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WvgS756PQz2ytg
-	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 22:23:50 +1000 (AEST)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-7142a30e3bdso1276329b3a.0
-        for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 05:23:50 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wvgks6Kpqz2yvs
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 22:36:36 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724934229; x=1725539029; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TwpOWs5TRY3li1WZexMIRENKzcNMtUnsc6PFnx6LYbw=;
-        b=VVN6yfzSRIFRzqtTbz+eUcW+JsdquyLzOpffnlJjqKKvkcoIW6Hjlsc5cP9OP2AxAb
-         M/8LOXTtqkitLqBk6mWv50CoyH80KYMCouUENsWTHilEi1qKTI7GHgNpYo/ZSmPiNtHZ
-         4Xg0mQ4/iT+WpoY4mkxy4UOKsr6IMiLks2vfTLyTFyZwlDAYGBp0wi620HKaNlr+VfZ3
-         OsMCY5dgY/4ktHH+YmjMCvAYsqEt/RjdBPy9JJq4aq5JeQhxHn78lrL3yZrwgJ9gRJ5C
-         f17CQtgGEeOooB3nIezrN8HHip1PbvP9HN7krW+ZLtD0MTeYXFVvVHaHXrpMtt4PRADr
-         ua0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724934229; x=1725539029;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TwpOWs5TRY3li1WZexMIRENKzcNMtUnsc6PFnx6LYbw=;
-        b=CX5Kk/QPXQm2rgrXCDLQ3VQth991PJ/GdCR+NLXJ5nkSQ3QsUGO+Tkjq8px9IdUYbn
-         mI129qyxqLHVEN8bEJCC036AxL6CYDAh+BhKOQt67Bp/ZTgdvmCxGNqRFZI+QjSEWYeB
-         YtJHyMgO+1WBFF5+gr+LfR9KIPen0jaP8FmG3RgaM4UY0Ced4ssdrkw4A6KmodPGYEzl
-         MZz88uzNp8//9RZsI0cWS7GOeMZ8msvSoczbdnykfZAFBn+vuqw2a4+rW9io4uGleRAe
-         uldIclbbujYlU6FIFOW3FOXxFvrJP9D7i+YMy4Bfbfr4KKMBWMb6VN5+THWol9D7XwaG
-         wPbw==
-X-Gm-Message-State: AOJu0Yw7Xi3wJ7yZb2h1x6As0AXpz8h0SIemfSRMIUHv15hBRoQ/TLI/
-	OBs0ajRFyZFUgVa0WCj/Lk6UBJVooyDpwL+YpTWlLxjmvMPLO2ib+BNJQw==
-X-Google-Smtp-Source: AGHT+IG198yRuHygyAB1tM094PSpZ1gX96hOLQ8t4QWkcUaq/daYsXOlEmRb6eqNGi3KG87Q5zMWYg==
-X-Received: by 2002:a05:6a21:338e:b0:1c4:91f2:936a with SMTP id adf61e73a8af0-1cce15f7d79mr4245384637.5.1724934228690;
-        Thu, 29 Aug 2024 05:23:48 -0700 (PDT)
-Received: from mi.mioffice.cn ([2408:8607:1b00:8:8eec:4bff:fe94:a95d])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7d22e742e0fsm1093693a12.16.2024.08.29.05.23.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Aug 2024 05:23:48 -0700 (PDT)
-From: liujinbao1 <jinbaoliu365@gmail.com>
-To: xiang@kernel.org
-Subject: [PATCH v2] erofs: Prevent entering an infinite loop when i is 0
-Date: Thu, 29 Aug 2024 20:23:42 +0800
-Message-Id: <20240829122342.309611-1-jinbaoliu365@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	d=linux.alibaba.com; s=default;
+	t=1724934991; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=VINzfzPx21qCy+WyvNibHQxd8FKqrqu0GcqrQzlXHUU=;
+	b=kdM3EkFu2AwAhRH/oVdgGDu2QfD7Tjme3vq65uqf2Dc3f4sFk1lxzt7sK6AP1a9FvM+7Uxk/gqGHsGOaqmtQLBfUF14hKCYwOfbHT5MUB+4Ij4NVNVjfPG/eAIqO8jN7KFXRPVhcPPVoM4JmsyMXALkBUHatcG/tFzo415p+VQI=
+Received: from 172.20.10.8(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WDt5UoR_1724934989)
+          by smtp.aliyun-inc.com;
+          Thu, 29 Aug 2024 20:36:31 +0800
+Message-ID: <7708e958-b9d5-40dc-8a40-2144f8e3a906@linux.alibaba.com>
+Date: Thu, 29 Aug 2024 20:36:29 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] erofs: Prevent entering an infinite loop when i is 0
+To: liujinbao1 <jinbaoliu365@gmail.com>, xiang@kernel.org
+References: <20240829122342.309611-1-jinbaoliu365@gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240829122342.309611-1-jinbaoliu365@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -88,48 +64,21 @@ Cc: mazhenhua@xiaomi.com, linux-erofs@lists.ozlabs.org, liujinbao1 <liujinbao1@x
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-From: liujinbao1 <liujinbao1@xiaomi.com>
 
-When i=0 and err is not equal to 0,
-the while(-1) loop will enter into an
-infinite loop. This patch avoids this issue
 
-Signed-off-by: liujinbao1 <liujinbao1@xiaomi.com>
----
- fs/erofs/decompressor.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On 2024/8/29 20:23, liujinbao1 wrote:
+> From: liujinbao1 <liujinbao1@xiaomi.com>
+> 
+> When i=0 and err is not equal to 0,
+> the while(-1) loop will enter into an
+> infinite loop. This patch avoids this issue
+> 
+> Signed-off-by: liujinbao1 <liujinbao1@xiaomi.com>
 
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index c2253b6a5416..672f097966fa 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -534,18 +534,18 @@ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
- 
- int __init z_erofs_init_decompressor(void)
- {
--	int i, err;
-+	int i, err = 0;
- 
- 	for (i = 0; i < Z_EROFS_COMPRESSION_MAX; ++i) {
- 		err = z_erofs_decomp[i] ? z_erofs_decomp[i]->init() : 0;
--		if (err) {
--			while (--i)
-+		if (err && i) {
-+			while (i--)
- 				if (z_erofs_decomp[i])
- 					z_erofs_decomp[i]->exit();
--			return err;
-+			break;
- 		}
- 	}
--	return 0;
-+	return err;
- }
+Thanks for the patch:
 
-(1) The use of "break" is to enable a jump out of the for loop, 
-otherwise it may not be able to exit the loop.
-(2) --i should be changed to i-- because when i is equal to 1,
-the "while (--i)" statement would exit the loop prematurely.
+Fixes: 5a7cce827ee9 ("erofs: refine z_erofs_{init,exit}_subsystem()")
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-and sorry for the delay in the response.
-
+Thanks,
+Gao Xiang
