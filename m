@@ -2,80 +2,66 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73DB8963859
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 04:48:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 74AFE963EB8
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 10:35:49 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WvQgn0jtxz2ysD
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 12:48:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WvZNz2vRMz2yw3
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 18:35:47 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::230"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724899683;
-	cv=none; b=Iu6K1414lAt0KHmNKnCSqLF5UMWF27xu2XpCwTcrlHjxBhutQCg3UATjsytATelv2iAxbHWH9F+k7xSikQ4CQdg8yPqCLJ73VvQ1NLIGbAVq20xXbRCJdm2AsYkYk7b1pV/d4BNqMjYFoCMcqTF0Idcv7RG2jV61s0MznMO9irhcbbWd+lUMm8STFYvP7XjK32snyhuxsK8vB4JTuBHb8MdnE+h/9kXKvVbAiEq4XnMbFpiLtDKVAQJl4/mondp/n5e7vxsnxQXuvQD3MlPOijMGl5criZHbygKTPufHz4NtwrjtpeCMhaHe0Z5c4urrhdTqhy6OpZlrNxN7n3RrxA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.51
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724920544;
+	cv=none; b=Cb2fA1Ar6xtYoQ5eKXfoAMsVNxQdn/AwJftmu7/nxEFiZIL+vKQjMkeVvHimrH6uw4le+jj+GOn9pUE73oHK/eOpydySsg3Ts2ibGL7BD6wkAhH8E4fHiC+ilGW9+emxhvkU9exTOqZuJTN8wkjcVe1v1MDywtv/mWBFtQbAPubJXj1ii+6SKd2r2YBp3OJfKiSI0to4FNUHvKF5P24TfmkUAyK1u2lLUDZN4Z+N4ywTVcR04ahhe6mEvahakUvg6fWUTvUWNSrHJU4hljwFhki3800INU1f4oB5DTbO6m5KqUyrZneKMnkc43qjx46Hu5E6yqB93+8t/3hX4uO8Og==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1724899683; c=relaxed/relaxed;
-	bh=j8nW60xbKKK3BMmTEpx1vfAUyDbucJTsTqvhOF4FZ8U=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Forwarded-Encrypted:X-Gm-Message-State:X-Google-Smtp-Source:
-	 X-Received:MIME-Version:References:In-Reply-To:From:Date:
-	 Message-ID:Subject:To:Cc:Content-Type:Content-Transfer-Encoding;
-	b=kSVdfMmahZ5GyFDKYfaUjarfqQq+qz+fbX/dbhwqmE9HyqXFCoDILJBof3hhk+5y+3LHjj8M6HFsQg4qipL+jdmQTuf7jhev/Q5p7Mug7bszrqiaWmmmBI+MRGlugyqgbL0nW8LBD33mLU+8/L34kyVSLj61/W2FF+PcVfH7JIlVI8b3SwaR4YUFHj3Mzj32LJjBpyUKAUS9dgtEOWw9ZSjsfcjnIa7w2iesT8rt5cy56FZapt7NkcIb1p33OsSGYIfzoC6llUyfEWh9AUH9A9eK3goFQ2djHZsVUXxIjCFL76CLtzJ25d7OPgMz10twsBCLatL7ZEFMlmAUMwDIXQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=mbzZbaGl; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::230; helo=mail-lj1-x230.google.com; envelope-from=smfrench@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=mbzZbaGl;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::230; helo=mail-lj1-x230.google.com; envelope-from=smfrench@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+	t=1724920544; c=relaxed/relaxed;
+	bh=vWD4whaMEMrepWx4z1YExreJGNLgKOogfuQWVKgjGfw=;
+	h=Received:Received:Received:From:To:Cc:Subject:Date:Message-Id:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo; b=gBXxxazJ0vCK/wafeHZjln6DxB+HGidc6aR8latMes8y8MTsdJDIS7dNjMkO88/CRAfrMZbmq7rxkz5EPHf+h3hThbszUKSc1kesPko+H1i/R267I2JHks8QUN9TcDBbRrbM+9OKYcARcwSRnBafcTChC9VjvijD4C9+rv2HHv5lrTLcWrOBV49djVNBef0HgW1payiTzNH8IXGIKzfw/jB29yI5lz+1GEw7YP306RTxk6MxC3ZozPqL5oNbLkdjnb0NcRouooSziBH5pEyK5gcDRrK0R9Xb4BGbsiv/1qRA/uLiDLi3xHwbUOXdc1S7WDmjJwSk9/fMRx5eFmo4Fg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org) smtp.mailfrom=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WvQgk1x8vz2ymb
-	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 12:48:00 +1000 (AEST)
-Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2f50966c448so1365931fa.2
-        for <linux-erofs@lists.ozlabs.org>; Wed, 28 Aug 2024 19:48:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724899676; x=1725504476; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j8nW60xbKKK3BMmTEpx1vfAUyDbucJTsTqvhOF4FZ8U=;
-        b=mbzZbaGl399OpVU1tmFhBLK5f5SnVwrd7uV4xxqgVjRqSZaUF3m7vxaHE6ikidg1m7
-         sOj3zBqBPGZ5amYWupPFtwOJ8zbHZp6y33i19A8amn6Habxta6A6UfasuyzGaEr4JHPY
-         BGy9yUGL+b/3EWKwdYCoRQr3Z+dE9uD/fB3pCCONWlB0dNvmkWe9l+fqscU0HzkFNlGy
-         bSVippgsq/7DMpsYSeTa2AfOZmxRjzwCFUVRJ2IdYSgO20ANr3XAUEy3Ks/2hmvw2Pio
-         c2DY26ROQ7EHOziOegCs+O9RXrOmv/Bq5Sr24/10KNzVz9b6BwWLALRm/TV+fi2Qen5k
-         h3og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724899676; x=1725504476;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j8nW60xbKKK3BMmTEpx1vfAUyDbucJTsTqvhOF4FZ8U=;
-        b=E07hIbZgnnZ07HWXnFtb38eLle6AB5RCDCEr3wC4J9pYJ41e/2l9ZdGVOEZsWrv5ui
-         /4lQFuOd6Y/g2B/ITbNU1PYrE7FfUTIRTYVatzpo4osMiapowEPF5Vihfo7R8GbX5pV1
-         duxSOBzMjWxsCStr6w4GkgggQGfvhYZ//YC0W8L0Y1osggaQN+VNF7XDKdK+ONY1qUUA
-         vtuTIy8jtfXYZVVqts9Kdo9mBWhvfkjDiTw208hBl/C7GXT+PJwWMaBIQluSicgaDR4E
-         PEsA0dgXftAT9P3b03RLtKyv4qKLxjZGPs+Xra6sitJD5uRRCCYmkHS+PHs6SjCmpfLV
-         0m/A==
-X-Forwarded-Encrypted: i=1; AJvYcCX0N7X8jtmhExhzTjmibP2A0jgQkHLjm2mbpjOYlZ9fMHtKwqPPp0RULWajCujJ1o8ZnbqLmWL5pqg8/g==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YwAMgUL4iZH/GoTWjaffLssX+tYry03zpgaI7TGN2LrpyL+4DFh
-	Bgl3uudQMJYxe1htXVMLgRuZ74xvvq14tQ+Q9FftHn8CAWG3ZTid/ad8BVqPUs0ivw/473dvzcG
-	mdhbgB8ax44JC2Dq7ijS8u/kDAD8=
-X-Google-Smtp-Source: AGHT+IFw6YFPE4uQg6imkFHXMbxtDADWvwTRJd5bZLVgOFxAE0atjLaGwN/Y3Vs2U2TCttK/XyhsIPdmUPLmGEsItEg=
-X-Received: by 2002:a05:6512:1055:b0:52c:db0a:a550 with SMTP id
- 2adb3069b0e04-5353e5aae01mr710771e87.42.1724899675197; Wed, 28 Aug 2024
- 19:47:55 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WvZNv61Y1z2ysv
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 18:35:39 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WvZNR5J0Yz4f3kjf
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 16:35:19 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id BB0D21A07B6
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 16:35:29 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgB3n4XNMtBmyzYkDA--.10163S4;
+	Thu, 29 Aug 2024 16:35:27 +0800 (CST)
+From: libaokun@huaweicloud.com
+To: netfs@lists.linux.dev
+Subject: [PATCH v2] cachefiles: fix dentry leak in cachefiles_open_file()
+Date: Thu, 29 Aug 2024 16:34:09 +0800
+Message-Id: <20240829083409.3788142-1-libaokun@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20240828210249.1078637-1-dhowells@redhat.com>
-In-Reply-To: <20240828210249.1078637-1-dhowells@redhat.com>
-From: Steve French <smfrench@gmail.com>
-Date: Wed, 28 Aug 2024 21:47:43 -0500
-Message-ID: <CAH2r5muvO8+Es4Y8d=VtWEp-vcC62TYEZc3W1Y0r+6ro6d9yxQ@mail.gmail.com>
-Subject: Re: [PATCH 0/6] mm, netfs, cifs: Miscellaneous fixes
-To: David Howells <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgB3n4XNMtBmyzYkDA--.10163S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxury8ZF45AFW8Zw1DCw4kJFb_yoW5ZF15pF
+	ZayFyxJryrWrWkGr48AFnYqr1rA3yjqF1DX3Z5Wr1kAr1qvr1aqr17tr1Fqry5GrZ7Ar42
+	qF1UCa43JryjkrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbTGQDUUUUU==
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAKBWbO339ALgABsp
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -87,93 +73,109 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, linux-cifs@vger.kernel.org, Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <sfrench@samba.org>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Christian Brauner <christian@brauner.io>
+Cc: brauner@kernel.org, yangerkun@huawei.com, jlayton@kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com, libaokun@huaweicloud.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-testing is going fine so far with David's series ontop of current mainline
+From: Baokun Li <libaokun1@huawei.com>
 
-(I see one possible intermittent server bug failure - on test
-generic/728 - but no red flags testing so far)
+A dentry leak may be caused when a lookup cookie and a cull are concurrent:
 
-http://smb311-linux-testing.southcentralus.cloudapp.azure.com/#/builders/3/=
-builds/207
+            P1             |             P2
+-----------------------------------------------------------
+cachefiles_lookup_cookie
+  cachefiles_look_up_object
+    lookup_one_positive_unlocked
+     // get dentry
+                            cachefiles_cull
+                              inode->i_flags |= S_KERNEL_FILE;
+    cachefiles_open_file
+      cachefiles_mark_inode_in_use
+        __cachefiles_mark_inode_in_use
+          can_use = false
+          if (!(inode->i_flags & S_KERNEL_FILE))
+            can_use = true
+	  return false
+        return false
+        // Returns an error but doesn't put dentry
 
-On Wed, Aug 28, 2024 at 4:03=E2=80=AFPM David Howells <dhowells@redhat.com>=
- wrote:
->
-> Hi Christian, Steve,
->
-> Firstly, here are some fixes to DIO read handling and the retrying of
-> reads, particularly in relation to cifs:
->
->  (1) Fix the missing credit renegotiation in cifs on the retrying of read=
-s.
->      The credits we had ended with the original read (or the last retry)
->      and to perform a new read we need more credits otherwise the server
->      can reject our read with EINVAL.
->
->  (2) Fix the handling of short DIO reads to avoid ENODATA when the read
->      retry tries to access a portion of the file after the EOF.
->
-> Secondly, some patches fixing cifs copy and zero offload:
->
->  (3) Fix cifs_file_copychunk_range() to not try to partially invalidate
->      folios that are only partly covered by the range, but rather flush
->      them back and invalidate them.
->
->  (4) Fix filemap_invalidate_inode() to use the correct invalidation
->      function so that it doesn't leave partially invalidated folios hangi=
-ng
->      around (which may hide part of the result of an offloaded copy).
->
->  (5) Fix smb3_zero_data() to correctly handle zeroing of data that's
->      buffered locally but not yet written back and with the EOF position =
-on
->      the server short of the local EOF position.
->
->      Note that this will also affect afs and 9p, particularly with regard
->      to direct I/O writes.
->
-> And finally, here's an adjustment to debugging statements:
->
->  (6) Adjust three debugging output statements.  Not strictly a fix, so
->      could be dropped.  Including the subreq ID in some extra debug lines
->      helps a bit, though.
->
-> The patches can also be found here:
->
->         https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs=
-.git/log/?h=3Dnetfs-fixes
->
-> Thanks,
-> David
->
-> David Howells (6):
->   cifs: Fix lack of credit renegotiation on read retry
->   netfs, cifs: Fix handling of short DIO read
->   cifs: Fix copy offload to flush destination region
->   mm: Fix filemap_invalidate_inode() to use
->     invalidate_inode_pages2_range()
->   cifs: Fix FALLOC_FL_ZERO_RANGE to preflush buffered part of target
->     region
->   netfs, cifs: Improve some debugging bits
->
->  fs/netfs/io.c            | 21 +++++++++++++-------
->  fs/smb/client/cifsfs.c   | 21 ++++----------------
->  fs/smb/client/cifsglob.h |  1 +
->  fs/smb/client/file.c     | 37 ++++++++++++++++++++++++++++++++----
->  fs/smb/client/smb2ops.c  | 26 +++++++++++++++++++------
->  fs/smb/client/smb2pdu.c  | 41 +++++++++++++++++++++++++---------------
->  fs/smb/client/trace.h    |  1 +
->  include/linux/netfs.h    |  1 +
->  mm/filemap.c             |  2 +-
->  9 files changed, 101 insertions(+), 50 deletions(-)
->
->
+After that the following WARNING will be triggered when the backend folder
+is umounted:
 
+==================================================================
+BUG: Dentry 000000008ad87947{i=7a,n=Dx_1_1.img}  still in use (1) [unmount of ext4 sda]
+WARNING: CPU: 4 PID: 359261 at fs/dcache.c:1767 umount_check+0x5d/0x70
+CPU: 4 PID: 359261 Comm: umount Not tainted 6.6.0-dirty #25
+RIP: 0010:umount_check+0x5d/0x70
+Call Trace:
+ <TASK>
+ d_walk+0xda/0x2b0
+ do_one_tree+0x20/0x40
+ shrink_dcache_for_umount+0x2c/0x90
+ generic_shutdown_super+0x20/0x160
+ kill_block_super+0x1a/0x40
+ ext4_kill_sb+0x22/0x40
+ deactivate_locked_super+0x35/0x80
+ cleanup_mnt+0x104/0x160
+==================================================================
 
---=20
-Thanks,
+Whether cachefiles_open_file() returns true or false, the reference count
+obtained by lookup_positive_unlocked() in cachefiles_look_up_object()
+should be released.
 
-Steve
+Therefore release that reference count in cachefiles_look_up_object() to
+fix the above issue and simplify the code.
+
+Fixes: 1f08c925e7a3 ("cachefiles: Implement backing file wrangling")
+Cc: stable@kernel.org
+Signed-off-by: Baokun Li <libaokun1@huawei.com>
+---
+v1->v2:
+	Use of new solution.
+
+v1: https://lore.kernel.org/r/20240826040018.2990763-1-libaokun@huaweicloud.com
+
+ fs/cachefiles/namei.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
+index f53977169db4..2b3f9935dbb4 100644
+--- a/fs/cachefiles/namei.c
++++ b/fs/cachefiles/namei.c
+@@ -595,14 +595,12 @@ static bool cachefiles_open_file(struct cachefiles_object *object,
+ 	 * write and readdir but not lookup or open).
+ 	 */
+ 	touch_atime(&file->f_path);
+-	dput(dentry);
+ 	return true;
+ 
+ check_failed:
+ 	fscache_cookie_lookup_negative(object->cookie);
+ 	cachefiles_unmark_inode_in_use(object, file);
+ 	fput(file);
+-	dput(dentry);
+ 	if (ret == -ESTALE)
+ 		return cachefiles_create_file(object);
+ 	return false;
+@@ -611,7 +609,6 @@ static bool cachefiles_open_file(struct cachefiles_object *object,
+ 	fput(file);
+ error:
+ 	cachefiles_do_unmark_inode_in_use(object, d_inode(dentry));
+-	dput(dentry);
+ 	return false;
+ }
+ 
+@@ -654,7 +651,9 @@ bool cachefiles_look_up_object(struct cachefiles_object *object)
+ 		goto new_file;
+ 	}
+ 
+-	if (!cachefiles_open_file(object, dentry))
++	ret = cachefiles_open_file(object, dentry);
++	dput(dentry);
++	if (!ret)
+ 		return false;
+ 
+ 	_leave(" = t [%lu]", file_inode(object->file)->i_ino);
+-- 
+2.39.2
+
