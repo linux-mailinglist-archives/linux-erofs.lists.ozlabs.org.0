@@ -2,81 +2,74 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 320AA96336D
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Aug 2024 23:03:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 76B7E9637EC
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 03:43:50 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WvH2h1lV8z2yqB
-	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 07:03:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WvPFZ3bDvz2ypx
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Aug 2024 11:43:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724879034;
-	cv=none; b=f7EMAYXMO1swjYjJ5ya6MHOwkR7TtYUlG7hinZRqJd9tPPtEcSwZgqaWXg5baoOLZ1Tb8TpvyOyd4NXeyxtCw674uzWX/acDEVTORy2/NGKv9r/JuVMPmHVGMnZZdrzgaOqZzo0Bz3FPN629ttvOSfnVsBo9K90In9m5zGL0HpbnMIVbhOOIw8i/uY53Lz8+/EMOu5HYOH1rCxy16/DwmXoKRr1tb9mDmYp3eD6YK6dvf+btXgaIHx28WcB5l5PTZ0j/SwxnDuxkX6Jm0+FRGO7UItb3vt/lPBNyRuhYd1fLVHK7xVVSYmEI3F8zueqiyGb/A9gEwfbe7xebGrMzyQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.51
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1724895823;
+	cv=none; b=lhvjDSzj3MR/KZrpgSu3vmw/yp44x9V54aM1D0lKCg8AJH0uecHBQ5vs+z29dZl4yJ2ciLQYEm1DScVz3rDCx92KHxDfhvu5R7uV9PytqtQgV3hmWQY5yoRa1fvVfEhWG7W2vl7/A59s0uRSI1Ic/afPr75inRHsIZfOOkrwEswL1i+Um5Q36ixM6stWXS94VArQAnabFeVr7gUeOW9TKv7c2PF2HHCgVlE0G9ha/UoLs5g2gWu6mQJifeQe+Pddz9CTZWW61ob8I8QDvnZOOYTCDId5J/dm2plkQYnxesh+8NGW0qRtmYznDU4S+RyvSSfGJAr6YCuslhltIqFbpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1724879034; c=relaxed/relaxed;
-	bh=HnRbucMY226i4IUYHJiuv+7kBNxjZEs05bItUy7sjXs=;
-	h=DKIM-Signature:DKIM-Signature:Received:X-MC-Unique:Received:
-	 Received:From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:X-Scanned-By; b=nB0RJQz+v7zT10TIaBbIY12tDhjQTOgsseGRNsIdFXkKhbfAVCzjmFxeeXpZ1W+DA2vb9RFUCQFZ6bAjjIO7Ff3aER4J/Az2j3yds7i9MUcrWECwE8Zt+mXZ8TwXs0aiyor74yL5MCzCOirjwT2gf4eKoXycnE6VfextxHhWKRJiB2gvagLu7l5fUu75CDE8LDgI3sjeIKprVREyeizNn0j5IbmOJji2tsS582IsCo27KGPdxzrY0Bi4EwNIhh7CjU2Rj9PXVxNWLwAanVDzQmYhwWMUXzUsni6AFAQ/KSVzpwBJQnpP0KH83qIuU8r4qR6XBu5DvinK1bYw71gFLg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=REgv7IQR; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FdFsD6mk; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=REgv7IQR;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FdFsD6mk;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	t=1724895823; c=relaxed/relaxed;
+	bh=13FW3FFsyZcmYCaM9j3DtMhT0e5P6uK0Ttk2a2OjxDk=;
+	h=Received:Received:Received:Message-ID:Date:MIME-Version:
+	 User-Agent:Subject:To:Cc:References:Content-Language:From:
+	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-CM-TRANSID:
+	 X-Coremail-Antispam:X-CM-SenderInfo; b=L1y3S6Gdi6J3UU7eiodSUpiJ0IJWMhP6ZAgkV2u+Zo4rnzJDMF6ktgd26kL4TsYj8SaFYAZYNp0AWm8eKGaCvjwzqeWYvjmMn2Dxa942e22R8PwLA8p+jdo50msONxya/YNShg64g0Bb/fiZcstNT3+85izKr7ERDNLzeJ8y/kJfuEuxB+7MziiZZqLM+jvP2LsAkhLIOKta+xREN/IkZA5tl3qBv35PscM3aJq9VQLI1dgCwHyMaJteZd3RknQCcBIWKa39dzvaRNPgm0bf0i9BEED/O50BeyCNKXjU+GNTUs3rRY0yeX5wIe96OQu7o8H60FbQ0UcICbTPwYvBZg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org) smtp.mailfrom=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huaweicloud.com (client-ip=45.249.212.51; helo=dggsgout11.his.huawei.com; envelope-from=libaokun@huaweicloud.com; receiver=lists.ozlabs.org)
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WvH2d6mDFz2y8X
-	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 07:03:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724879030;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HnRbucMY226i4IUYHJiuv+7kBNxjZEs05bItUy7sjXs=;
-	b=REgv7IQR0dZOkBay5uqUMA+aoN7jimvi7JXLWm6KZVqRHEu628UwOXFM3xQaHFaWux4Hx5
-	SOdGGpqAeYpzq77PsVe2MW6OxFR+zjrQPFOkocPPln2RmxbIM6Mzw7Qo0HaOXqJGy/5I12
-	ekiGzf8xSPc77/tecm2rikHEdkbKbSY=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724879031;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HnRbucMY226i4IUYHJiuv+7kBNxjZEs05bItUy7sjXs=;
-	b=FdFsD6mkDlI5bNwRuuHD9c8KrPQY6bsbj40L58YPSnHc72Uey/H22OifjX1iy1s4k1JTZD
-	3pGE+xnHW7M4x9grBi4gi7OvcI97J0YAdPkHTkI5WNiKWjHmKnqXBH88AyoLVMdcVShbLg
-	DQioft5FYuin9RCqxJMoBDXS9mmO3EI=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-122-iAIpNcUkPheyG0CeJjFQ_w-1; Wed,
- 28 Aug 2024 17:03:45 -0400
-X-MC-Unique: iAIpNcUkPheyG0CeJjFQ_w-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 010F11955BF1;
-	Wed, 28 Aug 2024 21:03:43 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.30])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5B35C1955BF2;
-	Wed, 28 Aug 2024 21:03:38 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Steve French <sfrench@samba.org>
-Subject: [PATCH 6/6] netfs, cifs: Improve some debugging bits
-Date: Wed, 28 Aug 2024 22:02:47 +0100
-Message-ID: <20240828210249.1078637-7-dhowells@redhat.com>
-In-Reply-To: <20240828210249.1078637-1-dhowells@redhat.com>
-References: <20240828210249.1078637-1-dhowells@redhat.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WvPFW2TNMz2yGF
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 11:43:39 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WvPDv54Qcz4f3kw5
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 09:43:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 392B51A0568
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Aug 2024 09:43:27 +0800 (CST)
+Received: from [10.174.177.174] (unknown [10.174.177.174])
+	by APP4 (Coremail) with SMTP id gCh0CgAHL4U70s9mWOUIDA--.61429S3;
+	Thu, 29 Aug 2024 09:43:27 +0800 (CST)
+Message-ID: <491c1962-1f9e-4aca-b263-eb6eb88140e0@huaweicloud.com>
+Date: Thu, 29 Aug 2024 09:43:23 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cachefiles: fix dentry leak in cachefiles_open_file()
+To: David Howells <dhowells@redhat.com>
+References: <11c591fd-221b-4eeb-a0bd-e9e303d391a6@huaweicloud.com>
+ <5b7455f8-4637-4ec0-a016-233827131fb2@huaweicloud.com>
+ <20240826040018.2990763-1-libaokun@huaweicloud.com>
+ <467d9b9b-34b4-4a94-95c1-1d41f0a91e05@web.de>
+ <988772.1724850113@warthog.procyon.org.uk>
+ <1043618.1724861676@warthog.procyon.org.uk>
+Content-Language: en-US
+From: Baokun Li <libaokun@huaweicloud.com>
+In-Reply-To: <1043618.1724861676@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: gCh0CgAHL4U70s9mWOUIDA--.61429S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYv7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
+	rI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxAqzxv26xkF7I0En4kS14v26r
+	1q6r43MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQVy7UUUUU==
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/1tbiAQAKBWbO339AKwAAst
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -88,67 +81,28 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, linux-cifs@vger.kernel.org, Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
+Cc: Baokun Li <libaokun@huaweicloud.com>, Christian Brauner <brauner@kernel.org>, Yang Erkun <yangerkun@huawei.com>, Jeff Layton <jlayton@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Markus Elfring <Markus.Elfring@web.de>, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org, stable@kernel.org, Yu Kuai <yukuai3@huawei.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Improve some debugging bits:
+Hi David,
 
- (1) The netfslib _debug() macro doesn't need a newline in its format
-     string.
+On 2024/8/29 0:14, David Howells wrote:
+> Baokun Li <libaokun@huaweicloud.com> wrote:
+>
+>>> You couldn't do that anyway, since kernel_file_open() steals the caller's ref
+>>> if successful.
+>> Ignoring kernel_file_open(), we now put a reference count of the dentry
+>> whether cachefiles_open_file() returns true or false.
+> Actually, I'm wrong kernel_file_open() doesn't steal a ref.
+>
+> David
+>
+>
+Thanks for confirming this.
+I will send a new version using the new solution.
 
- (2) Display the request debug ID and subrequest index in messages emitted
-     in smb2_adjust_credits() to make it easier to reference in traces.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Paulo Alcantara <pc@manguebit.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/netfs/io.c           | 2 +-
- fs/smb/client/smb2ops.c | 8 +++++---
- 2 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/fs/netfs/io.c b/fs/netfs/io.c
-index 943128507af5..d6ada4eba744 100644
---- a/fs/netfs/io.c
-+++ b/fs/netfs/io.c
-@@ -270,7 +270,7 @@ static void netfs_reset_subreq_iter(struct netfs_io_request *rreq,
- 	if (count == remaining)
- 		return;
- 
--	_debug("R=%08x[%u] ITER RESUB-MISMATCH %zx != %zx-%zx-%llx %x\n",
-+	_debug("R=%08x[%u] ITER RESUB-MISMATCH %zx != %zx-%zx-%llx %x",
- 	       rreq->debug_id, subreq->debug_index,
- 	       iov_iter_count(&subreq->io_iter), subreq->transferred,
- 	       subreq->len, rreq->i_size,
-diff --git a/fs/smb/client/smb2ops.c b/fs/smb/client/smb2ops.c
-index 4df84ebe8dbe..e6540072ffb0 100644
---- a/fs/smb/client/smb2ops.c
-+++ b/fs/smb/client/smb2ops.c
-@@ -316,7 +316,8 @@ smb2_adjust_credits(struct TCP_Server_Info *server,
- 				      cifs_trace_rw_credits_no_adjust_up);
- 		trace_smb3_too_many_credits(server->CurrentMid,
- 				server->conn_id, server->hostname, 0, credits->value - new_val, 0);
--		cifs_server_dbg(VFS, "request has less credits (%d) than required (%d)",
-+		cifs_server_dbg(VFS, "R=%x[%x] request has less credits (%d) than required (%d)",
-+				subreq->rreq->debug_id, subreq->subreq.debug_index,
- 				credits->value, new_val);
- 
- 		return -EOPNOTSUPP;
-@@ -338,8 +339,9 @@ smb2_adjust_credits(struct TCP_Server_Info *server,
- 		trace_smb3_reconnect_detected(server->CurrentMid,
- 			server->conn_id, server->hostname, scredits,
- 			credits->value - new_val, in_flight);
--		cifs_server_dbg(VFS, "trying to return %d credits to old session\n",
--			 credits->value - new_val);
-+		cifs_server_dbg(VFS, "R=%x[%x] trying to return %d credits to old session\n",
-+				subreq->rreq->debug_id, subreq->subreq.debug_index,
-+				credits->value - new_val);
- 		return -EAGAIN;
- 	}
- 
+Cheers,
+Baokun
 
