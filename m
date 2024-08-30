@@ -1,49 +1,75 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F7D6965DE0
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2024 12:04:15 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A41F99662CC
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2024 15:21:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1725024060;
+	bh=1fa8JFgeAi/ZlMTSUfcr9ne/8HXdsxXnAZE+mZp+p6U=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=faRrhdBk3brYk7oBVYQbxpSh+MTshlxt1liwPejS14rQUEmlNGp+jaOq6mawoAzUH
+	 aY4WOKcQhm8mcmOkRcgkX5CVdAtS6Karpq/onjqNCdCxMYJmLcg2hQnMLiBfuL9ksW
+	 iNnOiVhjyTxyNdb6hmcXrLFoHnB0a31jeuiCYZUZLXF87PohSyeK8gWswwAdkqe+QW
+	 mxKk/uU1jzZHGUQAcY5IEE+ZXGgyWlXX0ysbng5g4idL9nJicVoX1p75hpnNqfzJ7w
+	 a2oWMSrWCd57GqZfdhP4J/y87i3w5cfm/07braJiB4py/YH55ZYUgFoMHXrITabt9A
+	 0vrI9CqMF4UBg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WwDJY5Cx1z30DR
-	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2024 20:04:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WwJgc27Hfz30HH
+	for <lists+linux-erofs@lfdr.de>; Fri, 30 Aug 2024 23:21:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725012252;
-	cv=none; b=L90Gr4dHMfaTMr/rtP3au9ZZl6gH79ZpmZOshjEeC1/WkVANIUYEWBXEZi0GRk31Y3uiGTUDmI0kLVcF+kmp8Cji1WFBdWPhLMQX76yrqPoZpPfdpwI3s2EbmbLBpNSTmRaOM4wZRp87hydGf3ygIStKTnmRbxVm8IVrddZk5iqQdJ9xlPsRScmw+oc8mDw4EPjVHzkDreYnRijr3aOexVdhqy4+WNDEkIiircxQcB9YXrHPyfTEBOz30q9n/kZxVWNTS8b5G4XxRLQYhVsGNXkh1V+1P0QeZmgA1JTqc4KFhJy7I20E6ks5nXf5JPFuoxBX7wfUxu3MfRSdGR6CQg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4601:e00::1"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725024056;
+	cv=none; b=GqVPdYuc8j6UCad2aLeeJZJeyUq0+p6k+V1PVTO3xI2Wjh8PhcANyrHVoSRxpQDqKLeOBybwlYRKw8enLCE11U02KuhQWIO5YPeCiTdA/v0AEdmN586uOoNVlNBGivzqtL9bbtJyvnP7EUwOCUdUF7EjcoHpH5gBltgZDC1JySq7hrcIibcP9WWdyrcsNnv5bFWJWAu00VgRk2W72UntZdW1q3wVQ6sRtBDoMdCApO2wKQay9TKrsbiUuuUscK66MYg/p4K0JrPMoMcQQ31GJb11CXC5SUSqxTgpUAxV4Zvlfi+fH93YSyGObvatb/NiErrli0JF7Ut09vLdjKV2NA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725012252; c=relaxed/relaxed;
-	bh=BnUe0dXSx0FQ7ldNUdmCw2iqXJtCiwN5kQYi8wJkb60=;
-	h=DKIM-Signature:Received:From:To:Cc:Subject:Date:Message-ID:
-	 X-Mailer:MIME-Version:Content-Transfer-Encoding; b=gsoXhYlFBRRnZZ81T1F+/uO8p80w65skgUOe5IJFVJ//Y9Sg7RdY8rOwrLZj9+dPwaeKdI1djUJeOP7vK7zqsHNN/BrZeJ4Pcr0kpBSsMz8ElF8SBld1WFU3CNv3XyyLvJIBuwxPQxHXQXhBYyicWDCOfxKjBDzelWdiqcEtcc4RAN8FSRXznnhBICDWUzU2lWUeGf1U2HYO0v16YghUsrfzJ6rI4LkqCWC+DOSeNjFa1Avq6ecRXkhQF3MuSrjvUiiueVLCrRS9FBw5J9lT8qBlAWP3SPs2PldGPDRu8hAlkknBGAz3rdzIK4FsuRHL0R7nPgP4pZ+TvZQoDku3LQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nNAR1jWs; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1725024056; c=relaxed/relaxed;
+	bh=1fa8JFgeAi/ZlMTSUfcr9ne/8HXdsxXnAZE+mZp+p6U=;
+	h=X-Greylist:Received:Received:DKIM-Signature:From:To:Cc:Subject:
+	 Date:Message-ID:X-Mailer:In-Reply-To:References:MIME-Version:
+	 Content-Type:X-Developer-Signature:X-Developer-Key:
+	 Content-Transfer-Encoding; b=MCp0+1MtusppxPfCkk7irZj168RTASjRiJCi7ObJoxZzRGZ9R7CrffEtQg2ld7j9tv++nDTVtQD2b8OtmLNgzClzWEYT1Dt35FMhckwQk6u0R7HHKXJgahygdfp3Hc07uccu8u4DaRhIcUF8fjLR19NWJpmZsvgGWozOfbKvc3GXGun0/DIRxifwNYFXGP2AiJmvBodZ/uJ0AN5g+tUlC+1Ugq0D95u//PjHhmT2yb2VAALWPUvdqwe0Lz4Ks7pKVkMvamBxhhrdELIZKB+FWabNTH66IIzyfVcEl+Q5XpN4vwbkgeK9cQfBgthfEiwArKu4O3QbPpWpXe4+AVHwZg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Ty5bAm6t; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nNAR1jWs;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Ty5bAm6t;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4601:e00::1; helo=ams.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+X-Greylist: delayed 505 seconds by postgrey-1.37 at boromir; Fri, 30 Aug 2024 23:20:56 AEST
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WwDJV5S1Rz306G
-	for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2024 20:04:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1725012244; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=BnUe0dXSx0FQ7ldNUdmCw2iqXJtCiwN5kQYi8wJkb60=;
-	b=nNAR1jWsmga8zsgemtnvht5txyhQUIjbXz65axsTInJwqZL1UxZU1DVRB/GU+Xn4DiwZVelcO+kaiSP7x/qhfTf4pQFTUzf21jYS/44SLdT7HVbQAqEpRCs12sgqCCgj3QMjNh0VZG8+NO9sacHTvpkXD+xFZHfEwhOeV9Bgzyo=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WDwX3ob_1725012242)
-          by smtp.aliyun-inc.com;
-          Fri, 30 Aug 2024 18:04:02 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v5] erofs-utils: fix invalid argument type in erofs_err()
-Date: Fri, 30 Aug 2024 18:03:54 +0800
-Message-ID: <20240830100354.2093735-1-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WwJgX2Hrnz2yp9
+	for <linux-erofs@lists.ozlabs.org>; Fri, 30 Aug 2024 23:20:56 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by ams.source.kernel.org (Postfix) with ESMTP id 4C366AE3A20;
+	Fri, 30 Aug 2024 13:12:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D2B4C4CEC2;
+	Fri, 30 Aug 2024 13:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725023543;
+	bh=WndIbO8xrC2aIrGdqBcilJuDXzO/BXzIA8VlzOJWcDo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ty5bAm6tFv6bg4YA3HAyot4VdLW2RJKGdG1xvdXVogremu8LD3BqEh4VHwGPQbh1p
+	 g5wB6d5xMedceeupVFRBiOJF2X1RQbXR7I/eTH3weokE6ad0t6Ezo6vHjcDKPVbTlB
+	 Z3S4gJVFjrB6hycktKp1ueGv6wungGZ3cKnt0wXInlgTLGxuCAHj3w8ZYHqjF+GFUB
+	 QTyvsjOBPVrVpsZuumcYH8TAjCVp5l1eYu4rXoVRWjPjq8sCLqJLVtHIh6i3fVU/nI
+	 SVYRAvH1Ts46AhfsHIwkNzc0SvAJDkfT/NWnyDPoWUXLCHntm7LX/eW8iyDDIh7MGs
+	 GI0a1819kd2HQ==
+To: David Howells <dhowells@redhat.com>
+Subject: Re: (subset) [PATCH 4/6] mm: Fix filemap_invalidate_inode() to use invalidate_inode_pages2_range()
+Date: Fri, 30 Aug 2024 15:12:02 +0200
+Message-ID: <20240830-anteil-haarfarbe-d11935ac1017@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240828210249.1078637-5-dhowells@redhat.com>
+References: <20240828210249.1078637-1-dhowells@redhat.com> <20240828210249.1078637-5-dhowells@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1253; i=brauner@kernel.org; h=from:subject:message-id; bh=WndIbO8xrC2aIrGdqBcilJuDXzO/BXzIA8VlzOJWcDo=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRdPKr76Dezq5ehzM4jKYrG1ftWrXx6vvm+7LaNC7uZV E+srfHd1FHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRR5oM/1T7Tb2YfR5sYXnu FDtjHaviHxfHAmW1+apKn47PLwxJcWBkWDj/YHmXY6+ZxwZFZ420TYu1Jiiw5DG/WmQs9an18sQ 6HgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -56,137 +82,36 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Christian Brauner via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Christian Brauner <brauner@kernel.org>
+Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Christoph Hellwig <hch@lst.de>, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>, Matthew Wilcox <willy@infradead.org>, linux-afs@lists.infradead.org, devel@lists.orangefs.org, linux-nfs@vger.kernel.org, Tom Talpey <tom@talpey.com>, Alexander Viro <viro@zeniv.linux.org.uk>, ceph-devel@vger.kernel.org, Trond Myklebust <trond.myklebust@hammerspace.com>, Christian Brauner <brauner@kernel.org>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Steve French <sfrench@samba.org>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Fix several issues found by Coverity regarding "Invalid type in argument
-for printf format specifier".
+On Wed, 28 Aug 2024 22:02:45 +0100, David Howells wrote:
+> Fix filemap_invalidate_inode() to use invalidate_inode_pages2_range()
+> rather than truncate_inode_pages_range().  The latter clears the
+> invalidated bit of a partial pages rather than discarding it entirely.
+> This causes copy_file_range() to fail on cifs because the partial pages at
+> either end of the destination range aren't evicted and reread, but rather
+> just partly cleared.
+> 
+> [...]
 
-Coverity-id: 502374, 502367, 502362, 502348, 502342, 502341,
-	     502340, 502358
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
----
-v5: Adjusted commit message and made minor changes.
-v4: https://lore.kernel.org/all/20240827032240.1869284-1-hongzhen@linux.alibaba.com/
-v3: https://lore.kernel.org/all/20240814045501.1675174-1-hongzhen@linux.alibaba.com/
-v2: https://lore.kernel.org/all/20240814033813.1605825-1-hongzhen@linux.alibaba.com/
-v1: https://lore.kernel.org/all/20240813121003.780870-1-hongzhen@linux.alibaba.com/
----
- fsck/main.c     |  4 ++--
- lib/blobchunk.c |  3 ++-
- lib/compress.c  |  4 ++--
- lib/fragments.c | 10 +++++-----
- lib/super.c     |  3 ++-
- mkfs/main.c     |  2 +-
- 6 files changed, 14 insertions(+), 12 deletions(-)
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-diff --git a/fsck/main.c b/fsck/main.c
-index 28f1e7e..89d87fb 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -807,8 +807,8 @@ static int erofsfsck_dirent_iter(struct erofs_dir_context *ctx)
- 	curr_pos = prev_pos;
- 
- 	if (prev_pos + ctx->de_namelen >= PATH_MAX) {
--		erofs_err("unable to fsck since the path is too long (%u)",
--			  curr_pos + ctx->de_namelen);
-+		erofs_err("unable to fsck since the path is too long (%llu)",
-+			  (curr_pos + ctx->de_namelen) | 0ULL);
- 		return -EOPNOTSUPP;
- 	}
- 
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index 2835755..33dadd5 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -95,7 +95,8 @@ static struct erofs_blobchunk *erofs_blob_getchunk(struct erofs_sb_info *sbi,
- 		chunk->device_id = 0;
- 	chunk->blkaddr = erofs_blknr(sbi, blkpos);
- 
--	erofs_dbg("Writing chunk (%u bytes) to %u", chunksize, chunk->blkaddr);
-+	erofs_dbg("Writing chunk (%llu bytes) to %u", chunksize | 0ULL,
-+		  chunk->blkaddr);
- 	ret = fwrite(buf, chunksize, 1, blobfile);
- 	if (ret == 1) {
- 		padding = erofs_blkoff(sbi, chunksize);
-diff --git a/lib/compress.c b/lib/compress.c
-index 8655e78..17e7112 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -497,8 +497,8 @@ static bool z_erofs_fixup_deduped_fragment(struct z_erofs_compress_sctx *ctx,
- 	inode->fragmentoff += inode->fragment_size - newsize;
- 	inode->fragment_size = newsize;
- 
--	erofs_dbg("Reducing fragment size to %u at %llu",
--		  inode->fragment_size, inode->fragmentoff | 0ULL);
-+	erofs_dbg("Reducing fragment size to %llu at %llu",
-+		  inode->fragment_size | 0ULL, inode->fragmentoff | 0ULL);
- 
- 	/* it's the end */
- 	DBG_BUGON(ctx->tail - ctx->head + ctx->remaining != newsize);
-diff --git a/lib/fragments.c b/lib/fragments.c
-index 7591718..e2d3343 100644
---- a/lib/fragments.c
-+++ b/lib/fragments.c
-@@ -138,7 +138,7 @@ static int z_erofs_fragments_dedupe_find(struct erofs_inode *inode, int fd,
- 	inode->fragment_size = deduped;
- 	inode->fragmentoff = pos;
- 
--	erofs_dbg("Dedupe %u tail data at %llu", inode->fragment_size,
-+	erofs_dbg("Dedupe %llu tail data at %llu", inode->fragment_size | 0ULL,
- 		  inode->fragmentoff | 0ULL);
- out:
- 	free(data);
-@@ -283,8 +283,8 @@ int z_erofs_pack_file_from_fd(struct erofs_inode *inode, int fd,
- 		goto out;
- 	}
- 
--	erofs_dbg("Recording %u fragment data at %lu", inode->fragment_size,
--		  inode->fragmentoff);
-+	erofs_dbg("Recording %llu fragment data at %llu",
-+		  inode->fragment_size | 0ULL, inode->fragmentoff | 0ULL);
- 
- 	if (memblock)
- 		rc = z_erofs_fragments_dedupe_insert(memblock,
-@@ -316,8 +316,8 @@ int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
- 	if (fwrite(data, len, 1, packedfile) != 1)
- 		return -EIO;
- 
--	erofs_dbg("Recording %u fragment data at %lu", inode->fragment_size,
--		  inode->fragmentoff);
-+	erofs_dbg("Recording %llu fragment data at %llu",
-+		  inode->fragment_size | 0ULL, inode->fragmentoff | 0ULL);
- 
- 	ret = z_erofs_fragments_dedupe_insert(data, len, inode->fragmentoff,
- 					      tofcrc);
-diff --git a/lib/super.c b/lib/super.c
-index 32e10cd..d4cea50 100644
---- a/lib/super.c
-+++ b/lib/super.c
-@@ -213,7 +213,8 @@ struct erofs_buffer_head *erofs_reserve_sb(struct erofs_bufmgr *bmgr)
- 
- 	bh = erofs_balloc(bmgr, META, 0, 0, 0);
- 	if (IS_ERR(bh)) {
--		erofs_err("failed to allocate super: %s", PTR_ERR(bh));
-+		erofs_err("failed to allocate super: %s",
-+			  erofs_strerror(PTR_ERR(bh)));
- 		return bh;
- 	}
- 	bh->op = &erofs_skip_write_bhops;
-diff --git a/mkfs/main.c b/mkfs/main.c
-index b7129eb..1027fc6 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -274,7 +274,7 @@ static int erofs_mkfs_feat_set_fragments(bool en, const char *val,
- 		u64 i = strtoull(val, &endptr, 0);
- 
- 		if (endptr - val != vallen) {
--			erofs_err("invalid pcluster size %s for the packed file %s", val);
-+			erofs_err("invalid pcluster size %s for the packed file", val);
- 			return -EINVAL;
- 		}
- 		pclustersize_packed = i;
--- 
-2.43.5
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[4/6] mm: Fix filemap_invalidate_inode() to use invalidate_inode_pages2_range()
+      https://git.kernel.org/vfs/vfs/c/c26096ee0278
