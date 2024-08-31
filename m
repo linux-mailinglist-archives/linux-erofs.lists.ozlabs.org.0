@@ -1,54 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C3A92966EF8
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2024 04:54:19 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E0CE966EFA
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2024 04:59:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wwfjz6rGqz30Ts
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2024 12:54:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WwfqP4FLWz30Tt
+	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2024 12:58:57 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725072853;
-	cv=none; b=iUcPk57yHqv4Do7Z+E1kATLSOOyU0xamaXT+eCzSdd89+6vDoM38boVpyk7INrl+FQ0RArFrGQCI3eD+vY+a4vons1BEp2T+xFAaE5a/LvTqwpQivnN267iuT68N/AduQ5QWCpK0x/IeRHOUF8y7S+ie7eqrZpb9EvNgz5rq/ef5Adj0le0hp259+e2pwVSPGXQL/4duxWab8fayQ/FcmVxs+QEPNXsKsNu3CMMbARIzLzUKvirHoeCYq4N8QEEst4nndlqaqp5jPobKTq/kl69+T2ovybhCWslm7yPCMrWa+VgG35whAosCqtCqPd6WWP6AY7H7Z8qVypK7zrzMaA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725073135;
+	cv=none; b=DhLK8z6q3T4G71ZmFG0zKZc8Kfnu0fWBm0z8a9Mtn+qjH/0Fe9B10l8UTZN9GeEPpds4UjCMCieuu/sGhoBPdQw76N1xt+cZ+DFaPExs9DwKtvr3/87Z5TxCZL/tMXTjWoygZEy0mlJXWexu/thX511Vjo/rBDDVW9HliShWbeqAviSMo1oLBhFGqQ6Gg6tvchhj6dyNhYRjqeNA77sNhHe64ejLNcWPq1dGcWf2SkwJYTHnmVDCvVG0nrnZ+lyrJI5wM+xOzN6gaygYsxzUuYqUfYmDVWlTMXt/5ASyJPcq5WJRAGGn88gNnjl0rk88QeqWtGeppZuKqXYKbqE0kw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725072853; c=relaxed/relaxed;
-	bh=zZJJrwNuQqZJmQm0d3gc2XhF2BtCX1ZJsTSpftN+ZuM=;
+	t=1725073135; c=relaxed/relaxed;
+	bh=l0ZN0V2wDGVdJYLmBlxDemZT06auDRxXuERgQRkl+h4=;
 	h=DKIM-Signature:Received:Message-ID:Date:MIME-Version:User-Agent:
 	 Subject:To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=eqj6h2AxGnWaMPt6Ffnho7kfq85Pq4A93REV+hFj7GA4SIdqCzvB3798HizQRMAiPZrVg2V1nDkx4lk4PriA6Zu9dJe+s6ELbJR5xqNVjX2Q1FSHufwIcUVH6SrbUqHhHO4xHS1FQ66voW0bCWup7MBueFZOh7kIK3oNVnph5B8N9Qcl5bAohW+XVE5RCc3LxhKHnsCXbVbv0tXNslQmyAApK1HF+1NFJo96w+bj68+jRmh6k/FAnXRDUAgmhZ7k6aWfyBjW27xCHVLXus4ANpXokM+n+oPtfmk961FdSVSQhgoWOQ9U8khKtYppdL/yEVbyi9e+Mvp8Sxyrs4miTQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tuCViTGo; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 Content-Transfer-Encoding; b=IeQdyChMxZqJ9cTfAhYRJS8vNokbK7dN5sPmOkqz1MF+8zSE4qxuxOlo6H1095AQ5SazLAVPSbqIY+obOufHKG76ChJ2cucUXkPlJuiQBamh5O7U1UoVUGonnIqx1ten5KC7bebADBOW2a4dpHlq1YPwZ1GlNeMwkhbW6Daq6jyNNrQTLLz7BupIBI4HMLtpWjgpXzkp6uCyH+011f6hsJpe7VGTHa4vNWpJ8rDr9v4WUgrelHciOkiKVh6JH9udc60O7zjR7RTh8+uqHqeR0LYs3FHJSqZL5io3LD4VgrVgyiBrlDwryJd6rNCv8u4asA8tpqy5aX23GhNJqunaVw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=EKMBnSF4; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tuCViTGo;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=EKMBnSF4;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wwfjv5pyKz2xr4
-	for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2024 12:54:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WwfqM2sHDz2ywy
+	for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2024 12:58:55 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1725072844; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=zZJJrwNuQqZJmQm0d3gc2XhF2BtCX1ZJsTSpftN+ZuM=;
-	b=tuCViTGowY8L2WRteNhpHjNUv0hs2elohT7uiFJAPZblSMa3o/LC5zfqrJX4NrfC35N/FFBPSylFfUu6eJlr+oIh9oGH5gycR7F213ZKhP8YciJWjnz9fdYy8pnXhZ0cFNPD4ztamOPKQMR0HNj9yLKOsJmX8Bqnah9xk9abTRA=
-Received: from 192.168.2.29(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WDyK-lV_1725072842)
+	t=1725073131; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=l0ZN0V2wDGVdJYLmBlxDemZT06auDRxXuERgQRkl+h4=;
+	b=EKMBnSF4of7wqeDRMpKaXoYandb8uYtLeEjXkirWzKeF9MnBluy4kIr+/M6X6J7Mo1O7Pk2OTf3ADZLOIrNJu6obqsxZomsbiqN3fWKyJ1VK2li/XD2L4gkwFdgiI+bJ4Y66fpzq4tjnjHmwvukDqXIa1dTf0H6PqigfKd4x8o4=
+Received: from 192.168.2.29(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WDyCJXa_1725073129)
           by smtp.aliyun-inc.com;
-          Sat, 31 Aug 2024 10:54:03 +0800
-Message-ID: <474573b0-14d3-4534-82ad-8b4942567008@linux.alibaba.com>
-Date: Sat, 31 Aug 2024 10:54:02 +0800
+          Sat, 31 Aug 2024 10:58:50 +0800
+Message-ID: <7e1b1c15-dd7c-4565-a1dc-ba6a49cf249f@linux.alibaba.com>
+Date: Sat, 31 Aug 2024 10:58:49 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] erofs: support unencoded inodes for fileio
-To: Sandeep Dhavale <dhavale@google.com>
-References: <20240830032840.3783206-1-hsiangkao@linux.alibaba.com>
- <20240830032840.3783206-2-hsiangkao@linux.alibaba.com>
- <CAB=BE-Q1X2ossOkSUJcW_m-GBnzQngTMnCxUWUBD=qei-J7_=g@mail.gmail.com>
+Subject: Re: [PATCH v2] erofs: Prevent entering an infinite loop when i is 0
+To: Sandeep Dhavale <dhavale@google.com>, liujinbao1 <jinbaoliu365@gmail.com>
+References: <20240829122342.309611-1-jinbaoliu365@gmail.com>
+ <CAB=BE-QfSB_BZNA_ZPt6G6WTbruHs8QtN9guGfZTkyjGjJNy5Q@mail.gmail.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAB=BE-Q1X2ossOkSUJcW_m-GBnzQngTMnCxUWUBD=qei-J7_=g@mail.gmail.com>
+In-Reply-To: <CAB=BE-QfSB_BZNA_ZPt6G6WTbruHs8QtN9guGfZTkyjGjJNy5Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -62,194 +61,77 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
+Cc: mazhenhua@xiaomi.com, kernel-team@android.com, linux-erofs@lists.ozlabs.org, liujinbao1 <liujinbao1@xiaomi.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Hi Sandeep,
 
-
-On 2024/8/31 08:19, Sandeep Dhavale wrote:
-> On Thu, Aug 29, 2024 at 8:29 PM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+On 2024/8/31 05:46, Sandeep Dhavale wrote:
+> Hi Liujinbao,
+> On Thu, Aug 29, 2024 at 5:24 AM liujinbao1 <jinbaoliu365@gmail.com> wrote:
 >>
->> Since EROFS only needs to handle read requests in simple contexts,
->> Just directly use vfs_iocb_iter_read() for data I/Os.
+>> From: liujinbao1 <liujinbao1@xiaomi.com>
 >>
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+>> When i=0 and err is not equal to 0,
+>> the while(-1) loop will enter into an
+>> infinite loop. This patch avoids this issue
+>>
+>> Signed-off-by: liujinbao1 <liujinbao1@xiaomi.com>
 >> ---
->> v2:
->>   - fix redundant refcount which cause hanging on chunked inodes.
+>>   fs/erofs/decompressor.c | 10 +++++-----
+>>   1 file changed, 5 insertions(+), 5 deletions(-)
 >>
->>   fs/erofs/Makefile   |   1 +
->>   fs/erofs/data.c     |  50 +++++++++++-
->>   fs/erofs/fileio.c   | 181 ++++++++++++++++++++++++++++++++++++++++++++
->>   fs/erofs/inode.c    |  17 +++--
->>   fs/erofs/internal.h |   7 +-
->>   fs/erofs/zdata.c    |  46 ++---------
->>   6 files changed, 251 insertions(+), 51 deletions(-)
->>   create mode 100644 fs/erofs/fileio.c
+>> diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+>> index c2253b6a5416..672f097966fa 100644
+>> --- a/fs/erofs/decompressor.c
+>> +++ b/fs/erofs/decompressor.c
+>> @@ -534,18 +534,18 @@ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
 >>
->> diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
->> index 097d672e6b14..4331d53c7109 100644
->> --- a/fs/erofs/Makefile
->> +++ b/fs/erofs/Makefile
->> @@ -7,4 +7,5 @@ erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o
->>   erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
->>   erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
->>   erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
->> +erofs-$(CONFIG_EROFS_FS_BACKED_BY_FILE) += fileio.o
->>   erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
->> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
->> index 0fb31c588ae0..b4c07ce7a294 100644
->> --- a/fs/erofs/data.c
->> +++ b/fs/erofs/data.c
->> @@ -132,7 +132,7 @@ int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map)
->>          if (map->m_la >= inode->i_size) {
->>                  /* leave out-of-bound access unmapped */
->>                  map->m_flags = 0;
->> -               map->m_plen = 0;
->> +               map->m_plen = map->m_llen;
->>                  goto out;
->>          }
->>
->> @@ -197,8 +197,13 @@ static void erofs_fill_from_devinfo(struct erofs_map_dev *map,
->>                                      struct erofs_device_info *dif)
+>>   int __init z_erofs_init_decompressor(void)
 >>   {
->>          map->m_bdev = NULL;
->> -       if (dif->file && S_ISBLK(file_inode(dif->file)->i_mode))
->> -               map->m_bdev = file_bdev(dif->file);
->> +       map->m_fp = NULL;
->> +       if (dif->file) {
->> +               if (S_ISBLK(file_inode(dif->file)->i_mode))
->> +                       map->m_bdev = file_bdev(dif->file);
->> +               else
->> +                       map->m_fp = dif->file;
->> +       }
->>          map->m_daxdev = dif->dax_dev;
->>          map->m_dax_part_off = dif->dax_part_off;
->>          map->m_fscache = dif->fscache;
->> @@ -215,6 +220,7 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
->>          map->m_daxdev = EROFS_SB(sb)->dax_dev;
->>          map->m_dax_part_off = EROFS_SB(sb)->dax_part_off;
->>          map->m_fscache = EROFS_SB(sb)->s_fscache;
->> +       map->m_fp = EROFS_SB(sb)->fdev;
+>> -       int i, err;
+>> +       int i, err = 0;
 >>
->>          if (map->m_deviceid) {
->>                  down_read(&devs->rwsem);
->> @@ -250,6 +256,42 @@ int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *map)
->>          return 0;
->>   }
->>
->> +/*
->> + * bit 30: I/O error occurred on this folio
->> + * bit 0 - 29: remaining parts to complete this folio
->> + */
->> +#define EROFS_ONLINEFOLIO_EIO                  (1 << 30)
->> +
->> +void erofs_onlinefolio_init(struct folio *folio)
->> +{
->> +       union {
->> +               atomic_t o;
->> +               void *v;
->> +       } u = { .o = ATOMIC_INIT(1) };
->> +
->> +       folio->private = u.v;   /* valid only if file-backed folio is locked */
->> +}
->> +
->> +void erofs_onlinefolio_split(struct folio *folio)
->> +{
->> +       atomic_inc((atomic_t *)&folio->private);
->> +}
->> +
->> +void erofs_onlinefolio_end(struct folio *folio, int err)
->> +{
->> +       int orig, v;
->> +
->> +       do {
->> +               orig = atomic_read((atomic_t *)&folio->private);
->> +               v = (orig - 1) | (err ? EROFS_ONLINEFOLIO_EIO : 0);
->> +       } while (atomic_cmpxchg((atomic_t *)&folio->private, orig, v) != orig);
->> +
->> +       if (v & ~EROFS_ONLINEFOLIO_EIO)
->> +               return;
->> +       folio->private = 0;
->> +       folio_end_read(folio, !(v & EROFS_ONLINEFOLIO_EIO));
->> +}
->> +
->>   static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->>                  unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
->>   {
->> @@ -399,7 +441,7 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
->>   }
->>
->>   /* for uncompressed (aligned) files and raw access for other files */
->> -const struct address_space_operations erofs_raw_access_aops = {
->> +const struct address_space_operations erofs_aops = {
->>          .read_folio = erofs_read_folio,
->>          .readahead = erofs_readahead,
->>          .bmap = erofs_bmap,
->> diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
->> new file mode 100644
->> index 000000000000..eab52b8abd0b
->> --- /dev/null
->> +++ b/fs/erofs/fileio.c
->> @@ -0,0 +1,181 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * Copyright (C) 2024, Alibaba Cloud
->> + */
->> +#include "internal.h"
->> +#include <trace/events/erofs.h>
->> +
->> +struct erofs_fileio_rq {
->> +       struct bio_vec bvecs[BIO_MAX_VECS];
->> +       struct bio bio;
->> +       struct kiocb iocb;
->> +};
->> +
->> +struct erofs_fileio {
->> +       struct erofs_map_blocks map;
->> +       struct erofs_map_dev dev;
->> +       struct erofs_fileio_rq *rq;
->> +};
->> +
->> +static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
->> +{
->> +       struct erofs_fileio_rq *rq =
->> +                       container_of(iocb, struct erofs_fileio_rq, iocb);
->> +       struct folio_iter fi;
->> +
->> +       DBG_BUGON(rq->bio.bi_end_io);
->> +       if (ret > 0) {
->> +               if (ret != rq->bio.bi_iter.bi_size) {
->> +                       bio_advance(&rq->bio, ret);
->> +                       zero_fill_bio(&rq->bio);
->> +               }
->> +               ret = 0;
->> +       }
->> +       bio_for_each_folio_all(fi, &rq->bio) {
->> +               DBG_BUGON(folio_test_uptodate(fi.folio));
->> +               erofs_onlinefolio_end(fi.folio, ret);
->> +       }
->> +       kfree(rq);
->> +}
->> +
->> +static void erofs_fileio_rq_submit(struct erofs_fileio_rq *rq)
->> +{
->> +       struct iov_iter iter;
->> +       int ret;
->> +
->> +       if (!rq)
->> +               return;
->> +       rq->iocb.ki_pos = rq->bio.bi_iter.bi_sector << 9;
->> +       rq->iocb.ki_ioprio = get_current_ioprio();
->> +       rq->iocb.ki_complete = erofs_fileio_ki_complete;
->> +       rq->iocb.ki_flags = (rq->iocb.ki_filp->f_mode & FMODE_CAN_ODIRECT) ?
->> +                               IOCB_DIRECT : 0;
-> Hi Gao,
-> Does this mean, direct IO by default if the backing file supports it
-> (technically filesystem where image/backing file reside)?
+>>          for (i = 0; i < Z_EROFS_COMPRESSION_MAX; ++i) {
+>>                  err = z_erofs_decomp[i] ? z_erofs_decomp[i]->init() : 0;
+>> -               if (err) {
+>> -                       while (--i)
+>> +               if (err && i) {
+>> +                       while (i--)
+> Actually there is a subtle bug in this fix. We will never enter the if
+> block here when i=0 and err is set which we were trying to fix.
+> This will cause z_erofs_decomp[0]->init() error to get masked and we
+> will continue the outer for loop (i.e. when i=0 and err is set).
 
-Yes.
+Thanks for catching this!
+
+Yes, that needs to be resolved, and I will replace the
+patch to the new version.
 
 Thanks,
 Gao Xiang
+
+> 
+> Yes original code had the bug but probably simpler and readable fix could be
+> 
+> diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+> index c2253b6a5416..abf2db2ba10c 100644
+> --- a/fs/erofs/decompressor.c
+> +++ b/fs/erofs/decompressor.c
+> @@ -539,7 +539,7 @@ int __init z_erofs_init_decompressor(void)
+>          for (i = 0; i < Z_EROFS_COMPRESSION_MAX; ++i) {
+>                  err = z_erofs_decomp[i] ? z_erofs_decomp[i]->init() : 0;
+>                  if (err) {
+> -                       while (--i)
+> +                       while (i-- > 0)
+>                                  if (z_erofs_decomp[i])
+>                                          z_erofs_decomp[i]->exit();
+>                          return err;
+> 
+> Let me know if you want me to send a fix with your Reported-by or you
+> can send quick v3.
+> 
+> Thanks,
+> Sandeep.
+> 
