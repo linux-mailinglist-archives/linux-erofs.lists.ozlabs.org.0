@@ -2,76 +2,78 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 37ACA96755A
-	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2024 08:43:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 58165967554
+	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2024 08:39:25 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1725172988;
-	bh=XWDF4DK1jpYKo5Zpql1RY94BmdMG/vS7KQDO6GHiK6U=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:From;
-	b=HfDrtjOqrPsFulksgXwP3aeECXnBUNzAS8dT/NUHA8r6q6jSiK3Y1KSTF7z9n+mD6
-	 gx5XOyIkUz/87LHJ2lpQlIMtg+dpbQhFQgPVWMFkkCAwNn45k483A/LLxtDBcys371
-	 imlrsQuGNlNAEwnyRiYMXD7SyzS9NZDWcBgV0wBdMXTxlMk8GVke8Wknb58BEP4GYL
-	 Z1Nrbt/nKKx0LuWGw8sp6PrqxJb/hO0Tsh4wawxyWrs52JB5qJ7VnLBu/kUejnHCTM
-	 zHTz8LD6dDQilbpIk6RQ8I6Va/aBn7gqZHOIFQ1jxVo1MQmhAxNh5cVkLMGrHTjoAj
-	 +4L6vQ9Zvv8iw==
+	s=201707; t=1725172761;
+	bh=L5cj07VjICIGJdU4+Y25/wkmn+x9ZFiaKIEwQ+TZbqA=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 From;
+	b=oJcrm3VPz2IAnqIHDftPmrT2O8MVIWYXORGAMrx+bL00/Rukr254uwc+XIiLKrB1G
+	 qU6PXohEazfBNIIEhKJFh3/GjxHYfPXNF6/vhRuG7xhurevjnHiRXXQw+ywByAg3rz
+	 QPK//u6DCpeEAe76Ze/QJjzbKYSvsFyB2BaM50QdnttvEpZTnMPE1hJcAT5vwb8Xoh
+	 C8FE9zWNGE46bGLRuQH56kqQzRhvZeaiFUF+JgJPZPrXuyPHylDznba3i8w5w7jdXx
+	 BmNNSYWl1u9jcdWv8kqf1akolEodOv4HZL7TM+s56szUzN8PMYsch52mzW2rm4lS2G
+	 GH8s9A5ME464A==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WxMlc25wGz3c5F
-	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2024 16:43:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WxMgF2Xdfz3c5F
+	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2024 16:39:21 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.233
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725172986;
-	cv=none; b=hly7IpZJN80IqWKSCs9HmWo+bcS7rCV+DhSDntOMR2BSbGKaNmYWMHrX3k8vu+GOw8ZPqnN2UsTnaX2R0Kwape9cP+IPDr9k6cXq73uWsinpvMgQN+9k9MCqUrDxpf1J9Ik009CVFbl3ZJSZer1Vpje/PcdLO2WfIxez6FlxWJZrqtFHHmkVlNOV5rs4rLkl9tVozLGkYSyYnkPMP84+Cyu5R8qqNEs/b4qjKp40CneQLZ1jAQwuS22OsqxihJLdgJPWtuMgWjy7Vhg2PZBxwSL8PGRPzUC8uEaiZKHQUUkE7IV2x7SGN71H2WN9GY+OPpsejhEoM9e+zBs0zrxP1g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.210
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725172756;
+	cv=none; b=Ym06KVwzAAvFXPcOeqxxGc5aXXRWqow8NRzS1APE6Drmz1cnLKmg1PemdUshBxg08GgpCYu5PQgwb+k4ddvLV7k4Za6GSGUL6yKA/imDRMqf7fJ1rEFZyWqI5Xbk6clk2ryo6GFD3h/3XZQ3RxCWQE08KUPgRjeiswFiVjswcofBPkgcha1MyHyc18jcQyDsOZKSoPtPnoozTkUYEt1xmaVbThQy5HxmOoLQh1R+VkcjocqzeDtYeU3O3qwN4sJWn8WpYTxQeLO9esjUv4ljOUieUa2yD5j9ymBfLcxc4wZiKFicN6AUu4v6Xd1sO4gfsF3GoC/t4illRLGLiNT4iQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725172986; c=relaxed/relaxed;
-	bh=XWDF4DK1jpYKo5Zpql1RY94BmdMG/vS7KQDO6GHiK6U=;
+	t=1725172756; c=relaxed/relaxed;
+	bh=L5cj07VjICIGJdU4+Y25/wkmn+x9ZFiaKIEwQ+TZbqA=;
 	h=DKIM-Signature:Received:X-QQ-mid:Message-ID:X-QQ-XMAILINFO:
 	 X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:X-Mailer:
-	 MIME-Version:Content-Transfer-Encoding; b=OJtfSLPjSl/fh+OIvvFXgH1uFWsNRrp5ydDvBs8px1Nz8bNZIAlUiMPI/pbo+J4hKQBZ52RQJSD8RXis2jjccC8jaySDt165QXpf4mp+4WnsaXzxv6KtcjPLSYiGwgV4PmU+XIcXNGueRQNORkMRUAM+i/ebNaXWgaQB50QqZ/5L1mbhPtb0awaS2Kv8Do9bxYcso6t2pvQJS8zRygETS+QDALMvu+aeX2gpnAkbA+JA93s7JomIXU4o5T6ERYOcRVXuFd8EUXn/xz879Tc58+PcT+dS1BWar151cUK89O1wCaSiF2rBQ/VTQFBFp1pNgU4bS2gmDoVnDgInAxA8Cw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=y7D0n+20; dkim-atps=neutral; spf=pass (client-ip=203.205.221.233; helo=out203-205-221-233.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org) smtp.mailfrom=qq.com
+	 In-Reply-To:References:MIME-Version:Content-Transfer-Encoding; b=mo+6Nw5T+/lBKCAhLxf6TvJBFHK+3dZvcZZv6d+4jcBgYoX+1DEexfVPiB1pBFhfLsfX62C5kqevln7ajbpSPnlmAeAArnLtn9Dkf4QACIFBA07H40iwrOfYLRZPdQyfMHuzJ+In+OER7fGb8+kFYfg3zuu/Ix+wx4wUFLPtGHmbuu/EZ8P4CXlXmWoC+2xRxD3kQJcHCZFyzljiWu1ZPp3KxXKtzhPPIr4F1DiluaxkGsGbYuAcL0bGJORw18L3IMz46fpd2vMqKFLi0enxg0bNHeq2pQl4DURE3rtonjxIyUDomOCmdSgyTvdQ4J2ZumiBrtk2IAF74lr8/H+Aog==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=hb5M0oTz; dkim-atps=neutral; spf=pass (client-ip=203.205.221.210; helo=out203-205-221-210.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org) smtp.mailfrom=qq.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=y7D0n+20;
+	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=hb5M0oTz;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.233; helo=out203-205-221-233.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org)
-Received: from out203-205-221-233.mail.qq.com (out203-205-221-233.mail.qq.com [203.205.221.233])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.210; helo=out203-205-221-210.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org)
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4WxMlY5cdhz2xxy
-	for <linux-erofs@lists.ozlabs.org>; Sun,  1 Sep 2024 16:43:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4WxMg437vqz2xxt
+	for <linux-erofs@lists.ozlabs.org>; Sun,  1 Sep 2024 16:39:01 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1725172982; bh=XWDF4DK1jpYKo5Zpql1RY94BmdMG/vS7KQDO6GHiK6U=;
-	h=From:To:Cc:Subject:Date;
-	b=y7D0n+20l3Znx+sVdcOSHx3wLaNIsIHeOuHqKtHb/sT/HOHQ/EZWugSX+pbMB9MSg
-	 oZUdh2XTatqwBE2y5azdntx0DYoCuPONeNRnWxmsFHSWT7yCbnQRX6L8csPqXsijBx
-	 5XdhtBKWmKz/GXb4Jca2CNMIHRdNoATTuUiuaitc=
+	t=1725172735; bh=L5cj07VjICIGJdU4+Y25/wkmn+x9ZFiaKIEwQ+TZbqA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=hb5M0oTzUq8BsnIzpXijxa0jQD1Eev9WTzPcUuosyKPqfmvKgkDPhEN6M0XbDv5c3
+	 h7rFlrLW+xx740m44Sj/VouL3bPXWCWG3nEvEq3KKAZc5saPXJKajwihZcMIYslGrW
+	 xpp1j0KmD121t/DVgtlXUVi71pa4LlJQmxmdB0Z4=
 Received: from kyrie-virtual-machine.localdomain ([115.156.140.10])
 	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
 	id 8F31DEF9; Sun, 01 Sep 2024 14:35:51 +0800
-X-QQ-mid: xmsmtpt1725172551tfj2h4wgz
-Message-ID: <tencent_4A38E7296EF52417020255BC66C869CE1909@qq.com>
-X-QQ-XMAILINFO: MW5hkHoBpWXyKcCkvGgqjFzMMYIJr1GukoOkcFrZtXYtYr9vN+3cOElZtkG/jV
-	 kl6YDqjpj/GSgS6UmJrtW3KMe0pQmJotDwZpGGyOoxc5QCYAev8rPwfObijjaUcYBSWlrccTWbyo
-	 TTJJmV/Y1Ss3OU+jgqmm3U+o2/AGnNXiXL4dww2hNyGwEtPfzeVpV+M0vHvWrCViKvig8Vawfr09
-	 GgdwA70qXPZ7xcWdhqy3FBQ8xR+5tHnnLYqxGrh6QTXhZakd20bIjNe35F6EfdOk7kMeJJHqm3WF
-	 ZkG9ZCtbQsKoy19G7K6T1m9MFZAp5z9ABSdE8LFPXcu8xTONBK2oCnLGhroa860e5BIk+dY1SDAS
-	 RqJH3cADq24ObH7KNAPxk5cvMtn0F0OeLlxXm5AKYb3DW858mLqHSeLPVI3GYQKgIfWdjVdjPsQa
-	 F4CS12kC0MNW5/N9ZafqxfKS4OGZc11flUYy/dEBu19+snx3zrvXVXtz5C6Rpf8bs5C1ShNj7XZL
-	 3INIYS0U1VBk4CwDrgHnapUVvQcodXyOd2jD8OAwQZFxy+482MXG5GRteDDVrlqF1IyO7TM2Gx9M
-	 5wW4Zoftm4Hjwc0m9acbF4WC4AAMRzgTV6n4+MfpOYz7drDCzkSfkz4uDQRQwT1zAFjoGKk4wIqM
-	 /whBrPJdbCB/lE2UoVImdyWluwQ9SjVxkX0T7Lh516YUCeC1W5YgEIcuVbu7HPBJEw5Fcu7p1yiI
-	 BGT0lGSQI3sld1SaUoAKxvxvopIuoG3XaJkA5fUGY3tVNMlHXC4iCGXd4ngd7C37boB/yzjnAdGy
-	 IAP49fYhVUiIYy3oL7ZiddbcudbQljfrVBRBUxR1uWtZLk0kwzedQU8IKLLGa+FsrtzZFl5DztdY
-	 fM1DYg5R8JJWwhG4tl93T/mzGznvKoe9DlS5Iv1DzIq/iPCx5abgISegXzWxjknRIb32DEPYGR0s
-	 6VhCx/8iC/dSfAvqiQoOHzgeo0f5QoFN1cCGhM8THBuPCkdqdyPpUBBAuzPRA+nyfX+txaN8BSwW
-	 CvU2Oe8g==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-mid: xmsmtpt1725172552to04a2klp
+Message-ID: <tencent_FF4DC0AF8AD68C180D18C3FF7CFB6DA5A406@qq.com>
+X-QQ-XMAILINFO: N+BV1J6/yX+azuwTuuT70uG2D6uQchi3p50JtmYyoVcuVh6i+t8J2Xpl0pQ0Pv
+	 tA57CSyV1PE0+vRqT1OJ2ISoZnj9O056Jpq3JpkMAeE5o86cC6/l+xTpQenX3qvDsCz9JzONu2VL
+	 iKEWdnR4mUEuMdamE/tdITEQ01JUjlfAqWftsNM3Zz456E5IILm3UrxV03ugjiI4OBARRKqqKQH4
+	 ua3bJsdTZzYpIhTp3NsGLo1pS00atkfvqsdkx04h98I/AH2rA+dwlzkNmkQtYe06LJktgJju62uT
+	 lOlBn1BtnUQUrLic8bjpbg6O+jB0FX3tDoucNZxK+EDuvlarKB12BcB7Qhi2wKe8snXTERvwOPuv
+	 ISLmioJKDTmmhql8N9tqsPpWUDe/7byueIXSg4tbqK4rJIvOmvjjorT9riaTZ2bT0XTdm6YE/Moe
+	 N3zbHuJ4BiJgW97RJMDLkhQ5x/TMGpaBzCOrLNMtEQowm1T/a0pr45oMEEHeDVmeIg2hjOMfqAnw
+	 rqWWO1hg2Nzv60vLSXcJ7A78c/UbdUcNWIJzgO5Yyj9zBeGLoIaSyHLk1zt2OfWQc9zA1Ai8RYIm
+	 x4fA+E6yHybvKcviZSHzR8e+WosokzOUjuVTOwDA2MWjuc8MOFekpkFLZTfjq8Ja5wjDrwDh6SmD
+	 ynEhluBse/GcFG7ZD7KP+1MtxzgZI8MJLdjqNKFMfwR8S6a9DW9VTq31sPpqpj5SFYxRyuTjVn6j
+	 wNuybe725PNB9CGLeAdudLW1H6EmMX3naN/pQ9iRTz/WU2W33UofH1VTHUvMWa73iy1Zz5XIu6xf
+	 XXDTd853tbT31ZqbqUG7nyYJXCIzS7I83yS+gtGA2y2LMemj2j9GTBjWFhLitkQUcs9jg7wYhlJY
+	 yWxlt5xTQq6mODdGZ3BywDcsTBsj1RGklzuQTS6D81DVtocbca5KFS5AOjU6DkQUPnh88MXrvFaw
+	 sK7a/KeZrV/EXh0HY98ViHViuDc1KTxVV1IC9CKbMw33hW1WRVjtdXa8ImSyHoYVSNfx87fm0=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/2] erofsd-utils: tests: add stress test
-Date: Sun,  1 Sep 2024 14:35:48 +0800
-X-OQ-MSGID: <20240901063549.2134417-1-kyr1ewang@qq.com>
+Subject: [PATCH 2/2] erofs-utils:tests: add new test options for stress tests
+Date: Sun,  1 Sep 2024 14:35:49 +0800
+X-OQ-MSGID: <20240901063549.2134417-2-kyr1ewang@qq.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240901063549.2134417-1-kyr1ewang@qq.com>
+References: <20240901063549.2134417-1-kyr1ewang@qq.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -90,453 +92,451 @@ Reply-To: Jiawei Wang <kyr1ewang@qq.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch add stress test for erofs utils.
+This patch add some new test options (direct_io, mmap and fadvise) for
+stress test.
 
 Signed-off-by: Jiawei Wang <kyr1ewang@qq.com>
 ---
- configure.ac                  |   1 +
- tests/Makefile.am             |   2 +-
- tests/erofsstress/Makefile.am |   7 +
- tests/erofsstress/stress.c    | 684 ++++++++++++++++++++++++++++++++++
- 4 files changed, 693 insertions(+), 1 deletion(-)
- create mode 100644 tests/erofsstress/Makefile.am
- create mode 100644 tests/erofsstress/stress.c
+ tests/erofsstress/stress.c | 459 +++++++++++++++++++++++++++++++++----
+ 1 file changed, 418 insertions(+), 41 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 055b485..9145e4d 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -635,5 +635,6 @@ AC_CONFIG_FILES([Makefile
- 		 fuse/Makefile
- 		 fsck/Makefile
- 		 tests/Makefile
-+		 tests/erofsstress/Makefile
- 		 tests/src/Makefile])
- AC_OUTPUT
-diff --git a/tests/Makefile.am b/tests/Makefile.am
-index 93016e5..e9f6a6d 100644
---- a/tests/Makefile.am
-+++ b/tests/Makefile.am
-@@ -2,7 +2,7 @@
- # Makefile.am
- 
- AUTOMAKE_OPTIONS = serial-tests
--SUBDIRS = src
-+SUBDIRS = src erofsstress
- 
- TESTS =
- 
-diff --git a/tests/erofsstress/Makefile.am b/tests/erofsstress/Makefile.am
-new file mode 100644
-index 0000000..2a2c464
---- /dev/null
-+++ b/tests/erofsstress/Makefile.am
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+# Makefile.am
-+
-+AUTOMAKE_OPTIONS	= foreign
-+noinst_PROGRAMS		= stress
-+
-+stress_SOURCES = stress.c
 diff --git a/tests/erofsstress/stress.c b/tests/erofsstress/stress.c
-new file mode 100644
-index 0000000..4dfe489
---- /dev/null
+index 4dfe489..84a665c 100644
+--- a/tests/erofsstress/stress.c
 +++ b/tests/erofsstress/stress.c
-@@ -0,0 +1,684 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * stress test for EROFS filesystem
-+ * based on https://lore.kernel.org/r/20200206135631.1491-1-hsiangkao@aol.com
-+ *
-+ * Copyright (C) 2019-2022 Gao Xiang <xiang@kernel.org>
-+ */
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <sched.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdint.h>
-+#include <string.h>
-+#include <stdbool.h>
-+#include <dirent.h>
-+#include <sys/stat.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <time.h>
-+#include <unistd.h>
-+#include <fcntl.h>
-+
-+#define PAGE_SHIFT	12
-+#define PAGE_SIZE	(1 << PAGE_SHIFT)
-+#define MAX_CHUNKSIZE	(4 * 1024 * 1024)
-+#define MAX_SCAN_CHUNKSIZE	(256 * 1024)
-+
-+bool superuser;
-+unsigned int nprocs = 1, loops = 1, r_seed;
-+sig_atomic_t should_stop = 0;
-+
-+enum {
-+	GETDENTS,
-+	READLINK,
-+	RANDSCAN_ALIGNED,
-+	RANDSCAN_UNALIGNED,
-+	RANDREAD,		/* oneshot randread */
-+	DROP_FILE_CACHE_RAND,
-+	DROP_FILE_CACHE_ALL,
-+	DROP_PAGE_CACHE,
-+	DROP_SLAB_CACHE,
-+	COMPACT_MEMORY,
-+};
-+
-+const int globalop[] = {
-+	GETDENTS,
-+	GETDENTS,
-+	GETDENTS,
-+	READLINK,
-+	READLINK,
-+	READLINK,
-+	RANDSCAN_ALIGNED,
-+	RANDSCAN_UNALIGNED,
-+	RANDSCAN_UNALIGNED,
-+	RANDREAD,
-+	RANDREAD,
-+	RANDREAD,
-+	DROP_FILE_CACHE_ALL,
-+	DROP_PAGE_CACHE,
-+	DROP_SLAB_CACHE,
-+	COMPACT_MEMORY,
-+};
-+
-+#define GLOBALOPS	(sizeof(globalop) / sizeof(globalop[0]))
-+
-+int drop_caches(int mode)
-+{
-+	static const char *procfile[] = {
-+		[DROP_PAGE_CACHE] = "/proc/sys/vm/drop_caches",
-+		[DROP_SLAB_CACHE] = "/proc/sys/vm/drop_caches",
-+		[COMPACT_MEMORY] = "/proc/sys/vm/compact_memory",
-+	};
-+	static const char *val[] = {
-+		[DROP_PAGE_CACHE] = "1\n",
-+		[DROP_SLAB_CACHE] = "2\n",
-+		[COMPACT_MEMORY] = "1\n",
-+	};
-+	FILE *f;
-+	clock_t start;
-+
-+	if (!superuser)
-+		return 0;
-+	if (!procfile[mode])
-+		return -EINVAL;
-+
-+	printf("drop_caches(%u): %s=%s", getpid(), procfile[mode], val[mode]);
-+
-+	f = fopen(procfile[mode], "w");
-+	if (!f)
-+		return -errno;
-+
-+	start = clock();
-+	while (clock() < start + CLOCKS_PER_SEC) {
-+		fputs(val[mode], f);
-+		(void)sched_yield();
+@@ -17,6 +17,7 @@
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
++#include <sys/mman.h>
+ #include <time.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+@@ -27,6 +28,9 @@
+ #define MAX_SCAN_CHUNKSIZE	(256 * 1024)
+ 
+ bool superuser;
++bool direct_io = false;
++bool mmap_flag = false;
++bool fadvise_flag = false;
+ unsigned int nprocs = 1, loops = 1, r_seed;
+ sig_atomic_t should_stop = 0;
+ 
+@@ -114,6 +118,8 @@ int drop_file_cache(int fd, int mode)
+ 
+ struct fent {
+ 	char *subpath;
++	void *fd_ptr;
++	void *chkfd_ptr;
+ 	int  fd, chkfd;
+ };
+ 
+@@ -282,60 +288,276 @@ static int testdir_fd = -1, chkdir_fd = -1;
+ 
+ int tryopen(struct fent *fe)
+ {
++	int err;
++	uint64_t filesize;
++	
+ 	if (fe->fd < 0) {
+-		fe->fd = openat(testdir_fd, fe->subpath, O_RDONLY);
++		fe->fd = openat(testdir_fd, fe->subpath, direct_io ? O_RDONLY | O_DIRECT : O_RDONLY);
+ 		if (fe->fd < 0)
+ 			return -errno;
+ 
+ 		/* use force_page_cache_readahead for every read request */
+ 		posix_fadvise(fe->fd, 0, 0, POSIX_FADV_RANDOM);
++		
++		filesize = lseek64(fe->fd, 0, SEEK_END);
++		if (mmap_flag) {
++			fe->fd_ptr = mmap(NULL, filesize, PROT_READ, MAP_PRIVATE, fe->fd, 0);
++			if (fe->fd_ptr == MAP_FAILED) {
++				fprintf(stderr, "%s failed mmap\n", __func__);
++				return -errno;
++			}
++		}
+ 	}
+ 
+-	if (chkdir_fd >= 0 && fe->chkfd < 0)
+-		fe->chkfd = openat(chkdir_fd, fe->subpath, O_RDONLY);
++	if (chkdir_fd >= 0 && fe->chkfd < 0) {
++		fe->chkfd = openat(chkdir_fd, fe->subpath, direct_io ? O_RDONLY | O_DIRECT : O_RDONLY);
++		
++		if (fe->chkfd > 0) {
++			filesize = lseek64(fe->chkfd, 0, SEEK_END);
++			if (mmap_flag) {
++				fe->chkfd_ptr = mmap(NULL, filesize, PROT_READ, MAP_PRIVATE, fe->chkfd, 0);
++				if (fe->chkfd_ptr == MAP_FAILED) {
++					fprintf(stderr, "%s failed mmap\n", __func__);
++					return -errno;
++				}
++			}
++		} else
++			fe->chkfd_ptr = NULL;
 +	}
-+	fclose(f);
+ 	return 0;
+ }
+ 
+-int doscan(int fd, int chkfd, uint64_t filesize, uint64_t chunksize)
++void mismatch_output(struct  fent *ent, uint64_t pos, uint64_t chunksize)
++{
++	int fd, ret;
++	ssize_t nread, nread2;
++	char filename[20];
++	char *buf, *chkbuf;
++	
++	ret = posix_memalign(&buf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
++	if (ret) {
++		fprintf(stderr, "posix_memalign failed: %s\n", strerror(ret));
++		goto cleanup;
++	}
++	nread = pread64(ent->fd, buf, chunksize, pos);
++	if (nread <= 0) {
++		fprintf(stderr, "read file failed");
++		goto cleanup;
++	}
++	
++	ret = posix_memalign(&chkbuf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
++	if (ret) {
++		fprintf(stderr, "posix_memalign failed: %s\n", strerror(ret));
++		goto cleanup;
++	}
++	nread2 = pread64(ent->chkfd, chkbuf, chunksize, pos);
++	if (nread2 <=0) {
++		fprintf(stderr, "read file failed");
++		goto cleanup;
++	}
++	
++	sprintf(filename, "%d", getpid());
++	strcat(filename, "_mismatch");
++	fd = open(filename, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
++	if (fd == -1) {
++		fprintf(stderr, "error opening file");
++		goto cleanup;
++	}
++	
++	ret = write(fd, ent->subpath, strlen(ent->subpath));
++	if (ret == -1) {
++		fprintf(stderr, "error writing file");
++		goto cleanup;
++	}
++	write(fd, "\n", 1);
++	
++	ret = write(fd, buf, nread);
++	if (ret == -1) {
++		fprintf(stderr, "error writing file");
++		goto cleanup;
++	}
++	write(fd, "\n", 1);
++	ret = write(fd, chkbuf, nread2);
++	if (ret == -1) {
++		fprintf(stderr, "error writing file");
++		goto cleanup;
++	}
++cleanup:
++	free(buf);
++	free(chkbuf);
++}
++
++int doscan(struct fent *ent, uint64_t filesize, uint64_t chunksize)
+ {
+-	static char buf[MAX_SCAN_CHUNKSIZE], chkbuf[MAX_SCAN_CHUNKSIZE];
++	char *buf, *chkbuf;
+ 	uint64_t pos;
++	int err = 0;
+ 
+ 	printf("doscan(%u): filesize: %llu, chunksize: %llu\n",
+ 	       getpid(), (unsigned long long)filesize,
+ 	       (unsigned long long)chunksize);
+-
++	
++	err = posix_memalign(&buf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
++	if (err) {
++		fprintf(stderr, "posix_memalign failed: %s\n", strerror(err));
++		goto cleanup;
++	}
++	
++	err = posix_memalign(&chkbuf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
++	if (err) {
++		fprintf(stderr, "posix_memalign failed: %s\n", strerror(err));
++		goto cleanup;
++	}
++	
+ 	for (pos = 0; pos < filesize; pos += chunksize) {
+ 		ssize_t nread, nread2;
++		
++		nread = pread64(ent->fd, buf, chunksize, pos);
++		if (nread <= 0) {
++			err = -errno;
++			goto cleanup;
++		}
+ 
+-		nread = pread64(fd, buf, chunksize, pos);
+-
+-		if (nread <= 0)
+-			return -errno;
+-
+-		if (nread < chunksize && nread != filesize - pos)
+-			return -ERANGE;
++		if (nread < chunksize && nread != filesize - pos) {
++			err = -ERANGE;
++			goto cleanup;
++		}
+ 
+-		if (chkfd < 0)
++		if (ent->chkfd < 0)
+ 			continue;
+ 
+-		nread2 = pread64(chkfd, chkbuf, chunksize, pos);
+-		if (nread2 <= 0)
+-			return -errno;
++		nread2 = pread64(ent->chkfd, chkbuf, chunksize, pos);
++		if (nread2 <= 0) {
++			err = -errno;
++			goto cleanup;
++		}
+ 
+-		if (nread != nread2)
+-			return -EFBIG;
++		if (nread != nread2) {
++			err = -EFBIG;
++			goto cleanup;
++		}
+ 
+ 		if (memcmp(buf, chkbuf, nread)) {
+ 			fprintf(stderr, "doscan: %llu bytes mismatch @ %llu\n",
+ 				(unsigned long long)chunksize,
+ 				(unsigned long long)pos);
++			mismatch_output(ent, pos, chunksize);
++			err = -EBADMSG;
++			goto cleanup;
++		}
++	}
++	
++cleanup:
++	free(buf);
++	free(chkbuf);
++	return err;
++}
++
++int doscan_mmap(struct fent *ent, uint64_t filesize, uint64_t chunksize)
++{
++	uint64_t pos, nread;
++
++	printf("doscan_mmap(%u): filesize: %llu, chunksize: %llu\n",
++	       getpid(), (unsigned long long)filesize,
++	       (unsigned long long)chunksize);
++	       
++	if (ent->chkfd >= 0 && lseek(ent->chkfd, 0, SEEK_END) != filesize)
++		return -EFBIG;
++	
++	for (pos = 0; pos < filesize; pos += chunksize) {
++		
++		if (pos + chunksize < filesize)
++			nread = chunksize;
++		else
++			nread = filesize - pos;
++		
++		if (ent->chkfd < 0)
++			continue;
++			
++		if (memcmp(ent->fd_ptr + pos, ent->chkfd_ptr + pos, nread)) {
++			fprintf(stderr, "doscan_mmap: %llu bytes mismatch @ %llu\n",
++				(unsigned long long)chunksize,
++				(unsigned long long)pos);
++			mismatch_output(ent, pos, chunksize);
+ 			return -EBADMSG;
+ 		}
+ 	}
+ 	return 0;
+ }
+ 
++int doscan_fadvise(struct fent *ent, uint64_t filesize, uint64_t chunksize)
++{
++	int err;
++	uint64_t pos, nread;
++
++	printf("doscan_fadvise(%u): filesize: %llu, chunksize: %llu\n",
++	       getpid(), (unsigned long long)filesize,
++	       (unsigned long long)chunksize);
++	       
++	if (ent->chkfd >= 0 && lseek(ent->chkfd, 0, SEEK_END) != filesize)
++		return -EFBIG;
++	
++	for (pos = 0; pos < filesize; pos += chunksize) {
++		
++		if (pos + chunksize < filesize)
++			nread = chunksize;
++		else
++			nread = filesize - pos;
++		
++		err = posix_fadvise(ent->fd, pos, nread, POSIX_FADV_WILLNEED);
++		if (err) {
++			perror("posix_fadvise");
++			return -errno;;
++		}
++		
++		if (ent->chkfd < 0)
++			continue;
++			
++		err = posix_fadvise(ent->chkfd, pos, nread, POSIX_FADV_WILLNEED);
++		if (err) {
++			perror("posix_fadvise");
++			return -errno;
++		}
++	}
 +	return 0;
 +}
 +
-+int drop_file_cache(int fd, int mode)
++int doscan_random(struct fent *ent, uint64_t filesize, uint64_t chunksize)
 +{
-+	clock_t start;
-+
-+	printf("drop_file_cache(%u)\n", getpid());
-+	start = clock();
-+	while (clock() < start + CLOCKS_PER_SEC / 2) {
-+		posix_fadvise(fd, 0, 0, POSIX_FADV_DONTNEED);
-+		(void)sched_yield();
-+	}
-+	return 0;
-+}
-+
-+struct fent {
-+	char *subpath;
-+	int  fd, chkfd;
-+};
-+
-+#define FT_DIR	0
-+#define FT_DIRm	(1 << FT_DIR)
-+#define FT_REG	1
-+#define FT_REGm	(1 << FT_REG)
-+#define FT_SYM	2
-+#define FT_SYMm	(1 << FT_SYM)
-+#define FT_DEV	3
-+#define FT_DEVm	(1 << FT_DEV)
-+#define FT_nft	4
-+#define FT_ANYm	((1 << FT_nft) - 1)
-+
-+#define	FLIST_SLOT_INCR	16
-+
-+struct flist {
-+	int nfiles, nslots;
-+	struct fent *fents;
-+} flists[FT_nft];
-+
-+struct fent *add_to_flist(int type, char *subpath)
-+{
-+	struct fent *fep;
-+	struct flist *ftp;
-+
-+	ftp = &flists[type];
-+	if (ftp->nfiles >= ftp->nslots) {
-+		ftp->nslots += FLIST_SLOT_INCR;
-+		ftp->fents = realloc(ftp->fents,
-+				     ftp->nslots * sizeof(struct fent));
-+		if (!ftp->fents)
-+			return NULL;
-+	}
-+	fep = &ftp->fents[ftp->nfiles++];
-+	fep->subpath = strdup(subpath);
-+	fep->fd = -1;
-+	fep->chkfd = -1;
-+	return fep;
-+}
-+
-+static inline bool is_dot_dotdot(const char *name)
-+{
-+	if (name[0] != '.')
-+		return false;
-+
-+	return name[1] == '\0' || (name[1] == '.' && name[2] == '\0');
-+}
-+
-+int walkdir(struct fent *ent)
-+{
-+	const char *dirpath = ent->subpath;
-+	int ret = 0;
-+	struct dirent *dp;
-+	DIR *_dir;
-+
-+	_dir = opendir(dirpath);
-+	if (!_dir) {
-+		fprintf(stderr, "failed to opendir at %s: %d",
-+			dirpath, strerror(errno));
-+		return -errno;
-+	}
-+
-+	while (1) {
-+		char subpath[PATH_MAX];
-+		struct stat st;
-+
-+		/*
-+		 * set errno to 0 before calling readdir() in order to
-+		 * distinguish end of stream and from an error.
-+		 */
-+		errno = 0;
-+		dp = readdir(_dir);
-+		if (!dp)
++	bool flag = false;
++	int err;
++	int randnum;
++	
++	srand(time(NULL));
++	while(true) {
++		if (flag)
 +			break;
-+
-+		if (is_dot_dotdot(dp->d_name))
-+			continue;
-+
-+		sprintf(subpath, "%s/%s", dirpath, dp->d_name);
-+
-+		if (lstat(subpath, &st))
-+			continue;
-+
-+		switch (st.st_mode & S_IFMT) {
-+		case S_IFDIR:
-+			ent = add_to_flist(FT_DIR, subpath);
-+			if (ent == NULL) {
-+				ret = -ENOMEM;
-+				goto err_closedir;
-+			}
-+			ret = walkdir(ent);
-+			if (ret)
-+				goto err_closedir;
++		
++		randnum = rand() % 3 + 1;
++		switch(randnum) {
++		case 1:
++			flag = true;
++			err = doscan(ent, filesize, chunksize);
 +			break;
-+		case S_IFREG:
-+			ent = add_to_flist(FT_REG, subpath);
-+			if (ent == NULL) {
-+				ret = -ENOMEM;
-+				goto err_closedir;
++		case 2:
++			if (mmap_flag) {
++				flag = true;
++				err = doscan_mmap(ent, filesize, chunksize);
 +			}
 +			break;
-+		case S_IFLNK:
-+			ent = add_to_flist(FT_SYM, subpath);
-+			if (ent == NULL) {
-+				ret = -ENOMEM;
-+				goto err_closedir;
++		case 3:
++			if (fadvise_flag) {
++				flag = true;
++				err = doscan_fadvise(ent, filesize, chunksize);
 +			}
 +			break;
 +		default:
 +			break;
 +		}
 +	}
-+	if (errno)
-+		ret = -errno;
-+err_closedir:
-+	closedir(_dir);
-+	return ret;
++	return err;
 +}
 +
-+int init_filetable(int testdir_fd)
-+{
-+	struct fent *fent;
-+
-+	fent = add_to_flist(FT_DIR, ".");
-+	if (!fent)
-+		return -ENOMEM;
-+	fchdir(testdir_fd);
-+	return walkdir(fent);
-+}
-+
-+struct fent *getfent(int which, int r)
-+{
-+	int		totalsum = 0; /* total number of matching files */
-+	int		partialsum = 0; /* partial sum of matching files */
-+	struct flist	*flp;
-+	int		i, x;
-+
-+	totalsum = 0;
-+	for (i = 0, flp = flists; i < FT_nft; ++i, ++flp)
-+		if (which & (1 << i))
-+			totalsum += flp->nfiles;
-+
-+	if (!totalsum)
-+		return NULL;
-+
-+	/*
-+	 * Now we have possible matches between 0..totalsum-1.
-+	 * And we use r to help us choose which one we want,
-+	 * which when bounded by totalsum becomes x.
-+	 */
-+	x = (int)(r % totalsum);
-+
-+	for (i = 0, flp = flists; i < FT_nft; i++, flp++) {
-+		if (which & (1 << i)) {
-+			if (x < partialsum + flp->nfiles)
-+				return &flp->fents[x - partialsum];
-+			partialsum += flp->nfiles;
-+		}
+ int getdents_f(struct fent *fe)
+ {
+ 	int dfd;
+@@ -379,17 +601,30 @@ int readlink_f(struct fent *fe)
+ 	return 0;
+ }
+ 
+-int read_f(int fd, int chkfd, uint64_t filesize)
++int read_f(struct fent *ent, uint64_t filesize)
+ {
+-	static char buf[MAX_CHUNKSIZE], chkbuf[MAX_CHUNKSIZE];
++	char *buf, *chkbuf;
+ 	uint64_t lr, off, len, trimmed;
+ 	size_t nread, nread2;
++	int err = 0;
+ 
+ 	lr = ((uint64_t) random() << 32) + random();
+ 	off = lr % filesize;
+ 	len = (random() % MAX_CHUNKSIZE) + 1;
+ 	trimmed = len;
+-
++	
++	err = posix_memalign(&buf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
++	if (err) {
++		fprintf(stderr, "posix_memalign failed: %s\n", strerror(err));
++		goto cleanup;
 +	}
-+	fprintf(stderr, "%s failure\n", __func__);
-+	return NULL;
-+}
-+
-+static int testdir_fd = -1, chkdir_fd = -1;
-+
-+int tryopen(struct fent *fe)
-+{
-+	if (fe->fd < 0) {
-+		fe->fd = openat(testdir_fd, fe->subpath, O_RDONLY);
-+		if (fe->fd < 0)
-+			return -errno;
-+
-+		/* use force_page_cache_readahead for every read request */
-+		posix_fadvise(fe->fd, 0, 0, POSIX_FADV_RANDOM);
++	
++	err = posix_memalign(&chkbuf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
++	if (err) {
++		fprintf(stderr, "posix_memalign failed: %s\n", strerror(err));
++		goto cleanup;
 +	}
-+
-+	if (chkdir_fd >= 0 && fe->chkfd < 0)
-+		fe->chkfd = openat(chkdir_fd, fe->subpath, O_RDONLY);
-+	return 0;
-+}
-+
-+int doscan(int fd, int chkfd, uint64_t filesize, uint64_t chunksize)
-+{
-+	static char buf[MAX_SCAN_CHUNKSIZE], chkbuf[MAX_SCAN_CHUNKSIZE];
-+	uint64_t pos;
-+
-+	printf("doscan(%u): filesize: %llu, chunksize: %llu\n",
-+	       getpid(), (unsigned long long)filesize,
-+	       (unsigned long long)chunksize);
-+
-+	for (pos = 0; pos < filesize; pos += chunksize) {
-+		ssize_t nread, nread2;
-+
-+		nread = pread64(fd, buf, chunksize, pos);
-+
-+		if (nread <= 0)
-+			return -errno;
-+
-+		if (nread < chunksize && nread != filesize - pos)
-+			return -ERANGE;
-+
-+		if (chkfd < 0)
-+			continue;
-+
-+		nread2 = pread64(chkfd, chkbuf, chunksize, pos);
-+		if (nread2 <= 0)
-+			return -errno;
-+
-+		if (nread != nread2)
-+			return -EFBIG;
-+
-+		if (memcmp(buf, chkbuf, nread)) {
-+			fprintf(stderr, "doscan: %llu bytes mismatch @ %llu\n",
-+				(unsigned long long)chunksize,
-+				(unsigned long long)pos);
-+			return -EBADMSG;
-+		}
++	
+ 	if (off + len > filesize) {
+ 		uint64_t a = filesize - off + 16 * getpagesize();
+ 
+@@ -397,44 +632,175 @@ int read_f(int fd, int chkfd, uint64_t filesize)
+ 			len %= a;
+ 		trimmed = len <= filesize - off ? len : filesize - off;
+ 	}
+-
++	
++	if (direct_io) {
++		off = (((off - 1) >> PAGE_SHIFT) + 1)
++			<< PAGE_SHIFT;
++		trimmed = len = (((len - 1) >> PAGE_SHIFT) + 1)
++			<< PAGE_SHIFT;
++		if (!len || off + len > filesize)
++			goto cleanup;
 +	}
-+	return 0;
-+}
-+
-+int getdents_f(struct fent *fe)
-+{
-+	int dfd;
-+	DIR *dir;
-+
-+	printf("getdents_f(%u): @ %s\n", getpid(), fe->subpath);
-+	dfd = openat(testdir_fd, fe->subpath, O_DIRECTORY);
-+	if (dfd < 0)
-+		return -errno;
-+	dir = fdopendir(dfd);
-+
-+	while (readdir64(dir) != NULL)
-+		continue;
-+	closedir(dir);
-+	return 0;
-+}
-+
-+int readlink_f(struct fent *fe)
-+{
-+	char buf1[PATH_MAX], buf2[PATH_MAX];
-+	ssize_t sz;
-+
-+	printf("readlink_f(%u): @ %s\n", getpid(), fe->subpath);
-+	sz = readlinkat(testdir_fd, fe->subpath, buf1, PATH_MAX - 1);
-+	if (sz < 0)
-+		return -errno;
-+
-+	if (chkdir_fd >= 0) {
-+		if (sz != readlinkat(testdir_fd, fe->subpath, buf2,
-+				     PATH_MAX - 1)) {
-+			fprintf(stderr, "doscan: symlink length mismatch @%s\n",
-+				fe->subpath);
-+			return -E2BIG;
-+		}
-+		if (memcmp(buf1, buf2, sz)) {
-+			fprintf(stderr, "doscan: symlink mismatch @%s\n",
-+				fe->subpath);
-+			return -EBADMSG;
-+		}
++	
+ 	printf("read_f(%u): %llu bytes @ %llu\n", getpid(),
+-	       len | 0ULL, off | 0ULL);
++	       len | 0ULL, off | 0ULL);	
+ 
+-	nread = pread64(fd, buf, len, off);
++	nread = pread64(ent->fd, buf, len, off);
+ 	if (nread != trimmed) {
+ 		fprintf(stderr, "read_f(%d, %u): failed to read %llu bytes @ %llu\n",
+ 			__LINE__, getpid(), len | 0ULL, off | 0ULL);
+-		return -errno;
++		err = -errno;
++		goto cleanup;
+ 	}
+ 
+-	if (chkfd < 0)
+-		return 0;
++	if (ent->chkfd < 0)
++		goto cleanup;
+ 
+-	nread2 = pread64(chkfd, chkbuf, len, off);
++	nread2 = pread64(ent->chkfd, chkbuf, len, off);
+ 	if (nread2 <= 0) {
+ 		fprintf(stderr, "read_f(%d, %u): failed to read %llu bytes @ %llu\n",
+ 			__LINE__, getpid(), len | 0ULL, off | 0ULL);
+-		return -errno;
++		err = -errno;
++		goto cleanup;
+ 	}
+ 
+ 	if (nread != nread2) {
+ 		fprintf(stderr, "read_f(%d, %u): size mismatch %llu bytes @ %llu\n",
+ 			__LINE__, getpid(), len | 0ULL, off | 0ULL);
+-		return -EFBIG;
++		mismatch_output(ent, off, len);
++		err = -EFBIG;
++		goto cleanup;
+ 	}
+ 
+ 	if (memcmp(buf, chkbuf, nread)) {
+ 		fprintf(stderr, "read_f(%d, %u): data mismatch %llu bytes @ %llu\n",
+ 			__LINE__, getpid(), len | 0ULL, off | 0ULL);
++		mismatch_output(ent, off, len);
++		err = -EBADMSG;
++		goto cleanup;
 +	}
-+	return 0;
++	
++cleanup:
++	free(buf);
++	free(chkbuf);
++	return err;
 +}
 +
-+int read_f(int fd, int chkfd, uint64_t filesize)
++int read_f_mmap(struct fent *ent, uint64_t filesize)
 +{
-+	static char buf[MAX_CHUNKSIZE], chkbuf[MAX_CHUNKSIZE];
 +	uint64_t lr, off, len, trimmed;
-+	size_t nread, nread2;
-+
++	
 +	lr = ((uint64_t) random() << 32) + random();
 +	off = lr % filesize;
 +	len = (random() % MAX_CHUNKSIZE) + 1;
 +	trimmed = len;
-+
++	
 +	if (off + len > filesize) {
 +		uint64_t a = filesize - off + 16 * getpagesize();
 +
@@ -544,291 +544,185 @@ index 0000000..4dfe489
 +			len %= a;
 +		trimmed = len <= filesize - off ? len : filesize - off;
 +	}
-+
-+	printf("read_f(%u): %llu bytes @ %llu\n", getpid(),
++	
++	printf("read_f_mmap(%u): %llu bytes @ %llu\n", getpid(),
 +	       len | 0ULL, off | 0ULL);
-+
-+	nread = pread64(fd, buf, len, off);
-+	if (nread != trimmed) {
-+		fprintf(stderr, "read_f(%d, %u): failed to read %llu bytes @ %llu\n",
-+			__LINE__, getpid(), len | 0ULL, off | 0ULL);
-+		return -errno;
-+	}
-+
-+	if (chkfd < 0)
-+		return 0;
-+
-+	nread2 = pread64(chkfd, chkbuf, len, off);
-+	if (nread2 <= 0) {
-+		fprintf(stderr, "read_f(%d, %u): failed to read %llu bytes @ %llu\n",
-+			__LINE__, getpid(), len | 0ULL, off | 0ULL);
-+		return -errno;
-+	}
-+
-+	if (nread != nread2) {
-+		fprintf(stderr, "read_f(%d, %u): size mismatch %llu bytes @ %llu\n",
-+			__LINE__, getpid(), len | 0ULL, off | 0ULL);
++	
++	if (ent->chkfd >= 0 && lseek(ent->chkfd, 0, SEEK_END) != filesize)
 +		return -EFBIG;
-+	}
-+
-+	if (memcmp(buf, chkbuf, nread)) {
-+		fprintf(stderr, "read_f(%d, %u): data mismatch %llu bytes @ %llu\n",
++	
++	if (ent->chkfd < 0)
++		return 0;
++		
++	if (memcmp(ent->fd_ptr + off, ent->chkfd_ptr + off, trimmed)) {
++		fprintf(stderr, "read_f_mmap(%d, %u): data mismatch %llu bytes @ %llu\n",
 +			__LINE__, getpid(), len | 0ULL, off | 0ULL);
-+		return -EBADMSG;
-+	}
-+	return 0;
-+}
-+
-+int testfd(int fd, int chkfd, int mode)
-+{
-+	const off64_t filesize = lseek64(fd, 0, SEEK_END);
-+	uint64_t chunksize, maxchunksize;
++		mismatch_output(ent, off, len);
+ 		return -EBADMSG;
+ 	}
+ 	return 0;
+ }
+ 
+-int testfd(int fd, int chkfd, int mode)
++int read_f_fadvise(struct fent *ent, uint64_t filesize)
+ {
+-	const off64_t filesize = lseek64(fd, 0, SEEK_END);
 +	int err;
++	uint64_t lr, off, len, trimmed;
++	
++	lr = ((uint64_t) random() << 32) + random();
++	off = lr % filesize;
++	len = (random() % MAX_CHUNKSIZE) + 1;
++	trimmed = len;
++	
++	if (off + len > filesize) {
++		uint64_t a = filesize - off + 16 * getpagesize();
 +
-+	if (!filesize)
++		if (len > a)
++			len %= a;
++		trimmed = len <= filesize - off ? len : filesize - off;
++	}
++	
++	printf("read_f_fadvise(%u): %llu bytes @ %llu\n", getpid(),
++	       len | 0ULL, off | 0ULL);
++	
++	err = posix_fadvise(ent->fd, off, trimmed, POSIX_FADV_WILLNEED);
++	if (err) {
++		perror("posix_fadvise");
++		return -errno;
++	}
++	
++	if (ent->chkfd >= 0 && lseek(ent->chkfd, 0, SEEK_END) != filesize)
++		return -EFBIG;
++	
++	if (ent->chkfd < 0)
 +		return 0;
-+
-+	if (mode == RANDSCAN_ALIGNED && filesize > PAGE_SIZE) {
-+		maxchunksize = (filesize - PAGE_SIZE > MAX_SCAN_CHUNKSIZE ?
-+				MAX_SCAN_CHUNKSIZE : filesize - PAGE_SIZE);
-+
-+		chunksize = random() * random() % maxchunksize;
-+		chunksize = (((chunksize - 1) >> PAGE_SHIFT) + 1)
-+			<< PAGE_SHIFT;
-+		if (!chunksize)
-+			chunksize = PAGE_SIZE;
-+		err = doscan(fd, chkfd, filesize, chunksize);
-+		if (err)
-+			return err;
-+	} else if (mode == RANDSCAN_UNALIGNED) {
-+		chunksize = (random() * random() % MAX_SCAN_CHUNKSIZE) + 1;
-+		err = doscan(fd, chkfd, filesize, chunksize);
-+		if (err)
-+			return err;
-+	} else if (mode == RANDREAD) {
-+		err = read_f(fd, chkfd, filesize);
-+		if (err)
-+			return err;
++		
++	err = posix_fadvise(ent->chkfd, off, trimmed, POSIX_FADV_WILLNEED);
++	if (err) {
++		perror("posix_fadvise");
++		return -errno;
 +	}
 +	return 0;
 +}
 +
-+int doproc(int mode)
++int read_f_random(struct fent * ent, uint64_t filesize)
 +{
-+	struct fent *fe;
-+	int ret;
-+
-+	if (mode <= GETDENTS) {
-+		fe = getfent(FT_DIRm, random());
-+		if (!fe)
-+			return 0;
-+
-+		if (mode == GETDENTS)
-+			return getdents_f(fe);
-+	} else if (mode <= READLINK) {
-+		fe = getfent(FT_SYMm, random());
-+		if (!fe)
-+			return 0;
-+
-+		if (mode == READLINK)
-+			return readlink_f(fe);
-+	}
-+	fe = getfent(FT_REGm, random());
-+	if (!fe)
-+		return 0;
-+	ret = tryopen(fe);
-+	if (ret)
-+		return ret;
-+	return testfd(fe->fd, fe->chkfd, mode);
-+}
-+
-+void randomdelay(void)
-+{
-+	uint64_t lr = ((uint64_t) random() << 32) + random();
-+	clock_t start;
-+	clock_t length = (lr % CLOCKS_PER_SEC) >> 1;
-+
-+	start = clock();
-+	while (clock() < start + length)
-+		(void)sched_yield();
-+}
-+
-+void sg_handler(int signum)
-+{
-+	switch (signum) {
-+	case SIGTERM:
-+		should_stop = 1;
-+		break;
-+	default:
-+		break;
-+	}
-+}
-+
-+static int parse_options(int argc, char *argv[])
-+{
-+	char *testdir, *chkdir;
-+	int opt;
-+
-+	while ((opt = getopt(argc, argv, "l:p:s:")) != -1) {
-+		switch (opt) {
-+		case 'l':
-+			loops = atoi(optarg);
-+			if (loops < 0) {
-+				fprintf(stderr, "invalid loops %d\n", loops);
-+				return -EINVAL;
++	bool flag = false;
++	int err;
++	int randnum;
++	
++	srand(time(NULL));
++	while(true) {
++		if (flag)
++			break;
++		
++		randnum = rand() % 3 + 1;
++		switch(randnum) {
++		case 1:
++			flag = true;
++			err = read_f(ent, filesize);
++			break;
++		case 2:
++			if (mmap_flag) {
++				flag = true;
++				err = read_f_mmap(ent, filesize);
 +			}
 +			break;
-+		case 'p':
-+			nprocs = atoi(optarg);
-+			if (nprocs < 0) {
-+				fprintf(stderr, "invalid workers %d\n",
-+					nprocs);
-+				return -EINVAL;
++		case 3:
++			if (fadvise_flag) {
++				flag = true;
++				err = read_f_fadvise(ent, filesize);
 +			}
 +			break;
-+		case 's':
-+			r_seed = atoi(optarg);
-+			if (r_seed < 0) {
-+				fprintf(stderr, "invalid random seed %d\n",
-+					r_seed);
-+				return -EINVAL;
-+			}
-+			break;
-+		default: /* '?' */
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (optind >= argc)
-+		return -EINVAL;
-+
-+	testdir = argv[optind++];
-+	if (testdir) {
-+		testdir_fd = open(testdir, O_PATH);
-+		if (testdir_fd < 0) {
-+			fprintf(stderr, "cannot open testdir fd @ %s: %s\n",
-+				testdir, strerror(errno));
-+			return 1;
-+		}
-+	}
-+
-+	if (argc > optind) {
-+		chkdir = argv[optind++];
-+
-+		chkdir_fd = open(chkdir, O_PATH);
-+		if (chkdir_fd < 0) {
-+			fprintf(stderr, "cannot open checkdir fd @ %s: %s\n",
-+				chkdir, strerror(errno));
-+			return 1;
-+		}
-+	}
-+	return 0;
-+}
-+
-+void usage(void)
-+{
-+	fputs("usage: [options] TESTDIR [COMPRDIR]\n\n"
-+	      "stress test for EROFS filesystem\n"
-+	      " -l#     specifies the no. of times the testrun should loop.\n"
-+	      "         *use 0 for infinite (default 1)\n"
-+	      " -p#     specifies the no. of processes (default 1)\n"
-+	      " -s#     specifies the seed for the random generator (default random)\n",
-+	      stderr);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	unsigned int i;
-+	int err, stat;
-+	int fd, chkfd;
-+	struct sigaction action;
-+
-+	err = parse_options(argc, argv);
-+	if (err) {
-+		if (err == -EINVAL)
-+			usage();
-+		return 1;
-+	}
-+
-+	err = init_filetable(testdir_fd);
-+	if (err) {
-+		fprintf(stderr, "cannot initialize file table: %s\n",
-+			strerror(errno));
-+		return 1;
-+	}
-+
-+	superuser = (geteuid() == 0);
-+	setpgid(0, 0);
-+	action.sa_handler = sg_handler;
-+	action.sa_flags = 0;
-+
-+	if (sigaction(SIGTERM, &action, 0)) {
-+		perror("sigaction failed");
-+		exit(1);
-+	}
-+
-+	/* spawn nprocs processes */
-+	for (i = 0; i < nprocs; ++i) {
-+		if (fork() == 0) {
-+			bool infinite_loop = !loops;
-+
-+			sigemptyset(&action.sa_mask);
-+			if (sigaction(SIGTERM, &action, 0)) {
-+				perror("sigaction failed");
-+				exit(1);
-+			}
-+
-+			srandom((r_seed ? :
-+				 (time(NULL) ? : 1) * getpid()) * (i + 1));
-+
-+			while (!should_stop && (infinite_loop || loops)) {
-+				int op = globalop[random() % GLOBALOPS];
-+
-+				if (op == DROP_FILE_CACHE_RAND ||
-+				    op == DROP_FILE_CACHE_ALL) {
-+					err = drop_file_cache(fd, op);
-+				} else if (op <= RANDREAD) {
-+					randomdelay();
-+					err = doproc(op);
-+				} else {
-+					err = drop_caches(op);
-+				}
-+
-+				if (err) {
-+					fprintf(stderr, "test failed (%u): %s\n",
-+						getpid(), strerror(-err));
-+					exit(1);
-+				}
-+				--loops;
-+			}
-+			return 0;
-+		}
-+	}
-+
-+	err = 0;
-+	while (wait(&stat) > 0 && !should_stop) {
-+		if (!WIFEXITED(stat)) {
-+			err = 1;
-+			break;
-+		}
-+
-+		if (WEXITSTATUS(stat)) {
-+			err = WEXITSTATUS(stat);
++		default:
 +			break;
 +		}
 +	}
-+	action.sa_flags = SA_RESTART;
-+	sigaction(SIGTERM, &action, 0);
-+	kill(-getpid(), SIGTERM);
-+	/* wait until all children exit */
-+	while (wait(&stat) > 0)
-+		continue;
-+
-+	if (chkfd >= 0)
-+		close(chkfd);
-+	close(fd);
 +	return err;
 +}
++
++int testfd(struct fent *ent, int mode)
++{
++	const off64_t filesize = lseek64(ent->fd, 0, SEEK_END);
+ 	uint64_t chunksize, maxchunksize;
+ 	int err;
+ 
+@@ -450,16 +816,16 @@ int testfd(int fd, int chkfd, int mode)
+ 			<< PAGE_SHIFT;
+ 		if (!chunksize)
+ 			chunksize = PAGE_SIZE;
+-		err = doscan(fd, chkfd, filesize, chunksize);
++		err = doscan_random(ent, filesize, chunksize);
+ 		if (err)
+ 			return err;
+-	} else if (mode == RANDSCAN_UNALIGNED) {
++	} else if (mode == RANDSCAN_UNALIGNED && !direct_io) {
+ 		chunksize = (random() * random() % MAX_SCAN_CHUNKSIZE) + 1;
+-		err = doscan(fd, chkfd, filesize, chunksize);
++		err = doscan_random(ent, filesize, chunksize);
+ 		if (err)
+ 			return err;
+ 	} else if (mode == RANDREAD) {
+-		err = read_f(fd, chkfd, filesize);
++		err = read_f_random(ent, filesize);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -470,7 +836,6 @@ int doproc(int mode)
+ {
+ 	struct fent *fe;
+ 	int ret;
+-
+ 	if (mode <= GETDENTS) {
+ 		fe = getfent(FT_DIRm, random());
+ 		if (!fe)
+@@ -492,7 +857,7 @@ int doproc(int mode)
+ 	ret = tryopen(fe);
+ 	if (ret)
+ 		return ret;
+-	return testfd(fe->fd, fe->chkfd, mode);
++	return testfd(fe, mode);
+ }
+ 
+ void randomdelay(void)
+@@ -522,7 +887,7 @@ static int parse_options(int argc, char *argv[])
+ 	char *testdir, *chkdir;
+ 	int opt;
+ 
+-	while ((opt = getopt(argc, argv, "l:p:s:")) != -1) {
++	while ((opt = getopt(argc, argv, "l:p:s:dmf")) != -1) {
+ 		switch (opt) {
+ 		case 'l':
+ 			loops = atoi(optarg);
+@@ -547,6 +912,15 @@ static int parse_options(int argc, char *argv[])
+ 				return -EINVAL;
+ 			}
+ 			break;
++		case 'd':
++			direct_io = true;
++			break;
++		case 'm':
++			mmap_flag = true;
++			break;
++		case 'f':
++			fadvise_flag = true;
++			break;
+ 		default: /* '?' */
+ 			return -EINVAL;
+ 		}
+@@ -585,7 +959,10 @@ void usage(void)
+ 	      " -l#     specifies the no. of times the testrun should loop.\n"
+ 	      "         *use 0 for infinite (default 1)\n"
+ 	      " -p#     specifies the no. of processes (default 1)\n"
+-	      " -s#     specifies the seed for the random generator (default random)\n",
++	      " -s#     specifies the seed for the random generator (default random)\n"
++	      " -d      using direct_io to start stress test\n"
++	      " -m      using mmap to start stress test\n"
++	      " -f      using fadvise to start stress test\n",
+ 	      stderr);
+ }
+ 
 -- 
 2.34.1
 
