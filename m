@@ -2,71 +2,77 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9C2996706B
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2024 11:01:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8951C96743F
+	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2024 04:58:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1725159525;
+	bh=sEYQaVWhtcXYrNgMjfPkzqecGeZhydezmlfqmaFonPw=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:From;
+	b=TaWEIzAeYq5/2gdVrJcaYgHWqJNWEST1Q2Gg87JuMCeAwptEKYjJb7NN9bdgjCc8D
+	 CmSOcOWWk/+7O0pbMwM667UZYN0e3Yrq9nk7uBv6iT60sMqTGL8dDrLgifDk2W85jg
+	 EshEC/kbgXMxf4PMi/VAXvvyvlsyXXZROIsRVnfJpapdLsWrzQ+kg2BCXH3tZOyvFI
+	 jnqLbNdF+0XSg3MlHytK1J7Ug6WWk1Sc4Wd7U22ZdRr0NphUvk4tDJWbhuPSPsFfmZ
+	 lcZ9nJjGTUrLgHDP4BL3cGLfcb5bJWUx7pEqy//Lf42FVAEYktsrdtOZlA+ZDrseCh
+	 qrmEMkw/n6exw==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WwpsH1nBgz2yPM
-	for <lists+linux-erofs@lfdr.de>; Sat, 31 Aug 2024 19:01:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WxGmj5M6Pz2yjV
+	for <lists+linux-erofs@lfdr.de>; Sun,  1 Sep 2024 12:58:45 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.15
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725094861;
-	cv=none; b=iNguttJmCiGko75nX6I5MaA2DwQgg3UAaCP3OgwfSPWSdFUUMhGxvUD9CZT2px7Qk7lBtP1KOrurTstWmYfjTXMzoYvvm4yEZ+H2Pk+5OsxCIYES81+19smXM/uHR8iUwEJ5RzUmtzGEmYVmwGs9IGn6t/+8JduMjCKNiRUTeQZlhq5DEp2FJlziKc63Pwfg6k4mZbzJEusmnP4k22CuR19ow7oxtvXZJpzxsy4GVHNK9MY2E3FPfV5OTD7PI9nW/haI9m2XeD/rRL9+vQ4zbl4tGiV9Hl5ORpoU3FHp8es9sUmC9jtwmXBtk0U58mGH6zwFrp6DwH41duz3/P5i6A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.233
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725159520;
+	cv=none; b=KucnEFsidWrqdSpsZsv7v1lFHQy7IEGdTTwpTI2pw8kIEvpBRANCqqJB9PdbmJI8T8vAsNGC2ivXpLaghe3XnzSZRk6WIF+ZVV2zv2NA2X4LE0+jMm4/cnhQcQByxGL1iKhjsbnUm7HLh8xThFsI1Fi9qY6dkN7TMifsdmiwtH+BVqVbN29TWER53KTLFP3zLZYcceOVy3DiT3eWlDmjFe3Knc88pUywSUmX09yNsgMEyPslBLeCkw1HrkUlbv48SM5wHdBVf1V4pyeciHZp/81bL+aGdMRyvhJV1cLMAz5d7iNf+wah//DQHjn+qzAUpIVZQtcV4OS3Stlyx0Swpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725094861; c=relaxed/relaxed;
-	bh=q8P38ZqttW5JIH6SVtK/s9KdyV8Mqn0fLcpasOnitUM=;
-	h=DKIM-Signature:X-CSE-ConnectionGUID:X-CSE-MsgGUID:X-IronPort-AV:
-	 X-IronPort-AV:Received:X-CSE-ConnectionGUID:X-CSE-MsgGUID:
-	 X-ExtLoop1:X-IronPort-AV:Received:Received:Date:From:To:Cc:Subject:
-	 Message-ID:User-Agent; b=NtTdCWxULDA/Wwe8sxU2qsbALYlltCLkxSon1+TYy8HN4u2zg0B9TQdetk1dYyd1SvNTwGPdLWJIawaRH/wpoemPQepRcNb7hSh5Gr+a7q1KpnymH6m1jjcjs9Sue6WVlpYA+2wEzwfkI8pIzdpLu3fCP46PmbGdb2fK4P/zfo0Q9flu07EohNC0MB7bUwceHKrsQ3fnCzrUAkTCQ/4BKzMWdQUs6jPkVMnaStR3fIj3f8VYoGlPj10WhSevqmMC6psuhlN2d1u7TgHp8MVxn5m/PPa//UsYyhOfeYdAQwLAS+PehbWnPkVOMOWlF2RteiOCHrG0p/BbYlIma26gWA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=S2aPe88D; dkim-atps=neutral; spf=pass (client-ip=192.198.163.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1725159520; c=relaxed/relaxed;
+	bh=sEYQaVWhtcXYrNgMjfPkzqecGeZhydezmlfqmaFonPw=;
+	h=DKIM-Signature:Received:X-QQ-mid:Message-ID:X-QQ-XMAILINFO:
+	 X-QQ-XMRINFO:From:To:Cc:Subject:Date:X-OQ-MSGID:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding; b=SXuRzmQYF7H8NXlwIZF4kq/qCFlGx9dF4oF+WgHDCr6JGSoycnVU+Cw+RrejzhXnkdp1OsnZi3AdaEgZXXolILcEXPOsKuMPvzaQEKIsEqvttbLHP18LDHYNA3rNwICXaqceV0D3hmxfqWAg/j0ernG7LrJLwsAggk0j1z+rw8crgdkajGIg2P0k97P4gT+DVfEXOn3e1URhi/xyovWbo1gk2Acn0Qbdo9kxe64ZHhCI+fOxW/fgw+JTDKtQql/M+gSewSzlN/Ib0VSCbQgcmNfF8xeylz/cnCZe+G70m1IJHr1HoiUMXqqpTqlJLE46JjBygmkuvtFIfiWOYjRKiw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=tLq3tt7K; dkim-atps=neutral; spf=pass (client-ip=203.205.221.233; helo=out203-205-221-233.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org) smtp.mailfrom=qq.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=S2aPe88D;
+	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=tLq3tt7K;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.233; helo=out203-205-221-233.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org)
+Received: from out203-205-221-233.mail.qq.com (out203-205-221-233.mail.qq.com [203.205.221.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wwps81LwZz2y0B
-	for <linux-erofs@lists.ozlabs.org>; Sat, 31 Aug 2024 19:00:57 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725094860; x=1756630860;
-  h=date:from:to:cc:subject:message-id;
-  bh=9TBHsLcUTPQR37oLP25qm1d9cFgjl9I4A+W4IU3PZFA=;
-  b=S2aPe88D1l5hwzkNNPrrCZpGLOPijWYr6KfgMwQuyaoXwvaLMKohoF5u
-   xF4V5k/9iqTJNaR48xZqfLi/ZQaHvS0+LvtI1xID3BK+lFENkNBt0tGp0
-   lrNRQNzll0n9ggjUNDPscqbCUE6D6KzpRP10sRzEz2xsDOLFFZimbavCN
-   7b+/1/iWpR7c3ledBB3FAG1rlMVyq+etN8qG5EknKMicWKHZB/DjoNkiV
-   sLQZZPKMFsquw5jpKV0H/8O9pIlPG7a3CXD6OlZkuL11myMPKS3MfTb6x
-   ZHNY2J0V3OeOKBmBWBQXtqgahBMEV9XCEd7C5wgRPP3WnW4CJ8SklK847
-   g==;
-X-CSE-ConnectionGUID: BVbdwmY7Ro+tNDoJpZV8Kg==
-X-CSE-MsgGUID: zPjS0AlTRJa/TOWj1DYCUg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11180"; a="23906579"
-X-IronPort-AV: E=Sophos;i="6.10,191,1719903600"; 
-   d="scan'208";a="23906579"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2024 02:00:54 -0700
-X-CSE-ConnectionGUID: G+JDQV4ZSvCyJ0fWsI/0mg==
-X-CSE-MsgGUID: omIuHMCTSuiZ0iR6NfPWEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,191,1719903600"; 
-   d="scan'208";a="68790898"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 31 Aug 2024 02:00:52 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1skJyU-0002Uk-2C;
-	Sat, 31 Aug 2024 09:00:50 +0000
-Date: Sat, 31 Aug 2024 17:00:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 50b89a2ee010614c01c4a7e0474364a66bba0a74
-Message-ID: <202408311737.zLtePtWJ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4WxGmb08Qsz2xLR
+	for <linux-erofs@lists.ozlabs.org>; Sun,  1 Sep 2024 12:58:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1725159508; bh=sEYQaVWhtcXYrNgMjfPkzqecGeZhydezmlfqmaFonPw=;
+	h=From:To:Cc:Subject:Date;
+	b=tLq3tt7KS9gk8VXPWCjZ5JkX3s8H+SxI4cTw99HiBh3OIbF/WTt225YcaDSzBXoLs
+	 nAGYBoJmKexqIMNyfldkyjCAiqQ4p/jQtaX3EqigFjvxxrthg5gunSImW5gvy+uV07
+	 6OEa1AhoxyXC+O2Dw8eGmjzHWlnmPPaw2QLcEjZY=
+Received: from kyrie-virtual-machine.localdomain ([115.156.140.10])
+	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
+	id E563A462; Sun, 01 Sep 2024 10:57:22 +0800
+X-QQ-mid: xmsmtpt1725159442t3ke13z21
+Message-ID: <tencent_6102AC554A6662684C1830E6276FF924C309@qq.com>
+X-QQ-XMAILINFO: OKKHiI6c9SH3yQdgsnGFebaclwe9UD86J+MlV7COJJWZbzpn6CN/HdxASchGGe
+	 klChr4+AzC34kaA7C5a8OSQXQc/UMUqjRFBi1r5CsmAB3dGsgVPzGKONZR1lB3Sd8yDMFEjeSZ56
+	 E3jeQvGzzDvdpjnYkAnNWzOdcfScgKV/cpyEt5BxMzkD5tdBqwionRSJc+Yg8WQe+quF5J9AHte5
+	 +VNXqYvDZK3M6JCOy3gwA18FE26q2ym6zkIbnP+gXjo4uNEy7zVY8HqFyIun4d+rkA7U9zLQ5gHp
+	 wqGrIIGp0yVahshWPeAh9Cc3EBM200bj40mfbDTSo3so/Ib8paHvHxXxWrQ4ooOlU8UtoFhvyad5
+	 F+nC/Z1FkW7Heh7bGzSh+4IFVgcGYW9WniuL8fImokxVS4tTFZPwvRQlS+bEPQ9TNPe2gnqdQYi7
+	 VH37PWoCipJGTJRnM0b5P8NZEAq/uBVpy8rJGfYi5Nty97gYwARwGLo2ooqdCXGBilqBCEGpl5T4
+	 RnI+hqnsafhYV0RwNm+xd1q/m3E+RFAiC6MmZq3sfYLJ4ECCjBhApok/zt7Zmy8gt1mhVDxecvdL
+	 zDD4tzLzqfaJNZ23ayzpP69LcEIGEQ0xfez4Ck/ByZKLPSfpdlketKvSjzIycLiA3lsOeIW9lLi0
+	 1U3ty9RL7z2aJ5HFfZWRTQn6TuWFyCBUJ812gsoQ/JomCw2yb/be20axh+9uEq2aeuMxFDvy9+Ar
+	 d/JkivHD3EnOLkNPtyfVPL0hjVlBltVAoWknoxSXW/MVhr0NNYIfXwnk6SFzZ0nvj89Uz9/AMOi0
+	 Zz68T/FKKEXeCpSXb07oKR30h4sQ6c924X/8ED1TVTt5cpef+s6kCmBcTZu25M3zMYYpzctgXWek
+	 6/D6/aVeuLxzPP2EWGu9QixaPx0QEqDMeSD8x36Hqui4A/FgCnpj05Csbx6hDOPtDfXrMJKOPnsu
+	 px8t7bGUhJgtqbgMU70PRk7f0FRqhq3pgoRQlw28SAlDQwUZckDA==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/2] erofs-utils: add fssum function for fsck
+Date: Sun,  1 Sep 2024 10:57:19 +0800
+X-OQ-MSGID: <20240901025720.2114485-1-kyr1ewang@qq.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,201 +84,124 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+From: Jiawei Wang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Jiawei Wang <kyr1ewang@qq.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 50b89a2ee010614c01c4a7e0474364a66bba0a74  erofs: mark experimental fscache backend deprecated
+This patch introduces a fssum option to the erofs-utils fsck tool, 
+enabling checksum calculation for erofs image files.
 
-elapsed time: 1547m
+Signed-off-by: Jiawei Wang <kyr1ewang@qq.com>
+---
+ fsck/Makefile.am |  3 ++-
+ fsck/main.c      | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+), 1 deletion(-)
 
-configs tested: 178
-configs skipped: 5
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc-14.1.0
-alpha                            allyesconfig   clang-20
-alpha                               defconfig   gcc-14.1.0
-arc                              allmodconfig   clang-20
-arc                               allnoconfig   gcc-14.1.0
-arc                              allyesconfig   clang-20
-arc                                 defconfig   gcc-14.1.0
-arc                        nsimosci_defconfig   clang-20
-arc                   randconfig-001-20240831   gcc-14.1.0
-arc                   randconfig-002-20240831   gcc-14.1.0
-arm                              allmodconfig   clang-20
-arm                               allnoconfig   gcc-14.1.0
-arm                              allyesconfig   clang-20
-arm                                 defconfig   gcc-14.1.0
-arm                          ep93xx_defconfig   clang-20
-arm                          gemini_defconfig   clang-20
-arm                      jornada720_defconfig   clang-20
-arm                         nhk8815_defconfig   clang-20
-arm                   randconfig-001-20240831   gcc-14.1.0
-arm                   randconfig-002-20240831   gcc-14.1.0
-arm                   randconfig-003-20240831   gcc-14.1.0
-arm                   randconfig-004-20240831   gcc-14.1.0
-arm                        realview_defconfig   clang-20
-arm                         vf610m4_defconfig   clang-20
-arm                    vt8500_v6_v7_defconfig   clang-20
-arm64                            allmodconfig   clang-20
-arm64                             allnoconfig   gcc-14.1.0
-arm64                               defconfig   clang-20
-arm64                               defconfig   gcc-14.1.0
-arm64                 randconfig-001-20240831   gcc-14.1.0
-arm64                 randconfig-002-20240831   gcc-14.1.0
-arm64                 randconfig-003-20240831   gcc-14.1.0
-arm64                 randconfig-004-20240831   gcc-14.1.0
-csky                              allnoconfig   gcc-14.1.0
-csky                                defconfig   gcc-14.1.0
-csky                  randconfig-001-20240831   gcc-14.1.0
-csky                  randconfig-002-20240831   gcc-14.1.0
-hexagon                          alldefconfig   clang-20
-hexagon                          allmodconfig   clang-20
-hexagon                           allnoconfig   gcc-14.1.0
-hexagon                          allyesconfig   clang-20
-hexagon                             defconfig   gcc-14.1.0
-hexagon               randconfig-001-20240831   gcc-14.1.0
-hexagon               randconfig-002-20240831   gcc-14.1.0
-i386                             allmodconfig   clang-18
-i386                              allnoconfig   clang-18
-i386                             allyesconfig   clang-18
-i386         buildonly-randconfig-001-20240831   clang-18
-i386         buildonly-randconfig-002-20240831   clang-18
-i386         buildonly-randconfig-003-20240831   clang-18
-i386         buildonly-randconfig-004-20240831   clang-18
-i386         buildonly-randconfig-005-20240831   clang-18
-i386         buildonly-randconfig-006-20240831   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240831   clang-18
-i386                  randconfig-002-20240831   clang-18
-i386                  randconfig-003-20240831   clang-18
-i386                  randconfig-004-20240831   clang-18
-i386                  randconfig-005-20240831   clang-18
-i386                  randconfig-006-20240831   clang-18
-i386                  randconfig-011-20240831   clang-18
-i386                  randconfig-012-20240831   clang-18
-i386                  randconfig-013-20240831   clang-18
-i386                  randconfig-014-20240831   clang-18
-i386                  randconfig-015-20240831   clang-18
-i386                  randconfig-016-20240831   clang-18
-loongarch                        allmodconfig   gcc-14.1.0
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch                           defconfig   gcc-14.1.0
-loongarch             randconfig-001-20240831   gcc-14.1.0
-loongarch             randconfig-002-20240831   gcc-14.1.0
-m68k                             allmodconfig   gcc-14.1.0
-m68k                              allnoconfig   gcc-14.1.0
-m68k                             allyesconfig   gcc-14.1.0
-m68k                          amiga_defconfig   clang-20
-m68k                                defconfig   gcc-14.1.0
-microblaze                       allmodconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-14.1.0
-microblaze                       allyesconfig   gcc-14.1.0
-microblaze                          defconfig   gcc-14.1.0
-mips                              allnoconfig   gcc-14.1.0
-mips                            gpr_defconfig   clang-20
-mips                          malta_defconfig   clang-20
-mips                      malta_kvm_defconfig   clang-20
-mips                        omega2p_defconfig   clang-20
-mips                         rt305x_defconfig   clang-20
-nios2                            alldefconfig   clang-20
-nios2                             allnoconfig   gcc-14.1.0
-nios2                               defconfig   gcc-14.1.0
-nios2                 randconfig-001-20240831   gcc-14.1.0
-nios2                 randconfig-002-20240831   gcc-14.1.0
-openrisc                          allnoconfig   clang-20
-openrisc                            defconfig   gcc-12
-openrisc                  or1klitex_defconfig   clang-20
-parisc                            allnoconfig   clang-20
-parisc                              defconfig   gcc-12
-parisc                generic-64bit_defconfig   clang-20
-parisc                randconfig-001-20240831   gcc-14.1.0
-parisc                randconfig-002-20240831   gcc-14.1.0
-parisc64                            defconfig   gcc-14.1.0
-powerpc                    adder875_defconfig   clang-20
-powerpc                           allnoconfig   clang-20
-powerpc                 canyonlands_defconfig   clang-20
-powerpc                       ebony_defconfig   clang-20
-powerpc                    gamecube_defconfig   clang-20
-powerpc                       maple_defconfig   clang-20
-powerpc                 mpc834x_itx_defconfig   clang-20
-powerpc                    mvme5100_defconfig   clang-20
-powerpc               randconfig-001-20240831   gcc-14.1.0
-powerpc                  storcenter_defconfig   clang-20
-powerpc                     tqm8540_defconfig   clang-20
-powerpc64             randconfig-001-20240831   gcc-14.1.0
-powerpc64             randconfig-002-20240831   gcc-14.1.0
-powerpc64             randconfig-003-20240831   gcc-14.1.0
-riscv                             allnoconfig   clang-20
-riscv                               defconfig   gcc-12
-riscv                    nommu_k210_defconfig   clang-20
-riscv                 randconfig-001-20240831   gcc-14.1.0
-riscv                 randconfig-002-20240831   gcc-14.1.0
-s390                             allmodconfig   gcc-14.1.0
-s390                              allnoconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   gcc-12
-s390                  randconfig-001-20240831   gcc-14.1.0
-s390                  randconfig-002-20240831   gcc-14.1.0
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-12
-sh                    randconfig-001-20240831   gcc-14.1.0
-sh                    randconfig-002-20240831   gcc-14.1.0
-sh                           se7780_defconfig   clang-20
-sh                   secureedge5410_defconfig   clang-20
-sh                        sh7763rdp_defconfig   clang-20
-sh                        sh7785lcr_defconfig   clang-20
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-12
-sparc64               randconfig-001-20240831   gcc-14.1.0
-sparc64               randconfig-002-20240831   gcc-14.1.0
-um                               allmodconfig   clang-20
-um                                allnoconfig   clang-20
-um                               allyesconfig   clang-20
-um                                  defconfig   gcc-12
-um                             i386_defconfig   gcc-12
-um                    randconfig-001-20240831   gcc-14.1.0
-um                    randconfig-002-20240831   gcc-14.1.0
-um                           x86_64_defconfig   gcc-12
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240831   clang-18
-x86_64       buildonly-randconfig-002-20240831   clang-18
-x86_64       buildonly-randconfig-003-20240831   clang-18
-x86_64       buildonly-randconfig-004-20240831   clang-18
-x86_64       buildonly-randconfig-005-20240831   clang-18
-x86_64       buildonly-randconfig-006-20240831   clang-18
-x86_64                              defconfig   clang-18
-x86_64                randconfig-001-20240831   clang-18
-x86_64                randconfig-002-20240831   clang-18
-x86_64                randconfig-003-20240831   clang-18
-x86_64                randconfig-004-20240831   clang-18
-x86_64                randconfig-005-20240831   clang-18
-x86_64                randconfig-006-20240831   clang-18
-x86_64                randconfig-011-20240831   clang-18
-x86_64                randconfig-012-20240831   clang-18
-x86_64                randconfig-013-20240831   clang-18
-x86_64                randconfig-014-20240831   clang-18
-x86_64                randconfig-015-20240831   clang-18
-x86_64                randconfig-016-20240831   clang-18
-x86_64                randconfig-071-20240831   clang-18
-x86_64                randconfig-072-20240831   clang-18
-x86_64                randconfig-073-20240831   clang-18
-x86_64                randconfig-074-20240831   clang-18
-x86_64                randconfig-075-20240831   clang-18
-x86_64                randconfig-076-20240831   clang-18
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-14.1.0
-xtensa                randconfig-001-20240831   gcc-14.1.0
-xtensa                randconfig-002-20240831   gcc-14.1.0
-
+diff --git a/fsck/Makefile.am b/fsck/Makefile.am
+index 5bdee4d..b7f0289 100644
+--- a/fsck/Makefile.am
++++ b/fsck/Makefile.am
+@@ -4,7 +4,8 @@
+ AUTOMAKE_OPTIONS = foreign
+ bin_PROGRAMS     = fsck.erofs
+ AM_CPPFLAGS = ${libuuid_CFLAGS}
+-fsck_erofs_SOURCES = main.c
++noinst_HEADERS = fssum.h
++fsck_erofs_SOURCES = main.c fssum.c
+ fsck_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
+ fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
+ 	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} \
+diff --git a/fsck/main.c b/fsck/main.c
+index 28f1e7e..abc0a06 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -13,6 +13,7 @@
+ #include "erofs/compress.h"
+ #include "erofs/decompress.h"
+ #include "erofs/dir.h"
++#include "fssum.h"
+ #include "../lib/compressor.h"
+ 
+ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid);
+@@ -31,6 +32,7 @@ struct erofsfsck_cfg {
+ 	bool overwrite;
+ 	bool preserve_owner;
+ 	bool preserve_perms;
++	bool checksum;
+ };
+ static struct erofsfsck_cfg fsckcfg;
+ 
+@@ -48,6 +50,7 @@ static struct option long_options[] = {
+ 	{"no-preserve-owner", no_argument, 0, 10},
+ 	{"no-preserve-perms", no_argument, 0, 11},
+ 	{"offset", required_argument, 0, 12},
++	{"fssum", no_argument, 0, 13},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -98,6 +101,7 @@ static void usage(int argc, char **argv)
+ 		" --extract[=X]          check if all files are well encoded, optionally\n"
+ 		"                        extract to X\n"
+ 		" --offset=#             skip # bytes at the beginning of IMAGE\n"
++		" --fssum                calculate the checksum of iamge\n"
+ 		"\n"
+ 		" -a, -A, -y             no-op, for compatibility with fsck of other filesystems\n"
+ 		"\n"
+@@ -225,6 +229,9 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
+ 				return -EINVAL;
+ 			}
+ 			break;
++		case 13:
++			fsckcfg.checksum = true;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+@@ -932,6 +939,23 @@ out:
+ 	return ret;
+ }
+ 
++static int erofsfsck_sum_image(struct erofs_sb_info *sbi)
++{
++	int ret = 0;
++	struct erofs_dir_context ctx = {
++		.flags = 0,
++		.pnid = 0,
++		.dir = NULL,
++		.de_nid = sbi->root_nid,
++		.dname = "",
++		.de_namelen = 0,
++	};
++	
++	ret = erofs_fssum_calculate(&ctx);
++	
++	return ret;
++}
++
+ #ifdef FUZZING
+ int erofsfsck_fuzz_one(int argc, char *argv[])
+ #else
+@@ -953,6 +977,7 @@ int main(int argc, char *argv[])
+ 	fsckcfg.check_decomp = false;
+ 	fsckcfg.force = false;
+ 	fsckcfg.overwrite = false;
++	fsckcfg.checksum = false;
+ 	fsckcfg.preserve_owner = fsckcfg.superuser;
+ 	fsckcfg.preserve_perms = fsckcfg.superuser;
+ 
+@@ -1017,6 +1042,11 @@ int main(int argc, char *argv[])
+ 		}
+ 	}
+ 
++	if (fsckcfg.checksum) {
++		err = erofsfsck_sum_image(&g_sbi);
++		if (err)
++			erofs_err("fssum calculation for image falied");
++	}
+ exit_hardlink:
+ 	if (fsckcfg.extract_path)
+ 		erofsfsck_hardlink_exit();
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
