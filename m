@@ -1,78 +1,48 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF8B1968493
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 12:24:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1725272649;
-	bh=+xsQAoH83hKuiLcCZfUhZ/tqVmWdb4UrtSbMHcg8gsw=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
-	 From;
-	b=SLjmyd6MnEQAXBJBNdSjaC7QjvcwzWB6Owjy5AD1rJ95cchAOZ21csFvpEdqHmrPr
-	 Sboj6Sms3txS59BJb9jmbrx/fpymBP2u/Yi1NcnpaIMI+9t8INcZ8SzrfkSaFsY7QJ
-	 8H0Y0oEUJo6yY7MV/ZQwak6PgG8K8jsAeMwhJXf4Hq/OOjHUtXoNc1nPCS5/RTopY6
-	 ci50cPKG2cnTAGxArh/opncmHEUgh67O5RaOMSmhPhXIW5kJY9n9eCe8yCXupUAvg3
-	 6dRef6J5KrJBggt1+dRf+dJTme/0DYRhllIQxCdBocolKPcxnwUV/gd3pswW0HH8mK
-	 jMVidRagaWvxg==
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EE269685AF
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 13:06:40 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wy4c93V5Xz3c7Q
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 20:24:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wy5YB0LPcz2yG9
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 21:06:38 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.231
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725272645;
-	cv=none; b=Pz+WDhzATfb1Y7mmeF1n8jn1/MkGZp8RGz7E56UeO9WRz2okK+L7W2dpFpByxMWzaWhFj+3HIdfulZsQjFgVDxUwTFsRp3NU5xLUjIPmq5S/wzQUiIecWbOaG6NnSXsbX2P8OilEyNi5Ig3JnyNjtFY6qbsWz8esrCXqVBeZIqTrAZqM7uBoEhWfADj0gKF4KCbt640XhBqk09ARF6MM5ECahBPBMrWOxnCubhjNmwL/gIO34N4G13yXK4MzumEas9tmX8tJosuQfD9P6a4Eu3aH4v9zCQQ5GUK1i4UEQuy8wj38Hq1KUd9mD7DtBngFx+Dd3HYdMB7zFcjgvMJR5w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725275195;
+	cv=none; b=aA2TsBHZG1HjZSGZnJPeM+zMQSchYSc0EyoS2PhL99Bk9ZcWYtmoCeqvjP2lS4FtmE0ntOl1xP5NA3o1mSnTtqqVLczaddG+IbbOeD3CpuO9BHHux/MVr8nf5FVCTeIEM+Rvg6VYYTHtiAu28hUsmY62NgG3QEHjjIGsnDNu1LZL3OsT5nTaRIDUt8U7Ay0+I6mOVbfrx/gFSrqkNygyBXUQS8idwGn9UbzxItJcfAREwGW9hNxHg9f01RXPnoTGXLwb2DQbvOFpAZO4/d/RPr6EVYR4iumHTg6peKQmEpJo7Y4jR9gOaID7anBKRZGrA9nvFALSdBmzfGjMk+yA1A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725272645; c=relaxed/relaxed;
-	bh=+xsQAoH83hKuiLcCZfUhZ/tqVmWdb4UrtSbMHcg8gsw=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=U2pXtSiSqUPFPPkW+GWp95L+1cVpaI6B384AXclhgxtS+SJTzEm7JavSPQ9VtNJ4yDerAiK8QJ4O5hBiD73cPdeJf0H7beJdZdUm+vpttgZRDmbt/baBIcX/g0BaI5rmD0gmVxVyS9d+Qe73iRz1yxirD2QZ/2ANplVNI0zP8C0LvM6xUOgFpryERZbedKjN5wRTqMFixl5tLQmfzZXmiW6U1+0DavS7XIoFYpbJYmzdULvIeHuMw7vy7Jnpuhu+zP6XiXi/kUPDhEvqlMvi5J3PqonYbtKJ1qna6zj6nU99v2bKdp7rg+/emwVF/JBqEEHi4ziWJQplXvw4VPMkjQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=dokRTYbL; dkim-atps=neutral; spf=pass (client-ip=203.205.221.231; helo=out203-205-221-231.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org) smtp.mailfrom=qq.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+	t=1725275195; c=relaxed/relaxed;
+	bh=54uiycrpKCuIzqYqG1SzcrlXmsXcCqDK/gsnbUk+/kc=;
+	h=DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=mzt7q4iFIH+8pMZgmMo5/GIVg51AWhOIYYNhov3gEn5joW2/4jY8gAp0WdW+XHJo9lFmeqamgP2rUHUlshTdeiYPQlRvQSn+E5gS5tinjKiIUY87RfH8DC7w4U1DmxeIakBNbaEeYFmzqnbnmQoQWljnA+q3JimKSzMHJSzRc+3GNqXdx+dp70VCYGH1yTCKVZkHJTn1ZZvW2BOYx52pvOfjeF4ye2SMmpAn9H+uNg7CfohFVdfNbdF0zgFNGlNhUkGAzdrcpaU6r31TOVguuAhRA3JjUZM3CEIOm4dA6wpEoHQP6pkP1ShcalAUEGt9ZKthrnplzVTi2nasvvDLRA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yHG9wCVt; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=dokRTYbL;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yHG9wCVt;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.231; helo=out203-205-221-231.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org)
-Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4Wy4c32tncz2xZY
-	for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2024 20:24:01 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1725272639; bh=+xsQAoH83hKuiLcCZfUhZ/tqVmWdb4UrtSbMHcg8gsw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dokRTYbL3fBm2WaqcBC679rKknWmyqtDX3UC220eUJMBTizG4CdSpK4Rcep/UKYhA
-	 UivLc5pPNQfHuhQqxzhf7tXqyniQq36vRjeMbl00kljHSIyF/M0b3uvzylCtS4coq7
-	 qq4mOeqIE8dLJ8oTc9oA0+cpgD9zRqTdLhz5Now8=
-Received: from kyrie-virtual-machine.localdomain ([115.156.140.10])
-	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
-	id 5B60D264; Mon, 02 Sep 2024 18:22:54 +0800
-X-QQ-mid: xmsmtpt1725272576tb1w0a4u9
-Message-ID: <tencent_1E2599023C54426692690818C4E61D6F5109@qq.com>
-X-QQ-XMAILINFO: OW4JKxETGMY2FyXFUqSmVeeCpTwIsFvOKobtotw2fK19ml5C8lE7XHHzWkU/Vz
-	 70qOjZxuckbbqSoFPqo8ppHgWw0L6J3r1kseZsGd5FLQrtogGnPpYC78KPVbsdWm9LLSuZDMpLVH
-	 KnprhrbH1DamadC3gGdEjjuYAv5/u1LY5E5pdnxGVt1sgC32ZdWmIrPSMiNEz1LOPAek3NqnNZnG
-	 8d0UXGeqq8Z2jlLUk2MRfgaWlKDbtRg0j7OUsqQhqXHOpXcK4vF71HSIpjxZdJvJ8rQYusKP+oqe
-	 LZsINl0dWOeh+bh4PrwtpjYYnf5qTZfMHVrsP9wq8cZlv9tEb5n7529ufrILp+Zki2pMGhl26Ti1
-	 BP61IjHO/A4EiZFG34Z4S4sYlXnVbWvOQmVDXV9OaWCFk75kKq3rxhCR+4d/9D1qnW+CAj/0hpaT
-	 hR5zWLdoCONLofWWO4tdy2hUDFUgBaRUn9c8nDYm/BKnBUk1UBAfoF8jDhfeJdx6qrUc6bzSyhHY
-	 0p0nJ8KLIQF8J3UKndcJrxuJA9JuLqsxsDH/43DIE3RpZPThT9XwqFT7zv0IdBQhl7pa/ze3UQnY
-	 kVQ2NAReJGi26pjtV0L589slQBjS9RTkGmr8qF2ewdc7gvdoex0sQYape/XyAMlU60pFHgMZClQK
-	 xV6ENLzGECNvKh6Xp5Oe3kfImcCC2o9/JjtyRhCurv/Ezl8PEoQlgTwhLiApkc74kA63jb4og0OR
-	 K9b0HsaYoCsQY7tYAKSJM6pS9Ieb86WFF4tAGv0wXi4lLEBDh5HEt7uK8MpyrpA6sldvMZ8F5XFs
-	 bbTsc9s/UxxPHS0mILYKrHx+TC96BMWMAAVpI1ov6OMtbIuKoTdcJmv2S0wo6EhoQ/msvCc/qmDO
-	 o/iR0xepC3o5L6a4p+K5yHk1F4liS2WlgjEA9Uai+hp/80vtft5447l8+VNFJPqj197wPlze90h0
-	 RA5sX7WC1rBL83iI11AibZ1xkE6EWIOgHbLfXGtcWFQ3iv7usE/Q==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wy5Y604Slz2xPZ
+	for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2024 21:06:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1725275188; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=54uiycrpKCuIzqYqG1SzcrlXmsXcCqDK/gsnbUk+/kc=;
+	b=yHG9wCVtVwH4AKs41CVfKGoXeZiz0cEATSzT1xpa3mjX7DnZk3XDHcQw8SufPpuy5f6WcpYLIAE4IdmwD+Rsq1eeIJe0G2OA1uLDGGHtHLFwfVjFvw4DKAI71H1n/R4SwkhbnJzlyty1riKZehrzxvePawJXc5XVYelGTCFZxXo=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WE7YYnS_1725275186)
+          by smtp.aliyun-inc.com;
+          Mon, 02 Sep 2024 19:06:27 +0800
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/3] erofs-utils: tests: add fssum option for fsck
-Date: Mon,  2 Sep 2024 18:22:52 +0800
-X-OQ-MSGID: <20240902102252.2150182-3-kyr1ewang@qq.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240902102252.2150182-1-kyr1ewang@qq.com>
-References: <20240902102252.2150182-1-kyr1ewang@qq.com>
+Subject: [PATCH RFC v4 0/4] erofs: introduce page cache share feature
+Date: Mon,  2 Sep 2024 19:06:16 +0800
+Message-ID: <20240902110620.2202586-1-hongzhen@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -86,121 +56,144 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Jiawei Wang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Jiawei Wang <kyr1ewang@qq.com>
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch introduces a fssum option to the erofs-utils fsck tool, 
-enabling checksum calculation for erofs image files.
+v4:
+Changes since v3:
+	- Implemented .fadvise
+v3: https://lore.kernel.org/all/20240828111959.3677011-1-hongzhen@linux.alibaba.com/
+v2: https://lore.kernel.org/all/20240731080704.678259-1-hongzhen@linux.alibaba.com/
+v1: https://lore.kernel.org/all/20240722065355.1396365-1-hongzhen@linux.alibaba.com/
 
-Signed-off-by: Jiawei Wang <kyr1ewang@qq.com>
----
- fsck/Makefile.am |  3 ++-
- fsck/main.c      | 27 +++++++++++++++++++++++++++
- 2 files changed, 29 insertions(+), 1 deletion(-)
+[Background]
+================
+Currently, reading files with different paths (or names) but the same
+content will consume multiple copies of the page cache, even if the
+content of these page caches is the same. For example, reading identical
+files (e.g., *.so files) from two different minor versions of container
+images will cost multiple copies of the same page cache, since different
+containers have different mount points. Therefore, sharing the page cache
+for files with the same content can save memory.
 
-diff --git a/fsck/Makefile.am b/fsck/Makefile.am
-index 5bdee4d..b7f0289 100644
---- a/fsck/Makefile.am
-+++ b/fsck/Makefile.am
-@@ -4,7 +4,8 @@
- AUTOMAKE_OPTIONS = foreign
- bin_PROGRAMS     = fsck.erofs
- AM_CPPFLAGS = ${libuuid_CFLAGS}
--fsck_erofs_SOURCES = main.c
-+noinst_HEADERS = fssum.h
-+fsck_erofs_SOURCES = main.c fssum.c
- fsck_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
- 	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} \
-diff --git a/fsck/main.c b/fsck/main.c
-index 28f1e7e..de0a872 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -13,6 +13,7 @@
- #include "erofs/compress.h"
- #include "erofs/decompress.h"
- #include "erofs/dir.h"
-+#include "fssum.h"
- #include "../lib/compressor.h"
- 
- static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid);
-@@ -31,6 +32,7 @@ struct erofsfsck_cfg {
- 	bool overwrite;
- 	bool preserve_owner;
- 	bool preserve_perms;
-+	bool fssum;
- };
- static struct erofsfsck_cfg fsckcfg;
- 
-@@ -48,6 +50,7 @@ static struct option long_options[] = {
- 	{"no-preserve-owner", no_argument, 0, 10},
- 	{"no-preserve-perms", no_argument, 0, 11},
- 	{"offset", required_argument, 0, 12},
-+	{"fssum", no_argument, 0, 13},
- 	{0, 0, 0, 0},
- };
- 
-@@ -98,6 +101,7 @@ static void usage(int argc, char **argv)
- 		" --extract[=X]          check if all files are well encoded, optionally\n"
- 		"                        extract to X\n"
- 		" --offset=#             skip # bytes at the beginning of IMAGE\n"
-+		" --fssum                calculate the checksum of iamge\n"
- 		"\n"
- 		" -a, -A, -y             no-op, for compatibility with fsck of other filesystems\n"
- 		"\n"
-@@ -225,6 +229,9 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
- 				return -EINVAL;
- 			}
- 			break;
-+		case 13:
-+			fsckcfg.fssum = true;
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -932,6 +939,20 @@ out:
- 	return ret;
- }
- 
-+static int erofsfsck_sum_image(struct erofs_sb_info *sbi)
-+{
-+	struct erofs_dir_context ctx = {
-+		.flags = 0,
-+		.pnid = 0,
-+		.dir = NULL,
-+		.de_nid = sbi->root_nid,
-+		.dname = "",
-+		.de_namelen = 0,
-+	};
-+	
-+	return erofs_fssum_calculate(&ctx);
-+}
-+
- #ifdef FUZZING
- int erofsfsck_fuzz_one(int argc, char *argv[])
- #else
-@@ -953,6 +974,7 @@ int main(int argc, char *argv[])
- 	fsckcfg.check_decomp = false;
- 	fsckcfg.force = false;
- 	fsckcfg.overwrite = false;
-+	fsckcfg.fssum = false;
- 	fsckcfg.preserve_owner = fsckcfg.superuser;
- 	fsckcfg.preserve_perms = fsckcfg.superuser;
- 
-@@ -1017,6 +1039,11 @@ int main(int argc, char *argv[])
- 		}
- 	}
- 
-+	if (fsckcfg.fssum) {
-+		err = erofsfsck_sum_image(&g_sbi);
-+		if (err)
-+			erofs_err("fssum calculation for image falied");
-+	}
- exit_hardlink:
- 	if (fsckcfg.extract_path)
- 		erofsfsck_hardlink_exit();
+[Implementation]
+================
+This introduces the page cache share feature in erofs. During the mkfs
+phase, the file content is hashed and the hash value is stored in the
+`trusted.erofs.fingerprint` extended attribute. Inodes of files with the
+same `trusted.erofs.fingerprint` are mapped to the same anonymous inode
+(indicated by the `ano_inode` field). When a read request occurs, the
+anonymous inode serves as a "container" whose page cache is shared. The
+actual operations involving the iomap are carried out by the original
+inode which is mapped to the anonymous inode.
+
+[Effect]
+================
+I conducted experiments on two aspects across two different minor versions of
+container images:
+
+1. reading all files in two different minor versions of container images 
+
+2. run workloads or use the default entrypoint within the containers^[1]
+
+Below is the memory usage for reading all files in two different minor
+versions of container images:
+
++-------------------+------------------+-------------+---------------+
+|       Image       | Page Cache Share | Memory (MB) |    Memory     |
+|                   |                  |             | Reduction (%) |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     241     |       -       |
+|       redis       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |     163     |      33%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     872     |       -       |
+|      postgres     +------------------+-------------+---------------+
+|    16.1 & 16.2    |        Yes       |     630     |      28%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     2771    |       -       |
+|     tensorflow    +------------------+-------------+---------------+
+|  1.11.0 & 2.11.1  |        Yes       |     2340    |      16%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     926     |       -       |
+|       mysql       +------------------+-------------+---------------+
+|  8.0.11 & 8.0.12  |        Yes       |     735     |      21%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     390     |       -       |
+|       nginx       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |     219     |      44%      |
++-------------------+------------------+-------------+---------------+
+|       tomcat      |        No        |     924     |       -       |
+| 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+|                   |        Yes       |     474     |      49%      |
++-------------------+------------------+-------------+---------------+
+
+Additionally, the table below shows the runtime memory usage of the
+container:
+
++-------------------+------------------+-------------+---------------+
+|       Image       | Page Cache Share | Memory (MB) |    Memory     |
+|                   |                  |             | Reduction (%) |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |      35     |       -       |
+|       redis       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |      28     |      20%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     149     |       -       |
+|      postgres     +------------------+-------------+---------------+
+|    16.1 & 16.2    |        Yes       |      95     |      37%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     1028    |       -       |
+|     tensorflow    +------------------+-------------+---------------+
+|  1.11.0 & 2.11.1  |        Yes       |     930     |      10%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     155     |       -       |
+|       mysql       +------------------+-------------+---------------+
+|  8.0.11 & 8.0.12  |        Yes       |     132     |      15%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |      25     |       -       |
+|       nginx       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |      20     |      20%      |
++-------------------+------------------+-------------+---------------+
+|       tomcat      |        No        |     186     |       -       |
+| 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+|                   |        Yes       |      98     |      48%      |
++-------------------+------------------+-------------+---------------+
+
+It can be observed that when reading all the files in the image, the reduced
+memory usage varies from 16% to 49%, depending on the specific image.
+Additionally, the container's runtime memory usage reduction ranges from 10%
+to 48%.
+
+[1] Below are the workload for these images:
+	- redis: redis-benchmark
+	- postgres: sysbench
+	- tensorflow: app.py of tensorflow.python.platform
+	- mysql: sysbench
+	- nginx: wrk
+	- tomcat: default entrypoint
+
+Hongzhen Luo (4):
+  erofs: move `struct erofs_anon_fs_type` to super.c
+  erofs: introduce page cache share feature
+  erofs: apply the page cache share feature
+  erofs: introduce .fadvise for page cache share
+
+ fs/erofs/Kconfig           |  10 ++
+ fs/erofs/Makefile          |   1 +
+ fs/erofs/data.c            |  68 ++++++++++-
+ fs/erofs/fscache.c         |  13 --
+ fs/erofs/inode.c           |  12 ++
+ fs/erofs/internal.h        |  11 ++
+ fs/erofs/pagecache_share.c | 239 +++++++++++++++++++++++++++++++++++++
+ fs/erofs/pagecache_share.h |  21 ++++
+ fs/erofs/super.c           |  59 +++++++++
+ fs/erofs/zdata.c           |  32 +++++
+ 10 files changed, 452 insertions(+), 14 deletions(-)
+ create mode 100644 fs/erofs/pagecache_share.c
+ create mode 100644 fs/erofs/pagecache_share.h
+
 -- 
-2.34.1
+2.43.5
 
