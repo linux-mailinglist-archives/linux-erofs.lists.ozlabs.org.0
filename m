@@ -2,74 +2,74 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FC7C968492
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 12:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BF8B1968493
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 12:24:13 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1725272648;
-	bh=2e3EUUKKMGmRX7z2CVywk5vN1crgFDfQqlzF6oDKLWw=;
+	s=201707; t=1725272649;
+	bh=+xsQAoH83hKuiLcCZfUhZ/tqVmWdb4UrtSbMHcg8gsw=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=QqXmc1+44tl3dt9R55ETWIUnnjPwzc3OKQb0vpXNJlmOobb7GJZy1egNISdWjjI1L
-	 Rsv+S+8HwXwOcwGRNCFVmXKxXpn3w3U2rnhUY5Nc+QE5yC4LZxpzr3tCuQRcS7Y0vv
-	 ZpAPppp9/ZDYwm+huYj16935yLGxLw13Y6FpmXC3vsLawLg5PdCzY90R5J+3o6xPTn
-	 zXkB/jVJQNI7At+4y+mYxcoGVX9RqrCfEc++C+tvBSAiTVha1j/1umOmHeVGEZlzuY
-	 cDPDXMcLKWchHgUCOdDQodJULYSSQWKmgDEaE2mFFV9Y0DwudAtKcFEOcI6W87Js79
-	 CwkUCUGnYPN2Q==
+	b=SLjmyd6MnEQAXBJBNdSjaC7QjvcwzWB6Owjy5AD1rJ95cchAOZ21csFvpEdqHmrPr
+	 Sboj6Sms3txS59BJb9jmbrx/fpymBP2u/Yi1NcnpaIMI+9t8INcZ8SzrfkSaFsY7QJ
+	 8H0Y0oEUJo6yY7MV/ZQwak6PgG8K8jsAeMwhJXf4Hq/OOjHUtXoNc1nPCS5/RTopY6
+	 ci50cPKG2cnTAGxArh/opncmHEUgh67O5RaOMSmhPhXIW5kJY9n9eCe8yCXupUAvg3
+	 6dRef6J5KrJBggt1+dRf+dJTme/0DYRhllIQxCdBocolKPcxnwUV/gd3pswW0HH8mK
+	 jMVidRagaWvxg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wy4c85Nb2z2yk8
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 20:24:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wy4c93V5Xz3c7Q
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 20:24:09 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.205
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.231
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725272645;
-	cv=none; b=me6pKQJN2XCVG5L2/jthVl6QYw1d9Ja2rFzDDfMyBO1bBPQZjNiasRcYvy+/hiugHCJw9qUgzn6K1QvCeANsgRLz6JAK6YC4hHRnMbEKcJPqyRm4TfUKC065kbI6fIen+oFQpnEGzsPluwW9nUF0DQn74PGeRbiVIMwDr3N8sGpO4wXLV93QvWlfb7tpKmx3NoIUzjGg0x3R/3Q5cP98NykvCuDM55KJY9bfZw3WDHLvFD9Ll+fRgPw4agqIDsObmbzqjTv9jal9yJhOZq+IW6LoYZJrGoYChNgj2YFKB4WeDmllZB0hEYnQrOVjjtwYS+EN299ZFls/0pUHzNRgBg==
+	cv=none; b=Pz+WDhzATfb1Y7mmeF1n8jn1/MkGZp8RGz7E56UeO9WRz2okK+L7W2dpFpByxMWzaWhFj+3HIdfulZsQjFgVDxUwTFsRp3NU5xLUjIPmq5S/wzQUiIecWbOaG6NnSXsbX2P8OilEyNi5Ig3JnyNjtFY6qbsWz8esrCXqVBeZIqTrAZqM7uBoEhWfADj0gKF4KCbt640XhBqk09ARF6MM5ECahBPBMrWOxnCubhjNmwL/gIO34N4G13yXK4MzumEas9tmX8tJosuQfD9P6a4Eu3aH4v9zCQQ5GUK1i4UEQuy8wj38Hq1KUd9mD7DtBngFx+Dd3HYdMB7zFcjgvMJR5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1725272645; c=relaxed/relaxed;
-	bh=2e3EUUKKMGmRX7z2CVywk5vN1crgFDfQqlzF6oDKLWw=;
+	bh=+xsQAoH83hKuiLcCZfUhZ/tqVmWdb4UrtSbMHcg8gsw=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=QcV8RSHtS5xUI/lRCxhUYfr2buBybk3SSYOGgmd9pC62dT4opxe3H97Lcqcd5EjCWgSrDIfr4y6UXQRSGKZEOJgWJ+SNCZ9ocvCKtH9XjSrePTLbOVBw8orovM4oitIhdyTobpjOXo/siwSo8P2jySr5Ssg6W0v3BgeCOeHM1dd2xTzTgiEawh34U0QBic655qYONYZukMNNr3rIUfgB0KV8ACkDSSabQfTuCER39ytwFpXmbIoSVEffNAEyZh9LODBxVNps6xsZ+OsyUln3Meuz4EwVcebK+q0EjflbzpUYp+g27JoW3ikYjfUU6LQKAgPPQRoL4DCN3iZOG13ggw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=twziDvcR; dkim-atps=neutral; spf=pass (client-ip=203.205.221.205; helo=out203-205-221-205.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org) smtp.mailfrom=qq.com
+	 MIME-Version; b=U2pXtSiSqUPFPPkW+GWp95L+1cVpaI6B384AXclhgxtS+SJTzEm7JavSPQ9VtNJ4yDerAiK8QJ4O5hBiD73cPdeJf0H7beJdZdUm+vpttgZRDmbt/baBIcX/g0BaI5rmD0gmVxVyS9d+Qe73iRz1yxirD2QZ/2ANplVNI0zP8C0LvM6xUOgFpryERZbedKjN5wRTqMFixl5tLQmfzZXmiW6U1+0DavS7XIoFYpbJYmzdULvIeHuMw7vy7Jnpuhu+zP6XiXi/kUPDhEvqlMvi5J3PqonYbtKJ1qna6zj6nU99v2bKdp7rg+/emwVF/JBqEEHi4ziWJQplXvw4VPMkjQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=dokRTYbL; dkim-atps=neutral; spf=pass (client-ip=203.205.221.231; helo=out203-205-221-231.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org) smtp.mailfrom=qq.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=twziDvcR;
+	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=dokRTYbL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.205; helo=out203-205-221-205.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org)
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.231; helo=out203-205-221-231.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org)
+Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4Wy4c35pTvz2xtK
-	for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2024 20:24:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4Wy4c32tncz2xZY
+	for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2024 20:24:01 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1725272637; bh=2e3EUUKKMGmRX7z2CVywk5vN1crgFDfQqlzF6oDKLWw=;
+	t=1725272639; bh=+xsQAoH83hKuiLcCZfUhZ/tqVmWdb4UrtSbMHcg8gsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=twziDvcRbN4B8h0WANYAHc/SAJtKkMaxphzsbSUiqbgUxpwhq9GWCleCrge2HIv/h
-	 7SGDx+p9pq7O5g9KGkfLQqV54SztpTZCR0jdCgz/Xr3psW1hxBwn3B1yR9qJ59z0CB
-	 f7a/9fgisp4aB6yDJvOvylBMIGIswzMH+g2sQNIE=
+	b=dokRTYbL3fBm2WaqcBC679rKknWmyqtDX3UC220eUJMBTizG4CdSpK4Rcep/UKYhA
+	 UivLc5pPNQfHuhQqxzhf7tXqyniQq36vRjeMbl00kljHSIyF/M0b3uvzylCtS4coq7
+	 qq4mOeqIE8dLJ8oTc9oA0+cpgD9zRqTdLhz5Now8=
 Received: from kyrie-virtual-machine.localdomain ([115.156.140.10])
 	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
 	id 5B60D264; Mon, 02 Sep 2024 18:22:54 +0800
-X-QQ-mid: xmsmtpt1725272575toc07kzpz
-Message-ID: <tencent_981814E6336F2724DD03EC54B0669E68D009@qq.com>
-X-QQ-XMAILINFO: M5WvXNp9ZPrQlXBlat3WTzOw9mUEXSgm0UD7ViM78QohWTFKYn8f69sUKcQMqV
-	 N+xNxwWJMXovcnGgTbFukXBR/RSxUbVaIIMi3b4CJ9+NEkd4gLh7hm+Mb6kzWF3RotvdxHtoR7q/
-	 eV9CDBQwDT2F6JYwP0CL4sTsUbrIGoLu8w70ztmuUAk+2DEBr0sAbejujbooTtEMYthZFQLi8Amu
-	 eYaQtH3hLKSThkm2bNb1xtftuWxyQux2fu/I5mlt6a1LUDfS6fcOUX6tSk5dg7SDPRF86OtTNst3
-	 6Mx+Sp/jRYjzguFK1fKmQgGWHbt+cGj76PfwoHOtknP1yy2FQIcXb1+ipFAU/ryHyCvpE2tjvMAJ
-	 JLZrqS71syhmaH9YaAKHFaYxTc8zp4VDUcHFlA3dHUL02oZoofB+Ncl84lob0cKJHu5Ym3bv4OvG
-	 w5gY5x+pzHezyNnmdxjGBLqmJIUjdUenNpuYdh2e/KXLWJGByrl6DAO7ecJjYYanMBeN8Nkcq9xw
-	 kpHWjBmKGFSUaAMwqEutLjx4eiHFe1MQU6jNUO7q8FLn64xCZym5TusB6vjSgwQn3FKWXq2uJETD
-	 c2/KmpGsJFBxjiYe3p3J41aMV0cbUW5eoIAqmpKFfHMwp51mzyi74aaiy1rkUuim5g7bhprXxKwn
-	 wu1KqRwBzZgwsq4KxIKxUbXDG1mndqiVFk0fZqj6EU20IQJX/zAmzq3q49AbeIZe6VcgYTdg54qK
-	 YPfMdX4Asok9BpwkSNiPrJsnVJgp2a8YHs/RA5MBv12W3kv9Y1xJUPCGMx2ayoJD0k21JzZ4DK4j
-	 C+dTE/bqlkOVOaLikEDiQb+IuDpukCfCWe6x/p/FCgMi0wJHAzBnsB5oDrLTPKNfF/cOnEgPvtXT
-	 ziN01V8UEI8qfQQqoC5nmcoxlCkzSkuO+yQvrP7FFE0cG4qDLQKY+TSszeaXnR+aSyxHKf5DBQv/
-	 NtKGo3yZFromKnzRfksmt2E8EZaVkhE0sVxbcK1J9qtSjlLucE5g==
+X-QQ-mid: xmsmtpt1725272576tb1w0a4u9
+Message-ID: <tencent_1E2599023C54426692690818C4E61D6F5109@qq.com>
+X-QQ-XMAILINFO: OW4JKxETGMY2FyXFUqSmVeeCpTwIsFvOKobtotw2fK19ml5C8lE7XHHzWkU/Vz
+	 70qOjZxuckbbqSoFPqo8ppHgWw0L6J3r1kseZsGd5FLQrtogGnPpYC78KPVbsdWm9LLSuZDMpLVH
+	 KnprhrbH1DamadC3gGdEjjuYAv5/u1LY5E5pdnxGVt1sgC32ZdWmIrPSMiNEz1LOPAek3NqnNZnG
+	 8d0UXGeqq8Z2jlLUk2MRfgaWlKDbtRg0j7OUsqQhqXHOpXcK4vF71HSIpjxZdJvJ8rQYusKP+oqe
+	 LZsINl0dWOeh+bh4PrwtpjYYnf5qTZfMHVrsP9wq8cZlv9tEb5n7529ufrILp+Zki2pMGhl26Ti1
+	 BP61IjHO/A4EiZFG34Z4S4sYlXnVbWvOQmVDXV9OaWCFk75kKq3rxhCR+4d/9D1qnW+CAj/0hpaT
+	 hR5zWLdoCONLofWWO4tdy2hUDFUgBaRUn9c8nDYm/BKnBUk1UBAfoF8jDhfeJdx6qrUc6bzSyhHY
+	 0p0nJ8KLIQF8J3UKndcJrxuJA9JuLqsxsDH/43DIE3RpZPThT9XwqFT7zv0IdBQhl7pa/ze3UQnY
+	 kVQ2NAReJGi26pjtV0L589slQBjS9RTkGmr8qF2ewdc7gvdoex0sQYape/XyAMlU60pFHgMZClQK
+	 xV6ENLzGECNvKh6Xp5Oe3kfImcCC2o9/JjtyRhCurv/Ezl8PEoQlgTwhLiApkc74kA63jb4og0OR
+	 K9b0HsaYoCsQY7tYAKSJM6pS9Ieb86WFF4tAGv0wXi4lLEBDh5HEt7uK8MpyrpA6sldvMZ8F5XFs
+	 bbTsc9s/UxxPHS0mILYKrHx+TC96BMWMAAVpI1ov6OMtbIuKoTdcJmv2S0wo6EhoQ/msvCc/qmDO
+	 o/iR0xepC3o5L6a4p+K5yHk1F4liS2WlgjEA9Uai+hp/80vtft5447l8+VNFJPqj197wPlze90h0
+	 RA5sX7WC1rBL83iI11AibZ1xkE6EWIOgHbLfXGtcWFQ3iv7usE/Q==
 X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/3] erofs-utils: tests: implement checksum calculation for fssum
-Date: Mon,  2 Sep 2024 18:22:51 +0800
-X-OQ-MSGID: <20240902102252.2150182-2-kyr1ewang@qq.com>
+Subject: [PATCH 3/3] erofs-utils: tests: add fssum option for fsck
+Date: Mon,  2 Sep 2024 18:22:52 +0800
+X-OQ-MSGID: <20240902102252.2150182-3-kyr1ewang@qq.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240902102252.2150182-1-kyr1ewang@qq.com>
 References: <20240902102252.2150182-1-kyr1ewang@qq.com>
@@ -91,274 +91,116 @@ Reply-To: Jiawei Wang <kyr1ewang@qq.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch specifically implements the function of calculating image checksum 
-and provides interface function that enables fsck to call to complete the 
-calculation of image checksum.
+This patch introduces a fssum option to the erofs-utils fsck tool, 
+enabling checksum calculation for erofs image files.
 
 Signed-off-by: Jiawei Wang <kyr1ewang@qq.com>
 ---
- fsck/fssum.c | 251 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 251 insertions(+)
+ fsck/Makefile.am |  3 ++-
+ fsck/main.c      | 27 +++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/fsck/fssum.c b/fsck/fssum.c
-index 7c5798c..c6bb1aa 100644
---- a/fsck/fssum.c
-+++ b/fsck/fssum.c
-@@ -255,3 +255,254 @@ int erofs_fssum_addinode(struct erofs_sum_t *dst, struct erofs_inode vi)
+diff --git a/fsck/Makefile.am b/fsck/Makefile.am
+index 5bdee4d..b7f0289 100644
+--- a/fsck/Makefile.am
++++ b/fsck/Makefile.am
+@@ -4,7 +4,8 @@
+ AUTOMAKE_OPTIONS = foreign
+ bin_PROGRAMS     = fsck.erofs
+ AM_CPPFLAGS = ${libuuid_CFLAGS}
+-fsck_erofs_SOURCES = main.c
++noinst_HEADERS = fssum.h
++fsck_erofs_SOURCES = main.c fssum.c
+ fsck_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
+ fsck_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
+ 	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} \
+diff --git a/fsck/main.c b/fsck/main.c
+index 28f1e7e..de0a872 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -13,6 +13,7 @@
+ #include "erofs/compress.h"
+ #include "erofs/decompress.h"
+ #include "erofs/dir.h"
++#include "fssum.h"
+ #include "../lib/compressor.h"
+ 
+ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid);
+@@ -31,6 +32,7 @@ struct erofsfsck_cfg {
+ 	bool overwrite;
+ 	bool preserve_owner;
+ 	bool preserve_perms;
++	bool fssum;
+ };
+ static struct erofsfsck_cfg fsckcfg;
+ 
+@@ -48,6 +50,7 @@ static struct option long_options[] = {
+ 	{"no-preserve-owner", no_argument, 0, 10},
+ 	{"no-preserve-perms", no_argument, 0, 11},
+ 	{"offset", required_argument, 0, 12},
++	{"fssum", no_argument, 0, 13},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -98,6 +101,7 @@ static void usage(int argc, char **argv)
+ 		" --extract[=X]          check if all files are well encoded, optionally\n"
+ 		"                        extract to X\n"
+ 		" --offset=#             skip # bytes at the beginning of IMAGE\n"
++		" --fssum                calculate the checksum of iamge\n"
+ 		"\n"
+ 		" -a, -A, -y             no-op, for compatibility with fsck of other filesystems\n"
+ 		"\n"
+@@ -225,6 +229,9 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
+ 				return -EINVAL;
+ 			}
+ 			break;
++		case 13:
++			fsckcfg.fssum = true;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+@@ -932,6 +939,20 @@ out:
+ 	return ret;
+ }
+ 
++static int erofsfsck_sum_image(struct erofs_sb_info *sbi)
++{
++	struct erofs_dir_context ctx = {
++		.flags = 0,
++		.pnid = 0,
++		.dir = NULL,
++		.de_nid = sbi->root_nid,
++		.dname = "",
++		.de_namelen = 0,
++	};
++	
++	return erofs_fssum_calculate(&ctx);
++}
++
+ #ifdef FUZZING
+ int erofsfsck_fuzz_one(int argc, char *argv[])
+ #else
+@@ -953,6 +974,7 @@ int main(int argc, char *argv[])
+ 	fsckcfg.check_decomp = false;
+ 	fsckcfg.force = false;
+ 	fsckcfg.overwrite = false;
++	fsckcfg.fssum = false;
+ 	fsckcfg.preserve_owner = fsckcfg.superuser;
+ 	fsckcfg.preserve_perms = fsckcfg.superuser;
+ 
+@@ -1017,6 +1039,11 @@ int main(int argc, char *argv[])
+ 		}
  	}
- 	
- 	return 0;
-+}
-+
-+char* erofs_fssum_sum2string(struct erofs_sum_t *dst)
-+{
-+	int i;
-+	char *s = erofs_fssum_alloc(CS_SIZE * 2 + 1);
-+	
-+	for (i = 0; i < CS_SIZE; ++i)
-+		sprintf(s + i * 2, "%02x", dst->out[i]);
-+		
-+	return s;
-+}
-+
-+int erofs_fssum_traverse_dirents(struct erofs_dir_context *ctx,
-+			    void *dentry_blk, unsigned int lblk,
-+			    unsigned int next_nameoff, unsigned int maxsize,
-+			    struct erofs_sum_t *dircs, int level)
-+{
-+	struct erofs_dirent *de = dentry_blk;
-+	const struct erofs_dirent *end = dentry_blk + next_nameoff;
-+	const char *errmsg;
-+	int ret = 0;
-+	bool silent = false;
-+
-+	while (de < end) {
-+		const char *de_name;
-+		unsigned int de_namelen;
-+		unsigned int nameoff;
-+
-+		nameoff = le16_to_cpu(de->nameoff);
-+		de_name = (char *)dentry_blk + nameoff;
-+
-+		/* the last dirent check */
-+		if (de + 1 >= end)
-+			de_namelen = strnlen(de_name, maxsize - nameoff);
-+		else
-+			de_namelen = le16_to_cpu(de[1].nameoff) - nameoff;
-+
-+		ctx->de_nid = le64_to_cpu(de->nid);
-+		erofs_dbg("traversed nid (%llu)", ctx->de_nid | 0ULL);
-+
-+		ret = -EFSCORRUPTED;
-+		/* corrupted entry check */
-+		if (nameoff != next_nameoff) {
-+			errmsg = "bogus dirent nameoff";
-+			break;
-+		}
-+
-+		if (nameoff + de_namelen > maxsize || !de_namelen ||
-+				de_namelen > EROFS_NAME_LEN) {
-+			errmsg = "bogus dirent namelen";
-+			break;
-+		}
-+
-+		ctx->dname = de_name;
-+		ctx->de_namelen = de_namelen;
-+		ctx->de_ftype = de->file_type;
-+		ctx->dot_dotdot = is_dot_dotdot_len(de_name, de_namelen);
-+		ret = erofs_fssum_sum(ctx, dircs, level);
-+		if (ret) {
-+			silent = true;
-+			break;
-+		}
-+		next_nameoff += de_namelen;
-+		++de;
-+	}
-+out:
-+	if (ret && !silent)
-+		erofs_err("%s @ nid %llu, lblk %u, index %lu",
-+			  errmsg, ctx->dir->nid | 0ULL, lblk,
-+			  (de - (struct erofs_dirent *)dentry_blk) | 0UL);
-+	return ret;
-+}
-+
-+int erofs_fssum_iterate_dir(struct erofs_dir_context *ctx, struct erofs_sum_t *dircs, int level)
-+{
-+	struct erofs_inode *dir = ctx->dir;
-+	struct erofs_sb_info *sbi = dir->sbi;
-+	int err = 0;
-+	erofs_off_t pos;
-+	char buf[EROFS_MAX_BLOCK_SIZE];
-+
-+	if (!S_ISDIR(dir->i_mode))
-+		return -ENOTDIR;
-+
-+	ctx->flags &= ~EROFS_READDIR_ALL_SPECIAL_FOUND;
-+	pos = 0;
-+	while (pos < dir->i_size) {
-+		erofs_blk_t lblk = erofs_blknr(sbi, pos);
-+		erofs_off_t maxsize = min_t(erofs_off_t,
-+					dir->i_size - pos, erofs_blksiz(sbi));
-+		const struct erofs_dirent *de = (const void *)buf;
-+		unsigned int nameoff;
-+
-+		err = erofs_pread(dir, buf, maxsize, pos);
-+		if (err) {
-+			erofs_err("I/O error occurred when reading dirents @ nid %llu, lblk %u: %d",
-+				  dir->nid | 0ULL, lblk, err);
-+			return err;
-+		}
-+
-+		nameoff = le16_to_cpu(de->nameoff);
-+		if (nameoff < sizeof(struct erofs_dirent) ||
-+		    nameoff >= erofs_blksiz(sbi)) {
-+			erofs_err("invalid de[0].nameoff %u @ nid %llu, lblk %u",
-+				  nameoff, dir->nid | 0ULL, lblk);
-+			return -EFSCORRUPTED;
-+		}
-+		err = erofs_fssum_traverse_dirents(ctx, buf, lblk, nameoff, maxsize, dircs, level);
+ 
++	if (fsckcfg.fssum) {
++		err = erofsfsck_sum_image(&g_sbi);
 +		if (err)
-+			break;
-+		pos += maxsize;
++			erofs_err("fssum calculation for image falied");
 +	}
-+	
-+	return err;
-+}
-+
-+int erofs_fssum_sum(struct erofs_dir_context *ctx, struct erofs_sum_t *dircs, int level)
-+{
-+	int err;
-+	struct erofs_sum_t meta;
-+	struct erofs_sum_t cs;
-+	struct erofs_inode vi = { .sbi = &g_sbi, .nid = ctx->de_nid };
-+	
-+	
-+	if (ctx->dot_dotdot)
-+		return 0;
-+	
-+	err = erofs_read_inode_from_disk(&vi);
-+	if (err) {
-+		erofs_err("failed to read file inode from disk");
-+		return err;
-+	}
-+
-+	erofs_fssum_init(&meta);
-+	erofs_fssum_init(&cs);
-+	
-+	erofs_fssum_addu64(&meta, level);
-+	erofs_fssum_add(&meta, ctx->dname, ctx->de_namelen);
-+	if (!S_ISDIR(vi.i_mode))
-+		erofs_fssum_addu64(&meta, vi.i_nlink);
-+	erofs_fssum_addu64(&meta, vi.i_uid);
-+	erofs_fssum_addu64(&meta, vi.i_gid);
-+	erofs_fssum_addu64(&meta, vi.i_mode);
-+	erofs_fssum_addtime(&meta, vi.i_mtime);
-+
-+	if (S_ISDIR(vi.i_mode) || S_ISREG(vi.i_mode)) {
-+		ssize_t kllen;
-+		ssize_t ret;
-+		char *keylst, *key;
-+		
-+		kllen = erofs_listxattr(&vi, NULL, 0);
-+		if (kllen < 0)
-+			return kllen;
-+		
-+		keylst = malloc(kllen);
-+		if(!keylst)
-+			return -ENOMEM;
-+			
-+		ret = erofs_listxattr(&vi, keylst, kllen);
-+		if (ret < 0) {
-+			free(keylst);
-+			return err;
-+		}
-+		
-+		for (key = keylst; key < keylst + kllen; key += strlen(key) + 1) {
-+			char *value;
-+			ssize_t size;
-+			        
-+			ret = erofs_getxattr(&vi, key, NULL, 0);
-+			if (ret < 0)
-+				return ret;
-+			        
-+			erofs_fssum_add(&meta, key, strlen(key));
-+			if (ret == 0)
-+				continue;
-+			if (ret) {
-+				size = ret;
-+				value = malloc(size);
-+			        if (!value)
-+			        	return -ENOMEM;
-+			        ret = erofs_getxattr(&vi, key, value, size);
-+			        if (ret < 0){
-+			        	free(value);
-+			                free(keylst);
-+			                return ret;
-+			        }
-+			        erofs_fssum_add(&meta, value, size);
-+			        printf("key:%s val:%s\n", key, value);
-+			}    
-+		}
-+		free(keylst);
-+	}
-+	
-+	if (S_ISDIR(vi.i_mode)) {
-+		struct erofs_dir_context nctx = {
-+			.flags = ctx->dir ? EROFS_READDIR_VALID_PNID : 0,
-+			.pnid = ctx->dir ? ctx->dir->nid : 0,
-+			.dir = &vi,
-+		};
-+		
-+		err = erofs_fssum_iterate_dir(&nctx, &cs, level + 1);
-+		if (err)
-+			return err;
-+	} else {
-+		if (S_ISREG(vi.i_mode)) {
-+			erofs_fssum_addu64(&meta, vi.i_size);
-+			err = erofs_fssum_addinode(&cs, vi); 
-+			if (err)
-+				return err;
-+		} else if (S_ISLNK(vi.i_mode)) {
-+			err = erofs_fssum_addinode(&cs, vi);
-+			if (err)
-+			        return err;
-+		} else if (S_ISCHR(vi.i_mode) || S_ISBLK(vi.i_mode)) {
-+			erofs_fssum_addu64(&cs, major(vi.u.i_rdev));
-+			erofs_fssum_addu64(&cs, minor(vi.u.i_rdev));
-+		}
-+	}
-+	
-+	erofs_fssum_fini(&cs);
-+	erofs_fssum_fini(&meta);
-+	erofs_fssum_addsum(dircs, &cs);
-+	erofs_fssum_addsum(dircs, &meta);
-+	
-+	return 0;
-+}
-+
-+int erofs_fssum_calculate(struct erofs_dir_context *ctx)
-+{
-+	struct erofs_sum_t ans_cs;
-+	struct erofs_inode vi = { .sbi = &g_sbi, .nid = ctx->de_nid };
-+	struct erofs_dir_context nctx = {
-+			.flags = ctx->dir ? EROFS_READDIR_VALID_PNID : 0,
-+			.pnid = ctx->dir ? ctx->dir->nid : 0,
-+			.dir = &vi,
-+		};
-+	int ret = 0;
-+	
-+	ret = erofs_read_inode_from_disk(&vi);
-+	if (ret) {
-+		erofs_err("failed to read file inode from disk");
-+		return ret;
-+	}
-+	erofs_fssum_init(&ans_cs);
-+	ret = erofs_fssum_iterate_dir(&nctx, &ans_cs, 1);
-+	erofs_fssum_fini(&ans_cs);
-+	fprintf(stdout, "%s\n", erofs_fssum_sum2string(&ans_cs));
-+	
-+	return ret;
-+}
+ exit_hardlink:
+ 	if (fsckcfg.extract_path)
+ 		erofsfsck_hardlink_exit();
 -- 
 2.34.1
 
