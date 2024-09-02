@@ -2,54 +2,75 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B562A96826C
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 10:53:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 61C199682A2
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 11:05:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1725267904;
+	bh=TQsmNWJpgMKQcVX8UDqSzsB4Bs+ipIytVMnLzc8Cjjc=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=mv29YzSojQVrYyh0c/EVUleV6i48N8BtO/uxLGsmTqPqc67WxKPGXwp7XPvSdEO/W
+	 UsrVvBW+aZO7SAr4fMpX/iuOrxPYNAhRPfFqJCPn1q3TQrS6P6i1UCgViBJUqGpaxK
+	 yOXFZr+5KRFFQtEK6gZOfr4sKdmAQ7Xjc7bAmQXGlnJTVKYl1Z5ZY2xMILC6sliwPz
+	 6f/JCWzXZkyGZfteLseCdTZQhbEUckt+1Vfb7uk0+pa6cyQXFE4l2beruz6Im7QWX6
+	 Q03ch37Qb+XNFRiMdc8K0IPDapKnaKzU7ZutINPdIdE4Jccnd/1uWdjGLr/WdYM3mB
+	 lgOU5pODSujsA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wy2b95ksMz2yNR
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 18:53:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wy2rw0xvZz2yNJ
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 19:05:04 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725267188;
-	cv=none; b=a/Kcd+gmrEN3Z0p5ZcW9K3wmOPa8bxV7whZ64pYDtpU2fg4UoITZ+cTLsiel+EP9V4vdgCkn6BV/zjPkZ/IuRLewcWcLqVMXcnzSZ60K08nwIduhyyZukEBDvI8DZpUA4S15NvfaECAxaCzOrLE1C6GD9KT1PkVTjJBJgyUVJqCKm8FaSIJ/rMZCCdm/U88ksX0X8xz1IQ7i6+I4nJQ8aUnGBvAsRh/KGBySXwm8w16z+ouOwOu9cHSqrybMu76M46AIIrm/EqScQFfBBRKU/1tvOFfzHVVVm/EmNCmkfD9VYwqTk97LOk1tZV2rGNgfiojltpBgmL3AHlukcxmbQg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725267901;
+	cv=none; b=J7JCDlCUqBahf+zJowZdUkDBx4njrc+N5UMeBH5X3y9ascOIgDg8hDXA9MKuNKeY+BfO+RjzJxhK2dzIkufdyK2ICaOnDs95XuJb86Y6zyRxinjvS2Gxx++STx5/wgQpoGQnAihS42hnti3K93BPJ/v6w2UlJ+UzMEIrwtGFyT5EruYknCOVUvxA82Kl33torHoaqEKzqeBG+53mdnMANTlhmB9IpROnUYyZNxQ7TAMiGgTwBbzDIEKfhozGl+FdDPV6JoaIr300XQ92x9hN8E/tfFX7h3tF/CrVXh2i1eLaEZbODeFfPZofVWPna9NOPs4mVFatq0rHvTQ0uxssbg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725267188; c=relaxed/relaxed;
-	bh=xpQZ7hJDTbJ9KCZwvp8AiR6qR/AwwSRf9hynOv344Ro=;
-	h=DKIM-Signature:Received:Message-ID:Date:MIME-Version:User-Agent:
-	 From:Subject:To:References:Cc:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=T9lR7fu9a7M/ZiTR2IjiUAyFy9wYTY+M6dPIE0NTqup2tnKLtWqgFAhyqNeqBj0QyhIhHhzeQFGNrjOPnW4eHHdpb9d4zPiamFxmv3CjJQstWR2hefULcYZvAJlTPaIl9QydiGjO2OHP06uZb6BlefjHGMznNdTGwnVzvQlBPVxm6GgwaYVHF4umwWgr99R0OGmS6wH8bSCOUb+nRkfBBBUPFkyV7Ct0t4IlM5T4qw4prVKG0mcOCAoXUx5amHUAFSJ+jxM6YJ9io/HyEsTSeSNZCAEstJeB0rLY/woJNcmSKWlKQlyPot6v8daM9dhhuERhzSxzAbaUGsj4yBSxKg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=QT1HoiHU; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1725267901; c=relaxed/relaxed;
+	bh=TQsmNWJpgMKQcVX8UDqSzsB4Bs+ipIytVMnLzc8Cjjc=;
+	h=Received:Received:DKIM-Signature:Date:From:To:Cc:Subject:
+	 Message-ID:Mail-Followup-To:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JElBk0h17+GP36gTxdXebrmTsIOQA4QWnAIJAxKJllIBVcKMOaN+r7izLl/iV/pKamp01buage6uVlXQBUPQwVo8XvUSTchjTTOpUaQJ7ASFDV8h68sT1bHGfHOTnoSxE1sgupQuMr2RMHoaWQqW9Q8UzMQDbWlZezxARtIlp0kSi3cOfDl2J5Kcvm2KfmZ7wGxE4lj2jDJg20pg/5wCK6wjnG5MytOijs53TbNkNL58XDPsaZQ73+hNdDKOBQvXkgDHy7Ox3zqMyIUQcYAK3yNEY8sh/xZqm8UVZLccCWx5xRGslNlldtTy6/pXb0nEtzenqSOIK5Jhi8FbKtsHWg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=u8d5KG78; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=QT1HoiHU;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=u8d5KG78;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wy2b75rR4z2xb9
-	for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2024 18:53:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1725267184; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
-	bh=xpQZ7hJDTbJ9KCZwvp8AiR6qR/AwwSRf9hynOv344Ro=;
-	b=QT1HoiHUOhHz+kLGC77VZynOl3D8BT5oJ83Rf71K4V0zeDgRBaZ5J3hzifGmE/2/Ns5zDPDOXa8SHYQHfHGNr9MvU32FOnvazvjQmoLDhWdwxiiv/eibzXty5ZQlpUoqd9YoTqwqPKVMhPEswTdkM6nHUHxoG70hAJJxyuYiw/0=
-Received: from 30.221.132.251(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WE63wr3_1725267182)
-          by smtp.aliyun-inc.com;
-          Mon, 02 Sep 2024 16:53:03 +0800
-Message-ID: <ca8dea24-1ef2-46a8-bfca-72aeffa1f6e6@linux.alibaba.com>
-Date: Mon, 2 Sep 2024 16:53:02 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH V4 2/2] erofs: refactor read_inode calling convention
-To: Yiyang Wu <toolmanp@tlmp.cc>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wy2rs35TJz2xZY
+	for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2024 19:05:01 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 7985F5C57AA;
+	Mon,  2 Sep 2024 09:04:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279AEC4CEC2;
+	Mon,  2 Sep 2024 09:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725267898;
+	bh=KvXscvN78Ao8anzOavQBBAUcQkSkV1wlEFUurKNjQcs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u8d5KG78lYck5XcL0P3mmh+NRARmGaESQjh9dEqoJFtQSmJmFGi2ONSEXaSd/8UAc
+	 Ohn1V/qBdVe8KglC3hTHWkDxt4qu2q6TzNjbQftleV89sp+jsd9ncFQ/Q3XVId+DCl
+	 1WSjqfUVRMVDNGgUhCFz4E7lusZ2GAiScXPSFOCgBAM1g7yTGcsuKXPrl9S8YyS3CE
+	 JGa3YuN0v63ntQyPRG9xpNSs2hrW0NXptv7PWUgqkCdttmMJCHLmM89fO0Z8zr3uDS
+	 BQlrC2/mHY77oISmAO35JTL6PIgDLNubBV/GTd6pVpUiQmirXDZsGbVhN5oFdIA+On
+	 hE6rSWUithovQ==
+Date: Mon, 2 Sep 2024 17:04:50 +0800
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH V4 1/2] erofs: use kmemdup_nul in erofs_fill_symlink
+Message-ID: <ZtV/speqypBt99sE@debian>
+Mail-Followup-To: Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Yiyang Wu <toolmanp@tlmp.cc>, linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
 References: <20240902083147.450558-1-toolmanp@tlmp.cc>
- <20240902083147.450558-3-toolmanp@tlmp.cc>
-In-Reply-To: <20240902083147.450558-3-toolmanp@tlmp.cc>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <20240902083147.450558-2-toolmanp@tlmp.cc>
+ <5783ccbd-34cb-4f1b-8376-d795df2db4e3@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5783ccbd-34cb-4f1b-8376-d795df2db4e3@linux.alibaba.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,259 +82,96 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <xiang@kernel.org>
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-
-
-On 2024/9/2 16:31, Yiyang Wu wrote:
-> Refactor out the iop binding behavior out of the erofs_fill_symlink
-> and move erofs_buf into the erofs_read_inode, so that erofs_fill_inode
-> can only deal with inode operation bindings and can be decoupled from
-> metabuf operations. This results in better calling conventions.
+On Mon, Sep 02, 2024 at 04:52:30PM +0800, Gao Xiang wrote:
 > 
-> Note that after this patch, we do not need erofs_buf and ofs as
-> parameters any more when calling erofs_read_inode as
-> all the data operations are now included in itself.
 > 
-> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> Link: https://lore.kernel.org/all/20240425222847.GN2118490@ZenIV/
-> Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
-> ---
->   fs/erofs/inode.c | 127 +++++++++++++++++++++++------------------------
->   1 file changed, 61 insertions(+), 66 deletions(-)
+> On 2024/9/2 16:31, Yiyang Wu wrote:
+> > Remove open coding in erofs_fill_symlink.
+> > 
+> > Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+> > Link: https://lore.kernel.org/all/20240425222847.GN2118490@ZenIV
+> > Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
 > 
-> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-> index 40d3f4921d81..ae11af82e2ec 100644
-> --- a/fs/erofs/inode.c
-> +++ b/fs/erofs/inode.c
-> @@ -8,8 +8,33 @@
->   
->   #include <trace/events/erofs.h>
->   
-> -static void *erofs_read_inode(struct erofs_buf *buf,
-> -			      struct inode *inode, unsigned int *ofs)
-> +static int erofs_fill_symlink(struct inode *inode, void *kaddr,
-> +			      unsigned int m_pofs)
-> +{
-> +	struct erofs_inode *vi = EROFS_I(inode);
-> +	unsigned int bsz = i_blocksize(inode);
-> +
-> +	/* if it cannot be handled with fast symlink scheme */
-> +	if (vi->datalayout != EROFS_INODE_FLAT_INLINE ||
-> +	    inode->i_size >= bsz || inode->i_size < 0) {
-> +		return 0;
-> +	}
-> +
-> +	m_pofs += vi->xattr_isize;
-> +	/* inline symlink data shouldn't cross block boundary */
-> +	if (m_pofs + inode->i_size > bsz) {
-> +		erofs_err(inode->i_sb, "inline data cross block boundary @ nid %llu",
-> +			  vi->nid);
-> +		DBG_BUGON(1);
-> +		return -EFSCORRUPTED;
-> +	}
-> +
-> +	inode->i_link = kmemdup_nul(kaddr + m_pofs, inode->i_size, GFP_KERNEL);
+> If a patch is unchanged, you have two ways to handle:
+>  - resend the patch with new received "Reviewed-by";
+>  - just send the updated [PATCH 2/2] with new version
+>    and `--in-reply-to=<old message id>`.
+> 
+> I will apply this patch first.
 
-Honestly I don't like one statement between two new lines,
-but I could manually update this when applying.
+I applied this patch as
 
-> +
-> +	return inode->i_link ? 0 : -ENOMEM;
-> +}
-> +
-> +static int erofs_read_inode(struct inode *inode)
->   {
->   	struct super_block *sb = inode->i_sb;
->   	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> @@ -20,20 +45,21 @@ static void *erofs_read_inode(struct erofs_buf *buf,
->   	struct erofs_inode_compact *dic;
->   	struct erofs_inode_extended *die, *copied = NULL;
->   	union erofs_inode_i_u iu;
-> -	unsigned int ifmt;
-> -	int err;
-> +	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-> +	unsigned int ifmt, ofs;
-> +	int err = 0;
->   
->   	blkaddr = erofs_blknr(sb, inode_loc);
-> -	*ofs = erofs_blkoff(sb, inode_loc);
-> +	ofs = erofs_blkoff(sb, inode_loc);
->   
-> -	kaddr = erofs_read_metabuf(buf, sb, erofs_pos(sb, blkaddr), EROFS_KMAP);
-> +	kaddr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr), EROFS_KMAP);
->   	if (IS_ERR(kaddr)) {
->   		erofs_err(sb, "failed to get inode (nid: %llu) page, err %ld",
->   			  vi->nid, PTR_ERR(kaddr));
-> -		return kaddr;
-> +		return PTR_ERR(kaddr);
->   	}
->   
-> -	dic = kaddr + *ofs;
-> +	dic = kaddr + ofs;
->   	ifmt = le16_to_cpu(dic->i_format);
->   	if (ifmt & ~EROFS_I_ALL) {
->   		erofs_err(sb, "unsupported i_format %u of nid %llu",
-> @@ -54,11 +80,11 @@ static void *erofs_read_inode(struct erofs_buf *buf,
->   	case EROFS_INODE_LAYOUT_EXTENDED:
->   		vi->inode_isize = sizeof(struct erofs_inode_extended);
->   		/* check if the extended inode acrosses block boundary */
-> -		if (*ofs + vi->inode_isize <= sb->s_blocksize) {
-> -			*ofs += vi->inode_isize;
-> +		if (ofs + vi->inode_isize <= sb->s_blocksize) {
-> +			ofs += vi->inode_isize;
->   			die = (struct erofs_inode_extended *)dic;
->   		} else {
-> -			const unsigned int gotten = sb->s_blocksize - *ofs;
-> +			const unsigned int gotten = sb->s_blocksize - ofs;
->   
->   			copied = kmalloc(vi->inode_isize, GFP_KERNEL);
->   			if (!copied) {
-> @@ -66,16 +92,16 @@ static void *erofs_read_inode(struct erofs_buf *buf,
->   				goto err_out;
->   			}
->   			memcpy(copied, dic, gotten);
-> -			kaddr = erofs_read_metabuf(buf, sb, erofs_pos(sb, blkaddr + 1),
-> +			kaddr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr + 1),
->   						   EROFS_KMAP);
->   			if (IS_ERR(kaddr)) {
->   				erofs_err(sb, "failed to get inode payload block (nid: %llu), err %ld",
->   					  vi->nid, PTR_ERR(kaddr));
->   				kfree(copied);
-> -				return kaddr;
-> +				return PTR_ERR(kaddr);
->   			}
-> -			*ofs = vi->inode_isize - gotten;
-> -			memcpy((u8 *)copied + gotten, kaddr, *ofs);
-> +			ofs = vi->inode_isize - gotten;
-> +			memcpy((u8 *)copied + gotten, kaddr, ofs);
->   			die = copied;
->   		}
->   		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
-> @@ -91,11 +117,10 @@ static void *erofs_read_inode(struct erofs_buf *buf,
->   
->   		inode->i_size = le64_to_cpu(die->i_size);
->   		kfree(copied);
-> -		copied = NULL;
->   		break;
->   	case EROFS_INODE_LAYOUT_COMPACT:
->   		vi->inode_isize = sizeof(struct erofs_inode_compact);
-> -		*ofs += vi->inode_isize;
-> +		ofs += vi->inode_isize;
->   		vi->xattr_isize = erofs_xattr_ibody_size(dic->i_xattr_icount);
->   
->   		inode->i_mode = le16_to_cpu(dic->i_mode);
-> @@ -119,6 +144,11 @@ static void *erofs_read_inode(struct erofs_buf *buf,
->   	case S_IFREG:
->   	case S_IFDIR:
->   	case S_IFLNK:
-> +		if(S_ISLNK(inode->i_mode)) {
-> +			err = erofs_fill_symlink(inode, kaddr, ofs);
-> +			if (err)
-> +				goto err_out;
-> +		}
->   		vi->raw_blkaddr = le32_to_cpu(iu.raw_blkaddr);
+From b3c5375ceb2944a7e4d34a6fb106ecd4614260d7 Mon Sep 17 00:00:00 2001
+From: Yiyang Wu <toolmanp@tlmp.cc>
+Date: Mon, 2 Sep 2024 16:31:46 +0800
+Subject: erofs: use kmemdup_nul in erofs_fill_symlink
 
-I prefer
-		vi->raw_blkaddr = le32_to_cpu(iu.raw_blkaddr);
-		if (S_ISLNK(inode->i_mode)) {
-			...
-		}
+Remove open coding in erofs_fill_symlink.
 
-here though.
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Link: https://lore.kernel.org/all/20240425222847.GN2118490@ZenIV
+Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
+Link: https://lore.kernel.org/r/20240902083147.450558-2-toolmanp@tlmp.cc
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/inode.c | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
-Although it has no real affact, but raw_blkaddr would be
-better to assign first.
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 82259553d9f641..68ea67e0caf33a 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -179,7 +179,6 @@ static int erofs_fill_symlink(struct inode *inode,
+void *kaddr,
+ {
+ 	struct erofs_inode *vi = EROFS_I(inode);
+ 	unsigned int bsz = i_blocksize(inode);
+-	char *lnk;
+ 
+ 	/* if it cannot be handled with fast symlink scheme */
+ 	if (vi->datalayout != EROFS_INODE_FLAT_INLINE ||
+@@ -188,24 +187,18 @@ static int erofs_fill_symlink(struct inode *inode,
+void *kaddr,
+ 		return 0;
+ 	}
+ 
+-	lnk = kmalloc(inode->i_size + 1, GFP_KERNEL);
+-	if (!lnk)
+-		return -ENOMEM;
+-
+ 	m_pofs += vi->xattr_isize;
+ 	/* inline symlink data shouldn't cross block boundary */
+ 	if (m_pofs + inode->i_size > bsz) {
+-		kfree(lnk);
+-		erofs_err(inode->i_sb,
+-			  "inline data cross block boundary @ nid %llu",
++		erofs_err(inode->i_sb, "inline data cross block boundary
+@ nid %llu",
+ 			  vi->nid);
+ 		DBG_BUGON(1);
+ 		return -EFSCORRUPTED;
+ 	}
+-	memcpy(lnk, kaddr + m_pofs, inode->i_size);
+-	lnk[inode->i_size] = '\0';
+ 
+-	inode->i_link = lnk;
++	inode->i_link = kmemdup_nul(kaddr + m_pofs, inode->i_size,
+GFP_KERNEL);
++	if (!inode->i_link)
++		return -ENOMEM;
+ 	inode->i_op = &erofs_fast_symlink_iops;
+ 	return 0;
+ }
 
->   		break;
->   	case S_IFCHR:
-> @@ -165,59 +195,24 @@ static void *erofs_read_inode(struct erofs_buf *buf,
->   		inode->i_blocks = round_up(inode->i_size, sb->s_blocksize) >> 9;
->   	else
->   		inode->i_blocks = nblks << (sb->s_blocksize_bits - 9);
-> -	return kaddr;
->   
->   err_out:
-> -	DBG_BUGON(1);
-> -	kfree(copied);
-> -	erofs_put_metabuf(buf);
-> -	return ERR_PTR(err);
-> -}
-> -
-> -static int erofs_fill_symlink(struct inode *inode, void *kaddr,
-> -			      unsigned int m_pofs)
-> -{
-> -	struct erofs_inode *vi = EROFS_I(inode);
-> -	unsigned int bsz = i_blocksize(inode);
-> -
-> -	/* if it cannot be handled with fast symlink scheme */
-> -	if (vi->datalayout != EROFS_INODE_FLAT_INLINE ||
-> -	    inode->i_size >= bsz || inode->i_size < 0) {
-> -		inode->i_op = &erofs_symlink_iops;
-> -		return 0;
-> -	}
-> -
-> -	m_pofs += vi->xattr_isize;
-> -	/* inline symlink data shouldn't cross block boundary */
-> -	if (m_pofs + inode->i_size > bsz) {
-> -		erofs_err(inode->i_sb, "inline data cross block boundary @ nid %llu",
-> -			  vi->nid);
-> -		DBG_BUGON(1);
-> -		return -EFSCORRUPTED;
-> -	}
-> -	
-> -	inode->i_link = kmemdup_nul(kaddr + m_pofs, inode->i_size, GFP_KERNEL);
-> -	if (!inode->i_link)
-> -		return -ENOMEM;
-> -
-> -	inode->i_op = &erofs_fast_symlink_iops;
-> -	return 0;
-> +	DBG_BUGON(err);
-> +	erofs_put_metabuf(&buf);
-> +	return err;
->   }
->   
->   static int erofs_fill_inode(struct inode *inode)
->   {
->   	struct erofs_inode *vi = EROFS_I(inode);
-> -	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-> -	void *kaddr;
-> -	unsigned int ofs;
->   	int err = 0;
->   
->   	trace_erofs_fill_inode(inode);
->   
->   	/* read inode base data from disk */
-> -	kaddr = erofs_read_inode(&buf, inode, &ofs);
-> -	if (IS_ERR(kaddr))
-> -		return PTR_ERR(kaddr);
-> +	err = erofs_read_inode(inode);
-> +	if (err)
-> +		return err;
->   
->   	/* setup the new inode */
->   	switch (inode->i_mode & S_IFMT) {
-> @@ -234,9 +229,11 @@ static int erofs_fill_inode(struct inode *inode)
->   		inode_nohighmem(inode);
->   		break;
->   	case S_IFLNK:
-> -		err = erofs_fill_symlink(inode, kaddr, ofs);
-> -		if (err)
-> -			goto out_unlock;
-> +		if (inode->i_link)
-> +			inode->i_op = &erofs_fast_symlink_iops;
-> +		else
-> +			inode->i_op = &erofs_symlink_iops;
-> +
 
-I don't quite like this new line too, since
-it's already simple enough.
-
-New line is used to seperate different logic,
-not just different block.  Yet that is my
-own perference though.
+To fix a redundant tab and a blank line.
 
 Thanks,
 Gao Xiang
