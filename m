@@ -2,67 +2,62 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2533D9681AD
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 10:26:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E0EFF9681DF
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 10:30:36 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1725265569;
-	bh=UhT3U5zyLILdoM1tyZBb1t7DNlyeif+DRzYH4+w3qmw=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=dEAIIROxRb91DT7akp0fkh7FvT7idIs402aOAcOkQIGll4fkZgyUw6VjTVnCfOT3r
-	 wtBbNwRy1PnwfSf9zkbd+R4zVtmXZHq7WyjnevgVF1jkE2s008W7uwnQPY0NXIJR4I
-	 smvB6K7b6zRitMqUOcz/1Y91oBQoWK3B+y4jo9xHJs/0/5AQcLQ5tJ0zFWHfYq10WA
-	 aA0tGVtKwT3Rcusk3rBJupQY7qOlsxkGthorXPzRu11ba6PgJhtZ8NkBvZvCmv2D02
-	 RfDpC5WI6VqE7dIRqGBHL27YfFu6tWv5BT1AqvyskS/4zcMmJCENar+uKJ5y2cUIYu
-	 f+tnIi6Bj+WPg==
+	s=201707; t=1725265834;
+	bh=qrCNvicodlSdNtI3m0rhOX/zs3Y0RyZj7feiE8HzeJE=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=XeeSLiCiNUlspNbPbWPuB+t8iWRYfShu4lDSctc57RPbzhbJRofumuI5QkyfEAbU1
+	 aetxhybQ9fjvEJELnvpF1HylnCMopoINwxLxo9ziyfM1Hvpw8qWZxpGdRkQOXufy2j
+	 GULPShOrNnEmM1gmkUbynQk3IzmbFy2RtmA3v5ObOuz/7cPkqGfNZSe8zwx5x5uehb
+	 OU3QznCIuuWzNuoL9qqRcR/JjqaMwTfW8HsDE7t/iSwIbjqxIaYivwl5fqvj4B5oWw
+	 VJgXQJkhR5yI+0pKw6z8uOKEW0Mpc+2aBe5dg26TxwGxhZko/7U1hJwgvIdKz2RbyY
+	 +k5LbaCvUfkzw==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wy2015vpJz2yNf
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 18:26:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wy2563glsz2yNc
+	for <lists+linux-erofs@lfdr.de>; Mon,  2 Sep 2024 18:30:34 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=148.135.17.20
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725265564;
-	cv=none; b=e3U3cnGdDeL0hPxU6QD52wYLxIpZ/LteJo9imgM8vAEwzjjZyPOrQmDqXpsdz5QuagZimenmnhKO3FYBuKMID1raoBspQS4FTazDbwPisn2VB/kIv/AVKwXKS3LPgbFqkfdloBpTf9WwbEBjqQstKhjTJspsA7RTbBZvARdxwBFK6wdS7S0MCmhfgwi3VGMV1ouyOrGus5DWymJW7/Vx/eO1KE+9OBaJZTYviVCbrvtTtH09Tduxcg3rzFjkvOvSGN3lfxzKCQ9+oQI06pkhojelChF4cZE2NXe+Wf96bc1cyLZs35mVibVzRqM0P7815xNCxpYww5hPuuKP0HMFjg==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725265832;
+	cv=none; b=JTz1THueKNwD/VSSq0CbnuSxsxId4phToX6KvQAKWnqX/OuEF4/7OWzIEQyOipf6ub9C7eIp7WaYKc/wuZ40f6URjNzUNwhvONsch4J5XY0nN17bVtZxCs0q1f7npv3SGaMLg72kHkK+JKAhkVdOAtp1Rtp30hm6t5OJ3xRLuLm2r9h3zknT8dOKEHdzgGfSdaX+jDQdfMM/UX6qewlqpKmXCav096MK7BCkNYG25JZFj6eXc82npMIzMoSqLCuvAYcb9M+Y5nbBXJHIkODjKD35pxwwIRNhTXlQwTnVO2RdDlBQRq1RfGlkuPpJy/SZyAQH/TQYalM5uwZvJZT2nA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725265564; c=relaxed/relaxed;
-	bh=UhT3U5zyLILdoM1tyZBb1t7DNlyeif+DRzYH4+w3qmw=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To:X-Last-TLS-Session-Version; b=RUeMfbZ8uz51X1mewEGDHxxahy0BnCduJuVV5KQ402djcbtrSSiY8Uw7ChcXWLM+4GhKKdvR2IWByleP14EJQuuTbtJ7EKfi/iFqJqianGQSi/wbBNBvisCVQPTl4g07+xGhWdmZuLZLlH3SYE+yBQpWDKKNckPPVTzlB1HSOyfOInACMcsnlWa9S5WVW4bP+LLXhyRBoYQ3PoBhf1bAwD8q9DOvg/OsqxiEfMkB5e4YlSXpcFxarJx3J5lRd2h7YCTGTkZL8e0e4pkchry+ki+vFv9B7Yz6X/JvW0Wczxnjx5GSfFt2MEaqEctW0DKIW4Jr24IAe5y9WWgLRyACuQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=Getyq49N; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
+	t=1725265832; c=relaxed/relaxed;
+	bh=qrCNvicodlSdNtI3m0rhOX/zs3Y0RyZj7feiE8HzeJE=;
+	h=Received:DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:
+	 X-Mailer:MIME-Version:Content-Transfer-Encoding:
+	 X-Last-TLS-Session-Version; b=E/xIta1vNoetRPc1shXlfSql5ZH/gu847lKgKRW5RKpkMHNhu0eTXsS29MfIIwxCjn3H57oB4OKF3eGcKOBOlejohlU/P2nDwCzqJPJ/b25J4R7r+MwQzL0su8Fu3UAA/g/IAfD5AdN13aJJc4qEhMILU6I9VqyrXhY/BuLqcpl8vQlctpEny16aoGRGdB9fcN3OdCIQQrqmunt7t27cYbzhbSZ1aokDvRO+bBbwjmryFGpAPILb6wn78TVVGAEyHTfRhqfRk3XTXCJohpUEEDXBnMyaq9Qa7MT6WqyZknYgeFvdKzGxjV/zRO5rZQXq1VFPcOWMNoc9uazZ4+C2UA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=olDWk6XD; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=Getyq49N;
+	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=olDWk6XD;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=tlmp.cc (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org)
 Received: from mail.tlmp.cc (unknown [148.135.17.20])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wy1zv4TYqz2xdY
-	for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2024 18:26:03 +1000 (AEST)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 567E9697D1;
-	Mon,  2 Sep 2024 04:25:56 -0400 (EDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wy2542lBqz2xb9
+	for <linux-erofs@lists.ozlabs.org>; Mon,  2 Sep 2024 18:30:32 +1000 (AEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8A3E269799;
+	Mon,  2 Sep 2024 04:30:26 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tlmp.cc; s=dkim;
-	t=1725265560; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=UhT3U5zyLILdoM1tyZBb1t7DNlyeif+DRzYH4+w3qmw=;
-	b=Getyq49NqDeqVZkMt1QZ3Cf7CeW/swOruiVOs46r332V1ZklA6kLb0igYL308Q1rFQSox7
-	H3K2Ghbq0h7pdLPUV5wnYk/meW7nmTDALMhr62sUm5v344Hc3l4XfUJwYc2C1xcsqjOHuF
-	mOnE0o6TAneEwd/9Et0FTLZK3pYvZguSL/J5GJg0Gc4oN6R/yM/8VMC/9Q8jOt3m2y7GVK
-	vWj/57/Ces9DGLRnfu0zcvERy6orpt2GiOzOuMj3wqWVN6jvABohHF6Egm3Yjdye5HVg/K
-	bSW2vtpfCY35T2hztsmE4ohsfrjUHWRv7XGsvZwPZmwkaAjpNRdhUYg6/fNKow==
-Date: Mon, 2 Sep 2024 16:25:52 +0800
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH V3 2/2] erofs: refactor read_inode calling convention
-Message-ID: <7d5r3gf4drcyraiahnuwo6ia5czursu2s6bd4jo4fcizhgwqhk@6qwnh7kn53qz>
-References: <20240902080417.427993-1-toolmanp@tlmp.cc>
- <20240902080417.427993-3-toolmanp@tlmp.cc>
- <1cbbd501-bd81-4df8-a887-8c07e0469ae1@linux.alibaba.com>
+	t=1725265829; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=qrCNvicodlSdNtI3m0rhOX/zs3Y0RyZj7feiE8HzeJE=;
+	b=olDWk6XDyTNXfPWufG3Oj3xdoICOCgnTNEpWGXoGNj9lvYiyMUG4Vy/w3dUrbOr0DJb626
+	dknvMR9yVlLpHk0w0lHrTySRjvjgfglsw60sA6Uko8Az2wvmKpKnOdMWGsBOqn+YpziFSX
+	vkb1Pq3SaUpasfuzmDxblGOTq9lpVute9aHjlA6TM4eO64wHt6H7oYlkVFWXfYwDrQN8Oi
+	kehSPDV+dXIKckWkQi4sMsmIx07RBlVndUP8gC+9GkZHJSP6dlTgcB23yW6M8qXrVNmIVe
+	sqqxlJ3jUgiqaOzubNJpl15CGA+GHo1thg04qeqHDp9UHgq00UjQUdw+101ZVg==
+To: hsiangkao@linux.alibaba.com
+Subject: 
+Date: Mon,  2 Sep 2024 16:30:22 +0800
+Message-ID: <20240902083024.448367-1-toolmanp@tlmp.cc>
+X-Mailer: git-send-email 2.46.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1cbbd501-bd81-4df8-a887-8c07e0469ae1@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -81,54 +76,33 @@ Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Sep 02, 2024 at 04:12:31PM GMT, Gao Xiang wrote:
-> 
-> 
-> > +static int erofs_read_inode(struct inode *inode)
-> >   {
-> >   	struct super_block *sb = inode->i_sb;
-> >   	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> > @@ -20,20 +45,21 @@ static void *erofs_read_inode(struct erofs_buf *buf,
-> >   	struct erofs_inode_compact *dic;
-> >   	struct erofs_inode_extended *die, *copied = NULL;
-> >   	union erofs_inode_i_u iu;
-> > -	unsigned int ifmt;
-> > -	int err;
-> > +	struct erofs_buf buf;
-> 
-> Should be
-> 	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-> 
-> Otherwise buf itself will be left uninitialized.
-> 
+Subject: [PATCH V4 0/2] erofs: refactor fast_symlink and read_inode
 
-My bad, i forget this when rebasing. will be fixed in next version.
+This patchset is response to the original suggestions posted here[1].
+Since my later work is somehow related to this issue, i think it's
+better to deal with it first.
 
-> >   		inode_nohighmem(inode);
-> >   		break;
-> >   	case S_IFCHR:
-> > @@ -269,7 +266,6 @@ static int erofs_fill_inode(struct inode *inode)
-> >   #endif
-> >   	}
-> >   out_unlock:
-> 
-> I mean since `return err` is the only useful statement for
-> label `out_unlock`.
-> 
-> You could just remove it entirely and replace all
-> `goto out_unlock` to `return err`;
-> 
-> the name `out_unlock` itself is also meaningless due to
-> this patch.
-> 
-> Thanks,
-> Gao Xiang
-> 
-> > -	erofs_put_metabuf(&buf);
-> >   	return err;
-> >   }
-> 
-Got it, will be fixed in next version.
+Changes in V2:
+  1. Lift the erofs_fill_symlink patch to 1/2
+  2. Fix code styles problems in read_inode patch.
+  3. Fix the formatting problems caused by clang-format.
 
-Best Regards,
-Yiyang Wu
+Changes in V3:
+  1. Remove some redundant variables and statements in both patches.
+
+Changes in V4:
+  1. Remove out_unlock in erofs_fill_inode and use early returns.
+  2. Fix missing initializer for erofs_buf in erofs_read_inode.
+
+[1]: https://lore.kernel.org/all/20240425222847.GN2118490@ZenIV/
+
+Yiyang Wu (2):
+  erofs: use kmemdup_nul in erofs_fill_symlink
+  erofs: refactor read_inode calling convention
+
+ fs/erofs/inode.c | 133 ++++++++++++++++++++++-------------------------
+ 1 file changed, 61 insertions(+), 72 deletions(-)
+
+-- 
+2.46.0
+
