@@ -2,73 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 080BD969177
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Sep 2024 04:38:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1725331087;
-	bh=TRVL9ISUj2NM95nVZR93PyDfyOfsECfnzztpvLyuYT0=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=NYKc/RQ87g6oiA6o+EveuLcOE41Oq5nLZaC29tqKXq0PjWxVu1XqkOE64P1d9hs6/
-	 CqQ/GMKJgdqJ1jK2KJQtAj5kTD/PZwz6c9hf6qaXORsgHTzvFeDEar4NSvvNx2ZeNY
-	 PF8o/99Smb7eiPHe6tmhR2SWwP4wGSIds2Xz8xnMwmFO2AmT9nHkBjk1fTuExO6lMV
-	 6b2OHN3f+qnHwsfFVf7hIKMHteAzrOAm4nH+H+1PkMTp0+Xi8MPX41HzLr3S1aHYDS
-	 3dWsLHxEg50eg8/otQdyebExx/HpIJHvgxElU1ZDiaSfGk0hhU5nwK3pd4//mfJ60G
-	 PUv6j9hevI6mg==
+	by mail.lfdr.de (Postfix) with ESMTPS id 6116C9695B3
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Sep 2024 09:35:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WyVCz6vwFz2yNJ
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Sep 2024 12:38:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wycq7145pz2yN8
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Sep 2024 17:35:31 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725331085;
-	cv=none; b=iaLCJkNKLWg2pPAQum5lIKBvJe/cRGGGgMQZLvcWJkisM4KK9kjVwS31QOElaODvlbj8BZwqMtjBZUEg8r8KUq/f60vZs824o+lKbvWrJ2x+5BHcCpkiFZrTc1BBIaVJD6qUCOwpDt+pUv6BWiITSC5AN+Dh/gOU7W5zehZKvwZsuWRF/Ie2i7cFBTAgcnIzEpOx6O/KoGcPE/iWDZ0iPz55TiNYuPkPf7zV5Beo4RwpJExJNtCaSS+hiqjxQvVnXkx99ZjkGpFBcbuQl6wl/zsPIStdCikjMT/ZE7pp4WxsxD1Omabmb2VJk26LFibGAeYRZC/V7mkqB8Vy5h5KNg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725348928;
+	cv=none; b=QpJRofyxa0GcSfmdf0w4pdDSzow5WuX3H7UpeGLvo8f+vQL0lvRc45Uod3X5zkTntWOB73IjMztTinNgmwHy7FIEve21Rk88YkDON1mj2/JLlJFXK+Wk47dhpW5EDDRsmizdYY/Dsik38QiOLl47C7TRj9ApcbNH+WMKPMzLOLVSKJXZOS76SApcGHZZ0jdEsbXpvn8mU+K0qhHQLStMuMS91RxG2SJvC5O23YblP3HzjCG6lGCbt3xiOm5aYyOJQ3fUthJAqPsD333jzuFsyYy9DaNt0CrOjpdod01JaJS78DCqhEg4RBpbocdLKztTf/ZftuhlZXidjTiULMhcnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725331085; c=relaxed/relaxed;
-	bh=TRVL9ISUj2NM95nVZR93PyDfyOfsECfnzztpvLyuYT0=;
-	h=DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=D9jIwydpQ1IS9IHmG5UHmQ5/iQQnIG1ZV0BroD+vYfpl9INpq9C/LX1zXzgSyNL/xNnqWq5dY0BRb7C81Jz0D1+MYmER6XD0EgE1Wyp/ujWz/bpBDnanmc5vOU5k0/Hb0Ws3ECuhXP4fB9HVWXZ7txct3QrfWGc2nszOLLc/FStC5BJUyA+GDFaSiWY6qMzcyeqYpTDIjc3quNYZiFh76y67dHqqnyZIsiELfE0p6u8mMZNVzvYfHCfIAUjwpPcdnSWSFmfI3gWMts54JpGPOl6LenAf8kmfp+ImzjMyuM+9Cdy1pLiDCWQ+2EYMNz6+IR9lUz85yRN4kxW9Le5yTQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gi4c1GtO; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1725348928; c=relaxed/relaxed;
+	bh=O7BRyMp+lq1nuu0SH1Xg9AW4M6rtguWH0B+U8MUvBrE=;
+	h=DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=D7i5dZrc4Xqr98p/p75vfJ0nmEeVaUNM7J/X8rkFq7xEICsb8aSyNgM4jQb1BlZByex4aXK8zq00A0Dmj0Fs1s11VkZDVftAtATmfuAx40UUeHteG7OQoa6qXKY6+PEj3lf1/B0KrmHCBH51YI7uIXR8G/sZRfOYJmCkcpMDnnizCkB8QxS+Wj0W+HTNiolQijoiAMa0Mli7bCt+txxhVs4Vp26+pG/+2jhboVViWZ4PjuG/WHVMhEwdtq8JalD9pO0TGfdoI6KhVDrvAxYOb+BawancwL+GGl/zLzTGy9f1e1qUH7niUydto2cWZi5MwSX7HT06h8rX5eV8yCpg+A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=UnboN0Qb; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gi4c1GtO;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=UnboN0Qb;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WyVCx39cKz2yJL
-	for <linux-erofs@lists.ozlabs.org>; Tue,  3 Sep 2024 12:38:05 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 14F57A409BB;
-	Tue,  3 Sep 2024 02:37:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F38B3C4CEC2;
-	Tue,  3 Sep 2024 02:37:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725331081;
-	bh=s3ixy1Dk0VBO3qFac0eQGqV2MWZpl1pz4srEs/WX2P8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gi4c1GtOn5/HucTPGizj/UeHFF4sYHJTsoq8PWHPFGJ+qE23qcXYa+aY2bar1EJT/
-	 2PcZNxXAvF/zjkv6bUF2tUOVZuAqMCBgC76FT+yLy6aJt2yk4ZNoUO18cwlH2zbTeS
-	 ZWZmWgcKWgigzCfk3XSC8QsTLgW4z+5PKfX8GZ9OSX9A6761P6YZzTcbqpdWwsYB+Y
-	 Mec+IAau14Q293Ssgo+V4yLpXFt4P7AYs/VWXz2sTTrMp+5fA6cxX/RO+kL9DN5oD4
-	 zArRKo/bUzWmuqA/0egxtQJqpjbIxq11LUNPTcPCWvPerfi0i5OWl++R72tG78XHxr
-	 WDyPKby28kDYw==
-Date: Tue, 3 Sep 2024 10:37:55 +0800
-To: Yiyang Wu <toolmanp@tlmp.cc>
-Subject: Re: [PATCH V4 2/2] erofs: refactor read_inode calling convention
-Message-ID: <ZtZ2gygmwGSAuPgS@debian>
-Mail-Followup-To: Yiyang Wu <toolmanp@tlmp.cc>,
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <ca8dea24-1ef2-46a8-bfca-72aeffa1f6e6@linux.alibaba.com>
- <20240902093412.509083-1-toolmanp@tlmp.cc>
- <94737216-af40-44b0-ab3e-e5bfdbffab5f@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wycq24S7Mz2xQD
+	for <linux-erofs@lists.ozlabs.org>; Tue,  3 Sep 2024 17:35:25 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1725348919; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=O7BRyMp+lq1nuu0SH1Xg9AW4M6rtguWH0B+U8MUvBrE=;
+	b=UnboN0Qb4Qdn6Oxc4f3lt2TaHWQMi1cUkcyh1bSVI2Gk+kYE/v2EFPOEyrvlPnavUEEteAhNt3qpV3u7IWmVhz1NECSsO78pqdCH46Ni69rGcigcAGvOqwYDG8O7HwVCXJMVeD4EyZAUCEz8Spf9KO+Nwrnuqrx5UI9SJ9mPqJI=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WECVRQV_1725348918)
+          by smtp.aliyun-inc.com;
+          Tue, 03 Sep 2024 15:35:18 +0800
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: fsck: add --xattr option
+Date: Tue,  3 Sep 2024 15:35:17 +0800
+Message-ID: <20240903073517.3311407-1-hongzhen@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <94737216-af40-44b0-ab3e-e5bfdbffab5f@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -80,58 +56,139 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <xiang@kernel.org>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Sep 02, 2024 at 05:54:22PM +0800, Gao Xiang wrote:
-> 
-> 
-> On 2024/9/2 17:34, Yiyang Wu wrote:
-> > Refactor out the iop binding behavior out of the erofs_fill_symlink
-> > and move erofs_buf into the erofs_read_inode, so that erofs_fill_inode
-> > can only deal with inode operation bindings and can be decoupled from
-> > metabuf operations. This results in better calling conventions.
-> > 
-> > Note that after this patch, we do not need erofs_buf and ofs as
-> > parameters any more when calling erofs_read_inode as
-> > all the data operations are now included in itself.
-> > 
-> > Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> > Link: https://lore.kernel.org/all/20240425222847.GN2118490@ZenIV/
-> > Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
-> 
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> 
-> Thanks,
-> Gao Xiang
+The current `fsck --extract` does not support exporting the extended
+attributes of files. This patch adds `--xattr` option to dump the
+extended attributes.
 
-Applied with the following minor cleanups:
+Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+---
+ fsck/main.c | 61 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 726a93a0413c..31d811b50291 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -16,9 +16,8 @@ static int erofs_fill_symlink(struct inode *inode, void *kaddr,
+diff --git a/fsck/main.c b/fsck/main.c
+index 28f1e7e..6a71791 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -9,6 +9,7 @@
+ #include <utime.h>
+ #include <unistd.h>
+ #include <sys/stat.h>
++#include <sys/xattr.h>
+ #include "erofs/print.h"
+ #include "erofs/compress.h"
+ #include "erofs/decompress.h"
+@@ -31,6 +32,7 @@ struct erofsfsck_cfg {
+ 	bool overwrite;
+ 	bool preserve_owner;
+ 	bool preserve_perms;
++	bool xattr;
+ };
+ static struct erofsfsck_cfg fsckcfg;
  
- 	/* if it cannot be handled with fast symlink scheme */
- 	if (vi->datalayout != EROFS_INODE_FLAT_INLINE ||
--	    inode->i_size >= bsz || inode->i_size < 0) {
-+	    inode->i_size >= bsz || inode->i_size < 0)
- 		return 0;
--	}
+@@ -48,6 +50,7 @@ static struct option long_options[] = {
+ 	{"no-preserve-owner", no_argument, 0, 10},
+ 	{"no-preserve-perms", no_argument, 0, 11},
+ 	{"offset", required_argument, 0, 12},
++	{"xattr", no_argument, 0, 13},
+ 	{0, 0, 0, 0},
+ };
  
- 	m_pofs += vi->xattr_isize;
- 	/* inline symlink data shouldn't cross block boundary */
-@@ -204,7 +203,7 @@ static int erofs_read_inode(struct inode *inode)
- static int erofs_fill_inode(struct inode *inode)
+@@ -98,6 +101,7 @@ static void usage(int argc, char **argv)
+ 		" --extract[=X]          check if all files are well encoded, optionally\n"
+ 		"                        extract to X\n"
+ 		" --offset=#             skip # bytes at the beginning of IMAGE\n"
++		" --xattr                dump extended attributes\n"
+ 		"\n"
+ 		" -a, -A, -y             no-op, for compatibility with fsck of other filesystems\n"
+ 		"\n"
+@@ -225,6 +229,9 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
+ 				return -EINVAL;
+ 			}
+ 			break;
++		case 13:
++			fsckcfg.xattr = true;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+@@ -411,6 +418,53 @@ out:
+ 	return ret;
+ }
+ 
++static int erofs_dump_xattr(struct erofs_inode *inode)
++{
++	char *keylst, *key;
++	ssize_t kllen;
++	int ret;
++
++	if (!fsckcfg.extract_path)
++		return 0;
++	kllen = erofs_listxattr(inode, NULL, 0);
++	if (kllen <= 0)
++		return kllen;
++	keylst = malloc(kllen);
++	if (!keylst)
++		return -ENOMEM;
++	ret = erofs_listxattr(inode, keylst, kllen);
++	if (ret < 0)
++		goto out;
++	for (key = keylst; key < keylst + kllen; key += strlen(key) + 1) {
++		void *value = NULL;
++		size_t size = 0;
++
++		ret = erofs_getxattr(inode, key, NULL, 0);
++		if (ret < 0)
++			goto out;
++		if (ret) {
++			size = ret;
++			value = malloc(size);
++			if (!value) {
++				ret = -ENOMEM;
++				goto out;
++			}
++			ret = erofs_getxattr(inode, key, value, size);
++			if (ret < 0) {
++				free(value);
++				goto out;
++			}
++			ret = setxattr(fsckcfg.extract_path, key, value, size, 0);
++			free(value);
++			if (ret)
++				goto out;
++		}
++	}
++out:
++	free(keylst);
++	return ret;
++}
++
+ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
  {
- 	struct erofs_inode *vi = EROFS_I(inode);
--	int err = 0;
-+	int err;
+ 	struct erofs_map_blocks map = {
+@@ -909,6 +963,12 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
+ 	if (ret && ret != -ECANCELED)
+ 		goto out;
  
- 	trace_erofs_fill_inode(inode);
++	if (fsckcfg.xattr) {
++		ret = erofs_dump_xattr(&inode);
++		if (ret)
++			return ret;
++	}
++
+ 	/* XXXX: the dir depth should be restricted in order to avoid loops */
+ 	if (S_ISDIR(inode.i_mode)) {
+ 		struct erofs_dir_context ctx = {
+@@ -955,6 +1015,7 @@ int main(int argc, char *argv[])
+ 	fsckcfg.overwrite = false;
+ 	fsckcfg.preserve_owner = fsckcfg.superuser;
+ 	fsckcfg.preserve_perms = fsckcfg.superuser;
++	fsckcfg.xattr = false;
  
+ 	err = erofsfsck_parse_options_cfg(argc, argv);
+ 	if (err) {
+-- 
+2.43.5
 
