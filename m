@@ -2,54 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAEB696CCDF
-	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 04:58:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EA92496CCE1
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 05:03:52 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4WzkZW5QKGz2ysf
-	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 12:58:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wzkhk4dHrz2ysf
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 13:03:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725505106;
-	cv=none; b=VozrgZnR5EKTY6lnvwrpkwW2NZg+0QJyZLqUuDrbjr/m2NVxxJSwktkUnPnd0DFTeNdal+CD0C2zTK1dSAxqW0Ynghq9a5GygQZHV71U0PvIHdiDCD/jWi7alt/Jwtz7AN0X/I7coV3XD3UXS6wBGQ7NUkbyBRwqJ2NGbTPXHaAFNF1nFmLbY6J25vpyQtjW8P0svICobKxYA1oW8J8nZFjMskWu0Hf8IVDG/WkQ1XZxNLXz7aBAVXONAgS+huBJ5PcArHzQU5EnPen0DjB0eFdYOo5CchrgwXw8rTr3RqvKFUAxWVZ2z5HN3qoFzeTdYXrKxmqkv+AsZf6Ied7nhg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725505428;
+	cv=none; b=LEVGu7/EpqQNTDxl2IbNl81m6N5zblBolCvuY6J6OTmOojXy4Ynl63ekSkFYTUDk85k9ApfSP/eF2HTpnA7pde9sZbzDFW/IyOe9cOAI6WIFLdRom/nUesfrotxuylT7X9QsizuVsLEpzxbX91WXmT77K55RfQfWhXxiDm/AGbLgy7lKTKEIYsiLNKPHPpiocokkXj/Bs9dhp8oICjBZmenGyPkNSnwgroQW6T1+UsM8K9+e43jJLSNkRRquT71bnc4k65nuGd1SSxAIH364g2IxQrs+9HkDLiQzy/va8Zdc2I53Pb42wQJ8zgWduJvhNSap2I/30bm4KAIgb9lv9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725505106; c=relaxed/relaxed;
-	bh=0vcnJvpd/gY/DR/ExUFwhFp+YngaXKdK9YOU7JWWiOk=;
-	h=DKIM-Signature:Message-ID:Date:MIME-Version:From:Subject:To:
-	 References:In-Reply-To:Content-Type; b=EchOX439QUV3a0xs7n1IYHEhnoi/MbMQBTMEb7kAnzL7sQeATl2imEaBumfDPKDW7KZLnNMWj0YICKkYUZDZgU/JbAwIp9H/V+Svon571LySciYTtVBYX8TgZJhVIPFMh7NDbcAJyK8RvKOhT2r9geWqmjMrROc0EGdBsTBxNiakYyswyYXxn1HAYXYfHKnw0nz8GggeoOZ6VloU2f3SgB/S3v2i8tAY1YnngXGV8As4TRPnsCsLfynXhVQFmdtQijj/hBKjtgC7d+ZuD95XbpQINa2RLqGvErKIcpVl/x3/m3/o0x5VXKmdENRaZjJK10FvngFbD+i0QCYFZ4znpA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uwHiG0q6; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1725505428; c=relaxed/relaxed;
+	bh=fC+vzKwLthbvHWWaMcb4VLaSEm+2MTEtjuhPVPFwODM=;
+	h=DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=n0/F3k6ZLEwht7QXKxvmffY4wc2k5kVc+pJcnoYauYlFbxE+2dKP4mK8DZukRme9HJWND4hYAEcCmLj4GYq70fMPuKQG61ceageZS1KVQDQXmDNiwkMc0InPAlHcd4NLh4bAZANXjfVM+Bds491IfEn8PxdDJ+YpDCUci1pW7Y85IsDzMrmJfANP0COD1OHGoacRFOFShFOC7RmKdjoOGLd3HZRN2qWvdHulhrnZ3h8dS2Q5dpiuzTcVlpgFCuhXjIyXkXKLRq0LQ6VhZKiz7MMUr/pauFwzxzsZqS65M8VR/ERcSJsQEIAbcANN5KEGQ4NBogUqnEVk7ZVaCG2bRg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YJi7H1Wh; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uwHiG0q6;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YJi7H1Wh;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4WzkZT4Z1jz2xq0
-	for <linux-erofs@lists.ozlabs.org>; Thu,  5 Sep 2024 12:58:25 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wzkhg1BDrz2xHg
+	for <linux-erofs@lists.ozlabs.org>; Thu,  5 Sep 2024 13:03:45 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1725505102; h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type;
-	bh=0vcnJvpd/gY/DR/ExUFwhFp+YngaXKdK9YOU7JWWiOk=;
-	b=uwHiG0q68QhXOALBZlWGf5XRyXs8Pavs2Eym/XRSI07V/TDixXLD+Gd7IhsoPz4DnSOSv1Gf4D2epFcz7FoOxHxEi+0mkfY46SrtBplLIjeHJFuIFoW+Mlfbl1OmG1SiPRnUx/oN6GbhAkqmyyNz21b7Aj0KuEsDrR8WqYAz2fI=
-Received: from 30.221.129.218(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WEJYt6K_1725505100)
+	t=1725505421; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=fC+vzKwLthbvHWWaMcb4VLaSEm+2MTEtjuhPVPFwODM=;
+	b=YJi7H1Whq8vvsXtMtw69onN7c0+uZFz1Q4cODVnkY8kdxcvlrlo5NU7Azs2sPWjLm5CaYvGa8VmvJ+H5dVJOCz9Ec2BuSJ/OllM6ju6agZhurapfcWsMRh1Y9hqTCUUDCSxM7Sdz8OY+pSRb5QMPe2UOcfXq8MXpVIYPhFGLnRg=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WEJdNyJ_1725505419)
           by smtp.aliyun-inc.com;
-          Thu, 05 Sep 2024 10:58:20 +0800
-Message-ID: <80045cd0-338d-43c5-bea7-378504032006@linux.alibaba.com>
-Date: Thu, 5 Sep 2024 10:58:19 +0800
+          Thu, 05 Sep 2024 11:03:40 +0800
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: simplify erofs_map_blocks_flatmode()
+Date: Thu,  5 Sep 2024 11:03:39 +0800
+Message-ID: <20240905030339.1474396-1-hongzhen@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [syzbot] [erofs?] INFO: task hung in z_erofs_runqueue
-To: syzbot <syzbot+4fc98ed414ae63d1ada2@syzkaller.appspotmail.com>,
- linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- syzkaller-bugs@googlegroups.com, xiang@kernel.org
-References: <0000000000006d2b8f06204e76f8@google.com>
-In-Reply-To: <0000000000006d2b8f06204e76f8@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -61,11 +56,70 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
+Get rid of redundant variables (nblocks, offset) and a dead branch
+(!tailendpacking).
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+---
+ fs/erofs/data.c | 28 +++++++++-------------------
+ 1 file changed, 9 insertions(+), 19 deletions(-)
+
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 1b7eba38ba1e..b13ef0019c92 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -75,38 +75,28 @@ void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
+ static int erofs_map_blocks_flatmode(struct inode *inode,
+ 				     struct erofs_map_blocks *map)
+ {
+-	erofs_blk_t nblocks, lastblk;
+-	u64 offset = map->m_la;
+ 	struct erofs_inode *vi = EROFS_I(inode);
+ 	struct super_block *sb = inode->i_sb;
+ 	bool tailendpacking = (vi->datalayout == EROFS_INODE_FLAT_INLINE);
++	erofs_blk_t lastblk = erofs_iblks(inode) - tailendpacking;
+ 
+-	nblocks = erofs_iblks(inode);
+-	lastblk = nblocks - tailendpacking;
+-
+-	/* there is no hole in flatmode */
+-	map->m_flags = EROFS_MAP_MAPPED;
+-	if (offset < erofs_pos(sb, lastblk)) {
++	map->m_flags = EROFS_MAP_MAPPED;	/* no hole in flat inodes */
++	if (map->m_la < erofs_pos(sb, lastblk)) {
+ 		map->m_pa = erofs_pos(sb, vi->raw_blkaddr) + map->m_la;
+-		map->m_plen = erofs_pos(sb, lastblk) - offset;
+-	} else if (tailendpacking) {
++		map->m_plen = erofs_pos(sb, lastblk) - map->m_la;
++	} else {
++		DBG_BUGON(!tailendpacking);
+ 		map->m_pa = erofs_iloc(inode) + vi->inode_isize +
+-			vi->xattr_isize + erofs_blkoff(sb, offset);
+-		map->m_plen = inode->i_size - offset;
++			vi->xattr_isize + erofs_blkoff(sb, map->m_la);
++		map->m_plen = inode->i_size - map->m_la;
+ 
+ 		/* inline data should be located in the same meta block */
+ 		if (erofs_blkoff(sb, map->m_pa) + map->m_plen > sb->s_blocksize) {
+-			erofs_err(sb, "inline data cross block boundary @ nid %llu",
+-				  vi->nid);
++			erofs_err(sb, "inline data across blocks @ nid %llu", vi->nid);
+ 			DBG_BUGON(1);
+ 			return -EFSCORRUPTED;
+ 		}
+ 		map->m_flags |= EROFS_MAP_META;
+-	} else {
+-		erofs_err(sb, "internal error @ nid: %llu (size %llu), m_la 0x%llx",
+-			  vi->nid, inode->i_size, map->m_la);
+-		DBG_BUGON(1);
+-		return -EIO;
+ 	}
+ 	return 0;
+ }
+-- 
+2.43.5
+
