@@ -2,71 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 119BA96D1E6
-	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 10:22:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1725524533;
-	bh=xbrqMv4DaUYnY1vV9HUKyfkULu+xPGI8bX/+hJO0VC0=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=eEn5rN07vHNYTgfVZ1mElr0gMrWOyHe+tXB3HBCFrHtImyS+Tj66rCW3JBLFw1/XG
-	 M/IB2N3AhVf9CsvZZz5fz01e8xiqxnybJAlvyAv2sq34UBx7FZUHD/JDOC3Imk+K42
-	 /k/yz+uDrgZRAxwJQYrIk9VqPKddh3YrwFYQ5YNiaSMeWFpJpE0hQa/cKtkWoXLGGX
-	 SHI1urFu/r29CxBAtvH0BJLIYUoNGVNYceVDJYFMhr0rCiHvI4Kh0dW2Rf+QFOQzzq
-	 kBtOGYGS0oNHSJsBcqrpngiAC7SOIa6N/jH5wJ53C6gCA0PSI4OircdAYmhVimsMSD
-	 tiU2cLMItPFZw==
+	by mail.lfdr.de (Postfix) with ESMTPS id CF42396D270
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 10:47:54 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wzsm50sL5z2ytR
-	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 18:22:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4WztKh5gSgz2ytT
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 18:47:52 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725524528;
-	cv=none; b=at4nLkcqbi/wt/s5f1uwjkroWDeGdlx83lHF27lo/uxOnKyPwwT218lfMPelnSAeH5d1e5A9vr5ZxR6hfTtl0W7BztxiaxazFFC4KdfQyuGsRBrDjoTZZbNhAhAvRHX5CdV+CS4FJz7AwpkVDwbuOgx7GKerjjUXmUJF5jddEAmi8yvs9jXygUugT/FTHANsh40naDsJFYGZIJsvEQrNzQeWokBN9BJyP+FCYYXoA9Xm+HWyjySsUwrJLamPBrGl//DjhRdIq5ib6zy0/G38zudxvo4yz17XYKffT5xzy0zUl8KUDaIljUz2q0XKCoLyDYAd+4Lk/1zmodIMPAO59g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725526070;
+	cv=none; b=B+4e8sS/AtI9okev5g/YtcVvlh8tedu4yjKwItkXqyT0zKBx92zLovy5eLm072c2zjoW27/pdSqU1de+XfBxECWkTA5ViHn7xwVPfrUBNsBJIwPN7gywXDxBobOLJSQvCGLcTQ0a9xbEOiMN5YQ/FIFoOpwl6bvlpL3X8j3Yn1jdljR01UHVsC/V7FkhiAlqC5uEQaqQy1H6fl5mmEVeEabqmQtY7SPIqgeoIrJ49MWH3tX0xLRgzto7N2q37WlH6T89ntuEvPCH3mqo2QIMkpaYGI0VdXbj0gFihsIBstGSzj6h6LRqc1Dpi+uvzvP+L5Iccdh4TTmSVjGDFOz3wQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725524528; c=relaxed/relaxed;
-	bh=xbrqMv4DaUYnY1vV9HUKyfkULu+xPGI8bX/+hJO0VC0=;
-	h=DKIM-Signature:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type; b=gs0ERj5oG24HZbMfZYNn6RroEc4d4gIhUDwjq3ogIaEziem1OXiSmy9LhOudB+IqOxQsGWCNPe7rYRXkdT1Nps+NozHpvJwRiNH/Qf0ZhkXf3UctqLyidTKhXnbAljaI+acQ5C5SJmWvR05BGI6uP0SOMmbpaiPfMQBjH+8A+1NUrVFINEfm+6e2HrWgucWRwcZO0x40QAoKANO78vTtjhuwaxpHHKvloe7ut5RhmW7+213I3gMdElpVh0axc4BHOWAg7Y89FQs5BatjX2AJCGbReAa/tfB/FP/bIFC51a4Zv11quzU3bD02QZoeDMtFWvyxtJK2FSSeqR4hpZjamA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rX/XEl58; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1725526070; c=relaxed/relaxed;
+	bh=KBcIhc8Q7kIsMJt6qdxk6IoQjq0pkuleDwCZgpWG3ek=;
+	h=DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=hdwhmkzOnIqTTfoDA/LjZXBGjRpt+tWJ039PvcLbz2iSvZuOgUWjBW/ZwoGVtdw8uV7JrsSWH4+aGEW5VbGIqOKwVJH9GGQj2MPoKO18tbOKuL7reThZIR73IzzsR9mw27TijBL4AgJQLXkgYqFUNEWzgyTy++2QGqb1phWRWxUZHR51ucmRAndi4xsdxgTDEEAo2kkMNDJ9SKevgW1+5p8A2tWLYsp7s1ivn0+m09bijgxZXLvTfiNeAwzSISVqZ+2EoXA5dSi/r2x4tZatPZyzOAWuGEQtLHYyUstcvVIy0BNJu2D69yMQrzWawLjEDbmPdFMLaYhWAomWn5oNrg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wFKPNrUb; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rX/XEl58;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wFKPNrUb;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wzsm045HWz2yRZ
-	for <linux-erofs@lists.ozlabs.org>; Thu,  5 Sep 2024 18:22:08 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 403F15C55FB;
-	Thu,  5 Sep 2024 08:22:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9177EC4CEC4;
-	Thu,  5 Sep 2024 08:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725524526;
-	bh=6O+X9dfhS4zYptfRJFP88uQaZ4Yq66gOjR9HYND0g7E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rX/XEl58dPKRF1VsQ8bD4j8oviaDA9YSMCjJz+w0osDco+qHCSPyHMI+amXUb92pW
-	 paeYLsn+WMS32YnIC9luYH3VRkoMoLNYV0U0PaxmC8hw9F1E+28DMuOvZXc/wJYCfl
-	 j81N0Oa9ctNOGSAVqvbfh/tP18cFp0Jq6BQRE3rp7YN1oiQMSjx6eLC8+ODNCYRiJk
-	 1pa9czZhaWEL3WZQQupZvTmP0HNNoGgevubkGZOQdmYeLLo3MiKYj0GZ0VrKZJr3v5
-	 Ub5RQ7Ldp3KaqQBcOlNTi4RJSytcFEGG8an3Q8lUsUyVYPN0V985Pl26K60sxIg87Y
-	 44mYVY2kwjaqA==
-Message-ID: <e0a6cccc-c982-4d8c-95a4-afa63da6aa7b@kernel.org>
-Date: Thu, 5 Sep 2024 16:22:03 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4WztKc3kdJz2yRZ
+	for <linux-erofs@lists.ozlabs.org>; Thu,  5 Sep 2024 18:47:46 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1725526062; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=KBcIhc8Q7kIsMJt6qdxk6IoQjq0pkuleDwCZgpWG3ek=;
+	b=wFKPNrUb3DQzDYs9e6tJ2w/V0+qM8JATf3kCGA8BMmzQfjQDh1e5IgyD1qdpUV6/0bUPLWe1fVXT3Qgmcy8Jk79ZYXp79BsJaeRi+FmkHpmCVdDSVF/73yxm2Q09vD0DQHb8/Gt2yHXYMm+A0Inh/M9gPsySWRohUCzEF7/zCQ8=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WEKumsr_1725526053)
+          by smtp.aliyun-inc.com;
+          Thu, 05 Sep 2024 16:47:41 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: sunset unneeded NOFAILs
+Date: Thu,  5 Sep 2024 16:47:32 +0800
+Message-ID: <20240905084732.2684515-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] erofs: add file-backed mount support
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20240830032840.3783206-1-hsiangkao@linux.alibaba.com>
-Content-Language: en-US
-In-Reply-To: <20240830032840.3783206-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -78,60 +56,192 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Chao Yu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Chao Yu <chao@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/8/30 11:28, Gao Xiang wrote:
-> It actually has been around for years: For containers and other sandbox
-> use cases, there will be thousands (and even more) of authenticated
-> (sub)images running on the same host, unlike OS images.
-> 
-> Of course, all scenarios can use the same EROFS on-disk format, but
-> bdev-backed mounts just work well for OS images since golden data is
-> dumped into real block devices.  However, it's somewhat hard for
-> container runtimes to manage and isolate so many unnecessary virtual
-> block devices safely and efficiently [1]: they just look like a burden
-> to orchestrators and file-backed mounts are preferred indeed.  There
-> were already enough attempts such as Incremental FS, the original
-> ComposeFS and PuzzleFS acting in the same way for immutable fses.  As
-> for current EROFS users, ComposeFS, containerd and Android APEXs will
-> be directly benefited from it.
-> 
-> On the other hand, previous experimental feature "erofs over fscache"
-> was once also intended to provide a similar solution (inspired by
-> Incremental FS discussion [2]), but the following facts show file-backed
-> mounts will be a better approach:
->   - Fscache infrastructure has recently been moved into new Netfslib
->     which is an unexpected dependency to EROFS really, although it
->     originally claims "it could be used for caching other things such as
->     ISO9660 filesystems too." [3]
-> 
->   - It takes an unexpectedly long time to upstream Fscache/Cachefiles
->     enhancements.  For example, the failover feature took more than
->     one year, and the deamonless feature is still far behind now;
-> 
->   - Ongoing HSM "fanotify pre-content hooks" [4] together with this will
->     perfectly supersede "erofs over fscache" in a simpler way since
->     developers (mainly containerd folks) could leverage their existing
->     caching mechanism entirely in userspace instead of strictly following
->     the predefined in-kernel caching tree hierarchy.
-> 
-> After "fanotify pre-content hooks" lands upstream to provide the same
-> functionality, "erofs over fscache" will be removed then (as an EROFS
-> internal improvement and EROFS will not have to bother with on-demand
-> fetching and/or caching improvements anymore.)
-> 
-> [1] https://github.com/containers/storage/pull/2039
-> [2] https://lore.kernel.org/r/CAOQ4uxjbVxnubaPjVaGYiSwoGDTdpWbB=w_AeM6YM=zVixsUfQ@mail.gmail.com
-> [3] https://docs.kernel.org/filesystems/caching/fscache.html
-> [4] https://lore.kernel.org/r/cover.1723670362.git.josef@toxicpanda.com
-> 
-> Closes: https://github.com/containers/composefs/issues/144
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+With iterative development, our codebase can now deal with compressed
+buffer misses properly if both in-place I/O and compressed buffer
+allocation fail.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+Note that if readahead fails (with non-uptodate folios), the original
+request will then fall back to synchronous read, and `.read_folio()`
+should return appropriate errnos; otherwise -EIO will be passed to
+user space, which is unexpected.
 
-Thanks,
+To simplify rarely encountered failure paths, a mimic decompression
+will be just used.  Before that, failure reasons are recorded in
+compressed_bvecs[] and they also act as placeholders to avoid in-place
+pages.  They will be parsed just before decompression and then pass
+back to `.read_folio()`.
+
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/zdata.c | 57 ++++++++++++++++++++++++++----------------------
+ 1 file changed, 31 insertions(+), 26 deletions(-)
+
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 785ae6ca77b1..ad0b59b3d23e 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1154,9 +1154,10 @@ static int z_erofs_parse_in_bvecs(struct z_erofs_decompress_backend *be,
+ 		struct z_erofs_bvec *bvec = &pcl->compressed_bvecs[i];
+ 		struct page *page = bvec->page;
+ 
+-		/* compressed data ought to be valid before decompressing */
+-		if (!page) {
+-			err = -EIO;
++		/* compressed data ought to be valid when decompressing */
++		if (IS_ERR(page) || !page) {
++			bvec->page = NULL;	/* clear the failure reason */
++			err = page ? PTR_ERR(page) : -EIO;
+ 			continue;
+ 		}
+ 		be->compressed_pages[i] = page;
+@@ -1232,8 +1233,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
+ 					.inplace_io = overlapped,
+ 					.partial_decoding = pcl->partial,
+ 					.fillgaps = pcl->multibases,
+-					.gfp = pcl->besteffort ?
+-						GFP_KERNEL | __GFP_NOFAIL :
++					.gfp = pcl->besteffort ? GFP_KERNEL :
+ 						GFP_NOWAIT | __GFP_NORETRY
+ 				 }, be->pagepool);
+ 
+@@ -1297,8 +1297,8 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
+ 	return err;
+ }
+ 
+-static void z_erofs_decompress_queue(const struct z_erofs_decompressqueue *io,
+-				     struct page **pagepool)
++static int z_erofs_decompress_queue(const struct z_erofs_decompressqueue *io,
++				    struct page **pagepool)
+ {
+ 	struct z_erofs_decompress_backend be = {
+ 		.sb = io->sb,
+@@ -1307,6 +1307,7 @@ static void z_erofs_decompress_queue(const struct z_erofs_decompressqueue *io,
+ 			LIST_HEAD_INIT(be.decompressed_secondary_bvecs),
+ 	};
+ 	z_erofs_next_pcluster_t owned = io->head;
++	int err = io->eio ? -EIO : 0;
+ 
+ 	while (owned != Z_EROFS_PCLUSTER_TAIL) {
+ 		DBG_BUGON(owned == Z_EROFS_PCLUSTER_NIL);
+@@ -1314,12 +1315,13 @@ static void z_erofs_decompress_queue(const struct z_erofs_decompressqueue *io,
+ 		be.pcl = container_of(owned, struct z_erofs_pcluster, next);
+ 		owned = READ_ONCE(be.pcl->next);
+ 
+-		z_erofs_decompress_pcluster(&be, io->eio ? -EIO : 0);
++		err = z_erofs_decompress_pcluster(&be, err) ?: err;
+ 		if (z_erofs_is_inline_pcluster(be.pcl))
+ 			z_erofs_free_pcluster(be.pcl);
+ 		else
+ 			erofs_workgroup_put(&be.pcl->obj);
+ 	}
++	return err;
+ }
+ 
+ static void z_erofs_decompressqueue_work(struct work_struct *work)
+@@ -1462,17 +1464,21 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
+ 	folio_unlock(folio);
+ 	folio_put(folio);
+ out_allocfolio:
+-	page = erofs_allocpage(&f->pagepool, gfp | __GFP_NOFAIL);
++	page = erofs_allocpage(&f->pagepool, gfp);
+ 	spin_lock(&pcl->obj.lockref.lock);
+ 	if (unlikely(pcl->compressed_bvecs[nr].page != zbv.page)) {
+-		erofs_pagepool_add(&f->pagepool, page);
++		if (page)
++			erofs_pagepool_add(&f->pagepool, page);
+ 		spin_unlock(&pcl->obj.lockref.lock);
+ 		cond_resched();
+ 		goto repeat;
+ 	}
+-	bvec->bv_page = pcl->compressed_bvecs[nr].page = page;
+-	folio = page_folio(page);
++	pcl->compressed_bvecs[nr].page = page ? page : ERR_PTR(-ENOMEM);
+ 	spin_unlock(&pcl->obj.lockref.lock);
++	bvec->bv_page = page;
++	if (!page)
++		return;
++	folio = page_folio(page);
+ out_tocache:
+ 	if (!tocache || bs != PAGE_SIZE ||
+ 	    filemap_add_folio(mc, folio, pcl->obj.index + nr, gfp)) {
+@@ -1695,26 +1701,28 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
+ 	z_erofs_decompress_kickoff(q[JQ_SUBMIT], nr_bios);
+ }
+ 
+-static void z_erofs_runqueue(struct z_erofs_decompress_frontend *f,
+-			     bool force_fg, bool ra)
++static int z_erofs_runqueue(struct z_erofs_decompress_frontend *f,
++			    unsigned int ra_folios)
+ {
+ 	struct z_erofs_decompressqueue io[NR_JOBQUEUES];
++	struct erofs_sb_info *sbi = EROFS_I_SB(f->inode);
++	bool force_fg = z_erofs_is_sync_decompress(sbi, ra_folios);
++	int err;
+ 
+ 	if (f->owned_head == Z_EROFS_PCLUSTER_TAIL)
+-		return;
+-	z_erofs_submit_queue(f, io, &force_fg, ra);
++		return 0;
++	z_erofs_submit_queue(f, io, &force_fg, !!ra_folios);
+ 
+ 	/* handle bypass queue (no i/o pclusters) immediately */
+-	z_erofs_decompress_queue(&io[JQ_BYPASS], &f->pagepool);
+-
++	err = z_erofs_decompress_queue(&io[JQ_BYPASS], &f->pagepool);
+ 	if (!force_fg)
+-		return;
++		return err;
+ 
+ 	/* wait until all bios are completed */
+ 	wait_for_completion_io(&io[JQ_SUBMIT].u.done);
+ 
+ 	/* handle synchronous decompress queue in the caller context */
+-	z_erofs_decompress_queue(&io[JQ_SUBMIT], &f->pagepool);
++	return z_erofs_decompress_queue(&io[JQ_SUBMIT], &f->pagepool) ?: err;
+ }
+ 
+ /*
+@@ -1776,7 +1784,6 @@ static void z_erofs_pcluster_readmore(struct z_erofs_decompress_frontend *f,
+ static int z_erofs_read_folio(struct file *file, struct folio *folio)
+ {
+ 	struct inode *const inode = folio->mapping->host;
+-	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+ 	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
+ 	int err;
+ 
+@@ -1788,9 +1795,8 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
+ 	z_erofs_pcluster_readmore(&f, NULL, false);
+ 	z_erofs_pcluster_end(&f);
+ 
+-	/* if some compressed cluster ready, need submit them anyway */
+-	z_erofs_runqueue(&f, z_erofs_is_sync_decompress(sbi, 0), false);
+-
++	/* if some pclusters are ready, need submit them anyway */
++	err = z_erofs_runqueue(&f, 0) ?: err;
+ 	if (err && err != -EINTR)
+ 		erofs_err(inode->i_sb, "read error %d @ %lu of nid %llu",
+ 			  err, folio->index, EROFS_I(inode)->nid);
+@@ -1803,7 +1809,6 @@ static int z_erofs_read_folio(struct file *file, struct folio *folio)
+ static void z_erofs_readahead(struct readahead_control *rac)
+ {
+ 	struct inode *const inode = rac->mapping->host;
+-	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+ 	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
+ 	struct folio *head = NULL, *folio;
+ 	unsigned int nr_folios;
+@@ -1833,7 +1838,7 @@ static void z_erofs_readahead(struct readahead_control *rac)
+ 	z_erofs_pcluster_readmore(&f, rac, false);
+ 	z_erofs_pcluster_end(&f);
+ 
+-	z_erofs_runqueue(&f, z_erofs_is_sync_decompress(sbi, nr_folios), true);
++	(void)z_erofs_runqueue(&f, nr_folios);
+ 	erofs_put_metabuf(&f.map.buf);
+ 	erofs_release_pages(&f.pagepool);
+ }
+-- 
+2.43.5
+
