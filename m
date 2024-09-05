@@ -2,69 +2,69 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A434496CFD2
-	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 08:56:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 119BA96D1E6
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 10:22:19 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1725519374;
-	bh=+/1n1Wq6TkyRm/r0Mb9Rjo+uCC6QOdmqjyM3fXuqoYQ=;
+	s=201707; t=1725524533;
+	bh=xbrqMv4DaUYnY1vV9HUKyfkULu+xPGI8bX/+hJO0VC0=;
 	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=BgvC9oii4QrQJyExGOnbgmUOkE5Aw1W83kFLNPT/odv7hwGYjPX/KNx0MjW4gnlLB
-	 GMnkONdw9ha9HwiFyC0SyAVeWBvsVrEyApwDZvDCTSLzeZUoVCoufEfkhFdzxEDmAH
-	 g6GBmUyXD5eadyQG/+Hd6h5vPBaZ8WHCL2Xw0YXvcOTr1P6RpFBjzzYFHwsMsfqEFC
-	 nUynMpu4sWKHrIbnh+yVQaBvvtHRVE7+d66ZPouNYgl7EhmCHY3g3A0h24ys3Ocbo0
-	 ig9euM1LNnrga9U44TghZZ7/A1og3mS1u7AJlHIu/zFBwqP4CSIQLq825qIQu5FiJQ
-	 CP9xYSikPKiSw==
+	b=eEn5rN07vHNYTgfVZ1mElr0gMrWOyHe+tXB3HBCFrHtImyS+Tj66rCW3JBLFw1/XG
+	 M/IB2N3AhVf9CsvZZz5fz01e8xiqxnybJAlvyAv2sq34UBx7FZUHD/JDOC3Imk+K42
+	 /k/yz+uDrgZRAxwJQYrIk9VqPKddh3YrwFYQ5YNiaSMeWFpJpE0hQa/cKtkWoXLGGX
+	 SHI1urFu/r29CxBAtvH0BJLIYUoNGVNYceVDJYFMhr0rCiHvI4Kh0dW2Rf+QFOQzzq
+	 kBtOGYGS0oNHSJsBcqrpngiAC7SOIa6N/jH5wJ53C6gCA0PSI4OircdAYmhVimsMSD
+	 tiU2cLMItPFZw==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Wzqrt27vWz2yst
-	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 16:56:14 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Wzsm50sL5z2ytR
+	for <lists+linux-erofs@lfdr.de>; Thu,  5 Sep 2024 18:22:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725519372;
-	cv=none; b=BpZ1Nyt4FUMe0QjkQurvmr4aBykrGSc1te51KUbhXHjdpb08EWGZGjKh33bxXbIaVW6BfZP9DHjYvASWd7Xeq8b7k8oXw9Gsuy0D1tXw7RIAIZXECqtS5oXMyR2xr7QgWHd4riiP/RZiOUh4CKaiMoF/bRaJPE574Nt6Bif8zfOqSB1hKdbD/5QD5yTdQcrHf5Uyo2WArXyWqddR/zvH7Lt4Xq3cuz+OhhlKdxWLy64y9iEUmB8rKF6/aBsQUUHrvH6laFxKJZYL1BAU9RqdeAna0LzSBVtw+Zild3AFzrQ8BLZrNGmB+4DVcbZalZ2BFojfOtG5WnPocMd3flVONw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725524528;
+	cv=none; b=at4nLkcqbi/wt/s5f1uwjkroWDeGdlx83lHF27lo/uxOnKyPwwT218lfMPelnSAeH5d1e5A9vr5ZxR6hfTtl0W7BztxiaxazFFC4KdfQyuGsRBrDjoTZZbNhAhAvRHX5CdV+CS4FJz7AwpkVDwbuOgx7GKerjjUXmUJF5jddEAmi8yvs9jXygUugT/FTHANsh40naDsJFYGZIJsvEQrNzQeWokBN9BJyP+FCYYXoA9Xm+HWyjySsUwrJLamPBrGl//DjhRdIq5ib6zy0/G38zudxvo4yz17XYKffT5xzy0zUl8KUDaIljUz2q0XKCoLyDYAd+4Lk/1zmodIMPAO59g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725519372; c=relaxed/relaxed;
-	bh=+/1n1Wq6TkyRm/r0Mb9Rjo+uCC6QOdmqjyM3fXuqoYQ=;
+	t=1725524528; c=relaxed/relaxed;
+	bh=xbrqMv4DaUYnY1vV9HUKyfkULu+xPGI8bX/+hJO0VC0=;
 	h=DKIM-Signature:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type; b=g8Fhd1Aj7iYF2VO4v1GSMSE0DgAOWv6Tp7RjF6LcTgHJAgF7O2wpV+GK2CXiu6sek49jrXtyVDB3TR8Nl2e9yLhj6oNQ2finQ0e7lnk4aUC9ZpdRs8aVMqLk890CqryGkh/NZKL4BRH1548A3K0SlzH3Ppmwxi/ddc/KjhvdpPvJ5qBNMW6pTcXMsgDi8l/aL8aMvuJYpw6B14ptWHNiW6v49R+3LM4VNUJFfOxqUhLe4JPWdDUJIkxnZ9QH0AdN+tU7Hb0ShSANeTR1M/EDq0PSAL7Wp7NRPJXBvryvAPYd5HjAn8P6a4UrUDu/a7lYSDCpl/LwmnrifhB5TQWz1A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=FVZUVrgr; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 References:From:In-Reply-To:Content-Type; b=gs0ERj5oG24HZbMfZYNn6RroEc4d4gIhUDwjq3ogIaEziem1OXiSmy9LhOudB+IqOxQsGWCNPe7rYRXkdT1Nps+NozHpvJwRiNH/Qf0ZhkXf3UctqLyidTKhXnbAljaI+acQ5C5SJmWvR05BGI6uP0SOMmbpaiPfMQBjH+8A+1NUrVFINEfm+6e2HrWgucWRwcZO0x40QAoKANO78vTtjhuwaxpHHKvloe7ut5RhmW7+213I3gMdElpVh0axc4BHOWAg7Y89FQs5BatjX2AJCGbReAa/tfB/FP/bIFC51a4Zv11quzU3bD02QZoeDMtFWvyxtJK2FSSeqR4hpZjamA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rX/XEl58; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=FVZUVrgr;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rX/XEl58;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wzqrq5G1gz2xr2
-	for <linux-erofs@lists.ozlabs.org>; Thu,  5 Sep 2024 16:56:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Wzsm045HWz2yRZ
+	for <linux-erofs@lists.ozlabs.org>; Thu,  5 Sep 2024 18:22:08 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 7C462A440EA;
-	Thu,  5 Sep 2024 06:56:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB7CFC4CEC4;
-	Thu,  5 Sep 2024 06:56:07 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 403F15C55FB;
+	Thu,  5 Sep 2024 08:22:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9177EC4CEC4;
+	Thu,  5 Sep 2024 08:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725519368;
-	bh=ce025tkK3ZwkXlnplm7T9pIM5YkyJ3Sa1dTw5Wj9Ogs=;
+	s=k20201202; t=1725524526;
+	bh=6O+X9dfhS4zYptfRJFP88uQaZ4Yq66gOjR9HYND0g7E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FVZUVrgrWkfbhCvUFwxsxgwYyyEPKW+w6RFmXTvNS/mdZwZun6MJkom95aAVpcpfs
-	 omX1MIz+t84xMs1CTR/FmP9zAIFUyUpzRgug1qLp8JkrTvHuNVZy5CnWvX+3dcteSS
-	 KozR5zxzL8mFXvhcjowt9U/C2KqaL+8/TtzQqx0TZyBonp+7ej1Z8za+3YdkN/PzS5
-	 rWDkruMOlkFbMo4qvG17lKgD1zHnlg1CC6nMMcEY7yeVurtyLaIGDKIW8nTTRVrEqZ
-	 uF2MB/eN8zACNyFRD2MgzBbOwSAg5I+DZtcvHuw57xi9y51Xh41o3DaIjgQCwmOCXk
-	 hx5HfwJe6Z0Ew==
-Message-ID: <cbd52bf3-ef9b-4b1c-9342-c1a01481ff41@kernel.org>
-Date: Thu, 5 Sep 2024 14:56:05 +0800
+	b=rX/XEl58dPKRF1VsQ8bD4j8oviaDA9YSMCjJz+w0osDco+qHCSPyHMI+amXUb92pW
+	 paeYLsn+WMS32YnIC9luYH3VRkoMoLNYV0U0PaxmC8hw9F1E+28DMuOvZXc/wJYCfl
+	 j81N0Oa9ctNOGSAVqvbfh/tP18cFp0Jq6BQRE3rp7YN1oiQMSjx6eLC8+ODNCYRiJk
+	 1pa9czZhaWEL3WZQQupZvTmP0HNNoGgevubkGZOQdmYeLLo3MiKYj0GZ0VrKZJr3v5
+	 Ub5RQ7Ldp3KaqQBcOlNTi4RJSytcFEGG8an3Q8lUsUyVYPN0V985Pl26K60sxIg87Y
+	 44mYVY2kwjaqA==
+Message-ID: <e0a6cccc-c982-4d8c-95a4-afa63da6aa7b@kernel.org>
+Date: Thu, 5 Sep 2024 16:22:03 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: clean up erofs_register_sysfs()
+Subject: Re: [PATCH v2 1/4] erofs: add file-backed mount support
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20240828095232.571946-1-hsiangkao@linux.alibaba.com>
+References: <20240830032840.3783206-1-hsiangkao@linux.alibaba.com>
 Content-Language: en-US
-In-Reply-To: <20240828095232.571946-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240830032840.3783206-1-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -84,12 +84,52 @@ Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/8/28 17:52, Gao Xiang wrote:
-> After commit 684b290abc77 ("erofs: add support for
-> FS_IOC_GETFSSYSFSPATH"), `sb->s_sysfs_name` is now valid.
+On 2024/8/30 11:28, Gao Xiang wrote:
+> It actually has been around for years: For containers and other sandbox
+> use cases, there will be thousands (and even more) of authenticated
+> (sub)images running on the same host, unlike OS images.
 > 
-> Just use it to get rid of duplicated logic.
+> Of course, all scenarios can use the same EROFS on-disk format, but
+> bdev-backed mounts just work well for OS images since golden data is
+> dumped into real block devices.  However, it's somewhat hard for
+> container runtimes to manage and isolate so many unnecessary virtual
+> block devices safely and efficiently [1]: they just look like a burden
+> to orchestrators and file-backed mounts are preferred indeed.  There
+> were already enough attempts such as Incremental FS, the original
+> ComposeFS and PuzzleFS acting in the same way for immutable fses.  As
+> for current EROFS users, ComposeFS, containerd and Android APEXs will
+> be directly benefited from it.
 > 
+> On the other hand, previous experimental feature "erofs over fscache"
+> was once also intended to provide a similar solution (inspired by
+> Incremental FS discussion [2]), but the following facts show file-backed
+> mounts will be a better approach:
+>   - Fscache infrastructure has recently been moved into new Netfslib
+>     which is an unexpected dependency to EROFS really, although it
+>     originally claims "it could be used for caching other things such as
+>     ISO9660 filesystems too." [3]
+> 
+>   - It takes an unexpectedly long time to upstream Fscache/Cachefiles
+>     enhancements.  For example, the failover feature took more than
+>     one year, and the deamonless feature is still far behind now;
+> 
+>   - Ongoing HSM "fanotify pre-content hooks" [4] together with this will
+>     perfectly supersede "erofs over fscache" in a simpler way since
+>     developers (mainly containerd folks) could leverage their existing
+>     caching mechanism entirely in userspace instead of strictly following
+>     the predefined in-kernel caching tree hierarchy.
+> 
+> After "fanotify pre-content hooks" lands upstream to provide the same
+> functionality, "erofs over fscache" will be removed then (as an EROFS
+> internal improvement and EROFS will not have to bother with on-demand
+> fetching and/or caching improvements anymore.)
+> 
+> [1] https://github.com/containers/storage/pull/2039
+> [2] https://lore.kernel.org/r/CAOQ4uxjbVxnubaPjVaGYiSwoGDTdpWbB=w_AeM6YM=zVixsUfQ@mail.gmail.com
+> [3] https://docs.kernel.org/filesystems/caching/fscache.html
+> [4] https://lore.kernel.org/r/cover.1723670362.git.josef@toxicpanda.com
+> 
+> Closes: https://github.com/containers/composefs/issues/144
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Chao Yu <chao@kernel.org>
