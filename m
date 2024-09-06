@@ -1,54 +1,67 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C78D896E7BE
-	for <lists+linux-erofs@lfdr.de>; Fri,  6 Sep 2024 04:31:51 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E99D96E7DE
+	for <lists+linux-erofs@lfdr.de>; Fri,  6 Sep 2024 04:48:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1725590900;
+	bh=NZwdr/Pzgt4ASIZAjibN8s+LKAj2+hFdPACcHzVIcxQ=;
+	h=To:Subject:Date:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 From;
+	b=EsnJq4MuU8RWQk9LJ+WXqdH/e41o7Gj/bSbSQ455W50jL18y7ah47ASON0pLj/C2G
+	 bwGb9q6AOA/IirIAFYJtDIKK8xGnCFH5wWVRifnW+5vV/4nJoR/BbpKXVu6Db6kzoI
+	 bnRXEgrz4dLmd3+XwtO6FAVpq9hkWJCtYQqdZJjgm5e6Gu0GbR5ADb6ADfN1ftz9xh
+	 4/Lhjo/4K3ktp5q0yiQLA2x7EFQY9WxP5i/BeidOZ2erGnueWRDnwQMNqGMHENpFUR
+	 kYQnoCgtFGE5p0ewzoULMRw2j10g29JiApL5RwftULGGlnTg94/8hwKAyyC1is9HPO
+	 SqVe5QBsKKuvg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X0KxK45Pcz3020
-	for <lists+linux-erofs@lfdr.de>; Fri,  6 Sep 2024 12:31:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X0LJN16mxz303K
+	for <lists+linux-erofs@lfdr.de>; Fri,  6 Sep 2024 12:48:20 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725589907;
-	cv=none; b=LksejQC6EBvIQROqrX3oZ9s15T744DH6CgVN9cYfl2dRMJiA9L6ciabcoAevZB5/R5OwxUSVOvdE0FqkS2QAmoeX2VuWv57yWFT5B0KgipivglBPlJfxNStV7bsVAFtJwHf5uuYtciMUqgjSSzrRNyBwDzSRzNLgg6oHInZYIwcH5UTCRxCezzgZ+jIPaHWG1+uCmlR1H3HSMfWg1RD/v0Ec6tDuBsLDw9Gqh7AIc5Ou1qJyTI/gbgLALK+ylFmHUOvoGFLjgtXljl/Ik0i9YzM09uwAZ9tMVJqGWLMLWjT8o7w2vXWyyRqmp56nr/xbkOASwnOZ7B+cuf+cZP8ycw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=207.226.244.122
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725590897;
+	cv=none; b=PJ8DvIFyMv2hphMQJx1vhhmkTZoy1ahFWKeiPhkP2azfgMSKkm8kItUsim/7aIv83wR431UZa9g8giwTiAqVBF8jzeiMLrL0vxJJjQdQ/lmQ9JVJNw2ie/wdfb5NJ191G50T1um5PuxvMYTJ17WuBe327S/r9+Hou0E6KYklZhwOfGzPutiToo5lZzThGXpklOboHwrbYvKNO0KyPZ69um32u4svwFOraUbfkQiBgoRFEb9DzFgWRMm/ZC0/Vim66q2PkNuxEkCYLImMvmAlE89FDbYJY9e2zo2pc/8oxbLlHsFlxVbJyz5mWyLKmumabwVB3M9t8raUSLHoIHu3wg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725589907; c=relaxed/relaxed;
-	bh=mlTh6PneCGVbrN5tHpd9Y/JqHllvhV3gcBuI5rEKKc4=;
-	h=DKIM-Signature:Message-ID:Date:MIME-Version:Subject:To:References:
-	 From:In-Reply-To:Content-Type; b=Zgw42duwQ4NvCT0oeQMQbHpun23zs90SvcoIW9a+RBNkEIHxEh/7koKoF24zzSQXRcQOTuqToL7mFhn8vx2knRKmcpaMHQs12qwm5oEfYoHIGzdghH+MAxfYxRri/ENlTv+nxy7C5bnijI/0ibaoEykyipI+rfNhyY1ZN6beykPUYnuK4GvOmUXv0bFixehQTBRfSN8ylDLQbIrmuH0vsIvTHQF7zEP1q+tOvjyDuwj6Y1IADZYdZngQraoHd3K6Dw40W8jDNkhdLomk3HxHbG0EuihyIA9uHv0gIk1VZvyl0yFtHm412eKC7MbJm+PpFYKAnabNtxBNg0BxEf67+w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Mqsf1/4C; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Mqsf1/4C;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X0KxG2XJWz2xHY
-	for <linux-erofs@lists.ozlabs.org>; Fri,  6 Sep 2024 12:31:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1725589902; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=mlTh6PneCGVbrN5tHpd9Y/JqHllvhV3gcBuI5rEKKc4=;
-	b=Mqsf1/4CDBzKzm0lEWEI/qyTzm9nek6bbjGogCZvR0vawogTYFdN8zqXFsfU3uVmPcpDsWCx2CJ3lVeSyVOnpfXGrbVYOBBc7SIxjwebnOfM+qVFADvizS+L4pvOso/vrca3dn6S6bJfn8Z60dJmehgoBR9aFkHyNXgo/ACMPKo=
-Received: from 30.221.130.77(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WENlY2-_1725589901)
-          by smtp.aliyun-inc.com;
-          Fri, 06 Sep 2024 10:31:41 +0800
-Message-ID: <87c5bb2c-46b7-479f-9bd8-e555d472f105@linux.alibaba.com>
-Date: Fri, 6 Sep 2024 10:31:40 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] erofs-utils: fsck: introduce exporting xattrs
-To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org,
- Huang Jianan <huangjianan@xiaomi.com>
+	t=1725590897; c=relaxed/relaxed;
+	bh=NZwdr/Pzgt4ASIZAjibN8s+LKAj2+hFdPACcHzVIcxQ=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BMrAgY+M63XGa89OuO31TZKfD2zAICxaMWm7Az6yIerGVwhFLQQIoOjhMIqwQpLWHhslUkLF7GSBdcC2z8yEIMmhVTfpIpTyOpeM755lHCbzxZU9ynTSk2noFo+qYO15UAPGctC3/cs57w2sLabxletXjre3IICdSf9USlRVjU/xcco318aDCISdJT3f8oz3iEBtBb88/ahSGQvFCkV/W3J3meA+Qg/kX4twcWUa5gma8s+GSJf5mr+5+6zSVoXEfCrKd4OslkB9pVg0b9xiGNdsILTGVDKJdFb5x0LI8WGqBoRiE305HJXDFPRrEYkt88dVTLE+GtOmPF6EHSkuvw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com; spf=pass (client-ip=207.226.244.122; helo=outboundhk.mxmail.xiaomi.com; envelope-from=huangjianan@xiaomi.com; receiver=lists.ozlabs.org) smtp.mailfrom=xiaomi.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=xiaomi.com (client-ip=207.226.244.122; helo=outboundhk.mxmail.xiaomi.com; envelope-from=huangjianan@xiaomi.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 63 seconds by postgrey-1.37 at boromir; Fri, 06 Sep 2024 12:48:17 AEST
+Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [207.226.244.122])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X0LJK2BCjz2ytR
+	for <linux-erofs@lists.ozlabs.org>; Fri,  6 Sep 2024 12:48:17 +1000 (AEST)
+X-CSE-ConnectionGUID: 1GukFybgQ9y0GugMacYj6Q==
+X-CSE-MsgGUID: biPhRC5gRciOpIgAIquGlA==
+X-IronPort-AV: E=Sophos;i="6.10,206,1719849600"; 
+   d="scan'208";a="121270462"
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, Hongzhen Luo
+	<hongzhen@linux.alibaba.com>, "linux-erofs@lists.ozlabs.org"
+	<linux-erofs@lists.ozlabs.org>
+Subject: Re: [External Mail]Re: [PATCH v5] erofs-utils: fsck: introduce
+ exporting xattrs
+Thread-Topic: [External Mail]Re: [PATCH v5] erofs-utils: fsck: introduce
+ exporting xattrs
+Thread-Index: AQHbAATx+AKyk+vPfUi20vRMr9Dv+rJJh+uA
+Date: Fri, 6 Sep 2024 02:46:58 +0000
+Message-ID: <89bed599-5269-4b95-a6a2-6a3c9dff44ee@xiaomi.com>
 References: <20240906022206.2725584-1-hongzhen@linux.alibaba.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240906022206.2725584-1-hongzhen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <87c5bb2c-46b7-479f-9bd8-e555d472f105@linux.alibaba.com>
+In-Reply-To: <87c5bb2c-46b7-479f-9bd8-e555d472f105@linux.alibaba.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.237.8.21]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2F2024177CEE43419AB2F06A16726391@xiaomi.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,179 +73,152 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Huang Jianan via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Huang Jianan <huangjianan@xiaomi.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Jianan,
-
-On 2024/9/6 10:22, Hongzhen Luo wrote:
-> The current `fsck --extract` does not support exporting the extended
-> attributes of files. This patch adds `--xattrs` option to dump the
-> extended attributes, as well as the `--no-xattrs` option to not dump
-> the extended attributes.
-> 
-> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
-
-Could you confirm this version?
-
-Thanks,
-Gao Xiang
-
-> ---
-> v5: Adjust the help information.
-> v4: https://lore.kernel.org/all/20240905113723.1937634-1-hongzhen@linux.alibaba.com/
-> v3: https://lore.kernel.org/all/20240903113729.3539578-1-hongzhen@linux.alibaba.com/
-> v2: https://lore.kernel.org/all/20240903085643.3393012-1-hongzhen@linux.alibaba.com/
-> v1: https://lore.kernel.org/all/20240903073517.3311407-1-hongzhen@linux.alibaba.com/
-> ---
->   fsck/main.c | 82 ++++++++++++++++++++++++++++++++++++++++++++++++++---
->   1 file changed, 78 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fsck/main.c b/fsck/main.c
-> index 28f1e7e..d110cdb 100644
-> --- a/fsck/main.c
-> +++ b/fsck/main.c
-> @@ -9,6 +9,7 @@
->   #include <utime.h>
->   #include <unistd.h>
->   #include <sys/stat.h>
-> +#include <sys/xattr.h>
->   #include "erofs/print.h"
->   #include "erofs/compress.h"
->   #include "erofs/decompress.h"
-> @@ -31,6 +32,7 @@ struct erofsfsck_cfg {
->   	bool overwrite;
->   	bool preserve_owner;
->   	bool preserve_perms;
-> +	bool dump_xattrs;
->   };
->   static struct erofsfsck_cfg fsckcfg;
->   
-> @@ -48,6 +50,8 @@ static struct option long_options[] = {
->   	{"no-preserve-owner", no_argument, 0, 10},
->   	{"no-preserve-perms", no_argument, 0, 11},
->   	{"offset", required_argument, 0, 12},
-> +	{"xattrs", no_argument, 0, 13},
-> +	{"no-xattrs", no_argument, 0, 14},
->   	{0, 0, 0, 0},
->   };
->   
-> @@ -98,6 +102,7 @@ static void usage(int argc, char **argv)
->   		" --extract[=X]          check if all files are well encoded, optionally\n"
->   		"                        extract to X\n"
->   		" --offset=#             skip # bytes at the beginning of IMAGE\n"
-> +		" --[no-]xattrs          whether to dump extended attributes (default on)\n"
->   		"\n"
->   		" -a, -A, -y             no-op, for compatibility with fsck of other filesystems\n"
->   		"\n"
-> @@ -225,6 +230,12 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
->   				return -EINVAL;
->   			}
->   			break;
-> +		case 13:
-> +			fsckcfg.dump_xattrs = true;
-> +			break;
-> +		case 14:
-> +			fsckcfg.dump_xattrs = false;
-> +			break;
->   		default:
->   			return -EINVAL;
->   		}
-> @@ -411,6 +422,60 @@ out:
->   	return ret;
->   }
->   
-> +static int erofsfsck_dump_xattrs(struct erofs_inode *inode)
-> +{
-> +	char *keylst, *key;
-> +	ssize_t kllen;
-> +	int ret;
-> +
-> +	kllen = erofs_listxattr(inode, NULL, 0);
-> +	if (kllen <= 0)
-> +		return kllen;
-> +	keylst = malloc(kllen);
-> +	if (!keylst)
-> +		return -ENOMEM;
-> +	ret = erofs_listxattr(inode, keylst, kllen);
-> +	if (ret < 0)
-> +		goto out;
-> +	for (key = keylst; key < keylst + kllen; key += strlen(key) + 1) {
-> +		void *value = NULL;
-> +		size_t size = 0;
-> +
-> +		ret = erofs_getxattr(inode, key, NULL, 0);
-> +		if (ret < 0)
-> +			break;
-> +		if (ret) {
-> +			size = ret;
-> +			value = malloc(size);
-> +			if (!value) {
-> +				ret = -ENOMEM;
-> +				break;
-> +			}
-> +			ret = erofs_getxattr(inode, key, value, size);
-> +			if (ret < 0) {
-> +				erofs_err("fail to get xattr %s @ nid %llu",
-> +					  key, inode->nid | 0ULL);
-> +				free(value);
-> +				break;
-> +			}
-> +			if (fsckcfg.extract_path)
-> +				ret = setxattr(fsckcfg.extract_path, key, value,
-> +					       size, 0);
-> +			else
-> +				ret = 0;
-> +			free(value);
-> +			if (ret) {
-> +				erofs_err("fail to set xattr %s @ nid %llu",
-> +					  key, inode->nid | 0ULL);
-> +				break;
-> +			}
-> +		}
-> +	}
-> +out:
-> +	free(keylst);
-> +	return ret;
-> +}
-> +
->   static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
->   {
->   	struct erofs_map_blocks map = {
-> @@ -900,15 +965,23 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
->   		goto out;
->   	}
->   
-> -	/* verify xattr field */
-> -	ret = erofs_verify_xattr(&inode);
-> -	if (ret)
-> -		goto out;
-> +	if (!fsckcfg.check_decomp) {
-> +		/* verify xattr field */
-> +		ret = erofs_verify_xattr(&inode);
-> +		if (ret)
-> +			goto out;
-> +	}
->   
->   	ret = erofsfsck_extract_inode(&inode);
->   	if (ret && ret != -ECANCELED)
->   		goto out;
->   
-> +	if (fsckcfg.check_decomp && fsckcfg.dump_xattrs) {
-> +		ret = erofsfsck_dump_xattrs(&inode);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->   	/* XXXX: the dir depth should be restricted in order to avoid loops */
->   	if (S_ISDIR(inode.i_mode)) {
->   		struct erofs_dir_context ctx = {
-> @@ -955,6 +1028,7 @@ int main(int argc, char *argv[])
->   	fsckcfg.overwrite = false;
->   	fsckcfg.preserve_owner = fsckcfg.superuser;
->   	fsckcfg.preserve_perms = fsckcfg.superuser;
-> +	fsckcfg.dump_xattrs = true;
->   
->   	err = erofsfsck_parse_options_cfg(argc, argv);
->   	if (err) {
-
+T24gMjAyNC85LzYgMTA6MzEsIEdhbyBYaWFuZyB3cm90ZToNCj4gDQo+IEhpIEppYW5hbiwNCj4g
+DQo+IE9uIDIwMjQvOS82IDEwOjIyLCBIb25nemhlbiBMdW8gd3JvdGU6DQo+PiBUaGUgY3VycmVu
+dCBgZnNjayAtLWV4dHJhY3RgIGRvZXMgbm90IHN1cHBvcnQgZXhwb3J0aW5nIHRoZSBleHRlbmRl
+ZA0KPj4gYXR0cmlidXRlcyBvZiBmaWxlcy4gVGhpcyBwYXRjaCBhZGRzIGAtLXhhdHRyc2Agb3B0
+aW9uIHRvIGR1bXAgdGhlDQo+PiBleHRlbmRlZCBhdHRyaWJ1dGVzLCBhcyB3ZWxsIGFzIHRoZSBg
+LS1uby14YXR0cnNgIG9wdGlvbiB0byBub3QgZHVtcA0KPj4gdGhlIGV4dGVuZGVkIGF0dHJpYnV0
+ZXMuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogSG9uZ3poZW4gTHVvIDxob25nemhlbkBsaW51eC5h
+bGliYWJhLmNvbT4NCj4gDQo+IENvdWxkIHlvdSBjb25maXJtIHRoaXMgdmVyc2lvbj8NCj4gDQo+
+IFRoYW5rcywNCj4gR2FvIFhpYW5nDQo+IA0KDQpMR1RNLg0KDQpSZXZpZXdlZC1ieTogSmlhbmFu
+IEh1YW5nIDxodWFuZ2ppYW5hbkB4aWFvbWkuY29tPg0KVGhhbmtzLA0KDQo+PiAtLS0NCj4+IHY1
+OiBBZGp1c3QgdGhlIGhlbHAgaW5mb3JtYXRpb24uDQo+PiB2NDogaHR0cHM6Ly9sb3JlLmtlcm5l
+bC5vcmcvYWxsLzIwMjQwOTA1MTEzNzIzLjE5Mzc2MzQtMS0gDQo+PiBob25nemhlbkBsaW51eC5h
+bGliYWJhLmNvbS8NCj4+IHYzOiBodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvMjAyNDA5MDMx
+MTM3MjkuMzUzOTU3OC0xLSANCj4+IGhvbmd6aGVuQGxpbnV4LmFsaWJhYmEuY29tLw0KPj4gdjI6
+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI0MDkwMzA4NTY0My4zMzkzMDEyLTEtIA0K
+Pj4gaG9uZ3poZW5AbGludXguYWxpYmFiYS5jb20vDQo+PiB2MTogaHR0cHM6Ly9sb3JlLmtlcm5l
+bC5vcmcvYWxsLzIwMjQwOTAzMDczNTE3LjMzMTE0MDctMS0gDQo+PiBob25nemhlbkBsaW51eC5h
+bGliYWJhLmNvbS8NCj4+IC0tLQ0KPj4gwqAgZnNjay9tYWluLmMgfCA4MiArKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLQ0KPj4gwqAgMSBmaWxlIGNo
+YW5nZWQsIDc4IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdp
+dCBhL2ZzY2svbWFpbi5jIGIvZnNjay9tYWluLmMNCj4+IGluZGV4IDI4ZjFlN2UuLmQxMTBjZGIg
+MTAwNjQ0DQo+PiAtLS0gYS9mc2NrL21haW4uYw0KPj4gKysrIGIvZnNjay9tYWluLmMNCj4+IEBA
+IC05LDYgKzksNyBAQA0KPj4gwqAgI2luY2x1ZGUgPHV0aW1lLmg+DQo+PiDCoCAjaW5jbHVkZSA8
+dW5pc3RkLmg+DQo+PiDCoCAjaW5jbHVkZSA8c3lzL3N0YXQuaD4NCj4+ICsjaW5jbHVkZSA8c3lz
+L3hhdHRyLmg+DQo+PiDCoCAjaW5jbHVkZSAiZXJvZnMvcHJpbnQuaCINCj4+IMKgICNpbmNsdWRl
+ICJlcm9mcy9jb21wcmVzcy5oIg0KPj4gwqAgI2luY2x1ZGUgImVyb2ZzL2RlY29tcHJlc3MuaCIN
+Cj4+IEBAIC0zMSw2ICszMiw3IEBAIHN0cnVjdCBlcm9mc2ZzY2tfY2ZnIHsNCj4+IMKgwqDCoMKg
+wqAgYm9vbCBvdmVyd3JpdGU7DQo+PiDCoMKgwqDCoMKgIGJvb2wgcHJlc2VydmVfb3duZXI7DQo+
+PiDCoMKgwqDCoMKgIGJvb2wgcHJlc2VydmVfcGVybXM7DQo+PiArwqDCoMKgwqAgYm9vbCBkdW1w
+X3hhdHRyczsNCj4+IMKgIH07DQo+PiDCoCBzdGF0aWMgc3RydWN0IGVyb2ZzZnNja19jZmcgZnNj
+a2NmZzsNCj4+DQo+PiBAQCAtNDgsNiArNTAsOCBAQCBzdGF0aWMgc3RydWN0IG9wdGlvbiBsb25n
+X29wdGlvbnNbXSA9IHsNCj4+IMKgwqDCoMKgwqAgeyJuby1wcmVzZXJ2ZS1vd25lciIsIG5vX2Fy
+Z3VtZW50LCAwLCAxMH0sDQo+PiDCoMKgwqDCoMKgIHsibm8tcHJlc2VydmUtcGVybXMiLCBub19h
+cmd1bWVudCwgMCwgMTF9LA0KPj4gwqDCoMKgwqDCoCB7Im9mZnNldCIsIHJlcXVpcmVkX2FyZ3Vt
+ZW50LCAwLCAxMn0sDQo+PiArwqDCoMKgwqAgeyJ4YXR0cnMiLCBub19hcmd1bWVudCwgMCwgMTN9
+LA0KPj4gK8KgwqDCoMKgIHsibm8teGF0dHJzIiwgbm9fYXJndW1lbnQsIDAsIDE0fSwNCj4+IMKg
+wqDCoMKgwqAgezAsIDAsIDAsIDB9LA0KPj4gwqAgfTsNCj4+DQo+PiBAQCAtOTgsNiArMTAyLDcg
+QEAgc3RhdGljIHZvaWQgdXNhZ2UoaW50IGFyZ2MsIGNoYXIgKiphcmd2KQ0KPj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgIiAtLWV4dHJhY3RbPVhdwqDCoMKgwqDCoMKgwqDCoMKgIGNoZWNr
+IGlmIGFsbCBmaWxlcyBhcmUgd2VsbCANCj4+IGVuY29kZWQsIG9wdGlvbmFsbHlcbiINCj4+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICLCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIGV4dHJhY3QgdG8gWFxuIg0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgIiAtLW9mZnNldD0jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNraXAgIyBieXRlcyBh
+dCB0aGUgYmVnaW5uaW5nIA0KPj4gb2YgSU1BR0VcbiINCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgIiAtLVtuby1deGF0dHJzwqDCoMKgwqDCoMKgwqDCoMKgIHdoZXRoZXIgdG8gZHVtcCBl
+eHRlbmRlZCANCj4+IGF0dHJpYnV0ZXMgKGRlZmF1bHQgb24pXG4iDQo+PiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCAiXG4iDQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAiIC1hLCAt
+QSwgLXnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbm8tb3AsIGZvciBjb21wYXRpYmlsaXR5IHdp
+dGggDQo+PiBmc2NrIG9mIG90aGVyIGZpbGVzeXN0ZW1zXG4iDQo+PiDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCAiXG4iDQo+PiBAQCAtMjI1LDYgKzIzMCwxMiBAQCBzdGF0aWMgaW50IGVyb2Zz
+ZnNja19wYXJzZV9vcHRpb25zX2NmZyhpbnQgYXJnYywgDQo+PiBjaGFyICoqYXJndikNCj4+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+cmV0dXJuIC1FSU5WQUw7DQo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgfQ0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJy
+ZWFrOw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjYXNlIDEzOg0KPj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZnNja2NmZy5kdW1wX3hhdHRycyA9IHRy
+dWU7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBicmVhazsN
+Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY2FzZSAxNDoNCj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGZzY2tjZmcuZHVtcF94YXR0cnMgPSBmYWxzZTsN
+Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJyZWFrOw0KPj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZGVmYXVsdDoNCj4+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVJTlZBTDsNCj4+IMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIH0NCj4+IEBAIC00MTEsNiArNDIyLDYwIEBAIG91dDoNCj4+IMKgwqDC
+oMKgwqAgcmV0dXJuIHJldDsNCj4+IMKgIH0NCj4+DQo+PiArc3RhdGljIGludCBlcm9mc2ZzY2tf
+ZHVtcF94YXR0cnMoc3RydWN0IGVyb2ZzX2lub2RlICppbm9kZSkNCj4+ICt7DQo+PiArwqDCoMKg
+wqAgY2hhciAqa2V5bHN0LCAqa2V5Ow0KPj4gK8KgwqDCoMKgIHNzaXplX3Qga2xsZW47DQo+PiAr
+wqDCoMKgwqAgaW50IHJldDsNCj4+ICsNCj4+ICvCoMKgwqDCoCBrbGxlbiA9IGVyb2ZzX2xpc3R4
+YXR0cihpbm9kZSwgTlVMTCwgMCk7DQo+PiArwqDCoMKgwqAgaWYgKGtsbGVuIDw9IDApDQo+PiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBrbGxlbjsNCj4+ICvCoMKgwqDCoCBrZXls
+c3QgPSBtYWxsb2Moa2xsZW4pOw0KPj4gK8KgwqDCoMKgIGlmICgha2V5bHN0KQ0KPj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm4gLUVOT01FTTsNCj4+ICvCoMKgwqDCoCByZXQgPSBl
+cm9mc19saXN0eGF0dHIoaW5vZGUsIGtleWxzdCwga2xsZW4pOw0KPj4gK8KgwqDCoMKgIGlmIChy
+ZXQgPCAwKQ0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBnb3RvIG91dDsNCj4+ICvCoMKg
+wqDCoCBmb3IgKGtleSA9IGtleWxzdDsga2V5IDwga2V5bHN0ICsga2xsZW47IGtleSArPSBzdHJs
+ZW4oa2V5KSArIDEpIHsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdm9pZCAqdmFsdWUg
+PSBOVUxMOw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzaXplX3Qgc2l6ZSA9IDA7DQo+
+PiArDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldCA9IGVyb2ZzX2dldHhhdHRyKGlu
+b2RlLCBrZXksIE5VTEwsIDApOw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAocmV0
+IDwgMCkNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJyZWFr
+Ow0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAocmV0KSB7DQo+PiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzaXplID0gcmV0Ow0KPj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdmFsdWUgPSBtYWxsb2Moc2l6ZSk7DQo+
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoIXZhbHVlKSB7
+DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgcmV0ID0gLUVOT01FTTsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBicmVhazsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIH0NCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIHJldCA9IGVyb2ZzX2dldHhhdHRyKGlub2RlLCBrZXksIHZhbHVlLCBzaXpl
+KTsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmIChyZXQg
+PCAwKSB7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgZXJvZnNfZXJyKCJmYWlsIHRvIGdldCB4YXR0ciAlcyBAIG5pZCANCj4+ICVs
+bHUiLA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAga2V5LCBpbm9kZS0+bmlkIHwgMFVMTCk7DQo+
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgZnJlZSh2YWx1ZSk7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgYnJlYWs7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCB9DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCBpZiAoZnNja2NmZy5leHRyYWN0X3BhdGgpDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0ID0gc2V0eGF0dHIoZnNj
+a2NmZy5leHRyYWN0X3BhdGgsIA0KPj4ga2V5LCB2YWx1ZSwNCj4+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBzaXplLCAwKTsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGVsc2UNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXQgPSAwOw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgZnJlZSh2YWx1ZSk7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAocmV0KSB7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZXJvZnNfZXJyKCJmYWlsIHRv
+IHNldCB4YXR0ciAlcyBAIG5pZCANCj4+ICVsbHUiLA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+a2V5LCBpbm9kZS0+bmlkIHwgMFVMTCk7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnJlYWs7DQo+PiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IH0NCj4+ICvCoMKgwqDCoCB9DQo+PiArb3V0Og0KPj4gK8KgwqDCoMKgIGZyZWUoa2V5bHN0KTsN
+Cj4+ICvCoMKgwqDCoCByZXR1cm4gcmV0Ow0KPj4gK30NCj4+ICsNCj4+IMKgIHN0YXRpYyBpbnQg
+ZXJvZnNfdmVyaWZ5X2lub2RlX2RhdGEoc3RydWN0IGVyb2ZzX2lub2RlICppbm9kZSwgaW50IA0K
+Pj4gb3V0ZmQpDQo+PiDCoCB7DQo+PiDCoMKgwqDCoMKgIHN0cnVjdCBlcm9mc19tYXBfYmxvY2tz
+IG1hcCA9IHsNCj4+IEBAIC05MDAsMTUgKzk2NSwyMyBAQCBzdGF0aWMgaW50IGVyb2ZzZnNja19j
+aGVja19pbm9kZShlcm9mc19uaWRfdCANCj4+IHBuaWQsIGVyb2ZzX25pZF90IG5pZCkNCj4+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGdvdG8gb3V0Ow0KPj4gwqDCoMKgwqDCoCB9DQo+Pg0K
+Pj4gLcKgwqDCoMKgIC8qIHZlcmlmeSB4YXR0ciBmaWVsZCAqLw0KPj4gLcKgwqDCoMKgIHJldCA9
+IGVyb2ZzX3ZlcmlmeV94YXR0cigmaW5vZGUpOw0KPj4gLcKgwqDCoMKgIGlmIChyZXQpDQo+PiAt
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGdvdG8gb3V0Ow0KPj4gK8KgwqDCoMKgIGlmICghZnNj
+a2NmZy5jaGVja19kZWNvbXApIHsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLyogdmVy
+aWZ5IHhhdHRyIGZpZWxkICovDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldCA9IGVy
+b2ZzX3ZlcmlmeV94YXR0cigmaW5vZGUpOw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBp
+ZiAocmV0KQ0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZ290
+byBvdXQ7DQo+PiArwqDCoMKgwqAgfQ0KPj4NCj4+IMKgwqDCoMKgwqAgcmV0ID0gZXJvZnNmc2Nr
+X2V4dHJhY3RfaW5vZGUoJmlub2RlKTsNCj4+IMKgwqDCoMKgwqAgaWYgKHJldCAmJiByZXQgIT0g
+LUVDQU5DRUxFRCkNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGdvdG8gb3V0Ow0KPj4N
+Cj4+ICvCoMKgwqDCoCBpZiAoZnNja2NmZy5jaGVja19kZWNvbXAgJiYgZnNja2NmZy5kdW1wX3hh
+dHRycykgew0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXQgPSBlcm9mc2ZzY2tfZHVt
+cF94YXR0cnMoJmlub2RlKTsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgKHJldCkN
+Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiByZXQ7
+DQo+PiArwqDCoMKgwqAgfQ0KPj4gKw0KPj4gwqDCoMKgwqDCoCAvKiBYWFhYOiB0aGUgZGlyIGRl
+cHRoIHNob3VsZCBiZSByZXN0cmljdGVkIGluIG9yZGVyIHRvIGF2b2lkIA0KPj4gbG9vcHMgKi8N
+Cj4+IMKgwqDCoMKgwqAgaWYgKFNfSVNESVIoaW5vZGUuaV9tb2RlKSkgew0KPj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgc3RydWN0IGVyb2ZzX2Rpcl9jb250ZXh0IGN0eCA9IHsNCj4+IEBA
+IC05NTUsNiArMTAyOCw3IEBAIGludCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pDQo+PiDC
+oMKgwqDCoMKgIGZzY2tjZmcub3ZlcndyaXRlID0gZmFsc2U7DQo+PiDCoMKgwqDCoMKgIGZzY2tj
+ZmcucHJlc2VydmVfb3duZXIgPSBmc2NrY2ZnLnN1cGVydXNlcjsNCj4+IMKgwqDCoMKgwqAgZnNj
+a2NmZy5wcmVzZXJ2ZV9wZXJtcyA9IGZzY2tjZmcuc3VwZXJ1c2VyOw0KPj4gK8KgwqDCoMKgIGZz
+Y2tjZmcuZHVtcF94YXR0cnMgPSB0cnVlOw0KPj4NCj4+IMKgwqDCoMKgwqAgZXJyID0gZXJvZnNm
+c2NrX3BhcnNlX29wdGlvbnNfY2ZnKGFyZ2MsIGFyZ3YpOw0KPj4gwqDCoMKgwqDCoCBpZiAoZXJy
+KSB7DQo+IA0KDQo=
