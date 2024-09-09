@@ -2,68 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0D2A96FE5E
-	for <lists+linux-erofs@lfdr.de>; Sat,  7 Sep 2024 01:18:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 34E50970BC8
+	for <lists+linux-erofs@lfdr.de>; Mon,  9 Sep 2024 04:28:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X0sbn4PJqz30DR
-	for <lists+linux-erofs@lfdr.de>; Sat,  7 Sep 2024 09:18:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X29k70JMTz2yMk
+	for <lists+linux-erofs@lfdr.de>; Mon,  9 Sep 2024 12:28:31 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.19
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725664704;
-	cv=none; b=ZulyX/oUbovq6dzUM+HApXtidyQToCxV2jJ1cV3I9bE80LWaF1GXMy/ScCFAbpPWYOd3naMA+Pnl3huOaVivjjT23am8BwE5QWa5dUqIjuZzV5Rgi3KEFP0u0HBzu7YUrYqs2+m6mwu14/cEOOt6xizYHJVf/nU3qXE1nnngQRiPsW74K06tCSJyFf0kB4RPD/0g1grytnC4hZEFlnRmzWyJRfG9nZtwkR0UCqxpcG6mr/HB37zzHsAwsA9C16QarycnX06i5kKpWPgiyvFRCxAviyhjttAgIMTSt6onPvChXU8eOrGVo7oV0wy7zK72ndR5N2kjIhbGGieTEr0gHg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725848906;
+	cv=none; b=f15rFw0rCMg6Mp7LTvPnjg5GhNOkOOf1RRem08T2GOasWYJur+IEwbDrgYXeML5v2Kt2X47hB2PvMXKM4mewBphevB/c67skWZYaQAjTVM1u4oKTo+lvkpkXOvuj5ujwJBa4pnzGxvu0AqvKbJZrJyDQ2CYbA8Nvzdfxnq8ULLKCWoq3YwML1w2mAVcnhqASQchMeI1HAyG74+k9qXCVLPNCqGhc2RkLlXnVAZfvGjXCCXCxY56KN3AS5eRSueNf90hQ+ptBSHAeDALgDVXygwezAxpRGdGyfqTj6SQT9krdE8iO/AoQQ4HjvOKKuKNni53DuGdo9U94vlExUa2caw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725664704; c=relaxed/relaxed;
-	bh=EN6EOo2uM1qjf/NPkp3Ck99oismt7o7QwFxwsMqz9i8=;
-	h=DKIM-Signature:Date:From:To:Cc:Subject:Message-ID; b=CdnFpuvNTKYZoOFHoXSD1f/tNerqUK4kGxUs7yLcTaiPZllUPGuKaM7AL3NjLXBHeJPsfU4i66QzBIIqIzdkX3brQMFrjKHD2gedQMFsyNL4lm16uniZESvCNqoEKtuc1XQJzMazBuIkdF6005eya35/XwqV19YE7v4ltg+LM9c0tPI7I8QEgZBhcNSaJlgyRKD43RuG0S05n1uo0j190emejNNvIMbGNDgOWUMIHpFPNd6mD+eZNy+tCi6cYFqSot0oKbEwCmTUtYT0MzgK/xomfK7UkpiEtV6F+Xe/bnKn6efQ5DDabt1IkOejcOozmnQVmX33/R4q7bA9o1xgHA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Yi7G/cuw; dkim-atps=neutral; spf=pass (client-ip=198.175.65.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1725848906; c=relaxed/relaxed;
+	bh=m889utn8QsE6CPyNbFisRS2RlR4XYhZBEbtQrDwaS0s=;
+	h=DKIM-Signature:From:To:Cc:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type; b=N9A3ZUj3J1D+1wnEx8IHGoVtzCfqcib9Pprvyrai+9e7nEKZk2ci0zj8Qo7SFgyKy9eK2GoGuyRYELUYF1U+vJGFIUhDHkbHJOrVqqq23TKPdTZgN8J3ZT3w3Nnjf19WTyUbc+em5sSH0Uta7oAxqFGoWPOYu1MjVVjC4OSHKQgpQyzwbZpTPphsbSUHkN621lB39XUO+73dnce5ff9o6aiXRKeO63uMyv7tWvREQSsHjmlexySPWQoiz9lwJ7xcT6gvtFH0kUHcq5fLDSAlJcXPhj8pxGfIULgkWWdxbKkbNVT9DBURJbmz/LwV0yaMLmKePTSnJ6jWo/7K05+Xfg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=awpoWFwp; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Yi7G/cuw;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=awpoWFwp;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X0sbf40qlz2yVB
-	for <linux-erofs@lists.ozlabs.org>; Sat,  7 Sep 2024 09:18:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725664703; x=1757200703;
-  h=date:from:to:cc:subject:message-id;
-  bh=GUxjcSyiFmlWw9VmX5xN+FVhDSXga6Vaw5ws9x9sg4Q=;
-  b=Yi7G/cuwcF8glyYhWyfZ+NAeh2kGTSpKileR4b1X4HRlu6/jdUIm/VeW
-   jTsS5YMxFiad9X49FZg+2wLLZPc1pDeKUbdbKqnxEPnc6PPU4UYwm/dqX
-   t48RgAT2Dv904bd5tTx4WNRHrpoAiorYi3GArLKmLwrHObEGNB5yS+jQ5
-   O8SJcNpbzLXdYslaFuFfmjzyzM9Hiv0MdH5h+ydkW40QKRoQWV37znC6j
-   MirOethn3CHr6dm+09da+uqGd0igXAGoWSF6SbY99jQq00ZMiDLuA2t04
-   11DzACVIEsEBtmESP2mD25KwKZJFDFHV2zVqyz26JLpPZEZB7AaOvCNPx
-   w==;
-X-CSE-ConnectionGUID: 31dFeUExQ8iNBF1frSBqfA==
-X-CSE-MsgGUID: 5tXqFdavRXagvSvCvU3eOA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11187"; a="24303393"
-X-IronPort-AV: E=Sophos;i="6.10,209,1719903600"; 
-   d="scan'208";a="24303393"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 16:18:17 -0700
-X-CSE-ConnectionGUID: +Gzo4JBNRGODekkMhnjTIw==
-X-CSE-MsgGUID: DToryH0RR0yXDFFZPm7vVA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,209,1719903600"; 
-   d="scan'208";a="70909176"
-Received: from lkp-server01.sh.intel.com (HELO 9c6b1c7d3b50) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 06 Sep 2024 16:18:15 -0700
-Received: from kbuild by 9c6b1c7d3b50 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1smiDU-000Bqd-36;
-	Fri, 06 Sep 2024 23:18:12 +0000
-Date: Sat, 07 Sep 2024 07:17:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 6f91636b3746d4f5d57cf76a2fe0d61d405c61f0
-Message-ID: <202409070747.zLSeqwSi-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X29k120Lkz2xs1
+	for <linux-erofs@lists.ozlabs.org>; Mon,  9 Sep 2024 12:28:22 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1725848898; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=m889utn8QsE6CPyNbFisRS2RlR4XYhZBEbtQrDwaS0s=;
+	b=awpoWFwpvQvyJKOm2SsjDyNXRLMgNAbyJ+as1Gr+/l7ta0Gowz34o3bocqT+zwBXqT7NXiN7rS1BHT8EPTabAfgT+xWoRtdjL4uHKP3cdSD3a4A55l74f2D39swtKUXV8nABFOXLQ0/18o1ItpZwmRBtOkko6motS7iK4X8s2aM=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WEVwP4i_1725848893)
+          by smtp.aliyun-inc.com;
+          Mon, 09 Sep 2024 10:28:17 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs: fix incorrect symlink detection in fast symlink
+Date: Mon,  9 Sep 2024 10:28:11 +0800
+Message-ID: <20240909022811.1105052-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -75,133 +57,65 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>, Colin Walters <walters@verbum.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 6f91636b3746d4f5d57cf76a2fe0d61d405c61f0  erofs: sunset unneeded NOFAILs
+Fast symlink can be used if the on-disk symlink data is stored
+in the same block as the on-disk inode, so we don’t need to trigger
+another I/O for symlink data.  However, correctly fs correction could be
+reported _incorrectly_ if inode xattrs are too large.
 
-elapsed time: 2153m
+In fact, these should be valid images although they cannot be handled as
+fast symlinks.
 
-configs tested: 110
-configs skipped: 2
+Many thanks to Colin for reporting this!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Reported-by: Colin Walters <walters@verbum.org>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/inode.c | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
 
-tested configs:
-alpha                             allnoconfig   gcc-13.3.0
-alpha                            allyesconfig   gcc-13.3.0
-arc                               allnoconfig   gcc-13.2.0
-arc                   randconfig-001-20240907   gcc-13.2.0
-arc                   randconfig-002-20240907   gcc-13.2.0
-arm                               allnoconfig   clang-20
-arm                   randconfig-001-20240907   gcc-14.1.0
-arm                   randconfig-002-20240907   gcc-14.1.0
-arm                   randconfig-003-20240907   gcc-14.1.0
-arm                   randconfig-004-20240907   clang-16
-arm64                             allnoconfig   gcc-14.1.0
-arm64                 randconfig-001-20240907   gcc-14.1.0
-arm64                 randconfig-002-20240907   gcc-14.1.0
-arm64                 randconfig-003-20240907   gcc-14.1.0
-arm64                 randconfig-004-20240907   gcc-14.1.0
-csky                              allnoconfig   gcc-14.1.0
-csky                  randconfig-001-20240907   gcc-14.1.0
-csky                  randconfig-002-20240907   gcc-14.1.0
-hexagon                           allnoconfig   clang-20
-hexagon               randconfig-001-20240907   clang-20
-hexagon               randconfig-002-20240907   clang-20
-i386                             allmodconfig   gcc-12
-i386                              allnoconfig   gcc-12
-i386                             allyesconfig   gcc-12
-i386         buildonly-randconfig-001-20240906   clang-18
-i386         buildonly-randconfig-002-20240906   gcc-12
-i386         buildonly-randconfig-003-20240906   clang-18
-i386         buildonly-randconfig-004-20240906   gcc-12
-i386         buildonly-randconfig-005-20240906   clang-18
-i386         buildonly-randconfig-006-20240906   clang-18
-i386                                defconfig   clang-18
-i386                  randconfig-001-20240906   gcc-12
-i386                  randconfig-002-20240906   clang-18
-i386                  randconfig-003-20240906   gcc-12
-i386                  randconfig-004-20240906   clang-18
-i386                  randconfig-005-20240906   clang-18
-i386                  randconfig-006-20240906   gcc-12
-i386                  randconfig-011-20240906   gcc-12
-i386                  randconfig-012-20240906   clang-18
-i386                  randconfig-013-20240906   gcc-12
-i386                  randconfig-014-20240906   gcc-12
-i386                  randconfig-015-20240906   gcc-12
-i386                  randconfig-016-20240906   gcc-12
-loongarch                         allnoconfig   gcc-14.1.0
-loongarch             randconfig-001-20240907   gcc-14.1.0
-loongarch             randconfig-002-20240907   gcc-14.1.0
-m68k                              allnoconfig   gcc-14.1.0
-microblaze                        allnoconfig   gcc-14.1.0
-mips                              allnoconfig   gcc-14.1.0
-nios2                             allnoconfig   gcc-14.1.0
-nios2                 randconfig-001-20240907   gcc-14.1.0
-nios2                 randconfig-002-20240907   gcc-14.1.0
-openrisc                          allnoconfig   gcc-14.1.0
-openrisc                         allyesconfig   gcc-14.1.0
-openrisc                            defconfig   gcc-14.1.0
-parisc                           allmodconfig   gcc-14.1.0
-parisc                            allnoconfig   gcc-14.1.0
-parisc                           allyesconfig   gcc-14.1.0
-parisc                              defconfig   gcc-14.1.0
-parisc                randconfig-001-20240907   gcc-14.1.0
-parisc                randconfig-002-20240907   gcc-14.1.0
-powerpc                          allmodconfig   gcc-14.1.0
-powerpc                           allnoconfig   gcc-14.1.0
-powerpc                          allyesconfig   clang-20
-powerpc               randconfig-001-20240907   clang-20
-powerpc64             randconfig-001-20240907   clang-16
-riscv                            allmodconfig   clang-20
-riscv                             allnoconfig   gcc-14.1.0
-riscv                               defconfig   clang-20
-s390                             allmodconfig   clang-20
-s390                              allnoconfig   clang-20
-s390                             allyesconfig   gcc-14.1.0
-s390                                defconfig   clang-20
-sh                               allmodconfig   gcc-14.1.0
-sh                                allnoconfig   gcc-14.1.0
-sh                               allyesconfig   gcc-14.1.0
-sh                                  defconfig   gcc-14.1.0
-sparc                            allmodconfig   gcc-14.1.0
-sparc64                             defconfig   gcc-14.1.0
-um                               allmodconfig   clang-20
-um                                allnoconfig   clang-17
-um                               allyesconfig   gcc-12
-um                                  defconfig   clang-20
-um                             i386_defconfig   gcc-12
-um                           x86_64_defconfig   clang-15
-x86_64                            allnoconfig   clang-18
-x86_64                           allyesconfig   clang-18
-x86_64       buildonly-randconfig-001-20240906   clang-18
-x86_64       buildonly-randconfig-002-20240906   clang-18
-x86_64       buildonly-randconfig-003-20240906   clang-18
-x86_64       buildonly-randconfig-004-20240906   clang-18
-x86_64       buildonly-randconfig-005-20240906   clang-18
-x86_64       buildonly-randconfig-006-20240906   clang-18
-x86_64                              defconfig   gcc-11
-x86_64                randconfig-001-20240906   clang-18
-x86_64                randconfig-002-20240906   gcc-12
-x86_64                randconfig-003-20240906   gcc-12
-x86_64                randconfig-004-20240906   gcc-12
-x86_64                randconfig-005-20240906   gcc-12
-x86_64                randconfig-006-20240906   gcc-12
-x86_64                randconfig-011-20240906   clang-18
-x86_64                randconfig-012-20240906   gcc-12
-x86_64                randconfig-013-20240906   clang-18
-x86_64                randconfig-014-20240906   clang-18
-x86_64                randconfig-015-20240906   clang-18
-x86_64                randconfig-016-20240906   clang-18
-x86_64                randconfig-071-20240906   gcc-12
-x86_64                randconfig-072-20240906   gcc-12
-x86_64                          rhel-8.3-rust   clang-18
-xtensa                            allnoconfig   gcc-14.1.0
-
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 5f6439a63af7..79a29841ae1c 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -178,12 +178,13 @@ static int erofs_fill_symlink(struct inode *inode, void *kaddr,
+ 			      unsigned int m_pofs)
+ {
+ 	struct erofs_inode *vi = EROFS_I(inode);
+-	unsigned int bsz = i_blocksize(inode);
++	loff_t off;
+ 	char *lnk;
+ 
+-	/* if it cannot be handled with fast symlink scheme */
+-	if (vi->datalayout != EROFS_INODE_FLAT_INLINE ||
+-	    inode->i_size >= bsz || inode->i_size < 0) {
++	/* check if it cannot be handled with fast symlink scheme */
++	if (vi->datalayout != EROFS_INODE_FLAT_INLINE || inode->i_size < 0 ||
++	    check_add_overflow(m_pofs + vi->xattr_isize, inode->i_size, &off) ||
++	    off > i_blocksize(inode)) {
+ 		inode->i_op = &erofs_symlink_iops;
+ 		return 0;
+ 	}
+@@ -192,16 +193,6 @@ static int erofs_fill_symlink(struct inode *inode, void *kaddr,
+ 	if (!lnk)
+ 		return -ENOMEM;
+ 
+-	m_pofs += vi->xattr_isize;
+-	/* inline symlink data shouldn't cross block boundary */
+-	if (m_pofs + inode->i_size > bsz) {
+-		kfree(lnk);
+-		erofs_err(inode->i_sb,
+-			  "inline data cross block boundary @ nid %llu",
+-			  vi->nid);
+-		DBG_BUGON(1);
+-		return -EFSCORRUPTED;
+-	}
+ 	memcpy(lnk, kaddr + m_pofs, inode->i_size);
+ 	lnk[inode->i_size] = '\0';
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.5
+
