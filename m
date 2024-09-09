@@ -2,74 +2,73 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE5D7970C60
-	for <lists+linux-erofs@lfdr.de>; Mon,  9 Sep 2024 05:38:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 83796970C69
+	for <lists+linux-erofs@lfdr.de>; Mon,  9 Sep 2024 05:41:37 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1725853083;
-	bh=EZI2S0nTJGEDcrhLu8hUHbGE2IRU/Z8/fi+wmshz1Lw=;
+	s=201707; t=1725853295;
+	bh=+r7iT7AXesM5Oh8E2udl4K2BqAgIz2rH1BT9FqgK1l8=;
 	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
 	 From;
-	b=dneFmwGLv1TjY5Nn0PEefBpFQYjWK40he2Y5niyyukW4zIdmKsVesU+GTz3X1QoOJ
-	 gFszrG5RiUbghgrvdGj6sQ0XKHsEdamrvyHDi/ghO7l89f9QHDkwxuH63rpUebKKvT
-	 BVoTMtmw2xkzj72qWMhlkprpi6bV+c3F/EdpLsgqZUoSH8qazee5trc3wK8vSjTFC6
-	 WEOhZSPYYX45Ih49zA75/pLT1vq0R+wgTxJYsx9H0uv4J2pqaftj8clANL0F7SOpLn
-	 PW9BXV3AhUoJ8PQxq9q5klzSmgDVtEl74HKgMIlk9MudfxSrG4+zo3fxiY+ZGOFgKf
-	 3OVsiNJS5cnIw==
+	b=f2Zcz1qzl2N9aKpqEWGVZ3zgW1eP6zgWAs0u7fKqYlid3gi9mZ84lGmlsQ8oOCx8P
+	 3JmZgeIRwc9lWb+U8riaSWztoEdq2eaozPszP78+WYIPbH1MmLS/l0zsF0UR3AlIU5
+	 YbkrU9sfUAAYnt+PHKZKV15dNmaDTsaQsFhy3MxKsh4geAWehmQSmTTeWDeFqCrYx7
+	 Hky9f6Smf7kZmPHpj8I0vM7aTMjE3xP/pGtwWKxtGC8g3H8AWzDnhx0lNgO6+txzv0
+	 7nMugv9Zpc5oTWWiPVPbgutbTkR5xhNZXvmKmMJ3V9FqK8lW6O2rQ+QW4POBLnHq6U
+	 xCPyzXxtzT5KA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X2CGM0f0cz2yMk
-	for <lists+linux-erofs@lfdr.de>; Mon,  9 Sep 2024 13:38:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X2CLR1D9Nz2yMk
+	for <lists+linux-erofs@lfdr.de>; Mon,  9 Sep 2024 13:41:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725853081;
-	cv=none; b=nqG6PVsZGTfTVfFPAItTCkJaKLlCAOO3fUIOOp6WNJRgPKAuvep2zJnlmzC3kSmRTcHdv4vVWbfBZrXk0FbfRvmn/6Dxq+gWbvqg58YT09Ob2OTlG0qrC4lS19JVmDaJXlhPzOLCE6HErNjmXEd78/NzMuVFLTdoMJ0uGt1nOWhF8gWzt80dTUshbgGXBFwZm6RVoKv4w64jlOA+4bMR3I/ww8Htp9v2h2+Pv4mecxs0r+mqdnMiebIaEPRwfgF12Oo/HNqUitFCwNLUBdOqzfqzWeKTOKGWonYkeLZZSUADPxzsJGdSUkzBg450g3ZQKA3SNexYyIi+4xzKJIWbfQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725853293;
+	cv=none; b=N2yazBcPGo3d+O73HO3FdrN4xp23wWJM8P25z1K4VPTl/pABZn3ec70vQdAWYGCiL/9d4yN9BDgEdTrElDYm8BdogUxZOSVhtiptm1/t0djgAxRGzL2w4GzJZW5ZAZwTWTtcQrXtL/UUqoZ8iKI2KcNPJMQRaMSAqjWt3/v3HrPrFx0h44hx0oCIgiN9wE8guk1N1q++6bt1nSRJU+UzjyBBXWZcmTcly9EQhkYT8ZQo1CSn0P3cNBJaM/aPXnHzhfkaOkkYyKltLAiPM95yUT9QsvHxE1NbZd3KUEUuwQbKocvRfprNXT+wtaL/e/BBHtovzMOm8yQ69DTGcWVUTQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725853081; c=relaxed/relaxed;
-	bh=EZI2S0nTJGEDcrhLu8hUHbGE2IRU/Z8/fi+wmshz1Lw=;
+	t=1725853293; c=relaxed/relaxed;
+	bh=+r7iT7AXesM5Oh8E2udl4K2BqAgIz2rH1BT9FqgK1l8=;
 	h=DKIM-Signature:Message-ID:Date:MIME-Version:Cc:Subject:To:
-	 References:From:In-Reply-To:Content-Type; b=IQYAdGO83UbO6dlfmWSnPkLskj5dhJmmB5e4swzQ3zwkDp2t0BzykJl5vusDRg1i0EA0L321Qmfa+FUQM8Tp2EwRpMKwVcisNplPnUi8YQ5upDa2Pi6Q953blZ5YJD+qQCxWrV7oBAE+8BPxauK5V4DBcp1RrxJ1G+rAqHAYvSV2TmMyrLwPeVpn9Rp6jlmKy2hALNKXeWtpHlVgZSP47FoRRrPTO4LQPeibRNCYzZuuEZCPsO1ATVVDq4NwZ4OGnDERg7g9IJYc3uLLuZdC8LZhh/mxXfUd5mMhpQSDj4vSMDD8k7kYL4T0Ow6CmUmz32apgcWI0MnUWB/KYsZrNg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=vLe0vO0g; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 References:From:In-Reply-To:Content-Type; b=ilaHO8gN1paHsCqdOw7LPaW2uEumdyRC9MbYDvE6V7XuPQ1m+6o+MAaV7hnh+JPC1DSiW9qHa0qS1TdxN9U1CwTS6GRTw9lJrN7cCusUdqHZahaY+/rVkPDpdg/AfI9woiyOT73TKJNUntEL31gc/1cBnznwWRzoQVzq+kzUsEXYd2rgTHasm/lgnXY/Bo5qPmXn9YyDJxsusLKNSBZYpfVpWIAKNaNXYVbLa9LjtiDf34iXABpkCtX4qzreJuY8kQBD7x07zFvw8gFQtnPhM8Msodda3fT2OPSl0pgq6vYDi5XsBUMTVNRLp+YrwEVVe6Hp+Vjmps9whVZsvZeS4A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Xaf2Aqi1; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=vLe0vO0g;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Xaf2Aqi1;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X2CGJ5HZRz2xf2
-	for <linux-erofs@lists.ozlabs.org>; Mon,  9 Sep 2024 13:38:00 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X2CLN6hJDz2xf2
+	for <linux-erofs@lists.ozlabs.org>; Mon,  9 Sep 2024 13:41:32 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 5629FA42547;
-	Mon,  9 Sep 2024 03:37:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 884FBC4CEC9;
-	Mon,  9 Sep 2024 03:37:55 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 7C0525C5497;
+	Mon,  9 Sep 2024 03:41:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53D70C4CEC3;
+	Mon,  9 Sep 2024 03:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725853077;
-	bh=Ebsht7pufR8973XS6Pew/zX/2W72fELou862g4wEc/4=;
+	s=k20201202; t=1725853289;
+	bh=IeEym+QIEFtWQkTwYNKOXbQP/NW/wGRryDpC8XnK1KY=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=vLe0vO0g3h4DHaXN1Ji6laLgSaDkXmxsegVdqr+Xd4XL8O17ZrtKeJlzWIownnYxf
-	 VjSqE5TKc+iX6p08aHG6BoGMGL4nYZEjcusoFCpb2jS54KCs+l8DEq5ZT8wDQ29F08
-	 /9TqIpFLPRR03M8qQq0QZro6F7n453HqDlQr2TU58uEv6BMIWT3KxDFF/ZD9q95T+M
-	 qBL0sIMFNPxmRLwtsfDYUXUrQqDbmvVP+nCdmJl1xm0R0+Wk4zUbn3vr3PHBYxLzZe
-	 iPZAm0rYIhtmxvCj3kmbsX9ZMb1q4iT4dnX1iFFncCtPABS0h3YeFJ/m/C1EVnpZoz
-	 0JEym1WJ8MYGg==
-Message-ID: <aacfdf82-6b8f-44ef-9efd-e5356147d91b@kernel.org>
-Date: Mon, 9 Sep 2024 11:37:52 +0800
+	b=Xaf2Aqi1zbEYcRGx/y0/6TgrAB7pvx667F9XxoKJmnkbaEMqJ2dC8BpskUPHxppOX
+	 aQZAeYeRgh7ffH455mti5/MLXRTj6grTZDMN9ka9DnvsnGOH5Zf9xSD3JXFly6FazE
+	 kNA1vKjcqm21x21o/24FQbaOurJ0RDbPMcki0G7vHaOIwpcGl7Qp4Ut10RR6J6IQHr
+	 xRD4Y2mU7Q2RD9Y48PVs676wHeVOfzAdyNtvcigUFN7uLDD4b0HqGATokPJnDiYnCg
+	 TD3B8htNrFLZwmkwIhW7yV8xlosDjwXkHaSqxhhBpo7dnDnuMaA1kSxVXJI1pGk3xB
+	 o3IPAwtksvuVA==
+Message-ID: <0d351b53-7433-4522-af19-395576842543@kernel.org>
+Date: Mon, 9 Sep 2024 11:41:25 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 1/2] erofs: use kmemdup_nul in erofs_fill_symlink
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, Yiyang Wu <toolmanp@tlmp.cc>,
- linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- Al Viro <viro@zeniv.linux.org.uk>
-References: <20240902083147.450558-1-toolmanp@tlmp.cc>
- <20240902083147.450558-2-toolmanp@tlmp.cc>
- <5783ccbd-34cb-4f1b-8376-d795df2db4e3@linux.alibaba.com>
- <ZtV/speqypBt99sE@debian>
+Subject: Re: [PATCH V4 2/2] erofs: refactor read_inode calling convention
+To: Yiyang Wu <toolmanp@tlmp.cc>, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <ca8dea24-1ef2-46a8-bfca-72aeffa1f6e6@linux.alibaba.com>
+ <20240902093412.509083-1-toolmanp@tlmp.cc>
+ <94737216-af40-44b0-ab3e-e5bfdbffab5f@linux.alibaba.com>
+ <ZtZ2gygmwGSAuPgS@debian>
 Content-Language: en-US
-In-Reply-To: <ZtV/speqypBt99sE@debian>
+In-Reply-To: <ZtZ2gygmwGSAuPgS@debian>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -88,40 +87,59 @@ Reply-To: Chao Yu <chao@kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/9/2 17:04, Gao Xiang via Linux-erofs wrote:
-> On Mon, Sep 02, 2024 at 04:52:30PM +0800, Gao Xiang wrote:
+On 2024/9/3 10:37, Gao Xiang via Linux-erofs wrote:
+> On Mon, Sep 02, 2024 at 05:54:22PM +0800, Gao Xiang wrote:
 >>
 >>
->> On 2024/9/2 16:31, Yiyang Wu wrote:
->>> Remove open coding in erofs_fill_symlink.
+>> On 2024/9/2 17:34, Yiyang Wu wrote:
+>>> Refactor out the iop binding behavior out of the erofs_fill_symlink
+>>> and move erofs_buf into the erofs_read_inode, so that erofs_fill_inode
+>>> can only deal with inode operation bindings and can be decoupled from
+>>> metabuf operations. This results in better calling conventions.
+>>>
+>>> Note that after this patch, we do not need erofs_buf and ofs as
+>>> parameters any more when calling erofs_read_inode as
+>>> all the data operations are now included in itself.
 >>>
 >>> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
->>> Link: https://lore.kernel.org/all/20240425222847.GN2118490@ZenIV
+>>> Link: https://lore.kernel.org/all/20240425222847.GN2118490@ZenIV/
 >>> Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
 >>
->> If a patch is unchanged, you have two ways to handle:
->>   - resend the patch with new received "Reviewed-by";
->>   - just send the updated [PATCH 2/2] with new version
->>     and `--in-reply-to=<old message id>`.
+>> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 >>
->> I will apply this patch first.
+>> Thanks,
+>> Gao Xiang
 > 
-> I applied this patch as
+> Applied with the following minor cleanups:
 > 
->  From b3c5375ceb2944a7e4d34a6fb106ecd4614260d7 Mon Sep 17 00:00:00 2001
-> From: Yiyang Wu <toolmanp@tlmp.cc>
-> Date: Mon, 2 Sep 2024 16:31:46 +0800
-> Subject: erofs: use kmemdup_nul in erofs_fill_symlink
-> 
-> Remove open coding in erofs_fill_symlink.
-> 
-> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> Link: https://lore.kernel.org/all/20240425222847.GN2118490@ZenIV
-> Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
-> Link: https://lore.kernel.org/r/20240902083147.450558-2-toolmanp@tlmp.cc
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+> index 726a93a0413c..31d811b50291 100644
+> --- a/fs/erofs/inode.c
+> +++ b/fs/erofs/inode.c
+> @@ -16,9 +16,8 @@ static int erofs_fill_symlink(struct inode *inode, void *kaddr,
+>   
+>   	/* if it cannot be handled with fast symlink scheme */
+>   	if (vi->datalayout != EROFS_INODE_FLAT_INLINE ||
+> -	    inode->i_size >= bsz || inode->i_size < 0) {
+> +	    inode->i_size >= bsz || inode->i_size < 0)
+>   		return 0;
+> -	}
+>   
+>   	m_pofs += vi->xattr_isize;
+>   	/* inline symlink data shouldn't cross block boundary */
+> @@ -204,7 +203,7 @@ static int erofs_read_inode(struct inode *inode)
+>   static int erofs_fill_inode(struct inode *inode)
+>   {
+>   	struct erofs_inode *vi = EROFS_I(inode);
+> -	int err = 0;
+> +	int err;
+>   
+>   	trace_erofs_fill_inode(inode);
 
 Reviewed-by: Chao Yu <chao@kernel.org>
 
 Thanks,
+
+>   
+> 
+
