@@ -1,59 +1,108 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F33F9733AB
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Sep 2024 12:34:44 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B84F974453
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Sep 2024 22:52:23 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X30Sd2YZ1z2yYd
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Sep 2024 20:34:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X3G9D5WqLz2ydG
+	for <lists+linux-erofs@lfdr.de>; Wed, 11 Sep 2024 06:52:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725964478;
-	cv=none; b=PShe2hd/kadKXg+dmGo2ZeDBQ1GigiWhB7E8C5wUCwmR4iKyf9XaAiTOEo+Uj2L43KDBXE0mkT45bfcpLshTdBx+h/l4y3sXtZDyXLnqxivoQcM/rvZlsdc8Z5fe3dwgUp9xVpUg2c1bCKBOdFo0zFmZ1eit6rn8Q+DUmGLx7zG/z4Pp4bvG5YuPWZ+uYa9LgHoqMsRxJRF4bkrApH7/mJjCmZM3avV1XYOwR5vIDHxBBByBBgJukmPYBdGQjZGELPHe5wAGaf9xhcANUf+5L9Wjrzi39vhK4+NwJ5+u3gOdgtcczvLvk0AVJctXn9ducV/oPFE5XQ+9OcQDwkpxpw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=103.168.172.157
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726001531;
+	cv=none; b=Y+E/1x19cRDKBbMO5XteJM0/FoBUYC0tDXBihp5H7fnmFEbZsprt8GDryArhPBQUmQB2NHo8CotwWuKbRsjitbEeC0f11/E6sT1AsPXtDTY6ZxvAlR+O/lOMJRcF3nph2iUoJl1OjunwycqylFaeqv4rJ/c4w2bcHvWnG2wXBTa87WYJZHcsvVxveUMRd7zK5tHkFuSQbmIUA52+ZQEAxeA2xIiCotnW6FZzs0gkVON7z17zw+c0Ud6rDeffJftv/SHyJPIB+bfiv7oNtB9m1GKur2Zax4Pf2OGbDARVDU71YooLsO0AlxXywHTNxvqgXHAiETCDCTr9ibRIY5xm8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725964478; c=relaxed/relaxed;
-	bh=b970Stp/MG6FT7rnXx189Untkrd6pEZfcmgfoOEc9IY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JLZ5Myq90BYstmrVfS9ygeTHhGYjh2ctjnf2wrwzzMOUupxYo6piVdC2+oT7Qp/WVCR7UA2Z3tp7zmyeS2oNETiR2vissue3Twl71RgDc4yAy4Lh44mHrXS1ZhZCFCX9zgF0zKYg/agxH477ZfGUaLChx4Cp1wH2576tPdrnmXep/SAfe1fd+FW8ZlTE1tbf/81G+0p8jwTjFE29ciTuD7HuUB1zFyBJzKlVRWbFyUtbNwvEkPVmFvjpxfzF1DNsig4LcVWYwq5v9FawDh1+y5ND5R2+b5q3ub0eLgZa5nuiy5vfdc2ZEXzAtrM8xgZD9/xmSgFcwl0QvVC9ahSKVg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=j5DHJ2Ml; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+	t=1726001531; c=relaxed/relaxed;
+	bh=GXC0yulCrynQrY5/3EoWZXN2eEiW8kN3wl0FVcVuFxk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=EGzcsWoCxM/NIrXJnj1q9yWNKXy257Y7szMg6a+L/mDZrCnLXqoC7x3UjHdRO+lFCDUr8PKDyqZP6a5w09tL7YOclDq1Fp2fnXB0PE3JBxRJ7Ep2J4FmZMwMTHLlYoje7EN998gtxeEEdq7cBxmgxh9CCScCd7GmqEUc6yU5MQIiacDK7iIDF2EPtDJ9+yQr6C4tRQnYDW6mkkI9o2E4xcbqnia/3hUM2aAAT82EZcs30zUCYMYgwNt8gFVQMBZQGtUnziK3bvK4C7/GRICL7CRRSvSZrpa6S15yvIbTV88hKTfYLa7l9QfySvY14IpMN6ntfGX+Tt8dDe8ubT0W0Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=verbum.org; dkim=pass (2048-bit key; unprotected) header.d=verbum.org header.i=@verbum.org header.a=rsa-sha256 header.s=fm1 header.b=ENSMjzN1; dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm1 header.b=Y9vRvNoi; dkim-atps=neutral; spf=pass (client-ip=103.168.172.157; helo=fhigh6-smtp.messagingengine.com; envelope-from=walters@verbum.org; receiver=lists.ozlabs.org) smtp.mailfrom=verbum.org
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=verbum.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=j5DHJ2Ml;
+	dkim=pass (2048-bit key; unprotected) header.d=verbum.org header.i=@verbum.org header.a=rsa-sha256 header.s=fm1 header.b=ENSMjzN1;
+	dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm1 header.b=Y9vRvNoi;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=verbum.org (client-ip=103.168.172.157; helo=fhigh6-smtp.messagingengine.com; envelope-from=walters@verbum.org; receiver=lists.ozlabs.org)
+Received: from fhigh6-smtp.messagingengine.com (fhigh6-smtp.messagingengine.com [103.168.172.157])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X30SZ1xh4z2xQD
-	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Sep 2024 20:34:37 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 765515C034A;
-	Tue, 10 Sep 2024 10:34:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2663DC4CEC3;
-	Tue, 10 Sep 2024 10:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725964472;
-	bh=FtRYpJY9aLy9pHP3pTx2RgorHQDkI2pGMNIu0mggR2o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j5DHJ2MlbbbblDHwOyhcTmYv6tHamjhfrWoNFUQAWXROt7u8AiTYL2H2Dsl9m+RR+
-	 t6he/UFE/7ucI0dYjrsvuo4C9CvP0/2eRTamycLXUZaFO54HhtW7MTKEXJDViatDYI
-	 uiyppBRHg+AEhvSy+R2mN5UHkNsaG8dRT/YZRD28=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Subject: [PATCH 6.6 177/269] vfs: Fix potential circular locking through setxattr() and removexattr()
-Date: Tue, 10 Sep 2024 11:32:44 +0200
-Message-ID: <20240910092614.478086490@linuxfoundation.org>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240910092608.225137854@linuxfoundation.org>
-References: <20240910092608.225137854@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X3G940nrzz2xdR
+	for <linux-erofs@lists.ozlabs.org>; Wed, 11 Sep 2024 06:52:06 +1000 (AEST)
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 858FB114012D;
+	Tue, 10 Sep 2024 16:52:03 -0400 (EDT)
+Received: from phl-imap-06 ([10.202.2.83])
+  by phl-compute-02.internal (MEProxy); Tue, 10 Sep 2024 16:52:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verbum.org; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1726001523;
+	 x=1726087923; bh=GXC0yulCrynQrY5/3EoWZXN2eEiW8kN3wl0FVcVuFxk=; b=
+	ENSMjzN1H3C2E7LkjrJ4FO+OiSYzYKdzVdM7d4zjr7aCsGmgBh1IisWNBFGbdu5g
+	dsGAxYNXOnbsiNlXxmfNdZG3GS5/Ia15wme3nYdeFit0aQ4uMplA0syxnWJJZdFH
+	0W9GzmTF2cw4uoIl58EfzFTXLTNqtdzSvsjKxZ12hMOQix6qVjqvYKupb8wnEsVK
+	x9m9RPX5mFqTut2+qO44Uy2LyS0ihioMAfxQC1wQf//VWxlnKaSbVehpXBYpskMA
+	iYBMJqs+3yMuZ6xdkxMVjULYmuZclZQXj3j4NiwC0YXC7PC3yhfF0rIetHHefzPL
+	THaDu58vB0TpIxvH/+ee2w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1726001523; x=
+	1726087923; bh=GXC0yulCrynQrY5/3EoWZXN2eEiW8kN3wl0FVcVuFxk=; b=Y
+	9vRvNoiGGtX3B6MZE/tIVNFPRe7j+wQwWyvIz1jFeXk5UaJ3+2IlXfDBAfo+PnWo
+	VDKUrevLx3fPov5HfQiWhvgLJBBJK/46rfK/JS1K7BmD07IHNA2J0vNskDRYf6Us
+	0BImkw87K56M+h9mwHmWKlUFBpH9hiZpvtFb5gVo0ucFwY5IIW7qLj9pK6eD8zIc
+	yfz+Z9rLctvZE/SdAll6egGrJMMAAGhxWXeQ/eOZiuicwcuU0yIowJkDYnZVkqNe
+	2zryq566mBHorlualrt5Krv+bb2lfewC3GT9WTep+NvlWnSGfpK9J+CvFyhXNBL0
+	mlN/y3LPey1fQ2q6lsIJw==
+X-ME-Sender: <xms:crHgZvtHPlAxZCVhdvN5h5_npGzd4l_DmguXqPGKnrxQP01qvYpECg>
+    <xme:crHgZgdEimwSU0tqAW_8FIcZB53S4bIaO_Bj_vmujXzfKzcWZ_Z0gHQirjrk1gvfL
+    9-0QALKCNmGmztZ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeftddrudeiledgudeghecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhepofggff
+    fhvfevkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfveholhhinhcuhggrlhht
+    vghrshdfuceofigrlhhtvghrshesvhgvrhgsuhhmrdhorhhgqeenucggtffrrghtthgvrh
+    hnpeefjeeitdekueejkeekgfduffduiefftdfhkeevuddtudfhudefhefgfeeifeelvden
+    ucffohhmrghinhepfihikhhiphgvughirgdrohhrghdpkhgvrhhnvghlrdhorhhgnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepfigrlhhtvghr
+    shesvhgvrhgsuhhmrdhorhhgpdhnsggprhgtphhtthhopeefpdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopehhshhirghnghhkrghosehlihhnuhigrdgrlhhisggrsggrrdgt
+    ohhmpdhrtghpthhtoheplhhinhhugidqvghrohhfsheslhhishhtshdrohiilhgrsghsrd
+    horhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghl
+    rdhorhhg
+X-ME-Proxy: <xmx:crHgZiyZ0S-deCU5qyGaequ85oldZaAxmJuYkuUgZQQVSpU0Mt4elg>
+    <xmx:crHgZuMrT01nDD6v9b28yisSgfgqNHE0wTFWswXAAlA1T7l9JTkmaw>
+    <xmx:crHgZv9lq5ejeaivPQuyIyGitt9WL_T_mayqH2I9792v-EbbheIpmQ>
+    <xmx:crHgZuUjmDvfokWAEgtxOCnXPejVuXTS_pS4yTcNSiWlo3yEEDriLA>
+    <xmx:c7HgZhKUF93rh_Kvr14wwFfYrmGhGwVZ_tq7bE8A0Nx6Jvn5U7MmBmtF>
+Feedback-ID: ibe7c40e9:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 9DBEA29C0072; Tue, 10 Sep 2024 16:52:02 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Tue, 10 Sep 2024 16:51:41 -0400
+From: "Colin Walters" <walters@verbum.org>
+To: "Gao Xiang" <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+Message-Id: <ba83ef6e-d4cc-4ade-9dd0-e3fdfa8fde70@app.fastmail.com>
+In-Reply-To: <e137404e-16cd-4d81-9047-2973afb4690b@linux.alibaba.com>
+References: <20240909022811.1105052-1-hsiangkao@linux.alibaba.com>
+ <20240909031911.1174718-1-hsiangkao@linux.alibaba.com>
+ <bb2dd430-7de0-47da-ae5b-82ab2dd4d945@app.fastmail.com>
+ <25f0356d-d949-483c-8e59-ddc9cace61f6@linux.alibaba.com>
+ <21ddadb7-407d-48b6-9c1b-845ead2eefb4@app.fastmail.com>
+ <df09821e-d7ca-4bfb-8f57-2046c072af62@linux.alibaba.com>
+ <91310d4c-98d5-4a8b-b3db-2043d4a3d533@app.fastmail.com>
+ <f8a965ed-e962-40a8-8287-943e872d238c@linux.alibaba.com>
+ <7bbda10d-cf22-4a5f-be2d-6c100cf0c5ae@app.fastmail.com>
+ <e137404e-16cd-4d81-9047-2973afb4690b@linux.alibaba.com>
+Subject: Re: [PATCH v2] erofs: fix incorrect symlink detection in fast symlink
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -65,388 +114,39 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Sasha Levin <sashal@kernel.org>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jeff Layton <jlayton@kernel.org>, patches@lists.linux.dev, Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-6.6-stable review patch.  If anyone has any objections, please let me know.
-
-------------------
-
-From: David Howells <dhowells@redhat.com>
-
-[ Upstream commit c3a5e3e872f3688ae0dc57bb78ca633921d96a91 ]
-
-When using cachefiles, lockdep may emit something similar to the circular
-locking dependency notice below.  The problem appears to stem from the
-following:
-
- (1) Cachefiles manipulates xattrs on the files in its cache when called
-     from ->writepages().
-
- (2) The setxattr() and removexattr() system call handlers get the name
-     (and value) from userspace after taking the sb_writers lock, putting
-     accesses of the vma->vm_lock and mm->mmap_lock inside of that.
-
- (3) The afs filesystem uses a per-inode lock to prevent multiple
-     revalidation RPCs and in writeback vs truncate to prevent parallel
-     operations from deadlocking against the server on one side and local
-     page locks on the other.
-
-Fix this by moving the getting of the name and value in {get,remove}xattr()
-outside of the sb_writers lock.  This also has the minor benefits that we
-don't need to reget these in the event of a retry and we never try to take
-the sb_writers lock in the event we can't pull the name and value into the
-kernel.
-
-Alternative approaches that might fix this include moving the dispatch of a
-write to the cache off to a workqueue or trying to do without the
-validation lock in afs.  Note that this might also affect other filesystems
-that use netfslib and/or cachefiles.
-
- ======================================================
- WARNING: possible circular locking dependency detected
- 6.10.0-build2+ #956 Not tainted
- ------------------------------------------------------
- fsstress/6050 is trying to acquire lock:
- ffff888138fd82f0 (mapping.invalidate_lock#3){++++}-{3:3}, at: filemap_fault+0x26e/0x8b0
-
- but task is already holding lock:
- ffff888113f26d18 (&vma->vm_lock->lock){++++}-{3:3}, at: lock_vma_under_rcu+0x165/0x250
-
- which lock already depends on the new lock.
-
- the existing dependency chain (in reverse order) is:
-
- -> #4 (&vma->vm_lock->lock){++++}-{3:3}:
-        __lock_acquire+0xaf0/0xd80
-        lock_acquire.part.0+0x103/0x280
-        down_write+0x3b/0x50
-        vma_start_write+0x6b/0xa0
-        vma_link+0xcc/0x140
-        insert_vm_struct+0xb7/0xf0
-        alloc_bprm+0x2c1/0x390
-        kernel_execve+0x65/0x1a0
-        call_usermodehelper_exec_async+0x14d/0x190
-        ret_from_fork+0x24/0x40
-        ret_from_fork_asm+0x1a/0x30
-
- -> #3 (&mm->mmap_lock){++++}-{3:3}:
-        __lock_acquire+0xaf0/0xd80
-        lock_acquire.part.0+0x103/0x280
-        __might_fault+0x7c/0xb0
-        strncpy_from_user+0x25/0x160
-        removexattr+0x7f/0x100
-        __do_sys_fremovexattr+0x7e/0xb0
-        do_syscall_64+0x9f/0x100
-        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
- -> #2 (sb_writers#14){.+.+}-{0:0}:
-        __lock_acquire+0xaf0/0xd80
-        lock_acquire.part.0+0x103/0x280
-        percpu_down_read+0x3c/0x90
-        vfs_iocb_iter_write+0xe9/0x1d0
-        __cachefiles_write+0x367/0x430
-        cachefiles_issue_write+0x299/0x2f0
-        netfs_advance_write+0x117/0x140
-        netfs_write_folio.isra.0+0x5ca/0x6e0
-        netfs_writepages+0x230/0x2f0
-        afs_writepages+0x4d/0x70
-        do_writepages+0x1e8/0x3e0
-        filemap_fdatawrite_wbc+0x84/0xa0
-        __filemap_fdatawrite_range+0xa8/0xf0
-        file_write_and_wait_range+0x59/0x90
-        afs_release+0x10f/0x270
-        __fput+0x25f/0x3d0
-        __do_sys_close+0x43/0x70
-        do_syscall_64+0x9f/0x100
-        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
- -> #1 (&vnode->validate_lock){++++}-{3:3}:
-        __lock_acquire+0xaf0/0xd80
-        lock_acquire.part.0+0x103/0x280
-        down_read+0x95/0x200
-        afs_writepages+0x37/0x70
-        do_writepages+0x1e8/0x3e0
-        filemap_fdatawrite_wbc+0x84/0xa0
-        filemap_invalidate_inode+0x167/0x1e0
-        netfs_unbuffered_write_iter+0x1bd/0x2d0
-        vfs_write+0x22e/0x320
-        ksys_write+0xbc/0x130
-        do_syscall_64+0x9f/0x100
-        entry_SYSCALL_64_after_hwframe+0x76/0x7e
-
- -> #0 (mapping.invalidate_lock#3){++++}-{3:3}:
-        check_noncircular+0x119/0x160
-        check_prev_add+0x195/0x430
-        __lock_acquire+0xaf0/0xd80
-        lock_acquire.part.0+0x103/0x280
-        down_read+0x95/0x200
-        filemap_fault+0x26e/0x8b0
-        __do_fault+0x57/0xd0
-        do_pte_missing+0x23b/0x320
-        __handle_mm_fault+0x2d4/0x320
-        handle_mm_fault+0x14f/0x260
-        do_user_addr_fault+0x2a2/0x500
-        exc_page_fault+0x71/0x90
-        asm_exc_page_fault+0x22/0x30
-
- other info that might help us debug this:
-
- Chain exists of:
-   mapping.invalidate_lock#3 --> &mm->mmap_lock --> &vma->vm_lock->lock
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   rlock(&vma->vm_lock->lock);
-                                lock(&mm->mmap_lock);
-                                lock(&vma->vm_lock->lock);
-   rlock(mapping.invalidate_lock#3);
-
-  *** DEADLOCK ***
-
- 1 lock held by fsstress/6050:
-  #0: ffff888113f26d18 (&vma->vm_lock->lock){++++}-{3:3}, at: lock_vma_under_rcu+0x165/0x250
-
- stack backtrace:
- CPU: 0 PID: 6050 Comm: fsstress Not tainted 6.10.0-build2+ #956
- Hardware name: ASUS All Series/H97-PLUS, BIOS 2306 10/09/2014
- Call Trace:
-  <TASK>
-  dump_stack_lvl+0x57/0x80
-  check_noncircular+0x119/0x160
-  ? queued_spin_lock_slowpath+0x4be/0x510
-  ? __pfx_check_noncircular+0x10/0x10
-  ? __pfx_queued_spin_lock_slowpath+0x10/0x10
-  ? mark_lock+0x47/0x160
-  ? init_chain_block+0x9c/0xc0
-  ? add_chain_block+0x84/0xf0
-  check_prev_add+0x195/0x430
-  __lock_acquire+0xaf0/0xd80
-  ? __pfx___lock_acquire+0x10/0x10
-  ? __lock_release.isra.0+0x13b/0x230
-  lock_acquire.part.0+0x103/0x280
-  ? filemap_fault+0x26e/0x8b0
-  ? __pfx_lock_acquire.part.0+0x10/0x10
-  ? rcu_is_watching+0x34/0x60
-  ? lock_acquire+0xd7/0x120
-  down_read+0x95/0x200
-  ? filemap_fault+0x26e/0x8b0
-  ? __pfx_down_read+0x10/0x10
-  ? __filemap_get_folio+0x25/0x1a0
-  filemap_fault+0x26e/0x8b0
-  ? __pfx_filemap_fault+0x10/0x10
-  ? find_held_lock+0x7c/0x90
-  ? __pfx___lock_release.isra.0+0x10/0x10
-  ? __pte_offset_map+0x99/0x110
-  __do_fault+0x57/0xd0
-  do_pte_missing+0x23b/0x320
-  __handle_mm_fault+0x2d4/0x320
-  ? __pfx___handle_mm_fault+0x10/0x10
-  handle_mm_fault+0x14f/0x260
-  do_user_addr_fault+0x2a2/0x500
-  exc_page_fault+0x71/0x90
-  asm_exc_page_fault+0x22/0x30
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-Link: https://lore.kernel.org/r/2136178.1721725194@warthog.procyon.org.uk
-cc: Alexander Viro <viro@zeniv.linux.org.uk>
-cc: Christian Brauner <brauner@kernel.org>
-cc: Jan Kara <jack@suse.cz>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: Gao Xiang <xiang@kernel.org>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: netfs@lists.linux.dev
-cc: linux-erofs@lists.ozlabs.org
-cc: linux-fsdevel@vger.kernel.org
-[brauner: fix minor issues]
-Signed-off-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/xattr.c | 91 ++++++++++++++++++++++++++++--------------------------
- 1 file changed, 48 insertions(+), 43 deletions(-)
-
-diff --git a/fs/xattr.c b/fs/xattr.c
-index efd4736bc94b..c20046548f21 100644
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -631,10 +631,9 @@ int do_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 			ctx->kvalue, ctx->size, ctx->flags);
- }
- 
--static long
--setxattr(struct mnt_idmap *idmap, struct dentry *d,
--	const char __user *name, const void __user *value, size_t size,
--	int flags)
-+static int path_setxattr(const char __user *pathname,
-+			 const char __user *name, const void __user *value,
-+			 size_t size, int flags, unsigned int lookup_flags)
- {
- 	struct xattr_name kname;
- 	struct xattr_ctx ctx = {
-@@ -644,33 +643,20 @@ setxattr(struct mnt_idmap *idmap, struct dentry *d,
- 		.kname    = &kname,
- 		.flags    = flags,
- 	};
-+	struct path path;
- 	int error;
- 
- 	error = setxattr_copy(name, &ctx);
- 	if (error)
- 		return error;
- 
--	error = do_setxattr(idmap, d, &ctx);
--
--	kvfree(ctx.kvalue);
--	return error;
--}
--
--static int path_setxattr(const char __user *pathname,
--			 const char __user *name, const void __user *value,
--			 size_t size, int flags, unsigned int lookup_flags)
--{
--	struct path path;
--	int error;
--
- retry:
- 	error = user_path_at(AT_FDCWD, pathname, lookup_flags, &path);
- 	if (error)
--		return error;
-+		goto out;
- 	error = mnt_want_write(path.mnt);
- 	if (!error) {
--		error = setxattr(mnt_idmap(path.mnt), path.dentry, name,
--				 value, size, flags);
-+		error = do_setxattr(mnt_idmap(path.mnt), path.dentry, &ctx);
- 		mnt_drop_write(path.mnt);
- 	}
- 	path_put(&path);
-@@ -678,6 +664,9 @@ static int path_setxattr(const char __user *pathname,
- 		lookup_flags |= LOOKUP_REVAL;
- 		goto retry;
- 	}
-+
-+out:
-+	kvfree(ctx.kvalue);
- 	return error;
- }
- 
-@@ -698,20 +687,32 @@ SYSCALL_DEFINE5(lsetxattr, const char __user *, pathname,
- SYSCALL_DEFINE5(fsetxattr, int, fd, const char __user *, name,
- 		const void __user *,value, size_t, size, int, flags)
- {
--	struct fd f = fdget(fd);
--	int error = -EBADF;
-+	struct xattr_name kname;
-+	struct xattr_ctx ctx = {
-+		.cvalue   = value,
-+		.kvalue   = NULL,
-+		.size     = size,
-+		.kname    = &kname,
-+		.flags    = flags,
-+	};
-+	int error;
- 
-+	CLASS(fd, f)(fd);
- 	if (!f.file)
--		return error;
-+		return -EBADF;
-+
- 	audit_file(f.file);
-+	error = setxattr_copy(name, &ctx);
-+	if (error)
-+		return error;
-+
- 	error = mnt_want_write_file(f.file);
- 	if (!error) {
--		error = setxattr(file_mnt_idmap(f.file),
--				 f.file->f_path.dentry, name,
--				 value, size, flags);
-+		error = do_setxattr(file_mnt_idmap(f.file),
-+				    f.file->f_path.dentry, &ctx);
- 		mnt_drop_write_file(f.file);
- 	}
--	fdput(f);
-+	kvfree(ctx.kvalue);
- 	return error;
- }
- 
-@@ -900,9 +901,17 @@ SYSCALL_DEFINE3(flistxattr, int, fd, char __user *, list, size_t, size)
-  * Extended attribute REMOVE operations
-  */
- static long
--removexattr(struct mnt_idmap *idmap, struct dentry *d,
--	    const char __user *name)
-+removexattr(struct mnt_idmap *idmap, struct dentry *d, const char *name)
- {
-+	if (is_posix_acl_xattr(name))
-+		return vfs_remove_acl(idmap, d, name);
-+	return vfs_removexattr(idmap, d, name);
-+}
-+
-+static int path_removexattr(const char __user *pathname,
-+			    const char __user *name, unsigned int lookup_flags)
-+{
-+	struct path path;
- 	int error;
- 	char kname[XATTR_NAME_MAX + 1];
- 
-@@ -911,25 +920,13 @@ removexattr(struct mnt_idmap *idmap, struct dentry *d,
- 		error = -ERANGE;
- 	if (error < 0)
- 		return error;
--
--	if (is_posix_acl_xattr(kname))
--		return vfs_remove_acl(idmap, d, kname);
--
--	return vfs_removexattr(idmap, d, kname);
--}
--
--static int path_removexattr(const char __user *pathname,
--			    const char __user *name, unsigned int lookup_flags)
--{
--	struct path path;
--	int error;
- retry:
- 	error = user_path_at(AT_FDCWD, pathname, lookup_flags, &path);
- 	if (error)
- 		return error;
- 	error = mnt_want_write(path.mnt);
- 	if (!error) {
--		error = removexattr(mnt_idmap(path.mnt), path.dentry, name);
-+		error = removexattr(mnt_idmap(path.mnt), path.dentry, kname);
- 		mnt_drop_write(path.mnt);
- 	}
- 	path_put(&path);
-@@ -955,15 +952,23 @@ SYSCALL_DEFINE2(lremovexattr, const char __user *, pathname,
- SYSCALL_DEFINE2(fremovexattr, int, fd, const char __user *, name)
- {
- 	struct fd f = fdget(fd);
-+	char kname[XATTR_NAME_MAX + 1];
- 	int error = -EBADF;
- 
- 	if (!f.file)
- 		return error;
- 	audit_file(f.file);
-+
-+	error = strncpy_from_user(kname, name, sizeof(kname));
-+	if (error == 0 || error == sizeof(kname))
-+		error = -ERANGE;
-+	if (error < 0)
-+		return error;
-+
- 	error = mnt_want_write_file(f.file);
- 	if (!error) {
- 		error = removexattr(file_mnt_idmap(f.file),
--				    f.file->f_path.dentry, name);
-+				    f.file->f_path.dentry, kname);
- 		mnt_drop_write_file(f.file);
- 	}
- 	fdput(f);
--- 
-2.43.0
 
 
+On Mon, Sep 9, 2024, at 10:18 PM, Gao Xiang wrote:
 
+> I know you ask for an explicit check on symlink i_size, but
+> I've explained the current kernel behavior:
+>    - For symlink i_size < PAGE_SIZE (always >= 4096 on Linux),
+>      it behaves normally for EROFS Linux implementation;
+>
+>    - For symlink i_size >= PAGE_SIZE, EROFS Linux
+>      implementation will mark '\0' at PAGE_SIZE - 1 in
+>      page_get_link() -> nd_terminate_link() so the behavior is also
+>      deterministic and not harmful to the system stability and security;
+
+Got it, OK.
+
+> In other words, currently i_size >= PAGE_SIZE is an undefined behavior
+> but Linux just truncates the link path.
+
+I think where we had a miscommunication is that when I see "undefined behavior" I thought you were using the formal term: https://en.wikipedia.org/wiki/Undefined_behavior
+
+The term for what you're talking about in my experience is usually "unspecified behavior" or "implementation defined behavior" which (assuming a reasonable implementor) would include silent truncation or an explicit error, but *not* walking off the end of a buffer and writing to arbitrary other kernel memory etc.
+
+(Hmm really given the widespread use of nd_terminate_link I guess this is kind of more of a "Linux convention" than just an EROFS one, with XFS as a notable exception?)
+
+> For this case, to be clear I'm totally fine with the limitation,
+> but I need to decide whether I should make "EROFS_SYMLINK_MAXLEN"
+> as 4095 or "EROFS_SYMLINK_MAXLEN" as 4096 but also accepts
+> `link[4095] == '\0'`.
+
+Mmmm...I think PATH_MAX is conventionally taken to include the NUL; yeah see
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/namei.c?id=b40c8e7a033ff2cafd33adbe50e2a516f88fa223#n123
