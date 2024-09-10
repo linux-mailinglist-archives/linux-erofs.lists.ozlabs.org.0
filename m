@@ -1,54 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42263972FBC
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Sep 2024 11:54:43 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F33F9733AB
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Sep 2024 12:34:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X2zZS0rnmz2yZ5
-	for <lists+linux-erofs@lfdr.de>; Tue, 10 Sep 2024 19:54:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X30Sd2YZ1z2yYd
+	for <lists+linux-erofs@lfdr.de>; Tue, 10 Sep 2024 20:34:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725962078;
-	cv=none; b=CpjxBqh//NwqHu39Ygt2lisCOSXs4ySR+UeaFVT8yCI/pqiemzLDkwSPY1pwXQJomAT4zdrqpWSUu2Zkg69X1ldt04iWCBO5i0ldRmh36DOCXgLE8ziDysVEjYXGtUmsqs9F1KacSJiXqzcxs1kGTmi14uS9sDYaNESZxfJahaXYLUgyBuy5W0sMymFDegC7o69tVbtCtCHrfNV9dyUK5OjneZQoSIEzYxYYjPaTfcVPCRQlT8uA6M0eZo1ks91PN90U0dk3rzMouBEPc5Aka/EyWsPq8RSjE+ZHXBNGy8hxPXvpNQiYyCSASHuvuC4azmdswx1VmOhjprtVfFwzAQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1725964478;
+	cv=none; b=PShe2hd/kadKXg+dmGo2ZeDBQ1GigiWhB7E8C5wUCwmR4iKyf9XaAiTOEo+Uj2L43KDBXE0mkT45bfcpLshTdBx+h/l4y3sXtZDyXLnqxivoQcM/rvZlsdc8Z5fe3dwgUp9xVpUg2c1bCKBOdFo0zFmZ1eit6rn8Q+DUmGLx7zG/z4Pp4bvG5YuPWZ+uYa9LgHoqMsRxJRF4bkrApH7/mJjCmZM3avV1XYOwR5vIDHxBBByBBgJukmPYBdGQjZGELPHe5wAGaf9xhcANUf+5L9Wjrzi39vhK4+NwJ5+u3gOdgtcczvLvk0AVJctXn9ducV/oPFE5XQ+9OcQDwkpxpw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1725962078; c=relaxed/relaxed;
-	bh=qNL4kIs+gXkQ2EbWyKiDPCK5DmFH5crYa6WP71OtOnc=;
+	t=1725964478; c=relaxed/relaxed;
+	bh=b970Stp/MG6FT7rnXx189Untkrd6pEZfcmgfoOEc9IY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OyupS6qED7ptX3wO0BNdXypo2VQseKgTI52ZVXSUKfvQRYpeZ0l7Pm6+p5kRo8QzsqlhLTrqrTkylZBVtDkDRCneqPC8rORQTvIbW81tCgY2zNHCHIEkiVvBzlKJoFqwpaHVrsm24n6SBPqARxQZpNq5rKw3Xbmq1R20PVSnzHbJ7pLD3S61LppBAwK6NVU4lXePiHWScyP6ujTIoiL+XO8CouI+tAwP4GtuoIIw78rlovuBk99oqSAGNnV7in/AJuXAl0DAX0Ccx45IB/nb5FXTRN1X4RX1TWFwpIlcyafJGljzyeeq7Sr2QG8wrwZjFEO/KKJfkK3ab9XtahBj/A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=qjUNn448; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+	 MIME-Version; b=JLZ5Myq90BYstmrVfS9ygeTHhGYjh2ctjnf2wrwzzMOUupxYo6piVdC2+oT7Qp/WVCR7UA2Z3tp7zmyeS2oNETiR2vissue3Twl71RgDc4yAy4Lh44mHrXS1ZhZCFCX9zgF0zKYg/agxH477ZfGUaLChx4Cp1wH2576tPdrnmXep/SAfe1fd+FW8ZlTE1tbf/81G+0p8jwTjFE29ciTuD7HuUB1zFyBJzKlVRWbFyUtbNwvEkPVmFvjpxfzF1DNsig4LcVWYwq5v9FawDh1+y5ND5R2+b5q3ub0eLgZa5nuiy5vfdc2ZEXzAtrM8xgZD9/xmSgFcwl0QvVC9ahSKVg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=j5DHJ2Ml; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=qjUNn448;
+	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=j5DHJ2Ml;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X2zZP363Pz2xwH
-	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Sep 2024 19:54:36 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X30SZ1xh4z2xQD
+	for <linux-erofs@lists.ozlabs.org>; Tue, 10 Sep 2024 20:34:37 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 4DCA8A44423;
-	Tue, 10 Sep 2024 09:54:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5233C4CEC3;
-	Tue, 10 Sep 2024 09:54:31 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 765515C034A;
+	Tue, 10 Sep 2024 10:34:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2663DC4CEC3;
+	Tue, 10 Sep 2024 10:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725962072;
-	bh=rG3tpbi/ocN+XIIuDnFF10/bxYZkGyA0bnpN7uvqTA0=;
+	s=korg; t=1725964472;
+	bh=FtRYpJY9aLy9pHP3pTx2RgorHQDkI2pGMNIu0mggR2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qjUNn448Keongl+6FVFskFNSTVeaPDtrk9AwuLxVmC968XDA+5XMlQWX1WV1tY4CG
-	 HH+4OOEFkDjvkvxk9Hu0eh993/dUBPIDcPlqBP/q8ZnfWr0aUjlqiCmXw6oAWrq1lO
-	 AQs7oq38MrSETcrWzgkmcqjqRQnP/6O5x0ZYfTvg=
+	b=j5DHJ2MlbbbblDHwOyhcTmYv6tHamjhfrWoNFUQAWXROt7u8AiTYL2H2Dsl9m+RR+
+	 t6he/UFE/7ucI0dYjrsvuo4C9CvP0/2eRTamycLXUZaFO54HhtW7MTKEXJDViatDYI
+	 uiyppBRHg+AEhvSy+R2mN5UHkNsaG8dRT/YZRD28=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
-Subject: [PATCH 6.10 258/375] vfs: Fix potential circular locking through setxattr() and removexattr()
-Date: Tue, 10 Sep 2024 11:30:55 +0200
-Message-ID: <20240910092631.232821998@linuxfoundation.org>
+Subject: [PATCH 6.6 177/269] vfs: Fix potential circular locking through setxattr() and removexattr()
+Date: Tue, 10 Sep 2024 11:32:44 +0200
+Message-ID: <20240910092614.478086490@linuxfoundation.org>
 X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240910092622.245959861@linuxfoundation.org>
-References: <20240910092622.245959861@linuxfoundation.org>
+In-Reply-To: <20240910092608.225137854@linuxfoundation.org>
+References: <20240910092608.225137854@linuxfoundation.org>
 User-Agent: quilt/0.67
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -69,7 +69,7 @@ Cc: Sasha Levin <sashal@kernel.org>, Christian Brauner <brauner@kernel.org>, Jan
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-6.10-stable review patch.  If anyone has any objections, please let me know.
+6.6-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -269,10 +269,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 48 insertions(+), 43 deletions(-)
 
 diff --git a/fs/xattr.c b/fs/xattr.c
-index f8b643f91a98..7672ce5486c5 100644
+index efd4736bc94b..c20046548f21 100644
 --- a/fs/xattr.c
 +++ b/fs/xattr.c
-@@ -630,10 +630,9 @@ int do_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
+@@ -631,10 +631,9 @@ int do_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
  			ctx->kvalue, ctx->size, ctx->flags);
  }
  
@@ -286,7 +286,7 @@ index f8b643f91a98..7672ce5486c5 100644
  {
  	struct xattr_name kname;
  	struct xattr_ctx ctx = {
-@@ -643,33 +642,20 @@ setxattr(struct mnt_idmap *idmap, struct dentry *d,
+@@ -644,33 +643,20 @@ setxattr(struct mnt_idmap *idmap, struct dentry *d,
  		.kname    = &kname,
  		.flags    = flags,
  	};
@@ -323,7 +323,7 @@ index f8b643f91a98..7672ce5486c5 100644
  		mnt_drop_write(path.mnt);
  	}
  	path_put(&path);
-@@ -677,6 +663,9 @@ static int path_setxattr(const char __user *pathname,
+@@ -678,6 +664,9 @@ static int path_setxattr(const char __user *pathname,
  		lookup_flags |= LOOKUP_REVAL;
  		goto retry;
  	}
@@ -333,7 +333,7 @@ index f8b643f91a98..7672ce5486c5 100644
  	return error;
  }
  
-@@ -697,20 +686,32 @@ SYSCALL_DEFINE5(lsetxattr, const char __user *, pathname,
+@@ -698,20 +687,32 @@ SYSCALL_DEFINE5(lsetxattr, const char __user *, pathname,
  SYSCALL_DEFINE5(fsetxattr, int, fd, const char __user *, name,
  		const void __user *,value, size_t, size, int, flags)
  {
@@ -373,7 +373,7 @@ index f8b643f91a98..7672ce5486c5 100644
  	return error;
  }
  
-@@ -899,9 +900,17 @@ SYSCALL_DEFINE3(flistxattr, int, fd, char __user *, list, size_t, size)
+@@ -900,9 +901,17 @@ SYSCALL_DEFINE3(flistxattr, int, fd, char __user *, list, size_t, size)
   * Extended attribute REMOVE operations
   */
  static long
@@ -393,7 +393,7 @@ index f8b643f91a98..7672ce5486c5 100644
  	int error;
  	char kname[XATTR_NAME_MAX + 1];
  
-@@ -910,25 +919,13 @@ removexattr(struct mnt_idmap *idmap, struct dentry *d,
+@@ -911,25 +920,13 @@ removexattr(struct mnt_idmap *idmap, struct dentry *d,
  		error = -ERANGE;
  	if (error < 0)
  		return error;
@@ -420,7 +420,7 @@ index f8b643f91a98..7672ce5486c5 100644
  		mnt_drop_write(path.mnt);
  	}
  	path_put(&path);
-@@ -954,15 +951,23 @@ SYSCALL_DEFINE2(lremovexattr, const char __user *, pathname,
+@@ -955,15 +952,23 @@ SYSCALL_DEFINE2(lremovexattr, const char __user *, pathname,
  SYSCALL_DEFINE2(fremovexattr, int, fd, const char __user *, name)
  {
  	struct fd f = fdget(fd);
