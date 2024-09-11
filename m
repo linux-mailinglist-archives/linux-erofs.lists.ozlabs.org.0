@@ -2,68 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D98A974859
-	for <lists+linux-erofs@lfdr.de>; Wed, 11 Sep 2024 04:51:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6713D9749D6
+	for <lists+linux-erofs@lfdr.de>; Wed, 11 Sep 2024 07:32:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X3Q7M5M5xz2yhg
-	for <lists+linux-erofs@lfdr.de>; Wed, 11 Sep 2024 12:51:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X3Tjl1kKZz2yjR
+	for <lists+linux-erofs@lfdr.de>; Wed, 11 Sep 2024 15:32:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.58.52.133
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726023068;
-	cv=none; b=bRsqYMECjOA2FK6ZbDxOA+pu7QYB+p29/erP7dD/qIsLyFCznXJ2epzytNac9w2Fm+MEtlYENCxJXXrdUznuvWsEBMOjHqhVuOtS+dRFdmpahIlfVWln1FouYdwpAOr1JtitlCOXUcQnbQkPIv8WjQ1jOXGLeEQTDTMKQYariPhEDiwj4h7CPus9KlkkReei3r76HNenjVjidEIHnhXLw78VwcvMz3ig3z3FiC99eLvjPX8LX9J9iH4ASWrzT2Fv8fvE0/Q29QDRkqCyPXMLzsClc70CSj9yIsolWKxbRH7EKdEIX62htcAxQPmBTqxg+4jpAKiGX7ecr90be9/E7A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.19
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726032760;
+	cv=none; b=lsfh/yzOstYHiCPV1iY7bXGZbi3iPlTRZTjqeDGnfULvJeQ2yDh2/w6jr5HEaL54BjQwxOsh8kn35x61fQePmDY55toLgtKRnlCkYkKAFBD1sqOI/E2d66NgJlE1MeusIcRdGcvkN0HvmZdDzdL3Xf7xoGQ3zJ2mHfm2O58ExXjjk05FNzRixi6tqy9qQna7BVbS+cWx/1lKZwEDwZ2Eb3o27t/Dd+qXzYCqRzJ82NV59TsyupSwP5d0fM372RsNFNhhvQyab4MMXMvYsavWJ31O1xEA9mScqV8SmvS9eRk/+uesaaHdpIXSXkaNdncBJSFnfo2hSnNxK293ZJhTgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726023068; c=relaxed/relaxed;
-	bh=F0izTLkzvLaCVywJONgSsLsqtwszvHdfdXG1Axz7UgY=;
-	h=Message-ID:Date:Subject:From:To:MIME-Version:Content-Type; b=it1EJneOXFjxUOO5q/3MNeISzWjVPE0TqwKJX3YpHagShYJFDUnnxj8f6BFPzBOpd31U5dgRj4ByxiMcAv5/ltlR0lgzCsvCpm0aZ925FFCczyFq7ymoJv/vqVy3gq6E8moQhEzYeDDwOrNKr5mZedfzc29oaaV/VNhm9KYwIRMC3DFKEKweia0yBpTFyY3jA9DuGlbAXZ4d/BDr1hg3cj8cXYdfyMuaSJqOj4OC3UbBxKyEVSrRGteNDssnbNt2Gr6lvHSn8/rwoDH1ZLEVCQoELC/pjUiEkra9NIIbChg7hJrUa6C6CdIbKjocapWGXFQeFqOikmw7GCE7SkrFrw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=163.com; dkim=fail header.d=163.com header.i=salesluckygoods@163.com header.a=rsa-sha1 header.s=ossljy header.b=hP1LnP68 reason="key not found in DNS"; dkim-atps=neutral; spf=pass (client-ip=45.58.52.133; helo=server1.abioi.cn; envelope-from=manager@abioi.cn; receiver=lists.ozlabs.org) smtp.mailfrom=abioi.cn
-Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=163.com
+	t=1726032760; c=relaxed/relaxed;
+	bh=CxHokIu0R04vdnUdFDVnX46SOIi9ZvSpDo6MUVUxDLg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=kb/9BdpO/roq/snMQJpEQp1lqFWjl9zQd2+pnvQbzhlqsy2npHagrDiRPaMXGqNRAu3jArjJxHGLgUBnBg1oTLATQjE8n/nbF6YxLcKUo3zYRp+SWBmXsYcaZ6GwvowSe5jxtCLM9OvtXggMlX6AoFiGuacMD0UKbrfRzv5fOuHLKQVAm5XdrqlX/JE/VUdaqk8IwngJ1pDXnDwJhJ2dfi2tZ5C2nyuklxoZ73EvK2VF+FSVdQVwvGJRkIfTTwN6pRGdThJwvP7HvGPPKIGN2T/o63ePBpRgrMC6yxB9XF01v44CE2rB3Ls2StLyIX9WFIE5GAMb8B3fu+1+MbzwBQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=BX4MMSzG; dkim-atps=neutral; spf=pass (client-ip=198.175.65.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="key not found in DNS" header.d=163.com header.i=salesluckygoods@163.com header.a=rsa-sha1 header.s=ossljy header.b=hP1LnP68;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=BX4MMSzG;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=abioi.cn (client-ip=45.58.52.133; helo=server1.abioi.cn; envelope-from=manager@abioi.cn; receiver=lists.ozlabs.org)
-X-Greylist: delayed 603 seconds by postgrey-1.37 at boromir; Wed, 11 Sep 2024 12:51:07 AEST
-Received: from server1.abioi.cn (abioi.cn [45.58.52.133])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X3Q7H289kz2xsH
-	for <linux-erofs@lists.ozlabs.org>; Wed, 11 Sep 2024 12:51:06 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=ossljy; d=163.com;
- h=Message-ID:Date:Subject:From:Reply-To:To:MIME-Version:Content-Type:List-Unsubscribe:List-Id; i=salesluckygoods@163.com;
- bh=2+8xM1b/9eHPohjIJKsp9LDGSK4=;
- b=hP1LnP68wdJdUM/2r9ElKfHFLEPC0jIenUT6ekM0uIasOXR+3NiqeiSvoDeCXarurb9CqHrpy9NN
-   EymxEi+2Jl/iKJfXG965FQWHbbBmQG0znkWySqgyIuh5iFsMXhqf20o4u/rBFkGchS9Bkwy6K2/W
-   jwkR6oyFXi48phZoBruQw32K9/mNcblggB77diEzfFWhKEqKLCEIwwAeSbfctJ6JeG0O4BffRd1R
-   G9mgCxpjLMUqr+Fp/NfnZjl4SbBQ23BmSYaTY89cn3mBvVpYatxgZR5/JWoNxyQXQM5hNuEU9zDo
-   YimFpM8eQ3tfiGUJY8eLULe/v2rTCiyEniPNCg==
-DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=ossljy; d=163.com;
- b=x+6b2jzJMfEtuPjeknMtg2dt41/I/IE9W1ZgSGC0pr0AB/CIcmgOwD2N45G3Ep/7FP2QBrqaEUHF
-   1QcYIq+gyQZSTtnrA2g8F36joou7mgej7gK8v7NaGHAb7V5qxpyBuifFXp44Na8BgQbuVBBuYF+M
-   OKjxb8tEE2SIZC3fW0j0fa8KyUGvkKBJCJtB1PkM8kgHvu8qrtOYtGNBb5d8PSh1QRqxDff6vOpV
-   pBcrzOdiDBPBEb/99a11Qk+npS+64NK9kKOp1GQ8uWxOzjXOxbGLVrYP1nVHULXV+4yFz3OIOQt4
-   oMCnKcuZqXbrK7URmju3tY3lSGs8FhE2/nboZw==;
-Received: from svip.ossedm.com (182.106.136.53) by server1.abioi.cn id hs42pm0e97c8 for <linux-erofs@lists.ozlabs.org>; Wed, 11 Sep 2024 02:41:00 +0000 (envelope-from <manager@abioi.cn>)
-Message-ID: <22c6b74c1d3526c872f335f49bf7f0c4@abioi.cn>
-Date: Wed, 11 Sep 2024 02:40:51 +0000
-Subject: artificial flowers
-From: Arrow <salesluckygoods@163.com>
-To: "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="_=_swift_v4_1726022451_6d2ec18bc2f71ec9d4ae8ecc918da080_=_"
-X-Tracking-Did: 0
-X-Subscriber-Uid: zw225mbdyfb88
-X-Report-Abuse: Please report abuse for this campaign here:
- http://svip.ossedm.com/index.php/campaigns/jf603e9wgkbf3/report-abuse/jn26570cnm0fe/zw225mbdyfb88
-X-Mailer: SwiftMailer - 5.4.x
-X-EBS: http://svip.ossedm.com/index.php/lists/block-address
-X-Delivery-Sid: 42
-X-Customer-Uid: jc916mcm3w7e5
-X-Customer-Gid: 6
-X-Campaign-Uid: jf603e9wgkbf3
-Precedence: bulk
-List-Unsubscribe-Post: List-Unsubscribe=One-Click
-Feedback-ID: jf603e9wgkbf3:regular:jn26570cnm0fe:jc916mcm3w7e5
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X3Tjg01kvz2xqp
+	for <linux-erofs@lists.ozlabs.org>; Wed, 11 Sep 2024 15:32:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1726032759; x=1757568759;
+  h=date:from:to:cc:subject:message-id;
+  bh=uIgXEXWr0cdv/1P5gy93eJ7DzTfQ59rE7C+HT53T7ok=;
+  b=BX4MMSzGHVio1scs/N34fsmjOcQFcRaYvXtXEGVbGgcyRUme2SyZZnGr
+   2e54jEIuTJLkf4DqsoiOaLtn7Peab2fOJs60iZ6FhPKqQvspHeV/A7Iqv
+   r4Dbuvha7bxhZplC/vAkgsd0ij7oUrrTJodAi6nO1vybS5HNobMQzHPwf
+   E0HRl2av7WSfltlNbeFgwOF6T+jAzmwvKtVHNQSfeDnGf73FHlABMoDoi
+   XjP4S2SKEIs4jvDwan0uU8mBtoIB9T0JPX+8z974WtausZFKV121bCbp6
+   Bc27In85gMcuo2KOjwuqFKCUAA8xrb6O3o14gcNnrcAFhK6PMdCUpQl/v
+   w==;
+X-CSE-ConnectionGUID: 7NNG1VOfTvWB40i8AZ236g==
+X-CSE-MsgGUID: VUrQ6cTMSI+rYLphZKYCRA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11191"; a="24680635"
+X-IronPort-AV: E=Sophos;i="6.10,219,1719903600"; 
+   d="scan'208";a="24680635"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2024 22:32:33 -0700
+X-CSE-ConnectionGUID: LTiTB60YReW7xlbqxop1iQ==
+X-CSE-MsgGUID: LxdNqsJuQwS9+hAXEd6/cg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,219,1719903600"; 
+   d="scan'208";a="67758347"
+Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 10 Sep 2024 22:32:32 -0700
+Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1soFxt-000352-1R;
+	Wed, 11 Sep 2024 05:32:29 +0000
+Date: Wed, 11 Sep 2024 13:32:01 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev] BUILD SUCCESS
+ a71f78705a875400b47ebf28131c7ac85192a751
+Message-ID: <202409111359.6TlKkmFb-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
+Precedence: list
 List-Id: Development of Linux EROFS file system <linux-erofs.lists.ozlabs.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=unsubscribe>
@@ -72,67 +75,181 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: Arrow <salesluckygoods@163.com>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
+branch HEAD: a71f78705a875400b47ebf28131c7ac85192a751  erofs: allocate more short-lived pages from reserved pool first
 
---_=_swift_v4_1726022451_6d2ec18bc2f71ec9d4ae8ecc918da080_=_
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 1286m
 
-Hi friend,
-Good day!I'm Arrow from the Professional artificial flower pro=
-ducts
-manufacturer.
-Do you sell artificial flower products?Are you a ma=
-nufacturer or
-distributor?
-Warm regards,
-Arrow,
-Professional artifi=
-cial flower products manu
+configs tested: 158
+configs skipped: 5
 
---_=_swift_v4_1726022451_6d2ec18bc2f71ec9d4ae8ecc918da080_=_
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-<!DOCTYPE html>
-<html><head><meta charset=3D"utf-8"><title>artificial flo=
-wers</title></head><body><span style=3D"font-size:16px;"><span style=3D"fon=
-t-family:&#31561;&#32447;"><span style=3D"font-family:&#23435;&#20307;"><sp=
-an style=3D"color:#000000"><span style=3D"letter-spacing:0.0000pt"><span st=
-yle=3D"text-transform:none"><span style=3D"font-style:normal"><font face=3D=
-"&#23435;&#20307;">Hi friend,</font></span></span></span></span></span><br>=
-<span style=3D"font-family:&#23435;&#20307;"><span style=3D"color:#000000">=
-<span style=3D"letter-spacing:0.0000pt"><span style=3D"text-transform:none"=
-><span style=3D"font-style:normal"><font face=3D"&#23435;&#20307;">Good day=
-!I'm Arrow</font>&nbsp;<font face=3D"&#23435;&#20307;">from the Professiona=
-l artificial flower</font>&nbsp;<font face=3D"&#23435;&#20307;">products ma=
-nufacturer.<br><span style=3D"background-color:#e74c3c;">Do you sell artifi=
-cial flower</span></font><span style=3D"background-color:#e74c3c;">&nbsp;</=
-span><font face=3D"&#23435;&#20307;"><span style=3D"background-color:#e74c3=
-c;">products?Are you a manufacturer or distributor?</span></font></span></s=
-pan></span></span></span></span><br><span style=3D"font-family:&#31561;&#32=
-447;"><span style=3D"font-family:&#23435;&#20307;"><span style=3D"color:#00=
-0000"><span style=3D"letter-spacing:0.0000pt"><span style=3D"text-transform=
-:none"><span style=3D"font-style:normal"><font face=3D"&#23435;&#20307;">Wa=
-rm regards,</font></span></span></span></span></span></span><br><br><img al=
-t=3D"" src=3D"https://pic.imgdb.cn/item/66a890d0d9c307b7e9e9d93e.jpg" style=
-=3D"height: 191px; width: 500px;"><br><span style=3D"font-family:&#31561;&#=
-32447;"><span style=3D"font-family:&#23435;&#20307;"><span style=3D"color:#=
-000000"><span style=3D"letter-spacing:0.0000pt"><span style=3D"text-transfo=
-rm:none"><span style=3D"font-style:normal">Arrow<font face=3D"&#23435;&#203=
-07;">,</font></span></span></span></span></span></span><br><span style=3D"f=
-ont-family:&#31561;&#32447;"><span style=3D"font-family:&#23435;&#20307;"><=
-span style=3D"color:#000000"><span style=3D"letter-spacing:0.0000pt"><span =
-style=3D"text-transform:none"><span style=3D"font-style:normal"><font face=
-=3D"&#23435;&#20307;">Professional artificial flower</font>&nbsp;<font face=
-=3D"&#23435;&#20307;">products manu</font></span></span></span></span></spa=
-n></span></span><img width=3D"1" height=3D"1" src=3D"http://svip.ossedm.com=
-/index.php/campaigns/jf603e9wgkbf3/track-opening/zw225mbdyfb88" alt=3D"" />=
+tested configs:
+alpha                             allnoconfig   gcc-13.3.0
+alpha                            allyesconfig   gcc-13.3.0
+alpha                               defconfig   gcc-13.3.0
+arc                              allmodconfig   gcc-13.2.0
+arc                               allnoconfig   gcc-13.2.0
+arc                              allyesconfig   gcc-13.2.0
+arc                          axs101_defconfig   gcc-13.2.0
+arc                                 defconfig   gcc-13.2.0
+arc                   randconfig-001-20240911   gcc-13.2.0
+arc                   randconfig-002-20240911   gcc-13.2.0
+arm                              allmodconfig   gcc-14.1.0
+arm                               allnoconfig   clang-20
+arm                              allyesconfig   gcc-14.1.0
+arm                     davinci_all_defconfig   clang-20
+arm                                 defconfig   clang-14
+arm                            mps2_defconfig   clang-20
+arm                   randconfig-001-20240911   clang-20
+arm                   randconfig-002-20240911   clang-20
+arm                   randconfig-003-20240911   clang-20
+arm                   randconfig-004-20240911   gcc-14.1.0
+arm64                            allmodconfig   clang-20
+arm64                             allnoconfig   gcc-14.1.0
+arm64                               defconfig   gcc-14.1.0
+arm64                 randconfig-001-20240911   clang-20
+arm64                 randconfig-002-20240911   clang-15
+arm64                 randconfig-003-20240911   clang-20
+arm64                 randconfig-004-20240911   clang-15
+csky                              allnoconfig   gcc-14.1.0
+csky                                defconfig   gcc-14.1.0
+csky                  randconfig-001-20240911   gcc-14.1.0
+csky                  randconfig-002-20240911   gcc-14.1.0
+hexagon                          allmodconfig   clang-20
+hexagon                           allnoconfig   clang-20
+hexagon                          allyesconfig   clang-20
+hexagon                             defconfig   clang-20
+hexagon               randconfig-001-20240911   clang-20
+hexagon               randconfig-002-20240911   clang-20
+i386                             allmodconfig   gcc-12
+i386                              allnoconfig   gcc-12
+i386                             allyesconfig   gcc-12
+i386         buildonly-randconfig-001-20240911   clang-18
+i386         buildonly-randconfig-002-20240911   gcc-12
+i386         buildonly-randconfig-003-20240911   clang-18
+i386         buildonly-randconfig-004-20240911   gcc-12
+i386         buildonly-randconfig-005-20240911   gcc-12
+i386         buildonly-randconfig-006-20240911   gcc-12
+i386                                defconfig   clang-18
+i386                  randconfig-001-20240911   gcc-12
+i386                  randconfig-002-20240911   clang-18
+i386                  randconfig-003-20240911   clang-18
+i386                  randconfig-004-20240911   gcc-12
+i386                  randconfig-005-20240911   gcc-12
+i386                  randconfig-006-20240911   clang-18
+i386                  randconfig-011-20240911   gcc-12
+i386                  randconfig-012-20240911   gcc-12
+i386                  randconfig-013-20240911   clang-18
+i386                  randconfig-014-20240911   clang-18
+i386                  randconfig-015-20240911   gcc-12
+i386                  randconfig-016-20240911   clang-18
+loongarch                        allmodconfig   gcc-14.1.0
+loongarch                         allnoconfig   gcc-14.1.0
+loongarch                           defconfig   gcc-14.1.0
+loongarch             randconfig-001-20240911   gcc-14.1.0
+loongarch             randconfig-002-20240911   gcc-14.1.0
+m68k                             allmodconfig   gcc-14.1.0
+m68k                              allnoconfig   gcc-14.1.0
+m68k                             allyesconfig   gcc-14.1.0
+m68k                                defconfig   gcc-14.1.0
+microblaze                       alldefconfig   gcc-14.1.0
+microblaze                       allmodconfig   gcc-14.1.0
+microblaze                        allnoconfig   gcc-14.1.0
+microblaze                       allyesconfig   gcc-14.1.0
+microblaze                          defconfig   gcc-14.1.0
+mips                              allnoconfig   gcc-14.1.0
+nios2                             allnoconfig   gcc-14.1.0
+nios2                               defconfig   gcc-14.1.0
+nios2                 randconfig-001-20240911   gcc-14.1.0
+nios2                 randconfig-002-20240911   gcc-14.1.0
+openrisc                          allnoconfig   gcc-14.1.0
+openrisc                         allyesconfig   gcc-14.1.0
+openrisc                            defconfig   gcc-14.1.0
+parisc                           allmodconfig   gcc-14.1.0
+parisc                            allnoconfig   gcc-14.1.0
+parisc                           allyesconfig   gcc-14.1.0
+parisc                              defconfig   gcc-14.1.0
+parisc                randconfig-001-20240911   gcc-14.1.0
+parisc                randconfig-002-20240911   gcc-14.1.0
+parisc64                            defconfig   gcc-14.1.0
+powerpc                          allmodconfig   gcc-14.1.0
+powerpc                           allnoconfig   gcc-14.1.0
+powerpc                          allyesconfig   clang-20
+powerpc               randconfig-001-20240911   clang-20
+powerpc               randconfig-002-20240911   gcc-14.1.0
+powerpc               randconfig-003-20240911   gcc-14.1.0
+powerpc64             randconfig-001-20240911   clang-17
+powerpc64             randconfig-002-20240911   clang-15
+powerpc64             randconfig-003-20240911   gcc-14.1.0
+riscv                            allmodconfig   clang-20
+riscv                             allnoconfig   gcc-14.1.0
+riscv                            allyesconfig   clang-20
+riscv                               defconfig   clang-20
+riscv                 randconfig-001-20240911   gcc-14.1.0
+riscv                 randconfig-002-20240911   gcc-14.1.0
+s390                             allmodconfig   clang-20
+s390                              allnoconfig   clang-20
+s390                             allyesconfig   gcc-14.1.0
+s390                                defconfig   clang-20
+s390                  randconfig-001-20240911   gcc-14.1.0
+s390                  randconfig-002-20240911   clang-20
+sh                               allmodconfig   gcc-14.1.0
+sh                                allnoconfig   gcc-14.1.0
+sh                               allyesconfig   gcc-14.1.0
+sh                                  defconfig   gcc-14.1.0
+sh                    randconfig-001-20240911   gcc-14.1.0
+sh                    randconfig-002-20240911   gcc-14.1.0
+sparc                            allmodconfig   gcc-14.1.0
+sparc64                             defconfig   gcc-14.1.0
+sparc64               randconfig-001-20240911   gcc-14.1.0
+sparc64               randconfig-002-20240911   gcc-14.1.0
+um                               allmodconfig   clang-20
+um                                allnoconfig   clang-17
+um                               allyesconfig   gcc-12
+um                                  defconfig   clang-20
+um                             i386_defconfig   gcc-12
+um                    randconfig-001-20240911   clang-15
+um                    randconfig-002-20240911   clang-20
+um                           x86_64_defconfig   clang-15
+x86_64                            allnoconfig   clang-18
+x86_64                           allyesconfig   clang-18
+x86_64       buildonly-randconfig-001-20240911   clang-18
+x86_64       buildonly-randconfig-002-20240911   clang-18
+x86_64       buildonly-randconfig-003-20240911   gcc-12
+x86_64       buildonly-randconfig-004-20240911   gcc-12
+x86_64       buildonly-randconfig-005-20240911   gcc-12
+x86_64       buildonly-randconfig-006-20240911   clang-18
+x86_64                              defconfig   gcc-11
+x86_64                randconfig-001-20240911   gcc-12
+x86_64                randconfig-002-20240911   gcc-12
+x86_64                randconfig-003-20240911   clang-18
+x86_64                randconfig-004-20240911   clang-18
+x86_64                randconfig-005-20240911   clang-18
+x86_64                randconfig-006-20240911   gcc-12
+x86_64                randconfig-011-20240911   clang-18
+x86_64                randconfig-012-20240911   clang-18
+x86_64                randconfig-013-20240911   gcc-12
+x86_64                randconfig-014-20240911   clang-18
+x86_64                randconfig-015-20240911   gcc-12
+x86_64                randconfig-016-20240911   clang-18
+x86_64                randconfig-071-20240911   clang-18
+x86_64                randconfig-072-20240911   gcc-11
+x86_64                randconfig-073-20240911   clang-18
+x86_64                randconfig-074-20240911   clang-18
+x86_64                randconfig-075-20240911   gcc-12
+x86_64                randconfig-076-20240911   clang-18
+x86_64                          rhel-8.3-rust   clang-18
+xtensa                            allnoconfig   gcc-14.1.0
+xtensa                randconfig-001-20240911   gcc-14.1.0
+xtensa                randconfig-002-20240911   gcc-14.1.0
 
-</body></html>
-
---_=_swift_v4_1726022451_6d2ec18bc2f71ec9d4ae8ecc918da080_=_--
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
