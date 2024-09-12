@@ -2,69 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4183E976534
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Sep 2024 11:09:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1726132145;
-	bh=HVXOLWyWNS1Std2abaKWJVXIf0uhECWSDcSunqXcH+g=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=ALHi9tGFmm98d1bLWUQmbyWRoFehj4H9P4CyCkVpuFHhn6JPtgaIMJ2uYanGwEe37
-	 6v4apvko0ABGXptYKd3kWMmrjjM4qdG9UuOuB9h6ljBHYHFGTAQqkPYYOMDwSRGclF
-	 F86BSVurOH+2v2QAWlWxi7c/7DaIe9BDO0BzRdXZ90CBWs+NhWENJInZ4Ftw9tiS3U
-	 Pe7luDKtlAVHAXnoAmU+9l/w8Jrzyay9gQR7McpIrCZiC5YS3pfygxMPCF5fJ/G8uP
-	 /CD5fxC0jlb8++a0HTAIR9CGFJj7oAEeMtacta6I3IMvgyk9OH/Hp5l3WYe0XYBZs8
-	 Zdd9gWil3tAIQ==
+	by mail.lfdr.de (Postfix) with ESMTPS id C459697660C
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Sep 2024 11:50:53 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X4BSx1YVtz2yVX
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Sep 2024 19:09:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X4CP74Q2mz2yVv
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Sep 2024 19:50:51 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726132142;
-	cv=none; b=dmJ16Z/efoCmZI6HBmJigVNWcFic+QRlFPHp7dQQukHXky24CPXzbEq5Vm+JFPS1AjkUR7DU6CcKKOKn63Qd0EcZzjQOFC1HAUw6DiiAmtCGdtAVyGdvXaG+Jlm9awU81F/GUDcwu/7Ntj/xSOJfBHGh0d2eIWPONb5Ft10vtqRi1jkdOmbDDZYETNQrnbyxxVa8spuETZvepJ6lvigBx75bO/+tK5OIOJhNs1brMkeAlh3OqkmvEmzNWxiq4q8307uNvPEQMQ0g8zoyAB7JcwshvFpBEh2D7kJz+fzAlg3nqB9v2mm//cLIaPZ67uVIW1YKtYY8DakrX/7GMPSzpQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726134648;
+	cv=none; b=TT8TQ/d9zQ4LVwdDdKUGWxELBabVIPex57FnKJ2ey5Vw70wL9kzdV+deUwk0Z1Xg9eFkI723zUD/U4R/oqIAXBz9zI/rL0k5ZEJKDYkwmXs6OxBZhzWDkTUXUyd6b49ucqZx3m5uigJZC5iXFdiTTnsnhMYavXhANtx9Ev97uFYvztI7XS9h7EuZRYYpZwvMO9ZEbzIn59gBBXO5OCduoQo4skCVSESVlOj+gRrwtYwCFivISqjzea2jsEYXci9GzTA0J3Cwo6fJVmucsA61pK/jG0gdystMSarWET0gSFpPiIe19VERslwq32DxpklW9ftvMiSTbtntZVJZotoM/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726132142; c=relaxed/relaxed;
-	bh=HVXOLWyWNS1Std2abaKWJVXIf0uhECWSDcSunqXcH+g=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Q8F1rw0vnhgZebr5jYDQuU9S8+Q/GYOOskp+801EWUYAQ3OJgS3XivpWja7E3tE1n6ziZ7rPixq0Xtp9bHMfixiLWgGdxMcHKicmFH2EI+RqLoRX+hMBIMgccOua8TG5Fxh0H/88aBl4yHKm794gtB071qVIiEaCWJ0/BLgE286AzXZeDwxRsUNTmbB2ucBWv4/FoZ49q7YIpbuEVj+vgS2HCLoX7PmXhObBJytUaSdug/tVvWONAB0kwbC7f4gApwXOdGXE1i+p1wVxytKAW2UBgpkoNqNYsoT/gkIBKa5P1bLawYEKEgkjp8ogEZkwU1ncVX879DqWhCgzy1DYcQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=cxKbzOYe; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1726134648; c=relaxed/relaxed;
+	bh=6DbEJrJtDiqqTKEcdu95OTnj0uf8LZS3nF22MDAN8nQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=VU8rmzmaZqy3Sa9ppaMYgyfc6l2r/o2B14bdqLr/gb8AbMBRYa6a8Or16wTh/cJY1ZbsNEaqHnlj8OVNDhWKc2EiOwsmFDDSp6uu9RQZ5QulWzdi10Y91Z1Km4Gm3wj069reHPL6NGE3LzzlcIh4b0OwKvGCin8GRjkVXdIJdUmQaXIVhBpcCtJWaOMcmKRCEdrqXt1t/xsO4pXdGzoH6SZ/TxP7cJ9Vm5xZUMp5hrt+/MRm3S21Bqm4va/v4Zw5Wo8N3LfKL7A9bjj9vkHKuGayFxbt5wQPFNXTF1/z9P0tiLrE3rYGXOpso79ZjyMlJzgRquQTa4Tg8a1au5T9+A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IZcq2kCn; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=cxKbzOYe;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IZcq2kCn;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X4BSt5FvXz2yMF
-	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Sep 2024 19:09:02 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 10B635C59FA;
-	Thu, 12 Sep 2024 09:08:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F023C4CEC3;
-	Thu, 12 Sep 2024 09:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726132140;
-	bh=d4ks9mtR7upiaSaXYwa6WztAU/vsuQg//2VO7mzJKYA=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=cxKbzOYemlPhxUsxRgFLiv7Zs6Xh5VAc8RTXYK1tTSP3I8UsSRXs6jEKKIMdAYtTa
-	 +Lq95LF18D5hJMoc/NSkJCniAF2KFFuacM7s8zE4XtkSUV8mPeJ97K4+fQScH3mQGJ
-	 XGebjkAWUaazVCIRAXZatCp63A4TPSUU6oJmUL2r7VDBcyEkmsj8+EsazUoTwn+9ox
-	 kipAL3V4ny1OiDirGtM3sQXfVsmmZ4dTGOO2NGWyv80QJZgHO9Ey3UTm7CIlqQqPz3
-	 CBfiaRHjwb1lCFixP2bLhtrLGqrIec7WMayAPxXa7byIoHVFf0RIp5mOE+lcox7r4z
-	 nAVwuZCAk0Fdw==
-Message-ID: <0600636f-ff01-4175-9de7-4a4fcf7e5669@kernel.org>
-Date: Thu, 12 Sep 2024 17:08:54 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X4CP31mcDz2xpx
+	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Sep 2024 19:50:44 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1726134640; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=6DbEJrJtDiqqTKEcdu95OTnj0uf8LZS3nF22MDAN8nQ=;
+	b=IZcq2kCnDdvct8BMCVt2NmwA6K2nDE/+SurVKdpWWXzbhqlJWudQBEXe6dLZIBTIaBKR7YmuF2OHxKDBF10OlmWmW9tOhiO9mKt4aShBaLHWPJ+MWQ4gZ4JH4c8vSjn3y4U1W9upqCXJEOhKGxfl/UobpDPGFOBu1ho5B4hoN8M=
+Received: from 30.221.130.230(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WEr-uOe_1726134638)
+          by smtp.aliyun-inc.com;
+          Thu, 12 Sep 2024 17:50:39 +0800
+Message-ID: <1a8bf68a-8712-4428-9724-5c4fae46623f@linux.alibaba.com>
+Date: Thu, 12 Sep 2024 17:50:37 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: reject inodes with negative i_size
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20240912083538.3011860-1-hsiangkao@linux.alibaba.com>
-Content-Language: en-US
-In-Reply-To: <20240912083538.3011860-1-hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH v7 1/2] erofs-utils: lib: expose erofs_match_prefix()
+To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <20240906095853.3167228-1-hongzhen@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240906095853.3167228-1-hongzhen@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -78,27 +59,38 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Chao Yu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Chao Yu <chao@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/9/12 16:35, Gao Xiang wrote:
-> Negative i_size is never supported, although crafted images with inodes
-> having negative i_size will not lead to security issues in our current
-> codebase:
-> 
-> The following image can verify this (gzip+base64 encoded):
-> 
-> H4sICCmk4mYAA3Rlc3QuaW1nAGNgGAWjYBSMVPDo4dcH3jP2aTED2TwMKgxMUHHNJY/SQDQX
-> LxcDIw3tZwXit44MDNpQ/n8gQJZ/vxjijosPuSyZ0DUDgQqcZoKzVYFsDShbHeh6PT29ktTi
-> Eqz2g/y2pBFiLxDMh4lhs5+W4TAKRsEoGAWjYBSMglEwCkYBPQAAS2DbowAQAAA=
-> 
-> Mark as bad inodes for such corrupted inodes explicitly.
-> 
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+
+On 2024/9/6 17:58, Hongzhen Luo wrote:
+> Prepare for the feature of exporting extended attributes for
+> `fsck.erofs`.
+> 
+> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+> ---
+> v2: Expose erofs_match_prefix() directly instead of introducing another helper function.
+> v1: https://lore.kernel.org/all/20240906083849.3090392-1-hongzhen@linux.alibaba.com/
+> ---
+>   include/erofs/xattr.h |  3 +++
+>   lib/xattr.c           | 11 ++++++-----
+>   2 files changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+> index 7643611..e89172e 100644
+> --- a/include/erofs/xattr.h
+> +++ b/include/erofs/xattr.h
+> @@ -61,6 +61,9 @@ void erofs_clear_opaque_xattr(struct erofs_inode *inode);
+>   int erofs_set_origin_xattr(struct erofs_inode *inode);
+>   int erofs_read_xattrs_from_disk(struct erofs_inode *inode);
+>   
+> +bool erofs_match_prefix(const char *key, unsigned int *index,
+> +			unsigned int *len);
+
+better to add `xattr` in the function name too,
+
+erofs_xattr_prefix_matches?
 
 Thanks,
+Gao Xiang
