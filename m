@@ -1,49 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3C039764B4
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Sep 2024 10:35:55 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0E32976527
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Sep 2024 11:06:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1726132006;
+	bh=A4eHS1sh4CKIGqGHVJl226fQvh7/Bi4n1+YKdJ97DDs=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=YI8lbW3rohH3KZkY3FbNZcHrKqoJhTxeAe3sOgD2t9zvbRHhhymDmSMO2blCAadqS
+	 e72D4vIhDTJrnkxGdzVC83dJ1dcry5InEy+Khl1Y4LJw/BAw0e7bpG6DcQJuHO4B+i
+	 OPKT3EjGuNBon/L+6EH5okPdH8f0RURu0w36j+iEDqbU91KzN+ODGt0oC+jAszIzOu
+	 LNmcyyWJ58WboCOnYuZ7qZuPwjEPzqDk7jC6x+7yo/+1u13uomKa29hI6oWleSW4kn
+	 b6NQvrC4Nux4mjSJeRt5GVaTIuq7Tr1V8TDaC51WX3HfLln5Y6x2EeE+j1n1iMQZDV
+	 q0RcaZg5VQfCg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X49kd5Smsz2yY9
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Sep 2024 18:35:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X4BQG3PXmz2yVZ
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Sep 2024 19:06:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726130151;
-	cv=none; b=BMqBQN0O3zm8J0vXws7Ku3k9iaGqA86ObmQGb2VqDTsTnSx8bdK99PbzlMdOXwx7ESLJA1pzz/Xon2V8uPkfTBvPG11QLO/YS+pXKtsIUbvjyEEQqnKhSPl8IsmAsawCCRdKQMleb7qU7rVgh1AI8N+d74A9f8xEd6rwmrwoChcdjoz3UI8zG/S1zxj8poxC1VHMdk5GewaqYVu/b9F4n5e8RJ3R47YRZVOoNcji75Bj348WjhY9nrQWTLkF4iR6ZdruykrahcxE0D1wgfcGYfWjUQfFfst6M3l6k2qKZZp8RNjiRYJRRsWRs3uG/j+Qtzou3C9RbLbK52w1xr3jGA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726132004;
+	cv=none; b=is5Iqe0LPIUMkWmFu9Q6+sNTSHXVfCHmPZe2YlONuoK2rZlxxvLgQuPfj4EEuOitPKA/w8sW5L0/y0LWHdRvchvc4QoFe3NN1SYEQIWFJMyXpn9n+q9hSCykFM+57QDItoAbeACCcrXRxQxXhmEYo6O7y8gadegFzjhwigP3F1ZxNHM3TZXiO46GCTH/aSATmQkBfOkfUuTrioNVqzDTA+1+V/7Ev9zS0unzki1hI71mAJDmoCnEYADOHfKSibs+kXnV8FGnt/h/BjwSpQNMalX/b1Aj/ABQvigosAwYuGnqhdVXp8nFuJH3MsSMpFmxdD+3m1MCUjJMwAWiYyjj6Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726130151; c=relaxed/relaxed;
-	bh=OQSX4JcrAXPvNnaJnPYb8rHWwXAA63xuZRYJXlbO310=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ownziL9kTWGusIEcmElb74hecnblx6ETsqyB/Bc+An5iwkU26jL6zPC72YPFmXAY/2E/tzmnKBZiM7qL3rvGF6K0DnkllClkvyKO01EMGNIDLPLXpA6U6PGooEvsfV40qkDyBYjVbdZ6s+Y5dShHYTdJJXKVWpX9AoilXs1v70Iaanmo4Lj2atC5G2+HnjpjYnpE1Z8D1nBn+7qoO8YMPBZhe6Ly5pLew6EVENk7pczI0waVIbFwhTKuB6ZE5mDyX82TTM8C5bKfsF9Ibjh9wu/R75Zxl1ucCeTcJPW7DYmlF135kHSHyLLOykWVv7Ma9A+wUGHEWyAbIoNdWP80GA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Mxhk8Vpi; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1726132004; c=relaxed/relaxed;
+	bh=A4eHS1sh4CKIGqGHVJl226fQvh7/Bi4n1+YKdJ97DDs=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=DdeO2onZb32laXZUsB2VpEfkaBo5hmt4NvOcc6E5368/MnDPCbtjvzBZrzuP+fK4OgTlCjGybO3378dF3KT2UNsoeyZlQ3+ZMNO2+1APEUM1uNxvFBBe+FBPjoy1blQNbmbTys17aoYQAmzGZkAE06eZHQQ4D4ghBpW+zpq1Gj+YD3HwBs0f25xrEF+xKyu64AG+axP1rguwvw3MoRedk0dQ8fVfu2TQ82uqIl534mgRw+pIzqmfRh4eMlLAgsV3BrDbjICGaN3PUB4Ie+R0Sz1l411o3avQUS7Ib47QvEnB4nndf969zmWhnFhH135DUo07Z/2Koh1ZtTr9Q09qSw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Z6v50LaW; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Mxhk8Vpi;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Z6v50LaW;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X49kZ1MdNz2xl6
-	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Sep 2024 18:35:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1726130145; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=OQSX4JcrAXPvNnaJnPYb8rHWwXAA63xuZRYJXlbO310=;
-	b=Mxhk8VpiNgyWcFFON5nNLN2T6rnNiBsJTYB0lMMGKEx+BBNt2it8W3ghJC53P+2mdS9OuaaLuiFGSA9TBrcAYD/7M1StnArPBc+cm7b7GRPbW8zySMFGmKUxbguu3SLIUOeGSKUkSjaGHfXTN7zQnCWJfy/uT5MKEZQVJx9PVQE=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WEqlyhG_1726130140)
-          by smtp.aliyun-inc.com;
-          Thu, 12 Sep 2024 16:35:44 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: reject inodes with negative i_size
-Date: Thu, 12 Sep 2024 16:35:38 +0800
-Message-ID: <20240912083538.3011860-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X4BQD14WDz2xpx
+	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Sep 2024 19:06:44 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id F2223A4457B;
+	Thu, 12 Sep 2024 09:06:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67942C4CEC3;
+	Thu, 12 Sep 2024 09:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726131999;
+	bh=ujsBFOcNrFBUxWWFDaYYBKGgdo4OV7buD0Yn7UNY6lI=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=Z6v50LaWqPTUjB2LLOjFKUK0gWnyefy87PcgJ1pKARj/7+6b2xR/ds+cgk4IKmK8t
+	 TvHwED88ST4gze0oNXa+4FeItqyiq/meMgnXcFiwTxXhm7eWEsLRO4llr4fPtdI4F4
+	 BEfoiTDAejASYTZAKSZVrsnFoVCU9MdfOaL1tMR/d7ND7nN766XWwZKyZj633Lpwqo
+	 yEbgOldjx2wNVDmb4PQqLs9epviRTr/HW2DiTSW+LdPmpxS1OBA2rA1LZh0uiGs6RL
+	 nQU7Iiurg0/cOM8O6DwEzscJdQR4GKjAZt7Xq5Zv86cqGnvRV2pgxGxbXWlKDfUurL
+	 AffhiWde/D1Ow==
+Message-ID: <e5a4dd90-3fbb-413d-94cb-41ce67d6824f@kernel.org>
+Date: Thu, 12 Sep 2024 17:06:34 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs: restrict pcluster size limitations
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <20240912074156.2925394-1-hsiangkao@linux.alibaba.com>
+Content-Language: en-US
+In-Reply-To: <20240912074156.2925394-1-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -55,68 +78,23 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+From: Chao Yu via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Chao Yu <chao@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Negative i_size is never supported, although crafted images with inodes
-having negative i_size will not lead to security issues in our current
-codebase:
+On 2024/9/12 15:41, Gao Xiang wrote:
+> Error out if {en,de}encoded size of a pcluster is unsupported:
+>    Maximum supported encoded size (of a pcluster):  1 MiB
+>    Maximum supported decoded size (of a pcluster): 12 MiB
+> 
+> Users can still choose to use supported large configurations (e.g.,
+> for archival purposes), but there may be performance penalties in
+> low-memory scenarios compared to smaller pclusters.
+> 
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-The following image can verify this (gzip+base64 encoded):
+Reviewed-by: Chao Yu <chao@kernel.org>
 
-H4sICCmk4mYAA3Rlc3QuaW1nAGNgGAWjYBSMVPDo4dcH3jP2aTED2TwMKgxMUHHNJY/SQDQX
-LxcDIw3tZwXit44MDNpQ/n8gQJZ/vxjijosPuSyZ0DUDgQqcZoKzVYFsDShbHeh6PT29ktTi
-Eqz2g/y2pBFiLxDMh4lhs5+W4TAKRsEoGAWjYBSMglEwCkYBPQAAS2DbowAQAAA=
-
-Mark as bad inodes for such corrupted inodes explicitly.
-
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/inode.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 7a98df664814..db29190656eb 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -5,7 +5,6 @@
-  * Copyright (C) 2021, Alibaba Cloud
-  */
- #include "xattr.h"
--
- #include <trace/events/erofs.h>
- 
- static int erofs_fill_symlink(struct inode *inode, void *kaddr,
-@@ -16,7 +15,7 @@ static int erofs_fill_symlink(struct inode *inode, void *kaddr,
- 
- 	m_pofs += vi->xattr_isize;
- 	/* check if it cannot be handled with fast symlink scheme */
--	if (vi->datalayout != EROFS_INODE_FLAT_INLINE || inode->i_size < 0 ||
-+	if (vi->datalayout != EROFS_INODE_FLAT_INLINE ||
- 	    check_add_overflow(m_pofs, inode->i_size, &off) ||
- 	    off > i_blocksize(inode))
- 		return 0;
-@@ -131,6 +130,11 @@ static int erofs_read_inode(struct inode *inode)
- 		goto err_out;
- 	}
- 
-+	if (unlikely(inode->i_size < 0)) {
-+		erofs_err(sb, "negative i_size @ nid %llu", vi->nid);
-+		err = -EFSCORRUPTED;
-+		goto err_out;
-+	}
- 	switch (inode->i_mode & S_IFMT) {
- 	case S_IFREG:
- 	case S_IFDIR:
-@@ -186,7 +190,6 @@ static int erofs_read_inode(struct inode *inode)
- 		inode->i_blocks = round_up(inode->i_size, sb->s_blocksize) >> 9;
- 	else
- 		inode->i_blocks = nblks << (sb->s_blocksize_bits - 9);
--
- err_out:
- 	DBG_BUGON(err);
- 	erofs_put_metabuf(&buf);
--- 
-2.43.5
-
+Thanks,
