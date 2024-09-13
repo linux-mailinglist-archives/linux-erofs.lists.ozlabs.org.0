@@ -2,112 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00A37976B41
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Sep 2024 15:54:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1726149270;
-	bh=kvZiZ7FpLo/BaP81J51KdaPy7tXxkeFMbSHVAB7lkh4=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=TM9Da9Fz5Nm2eOnQcKvmwSu6aFUo9RHCzuVuGaU2KL326YTAqguwc9esFRp8ZDyLK
-	 Lf7Sc+/J+j3bTRwkLQX1Jpck5aC5LIURfQpVZGKqAqmQJrrYtboqIudt4JDYvKfzxa
-	 eG/UAgNCaQ96ACuUHN9MkJpDZptg/1h3AUkrJW5rPCV+NNE/sY0V6C5Jg7/INGvWst
-	 z3S1hssPohteOZz5/OmG9mkf/wRbrHwXZC+6Cj6/il2Ig+wi+10i0p8LIzKosSzKmD
-	 cQSbjDWXZqhBuvSSQmdmnohJHSolXC7EjOon6IQxuYOcxAOYQ4nyLuyZmexuN1uoBJ
-	 f3SarxMhIiJxg==
+	by mail.lfdr.de (Postfix) with ESMTPS id E06EB9778AE
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Sep 2024 08:13:49 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X4JpG2tpHz2yZ0
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Sep 2024 23:54:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X4kXB6YtLz2yn9
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Sep 2024 16:13:46 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726149267;
-	cv=none; b=jHV07tyY1ojYU55GmbsHvI4GL/1JYFb9evscUnzuAAvTrgmAnhL4b3G+hdeh5InHTFaI/zVHNqz8FSb/eVMJOeEQ3iEmY3l3rXGXYleP9sLfBRq6SFzKRzgFcyXpGbLap6opgoGK39K3mYmJ0owXQ2KfaWU/l/jSgn/5psNtLodvq7srRz8yIxaFI8hRbFl4G59vtKPEHY5KI7zVCdhpf26ViFzKu+ROx1kvo8NgDc8vyYF9ATIfKR0U1B4lgV5k+2j7R6bVd6DHCNAulcIqR+agTa0rJTy/18ZQ6Ej2uvJuDfvPMzButxS+7gjOMhaaCpC68ZNiKEineIM1J3lmNA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726208022;
+	cv=none; b=l5MVoMLoAa5bNFVXla8aSiDmr2HY2xqd3RGH41813looUsB7mjJzwJODlML5QDkZJqJ6QuyPyiE0cRrgZkK/Q2OilEawLu2OtFyeqra+tfGh2pM1pthIVN+CBxaQsdqFuz7TrsxpjH8pq2Hk8zuxIOoGnJ3UT+y+GGzKs2f1fihk3NfAugizk36LihX/cocoe2mjLtgVJZ461pbN46+CNq454cxAFE0VaN5YFOqrnyYhMFgPs49TDC9KyIwT1ru4dPAXaoSqauGVI3Q8dcF6pX2c+3FIxVnz7UeICtN/dEk/7GqxFe7+jcvT74W1Rm3vqCLNuRe3EGp5lQqesiUuPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726149267; c=relaxed/relaxed;
-	bh=kvZiZ7FpLo/BaP81J51KdaPy7tXxkeFMbSHVAB7lkh4=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=c4Ligv1Z6uBeIhaE41oaWQ4ly6PT/XJelFEeUEpEYcxsHnwXtu/v2DEmuo4GCo4+CS2PseyGYZryn6lMVTuoi8/wCV6Hj4Fxc3/c3p71uZeSU0Agx8Jx3LZrdO5igV3SgMzTRR9e6RiIZ7TaH+AgCBwxFvxYpNWVlinJip74TSQBTEtHIpw1+b9d2A4R2ZLnVWGMIgmQwdZ2lK/O9WQIP/XonvqIxfG9wzEy2t097fMBVqihLh85sOOvJ8AwZX0kvyv7hFvaKg8m27x0fgIpX5tvQ50VX4ZCYuU4pQD6GcFa9TPZeORQeZwqAZ4FThGLfOTAxZOCEASBE6bCLmnsJg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=W2EJosOI; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1726208022; c=relaxed/relaxed;
+	bh=mEL1aqsxMLCoNhLDq1j92lpVQjAmyYiEnRK38fgD0Z4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dNlSkCw+wzQyHcQjk1XKRiHuw00YyX3y7L7aq88AYiogRnR3yA9CDzuPMlO5M8J+x4ro01rYuv6AVXinnDe6OTGvXS0gdfGa6o6GmB9UVgmb/rkyMtM1xIuOe1GHnRVxKWXJNyzsQrW80AG3Zx0kfPrg9nzTyW3ryBIlGtHl6tYj/0KyrVOWivrJOymT0efvEsFLrIUoDSj3cO9CQ9O9XVXDnSAOUMOEfKHwN9mwtUlyg5kQHXyS9p8016uVrP6cY9NN+1NW2TzsL8b60e0wa7g8ywLyYkHAqprOmmvA52LJHoI6tvXO3U8Mf/0zKPr3RExZst6d6R7LnEandXwaaQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=xj+3PDy5; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=W2EJosOI;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=xj+3PDy5;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X4JpC2N7Bz2xJF
-	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Sep 2024 23:54:27 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id D52875C06CB;
-	Thu, 12 Sep 2024 13:54:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B60C4CEC3;
-	Thu, 12 Sep 2024 13:54:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726149263;
-	bh=jTcPnc49GsN25dkCxxl2DcKJrvvY/afL8rIHM1XxCEw=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=W2EJosOIDwj6IJ3ETQq/LuLmZXEQFdrjyuEe2cZT8Q8aaa/35/wmhOi7N3N+UxpuX
-	 D1YotbHQTWDcm2mO0RrtUktWS//mIFGktYF+CcISrRjxVZ3309eNTFINdMuCR9vv8B
-	 Wjf3WK2qHHlTdLInx2U0warBamtZI4mZqafu8HfQEdDcoNLGnWW6/+pAAYPGgaWRZf
-	 NKX23h15mPSl9JXdyNz02I53r4YHlWWKkuUnzrsQ7gMsBoL2W7isM94P5Qk1f2sgtT
-	 rh/ztZrc5iJcgOZBmgkMgp5C3lP1CP3DgeVuSEnOwXBWVLYP5XIwAx9bIzzrltFS3l
-	 o1QvBVeh1T8jA==
-Message-ID: <1387dab3-c61f-4f76-8c1f-ac8bdd44df24@kernel.org>
-Date: Thu, 12 Sep 2024 21:54:17 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X4kX46ngtz2yM6
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Sep 2024 16:13:39 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1726208015; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=mEL1aqsxMLCoNhLDq1j92lpVQjAmyYiEnRK38fgD0Z4=;
+	b=xj+3PDy5te+f4dlVqsmIii2AfK/2cZskagZM2x/WimgFNx0AkHp2sTEp/dInub7S94WF/uyQhNsrvUJJOQIM5GMgVd64Hx1verJIB3BI5Zl6ExX116c6RsVfdMFyaKfvlXoMefeTKTjersORG3O9uL1TH6LuXgo485zVFTDGBIM=
+Received: from 30.221.130.178(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WEtqFow_1726208013)
+          by smtp.aliyun-inc.com;
+          Fri, 13 Sep 2024 14:13:33 +0800
+Message-ID: <4f72a713-73c8-4ac3-8c21-02abc5944bab@linux.alibaba.com>
+Date: Fri, 13 Sep 2024 14:13:33 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: allocate more short-lived pages from reserved pool
- first
-To: Chunhai Guo <guochunhai@vivo.com>, xiang@kernel.org
-References: <20240906121110.3701889-1-guochunhai@vivo.com>
-Content-Language: en-US
-Autocrypt: addr=chao@kernel.org; keydata=
- xsFNBFYs6bUBEADJuxYGZRMvAEySns+DKVtVQRKDYcHlmj+s9is35mtlhrLyjm35FWJY099R
- 6DL9bp8tAzLJOMBn9RuTsu7hbRDErCCTiyXWAsFsPkpt5jgTOy90OQVyTon1i/fDz4sgGOrL
- 1tUfcx4m5i5EICpdSuXm0dLsC5lFB2KffLNw/ZfRuS+nNlzUm9lomLXxOgAsOpuEVps7RdYy
- UEC81IYCAnweojFbbK8U6u4Xuu5DNlFqRFe/MBkpOwz4Nb+caCx4GICBjybG1qLl2vcGFNkh
- eV2i8XEdUS8CJP2rnp0D8DM0+Js+QmAi/kNHP8jzr7CdG5tje1WIVGH6ec8g8oo7kIuFFadO
- kwy6FSG1kRzkt4Ui2d0z3MF5SYgA1EWQfSqhCPzrTl4rJuZ72ZVirVxQi49Ei2BI+PQhraJ+
- pVXd8SnIKpn8L2A/kFMCklYUaLT8kl6Bm+HhKP9xYMtDhgZatqOiyVV6HFewfb58HyUjxpza
- 1C35+tplQ9klsejuJA4Fw9y4lhdiFk8y2MppskaqKg950oHiqbJcDMEOfdo3NY6/tXHFaeN1
- etzLc1N3Y0pG8qS/mehcIXa3Qs2fcurIuLBa+mFiFWrdfgUkvicSYqOimsrE/Ezw9hYhAHq4
- KoW4LQoKyLbrdOBJFW0bn5FWBI4Jir1kIFHNgg3POH8EZZDWbQARAQABzRlDaGFvIFl1IDxj
- aGFvQGtlcm5lbC5vcmc+wsF3BBMBCgAhBQJWLOm1AhsDBQsJCAcDBRUKCQgLBRYCAwEAAh4B
- AheAAAoJEKTPgB1/p52Gm2MP/0zawCU6QN7TZuJ8R1yfdhYr0cholc8ZuPoGim69udQ3otet
- wkTNARnpuK5FG5la0BxFKPlazdgAU1pt+dTzCTS6a3/+0bXYQ5DwOeBPRWeFFklm5Frmk8sy
- wSTxxEty0UBMjzElczkJflmCiDfQunBpWGy9szn/LZ6jjIVK/BiR7CgwXTdlvKcCEkUlI7MD
- vTj/4tQ3y4Vdx+p7P53xlacTzZkP+b6D2VsjK+PsnsPpKwaiPzVFMUwjt1MYtOupK4bbDRB4
- NIFSNu2HSA0cjsu8zUiiAvhd/6gajlZmV/GLJKQZp0MjHOvFS5Eb1DaRvoCf27L+BXBMH4Jq
- 2XIyBMm+xqDJd7BRysnImal5NnQlKnDeO4PrpFq4JM0P33EgnSOrJuAb8vm5ORS9xgRlshXh
- 2C0MeyQFxL6l+zolEFe2Nt2vrTFgjYLsm2vPL+oIPlE3j7ToRlmm7DcAqsa9oYMlVTTnPRL9
- afNyrsocG0fvOYFCGvjfog/V56WFXvy9uH8mH5aNOg5xHB0//oG9vUyY0Rv/PrtW897ySEPh
- 3jFP/EDI0kKjFW3P6CfYG/X1eaw6NDfgpzjkCf2/bYm/SZLV8dL2vuLBVV+hrT1yM1FcZotP
- WwLEzdgdQffuQwJHovz72oH8HVHD2yvJf2hr6lH58VK4/zB/iVN4vzveOdzlzsFNBFYs6bUB
- EADZTCTgMHkb6bz4bt6kkvj7+LbftBt5boKACy2mdrFFMocT5zM6YuJ7Ntjazk5z3F3IzfYu
- 94a41kLY1H/G0Y112wggrxem6uAtUiekR9KnphsWI9lRI4a2VbbWUNRhCQA8ag7Xwe5cDIV5
- qb7r7M+TaKaESRx/Y91bm0pL/MKfs/BMkYsr3wA1OX0JuEpV2YHDW8m2nFEGP6CxNma7vzw+
- JRxNuyJcNi+VrLOXnLR6hZXjShrmU88XIU2yVXVbxtKWq8vlOSRuXkLh9NQOZn7mrR+Fb1EY
- DY1ydoR/7FKzRNt6ejI8opHN5KKFUD913kuT90wySWM7Qx9icc1rmjuUDz3VO+rl2sdd0/1h
- Q2VoXbPFxi6c9rLiDf8t7aHbYccst/7ouiHR/vXQty6vSUV9iEbzm+SDpHzdA8h3iPJs6rAb
- 0NpGhy3XKY7HOSNIeHvIbDHTUZrewD2A6ARw1VYg1vhJbqUE4qKoUL1wLmxHrk+zHUEyLHUq
- aDpDMZArdNKpT6Nh9ySUFzlWkHUsj7uUNxU3A6GTum2aU3Gh0CD1p8+FYlG1dGhO5boTIUsR
- 6ho73ZNk1bwUj/wOcqWu+ZdnQa3zbfvMI9o/kFlOu8iTGlD8sNjJK+Y/fPK3znFqoqqKmSFZ
- aiRALjAZH6ufspvYAJEJE9eZSX7Rtdyt30MMHQARAQABwsFfBBgBCgAJBQJWLOm1AhsMAAoJ
- EKTPgB1/p52GPpoP/2LOn/5KSkGHGmdjzRoQHBTdm2YV1YwgADg52/mU68Wo6viStZqcVEnX
- 3ALsWeETod3qeBCJ/TR2C6hnsqsALkXMFFJTX8aRi/E4WgBqNvNgAkWGsg5XKB3JUoJmQLqe
- CGVCT1OSQA/gTEfB8tTZAGFwlw1D3W988CiGnnRb2EEqU4pEuBoQir0sixJzFWybf0jjEi7P
- pODxw/NCyIf9GNRNYByUTVKnC7C51a3b1gNs10aTUmRfQuu+iM5yST5qMp4ls/yYl5ybr7N1
- zSq9iuL13I35csBOn13U5NE67zEb/pCFspZ6ByU4zxChSOTdIJSm4/DEKlqQZhh3FnVHh2Ld
- eG/Wbc1KVLZYX1NNbXTz7gBlVYe8aGpPNffsEsfNCGsFDGth0tC32zLT+5/r43awmxSJfx2P
- 5aGkpdszvvyZ4hvcDfZ7U5CBItP/tWXYV0DDl8rCFmhZZw570vlx8AnTiC1v1FzrNfvtuxm3
- 92Qh98hAj3cMFKtEVbLKJvrc2AO+mQlS7zl1qWblEhpZnXi05S1AoT0gDW2lwe54VfT3ySon
- 8Klpbp5W4eEoY21tLwuNzgUMxmycfM4GaJWNCncKuMT4qGVQO9SPFs0vgUrdBUC5Pn5ZJ46X
- mZA0DUz0S8BJtYGI0DUC/jAKhIgy1vAx39y7sAshwu2VILa71tXJ
-In-Reply-To: <20240906121110.3701889-1-guochunhai@vivo.com>
+Subject: Re: [PATCH v8 2/2] erofs-utils: fsck: introduce exporting xattrs
+To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <20240912131108.3742683-1-hongzhen@linux.alibaba.com>
+ <20240912131108.3742683-2-hongzhen@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240912131108.3742683-2-hongzhen@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -121,48 +60,227 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Chao Yu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Chao Yu <chao@kernel.org>
-Cc: linux-erofs@lists.ozlabs.org, huyue2@coolpad.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/9/6 20:11, Chunhai Guo wrote:
-> This patch aims to allocate bvpages and short-lived compressed pages
-> from the reserved pool first.
-> 
-> After applying this patch, there are three benefits.
-> 
-> 1. It reduces the page allocation time.
->   The bvpages and short-lived compressed pages account for about 4% of
-> the pages allocated from the system in the multi-app launch benchmarks
-> [1]. It reduces the page allocation time accordingly and lowers the
-> likelihood of blockage by page allocation in low memory scenarios.
-> 
-> 2. The pages in the reserved pool will be allocated on demand.
->   Currently, bvpages and short-lived compressed pages are short-lived
-> pages allocated from the system, and the pages in the reserved pool all
-> originate from short-lived pages. Consequently, the number of reserved
-> pool pages will increase to z_erofs_rsv_nrpages over time.
->   With this patch, all short-lived pages are allocated from the reserved
-> pool first, so the number of reserved pool pages will only increase when
-> there are not enough pages. Thus, even if z_erofs_rsv_nrpages is set to
-> a large number for specific reasons, the actual number of reserved pool
-> pages may remain low as per demand. In the multi-app launch benchmarks
-> [1], z_erofs_rsv_nrpages is set at 256, while the number of reserved
-> pool pages remains below 64.
-> 
-> 3. When erofs cache decompression is disabled
->     (EROFS_ZIP_CACHE_DISABLED), all pages will *only* be allocated from
-> the reserved pool for erofs. This will significantly reduce the memory
-> pressure from erofs.
-> 
-> [1] For additional details on the multi-app launch benchmarks, please
-> refer to commit 0f6273ab4637 ("erofs: add a reserved buffer pool for lz4
-> decompression").
-> 
-> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+
+On 2024/9/12 21:11, Hongzhen Luo wrote:
+> The current `fsck --extract` does not support exporting the extended
+> attributes of files. This patch adds `--xattrs` option to dump the
+> extended attributes, as well as the `--no-xattrs` option to not dump
+> the extended attributes.
+> 
+> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+> ---
+> v8: The code has been adjusted to look better.
+> v7: https://lore.kernel.org/all/20240906095853.3167228-2-hongzhen@linux.alibaba.com/
+> v6: https://lore.kernel.org/all/20240906083849.3090392-2-hongzhen@linux.alibaba.com/
+> v5: https://lore.kernel.org/all/20240906022206.2725584-1-hongzhen@linux.alibaba.com/
+> v4: https://lore.kernel.org/all/20240905113723.1937634-1-hongzhen@linux.alibaba.com/
+> v3: https://lore.kernel.org/all/20240903113729.3539578-1-hongzhen@linux.alibaba.com/
+> v2: https://lore.kernel.org/all/20240903085643.3393012-1-hongzhen@linux.alibaba.com/
+> v1: https://lore.kernel.org/all/20240903073517.3311407-1-hongzhen@linux.alibaba.com/
+> ---
+>   fsck/main.c      | 107 +++++++++++++++++++++++++++++++++++++++++++++--
+>   man/fsck.erofs.1 |   3 ++
+>   2 files changed, 106 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fsck/main.c b/fsck/main.c
+> index 28f1e7e..af0c01f 100644
+> --- a/fsck/main.c
+> +++ b/fsck/main.c
+> @@ -9,10 +9,12 @@
+>   #include <utime.h>
+>   #include <unistd.h>
+>   #include <sys/stat.h>
+> +#include <sys/xattr.h>
+>   #include "erofs/print.h"
+>   #include "erofs/compress.h"
+>   #include "erofs/decompress.h"
+>   #include "erofs/dir.h"
+> +#include "erofs/xattr.h"
+>   #include "../lib/compressor.h"
+>   
+>   static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid);
+> @@ -31,6 +33,7 @@ struct erofsfsck_cfg {
+>   	bool overwrite;
+>   	bool preserve_owner;
+>   	bool preserve_perms;
+> +	bool dump_xattrs;
+>   };
+>   static struct erofsfsck_cfg fsckcfg;
+>   
+> @@ -48,6 +51,8 @@ static struct option long_options[] = {
+>   	{"no-preserve-owner", no_argument, 0, 10},
+>   	{"no-preserve-perms", no_argument, 0, 11},
+>   	{"offset", required_argument, 0, 12},
+> +	{"xattrs", no_argument, 0, 13},
+> +	{"no-xattrs", no_argument, 0, 14},
+>   	{0, 0, 0, 0},
+>   };
+>   
+> @@ -98,6 +103,7 @@ static void usage(int argc, char **argv)
+>   		" --extract[=X]          check if all files are well encoded, optionally\n"
+>   		"                        extract to X\n"
+>   		" --offset=#             skip # bytes at the beginning of IMAGE\n"
+> +		" --[no-]xattrs          whether to dump extended attributes (default off)\n"
+>   		"\n"
+>   		" -a, -A, -y             no-op, for compatibility with fsck of other filesystems\n"
+>   		"\n"
+> @@ -225,6 +231,12 @@ static int erofsfsck_parse_options_cfg(int argc, char **argv)
+>   				return -EINVAL;
+>   			}
+>   			break;
+> +		case 13:
+> +			fsckcfg.dump_xattrs = true;
+> +			break;
+> +		case 14:
+> +			fsckcfg.dump_xattrs = false;
+> +			break;
+>   		default:
+>   			return -EINVAL;
+>   		}
+> @@ -411,6 +423,84 @@ out:
+>   	return ret;
+>   }
+>   
+> +static int erofsfsck_dump_xattrs(struct erofs_inode *inode)
+> +{
+> +	static bool ignore_xattrs = false;
+> +	char *keylst, *key;
+> +	ssize_t kllen;
+> +	int ret;
+> +
+> +	kllen = erofs_listxattr(inode, NULL, 0);
+> +	if (kllen <= 0)
+> +		return kllen;
+> +	keylst = malloc(kllen);
+> +	if (!keylst)
+> +		return -ENOMEM;
+> +	ret = erofs_listxattr(inode, keylst, kllen);
+> +	if (ret != kllen) {
+> +		erofs_err("failed to list xattrs @ nid %llu",
+> +			  inode->nid | 0ULL);
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +	ret = 0;
+> +	for (key = keylst; key < keylst + kllen; key += strlen(key) + 1) {
+> +		unsigned int index, len;
+> +		void *value = NULL;
+> +		size_t size = 0;
+> +
+> +		ret = erofs_getxattr(inode, key, NULL, 0);
+> +		if (ret <= 0)
+> +			break;
+> +		size = ret;
+> +		value = malloc(size);
+> +		if (!value) {
+> +			ret = -ENOMEM;
+> +			break;
+> +		}
+> +		ret = erofs_getxattr(inode, key, value, size);
+> +		if (ret < 0) {
+> +			erofs_err("failed to get xattr `%s` @ nid %llu, because of `%s`", key,
+> +				  inode->nid | 0ULL, erofs_strerror(ret));
+> +			free(value);
+> +			break;
+> +		}
+> +		if (fsckcfg.extract_path)
+> +			ret = lsetxattr(fsckcfg.extract_path, key, value, size,
+> +					0);
+> +		else
+> +			ret = 0;
+> +		free(value);
+> +		if (ret == -EPERM && !fsckcfg.superuser) {
+> +			if (__erofs_unlikely(!erofs_xattr_prefix_matches(key,
+> +					&index, &len))) {
+> +				erofs_err("failed to match the prefix of `%s` @ nid %llu",
+> +					  key, inode->nid | 0ULL);
+> +				ret = -EINVAL;
+> +				break;
+> +			}
+> +			if (index != EROFS_XATTR_INDEX_USER) {
+> +				if (!ignore_xattrs) {
+> +					erofs_warn("ignored xattr `%s` @ nid %llu, due to non-superuser",
+> +						   key, inode->nid | 0ULL);
+> +					ignore_xattrs = true;
+> +				}
+> +				ret = 0;
+> +				continue;
+> +			}
+> +
+> +		}
+> +		if (ret) {
+> +			erofs_err("failed to set xattr `%s` @ nid %llu because of `%s`",
+> +				  key, inode->nid | 0ULL, erofs_strerror(ret));
+> +			break;
+> +		}
+> +	}
+> +out:
+> +	free(keylst);
+> +	return ret;
+> +}
+> +
+>   static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+>   {
+>   	struct erofs_map_blocks map = {
+> @@ -900,15 +990,23 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
+>   		goto out;
+>   	}
+>   
+> -	/* verify xattr field */
+> -	ret = erofs_verify_xattr(&inode);
+> -	if (ret)
+> -		goto out;
+> +	if (!fsckcfg.check_decomp) {
+
+It should be `!(fsckcfg.check_decomp && fsckcfg.dump_xattr)`?
+
+> +		/* verify xattr field */
+> +		ret = erofs_verify_xattr(&inode);
+> +		if (ret)
+> +			goto out;
+> +	}
+>   
+>   	ret = erofsfsck_extract_inode(&inode);
+>   	if (ret && ret != -ECANCELED)
+>   		goto out;
+>   
+> +	if (fsckcfg.check_decomp && fsckcfg.dump_xattrs) {
+> +		ret = erofsfsck_dump_xattrs(&inode);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+>   	/* XXXX: the dir depth should be restricted in order to avoid loops */
+>   	if (S_ISDIR(inode.i_mode)) {
+>   		struct erofs_dir_context ctx = {
+> @@ -955,6 +1053,7 @@ int main(int argc, char *argv[])
+>   	fsckcfg.overwrite = false;
+>   	fsckcfg.preserve_owner = fsckcfg.superuser;
+>   	fsckcfg.preserve_perms = fsckcfg.superuser;
+> +	fsckcfg.dump_xattrs = false;
+>   
+>   	err = erofsfsck_parse_options_cfg(argc, argv);
+>   	if (err) {
+> diff --git a/man/fsck.erofs.1 b/man/fsck.erofs.1
+> index 393ae9e..fc862e2 100644
+> --- a/man/fsck.erofs.1
+> +++ b/man/fsck.erofs.1
+> @@ -27,6 +27,9 @@ You may give multiple
+>   .B --device
+>   options in the correct order.
+>   .TP
+> +.BI "--[no-]xattrs"
+> +Whether to dump extended attributes (default off).
+
+Why is it placed here? (it should be located according
+to alphabetic order)
+
+Also better to be
+`Whether to dump extended attributes during extraction (default off)`
 
 Thanks,
+Gao Xiang
