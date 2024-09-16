@@ -2,84 +2,75 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7926979C23
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 09:39:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 171F7979C53
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 09:57:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1726472373;
-	bh=WohYSK31clllGiH95dMbXWRXBt/EhC1bH9X+zlyrT9k=;
+	s=201707; t=1726473428;
+	bh=XWDF4DK1jpYKo5Zpql1RY94BmdMG/vS7KQDO6GHiK6U=;
 	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
 	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=NIv6+0YsitLRnYU6z4s4zSr59rHljYO7bKcoK8Qj+ejPYu5zuy8WDmHp770UMG3Ni
-	 r3EUSPz/75hK2rJpS8p1zuu8IlunU/+mRsnr/MEeiPbO/b1nGiYr8KVZwoS2p0grKi
-	 7fChcdraAIAbwdUnnJG3raQDXgM41A5RhFdJZMKsIc8jfDF6LFyeR5UY7Tpr+JnuES
-	 IU9taAZyymWMiKTRDW5HjvYiB/NUWB/AClRneXEHadWYEr0F0uTZAJ6ndlmCCmgyhW
-	 Fhonm10zyIIn2xozyZn7qt9pNVSDSveay81Biae13Fx1V4yzUuAwZBf4pe9h8R76Fk
-	 u+bPNeJME+KqQ==
+	b=A+DgkAdzeuvCen+UiTbWHaZXmdAnIMDCTeIxDJQJJMRDQ1YmAwq58Gz2nx2tX8jh7
+	 bjJRfqD/DKp27kWdP3rNCdZIX07uRP6BFOqAzySakvGpz9NEA9AWXNwcODGmPwGp+7
+	 JvjBCCef0VAvwRhkaFewUTjzYlAs/ZL63840GswrqMjMQigBzSFR+r1R0/YgNDtGg/
+	 ZOwroGRs9zLgWlHB5hvwLRD/sFtPOQprX3Khy75avUgVy3AJ+QrIkBM3jCdC/FRe5W
+	 Xgq9KK5hTvBPHOrce2NVQ/8+MV3Y7v1b7wGibcbd7SrQ1JkJSagGjc4oX4xcih/9Wa
+	 08qSlTuOI/Pow==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X6cHn6V3dz2yhG
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 17:39:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X6ch45Dx6z2yY1
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 17:57:08 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::734"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726472371;
-	cv=none; b=HPdD5cTp2bepKbqetRhU/ARhz99aw1+VCgw/35eXIK8Ir7O/gZbjnneY2JKUgErvb3IbaGnsHLeL+pENlPf0W1iBr59C7lqa0gFkwxqMebJlqJL77sox4TuuANZG+d02s2Qsnh9RhxRIvtcff/C3hdDjo5gWIB8TmTsFfeg0A3f+EUOwRl2ro8QIqd2xxsgwfn5V6wKiaGBJ6MP1cSW1Eux2/j3R1fw1D3CUaZucCnuk417G1oPuW9+Jwr2lXuftm7zylr5DO8eLgzhrMfsCf6NMuIzjBGKuIDGjXKY9LnEFXvpnzXiA92q17nAeiRQJIkAr6fRlJZkUqXJY6Cygkg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=162.62.58.211
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726473424;
+	cv=none; b=A2mu2v0DSiTlEQRNdPQt8Pnk4a92by/h2GYvlCxfNMBsenWpyOYUQiN/abjRPx/q6Zd3Ob8l8gK1hBQMRCwU2g1SPrABXvxC9uDHolyNuVzCeMPP46/YlQHz04V7LbvTwOIrdCxxOHqW1K+yK1gwIsoGmeZmLwlwzz0CjU/leu5968k0lHeJIDpxWpevmza4IBvAJRePNgDYaM9iaEhB7SA9oWIRPHDsqj3KwqeNT4O81aaUAFt8LSy2SMqvnX1aptk1cggvoEPpyvDy4OuW3ss9BJZe2m71mx9VaJW41BE8PDnd7kG2Hkr0NrMMMuN9cftWpmocu8L38nfFEbR77A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726472371; c=relaxed/relaxed;
-	bh=WohYSK31clllGiH95dMbXWRXBt/EhC1bH9X+zlyrT9k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QUvKeCKKOrKsiu2E14qKYuEnfYqa8Ow0SUJxY7XLjcvkWN/9NC5e8OB7weYZmvSPLn3AiVL2rCcjNRLD4MiaZbPKlLNqtzRIz7KukY2+VcsyBtHM5nDTvxSNTpczNdOuMAV2bKP3L51VR53l0zpGTLOJPHmxGWYStCUSvt5BbuliwE44XjuHSUgYp4SLvvt2OJxFO5GIEzUtF1MCQWyQLsOhyKd57mRl0XlkN6q9jhS6HfKNAKFnLktW3cVw2B5nYIRBsBDWUKxeXADpWe5qSEHzU0Pib3Se0t8KRLe/+v0nuJDjVkFQf0255jt/2w558OQt2hLH2JiajqAXjyIMtg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=orbstack.dev; dkim=pass (2048-bit key; secure) header.d=orbstack.dev header.i=@orbstack.dev header.a=rsa-sha256 header.s=google header.b=LsV0JCj+; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::734; helo=mail-qk1-x734.google.com; envelope-from=danny@orbstack.dev; receiver=lists.ozlabs.org) smtp.mailfrom=orbstack.dev
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=orbstack.dev
+	t=1726473424; c=relaxed/relaxed;
+	bh=XWDF4DK1jpYKo5Zpql1RY94BmdMG/vS7KQDO6GHiK6U=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=E2cdu9LomO2++drzug6wQ5xiPuyTbUuiaxbbMhLR0s4yyQi10Bak5C3ftFQrzHZl/eWupXUG7/+XVO7a+ay1UaCE/lnZjf0qRP3dlHVzn5RUhcfB0FT4VvC7H09IiqGAxwh1CtPo7zRa9bcss1Ng4flY2rdGo9vYymR9Pqi1r2dd0gCn6Fc0axcs2C2/NDTXQ+YlPd8ULxsAN71OhaWWGJUcMSFJkioYevTrToU0631wUmGldjY4ciWZQz9O5t5khyAZzTFpvktrjnYjXxJEaKwUeK+lLoa8ZmVBjLgqNhYc54NlFKjtu/OwGYKx/5Q1z9etzayKdjy46DZJlmUfxA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=Lw7tXlvt; dkim-atps=neutral; spf=pass (client-ip=162.62.58.211; helo=out162-62-58-211.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org) smtp.mailfrom=qq.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=orbstack.dev header.i=@orbstack.dev header.a=rsa-sha256 header.s=google header.b=LsV0JCj+;
+	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=Lw7tXlvt;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=orbstack.dev (client-ip=2607:f8b0:4864:20::734; helo=mail-qk1-x734.google.com; envelope-from=danny@orbstack.dev; receiver=lists.ozlabs.org)
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=162.62.58.211; helo=out162-62-58-211.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 1696 seconds by postgrey-1.37 at boromir; Mon, 16 Sep 2024 17:57:02 AEST
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X6cHk4pZCz2xs8
-	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 17:39:29 +1000 (AEST)
-Received: by mail-qk1-x734.google.com with SMTP id af79cd13be357-7ac83a98e5eso98169085a.0
-        for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 00:39:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=orbstack.dev; s=google; t=1726472365; x=1727077165; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WohYSK31clllGiH95dMbXWRXBt/EhC1bH9X+zlyrT9k=;
-        b=LsV0JCj+pyEloQzh6E9RqEGMDkVb3dY6lwzRmJEWZmVD8ca4F8kCci//4xRub0YUis
-         lCv65UMjaU5XSST5Km9pEujGCbMx/2A0t8K0PhUjZ7CK99LtoWPKcIRVyfqVh7Xf0AKs
-         FMekxfbdi/73bIH4pIuJF1POET796FxfXgbY6/BE6ibmJ4d4sHbbwjjQyDoMukOh/7HV
-         HdisD57OnBHXN8zKGpw5H3rg+10HDA3ZwqmnIXZnHf6R8oGTE09Lyeu1KbU9j/89t9ti
-         62KOrWLJIT8nFQnaXChEbt2mXrgKSXc3Ea7lj0NDn8Uf21i5rJaR2fiB+xtGiQvuGXeC
-         +Qzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726472365; x=1727077165;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WohYSK31clllGiH95dMbXWRXBt/EhC1bH9X+zlyrT9k=;
-        b=oD7ajEILK5Dl5C8f3QFEseGs1R/68omB70JNqNIp1ktzULvwoXEKVBr2xanPKVkjf1
-         jYAel310DYRearaGH4l3mLXfWuX0BizklE/6MZSBZH1sB9A26wTJj/CLIslLWeaXuSoL
-         B7iefQW/VtWG7EYyuWK4AsD69BPsXxN7jpX3wD9jVDQC8Lq8xau+yLX67VfdrocPP3gK
-         eOGG8nJ1RH8FmCAnz5rgRHDm7YHwx1re5i6ca6w5Ko8H6H/snrosUYROw1yhc/uswbcY
-         VXqMA3tr/nWCO6sY76qaLosu0Roo79Rl4/F8/hBM9oh2+KyqK5/PBhrWRnhfjixHImjM
-         X58g==
-X-Gm-Message-State: AOJu0YzEHnYpNx/SUmU/efgqe/LSLsj8ccjKeFoVOqkVQh7Kp+SzcfUZ
-	xOqP0bqAoAqE4gIuw52z1/Bc5rqza+HA4uBC9+baVOKwXJbk+3zEa4wS9X3xLF6b1ZGV0i0tyaP
-	dRxE2YdYoWclkFvy6F3e/+9x/i1w8dSfid203NL+H6pmMSOQe7H1SPjTD+2oZdW6l9JMbn9M/YA
-	q2tICbHfDe1IbiNkN/GvRKMGKS6UDKoNh7vBh+3B6Jgqtr
-X-Google-Smtp-Source: AGHT+IFfe01SIEuw5FYE8AOr6ZFEZlvQHDENoka75R7Kh9fuWpXQJRl7AlEOCQf54hxtnRy4R6CVhw==
-X-Received: by 2002:a05:620a:29c7:b0:7a9:ab71:f7f2 with SMTP id af79cd13be357-7a9e60bb820mr2511745285a.15.1726472365293;
-        Mon, 16 Sep 2024 00:39:25 -0700 (PDT)
-Received: from arch.. ([38.42.120.37])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ab3eb632cdsm224411785a.115.2024.09.16.00.39.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2024 00:39:25 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4X6cgy3Zssz2y1W
+	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 17:57:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1726473417; bh=XWDF4DK1jpYKo5Zpql1RY94BmdMG/vS7KQDO6GHiK6U=;
+	h=From:To:Cc:Subject:Date;
+	b=Lw7tXlvtQNqGu1tjQS0GsD2xHcTx9hw6RYu1ylWw2ObkPQ5PF7hVPX/2TkPP1+vcI
+	 TNqGbuaY/6FjEn8IxvEZoydsVaVlKm/WcI7/FgHu/VEwnIpvzeLrUpzO3GdjrzXbiq
+	 RQQeom4STXU4UU1Bk0gxESrWvC0IOgFgGiWcRJUg=
+Received: from kyrie-virtual-machine.localdomain ([115.156.140.10])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id D7406224; Mon, 16 Sep 2024 15:53:52 +0800
+X-QQ-mid: xmsmtpt1726473232trwe0fsil
+Message-ID: <tencent_0001002A6B335C34530C00F363B7EE926208@qq.com>
+X-QQ-XMAILINFO: OdIVOfqOaVcrC4QCVjMqv6Pj2r2Lh1TVMDcV6fvu+HdjWkK4dbZ76+6v6YjhXp
+	 rK1Rbfr2iyGSNmsAJvb6p4RU+HbSdoCAv/aQLpzpESKuq+L1DkYNX4MQSwT10NQN9QWer/PEtZxQ
+	 nKhkGnsJluqts71+6OvjcE6fvcBSPCP27X4Bt4P5zgy9ueoDLPIxDdEPnpgr33lJPAfZXVjIdrbl
+	 tbbsMZeRixBZxOVUXcGmBD8iDTQkFzEX5NREOg5sIddcub7hSEuF33Fg/D7uk7TqS59uzS17TMVl
+	 L32wpWykWYpAy2jf2/uulVd9XS/Vnrc8/+a7dT6nZBGVI71Cuhmc/79M0hNv8+2UPVhvohAY24Gz
+	 zdDELqB9RlDLBX6zRjrMmDgO4bAOK4liLJLbeHNS+clJzvvR/hkll49znoOd5BUzUJzNRS/EJcFI
+	 3noY4WcPUW06qxsmdWtficCZkIhDeeDV8Qp0wsj7NGQSd6vlmWFoXJWuZ0A2wsrOx3E98tF2FdcV
+	 I0AqyRa4g1s64PSdDbNo9i794fZynw8EWveHTS8EYaH+gWQGG7KsL3OAYbjTeKx4kTdun8tq/3M5
+	 IuMqUzCPo6ArKMgoCga1YeWqCYkTLkghgwxLKAam+2V4KI2WreRHHKdcJqcmdVcu8a2zO8BiCEe8
+	 n7L96pXbHbTkv1NcyZX35foDO8qXFVyr/gS7PfhCj3EiNHyf678sQeSsW44B2SgUGyixLLjQ5w9E
+	 GpOYm0sCzDhQx2u7Vtc3jd1+615ExTuQdHB4Ny/2k1OwBDfFrDE0+ASfwS2O/HCRGKlI9CfrLroq
+	 Igdd6oEwzPWrAr7pIBxzKNvV/NbhHE5ok4okUb5jEo23xaGxWxnJQIm9c8O1IKBQjyVDmVhU5dTH
+	 XWsxjNBKqr6GJUEOyY/1w5GXQouSVR/257HJwYqHu1462TY7i5kMqU7SIxqU/94+QWi69w0yOYDg
+	 msDk/xR2Aw6zh/SO97G/0col9NJozUN425VInmq7XxwSZ7Ph3G6vI/3Yq9J7+4ktcSgpsdMAvL1l
+	 8ynd+TZ+dxO4KR3Btc
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: lib: fix compressed packed inodes
-Date: Mon, 16 Sep 2024 00:38:30 -0700
-Message-ID: <20240916073835.77470-1-danny@orbstack.dev>
-X-Mailer: git-send-email 2.46.0
+Subject: [PATCH 1/2] erofsd-utils: tests: add stress test
+Date: Mon, 16 Sep 2024 15:53:50 +0800
+X-OQ-MSGID: <20240916075351.2448016-1-kyr1ewang@qq.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -93,56 +84,751 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Danny Lin via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Danny Lin <danny@orbstack.dev>
-Cc: Danny Lin <danny@orbstack.dev>
+From: Jiawei Wang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Jiawei Wang <kyr1ewang@qq.com>
+Cc: lyr1ewang@qq.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Commit b9b6493 fixed uncompressed packed inodes by not always writing
-compressed data, but it broke compressed packed inodes because now
-uncompressed file data is always written after the compressed data.
+This patch add stress test for erofs utils.
 
-The new error handling always rewinds with lseek and falls through to
-write_uncompressed_file_from_fd, regardless of whether the compressed
-data was written successfully (ret = 0) or not (ret = -ENOSPC). This
-can result in corrupted files.
-
-Fix it by simplifying the error handling to better match the old code.
-
-Fixes: b9b6493 ("erofs-utils: lib: fix uncompressed packed inode")
-Signed-off-by: Danny Lin <danny@orbstack.dev>
+Signed-off-by: Jiawei Wang <kyr1ewang@qq.com>
 ---
- lib/inode.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ configure.ac                  |   1 +
+ tests/Makefile.am             |   2 +-
+ tests/erofsstress/Makefile.am |   7 +
+ tests/erofsstress/stress.c    | 684 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 693 insertions(+), 1 deletion(-)
+ create mode 100644 tests/erofsstress/Makefile.am
+ create mode 100644 tests/erofsstress/stress.c
 
-diff --git a/lib/inode.c b/lib/inode.c
-index bc3cb76..797c622 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -1927,14 +1927,16 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(struct erofs_sb_info *sbi,
+diff --git a/configure.ac b/configure.ac
+index 055b485..9145e4d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -635,5 +635,6 @@ AC_CONFIG_FILES([Makefile
+ 		 fuse/Makefile
+ 		 fsck/Makefile
+ 		 tests/Makefile
++		 tests/erofsstress/Makefile
+ 		 tests/src/Makefile])
+ AC_OUTPUT
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 93016e5..e9f6a6d 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -2,7 +2,7 @@
+ # Makefile.am
  
- 		DBG_BUGON(!ictx);
- 		ret = erofs_write_compressed_file(ictx);
--		if (ret && ret != -ENOSPC)
--			 return ERR_PTR(ret);
-+		if (ret == -ENOSPC) {
-+			ret = lseek(fd, 0, SEEK_SET);
-+			if (ret < 0)
-+				return ERR_PTR(-errno);
+ AUTOMAKE_OPTIONS = serial-tests
+-SUBDIRS = src
++SUBDIRS = src erofsstress
  
--		ret = lseek(fd, 0, SEEK_SET);
--		if (ret < 0)
--			return ERR_PTR(-errno);
-+			ret = write_uncompressed_file_from_fd(inode, fd);
+ TESTS =
+ 
+diff --git a/tests/erofsstress/Makefile.am b/tests/erofsstress/Makefile.am
+new file mode 100644
+index 0000000..2a2c464
+--- /dev/null
++++ b/tests/erofsstress/Makefile.am
+@@ -0,0 +1,7 @@
++# SPDX-License-Identifier: GPL-2.0+
++# Makefile.am
++
++AUTOMAKE_OPTIONS	= foreign
++noinst_PROGRAMS		= stress
++
++stress_SOURCES = stress.c
+diff --git a/tests/erofsstress/stress.c b/tests/erofsstress/stress.c
+new file mode 100644
+index 0000000..4dfe489
+--- /dev/null
++++ b/tests/erofsstress/stress.c
+@@ -0,0 +1,684 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * stress test for EROFS filesystem
++ * based on https://lore.kernel.org/r/20200206135631.1491-1-hsiangkao@aol.com
++ *
++ * Copyright (C) 2019-2022 Gao Xiang <xiang@kernel.org>
++ */
++#define _GNU_SOURCE
++#include <errno.h>
++#include <sched.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <stdint.h>
++#include <string.h>
++#include <stdbool.h>
++#include <dirent.h>
++#include <sys/stat.h>
++#include <sys/types.h>
++#include <sys/wait.h>
++#include <time.h>
++#include <unistd.h>
++#include <fcntl.h>
++
++#define PAGE_SHIFT	12
++#define PAGE_SIZE	(1 << PAGE_SHIFT)
++#define MAX_CHUNKSIZE	(4 * 1024 * 1024)
++#define MAX_SCAN_CHUNKSIZE	(256 * 1024)
++
++bool superuser;
++unsigned int nprocs = 1, loops = 1, r_seed;
++sig_atomic_t should_stop = 0;
++
++enum {
++	GETDENTS,
++	READLINK,
++	RANDSCAN_ALIGNED,
++	RANDSCAN_UNALIGNED,
++	RANDREAD,		/* oneshot randread */
++	DROP_FILE_CACHE_RAND,
++	DROP_FILE_CACHE_ALL,
++	DROP_PAGE_CACHE,
++	DROP_SLAB_CACHE,
++	COMPACT_MEMORY,
++};
++
++const int globalop[] = {
++	GETDENTS,
++	GETDENTS,
++	GETDENTS,
++	READLINK,
++	READLINK,
++	READLINK,
++	RANDSCAN_ALIGNED,
++	RANDSCAN_UNALIGNED,
++	RANDSCAN_UNALIGNED,
++	RANDREAD,
++	RANDREAD,
++	RANDREAD,
++	DROP_FILE_CACHE_ALL,
++	DROP_PAGE_CACHE,
++	DROP_SLAB_CACHE,
++	COMPACT_MEMORY,
++};
++
++#define GLOBALOPS	(sizeof(globalop) / sizeof(globalop[0]))
++
++int drop_caches(int mode)
++{
++	static const char *procfile[] = {
++		[DROP_PAGE_CACHE] = "/proc/sys/vm/drop_caches",
++		[DROP_SLAB_CACHE] = "/proc/sys/vm/drop_caches",
++		[COMPACT_MEMORY] = "/proc/sys/vm/compact_memory",
++	};
++	static const char *val[] = {
++		[DROP_PAGE_CACHE] = "1\n",
++		[DROP_SLAB_CACHE] = "2\n",
++		[COMPACT_MEMORY] = "1\n",
++	};
++	FILE *f;
++	clock_t start;
++
++	if (!superuser)
++		return 0;
++	if (!procfile[mode])
++		return -EINVAL;
++
++	printf("drop_caches(%u): %s=%s", getpid(), procfile[mode], val[mode]);
++
++	f = fopen(procfile[mode], "w");
++	if (!f)
++		return -errno;
++
++	start = clock();
++	while (clock() < start + CLOCKS_PER_SEC) {
++		fputs(val[mode], f);
++		(void)sched_yield();
++	}
++	fclose(f);
++	return 0;
++}
++
++int drop_file_cache(int fd, int mode)
++{
++	clock_t start;
++
++	printf("drop_file_cache(%u)\n", getpid());
++	start = clock();
++	while (clock() < start + CLOCKS_PER_SEC / 2) {
++		posix_fadvise(fd, 0, 0, POSIX_FADV_DONTNEED);
++		(void)sched_yield();
++	}
++	return 0;
++}
++
++struct fent {
++	char *subpath;
++	int  fd, chkfd;
++};
++
++#define FT_DIR	0
++#define FT_DIRm	(1 << FT_DIR)
++#define FT_REG	1
++#define FT_REGm	(1 << FT_REG)
++#define FT_SYM	2
++#define FT_SYMm	(1 << FT_SYM)
++#define FT_DEV	3
++#define FT_DEVm	(1 << FT_DEV)
++#define FT_nft	4
++#define FT_ANYm	((1 << FT_nft) - 1)
++
++#define	FLIST_SLOT_INCR	16
++
++struct flist {
++	int nfiles, nslots;
++	struct fent *fents;
++} flists[FT_nft];
++
++struct fent *add_to_flist(int type, char *subpath)
++{
++	struct fent *fep;
++	struct flist *ftp;
++
++	ftp = &flists[type];
++	if (ftp->nfiles >= ftp->nslots) {
++		ftp->nslots += FLIST_SLOT_INCR;
++		ftp->fents = realloc(ftp->fents,
++				     ftp->nslots * sizeof(struct fent));
++		if (!ftp->fents)
++			return NULL;
++	}
++	fep = &ftp->fents[ftp->nfiles++];
++	fep->subpath = strdup(subpath);
++	fep->fd = -1;
++	fep->chkfd = -1;
++	return fep;
++}
++
++static inline bool is_dot_dotdot(const char *name)
++{
++	if (name[0] != '.')
++		return false;
++
++	return name[1] == '\0' || (name[1] == '.' && name[2] == '\0');
++}
++
++int walkdir(struct fent *ent)
++{
++	const char *dirpath = ent->subpath;
++	int ret = 0;
++	struct dirent *dp;
++	DIR *_dir;
++
++	_dir = opendir(dirpath);
++	if (!_dir) {
++		fprintf(stderr, "failed to opendir at %s: %d",
++			dirpath, strerror(errno));
++		return -errno;
++	}
++
++	while (1) {
++		char subpath[PATH_MAX];
++		struct stat st;
++
++		/*
++		 * set errno to 0 before calling readdir() in order to
++		 * distinguish end of stream and from an error.
++		 */
++		errno = 0;
++		dp = readdir(_dir);
++		if (!dp)
++			break;
++
++		if (is_dot_dotdot(dp->d_name))
++			continue;
++
++		sprintf(subpath, "%s/%s", dirpath, dp->d_name);
++
++		if (lstat(subpath, &st))
++			continue;
++
++		switch (st.st_mode & S_IFMT) {
++		case S_IFDIR:
++			ent = add_to_flist(FT_DIR, subpath);
++			if (ent == NULL) {
++				ret = -ENOMEM;
++				goto err_closedir;
++			}
++			ret = walkdir(ent);
++			if (ret)
++				goto err_closedir;
++			break;
++		case S_IFREG:
++			ent = add_to_flist(FT_REG, subpath);
++			if (ent == NULL) {
++				ret = -ENOMEM;
++				goto err_closedir;
++			}
++			break;
++		case S_IFLNK:
++			ent = add_to_flist(FT_SYM, subpath);
++			if (ent == NULL) {
++				ret = -ENOMEM;
++				goto err_closedir;
++			}
++			break;
++		default:
++			break;
 +		}
-+	} else {
-+		ret = write_uncompressed_file_from_fd(inode, fd);
- 	}
--	ret = write_uncompressed_file_from_fd(inode, fd);
- 	if (ret)
- 		return ERR_PTR(ret);
- 	erofs_prepare_inode_buffer(inode);
++	}
++	if (errno)
++		ret = -errno;
++err_closedir:
++	closedir(_dir);
++	return ret;
++}
++
++int init_filetable(int testdir_fd)
++{
++	struct fent *fent;
++
++	fent = add_to_flist(FT_DIR, ".");
++	if (!fent)
++		return -ENOMEM;
++	fchdir(testdir_fd);
++	return walkdir(fent);
++}
++
++struct fent *getfent(int which, int r)
++{
++	int		totalsum = 0; /* total number of matching files */
++	int		partialsum = 0; /* partial sum of matching files */
++	struct flist	*flp;
++	int		i, x;
++
++	totalsum = 0;
++	for (i = 0, flp = flists; i < FT_nft; ++i, ++flp)
++		if (which & (1 << i))
++			totalsum += flp->nfiles;
++
++	if (!totalsum)
++		return NULL;
++
++	/*
++	 * Now we have possible matches between 0..totalsum-1.
++	 * And we use r to help us choose which one we want,
++	 * which when bounded by totalsum becomes x.
++	 */
++	x = (int)(r % totalsum);
++
++	for (i = 0, flp = flists; i < FT_nft; i++, flp++) {
++		if (which & (1 << i)) {
++			if (x < partialsum + flp->nfiles)
++				return &flp->fents[x - partialsum];
++			partialsum += flp->nfiles;
++		}
++	}
++	fprintf(stderr, "%s failure\n", __func__);
++	return NULL;
++}
++
++static int testdir_fd = -1, chkdir_fd = -1;
++
++int tryopen(struct fent *fe)
++{
++	if (fe->fd < 0) {
++		fe->fd = openat(testdir_fd, fe->subpath, O_RDONLY);
++		if (fe->fd < 0)
++			return -errno;
++
++		/* use force_page_cache_readahead for every read request */
++		posix_fadvise(fe->fd, 0, 0, POSIX_FADV_RANDOM);
++	}
++
++	if (chkdir_fd >= 0 && fe->chkfd < 0)
++		fe->chkfd = openat(chkdir_fd, fe->subpath, O_RDONLY);
++	return 0;
++}
++
++int doscan(int fd, int chkfd, uint64_t filesize, uint64_t chunksize)
++{
++	static char buf[MAX_SCAN_CHUNKSIZE], chkbuf[MAX_SCAN_CHUNKSIZE];
++	uint64_t pos;
++
++	printf("doscan(%u): filesize: %llu, chunksize: %llu\n",
++	       getpid(), (unsigned long long)filesize,
++	       (unsigned long long)chunksize);
++
++	for (pos = 0; pos < filesize; pos += chunksize) {
++		ssize_t nread, nread2;
++
++		nread = pread64(fd, buf, chunksize, pos);
++
++		if (nread <= 0)
++			return -errno;
++
++		if (nread < chunksize && nread != filesize - pos)
++			return -ERANGE;
++
++		if (chkfd < 0)
++			continue;
++
++		nread2 = pread64(chkfd, chkbuf, chunksize, pos);
++		if (nread2 <= 0)
++			return -errno;
++
++		if (nread != nread2)
++			return -EFBIG;
++
++		if (memcmp(buf, chkbuf, nread)) {
++			fprintf(stderr, "doscan: %llu bytes mismatch @ %llu\n",
++				(unsigned long long)chunksize,
++				(unsigned long long)pos);
++			return -EBADMSG;
++		}
++	}
++	return 0;
++}
++
++int getdents_f(struct fent *fe)
++{
++	int dfd;
++	DIR *dir;
++
++	printf("getdents_f(%u): @ %s\n", getpid(), fe->subpath);
++	dfd = openat(testdir_fd, fe->subpath, O_DIRECTORY);
++	if (dfd < 0)
++		return -errno;
++	dir = fdopendir(dfd);
++
++	while (readdir64(dir) != NULL)
++		continue;
++	closedir(dir);
++	return 0;
++}
++
++int readlink_f(struct fent *fe)
++{
++	char buf1[PATH_MAX], buf2[PATH_MAX];
++	ssize_t sz;
++
++	printf("readlink_f(%u): @ %s\n", getpid(), fe->subpath);
++	sz = readlinkat(testdir_fd, fe->subpath, buf1, PATH_MAX - 1);
++	if (sz < 0)
++		return -errno;
++
++	if (chkdir_fd >= 0) {
++		if (sz != readlinkat(testdir_fd, fe->subpath, buf2,
++				     PATH_MAX - 1)) {
++			fprintf(stderr, "doscan: symlink length mismatch @%s\n",
++				fe->subpath);
++			return -E2BIG;
++		}
++		if (memcmp(buf1, buf2, sz)) {
++			fprintf(stderr, "doscan: symlink mismatch @%s\n",
++				fe->subpath);
++			return -EBADMSG;
++		}
++	}
++	return 0;
++}
++
++int read_f(int fd, int chkfd, uint64_t filesize)
++{
++	static char buf[MAX_CHUNKSIZE], chkbuf[MAX_CHUNKSIZE];
++	uint64_t lr, off, len, trimmed;
++	size_t nread, nread2;
++
++	lr = ((uint64_t) random() << 32) + random();
++	off = lr % filesize;
++	len = (random() % MAX_CHUNKSIZE) + 1;
++	trimmed = len;
++
++	if (off + len > filesize) {
++		uint64_t a = filesize - off + 16 * getpagesize();
++
++		if (len > a)
++			len %= a;
++		trimmed = len <= filesize - off ? len : filesize - off;
++	}
++
++	printf("read_f(%u): %llu bytes @ %llu\n", getpid(),
++	       len | 0ULL, off | 0ULL);
++
++	nread = pread64(fd, buf, len, off);
++	if (nread != trimmed) {
++		fprintf(stderr, "read_f(%d, %u): failed to read %llu bytes @ %llu\n",
++			__LINE__, getpid(), len | 0ULL, off | 0ULL);
++		return -errno;
++	}
++
++	if (chkfd < 0)
++		return 0;
++
++	nread2 = pread64(chkfd, chkbuf, len, off);
++	if (nread2 <= 0) {
++		fprintf(stderr, "read_f(%d, %u): failed to read %llu bytes @ %llu\n",
++			__LINE__, getpid(), len | 0ULL, off | 0ULL);
++		return -errno;
++	}
++
++	if (nread != nread2) {
++		fprintf(stderr, "read_f(%d, %u): size mismatch %llu bytes @ %llu\n",
++			__LINE__, getpid(), len | 0ULL, off | 0ULL);
++		return -EFBIG;
++	}
++
++	if (memcmp(buf, chkbuf, nread)) {
++		fprintf(stderr, "read_f(%d, %u): data mismatch %llu bytes @ %llu\n",
++			__LINE__, getpid(), len | 0ULL, off | 0ULL);
++		return -EBADMSG;
++	}
++	return 0;
++}
++
++int testfd(int fd, int chkfd, int mode)
++{
++	const off64_t filesize = lseek64(fd, 0, SEEK_END);
++	uint64_t chunksize, maxchunksize;
++	int err;
++
++	if (!filesize)
++		return 0;
++
++	if (mode == RANDSCAN_ALIGNED && filesize > PAGE_SIZE) {
++		maxchunksize = (filesize - PAGE_SIZE > MAX_SCAN_CHUNKSIZE ?
++				MAX_SCAN_CHUNKSIZE : filesize - PAGE_SIZE);
++
++		chunksize = random() * random() % maxchunksize;
++		chunksize = (((chunksize - 1) >> PAGE_SHIFT) + 1)
++			<< PAGE_SHIFT;
++		if (!chunksize)
++			chunksize = PAGE_SIZE;
++		err = doscan(fd, chkfd, filesize, chunksize);
++		if (err)
++			return err;
++	} else if (mode == RANDSCAN_UNALIGNED) {
++		chunksize = (random() * random() % MAX_SCAN_CHUNKSIZE) + 1;
++		err = doscan(fd, chkfd, filesize, chunksize);
++		if (err)
++			return err;
++	} else if (mode == RANDREAD) {
++		err = read_f(fd, chkfd, filesize);
++		if (err)
++			return err;
++	}
++	return 0;
++}
++
++int doproc(int mode)
++{
++	struct fent *fe;
++	int ret;
++
++	if (mode <= GETDENTS) {
++		fe = getfent(FT_DIRm, random());
++		if (!fe)
++			return 0;
++
++		if (mode == GETDENTS)
++			return getdents_f(fe);
++	} else if (mode <= READLINK) {
++		fe = getfent(FT_SYMm, random());
++		if (!fe)
++			return 0;
++
++		if (mode == READLINK)
++			return readlink_f(fe);
++	}
++	fe = getfent(FT_REGm, random());
++	if (!fe)
++		return 0;
++	ret = tryopen(fe);
++	if (ret)
++		return ret;
++	return testfd(fe->fd, fe->chkfd, mode);
++}
++
++void randomdelay(void)
++{
++	uint64_t lr = ((uint64_t) random() << 32) + random();
++	clock_t start;
++	clock_t length = (lr % CLOCKS_PER_SEC) >> 1;
++
++	start = clock();
++	while (clock() < start + length)
++		(void)sched_yield();
++}
++
++void sg_handler(int signum)
++{
++	switch (signum) {
++	case SIGTERM:
++		should_stop = 1;
++		break;
++	default:
++		break;
++	}
++}
++
++static int parse_options(int argc, char *argv[])
++{
++	char *testdir, *chkdir;
++	int opt;
++
++	while ((opt = getopt(argc, argv, "l:p:s:")) != -1) {
++		switch (opt) {
++		case 'l':
++			loops = atoi(optarg);
++			if (loops < 0) {
++				fprintf(stderr, "invalid loops %d\n", loops);
++				return -EINVAL;
++			}
++			break;
++		case 'p':
++			nprocs = atoi(optarg);
++			if (nprocs < 0) {
++				fprintf(stderr, "invalid workers %d\n",
++					nprocs);
++				return -EINVAL;
++			}
++			break;
++		case 's':
++			r_seed = atoi(optarg);
++			if (r_seed < 0) {
++				fprintf(stderr, "invalid random seed %d\n",
++					r_seed);
++				return -EINVAL;
++			}
++			break;
++		default: /* '?' */
++			return -EINVAL;
++		}
++	}
++
++	if (optind >= argc)
++		return -EINVAL;
++
++	testdir = argv[optind++];
++	if (testdir) {
++		testdir_fd = open(testdir, O_PATH);
++		if (testdir_fd < 0) {
++			fprintf(stderr, "cannot open testdir fd @ %s: %s\n",
++				testdir, strerror(errno));
++			return 1;
++		}
++	}
++
++	if (argc > optind) {
++		chkdir = argv[optind++];
++
++		chkdir_fd = open(chkdir, O_PATH);
++		if (chkdir_fd < 0) {
++			fprintf(stderr, "cannot open checkdir fd @ %s: %s\n",
++				chkdir, strerror(errno));
++			return 1;
++		}
++	}
++	return 0;
++}
++
++void usage(void)
++{
++	fputs("usage: [options] TESTDIR [COMPRDIR]\n\n"
++	      "stress test for EROFS filesystem\n"
++	      " -l#     specifies the no. of times the testrun should loop.\n"
++	      "         *use 0 for infinite (default 1)\n"
++	      " -p#     specifies the no. of processes (default 1)\n"
++	      " -s#     specifies the seed for the random generator (default random)\n",
++	      stderr);
++}
++
++int main(int argc, char *argv[])
++{
++	unsigned int i;
++	int err, stat;
++	int fd, chkfd;
++	struct sigaction action;
++
++	err = parse_options(argc, argv);
++	if (err) {
++		if (err == -EINVAL)
++			usage();
++		return 1;
++	}
++
++	err = init_filetable(testdir_fd);
++	if (err) {
++		fprintf(stderr, "cannot initialize file table: %s\n",
++			strerror(errno));
++		return 1;
++	}
++
++	superuser = (geteuid() == 0);
++	setpgid(0, 0);
++	action.sa_handler = sg_handler;
++	action.sa_flags = 0;
++
++	if (sigaction(SIGTERM, &action, 0)) {
++		perror("sigaction failed");
++		exit(1);
++	}
++
++	/* spawn nprocs processes */
++	for (i = 0; i < nprocs; ++i) {
++		if (fork() == 0) {
++			bool infinite_loop = !loops;
++
++			sigemptyset(&action.sa_mask);
++			if (sigaction(SIGTERM, &action, 0)) {
++				perror("sigaction failed");
++				exit(1);
++			}
++
++			srandom((r_seed ? :
++				 (time(NULL) ? : 1) * getpid()) * (i + 1));
++
++			while (!should_stop && (infinite_loop || loops)) {
++				int op = globalop[random() % GLOBALOPS];
++
++				if (op == DROP_FILE_CACHE_RAND ||
++				    op == DROP_FILE_CACHE_ALL) {
++					err = drop_file_cache(fd, op);
++				} else if (op <= RANDREAD) {
++					randomdelay();
++					err = doproc(op);
++				} else {
++					err = drop_caches(op);
++				}
++
++				if (err) {
++					fprintf(stderr, "test failed (%u): %s\n",
++						getpid(), strerror(-err));
++					exit(1);
++				}
++				--loops;
++			}
++			return 0;
++		}
++	}
++
++	err = 0;
++	while (wait(&stat) > 0 && !should_stop) {
++		if (!WIFEXITED(stat)) {
++			err = 1;
++			break;
++		}
++
++		if (WEXITSTATUS(stat)) {
++			err = WEXITSTATUS(stat);
++			break;
++		}
++	}
++	action.sa_flags = SA_RESTART;
++	sigaction(SIGTERM, &action, 0);
++	kill(-getpid(), SIGTERM);
++	/* wait until all children exit */
++	while (wait(&stat) > 0)
++		continue;
++
++	if (chkfd >= 0)
++		close(chkfd);
++	close(fd);
++	return err;
++}
 -- 
-2.46.0
+2.34.1
 
