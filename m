@@ -1,61 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8161F97A34E
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 15:57:25 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4915897A350
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 15:57:27 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1726495043;
-	bh=SF+isR41/QqrBfGfC6meT3Kg4eWEa6AIAKKhQ1hnyqE=;
+	s=201707; t=1726495045;
+	bh=iVEpuQCRq5HfW1zEs0Xldj9thdzekA2PSp+UaBg4euk=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=e9uYUWHxFI5I4EVAwDJ5qRJ1fm8m4jpUEVUliJO1X/mNQo8mthsmN6fzSFB1DCs5U
-	 FzXHHaZf6m7HjgltzAFHxysylaWn6VEEtQKsydcQmK6VsHKAttgC03bWijhRBHqth0
-	 lHJWV5Zl6s6VFYvWQCzZhp4OMqtXXj9IB9M8vGnBgVBRZeU69yrr11LLxtRYmdjntw
-	 oNtxqCRyTM+3CAm35MzPyDf6lZr33szuyxagrQt5aCxu3kZ15fSRf77Jf12lazq1//
-	 ZBvGe8UPj3xo1yLI5Ewac3A2rNgZ50PY8XwK9qiKqbVMXafusQ7lcS0B/qTfXVgaQR
-	 J+8R+lIjahhWg==
+	b=lJHj5A8Mxl5BhEibQro2Y7+6Yx1Sk7kQl9tZPuH8lwd9aHnqVs8J8CiwNMmK9fum4
+	 yq3f0pghtKn3p9lZ9BeRqIKLdEci8LWPNGXAzH7PKGVoBtyZ47OVkxVmcshV8gCqe0
+	 BMEpTHXZ+MnTnzq/glyVIhHIp+CEnpjBbKY15ssyNwScKsbd/inNWdWjS/Xe5QQHB1
+	 LpDbTwaEEFB8Zx3Cwis48AWQXL6eFzsMfy1JmBR0EhHwykbdszIelet9j0cwB+/IIN
+	 HoAtEP1dXeElaGff6opT36H4I72e9b4Nm2W+3tYbLm+lqG/Kotc8RVECiPj07TWI6U
+	 fHWhpBkLbr64A==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X6mgl45GCz30Bp
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 23:57:23 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X6mgn14mLz30DD
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 23:57:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=148.135.17.20
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726495042;
-	cv=none; b=bbfkfAfc2eOfwg+2wGZO0ACegFiwIsavzP7LbB/KKRgwJTb1M3s1KUGlBDPT2EpmhNsbyz0SERV0dShl1qWEVevPpaAoipyWZTnBgUDbr2/w0y23ZFiaOuJsr5uvL9LEdNOFUGdYMng1TQ2IMM9uOv0MtXKhQ5/JAup7cKm8wS8GWxK0MfTTT7t7mkRJCwy2+sL00xIwSUU4sbMTR7q3YV4WmutlVBK71by0RH75Fv707+tQM1bbkYBNdSlg8d9d1pnvoDvyLLS6dcO36s+gVdsE8KQFtQaD2HwiNzlkf8s77lKlCRg1R4Y6CFI3dNwe76i6RF7NfqpaonAccl8YRw==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726495043;
+	cv=none; b=cJjgMTfTdtFqx8yKE2hj3WXuKCeomU6K8MwDu1DTiviHPVt5hD2Ri1DRlO/qsOCjseFoIg0FJGLPt/sxHxiCXU93jLPv3XLXyUZuGpPWkctb7P3R9pPMxEeLODoiLzBXx8JUqymWcI0uGEl7zRiofeEnkmz/595zCxdYDxp/EhqmIBlz9/JfLchd/ycvbxSK0Z33S+aBKiPD4hgJ/s2F1swGrS9mK+9eVNlT6BWF9xVsvkjDOyKocUJdR5MSn5IhMOEy6cKpp4anLWM11/kA5ON2skmMHsQ413JCJWyw7jwklZtTCLWeo/LdcNrSQxZTXHKyhag0Ccd/lZFumC3vyA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726495042; c=relaxed/relaxed;
-	bh=SF+isR41/QqrBfGfC6meT3Kg4eWEa6AIAKKhQ1hnyqE=;
+	t=1726495043; c=relaxed/relaxed;
+	bh=iVEpuQCRq5HfW1zEs0Xldj9thdzekA2PSp+UaBg4euk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=m4qNYmRx7qAk41dLFpRbPQ9uW3QaEeyhMig3iNX4ZpSC084QmN012AhO+OGl/08E183b4tymHf3/5HVMtXPRI1mNDABjJN/NAdyT52JeGMLlYSYFK13407r00QyTjmwpUyddZusggGAqgN4LCXSbnipDOvG1rrxEyJHyPYkQ/B2kQGMXnZAUdEfiJbENdF3f6aIMup3Mq6cUeYxfH1pKSJOr4a3p2BUClSNTCWQ+1Sf2KOK3uCoOXXDSeSRwZUMg9zzFnAJtAoTnwFlvQHBcwigMGOJ+JGlz70ijck/XMVepjsoFvYXBxXYv4RDDuRhfX/WY91/5vyhfZ2jrHavAkA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=X5cUuPKc; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
+	 MIME-Version; b=As3ZizH6c/5NFOdtzH5LxewD4vQN6bvE2XQyXJD8r2qi3uWsXiSMatThOZUVzx65m4MeLw0eOe+xNx6PCfjsTGya+elAujMIsiK8ho+3bdAAzs89Vk2FbMB4iptG3Vov9tOxI1L7i0sPYy6bzv+jscT8xeTB6yolB/35Wwcpeiu3japtyg3hogXa7LDiyoHpyC3/T+HndWNdZQQ6iUeIX9FhzEZj5zLnSKZ3uHlW3AXj8z7lACh3IJF4f2fLblXJYoMZToRNnOf4yqcObq+KasImL5I5clbhLbcUP1BRW7Buj15HgWMHz0K27K0GBaFIjWip+UGK6cXMtgYi95uVHg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=X4baUaJu; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=X5cUuPKc;
+	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=X4baUaJu;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=tlmp.cc (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org)
 Received: from mail.tlmp.cc (unknown [148.135.17.20])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X6mgk2S9hz2yQL
-	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 23:57:22 +1000 (AEST)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 584C969839;
-	Mon, 16 Sep 2024 09:57:18 -0400 (EDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X6mgl2hfDz2yTs
+	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 23:57:23 +1000 (AEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5407B69846;
+	Mon, 16 Sep 2024 09:57:20 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tlmp.cc; s=dkim;
-	t=1726495039; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1726495041; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=SF+isR41/QqrBfGfC6meT3Kg4eWEa6AIAKKhQ1hnyqE=;
-	b=X5cUuPKcDAJD4qrkdbm0LQChHyRJrM+CjfZdi2pNiAo3Gu2Pbkbzoy2+ZgrhlD7ofI06mj
-	blYOAEf2pYeemD0LXW0dKogk+HQaxnzrCt+pFL7ZMYsBWgy1bDVVrw+R4UTlgXG18IAIT0
-	QRbBTNXXdkHc5dTL2oVYI/1RgPEYRt4oAbzo9+DfSQ4aNMPccOlygyOnfQPM5e3QAaSs8L
-	5mrbOfVBY3lQiL15qkSsUCPmoNJ71ipLnZgDo/hFse/fb9t/BXtSixqvPCw+i0cMbk+pIg
-	4imgAQxaMDCa/6rHNCewn5Uw3UcvIAe9dEz0QgMAI/PFjHEDSZtT4GX+V+OWTw==
+	bh=iVEpuQCRq5HfW1zEs0Xldj9thdzekA2PSp+UaBg4euk=;
+	b=X4baUaJuu1m/SZcizjCUwjQXlm2cqf/Wsik3+r0ZAj0Dsx1wUrzzvdWixSm+HzNQVhpbBH
+	7pEknBiEY52wUf/Ntn1D1CENrM44nH9qkHp//5Ehmwavc2rz41hCKJmzvvJu/EaCatnECd
+	JLUHPJsylOQ+KaMJoiFUzPEuG0L7FP2pJpr7jWA3K5p+MXgtQZdtZSUPqswck7TEIiUNbw
+	nkvJzl55CjR5pTO0hjZcoNxb5/ZWgGvAKIUvXmXdvkN5EmtaGUvIbS6FYAFK4fwgVTJDnA
+	Vlr6mklfEGHUgfNmXRNtMVyexGCFFXHp20eM31T/GXzyy3MIxL/N+cG21fb/YA==
 To: linux-erofs@lists.ozlabs.org
-Subject: [RFC PATCH 21/24] erofs: introduce erofs_map_blocks alternative to C
-Date: Mon, 16 Sep 2024 21:56:31 +0800
-Message-ID: <20240916135634.98554-22-toolmanp@tlmp.cc>
+Subject: [RFC PATCH 22/24] erofs: add skippable iters in Rust
+Date: Mon, 16 Sep 2024 21:56:32 +0800
+Message-ID: <20240916135634.98554-23-toolmanp@tlmp.cc>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240916135634.98554-1-toolmanp@tlmp.cc>
 References: <20240916135634.98554-1-toolmanp@tlmp.cc>
@@ -79,127 +79,143 @@ Cc: linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, rust-for
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch introduces erofs_map_blocks alternative written in Rust,
-which will be hooked inside the erofs_iomap_begin.
+This patch introduce self-owned skippable data iterators in Rust.
+This iterators will be used to access extended attributes later.
 
 Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
 ---
- fs/erofs/Makefile        |  2 +-
- fs/erofs/data.c          |  5 ++++
- fs/erofs/data_rs.rs      | 63 ++++++++++++++++++++++++++++++++++++++++
- fs/erofs/rust_bindings.h |  4 +++
- 4 files changed, 73 insertions(+), 1 deletion(-)
- create mode 100644 fs/erofs/data_rs.rs
+ fs/erofs/rust/erofs_sys/data/raw_iters.rs | 121 ++++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
 
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index e086487971b6..219ddca0642e 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -9,4 +9,4 @@ erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
- erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
- erofs-$(CONFIG_EROFS_FS_BACKED_BY_FILE) += fileio.o
- erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
--erofs-$(CONFIG_EROFS_FS_RUST) += super_rs.o inode_rs.o namei_rs.o dir_rs.o rust_helpers.o
-+erofs-$(CONFIG_EROFS_FS_RUST) += super_rs.o inode_rs.o namei_rs.o dir_rs.o data_rs.o rust_helpers.o
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 61debd799cf9..c9694661136b 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -293,7 +293,12 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	map.m_la = offset;
- 	map.m_llen = length;
- 
-+#ifdef CONFIG_EROFS_FS_RUST
-+	ret = erofs_map_blocks_rust(inode, &map);
-+#else  
- 	ret = erofs_map_blocks(inode, &map);
-+#endif
+diff --git a/fs/erofs/rust/erofs_sys/data/raw_iters.rs b/fs/erofs/rust/erofs_sys/data/raw_iters.rs
+index 8f3bd250d252..f1ff0a251596 100644
+--- a/fs/erofs/rust/erofs_sys/data/raw_iters.rs
++++ b/fs/erofs/rust/erofs_sys/data/raw_iters.rs
+@@ -4,3 +4,124 @@
+ pub(crate) mod ref_iter;
+ mod traits;
+ pub(crate) use traits::*;
 +
- 	if (ret < 0)
- 		return ret;
- 
-diff --git a/fs/erofs/data_rs.rs b/fs/erofs/data_rs.rs
-new file mode 100644
-index 000000000000..ac34a9dd2079
---- /dev/null
-+++ b/fs/erofs/data_rs.rs
-@@ -0,0 +1,63 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-or-later
++use super::*;
++use alloc::boxed::Box;
 +
-+//! EROFS Rust Kernel Module Helpers Implementation
-+//! This is only for experimental purpose. Feedback is always welcome.
-+
-+#[allow(dead_code)]
-+#[allow(missing_docs)]
-+pub(crate) mod rust;
-+use core::ffi::*;
-+use core::ptr::NonNull;
-+
-+use kernel::bindings::inode;
-+use kernel::container_of;
-+
-+use rust::{erofs_sys::*, kinode::*, ksuperblock::*};
-+
-+#[repr(C)]
-+struct ErofsBuf {
-+    mapping: NonNull<c_void>,
-+    page: NonNull<c_void>,
-+    base: NonNull<c_void>,
-+    kmap_type: c_int,
++/// Represents a skippable continuous buffer iterator. This is used primarily for reading the
++/// extended attributes. Since the key-value is flattened out in its original format.
++pub(crate) struct SkippableContinuousIter<'a> {
++    iter: Box<dyn ContinuousBufferIter<'a> + 'a>,
++    data: RefBuffer<'a>,
++    cur: usize,
 +}
 +
-+/// A helper sturct to map blocks for iomap_begin because iomap is not generated by bindgen
-+#[repr(C)]
-+pub struct ErofsMapBlocks {
-+    buf: ErofsBuf,
-+    pub(crate) m_pa: u64,
-+    pub(crate) m_la: u64,
-+    pub(crate) m_plen: u64,
-+    pub(crate) m_llen: u64,
-+    pub(crate) m_deviceid: u16,
-+    pub(crate) m_flags: u32,
++fn cmp_with_cursor_move(
++    lhs: &[u8],
++    rhs: &[u8],
++    lhs_cur: &mut usize,
++    rhs_cur: &mut usize,
++    len: usize,
++) -> bool {
++    let result = lhs[*lhs_cur..(*lhs_cur + len)] == rhs[*rhs_cur..(*rhs_cur + len)];
++    *lhs_cur += len;
++    *rhs_cur += len;
++    result
 +}
-+/// Exported as a replacement for erofs_map_blocks.
-+#[no_mangle]
-+pub unsafe extern "C" fn erofs_map_blocks_rust(
-+    k_inode: NonNull<inode>,
-+    mut map: NonNull<ErofsMapBlocks>,
-+) -> c_int {
-+    // SAFETY: super_block and superblockinfo is always initialized in k_inode.
-+    let sbi = erofs_sbi(unsafe { NonNull::new(k_inode.as_ref().i_sb).unwrap() });
-+    // SAFETY: We are sure that the inode is a Kernel Inode since alloc_inode is called
-+    let erofs_inode = unsafe { &*container_of!(k_inode.as_ptr(), KernelInode, k_inode) };
-+    // SAFETY: The map is always initialized in the caller.
-+    match sbi
-+        .filesystem
-+        .map(erofs_inode, unsafe { map.as_ref().m_la } as Off)
-+    {
-+        Ok(m) => unsafe {
-+            map.as_mut().m_pa = m.physical.start;
-+            map.as_mut().m_la = map.as_ref().m_la;
-+            map.as_mut().m_plen = m.physical.len;
-+            map.as_mut().m_llen = m.physical.len;
-+            map.as_mut().m_deviceid = m.device_id;
-+            map.as_mut().m_flags = m.map_type.into();
-+            0
-+        },
-+        Err(e) => i32::from(e) as c_int,
++
++#[derive(Debug, Clone, Copy, PartialEq)]
++pub(crate) enum SkipCmpError {
++    PosixError(Errno),
++    NotEqual(Off),
++}
++
++impl From<Errno> for SkipCmpError {
++    fn from(e: Errno) -> Self {
++        SkipCmpError::PosixError(e)
 +    }
 +}
-diff --git a/fs/erofs/rust_bindings.h b/fs/erofs/rust_bindings.h
-index 8b71d65e2c0b..ad9aa75a7a2c 100644
---- a/fs/erofs/rust_bindings.h
-+++ b/fs/erofs/rust_bindings.h
-@@ -24,4 +24,8 @@ extern struct dentry *erofs_lookup_rust(struct inode *inode, struct dentry *dent
- 			      unsigned int flags);
- extern struct dentry *erofs_get_parent_rust(struct dentry *dentry);
- extern int erofs_readdir_rust(struct file *file, struct dir_context *ctx);
 +
-+struct erofs_map_blocks;
-+extern int erofs_map_blocks_rust(struct inode *inode,
-+				 struct erofs_map_blocks *map);
- #endif
++impl<'a> SkippableContinuousIter<'a> {
++    pub(crate) fn try_new(
++        mut iter: Box<dyn ContinuousBufferIter<'a> + 'a>,
++    ) -> PosixResult<Option<Self>> {
++        if iter.eof() {
++            return Ok(None);
++        }
++        let data = iter.next().unwrap()?;
++        Ok(Some(Self { iter, data, cur: 0 }))
++    }
++    pub(crate) fn skip(&mut self, offset: Off) -> PosixResult<()> {
++        let dlen = self.data.content().len() - self.cur;
++        if offset as usize <= dlen {
++            self.cur += offset as usize;
++        } else {
++            self.cur = 0;
++            self.iter.advance_off(dlen as Off);
++            self.data = self.iter.next().unwrap()?;
++        }
++        Ok(())
++    }
++
++    pub(crate) fn read(&mut self, buf: &mut [u8]) -> PosixResult<()> {
++        let mut dlen = self.data.content().len() - self.cur;
++        let mut bcur = 0_usize;
++        let blen = buf.len();
++        if dlen != 0 && dlen >= blen {
++            buf.clone_from_slice(&self.data.content()[self.cur..(self.cur + blen)]);
++            self.cur += blen;
++        } else {
++            buf[bcur..(bcur + dlen)].copy_from_slice(&self.data.content()[self.cur..]);
++            bcur += dlen;
++            while bcur < blen {
++                self.cur = 0;
++                self.data = self.iter.next().unwrap()?;
++                dlen = self.data.content().len();
++                if dlen >= blen - bcur {
++                    buf[bcur..].copy_from_slice(&self.data.content()[..(blen - bcur)]);
++                    self.cur = blen - bcur;
++                    return Ok(());
++                } else {
++                    buf[bcur..(bcur + dlen)].copy_from_slice(self.data.content());
++                    bcur += dlen;
++                }
++            }
++        }
++        Ok(())
++    }
++
++    pub(crate) fn try_cmp(&mut self, buf: &[u8]) -> Result<(), SkipCmpError> {
++        let dlen = self.data.content().len() - self.cur;
++        let blen = buf.len();
++        let mut bcur = 0_usize;
++
++        if dlen != 0 && dlen >= blen {
++            if cmp_with_cursor_move(self.data.content(), buf, &mut self.cur, &mut bcur, blen) {
++                Ok(())
++            } else {
++                Err(SkipCmpError::NotEqual(bcur as Off))
++            }
++        } else {
++            if dlen != 0 {
++                let clen = dlen.min(blen);
++                if !cmp_with_cursor_move(self.data.content(), buf, &mut self.cur, &mut bcur, clen) {
++                    return Err(SkipCmpError::NotEqual(bcur as Off));
++                }
++            }
++            while bcur < blen {
++                self.cur = 0;
++                self.data = self.iter.next().unwrap()?;
++                let dlen = self.data.content().len();
++                let clen = dlen.min(blen - bcur);
++                if !cmp_with_cursor_move(self.data.content(), buf, &mut self.cur, &mut bcur, clen) {
++                    return Err(SkipCmpError::NotEqual(bcur as Off));
++                }
++            }
++
++            Ok(())
++        }
++    }
++    pub(crate) fn eof(&self) -> bool {
++        self.data.content().len() - self.cur == 0 && self.iter.eof()
++    }
++}
 -- 
 2.46.0
 
