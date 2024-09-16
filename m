@@ -2,78 +2,73 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5693D979C5E
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 10:01:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF0A4979C55
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 09:58:10 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1726473667;
-	bh=L5cj07VjICIGJdU4+Y25/wkmn+x9ZFiaKIEwQ+TZbqA=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=hI0RBHAoSZA+Ieq04QwW8cr9XsqaPIhWLWL0FQPqHelrLYm61XkzrLvTe3hzV42H5
-	 HBTYqUqqHb0/zg2Lg/8GNjZjffZNFhzba/75xhxAxKUrSJVhB3HMn7phfrDuAKDLHs
-	 GmKd7gIbZ0XcwmxcShv1AQpqpHUAqs8N0tSZS5U7kccfiarh1zckSrdUXdciIZTTsg
-	 FLMQuTc9nTe5az5Hl0kplo0ApIGcR2KaeL5Lpv7pDj3UryafIJmVeYoPCkPCNEPFek
-	 5EOsSKWbAkabwrl/DrdtKXJOrz5EJ55w6O+fGvgkWo+Fy8oiNJ1SwUnW2Xu6IF602p
-	 RTAuX9AVB9qxA==
+	s=201707; t=1726473488;
+	bh=4sLfKRlp3UZ7CCM7BLzI5DgdFiS6sy6E/jWNs4yPE6Q=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:From;
+	b=ibxBI8RMLeM5vCD+I24NB626pHU2iuiGesW31yydUq9LUVgym/LNnJxa5iJA6EmHC
+	 1bW4O3EBmxyKfAvNpt2uqfABBxTY7ymyM+87QBnxcp7munUftPB9SdoQoVA0uKvMU+
+	 52KYnlNwu1flxfPUH6jlDX8mraaEwv4cdmsjS/1zW5yCRwdq9d4iRKnIcj9hXTR0i9
+	 JxjUuBVvCfpo7+55V6edRiwZaCeFSH8FU17KVfaJuTb/K+e2qF3vHosC9bSjVVNL56
+	 hQ8m2GyGo1v5fsFLAOcvx7m96gMVnn6UNQV0MLO/IAGAD7nGwAw7iDBk2Dj9iKwzHF
+	 wQXw39sgDgOLQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X6cmg5YlWz2yY1
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 18:01:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X6cjD6v7Yz2yVb
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 17:58:08 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.153
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726473665;
-	cv=none; b=n4D97Lj17/L036AONvAodFQO6t0oWUNwLvn99t0O4pVkYhjUOIGvdoRFtls+TXIlG1YxID99v08WxfIL9CprjXgx1+6N87VHz+EgLSUNpdMsw6Hcwf2XMcIlRRhxe3tO84Tf70GIPrvb6S6XjZ58EjMaH8uVfbKZEgzF09GQ5BMTKQk43Vp6Zte9Hcp+PNQEY85lpbb5aeWbryye3q/FgqMe5UVV0qwe3Xl15IFDjrtgCVVrmxpFUw12+vmGpd05sDpWyYJ0UbUKM15mAPoU5xHQZ/gRklmRbofVqY9KhqL0RQ1EOWEqQpeafR7Uh44KRQ9LOvHQAJ8tGr25HNLf/Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.191
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726473486;
+	cv=none; b=GF2YZ+l8H4hCTe6qCRi8wM9Zy5R4PwB7j/8hmAcyVh5YmiXhbntRq0Gva6wzIvdfIdT43qocNGVOE7SJ8r+aRHbeKKG+/FRdMuIdbx7tAEHMxxdQFWc3k7WZzKkPhJKapOmKnJQsxXibFLgnb6osccczGUne+Et1Y1EWlsEx/JIiJ/pCa4FqF2BNxon8xEwF7hbuMBqgK9yElMpmXiLxQ/ivBBzMH5LBneQ0xtuCI+4z5nuVN52rY2vm/8gg7JRYjBJ1kAPRJUaqeTTB8hCXT8xTEVe0V4c/fcus5gTBHyij984TdvGSrv3C2fIQQ2NmsFmcX57Lg5uXOZT5FjPyjg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726473665; c=relaxed/relaxed;
-	bh=L5cj07VjICIGJdU4+Y25/wkmn+x9ZFiaKIEwQ+TZbqA=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=gB/PNRcTMi0+GSKgFKC9WSqE6zVN/XVHT7NWT+L/Z/JmmSi5IpZQxW1agDO1OUyEpz5nJH0Y0Hu6ccfcfn5ai7hypPoHJgfyuqeB/SCYQBsW2SoG0jWnD9qF6rKsfU6lgX0VORYWMCi6AdD63h+IG9CJwQpULse+EkuKEVUdbEA3OHHiY90iU8yrNzoZ9yXzlhVnkDlRPUaL7onoSgyZXGkfy5m44hdejPRe8c7qU2jdadTGfyLh88ivkN8c5Khev5jhjZOa/wOPgDtbs8c8w6IVdwBepL0oNwXzRhwzFNky4Hm5XSh1GprmfT3PXXdgs2Gbnk6RqFXfbgZmE6lmSg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=Vm6JIGTa; dkim-atps=neutral; spf=pass (client-ip=203.205.221.153; helo=out203-205-221-153.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org) smtp.mailfrom=qq.com
+	t=1726473486; c=relaxed/relaxed;
+	bh=4sLfKRlp3UZ7CCM7BLzI5DgdFiS6sy6E/jWNs4yPE6Q=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=bV+ficbBRevDbC60rnDxFXOEKjtIPXIH+AUoNbn8qcil9DmeET703W8BNlyywohZVM8RuKYE+8xzaWJ3hAK0cOA9OuHsBgYy/BGm8FpzHhHvf83jVoMiP9Pt/YERKFnMpb0sh55Kn+vdu2eT0fbzSLsXRuJIGYv77Zu/5c3SoibHcGJ+d/k9+jHEnYfzhzt1UINhH9SEhZ/uEfQ951NFxoznwoYAtB6R4tMGHd8vqi3WQ4kUFFlUDBxNrBKDVQxiyQeycpZ4x25DMfkDqhgMkSr+umELSeEhCPRBxk5q9kRtTpMIlhESSOH/r/rH7DpD4Eo1E79320//c++xZ5ucMw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=XDK4RlFQ; dkim-atps=neutral; spf=pass (client-ip=203.205.221.191; helo=out203-205-221-191.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org) smtp.mailfrom=qq.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=Vm6JIGTa;
+	dkim=pass (1024-bit key; unprotected) header.d=qq.com header.i=@qq.com header.a=rsa-sha256 header.s=s201512 header.b=XDK4RlFQ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.153; helo=out203-205-221-153.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org)
-Received: from out203-205-221-153.mail.qq.com (out203-205-221-153.mail.qq.com [203.205.221.153])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=qq.com (client-ip=203.205.221.191; helo=out203-205-221-191.mail.qq.com; envelope-from=kyr1ewang@qq.com; receiver=lists.ozlabs.org)
+Received: from out203-205-221-191.mail.qq.com (out203-205-221-191.mail.qq.com [203.205.221.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4X6cmc5MC9z2xHW
-	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 18:01:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4X6cjB2j21z2y1W
+	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 17:58:06 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1726473660; bh=L5cj07VjICIGJdU4+Y25/wkmn+x9ZFiaKIEwQ+TZbqA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Vm6JIGTaQW3iUTMY27+zl6vqkL11nJb2Q2oZCO+6urlMfQw/MKVi1XOS2TW4O/FCh
-	 KDbeJLIVg3tquKrfmWZkmjW9bwl4k+O7lbA1lP2/xrISB9dN7oSf0xX4WGSs/vQZAe
-	 nsqi1kuCKWKwKKZEtXBH3GYaOT3qj0gVcz3+ozjs=
+	t=1726473484; bh=4sLfKRlp3UZ7CCM7BLzI5DgdFiS6sy6E/jWNs4yPE6Q=;
+	h=From:To:Cc:Subject:Date;
+	b=XDK4RlFQfx/pPnuPEoZGFF4a4fnrmoWbRcSzzondSgOH+60GgbBkwLMJ/PglJyuJs
+	 D0u2SFJWtlHlTztuETgVESOuKs3dJ5Mr+l+Ou7Og2JReRu25y+mSX5cYkaFJiRHhfd
+	 90AQbRKFNM2SBYcex9DGzFj+5YlHgCFDj74IHaj0=
 Received: from kyrie-virtual-machine.localdomain ([115.156.140.10])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id D7406224; Mon, 16 Sep 2024 15:53:52 +0800
-X-QQ-mid: xmsmtpt1726473233t4cc1x9oe
-Message-ID: <tencent_9AF319B7B192C501062AAA339534DC0C4408@qq.com>
-X-QQ-XMAILINFO: NMGzQWUSIfvTq01UExEAd02tNLb8W8i5EiotTZO5kQZ4BdHWcUI/LkmwSXGYZ7
-	 mem630OUnEhuI8ynwLU64AXA8rS0zMeN4Dxhtzarp20TDFg61k3M2cwNfjODT1y0PA4ytf0rbWWB
-	 rHZ/aJOkQPcJCVJrBk2dCPP506HWiOa8Ks0hEnjzEcV6CEEXmiC9peFmG3UTxGqOpsto1YMkeeHj
-	 OnUo1aTlFbX37oF1VmX3Qe2pFoURoyTR7LUXP5l5WdO0MsAZjs5txz3XFP+tci1g2P1Y/Cn0pKYl
-	 UuCPX15rRuajubynlEzwJICrB2nNuHEKH1gIiZUxsfH1uJ2MDjDgUV8wNkrGxSt3NPc0gu9C0EYP
-	 ReiHZBIWyqF3fv4/Pr8MtXQJFmTxyGYib9ZGpx06rX46eG9GxUWlZOjgu6ibG8NJpc/Im4XNJl/U
-	 GTy54pq6Jisqo1eg8rQunVP8xH7VNzOeh8EUa5sxqJUdgTWb2cfeGCHKqhHsNaCSh3FmBtEB0WiO
-	 EPaOcB8PD3uEcOGL2nMfNvcCVMX7vDfPeraBk2xNpQ+ny9VSBHNnYEPHZrIt2wmpsvMqD2AHabCK
-	 H8HMaxyJOCVHVl0F0YxP5GTVgXWzrCVNDQWjeBVl6bfc69qhEoha9BnxXTOhspAgKxcwokrnE56J
-	 QgfFK8JKZ7RJzGVyUvsFXH9YQrHpY6561h7+sZ/awBJfZCZQubaZT3UH6jp4+sceU2GWobCbTN2x
-	 TjSiYRGg3LRkj1/VhUZM4j3QWaOrobIjmgSWbsVDO12kerOTjuQO7OjnYOxXbVitmSAgVftH4PlL
-	 J6YrzK6HR0i7btw3hErnCD9DNu4vqJ/ntriAkXB5Hfccfjgzmr/8EdbuQ0v3oKGol9m4RTQpok2D
-	 huxsxQg3C7d3oRoK/ZIjmrX/qf1uo+IXq+wKYHh78d62bNPdiWZkf6d1wT//I5bfq4GXWY9aBDiU
-	 R04DrejS23Wiz9Tl07Akyx8YX66quWNSCmXvmCmQz0SKn6leXH1YnfhdaWzBoeu2SYfppRQenNU0
-	 nr1wUPvQ==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id DBA8E8E2; Mon, 16 Sep 2024 15:54:58 +0800
+X-QQ-mid: xmsmtpt1726473298twv1601fz
+Message-ID: <tencent_B7EF0C2FF320B7CB929B010F2A1A33673408@qq.com>
+X-QQ-XMAILINFO: NMGzQWUSIfvTvPBj+cOF/MR050JzkegzUpLHxrlL/r5bK6AgF/cpKaUdTz5fqL
+	 TK4Vl/uaQucSJbiOVVQ2Rnv696PULnAhsHsqe5oQaX134E1FqYGl3WAQwDhg8TGkBH1c2w5DIHhy
+	 f9UCEc0e2bnTadihQ0bCFmRUjIG8uR+EE0j3Xc9Sa/1w2a4xfSjcFGHLRqgo8rL/8sj+jYXNHm5i
+	 58/Wt6Jc+GOzsEc9Puec6hAzvxCt0BD+zcq2OlTmbIXRFT6HScxY11GZ5P4VvDZ1g6bS4VrcDrYI
+	 JnTB9JBLPSKmxJKyr3uhZhmHCoTusgo8R0gc1lfKedT6Ue1dOEGKRPQ0YEZUesSomakNfn3ovuxA
+	 JQtXUILviphdvAq2a9Uet1GoZpw5422QtYWqoi0l4fNH4sqw+BahBFhIHvV4kZq/S/Ek5l314V4H
+	 mXLFnDtbPC0Edgb+5+dYU8MO3LchEUvbHTJS3ZXYahDwRYHvfddiRKhnx6zg0nqRCfY3xXtE+liG
+	 /bXBYZR8GMgXyRAGoC3SLUYuM1nM4zN+ybNeagoZuYSENQrp7UJojbjILHqL3yNjLQZajTOxRuqh
+	 9Wdp/tEg23CXPHLxgUvQdxzO45l7Je0sscGatC1mVmKB5pjcUrt+IGat5s0+1Gj1x21xRPU+33Cl
+	 I9ewtDK0Qiam5JLle/8DDoQc5rRI3TcEoQFWo3PjLVwsb9rxj7grgHjpNsX6OrFbEmURic7WkcCw
+	 puf4JgVh8ZZ3t2RFIdvuZwyyhAGr2tqvGWQLQF4Am8bxN609lfZVZtjmnHbO3UEVP/gNYgtfY9+Q
+	 O/HxSqJAw7Q5HJjGSG3h26rGPL8QBLp3bSMIHxBWETI5A629iEMFZQz/HT4SR5vfr3ofnTe40kBq
+	 6Z8ZiuRGsZR/2tFJY9Y9iHgqSj6Lsi8reOBZ8QZf/1Lri9JnW01Vg61Cv/7GdwyTlBuXN2J0TWlA
+	 YdbbjjI1h1oU62XtSbbwWDmv3NjAmKq2UttvJiPWDbAGn/YeYaudDQFUZtUdSqemnOULVqY8I=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 2/2] erofs-utils:tests: add new test options for stress tests
-Date: Mon, 16 Sep 2024 15:53:51 +0800
-X-OQ-MSGID: <20240916075351.2448016-2-kyr1ewang@qq.com>
+Subject: [PATCH 1/3] erofs-utils: tests: implement MD5 checksum for fssum
+Date: Mon, 16 Sep 2024 15:54:55 +0800
+X-OQ-MSGID: <20240916075457.2448082-1-kyr1ewang@qq.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240916075351.2448016-1-kyr1ewang@qq.com>
-References: <20240916075351.2448016-1-kyr1ewang@qq.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -89,641 +84,347 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Jiawei Wang via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Jiawei Wang <kyr1ewang@qq.com>
-Cc: lyr1ewang@qq.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch add some new test options (direct_io, mmap and fadvise) for
-stress test.
+This patch adds MD5 checksum initialization and some other related 
+operations, providing support for subsequent implementation of checksum 
+calculation for erofs image file.
 
 Signed-off-by: Jiawei Wang <kyr1ewang@qq.com>
 ---
- tests/erofsstress/stress.c | 459 +++++++++++++++++++++++++++++++++----
- 1 file changed, 418 insertions(+), 41 deletions(-)
+ fsck/fssum.c | 257 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ fsck/fssum.h |  57 ++++++++++++
+ 2 files changed, 314 insertions(+)
+ create mode 100644 fsck/fssum.c
+ create mode 100644 fsck/fssum.h
 
-diff --git a/tests/erofsstress/stress.c b/tests/erofsstress/stress.c
-index 4dfe489..84a665c 100644
---- a/tests/erofsstress/stress.c
-+++ b/tests/erofsstress/stress.c
-@@ -17,6 +17,7 @@
- #include <sys/stat.h>
- #include <sys/types.h>
- #include <sys/wait.h>
-+#include <sys/mman.h>
- #include <time.h>
- #include <unistd.h>
- #include <fcntl.h>
-@@ -27,6 +28,9 @@
- #define MAX_SCAN_CHUNKSIZE	(256 * 1024)
- 
- bool superuser;
-+bool direct_io = false;
-+bool mmap_flag = false;
-+bool fadvise_flag = false;
- unsigned int nprocs = 1, loops = 1, r_seed;
- sig_atomic_t should_stop = 0;
- 
-@@ -114,6 +118,8 @@ int drop_file_cache(int fd, int mode)
- 
- struct fent {
- 	char *subpath;
-+	void *fd_ptr;
-+	void *chkfd_ptr;
- 	int  fd, chkfd;
- };
- 
-@@ -282,60 +288,276 @@ static int testdir_fd = -1, chkdir_fd = -1;
- 
- int tryopen(struct fent *fe)
- {
-+	int err;
-+	uint64_t filesize;
-+	
- 	if (fe->fd < 0) {
--		fe->fd = openat(testdir_fd, fe->subpath, O_RDONLY);
-+		fe->fd = openat(testdir_fd, fe->subpath, direct_io ? O_RDONLY | O_DIRECT : O_RDONLY);
- 		if (fe->fd < 0)
- 			return -errno;
- 
- 		/* use force_page_cache_readahead for every read request */
- 		posix_fadvise(fe->fd, 0, 0, POSIX_FADV_RANDOM);
-+		
-+		filesize = lseek64(fe->fd, 0, SEEK_END);
-+		if (mmap_flag) {
-+			fe->fd_ptr = mmap(NULL, filesize, PROT_READ, MAP_PRIVATE, fe->fd, 0);
-+			if (fe->fd_ptr == MAP_FAILED) {
-+				fprintf(stderr, "%s failed mmap\n", __func__);
-+				return -errno;
-+			}
-+		}
- 	}
- 
--	if (chkdir_fd >= 0 && fe->chkfd < 0)
--		fe->chkfd = openat(chkdir_fd, fe->subpath, O_RDONLY);
-+	if (chkdir_fd >= 0 && fe->chkfd < 0) {
-+		fe->chkfd = openat(chkdir_fd, fe->subpath, direct_io ? O_RDONLY | O_DIRECT : O_RDONLY);
-+		
-+		if (fe->chkfd > 0) {
-+			filesize = lseek64(fe->chkfd, 0, SEEK_END);
-+			if (mmap_flag) {
-+				fe->chkfd_ptr = mmap(NULL, filesize, PROT_READ, MAP_PRIVATE, fe->chkfd, 0);
-+				if (fe->chkfd_ptr == MAP_FAILED) {
-+					fprintf(stderr, "%s failed mmap\n", __func__);
-+					return -errno;
-+				}
-+			}
-+		} else
-+			fe->chkfd_ptr = NULL;
-+	}
- 	return 0;
- }
- 
--int doscan(int fd, int chkfd, uint64_t filesize, uint64_t chunksize)
-+void mismatch_output(struct  fent *ent, uint64_t pos, uint64_t chunksize)
+diff --git a/fsck/fssum.c b/fsck/fssum.c
+new file mode 100644
+index 0000000..7c5798c
+--- /dev/null
++++ b/fsck/fssum.c
+@@ -0,0 +1,257 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <sys/sysmacros.h>
++#include <sys/xattr.h>
++#include "fssum.h"
++#include "erofs/print.h"
++#include "erofs/xattr.h"
++#include "erofs/list.h"
++#include "erofs/dir.h"
++
++static const void *erofs_fssum_MD5body(struct erofs_MD5_CTX *ctx, const void *data, unsigned long size)
 +{
-+	int fd, ret;
-+	ssize_t nread, nread2;
-+	char filename[20];
-+	char *buf, *chkbuf;
-+	
-+	ret = posix_memalign(&buf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
-+	if (ret) {
-+		fprintf(stderr, "posix_memalign failed: %s\n", strerror(ret));
-+		goto cleanup;
-+	}
-+	nread = pread64(ent->fd, buf, chunksize, pos);
-+	if (nread <= 0) {
-+		fprintf(stderr, "read file failed");
-+		goto cleanup;
-+	}
-+	
-+	ret = posix_memalign(&chkbuf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
-+	if (ret) {
-+		fprintf(stderr, "posix_memalign failed: %s\n", strerror(ret));
-+		goto cleanup;
-+	}
-+	nread2 = pread64(ent->chkfd, chkbuf, chunksize, pos);
-+	if (nread2 <=0) {
-+		fprintf(stderr, "read file failed");
-+		goto cleanup;
-+	}
-+	
-+	sprintf(filename, "%d", getpid());
-+	strcat(filename, "_mismatch");
-+	fd = open(filename, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
-+	if (fd == -1) {
-+		fprintf(stderr, "error opening file");
-+		goto cleanup;
-+	}
-+	
-+	ret = write(fd, ent->subpath, strlen(ent->subpath));
-+	if (ret == -1) {
-+		fprintf(stderr, "error writing file");
-+		goto cleanup;
-+	}
-+	write(fd, "\n", 1);
-+	
-+	ret = write(fd, buf, nread);
-+	if (ret == -1) {
-+		fprintf(stderr, "error writing file");
-+		goto cleanup;
-+	}
-+	write(fd, "\n", 1);
-+	ret = write(fd, chkbuf, nread2);
-+	if (ret == -1) {
-+		fprintf(stderr, "error writing file");
-+		goto cleanup;
-+	}
-+cleanup:
-+	free(buf);
-+	free(chkbuf);
++	const unsigned char *ptr;
++	MD5_u32plus a, b, c, d;
++	MD5_u32plus saved_a, saved_b, saved_c, saved_d;
++
++	ptr = (const unsigned char *)data;
++
++	a = ctx->a;
++	b = ctx->b;
++	c = ctx->c;
++	d = ctx->d;
++
++	do {
++		saved_a = a;
++		saved_b = b;
++		saved_c = c;
++		saved_d = d;
++
++/* Round 1 */
++		STEP(F, a, b, c, d, SET(0), 0xd76aa478, 7)
++		STEP(F, d, a, b, c, SET(1), 0xe8c7b756, 12)
++		STEP(F, c, d, a, b, SET(2), 0x242070db, 17)
++		STEP(F, b, c, d, a, SET(3), 0xc1bdceee, 22)
++		STEP(F, a, b, c, d, SET(4), 0xf57c0faf, 7)
++		STEP(F, d, a, b, c, SET(5), 0x4787c62a, 12)
++		STEP(F, c, d, a, b, SET(6), 0xa8304613, 17)
++		STEP(F, b, c, d, a, SET(7), 0xfd469501, 22)
++		STEP(F, a, b, c, d, SET(8), 0x698098d8, 7)
++		STEP(F, d, a, b, c, SET(9), 0x8b44f7af, 12)
++		STEP(F, c, d, a, b, SET(10), 0xffff5bb1, 17)
++		STEP(F, b, c, d, a, SET(11), 0x895cd7be, 22)
++		STEP(F, a, b, c, d, SET(12), 0x6b901122, 7)
++		STEP(F, d, a, b, c, SET(13), 0xfd987193, 12)
++		STEP(F, c, d, a, b, SET(14), 0xa679438e, 17)
++		STEP(F, b, c, d, a, SET(15), 0x49b40821, 22)
++
++/* Round 2 */
++		STEP(G, a, b, c, d, GET(1), 0xf61e2562, 5)
++		STEP(G, d, a, b, c, GET(6), 0xc040b340, 9)
++		STEP(G, c, d, a, b, GET(11), 0x265e5a51, 14)
++		STEP(G, b, c, d, a, GET(0), 0xe9b6c7aa, 20)
++		STEP(G, a, b, c, d, GET(5), 0xd62f105d, 5)
++		STEP(G, d, a, b, c, GET(10), 0x02441453, 9)
++		STEP(G, c, d, a, b, GET(15), 0xd8a1e681, 14)
++		STEP(G, b, c, d, a, GET(4), 0xe7d3fbc8, 20)
++		STEP(G, a, b, c, d, GET(9), 0x21e1cde6, 5)
++		STEP(G, d, a, b, c, GET(14), 0xc33707d6, 9)
++		STEP(G, c, d, a, b, GET(3), 0xf4d50d87, 14)
++		STEP(G, b, c, d, a, GET(8), 0x455a14ed, 20)
++		STEP(G, a, b, c, d, GET(13), 0xa9e3e905, 5)
++		STEP(G, d, a, b, c, GET(2), 0xfcefa3f8, 9)
++		STEP(G, c, d, a, b, GET(7), 0x676f02d9, 14)
++		STEP(G, b, c, d, a, GET(12), 0x8d2a4c8a, 20)
++
++/* Round 3 */
++		STEP(H, a, b, c, d, GET(5), 0xfffa3942, 4)
++		STEP(H2, d, a, b, c, GET(8), 0x8771f681, 11)
++		STEP(H, c, d, a, b, GET(11), 0x6d9d6122, 16)
++		STEP(H2, b, c, d, a, GET(14), 0xfde5380c, 23)
++		STEP(H, a, b, c, d, GET(1), 0xa4beea44, 4)
++		STEP(H2, d, a, b, c, GET(4), 0x4bdecfa9, 11)
++		STEP(H, c, d, a, b, GET(7), 0xf6bb4b60, 16)
++		STEP(H2, b, c, d, a, GET(10), 0xbebfbc70, 23)
++		STEP(H, a, b, c, d, GET(13), 0x289b7ec6, 4)
++		STEP(H2, d, a, b, c, GET(0), 0xeaa127fa, 11)
++		STEP(H, c, d, a, b, GET(3), 0xd4ef3085, 16)
++		STEP(H2, b, c, d, a, GET(6), 0x04881d05, 23)
++		STEP(H, a, b, c, d, GET(9), 0xd9d4d039, 4)
++		STEP(H2, d, a, b, c, GET(12), 0xe6db99e5, 11)
++		STEP(H, c, d, a, b, GET(15), 0x1fa27cf8, 16)
++		STEP(H2, b, c, d, a, GET(2), 0xc4ac5665, 23)
++
++/* Round 4 */
++		STEP(I, a, b, c, d, GET(0), 0xf4292244, 6)
++		STEP(I, d, a, b, c, GET(7), 0x432aff97, 10)
++		STEP(I, c, d, a, b, GET(14), 0xab9423a7, 15)
++		STEP(I, b, c, d, a, GET(5), 0xfc93a039, 21)
++		STEP(I, a, b, c, d, GET(12), 0x655b59c3, 6)
++		STEP(I, d, a, b, c, GET(3), 0x8f0ccc92, 10)
++		STEP(I, c, d, a, b, GET(10), 0xffeff47d, 15)
++		STEP(I, b, c, d, a, GET(1), 0x85845dd1, 21)
++		STEP(I, a, b, c, d, GET(8), 0x6fa87e4f, 6)
++		STEP(I, d, a, b, c, GET(15), 0xfe2ce6e0, 10)
++		STEP(I, c, d, a, b, GET(6), 0xa3014314, 15)
++		STEP(I, b, c, d, a, GET(13), 0x4e0811a1, 21)
++		STEP(I, a, b, c, d, GET(4), 0xf7537e82, 6)
++		STEP(I, d, a, b, c, GET(11), 0xbd3af235, 10)
++		STEP(I, c, d, a, b, GET(2), 0x2ad7d2bb, 15)
++		STEP(I, b, c, d, a, GET(9), 0xeb86d391, 21)
++
++		a += saved_a;
++		b += saved_b;
++		c += saved_c;
++		d += saved_d;
++
++		ptr += 64;
++	} while (size -= 64);
++
++	ctx->a = a;
++	ctx->b = b;
++	ctx->c = c;
++	ctx->d = d;
++
++	return ptr;
 +}
 +
-+int doscan(struct fent *ent, uint64_t filesize, uint64_t chunksize)
- {
--	static char buf[MAX_SCAN_CHUNKSIZE], chkbuf[MAX_SCAN_CHUNKSIZE];
-+	char *buf, *chkbuf;
- 	uint64_t pos;
-+	int err = 0;
- 
- 	printf("doscan(%u): filesize: %llu, chunksize: %llu\n",
- 	       getpid(), (unsigned long long)filesize,
- 	       (unsigned long long)chunksize);
--
-+	
-+	err = posix_memalign(&buf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
-+	if (err) {
-+		fprintf(stderr, "posix_memalign failed: %s\n", strerror(err));
-+		goto cleanup;
-+	}
-+	
-+	err = posix_memalign(&chkbuf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
-+	if (err) {
-+		fprintf(stderr, "posix_memalign failed: %s\n", strerror(err));
-+		goto cleanup;
-+	}
-+	
- 	for (pos = 0; pos < filesize; pos += chunksize) {
- 		ssize_t nread, nread2;
-+		
-+		nread = pread64(ent->fd, buf, chunksize, pos);
-+		if (nread <= 0) {
-+			err = -errno;
-+			goto cleanup;
-+		}
- 
--		nread = pread64(fd, buf, chunksize, pos);
--
--		if (nread <= 0)
--			return -errno;
--
--		if (nread < chunksize && nread != filesize - pos)
--			return -ERANGE;
-+		if (nread < chunksize && nread != filesize - pos) {
-+			err = -ERANGE;
-+			goto cleanup;
-+		}
- 
--		if (chkfd < 0)
-+		if (ent->chkfd < 0)
- 			continue;
- 
--		nread2 = pread64(chkfd, chkbuf, chunksize, pos);
--		if (nread2 <= 0)
--			return -errno;
-+		nread2 = pread64(ent->chkfd, chkbuf, chunksize, pos);
-+		if (nread2 <= 0) {
-+			err = -errno;
-+			goto cleanup;
-+		}
- 
--		if (nread != nread2)
--			return -EFBIG;
-+		if (nread != nread2) {
-+			err = -EFBIG;
-+			goto cleanup;
-+		}
- 
- 		if (memcmp(buf, chkbuf, nread)) {
- 			fprintf(stderr, "doscan: %llu bytes mismatch @ %llu\n",
- 				(unsigned long long)chunksize,
- 				(unsigned long long)pos);
-+			mismatch_output(ent, pos, chunksize);
-+			err = -EBADMSG;
-+			goto cleanup;
-+		}
-+	}
-+	
-+cleanup:
-+	free(buf);
-+	free(chkbuf);
-+	return err;
++void erofs_fssum_MD5Init(struct erofs_MD5_CTX *ctx)
++{
++	ctx->a = 0x67452301;
++	ctx->b = 0xefcdab89;
++	ctx->c = 0x98badcfe;
++	ctx->d = 0x10325476;
++
++	ctx->lo = 0;
++	ctx->hi = 0;
 +}
 +
-+int doscan_mmap(struct fent *ent, uint64_t filesize, uint64_t chunksize)
++void erofs_fssum_MD5Update(struct erofs_MD5_CTX *ctx, const void *data, unsigned long size)
 +{
-+	uint64_t pos, nread;
++	MD5_u32plus saved_lo;
++	unsigned long used, available;
 +
-+	printf("doscan_mmap(%u): filesize: %llu, chunksize: %llu\n",
-+	       getpid(), (unsigned long long)filesize,
-+	       (unsigned long long)chunksize);
-+	       
-+	if (ent->chkfd >= 0 && lseek(ent->chkfd, 0, SEEK_END) != filesize)
-+		return -EFBIG;
-+	
-+	for (pos = 0; pos < filesize; pos += chunksize) {
-+		
-+		if (pos + chunksize < filesize)
-+			nread = chunksize;
-+		else
-+			nread = filesize - pos;
-+		
-+		if (ent->chkfd < 0)
-+			continue;
-+			
-+		if (memcmp(ent->fd_ptr + pos, ent->chkfd_ptr + pos, nread)) {
-+			fprintf(stderr, "doscan_mmap: %llu bytes mismatch @ %llu\n",
-+				(unsigned long long)chunksize,
-+				(unsigned long long)pos);
-+			mismatch_output(ent, pos, chunksize);
- 			return -EBADMSG;
- 		}
- 	}
- 	return 0;
- }
- 
-+int doscan_fadvise(struct fent *ent, uint64_t filesize, uint64_t chunksize)
-+{
-+	int err;
-+	uint64_t pos, nread;
++	saved_lo = ctx->lo;
++	if ((ctx->lo = (saved_lo + size) & 0x1fffffff) < saved_lo)
++		ctx->hi++;
++	ctx->hi += size >> 29;
 +
-+	printf("doscan_fadvise(%u): filesize: %llu, chunksize: %llu\n",
-+	       getpid(), (unsigned long long)filesize,
-+	       (unsigned long long)chunksize);
-+	       
-+	if (ent->chkfd >= 0 && lseek(ent->chkfd, 0, SEEK_END) != filesize)
-+		return -EFBIG;
-+	
-+	for (pos = 0; pos < filesize; pos += chunksize) {
-+		
-+		if (pos + chunksize < filesize)
-+			nread = chunksize;
-+		else
-+			nread = filesize - pos;
-+		
-+		err = posix_fadvise(ent->fd, pos, nread, POSIX_FADV_WILLNEED);
-+		if (err) {
-+			perror("posix_fadvise");
-+			return -errno;;
++	used = saved_lo & 0x3f;
++
++	if (used) {
++		available = 64 - used;
++
++		if (size < available) {
++			memcpy(&ctx->buffer[used], data, size);
++			return;
 +		}
-+		
-+		if (ent->chkfd < 0)
-+			continue;
-+			
-+		err = posix_fadvise(ent->chkfd, pos, nread, POSIX_FADV_WILLNEED);
-+		if (err) {
-+			perror("posix_fadvise");
-+			return -errno;
-+		}
++
++		memcpy(&ctx->buffer[used], data, available);
++		data = (const unsigned char *)data + available;
++		size -= available;
++		erofs_fssum_MD5body(ctx, ctx->buffer, 64);
 +	}
++
++	if (size >= 64) {
++		data = erofs_fssum_MD5body(ctx, data, size & ~(unsigned long)0x3f);
++		size &= 0x3f;
++	}
++
++	memcpy(ctx->buffer, data, size);
++}
++
++void erofs_fssum_MD5Final(unsigned char *result, struct erofs_MD5_CTX *ctx)
++{
++	unsigned long used, available;
++
++	used = ctx->lo & 0x3f;
++
++	ctx->buffer[used++] = 0x80;
++
++	available = 64 - used;
++
++	if (available < 8) {
++		memset(&ctx->buffer[used], 0, available);
++		erofs_fssum_MD5body(ctx, ctx->buffer, 64);
++		used = 0;
++		available = 64;
++	}
++
++	memset(&ctx->buffer[used], 0, available - 8);
++
++	ctx->lo <<= 3;
++	OUT(&ctx->buffer[56], ctx->lo)
++	OUT(&ctx->buffer[60], ctx->hi)
++
++	erofs_fssum_MD5body(ctx, ctx->buffer, 64);
++
++	OUT(&result[0], ctx->a)
++	OUT(&result[4], ctx->b)
++	OUT(&result[8], ctx->c)
++	OUT(&result[12], ctx->d)
++
++	memset(ctx, 0, sizeof(*ctx));
++}
++
++void* erofs_fssum_alloc(size_t sz)
++{
++	void *p = malloc(sz);
++	
++	if (!p) {
++		erofs_err("malloc falied");
++		exit(-1);
++	}
++	
++	return p;
++}
++
++void erofs_fssum_init(struct erofs_sum_t *cs)
++{
++	erofs_fssum_MD5Init(&cs->md5);
++}
++
++void erofs_fssum_fini(struct erofs_sum_t *cs)
++{
++	erofs_fssum_MD5Final(cs->out, &cs->md5);
++}
++
++void erofs_fssum_add(struct erofs_sum_t *cs, void* buf, int size)
++{
++	erofs_fssum_MD5Update(&cs->md5, buf, size);
++}
++
++void erofs_fssum_addsum(struct erofs_sum_t *dst, struct erofs_sum_t *src)
++{
++	erofs_fssum_add(dst, src->out, sizeof(src->out));
++}
++
++void erofs_fssum_addu64(struct erofs_sum_t *dst, uint64_t val)
++{
++	uint64_t v = htobe64(val);
++	erofs_fssum_add(dst, &v, sizeof(v));
++}
++
++void erofs_fssum_addtime(struct erofs_sum_t *dst, time_t t)
++{
++	erofs_fssum_addu64(dst, t);
++}
++
++int erofs_fssum_addinode(struct erofs_sum_t *dst, struct erofs_inode vi)
++{
++        int err;
++	char buf[EROFS_MAX_BLOCK_SIZE];
++	erofs_off_t offset = 0;
++	
++	while (offset < vi.i_size) {
++	        erofs_off_t maxsize = min_t(erofs_off_t,
++			                    vi.i_size - offset, erofs_blksiz(&g_sbi));
++
++	        err = erofs_pread(&vi, buf, maxsize, offset);
++	        if (err)
++		        return err;
++		        
++	        erofs_fssum_add(dst, buf, maxsize);
++	        offset += maxsize;
++	}
++	
 +	return 0;
-+}
+diff --git a/fsck/fssum.h b/fsck/fssum.h
+new file mode 100644
+index 0000000..0203169
+--- /dev/null
++++ b/fsck/fssum.h
+@@ -0,0 +1,57 @@
++#ifndef EROFS_FSSUM_H
++#define EROFS_FSSUM_H
++#include "erofs/dir.h"
 +
-+int doscan_random(struct fent *ent, uint64_t filesize, uint64_t chunksize)
-+{
-+	bool flag = false;
-+	int err;
-+	int randnum;
-+	
-+	srand(time(NULL));
-+	while(true) {
-+		if (flag)
-+			break;
-+		
-+		randnum = rand() % 3 + 1;
-+		switch(randnum) {
-+		case 1:
-+			flag = true;
-+			err = doscan(ent, filesize, chunksize);
-+			break;
-+		case 2:
-+			if (mmap_flag) {
-+				flag = true;
-+				err = doscan_mmap(ent, filesize, chunksize);
-+			}
-+			break;
-+		case 3:
-+			if (fadvise_flag) {
-+				flag = true;
-+				err = doscan_fadvise(ent, filesize, chunksize);
-+			}
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+	return err;
-+}
++#define CS_SIZE 16
++#define CHUNKS 128
 +
- int getdents_f(struct fent *fe)
- {
- 	int dfd;
-@@ -379,17 +601,30 @@ int readlink_f(struct fent *fe)
- 	return 0;
- }
- 
--int read_f(int fd, int chkfd, uint64_t filesize)
-+int read_f(struct fent *ent, uint64_t filesize)
- {
--	static char buf[MAX_CHUNKSIZE], chkbuf[MAX_CHUNKSIZE];
-+	char *buf, *chkbuf;
- 	uint64_t lr, off, len, trimmed;
- 	size_t nread, nread2;
-+	int err = 0;
- 
- 	lr = ((uint64_t) random() << 32) + random();
- 	off = lr % filesize;
- 	len = (random() % MAX_CHUNKSIZE) + 1;
- 	trimmed = len;
--
-+	
-+	err = posix_memalign(&buf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
-+	if (err) {
-+		fprintf(stderr, "posix_memalign failed: %s\n", strerror(err));
-+		goto cleanup;
-+	}
-+	
-+	err = posix_memalign(&chkbuf, PAGE_SIZE, MAX_SCAN_CHUNKSIZE);
-+	if (err) {
-+		fprintf(stderr, "posix_memalign failed: %s\n", strerror(err));
-+		goto cleanup;
-+	}
-+	
- 	if (off + len > filesize) {
- 		uint64_t a = filesize - off + 16 * getpagesize();
- 
-@@ -397,44 +632,175 @@ int read_f(int fd, int chkfd, uint64_t filesize)
- 			len %= a;
- 		trimmed = len <= filesize - off ? len : filesize - off;
- 	}
--
-+	
-+	if (direct_io) {
-+		off = (((off - 1) >> PAGE_SHIFT) + 1)
-+			<< PAGE_SHIFT;
-+		trimmed = len = (((len - 1) >> PAGE_SHIFT) + 1)
-+			<< PAGE_SHIFT;
-+		if (!len || off + len > filesize)
-+			goto cleanup;
-+	}
-+	
- 	printf("read_f(%u): %llu bytes @ %llu\n", getpid(),
--	       len | 0ULL, off | 0ULL);
-+	       len | 0ULL, off | 0ULL);	
- 
--	nread = pread64(fd, buf, len, off);
-+	nread = pread64(ent->fd, buf, len, off);
- 	if (nread != trimmed) {
- 		fprintf(stderr, "read_f(%d, %u): failed to read %llu bytes @ %llu\n",
- 			__LINE__, getpid(), len | 0ULL, off | 0ULL);
--		return -errno;
-+		err = -errno;
-+		goto cleanup;
- 	}
- 
--	if (chkfd < 0)
--		return 0;
-+	if (ent->chkfd < 0)
-+		goto cleanup;
- 
--	nread2 = pread64(chkfd, chkbuf, len, off);
-+	nread2 = pread64(ent->chkfd, chkbuf, len, off);
- 	if (nread2 <= 0) {
- 		fprintf(stderr, "read_f(%d, %u): failed to read %llu bytes @ %llu\n",
- 			__LINE__, getpid(), len | 0ULL, off | 0ULL);
--		return -errno;
-+		err = -errno;
-+		goto cleanup;
- 	}
- 
- 	if (nread != nread2) {
- 		fprintf(stderr, "read_f(%d, %u): size mismatch %llu bytes @ %llu\n",
- 			__LINE__, getpid(), len | 0ULL, off | 0ULL);
--		return -EFBIG;
-+		mismatch_output(ent, off, len);
-+		err = -EFBIG;
-+		goto cleanup;
- 	}
- 
- 	if (memcmp(buf, chkbuf, nread)) {
- 		fprintf(stderr, "read_f(%d, %u): data mismatch %llu bytes @ %llu\n",
- 			__LINE__, getpid(), len | 0ULL, off | 0ULL);
-+		mismatch_output(ent, off, len);
-+		err = -EBADMSG;
-+		goto cleanup;
-+	}
-+	
-+cleanup:
-+	free(buf);
-+	free(chkbuf);
-+	return err;
-+}
++#define F(x, y, z)			((z) ^ ((x) & ((y) ^ (z))))
++#define G(x, y, z)			((y) ^ ((z) & ((x) ^ (y))))
++#define H(x, y, z)			(((x) ^ (y)) ^ (z))
++#define H2(x, y, z)			((x) ^ ((y) ^ (z)))
++#define I(x, y, z)			((y) ^ ((x) | ~(z)))
 +
-+int read_f_mmap(struct fent *ent, uint64_t filesize)
-+{
-+	uint64_t lr, off, len, trimmed;
++#define STEP(f, a, b, c, d, x, t, s) \
++	(a) += f((b), (c), (d)) + (x) + (t); \
++	(a) = (((a) << (s)) | (((a) & 0xffffffff) >> (32 - (s)))); \
++	(a) += (b);
 +	
-+	lr = ((uint64_t) random() << 32) + random();
-+	off = lr % filesize;
-+	len = (random() % MAX_CHUNKSIZE) + 1;
-+	trimmed = len;
-+	
-+	if (off + len > filesize) {
-+		uint64_t a = filesize - off + 16 * getpagesize();
++#define OUT(dst, src) \
++	(dst)[0] = (unsigned char)(src); \
++	(dst)[1] = (unsigned char)((src) >> 8); \
++	(dst)[2] = (unsigned char)((src) >> 16); \
++	(dst)[3] = (unsigned char)((src) >> 24);
 +
-+		if (len > a)
-+			len %= a;
-+		trimmed = len <= filesize - off ? len : filesize - off;
-+	}
-+	
-+	printf("read_f_mmap(%u): %llu bytes @ %llu\n", getpid(),
-+	       len | 0ULL, off | 0ULL);
-+	
-+	if (ent->chkfd >= 0 && lseek(ent->chkfd, 0, SEEK_END) != filesize)
-+		return -EFBIG;
-+	
-+	if (ent->chkfd < 0)
-+		return 0;
-+		
-+	if (memcmp(ent->fd_ptr + off, ent->chkfd_ptr + off, trimmed)) {
-+		fprintf(stderr, "read_f_mmap(%d, %u): data mismatch %llu bytes @ %llu\n",
-+			__LINE__, getpid(), len | 0ULL, off | 0ULL);
-+		mismatch_output(ent, off, len);
- 		return -EBADMSG;
- 	}
- 	return 0;
- }
- 
--int testfd(int fd, int chkfd, int mode)
-+int read_f_fadvise(struct fent *ent, uint64_t filesize)
- {
--	const off64_t filesize = lseek64(fd, 0, SEEK_END);
-+	int err;
-+	uint64_t lr, off, len, trimmed;
-+	
-+	lr = ((uint64_t) random() << 32) + random();
-+	off = lr % filesize;
-+	len = (random() % MAX_CHUNKSIZE) + 1;
-+	trimmed = len;
-+	
-+	if (off + len > filesize) {
-+		uint64_t a = filesize - off + 16 * getpagesize();
++#if defined(__i386__) || defined(__x86_64__) || defined(__vax__)
++#define SET(n) \
++	(*(MD5_u32plus *)&ptr[(n) * 4])
++#define GET(n) \
++	SET(n)
++#else
++#define SET(n) \
++	(ctx->block[(n)] = \
++	(MD5_u32plus)ptr[(n) * 4] | \
++	((MD5_u32plus)ptr[(n) * 4 + 1] << 8) | \
++	((MD5_u32plus)ptr[(n) * 4 + 2] << 16) | \
++	((MD5_u32plus)ptr[(n) * 4 + 3] << 24))
++#define GET(n) \
++	(ctx->block[(n)])
++#endif
 +
-+		if (len > a)
-+			len %= a;
-+		trimmed = len <= filesize - off ? len : filesize - off;
-+	}
-+	
-+	printf("read_f_fadvise(%u): %llu bytes @ %llu\n", getpid(),
-+	       len | 0ULL, off | 0ULL);
-+	
-+	err = posix_fadvise(ent->fd, off, trimmed, POSIX_FADV_WILLNEED);
-+	if (err) {
-+		perror("posix_fadvise");
-+		return -errno;
-+	}
-+	
-+	if (ent->chkfd >= 0 && lseek(ent->chkfd, 0, SEEK_END) != filesize)
-+		return -EFBIG;
-+	
-+	if (ent->chkfd < 0)
-+		return 0;
-+		
-+	err = posix_fadvise(ent->chkfd, off, trimmed, POSIX_FADV_WILLNEED);
-+	if (err) {
-+		perror("posix_fadvise");
-+		return -errno;
-+	}
-+	return 0;
-+}
++typedef unsigned int MD5_u32plus;
 +
-+int read_f_random(struct fent * ent, uint64_t filesize)
-+{
-+	bool flag = false;
-+	int err;
-+	int randnum;
-+	
-+	srand(time(NULL));
-+	while(true) {
-+		if (flag)
-+			break;
-+		
-+		randnum = rand() % 3 + 1;
-+		switch(randnum) {
-+		case 1:
-+			flag = true;
-+			err = read_f(ent, filesize);
-+			break;
-+		case 2:
-+			if (mmap_flag) {
-+				flag = true;
-+				err = read_f_mmap(ent, filesize);
-+			}
-+			break;
-+		case 3:
-+			if (fadvise_flag) {
-+				flag = true;
-+				err = read_f_fadvise(ent, filesize);
-+			}
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+	return err;
-+}
++struct erofs_MD5_CTX {
++	MD5_u32plus lo, hi;
++	MD5_u32plus a, b, c, d;
++	unsigned char buffer[64];
++	MD5_u32plus block[16];
++};
 +
-+int testfd(struct fent *ent, int mode)
-+{
-+	const off64_t filesize = lseek64(ent->fd, 0, SEEK_END);
- 	uint64_t chunksize, maxchunksize;
- 	int err;
- 
-@@ -450,16 +816,16 @@ int testfd(int fd, int chkfd, int mode)
- 			<< PAGE_SHIFT;
- 		if (!chunksize)
- 			chunksize = PAGE_SIZE;
--		err = doscan(fd, chkfd, filesize, chunksize);
-+		err = doscan_random(ent, filesize, chunksize);
- 		if (err)
- 			return err;
--	} else if (mode == RANDSCAN_UNALIGNED) {
-+	} else if (mode == RANDSCAN_UNALIGNED && !direct_io) {
- 		chunksize = (random() * random() % MAX_SCAN_CHUNKSIZE) + 1;
--		err = doscan(fd, chkfd, filesize, chunksize);
-+		err = doscan_random(ent, filesize, chunksize);
- 		if (err)
- 			return err;
- 	} else if (mode == RANDREAD) {
--		err = read_f(fd, chkfd, filesize);
-+		err = read_f_random(ent, filesize);
- 		if (err)
- 			return err;
- 	}
-@@ -470,7 +836,6 @@ int doproc(int mode)
- {
- 	struct fent *fe;
- 	int ret;
--
- 	if (mode <= GETDENTS) {
- 		fe = getfent(FT_DIRm, random());
- 		if (!fe)
-@@ -492,7 +857,7 @@ int doproc(int mode)
- 	ret = tryopen(fe);
- 	if (ret)
- 		return ret;
--	return testfd(fe->fd, fe->chkfd, mode);
-+	return testfd(fe, mode);
- }
- 
- void randomdelay(void)
-@@ -522,7 +887,7 @@ static int parse_options(int argc, char *argv[])
- 	char *testdir, *chkdir;
- 	int opt;
- 
--	while ((opt = getopt(argc, argv, "l:p:s:")) != -1) {
-+	while ((opt = getopt(argc, argv, "l:p:s:dmf")) != -1) {
- 		switch (opt) {
- 		case 'l':
- 			loops = atoi(optarg);
-@@ -547,6 +912,15 @@ static int parse_options(int argc, char *argv[])
- 				return -EINVAL;
- 			}
- 			break;
-+		case 'd':
-+			direct_io = true;
-+			break;
-+		case 'm':
-+			mmap_flag = true;
-+			break;
-+		case 'f':
-+			fadvise_flag = true;
-+			break;
- 		default: /* '?' */
- 			return -EINVAL;
- 		}
-@@ -585,7 +959,10 @@ void usage(void)
- 	      " -l#     specifies the no. of times the testrun should loop.\n"
- 	      "         *use 0 for infinite (default 1)\n"
- 	      " -p#     specifies the no. of processes (default 1)\n"
--	      " -s#     specifies the seed for the random generator (default random)\n",
-+	      " -s#     specifies the seed for the random generator (default random)\n"
-+	      " -d      using direct_io to start stress test\n"
-+	      " -m      using mmap to start stress test\n"
-+	      " -f      using fadvise to start stress test\n",
- 	      stderr);
- }
- 
++struct erofs_sum_t {
++	struct erofs_MD5_CTX md5;
++	unsigned char out[16];
++};
++
++int erofs_fssum_calculate(struct erofs_dir_context *ctx);
++
++#endif
 -- 
 2.34.1
 
