@@ -1,61 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8C8197A33D
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 15:57:04 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9120497A340
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 15:57:08 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1726495024;
-	bh=F4hCBD/QFnbrfenytYFFJtYuvUkCDWy+jx5tXlowPUM=;
+	s=201707; t=1726495026;
+	bh=aIuZG5PEljHDXPUlgWsVRtI4LVnRy+jfg4KsDBMADu4=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=AHAsuiiDuQpS1tyh7jGBrYB7hveNJJMiI9qlTGiFG+XNRyr5c3vNvArLAeiIvX42O
-	 iBJmfqb5j//XX5bn8mwlUt4a4mL9XUIFNH8yBJEPLiJIrbEy2pVdrD+Cu8Q5iOCxQ5
-	 YQaHlWbNLbXy5uUlVEvJpzXLKiRTqpx8pc6VkWZZDzff+o4Eughl4ut7i2PdXr3aDD
-	 W3zIwQNRBwL1oBx8B+vVxINKg9P70veJMMwKnDhBsGuWRxCdLHoMPMiisxDdJF1lOG
-	 ZgzMOpZW4oqluBXA+PgCSJgFe+Qcgm29GAR7pM70p+0BXkP58E+xyfQBB22eFLfjDc
-	 z8BNjkjfbo5vg==
+	b=g2KaBiUojscTBrtaR/A7RBnIF5dhmAZDbKd/z7MJlG45qP53ZxysiVbmwM9TBg5o6
+	 /Efpp8r3jbopw3QeUFrjw8V+/ZPSqIq1Zb2CVqIX5J9khOoVT6Z62sE1umA7wfbuCm
+	 tNE0YOxzbalxhnyITnsvKIqGcRjwhYTBHzd0Gm7mNoBWKThJhGwY6w+G6X2YLftyyj
+	 RXiGAF+RBTTn5WQ0929yvcfyk5K8Hsh4TULWvYHWDMYCOJqVJjLLZeFrje9Dx3Yql3
+	 lfeVhUCJswvnSA/0fnibGDmVAr3dRZBB9z0Pvt4XZcCMHJzUGqSx0qJ8vWzfpEg4jF
+	 VX5mPzqqrAWzQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X6mgN06Cnz305G
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 23:57:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X6mgQ488Wz304C
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 23:57:06 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=148.135.17.20
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726495021;
-	cv=none; b=eZVpFyEzjAmK6kDk2sFsGEgK6cY3lwIQ/pp057qROAjOVVyT++NhH7losa78Dkg8lgZXvh0oss+zDuLPv1+urGhnrzFaLG3hvcyH727sp226HOPXgLB7hQ/S5rT8g4PFK82/3RzFPcKpLyWjN1iTCDK72Yjwvo0lFWc2sHE/3pztAYJ52xlicJ256tG4Yha9Jf+fhup9LAIZWAg6PN9MXtj5ksZjs8oPElsKcHxslpBWj+1bU48B7wuSsgc6jnsszbJEiPIhQyg4wNhy/YWyRXsGMhcglNp8Duyv+6LS0ebAz9Lr9uSi6DA0HkxvFPioo+awm+XmZ/Uadsaw9usZbQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726495023;
+	cv=none; b=R9zgGYL9rTbSdLJW+RC4uEAKJFYTOadql3pyPY/q6Jg4a04pBgLBUqUDrLOcqSQiOG7I66AnPUO8yHYmYzukT982PkbnGwfatcRZsRcUeJAajumIv7FmaZGnKW6GMhWdsVhg/gF2MVZNhh/59C/qy8DVa++dubibx1JV1gv73YzNB404PWPLReM7xGHVhFc78/ymXlmRYC1eLMqeaK0MP+vna252S1cUJQ+/+dGT7D8VUkioAhWOHegNjbR9LUd6EyLgD5Y7XScTP+sM0HXuw3OOGEDGrgwCCbdwYmx8AAKdXq9HwgnSmQo49pxTMxesV5GUU2i6xG14UKLys9UNSA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726495021; c=relaxed/relaxed;
-	bh=F4hCBD/QFnbrfenytYFFJtYuvUkCDWy+jx5tXlowPUM=;
+	t=1726495023; c=relaxed/relaxed;
+	bh=aIuZG5PEljHDXPUlgWsVRtI4LVnRy+jfg4KsDBMADu4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GxgAHy/c4gtkDBN0vG1p56WQBMlIq7BkYRoR53fozif+zPldvckQH0N3k5YUNtXLA0wN02TXNSQQxtvnqwMD45XMMATsdLcAWVCu39MlL8oC1wI3eP3Z108rwzMpoeALXKIr7qARkq7TGXMSx1ebYk2nvCbGiHt+KGsA8otO1he63c0UJh8glpzyPJEJ228O6BVxCRPCEEpdoQnVvH8u0Y4njiPCIDoHUZStUs4Ye/In/eFZgOFnnIjSLtOt1PsRotJwhO8tMLX7LvOm6ddZD8MxFkQoBHmphKpXIDmPwBcuJSXAMzSpPZOKkyOdOVWUpvfKLr80/sa7OlXZ7IS8Ng==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=CFSckmI4; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
+	 MIME-Version; b=SfNOQ/8klWeyeh3pdQrIY9eERk6dvi08rzxSe8EnXwl5RDitQ19QjzEB3OVouj5mKSw+EoNLTef7GbAvbbmprSVXSdKQ+kxTXmB0wWqHVJKDOitVWZqzrgnpTG5Ify/MYFdtwxX57EhUnsAwzkEnEgOnf2NPav6Tq5fjqO7idZn42qDhB7RSsuotBVtubTzF6xMNaL8c44iSx91cfYm1uwQkRwO3ydfXmy2AujvW/VR54k8PgTmylXyk1oGM2W46aPWoPRupSqWYtnmF9lDaPOHCCc7B1O1YU6p00OR+m9cu7GaqdGrKP83jDjo5TSCqw+yq5yyuhdM8pWYJg+Sa0A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=JzgW3RT9; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=CFSckmI4;
+	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=JzgW3RT9;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=tlmp.cc (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org)
 Received: from mail.tlmp.cc (unknown [148.135.17.20])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X6mgK3BlJz3c6C
-	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 23:57:01 +1000 (AEST)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 93C2F69845;
-	Mon, 16 Sep 2024 09:56:58 -0400 (EDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X6mgM4w8pz2yVX
+	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 23:57:03 +1000 (AEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 76A4A697C4;
+	Mon, 16 Sep 2024 09:57:00 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tlmp.cc; s=dkim;
-	t=1726495019; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1726495021; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=F4hCBD/QFnbrfenytYFFJtYuvUkCDWy+jx5tXlowPUM=;
-	b=CFSckmI4MUIPR9slBm8hO8DjCiZn8m3HjPaYgOVerbk8DEmUgIw9uVE85dm47JHVK0OQRI
-	7MYVXmNEFJPIsUqwcQSjbSDy9kw0KiMRFJI3H8Sz5YX+L+ej0GwV0nO3CoNFUn3k5VxnSK
-	8qCd3dKrDlY0aHo/90jKK/JJPfpi9WEFuS6Fy7eBnf38yI19S8LRwlIX6JVJJdAEHoKHDN
-	WxP4HdUszJkuV08+XnKywMarGNMRm+QUOaaHev8dWlo5IcOJ8vIVc95+MfymXlzX/NKIvu
-	K74GHUrHa3tW2dGbB7fbdK7GPji0+dCARhAzmPwA7yOy8HCN76mzygKk7gA5YA==
+	bh=aIuZG5PEljHDXPUlgWsVRtI4LVnRy+jfg4KsDBMADu4=;
+	b=JzgW3RT9D4Z5Zx0GeV99WrpnWZLJKf6cD4UwQVruHRKjSt1IWDApdXssW522GAGu85TKJE
+	szMUzWXMfWY4d+6AlArsH21f89D7DGFxIvxS/ynohg2VJN7VbuRLb3s9z6GsTSDB9k9tyY
+	SxKljzY3Y8TrYD8aWuprNrCBpCZ6u5Ph/OdJ3hcLwdUnBO2mN6/rjkCh95g2TIXSUJIoQd
+	QtMVozhUxBW1K0sVzTjCtcYV1bQz0R9qzMPS6+GcsCH5guI40E/ucfP7+HzmeppU8W5pDA
+	nEfyy0mEsmcOhPs3p0CpuD1N6FYdbonSJ4n1spG/+ncP73znZUy0DRoF4cblwg==
 To: linux-erofs@lists.ozlabs.org
-Subject: [RFC PATCH 11/24] erofs: add map data structure in Rust
-Date: Mon, 16 Sep 2024 21:56:21 +0800
-Message-ID: <20240916135634.98554-12-toolmanp@tlmp.cc>
+Subject: [RFC PATCH 12/24] erofs: add directory entry data structure in Rust
+Date: Mon, 16 Sep 2024 21:56:22 +0800
+Message-ID: <20240916135634.98554-13-toolmanp@tlmp.cc>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240916135634.98554-1-toolmanp@tlmp.cc>
 References: <20240916135634.98554-1-toolmanp@tlmp.cc>
@@ -79,79 +79,132 @@ Cc: linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, rust-for
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch introduce core map flags and runtime map data structure
-in Rust. This will later be used to do iomapping.
+This patch adds DirentDesc and DirCollection in Rust.
+It will later be used as helper to read_dir and lookup operations.
 
 Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
 ---
  fs/erofs/rust/erofs_sys.rs     |  1 +
- fs/erofs/rust/erofs_sys/map.rs | 45 ++++++++++++++++++++++++++++++++++
- 2 files changed, 46 insertions(+)
- create mode 100644 fs/erofs/rust/erofs_sys/map.rs
+ fs/erofs/rust/erofs_sys/dir.rs | 98 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 99 insertions(+)
+ create mode 100644 fs/erofs/rust/erofs_sys/dir.rs
 
 diff --git a/fs/erofs/rust/erofs_sys.rs b/fs/erofs/rust/erofs_sys.rs
-index f1a1e491caec..15ed65866097 100644
+index 15ed65866097..65dc563986c3 100644
 --- a/fs/erofs/rust/erofs_sys.rs
 +++ b/fs/erofs/rust/erofs_sys.rs
-@@ -28,6 +28,7 @@
+@@ -26,6 +26,7 @@
+ pub(crate) mod alloc_helper;
+ pub(crate) mod data;
  pub(crate) mod devices;
++pub(crate) mod dir;
  pub(crate) mod errnos;
  pub(crate) mod inode;
-+pub(crate) mod map;
- pub(crate) mod superblock;
- pub(crate) mod xattrs;
- pub(crate) use errnos::Errno;
-diff --git a/fs/erofs/rust/erofs_sys/map.rs b/fs/erofs/rust/erofs_sys/map.rs
+ pub(crate) mod map;
+diff --git a/fs/erofs/rust/erofs_sys/dir.rs b/fs/erofs/rust/erofs_sys/dir.rs
 new file mode 100644
-index 000000000000..757e8083c8f1
+index 000000000000..d4255582b7c0
 --- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/map.rs
-@@ -0,0 +1,45 @@
++++ b/fs/erofs/rust/erofs_sys/dir.rs
+@@ -0,0 +1,98 @@
 +// Copyright 2024 Yiyang Wu
 +// SPDX-License-Identifier: MIT or GPL-2.0-or-later
 +
-+use super::*;
-+pub(crate) const MAP_MAPPED: u32 = 0x0001;
-+pub(crate) const MAP_META: u32 = 0x0002;
-+pub(crate) const MAP_ENCODED: u32 = 0x0004;
-+pub(crate) const MAP_FULL_MAPPED: u32 = 0x0008;
-+pub(crate) const MAP_FRAGMENT: u32 = 0x0010;
-+pub(crate) const MAP_PARTIAL_REF: u32 = 0x0020;
++/// On-disk Directory Descriptor Format for EROFS
++/// Documented on [EROFS Directory](https://erofs.docs.kernel.org/en/latest/core_ondisk.html#directories)
++use core::mem::size_of;
 +
-+#[derive(Debug, Default)]
-+#[repr(C)]
-+pub(crate) struct Segment {
-+    pub(crate) start: Off,
-+    pub(crate) len: Off,
++#[repr(C, packed)]
++#[derive(Debug, Clone, Copy)]
++pub(crate) struct DirentDesc {
++    pub(crate) nid: u64,
++    pub(crate) nameoff: u16,
++    pub(crate) file_type: u8,
++    pub(crate) reserved: u8,
 +}
 +
-+#[derive(Debug, Default)]
-+#[repr(C)]
-+pub(crate) struct Map {
-+    pub(crate) logical: Segment,
-+    pub(crate) physical: Segment,
-+    pub(crate) device_id: u16,
-+    pub(crate) algorithm_format: u16,
-+    pub(crate) map_type: MapType,
++/// In memory representation of a real directory entry.
++#[derive(Debug, Clone, Copy)]
++pub(crate) struct Dirent<'a> {
++    pub(crate) desc: DirentDesc,
++    pub(crate) name: &'a [u8],
 +}
 +
-+#[derive(Debug, Default)]
-+pub(crate) enum MapType {
-+    Meta,
-+    #[default]
-+    Normal,
-+}
-+
-+impl From<MapType> for u32 {
-+    fn from(value: MapType) -> Self {
-+        match value {
-+            MapType::Meta => MAP_META | MAP_MAPPED,
-+            MapType::Normal => MAP_MAPPED,
++impl From<[u8; size_of::<DirentDesc>()]> for DirentDesc {
++    fn from(data: [u8; size_of::<DirentDesc>()]) -> Self {
++        Self {
++            nid: u64::from_le_bytes([
++                data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7],
++            ]),
++            nameoff: u16::from_le_bytes([data[8], data[9]]),
++            file_type: data[10],
++            reserved: data[11],
 +        }
 +    }
 +}
 +
-+pub(crate) type MapResult = PosixResult<Map>;
++/// Create a collection of directory entries from a buffer.
++/// This is a helper struct to iterate over directory entries.
++pub(crate) struct DirCollection<'a> {
++    data: &'a [u8],
++    offset: usize,
++    total: usize,
++}
++
++impl<'a> DirCollection<'a> {
++    pub(crate) fn new(buffer: &'a [u8]) -> Self {
++        let desc: &DirentDesc = unsafe { &*(buffer.as_ptr() as *const DirentDesc) };
++        Self {
++            data: buffer,
++            offset: 0,
++            total: desc.nameoff as usize / core::mem::size_of::<DirentDesc>(),
++        }
++    }
++    pub(crate) fn dirent(&self, index: usize) -> Option<Dirent<'a>> {
++        let descs: &'a [[u8; size_of::<DirentDesc>()]] =
++            unsafe { core::slice::from_raw_parts(self.data.as_ptr().cast(), self.total) };
++        if index >= self.total {
++            None
++        } else if index == self.total - 1 {
++            let desc = DirentDesc::from(descs[index]);
++            let len = self.data.len() - desc.nameoff as usize;
++            Some(Dirent {
++                desc,
++                name: &self.data[desc.nameoff as usize..(desc.nameoff as usize) + len],
++            })
++        } else {
++            let desc = DirentDesc::from(descs[index]);
++            let next_desc = DirentDesc::from(descs[index + 1]);
++            let len = (next_desc.nameoff - desc.nameoff) as usize;
++            Some(Dirent {
++                desc,
++                name: &self.data[desc.nameoff as usize..(desc.nameoff as usize) + len],
++            })
++        }
++    }
++    pub(crate) fn skip_dir(&mut self, offset: usize) {
++        self.offset += offset;
++    }
++    pub(crate) fn total(&self) -> usize {
++        self.total
++    }
++}
++
++impl<'a> Iterator for DirCollection<'a> {
++    type Item = Dirent<'a>;
++    fn next(&mut self) -> Option<Self::Item> {
++        self.dirent(self.offset).map(|x| {
++            self.offset += 1;
++            x
++        })
++    }
++}
++
++impl<'a> Dirent<'a> {
++    pub(crate) fn dirname(&self) -> &'a [u8] {
++        self.name
++    }
++}
 -- 
 2.46.0
 
