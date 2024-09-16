@@ -1,61 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7950C97A32B
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 866C397A32D
 	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 15:56:36 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
 	s=201707; t=1726494982;
-	bh=CeM2RxQ3ayEheLUMCn9fl9h9UhYePHokORV1b9tMe8Y=;
+	bh=TBJTDvYko+/iIPJGn9oa9UFP8352ieqw0qlVnvGk9ME=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=Arsc4BUQGGwTKC1v2HoQt9WsuSmTEVqLTAvBcwuJHYfHr1YUS1T2qVZt77WSySelg
-	 6l3KJAQWkV6dndvwvEBT8SBCJK/XM69EeSC4uL41KgXoMadFqhpXBSnx4+4u8a8+hv
-	 29lm0uLCQHKj3FwPBp3aTFRX0M98rsqc9AacNpFNLwEhA9/AYp2UIU2aGW97IyVe8k
-	 3P20lYC+qQ5t8pTC9cstZGgmXJNN9f1WZCeeN61DA9Wux7f7sGUMoOy47vT+N2crI4
-	 DF7LkY02CEQ58OCPYOrUHjF16dzklOPerthRUEJIdBAsHc6hcMu2UI40duNC5revJw
-	 Yg9p9RRV4DV8Q==
+	b=Je9zs6DL2KSvnJEjdx9i8MOUvvT0r9awpbgIb5RlTYOBn2v2wFvLix5wLYS+ntd98
+	 azG6RbZvVl1liEERMstHPgfpjpSNjr1l9SPcO20KZN4ox6mxpzdoCHAzcGSX4C4rPu
+	 rlJUezFyyvGvm2o3EnU+6RIHn08HFaQv8VhOwqz1K3cIMSfg0pWqey+F/BwI3cRIf+
+	 H9alXd5ghDXK8p6E/xIlo7E9MxBp64+aPymrNGu9Un9v2tLSB2d8NFcED5VVYGsbVt
+	 ZhpdMMs+6RqqOopAnjM+UXkai7k2d3u8VpawzFAPs3+6ZcjVZUrfcNCY83MOAJkp3A
+	 4W7Y6lwikjdrA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X6mfZ0Qh4z3cDt
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X6mfZ4mkmz3cSq
 	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 23:56:22 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=148.135.17.20
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726494979;
-	cv=none; b=AKPSAtPn4ira/NY8UPH9Y+pUnlXmWZr9mV3gYq4Bsr8g7XljrclhQ+63b17eljmvWQU0vOCTtLjgWIxaDFOL4tiakNojHJvPWPFVrNRn0502W34argqRvOcgCQhsGvhZQ6Di8ZuRaV/9DtFpvBmr3OADASVjTeczHJlEvYQYUWkIQ87kqUNH2wjROCxtizuPGjceH9uz9tTy0/+1bqlPhCiej++W8Y/8jLM/3/3RHptMS7dTZ8x1vk7TNuzrZEL886773t58u4IItuEuWvbfoIExwYgrA9Ve21BqPCcvdIpf4rv2kErH3iG00fTgZqPudwWV8mXpjXSyZu2LhkMXbw==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726494981;
+	cv=none; b=NjGjYlj103sp+mjkjpWtRs0uOvk4KWrqohp3fCxZBF4uv3+X4tgtpn44qcrj9uCFRMM8ek5u0LYe366CLtpP7shRl9fSCWxL3ZRM3I4Hq/DWhrHRDxE732onLjk0tpUiR/EsmGW9z19CxDVOQTe9vsLRil9iOaGpUBsX1kzSbCjTErOsLFj4eFn93QYoZZck2CfS0R4Mx4TMhpsq8vbLonI4X14xtNmuvX9z55cZO73keUxsoVWRYoldZZBP0bxT9ZXPK7N58EXsD7Eu/6nfJISATWXmSP7GPwtqCiWyCseJeXl/PEgcDc672oLuXfsUlwTQnL8G/QiPJAg+tEbjBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726494979; c=relaxed/relaxed;
-	bh=CeM2RxQ3ayEheLUMCn9fl9h9UhYePHokORV1b9tMe8Y=;
+	t=1726494981; c=relaxed/relaxed;
+	bh=TBJTDvYko+/iIPJGn9oa9UFP8352ieqw0qlVnvGk9ME=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IdughXY4cQNWbXvrgT9MmcJNDlgWVzhU/BW1gXn8FtZtfcx1Kcxm+OjgLB6MEJnjYUEemSX8IW//YKmducfFaPA7EmZeAtoJfsotSVkzk9EAaqYFYb9XBCBwvLDllGPzRAH/dGPSM9A2BLQO7NBcB6brv4CoOJeTAaC3GSlLBqA4BuCQHAL7xHcG5funJQ5fnFc10ToQe44Dd/ber8+L5Wi0srpqHeScP6632c/5uqSDMnbhO+q3LlQcFZAomyAgOqOW+aIc05DTqy+A/ip+Y0Y9a2ZV688eykvVom/zFyUqlsJPnqpumuK2MXaePI/N51RXXFq/0mdxZh4svErKyg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=CCH/7Wpl; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
+	 MIME-Version; b=YmeznnKm6yoWGovRmjY711xQ24qSTGnt3KiOIbrxyEZKHJBCoQ70c8G0wzC3F6cVkkaUIF6+irKw+q8qdEobIumrlzx+6VYJJd8inu3fi/B/AuTVok0Kxr1RlyDdLa0xeA8Ci2vz6Q5aR7R670/ZziBod7L9LnxUvAKpYOTpaOsVisl0dLEPiAT8+FeJbCPQxe1sk+9KDtCdDWiuq139MlbDelowCzhQEGM5hkAjMZC8aTZdyvCt12UWdnArd16OY7UV4fXvu3lvSyusZsMl8nOaTLqMaf3du8XS0PqPKlIZLxSEEgFi9S85KU0MnG2h2sjtoyBdsM/ZwqZ0uAfAAw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=JG0YywNm; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=CCH/7Wpl;
+	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=JG0YywNm;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=tlmp.cc (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org)
 Received: from mail.tlmp.cc (unknown [148.135.17.20])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X6mfW3PJNz2yTs
-	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 23:56:19 +1000 (AEST)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id A972E6997D;
-	Mon, 16 Sep 2024 09:56:16 -0400 (EDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X6mfY1PPVz2yYq
+	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 23:56:21 +1000 (AEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 76EE76997F;
+	Mon, 16 Sep 2024 09:56:18 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tlmp.cc; s=dkim;
-	t=1726494977; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1726494979; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=CeM2RxQ3ayEheLUMCn9fl9h9UhYePHokORV1b9tMe8Y=;
-	b=CCH/7WplQihI8IQSOeM+qSyheqlKc/+3ge+BVwwr3F5KemwNkoKCxNMRnQ5KEjxI4pHhEG
-	Yp3l0ZbMtH6z/O9zF8Rc26nGuHUWn8bx19wkKPrt4BeXbonNQrPlz2DFpN7Q9YItP2rbj2
-	q0bKdiKpmPkNoSNXo1wZlae5WbZLiFVfWLSkweVgwMI/m6ZJ2aDueAO/IUkcT+bEfDhNNG
-	iAC0MfyYbPOKQX/767ZGpqgr2Cvkeb9Hykj33qkOFFhdAmX4ff24BsCfN/MMT1r1O/oCb5
-	Abalb/CnbSKVm3eG06+rw6hM/nYxXm9ujXXKb34nWe2ZoiH2mDwYqR2uPTjBcQ==
+	bh=TBJTDvYko+/iIPJGn9oa9UFP8352ieqw0qlVnvGk9ME=;
+	b=JG0YywNmLao0k+8IkcmVMo1Tn7rk9cAoA/a1PrlMTUK/v/hLtORzSDc9yFLe7400qUxPlC
+	MkjpSLGmtgq6XCcw9gcFCrKWn+V2JM0xqTm2dcI0+qnF9aS40Q9WIHJrZHXdygoyTaaQ8Z
+	P95rw7havM9mbyYDXxu4/7K/TSXLT3MumjiadDjOaUe/ObcxklMdAsEUpcYDmp48F6vgWi
+	vKVKIMQ6OHP2Vh8abqjXykdcWiiFMC7u84n8ED/9mBPaJKwXmNfPDSg83VAEA8mZjKzDZC
+	JNgvi6SCATgor+5JvNps3qtIWoLk9cBufJZtCr0SDVwo0dtiE9IrmeddrLPMLA==
 To: linux-erofs@lists.ozlabs.org
-Subject: [RFC PATCH 09/24] erofs: add continuous iterators in Rust
-Date: Mon, 16 Sep 2024 21:55:26 +0800
-Message-ID: <20240916135541.98096-10-toolmanp@tlmp.cc>
+Subject: [RFC PATCH 10/24] erofs: add device_infos implementation in Rust
+Date: Mon, 16 Sep 2024 21:55:27 +0800
+Message-ID: <20240916135541.98096-11-toolmanp@tlmp.cc>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240916135541.98096-1-toolmanp@tlmp.cc>
 References: <20240916135541.98096-1-toolmanp@tlmp.cc>
@@ -79,138 +79,81 @@ Cc: linux-fsdevel@vger.kernel.org, rust-for-linux@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch adds a special iterator that is capable of iterating over a
-memory region in the granularity of a common page. This can be later
-used to read device buffer or fast symlink.
+Add device_infos implementation in rust. It will later be used
+to be put inside the SuperblockInfo. This mask and spec can later
+be used to chunk-based image file block mapping.
 
 Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
 ---
- fs/erofs/rust/erofs_sys/data.rs               |  2 +
- fs/erofs/rust/erofs_sys/data/raw_iters.rs     |  6 ++
- .../rust/erofs_sys/data/raw_iters/ref_iter.rs | 68 +++++++++++++++++++
- .../rust/erofs_sys/data/raw_iters/traits.rs   | 13 ++++
- 4 files changed, 89 insertions(+)
- create mode 100644 fs/erofs/rust/erofs_sys/data/raw_iters.rs
- create mode 100644 fs/erofs/rust/erofs_sys/data/raw_iters/ref_iter.rs
- create mode 100644 fs/erofs/rust/erofs_sys/data/raw_iters/traits.rs
+ fs/erofs/rust/erofs_sys/devices.rs | 47 ++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/fs/erofs/rust/erofs_sys/data.rs b/fs/erofs/rust/erofs_sys/data.rs
-index 284c8b1f3bd4..483f3204ce42 100644
---- a/fs/erofs/rust/erofs_sys/data.rs
-+++ b/fs/erofs/rust/erofs_sys/data.rs
-@@ -1,6 +1,8 @@
+diff --git a/fs/erofs/rust/erofs_sys/devices.rs b/fs/erofs/rust/erofs_sys/devices.rs
+index 097676ee8720..7495164c7bd0 100644
+--- a/fs/erofs/rust/erofs_sys/devices.rs
++++ b/fs/erofs/rust/erofs_sys/devices.rs
+@@ -1,6 +1,10 @@
  // Copyright 2024 Yiyang Wu
  // SPDX-License-Identifier: MIT or GPL-2.0-or-later
- pub(crate) mod backends;
-+pub(crate) mod raw_iters;
-+use super::superblock::*;
- use super::*;
  
- /// Represent some sort of generic data source. This cound be file, memory or even network.
-diff --git a/fs/erofs/rust/erofs_sys/data/raw_iters.rs b/fs/erofs/rust/erofs_sys/data/raw_iters.rs
-new file mode 100644
-index 000000000000..8f3bd250d252
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/data/raw_iters.rs
-@@ -0,0 +1,6 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-or-later
-+
-+pub(crate) mod ref_iter;
-+mod traits;
-+pub(crate) use traits::*;
-diff --git a/fs/erofs/rust/erofs_sys/data/raw_iters/ref_iter.rs b/fs/erofs/rust/erofs_sys/data/raw_iters/ref_iter.rs
-new file mode 100644
-index 000000000000..5aa2b7f44f3d
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/data/raw_iters/ref_iter.rs
-@@ -0,0 +1,68 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-or-later
-+
-+use super::super::*;
++use super::alloc_helper::*;
++use super::data::raw_iters::*;
++use super::data::*;
 +use super::*;
-+
-+/// Continous Ref Buffer Iterator which iterates over a range of disk addresses within the
-+/// the temp block size. Since the temp block is always the same size as page and it will not
-+/// overflow.
-+pub(crate) struct ContinuousRefIter<'a, B>
-+where
-+    B: Backend,
-+{
-+    sb: &'a SuperBlock,
-+    backend: &'a B,
-+    offset: Off,
-+    len: Off,
-+}
-+
-+impl<'a, B> ContinuousRefIter<'a, B>
-+where
-+    B: Backend,
-+{
-+    pub(crate) fn new(sb: &'a SuperBlock, backend: &'a B, offset: Off, len: Off) -> Self {
+ use alloc::vec::Vec;
+ 
+ /// Device specification.
+@@ -21,8 +25,51 @@ pub(crate) struct DeviceSlot {
+     reserved: [u8; 56],
+ }
+ 
++impl From<[u8; 128]> for DeviceSlot {
++    fn from(data: [u8; 128]) -> Self {
 +        Self {
-+            sb,
-+            backend,
-+            offset,
-+            len,
++            tags: data[0..64].try_into().unwrap(),
++            blocks: u32::from_le_bytes([data[64], data[65], data[66], data[67]]),
++            mapped_blocks: u32::from_le_bytes([data[68], data[69], data[70], data[71]]),
++            reserved: data[72..128].try_into().unwrap(),
 +        }
 +    }
 +}
 +
-+impl<'a, B> Iterator for ContinuousRefIter<'a, B>
-+where
-+    B: Backend,
-+{
-+    type Item = PosixResult<RefBuffer<'a>>;
-+    fn next(&mut self) -> Option<Self::Item> {
-+        if self.len == 0 {
-+            return None;
+ /// Device information.
+ pub(crate) struct DeviceInfo {
+     pub(crate) mask: u16,
+     pub(crate) specs: Vec<DeviceSpec>,
+ }
++
++pub(crate) fn get_device_infos<'a>(
++    iter: &mut (dyn ContinuousBufferIter<'a> + 'a),
++) -> PosixResult<DeviceInfo> {
++    let mut specs = Vec::new();
++    for data in iter {
++        let buffer = data?;
++        let mut cur: usize = 0;
++        let len = buffer.content().len();
++        while cur + 128 <= len {
++            let slot_data: [u8; 128] = buffer.content()[cur..cur + 128].try_into().unwrap();
++            let slot = DeviceSlot::from(slot_data);
++            cur += 128;
++            push_vec(
++                &mut specs,
++                DeviceSpec {
++                    tags: slot.tags,
++                    blocks: slot.blocks,
++                    mapped_blocks: slot.mapped_blocks,
++                },
++            )?;
 +        }
-+        let accessor = self.sb.blk_access(self.offset);
-+        let len = accessor.len.min(self.len);
-+        let result: Option<Self::Item> = self.backend.as_buf(self.offset, len).map_or_else(
-+            |e| Some(Err(e)),
-+            |buf| {
-+                self.offset += len;
-+                self.len -= len;
-+                Some(Ok(buf))
-+            },
-+        );
-+        result
 +    }
-+}
 +
-+impl<'a, B> ContinuousBufferIter<'a> for ContinuousRefIter<'a, B>
-+where
-+    B: Backend,
-+{
-+    fn advance_off(&mut self, offset: Off) {
-+        self.offset += offset;
-+        self.len -= offset
-+    }
-+    fn eof(&self) -> bool {
-+        self.len == 0
-+    }
-+}
-diff --git a/fs/erofs/rust/erofs_sys/data/raw_iters/traits.rs b/fs/erofs/rust/erofs_sys/data/raw_iters/traits.rs
-new file mode 100644
-index 000000000000..90b6a51658a9
---- /dev/null
-+++ b/fs/erofs/rust/erofs_sys/data/raw_iters/traits.rs
-@@ -0,0 +1,13 @@
-+// Copyright 2024 Yiyang Wu
-+// SPDX-License-Identifier: MIT or GPL-2.0-or-later
++    let mask = if specs.is_empty() {
++        0
++    } else {
++        (1 << (specs.len().ilog2() + 1)) - 1
++    };
 +
-+use super::super::*;
-+
-+/// Represents a basic iterator over a range of bytes from data backends.
-+/// Note that this is skippable and can be used to move the iterator's cursor forward.
-+pub(crate) trait ContinuousBufferIter<'a>:
-+    Iterator<Item = PosixResult<RefBuffer<'a>>>
-+{
-+    fn advance_off(&mut self, offset: Off);
-+    fn eof(&self) -> bool;
++    Ok(DeviceInfo { mask, specs })
 +}
 -- 
 2.46.0
