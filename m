@@ -1,86 +1,62 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9776697A2B4
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 15:05:36 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6AAF97A321
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 15:56:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1726494968;
+	bh=9N+ZQkVun0N8rthsyIs0Y8nbkjuLiSMyhR8LZUW+bjg=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=gtsusZc/XnpYtPcZHcjJvYK3PdTFvn2aCDwTBs8w4kPuIE0MB7Dm+kILxiy/D8qfG
+	 whBfHIvx1cZM4MZ0zeGFYJQA7wsAKSf/NO6aBENhcgw+8DmRFBF7XMxJkvJ4Od9XTx
+	 ktzvYCftPXRJlTs7CvCIREObtdkpmnYtEb5k0nkEjNffLR24hu3EStVGVjdmnkh2+c
+	 MZsy+MktoHE7hvLPpkd8ABBfyjdeW087uOluHTyZZmTlcDC1cldJeOwu3523QWhhee
+	 R1ukzUiELGyYnsHnZbKLdRPdGkA6xJFsNL4qVeiHuyicrKQPyMJxouHN9lKVOhWFKy
+	 jIPTdFtGpgdhQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X6lWx4Z3Gz2yYn
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 23:05:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X6mfJ5MSCz2yZ0
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Sep 2024 23:56:08 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726491930;
-	cv=none; b=LmS4D2ByH6y1VD26MPqgMOeqhGa2/KUKge8Sd424EiPGqZJHcFh6ep7sgM2OZqwDG31xvMsmsfDEgVGM/+5dembgUY5XkSaTHy0/vQVZfxs++TubGdlAlyfwxi2I6+uevOALJeK8dn/s/o8hj7C5xz9YTbpulEKnbbdYGg2DUr8nmhyTGTa9gjTawCyyQ344yBpu6TkpGewFjnChJjCw7f5girzt8SXvxNlTEkfYXYP8bjBfd1OzbnEMegNGKCQuh/P418d3LwxPmneUFaTyyzmrJq1DEk3B+ZWWiD87wzJKKTW7vKAjXQE2cq25aeDdW9YWJ92Lsb1AU5S3PdkIGg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=148.135.17.20
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726494963;
+	cv=none; b=CII7TrckLc55Y0J/mvEjJ3GXDTGCjloaE4b3ad8UoYU75da0cmM8eJKhHi2v8WLl+fpcmkO3gkilpSb6+bA0D3wOetOPMCAkyFy7uFdTpe2+TzI4dONilMRZ7hjC7g6pc4rq3zEEZ5frhhbl8+mnPi3uZgJw47J1+cMZrgRWoKntAjvpS6nqgohhPAu40XZo/XNBagEMIpyhX9VT+Ra5Yga2dZ9NH795pG4wcClAFij625q0oWu1zDgNF1ys3VuSWzHkY/8NudDZAuFhTdMla+VXuV8MN3TxXL9dFNyH+zzAqPEshwUqVFq8Ub+XXJofR8jFUYyL+tYpTPVFiHCPPg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726491930; c=relaxed/relaxed;
-	bh=3Fz2Otqr1x0kPcbKDKf2bmB2iDmlHXr2EPIDX2kJglM=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=fNntdhKGwY66hr4a8+cpkSSJeeNm43kgIBNsufWcaLWwzGAcaeGyOY21nvRv4il/nzbkeavxNVr/G0nYr5CidWRZCrT0NdvVAMlSF9DA2bq561y20PWZiKVkBPSpuCl0Dvl7m+F/B/7RxSyQSpTsPKNCXt/g/jKjqNNu4HPyyKjcObCSL2yj1QBKzuPQV1XbWfMsgLfmVXJc/2aAgjb824PNMH29ae2vUCZL47p3iWsambiif69NHVMiZxIHX1jZb8JRvjPfP4S0OmXXEJrD+nSBuenTHKVW2zlQhfS5GNVA/8BxZTlRWNg0boPPq+s/AE0YcoK9jeyiomYq6kYZWw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HG2NmMAI; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HG2NmMAI; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+	t=1726494963; c=relaxed/relaxed;
+	bh=9N+ZQkVun0N8rthsyIs0Y8nbkjuLiSMyhR8LZUW+bjg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gBTdMCYS1bFyuWX27e5zNmgHkWEV12rQKiJPi8sJf1irVdRFPpsRCh0Gaf+rBs7xLHceleJTBmMX8fcLE0m2aXYaw6se/mIeH1vtQ3Dc8xXO0ijTNVyYoaKIErP0V+CHHV7zntp4xBPfBeLCR6JuATkRA6rYjrFQI/FgeUbHB4xoFtNkTowzM/I8oMSjBDd960NO7G14mqn+LtCzU5QHh/B79UYz0Ca5UD/TErCs58/+7nBVT42Bg+M18hQc2X+Xe1iViOEmTOVld4dfKg5TP/kJW/dGjxr+rc9k7ssix9W3MXIpezLOzYlf1IGtBhLDE9aO20NkF+0kNFBPYZUG4w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=l6a/8fFj; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HG2NmMAI;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=HG2NmMAI;
+	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=l6a/8fFj;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=tlmp.cc (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org)
+Received: from mail.tlmp.cc (unknown [148.135.17.20])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X6lWt0fzjz2yNs
-	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 23:05:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726491923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3Fz2Otqr1x0kPcbKDKf2bmB2iDmlHXr2EPIDX2kJglM=;
-	b=HG2NmMAIubUvBcYtNeMZlvJy4Q4mXugiz3zvtjappTPwCQTXymK0Drr1zyWZcmMtlcJIBg
-	TWwjYlXnjM0nwzspYgakcG0YJncm5ccmmSUdhYOQnbr+ks4BEs7qT91fJ/iEjNR60mztuF
-	jxh3n+w1frmfKVChx+3CHJ2MBDjidqM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1726491923;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3Fz2Otqr1x0kPcbKDKf2bmB2iDmlHXr2EPIDX2kJglM=;
-	b=HG2NmMAIubUvBcYtNeMZlvJy4Q4mXugiz3zvtjappTPwCQTXymK0Drr1zyWZcmMtlcJIBg
-	TWwjYlXnjM0nwzspYgakcG0YJncm5ccmmSUdhYOQnbr+ks4BEs7qT91fJ/iEjNR60mztuF
-	jxh3n+w1frmfKVChx+3CHJ2MBDjidqM=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-670-U_07DsiXMa2szt0yLJCLvg-1; Mon,
- 16 Sep 2024 09:05:19 -0400
-X-MC-Unique: U_07DsiXMa2szt0yLJCLvg-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 748921955DC8;
-	Mon, 16 Sep 2024 13:05:16 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.14])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9AC4D1956088;
-	Mon, 16 Sep 2024 13:05:10 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240829083409.3788142-1-libaokun@huaweicloud.com>
-References: <20240829083409.3788142-1-libaokun@huaweicloud.com>
-To: libaokun@huaweicloud.com
-Subject: Re: [PATCH v2] cachefiles: fix dentry leak in cachefiles_open_file()
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X6mfB71F3z2yNB
+	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Sep 2024 23:56:02 +1000 (AEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 6E19169799;
+	Mon, 16 Sep 2024 09:55:52 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tlmp.cc; s=dkim;
+	t=1726494958; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=9N+ZQkVun0N8rthsyIs0Y8nbkjuLiSMyhR8LZUW+bjg=;
+	b=l6a/8fFj2/PvQcWCumcQLWs2m5I0tlDX/65VILGQQKYi8aivsrOhhRmPbEhIWSwy4G5tc9
+	FEy3khtCymynox7uYG5voXxoUprQ9XT7tjzBt19wsycB0oPtWGnommd0NpOIqgsrr9fQoH
+	tgkj/JxaFTA7xoargGoa9vT5Yr7VVzi0VTpax2W1Se5vP17Rba41skQfXkMf2NL/YLRyQD
+	hN4CfgqgiZt2NhT1PgsnAoocTELhDXiaNxresJdBEgPUrhA0qLA7Yx3afrCms3k/Kq+MKy
+	965KUhba0fwMQUtEDzLWnhPxLAJIZ8cKGAO5lUOKx4Sk8ogSg5CXjXB8iLMdeQ==
+To: linux-erofs@lists.ozlabs.org
+Subject: [RFC PATCH 00/24] erofs: introduce Rust implementation
+Date: Mon, 16 Sep 2024 21:55:17 +0800
+Message-ID: <20240916135541.98096-1-toolmanp@tlmp.cc>
+X-Mailer: git-send-email 2.46.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1899864.1726491909.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Sep 2024 14:05:09 +0100
-Message-ID: <1899865.1726491909@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -92,79 +68,158 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: brauner@kernel.org, yangerkun@huawei.com, jlayton@kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org, dhowells@redhat.com, hsiangkao@linux.alibaba.com, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org, yukuai3@huawei.com
+From: Yiyang Wu via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Yiyang Wu <toolmanp@tlmp.cc>
+Cc: linux-fsdevel@vger.kernel.org, rust-for-linux@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-libaokun@huaweicloud.com wrote:
+Greetings,
 
-> From: Baokun Li <libaokun1@huawei.com>
-> =
+So here is a patchset to add Rust skeleton codes to the current EROFS
+implementation. The implementation is deeply inspired by the current C 
+implementation, and it's based on a generic erofs_sys crate[1] written
+by me. The purpose is to potentially replace some of C codes to make
+to make full use of Rust's safety features and better
+optimization guarantees.
 
-> A dentry leak may be caused when a lookup cookie and a cull are concurre=
-nt:
-> =
+Many of the features (like compression inodes) still
+fall back to C implementation because of my limited time and lack of
+Rust counterparts. However, the Extended Attributes work purely in Rust.
 
->             P1             |             P2
-> -----------------------------------------------------------
-> cachefiles_lookup_cookie
->   cachefiles_look_up_object
->     lookup_one_positive_unlocked
->      // get dentry
->                             cachefiles_cull
->                               inode->i_flags |=3D S_KERNEL_FILE;
->     cachefiles_open_file
->       cachefiles_mark_inode_in_use
->         __cachefiles_mark_inode_in_use
->           can_use =3D false
->           if (!(inode->i_flags & S_KERNEL_FILE))
->             can_use =3D true
-> 	  return false
->         return false
->         // Returns an error but doesn't put dentry
-> =
+Some changes are done to the original C code.
+1) Some of superblock operations are modified slightly to make sure
+memory allocation and deallocation are done correctly when interacting
+with Rust.
+2) A new rust_helpers.c file is introduced to help Rust to deal with
+self-included EROFS API without exporting types that are not
+interpreted in Rust.
+3) A new rust_bindings.h is introduced to provide Rust functions
+externs with the same function signature as Rust side so that
+C-side code can use the bindings easily.
+4) CONFIG_EROFS_FS_RUST is added in dir.c, inode.c, super.c, data.c,
+and xattr.c to allow C code to be opt out and uses Rust implementation.
+5) Some macros and function signatures are tweaked in internal.h
+with the compilation options.
 
-> After that the following WARNING will be triggered when the backend fold=
-er
-> is umounted:
-> =
+Note that, since currently there is no mature Rust VFS implementation
+landed upstream, this patchset only uses C bindings internally and
+each unsafe operation is examined. This implementation only offers
+C-ABI-compatible functions impls and gets its exposed to original C
+implementation as either hooks or function pointers.
 
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> BUG: Dentry 000000008ad87947{i=3D7a,n=3DDx_1_1.img}  still in use (1) [u=
-nmount of ext4 sda]
-> WARNING: CPU: 4 PID: 359261 at fs/dcache.c:1767 umount_check+0x5d/0x70
-> CPU: 4 PID: 359261 Comm: umount Not tainted 6.6.0-dirty #25
-> RIP: 0010:umount_check+0x5d/0x70
-> Call Trace:
->  <TASK>
->  d_walk+0xda/0x2b0
->  do_one_tree+0x20/0x40
->  shrink_dcache_for_umount+0x2c/0x90
->  generic_shutdown_super+0x20/0x160
->  kill_block_super+0x1a/0x40
->  ext4_kill_sb+0x22/0x40
->  deactivate_locked_super+0x35/0x80
->  cleanup_mnt+0x104/0x160
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =
+Also note that, this patchset only uses already-present self-included
+EROFS API and it uses as few C bindings generated from bindgen as
+possible, only inode, dentry, file and dir_context related are used,
+to be precise.
 
-> Whether cachefiles_open_file() returns true or false, the reference coun=
-t
-> obtained by lookup_positive_unlocked() in cachefiles_look_up_object()
-> should be released.
-> =
+Since the EROFS community is pretty interested in giving Rust a try,
+I think this patchset will be a good start for Rust EROFS.
 
-> Therefore release that reference count in cachefiles_look_up_object() to
-> fix the above issue and simplify the code.
-> =
+This patchset is based on the latest EROFS development tree.
+And the current codebase can also be found on my github repo[2].
 
-> Fixes: 1f08c925e7a3 ("cachefiles: Implement backing file wrangling")
-> Cc: stable@kernel.org
-> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+[1]: https://github.com/ToolmanP/erofs-rs
+[2]: https://github.com/ToolmanP/erofs-rs-linux
 
-Acked-by: David Howells <dhowells@redhat.com>
+Yiyang Wu (24):
+  erofs: lift up erofs_fill_inode to global
+  erofs: add superblock data structure in Rust
+  erofs: add Errno in Rust
+  erofs: add xattrs data structure in Rust
+  erofs: add inode data structure in Rust
+  erofs: add alloc_helper in Rust
+  erofs: add data abstraction in Rust
+  erofs: add device data structure in Rust
+  erofs: add continuous iterators in Rust
+  erofs: add device_infos implementation in Rust
+  erofs: add map data structure in Rust
+  erofs: add directory entry data structure in Rust
+  erofs: add runtime filesystem and inode in Rust
+  erofs: add block mapping capability in Rust
+  erofs: add iter methods in filesystem in Rust
+  erofs: implement dir and inode operations in Rust
+  erofs: introduce Rust SBI to C
+  erofs: introduce iget alternative to C
+  erofs: introduce namei alternative to C
+  erofs: introduce readdir alternative to C
+  erofs: introduce erofs_map_blocks alternative to C
+  erofs: add skippable iters in Rust
+  erofs: implement xattrs operations in Rust
+  erofs: introduce xattrs replacement to C
+
+ fs/erofs/Kconfig                              |  10 +
+ fs/erofs/Makefile                             |   4 +
+ fs/erofs/data.c                               |   5 +
+ fs/erofs/data_rs.rs                           |  63 +++
+ fs/erofs/dir.c                                |   2 +
+ fs/erofs/dir_rs.rs                            |  57 ++
+ fs/erofs/inode.c                              |  10 +-
+ fs/erofs/inode_rs.rs                          |  64 +++
+ fs/erofs/internal.h                           |  47 ++
+ fs/erofs/namei.c                              |   2 +
+ fs/erofs/namei_rs.rs                          |  56 ++
+ fs/erofs/rust/erofs_sys.rs                    |  47 ++
+ fs/erofs/rust/erofs_sys/alloc_helper.rs       |  35 ++
+ fs/erofs/rust/erofs_sys/data.rs               |  70 +++
+ fs/erofs/rust/erofs_sys/data/backends.rs      |   4 +
+ .../erofs_sys/data/backends/uncompressed.rs   |  39 ++
+ fs/erofs/rust/erofs_sys/data/raw_iters.rs     | 127 +++++
+ .../rust/erofs_sys/data/raw_iters/ref_iter.rs | 131 +++++
+ .../rust/erofs_sys/data/raw_iters/traits.rs   |  17 +
+ fs/erofs/rust/erofs_sys/devices.rs            |  75 +++
+ fs/erofs/rust/erofs_sys/dir.rs                |  98 ++++
+ fs/erofs/rust/erofs_sys/errnos.rs             | 191 +++++++
+ fs/erofs/rust/erofs_sys/inode.rs              | 398 ++++++++++++++
+ fs/erofs/rust/erofs_sys/map.rs                |  99 ++++
+ fs/erofs/rust/erofs_sys/operations.rs         |  62 +++
+ fs/erofs/rust/erofs_sys/superblock.rs         | 514 ++++++++++++++++++
+ fs/erofs/rust/erofs_sys/superblock/mem.rs     |  94 ++++
+ fs/erofs/rust/erofs_sys/xattrs.rs             | 272 +++++++++
+ fs/erofs/rust/kinode.rs                       |  76 +++
+ fs/erofs/rust/ksources.rs                     |  66 +++
+ fs/erofs/rust/ksuperblock.rs                  |  30 +
+ fs/erofs/rust/mod.rs                          |   7 +
+ fs/erofs/rust_bindings.h                      |  39 ++
+ fs/erofs/rust_helpers.c                       |  86 +++
+ fs/erofs/rust_helpers.h                       |  23 +
+ fs/erofs/super.c                              |  51 +-
+ fs/erofs/super_rs.rs                          |  59 ++
+ fs/erofs/xattr.c                              |  31 +-
+ fs/erofs/xattr.h                              |   7 +
+ fs/erofs/xattr_rs.rs                          | 106 ++++
+ 40 files changed, 3153 insertions(+), 21 deletions(-)
+ create mode 100644 fs/erofs/data_rs.rs
+ create mode 100644 fs/erofs/dir_rs.rs
+ create mode 100644 fs/erofs/inode_rs.rs
+ create mode 100644 fs/erofs/namei_rs.rs
+ create mode 100644 fs/erofs/rust/erofs_sys.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/alloc_helper.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/data.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/data/backends.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/data/backends/uncompressed.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/data/raw_iters.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/data/raw_iters/ref_iter.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/data/raw_iters/traits.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/devices.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/dir.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/errnos.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/inode.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/map.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/operations.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/superblock.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/superblock/mem.rs
+ create mode 100644 fs/erofs/rust/erofs_sys/xattrs.rs
+ create mode 100644 fs/erofs/rust/kinode.rs
+ create mode 100644 fs/erofs/rust/ksources.rs
+ create mode 100644 fs/erofs/rust/ksuperblock.rs
+ create mode 100644 fs/erofs/rust/mod.rs
+ create mode 100644 fs/erofs/rust_bindings.h
+ create mode 100644 fs/erofs/rust_helpers.c
+ create mode 100644 fs/erofs/rust_helpers.h
+ create mode 100644 fs/erofs/super_rs.rs
+ create mode 100644 fs/erofs/xattr_rs.rs
+
+-- 
+2.46.0
 
