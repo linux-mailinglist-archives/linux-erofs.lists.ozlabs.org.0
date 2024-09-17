@@ -1,65 +1,55 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E42B797ABC7
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 09:02:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EC1997ABE5
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 09:15:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X7CQD3wcVz2yMv
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 17:02:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X7CjJ5wMcz2yMv
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 17:15:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.166.200
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726556528;
-	cv=none; b=Jb0SF6Tr75jfAXKGVuPMFK19w/oXwY1NIKA8Tv+zFL1j3aDNlK4xejvBEuiqsCx0fWPogHN8ZQrvWOWeIQeNNsGxGBvEYbzbjZ3u7Y6FS4l+7ujzg/+MiiOm4GqXD64HfiaWTj757jMUujuaoil3gTN7t9GlAJ17REPNgv4gGi1Hsf47nWAA3+e+JaU5Q960B3PvupIl9U6QkmxsMok2kd4eSavtDj7MGB86tfuvMaoeC0srgi5Y1DVrp+WqjKplA8V4cCHJeDqTNkjGr6uvyaXeN6koRlr2/PMX7abAAC9OlAH9LJGO1rZYrKgwXie5wdF1soV5hfejAZFr1zuV4A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726557314;
+	cv=none; b=WEVVU8Vpj0uv6NNF4HNvoqBjsdmfGPVU9mBKMCZcySGZgyG3/I61AIzEDNkpnjoinn7RAUi05lZ28wPWQRi2QTr3vdpzLjRke1Rcx9frZ5pKa+vnF0YKU9PKWx4znPzpD6bv9J3ciHNvRwL1iZG4mX4bQNZMQl0eaOJyVPZv8iUrfnYPXuR6fQPqHhGjj7ixwdKJMqnTlKYw/MqHOCiRrt6vRIwDUg24cRKvPOS4tLq1zFSzsd0B4jChb3CRhBeNbF2RplRAk+Pn99XI2Q2UWeZ/GbfTQNO1CmJMsxz2PH8FQThd7+00MJyJVTW8k3vS8e0ScvMp1bHT9uE0CvU/Dw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726556528; c=relaxed/relaxed;
-	bh=0HSv32HeGpYbI3uL9CkUI9gRqEnD6C5ndl4yRdjzD7Q=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=LBSb5wEfputAvnkYvjJGNCNd6JdpRU2zUCSP07LzbY3Jd//rVbvKvVCaczWHGJyvTeSCrTurGn+WCN7JzjGqWju6Du/G48Ryi4XIK7Jkc+8XQlC894VmWK8QA0HGiEhkDU5ifQbOKrSctn8WUSAgkYSncKowzZ/W7VjTYMoWpq4EYRllWoSXMoq04bdZLKhS3oUSzfDRBf1tffhgMreKp2BxQbfctKkAFMV6xqaLMWRqxqHpQpv/XvsRS3R7HPjfhjHcS5oM7a+qF9DxR90Y77q2H2LrmeMOiney+fx468VmOi4xa2Esp7Ccpxjij624aMMGQTxWf6M1Ameq9lk7xg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass (client-ip=209.85.166.200; helo=mail-il1-f200.google.com; envelope-from=3bcnpzgkbaketzalbmmfsbqqje.hpphmfvtfsdpoufou.dpn@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com
-Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.200; helo=mail-il1-f200.google.com; envelope-from=3bcnpzgkbaketzalbmmfsbqqje.hpphmfvtfsdpoufou.dpn@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	t=1726557314; c=relaxed/relaxed;
+	bh=aHmQE7AUQfpWpDBPMmGmaaJMlBjlx8yVsf52qbqS98k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MjnW7KYnV7+ETST7bMF83gJufjE/qYdC25jBl2sqvvn9HaPZVHqq7biueNakTD160dYJQJZgewSaEDCnAAFsREIOIcAtYHGXVDYlaWXGeiG37bq4irbfrRmyPtkbhDLBv292Yr+s4GK5BGBitrVj2hZ52GBvgLRjQJaeoE9UhToy/SMzx6xMJnRGAEQeOTyr2L9F7b43GsvuTCWTrtCsUcYgKNgOU3B4o+ZCO9JIdsy5CFcYcpQeRa4gGFZwxfeJ02svoeaqapI5tR9+5qinSG1YUx4TWblfX+fo5qfZohmJrU+a2k03N4G6nmjDNHSh9E0kqt7SmDq3IX9A1xUUtA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JBsVrCkU; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JBsVrCkU;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X7CQ74ftGz2xY6
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Sep 2024 17:02:06 +1000 (AEST)
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3a093440d95so55265095ab.2
-        for <linux-erofs@lists.ozlabs.org>; Tue, 17 Sep 2024 00:02:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726556524; x=1727161324;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0HSv32HeGpYbI3uL9CkUI9gRqEnD6C5ndl4yRdjzD7Q=;
-        b=HtnWYlA1gGJS3aPLq6fPAfL7xRposTJcbHkKquMW+hu+3lE8GKbMUjXoF7d5Mmwnpn
-         4YRZNM6Be1VcVx01v2BZOu1BAa1stdoi7Fqe3NrQ5GwXT2Bs4KiWHfN0ttFtSqdIZQLg
-         xItEjAP1M2vRdd2TI9DFp/E7QAw23ICE8XEp0b175ibFtFvYf+l+Zr5AmEnxKeBCdqu6
-         BLkpvhA77cM6aekubnOuViZcTTz7EBO3ikkh31vRySw4bmcNCufPfnloKVUNbx6P/wMg
-         SfI+h/LtxjWYTlfydMDCA4EaGKJh8uXNEnm7r+7zq2HCjEM7LSWOCb5tXtI5VUkn8YAI
-         /2Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCWt5ri42AU4k66cc8Sy9UO98ujt2ZZZjifAu+RnihCVrEZ3+owNoCpmazxIoNr/t19n9ixpdGdaRGwQZw==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YwoqYzkcsflyqsURxn8XKKAjqyUgnq/9+EZZfamt4Ub7AsM2R+g
-	XcA0FAeqwh89dFGM1SnpiFo77pbazdXDnIJZW4Uo/+kFL36+9YQnYBLxILvOKWZH4E67ICzI73D
-	45TS1H0UaQhSvnkv517KeYTMpqPX8zFzBp0vC2OOHeN0f6tILXUsPSmQ=
-X-Google-Smtp-Source: AGHT+IGw8MIimOumCcBH/mbb+XShL8ROcJkfpG6tiQ4cOqJf4vE+Ssk3Q/tTlw6EZZn4NTFoq+T7ItW8chy/Sbh4o0NPuCpCuNcj
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X7Cj947Cjz2xb9
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Sep 2024 17:15:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1726557301; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=aHmQE7AUQfpWpDBPMmGmaaJMlBjlx8yVsf52qbqS98k=;
+	b=JBsVrCkUji0WCaOzPMXTgOujrDiO8+VYZrAgaxArhqSj12WFg7Kb7TMuu24h0okGrymWpora77mhL85CJ266IdlJP+Kb6zCVx0HP7Fbp+dyHK54wb+L6SJhbQB+FO7alhIa7NoiGYdM5DoEOBqHLBlaKbhXGc0xXWkmdQa3DCxY=
+Received: from 30.27.106.17(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WFACzIr_1726557298)
+          by smtp.aliyun-inc.com;
+          Tue, 17 Sep 2024 15:15:00 +0800
+Message-ID: <1edf9fe3-5e39-463b-8825-67b4d1ad01be@linux.alibaba.com>
+Date: Tue, 17 Sep 2024 15:14:58 +0800
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b4c:b0:3a0:4c4e:2e53 with SMTP id
- e9e14a558f8ab-3a08b6f86c2mr132203285ab.5.1726556524044; Tue, 17 Sep 2024
- 00:02:04 -0700 (PDT)
-Date: Tue, 17 Sep 2024 00:02:04 -0700
-In-Reply-To: <f58a6956-5029-4764-962c-ffc02602a755@linux.alibaba.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <66e9296c.050a0220.252d9a.0005.GAE@google.com>
-Subject: Re: [syzbot] [erofs?] [mm?] BUG: unable to handle kernel NULL pointer
- dereference in filemap_read_folio (3)
-From: syzbot <syzbot+001306cd9c92ce0df23f@syzkaller.appspotmail.com>
-To: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	syzkaller-bugs@googlegroups.com, xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 19/24] erofs: introduce namei alternative to C
+To: Yiyang Wu <toolmanp@tlmp.cc>, Al Viro <viro@zeniv.linux.org.uk>
+References: <20240916135634.98554-1-toolmanp@tlmp.cc>
+ <20240916135634.98554-20-toolmanp@tlmp.cc> <20240916170801.GO2825852@ZenIV>
+ <ocmc6tmkyl6fnlijx4r3ztrmjfv5eep6q6dvbtfja4v43ujtqx@y43boqba3p5f>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <ocmc6tmkyl6fnlijx4r3ztrmjfv5eep6q6dvbtfja4v43ujtqx@y43boqba3p5f>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -71,24 +61,121 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, rust-for-linux@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Reported-by: syzbot+001306cd9c92ce0df23f@syzkaller.appspotmail.com
-Tested-by: syzbot+001306cd9c92ce0df23f@syzkaller.appspotmail.com
+On 2024/9/17 14:48, Yiyang Wu wrote:
+> On Mon, Sep 16, 2024 at 06:08:01PM GMT, Al Viro wrote:
+>> On Mon, Sep 16, 2024 at 09:56:29PM +0800, Yiyang Wu wrote:
+>>> +/// Lookup function for dentry-inode lookup replacement.
+>>> +#[no_mangle]
+>>> +pub unsafe extern "C" fn erofs_lookup_rust(
+>>> +    k_inode: NonNull<inode>,
+>>> +    dentry: NonNull<dentry>,
+>>> +    _flags: c_uint,
+>>> +) -> *mut c_void {
+>>> +    // SAFETY: We are sure that the inode is a Kernel Inode since alloc_inode is called
+>>> +    let erofs_inode = unsafe { &*container_of!(k_inode.as_ptr(), KernelInode, k_inode) };
+>>
+>> 	Ummm...  A wrapper would be highly useful.  And the reason why
+>> it's safe is different - your function is called only via ->i_op->lookup,
+>> the is only one instance of inode_operations that has that ->lookup
+>> method, and the only place where an inode gets ->i_op set to that
+>> is erofs_fill_inode().  Which is always passed erofs_inode::vfs_inode.
+>>
+> So my original intention behind this is that all vfs_inodes come from
+> that erofs_iget function and it's always gets initialized in this case
+> And this just followes the same convention here. I can document this
+> more precisely.
 
-Tested on:
+I think Al just would like a wrapper here, like the current C EROFS_I().
 
-commit:         2830df2e erofs: ensure regular inodes for file-backed ..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-console output: https://syzkaller.appspot.com/x/log.txt?x=11b168a9980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a43f85ec3262ab75
-dashboard link: https://syzkaller.appspot.com/bug?extid=001306cd9c92ce0df23f
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+>>> +    // SAFETY: The super_block is initialized when the erofs_alloc_sbi_rust is called.
+>>> +    let sbi = erofs_sbi(unsafe { NonNull::new(k_inode.as_ref().i_sb).unwrap() });
+>>
+>> 	Again, that calls for a wrapper - this time not erofs-specific;
+>> inode->i_sb is *always* non-NULL, is assign-once and always points
+>> to live struct super_block instance at least until the call of
+>> destroy_inode().
+>>
+> 
+> Will be modified correctly, I'm not a native speaker and I just can't
+> find a better way, I will take my note here.
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+Same here, like the current EROFS_I_SB().
+
+>>> +    // SAFETY: this is backed by qstr which is c representation of a valid slice.
+>>
+>> 	What is that sentence supposed to mean?  Nevermind "why is it correct"...
+>>
+>>> +    let name = unsafe {
+>>> +        core::str::from_utf8_unchecked(core::slice::from_raw_parts(
+>>> +            dentry.as_ref().d_name.name,
+>>> +            dentry.as_ref().d_name.__bindgen_anon_1.__bindgen_anon_1.len as usize,
+>>
+
+...
+
+> 
+>> 	Current erofs_lookup() (and your version as well) *is* indeed
+>> safe in that respect, but the proof (from filesystem POV) is that "it's
+>> called only as ->lookup() instance, so dentry is initially unhashed
+>> negative and will remain such until it's passed to d_splice_alias();
+>> until that point it is guaranteed to have ->d_name and ->d_parent stable".
+
+Agreed.
+
+>>
+>> 	Note that once you _have_ called d_splice_alias(), you can't
+>> count upon the ->d_name stability - or, indeed, upon ->d_name.name you've
+>> sampled still pointing to allocated memory.
+>>
+>> 	For directory-modifying methods it's "stable, since parent is held
+>> exclusive".  Some internal function called from different environments?
+>> Well...  Swear, look through the call graph and see what can be proven
+>> for each.
+> 
+> Sorry for my ignorance.
+> I mean i just borrowed the code from the fs/erofs/namei.c and i directly
+> translated that into Rust code. That might be a problem that also
+> exists in original working C code.
+
+As for EROFS (an immutable fs), I think after d_splice_alias(), d_name is
+still stable (since we don't have rename semantics likewise for now).
+
+But as the generic filesystem POV, d_name access is actually tricky under
+RCU walk path indeed.
+
+> 
+>> 	Expressing that kind of fun in any kind of annotations (Rust type
+>> system included) is not pleasant.  _Probably_ might be handled by a type
+>> that would be a dentry pointer with annotation along the lines "->d_name
+>> and ->d_parent of that one are stable".  Then e.g. ->lookup() would
+>> take that thing as an argument and d_splice_alias() would consume it.
+>> ->mkdir() would get the same thing, etc.  I hadn't tried to get that
+>> all way through (the amount of annotation churn in existing filesystems
+>> would be high and hard to split into reviewable patch series), so there
+>> might be dragons - and there definitely are places where the stability is
+>> proven in different ways (e.g. if dentry->d_lock is held, we have the damn
+>> thing stable; then there's a "take a safe snapshot of name" API; etc.).
+> 
+> That's kinda interesting, I originally thought that VFS will make sure
+> its d_name / d_parent is stable in the first place.
+> Again, I just don't have a full picture or understanding of VFS and my
+> code is just basic translation of original C code, Maybe we can address
+> this later.
+
+d_alloc will allocate an unhashed dentry which is almost unrecognized
+by VFS dcache (d_name is stable of course).
+
+After d_splice_alias() and d_add(), rename() could change d_name.  So
+either we take d_lock or with rcu_read_lock() to take a snapshot of
+d_name in the RCU walk path.  That is my overall understanding.
+
+But for EROFS, since we don't have rename, so it doesn't matter.
+
+Thanks,
+Gao Xiang
