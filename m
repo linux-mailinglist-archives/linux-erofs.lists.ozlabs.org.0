@@ -1,62 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3403B97AC51
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 09:44:41 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C35097AC90
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 10:07:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X7DMB5jB2z2yMt
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 17:44:38 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X7DsF5MrJz2yN1
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 18:07:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a03:a000:7:0:5054:ff:fe1c:15ff"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726559073;
-	cv=none; b=BMl38voCk/sgns4qyhtQ3xrfs7AVCx1Tspqvo7fa9WCP29sAhwhIqBp5OlHlmUTXYI4ubyOXQSNYysw/Zk+6cnmWXwX1r8wCTnjtDFGyE6U4hej/J6fuVCwDRkSZjW4768skCoHywijkv8dkE6+EMS4cgUkMQBYZjLGRtlJ4PtE3ijQbE11UTYPA4y5YSWHjSERcCUrEC3l2r+YtzxyldeT7PVy1/3l6DMsDH8TXLXdTteTxuUtO5lG4Ql27IeD1v9nWWRjS9CvKfsQLoZS0XI+TjBVsaYt598KO7bQmGbMfDTZzLHoR9ENrWT5yqbbD0S5fJJrm7ifbzVJPpWVUDA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726560430;
+	cv=none; b=DWbcCOs3sXyH1d981irxBZuLvKnwixYZuP/4rE8Ca/rvcBnVpNVUFRzFfkHLvihSABqL91MkMPYHfK5mgFLPu3f/CFvh4e13kWqlEoO8hCjRSP4nGO1ox/0WW5NjO5HC6fnG2TrcZIjQuVRu4pqBqv4FPfBS19cOsVEcLkoibn8YnvWtmZwZGkV7wfYWJFfklMnzlmPGVAe5IXm0itPYq5B8uFunqvUu6F8Yo/RFTvIDT5B4p8uc3BQzJGQNS12z0YMbvjklOISh4u9qUewpQCBoqeMLtXH7QBnQHh/xxIwY2FDnmiMmjoyjfTdxff7guMJK4y+V4b/gAqi6gxWiSA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726559073; c=relaxed/relaxed;
-	bh=9cCDNqUqku74cuT7uPSo0Wm5Piy7EOaKF6xGAapJSn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N4WafkYkNq8sQAaQYrPnmw8QDy1kzVjYOoUYbHp96to3DhAyTlm6RNMy19h/r3ySSMhcrKiP0TC9IZ99Uv77a1LOAfhuuDUSWv/614Kzv8QoaCAeg1W2tCRKWrOwL3v+3JXAlBm1SwOC5KcEETGtaivsrSrvstjSFqzAX7HA7tfqnZbFgO0gaxfe2i/yrsuZnitfHqoVnMuiYgspfCZbB438Lb+7vuFGI5+SzekyxQG5XIpsZ3cBb2Mt1cj1gB6bcd26s+BY+miYkgZ5HtSrZU6c/ztIYrNQgN3bTtsVnm5P6F7OAbLOuEgTePj/Ml7e3QllZutywbwxN63uh1WUDw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=MlGiO8IF; dkim-atps=neutral; spf=none (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org) smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+	t=1726560430; c=relaxed/relaxed;
+	bh=zD8A7S8NSOoYTS0UIC1YFPPNS2TblfcXM5xymSmNV04=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ssu+nwh0cp0EjjZeDWSdtK1Oq/GMvedI76QOGsbJS1/iWOnkWGUCftbOzVMnkKtb29XtdDPhUPfOMK0yjoxG2LghnUrJuENT3MjXR8DgQ7fewYMRh/Lh/6BGFXyjU8SEfnALPXyzkNVIM+yjqTXE+MfM+aKRngOm33Qyg3R2J/v6akTCcorrtl3H3PNlNHCW7/1qSFIgaQXQWcsb7yYF/tfuNonxvBav9inZ04KHsavQZQJ+3NV2AybVDdWSIZhfDe0avnl3fDJTPkPVmwxlLINgGef9gi0JDLvQtwbrJRdfYiYzMp5ewLIZJYnG0dqzZIk1ehx61fjO+WrALf4BRg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d+H2VHso; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=MlGiO8IF;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d+H2VHso;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=ftp.linux.org.uk (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org)
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X7DM51yzZz2xb9
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Sep 2024 17:44:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=9cCDNqUqku74cuT7uPSo0Wm5Piy7EOaKF6xGAapJSn8=; b=MlGiO8IFgA/5EE8FaV84k6wbe5
-	hL87z/Km4WaN9jOXFpYpVWjE00u+bKu2Whq+a5UKdOEEg7YJ57e4DcFyeOGak3IabNckm1PpwrbgY
-	K12LtGN71UYaDm2LotNk6R14LIpbc7MVqwemmNVAn7HLHBXA7v+ZuRMRgUEK9zxNCNRBFG61pOywl
-	2kogj/jVtNYd2W9thyz44rcpHCWOB2F+odMecViYUCdYGkSztpnASLeKU8o7QVPULgXddI2Hmleof
-	R5ltXXvY/SXeeHjNwXD7H26eQsTiRQc0lSIMWiH+jGxAN/DGSeKZm0eSDMaD6Vj3CLsq1f9JOh3Gu
-	BMonxIIA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1sqSsv-0000000D8Ft-3xHZ;
-	Tue, 17 Sep 2024 07:44:29 +0000
-Date: Tue, 17 Sep 2024 08:44:29 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X7Ds81MNkz2xb9
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Sep 2024 18:07:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1726560422; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=zD8A7S8NSOoYTS0UIC1YFPPNS2TblfcXM5xymSmNV04=;
+	b=d+H2VHso7gqLttcwhVqPO1QZ5SbKF9Dj/abm8/bnfq7Hmmo8HMnOLm+dcxHYKKiW7cr/x+Oe0If8kyXjIf+NMzXbnRvVN7D3jdE1CngMwwxl+I1rRbBswbNTgJHM4JXZ0qhlgn58PEVOy9oVqDTKrjOzi/+b3Mz1o2lAikaS8yU=
+Received: from 30.244.95.26(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WFARaTY_1726560417)
+          by smtp.aliyun-inc.com;
+          Tue, 17 Sep 2024 16:06:59 +0800
+Message-ID: <b39d430d-3ecb-4537-8d9c-9f0c50cefdf0@linux.alibaba.com>
+Date: Tue, 17 Sep 2024 16:06:56 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC PATCH 19/24] erofs: introduce namei alternative to C
-Message-ID: <20240917074429.GE3107530@ZenIV>
+To: Al Viro <viro@zeniv.linux.org.uk>
 References: <20240916135634.98554-1-toolmanp@tlmp.cc>
- <20240916135634.98554-20-toolmanp@tlmp.cc>
- <20240916170801.GO2825852@ZenIV>
+ <20240916135634.98554-20-toolmanp@tlmp.cc> <20240916170801.GO2825852@ZenIV>
  <ocmc6tmkyl6fnlijx4r3ztrmjfv5eep6q6dvbtfja4v43ujtqx@y43boqba3p5f>
  <1edf9fe3-5e39-463b-8825-67b4d1ad01be@linux.alibaba.com>
  <20240917073149.GD3107530@ZenIV>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 In-Reply-To: <20240917073149.GD3107530@ZenIV>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -72,36 +67,36 @@ Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, LKML <linux-ker
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Sep 17, 2024 at 08:31:49AM +0100, Al Viro wrote:
 
-> > After d_splice_alias() and d_add(), rename() could change d_name.  So
-> > either we take d_lock or with rcu_read_lock() to take a snapshot of
-> > d_name in the RCU walk path.  That is my overall understanding.
+
+On 2024/9/17 15:31, Al Viro wrote:
+> On Tue, Sep 17, 2024 at 03:14:58PM +0800, Gao Xiang wrote:
 > 
-> No, it's more complicated than that, sadly.  ->d_name and ->d_parent are
-> the trickiest parts of dentry field stability.
+>>> Sorry for my ignorance.
+>>> I mean i just borrowed the code from the fs/erofs/namei.c and i directly
+>>> translated that into Rust code. That might be a problem that also
+>>> exists in original working C code.
+>>
+>> As for EROFS (an immutable fs), I think after d_splice_alias(), d_name is
+>> still stable (since we don't have rename semantics likewise for now).
 > 
-> > But for EROFS, since we don't have rename, so it doesn't matter.
+> Even on corrupted images?  If you have two directories with entries that
+> act as hardlinks to the same subdirectory, and keep hitting them on lookups,
+> it will have to transplant the subtree between the parents.
+
+Oh, I missed unexpected directory hardlink corrupted cases.
+
 > 
-> See above.  IF we could guarantee that all filesystem images are valid
-> and will remain so, life would be much simpler.
+>> But as the generic filesystem POV, d_name access is actually tricky under
+>> RCU walk path indeed.
+> 
+> ->lookup() is never called in RCU mode.
 
-In any case, currently it is safe - d_splice_alias() is the last thing
-done by erofs_lookup().  Just don't assume that names can't change in
-there - and the fewer places in filesystem touch ->d_name, the better.
+I know, I just said d_name access is tricky in RCU walk.
 
-In practice, for ->lookup() you are safe until after d_splice_alias()
-and for directory-modifying operations you are safe unless you start
-playing insane games with unlocking and relocking the parent directories
-(apparmorfs does; the locking is really obnoxious there).  That covers
-the majority of ->d_name and ->d_parent accesses in filesystem code.
+->lookup() is for real lookup, not search dcache as fast cached lookup
+in the RCU context.
 
-->d_hash() and ->d_compare() are separate story; I've posted a text on
-that last year (or this winter - not sure, will check once I get some
-sleep).
+Thanks,
+Gao Xiang
 
-d_path() et.al. are taking care to do the right thing; those (and %pd
-format) can be used safely.
-
-Anyway, I'm half-asleep at the moment and I'd rather leave writing these
-rules up until tomorrow.  Sorry...
