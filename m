@@ -2,56 +2,73 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 129F097AC94
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 10:08:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BFDF97AD7B
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 11:03:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1726563817;
+	bh=aNbw7wKOD7gY/9cGnSV2ctOor5UTDwXGnfGNgb9DhdM=;
+	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=lk6bLjxGGiTHpwVp2mS96FgWwK+pdImIzHc8p0TpSgvxiDOwEtCd4smmy4nzgz/Dm
+	 oAA7QyFVGu34FfJihljeoFNO8Pnesm+/VN0UHIgSJc4Zp95i6g9T+fI+AsL7M/bnyQ
+	 /slSt9RAZT7MHzxwtSfeZ8ilN6WXtha2jyOoGrSIUMDznP2nXh36nX0nYXYh1wTAIT
+	 dXavkVv5MC7YQ6BH+fHbll09B/Ns0Rb48fuJ3+zf+3vDNdo3GX+RVPvqeOF3ZTquoS
+	 UHkr0BDFs7w2Axy7g/4sxGWI+wRb8mcXa+MRTs37a1Lj1YPMu3x7yYh+6VoQS84dGx
+	 M2NbGrz1+rSBQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X7Dtx1JgHz2yN1
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 18:08:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X7G6K5WGnz2yLB
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Sep 2024 19:03:37 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726560514;
-	cv=none; b=QT8elDTKW3X+nXL0ls+KjUHJhrIxjC5Fl7wIrzalEJ8wYOmjp0ytcGmMY6NL75UJRTFfNR1gXGzNFlOggS+uB61j9DKngFHmbWwZ30P6ch0ouTvUymMxlVJgelq1XXiisla4sa0iyCFngDejcKjmqqj1HugfRrRB+tySVHwBUzXjsUQuhgshqyJ+h8mBfV/TqQDDvpjVl0IbUoctfgWEHqsmAXDjQ6FdxPvmMxdlvXTBr2L9gDK5hgHrpgVN8ibR2CIme9+w1K//Z1pPX9/ixqcY0qPFBgP2hPA3Peu64lWHHZ6Wgiml5TATme/CoWf0iX0GvM4wPf31fYHpW/VagA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726563816;
+	cv=none; b=K6ZqD8Ijw5RtCL5Pvc82m39wK1I+3T10Ifax7MTpDbRPLjUhtNhipcC9ec0X8orL0KMkJc+3/UdqLhJ2kUj1+dIertCDF3DXGZqumvXkbOUtjOYxjCgYcDpDfrwdoGsuU4JTayA2qxqZQgXkVKRPP7P2HSh+jdV44/jjxwSCAvgMjdNFEph7I5jPsfGQ5n5IXlvVaVRsJZYIcr2z/7jDM09X8nMBtwyUnlVLkjXouNdlrl3BzNn0aaTt059DY0gozQBunyTakNJPAJBN7xGhUSvmpYOjFoMqxv9XYtK4OzI9OfqXAfsC9QSs/E3lrzoJSaO31SeAkNtObrWOLs0/xQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726560514; c=relaxed/relaxed;
-	bh=I8eWoKaw2PNnTTn7YsG5l65WbNKRB5CSK40+WOhrwfs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MlEMFPzmYa2YPKqVnV3V0oGQi/hZLoCszFlLXQsZWPc7j+T7GVrwuX0ala7mOxWAEDLMbced8zhCLDf++mKSPvHy7oj2yXpXTWn5BFV6eTqYNSRRju2gZOudqfb8lFOU90iwOc+oKSh2Rfp+S7QNIN5HJpPtQqzaDdLGqgNrB2eYI+o5n7C5xB1nCrlHPFKPrbyN0KCg2hgANU41+8GIKWCxXEJXMQ9dZ9+hkjPxby4eoW5vVynt1Cc9ipz1JgplZlxHnCHzg/qteV+WP092GBq9XVJkLdw9vatlNcHdnhUwIExgH73gUoMUNsfHEpqvIbELXuBQtskbyEUxQLbZHw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tag8/vLu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1726563816; c=relaxed/relaxed;
+	bh=aNbw7wKOD7gY/9cGnSV2ctOor5UTDwXGnfGNgb9DhdM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Drcq7BSWjyFJlL9Vqox1RjQyJc8GKnGRpz4/eVWYmLjVMgcQWJ+4s1lQW8xc9SrI7ebvVtxTnWzQiNgaFO1964zkzHwan/FM99WBwm08YIiU0vSFM3q8NTbZ+0nhn/kfdl1hli8XlsnqtWiQcYUEBMapvIj1MGfkQWMrkfzyCPeF6iPuhOXR8PbSa0axEl6H0dNg2G8CVyFlHRwYHJLg2ziRWg8B9qnCF8GhTJZ7k+xyrB2EiT/joPaUXoGdQ1yYHns/mdCmBLdWR+OfbdgwHhhNkSOa39zAXc+pmspvsDivfVwEQXMapP9QrsMBEhPSyF9Jdi96Cgldqj+PZVBR2g==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OQ/yANKh; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tag8/vLu;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OQ/yANKh;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X7Dtp0hDxz2xX3
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Sep 2024 18:08:33 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1726560510; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=I8eWoKaw2PNnTTn7YsG5l65WbNKRB5CSK40+WOhrwfs=;
-	b=tag8/vLuQRUGMn3/Sv2rFsUFpTaFQM+ScGijADkuUK7bZwRaExsS0zuBbwfv90o2EZqtrZ2W5xgrKnYip5bGhHRIvhWff294N+UP6hEea7RfALNIW20z0+WGwdW5yy1BirS3rMjmhfmkPCAjoI5ObAfOZg812SOheFh5+UqUljI=
-Received: from 30.244.95.26(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WFARatd_1726560507)
-          by smtp.aliyun-inc.com;
-          Tue, 17 Sep 2024 16:08:29 +0800
-Message-ID: <8871d954-4e6d-4e2d-9080-c5950e7ac2c6@linux.alibaba.com>
-Date: Tue, 17 Sep 2024 16:08:26 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X7G6J0VS5z2x98
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Sep 2024 19:03:36 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 5C4175C59BE;
+	Tue, 17 Sep 2024 09:03:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A3BC4CEC5;
+	Tue, 17 Sep 2024 09:03:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726563811;
+	bh=EltNu/Vvs2dUaVxhrsZoanhKyc7N5StGFgimWX0o+4Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OQ/yANKhnddSqulNweiFVaryGn6CGgbcQ6UcZlMfKrPknKnYcKUP9MFP+cqeUMVcM
+	 oBmLAOppc1865gs6utmZ5AEq7RN6oZbGfidJEP8dJoGboU1DUv2Cgp2AWpHzVWdIt5
+	 YITHBvii9sspSNKH5/jSDrOAleRV5c8zkumZzM0kHLUNprvTYNlwbIn33+kJMGnM7Z
+	 Le8qw7A6CUYhw9Pb5MiDuPI4ryqwsrb/APjIlHO+/aMrPSvQMhedmfXrJWZQrlO2gL
+	 tBDJetlSQGD/w3nZ0YL6zUBaKeqoJPr60aUUlsQ6f8FiMApwzTYXkxoHsMzuIfDSNQ
+	 bsBMFhvlMSVbQ==
+To: netfs@lists.linux.dev,
+	libaokun@huaweicloud.com
+Subject: Re: [PATCH v2] cachefiles: fix dentry leak in cachefiles_open_file()
+Date: Tue, 17 Sep 2024 11:03:19 +0200
+Message-ID: <20240917-ursachen-umsatz-3746ab6636a8@brauner>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240829083409.3788142-1-libaokun@huaweicloud.com>
+References: <20240829083409.3788142-1-libaokun@huaweicloud.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 19/24] erofs: introduce namei alternative to C
-To: Al Viro <viro@zeniv.linux.org.uk>
-References: <20240916135634.98554-1-toolmanp@tlmp.cc>
- <20240916135634.98554-20-toolmanp@tlmp.cc> <20240916170801.GO2825852@ZenIV>
- <ocmc6tmkyl6fnlijx4r3ztrmjfv5eep6q6dvbtfja4v43ujtqx@y43boqba3p5f>
- <1edf9fe3-5e39-463b-8825-67b4d1ad01be@linux.alibaba.com>
- <20240917073149.GD3107530@ZenIV> <20240917074429.GE3107530@ZenIV>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20240917074429.GE3107530@ZenIV>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1589; i=brauner@kernel.org; h=from:subject:message-id; bh=EltNu/Vvs2dUaVxhrsZoanhKyc7N5StGFgimWX0o+4Q=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaS9dL1tmNoz0SxnS82BXuV4j459Ti7XWO+85k8TYXBKY F4689PsjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgInY5TMyNB861azxZYP1hOsl z4IfLt/p+ve2+xzG9etuSj2M/fB9XwYjw5Wir3wewlPMdCb38aTXM+T8Ufjj+frIrrOKU6OeX76 VzQ4A
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -63,50 +80,49 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, rust-for-linux@vger.kernel.org
+From: Christian Brauner via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Christian Brauner <brauner@kernel.org>
+Cc: Christian Brauner <brauner@kernel.org>, yangerkun@huawei.com, jlayton@kernel.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-fsdevel@vger.kernel.org, yukuai3@huawei.com, linux-erofs@lists.ozlabs.org, stable@kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-
-
-On 2024/9/17 15:44, Al Viro wrote:
-> On Tue, Sep 17, 2024 at 08:31:49AM +0100, Al Viro wrote:
+On Thu, 29 Aug 2024 16:34:09 +0800, libaokun@huaweicloud.com wrote:
+> A dentry leak may be caused when a lookup cookie and a cull are concurrent:
 > 
->>> After d_splice_alias() and d_add(), rename() could change d_name.  So
->>> either we take d_lock or with rcu_read_lock() to take a snapshot of
->>> d_name in the RCU walk path.  That is my overall understanding.
->>
->> No, it's more complicated than that, sadly.  ->d_name and ->d_parent are
->> the trickiest parts of dentry field stability.
->>
->>> But for EROFS, since we don't have rename, so it doesn't matter.
->>
->> See above.  IF we could guarantee that all filesystem images are valid
->> and will remain so, life would be much simpler.
+>             P1             |             P2
+> -----------------------------------------------------------
+> cachefiles_lookup_cookie
+>   cachefiles_look_up_object
+>     lookup_one_positive_unlocked
+>      // get dentry
+>                             cachefiles_cull
+>                               inode->i_flags |= S_KERNEL_FILE;
+>     cachefiles_open_file
+>       cachefiles_mark_inode_in_use
+>         __cachefiles_mark_inode_in_use
+>           can_use = false
+>           if (!(inode->i_flags & S_KERNEL_FILE))
+>             can_use = true
+> 	  return false
+>         return false
+>         // Returns an error but doesn't put dentry
 > 
-> In any case, currently it is safe - d_splice_alias() is the last thing
-> done by erofs_lookup().  Just don't assume that names can't change in
-> there - and the fewer places in filesystem touch ->d_name, the better.
-> 
-> In practice, for ->lookup() you are safe until after d_splice_alias()
-> and for directory-modifying operations you are safe unless you start
-> playing insane games with unlocking and relocking the parent directories
-> (apparmorfs does; the locking is really obnoxious there).  That covers
-> the majority of ->d_name and ->d_parent accesses in filesystem code.
-> 
-> ->d_hash() and ->d_compare() are separate story; I've posted a text on
-> that last year (or this winter - not sure, will check once I get some
-> sleep).
-> 
-> d_path() et.al. are taking care to do the right thing; those (and %pd
-> format) can be used safely.
-> 
-> Anyway, I'm half-asleep at the moment and I'd rather leave writing these
-> rules up until tomorrow.  Sorry...
+> [...]
 
-Agreed, thanks for writing so many words on this!
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-Thanks,
-Gao Xiang
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] cachefiles: fix dentry leak in cachefiles_open_file()
+      https://git.kernel.org/vfs/vfs/c/31075a6ed624
