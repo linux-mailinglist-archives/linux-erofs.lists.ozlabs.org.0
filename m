@@ -1,63 +1,65 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7F7397B5B2
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Sep 2024 00:22:37 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 600D197BCBB
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Sep 2024 15:04:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1726664675;
+	bh=afX4bkpPEcf8jyT8KIj1mim62akw0BvMOjBFscO0oxk=;
+	h=To:Subject:Date:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=ksbLejZvaMH+p4BAHAOq6HrrwV3b+DboC5laarDGrbpRpihU0ToI+XD2GMxtrS67L
+	 PUOq6D+lz+qpxpak4kgPnUdiYzR+ytB1z2C5uxULdandd2g3LgnKrOBadKT67qMDsl
+	 JsyfpptipjIcsaNFbutUUEaHkrERb+4ABtkCylxVZSVr/P74hKptFUKaHafcMVcj2Q
+	 YVx9cIyeyBS5DXkDk4ntdt2fCXgX3nQo3InhM2GU+9ZC8h6tXWqGU7ooOdtjKQAAvN
+	 PY72OEfiz5kTTN65OU5L2AaP49OpGCggXnma790uYFJXjhpFb7LV7QzLJXq5ss6ZVh
+	 4NfvoJmd288JA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X7brB5cB0z2yGX
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Sep 2024 08:22:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X7zPv32TFz2yFK
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Sep 2024 23:04:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a03:a000:7:0:5054:ff:fe1c:15ff"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726611747;
-	cv=none; b=l7o795XKsCrbmA0eCPmd9Ej9XXOV+BkTTWaSsQlo5iE+36jzJLa5lohq53e+Bl5lqJ+T4TCLHfK++koHWOpG0QA+maKrO8Am50+CEjzDTZoJL/s7YUh91ghHeP43GZF1WyVGBp8lPiJVlczEgXSfsZtC/4rgZPRpEoPtvFQOkyQ7NcgG13tkRWjKhjJeAdgtpUQRKMlaifv4DAQM9E7UsfExy1IS/TbRobzS1IPLz7ryo6OmAzWxAGvYVlkICwrDh3EaC8COWh5df5QApBY1wE5MuRribJEgJ4FMH420ywaFf0WZhZ0v1ewSL6DgtFb5wUaeYEpg6g5E2PJ4b8MqRw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=118.143.206.90
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726664669;
+	cv=none; b=hwNXmcm/3bHPqIrQ8G9tp3r4FQcN6C6b0UXEVoRVI3ofGazFrsCcQiw4yELXvpM5wDpibMR5Gsp7Fan7bhV3fnfOX47OWs6KUSZ9lc5ZrGe9/pvWDOFeqsciUYWSyAvLEhNGcS3UYorVQ80evIA3Xhh18FEBpqgI73bwtCWcVueMQ2KBbr8uSESkFVZNK23trSoooqtDPATbyd7vYvqeNWdhL+hzy6bq5buj783HU8G1D+x1bzQerHF5UVXDIivN38Ds/lLcnGzK2HUnYjnCuE/krRWn8sGrLsUbm3GhHv8XNEwHxk0SH6/hMxKhLHXTNlkCx8f2GQjrdE6Wv1Nq6w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726611747; c=relaxed/relaxed;
-	bh=iLQ5LiZffWjY0HKID2pJokQ+7vMW0GhlCO+qySBS8dA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fM8qv3/paTAUcjXMv3J+vnYynEWvS0wY+Cm5x/3YHYsAOzErWisP5BukLP9v4E2G5uHStRlo5E/Q6PZEySE+rrnRoZscHXo8eTvA+mv9UdIqW8R2IhgUBSMQRrWfxr2Tr5BIb7p5Yv1KssvYtu2gKADJUdi7RDBC5jJhhJ7h3uaq5KZCXeQ8Jmcoa3kn9FK5oPlEpbC7h8gzUSYHDAgQbDQF/R35I6BkBjQp2S0GqGZJmenKmx6InFeHM5WaVyv8Heb7Mm0Oz3hgWW7xoLCy2Ca2e12m6EsXeq1zUY40JfXuJpLSL58UKZoIDWaTFOGo3rxoKTtNvqj+LBNtza55eQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=bkVOdYuO; dkim-atps=neutral; spf=none (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org) smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=bkVOdYuO;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=ftp.linux.org.uk (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org)
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X7br20Z1Dz2xJy
-	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Sep 2024 08:22:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=iLQ5LiZffWjY0HKID2pJokQ+7vMW0GhlCO+qySBS8dA=; b=bkVOdYuOwPg80KgLMJGdoYMcRG
-	wLzPnAAj9GE+DC3QXzU/yJ9lkHW1WbPFoJx94t8fLUD3RgkS4jzLyj3bvrroQuTlXCgy74FhjD8fV
-	YgvTPj7HvivM9mzttpf3hy2A7AsUWcDBQ9E3bOThKoWGb6oAPPk5A+DzJ9IHeupSOV/kHZuo5Qpfb
-	XbL3m1JHwhb76Qq6bwgJoZJ4Uk1ukQSvULg9QUhuAwFQso20pZXd7S36tDPUD9zQMH/WtGDAn44Rj
-	iL6FAd0w++VJvRtz1/gP/AaU9ObAY0CMkDw8MsKjMNNKDYQIbS7wA6XxD39vI9/nrIVdcLykek4y+
-	VGsEdF/w==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1sqgaM-0000000DGfH-3tnr;
-	Tue, 17 Sep 2024 22:22:14 +0000
-Date: Tue, 17 Sep 2024 23:22:14 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [RFC PATCH 19/24] erofs: introduce namei alternative to C
-Message-ID: <20240917222214.GF3107530@ZenIV>
+	t=1726664669; c=relaxed/relaxed;
+	bh=afX4bkpPEcf8jyT8KIj1mim62akw0BvMOjBFscO0oxk=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Pg9I0zE5GLb1jDvLHzf3Z0YFdyFIeohjsX6Dfi0llXAe2ovvyqDmv9QzGFtQKGn115VEMRSEvc+lQa8A4cj0VrZHDqbYxdMN9/IzA9QK6JkEehlRL8ihJirGmnFegFkgZYj2f6GvcmO1fBhiwG85TOHTzppIJMbwaLuyVDfryz3wwD2142lNVkchcyvaM0lQNgCBpLfp0NgCwfot13l1UG/xCbSEEREFCg/kleUv/0QHVwbNl91xHHxLHinRFGdz9uInb+79fPMvFDYHEuQ7X/kRYiJSuGA0t4EJi5u9xk5gTmf26BxJnBl8+hmjTolHcmNIvV4kMr2/rMcv/3I2Yw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com; spf=pass (client-ip=118.143.206.90; helo=outboundhk.mxmail.xiaomi.com; envelope-from=huangjianan@xiaomi.com; receiver=lists.ozlabs.org) smtp.mailfrom=xiaomi.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=xiaomi.com (client-ip=118.143.206.90; helo=outboundhk.mxmail.xiaomi.com; envelope-from=huangjianan@xiaomi.com; receiver=lists.ozlabs.org)
+Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [118.143.206.90])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X7zPm3ZfGz2xdw
+	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Sep 2024 23:04:25 +1000 (AEST)
+X-CSE-ConnectionGUID: 4+WXDfC1T5eqhrCrZUvxPA==
+X-CSE-MsgGUID: rdQq/ww4TyqOpKT4uhEetA==
+X-IronPort-AV: E=Sophos;i="6.10,238,1719849600"; 
+   d="scan'208";a="96676329"
+To: Yiyang Wu <toolmanp@tlmp.cc>, "linux-erofs@lists.ozlabs.org"
+	<linux-erofs@lists.ozlabs.org>
+Subject: Re: [External Mail][RFC PATCH 05/24] erofs: add inode data structure
+ in Rust
+Thread-Topic: [External Mail][RFC PATCH 05/24] erofs: add inode data structure
+ in Rust
+Thread-Index: AQHbCEBKRNg1ub5CFEOhxt8swuAy2bJc/+0A
+Date: Wed, 18 Sep 2024 13:04:21 +0000
+Message-ID: <753cd249-e90e-4473-a576-dc0cc44eae34@xiaomi.com>
 References: <20240916135634.98554-1-toolmanp@tlmp.cc>
- <20240916135634.98554-20-toolmanp@tlmp.cc>
- <20240916170801.GO2825852@ZenIV>
- <ocmc6tmkyl6fnlijx4r3ztrmjfv5eep6q6dvbtfja4v43ujtqx@y43boqba3p5f>
- <1edf9fe3-5e39-463b-8825-67b4d1ad01be@linux.alibaba.com>
- <20240917073149.GD3107530@ZenIV>
- <20240917074429.GE3107530@ZenIV>
+ <20240916135634.98554-6-toolmanp@tlmp.cc>
+In-Reply-To: <20240916135634.98554-6-toolmanp@tlmp.cc>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.237.88.13]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <649DA2524C3D524FAFEAEF2005E05E5D@xiaomi.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240917074429.GE3107530@ZenIV>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -69,204 +71,212 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, rust-for-linux@vger.kernel.org
+From: Huang Jianan via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Huang Jianan <huangjianan@xiaomi.com>
+Cc: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Tue, Sep 17, 2024 at 08:44:29AM +0100, Al Viro wrote:
-
-> Anyway, I'm half-asleep at the moment and I'd rather leave writing these
-> rules up until tomorrow.  Sorry...
-
-
-[Below are the bits of my notes related to d_name and d_parent,
-with most of the unprintable parts thrown out and minimal markup added.
-Probably not all relevant notes are here - this has been culled from
-a bunch of files sitting around and I might've missed some]
-
-NOTE: ->d_parent and ->d_name are by far the worst parts of dentry
-wrt stability rules.  Code audits are not pleasant, to put it mildly.
-This covers the bits outside of VFS proper - verifying the locking
-rules is a separate story.
-
-
-A Really Blunt Tool You Should Not Use.
-======================================
-
-All changes of ->d_parent are serialized on rename_lock.  It's *NOT*
-something you want the stuff outside of core VFS to touch, though.
-It's a seqlock, and write_seqlock() on it is limited to fs/dcache.c
-alone.  Reader side is allowed, but it's still not something you
-want to use lightly - outside of fs/dcache.c, fs/d_path.c and fs/namei.c
-there are only 3 users (ceph_mdsc_build_path(), nfs_path() and
-auditsc handle_path()).  Don't add more without a discussion on fsdevel
-and detailed ACKs; it's quite likely that a better solution will be
-found.
-
-With one exception (see the discussion of d_mark_tmpfile() in the end),
-->d_name is also stabilized by that.
-
-
-Slightly Less Blunt Tool You Still Should Not Use.
-==================================================
-
-->s_vfs_rename_mutex will stabilize ->d_parent.  The trouble is,
-while it's not system-wide like rename_lock, it's fs-wide, so there's
-a plenty of contention to run into *AND* if you try that while
-->i_rwsem is held on some directory in that filesystem, you are fucked -
-lock_rename() (and rename(2), and...) will deadlock on you.
-Nothing outside of fs/{namei,dcache}.c touches it directly; there is
-an indirect use (lock_rename()), but that should be done only around
-the call of cross-directory rename on _another_ filesystem - overlayfs
-moving stuff within the writable layer, ecryptfs doing rename on
-underlying filesystem, nfsd handling rename request from client, etc.
-
-Anyone trying to use that hammer without a good reason will be very
-sorry - that's a promise.  The pain will begin with the request to
-adjust the proof of deadlock avoidance in directory locking and it
-will only go downwards from there...
-
-
-Parent's ->i_rwsem Held Exclusive.
-==================================
-
-That stabilizes ->d_parent and ->d_name.  To be more precise,
-
-holding parent->d_inode->i_rwsem exclusive stabilizes the result
-of (dentry->d_parent == parent).  That is to say, dentry
-that is a child of parent will remain such and dentry that isn't
-a child won't become a child.
-
-holding parent->d_inode->i_rwsem exclusive stabilizes ->d_name of
-all children.  In other words, if you've locked the parent exclusive
-and found something to be its child while keeping the parent locked,
-child will have ->d_parent and ->d_name stable until you unlock the
-parent.
-
-That covers most of the directory-modifying methods - stuff like
-->mkdir(), ->unlink(), ->rename(), etc. can access ->d_parent and
-->d_name of the dentry argument(s) without any extra locks; the
-caller is already holding enough.  Well, unless you are special
-(*cough* apparmor *cough*) and feel like dropping and regaining
-the lock on parent inside your ->mkdir()...  Don't do that, please -
-you might have no renames, but there's a plenty of other headache
-you can get into that way.
-
-
-Negatives.
-==========
-
-Negative dentry doesn't change ->d_parent or ->d_name.  Of course,
-that is only worth something if you are guaranteed that it won't
-become positive under you - if that happens, all bets are off.
-
-Holding the inode of parent locked (at least) shared is enough to
-guarantee that.  That takes care of ->lookup() instances - their
-dentry argument has ->d_parent and ->d_name stable until you make
-it positive (normally - by d_splice_alias()).  Once you've done
-d_splice_alias(), you'd better be careful with access to those;
-you won't get hit by concurrent rename() (it locks parent(s)
-exclusive), but if your inode is a directory and d_splice_alias()
-*elsewhere* picks the same inode (fs image corruption, network
-filesystem with rename done from another client behind your back,
-etc.), you'll see the sucker moved.
-
-In practice, d_splice_alias() is the last thing done by most of ->lookup()
-instances - whatever it has returned gets returned by ->lookup() itself,
-possibly after freeing some temporary allocations, etc.  The rest needs
-to watch out for accesses to ->d_name and ->d_parent downstream of
-d_splice_alias() return.
-
-Another case where we are guaranteed that dentry is negative and
-will stay so is ->d_release() - it's called for a dentry that is
-well on the way to becoming an ex-parrot; it's already marked
-dead, unhashed and negative.  So a ->d_release() instance doesn't
-have to worry about ->d_name and ->d_parent - both are valid and
-stable.
-
-
-sprintf().
-==========
-
-%pd prints dentry name, safely.  %p2d - parent_name/dentry_name, etc. up
-to %p4d.  %pD .. %p4D  do the same by file reference.  Any time you see
-pr_warn("Some weird bollocks with %s (%d)\n", dentry->d_name, err);
-it should've been
-pr_warn("Some weird bollocks with %pd (%d)\n", dentry, err)...
-
-d_path() and friends are there for purpose - don't open-code those without
-a damn good reason.
-
-
-Checking if one dentry is an ancestor of another.
-=================================================
-
-Use the damn is_subdir(), don't open-code it.
-
-
-Spinlocks.
-==========
-
-dentry->d_lock stabilizes ->d_parent and ->d_name (as well as almost
-everything else about dentry); downside is that it's a spinlock
-*and* nesting it is not to be attempted easily; you are allowed
-to lock child while holding lock on parent, but very few places
-have any business doing that (only 2 outside of VFS - tree-walking
-in autofs, which might eventually get redone avoiding that and
-fsnotify_set_children_dentry_flags(), which just might get moved to
-fs/dcache.c itself; we'll see)
-
-Note that "almost everything" includes refcount; that is to say, dget()
-and dput() will spin if you are holding ->d_lock, so you can't dget()
-the parent under ->d_lock on child - that's a locking order violation
-that can easily deadlock on you.  dget_parent() does that kind of thing
-safely, and a look at it might be instructive.  Try to open-code something
-of that sort, and you'll be hurt.
-
-Said that, dget_parent() is overused - it has legitimate uses, but
-more often than not it's the wrong tool.  In particular, while you
-grab a reference to something that was the parent at some point during
-dget_parent(), it might not be the parent anymore by the time it is
-returned to caller.
-
-Most of the dget_parent() uses are due to bad calling conventions of
-->d_revalidate().  When that gets sanitized, those will be gone.
-
-The methods that are called with ->d_lock get the protection - that
-would be ->d_delete() and ->d_prune().
-
-->d_lock on parent is also sufficient; similar to exclusive ->i_rwsem,
-parent->d_lock stabilizes (dentry->d_parent == parent) and if child
-has been observed to have child->d_parent equal to parent after
-you've locked parent->d_lock, you know that child->d_{parent,name}
-will remain stable until you unlock the parent.
-
-
-Name Snapshots.
-===============
-
-There's take_dentry_name_snapshot()/release_dentry_name_snapshot().
-That stuff eats about 64 bytes on stack (longer names _are_ handled
-correctly; no allocations are needed, we can simply grab an extra
-reference to external name and hold it).  Can't be done under
-->d_lock, won't do anything about ->d_parent *and* there's nothing
-to prevent dentry being renamed while you are looking at the name
-snapshot.  Sometimes it's useful...
-
-
-RCU Headaches.
-==============
-
-See e.g. https://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git/commit/?h=fixes.pathwalk-rcu-2&id=8d0a75eba81813cbb00beb73a67783e1cde9982f
-(NB: ought to repost that)
-
-
-[*] d_mark_tmpfile() is pretty much a delayed bit of constructor.  There is
-a possible intermediate state of dentry ("will be tmpfile one"); dentries
-in that state are all created in vfs_tmpfile(), get passed to ->tmpfile()
-where they transition to normal unhashed postive dentries.  The reason why
-name is not set from the very beginning is that at that point we do not know
-the inumber of inode they are going to get (that becomes known inside
-->tmpfile() instance) and we want that inumber seen in their names (for
-/proc/*/fd/*, basically).  Name change is done while holding ->d_lock both
-on dentry itself and on its parent.
+T24gMjAyNC85LzE2IDIxOjU2LCBZaXlhbmcgV3UgdmlhIExpbnV4LWVyb2ZzIHdyb3RlOg0KPiAN
+Cj4gVGhpcyBwYXRjaCBpbnRyb2R1Y2VzIHRoZSBzYW1lIG9uLWRpc2sgZXJvZnMgZGF0YSBzdHJ1
+Y3R1cmUNCj4gaW4gcnVzdCBhbmQgYWxzbyBpbnRyb2R1Y2VzIG11bHRpcGxlIGhlbHBlcnMgZm9y
+IGlub2RlIGlfZm9ybWF0DQo+IGFuZCBjaHVua19pbmRleGluZyBhbmQgbGF0ZXIgY2FuIGJlIHVz
+ZWQgdG8gaW1wbGVtZW50IG1hcF9ibG9ja3MuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBZaXlhbmcg
+V3UgPHRvb2xtYW5wQHRsbXAuY2M+DQo+IC0tLQ0KPiAgIGZzL2Vyb2ZzL3J1c3QvZXJvZnNfc3lz
+LnJzICAgICAgIHwgICAxICsNCj4gICBmcy9lcm9mcy9ydXN0L2Vyb2ZzX3N5cy9pbm9kZS5ycyB8
+IDI5MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ICAgMiBmaWxlcyBjaGFuZ2Vk
+LCAyOTIgaW5zZXJ0aW9ucygrKQ0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBmcy9lcm9mcy9ydXN0
+L2Vyb2ZzX3N5cy9pbm9kZS5ycw0KPiANCj4gZGlmZiAtLWdpdCBhL2ZzL2Vyb2ZzL3J1c3QvZXJv
+ZnNfc3lzLnJzIGIvZnMvZXJvZnMvcnVzdC9lcm9mc19zeXMucnMNCj4gaW5kZXggNmYzYzEyNjY1
+ZWQ2Li4zNDI2N2VjNzc3MmQgMTAwNjQ0DQo+IC0tLSBhL2ZzL2Vyb2ZzL3J1c3QvZXJvZnNfc3lz
+LnJzDQo+ICsrKyBiL2ZzL2Vyb2ZzL3J1c3QvZXJvZnNfc3lzLnJzDQo+IEBAIC0yNCw2ICsyNCw3
+IEBADQo+ICAgcHViKGNyYXRlKSB0eXBlIFBvc2l4UmVzdWx0PFQ+ID0gUmVzdWx0PFQsIEVycm5v
+PjsNCj4gDQo+ICAgcHViKGNyYXRlKSBtb2QgZXJybm9zOw0KPiArcHViKGNyYXRlKSBtb2QgaW5v
+ZGU7DQo+ICAgcHViKGNyYXRlKSBtb2Qgc3VwZXJibG9jazsNCj4gICBwdWIoY3JhdGUpIG1vZCB4
+YXR0cnM7DQo+ICAgcHViKGNyYXRlKSB1c2UgZXJybm9zOjpFcnJubzsNCj4gZGlmZiAtLWdpdCBh
+L2ZzL2Vyb2ZzL3J1c3QvZXJvZnNfc3lzL2lub2RlLnJzIGIvZnMvZXJvZnMvcnVzdC9lcm9mc19z
+eXMvaW5vZGUucnMNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAw
+Li4xNzYyMDIzZTk3ZjgNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9mcy9lcm9mcy9ydXN0L2Vy
+b2ZzX3N5cy9pbm9kZS5ycw0KPiBAQCAtMCwwICsxLDI5MSBAQA0KPiArdXNlIHN1cGVyOjp4YXR0
+cnM6Oio7DQo+ICt1c2Ugc3VwZXI6Oio7DQo+ICt1c2UgY29yZTo6ZmZpOjoqOw0KPiArdXNlIGNv
+cmU6Om1lbTo6c2l6ZV9vZjsNCj4gKw0KPiArLy8vIFJlcHJlc2VudHMgdGhlIGNvbXBhY3QgYml0
+ZmllbGQgb2YgdGhlIEVyb2ZzIElub2RlIGZvcm1hdC4NCj4gKyNbcmVwcih0cmFuc3BhcmVudCld
+DQo+ICsjW2Rlcml2ZShDbG9uZSwgQ29weSldDQo+ICtwdWIoY3JhdGUpIHN0cnVjdCBGb3JtYXQo
+dTE2KTsNCj4gKw0KPiArcHViKGNyYXRlKSBjb25zdCBJTk9ERV9WRVJTSU9OX01BU0s6IHUxNiA9
+IDB4MTsNCj4gK3B1YihjcmF0ZSkgY29uc3QgSU5PREVfVkVSU0lPTl9CSVQ6IHUxNiA9IDA7DQo+
+ICsNCj4gK3B1YihjcmF0ZSkgY29uc3QgSU5PREVfTEFZT1VUX0JJVDogdTE2ID0gMTsNCj4gK3B1
+YihjcmF0ZSkgY29uc3QgSU5PREVfTEFZT1VUX01BU0s6IHUxNiA9IDB4NzsNCj4gKw0KPiArLy8v
+IEhlbHBlciBtYWNybyB0byBleHRyYWN0IHByb3BlcnR5IGZyb20gdGhlIGJpdGZpZWxkLg0KPiAr
+bWFjcm9fcnVsZXMhIGV4dHJhY3Qgew0KPiArICAgICgkbmFtZTogZXhwciwgJGJpdDogZXhwciwg
+JG1hc2s6IGV4cHIpID0+IHsNCj4gKyAgICAgICAgKCRuYW1lID4+ICRiaXQpICYgKCRtYXNrKQ0K
+PiArICAgIH07DQo+ICt9DQo+ICsNCj4gKy8vLyBUaGUgVmVyc2lvbiBvZiB0aGUgSW5vZGUgd2hp
+Y2ggcmVwcmVzZW50cyB3aGV0aGVyIHRoaXMgaW5vZGUgaXMgZXh0ZW5kZWQgb3IgY29tcGFjdC4N
+Cj4gKy8vLyBFeHRlbmRlZCBpbm9kZXMgaGF2ZSBtb3JlIGluZm9zIGFib3V0IG5saW5rcyArIG10
+aW1lLg0KPiArLy8vIFRoaXMgaXMgZG9jdW1lbnRlZCBpbiBodHRwczovL2Vyb2ZzLmRvY3Mua2Vy
+bmVsLm9yZy9lbi9sYXRlc3QvY29yZV9vbmRpc2suaHRtbCNpbm9kZXMNCj4gKyNbcmVwcihDKV0N
+Cj4gKyNbZGVyaXZlKENsb25lLCBDb3B5KV0NCj4gK3B1YihjcmF0ZSkgZW51bSBWZXJzaW9uIHsN
+Cj4gKyAgICBDb21wYXQsDQo+ICsgICAgRXh0ZW5kZWQsDQo+ICsgICAgVW5rbm93biwNCj4gK30N
+Cj4gKw0KPiArLy8vIFJlcHJlc2VudHMgdGhlIGRhdGEgbGF5b3V0IGJhY2tlZCBieSB0aGUgSW5v
+ZGUuDQo+ICsvLy8gQXMgRG9jdW1lbnRlZCBpbiBodHRwczovL2Vyb2ZzLmRvY3Mua2VybmVsLm9y
+Zy9lbi9sYXRlc3QvY29yZV9vbmRpc2suaHRtbCNpbm9kZS1kYXRhLWxheW91dHMNCj4gKyNbcmVw
+cihDKV0NCj4gKyNbZGVyaXZlKENsb25lLCBDb3B5LCBQYXJ0aWFsRXEpXQ0KPiArcHViKGNyYXRl
+KSBlbnVtIExheW91dCB7DQo+ICsgICAgRmxhdFBsYWluLA0KPiArICAgIENvbXByZXNzZWRGdWxs
+LA0KPiArICAgIEZsYXRJbmxpbmUsDQo+ICsgICAgQ29tcHJlc3NlZENvbXBhY3QsDQo+ICsgICAg
+Q2h1bmssDQo+ICsgICAgVW5rbm93biwNCj4gK30NCj4gKw0KPiArI1tyZXByKEMpXQ0KPiArI1th
+bGxvdyhub25fY2FtZWxfY2FzZV90eXBlcyldDQo+ICsjW2Rlcml2ZShDbG9uZSwgQ29weSwgRGVi
+dWcsIFBhcnRpYWxFcSldDQo+ICtwdWIoY3JhdGUpIGVudW0gVHlwZSB7DQo+ICsgICAgUmVndWxh
+ciwNCj4gKyAgICBEaXJlY3RvcnksDQo+ICsgICAgTGluaywNCj4gKyAgICBDaGFyYWN0ZXIsDQo+
+ICsgICAgQmxvY2ssDQo+ICsgICAgRmlmbywNCj4gKyAgICBTb2NrZXQsDQo+ICsgICAgVW5rbm93
+biwNCj4gK30NCj4gKw0KPiArLy8vIFRoaXMgaXMgZm9ybWF0IGV4dHJhY3RlZCBmcm9tIGlfZm9y
+bWF0IGJpdCByZXByZXNlbnRhdGlvbi4NCj4gKy8vLyBUaGlzIGluY2x1ZGVzIHZhcmlvdXMgaW5m
+b3MgYW5kIHNwZWNzIGFib3V0IHRoZSBpbm9kZS4NCj4gK2ltcGwgRm9ybWF0IHsNCj4gKyAgICBw
+dWIoY3JhdGUpIGZuIHZlcnNpb24oJnNlbGYpIC0+IFZlcnNpb24gew0KPiArICAgICAgICBtYXRj
+aCBleHRyYWN0IShzZWxmLjAsIElOT0RFX1ZFUlNJT05fQklULCBJTk9ERV9WRVJTSU9OX01BU0sp
+IHsNCj4gKyAgICAgICAgICAgIDAgPT4gVmVyc2lvbjo6Q29tcGF0LA0KPiArICAgICAgICAgICAg
+MSA9PiBWZXJzaW9uOjpFeHRlbmRlZCwNCj4gKyAgICAgICAgICAgIF8gPT4gVmVyc2lvbjo6VW5r
+bm93biwNCj4gKyAgICAgICAgfQ0KPiArICAgIH0NCj4gKw0KPiArICAgIHB1YihjcmF0ZSkgZm4g
+bGF5b3V0KCZzZWxmKSAtPiBMYXlvdXQgew0KPiArICAgICAgICBtYXRjaCBleHRyYWN0IShzZWxm
+LjAsIElOT0RFX0xBWU9VVF9CSVQsIElOT0RFX0xBWU9VVF9NQVNLKSB7DQo+ICsgICAgICAgICAg
+ICAwID0+IExheW91dDo6RmxhdFBsYWluLA0KPiArICAgICAgICAgICAgMSA9PiBMYXlvdXQ6OkNv
+bXByZXNzZWRGdWxsLA0KPiArICAgICAgICAgICAgMiA9PiBMYXlvdXQ6OkZsYXRJbmxpbmUsDQo+
+ICsgICAgICAgICAgICAzID0+IExheW91dDo6Q29tcHJlc3NlZENvbXBhY3QsDQo+ICsgICAgICAg
+ICAgICA0ID0+IExheW91dDo6Q2h1bmssDQo+ICsgICAgICAgICAgICBfID0+IExheW91dDo6VW5r
+bm93biwNCj4gKyAgICAgICAgfQ0KPiArICAgIH0NCj4gK30NCj4gKw0KPiArLy8vIFJlcHJlc2Vu
+dHMgdGhlIGNvbXBhY3QgaW5vZGUgd2hpY2ggcmVzaWRlcyBvbi1kaXNrLg0KPiArLy8vIFRoaXMg
+aXMgZG9jdW1lbnRlZCBpbiBodHRwczovL2Vyb2ZzLmRvY3Mua2VybmVsLm9yZy9lbi9sYXRlc3Qv
+Y29yZV9vbmRpc2suaHRtbCNpbm9kZXMNCj4gKyNbcmVwcihDKV0NCj4gKyNbZGVyaXZlKENsb25l
+LCBDb3B5KV0NCj4gK3B1YihjcmF0ZSkgc3RydWN0IENvbXBhY3RJbm9kZUluZm8gew0KPiArICAg
+IHB1YihjcmF0ZSkgaV9mb3JtYXQ6IEZvcm1hdCwNCj4gKyAgICBwdWIoY3JhdGUpIGlfeGF0dHJf
+aWNvdW50OiB1MTYsDQo+ICsgICAgcHViKGNyYXRlKSBpX21vZGU6IHUxNiwNCj4gKyAgICBwdWIo
+Y3JhdGUpIGlfbmxpbms6IHUxNiwNCj4gKyAgICBwdWIoY3JhdGUpIGlfc2l6ZTogdTMyLA0KPiAr
+ICAgIHB1YihjcmF0ZSkgaV9yZXNlcnZlZDogW3U4OyA0XSwNCj4gKyAgICBwdWIoY3JhdGUpIGlf
+dTogW3U4OyA0XSwNCj4gKyAgICBwdWIoY3JhdGUpIGlfaW5vOiB1MzIsDQo+ICsgICAgcHViKGNy
+YXRlKSBpX3VpZDogdTE2LA0KPiArICAgIHB1YihjcmF0ZSkgaV9naWQ6IHUxNiwNCj4gKyAgICBw
+dWIoY3JhdGUpIGlfcmVzZXJ2ZWQyOiBbdTg7IDRdLA0KPiArfQ0KPiArDQo+ICsvLy8gUmVwcmVz
+ZW50cyB0aGUgZXh0ZW5kZWQgaW5vZGUgd2hpY2ggcmVzaWRlcyBvbi1kaXNrLg0KPiArLy8vIFRo
+aXMgaXMgZG9jdW1lbnRlZCBpbiBodHRwczovL2Vyb2ZzLmRvY3Mua2VybmVsLm9yZy9lbi9sYXRl
+c3QvY29yZV9vbmRpc2suaHRtbCNpbm9kZXMNCj4gKyNbcmVwcihDKV0NCj4gKyNbZGVyaXZlKENs
+b25lLCBDb3B5KV0NCj4gK3B1YihjcmF0ZSkgc3RydWN0IEV4dGVuZGVkSW5vZGVJbmZvIHsNCj4g
+KyAgICBwdWIoY3JhdGUpIGlfZm9ybWF0OiBGb3JtYXQsDQo+ICsgICAgcHViKGNyYXRlKSBpX3hh
+dHRyX2ljb3VudDogdTE2LA0KPiArICAgIHB1YihjcmF0ZSkgaV9tb2RlOiB1MTYsDQo+ICsgICAg
+cHViKGNyYXRlKSBpX3Jlc2VydmVkOiBbdTg7IDJdLA0KPiArICAgIHB1YihjcmF0ZSkgaV9zaXpl
+OiB1NjQsDQo+ICsgICAgcHViKGNyYXRlKSBpX3U6IFt1ODsgNF0sDQo+ICsgICAgcHViKGNyYXRl
+KSBpX2lubzogdTMyLA0KPiArICAgIHB1YihjcmF0ZSkgaV91aWQ6IHUzMiwNCj4gKyAgICBwdWIo
+Y3JhdGUpIGlfZ2lkOiB1MzIsDQo+ICsgICAgcHViKGNyYXRlKSBpX210aW1lOiB1NjQsDQo+ICsg
+ICAgcHViKGNyYXRlKSBpX210aW1lX25zZWM6IHUzMiwNCj4gKyAgICBwdWIoY3JhdGUpIGlfbmxp
+bms6IHUzMiwNCj4gKyAgICBwdWIoY3JhdGUpIGlfcmVzZXJ2ZWQyOiBbdTg7IDE2XSwNCj4gK30N
+Cj4gKw0KPiArLy8vIFJlcHJlc2VudHMgdGhlIGlub2RlIGluZm8gd2hpY2ggaXMgZWl0aGVyIGNv
+bXBhY3Qgb3IgZXh0ZW5kZWQuDQo+ICsjW2Rlcml2ZShDbG9uZSwgQ29weSldDQo+ICtwdWIoY3Jh
+dGUpIGVudW0gSW5vZGVJbmZvIHsNCj4gKyAgICBFeHRlbmRlZChFeHRlbmRlZElub2RlSW5mbyks
+DQo+ICsgICAgQ29tcGFjdChDb21wYWN0SW5vZGVJbmZvKSwNCj4gK30NCj4gKw0KPiArcHViKGNy
+YXRlKSBjb25zdCBDSFVOS19CTEtCSVRTX01BU0s6IHUxNiA9IDB4MWY7DQo+ICtwdWIoY3JhdGUp
+IGNvbnN0IENIVU5LX0ZPUk1BVF9JTkRFWF9CSVQ6IHUxNiA9IDB4MjA7DQo+ICsNCj4gKy8vLyBS
+ZXByZXNlbnRzIG9uLWRpc2sgY2h1bmsgaW5kZXggb2YgdGhlIGZpbGUgYmFja2luZyBpbm9kZS4N
+Cj4gKyNbcmVwcihDKV0NCj4gKyNbZGVyaXZlKENsb25lLCBDb3B5LCBEZWJ1ZyldDQo+ICtwdWIo
+Y3JhdGUpIHN0cnVjdCBDaHVua0luZGV4IHsNCj4gKyAgICBwdWIoY3JhdGUpIGFkdmlzZTogdTE2
+LA0KPiArICAgIHB1YihjcmF0ZSkgZGV2aWNlX2lkOiB1MTYsDQo+ICsgICAgcHViKGNyYXRlKSBi
+bGthZGRyOiB1MzIsDQo+ICt9DQo+ICsNCj4gK2ltcGwgRnJvbTxbdTg7IDhdPiBmb3IgQ2h1bmtJ
+bmRleCB7DQo+ICsgICAgZm4gZnJvbSh1OiBbdTg7IDhdKSAtPiBTZWxmIHsNCj4gKyAgICAgICAg
+bGV0IGFkdmlzZSA9IHUxNjo6ZnJvbV9sZV9ieXRlcyhbdVswXSwgdVsxXV0pOw0KPiArICAgICAg
+ICBsZXQgZGV2aWNlX2lkID0gdTE2Ojpmcm9tX2xlX2J5dGVzKFt1WzJdLCB1WzNdXSk7DQo+ICsg
+ICAgICAgIGxldCBibGthZGRyID0gdTMyOjpmcm9tX2xlX2J5dGVzKFt1WzRdLCB1WzVdLCB1WzZd
+LCB1WzddXSk7DQo+ICsgICAgICAgIENodW5rSW5kZXggew0KPiArICAgICAgICAgICAgYWR2aXNl
+LA0KPiArICAgICAgICAgICAgZGV2aWNlX2lkLA0KPiArICAgICAgICAgICAgYmxrYWRkciwNCj4g
+KyAgICAgICAgfQ0KPiArICAgIH0NCj4gK30NCj4gKw0KPiArLy8vIENodW5rIGZvcm1hdCB1c2Vk
+IGZvciBpbmRpY2F0aW5nIHRoZSBjaHVua2JpdHMgYW5kIGNodW5raW5kZXguDQo+ICsjW3JlcHIo
+QyldDQo+ICsjW2Rlcml2ZShDbG9uZSwgQ29weSwgRGVidWcpXQ0KPiArcHViKGNyYXRlKSBzdHJ1
+Y3QgQ2h1bmtGb3JtYXQocHViKGNyYXRlKSB1MTYpOw0KPiArDQo+ICtpbXBsIENodW5rRm9ybWF0
+IHsNCj4gKyAgICBwdWIoY3JhdGUpIGZuIGlzX2NodW5raW5kZXgoJnNlbGYpIC0+IGJvb2wgew0K
+PiArICAgICAgICBzZWxmLjAgJiBDSFVOS19GT1JNQVRfSU5ERVhfQklUICE9IDANCj4gKyAgICB9
+DQo+ICsgICAgcHViKGNyYXRlKSBmbiBjaHVua2JpdHMoJnNlbGYpIC0+IHUxNiB7DQo+ICsgICAg
+ICAgIHNlbGYuMCAmIENIVU5LX0JMS0JJVFNfTUFTSw0KPiArICAgIH0NCg0KSXQgaXMgcmVjb21t
+ZW5kZWQgdG8gYWRkIGJsYW5rIGxpbmVzIGJldHdlZW4gY29kZSBibG9ja3MuIFRoaXMgcHJvYmxl
+bSANCmV4aXN0cyBpbiBtYW55IHBsYWNlcyBpbiB0aGlzIHBhdGNoIHNldC4NCg0KPiArfQ0KPiAr
+DQo+ICsvLy8gUmVwcmVzZW50cyB0aGUgaW5vZGUgc3BlYyB3aGljaCBpcyBlaXRoZXIgZGF0YSBv
+ciBkZXZpY2UuDQo+ICsjW2Rlcml2ZShDbG9uZSwgQ29weSwgRGVidWcpXQ0KPiArI1tyZXByKHUz
+MildDQo+ICtwdWIoY3JhdGUpIGVudW0gU3BlYyB7DQo+ICsgICAgQ2h1bmsoQ2h1bmtGb3JtYXQp
+LA0KPiArICAgIFJhd0Jsayh1MzIpLA0KPiArICAgIERldmljZSh1MzIpLA0KPiArICAgIENvbXBy
+ZXNzZWRCbG9ja3ModTMyKSwNCj4gKyAgICBVbmtub3duLA0KPiArfQ0KPiArDQo+ICsvLy8gQ29u
+dmVydCB0aGUgc3BlYyBmcm9tIHRoZSBmb3JtYXQgb2YgdGhlIGlub2RlIGJhc2VkIG9uIHRoZSBs
+YXlvdXQuDQo+ICtpbXBsIEZyb208KCZbdTg7IDRdLCBMYXlvdXQpPiBmb3IgU3BlYyB7DQo+ICsg
+ICAgZm4gZnJvbSh2YWx1ZTogKCZbdTg7IDRdLCBMYXlvdXQpKSAtPiBTZWxmIHsNCj4gKyAgICAg
+ICAgbWF0Y2ggdmFsdWUuMSB7DQo+ICsgICAgICAgICAgICBMYXlvdXQ6OkZsYXRJbmxpbmUgfCBM
+YXlvdXQ6OkZsYXRQbGFpbiA9PiBTcGVjOjpSYXdCbGsodTMyOjpmcm9tX2xlX2J5dGVzKCp2YWx1
+ZS4wKSksDQo+ICsgICAgICAgICAgICBMYXlvdXQ6OkNvbXByZXNzZWRGdWxsIHwgTGF5b3V0OjpD
+b21wcmVzc2VkQ29tcGFjdCA9PiB7DQo+ICsgICAgICAgICAgICAgICAgU3BlYzo6Q29tcHJlc3Nl
+ZEJsb2Nrcyh1MzI6OmZyb21fbGVfYnl0ZXMoKnZhbHVlLjApKQ0KPiArICAgICAgICAgICAgfQ0K
+PiArICAgICAgICAgICAgTGF5b3V0OjpDaHVuayA9PiBTZWxmOjpDaHVuayhDaHVua0Zvcm1hdCh1
+MTY6OmZyb21fbGVfYnl0ZXMoW3ZhbHVlLjBbMF0sIHZhbHVlLjBbMV1dKSkpLA0KPiArICAgICAg
+ICAgICAgLy8gV2UgZG9uJ3Qgc3VwcG9ydCBjb21wcmVzc2VkIGlubGluZXMgb3IgY29tcHJlc3Nl
+ZCBjaHVua3MgY3VycmVudGx5Lg0KPiArICAgICAgICAgICAgXyA9PiBTcGVjOjpVbmtub3duLA0K
+PiArICAgICAgICB9DQo+ICsgICAgfQ0KPiArfQ0KPiArDQo+ICsvLy8gSGVscGVyIGZ1bmN0aW9u
+cyBmb3IgSW5vZGUgSW5mby4NCj4gK2ltcGwgSW5vZGVJbmZvIHsNCj4gKyAgICBjb25zdCBTX0lG
+TVQ6IHUxNiA9IDBvMTcwMDAwOw0KPiArICAgIGNvbnN0IFNfSUZTT0NLOiB1MTYgPSAwbzE0MDAw
+MDsNCj4gKyAgICBjb25zdCBTX0lGTE5LOiB1MTYgPSAwbzEyMDAwMDsNCj4gKyAgICBjb25zdCBT
+X0lGUkVHOiB1MTYgPSAwbzEwMDAwMDsNCj4gKyAgICBjb25zdCBTX0lGQkxLOiB1MTYgPSAwbzYw
+MDAwOw0KPiArICAgIGNvbnN0IFNfSUZESVI6IHUxNiA9IDBvNDAwMDA7DQo+ICsgICAgY29uc3Qg
+U19JRkNIUjogdTE2ID0gMG8yMDAwMDsNCj4gKyAgICBjb25zdCBTX0lGSUZPOiB1MTYgPSAwbzEw
+MDAwOw0KPiArICAgIGNvbnN0IFNfSVNVSUQ6IHUxNiA9IDBvNDAwMDsNCj4gKyAgICBjb25zdCBT
+X0lTR0lEOiB1MTYgPSAwbzIwMDA7DQo+ICsgICAgY29uc3QgU19JU1ZUWDogdTE2ID0gMG8xMDAw
+Ow0KPiArICAgIHB1YihjcmF0ZSkgZm4gaW5vKCZzZWxmKSAtPiB1MzIgew0KPiArICAgICAgICBt
+YXRjaCBzZWxmIHsNCj4gKyAgICAgICAgICAgIFNlbGY6OkV4dGVuZGVkKGV4dGVuZGVkKSA9PiBl
+eHRlbmRlZC5pX2lubywNCj4gKyAgICAgICAgICAgIFNlbGY6OkNvbXBhY3QoY29tcGFjdCkgPT4g
+Y29tcGFjdC5pX2lubywNCj4gKyAgICAgICAgfQ0KPiArICAgIH0NCj4gKw0KPiArICAgIHB1Yihj
+cmF0ZSkgZm4gZm9ybWF0KCZzZWxmKSAtPiBGb3JtYXQgew0KPiArICAgICAgICBtYXRjaCBzZWxm
+IHsNCj4gKyAgICAgICAgICAgIFNlbGY6OkV4dGVuZGVkKGV4dGVuZGVkKSA9PiBleHRlbmRlZC5p
+X2Zvcm1hdCwNCj4gKyAgICAgICAgICAgIFNlbGY6OkNvbXBhY3QoY29tcGFjdCkgPT4gY29tcGFj
+dC5pX2Zvcm1hdCwNCj4gKyAgICAgICAgfQ0KPiArICAgIH0NCj4gKw0KPiArICAgIHB1YihjcmF0
+ZSkgZm4gZmlsZV9zaXplKCZzZWxmKSAtPiBPZmYgew0KPiArICAgICAgICBtYXRjaCBzZWxmIHsN
+Cj4gKyAgICAgICAgICAgIFNlbGY6OkV4dGVuZGVkKGV4dGVuZGVkKSA9PiBleHRlbmRlZC5pX3Np
+emUsDQo+ICsgICAgICAgICAgICBTZWxmOjpDb21wYWN0KGNvbXBhY3QpID0+IGNvbXBhY3QuaV9z
+aXplIGFzIHU2NCwNCj4gKyAgICAgICAgfQ0KPiArICAgIH0NCj4gKw0KPiArICAgIHB1YihjcmF0
+ZSkgZm4gaW5vZGVfc2l6ZSgmc2VsZikgLT4gT2ZmIHsNCj4gKyAgICAgICAgbWF0Y2ggc2VsZiB7
+DQo+ICsgICAgICAgICAgICBTZWxmOjpFeHRlbmRlZChfKSA9PiA2NCwNCj4gKyAgICAgICAgICAg
+IFNlbGY6OkNvbXBhY3QoXykgPT4gMzIsDQoNClNlbGY6OkV4dGVuZGVkKF8pID0+IHNpemVfb2Y6
+OjxFeHRlbmRlZElub2RlSW5mbz4oKSBhcyBPZmYsDQpTZWxmOjpDb21wYWN0KF8pID0+IHNpemVf
+b2Y6OjxDb21wYWN0SW5vZGVJbmZvPigpIGFzIE9mZiwNCg0KPiArICAgICAgICB9DQo+ICsgICAg
+fQ0KPiArDQo+ICsgICAgcHViKGNyYXRlKSBmbiBzcGVjKCZzZWxmKSAtPiBTcGVjIHsNCj4gKyAg
+ICAgICAgbGV0IG1vZGUgPSBtYXRjaCBzZWxmIHsNCj4gKyAgICAgICAgICAgIFNlbGY6OkV4dGVu
+ZGVkKGV4dGVuZGVkKSA9PiBleHRlbmRlZC5pX21vZGUsDQo+ICsgICAgICAgICAgICBTZWxmOjpD
+b21wYWN0KGNvbXBhY3QpID0+IGNvbXBhY3QuaV9tb2RlLA0KPiArICAgICAgICB9Ow0KPiArDQo+
+ICsgICAgICAgIGxldCB1ID0gbWF0Y2ggc2VsZiB7DQo+ICsgICAgICAgICAgICBTZWxmOjpFeHRl
+bmRlZChleHRlbmRlZCkgPT4gJmV4dGVuZGVkLmlfdSwNCj4gKyAgICAgICAgICAgIFNlbGY6OkNv
+bXBhY3QoY29tcGFjdCkgPT4gJmNvbXBhY3QuaV91LA0KPiArICAgICAgICB9Ow0KPiArDQo+ICsg
+ICAgICAgIG1hdGNoIG1vZGUgJiAwbzE3MDAwMCB7DQo+ICsgICAgICAgICAgICAwbzQwMDAwIHwg
+MG8xMDAwMDAgfCAwbzEyMDAwMCA9PiBTcGVjOjpmcm9tKCh1LCBzZWxmLmZvcm1hdCgpLmxheW91
+dCgpKSksDQoNCm1hdGNoIG1vZGUgJiBTZWxmOjpTX0lGTVQgew0KICAgICBTZWxmOjpTX0lGRElS
+IHwgU2VsZjo6U19JRlJFRyB8IFNlbGY6OlNfSUZMTksgPT4gU3BlYzo6ZnJvbSgodSwgDQpzZWxm
+LmZvcm1hdCgpLmxheW91dCgpKSksDQoNCj4gKyAgICAgICAgICAgIC8vIFdlIGRvbid0IHN1cHBv
+cnQgZGV2aWNlIGlub2RlcyBjdXJyZW50bHkuDQo+ICsgICAgICAgICAgICBfID0+IFNwZWM6OlVu
+a25vd24sDQo+ICsgICAgICAgIH0NCj4gKyAgICB9DQo+ICsNCj4gKyAgICBwdWIoY3JhdGUpIGZu
+IGlub2RlX3R5cGUoJnNlbGYpIC0+IFR5cGUgew0KPiArICAgICAgICBsZXQgbW9kZSA9IG1hdGNo
+IHNlbGYgew0KPiArICAgICAgICAgICAgU2VsZjo6RXh0ZW5kZWQoZXh0ZW5kZWQpID0+IGV4dGVu
+ZGVkLmlfbW9kZSwNCj4gKyAgICAgICAgICAgIFNlbGY6OkNvbXBhY3QoY29tcGFjdCkgPT4gY29t
+cGFjdC5pX21vZGUsDQo+ICsgICAgICAgIH07DQo+ICsgICAgICAgIG1hdGNoIG1vZGUgJiBTZWxm
+OjpTX0lGTVQgew0KPiArICAgICAgICAgICAgU2VsZjo6U19JRkRJUiA9PiBUeXBlOjpEaXJlY3Rv
+cnksIC8vIERpcmVjdG9yeQ0KPiArICAgICAgICAgICAgU2VsZjo6U19JRlJFRyA9PiBUeXBlOjpS
+ZWd1bGFyLCAgIC8vIFJlZ3VsYXIgRmlsZQ0KPiArICAgICAgICAgICAgU2VsZjo6U19JRkxOSyA9
+PiBUeXBlOjpMaW5rLCAgICAgIC8vIFN5bWJvbGljIExpbmsNCj4gKyAgICAgICAgICAgIFNlbGY6
+OlNfSUZJRk8gPT4gVHlwZTo6RmlmbywgICAgICAvLyBGSUZPDQo+ICsgICAgICAgICAgICBTZWxm
+OjpTX0lGU09DSyA9PiBUeXBlOjpTb2NrZXQsICAgLy8gU29ja2V0DQo+ICsgICAgICAgICAgICBT
+ZWxmOjpTX0lGQkxLID0+IFR5cGU6OkJsb2NrLCAgICAgLy8gQmxvY2sNCj4gKyAgICAgICAgICAg
+IFNlbGY6OlNfSUZDSFIgPT4gVHlwZTo6Q2hhcmFjdGVyLCAvLyBDaGFyYWN0ZXINCj4gKyAgICAg
+ICAgICAgIF8gPT4gVHlwZTo6VW5rbm93biwNCj4gKyAgICAgICAgfQ0KPiArICAgIH0NCj4gKw0K
+PiArICAgIHB1YihjcmF0ZSkgZm4geGF0dHJfc2l6ZSgmc2VsZikgLT4gT2ZmIHsNCj4gKyAgICAg
+ICAgbWF0Y2ggc2VsZiB7DQo+ICsgICAgICAgICAgICBTZWxmOjpFeHRlbmRlZChleHRlbmRlZCkg
+PT4gew0KDQppZiBleHRlbmRlZC5pX3hhdHRyX2ljb3VudCA9PSAwIHsNCiAgICAgcmV0dXJuIDA7
+DQp9DQoNCnRvIGF2b2lkIHN1YnRyYWN0IHdpdGggb3ZlcmZsb3cuDQoNClRoYW5rcywNCkppYW5h
+bg0KDQo+ICsgICAgICAgICAgICAgICAgc2l6ZV9vZjo6PFhBdHRyU2hhcmVkRW50cnlTdW1tYXJ5
+PigpIGFzIE9mZg0KPiArICAgICAgICAgICAgICAgICAgICArIChzaXplX29mOjo8Y19pbnQ+KCkg
+YXMgT2ZmKSAqIChleHRlbmRlZC5pX3hhdHRyX2ljb3VudCBhcyBPZmYgLSAxKQ0KPiArICAgICAg
+ICAgICAgfQ0KPiArICAgICAgICAgICAgU2VsZjo6Q29tcGFjdChfKSA9PiAwLA0KPiArICAgICAg
+ICB9DQo+ICsgICAgfQ0KPiArDQo+ICsgICAgcHViKGNyYXRlKSBmbiB4YXR0cl9jb3VudCgmc2Vs
+ZikgLT4gdTE2IHsNCj4gKyAgICAgICAgbWF0Y2ggc2VsZiB7DQo+ICsgICAgICAgICAgICBTZWxm
+OjpFeHRlbmRlZChleHRlbmRlZCkgPT4gZXh0ZW5kZWQuaV94YXR0cl9pY291bnQsDQo+ICsgICAg
+ICAgICAgICBTZWxmOjpDb21wYWN0KGNvbXBhY3QpID0+IGNvbXBhY3QuaV94YXR0cl9pY291bnQs
+DQo+ICsgICAgICAgIH0NCj4gKyAgICB9DQo+ICt9DQo+ICsNCj4gK3B1YihjcmF0ZSkgdHlwZSBD
+b21wYWN0SW5vZGVJbmZvQnVmID0gW3U4OyBzaXplX29mOjo8Q29tcGFjdElub2RlSW5mbz4oKV07
+DQo+ICtwdWIoY3JhdGUpIHR5cGUgRXh0ZW5kZWRJbm9kZUluZm9CdWYgPSBbdTg7IHNpemVfb2Y6
+OjxFeHRlbmRlZElub2RlSW5mbz4oKV07DQo+ICtwdWIoY3JhdGUpIGNvbnN0IERFRkFVTFRfSU5P
+REVfQlVGOiBFeHRlbmRlZElub2RlSW5mb0J1ZiA9IFswOyBzaXplX29mOjo8RXh0ZW5kZWRJbm9k
+ZUluZm8+KCldOw0KPiAtLQ0KPiAyLjQ2LjANCj4gDQoNCg==
