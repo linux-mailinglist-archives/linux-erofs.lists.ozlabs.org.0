@@ -2,66 +2,66 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC83F97CFF8
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Sep 2024 04:49:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 45BB997D007
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Sep 2024 04:58:11 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1726800592;
-	bh=kqk81g7cDt96LcsILwVIIivCeMHJdyCwfxcWpXlbjK8=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
+	s=201707; t=1726801089;
+	bh=YMih+D2wi9YPfDllyA5iKM7XhtyK372/GGedwlq9L10=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=k/XIBY4ILMGd4RHtHZ9f7MEhl4hNpI90e1TXPlDR1TVh7JiW6PVrIuao/Fxi80a7E
-	 9I4U3dIhBB0dRS61Z0cg2MM1PzGYqx0OVIQqYc7SJwDi0vuOVwifbS7zg5bPpnuD8p
-	 R45uQkkFyRGrIp1fiEf9w2Q7p1cSLmJ3ijN4n/0GcsrlBUXVB6LkavIGU+oWQ7WcxF
-	 CHZDgsDg5fgSgkh8fUTI7ycog0bKl6qKwtkEsMRl4KnrMBGfPoTuWoWsB99rCfxqm+
-	 dQT9JJbAyZ8ME4bMPa9zUW9OaLrp8xIZNnpaZM6boJLZ8IgDh/E8z+gp77/XD9tKuB
-	 Ntr7dEG528ssg==
+	b=RMQDHKYa6TAfIdO+s5zmVZEtuF5zoWT/vRuXl8MC4SRY4s7+DUcOYGgBdqPY36PD9
+	 7QqGBPbDxbcsNIpHPvcIueV6rPkcLTHn1Oisw2Ng0nsvycPBWbKNQv+7XcPrQQSiue
+	 3Zo862BzmuFPMwP2JBgu3+SSuq0DpLWXpuZ60TAC4B1Anv8TjALIp/bg4aZ+eQGH7C
+	 VMeaMlA9GzLPD4Z+WOcxSXfO8IF7qqyo8zIvspMobN/oE78moYD3X/4d+ujG/xp3ux
+	 nhv5eoLoKX4AzSiVtt2EXJn3OTp8KTr64gP95udNVPm93djtOHYT2SHd8rDqUmDq4p
+	 PBgA0dOOezJVg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X8xgh5Ykzz2ysc
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Sep 2024 12:49:52 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X8xsF2csVz2yRF
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Sep 2024 12:58:09 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=148.135.17.20
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726800588;
-	cv=none; b=i1XHHFw7+ywBZWH3C6N8xyAiEvGf/Cl8YIpGtJj+DNF97eOHZjQm+e/gvTMEKw+jlmzHGQA60rL5QFsEZ9DK9kNZDkU86LgcyXwv/eUE5u5G0sxAH4vOFegKHIQC+XEDd1dkyKGPVBvgTTeri8Y/yJKOvCw56mDA5ZB7hdOeO27fcpAYsQdXtK7VkuvbUKO1jSdnsawqBoN9TqWcERLJUKkcyWrx3zhoSrUFUsUj9E5OmMjJ719hxRFFkeeXzEs92oX599H30yFdFx0s7FPxfVdlxq9/DN19XlImUghe+IU2PAFNH3yuZ2YLGiSahQggp8+W3Dfqmodyd+gu44O8Sw==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726801086;
+	cv=none; b=djJbOiF59Eakz19RzHfG6nDX5aC8T63lYDS4UWLKchz/01/wafVj6NsyCB1HX2hHLOz4AKuBxGaTPD7gBo7vdxFkfeQtNQRL5BerY+uqnDKeU0uK9ovsDa3PaukZtBJabwLUbplD0oMz5bYy/VEzVksWKTXb3Ah1sK8IzY/v/23gXLMUY5X+5ku/e6L9NXAYVpd9tcUbex2Nw2YcQWMs1k0x0+ddTCcGeMogjrK4JpEgQKwAtcrQ5fr2uBWeHNCBWaDW13BkZoKrPTwlIKvrlpi5+5WtAzmtoqmq+R7ZD9JPXdmNXebSgYz9Ea7THo1IRt1yvIYszvjQ8Gah6GN1kA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726800588; c=relaxed/relaxed;
-	bh=kqk81g7cDt96LcsILwVIIivCeMHJdyCwfxcWpXlbjK8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dmiOlJUf/j6dVtwcOU8DypFMNPOkCfHQ6NZplc/zvwE2le052qDV99DYQY/6BU38hWTZGG+RxBNX4aAi5mT3saYRRmB8nc5vzsRST8GQpR/k0258QXQluGFqnFtkwaXGTF/go8XIcAGlWNlJrqX6OdppM9n/FuRNhswCJewRyesDCqfPUnWmq+eFe2rakMDWcwAxRM2scsIG2EkV5rhwQugRCIR1xZWYzuy2SXdF8OJ/kvyRJhuHOwSgjOl1Ur5fu6+twOm9A+JnbrAFBWUbfUJP08/U09M0tKROSSK3hDP/J7yKgpCGa6q+/NtVeMbP4LBNg6FOF1OjtW9boX6gKg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=ZcZSdQbp; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
+	t=1726801086; c=relaxed/relaxed;
+	bh=YMih+D2wi9YPfDllyA5iKM7XhtyK372/GGedwlq9L10=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jfSPCpWgBu0cnbLCPnieNixK3/0hgLSC7/J7E0Lx6vDm6w/c8H4III097Grhz9lxoe4P8QuR/nLsCZWxVoBennH6nTIQgaJwJHYU//2fIH6HIKHblLjSWmXy/FdDag2njDQQopnSZaoKDT9fuX8p96SilqncNyjI6YqbB1xm/Y82i/X4LTPB5PAAl6jsQHNgiz8JIIWw26wSjS8jZ6CkmHGI82uf1pkWiEDLDhsuIFIIdOXrfMf0t1IMLcwfr7Ns8vG6M/8OGsIjd7y9lvPqVWT+3z5LM5wzDZj3JF/4mTDDLkQ/jN4UDrwnag5QhkFBg+I8w0PI/LfK949YiOLEug==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=gnmap5+E; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=ZcZSdQbp;
+	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=gnmap5+E;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=tlmp.cc (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org)
 Received: from mail.tlmp.cc (unknown [148.135.17.20])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X8xgc0lPGz2xpp
-	for <linux-erofs@lists.ozlabs.org>; Fri, 20 Sep 2024 12:49:48 +1000 (AEST)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E02B36983F;
-	Thu, 19 Sep 2024 22:49:42 -0400 (EDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X8xsB4WKFz2xmS
+	for <linux-erofs@lists.ozlabs.org>; Fri, 20 Sep 2024 12:58:06 +1000 (AEST)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 763BC697AF;
+	Thu, 19 Sep 2024 22:58:02 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tlmp.cc; s=dkim;
-	t=1726800584; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=kqk81g7cDt96LcsILwVIIivCeMHJdyCwfxcWpXlbjK8=;
-	b=ZcZSdQbp0VIvi0hfV0+927P1+M62iDNMPEz8UWh77he1IbyVS8s/xfcerNU97WMcSpe4It
-	R1kVb/4LL5o9xetugpbqxLTEZN4aS7SAknhy4/zhXOdgJLfk66eLW8cLEuet/nekxGdGtE
-	VNe/jAajUxhGXzCTWtAzEB4KygCCsKR4MEmBV/NANbcUiw1aW6eyoAfKFtGrBK6jdc9j/t
-	OfznPOPYLnnXj8aRGZZobGAeY43OmcdTNKwZG3PMqhv/UXZLLPRGmLEuJbtwb9uVMvDr1Y
-	c3xZ0GuAZkcmDtSR7g3pfZ7mjEjwvxr4CMZ6ixa0xKIFJX0AX3fSho3Zu58Aog==
-To: rust-for-linux@vger.kernel.org
-Subject: [PATCH RESEND 1/1] rust: error: auto-generate error declarations
-Date: Fri, 20 Sep 2024 10:49:19 +0800
-Message-ID: <20240920024920.215842-2-toolmanp@tlmp.cc>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20240920024920.215842-1-toolmanp@tlmp.cc>
-References: <2024091602-bannister-giddy-0d6e@gregkh>
- <20240920024920.215842-1-toolmanp@tlmp.cc>
+	t=1726801083; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=YMih+D2wi9YPfDllyA5iKM7XhtyK372/GGedwlq9L10=;
+	b=gnmap5+EjwAIwiUWK0HpcE8HCAks0Et9LQ8kadQi6QeoAdN2CxJcPnDpb3HoXeeYNKz7Rd
+	PTKv9f6reL0WqH0v4rdRvFf8B2fv2iaMRTq1RmQT1IRp5S68a/2HWa1UuZvDZ5KLKAvCXZ
+	kMhQJFvVSprSsMYga52499cV3uiAqhfjE+ZoCufd/x8Mr7lGwqrhQKqVXQ92PwRlqSBWXw
+	fsarJDIg4y39MkPXvvy1r7OFhvD8/tNw0f5j6LiZrY68fSORsyuurNm4bSa857RDJTxBes
+	0gkQ6hqa63bEPBqhbg1EAgyMcoKqSegmMjZXv2NfGg7pvut4lCkmk1y1y0voaA==
+Date: Fri, 20 Sep 2024 10:57:55 +0800
+To: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [RFC PATCH 03/24] erofs: add Errno in Rust
+Message-ID: <xqta6t7rrabvj4rdwt7bhp2ijxgnfzd65fauhca2rfyfhwxyzj@5wa5h63gelc5>
+References: <20240916135634.98554-1-toolmanp@tlmp.cc>
+ <20240916135634.98554-4-toolmanp@tlmp.cc>
+ <2024091602-bannister-giddy-0d6e@gregkh>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2024091602-bannister-giddy-0d6e@gregkh>
 X-Last-TLS-Session-Version: TLSv1.3
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -76,140 +76,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Yiyang Wu via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Yiyang Wu <toolmanp@tlmp.cc>
-Cc: gregkh@linuxfoundation.org, LKML <linux-kernel@vger.kernel.org>, gary@garyguo.net, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, rust-for-linux@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch adds a new cmd_errno to convert the include/linux/errno.h
-content into declare_err! macros for better maintainability and readability.
+On Mon, Sep 16, 2024 at 07:51:40PM GMT, Greg KH wrote:
+> On Mon, Sep 16, 2024 at 09:56:13PM +0800, Yiyang Wu wrote:
+> > Introduce Errno to Rust side code. Note that in current Rust For Linux,
+> > Errnos are implemented as core::ffi::c_uint unit structs.
+> > However, EUCLEAN, a.k.a EFSCORRUPTED is missing from error crate.
+> > 
+> > Since the errno_base hasn't changed for over 13 years,
+> > This patch merely serves as a temporary workaround for the missing
+> > errno in the Rust For Linux.
+> 
+> Why not just add the missing errno to the core rust code instead?  No
+> need to define a whole new one for this.
+> 
+> thanks,
+> 
+> greg k-h
 
-Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
----
- rust/.gitignore      |  1 +
- rust/Makefile        | 14 ++++++++++-
- rust/kernel/error.rs | 58 +++-----------------------------------------
- 3 files changed, 18 insertions(+), 55 deletions(-)
+I have added all the missing errnos by autogenerating declare_err!
+in the preceding patches. Please check :)
 
-diff --git a/rust/.gitignore b/rust/.gitignore
-index d3829ffab80b..ba71ef4a9239 100644
---- a/rust/.gitignore
-+++ b/rust/.gitignore
-@@ -5,6 +5,7 @@ bindings_helpers_generated.rs
- doctests_kernel_generated.rs
- doctests_kernel_generated_kunit.c
- uapi_generated.rs
-+errno_generated.rs
- exports_*_generated.h
- doc/
- test/
-diff --git a/rust/Makefile b/rust/Makefile
-index dd76dc27d666..f5a1680fe59c 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -22,6 +22,8 @@ always-$(CONFIG_RUST) += exports_alloc_generated.h exports_helpers_generated.h \
- always-$(CONFIG_RUST) += uapi/uapi_generated.rs
- obj-$(CONFIG_RUST) += uapi.o
- 
-+always-$(CONFIG_RUST) += kernel/errno_generated.rs
-+
- ifdef CONFIG_RUST_BUILD_ASSERT_ALLOW
- obj-$(CONFIG_RUST) += build_error.o
- else
-@@ -289,6 +291,15 @@ $(obj)/uapi/uapi_generated.rs: $(src)/uapi/uapi_helper.h \
-     $(src)/bindgen_parameters FORCE
- 	$(call if_changed_dep,bindgen)
- 
-+quiet_cmd_errno = EXPORTS $@
-+      cmd_errno = \
-+	$(CC) $(c_flags) -E -CC -dD $< \
-+	| sed -E 's/\#define\s*([A-Z0-9]+)\s+([0-9]+)\s+\/\*\s*(.*)\s\*\//declare_err!(\1, "\3.");/' \
-+	| grep -E '^declare_err.*$$' > $@
-+
-+$(obj)/kernel/errno_generated.rs: $(srctree)/include/linux/errno.h FORCE
-+	$(call if_changed,errno)
-+
- # See `CFLAGS_REMOVE_helpers.o` above. In addition, Clang on C does not warn
- # with `-Wmissing-declarations` (unlike GCC), so it is not strictly needed here
- # given it is `libclang`; but for consistency, future Clang changes and/or
-@@ -420,7 +431,8 @@ $(obj)/uapi.o: $(src)/uapi/lib.rs \
- 
- $(obj)/kernel.o: private rustc_target_flags = --extern alloc \
-     --extern build_error --extern macros --extern bindings --extern uapi
--$(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/alloc.o $(obj)/build_error.o \
-+$(obj)/kernel.o: $(src)/kernel/lib.rs $(obj)/kernel/errno_generated.rs \
-+    $(obj)/alloc.o $(obj)/build_error.o \
-     $(obj)/libmacros.so $(obj)/bindings.o $(obj)/uapi.o FORCE
- 	+$(call if_changed_rule,rustc_library)
- 
-diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
-index 6f1587a2524e..bb16b40a8d19 100644
---- a/rust/kernel/error.rs
-+++ b/rust/kernel/error.rs
-@@ -23,60 +23,10 @@ macro_rules! declare_err {
-             pub const $err: super::Error = super::Error(-(crate::bindings::$err as i32));
-         };
-     }
--
--    declare_err!(EPERM, "Operation not permitted.");
--    declare_err!(ENOENT, "No such file or directory.");
--    declare_err!(ESRCH, "No such process.");
--    declare_err!(EINTR, "Interrupted system call.");
--    declare_err!(EIO, "I/O error.");
--    declare_err!(ENXIO, "No such device or address.");
--    declare_err!(E2BIG, "Argument list too long.");
--    declare_err!(ENOEXEC, "Exec format error.");
--    declare_err!(EBADF, "Bad file number.");
--    declare_err!(ECHILD, "No child processes.");
--    declare_err!(EAGAIN, "Try again.");
--    declare_err!(ENOMEM, "Out of memory.");
--    declare_err!(EACCES, "Permission denied.");
--    declare_err!(EFAULT, "Bad address.");
--    declare_err!(ENOTBLK, "Block device required.");
--    declare_err!(EBUSY, "Device or resource busy.");
--    declare_err!(EEXIST, "File exists.");
--    declare_err!(EXDEV, "Cross-device link.");
--    declare_err!(ENODEV, "No such device.");
--    declare_err!(ENOTDIR, "Not a directory.");
--    declare_err!(EISDIR, "Is a directory.");
--    declare_err!(EINVAL, "Invalid argument.");
--    declare_err!(ENFILE, "File table overflow.");
--    declare_err!(EMFILE, "Too many open files.");
--    declare_err!(ENOTTY, "Not a typewriter.");
--    declare_err!(ETXTBSY, "Text file busy.");
--    declare_err!(EFBIG, "File too large.");
--    declare_err!(ENOSPC, "No space left on device.");
--    declare_err!(ESPIPE, "Illegal seek.");
--    declare_err!(EROFS, "Read-only file system.");
--    declare_err!(EMLINK, "Too many links.");
--    declare_err!(EPIPE, "Broken pipe.");
--    declare_err!(EDOM, "Math argument out of domain of func.");
--    declare_err!(ERANGE, "Math result not representable.");
--    declare_err!(ERESTARTSYS, "Restart the system call.");
--    declare_err!(ERESTARTNOINTR, "System call was interrupted by a signal and will be restarted.");
--    declare_err!(ERESTARTNOHAND, "Restart if no handler.");
--    declare_err!(ENOIOCTLCMD, "No ioctl command.");
--    declare_err!(ERESTART_RESTARTBLOCK, "Restart by calling sys_restart_syscall.");
--    declare_err!(EPROBE_DEFER, "Driver requests probe retry.");
--    declare_err!(EOPENSTALE, "Open found a stale dentry.");
--    declare_err!(ENOPARAM, "Parameter not supported.");
--    declare_err!(EBADHANDLE, "Illegal NFS file handle.");
--    declare_err!(ENOTSYNC, "Update synchronization mismatch.");
--    declare_err!(EBADCOOKIE, "Cookie is stale.");
--    declare_err!(ENOTSUPP, "Operation is not supported.");
--    declare_err!(ETOOSMALL, "Buffer or request is too small.");
--    declare_err!(ESERVERFAULT, "An untranslatable error occurred.");
--    declare_err!(EBADTYPE, "Type not supported by server.");
--    declare_err!(EJUKEBOX, "Request initiated, but will not complete before timeout.");
--    declare_err!(EIOCBQUEUED, "iocb queued, will get completion event.");
--    declare_err!(ERECALLCONFLICT, "Conflict with recalled state.");
--    declare_err!(ENOGRACE, "NFS file lock reclaim refused.");
-+    include!(concat!(
-+        env!("OBJTREE"),
-+        "/rust/kernel/errno_generated.rs"
-+    ));
- }
- 
- /// Generic integer kernel error.
--- 
-2.46.0
+Best Regards,
 
+Yiyang Wu
