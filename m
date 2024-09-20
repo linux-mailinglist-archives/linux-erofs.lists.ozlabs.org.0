@@ -2,67 +2,78 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45BB997D007
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Sep 2024 04:58:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1726801089;
-	bh=YMih+D2wi9YPfDllyA5iKM7XhtyK372/GGedwlq9L10=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=RMQDHKYa6TAfIdO+s5zmVZEtuF5zoWT/vRuXl8MC4SRY4s7+DUcOYGgBdqPY36PD9
-	 7QqGBPbDxbcsNIpHPvcIueV6rPkcLTHn1Oisw2Ng0nsvycPBWbKNQv+7XcPrQQSiue
-	 3Zo862BzmuFPMwP2JBgu3+SSuq0DpLWXpuZ60TAC4B1Anv8TjALIp/bg4aZ+eQGH7C
-	 VMeaMlA9GzLPD4Z+WOcxSXfO8IF7qqyo8zIvspMobN/oE78moYD3X/4d+ujG/xp3ux
-	 nhv5eoLoKX4AzSiVtt2EXJn3OTp8KTr64gP95udNVPm93djtOHYT2SHd8rDqUmDq4p
-	 PBgA0dOOezJVg==
+	by mail.lfdr.de (Postfix) with ESMTPS id 2439397D811
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Sep 2024 18:11:55 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X8xsF2csVz2yRF
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Sep 2024 12:58:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X9HT44DMYz2yXm
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Sep 2024 02:11:52 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=148.135.17.20
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726801086;
-	cv=none; b=djJbOiF59Eakz19RzHfG6nDX5aC8T63lYDS4UWLKchz/01/wafVj6NsyCB1HX2hHLOz4AKuBxGaTPD7gBo7vdxFkfeQtNQRL5BerY+uqnDKeU0uK9ovsDa3PaukZtBJabwLUbplD0oMz5bYy/VEzVksWKTXb3Ah1sK8IzY/v/23gXLMUY5X+5ku/e6L9NXAYVpd9tcUbex2Nw2YcQWMs1k0x0+ddTCcGeMogjrK4JpEgQKwAtcrQ5fr2uBWeHNCBWaDW13BkZoKrPTwlIKvrlpi5+5WtAzmtoqmq+R7ZD9JPXdmNXebSgYz9Ea7THo1IRt1yvIYszvjQ8Gah6GN1kA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=185.125.188.123
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726848710;
+	cv=none; b=cgyySi8ghZsgZoX1N3k0kSa5LdnCqEBzS3ITF+5GsujS7Vvrh3QY5ectFSlNaY6M8BAM9XiCWGGLAnYc5loQcszxqnzU/5wyfzlyA09G1SlR5guyd0WpsxmA7FWXnJz6iOa/iu/0jL0krVvjrgTAyxquaVGSLdvfBiDcMrXkAmaz/Amb46XjWbvZQ6JyL4Myy3lsHfAtxA7U/ukJGzR/EheQJjDs7ISOH4W3/wzzGbnJIwtKh24y/7tiFkFz0+R7VPCJtyPOfR/SywWylqsqPVbpEOm0SVASOQZVkHJeGYCuZeXQfftfn8rrS91oHXtCj46CodfhgYOxjbiLiDlBNg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726801086; c=relaxed/relaxed;
-	bh=YMih+D2wi9YPfDllyA5iKM7XhtyK372/GGedwlq9L10=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jfSPCpWgBu0cnbLCPnieNixK3/0hgLSC7/J7E0Lx6vDm6w/c8H4III097Grhz9lxoe4P8QuR/nLsCZWxVoBennH6nTIQgaJwJHYU//2fIH6HIKHblLjSWmXy/FdDag2njDQQopnSZaoKDT9fuX8p96SilqncNyjI6YqbB1xm/Y82i/X4LTPB5PAAl6jsQHNgiz8JIIWw26wSjS8jZ6CkmHGI82uf1pkWiEDLDhsuIFIIdOXrfMf0t1IMLcwfr7Ns8vG6M/8OGsIjd7y9lvPqVWT+3z5LM5wzDZj3JF/4mTDDLkQ/jN4UDrwnag5QhkFBg+I8w0PI/LfK949YiOLEug==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc; dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=gnmap5+E; dkim-atps=neutral; spf=pass (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org) smtp.mailfrom=tlmp.cc
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=tlmp.cc
+	t=1726848710; c=relaxed/relaxed;
+	bh=DDCFdwfSzQys9/FLX8CaxepnpWlXD3khIsZd4D4f4G8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=oqRMHoRHS3sBEQYXiyldWgdpDbyqyk5Q262qvmsGB/aXyYx1M9y/XhG0FmtcTV0PrNm8R6i2Zoh6uFwpAJ+nVXzc9KN0qLBjbKvWfraK5eTW0dYRmJuz2JIGLflVbuVFHPlNheHCS2lkuV+zVuqK75KFidj6BW7rNbyEDBGFoaPUOeY657m52nb209P45o6CqTWvMWylRBAWmMrIKl5VY+RvxXR/TS2CSsAdN6YqKH+tz5OfctIAhEjIngLrZsbJbXvYa7qP+zVGSW8jl81JVvgB6nXnU8zqAxSFoS+nwQk23KNRoKiP7+642xWEKp+5t1RDRQH9f396GsxLF6oqxQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=canonical.com; dkim=pass (2048-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20210705 header.b=NzIOjiPj; dkim-atps=neutral; spf=pass (client-ip=185.125.188.123; helo=smtp-relay-internal-1.canonical.com; envelope-from=fred.lotter@canonical.com; receiver=lists.ozlabs.org) smtp.mailfrom=canonical.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=tlmp.cc header.i=@tlmp.cc header.a=rsa-sha256 header.s=dkim header.b=gnmap5+E;
+	dkim=pass (2048-bit key; unprotected) header.d=canonical.com header.i=@canonical.com header.a=rsa-sha256 header.s=20210705 header.b=NzIOjiPj;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=tlmp.cc (client-ip=148.135.17.20; helo=mail.tlmp.cc; envelope-from=toolmanp@tlmp.cc; receiver=lists.ozlabs.org)
-Received: from mail.tlmp.cc (unknown [148.135.17.20])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=canonical.com (client-ip=185.125.188.123; helo=smtp-relay-internal-1.canonical.com; envelope-from=fred.lotter@canonical.com; receiver=lists.ozlabs.org)
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X8xsB4WKFz2xmS
-	for <linux-erofs@lists.ozlabs.org>; Fri, 20 Sep 2024 12:58:06 +1000 (AEST)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 763BC697AF;
-	Thu, 19 Sep 2024 22:58:02 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tlmp.cc; s=dkim;
-	t=1726801083; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=YMih+D2wi9YPfDllyA5iKM7XhtyK372/GGedwlq9L10=;
-	b=gnmap5+EjwAIwiUWK0HpcE8HCAks0Et9LQ8kadQi6QeoAdN2CxJcPnDpb3HoXeeYNKz7Rd
-	PTKv9f6reL0WqH0v4rdRvFf8B2fv2iaMRTq1RmQT1IRp5S68a/2HWa1UuZvDZ5KLKAvCXZ
-	kMhQJFvVSprSsMYga52499cV3uiAqhfjE+ZoCufd/x8Mr7lGwqrhQKqVXQ92PwRlqSBWXw
-	fsarJDIg4y39MkPXvvy1r7OFhvD8/tNw0f5j6LiZrY68fSORsyuurNm4bSa857RDJTxBes
-	0gkQ6hqa63bEPBqhbg1EAgyMcoKqSegmMjZXv2NfGg7pvut4lCkmk1y1y0voaA==
-Date: Fri, 20 Sep 2024 10:57:55 +0800
-To: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH 03/24] erofs: add Errno in Rust
-Message-ID: <xqta6t7rrabvj4rdwt7bhp2ijxgnfzd65fauhca2rfyfhwxyzj@5wa5h63gelc5>
-References: <20240916135634.98554-1-toolmanp@tlmp.cc>
- <20240916135634.98554-4-toolmanp@tlmp.cc>
- <2024091602-bannister-giddy-0d6e@gregkh>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X9HT0457gz2xs7
+	for <linux-erofs@lists.ozlabs.org>; Sat, 21 Sep 2024 02:11:46 +1000 (AEST)
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 878353F1CC
+	for <linux-erofs@lists.ozlabs.org>; Fri, 20 Sep 2024 16:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1726848703;
+	bh=DDCFdwfSzQys9/FLX8CaxepnpWlXD3khIsZd4D4f4G8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type;
+	b=NzIOjiPjSulJVkrFNhgfVJszrBLCuOebNy7uSzJqc66rSjGSxFbkNV80w4i3XzeRv
+	 sLnFYIpMuvt7q+pNN9MnQ+4JORE33O8Q5ke5S6LGhlR96OC1Jt6LqP+Vy4PkWf7eg3
+	 awhj0/ZUQTyRxeOIY8OuIYLEpYdM0DSAsFeK9YUpHH5TdKuMrn7SrevR7hXqoqDcoL
+	 AYhlCgTwFH9zsrT2QQIQXTU70Pw2SkXsjar+xruhNchHKHb7aQXcDtFT2GL+E+Fc1n
+	 WS56P9YOpz7AM//LEeWLe7ZZD2iToBDmtQ1uyRqeP6pN0lKl5DhHAJB2wlssLSxWHy
+	 CfzmKVAvjp9uQ==
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6c5984bc3fdso24460096d6.0
+        for <linux-erofs@lists.ozlabs.org>; Fri, 20 Sep 2024 09:11:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726848702; x=1727453502;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DDCFdwfSzQys9/FLX8CaxepnpWlXD3khIsZd4D4f4G8=;
+        b=Pey7g64jvMhcGG7FV70E+UeLCKsvcURQjYogMuMnquzlDI9HI6wIiLbWJaNCfLDoJV
+         N6XVL+gFUvS0xBdtwugHQV8mB4vg7UZw3LLKCcensskmVJan1x9iF9e/uA8e+6gE6rkP
+         WbliHPkbCo42UqrF27DZdCRgGx7Kwb0+evfx1G/Wt1G/z/dJvp2nDXZjZ00QkAGI1qS3
+         EO1VNrV+ZZ95F6HhIo0QFj+OkPpLJHjKblJF0mwgaQAqgH/f+nA9GnOS3ipotm8iRYa5
+         V0pGbySJ9P/OB2S7mCQW1VqiPgNL4MT0wGG65oYelTO0A1Jx/kZjnXJ4yc6glCU8POi5
+         tqhQ==
+X-Gm-Message-State: AOJu0Yxu3/mghQU0xLM0hDhIj8C4xYqHZXAoiKTY/ayIAHzUnJiUKPyL
+	OY1JIajuxz4Xpul/4ypXIH1bUZirXucsSQMs6YN0y0BDbosW+ol8Uy5TcBwnD1QtAzenvF9/v1W
+	vx9lRuq3EjzuiCGREpd6bHot7/+ie4JCx+zbdDNTwYEikFl0wJGrx/fu5x2qhjbqtuWhBFvdPlj
+	ZIaXTeL2W0IQNllVPvGkpTITP2JG462VwDf69cKGvLOSnPm2pJXnrj8GSncWyQAGE=
+X-Received: by 2002:a05:6214:2dc2:b0:6c1:70c8:ead6 with SMTP id 6a1803df08f44-6c7bd5b9113mr40616716d6.50.1726848702427;
+        Fri, 20 Sep 2024 09:11:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpFxLfxheiosQFuoLcNuKiKiiN8Gc290djgmzJxP3aQ3g+Thj4hD7qs914ABzfH+qxbNZl0c4wvvW4qXStro0=
+X-Received: by 2002:a05:6214:2dc2:b0:6c1:70c8:ead6 with SMTP id
+ 6a1803df08f44-6c7bd5b9113mr40616326d6.50.1726848701763; Fri, 20 Sep 2024
+ 09:11:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024091602-bannister-giddy-0d6e@gregkh>
-X-Last-TLS-Session-Version: TLSv1.3
+From: Fred Lotter <fred.lotter@canonical.com>
+Date: Fri, 20 Sep 2024 18:11:31 +0200
+Message-ID: <CA+yndwhjTkF_D1QZ3UDLggAXXGen_fLr6rLvBVS8tYw3ViH+8Q@mail.gmail.com>
+Subject: Help with EROFS for specific test scenario
+To: linux-erofs@lists.ozlabs.org
+Content-Type: multipart/alternative; boundary="00000000000073343906228f4b5f"
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -74,32 +85,69 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Yiyang Wu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Yiyang Wu <toolmanp@tlmp.cc>
-Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, rust-for-linux@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, Sep 16, 2024 at 07:51:40PM GMT, Greg KH wrote:
-> On Mon, Sep 16, 2024 at 09:56:13PM +0800, Yiyang Wu wrote:
-> > Introduce Errno to Rust side code. Note that in current Rust For Linux,
-> > Errnos are implemented as core::ffi::c_uint unit structs.
-> > However, EUCLEAN, a.k.a EFSCORRUPTED is missing from error crate.
-> > 
-> > Since the errno_base hasn't changed for over 13 years,
-> > This patch merely serves as a temporary workaround for the missing
-> > errno in the Rust For Linux.
-> 
-> Why not just add the missing errno to the core rust code instead?  No
-> need to define a whole new one for this.
-> 
-> thanks,
-> 
-> greg k-h
+--00000000000073343906228f4b5f
+Content-Type: text/plain; charset="UTF-8"
 
-I have added all the missing errnos by autogenerating declare_err!
-in the preceding patches. Please check :)
+Hi,
 
-Best Regards,
+In the context of this page:
+https://erofs.docs.kernel.org/en/latest/merging.html
 
-Yiyang Wu
+I am trying to experiment with EROFS where I want to try something crazy
+like the following setup:
+
+/dev/mmcblk0p3:
+|
+EROFS root image
+|
+--------
+|
+EROFS second image
+|
+--------
+
+I wanted to have a primate root EROFS filesystem written at the start of a
+partition. Then I would like to "append" files to the immutable root EROFS
+filesystem, by adding a concatenated EROFS filesystem after the root
+filesystem, with an external device reference pointing to the root EROFS
+filesystem.
+
+My idea in my head was then to boot the Linux kernel with something like:
+
+root=/dev/mmcblk0p3 rootfstype=erofs
+rootoptions=device=/dev/mmcblk0p3,offset=<root size>
+
+1. Is it possible to have the "blobdevice" point to a complete EROFS
+filesystem?
+
+2. If yes, is there userspace support for creating this setup?
+
+Kind Regards,
+Fred
+
+--00000000000073343906228f4b5f
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div>Hi,</div><div><br></div><div>In the context of this p=
+age:</div><a href=3D"https://erofs.docs.kernel.org/en/latest/merging.html">=
+https://erofs.docs.kernel.org/en/latest/merging.html</a><br><br>I am trying=
+ to experiment with EROFS where I want to try something crazy like the foll=
+owing setup:<br><br>/dev/mmcblk0p3:<br>|<br>EROFS root image<br>|<br>------=
+--=C2=A0<br>|<br>EROFS second image<br>|<br>--------<div><br>I wanted to ha=
+ve a primate root EROFS filesystem written at the start of a partition. The=
+n I would like to &quot;append&quot; files to the=C2=A0immutable root EROFS=
+ filesystem, by adding a concatenated EROFS filesystem after the root files=
+ystem, with an external device reference pointing to the root EROFS filesys=
+tem.<br><br>My idea in my head was then to boot the Linux kernel with somet=
+hing like:<br><br>root=3D/dev/mmcblk0p3 rootfstype=3Derofs rootoptions=3Dde=
+vice=3D/dev/mmcblk0p3,offset=3D&lt;root size&gt;<br><br>1. Is it possible t=
+o have the &quot;blobdevice&quot; point to a complete EROFS filesystem?<br>=
+<br>2. If yes, is there userspace support for creating this setup?=C2=A0</d=
+iv><div><br></div><div>Kind Regards,</div><div>Fred<br><br><br></div><div><=
+br><div><br></div></div></div>
+
+--00000000000073343906228f4b5f--
