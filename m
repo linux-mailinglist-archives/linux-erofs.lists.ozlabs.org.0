@@ -1,75 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AD0797DC5B
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Sep 2024 11:18:59 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32CAD97DC5D
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Sep 2024 11:29:43 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X9kG55PSNz2yVj
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Sep 2024 19:18:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4X9kVX69nlz2yVt
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Sep 2024 19:29:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::112c"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726910331;
-	cv=none; b=iZtGfEENd36b7sUV/l1QJY5FiqqPzN9U3BKkl1xx9vtjnvxeNXW7G7dflJQKzIq5Q6a+r+XFtLnswsJfefX4NQ3LUfb2xiW8iehwDNd1aPRMr4I5dLCNoYDkid6q9V7ic0wYFxBKg+XeQBVn0njdL0rH1oVZsSsiBc1iYMVXSU5Q1circdgszkjJrpWs3IEDKrziYkxSAW/wBEHJdJKYPV6YKMRw/Yoi+ZjA/xSmLWSVoJmh0zeNKMQQetfvc02aacgALQMmFB2PLdLa5Kpob2j1rupRlTZG4aePlyhm6aB47nVk44i6Kih4jhMA6GOSAqomByX+2AK+YyMaf0bdmw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726910977;
+	cv=none; b=Z7l9RyGso/7diIIGQojd1xNVBY4v+6NOijfOOnNybNLIkP3mJtzyb7JpZmS3wuN0ToOUvzwAdvY1d/QFLG/XOzbUiLAKwwG2WswAvTzCfTxTPyOSP31lKNVGXt8MN3Dhh0lqKb5DYuMc9CT6II43aRGO2sf56q7+NPlcReJdFZhNul/xR51se5Jv4NCFYNm+dMDMNWn/zxc+PtfCTW6mJn67PirE5vxMEfXelkmddakyF9NxeJNsXkjTlIQpMo2qcN8sepMTJAfPFkaSKca2pE01h7nwMcGazC+m8DULNlaMMYiSEoPoU2zPIiWf9XAaAuJ5v04BaqRkEB9SN8vmRQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726910331; c=relaxed/relaxed;
-	bh=mQlfqEKo0HNQmfqcfRxBIAuCZS7UpLwuphyfvK1E0MU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AuB88xVRcq62WLkG1otc6FonJcwWSpySTnFRYnS8FI3qRbYMmy9XmpifpgAlNq+eCnD6wq8iQk5iqcf1MSulKbUUXEh/H4ZclG8+10hipinP22BimjvzxUhD7evHEALKowvnyDjBSKu23Ult5UmwKLBZvOSZu2Ajj+da9z7tuif4vsNvcZBSUqL16UsA9wKE5LcnTmBskpaudR1ihhRCZ1FWE39qa/tXCOVbqyO7tm8s7XpRppejWzxqsbiqxzsSIOUHXXIeFAC5E02awhIepAUvD+gYMzdtRsA+gxn/dgN7CDPmfmEfce0L4U5INegzr2EV1EITHKY7d2EQZDt7bg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=hQ1RqOQq; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::112c; helo=mail-yw1-x112c.google.com; envelope-from=jnhuang95@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1726910977; c=relaxed/relaxed;
+	bh=Db9JY12mR3v9qGVXqAPEtXS6YlRFHGoPfQPLW0pSgcY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oXNRRzQLpv4uRGjfaCrmuSc61eAR2JuCl1yt+nS2P9A1IjH5YMb32amUiawdJHmek5QKVF7lTaGZWOOVv5oWB/otfFszPCpF0oecEuP5W0mE9aUpfPl7uaq7mVeiyxIa4vnSWvbcOoVvQPJSgTSVaVce6d3gx4gNgrDPFyDzva9R/MtrvrolwELa1bYzbj9lU4mmraElHBl7TtnXaOuPWzo6ls884x/7DQ2+Leq3jZ6Os2MtSLJcCF+d3qvyWKM0qeqyWrx0NWozUla5x9lP+9iCp6ZV8QzYoi3mDaIhs2a9mJtKAgtN60nOUf69MHXJcArAOnZ/3tcd/+CArvBLjw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ysec6DIW; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=hQ1RqOQq;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ysec6DIW;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::112c; helo=mail-yw1-x112c.google.com; envelope-from=jnhuang95@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X9kG313p6z2xmZ
-	for <linux-erofs@lists.ozlabs.org>; Sat, 21 Sep 2024 19:18:50 +1000 (AEST)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-6d6891012d5so23175537b3.2
-        for <linux-erofs@lists.ozlabs.org>; Sat, 21 Sep 2024 02:18:50 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4X9kVR49hVz2xmZ
+	for <linux-erofs@lists.ozlabs.org>; Sat, 21 Sep 2024 19:29:33 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726910325; x=1727515125; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mQlfqEKo0HNQmfqcfRxBIAuCZS7UpLwuphyfvK1E0MU=;
-        b=hQ1RqOQquEnX3akKuEy1/JiQ8kOyZnhPr96cmh8QHEKB8JlBtIvUt9StMzlQ/Oi0cH
-         KB0LS/y/spe7JK/s7WGNJSXSzd4W7XxZfb62QgfxS8fMAkbGh/+bsR8x5f5Q/Ief71pI
-         vkIguRcwFZh76hb3dgG8C8sZgJcIpYF2HfSfbskFISMEIS+tB8qMeChOG8xP0k3DSMuV
-         h4YCUedv8KPPpxdZBx0O1SCQriSWuvWF41yP2Cc0NJU4vvvWJ0eKr83b8Wgz/QO7T6tr
-         PUEHRlEMeiotpp9W9TWH0RW1sY+yEXsBIDCbW/DpEypzCzUKkuGPpkUwhZMUPMyDPpGx
-         wFow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726910325; x=1727515125;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mQlfqEKo0HNQmfqcfRxBIAuCZS7UpLwuphyfvK1E0MU=;
-        b=D61CPRUr4F32fluP3rXQ573PM0shrVGoYdtaeCYc9Q8nh6CyhRvNy1BwE2Vd2zdo/U
-         Pk2prGgZU9duy+YClfor0S/czqCvcJefU1blKnvE8n3P9GIOHWBMe5pLQXJHDPLVM1zS
-         ViSHHQFSPOJeSZwgVYh7rPciy5cWuMnFlLWllwz78gu0IzB3f1crqGuw7TZ7+k5xoTL7
-         ZdMqfHGzD1LDasTJxoNiy9mYVO3UYpGgADC8nnAo6wieZ1dU/MOh1CdnpJCVl2qyvErk
-         IfKTMOoSTP6bVrdKkKDVZzXHxSuhvP8Nu8ISvUvnMMo+Mh89UkLRyRb7/XJkdCUfcYTd
-         Sq3A==
-X-Gm-Message-State: AOJu0YwH12wdXypF2+DYm9DRbXx+mZdjN4VUuIF4UUOW15qiVNkBzQYw
-	KwWseK4blWQG7xw+y+2cLMHcR+kIlfVoQ0RYP8q1RGav59+hIMxIHjVLTcdndjk9B3cHokmNsQT
-	MKD5BpGNR01wNlsfpEadV3O51HFw=
-X-Google-Smtp-Source: AGHT+IEH5NeBSIjHHJhC6ua7HRL6Fq8ZDgEnCbyXKlVdFyzkBMNgnnt617vekaPtsDaTmp7zUtq9NMCVx+azm0CohxY=
-X-Received: by 2002:a05:690c:668d:b0:63b:d055:6a7f with SMTP id
- 00721157ae682-6dff2d2c893mr48269317b3.38.1726910324940; Sat, 21 Sep 2024
- 02:18:44 -0700 (PDT)
+	d=linux.alibaba.com; s=default;
+	t=1726910969; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Db9JY12mR3v9qGVXqAPEtXS6YlRFHGoPfQPLW0pSgcY=;
+	b=ysec6DIW6Lwjn/GmBbyvViZzMakIzQM7YHYdTigC093C8PoUNyltZKquMi7YiOxMJlK8VYdpWecISlDMSKDmAhbf3qxefDQ6VQcfsQWwS3dRrqx6jGb4LDusokEv3iHFxPt3fZlLFNdGC/iVWtbSHfPgjdbhIZdFWltPD2MwIY4=
+Received: from 30.27.103.103(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WFNqScp_1726910965)
+          by smtp.aliyun-inc.com;
+          Sat, 21 Sep 2024 17:29:27 +0800
+Message-ID: <3a6314fc-7956-47f3-8727-9dc026f3f50e@linux.alibaba.com>
+Date: Sat, 21 Sep 2024 17:29:25 +0800
 MIME-Version: 1.0
-References: <20240916135634.98554-1-toolmanp@tlmp.cc> <20240916135634.98554-9-toolmanp@tlmp.cc>
-In-Reply-To: <20240916135634.98554-9-toolmanp@tlmp.cc>
-From: Jianan Huang <jnhuang95@gmail.com>
-Date: Sat, 21 Sep 2024 17:18:29 +0800
-Message-ID: <CAJfKizqAN99fGjVY-x7qF4XCdNZ2xLkgw_FGB8nUx53iWDf2gg@mail.gmail.com>
-Subject: Re: [RFC PATCH 08/24] erofs: add device data structure in Rust
-To: Yiyang Wu <toolmanp@tlmp.cc>
-Content-Type: multipart/alternative; boundary="0000000000007a274506229da408"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 03/24] erofs: add Errno in Rust
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20240916135634.98554-1-toolmanp@tlmp.cc>
+ <20240916135634.98554-4-toolmanp@tlmp.cc>
+ <20240916210111.502e7d6d.gary@garyguo.net>
+ <2b04937c-1359-4771-86c6-bf5820550c92@linux.alibaba.com>
+ <ac871d1e-9e4e-4d1b-82be-7ae87b78d33e@proton.me>
+ <9bbbac63-c05f-4f7b-91c2-141a93783cd3@linux.alibaba.com>
+ <239b5d1d-64a7-4620-9075-dc645d2bab74@proton.me>
+ <b5c77d5b-7f6d-4fe5-a711-6376c265ed53@linux.alibaba.com>
+ <2024092139-kimono-heap-8431@gregkh>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <2024092139-kimono-heap-8431@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -81,183 +67,177 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, rust-for-linux@vger.kernel.org
+Cc: Benno Lossin <benno.lossin@proton.me>, rust-for-linux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Gary Guo <gary@garyguo.net>, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---0000000000007a274506229da408
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Greg,
 
-Yiyang Wu via Linux-erofs <linux-erofs@lists.ozlabs.org> =E4=BA=8E2024=E5=
-=B9=B49=E6=9C=8816=E6=97=A5=E5=91=A8=E4=B8=80
-21:57=E5=86=99=E9=81=93=EF=BC=9A
+On 2024/9/21 16:37, Greg Kroah-Hartman wrote:
+> On Fri, Sep 20, 2024 at 08:49:26AM +0800, Gao Xiang wrote:
+>>
+>>
 
-> This patch introduce device data structure in Rust.
-> It can later support chunk based block maps.
->
-> Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
-> ---
->  fs/erofs/rust/erofs_sys.rs         |  1 +
->  fs/erofs/rust/erofs_sys/devices.rs | 28 ++++++++++++++++++++++++++++
->  2 files changed, 29 insertions(+)
->  create mode 100644 fs/erofs/rust/erofs_sys/devices.rs
->
-> diff --git a/fs/erofs/rust/erofs_sys.rs b/fs/erofs/rust/erofs_sys.rs
-> index 8cca2cd9b75f..f1a1e491caec 100644
-> --- a/fs/erofs/rust/erofs_sys.rs
-> +++ b/fs/erofs/rust/erofs_sys.rs
-> @@ -25,6 +25,7 @@
->
->  pub(crate) mod alloc_helper;
->  pub(crate) mod data;
-> +pub(crate) mod devices;
->  pub(crate) mod errnos;
->  pub(crate) mod inode;
->  pub(crate) mod superblock;
-> diff --git a/fs/erofs/rust/erofs_sys/devices.rs b/fs/erofs/rust/erofs_sys=
-/
-> devices.rs
-> new file mode 100644
-> index 000000000000..097676ee8720
-> --- /dev/null
-> +++ b/fs/erofs/rust/erofs_sys/devices.rs
-> @@ -0,0 +1,28 @@
-> +// Copyright 2024 Yiyang Wu
-> +// SPDX-License-Identifier: MIT or GPL-2.0-or-later
-> +
-> +use alloc::vec::Vec;
-> +
-> +/// Device specification.
-> +#[derive(Copy, Clone, Debug)]
-> +pub(crate) struct DeviceSpec {
-> +    pub(crate) tags: [u8; 64],
->
+...
 
-I think we don't need to keep tags in the memory. It's not used in flatdev
-mode
-or when mount with "-o device". It can be replaced with a string like the C
-version,
-since it may represent a file path of variable length, or ignore this field
-for now.
+>>
+>>>
+>>>>>> For Rust VFS abstraction, that is a different and indepenent story,
+>>>>>> Yiyang don't have any bandwidth on this due to his limited time.
+>>>>>
+>>>>> This seems a bit weird, you have the bandwidth to write your own
+>>>>> abstractions, but not use the stuff that has already been developed?
+>>>>
+>>>> It's not written by me, Yiyang is still an undergraduate tudent.
+>>>> It's his research project and I don't think it's his responsibility
+>>>> to make an upstreamable VFS abstraction.
+>>>
+>>> That is fair, but he wouldn't have to start from scratch, Wedsons
+>>> abstractions were good enough for him to write a Rust version of ext2.
+>>
+>> The Wedson one is just broken, I assume that you've read
+>> https://lwn.net/Articles/978738/ ?
+> 
+> Yes, and if you see the patches on linux-fsdevel, people are working to
+> get these vfs bindings correct for any filesystem to use.  Please review
+> them and see if they will work for you for erofs, as "burying" the
+> binding in just one filesystem is not a good idea.
+
+Thanks for the reply!
+
+I do think the first Rust filesystem should be ext2 or other
+simple read-write fses due to many VFS member lifetime
+concerns as other filesystem developpers suggested before [1],
+otherwise honestly the VFS abstraction will be refactoredagain
+and again just due to limited vision and broken functionality,
+I do think which way is not how currently new C Linux kernel
+APIs are proposed too (e.g. carefully review all potential use
+cases).
+
+[1] https://lore.kernel.org/linux-fsdevel/ZZ3GeehAw%2F78gZJk@dread.disaster.area/
+
+> 
+>>> In addition, tarfs and puzzlefs also use those bindings.
+>>
+>> These are both toy fses, I don't know who will use these two
+>> fses for their customers.
+> 
+> tarfs is being used by real users as it solves a need they have today.
+> And it's a good example of how the vfs bindings would work, although
+> in a very simple way.  You have to start somewhere :)
+
+EROFS has resolved the same functionality upstream in
+2023, see [2]
+
+```
+Replacing tar or cpio archives with a filesystem is a
+potential use case for EROFS. There has been a proposal
+from the confidential-computing community for a kernel
+tarfs filesystem, which would allow guest VMs to
+efficiently mount a tar file directly. But EROFS would
+be a better choice, he said. There is a proof-of-concept
+patch set that allows directly mounting a downloaded tar
+file using EROFS that performs better than unpacking the
+tarball to ext4, then mounting it in the guest using
+overlayfs.
+```
+
+Honestly, I've kept doing very friendly public/private
+communitation with Wedson in the confidential-computing
+community to see if there could be a collaboration for
+our tar direct mount use cases, but he just ignored my
+suggestion [3] and keep on his "tarfs" development (even
+this "tarfs" has no relationship with the standard
+POSIX tar/pax format because you cannot mount a real
+POSIX tar/pax by his implementation.)
+
+So my concern is just as below:
+  1) EROFS can already work well for his "tarfs" use
+     cases, so there is already an in-tree stuff works
+     without any issue;
+
+  2) No matter from his "tarfs" current on-disk format,
+     and on-disk extendability perspersive, I think it
+     will be used for a very narrow use case.
+     So in the long term, it could be vanished or forget
+     since there are more powerful alternatives in the
+     kernel tree for more wider use cases.
+
+I think there could be some example fs to show Rust VFS
+abstraction (such as ext2, and even minix fs).  Those
+fses shouldn't be too hard to get a Rust implementation
+(e.g. minix fs for pre Linux 1.0).  But honestly I don't
+think it's a good idea to upstream a narrow use case
+stuff even it's written in Rust: also considering Wedson
+has been quited, so the code may not be maintainerd
+anymore.
+
+In short, I do _hope_ a nice Rust VFS abstraction could
+be landed upstream.  But it should be driven by a simple
+no-journal read-write filesystem to check all Rust VFS
+components in the global vision instead of some
+unsustainable random upstream work just for
+corporation pride likewise.
+
+And if some other approach could compare EROFS as a known
+prior art (as I once fully compared with SquashFS in the
+paper) with good reasons, I will be very happy and feel
+respect (also I could know the limitation of EROFS or how
+to improve EROFS.)  But if there is no reason and just
+ignore EROFS exists, and I think it's not the proper way
+to propose a new kernel feature / filesystem.
+
+[2] https://lwn.net/Articles/934047
+[3] https://github.com/kata-containers/kata-containers/pull/7106#issuecomment-1592192981
+
+> 
+>>> Miguel Ojeda.
+>>> However, we can only reach that longterm goal if maintainers are willing
+>>> and ready to put Rust into their subsystems (either by knowing/learning
+>>> Rust themselves or by having a co-maintainer that does just the Rust
+>>> part). So you wanting to experiment is great. I appreciate that you also
+>>> have a student working on this. Still, I think we should follow our
+>>> guidelines and create abstractions in order to require as little
+>>> `unsafe` code as possible.
+>>
+>> I've expressed my point.  I don't think some `guideline`
+>> could bring success to RFL.  Since many subsystems needs
+>> an incremental way, not just a black-or-white thing.
+> 
+> Incremental is good, and if you want to use a .rs file or two in the
+> middle of your module, that's fine.  But please don't try to implement
+> bindings to common kernel data structures like inodes and dentries and
+> superblocks if at all possible and ignore the work that others are doing
+> in this area as that's just duplicated work and will cause more
+> confusion over time.
+
+Yeah, agreed. That is what I'd like to say.
+
+Honestly, Yiyang don't have enough time to implement
+VFS abstraction due to his studies and my time slot is
+limited for now too.
+
+So I also asked him to "don't touch common kernel data
+structures like inodes and dentries and superblocks
+if possible" and just convert the EROFS core logic.
+
+But it seems his RFC patch is still left something,
+I think he will address them the next version.
+
+> 
+> It's the same for drivers, I will object strongly if someone attempted
+> to create a USB binding for 'struct usb_interface' in the middle of a
+> USB driver and instead insist they work on a generic binding that can be
+> used by all USB drivers.  I imagine the VFS maintainers have the same
+> opinion on their apis as well for valid reasons.
+
+Agreed.
 
 Thanks,
-Jianan
+Gao Xiang
 
+> 
+> thanks,
+> 
+> greg k-h
 
-> +    pub(crate) blocks: u32,
-> +    pub(crate) mapped_blocks: u32,
-> +}
-> +
-> +/// Device slot.
-> +#[derive(Copy, Clone, Debug)]
-> +#[repr(C)]
-> +pub(crate) struct DeviceSlot {
-> +    tags: [u8; 64],
-> +    blocks: u32,
-> +    mapped_blocks: u32,
-> +    reserved: [u8; 56],
-> +}
-> +
-> +/// Device information.
-> +pub(crate) struct DeviceInfo {
-> +    pub(crate) mask: u16,
-> +    pub(crate) specs: Vec<DeviceSpec>,
-> +}
-> --
-> 2.46.0
->
->
-
---0000000000007a274506229da408
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">Yiyang Wu via Linux-erofs &lt;<a href=
-=3D"mailto:linux-erofs@lists.ozlabs.org">linux-erofs@lists.ozlabs.org</a>&g=
-t; =E4=BA=8E2024=E5=B9=B49=E6=9C=8816=E6=97=A5=E5=91=A8=E4=B8=80 21:57=E5=
-=86=99=E9=81=93=EF=BC=9A<br></div><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex">This patch introduce device data structure in Rust.<br>
-It can later support chunk based block maps.<br>
-<br>
-Signed-off-by: Yiyang Wu &lt;<a href=3D"mailto:toolmanp@tlmp.cc" target=3D"=
-_blank">toolmanp@tlmp.cc</a>&gt;<br>
----<br>
-=C2=A0fs/erofs/rust/<a href=3D"http://erofs_sys.rs" rel=3D"noreferrer" targ=
-et=3D"_blank">erofs_sys.rs</a>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 1 +=
-<br>
-=C2=A0fs/erofs/rust/erofs_sys/<a href=3D"http://devices.rs" rel=3D"noreferr=
-er" target=3D"_blank">devices.rs</a> | 28 ++++++++++++++++++++++++++++<br>
-=C2=A02 files changed, 29 insertions(+)<br>
-=C2=A0create mode 100644 fs/erofs/rust/erofs_sys/<a href=3D"http://devices.=
-rs" rel=3D"noreferrer" target=3D"_blank">devices.rs</a><br>
-<br>
-diff --git a/fs/erofs/rust/<a href=3D"http://erofs_sys.rs" rel=3D"noreferre=
-r" target=3D"_blank">erofs_sys.rs</a> b/fs/erofs/rust/<a href=3D"http://ero=
-fs_sys.rs" rel=3D"noreferrer" target=3D"_blank">erofs_sys.rs</a><br>
-index 8cca2cd9b75f..f1a1e491caec 100644<br>
---- a/fs/erofs/rust/<a href=3D"http://erofs_sys.rs" rel=3D"noreferrer" targ=
-et=3D"_blank">erofs_sys.rs</a><br>
-+++ b/fs/erofs/rust/<a href=3D"http://erofs_sys.rs" rel=3D"noreferrer" targ=
-et=3D"_blank">erofs_sys.rs</a><br>
-@@ -25,6 +25,7 @@<br>
-<br>
-=C2=A0pub(crate) mod alloc_helper;<br>
-=C2=A0pub(crate) mod data;<br>
-+pub(crate) mod devices;<br>
-=C2=A0pub(crate) mod errnos;<br>
-=C2=A0pub(crate) mod inode;<br>
-=C2=A0pub(crate) mod superblock;<br>
-diff --git a/fs/erofs/rust/erofs_sys/<a href=3D"http://devices.rs" rel=3D"n=
-oreferrer" target=3D"_blank">devices.rs</a> b/fs/erofs/rust/erofs_sys/<a hr=
-ef=3D"http://devices.rs" rel=3D"noreferrer" target=3D"_blank">devices.rs</a=
-><br>
-new file mode 100644<br>
-index 000000000000..097676ee8720<br>
---- /dev/null<br>
-+++ b/fs/erofs/rust/erofs_sys/<a href=3D"http://devices.rs" rel=3D"noreferr=
-er" target=3D"_blank">devices.rs</a><br>
-@@ -0,0 +1,28 @@<br>
-+// Copyright 2024 Yiyang Wu<br>
-+// SPDX-License-Identifier: MIT or GPL-2.0-or-later<br>
-+<br>
-+use alloc::vec::Vec;<br>
-+<br>
-+/// Device specification.<br>
-+#[derive(Copy, Clone, Debug)]<br>
-+pub(crate) struct DeviceSpec {<br>
-+=C2=A0 =C2=A0 pub(crate) tags: [u8; 64],<br></blockquote><div><br></div><d=
-iv>I think we don&#39;t need to keep tags in the memory. It&#39;s not used =
-in flatdev mode <br>or when mount with &quot;-o device&quot;. It can be rep=
-laced with a string like the C version, <br>since it may represent a file p=
-ath of variable length, or ignore this field for now.<br></div><div><br></d=
-iv><div>Thanks,</div><div>Jianan</div><div>=C2=A0</div><blockquote class=3D=
-"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(2=
-04,204,204);padding-left:1ex">
-+=C2=A0 =C2=A0 pub(crate) blocks: u32,<br>
-+=C2=A0 =C2=A0 pub(crate) mapped_blocks: u32,<br>
-+}<br>
-+<br>
-+/// Device slot.<br>
-+#[derive(Copy, Clone, Debug)]<br>
-+#[repr(C)]<br>
-+pub(crate) struct DeviceSlot {<br>
-+=C2=A0 =C2=A0 tags: [u8; 64],<br>
-+=C2=A0 =C2=A0 blocks: u32,<br>
-+=C2=A0 =C2=A0 mapped_blocks: u32,<br>
-+=C2=A0 =C2=A0 reserved: [u8; 56],<br>
-+}<br>
-+<br>
-+/// Device information.<br>
-+pub(crate) struct DeviceInfo {<br>
-+=C2=A0 =C2=A0 pub(crate) mask: u16,<br>
-+=C2=A0 =C2=A0 pub(crate) specs: Vec&lt;DeviceSpec&gt;,<br>
-+}<br>
--- <br>
-2.46.0<br>
-<br>
-</blockquote></div></div>
-
---0000000000007a274506229da408--
