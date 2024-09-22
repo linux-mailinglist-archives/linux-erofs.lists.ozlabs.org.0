@@ -2,74 +2,85 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E97997DC6F
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Sep 2024 11:44:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C6EAE97E02F
+	for <lists+linux-erofs@lfdr.de>; Sun, 22 Sep 2024 07:08:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1726981731;
+	bh=ilo5E6tJQGAJlEXke9tvGINDBcvWGNiqxNrcjDh3Hic=;
+	h=References:In-Reply-To:Date:Subject:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:
+	 From;
+	b=UgKr+V/W0KDU20PDobm38wbm0j0HYJHKm+rAdT3Hod6o/A9DWYXvtkuJE15g1lPcK
+	 zFL6zShrDuHnml26Tk4H2/0o15MyMaKiCTpjpqvp0kt0kyPxRvY23KtlKPMCgj35Cv
+	 TJt6AocPYe6uvR3Qh+Gd9dh67BOSLKgR7FqYprvoLvpJAkS+NtIvxQr+tPj4LgSgpU
+	 E0dH8NOFeOWqcjTPK2kgjOLb/w0t61rI/fzG4nRwEjc1j+zzFnfdN6eaOGt8CKYtCm
+	 USSClfvWJ3XYDOnQlnoxKx98hl5DQrm+4tF9a6yzZU2poXQrHilFcg8UfAcfKAtffP
+	 a7mxeYfDbxlug==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4X9kr72PBZz2yWK
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Sep 2024 19:44:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XBDg75kFVz2yVV
+	for <lists+linux-erofs@lfdr.de>; Sun, 22 Sep 2024 15:08:51 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::112d"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726911893;
-	cv=none; b=c/o+sbK2MJACtIMPLsYo9VS6gp6SctxBsSnMiygQDloiydVqaE/o92Z0OK3IMHf9AAUsypJtgts2QbVNP1ArJhIlS9xMBRgQuezUe1Tdkby39WaDlbLQ1tCNhwnH2Ev1of1B3X1LCuzWMWxHcSPLdmerJ8Blmwgip6izAlVrfO7/5qvjgXNSUO9E8nSHiMePz18w3YAgt61VXy6Scfv9FQo8G7AKxdsRGw3QRaxRiAFaWVEdacCWLJ8R2depqJAxsoHzMzsAmDI/IQUKc1HUUSBOwT3eklxMN6S2ts3t+2X78XGr/i1mDaDrPKShpXh7ie2PPwtkQG8oxexfq3rNNw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::432"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1726981728;
+	cv=none; b=lVzCqqJrN6kki5Nu5iAFUZr8m81FFbLS8ikUbTgqIjlQPBWdj3GNPdRAFntELAew3z+pELpONcFLFGDxi0b71pEQOlunM2uCoCL6RObop6ZWKXxmLgYd1Tk9Qi6cb/22cAGCgoJvEeDiCxbS1tzO0yyuMD+5XUkoDz38GA7oMfgU7fQhHL0EJmsTQ9zeqhcnrfgQYoRx5UtfERtUbvPjysjMO7q1rEWx5dz4VgSzbyXH0AVx/G4HWULn0pPsGZwdMmKqSpdbIg51dHyEne3ivQid3y2+BKxE1ocRVna/i31/Ay9X2ooyizC4Q+QnvyUboUVee92jMnFGGPiZ6UTSJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1726911893; c=relaxed/relaxed;
-	bh=iT/pooyDWx+cXonngBHeD7hY6o8n6hEZ+T12BUFn3eU=;
+	t=1726981728; c=relaxed/relaxed;
+	bh=ilo5E6tJQGAJlEXke9tvGINDBcvWGNiqxNrcjDh3Hic=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S+MtmYzMQeKwu2UD8dE1puQKjOt4+pJZwdKYxKwYRIKDWBG4NYYOvoPa4UgXk/qPFhDgWUsYuYVYnb6B+bdYDPCytfUvGL1MA8nltXlcyOKGdyLBXeyCcW2ifLvKubxk4MDzy+uOoj055s4x2IwHHSnIWCg7OvcHU0ZjEanYtw6qYUcmcSBx4M+y8FpGzUNORTeB2uYHAwpObixJRPzNz59/3sNH0JsEP/EO6DPKuu/CoC6QiYvdhVAICdgOOTgc0DSta8eucwl4XkhkkK+4FbIquFSAlp4Odq7RWnxQk3xtwciBIhBVCabFqkkV9DSgey5DippCirqRFy4AhH2Png==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=gZnymtwA; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::112d; helo=mail-yw1-x112d.google.com; envelope-from=jnhuang95@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=FvWdkcWCodv44o/YpcNKCWr1jedqubUSEa0l1oMYAQjkoTZcNqo3aUtrz+fW7jIkj3v9B+tYq4YTtM3hR1xq+z0cao+Lbor3/8/+dTQSpXzyVPHZnd9gPBj3Q8SrnZP85783CHWVvK/BvazotQMjvTmzongQsIMwrlYlvP7CTA8UVG+F0GMPwc1e8bmmA3lZDlSYUIFfmaAoO6i0ysQJCCM5okjIx2uMFhJQ27zYNkgRnRTP2RCiuijOlm36LsFIlAjWrsBTXvEf8NEkj/XT2wZNy0RcE0Ehct9IHlZE9+RrettI9as035vS2avWcN6HmwnCp1Fh8kfswB2OoTKo4Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=orbstack.dev; dkim=pass (2048-bit key; secure) header.d=orbstack.dev header.i=@orbstack.dev header.a=rsa-sha256 header.s=google header.b=IE9P7ppm; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::432; helo=mail-pf1-x432.google.com; envelope-from=danny@orbstack.dev; receiver=lists.ozlabs.org) smtp.mailfrom=orbstack.dev
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=orbstack.dev
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=gZnymtwA;
+	dkim=pass (2048-bit key; secure) header.d=orbstack.dev header.i=@orbstack.dev header.a=rsa-sha256 header.s=google header.b=IE9P7ppm;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::112d; helo=mail-yw1-x112d.google.com; envelope-from=jnhuang95@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=orbstack.dev (client-ip=2607:f8b0:4864:20::432; helo=mail-pf1-x432.google.com; envelope-from=danny@orbstack.dev; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4X9kr51Yl9z2xmC
-	for <linux-erofs@lists.ozlabs.org>; Sat, 21 Sep 2024 19:44:52 +1000 (AEST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-6ddd138e0d0so25293877b3.1
-        for <linux-erofs@lists.ozlabs.org>; Sat, 21 Sep 2024 02:44:52 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XBDg375C2z2y8n
+	for <linux-erofs@lists.ozlabs.org>; Sun, 22 Sep 2024 15:08:46 +1000 (AEST)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-7191fb54147so2489071b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Sat, 21 Sep 2024 22:08:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1726911889; x=1727516689; darn=lists.ozlabs.org;
+        d=orbstack.dev; s=google; t=1726981721; x=1727586521; darn=lists.ozlabs.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iT/pooyDWx+cXonngBHeD7hY6o8n6hEZ+T12BUFn3eU=;
-        b=gZnymtwAaAhA26qIqRXCjPHJdLk4o7kmEZWmujNQRAYYtf82BKQKAaTcg2gei/Aqhn
-         fOdZztQQGkxZBgCj8ogIg1tddVaZ8WAB121VyhgkmyUIiKsfx5zqu+ZEdvKcHFlxaOIr
-         iFpHS966IGfNNTqKqlmuGHVaZuylLQ0FEPpfIa8KcLArdv/xBqGlqXjVRuWnfBLdngeu
-         eUFQWa/HmYEHFBTftw8BwIQ/DnUByuR9YJ56VnLt/YKJBBV0Ok8MrowOmKdIN7kQBEII
-         6L5ep6uket5sZgwJrsiq4J7Xx56QqO6iDYoay1XtLROTFDZ1LowU6T369eBnwTRaEyx+
-         96qA==
+        bh=ilo5E6tJQGAJlEXke9tvGINDBcvWGNiqxNrcjDh3Hic=;
+        b=IE9P7ppm7gQUELKqmb4O41ADsJtOhs/RXpMg+BkUEYWhihT1m+7ejV7XmaZb509MiP
+         aorOz+ludhI2Qcy4nLx7q7Z0V86XUDa+TrJRGSLtcWjAhmzPwodrjf60RIq5pauj0nzf
+         iMgF9MfxH0UPLZYxKKx5KHwtiNy81IgvjbhSSg/VGhYIKyTQWz3rz/TI39so9+TJqIXa
+         FgEo7EsC5wExseRA7/YDIbGHWot+pA6mSchvNciizIqdaa20Qz9dzOtIEAHfVM16z3DH
+         79bUceE0B4QxLyHZPHj72jY5i7dSLcJoF+O2NGKf4NiIXCQt9rgq3iNH5DeA9uzjmWe/
+         1NqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726911889; x=1727516689;
+        d=1e100.net; s=20230601; t=1726981721; x=1727586521;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iT/pooyDWx+cXonngBHeD7hY6o8n6hEZ+T12BUFn3eU=;
-        b=ExgCH84NxBlYOzPM9MeB7lrwN4MLKD+6JPx8HZoGMAvppEWmgSXCzwiO/Od+8uMwu+
-         PeZJhvaJTM3pqugeuW/DdNO6I7IArlYZOtqQEnNCWlLnQu7JomNoGr/wLJCHE3xwI+zB
-         xN/GaCZ3ZLqs34FI/jiRrVP4GxmUdeI4frogb7pwYWV4UX48OUGu0rr3NhrH3+9VuylB
-         g0w3iG9OmrhL33SVPvjJkiKTKwEUuRREx9LZVPeaS8cOeil4+2Q8CDRO8jpG0GN89Pwu
-         hRYC/oCDdrt9sJ/v4Vtbr5b3HMxk4pV7KW8KZ8AlbqFRzLYldZijo9QLxmW/ZMa/tVoH
-         KUoA==
-X-Gm-Message-State: AOJu0YzpuKQafvt7ZhoYf0MGmqMLkxuQV1MHGAY8/HltiUu/5AZg6T9s
-	cMsyXdOzEEHYZPT6qW+gEn3Wb+eegcOCRH0A9AncH0UBzLJsviB7I+dsY3wWEna85y+k4XdwkmJ
-	qivuiMHlMBK5CHY5kH9WLhxfPjAE=
-X-Google-Smtp-Source: AGHT+IH7ANdlTlvW/Mj7eVhLgLzw9ibdGPzl72d8JbFblPa9x1BA+ryCfZKd5D4ZNR1894gY3DwL4D76QQESJDYX57Y=
-X-Received: by 2002:a05:690c:d81:b0:6dd:d82c:4923 with SMTP id
- 00721157ae682-6dfeec1393amr60883837b3.7.1726911889342; Sat, 21 Sep 2024
- 02:44:49 -0700 (PDT)
+        bh=ilo5E6tJQGAJlEXke9tvGINDBcvWGNiqxNrcjDh3Hic=;
+        b=CgKGS7kO8H1RbNA/7oGQa18d6Hr/DAP3BsNpUYNVsCh+bN+E8F2TOGhQRW9OQZg4/q
+         /go7DnFdceZfCpJQDoissU0qyAMdCpIi8grJkBheQYSzi74wPeZISnoodg/d4C3oMuuz
+         sIOKK4/ReEd4CwNRaoBTq5GeV0iEPzFcUjkOs+0R7wMAIOGEKJa6bL9ki+V50ArZYNss
+         25/NrP4+oga/YkhqTyqNITFWYo/+IZ10njAaPQvEJbvqtOinbVmiEpMe6y8SJIUcZEJS
+         LTwuMIFPsQU1BmRsmPIzLTb+6eb/x7i7+6+5i9Apxg7+RdjAnaehAhx8e7+JGhbHcps1
+         v5MQ==
+X-Gm-Message-State: AOJu0Yzv8dwCb8Hv+rUFLoIX0jXf5PfnkGfbCLiv9tfkCfgFwk32p1k0
+	shYgLPyS7Hgwv8OTitL+cqYx9Id2znXLLH4nZoAlnuz7eS7WRDmR3KehEh0fWXDtOtIOzJous2m
+	vyV+EsydN8KogdkwomnNdgJ2ZBj2QSo1qKcPt/fOJBJb5wzbU
+X-Google-Smtp-Source: AGHT+IFjGfkR0qs+3T/FFxTL5LgANqbC9gb8jnoCzhvaPq5wN/45gKt2MZ53h4993UDQBnoSVIZmiJDNzI7wVLREDjY=
+X-Received: by 2002:a05:6a20:4386:b0:1d2:e945:77c4 with SMTP id
+ adf61e73a8af0-1d30c9c9898mr11075988637.2.1726981721334; Sat, 21 Sep 2024
+ 22:08:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20240916135634.98554-1-toolmanp@tlmp.cc> <20240916135634.98554-11-toolmanp@tlmp.cc>
-In-Reply-To: <20240916135634.98554-11-toolmanp@tlmp.cc>
-From: Jianan Huang <jnhuang95@gmail.com>
-Date: Sat, 21 Sep 2024 17:44:34 +0800
-Message-ID: <CAJfKizpW1rQuVfB3cNKVsEMYvHBegGcy5fgxqTBrr0wGsjjpjw@mail.gmail.com>
-Subject: Re: [RFC PATCH 10/24] erofs: add device_infos implementation in Rust
-To: Yiyang Wu <toolmanp@tlmp.cc>
+References: <20240916073835.77470-1-danny@orbstack.dev>
+In-Reply-To: <20240916073835.77470-1-danny@orbstack.dev>
+Date: Sat, 21 Sep 2024 22:08:30 -0700
+Message-ID: <CAEFvpLe92-nS+4zOv5a=UOMW2whBtsGZ98D_MHv+x_KujEaroQ@mail.gmail.com>
+Subject: Re: [PATCH] erofs-utils: lib: fix compressed packed inodes
+To: linux-erofs@lists.ozlabs.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -83,104 +94,65 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, rust-for-linux@vger.kernel.org
+From: Danny Lin via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Danny Lin <danny@orbstack.dev>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Yiyang Wu via Linux-erofs <linux-erofs@lists.ozlabs.org> =E4=BA=8E2024=E5=
-=B9=B49=E6=9C=8816=E6=97=A5=E5=91=A8=E4=B8=80 21:57=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> Add device_infos implementation in rust. It will later be used
-> to be put inside the SuperblockInfo. This mask and spec can later
-> be used to chunk-based image file block mapping.
->
-> Signed-off-by: Yiyang Wu <toolmanp@tlmp.cc>
-> ---
->  fs/erofs/rust/erofs_sys/devices.rs | 47 ++++++++++++++++++++++++++++++
->  1 file changed, 47 insertions(+)
->
-> diff --git a/fs/erofs/rust/erofs_sys/devices.rs b/fs/erofs/rust/erofs_sys=
-/devices.rs
-> index 097676ee8720..7495164c7bd0 100644
-> --- a/fs/erofs/rust/erofs_sys/devices.rs
-> +++ b/fs/erofs/rust/erofs_sys/devices.rs
-> @@ -1,6 +1,10 @@
->  // Copyright 2024 Yiyang Wu
->  // SPDX-License-Identifier: MIT or GPL-2.0-or-later
->
-> +use super::alloc_helper::*;
-> +use super::data::raw_iters::*;
-> +use super::data::*;
-> +use super::*;
->  use alloc::vec::Vec;
->
->  /// Device specification.
-> @@ -21,8 +25,51 @@ pub(crate) struct DeviceSlot {
->      reserved: [u8; 56],
->  }
->
-> +impl From<[u8; 128]> for DeviceSlot {
-> +    fn from(data: [u8; 128]) -> Self {
-> +        Self {
-> +            tags: data[0..64].try_into().unwrap(),
-> +            blocks: u32::from_le_bytes([data[64], data[65], data[66], da=
-ta[67]]),
-> +            mapped_blocks: u32::from_le_bytes([data[68], data[69], data[=
-70], data[71]]),
-> +            reserved: data[72..128].try_into().unwrap(),
-> +        }
-> +    }
-> +}
-> +
->  /// Device information.
->  pub(crate) struct DeviceInfo {
->      pub(crate) mask: u16,
->      pub(crate) specs: Vec<DeviceSpec>,
->  }
-> +
-> +pub(crate) fn get_device_infos<'a>(
-> +    iter: &mut (dyn ContinuousBufferIter<'a> + 'a),
-> +) -> PosixResult<DeviceInfo> {
-> +    let mut specs =3D Vec::new();
-> +    for data in iter {
-> +        let buffer =3D data?;
-> +        let mut cur: usize =3D 0;
-> +        let len =3D buffer.content().len();
-> +        while cur + 128 <=3D len {
-
-
-It is better to use macros instead of hardcode, like:
-const EROFS_DEVT_SLOT_SIZE: usize =3D size_of::<DeviceSlot>();
-Also works to the other similar usages in this patch set.
+Gentle bump =E2=80=94 let me know if anything needs to be changed!
 
 Thanks,
-Jianan
+Danny
 
+On Mon, Sep 16, 2024 at 12:39=E2=80=AFAM Danny Lin <danny@orbstack.dev> wro=
+te:
 >
-> +            let slot_data: [u8; 128] =3D buffer.content()[cur..cur + 128=
-].try_into().unwrap();
-> +            let slot =3D DeviceSlot::from(slot_data);
-> +            cur +=3D 128;
-> +            push_vec(
-> +                &mut specs,
-> +                DeviceSpec {
-> +                    tags: slot.tags,
-> +                    blocks: slot.blocks,
-> +                    mapped_blocks: slot.mapped_blocks,
-> +                },
-> +            )?;
-> +        }
-> +    }
-> +
-> +    let mask =3D if specs.is_empty() {
-> +        0
-> +    } else {
-> +        (1 << (specs.len().ilog2() + 1)) - 1
-> +    };
-> +
-> +    Ok(DeviceInfo { mask, specs })
-> +}
+> Commit b9b6493 fixed uncompressed packed inodes by not always writing
+> compressed data, but it broke compressed packed inodes because now
+> uncompressed file data is always written after the compressed data.
+>
+> The new error handling always rewinds with lseek and falls through to
+> write_uncompressed_file_from_fd, regardless of whether the compressed
+> data was written successfully (ret =3D 0) or not (ret =3D -ENOSPC). This
+> can result in corrupted files.
+>
+> Fix it by simplifying the error handling to better match the old code.
+>
+> Fixes: b9b6493 ("erofs-utils: lib: fix uncompressed packed inode")
+> Signed-off-by: Danny Lin <danny@orbstack.dev>
+> ---
+>  lib/inode.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+>
+> diff --git a/lib/inode.c b/lib/inode.c
+> index bc3cb76..797c622 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -1927,14 +1927,16 @@ struct erofs_inode *erofs_mkfs_build_special_from=
+_fd(struct erofs_sb_info *sbi,
+>
+>                 DBG_BUGON(!ictx);
+>                 ret =3D erofs_write_compressed_file(ictx);
+> -               if (ret && ret !=3D -ENOSPC)
+> -                        return ERR_PTR(ret);
+> +               if (ret =3D=3D -ENOSPC) {
+> +                       ret =3D lseek(fd, 0, SEEK_SET);
+> +                       if (ret < 0)
+> +                               return ERR_PTR(-errno);
+>
+> -               ret =3D lseek(fd, 0, SEEK_SET);
+> -               if (ret < 0)
+> -                       return ERR_PTR(-errno);
+> +                       ret =3D write_uncompressed_file_from_fd(inode, fd=
+);
+> +               }
+> +       } else {
+> +               ret =3D write_uncompressed_file_from_fd(inode, fd);
+>         }
+> -       ret =3D write_uncompressed_file_from_fd(inode, fd);
+>         if (ret)
+>                 return ERR_PTR(ret);
+>         erofs_prepare_inode_buffer(inode);
 > --
 > 2.46.0
 >
