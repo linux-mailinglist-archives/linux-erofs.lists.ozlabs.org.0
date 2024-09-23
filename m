@@ -1,54 +1,68 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 303C097E44B
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Sep 2024 02:08:34 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E6AD497E4B0
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Sep 2024 03:53:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1727056420;
+	bh=bm9PIK55L9vBacxqG1qfVzWmU1tHqOu+50gbZGZIxRE=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=VoWXaZ+ufSiSFjgKkl8EGjJ2hQpcmgFB0+gshXm5WzUXSjxrfHntZKgO4xVCFa7Nx
+	 8OwUsOBo722eNIZWrr2YzL0TD3eBoGcheFdQoyK2OuiPZPh/HGbh3Deo3Ftim0niqO
+	 q4L9oH3L8bLHWs9aV/GsEnCeTgiJYxJ3e/R2rnxAzfXOSKcWMNZfJE5WZIkEIgBhDT
+	 7kyHLZ9HZZ05pLJ3NU7qNyQbn7zSHtcdMxZy70rxMY2pdXwo8bZFUU5rCoJf2wUn4p
+	 73Ms1fEif6LOF5aXTRNuaEe9BYe/Ji15itlnKi9FHWoYlFKmrrfb639gnGCWWeGPdU
+	 A8znIqm1dYV6Q==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XBjy75yfvz2yPM
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Sep 2024 10:08:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XBmHS0DZgz2yRG
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Sep 2024 11:53:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727050110;
-	cv=none; b=Sw0fh6dRKeuRmwiz3gdf4TVSmtqUZXxUnDOB1Aa+BsQZ6W+5xYR7qHKcxhODxzPEi/lxE324DeJAuT47kf+Bsj7wsyyqqLH92ITYqBmUbgD5rr1KSy5gNzc5MY7qTBVtWuXBEl+CzN6NjXhZ21riaLzOFQ4QfPRirdNdRZh9assgP1Snsf2f3lalIQI9vuZdRRcWaNEdK061qko3UUx7RwPVb30g7kZ5v+rksxdMVHXUyjgtfchryZCGr8pK6usfJ9XpuW2oB2GXbkcsTNY0J6W7RM3rADbsYY1XtK+4wFT04KYWNRpp+VDVvgwInwgpQ0w/P+5zwC1VESUS8ecrrQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=85.239.33.245
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727056417;
+	cv=none; b=i9kCXkeOYQMmTM3wT6cvzdBIDmEAXajGmhCx8+Yhpn2jtBmbQuHnA8Jlll6zG+VPf5n+8hsfe87pBS1y3xFBUInsuAgClPS777CoJ79T9Ar+lzuiZAexfZl9gaI8he+zlqZ6jRV1r3nmyBbfQSEUiK+hEDCo72Gp2/MdnoHswkEbi984II8ipcckSNvp7Ox+b7emovvytCvRK0Q+ra+PIOamp5181fKlsIcMpdXJBuNJqnJR+55U7ZllZWrRvSbANbapW8PSgaC+c0KKeoQQqtZyZLKjdLsLhITWrT8CusuIX6aGF0i99K0cpUVPXr3Wlaw4jB+QGh/3F3jMEJqdJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727050110; c=relaxed/relaxed;
-	bh=QeL52XbexEQQhcGM03hcns968M1iZQ1HyvYc4ZGRN8s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TRq4BheSklG4kZvTS2e6Ckw0HkOkvH/ZKOwSCsdk/EmdpGDtQ61Hpm+S+QWPan00UAqNXCLdtIoNWQpfil+/jOv4ehDrMISsOvSJCcSTKjQT0M3xVo6k9jlM0zQZtbO/Zev9NL9Sof5qSxPF0ktUtlJFS7Nn3sq9x2egBQWrOA6VPakz1q/S98GR+pKwjB4ABlu20FPgqbnRt61W/rbG2RZrdlj64/fr2/mYopQ4F2w6QMyqCtxbrC0IbtozXrSGkpUkA6h7ER+A6opTLtLNYPBZXzyneP0X/KsnfBHJsz5TNX8ap/jFXp2cEAwhl90QCvV19rU2qSGTP8mXQXCXuQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=cPLLKdCt; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1727056417; c=relaxed/relaxed;
+	bh=bm9PIK55L9vBacxqG1qfVzWmU1tHqOu+50gbZGZIxRE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hB25EwmwlGRxgfVl6hA5NsWJwmYOmvgliw3spIBWBHoEltrBXTQ0gGka3Keusmw2GX18hT04+bJ/lnJLYWnY3MWMcNxveZbRuNZ/Y4FrCYDzrpyKxK3WQdP3/QY6bUNVyrOeDuiDUyfaKdesr3QK8bSroq8JkHH4HJKXMMY5POgjZ/ad6x5hnTaG6+id4lIFLwu5igvBJw9Hs7nNKJlj6gnNztgx6t+qKWuNyGjhCsotV1AQ7SazTV6/2mJcDoYnuNDLhpRVtapiPGDy7jBmsh2uPeRF5HG8D2GE1ICw/ZgVWFHR1+4MeM6ECwF144HFbiSCfjeCTGvStI/tK6InVg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=quicksendemail77.com; dkim=pass (2048-bit key; secure) header.d=quicksendemail77.com header.i=@quicksendemail77.com header.a=rsa-sha256 header.s=202407 header.b=go29S0q8; dkim-atps=neutral; spf=pass (client-ip=85.239.33.245; helo=mail.quicksendemail77.com; envelope-from=info@quicksendemail77.com; receiver=lists.ozlabs.org) smtp.mailfrom=quicksendemail77.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=quicksendemail77.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=cPLLKdCt;
+	dkim=pass (2048-bit key; secure) header.d=quicksendemail77.com header.i=@quicksendemail77.com header.a=rsa-sha256 header.s=202407 header.b=go29S0q8;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=quicksendemail77.com (client-ip=85.239.33.245; helo=mail.quicksendemail77.com; envelope-from=info@quicksendemail77.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 465 seconds by postgrey-1.37 at boromir; Mon, 23 Sep 2024 11:53:34 AEST
+Received: from mail.quicksendemail77.com (mail.quicksendemail77.com [85.239.33.245])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XBjy46794z2xMQ
-	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Sep 2024 10:08:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XBmHL6sGyz2y72
+	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Sep 2024 11:53:34 +1000 (AEST)
+Received: from quicksendemail77.com (unknown [172.245.243.31])
+	by mail.quicksendemail77.com (Postfix) with ESMTPSA id 38C6610124AB
+	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Sep 2024 01:45:41 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.quicksendemail77.com 38C6610124AB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1727050103; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=QeL52XbexEQQhcGM03hcns968M1iZQ1HyvYc4ZGRN8s=;
-	b=cPLLKdCtgqg0CgkEBXtfvmyGRPBAcGTTXNQam8ooStiCBFRGoCfQ1xrhVSA8AR51OU06blXhM6GqJJRLeniHGTnuuC4zmtZbZNWt+jJdVpvXy6t1eBlikEClroymCBGM810ygyHc9AaKg+Ud/Sbade4yK8GP6+z9eIm1JwuaZN4=
-Received: from 30.27.108.50(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WFRXf5c_1727050099)
-          by smtp.aliyun-inc.com;
-          Mon, 23 Sep 2024 08:08:21 +0800
-Message-ID: <63307dbc-da27-42e6-86fb-ed446f04ede5@linux.alibaba.com>
-Date: Mon, 23 Sep 2024 08:08:17 +0800
+	d=quicksendemail77.com; s=202407; t=1727055941;
+	bh=bm9PIK55L9vBacxqG1qfVzWmU1tHqOu+50gbZGZIxRE=;
+	h=Reply-To:From:To:Subject:Date:From;
+	b=go29S0q8quSwsa5u8D6j99VPNPE/A+8TBr614ffnapkyKy7WL6LB3dI66WYbpAMHO
+	 ZHaJ8RqyYWQj7T4lYps/pfa4sYdD1T7Vo78tSzdJUDP+JVuYs2V+HskGJIvMa+2seU
+	 qOMLrdnIVc9Ey5F5VYQ7qN/GMNbGp8d+tj21YNcEJZOCKX/PnjRRnlPe4ojiLMWwts
+	 WRKUPRBvlyswkvlPka8rdbltl+DWHE30EOd745423o2BF5s5b0iQiOLG4MKGKVFEho
+	 RcuLnDTu4X+77BBdId92tzGLQpQm5J1kilTLul7oCH1MJAltgtPO6QIcRXwMgO1YPm
+	 s18JxKT73h0UA==
+To: linux-erofs@lists.ozlabs.org
+Subject: New Order
+Date: 22 Sep 2024 16:45:40 -0900
+Message-ID: <20240922164540.3962D0ADC0E60969@quicksendemail77.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: lib: fix compressed packed inodes
-To: Danny Lin <danny@orbstack.dev>, linux-erofs@lists.ozlabs.org
-References: <20240916073835.77470-1-danny@orbstack.dev>
- <CAEFvpLe92-nS+4zOv5a=UOMW2whBtsGZ98D_MHv+x_KujEaroQ@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAEFvpLe92-nS+4zOv5a=UOMW2whBtsGZ98D_MHv+x_KujEaroQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.4 (mail.quicksendemail77.com [0.0.0.0]); Mon, 23 Sep 2024 01:45:41 +0000 (UTC)
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,36 +74,22 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: Elena Santiago via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: info@declodgroup.com
+Cc: Elena Santiago <info@quicksendemail77.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Danny,
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.=
+w3.org/TR/html4/loose.dtd">
 
-Thanks for the patch!
-Sorry I somewhat missed the previous email..
-
-On 2024/9/22 13:08, Danny Lin wrote:
-> Gentle bump — let me know if anything needs to be changed!
-
-Does the following change resolve the issue too?
-
-Also I think it
-Fixes: 2fdbd28ad4a3 ("erofs-utils: lib: fix uncompressed packed inode")
-
-@@ -1927,7 +1926,7 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(struct erofs_sb_info *sbi,
-
-                 DBG_BUGON(!ictx);
-                 ret = erofs_write_compressed_file(ictx);
--               if (ret && ret != -ENOSPC)
-+               if (ret != -ENOSPC)
-                          return ERR_PTR(ret);
-
-                 ret = lseek(fd, 0, SEEK_SET);
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Danny
-
+<HTML><HEAD>
+<META name=3DGENERATOR content=3D"MSHTML 11.00.10570.1001"></HEAD>
+<body style=3D"MARGIN: 0.5em">
+<P>Dear&nbsp;Supplier.</P>
+<P>We would like to make a purchase from you, send us your recent catalog.<=
+/P>
+<P>Looking forward to hearing from you,</P>
+<P><STRONG>Elena Santiago<BR>Purchasing and Quality Manager<BR>DECLOD GROUP=
+ SRL<BR>Parque Empresarial V&iacute;a<BR>Norte C. Quintanavides,<BR>21, Bui=
+lding 5, 28050 Madrid</STRONG></P></BODY></HTML>
