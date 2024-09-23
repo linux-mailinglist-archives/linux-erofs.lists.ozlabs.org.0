@@ -1,49 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 447BB97E6D1
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Sep 2024 09:49:53 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2870897ED9B
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Sep 2024 17:08:27 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XBwBQ5VVHz2yWK
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Sep 2024 17:49:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XC5wR5Nr7z2yVX
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 01:08:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727077787;
-	cv=none; b=bCs6HeJqivseZ1i8vM2Z6pdK/PCtREqeggq2wI1Pb0m7Jst2In7/+9VsUMLXqck8yBAmxaSqqcho/IPnaxJFM8aTswZ1a0hTAi7FbI+gD5maTSmKbQgQDl3qaX/lg4qNz8oy1jcgbN6GlubwUVV68x/tyYQobN2X46vYvQnNCjuHG+tbHnutbxdZdC1kWBUjjY3usN6GqgqH2/mrTGqPFupOLcfVmfZjBVUsXpQdgDEWuBQmDqSxj4Whu4atdM9BvZK1UV/+lDx8mOxztJpPnvwD/DKw+PjLzSjdPQAwbj7a8Xkve9LyHQA6DsbVGHVMDSUx4tCoeojJn3Fm36bWPw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727104099;
+	cv=none; b=A70rexsAFhRTmtgEKwacia3QPp6Ee6pygAhpvHp1vqcMO72A3V7ZKDoy01AK89AMK+5mQJIJAOM9ZSbVfSgWrxpffJsuUi/+IzdyZM9pJyzCSPaNCKQ+UoMgrwskTB9PFQk4QZEWniAhM2Pz067x+tdfotRWwR72KPguVJ4K7ivF5UFyGhOyhcKMs9ArigEGNFSyLrAY/fLkUbtxJ/9MbOsspKdhsxNC8PjD30evBzRd+C7gAGjHfvfEtdoFXhkTyBTYbLMKNlIS1cOD5MVw00Ctxj98/66J8W2m60TYGqIYs1liwmCZJGXkSgciekFR6RUGHM/8vLFlHgwtBmNi9Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727077787; c=relaxed/relaxed;
-	bh=qLO3Nj4qAiL63oNUX3KeCO6PkcJXE3W/V0tHhTDbq3k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CS/hNksPxFRdVNZZkVzoVwSJ6g0RUy0RiGyvbYBEi6Io3hDC2W0dkLCvVMxNg3CEOM/MXzTRYSSyRvl7klyQ+9W4HrEK5AUe0dBl2/0T718tWj5RWPaq/B1Ps1du4GCJ7/Hj8nd0SIdxy8BhbcBVYPna5RquAOcMuH3/59bQxkVcXsdUUBGIIqxf9AttUAcJ4I2DDHSoDCNlMY0U95Vx37uDEsA8DhwRFCszhLJ5h1RN1YtZtjln/EgbucO0iNUb44/7sIMn8spLAQ2RdscHBaF3CZztbOrl1A72u1LHL9x1o51cpHaNnY8k/wMVSZF59sfdqsk/0p1YgBUwRlZBVA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WZV3Tt9V; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1727104099; c=relaxed/relaxed;
+	bh=deDp5fXNcCneGmSM6E3aF14XvR7SODlrONWVXGCHh5M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DfzMy68oyFIj73Sos+N5V+MzY+NaV4RjbOtEH1eVPlOY16wBJBg7ITJyHJX8ByHcxdSYwzLFckux8qE4I6GlB0XgI7QlzLm++5NUUj1Z/F2qhZ5QMCevy6KjCCqnQM1tbMG7c/XVpp+DYxR/3jPbGQq2Y0jP+97qw9e4O8CRl1G6sVLtFb3l4ZBK7vLc75wWFVOYMucqj78nnUcjm2WDJ5BvxqAQTadc3rVmQzIBiAaomhqsqxIWmH7qjs+9u8gMJlXgemaJxXUmKU2e/2/D4guW1+cDu7IUXE2Y40yjTZQRiT3bvrxo4eGjFBWiGd3QAI5iYSQYJcv9NiHTn1Pbhg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XLdmUzcC; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XLdmUzcC; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WZV3Tt9V;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XLdmUzcC;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XLdmUzcC;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XBwBH6F52z2yN3
-	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Sep 2024 17:49:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1727077775; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=qLO3Nj4qAiL63oNUX3KeCO6PkcJXE3W/V0tHhTDbq3k=;
-	b=WZV3Tt9VX6VpJVqMVn2qAqgHjsFlH618x64OdQxIwSm41xsXXGM5oLzw+GzgaTPTnHjUUVdsF5ar1o23Qbs2PboG0/XWNw4pZD+tkae6kv4LtIu1tqUepladTnPSwYKqH8q0mGhMfnvKsOOHAJrhBHYmLosrO0uUjG1hurFEvmg=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WFVV3fE_1727077769)
-          by smtp.aliyun-inc.com;
-          Mon, 23 Sep 2024 15:49:34 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: add `--sort=none`
-Date: Mon, 23 Sep 2024 15:49:29 +0800
-Message-ID: <20240923074929.2445674-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XC5wM23Qhz2xb9
+	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Sep 2024 01:08:16 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727104091;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=deDp5fXNcCneGmSM6E3aF14XvR7SODlrONWVXGCHh5M=;
+	b=XLdmUzcC3462VkU0zwaLGlbbpetIa/L5uAJwmJt34kuMcoRlGTOc4qjZ7elO37szG7uX5I
+	FPl34g/960GxFsOjRs2TayINhJGXEkcpFNZV2EtAgT5g+eu1CGMpsSLLEw7fc1P9yZdrta
+	4ePXYynRODB85N+6YmO7y39tNI8x+PA=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727104091;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=deDp5fXNcCneGmSM6E3aF14XvR7SODlrONWVXGCHh5M=;
+	b=XLdmUzcC3462VkU0zwaLGlbbpetIa/L5uAJwmJt34kuMcoRlGTOc4qjZ7elO37szG7uX5I
+	FPl34g/960GxFsOjRs2TayINhJGXEkcpFNZV2EtAgT5g+eu1CGMpsSLLEw7fc1P9yZdrta
+	4ePXYynRODB85N+6YmO7y39tNI8x+PA=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-581-4y-C8U9DPSq2ZrlXAofqpQ-1; Mon,
+ 23 Sep 2024 11:08:09 -0400
+X-MC-Unique: 4y-C8U9DPSq2ZrlXAofqpQ-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 29E0C18EB2E2;
+	Mon, 23 Sep 2024 15:08:06 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.145])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1ACE8194328E;
+	Mon, 23 Sep 2024 15:07:59 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Steve French <sfrench@samba.org>,
+	Marc Dionne <marc.dionne@auristor.com>
+Subject: [PATCH 0/8] netfs, afs, cifs: Miscellaneous fixes/changes
+Date: Mon, 23 Sep 2024 16:07:44 +0100
+Message-ID: <20240923150756.902363-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -55,231 +83,85 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently, `--tar=f` writes file data twice due to unseekable streams
-and EROFS data ordering requirements.  Some use cases may need to avoid
-unnecessary data writes for performance and do NOT require a strict
-data ordering.
+Hi Christian, Steve, Marc,
 
-It adds `--sort=none` to address this.  The image is still reproducible;
-it simply means no specific file data ordering is implied.
+Here are some miscellaneous fixes and changes for netfslib and the afs and
+cifs filesystems, some of which are already in the vfs or cifs trees, but I
+thought I'd repost them all for completeness, starting with netfs:
 
-Currently, It comes into effect if `-E^inline_data` is specified and no
-compression is applied.
+ (1) Fix the update of mtime and ctime for mmapped files.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/inode.h |  1 +
- include/erofs/tar.h   |  1 +
- lib/inode.c           | 19 +++++++++----------
- lib/tar.c             | 36 ++++++++++++++++++++++++++++++++++++
- man/mkfs.erofs.1      | 13 ++++++++++++-
- mkfs/main.c           |  6 ++++++
- 6 files changed, 65 insertions(+), 11 deletions(-)
+ (2) Drop the was_async argument from netfs_read_subreq_terminated().
 
-diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index 604161c..eb8f45b 100644
---- a/include/erofs/inode.h
-+++ b/include/erofs/inode.h
-@@ -34,6 +34,7 @@ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
- int erofs_iflush(struct erofs_inode *inode);
- struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
- 				   const char *name);
-+int erofs_allocate_inode_bh_data(struct erofs_inode *inode, erofs_blk_t nblocks);
- bool erofs_dentry_is_wht(struct erofs_sb_info *sbi, struct erofs_dentry *d);
- int erofs_rebuild_dump_tree(struct erofs_inode *dir, bool incremental);
- int erofs_init_empty_dir(struct erofs_inode *dir);
-diff --git a/include/erofs/tar.h b/include/erofs/tar.h
-index 42fbb00..6981f9e 100644
---- a/include/erofs/tar.h
-+++ b/include/erofs/tar.h
-@@ -52,6 +52,7 @@ struct erofs_tarfile {
- 	u64 offset;
- 	bool index_mode, headeronly_mode, rvsp_mode, aufs;
- 	bool ddtaridx_mode;
-+	bool try_no_reorder;
- };
- 
- void erofs_iostream_close(struct erofs_iostream *ios);
-diff --git a/lib/inode.c b/lib/inode.c
-index bc3cb76..f08f395 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -171,14 +171,12 @@ struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
- 	return d;
- }
- 
--/* allocate main data for a inode */
--static int __allocate_inode_bh_data(struct erofs_inode *inode,
--				    unsigned long nblocks,
--				    int type)
-+/* allocate main data for an inode */
-+int erofs_allocate_inode_bh_data(struct erofs_inode *inode, erofs_blk_t nblocks)
- {
- 	struct erofs_bufmgr *bmgr = inode->sbi->bmgr;
- 	struct erofs_buffer_head *bh;
--	int ret;
-+	int ret, type;
- 
- 	if (!nblocks) {
- 		/* it has only tail-end data */
-@@ -187,6 +185,7 @@ static int __allocate_inode_bh_data(struct erofs_inode *inode,
- 	}
- 
- 	/* allocate main data buffer */
-+	type = S_ISDIR(inode->i_mode) ? DIRA : DATA;
- 	bh = erofs_balloc(bmgr, type, erofs_pos(inode->sbi, nblocks), 0, 0);
- 	if (IS_ERR(bh))
- 		return PTR_ERR(bh);
-@@ -431,7 +430,7 @@ static int erofs_write_dir_file(struct erofs_inode *dir)
- 	q = used = blkno = 0;
- 
- 	/* allocate dir main data */
--	ret = __allocate_inode_bh_data(dir, erofs_blknr(sbi, dir->i_size), DIRA);
-+	ret = erofs_allocate_inode_bh_data(dir, erofs_blknr(sbi, dir->i_size));
- 	if (ret)
- 		return ret;
- 
-@@ -487,7 +486,7 @@ int erofs_write_file_from_buffer(struct erofs_inode *inode, char *buf)
- 
- 	inode->datalayout = EROFS_INODE_FLAT_INLINE;
- 
--	ret = __allocate_inode_bh_data(inode, nblocks, DATA);
-+	ret = erofs_allocate_inode_bh_data(inode, nblocks);
- 	if (ret)
- 		return ret;
- 
-@@ -514,15 +513,15 @@ static bool erofs_file_is_compressible(struct erofs_inode *inode)
- 
- static int write_uncompressed_file_from_fd(struct erofs_inode *inode, int fd)
- {
--	int ret;
-+	struct erofs_sb_info *sbi = inode->sbi;
- 	erofs_blk_t nblocks, i;
- 	unsigned int len;
--	struct erofs_sb_info *sbi = inode->sbi;
-+	int ret;
- 
- 	inode->datalayout = EROFS_INODE_FLAT_INLINE;
- 	nblocks = inode->i_size >> sbi->blkszbits;
- 
--	ret = __allocate_inode_bh_data(inode, nblocks, DATA);
-+	ret = erofs_allocate_inode_bh_data(inode, nblocks);
- 	if (ret)
- 		return ret;
- 
-diff --git a/lib/tar.c b/lib/tar.c
-index 6d35292..3c56d43 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -586,6 +586,38 @@ void tarerofs_remove_inode(struct erofs_inode *inode)
- 	--inode->i_parent->i_nlink;
- }
- 
-+static int tarerofs_write_uncompressed_file(struct erofs_inode *inode,
-+					    struct erofs_tarfile *tar)
-+{
-+	struct erofs_sb_info *sbi = inode->sbi;
-+	erofs_blk_t nblocks;
-+	erofs_off_t pos;
-+	void *buf;
-+	int ret;
-+
-+	inode->datalayout = EROFS_INODE_FLAT_PLAIN;
-+	nblocks = DIV_ROUND_UP(inode->i_size, 1U << sbi->blkszbits);
-+
-+	ret = erofs_allocate_inode_bh_data(inode, nblocks);
-+	if (ret)
-+		return ret;
-+
-+	for (pos = 0; pos < inode->i_size; pos += ret) {
-+		ret = erofs_iostream_read(&tar->ios, &buf, inode->i_size - pos);
-+		if (ret < 0)
-+			break;
-+		if (erofs_dev_write(sbi, buf,
-+				    erofs_pos(sbi, inode->u.i_blkaddr) + pos,
-+				    ret)) {
-+			ret = -EIO;
-+			break;
-+		}
-+	}
-+	inode->idata_size = 0;
-+	inode->datasource = EROFS_INODE_DATA_SOURCE_NONE;
-+	return 0;
-+}
-+
- static int tarerofs_write_file_data(struct erofs_inode *inode,
- 				    struct erofs_tarfile *tar)
- {
-@@ -1012,6 +1044,10 @@ new_inode:
- 				if (!ret && erofs_iostream_lskip(&tar->ios,
- 								 inode->i_size))
- 					ret = -EIO;
-+			} else if (tar->try_no_reorder &&
-+				   !cfg.c_compr_opts[0].alg &&
-+				   !cfg.c_inline_data) {
-+				ret = tarerofs_write_uncompressed_file(inode, tar);
- 			} else {
- 				ret = tarerofs_write_file_data(inode, tar);
- 			}
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index d599fac..abdd9b9 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -192,7 +192,18 @@ Use extended inodes instead of compact inodes if the file modification time
- would overflow compact inodes. This is the default. Overrides
- .BR --ignore-mtime .
- .TP
--.BI "\-\-tar, \-\-tar="MODE
-+.BI "\-\-sort=" MODE
-+Inode data sorting order for tarballs as input.
-+
-+\fIMODE\fR may be one of \fBnone\fR or \fBpath\fR.
-+
-+\fBnone\fR: No particular data order is specified for the target image to
-+avoid unnecessary overhead; Currently, it takes effect if `-E^inline_data` is
-+specified and no compression is applied.
-+
-+\fBpath\fR: Data order strictly follows the tree generation order. (default)
-+.TP
-+.BI "\-\-tar, \-\-tar=" MODE
- Treat \fISOURCE\fR as a tarball or tarball-like "headerball" rather than as a
- directory.
- 
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 8f1fdbc..d422787 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -84,6 +84,7 @@ static struct option long_options[] = {
- 	{"root-xattr-isize", required_argument, NULL, 524},
- 	{"mkfs-time", no_argument, NULL, 525},
- 	{"all-time", no_argument, NULL, 526},
-+	{"sort", required_argument, NULL, 527},
- 	{0, 0, 0, 0},
- };
- 
-@@ -180,6 +181,7 @@ static void usage(int argc, char **argv)
- 		" --offset=#            skip # bytes at the beginning of IMAGE.\n"
- 		" --root-xattr-isize=#  ensure the inline xattr size of the root directory is # bytes at least\n"
- 		" --aufs                replace aufs special files with overlayfs metadata\n"
-+		" --sort=<path,none>    data sorting order for tarballs as input (default: path)\n"
- 		" --tar=X               generate a full or index-only image from a tarball(-ish) source\n"
- 		"                       (X = f|i|headerball; f=full mode, i=index mode,\n"
- 		"                                            headerball=file data is omited in the source stream)\n"
-@@ -840,6 +842,10 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		case 526:
- 			cfg.c_timeinherit = TIMESTAMP_FIXED;
- 			break;
-+		case 527:
-+			if (!strcmp(optarg, "none"))
-+				erofstar.try_no_reorder = true;
-+			break;
- 		case 'V':
- 			version();
- 			exit(0);
--- 
-2.43.5
+then afs:
+
+ (3) Wire up afs_retry_request() so that writeback rotates through the
+     available keys.
+
+ (4) Remove some unused defs.
+
+ (5) Fix a potential infinite loop in the server rotation code.
+
+ (6) Fix an oops that can occur when a server responds, but we decide the
+     operation failed (e.g. an abort).
+
+and then cifs:
+
+ (7) Fix reversion of the I/O iterator causing cryptographically signed
+     transport reception to fail.
+
+ (8) Alter the write tracepoints to display netfs request info.
+
+The patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
+
+Thanks,
+David
+
+David Howells (6):
+  netfs: Fix mtime/ctime update for mmapped writes
+  netfs: Drop the was_async arg from netfs_read_subreq_terminated()
+  afs: Fix missing wire-up of afs_retry_request()
+  afs: Fix the setting of the server responding flag
+  cifs: Fix reversion of the iter in cifs_readv_receive().
+  cifs: Make the write_{enter,done,err} tracepoints display netfs info
+
+Marc Dionne (1):
+  afs: Fix possible infinite loop with unresponsive servers
+
+Thorsten Blum (1):
+  afs: Remove unused struct and function prototype
+
+ fs/9p/vfs_addr.c          |  3 +-
+ fs/afs/afs_vl.h           |  9 ----
+ fs/afs/file.c             | 16 ++++---
+ fs/afs/fs_operation.c     |  2 +-
+ fs/afs/fs_probe.c         |  4 +-
+ fs/afs/fsclient.c         |  2 +-
+ fs/afs/rotate.c           | 11 +++--
+ fs/afs/yfsclient.c        |  2 +-
+ fs/ceph/addr.c            | 13 ++++--
+ fs/netfs/buffered_read.c  | 16 +++----
+ fs/netfs/buffered_write.c |  1 +
+ fs/netfs/direct_read.c    |  2 +-
+ fs/netfs/internal.h       |  2 +-
+ fs/netfs/objects.c        | 17 ++++++-
+ fs/netfs/read_collect.c   | 95 ++++++++++++++++-----------------------
+ fs/netfs/read_retry.c     |  2 +-
+ fs/nfs/fscache.c          |  6 ++-
+ fs/nfs/fscache.h          |  3 +-
+ fs/smb/client/cifssmb.c   | 10 +----
+ fs/smb/client/connect.c   |  6 +--
+ fs/smb/client/file.c      |  3 +-
+ fs/smb/client/smb2ops.c   |  9 ++--
+ fs/smb/client/smb2pdu.c   | 32 ++++++-------
+ fs/smb/client/trace.h     |  6 +--
+ fs/smb/client/transport.c |  3 --
+ include/linux/netfs.h     |  7 ++-
+ 26 files changed, 139 insertions(+), 143 deletions(-)
 
