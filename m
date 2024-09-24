@@ -2,82 +2,70 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF75C983A71
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 01:38:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A6FFF9841F0
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 11:22:24 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XCKDf42K8z2yS0
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 09:38:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XCZBh592Cz2yjR
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 19:22:20 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::42d"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727134688;
-	cv=none; b=TNiCe8+vQNPq8lSJTGVengO1+ArfOC23j3T1AEigbOhXsKK+YUQcCCpGrbOFMClqcEx8RIr2aEnNQ5xlEM7vtMY9LSy10GsoW5kwciaobQ9ax4G4j7xkG4Px3wdNJhSB9qld6GSTHqtSWSPAN/in/MEzoiKIxxt4G6RzsWexozDqaNslmxBj4o4sev4/IkG5ahB9uJ7u42ckTYAkHJki06vCgMuYBomD02JFFegBK0CGLxa7yPVmYLiL84l3DhYcxtTE4HPnQtCZB8hcPkLGNDIMPYXmaMiV0dJGDawqWwPPR5L+9PTIZEmcVGaDkvsmiervNJpFygQrJ6xPGzB1/A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.128.182
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727169738;
+	cv=none; b=ZdXiuyG6FAdtsZKr1AVOFM1usATQ5xSOy45++mQ1y9uQvxABiU90t0SHFiPUak5ZfP5vXDctQd3eJAE+u1n5HqnWwecB6sISQAVxQF/8zPSW1URg8iCHVyxLysHs4f3xXTPD2fKu4kaBvficdRH4wT8MO/zdLBjhAtjQTSvQPgYMnGiy4u6AHTC9Pli8dwu9KOqZ82+mngcYS6KJnM1Gc0DdugDQafO180TV7+cl7D5e3Jh1M4VO9j6LWPnYTp27rwDBlYxU3YI8ggpV18G9axf3SfuGgCiYU2QG8CulifFZAaqhC2jF+EFmEUN9s+Zvcz52hytVS/csNNC97XeI+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727134688; c=relaxed/relaxed;
-	bh=rJ7sS1msjw1V7YsuQ34rxHY/7ajzA+pa1mgHv6cKuhk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VfYvCMOHy3a1XYvTh7u6tRkA9ua9IOYb+XBbfXQZtL/APzLR2cNr2DgtCYwdaSozAShhKgUAKDvfTA50VNKdE0vYe86N2ddGbD15A5dSABlLdjtc+Kvy5bh5TbOS2DPwUS4Wfld4q5odVegw9y3ruqxX4QZa9aQ+BhMyMreDUMdQxjRYW2Uop1EsAojybXkYkbe37NpORrR4MRORsSEqz7BPCwWKdd1JT4ZfREGexqb1RVWr1OSpuaJ3LOl30jTKU/NuWO+kqDOnjH1NKfIQVVQgYitl0S5IUwGM9LZr16EWasUeUmOus34WNYNvyYDg0VbNayWaqCx28MDPvcZVlw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=TYIdoDqB; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::42d; helo=mail-pf1-x42d.google.com; envelope-from=eddyz87@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=TYIdoDqB;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42d; helo=mail-pf1-x42d.google.com; envelope-from=eddyz87@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+	t=1727169738; c=relaxed/relaxed;
+	bh=ezXFARLli0XopvazaZI4WJPLJgg9ymKuou4RbS/PT28=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=brQp8Ge9K17VOMm8N7Ts6PoaPabgZreii0NSDyiAT4Z293c3GGmipzJemubvw+4UJYqTVT13uT1qRT5W8/5ksgBqvMGc4RbzmoWLpKP7aS3RP9EIxcsRwAkmWoSBcqwV84gW8eYR7cuBqTWRFfxAwmpmUmtmmjQcZ7yGmVNzpP5i1T1GHyfzf+cGboOGrQX73+M+XrvkYsr7O5fiAuDK4Jwtndg8Jk9//Tzo12X9z1m3EspXb4oUw4pgpv+nuy6LDHZwHluWukk0LlWeMvcCrJFR3vjmyV5X5L8ewdGllTa2TIscAvannjFxdaA23a9S3EDtYD8wVfruiDdZy8JlkA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass (client-ip=209.85.128.182; helo=mail-yw1-f182.google.com; envelope-from=geert.uytterhoeven@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=209.85.128.182; helo=mail-yw1-f182.google.com; envelope-from=geert.uytterhoeven@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XCKDb51GZz2xm5
-	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Sep 2024 09:38:06 +1000 (AEST)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-718d8d6af8fso3498154b3a.3
-        for <linux-erofs@lists.ozlabs.org>; Mon, 23 Sep 2024 16:38:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1727134684; x=1727739484; darn=lists.ozlabs.org;
-        h=mime-version:user-agent:references:in-reply-to:date:cc:to:from
-         :subject:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=rJ7sS1msjw1V7YsuQ34rxHY/7ajzA+pa1mgHv6cKuhk=;
-        b=TYIdoDqBxk/ap7jwf9szL2trsOLhYdgHciOlv3QBtR38p2jDuQucaOrh3q8cRx50Lk
-         UNs+4dbiOAa6niMqJA93F6XMEceGZ3hN0RmZ2Bj5cJtxCN0wlM7dS7EVkvT8I5aqbNhA
-         sT0IkGLbIUgUBtp2JR+SRes6IxlJGddvUOYFvvbAWlRENNmC/4c7Hq+hQ/jX3wUYBPh9
-         iCohj8xpzRoh+z48kGR0ymlEAH4ORSqtU0/7MRzaZ6NLrkIuvv4yL7hwF2pembmyTjIc
-         T11WBJnC+2NYHF0Y6fc+3611EwDEB+AtXacNXQEOlK1HFjqkdbeiJiZhVNJPkiSi9L/j
-         3GmA==
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XCZBc6v2sz2y8X
+	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Sep 2024 19:22:16 +1000 (AEST)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6ddd758aaf4so38128827b3.2
+        for <linux-erofs@lists.ozlabs.org>; Tue, 24 Sep 2024 02:22:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727134684; x=1727739484;
-        h=mime-version:user-agent:references:in-reply-to:date:cc:to:from
-         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rJ7sS1msjw1V7YsuQ34rxHY/7ajzA+pa1mgHv6cKuhk=;
-        b=JnYWol3FameCkPOiv3PU3PYiHDWxqn9ePXM22EKs9entnwQUy5GvSyV6zo/p4SZgx8
-         k/fPMYsPEXpyGBql9Z+tzf+RZTTyqZrvoJONveL0PMgMtbqjd79Z7VPJYMqOU9ZiRz5Q
-         0uHkNuBRa2g9OK+7nLRXS+55uoa8P2cH8fUnEsY8npUagyctK2srrTHYR0U6+mepHQa5
-         m9cDD8dfgMR8dJmK55zOnUD1y5zsfF8RHPch/lOcibqu3kt6WgeidVtarwaaUt/GPLr1
-         xYQURan3lkSZV1QTvqoWqMeCb0PxpBNqmBo1RsXCBOgLV/E4UohDOqLpJ6VBZd+HH2bs
-         5/aA==
-X-Forwarded-Encrypted: i=1; AJvYcCW4X35FSZaRs+xR//EDzKi0ivX9ekmlZHxaMhDOWgFcyVp7BlOS2/8Mv+FPqcN8KtumcqtE/J7lENqYXQ==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YxnK/xdlh541y+PGFg01N9Pkp2gxkeLdWjZjfsE49e2RFcI3lWY
-	KyHqrV0blPxrd+0Vqu1HY8+xodm5hIUzBXCgrDfX1rpeCF0COVXf
-X-Google-Smtp-Source: AGHT+IEn7xNlzig8H3Enwhf26kXdACpLuW4DsQZFPPEgmwNxWuFNyz/yjUDuPQMBz7MUGiacjBcrwg==
-X-Received: by 2002:a05:6a00:99f:b0:718:d5e5:2661 with SMTP id d2e1a72fcca58-7199c840a84mr21575147b3a.0.1727134684098;
-        Mon, 23 Sep 2024 16:38:04 -0700 (PDT)
-Received: from [192.168.0.235] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71afc9390e9sm144198b3a.124.2024.09.23.16.38.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Sep 2024 16:38:03 -0700 (PDT)
-Message-ID: <ad831566b2e5d44c59ba2526176d9ca75c6ce94d.camel@gmail.com>
-Subject: Re: [PATCH v2 19/25] netfs: Speed up buffered reading
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: David Howells <dhowells@redhat.com>
-Date: Mon, 23 Sep 2024 16:37:58 -0700
-In-Reply-To: <961634.1727130830@warthog.procyon.org.uk>
-References: <0f6afef57196cb308aa90be5b06a64793aa24682.camel@gmail.com>
-	 <20240814203850.2240469-20-dhowells@redhat.com>
-	 <20240923183432.1876750-1-chantr4@gmail.com>
-	 <670794146059f85a30efd7cf9d6650375d987077.camel@gmail.com>
-	 <961634.1727130830@warthog.procyon.org.uk>
-Content-Type: multipart/alternative; boundary="=-Q91RsiEvrT2A6vPIbGYO"
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+        d=1e100.net; s=20230601; t=1727169732; x=1727774532;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ezXFARLli0XopvazaZI4WJPLJgg9ymKuou4RbS/PT28=;
+        b=gjh/kaeWA6I/TRGTHOGnhP1yC9yV++t3n/fjHn+t6NxvehPAAG/KtTCAG9VSaD++1W
+         QeV75wo9fYWTa5YbLDMvoL8PmhocCSP3YGPT+JC31VPSkpEyruTAbuJAGfALgV8+Wztg
+         2OEBbKHrvsV8ln2/Em1HSg0WhSqERBbDnZ4YXjsAiMFOumToiJi+1MfuqzLwhegmUgxa
+         AQayDxRN4oBexFeyxxOu6cleZa8a2Sgx1dVUwsaTlikaIiP/Z9D8E1LQTo87HW3tb3rz
+         t/JLHV2XYjodUmFMFOd7MTSdCVRwc7CWUICay8SWMhmzTyEDH772ucwQsOgu4AAcH9zi
+         GjoA==
+X-Gm-Message-State: AOJu0YwRdaz+yLBK0+Y6lxiFFCfxiQMQ1HU7UQyyudx9dNxHjCgmfN4n
+	L8mtMRKAksS97rfnGJde+sTG3VM+gfsdpmZ9ZtAoMkULAcj/ZHkHz7MrR6O+
+X-Google-Smtp-Source: AGHT+IFOu/6seHqsu9WJN/LhPlDLNuxoymnRm6xcIrGgWf9SN9ZKf0py1fYZ6MDJH784fVuJP2vJoA==
+X-Received: by 2002:a05:690c:62ca:b0:6e0:12e:e470 with SMTP id 00721157ae682-6e0012ee6ccmr105685897b3.25.1727169732337;
+        Tue, 24 Sep 2024 02:22:12 -0700 (PDT)
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com. [209.85.128.180])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-6e20d27d051sm1871967b3.110.2024.09.24.02.22.11
+        for <linux-erofs@lists.ozlabs.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Sep 2024 02:22:11 -0700 (PDT)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6ddd758aaf4so38128647b3.2
+        for <linux-erofs@lists.ozlabs.org>; Tue, 24 Sep 2024 02:22:11 -0700 (PDT)
+X-Received: by 2002:a05:690c:fc1:b0:6e2:ffd:c123 with SMTP id
+ 00721157ae682-6e20ffdc6ffmr10422617b3.7.1727169731405; Tue, 24 Sep 2024
+ 02:22:11 -0700 (PDT)
 MIME-Version: 1.0
+References: <20240830032840.3783206-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240830032840.3783206-1-hsiangkao@linux.alibaba.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 24 Sep 2024 11:21:59 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVqa2Mjqtqv0q=uuhBY1EfTaa+X6WkG7E2tEnKXJbTkNg@mail.gmail.com>
+Message-ID: <CAMuHMdVqa2Mjqtqv0q=uuhBY1EfTaa+X6WkG7E2tEnKXJbTkNg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] erofs: add file-backed mount support
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -89,86 +77,126 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: asmadeus@codewreck.org, linux-mm@kvack.org, marc.dionne@auristor.com, linux-afs@lists.infradead.org, pc@manguebit.com, linux-cifs@vger.kernel.org, Manu Bretelle <chantr4@gmail.com>, willy@infradead.org, smfrench@gmail.com, hsiangkao@linux.alibaba.com, idryomov@gmail.com, sprasad@microsoft.com, tom@talpey.com, ceph-devel@vger.kernel.org, ericvh@kernel.org, christian@brauner.io, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, jlayton@kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Linux FS Devel <linux-fsdevel@vger.kernel.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
---=-Q91RsiEvrT2A6vPIbGYO
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Gao,
 
-On Mon, 2024-09-23 at 23:33 +0100, David Howells wrote:
-> Eduard Zingerman <eddyz87@gmail.com> wrote:
->=20
-> > - null-ptr-deref is triggered by access to page->pcp_list.next
-> >   when list_del() is called from page_alloc.c:__rmqueue_pcplist(),
->=20
-> Can you tell me what the upstream commit ID of your kernel is?  (before a=
-ny
-> patches are stacked on it)
+CC vfs
 
-I used bpf-next tree, but could be reproduced with [1] as well,
-commit ID [2]. Decoded dmesg for this commit ID in [3].
+On Fri, Aug 30, 2024 at 5:29=E2=80=AFAM Gao Xiang <hsiangkao@linux.alibaba.=
+com> wrote:
+> It actually has been around for years: For containers and other sandbox
+> use cases, there will be thousands (and even more) of authenticated
+> (sub)images running on the same host, unlike OS images.
+>
+> Of course, all scenarios can use the same EROFS on-disk format, but
+> bdev-backed mounts just work well for OS images since golden data is
+> dumped into real block devices.  However, it's somewhat hard for
+> container runtimes to manage and isolate so many unnecessary virtual
+> block devices safely and efficiently [1]: they just look like a burden
+> to orchestrators and file-backed mounts are preferred indeed.  There
+> were already enough attempts such as Incremental FS, the original
+> ComposeFS and PuzzleFS acting in the same way for immutable fses.  As
+> for current EROFS users, ComposeFS, containerd and Android APEXs will
+> be directly benefited from it.
+>
+> On the other hand, previous experimental feature "erofs over fscache"
+> was once also intended to provide a similar solution (inspired by
+> Incremental FS discussion [2]), but the following facts show file-backed
+> mounts will be a better approach:
+>  - Fscache infrastructure has recently been moved into new Netfslib
+>    which is an unexpected dependency to EROFS really, although it
+>    originally claims "it could be used for caching other things such as
+>    ISO9660 filesystems too." [3]
+>
+>  - It takes an unexpectedly long time to upstream Fscache/Cachefiles
+>    enhancements.  For example, the failover feature took more than
+>    one year, and the deamonless feature is still far behind now;
+>
+>  - Ongoing HSM "fanotify pre-content hooks" [4] together with this will
+>    perfectly supersede "erofs over fscache" in a simpler way since
+>    developers (mainly containerd folks) could leverage their existing
+>    caching mechanism entirely in userspace instead of strictly following
+>    the predefined in-kernel caching tree hierarchy.
+>
+> After "fanotify pre-content hooks" lands upstream to provide the same
+> functionality, "erofs over fscache" will be removed then (as an EROFS
+> internal improvement and EROFS will not have to bother with on-demand
+> fetching and/or caching improvements anymore.)
+>
+> [1] https://github.com/containers/storage/pull/2039
+> [2] https://lore.kernel.org/r/CAOQ4uxjbVxnubaPjVaGYiSwoGDTdpWbB=3Dw_AeM6Y=
+M=3DzVixsUfQ@mail.gmail.com
+> [3] https://docs.kernel.org/filesystems/caching/fscache.html
+> [4] https://lore.kernel.org/r/cover.1723670362.git.josef@toxicpanda.com
+>
+> Closes: https://github.com/containers/composefs/issues/144
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-[2] abf2050f51fd ("Merge tag 'media/v6.12-1' of git://git.kernel.org/pub/sc=
-m/linux/kernel/git/mchehab/linux-media")
-[3] https://gist.github.com/eddyz87/af39e04069c6ca30e66c3032c0384b8e
+Thanks for your patch, which is now commit fb176750266a3d7f
+("erofs: add file-backed mount support").
 
-> If you can modify your kernel, can you find the following in fs/netfs/:
->=20
-> buffered_read.c:127:			new =3D kmalloc(sizeof(*new), GFP_NOFS);
-> buffered_read.c:353:	folioq =3D kmalloc(sizeof(*folioq), GFP_KERNEL);
-> buffered_read.c:458:	folioq =3D kmalloc(sizeof(*folioq), GFP_KERNEL);
-> misc.c:25:		tail =3D kmalloc(sizeof(*tail), GFP_NOFS);
->=20
-> and change the kmalloc to kzalloc?
+> ---
+> v2:
+>  - should use kill_anon_super();
+>  - add O_LARGEFILE to support large files.
+>
+>  fs/erofs/Kconfig    | 17 ++++++++++
+>  fs/erofs/data.c     | 35 ++++++++++++---------
+>  fs/erofs/inode.c    |  5 ++-
+>  fs/erofs/internal.h | 11 +++++--
+>  fs/erofs/super.c    | 76 +++++++++++++++++++++++++++++----------------
+>  5 files changed, 100 insertions(+), 44 deletions(-)
+>
+> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+> index 7dcdce660cac..1428d0530e1c 100644
+> --- a/fs/erofs/Kconfig
+> +++ b/fs/erofs/Kconfig
+> @@ -74,6 +74,23 @@ config EROFS_FS_SECURITY
+>
+>           If you are not using a security module, say N.
+>
+> +config EROFS_FS_BACKED_BY_FILE
+> +       bool "File-backed EROFS filesystem support"
+> +       depends on EROFS_FS
+> +       default y
 
-No changes in behaviour.
+I am a bit reluctant to have this default to y, without an ack from
+the VFS maintainers.
 
+> +       help
+> +         This allows EROFS to use filesystem image files directly, witho=
+ut
+> +         the intercession of loopback block devices or likewise. It is
+> +         particularly useful for container images with numerous blobs an=
+d
+> +         other sandboxes, where loop devices behave intricately.  It can=
+ also
+> +         be used to simplify error-prone lifetime management of unnecess=
+ary
+> +         virtual block devices.
+> +
+> +         Note that this feature, along with ongoing fanotify pre-content
+> +         hooks, will eventually replace "EROFS over fscache."
+> +
+> +         If you don't want to enable this feature, say N.
+> +
+>  config EROFS_FS_ZIP
+>         bool "EROFS Data Compression Support"
+>         depends on EROFS_FS
 
---=-Q91RsiEvrT2A6vPIbGYO
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Gr{oetje,eeting}s,
 
-<html lang=3D"en" data-color-mode=3D"auto" data-light-theme=3D"light" data-=
-dark-theme=3D"dark" data-a11y-animated-images=3D"system" data-a11y-link-und=
-erlines=3D"true"><head><style>pre,code,address {
-  margin: 0px;
-}
-h1,h2,h3,h4,h5,h6 {
-  margin-top: 0.2em;
-  margin-bottom: 0.2em;
-}
-ol,ul {
-  margin-top: 0em;
-  margin-bottom: 0em;
-}
-blockquote {
-  margin-top: 0em;
-  margin-bottom: 0em;
-}
-</style></head><body style=3D"overflow-wrap: break-word; -webkit-nbsp-mode:=
- space; line-break: after-white-space;"><pre>On Mon, 2024-09-23 at 23:33 +0=
-100, David Howells wrote:</pre><pre>&gt; Eduard Zingerman &lt;eddyz87@gmail=
-.com&gt; wrote:</pre><pre>&gt; </pre><pre>&gt; &gt; - null-ptr-deref is tri=
-ggered by access to page-&gt;pcp_list.next</pre><pre>&gt; &gt;   when list_=
-del() is called from page_alloc.c:__rmqueue_pcplist(),</pre><pre>&gt; </pre=
-><pre>&gt; Can you tell me what the upstream commit ID of your kernel is?  =
-(before any</pre><pre>&gt; patches are stacked on it)</pre><pre><br></pre><=
-pre>I used bpf-next tree, but could be reproduced with [1] as well,</pre><p=
-re>commit ID [2]. Decoded dmesg for this commit ID in [3].</pre><pre><br></=
-pre><pre>[1] git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.g=
-it</pre><pre>[2] abf2050f51fd ("Merge tag 'media/v6.12-1' of git://git.kern=
-el.org/pub/scm/linux/kernel/git/mchehab/linux-media")</pre><pre>[3] https:/=
-/gist.github.com/eddyz87/af39e04069c6ca30e66c3032c0384b8e</pre><pre><br></p=
-re><pre>&gt; If you can modify your kernel, can you find the following in f=
-s/netfs/:</pre><pre>&gt; </pre><pre>&gt; buffered_read.c:127:			new =3D kma=
-lloc(sizeof(*new), GFP_NOFS);</pre><pre>&gt; buffered_read.c:353:	folioq =
-=3D kmalloc(sizeof(*folioq), GFP_KERNEL);</pre><pre>&gt; buffered_read.c:45=
-8:	folioq =3D kmalloc(sizeof(*folioq), GFP_KERNEL);</pre><pre>&gt; misc.c:2=
-5:		tail =3D kmalloc(sizeof(*tail), GFP_NOFS);</pre><pre>&gt; </pre><pre>&g=
-t; and change the kmalloc to kzalloc?</pre><pre><br></pre><pre>No changes i=
-n behaviour.</pre><pre><br></pre></body></html>
+                        Geert
 
---=-Q91RsiEvrT2A6vPIbGYO--
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
