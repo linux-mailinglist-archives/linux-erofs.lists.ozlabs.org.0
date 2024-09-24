@@ -1,73 +1,86 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E94398428F
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 11:48:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1727171304;
-	bh=FTjmBljRKDLJp9jdXkbW5p6euOt+9y7h0X2MEHRE8c4=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=XfuoStLOe5iO9codNTXv9nC9ccZ7/yWnwy9g4I15bRuKH+kPIPgzvPSjd1XAU+MGS
-	 Fw9UkEb21c/0/FBvoo005IBHTbLPLpiVKE81mSGHqdXjLk+xUVVwWJVRqw+3c28vER
-	 pd+enkgqhByZtE1EzK0ufZk/euMlMc2ZzkkE5YDv3pm+tkoqZOxOCfzCpVMXZpoKDW
-	 itBscvEUHe0HTZ8mckY3ajDZrP4X8YKV5nya0P2fjFOjpRuj80fpo2C9Q3kH8LAP/A
-	 LpHFNvU5e8nCa46NoK9yCIZ3+ivccNR7bkJg9oQaEGS8mGusz6L9VbqaXlqI18mwWH
-	 Qq7o8FXe/de4A==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E960984EDD
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 Sep 2024 01:20:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XCZmm3QLYz2ytm
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 19:48:24 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XCwp1401jz2yVM
+	for <lists+linux-erofs@lfdr.de>; Wed, 25 Sep 2024 09:20:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727171300;
-	cv=none; b=DgVNQYRvz9GuvlJLt8G+PMFMS5WolLEc4KqpRBmBp6v2pSUWBWS2sbtVvBKFdD1xZmf7ZKaw0h3OZK32A9+GqB1bPBz6qnXnEflEnfm0a12jK92qoeOsavQGgm8udD+Nujk+4BvPYql9kqRwG4eo/J/4OasCk/EPP9MzBwgeLbAf9yx/fTI8r/ZgkFQJ79VwY3iuc8eJNdkoe0U0YpYtRKahyVETFjupb6pDKY///7OtnxTNRf9KUG0eSoAg8Z2ziZNRAUT//sLW9hGlMOXJlobXK6fyhzZhWJizTMCnqJdDrM9GU6t3Br5i3/98wqmAOCOs/BdQm3N4YUYRBTO/Hg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727220037;
+	cv=none; b=Zg1wWxV36oLDSoStZwMwqyUvQ7i/xs3jY562J1PSP4FghPtuhAN3knfu8e11u3ZktdQeVrQXkcaUUcrGUpyRwpK5ZxAWq0Kw80pJILCtwPfmDfNslGL4lk46lP6CRtdjQSYdDiOg1rgr4tAGBEBFJb6MH/AIKgFVLMIsBvQCIQdkJJw3WHv1VKD+8ShyOkjrDxhS6OB8mjxK/GNMiwUQPumVG7cgxbCDjv2Tvl2dXfTiblPqKJgpBAC/PdR9SO7a4wSTn8gejrnUgFLZDvtV02ks3Ph/KxsO3prlZQgSVr926gM9nobzGmYAXAf7QzkhA0U3dKjrDl8MHrb73JTtiQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727171300; c=relaxed/relaxed;
-	bh=FTjmBljRKDLJp9jdXkbW5p6euOt+9y7h0X2MEHRE8c4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GaTf2UuLsIz2HnADX2tZ9Qye46GZCnO2GoItJnBuC2Q9eJDu+7q+6pwNKgyKuoMLimUEs3THX40Ge/oX1caTTqSsX7fsAqPNcSd7PU5wk/sQtQc4EEgjWkL8OewnZhyOf7+UwnZvi6OEVvGIl6WXGqmWS6RViv7gpnXWZIWbhYUkVGCNvyW8B0OxBFX8/Ba14/DzNTxy/I8JhtDFZTWmzRgaT5obUbOTnkWPSxEQGpzH5si7us4B2p1HmHHRxyM4aQW+wFI0DLOpCWvviYdqeAsiimW2PThOF4hXP2co9qsPGJDCLduJUgFcI4UV6/fQDgeSTtHPDQjJML/fy+5cxA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ke8RdNqR; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=leon@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1727220037; c=relaxed/relaxed;
+	bh=1R6dWg97gMKWsJa7Y9eW/vCPbW+C/1rDhbmcsNTkNFo=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=jhpEgNAtHE3X7b6hM5Yoa+a7YYwbHQEAc2XR87hjKZa3rlTCNEbHjyISSP5SiwT5QOQzlm01R2K5Gu/EIOjpCJ17zxl+wK2Ioa9f1XgDds1AvBkcJTOWjupG3IL1JsTY9//ViwePuEdBlXxUYhFRkgjL9OkIJwAGEEzclVftxVZNeZNFX6msSE3S9BaP0gzRWk+Icd8EpprKFsaH6k80t46oL6HDpxc9eMLoHsHftkQ1aFGkBv0GwHn51FSCTDQVujxPd5e+kh5BCEa8Hbcf2S9V0RHchSScnQiRr27VfT0x5a34v0vZUWLDI1hlldV+t9tQJkMWPpmxIBy8+UbyRQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MijpAA0G; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MijpAA0G; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ke8RdNqR;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MijpAA0G;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MijpAA0G;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=leon@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XCZmg70zMz2xJJ
-	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Sep 2024 19:48:19 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id F33BFA40E31;
-	Tue, 24 Sep 2024 09:48:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F92C4CEC4;
-	Tue, 24 Sep 2024 09:48:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727171294;
-	bh=IJb2CY2sQexSIpMJlLAZTjDzjCwF7sXuLr8nOkq3T5Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ke8RdNqRNrJOuxH3G/Ln6qNlL6QGQ/daYetAAt1sBMZJ0y7LmzxW+cIsoaM+SDRcd
-	 /NWgG9uAVX1OmTbwLZrk4VFMjmveHy1t4tOE37b5Y2dGlELjeIm7+IkM7UBrgbIziL
-	 1QGpr3l1xvgyERkKlbolB+xbud5VGkGTGjU6JIA8yDzMBiKY+W2wzl5OhT5LmV3ZU0
-	 eTUk0TlfWFAObQkz/Ll3WDJbzS8KBoTZ2//YyyX50l+Pw5hXRlPeVVhdVTv6UM9hLz
-	 z8Sl1ai3JtBKE54ANx/ZqRBNkENUlruWITPhgRJV2uTN1PVF26og/aWR0YLlquICkM
-	 l0CYDkm4yULGg==
-Date: Tue, 24 Sep 2024 12:48:09 +0300
-To: David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH v2 15/25] netfs: Use new folio_queue data type and
- iterator instead of xarray iter
-Message-ID: <20240924094809.GA1182241@unreal>
-References: <20240814203850.2240469-1-dhowells@redhat.com>
- <20240814203850.2240469-16-dhowells@redhat.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XCwnw5VrXz2xsK
+	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Sep 2024 09:20:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727220030;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1R6dWg97gMKWsJa7Y9eW/vCPbW+C/1rDhbmcsNTkNFo=;
+	b=MijpAA0GSpj6Meh9+0+1KnCCeKnzu9/a6yUcib5LIgN21trC1Y+OGkpiVKtxSLySpaDWXa
+	9KRlaudejcNFXDPu5RuegWbfp21OmxAlfDn1pzX/lwr74L+nuRYu84jp/wsWE7tCM5266C
+	0/yFaDmqpaJOv10aw5bCXTcK/V3dzIc=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727220030;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1R6dWg97gMKWsJa7Y9eW/vCPbW+C/1rDhbmcsNTkNFo=;
+	b=MijpAA0GSpj6Meh9+0+1KnCCeKnzu9/a6yUcib5LIgN21trC1Y+OGkpiVKtxSLySpaDWXa
+	9KRlaudejcNFXDPu5RuegWbfp21OmxAlfDn1pzX/lwr74L+nuRYu84jp/wsWE7tCM5266C
+	0/yFaDmqpaJOv10aw5bCXTcK/V3dzIc=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-385-rilsnK3MOTSffUsOAE5KMg-1; Tue,
+ 24 Sep 2024 19:20:24 -0400
+X-MC-Unique: rilsnK3MOTSffUsOAE5KMg-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 756BA193E8C7;
+	Tue, 24 Sep 2024 23:20:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.145])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DFC4719560AA;
+	Tue, 24 Sep 2024 23:20:14 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20240923183432.1876750-1-chantr4@gmail.com>
+References: <20240923183432.1876750-1-chantr4@gmail.com> <20240814203850.2240469-20-dhowells@redhat.com>
+To: Manu Bretelle <chantr4@gmail.com>, eddyz87@gmail.com
+Subject: Re: [PATCH v2 19/25] netfs: Speed up buffered reading
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1279815.1727220013.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240814203850.2240469-16-dhowells@redhat.com>
+Date: Wed, 25 Sep 2024 00:20:13 +0100
+Message-ID: <1279816.1727220013@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -79,280 +92,307 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Leon Romanovsky via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Leon Romanovsky <leon@kernel.org>
-Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: asmadeus@codewreck.org, dhowells@redhat.com, linux-mm@kvack.org, marc.dionne@auristor.com, linux-afs@lists.infradead.org, pc@manguebit.com, linux-cifs@vger.kernel.org, willy@infradead.org, smfrench@gmail.com, hsiangkao@linux.alibaba.com, idryomov@gmail.com, sprasad@microsoft.com, tom@talpey.com, ceph-devel@vger.kernel.org, ericvh@kernel.org, christian@brauner.io, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, jlayton@kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Aug 14, 2024 at 09:38:35PM +0100, David Howells wrote:
-> Make the netfs write-side routines use the new folio_queue struct to hold=
- a
-> rolling buffer of folios, with the issuer adding folios at the tail and t=
-he
-> collector removing them from the head as they're processed instead of usi=
-ng
-> an xarray.
->=20
-> This will allow a subsequent patch to simplify the write collector.
->=20
-> The primary mark (as tested by folioq_is_marked()) is used to note if the
-> corresponding folio needs putting.
->=20
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Jeff Layton <jlayton@kernel.org>
-> cc: netfs@lists.linux.dev
-> cc: linux-fsdevel@vger.kernel.org
-> ---
->  fs/netfs/internal.h          |  9 +++-
->  fs/netfs/misc.c              | 76 ++++++++++++++++++++++++++++++++
->  fs/netfs/objects.c           |  1 +
->  fs/netfs/stats.c             |  4 +-
->  fs/netfs/write_collect.c     | 84 +++++++++++++++++++-----------------
->  fs/netfs/write_issue.c       | 28 ++++++------
->  include/linux/netfs.h        |  8 ++--
->  include/trace/events/netfs.h |  1 +
->  8 files changed, 150 insertions(+), 61 deletions(-)
+Could you try the attached?  It may help, though this fixes a bug in the
+write-side, not the read-side.
 
-According to git bisect, this commit causes to the following kernel
-splat during boot of the system with 9p fs.
+David
+---
+netfs: Fix write oops in generic/346 (9p) and maybe generic/074 (cifs)
 
-#
-# Caches
-#
-CONFIG_NETFS_SUPPORT=3Dy
-# CONFIG_NETFS_STATS is not set
-# CONFIG_NETFS_DEBUG is not set
-# CONFIG_FSCACHE is not set
-# end of Caches
+In netfslib, a buffered writeback operation has a 'write queue' of folios
+that are being written, held in a linear sequence of folio_queue structs.
+The 'issuer' adds new folio_queues on the leading edge of the queue and
+populates each one progressively; the 'collector' pops them off the
+trailing edge and discards them and the folios they point to as they are
+consumed.
 
-=2E..
-CONFIG_9P_FS=3Dy
-=2E..
+The queue is required to always retain at least one folio_queue structure.
+This allows the queue to be accessed without locking and with just a bit o=
+f
+barriering.
 
-[    1.510725][    T1] Run /sbin/init as init process
-[    1.510937][    T1]   with arguments:
-[    1.511060][    T1]     /sbin/init
-[    1.511233][    T1]   with environment:
-[    1.511332][    T1]     HOME=3D/
-[    1.511448][    T1]     TERM=3Dlinux
-[    1.516066][    T1] page: refcount:0 mapcount:0 mapping:0000000000000000=
- index:0x0 pfn:0x6ce48
-[    1.516920][    T1] flags: 0x4000000000000000(zone=3D1)
-[    1.517112][    T1] raw: 4000000000000000 ffffea0001b39248 ffffea0000158=
-3c8 0000000000000000
-[    1.517374][    T1] raw: 0000000000000000 0000000000000000 00000000fffff=
-fff 0000000000000000
-[    1.517767][    T1] page dumped because: VM_BUG_ON_FOLIO(((unsigned int)=
- folio_ref_count(folio) + 127u <=3D 127u))
-[    1.518144][    T1] ------------[ cut here ]------------
-[    1.518311][    T1] kernel BUG at include/linux/mm.h:1444!
-[    1.518488][    T1] Oops: invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC =
-KASAN
-[    1.518738][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.1=
-1.0+ #2488
-[    1.518990][    T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), =
-BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-[    1.519325][    T1] RIP: 0010:__iov_iter_get_pages_alloc+0x16d4/0x2210
-[    1.519540][    T1] Code: 84 f2 fa ff ff 48 89 ef e8 49 28 98 ff e9 e5 f=
-a ff ff 48 8d 48 ff e9 2c fe ff ff 48 c7 c6 20 ee 21 83 48 89 cf e8 7c 2d 8=
-a ff <0f> 0b 48 b8 00 00 00 00 00 fc ff df 4c 8b 74 24 68 44 8b 5c 24 30
-[    1.520110][    T1] RSP: 0000:ffff8880060f6e40 EFLAGS: 00010286
-[    1.520317][    T1] RAX: 000000000000005c RBX: ffffea0001b39234 RCX: 000=
-0000000000000
-[    1.520547][    T1] RDX: 000000000000005c RSI: 0000000000000004 RDI: fff=
-fed1000c1edbb
-[    1.520776][    T1] RBP: dffffc0000000000 R08: 0000000000000000 R09: fff=
-ffbfff0718ce0
-[    1.521027][    T1] R10: 0000000000000003 R11: 0000000000000001 R12: fff=
-f8880065bd7e0                                                              =
-                                                                    12:43:4=
-5 [122/
-[    1.521252][    T1] R13: ffff888006644000 R14: 0000000000000002 R15: 000=
-0000000001000
-[    1.521475][    T1] FS:  0000000000000000(0000) GS:ffff88806ce80000(0000=
-) knlGS:0000000000000000
-[    1.521761][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.521961][    T1] CR2: 0000000000000000 CR3: 0000000003881001 CR4: 000=
-0000000370eb0
-[    1.522200][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
-0000000000000
-[    1.522418][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
-0000000000400
-[    1.522636][    T1] Call Trace:
-[    1.522750][    T1]  <TASK>
-[    1.522823][    T1]  ? __die+0x52/0x8f
-[    1.522939][    T1]  ? die+0x2a/0x50
-[    1.523061][    T1]  ? do_trap+0x1d9/0x2c0
-[    1.523163][    T1]  ? __iov_iter_get_pages_alloc+0x16d4/0x2210
-[    1.523334][    T1]  ? do_error_trap+0xa3/0x160
-[    1.523465][    T1]  ? __iov_iter_get_pages_alloc+0x16d4/0x2210
-[    1.523633][    T1]  ? handle_invalid_op+0x2c/0x30
-[    1.523765][    T1]  ? __iov_iter_get_pages_alloc+0x16d4/0x2210
-[    1.523942][    T1]  ? exc_invalid_op+0x29/0x40
-[    1.524087][    T1]  ? asm_exc_invalid_op+0x16/0x20
-[    1.524238][    T1]  ? __iov_iter_get_pages_alloc+0x16d4/0x2210
-[    1.524426][    T1]  ? iov_iter_extract_pages+0x1ee0/0x1ee0
-[    1.524575][    T1]  ? radix_tree_node_alloc.constprop.0+0x16a/0x2c0
-[    1.524762][    T1]  ? lock_acquire+0xe2/0x500
-[    1.524916][    T1]  ? mark_lock+0xfc/0x2dc0
-[    1.525071][    T1]  iov_iter_get_pages_alloc2+0x3d/0xe0
-[    1.525208][    T1]  ? print_usage_bug.part.0+0x600/0x600
-[    1.525392][    T1]  p9_get_mapped_pages.part.0.constprop.0+0x3bf/0x6c0
-[    1.525595][    T1]  ? p9pdu_vwritef+0x320/0x1f20
-[    1.525756][    T1]  ? p9_virtio_request+0x550/0x550
-[    1.525918][    T1]  ? pdu_read+0xc0/0xc0
-[    1.526056][    T1]  ? lock_release+0x220/0x780
-[    1.526218][    T1]  ? pdu_read+0xc0/0xc0
-[    1.526341][    T1]  p9_virtio_zc_request+0x728/0x1020
-[    1.526501][    T1]  ? p9pdu_vwritef+0x320/0x1f20
-[    1.526662][    T1]  ? p9_virtio_probe+0xa20/0xa20
-[    1.526824][    T1]  ? netfs_read_to_pagecache+0x601/0xd50
-[    1.526990][    T1]  ? mark_lock+0xfc/0x2dc0
-[    1.527159][    T1]  ? p9pdu_finalize+0xdc/0x1d0
-[    1.527321][    T1]  ? p9_client_prepare_req+0x235/0x360
-[    1.527483][    T1]  ? p9_tag_alloc+0x6e0/0x6e0
-[    1.527644][    T1]  ? lock_release+0x220/0x780
-[    1.527806][    T1]  p9_client_zc_rpc.constprop.0+0x236/0x7d0
-[    1.528013][    T1]  ? __create_object+0x5e/0x80
-[    1.528175][    T1]  ? p9_client_flush.isra.0+0x390/0x390
-[    1.528345][    T1]  ? lockdep_hardirqs_on_prepare+0x268/0x3e0
-[    1.528544][    T1]  ? __call_rcu_common.constprop.0+0x475/0xc80
-[    1.528785][    T1]  ? p9_req_put+0x17a/0x200
-[    1.528944][    T1]  p9_client_read_once+0x343/0x840
-[    1.529114][    T1]  ? p9_client_getlock_dotl+0x3c0/0x3c0
-[    1.529274][    T1]  p9_client_read+0xf1/0x150
-[    1.529440][    T1]  v9fs_issue_read+0x107/0x2c0
-[    1.529608][    T1]  ? v9fs_issue_write+0x140/0x140
-[    1.529736][    T1]  netfs_read_to_pagecache+0x601/0xd50
-[    1.529858][    T1]  netfs_readahead+0x6af/0xbe0
-[    1.530000][    T1]  read_pages+0x17b/0xaf0
-[    1.530136][    T1]  ? lru_move_tail+0x8f0/0x8f0
-[    1.530299][    T1]  ? file_ra_state_init+0xd0/0xd0
-[    1.530479][    T1]  page_cache_ra_unbounded+0x324/0x5f0
-[    1.530638][    T1]  filemap_get_pages+0x597/0x16b0
-[    1.530801][    T1]  ? filemap_add_folio+0x140/0x140
-[    1.530957][    T1]  ? lock_is_held_type+0x81/0xe0
-[    1.531121][    T1]  filemap_read+0x2ec/0xa90
-[    1.531282][    T1]  ? filemap_get_pages+0x16b0/0x16b0
-[    1.531443][    T1]  ? 0xffffffff81000000
-[    1.531565][    T1]  ? find_held_lock+0x2d/0x110
-[    1.531720][    T1]  ? lock_is_held_type+0x81/0xe0
-[    1.531888][    T1]  ? down_read_interruptible+0x1f6/0x490
-[    1.532062][    T1]  ? down_read+0x450/0x450
-[    1.532229][    T1]  ? lockdep_hardirqs_on_prepare+0x3e0/0x3e0
-[    1.532435][    T1]  ? find_held_lock+0x2d/0x110
-[    1.532594][    T1]  netfs_buffered_read_iter+0xe2/0x130
-[    1.532755][    T1]  ? netfs_file_read_iter+0xb2/0x130
-[    1.532904][    T1]  __kernel_read+0x2db/0x8a0
-[    1.533066][    T1]  ? __x64_sys_lseek+0x1d0/0x1d0
-[    1.533221][    T1]  bprm_execve+0x548/0x1410
-[    1.533381][    T1]  ? setup_arg_pages+0xb40/0xb40
-[    1.533534][    T1]  ? __cond_resched+0x17/0x70
-[    1.533684][    T1]  kernel_execve+0x26a/0x2f0
-[    1.533808][    T1]  try_to_run_init_process+0xf/0x30
-[    1.533933][    T1]  ? rest_init+0x1b0/0x1b0
-[    1.534064][    T1]  kernel_init+0xe2/0x140
-[    1.534160][    T1]  ? _raw_spin_unlock_irq+0x24/0x30
-[    1.534285][    T1]  ret_from_fork+0x2d/0x70
-[    1.534415][    T1]  ? rest_init+0x1b0/0x1b0
-[    1.534558][    T1]  ret_from_fork_asm+0x11/0x20
-[    1.534730][    T1]  </TASK>
-[    1.534858][    T1] Modules linked in:
-[    1.535016][    T1] ---[ end trace 0000000000000000 ]---
-[    1.535173][    T1] RIP: 0010:__iov_iter_get_pages_alloc+0x16d4/0x2210
-[    1.535385][    T1] Code: 84 f2 fa ff ff 48 89 ef e8 49 28 98 ff e9 e5 f=
-a ff ff 48 8d 48 ff e9 2c fe ff ff 48 c7 c6 20 ee 21 83 48 89 cf e8 7c 2d 8=
-a ff <0f> 0b 48 b8 00 00 00 00 00 fc ff df 4c 8b 74 24 68 44 8b 5c 24 30
-[    1.535967][    T1] RSP: 0000:ffff8880060f6e40 EFLAGS: 00010286
-[    1.536183][    T1] RAX: 000000000000005c RBX: ffffea0001b39234 RCX: 000=
-0000000000000
-[    1.536426][    T1] RDX: 000000000000005c RSI: 0000000000000004 RDI: fff=
-fed1000c1edbb
-[    1.536667][    T1] RBP: dffffc0000000000 R08: 0000000000000000 R09: fff=
-ffbfff0718ce0
-[    1.536914][    T1] R10: 0000000000000003 R11: 0000000000000001 R12: fff=
-f8880065bd7e0
-[    1.537163][    T1] R13: ffff888006644000 R14: 0000000000000002 R15: 000=
-0000000001000
-[    1.537409][    T1] FS:  0000000000000000(0000) GS:ffff88806ce80000(0000=
-) knlGS:0000000000000000
-[    1.537842][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.538035][    T1] CR2: 0000000000000000 CR3: 0000000003881001 CR4: 000=
-0000000370eb0
-[    1.538281][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
-0000000000000
-[    1.538519][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
-0000000000400
-[    1.538779][    T1] ------------[ cut here ]------------
-[    1.538904][    T1] WARNING: CPU: 1 PID: 1 at kernel/exit.c:886 do_exit+=
-0x17c4/0x23a0
-[    1.539110][    T1] Modules linked in:
-[    1.539229][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G     =
- D            6.11.0+ #2488
-[    1.539459][    T1] Tainted: [D]=3DDIE
-[    1.539567][    T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), =
-BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-[    1.539860][    T1] RIP: 0010:do_exit+0x17c4/0x23a0
-[    1.540008][    T1] Code: bb 68 04 00 00 31 f6 e8 5a 92 ff ff e9 d6 f8 f=
-f ff 4c 89 fe bf 05 06 00 00 e8 c8 53 02 00 e9 5c ec ff ff 0f 0b e9 b7 e8 f=
-f ff <0f> 0b e9 27 ea ff ff 48 89 df e8 ad 90 ff ff 48 85 c0 49 89 c7 0f
-[    1.540502][    T1] RSP: 0000:ffff8880060f7e68 EFLAGS: 00010286
-[    1.540657][    T1] RAX: dffffc0000000000 RBX: ffff8880060e8000 RCX: 1ff=
-ffffff07aebdf
-[    1.540860][    T1] RDX: 1ffff11000c1d20b RSI: 0000000000000008 RDI: fff=
-f8880060e9058
-[    1.541078][    T1] RBP: ffff8880060e8708 R08: 0000000000000000 R09: fff=
-ffbfff07ae5c1
-[    1.541261][    T1] R10: 0000000000000000 R11: 0000000000000001 R12: fff=
-f888006108000
-[    1.541437][    T1] R13: ffff8880060e8710 R14: ffff888006100000 R15: 000=
-000000000000b
-[    1.541645][    T1] FS:  0000000000000000(0000) GS:ffff88806ce80000(0000=
-) knlGS:0000000000000000
-[    1.541875][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.542043][    T1] CR2: 0000000000000000 CR3: 0000000003881001 CR4: 000=
-0000000370eb0
-[    1.542237][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
-0000000000000
-[    1.542432][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
-0000000000400
-[    1.542622][    T1] Call Trace:
-[    1.542733][    T1]  <TASK>
-[    1.542801][    T1]  ? __warn.cold+0x5f/0x1ed
-[    1.542930][    T1]  ? do_exit+0x17c4/0x23a0
-[    1.543063][    T1]  ? report_bug+0x1e6/0x290
-[    1.543190][    T1]  ? handle_bug+0x4f/0x90
-[    1.543290][    T1]  ? exc_invalid_op+0x13/0x40
-[    1.543418][    T1]  ? asm_exc_invalid_op+0x16/0x20
-[    1.543545][    T1]  ? do_exit+0x17c4/0x23a0
-[    1.543676][    T1]  ? do_exit+0x1c2/0x23a0
-[    1.543774][    T1]  ? __cond_resched+0x17/0x70
-[    1.543904][    T1]  ? is_current_pgrp_orphaned+0x90/0x90
-[    1.544040][    T1]  ? kernel_execve+0x26a/0x2f0
-[    1.544169][    T1]  ? __iov_iter_get_pages_alloc+0x16d4/0x2210
-[    1.544329][    T1]  make_task_dead+0xf0/0x110
-[    1.544462][    T1]  rewind_stack_and_make_dead+0x16/0x20
-[    1.544595][    T1] RIP: 0000:0x0
-[    1.544708][    T1] Code: Unable to access opcode bytes at 0xfffffffffff=
-fffd6.
-[    1.544903][    T1] RSP: 0000:0000000000000000 EFLAGS: 00000000 ORIG_RAX=
-: 0000000000000000
-[    1.545098][    T1] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000=
-0000000000000
-[    1.545286][    T1] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000=
-0000000000000
-[    1.545489][    T1] RBP: 0000000000000000 R08: 0000000000000000 R09: 000=
-0000000000000
-[    1.545699][    T1] R10: 0000000000000000 R11: 0000000000000000 R12: 000=
-0000000000000
-[    1.545898][    T1] R13: 0000000000000000 R14: 0000000000000000 R15: 000=
-0000000000000
-[    1.546099][    T1]  </TASK>
-[    1.546198][    T1] Kernel panic - not syncing: kernel: panic_on_warn se=
-t ...
-[    1.546654][    T1] Kernel Offset: disabled
-[    1.546769][    T1] ---[ end Kernel panic - not syncing: kernel: panic_o=
-n_warn set ... ]---
+When a new subrequest is prepared, its ->io_iter iterator is pointed at th=
+e
+current end of the write queue and then the iterator is extended as more
+data is added to the queue until the subrequest is committed.
 
-Thanks
+Now, the problem is that the folio_queue at the leading edge of the write
+queue when a subrequest is prepared might have been entirely consumed - bu=
+t
+not yet removed from the queue as it is the only remaining one and is
+preventing the queue from collapsing.
+
+So, what happens is that subreq->io_iter is pointed at the spent
+folio_queue, then a new folio_queue is added, and, at that point, the
+collector is at entirely at liberty to immediately delete the spent
+folio_queue.
+
+This leaves the subreq->io_iter pointing at a freed object.  If the system
+is lucky, iterate_folioq() sees ->io_iter, sees the as-yet uncorrupted
+freed object and advances to the next folio_queue in the queue.
+
+In the case seen, however, the freed object gets recycled and put back ont=
+o
+the queue at the tail and filled to the end.  This confuses
+iterate_folioq() and it tries to step ->next, which may be NULL - resultin=
+g
+in an oops.
+
+Fix this by the following means:
+
+ (1) When preparing a write subrequest, make sure there's a folio_queue
+     struct with space in it at the leading edge of the queue.  A function
+     to make space is split out of the function to append a folio so that
+     it can be called for this purpose.
+
+ (2) If the request struct iterator is pointing to a completely spent
+     folio_queue when we make space, then advance the iterator to the newl=
+y
+     allocated folio_queue.  The subrequest's iterator will then be set
+     from this.
+
+Whilst we're at it, also split out the function to allocate a folio_queue,
+initialise it and do the accounting.
+
+The oops could be triggered using the generic/346 xfstest with a filesyste=
+m
+on9P over TCP with cache=3Dloose.  The oops looked something like:
+
+ BUG: kernel NULL pointer dereference, address: 0000000000000008
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ ...
+ RIP: 0010:_copy_from_iter+0x2db/0x530
+ ...
+ Call Trace:
+  <TASK>
+ ...
+  p9pdu_vwritef+0x3d8/0x5d0
+  p9_client_prepare_req+0xa8/0x140
+  p9_client_rpc+0x81/0x280
+  p9_client_write+0xcf/0x1c0
+  v9fs_issue_write+0x87/0xc0
+  netfs_advance_write+0xa0/0xb0
+  netfs_write_folio.isra.0+0x42d/0x500
+  netfs_writepages+0x15a/0x1f0
+  do_writepages+0xd1/0x220
+  filemap_fdatawrite_wbc+0x5c/0x80
+  v9fs_mmap_vm_close+0x7d/0xb0
+  remove_vma+0x35/0x70
+  vms_complete_munmap_vmas+0x11a/0x170
+  do_vmi_align_munmap+0x17d/0x1c0
+  do_vmi_munmap+0x13e/0x150
+  __vm_munmap+0x92/0xd0
+  __x64_sys_munmap+0x17/0x20
+  do_syscall_64+0x80/0xe0
+  entry_SYSCALL_64_after_hwframe+0x71/0x79
+
+This may also fix a similar-looking issue with cifs and generic/074.
+
+  | Reported-by: kernel test robot <oliver.sang@intel.com>
+  | Closes: https://lore.kernel.org/oe-lkp/202409180928.f20b5a08-oliver.sa=
+ng@intel.com
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Eric Van Hensbergen <ericvh@kernel.org>
+cc: Latchesar Ionkov <lucho@ionkov.net>
+cc: Dominique Martinet <asmadeus@codewreck.org>
+cc: Christian Schoenebeck <linux_oss@crudebyte.com>
+cc: Steve French <sfrench@samba.org>
+cc: Paulo Alcantara <pc@manguebit.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: v9fs@lists.linux.dev
+cc: linux-cifs@vger.kernel.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/netfs/internal.h    |    2 +
+ fs/netfs/misc.c        |   72 ++++++++++++++++++++++++++++++++++---------=
+------
+ fs/netfs/objects.c     |   12 ++++++++
+ fs/netfs/write_issue.c |   12 +++++++-
+ 4 files changed, 76 insertions(+), 22 deletions(-)
+
+diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
+index c7f23dd3556a..79c0ad89affb 100644
+--- a/fs/netfs/internal.h
++++ b/fs/netfs/internal.h
+@@ -58,6 +58,7 @@ static inline void netfs_proc_del_rreq(struct netfs_io_r=
+equest *rreq) {}
+ /*
+  * misc.c
+  */
++struct folio_queue *netfs_buffer_make_space(struct netfs_io_request *rreq=
+);
+ int netfs_buffer_append_folio(struct netfs_io_request *rreq, struct folio=
+ *folio,
+ 			      bool needs_put);
+ struct folio_queue *netfs_delete_buffer_head(struct netfs_io_request *wre=
+q);
+@@ -76,6 +77,7 @@ void netfs_clear_subrequests(struct netfs_io_request *rr=
+eq, bool was_async);
+ void netfs_put_request(struct netfs_io_request *rreq, bool was_async,
+ 		       enum netfs_rreq_ref_trace what);
+ struct netfs_io_subrequest *netfs_alloc_subrequest(struct netfs_io_reques=
+t *rreq);
++struct folio_queue *netfs_folioq_alloc(struct netfs_io_request *rreq, gfp=
+_t gfp);
+ =
+
+ static inline void netfs_see_request(struct netfs_io_request *rreq,
+ 				     enum netfs_rreq_ref_trace what)
+diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
+index 0ad0982ce0e2..a743e8963247 100644
+--- a/fs/netfs/misc.c
++++ b/fs/netfs/misc.c
+@@ -9,34 +9,64 @@
+ #include "internal.h"
+ =
+
+ /*
+- * Append a folio to the rolling queue.
++ * Make sure there's space in the rolling queue.
+  */
+-int netfs_buffer_append_folio(struct netfs_io_request *rreq, struct folio=
+ *folio,
+-			      bool needs_put)
++struct folio_queue *netfs_buffer_make_space(struct netfs_io_request *rreq=
+)
+ {
+-	struct folio_queue *tail =3D rreq->buffer_tail;
+-	unsigned int slot, order =3D folio_order(folio);
++	struct folio_queue *tail =3D rreq->buffer_tail, *prev;
++	unsigned int prev_nr_slots =3D 0;
+ =
+
+ 	if (WARN_ON_ONCE(!rreq->buffer && tail) ||
+ 	    WARN_ON_ONCE(rreq->buffer && !tail))
+-		return -EIO;
+-
+-	if (!tail || folioq_full(tail)) {
+-		tail =3D kmalloc(sizeof(*tail), GFP_NOFS);
+-		if (!tail)
+-			return -ENOMEM;
+-		netfs_stat(&netfs_n_folioq);
+-		folioq_init(tail);
+-		tail->prev =3D rreq->buffer_tail;
+-		if (tail->prev)
+-			tail->prev->next =3D tail;
+-		rreq->buffer_tail =3D tail;
+-		if (!rreq->buffer) {
+-			rreq->buffer =3D tail;
+-			iov_iter_folio_queue(&rreq->io_iter, ITER_SOURCE, tail, 0, 0, 0);
++		return ERR_PTR(-EIO);
++
++	prev =3D tail;
++	if (prev) {
++		if (!folioq_full(tail))
++			return tail;
++		prev_nr_slots =3D folioq_nr_slots(tail);
++	}
++
++	tail =3D netfs_folioq_alloc(rreq, GFP_NOFS);
++	if (!tail)
++		return ERR_PTR(-ENOMEM);
++	tail->prev =3D prev;
++	if (prev)
++		/* [!] NOTE: After we set prev->next, the consumer is entirely
++		 * at liberty to delete prev.
++		 */
++		WRITE_ONCE(prev->next, tail);
++
++	rreq->buffer_tail =3D tail;
++	if (!rreq->buffer) {
++		rreq->buffer =3D tail;
++		iov_iter_folio_queue(&rreq->io_iter, ITER_SOURCE, tail, 0, 0, 0);
++	} else {
++		/* Make sure we don't leave the master iterator pointing to a
++		 * block that might get immediately consumed.
++		 */
++		if (rreq->io_iter.folioq =3D=3D prev &&
++		    rreq->io_iter.folioq_slot =3D=3D prev_nr_slots) {
++			rreq->io_iter.folioq =3D tail;
++			rreq->io_iter.folioq_slot =3D 0;
+ 		}
+-		rreq->buffer_tail_slot =3D 0;
+ 	}
++	rreq->buffer_tail_slot =3D 0;
++	return tail;
++}
++
++/*
++ * Append a folio to the rolling queue.
++ */
++int netfs_buffer_append_folio(struct netfs_io_request *rreq, struct folio=
+ *folio,
++			      bool needs_put)
++{
++	struct folio_queue *tail;
++	unsigned int slot, order =3D folio_order(folio);
++
++	tail =3D netfs_buffer_make_space(rreq);
++	if (IS_ERR(tail))
++		return PTR_ERR(tail);
+ =
+
+ 	rreq->io_iter.count +=3D PAGE_SIZE << order;
+ =
+
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index d32964e8ca5d..dd8241bc996b 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -250,3 +250,15 @@ void netfs_put_subrequest(struct netfs_io_subrequest =
+*subreq, bool was_async,
+ 	if (dead)
+ 		netfs_free_subrequest(subreq, was_async);
+ }
++
++struct folio_queue *netfs_folioq_alloc(struct netfs_io_request *rreq, gfp=
+_t gfp)
++{
++	struct folio_queue *fq;
++
++	fq =3D kmalloc(sizeof(*fq), gfp);
++	if (fq) {
++		netfs_stat(&netfs_n_folioq);
++		folioq_init(fq);
++	}
++	return fq;
++}
+diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
+index 04e66d587f77..0929d9fd4ce7 100644
+--- a/fs/netfs/write_issue.c
++++ b/fs/netfs/write_issue.c
+@@ -153,12 +153,22 @@ static void netfs_prepare_write(struct netfs_io_requ=
+est *wreq,
+ 				loff_t start)
+ {
+ 	struct netfs_io_subrequest *subreq;
++	struct iov_iter *wreq_iter =3D &wreq->io_iter;
++
++	/* Make sure we don't point the iterator at a used-up folio_queue
++	 * struct being used as a placeholder to prevent the queue from
++	 * collapsing.  In such a case, extend the queue.
++	 */
++	if (iov_iter_is_folioq(wreq_iter) &&
++	    wreq_iter->folioq_slot >=3D folioq_nr_slots(wreq_iter->folioq)) {
++		netfs_buffer_make_space(wreq);
++	}
+ =
+
+ 	subreq =3D netfs_alloc_subrequest(wreq);
+ 	subreq->source		=3D stream->source;
+ 	subreq->start		=3D start;
+ 	subreq->stream_nr	=3D stream->stream_nr;
+-	subreq->io_iter		=3D wreq->io_iter;
++	subreq->io_iter		=3D *wreq_iter;
+ =
+
+ 	_enter("R=3D%x[%x]", wreq->debug_id, subreq->debug_index);
+ =
+
