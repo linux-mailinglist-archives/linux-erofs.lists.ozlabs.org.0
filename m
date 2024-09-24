@@ -2,53 +2,72 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B701E98421A
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 11:29:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E94398428F
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 11:48:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1727171304;
+	bh=FTjmBljRKDLJp9jdXkbW5p6euOt+9y7h0X2MEHRE8c4=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=XfuoStLOe5iO9codNTXv9nC9ccZ7/yWnwy9g4I15bRuKH+kPIPgzvPSjd1XAU+MGS
+	 Fw9UkEb21c/0/FBvoo005IBHTbLPLpiVKE81mSGHqdXjLk+xUVVwWJVRqw+3c28vER
+	 pd+enkgqhByZtE1EzK0ufZk/euMlMc2ZzkkE5YDv3pm+tkoqZOxOCfzCpVMXZpoKDW
+	 itBscvEUHe0HTZ8mckY3ajDZrP4X8YKV5nya0P2fjFOjpRuj80fpo2C9Q3kH8LAP/A
+	 LpHFNvU5e8nCa46NoK9yCIZ3+ivccNR7bkJg9oQaEGS8mGusz6L9VbqaXlqI18mwWH
+	 Qq7o8FXe/de4A==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XCZLx4FWnz2yjN
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 19:29:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XCZmm3QLYz2ytm
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Sep 2024 19:48:24 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727170166;
-	cv=none; b=ghvZxRdgQ5JKawEuncFk7WoY4FxvZxQ69dryUR3LY/rr0sLwDZkYCjOG1qqtoD6ZftmjhwF2BfrGtTmx6BzAolDLxbN1h7ufGro8lUXebChM/JF9/q20UQ+Xez0733i456dLmqYqdFmxyEY3pBAt7K30HURaoI6ee4pJZGx4iG+IMhrFIvNF/mQgzaAkvp2+q4t3n6FPoOekxnyeC26AtLmffyWbpd2zZU/2WdTvjZCiRkQcIhSKlw5l7pvDLBna6qRnyAGHg7C289KU/8nRJrODtIwq23XyIR7/FCz7iJXM120wtUd9sOy8AhdrR9WhAjae8zfsexWse4Czn+7ZEw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727171300;
+	cv=none; b=DgVNQYRvz9GuvlJLt8G+PMFMS5WolLEc4KqpRBmBp6v2pSUWBWS2sbtVvBKFdD1xZmf7ZKaw0h3OZK32A9+GqB1bPBz6qnXnEflEnfm0a12jK92qoeOsavQGgm8udD+Nujk+4BvPYql9kqRwG4eo/J/4OasCk/EPP9MzBwgeLbAf9yx/fTI8r/ZgkFQJ79VwY3iuc8eJNdkoe0U0YpYtRKahyVETFjupb6pDKY///7OtnxTNRf9KUG0eSoAg8Z2ziZNRAUT//sLW9hGlMOXJlobXK6fyhzZhWJizTMCnqJdDrM9GU6t3Br5i3/98wqmAOCOs/BdQm3N4YUYRBTO/Hg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727170166; c=relaxed/relaxed;
-	bh=TYPCTrP9ZTx3OP31Ms8q/MZw7Vr2s+RTwZ353YzEMbk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nGO/z9cKgFMEmqmYtokRh/tRZ42Lwtd9nxn40SC1/lmj+g+gQ2nHcLiJKOIQ0WwX/Hn/4VDALKd55mKiMFpyuGBtba7NkYMUPBeP/oim+BxBpV0aLpXiSHqkSpleTSTE0NaS06KsTtcPoj73LibH1a5h4Tsieg1nNrV1crRP2sl7fmCXkc2houpK50Sd1yV5/D1XCcb0+jUtYwqfo5a4I1IdbtjkZGm/bG/gH4goaJqP5qD8P3OzrThHQQZewGYprkwz5L020J/GDK6BE1Z2fC/JhhTpXhUpvaekpwgnhHoPJOV2By2aEY+ufkkobXiTX0n7OBlYOqTCfzlIw/WKng==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Egbbrsy9; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1727171300; c=relaxed/relaxed;
+	bh=FTjmBljRKDLJp9jdXkbW5p6euOt+9y7h0X2MEHRE8c4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GaTf2UuLsIz2HnADX2tZ9Qye46GZCnO2GoItJnBuC2Q9eJDu+7q+6pwNKgyKuoMLimUEs3THX40Ge/oX1caTTqSsX7fsAqPNcSd7PU5wk/sQtQc4EEgjWkL8OewnZhyOf7+UwnZvi6OEVvGIl6WXGqmWS6RViv7gpnXWZIWbhYUkVGCNvyW8B0OxBFX8/Ba14/DzNTxy/I8JhtDFZTWmzRgaT5obUbOTnkWPSxEQGpzH5si7us4B2p1HmHHRxyM4aQW+wFI0DLOpCWvviYdqeAsiimW2PThOF4hXP2co9qsPGJDCLduJUgFcI4UV6/fQDgeSTtHPDQjJML/fy+5cxA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ke8RdNqR; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=leon@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Egbbrsy9;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ke8RdNqR;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=leon@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XCZLr3Fthz2yFP
-	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Sep 2024 19:29:21 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1727170156; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=TYPCTrP9ZTx3OP31Ms8q/MZw7Vr2s+RTwZ353YzEMbk=;
-	b=Egbbrsy9HTAnhkUwsgsUwzHQv2jECw7QAo2pu7z8OBFxhXoVmkVZlehjkVgDuZKPgBtcQXL0uGsUy7sRcmRvkDDG/qxlTvrAQLMXSxOfT0QtChKkckwry58Q/K954Z8ybUKArAOWn+uVe6pIu4x4oy+V6Bf4lc6WojsM58f05bI=
-Received: from 30.221.130.48(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WFfii39_1727170154)
-          by smtp.aliyun-inc.com;
-          Tue, 24 Sep 2024 17:29:15 +0800
-Message-ID: <34e86448-65fa-447d-b5d9-1897b2a53ff6@linux.alibaba.com>
-Date: Tue, 24 Sep 2024 17:29:14 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XCZmg70zMz2xJJ
+	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Sep 2024 19:48:19 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id F33BFA40E31;
+	Tue, 24 Sep 2024 09:48:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F92C4CEC4;
+	Tue, 24 Sep 2024 09:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727171294;
+	bh=IJb2CY2sQexSIpMJlLAZTjDzjCwF7sXuLr8nOkq3T5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ke8RdNqRNrJOuxH3G/Ln6qNlL6QGQ/daYetAAt1sBMZJ0y7LmzxW+cIsoaM+SDRcd
+	 /NWgG9uAVX1OmTbwLZrk4VFMjmveHy1t4tOE37b5Y2dGlELjeIm7+IkM7UBrgbIziL
+	 1QGpr3l1xvgyERkKlbolB+xbud5VGkGTGjU6JIA8yDzMBiKY+W2wzl5OhT5LmV3ZU0
+	 eTUk0TlfWFAObQkz/Ll3WDJbzS8KBoTZ2//YyyX50l+Pw5hXRlPeVVhdVTv6UM9hLz
+	 z8Sl1ai3JtBKE54ANx/ZqRBNkENUlruWITPhgRJV2uTN1PVF26og/aWR0YLlquICkM
+	 l0CYDkm4yULGg==
+Date: Tue, 24 Sep 2024 12:48:09 +0300
+To: David Howells <dhowells@redhat.com>
+Subject: Re: [PATCH v2 15/25] netfs: Use new folio_queue data type and
+ iterator instead of xarray iter
+Message-ID: <20240924094809.GA1182241@unreal>
+References: <20240814203850.2240469-1-dhowells@redhat.com>
+ <20240814203850.2240469-16-dhowells@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] erofs: add file-backed mount support
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-References: <20240830032840.3783206-1-hsiangkao@linux.alibaba.com>
- <CAMuHMdVqa2Mjqtqv0q=uuhBY1EfTaa+X6WkG7E2tEnKXJbTkNg@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAMuHMdVqa2Mjqtqv0q=uuhBY1EfTaa+X6WkG7E2tEnKXJbTkNg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240814203850.2240469-16-dhowells@redhat.com>
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -60,104 +79,280 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Linux FS Devel <linux-fsdevel@vger.kernel.org>, linux-erofs@lists.ozlabs.org
+From: Leon Romanovsky via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Leon Romanovsky <leon@kernel.org>
+Cc: Dominique Martinet <asmadeus@codewreck.org>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Geert,
+On Wed, Aug 14, 2024 at 09:38:35PM +0100, David Howells wrote:
+> Make the netfs write-side routines use the new folio_queue struct to hold=
+ a
+> rolling buffer of folios, with the issuer adding folios at the tail and t=
+he
+> collector removing them from the head as they're processed instead of usi=
+ng
+> an xarray.
+>=20
+> This will allow a subsequent patch to simplify the write collector.
+>=20
+> The primary mark (as tested by folioq_is_marked()) is used to note if the
+> corresponding folio needs putting.
+>=20
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Jeff Layton <jlayton@kernel.org>
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
+> ---
+>  fs/netfs/internal.h          |  9 +++-
+>  fs/netfs/misc.c              | 76 ++++++++++++++++++++++++++++++++
+>  fs/netfs/objects.c           |  1 +
+>  fs/netfs/stats.c             |  4 +-
+>  fs/netfs/write_collect.c     | 84 +++++++++++++++++++-----------------
+>  fs/netfs/write_issue.c       | 28 ++++++------
+>  include/linux/netfs.h        |  8 ++--
+>  include/trace/events/netfs.h |  1 +
+>  8 files changed, 150 insertions(+), 61 deletions(-)
 
-On 2024/9/24 17:21, Geert Uytterhoeven wrote:
-> Hi Gao,
-> 
-> CC vfs
-> 
-> On Fri, Aug 30, 2024 at 5:29 AM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->> It actually has been around for years: For containers and other sandbox
->> use cases, there will be thousands (and even more) of authenticated
->> (sub)images running on the same host, unlike OS images.
->>
->> Of course, all scenarios can use the same EROFS on-disk format, but
->> bdev-backed mounts just work well for OS images since golden data is
->> dumped into real block devices.  However, it's somewhat hard for
->> container runtimes to manage and isolate so many unnecessary virtual
->> block devices safely and efficiently [1]: they just look like a burden
->> to orchestrators and file-backed mounts are preferred indeed.  There
->> were already enough attempts such as Incremental FS, the original
->> ComposeFS and PuzzleFS acting in the same way for immutable fses.  As
->> for current EROFS users, ComposeFS, containerd and Android APEXs will
->> be directly benefited from it.
->>
->> On the other hand, previous experimental feature "erofs over fscache"
->> was once also intended to provide a similar solution (inspired by
->> Incremental FS discussion [2]), but the following facts show file-backed
->> mounts will be a better approach:
->>   - Fscache infrastructure has recently been moved into new Netfslib
->>     which is an unexpected dependency to EROFS really, although it
->>     originally claims "it could be used for caching other things such as
->>     ISO9660 filesystems too." [3]
->>
->>   - It takes an unexpectedly long time to upstream Fscache/Cachefiles
->>     enhancements.  For example, the failover feature took more than
->>     one year, and the deamonless feature is still far behind now;
->>
->>   - Ongoing HSM "fanotify pre-content hooks" [4] together with this will
->>     perfectly supersede "erofs over fscache" in a simpler way since
->>     developers (mainly containerd folks) could leverage their existing
->>     caching mechanism entirely in userspace instead of strictly following
->>     the predefined in-kernel caching tree hierarchy.
->>
->> After "fanotify pre-content hooks" lands upstream to provide the same
->> functionality, "erofs over fscache" will be removed then (as an EROFS
->> internal improvement and EROFS will not have to bother with on-demand
->> fetching and/or caching improvements anymore.)
->>
->> [1] https://github.com/containers/storage/pull/2039
->> [2] https://lore.kernel.org/r/CAOQ4uxjbVxnubaPjVaGYiSwoGDTdpWbB=w_AeM6YM=zVixsUfQ@mail.gmail.com
->> [3] https://docs.kernel.org/filesystems/caching/fscache.html
->> [4] https://lore.kernel.org/r/cover.1723670362.git.josef@toxicpanda.com
->>
->> Closes: https://github.com/containers/composefs/issues/144
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> 
-> Thanks for your patch, which is now commit fb176750266a3d7f
-> ("erofs: add file-backed mount support").
-> 
->> ---
->> v2:
->>   - should use kill_anon_super();
->>   - add O_LARGEFILE to support large files.
->>
->>   fs/erofs/Kconfig    | 17 ++++++++++
->>   fs/erofs/data.c     | 35 ++++++++++++---------
->>   fs/erofs/inode.c    |  5 ++-
->>   fs/erofs/internal.h | 11 +++++--
->>   fs/erofs/super.c    | 76 +++++++++++++++++++++++++++++----------------
->>   5 files changed, 100 insertions(+), 44 deletions(-)
->>
->> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
->> index 7dcdce660cac..1428d0530e1c 100644
->> --- a/fs/erofs/Kconfig
->> +++ b/fs/erofs/Kconfig
->> @@ -74,6 +74,23 @@ config EROFS_FS_SECURITY
->>
->>            If you are not using a security module, say N.
->>
->> +config EROFS_FS_BACKED_BY_FILE
->> +       bool "File-backed EROFS filesystem support"
->> +       depends on EROFS_FS
->> +       default y
-> 
-> I am a bit reluctant to have this default to y, without an ack from
-> the VFS maintainers.
+According to git bisect, this commit causes to the following kernel
+splat during boot of the system with 9p fs.
 
-It don't touch any VFS stuffs so I didn't cc -fsdevel.
+#
+# Caches
+#
+CONFIG_NETFS_SUPPORT=3Dy
+# CONFIG_NETFS_STATS is not set
+# CONFIG_NETFS_DEBUG is not set
+# CONFIG_FSCACHE is not set
+# end of Caches
 
-Okay, if VFS maintainers have any objection of this, I could turn
-it into "default n", if not, I tend to leave it as "y" since I
-believe it shouldn't be any risk of this feature (since EROFS is
-only an immutable filesystem and I don't think out a context which
-could be risky) with clear use cases and I've clearly documented
-and showed in the commit message and upstream pull request.
+=2E..
+CONFIG_9P_FS=3Dy
+=2E..
 
-Thanks,
-Gao Xiang
+[    1.510725][    T1] Run /sbin/init as init process
+[    1.510937][    T1]   with arguments:
+[    1.511060][    T1]     /sbin/init
+[    1.511233][    T1]   with environment:
+[    1.511332][    T1]     HOME=3D/
+[    1.511448][    T1]     TERM=3Dlinux
+[    1.516066][    T1] page: refcount:0 mapcount:0 mapping:0000000000000000=
+ index:0x0 pfn:0x6ce48
+[    1.516920][    T1] flags: 0x4000000000000000(zone=3D1)
+[    1.517112][    T1] raw: 4000000000000000 ffffea0001b39248 ffffea0000158=
+3c8 0000000000000000
+[    1.517374][    T1] raw: 0000000000000000 0000000000000000 00000000fffff=
+fff 0000000000000000
+[    1.517767][    T1] page dumped because: VM_BUG_ON_FOLIO(((unsigned int)=
+ folio_ref_count(folio) + 127u <=3D 127u))
+[    1.518144][    T1] ------------[ cut here ]------------
+[    1.518311][    T1] kernel BUG at include/linux/mm.h:1444!
+[    1.518488][    T1] Oops: invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC =
+KASAN
+[    1.518738][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.1=
+1.0+ #2488
+[    1.518990][    T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), =
+BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[    1.519325][    T1] RIP: 0010:__iov_iter_get_pages_alloc+0x16d4/0x2210
+[    1.519540][    T1] Code: 84 f2 fa ff ff 48 89 ef e8 49 28 98 ff e9 e5 f=
+a ff ff 48 8d 48 ff e9 2c fe ff ff 48 c7 c6 20 ee 21 83 48 89 cf e8 7c 2d 8=
+a ff <0f> 0b 48 b8 00 00 00 00 00 fc ff df 4c 8b 74 24 68 44 8b 5c 24 30
+[    1.520110][    T1] RSP: 0000:ffff8880060f6e40 EFLAGS: 00010286
+[    1.520317][    T1] RAX: 000000000000005c RBX: ffffea0001b39234 RCX: 000=
+0000000000000
+[    1.520547][    T1] RDX: 000000000000005c RSI: 0000000000000004 RDI: fff=
+fed1000c1edbb
+[    1.520776][    T1] RBP: dffffc0000000000 R08: 0000000000000000 R09: fff=
+ffbfff0718ce0
+[    1.521027][    T1] R10: 0000000000000003 R11: 0000000000000001 R12: fff=
+f8880065bd7e0                                                              =
+                                                                    12:43:4=
+5 [122/
+[    1.521252][    T1] R13: ffff888006644000 R14: 0000000000000002 R15: 000=
+0000000001000
+[    1.521475][    T1] FS:  0000000000000000(0000) GS:ffff88806ce80000(0000=
+) knlGS:0000000000000000
+[    1.521761][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.521961][    T1] CR2: 0000000000000000 CR3: 0000000003881001 CR4: 000=
+0000000370eb0
+[    1.522200][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
+0000000000000
+[    1.522418][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
+0000000000400
+[    1.522636][    T1] Call Trace:
+[    1.522750][    T1]  <TASK>
+[    1.522823][    T1]  ? __die+0x52/0x8f
+[    1.522939][    T1]  ? die+0x2a/0x50
+[    1.523061][    T1]  ? do_trap+0x1d9/0x2c0
+[    1.523163][    T1]  ? __iov_iter_get_pages_alloc+0x16d4/0x2210
+[    1.523334][    T1]  ? do_error_trap+0xa3/0x160
+[    1.523465][    T1]  ? __iov_iter_get_pages_alloc+0x16d4/0x2210
+[    1.523633][    T1]  ? handle_invalid_op+0x2c/0x30
+[    1.523765][    T1]  ? __iov_iter_get_pages_alloc+0x16d4/0x2210
+[    1.523942][    T1]  ? exc_invalid_op+0x29/0x40
+[    1.524087][    T1]  ? asm_exc_invalid_op+0x16/0x20
+[    1.524238][    T1]  ? __iov_iter_get_pages_alloc+0x16d4/0x2210
+[    1.524426][    T1]  ? iov_iter_extract_pages+0x1ee0/0x1ee0
+[    1.524575][    T1]  ? radix_tree_node_alloc.constprop.0+0x16a/0x2c0
+[    1.524762][    T1]  ? lock_acquire+0xe2/0x500
+[    1.524916][    T1]  ? mark_lock+0xfc/0x2dc0
+[    1.525071][    T1]  iov_iter_get_pages_alloc2+0x3d/0xe0
+[    1.525208][    T1]  ? print_usage_bug.part.0+0x600/0x600
+[    1.525392][    T1]  p9_get_mapped_pages.part.0.constprop.0+0x3bf/0x6c0
+[    1.525595][    T1]  ? p9pdu_vwritef+0x320/0x1f20
+[    1.525756][    T1]  ? p9_virtio_request+0x550/0x550
+[    1.525918][    T1]  ? pdu_read+0xc0/0xc0
+[    1.526056][    T1]  ? lock_release+0x220/0x780
+[    1.526218][    T1]  ? pdu_read+0xc0/0xc0
+[    1.526341][    T1]  p9_virtio_zc_request+0x728/0x1020
+[    1.526501][    T1]  ? p9pdu_vwritef+0x320/0x1f20
+[    1.526662][    T1]  ? p9_virtio_probe+0xa20/0xa20
+[    1.526824][    T1]  ? netfs_read_to_pagecache+0x601/0xd50
+[    1.526990][    T1]  ? mark_lock+0xfc/0x2dc0
+[    1.527159][    T1]  ? p9pdu_finalize+0xdc/0x1d0
+[    1.527321][    T1]  ? p9_client_prepare_req+0x235/0x360
+[    1.527483][    T1]  ? p9_tag_alloc+0x6e0/0x6e0
+[    1.527644][    T1]  ? lock_release+0x220/0x780
+[    1.527806][    T1]  p9_client_zc_rpc.constprop.0+0x236/0x7d0
+[    1.528013][    T1]  ? __create_object+0x5e/0x80
+[    1.528175][    T1]  ? p9_client_flush.isra.0+0x390/0x390
+[    1.528345][    T1]  ? lockdep_hardirqs_on_prepare+0x268/0x3e0
+[    1.528544][    T1]  ? __call_rcu_common.constprop.0+0x475/0xc80
+[    1.528785][    T1]  ? p9_req_put+0x17a/0x200
+[    1.528944][    T1]  p9_client_read_once+0x343/0x840
+[    1.529114][    T1]  ? p9_client_getlock_dotl+0x3c0/0x3c0
+[    1.529274][    T1]  p9_client_read+0xf1/0x150
+[    1.529440][    T1]  v9fs_issue_read+0x107/0x2c0
+[    1.529608][    T1]  ? v9fs_issue_write+0x140/0x140
+[    1.529736][    T1]  netfs_read_to_pagecache+0x601/0xd50
+[    1.529858][    T1]  netfs_readahead+0x6af/0xbe0
+[    1.530000][    T1]  read_pages+0x17b/0xaf0
+[    1.530136][    T1]  ? lru_move_tail+0x8f0/0x8f0
+[    1.530299][    T1]  ? file_ra_state_init+0xd0/0xd0
+[    1.530479][    T1]  page_cache_ra_unbounded+0x324/0x5f0
+[    1.530638][    T1]  filemap_get_pages+0x597/0x16b0
+[    1.530801][    T1]  ? filemap_add_folio+0x140/0x140
+[    1.530957][    T1]  ? lock_is_held_type+0x81/0xe0
+[    1.531121][    T1]  filemap_read+0x2ec/0xa90
+[    1.531282][    T1]  ? filemap_get_pages+0x16b0/0x16b0
+[    1.531443][    T1]  ? 0xffffffff81000000
+[    1.531565][    T1]  ? find_held_lock+0x2d/0x110
+[    1.531720][    T1]  ? lock_is_held_type+0x81/0xe0
+[    1.531888][    T1]  ? down_read_interruptible+0x1f6/0x490
+[    1.532062][    T1]  ? down_read+0x450/0x450
+[    1.532229][    T1]  ? lockdep_hardirqs_on_prepare+0x3e0/0x3e0
+[    1.532435][    T1]  ? find_held_lock+0x2d/0x110
+[    1.532594][    T1]  netfs_buffered_read_iter+0xe2/0x130
+[    1.532755][    T1]  ? netfs_file_read_iter+0xb2/0x130
+[    1.532904][    T1]  __kernel_read+0x2db/0x8a0
+[    1.533066][    T1]  ? __x64_sys_lseek+0x1d0/0x1d0
+[    1.533221][    T1]  bprm_execve+0x548/0x1410
+[    1.533381][    T1]  ? setup_arg_pages+0xb40/0xb40
+[    1.533534][    T1]  ? __cond_resched+0x17/0x70
+[    1.533684][    T1]  kernel_execve+0x26a/0x2f0
+[    1.533808][    T1]  try_to_run_init_process+0xf/0x30
+[    1.533933][    T1]  ? rest_init+0x1b0/0x1b0
+[    1.534064][    T1]  kernel_init+0xe2/0x140
+[    1.534160][    T1]  ? _raw_spin_unlock_irq+0x24/0x30
+[    1.534285][    T1]  ret_from_fork+0x2d/0x70
+[    1.534415][    T1]  ? rest_init+0x1b0/0x1b0
+[    1.534558][    T1]  ret_from_fork_asm+0x11/0x20
+[    1.534730][    T1]  </TASK>
+[    1.534858][    T1] Modules linked in:
+[    1.535016][    T1] ---[ end trace 0000000000000000 ]---
+[    1.535173][    T1] RIP: 0010:__iov_iter_get_pages_alloc+0x16d4/0x2210
+[    1.535385][    T1] Code: 84 f2 fa ff ff 48 89 ef e8 49 28 98 ff e9 e5 f=
+a ff ff 48 8d 48 ff e9 2c fe ff ff 48 c7 c6 20 ee 21 83 48 89 cf e8 7c 2d 8=
+a ff <0f> 0b 48 b8 00 00 00 00 00 fc ff df 4c 8b 74 24 68 44 8b 5c 24 30
+[    1.535967][    T1] RSP: 0000:ffff8880060f6e40 EFLAGS: 00010286
+[    1.536183][    T1] RAX: 000000000000005c RBX: ffffea0001b39234 RCX: 000=
+0000000000000
+[    1.536426][    T1] RDX: 000000000000005c RSI: 0000000000000004 RDI: fff=
+fed1000c1edbb
+[    1.536667][    T1] RBP: dffffc0000000000 R08: 0000000000000000 R09: fff=
+ffbfff0718ce0
+[    1.536914][    T1] R10: 0000000000000003 R11: 0000000000000001 R12: fff=
+f8880065bd7e0
+[    1.537163][    T1] R13: ffff888006644000 R14: 0000000000000002 R15: 000=
+0000000001000
+[    1.537409][    T1] FS:  0000000000000000(0000) GS:ffff88806ce80000(0000=
+) knlGS:0000000000000000
+[    1.537842][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.538035][    T1] CR2: 0000000000000000 CR3: 0000000003881001 CR4: 000=
+0000000370eb0
+[    1.538281][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
+0000000000000
+[    1.538519][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
+0000000000400
+[    1.538779][    T1] ------------[ cut here ]------------
+[    1.538904][    T1] WARNING: CPU: 1 PID: 1 at kernel/exit.c:886 do_exit+=
+0x17c4/0x23a0
+[    1.539110][    T1] Modules linked in:
+[    1.539229][    T1] CPU: 1 UID: 0 PID: 1 Comm: swapper/0 Tainted: G     =
+ D            6.11.0+ #2488
+[    1.539459][    T1] Tainted: [D]=3DDIE
+[    1.539567][    T1] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), =
+BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
+[    1.539860][    T1] RIP: 0010:do_exit+0x17c4/0x23a0
+[    1.540008][    T1] Code: bb 68 04 00 00 31 f6 e8 5a 92 ff ff e9 d6 f8 f=
+f ff 4c 89 fe bf 05 06 00 00 e8 c8 53 02 00 e9 5c ec ff ff 0f 0b e9 b7 e8 f=
+f ff <0f> 0b e9 27 ea ff ff 48 89 df e8 ad 90 ff ff 48 85 c0 49 89 c7 0f
+[    1.540502][    T1] RSP: 0000:ffff8880060f7e68 EFLAGS: 00010286
+[    1.540657][    T1] RAX: dffffc0000000000 RBX: ffff8880060e8000 RCX: 1ff=
+ffffff07aebdf
+[    1.540860][    T1] RDX: 1ffff11000c1d20b RSI: 0000000000000008 RDI: fff=
+f8880060e9058
+[    1.541078][    T1] RBP: ffff8880060e8708 R08: 0000000000000000 R09: fff=
+ffbfff07ae5c1
+[    1.541261][    T1] R10: 0000000000000000 R11: 0000000000000001 R12: fff=
+f888006108000
+[    1.541437][    T1] R13: ffff8880060e8710 R14: ffff888006100000 R15: 000=
+000000000000b
+[    1.541645][    T1] FS:  0000000000000000(0000) GS:ffff88806ce80000(0000=
+) knlGS:0000000000000000
+[    1.541875][    T1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.542043][    T1] CR2: 0000000000000000 CR3: 0000000003881001 CR4: 000=
+0000000370eb0
+[    1.542237][    T1] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000=
+0000000000000
+[    1.542432][    T1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000=
+0000000000400
+[    1.542622][    T1] Call Trace:
+[    1.542733][    T1]  <TASK>
+[    1.542801][    T1]  ? __warn.cold+0x5f/0x1ed
+[    1.542930][    T1]  ? do_exit+0x17c4/0x23a0
+[    1.543063][    T1]  ? report_bug+0x1e6/0x290
+[    1.543190][    T1]  ? handle_bug+0x4f/0x90
+[    1.543290][    T1]  ? exc_invalid_op+0x13/0x40
+[    1.543418][    T1]  ? asm_exc_invalid_op+0x16/0x20
+[    1.543545][    T1]  ? do_exit+0x17c4/0x23a0
+[    1.543676][    T1]  ? do_exit+0x1c2/0x23a0
+[    1.543774][    T1]  ? __cond_resched+0x17/0x70
+[    1.543904][    T1]  ? is_current_pgrp_orphaned+0x90/0x90
+[    1.544040][    T1]  ? kernel_execve+0x26a/0x2f0
+[    1.544169][    T1]  ? __iov_iter_get_pages_alloc+0x16d4/0x2210
+[    1.544329][    T1]  make_task_dead+0xf0/0x110
+[    1.544462][    T1]  rewind_stack_and_make_dead+0x16/0x20
+[    1.544595][    T1] RIP: 0000:0x0
+[    1.544708][    T1] Code: Unable to access opcode bytes at 0xfffffffffff=
+fffd6.
+[    1.544903][    T1] RSP: 0000:0000000000000000 EFLAGS: 00000000 ORIG_RAX=
+: 0000000000000000
+[    1.545098][    T1] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000=
+0000000000000
+[    1.545286][    T1] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000=
+0000000000000
+[    1.545489][    T1] RBP: 0000000000000000 R08: 0000000000000000 R09: 000=
+0000000000000
+[    1.545699][    T1] R10: 0000000000000000 R11: 0000000000000000 R12: 000=
+0000000000000
+[    1.545898][    T1] R13: 0000000000000000 R14: 0000000000000000 R15: 000=
+0000000000000
+[    1.546099][    T1]  </TASK>
+[    1.546198][    T1] Kernel panic - not syncing: kernel: panic_on_warn se=
+t ...
+[    1.546654][    T1] Kernel Offset: disabled
+[    1.546769][    T1] ---[ end Kernel panic - not syncing: kernel: panic_o=
+n_warn set ... ]---
+
+Thanks
