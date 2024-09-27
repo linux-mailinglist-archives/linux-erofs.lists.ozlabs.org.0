@@ -1,84 +1,83 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98677988B82
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Sep 2024 22:50:47 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56D21988B98
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Sep 2024 22:55:24 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XFjKY1W8lz3cQs
-	for <lists+linux-erofs@lfdr.de>; Sat, 28 Sep 2024 06:50:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XFjQt4Xtbz3cR3
+	for <lists+linux-erofs@lfdr.de>; Sat, 28 Sep 2024 06:55:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727470239;
-	cv=none; b=YbKn19ECvdVOFBRzSG2M8g+Iy1wMHUxRxR0nwhhcTmhAtIdau6ySfYg5Aev64YVoY12AH1ZDgB9d8cwKfbrzHKfTheeKiXKkh11fGPT+Op81CHK/YoURmkU+ocml9gLv9uGbybJHJoMHGMRTKOobvUj/n6Fx18g1IklD7ReOS2tnwesK+l5di/ynnInINCedbdzt9j7AKj5goT3HaN/AjUWYh9F9JSW8DAJTnJMO2uee0/dZtVLS4+ul9frBt1Llky2n9bubuRb+SmmQ+MucYyboqWrx4SQ18mE8V6pyZEetMRfCmLdJtNaSTjG0h7CoONtIuIQNd3kzMSiKIHWArQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::429"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727470516;
+	cv=none; b=f35mNAEtsF4HdBJp08sPS/Xyfu2i4aMG7qC+AXx8G1uJ1Sh+1YgsBS1xZh3O3V9YRJeibFDdZ0z8YMofPzx3RK8I2vFMrgK2KiOqhmYjTUIj1d2z/rxQmY1XWfCiJUrm09/SMu+Pu9EKXn5ULw18p1Iidd9krdweSEg+SiPE5odpTgwIt9hi8e9DPqURuBcs0Q9y2tAD8+bzq/HxhN9dscuhuOTrAiUCZZeSqvDYfm+WdT/GQVFX37F/7wDspD+61r1hSMw6T9Jvsi5AuClr1AD3uRvYceacfT+ehpgd1SQs2/Qba1+hPk/5dVRydHSN7vbzn/1HvcgesFpwcOZT7Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727470239; c=relaxed/relaxed;
-	bh=Ehr+2NKsngL7ZGsFX4D84MvJxLhbtVlSuY/MGkYSJZ0=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=Ek1+lH3eerHeW3rKD3ndVleSiWqKdjJo0e+4y6OyWYHmj/3paS9BXpZT2N0/U0C7xGHlgmUuiONINQtBRSDfrrC/xoNarpU/8cNoghZLJpbYM4S8O7QinlKncQ/mFBNEvjz/svO1v8wnyo2SFxa2gns608D2cYV9Ed8bhlj7jEDCt9169JmaWEKDw5eHKZyuwjJVzQvSB8eHoVQGFR+AohpPt72AstJ95jmkbP66ewfU0Vahx/c0M0RedSdfw/1paYOsDIYoaWTVF52/TDKldUaODCHjb0WHZAXQIj2yYrUfjizx76cMvxLsfcEVLkICUICTjgjmQ9fesm1awnmeXw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iVo+I93f; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bnXtoIpo; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+	t=1727470516; c=relaxed/relaxed;
+	bh=Jc3nYk2509qhCNS0ikpWjFw1TBPnAAPbAzygg09FB9o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IpSiGTonhOXcMjjSiQp+/Ue2F7LGwwmNOhvHkSj4uvAfgIQ31QpiYgqsWbP5K+wS/pSNfL9Sd3QtvJKJnCNTTI+/5a3OdNzzDLjiD5TD70s3S0Cm3uQtCR0C2ItccFOswDX2VfPbRVdLrmnCZyNm1T1+VlzGR7xVxg5ysoF1TuOIFgntaSTUo2Cscdly1BYf2WmID4Ws8L8hqJpW/UdJNWHKL1DSgjST9qhNBZkI6UTXzdih9olLS1ieSYQ3XiAaIBMB8msuyKUv9ft/L+Frvo0uCn/LPhZbOkJAXP3PqK7l9vgvNp221HZt4nqGmucMUYyv2ykqNQVkVSJxxlQUnA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Fpkzl4j/; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::429; helo=mail-pf1-x429.google.com; envelope-from=eddyz87@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iVo+I93f;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bnXtoIpo;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Fpkzl4j/;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::429; helo=mail-pf1-x429.google.com; envelope-from=eddyz87@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XFjKW2MSxz3cNl
-	for <linux-erofs@lists.ozlabs.org>; Sat, 28 Sep 2024 06:50:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727470232;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ehr+2NKsngL7ZGsFX4D84MvJxLhbtVlSuY/MGkYSJZ0=;
-	b=iVo+I93fBSlhMmLjPrDQhuYtSeelImAKgWINFpq5o/nHvjma5ASXtTZI9+XBtM2TgNNpgY
-	sirEjACAJXO8huiTj9ZvOvMaSiYGvxM0TPRhkO1So6NBxwwumpD478z3zUYlVBVAhC/nO8
-	nxTfiVteHMW029XLjXFWiWaArb4gukY=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727470233;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ehr+2NKsngL7ZGsFX4D84MvJxLhbtVlSuY/MGkYSJZ0=;
-	b=bnXtoIpoFXcKz0aSC2p++Qqx4NgtPYHpwIAjPe6XJKcua3mFZn9UjSy0aV9SbFusF8Sp28
-	D86A/SI37bdPosQsY6FDSjtcjOyFx8WQnCF0DxXN7bke/TeVSKQ26vyS+7EDinAd4ezTEe
-	7AOPZ/4JEh+/A6dTIJXetQFsHpnXZ/E=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-319-peQ0JcNLMAKLyO6YtwYCog-1; Fri,
- 27 Sep 2024 16:50:27 -0400
-X-MC-Unique: peQ0JcNLMAKLyO6YtwYCog-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8C38818DEF1D;
-	Fri, 27 Sep 2024 20:50:23 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.145])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2A0421956086;
-	Fri, 27 Sep 2024 20:50:16 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240923183432.1876750-1-chantr4@gmail.com>
-References: <20240923183432.1876750-1-chantr4@gmail.com> <20240814203850.2240469-20-dhowells@redhat.com>
-To: Manu Bretelle <chantr4@gmail.com>,
-    Eduard Zingerman <eddyz87@gmail.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XFjQq5SsRz3cNl
+	for <linux-erofs@lists.ozlabs.org>; Sat, 28 Sep 2024 06:55:14 +1000 (AEST)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-7179069d029so1914008b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Fri, 27 Sep 2024 13:55:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727470512; x=1728075312; darn=lists.ozlabs.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Jc3nYk2509qhCNS0ikpWjFw1TBPnAAPbAzygg09FB9o=;
+        b=Fpkzl4j/nJMUJ9VRIVWktZ+FlmILgibzZWkuvcPFvs5V5N4CHaSIZuK29UsnJI7H/Y
+         UyagmJdajBxpRt2gL0onvacN552r7thhTS6FFkdAFFhjs+6hlvaHFKtkNgnSm2hVJ4B3
+         zWiZ5ONEoGQ4LSEC0KEvQO5f2SSSDwa1zIy54DspMDpgyeFVHRcsMOvCP2kkeDpgGvDk
+         vq8DDxlBw5MUPloMjdigWCTQ0gBY/MpLIWRCdvDobidCZuRzJjXCDdgp9pzm4jDyHzHA
+         jt4yPqIW7J23LvJBjlpGwHql00i97BqD08/YYbO1+bbIVpJvXmokfZVaVWxTgUoZeZBV
+         /KjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727470512; x=1728075312;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Jc3nYk2509qhCNS0ikpWjFw1TBPnAAPbAzygg09FB9o=;
+        b=gllQlThmYPL/tEgz95ilqbL9QWCTDjpvqqilZ4P1iFwb875yFI3dtYCovroLPE8MZg
+         dUBVHWXX7aJsBd/aZ5olzEKq8VR6Yx/+c6uhiuBgAe60eY3orSJfWECyOeWYRWzN24Cm
+         n78v4wOza8v+csWpF5mPu109q8TmqQKtNvFxOxenttKabGzHjAANwyc2wbFpmfgo4CVL
+         CQ1shSjHyjtKO4va1fY9zKQftk3Cr5MuRy69cbwoYQj1lRliE4DmsSB9UOl9VxmVpGO8
+         NhBN3sRh4uXG1hAtbjH0H90LSdfGj9x2OR5M+d+4/gmoypUIlD6Vbx8nPoWKswKZWMSy
+         N1sg==
+X-Forwarded-Encrypted: i=1; AJvYcCWDcjaRc9ZBjB0R4EVhCC+q+rO3StkVbYTbkzswNtCqNDoV0MSVe1Csz9d2IGszVmoO/cUDyDe6SvDMpw==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YyXi4NZLz1pAFQXkbbFK9ZBOO6OHDCFeWpE5eJMlxJlTPwfLK1t
+	q6jr3JYcEx7iupjnRX5/JA9LmDUs5AOPrFx2R4d6cWzt2qjQWToK
+X-Google-Smtp-Source: AGHT+IG97WQ0sKf6nP3kVcYM7xIWbrZHObvDCRA4X7I+pJRt7WQ0LRz1ytlfbrB+m9K1oZ0O2AT5Aw==
+X-Received: by 2002:a05:6a21:1690:b0:1cf:4422:d18b with SMTP id adf61e73a8af0-1d4fa694d0bmr5811129637.14.1727470512137;
+        Fri, 27 Sep 2024 13:55:12 -0700 (PDT)
+Received: from [192.168.0.235] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-71b26536b46sm2025461b3a.193.2024.09.27.13.55.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Sep 2024 13:55:11 -0700 (PDT)
+Message-ID: <55cef4bef5a14a70b97e104c4ddd8ef64430f168.camel@gmail.com>
 Subject: Re: [PATCH v2 19/25] netfs: Speed up buffered reading
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: David Howells <dhowells@redhat.com>, Manu Bretelle <chantr4@gmail.com>
+Date: Fri, 27 Sep 2024 13:55:06 -0700
+In-Reply-To: <2663729.1727470216@warthog.procyon.org.uk>
+References: <20240923183432.1876750-1-chantr4@gmail.com>
+	 <20240814203850.2240469-20-dhowells@redhat.com>
+	 <2663729.1727470216@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2663728.1727470216.1@warthog.procyon.org.uk>
-Date: Fri, 27 Sep 2024 21:50:16 +0100
-Message-ID: <2663729.1727470216@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -90,12 +89,15 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: asmadeus@codewreck.org, dhowells@redhat.com, linux-mm@kvack.org, marc.dionne@auristor.com, linux-afs@lists.infradead.org, pc@manguebit.com, linux-cifs@vger.kernel.org, willy@infradead.org, smfrench@gmail.com, hsiangkao@linux.alibaba.com, idryomov@gmail.com, sprasad@microsoft.com, tom@talpey.com, ceph-devel@vger.kernel.org, ericvh@kernel.org, christian@brauner.io, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, jlayton@kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: asmadeus@codewreck.org, linux-mm@kvack.org, marc.dionne@auristor.com, linux-afs@lists.infradead.org, pc@manguebit.com, linux-cifs@vger.kernel.org, willy@infradead.org, smfrench@gmail.com, hsiangkao@linux.alibaba.com, idryomov@gmail.com, sprasad@microsoft.com, tom@talpey.com, ceph-devel@vger.kernel.org, ericvh@kernel.org, christian@brauner.io, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, jlayton@kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Is it possible for you to turn on some tracepoints and access the traces?
-Granted, you probably need to do the enablement during boot.
+On Fri, 2024-09-27 at 21:50 +0100, David Howells wrote:
+> Is it possible for you to turn on some tracepoints and access the traces?
+> Granted, you probably need to do the enablement during boot.
 
-David
+Yes, sure, tell me what you need.
+Alternatively I can pack this thing in a dockerfile, so that you would
+be able to reproduce locally (but that would have to wait till my evening).
 
