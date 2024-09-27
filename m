@@ -2,72 +2,83 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 842B3988005
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Sep 2024 10:08:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1727424499;
-	bh=l7eXDrSzOGi3k3DnYW9RcbNV1+ltNakNRfv+mQxnasw=;
-	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=OMQoBoKCkVByMICT0oZbKR1TWzZAtXAnkT28i1qGPuyBH1tyPM3r0cTnEivzJEKxp
-	 x1KZPY46OIJYGafCPTMDbDR00/C/X3Ibri47KVPWqQlBwZ51g0lggc6XX13XEV9beS
-	 FjOceEUzoU/9dxyjpEK6C/eVcm65OlxrgVI4b1MxFGAFO6xcBW+EDMvWeXo9zfY6i3
-	 hvWE2zD0xVHKNf5GUddsrERxJ25Ep2cH9aDQKhrLeifRMmLgUnwNPUgNk5ydwc3JRk
-	 xO3FZoYCHi7Q+MqhFpTuP+Z+1HEXZs1RaBGQXZJDNYOH4ybFvRVpSHzETvS+5lnQ5V
-	 YmeFMd4ZluNbw==
+	by mail.lfdr.de (Postfix) with ESMTPS id 98677988B82
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Sep 2024 22:50:47 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XFNPv4bLvz30Tc
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Sep 2024 18:08:19 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XFjKY1W8lz3cQs
+	for <lists+linux-erofs@lfdr.de>; Sat, 28 Sep 2024 06:50:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727424498;
-	cv=none; b=BeIGn10eH/mYyYI5CxGF0jIBKF0LDspmmdzkk40A099I66VDIk2QOUL6/5fQhkPTdTkcpupAfNLj0O82mgaAL9wPs+JTDgodT6ki4QQKr3e2prafMx4tAoiNVcHTl+emSQsDpHMtxXgphQ9N4XA2Js8LFSBx6pfglJ4b6LVxaIt6IWgZvOVG4+WmWyDPsNf8ZK6UPX+7gWiUM5GvASPUY2YHKd46UrcmWW3dGciqfJef4hajgu6iMypDmZcLA4r71Z7cZDDDoideugFz5DOp/ajSDIzMGAnuFOnNh9+pAE2UjBPWXTfkdP0P375f0vrHx+MZrSWOt1RjzhwGZuINLA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727470239;
+	cv=none; b=YbKn19ECvdVOFBRzSG2M8g+Iy1wMHUxRxR0nwhhcTmhAtIdau6ySfYg5Aev64YVoY12AH1ZDgB9d8cwKfbrzHKfTheeKiXKkh11fGPT+Op81CHK/YoURmkU+ocml9gLv9uGbybJHJoMHGMRTKOobvUj/n6Fx18g1IklD7ReOS2tnwesK+l5di/ynnInINCedbdzt9j7AKj5goT3HaN/AjUWYh9F9JSW8DAJTnJMO2uee0/dZtVLS4+ul9frBt1Llky2n9bubuRb+SmmQ+MucYyboqWrx4SQ18mE8V6pyZEetMRfCmLdJtNaSTjG0h7CoONtIuIQNd3kzMSiKIHWArQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727424498; c=relaxed/relaxed;
-	bh=l7eXDrSzOGi3k3DnYW9RcbNV1+ltNakNRfv+mQxnasw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OU39wBsp94NZOEe0sTtQICG4BdmfsdwbF/2a+tRO6oGmkdFLFjX1puAGOrHzG8MtUh7bAyTSHYRE2yhd2qqCIaOedmork5TLKnl99zGAG0bjcxqWDfzHyOMJH9YgPp3EebkjI7HCYq+r5MW109PpO0HSPBOgcRVewfCF2ROYAe3UtSR5yNzNInDmV5B3U3g8fYsZnfRm7jeq1DQ8Z0ZHj1T6ssLqhY9Hzs7C04sYVDidHc0s/Gl7vv/X32FvngfWLotHY5LfpXJP1AtnkJB8ijyVnzLEvUqHHt4q5aTPK/jvFAE7gIpq2EvH5b5zDVieNF2Wz51G0gJGHLIrpWzqiA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Outd2lB0; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1727470239; c=relaxed/relaxed;
+	bh=Ehr+2NKsngL7ZGsFX4D84MvJxLhbtVlSuY/MGkYSJZ0=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=Ek1+lH3eerHeW3rKD3ndVleSiWqKdjJo0e+4y6OyWYHmj/3paS9BXpZT2N0/U0C7xGHlgmUuiONINQtBRSDfrrC/xoNarpU/8cNoghZLJpbYM4S8O7QinlKncQ/mFBNEvjz/svO1v8wnyo2SFxa2gns608D2cYV9Ed8bhlj7jEDCt9169JmaWEKDw5eHKZyuwjJVzQvSB8eHoVQGFR+AohpPt72AstJ95jmkbP66ewfU0Vahx/c0M0RedSdfw/1paYOsDIYoaWTVF52/TDKldUaODCHjb0WHZAXQIj2yYrUfjizx76cMvxLsfcEVLkICUICTjgjmQ9fesm1awnmeXw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iVo+I93f; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bnXtoIpo; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Outd2lB0;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=iVo+I93f;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=bnXtoIpo;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XFNPt2PKyz30Dw
-	for <linux-erofs@lists.ozlabs.org>; Fri, 27 Sep 2024 18:08:18 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 9A55EA452CB;
-	Fri, 27 Sep 2024 08:08:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C4DC4CEC4;
-	Fri, 27 Sep 2024 08:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727424494;
-	bh=qrr8F6mhp37/8goTelXVcSv72h5Emk8kpcyLOVTI7nQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Outd2lB01VOTLYDOGeswQwueKzlm+EOifqdxlQ4wB/8MrqP6mZtqn6n+rKIoTqc1e
-	 kiisilHVnZCIEJvalKnA3qR2YHOkwk+HzZxQYLedHYLRTpBSFEheAsUMMOVVXFYRgj
-	 oZNhoNHLcUvthQxoFMAThjmuiGgHXqnMfBJJboyDD3j6cY2fyYQxHOwaNlAfY9ESKo
-	 grEtBzrVEHlyEpt136/mYVhFyRdz36/t+JDZSXA5Mge9d5fwWXYM2cDL4KIrNMeMd8
-	 WUGeJbN6K897pM3Cb8O2g8BA94c0wF4P33q9OSZrB7Mfqe5Ls744JoZHQWmwTx2/kE
-	 UOLO55iVty1Fw==
-To: David Howells <dhowells@redhat.com>
-Subject: Re: (subset) [PATCH 6/8] afs: Fix the setting of the server responding flag
-Date: Fri, 27 Sep 2024 10:07:59 +0200
-Message-ID: <20240927-inklusive-erfunden-8a9df201244e@brauner>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240923150756.902363-7-dhowells@redhat.com>
-References: <20240923150756.902363-1-dhowells@redhat.com> <20240923150756.902363-7-dhowells@redhat.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XFjKW2MSxz3cNl
+	for <linux-erofs@lists.ozlabs.org>; Sat, 28 Sep 2024 06:50:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727470232;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ehr+2NKsngL7ZGsFX4D84MvJxLhbtVlSuY/MGkYSJZ0=;
+	b=iVo+I93fBSlhMmLjPrDQhuYtSeelImAKgWINFpq5o/nHvjma5ASXtTZI9+XBtM2TgNNpgY
+	sirEjACAJXO8huiTj9ZvOvMaSiYGvxM0TPRhkO1So6NBxwwumpD478z3zUYlVBVAhC/nO8
+	nxTfiVteHMW029XLjXFWiWaArb4gukY=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1727470233;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ehr+2NKsngL7ZGsFX4D84MvJxLhbtVlSuY/MGkYSJZ0=;
+	b=bnXtoIpoFXcKz0aSC2p++Qqx4NgtPYHpwIAjPe6XJKcua3mFZn9UjSy0aV9SbFusF8Sp28
+	D86A/SI37bdPosQsY6FDSjtcjOyFx8WQnCF0DxXN7bke/TeVSKQ26vyS+7EDinAd4ezTEe
+	7AOPZ/4JEh+/A6dTIJXetQFsHpnXZ/E=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-319-peQ0JcNLMAKLyO6YtwYCog-1; Fri,
+ 27 Sep 2024 16:50:27 -0400
+X-MC-Unique: peQ0JcNLMAKLyO6YtwYCog-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8C38818DEF1D;
+	Fri, 27 Sep 2024 20:50:23 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.145])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2A0421956086;
+	Fri, 27 Sep 2024 20:50:16 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20240923183432.1876750-1-chantr4@gmail.com>
+References: <20240923183432.1876750-1-chantr4@gmail.com> <20240814203850.2240469-20-dhowells@redhat.com>
+To: Manu Bretelle <chantr4@gmail.com>,
+    Eduard Zingerman <eddyz87@gmail.com>
+Subject: Re: [PATCH v2 19/25] netfs: Speed up buffered reading
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1300; i=brauner@kernel.org; h=from:subject:message-id; bh=qrr8F6mhp37/8goTelXVcSv72h5Emk8kpcyLOVTI7nQ=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR9S3928A/vY47APBNFzaQswV4+Pw8Hlu3a9bd+cD9uO Frlc/JtRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwETyLzMyTNTnfr5xfcZix1xr Tj7JEPepAnKn+FvmbAnf0rfRyop5DsP/gIP2Vf3Nm3a29nDoVNhIl9UaHjpdV197f2eb0M+i678 5AQ==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2663728.1727470216.1@warthog.procyon.org.uk>
+Date: Fri, 27 Sep 2024 21:50:16 +0100
+Message-ID: <2663729.1727470216@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -79,38 +90,12 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Christian Brauner via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Christian Brauner <brauner@kernel.org>
-Cc: Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Christian Brauner <brauner@kernel.org>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, Steve French <sfrench@samba.org>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Marc Dionne <marc.dionne@auristor.com>
+Cc: asmadeus@codewreck.org, dhowells@redhat.com, linux-mm@kvack.org, marc.dionne@auristor.com, linux-afs@lists.infradead.org, pc@manguebit.com, linux-cifs@vger.kernel.org, willy@infradead.org, smfrench@gmail.com, hsiangkao@linux.alibaba.com, idryomov@gmail.com, sprasad@microsoft.com, tom@talpey.com, ceph-devel@vger.kernel.org, ericvh@kernel.org, christian@brauner.io, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, jlayton@kernel.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, 23 Sep 2024 16:07:50 +0100, David Howells wrote:
-> In afs_wait_for_operation(), we set transcribe the call responded flag to
-> the server record that we used after doing the fileserver iteration loop -
-> but it's possible to exit the loop having had a response from the server
-> that we've discarded (e.g. it returned an abort or we started receiving
-> data, but the call didn't complete).
-> 
-> This means that op->server might be NULL, but we don't check that before
-> attempting to set the server flag.
-> 
-> [...]
+Is it possible for you to turn on some tracepoints and access the traces?
+Granted, you probably need to do the enablement during boot.
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+David
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[6/8] afs: Fix the setting of the server responding flag
-      https://git.kernel.org/vfs/vfs/c/830c1b2c1c28
