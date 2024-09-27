@@ -1,71 +1,71 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9ED54987FFA
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Sep 2024 10:06:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFF9B987FFF
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Sep 2024 10:07:32 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1727424372;
-	bh=w3tgcr07l48NUpiRId4iNl4o70xksvq/UJEdOlAXpiA=;
+	s=201707; t=1727424450;
+	bh=vLnfEjKtNIU7zYkrmvOXNlWFEsTNr+a9qZ928W2WsJM=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=I4Usd7VC7UB+sc/TJbdUnqKk/5bAvDpVLKrpLxpb5DWMfwkPA8yLAXqj/GxMsPEPA
-	 GVhbPjVf+bOMbDA5aDhz4MuVK74UcdgV+ySEwh/njJ5EnqAh0pMQf34FSPHdoj3fCO
-	 dx0FMTwUKl3ZZEpGgl6rXzdJL/a70OMQR5f9nNHUSYkSIDDkHAvRhTvHNKvP9fFoU7
-	 /xr/J2DONpo6z2w5G8OM+m8rVCxetxYhkzdjxqvuqvFl6IQnF487Z3RblrGm3ZrhJu
-	 QDhF0XMTic259VItBvE0ouN52WboLL22+f6OkV10gD6dw+Zm8nn1w4Cg7DgOnpONpI
-	 u9pjKKQffkndA==
+	b=VQZYQvDV9/TfdR2LcT8i5ibn4Ez9cHyWmBWJOBNV0OLL2sWcotSNObZ1s+z0p6WPn
+	 NOdQ4FM5fhEOr+rVFl8jn/yc1Di0b6p1yJXiFsqD1VZGxMc7WLzQYC5lLOrTKsCR8w
+	 3P4PTRrot5Cn5+utlbApwoGXqpBVwyGBEx2vgmn2FNFsrTbokdTh0KQFDzZxHUiTQF
+	 fFkjTw6mqKsDicufTD/1Jrd+Wkb7RA1ayYNkshTRkUt8uUhULxVAGCocYxYRH8cJF5
+	 IBf0NLByySQezlja7j0p6mZ7c2r6v4STB9Vtgn0J6WU79VLx0m7kjYLtwVsiyCqm00
+	 2cdVgUB+lcDqA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XFNMS157Lz30RN
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Sep 2024 18:06:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XFNNy6q27z30Ns
+	for <lists+linux-erofs@lfdr.de>; Fri, 27 Sep 2024 18:07:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727424367;
-	cv=none; b=hW1cBqICljLWEAWysaFcwzJt07r8K5qSCHBPwErJTFDLSaZxZlW2jH3BU0HWsbICOPVssl4rGZ+favlD9bcpbBgNkxz/cuS7T8STPThdSuGxK2ELn2ag716fy8DjNZw81p5CKMkG9oV+pUrn6T+LStnrhyG9FEyCV+n9goVShwqTy6wUFWLd71FoWSBKjNhnO/LNlYmrn/Hrk91TLsUdst4Oa5UdF/AQAlYknD9kD5+O5yu4ZXWgqTYyx8eWH/EkAgrOO7UZ2JyzgYOGPZAqjLupCtdx455XzO6vUAGTnE0I6UlhshC6a0Utrxd5dqQ8eK8Cu/HwddEgozaBh6MRJg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727424448;
+	cv=none; b=moPUV9xrPUv5toz2v51oN2pxGf36tfNhgU9zMb+ZcvmosX46DF96XEC1a4PIoFgKakzvOiLi9UffqbAdapVorIgL8XBpvkNdP7sXoJpIjTuETdAFpOxMA5hUeIYUkBwtuC1BPEINKtkzeHOBHR4yVW68Yq3shMXf5mXHlhDO1aebJnMhfkd60YKsjaFm03u49Ke5aNGQaKR8Vzcn9PMDU6vPyOZrvSpRDRT7FIcoe9x9GSOEEtWgj3Vexc5jsvGgMySiX7e+lZsFN7YttABGAIfGTxC3qok2j3qCrHEglN7ojDIYloSAA2e8GochQ+D+zpj/tAy81RuGZtvdA+QMIA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727424367; c=relaxed/relaxed;
-	bh=w3tgcr07l48NUpiRId4iNl4o70xksvq/UJEdOlAXpiA=;
+	t=1727424448; c=relaxed/relaxed;
+	bh=vLnfEjKtNIU7zYkrmvOXNlWFEsTNr+a9qZ928W2WsJM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bsXTl/p6g07w0ltlti+dDolnNdfpfONH0ZgvCsyzGZcm+qcOSH3gTbheKs9ut+JBXv3lxgAYasQ+ox6Cxqaq2CWjO7r7DnFp7mqP1pzsnD3azsyOgjQ320zJMHGNPG+UhLjTHA/ncGNGRRPavJOhWu53xZEd1jM/FRD4sXLpyPSV4y8R3g1mkN6Z36DOz+iXZLvmeSfyyl29ZRQxsG1BSjY9TurdAApW8cvltt3duA/uEG3uJCeiqj3ljBvdJ9pqV2giXGhA/N3fKk4Ns0OHKDTDAWNA9VKsvoZh9nL3uJvQgwIqjw/cNOVn5pm8DRuDOPzm+6QYeAy5kOXqKhSb8A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HaAIXMic; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 MIME-Version:Content-Type; b=gyEdx2zq2x/habCK4VUoUcTZN6U8ec1X2K+XvU7KDVGqf5de5dCiE7UpBAJzg/yv//3tJSX7RZ376dxJ7QHqMkRxO8jE/MYxTw4Z6JpLqULGwhKwBh4OWn2bIvnzfZ6OwPNeDyc7qjQdvFdj3A+TKeKldeCggC1+cfoToE5BJqrTHjBcsXd4+s/XGtDlPrwCCPayVoeiXSG8mYabP5H8OY3zt/GICShTKQQxRHUN4z6MpNQaWhjqU1YDeCS9KxJYxh0vMjInbOy7Y1X7d2ErAps0GzHAtrnTOqCkHnzt6qWZFf+t94bw1rAPsy1lmyJ6M20gd9Jb/ExUXcv33Z9P9w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=B6oFnRXx; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HaAIXMic;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=B6oFnRXx;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XFNMM42HKz302T
-	for <linux-erofs@lists.ozlabs.org>; Fri, 27 Sep 2024 18:06:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XFNNw49bWz2yYJ
+	for <linux-erofs@lists.ozlabs.org>; Fri, 27 Sep 2024 18:07:28 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id E28A45C5A4F;
-	Fri, 27 Sep 2024 08:06:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8945C4CEC4;
-	Fri, 27 Sep 2024 08:06:00 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id B20AAA45316;
+	Fri, 27 Sep 2024 08:07:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9461C4CEC4;
+	Fri, 27 Sep 2024 08:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727424364;
-	bh=KjsjOpufVwVtvtG9C4bCus2/XmKmDXOmFJWmSRq/BY0=;
+	s=k20201202; t=1727424444;
+	bh=w/r4IrDMdsbnNrUJdiGTxDc3Vc0EH27o2LrhEKew1Ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HaAIXMict1VrTe7i8TwVZ5W3EQ/WTegi8/OHOEkwPr173UnrLezn4mPejbmDGj2Va
-	 JzClZWAAEFXfx5vFVFkjx+3Bkn30tc+SssdrENLR5FslHOsVouXCdLzMO+adoH9tnc
-	 zkXNylEWRwKw5LUIOdH0peE5GHb2oq7StB/T/R1ZqX2rjLg3gyt73TQdT9CGlK1e1y
-	 +0R1PmoplUYpYy45bYv/DHBqbVebHLvqJ+Zj3yrLJO2EGsPMgBdMR6uK6DZ+/mXWG2
-	 BnuUyJDVL64zGvygjtGlvBwmLB3O/DZn15DHVuse1YXw/gPPN/DLf8Erpw19GuMUJ6
-	 BIWbB7FwYdy7Q==
+	b=B6oFnRXxQkgl22gfgRImZiiCHxUgyVhhbFzoqKCjHidXalW6C1b0p5OEC7RzXwDuD
+	 QbGKtx++eoj6dk31xc3dHn0ZayosgCj7HmDRdGpvqXrIP3dJNIypsrPtOtJXxd7+Hi
+	 Kl5qVXPOp2lT66ee6SrJEaIFddPSnZi+bDKdC/iDjyGfIE201CPHRqBzmh1X6WoAYm
+	 N3VrUm0NWY2K0RUe0gDori9yX2Qz4COEzDUKJT+ZX4Zcn6+hh10OnntWjipQlwNU98
+	 MbvA9XHSrLr8Bp9gcPbQUOp5MC6LSLH785IcxOyAV6Zsg5EVLLiDd55dUY7jG6EaBk
+	 FptumCalarihQ==
 To: David Howells <dhowells@redhat.com>
-Subject: Re: (subset) [PATCH 5/8] afs: Fix possible infinite loop with unresponsive servers
-Date: Fri, 27 Sep 2024 10:05:44 +0200
-Message-ID: <20240927-raunt-gekrochen-aa4fd2c2e59b@brauner>
+Subject: Re: (subset) [PATCH 4/8] afs: Remove unused struct and function prototype
+Date: Fri, 27 Sep 2024 10:07:10 +0200
+Message-ID: <20240927-beide-aktienhandel-de829a6cac5e@brauner>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240923150756.902363-6-dhowells@redhat.com>
-References: <20240923150756.902363-1-dhowells@redhat.com> <20240923150756.902363-6-dhowells@redhat.com>
+In-Reply-To: <20240923150756.902363-5-dhowells@redhat.com>
+References: <20240923150756.902363-1-dhowells@redhat.com> <20240923150756.902363-5-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1319; i=brauner@kernel.org; h=from:subject:message-id; bh=KjsjOpufVwVtvtG9C4bCus2/XmKmDXOmFJWmSRq/BY0=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR9S0+55/AnN86X/6qh8Jnw2/fN3txs/vdb88Csxor51 h0HFWpKOkpZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACbCv4SR4f4hM23PS4ZOM4SW /uIJzdp91vHK3XmrQzc7J2s8lPYT0GT4Z2t0NERa9/mHUpZlb9KM7mza0TV9pafR+8KMuYvUDR4 GMAEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=970; i=brauner@kernel.org; h=from:subject:message-id; bh=w/r4IrDMdsbnNrUJdiGTxDc3Vc0EH27o2LrhEKew1Ys=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR9S9/Cmv1nio7inM2hPx4Gqx7MOXeN7/ecBw9sbsrrW Rh1//P93FHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRU+WMDBv2R79Oloz9sKxY ZOUMHwnHSWzSqcn6ly5MaO8/mmIukczwV8rkYKuOZ5HcqZ9O/I0fzzdkhnybeC6Tk2WCjH1JeNd TJgA=
 X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -81,21 +81,16 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Christian Brauner via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Christian Brauner <brauner@kernel.org>
-Cc: Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Christian Brauner <brauner@kernel.org>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, Steve French <sfrench@samba.org>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Marc Dionne <marc.dionne@auristor.com>, Markus Suvanto <markus.suvanto@gmail.com>
+Cc: Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Christian Brauner <brauner@kernel.org>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, Steve French <sfrench@samba.org>, linux-mm@kvack.org, Thorsten Blum <thorsten.blum@toblux.com>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Marc Dionne <marc.dionne@auristor.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, 23 Sep 2024 16:07:49 +0100, David Howells wrote:
-> A return code of 0 from afs_wait_for_one_fs_probe is an indication
-> that the endpoint state attached to the operation is stale and has
-> been superseded.  In that case the iteration needs to be restarted
-> so that the newer probe result state gets used.
+On Mon, 23 Sep 2024 16:07:48 +0100, David Howells wrote:
+> The struct afs_address_list and the function prototype
+> afs_put_address_list() are not used anymore and can be removed. Remove
+> them.
 > 
-> Failure to do so can result in an tight infinite loop around the
-> iterate_address label, where all addresses are thought to be responsive
-> and have been tried, with nothing to refresh the endpoint state.
 > 
-> [...]
 
 Applied to the vfs.fixes branch of the vfs/vfs.git tree.
 Patches in the vfs.fixes branch should appear in linux-next soon.
@@ -112,5 +107,5 @@ trailer updates or similar. If in doubt, please check the listed branch.
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
 branch: vfs.fixes
 
-[5/8] afs: Fix possible infinite loop with unresponsive servers
-      https://git.kernel.org/vfs/vfs/c/6e45740867ee
+[4/8] afs: Remove unused struct and function prototype
+      https://git.kernel.org/vfs/vfs/c/45635ccabac2
