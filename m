@@ -1,54 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D45D98D503
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Oct 2024 15:26:44 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E43398D850
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Oct 2024 15:58:52 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XJbDx5JCbz2yVM
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Oct 2024 23:26:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XJby040WVz2yVF
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Oct 2024 23:58:48 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727875599;
-	cv=none; b=LGcxnL/fcpo8A3xqy2EWSHqzojNIhFFsBtombMSX8MbTO/x2DybOYJNpnsabbOrIbxwc/13ejZLuci7qBQcjQ9BpuYBfr1142L4dpOJYkXmZobaraFqEcvCdh/kn60U36+/8IDdo9HrVh+6IswsNTeIQMIyTcgQQnBCf3oNnBZd9VFB5DCId0OwXQMPrlYSwb1BirLTZi5NIlq44TKQKeh+xHKLrKVrkjl16xAE1xtxp2ZnlvSZxJMAfSV4WF8IWUKz2pFEhZApJZVxTOk9fLJFIi898k6qBNyAYdVa9xMLI6YSM6Sp9wjDLY6XQsslo++WYbQXT+aBBYEdtdhdDEw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727877526;
+	cv=none; b=Sf37RnmpmGgmAHNGuxHZoeN5ePNeWlzJRVgpiKM6d5fJatawZYOC/FafpOO4SxZEJoxDmqDRUQeBYIfvuWp1B3nkPEsmKQ6pfYgf6V7f+eiaPoV91vq64+bXv4zCnE0si+9J/y2sPWA+Un6n08gXG0zxDHUx0bd1QV7vfDD5yx0DVBUtPiFmsQaRKhZe6BNHrfR4TIZEi5vDqlBNCUzwcMEfqrzCECp1oqnPyMQuijJaKJu8GEWUT2nYjLKJNLjcXVxGO9Gb5cGHr99vQ2aY25cEqhVxttZUh1ILbdQTL8uSnJIYYrohHUNrJXJ+tlu7CU0a6YNY30q9gC5mx+xXTA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727875599; c=relaxed/relaxed;
-	bh=AM71QpWHeo2iO3DtAlei+JQfZAdDDTUsLK3oq6ONJhc=;
+	t=1727877526; c=relaxed/relaxed;
+	bh=Vjh63NEnSPpnjliCWePESMlWq7vBa7K7hYrwewvw0uI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nKNjBm3QEU6vLo6jb1S5D6yFqFX7jd24cOrSpxyqaM0A7zahsRJH8Y4wPgmXy2Ox2ETTa5uWR/z1KwldMzj9WuD62MKtJRo80082sQmGqE2cDj4JsCTpFSUS7u6cjRqfxC6GONDe5IpKfbLbwt18uJesm9c8angJjMpBEmtWy94LFA8u5878UJLMJFNBzWuv9FgAra/RmllzRIT6/769rj8HmtE6MM2eVKloZtwu2I5tJFCre1uinWGtpb7ZYDUVkum2z5It4jZPHbC6IoHVHQhSzMOJNT5Q3oRGyr5zJ7/sT6bvtEvryb2TnQf6Axaq/defTwy3veCkZsYd2PfuZw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=BUPbBATH; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+	 MIME-Version; b=be/AdnFeqmvgG8bjiAKfsbS1XWaxO5/43/uEu4zdzp6SlqAqDup6DxLxs8CFd9mocJrY40OW8b9koQ6dUz6Lqsd9GkALL8bcsaJ7ZlXUWqQmd0w2+3lWGiDVGUqvNjYZUktdyHBOwOSGRgK2ENx5TJmN8uOKlZjLw5ZZ9nRstKC6IYEWCrasiSLUB5MhHDY7sjYlLhBllLypDzUGhzMzZhnJieUwTUZlPtcCBWfStGgiPES2XAC6JG1IRtXuUIU7UR3X4jAqCCz1g0uyrKjXMQd28Wz1cRA/iABp6czD03A934dd6BT5Zysi5ms7GxLsoGKXjpl4Oj9ic3eCdzZrpg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=FTgprCho; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=BUPbBATH;
+	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=FTgprCho;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XJbDt5c4Yz2xnX
-	for <linux-erofs@lists.ozlabs.org>; Wed,  2 Oct 2024 23:26:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XJbxx5c3xz2xpf
+	for <linux-erofs@lists.ozlabs.org>; Wed,  2 Oct 2024 23:58:44 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id C2696A43CCC;
-	Wed,  2 Oct 2024 13:26:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 670F0C4CEC5;
-	Wed,  2 Oct 2024 13:26:33 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id 9C61EA43B82;
+	Wed,  2 Oct 2024 13:58:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65686C4CEC5;
+	Wed,  2 Oct 2024 13:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1727875593;
-	bh=N0daNTTHR4kVEaXoYIs2c6SecM2Ow+RiShhTwtKkVio=;
+	s=korg; t=1727877520;
+	bh=ryqptHfQ6/OzlBpaqIqv0j7pXd+zyI6Lx21/BYxeqww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BUPbBATHdN325EQDnrVhXhAyKzj77Hbc6mSazWL/LNwGbN340Rab465E9+sJyXhl4
-	 l39j7GPVoXQXYI9kxZ21JJ56xT8F62zia6UR8JlHIB7XuOLGiuORZBV6Yr7qmpaI2Z
-	 /KwB89WHVagvZhF79ViYINlo1PPQ4GaAK3T9i3rs=
+	b=FTgprChowle0gpVPmb7ppzu5uLmNVELgD+LroLWLj4GKNoCOLoIAEzaWa6xPcTN/M
+	 MRNp6HCGzk+Ysk/Dup8ahjV72KC4MEBtk8m69bzrxjECynwBi4rTw8I2gSmEhc1yLh
+	 VBSiQxEJU57tSGdBFHTN5NZz3v9UsoCLfOsko3Y0=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
-Subject: [PATCH 6.11 123/695] cachefiles: Fix non-taking of sb_writers around set/removexattr
-Date: Wed,  2 Oct 2024 14:52:01 +0200
-Message-ID: <20241002125827.382185172@linuxfoundation.org>
+Subject: [PATCH 6.10 107/634] cachefiles: Fix non-taking of sb_writers around set/removexattr
+Date: Wed,  2 Oct 2024 14:53:27 +0200
+Message-ID: <20241002125815.338541071@linuxfoundation.org>
 X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241002125822.467776898@linuxfoundation.org>
-References: <20241002125822.467776898@linuxfoundation.org>
+In-Reply-To: <20241002125811.070689334@linuxfoundation.org>
+References: <20241002125811.070689334@linuxfoundation.org>
 User-Agent: quilt/0.67
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -73,7 +73,7 @@ Cc: Sasha Levin <sashal@kernel.org>, Christian Brauner <brauner@kernel.org>, Gre
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-6.11-stable review patch.  If anyone has any objections, please let me know.
+6.10-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
