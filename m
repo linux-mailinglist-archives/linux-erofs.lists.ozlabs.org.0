@@ -1,87 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D17698E1D8
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Oct 2024 19:43:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1727891006;
-	bh=8AEdD+3/490HDz+pWc5YBIQA1pEFhZdxdnYZKQxLPPE=;
-	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=UZepNj4x+Z5Ltf2FpI72cnDoRarkXn9MTlwNwTsoh0iBonfkFIx2Yn/FW84xV3sLk
-	 OOoNRaFmp5jtFYGoDcNncBsaYkEsB8kDFtVkpd6gE35YLwkIgvsBgtsUclHmUVbJu+
-	 VOZbtjMYY33O6OwmDGYucmbBm+x0rSCmAb+QRnhVzSVUJmMUCr/qVUzMxaqkgTIMsZ
-	 zy3RckF7rtx7ACYJFqFPq5MXAE+FwVsu9cDSrS3jGHNdYkxFY78MLZW3ed54whrz84
-	 I6N2rNWfGXDy69Sr+zEsDRTrF0FyspL1ttQndnYLddpggSHTRGrk/Z914+bPKItH2v
-	 7DS5uvo5I2iWw==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0487198E1F3
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Oct 2024 19:55:35 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XJhxB64sHz2yWK
-	for <lists+linux-erofs@lfdr.de>; Thu,  3 Oct 2024 03:43:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XJjC84TZHz2yWr
+	for <lists+linux-erofs@lfdr.de>; Thu,  3 Oct 2024 03:55:32 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::649"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727891004;
-	cv=none; b=dT7SU8OZX4JhMWn32IgC/dkhfy/QZQ97iU8gEPc1TwdsNpWqjJSGFRsEahgd0PssIEv646jRROkcPd7uLnncISTomIXa4SbkW15awg7vV0d8U1EKpoWwHuA9o4ARbi2+hMwXOr/VkaV7674Khdmb0YqW9an+QilXiJmHc6uwxPVBcmHr193+Gixzo2MXqanJZKpflbn6i8ZMsfkKxoiU9fBkeIHSd8w0tGSKhp9y4s/BwxmL6A4NHCyop/Mz22g1Z2qOAbjQsZRulRK2cISQQCgP6Ic3yKewVgaVRsHQTuWH/wn1i2Rmq8hKIfgsrGb6O+Q0ItWytp49A3Ldkqd7ug==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=202.120.2.232
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727891729;
+	cv=none; b=AwKVq746Wd0l8Oat/cTJ3NzQ4wEYGpb7s3kU1nu/PtgU38nicxLq0+XWRq9+4FS+4b6DHtPa/fftP/R2XFXpVD6faU8INJrHzZW+J7BGl/tebRqYK/ez8JtvN1bdXS75lrBipCQVg5sXLRWsE3d5IraqCydWY/lkQvIdTYtGpXWqSy6pnLTm3pwEGITi1GDEvGjXE3WGxAhjFTgmb7aKxBJPmuHHnx+elknjOheVEBEGO6oyoVH1bNBImiaoZQKMJn/aCxSWV5KIRu9QXbCUIjQ0D7NWoFD9K6H4X41se+gYZL1JqQtrJWrEuH69PAlS/VjQtDclRO9cIxro3GT4gw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727891004; c=relaxed/relaxed;
-	bh=8AEdD+3/490HDz+pWc5YBIQA1pEFhZdxdnYZKQxLPPE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=FAy0YKv/oxpOoYA+awsu2NYO0mVC64wIqtXSjkVtUwBZDIDjsMI6WXl2y0Vp/JIQq1pm2e0DwCqGWMbKkcmO4WNK+AJPRn7f4Tg3uk8sFTaDiOZilXb2a0ayS3x0b/VqmOPu61o8RgiGVzuywJgvDeXXYXJ6QKG3dzavtbVX/fQyVWPFDZDLOh4BQP5mApV1KEo9CmvrGtHySLABC1AlSTkJRrRBEYEsCoIujuqR2TodNOMQJJxEamXcPK9ZLNl427O4x3PIA1UHo+O6ow7LSFgtV2BZjdyPTdmzeZkPNipxVZjnKpe5ZY5PjzVZbVQ+SFMZJgYChSQht7AxvWEXkQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=fFxH78MZ; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::649; helo=mail-pl1-x649.google.com; envelope-from=3nib9zgskc3usatgzdxeobgzhhzex.vhfebgnq-xkhyleblml.hsetul.hkz@flex--zhangkelvin.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=flex--zhangkelvin.bounces.google.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=fFxH78MZ;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--zhangkelvin.bounces.google.com (client-ip=2607:f8b0:4864:20::649; helo=mail-pl1-x649.google.com; envelope-from=3nib9zgskc3usatgzdxeobgzhhzex.vhfebgnq-xkhyleblml.hsetul.hkz@flex--zhangkelvin.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+	t=1727891729; c=relaxed/relaxed;
+	bh=jWSkRHRNOBKe4Zgzq8lh38BmdvSAdmwIKu5bJmqACmY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CeNLYV5tvsRbzl6/B3axKG6jto1EO3JolI4cugQj3e0vzBm74XhdyXhidRo4XpTliIfJkL03ZsYDOWCdRLqBbtbe9uExWlXOZ4lKwkWkUGZRpe4dSfV4S0BYPc7RLW/ggW38+/7DtPQsUd0wr8iRa6fPRSalq3mA2lOjeQsnBfz2fQsVoqVDHKPbG8Ztp7kBDMUeQLUe72LohDeAj5gYRPbmOB/82rduZ/QXMPh9WFRJ3psiMzVBkMSIYuqcD6ESMQadwQ9jukKn07HufvahFvlaSj7aOIXMpNRO5JBYxc/E64wnH0kVqWjt2MQ0U9TLVnRoYi4aN9vARnUJ69/zgg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn; spf=pass (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org) smtp.mailfrom=sjtu.edu.cn
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
+X-Greylist: delayed 365 seconds by postgrey-1.37 at boromir; Thu, 03 Oct 2024 03:55:29 AEST
+Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XJhx72QYNz2yN8
-	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Oct 2024 03:43:21 +1000 (AEST)
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-20b921fa133so1269545ad.1
-        for <linux-erofs@lists.ozlabs.org>; Wed, 02 Oct 2024 10:43:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1727890997; x=1728495797; darn=lists.ozlabs.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8AEdD+3/490HDz+pWc5YBIQA1pEFhZdxdnYZKQxLPPE=;
-        b=fFxH78MZ30C8Ms9L1LhNnjcXcwLVXUJL0tYYpNNQnpba4vlo5yFaAApvfQy65+S3OP
-         l5g2bUA1j1YWBa9MYJZMICqRDzxuZBQiSCo5YKIhsGMRRxPQXOvs9Hvxytaj5gzcE8ZH
-         1KVZc/iUT2bwFi5C2WqNoy3cBkngxMQQ2StO77GOtMHxxo8M0xtD3RFMnmnUWdPdOeIU
-         EC5i941F0+5NiaN0GisuXAITUST0qFn32Q9jBeJ+6pCEAtugp4l+D/KUApb1Hti3CaPx
-         KnKMIvm6nq+tpz3cDCKE3nAPZHAtVXzMzsUE58UhQccsyFlr7U4jfSFlw0xdzk+hx1Ew
-         LvRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1727890997; x=1728495797;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8AEdD+3/490HDz+pWc5YBIQA1pEFhZdxdnYZKQxLPPE=;
-        b=Z2XUPqJZFa4PYIa01cn8froJoyZTpEUSzFUCV5uvNFad7qX0w2Blpgel28bEWiMZcb
-         RwRkI4oZW2FGiHvAqorIeOvWA5VBDQvN1zMSXvC73EAF4kPyz9hNufUow2jilCbrsm+J
-         b14X5/KTE+wVR0ZhyBW+EiISME0RbydfmQBrnhsKqy3XEyUmRzNTVN5R1Lddmstvw8cG
-         /tB/PitlIW0hTIqL7QTlAQ7oyH4O1L8kSlF+Kwy6enh96m0FsKYi/hHVrHLRBP5bnF/W
-         ujs5nOAOoWPhhd6XmR56TO0FfC6cHIQtJl+zOs70nBjO8DnEoVg5h4rS6A7Jwe7KeP6K
-         cLww==
-X-Gm-Message-State: AOJu0YwdIsC2oYa6Oo8trR/XWgKqsiRCDVA6uRZlBCUNDQGMMjeX4OJd
-	oyQEHD2OlbMnYA2VxZP/OocvdROaD/gyba0Qtef/lc3yb/MR7KrQT/NAZDIMV7A7PRS0u7A3RmS
-	gWsk5V/mFjfjEdhhYeZ68TCeRqRkQCd1mnpoWsHgOs+czIj6xW4w1kpcVrl7UfyFuX9yQ83ykQD
-	aItTTkwtwcbvMMQnW84HAJjwLGw1qVvRXb5LL6QqBOc+mPuxEgpSP5mUT4LOJyvxUmT5E=
-X-Google-Smtp-Source: AGHT+IGfJ4jAXlLObO9K1jZrI9GL4j1ShW+cz6w0jRuiMGIO7nChKGotXnQd9n+7p18z0F+1mc9sjrYcAIjZ/Fq9Fw==
-X-Received: from zhangkelvin.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:2bb0])
- (user=zhangkelvin job=sendgmr) by 2002:a17:902:8f87:b0:205:58ee:1567 with
- SMTP id d9443c01a7336-20be17deed4mr6805ad.0.1727890996180; Wed, 02 Oct 2024
- 10:43:16 -0700 (PDT)
-Date: Wed,  2 Oct 2024 10:43:08 -0700
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
-Message-ID: <20241002174308.2585690-1-zhangkelvin@google.com>
-Subject: [PATCH v1] Use pthread_kill instead of pthread_cancel for compatibility
-To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.6 required=5.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,SPF_HELO_NONE,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=disabled version=4.0.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XJjC547jcz2yQL
+	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Oct 2024 03:55:27 +1000 (AEST)
+Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
+	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 0312A1008AED4
+	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Oct 2024 01:49:18 +0800 (CST)
+Received: from zhaoyf.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
+	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 7D70E37C967;
+	Thu,  3 Oct 2024 01:49:15 +0800 (CST)
+From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: mkfs: use pthread_kill instead of pthread_cancel
+Date: Thu,  3 Oct 2024 01:49:12 +0800
+Message-ID: <20241002174912.42486-1-zhaoyifan@sjtu.edu.cn>
+X-Mailer: git-send-email 2.46.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.0 required=5.0 tests=ARC_SIGNED,ARC_VALID,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -94,35 +54,59 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Kelvin Zhang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Kelvin Zhang <zhangkelvin@google.com>
-Cc: Kelvin Zhang <zhangkelvin@google.com>
+Cc: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-pthread_kill is supported on more platforms. For example, android's
-bionic libc does not have pthread_cancel. Since pthread_setcancelstate()
-is not used in erofs-utils workqueue code, pthread_cancel has identical
-behavior to pthread_kill, this switch should be safe.
+Bionic (Android's libc) does not have pthread_cancel. Let's use
+pthread_kill instead to gracefully terminate the worker threads.
 
-Signed-off-by: Kelvin Zhang <zhangkelvin@google.com>
+Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 ---
- lib/workqueue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/workqueue.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/lib/workqueue.c b/lib/workqueue.c
-index 47cec9b..3b63463 100644
+index 47cec9b..f6d1a7f 100644
 --- a/lib/workqueue.c
 +++ b/lib/workqueue.c
-@@ -69,7 +69,7 @@ int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
+ #include <pthread.h>
++#include <signal.h>
+ #include <stdlib.h>
+ #include "erofs/workqueue.h"
+ 
+@@ -40,6 +41,11 @@ static void *worker_thread(void *arg)
+ 	return NULL;
+ }
+ 
++void worker_exit_handler(int sig)
++{
++	pthread_exit(NULL);
++}
++
+ int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
+ 			  unsigned int max_jobs, erofs_wq_func_t on_start,
+ 			  erofs_wq_func_t on_exit)
+@@ -50,6 +56,8 @@ int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
+ 	if (!wq || nworker <= 0 || max_jobs <= 0)
+ 		return -EINVAL;
+ 
++	signal(SIGUSR1, worker_exit_handler);
++
+ 	wq->head = wq->tail = NULL;
+ 	wq->nworker = nworker;
+ 	wq->max_jobs = max_jobs;
+@@ -69,7 +77,7 @@ int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
  		ret = pthread_create(&wq->workers[i], NULL, worker_thread, wq);
  		if (ret) {
  			while (i)
 -				pthread_cancel(wq->workers[--i]);
-+				pthread_kill(wq->workers[--i]);
++				pthread_kill(wq->workers[--i], SIGUSR1);
  			free(wq->workers);
  			return ret;
  		}
 -- 
-2.46.1.824.gd892dcdcdd-goog
+2.46.2
 
