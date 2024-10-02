@@ -2,61 +2,86 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3792B98DB30
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Oct 2024 16:28:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D17698E1D8
+	for <lists+linux-erofs@lfdr.de>; Wed,  2 Oct 2024 19:43:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1727891006;
+	bh=8AEdD+3/490HDz+pWc5YBIQA1pEFhZdxdnYZKQxLPPE=;
+	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=UZepNj4x+Z5Ltf2FpI72cnDoRarkXn9MTlwNwTsoh0iBonfkFIx2Yn/FW84xV3sLk
+	 OOoNRaFmp5jtFYGoDcNncBsaYkEsB8kDFtVkpd6gE35YLwkIgvsBgtsUclHmUVbJu+
+	 VOZbtjMYY33O6OwmDGYucmbBm+x0rSCmAb+QRnhVzSVUJmMUCr/qVUzMxaqkgTIMsZ
+	 zy3RckF7rtx7ACYJFqFPq5MXAE+FwVsu9cDSrS3jGHNdYkxFY78MLZW3ed54whrz84
+	 I6N2rNWfGXDy69Sr+zEsDRTrF0FyspL1ttQndnYLddpggSHTRGrk/Z914+bPKItH2v
+	 7DS5uvo5I2iWw==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XJccl26lvz2yVd
-	for <lists+linux-erofs@lfdr.de>; Thu,  3 Oct 2024 00:28:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XJhxB64sHz2yWK
+	for <lists+linux-erofs@lfdr.de>; Thu,  3 Oct 2024 03:43:26 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727879332;
-	cv=none; b=h23QeUnhQhCgSicNJoCyKb2j+xaaPMjzGWJS6ObGYnf+MKipVvETcrOaSgaIOUhePIEMe/QgVez1cToNq9aTCBh2/JWeASkknboaGfUgYLK9Zne9td+x3btaRcXPlMXHWQaDI4kJUo2XI1l4YCRx4SWbeO8/aNVu1ONVLj96O7UWhmdri3aKWAcvTTnBe4V54KPV1JMfp8+6gTG8ssB3h2bLjzKACtuN4NG0kJVIS7XS4jcCUwbjVDv+2Whm5+cbht/ePRMnUknMUa5JI/9tVbefuj5SMTzu/jS2zFgktyEAgY0pLG+EOQYJG7lhHUPmGRmHeVI3UQUT4LG5HX1bsQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::649"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727891004;
+	cv=none; b=dT7SU8OZX4JhMWn32IgC/dkhfy/QZQ97iU8gEPc1TwdsNpWqjJSGFRsEahgd0PssIEv646jRROkcPd7uLnncISTomIXa4SbkW15awg7vV0d8U1EKpoWwHuA9o4ARbi2+hMwXOr/VkaV7674Khdmb0YqW9an+QilXiJmHc6uwxPVBcmHr193+Gixzo2MXqanJZKpflbn6i8ZMsfkKxoiU9fBkeIHSd8w0tGSKhp9y4s/BwxmL6A4NHCyop/Mz22g1Z2qOAbjQsZRulRK2cISQQCgP6Ic3yKewVgaVRsHQTuWH/wn1i2Rmq8hKIfgsrGb6O+Q0ItWytp49A3Ldkqd7ug==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727879332; c=relaxed/relaxed;
-	bh=iMy4FEBClDztJONP7hw29e+vqWzHiF3jd0b5Y3qLcR8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jJjpcmHe7rhlMLliPs3G8aEbs6M9MzZF/xJYb9QMmP4scitGCPwHjThaPHDVWMi4ytT6cPs7EiNYG0aR2VdTdSfu/payqeP0xIL6ePrz0AZFIEZW/vsD9FyXzmvwmeDxVFXvz48jb9SE74t3+vE3NzOKzp9kwWrkxwt0gZoK7QmfNOrISJVjXsthKjN7W7iNCoohUP3pAgNk1zuRAjyD2+mvgvY8XWq5vhfPIdhLM8F7kCCW9Eipgn6TWgIQBiIUAsm6mn35PoIUqVJXkQjsNt/SEZ+uPGN4O+vNiaI84hJSvJyDajWNDJrApNBFmkALpud1bFXHntbPriWT+MyF8w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=Zk3ay2Jj; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+	t=1727891004; c=relaxed/relaxed;
+	bh=8AEdD+3/490HDz+pWc5YBIQA1pEFhZdxdnYZKQxLPPE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=FAy0YKv/oxpOoYA+awsu2NYO0mVC64wIqtXSjkVtUwBZDIDjsMI6WXl2y0Vp/JIQq1pm2e0DwCqGWMbKkcmO4WNK+AJPRn7f4Tg3uk8sFTaDiOZilXb2a0ayS3x0b/VqmOPu61o8RgiGVzuywJgvDeXXYXJ6QKG3dzavtbVX/fQyVWPFDZDLOh4BQP5mApV1KEo9CmvrGtHySLABC1AlSTkJRrRBEYEsCoIujuqR2TodNOMQJJxEamXcPK9ZLNl427O4x3PIA1UHo+O6ow7LSFgtV2BZjdyPTdmzeZkPNipxVZjnKpe5ZY5PjzVZbVQ+SFMZJgYChSQht7AxvWEXkQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=fFxH78MZ; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::649; helo=mail-pl1-x649.google.com; envelope-from=3nib9zgskc3usatgzdxeobgzhhzex.vhfebgnq-xkhyleblml.hsetul.hkz@flex--zhangkelvin.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=flex--zhangkelvin.bounces.google.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=Zk3ay2Jj;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=fFxH78MZ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--zhangkelvin.bounces.google.com (client-ip=2607:f8b0:4864:20::649; helo=mail-pl1-x649.google.com; envelope-from=3nib9zgskc3usatgzdxeobgzhhzex.vhfebgnq-xkhyleblml.hsetul.hkz@flex--zhangkelvin.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XJcch0CzNz2xHt
-	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Oct 2024 00:28:51 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 19DCBA41441;
-	Wed,  2 Oct 2024 14:28:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3A1BC4CEC2;
-	Wed,  2 Oct 2024 14:28:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1727879329;
-	bh=q3i+jh3J55NJ2YKPmphp1ZR3NNfS4eJnCqjvOtxmT18=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Zk3ay2JjJFdLcrl6nhhm2OfiNp1ABtROP2IsL4gHDmoy5abLtqvC++JYkrAx60pQd
-	 kCNuFG5WAZiDjwo5U/NNzArzlVsamRl9OqXXhAiKWoVxpCarCCGYrtzg8Dzoccmo2z
-	 MafR/74iPsA7d+QWg2Y2HkMVhtu0h9uQmVUMicSc=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Subject: [PATCH 6.6 081/538] cachefiles: Fix non-taking of sb_writers around set/removexattr
-Date: Wed,  2 Oct 2024 14:55:20 +0200
-Message-ID: <20241002125755.416948368@linuxfoundation.org>
-X-Mailer: git-send-email 2.46.2
-In-Reply-To: <20241002125751.964700919@linuxfoundation.org>
-References: <20241002125751.964700919@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.3 required=5.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XJhx72QYNz2yN8
+	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Oct 2024 03:43:21 +1000 (AEST)
+Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-20b921fa133so1269545ad.1
+        for <linux-erofs@lists.ozlabs.org>; Wed, 02 Oct 2024 10:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1727890997; x=1728495797; darn=lists.ozlabs.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8AEdD+3/490HDz+pWc5YBIQA1pEFhZdxdnYZKQxLPPE=;
+        b=fFxH78MZ30C8Ms9L1LhNnjcXcwLVXUJL0tYYpNNQnpba4vlo5yFaAApvfQy65+S3OP
+         l5g2bUA1j1YWBa9MYJZMICqRDzxuZBQiSCo5YKIhsGMRRxPQXOvs9Hvxytaj5gzcE8ZH
+         1KVZc/iUT2bwFi5C2WqNoy3cBkngxMQQ2StO77GOtMHxxo8M0xtD3RFMnmnUWdPdOeIU
+         EC5i941F0+5NiaN0GisuXAITUST0qFn32Q9jBeJ+6pCEAtugp4l+D/KUApb1Hti3CaPx
+         KnKMIvm6nq+tpz3cDCKE3nAPZHAtVXzMzsUE58UhQccsyFlr7U4jfSFlw0xdzk+hx1Ew
+         LvRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727890997; x=1728495797;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8AEdD+3/490HDz+pWc5YBIQA1pEFhZdxdnYZKQxLPPE=;
+        b=Z2XUPqJZFa4PYIa01cn8froJoyZTpEUSzFUCV5uvNFad7qX0w2Blpgel28bEWiMZcb
+         RwRkI4oZW2FGiHvAqorIeOvWA5VBDQvN1zMSXvC73EAF4kPyz9hNufUow2jilCbrsm+J
+         b14X5/KTE+wVR0ZhyBW+EiISME0RbydfmQBrnhsKqy3XEyUmRzNTVN5R1Lddmstvw8cG
+         /tB/PitlIW0hTIqL7QTlAQ7oyH4O1L8kSlF+Kwy6enh96m0FsKYi/hHVrHLRBP5bnF/W
+         ujs5nOAOoWPhhd6XmR56TO0FfC6cHIQtJl+zOs70nBjO8DnEoVg5h4rS6A7Jwe7KeP6K
+         cLww==
+X-Gm-Message-State: AOJu0YwdIsC2oYa6Oo8trR/XWgKqsiRCDVA6uRZlBCUNDQGMMjeX4OJd
+	oyQEHD2OlbMnYA2VxZP/OocvdROaD/gyba0Qtef/lc3yb/MR7KrQT/NAZDIMV7A7PRS0u7A3RmS
+	gWsk5V/mFjfjEdhhYeZ68TCeRqRkQCd1mnpoWsHgOs+czIj6xW4w1kpcVrl7UfyFuX9yQ83ykQD
+	aItTTkwtwcbvMMQnW84HAJjwLGw1qVvRXb5LL6QqBOc+mPuxEgpSP5mUT4LOJyvxUmT5E=
+X-Google-Smtp-Source: AGHT+IGfJ4jAXlLObO9K1jZrI9GL4j1ShW+cz6w0jRuiMGIO7nChKGotXnQd9n+7p18z0F+1mc9sjrYcAIjZ/Fq9Fw==
+X-Received: from zhangkelvin.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:2bb0])
+ (user=zhangkelvin job=sendgmr) by 2002:a17:902:8f87:b0:205:58ee:1567 with
+ SMTP id d9443c01a7336-20be17deed4mr6805ad.0.1727890996180; Wed, 02 Oct 2024
+ 10:43:16 -0700 (PDT)
+Date: Wed,  2 Oct 2024 10:43:08 -0700
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.1.824.gd892dcdcdd-goog
+Message-ID: <20241002174308.2585690-1-zhangkelvin@google.com>
+Subject: [PATCH v1] Use pthread_kill instead of pthread_cancel for compatibility
+To: linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.6 required=5.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,SPF_HELO_NONE,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -69,98 +94,35 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Sasha Levin <sashal@kernel.org>, Christian Brauner <brauner@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, patches@lists.linux.dev, David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+From: Kelvin Zhang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Kelvin Zhang <zhangkelvin@google.com>
+Cc: Kelvin Zhang <zhangkelvin@google.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-6.6-stable review patch.  If anyone has any objections, please let me know.
+pthread_kill is supported on more platforms. For example, android's
+bionic libc does not have pthread_cancel. Since pthread_setcancelstate()
+is not used in erofs-utils workqueue code, pthread_cancel has identical
+behavior to pthread_kill, this switch should be safe.
 
-------------------
-
-From: David Howells <dhowells@redhat.com>
-
-[ Upstream commit 80887f31672970abae3aaa9cf62ac72a124e7c89 ]
-
-Unlike other vfs_xxxx() calls, vfs_setxattr() and vfs_removexattr() don't
-take the sb_writers lock, so the caller should do it for them.
-
-Fix cachefiles to do this.
-
-Fixes: 9ae326a69004 ("CacheFiles: A cache that backs onto a mounted filesystem")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Christian Brauner <brauner@kernel.org>
-cc: Gao Xiang <xiang@kernel.org>
-cc: netfs@lists.linux.dev
-cc: linux-erofs@lists.ozlabs.org
-cc: linux-fsdevel@vger.kernel.org
-Link: https://lore.kernel.org/r/20240814203850.2240469-3-dhowells@redhat.com/ # v2
-Signed-off-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Kelvin Zhang <zhangkelvin@google.com>
 ---
- fs/cachefiles/xattr.c | 34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
+ lib/workqueue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cachefiles/xattr.c b/fs/cachefiles/xattr.c
-index 4dd8a993c60a8..7c6f260a3be56 100644
---- a/fs/cachefiles/xattr.c
-+++ b/fs/cachefiles/xattr.c
-@@ -64,9 +64,15 @@ int cachefiles_set_object_xattr(struct cachefiles_object *object)
- 		memcpy(buf->data, fscache_get_aux(object->cookie), len);
- 
- 	ret = cachefiles_inject_write_error();
--	if (ret == 0)
--		ret = vfs_setxattr(&nop_mnt_idmap, dentry, cachefiles_xattr_cache,
--				   buf, sizeof(struct cachefiles_xattr) + len, 0);
-+	if (ret == 0) {
-+		ret = mnt_want_write_file(file);
-+		if (ret == 0) {
-+			ret = vfs_setxattr(&nop_mnt_idmap, dentry,
-+					   cachefiles_xattr_cache, buf,
-+					   sizeof(struct cachefiles_xattr) + len, 0);
-+			mnt_drop_write_file(file);
-+		}
-+	}
- 	if (ret < 0) {
- 		trace_cachefiles_vfs_error(object, file_inode(file), ret,
- 					   cachefiles_trace_setxattr_error);
-@@ -151,8 +157,14 @@ int cachefiles_remove_object_xattr(struct cachefiles_cache *cache,
- 	int ret;
- 
- 	ret = cachefiles_inject_remove_error();
--	if (ret == 0)
--		ret = vfs_removexattr(&nop_mnt_idmap, dentry, cachefiles_xattr_cache);
-+	if (ret == 0) {
-+		ret = mnt_want_write(cache->mnt);
-+		if (ret == 0) {
-+			ret = vfs_removexattr(&nop_mnt_idmap, dentry,
-+					      cachefiles_xattr_cache);
-+			mnt_drop_write(cache->mnt);
-+		}
-+	}
- 	if (ret < 0) {
- 		trace_cachefiles_vfs_error(object, d_inode(dentry), ret,
- 					   cachefiles_trace_remxattr_error);
-@@ -208,9 +220,15 @@ bool cachefiles_set_volume_xattr(struct cachefiles_volume *volume)
- 	memcpy(buf->data, p, volume->vcookie->coherency_len);
- 
- 	ret = cachefiles_inject_write_error();
--	if (ret == 0)
--		ret = vfs_setxattr(&nop_mnt_idmap, dentry, cachefiles_xattr_cache,
--				   buf, len, 0);
-+	if (ret == 0) {
-+		ret = mnt_want_write(volume->cache->mnt);
-+		if (ret == 0) {
-+			ret = vfs_setxattr(&nop_mnt_idmap, dentry,
-+					   cachefiles_xattr_cache,
-+					   buf, len, 0);
-+			mnt_drop_write(volume->cache->mnt);
-+		}
-+	}
- 	if (ret < 0) {
- 		trace_cachefiles_vfs_error(NULL, d_inode(dentry), ret,
- 					   cachefiles_trace_setxattr_error);
+diff --git a/lib/workqueue.c b/lib/workqueue.c
+index 47cec9b..3b63463 100644
+--- a/lib/workqueue.c
++++ b/lib/workqueue.c
+@@ -69,7 +69,7 @@ int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
+ 		ret = pthread_create(&wq->workers[i], NULL, worker_thread, wq);
+ 		if (ret) {
+ 			while (i)
+-				pthread_cancel(wq->workers[--i]);
++				pthread_kill(wq->workers[--i]);
+ 			free(wq->workers);
+ 			return ret;
+ 		}
 -- 
-2.43.0
-
-
+2.46.1.824.gd892dcdcdd-goog
 
