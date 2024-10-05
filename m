@@ -2,46 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0487198E1F3
-	for <lists+linux-erofs@lfdr.de>; Wed,  2 Oct 2024 19:55:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C70D99176E
+	for <lists+linux-erofs@lfdr.de>; Sat,  5 Oct 2024 16:41:34 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XJjC84TZHz2yWr
-	for <lists+linux-erofs@lfdr.de>; Thu,  3 Oct 2024 03:55:32 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XLSlp5mbFz3bdW
+	for <lists+linux-erofs@lfdr.de>; Sun,  6 Oct 2024 00:41:26 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=202.120.2.232
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1727891729;
-	cv=none; b=AwKVq746Wd0l8Oat/cTJ3NzQ4wEYGpb7s3kU1nu/PtgU38nicxLq0+XWRq9+4FS+4b6DHtPa/fftP/R2XFXpVD6faU8INJrHzZW+J7BGl/tebRqYK/ez8JtvN1bdXS75lrBipCQVg5sXLRWsE3d5IraqCydWY/lkQvIdTYtGpXWqSy6pnLTm3pwEGITi1GDEvGjXE3WGxAhjFTgmb7aKxBJPmuHHnx+elknjOheVEBEGO6oyoVH1bNBImiaoZQKMJn/aCxSWV5KIRu9QXbCUIjQ0D7NWoFD9K6H4X41se+gYZL1JqQtrJWrEuH69PAlS/VjQtDclRO9cIxro3GT4gw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728139284;
+	cv=none; b=hsf4LmxrlHTbbyZ4aFTPuxGv+7MJPFuXwGlCupTMhV50dixk3m4Y0/3NNhDOvngwSUxPVRPp8pmt/sVTi0fqpNDLGuWYGrJL8nbAUJpWtHm9dOz/iQ/HftvuoDfhuvmUAVNwJreItx0rzv5E9iJxDd2dSkDRwCEB5H1HFxDK/bAbP1vgfUCZKvi62i6KOiCPE6ZeIZpalWOsyx6tq/fVp9WudnAA0wuWUKXVKJPmyyYrHUBUm+r73cp460o+QUL3DD8aro98XfapEpYf0K5EuTXjn5uLOrp/3Df2/m9fkezLOy9lBCX+E/HqjNV6L7kOMgdPQ2niQZ5r1AUqLfliMQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1727891729; c=relaxed/relaxed;
-	bh=jWSkRHRNOBKe4Zgzq8lh38BmdvSAdmwIKu5bJmqACmY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CeNLYV5tvsRbzl6/B3axKG6jto1EO3JolI4cugQj3e0vzBm74XhdyXhidRo4XpTliIfJkL03ZsYDOWCdRLqBbtbe9uExWlXOZ4lKwkWkUGZRpe4dSfV4S0BYPc7RLW/ggW38+/7DtPQsUd0wr8iRa6fPRSalq3mA2lOjeQsnBfz2fQsVoqVDHKPbG8Ztp7kBDMUeQLUe72LohDeAj5gYRPbmOB/82rduZ/QXMPh9WFRJ3psiMzVBkMSIYuqcD6ESMQadwQ9jukKn07HufvahFvlaSj7aOIXMpNRO5JBYxc/E64wnH0kVqWjt2MQ0U9TLVnRoYi4aN9vARnUJ69/zgg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn; spf=pass (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org) smtp.mailfrom=sjtu.edu.cn
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=sjtu.edu.cn
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sjtu.edu.cn (client-ip=202.120.2.232; helo=smtp232.sjtu.edu.cn; envelope-from=zhaoyifan@sjtu.edu.cn; receiver=lists.ozlabs.org)
-X-Greylist: delayed 365 seconds by postgrey-1.37 at boromir; Thu, 03 Oct 2024 03:55:29 AEST
-Received: from smtp232.sjtu.edu.cn (smtp232.sjtu.edu.cn [202.120.2.232])
+	t=1728139284; c=relaxed/relaxed;
+	bh=gCbXyy0cblcXk7UDUVtGH5kGEQ3mspdwjmhYqK8wCyo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=IYA28PDYCG/XITCTI3vZSRqGBmva2ZLTBG4V5lVotzZYKicJTVBySzij5l6W9sqysKqhirYuBUUJ0QzEpjpeSoBnrwX5o4K4yLDrznQk4vyEdY+fvVFT96vh07r2p30PRam09T8kTFaRLcsqRqqmwlRUxs3I1EeseNPM5b7/4/LZfTE9Lkk70xHhVZ6jblipbzArZ0w9HDgHwpAbn9+R5HdclIfQzyxGSPdZQA9qQhd6f6wQBs5iOM5ylq5VQpUb3c7ZdiPAv/uvvbULla0moO1u+256AF14pCaDiQuFtsAoefjG+P3Dt/5BBJqNRhifh9Uo7BRaUd2/p+fLdpBx3Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=EjWo5t/a; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=EjWo5t/a;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XJjC547jcz2yQL
-	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Oct 2024 03:55:27 +1000 (AEST)
-Received: from proxy188.sjtu.edu.cn (smtp188.sjtu.edu.cn [202.120.2.188])
-	by smtp232.sjtu.edu.cn (Postfix) with ESMTPS id 0312A1008AED4
-	for <linux-erofs@lists.ozlabs.org>; Thu,  3 Oct 2024 01:49:18 +0800 (CST)
-Received: from zhaoyf.ipads-lab.se.sjtu.edu.cn (unknown [202.120.40.82])
-	by proxy188.sjtu.edu.cn (Postfix) with ESMTPSA id 7D70E37C967;
-	Thu,  3 Oct 2024 01:49:15 +0800 (CST)
-From: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: use pthread_kill instead of pthread_cancel
-Date: Thu,  3 Oct 2024 01:49:12 +0800
-Message-ID: <20241002174912.42486-1-zhaoyifan@sjtu.edu.cn>
-X-Mailer: git-send-email 2.46.2
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XLSlh3yf9z2xjM
+	for <linux-erofs@lists.ozlabs.org>; Sun,  6 Oct 2024 00:41:18 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1728139273; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=gCbXyy0cblcXk7UDUVtGH5kGEQ3mspdwjmhYqK8wCyo=;
+	b=EjWo5t/amdmygQ1UQBlKoOnIxC/3B51oMeoAmhVVWl15MyMmdklP2zXbocl3/xp3EPiSn8C8el3ooU6T029RjJqYy2EwuNqbh1XQpl1GE+VHUIecawMXUAsW3CVQwDVDotsya4kbjWy/Q0R2W/gFKf9Yaezj5nnjFKVavGOaI5I=
+Received: from 192.168.2.29(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGHfK9X_1728139270)
+          by smtp.aliyun-inc.com;
+          Sat, 05 Oct 2024 22:41:11 +0800
+Message-ID: <bb781cf6-1baf-4a98-94a5-f261a556d492@linux.alibaba.com>
+Date: Sat, 5 Oct 2024 22:41:10 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Incorrect error message from erofs "backed by file" in 6.12-rc
+To: Allison Karlitskaya <allison.karlitskaya@redhat.com>,
+ Gao Xiang <xiang@kernel.org>, linux-erofs@lists.ozlabs.org,
+ linux-fsdevel@vger.kernel.org, Christian Brauner <brauner@kernel.org>
+References: <CAOYeF9VQ8jKVmpy5Zy9DNhO6xmWSKMB-DO8yvBB0XvBE7=3Ugg@mail.gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <CAOYeF9VQ8jKVmpy5Zy9DNhO6xmWSKMB-DO8yvBB0XvBE7=3Ugg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.0 required=5.0 tests=ARC_SIGNED,ARC_VALID,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -54,59 +66,55 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Bionic (Android's libc) does not have pthread_cancel. Let's use
-pthread_kill instead to gracefully terminate the worker threads.
+Hi Allison,
 
-Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
----
- lib/workqueue.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+(try to +Cc Christian)
 
-diff --git a/lib/workqueue.c b/lib/workqueue.c
-index 47cec9b..f6d1a7f 100644
---- a/lib/workqueue.c
-+++ b/lib/workqueue.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
- #include <pthread.h>
-+#include <signal.h>
- #include <stdlib.h>
- #include "erofs/workqueue.h"
- 
-@@ -40,6 +41,11 @@ static void *worker_thread(void *arg)
- 	return NULL;
- }
- 
-+void worker_exit_handler(int sig)
-+{
-+	pthread_exit(NULL);
-+}
-+
- int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
- 			  unsigned int max_jobs, erofs_wq_func_t on_start,
- 			  erofs_wq_func_t on_exit)
-@@ -50,6 +56,8 @@ int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
- 	if (!wq || nworker <= 0 || max_jobs <= 0)
- 		return -EINVAL;
- 
-+	signal(SIGUSR1, worker_exit_handler);
-+
- 	wq->head = wq->tail = NULL;
- 	wq->nworker = nworker;
- 	wq->max_jobs = max_jobs;
-@@ -69,7 +77,7 @@ int erofs_alloc_workqueue(struct erofs_workqueue *wq, unsigned int nworker,
- 		ret = pthread_create(&wq->workers[i], NULL, worker_thread, wq);
- 		if (ret) {
- 			while (i)
--				pthread_cancel(wq->workers[--i]);
-+				pthread_kill(wq->workers[--i], SIGUSR1);
- 			free(wq->workers);
- 			return ret;
- 		}
--- 
-2.46.2
+On 2024/10/2 20:58, Allison Karlitskaya wrote:
+> hi,
+> 
+> In context of my work on composefs/bootc I've been testing the new support for directly mounting files with erofs (ie: without a loopback device) and it's working well.  Thanks for adding this feature --- it's a huge quality of life improvement for us.
+> 
+> I've observed a strange behaviour, though: when mounting a file as an erofs, if you read() the filesystem context fd, you always get the following error message reported: Can't lookup blockdev.
+> 
+> That's caused by the code in erofs_fc_get_tree() trying to call get_tree_bdev() and recovering from the error in case it was ENOTBLK and CONFIG_EROFS_FS_BACKED_BY_FILE.  Unfortunately, get_tree_bdev() logs the error directly on the fs_context, so you get the error message even on successful mounts.
+> > It looks something like this at the syscall level:
+> 
+> fsopen("erofs", FSOPEN_CLOEXEC)         = 3
+> fsconfig(3, FSCONFIG_SET_FLAG, "ro", NULL, 0) = 0
+> fsconfig(3, FSCONFIG_SET_STRING, "source", "/home/lis/src/mountcfs/cfs", 0) = 0
+> fsconfig(3, FSCONFIG_CMD_CREATE, NULL, NULL, 0) = 0
+> fsmount(3, FSMOUNT_CLOEXEC, 0)          = 5
+> move_mount(5, "", AT_FDCWD, "/tmp/composefs.upper.KuT5aV", MOVE_MOUNT_F_EMPTY_PATH) = 0
+> read(3, "e /home/lis/src/mountcfs/cfs: Can't lookup blockdev\n", 1024) = 52
+> 
+> This is kernel 6.12.0-0.rc0.20240926git11a299a7933e.13.fc42.x86_64 from Fedora Rawhide.
+> 
+> It's a pretty minor issue, but it sent me on a wild goose chase for an hour or two, so probably it should get fixed before the final release.
+> 
+
+Sorry for late response. I'm on vacation recently.
+
+Yes, I also observed this message, but I'm not sure
+how to handle it better.  Indeed, the message itself
+is out of get_tree_bdev() as you said.
+
+Yet I tend to avoid unnecessary extra lookup_bdev()
+likewise to confirm the type of the source in advance,
+since the majority mount type of EROFS is still
+bdev-based instead file-based so I tend to make
+file-based mount as a fallback...
+
+Hi Christian, if possible, could you give some other
+idea to handle this case better? Many thanks!
+
+Thanks,
+Gao Xiang
+
+> Thanks again for this awesome feature!
+> 
+> Allison Karlitskaya
 
