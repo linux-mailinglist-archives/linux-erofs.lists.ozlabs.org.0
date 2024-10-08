@@ -2,56 +2,50 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5B42994298
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Oct 2024 10:48:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 907BC9944E1
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Oct 2024 11:56:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XN8n93zr4z2yNs
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Oct 2024 19:48:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XNBHd6F0Pz3bgV
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Oct 2024 20:56:29 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728377308;
-	cv=none; b=gOGPuj9AVYAunjXZJJFim5UiteZB5itwdiFHFbMTGQQPF1WYoabZ1bSxFKJbZfkcCaiBwiQn+TTQaBH5/tZcngFTOu986tzwLX4RULL5Dl6virx0r2v435J5FDPfArmM7HaU5Ahh9fCmU6Vh0gIPPrGzQtHFryuqvmWnZQIgX32B9kYS6fkD7dY5P4i0g65aCyNBzy++slVoQdrE65atZre0c+yenwJl5QLhlEVSSuDpkzf5P2bO9NxdIA+a4BixJAVLdANlohEsgCAIkx4RPzQ9LDgY0auq9Cj2yTLxD93oFKfKSnNJ76uqAh4hEJhW2+vcc9cPLz93VH76Fvev5w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728381388;
+	cv=none; b=iZekpb/28pBPRkW/LkZVdHl9rmqdE2CD3mtFXtZkD4YDvVuEgU4DFYJIfueXJRmFEkUBmr3gn71rWtHAv09CQwFl5w24r8xf8A08Syw/p57Kf9MEpLnGU8R9AdjXErXEZUoVbPoKIn3cHGpOe4qikxiIA9HxThVHSgsL0csV92J+gM6h2gLCYfytUcWM/0PHshkyTgdN1SZR46jOyEBr6UGLkbNWJ7KazcQJautBPMQ+EDLBr33DRsPTy9/hZWb/sElVCB3UVWqoR8jQCRomehxRo6qpTS0lCJhxKCsA/OVzGF5LkUJGVN7vAeL89KuxEls6V0nGsbHDSeLxbN+rrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1728377308; c=relaxed/relaxed;
-	bh=0NyW6bEkcTAV3r2ZXDGCX9ZEqYnZHArarZL+caGXqFU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ipQlTVJttTWWMwR0BTgb58v0lpya138eyHNVyIDLZ1Vco0ZdgnHh9YPzFgEPRUep1jXMAQujXg2mdTNBU3z5Js3U96Ik+1UXDK5wNmZ9REOW4G5HvtJxnpX9a//5UbQxycJs1XqkfLOUrbBdXd88pgnjWDysqvWib945cpH3YKsSQ3rKRZbADl7FrcdpgXqCky+gspdDwRZ0E0ZcuYjSjgvmdF4zpO5nw4qRDF1ofMydrKkt6pYYk6QC3R3JYYlvLwbROljCWqcI2uaXLb2Pz12UM+RihYm5cOQGA92i2uXtbyLYh5jYnzxAJDJVDkEdp+Pxvw8iCl+F+Ex0elO1Iw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=a5qbs/CR; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1728381388; c=relaxed/relaxed;
+	bh=R40RoxvI5Y2ML/F8sE+GUL5WsI1GRLpUALW+tN6AodQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D1NVkNUUf41yrdIdadbsZZsbiwFR2MXCei6SltI16UQz+VxFEB85tYZYF3xbUwfVycKRoGoSr4GVsz/8wYs9dJFGaim25Zsu2wT6llDjiZOEswCGzNzjSbbhmWiOmcMZ3UftxpfCMte3NYYGnUo/u1lJcNzuAkc7GETXLDlEmC6nveyS+A0FtL6n77K0+yKp3A2iCQ/JpDG/YYw/L/J9NjrlQi+x44jG51owg9wsRNFIjRFBtheJdxHLeGj5nmJReNoA7RYlct08hyhBZracABDxNyBgDlPrvPvMT7mK6zVTK4NOoUDIKbw09ciaoiYfyKrvPGRmTxVVgofUE2Zdtw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fxhacmP0; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=a5qbs/CR;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fxhacmP0;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XN8n45DLQz2xHb
-	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Oct 2024 19:48:22 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XNBHX2x3Xz2yN3
+	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Oct 2024 20:56:20 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1728377298; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=0NyW6bEkcTAV3r2ZXDGCX9ZEqYnZHArarZL+caGXqFU=;
-	b=a5qbs/CRAr3rNVQKucnvpNty32K8tnZ/FnauzqKFgwFTrXslRwb8dbhX2wi6KOTruvApD/o7RAmxoFSTRcDERIbnvhPOepj9JSVzL5CKGmu0tbtiD3m3B+UE1heVQSPkNMP8QCFl+YKV2TStZDEbJ4WticoBAL90cxQy0Lohv9o=
-Received: from 30.221.129.198(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGcMdA8_1728377295)
+	t=1728381375; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=R40RoxvI5Y2ML/F8sE+GUL5WsI1GRLpUALW+tN6AodQ=;
+	b=fxhacmP0XCsR3VU2xJxNlOJPOtusKKbeSdFCAw/bKo0YxryfVmyeX06IYvmxjsGp0usOwO8Vky1/91kpS5mHov20rAtBtO+0x1nLgVTMAbUWn24oFD6MoxUTIPxh5RA5VjhKLkJ+e4jeiGzKDlBiM6ULAQEKDBXZcoLIwTeXEVg=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGdZ8q3_1728381368)
           by smtp.aliyun-inc.com;
-          Tue, 08 Oct 2024 16:48:16 +0800
-Message-ID: <e164898b-0094-4e66-a462-4302d56a8f71@linux.alibaba.com>
-Date: Tue, 8 Oct 2024 16:48:15 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Incorrect error message from erofs "backed by file" in 6.12-rc
-To: Christian Brauner <brauner@kernel.org>
-References: <CAOYeF9VQ8jKVmpy5Zy9DNhO6xmWSKMB-DO8yvBB0XvBE7=3Ugg@mail.gmail.com>
- <bb781cf6-1baf-4a98-94a5-f261a556d492@linux.alibaba.com>
- <20241007-zwietracht-flehen-1eeed6fac1a5@brauner>
- <b9565874-7018-46ef-b123-b524a1dffb21@linux.alibaba.com>
- <20241008-blicken-ziehharmonika-de395b6dd566@brauner>
+          Tue, 08 Oct 2024 17:56:14 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20241008-blicken-ziehharmonika-de395b6dd566@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>
+Subject: [PATCH 1/2] fs/super.c: introduce get_tree_bdev_by_dev()
+Date: Tue,  8 Oct 2024 17:56:05 +0800
+Message-ID: <20241008095606.990466-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -68,77 +62,116 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, Allison Karlitskaya <allison.karlitskaya@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, Allison Karlitskaya <allison.karlitskaya@redhat.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+As Allison reported [1], currently get_tree_bdev() will store
+"Can't lookup blockdev" error message.  Although it makes sense for
+pure bdev-based fses, this message may mislead users who try to use
+EROFS file-backed mounts since get_tree_nodev() is used as a fallback
+then.
 
+Add get_tree_bdev_by_dev() to specify a device number explicitly
+instead of the hardcoded fc->source as mentioned in [2], there are
+other benefits like:
+  - Filesystems can have other ways to get a bdev-based sb
+    in addition to the current hard-coded source path;
 
-On 2024/10/8 16:46, Christian Brauner wrote:
-> On Tue, Oct 08, 2024 at 10:13:31AM GMT, Gao Xiang wrote:
->> Hi Christian,
->>
->> On 2024/10/7 19:35, Christian Brauner wrote:
->>> On Sat, Oct 05, 2024 at 10:41:10PM GMT, Gao Xiang wrote:
->>
->> ...
->>
->>>>
->>>> Hi Christian, if possible, could you give some other
->>>> idea to handle this case better? Many thanks!
->>
->> Thanks for the reply!
->>
->>>
->>> (1) Require that the path be qualified like:
->>>
->>>       fsconfig(<fd>, FSCONFIG_SET_STRING, "source", "file:/home/lis/src/mountcfs/cfs", 0)
->>>
->>>       and match on it in either erofs_*_get_tree() or by adding a custom
->>>       function for the Opt_source/"source" parameter.
->>
->> IMHO, Users could create names with the prefix `file:`,
->> it's somewhat strange to define a fixed prefix by the
->> definition of source path fc->source.
->>
->> Although there could be some escape character likewise
->> way, but I'm not sure if it's worthwhile to work out
->> this in kernel.
->>
->>>
->>> (2) Add a erofs specific "source-file" mount option. IOW, check that
->>>       either "source-file" or "source" was specified but not both. You
->>>       could even set fc->source to "source-file" value and fail if
->>>       fc->source is already set. You get the idea.
->>
->> I once thought to add a new mount option too, yet from
->> the user perpertive, I think users may not care about
->> the source type of an arbitary path, and the kernel also
->> can parse the type of the source path directly... so..
->>
->>
->> So.. I wonder if it's possible to add a new VFS interface
->> like get_tree_bdev_by_dev() for filesystems to specify a
->> device number rather than hardcoded hard-coded source path
->> way, e.g. I could see the potential benefits other than
->> the EROFS use case:
->>
->>   - Filesystems can have other ways to get a bdev-based sb
->>     in addition to the current hard-coded source path way;
->>
->>   - Some pseudo fs can use this way to generate a fs from a
->>     bdev.
->>
->>   - Just like get_tree_nodev(), it doesn't strictly tie to
->>     fc->source too.
->>
->> Also EROFS could lookup_bdev() (this kAPI is already
->> exported) itself to check if it uses get_tree_bdev_by_dev()
->> or get_tree_nodev()... Does it sounds good?  Many thanks!
-> 
-> Sounds fair to me.
+  - Pseudo-filesystems can utilize this method to generate a
+    filesystem from given device numbers too.
 
-Okay, thanks! Let me submit patches for this.
+  - Like get_tree_nodev(), it doesn't strictly tie to fc->source
+    either.
 
-Thanks,
-Gao Xiang
+[1] https://lore.kernel.org/r/CAOYeF9VQ8jKVmpy5Zy9DNhO6xmWSKMB-DO8yvBB0XvBE7=3Ugg@mail.gmail.com
+[2] https://lore.kernel.org/r/b9565874-7018-46ef-b123-b524a1dffb21@linux.alibaba.com
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/super.c                 | 41 ++++++++++++++++++++++++++------------
+ include/linux/fs_context.h |  3 +++
+ 2 files changed, 31 insertions(+), 13 deletions(-)
+
+diff --git a/fs/super.c b/fs/super.c
+index 1db230432960..8cc8350b9ba6 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1596,26 +1596,17 @@ int setup_bdev_super(struct super_block *sb, int sb_flags,
+ EXPORT_SYMBOL_GPL(setup_bdev_super);
+ 
+ /**
+- * get_tree_bdev - Get a superblock based on a single block device
++ * get_tree_bdev_by_dev - Get a bdev-based superblock with a given device number
+  * @fc: The filesystem context holding the parameters
+  * @fill_super: Helper to initialise a new superblock
++ * @dev: The device number indicating the target block device
+  */
+-int get_tree_bdev(struct fs_context *fc,
++int get_tree_bdev_by_dev(struct fs_context *fc,
+ 		int (*fill_super)(struct super_block *,
+-				  struct fs_context *))
++				  struct fs_context *), dev_t dev)
+ {
+ 	struct super_block *s;
+ 	int error = 0;
+-	dev_t dev;
+-
+-	if (!fc->source)
+-		return invalf(fc, "No source specified");
+-
+-	error = lookup_bdev(fc->source, &dev);
+-	if (error) {
+-		errorf(fc, "%s: Can't lookup blockdev", fc->source);
+-		return error;
+-	}
+ 
+ 	fc->sb_flags |= SB_NOSEC;
+ 	s = sget_dev(fc, dev);
+@@ -1644,6 +1635,30 @@ int get_tree_bdev(struct fs_context *fc,
+ 	fc->root = dget(s->s_root);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(get_tree_bdev_by_dev);
++
++/**
++ * get_tree_bdev - Get a superblock based on a single block device
++ * @fc: The filesystem context holding the parameters
++ * @fill_super: Helper to initialise a new superblock
++ */
++int get_tree_bdev(struct fs_context *fc,
++		int (*fill_super)(struct super_block *,
++				  struct fs_context *))
++{
++	int error;
++	dev_t dev;
++
++	if (!fc->source)
++		return invalf(fc, "No source specified");
++
++	error = lookup_bdev(fc->source, &dev);
++	if (error) {
++		errorf(fc, "%s: Can't lookup blockdev", fc->source);
++		return error;
++	}
++	return get_tree_bdev_by_dev(fc, fill_super, dev);
++}
+ EXPORT_SYMBOL(get_tree_bdev);
+ 
+ static int test_bdev_super(struct super_block *s, void *data)
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index c13e99cbbf81..54f23589ad5b 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -160,6 +160,9 @@ extern int get_tree_keyed(struct fs_context *fc,
+ 
+ int setup_bdev_super(struct super_block *sb, int sb_flags,
+ 		struct fs_context *fc);
++int get_tree_bdev_by_dev(struct fs_context *fc,
++			 int (*fill_super)(struct super_block *sb,
++					   struct fs_context *fc), dev_t dev);
+ extern int get_tree_bdev(struct fs_context *fc,
+ 			       int (*fill_super)(struct super_block *sb,
+ 						 struct fs_context *fc));
+-- 
+2.43.5
+
