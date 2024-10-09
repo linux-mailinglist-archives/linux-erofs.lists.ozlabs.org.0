@@ -2,57 +2,51 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A657994E13
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Oct 2024 15:12:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 14B93995E2B
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Oct 2024 05:32:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XNGf25FMhz306d
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Oct 2024 00:12:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XNdjn5dBbz2yx7
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Oct 2024 14:32:13 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728393160;
-	cv=none; b=j4Ybxl4NM7vQleCVsunQY1VtiuQ7vpiclCCVJhwoek7bbDlqPjgtiG4LLRU+rfspUOEH5cxgcoW8Dj4SV+nlwCUssFDdAmjjIUQdFaH7Jc4rPhx2sxoM8WfP56glsSBva9KI8B9+V7VoLBMdK/DJGHWckwo/xMqOXlbawJ1d5mDMgWSf06FumRMOrHP2EqHk79h36TV3KNz5yWCM3Whq6oGRM3AulDACE0V4a5ZYCTK5mUiVeJSR0KwunZXCL4bcoM1OpLDEuKiso3eLk3EINInseDYEjiXJ7XLw9j7wnXGQ5HLc7qD1rYU4H5klgp4UGdPDNApErMD8ByBSAIMzxg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728444731;
+	cv=none; b=kUMQ71jfrDVgRxXLEyj8SZAWrSJc8SVVApOiozRgwPybJa35+s+fiDS5yQ/1IQ29jch9hlsD+W+eUeH+A0qb8mR2SM2qzbjG0HRJ1zDFD24aucucADBvzDl1niljiuKjn72fKeuqj+El9N9OqmqrvFAFgl6Eu4OfndfxOyM2IKKX0+5QXhBXUhlQrwZsc/I0s8Sg/ClIQl1GkFUuK1AdyiirMfy2hiTwBtr3b+oIa5zynrTe2kNTxjJrf44HI6E2ScmeBEaMR9PAhCVbLvSjsKi+VSZJEN1NfPV5yoap/QxPnguMKadhR25pTUSnJK4f2ReMMhOmntuln9mCRB0N8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1728393160; c=relaxed/relaxed;
-	bh=L2tMYa++LilgFGUn5qa+f4HeMfwMqFzOdCyNTGH96cU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Su6rvMp5ft74HJOsFrwemKKqPFZIKE6UL73Rd7xkcX4vtGSAt70Ke/bPzJyqhlim4Jv/L43Ak+MdUwZ1GoCfxxSKfPENoMR9W4V6gq/xZz6NIt36IvdpT7YQLxCFJzq1nBqeGcwmpXQa3z94CHUTBhOOJwSpnIA7ahyONM171xDeXpBqNwaAkbFz98t9HzxprY4rpkXGCOR2HqBiYbadMWWuuqDIZGTqe3hr+/8ZGhDUYS1DJF47vrrU71c0fGGmaRNruBhBXc6nfDvea7XFOrZIvjdwzdMj4frUmTlJIle6GjIVyU/XI1FnvxPMQhvRUVW7O8vWtyndLIMPpe3GGQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CGeoOUP5; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1728444731; c=relaxed/relaxed;
+	bh=Q3VvV8dzU7fDz1bTrlR+T03pQEuaXvrJZsIVuE0YJXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cg2QaVm9ljNFCzMZCScGczP4oxQPCPeoAbg1eN/CZXFd8jTcvsUFgcGuzCdd1SI1t65WCNde63ZcyzB1tn/Vny3kYhkYOfvKMBlOxH6x9JVv6wdjNOYE5x5kEE5GXyOflAYjzUI2xZ9wevr4wSzCygNmvAtYzF2foom9KfWsg8N3KAJSDeAEiv+wU2cZUBxyCb2Mhs5BpcqOvuTyvmyc+V5ZuKD0KYlHkPGXa3dsEFe8FVuztvTW7Ewt5xMyhLUhKG12DQlAyaW8iU5rP8sHZhJr7sX8vsL8BFK+WbADpO2OLgzr99nKb1Jtj4P7lcFJkVJ08e/9a1Ifg1yF9HPeqw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=AIlMKogB; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CGeoOUP5;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=AIlMKogB;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XNGdw0HBRz2xJ6
-	for <linux-erofs@lists.ozlabs.org>; Wed,  9 Oct 2024 00:12:32 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XNdjh3cn9z2yNc
+	for <linux-erofs@lists.ozlabs.org>; Wed,  9 Oct 2024 14:32:04 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1728393147; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=L2tMYa++LilgFGUn5qa+f4HeMfwMqFzOdCyNTGH96cU=;
-	b=CGeoOUP5xLint5k4POyX+6zuab/0Ex0vKyMIn3aj7tuZQ1L1xJLs0ihlqwoE4CkbiwD75rWbj4vl5dA+4G8Omxu2krhZ98V3eHV1cJMvttHi9+wQOm/+713K/viFkMDXv8t4iroaM+jRfnOPChkL7wvaj6SwZn5xv1kvi+8GJ8o=
-Received: from 192.168.2.29(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGfRSit_1728393144)
+	t=1728444720; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Q3VvV8dzU7fDz1bTrlR+T03pQEuaXvrJZsIVuE0YJXE=;
+	b=AIlMKogB5YYy+qgWQoS/bKfRXwLRXmim3j+qo8Fk3U7iuNgpN25bJSiqRv1ly5w2rfnMI7M7VSNE3u4e5QdtqfXopiwAFYxH3CZphLOOOKErUv55LDcV8oXNA2Zh9rwJAUt4gJlD15Bv9c4AOWNJ76U3alPi0g8GOYsaLZwIuCQ=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGhJfrz_1728444712)
           by smtp.aliyun-inc.com;
-          Tue, 08 Oct 2024 21:12:25 +0800
-Message-ID: <9774de2b-2bd6-443e-b502-2c1dd3ccf0a8@linux.alibaba.com>
-Date: Tue, 8 Oct 2024 21:12:23 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] fs/super.c: introduce get_tree_bdev_by_dev()
-To: Christoph Hellwig <hch@infradead.org>
-References: <20241008095606.990466-1-hsiangkao@linux.alibaba.com>
- <ZwUcT0qUp2DKOCS3@infradead.org>
- <34cbdb0b-28f4-4408-83b1-198f55427b5c@linux.alibaba.com>
- <ZwUkJEtwIpUA4qMz@infradead.org>
- <ca887ba4-baa6-4d7d-8433-1467f449e1e1@linux.alibaba.com>
- <ZwUr2HthVw9Hc1ke@infradead.org>
+          Wed, 09 Oct 2024 11:31:58 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <ZwUr2HthVw9Hc1ke@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	Christoph Hellwig <hch@infradead.org>
+Subject: [PATCH v2 1/2] fs/super.c: introduce get_tree_bdev_flags()
+Date: Wed,  9 Oct 2024 11:31:50 +0800
+Message-ID: <20241009033151.2334888-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -69,26 +63,106 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, Allison Karlitskaya <allison.karlitskaya@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, Allison Karlitskaya <allison.karlitskaya@redhat.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+As Allison reported [1], currently get_tree_bdev() will store
+"Can't lookup blockdev" error message.  Although it makes sense for
+pure bdev-based fses, this message may mislead users who try to use
+EROFS file-backed mounts since get_tree_nodev() is used as a fallback
+then.
 
+Add get_tree_bdev_flags() to specify extensible flags [2] and
+GET_TREE_BDEV_QUIET_LOOKUP to silence "Can't lookup blockdev" message
+since it's misleading to EROFS file-backed mounts now.
 
-On 2024/10/8 20:55, Christoph Hellwig wrote:
-> On Tue, Oct 08, 2024 at 08:33:27PM +0800, Gao Xiang wrote:
->> how about
->> int get_tree_bdev_flags(struct fs_context *fc,
->> 		int (*fill_super)(struct super_block *,
->> 				  struct fs_context *), bool quiet)
->>
->> for now? it can be turned into `int flags` if other needs
->> are shown later (and I don't need to define an enum.)
-> 
-> I'd pass an unsigned int flags with a clearly spellt out (and
-> extensible) flags namespae.
+[1] https://lore.kernel.org/r/CAOYeF9VQ8jKVmpy5Zy9DNhO6xmWSKMB-DO8yvBB0XvBE7=3Ugg@mail.gmail.com
+[2] https://lore.kernel.org/r/ZwUkJEtwIpUA4qMz@infradead.org
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+v1: https://lore.kernel.org/r/20241008095606.990466-1-hsiangkao@linux.alibaba.com
+change since v1:
+ - add get_tree_bdev_flags() suggested by Christoph.
 
-okay, got it.
+ fs/super.c                 | 26 ++++++++++++++++++++------
+ include/linux/fs_context.h |  6 ++++++
+ 2 files changed, 26 insertions(+), 6 deletions(-)
 
-Thanks,
-Gao Xiang
+diff --git a/fs/super.c b/fs/super.c
+index 1db230432960..c9c7223bc2a2 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1596,13 +1596,14 @@ int setup_bdev_super(struct super_block *sb, int sb_flags,
+ EXPORT_SYMBOL_GPL(setup_bdev_super);
+ 
+ /**
+- * get_tree_bdev - Get a superblock based on a single block device
++ * get_tree_bdev_flags - Get a superblock based on a single block device
+  * @fc: The filesystem context holding the parameters
+  * @fill_super: Helper to initialise a new superblock
++ * @flags: GET_TREE_BDEV_* flags
+  */
+-int get_tree_bdev(struct fs_context *fc,
+-		int (*fill_super)(struct super_block *,
+-				  struct fs_context *))
++int get_tree_bdev_flags(struct fs_context *fc,
++		int (*fill_super)(struct super_block *sb,
++				  struct fs_context *fc), unsigned int flags)
+ {
+ 	struct super_block *s;
+ 	int error = 0;
+@@ -1613,10 +1614,10 @@ int get_tree_bdev(struct fs_context *fc,
+ 
+ 	error = lookup_bdev(fc->source, &dev);
+ 	if (error) {
+-		errorf(fc, "%s: Can't lookup blockdev", fc->source);
++		if (!(flags & GET_TREE_BDEV_QUIET_LOOKUP))
++			errorf(fc, "%s: Can't lookup blockdev", fc->source);
+ 		return error;
+ 	}
+-
+ 	fc->sb_flags |= SB_NOSEC;
+ 	s = sget_dev(fc, dev);
+ 	if (IS_ERR(s))
+@@ -1644,6 +1645,19 @@ int get_tree_bdev(struct fs_context *fc,
+ 	fc->root = dget(s->s_root);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(get_tree_bdev_flags);
++
++/**
++ * get_tree_bdev - Get a superblock based on a single block device
++ * @fc: The filesystem context holding the parameters
++ * @fill_super: Helper to initialise a new superblock
++ */
++int get_tree_bdev(struct fs_context *fc,
++		int (*fill_super)(struct super_block *,
++				  struct fs_context *))
++{
++	return get_tree_bdev_flags(fc, fill_super, 0);
++}
+ EXPORT_SYMBOL(get_tree_bdev);
+ 
+ static int test_bdev_super(struct super_block *s, void *data)
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index c13e99cbbf81..4b4bfef6f053 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -160,6 +160,12 @@ extern int get_tree_keyed(struct fs_context *fc,
+ 
+ int setup_bdev_super(struct super_block *sb, int sb_flags,
+ 		struct fs_context *fc);
++
++#define GET_TREE_BDEV_QUIET_LOOKUP		0x0001
++int get_tree_bdev_flags(struct fs_context *fc,
++		int (*fill_super)(struct super_block *sb,
++				  struct fs_context *fc), unsigned int flags);
++
+ extern int get_tree_bdev(struct fs_context *fc,
+ 			       int (*fill_super)(struct super_block *sb,
+ 						 struct fs_context *fc));
+-- 
+2.43.5
+
