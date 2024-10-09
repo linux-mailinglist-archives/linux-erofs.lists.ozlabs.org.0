@@ -1,63 +1,60 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3F4C9960EB
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Oct 2024 09:31:42 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E72C9960FF
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Oct 2024 09:37:22 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XNl224Zp6z3bbR
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Oct 2024 18:31:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XNl8c10SSz3bZs
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Oct 2024 18:37:20 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:7c80:54:3::133"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728459097;
-	cv=none; b=Q0eMv7l3jFidGQmaL3qikFn2e9dCUJzxEFJ8VA8cM/+pU02KtlqJ9Wfqc/y+Du/H5jPzdqQIetcB0d3vz/Ef2yb1IK2K7fiCy0PtosAT+8nc/9RhNm8tKhhaxWmynKZKUpl+8MhVaJKdeu3F6aH6wPQ9RnTHns/nlhXBLASUUm+C5UEe11XEciDwRLlFPT+vX9DVHQUb635uQYBdNYWE77g4wHhyT3LE0esBb3fuStGROfBG+55BQUZ+ia7ZjrGgen38oQ5OtA60c+krOoIR+Kj6RYr7t2HkC2T3w+H2cTaDLoWMARSkU81jZIzF90MhKr9MvjHWAl4As7bMD7QdZw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728459438;
+	cv=none; b=H/7JTuSKrFsFT5bDH+hOqzatNM2c5NyEgYtmi1OSkx71FW9N3K+IX+V30h23Alv5F/ZrPdkrYzdvIKad4zy7mhckm2bpo2sSfmtg1loknF1OFbaqqvxwl2YAnyn9tW/Bch3/KZSksnS2nwbpT2eCmjP0L9TUyuxtanhtvxKc9YcnWOYzEptqhvP+hfw0QzQZv5QY5m4xa3vFvwAxytBo+LacAGefPkOQSRA7sM09SfHmFcPxLYtlDbZl7dalQYFmPsOVwPQmAGd8f+ZI2kVZA7tTSjUThE+QELsX+7tJQUOero0atWsKqTNnbRiGBLkpNpuahAInUYkEBao40j4obA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1728459097; c=relaxed/relaxed;
-	bh=jZqLAC3MRdTsqXfdRTrZ8YpQt2c+tTA1yWYUJqu0P5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KG8QkrcYD30TmrYtO0Vg7PYvect9JVW6ivRKE5V3EI8GRPEIKXBeZhqCtutlrvkudm0uPZiOdzKguMYOkJvP1tnfBX69nLoH/8cjtxcNH9UmiXZuT7lrUAa37+UXWkSN/IVSG9MnnUMiVIgHB/L/0O8yzZdXDiyKvkphc8jgLUgOe6GSKqYQ0Mb685yt8HDtcbQ3FbCZcaq3/VHDiaQYz3+2IEpmMEBs4DbZYetM8hNZoiVSehFQa8kiqE8qv4IdHo4bOAh7wIgviIQdHELAGA2/oxRTHDUo0HGCuHIcKKNBpiS055PwnvzexpSWuLISwp3Cl+HyrV3e7hRaivpOUw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=fe/tI5M+; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+cb460f4b002c9a6a9c29+7717+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=infradead.org
+	t=1728459438; c=relaxed/relaxed;
+	bh=oSl+cGwvm5m4G+tPjkLAH90RmfdMCPQYjH5YWNkUFLo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cdoBS6M28dGjhNfyN7DwLaoTSaqVrn8Et2J5YGJoYXsgdRU3QLaEcslbp3pJFlvkPaqgWA2daPCFiryn22fDYCtaXhoj1F7A9D+H23RwMBHM5rkILx2JZcuxTR8CkSveOOJvKbQuJ0jenTz9L5AtcYp4gGYUz+DS1q7jAW8HDcb9ujEVkGEZ91tc+10ns5iFVGaq648/GYTT+r3WFaFYTvf/NUggPzSmQR/8Bv5bMz0rCTSO6/Blgl9LNnONhXcUsST5VD4+wEz7j+7FDidyhzoxLvST1oJH5v7HQX1mHCRTLWr8CVZwpdC/YoOCJIkuSBHGoV+y0aL0MnFPvtvI2w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=m0ycJI3G; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=fe/tI5M+;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=m0ycJI3G;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+cb460f4b002c9a6a9c29+7717+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XNl205dBzz2xs0
-	for <linux-erofs@lists.ozlabs.org>; Wed,  9 Oct 2024 18:31:36 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=jZqLAC3MRdTsqXfdRTrZ8YpQt2c+tTA1yWYUJqu0P5c=; b=fe/tI5M+hy7HITYN8Vcm9vzsSn
-	zSl69WsztIZ7NWUzZk/7J48NDLNXZnH16V3ol7noRDmSxfFz6Bs06085H02Z9Yp+8+T1yBJBKEi01
-	Hiz4IM2bHULEUHQCzlL//1l6w/PDuxBjmppkcaikA2+Yh2EqnBSamZOrxsz9zliPZvyCUa+VIocKd
-	NuxNLQLPs1N3GMmNU5kiJEnrOwXVItruDzxXospaupEfR5wosuG87xyB/G6FbRsaNp0I+fmgZzh8r
-	0QLmmE7jenjDl2THrkCbZ3e2uf9YZaHxHdeldtQJE1/CiU5/0dHgq0QV0IZjYGq/Kv43tAEqHA71X
-	Tvzgsf2Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1syRAT-00000008FFP-2t3k;
-	Wed, 09 Oct 2024 07:31:33 +0000
-Date: Wed, 9 Oct 2024 00:31:33 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XNl8V0W2Vz2xHg
+	for <linux-erofs@lists.ozlabs.org>; Wed,  9 Oct 2024 18:37:11 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1728459427; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=oSl+cGwvm5m4G+tPjkLAH90RmfdMCPQYjH5YWNkUFLo=;
+	b=m0ycJI3GIQhk9S7tc1FAMozhciYnD8qa606kyAoG+fibgIsdg1VFZPp+VnMK12x6EO3Jc6+u6x1Ib/3ha0yAyvn1gQx//QZLYUJkax2tzcO9bPDjAblxboFRMqRHR9lbGPRKVrMYRErXq6nAxuIKI9wZIGWzKKUlmHPZDywF68w=
+Received: from 30.221.130.172(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGi.FKl_1728459424)
+          by smtp.aliyun-inc.com;
+          Wed, 09 Oct 2024 15:37:05 +0800
+Message-ID: <8a40d27c-28f1-467b-9a9e-359b36ee5e33@linux.alibaba.com>
+Date: Wed, 9 Oct 2024 15:37:04 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 2/2] erofs: use get_tree_bdev_flags() to avoid
  misleading messages
-Message-ID: <ZwYxVcvyjJR_FM0U@infradead.org>
+To: Christoph Hellwig <hch@infradead.org>
 References: <20241009033151.2334888-1-hsiangkao@linux.alibaba.com>
  <20241009033151.2334888-2-hsiangkao@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241009033151.2334888-2-hsiangkao@linux.alibaba.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
-	autolearn=disabled version=4.0.0
+ <ZwYxVcvyjJR_FM0U@infradead.org>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <ZwYxVcvyjJR_FM0U@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -70,38 +67,51 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, Allison Karlitskaya <allison.karlitskaya@redhat.com>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, Allison Karlitskaya <allison.karlitskaya@redhat.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Wed, Oct 09, 2024 at 11:31:51AM +0800, Gao Xiang wrote:
-> Users can pass in an arbitrary source path for the proper type of
-> a mount then without "Can't lookup blockdev" error message.
-> 
-> Reported-by: Allison Karlitskaya <allison.karlitskaya@redhat.com>
-> Closes: https://lore.kernel.org/r/CAOYeF9VQ8jKVmpy5Zy9DNhO6xmWSKMB-DO8yvBB0XvBE7=3Ugg@mail.gmail.com
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> ---
-> changes since v1:
->  - use new get_tree_bdev_flags().
-> 
->  fs/erofs/super.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 666873f745da..b89836a8760d 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -705,7 +705,9 @@ static int erofs_fc_get_tree(struct fs_context *fc)
->  	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
->  		return get_tree_nodev(fc, erofs_fc_fill_super);
->  
-> -	ret = get_tree_bdev(fc, erofs_fc_fill_super);
-> +	ret = get_tree_bdev_flags(fc, erofs_fc_fill_super,
-> +		IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) ?
-> +			GET_TREE_BDEV_QUIET_LOOKUP : 0);
+Hi Christoph,
 
-Why not pass it unconditionally and provide your own more useful
-error message at the end of the function if you could not find any
-source?
+On 2024/10/9 15:31, Christoph Hellwig wrote:
+> On Wed, Oct 09, 2024 at 11:31:51AM +0800, Gao Xiang wrote:
+>> Users can pass in an arbitrary source path for the proper type of
+>> a mount then without "Can't lookup blockdev" error message.
+>>
+>> Reported-by: Allison Karlitskaya <allison.karlitskaya@redhat.com>
+>> Closes: https://lore.kernel.org/r/CAOYeF9VQ8jKVmpy5Zy9DNhO6xmWSKMB-DO8yvBB0XvBE7=3Ugg@mail.gmail.com
+>> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+>> ---
+>> changes since v1:
+>>   - use new get_tree_bdev_flags().
+>>
+>>   fs/erofs/super.c | 4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>> index 666873f745da..b89836a8760d 100644
+>> --- a/fs/erofs/super.c
+>> +++ b/fs/erofs/super.c
+>> @@ -705,7 +705,9 @@ static int erofs_fc_get_tree(struct fs_context *fc)
+>>   	if (IS_ENABLED(CONFIG_EROFS_FS_ONDEMAND) && sbi->fsid)
+>>   		return get_tree_nodev(fc, erofs_fc_fill_super);
+>>   
+>> -	ret = get_tree_bdev(fc, erofs_fc_fill_super);
+>> +	ret = get_tree_bdev_flags(fc, erofs_fc_fill_super,
+>> +		IS_ENABLED(CONFIG_EROFS_FS_BACKED_BY_FILE) ?
+>> +			GET_TREE_BDEV_QUIET_LOOKUP : 0);
+> 
+> Why not pass it unconditionally and provide your own more useful
+> error message at the end of the function if you could not find any
+> source?
+
+My own (potential) concern is that if CONFIG_EROFS_FS_BACKED_BY_FILE
+is off, EROFS should just behave as other pure bdev fses since I'm
+not sure if some userspace program really relies on
+"Can't lookup blockdev" behavior.
+
+.. Yet that is just my own potential worry anyway.
+
+Thanks,
+Gao Xiang
 
