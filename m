@@ -2,46 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C34B998175
+	by mail.lfdr.de (Postfix) with ESMTPS id E9FEC998176
 	for <lists+linux-erofs@lfdr.de>; Thu, 10 Oct 2024 11:04:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XPP3B71W3z3brr
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Oct 2024 20:04:54 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XPP3C28hsz3c3K
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Oct 2024 20:04:55 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728551093;
-	cv=none; b=iyXwVsGWiDhEAXNpkupRS+x+8APAH6bNhwIooJMumDmalq/zH1ogteEPWx8whm3qbs4X7iq+pPgN1uxkfI/WR3TARAaGY9r4FCA5W/DcZZso15mc9X9cJM3BuW43YT0/0d4S1esAammQsawoYUBPCTGPKro7NFib4Hyg98kV35WD2cIZge07OgWH1ToON90c4TqPtvP+rRrroY+oUXKBJ758gGlQLzZ+xjPAUmdxcs85UENKvluvCS6ccxkckWqdWW2kqViT5OjZs33VVJvIS8kGgHV3v2s3ECZuHIrY7nj7kA60Gv4AXmdrObEcQx5YX9MECbchfg30inVlX8AaEw==
+	cv=none; b=EOKRInvay1+A1MwV/Q1w6QwryWuhyK8OTcix50b5HKAKfFwJo2pYFt47H/WpWOqOcOaofWkkfVDHRH33QAF+fHTYt2HXTSrhkusu/8RY0JEuhdE37NICx12kznHeeYPQp6uqoPml6qZsPXgNPA+Lf/bw4Nfjnuw7n859rJMvXLpwNta5v9+spDP6CpjLvEEg9XOavlRsAi+R8rDkxKHrYN5E+7jch+Hol4X6LzIz0L68Kt8RYsUsc4EDNHu4OagTCS8WkXOO9AKMEj+m9CIMWsoUDpd35tBJ3JjpAQFoZcWY5iWaUFxruE78rCIt7PgFkXDwr9eRiKHHevLwftp/7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1728551093; c=relaxed/relaxed;
-	bh=OhN43jmqgscvViJHTKkxcG9hhjOllYEZaG+SvYfOIwg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TjFkP1c3PZEixvqIZ5tuKuBaHR6jvvLY9Efx+QmCj8Vw118kohRUhaqBfAssN9p2d8JRDo4SPZVCfxmcNV1IpN4y1SAWv1OoybU1ZiQTMS8S7LXEfAWrGbmtTadX9KypLLx5kVqabR7d/OhRa/Tn/7lv6UsRTxaG0nx4wbK/X0nudbRK+Azg1SZGhVqzywQN/QHNIaiZimQaBzoxKIgBk9tU1dr10/jrJ5F/+DOFHaI4IQcAXg1yKrlnX5xJGq9ldbGCnwi00Ck9BYcghOBAWTsz/qwXnLJST2wC6GjhIncxFYJFY35oC4LFb8UoNAscMQG4uf0MqdUrATGh0LCD1Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qRU1PK28; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	bh=rY5VPsaO1H3ZA4xnMlRJLB6Hi8aGa4Y6EA1p+XeRCfQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AM99DHckUULrXp19KKa8WcXaSMDyAmbWc7LyKpZBVpYLhnrGoauad34UASHmBv9OsewDzYw8DV7n1OPlTKKpERnnb6UsItjp6vmdCwWavx7gqKRU2oWiG9AVtCTX4bBuwxtQ4Grn7Jn3xWgJl/TprOuJEQJ/sDeCJfckn43rdzUBna/uOquly7CryhPPU8iuFavLpMmxlF3gb+e+N1Rx3l1TnmVV35zBTbvwgDPYYhqByvYu8TVdQRxNZU9HybNrJ11iRywXsy7aWgOVaal8+4dEo9QbSLmYuryaxSOKw5/fnJIzOuZ7N6HqZR0KWwcTtQPpIpbvPLVMiKZ3NIVzRA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=aB2Nhsaq; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qRU1PK28;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=aB2Nhsaq;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XPP362N7Sz3bp0
-	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Oct 2024 20:04:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XPP360VyBz3bnr
+	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Oct 2024 20:04:48 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1728551080; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=OhN43jmqgscvViJHTKkxcG9hhjOllYEZaG+SvYfOIwg=;
-	b=qRU1PK281FXbweUxUF7mhjswJBJhRv+EoWsalMEsiPEXu+0akLb20QIuShQO1cYxqXBQd8+ZMyv/UnGqAZbe0cGTSrhouabdxpRaxeRH13u8wtTpu+fNq6ryYDqyTgrhBLapcb0aVgtOiR8Wv6xlfCtX+MZoay/Lsn8n7O4ChVY=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGlkDys_1728551062 cluster:ay36)
+	t=1728551085; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=rY5VPsaO1H3ZA4xnMlRJLB6Hi8aGa4Y6EA1p+XeRCfQ=;
+	b=aB2Nhsaqcr2gQrUP8xeHoxXQpaEQ1nggvP+4ZltBxDMCKos787i+Zs8qZzjiE0NaR3kgjIh2Z1gIxo6J54dedjFiFxL4Qc0mQlZIBLjNm7WZDLirFqKeslDD/bWDO9IkwPfIWMuzGfvmpn1oy3k4VxBJLajkLfKF/Q1MIO4aqvI=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGlkE6t_1728551079 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 10 Oct 2024 17:04:39 +0800
+          Thu, 10 Oct 2024 17:04:43 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/2] erofs: get rid of z_erofs_try_to_claim_pcluster()
-Date: Thu, 10 Oct 2024 17:04:19 +0800
-Message-ID: <20241010090420.405871-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/2] erofs: get rid of kaddr in `struct z_erofs_maprecorder`
+Date: Thu, 10 Oct 2024 17:04:20 +0800
+Message-ID: <20241010090420.405871-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20241010090420.405871-1-hsiangkao@linux.alibaba.com>
+References: <20241010090420.405871-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -64,67 +67,110 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Just fold it into the caller for simplicity.
+`kaddr` becomes useless after switching to metabuf.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/zdata.c | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+ fs/erofs/zmap.c | 34 +++++++++++++---------------------
+ 1 file changed, 13 insertions(+), 21 deletions(-)
 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 8936790618c6..a569ff9dfd04 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -710,24 +710,6 @@ static int z_erofs_attach_page(struct z_erofs_decompress_frontend *fe,
- 	return ret;
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index e980e29873a5..d329a38de1b9 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -10,8 +10,6 @@
+ struct z_erofs_maprecorder {
+ 	struct inode *inode;
+ 	struct erofs_map_blocks *map;
+-	void *kaddr;
+-
+ 	unsigned long lcn;
+ 	/* compression extent information gathered */
+ 	u8  type, headtype;
+@@ -33,14 +31,11 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
+ 	struct z_erofs_lcluster_index *di;
+ 	unsigned int advise;
+ 
+-	m->kaddr = erofs_read_metabuf(&m->map->buf, inode->i_sb,
+-				      pos, EROFS_KMAP);
+-	if (IS_ERR(m->kaddr))
+-		return PTR_ERR(m->kaddr);
+-
+-	m->nextpackoff = pos + sizeof(struct z_erofs_lcluster_index);
++	di = erofs_read_metabuf(&m->map->buf, inode->i_sb, pos, EROFS_KMAP);
++	if (IS_ERR(di))
++		return PTR_ERR(di);
+ 	m->lcn = lcn;
+-	di = m->kaddr;
++	m->nextpackoff = pos + sizeof(struct z_erofs_lcluster_index);
+ 
+ 	advise = le16_to_cpu(di->di_advise);
+ 	m->type = advise & Z_EROFS_LI_LCLUSTER_TYPE_MASK;
+@@ -53,8 +48,7 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
+ 				DBG_BUGON(1);
+ 				return -EFSCORRUPTED;
+ 			}
+-			m->compressedblks = m->delta[0] &
+-				~Z_EROFS_LI_D0_CBLKCNT;
++			m->compressedblks = m->delta[0] & ~Z_EROFS_LI_D0_CBLKCNT;
+ 			m->delta[0] = 1;
+ 		}
+ 		m->delta[1] = le16_to_cpu(di->di_u.delta[1]);
+@@ -110,9 +104,9 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 	struct erofs_inode *const vi = EROFS_I(m->inode);
+ 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
+ 	unsigned int vcnt, lo, lobits, encodebits, nblk, bytes;
+-	int i;
+-	u8 *in, type;
+ 	bool big_pcluster;
++	u8 *in, type;
++	int i;
+ 
+ 	if (1 << amortizedshift == 4 && lclusterbits <= 14)
+ 		vcnt = 2;
+@@ -121,6 +115,10 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 	else
+ 		return -EOPNOTSUPP;
+ 
++	in = erofs_read_metabuf(&m->map->buf, m->inode->i_sb, pos, EROFS_KMAP);
++	if (IS_ERR(in))
++		return PTR_ERR(in);
++
+ 	/* it doesn't equal to round_up(..) */
+ 	m->nextpackoff = round_down(pos, vcnt << amortizedshift) +
+ 			 (vcnt << amortizedshift);
+@@ -128,9 +126,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 	lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1U);
+ 	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
+ 	bytes = pos & ((vcnt << amortizedshift) - 1);
+-
+-	in = m->kaddr - bytes;
+-
++	in -= bytes;
+ 	i = bytes >> amortizedshift;
+ 
+ 	lo = decode_compactedbits(lobits, in, encodebits * i, &type);
+@@ -226,7 +222,6 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
+ 	if (lcn >= totalidx)
+ 		return -EINVAL;
+ 
+-	m->lcn = lcn;
+ 	/* used to align to 32-byte (compacted_2b) alignment */
+ 	compacted_4b_initial = (32 - ebase % 32) / 4;
+ 	if (compacted_4b_initial == 32 / 4)
+@@ -254,11 +249,8 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
+ 	lcn -= compacted_2b;
+ 	amortizedshift = 2;
+ out:
++	m->lcn = lcn;
+ 	pos += lcn * (1 << amortizedshift);
+-	m->kaddr = erofs_read_metabuf(&m->map->buf, inode->i_sb,
+-				      pos, EROFS_KMAP);
+-	if (IS_ERR(m->kaddr))
+-		return PTR_ERR(m->kaddr);
+ 	return unpack_compacted_index(m, amortizedshift, pos, lookahead);
  }
  
--static void z_erofs_try_to_claim_pcluster(struct z_erofs_decompress_frontend *f)
--{
--	struct z_erofs_pcluster *pcl = f->pcl;
--	z_erofs_next_pcluster_t *owned_head = &f->owned_head;
--
--	/* type 1, nil pcluster (this pcluster doesn't belong to any chain.) */
--	if (cmpxchg(&pcl->next, Z_EROFS_PCLUSTER_NIL,
--		    *owned_head) == Z_EROFS_PCLUSTER_NIL) {
--		*owned_head = &pcl->next;
--		/* so we can attach this pcluster to our submission chain. */
--		f->mode = Z_EROFS_PCLUSTER_FOLLOWED;
--		return;
--	}
--
--	/* type 2, it belongs to an ongoing chain */
--	f->mode = Z_EROFS_PCLUSTER_INFLIGHT;
--}
--
- static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
- {
- 	struct erofs_map_blocks *map = &fe->map;
-@@ -803,7 +785,6 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
- 	int ret;
- 
- 	DBG_BUGON(fe->pcl);
--
- 	/* must be Z_EROFS_PCLUSTER_TAIL or pointed to previous pcluster */
- 	DBG_BUGON(fe->owned_head == Z_EROFS_PCLUSTER_NIL);
- 
-@@ -823,7 +804,15 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
- 
- 	if (ret == -EEXIST) {
- 		mutex_lock(&fe->pcl->lock);
--		z_erofs_try_to_claim_pcluster(fe);
-+		/* check if this pcluster hasn't been linked into any chain. */
-+		if (cmpxchg(&fe->pcl->next, Z_EROFS_PCLUSTER_NIL,
-+			    fe->owned_head) == Z_EROFS_PCLUSTER_NIL) {
-+			/* .. so it can be attached to our submission chain */
-+			fe->owned_head = &fe->pcl->next;
-+			fe->mode = Z_EROFS_PCLUSTER_FOLLOWED;
-+		} else {	/* otherwise, it belongs to an inflight chain */
-+			fe->mode = Z_EROFS_PCLUSTER_INFLIGHT;
-+		}
- 	} else if (ret) {
- 		return ret;
- 	}
 -- 
 2.43.5
 
