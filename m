@@ -1,71 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBB85997BA5
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Oct 2024 06:08:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1728533327;
-	bh=CEkGMWeXeG5EIKzooRFp1bexvUcTd1W76MvtznBRNC4=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=TaVc+oNk9winZQii+xZcdIZetSRSu5u4BKJuKgzN9U3iIo53tCeJ1NVq6BmcDxlil
-	 S+8icRqAeHq7fx9TA6YUFetEMFvJwXc9McsgMLg3EXYBNGsKwR8ji9LasIneyKgEBy
-	 sCTTcQzF34YDGnuqC2mdnIRNmAZ7sxph+EFmGssK+ns18DMsRu6YH5U4AbdGaobcQZ
-	 jyP0Ve7MB/el/EnfF5wkrRqy4+lBq9JHYTypB+g44+FiLfD41CJ1N5nmU5e9y1Zar3
-	 hg2obqy/JCQjxlAyznOcS7JUMNQnu2eQZ+gR9nmK7If9nZx77dWGISrOK1qFlXy3Gh
-	 TZIDkJmMS4mMA==
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C34B998175
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Oct 2024 11:04:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XPGTW23pHz3blB
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Oct 2024 15:08:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XPP3B71W3z3brr
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Oct 2024 20:04:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728533325;
-	cv=none; b=b2gwHieK6yVXOMXbRq4QOmN1ae+irTfwdoGfZGiB1HoPChuXKhOhp62XgMQ62SMgyCqosyrSrGFruyHtSpuZcfrZyoXgpmKHXgKXv4Nypk34N/FLCvE8R4arC8CqQt6kxfRBFotmEBYU9l+2Zp49PEyNctkEPZMe9+r5flUEPlaOdA8TYYua0aKqhNsD+t4+zJYDnj+/Z1VduOTdhVby370aRJu6OKOesE/oOd8HNMzNFg+afT0VFkdOUIYEaDggZODk3lj9so1keNCRtk2sV7sC4WLFxkF3CkRizo1zjBRyhAR5gNULJKaRYFZWYLSSD3IFe9AS6eVIUGbW3tr5NA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728551093;
+	cv=none; b=iyXwVsGWiDhEAXNpkupRS+x+8APAH6bNhwIooJMumDmalq/zH1ogteEPWx8whm3qbs4X7iq+pPgN1uxkfI/WR3TARAaGY9r4FCA5W/DcZZso15mc9X9cJM3BuW43YT0/0d4S1esAammQsawoYUBPCTGPKro7NFib4Hyg98kV35WD2cIZge07OgWH1ToON90c4TqPtvP+rRrroY+oUXKBJ758gGlQLzZ+xjPAUmdxcs85UENKvluvCS6ccxkckWqdWW2kqViT5OjZs33VVJvIS8kGgHV3v2s3ECZuHIrY7nj7kA60Gv4AXmdrObEcQx5YX9MECbchfg30inVlX8AaEw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1728533325; c=relaxed/relaxed;
-	bh=CEkGMWeXeG5EIKzooRFp1bexvUcTd1W76MvtznBRNC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HvSiqSen29jircyWh+MrF1o3ipr5p74W8oT+IMROMmiG+hHMD2jpVyOjDHcDYNfosr76eyh0RoSSA+O7+oebck6xhsUfzA2rXvSLtewiD+5M8MlnrgXBWOve4G8Xk2RBoP8c4PCw1x6mZuRFMzOtnI22HW5DXYU2jVjGF5m2S234jcVBYg/tWqyotsNZe6SvRb0mQgqSLgrMpsOiL32ZLZYoUJ63V3g9lKh+h21bnl2KM8YfXLg31vcjMER2/p8O7IY7Sovy6dQreutLDtY+abHwewChpPZF9zZTYquj4mdm7E6+AuBHUKM1STPUQNsmq6GClLoj2/1XBcc/tIujcQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=wozizhi@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=wozizhi@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1728551093; c=relaxed/relaxed;
+	bh=OhN43jmqgscvViJHTKkxcG9hhjOllYEZaG+SvYfOIwg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TjFkP1c3PZEixvqIZ5tuKuBaHR6jvvLY9Efx+QmCj8Vw118kohRUhaqBfAssN9p2d8JRDo4SPZVCfxmcNV1IpN4y1SAWv1OoybU1ZiQTMS8S7LXEfAWrGbmtTadX9KypLLx5kVqabR7d/OhRa/Tn/7lv6UsRTxaG0nx4wbK/X0nudbRK+Azg1SZGhVqzywQN/QHNIaiZimQaBzoxKIgBk9tU1dr10/jrJ5F/+DOFHaI4IQcAXg1yKrlnX5xJGq9ldbGCnwi00Ck9BYcghOBAWTsz/qwXnLJST2wC6GjhIncxFYJFY35oC4LFb8UoNAscMQG4uf0MqdUrATGh0LCD1Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qRU1PK28; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qRU1PK28;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XPGTS0pRxz3bjb
-	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Oct 2024 15:08:41 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4XPGRD6w7VzyT2T;
-	Thu, 10 Oct 2024 12:06:48 +0800 (CST)
-Received: from kwepemf100017.china.huawei.com (unknown [7.202.181.16])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0FEBC18009B;
-	Thu, 10 Oct 2024 12:08:06 +0800 (CST)
-Received: from [10.174.176.88] (10.174.176.88) by
- kwepemf100017.china.huawei.com (7.202.181.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 10 Oct 2024 12:08:04 +0800
-Message-ID: <90e546b6-ee8a-436f-890b-0e73cb0b1530@huawei.com>
-Date: Thu, 10 Oct 2024 12:08:04 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XPP362N7Sz3bp0
+	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Oct 2024 20:04:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1728551080; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=OhN43jmqgscvViJHTKkxcG9hhjOllYEZaG+SvYfOIwg=;
+	b=qRU1PK281FXbweUxUF7mhjswJBJhRv+EoWsalMEsiPEXu+0akLb20QIuShQO1cYxqXBQd8+ZMyv/UnGqAZbe0cGTSrhouabdxpRaxeRH13u8wtTpu+fNq6ryYDqyTgrhBLapcb0aVgtOiR8Wv6xlfCtX+MZoay/Lsn8n7O4ChVY=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGlkDys_1728551062 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 10 Oct 2024 17:04:39 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/2] erofs: get rid of z_erofs_try_to_claim_pcluster()
+Date: Thu, 10 Oct 2024 17:04:19 +0800
+Message-ID: <20241010090420.405871-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] netfs/cachefiles: Some bugfixes
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <netfs@lists.linux.dev>,
-	<dhowells@redhat.com>, <jlayton@kernel.org>, <brauner@kernel.org>
-References: <20240821024301.1058918-1-wozizhi@huawei.com>
- <827d5f2e-d6a7-43ca-8034-5e2508d89f22@huawei.com>
- <15a74197-9b84-4d73-a770-8bfc2fde7742@linux.alibaba.com>
-In-Reply-To: <15a74197-9b84-4d73-a770-8bfc2fde7742@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.88]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemf100017.china.huawei.com (7.202.181.16)
-X-Spam-Status: No, score=-2.3 required=5.0 tests=RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -78,103 +60,71 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Zizhi Wo via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Zizhi Wo <wozizhi@huawei.com>
-Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, yukuai3@huawei.com, linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Just fold it into the caller for simplicity.
 
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/zdata.c | 29 +++++++++--------------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
 
-在 2024/10/10 11:31, Gao Xiang 写道:
-> Hi Zizhi,
-> 
-> On 2024/10/10 11:08, Zizhi Wo wrote:
->> Hi!
->>
->> This patchset involves some general cachefiles workflows and the on-
->> demand loading process. For example, the eighth patch fixes a memory
->> ordering issue in cachefiles, and the fifth patch includes some cleanup.
->> These all related to changes in the general cachefiles workflow, and I
->> think these deserve some attention.
->>
->> Additionally, although the current EROFS on-demand loading mode based on
->> cachefiles interaction might be considered for switching to the fanotify
->> mode in the future, I believe the code based on the current cachefiles
->> on-demand loading mode still requires maintenance. The first few patches
->> here are bugfixes specifically for that.
-> 
-> Yes, I also agree with you.  I pinged David weeks ago, because many
-> bugfixes are not only impacted to cachefiles on-demand feature but
-> also generic cachefiles, hopefully they could be addressed upstream.
-> 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 8936790618c6..a569ff9dfd04 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -710,24 +710,6 @@ static int z_erofs_attach_page(struct z_erofs_decompress_frontend *fe,
+ 	return ret;
+ }
+ 
+-static void z_erofs_try_to_claim_pcluster(struct z_erofs_decompress_frontend *f)
+-{
+-	struct z_erofs_pcluster *pcl = f->pcl;
+-	z_erofs_next_pcluster_t *owned_head = &f->owned_head;
+-
+-	/* type 1, nil pcluster (this pcluster doesn't belong to any chain.) */
+-	if (cmpxchg(&pcl->next, Z_EROFS_PCLUSTER_NIL,
+-		    *owned_head) == Z_EROFS_PCLUSTER_NIL) {
+-		*owned_head = &pcl->next;
+-		/* so we can attach this pcluster to our submission chain. */
+-		f->mode = Z_EROFS_PCLUSTER_FOLLOWED;
+-		return;
+-	}
+-
+-	/* type 2, it belongs to an ongoing chain */
+-	f->mode = Z_EROFS_PCLUSTER_INFLIGHT;
+-}
+-
+ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
+ {
+ 	struct erofs_map_blocks *map = &fe->map;
+@@ -803,7 +785,6 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
+ 	int ret;
+ 
+ 	DBG_BUGON(fe->pcl);
+-
+ 	/* must be Z_EROFS_PCLUSTER_TAIL or pointed to previous pcluster */
+ 	DBG_BUGON(fe->owned_head == Z_EROFS_PCLUSTER_NIL);
+ 
+@@ -823,7 +804,15 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
+ 
+ 	if (ret == -EEXIST) {
+ 		mutex_lock(&fe->pcl->lock);
+-		z_erofs_try_to_claim_pcluster(fe);
++		/* check if this pcluster hasn't been linked into any chain. */
++		if (cmpxchg(&fe->pcl->next, Z_EROFS_PCLUSTER_NIL,
++			    fe->owned_head) == Z_EROFS_PCLUSTER_NIL) {
++			/* .. so it can be attached to our submission chain */
++			fe->owned_head = &fe->pcl->next;
++			fe->mode = Z_EROFS_PCLUSTER_FOLLOWED;
++		} else {	/* otherwise, it belongs to an inflight chain */
++			fe->mode = Z_EROFS_PCLUSTER_INFLIGHT;
++		}
+ 	} else if (ret) {
+ 		return ret;
+ 	}
+-- 
+2.43.5
 
-Thank you very much for your support and reply!
-
-Thanks,
-Zizhi Wo
-
-> Thanks,
-> Gao Xiang
->
->>
->> Therefore, I would greatly appreciate it if anyone could take some time
->> to review these patches. So friendly ping.
->>
->> Thanks,
->> Zizhi Wo
->>
->>
->> 在 2024/8/21 10:42, Zizhi Wo 写道:
->>> Hi!
->>>
->>> We recently discovered some bugs through self-discovery and testing in
->>> erofs ondemand loading mode, and this patchset is mainly used to fix
->>> them. These patches are relatively simple changes, and I would be 
->>> excited
->>> to discuss them together with everyone. Below is a brief introduction to
->>> each patch:
->>>
->>> Patch 1: Fix for wrong block_number calculated in ondemand write.
->>>
->>> Patch 2: Fix for wrong length return value in ondemand write.
->>>
->>> Patch 3: Fix missing position update in ondemand write, for scenarios
->>> involving read-ahead, invoking the write syscall.
->>>
->>> Patch 4: Previously, the last redundant data was cleared during the 
->>> umount
->>> phase. This patch remove unnecessary data in advance.
->>>
->>> Patch 5: Code clean up for cachefiles_commit_tmpfile().
->>>
->>> Patch 6: Modify error return value in cachefiles_daemon_secctx().
->>>
->>> Patch 7: Fix object->file Null-pointer-dereference problem.
->>>
->>> Patch 8: Fix for memory out of order in fscache_create_volume().
->>>
->>>
->>> Zizhi Wo (8):
->>>    cachefiles: Fix incorrect block calculations in
->>>      __cachefiles_prepare_write()
->>>    cachefiles: Fix incorrect length return value in
->>>      cachefiles_ondemand_fd_write_iter()
->>>    cachefiles: Fix missing pos updates in
->>>      cachefiles_ondemand_fd_write_iter()
->>>    cachefiles: Clear invalid cache data in advance
->>>    cachefiles: Clean up in cachefiles_commit_tmpfile()
->>>    cachefiles: Modify inappropriate error return value in
->>>      cachefiles_daemon_secctx()
->>>    cachefiles: Fix NULL pointer dereference in object->file
->>>    netfs/fscache: Add a memory barrier for FSCACHE_VOLUME_CREATING
->>>
->>>   fs/cachefiles/daemon.c    |  2 +-
->>>   fs/cachefiles/interface.c |  3 +++
->>>   fs/cachefiles/io.c        | 10 +++++-----
->>>   fs/cachefiles/namei.c     | 23 +++++++++++++----------
->>>   fs/cachefiles/ondemand.c  | 38 +++++++++++++++++++++++++++++---------
->>>   fs/netfs/fscache_volume.c |  3 +--
->>>   6 files changed, 52 insertions(+), 27 deletions(-)
->>>
-> 
