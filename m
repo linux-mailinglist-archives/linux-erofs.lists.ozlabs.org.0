@@ -1,72 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AB1D999529
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 00:24:54 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC63A9995E4
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 01:58:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XPkpD3Wzsz3bsn
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 09:24:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XPmtl41X0z3btY
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 10:58:55 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.14
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728599089;
-	cv=none; b=Xvo3VyVXlIqw4TAw8oT+UyuDzZNQXdruVL82Qohw5b8kKCyWIJRsjmUoFJTDs97BfPArKAfsEVa9XO3xxrCV2lXAVhQFkTaBuRIjgeHclMt2ki5ieVNlaU8DApaPcvg/TQBJJrSEqYCm6zQFYZn+YsaOa5VxCqzCJ73bcl10WEfzaimwBwr8dvip3tWawgUqAmXkE7ovD01ulHwi9qP06ShjtyGEP3TDMQU5rSYDaYviZe0LOz/GecA+xj98ReyQ+pAkKw9mpoSAcK/hsj94RrsEBM7Lg+61sVR/W+FIGp+58jdWR2m8x/nttJ+VFFpYYvwWe4n5DsXsrkDYgP3OJQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728604733;
+	cv=none; b=i6m50oe8D8GQJrAbUMw+D4eSDbLDjeEbVf4RFjFaA1lF6TMx/LNDjC6wZ2OLa047dtgLkqNci3355klsyasLvr/KwDOV7OinKPUtBTtMFMfSqXxsgvPr65BNIQq0stRIYAvsDk+GIqA8Qoj4gGugnfUH+kHAsQ7NLbMFexDX/LUtcDQFgRcjrKIu/XmB8dKkkTTbSpT/qEdEN7XFXiw5GVhg3ajMuDTinOgadfMrAoPkDlPZChY7YeuhzxnY5exafWBVojfX4Jg6TZoeWGGhzkAYsRcv4mlKKf2OSrKt3fOjsgqK9NJkbBXwv9+JcLwSZgu/RAI87ckPtzUYMYs7hw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1728599089; c=relaxed/relaxed;
-	bh=GLOlhSoymk48DIQQitueShH24OW7wun0QPPePtiJxSE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=N+bjsITUSk4udyUl+dguhxN+Ce6kf3cSwb5rlcwSnUFdzEWRSmM443KypFz9XJMOs+6TVwqD+D/+L3jdjIoUJnjW3tUhVDAmuzRSD1+4/6SI5/AmwPuM0Rl3PrMZuM8K16yuQ/Ux0aA34na2H9WvMlcqA3HYnF01YcWolWOINRTEmAY5np0hJpxpGtsoORQ7tvn3EbReVpDu9iB5z/xG/t7MIqUZLNcWkRVEKqpiXLxUx4hLl1xs9gYRLH1PgAimaio5tqscJajs2rN0fPOYtAzHIR9E2Wnj4msNQrI9HXrir+qPAMmuOg6/BVitf1jfCI+PzJNWTQg7nn+FycMlsg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=RzHAP83S; dkim-atps=neutral; spf=pass (client-ip=198.175.65.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1728604733; c=relaxed/relaxed;
+	bh=zbXq5dUZg+8cBo6+/cLm+yRxdzIzOWWwebxq2zDBn0Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T3a5SZjXxoPuGLVSvqe8OKSAJRp6j8EWeXbhj68Bc5o3Ac1XNmw8eySmbZULQdmJhJmm7e76zYF42J9SbrkUwrjNZo/XnffDf61Yxr9qEhvpDbU0jqu0gz5tf5bm9eEgj2xS8ildL+TlknnyXWugIv+vYqjyXXcstHd8Ci2/mkNbrk/L0eu/EmeIafJxpYva2HlRub/C9xZ+xXbEz6vrkQPz3oKo9oZailMoamhz1XCDTdRBcGvJKiyNZ0xJU2IWT4Ddcn4IpdzFI8Kerc8gAYmDnCBbWDF/M+K5EzNozYRBirri+mdhVLDExE4tt2vcBn3yZprxWr17IP3PUI+WQw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=vAltLOIm; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=RzHAP83S;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=vAltLOIm;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XPkp702qwz2yLT
-	for <linux-erofs@lists.ozlabs.org>; Fri, 11 Oct 2024 09:24:43 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1728599087; x=1760135087;
-  h=date:from:to:cc:subject:message-id;
-  bh=2oQEwHxMK0JdWkXK4wDKQ1RpcccIjeMmKl3DKx0ZX04=;
-  b=RzHAP83SojDhrWM34M4bPADknhvPRm0hVE1+J+/0Flmj5BaqCwLb9B/t
-   oAWjflgYrihUPYs3B7gUu42xJk5eSV5Ic5ye7rVgjg3Z2PHQNLj9wXilg
-   Ew+aNHsMrzE+sIm+XVkd80jvV4AHebTCrdY9hXvSQutiAOHoIbjJXCUA6
-   Y34/lBiC6402mycC9jhtoo2em7gT50J365C/o40Z7OJyJoCq04NYCp4iI
-   IZZ+O5zgDEg6OaOg3kJy0CNBV2qeYDnj4LzA+lqugljzLkVcpeU2GJg7R
-   N2kZA1h2GAN+mzpb6X3Dw8iRazBeN3A4LmSbPP4pgLnH8lHuTcwiNeSH3
-   w==;
-X-CSE-ConnectionGUID: Gk2aU5McTWeHgDpcq6SlMQ==
-X-CSE-MsgGUID: 5Y/4B2+OR6GukY6KEpd05Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11221"; a="31782066"
-X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
-   d="scan'208";a="31782066"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2024 15:24:38 -0700
-X-CSE-ConnectionGUID: +lo6XKlVSpCQYsITNz7DcA==
-X-CSE-MsgGUID: QEiIFkEJQO2eVsAZctHRHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,194,1725346800"; 
-   d="scan'208";a="76933371"
-Received: from lkp-server01.sh.intel.com (HELO a48cf1aa22e8) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 10 Oct 2024 15:24:38 -0700
-Received: from kbuild by a48cf1aa22e8 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sz1aE-000BM9-2f;
-	Thu, 10 Oct 2024 22:24:34 +0000
-Date: Fri, 11 Oct 2024 06:24:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 56bd565ea59192bbc7d5bbcea155e861a20393f4
-Message-ID: <202410110658.QyOAlZzJ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.6 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XPmtd5GgCz3bl6
+	for <linux-erofs@lists.ozlabs.org>; Fri, 11 Oct 2024 10:58:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1728604719; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=zbXq5dUZg+8cBo6+/cLm+yRxdzIzOWWwebxq2zDBn0Q=;
+	b=vAltLOImfHtWF92DdapCbsS/PfdkQYIWLyA/3sGX33AcuupKscC6BFyXUrBP/gHvYRoM7vdhBc9PS7hDvNWY9LJeLu8L4rJwnMdKVjGAjKxqNnkWkbbtCs2nDYq7JVJ+DqFHh6FpTBVZUTs2rlz3Z9HDu9W/Z0646Pw7fmY5/D4=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGnpNaL_1728604712 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 11 Oct 2024 07:58:37 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2 2/2] erofs: get rid of kaddr in `struct z_erofs_maprecorder`
+Date: Fri, 11 Oct 2024 07:58:30 +0800
+Message-ID: <20241010235830.1535616-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20241010090420.405871-2-hsiangkao@linux.alibaba.com>
+References: <20241010090420.405871-2-hsiangkao@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -79,77 +63,107 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 56bd565ea59192bbc7d5bbcea155e861a20393f4  erofs: get rid of kaddr in `struct z_erofs_maprecorder`
+`kaddr` becomes useless after switching to metabuf.
 
-elapsed time: 737m
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+change since v1:
+ - shouldn't move `m->lcn` downwards since `lcn` has been changed.
 
-configs tested: 54
-configs skipped: 1
+ fs/erofs/zmap.c | 32 ++++++++++++--------------------
+ 1 file changed, 12 insertions(+), 20 deletions(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index e980e29873a5..37516d7ea811 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -10,8 +10,6 @@
+ struct z_erofs_maprecorder {
+ 	struct inode *inode;
+ 	struct erofs_map_blocks *map;
+-	void *kaddr;
+-
+ 	unsigned long lcn;
+ 	/* compression extent information gathered */
+ 	u8  type, headtype;
+@@ -33,14 +31,11 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
+ 	struct z_erofs_lcluster_index *di;
+ 	unsigned int advise;
+ 
+-	m->kaddr = erofs_read_metabuf(&m->map->buf, inode->i_sb,
+-				      pos, EROFS_KMAP);
+-	if (IS_ERR(m->kaddr))
+-		return PTR_ERR(m->kaddr);
+-
+-	m->nextpackoff = pos + sizeof(struct z_erofs_lcluster_index);
++	di = erofs_read_metabuf(&m->map->buf, inode->i_sb, pos, EROFS_KMAP);
++	if (IS_ERR(di))
++		return PTR_ERR(di);
+ 	m->lcn = lcn;
+-	di = m->kaddr;
++	m->nextpackoff = pos + sizeof(struct z_erofs_lcluster_index);
+ 
+ 	advise = le16_to_cpu(di->di_advise);
+ 	m->type = advise & Z_EROFS_LI_LCLUSTER_TYPE_MASK;
+@@ -53,8 +48,7 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
+ 				DBG_BUGON(1);
+ 				return -EFSCORRUPTED;
+ 			}
+-			m->compressedblks = m->delta[0] &
+-				~Z_EROFS_LI_D0_CBLKCNT;
++			m->compressedblks = m->delta[0] & ~Z_EROFS_LI_D0_CBLKCNT;
+ 			m->delta[0] = 1;
+ 		}
+ 		m->delta[1] = le16_to_cpu(di->di_u.delta[1]);
+@@ -110,9 +104,9 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 	struct erofs_inode *const vi = EROFS_I(m->inode);
+ 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
+ 	unsigned int vcnt, lo, lobits, encodebits, nblk, bytes;
+-	int i;
+-	u8 *in, type;
+ 	bool big_pcluster;
++	u8 *in, type;
++	int i;
+ 
+ 	if (1 << amortizedshift == 4 && lclusterbits <= 14)
+ 		vcnt = 2;
+@@ -121,6 +115,10 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 	else
+ 		return -EOPNOTSUPP;
+ 
++	in = erofs_read_metabuf(&m->map->buf, m->inode->i_sb, pos, EROFS_KMAP);
++	if (IS_ERR(in))
++		return PTR_ERR(in);
++
+ 	/* it doesn't equal to round_up(..) */
+ 	m->nextpackoff = round_down(pos, vcnt << amortizedshift) +
+ 			 (vcnt << amortizedshift);
+@@ -128,9 +126,7 @@ static int unpack_compacted_index(struct z_erofs_maprecorder *m,
+ 	lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1U);
+ 	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
+ 	bytes = pos & ((vcnt << amortizedshift) - 1);
+-
+-	in = m->kaddr - bytes;
+-
++	in -= bytes;
+ 	i = bytes >> amortizedshift;
+ 
+ 	lo = decode_compactedbits(lobits, in, encodebits * i, &type);
+@@ -255,10 +251,6 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
+ 	amortizedshift = 2;
+ out:
+ 	pos += lcn * (1 << amortizedshift);
+-	m->kaddr = erofs_read_metabuf(&m->map->buf, inode->i_sb,
+-				      pos, EROFS_KMAP);
+-	if (IS_ERR(m->kaddr))
+-		return PTR_ERR(m->kaddr);
+ 	return unpack_compacted_index(m, amortizedshift, pos, lookahead);
+ }
+ 
+-- 
+2.43.5
 
-tested configs:
-alpha         allnoconfig    gcc-14.1.0
-alpha        allyesconfig    clang-20
-arc          allmodconfig    clang-20
-arc           allnoconfig    gcc-14.1.0
-arc          allyesconfig    clang-20
-arm          allmodconfig    clang-20
-arm           allnoconfig    gcc-14.1.0
-arm          allyesconfig    clang-20
-arm64        allmodconfig    clang-20
-arm64         allnoconfig    gcc-14.1.0
-csky          allnoconfig    gcc-14.1.0
-hexagon      allmodconfig    clang-20
-hexagon       allnoconfig    gcc-14.1.0
-hexagon      allyesconfig    clang-20
-i386         allmodconfig    clang-18
-i386          allnoconfig    clang-18
-i386         allyesconfig    clang-18
-i386            defconfig    clang-18
-loongarch    allmodconfig    gcc-14.1.0
-loongarch     allnoconfig    gcc-14.1.0
-m68k         allmodconfig    gcc-14.1.0
-m68k          allnoconfig    gcc-14.1.0
-m68k         allyesconfig    gcc-14.1.0
-microblaze   allmodconfig    gcc-14.1.0
-microblaze    allnoconfig    gcc-14.1.0
-microblaze   allyesconfig    gcc-14.1.0
-mips          allnoconfig    gcc-14.1.0
-nios2         allnoconfig    gcc-14.1.0
-openrisc      allnoconfig    clang-20
-openrisc     allyesconfig    gcc-14.1.0
-parisc       allmodconfig    gcc-14.1.0
-parisc        allnoconfig    clang-20
-parisc       allyesconfig    gcc-14.1.0
-powerpc      allmodconfig    gcc-14.1.0
-powerpc       allnoconfig    clang-20
-powerpc      allyesconfig    gcc-14.1.0
-riscv        allmodconfig    gcc-14.1.0
-riscv         allnoconfig    clang-20
-riscv        allyesconfig    gcc-14.1.0
-s390         allmodconfig    gcc-14.1.0
-s390          allnoconfig    clang-20
-s390         allyesconfig    gcc-14.1.0
-sh           allmodconfig    gcc-14.1.0
-sh            allnoconfig    gcc-14.1.0
-sh           allyesconfig    gcc-14.1.0
-sparc        allmodconfig    gcc-14.1.0
-um           allmodconfig    clang-20
-um            allnoconfig    clang-20
-um           allyesconfig    clang-20
-x86_64        allnoconfig    clang-18
-x86_64       allyesconfig    clang-18
-x86_64          defconfig    clang-18
-x86_64      rhel-8.3-rust    clang-18
-xtensa        allnoconfig    gcc-14.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
