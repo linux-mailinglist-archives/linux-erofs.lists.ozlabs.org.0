@@ -1,53 +1,76 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 34E02999D1D
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 08:52:05 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4081C99AD72
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 22:23:10 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XPy3M0d5pz3bsy
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 17:51:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XQJ3H6JpKz3c3s
+	for <lists+linux-erofs@lfdr.de>; Sat, 12 Oct 2024 07:23:07 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728629517;
-	cv=none; b=XvzYMHzzkYujIJvHNdllFR9mQjLhm1z3QwsapJffM+OFllZaCzfq6kdpslHO0vmvWEMCS8wqXbdesTwIdVNYjIE1it0FOpP8B1DwwacBmZjFZdX+xPgUiYGOpUuMZT9zpxRMa3ug8yFv90oU2zl+/S0BiwCLCYRdLsrv39dWunRzQr4INfX2YMcx0Uz5LFFeuGIZrZ2p6YmvRwEdUKp7PC5ryISx/rNOaUA26guj+Z8RqfG1hh3dyUfFDpX36SJXAhPEcaNcPrrJ9azj54s0q3NVtwRWDZwQl9KElNUk7xN89ZjFKfvA5KNui6LEnR4vQomzKqZEcoVsSvk8khTzfw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::b32"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728678185;
+	cv=none; b=LzTDUyxPcW8COBGpRi8bpqsal+H3Uu963V+wWYjLr+s/8epVAZJfNCqm2FqrXA1GuekdOaQd8833NSgQib+2b8yjfta5Va4sGNU6TNd1OkQOtBepcIlmGcdBtMIZSLnUDwaVwxPt46rtvsRdCwhQB8rJefYn4Zw0m36YZQNu+b682zNKTQtdYcyXRDNKGqjiBcw4DNHTTN4/6UlVjrp/m7V4wG3IM9ME0vgKTD0LXtH+pmOqchYAxlq1z7IEwDPSqi/RXtC4Upf9shUgwQ1ELYyi9XKd1qAZROAXHM13rTpnH7Y8PHxWXhzK8W1G7yA6bjxHyHpKUZpGgNaQtg+cRA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1728629517; c=relaxed/relaxed;
-	bh=9Jq7WlCziE6Y2VeyCMIXiyZ4N1+DiD4cKivRAbahRII=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nAukj+CzgfAgvJAxrdUtbqtLMaNDy1Kv9fNgoLC1dJO5eUY/lqPBVKaGMXICvcRzOSi4hwQen1tI07l0XfRducY0yqb9O+MqbvQUEvmI66jar9DztHFB+LRrAKNA75QYLx5+9laTGzPAg4NkfJA5EHFaWJDD8Me9jJkyJ9Fewndnh5cUqn47NgBikvY4LUs2ZBWXT8bYAfUEuUnSh8vRWtn5uuekAeoy7a21QZm2wHMKzY2ZZt2maKS7j2hVbKxpPp+u98bhhah+MJgO5QRnhrG62ekm5B80C1ANLklTPzWuRh5aPBO3spEeR0R8/Ie8SgkOPjDJjwcCxVfo1sPtUQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IxnpGl0G; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1728678185; c=relaxed/relaxed;
+	bh=P6CMN2nKdeDn7O0ThHc63pN7dVVQ09yscr9ayrYwxzI=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=TXfpcnM46abHdYIu+QH9rsMFPI45DUGsfG/aG6e7IGtrZCXNTzuNdKiNbdF922I/iWs9S36OQICA3kCA+Za0qYbl5DuNzdDc1bddBTjWpKYs/gv3dJdYHXmTNjkVgWVIYJdqVqk7fAMeYGAhng5tdNlrom5Jx8BL4v7cBOejBSFfb1p1WFFoB/wPpnCPqYlKdXFlrlhJwJZttDYIKH2vLR7MpeltYvHVXX3la1PyeLLM5DfuwAx2XBY0xsqIBbLHenUuhBw1YpebgV82/RMqf5oh6LOJuXMPdFilzCWltBGPqNAEzq/oBvTcS+3aQN9Lx5qUntvDScL7JMHwGzOqeg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Uzw7ew5j; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::b32; helo=mail-yb1-xb32.google.com; envelope-from=fedora.dm0@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IxnpGl0G;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Uzw7ew5j;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::b32; helo=mail-yb1-xb32.google.com; envelope-from=fedora.dm0@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XPy3F4j5Wz3bg4
-	for <linux-erofs@lists.ozlabs.org>; Fri, 11 Oct 2024 17:51:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XQJ3C62f0z2xjY
+	for <linux-erofs@lists.ozlabs.org>; Sat, 12 Oct 2024 07:23:03 +1100 (AEDT)
+Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-e290554afb4so2538067276.0
+        for <linux-erofs@lists.ozlabs.org>; Fri, 11 Oct 2024 13:23:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1728629504; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=9Jq7WlCziE6Y2VeyCMIXiyZ4N1+DiD4cKivRAbahRII=;
-	b=IxnpGl0Gt+6eIeXSHnbpwcwCBrrNX/5mW6zCnbUw+G1cPq+oINkdrIMAX3GzrCSRGPV1q/bRvXgd5DYROjM3pU+y/xXBBWMgmuFbrhq7o+sU1yThlvVR8phil/VvwMrKl+wWEBbRpeauLEsfOcLkYpRRKh71mLLEpaLYbAkBCt8=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WGp69Ai_1728629490 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 11 Oct 2024 14:51:43 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: add SEEK_{DATA,HOLE} support
-Date: Fri, 11 Oct 2024 14:51:28 +0800
-Message-ID: <20241011065128.2097377-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+        d=gmail.com; s=20230601; t=1728678180; x=1729282980; darn=lists.ozlabs.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=P6CMN2nKdeDn7O0ThHc63pN7dVVQ09yscr9ayrYwxzI=;
+        b=Uzw7ew5jWpc2/6LWrQf1sB9LCIKyLt+Ts2DH14URbgfax8F8CZ8lKh5nK7XOI/DwTT
+         TMj2nEudeO5oOg2Vt7tcNWVkJjtSZJmH/u6x5o/jPqzRU3csp0Bs1ehpleI+sQP9dY0e
+         HZ6dMUONTH2/6tLADhicBc7mUz5V7xAj3vVn3XYuLqC/aLtaXS+b76Kv65mhu0lYwx0V
+         ZQTvHZcS6EQHUiNSKDNseAv5dsHNBY7IaaflGU2jcf9XPM0KUJLsZrD2WSFW/rd8oHw0
+         FhC1ivzjn2EiKOcdg+UNi3OmXBTVZQUswPQm8ZNgExo1eHt5ybt3z3LnncrygR2GbgpL
+         iEsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728678180; x=1729282980;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=P6CMN2nKdeDn7O0ThHc63pN7dVVQ09yscr9ayrYwxzI=;
+        b=khEOC1lV1kpfmjyYGkQ19rVhhy2xi3xe/2QG3NMDmo5/ObCw2yQpb/ebV08PL7R+Rs
+         Ilu9oHtm1bQ89E0dFyl0arKcYqLZkkxJDgHgJtd+lPoAZTKZMLmR/0xKFfIZpN1f4HFC
+         Xv27zFG1IYj2vgQqshNDwqFtDjARmxvH3L0u4pnhD/uDx7NL7/QQEELDJuRTFXT+CGYP
+         r2c5a0wrMG20ktr4GB7BuNXW45dWarSc64XHdZJdAJk1mqua54oRDSF5+IfV4avfvSlu
+         KMRcvaVdyYelscb00DnxyoEzApbfnd8Q+zcqceVQxaTqo4zF7s7vf79DlDZySnwOxDs7
+         MVHw==
+X-Gm-Message-State: AOJu0YwIb+AZ+Frrw12GgoOorHjSl2I1veoDo7lLOKFv91elGnrrmXVZ
+	bbuz0kE2obuPEi8mu7sBScAQfGQNYYTSjnM64ojSehseV33flHK52VSxfTyeUD3WruyqbWrmvjF
+	a8gxfMycXy6rLxtAAsRCGLDhbsI7f1lFP
+X-Google-Smtp-Source: AGHT+IFlNA+dSwjbx2knDL/hpt/fzxLDr8WkduHQ6HjjXAnyMSkdydOCEs3agCj8UPjDBXUiOTYrT5Cbpb9svEfD3NI=
+X-Received: by 2002:a05:6902:1611:b0:e28:ec85:904b with SMTP id
+ 3f1490d57ef6-e2919d678c9mr4181542276.8.1728678179864; Fri, 11 Oct 2024
+ 13:22:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+From: David Michael <fedora.dm0@gmail.com>
+Date: Fri, 11 Oct 2024 16:22:49 -0400
+Message-ID: <CAEvUa7njGB_7Xs4A+DhGBR0LZL--tAZNmU=3bFS+uVm0G8uULg@mail.gmail.com>
+Subject: [bug report] erofs-utils: Compression with -Eall-fragments segfaults
+ on 1.8.2
+To: linux-erofs@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -60,56 +83,32 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Many userspace programs (including erofs-utils itself) uses SEEK_DATA /
-SEEK_HOLE to parse hole extents in addition to FIEMAP.
+Hi,
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/data.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+Version 1.8.2 has a reproducible segfault with "-E all-fragments"
+(testing on Fedora 40).  When compressing the install image, it
+consistently hangs on a firmware file:
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 61debd799cf9..6355866220ff 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -473,8 +473,32 @@ static int erofs_file_mmap(struct file *file, struct vm_area_struct *vma)
- #define erofs_file_mmap	generic_file_readonly_mmap
- #endif
- 
-+static loff_t erofs_file_llseek(struct file *file, loff_t offset, int whence)
-+{
-+	struct inode *inode = file->f_mapping->host;
-+	const struct iomap_ops *ops = &erofs_iomap_ops;
-+
-+	if (erofs_inode_is_data_compressed(EROFS_I(inode)->datalayout))
-+#ifdef CONFIG_EROFS_FS_ZIP
-+		ops = &z_erofs_iomap_report_ops;
-+#else
-+		return generic_file_llseek(file, offset, whence);
-+#endif
-+
-+	if (whence == SEEK_HOLE)
-+		offset = iomap_seek_hole(inode, offset, ops);
-+	else if (whence == SEEK_DATA)
-+		offset = iomap_seek_data(inode, offset, ops);
-+	else
-+		return generic_file_llseek(file, offset, whence);
-+
-+	if (offset < 0)
-+		return offset;
-+	return vfs_setpos(file, offset, inode->i_sb->s_maxbytes);
-+}
-+
- const struct file_operations erofs_file_fops = {
--	.llseek		= generic_file_llseek,
-+	.llseek		= erofs_file_llseek,
- 	.read_iter	= erofs_file_read_iter,
- 	.mmap		= erofs_file_mmap,
- 	.get_unmapped_area = thp_get_unmapped_area,
--- 
-2.43.5
+> sudo dnf -y install erofs-utils
+> wget https://dl.fedoraproject.org/pub/fedora/linux/releases/40/Everything/x86_64/os/images/install.img
+> sudo mount install.img /mnt
+> sudo mkfs.erofs -z zstd -E all-fragments erofs.img /mnt
 
+If you isolate just that firmware directory instead of the whole
+image, it will segfault:
+
+> mkfs.erofs -z zstd -E all-fragments erofs.img /mnt/usr/lib/firmware/nvidia/ga102/gsp
+
+It happens with all compressors I've tried, but adding "dedupe" works
+around it.  Is there any change I should test?  Let me know if you
+need additional information.
+
+Thanks.
+
+David
+
+Originally reported in: https://bugzilla.redhat.com/2318138
