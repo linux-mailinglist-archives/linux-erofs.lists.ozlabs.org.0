@@ -2,74 +2,76 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 22FB3999B03
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 05:12:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A765999B29
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 05:23:58 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1728616335;
-	bh=sWCUGrFlf917GdtQEMJONfMzAgH5AP2rbJR92X44RMs=;
+	s=201707; t=1728617036;
+	bh=F/DrQfgMdhifUqq4zT+vZ6JGj6MwJBh4W170nOaFSiY=;
 	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=mtRLEQ07pnD+MjD2JnCOpxIooa0ikhPXpXynIfT1I6FbNHsrtFqPBnxIw9mEOyR2G
-	 ieVk3jBe0KLuxkWD8JipkpD5LYGOoERBYjcZnQjaAE/qhSeKWej7gVolug8C05Xf5A
-	 OU5z3sx+XsXDzT/iQCzqPlT+R86GitCuv8YVNZq2ouRjqCCWQzgP+HlYeOg7nnlqDq
-	 tjf/qh8DyJI9Lh2GhvqqoM4+NoNQTBxihpbOl4G178NXJz815nmTiuurOBHiKwqWB6
-	 sn3TVXt8E3rB8sqLxnzlKEPshVJyi3Akb5Pn0LhuAE1pJItVJqHTw4mM19WMkjuObt
-	 daFzKgLSO0piw==
+	b=ij1jbNT20tbOsHzDfGVbmrpsHnDz1/VzlwTUrwZktjB+vJsZHRnSlMwhenB/hxZt2
+	 FSQWp+2+sQRQgWTceJsVyREKZUxqtUZ7HR3yDAIvTwlKexxLGFDhKDQDcnbYD3r3Jp
+	 2iz1ieLRdrhMzl30bWjiDYe2MBQpwq/E+1E8GIV34g4pJJrUYEQzqWZL1ovBNy8Seo
+	 MFVtyCDOndWtdi9N36/s4uhHeETj1r2u4Tj9Nl8P323a0BL5lDTcrjrN9Jd5R1cG/5
+	 LNubH4F7+DiDxEBv7v7DRW8z2Pd5TYOwoYc37xm92mt2z0azyVB+kKgJpmg4yclEDX
+	 fSoEb8BHWgjeg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XPs9q0x0Dz3brL
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 14:12:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XPsRJ3yvlz3bm3
+	for <lists+linux-erofs@lfdr.de>; Fri, 11 Oct 2024 14:23:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728616333;
-	cv=none; b=cFfXDqt3at8vbqFsmzhaL0gDC042myZ8BFgDUO2YPR0XDYgnbLG81t3JsByzmltAkoHBeqTur4RGYzsti4opriueZh81Ok81BCxOtr7MBE9flSHsovLmfyhAAsHYCnd/LRG5nYj+PSoIY2YCGXSIy2+PnvERNajhU4zfI6nnEqFzpjINiLbjq86PUmWSpyOXl84o+fG2YHBcoRTvwTKZ3u29mp4Oq4NO5fc/1hAB29eXHi975c0pu4ZQFylwnADGPcVrHZPOAntXAuk6HBbYvCYeUxZiHbRAf8x9iR7jamTqQBo2Tlyz8hMf3iCTSZmupDhK9nZ0enU6Eie9+g/LSg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728617034;
+	cv=none; b=C3IewAA828bATGBHVhWWFR5PktgIZszrXQqT5hzeBFmUCvBhLvj1zUe7ELQo1/kbVVR6p1FeYIQIXCCAgNvisUvjr4RtN5oXrUWeCZ8Nd0Ow9rddcLpfqhXVzLStG+BJ0pjdMqqtezbbf1TjvT3ywHqDyMQ9xKpw34g7KYeORiJTrvIm+K8Vc0Y9VfBXw4vKA7+0eHbyHh+v7zdE3GbiQGgfM2LUCgldZvP6qnY3kLqmqRSWbQE8tWG7SbbqnuPsF51Z5Q63lgo3ZxwvP1Y5jFL9lZXM6QbDsW7HSvfmv8C99IE/ugs0YetwrUqY1dosvHZxwHzV3uR7JDzrdSdUGQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1728616333; c=relaxed/relaxed;
-	bh=sWCUGrFlf917GdtQEMJONfMzAgH5AP2rbJR92X44RMs=;
+	t=1728617034; c=relaxed/relaxed;
+	bh=F/DrQfgMdhifUqq4zT+vZ6JGj6MwJBh4W170nOaFSiY=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Il7cfrjNERaVTgSDlDqEaqWCHLPjcuXhD2Id6lBAEu6FL8ggGS1sDqoutI6U+FcvmBVyTQsQ7Z9Cq/3/9PS4ei9Ua5h3ivpdSYTZEFKqRErlr7pqi1Lf/Go3y6Aue9HWRPUb2+WuIW/B+agtjSVensUyNAlQw0YEbRB5BmAsSm4GFU7uFy0Z1j3ULrrhfdEIduheuOGjwRdbz1tnzBTY/7iae7+vg3Tu0498bu1SSS9W03K7Cuk0CugXScVKA6V/sCDJ396iBwL4zKuTI+3n6gOXsOBjdHQiuSG4ERSEtdUFkL32KwO2bSZcALN5FRzad3gWtJ3PXCwIZozgcEJIUQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rrJL1zP0; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:Content-Type; b=gm9MLkR1KxrW1r8cT9yC3cixUTIezTh6Sd4MTWysbG69NX/UweR3lhiJ6uroRqNofHVqYafvE7MWVtlwBHefJP5DQCCKmOim77dLOIM1j/Vq/QcrJm39ox/nI7Zj26yDc5R+hQ7K12HoyZqJAJIJP6dyl5FTN7fLYLewvqW1xFajKJfGjloEm3FIdwkDF1RqG55s3R7D33UzFMMcYc12ZDCCPZy8nzngbKtyWAwNiD7Xv+wjYFwI53RIM7hqAGNYQiBtsyxo8QqKm9MpitiNMLk0e4rDUvxt6PzjZHg3h5WzqegzvEJgeiT0eTuzRbXtQwBd+HGFxicsvegw12ziZA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ZwBup2Ft; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rrJL1zP0;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ZwBup2Ft;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XPs9m6DWJz3bcX
-	for <linux-erofs@lists.ozlabs.org>; Fri, 11 Oct 2024 14:12:12 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XPsRD6pLlz2xjv
+	for <linux-erofs@lists.ozlabs.org>; Fri, 11 Oct 2024 14:23:52 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 3D4D3A44F1A;
-	Fri, 11 Oct 2024 03:12:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5CD2C4CEC5;
-	Fri, 11 Oct 2024 03:12:07 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 006D95C5A18;
+	Fri, 11 Oct 2024 03:23:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDB96C4CEC3;
+	Fri, 11 Oct 2024 03:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728616329;
-	bh=ES9TOK7eJS1nx2Q3UXzWLwz7JYFWeDakG2nX1hzty00=;
+	s=k20201202; t=1728617030;
+	bh=Uebx/oNcKWECtLhnrymtjaw7rE4TW8QKrIUn/TUZzJI=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=rrJL1zP0JmkuA7xQA+fTj/43kqEf5OVPK2chcJL8g+hFtZa0c3b4EE32VrG1B2NhL
-	 huIaj3WeYxbgB6YGyehUJVRoH+StXBNidAxHkPrEhi5Hgsd6KRTzv/OTgRIWWQkbHH
-	 ub71sQTBrdjWVjRrW9u1/f7ukESgiN3Vke1iyeyaCtKPHhdGhrwbD8zLTWl6Q9kvQe
-	 qb9mddzNuVIvoD2h5CPrj8waKRKhtsoU3G2O+FW8FQmPQvuZJmawZvH1FCxZFWbqq1
-	 MSmeLobOxLGRBjcn9yq01z4vYNHxKQD4zpRv+RRx5waYcY/pUGKwNKyEnsZ+QM1wC7
-	 Tu70JwVSbSAqA==
-Message-ID: <76644f60-d310-490e-8924-aebff9ae6250@kernel.org>
-Date: Fri, 11 Oct 2024 11:12:03 +0800
+	b=ZwBup2FtT3HzT32tEiDuzeonnigpQskMYb0iYtniVwZGnX0LdRVFdO/Q3Qd+9d/2F
+	 +C4jAeDAkGxqLcFtlYAIjWQwpPoHQphny3GGQ3ZI7v0R3yGBCrhKvm1BOM+4ZH00tV
+	 sOR5ioU+8V2vbu6zbJ2ZG8oMMxZCYpm6nCtipXgwdgrYfqB94IsYH0Fk5FWT8js3Ep
+	 wO8lrVV6dyPAwaWjjkh5qvcMGKxtrFAHlUIvW4MkHuw67k5J+V7AWg2KdHxSveudJp
+	 aceCuOZ4ROMyk/pkbExi+BYR0mqi9C4/IxtOZHbwFIyVeRJVoPNrRtP5SraWOJqzzf
+	 EtrRjBMh/Ekzw==
+Message-ID: <a6ed3ae5-8ed2-4e7c-a790-8771adae121c@kernel.org>
+Date: Fri, 11 Oct 2024 11:23:43 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] erofs: get rid of z_erofs_try_to_claim_pcluster()
+Subject: Re: [PATCH v2 2/2] erofs: get rid of kaddr in `struct
+ z_erofs_maprecorder`
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20241010090420.405871-1-hsiangkao@linux.alibaba.com>
+References: <20241010090420.405871-2-hsiangkao@linux.alibaba.com>
+ <20241010235830.1535616-1-hsiangkao@linux.alibaba.com>
 Content-Language: en-US
-In-Reply-To: <20241010090420.405871-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20241010235830.1535616-1-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=-5.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -88,8 +90,8 @@ Cc: LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/10/10 17:04, Gao Xiang wrote:
-> Just fold it into the caller for simplicity.
+On 2024/10/11 7:58, Gao Xiang wrote:
+> `kaddr` becomes useless after switching to metabuf.
 > 
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
