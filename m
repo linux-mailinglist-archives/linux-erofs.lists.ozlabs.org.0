@@ -1,53 +1,79 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A98CD99D079
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Oct 2024 17:04:24 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A402F99D741
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Oct 2024 21:23:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1728933790;
+	bh=DW8vMO/zWtxkJ2I3OB/JA0MpfH2i/3sTbWTX4vvHKgM=;
+	h=Subject:In-Reply-To:References:Date:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=cENVOk8wDaOgugOyNJFF2BmOuTyrRO4SDakmF2uF+wqqDPuj7M3pPUiOafrAalG2f
+	 KDc0Sf87GhX1xFKXOp4w2NIVISszfD3zanIjWF0GAWhJ+dUMzxPnhDos+Gry+Z5G3c
+	 hTOwdT0t3yOcsOKMzQVGK6+YmHJOObzcD2UB/L2rTRt+NTnCMdBkIx/wkUM2nofiW+
+	 MUA0KmRYmk9NnwySjjUmThQcza6eJDDLx/w7F2FAwoM38gMnaIGx8fV5qkB40DoDs5
+	 V9fUyq+wTj+p6+ghnG7rq/CRduE572yfRDm1oySPsr1NyuEOit7EdGs6BURAE/UGtG
+	 34yGtm28C7JEg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XS0r65Qc8z3c2V
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2024 02:04:22 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XS6Zk221Dz3c17
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2024 06:23:10 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728918261;
-	cv=none; b=MGuil2TAXcO83S+dl2bzQdLhRMjQn20GsH+3g374mXpgtrnSFf9X6b7eBdjOWE4VD+l5XZGBcwFd9/m25Gj7Pk1eDJRyogKKjkMJ8MA9GsK13Um8QAUv8gbQRRHBFMlGAJOdN+4v85AD8AIRlWI9rKaqjgGTJcGCnp0LS+gKUgMPQHIRWxOtxyjfZgxWD4iilv55GJ1m7mhJG8UfA5cu+tiFHoVbymP74LiYUb5bHWtB4QKX1abhvC9c0o4SsqP8QWLsoVY8T4UhqBxLasbh8UBjlh6IwGAatiBjSaqmERQ3zabV6vYLtgr9+LYb0CFB74SA5PwZokarlPVg/8idgw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728933787;
+	cv=none; b=hW3nS3J9SqDAtwIM1yl1JKMZhc+6JKgIfysAnuFn7u7UkSBLifu4VleQwQ4eVnwjOdoGNp9fqzFzYzIRKjJ3ZeDM3IfiCnE8We+LgZE46KZDPFX1LJOlNxNF8prt/LC6LER+Z4qQuoNZ72gaE31w6SCU6q1kbAbIPILWm0u9LlF0bGhndMX3tryMJIlYqbmDewcCUT4yqdv3kJNVAV36lxJoh+CtJHRC/KxoHrxk6heBVlV2ebU+mhkV4Kho2u/tC5Itd/3tQX9XEwrEmSnNpYnahdxxMB/jeGjvL3WrI7fARwPxOqxbpcgYDnGNWT57cCCS/HFcoSOxe1oCC3ZhBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1728918261; c=relaxed/relaxed;
-	bh=f3vlUIcFK2AOdRKdV6A8m43KT7kiKOBOhbpDp5seMp8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VNH/gQqFI4OqhdZU0SdSsjV+vtRR3G7oxvFa6DlDvfiTnv12No8SDcWac+WQhbGj/waM7UmSJfLiLNWyFgcIrldQ7Dwb/wK9+g8Ch9xZx1MOqATfPveomBQHwwsVj4zYHknzHwoZ61xth2PqXK+fzZoZxLa8dSPe9IlzveK3Jrv+nFJSMmfTy1bxU8SKj6Qf/YWNbm4zm5sqLJyMDvLLqGFKhju02N5hxeLggbW/AGFGcGxwBHhXlArb2o93FcTaXipcfTWGyyB8ISrj5ULkt7xMtp0dprT8DRVNaZFOC+gXXNVeiQIxo4bQ+QUDtrMiHbJ7r1ujvt0HDmifrKHKcw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=DO+YF+xJ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1728933787; c=relaxed/relaxed;
+	bh=DW8vMO/zWtxkJ2I3OB/JA0MpfH2i/3sTbWTX4vvHKgM=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Wm/g030Wh0yATONvwHV61Z87LAF8vO3o8rTdDQl/SzqtTa1xsj6AkdohlE7fxG5LtXMAl9pQ1EQ8R6EL08RqXKVNJo4JElmJnvffvh8660jQYGybrgOnYEn024RmgExePnFEZM4W/ZwBHssVSIuk/ZoEz2B+qkfi5MjViV+OqQMaO91GCNkD8r+wOXIrFiQioIEV7ZUQLt+bXERTmJrZOPKIJRSo4Wj38TYm+eGzXAQfxftVdCsWb2Owj3tOfVcKraUx5zPCFAmgPkALU6PXM7CRF0Epl3GlGrtu+mM6rgZZlfHbBFv/x89tahReBRcnD5rpeuASljrGi/PM2AR4Kw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qAz9tIGE; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=DO+YF+xJ;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qAz9tIGE;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XS0qv6ZDjz2x9W
-	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Oct 2024 02:04:07 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1728918243; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=f3vlUIcFK2AOdRKdV6A8m43KT7kiKOBOhbpDp5seMp8=;
-	b=DO+YF+xJlRivTzSwo+/LA+sZFtxk+Kd6SBgd6k9v0AC+9t+biQg/r9gehQT9qPF+r51caW4cRXWGEFuijo1v7aIuVLe6sIUz8NFcgp9H+4CegVjBODhi3HJo7vB9CFGGw/1Xvs1nCd/5jkoumX8ebERk8UtTwW7IBCL5WmPJINY=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WH9vE2x_1728918241 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 14 Oct 2024 23:04:02 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: tests: add test for file-backed mount
-Date: Mon, 14 Oct 2024 23:03:59 +0800
-Message-ID: <20241014150359.2185347-1-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XS6Zf74mNz30gn
+	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Oct 2024 06:23:06 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 4EBE45C5B79;
+	Mon, 14 Oct 2024 19:23:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D29C1C4CEC3;
+	Mon, 14 Oct 2024 19:23:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728933783;
+	bh=dCUME0CI55Wl+NRXuXAKP5D7ZiIsOcTukDnUZQ5AyaE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=qAz9tIGEcu6tlP5ZdtvuowBiz8iMvGl3uqNCWrHQI6LCTJEOmma/qDpi1rxuAZK48
+	 oP+7cN5Rx72ilIXCU4G3lkydMy4lwE822m8boIaQkOtw8lRYd/gv9sxd2UMqM2+htt
+	 vQF3BHDwhkzlWPDgloOQ9p6P8xJfMWZEJIIHD4nDinE8RlCubYNccPmVWMKoUsHGFh
+	 D92LqkBP6CYDkO71XDY8IufAeMBHQgq4AmR7PnhGqxOxFqVAgDdeSPRPkmxXLGfpOK
+	 GZvuU6HaTppnAQphjwa0P6QXn0Qo4t3AxpqGBlMwFaoE8bdR9XntxEaEQv9ydQDMrS
+	 bb+U5UQj5Uvpw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E333822E4C;
+	Mon, 14 Oct 2024 19:23:10 +0000 (UTC)
+Subject: Re: [GIT PULL] erofs fixes for 6.12-rc4
+In-Reply-To: <Zw0g5xS5WXYve0Hj@debian>
+References: <Zw0g5xS5WXYve0Hj@debian>
+X-PR-Tracked-List-Id: Development of Linux EROFS file system <linux-erofs.lists.ozlabs.org>
+X-PR-Tracked-Message-Id: <Zw0g5xS5WXYve0Hj@debian>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.12-rc4-fixes
+X-PR-Tracked-Commit-Id: ae54567eaa87fd863ab61084a3828e1c36b0ffb0
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 63fa605041843b50ebc8dca6483dbfa6e835c61a
+Message-Id: <172893378871.615880.7545042172265090461.pr-tracker-bot@kernel.org>
+Date: Mon, 14 Oct 2024 19:23:08 +0000
+To: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+X-Spam-Status: No, score=-5.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -60,102 +86,21 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+From: pr-tracker-bot--- via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: pr-tracker-bot@kernel.org
+Cc: linux-erofs@lists.ozlabs.org, Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Test for the file-backed mount feature.
+The pull request you sent on Mon, 14 Oct 2024 21:47:19 +0800:
 
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
----
- tests/Makefile.am   |  3 +++
- tests/erofs/026     | 54 +++++++++++++++++++++++++++++++++++++++++++++
- tests/erofs/026.out |  2 ++
- 3 files changed, 59 insertions(+)
- create mode 100755 tests/erofs/026
- create mode 100644 tests/erofs/026.out
+> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.12-rc4-fixes
 
-diff --git a/tests/Makefile.am b/tests/Makefile.am
-index 93016e5..70044a3 100644
---- a/tests/Makefile.am
-+++ b/tests/Makefile.am
-@@ -110,6 +110,9 @@ TESTS += erofs/024
- # 025 - regression test for corrupted directories with hardlinks
- TESTS += erofs/025
- 
-+# 026 - test for file-backed mount
-+TESTS += erofs/026
-+
- EXTRA_DIST = common/rc erofs
- 
- clean-local: clean-local-check
-diff --git a/tests/erofs/026 b/tests/erofs/026
-new file mode 100755
-index 0000000..2228f4b
---- /dev/null
-+++ b/tests/erofs/026
-@@ -0,0 +1,54 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Test for file-backed moount
-+#
-+seq=`basename $0`
-+seqres=$RESULT_DIR/$(echo $0 | awk '{print $((NF-1))"/"$NF}' FS="/")
-+
-+# get standard environment, filters and checks
-+. "${srcdir}/common/rc"
-+
-+cleanup()
-+{
-+	cd /
-+	rm -rf $tmp.*
-+}
-+
-+_require_root
-+_require_erofs
-+_require_fssum
-+
-+# remove previous $seqres.full before test
-+rm -f $seqres.full
-+
-+# real QA test starts here
-+echo "QA output created by $seq"
-+
-+if [ -z $SCRATCH_DEV ]; then
-+	SCRATCH_DEV=$tmp/erofs_$seq.img
-+	rm -f SCRATCH_DEV
-+fi
-+
-+input_dir="../lib/"
-+FSSUM_OPTS="-MAC"
-+sum_std=`$FSSUM_PROG $FSSUM_OPTS "$input_dir"`
-+
-+# test uncompressed files
-+_scratch_mkfs "$input_dir" >> $seqres.full 2>&1 || _fail "failed to mkfs (uncompressed)"
-+_do_mount "-t $FSTYP $SCRATCH_DEV $SCRATCH_MNT" 2>>$seqres.full
-+sum_uncompressed=`$FSSUM_PROG $FSSUM_OPTS $SCRATCH_MNT`
-+[ "x$sum_std" = "x$sum_uncompressed" ] || _fail "-->test uncompressed files FAILED"
-+_scratch_unmount
-+
-+_require_erofs_compression "-zdeflate,9"
-+MKFS_OPTIONS=" -zdeflate,9"
-+_scratch_mkfs "$input_dir" >> $seqres.full 2>&1 || _fail "failed to mkfs (compressed)"
-+_do_mount "-t $FSTYP $SCRATCH_DEV $SCRATCH_MNT" 2>>$seqres.full
-+sum_compressed=`$FSSUM_PROG $FSSUM_OPTS $SCRATCH_MNT`
-+[ "x$sum_std" = "x$sum_compressed" ] || _fail "-->test compressed files FAILED"
-+_scratch_unmount
-+
-+echo Silence is golden
-+status=0
-+exit 0
-diff --git a/tests/erofs/026.out b/tests/erofs/026.out
-new file mode 100644
-index 0000000..e45c6a3
---- /dev/null
-+++ b/tests/erofs/026.out
-@@ -0,0 +1,2 @@
-+QA output created by 026
-+Silence is golden
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/63fa605041843b50ebc8dca6483dbfa6e835c61a
+
+Thank you!
+
 -- 
-2.43.5
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
