@@ -1,67 +1,58 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4403299E374
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2024 12:09:12 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2461E99E40E
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2024 12:34:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XSVF20tcqz3bpm
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2024 21:09:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XSVpT6gVgz3bpS
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2024 21:34:41 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.166.198
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728986948;
-	cv=none; b=cgqWIOZiMPZo0nnYdH7SM+YlB+18eo42jsdhWr6oLOvHwaLIMnz0RuYPSPiaYvJADhh00B8ftN7oTsU2P2HXoI2P9r0Nd1jC148XkUkwjB6Q67DJ65IEk5Wne4aUd7aL/OYWn/8rjuw6JiOUNeYtXKEVhvhOQNUDIqGUjRn4Vz6XP8I0hMtktlQf4RSWn3Icd1N1i98Bzi9WorxdfGVT7RtNwizr16k05Dtq6QmZ8EFmt2YAYOWS9cPHdPqqqJrHUOiPoopEYSRZFRULGZr0IMfiKcWYgbw9vb7knOVvPZbxgQM6NQxZ+mMAM2c2Wh+kBSQ7VxTpOLL9CDoQuYMJXw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728988480;
+	cv=none; b=IVj+xERrMEqD+YlbrZbFSToNX5gw99Yhu0nnVpPkUC0byNm3IJF5GJJl5Abavt9GejUYCyNf6v+3l8TiF8mDTfTsTCjnFa4+Q181anHoSbB7PpOxcsO8u76rioXNb0w0Us9XJZr9Q/0Kd6o3E2Gh154ItukQF7B2AV01RJ/o7eB4LCsc3Pfg6bDEaC8zfBnynlb49Z2jkfCFiW/i0yQNCXtaQfkVDaiKAJnEra2AfglvEqt8RI6a5NgfgJKSJwARYJRIU7iTakuE7no8AYGib085n3QTkgTjcesIZ/73FIWy8s34caUAba6A0La68L9Vah143/+cU4eEN9nLtbYeBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1728986948; c=relaxed/relaxed;
-	bh=sJ1XgZLD06jZgmdfCG0BxwXZqAtgXOjAbyLjBcsgS6M=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=REOjWnOAGzITsJt4kmACzjUWldr+2IZ2jja0qnOvNzNL0Jmfu9ep1yT8f8AEwTrTMujSMtLJBYvkXwoLb14a8TujdzMvk+KykZLKLky/SxjN9dSxmye30YyP31T/U3C+MfFwODr5hvHM59g6HPn81zhfRYkbBrSy2k0sZWkR1+rriVDR+gjUxJbBnFA6JuShogbqpvNHML6vo0PvtQZPmgK15woGFCObF30ccpcTuN3wg/Vy8ie+rmRUYZ7ixR552IKow5B7fRWUV1g8H4sll18EltLOQYMPY1P+I/Q9sDs4fOyRyjFdeWysX5/ut7SEdsJanTc8J7rCGJA5g8JESQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass (client-ip=209.85.166.198; helo=mail-il1-f198.google.com; envelope-from=3pz8ozwkbadykqrcsddwjshhav.yggydwmkwjugflwfl.uge@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com
-Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.198; helo=mail-il1-f198.google.com; envelope-from=3pz8ozwkbadykqrcsddwjshhav.yggydwmkwjugflwfl.uge@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	t=1728988480; c=relaxed/relaxed;
+	bh=rY+7tRwbhEa9NRr1LWtSOufpGMP2qFins0pVb8gCf08=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To; b=HFKrZE/YDKP71lyF19YeYzj4yA0YTeozVGcXj5L0ofFaXldRgr3y2FuU63JOyhEMuTCHoV3YnF0OCVRQhYJz1hl3yCOY3NfBdG5oejyjPcRtk59UCJMugdKlrx5cXoCgYAYoRTP7ev/Jfo4qm+rDFCn0pbpWfQY4KhZtmnKAq6mNY1e7ZMxrHMh5st/vP/z06PXfe31o74qJd4lE0PONrqpa3NXdN1WB9TcRyUAH8X9EsMrZxWM4yGlLQxsa9QFf20US21bxAVWS7e53Sf4cZIRtH1RkuKauQxqsOA7gstHE5Wc0f39+tWH7uFgdogUo62Fa+5rzjhjHzwvbbpNZoA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=bZBo6/jH; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=bZBo6/jH;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XSVDy6Nd4z3blN
-	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Oct 2024 21:09:05 +1100 (AEDT)
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3a3b457f6aeso28908855ab.0
-        for <linux-erofs@lists.ozlabs.org>; Tue, 15 Oct 2024 03:09:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728986943; x=1729591743;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sJ1XgZLD06jZgmdfCG0BxwXZqAtgXOjAbyLjBcsgS6M=;
-        b=lCZpB9X4m0SgRrnl480iTGQnBSDHThJLxyCkutoSmzhOftNqnukwHfsDHy85/NQJZ8
-         oTS5bjkBdvqKQqbaKrkKyN9iPohia06P81sXtD0tqXV4ArXcQosm/ZeFui98H8iMJU9N
-         kLKGRv+Hl6XRDleqveDgHmEDVBmkT86l8aaPyM4oGLsAyntZNfqytDoMFXbgFZ8EpXYi
-         tfV5qsDXxFxytc6CLCNbZNUMUBsy6N4vlDkH/86ls944xoPQiFAdyZBAenWPQhFVLxht
-         LPtlaU6qeLcTmR0udT2AKhZELx7jNNFVb/Gnt7EKVutYGi8Uey80W8hSIIdpUGb4Ff8m
-         n1Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCUyrJGHtorhXK+EN/XNKXe1HY1FdCKuoZuh6GsjQlpEWDWAb1v2x3oQOtJey2tFoyamPFAWWLSm0QWF4g==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0Yz9wfnSL/6k+NGKDPL1jgggh29UufNcg/pjagijAO+nEIGILTdj
-	B42kWEpZ/bMRcUzVPDGwMn01k4k44KA1dUR52OdSr5aiv8wurVAg5SHE1Fi2ON2exrWp7t39V5x
-	SBNhsTzlkysw0+hibUvEwUTbCTjEBCeGQtZnvz8kLffgGJPieNUJQ/Ls=
-X-Google-Smtp-Source: AGHT+IF1ACL8+aT3InlSzj0jgkv7uhzXC6SoU1xoFZig0zYBBt1vpWJKJJP0NyURctI+RjUawz8qZZtyWUOP4xk2iAc+NLmKXANC
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XSVpK5MR5z3bkf
+	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Oct 2024 21:34:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1728988464; h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:From;
+	bh=rY+7tRwbhEa9NRr1LWtSOufpGMP2qFins0pVb8gCf08=;
+	b=bZBo6/jHRaocaoS5tB1Su5Vq7nk1iqSOcg5wdGbUlEYK/Jq3KngFs/v/Vvae4YkU0n7seg1yUIpxJpo1LFATpXXOhoJpbSMrHvJ4RezbVHj44AHqPBRevbsyP3I213cf+D+Ll0fP7LKkfez+xMRtWPzG3Xxo4VMnD+71Jqz2DSQ=
+Received: from 30.221.131.163(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WHDRFEq_1728988463 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 15 Oct 2024 18:34:24 +0800
+Content-Type: multipart/alternative;
+ boundary="------------2vpXlp0bPm3k17s4EV0KpwP6"
+Message-ID: <0445fd69-8236-4e09-b2b4-0ac57882229e@linux.alibaba.com>
+Date: Tue, 15 Oct 2024 18:34:23 +0800
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3dc2:b0:39d:3c87:1435 with SMTP id
- e9e14a558f8ab-3a3a709de06mr122817055ab.1.1728986943585; Tue, 15 Oct 2024
- 03:09:03 -0700 (PDT)
-Date: Tue, 15 Oct 2024 03:09:03 -0700
-In-Reply-To: <120ff6bf-3607-4f6b-9ec4-f1af9bdbdbd0@linux.alibaba.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <670e3f3f.050a0220.f16b.000b.GAE@google.com>
-Subject: Re: [syzbot] [iomap?] WARNING in iomap_iter (3)
-From: syzbot <syzbot+74cc7d98ae5484c2744d@syzkaller.appspotmail.com>
-To: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.6 required=5.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] erofs: fix blksize < PAGE_SIZE for file-backed mounts
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <20241015070750.3489603-1-hongzhen@linux.alibaba.com>
+ <b0c38bac-a682-45ae-8991-b73991ae6ddb@linux.alibaba.com>
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+In-Reply-To: <b0c38bac-a682-45ae-8991-b73991ae6ddb@linux.alibaba.com>
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,HTML_MESSAGE,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -74,24 +65,183 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello,
+This is a multi-part message in MIME format.
+--------------2vpXlp0bPm3k17s4EV0KpwP6
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Reported-by: syzbot+74cc7d98ae5484c2744d@syzkaller.appspotmail.com
-Tested-by: syzbot+74cc7d98ae5484c2744d@syzkaller.appspotmail.com
+On 2024/10/15 15:52, Gao Xiang wrote:
+>
+>
+> On 2024/10/15 15:07, Hongzhen Luo wrote:
+>> Adjust sb->s_blocksize{,_bits} directly for file-backed
+>> mounts when the fs block size is smaller than PAGE_SIZE.
+>>
+>> Previously, EROFS used sb_set_blocksize(), which caused
+>> a panic if bdev-backed mounts is not used.
+>>
+>> Fixes: fb176750266a ("erofs: add file-backed mount support")
+>> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+>> ---
+>> v3: Fix trivial typos.
+>> v2: 
+>> https://lore.kernel.org/linux-erofs/20241015064007.3449582-1-hongzhen@linux.alibaba.com/
+>> v1: 
+>> https://lore.kernel.org/linux-erofs/20241015033601.3206952-1-hongzhen@linux.alibaba.com/
+>> ---
+>>   fs/erofs/super.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>> index 320d586c3896..ca45dfb17d7c 100644
+>> --- a/fs/erofs/super.c
+>> +++ b/fs/erofs/super.c
+>> @@ -631,7 +631,11 @@ static int erofs_fc_fill_super(struct 
+>> super_block *sb, struct fs_context *fc)
+>>               errorfc(fc, "unsupported blksize for fscache mode");
+>>               return -EINVAL;
+>>           }
+>> -        if (!sb_set_blocksize(sb, 1 << sbi->blkszbits)) {
+>> +
+>> +        if (erofs_is_fileio_mode(sbi)) {
+>> +            sb->s_blocksize = (1 << sbi->blkszbits);
+>
+> Why needing parentheses here?
+>
+> Thanks,
+> Gao Xiang
 
-Tested on:
+I will resend a version without the parentheses soon.
 
-commit:         ae54567e erofs: get rid of kaddr in `struct z_erofs_ma..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git erofs-for-6.12-rc4-fixes
-console output: https://syzkaller.appspot.com/x/log.txt?x=17bac030580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=286b31f2cf1c36b5
-dashboard link: https://syzkaller.appspot.com/bug?extid=74cc7d98ae5484c2744d
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+---
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
+Thanks,
+
+Hongzhen
+
+>
+>> +            sb->s_blocksize_bits = sbi->blkszbits;
+>> +        } else if (!sb_set_blocksize(sb, 1 << sbi->blkszbits)) {
+>>               errorfc(fc, "failed to set erofs blksize");
+>>               return -EINVAL;
+>>           }
+--------------2vpXlp0bPm3k17s4EV0KpwP6
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">On 2024/10/15 15:52, Gao Xiang wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:b0c38bac-a682-45ae-8991-b73991ae6ddb@linux.alibaba.com">
+      <br>
+      <br>
+      On 2024/10/15 15:07, Hongzhen Luo wrote:
+      <br>
+      <blockquote type="cite">Adjust sb-&gt;s_blocksize{,_bits} directly
+        for file-backed
+        <br>
+        mounts when the fs block size is smaller than PAGE_SIZE.
+        <br>
+        <br>
+        Previously, EROFS used sb_set_blocksize(), which caused
+        <br>
+        a panic if bdev-backed mounts is not used.
+        <br>
+        <br>
+        Fixes: fb176750266a ("erofs: add file-backed mount support")
+        <br>
+        Signed-off-by: Hongzhen Luo <a class="moz-txt-link-rfc2396E" href="mailto:hongzhen@linux.alibaba.com">&lt;hongzhen@linux.alibaba.com&gt;</a>
+        <br>
+        ---
+        <br>
+        v3: Fix trivial typos.
+        <br>
+        v2:
+<a class="moz-txt-link-freetext" href="https://lore.kernel.org/linux-erofs/20241015064007.3449582-1-hongzhen@linux.alibaba.com/">https://lore.kernel.org/linux-erofs/20241015064007.3449582-1-hongzhen@linux.alibaba.com/</a><br>
+        v1:
+<a class="moz-txt-link-freetext" href="https://lore.kernel.org/linux-erofs/20241015033601.3206952-1-hongzhen@linux.alibaba.com/">https://lore.kernel.org/linux-erofs/20241015033601.3206952-1-hongzhen@linux.alibaba.com/</a><br>
+        ---
+        <br>
+          fs/erofs/super.c | 6 +++++-
+        <br>
+          1 file changed, 5 insertions(+), 1 deletion(-)
+        <br>
+        <br>
+        diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+        <br>
+        index 320d586c3896..ca45dfb17d7c 100644
+        <br>
+        --- a/fs/erofs/super.c
+        <br>
+        +++ b/fs/erofs/super.c
+        <br>
+        @@ -631,7 +631,11 @@ static int erofs_fc_fill_super(struct
+        super_block *sb, struct fs_context *fc)
+        <br>
+                      errorfc(fc, "unsupported blksize for fscache
+        mode");
+        <br>
+                      return -EINVAL;
+        <br>
+                  }
+        <br>
+        -        if (!sb_set_blocksize(sb, 1 &lt;&lt;
+        sbi-&gt;blkszbits)) {
+        <br>
+        +
+        <br>
+        +        if (erofs_is_fileio_mode(sbi)) {
+        <br>
+        +            sb-&gt;s_blocksize = (1 &lt;&lt;
+        sbi-&gt;blkszbits);
+        <br>
+      </blockquote>
+      <br>
+      Why needing parentheses here?
+      <br>
+      <br>
+      Thanks,
+      <br>
+      Gao Xiang
+      <br>
+    </blockquote>
+    <p>I will resend a version without the parentheses soon.<span
+style="color: rgb(51, 51, 51); font-family: PingFangSC-Regular; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(249, 250, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"></span></p>
+    <p>---</p>
+    <p>Thanks,</p>
+    <p>Hongzhen<br>
+    </p>
+    <blockquote type="cite"
+      cite="mid:b0c38bac-a682-45ae-8991-b73991ae6ddb@linux.alibaba.com">
+      <br>
+      <blockquote type="cite">+            sb-&gt;s_blocksize_bits =
+        sbi-&gt;blkszbits;
+        <br>
+        +        } else if (!sb_set_blocksize(sb, 1 &lt;&lt;
+        sbi-&gt;blkszbits)) {
+        <br>
+                      errorfc(fc, "failed to set erofs blksize");
+        <br>
+                      return -EINVAL;
+        <br>
+                  }
+        <br>
+      </blockquote>
+    </blockquote>
+  </body>
+</html>
+
+--------------2vpXlp0bPm3k17s4EV0KpwP6--
