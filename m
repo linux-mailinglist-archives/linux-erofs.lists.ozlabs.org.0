@@ -1,54 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4CEE99DD08
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2024 05:53:25 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D86C399DD2F
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2024 06:31:12 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XSKvQ5G27z3cGg
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2024 14:53:22 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XSLl24pznz3cH2
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Oct 2024 15:31:10 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728964401;
-	cv=none; b=enYlT21ptBl0h/5xVZoCdQM7N6l8FfyEp3mXQxER7BvvQ+IqIrYfaFxi/G3QLDjJh12DPGIQQQWGrfoWFFNBgxnFjEcnVrLZ1wnQF5oSkncH1MRF/WfnwVSX2AFdHXVYvV3kzntk89QVrOqnQBcgQKQNyWEjeJ4t+jZ+cnottuB8v2YhBA/jNPWq0OArFkrJwkgPxhnBmyQ22q/H9436NazMDxFNfK+qp/U1Ki/V9Y3GZHgqCIyEaz8EMTWFn9Z2+t2iUiF09lp2FtwQ8EZP8Fqua0iEYgl4agW6MVfng7DAqzBkxz3PBw61NpyAZoy075AYzRePmeHgu++heFnUUg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1728966668;
+	cv=none; b=IiFZtMud23/Gwih15ZaUUYiw3Jbtj7S4lzopZzBr2CB2F3zlTNOvgBtPtbbP4SO15cG1TbVtx4vpnB+9QJTtGN+kxx1XKEomEdxpf3B4B5aGhK5MgdcMduO4Yzye0AxsuJFrwA8UZPySrUfOKZw7UHZ/vjYuyQSNT0SuY33LutxRJwM/B+h4V8xDkgxydZJ1+xOUgmGO6McdUUOpa+8RiOuVGzcuOi3pli/719ZFtwXkBtewtRnye3vh9b6DEE0XCCIZBmpiAHvbO0hxsPoSiI8r+NwglMN1jvhiu7ReCkW3Bmrh/28FNZvB4RVq796+LYsECjRFeETYpEXvhilWeA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1728964401; c=relaxed/relaxed;
-	bh=GyoFiN/rXaMe/m+aaklpP07LqfN1T2+8ThFonOV2jgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QQmdicgRVl7d3e9Hej/dPyt58OFTvX0TIpbQTo8qQPek5nvRns9IvvySrrHquIRmSklgMe0RsoFiHkAXEoUJ4iQJ/ad93zgpMktlz2fK3INK0Y3R8RlVtdrtr5GChbDNdXB5pZS9b80+qVpZ6aZm0WFtsm5QB+yMdVpwVTjlMMxogBnEBegoNubTsQKWtXK3cdxbT3olwvj30okzlHWVT3lgBmUK9Qdw4jwiB5E8GgKL0d2glN2rtZoSFF/y8ASmUpUI88Pez+DSbSEd32tujeGAnunCT62RmcaZZHJ9VT+QZ5eZTwEGMf2HB7ReY97bQq/8W28loYYWHc9SmdeMQQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tTiMym2h; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1728966668; c=relaxed/relaxed;
+	bh=6YQRKe9Sij8fqzL3W2juIFPDKDXqzR4cJmD647qt1Es=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=VkU2fU0XD433CRB5KKmS0iJBWk6QZIDEXI/4F4gwsNBoM1MNlwBSpFAMaWwnslauUaApOBJc7ZYlrqF4DydRyGCCD+1fByTxxCK9NGzJIaRFoCTUSGHKqP/e+8LQh/IoqL1YFNHYswZqqmaSjrKdOdqAUszYSXMjhyvdtsluFLf0GQsWJoM7vLYgVVx4+kQRA7GorNJ1Q2tNDnaGiHmd+tZXKOsvulD8uEkVJ6YpCXw4SqnRjzLTzJDjG17+IC6C0iGrKrcJoI2pVTLjwvnVZZwWOyk35rgS+FZWvRCp0xaSf5HVYePGD8X7Vi+CDRsUi59lWG0hq1qW9NwC7DjibQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wErw9Hav; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tTiMym2h;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wErw9Hav;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XSKvM08yGz2yNR
-	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Oct 2024 14:53:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XSLkr44Qjz3cF4
+	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Oct 2024 15:30:57 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1728964393; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=GyoFiN/rXaMe/m+aaklpP07LqfN1T2+8ThFonOV2jgk=;
-	b=tTiMym2hn0MQy3Ob3PPAInrEeTIWU4H3OFtbWtr2rJJOVvPArMXO8F0oprqJap0G1r3eW6wGpY0q5w4UAeO5PKTgBOngwBE4BDngjR0SfImf/zj2Ja/n2D9z982KjiF/0ILBGbYQSbXe/y9H1vlr7hfVjTCfmgT5uw5Hul6mVS0=
-Received: from 30.221.131.163(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WHBoCoP_1728964391 cluster:ay36)
+	t=1728966653; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=6YQRKe9Sij8fqzL3W2juIFPDKDXqzR4cJmD647qt1Es=;
+	b=wErw9HavjgqZUxJGYm2ZvwlN9hwlnAQ3wAcOOm9E2TFmZEJHNHIPQU6tN+LU0Sts8IV9Naa9J2ViaggwK068ifyKVcTUxqdrqsuYjVOXIy5JiRuwlWUmBRELonicaj3M6TZL6TlZuOaBxz5Y6dx8B0C6WK+WZ2L1WrDf7pxztYE=
+Received: from 30.221.131.163(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WHC21-1_1728966652 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 15 Oct 2024 11:53:12 +0800
-Message-ID: <2d76e36c-95d5-4eb2-9825-fa5e739ae139@linux.alibaba.com>
-Date: Tue, 15 Oct 2024 11:53:11 +0800
+          Tue, 15 Oct 2024 12:30:52 +0800
+Message-ID: <a850712b-12b4-43a6-98e1-4f4c2bb779ff@linux.alibaba.com>
+Date: Tue, 15 Oct 2024 12:30:50 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: fix unsupported blksize in fileio mode
+Subject: Re: [PATCH] erofs-utils: tests: add test for file-backed mount
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20241015033601.3206952-1-hongzhen@linux.alibaba.com>
- <231e17e3-82c1-49f4-9cc1-b376b89205b3@linux.alibaba.com>
+References: <20241014150359.2185347-1-hongzhen@linux.alibaba.com>
+ <ca1304e4-10ae-4721-9e61-5e8274743234@linux.alibaba.com>
 From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-In-Reply-To: <231e17e3-82c1-49f4-9cc1-b376b89205b3@linux.alibaba.com>
+In-Reply-To: <ca1304e4-10ae-4721-9e61-5e8274743234@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -65,31 +65,34 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 
-On 2024/10/15 11:47, Gao Xiang wrote:
-> Hi Hongzhen,
+On 2024/10/15 11:48, Gao Xiang wrote:
 >
-> On 2024/10/15 11:36, Hongzhen Luo wrote:
->> In fileio mode, when blcksize is not equal to PAGE_SIZE,
->> erofs will attempt to set the block size of sb->s_bdev,
->> which will trigger a panic. This patch fixes this.
->>
->> Fixes: fb176750266a ("erofs: add file-backed mount support")
+>
+> On 2024/10/14 23:03, Hongzhen Luo wrote:
+>> Test for the file-backed mount feature.
 >>
 >> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
 >
-> File-backed mounts should support < PAGE_SIZE sizes.
-> You should just fix these cases instead.
+> I think we need to run all previous tests for file-backed mounts,
+> and it's my previous mount helper for testing.
+>
+> #include <sys/mount.h>
+>
+> int main(int argc, char *argv[])
+> {
+>         return mount(argv[1], argv[2], "erofs", MS_RDONLY, argc >= 3 ? 
+> argv[3] : NULL);
+>
+> }
 >
 > Thanks,
 > Gao Xiang
 
-
-Okay, I will fix it later.
+Sure.
 
 ---
 
