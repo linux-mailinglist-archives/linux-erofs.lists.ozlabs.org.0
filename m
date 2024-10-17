@@ -1,61 +1,66 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BFE19A1CE3
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Oct 2024 10:17:20 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FA159A2060
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Oct 2024 12:59:01 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XTgfv60Gzz3bgV
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Oct 2024 19:17:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XTlFZ4WNKz3bjs
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Oct 2024 21:58:58 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729153030;
-	cv=none; b=gYsD1nLEA5rcfjEIXbmw1FRQGsyYMP8HVMumdr3K1yDDJfHHuT0x4Al42TluT1aleggTLjNf/yoQId5wMdJylGF8luk6NdSeFWgZE+4yYVPxdZegdwxyP1SurT4gwrYfmep/gMW4BcUSONcEJ09ltiCnqEezOTMNoMVN/QDusdY90UDGdWSzx7ElzA85zzEHZ0GpMAm3PyxAa+arxJz0VkYDlYxmGUrDIiWcw9mciVhzFP9itt+BFQSuoIid0cJpv6OIz8RWrNJHbVhOtQSlXRmUeM0wz9eL/wQjLUcfdPwQNYrGyOaeUIvCzVPxQfqRX5X4duIG008gUxEsdJq0WA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=117.135.210.2
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729162736;
+	cv=none; b=QrvZts60GJOwocQMdcgNQ2RSwr0HgJ32RV1i0NlPYRfyyW+SiwRSd0tUORBdFRQuJkofBgrimaYndSML0YbSExIthipqY1NKSXo6aG75iik3M2HtXgzssoJCPCfXQleY7TKRFPsfGD/95FMBdWnq5cKc1maxBwM+XUEZdplow6BuGVVmumu73y6wgqZTGqpXodxBNaAcVDwu2JIIrK5ZO0LmsbAUmXFhg/7sPvQddJpVGTnxGrsb/6GA+Gq4dVDkUTmI8v7apMEKoO+KGlpXBjwaDL8C+lPjC9N88i591gJIrMPk3UelsbCddCZD6l4uaLVSs4FdOwQQyqQu6USj7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729153030; c=relaxed/relaxed;
-	bh=lgdtE/cjkREEUIcIbl6cLW0HqkfNtPyPRowWoZLEyrk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gyNPUcv8Pn5RivJkMVQ6f0keIkw3c2OmOSUszxsgat7QMdJQ52mKaQDUrtJfw86Wn0lwVjygny2XwKXJhXWcd7MmSIFa0Lj3UvOUZKGUzmm0qlswYIbJnZOmIaaMkr9QT+FejtThSGEWaixNfK4HQ5IqO5oQq/sZuFe3rVzzVIrYZfRUimTrUO/yizNug6M0H/4idzd/mDob/ZNcYrMHpHis2CWvBPlB8qeFRTJ3ARdR0mi/saJGKUT1udUlrdM736L2ECOfL+eYl011JSHqifiMunmVdPOzP797cca02d4eWhjhlU0jHs26LiFgh8fRfsGQPzK97dqIENhwhVFUmA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YHOSUD1K; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1729162736; c=relaxed/relaxed;
+	bh=VYfStKyYjzPsv6QU09uz3TUo+uYsxOYyEuAT3Sv919Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=JNZzdWhU0IfP0sEGGkBFokUhfVz/MXGZRUWpXDOLhidlOrrNks63hDLzGdVPFiDHq4btpXg3z38DAQugUiDBFqaWPkbsjaGzSHMDtOMLa5XWwhnRJh2kMimfsbdkv0nfEgm8adRjbwmMW5+qllLKHNZpDYSkRmvZ7XMWs8XhK7WUvFzzwhRKvkDhKLlm5OCfynPrwQEOGHIY4bDkGWF4DsM7fiseho83t7Nr2QvER6gCf+3w7dv3w5K7LNaUlAS8UhmT85ZQSma1JNx/cEEJh6Z9UAwZ2pU1AYh8jdOGMwUFPlDQUyzTnwx4o2ws8bhLfnX3+oia9uiJO/TlerRHqg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=163.com; dkim=pass (1024-bit key; unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=WOdBQNiD; dkim-atps=neutral; spf=pass (client-ip=117.135.210.2; helo=m16.mail.163.com; envelope-from=gouhaojake@163.com; receiver=lists.ozlabs.org) smtp.mailfrom=163.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YHOSUD1K;
+	dkim=pass (1024-bit key; unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=WOdBQNiD;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XTgfm6bY0z2xbY
-	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Oct 2024 19:17:02 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1729153018; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=lgdtE/cjkREEUIcIbl6cLW0HqkfNtPyPRowWoZLEyrk=;
-	b=YHOSUD1KDk8WEgBzGBs4idqnAsMULoW78iGKK+soB1AeLI8rYOtQDaBN8hwHY0W8zaW+4f8570g+O8w7wgMXy7Wjjbvt/d16g4AIRv/RnC4jE4E0tV1fnaxJW7F1zBL6uKtd0DjdgV7fWVZWP6fnqV/ezJL7xXMEPaKDOQ+62os=
-Received: from 30.221.129.137(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WHKAp-e_1729153015 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 17 Oct 2024 16:16:56 +0800
-Message-ID: <dcbf0903-67a2-4b8e-b43b-d6b9cf195a5a@linux.alibaba.com>
-Date: Thu, 17 Oct 2024 16:16:54 +0800
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=163.com (client-ip=117.135.210.2; helo=m16.mail.163.com; envelope-from=gouhaojake@163.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 2760 seconds by postgrey-1.37 at boromir; Thu, 17 Oct 2024 21:58:52 AEDT
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XTlFS5BWpz3bbn
+	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Oct 2024 21:58:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=VYfStKyYjzPsv6QU09uz3TUo+uYsxOYyEuAT3Sv919Q=; b=W
+	OdBQNiDcqwGo8kNjmGk4yZGJmGpPe+vm5bq0EmIVyrH9f6TObXhSdFosNMWKQpuP
+	1luGLwOB3sAzOYzvQl0KEeUJ5jtWYdqfalKJiAG49LrP3LKiE2yEcVFZgFCUJrWf
+	OQ93L9+ihv7YewEQPm5QUcUc6F1sR+HSyxfvAhFB3A=
+Received: from gouhaojake$163.com ( [125.76.217.162] ) by
+ ajax-webmail-wmsvr-40-129 (Coremail) ; Thu, 17 Oct 2024 18:12:24 +0800
+ (CST)
+X-Originating-IP: [125.76.217.162]
+Date: Thu, 17 Oct 2024 18:12:24 +0800 (CST)
+From: "Gou Hao" <gouhaojake@163.com>
+To: "Gao Xiang" <hsiangkao@linux.alibaba.com>
+Subject: Re:Re: [PATCH 1/2] erofs: using macro instead of definition of log
+ functions
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2024 www.mailtech.cn 163com
+In-Reply-To: <e5843bc0-4157-4bbb-908d-2997e95e6007@linux.alibaba.com>
+References: <20241016152430.3456-1-gouhao@uniontech.com>
+ <e5843bc0-4157-4bbb-908d-2997e95e6007@linux.alibaba.com>
+X-NTES-SC: AL_Qu2ZC/2etkEv4iCeYukfm0wQgOg6UcKwu/oj2oBeN514jADp5TIqX25SImPc/ce0KxGgmgmGYBd0x95HRo5xeIQWnfLkFSQjaH1ZAbUL7CI3RA==
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_155325_1992688099.1729159944071"
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] fs: erofs: support PG_mappedtodisk flag for folios
- with zero-filled
-To: Barry Song <21cnbao@gmail.com>
-References: <20241017074346.35284-1-21cnbao@gmail.com>
- <ca27aa75-40a4-4c82-8d84-7968b2ab89d4@linux.alibaba.com>
- <0fa18bcf-9af6-4c99-ad57-613fa38ff741@linux.alibaba.com>
- <CAGsJ_4yLK3sCeJNdZRKxD2tSdMVFRBp9eq-1mAMu7UT=gqpA_Q@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAGsJ_4yLK3sCeJNdZRKxD2tSdMVFRBp9eq-1mAMu7UT=gqpA_Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+Message-ID: <5a26f5ae.a041.19299f6d787.Coremail.gouhaojake@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: gSgvCgDXfykJ4xBnkJEQAA--.11410W
+X-CM-SenderInfo: xjrxxt5rmdyvi6rwjhhfrp/1tbiYAp7jGcQgW2aYgADs9
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HTML_MESSAGE,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -68,67 +73,108 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+------=_Part_155325_1992688099.1729159944071
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 
+QXQgMjAyNC0xMC0xNyAxMTozOTo1MywgIkdhbyBYaWFuZyIgPGhzaWFuZ2thb0BsaW51eC5hbGli
+YWJhLmNvbT4gd3JvdGU6Cgo+SGkgSGFvLAo+Cj5PbiAyMDI0LzEwLzE2IDIzOjI0LCBHb3UgSGFv
+IHdyb3RlOgo+PiBObyBmdW5jdGlvbmFsIGNoYW5nZSBpbnRlbmRlZC4KPj4gCj4+IFNpZ25lZC1v
+ZmYtYnk6IEdvdSBIYW8gPGdvdWhhb0B1bmlvbnRlY2guY29tPgo+PiAtLS0KPj4gICBmcy9lcm9m
+cy9zdXBlci5jIHwgNTEgKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDMyIGRlbGV0aW9u
+cygtKQo+PiAKPj4gZGlmZiAtLWdpdCBhL2ZzL2Vyb2ZzL3N1cGVyLmMgYi9mcy9lcm9mcy9zdXBl
+ci5jCj4+IGluZGV4IDY2Njg3M2Y3NDVkYS4uYjA0Zjg4OGM4MTIzIDEwMDY0NAo+PiAtLS0gYS9m
+cy9lcm9mcy9zdXBlci5jCj4+ICsrKyBiL2ZzL2Vyb2ZzL3N1cGVyLmMKPj4gQEAgLTE4LDM5ICsx
+OCwyNiBAQAo+PiAgIAo+PiAgIHN0YXRpYyBzdHJ1Y3Qga21lbV9jYWNoZSAqZXJvZnNfaW5vZGVf
+Y2FjaGVwIF9fcmVhZF9tb3N0bHk7Cj4+ICAgCj4+IC12b2lkIF9lcm9mc19lcnIoc3RydWN0IHN1
+cGVyX2Jsb2NrICpzYiwgY29uc3QgY2hhciAqZnVuYywgY29uc3QgY2hhciAqZm10LCAuLi4pCj4+
+IC17Cj4+IC0Jc3RydWN0IHZhX2Zvcm1hdCB2YWY7Cj4+IC0JdmFfbGlzdCBhcmdzOwo+PiAtCj4+
+IC0JdmFfc3RhcnQoYXJncywgZm10KTsKPj4gLQo+PiAtCXZhZi5mbXQgPSBmbXQ7Cj4+IC0JdmFm
+LnZhID0gJmFyZ3M7Cj4+IC0KPj4gLQlpZiAoc2IpCj4+IC0JCXByX2VycigiKGRldmljZSAlcyk6
+ICVzOiAlcFYiLCBzYi0+c19pZCwgZnVuYywgJnZhZik7Cj4+IC0JZWxzZQo+PiAtCQlwcl9lcnIo
+IiVzOiAlcFYiLCBmdW5jLCAmdmFmKTsKPj4gLQl2YV9lbmQoYXJncyk7Cj4+IC19Cj4+IC0KPj4g
+LXZvaWQgX2Vyb2ZzX2luZm8oc3RydWN0IHN1cGVyX2Jsb2NrICpzYiwgY29uc3QgY2hhciAqZnVu
+YywgY29uc3QgY2hhciAqZm10LCAuLi4pCj4+IC17Cj4+IC0Jc3RydWN0IHZhX2Zvcm1hdCB2YWY7
+Cj4+IC0JdmFfbGlzdCBhcmdzOwo+PiAtCj4+IC0JdmFfc3RhcnQoYXJncywgZm10KTsKPj4gLQo+
+PiAtCXZhZi5mbXQgPSBmbXQ7Cj4+IC0JdmFmLnZhID0gJmFyZ3M7Cj4+ICsjZGVmaW5lIF9lcm9m
+c19sb2dfZGVmKG5hbWUpIFwKPj4gKwl2b2lkIF9lcm9mc18jI25hbWUoc3RydWN0IHN1cGVyX2Js
+b2NrICpzYiwgY29uc3QgY2hhciAqZnVuYywgY29uc3QgY2hhciAqZm10LCAuLi4pIFwKPj4gKwl7
+IFwKPj4gKwkJc3RydWN0IHZhX2Zvcm1hdCB2YWY7IFwKPj4gKwkJdmFfbGlzdCBhcmdzOyBcCj4+
+ICsJCVwKPj4gKwkJdmFfc3RhcnQoYXJncywgKGZtdCkpOyBcCj4+ICsJCVwKPj4gKwkJdmFmLmZt
+dCA9IChmbXQpOyBcCj4+ICsJCXZhZi52YSA9ICZhcmdzOyBcCj4+ICsJCVwKPj4gKwkJaWYgKChz
+YikpIFwKPj4gKwkJCXByXyMjbmFtZSgiKGRldmljZSAlcyk6ICVzOiAlcFYiLCAoc2IpLT5zX2lk
+LCAoZnVuYyksICZ2YWYpOyBcCj4+ICsJCWVsc2UgXAo+PiArCQkJcHJfIyNuYW1lKCIlczogJXBW
+IiwgKGZ1bmMpLCAmdmFmKTsgXAo+PiArCQl2YV9lbmQoYXJncyk7IFwKPj4gKwl9Cj4KPlRoYW5r
+cyBmb3IgdGhlIHBhdGNoIQo+Cj5BbHRob3VnaCBjb2RlIHNpbXBsaWNpdHkgaXMgcXVpdGUgaW1w
+b3J0YW50IGZvciBFUk9GUywgYnV0Cj5JJ20gbm90IHN1cmUgaW50cm9kdWNpbmcgdW5uZWNlc3Nh
+cnkgbWFjcm8gZGVmaW5pdGlvbnMgKHdoaWNoCj5jYW4gYmUgYXZvaWRlZCkgaXMgYmV0dGVyIGZv
+ciBjb2RlIHJlYWRhYmlsaXR5Lgo+Cj5JIHdvbmRlciBpZiB3ZSBjYW4gcHV0IHRoaXMgaW50byBh
+bm90aGVyIHdheSwgbGlrZSB0aGUgY3VycmVudAo+X2J0cmZzX3ByaW50aygpIGFuZCBfZjJmc19w
+cmludGsoKSBpZiB3ZSByZWFsbHkgbmVlZCB0byB3b3JrCj5vbiB0aGlzLgo+Cj5UaGFua3MsCgo+
+R2FvIFhpYW5nCgoKVGhhbmtzIGZvciB5b3VyIHJldmlldyBhbmQgYWR2aXNlLiBJIHRha2UgYSBs
+b29rIGF0IHRoZXNlIHR3byBmdW5jdGlvbnMuCgoKCi0tCgp0aGFua3MsCkdvdSBIYW8=
+------=_Part_155325_1992688099.1729159944071
+Content-Type: text/html; charset=GBK
+Content-Transfer-Encoding: base64
 
-On 2024/10/17 16:09, Barry Song wrote:
-> On Thu, Oct 17, 2024 at 9:00 PM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->>
->>
->>
->> On 2024/10/17 15:58, Gao Xiang wrote:
->>> Hi Barry,
->>>
->>> On 2024/10/17 15:43, Barry Song wrote:
->>>> From: Barry Song <v-songbaohua@oppo.com>
->>>>
->>>> When a folio has never been zero-filled, mark it as mappedtodisk
->>>> to allow other software components to recognize and utilize the
->>>> flag.
->>>>
->>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
->>>
->>> Thanks for this!
->>>
->>> It looks good to me as an improvement as long as PG_mappedtodisk
->>> is long-term lived and useful to users.
->>>
->>> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->>
-> 
-> thanks!
-> 
->> BTW, I wonder if iomap supports this since uncompressed EROFS
->> relies on iomap paths...
-> 
-> In the core layer, I only see fs/buffer.c's block_read_full_folio()
-> and fs/mpage.c's mpage_readahead() and mpage_readahead()
-> supporting this. I haven't found any code in iomap that sets the
-> flag.
-> 
-> I guess erofs doesn't call the above functions for non-compressed
-> files?
-
-mpage are obsoleted interfaces (of course EROFS could use
-them instead, see my backport to centos 7 [1]), and iomap
-is used for recent unencoded I/O use cases.
-
-It would be better to add support for iomap too, but I guess
-PG_mappedtodisk has very few users in the upstream kernel,
-so they might ask for further use cases tho ;-)
-
-Thanks,
-Gao Xiang
-
-[1] https://github.com/erofs/kmod-erofs/blob/main/src/data.c#L249
-
-> 
->>
->> Thanks,
->> Gao Xiang
-> 
-> Barry
+PGRpdiBkYXRhLW50ZXM9Im50ZXNfbWFpbF9ib2R5X3Jvb3QiIHN0eWxlPSJsaW5lLWhlaWdodDox
+Ljc7Y29sb3I6IzAwMDAwMDtmb250LXNpemU6MTRweDtmb250LWZhbWlseTpBcmlhbCI+PGRpdiBp
+ZD0ic3BuRWRpdG9yQ29udGVudCI+PHAgc3R5bGU9Im1hcmdpbjogMDsiPjxzcGFuIHN0eWxlPSJm
+b250LWZhbWlseTogYXJpYWw7IHdoaXRlLXNwYWNlLWNvbGxhcHNlOiBwcmVzZXJ2ZTsiPkF0IDIw
+MjQtMTAtMTcgMTE6Mzk6NTMsICJHYW8gWGlhbmciICZsdDtoc2lhbmdrYW9AbGludXguYWxpYmFi
+YS5jb20mZ3Q7IHdyb3RlOjwvc3Bhbj48L3A+PC9kaXY+PHByZT4mZ3Q7SGkgSGFvLAomZ3Q7CiZn
+dDtPbiAyMDI0LzEwLzE2IDIzOjI0LCBHb3UgSGFvIHdyb3RlOgomZ3Q7Jmd0OyBObyBmdW5jdGlv
+bmFsIGNoYW5nZSBpbnRlbmRlZC4KJmd0OyZndDsgCiZndDsmZ3Q7IFNpZ25lZC1vZmYtYnk6IEdv
+dSBIYW8gJmx0O2dvdWhhb0B1bmlvbnRlY2guY29tJmd0OwomZ3Q7Jmd0OyAtLS0KJmd0OyZndDsg
+ICBmcy9lcm9mcy9zdXBlci5jIHwgNTEgKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tCiZndDsmZ3Q7ICAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMo
+KyksIDMyIGRlbGV0aW9ucygtKQomZ3Q7Jmd0OyAKJmd0OyZndDsgZGlmZiAtLWdpdCBhL2ZzL2Vy
+b2ZzL3N1cGVyLmMgYi9mcy9lcm9mcy9zdXBlci5jCiZndDsmZ3Q7IGluZGV4IDY2Njg3M2Y3NDVk
+YS4uYjA0Zjg4OGM4MTIzIDEwMDY0NAomZ3Q7Jmd0OyAtLS0gYS9mcy9lcm9mcy9zdXBlci5jCiZn
+dDsmZ3Q7ICsrKyBiL2ZzL2Vyb2ZzL3N1cGVyLmMKJmd0OyZndDsgQEAgLTE4LDM5ICsxOCwyNiBA
+QAomZ3Q7Jmd0OyAgIAomZ3Q7Jmd0OyAgIHN0YXRpYyBzdHJ1Y3Qga21lbV9jYWNoZSAqZXJvZnNf
+aW5vZGVfY2FjaGVwIF9fcmVhZF9tb3N0bHk7CiZndDsmZ3Q7ICAgCiZndDsmZ3Q7IC12b2lkIF9l
+cm9mc19lcnIoc3RydWN0IHN1cGVyX2Jsb2NrICpzYiwgY29uc3QgY2hhciAqZnVuYywgY29uc3Qg
+Y2hhciAqZm10LCAuLi4pCiZndDsmZ3Q7IC17CiZndDsmZ3Q7IC0Jc3RydWN0IHZhX2Zvcm1hdCB2
+YWY7CiZndDsmZ3Q7IC0JdmFfbGlzdCBhcmdzOwomZ3Q7Jmd0OyAtCiZndDsmZ3Q7IC0JdmFfc3Rh
+cnQoYXJncywgZm10KTsKJmd0OyZndDsgLQomZ3Q7Jmd0OyAtCXZhZi5mbXQgPSBmbXQ7CiZndDsm
+Z3Q7IC0JdmFmLnZhID0gJmFtcDthcmdzOwomZ3Q7Jmd0OyAtCiZndDsmZ3Q7IC0JaWYgKHNiKQom
+Z3Q7Jmd0OyAtCQlwcl9lcnIoIihkZXZpY2UgJXMpOiAlczogJXBWIiwgc2ItJmd0O3NfaWQsIGZ1
+bmMsICZhbXA7dmFmKTsKJmd0OyZndDsgLQllbHNlCiZndDsmZ3Q7IC0JCXByX2VycigiJXM6ICVw
+ViIsIGZ1bmMsICZhbXA7dmFmKTsKJmd0OyZndDsgLQl2YV9lbmQoYXJncyk7CiZndDsmZ3Q7IC19
+CiZndDsmZ3Q7IC0KJmd0OyZndDsgLXZvaWQgX2Vyb2ZzX2luZm8oc3RydWN0IHN1cGVyX2Jsb2Nr
+ICpzYiwgY29uc3QgY2hhciAqZnVuYywgY29uc3QgY2hhciAqZm10LCAuLi4pCiZndDsmZ3Q7IC17
+CiZndDsmZ3Q7IC0Jc3RydWN0IHZhX2Zvcm1hdCB2YWY7CiZndDsmZ3Q7IC0JdmFfbGlzdCBhcmdz
+OwomZ3Q7Jmd0OyAtCiZndDsmZ3Q7IC0JdmFfc3RhcnQoYXJncywgZm10KTsKJmd0OyZndDsgLQom
+Z3Q7Jmd0OyAtCXZhZi5mbXQgPSBmbXQ7CiZndDsmZ3Q7IC0JdmFmLnZhID0gJmFtcDthcmdzOwom
+Z3Q7Jmd0OyArI2RlZmluZSBfZXJvZnNfbG9nX2RlZihuYW1lKSBcCiZndDsmZ3Q7ICsJdm9pZCBf
+ZXJvZnNfIyNuYW1lKHN0cnVjdCBzdXBlcl9ibG9jayAqc2IsIGNvbnN0IGNoYXIgKmZ1bmMsIGNv
+bnN0IGNoYXIgKmZtdCwgLi4uKSBcCiZndDsmZ3Q7ICsJeyBcCiZndDsmZ3Q7ICsJCXN0cnVjdCB2
+YV9mb3JtYXQgdmFmOyBcCiZndDsmZ3Q7ICsJCXZhX2xpc3QgYXJnczsgXAomZ3Q7Jmd0OyArCQlc
+CiZndDsmZ3Q7ICsJCXZhX3N0YXJ0KGFyZ3MsIChmbXQpKTsgXAomZ3Q7Jmd0OyArCQlcCiZndDsm
+Z3Q7ICsJCXZhZi5mbXQgPSAoZm10KTsgXAomZ3Q7Jmd0OyArCQl2YWYudmEgPSAmYW1wO2FyZ3M7
+IFwKJmd0OyZndDsgKwkJXAomZ3Q7Jmd0OyArCQlpZiAoKHNiKSkgXAomZ3Q7Jmd0OyArCQkJcHJf
+IyNuYW1lKCIoZGV2aWNlICVzKTogJXM6ICVwViIsIChzYiktJmd0O3NfaWQsIChmdW5jKSwgJmFt
+cDt2YWYpOyBcCiZndDsmZ3Q7ICsJCWVsc2UgXAomZ3Q7Jmd0OyArCQkJcHJfIyNuYW1lKCIlczog
+JXBWIiwgKGZ1bmMpLCAmYW1wO3ZhZik7IFwKJmd0OyZndDsgKwkJdmFfZW5kKGFyZ3MpOyBcCiZn
+dDsmZ3Q7ICsJfQomZ3Q7CiZndDtUaGFua3MgZm9yIHRoZSBwYXRjaCEKJmd0OwomZ3Q7QWx0aG91
+Z2ggY29kZSBzaW1wbGljaXR5IGlzIHF1aXRlIGltcG9ydGFudCBmb3IgRVJPRlMsIGJ1dAomZ3Q7
+SSdtIG5vdCBzdXJlIGludHJvZHVjaW5nIHVubmVjZXNzYXJ5IG1hY3JvIGRlZmluaXRpb25zICh3
+aGljaAomZ3Q7Y2FuIGJlIGF2b2lkZWQpIGlzIGJldHRlciBmb3IgY29kZSByZWFkYWJpbGl0eS4K
+Jmd0OwomZ3Q7SSB3b25kZXIgaWYgd2UgY2FuIHB1dCB0aGlzIGludG8gYW5vdGhlciB3YXksIGxp
+a2UgdGhlIGN1cnJlbnQKJmd0O19idHJmc19wcmludGsoKSBhbmQgX2YyZnNfcHJpbnRrKCkgaWYg
+d2UgcmVhbGx5IG5lZWQgdG8gd29yawomZ3Q7b24gdGhpcy4KJmd0OwomZ3Q7VGhhbmtzLAo8ZGl2
+PiZndDtHYW8gWGlhbmc8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRoYW5rcyBmb3IgeW91ciBy
+ZXZpZXcgYW5kIGFkdmlzZS4gSSB0YWtlIGEgbG9vayBhdCB0aGVzZSB0d28gZnVuY3Rpb25zLjwv
+ZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHAgc3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbDsgd2hp
+dGUtc3BhY2UtY29sbGFwc2U6IGNvbGxhcHNlOyBtYXJnaW46IDBweDsiPi0tPC9wPjxwIHN0eWxl
+PSJmb250LWZhbWlseTogQXJpYWw7IHdoaXRlLXNwYWNlLWNvbGxhcHNlOiBjb2xsYXBzZTsgbWFy
+Z2luOiAwcHg7Ij48L3A+PHByZSBjbGFzcz0ibW96LXNpZ25hdHVyZSIgY29scz0iNzIiPnRoYW5r
+cywKR291IEhhbzwvcHJlPjwvZGl2PjwvcHJlPjwvZGl2Pg==
+------=_Part_155325_1992688099.1729159944071--
 
