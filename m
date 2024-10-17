@@ -1,66 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FA159A2060
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Oct 2024 12:59:01 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4E429A2199
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Oct 2024 13:57:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XTlFZ4WNKz3bjs
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Oct 2024 21:58:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XTmY62ntwz3btc
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Oct 2024 22:57:30 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=117.135.210.2
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729162736;
-	cv=none; b=QrvZts60GJOwocQMdcgNQ2RSwr0HgJ32RV1i0NlPYRfyyW+SiwRSd0tUORBdFRQuJkofBgrimaYndSML0YbSExIthipqY1NKSXo6aG75iik3M2HtXgzssoJCPCfXQleY7TKRFPsfGD/95FMBdWnq5cKc1maxBwM+XUEZdplow6BuGVVmumu73y6wgqZTGqpXodxBNaAcVDwu2JIIrK5ZO0LmsbAUmXFhg/7sPvQddJpVGTnxGrsb/6GA+Gq4dVDkUTmI8v7apMEKoO+KGlpXBjwaDL8C+lPjC9N88i591gJIrMPk3UelsbCddCZD6l4uaLVSs4FdOwQQyqQu6USj7A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729166247;
+	cv=none; b=Fg3f0jz2TULAq4j2pYMjEhCWXPdQd1Xw/J0L0qr3GG1SbiEsjYuBAj+cEQtIR6dywvtx23j7D2o9mFwOsedzAuycWzVNZus0Y52BnMCD40ROeZ0Or0939gBhlBXDJsCOTb8RQMLWLjvQzuTLG2zxKpdVQVQjSy3beRphF42CmdWh3FznLak2gyD7YyFvIWlhLJiiShvxXCAdHoLRMH5HFlcB8DT2jgUPx8hKT+5u0/PIi2lG6DORcIJeMmY+1myB753bWHDhXXyne8qsT9QN0HuMh014b/kPCc04WN2A22ee3tIYIReEVUmk3XD7wfHxiahwUff1g9fZNyIGJHqSOg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729162736; c=relaxed/relaxed;
-	bh=VYfStKyYjzPsv6QU09uz3TUo+uYsxOYyEuAT3Sv919Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=JNZzdWhU0IfP0sEGGkBFokUhfVz/MXGZRUWpXDOLhidlOrrNks63hDLzGdVPFiDHq4btpXg3z38DAQugUiDBFqaWPkbsjaGzSHMDtOMLa5XWwhnRJh2kMimfsbdkv0nfEgm8adRjbwmMW5+qllLKHNZpDYSkRmvZ7XMWs8XhK7WUvFzzwhRKvkDhKLlm5OCfynPrwQEOGHIY4bDkGWF4DsM7fiseho83t7Nr2QvER6gCf+3w7dv3w5K7LNaUlAS8UhmT85ZQSma1JNx/cEEJh6Z9UAwZ2pU1AYh8jdOGMwUFPlDQUyzTnwx4o2ws8bhLfnX3+oia9uiJO/TlerRHqg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=163.com; dkim=pass (1024-bit key; unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=WOdBQNiD; dkim-atps=neutral; spf=pass (client-ip=117.135.210.2; helo=m16.mail.163.com; envelope-from=gouhaojake@163.com; receiver=lists.ozlabs.org) smtp.mailfrom=163.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=163.com
+	t=1729166247; c=relaxed/relaxed;
+	bh=+0k3fKbkmiBfeJSp47PplMF3yEs2JVdVQUW+a1FcgDM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mAmKcZ+YBPf65ffBwCfp9XBHYR0UqVb2qPTyMkc0G9duj+s4sIAgQe9wgjKGVZdsR5wqHCItWJU+TUEb1+Wt8yJxNbVtLhGZz7d1Z59QMKayRtOXI2ypTvSHjNUUIoGbXyihHF01s1/SNzM4V6K6epZcu8w+qW2vKJmlta2vqKrACARMA4ew05QZxAs952IUJZXmZxj9dM4w4Du+i3Cete+XbH5RlyBtD80ywjz4Lw9HScJnQTHl+1gv2ZYfO3XHkuG4Zr0DsG2E4qP7UfqMn8l+Soxz4LtXEQUdMZtdt5wALauHpZ9FLyX6y71IfuEzz69dMKF26gLncz410Pdy5Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YZbsUr7w; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=WOdBQNiD;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YZbsUr7w;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=163.com (client-ip=117.135.210.2; helo=m16.mail.163.com; envelope-from=gouhaojake@163.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 2760 seconds by postgrey-1.37 at boromir; Thu, 17 Oct 2024 21:58:52 AEDT
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XTlFS5BWpz3bbn
-	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Oct 2024 21:58:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=VYfStKyYjzPsv6QU09uz3TUo+uYsxOYyEuAT3Sv919Q=; b=W
-	OdBQNiDcqwGo8kNjmGk4yZGJmGpPe+vm5bq0EmIVyrH9f6TObXhSdFosNMWKQpuP
-	1luGLwOB3sAzOYzvQl0KEeUJ5jtWYdqfalKJiAG49LrP3LKiE2yEcVFZgFCUJrWf
-	OQ93L9+ihv7YewEQPm5QUcUc6F1sR+HSyxfvAhFB3A=
-Received: from gouhaojake$163.com ( [125.76.217.162] ) by
- ajax-webmail-wmsvr-40-129 (Coremail) ; Thu, 17 Oct 2024 18:12:24 +0800
- (CST)
-X-Originating-IP: [125.76.217.162]
-Date: Thu, 17 Oct 2024 18:12:24 +0800 (CST)
-From: "Gou Hao" <gouhaojake@163.com>
-To: "Gao Xiang" <hsiangkao@linux.alibaba.com>
-Subject: Re:Re: [PATCH 1/2] erofs: using macro instead of definition of log
- functions
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <e5843bc0-4157-4bbb-908d-2997e95e6007@linux.alibaba.com>
-References: <20241016152430.3456-1-gouhao@uniontech.com>
- <e5843bc0-4157-4bbb-908d-2997e95e6007@linux.alibaba.com>
-X-NTES-SC: AL_Qu2ZC/2etkEv4iCeYukfm0wQgOg6UcKwu/oj2oBeN514jADp5TIqX25SImPc/ce0KxGgmgmGYBd0x95HRo5xeIQWnfLkFSQjaH1ZAbUL7CI3RA==
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_155325_1992688099.1729159944071"
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XTmY00xHNz2yMD
+	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Oct 2024 22:57:20 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1729166235; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=+0k3fKbkmiBfeJSp47PplMF3yEs2JVdVQUW+a1FcgDM=;
+	b=YZbsUr7wyi51zWeIR2eavaPTEyspYWr5mY7Rv/t4cTv59gQOPAghEhIiV/rtrYxf8votiUymOpdUJyUwlpAUuxeXs2WAzL//I/8Y1mf5X+Oh2PRBp0a40M68/OwnIYpSKSlYe9Zt4a+jna2IzU+Z68WJAJu2cUzE87SzOpAVZkI=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WHKltBl_1729166227 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 17 Oct 2024 19:57:14 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/3] erofs: get rid of erofs_{find,insert}_workgroup
+Date: Thu, 17 Oct 2024 19:57:03 +0800
+Message-ID: <20241017115705.877515-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-Message-ID: <5a26f5ae.a041.19299f6d787.Coremail.gouhaojake@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: gSgvCgDXfykJ4xBnkJEQAA--.11410W
-X-CM-SenderInfo: xjrxxt5rmdyvi6rwjhhfrp/1tbiYAp7jGcQgW2aYgADs9
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HTML_MESSAGE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -73,108 +60,170 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Chunhai Guo <guochunhai@vivo.com>, LKML <linux-kernel@vger.kernel.org>, Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-------=_Part_155325_1992688099.1729159944071
-Content-Type: text/plain; charset=GBK
-Content-Transfer-Encoding: base64
+Just fold them into the only two callers since
+they are simple enough.
 
-QXQgMjAyNC0xMC0xNyAxMTozOTo1MywgIkdhbyBYaWFuZyIgPGhzaWFuZ2thb0BsaW51eC5hbGli
-YWJhLmNvbT4gd3JvdGU6Cgo+SGkgSGFvLAo+Cj5PbiAyMDI0LzEwLzE2IDIzOjI0LCBHb3UgSGFv
-IHdyb3RlOgo+PiBObyBmdW5jdGlvbmFsIGNoYW5nZSBpbnRlbmRlZC4KPj4gCj4+IFNpZ25lZC1v
-ZmYtYnk6IEdvdSBIYW8gPGdvdWhhb0B1bmlvbnRlY2guY29tPgo+PiAtLS0KPj4gICBmcy9lcm9m
-cy9zdXBlci5jIHwgNTEgKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDMyIGRlbGV0aW9u
-cygtKQo+PiAKPj4gZGlmZiAtLWdpdCBhL2ZzL2Vyb2ZzL3N1cGVyLmMgYi9mcy9lcm9mcy9zdXBl
-ci5jCj4+IGluZGV4IDY2Njg3M2Y3NDVkYS4uYjA0Zjg4OGM4MTIzIDEwMDY0NAo+PiAtLS0gYS9m
-cy9lcm9mcy9zdXBlci5jCj4+ICsrKyBiL2ZzL2Vyb2ZzL3N1cGVyLmMKPj4gQEAgLTE4LDM5ICsx
-OCwyNiBAQAo+PiAgIAo+PiAgIHN0YXRpYyBzdHJ1Y3Qga21lbV9jYWNoZSAqZXJvZnNfaW5vZGVf
-Y2FjaGVwIF9fcmVhZF9tb3N0bHk7Cj4+ICAgCj4+IC12b2lkIF9lcm9mc19lcnIoc3RydWN0IHN1
-cGVyX2Jsb2NrICpzYiwgY29uc3QgY2hhciAqZnVuYywgY29uc3QgY2hhciAqZm10LCAuLi4pCj4+
-IC17Cj4+IC0Jc3RydWN0IHZhX2Zvcm1hdCB2YWY7Cj4+IC0JdmFfbGlzdCBhcmdzOwo+PiAtCj4+
-IC0JdmFfc3RhcnQoYXJncywgZm10KTsKPj4gLQo+PiAtCXZhZi5mbXQgPSBmbXQ7Cj4+IC0JdmFm
-LnZhID0gJmFyZ3M7Cj4+IC0KPj4gLQlpZiAoc2IpCj4+IC0JCXByX2VycigiKGRldmljZSAlcyk6
-ICVzOiAlcFYiLCBzYi0+c19pZCwgZnVuYywgJnZhZik7Cj4+IC0JZWxzZQo+PiAtCQlwcl9lcnIo
-IiVzOiAlcFYiLCBmdW5jLCAmdmFmKTsKPj4gLQl2YV9lbmQoYXJncyk7Cj4+IC19Cj4+IC0KPj4g
-LXZvaWQgX2Vyb2ZzX2luZm8oc3RydWN0IHN1cGVyX2Jsb2NrICpzYiwgY29uc3QgY2hhciAqZnVu
-YywgY29uc3QgY2hhciAqZm10LCAuLi4pCj4+IC17Cj4+IC0Jc3RydWN0IHZhX2Zvcm1hdCB2YWY7
-Cj4+IC0JdmFfbGlzdCBhcmdzOwo+PiAtCj4+IC0JdmFfc3RhcnQoYXJncywgZm10KTsKPj4gLQo+
-PiAtCXZhZi5mbXQgPSBmbXQ7Cj4+IC0JdmFmLnZhID0gJmFyZ3M7Cj4+ICsjZGVmaW5lIF9lcm9m
-c19sb2dfZGVmKG5hbWUpIFwKPj4gKwl2b2lkIF9lcm9mc18jI25hbWUoc3RydWN0IHN1cGVyX2Js
-b2NrICpzYiwgY29uc3QgY2hhciAqZnVuYywgY29uc3QgY2hhciAqZm10LCAuLi4pIFwKPj4gKwl7
-IFwKPj4gKwkJc3RydWN0IHZhX2Zvcm1hdCB2YWY7IFwKPj4gKwkJdmFfbGlzdCBhcmdzOyBcCj4+
-ICsJCVwKPj4gKwkJdmFfc3RhcnQoYXJncywgKGZtdCkpOyBcCj4+ICsJCVwKPj4gKwkJdmFmLmZt
-dCA9IChmbXQpOyBcCj4+ICsJCXZhZi52YSA9ICZhcmdzOyBcCj4+ICsJCVwKPj4gKwkJaWYgKChz
-YikpIFwKPj4gKwkJCXByXyMjbmFtZSgiKGRldmljZSAlcyk6ICVzOiAlcFYiLCAoc2IpLT5zX2lk
-LCAoZnVuYyksICZ2YWYpOyBcCj4+ICsJCWVsc2UgXAo+PiArCQkJcHJfIyNuYW1lKCIlczogJXBW
-IiwgKGZ1bmMpLCAmdmFmKTsgXAo+PiArCQl2YV9lbmQoYXJncyk7IFwKPj4gKwl9Cj4KPlRoYW5r
-cyBmb3IgdGhlIHBhdGNoIQo+Cj5BbHRob3VnaCBjb2RlIHNpbXBsaWNpdHkgaXMgcXVpdGUgaW1w
-b3J0YW50IGZvciBFUk9GUywgYnV0Cj5JJ20gbm90IHN1cmUgaW50cm9kdWNpbmcgdW5uZWNlc3Nh
-cnkgbWFjcm8gZGVmaW5pdGlvbnMgKHdoaWNoCj5jYW4gYmUgYXZvaWRlZCkgaXMgYmV0dGVyIGZv
-ciBjb2RlIHJlYWRhYmlsaXR5Lgo+Cj5JIHdvbmRlciBpZiB3ZSBjYW4gcHV0IHRoaXMgaW50byBh
-bm90aGVyIHdheSwgbGlrZSB0aGUgY3VycmVudAo+X2J0cmZzX3ByaW50aygpIGFuZCBfZjJmc19w
-cmludGsoKSBpZiB3ZSByZWFsbHkgbmVlZCB0byB3b3JrCj5vbiB0aGlzLgo+Cj5UaGFua3MsCgo+
-R2FvIFhpYW5nCgoKVGhhbmtzIGZvciB5b3VyIHJldmlldyBhbmQgYWR2aXNlLiBJIHRha2UgYSBs
-b29rIGF0IHRoZXNlIHR3byBmdW5jdGlvbnMuCgoKCi0tCgp0aGFua3MsCkdvdSBIYW8=
-------=_Part_155325_1992688099.1729159944071
-Content-Type: text/html; charset=GBK
-Content-Transfer-Encoding: base64
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/internal.h |  5 +----
+ fs/erofs/zdata.c    | 38 +++++++++++++++++++++++++---------
+ fs/erofs/zutil.c    | 50 +--------------------------------------------
+ 3 files changed, 30 insertions(+), 63 deletions(-)
 
-PGRpdiBkYXRhLW50ZXM9Im50ZXNfbWFpbF9ib2R5X3Jvb3QiIHN0eWxlPSJsaW5lLWhlaWdodDox
-Ljc7Y29sb3I6IzAwMDAwMDtmb250LXNpemU6MTRweDtmb250LWZhbWlseTpBcmlhbCI+PGRpdiBp
-ZD0ic3BuRWRpdG9yQ29udGVudCI+PHAgc3R5bGU9Im1hcmdpbjogMDsiPjxzcGFuIHN0eWxlPSJm
-b250LWZhbWlseTogYXJpYWw7IHdoaXRlLXNwYWNlLWNvbGxhcHNlOiBwcmVzZXJ2ZTsiPkF0IDIw
-MjQtMTAtMTcgMTE6Mzk6NTMsICJHYW8gWGlhbmciICZsdDtoc2lhbmdrYW9AbGludXguYWxpYmFi
-YS5jb20mZ3Q7IHdyb3RlOjwvc3Bhbj48L3A+PC9kaXY+PHByZT4mZ3Q7SGkgSGFvLAomZ3Q7CiZn
-dDtPbiAyMDI0LzEwLzE2IDIzOjI0LCBHb3UgSGFvIHdyb3RlOgomZ3Q7Jmd0OyBObyBmdW5jdGlv
-bmFsIGNoYW5nZSBpbnRlbmRlZC4KJmd0OyZndDsgCiZndDsmZ3Q7IFNpZ25lZC1vZmYtYnk6IEdv
-dSBIYW8gJmx0O2dvdWhhb0B1bmlvbnRlY2guY29tJmd0OwomZ3Q7Jmd0OyAtLS0KJmd0OyZndDsg
-ICBmcy9lcm9mcy9zdXBlci5jIHwgNTEgKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tCiZndDsmZ3Q7ICAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMo
-KyksIDMyIGRlbGV0aW9ucygtKQomZ3Q7Jmd0OyAKJmd0OyZndDsgZGlmZiAtLWdpdCBhL2ZzL2Vy
-b2ZzL3N1cGVyLmMgYi9mcy9lcm9mcy9zdXBlci5jCiZndDsmZ3Q7IGluZGV4IDY2Njg3M2Y3NDVk
-YS4uYjA0Zjg4OGM4MTIzIDEwMDY0NAomZ3Q7Jmd0OyAtLS0gYS9mcy9lcm9mcy9zdXBlci5jCiZn
-dDsmZ3Q7ICsrKyBiL2ZzL2Vyb2ZzL3N1cGVyLmMKJmd0OyZndDsgQEAgLTE4LDM5ICsxOCwyNiBA
-QAomZ3Q7Jmd0OyAgIAomZ3Q7Jmd0OyAgIHN0YXRpYyBzdHJ1Y3Qga21lbV9jYWNoZSAqZXJvZnNf
-aW5vZGVfY2FjaGVwIF9fcmVhZF9tb3N0bHk7CiZndDsmZ3Q7ICAgCiZndDsmZ3Q7IC12b2lkIF9l
-cm9mc19lcnIoc3RydWN0IHN1cGVyX2Jsb2NrICpzYiwgY29uc3QgY2hhciAqZnVuYywgY29uc3Qg
-Y2hhciAqZm10LCAuLi4pCiZndDsmZ3Q7IC17CiZndDsmZ3Q7IC0Jc3RydWN0IHZhX2Zvcm1hdCB2
-YWY7CiZndDsmZ3Q7IC0JdmFfbGlzdCBhcmdzOwomZ3Q7Jmd0OyAtCiZndDsmZ3Q7IC0JdmFfc3Rh
-cnQoYXJncywgZm10KTsKJmd0OyZndDsgLQomZ3Q7Jmd0OyAtCXZhZi5mbXQgPSBmbXQ7CiZndDsm
-Z3Q7IC0JdmFmLnZhID0gJmFtcDthcmdzOwomZ3Q7Jmd0OyAtCiZndDsmZ3Q7IC0JaWYgKHNiKQom
-Z3Q7Jmd0OyAtCQlwcl9lcnIoIihkZXZpY2UgJXMpOiAlczogJXBWIiwgc2ItJmd0O3NfaWQsIGZ1
-bmMsICZhbXA7dmFmKTsKJmd0OyZndDsgLQllbHNlCiZndDsmZ3Q7IC0JCXByX2VycigiJXM6ICVw
-ViIsIGZ1bmMsICZhbXA7dmFmKTsKJmd0OyZndDsgLQl2YV9lbmQoYXJncyk7CiZndDsmZ3Q7IC19
-CiZndDsmZ3Q7IC0KJmd0OyZndDsgLXZvaWQgX2Vyb2ZzX2luZm8oc3RydWN0IHN1cGVyX2Jsb2Nr
-ICpzYiwgY29uc3QgY2hhciAqZnVuYywgY29uc3QgY2hhciAqZm10LCAuLi4pCiZndDsmZ3Q7IC17
-CiZndDsmZ3Q7IC0Jc3RydWN0IHZhX2Zvcm1hdCB2YWY7CiZndDsmZ3Q7IC0JdmFfbGlzdCBhcmdz
-OwomZ3Q7Jmd0OyAtCiZndDsmZ3Q7IC0JdmFfc3RhcnQoYXJncywgZm10KTsKJmd0OyZndDsgLQom
-Z3Q7Jmd0OyAtCXZhZi5mbXQgPSBmbXQ7CiZndDsmZ3Q7IC0JdmFmLnZhID0gJmFtcDthcmdzOwom
-Z3Q7Jmd0OyArI2RlZmluZSBfZXJvZnNfbG9nX2RlZihuYW1lKSBcCiZndDsmZ3Q7ICsJdm9pZCBf
-ZXJvZnNfIyNuYW1lKHN0cnVjdCBzdXBlcl9ibG9jayAqc2IsIGNvbnN0IGNoYXIgKmZ1bmMsIGNv
-bnN0IGNoYXIgKmZtdCwgLi4uKSBcCiZndDsmZ3Q7ICsJeyBcCiZndDsmZ3Q7ICsJCXN0cnVjdCB2
-YV9mb3JtYXQgdmFmOyBcCiZndDsmZ3Q7ICsJCXZhX2xpc3QgYXJnczsgXAomZ3Q7Jmd0OyArCQlc
-CiZndDsmZ3Q7ICsJCXZhX3N0YXJ0KGFyZ3MsIChmbXQpKTsgXAomZ3Q7Jmd0OyArCQlcCiZndDsm
-Z3Q7ICsJCXZhZi5mbXQgPSAoZm10KTsgXAomZ3Q7Jmd0OyArCQl2YWYudmEgPSAmYW1wO2FyZ3M7
-IFwKJmd0OyZndDsgKwkJXAomZ3Q7Jmd0OyArCQlpZiAoKHNiKSkgXAomZ3Q7Jmd0OyArCQkJcHJf
-IyNuYW1lKCIoZGV2aWNlICVzKTogJXM6ICVwViIsIChzYiktJmd0O3NfaWQsIChmdW5jKSwgJmFt
-cDt2YWYpOyBcCiZndDsmZ3Q7ICsJCWVsc2UgXAomZ3Q7Jmd0OyArCQkJcHJfIyNuYW1lKCIlczog
-JXBWIiwgKGZ1bmMpLCAmYW1wO3ZhZik7IFwKJmd0OyZndDsgKwkJdmFfZW5kKGFyZ3MpOyBcCiZn
-dDsmZ3Q7ICsJfQomZ3Q7CiZndDtUaGFua3MgZm9yIHRoZSBwYXRjaCEKJmd0OwomZ3Q7QWx0aG91
-Z2ggY29kZSBzaW1wbGljaXR5IGlzIHF1aXRlIGltcG9ydGFudCBmb3IgRVJPRlMsIGJ1dAomZ3Q7
-SSdtIG5vdCBzdXJlIGludHJvZHVjaW5nIHVubmVjZXNzYXJ5IG1hY3JvIGRlZmluaXRpb25zICh3
-aGljaAomZ3Q7Y2FuIGJlIGF2b2lkZWQpIGlzIGJldHRlciBmb3IgY29kZSByZWFkYWJpbGl0eS4K
-Jmd0OwomZ3Q7SSB3b25kZXIgaWYgd2UgY2FuIHB1dCB0aGlzIGludG8gYW5vdGhlciB3YXksIGxp
-a2UgdGhlIGN1cnJlbnQKJmd0O19idHJmc19wcmludGsoKSBhbmQgX2YyZnNfcHJpbnRrKCkgaWYg
-d2UgcmVhbGx5IG5lZWQgdG8gd29yawomZ3Q7b24gdGhpcy4KJmd0OwomZ3Q7VGhhbmtzLAo8ZGl2
-PiZndDtHYW8gWGlhbmc8L2Rpdj48ZGl2Pjxicj48L2Rpdj48ZGl2PlRoYW5rcyBmb3IgeW91ciBy
-ZXZpZXcgYW5kIGFkdmlzZS4gSSB0YWtlIGEgbG9vayBhdCB0aGVzZSB0d28gZnVuY3Rpb25zLjwv
-ZGl2PjxkaXY+PGJyPjwvZGl2PjxkaXY+PHAgc3R5bGU9ImZvbnQtZmFtaWx5OiBBcmlhbDsgd2hp
-dGUtc3BhY2UtY29sbGFwc2U6IGNvbGxhcHNlOyBtYXJnaW46IDBweDsiPi0tPC9wPjxwIHN0eWxl
-PSJmb250LWZhbWlseTogQXJpYWw7IHdoaXRlLXNwYWNlLWNvbGxhcHNlOiBjb2xsYXBzZTsgbWFy
-Z2luOiAwcHg7Ij48L3A+PHByZSBjbGFzcz0ibW96LXNpZ25hdHVyZSIgY29scz0iNzIiPnRoYW5r
-cywKR291IEhhbzwvcHJlPjwvZGl2PjwvcHJlPjwvZGl2Pg==
-------=_Part_155325_1992688099.1729159944071--
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 4efd578d7c62..8081ee43cd83 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -457,10 +457,7 @@ void erofs_release_pages(struct page **pagepool);
+ 
+ #ifdef CONFIG_EROFS_FS_ZIP
+ void erofs_workgroup_put(struct erofs_workgroup *grp);
+-struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+-					     pgoff_t index);
+-struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
+-					       struct erofs_workgroup *grp);
++bool erofs_workgroup_get(struct erofs_workgroup *grp);
+ void erofs_workgroup_free_rcu(struct erofs_workgroup *grp);
+ void erofs_shrinker_register(struct super_block *sb);
+ void erofs_shrinker_unregister(struct super_block *sb);
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index a569ff9dfd04..7423354d6957 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -714,9 +714,10 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
+ {
+ 	struct erofs_map_blocks *map = &fe->map;
+ 	struct super_block *sb = fe->inode->i_sb;
++	struct erofs_sb_info *sbi = EROFS_SB(sb);
+ 	bool ztailpacking = map->m_flags & EROFS_MAP_META;
+ 	struct z_erofs_pcluster *pcl;
+-	struct erofs_workgroup *grp;
++	struct erofs_workgroup *grp, *pre;
+ 	int err;
+ 
+ 	if (!(map->m_flags & EROFS_MAP_ENCODED) ||
+@@ -752,15 +753,23 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
+ 		pcl->obj.index = 0;	/* which indicates ztailpacking */
+ 	} else {
+ 		pcl->obj.index = erofs_blknr(sb, map->m_pa);
+-
+-		grp = erofs_insert_workgroup(fe->inode->i_sb, &pcl->obj);
+-		if (IS_ERR(grp)) {
+-			err = PTR_ERR(grp);
+-			goto err_out;
++		while (1) {
++			xa_lock(&sbi->managed_pslots);
++			pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
++					   NULL, grp, GFP_KERNEL);
++			if (!pre || xa_is_err(pre) || erofs_workgroup_get(pre)) {
++				xa_unlock(&sbi->managed_pslots);
++				break;
++			}
++			/* try to legitimize the current in-tree one */
++			xa_unlock(&sbi->managed_pslots);
++			cond_resched();
+ 		}
+-
+-		if (grp != &pcl->obj) {
+-			fe->pcl = container_of(grp,
++		if (xa_is_err(pre)) {
++			err = xa_err(pre);
++			goto err_out;
++		} else if (pre) {
++			fe->pcl = container_of(pre,
+ 					struct z_erofs_pcluster, obj);
+ 			err = -EEXIST;
+ 			goto err_out;
+@@ -789,7 +798,16 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
+ 	DBG_BUGON(fe->owned_head == Z_EROFS_PCLUSTER_NIL);
+ 
+ 	if (!(map->m_flags & EROFS_MAP_META)) {
+-		grp = erofs_find_workgroup(sb, blknr);
++		while (1) {
++			rcu_read_lock();
++			grp = xa_load(&EROFS_SB(sb)->managed_pslots, blknr);
++			if (erofs_workgroup_get(grp)) {
++				DBG_BUGON(blknr != grp->index);
++				rcu_read_unlock();
++				break;
++			}
++			rcu_read_unlock();
++		}
+ 	} else if ((map->m_pa & ~PAGE_MASK) + map->m_plen > PAGE_SIZE) {
+ 		DBG_BUGON(1);
+ 		return -EFSCORRUPTED;
+diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
+index 37afe2024840..218b0249a482 100644
+--- a/fs/erofs/zutil.c
++++ b/fs/erofs/zutil.c
+@@ -214,7 +214,7 @@ void erofs_release_pages(struct page **pagepool)
+ 	}
+ }
+ 
+-static bool erofs_workgroup_get(struct erofs_workgroup *grp)
++bool erofs_workgroup_get(struct erofs_workgroup *grp)
+ {
+ 	if (lockref_get_not_zero(&grp->lockref))
+ 		return true;
+@@ -231,54 +231,6 @@ static bool erofs_workgroup_get(struct erofs_workgroup *grp)
+ 	return true;
+ }
+ 
+-struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+-					     pgoff_t index)
+-{
+-	struct erofs_sb_info *sbi = EROFS_SB(sb);
+-	struct erofs_workgroup *grp;
+-
+-repeat:
+-	rcu_read_lock();
+-	grp = xa_load(&sbi->managed_pslots, index);
+-	if (grp) {
+-		if (!erofs_workgroup_get(grp)) {
+-			/* prefer to relax rcu read side */
+-			rcu_read_unlock();
+-			goto repeat;
+-		}
+-
+-		DBG_BUGON(index != grp->index);
+-	}
+-	rcu_read_unlock();
+-	return grp;
+-}
+-
+-struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
+-					       struct erofs_workgroup *grp)
+-{
+-	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+-	struct erofs_workgroup *pre;
+-
+-	DBG_BUGON(grp->lockref.count < 1);
+-repeat:
+-	xa_lock(&sbi->managed_pslots);
+-	pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
+-			   NULL, grp, GFP_KERNEL);
+-	if (pre) {
+-		if (xa_is_err(pre)) {
+-			pre = ERR_PTR(xa_err(pre));
+-		} else if (!erofs_workgroup_get(pre)) {
+-			/* try to legitimize the current in-tree one */
+-			xa_unlock(&sbi->managed_pslots);
+-			cond_resched();
+-			goto repeat;
+-		}
+-		grp = pre;
+-	}
+-	xa_unlock(&sbi->managed_pslots);
+-	return grp;
+-}
+-
+ static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
+ {
+ 	atomic_long_dec(&erofs_global_shrink_cnt);
+-- 
+2.43.5
 
