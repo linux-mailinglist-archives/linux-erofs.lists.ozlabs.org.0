@@ -1,52 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AB039A2198
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Oct 2024 13:57:31 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB5A09A322A
+	for <lists+linux-erofs@lfdr.de>; Fri, 18 Oct 2024 03:44:28 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XTmY50DZPz3bkg
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Oct 2024 22:57:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XV6vG2zBnz3bm7
+	for <lists+linux-erofs@lfdr.de>; Fri, 18 Oct 2024 12:44:26 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729166247;
-	cv=none; b=DduDZHtH84qiOahKEkTG4TAM2eL207r7WY55q9oik6XbtH1cgGYrAvpE0AzlR/zA5+m1ZjEql2Of1R9lDoMQaZnfx542U30FQ0Xn+to5scTzkCV/lrE/YMfw5JElafuBiVHyBTjTzHdYuB5qdgnjjHnWoJGSGiXrAbTIeA1YsDFs8na4rt7jxr005r5qFIoUqCUQ6vphaA/8ZOaEVldWdL/UWZ8Q2vS7QVLCbFaLHq2yU6wgzNh2x0uf5rvV6LqIbakYl+VxNPIyfL340womZ8+GUKoEbcDoAP2GqLFaY2iPbqNxWXXZ4HOdpZbN5sdE8oW8lzCzogEL7vbrIHegCQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.110
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729215865;
+	cv=none; b=M3b7ic1ND7IXsX8FzDJpUAILpsqaWAdoY7evymS25Wj2W8L1UHa1Zm/1rbvbCGytSzRDqlXxgvd6+rOWPHiqiggOinK5ADt3NqG32se/YJaU2MlGIy17F6dJLcO/GMa1XHlhvjdsad0+IAcm6ca7dBmttxOzAmvumy6yC+7tMEM8MpNqd9+OLLzH+qTthomTLwGUjau9i3ISXd8x7ksViXH3z56sjafy2GpM5jgP7gaT2QszjF56hup1FbonV4/09SNPhnaS9o8XrUSlz/aZxT1/ctY154+ltG2sRqP/Zu3uXGVB020o7LgQS4CztRKDt3U2zQJAo4Nj5xRstndKzQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729166247; c=relaxed/relaxed;
-	bh=f5eH7wGuUi4PV14f9SED4wcswQY3AeRweCvDeAPPjIw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XeVSqtP7EEM3xrwQqYY9AMg4H8MpAthhbophXw+8T71JY7f1y6HLiFVwrgBq1xmSnQJ/NdY/4icmctI9f1fQsplbvsy6FDFWwam5ugywv/CkBI4ySqSBuQ+Jt/8UV94zq+hlf5XfSa9wuxLeCMDMlEHD4+i0KKO/lzHOYwMTBfvgTyiH5XOVtjLDtQSFeoFybZdEc/U+FzTD0PsFiAHz/rb1RQnDAldIeEVDWab8qcV/xmU6YbhRDDswjiVsZZoCXGrTP9+b1SdFUCr/TtKAU+hDkhWMP+EmhAKDEaZSMNW0A6xqb5HntGOZyi57048zwuzj8IptJpKLgHD1YnMJ6w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=dyaHyWs4; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1729215865; c=relaxed/relaxed;
+	bh=LrQw1Xi9Sb0d6T0yY4LpVBM0HbA4kS8pDDl44szB65E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d90DEDgTu5OA8ZCr10+zDzvt4pz4RigT2J6ET2UfXfwsl1ScH8ruyWPSRW4TVXwAJy5vlqv4RMNP/dNyVrb4EqV8I7hz3wpqwy7fFOqJP0CdEK/eqG2ZmCeitHpZdr7Duq/BX+lVG1lDHHN0E6mz91uOXTQfZbnMh8FvMO+m/cYCouvgrv6R0ImPLglCdopDzbcKHkzAgGWhqt425d9wwTFXa3+WD3ZBRhvF3g+74QnM4Gz9axDRtX1pIfw675FeHa24Q79bfq+JDtJ/qhGvpqE1kRiF+wpbqWe5KG14w+FJiefX/79FrMyv070Lih7AZQkLCqVGxxwp4YW62hhqUg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=xlPLJJAJ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=dyaHyWs4;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=xlPLJJAJ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XTmXz5bQgz2xjK
-	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Oct 2024 22:57:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XV6v73qHwz2xGw
+	for <linux-erofs@lists.ozlabs.org>; Fri, 18 Oct 2024 12:44:14 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1729166237; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=f5eH7wGuUi4PV14f9SED4wcswQY3AeRweCvDeAPPjIw=;
-	b=dyaHyWs4HoKrhZ7v9qIlILOlyUgYF+Qcdd66MB4WBm2qHiDd7LweBzXm0+veQZiNeTfFv/L9X48W7PY6f8ENzWf3FPvCdLMsv9+WvTc89NAQ/MM+iZyyRXnuEQQtrhhaL+GyIFSRcp2WNu1kqbzfbZFQj6XbDC8C/NKg780qy4g=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WHKltE5_1729166235 cluster:ay36)
+	t=1729215849; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=LrQw1Xi9Sb0d6T0yY4LpVBM0HbA4kS8pDDl44szB65E=;
+	b=xlPLJJAJlwb6W8OzyHSXGcvNTpQ+vK9yBrVo7+i+3m+V92H5YriUy9nGJJ88NIIdIpC7ahHugkX3LHUtau8XNER+N635sVJfL9DPfsLnTUSkAkeTlFZvXHThFgdDASaJIzC1Vb/6DiPzeZs2TNaufKWgtl3DK8zZTvq+H4OZEbw=
+Received: from 30.27.73.141(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WHMCYpl_1729215846 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 17 Oct 2024 19:57:16 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 3/3] erofs: sunset `struct erofs_workgroup`
-Date: Thu, 17 Oct 2024 19:57:05 +0800
-Message-ID: <20241017115705.877515-3-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20241017115705.877515-1-hsiangkao@linux.alibaba.com>
-References: <20241017115705.877515-1-hsiangkao@linux.alibaba.com>
+          Fri, 18 Oct 2024 09:44:08 +0800
+Message-ID: <588351c0-93f9-4a04-a923-15aae8b71d49@linux.alibaba.com>
+Date: Fri, 18 Oct 2024 09:44:05 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs: free pcluster right after decompression if
+ possible
+To: Chunhai Guo <guochunhai@vivo.com>, xiang@kernel.org
+References: <20240930140424.4049195-1-guochunhai@vivo.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240930140424.4049195-1-guochunhai@vivo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -63,400 +65,235 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Chunhai Guo <guochunhai@vivo.com>, LKML <linux-kernel@vger.kernel.org>, Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-kernel@vger.kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-`struct erofs_workgroup` was introduced to provide a unique header
-for all physically indexed objects.  However, after big pclusters and
-shared pclusters are implemented upstream, it seems that all EROFS
-encoded data (which requires transformation) can be represented with
-`struct z_erofs_pcluster` directly.
+Hi Chunhai,
 
-Move all members into `struct z_erofs_pcluster` for simplicity.
+Thanks for the work!  Please rebase this work on
+my "sunset z_erofs_workgroup` series.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/internal.h |   6 --
- fs/erofs/zdata.c    | 131 ++++++++++++++++++++------------------------
- 2 files changed, 60 insertions(+), 77 deletions(-)
+On 2024/9/30 22:04, Chunhai Guo wrote:
+> Once a pcluster is fully decompressed and there are no attached cached
+> pages, its corresponding struct z_erofs_pcluster will be freed. This
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 5fa7ac0575b2..3905d991c49b 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -208,12 +208,6 @@ enum {
- 	EROFS_ZIP_CACHE_READAROUND
- };
- 
--/* basic unit of the workstation of a super_block */
--struct erofs_workgroup {
--	pgoff_t index;
--	struct lockref lockref;
--};
--
- enum erofs_kmap_type {
- 	EROFS_NO_KMAP,		/* don't map the buffer */
- 	EROFS_KMAP,		/* use kmap_local_page() to map the buffer */
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index cd181bb837a4..d6431ab10528 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -44,12 +44,15 @@ __Z_EROFS_BVSET(z_erofs_bvset_inline, Z_EROFS_INLINE_BVECS);
-  * A: Field should be accessed / updated in atomic for parallelized code.
-  */
- struct z_erofs_pcluster {
--	struct erofs_workgroup obj;
- 	struct mutex lock;
-+	struct lockref lockref;
- 
- 	/* A: point to next chained pcluster or TAILs */
- 	z_erofs_next_pcluster_t next;
- 
-+	/* I: start block address of this pcluster */
-+	erofs_off_t index;
-+
- 	/* L: the maximum decompression size of this round */
- 	unsigned int length;
- 
-@@ -108,7 +111,7 @@ struct z_erofs_decompressqueue {
- 
- static inline bool z_erofs_is_inline_pcluster(struct z_erofs_pcluster *pcl)
- {
--	return !pcl->obj.index;
-+	return !pcl->index;
- }
- 
- static inline unsigned int z_erofs_pclusterpages(struct z_erofs_pcluster *pcl)
-@@ -548,7 +551,7 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe)
- 		if (READ_ONCE(pcl->compressed_bvecs[i].page))
- 			continue;
- 
--		page = find_get_page(mc, pcl->obj.index + i);
-+		page = find_get_page(mc, pcl->index + i);
- 		if (!page) {
- 			/* I/O is needed, no possible to decompress directly */
- 			standalone = false;
-@@ -564,13 +567,13 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe)
- 				continue;
- 			set_page_private(newpage, Z_EROFS_PREALLOCATED_PAGE);
- 		}
--		spin_lock(&pcl->obj.lockref.lock);
-+		spin_lock(&pcl->lockref.lock);
- 		if (!pcl->compressed_bvecs[i].page) {
- 			pcl->compressed_bvecs[i].page = page ? page : newpage;
--			spin_unlock(&pcl->obj.lockref.lock);
-+			spin_unlock(&pcl->lockref.lock);
- 			continue;
- 		}
--		spin_unlock(&pcl->obj.lockref.lock);
-+		spin_unlock(&pcl->lockref.lock);
- 
- 		if (page)
- 			put_page(page);
-@@ -588,10 +591,8 @@ static void z_erofs_bind_cache(struct z_erofs_decompress_frontend *fe)
- 
- /* (erofs_shrinker) disconnect cached encoded data with pclusters */
- static int erofs_try_to_free_all_cached_folios(struct erofs_sb_info *sbi,
--					       struct erofs_workgroup *grp)
-+					       struct z_erofs_pcluster *pcl)
- {
--	struct z_erofs_pcluster *const pcl =
--		container_of(grp, struct z_erofs_pcluster, obj);
- 	unsigned int pclusterpages = z_erofs_pclusterpages(pcl);
- 	struct folio *folio;
- 	int i;
-@@ -626,8 +627,8 @@ static bool z_erofs_cache_release_folio(struct folio *folio, gfp_t gfp)
- 		return true;
- 
- 	ret = false;
--	spin_lock(&pcl->obj.lockref.lock);
--	if (pcl->obj.lockref.count <= 0) {
-+	spin_lock(&pcl->lockref.lock);
-+	if (pcl->lockref.count <= 0) {
- 		DBG_BUGON(z_erofs_is_inline_pcluster(pcl));
- 		for (; bvec < end; ++bvec) {
- 			if (bvec->page && page_folio(bvec->page) == folio) {
-@@ -638,7 +639,7 @@ static bool z_erofs_cache_release_folio(struct folio *folio, gfp_t gfp)
- 			}
- 		}
- 	}
--	spin_unlock(&pcl->obj.lockref.lock);
-+	spin_unlock(&pcl->lockref.lock);
- 	return ret;
- }
- 
-@@ -689,15 +690,15 @@ static int z_erofs_attach_page(struct z_erofs_decompress_frontend *fe,
- 
- 	if (exclusive) {
- 		/* give priority for inplaceio to use file pages first */
--		spin_lock(&pcl->obj.lockref.lock);
-+		spin_lock(&pcl->lockref.lock);
- 		while (fe->icur > 0) {
- 			if (pcl->compressed_bvecs[--fe->icur].page)
- 				continue;
- 			pcl->compressed_bvecs[fe->icur] = *bvec;
--			spin_unlock(&pcl->obj.lockref.lock);
-+			spin_unlock(&pcl->lockref.lock);
- 			return 0;
- 		}
--		spin_unlock(&pcl->obj.lockref.lock);
-+		spin_unlock(&pcl->lockref.lock);
- 
- 		/* otherwise, check if it can be used as a bvpage */
- 		if (fe->mode >= Z_EROFS_PCLUSTER_FOLLOWED &&
-@@ -710,20 +711,20 @@ static int z_erofs_attach_page(struct z_erofs_decompress_frontend *fe,
- 	return ret;
- }
- 
--static bool z_erofs_get_pcluster(struct erofs_workgroup *grp)
-+static bool z_erofs_get_pcluster(struct z_erofs_pcluster *pcl)
- {
--	if (lockref_get_not_zero(&grp->lockref))
-+	if (lockref_get_not_zero(&pcl->lockref))
- 		return true;
- 
--	spin_lock(&grp->lockref.lock);
--	if (__lockref_is_dead(&grp->lockref)) {
--		spin_unlock(&grp->lockref.lock);
-+	spin_lock(&pcl->lockref.lock);
-+	if (__lockref_is_dead(&pcl->lockref)) {
-+		spin_unlock(&pcl->lockref.lock);
- 		return false;
- 	}
- 
--	if (!grp->lockref.count++)
-+	if (!pcl->lockref.count++)
- 		atomic_long_dec(&erofs_global_shrink_cnt);
--	spin_unlock(&grp->lockref.lock);
-+	spin_unlock(&pcl->lockref.lock);
- 	return true;
- }
- 
-@@ -733,8 +734,7 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
- 	struct super_block *sb = fe->inode->i_sb;
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 	bool ztailpacking = map->m_flags & EROFS_MAP_META;
--	struct z_erofs_pcluster *pcl;
--	struct erofs_workgroup *grp, *pre;
-+	struct z_erofs_pcluster *pcl, *pre;
- 	int err;
- 
- 	if (!(map->m_flags & EROFS_MAP_ENCODED) ||
-@@ -748,8 +748,8 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
- 	if (IS_ERR(pcl))
- 		return PTR_ERR(pcl);
- 
--	spin_lock_init(&pcl->obj.lockref.lock);
--	pcl->obj.lockref.count = 1;	/* one ref for this request */
-+	spin_lock_init(&pcl->lockref.lock);
-+	pcl->lockref.count = 1;		/* one ref for this request */
- 	pcl->algorithmformat = map->m_algorithmformat;
- 	pcl->length = 0;
- 	pcl->partial = true;
-@@ -767,13 +767,13 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
- 	DBG_BUGON(!mutex_trylock(&pcl->lock));
- 
- 	if (ztailpacking) {
--		pcl->obj.index = 0;	/* which indicates ztailpacking */
-+		pcl->index = 0;		/* which indicates ztailpacking */
- 	} else {
--		pcl->obj.index = erofs_blknr(sb, map->m_pa);
-+		pcl->index = erofs_blknr(sb, map->m_pa);
- 		while (1) {
- 			xa_lock(&sbi->managed_pslots);
--			pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
--					   NULL, grp, GFP_KERNEL);
-+			pre = __xa_cmpxchg(&sbi->managed_pslots, pcl->index,
-+					   NULL, pcl, GFP_KERNEL);
- 			if (!pre || xa_is_err(pre) || z_erofs_get_pcluster(pre)) {
- 				xa_unlock(&sbi->managed_pslots);
- 				break;
-@@ -786,8 +786,7 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
- 			err = xa_err(pre);
- 			goto err_out;
- 		} else if (pre) {
--			fe->pcl = container_of(pre,
--					struct z_erofs_pcluster, obj);
-+			fe->pcl = pre;
- 			err = -EEXIST;
- 			goto err_out;
- 		}
-@@ -807,7 +806,7 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
- 	struct erofs_map_blocks *map = &fe->map;
- 	struct super_block *sb = fe->inode->i_sb;
- 	erofs_blk_t blknr = erofs_blknr(sb, map->m_pa);
--	struct erofs_workgroup *grp = NULL;
-+	struct z_erofs_pcluster *pcl = NULL;
- 	int ret;
- 
- 	DBG_BUGON(fe->pcl);
-@@ -817,9 +816,9 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
- 	if (!(map->m_flags & EROFS_MAP_META)) {
- 		while (1) {
- 			rcu_read_lock();
--			grp = xa_load(&EROFS_SB(sb)->managed_pslots, blknr);
--			if (z_erofs_get_pcluster(grp)) {
--				DBG_BUGON(blknr != grp->index);
-+			pcl = xa_load(&EROFS_SB(sb)->managed_pslots, blknr);
-+			if (z_erofs_get_pcluster(pcl)) {
-+				DBG_BUGON(blknr != pcl->index);
- 				rcu_read_unlock();
- 				break;
- 			}
-@@ -830,8 +829,8 @@ static int z_erofs_pcluster_begin(struct z_erofs_decompress_frontend *fe)
- 		return -EFSCORRUPTED;
- 	}
- 
--	if (grp) {
--		fe->pcl = container_of(grp, struct z_erofs_pcluster, obj);
-+	if (pcl) {
-+		fe->pcl = pcl;
- 		ret = -EEXIST;
- 	} else {
- 		ret = z_erofs_register_pcluster(fe);
-@@ -886,21 +885,13 @@ static void z_erofs_rcu_callback(struct rcu_head *head)
- 			struct z_erofs_pcluster, rcu));
- }
- 
--static void erofs_workgroup_free_rcu(struct erofs_workgroup *grp)
--{
--	struct z_erofs_pcluster *const pcl =
--		container_of(grp, struct z_erofs_pcluster, obj);
--
--	call_rcu(&pcl->rcu, z_erofs_rcu_callback);
--}
--
- static bool erofs_try_to_release_pcluster(struct erofs_sb_info *sbi,
--					  struct erofs_workgroup *grp)
-+					  struct z_erofs_pcluster *pcl)
- {
- 	int free = false;
- 
--	spin_lock(&grp->lockref.lock);
--	if (grp->lockref.count)
-+	spin_lock(&pcl->lockref.lock);
-+	if (pcl->lockref.count)
- 		goto out;
- 
- 	/*
-@@ -908,22 +899,22 @@ static bool erofs_try_to_release_pcluster(struct erofs_sb_info *sbi,
- 	 * the XArray.  Otherwise some folios could be still attached to the
- 	 * orphan old pcluster when the new one is available in the tree.
- 	 */
--	if (erofs_try_to_free_all_cached_folios(sbi, grp))
-+	if (erofs_try_to_free_all_cached_folios(sbi, pcl))
- 		goto out;
- 
- 	/*
- 	 * It's impossible to fail after the pcluster is freezed, but in order
- 	 * to avoid some race conditions, add a DBG_BUGON to observe this.
- 	 */
--	DBG_BUGON(__xa_erase(&sbi->managed_pslots, grp->index) != grp);
-+	DBG_BUGON(__xa_erase(&sbi->managed_pslots, pcl->index) != pcl);
- 
--	lockref_mark_dead(&grp->lockref);
-+	lockref_mark_dead(&pcl->lockref);
- 	free = true;
- out:
--	spin_unlock(&grp->lockref.lock);
-+	spin_unlock(&pcl->lockref.lock);
- 	if (free) {
- 		atomic_long_dec(&erofs_global_shrink_cnt);
--		erofs_workgroup_free_rcu(grp);
-+		call_rcu(&pcl->rcu, z_erofs_rcu_callback);
- 	}
- 	return free;
- }
-@@ -931,14 +922,14 @@ static bool erofs_try_to_release_pcluster(struct erofs_sb_info *sbi,
- unsigned long z_erofs_shrink_scan(struct erofs_sb_info *sbi,
- 				  unsigned long nr_shrink)
- {
--	struct erofs_workgroup *grp;
-+	struct z_erofs_pcluster *pcl;
- 	unsigned int freed = 0;
- 	unsigned long index;
- 
- 	xa_lock(&sbi->managed_pslots);
--	xa_for_each(&sbi->managed_pslots, index, grp) {
-+	xa_for_each(&sbi->managed_pslots, index, pcl) {
- 		/* try to shrink each valid pcluster */
--		if (!erofs_try_to_release_pcluster(sbi, grp))
-+		if (!erofs_try_to_release_pcluster(sbi, pcl))
- 			continue;
- 		xa_unlock(&sbi->managed_pslots);
- 
-@@ -953,16 +944,14 @@ unsigned long z_erofs_shrink_scan(struct erofs_sb_info *sbi,
- 
- static void z_erofs_put_pcluster(struct z_erofs_pcluster *pcl)
- {
--	struct erofs_workgroup *grp = &pcl->obj;
--
--	if (lockref_put_or_lock(&grp->lockref))
-+	if (lockref_put_or_lock(&pcl->lockref))
- 		return;
- 
--	DBG_BUGON(__lockref_is_dead(&grp->lockref));
--	if (grp->lockref.count == 1)
-+	DBG_BUGON(__lockref_is_dead(&pcl->lockref));
-+	if (pcl->lockref.count == 1)
- 		atomic_long_inc(&erofs_global_shrink_cnt);
--	--grp->lockref.count;
--	spin_unlock(&grp->lockref.lock);
-+	--pcl->lockref.count;
-+	spin_unlock(&pcl->lockref.lock);
- }
- 
- static void z_erofs_pcluster_end(struct z_erofs_decompress_frontend *fe)
-@@ -1497,9 +1486,9 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
- 	bvec->bv_offset = 0;
- 	bvec->bv_len = PAGE_SIZE;
- repeat:
--	spin_lock(&pcl->obj.lockref.lock);
-+	spin_lock(&pcl->lockref.lock);
- 	zbv = pcl->compressed_bvecs[nr];
--	spin_unlock(&pcl->obj.lockref.lock);
-+	spin_unlock(&pcl->lockref.lock);
- 	if (!zbv.page)
- 		goto out_allocfolio;
- 
-@@ -1561,23 +1550,23 @@ static void z_erofs_fill_bio_vec(struct bio_vec *bvec,
- 	folio_put(folio);
- out_allocfolio:
- 	page = __erofs_allocpage(&f->pagepool, gfp, true);
--	spin_lock(&pcl->obj.lockref.lock);
-+	spin_lock(&pcl->lockref.lock);
- 	if (unlikely(pcl->compressed_bvecs[nr].page != zbv.page)) {
- 		if (page)
- 			erofs_pagepool_add(&f->pagepool, page);
--		spin_unlock(&pcl->obj.lockref.lock);
-+		spin_unlock(&pcl->lockref.lock);
- 		cond_resched();
- 		goto repeat;
- 	}
- 	pcl->compressed_bvecs[nr].page = page ? page : ERR_PTR(-ENOMEM);
--	spin_unlock(&pcl->obj.lockref.lock);
-+	spin_unlock(&pcl->lockref.lock);
- 	bvec->bv_page = page;
- 	if (!page)
- 		return;
- 	folio = page_folio(page);
- out_tocache:
- 	if (!tocache || bs != PAGE_SIZE ||
--	    filemap_add_folio(mc, folio, pcl->obj.index + nr, gfp)) {
-+	    filemap_add_folio(mc, folio, pcl->index + nr, gfp)) {
- 		/* turn into a temporary shortlived folio (1 ref) */
- 		folio->private = (void *)Z_EROFS_SHORTLIVED_PAGE;
- 		return;
-@@ -1709,7 +1698,7 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
- 
- 		/* no device id here, thus it will always succeed */
- 		mdev = (struct erofs_map_dev) {
--			.m_pa = erofs_pos(sb, pcl->obj.index),
-+			.m_pa = erofs_pos(sb, pcl->index),
- 		};
- 		(void)erofs_map_dev(sb, &mdev);
- 
--- 
-2.43.5
+Subject: free pclusters if no cached folio attached
 
+cached folios, its corresponding `struct z_erofs_pcluster`...
+
+> will significantly reduce the frequency of calls to erofs_shrink_scan()
+> and the memory allocated for struct z_erofs_pcluster.
+> 
+> The tables below show approximately a 95% reduction in the calls to
+> erofs_shrink_scan() and in the memory allocated for struct
+					for `struct z_erofs_pcluster`
+
+> z_erofs_pcluster after applying this patch. The results were obtained by
+> performing a test to copy a 2.1 GB partition on ARM64 Android devices
+> running the 5.15 kernel with an 8-core CPU and 8GB of memory.
+
+I guess you could try to use more recent kernels for testing instead?
+
+> 
+> 1. The reduction in calls to erofs_shrink_scan():
+> +-----------------+-----------+----------+---------+
+> |                 | w/o patch | w/ patch |  diff   |
+> +-----------------+-----------+----------+---------+
+> | Average (times) |   3152    |   160    | -94.92% |
+> +-----------------+-----------+----------+---------+
+> 
+> 2. The reduction in memory released by erofs_shrink_scan():
+> +-----------------+-----------+----------+---------+
+> |                 | w/o patch | w/ patch |  diff   |
+> +-----------------+-----------+----------+---------+
+> | Average (Byte)  | 44503200  | 2293760  | -94.84% |
+> +-----------------+-----------+----------+---------+
+> 
+> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+> ---
+>   fs/erofs/internal.h |  3 ++-
+>   fs/erofs/zdata.c    | 14 ++++++++---
+>   fs/erofs/zutil.c    | 58 +++++++++++++++++++++++++++++----------------
+>   3 files changed, 51 insertions(+), 24 deletions(-)
+> 
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 4efd578d7c62..17b04bfd743f 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -456,7 +456,8 @@ static inline void erofs_pagepool_add(struct page **pagepool, struct page *page)
+>   void erofs_release_pages(struct page **pagepool);
+>   
+>   #ifdef CONFIG_EROFS_FS_ZIP
+> -void erofs_workgroup_put(struct erofs_workgroup *grp);
+> +void erofs_workgroup_put(struct erofs_sb_info *sbi, struct erofs_workgroup *grp,
+> +		bool can_released);
+>   struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+>   					     pgoff_t index);
+>   struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 8936790618c6..656fd65aec33 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -888,7 +888,7 @@ static void z_erofs_pcluster_end(struct z_erofs_decompress_frontend *fe)
+>   	 * any longer if the pcluster isn't hosted by ourselves.
+>   	 */
+>   	if (fe->mode < Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE)
+> -		erofs_workgroup_put(&pcl->obj);
+> +		erofs_workgroup_put(EROFS_I_SB(fe->inode), &pcl->obj, false);
+>   
+>   	fe->pcl = NULL;
+>   }
+> @@ -1046,6 +1046,9 @@ struct z_erofs_decompress_backend {
+>   	struct list_head decompressed_secondary_bvecs;
+>   	struct page **pagepool;
+>   	unsigned int onstack_used, nr_pages;
+> +
+> +	/* whether the pcluster can be released after its decompression */
+> +	bool try_free;
+>   };
+>   
+>   struct z_erofs_bvec_item {
+> @@ -1244,12 +1247,15 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
+>   		WRITE_ONCE(pcl->compressed_bvecs[0].page, NULL);
+>   		put_page(page);
+>   	} else {
+> +		be->try_free = true;
+>   		/* managed folios are still left in compressed_bvecs[] */
+>   		for (i = 0; i < pclusterpages; ++i) {
+>   			page = be->compressed_pages[i];
+>   			if (!page ||
+> -			    erofs_folio_is_managed(sbi, page_folio(page)))
+> +			    erofs_folio_is_managed(sbi, page_folio(page))) {
+> +				be->try_free = false;
+>   				continue;
+> +			}
+>   			(void)z_erofs_put_shortlivedpage(be->pagepool, page);
+>   			WRITE_ONCE(pcl->compressed_bvecs[i].page, NULL);
+>   		}
+> @@ -1285,6 +1291,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
+>   	if (be->decompressed_pages != be->onstack_pages)
+>   		kvfree(be->decompressed_pages);
+>   
+> +	be->try_free = be->try_free && !pcl->partial;
+
+I think no need to check `pcl->partial`.
+
+>   	pcl->length = 0;
+>   	pcl->partial = true;
+>   	pcl->multibases = false;
+> @@ -1320,7 +1327,8 @@ static int z_erofs_decompress_queue(const struct z_erofs_decompressqueue *io,
+>   		if (z_erofs_is_inline_pcluster(be.pcl))
+>   			z_erofs_free_pcluster(be.pcl);
+>   		else
+> -			erofs_workgroup_put(&be.pcl->obj);
+> +			erofs_workgroup_put(EROFS_SB(io->sb), &be.pcl->obj,
+> +					be.try_free);
+
+We could just move
+
+if (z_erofs_is_inline_pcluster(be.pcl))
+	z_erofs_free_pcluster(be.pcl);
+else
+	z_erofs_put_pcluster(be.pcl);
+
+into the end of z_erofs_decompress_pcluster() and
+get rid of `be->try_free`;
+
+
+
+>   	}
+>   	return err;
+>   }
+> diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
+> index 37afe2024840..cf59ba6a2322 100644
+> --- a/fs/erofs/zutil.c
+> +++ b/fs/erofs/zutil.c
+> @@ -285,26 +285,11 @@ static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
+>   	erofs_workgroup_free_rcu(grp);
+>   }
+>   
+> -void erofs_workgroup_put(struct erofs_workgroup *grp)
+> -{
+> -	if (lockref_put_or_lock(&grp->lockref))
+> -		return;
+> -
+> -	DBG_BUGON(__lockref_is_dead(&grp->lockref));
+> -	if (grp->lockref.count == 1)
+> -		atomic_long_inc(&erofs_global_shrink_cnt);
+> -	--grp->lockref.count;
+> -	spin_unlock(&grp->lockref.lock);
+> -}
+> -
+> -static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+> +static bool erofs_prepare_to_release_workgroup(struct erofs_sb_info *sbi,
+>   					   struct erofs_workgroup *grp)
+>   {
+> -	int free = false;
+> -
+> -	spin_lock(&grp->lockref.lock);
+>   	if (grp->lockref.count)
+> -		goto out;
+> +		return false;
+>   
+>   	/*
+>   	 * Note that all cached pages should be detached before deleted from
+> @@ -312,7 +297,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+>   	 * the orphan old workgroup when the new one is available in the tree.
+>   	 */
+>   	if (erofs_try_to_free_all_cached_folios(sbi, grp))
+> -		goto out;
+> +		return false;
+>   
+>   	/*
+>   	 * It's impossible to fail after the workgroup is freezed,
+> @@ -322,14 +307,47 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+>   	DBG_BUGON(__xa_erase(&sbi->managed_pslots, grp->index) != grp);
+>   
+>   	lockref_mark_dead(&grp->lockref);
+> -	free = true;
+> -out:
+> +	return true;
+> +}
+> +
+> +static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+> +					   struct erofs_workgroup *grp)
+> +{
+> +	bool free = false;
+> +
+> +	/* Using trylock to avoid deadlock with erofs_workgroup_put() */
+> +	if (!spin_trylock(&grp->lockref.lock))
+> +		return free;
+> +	free = erofs_prepare_to_release_workgroup(sbi, grp);
+>   	spin_unlock(&grp->lockref.lock);
+>   	if (free)
+>   		__erofs_workgroup_free(grp);
+>   	return free;
+>   }
+>   
+> +void erofs_workgroup_put(struct erofs_sb_info *sbi, struct erofs_workgroup *grp,
+> +		bool try_free)
+> +{
+> +	bool free = false;
+> +
+> +	if (lockref_put_or_lock(&grp->lockref))
+> +		return;
+> +
+> +	DBG_BUGON(__lockref_is_dead(&grp->lockref));
+> +	if (--grp->lockref.count == 0) {
+> +		atomic_long_inc(&erofs_global_shrink_cnt);
+> +
+> +		if (try_free) {
+> +			xa_lock(&sbi->managed_pslots);
+> +			free = erofs_prepare_to_release_workgroup(sbi, grp);
+> +			xa_unlock(&sbi->managed_pslots);
+> +		}
+> +	}
+> +	spin_unlock(&grp->lockref.lock);
+> +	if (free)
+> +		__erofs_workgroup_free(grp);
+
+need to wait for a RCU grace period.
+
+Thanks,
+Gao Xiang
