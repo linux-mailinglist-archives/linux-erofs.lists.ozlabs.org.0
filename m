@@ -1,51 +1,75 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 415CE9A5EFF
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Oct 2024 10:44:59 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE08F9A684E
+	for <lists+linux-erofs@lfdr.de>; Mon, 21 Oct 2024 14:27:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1729513638;
+	bh=9SezcXW1UUL1mXDP69mmZCgSGrjE4rd90UsEDXQMDOI=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=CsT7AuHCDpPqhm3I6dTfyoKO9Cb/27VmnlqkwXfmReeo9/HsBHjBHSQnCg4Y2jpIQ
+	 AuvmZX4V4JSbCrCUIB8KKz6yjdtFbsYeqngWWd/ninf5dQiFMEcvi9MyZpeA9hnPT0
+	 k3sbko3vAEKMBsY+q+WxWk8tjc+qbL4DDK/iItTNPXxfC/Iit9xD9fZcJUdskbiluB
+	 WZ44v+xvx4Z7YFRsag3yyqHU6ve0ufo6+IrA2T0h0dzcAlaxRPPcBVoMxUea2fE5mA
+	 8fZdeSxQiiXW806Yi4tZwRzHLXiYs9h+hF9BXNY7763SKWAb9nz1MpBOPNmOF/zGDf
+	 y6FdlBqzWYHng==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XX855074Dz2yVd
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Oct 2024 19:44:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XXF1f3t3Vz2ygy
+	for <lists+linux-erofs@lfdr.de>; Mon, 21 Oct 2024 23:27:18 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729500295;
-	cv=none; b=oKR+n/jYaFfeYY29Op/eP3wh5s6u2fg3PwwgGeL6momCtWrIwY6fJf5/E3NlbHNFE5IkW6SrpWvQrW7CDUlj9Md2z+yFtTZ4HcBLH9xFTh4TjqTfZCWTMgsxbRisiydDFlFiCIU3Gchbh2+uEoc562GDtXh3Gsc+WNyP/4MihW17ZDYvsdh+hfckJKgohS8YHQIgC8L10UFOBwUZcnGcCYcSexBCuADaHG5zMhUkgvo/GhbJx8kUbZW1d+GMobS5w3k+o6/PowlF0wmmHuLYzHooYtzZEHDfAc0wjdEzO+MTdCcSEpcj07zy4ix/XGIVWlczgYoAoW6k74rhWXr5AA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729513636;
+	cv=none; b=Ne8KyMGuM41SrL+DRbeUwEyRNakoo3/id6IKpwG3gw1KUIkDBe4okrmSFZvuuHYvRxqjsCoBUwoW/hVW6GZvOCyI9CdvWGtHj93/eD6MM5GDjVPtCAsxoGCrEIuxQUg4hHTNKQzUJnKkC1+i1PzT43NRHnTc7wn5/sTd/kcO27cSOjwB/CJ+FpxD3NmLJQF6y2fU17EF5zOfLqhCYBNJ/oOlLrUjiyEIJLoVLYTnw5/GI8qn1YGDYlDrA25UkjTSljYFb2CKG3MH0fM6c30Suq/gkvmiEs+Au9WlV1+eexJV1r/e0xYYe6K5aTn7gKczHUJHZroMf+opBj2k4peK/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729500295; c=relaxed/relaxed;
-	bh=CI2IO2w1zARuj9xj4CaUPdugLON1s/s7SFz+eWwBHnY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e+64e0oP9Jjk0l2dKt9v1dJOfHGvGGMUt6t1diKFm4J2HNTaUsSYtrnEgE5VOlfaAW7tTIYUP665TyLSjXUru7W4fvnrBxqClwwTK8NbQTC3hdzG65yO0I79s6PtUkojYNjmB1lbdzME9I33OjpeLQKDy5i7xRrjDzZpTQEeQqVzjY/Pd7Rf6Ehg6DrNHwXWojpWseE+d/hZAt1KFhqZLPNcSV0N7p2Hhi7Q+3OgelQAcrAGwO9ey2Jwb/p20Kfd1YgQ2yjUvdHWS9Z9elwxb1VMCosjdwS2RfSe1it0F3bBSCRcr0kmCIYGrWS9A78hV0obumKRtQQTv8eVc1xBVA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	t=1729513636; c=relaxed/relaxed;
+	bh=9SezcXW1UUL1mXDP69mmZCgSGrjE4rd90UsEDXQMDOI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WnmohNxT6zmQS7l/TW1Lxybe8MErU6iHbxqhEGzaVSty9Igogw0T+2R3m70QnBTwzic+2xLb1kNIqtIbpagryJTLgaxHSS2FdpVmTWL8h1zr077gdLlYCPjumD5Fqhjpm5EYeZZRh77aEDWNdGEie2xWFGB9KG5Drr6fsQALEgvMyHEKsEXGPIVoztS35/WAnbt8mwNS2SYWShcxCIoa+ZgJfqNdll0v5fRDxkgkLDHF+WCJGwsXeFq9r/bwOLx8b1jLkmlbM1SaOR6zv4md+/CgdfaDJFKzGVC0pgGppa8bClLO22HueMtyT2J5HV3jcT2ndfx9aRBCZq4f+6K2pw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UzyRfExx; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UzyRfExx;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XX84w0kp1z2xxt
-	for <linux-erofs@lists.ozlabs.org>; Mon, 21 Oct 2024 19:44:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1729500276; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=CI2IO2w1zARuj9xj4CaUPdugLON1s/s7SFz+eWwBHnY=;
-	b=I0oCRBJVm5YKOhoO2iKufvBdw2eS7eY1rDrCBc+Gl/uJxltHubAH+ChB49wmtdyzDG49bWLPAEzWv7kw2zPtHvK/tW5tFkC/IE8Te+ISVs4OGMp8onUAtJtD6kfoCiubbMyhsxXihNLeIHtr53dZAauqPqouqcxMGQnlM6wOtp8=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WHZK12o_1729500270 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 21 Oct 2024 16:44:36 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Subject: [PATCH 5.4.y] erofs: fix lz4 inplace decompression
-Date: Mon, 21 Oct 2024 16:44:29 +0800
-Message-ID: <20241021084429.3742972-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XXF1b3D55z2yLT
+	for <linux-erofs@lists.ozlabs.org>; Mon, 21 Oct 2024 23:27:15 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id ADC38A427B3;
+	Mon, 21 Oct 2024 12:27:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34FCCC4CEC3;
+	Mon, 21 Oct 2024 12:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729513632;
+	bh=kYjiKbopU3nHCtbQJu6rvBASdvuKeELUFFKYISpb/sQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UzyRfExx3I0AZj3W96QbCWdo+ZGE2EjZ8RlagAj7q+gzmFRpr7587s5qGTcTc1vLF
+	 w+Y4Xkw4dWz9a0v9moVieSSsVe8gAtZtp5Istt76SlYVdntv9iH7ffR5XJMMs1mBYI
+	 02X7TCA2HhqdjHJelBwHcGzqUke+V7oUHRUCFlU2/BU+Cz1DdjKIYApBo9yR017Wgv
+	 duMFtTfLw8ZGEOCA+sJX8kWpUQHoP+R5RrH/CHwzrlavPFR7AWxxnTCOZZkYAvkOad
+	 bwfdzj8CsLUEWzbRT7E9MdwrGE38aOHK0Pt8XwttpveHlLXtD+zTIUMHqleSU4k3hJ
+	 CVQRhVIRHAa9w==
+Date: Mon, 21 Oct 2024 14:27:07 +0200
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: Re: [PATCH v2 1/2] fs/super.c: introduce get_tree_bdev_flags()
+Message-ID: <20241021-geldverlust-rostig-adbb4182d669@brauner>
+References: <20241009033151.2334888-1-hsiangkao@linux.alibaba.com>
+ <20241010-bauordnung-keramik-eb5d35f6eb28@brauner>
+ <ab1a99aa-4732-4df6-97c0-e06cca2527e3@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ab1a99aa-4732-4df6-97c0-e06cca2527e3@linux.alibaba.com>
+X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -58,137 +82,59 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Juhyung Park <qkrwngud825@gmail.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Yifan Zhao <zhaoyifan@sjtu.edu.cn>, linux-erofs@lists.ozlabs.org
+From: Christian Brauner via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, LKML <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org, Allison Karlitskaya <allison.karlitskaya@redhat.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-commit 3c12466b6b7bf1e56f9b32c366a3d83d87afb4de upstream.
+On Mon, Oct 21, 2024 at 03:54:12PM +0800, Gao Xiang wrote:
+> Hi Christian,
+> 
+> On 2024/10/10 17:48, Christian Brauner wrote:
+> > On Wed, 09 Oct 2024 11:31:50 +0800, Gao Xiang wrote:
+> > > As Allison reported [1], currently get_tree_bdev() will store
+> > > "Can't lookup blockdev" error message.  Although it makes sense for
+> > > pure bdev-based fses, this message may mislead users who try to use
+> > > EROFS file-backed mounts since get_tree_nodev() is used as a fallback
+> > > then.
+> > > 
+> > > Add get_tree_bdev_flags() to specify extensible flags [2] and
+> > > GET_TREE_BDEV_QUIET_LOOKUP to silence "Can't lookup blockdev" message
+> > > since it's misleading to EROFS file-backed mounts now.
+> > > 
+> > > [...]
+> > 
+> > Applied to the vfs.misc branch of the vfs/vfs.git tree.
+> > Patches in the vfs.misc branch should appear in linux-next soon.
+> > 
+> > Please report any outstanding bugs that were missed during review in a
+> > new review to the original patch series allowing us to drop it.
+> > 
+> > It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> > patch has now been applied. If possible patch trailers will be updated.
+> > 
+> > Note that commit hashes shown below are subject to change due to rebase,
+> > trailer updates or similar. If in doubt, please check the listed branch.
+> > 
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> > branch: vfs.misc
+> > 
+> > [1/2] fs/super.c: introduce get_tree_bdev_flags()
+> >        https://git.kernel.org/vfs/vfs/c/f54acb32dff2
+> > [2/2] erofs: use get_tree_bdev_flags() to avoid misleading messages
+> >        https://git.kernel.org/vfs/vfs/c/83e6e973d9c9
+> 
+> Anyway, I'm not sure what's your thoughts about this, so I try to
+> write an email again.
+> 
+> As Allison suggested in the email [1], "..so probably it should get
+> fixed before the final release.".  Although I'm pretty fine to leave
+> it in "vfs.misc" for the next merge window (6.13) instead, it could
+> cause an unnecessary backport to the stable kernel.
 
-Currently EROFS can map another compressed buffer for inplace
-decompression, that was used to handle the cases that some pages of
-compressed data are actually not in-place I/O.
+Oh, the file changes have been merged during the v6.12 merge window?
+Sorry, that wasn't clear.
 
-However, like most simple LZ77 algorithms, LZ4 expects the compressed
-data is arranged at the end of the decompressed buffer and it
-explicitly uses memmove() to handle overlapping:
-  __________________________________________________________
- |_ direction of decompression --> ____ |_ compressed data _|
-
-Although EROFS arranges compressed data like this, it typically maps two
-individual virtual buffers so the relative order is uncertain.
-Previously, it was hardly observed since LZ4 only uses memmove() for
-short overlapped literals and x86/arm64 memmove implementations seem to
-completely cover it up and they don't have this issue.  Juhyung reported
-that EROFS data corruption can be found on a new Intel x86 processor.
-After some analysis, it seems that recent x86 processors with the new
-FSRM feature expose this issue with "rep movsb".
-
-Let's strictly use the decompressed buffer for lz4 inplace
-decompression for now.  Later, as an useful improvement, we could try
-to tie up these two buffers together in the correct order.
-
-Reported-and-tested-by: Juhyung Park <qkrwngud825@gmail.com>
-Closes: https://lore.kernel.org/r/CAD14+f2AVKf8Fa2OO1aAUdDNTDsVzzR6ctU_oJSmTyd6zSYR2Q@mail.gmail.com
-Fixes: 0ffd71bcc3a0 ("staging: erofs: introduce LZ4 decompression inplace")
-Fixes: 598162d05080 ("erofs: support decompress big pcluster for lz4 backend")
-Cc: stable <stable@vger.kernel.org> # 5.4+
-Tested-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
-Link: https://lore.kernel.org/r/20231206045534.3920847-1-hsiangkao@linux.alibaba.com
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-The remaining stable patch to address the issue "CVE-2023-52497" for
-5.4.y, which is the same as the 5.10.y one [1].
-
-[1] https://lore.kernel.org/r/20240224063248.2157885-1-hsiangkao@linux.alibaba.com
-
- fs/erofs/decompressor.c | 24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
-
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 38eeec5e3032..d06a3b77fb39 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -24,7 +24,8 @@ struct z_erofs_decompressor {
- 	 */
- 	int (*prepare_destpages)(struct z_erofs_decompress_req *rq,
- 				 struct list_head *pagepool);
--	int (*decompress)(struct z_erofs_decompress_req *rq, u8 *out);
-+	int (*decompress)(struct z_erofs_decompress_req *rq, u8 *out,
-+			  u8 *obase);
- 	char *name;
- };
- 
-@@ -114,10 +115,13 @@ static void *generic_copy_inplace_data(struct z_erofs_decompress_req *rq,
- 	return tmp;
- }
- 
--static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
-+static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out,
-+				  u8 *obase)
- {
-+	const uint nrpages_out = PAGE_ALIGN(rq->pageofs_out +
-+					    rq->outputsize) >> PAGE_SHIFT;
- 	unsigned int inputmargin, inlen;
--	u8 *src;
-+	u8 *src, *src2;
- 	bool copied, support_0padding;
- 	int ret;
- 
-@@ -125,6 +129,7 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
- 		return -EOPNOTSUPP;
- 
- 	src = kmap_atomic(*rq->in);
-+	src2 = src;
- 	inputmargin = 0;
- 	support_0padding = false;
- 
-@@ -148,16 +153,15 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
- 	if (rq->inplace_io) {
- 		const uint oend = (rq->pageofs_out +
- 				   rq->outputsize) & ~PAGE_MASK;
--		const uint nr = PAGE_ALIGN(rq->pageofs_out +
--					   rq->outputsize) >> PAGE_SHIFT;
--
- 		if (rq->partial_decoding || !support_0padding ||
--		    rq->out[nr - 1] != rq->in[0] ||
-+		    rq->out[nrpages_out - 1] != rq->in[0] ||
- 		    rq->inputsize - oend <
- 		      LZ4_DECOMPRESS_INPLACE_MARGIN(inlen)) {
- 			src = generic_copy_inplace_data(rq, src, inputmargin);
- 			inputmargin = 0;
- 			copied = true;
-+		} else {
-+			src = obase + ((nrpages_out - 1) << PAGE_SHIFT);
- 		}
- 	}
- 
-@@ -178,7 +182,7 @@ static int z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
- 	if (copied)
- 		erofs_put_pcpubuf(src);
- 	else
--		kunmap_atomic(src);
-+		kunmap_atomic(src2);
- 	return ret;
- }
- 
-@@ -248,7 +252,7 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
- 			return PTR_ERR(dst);
- 
- 		rq->inplace_io = false;
--		ret = alg->decompress(rq, dst);
-+		ret = alg->decompress(rq, dst, NULL);
- 		if (!ret)
- 			copy_from_pcpubuf(rq->out, dst, rq->pageofs_out,
- 					  rq->outputsize);
-@@ -282,7 +286,7 @@ static int z_erofs_decompress_generic(struct z_erofs_decompress_req *rq,
- 	dst_maptype = 2;
- 
- dstmap_out:
--	ret = alg->decompress(rq, dst + rq->pageofs_out);
-+	ret = alg->decompress(rq, dst + rq->pageofs_out, dst);
- 
- 	if (!dst_maptype)
- 		kunmap_atomic(dst);
--- 
-2.43.5
-
+Well, this is a bit annoying but yes, we can get that fixed upstream
+then. I'll move it to vfs.fixes...
