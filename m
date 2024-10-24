@@ -1,82 +1,82 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32A1F9AE769
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Oct 2024 16:06:30 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 448C39AE76C
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Oct 2024 16:06:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XZ74h1QZXz3bd2
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 01:06:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XZ74r1xPRz3bcy
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 01:06:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729778786;
-	cv=none; b=Zz/mTy3Cn0CVz+SPRibAp4oS0NKcecM9btIh4S6SS7/EEMnWYgj0R4Ws3Fb2svvvWq7Oo2VFvJ8uKSlXnnD9m7Xkz9LwCgLi8na9G8rXvhIedobNUr2iUg16dnWymQXaRDwlQF3KIo4X4KCq/8Y80DobUgea6Vhd5MkAUwi/mMIMFkLb6DO+MnpRFimDzEojHpBCXr1ZftDSKPR3HzxPW7PJs01Ps5TDOL4EhV/T/fXONIQIs1icElJv8Pu9JYi7YgvoKgAiXTIqaFQxHt5WFEn1h8+Lg/MGkXAGDe6hV9D1EmT5G1XSouhiHAFH8BtN/2FYN0HLSeAhFAjGiVmNYQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729778793;
+	cv=none; b=MRL0d/pBPT9s4SCmjElZv7wX3bRjj83G6B/pn4Z4bSF4q4dBCpT81mSbMGsQ1P6Z0aD2BPV4eZtQZRYi8nTPwuNptdrKaeXJ08X0IjUVWazH7hSBtiQg+t1GPqeUN0QxLoDwVPaSI7zqzgSu5OUqvE5cuqYJZpslqMJFG6Wv5Vb+0xNrcVIhE1q9QpmNE4KueRlE16LKVgprXQ47SMuCQO2RbKQ0mMJRr45oVrkeKdLY4AbSBAgl/X8Bho/je2aKrzrdoVNLXh0/kqJKynHdNN2k7AD5Dc96mtBOKzgEsQhL2jbaRtrrPnK0caGqTZ7d3ZKVJWrOhZW/5UURW4AtYg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729778786; c=relaxed/relaxed;
-	bh=TRktXy0njOtGduc146rNPLaeznRZ8wjmjmNrqe7WMw8=;
+	t=1729778793; c=relaxed/relaxed;
+	bh=2WJ3IwRH8RLBNIi0Kxo/o1E5+hUSf0Z9V2WPyhSRrlg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D5FFAE7dLy3iOukMvgPORXzUH2xGizE5vaDUpTNJO3buZDaARYWOTu5cfjJ4jHV62qOGwC/ra5Ka0MdWHq+1HVm8BPa7DsMotSYfUG0qniYySUev8ogLe7qQfnNxZWwtcHwLsAV2bbgKutN8VzCoAgxZ05opJoVx/UU1/MhHzYSw++RvuNIZSZIKrG1qeJK7gDLA67tMFY+iB49TGZ15t/vi/dwVGSar/I/wLe/Lhz7ttQcNCOBW7oY4e4qj3X2h2BkDihttlpagsqyT6Xu+J0K1XwmAvmibrrElDNacmac8YWRPW1E++4/K9GOFGcZVtOw93w4dFYukPNgbi4RLNg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LKFTyKn/; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LKFTyKn/; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version; b=QUqGGU3cGGfIRtP8O1Er7FRjgzZDjTn+R2f+NzYADHqGE6CXlSbiuu0S3yLftDGVvqgHp+eSGCwVpOJvqakkNRTQ9LdvogiQb6rLBhuDS+LbXwFg0RxCqwSjIMA01TEnl2BKYCRDpdyyqK/n3KOWm3su1TGUgb603zPgoUPa2olLAxFeAi4w3b0HLrzcXtDWPwRmQaEmDIFR/zT+qHP9gRiVBOObNcBEQe+HaEqRufOOk5cpVhuXPubyzN0Yk5o+VLnzbfrLOEKIiHs3FFl6q5z+99hyVweutX1xuKkGcrY0cUFt8rdjQi6fmgmAz/m16pDB7bQg7l+JTlQb35EP4Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Rv3iecie; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Rv3iecie; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LKFTyKn/;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LKFTyKn/;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Rv3iecie;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Rv3iecie;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZ74d13sQz2yPR
-	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Oct 2024 01:06:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZ74m2vhdz305n
+	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Oct 2024 01:06:32 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729778782;
+	s=mimecast20190719; t=1729778789;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TRktXy0njOtGduc146rNPLaeznRZ8wjmjmNrqe7WMw8=;
-	b=LKFTyKn/tSjMapXzhU1lyrs4nRtXDUWESWYL7FQ1sAamAOEBmud6NxAII1GJoMgAGB3nrA
-	/oEhiMQxYXy85ciC8Wtu/ZH5IPnlzs2cqHpde84y4HfuyFMZi8yXzWWkazHZ87CUMEHq5D
-	7jOK2h8eAJodVfd3Gyv8X1GPgtMf1Fc=
+	bh=2WJ3IwRH8RLBNIi0Kxo/o1E5+hUSf0Z9V2WPyhSRrlg=;
+	b=Rv3iecieKtvfURDTBn6fT4Pt3FP9zJzNBg1ZiNBpgvHYQK9YxVoBFTji7FFCC1M8msmSn9
+	zllNo7diUVyHVvnCxrcfM32aBgYCm7lrYhCp7m/OnSqkWriqk8fwm88hP4V+z3YKrhFfkq
+	Ued7lDT9if3uirJSgkBkczAM5k+6F+o=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729778782;
+	s=mimecast20190719; t=1729778789;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TRktXy0njOtGduc146rNPLaeznRZ8wjmjmNrqe7WMw8=;
-	b=LKFTyKn/tSjMapXzhU1lyrs4nRtXDUWESWYL7FQ1sAamAOEBmud6NxAII1GJoMgAGB3nrA
-	/oEhiMQxYXy85ciC8Wtu/ZH5IPnlzs2cqHpde84y4HfuyFMZi8yXzWWkazHZ87CUMEHq5D
-	7jOK2h8eAJodVfd3Gyv8X1GPgtMf1Fc=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=2WJ3IwRH8RLBNIi0Kxo/o1E5+hUSf0Z9V2WPyhSRrlg=;
+	b=Rv3iecieKtvfURDTBn6fT4Pt3FP9zJzNBg1ZiNBpgvHYQK9YxVoBFTji7FFCC1M8msmSn9
+	zllNo7diUVyHVvnCxrcfM32aBgYCm7lrYhCp7m/OnSqkWriqk8fwm88hP4V+z3YKrhFfkq
+	Ued7lDT9if3uirJSgkBkczAM5k+6F+o=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-T5p3B-9LP26j_KvYzWMxQQ-1; Thu,
- 24 Oct 2024 10:06:19 -0400
-X-MC-Unique: T5p3B-9LP26j_KvYzWMxQQ-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-488-K1AZ-6hrP7ClMaUkBCUW0w-1; Thu,
+ 24 Oct 2024 10:06:25 -0400
+X-MC-Unique: K1AZ-6hrP7ClMaUkBCUW0w-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0E6101954B11;
-	Thu, 24 Oct 2024 14:06:12 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2FB241933195;
+	Thu, 24 Oct 2024 14:06:21 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.231])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A35D919560A2;
-	Thu, 24 Oct 2024 14:06:04 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7C7D4195607C;
+	Thu, 24 Oct 2024 14:06:13 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
 	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH 02/27] netfs: Fix a few minor bugs in netfs_page_mkwrite()
-Date: Thu, 24 Oct 2024 15:05:00 +0100
-Message-ID: <20241024140539.3828093-3-dhowells@redhat.com>
+Subject: [PATCH 03/27] netfs: Remove unnecessary references to pages
+Date: Thu, 24 Oct 2024 15:05:01 +0100
+Message-ID: <20241024140539.3828093-4-dhowells@redhat.com>
 In-Reply-To: <20241024140539.3828093-1-dhowells@redhat.com>
 References: <20241024140539.3828093-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
 	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
@@ -99,80 +99,99 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-We can't return with VM_FAULT_SIGBUS | VM_FAULT_LOCKED; the core
-code will not unlock the folio in this instance.  Introduce a new
-"unlock" error exit to handle this case.  Use it to handle
-the "folio is truncated" check, and change the "writeback interrupted
-by a fatal signal" to do a NOPAGE exit instead of letting the core
-code install the folio currently under writeback before killing the
-process.
+These places should all use folios instead of pages.
 
 Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Link: https://lore.kernel.org/r/20241005182307.3190401-3-willy@infradead.org
+Link: https://lore.kernel.org/r/20241005182307.3190401-4-willy@infradead.org
 Signed-off-by: Christian Brauner <brauner@kernel.org>
 ---
- fs/netfs/buffered_write.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ fs/netfs/buffered_read.c  |  8 ++++----
+ fs/netfs/buffered_write.c | 14 +++++++-------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index b3910dfcb56d..ff2814da88b1 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -491,7 +491,9 @@ EXPORT_SYMBOL(netfs_file_write_iter);
+diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
+index af46a598f4d7..7ac34550c403 100644
+--- a/fs/netfs/buffered_read.c
++++ b/fs/netfs/buffered_read.c
+@@ -627,7 +627,7 @@ static bool netfs_skip_folio_read(struct folio *folio, loff_t pos, size_t len,
+ 	if (unlikely(always_fill)) {
+ 		if (pos - offset + len <= i_size)
+ 			return false; /* Page entirely before EOF */
+-		zero_user_segment(&folio->page, 0, plen);
++		folio_zero_segment(folio, 0, plen);
+ 		folio_mark_uptodate(folio);
+ 		return true;
+ 	}
+@@ -646,7 +646,7 @@ static bool netfs_skip_folio_read(struct folio *folio, loff_t pos, size_t len,
+ 
+ 	return false;
+ zero_out:
+-	zero_user_segments(&folio->page, 0, offset, offset + len, plen);
++	folio_zero_segments(folio, 0, offset, offset + len, plen);
+ 	return true;
+ }
+ 
+@@ -713,7 +713,7 @@ int netfs_write_begin(struct netfs_inode *ctx,
+ 	if (folio_test_uptodate(folio))
+ 		goto have_folio;
+ 
+-	/* If the page is beyond the EOF, we want to clear it - unless it's
++	/* If the folio is beyond the EOF, we want to clear it - unless it's
+ 	 * within the cache granule containing the EOF, in which case we need
+ 	 * to preload the granule.
+ 	 */
+@@ -773,7 +773,7 @@ int netfs_write_begin(struct netfs_inode *ctx,
+ EXPORT_SYMBOL(netfs_write_begin);
  
  /*
-  * Notification that a previously read-only page is about to become writable.
-- * Note that the caller indicates a single page of a multipage folio.
-+ * The caller indicates the precise page that needs to be written to, but
-+ * we only track group on a per-folio basis, so we block more often than
-+ * we might otherwise.
+- * Preload the data into a page we're proposing to write into.
++ * Preload the data into a folio we're proposing to write into.
   */
- vm_fault_t netfs_page_mkwrite(struct vm_fault *vmf, struct netfs_group *netfs_group)
- {
-@@ -501,7 +503,7 @@ vm_fault_t netfs_page_mkwrite(struct vm_fault *vmf, struct netfs_group *netfs_gr
- 	struct address_space *mapping = file->f_mapping;
- 	struct inode *inode = file_inode(file);
- 	struct netfs_inode *ictx = netfs_inode(inode);
--	vm_fault_t ret = VM_FAULT_RETRY;
-+	vm_fault_t ret = VM_FAULT_NOPAGE;
- 	int err;
- 
- 	_enter("%lx", folio->index);
-@@ -510,21 +512,15 @@ vm_fault_t netfs_page_mkwrite(struct vm_fault *vmf, struct netfs_group *netfs_gr
- 
- 	if (folio_lock_killable(folio) < 0)
- 		goto out;
--	if (folio->mapping != mapping) {
--		folio_unlock(folio);
--		ret = VM_FAULT_NOPAGE;
--		goto out;
--	}
--
--	if (folio_wait_writeback_killable(folio)) {
--		ret = VM_FAULT_LOCKED;
--		goto out;
--	}
-+	if (folio->mapping != mapping)
-+		goto unlock;
-+	if (folio_wait_writeback_killable(folio) < 0)
-+		goto unlock;
- 
- 	/* Can we see a streaming write here? */
- 	if (WARN_ON(!folio_test_uptodate(folio))) {
--		ret = VM_FAULT_SIGBUS | VM_FAULT_LOCKED;
--		goto out;
-+		ret = VM_FAULT_SIGBUS;
-+		goto unlock;
- 	}
- 
- 	group = netfs_folio_group(folio);
-@@ -559,5 +555,8 @@ vm_fault_t netfs_page_mkwrite(struct vm_fault *vmf, struct netfs_group *netfs_gr
- out:
- 	sb_end_pagefault(inode->i_sb);
- 	return ret;
-+unlock:
-+	folio_unlock(folio);
-+	goto out;
- }
- EXPORT_SYMBOL(netfs_page_mkwrite);
+ int netfs_prefetch_for_write(struct file *file, struct folio *folio,
+ 			     size_t offset, size_t len)
+diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
+index ff2814da88b1..b4826360a411 100644
+--- a/fs/netfs/buffered_write.c
++++ b/fs/netfs/buffered_write.c
+@@ -83,13 +83,13 @@ static void netfs_update_i_size(struct netfs_inode *ctx, struct inode *inode,
+  * netfs_perform_write - Copy data into the pagecache.
+  * @iocb: The operation parameters
+  * @iter: The source buffer
+- * @netfs_group: Grouping for dirty pages (eg. ceph snaps).
++ * @netfs_group: Grouping for dirty folios (eg. ceph snaps).
+  *
+- * Copy data into pagecache pages attached to the inode specified by @iocb.
++ * Copy data into pagecache folios attached to the inode specified by @iocb.
+  * The caller must hold appropriate inode locks.
+  *
+- * Dirty pages are tagged with a netfs_folio struct if they're not up to date
+- * to indicate the range modified.  Dirty pages may also be tagged with a
++ * Dirty folios are tagged with a netfs_folio struct if they're not up to date
++ * to indicate the range modified.  Dirty folios may also be tagged with a
+  * netfs-specific grouping such that data from an old group gets flushed before
+  * a new one is started.
+  */
+@@ -223,11 +223,11 @@ ssize_t netfs_perform_write(struct kiocb *iocb, struct iov_iter *iter,
+ 		 * we try to read it.
+ 		 */
+ 		if (fpos >= ctx->zero_point) {
+-			zero_user_segment(&folio->page, 0, offset);
++			folio_zero_segment(folio, 0, offset);
+ 			copied = copy_folio_from_iter_atomic(folio, offset, part, iter);
+ 			if (unlikely(copied == 0))
+ 				goto copy_failed;
+-			zero_user_segment(&folio->page, offset + copied, flen);
++			folio_zero_segment(folio, offset + copied, flen);
+ 			__netfs_set_group(folio, netfs_group);
+ 			folio_mark_uptodate(folio);
+ 			trace_netfs_folio(folio, netfs_modify_and_clear);
+@@ -407,7 +407,7 @@ EXPORT_SYMBOL(netfs_perform_write);
+  * netfs_buffered_write_iter_locked - write data to a file
+  * @iocb:	IO state structure (file, offset, etc.)
+  * @from:	iov_iter with data to write
+- * @netfs_group: Grouping for dirty pages (eg. ceph snaps).
++ * @netfs_group: Grouping for dirty folios (eg. ceph snaps).
+  *
+  * This function does all the work needed for actually writing data to a
+  * file. It does all basic checks, removes SUID from the file, updates
 
