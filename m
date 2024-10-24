@@ -2,85 +2,91 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FE119AE7A7
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Oct 2024 16:09:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C0EAF9AEC86
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Oct 2024 18:48:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1729788531;
+	bh=LnAWWsM9ROws4/S41bMH0QAvy+icSduZLkiq789YHsQ=;
+	h=References:In-Reply-To:Date:Subject:To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=muFcj0jM7boyLDBrCsBAIyHBNMzuWamOusg0p/EA3ZHxf52XnNMLzrja4xb4N16ZE
+	 fxW+jO6J8Pri8fvaiuBomIv/Xa8jgywfK6EKjJ3jTug0wXCZztnGeE6tVuIBA5+lhr
+	 rmQd+GwoK1nfI3/s5U3XqP9FmHn7hvnSxgvnCmmWTktff0sKyF9EZk/tjxZcd1ZoXl
+	 ueBUN2Z6dy7VlSbDoShQuG15IxWQmDcA6YNKc904immkVffEogqJm2HX5Xulspd3VP
+	 k3KTN1K0MLT79mdwtShgToq2DWzEd7qGa3FVKlEYLnWHSivoAMVtWbMsIISGKSu06g
+	 sfx9Kh5yg8b1g==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XZ7860sTLz3brD
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 01:09:26 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XZBh34qw7z3bfK
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 03:48:51 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729778964;
-	cv=none; b=XE4NuFbme29QzyLxYRbe5qj1mAX1r7AcGDekjaACIo9hS4vyewL4XVycFN+k+T25EKIbrwo+om3iPh/dHgBXCkluO6hcz5mWQtwSogW2BGILFdJabqeESSwMgeiX3jCVk7a8AYyKP3qbaT8v2T8H6pwN8juxTsN8SJKJkLv6wHJ/tTXV5Zb9YxC7YqMC7HBVRaO3YTdgJmOc8UF/FtFpjnpuDTtORZl6tTvhGKESrfbHRzF/qIAODfAWVC2Bk4GF/+TUQMFahWyGDJeYjZeyLuMrv0j+wdZLzcuptNDnhC4BUd3etxW0QVukiqQBjc81qoYXpNWsDAVtViUnEAYwNQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::433"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729788529;
+	cv=none; b=Ei0PVAGQCK9sIFr2zD0cjHKTB9HpirtYO93j7n31bHeDBF7P+s9LjgW2lCwDwR794w4lQK/+BW+u+eRQ/PAn2IbWMs4w+nDB1nqpW0goTEEVWOSZt36W/COuh7GHTCc/Xe4PZ54I6ehRuTvcMXdH2lgzZpM2bBJZZggdB3uX7ZTfeuUOU7UQom2kEOj03pirywGYm/GA6/0cyQt/Qd/r604hR7BdQqlxpZu1LDqeWLFcc4CJLDQa2JJed2Iir0DlRXgShoh1Vi1cJgRy9xsO5mgW+E5QcKAu2xMbLmo6ZSKmao7AzVM+wf8trv8L0WGWOhQpePpicKxxkL0LJtqoVw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729778964; c=relaxed/relaxed;
-	bh=iqdCYyLxV3eZI7xKPYjIcc90QP7ii8Dvz5lSTfzAmmU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VQ5YUI4pF9hngnM0L7LsFV3f4LthrpOG1q41FIYFVpjFbCAFAGLBA8JFJVY3viZwm6HCgMahCY/WHXRLdC21VkTXgM1kMeLyYTgptxnOpCpuU8RaLg94ZFwM6DeVBBavkHl9z7Zi/a0Dri6Nsxzj1opLqam5OUvzl5W4All5y0J+wcIDf9qxOzL7c/ZgJRmvvUGONd+LfLvJUobA6joy/hqeUwVDh1MSjLpqnKjoMCK3RKTRRCW0u7Tou5RNp3hiDgIA8QqEzU3qrbQ4ne1bQXExJBFz/rrWGLY12FNnM4WpQdTYaZSqBO/HuDVxGekxaB29vpnhlLFnlstkDcZ3Rw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Mz1uHghR; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Mz1uHghR; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+	t=1729788529; c=relaxed/relaxed;
+	bh=LnAWWsM9ROws4/S41bMH0QAvy+icSduZLkiq789YHsQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rbj6rmLqhLSutNOTxwNyrfm0crFOIEXF3B8MpIWSLrGjndbIn5h1OFut2Wi4SIm/+bawLmRZrznkXaKmPUOe9k4adTZItQTiQhtQIQuzVNWVkchGwT+0LZiG8rdC8nKBc4045CFzyEQrnQ1/NwZdLx5dhCMUnTFf2y6eEJvqHMhm3UY9tWfiv+HS/ccSQ+0Tle3bUWLgJoivox6YW3ImNBT/qVQVCMxJsh/lMFF0hE4q1nRLnKCKwe86EfAgyTFr0jP2lK4Wm7EyMwe7IDpKG4mwrAqKM5XNM1mpGOCfm2qxl+1SGhTMYWXwMxvwBO7Xx9hzcpL9hlRjd2Pei6MXdg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=a8d3xtsG; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org) smtp.mailfrom=google.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Mz1uHghR;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Mz1uHghR;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=a8d3xtsG;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=google.com (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZ7830bDyz3bfS
-	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Oct 2024 01:09:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729778960;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iqdCYyLxV3eZI7xKPYjIcc90QP7ii8Dvz5lSTfzAmmU=;
-	b=Mz1uHghR8a/DxsiYRRGYkF1DC8zk/SeUNunZ4eKNWwHB5FyntWTCmyWQ3ujlsKJ5jtoJQK
-	zZvfMXHdvfM1xiSPBE8VIOtYjvinzI6kN5tgmVuVN5kRSQ9XeXt1Tzb1sD/XVk1KBK+MKY
-	Hzz9nZZ7Yx605AZcxcVOihiGe0HTvfo=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729778960;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iqdCYyLxV3eZI7xKPYjIcc90QP7ii8Dvz5lSTfzAmmU=;
-	b=Mz1uHghR8a/DxsiYRRGYkF1DC8zk/SeUNunZ4eKNWwHB5FyntWTCmyWQ3ujlsKJ5jtoJQK
-	zZvfMXHdvfM1xiSPBE8VIOtYjvinzI6kN5tgmVuVN5kRSQ9XeXt1Tzb1sD/XVk1KBK+MKY
-	Hzz9nZZ7Yx605AZcxcVOihiGe0HTvfo=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-608-RR6a9pwMNua986kgppA9xQ-1; Thu,
- 24 Oct 2024 10:09:19 -0400
-X-MC-Unique: RR6a9pwMNua986kgppA9xQ-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 032451955F3F;
-	Thu, 24 Oct 2024 14:09:16 +0000 (UTC)
-Received: from warthog.procyon.org.uk.com (unknown [10.42.28.231])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6260D195607C;
-	Thu, 24 Oct 2024 14:09:10 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH 27/27] afs: Make afs_mkdir() locally initialise a new directory's content
-Date: Thu, 24 Oct 2024 15:05:25 +0100
-Message-ID: <20241024140539.3828093-28-dhowells@redhat.com>
-In-Reply-To: <20241024140539.3828093-1-dhowells@redhat.com>
-References: <20241024140539.3828093-1-dhowells@redhat.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZBgz3WjNz2xrJ
+	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Oct 2024 03:48:46 +1100 (AEDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-71e983487a1so841600b3a.2
+        for <linux-erofs@lists.ozlabs.org>; Thu, 24 Oct 2024 09:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1729788524; x=1730393324; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LnAWWsM9ROws4/S41bMH0QAvy+icSduZLkiq789YHsQ=;
+        b=a8d3xtsGVs3fQHL1yX2dWndvqvTlttTM0dm7qRKFty+QTvqkWdOSC1AUv3Jr4H/WRL
+         P90YXbmi6mtVoG4bSzyDL6c3OrOPjCHhirJIsXsgfoSO1ls7GfD2pCdxzc12MbFgp4Ie
+         PxNPLzn/eTkLmXj2ZlHOjKA1h1rzzSHUqu2n2k3XrhcGXR9f58Ep5/+lXnlTRrxwJUmY
+         lnyoHenOB1uM6E7/+v+TGi4LTWUqIvsovFyXJilhIHRiWedYTvQRtLetxETSEvXFG2qM
+         EJUjhTMkkDZBQV6aoJrUTiXezWXDNADFAaqgqp0xct9JouXtzpI/x1m9BKClgJEReZYr
+         swFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729788524; x=1730393324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LnAWWsM9ROws4/S41bMH0QAvy+icSduZLkiq789YHsQ=;
+        b=KIV2t69YCv7jmK3AsjJ5KTTNIZ+KSqFU4N8g3ulG0aRMee/ed40NLwRYYdGOzVBEEL
+         CKikPSRx4dloJGQkNqgQ787L8UHvQwQtT9TlU6iC2PDZGN9MvWVtRmsarE4iWYKRgzqr
+         tz2e76Ny9KgRNfYJWq2iK5BezJs3Uby7a5jy3PJw6DRIY0xB/MwLgQoxw9B+o/SbWr6j
+         L+cv5IldS2aXys9uMo/Edjtr/tH/avpmoovrtnaGpwOwgyn7NyKOgyGkrR62TlAQ7zs2
+         vSiP0XU6zbGOR8qvQwnIWEVrsE8MPWd+ApTHqicmy4MlKGvEUgP4gaCaqXIhFMmrZPTp
+         8CIQ==
+X-Gm-Message-State: AOJu0YxOgsTW7kNOd1W7x/BawN1dogP0OfxOMo0r57vZLou6XGjlgwSN
+	M8x80JFAqBzksBlzusuYDWB3dFDCokzxNP1j/pEFL+nDwAwLvRJobrfYSzASCvqegRphe/geZg+
+	P+hXJ3Hdght03HoyJlzPkW7AqtC8fLtB0MD4M
+X-Google-Smtp-Source: AGHT+IEMs3PCkteq5dd3LXJ4LMS3NMMFJ2SsGVrOyhJLDia9peKcPDH4nCdL0eXigj1vBPmeMv6ZHw2ip8cCfDLFRsw=
+X-Received: by 2002:a05:6a00:2d25:b0:71e:6a99:472f with SMTP id
+ d2e1a72fcca58-72030b992eemr8187192b3a.24.1729788523359; Thu, 24 Oct 2024
+ 09:48:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
-X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.0
+References: <20241024094806.634534-1-huangjianan@xiaomi.com>
+In-Reply-To: <20241024094806.634534-1-huangjianan@xiaomi.com>
+Date: Thu, 24 Oct 2024 09:48:30 -0700
+Message-ID: <CAB=BE-QGVZPJizeOceDgjZ-D8JL12AYp8O8Y-qMm2pn+ER-2Jw@mail.gmail.com>
+Subject: Re: [PATCH] erofs-utils: avoid allocating large arrays on the stack
+To: Jianan Huang <huangjianan@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -93,131 +99,107 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, Shyam Prasad N <sprasad@microsoft.com>, linux-cifs@vger.kernel.org, netdev@vger.kernel.org, Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org, linux-mm@kvack.org, netfs@lists.linux.dev, Marc Dionne <marc.dionne@auristor.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Eric Van Hensbergen <ericvh@kernel.org>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
+From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Sandeep Dhavale <dhavale@google.com>
+Cc: zhaoyifan@sjtu.edu.cn, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Initialise a new directory's content when it is created by mkdir locally
-rather than downloading the content from the server as we can predict what
-it's going to look like.
+Hi Jianan,
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: linux-afs@lists.infradead.org
----
- fs/afs/dir.c               |  3 +++
- fs/afs/dir_edit.c          | 48 ++++++++++++++++++++++++++++++++++++++
- fs/afs/internal.h          |  1 +
- include/trace/events/afs.h |  2 ++
- 4 files changed, 54 insertions(+)
+On Thu, Oct 24, 2024 at 2:49=E2=80=AFAM Jianan Huang via Linux-erofs
+<linux-erofs@lists.ozlabs.org> wrote:
+>
+> The default pthread stack size of bionic is 1M. Use malloc to avoid
+> stack overflow.
+>
+> Signed-off-by: Jianan Huang <huangjianan@xiaomi.com>
+> ---
+>  lib/compress.c | 31 +++++++++++++++++++++----------
+>  1 file changed, 21 insertions(+), 10 deletions(-)
+>
+> diff --git a/lib/compress.c b/lib/compress.c
+> index cbd4620..47ba662 100644
+> --- a/lib/compress.c
+> +++ b/lib/compress.c
+> @@ -451,31 +451,37 @@ static int z_erofs_fill_inline_data(struct erofs_in=
+ode *inode, void *data,
+>         return len;
+>  }
+>
+> -static void tryrecompress_trailing(struct z_erofs_compress_sctx *ctx,
+> -                                  struct erofs_compress *ec,
+> -                                  void *in, unsigned int *insize,
+> -                                  void *out, unsigned int *compressedsiz=
+e)
+> +static int tryrecompress_trailing(struct z_erofs_compress_sctx *ctx,
+> +                                 struct erofs_compress *ec,
+> +                                 void *in, unsigned int *insize,
+> +                                 void *out, unsigned int *compressedsize=
+)
+>  {
+>         struct erofs_sb_info *sbi =3D ctx->ictx->inode->sbi;
+> -       char tmp[Z_EROFS_PCLUSTER_MAX_SIZE];
+> +       char *tmp;
+>         unsigned int count;
+>         int ret =3D *compressedsize;
+>
+> +       tmp =3D malloc(Z_EROFS_PCLUSTER_MAX_SIZE);
+> +       if (!tmp)
+> +               return -ENOMEM;
+> +
+>         /* no need to recompress */
+>         if (!(ret & (erofs_blksiz(sbi) - 1)))
+> -               return;
+> +               return 0;
+>
+You can move allocation here instead of at the top to avoid malloc
+cost if we do not need the tmp.
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 87c5fb982e5b..c5b1008b302b 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -1270,6 +1270,7 @@ void afs_check_for_remote_deletion(struct afs_operation *op)
-  */
- static void afs_vnode_new_inode(struct afs_operation *op)
- {
-+	struct afs_vnode_param *dvp = &op->file[0];
- 	struct afs_vnode_param *vp = &op->file[1];
- 	struct afs_vnode *vnode;
- 	struct inode *inode;
-@@ -1289,6 +1290,8 @@ static void afs_vnode_new_inode(struct afs_operation *op)
- 
- 	vnode = AFS_FS_I(inode);
- 	set_bit(AFS_VNODE_NEW_CONTENT, &vnode->flags);
-+	if (S_ISDIR(inode->i_mode))
-+		afs_mkdir_init_dir(vnode, dvp->vnode);
- 	if (!afs_op_error(op))
- 		afs_cache_permit(vnode, op->key, vnode->cb_break, &vp->scb);
- 	d_instantiate(op->dentry, inode);
-diff --git a/fs/afs/dir_edit.c b/fs/afs/dir_edit.c
-index 28a966d2612d..c823497b9e25 100644
---- a/fs/afs/dir_edit.c
-+++ b/fs/afs/dir_edit.c
-@@ -556,3 +556,51 @@ void afs_edit_dir_update_dotdot(struct afs_vnode *vnode, struct afs_vnode *new_d
- 			   0, 0, 0, 0, "..");
- 	goto out;
- }
-+
-+/*
-+ * Initialise a new directory.  We need to fill in the "." and ".." entries.
-+ */
-+void afs_mkdir_init_dir(struct afs_vnode *dvnode, struct afs_vnode *parent_dvnode)
-+{
-+	union afs_xdr_dir_block *meta;
-+	struct afs_dir_iter iter = { .dvnode = dvnode };
-+	union afs_xdr_dirent *de;
-+	unsigned int slot = AFS_DIR_RESV_BLOCKS0;
-+	loff_t i_size;
-+
-+	i_size = i_size_read(&dvnode->netfs.inode);
-+	if (i_size != AFS_DIR_BLOCK_SIZE) {
-+		afs_invalidate_dir(dvnode, afs_dir_invalid_edit_add_bad_size);
-+		return;
-+	}
-+
-+	meta = afs_dir_get_block(&iter, 0);
-+	if (!meta)
-+		return;
-+
-+	afs_edit_init_block(meta, meta, 0);
-+
-+	de = &meta->dirents[slot];
-+	de->u.valid  = 1;
-+	de->u.vnode  = htonl(dvnode->fid.vnode);
-+	de->u.unique = htonl(dvnode->fid.unique);
-+	memcpy(de->u.name, ".", 2);
-+	trace_afs_edit_dir(dvnode, afs_edit_dir_for_mkdir, afs_edit_dir_mkdir, 0, slot,
-+			   dvnode->fid.vnode, dvnode->fid.unique, ".");
-+	slot++;
-+
-+	de = &meta->dirents[slot];
-+	de->u.valid  = 1;
-+	de->u.vnode  = htonl(parent_dvnode->fid.vnode);
-+	de->u.unique = htonl(parent_dvnode->fid.unique);
-+	memcpy(de->u.name, "..", 3);
-+	trace_afs_edit_dir(dvnode, afs_edit_dir_for_mkdir, afs_edit_dir_mkdir, 0, slot,
-+			   parent_dvnode->fid.vnode, parent_dvnode->fid.unique, "..");
-+
-+	afs_set_contig_bits(meta, AFS_DIR_RESV_BLOCKS0, 2);
-+	meta->meta.alloc_ctrs[0] -= 2;
-+	kunmap_local(meta);
-+
-+	netfs_single_mark_inode_dirty(&dvnode->netfs.inode);
-+	set_bit(AFS_VNODE_DIR_VALID, &dvnode->flags);
-+}
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index c7f0d75eab7f..3acf1445e444 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -1074,6 +1074,7 @@ extern void afs_edit_dir_add(struct afs_vnode *, struct qstr *, struct afs_fid *
- extern void afs_edit_dir_remove(struct afs_vnode *, struct qstr *, enum afs_edit_dir_reason);
- void afs_edit_dir_update_dotdot(struct afs_vnode *vnode, struct afs_vnode *new_dvnode,
- 				enum afs_edit_dir_reason why);
-+void afs_mkdir_init_dir(struct afs_vnode *dvnode, struct afs_vnode *parent_vnode);
- 
- /*
-  * dir_silly.c
-diff --git a/include/trace/events/afs.h b/include/trace/events/afs.h
-index 49a749672e38..020ab7302a6b 100644
---- a/include/trace/events/afs.h
-+++ b/include/trace/events/afs.h
-@@ -348,6 +348,7 @@ enum yfs_cm_operation {
- 	EM(afs_dir_invalid_edit_add_no_slots,	"edit-add-no-slots") \
- 	EM(afs_dir_invalid_edit_add_too_many_blocks, "edit-add-too-many-blocks") \
- 	EM(afs_dir_invalid_edit_get_block,	"edit-get-block") \
-+	EM(afs_dir_invalid_edit_mkdir,		"edit-mkdir") \
- 	EM(afs_dir_invalid_edit_rem_bad_size,	"edit-rem-bad-size") \
- 	EM(afs_dir_invalid_edit_rem_wrong_name,	"edit-rem-wrong_name") \
- 	EM(afs_dir_invalid_edit_upd_bad_size,	"edit-upd-bad-size") \
-@@ -369,6 +370,7 @@ enum yfs_cm_operation {
- 	EM(afs_edit_dir_delete_error,		"d_err ") \
- 	EM(afs_edit_dir_delete_inval,		"d_invl") \
- 	EM(afs_edit_dir_delete_noent,		"d_nent") \
-+	EM(afs_edit_dir_mkdir,			"mk_ent") \
- 	EM(afs_edit_dir_update_dd,		"u_ddot") \
- 	EM(afs_edit_dir_update_error,		"u_fail") \
- 	EM(afs_edit_dir_update_inval,		"u_invl") \
+Also need to free tmp on all the exit paths.
 
+Thanks,
+Sandeep.
+
+>         count =3D *insize;
+>         ret =3D erofs_compress_destsize(ec, in, &count, (void *)tmp,
+>                                       rounddown(ret, erofs_blksiz(sbi)));
+>         if (ret <=3D 0 || ret + (*insize - count) >=3D
+>                         roundup(*compressedsize, erofs_blksiz(sbi)))
+> -               return;
+> +               return 0;
+>
+>         /* replace the original compressed data if any gain */
+>         memcpy(out, tmp, ret);
+>         *insize =3D count;
+>         *compressedsize =3D ret;
+> +
+> +       return 0;
+>  }
+>
+>  static bool z_erofs_fixup_deduped_fragment(struct z_erofs_compress_sctx =
+*ctx,
+> @@ -631,9 +637,14 @@ frag_packing:
+>                         goto fix_dedupedfrag;
+>                 }
+>
+> -               if (may_inline && len =3D=3D e->length)
+> -                       tryrecompress_trailing(ctx, h, ctx->queue + ctx->=
+head,
+> -                                       &e->length, dst, &compressedsize)=
+;
+> +               if (may_inline && len =3D=3D e->length) {
+> +                       ret =3D tryrecompress_trailing(ctx, h,
+> +                                                    ctx->queue + ctx->he=
+ad,
+> +                                                    &e->length, dst,
+> +                                                    &compressedsize);
+> +                       if (ret)
+> +                               return ret;
+> +               }
+>
+>                 e->compressedblks =3D BLK_ROUND_UP(sbi, compressedsize);
+>                 DBG_BUGON(e->compressedblks * blksz >=3D e->length);
+> --
+> 2.43.0
+>
