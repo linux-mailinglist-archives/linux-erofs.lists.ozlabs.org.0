@@ -2,91 +2,78 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0EAF9AEC86
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Oct 2024 18:48:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1729788531;
-	bh=LnAWWsM9ROws4/S41bMH0QAvy+icSduZLkiq789YHsQ=;
-	h=References:In-Reply-To:Date:Subject:To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=muFcj0jM7boyLDBrCsBAIyHBNMzuWamOusg0p/EA3ZHxf52XnNMLzrja4xb4N16ZE
-	 fxW+jO6J8Pri8fvaiuBomIv/Xa8jgywfK6EKjJ3jTug0wXCZztnGeE6tVuIBA5+lhr
-	 rmQd+GwoK1nfI3/s5U3XqP9FmHn7hvnSxgvnCmmWTktff0sKyF9EZk/tjxZcd1ZoXl
-	 ueBUN2Z6dy7VlSbDoShQuG15IxWQmDcA6YNKc904immkVffEogqJm2HX5Xulspd3VP
-	 k3KTN1K0MLT79mdwtShgToq2DWzEd7qGa3FVKlEYLnWHSivoAMVtWbMsIISGKSu06g
-	 sfx9Kh5yg8b1g==
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EA819AF32D
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Oct 2024 22:00:26 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XZBh34qw7z3bfK
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 03:48:51 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XZGx401hJz3bgV
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 07:00:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::433"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729788529;
-	cv=none; b=Ei0PVAGQCK9sIFr2zD0cjHKTB9HpirtYO93j7n31bHeDBF7P+s9LjgW2lCwDwR794w4lQK/+BW+u+eRQ/PAn2IbWMs4w+nDB1nqpW0goTEEVWOSZt36W/COuh7GHTCc/Xe4PZ54I6ehRuTvcMXdH2lgzZpM2bBJZZggdB3uX7ZTfeuUOU7UQom2kEOj03pirywGYm/GA6/0cyQt/Qd/r604hR7BdQqlxpZu1LDqeWLFcc4CJLDQa2JJed2Iir0DlRXgShoh1Vi1cJgRy9xsO5mgW+E5QcKAu2xMbLmo6ZSKmao7AzVM+wf8trv8L0WGWOhQpePpicKxxkL0LJtqoVw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::f2e"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729800021;
+	cv=none; b=akUrapghMTop+JymMUpQo249g7Fy4CN9kexFPNX9OncjXJH61w2eqE6dBALKgq51mnqErnfjmBaa6djmYNyeDqkaI6IrU9dV3+gLDW0k6fwnKxSy7j6xqXOKT6/nqrFfTLVedUGIatrzTWYs7c7RfiV9V3nfr3tIB6QWbgqrtwN7dKTJ2b3oWVcTAQQVFfp48SfF2q6LOjQ1uSB6gawwRvyJ02YWerTHHcfOg8XDzPKLaxHt5LEo4Tree6wJgX/qPzcDemcEn/UDFMdiz1hSnjJHV04zbp51G9bmwkNrGbmE4262/VYYLJpaQSRWnGVhVku//FiRPFcfq2SQoZLBIw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729788529; c=relaxed/relaxed;
-	bh=LnAWWsM9ROws4/S41bMH0QAvy+icSduZLkiq789YHsQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rbj6rmLqhLSutNOTxwNyrfm0crFOIEXF3B8MpIWSLrGjndbIn5h1OFut2Wi4SIm/+bawLmRZrznkXaKmPUOe9k4adTZItQTiQhtQIQuzVNWVkchGwT+0LZiG8rdC8nKBc4045CFzyEQrnQ1/NwZdLx5dhCMUnTFf2y6eEJvqHMhm3UY9tWfiv+HS/ccSQ+0Tle3bUWLgJoivox6YW3ImNBT/qVQVCMxJsh/lMFF0hE4q1nRLnKCKwe86EfAgyTFr0jP2lK4Wm7EyMwe7IDpKG4mwrAqKM5XNM1mpGOCfm2qxl+1SGhTMYWXwMxvwBO7Xx9hzcpL9hlRjd2Pei6MXdg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=a8d3xtsG; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org) smtp.mailfrom=google.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
+	t=1729800021; c=relaxed/relaxed;
+	bh=B4TZpsAzpo2pp8mtaK0ShzO+ppOPWu2dSnDYpyu3h3o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZFOl/4qTu5V5N6PAWUC2Rg8O7LN6pyTkb2gwsKfIxHFT/9Z+X135RlInzJsemdpiXiMQB4lTew4GVuZlTGMMsnIVwr4AHvf1Xn16jojNBI4wcqPb0d2QnUSvRcUiPxVZTI+N3ImrnCncvW9lUvN9D942PnjRVuOhhq+LNCjsTwMvXNYXKOBrc+4JHzFReI8dpTeqOqS59TobeNPgHH94x7KPT/GwChEW32pVaZSaXd0DnsMP40w6bWnrq9jEo3ZhPzVQ5/RwTP79VEOa+LduuZpHYR7IuS5Z+e53YCV45FR8UvkwMpQXH6OJephGLf1KnYhVfPegZz3hbcveeAykyg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=mbaynton.com; dkim=pass (2048-bit key; unprotected) header.d=mbaynton-com.20230601.gappssmtp.com header.i=@mbaynton-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=aKA8slq9; dkim-atps=neutral; spf=none (client-ip=2607:f8b0:4864:20::f2e; helo=mail-qv1-xf2e.google.com; envelope-from=mike@mbaynton.com; receiver=lists.ozlabs.org) smtp.mailfrom=mbaynton.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=mbaynton.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=a8d3xtsG;
+	dkim=pass (2048-bit key; unprotected) header.d=mbaynton-com.20230601.gappssmtp.com header.i=@mbaynton-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=aKA8slq9;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=google.com (client-ip=2607:f8b0:4864:20::433; helo=mail-pf1-x433.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=mbaynton.com (client-ip=2607:f8b0:4864:20::f2e; helo=mail-qv1-xf2e.google.com; envelope-from=mike@mbaynton.com; receiver=lists.ozlabs.org)
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZBgz3WjNz2xrJ
-	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Oct 2024 03:48:46 +1100 (AEDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-71e983487a1so841600b3a.2
-        for <linux-erofs@lists.ozlabs.org>; Thu, 24 Oct 2024 09:48:46 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZGwy6mbFz2xy7
+	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Oct 2024 07:00:17 +1100 (AEDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-6cc2ea27a50so22144356d6.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 24 Oct 2024 13:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1729788524; x=1730393324; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LnAWWsM9ROws4/S41bMH0QAvy+icSduZLkiq789YHsQ=;
-        b=a8d3xtsGVs3fQHL1yX2dWndvqvTlttTM0dm7qRKFty+QTvqkWdOSC1AUv3Jr4H/WRL
-         P90YXbmi6mtVoG4bSzyDL6c3OrOPjCHhirJIsXsgfoSO1ls7GfD2pCdxzc12MbFgp4Ie
-         PxNPLzn/eTkLmXj2ZlHOjKA1h1rzzSHUqu2n2k3XrhcGXR9f58Ep5/+lXnlTRrxwJUmY
-         lnyoHenOB1uM6E7/+v+TGi4LTWUqIvsovFyXJilhIHRiWedYTvQRtLetxETSEvXFG2qM
-         EJUjhTMkkDZBQV6aoJrUTiXezWXDNADFAaqgqp0xct9JouXtzpI/x1m9BKClgJEReZYr
-         swFg==
+        d=mbaynton-com.20230601.gappssmtp.com; s=20230601; t=1729800013; x=1730404813; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B4TZpsAzpo2pp8mtaK0ShzO+ppOPWu2dSnDYpyu3h3o=;
+        b=aKA8slq9QPf9ElVPInOxsn7gU02yLCKZEKACBUUY3FBB4LFjqpkMaN8YWEdG0MYb5L
+         ogg66tyXhF5ftlCrwMR/wnNMnb2RwFr7443+zm4C2XFi/MPznWnlUMGoP8Pc83mjzKO9
+         DVq0YuVBGGRbmq/5XJ+v+ZxDwNa8JHSZXlRWIEsZmSMSfkPKwJ093DJaj5G4q5pMVYkS
+         NizAHONGS71brZw/gRncNcDRRYq4qbTinTjmcPYXqwAKIwq7P7gYejX0LAUB4pXyvocx
+         frkg+fz+PMUIR5jC3mcEIbmr9m/5R16il9kgeGtBdshH2oPn82DteZoUyhzEbjeUYYrL
+         +u5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729788524; x=1730393324;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LnAWWsM9ROws4/S41bMH0QAvy+icSduZLkiq789YHsQ=;
-        b=KIV2t69YCv7jmK3AsjJ5KTTNIZ+KSqFU4N8g3ulG0aRMee/ed40NLwRYYdGOzVBEEL
-         CKikPSRx4dloJGQkNqgQ787L8UHvQwQtT9TlU6iC2PDZGN9MvWVtRmsarE4iWYKRgzqr
-         tz2e76Ny9KgRNfYJWq2iK5BezJs3Uby7a5jy3PJw6DRIY0xB/MwLgQoxw9B+o/SbWr6j
-         L+cv5IldS2aXys9uMo/Edjtr/tH/avpmoovrtnaGpwOwgyn7NyKOgyGkrR62TlAQ7zs2
-         vSiP0XU6zbGOR8qvQwnIWEVrsE8MPWd+ApTHqicmy4MlKGvEUgP4gaCaqXIhFMmrZPTp
-         8CIQ==
-X-Gm-Message-State: AOJu0YxOgsTW7kNOd1W7x/BawN1dogP0OfxOMo0r57vZLou6XGjlgwSN
-	M8x80JFAqBzksBlzusuYDWB3dFDCokzxNP1j/pEFL+nDwAwLvRJobrfYSzASCvqegRphe/geZg+
-	P+hXJ3Hdght03HoyJlzPkW7AqtC8fLtB0MD4M
-X-Google-Smtp-Source: AGHT+IEMs3PCkteq5dd3LXJ4LMS3NMMFJ2SsGVrOyhJLDia9peKcPDH4nCdL0eXigj1vBPmeMv6ZHw2ip8cCfDLFRsw=
-X-Received: by 2002:a05:6a00:2d25:b0:71e:6a99:472f with SMTP id
- d2e1a72fcca58-72030b992eemr8187192b3a.24.1729788523359; Thu, 24 Oct 2024
- 09:48:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1729800013; x=1730404813;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B4TZpsAzpo2pp8mtaK0ShzO+ppOPWu2dSnDYpyu3h3o=;
+        b=vBREDlgKM+RHZTgv6S7taYGtQHkmUoJQSfg2SrBrzlDw9G62F5q3+qrHlgcxFs0SuO
+         FJ39SBlQX687XcRc+k5Gg3rbeZguj2glvVrpOLmuUKCwGZUX6wc/2426AQzjwrrkPi7h
+         MK6p4sSsAi54YbapK7BpFBUtMZGS8kdEMxIqI+VuuYHtRR6j7tPHiEoUKx62UJGfeIe9
+         bI4WAI34dtR4TrXc3gmfEJlfQ7nvD2z2JmB9LOXBSAi6Er7f8Z/NcJ+lJGvc6DdRdhA5
+         NK7RlUoIbFHGWYPpSjsUqaRjxAf9Fyl4C90HtRTBnJUftovDX/IZSyiCv/qctCkNc7aB
+         q+UA==
+X-Forwarded-Encrypted: i=1; AJvYcCVB10gGh4l/jj0LtR4GMYdVw5zDZB4fnezA5+U+eRM8x5bRpt+MA67HNi2SUbo+59OkQSFUogK0qpARNA==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YyGk2/SmwTSZhTpKZv8SJGZSSG/kWwNIVs5sCSnazsAG9zhHUcG
+	xaI7iBFtuo58jYhXCh/5vOq8GKzwMdEM8fcVTEhUfdC1o4q77YHLYAG+ggLW07Q=
+X-Google-Smtp-Source: AGHT+IEki9ubYQarrYdlWz/+aFzC3Jo/zw8lXMaVwZy3y7nhvkp1DHU/HwArJnOjoFwKIb7tPwqeCA==
+X-Received: by 2002:a05:6214:5909:b0:6ce:3512:6224 with SMTP id 6a1803df08f44-6d08e7376d5mr45681306d6.21.1729800012596;
+        Thu, 24 Oct 2024 13:00:12 -0700 (PDT)
+Received: from mike-laptop.. ([50.203.248.222])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ce0091ab0dsm53489526d6.72.2024.10.24.13.00.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Oct 2024 13:00:11 -0700 (PDT)
+From: Mike Baynton <mike@mbaynton.com>
+To: hsiangkao@linux.alibaba.com,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH] mkfs: Fix input offset counting in headerball mode
+Date: Thu, 24 Oct 2024 14:58:02 -0500
+Message-Id: <20241024195801.1546336-1-mike@mbaynton.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20241024094806.634534-1-huangjianan@xiaomi.com>
-In-Reply-To: <20241024094806.634534-1-huangjianan@xiaomi.com>
-Date: Thu, 24 Oct 2024 09:48:30 -0700
-Message-ID: <CAB=BE-QGVZPJizeOceDgjZ-D8JL12AYp8O8Y-qMm2pn+ER-2Jw@mail.gmail.com>
-Subject: Re: [PATCH] erofs-utils: avoid allocating large arrays on the stack
-To: Jianan Huang <huangjianan@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	SPF_HELO_NONE,SPF_NONE autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -99,107 +86,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Sandeep Dhavale via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Sandeep Dhavale <dhavale@google.com>
-Cc: zhaoyifan@sjtu.edu.cn, linux-erofs@lists.ozlabs.org
+Cc: sam@posit.co
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Jianan,
+When using --tar=headerball, most files included in the headerball are
+not included in the EROFS image. mkfs.erofs typically exits prematurely,
+having processed non-USTAR blocks as USTAR and believing they are
+end-of-archive markers. (Other failure modes are probably also possible
+if the input stream doesn't look like end-of-archive markers at the
+locations that are being read.)
 
-On Thu, Oct 24, 2024 at 2:49=E2=80=AFAM Jianan Huang via Linux-erofs
-<linux-erofs@lists.ozlabs.org> wrote:
->
-> The default pthread stack size of bionic is 1M. Use malloc to avoid
-> stack overflow.
->
-> Signed-off-by: Jianan Huang <huangjianan@xiaomi.com>
-> ---
->  lib/compress.c | 31 +++++++++++++++++++++----------
->  1 file changed, 21 insertions(+), 10 deletions(-)
->
-> diff --git a/lib/compress.c b/lib/compress.c
-> index cbd4620..47ba662 100644
-> --- a/lib/compress.c
-> +++ b/lib/compress.c
-> @@ -451,31 +451,37 @@ static int z_erofs_fill_inline_data(struct erofs_in=
-ode *inode, void *data,
->         return len;
->  }
->
-> -static void tryrecompress_trailing(struct z_erofs_compress_sctx *ctx,
-> -                                  struct erofs_compress *ec,
-> -                                  void *in, unsigned int *insize,
-> -                                  void *out, unsigned int *compressedsiz=
-e)
-> +static int tryrecompress_trailing(struct z_erofs_compress_sctx *ctx,
-> +                                 struct erofs_compress *ec,
-> +                                 void *in, unsigned int *insize,
-> +                                 void *out, unsigned int *compressedsize=
-)
->  {
->         struct erofs_sb_info *sbi =3D ctx->ictx->inode->sbi;
-> -       char tmp[Z_EROFS_PCLUSTER_MAX_SIZE];
-> +       char *tmp;
->         unsigned int count;
->         int ret =3D *compressedsize;
->
-> +       tmp =3D malloc(Z_EROFS_PCLUSTER_MAX_SIZE);
-> +       if (!tmp)
-> +               return -ENOMEM;
-> +
->         /* no need to recompress */
->         if (!(ret & (erofs_blksiz(sbi) - 1)))
-> -               return;
-> +               return 0;
->
-You can move allocation here instead of at the top to avoid malloc
-cost if we do not need the tmp.
+This is because we lost correct count of bytes that are read from the
+input stream when in headerball (or ddtaridx) modes. We were assuming that
+in these modes no data would be read following the ustar block, but in
+case of things like PAX headers, lots more data may be read without
+incrementing tar->offset.
 
-Also need to free tmp on all the exit paths.
+This corrects by always incrementing the offset counter, and then
+decrementing it again in the one case where headerballs differ -
+regular file data blocks are not present.
 
-Thanks,
-Sandeep.
+Signed-off-by: Mike Baynton <mike@mbaynton.com>
+---
 
->         count =3D *insize;
->         ret =3D erofs_compress_destsize(ec, in, &count, (void *)tmp,
->                                       rounddown(ret, erofs_blksiz(sbi)));
->         if (ret <=3D 0 || ret + (*insize - count) >=3D
->                         roundup(*compressedsize, erofs_blksiz(sbi)))
-> -               return;
-> +               return 0;
->
->         /* replace the original compressed data if any gain */
->         memcpy(out, tmp, ret);
->         *insize =3D count;
->         *compressedsize =3D ret;
-> +
-> +       return 0;
->  }
->
->  static bool z_erofs_fixup_deduped_fragment(struct z_erofs_compress_sctx =
-*ctx,
-> @@ -631,9 +637,14 @@ frag_packing:
->                         goto fix_dedupedfrag;
->                 }
->
-> -               if (may_inline && len =3D=3D e->length)
-> -                       tryrecompress_trailing(ctx, h, ctx->queue + ctx->=
-head,
-> -                                       &e->length, dst, &compressedsize)=
-;
-> +               if (may_inline && len =3D=3D e->length) {
-> +                       ret =3D tryrecompress_trailing(ctx, h,
-> +                                                    ctx->queue + ctx->he=
-ad,
-> +                                                    &e->length, dst,
-> +                                                    &compressedsize);
-> +                       if (ret)
-> +                               return ret;
-> +               }
->
->                 e->compressedblks =3D BLK_ROUND_UP(sbi, compressedsize);
->                 DBG_BUGON(e->compressedblks * blksz >=3D e->length);
-> --
-> 2.43.0
->
+I suspect headerball mode may be unfamiliar, since it exists due to my
+prior contribution and my site is probably the only active user. As a recap,
+the idea of a "headerball" is to offer a relatively easy to produce,
+optimally efficient input format for constructing EROFS filesystems of only 
+inode metadata. A headerball is a PAX tarball, except that all 512-byte
+blocks containing regular file data are not present.
+
+For convenience, a small example "headerball" can be downloaded from
+https://gist.github.com/mbaynton/bae60bf1044d83985956c6dc5b199cc3
+
+This produces a 67-inode EROFS image with this patch, and as I recall
+about 3 inodes without it.
+
+This also changes the behavior of ddtaridx format, which sounds like a
+similar use case but the user is Alibaba. It _looks_ like this format
+would also be affected, but without sample input I can't confirm.
+
+ lib/tar.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/lib/tar.c b/lib/tar.c
+index b32abd4..726e565 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -808,8 +808,7 @@ out_eot:
+ 	}
+ 
+ 	dataoff = tar->offset;
+-	if (!(tar->headeronly_mode || tar->ddtaridx_mode))
+-		tar->offset += st.st_size;
++	tar->offset += st.st_size;
+ 	switch(th->typeflag) {
+ 	case '0':
+ 	case '7':
+@@ -1022,8 +1021,10 @@ new_inode:
+ 			memcpy(inode->i_link, eh.link, inode->i_size + 1);
+ 		} else if (inode->i_size) {
+ 			if (tar->headeronly_mode) {
++				tar->offset -= st.st_size; // assumed wrong earlier
+ 				ret = erofs_write_zero_inode(inode);
+ 			} else if (tar->ddtaridx_mode) {
++				tar->offset -= st.st_size; // assumed wrong earlier
+ 				dataoff = le64_to_cpu(*(__le64 *)(th->devmajor));
+ 				if (tar->rvsp_mode) {
+ 					inode->datasource = EROFS_INODE_DATA_SOURCE_RESVSP;
+-- 
+2.34.1
+
