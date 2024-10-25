@@ -1,65 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 050F39AF718
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 03:44:00 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 398A79AF72C
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 03:52:56 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1729820638;
-	bh=YRC3cOpVFCcFmpHmJPAcPU3Ali1vpl0KPVIdhi0f9Ok=;
-	h=To:Subject:Date:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=Ff0AklQVEk5uWnkezlXZN9Q9+PJlgcIa2mBzrk50K074MS1EkvpIBbl4ckXMfVSfi
-	 bsjxyMY1kq8p4Z9bi7F9pG1DK4ckTn8Jg6iK6dI+O/vVrxh65b3oYK5S7a8XZvH/1M
-	 D88WI4TuYQb9/ygkRRhNpINNsd20QfpNqkGx5X0ROiR87S1BqNN8smoRPKw80AbiyI
-	 QI2+DFhogVs23hXYnGVWRGNb5ZgJj+3wKKPLYzyq9fMrC+aokCwbOJd080i1ryr75M
-	 SRFsbh2wvnHEUgtyEl+lXzIk7v98cyS+OUo83PLapvXqVzXEmvJI+H1JQJLMCELQ3x
-	 uVFE+zRKkgx2A==
+	s=201707; t=1729821173;
+	bh=aCacTjwfF5d6wH/+jDaJeFwXQoPIzUOhS7P1E7UBZwU=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=M5IonxIpr+8hjOKxSLW62wuDwg8YpRWhD4sXMOdoTWycGndju21whlv/c4zwzS/fj
+	 wDvIS9jbnvvlicVhP/p5q4d5pvvbdOwrpA3rMv/2qutgSDEHBjpu+XOocJlptgUwJP
+	 5iRjL4Qltv9hlASs0xstb4Sbqachjb+9gNCc9xfyHNQkiAp626ras2grYAzXYD88+z
+	 WJ4SaSE6ICaenFc9kZm9DghwJXLQUO6gpJRrLgx0rU/+SUt4cq2WcoS0GTrXzaMJzl
+	 OeiE+0qeTrruWV/1Pi9W/oxr769PBzFYtOtMIIhm1kUAkeE1Lj10wKXqeR65XwIbYG
+	 hbEwF0xNaQCOQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XZQYV030Hz2xnK
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 12:43:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XZQln6ztRz2xmZ
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 12:52:53 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=118.143.206.90
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729820635;
-	cv=none; b=OSmykMZObwrqBZjgrcIIwquDTG9zXQT7iUyUWIjG5/1Pwyp7BKrsGWiScH3itD+pqdimEgDPp1WpiVjrlRLDC+esAo22TfbIL4bgKOn6jLaM6uktlybolK925mmKJlvqaYcrV8EN2gZ8bO/NIvm+u+OMzco+NiGqFzTMIW725K7M4qtEs+0Ag59/m9EjdUjI9T9Iv/GFTH4PitOa9tqiuwrVAF5kBd7eHUiAtBcVdPOCoZtwrxpaRU6ZUwbIrvoHxSY/1MfEhDhraWfxMr23pCy64z/IwYrLWU0p3FJrEo7GkiNMPUvlpKwV8sCKnbS18KhXeav2RwNg9reAojZl+w==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729821171;
+	cv=none; b=ItM0b7PUngBe/Ie2isI/aNQNPttpfTq5qi4CDFyjSvYkJkInw/1XbLYZbnEJinuBELIlAUfjvsv2JGxJwS41R6IbUYlpaBlQCcE8au8bqNQqf8X1dPhcP0yWUobRB+jvtAbEZw2j2vv/IOZ4hpWFT5WUN/c/0hAsRfS7mmWIauTps7S0BegOmQ2+0gKxgHGDdFLiQSf+iEQsKfP4LysqApcXR1FqXMVKXDmIILonZAVibfYGUfWeg7AEiKzeLy2BupVoqVqwrI8L2uOY6TbNl+Lz+sviVZKNuvIMkeD7TULZLV2/tzGoN/JCmWw9t2LRwjKZW+KVOZ0UCZHPIcPtSw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729820635; c=relaxed/relaxed;
-	bh=YRC3cOpVFCcFmpHmJPAcPU3Ali1vpl0KPVIdhi0f9Ok=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MaPzhSn3TpyShBgPrzOoWN2P/ZQu74g/Nj3Lo0jfNNTm3PDgUL/7NrH9ZVtcNGzLS1VzcuqZfHqfZcs1cq5sqDxr5Pi63iUjxQeHuLi3w7P1ma8w2xG96kKjDH8VExXR8WX54fAWydWv2gZoJoug+qmCdWNHAYZhuIjEKxHArNo+yoUn8bjNHwcQjejxIKp8xAPo7nK0Q2YWMXrgZjgX1vYCY+O6hJApTpiKVuDJ0riOTtkwmJciIq/ea+soxlXTpizZ/HBJh4eyfYAsxMfNN9hlE2AoIpUDCZD6YM/waJhLBYU3dYrvTEdKUw1v/vUUmXlgSWVLyEHwlsIAVYz4gg==
+	t=1729821171; c=relaxed/relaxed;
+	bh=aCacTjwfF5d6wH/+jDaJeFwXQoPIzUOhS7P1E7UBZwU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SRbR1BdTazQQkveh8niujaF9jVWFOS8RPsE+LFoHon720EnK19ughmip1fdp6vjAvX6I1w81MD3abgGDhAQUm0RxVLPffjLGfYgTUH99mf8V6O4uhn4xMojWQIvsMm4lyqnzob7vpFOc/xEGC1lDWy5dSrwB9BzSDSneuIOZKIy99izVF1fhgCLq90jAXwDskceyf+KRz6KsAE4DskqSGTxXuy4ltKRSfsAtbRorXmYbkA5VAVbuR6KeJoUzrM172jasTppDXskaU3sVUbf3XD9gnGuqw0nkYX0NPKc9whCMYxGtui7m7SN6IR6gpRIpjg7Wwm9izGDFrXqqeb9Yrw==
 ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com; spf=pass (client-ip=118.143.206.90; helo=outboundhk.mxmail.xiaomi.com; envelope-from=huangjianan@xiaomi.com; receiver=lists.ozlabs.org) smtp.mailfrom=xiaomi.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=xiaomi.com (client-ip=118.143.206.90; helo=outboundhk.mxmail.xiaomi.com; envelope-from=huangjianan@xiaomi.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 62 seconds by postgrey-1.37 at boromir; Fri, 25 Oct 2024 12:43:54 AEDT
 Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [118.143.206.90])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XZQYQ1Cgmz2xJK
-	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Oct 2024 12:43:54 +1100 (AEDT)
-X-CSE-ConnectionGUID: DqK2u4iSQTOQH0V7udThrA==
-X-CSE-MsgGUID: InP8gByWTGaJ1H0VlgjkqQ==
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XZQlk2XyNz2xKh
+	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Oct 2024 12:52:49 +1100 (AEDT)
+X-CSE-ConnectionGUID: OfqGhIngSqCNJ8LrF3ePjA==
+X-CSE-MsgGUID: slA/1WHCSoWtvpXyB2sVwQ==
 X-IronPort-AV: E=Sophos;i="6.11,230,1725292800"; 
-   d="scan'208";a="99598863"
-To: Sandeep Dhavale <dhavale@google.com>
-Subject: Re: [External Mail]Re: [PATCH] erofs-utils: avoid allocating large
- arrays on the stack
-Thread-Topic: [External Mail]Re: [PATCH] erofs-utils: avoid allocating large
- arrays on the stack
-Thread-Index: AQHbJfnUALw7iSNLxkSbnJYg7YRZ7rKVlwwAgACVQwA=
-Date: Fri, 25 Oct 2024 01:42:47 +0000
-Message-ID: <c3367a2e-ff0e-4eb9-91cf-004f3e284d86@xiaomi.com>
-References: <20241024094806.634534-1-huangjianan@xiaomi.com>
- <CAB=BE-QGVZPJizeOceDgjZ-D8JL12AYp8O8Y-qMm2pn+ER-2Jw@mail.gmail.com>
-In-Reply-To: <CAB=BE-QGVZPJizeOceDgjZ-D8JL12AYp8O8Y-qMm2pn+ER-2Jw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.237.88.13]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E8988E60221FF04CA122D2C6524B2090@xiaomi.com>
-Content-Transfer-Encoding: base64
+   d="scan'208";a="99599575"
+To: <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH v2] erofs-utils: avoid allocating large arrays on the stack
+Date: Fri, 25 Oct 2024 09:52:46 +0800
+Message-ID: <20241025015246.649209-1-huangjianan@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.237.8.19]
+X-ClientProxiedBy: BJ-MBX05.mioffice.cn (10.237.8.125) To YZ-MBX05.mioffice.cn
+ (10.237.88.125)
 X-Spam-Status: No, score=0.9 required=5.0 tests=RCVD_IN_MSPIKE_H4,
 	RCVD_IN_MSPIKE_WL,SPF_HELO_SOFTFAIL,SPF_PASS autolearn=disabled
 	version=4.0.0
@@ -75,75 +63,92 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Huang Jianan via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Huang Jianan <huangjianan@xiaomi.com>
-Cc: "zhaoyifan@sjtu.edu.cn" <zhaoyifan@sjtu.edu.cn>, "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
+From: Jianan Huang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Jianan Huang <huangjianan@xiaomi.com>
+Cc: zhaoyifan@sjtu.edu.cn
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-T24gMjAyNC8xMC8yNSAwOjQ4LCBTYW5kZWVwIERoYXZhbGUgd3JvdGU6DQo+IA0KPiBIaSBKaWFu
-YW4sDQo+IA0KPiBPbiBUaHUsIE9jdCAyNCwgMjAyNCBhdCAyOjQ54oCvQU0gSmlhbmFuIEh1YW5n
-IHZpYSBMaW51eC1lcm9mcw0KPiA8bGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZz4gd3JvdGU6
-DQo+Pg0KPj4gVGhlIGRlZmF1bHQgcHRocmVhZCBzdGFjayBzaXplIG9mIGJpb25pYyBpcyAxTS4g
-VXNlIG1hbGxvYyB0byBhdm9pZA0KPj4gc3RhY2sgb3ZlcmZsb3cuDQo+Pg0KPj4gU2lnbmVkLW9m
-Zi1ieTogSmlhbmFuIEh1YW5nIDxodWFuZ2ppYW5hbkB4aWFvbWkuY29tPg0KPj4gLS0tDQo+PiAg
-IGxpYi9jb21wcmVzcy5jIHwgMzEgKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLQ0KPj4g
-ICAxIGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+Pg0K
-Pj4gZGlmZiAtLWdpdCBhL2xpYi9jb21wcmVzcy5jIGIvbGliL2NvbXByZXNzLmMNCj4+IGluZGV4
-IGNiZDQ2MjAuLjQ3YmE2NjIgMTAwNjQ0DQo+PiAtLS0gYS9saWIvY29tcHJlc3MuYw0KPj4gKysr
-IGIvbGliL2NvbXByZXNzLmMNCj4+IEBAIC00NTEsMzEgKzQ1MSwzNyBAQCBzdGF0aWMgaW50IHpf
-ZXJvZnNfZmlsbF9pbmxpbmVfZGF0YShzdHJ1Y3QgZXJvZnNfaW5vZGUgKmlub2RlLCB2b2lkICpk
-YXRhLA0KPj4gICAgICAgICAgcmV0dXJuIGxlbjsNCj4+ICAgfQ0KPj4NCj4+IC1zdGF0aWMgdm9p
-ZCB0cnlyZWNvbXByZXNzX3RyYWlsaW5nKHN0cnVjdCB6X2Vyb2ZzX2NvbXByZXNzX3NjdHggKmN0
-eCwNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGVyb2ZzX2Nv
-bXByZXNzICplYywNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdm9pZCAq
-aW4sIHVuc2lnbmVkIGludCAqaW5zaXplLA0KPj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICB2b2lkICpvdXQsIHVuc2lnbmVkIGludCAqY29tcHJlc3NlZHNpemUpDQo+PiArc3Rh
-dGljIGludCB0cnlyZWNvbXByZXNzX3RyYWlsaW5nKHN0cnVjdCB6X2Vyb2ZzX2NvbXByZXNzX3Nj
-dHggKmN0eCwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZXJv
-ZnNfY29tcHJlc3MgKmVjLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZv
-aWQgKmluLCB1bnNpZ25lZCBpbnQgKmluc2l6ZSwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB2b2lkICpvdXQsIHVuc2lnbmVkIGludCAqY29tcHJlc3NlZHNpemUpDQo+PiAg
-IHsNCj4+ICAgICAgICAgIHN0cnVjdCBlcm9mc19zYl9pbmZvICpzYmkgPSBjdHgtPmljdHgtPmlu
-b2RlLT5zYmk7DQo+PiAtICAgICAgIGNoYXIgdG1wW1pfRVJPRlNfUENMVVNURVJfTUFYX1NJWkVd
-Ow0KPj4gKyAgICAgICBjaGFyICp0bXA7DQo+PiAgICAgICAgICB1bnNpZ25lZCBpbnQgY291bnQ7
-DQo+PiAgICAgICAgICBpbnQgcmV0ID0gKmNvbXByZXNzZWRzaXplOw0KPj4NCj4+ICsgICAgICAg
-dG1wID0gbWFsbG9jKFpfRVJPRlNfUENMVVNURVJfTUFYX1NJWkUpOw0KPj4gKyAgICAgICBpZiAo
-IXRtcCkNCj4+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4+ICsNCj4+ICAgICAg
-ICAgIC8qIG5vIG5lZWQgdG8gcmVjb21wcmVzcyAqLw0KPj4gICAgICAgICAgaWYgKCEocmV0ICYg
-KGVyb2ZzX2Jsa3NpeihzYmkpIC0gMSkpKQ0KPj4gLSAgICAgICAgICAgICAgIHJldHVybjsNCj4+
-ICsgICAgICAgICAgICAgICByZXR1cm4gMDsNCj4+DQo+IFlvdSBjYW4gbW92ZSBhbGxvY2F0aW9u
-IGhlcmUgaW5zdGVhZCBvZiBhdCB0aGUgdG9wIHRvIGF2b2lkIG1hbGxvYw0KPiBjb3N0IGlmIHdl
-IGRvIG5vdCBuZWVkIHRoZSB0bXAuDQo+IA0KPiBBbHNvIG5lZWQgdG8gZnJlZSB0bXAgb24gYWxs
-IHRoZSBleGl0IHBhdGhzLg0KDQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3LCBJIHdpbGwgc2VuZCBv
-dXQgdjIgdG8gZml4IHRoZXNlIGlzc3Vlcy4NCg0KVGhhbmtzLA0KSmlhbmFuLg0KDQo+IA0KPiBU
-aGFua3MsDQo+IFNhbmRlZXAuDQo+IA0KPj4gICAgICAgICAgY291bnQgPSAqaW5zaXplOw0KPj4g
-ICAgICAgICAgcmV0ID0gZXJvZnNfY29tcHJlc3NfZGVzdHNpemUoZWMsIGluLCAmY291bnQsICh2
-b2lkICopdG1wLA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcm91
-bmRkb3duKHJldCwgZXJvZnNfYmxrc2l6KHNiaSkpKTsNCj4+ICAgICAgICAgIGlmIChyZXQgPD0g
-MCB8fCByZXQgKyAoKmluc2l6ZSAtIGNvdW50KSA+PQ0KPj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgIHJvdW5kdXAoKmNvbXByZXNzZWRzaXplLCBlcm9mc19ibGtzaXooc2JpKSkpDQo+PiAtICAg
-ICAgICAgICAgICAgcmV0dXJuOw0KPj4gKyAgICAgICAgICAgICAgIHJldHVybiAwOw0KPj4NCj4+
-ICAgICAgICAgIC8qIHJlcGxhY2UgdGhlIG9yaWdpbmFsIGNvbXByZXNzZWQgZGF0YSBpZiBhbnkg
-Z2FpbiAqLw0KPj4gICAgICAgICAgbWVtY3B5KG91dCwgdG1wLCByZXQpOw0KPj4gICAgICAgICAg
-Kmluc2l6ZSA9IGNvdW50Ow0KPj4gICAgICAgICAgKmNvbXByZXNzZWRzaXplID0gcmV0Ow0KPj4g
-Kw0KPj4gKyAgICAgICByZXR1cm4gMDsNCj4+ICAgfQ0KPj4NCj4+ICAgc3RhdGljIGJvb2wgel9l
-cm9mc19maXh1cF9kZWR1cGVkX2ZyYWdtZW50KHN0cnVjdCB6X2Vyb2ZzX2NvbXByZXNzX3NjdHgg
-KmN0eCwNCj4+IEBAIC02MzEsOSArNjM3LDE0IEBAIGZyYWdfcGFja2luZzoNCj4+ICAgICAgICAg
-ICAgICAgICAgICAgICAgICBnb3RvIGZpeF9kZWR1cGVkZnJhZzsNCj4+ICAgICAgICAgICAgICAg
-ICAgfQ0KPj4NCj4+IC0gICAgICAgICAgICAgICBpZiAobWF5X2lubGluZSAmJiBsZW4gPT0gZS0+
-bGVuZ3RoKQ0KPj4gLSAgICAgICAgICAgICAgICAgICAgICAgdHJ5cmVjb21wcmVzc190cmFpbGlu
-ZyhjdHgsIGgsIGN0eC0+cXVldWUgKyBjdHgtPmhlYWQsDQo+PiAtICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgJmUtPmxlbmd0aCwgZHN0LCAmY29tcHJlc3NlZHNpemUpOw0K
-Pj4gKyAgICAgICAgICAgICAgIGlmIChtYXlfaW5saW5lICYmIGxlbiA9PSBlLT5sZW5ndGgpIHsN
-Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldCA9IHRyeXJlY29tcHJlc3NfdHJhaWxpbmco
-Y3R4LCBoLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBjdHgtPnF1ZXVlICsgY3R4LT5oZWFkLA0KPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmZS0+bGVuZ3RoLCBkc3QsDQo+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZjb21wcmVz
-c2Vkc2l6ZSk7DQo+PiArICAgICAgICAgICAgICAgICAgICAgICBpZiAocmV0KQ0KPj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKyAgICAgICAgICAgICAg
-IH0NCj4+DQo+PiAgICAgICAgICAgICAgICAgIGUtPmNvbXByZXNzZWRibGtzID0gQkxLX1JPVU5E
-X1VQKHNiaSwgY29tcHJlc3NlZHNpemUpOw0KPj4gICAgICAgICAgICAgICAgICBEQkdfQlVHT04o
-ZS0+Y29tcHJlc3NlZGJsa3MgKiBibGtzeiA+PSBlLT5sZW5ndGgpOw0KPj4gLS0NCj4+IDIuNDMu
-MA0KPj4NCg0K
+The default pthread stack size of bionic is 1M. Use malloc to avoid
+stack overflow.
+
+Signed-off-by: Jianan Huang <huangjianan@xiaomi.com>
+---
+Changes since v1:
+- Move the allocation and free tmp when exiting, which was mentioned by Sandeep.
+
+ lib/compress.c | 33 +++++++++++++++++++++++----------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
+
+diff --git a/lib/compress.c b/lib/compress.c
+index cbd4620..d75e9c3 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -451,31 +451,39 @@ static int z_erofs_fill_inline_data(struct erofs_inode *inode, void *data,
+ 	return len;
+ }
+ 
+-static void tryrecompress_trailing(struct z_erofs_compress_sctx *ctx,
+-				   struct erofs_compress *ec,
+-				   void *in, unsigned int *insize,
+-				   void *out, unsigned int *compressedsize)
++static int tryrecompress_trailing(struct z_erofs_compress_sctx *ctx,
++				  struct erofs_compress *ec,
++				  void *in, unsigned int *insize,
++				  void *out, unsigned int *compressedsize)
+ {
+ 	struct erofs_sb_info *sbi = ctx->ictx->inode->sbi;
+-	char tmp[Z_EROFS_PCLUSTER_MAX_SIZE];
++	char *tmp;
+ 	unsigned int count;
+ 	int ret = *compressedsize;
+ 
+ 	/* no need to recompress */
+ 	if (!(ret & (erofs_blksiz(sbi) - 1)))
+-		return;
++		return 0;
++
++	tmp = malloc(Z_EROFS_PCLUSTER_MAX_SIZE);
++	if (!tmp)
++		return -ENOMEM;
+ 
+ 	count = *insize;
+ 	ret = erofs_compress_destsize(ec, in, &count, (void *)tmp,
+ 				      rounddown(ret, erofs_blksiz(sbi)));
+ 	if (ret <= 0 || ret + (*insize - count) >=
+ 			roundup(*compressedsize, erofs_blksiz(sbi)))
+-		return;
++		goto out;
+ 
+ 	/* replace the original compressed data if any gain */
+ 	memcpy(out, tmp, ret);
+ 	*insize = count;
+ 	*compressedsize = ret;
++
++out:
++	free(tmp);
++	return 0;
+ }
+ 
+ static bool z_erofs_fixup_deduped_fragment(struct z_erofs_compress_sctx *ctx,
+@@ -631,9 +639,14 @@ frag_packing:
+ 			goto fix_dedupedfrag;
+ 		}
+ 
+-		if (may_inline && len == e->length)
+-			tryrecompress_trailing(ctx, h, ctx->queue + ctx->head,
+-					&e->length, dst, &compressedsize);
++		if (may_inline && len == e->length) {
++			ret = tryrecompress_trailing(ctx, h,
++						     ctx->queue + ctx->head,
++						     &e->length, dst,
++						     &compressedsize);
++			if (ret)
++				return ret;
++		}
+ 
+ 		e->compressedblks = BLK_ROUND_UP(sbi, compressedsize);
+ 		DBG_BUGON(e->compressedblks * blksz >= e->length);
+-- 
+2.43.0
+
