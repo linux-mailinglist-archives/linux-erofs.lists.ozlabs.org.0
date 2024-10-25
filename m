@@ -2,81 +2,81 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C50539B1020
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 22:43:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 44F6D9B1021
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 22:43:11 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XZvqt5d51z3bjM
-	for <lists+linux-erofs@lfdr.de>; Sat, 26 Oct 2024 07:43:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XZvqx1xcqz3bpW
+	for <lists+linux-erofs@lfdr.de>; Sat, 26 Oct 2024 07:43:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729888984;
-	cv=none; b=FLrPoxkKiBAVZaPo6JSHOihgHdcLwBzYv9bFGrFkZX7IulK0v4/LNSIiN8rqJrxHdGxDYDyWrv3nBHFw6CdGey4Gg302XOkJsAOWB+ZO9i4AYkERX5MDcgEoK9uDpELKsScOF/8XYj6ybPOaL8ifIb15+aJ+63CaI9X/MCdJOaFs07d+7WR30gQ8NV7X5a+JAczVe+Mis1jnBk7SHLLT2Srxb4EZxGaouZA0QcYWyFXKNYJECy0zzLdIJSGaIEmw89kggZPzeQDe28uFcryaMdkloDYN8CED0BH+vh2aHSgoz45UK4LLedgPbNVji+o7xm+KZOrRxXMS0OvDEnBMBw==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729888987;
+	cv=none; b=DRzqxAuDlIoaMMLC38HMMdtUzHANOcW2b8ndFJoqoLffuz/kWq6dDNZCbhgRnstmDgnv1de9LJkFPAeib/CmiDt23ByRFmGUjBhnuAqFfW8FsuNTVAtwIOhPXNB4nBVGrnT6lHWQuO85mz6L5fNC4er1gOxj6xZQMNdK9ZUX5irkQLrKmm145oYJj6Q8S8PO49HgWHLVnVIRSX4fnIGtZpqaV0bxlqbv/NcHAnctLmbahbg3+EOHkSelXYHmUgpin6/Sp3FVgxeoHpN/bds5jh804it5WExDDD9+OBLI+2PxGb3ezW5cELKk2myPjDKrLwQ9uLl46xg96mhBn5tLRA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729888984; c=relaxed/relaxed;
-	bh=amC5aop3KJx0r1HYYuGRhvQAJFiWIu7nIKfZ7/jIV/8=;
+	t=1729888987; c=relaxed/relaxed;
+	bh=/uReX9klHB0A1sUOQaT3wnYkOEENIZJDpqawtu757kA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jE74iN4VYJMtvXfLbxz2N8gv56tnxjt3WuVO/KXXwVB7PuNyAokTFEbEQ+rLjMsqjfpIXdx0iB8tMviZIvPBqG8n74uGKC4pWlUt1gBhbEHeA0asRk2De5OWxn0ipaUH9+bd0O5lw1a0GWAlFt201antq9WIYi1BhuKehgzuZObSxhnYjJTSkrwG29KiDW5TJGC4eaBOJ/cBd9Gy6MBj46ljOMirAlaptF5W/E3SjOJsWdUEGY2T3LLFeV3bkkfVg/DDY8ZcshIay4KhPUH/T6W/6o5lhpZiHu5srKa9MWIJx1Fy4Q4gpzu8/Ziz3xAtEkDLkZJCKnUDtK+x42juxg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IOJsIlNk; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=OtRw04aX; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version; b=nkt8ZVgM+pUNDlbQ3BVTbwWBteiLlzQm4nf5O0k9Q8mO05E0NdCE2WDJxDV9f41dRqJwPoKC4H+SchIa66Z+x7ZDcCdxQR2Tct+QpzAAPPsoa2+pYh78MyTGrk0qtxc9CNwA7QNs60VMjGLEDqFcmUbmy/kjTIdXvbwqXnTv7bDsIL9E4G6lDD9OvbHcBAc3o+ratxzr0AoN/cSWpBkp19gLuDwBgSD4M/WDUBZCCOnCq9Rzf9oiC8aIDNU7oKm+Ei9y/U79kkj06T0YHPwR6jPtwlLSfVZ/QOitKBnMcETNQ9rj3b0/suQzYn1UjtpWZq62r+Ll0fTQcUCD+h4Ydw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=h1g9U9aD; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=h1g9U9aD; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=IOJsIlNk;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=OtRw04aX;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=h1g9U9aD;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=h1g9U9aD;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZvqq521Yz2yF7
-	for <linux-erofs@lists.ozlabs.org>; Sat, 26 Oct 2024 07:43:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZvqs68xMz2yF7
+	for <linux-erofs@lists.ozlabs.org>; Sat, 26 Oct 2024 07:43:05 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729888980;
+	s=mimecast20190719; t=1729888983;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=amC5aop3KJx0r1HYYuGRhvQAJFiWIu7nIKfZ7/jIV/8=;
-	b=IOJsIlNkKH0xeTg7vVmWfMZuJQ6qeszngc3g5RQaDaTwtBb+3o/ffVhx5AqeKBphP0FXKy
-	lS/VFY8+91P3l7RODppR56JpDF1r0f9x3arZf7OqtGxODRk46UaEeLgNIxZocF9n7JnV2t
-	sAtWSSUD6RxE0MbbnodhG4GyNIKIGGs=
+	bh=/uReX9klHB0A1sUOQaT3wnYkOEENIZJDpqawtu757kA=;
+	b=h1g9U9aDhxvnpQnFrnoJ94E4C3FNc8ZC3Wb9jUmd/kU5bJ03Vb2IrxxIjB1/+H64o0QxqM
+	UTiEFS/spZ61iDsGVW0ALEsemLviMQ/BJ9nVQE/uZT4GGidA1GtfaUhTFhkYGm8ArjKzF9
+	uArDkfTCek5LgnUQKTVePMKguGT9Jyw=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729888981;
+	s=mimecast20190719; t=1729888983;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=amC5aop3KJx0r1HYYuGRhvQAJFiWIu7nIKfZ7/jIV/8=;
-	b=OtRw04aXeqlZG5yBnIae0EItpgzC2IzKM6d4lmdu/xeBwNbrCLGtkXJL+/584eVrIQ3Tzq
-	HYJv4N56iiFaW/9VcUdOqaoUPFP/8hqBgerYK+21xdFVIK57jm6ALRP4UZ91wzqLz/Qf1V
-	VFV0954axpkx+Ksbp7Krve0QSPnea94=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=/uReX9klHB0A1sUOQaT3wnYkOEENIZJDpqawtu757kA=;
+	b=h1g9U9aDhxvnpQnFrnoJ94E4C3FNc8ZC3Wb9jUmd/kU5bJ03Vb2IrxxIjB1/+H64o0QxqM
+	UTiEFS/spZ61iDsGVW0ALEsemLviMQ/BJ9nVQE/uZT4GGidA1GtfaUhTFhkYGm8ArjKzF9
+	uArDkfTCek5LgnUQKTVePMKguGT9Jyw=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-50-gViY-idHMhSIYBEvSRvkKw-1; Fri,
- 25 Oct 2024 16:42:54 -0400
-X-MC-Unique: gViY-idHMhSIYBEvSRvkKw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-270-vRRV1PwvOI-JT1nGa-Zszg-1; Fri,
+ 25 Oct 2024 16:43:01 -0400
+X-MC-Unique: vRRV1PwvOI-JT1nGa-Zszg-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C86881955D58;
-	Fri, 25 Oct 2024 20:42:51 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EF3921955F65;
+	Fri, 25 Oct 2024 20:42:57 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.231])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ED109195607C;
-	Fri, 25 Oct 2024 20:42:46 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2485919560A2;
+	Fri, 25 Oct 2024 20:42:52 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
 	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v2 23/31] afs: Use netfslib for symlinks, allowing them to be cached
-Date: Fri, 25 Oct 2024 21:39:50 +0100
-Message-ID: <20241025204008.4076565-24-dhowells@redhat.com>
+Subject: [PATCH v2 24/31] afs: Eliminate afs_read
+Date: Fri, 25 Oct 2024 21:39:51 +0100
+Message-ID: <20241025204008.4076565-25-dhowells@redhat.com>
 In-Reply-To: <20241025204008.4076565-1-dhowells@redhat.com>
 References: <20241025204008.4076565-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
 	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
@@ -97,264 +97,561 @@ Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, Shyam Prasa
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Use netfslib to read symlinks, thereby allowing them to be cached by
-fscache and cachefiles.
+Now that directory and symlink reads go through netfslib, the afs_read
+struct is mostly redundant with almost all data duplicated in the
+netfs_io_request and netfs_io_subrequest structs that are also available
+any time we're doing a fetch.
+
+Eliminate afs_read by moving the one field we still need there to the
+afs_call struct (we may be given a different amount of data than what we
+asked for and have to track what remains of that) and using the
+netfs_io_subrequest directly instead.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jeff Layton <jlayton@kernel.org>
 cc: linux-afs@lists.infradead.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
 ---
- fs/afs/file.c              | 32 -------------------
- fs/afs/inode.c             | 64 +++++++++++++++++++++++++++++++++++---
- fs/afs/internal.h          |  4 ++-
- fs/afs/mntpt.c             | 22 ++++++-------
- include/trace/events/afs.h |  1 +
- 5 files changed, 74 insertions(+), 49 deletions(-)
+ fs/afs/file.c      | 96 +++++++++-------------------------------------
+ fs/afs/fsclient.c  | 55 +++++++++++++-------------
+ fs/afs/inode.c     |  2 +
+ fs/afs/internal.h  | 35 ++---------------
+ fs/afs/yfsclient.c | 47 +++++++++++------------
+ fs/netfs/main.c    |  2 +-
+ 6 files changed, 72 insertions(+), 165 deletions(-)
 
 diff --git a/fs/afs/file.c b/fs/afs/file.c
-index 5bc36bfaa173..48695a50d2f9 100644
+index 48695a50d2f9..b996f4419c0c 100644
 --- a/fs/afs/file.c
 +++ b/fs/afs/file.c
-@@ -20,7 +20,6 @@
- #include "internal.h"
- 
- static int afs_file_mmap(struct file *file, struct vm_area_struct *vma);
--static int afs_symlink_read_folio(struct file *file, struct folio *folio);
- 
- static ssize_t afs_file_read_iter(struct kiocb *iocb, struct iov_iter *iter);
- static ssize_t afs_file_splice_read(struct file *in, loff_t *ppos,
-@@ -61,13 +60,6 @@ const struct address_space_operations afs_file_aops = {
- 	.writepages	= afs_writepages,
- };
- 
--const struct address_space_operations afs_symlink_aops = {
--	.read_folio	= afs_symlink_read_folio,
--	.release_folio	= netfs_release_folio,
--	.invalidate_folio = netfs_invalidate_folio,
--	.migrate_folio	= filemap_migrate_folio,
--};
--
- static const struct vm_operations_struct afs_vm_ops = {
- 	.open		= afs_vm_open,
- 	.close		= afs_vm_close,
-@@ -346,30 +338,6 @@ static void afs_issue_read(struct netfs_io_subrequest *subreq)
- 	queue_work(system_long_wq, &subreq->work);
+@@ -200,50 +200,12 @@ int afs_release(struct inode *inode, struct file *file)
+ 	return ret;
  }
  
--static int afs_symlink_read_folio(struct file *file, struct folio *folio)
+-/*
+- * Allocate a new read record.
+- */
+-struct afs_read *afs_alloc_read(gfp_t gfp)
 -{
--	struct afs_vnode *vnode = AFS_FS_I(folio->mapping->host);
--	struct afs_read *fsreq;
--	int ret;
+-	struct afs_read *req;
 -
--	fsreq = afs_alloc_read(GFP_NOFS);
--	if (!fsreq)
--		return -ENOMEM;
+-	req = kzalloc(sizeof(struct afs_read), gfp);
+-	if (req)
+-		refcount_set(&req->usage, 1);
 -
--	fsreq->pos	= folio_pos(folio);
--	fsreq->len	= folio_size(folio);
--	fsreq->vnode	= vnode;
--	fsreq->iter	= &fsreq->def_iter;
--	iov_iter_xarray(&fsreq->def_iter, ITER_DEST, &folio->mapping->i_pages,
--			fsreq->pos, fsreq->len);
--
--	ret = afs_fetch_data(fsreq->vnode, fsreq);
--	if (ret == 0)
--		folio_mark_uptodate(folio);
--	folio_unlock(folio);
--	return ret;
+-	return req;
 -}
 -
- static int afs_init_request(struct netfs_io_request *rreq, struct file *file)
+-/*
+- * Dispose of a ref to a read record.
+- */
+-void afs_put_read(struct afs_read *req)
+-{
+-	if (refcount_dec_and_test(&req->usage)) {
+-		if (req->cleanup)
+-			req->cleanup(req);
+-		key_put(req->key);
+-		kfree(req);
+-	}
+-}
+-
+ static void afs_fetch_data_notify(struct afs_operation *op)
  {
- 	struct afs_vnode *vnode = AFS_FS_I(rreq->inode);
-diff --git a/fs/afs/inode.c b/fs/afs/inode.c
-index 0ed1e5c35fef..6f27a2b4bf5a 100644
---- a/fs/afs/inode.c
-+++ b/fs/afs/inode.c
-@@ -25,8 +25,60 @@
- #include "internal.h"
- #include "afs_fs.h"
+-	struct afs_read *req = op->fetch.req;
+-	struct netfs_io_subrequest *subreq = req->subreq;
+-	int error = afs_op_error(op);
+-
+-	req->error = error;
+-	if (subreq) {
+-		subreq->rreq->i_size = req->file_size;
+-		if (req->pos + req->actual_len >= req->file_size)
+-			__set_bit(NETFS_SREQ_HIT_EOF, &subreq->flags);
+-		subreq->error = error;
+-		netfs_read_subreq_terminated(subreq);
+-		req->subreq = NULL;
+-	} else if (req->done) {
+-		req->done(req);
+-	}
++	struct netfs_io_subrequest *subreq = op->fetch.subreq;
++
++	subreq->error = afs_op_error(op);
++	netfs_read_subreq_terminated(subreq);
+ }
  
-+static void afs_put_link(void *arg)
-+{
-+	struct folio *folio = virt_to_folio(arg);
-+
-+	kunmap_local(arg);
-+	folio_put(folio);
-+}
-+
-+const char *afs_get_link(struct dentry *dentry, struct inode *inode,
-+			 struct delayed_call *callback)
-+{
-+	struct afs_vnode *vnode = AFS_FS_I(inode);
-+	struct folio *folio;
-+	char *content;
-+	ssize_t ret;
-+
-+	if (atomic64_read(&vnode->cb_expires_at) == AFS_NO_CB_PROMISE ||
-+	    !vnode->directory) {
-+		if (!dentry)
-+			return ERR_PTR(-ECHILD);
-+		ret = afs_read_single(vnode, NULL);
-+		if (ret < 0)
-+			return ERR_PTR(ret);
-+	}
-+
-+	folio = folioq_folio(vnode->directory, 0);
-+	folio_get(folio);
-+	content = kmap_local_folio(folio, 0);
-+	set_delayed_call(callback, afs_put_link, content);
-+	return content;
-+}
-+
-+int afs_readlink(struct dentry *dentry, char __user *buffer, int buflen)
-+{
-+	DEFINE_DELAYED_CALL(done);
-+	const char *content;
-+	int len;
-+
-+	content = afs_get_link(dentry, d_inode(dentry), &done);
-+	if (IS_ERR(content)) {
-+		do_delayed_call(&done);
-+		return PTR_ERR(content);
-+	}
-+
-+	len = umin(strlen(content), buflen);
-+	if (copy_to_user(buffer, content, len))
-+		len = -EFAULT;
-+	do_delayed_call(&done);
-+	return len;
-+}
-+
- static const struct inode_operations afs_symlink_inode_operations = {
--	.get_link	= page_get_link,
-+	.get_link	= afs_get_link,
-+	.readlink	= afs_readlink,
- };
+ static void afs_fetch_data_success(struct afs_operation *op)
+@@ -253,7 +215,7 @@ static void afs_fetch_data_success(struct afs_operation *op)
+ 	_enter("op=%08x", op->debug_id);
+ 	afs_vnode_commit_status(op, &op->file[0]);
+ 	afs_stat_v(vnode, n_fetches);
+-	atomic_long_add(op->fetch.req->actual_len, &op->net->n_fetch_bytes);
++	atomic_long_add(op->fetch.subreq->transferred, &op->net->n_fetch_bytes);
+ 	afs_fetch_data_notify(op);
+ }
  
- static noinline void dump_vnode(struct afs_vnode *vnode, struct afs_vnode *parent_vnode)
-@@ -124,13 +176,13 @@ static int afs_inode_init_from_status(struct afs_operation *op,
- 			inode->i_mode	= S_IFDIR | 0555;
- 			inode->i_op	= &afs_mntpt_inode_operations;
- 			inode->i_fop	= &afs_mntpt_file_operations;
--			inode->i_mapping->a_ops	= &afs_symlink_aops;
- 		} else {
- 			inode->i_mode	= S_IFLNK | status->mode;
- 			inode->i_op	= &afs_symlink_inode_operations;
--			inode->i_mapping->a_ops	= &afs_symlink_aops;
- 		}
-+		inode->i_mapping->a_ops	= &afs_dir_aops;
- 		inode_nohighmem(inode);
-+		mapping_set_release_always(inode->i_mapping);
- 		break;
- 	default:
- 		dump_vnode(vnode, op->file[0].vnode != vnode ? op->file[0].vnode : NULL);
-@@ -443,7 +495,8 @@ static void afs_get_inode_cache(struct afs_vnode *vnode)
- 	struct afs_vnode_cache_aux aux;
+@@ -265,11 +227,10 @@ static void afs_fetch_data_aborted(struct afs_operation *op)
  
- 	if (vnode->status.type != AFS_FTYPE_FILE &&
--	    vnode->status.type != AFS_FTYPE_DIR) {
-+	    vnode->status.type != AFS_FTYPE_DIR &&
-+	    vnode->status.type != AFS_FTYPE_SYMLINK) {
- 		vnode->netfs.cache = NULL;
- 		return;
+ static void afs_fetch_data_put(struct afs_operation *op)
+ {
+-	op->fetch.req->error = afs_op_error(op);
+-	afs_put_read(op->fetch.req);
++	op->fetch.subreq->error = afs_op_error(op);
+ }
+ 
+-static const struct afs_operation_ops afs_fetch_data_operation = {
++const struct afs_operation_ops afs_fetch_data_operation = {
+ 	.issue_afs_rpc	= afs_fs_fetch_data,
+ 	.issue_yfs_rpc	= yfs_fs_fetch_data,
+ 	.success	= afs_fetch_data_success,
+@@ -281,55 +242,34 @@ static const struct afs_operation_ops afs_fetch_data_operation = {
+ /*
+  * Fetch file data from the volume.
+  */
+-int afs_fetch_data(struct afs_vnode *vnode, struct afs_read *req)
++static void afs_read_worker(struct work_struct *work)
+ {
++	struct netfs_io_subrequest *subreq = container_of(work, struct netfs_io_subrequest, work);
+ 	struct afs_operation *op;
++	struct afs_vnode *vnode = AFS_FS_I(subreq->rreq->inode);
++	struct key *key = subreq->rreq->netfs_priv;
+ 
+ 	_enter("%s{%llx:%llu.%u},%x,,,",
+ 	       vnode->volume->name,
+ 	       vnode->fid.vid,
+ 	       vnode->fid.vnode,
+ 	       vnode->fid.unique,
+-	       key_serial(req->key));
++	       key_serial(key));
+ 
+-	op = afs_alloc_operation(req->key, vnode->volume);
++	op = afs_alloc_operation(key, vnode->volume);
+ 	if (IS_ERR(op)) {
+-		if (req->subreq) {
+-			req->subreq->error = PTR_ERR(op);
+-			netfs_read_subreq_terminated(req->subreq);
+-		}
+-		return PTR_ERR(op);
++		subreq->error = PTR_ERR(op);
++		netfs_read_subreq_terminated(subreq);
++		return;
  	}
-@@ -657,7 +710,8 @@ void afs_evict_inode(struct inode *inode)
  
- 	ASSERTCMP(inode->i_ino, ==, vnode->fid.vnode);
+ 	afs_op_set_vnode(op, 0, vnode);
  
--	if ((S_ISDIR(inode->i_mode)) &&
-+	if ((S_ISDIR(inode->i_mode) ||
-+	     S_ISLNK(inode->i_mode)) &&
- 	    (inode->i_state & I_DIRTY) &&
- 	    !sbi->dyn_root) {
- 		struct writeback_control wbc = {
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index ecf5df9ca12c..6fa3b1dd4c98 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -1115,7 +1115,6 @@ extern void afs_dynroot_depopulate(struct super_block *);
-  * file.c
-  */
- extern const struct address_space_operations afs_file_aops;
--extern const struct address_space_operations afs_symlink_aops;
- extern const struct inode_operations afs_file_inode_operations;
- extern const struct file_operations afs_file_operations;
- extern const struct netfs_request_ops afs_req_ops;
-@@ -1221,6 +1220,9 @@ extern void afs_fs_probe_cleanup(struct afs_net *);
-  */
- extern const struct afs_operation_ops afs_fetch_status_operation;
+-	op->fetch.req	= afs_get_read(req);
++	op->fetch.subreq = subreq;
+ 	op->ops		= &afs_fetch_data_operation;
+-	return afs_do_sync_operation(op);
+-}
+-
+-static void afs_read_worker(struct work_struct *work)
+-{
+-	struct netfs_io_subrequest *subreq = container_of(work, struct netfs_io_subrequest, work);
+-	struct afs_vnode *vnode = AFS_FS_I(subreq->rreq->inode);
+-	struct afs_read *fsreq;
+-
+-	fsreq = afs_alloc_read(GFP_NOFS);
+-	if (!fsreq) {
+-		subreq->error = -ENOMEM;
+-		return netfs_read_subreq_terminated(subreq);
+-	}
+-
+-	fsreq->subreq	= subreq;
+-	fsreq->pos	= subreq->start + subreq->transferred;
+-	fsreq->len	= subreq->len   - subreq->transferred;
+-	fsreq->key	= key_get(subreq->rreq->netfs_priv);
+-	fsreq->vnode	= vnode;
+-	fsreq->iter	= &subreq->io_iter;
  
-+const char *afs_get_link(struct dentry *dentry, struct inode *inode,
-+			 struct delayed_call *callback);
-+int afs_readlink(struct dentry *dentry, char __user *buffer, int buflen);
- extern void afs_vnode_commit_status(struct afs_operation *, struct afs_vnode_param *);
- extern int afs_fetch_status(struct afs_vnode *, struct key *, bool, afs_access_t *);
- extern int afs_ilookup5_test_by_fid(struct inode *, void *);
-diff --git a/fs/afs/mntpt.c b/fs/afs/mntpt.c
-index 297487ee8323..507c25a5b2cb 100644
---- a/fs/afs/mntpt.c
-+++ b/fs/afs/mntpt.c
-@@ -30,7 +30,7 @@ const struct file_operations afs_mntpt_file_operations = {
+ 	trace_netfs_sreq(subreq, netfs_sreq_trace_submit);
+-	afs_fetch_data(fsreq->vnode, fsreq);
+-	afs_put_read(fsreq);
++	afs_do_sync_operation(op);
+ }
  
- const struct inode_operations afs_mntpt_inode_operations = {
- 	.lookup		= afs_mntpt_lookup,
--	.readlink	= page_readlink,
-+	.readlink	= afs_readlink,
- 	.getattr	= afs_getattr,
- };
+ static void afs_issue_read(struct netfs_io_subrequest *subreq)
+diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
+index 784f7daab112..d9d224c95454 100644
+--- a/fs/afs/fsclient.c
++++ b/fs/afs/fsclient.c
+@@ -301,19 +301,19 @@ void afs_fs_fetch_status(struct afs_operation *op)
+ static int afs_deliver_fs_fetch_data(struct afs_call *call)
+ {
+ 	struct afs_operation *op = call->op;
++	struct netfs_io_subrequest *subreq = op->fetch.subreq;
+ 	struct afs_vnode_param *vp = &op->file[0];
+-	struct afs_read *req = op->fetch.req;
+ 	const __be32 *bp;
+ 	size_t count_before;
+ 	int ret;
  
-@@ -118,9 +118,9 @@ static int afs_mntpt_set_params(struct fs_context *fc, struct dentry *mntpt)
- 		ctx->volnamesz = sizeof(afs_root_volume) - 1;
- 	} else {
- 		/* read the contents of the AFS special symlink */
--		struct page *page;
-+		DEFINE_DELAYED_CALL(cleanup);
-+		const char *content;
- 		loff_t size = i_size_read(d_inode(mntpt));
--		char *buf;
+ 	_enter("{%u,%zu,%zu/%llu}",
+ 	       call->unmarshall, call->iov_len, iov_iter_count(call->iter),
+-	       req->actual_len);
++	       call->remaining);
  
- 		if (src_as->cell)
- 			ctx->cell = afs_use_cell(src_as->cell, afs_cell_trace_use_mntpt);
-@@ -128,16 +128,16 @@ static int afs_mntpt_set_params(struct fs_context *fc, struct dentry *mntpt)
- 		if (size < 2 || size > PAGE_SIZE - 1)
- 			return -EINVAL;
+ 	switch (call->unmarshall) {
+ 	case 0:
+-		req->actual_len = 0;
++		call->remaining = 0;
+ 		call->unmarshall++;
+ 		if (call->operation_ID == FSFETCHDATA64) {
+ 			afs_extract_to_tmp64(call);
+@@ -323,8 +323,8 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
+ 		}
+ 		fallthrough;
  
--		page = read_mapping_page(d_inode(mntpt)->i_mapping, 0, NULL);
--		if (IS_ERR(page))
--			return PTR_ERR(page);
-+		content = afs_get_link(mntpt, d_inode(mntpt), &cleanup);
-+		if (IS_ERR(content)) {
-+			do_delayed_call(&cleanup);
-+			return PTR_ERR(content);
-+		}
- 
--		buf = kmap(page);
- 		ret = -EINVAL;
--		if (buf[size - 1] == '.')
--			ret = vfs_parse_fs_string(fc, "source", buf, size - 1);
--		kunmap(page);
--		put_page(page);
-+		if (content[size - 1] == '.')
-+			ret = vfs_parse_fs_string(fc, "source", content, size - 1);
-+		do_delayed_call(&cleanup);
+-		/* Extract the returned data length into
+-		 * ->actual_len.  This may indicate more or less data than was
++		/* Extract the returned data length into ->remaining.
++		 * This may indicate more or less data than was
+ 		 * requested will be returned.
+ 		 */
+ 	case 1:
+@@ -333,42 +333,41 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
  		if (ret < 0)
  			return ret;
  
-diff --git a/include/trace/events/afs.h b/include/trace/events/afs.h
-index d05f2c09efe3..49a749672e38 100644
---- a/include/trace/events/afs.h
-+++ b/include/trace/events/afs.h
-@@ -422,6 +422,7 @@ enum yfs_cm_operation {
- 	EM(afs_file_error_dir_over_end,		"DIR_ENT_OVER_END")	\
- 	EM(afs_file_error_dir_small,		"DIR_SMALL")		\
- 	EM(afs_file_error_dir_unmarked_ext,	"DIR_UNMARKED_EXT")	\
-+	EM(afs_file_error_symlink_big,		"SYM_BIG")		\
- 	EM(afs_file_error_mntpt,		"MNTPT_READ_FAILED")	\
- 	E_(afs_file_error_writeback_fail,	"WRITEBACK_FAILED")
+-		req->actual_len = be64_to_cpu(call->tmp64);
+-		_debug("DATA length: %llu", req->actual_len);
++		call->remaining = be64_to_cpu(call->tmp64);
++		_debug("DATA length: %llu", call->remaining);
  
+-		if (req->actual_len == 0)
++		if (call->remaining == 0)
+ 			goto no_more_data;
+ 
+-		call->iter = req->iter;
+-		call->iov_len = min(req->actual_len, req->len);
++		call->iter = &subreq->io_iter;
++		call->iov_len = umin(call->remaining, subreq->len - subreq->transferred);
+ 		call->unmarshall++;
+ 		fallthrough;
+ 
+ 		/* extract the returned data */
+ 	case 2:
+ 		count_before = call->iov_len;
+-		_debug("extract data %zu/%llu", count_before, req->actual_len);
++		_debug("extract data %zu/%llu", count_before, call->remaining);
+ 
+ 		ret = afs_extract_data(call, true);
+-		if (req->subreq) {
+-			req->subreq->transferred += count_before - call->iov_len;
+-			netfs_read_subreq_progress(req->subreq);
+-		}
++		subreq->transferred += count_before - call->iov_len;
++		call->remaining -= count_before - call->iov_len;
++		netfs_read_subreq_progress(subreq);
+ 		if (ret < 0)
+ 			return ret;
+ 
+ 		call->iter = &call->def_iter;
+-		if (req->actual_len <= req->len)
++		if (call->remaining)
+ 			goto no_more_data;
+ 
+ 		/* Discard any excess data the server gave us */
+-		afs_extract_discard(call, req->actual_len - req->len);
++		afs_extract_discard(call, call->remaining);
+ 		call->unmarshall = 3;
+ 		fallthrough;
+ 
+ 	case 3:
+ 		_debug("extract discard %zu/%llu",
+-		       iov_iter_count(call->iter), req->actual_len - req->len);
++		       iov_iter_count(call->iter), call->remaining);
+ 
+ 		ret = afs_extract_data(call, true);
+ 		if (ret < 0)
+@@ -390,8 +389,8 @@ static int afs_deliver_fs_fetch_data(struct afs_call *call)
+ 		xdr_decode_AFSCallBack(&bp, call, &vp->scb);
+ 		xdr_decode_AFSVolSync(&bp, &op->volsync);
+ 
+-		req->data_version = vp->scb.status.data_version;
+-		req->file_size = vp->scb.status.size;
++		if (subreq->start + subreq->transferred >= vp->scb.status.size)
++			__set_bit(NETFS_SREQ_HIT_EOF, &subreq->flags);
+ 
+ 		call->unmarshall++;
+ 		fallthrough;
+@@ -426,8 +425,8 @@ static const struct afs_call_type afs_RXFSFetchData64 = {
+  */
+ static void afs_fs_fetch_data64(struct afs_operation *op)
+ {
++	struct netfs_io_subrequest *subreq = op->fetch.subreq;
+ 	struct afs_vnode_param *vp = &op->file[0];
+-	struct afs_read *req = op->fetch.req;
+ 	struct afs_call *call;
+ 	__be32 *bp;
+ 
+@@ -443,10 +442,10 @@ static void afs_fs_fetch_data64(struct afs_operation *op)
+ 	bp[1] = htonl(vp->fid.vid);
+ 	bp[2] = htonl(vp->fid.vnode);
+ 	bp[3] = htonl(vp->fid.unique);
+-	bp[4] = htonl(upper_32_bits(req->pos));
+-	bp[5] = htonl(lower_32_bits(req->pos));
++	bp[4] = htonl(upper_32_bits(subreq->start + subreq->transferred));
++	bp[5] = htonl(lower_32_bits(subreq->start + subreq->transferred));
+ 	bp[6] = 0;
+-	bp[7] = htonl(lower_32_bits(req->len));
++	bp[7] = htonl(lower_32_bits(subreq->len   - subreq->transferred));
+ 
+ 	call->fid = vp->fid;
+ 	trace_afs_make_fs_call(call, &vp->fid);
+@@ -458,9 +457,9 @@ static void afs_fs_fetch_data64(struct afs_operation *op)
+  */
+ void afs_fs_fetch_data(struct afs_operation *op)
+ {
++	struct netfs_io_subrequest *subreq = op->fetch.subreq;
+ 	struct afs_vnode_param *vp = &op->file[0];
+ 	struct afs_call *call;
+-	struct afs_read *req = op->fetch.req;
+ 	__be32 *bp;
+ 
+ 	if (test_bit(AFS_SERVER_FL_HAS_FS64, &op->server->flags))
+@@ -472,16 +471,14 @@ void afs_fs_fetch_data(struct afs_operation *op)
+ 	if (!call)
+ 		return afs_op_nomem(op);
+ 
+-	req->call_debug_id = call->debug_id;
+-
+ 	/* marshall the parameters */
+ 	bp = call->request;
+ 	bp[0] = htonl(FSFETCHDATA);
+ 	bp[1] = htonl(vp->fid.vid);
+ 	bp[2] = htonl(vp->fid.vnode);
+ 	bp[3] = htonl(vp->fid.unique);
+-	bp[4] = htonl(lower_32_bits(req->pos));
+-	bp[5] = htonl(lower_32_bits(req->len));
++	bp[4] = htonl(lower_32_bits(subreq->start + subreq->transferred));
++	bp[5] = htonl(lower_32_bits(subreq->len   + subreq->transferred));
+ 
+ 	call->fid = vp->fid;
+ 	trace_afs_make_fs_call(call, &vp->fid);
+diff --git a/fs/afs/inode.c b/fs/afs/inode.c
+index 6f27a2b4bf5a..c3b720fda525 100644
+--- a/fs/afs/inode.c
++++ b/fs/afs/inode.c
+@@ -317,6 +317,8 @@ static void afs_apply_status(struct afs_operation *op,
+ 			inode_set_ctime_to_ts(inode, t);
+ 			inode_set_atime_to_ts(inode, t);
+ 		}
++		if (op->ops == &afs_fetch_data_operation)
++			op->fetch.subreq->rreq->i_size = status->size;
+ 	}
+ }
+ 
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 6fa3b1dd4c98..36125fce0590 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -163,6 +163,7 @@ struct afs_call {
+ 	spinlock_t		state_lock;
+ 	int			error;		/* error code */
+ 	u32			abort_code;	/* Remote abort ID or 0 */
++	unsigned long long	remaining;	/* How much is left to receive */
+ 	unsigned int		max_lifespan;	/* Maximum lifespan in secs to set if not 0 */
+ 	unsigned		request_size;	/* size of request data */
+ 	unsigned		reply_max;	/* maximum size of reply */
+@@ -232,28 +233,6 @@ static inline struct key *afs_file_key(struct file *file)
+ 	return af->key;
+ }
+ 
+-/*
+- * Record of an outstanding read operation on a vnode.
+- */
+-struct afs_read {
+-	loff_t			pos;		/* Where to start reading */
+-	loff_t			len;		/* How much we're asking for */
+-	loff_t			actual_len;	/* How much we're actually getting */
+-	loff_t			file_size;	/* File size returned by server */
+-	struct key		*key;		/* The key to use to reissue the read */
+-	struct afs_vnode	*vnode;		/* The file being read into. */
+-	struct netfs_io_subrequest *subreq;	/* Fscache helper read request this belongs to */
+-	afs_dataversion_t	data_version;	/* Version number returned by server */
+-	refcount_t		usage;
+-	unsigned int		call_debug_id;
+-	unsigned int		nr_pages;
+-	int			error;
+-	void (*done)(struct afs_read *);
+-	void (*cleanup)(struct afs_read *);
+-	struct iov_iter		*iter;		/* Iterator representing the buffer */
+-	struct iov_iter		def_iter;	/* Default iterator */
+-};
+-
+ /*
+  * AFS superblock private data
+  * - there's one superblock per volume
+@@ -910,7 +889,7 @@ struct afs_operation {
+ 			bool	new_negative;
+ 		} rename;
+ 		struct {
+-			struct afs_read *req;
++			struct netfs_io_subrequest *subreq;
+ 		} fetch;
+ 		struct {
+ 			afs_lock_type_t type;
+@@ -1117,21 +1096,13 @@ extern void afs_dynroot_depopulate(struct super_block *);
+ extern const struct address_space_operations afs_file_aops;
+ extern const struct inode_operations afs_file_inode_operations;
+ extern const struct file_operations afs_file_operations;
++extern const struct afs_operation_ops afs_fetch_data_operation;
+ extern const struct netfs_request_ops afs_req_ops;
+ 
+ extern int afs_cache_wb_key(struct afs_vnode *, struct afs_file *);
+ extern void afs_put_wb_key(struct afs_wb_key *);
+ extern int afs_open(struct inode *, struct file *);
+ extern int afs_release(struct inode *, struct file *);
+-extern int afs_fetch_data(struct afs_vnode *, struct afs_read *);
+-extern struct afs_read *afs_alloc_read(gfp_t);
+-extern void afs_put_read(struct afs_read *);
+-
+-static inline struct afs_read *afs_get_read(struct afs_read *req)
+-{
+-	refcount_inc(&req->usage);
+-	return req;
+-}
+ 
+ /*
+  * flock.c
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index 368cf277d801..3718d852fabc 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -352,19 +352,19 @@ static int yfs_deliver_status_and_volsync(struct afs_call *call)
+ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
+ {
+ 	struct afs_operation *op = call->op;
++	struct netfs_io_subrequest *subreq = op->fetch.subreq;
+ 	struct afs_vnode_param *vp = &op->file[0];
+-	struct afs_read *req = op->fetch.req;
+ 	const __be32 *bp;
+ 	size_t count_before;
+ 	int ret;
+ 
+ 	_enter("{%u,%zu, %zu/%llu}",
+ 	       call->unmarshall, call->iov_len, iov_iter_count(call->iter),
+-	       req->actual_len);
++	       call->remaining);
+ 
+ 	switch (call->unmarshall) {
+ 	case 0:
+-		req->actual_len = 0;
++		call->remaining = 0;
+ 		afs_extract_to_tmp64(call);
+ 		call->unmarshall++;
+ 		fallthrough;
+@@ -379,42 +379,40 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
+ 		if (ret < 0)
+ 			return ret;
+ 
+-		req->actual_len = be64_to_cpu(call->tmp64);
+-		_debug("DATA length: %llu", req->actual_len);
++		call->remaining = be64_to_cpu(call->tmp64);
++		_debug("DATA length: %llu", call->remaining);
+ 
+-		if (req->actual_len == 0)
++		if (call->remaining == 0)
+ 			goto no_more_data;
+ 
+-		call->iter = req->iter;
+-		call->iov_len = min(req->actual_len, req->len);
++		call->iter = &subreq->io_iter;
++		call->iov_len = min(call->remaining, subreq->len - subreq->transferred);
+ 		call->unmarshall++;
+ 		fallthrough;
+ 
+ 		/* extract the returned data */
+ 	case 2:
+ 		count_before = call->iov_len;
+-		_debug("extract data %zu/%llu", count_before, req->actual_len);
++		_debug("extract data %zu/%llu", count_before, call->remaining);
+ 
+ 		ret = afs_extract_data(call, true);
+-		if (req->subreq) {
+-			req->subreq->transferred += count_before - call->iov_len;
+-			netfs_read_subreq_progress(req->subreq);
+-		}
++		subreq->transferred += count_before - call->iov_len;
++		netfs_read_subreq_progress(subreq);
+ 		if (ret < 0)
+ 			return ret;
+ 
+ 		call->iter = &call->def_iter;
+-		if (req->actual_len <= req->len)
++		if (call->remaining)
+ 			goto no_more_data;
+ 
+ 		/* Discard any excess data the server gave us */
+-		afs_extract_discard(call, req->actual_len - req->len);
++		afs_extract_discard(call, call->remaining);
+ 		call->unmarshall = 3;
+ 		fallthrough;
+ 
+ 	case 3:
+ 		_debug("extract discard %zu/%llu",
+-		       iov_iter_count(call->iter), req->actual_len - req->len);
++		       iov_iter_count(call->iter), call->remaining);
+ 
+ 		ret = afs_extract_data(call, true);
+ 		if (ret < 0)
+@@ -439,8 +437,8 @@ static int yfs_deliver_fs_fetch_data64(struct afs_call *call)
+ 		xdr_decode_YFSCallBack(&bp, call, &vp->scb);
+ 		xdr_decode_YFSVolSync(&bp, &op->volsync);
+ 
+-		req->data_version = vp->scb.status.data_version;
+-		req->file_size = vp->scb.status.size;
++		if (subreq->start + subreq->transferred >= vp->scb.status.size)
++			__set_bit(NETFS_SREQ_HIT_EOF, &subreq->flags);
+ 
+ 		call->unmarshall++;
+ 		fallthrough;
+@@ -468,14 +466,15 @@ static const struct afs_call_type yfs_RXYFSFetchData64 = {
+  */
+ void yfs_fs_fetch_data(struct afs_operation *op)
+ {
++	struct netfs_io_subrequest *subreq = op->fetch.subreq;
+ 	struct afs_vnode_param *vp = &op->file[0];
+-	struct afs_read *req = op->fetch.req;
+ 	struct afs_call *call;
+ 	__be32 *bp;
+ 
+-	_enter(",%x,{%llx:%llu},%llx,%llx",
++	_enter(",%x,{%llx:%llu},%llx,%zx",
+ 	       key_serial(op->key), vp->fid.vid, vp->fid.vnode,
+-	       req->pos, req->len);
++	       subreq->start + subreq->transferred,
++	       subreq->len   - subreq->transferred);
+ 
+ 	call = afs_alloc_flat_call(op->net, &yfs_RXYFSFetchData64,
+ 				   sizeof(__be32) * 2 +
+@@ -487,15 +486,13 @@ void yfs_fs_fetch_data(struct afs_operation *op)
+ 	if (!call)
+ 		return afs_op_nomem(op);
+ 
+-	req->call_debug_id = call->debug_id;
+-
+ 	/* marshall the parameters */
+ 	bp = call->request;
+ 	bp = xdr_encode_u32(bp, YFSFETCHDATA64);
+ 	bp = xdr_encode_u32(bp, 0); /* RPC flags */
+ 	bp = xdr_encode_YFSFid(bp, &vp->fid);
+-	bp = xdr_encode_u64(bp, req->pos);
+-	bp = xdr_encode_u64(bp, req->len);
++	bp = xdr_encode_u64(bp, subreq->start + subreq->transferred);
++	bp = xdr_encode_u64(bp, subreq->len   - subreq->transferred);
+ 	yfs_check_req(call, bp);
+ 
+ 	call->fid = vp->fid;
+diff --git a/fs/netfs/main.c b/fs/netfs/main.c
+index 8c1922c0cb42..16760695e667 100644
+--- a/fs/netfs/main.c
++++ b/fs/netfs/main.c
+@@ -118,7 +118,7 @@ static int __init netfs_init(void)
+ 		goto error_reqpool;
+ 
+ 	netfs_subrequest_slab = kmem_cache_create("netfs_subrequest",
+-						  sizeof(struct netfs_io_subrequest), 0,
++						  sizeof(struct netfs_io_subrequest) + 16, 0,
+ 						  SLAB_HWCACHE_ALIGN | SLAB_ACCOUNT,
+ 						  NULL);
+ 	if (!netfs_subrequest_slab)
 
