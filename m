@@ -2,85 +2,85 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 07CC99B1008
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 22:41:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8344B9B1009
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 22:42:05 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XZvpT0g9mz3bmY
-	for <lists+linux-erofs@lfdr.de>; Sat, 26 Oct 2024 07:41:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XZvpg45h3z3bgf
+	for <lists+linux-erofs@lfdr.de>; Sat, 26 Oct 2024 07:42:03 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729888912;
-	cv=none; b=LxBLL9p8BQ8adQrtVKXUfNaCKBmJfz9WR/DZ5gssJsSmA3uMlpNyqoMGUop8BWuZ9P/3jSdt7dvLn+ejgbMHGcYov/NnCapKQQql0vz2nUAb8atGZKxMyqZpu5PZYaST5BQgW/i3WW6LfHfjH5kJaS8Igc3z+j21s6OiwWIuUhtFmWSP0t9FmDR6DpnE+rpi+Cr4RCDjhv+IX1OTP+sp170XrngrsY9GBQybTH+yGT7Od48GWNHtO93N4QoxVVIgfWuSKSorr/Par/KOGi9eK8hdcyWtA3fzE9kvCn8x7cnGJK9zr7suvrTumdfp48exFnmH2az8inhpXOGLBdAuuA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729888922;
+	cv=none; b=NZ9YGuT/PGDk7wp6fk1X07SjdwTOgKof/0+NCG+CLhqESwoapW8Uj7Ff0n21pQYAfgB2+IU4AORgFhJFsh/9bQROHh/ZkQfC7Tp6SRC4su79xLjXV5orBPraV8mAYOO6P9IIS7DAQCRlkg5pM4iVLIwr98qyGlYvHNGNgnSNIqHo+RuiDPNsrGh4mRYuUs+HwrCWPJu4d1JK1yKtWCLYw/ir4hbyXEvlL1afcRW0MxP8pfaNkXO0EPiKs/IY87UIiSqwralILBMyoetPkO7ZpjwnX+faE5ca0Zd2ah2zsQNloeYz9LITG/ffPFkyyE6ib66n8bDkJnREozLJtH6uIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729888912; c=relaxed/relaxed;
-	bh=RVoEs9N2N3+Yy5ytz8xwWGrwrjCUqjBQVK6VxNHCBSE=;
+	t=1729888922; c=relaxed/relaxed;
+	bh=E8xdMX/uFcK2gZEOhPcswqOMkVx14v1DliFqQKEHbv4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QzgXuCdXAfbRg9QqhrdTJMdfeavB/gAt1zanvd2RnZa1HH4PCEjrgL6S4dJpdxhVEDo5zck9cKVxIpWmIWJsnpk2st2Uwqsy5A9soVyYa8vH9yVJV8O8V6tTE3vqQM6//Af5TbuFIx+RVlfPzDxpJ9sFoJYlqqQrI4N7NGrKTvh29G+NFzaO095gbnLfdSwjX2Pi7wmTPEHL+P9peB7k5aUOnPoFYcZBmcc6n2PsJZg5QWkUSo+ChmxtCdGlkuw2JksOUyrNFMaojJTM34xICeQvmWirH0zPKyraqvSK9sksEbWBl5zlDoRLGI9OtRAIHiFCgfR/JTCpETxnRAko2Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=dDMb2q3A; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=eNnGPYbk; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version; b=Qm1PxsKF0o52efNuQv+eoeGqNh+ROTKhIlxRm++yxIBA3yjI4Ou2nTYA5ppntH5DBIjrg6eWmBEdNdOkF811ycuIFyFm4Mbux+b9kkRk+XCn/1/p7dEW+/JXVgdNg0ti4FjV2qPGU3OI/w1/k+zYfkOYTxapMZ1g5yRRVKobW28Qo/I63csrJ/iaEb6KAqC8IlKOWiaD2NrWdbebCu+oNv8TFFzevM1Qff8/SVLL/SFqY0gbk1Hd+ET5sO4O8QhOrIoETEizhTKx85G41cBMdy7nUbod9Vf+ByCBISVRyDMGLU13Nj8/wznJhzCBfvr8mn8yjhayLq+gyqEYSVA6pw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=aU11b6mO; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=aU11b6mO; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=dDMb2q3A;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=eNnGPYbk;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=aU11b6mO;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=aU11b6mO;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZvpR1WGYz2yD6
-	for <linux-erofs@lists.ozlabs.org>; Sat, 26 Oct 2024 07:41:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZvpd37bjz2yD6
+	for <linux-erofs@lists.ozlabs.org>; Sat, 26 Oct 2024 07:42:01 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729888907;
+	s=mimecast20190719; t=1729888917;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RVoEs9N2N3+Yy5ytz8xwWGrwrjCUqjBQVK6VxNHCBSE=;
-	b=dDMb2q3ARD/meDiQwh/4N6KMw0M1QgES25kVHqI1a/kou4N5+7bgikCselY4md9zSd+DBp
-	GFK6kq9fI5FN6aJ23JNKO6Fgf5y3e+CipQ8WHP31nbqAjYScBrpHtONTvwSgQ5M8LM3LCA
-	8UmOpLQREGyd53NHnkFa9yQwGl6F7TU=
+	bh=E8xdMX/uFcK2gZEOhPcswqOMkVx14v1DliFqQKEHbv4=;
+	b=aU11b6mOCypRcFEA/FuVwHMOW0qo0kYvWh+d3EntARKrLs5d8mpXIdJ7ENF29kWsmcRiki
+	v3Cd8JqAqhqsLUuq1RWvxO4dplyOSy4UPvIk3zWKvbE9xMgaWxrtgw1Rkc1zGvq/uY53Sc
+	zODatH1UMzDEPsACDh9xe4wFsGKWCs0=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1729888908;
+	s=mimecast20190719; t=1729888917;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RVoEs9N2N3+Yy5ytz8xwWGrwrjCUqjBQVK6VxNHCBSE=;
-	b=eNnGPYbkzP9gxVc5JLp/qvhcc8LVnCggVraRxI60S/fMS5PU0MAFwWwlQfEzvRuDMRvC6P
-	ablRikwEL+SpalapESN2PwZ0DlP/MMa3YZVo5x1LodAQ994g8RKPG17bFC0cRnMvImhTO/
-	6jyo4AgcNFObU8aSw3M9qJgh+UHLInw=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=E8xdMX/uFcK2gZEOhPcswqOMkVx14v1DliFqQKEHbv4=;
+	b=aU11b6mOCypRcFEA/FuVwHMOW0qo0kYvWh+d3EntARKrLs5d8mpXIdJ7ENF29kWsmcRiki
+	v3Cd8JqAqhqsLUuq1RWvxO4dplyOSy4UPvIk3zWKvbE9xMgaWxrtgw1Rkc1zGvq/uY53Sc
+	zODatH1UMzDEPsACDh9xe4wFsGKWCs0=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-57-55EgSfbFMoajSZAVz0ac0g-1; Fri,
- 25 Oct 2024 16:41:44 -0400
-X-MC-Unique: 55EgSfbFMoajSZAVz0ac0g-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-290-cSA3XPpmPWqGyLTukBmT0g-1; Fri,
+ 25 Oct 2024 16:41:52 -0400
+X-MC-Unique: cSA3XPpmPWqGyLTukBmT0g-1
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 15F4D19560BD;
-	Fri, 25 Oct 2024 20:41:42 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3354819560AF;
+	Fri, 25 Oct 2024 20:41:48 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.231])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3BF7A1956056;
-	Fri, 25 Oct 2024 20:41:37 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 38557300018D;
+	Fri, 25 Oct 2024 20:41:43 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
 	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v2 12/31] afs: Don't use mutex for I/O operation lock
-Date: Fri, 25 Oct 2024 21:39:39 +0100
-Message-ID: <20241025204008.4076565-13-dhowells@redhat.com>
+Subject: [PATCH v2 13/31] afs: Fix EEXIST error returned from afs_rmdir() to be ENOTEMPTY
+Date: Fri, 25 Oct 2024 21:39:40 +0100
+Message-ID: <20241025204008.4076565-14-dhowells@redhat.com>
 In-Reply-To: <20241025204008.4076565-1-dhowells@redhat.com>
 References: <20241025204008.4076565-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.0
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -97,205 +97,37 @@ Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, Shyam Prasa
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Don't use the standard mutex for the I/O operation lock, but rather
-implement our own as the standard mutex must be released in the same thread
-as locked it.  This is a problem when it comes to doing async FetchData
-where the lock will be dropped from the workqueue that processed the
-incoming data and not from the issuing thread.
+AFS servers pass back a code indicating EEXIST when they're asked to remove
+a directory that is not empty rather than ENOTEMPTY because not all the
+systems that an AFS server can run on have the latter error available and
+AFS preexisted the addition of that error in general.
 
+Fix afs_rmdir() to translate EEXIST to ENOTEMPTY.
+
+Fixes: 260a980317da ("[AFS]: Add "directory write" support.")
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
 cc: linux-afs@lists.infradead.org
 ---
- fs/afs/fs_operation.c | 111 +++++++++++++++++++++++++++++++++++++++---
- fs/afs/internal.h     |   3 +-
- fs/afs/super.c        |   2 +-
- 3 files changed, 108 insertions(+), 8 deletions(-)
+ fs/afs/dir.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/afs/fs_operation.c b/fs/afs/fs_operation.c
-index 428721bbe4f6..8488ff8183fa 100644
---- a/fs/afs/fs_operation.c
-+++ b/fs/afs/fs_operation.c
-@@ -49,6 +49,105 @@ struct afs_operation *afs_alloc_operation(struct key *key, struct afs_volume *vo
- 	return op;
- }
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index ada363af5aab..50edd1cae28a 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -1472,7 +1472,12 @@ static int afs_rmdir(struct inode *dir, struct dentry *dentry)
+ 		op->file[1].vnode = vnode;
+ 	}
  
-+struct afs_io_locker {
-+	struct list_head	link;
-+	struct task_struct	*task;
-+	unsigned long		have_lock;
-+};
+-	return afs_do_sync_operation(op);
++	ret = afs_do_sync_operation(op);
 +
-+/*
-+ * Unlock the I/O lock on a vnode.
-+ */
-+static void afs_unlock_for_io(struct afs_vnode *vnode)
-+{
-+	struct afs_io_locker *locker;
-+
-+	spin_lock(&vnode->lock);
-+	locker = list_first_entry_or_null(&vnode->io_lock_waiters,
-+					  struct afs_io_locker, link);
-+	if (locker) {
-+		list_del(&locker->link);
-+		smp_store_release(&locker->have_lock, 1);
-+		smp_mb__after_atomic(); /* Store have_lock before task state */
-+		wake_up_process(locker->task);
-+	} else {
-+		clear_bit(AFS_VNODE_IO_LOCK, &vnode->flags);
-+	}
-+	spin_unlock(&vnode->lock);
-+}
-+
-+/*
-+ * Lock the I/O lock on a vnode uninterruptibly.  We can't use an ordinary
-+ * mutex as lockdep will complain if we unlock it in the wrong thread.
-+ */
-+static void afs_lock_for_io(struct afs_vnode *vnode)
-+{
-+	struct afs_io_locker myself = { .task = current, };
-+
-+	spin_lock(&vnode->lock);
-+
-+	if (!test_and_set_bit(AFS_VNODE_IO_LOCK, &vnode->flags)) {
-+		spin_unlock(&vnode->lock);
-+		return;
-+	}
-+
-+	list_add_tail(&myself.link, &vnode->io_lock_waiters);
-+	spin_unlock(&vnode->lock);
-+
-+	for (;;) {
-+		set_current_state(TASK_UNINTERRUPTIBLE);
-+		if (smp_load_acquire(&myself.have_lock))
-+			break;
-+		schedule();
-+	}
-+	__set_current_state(TASK_RUNNING);
-+}
-+
-+/*
-+ * Lock the I/O lock on a vnode interruptibly.  We can't use an ordinary mutex
-+ * as lockdep will complain if we unlock it in the wrong thread.
-+ */
-+static int afs_lock_for_io_interruptible(struct afs_vnode *vnode)
-+{
-+	struct afs_io_locker myself = { .task = current, };
-+	int ret = 0;
-+
-+	spin_lock(&vnode->lock);
-+
-+	if (!test_and_set_bit(AFS_VNODE_IO_LOCK, &vnode->flags)) {
-+		spin_unlock(&vnode->lock);
-+		return 0;
-+	}
-+
-+	list_add_tail(&myself.link, &vnode->io_lock_waiters);
-+	spin_unlock(&vnode->lock);
-+
-+	for (;;) {
-+		set_current_state(TASK_INTERRUPTIBLE);
-+		if (smp_load_acquire(&myself.have_lock) ||
-+		    signal_pending(current))
-+			break;
-+		schedule();
-+	}
-+	__set_current_state(TASK_RUNNING);
-+
-+	/* If we got a signal, try to transfer the lock onto the next
-+	 * waiter.
-+	 */
-+	if (unlikely(signal_pending(current))) {
-+		spin_lock(&vnode->lock);
-+		if (myself.have_lock) {
-+			spin_unlock(&vnode->lock);
-+			afs_unlock_for_io(vnode);
-+		} else {
-+			list_del(&myself.link);
-+			spin_unlock(&vnode->lock);
-+		}
-+		ret = -ERESTARTSYS;
-+	}
++	/* Not all systems that can host afs servers have ENOTEMPTY. */
++	if (ret == -EEXIST)
++		ret = -ENOTEMPTY;
 +	return ret;
-+}
-+
- /*
-  * Lock the vnode(s) being operated upon.
-  */
-@@ -60,7 +159,7 @@ static bool afs_get_io_locks(struct afs_operation *op)
- 	_enter("");
  
- 	if (op->flags & AFS_OPERATION_UNINTR) {
--		mutex_lock(&vnode->io_lock);
-+		afs_lock_for_io(vnode);
- 		op->flags |= AFS_OPERATION_LOCK_0;
- 		_leave(" = t [1]");
- 		return true;
-@@ -72,7 +171,7 @@ static bool afs_get_io_locks(struct afs_operation *op)
- 	if (vnode2 > vnode)
- 		swap(vnode, vnode2);
- 
--	if (mutex_lock_interruptible(&vnode->io_lock) < 0) {
-+	if (afs_lock_for_io_interruptible(vnode) < 0) {
- 		afs_op_set_error(op, -ERESTARTSYS);
- 		op->flags |= AFS_OPERATION_STOP;
- 		_leave(" = f [I 0]");
-@@ -81,10 +180,10 @@ static bool afs_get_io_locks(struct afs_operation *op)
- 	op->flags |= AFS_OPERATION_LOCK_0;
- 
- 	if (vnode2) {
--		if (mutex_lock_interruptible_nested(&vnode2->io_lock, 1) < 0) {
-+		if (afs_lock_for_io_interruptible(vnode2) < 0) {
- 			afs_op_set_error(op, -ERESTARTSYS);
- 			op->flags |= AFS_OPERATION_STOP;
--			mutex_unlock(&vnode->io_lock);
-+			afs_unlock_for_io(vnode);
- 			op->flags &= ~AFS_OPERATION_LOCK_0;
- 			_leave(" = f [I 1]");
- 			return false;
-@@ -104,9 +203,9 @@ static void afs_drop_io_locks(struct afs_operation *op)
- 	_enter("");
- 
- 	if (op->flags & AFS_OPERATION_LOCK_1)
--		mutex_unlock(&vnode2->io_lock);
-+		afs_unlock_for_io(vnode2);
- 	if (op->flags & AFS_OPERATION_LOCK_0)
--		mutex_unlock(&vnode->io_lock);
-+		afs_unlock_for_io(vnode);
- }
- 
- static void afs_prepare_vnode(struct afs_operation *op, struct afs_vnode_param *vp,
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index c9d620175e80..07b8f7083e73 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -702,13 +702,14 @@ struct afs_vnode {
- 	struct afs_file_status	status;		/* AFS status info for this file */
- 	afs_dataversion_t	invalid_before;	/* Child dentries are invalid before this */
- 	struct afs_permits __rcu *permit_cache;	/* cache of permits so far obtained */
--	struct mutex		io_lock;	/* Lock for serialising I/O on this mutex */
-+	struct list_head	io_lock_waiters; /* Threads waiting for the I/O lock */
- 	struct rw_semaphore	validate_lock;	/* lock for validating this vnode */
- 	struct rw_semaphore	rmdir_lock;	/* Lock for rmdir vs sillyrename */
- 	struct key		*silly_key;	/* Silly rename key */
- 	spinlock_t		wb_lock;	/* lock for wb_keys */
- 	spinlock_t		lock;		/* waitqueue/flags lock */
- 	unsigned long		flags;
-+#define AFS_VNODE_IO_LOCK	0		/* Set if the I/O serialisation lock is held */
- #define AFS_VNODE_UNSET		1		/* set if vnode attributes not yet set */
- #define AFS_VNODE_DIR_VALID	2		/* Set if dir contents are valid */
- #define AFS_VNODE_ZAP_DATA	3		/* set if vnode's data should be invalidated */
-diff --git a/fs/afs/super.c b/fs/afs/super.c
-index f3ba1c3e72f5..7631302c1984 100644
---- a/fs/afs/super.c
-+++ b/fs/afs/super.c
-@@ -663,7 +663,7 @@ static void afs_i_init_once(void *_vnode)
- 
- 	memset(vnode, 0, sizeof(*vnode));
- 	inode_init_once(&vnode->netfs.inode);
--	mutex_init(&vnode->io_lock);
-+	INIT_LIST_HEAD(&vnode->io_lock_waiters);
- 	init_rwsem(&vnode->validate_lock);
- 	spin_lock_init(&vnode->wb_lock);
- 	spin_lock_init(&vnode->lock);
+ error:
+ 	return afs_put_operation(op);
 
