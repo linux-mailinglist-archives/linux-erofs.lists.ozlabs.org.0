@@ -2,78 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5EA819AF32D
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Oct 2024 22:00:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 050F39AF718
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 03:44:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1729820638;
+	bh=YRC3cOpVFCcFmpHmJPAcPU3Ali1vpl0KPVIdhi0f9Ok=;
+	h=To:Subject:Date:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=Ff0AklQVEk5uWnkezlXZN9Q9+PJlgcIa2mBzrk50K074MS1EkvpIBbl4ckXMfVSfi
+	 bsjxyMY1kq8p4Z9bi7F9pG1DK4ckTn8Jg6iK6dI+O/vVrxh65b3oYK5S7a8XZvH/1M
+	 D88WI4TuYQb9/ygkRRhNpINNsd20QfpNqkGx5X0ROiR87S1BqNN8smoRPKw80AbiyI
+	 QI2+DFhogVs23hXYnGVWRGNb5ZgJj+3wKKPLYzyq9fMrC+aokCwbOJd080i1ryr75M
+	 SRFsbh2wvnHEUgtyEl+lXzIk7v98cyS+OUo83PLapvXqVzXEmvJI+H1JQJLMCELQ3x
+	 uVFE+zRKkgx2A==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XZGx401hJz3bgV
-	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 07:00:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XZQYV030Hz2xnK
+	for <lists+linux-erofs@lfdr.de>; Fri, 25 Oct 2024 12:43:58 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::f2e"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729800021;
-	cv=none; b=akUrapghMTop+JymMUpQo249g7Fy4CN9kexFPNX9OncjXJH61w2eqE6dBALKgq51mnqErnfjmBaa6djmYNyeDqkaI6IrU9dV3+gLDW0k6fwnKxSy7j6xqXOKT6/nqrFfTLVedUGIatrzTWYs7c7RfiV9V3nfr3tIB6QWbgqrtwN7dKTJ2b3oWVcTAQQVFfp48SfF2q6LOjQ1uSB6gawwRvyJ02YWerTHHcfOg8XDzPKLaxHt5LEo4Tree6wJgX/qPzcDemcEn/UDFMdiz1hSnjJHV04zbp51G9bmwkNrGbmE4262/VYYLJpaQSRWnGVhVku//FiRPFcfq2SQoZLBIw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=118.143.206.90
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1729820635;
+	cv=none; b=OSmykMZObwrqBZjgrcIIwquDTG9zXQT7iUyUWIjG5/1Pwyp7BKrsGWiScH3itD+pqdimEgDPp1WpiVjrlRLDC+esAo22TfbIL4bgKOn6jLaM6uktlybolK925mmKJlvqaYcrV8EN2gZ8bO/NIvm+u+OMzco+NiGqFzTMIW725K7M4qtEs+0Ag59/m9EjdUjI9T9Iv/GFTH4PitOa9tqiuwrVAF5kBd7eHUiAtBcVdPOCoZtwrxpaRU6ZUwbIrvoHxSY/1MfEhDhraWfxMr23pCy64z/IwYrLWU0p3FJrEo7GkiNMPUvlpKwV8sCKnbS18KhXeav2RwNg9reAojZl+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1729800021; c=relaxed/relaxed;
-	bh=B4TZpsAzpo2pp8mtaK0ShzO+ppOPWu2dSnDYpyu3h3o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZFOl/4qTu5V5N6PAWUC2Rg8O7LN6pyTkb2gwsKfIxHFT/9Z+X135RlInzJsemdpiXiMQB4lTew4GVuZlTGMMsnIVwr4AHvf1Xn16jojNBI4wcqPb0d2QnUSvRcUiPxVZTI+N3ImrnCncvW9lUvN9D942PnjRVuOhhq+LNCjsTwMvXNYXKOBrc+4JHzFReI8dpTeqOqS59TobeNPgHH94x7KPT/GwChEW32pVaZSaXd0DnsMP40w6bWnrq9jEo3ZhPzVQ5/RwTP79VEOa+LduuZpHYR7IuS5Z+e53YCV45FR8UvkwMpQXH6OJephGLf1KnYhVfPegZz3hbcveeAykyg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=mbaynton.com; dkim=pass (2048-bit key; unprotected) header.d=mbaynton-com.20230601.gappssmtp.com header.i=@mbaynton-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=aKA8slq9; dkim-atps=neutral; spf=none (client-ip=2607:f8b0:4864:20::f2e; helo=mail-qv1-xf2e.google.com; envelope-from=mike@mbaynton.com; receiver=lists.ozlabs.org) smtp.mailfrom=mbaynton.com
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=mbaynton.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=mbaynton-com.20230601.gappssmtp.com header.i=@mbaynton-com.20230601.gappssmtp.com header.a=rsa-sha256 header.s=20230601 header.b=aKA8slq9;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=mbaynton.com (client-ip=2607:f8b0:4864:20::f2e; helo=mail-qv1-xf2e.google.com; envelope-from=mike@mbaynton.com; receiver=lists.ozlabs.org)
-Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XZGwy6mbFz2xy7
-	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Oct 2024 07:00:17 +1100 (AEDT)
-Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-6cc2ea27a50so22144356d6.0
-        for <linux-erofs@lists.ozlabs.org>; Thu, 24 Oct 2024 13:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mbaynton-com.20230601.gappssmtp.com; s=20230601; t=1729800013; x=1730404813; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B4TZpsAzpo2pp8mtaK0ShzO+ppOPWu2dSnDYpyu3h3o=;
-        b=aKA8slq9QPf9ElVPInOxsn7gU02yLCKZEKACBUUY3FBB4LFjqpkMaN8YWEdG0MYb5L
-         ogg66tyXhF5ftlCrwMR/wnNMnb2RwFr7443+zm4C2XFi/MPznWnlUMGoP8Pc83mjzKO9
-         DVq0YuVBGGRbmq/5XJ+v+ZxDwNa8JHSZXlRWIEsZmSMSfkPKwJ093DJaj5G4q5pMVYkS
-         NizAHONGS71brZw/gRncNcDRRYq4qbTinTjmcPYXqwAKIwq7P7gYejX0LAUB4pXyvocx
-         frkg+fz+PMUIR5jC3mcEIbmr9m/5R16il9kgeGtBdshH2oPn82DteZoUyhzEbjeUYYrL
-         +u5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729800013; x=1730404813;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=B4TZpsAzpo2pp8mtaK0ShzO+ppOPWu2dSnDYpyu3h3o=;
-        b=vBREDlgKM+RHZTgv6S7taYGtQHkmUoJQSfg2SrBrzlDw9G62F5q3+qrHlgcxFs0SuO
-         FJ39SBlQX687XcRc+k5Gg3rbeZguj2glvVrpOLmuUKCwGZUX6wc/2426AQzjwrrkPi7h
-         MK6p4sSsAi54YbapK7BpFBUtMZGS8kdEMxIqI+VuuYHtRR6j7tPHiEoUKx62UJGfeIe9
-         bI4WAI34dtR4TrXc3gmfEJlfQ7nvD2z2JmB9LOXBSAi6Er7f8Z/NcJ+lJGvc6DdRdhA5
-         NK7RlUoIbFHGWYPpSjsUqaRjxAf9Fyl4C90HtRTBnJUftovDX/IZSyiCv/qctCkNc7aB
-         q+UA==
-X-Forwarded-Encrypted: i=1; AJvYcCVB10gGh4l/jj0LtR4GMYdVw5zDZB4fnezA5+U+eRM8x5bRpt+MA67HNi2SUbo+59OkQSFUogK0qpARNA==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YyGk2/SmwTSZhTpKZv8SJGZSSG/kWwNIVs5sCSnazsAG9zhHUcG
-	xaI7iBFtuo58jYhXCh/5vOq8GKzwMdEM8fcVTEhUfdC1o4q77YHLYAG+ggLW07Q=
-X-Google-Smtp-Source: AGHT+IEki9ubYQarrYdlWz/+aFzC3Jo/zw8lXMaVwZy3y7nhvkp1DHU/HwArJnOjoFwKIb7tPwqeCA==
-X-Received: by 2002:a05:6214:5909:b0:6ce:3512:6224 with SMTP id 6a1803df08f44-6d08e7376d5mr45681306d6.21.1729800012596;
-        Thu, 24 Oct 2024 13:00:12 -0700 (PDT)
-Received: from mike-laptop.. ([50.203.248.222])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ce0091ab0dsm53489526d6.72.2024.10.24.13.00.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Oct 2024 13:00:11 -0700 (PDT)
-From: Mike Baynton <mike@mbaynton.com>
-To: hsiangkao@linux.alibaba.com,
-	linux-erofs@lists.ozlabs.org
-Subject: [PATCH] mkfs: Fix input offset counting in headerball mode
-Date: Thu, 24 Oct 2024 14:58:02 -0500
-Message-Id: <20241024195801.1546336-1-mike@mbaynton.com>
-X-Mailer: git-send-email 2.34.1
+	t=1729820635; c=relaxed/relaxed;
+	bh=YRC3cOpVFCcFmpHmJPAcPU3Ali1vpl0KPVIdhi0f9Ok=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=MaPzhSn3TpyShBgPrzOoWN2P/ZQu74g/Nj3Lo0jfNNTm3PDgUL/7NrH9ZVtcNGzLS1VzcuqZfHqfZcs1cq5sqDxr5Pi63iUjxQeHuLi3w7P1ma8w2xG96kKjDH8VExXR8WX54fAWydWv2gZoJoug+qmCdWNHAYZhuIjEKxHArNo+yoUn8bjNHwcQjejxIKp8xAPo7nK0Q2YWMXrgZjgX1vYCY+O6hJApTpiKVuDJ0riOTtkwmJciIq/ea+soxlXTpizZ/HBJh4eyfYAsxMfNN9hlE2AoIpUDCZD6YM/waJhLBYU3dYrvTEdKUw1v/vUUmXlgSWVLyEHwlsIAVYz4gg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com; spf=pass (client-ip=118.143.206.90; helo=outboundhk.mxmail.xiaomi.com; envelope-from=huangjianan@xiaomi.com; receiver=lists.ozlabs.org) smtp.mailfrom=xiaomi.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=xiaomi.com (client-ip=118.143.206.90; helo=outboundhk.mxmail.xiaomi.com; envelope-from=huangjianan@xiaomi.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 62 seconds by postgrey-1.37 at boromir; Fri, 25 Oct 2024 12:43:54 AEDT
+Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [118.143.206.90])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XZQYQ1Cgmz2xJK
+	for <linux-erofs@lists.ozlabs.org>; Fri, 25 Oct 2024 12:43:54 +1100 (AEDT)
+X-CSE-ConnectionGUID: DqK2u4iSQTOQH0V7udThrA==
+X-CSE-MsgGUID: InP8gByWTGaJ1H0VlgjkqQ==
+X-IronPort-AV: E=Sophos;i="6.11,230,1725292800"; 
+   d="scan'208";a="99598863"
+To: Sandeep Dhavale <dhavale@google.com>
+Subject: Re: [External Mail]Re: [PATCH] erofs-utils: avoid allocating large
+ arrays on the stack
+Thread-Topic: [External Mail]Re: [PATCH] erofs-utils: avoid allocating large
+ arrays on the stack
+Thread-Index: AQHbJfnUALw7iSNLxkSbnJYg7YRZ7rKVlwwAgACVQwA=
+Date: Fri, 25 Oct 2024 01:42:47 +0000
+Message-ID: <c3367a2e-ff0e-4eb9-91cf-004f3e284d86@xiaomi.com>
+References: <20241024094806.634534-1-huangjianan@xiaomi.com>
+ <CAB=BE-QGVZPJizeOceDgjZ-D8JL12AYp8O8Y-qMm2pn+ER-2Jw@mail.gmail.com>
+In-Reply-To: <CAB=BE-QGVZPJizeOceDgjZ-D8JL12AYp8O8Y-qMm2pn+ER-2Jw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.237.88.13]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E8988E60221FF04CA122D2C6524B2090@xiaomi.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	SPF_HELO_NONE,SPF_NONE autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=0.9 required=5.0 tests=RCVD_IN_MSPIKE_H4,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_SOFTFAIL,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -86,75 +75,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: sam@posit.co
+From: Huang Jianan via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Huang Jianan <huangjianan@xiaomi.com>
+Cc: "zhaoyifan@sjtu.edu.cn" <zhaoyifan@sjtu.edu.cn>, "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-When using --tar=headerball, most files included in the headerball are
-not included in the EROFS image. mkfs.erofs typically exits prematurely,
-having processed non-USTAR blocks as USTAR and believing they are
-end-of-archive markers. (Other failure modes are probably also possible
-if the input stream doesn't look like end-of-archive markers at the
-locations that are being read.)
-
-This is because we lost correct count of bytes that are read from the
-input stream when in headerball (or ddtaridx) modes. We were assuming that
-in these modes no data would be read following the ustar block, but in
-case of things like PAX headers, lots more data may be read without
-incrementing tar->offset.
-
-This corrects by always incrementing the offset counter, and then
-decrementing it again in the one case where headerballs differ -
-regular file data blocks are not present.
-
-Signed-off-by: Mike Baynton <mike@mbaynton.com>
----
-
-I suspect headerball mode may be unfamiliar, since it exists due to my
-prior contribution and my site is probably the only active user. As a recap,
-the idea of a "headerball" is to offer a relatively easy to produce,
-optimally efficient input format for constructing EROFS filesystems of only 
-inode metadata. A headerball is a PAX tarball, except that all 512-byte
-blocks containing regular file data are not present.
-
-For convenience, a small example "headerball" can be downloaded from
-https://gist.github.com/mbaynton/bae60bf1044d83985956c6dc5b199cc3
-
-This produces a 67-inode EROFS image with this patch, and as I recall
-about 3 inodes without it.
-
-This also changes the behavior of ddtaridx format, which sounds like a
-similar use case but the user is Alibaba. It _looks_ like this format
-would also be affected, but without sample input I can't confirm.
-
- lib/tar.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/lib/tar.c b/lib/tar.c
-index b32abd4..726e565 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -808,8 +808,7 @@ out_eot:
- 	}
- 
- 	dataoff = tar->offset;
--	if (!(tar->headeronly_mode || tar->ddtaridx_mode))
--		tar->offset += st.st_size;
-+	tar->offset += st.st_size;
- 	switch(th->typeflag) {
- 	case '0':
- 	case '7':
-@@ -1022,8 +1021,10 @@ new_inode:
- 			memcpy(inode->i_link, eh.link, inode->i_size + 1);
- 		} else if (inode->i_size) {
- 			if (tar->headeronly_mode) {
-+				tar->offset -= st.st_size; // assumed wrong earlier
- 				ret = erofs_write_zero_inode(inode);
- 			} else if (tar->ddtaridx_mode) {
-+				tar->offset -= st.st_size; // assumed wrong earlier
- 				dataoff = le64_to_cpu(*(__le64 *)(th->devmajor));
- 				if (tar->rvsp_mode) {
- 					inode->datasource = EROFS_INODE_DATA_SOURCE_RESVSP;
--- 
-2.34.1
-
+T24gMjAyNC8xMC8yNSAwOjQ4LCBTYW5kZWVwIERoYXZhbGUgd3JvdGU6DQo+IA0KPiBIaSBKaWFu
+YW4sDQo+IA0KPiBPbiBUaHUsIE9jdCAyNCwgMjAyNCBhdCAyOjQ54oCvQU0gSmlhbmFuIEh1YW5n
+IHZpYSBMaW51eC1lcm9mcw0KPiA8bGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZz4gd3JvdGU6
+DQo+Pg0KPj4gVGhlIGRlZmF1bHQgcHRocmVhZCBzdGFjayBzaXplIG9mIGJpb25pYyBpcyAxTS4g
+VXNlIG1hbGxvYyB0byBhdm9pZA0KPj4gc3RhY2sgb3ZlcmZsb3cuDQo+Pg0KPj4gU2lnbmVkLW9m
+Zi1ieTogSmlhbmFuIEh1YW5nIDxodWFuZ2ppYW5hbkB4aWFvbWkuY29tPg0KPj4gLS0tDQo+PiAg
+IGxpYi9jb21wcmVzcy5jIHwgMzEgKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLQ0KPj4g
+ICAxIGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+Pg0K
+Pj4gZGlmZiAtLWdpdCBhL2xpYi9jb21wcmVzcy5jIGIvbGliL2NvbXByZXNzLmMNCj4+IGluZGV4
+IGNiZDQ2MjAuLjQ3YmE2NjIgMTAwNjQ0DQo+PiAtLS0gYS9saWIvY29tcHJlc3MuYw0KPj4gKysr
+IGIvbGliL2NvbXByZXNzLmMNCj4+IEBAIC00NTEsMzEgKzQ1MSwzNyBAQCBzdGF0aWMgaW50IHpf
+ZXJvZnNfZmlsbF9pbmxpbmVfZGF0YShzdHJ1Y3QgZXJvZnNfaW5vZGUgKmlub2RlLCB2b2lkICpk
+YXRhLA0KPj4gICAgICAgICAgcmV0dXJuIGxlbjsNCj4+ICAgfQ0KPj4NCj4+IC1zdGF0aWMgdm9p
+ZCB0cnlyZWNvbXByZXNzX3RyYWlsaW5nKHN0cnVjdCB6X2Vyb2ZzX2NvbXByZXNzX3NjdHggKmN0
+eCwNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGVyb2ZzX2Nv
+bXByZXNzICplYywNCj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdm9pZCAq
+aW4sIHVuc2lnbmVkIGludCAqaW5zaXplLA0KPj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB2b2lkICpvdXQsIHVuc2lnbmVkIGludCAqY29tcHJlc3NlZHNpemUpDQo+PiArc3Rh
+dGljIGludCB0cnlyZWNvbXByZXNzX3RyYWlsaW5nKHN0cnVjdCB6X2Vyb2ZzX2NvbXByZXNzX3Nj
+dHggKmN0eCwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZXJv
+ZnNfY29tcHJlc3MgKmVjLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZv
+aWQgKmluLCB1bnNpZ25lZCBpbnQgKmluc2l6ZSwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB2b2lkICpvdXQsIHVuc2lnbmVkIGludCAqY29tcHJlc3NlZHNpemUpDQo+PiAg
+IHsNCj4+ICAgICAgICAgIHN0cnVjdCBlcm9mc19zYl9pbmZvICpzYmkgPSBjdHgtPmljdHgtPmlu
+b2RlLT5zYmk7DQo+PiAtICAgICAgIGNoYXIgdG1wW1pfRVJPRlNfUENMVVNURVJfTUFYX1NJWkVd
+Ow0KPj4gKyAgICAgICBjaGFyICp0bXA7DQo+PiAgICAgICAgICB1bnNpZ25lZCBpbnQgY291bnQ7
+DQo+PiAgICAgICAgICBpbnQgcmV0ID0gKmNvbXByZXNzZWRzaXplOw0KPj4NCj4+ICsgICAgICAg
+dG1wID0gbWFsbG9jKFpfRVJPRlNfUENMVVNURVJfTUFYX1NJWkUpOw0KPj4gKyAgICAgICBpZiAo
+IXRtcCkNCj4+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT01FTTsNCj4+ICsNCj4+ICAgICAg
+ICAgIC8qIG5vIG5lZWQgdG8gcmVjb21wcmVzcyAqLw0KPj4gICAgICAgICAgaWYgKCEocmV0ICYg
+KGVyb2ZzX2Jsa3NpeihzYmkpIC0gMSkpKQ0KPj4gLSAgICAgICAgICAgICAgIHJldHVybjsNCj4+
+ICsgICAgICAgICAgICAgICByZXR1cm4gMDsNCj4+DQo+IFlvdSBjYW4gbW92ZSBhbGxvY2F0aW9u
+IGhlcmUgaW5zdGVhZCBvZiBhdCB0aGUgdG9wIHRvIGF2b2lkIG1hbGxvYw0KPiBjb3N0IGlmIHdl
+IGRvIG5vdCBuZWVkIHRoZSB0bXAuDQo+IA0KPiBBbHNvIG5lZWQgdG8gZnJlZSB0bXAgb24gYWxs
+IHRoZSBleGl0IHBhdGhzLg0KDQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3LCBJIHdpbGwgc2VuZCBv
+dXQgdjIgdG8gZml4IHRoZXNlIGlzc3Vlcy4NCg0KVGhhbmtzLA0KSmlhbmFuLg0KDQo+IA0KPiBU
+aGFua3MsDQo+IFNhbmRlZXAuDQo+IA0KPj4gICAgICAgICAgY291bnQgPSAqaW5zaXplOw0KPj4g
+ICAgICAgICAgcmV0ID0gZXJvZnNfY29tcHJlc3NfZGVzdHNpemUoZWMsIGluLCAmY291bnQsICh2
+b2lkICopdG1wLA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcm91
+bmRkb3duKHJldCwgZXJvZnNfYmxrc2l6KHNiaSkpKTsNCj4+ICAgICAgICAgIGlmIChyZXQgPD0g
+MCB8fCByZXQgKyAoKmluc2l6ZSAtIGNvdW50KSA+PQ0KPj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgIHJvdW5kdXAoKmNvbXByZXNzZWRzaXplLCBlcm9mc19ibGtzaXooc2JpKSkpDQo+PiAtICAg
+ICAgICAgICAgICAgcmV0dXJuOw0KPj4gKyAgICAgICAgICAgICAgIHJldHVybiAwOw0KPj4NCj4+
+ICAgICAgICAgIC8qIHJlcGxhY2UgdGhlIG9yaWdpbmFsIGNvbXByZXNzZWQgZGF0YSBpZiBhbnkg
+Z2FpbiAqLw0KPj4gICAgICAgICAgbWVtY3B5KG91dCwgdG1wLCByZXQpOw0KPj4gICAgICAgICAg
+Kmluc2l6ZSA9IGNvdW50Ow0KPj4gICAgICAgICAgKmNvbXByZXNzZWRzaXplID0gcmV0Ow0KPj4g
+Kw0KPj4gKyAgICAgICByZXR1cm4gMDsNCj4+ICAgfQ0KPj4NCj4+ICAgc3RhdGljIGJvb2wgel9l
+cm9mc19maXh1cF9kZWR1cGVkX2ZyYWdtZW50KHN0cnVjdCB6X2Vyb2ZzX2NvbXByZXNzX3NjdHgg
+KmN0eCwNCj4+IEBAIC02MzEsOSArNjM3LDE0IEBAIGZyYWdfcGFja2luZzoNCj4+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICBnb3RvIGZpeF9kZWR1cGVkZnJhZzsNCj4+ICAgICAgICAgICAgICAg
+ICAgfQ0KPj4NCj4+IC0gICAgICAgICAgICAgICBpZiAobWF5X2lubGluZSAmJiBsZW4gPT0gZS0+
+bGVuZ3RoKQ0KPj4gLSAgICAgICAgICAgICAgICAgICAgICAgdHJ5cmVjb21wcmVzc190cmFpbGlu
+ZyhjdHgsIGgsIGN0eC0+cXVldWUgKyBjdHgtPmhlYWQsDQo+PiAtICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgJmUtPmxlbmd0aCwgZHN0LCAmY29tcHJlc3NlZHNpemUpOw0K
+Pj4gKyAgICAgICAgICAgICAgIGlmIChtYXlfaW5saW5lICYmIGxlbiA9PSBlLT5sZW5ndGgpIHsN
+Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldCA9IHRyeXJlY29tcHJlc3NfdHJhaWxpbmco
+Y3R4LCBoLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBjdHgtPnF1ZXVlICsgY3R4LT5oZWFkLA0KPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmZS0+bGVuZ3RoLCBkc3QsDQo+PiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZjb21wcmVz
+c2Vkc2l6ZSk7DQo+PiArICAgICAgICAgICAgICAgICAgICAgICBpZiAocmV0KQ0KPj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKyAgICAgICAgICAgICAg
+IH0NCj4+DQo+PiAgICAgICAgICAgICAgICAgIGUtPmNvbXByZXNzZWRibGtzID0gQkxLX1JPVU5E
+X1VQKHNiaSwgY29tcHJlc3NlZHNpemUpOw0KPj4gICAgICAgICAgICAgICAgICBEQkdfQlVHT04o
+ZS0+Y29tcHJlc3NlZGJsa3MgKiBibGtzeiA+PSBlLT5sZW5ndGgpOw0KPj4gLS0NCj4+IDIuNDMu
+MA0KPj4NCg0K
