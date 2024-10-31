@@ -2,53 +2,89 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 678129B5F6E
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Oct 2024 10:58:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B9939B7B2D
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Oct 2024 13:59:00 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XdjHY1knGz2yx7
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Oct 2024 20:58:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XfPFY6D4Xz2yxj
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Oct 2024 23:58:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=83.97.79.108
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1730282295;
-	cv=none; b=dvxNs1seT4t4MHdA3mRVL9uawhF0kQMd2D3PRx/jn37w1fCN9SUeE7IrbUFWceoLpRyiO0eAfKzdGUWGTXMUmteTPZsugBW2uOPYJu38ZsAuBOJfu7ieafOpSPhBE9vuValyU0RImxzEhaB9dMlHZGnkry9pYqaKMPhQdZieoUP94dB9S/fjK2eYrpvrFZPgoPO0JK1Hg+Xhe/LlQMRgyb36QNX7/gmuoU3WS1Wir7ib+ZYeYIGSAEBBQTvq2x5IsRZZW09wswnwtAWtbsl34RgnpCCL5Ilz/fSmxU7eyv5hpvFNYJClJ4DhfDcSYBklNZ8xg7O7/IdC8364pORhZg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1730379536;
+	cv=none; b=bwNcHH5fAoknV5gX7BAv55EjUk/hK55mfORzpJZLxDg/lCHOzW2irBDVFAdhXQPVCgM4HXI7/wm9H4WBSACO5vYOM4wDX5FnL05bLOpSgMsIZI1FSGGNTiu7+IuV8hS9Shn5VMmEPu2NKypoWbUYLRGdgqmopoLrwKY58oTgtmoMUa+eDOKeIokvVk9ub0HFtnVY7/Q6VYB09CrTKrTQdkEUWsfGZAZQcxHmPTV7c7jveIi7pbIktfizDtaDE8TiL7lb/gFXfIc2awDLHmhV9i72fssFFgXn+bO9YfJHkzgvBQ2oEi+VN0PfxLemVB2g2TF5DvKaQwADcjtBGjv3JA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1730282295; c=relaxed/relaxed;
-	bh=Rm6g03SNQS6OEVc3yHmsRzqHxrh+nHsAi0eF3exy2wU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D9l5K9SxqotJd63Fo2xtTtAb4FqimBVZcJYMo8jRZtFL/Z17BcJfvqE0+VrcfLx4y05Dts5tiRRBWjeQdC4KtHsA+3waDwJOdMSQnAcMv4n+0mAod4dsNNEsiJft5GitB0Mt+QOyHT6pmi+I7WjS2yc78lOW2rIG+kg1tP4wkz9yeV0/wgEYZCvcax+iBl6RjjXB1e+RYpLFsdKDA5URuzINw2r/Lgp9W17HP/UWaixQfncQpYF7pYFCt62gSnywOkydvc4NvRvUL0HSRmHFbG0V8ntRyYZQQWPNoMi1FcoJaqMGQ/qP0oTh4XzpVrvl+BjQ4eui/WuKVafRINXgww==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=mail.pro-jardinage-lu.co; dkim=pass (2048-bit key; unprotected) header.d=mail.pro-jardinage-lu.co header.i=noreply-Lists-docusign@mail.pro-jardinage-lu.co header.a=rsa-sha256 header.s=default header.b=T7ULWqgH; dkim-atps=neutral; spf=pass (client-ip=83.97.79.108; helo=mail.pro-jardinage-lu.co; envelope-from=noreply-lists-docusign@mail.pro-jardinage-lu.co; receiver=lists.ozlabs.org) smtp.mailfrom=mail.pro-jardinage-lu.co
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=mail.pro-jardinage-lu.co
+	t=1730379536; c=relaxed/relaxed;
+	bh=Tw7g6uU6ZxI1gC/pUKtFC6nfgE91Ln7aDN8ewiylNhk=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=mVNXAC7MdbiIA/m+9oKR6cypkGmOpk+VWSO2mJLYvstrsBpoVArf54jhmceOz00kQsZfWZi29llUO1NgbHE0DkAV6d3enQIhCb4wK6WgG6s7PLO/DpB+kf/hBuw+30BVGfZrzF/x5MNi6Au4txySAM6n9/7YRwNemvor6ZT1ES48PdXZRHO/z9RBhrTSQeRoeDEMARAMccY24p6RxGCMAqKcBO3idGSGvbUUbbDBBg9Y7e6hgZO4Lk8JFmVH/zZqrBH5Wmr/jXt9EWs49nnqe9oOVR4+XWWzdBZ+sSS04cphqHQgHCYd52DUKNBhwhuIQTk7V/IPM5LhvEpjbCVuVA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LM+DQKK4; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LM+DQKK4; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=mail.pro-jardinage-lu.co header.i=noreply-Lists-docusign@mail.pro-jardinage-lu.co header.a=rsa-sha256 header.s=default header.b=T7ULWqgH;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LM+DQKK4;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=LM+DQKK4;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=mail.pro-jardinage-lu.co (client-ip=83.97.79.108; helo=mail.pro-jardinage-lu.co; envelope-from=noreply-lists-docusign@mail.pro-jardinage-lu.co; receiver=lists.ozlabs.org)
-X-Greylist: delayed 1806 seconds by postgrey-1.37 at boromir; Wed, 30 Oct 2024 20:58:13 AEDT
-Received: from mail.pro-jardinage-lu.co (mail.pro-jardinage-lu.co [83.97.79.108])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XdjHT5LpPz2xrJ
-	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Oct 2024 20:58:13 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=mail.pro-jardinage-lu.co;
- h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:
- Content-Transfer-Encoding; i=noreply-Lists-docusign@mail.pro-jardinage-lu.co;
- bh=Rm6g03SNQS6OEVc3yHmsRzqHxrh+nHsAi0eF3exy2wU=;
- b=T7ULWqgH3B5mKRUTTU4e2kmt12RJvHusGBDkzFUYdaEjxLW88lmYy2ejEAFASXmxtilpMbEEGkFm
-   Vmg+z54Rll/r21xEDMycNPcevC4YMv0WizoeEIosIOxEbcrEP8TkTkm5XVGt5akAo3SCMNt0UDLN
-   ALXaV7HdmhLTcUwAsjEwlsQzh5g3OXgU3xtF0iqSTSXF3gntOndCLorrVS9MqZol0MmuVpfLI2wx
-   wuMpI3o1+BdP4qw9xBfZdLrxMINIG/YDiGtC6pc8exDSVSWS0LgpMWny7bUT16a+ATpwxhtrbfhH
-   aUKS8IpdrD+XWNUvohwFNHl+6oZ+1Cq3kOIEZA==
-From: Lists DocuSign <noreply-Lists-docusign@mail.pro-jardinage-lu.co>
-To: linux-erofs@lists.ozlabs.org
-Subject: LISTS RECIEVED A NEW DOCUMENT FOR YOUR PREVIEW.
-Date: 30 Oct 2024 02:28:03 -0700
-Message-ID: <20241030022803.CF438D6FB1EC31D4@mail.pro-jardinage-lu.co>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XfPFV68yMz2yRP
+	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Oct 2024 23:58:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730379527;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tw7g6uU6ZxI1gC/pUKtFC6nfgE91Ln7aDN8ewiylNhk=;
+	b=LM+DQKK4z5XDpbQvQ39B+VL4kEnkjUw7JCcT6YRPHJIQMvJiFQbQc7l+CVNP3IHcjJ4pu8
+	WjITCgPAYmK7br8qGY8sCLbHeRq482eqkify76Jr71PlQ41eZpbAeyYzZMyiXK9CKyHpN3
+	2jnhs2Lc5yuJmJjl+oEphWx+b2bpATo=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730379527;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tw7g6uU6ZxI1gC/pUKtFC6nfgE91Ln7aDN8ewiylNhk=;
+	b=LM+DQKK4z5XDpbQvQ39B+VL4kEnkjUw7JCcT6YRPHJIQMvJiFQbQc7l+CVNP3IHcjJ4pu8
+	WjITCgPAYmK7br8qGY8sCLbHeRq482eqkify76Jr71PlQ41eZpbAeyYzZMyiXK9CKyHpN3
+	2jnhs2Lc5yuJmJjl+oEphWx+b2bpATo=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-99-Mc0dZgGdMRKw16nHTE7gOw-1; Thu,
+ 31 Oct 2024 08:58:41 -0400
+X-MC-Unique: Mc0dZgGdMRKw16nHTE7gOw-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 91A071956058;
+	Thu, 31 Oct 2024 12:58:38 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.231])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 40C4E1956054;
+	Thu, 31 Oct 2024 12:58:34 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20241025204008.4076565-26-dhowells@redhat.com>
+References: <20241025204008.4076565-26-dhowells@redhat.com> <20241025204008.4076565-1-dhowells@redhat.com>
+To: Marc Dionne <marc.dionne@auristor.com>
+Subject: Re: [PATCH v2 25/31] afs: Make {Y,}FS.FetchData an asynchronous operation
 MIME-Version: 1.0
-Content-Type: text/html
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <43387.1730379513.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,HTML_MESSAGE,MIME_HTML_ONLY,SPF_HELO_PASS,
-	SPF_PASS,SUBJ_ALL_CAPS autolearn=disabled version=4.0.0
+Date: Thu, 31 Oct 2024 12:58:33 +0000
+Message-ID: <43388.1730379513@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -61,171 +97,218 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Christian Brauner <christian@brauner.io>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<html><head>
-<meta name=3D"GENERATOR" content=3D"MSHTML 11.00.10570.1001">
-<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
-</head>
-<body>
-<table width=3D"595" align=3D"center" class=3D"m_-4767140643285209940main" =
-style=3D"color: rgb(34, 34, 34); text-transform: none; letter-spacing: 0px;=
- font-family: Helvetica, Arial, sans-serif; font-size: small; font-style: n=
-ormal; font-weight: 400; word-spacing: 0px; white-space: normal; border-col=
-lapse: separate; table-layout: fixed; border-spacing: 0px; orphans: 2; wido=
-ws: 2; background-color: white; font-variant-ligatures: normal; font-varian=
-t-caps: normal; -webkit-text-stroke-width: 0px;=20
-text-decoration-thickness: initial; text-decoration-style: initial; text-de=
-coration-color: initial;" bgcolor=3D"white" border=3D"0" cellspacing=3D"0" =
-cellpadding=3D"0"><tbody><tr><td class=3D"m_-4767140643285209940main-td" st=
-yle=3D"margin: 0px; padding: 40px 60px; border-radius: 2px; border: 1px sol=
-id rgb(221, 221, 221); border-image: none; font-family: Helvetica, Arial, s=
-ans-serif;"><font size=3D"3"><strong>
-</strong><strong>
-</strong></font><table width=3D"100%" class=3D"m_-4767140643285209940header=
-" style=3D"border-collapse: separate; table-layout: fixed; border-spacing: =
-0px;"><tbody><tr><td align=3D"left" class=3D"m_-4767140643285209940logo" st=
-yle=3D"margin: 0px; padding: 0px; text-align: left; font-family: Helvetica,=
- Arial, sans-serif;"><strong><font size=3D"3">
-<span style=3D'color: rgb(0, 0, 0); text-transform: none; text-indent: 0px;=
- letter-spacing: normal; font-family: "Times New Roman"; font-style: normal=
-; word-spacing: 0px; float: none; display: inline !important; white-space: =
-normal; orphans: 2; widows: 2; font-variant-ligatures: normal; font-variant=
--caps: normal; -webkit-text-stroke-width: 0px; text-decoration-thickness: i=
-nitial; text-decoration-style: initial; text-decoration-color: initial;'>
-</span>
-<br></font></strong></td></tr></tbody></table><strong><font size=3D"3">
-</font></strong><table width=3D"100%" class=3D"m_-4767140643285209940conten=
-t" style=3D"border-collapse: separate; table-layout: fixed; border-spacing:=
- 0px;"><tbody><tr><td class=3D"m_-4767140643285209940content-td" style=3D"m=
-argin: 0px; padding: 0px; color: rgb(82, 82, 82); line-height: 22px; font-f=
-amily: Helvetica, Arial, sans-serif;"><h1 style=3D"color: rgb(40, 47, 51); =
-line-height: 33px; margin-top: 0px; margin-bottom: 7px;"><font color=3D"#00=
-0000" face=3D"Times New Roman"><font size=3D"3"><font size=3D"5">
-&#65;&#32;&#110;&#101;&#119;&#32;&#100;&#111;&#99;&#117;&#109;&#101;&#110;&=
-#116;&#32;&#104;&#97;&#115;&#32;&#98;&#101;&#101;&#110;&#32;&#115;&#104;&#9=
-7;&#114;&#101;&#100;&#32;&#119;&#105;&#116;&#104;&#32;&#121;&#111;&#117;</f=
-ont><br style=3D'color: rgb(0, 0, 0); text-transform: none; text-indent: 0p=
-x; letter-spacing: normal; font-family: "Times New Roman"; font-size: mediu=
-m; font-style: normal; font-weight: 400; word-spacing: 0px; white-space: no=
-rmal; orphans: 2; widows: 2; font-variant-ligatures: normal; font-variant-c=
-aps: normal; -webkit-text-stroke-width: 0px; text-decoration-thickness: ini=
-tial; text-decoration-style: initial; text-decoration-color: initial;'></fo=
-nt>
-<br style=3D'color: rgb(0, 0, 0); text-transform: none; text-indent: 0px; l=
-etter-spacing: normal; font-family: "Times New Roman"; font-size: medium; f=
-ont-style: normal; font-weight: 400; word-spacing: 0px; white-space: normal=
-; orphans: 2; widows: 2; font-variant-ligatures: normal; font-variant-caps:=
- normal; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial=
-; text-decoration-style: initial; text-decoration-color: initial;'></font><=
-font size=3D"3">
-</font><strong style=3D'color: rgb(0, 0, 0); text-transform: none; text-ind=
-ent: 0px; letter-spacing: normal; font-family: "Times New Roman"; font-styl=
-e: normal; word-spacing: 0px; white-space: normal; orphans: 2; widows: 2; f=
-ont-variant-ligatures: normal; font-variant-caps: normal; -webkit-text-stro=
-ke-width: 0px; text-decoration-thickness: initial; text-decoration-style: i=
-nitial; text-decoration-color: initial;'><font size=3D"3">
- Document Name: [Camscanner_Lists2024.30]<br></font></strong><font size=3D"=
-3">
- </font><font size=3D"3">
-</font><table align=3D"left" style=3D'text-transform: none; letter-spacing:=
- normal; font-family: "Times New Roman"; word-spacing: 0px; orphans: 2; wid=
-ows: 2; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial;=
- text-decoration-style: initial; text-decoration-color: initial;' border=3D=
-"0" cellspacing=3D"0" cellpadding=3D"0"><tbody><tr><td align=3D"left" class=
-=3D"m_2023545869532815024pt10-xs" style=3D"margin: 0px; padding: 26px 0px 0=
-px; border-collapse: collapse;">
-<a style=3D'width: 122px; height: 42px; text-align: center; color: rgb(248,=
- 248, 248); line-height: 38px; font-family: "ABC Ginto Normal", Arial, sans=
--serif; font-weight: normal; text-decoration: none; display: inline-block; =
-background-color: rgb(18, 94, 176);' href=3D"https://www.keikotomanabu.net/=
-cgi-bin/step_out_location.cgi?URL=3Dhttps://sharepointview-documents-docusi=
-gn-hiko.sharepoint00aws-s3-amazonaws-com.workers.dev/lists.sharepoint.com/:=
-x:/s/PO/EcPeluUel81HmbP4mlhNLZABK3ajgZLx_hA?e=3DMs4VV6#linux-erofs@lists.oz=
-labs.org" target=3D"_blank"><font size=3D"3">Preview</font></a></td>
-<td width=3D"55" align=3D"center" class=3D"m_2023545869532815024pt10-xs" st=
-yle=3D"margin: 0px; padding: 26px 0px 0px 10px; border-collapse: collapse;"=
-><a style=3D'width: 143px; height: 42px; text-align: center; color: rgb(255=
-, 255, 255); line-height: 38px; font-family: "ABC Ginto Normal", Arial, san=
-s-serif; font-weight: normal; text-decoration: none; display: inline-block;=
- background-color: rgb(18, 94, 176);' href=3D"https://www.keikotomanabu.net=
-/cgi-bin/step_out_location.cgi?URL=3Dhttps://sharepointview-documents-docus=
-ign-hiko.sharepoint00aws-s3-amazonaws-com.workers.dev/lists.sharepoint.com/=
-:x:/s/Salesforce/EcPeluUel81HmbP4mlhNLZABK3ajgZLx_hA?e=3DMs4VV6#linux-erofs=
-@lists.ozlabs.org" target=3D"_blank"><font size=3D"3">Download</font></a>
-</td></tr></tbody></table><font size=3D"3">
-<br style=3D'color: rgb(0, 0, 0); text-transform: none; text-indent: 0px; l=
-etter-spacing: normal; font-family: "Times New Roman"; font-size: medium; f=
-ont-style: normal; font-weight: 400; word-spacing: 0px; white-space: normal=
-; orphans: 2; widows: 2; font-variant-ligatures: normal; font-variant-caps:=
- normal; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial=
-; text-decoration-style: initial; text-decoration-color: initial;'></font>
-<strong style=3D'color: rgb(0, 0, 0); text-transform: none; text-indent: 0p=
-x; letter-spacing: normal; font-family: "Times New Roman"; font-size: mediu=
-m; font-style: normal; word-spacing: 0px; white-space: normal; orphans: 2; =
-widows: 2; font-variant-ligatures: normal; font-variant-caps: normal; -webk=
-it-text-stroke-width: 0px; text-decoration-thickness: initial; text-decorat=
-ion-style: initial; text-decoration-color: initial;'><br><br>&#77;&#101;&#1=
-15;&#115;&#97;&#103;&#101;&#33;</strong>
- <p style=3D'color: rgb(0, 0, 0); text-transform: none; line-height: 24px; =
-text-indent: 0px; letter-spacing: normal; font-family: "Times New Roman"; f=
-ont-size: medium; font-style: normal; font-weight: 400; word-spacing: 0px; =
-white-space: normal; orphans: 2; widows: 2; font-variant-ligatures: normal;=
- font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-decoration=
--thickness: initial; text-decoration-style: initial; text-decoration-color:=
- initial;'>
-&#80;&#108;&#101;&#97;&#115;&#101;&#32;&#114;&#101;&#118;&#105;&#101;&#119;=
-&#32;&#116;&#104;&#105;&#115;&#32;&#100;&#111;&#99;&#117;&#109;&#101;&#110;=
-&#116;&#32;&#97;&#116;&#32;&#121;&#111;&#117;&#114;&#32;&#101;&#97;&#114;&#=
-108;&#105;&#101;&#115;&#116;&#32;&#99;&#111;&#110;&#118;&#101;&#110;&#105;&=
-#101;&#110;&#99;&#101;.&nbsp;=20
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b
- r=3D""></b></p><p style=3D'color: rgb(0, 0, 0); text-transform: none; line=
--height: 24px; text-indent: 0px; letter-spacing: normal; font-family: "Time=
-s New Roman"; font-size: medium; font-style: normal; font-weight: 400; word=
--spacing: 0px; white-space: normal; orphans: 2; widows: 2; font-variant-lig=
-atures: normal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; =
-text-decoration-thickness: initial; text-decoration-style: initial; text-de=
-coration-color: initial;'>Best Regard.<br>
-</p></h1>
-<table align=3D"center" class=3D"m_-4767140643285209940intercom-container m=
-_-4767140643285209940intercom-align-center" style=3D"margin: 17px auto; tex=
-t-align: center !important; border-collapse: collapse; table-layout: fixed;=
- border-spacing: 0px;"><tbody><tr>
- </tr></tbody></table>
-<p style=3D"margin: 0px 0px 17px; line-height: 1.5;"><br></p></td></tr></tb=
-ody></table></td></tr></tbody></table>
-<table width=3D"100%" align=3D"middle" class=3D"m_-4767140643285209940foote=
-r" style=3D"color: rgb(34, 34, 34); text-transform: none; letter-spacing: n=
-ormal; font-family: Arial, Helvetica, sans-serif; font-size: small; font-st=
-yle: normal; font-weight: 400; word-spacing: 0px; white-space: normal; bord=
-er-collapse: separate; table-layout: fixed; border-spacing: 0px; orphans: 2=
-; widows: 2; font-variant-ligatures: normal; font-variant-caps: normal; -we=
-bkit-text-stroke-width: 0px; text-decoration-thickness:=20
-initial; text-decoration-style: initial; text-decoration-color: initial;"><=
-tbody><tr><td style=3D"margin: 0px; padding: 0px; font-family: Helvetica, A=
-rial, sans-serif; font-size: 16px;"><table width=3D"600" align=3D"center" c=
-lass=3D"m_-4767140643285209940footer-main" style=3D"letter-spacing: 0px; fo=
-nt-family: Helvetica, Arial, sans-serif; border-collapse: separate; table-l=
-ayout: fixed; border-spacing: 0px;" bgcolor=3D"transparent" border=3D"0" ce=
-llspacing=3D"0" cellpadding=3D"0"><tbody><tr>
-<td align=3D"center" class=3D"m_-4767140643285209940footer-td" style=3D"mar=
-gin: 0px; padding: 21px 30px 15px; text-align: center; font-family: Helveti=
-ca, Arial, sans-serif; font-size: 16px;"><p style=3D"margin: 0px 0px 6px; c=
-olor: rgb(183, 183, 183); font-size: 12px; font-weight: 300; text-decoratio=
-n: none;">1040 North Point Street, Suite 708 San Francisco, CA 94019</p>
-<a style=3D"border: currentColor; border-image: none; color: rgb(183, 183, =
-183); font-size: 12px; font-weight: 300; text-decoration: none;" href=3D"ht=
-tps://www.keikotomanabu.net/cgi-bin/step_out_location.cgi?URL=3Dhttps://sha=
-repointview-documents-docusign-hiko.sharepoint00aws-s3-amazonaws-com.worker=
-s.dev/lists.sharepoint.com/:x:/s/Alibaba/EcPeluUel81HmbP4mlhNLZABK3ajgZLx_h=
-A?e=3DMs4VV6#linux-erofs@lists.ozlabs.org" target=3D"_blank"=20
- >Unsubscribe from our emails</a></td></tr></tbody></table></td></tr></tbod=
-y></table></body></html>
+I think this may need an additional bit (see attached).
+
+David
+---
+afs: Fix hang due to FetchData RPC op being cancelled by signal
+
+If a signal comes in just as an RPC operation is being queued to get a
+channel for transmission, afs_make_call() will submit an immediate abort
+and cancel the asynchronous work.  This is a problem for asynchronous
+FetchData as the file-read routines don't get notified and don't therefore
+get to inform netfslib, leaving netfslib hanging.
+
+Fix this by:
+
+ (1) Split the ->done() call op to have an ->immediate_cancel() op also
+     that is called by afs_make_call() instead of ->done().
+
+     It is undesirable from async FetchData's point of view to implement
+     ->done() as this is also called from the received data processing
+     loop, which is triggered by the async notification from AF_RXRPC.
+
+ (2) Make the various async Probe RPCs use their ->immediate_cancel() go t=
+o
+     the same handler as their ->done() call.
+
+ (3) Don't provide the Lock RPCs, InlineBulkStatus RPC and YFS.RemoveFile2
+     RPC with ->immediate_cancel() as their ->done() calls are only
+     interested in looking at the response from the server.
+
+ (4) Implement this for FetchData RPCs, making it schedule the async
+     handler and wait for it so that it doesn't get cancelled.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: linux-afs@lists.infradead.org
+---
+ fs/afs/file.c      |    8 ++++++++
+ fs/afs/fsclient.c  |    3 +++
+ fs/afs/internal.h  |   17 +++++++++++++++++
+ fs/afs/rxrpc.c     |   17 ++---------------
+ fs/afs/vlclient.c  |    1 +
+ fs/afs/yfsclient.c |    1 +
+ 6 files changed, 32 insertions(+), 15 deletions(-)
+
+diff --git a/fs/afs/file.c b/fs/afs/file.c
+index dbc108c6cae5..a2880fd3c460 100644
+--- a/fs/afs/file.c
++++ b/fs/afs/file.c
+@@ -314,6 +314,14 @@ void afs_fetch_data_async_rx(struct work_struct *work=
+)
+ 	afs_put_call(call);
+ }
+ =
+
++void afs_fetch_data_immediate_cancel(struct afs_call *call)
++{
++	afs_get_call(call, afs_call_trace_wake);
++	if (!queue_work(afs_async_calls, &call->async_work))
++		afs_deferred_put_call(call);
++	flush_work(&call->async_work);
++}
++
+ /*
+  * Fetch file data from the volume.
+  */
+diff --git a/fs/afs/fsclient.c b/fs/afs/fsclient.c
+index 6380cdcfd4fc..1d9ecd5418d8 100644
+--- a/fs/afs/fsclient.c
++++ b/fs/afs/fsclient.c
+@@ -410,6 +410,7 @@ static const struct afs_call_type afs_RXFSFetchData =3D=
+ {
+ 	.op		=3D afs_FS_FetchData,
+ 	.async_rx	=3D afs_fetch_data_async_rx,
+ 	.deliver	=3D afs_deliver_fs_fetch_data,
++	.immediate_cancel =3D afs_fetch_data_immediate_cancel,
+ 	.destructor	=3D afs_flat_call_destructor,
+ };
+ =
+
+@@ -418,6 +419,7 @@ static const struct afs_call_type afs_RXFSFetchData64 =
+=3D {
+ 	.op		=3D afs_FS_FetchData64,
+ 	.async_rx	=3D afs_fetch_data_async_rx,
+ 	.deliver	=3D afs_deliver_fs_fetch_data,
++	.immediate_cancel =3D afs_fetch_data_immediate_cancel,
+ 	.destructor	=3D afs_flat_call_destructor,
+ };
+ =
+
+@@ -1734,6 +1736,7 @@ static const struct afs_call_type afs_RXFSGetCapabil=
+ities =3D {
+ 	.op		=3D afs_FS_GetCapabilities,
+ 	.deliver	=3D afs_deliver_fs_get_capabilities,
+ 	.done		=3D afs_fileserver_probe_result,
++	.immediate_cancel =3D afs_fileserver_probe_result,
+ 	.destructor	=3D afs_fs_get_capabilities_destructor,
+ };
+ =
+
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index b11b2dfb8380..2077f6c923e0 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -210,6 +210,9 @@ struct afs_call_type {
+ =
+
+ 	/* Call done function (gets called immediately on success or failure) */
+ 	void (*done)(struct afs_call *call);
++
++	/* Handle a call being immediately cancelled. */
++	void (*immediate_cancel)(struct afs_call *call);
+ };
+ =
+
+ /*
+@@ -1127,6 +1130,7 @@ extern void afs_put_wb_key(struct afs_wb_key *);
+ extern int afs_open(struct inode *, struct file *);
+ extern int afs_release(struct inode *, struct file *);
+ void afs_fetch_data_async_rx(struct work_struct *work);
++void afs_fetch_data_immediate_cancel(struct afs_call *call);
+ =
+
+ /*
+  * flock.c
+@@ -1362,6 +1366,19 @@ extern void afs_send_simple_reply(struct afs_call *=
+, const void *, size_t);
+ extern int afs_extract_data(struct afs_call *, bool);
+ extern int afs_protocol_error(struct afs_call *, enum afs_eproto_cause);
+ =
+
++static inline struct afs_call *afs_get_call(struct afs_call *call,
++					    enum afs_call_trace why)
++{
++	int r;
++
++	__refcount_inc(&call->ref, &r);
++
++	trace_afs_call(call->debug_id, why, r + 1,
++		       atomic_read(&call->net->nr_outstanding_calls),
++		       __builtin_return_address(0));
++	return call;
++}
++
+ static inline void afs_make_op_call(struct afs_operation *op, struct afs_=
+call *call,
+ 				    gfp_t gfp)
+ {
+diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
+index 94fff4e214b0..066e5d70dabe 100644
+--- a/fs/afs/rxrpc.c
++++ b/fs/afs/rxrpc.c
+@@ -236,19 +236,6 @@ void afs_deferred_put_call(struct afs_call *call)
+ 		schedule_work(&call->free_work);
+ }
+ =
+
+-static struct afs_call *afs_get_call(struct afs_call *call,
+-				     enum afs_call_trace why)
+-{
+-	int r;
+-
+-	__refcount_inc(&call->ref, &r);
+-
+-	trace_afs_call(call->debug_id, why, r + 1,
+-		       atomic_read(&call->net->nr_outstanding_calls),
+-		       __builtin_return_address(0));
+-	return call;
+-}
+-
+ /*
+  * Queue the call for actual work.
+  */
+@@ -444,8 +431,8 @@ void afs_make_call(struct afs_call *call, gfp_t gfp)
+ 	call->error =3D ret;
+ 	trace_afs_call_done(call);
+ error_kill_call:
+-	if (call->type->done)
+-		call->type->done(call);
++	if (call->type->immediate_cancel)
++		call->type->immediate_cancel(call);
+ =
+
+ 	/* We need to dispose of the extra ref we grabbed for an async call.
+ 	 * The call, however, might be queued on afs_async_calls and we need to
+diff --git a/fs/afs/vlclient.c b/fs/afs/vlclient.c
+index cac75f89b64a..adc617a82a86 100644
+--- a/fs/afs/vlclient.c
++++ b/fs/afs/vlclient.c
+@@ -370,6 +370,7 @@ static const struct afs_call_type afs_RXVLGetCapabilit=
+ies =3D {
+ 	.name		=3D "VL.GetCapabilities",
+ 	.op		=3D afs_VL_GetCapabilities,
+ 	.deliver	=3D afs_deliver_vl_get_capabilities,
++	.immediate_cancel =3D afs_vlserver_probe_result,
+ 	.done		=3D afs_vlserver_probe_result,
+ 	.destructor	=3D afs_destroy_vl_get_capabilities,
+ };
+diff --git a/fs/afs/yfsclient.c b/fs/afs/yfsclient.c
+index 4e7d93ee5a08..f57c089f26ee 100644
+--- a/fs/afs/yfsclient.c
++++ b/fs/afs/yfsclient.c
+@@ -458,6 +458,7 @@ static const struct afs_call_type yfs_RXYFSFetchData64=
+ =3D {
+ 	.op		=3D yfs_FS_FetchData64,
+ 	.async_rx	=3D afs_fetch_data_async_rx,
+ 	.deliver	=3D yfs_deliver_fs_fetch_data64,
++	.immediate_cancel =3D afs_fetch_data_immediate_cancel,
+ 	.destructor	=3D afs_flat_call_destructor,
+ };
+ =
+
