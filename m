@@ -1,153 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4ECC99B911C
-	for <lists+linux-erofs@lfdr.de>; Fri,  1 Nov 2024 13:26:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1730464009;
-	bh=6fj/Tt8Mh3R5X8jsO26m/jAV8kSDrOhsc8WjA+p6VIs=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=jRv3wsRZ2ab83kHIjOlWLV3xJH51uzWNB1RpaPC3a4rXVzsMoau/u0/5IbwVxMCEs
-	 c+ayHFDNd5NT3NyqEjpWYYFrxxX+sbrBpG4YC3ors1OYU64ynm8q8oiTs3BwlVWbbQ
-	 2ho3hv1Y+/7KC8fw+/XQC3rIg0brqxoSxhgl2uMhmrHAhpokeZaoE+1XCyKutsCCXC
-	 DsNsa5Hw1NM0kQctzHpQn5jPHDPtlBGOEcSObqzmYaAGA9lu+lU3yad/z23n0lir5O
-	 6SpPmYLvvH5GRMz2l+tYDGjB0EfuPW8nmhLVUiRV+W2DrXuYA4qErLuzcGD5vWS21A
-	 Nmtkgjl+qCeSA==
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8C0C19BA118
+	for <lists+linux-erofs@lfdr.de>; Sat,  2 Nov 2024 16:21:29 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Xg0V16K4Hz30f4
-	for <lists+linux-erofs@lfdr.de>; Fri,  1 Nov 2024 23:26:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XghK33Jvxz2yxN
+	for <lists+linux-erofs@lfdr.de>; Sun,  3 Nov 2024 02:21:27 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:200e::62f" arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1730464008;
-	cv=pass; b=VCkeXF03d36eaxbk2uhA4USQkFQepgB8xBeU8I4lhf2LmQXwc6A+8bxkjiGqds3XD/xJWecO3pY4I4Uou5sCZ8bzqSqRkbd+RFUNvJGpRrlRoKI+g3xOPYF6SgWZs/UnHLqCnAq1FXYN6rFFbrJpFXv+FmVxryDT7znmbZbGviv77VUVGSnQTEjeIyZTbEsh1yZi1Y7kcyaOfeZwZyS0aI4mi2+10QtTATkOX1oEjTCG+BjqIKXTbn8AeeX/rd4zCEO1+5yvPIpkTMyyXCnaeTzUld3S0yafEBg1l/kZmDOnpVG0Uc9nECFZiM9jTNXhIJNtyLz5jra9oSOfH7CY9A==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1730464008; c=relaxed/relaxed;
-	bh=6fj/Tt8Mh3R5X8jsO26m/jAV8kSDrOhsc8WjA+p6VIs=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=lQPhqRxXhpD6xM7H69J82l70jbBWD4eSTc4RVgSnmu1dFai4cYYFbEbV8WkkXQ6FBuP/lwBNjhY73bqjj0dYNLYtiJcfcnYXM6wEH9SxfY131rMo5brPHJyS8YCCO2WMYvv1MCPbTMLcCFE1NdutoUcpO/GKqUXLUf2gI4mWrIQmHHDb+ntkOqqleRs7D8kHS7E5MTfx+Fx8qZ29XcfT3Q3d6bJnSIXpizcJztOdkoCgpDPlXwQrnFNivSnMSZwOwHB0ALDB2fd7/S2h6MUQa8LFq0jj9b9YsCnq8Te2YQl1DQrRab9etrhvALu5YzELZUQpKNhG97m7GJiNSuqhHQ==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=KoK/s2aX; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:200e::62f; helo=apc01-psa-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org) smtp.mailfrom=vivo.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=KoK/s2aX;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f403:200e::62f; helo=apc01-psa-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org)
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2062f.outbound.protection.outlook.com [IPv6:2a01:111:f403:200e::62f])
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.166.197
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1730560885;
+	cv=none; b=GZHEwB4RrRvP5awl+hrRpkzSQrXHCx/WZp/lOBC5xI/nsUny2+rSwjwbgQj6P+CcxP+dxk4DtgEXRiDyohMQcyEAM9dS44GaKu5Q6cRQXFOSIiCNCu49stF90YOe9BqQ58s+3Crz/lEOj83dfQvFC+PqPAKe96g8zQk35XfXSzzJrLALz0xp5PPRAtoKBbXuOdG+kXCTer8Wh+Vdc83dGr3weBfoq1fA/ZRUGvFQIQ6xsElJGj5u0dhD32Je5AY/lpNG8cs/oUgUecX9zVnrZ18KmUWnkI8xWlLRFngbS11zO4da2GZvkIJVJ9qiz4tz7q0RqZ8Np2hJTez7sdz0IA==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1730560885; c=relaxed/relaxed;
+	bh=1mS1EZv8tKnHllK5w7UYrymDgh7QiAcoeNCY5a8WVYQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bX5WBucRx1kL4QLkqkPwT/byDhx2rra0wYszKh1IVd5wZl6RSGSM0O2D3t23Lqg7lT5AJKMQLMaKZljZnZZbAOSfBJXZDPUyN6jDS9sXfnlCXWXW5NLeUBmksVkBcWxy9zB4mo//bVpJ2UwT+TqRhMvQA1UhFDigsaoxIZVsYlNcfD2ippY7i086PRihOXmXemCRgACgYNABJKPoojkgNxjBDMZfEXA11Qrtdrtv0McfQ77gtk5x7PYdwosn15miMcPtwjB1qbDfwjS96D6T8HyvhynrQNmnVOFzDYzijikv5sQDdo8OoVcM8jth8qWGwCZbOjocuoAgzpJl2Fw5Mg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass (client-ip=209.85.166.197; helo=mail-il1-f197.google.com; envelope-from=3bummzwkbamwagh2s33w9s770v.y66y3wcaw9u65bw5b.u64@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com
+Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.197; helo=mail-il1-f197.google.com; envelope-from=3bummzwkbamwagh2s33w9s770v.y66y3wcaw9u65bw5b.u64@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Xg0Tw5HGMz2xWY
-	for <linux-erofs@lists.ozlabs.org>; Fri,  1 Nov 2024 23:26:43 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bCwbRM+D17iWxIM3raEOxCr9zIkP/gQ9MV61aO3RtgJFeL4dVL7ezJLaUQpM3z27OQ0/sJqOWsadcVUCP0Mz82szYDCtuycYQFCD3zT6X0nU3I9PCBL1TqexeUfFPAXZSaahtQIIatUg92LAJZaOJQ2wp3D7G+bUlvd+gaIS2cLTkZOQ6ZpT3DDxc54VZDdMlUoSN3ibDo273MMdYfWwf/GtFMH8oX5rAibsHjN0nQG9VDFH2VN+IfISW/pAJU7sTTXTzEYNqEY6XlyFV0HY/5wno0EsyFHi2+pMv6wIBMlhNIpWTq98DLxg18jY0+Bo/2I/ledi0WFO/3tx82OtWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6fj/Tt8Mh3R5X8jsO26m/jAV8kSDrOhsc8WjA+p6VIs=;
- b=PqK2cuUrLmtmizKNYDXBfpLfJqrG9C1g5oT9E80X/aRnYZEr8zIfJ9DFrc+dbkIhBOuqy6Kh1jirtC0pH413DdL7eHfymzw00fhRPVMHMVZlm9zcTCfrcZzEJKO1jtwRCRDecngDLDbysarJVtHhEb8sBVyXKA8r8NQ7b9HCtOWdhg5h7ZQ4sRz9rtPdDYRxqb6xzzT6Kl9Dw7ik0B8eaEYOFMjVDiOaFWWGbthhNpqvnoQdmlmFmT1DW+3PnvT5qXuIcqa/1zUs0zaWQtrtMFfZ7ICh7rhPrjLE2j8Fux9CLiMV6277D8kJQoOwUey3JohLMAOsXIzfDWSzs/wh2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6fj/Tt8Mh3R5X8jsO26m/jAV8kSDrOhsc8WjA+p6VIs=;
- b=KoK/s2aXv7/AYEfXRkU0kuU9prfx3+1shq6QjpgJKvB3hMs+RLfGK3bhG7e3qx33S0qTVdb1PGOxAx+nZ6DfGfqaw+GIrZBVKHK75+vMt5NshW0VJnq1hFMd8BH1CKZR3kYuknJClnCA0AapcQTiv6DXQRlB2bhAf8ZvxBY1dqzOJwEuc8EAu5265wyk1aZunvZ4oxj0ioxPkBTKadZaffukbNiqworY5HniLXKuXdBCuBgr9MPO96TQhqmTXuFdy2Xd96YvHxHxKs8TIxJ8bHPyqfmHcz8uvsuC81VaQMeIHBNFuddACBJap2TQObEX0ia7iaed379Nm6IkL5O1qQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TYZPR06MB7096.apcprd06.prod.outlook.com (2603:1096:405:b5::13)
- by TYUPR06MB5946.apcprd06.prod.outlook.com (2603:1096:400:347::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.10; Fri, 1 Nov
- 2024 12:26:21 +0000
-Received: from TYZPR06MB7096.apcprd06.prod.outlook.com
- ([fe80::6c3a:9f76:c4a5:c2b]) by TYZPR06MB7096.apcprd06.prod.outlook.com
- ([fe80::6c3a:9f76:c4a5:c2b%2]) with mapi id 15.20.8114.015; Fri, 1 Nov 2024
- 12:26:21 +0000
-To: xiang@kernel.org
-Subject: [PATCH] erofs: add sysfs node to control cached decompression strategy
-Date: Fri,  1 Nov 2024 06:42:41 -0600
-Message-Id: <20241101124241.3090642-1-guochunhai@vivo.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR01CA0014.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::17) To TYZPR06MB7096.apcprd06.prod.outlook.com
- (2603:1096:405:b5::13)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XghJy71m3z2xfR
+	for <linux-erofs@lists.ozlabs.org>; Sun,  3 Nov 2024 02:21:21 +1100 (AEDT)
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3a6add3a52eso16086875ab.0
+        for <linux-erofs@lists.ozlabs.org>; Sat, 02 Nov 2024 08:21:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730560877; x=1731165677;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1mS1EZv8tKnHllK5w7UYrymDgh7QiAcoeNCY5a8WVYQ=;
+        b=ei7BSuyjcHqVxvGf6LOG8OM4WIv+LuyxEtsp1AAO/dRnLQC7JMYDxzDnv//MpWTDhn
+         TQ62+xTiiUMTI3Hf8gPKh0DETELeaySlIXetjzsu0DdeGdapXEjbndtDx9e7MkjJwRAa
+         vvn+A2lZgMJ5aorDOTR1pzRaG4gLEQ03c5xKMDiQcrMoG6v8BeiinOd9mdm8uOyFFA7m
+         CZGXLXHjLa7H8PqeZPSYIlrMa3JM+hAdyYiCDxKFHpAjOH7wsgXRLVRVbjC/7mm/d2nC
+         IE4TJ3a32xemwLnOp4W5n2bn+TBYEE2KP8/jRpgQkjkHr+RwLAy6HEnr/YLNQtlSB26B
+         z47A==
+X-Forwarded-Encrypted: i=1; AJvYcCX/8EfdE20xcVXJi5fppW/FwF14PjaugXlMlDLjbPpg27sbCg6sMX/xvYvjfC0MmfA5tK86GdEXvJ5sKg==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YzJOKkF1ddxncH9IkvXq2KVPF59vLdfQ5pX11FMdwL3tolYbXSs
+	EFszBH1mq/+1VzzbSOmnHGjhgZIZKEgxUjZS9+GSyB9mTjGJRVRWI3/Q8w50POQfUNqMu7zZ5Sm
+	Gr64n25WdxX/vsT+sm2ePIyHuEdZL5ekuKGaVt3xO6OPzNEx9okU4sDo=
+X-Google-Smtp-Source: AGHT+IG5GYzTP8HGRo46WO7wFdGqLPgeubh8U11Q3Pr9laRvypwXf/fhMbbj8Uf8x/QIB/soke8tzpCb85UfVIMF0f9Ri4MWmBeC
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR06MB7096:EE_|TYUPR06MB5946:EE_
-X-MS-Office365-Filtering-Correlation-Id: cfd7cfa3-bb3d-40bb-c9a4-08dcfa7064f6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info: 	=?us-ascii?Q?39NzYwGRs+nPBVP3koC70nX1p2nJ4/NHaWtHEu7xaQE9q3IuWxzRU8CxN5m3?=
- =?us-ascii?Q?bkhPn5xss3u6FH3k1/LR5bZh2oIyc6LsqnBavtynuej7qA+WtSVLRod9XR2F?=
- =?us-ascii?Q?7pIrSmwgRjtSC+cvsNHHg7+WE6kaD2Y7FFPoFOe5SKT6iZ9d3miY3bCLWX0K?=
- =?us-ascii?Q?fcjhdiQwz8d5og4/Zusq+8+ZDWlo52mrsC9/cKWlzE5DWkT8JDepRMEsJuUZ?=
- =?us-ascii?Q?sRsmEW98npyVV5PDzfX70TGPs0lr0/inKm/AODLQk2pUuEYRzAEhrpC1+UU6?=
- =?us-ascii?Q?oyyatde5uG2fbvufluzzESZ5X5hvRNP477/QY68SXDrGZZv7Sd9M6lrSdVop?=
- =?us-ascii?Q?k6K7hC4BiPxZAk7CEHRe7hk8EmS3upKsvLu/xT2DC/LmYVpL7lQD6l6lMsX6?=
- =?us-ascii?Q?DjVFilPDjSonsZBQyIgPM28ZTZol9K+p7bRxbF8kAdG4/ma/NaGHy2QnXYTk?=
- =?us-ascii?Q?jijdc3/OLrOikwjCa3d7AHL2tA+FvcIiY6dPdYEQyCXT4SMyuclPBqDsnu1H?=
- =?us-ascii?Q?ZRU21UOzhDHt5I4stu3jBL5WVjlFmwO+U1U6jmAHPfRLmEcTEgwswiFH2TV7?=
- =?us-ascii?Q?XeTa2LTRTCu4Ni6yiJ1odC/CEVqBfa5+HQh0MaJYqZkDKOEq44l2QzLtJMfv?=
- =?us-ascii?Q?uzpaMo/eZbVMDALgEqAvzyNgpcH5L3kxaJ4Gq6G+0Vfgy/bWfLbgIaoGiap6?=
- =?us-ascii?Q?04UDKoycWmyqdHnU/9Xtj/o8BCkAc+sD5rjWGfvnExVGrmMxKB6N9qsCdW7Q?=
- =?us-ascii?Q?FY41OFakkqdxZnNaOKTtqsu6CM1Dy7JPinidHhGvAwBiAn5a2hgwb/ghs/mT?=
- =?us-ascii?Q?a5aYH4fe1MmTdT77uyeoqu6xdZw0qH5Y5y8Tp8f8Irs4GzMG/qbkBIKlH5Re?=
- =?us-ascii?Q?HxiMP+udseE9JIqJJEQQsEsozCyt0eSJNlWQaHUxQ81bkwAGOSO27Jm0wGMe?=
- =?us-ascii?Q?pLabTV2eUauiXBztHhyGcItuaMpYJVXQg0/6BQWUXXCC2sbMd+vLx7U6HunS?=
- =?us-ascii?Q?2WBxZnCjX/60IAnqkxDDPeR0kelTBFHqA6ZZegBUGmYvxLGNw4wZENEpvdR5?=
- =?us-ascii?Q?PU5NfduLpIVAWhnAHKFAY9Z24C+A73EZw5KQMKsA6kNFCfNij6BNPtbwMAAt?=
- =?us-ascii?Q?17CJ7qvQEyIIymSxkotmAYdqFjXmo57+V5z3JfxTVHEJPV06cJcrXeZVh/2G?=
- =?us-ascii?Q?btgk91mK6rc6ebrxw2s3AO7C0mcfqlFUJT5owtdYjkXNXYJXnYhSZhuAI90G?=
- =?us-ascii?Q?V+QwkiK6VMHae+cE7CzhYBCH2fFhcDTnEiaI1L09GOMlbcfmufQPQq1v2rTi?=
- =?us-ascii?Q?9edfL3w3RQSAq2qrdMn87gpcoK2t97k5hJIHRKtVlht7o0XHNyGBdrry86CX?=
- =?us-ascii?Q?FlAtLe8=3D?=
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB7096.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?zLLKKYYOnLlT73xyNxrDw6Z9z1z0VUy7rcQyhAWN4dTL4p63wuoynVz3sA0y?=
- =?us-ascii?Q?NAD4eV2LkgqgVyj8PjaE0zheqOG8fX7iQO9vKUcDxlqEQZzZ9JWU8yVycLjw?=
- =?us-ascii?Q?BJBlwXZgnugcJ943JRJ+ICPQxvEqBcn9/3gLJZRtwf0bdvDEh/IqpwZ42shd?=
- =?us-ascii?Q?ewTR4Zfrw4qiS+W3ppDGhKCqQVUJ7jjGMbI7gTePbLd/YlUTEJ8g2lbHFiCG?=
- =?us-ascii?Q?Y4lRkO4zk9C93s0B+ZNfkys6BdD9ncr+uiGR3aJoM6sPxQjYWvHGr4Yo3oQq?=
- =?us-ascii?Q?vIjR4owGsVrQZZpgU3qyUBRzgX99yp0gDrBds2wp5iAmTg9IP8SNUDIr7fZe?=
- =?us-ascii?Q?rhHNZ0UnygU0G5B4kP2cVajL6ouEJUrAbICjNSRV5j06NQltu9GmkxWRl+i+?=
- =?us-ascii?Q?DCeReFvy8GBvl5Ob9+nRCBm+ZTCTO5iTL9F6qNIz0aEmRHoFxQlZWoN3wGb5?=
- =?us-ascii?Q?5JIn9haR+d7vztZjgPNp8LHfBJ5UiES86prgzW49MLHTn/9/ww3WpQoJhbnb?=
- =?us-ascii?Q?HkT35zpERf2paQ0B2YJDcUaKODhdwZQoOfo29D1hEnh82xauF/2JnWyTcTO9?=
- =?us-ascii?Q?DmgpkuEtn0QwN0R05w1+eJJjldgpdue6CsQ2Wn+DsAvLy3GpLZnLYtnPWANH?=
- =?us-ascii?Q?WBaUib4cS4BZ16d8LkEwNavzaT6UQAVjgHdBpE62DXaz+8Aq2WDDk/q5oTqk?=
- =?us-ascii?Q?isu1Ou6gYvM2/L2ram6aq0e/74sFZ9jrjmF8BzVPyhtdrm7C/sHjXjpBWddk?=
- =?us-ascii?Q?ej/Tnx59h5MtfYK6zvWCHG5ZMB6kfSKKxGXKqdztLzbI/qSdykX0ZHRlVRzC?=
- =?us-ascii?Q?RCONDLBk8iXTN2tBEItyjpaczUT71D11skZ4Jfvf7iK1p+AjMsmuw3tECeBG?=
- =?us-ascii?Q?xSJu5BGMjnm07Z0Lu3mBcviJ+ouHw9KRArjnZlvFLzm0QGbsMcxL+NQ2xgYq?=
- =?us-ascii?Q?Xg6jfnxN90+Hy3CGIuU8t+TlIP/ryLSiKqTceLBCF9BeDs1+INVZ5enB9ZVY?=
- =?us-ascii?Q?viIU6VKx56R7sAqa7QpP8kl6vNYElbJKtSOQmsZASo/3blyAi4LHPVM++Qv+?=
- =?us-ascii?Q?BwlO8bmAN6Tix9f9x1R44lIWa9GRTjteKYD7Vu55NQON1lYFxCVmaP9POIXV?=
- =?us-ascii?Q?JgZe/a5Ccgm+3UUANqar5xGJeyD2kuNR8AEiSrH5gfN88RS90SKcXXQugkyJ?=
- =?us-ascii?Q?LvORdQh8GD2STlG0CUEdATuT2ojXk5Iyj5JLUgWSiGOUOvtxKrwbYshsW+qe?=
- =?us-ascii?Q?oW7lCyiYMPO9P75iUYTzxLFaI1GspOQE2cUtdeouJXJ5upD5WYGg02kKnBaS?=
- =?us-ascii?Q?eXgI/y+7/MNjoYoLR7QACpMuw9pUu/81kzK9HPKpd8Q/XBJOesfzKNjNWuJP?=
- =?us-ascii?Q?EqQK7iUPOCY7WBCsJGmzV9rRmeBa3dQLGHytwEHjbNfOa1XjrpAyCnSzfyRt?=
- =?us-ascii?Q?F3YT+gotrCVNdc+DmRiUySern95JXwcaiwFA7Rhqu5CQxZvHrLHt7VD0Wal4?=
- =?us-ascii?Q?RY33W9wf110vV2loqDgqX8VPeQIWhe8vTX/lFtZrTfjuCDOYeD8KzJ76PO8B?=
- =?us-ascii?Q?eWdKskUei710YdCYVU6VHVEDYJ56b+4HsYKbF73U?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfd7cfa3-bb3d-40bb-c9a4-08dcfa7064f6
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB7096.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2024 12:26:21.8524
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: esuZWcKviexBX6og8K2d5fVudCfpE9p3kRckNyi0qLSauyGhHk1e6CudI3Lg84Wzx0y6Je2z/dyInDQl4W8Z6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYUPR06MB5946
-X-Spam-Status: No, score=-0.2 required=5.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,
-	SPF_PASS autolearn=disabled version=4.0.0
+X-Received: by 2002:a05:6e02:ca5:b0:39f:5def:a23d with SMTP id
+ e9e14a558f8ab-3a6afec7f93mr57509365ab.5.1730560877361; Sat, 02 Nov 2024
+ 08:21:17 -0700 (PDT)
+Date: Sat, 02 Nov 2024 08:21:17 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6726436d.050a0220.529b6.02d2.GAE@google.com>
+Subject: [syzbot] [integrity?] [lsm?] [erofs?] INFO: task hung in
+ ima_file_free (4)
+From: syzbot <syzbot+8036326eebe7d0140944@syzkaller.appspotmail.com>
+To: chao@kernel.org, dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, 
+	jmorris@namei.org, linux-erofs@lists.ozlabs.org, 
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, paul@paul-moore.com, 
+	roberto.sassu@huawei.com, serge@hallyn.com, syzkaller-bugs@googlegroups.com, 
+	xiang@kernel.org, zohar@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=3.1 required=5.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H2,SORTED_RECIPS,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -160,75 +77,117 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Chunhai Guo via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Chunhai Guo <guochunhai@vivo.com>
-Cc: linux-kernel@vger.kernel.org, huyue2@coolpad.com, Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add sysfs node to control cached decompression strategy, and all the
-cache will be cleaned up when the strategy is set to
-EROFS_ZIP_CACHE_DISABLED.
+Hello,
 
-Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+syzbot found the following issue on:
+
+HEAD commit:    e42b1a9a2557 Merge tag 'spi-fix-v6.12-rc5' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=150d4a30580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4aec7739e14231a7
+dashboard link: https://syzkaller.appspot.com/bug?extid=8036326eebe7d0140944
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15901ca7980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15fc815f980000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-e42b1a9a.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3e2253169da8/vmlinux-e42b1a9a.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b9d2f5008f24/bzImage-e42b1a9a.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/bc2284f99b09/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+8036326eebe7d0140944@syzkaller.appspotmail.com
+
+INFO: task syz-executor688:5342 blocked for more than 143 seconds.
+      Not tainted 6.12.0-rc5-syzkaller-00005-ge42b1a9a2557 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor688 state:D stack:25920 pid:5342  tgid:5342  ppid:5339   flags:0x00000006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5328 [inline]
+ __schedule+0x18af/0x4bd0 kernel/sched/core.c:6690
+ __schedule_loop kernel/sched/core.c:6767 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6782
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6839
+ __mutex_lock_common kernel/locking/mutex.c:684 [inline]
+ __mutex_lock+0x6a7/0xd70 kernel/locking/mutex.c:752
+ ima_check_last_writer security/integrity/ima/ima_main.c:166 [inline]
+ ima_file_free+0x17f/0x4d0 security/integrity/ima/ima_main.c:205
+ security_file_release+0x92/0x140 security/security.c:2873
+ __fput+0x1ae/0x880 fs/file_table.c:425
+ __do_sys_close fs/open.c:1567 [inline]
+ __se_sys_close fs/open.c:1552 [inline]
+ __x64_sys_close+0x7f/0x110 fs/open.c:1552
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd7dd29cdda
+RSP: 002b:00007ffd572b6bd0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fd7dd29cdda
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 0000000000000032 R08: 0000000000000000 R09: 7fffffffffffffff
+R10: 0000000000000000 R11: 0000000000000293 R12: 00007fd7dd32560c
+R13: 0000000000000009 R14: 0000000000040e1f R15: 0000000000040e51
+ </TASK>
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/25:
+ #0: ffffffff8e937da0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
+ #0: ffffffff8e937da0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
+ #0: ffffffff8e937da0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6720
+2 locks held by getty/5108:
+ #0: ffff88801fa510a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc9000039b2f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x6a6/0x1e00 drivers/tty/n_tty.c:2211
+1 lock held by syz-executor688/5342:
+ #0: ffff88803f594398 (&ima_iint_mutex_key[depth]#2){+.+.}-{3:3}, at: ima_check_last_writer security/integrity/ima/ima_main.c:166 [inline]
+ #0: ffff88803f594398 (&ima_iint_mutex_key[depth]#2){+.+.}-{3:3}, at: ima_file_free+0x17f/0x4d0 security/integrity/ima/ima_main.c:205
+1 lock held by syz-executor688/5343:
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 UID: 0 PID: 25 Comm: khungtaskd Not tainted 6.12.0-rc5-syzkaller-00005-ge42b1a9a2557 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:223 [inline]
+ watchdog+0xff4/0x1040 kernel/hung_task.c:379
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+
 ---
- Documentation/ABI/testing/sysfs-fs-erofs | 14 ++++++++++++++
- fs/erofs/sysfs.c                         |  8 ++++++++
- 2 files changed, 22 insertions(+)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
-index 284224d1b56f..194087bcbaea 100644
---- a/Documentation/ABI/testing/sysfs-fs-erofs
-+++ b/Documentation/ABI/testing/sysfs-fs-erofs
-@@ -16,3 +16,17 @@ Description:	Control strategy of sync decompression:
- 		  readahead on atomic contexts only.
- 		- 1 (force on): enable for readpage and readahead.
- 		- 2 (force off): disable for all situations.
-+
-+What:		/sys/fs/erofs/<disk>/cache_strategy
-+Date:		November 2024
-+Contact:	"Guo Chunhai" <guochunhai@vivo.com>
-+Description:	Control strategy of cached decompression strategy
-+
-+		- 0 (disabled): In-place I/O decompression only.
-+		- 1 (readahead): Cache the last incomplete compressed physical
-+			cluster for further reading. It still does in-place I/O
-+			decompression for the rest compressed physical clusters.
-+		- 2 (default, readaround): Cache the both ends of incomplete
-+			compressed physical clusters for further reading. It
-+			still does in-place I/O decompression for the rest
-+			compressed physical clusters.
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index 63cffd0fd261..2ee59eef3aa7 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -57,11 +57,13 @@ static struct erofs_attr erofs_attr_##_name = {			\
- 
- #ifdef CONFIG_EROFS_FS_ZIP
- EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
-+EROFS_ATTR_RW_UI(cache_strategy, erofs_mount_opts);
- #endif
- 
- static struct attribute *erofs_attrs[] = {
- #ifdef CONFIG_EROFS_FS_ZIP
- 	ATTR_LIST(sync_decompress),
-+	ATTR_LIST(cache_strategy),
- #endif
- 	NULL,
- };
-@@ -150,6 +152,12 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
- 		if (!strcmp(a->attr.name, "sync_decompress") &&
- 		    (t > EROFS_SYNC_DECOMPRESS_FORCE_OFF))
- 			return -EINVAL;
-+		else if (!strcmp(a->attr.name, "cache_strategy")) {
-+			if (t > EROFS_ZIP_CACHE_READAROUND)
-+				return -EINVAL;
-+			else if (t == EROFS_ZIP_CACHE_DISABLED)
-+				z_erofs_shrink_scan(sbi, ~0UL);
-+		}
- #endif
- 		*(unsigned int *)ptr = t;
- 		return len;
--- 
-2.25.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
