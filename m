@@ -1,78 +1,78 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 89C189BEA0E
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Nov 2024 13:40:09 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 167A59BEA0F
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Nov 2024 13:40:15 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Xk4Y33tzXz3bg1
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Nov 2024 23:40:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Xk4Y90tykz3bhf
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Nov 2024 23:40:13 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1730896805;
-	cv=none; b=E6X8D/tOW83r8MB1919QsbhPu2WE7RGjq8ULabBwBR/YTX39eOyu7EkG1ADdEfxDSIFpCl1SxW+6EasCXYystIhmGDCmuFiNI9uGkA/JJ7W3xFXD26/gVSzGOYlaU3/bO5COFk05CBecyO5y5j3zFB/iCOZwndYvsxMm0Yyj0groYg4xzAL7h1r3RZKRJfzNGK4IU3374cpXXM/gPcNIrJF96oVbtlwAZM26E2GoLTFXTpoZUoqi+3GNrYjZ9ezwxoXi81mDFJwJqEFeO8xjuVlrcIlf7RuIewBPxuOA5pBR99yu4DtwqrHvRu6DhJOY45XIwH5n3tFD34w8Z2WGdQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1730896811;
+	cv=none; b=YU5BZ6zfNtatYCj8WujlNmmyeENi9mebeKtrlvgrqm6yNYFYEndxvrOViEbcVCXMAcbpKIK1ARV3Fnvc2yWkzkUvNXPSZ5LkCCOl5tyaQzliMhXf5ofgjc/E3MX7RRyzgpkBnkzDIdLD4/76z65608tmKzcdKJXM03P8pSV/CM3x5T9feX1F9FfQUq8TJ5IgIs4H/8viVtfFZ57vMCOgp0nTvnuAa+ejdhfMh2CcfmDIUi7XZ/OtQ76G1Ra747aY6Fb/uhftIf04eBiN2g3nMnO8DKAvDx57j5HNiZ2Ri5/4tAShuifiaaKr83Otjz5FpJ81mWIK8i2cV0dVPXjVNA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1730896805; c=relaxed/relaxed;
-	bh=37R6sfCcKYujv9OrZLXpzsO3ouuXFg59JCsz2bwUTig=;
+	t=1730896811; c=relaxed/relaxed;
+	bh=XXoKBAczFzEdxforFlZoT0jqB8v2JMkojevHnwPW6bc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FqZSlBAKIfRRQq5SQNl3fYCdHQ9slRqsYjZ+jhlSkea0lYCTubTxGCQ9Sbry1ewUhL6IRmdJ5c2zyBlYvji7PywVSGxxDHzU4paKGhXX3NtOBi6V1leGaIsBtS/reaAASPJnddEqe9T8ylYKfyno8sCd4mipLQzPYzJMkYtfbTNswwU/k3tIDlWnJlxqlkdbp48t9ChkKgMhIHexU/LSv5p3DzOVmd9WuJJDu2i8PTJ1JkJIW2iyYnhIRGHSbjOBaf768xdupyKvR4xd8XYJ04g/3uB9IOh7nAcfVXIVhxeyKUU2UiAl6GXw4E9m2+9f/B7tCDP1SGJ6JC0zwTX14Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BD7TpBDJ; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MyxDFo3g; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version; b=CDDfhDSmFSe2j4nSl5yN0wArJiBO2Jv7tNMyLU1fyv20vTPqo4JDLX9v4T6f9n8hTPgt6NQRVgUIQVcy+GZbAi+xYhCD0sStfttoxH3SKObhMuHBnwjbWSNIxgiwWV89ToU4dyAz4vnnesaFY8XjiIt3Na51nGHzIklMk0YI6TmKld/OMHYAKMmaOWVHJPTAvYpz+hjVLYXO3vPwjtO5tl7/2NR8vwFUGqqVOdcEBwIwEj5YpjNQ6Dxd8DCom6jDaVNOHRFjOdJF9QXK1D7LCJkYeARIrnuV+4rc0PBMN1MT+KUyra3xi+0i4Phc5bLpOCGq/i/pXYqA9ndhuRHWrQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZYU5Lh2C; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZYU5Lh2C; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=BD7TpBDJ;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MyxDFo3g;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZYU5Lh2C;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZYU5Lh2C;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Xk4Y03gScz30PD
-	for <linux-erofs@lists.ozlabs.org>; Wed,  6 Nov 2024 23:40:04 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Xk4Y62XsSz3bZr
+	for <linux-erofs@lists.ozlabs.org>; Wed,  6 Nov 2024 23:40:10 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730896801;
+	s=mimecast20190719; t=1730896807;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=37R6sfCcKYujv9OrZLXpzsO3ouuXFg59JCsz2bwUTig=;
-	b=BD7TpBDJO2Hij8ek91bEM7SkG7pizLezagqIO41sDXoxeaF8ZO9dFvisw9XWxtBYltrM7O
-	mlqyqON6A+5jst3HI45KTgT/m6mwEaQFjMrWEX2otpnbxHdl3srmkAqRp4qX6FSBYQ7YNW
-	ZPWZ9Mi7D3wRQBldFzttyV9oA4uWt2A=
+	bh=XXoKBAczFzEdxforFlZoT0jqB8v2JMkojevHnwPW6bc=;
+	b=ZYU5Lh2CxFDFqQfl/J8Zi4RVLIJ6ZPh0oSb7mFyZ0MeX11Ev/ZYVKfI86UGfHtpWl5Jiv6
+	b3aGAeH4uiapaUth9LwliKkHuHE68yU7fsWGP30fkFZvf5I4I2qMgIRCeWYogrzq66R7Nh
+	6rmvfqvSpVqP3tnWGsIN1KFmR67UcR0=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1730896802;
+	s=mimecast20190719; t=1730896807;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=37R6sfCcKYujv9OrZLXpzsO3ouuXFg59JCsz2bwUTig=;
-	b=MyxDFo3gmo3NZy52TdUEAtb8Ctq7Yc6OVxRVNuPiq0vCWFeVkIC8d9X+MoDV5e+lB1uW/P
-	eDWJmASw61OrZC3Irpu9hzM+zQMLxkiFAEpR1W4ojL5sI1pZYgCR9YJZQO41ad+bhNFGHV
-	btwreAN6woflp1bcrln2Sw03KJwiZ70=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=XXoKBAczFzEdxforFlZoT0jqB8v2JMkojevHnwPW6bc=;
+	b=ZYU5Lh2CxFDFqQfl/J8Zi4RVLIJ6ZPh0oSb7mFyZ0MeX11Ev/ZYVKfI86UGfHtpWl5Jiv6
+	b3aGAeH4uiapaUth9LwliKkHuHE68yU7fsWGP30fkFZvf5I4I2qMgIRCeWYogrzq66R7Nh
+	6rmvfqvSpVqP3tnWGsIN1KFmR67UcR0=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-378-OKPGIeLLOUmAqHuMTzBgbw-1; Wed,
- 06 Nov 2024 07:39:56 -0500
-X-MC-Unique: OKPGIeLLOUmAqHuMTzBgbw-1
-X-Mimecast-MFC-AGG-ID: OKPGIeLLOUmAqHuMTzBgbw
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-607-lO_jK5jjM1WCcN-ItRvP8g-1; Wed,
+ 06 Nov 2024 07:40:03 -0500
+X-MC-Unique: lO_jK5jjM1WCcN-ItRvP8g-1
+X-Mimecast-MFC-AGG-ID: lO_jK5jjM1WCcN-ItRvP8g
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B74A71955EE7;
-	Wed,  6 Nov 2024 12:39:53 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CF90719560A2;
+	Wed,  6 Nov 2024 12:40:00 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.231])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3B52919560AD;
-	Wed,  6 Nov 2024 12:39:47 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 268B319560AD;
+	Wed,  6 Nov 2024 12:39:54 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
 	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v3 30/33] afs: Use the contained hashtable to search a directory
-Date: Wed,  6 Nov 2024 12:35:54 +0000
-Message-ID: <20241106123559.724888-31-dhowells@redhat.com>
+Subject: [PATCH v3 31/33] afs: Locally initialise the contents of a new symlink on creation
+Date: Wed,  6 Nov 2024 12:35:55 +0000
+Message-ID: <20241106123559.724888-32-dhowells@redhat.com>
 In-Reply-To: <20241106123559.724888-1-dhowells@redhat.com>
 References: <20241106123559.724888-1-dhowells@redhat.com>
 MIME-Version: 1.0
@@ -80,8 +80,8 @@ Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-	T_FILL_THIS_FORM_SHORT autolearn=disabled version=4.0.0
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -98,623 +98,135 @@ Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, Shyam Prasa
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Each directory image contains a hashtable with 128 buckets to speed up
-searching.  Currently, kafs does not use this, but rather iterates over all
-the occupied slots in the image as it can share this with readdir.
-
-Switch kafs to use the hashtable for lookups to reduce the latency.  Care
-must be taken that the hash chains are acyclic.
+Since we know what the contents of a symlink will be when we create it on
+the server, initialise its contents locally too to avoid the need to
+download it.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
 cc: linux-afs@lists.infradead.org
 ---
- fs/afs/Makefile     |   1 +
- fs/afs/dir.c        |  42 ++++----
- fs/afs/dir_edit.c   | 135 +++++++++++++++++---------
- fs/afs/dir_search.c | 227 ++++++++++++++++++++++++++++++++++++++++++++
- fs/afs/internal.h   |  18 ++++
- 5 files changed, 350 insertions(+), 73 deletions(-)
- create mode 100644 fs/afs/dir_search.c
+ fs/afs/dir.c             |  2 ++
+ fs/afs/inode.c           | 44 ++++++++++++++++++++++++++++++++++------
+ fs/afs/internal.h        |  1 +
+ fs/netfs/buffered_read.c |  2 +-
+ fs/netfs/read_single.c   |  2 +-
+ 5 files changed, 43 insertions(+), 8 deletions(-)
 
-diff --git a/fs/afs/Makefile b/fs/afs/Makefile
-index dcdc0f1bb76f..5efd7e13b304 100644
---- a/fs/afs/Makefile
-+++ b/fs/afs/Makefile
-@@ -11,6 +11,7 @@ kafs-y := \
- 	cmservice.o \
- 	dir.o \
- 	dir_edit.o \
-+	dir_search.o \
- 	dir_silly.o \
- 	dynroot.o \
- 	file.o \
 diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index aa589f0d55bf..6a4fc1cffb7e 100644
+index 6a4fc1cffb7e..663a212964d8 100644
 --- a/fs/afs/dir.c
 +++ b/fs/afs/dir.c
-@@ -88,8 +88,6 @@ struct afs_lookup_one_cookie {
- struct afs_lookup_cookie {
- 	struct dir_context	ctx;
- 	struct qstr		name;
--	bool			found;
--	bool			one_only;
- 	unsigned short		nr_fids;
- 	struct afs_fid		fids[50];
- };
-@@ -309,7 +307,7 @@ ssize_t afs_read_single(struct afs_vnode *dvnode, struct file *file)
-  * Read the directory into a folio_queue buffer in one go, scrubbing the
-  * previous contents.  We return -ESTALE if the caller needs to call us again.
-  */
--static ssize_t afs_read_dir(struct afs_vnode *dvnode, struct file *file)
-+ssize_t afs_read_dir(struct afs_vnode *dvnode, struct file *file)
- 	__acquires(&dvnode->validate_lock)
- {
- 	ssize_t ret;
-@@ -643,19 +641,10 @@ static bool afs_lookup_filldir(struct dir_context *ctx, const char *name,
- 	BUILD_BUG_ON(sizeof(union afs_xdr_dir_block) != 2048);
- 	BUILD_BUG_ON(sizeof(union afs_xdr_dirent) != 32);
+@@ -1270,6 +1270,8 @@ static void afs_vnode_new_inode(struct afs_operation *op)
+ 	set_bit(AFS_VNODE_NEW_CONTENT, &vnode->flags);
+ 	if (S_ISDIR(inode->i_mode))
+ 		afs_mkdir_init_dir(vnode, dvp->vnode);
++	else if (S_ISLNK(inode->i_mode))
++		afs_init_new_symlink(vnode, op);
+ 	if (!afs_op_error(op))
+ 		afs_cache_permit(vnode, op->key, vnode->cb_break, &vp->scb);
+ 	d_instantiate(op->dentry, inode);
+diff --git a/fs/afs/inode.c b/fs/afs/inode.c
+index c3b720fda525..f5618564b3fc 100644
+--- a/fs/afs/inode.c
++++ b/fs/afs/inode.c
+@@ -25,6 +25,23 @@
+ #include "internal.h"
+ #include "afs_fs.h"
  
--	if (cookie->found) {
--		if (cookie->nr_fids < 50) {
--			cookie->fids[cookie->nr_fids].vnode	= ino;
--			cookie->fids[cookie->nr_fids].unique	= dtype;
--			cookie->nr_fids++;
--		}
--	} else if (cookie->name.len == nlen &&
--		   memcmp(cookie->name.name, name, nlen) == 0) {
--		cookie->fids[1].vnode	= ino;
--		cookie->fids[1].unique	= dtype;
--		cookie->found = 1;
--		if (cookie->one_only)
--			return false;
-+	if (cookie->nr_fids < 50) {
-+		cookie->fids[cookie->nr_fids].vnode	= ino;
-+		cookie->fids[cookie->nr_fids].unique	= dtype;
-+		cookie->nr_fids++;
- 	}
- 
- 	return cookie->nr_fids < 50;
-@@ -783,6 +772,7 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry)
- 	struct afs_vnode *dvnode = AFS_FS_I(dir), *vnode;
- 	struct inode *inode = NULL, *ti;
- 	afs_dataversion_t data_version = READ_ONCE(dvnode->status.data_version);
-+	bool supports_ibulk;
- 	long ret;
- 	int i;
- 
-@@ -799,19 +789,19 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry)
- 	cookie->nr_fids = 2; /* slot 1 is saved for the fid we actually want
- 			      * and slot 0 for the directory */
- 
--	if (!afs_server_supports_ibulk(dvnode))
--		cookie->one_only = true;
--
--	/* search the directory */
--	ret = afs_dir_iterate(dir, &cookie->ctx, NULL, &data_version);
-+	/* Search the directory for the named entry using the hash table... */
-+	ret = afs_dir_search(dvnode, &dentry->d_name, &cookie->fids[1], &data_version);
- 	if (ret < 0)
- 		goto out;
- 
--	dentry->d_fsdata = (void *)(unsigned long)data_version;
-+	supports_ibulk = afs_server_supports_ibulk(dvnode);
-+	if (supports_ibulk) {
-+		/* ...then scan linearly from that point for entries to lookup-ahead. */
-+		cookie->ctx.pos = (ret + 1) * AFS_DIR_DIRENT_SIZE;
-+		afs_dir_iterate(dir, &cookie->ctx, NULL, &data_version);
-+	}
- 
--	ret = -ENOENT;
--	if (!cookie->found)
--		goto out;
-+	dentry->d_fsdata = (void *)(unsigned long)data_version;
- 
- 	/* Check to see if we already have an inode for the primary fid. */
- 	inode = ilookup5(dir->i_sb, cookie->fids[1].vnode,
-@@ -870,7 +860,7 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry)
- 	 * the whole operation.
- 	 */
- 	afs_op_set_error(op, -ENOTSUPP);
--	if (!cookie->one_only) {
-+	if (supports_ibulk) {
- 		op->ops = &afs_inline_bulk_status_operation;
- 		afs_begin_vnode_operation(op);
- 		afs_wait_for_operation(op);
-diff --git a/fs/afs/dir_edit.c b/fs/afs/dir_edit.c
-index f4037973416e..f6f4b1adc8dc 100644
---- a/fs/afs/dir_edit.c
-+++ b/fs/afs/dir_edit.c
-@@ -245,7 +245,7 @@ void afs_edit_dir_add(struct afs_vnode *vnode,
- 	union afs_xdr_dir_block *meta, *block;
- 	union afs_xdr_dirent *de;
- 	struct afs_dir_iter iter = { .dvnode = vnode };
--	unsigned int need_slots, nr_blocks, b;
-+	unsigned int nr_blocks, b, entry;
- 	loff_t i_size;
- 	int slot;
- 
-@@ -263,7 +263,7 @@ void afs_edit_dir_add(struct afs_vnode *vnode,
- 		return;
- 
- 	/* Work out how many slots we're going to need. */
--	need_slots = afs_dir_calc_slots(name->len);
-+	iter.nr_slots = afs_dir_calc_slots(name->len);
- 
- 	if (i_size == 0)
- 		goto new_directory;
-@@ -281,7 +281,7 @@ void afs_edit_dir_add(struct afs_vnode *vnode,
- 
- 		/* Lower dir blocks have a counter in the header we can check. */
- 		if (b < AFS_DIR_BLOCKS_WITH_CTR &&
--		    meta->meta.alloc_ctrs[b] < need_slots)
-+		    meta->meta.alloc_ctrs[b] < iter.nr_slots)
- 			continue;
- 
- 		block = afs_dir_get_block(&iter, b);
-@@ -308,7 +308,7 @@ void afs_edit_dir_add(struct afs_vnode *vnode,
- 		/* We need to try and find one or more consecutive slots to
- 		 * hold the entry.
- 		 */
--		slot = afs_find_contig_bits(block, need_slots);
-+		slot = afs_find_contig_bits(block, iter.nr_slots);
- 		if (slot >= 0) {
- 			_debug("slot %u", slot);
- 			goto found_space;
-@@ -347,12 +347,18 @@ void afs_edit_dir_add(struct afs_vnode *vnode,
- 	de->u.name[name->len] = 0;
- 
- 	/* Adjust the bitmap. */
--	afs_set_contig_bits(block, slot, need_slots);
--	kunmap_local(block);
-+	afs_set_contig_bits(block, slot, iter.nr_slots);
- 
- 	/* Adjust the allocation counter. */
- 	if (b < AFS_DIR_BLOCKS_WITH_CTR)
--		meta->meta.alloc_ctrs[b] -= need_slots;
-+		meta->meta.alloc_ctrs[b] -= iter.nr_slots;
++void afs_init_new_symlink(struct afs_vnode *vnode, struct afs_operation *op)
++{
++	size_t size = strlen(op->create.symlink) + 1;
++	size_t dsize = 0;
++	char *p;
 +
-+	/* Adjust the hash chain. */
-+	entry = b * AFS_DIR_SLOTS_PER_BLOCK + slot;
-+	iter.bucket = afs_dir_hash_name(name);
-+	de->u.hash_next = meta->meta.hashtable[iter.bucket];
-+	meta->meta.hashtable[iter.bucket] = htons(entry);
-+	kunmap_local(block);
- 
- 	inode_inc_iversion_raw(&vnode->netfs.inode);
- 	afs_stat_v(vnode, n_dir_cr);
-@@ -387,12 +393,14 @@ void afs_edit_dir_add(struct afs_vnode *vnode,
- void afs_edit_dir_remove(struct afs_vnode *vnode,
- 			 struct qstr *name, enum afs_edit_dir_reason why)
- {
--	union afs_xdr_dir_block *meta, *block;
--	union afs_xdr_dirent *de;
-+	union afs_xdr_dir_block *meta, *block, *pblock;
-+	union afs_xdr_dirent *de, *pde;
- 	struct afs_dir_iter iter = { .dvnode = vnode };
--	unsigned int need_slots, nr_blocks, b;
-+	struct afs_fid fid;
-+	unsigned int b, slot, entry;
- 	loff_t i_size;
--	int slot;
-+	__be16 next;
-+	int found;
- 
- 	_enter(",,{%d,%s},", name->len, name->name);
- 
-@@ -403,59 +411,90 @@ void afs_edit_dir_remove(struct afs_vnode *vnode,
- 		afs_invalidate_dir(vnode, afs_dir_invalid_edit_rem_bad_size);
- 		return;
- 	}
--	nr_blocks = i_size / AFS_DIR_BLOCK_SIZE;
- 
--	meta = afs_dir_get_block(&iter, 0);
--	if (!meta)
-+	if (!afs_dir_init_iter(&iter, name))
- 		return;
- 
--	/* Work out how many slots we're going to discard. */
--	need_slots = afs_dir_calc_slots(name->len);
--
--	/* Find a block that has sufficient slots available.  Each folio
--	 * contains two or more directory blocks.
--	 */
--	for (b = 0; b < nr_blocks; b++) {
--		block = afs_dir_get_block(&iter, b);
--		if (!block)
--			goto error;
--
--		/* Abandon the edit if we got a callback break. */
--		if (!test_bit(AFS_VNODE_DIR_VALID, &vnode->flags))
--			goto already_invalidated;
--
--		if (b > AFS_DIR_BLOCKS_WITH_CTR ||
--		    meta->meta.alloc_ctrs[b] <= AFS_DIR_SLOTS_PER_BLOCK - 1 - need_slots) {
--			slot = afs_dir_scan_block(block, name, b);
--			if (slot >= 0)
--				goto found_dirent;
--		}
-+	meta = afs_dir_find_block(&iter, 0);
-+	if (!meta)
++	if (netfs_alloc_folioq_buffer(NULL, &vnode->directory, &dsize, size,
++				      mapping_gfp_mask(vnode->netfs.inode.i_mapping)) < 0)
 +		return;
++
++	vnode->directory_size = dsize;
++	p = kmap_local_folio(folioq_folio(vnode->directory, 0), 0);
++	memcpy(p, op->create.symlink, size);
++	kunmap_local(p);
++	netfs_single_mark_inode_dirty(&vnode->netfs.inode);
++}
++
+ static void afs_put_link(void *arg)
+ {
+ 	struct folio *folio = virt_to_folio(arg);
+@@ -41,15 +58,30 @@ const char *afs_get_link(struct dentry *dentry, struct inode *inode,
+ 	char *content;
+ 	ssize_t ret;
  
--		kunmap_local(block);
-+	/* Find the entry in the blob. */
-+	found = afs_dir_search_bucket(&iter, name, &fid);
-+	if (found < 0) {
-+		/* Didn't find the dirent to clobber.  Re-download. */
-+		trace_afs_edit_dir(vnode, why, afs_edit_dir_delete_noent,
-+				   0, 0, 0, 0, name->name);
-+		afs_invalidate_dir(vnode, afs_dir_invalid_edit_rem_wrong_name);
-+		goto out_unmap;
+-	if (atomic64_read(&vnode->cb_expires_at) == AFS_NO_CB_PROMISE ||
+-	    !vnode->directory) {
+-		if (!dentry)
++	if (!dentry) {
++		/* RCU pathwalk. */
++		if (!vnode->directory || !afs_check_validity(vnode))
+ 			return ERR_PTR(-ECHILD);
+-		ret = afs_read_single(vnode, NULL);
+-		if (ret < 0)
+-			return ERR_PTR(ret);
++		goto good;
  	}
  
--	/* Didn't find the dirent to clobber.  Download the directory again. */
--	trace_afs_edit_dir(vnode, why, afs_edit_dir_delete_noent,
--			   0, 0, 0, 0, name->name);
--	afs_invalidate_dir(vnode, afs_dir_invalid_edit_rem_wrong_name);
--	goto out_unmap;
-+	entry = found;
-+	b    = entry / AFS_DIR_SLOTS_PER_BLOCK;
-+	slot = entry % AFS_DIR_SLOTS_PER_BLOCK;
- 
--found_dirent:
-+	block = afs_dir_find_block(&iter, b);
-+	if (!block)
-+		goto error;
-+	if (!test_bit(AFS_VNODE_DIR_VALID, &vnode->flags))
-+		goto already_invalidated;
++	if (!vnode->directory)
++		goto fetch;
 +
-+	/* Check and clear the entry. */
- 	de = &block->dirents[slot];
-+	if (de->u.valid != 1)
-+		goto error_unmap;
- 
- 	trace_afs_edit_dir(vnode, why, afs_edit_dir_delete, b, slot,
- 			   ntohl(de->u.vnode), ntohl(de->u.unique),
- 			   name->name);
- 
--	memset(de, 0, sizeof(*de) * need_slots);
--
- 	/* Adjust the bitmap. */
--	afs_clear_contig_bits(block, slot, need_slots);
--	kunmap_local(block);
-+	afs_clear_contig_bits(block, slot, iter.nr_slots);
- 
- 	/* Adjust the allocation counter. */
- 	if (b < AFS_DIR_BLOCKS_WITH_CTR)
--		meta->meta.alloc_ctrs[b] += need_slots;
-+		meta->meta.alloc_ctrs[b] += iter.nr_slots;
++	ret = afs_validate(vnode, NULL);
++	if (ret < 0)
++		return ERR_PTR(ret);
 +
-+	/* Clear the constituent entries. */
-+	next = de->u.hash_next;
-+	memset(de, 0, sizeof(*de) * iter.nr_slots);
-+	kunmap_local(block);
++	if (!test_and_clear_bit(AFS_VNODE_ZAP_DATA, &vnode->flags) &&
++	    vnode->directory)
++		goto good;
 +
-+	/* Adjust the hash chain: if iter->prev_entry is 0, the hashtable head
-+	 * index is previous; otherwise it's slot number of the previous entry.
-+	 */
-+	if (!iter.prev_entry) {
-+		__be16 prev_next = meta->meta.hashtable[iter.bucket];
++fetch:
++	ret = afs_read_single(vnode, NULL);
++	if (ret < 0)
++		return ERR_PTR(ret);
 +
-+		if (unlikely(prev_next != htons(entry))) {
-+			pr_warn("%llx:%llx:%x: not head of chain b=%x p=%x,%x e=%x %*s",
-+				vnode->fid.vid, vnode->fid.vnode, vnode->fid.unique,
-+				iter.bucket, iter.prev_entry, prev_next, entry,
-+				name->len, name->name);
-+			goto error;
-+		}
-+		meta->meta.hashtable[iter.bucket] = next;
-+	} else {
-+		unsigned int pb = iter.prev_entry / AFS_DIR_SLOTS_PER_BLOCK;
-+		unsigned int ps = iter.prev_entry % AFS_DIR_SLOTS_PER_BLOCK;
-+		__be16 prev_next;
-+
-+		pblock = afs_dir_find_block(&iter, pb);
-+		if (!pblock)
-+			goto error;
-+		pde = &pblock->dirents[ps];
-+		prev_next = pde->u.hash_next;
-+		if (prev_next != htons(entry)) {
-+			kunmap_local(pblock);
-+			pr_warn("%llx:%llx:%x: not prev in chain b=%x p=%x,%x e=%x %*s",
-+				vnode->fid.vid, vnode->fid.vnode, vnode->fid.unique,
-+				iter.bucket, iter.prev_entry, prev_next, entry,
-+				name->len, name->name);
-+			goto error;
-+		}
-+		pde->u.hash_next = next;
-+		kunmap_local(pblock);
-+	}
- 
- 	netfs_single_mark_inode_dirty(&vnode->netfs.inode);
- 
-@@ -474,6 +513,8 @@ void afs_edit_dir_remove(struct afs_vnode *vnode,
- 			   0, 0, 0, 0, name->name);
- 	goto out_unmap;
- 
-+error_unmap:
-+	kunmap_local(block);
- error:
- 	trace_afs_edit_dir(vnode, why, afs_edit_dir_delete_error,
- 			   0, 0, 0, 0, name->name);
-diff --git a/fs/afs/dir_search.c b/fs/afs/dir_search.c
-new file mode 100644
-index 000000000000..b25bd892db4d
---- /dev/null
-+++ b/fs/afs/dir_search.c
-@@ -0,0 +1,227 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Search a directory's hash table.
-+ *
-+ * Copyright (C) 2024 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ *
-+ * https://tools.ietf.org/html/draft-keiser-afs3-directory-object-00
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/fs.h>
-+#include <linux/namei.h>
-+#include <linux/iversion.h>
-+#include "internal.h"
-+#include "afs_fs.h"
-+#include "xdr_fs.h"
-+
-+/*
-+ * Calculate the name hash.
-+ */
-+unsigned int afs_dir_hash_name(const struct qstr *name)
-+{
-+	const unsigned char *p = name->name;
-+	unsigned int hash = 0, i;
-+	int bucket;
-+
-+	for (i = 0; i < name->len; i++)
-+		hash = (hash * 173) + p[i];
-+	bucket = hash & (AFS_DIR_HASHTBL_SIZE - 1);
-+	if (hash > INT_MAX) {
-+		bucket = AFS_DIR_HASHTBL_SIZE - bucket;
-+		bucket &= (AFS_DIR_HASHTBL_SIZE - 1);
-+	}
-+	return bucket;
-+}
-+
-+/*
-+ * Reset a directory iterator.
-+ */
-+static bool afs_dir_reset_iter(struct afs_dir_iter *iter)
-+{
-+	unsigned long long i_size = i_size_read(&iter->dvnode->netfs.inode);
-+	unsigned int nblocks;
-+
-+	/* Work out the maximum number of steps we can take. */
-+	nblocks = umin(i_size / AFS_DIR_BLOCK_SIZE, AFS_DIR_MAX_BLOCKS);
-+	if (!nblocks)
-+		return false;
-+	iter->loop_check = nblocks * (AFS_DIR_SLOTS_PER_BLOCK - AFS_DIR_RESV_BLOCKS);
-+	iter->prev_entry = 0; /* Hash head is previous */
-+	return true;
-+}
-+
-+/*
-+ * Initialise a directory iterator for looking up a name.
-+ */
-+bool afs_dir_init_iter(struct afs_dir_iter *iter, const struct qstr *name)
-+{
-+	iter->nr_slots = afs_dir_calc_slots(name->len);
-+	iter->bucket = afs_dir_hash_name(name);
-+	return afs_dir_reset_iter(iter);
-+}
-+
-+/*
-+ * Get a specific block.
-+ */
-+union afs_xdr_dir_block *afs_dir_find_block(struct afs_dir_iter *iter, size_t block)
-+{
-+	struct folio_queue *fq = iter->fq;
-+	struct afs_vnode *dvnode = iter->dvnode;
-+	struct folio *folio;
-+	size_t blpos = block * AFS_DIR_BLOCK_SIZE;
-+	size_t blend = (block + 1) * AFS_DIR_BLOCK_SIZE, fpos = iter->fpos;
-+	int slot = iter->fq_slot;
-+
-+	_enter("%zx,%d", block, slot);
-+
-+	if (iter->block) {
-+		kunmap_local(iter->block);
-+		iter->block = NULL;
-+	}
-+
-+	if (dvnode->directory_size < blend)
-+		goto fail;
-+
-+	if (!fq || blpos < fpos) {
-+		fq = dvnode->directory;
-+		slot = 0;
-+		fpos = 0;
-+	}
-+
-+	/* Search the folio queue for the folio containing the block... */
-+	for (; fq; fq = fq->next) {
-+		for (; slot < folioq_count(fq); slot++) {
-+			size_t fsize = folioq_folio_size(fq, slot);
-+
-+			if (blend <= fpos + fsize) {
-+				/* ... and then return the mapped block. */
-+				folio = folioq_folio(fq, slot);
-+				if (WARN_ON_ONCE(folio_pos(folio) != fpos))
-+					goto fail;
-+				iter->fq = fq;
-+				iter->fq_slot = slot;
-+				iter->fpos = fpos;
-+				iter->block = kmap_local_folio(folio, blpos - fpos);
-+				return iter->block;
-+			}
-+			fpos += fsize;
-+		}
-+		slot = 0;
-+	}
-+
-+fail:
-+	iter->fq = NULL;
-+	iter->fq_slot = 0;
-+	afs_invalidate_dir(dvnode, afs_dir_invalid_edit_get_block);
-+	return NULL;
-+}
-+
-+/*
-+ * Search through a directory bucket.
-+ */
-+int afs_dir_search_bucket(struct afs_dir_iter *iter, const struct qstr *name,
-+			  struct afs_fid *_fid)
-+{
-+	const union afs_xdr_dir_block *meta;
-+	unsigned int entry;
-+	int ret = -ESTALE;
-+
-+	meta = afs_dir_find_block(iter, 0);
-+	if (!meta)
-+		return -ESTALE;
-+
-+	entry = ntohs(meta->meta.hashtable[iter->bucket & (AFS_DIR_HASHTBL_SIZE - 1)]);
-+	_enter("%x,%x", iter->bucket, entry);
-+
-+	while (entry) {
-+		const union afs_xdr_dir_block *block;
-+		const union afs_xdr_dirent *dire;
-+		unsigned int blnum = entry / AFS_DIR_SLOTS_PER_BLOCK;
-+		unsigned int slot = entry % AFS_DIR_SLOTS_PER_BLOCK;
-+		unsigned int resv = (blnum == 0 ? AFS_DIR_RESV_BLOCKS0 : AFS_DIR_RESV_BLOCKS);
-+
-+		_debug("search %x", entry);
-+
-+		if (slot < resv) {
-+			kdebug("slot out of range h=%x rs=%2x sl=%2x-%2x",
-+			       iter->bucket, resv, slot, slot + iter->nr_slots - 1);
-+			goto bad;
-+		}
-+
-+		block = afs_dir_find_block(iter, blnum);
-+		if (!block)
-+			goto bad;
-+		dire = &block->dirents[slot];
-+
-+		if (slot + iter->nr_slots <= AFS_DIR_SLOTS_PER_BLOCK &&
-+		    memcmp(dire->u.name, name->name, name->len) == 0 &&
-+		    dire->u.name[name->len] == '\0') {
-+			_fid->vnode  = ntohl(dire->u.vnode);
-+			_fid->unique = ntohl(dire->u.unique);
-+			ret = entry;
-+			goto found;
-+		}
-+
-+		iter->prev_entry = entry;
-+		entry = ntohs(dire->u.hash_next);
-+		if (!--iter->loop_check) {
-+			kdebug("dir chain loop h=%x", iter->bucket);
-+			goto bad;
-+		}
-+	}
-+
-+	ret = -ENOENT;
-+found:
-+	if (iter->block) {
-+		kunmap_local(iter->block);
-+		iter->block = NULL;
-+	}
-+
-+bad:
-+	if (ret == -ESTALE)
-+		afs_invalidate_dir(iter->dvnode, afs_dir_invalid_iter_stale);
-+	_leave(" = %d", ret);
-+	return ret;
-+}
-+
-+/*
-+ * Search the appropriate hash chain in the contents of an AFS directory.
-+ */
-+int afs_dir_search(struct afs_vnode *dvnode, struct qstr *name,
-+		   struct afs_fid *_fid, afs_dataversion_t *_dir_version)
-+{
-+	struct afs_dir_iter iter = { .dvnode = dvnode, };
-+	int ret, retry_limit = 3;
-+
-+	_enter("{%lu},,,", dvnode->netfs.inode.i_ino);
-+
-+	if (!afs_dir_init_iter(&iter, name))
-+		return -ENOENT;
-+	do {
-+		if (--retry_limit < 0) {
-+			pr_warn("afs_read_dir(): Too many retries\n");
-+			ret = -ESTALE;
-+			break;
-+		}
-+		ret = afs_read_dir(dvnode, NULL);
-+		if (ret < 0) {
-+			if (ret != -ESTALE)
-+				break;
-+			if (test_bit(AFS_VNODE_DELETED, &dvnode->flags)) {
-+				ret = -ESTALE;
-+				break;
-+			}
-+			continue;
-+		}
-+		*_dir_version = inode_peek_iversion_raw(&dvnode->netfs.inode);
-+
-+		ret = afs_dir_search_bucket(&iter, name, _fid);
-+		up_read(&dvnode->validate_lock);
-+		if (ret == -ESTALE)
-+			afs_dir_reset_iter(&iter);
-+	} while (ret == -ESTALE);
-+
-+	_leave(" = %d", ret);
-+	return ret;
-+}
++good:
+ 	folio = folioq_folio(vnode->directory, 0);
+ 	folio_get(folio);
+ 	content = kmap_local_folio(folio, 0);
 diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index dd0e5278204e..8a2daa75b095 100644
+index 8a2daa75b095..a5da0dd8e9cc 100644
 --- a/fs/afs/internal.h
 +++ b/fs/afs/internal.h
-@@ -977,9 +977,14 @@ static inline void afs_invalidate_cache(struct afs_vnode *vnode, unsigned int fl
+@@ -1220,6 +1220,7 @@ extern void afs_fs_probe_cleanup(struct afs_net *);
   */
- struct afs_dir_iter {
- 	struct afs_vnode	*dvnode;
-+	union afs_xdr_dir_block *block;
- 	struct folio_queue	*fq;
- 	unsigned int		fpos;
- 	int			fq_slot;
-+	unsigned int		loop_check;
-+	u8			nr_slots;
-+	u8			bucket;
-+	unsigned int		prev_entry;
- };
+ extern const struct afs_operation_ops afs_fetch_status_operation;
  
- #include <trace/events/afs.h>
-@@ -1064,6 +1069,8 @@ extern const struct address_space_operations afs_dir_aops;
- extern const struct dentry_operations afs_fs_dentry_operations;
++void afs_init_new_symlink(struct afs_vnode *vnode, struct afs_operation *op);
+ const char *afs_get_link(struct dentry *dentry, struct inode *inode,
+ 			 struct delayed_call *callback);
+ int afs_readlink(struct dentry *dentry, char __user *buffer, int buflen);
+diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
+index 7036e9f12b07..65d9dd71f65d 100644
+--- a/fs/netfs/buffered_read.c
++++ b/fs/netfs/buffered_read.c
+@@ -210,7 +210,7 @@ static void netfs_read_to_pagecache(struct netfs_io_request *rreq)
  
- ssize_t afs_read_single(struct afs_vnode *dvnode, struct file *file);
-+ssize_t afs_read_dir(struct afs_vnode *dvnode, struct file *file)
-+	__acquires(&dvnode->validate_lock);
- extern void afs_d_release(struct dentry *);
- extern void afs_check_for_remote_deletion(struct afs_operation *);
- int afs_single_writepages(struct address_space *mapping,
-@@ -1079,6 +1086,17 @@ void afs_edit_dir_update_dotdot(struct afs_vnode *vnode, struct afs_vnode *new_d
- 				enum afs_edit_dir_reason why);
- void afs_mkdir_init_dir(struct afs_vnode *dvnode, struct afs_vnode *parent_vnode);
+ 	do {
+ 		struct netfs_io_subrequest *subreq;
+-		enum netfs_io_source source = NETFS_DOWNLOAD_FROM_SERVER;
++		enum netfs_io_source source = NETFS_SOURCE_UNKNOWN;
+ 		ssize_t slice;
  
-+/*
-+ * dir_search.c
-+ */
-+unsigned int afs_dir_hash_name(const struct qstr *name);
-+bool afs_dir_init_iter(struct afs_dir_iter *iter, const struct qstr *name);
-+union afs_xdr_dir_block *afs_dir_find_block(struct afs_dir_iter *iter, size_t block);
-+int afs_dir_search_bucket(struct afs_dir_iter *iter, const struct qstr *name,
-+			  struct afs_fid *_fid);
-+int afs_dir_search(struct afs_vnode *dvnode, struct qstr *name,
-+		   struct afs_fid *_fid, afs_dataversion_t *_dir_version);
-+
- /*
-  * dir_silly.c
-  */
+ 		subreq = netfs_alloc_subrequest(rreq);
+diff --git a/fs/netfs/read_single.c b/fs/netfs/read_single.c
+index 14bc61107182..fea0ecdecc53 100644
+--- a/fs/netfs/read_single.c
++++ b/fs/netfs/read_single.c
+@@ -97,7 +97,7 @@ static int netfs_single_dispatch_read(struct netfs_io_request *rreq)
+ 	if (!subreq)
+ 		return -ENOMEM;
+ 
+-	subreq->source	= NETFS_DOWNLOAD_FROM_SERVER;
++	subreq->source	= NETFS_SOURCE_UNKNOWN;
+ 	subreq->start	= 0;
+ 	subreq->len	= rreq->len;
+ 	subreq->io_iter	= rreq->buffer.iter;
 
