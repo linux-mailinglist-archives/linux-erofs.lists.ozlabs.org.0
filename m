@@ -2,69 +2,81 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C0C19BA118
-	for <lists+linux-erofs@lfdr.de>; Sat,  2 Nov 2024 16:21:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 211DE9BE9B1
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Nov 2024 13:36:32 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XghK33Jvxz2yxN
-	for <lists+linux-erofs@lfdr.de>; Sun,  3 Nov 2024 02:21:27 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Xk4Ss4kMHz3bc6
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Nov 2024 23:36:29 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.166.197
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1730560885;
-	cv=none; b=GZHEwB4RrRvP5awl+hrRpkzSQrXHCx/WZp/lOBC5xI/nsUny2+rSwjwbgQj6P+CcxP+dxk4DtgEXRiDyohMQcyEAM9dS44GaKu5Q6cRQXFOSIiCNCu49stF90YOe9BqQ58s+3Crz/lEOj83dfQvFC+PqPAKe96g8zQk35XfXSzzJrLALz0xp5PPRAtoKBbXuOdG+kXCTer8Wh+Vdc83dGr3weBfoq1fA/ZRUGvFQIQ6xsElJGj5u0dhD32Je5AY/lpNG8cs/oUgUecX9zVnrZ18KmUWnkI8xWlLRFngbS11zO4da2GZvkIJVJ9qiz4tz7q0RqZ8Np2hJTez7sdz0IA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1730896587;
+	cv=none; b=X5N9ar1EdlPRXvtoTxYskQ7ct4OkBjIQHtR4fZfr4wvh1mVcK6Ff4CmrveTH5lF2v3Uvae9nyvpurDvsYCum9Vc5iiX4Ox6oYUBi6p1nsRCFYEDvqQ4qDBT7P2dH9T4bHHpYchUqHCHxX7BF7Cc9X+/Tx5sWzO9ZdtNhWU7toCLE/z+3DDaclvK8uh4uYgt4lD3l3izikiNy3yUcEn7E0bf4j1kJFw6CyG1DFzb34bfCdGM+96PQoVSv205cnDjTvZShdHCnrXfMtJ6bLQuFL53BJeaqVIbAkplYD2V6ukeNlWR1IiQYVBv01Lb6k8JVmHX//Avso4+oCbQeJl+vwg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1730560885; c=relaxed/relaxed;
-	bh=1mS1EZv8tKnHllK5w7UYrymDgh7QiAcoeNCY5a8WVYQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bX5WBucRx1kL4QLkqkPwT/byDhx2rra0wYszKh1IVd5wZl6RSGSM0O2D3t23Lqg7lT5AJKMQLMaKZljZnZZbAOSfBJXZDPUyN6jDS9sXfnlCXWXW5NLeUBmksVkBcWxy9zB4mo//bVpJ2UwT+TqRhMvQA1UhFDigsaoxIZVsYlNcfD2ippY7i086PRihOXmXemCRgACgYNABJKPoojkgNxjBDMZfEXA11Qrtdrtv0McfQ77gtk5x7PYdwosn15miMcPtwjB1qbDfwjS96D6T8HyvhynrQNmnVOFzDYzijikv5sQDdo8OoVcM8jth8qWGwCZbOjocuoAgzpJl2Fw5Mg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass (client-ip=209.85.166.197; helo=mail-il1-f197.google.com; envelope-from=3bummzwkbamwagh2s33w9s770v.y66y3wcaw9u65bw5b.u64@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com
-Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.197; helo=mail-il1-f197.google.com; envelope-from=3bummzwkbamwagh2s33w9s770v.y66y3wcaw9u65bw5b.u64@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	t=1730896587; c=relaxed/relaxed;
+	bh=PRcVOi8fEmCkz8wHhRUMvvbh0uqF6xg3VFAicACwFBU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pwzcx6e3+epwXQma4Z8ZqSd5Xrr/uY5R6pJvZTjQu65yPZ+MQOoTa9TvK2anXqdPOANSG+1NWrdaXTUNggBsAhOuDcRnhgJm3zhYj3zKRpyz9uxQcDTmmmUPxizXke2yz5HMpE1vvCa0Tk/pJNybv/GenLqt6bdX9h+xrU3wde26JydpOVARhrPxHYaJuS1aIZZPGXSojdKbAzatWLE8IFuUZ6xUW87S3DtkgJXbpD/B266vCezoiVzr8qM4hCKA3THirVPUxAwJqZvIVpgE0rX7o+3ypDgJnpXRxnG5exAaHS3znlAOJV8Jga1cqyezc1LyUD+2cOEvL9bQ0xRk/Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=RiIhdr3y; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=RiIhdr3y; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=RiIhdr3y;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=RiIhdr3y;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XghJy71m3z2xfR
-	for <linux-erofs@lists.ozlabs.org>; Sun,  3 Nov 2024 02:21:21 +1100 (AEDT)
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3a6add3a52eso16086875ab.0
-        for <linux-erofs@lists.ozlabs.org>; Sat, 02 Nov 2024 08:21:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730560877; x=1731165677;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1mS1EZv8tKnHllK5w7UYrymDgh7QiAcoeNCY5a8WVYQ=;
-        b=ei7BSuyjcHqVxvGf6LOG8OM4WIv+LuyxEtsp1AAO/dRnLQC7JMYDxzDnv//MpWTDhn
-         TQ62+xTiiUMTI3Hf8gPKh0DETELeaySlIXetjzsu0DdeGdapXEjbndtDx9e7MkjJwRAa
-         vvn+A2lZgMJ5aorDOTR1pzRaG4gLEQ03c5xKMDiQcrMoG6v8BeiinOd9mdm8uOyFFA7m
-         CZGXLXHjLa7H8PqeZPSYIlrMa3JM+hAdyYiCDxKFHpAjOH7wsgXRLVRVbjC/7mm/d2nC
-         IE4TJ3a32xemwLnOp4W5n2bn+TBYEE2KP8/jRpgQkjkHr+RwLAy6HEnr/YLNQtlSB26B
-         z47A==
-X-Forwarded-Encrypted: i=1; AJvYcCX/8EfdE20xcVXJi5fppW/FwF14PjaugXlMlDLjbPpg27sbCg6sMX/xvYvjfC0MmfA5tK86GdEXvJ5sKg==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YzJOKkF1ddxncH9IkvXq2KVPF59vLdfQ5pX11FMdwL3tolYbXSs
-	EFszBH1mq/+1VzzbSOmnHGjhgZIZKEgxUjZS9+GSyB9mTjGJRVRWI3/Q8w50POQfUNqMu7zZ5Sm
-	Gr64n25WdxX/vsT+sm2ePIyHuEdZL5ekuKGaVt3xO6OPzNEx9okU4sDo=
-X-Google-Smtp-Source: AGHT+IG5GYzTP8HGRo46WO7wFdGqLPgeubh8U11Q3Pr9laRvypwXf/fhMbbj8Uf8x/QIB/soke8tzpCb85UfVIMF0f9Ri4MWmBeC
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Xk4Sp2BqZz2xpx
+	for <linux-erofs@lists.ozlabs.org>; Wed,  6 Nov 2024 23:36:24 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730896581;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PRcVOi8fEmCkz8wHhRUMvvbh0uqF6xg3VFAicACwFBU=;
+	b=RiIhdr3yKQWgYiN0iiz9D2k7ZCyYhvbSBJqXoVOUbWurISRnrr+p+/gLGOpzthdLVklAEv
+	2Oi/q2k+j1U8ctcNW2F80VgG+uQ+Qy8t6K4AC89RjzPGOKoIWCPPquuNmvqXdsdcAM0yrJ
+	pEsfawyP7WTtGes49/TA/naPYDy1MVw=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730896581;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PRcVOi8fEmCkz8wHhRUMvvbh0uqF6xg3VFAicACwFBU=;
+	b=RiIhdr3yKQWgYiN0iiz9D2k7ZCyYhvbSBJqXoVOUbWurISRnrr+p+/gLGOpzthdLVklAEv
+	2Oi/q2k+j1U8ctcNW2F80VgG+uQ+Qy8t6K4AC89RjzPGOKoIWCPPquuNmvqXdsdcAM0yrJ
+	pEsfawyP7WTtGes49/TA/naPYDy1MVw=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-636-0AfinYUAMj-3_Ts0JJm2ng-1; Wed,
+ 06 Nov 2024 07:36:17 -0500
+X-MC-Unique: 0AfinYUAMj-3_Ts0JJm2ng-1
+X-Mimecast-MFC-AGG-ID: 0AfinYUAMj-3_Ts0JJm2ng
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D3461955F41;
+	Wed,  6 Nov 2024 12:36:12 +0000 (UTC)
+Received: from warthog.procyon.org.uk.com (unknown [10.42.28.231])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 73F791956054;
+	Wed,  6 Nov 2024 12:36:03 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+	Steve French <smfrench@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v3 00/33] netfs: Read performance improvements and "single-blob" support
+Date: Wed,  6 Nov 2024 12:35:24 +0000
+Message-ID: <20241106123559.724888-1-dhowells@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:ca5:b0:39f:5def:a23d with SMTP id
- e9e14a558f8ab-3a6afec7f93mr57509365ab.5.1730560877361; Sat, 02 Nov 2024
- 08:21:17 -0700 (PDT)
-Date: Sat, 02 Nov 2024 08:21:17 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6726436d.050a0220.529b6.02d2.GAE@google.com>
-Subject: [syzbot] [integrity?] [lsm?] [erofs?] INFO: task hung in
- ima_file_free (4)
-From: syzbot <syzbot+8036326eebe7d0140944@syzkaller.appspotmail.com>
-To: chao@kernel.org, dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, 
-	jmorris@namei.org, linux-erofs@lists.ozlabs.org, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, paul@paul-moore.com, 
-	roberto.sassu@huawei.com, serge@hallyn.com, syzkaller-bugs@googlegroups.com, 
-	xiang@kernel.org, zohar@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=3.1 required=5.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H2,SORTED_RECIPS,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
-X-Spam-Level: ***
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -77,117 +89,289 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, Shyam Prasad N <sprasad@microsoft.com>, linux-cifs@vger.kernel.org, netdev@vger.kernel.org, Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org, linux-mm@kvack.org, netfs@lists.linux.dev, Marc Dionne <marc.dionne@auristor.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Eric Van Hensbergen <ericvh@kernel.org>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hello,
+Hi Christian, Steve, Willy,
 
-syzbot found the following issue on:
+This set of patches is primarily about two things: improving read
+performance and supporting monolithic single-blob objects that have to be
+read/written as such (e.g. AFS directory contents).  The implementation of
+the two parts is interwoven as each makes the other possible.
 
-HEAD commit:    e42b1a9a2557 Merge tag 'spi-fix-v6.12-rc5' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=150d4a30580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4aec7739e14231a7
-dashboard link: https://syzkaller.appspot.com/bug?extid=8036326eebe7d0140944
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15901ca7980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15fc815f980000
+READ PERFORMANCE
+================
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-e42b1a9a.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3e2253169da8/vmlinux-e42b1a9a.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b9d2f5008f24/bzImage-e42b1a9a.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/bc2284f99b09/mount_0.gz
+The read performance improvements are intended to speed up some loss of
+performance detected in cifs and to a lesser extend in afs.  The problem is
+that we queue too many work items during the collection of read results:
+each individual subrequest is collected by its own work item, and then they
+have to interact with each other when a series of subrequests don't exactly
+align with the pattern of folios that are being read by the overall
+request.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8036326eebe7d0140944@syzkaller.appspotmail.com
+Whilst the processing of the pages covered by individual subrequests as
+they complete potentially allows folios to be woken in parallel and with
+minimum delay, it can shuffle wakeups for sequential reads out of order -
+and that is the most common I/O pattern.
 
-INFO: task syz-executor688:5342 blocked for more than 143 seconds.
-      Not tainted 6.12.0-rc5-syzkaller-00005-ge42b1a9a2557 #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor688 state:D stack:25920 pid:5342  tgid:5342  ppid:5339   flags:0x00000006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5328 [inline]
- __schedule+0x18af/0x4bd0 kernel/sched/core.c:6690
- __schedule_loop kernel/sched/core.c:6767 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6782
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6839
- __mutex_lock_common kernel/locking/mutex.c:684 [inline]
- __mutex_lock+0x6a7/0xd70 kernel/locking/mutex.c:752
- ima_check_last_writer security/integrity/ima/ima_main.c:166 [inline]
- ima_file_free+0x17f/0x4d0 security/integrity/ima/ima_main.c:205
- security_file_release+0x92/0x140 security/security.c:2873
- __fput+0x1ae/0x880 fs/file_table.c:425
- __do_sys_close fs/open.c:1567 [inline]
- __se_sys_close fs/open.c:1552 [inline]
- __x64_sys_close+0x7f/0x110 fs/open.c:1552
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd7dd29cdda
-RSP: 002b:00007ffd572b6bd0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fd7dd29cdda
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
-RBP: 0000000000000032 R08: 0000000000000000 R09: 7fffffffffffffff
-R10: 0000000000000000 R11: 0000000000000293 R12: 00007fd7dd32560c
-R13: 0000000000000009 R14: 0000000000040e1f R15: 0000000000040e51
- </TASK>
+The final assessment and cleanup of an operation is then held up until the
+last I/O completes - and for a synchronous sequential operation, this means
+the bouncing around of work items just adds latency.
 
-Showing all locks held in the system:
-1 lock held by khungtaskd/25:
- #0: ffffffff8e937da0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- #0: ffffffff8e937da0 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
- #0: ffffffff8e937da0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6720
-2 locks held by getty/5108:
- #0: ffff88801fa510a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc9000039b2f0 (&ldata->atomic_read_lock){+.+.}-{3:3}, at: n_tty_read+0x6a6/0x1e00 drivers/tty/n_tty.c:2211
-1 lock held by syz-executor688/5342:
- #0: ffff88803f594398 (&ima_iint_mutex_key[depth]#2){+.+.}-{3:3}, at: ima_check_last_writer security/integrity/ima/ima_main.c:166 [inline]
- #0: ffff88803f594398 (&ima_iint_mutex_key[depth]#2){+.+.}-{3:3}, at: ima_file_free+0x17f/0x4d0 security/integrity/ima/ima_main.c:205
-1 lock held by syz-executor688/5343:
+Two changes have been made to make this work:
 
-=============================================
+ (1) All collection is now done in a single "work item" that works
+     progressively through the subrequests as they complete (and also
+     dispatches retries as necessary).
 
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 25 Comm: khungtaskd Not tainted 6.12.0-rc5-syzkaller-00005-ge42b1a9a2557 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:223 [inline]
- watchdog+0xff4/0x1040 kernel/hung_task.c:379
- kthread+0x2f0/0x390 kernel/kthread.c:389
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
+ (2) For readahead and AIO, this work item be done on a workqueue and can
+     run in parallel with the ultimate consumer of the data; for
+     synchronous direct or unbuffered reads, the collection is run in the
+     application thread and not offloaded.
+
+Functions such as smb2_readv_callback() then just tell netfslib that the
+subrequest has terminated; netfslib does a minimal bit of processing on the
+spot - stat counting and tracing mostly - and then queues/wakes up the
+worker.  This simplifies the logic as the collector just walks sequentially
+through the subrequests as they complete and walks through the folios, if
+buffered, unlocking them as it goes.  It also keeps to a minimum the amount
+of latency injected into the filesystem's low-level I/O handling
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+SINGLE-BLOB OBJECT SUPPORT
+==========================
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Single-blob objects are files for which the content of the file must be
+read from or written to the server in a single operation because reading
+them in parts may yield inconsistent results.  AFS directories are an
+example of this as there exists the possibility that the contents are
+generated on the fly and would differ between reads or might change due to
+third party interference.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Such objects will be written to and retrieved from the cache if one is
+present, though we allow/may need to propose multiple subrequests to do so.
+The important part is that read from/write to the *server* is monolithic.
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Single blob reading is, for the moment, fully synchronous and does result
+collection in the application thread and, also for the moment, the API is
+supplied the buffer in the form of a folio_queue chain rather than using
+the pagecache.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+AFS CHANGES
+===========
 
-If you want to undo deduplication, reply with:
-#syz undup
+This series makes a number of changes to the kafs filesystem, primarily in
+the area of directory handling:
+
+ (1) AFS's FetchData RPC reply processing is made partially asynchronous
+     which allows the netfs_io_request's outstanding operation counter to
+     be removed as part of reducing the collection to a single work item.
+
+ (2) Directory and symlink reading are plumbed through netfslib using the
+     single-blob object API and are now cacheable with fscache.  This also
+     allows the afs_read struct to be eliminated and netfs_io_subrequest to
+     be used directly instead.
+
+ (3) Directory and symlink content are now stored in a folio_queue buffer
+     rather than in the pagecache.  This means we don't require the RCU
+     read lock and xarray iteration to access it, and folios won't randomly
+     disappear under us because the VM wants them back.
+
+     There are some downsides to this, though: the storage folios are no
+     longer known to the VM, drop_caches can't flush them, the folios are
+     not migrateable.  The inode must also be marked dirty manually to get
+     the data written to the cache in the background.
+
+ (4) The vnode operation lock is changed from a mutex struct to a private
+     lock implementation.  The problem is that the lock now needs to be
+     dropped in a separate thread and mutexes don't permit that.
+
+ (5) When a new directory or symlink is created, we now initialise it
+     locally and mark it valid rather than downloading it (we know what
+     it's likely to look like).
+
+ (6) We now use the in-directory hashtable to reduce the number of entries
+     we need to scan when doing a lookup.  The edit routines have to
+     maintain the hash chains.
+
+ (7) Cancellation (e.g. by signal) of an async call after the rxrpc_call
+     has been set up is now offloaded to the worker thread as there will be
+     a notification from rxrpc upon completion.  This avoids a double
+     cleanup.
+
+
+SUPPORTING CHANGES
+==================
+
+To support the above some other changes are also made:
+
+ (1) A "rolling buffer" implementation is created to abstract out the two
+     separate folio_queue chaining implementations I had (one for read and
+     one for write).
+
+ (2) Functions are provided to create/extend a buffer in a folio_queue
+     chain and tear it down again.  This is used to handle AFS directories,
+     but could also be used to create bounce buffers for content crypto and
+     transport crypto.
+
+ (3) The was_async argument is dropped from netfs_read_subreq_terminated().
+     Instead we wake the read collection work item by either queuing it or
+     waking up the app thread.
+
+ (4) We don't need to use BH-excluding locks when communicating between the
+     issuing thread and the collection thread as neither of them now run in
+     BH context.
+
+
+MISCELLANY
+==========
+
+Also included are some fixes from Matthew Wilcox that need to be applied
+first; a number of new tracepoints; a split of the netfslib write
+collection code to put retrying into its own file (it gets more complicated
+with content encryption).
+
+There are also some minor fixes AFS included, including fixing the AFS
+directory format struct layout, reducing some directory over-invalidation
+and making afs_mkdir() translate EEXIST to ENOTEMPY (which is not available
+on all systems the servers support).
+
+Finally, there's a patch to try and detect entry into the folio unlock
+function with no folio_queue structs in the buffer (which isn't allowed in
+the cases that can get there).  This is a debugging patch, but should be
+minimal overhead.
+
+
+The patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-writeback
+
+
+CHANGES
+=======
+
+ver #3)
+ - In afs, fix a number of issues in asynchronous FetchData handling.
+ - In afs, fix a signedness issue in an error check dir editing.
+ - To afs, add a patch to fix handling of interruption by a signal whilst
+    an async call is being set up.
+
+ver #2)
+ - Handle that we might be in RCU pathwalk in afs_get_link().
+ - Fix double-call of afs_put_operation() in async FetchData.
+ - Don't set ->mapping on directory and symlink folios as they're not in
+   the pagecache.
+ - Add an afs patch to search the directory's hash table on lookup.
+ - Add an afs patch to preset the contents of a new symlink on creation.
+ - Add an afs patch to add a tracepoint in the async FetchData response
+   processing.
+ - Add a patch to report if a NULL folio_queue pointer is seen in
+   netfs_writeback_unlock_folios().
+
+Thanks,
+David
+
+David Howells (30):
+  kheaders: Ignore silly-rename files
+  netfs: Use a folio_queue allocation and free functions
+  netfs: Add a tracepoint to log the lifespan of folio_queue structs
+  netfs: Abstract out a rolling folio buffer implementation
+  netfs: Make netfs_advance_write() return size_t
+  netfs: Split retry code out of fs/netfs/write_collect.c
+  netfs: Drop the error arg from netfs_read_subreq_terminated()
+  netfs: Drop the was_async arg from netfs_read_subreq_terminated()
+  netfs: Don't use bh spinlock
+  afs: Don't use mutex for I/O operation lock
+  afs: Fix EEXIST error returned from afs_rmdir() to be ENOTEMPTY
+  afs: Fix directory format encoding struct
+  netfs: Remove some extraneous directory invalidations
+  cachefiles: Add some subrequest tracepoints
+  cachefiles: Add auxiliary data trace
+  afs: Add more tracepoints to do with tracking validity
+  netfs: Add functions to build/clean a buffer in a folio_queue
+  netfs: Add support for caching single monolithic objects such as AFS
+    dirs
+  afs: Make afs_init_request() get a key if not given a file
+  afs: Use netfslib for directories
+  afs: Use netfslib for symlinks, allowing them to be cached
+  afs: Eliminate afs_read
+  afs: Fix cleanup of immediately failed async calls
+  afs: Make {Y,}FS.FetchData an asynchronous operation
+  netfs: Change the read result collector to only use one work item
+  afs: Make afs_mkdir() locally initialise a new directory's content
+  afs: Use the contained hashtable to search a directory
+  afs: Locally initialise the contents of a new symlink on creation
+  afs: Add a tracepoint for afs_read_receive()
+  netfs: Report on NULL folioq in netfs_writeback_unlock_folios()
+
+Matthew Wilcox (Oracle) (3):
+  netfs: Remove call to folio_index()
+  netfs: Fix a few minor bugs in netfs_page_mkwrite()
+  netfs: Remove unnecessary references to pages
+
+ fs/9p/vfs_addr.c                  |   8 +-
+ fs/afs/Makefile                   |   1 +
+ fs/afs/callback.c                 |   4 +-
+ fs/afs/dir.c                      | 803 +++++++++++++++---------------
+ fs/afs/dir_edit.c                 | 382 ++++++++------
+ fs/afs/dir_search.c               | 227 +++++++++
+ fs/afs/file.c                     | 260 +++++-----
+ fs/afs/fs_operation.c             | 113 ++++-
+ fs/afs/fsclient.c                 |  62 +--
+ fs/afs/inode.c                    | 138 ++++-
+ fs/afs/internal.h                 | 142 ++++--
+ fs/afs/main.c                     |   2 +-
+ fs/afs/mntpt.c                    |  22 +-
+ fs/afs/rotate.c                   |   4 +-
+ fs/afs/rxrpc.c                    |  37 +-
+ fs/afs/super.c                    |   4 +-
+ fs/afs/validation.c               |  31 +-
+ fs/afs/vlclient.c                 |   1 +
+ fs/afs/write.c                    |  16 +-
+ fs/afs/xdr_fs.h                   |   2 +-
+ fs/afs/yfsclient.c                |  49 +-
+ fs/cachefiles/io.c                |   4 +
+ fs/cachefiles/xattr.c             |   9 +-
+ fs/ceph/addr.c                    |  13 +-
+ fs/netfs/Makefile                 |   5 +-
+ fs/netfs/buffered_read.c          | 276 ++++------
+ fs/netfs/buffered_write.c         |  41 +-
+ fs/netfs/direct_read.c            |  80 +--
+ fs/netfs/direct_write.c           |  10 +-
+ fs/netfs/internal.h               |  36 +-
+ fs/netfs/main.c                   |   6 +-
+ fs/netfs/misc.c                   | 163 +++---
+ fs/netfs/objects.c                |  21 +-
+ fs/netfs/read_collect.c           | 703 +++++++++++++++-----------
+ fs/netfs/read_pgpriv2.c           |  35 +-
+ fs/netfs/read_retry.c             | 209 ++++----
+ fs/netfs/read_single.c            | 195 ++++++++
+ fs/netfs/rolling_buffer.c         | 225 +++++++++
+ fs/netfs/stats.c                  |   4 +-
+ fs/netfs/write_collect.c          | 278 ++---------
+ fs/netfs/write_issue.c            | 239 ++++++++-
+ fs/netfs/write_retry.c            | 233 +++++++++
+ fs/nfs/fscache.c                  |   6 +-
+ fs/nfs/fscache.h                  |   3 +-
+ fs/smb/client/cifssmb.c           |  12 +-
+ fs/smb/client/file.c              |   3 +-
+ fs/smb/client/smb2ops.c           |   2 +-
+ fs/smb/client/smb2pdu.c           |  14 +-
+ include/linux/folio_queue.h       |  12 +-
+ include/linux/netfs.h             |  55 +-
+ include/linux/rolling_buffer.h    |  61 +++
+ include/trace/events/afs.h        | 210 +++++++-
+ include/trace/events/cachefiles.h |  13 +-
+ include/trace/events/netfs.h      |  97 ++--
+ kernel/gen_kheaders.sh            |   1 +
+ lib/kunit_iov_iter.c              |   4 +-
+ 56 files changed, 3635 insertions(+), 1951 deletions(-)
+ create mode 100644 fs/afs/dir_search.c
+ create mode 100644 fs/netfs/read_single.c
+ create mode 100644 fs/netfs/rolling_buffer.c
+ create mode 100644 fs/netfs/write_retry.c
+ create mode 100644 include/linux/rolling_buffer.h
+
