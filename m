@@ -1,57 +1,57 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2B789C0381
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Nov 2024 12:11:06 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DEE79C037E
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Nov 2024 12:10:47 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1730977864;
-	bh=kPFDwkhjsxkB7QtBB+Gq8YXyzY7MRMaHqdUm9LSSOPU=;
+	s=201707; t=1730977845;
+	bh=TiISMCGSbl/MEi6Uj+4tuAX5DXWUm+fP88j6qprCgy0=;
 	h=To:Subject:Date:In-Reply-To:References:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=bzROSO1wfdDFG5UqdcrinuvEeCyBMt2HZUNHr9L+cD1Yg12la7zmZiwOltdVKTYLb
-	 jstH7tbLaZbeF6aX12eSMVVfxu009rJu8DK9QnRXBgWMiRyGYfNGazv7kIBNz8zrZx
-	 XGWAiYSHq/twqZXJlJnQjI0Zr7fUddixLuO1lNr7IfSwn/+Ba/6+RqFhMOH2fOKNdZ
-	 bS+kls9QlrTFE4cqW78AROOpaO2lvs4/vYu2XkZ9B14TcDaVsZSqdP36JIC3YWD5Ec
-	 ctS3y9J9mzMnvb8g2MvmKCzFQHf1bBuZHjYpCJUqcoI/WY6T8cT4p1f87X2KS1sOXO
-	 eHM6RIqH+2/Xg==
+	b=PKLoMIxWgPo4GcxWBduY6WKCSBgoyyl1qTtfSwJmoBfaRR7Say3TaUa7t4NuLH6Lz
+	 gvDA2XenFCHDsI5mgHv2btykf6qKXhJPaIFqjReu8Z+1Tp3oxvsarGQBriFj8fj6bx
+	 0Z6ayHFfg8ZdCErhrKvwlQakGUeZo+rCKscNexAtiK5sCTGRlXgNIJYvpvKP52mh7x
+	 zqLPC/2I1cA0QsDNxtwt2UkjYAiT39Ezdd4jLgAb8gibDk5IAATigcqOzgTfifO4j9
+	 wjCzQbBm87VMGEIQF0Q6nQuWajqQGeH7HJfFQKqE6tXfm9ZxfBYJgO5GjxG8HWrXZK
+	 0pAOubVx3Qllg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XkfWr63Dkz3bnL
-	for <lists+linux-erofs@lfdr.de>; Thu,  7 Nov 2024 22:11:04 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XkfWT08KQz3bpL
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Nov 2024 22:10:45 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1730977863;
-	cv=none; b=OSozTkMTk6g/FA1PBe2iTrlS8zFKsJv3TevPEEUr4nYtQtoL7C9xVbvOsHGpnEaVwzbWJM3RMtHLTo6uU/T4pcs3qs8kP0HGVIQ3Rw3EQpYkayHkad5n/YLOZhPjr4/fR0MNKnqcaz1b66ruQ3fb4mqS/SHCA5ZYqbJHdAzYwHgQFdAlyrlgI4+UA9WB1iBz5ozHKOFdGs37Nz+MtQxGAAmYvg5FQ/UhiJwM8wxF4s8gL58ypnpTDVf/ItPGnRX+unxtdinofp08n6qCRExv26QdhHU86ZaPL1fbPyXom8o03XyzgYD7+J7P+wcWErbH/X81LRO2Op9hgYCq4nVnJQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.35
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1730977843;
+	cv=none; b=jqwtKXCoEiMkiMIip4c/KQGQJ0hVgQeDTQZnmeECwAJAZLPnrPoFVyimZVsXezCH837Mfg3l8FGZKb953XbPfM2AxiHvLaxROR7pmn5Tl54o1ulJw2uqEl4cQHM9wsqNlY9NY7C24dxS2Ef5lxfZNoDVNdtnh9b30CEwLJ+sXv/OMCDHw5YbIgQEY40PKziwunXvSlTQZh2MT43Mqd5PbptU8gOP/jcgtAgifgITAckWyP+sN6bIesk4Fj/yhiDY4F8hAplyDClVibZufW7jsfo5RucpDTNKkgGeOEy3uBZeJOQTuDZEnyrLnFu1O1ma9K9Em2oXOsh/OQYQaD+eug==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1730977863; c=relaxed/relaxed;
-	bh=kPFDwkhjsxkB7QtBB+Gq8YXyzY7MRMaHqdUm9LSSOPU=;
+	t=1730977843; c=relaxed/relaxed;
+	bh=TiISMCGSbl/MEi6Uj+4tuAX5DXWUm+fP88j6qprCgy0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CHQUT4LcxlJ96mE53YG5xRNkZV45YyCERC/RG+PVHkzZ2hrnC62Vo37NWmteP7LUlZzJHLNx+SOAdRpADpGUf1gyjTYqyujpasapBp5yVlpMoshAzjD3qOBjOHj/JjVP77V4cPofG5Ti651pQr67jewQIm9nB04F2SSCHP9K8Anyy7+yha/nII5vC9C/aGgOUt1eGejcoFqhLmNSHYmyL4tzdgKv8eYmkPSmXic8Gka8SytMuh4d04+cnPiNFjr1uUCIJKKOeG6e8zs0Wccyio/q7qKnbvf4MonRl/OKr5wFD15UhzuC2Vs/8NVCLlb1oCvK/UhlGkUM0sWpgq7D3w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=wozizhi@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+	 MIME-Version:Content-Type; b=PJ3ORIf+ulNKFrAYfLOZXRCW52P9AcgtgwwuC1FD6pvI21XjOuQV8mBIn75eMuv3xEwkjwJdpj2v6Fxi1yIx+vQLGFf2j5nGCizrGDrRxloCQ94Q8FQsdXHV/5p2F3rdB/F7wlJJQnBNfOd3ijukQgbIu63ax1xK6eIDpL9TKarUzNH8NDWseLssJhgCxXPnE3g3my9VcJT9z8LHWc4pLXM7uwfaEzlEXcOHVJNgTybIECehXpKAaAnZoxJXE3KsRjbX5oCaCuIKMtWAQ1KWls0VDoInxtrS4ANNNzzjy/+1q2vw3Msn3qPcWkIccz51VtSZ7vx3QLl2rAn4OAhL/w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.35; helo=szxga07-in.huawei.com; envelope-from=wozizhi@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=wozizhi@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.35; helo=szxga07-in.huawei.com; envelope-from=wozizhi@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XkfWn4mDhz3bdj
-	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Nov 2024 22:11:01 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4XkfSN1F9mz10Qlh;
-	Thu,  7 Nov 2024 19:08:04 +0800 (CST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XkfWL5cTzz3bmC
+	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Nov 2024 22:10:37 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4XkfT7637Rz1SGC6;
+	Thu,  7 Nov 2024 19:08:43 +0800 (CST)
 Received: from kwepemf100017.china.huawei.com (unknown [7.202.181.16])
-	by mail.maildlp.com (Postfix) with ESMTPS id B7DF71400DC;
-	Thu,  7 Nov 2024 19:10:25 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id C45F41A0188;
+	Thu,  7 Nov 2024 19:10:26 +0800 (CST)
 Received: from huawei.com (10.175.104.67) by kwepemf100017.china.huawei.com
  (7.202.181.16) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 7 Nov
- 2024 19:10:24 +0800
+ 2024 19:10:25 +0800
 To: <netfs@lists.linux.dev>, <dhowells@redhat.com>, <jlayton@kernel.org>,
 	<brauner@kernel.org>
-Subject: [PATCH v2 4/5] cachefiles: Fix NULL pointer dereference in object->file
-Date: Thu, 7 Nov 2024 19:06:48 +0800
-Message-ID: <20241107110649.3980193-5-wozizhi@huawei.com>
+Subject: [PATCH v2 5/5] netfs/fscache: Add a memory barrier for FSCACHE_VOLUME_CREATING
+Date: Thu, 7 Nov 2024 19:06:49 +0800
+Message-ID: <20241107110649.3980193-6-wozizhi@huawei.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20241107110649.3980193-1-wozizhi@huawei.com>
 References: <20241107110649.3980193-1-wozizhi@huawei.com>
@@ -82,134 +82,58 @@ Cc: yangerkun@huawei.com, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kerne
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-At present, the object->file has the NULL pointer dereference problem in
-ondemand-mode. The root cause is that the allocated fd and object->file
-lifetime are inconsistent, and the user-space invocation to anon_fd uses
-object->file. Following is the process that triggers the issue:
+In fscache_create_volume(), there is a missing memory barrier between the
+bit-clearing operation and the wake-up operation. This may cause a
+situation where, after a wake-up, the bit-clearing operation hasn't been
+detected yet, leading to an indefinite wait. The triggering process is as
+follows:
 
-	  [write fd]				[umount]
-cachefiles_ondemand_fd_write_iter
-				       fscache_cookie_state_machine
-					 cachefiles_withdraw_cookie
-  if (!file) return -ENOBUFS
-					   cachefiles_clean_up_object
-					     cachefiles_unmark_inode_in_use
-					     fput(object->file)
-					     object->file = NULL
-  // file NULL pointer dereference!
-  __cachefiles_write(..., file, ...)
+  [cookie1]                [cookie2]                  [volume_work]
+fscache_perform_lookup
+  fscache_create_volume
+                        fscache_perform_lookup
+                          fscache_create_volume
+			                        fscache_create_volume_work
+                                                  cachefiles_acquire_volume
+                                                  clear_and_wake_up_bit
+    test_and_set_bit
+                            test_and_set_bit
+                              goto maybe_wait
+      goto no_wait
 
-Fix this issue by add an additional reference count to the object->file
-before write/llseek, and decrement after it finished.
+In the above process, cookie1 and cookie2 has the same volume. When cookie1
+enters the -no_wait- process, it will clear the bit and wake up the waiting
+process. If a barrier is missing, it may cause cookie2 to remain in the
+-wait- process indefinitely.
 
-Fixes: c8383054506c ("cachefiles: notify the user daemon when looking up cookie")
+In commit 3288666c7256 ("fscache: Use clear_and_wake_up_bit() in
+fscache_create_volume_work()"), barriers were added to similar operations
+in fscache_create_volume_work(), but fscache_create_volume() was missed.
+
+By combining the clear and wake operations into clear_and_wake_up_bit() to
+fix this issue.
+
+Fixes: bfa22da3ed65 ("fscache: Provide and use cache methods to lookup/create/free a volume")
 Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+Acked-by: David Howells <dhowells@redhat.com>
 ---
- fs/cachefiles/interface.c | 14 ++++++++++----
- fs/cachefiles/ondemand.c  | 30 ++++++++++++++++++++++++------
- 2 files changed, 34 insertions(+), 10 deletions(-)
+ fs/netfs/fscache_volume.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/cachefiles/interface.c b/fs/cachefiles/interface.c
-index 35ba2117a6f6..3e63cfe15874 100644
---- a/fs/cachefiles/interface.c
-+++ b/fs/cachefiles/interface.c
-@@ -327,6 +327,8 @@ static void cachefiles_commit_object(struct cachefiles_object *object,
- static void cachefiles_clean_up_object(struct cachefiles_object *object,
- 				       struct cachefiles_cache *cache)
- {
-+	struct file *file;
-+
- 	if (test_bit(FSCACHE_COOKIE_RETIRED, &object->cookie->flags)) {
- 		if (!test_bit(CACHEFILES_OBJECT_USING_TMPFILE, &object->flags)) {
- 			cachefiles_see_object(object, cachefiles_obj_see_clean_delete);
-@@ -342,10 +344,14 @@ static void cachefiles_clean_up_object(struct cachefiles_object *object,
+diff --git a/fs/netfs/fscache_volume.c b/fs/netfs/fscache_volume.c
+index cb75c07b5281..ced14ac78cc1 100644
+--- a/fs/netfs/fscache_volume.c
++++ b/fs/netfs/fscache_volume.c
+@@ -322,8 +322,7 @@ void fscache_create_volume(struct fscache_volume *volume, bool wait)
  	}
- 
- 	cachefiles_unmark_inode_in_use(object, object->file);
--	if (object->file) {
--		fput(object->file);
--		object->file = NULL;
--	}
-+
-+	spin_lock(&object->lock);
-+	file = object->file;
-+	object->file = NULL;
-+	spin_unlock(&object->lock);
-+
-+	if (file)
-+		fput(file);
+ 	return;
+ no_wait:
+-	clear_bit_unlock(FSCACHE_VOLUME_CREATING, &volume->flags);
+-	wake_up_bit(&volume->flags, FSCACHE_VOLUME_CREATING);
++	clear_and_wake_up_bit(FSCACHE_VOLUME_CREATING, &volume->flags);
  }
  
  /*
-diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
-index 38ca6dce8ef2..fe3de9ad57bf 100644
---- a/fs/cachefiles/ondemand.c
-+++ b/fs/cachefiles/ondemand.c
-@@ -60,20 +60,26 @@ static ssize_t cachefiles_ondemand_fd_write_iter(struct kiocb *kiocb,
- {
- 	struct cachefiles_object *object = kiocb->ki_filp->private_data;
- 	struct cachefiles_cache *cache = object->volume->cache;
--	struct file *file = object->file;
-+	struct file *file;
- 	size_t len = iter->count, aligned_len = len;
- 	loff_t pos = kiocb->ki_pos;
- 	const struct cred *saved_cred;
- 	int ret;
- 
--	if (!file)
-+	spin_lock(&object->lock);
-+	file = object->file;
-+	if (!file) {
-+		spin_unlock(&object->lock);
- 		return -ENOBUFS;
-+	}
-+	get_file(file);
-+	spin_unlock(&object->lock);
- 
- 	cachefiles_begin_secure(cache, &saved_cred);
- 	ret = __cachefiles_prepare_write(object, file, &pos, &aligned_len, len, true);
- 	cachefiles_end_secure(cache, saved_cred);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	trace_cachefiles_ondemand_fd_write(object, file_inode(file), pos, len);
- 	ret = __cachefiles_write(object, file, pos, iter, NULL, NULL);
-@@ -82,6 +88,8 @@ static ssize_t cachefiles_ondemand_fd_write_iter(struct kiocb *kiocb,
- 		kiocb->ki_pos += ret;
- 	}
- 
-+out:
-+	fput(file);
- 	return ret;
- }
- 
-@@ -89,12 +97,22 @@ static loff_t cachefiles_ondemand_fd_llseek(struct file *filp, loff_t pos,
- 					    int whence)
- {
- 	struct cachefiles_object *object = filp->private_data;
--	struct file *file = object->file;
-+	struct file *file;
-+	loff_t ret;
- 
--	if (!file)
-+	spin_lock(&object->lock);
-+	file = object->file;
-+	if (!file) {
-+		spin_unlock(&object->lock);
- 		return -ENOBUFS;
-+	}
-+	get_file(file);
-+	spin_unlock(&object->lock);
- 
--	return vfs_llseek(file, pos, whence);
-+	ret = vfs_llseek(file, pos, whence);
-+	fput(file);
-+
-+	return ret;
- }
- 
- static long cachefiles_ondemand_fd_ioctl(struct file *filp, unsigned int ioctl,
 -- 
 2.39.2
 
