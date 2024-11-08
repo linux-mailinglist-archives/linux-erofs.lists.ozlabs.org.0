@@ -2,82 +2,82 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 975759C2328
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Nov 2024 18:34:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 224D99C2329
+	for <lists+linux-erofs@lfdr.de>; Fri,  8 Nov 2024 18:34:55 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XlR064JQFz3c20
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Nov 2024 04:34:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XlR0F0tqwz3c20
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Nov 2024 04:34:53 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731087285;
-	cv=none; b=fo62aYjLzddgqPdxBLRsvlrtbL5z8J9UI/4hq/xOy2Sb2h2oX5yc9OY9NHgMUdJT/v/sEX+3XmwjhMcppsh7OS2ublplXRCb0LEpZkQrdA4rgTmBozrErhGNzkJSGGUvKPIGyj8yf9P3DWgNERSC/FNQ2RZFd5VUcoSTteRia7mMAF/0MRmUh5t6X4pYAC6cwneU/6zRa+oE39WV8EkGXVWaPjTy3HKkrqbgsw1TDSAY2NBfNZ6RLbRnEUir5NVp7n7QYUDwhdDrHER556BHgerY1VbRHEFoBYdtUganTFSR/WIAgcTu6NwNHhhgHCbZrDdWPJdFTeSi+hy0lVkc7w==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731087291;
+	cv=none; b=LSHR4vkyHDrlmwwzjWRzXqWFUmzT/NDl9vU4ZThc2B45UiGIpcyRpj/BTrF7NVu2keqPhF7JzQE7tpVqJ2c3LJg5L/o7NUSYrII5IrZafFhZw1vfTjtn4tB3JFS0a05pP5qlVEtLo1pqng8ZWW+rTRYN+wCyR/CiCl3DUM2fZX0LH54L+rRXWdr8/qjYK0xYcg31wZu3TvR2UZmahFoCppFHnLpOttGnDr9c5gtbaTyFJYweMJypM424kuflpwcPcvACFXM1ASqieEvHrwU8soQsWjq+/4TeWpvc2Y45gHPElXivq4eohYJdJb5gD5djcXsjcGuBx1EJiWXXjo7Ivw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731087285; c=relaxed/relaxed;
-	bh=HO1trrAUxh6ged928OSrE9rZIbGVfYli8k1F5yQtGbY=;
+	t=1731087291; c=relaxed/relaxed;
+	bh=PpSYjRYWbFXxWDdh6eO8irNXCJzGx0/SlE83d2O2JK0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dAnlQm2Qdr7E/40fb3f6xwKjba2tKy9u0ClpR5v4Gcq84xSAkkmltN5//p5AhBen4S8ouveS0cqlhaL0/8wY1UHblSA78KUElowgSeVRUg42a2wuoVhKfp8P2MW6ExWYunxa001jcULY25DyqG4NsRubR+fB0ElYKfq8U6BUkipVAV2bb+mjT/zhfgA0heYKjNrqSZrplkU5+DxUl/w1RFq/9r9qRV/WPujsuu0hErL1zcp9a5pWcjbpt2sMW7JfmjxQ2DXuJrMT+fc7IJI3heEhiNCSbhQFP0yLvqX2fUJ0nc3TCR5X/wdOx6LEPsrQYuPXFA3QQAusltx+rXeidA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=VYi4P2HZ; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=VYi4P2HZ; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version; b=ozJ4gdNKS9riUH/R6w4DZRRP4Zig/ksEOQqagWNmal+Pzxogj7uzwTRK23tmYwQ1ZzWkfjtY58z6hIfxtwQKWIXn1E5+Tvkwa34CLLXPk2abZQYfikG8oGpr99Nsbj/lUGVGDK0EhLRvHT0XDZT+3cOB2/K4Z1NO22hHCzBjtHoSDjuHLjcYCYc7/x22Ip1Cz8AhJxMIleDuI0NTqfNN2xSkVwAR+Mwgp/vyBDAF8bQkYg4D4C58j+hdY9lVegVoTP1GhLw8oADRU+T+BlB6UtFdBBP2HKKGkqoh+IAIJ5bTE+owlH9nVKqwmuxnz1eV9kvBv56czPRxxm+6Pu52Cw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XjYxW9Kq; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=UBpRwsJ7; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=VYi4P2HZ;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=VYi4P2HZ;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XjYxW9Kq;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=UBpRwsJ7;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XlR041fXVz3bxR
-	for <linux-erofs@lists.ozlabs.org>; Sat,  9 Nov 2024 04:34:43 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XlR0B2mJMz3bkY
+	for <linux-erofs@lists.ozlabs.org>; Sat,  9 Nov 2024 04:34:50 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731087281;
+	s=mimecast20190719; t=1731087287;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HO1trrAUxh6ged928OSrE9rZIbGVfYli8k1F5yQtGbY=;
-	b=VYi4P2HZrbpWuJu6fPZ+iVJWk/rBNW/ZK7ekewDMh/6/4vt1CpbiiTiWcAaxwqx6aqk4An
-	SiFFJBBrOeHVe24NQV3Dpuy5a7lCCXR+yZAtFurXRLlVUi9R8XYRa8NL22OHJWjqXnWrSP
-	7yxuZiXwxWXaAJChf8TSe4ElDiH12QI=
+	bh=PpSYjRYWbFXxWDdh6eO8irNXCJzGx0/SlE83d2O2JK0=;
+	b=XjYxW9Kqx8inVixj8XX5iq2yjGNCAa0vuA3cGs/sHXzRE4IfWNrjQxqI/v3DmFyEEd3UKH
+	o1hVrfbIstoWBdeuJLFzHmOU53kUoZSeLFTdGTdK+7afOLM1ieZXXkhSX77gTvwzZXjsHW
+	dhpf/Sfs+6ZBPUhD8Xd5gmmVoE/oeBM=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731087281;
+	s=mimecast20190719; t=1731087288;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HO1trrAUxh6ged928OSrE9rZIbGVfYli8k1F5yQtGbY=;
-	b=VYi4P2HZrbpWuJu6fPZ+iVJWk/rBNW/ZK7ekewDMh/6/4vt1CpbiiTiWcAaxwqx6aqk4An
-	SiFFJBBrOeHVe24NQV3Dpuy5a7lCCXR+yZAtFurXRLlVUi9R8XYRa8NL22OHJWjqXnWrSP
-	7yxuZiXwxWXaAJChf8TSe4ElDiH12QI=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=PpSYjRYWbFXxWDdh6eO8irNXCJzGx0/SlE83d2O2JK0=;
+	b=UBpRwsJ7LAw5LGoBHrI1JPeh6qcmEZ1KvpzI0ULjPgyF1M0tDqA2qxFth4zoIfhcT1tz17
+	bPgzB9+5I/raQFroX70yHpLonOYWEacwm9t/RTTBfz9Vur3mB3IQjmNLxbwWusB7Sw2Shj
+	7FHWmOm0RA4T7GrVNhmt+a9P3111NSU=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-690-qOuK97hKMEujosWEowMyUg-1; Fri,
- 08 Nov 2024 12:34:38 -0500
-X-MC-Unique: qOuK97hKMEujosWEowMyUg-1
-X-Mimecast-MFC-AGG-ID: qOuK97hKMEujosWEowMyUg
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-656-vLwEkQlAMwO8A82QkSZrig-1; Fri,
+ 08 Nov 2024 12:34:44 -0500
+X-MC-Unique: vLwEkQlAMwO8A82QkSZrig-1
+X-Mimecast-MFC-AGG-ID: vLwEkQlAMwO8A82QkSZrig
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 973B21955F43;
-	Fri,  8 Nov 2024 17:34:34 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7319E19560B5;
+	Fri,  8 Nov 2024 17:34:41 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.231])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1545D3003B71;
-	Fri,  8 Nov 2024 17:34:28 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 037561953883;
+	Fri,  8 Nov 2024 17:34:35 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Steve French <smfrench@gmail.com>,
 	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v4 15/33] afs: Fix directory format encoding struct
-Date: Fri,  8 Nov 2024 17:32:16 +0000
-Message-ID: <20241108173236.1382366-16-dhowells@redhat.com>
+Subject: [PATCH v4 16/33] netfs: Remove some extraneous directory invalidations
+Date: Fri,  8 Nov 2024 17:32:17 +0000
+Message-ID: <20241108173236.1382366-17-dhowells@redhat.com>
 In-Reply-To: <20241108173236.1382366-1-dhowells@redhat.com>
 References: <20241108173236.1382366-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
 	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
@@ -98,34 +98,117 @@ Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, Shyam Prasa
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The AFS directory format structure, union afs_xdr_dir_block::meta, has too
-many alloc counter slots declared and so pushes the hash table along and
-over the data.  This doesn't cause a problem at the moment because I'm
-currently ignoring the hash table and only using the correct number of
-alloc_ctrs in the code anyway.  In future, however, I should start using
-the hash table to try and speed up afs_lookup().
+In the directory editing code, we shouldn't re-invalidate the directory
+if it is already invalidated.
 
-Fix this by using the correct constant to declare the counter array.
-
-Fixes: 4ea219a839bf ("afs: Split the directory content defs into a header")
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
 cc: linux-afs@lists.infradead.org
 ---
- fs/afs/xdr_fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/afs/dir_edit.c | 22 +++++++++-------------
+ 1 file changed, 9 insertions(+), 13 deletions(-)
 
-diff --git a/fs/afs/xdr_fs.h b/fs/afs/xdr_fs.h
-index 8ca868164507..cc5f143d21a3 100644
---- a/fs/afs/xdr_fs.h
-+++ b/fs/afs/xdr_fs.h
-@@ -88,7 +88,7 @@ union afs_xdr_dir_block {
+diff --git a/fs/afs/dir_edit.c b/fs/afs/dir_edit.c
+index fe223fb78111..13fb236a3f50 100644
+--- a/fs/afs/dir_edit.c
++++ b/fs/afs/dir_edit.c
+@@ -247,7 +247,7 @@ void afs_edit_dir_add(struct afs_vnode *vnode,
+ 		 */
+ 		index = b / AFS_DIR_BLOCKS_PER_PAGE;
+ 		if (nr_blocks >= AFS_DIR_MAX_BLOCKS)
+-			goto error;
++			goto error_too_many_blocks;
+ 		if (index >= folio_nr_pages(folio0)) {
+ 			folio = afs_dir_get_folio(vnode, index);
+ 			if (!folio)
+@@ -260,7 +260,7 @@ void afs_edit_dir_add(struct afs_vnode *vnode,
  
- 	struct {
- 		struct afs_xdr_dir_hdr	hdr;
--		u8			alloc_ctrs[AFS_DIR_MAX_BLOCKS];
-+		u8			alloc_ctrs[AFS_DIR_BLOCKS_WITH_CTR];
- 		__be16			hashtable[AFS_DIR_HASHTBL_SIZE];
- 	} meta;
+ 		/* Abandon the edit if we got a callback break. */
+ 		if (!test_bit(AFS_VNODE_DIR_VALID, &vnode->flags))
+-			goto invalidated;
++			goto already_invalidated;
  
+ 		_debug("block %u: %2u %3u %u",
+ 		       b,
+@@ -348,9 +348,8 @@ void afs_edit_dir_add(struct afs_vnode *vnode,
+ 	_leave("");
+ 	return;
+ 
+-invalidated:
++already_invalidated:
+ 	trace_afs_edit_dir(vnode, why, afs_edit_dir_create_inval, 0, 0, 0, 0, name->name);
+-	clear_bit(AFS_VNODE_DIR_VALID, &vnode->flags);
+ 	kunmap_local(block);
+ 	if (folio != folio0) {
+ 		folio_unlock(folio);
+@@ -358,9 +357,10 @@ void afs_edit_dir_add(struct afs_vnode *vnode,
+ 	}
+ 	goto out_unmap;
+ 
++error_too_many_blocks:
++	clear_bit(AFS_VNODE_DIR_VALID, &vnode->flags);
+ error:
+ 	trace_afs_edit_dir(vnode, why, afs_edit_dir_create_error, 0, 0, 0, 0, name->name);
+-	clear_bit(AFS_VNODE_DIR_VALID, &vnode->flags);
+ 	goto out_unmap;
+ }
+ 
+@@ -421,7 +421,7 @@ void afs_edit_dir_remove(struct afs_vnode *vnode,
+ 
+ 		/* Abandon the edit if we got a callback break. */
+ 		if (!test_bit(AFS_VNODE_DIR_VALID, &vnode->flags))
+-			goto invalidated;
++			goto already_invalidated;
+ 
+ 		if (b > AFS_DIR_BLOCKS_WITH_CTR ||
+ 		    meta->meta.alloc_ctrs[b] <= AFS_DIR_SLOTS_PER_BLOCK - 1 - need_slots) {
+@@ -475,10 +475,9 @@ void afs_edit_dir_remove(struct afs_vnode *vnode,
+ 	_leave("");
+ 	return;
+ 
+-invalidated:
++already_invalidated:
+ 	trace_afs_edit_dir(vnode, why, afs_edit_dir_delete_inval,
+ 			   0, 0, 0, 0, name->name);
+-	clear_bit(AFS_VNODE_DIR_VALID, &vnode->flags);
+ 	kunmap_local(block);
+ 	if (folio != folio0) {
+ 		folio_unlock(folio);
+@@ -489,7 +488,6 @@ void afs_edit_dir_remove(struct afs_vnode *vnode,
+ error:
+ 	trace_afs_edit_dir(vnode, why, afs_edit_dir_delete_error,
+ 			   0, 0, 0, 0, name->name);
+-	clear_bit(AFS_VNODE_DIR_VALID, &vnode->flags);
+ 	goto out_unmap;
+ }
+ 
+@@ -530,7 +528,7 @@ void afs_edit_dir_update_dotdot(struct afs_vnode *vnode, struct afs_vnode *new_d
+ 
+ 		/* Abandon the edit if we got a callback break. */
+ 		if (!test_bit(AFS_VNODE_DIR_VALID, &vnode->flags))
+-			goto invalidated;
++			goto already_invalidated;
+ 
+ 		slot = afs_dir_scan_block(block, &dotdot_name, b);
+ 		if (slot >= 0)
+@@ -564,18 +562,16 @@ void afs_edit_dir_update_dotdot(struct afs_vnode *vnode, struct afs_vnode *new_d
+ 	_leave("");
+ 	return;
+ 
+-invalidated:
++already_invalidated:
+ 	kunmap_local(block);
+ 	folio_unlock(folio);
+ 	folio_put(folio);
+ 	trace_afs_edit_dir(vnode, why, afs_edit_dir_update_inval,
+ 			   0, 0, 0, 0, "..");
+-	clear_bit(AFS_VNODE_DIR_VALID, &vnode->flags);
+ 	goto out;
+ 
+ error:
+ 	trace_afs_edit_dir(vnode, why, afs_edit_dir_update_error,
+ 			   0, 0, 0, 0, "..");
+-	clear_bit(AFS_VNODE_DIR_VALID, &vnode->flags);
+ 	goto out;
+ }
 
