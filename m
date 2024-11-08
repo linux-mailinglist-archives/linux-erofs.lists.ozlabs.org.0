@@ -2,91 +2,91 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B03F49C22A3
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Nov 2024 18:03:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 82D849C22D4
+	for <lists+linux-erofs@lfdr.de>; Fri,  8 Nov 2024 18:23:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XlQJR24Frz3c1D
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Nov 2024 04:03:51 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XlQlD10B2z3c1C
+	for <lists+linux-erofs@lfdr.de>; Sat,  9 Nov 2024 04:23:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731085429;
-	cv=none; b=ZfIr15NP6fQCnMkNaFZUf/1AhE+fTk9FzVOCRDRjCldXWtLxoH/vRxOfJEpw2lZnFUFkaX4h+5msMG20Iup+vh2SqFFaNQK52c2Kl1n0ttaM20okeCkEmjvu43ZY5R+0tP4wf9QwaY5MeFtBclSRyAKlgU9KRviOkrMzn++2Gq0cLal719AnNB6YPSpy0ObYh3wP2nCN7KNanr9Zhs3GjEA+uYbKDACuxx+VaFaax1bQWJ1Gh44KDm2Phe2F9SxCvnJ4qjnkc9m9dtaLMvLuw3XqxEXXtE4IEEQd6rLKaM0tn76UmL39lrsXpcoTN+D24+lDbymnzBZm/LkDDWW+6A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731086614;
+	cv=none; b=CvtqhuvIWBnP7i23J7zkcVtpo48y2vvUGR9ZxHdoNzEF+uELod6dOjmsRSM/OMFV7Kr4vCnydQr8VRLNsHjIPrCwlo7PM3XMseROyCCX33gDqLbzL4zwETg+dzdi7BJshfL2mnIbu3xPBQZWOE/6n2padqaGc6oYvfNGws6tnebEfCLwp7b7cLxMdTA1vlD+lBEwzRBlw75QcOQEm/dfgbZofJ6f/dX9WgjvFaCFas0zMSqgI/78Xof/ahyLPMx9fUB6bHzFnaCsO5d6cA8biyGt2QaX89WkdeQ9+CcYvigww5ORdoSRaBXEJtJfmme1QEsMei+jP9Ba26W42HZPLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731085429; c=relaxed/relaxed;
-	bh=kTE7HN+soO/Za76tq6046j/ukmrXopkun1LVu89YTbU=;
+	t=1731086614; c=relaxed/relaxed;
+	bh=XwJwM3+z7apLKFV/fpUBCprrM/E8Cp6F04ODxbzFqfw=;
 	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=MScQl5nWqWOZgv2vo827qx5aTgQ72iOtOShHNg8hTGLcsWuOkb51Ziws/lCGPywisXiE+JgnuV17BKircuZDaRJvv16xHHHxrzymjfdOKHkjQn92XR/6X5GEFGOecGS4gl0KVB9hGBv+aPrGUsULL2kiLHJzSjwLfmAXTUMwF/93GZZMfsGsnq49drVnFEXdn1p877KPB/+nMSlxh+HfpsrQE3Li3ctejK7c8eN8eJDonADrQNSj01IspCja7G1/p7S1UeuEmUuXn9fSeDYC4Xn/TiCmXvbY/pTS4VXrXO8FXmEZ/6dgfKK8LeknH4wkGcDEOzsTGv0pbP/UBXLY8w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=T6ziPddj; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=KzrJP5pO; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 Content-Type:Date:Message-ID; b=G8O7Quib5U4eBMT2WBx8jKDI6xoWREi/dGLkrMe0RdWgjR8rlh7rHkRh3DHc7Q2aOH47BxNjE/chWxRCSMnegQ70of1WnNtAx7nPMyToxn78XXwCdEKmoIJJn0bfbBPmOKxXLQ+cMHWaa3hLW0w+l2cRpUmH7MDyeFBa9t/c/heQM5I7gBhzd7ANVfwE21OdK2hedYkVe/4RFkEbb8NXeHF7GmkaNzqwu0eZacN53GvPkNwJJMj3akRXpuFRvn7i5tPLoJnEpzWFYWyzqL8egbyUZW2KMRMvApZrl/H+c/EW3cuENEfN3xcrrgk6eROnqX4Cx5pNO8UBggaRt6WrGg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=N2FRIWSa; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=N2FRIWSa; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=T6ziPddj;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=KzrJP5pO;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=N2FRIWSa;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=N2FRIWSa;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XlQJM3Nhhz3btt
-	for <linux-erofs@lists.ozlabs.org>; Sat,  9 Nov 2024 04:03:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XlQl92GGTz3btt
+	for <linux-erofs@lists.ozlabs.org>; Sat,  9 Nov 2024 04:23:30 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731085420;
+	s=mimecast20190719; t=1731086606;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kTE7HN+soO/Za76tq6046j/ukmrXopkun1LVu89YTbU=;
-	b=T6ziPddjG8hZJpSalG/+2LIsiO+iimsfZJF4kGKKF5IWCl5Owh3zmCM671iAUeLZHw7UzN
-	CImh1y27qmH7pi5V2WGl7Uarh1tz/lSfJ5OzkSticMUDSfNnUX8yU1vXF1EZsgCZLGdm/7
-	ah+D2tmM2izZryi+KM0QiUFEI8S+6Pc=
+	bh=XwJwM3+z7apLKFV/fpUBCprrM/E8Cp6F04ODxbzFqfw=;
+	b=N2FRIWSaQi+G3HvR0bVpVPUkOKSiM9onStV18UwrGGlCiHhZ+HC1QpygZyDwlZfkB9Bft2
+	uF8vg0gqyJV8rCmgF6Kv8rNSTSviB+iAQ4c2HKQxv7dmj/j1rO9zHFqyPwH/hRgPy6pJHH
+	KZENtEk7N4U7p7VQbSTGOBhLQA/aBLw=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731085421;
+	s=mimecast20190719; t=1731086606;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kTE7HN+soO/Za76tq6046j/ukmrXopkun1LVu89YTbU=;
-	b=KzrJP5pOQTwLPUqr24oDWY6kAzFq1gtyDPjIRakFawuaNbRQFoc7E8T2e00sE38JGXI5NU
-	8I/qbOXPpAcGje6T1jQ40BnSdetqfiNRLMFAKm7rQ/ELjpFyCB7sXzhgxw6DK32KJIb1ur
-	8N/LGjEuwwPV+xQzv/uaERGRld7oiAE=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=XwJwM3+z7apLKFV/fpUBCprrM/E8Cp6F04ODxbzFqfw=;
+	b=N2FRIWSaQi+G3HvR0bVpVPUkOKSiM9onStV18UwrGGlCiHhZ+HC1QpygZyDwlZfkB9Bft2
+	uF8vg0gqyJV8rCmgF6Kv8rNSTSviB+iAQ4c2HKQxv7dmj/j1rO9zHFqyPwH/hRgPy6pJHH
+	KZENtEk7N4U7p7VQbSTGOBhLQA/aBLw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-686-d2vfCBO4PnGWgeJI8QflhA-1; Fri,
- 08 Nov 2024 12:03:36 -0500
-X-MC-Unique: d2vfCBO4PnGWgeJI8QflhA-1
-X-Mimecast-MFC-AGG-ID: d2vfCBO4PnGWgeJI8QflhA
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-657-jwRKCGCpNXimF2m3kjGVAg-1; Fri,
+ 08 Nov 2024 12:23:21 -0500
+X-MC-Unique: jwRKCGCpNXimF2m3kjGVAg-1
+X-Mimecast-MFC-AGG-ID: jwRKCGCpNXimF2m3kjGVAg
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DE2041955EA1;
-	Fri,  8 Nov 2024 17:03:31 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E948D195F198;
+	Fri,  8 Nov 2024 17:23:17 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.42.28.231])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 03B2C1953880;
-	Fri,  8 Nov 2024 17:03:24 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 64CE21953882;
+	Fri,  8 Nov 2024 17:23:11 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
 	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
 	Kingdom.
 	Registered in England and Wales under Company Registration No. 3798903
 From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20241106123559.724888-29-dhowells@redhat.com>
-References: <20241106123559.724888-29-dhowells@redhat.com> <20241106123559.724888-1-dhowells@redhat.com>
+In-Reply-To: <20241106123559.724888-24-dhowells@redhat.com>
+References: <20241106123559.724888-24-dhowells@redhat.com> <20241106123559.724888-1-dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
     Steve French <smfrench@gmail.com>,
     Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v3 28/33] netfs: Change the read result collector to only use one work item
+Subject: Re: [PATCH v3 23/33] afs: Use netfslib for directories
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1321311.1731085403.1@warthog.procyon.org.uk>
+Content-ID: <1360666.1731086590.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 08 Nov 2024 17:03:23 +0000
-Message-ID: <1321312.1731085403@warthog.procyon.org.uk>
+Date: Fri, 08 Nov 2024 17:23:10 +0000
+Message-ID: <1360667.1731086590@warthog.procyon.org.uk>
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,
-	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
 	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -104,159 +104,157 @@ Cc: Paulo Alcantara <pc@manguebit.com>, Tom Talpey <tom@talpey.com>, Shyam Prasa
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch needs the attached adjustment folding in.
+The attached fix needs folding in across this patch (23), patch 24, patch
+29 and patch 31.
 
 David
 ---
-commit 2c0cccc7b29a051fadb6816d31f526e4dd45ddf5
+commit 9d4429bc7bb3f2b518d6decd1ca0e99e4d80d58e
 Author: David Howells <dhowells@redhat.com>
-Date:   Thu Nov 7 22:22:49 2024 +0000
+Date:   Thu Nov 7 23:46:48 2024 +0000
 
-    netfs: Fix folio abandonment
+    afs: Fix handling of signals during readdir
     =
 
-    The mechanism to handle the abandonment of a folio being read due to a=
+    When a directory is being read, whether or not the dvnode->directory b=
+uffer
+    pointer is NULL is used to track whether we've checked fscache yet.
+    However, if a signal occurs after the buffer being allocated but whils=
+t
+    we're doing the read, we may end up in an invalid state with ->directo=
+ry
+    set but no data in the buffer.
+    =
+
+    In this state, afs_readdir(), afs_lookup() and afs_d_revalidate() see
+    corrupt directory contents leading to a variety of malfunctions.
+    =
+
+    Fix this by providing a specific flag to record whether or not we've
+    performed a read yet - and, incidentally, sampled fscache - rather tha=
 n
-    error occurring in a subrequest (such as if a signal occurs) will corr=
-ectly
-    abandon folios if they're entirely processed in one go; but if the
-    constituent subrequests aren't processed in the same scheduled work it=
-em,
-    the note that the first one failed will get lost if no folios are proc=
-essed
-    (the ABANDON_SREQ note isn't transferred to the NETFS_RREQ_FOLIO_ABAND=
-ON
-    flag unless we process a folio).
+    using the value in ->directory instead.
     =
 
-    Fix this by simplifying the way the mechanism works.  Replace the flag=
- with
-    a variable that records the file position to which we should abandon
-    folios.  Any folio that overlaps this region at the time of unlocking =
-must
-    be abandoned (and reread).
-    =
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    cc: Marc Dionne <marc.dionne@auristor.com>
+    cc: linux-afs@lists.infradead.org
 
-    This works because subrequests are processed in order of file position=
- and
-    each folio is processed as soon as enough subrequest transference is
-    available to cover it - so when the abandonment point is moved, it cov=
-ers
-    only folios that draw data from the dodgy region.
-    =
-
-    Also make sure that NETFS_SREQ_FAILED is set on failure and that
-    stream->failed is set when we cut the stream short.
-    =
-
-    Signed-off: David Howells <dhowells@redhat.com>
-    cc: Jeff Layton <jlayton@kernel.org>
-    cc: netfs@lists.linux.dev
-    cc: linux-fsdevel@vger.kernel.org
-
-diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index 73f51039c2fe..7f3a3c056c6e 100644
---- a/fs/netfs/read_collect.c
-+++ b/fs/netfs/read_collect.c
-@@ -46,7 +46,7 @@ static void netfs_unlock_read_folio(struct netfs_io_requ=
-est *rreq,
- 	struct netfs_folio *finfo;
- 	struct folio *folio =3D folioq_folio(folioq, slot);
- =
-
--	if (unlikely(test_bit(NETFS_RREQ_FOLIO_ABANDON, &rreq->flags))) {
-+	if (unlikely(folio_pos(folio) < rreq->abandon_to)) {
- 		trace_netfs_folio(folio, netfs_folio_trace_abandon);
- 		goto just_unlock;
+diff --git a/fs/afs/dir.c b/fs/afs/dir.c
+index 663a212964d8..b6a202fd9926 100644
+--- a/fs/afs/dir.c
++++ b/fs/afs/dir.c
+@@ -323,7 +323,7 @@ ssize_t afs_read_dir(struct afs_vnode *dvnode, struct =
+file *file)
+ 	 * haven't read it yet.
+ 	 */
+ 	if (test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags) &&
+-	    dvnode->directory) {
++	    test_bit(AFS_VNODE_DIR_READ, &dvnode->flags)) {
+ 		ret =3D i_size;
+ 		goto valid;
  	}
-@@ -126,8 +126,6 @@ static void netfs_read_unlock_folios(struct netfs_io_r=
-equest *rreq,
+@@ -336,7 +336,7 @@ ssize_t afs_read_dir(struct afs_vnode *dvnode, struct =
+file *file)
+ 		afs_invalidate_cache(dvnode, 0);
  =
 
- 		if (*notes & COPY_TO_CACHE)
- 			set_bit(NETFS_RREQ_FOLIO_COPY_TO_CACHE, &rreq->flags);
--		if (*notes & ABANDON_SREQ)
--			set_bit(NETFS_RREQ_FOLIO_ABANDON, &rreq->flags);
+ 	if (!test_bit(AFS_VNODE_DIR_VALID, &dvnode->flags) ||
+-	    !dvnode->directory) {
++	    !test_bit(AFS_VNODE_DIR_READ, &dvnode->flags)) {
+ 		trace_afs_reload_dir(dvnode);
+ 		ret =3D afs_read_single(dvnode, file);
+ 		if (ret < 0)
+@@ -345,6 +345,7 @@ ssize_t afs_read_dir(struct afs_vnode *dvnode, struct =
+file *file)
+ 		// TODO: Trim excess pages
  =
 
- 		folio =3D folioq_folio(folioq, slot);
- 		if (WARN_ONCE(!folio_test_locked(folio),
-@@ -152,7 +150,6 @@ static void netfs_read_unlock_folios(struct netfs_io_r=
-equest *rreq,
- 		*notes |=3D MADE_PROGRESS;
+ 		set_bit(AFS_VNODE_DIR_VALID, &dvnode->flags);
++		set_bit(AFS_VNODE_DIR_READ, &dvnode->flags);
+ 	} else {
+ 		ret =3D i_size;
+ 	}
+diff --git a/fs/afs/dir_edit.c b/fs/afs/dir_edit.c
+index f6f4b1adc8dc..60a549f1d9c5 100644
+--- a/fs/afs/dir_edit.c
++++ b/fs/afs/dir_edit.c
+@@ -644,4 +644,5 @@ void afs_mkdir_init_dir(struct afs_vnode *dvnode, stru=
+ct afs_vnode *parent_dvnod
  =
 
- 		clear_bit(NETFS_RREQ_FOLIO_COPY_TO_CACHE, &rreq->flags);
--		clear_bit(NETFS_RREQ_FOLIO_ABANDON, &rreq->flags);
+ 	netfs_single_mark_inode_dirty(&dvnode->netfs.inode);
+ 	set_bit(AFS_VNODE_DIR_VALID, &dvnode->flags);
++	set_bit(AFS_VNODE_DIR_READ, &dvnode->flags);
+ }
+diff --git a/fs/afs/inode.c b/fs/afs/inode.c
+index f5618564b3fc..e9538e91f848 100644
+--- a/fs/afs/inode.c
++++ b/fs/afs/inode.c
+@@ -39,6 +39,7 @@ void afs_init_new_symlink(struct afs_vnode *vnode, struc=
+t afs_operation *op)
+ 	p =3D kmap_local_folio(folioq_folio(vnode->directory, 0), 0);
+ 	memcpy(p, op->create.symlink, size);
+ 	kunmap_local(p);
++	set_bit(AFS_VNODE_DIR_READ, &vnode->flags);
+ 	netfs_single_mark_inode_dirty(&vnode->netfs.inode);
+ }
  =
 
- 		/* Clean up the head folioq.  If we clear an entire folioq, then
- 		 * we can get rid of it provided it's not also the tail folioq
-@@ -251,6 +248,12 @@ static void netfs_collect_read_results(struct netfs_i=
-o_request *rreq)
- 			if (test_bit(NETFS_SREQ_COPY_TO_CACHE, &front->flags))
- 				notes |=3D COPY_TO_CACHE;
+@@ -60,12 +61,12 @@ const char *afs_get_link(struct dentry *dentry, struct=
+ inode *inode,
  =
 
-+			if (test_bit(NETFS_SREQ_FAILED, &front->flags)) {
-+				rreq->abandon_to =3D front->start + front->len;
-+				front->transferred =3D front->len;
-+				transferred =3D front->len;
-+				trace_netfs_rreq(rreq, netfs_rreq_trace_set_abandon);
-+			}
- 			if (front->start + transferred >=3D rreq->cleaned_to + fsize ||
- 			    test_bit(NETFS_SREQ_HIT_EOF, &front->flags))
- 				netfs_read_unlock_folios(rreq, &notes);
-@@ -268,6 +271,7 @@ static void netfs_collect_read_results(struct netfs_io=
-_request *rreq)
- 				stream->error =3D front->error;
- 				rreq->error =3D front->error;
- 				set_bit(NETFS_RREQ_FAILED, &rreq->flags);
-+				stream->failed =3D true;
- 			}
- 			notes |=3D MADE_PROGRESS | ABANDON_SREQ;
- 		} else if (test_bit(NETFS_SREQ_NEED_RETRY, &front->flags)) {
-@@ -566,6 +570,7 @@ void netfs_read_subreq_terminated(struct netfs_io_subr=
-equest *subreq)
- 			__set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
- 		} else {
- 			netfs_stat(&netfs_n_rh_download_failed);
-+			__set_bit(NETFS_SREQ_FAILED, &subreq->flags);
- 		}
- 		trace_netfs_rreq(rreq, netfs_rreq_trace_set_pause);
- 		set_bit(NETFS_RREQ_PAUSE, &rreq->flags);
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index c00cffa1da13..4af7208e1360 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -260,6 +260,7 @@ struct netfs_io_request {
- 	atomic64_t		issued_to;	/* Write issuer folio cursor */
- 	unsigned long long	collected_to;	/* Point we've collected to */
- 	unsigned long long	cleaned_to;	/* Position we've cleaned folios to */
-+	unsigned long long	abandon_to;	/* Position to abandon folios to */
- 	pgoff_t			no_unlock_folio; /* Don't unlock this folio after read */
- 	unsigned char		front_folio_order; /* Order (size) of front folio */
- 	refcount_t		ref;
-@@ -271,7 +272,6 @@ struct netfs_io_request {
- #define NETFS_RREQ_FAILED		4	/* The request failed */
- #define NETFS_RREQ_IN_PROGRESS		5	/* Unlocked when the request completes =
+ 	if (!dentry) {
+ 		/* RCU pathwalk. */
+-		if (!vnode->directory || !afs_check_validity(vnode))
++		if (!test_bit(AFS_VNODE_DIR_READ, &vnode->flags) || !afs_check_validity=
+(vnode))
+ 			return ERR_PTR(-ECHILD);
+ 		goto good;
+ 	}
+ =
+
+-	if (!vnode->directory)
++	if (test_bit(AFS_VNODE_DIR_READ, &vnode->flags))
+ 		goto fetch;
+ =
+
+ 	ret =3D afs_validate(vnode, NULL);
+@@ -73,13 +74,14 @@ const char *afs_get_link(struct dentry *dentry, struct=
+ inode *inode,
+ 		return ERR_PTR(ret);
+ =
+
+ 	if (!test_and_clear_bit(AFS_VNODE_ZAP_DATA, &vnode->flags) &&
+-	    vnode->directory)
++	    test_bit(AFS_VNODE_DIR_READ, &vnode->flags))
+ 		goto good;
+ =
+
+ fetch:
+ 	ret =3D afs_read_single(vnode, NULL);
+ 	if (ret < 0)
+ 		return ERR_PTR(ret);
++	set_bit(AFS_VNODE_DIR_READ, &vnode->flags);
+ =
+
+ good:
+ 	folio =3D folioq_folio(vnode->directory, 0);
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index a5da0dd8e9cc..90f407774a9a 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -705,6 +705,7 @@ struct afs_vnode {
+ #define AFS_VNODE_NEW_CONTENT	8		/* Set if file has new content (create/t=
+runc-0) */
+ #define AFS_VNODE_SILLY_DELETED	9		/* Set if file has been silly-deleted =
 */
- #define NETFS_RREQ_FOLIO_COPY_TO_CACHE	6	/* Copy current folio to cache f=
-rom read */
--#define NETFS_RREQ_FOLIO_ABANDON	7	/* Abandon failed folio from read */
- #define NETFS_RREQ_UPLOAD_TO_SERVER	8	/* Need to write to the server */
- #define NETFS_RREQ_NONBLOCK		9	/* Don't block if possible (O_NONBLOCK) */
- #define NETFS_RREQ_BLOCKED		10	/* We blocked */
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index cf14545ca2bd..22eb77b1f5e6 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -56,6 +56,7 @@
- 	EM(netfs_rreq_trace_free,		"FREE   ")	\
- 	EM(netfs_rreq_trace_redirty,		"REDIRTY")	\
- 	EM(netfs_rreq_trace_resubmit,		"RESUBMT")	\
-+	EM(netfs_rreq_trace_set_abandon,	"S-ABNDN")	\
- 	EM(netfs_rreq_trace_set_pause,		"PAUSE  ")	\
- 	EM(netfs_rreq_trace_unlock,		"UNLOCK ")	\
- 	EM(netfs_rreq_trace_unlock_pgpriv2,	"UNLCK-2")	\
+ #define AFS_VNODE_MODIFYING	10		/* Set if we're performing a modification=
+ op */
++#define AFS_VNODE_DIR_READ	11		/* Set if we've read a dir's contents */
+ =
+
+ 	struct folio_queue	*directory;	/* Directory contents */
+ 	struct list_head	wb_keys;	/* List of keys available for writeback */
 
