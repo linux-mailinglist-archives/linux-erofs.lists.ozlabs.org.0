@@ -2,86 +2,58 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F18B9C2354
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Nov 2024 18:36:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 98FB99C3667
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Nov 2024 03:09:33 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XlR2d4QH0z3cGf
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Nov 2024 04:36:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XmtK726xgz2yYq
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Nov 2024 13:09:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731087415;
-	cv=none; b=iLymhoeI2t9pjdiyqwYqttqvCNfv19e6cf945dmOukz7SF+WFemhDIjGN+viZ5+HpL1rM9z9GvuWVM6FbMJ2kdzFtcYsbWOuVEwZkjiw75bUgKhEEJg9K1SBYQahirVr9VeL8LgDMg+PenTQfDBXLH6nNyLXUiGdgI5mWI9Akn7imF+5d7JqdSVTiMhRVRlZ28T8BOEoc+FrYe5dMnHfj4z523sjhO53660fwkx1SDZYPVSw4Y0qwpwESLTgug0YWCr8NiOM2sLhCkLF/nkHJMuT3SlhTGmSZxf78Au5U3JKs6cLGIkyC02XvUW4wGJwhT5qsjOYO6OekoBadkInCA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731290969;
+	cv=none; b=mVmcZCYfmHuahRa2RByQI4UMNMPZdsIsQCL2nhR7++ocDzKpjgBRq/0nmwSNMJKseP172Mh1u7xP88uRSkczXZDESkHl8gNaAbbV9F6LcXB5gmT4KDiDJgtKHNV0pcnm3DX5c7A3KJNsCVO8FXPzAq54qbHoOqE+hBtN1D/QqzkDyuX2EJ2dLvEhFi6VYAjjtDmQ4QytYwnC4XUsrB8+lmClQPSJJaZdYsVqdL+vIxBHF5WWGGavCOKHzn12nG6ZDSMazN8a1QrJgF4fezt4H8JiOI0WE7mqS3gkNL5XXopNIRXHGsYox6JTZ+I8cJ2+cBBq8zvb6Wqeba5vONR5WQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731087415; c=relaxed/relaxed;
-	bh=Jlfv2ApsSBgn//KdBsSlx8BkotK5+tCpg2808yZLllw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UYqE+He9SdF+OpcnPEy2rJCsYh6M3dKuXBB5bvl/xe1hKi/7JHCuW+iXihkw+jxBYn/P1gUSxyK8gzLYykX9pUX6nek3ACOjaYz0hVQJuaMxB3hMfD7SZRW0DS7u6l5tSYcPk0XKlHP9rp25DasdKMDi9/4e1wZL9X9FkR2lZzAm9A+dfRf+ZAseOZKYon8nBqJ9BPOQzjhZrKbsLFpbuM6pr6ebXdgCo/949dV8pInp5hR8AqIYG+yJ+oQeCDAi79Vvj4MjpioODIRCQWAlYrmQ7O86WY5A6QEf8UXdZyPGgyFNwjMXZDZziCIhDPkLMiDE8L+2HJWUt2R/CLqN2w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EnlVuOKH; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EnlVuOKH; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+	t=1731290969; c=relaxed/relaxed;
+	bh=EkHq5ULh5nBblruZP9s1KkDsvhW94OirglM9nAXKs8A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=npLj428Nj9/sgXvco++eOiCvH1SMABvj83KlhBkZ0wPuZL0S1csUeqC9kLOazCu+RT73b/390WH/3O+isLc2S75D9cGvoYiGYFMZBqf6h1JgTPecgPmDS2pJN3hheyDnc26ZgSSlCzrNJFll/NNxBRwQTz3lqugrNA+YUJU0O5PCpFsMkDFp6Q28YL55TN6AzDtT34pBDa6ADBbzuMVuiKW2pYJPODjj4nKhBzj9JLJai/4mI7auxzlVVFXjcmjKgdJE+deikgN8WtYAXVJU3vewGXmQz8s7Zq32wxG1tUJsIrPp8VQSBb9Muec6IBBC8hHBg5THyBPrjkdZcaDgGg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=W6rPBvjg; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EnlVuOKH;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EnlVuOKH;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=W6rPBvjg;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XlR2Z2BrSz3bxl
-	for <linux-erofs@lists.ozlabs.org>; Sat,  9 Nov 2024 04:36:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731087411;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jlfv2ApsSBgn//KdBsSlx8BkotK5+tCpg2808yZLllw=;
-	b=EnlVuOKHtxRm5r/XUbwfEDUBfGg31uzPO+BhRxchcqfbRr6OVJnmSkMZd0jMy66pgqC8zh
-	2AnnDYGSll+xZ6ojZPTVsb7ehvZRQrSsSm2bzTFHRwyPrGf2ZS3fc+iey5vHpGiUcoTRPF
-	7N0oO5JsWY4du3oVMEUlc0lotqfO3QA=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731087411;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jlfv2ApsSBgn//KdBsSlx8BkotK5+tCpg2808yZLllw=;
-	b=EnlVuOKHtxRm5r/XUbwfEDUBfGg31uzPO+BhRxchcqfbRr6OVJnmSkMZd0jMy66pgqC8zh
-	2AnnDYGSll+xZ6ojZPTVsb7ehvZRQrSsSm2bzTFHRwyPrGf2ZS3fc+iey5vHpGiUcoTRPF
-	7N0oO5JsWY4du3oVMEUlc0lotqfO3QA=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-226-sjYpWV5SMt6Lmz3uofTwYw-1; Fri,
- 08 Nov 2024 12:36:48 -0500
-X-MC-Unique: sjYpWV5SMt6Lmz3uofTwYw-1
-X-Mimecast-MFC-AGG-ID: sjYpWV5SMt6Lmz3uofTwYw
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 935F41954128;
-	Fri,  8 Nov 2024 17:36:43 +0000 (UTC)
-Received: from warthog.procyon.org.uk.com (unknown [10.42.28.231])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9CB78195E480;
-	Fri,  8 Nov 2024 17:36:37 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v4 33/33] netfs: Report on NULL folioq in netfs_writeback_unlock_folios()
-Date: Fri,  8 Nov 2024 17:32:34 +0000
-Message-ID: <20241108173236.1382366-34-dhowells@redhat.com>
-In-Reply-To: <20241108173236.1382366-1-dhowells@redhat.com>
-References: <20241108173236.1382366-1-dhowells@redhat.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XmtJy6Yscz2xgp
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Nov 2024 13:09:18 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1731290953; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=EkHq5ULh5nBblruZP9s1KkDsvhW94OirglM9nAXKs8A=;
+	b=W6rPBvjgezNwPK4k/E2p013opsqR+GRkEubmkzWm1Q6gRLVQjv3zqTZOi1r7IAAVjMIoskrbC8hvRUKneHHa2z1ytp52a95lZnaPpW/tNGvplAbeySLAn2Sol3+kmbcNIkVCS97Ow1E1QIAHK+xvNy72IlGnAR+O+jXmCoPq3jE=
+Received: from 30.221.130.244(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WJ3xVzO_1731290951 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 11 Nov 2024 10:09:11 +0800
+Message-ID: <02a3a22d-782b-434b-b3e6-5138f77ee251@linux.alibaba.com>
+Date: Mon, 11 Nov 2024 10:09:10 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mkfs: Fix input offset counting in headerball mode
+To: Mike Baynton <mike@mbaynton.com>
+References: <20241024195801.1546336-1-mike@mbaynton.com>
+ <bfbf180e-21d6-45de-b4c9-43089dcef333@linux.alibaba.com>
+ <CAM56kJTuwXoOtQ+V7YHygHhHb--9qUmvkbADOuG=-4zwHvfkzQ@mail.gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <CAM56kJTuwXoOtQ+V7YHygHhHb--9qUmvkbADOuG=-4zwHvfkzQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Spam-Status: No, score=-0.3 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -94,97 +66,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: syzbot+af5c06208fa71bf31b16@syzkaller.appspotmail.com, Dominique Martinet <asmadeus@codewreck.org>, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Chang Yu <marcus.yu.56@gmail.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: sam@posit.co, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-It seems that it's possible to get to netfs_writeback_unlock_folios() with
-an empty rolling buffer during buffered writes.  This should not be
-possible as the rolling buffer is initialised as the write request is set
-up and thereafter maintains at least one folio_queue struct therein until
-it gets destroyed.  This allows lockless addition and removal of
-folio_queue structs in the buffer because, unlike with a ring buffer, the
-producer and consumer each only need to look at and alter one pointer into
-the buffer.
+Hi Mike,
 
-Now, the rolling buffer is only used for buffered I/O operations as
-netfs_collect_write_results() should only call
-netfs_writeback_unlock_folios() if the request is of origin type
-NETFS_WRITEBACK, NETFS_WRITETHROUGH or NETFS_PGPRIV2_COPY_TO_CACHE.
+On 2024/11/9 00:37, Mike Baynton wrote:
+> Thanks for the update, Gao! Appreciate your review.
+> 
+> Mike
 
-So it would seem that one of the following occurred: (1) I/O started before
-the request was fully initialised, (2) the origin got switched mid-flow or
-(3) the request has already been freed and this is a UAF error.  I think the
-last is the most likely.
+I'm just back from vacation.
 
-Make netfs_writeback_unlock_folios() report information about the request
-and subrequests if folioq is seen to be NULL to try and help debug this,
-throw a warning and return.
+> 
+> On Fri, Oct 25, 2024 at 8:36 PM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+>>
+>> Hi Mike,
+>>
+>> On 2024/10/25 03:58, Mike Baynton wrote:
+>>> When using --tar=headerball, most files included in the headerball are
+>>> not included in the EROFS image. mkfs.erofs typically exits prematurely,
+>>> having processed non-USTAR blocks as USTAR and believing they are
+>>> end-of-archive markers. (Other failure modes are probably also possible
+>>> if the input stream doesn't look like end-of-archive markers at the
+>>> locations that are being read.)
+>>>
+>>> This is because we lost correct count of bytes that are read from the
+>>> input stream when in headerball (or ddtaridx) modes. We were assuming that
+>>> in these modes no data would be read following the ustar block, but in
+>>> case of things like PAX headers, lots more data may be read without
+>>> incrementing tar->offset.
+>>>
+>>> This corrects by always incrementing the offset counter, and then
+>>> decrementing it again in the one case where headerballs differ -
+>>> regular file data blocks are not present.
+>>>
+>>> Signed-off-by: Mike Baynton <mike@mbaynton.com>
+>>
+>> Sorry for late reply, I'm busy in personal stuffs now.
+>> I will look into these cases and reply again later.
 
-Note that this does not try to fix the problem.
+Yeah, thanks for the nice catch!  Yet I'm not sure if
+decreasing `tar->offset` so late is safe (because there
+are potential early exits here).
 
-Reported-by: syzbot+af5c06208fa71bf31b16@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=af5c06208fa71bf31b16
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Chang Yu <marcus.yu.56@gmail.com>
-Link: https://lore.kernel.org/r/ZxshMEW4U7MTgQYa@gmail.com/
-cc: Jeff Layton <jlayton@kernel.org>
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/netfs/write_collect.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+So how about the following diff? If it looks good to you
+too, could you submit another version for this?
 
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 3d8b87c8e6a6..4a1499167770 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -21,6 +21,34 @@
- #define NEED_RETRY		0x10	/* A front op requests retrying */
- #define SAW_FAILURE		0x20	/* One stream or hit a permanent failure */
- 
-+static void netfs_dump_request(const struct netfs_io_request *rreq)
-+{
-+	pr_err("Request R=%08x r=%d fl=%lx or=%x e=%ld\n",
-+	       rreq->debug_id, refcount_read(&rreq->ref), rreq->flags,
-+	       rreq->origin, rreq->error);
-+	pr_err("  st=%llx tsl=%zx/%llx/%llx\n",
-+	       rreq->start, rreq->transferred, rreq->submitted, rreq->len);
-+	pr_err("  cci=%llx/%llx/%llx\n",
-+	       rreq->cleaned_to, rreq->collected_to, atomic64_read(&rreq->issued_to));
-+	pr_err("  iw=%pSR\n", rreq->netfs_ops->issue_write);
-+	for (int i = 0; i < NR_IO_STREAMS; i++) {
-+		const struct netfs_io_subrequest *sreq;
-+		const struct netfs_io_stream *s = &rreq->io_streams[i];
-+
-+		pr_err("  str[%x] s=%x e=%d acnf=%u,%u,%u,%u\n",
-+		       s->stream_nr, s->source, s->error,
-+		       s->avail, s->active, s->need_retry, s->failed);
-+		pr_err("  str[%x] ct=%llx t=%zx\n",
-+		       s->stream_nr, s->collected_to, s->transferred);
-+		list_for_each_entry(sreq, &s->subrequests, rreq_link) {
-+			pr_err("  sreq[%x:%x] sc=%u s=%llx t=%zx/%zx r=%d f=%lx\n",
-+			       sreq->stream_nr, sreq->debug_index, sreq->source,
-+			       sreq->start, sreq->transferred, sreq->len,
-+			       refcount_read(&sreq->ref), sreq->flags);
-+		}
-+	}
-+}
-+
- /*
-  * Successful completion of write of a folio to the server and/or cache.  Note
-  * that we are not allowed to lock the folio here on pain of deadlocking with
-@@ -87,6 +115,12 @@ static void netfs_writeback_unlock_folios(struct netfs_io_request *wreq,
- 	unsigned long long collected_to = wreq->collected_to;
- 	unsigned int slot = wreq->buffer.first_tail_slot;
- 
-+	if (WARN_ON_ONCE(!folioq)) {
-+		pr_err("[!] Writeback unlock found empty rolling buffer!\n");
-+		netfs_dump_request(wreq);
-+		return;
-+	}
-+
- 	if (wreq->origin == NETFS_PGPRIV2_COPY_TO_CACHE) {
- 		if (netfs_pgpriv2_unlock_copied_folios(wreq))
- 			*notes |= MADE_PROGRESS;
+diff --git a/lib/tar.c b/lib/tar.c
+index b32abd4..990c6cb 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -808,13 +808,14 @@ out_eot:
+  	}
 
+  	dataoff = tar->offset;
+-	if (!(tar->headeronly_mode || tar->ddtaridx_mode))
+-		tar->offset += st.st_size;
++	tar->offset += st.st_size;
+  	switch(th->typeflag) {
+  	case '0':
+  	case '7':
+  	case '1':
+  		st.st_mode |= S_IFREG;
++		if (tar->headeronly_mode || tar->ddtaridx_mode)
++			tar->offset -= st.st_size;
+  		break;
+  	case '2':
+  		st.st_mode |= S_IFLNK;
+
+Thanks,
+Gao Xiang
