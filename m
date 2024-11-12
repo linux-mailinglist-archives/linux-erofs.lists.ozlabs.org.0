@@ -1,153 +1,153 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6899E9C4DAE
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 05:16:43 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11A559C5149
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 09:58:12 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1731385000;
-	bh=QnFa9iocdHJ4baaTatKyAF4tSa92k4Eib2WDXY4rHxQ=;
+	s=201707; t=1731401889;
+	bh=24ZOW0JU3Sad33+xS6L1LE1wp9c1QdTX19KQJR9Yy4s=;
 	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
 	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=Mo3fj9qxrrbT+2jpWVMn7QP7Y7PhYMBruaF1DeIe8L2d7c85rpnfpMu90kRQNeGKU
-	 BVZQKojh7uTaYKQVu7TsW8fAbRR2T1H5vk1O5ie4U2fYZ2xdr7vlsVvkaqcrZH+qJa
-	 EAFtyaH4fL3w4Dx2LCC5aw9OuWPc6zzmHv/7HIc5UZ697cguG4n8k+B6F9Pv/tIhAF
-	 G8dkfGwSXZMyeEFsX+XE6h2PCrcjvIq29RaVGBmRlX613S6p1/UMntGTKiGkQ3x3Iz
-	 UpYF121pYqSS9zwJVNulq0jcsl7jf1K+9QzHTJKEqsKMYaPVHeBpA5eG+bQq+LuHKo
-	 WKzI5cbyO/22w==
+	b=FOkvPoa9ufiI4nIolA41Zwyen9Af0kBlFgkXOsfPhKanOrmka6F7crYDw7TfXGUQA
+	 Ii1KfD06WGbtK8YobeWcvK6JuzGohZFCUz5kzm5acx/jOFuu22vKR9RzM/gbYjtQbH
+	 ycY9Wwi/2ZUxdBE84Ze0A8FpFwX0pjUJ7oFtwdJBRgsrXJUxrCUcvmVYEvwIuiGcPt
+	 xkiF34o4ro2THJ9yU9haRDPEhbz9th5pppwFR5PkTyHDdTN+Z7ApjSWEKyeT9i1rc+
+	 ada9zzzQYI6NfDNLml9e6iLrb6JR3pNV8rFg3T00uotAkU3klZyMJG/RlMZZOrsT0R
+	 r2ODaMOSqxi8Q==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XnY5N6tFKz2yYJ
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 15:16:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XngL94RPSz2yYf
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 19:58:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c400::2" arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731384999;
-	cv=pass; b=OPHrVHGCr1hxSf17EzBS8tCYezUDyMUYrUnKXehmZUaGDT3f4oADL+wrTAbJwn59pUjQ/GTOYF3ZuU0oO5IaLF8i/CnwrxwYIs3IB+dbBni/btLJYRw5swTxU9l8CJ+PJtQfWO+kSref+5S17HcpZ/PKzkcrX94rvgHmd5jSTGpU0JcLbtTxt+1g3/WihSkqzlwcBcoifdK2CTBYiBFnZ20qhj1nnolFqlmMGFj3AepXzALsJhqGchUPIcKqQoVkuihdni2MctAf7eTuh1dcV5ndyzqrVtwjYHaiUpmasXZdA5GytaQBv73nuI9L8J7Gbfj3q/b+qsJy9MPATh9h1Q==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:200e::606" arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731401888;
+	cv=pass; b=bYlR6TrcqBC9LYi9YxOHdj8uEX1m2oeaHlADKwQ22Q9priNaZII49ehiqwZz6MiaPhqaKsGaTPqypiZKlSETrkVqJiuCCoM9XAIeZ+lA0ADTtgFu9a9YmO6pQbkHOPIH8nk5R3AKOt6I2BTTD35ECkH18aKlKu11vlJQqVTyOXqLEl8xsqlwpsi1texi3+vlqvj8o4ULo1FjHgfmCYbu35mvBtGQKIBi0fvIzud5vbBOoi86V4A6yuPZtxczQHzqg+/IXkZiU79DTKhEM0nOXJt0zMgWIpIZIImqyyGQdM5qBWuSVb3Nq8kDD0/MWZ7W1o9Ztk69l4OBx1YMmVnmvg==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731384999; c=relaxed/relaxed;
-	bh=QnFa9iocdHJ4baaTatKyAF4tSa92k4Eib2WDXY4rHxQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ArFUTt1ocTb7NTcD2ncotnIxBXNkO0JGlz69PgNN2bsLaTlngQe/pQiFjwrN1RJVh0vIj8m0rGMYbWJkyj2wenau6kZ8kJpWIiAabKvEGB/fKbCskiNeCIBRqYm94rbE8uqN7LJfDVUwkqDCJ1ASLgC86ClkZIG4rPbNgu6JMlj1IOcSsiSD2VaSrVCwrIKe5X5MAXvGih38lK1U42BYz7TDt1sQUr2DanH0DlymwfMDhAMmyKrvPAQYqdy4reifk/erb5CoYYdKSCDwvNp5hUQeS9p/YWxIoxAgU8uwBodsOZvLx4SN160lI1jUwEeYssKLTCycLqp3TshnvsR7gQ==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=Mx7vVr+Y; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c400::2; helo=hk3pr03cu002.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org) smtp.mailfrom=vivo.com
+	t=1731401888; c=relaxed/relaxed;
+	bh=24ZOW0JU3Sad33+xS6L1LE1wp9c1QdTX19KQJR9Yy4s=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=c8Ypb0QgkNKKxiSppgQxKrbay/CbeGy9Ls7NCe2FHsDe4XDrVMamkokXsSsEcVUlQ/0TOgGFpCBTUqHZiPz64xvw1Kb3U3Kyhix5CgXgVwKQAr7mCr9vDgghcKYCRzXgh9xzDqVa5AVtgHFoYS88FzvaPTQH9afZ9Uz7Nz1ebQXJtLgA4RDw9DHM+/oHl3xSWCRwILbYPUOkFpLhuZ9fFPudR1ZgmLB3zN91Eei1QaBDoXscB6EZwf12g/vvRyQaK1iG4urzG4euHdfhga5fLiQhJYCWkazCtt1cwcWW7EQyxV3dcDK4dSOXTD5kaAxfi5tP3gEi2Osj+suOltUApw==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=pRx0hkJD; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:200e::606; helo=apc01-psa-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org) smtp.mailfrom=vivo.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=Mx7vVr+Y;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=pRx0hkJD;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f403:c400::2; helo=hk3pr03cu002.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org)
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazlp170110002.outbound.protection.outlook.com [IPv6:2a01:111:f403:c400::2])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f403:200e::606; helo=apc01-psa-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org)
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on20606.outbound.protection.outlook.com [IPv6:2a01:111:f403:200e::606])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (secp384r1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XnY5K3kXZz2xlF
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2024 15:16:36 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XngL54tNNz2xZt
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2024 19:58:04 +1100 (AEDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iHnwWlRE8cvtwX46jJcbov+RfTkn41PnhfazHiy2QiHPmG9kC1ErrpMSxNWoxNCtTHI+EtqA6FwhvpXbFNE84eXlAj7FCDO2K3AUX/6rhpZBA8J37U5FlTRhszQw5Db7joBqku2jKDjBJEdYTsG+XrxAN4bFa6ENQWct22wZ2LWgB3og+JGwpVdr/ad2S1Iyp2PYw3QhQ8FXoZFww5ysldib26hT5iWkrv/WR4Lsx7h/+JTtALww8NAjqlyO/EGjWY6xlUuc7UoJnI0eY8tyznQxUNBDr5J1+6M+aphpgE43aYh9WmvD0C9CQpIsvghXdg4tA7T+rZQzltT/NL7TZw==
+ b=A2VLKgvwSe+kUsjXV58WxXMVsMaeNAMrY66KtqbyM0BgM79xR8E6/1p+oNIYBCbYo2YbYqIGtTad+XTUj4P3KR6DgTDJY2O51oIkUC9ZsWD5a1Jjbe3GI9V7DCE5tNtFwX3+yxtkGPyC5+Q123SPuq2U6WeUCfDyQJuY847eBF8aGGe+9oz+u77n2Yv4I28mAj7Zbokyix+ghhKP7PVj6UScSP8yIlZDfZWlXjWpvU4wsggP4+oYSxJZO9knYT4swoWEBcOOpniT9La1qDs5RfuQDwctpglwmoJsWOg3Y1W+C9SW/uZpqiWK8sgLXOc3FHfhM6gTyxvh57sQ86APDA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QnFa9iocdHJ4baaTatKyAF4tSa92k4Eib2WDXY4rHxQ=;
- b=EtbShJ+HdpLeWQscyIOmr3QXm1kwCQxCSLepuUAlCg4myEOtNdjyWc024pD+z9KWq9MHrtWS5k4OK566uA5lkmymxOEYu2SfDM1OjMjvNYN2oI6NHq6K6Yro4EXUjVAVdgQ1RB7LOmrFdzjG7q9Nevt0gBcdp8CuBMYRqJl1URiFhu+O3T1MhJXF3EnVMxh3fQVMOiLVJs59YY3FFWSEDD/3DX9W32aMgHtaBdJvtPRYNtEKa9OAwuWLQrS9Ktnuq5Vm/vFxqbLZPG93N9+cwwvBpST7ShCJbbCi188GK9fPy1FzA7Gfp4D97cKxB6TYwR+3DG3ninTHe4BC+Ps9DQ==
+ bh=24ZOW0JU3Sad33+xS6L1LE1wp9c1QdTX19KQJR9Yy4s=;
+ b=Tjiupx7RnM2f9xhdJY5Lz0jA3vA3vdACzBbGR61EsCdqoCcbN4AGESBGMU9XmLSr3+6kSR+4XSY/ZBpuGicQh64jo/l3tMhn/uxFm/2coegnu+T9MOwCT/oMxnLUWgIyoJtUrrtFLRjA3MsCey4jcsyYEdnbtfzkv/1IwYmTKesWQQAtIfhIAh+9luoeboPBxvM2Od7dDAvdjbN1bPRBH/jt3Aj1KkkpfUOpSornEBe13dUNmsJ3S+lT/KGLrpgjO4zmaausE7+cCMMK5X8S8dqd7WZEr292PAEizkROOorJqblJjsqpeYUD+tEwdfny8NbthfH/ajhVJs0rFh/OTA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
  dkim=pass header.d=vivo.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QnFa9iocdHJ4baaTatKyAF4tSa92k4Eib2WDXY4rHxQ=;
- b=Mx7vVr+Y6reJ/7Sxh5AsNWgsQK1OSA65glILNHMhYhKs5gIrywc3c64SrGGCfW8pn9nZ2w1/vApA3XS8P9hRW0ADCbRXec+BYviXIJKSwnGoIUrtj29LzElyYRkasgJ6c/a/btRxUSJy3onkGyM3khrsLZBhX9Xw/IpXnj6c2SW3b9SdCZFwh9WbG8Uxtp001ulTBKXHJUmWHzoLaK4IJcbN7JbsL2FZEgtP271/GTrXMnxyOXQag7D7aQkyKNGgs1HORiMWulc8HQNJ9B8TeDleM0KiGYmUcb59cj+ulYMzlXVukUUYNad5cZGp53IJkNCxujScvx23GTa+2YhKUA==
+ bh=24ZOW0JU3Sad33+xS6L1LE1wp9c1QdTX19KQJR9Yy4s=;
+ b=pRx0hkJD4Qy1Qpkuk3PRn54uT2JPpd6SxNUwBQFDJJDfznf6ll3KvA8zeqfM0A0dqiwv5F3uckepKFYKd32H+Xb2Ws3ci1c/IYWBxegHtpsJ1XOot4TJetJTJSgKanaBVG5Ff1ZpnZ4ECbk0VLo5nJmDPuvsCOU3aGR7e4QTuyh/HykMjQsRXEISkkagY5rFyrLAUxr/LmKHoTtMcW3QYQv/NyzRr9kG3ir7Dg7+zhlMP0ds+C4rbrTBQtC4xVwTAhjNie5ijFMyHWtuvsIx2oc72ZbukS4DcyxdlDGxM4Tq3Ycf0xxUIrVcdcrb4Fc5lSlX8dcWAzEq5LLAbNrqCg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=vivo.com;
 Received: from TYZPR06MB7096.apcprd06.prod.outlook.com (2603:1096:405:b5::13)
- by TYZPR06MB6261.apcprd06.prod.outlook.com (2603:1096:400:335::8) with
+ by SEYPR06MB6661.apcprd06.prod.outlook.com (2603:1096:101:168::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8137.20; Tue, 12 Nov
- 2024 04:16:09 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.16; Tue, 12 Nov
+ 2024 08:57:39 +0000
 Received: from TYZPR06MB7096.apcprd06.prod.outlook.com
  ([fe80::6c3a:9f76:c4a5:c2b]) by TYZPR06MB7096.apcprd06.prod.outlook.com
  ([fe80::6c3a:9f76:c4a5:c2b%6]) with mapi id 15.20.8158.011; Tue, 12 Nov 2024
- 04:16:09 +0000
+ 08:57:39 +0000
 To: xiang@kernel.org
-Subject: [PATCH v6] erofs: free pclusters if no cached folio is attached
-Date: Mon, 11 Nov 2024 21:32:35 -0700
-Message-Id: <20241112043235.546164-1-guochunhai@vivo.com>
+Subject: [PATCH] erofs: add sysfs node to drop all compression-related caches
+Date: Tue, 12 Nov 2024 02:14:03 -0700
+Message-Id: <20241112091403.586545-1-guochunhai@vivo.com>
 X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SI2PR04CA0001.apcprd04.prod.outlook.com
- (2603:1096:4:197::12) To TYZPR06MB7096.apcprd06.prod.outlook.com
+X-ClientProxiedBy: SG2PR02CA0064.apcprd02.prod.outlook.com
+ (2603:1096:4:54::28) To TYZPR06MB7096.apcprd06.prod.outlook.com
  (2603:1096:405:b5::13)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR06MB7096:EE_|TYZPR06MB6261:EE_
-X-MS-Office365-Filtering-Correlation-Id: dcad5ccd-e000-4c7d-0d89-08dd02d0bc64
+X-MS-TrafficTypeDiagnostic: TYZPR06MB7096:EE_|SEYPR06MB6661:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4f98fa1f-48e2-4aee-0f61-08dd02f80f93
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: 	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info: 	=?us-ascii?Q?N245gvdT+YGGnj+3itqxgOdj3L/7CkX6/ssN+7DzvLA4YCZCRCvyBoRFSoOU?=
- =?us-ascii?Q?A7O2CY57qsOpB5map+Fcr6OVsyDrKsa9J/UYbCYWYYKgnAVPnVSyDhqPhzPk?=
- =?us-ascii?Q?shRDXOXWVfADiafpCPXfnVSUniCFa8p6KsCuOXB+4NPpv36L3fxhcURkuoJ8?=
- =?us-ascii?Q?9NrYJRaPgK5yuqzC3NLemzLSW7uBO6sVzeNdtD7Z55ulW9h3uMqwEqSkG1Xo?=
- =?us-ascii?Q?JSjZfDhTAfyuJ3ARetAhnkhayABdF2a3YvYzs1HWIliRUGFWgvufW9y6L281?=
- =?us-ascii?Q?G8cuSirkvlvQxgzTXuVnhdP4KI4kpx0+MZ6pYmlfgdydUga5cosc8uk41Kcn?=
- =?us-ascii?Q?uO4Kd/wV7KOW9t66NDcq2axss1NU2ZqrzHnlsz0yruKy6VCiOsN4DuZ1oKoW?=
- =?us-ascii?Q?lTKZCJHnQG1Z3fepvgvhcQRNgDkOd/zxpTyGk9Ms8xWWYX52DnYN2hNyRX5f?=
- =?us-ascii?Q?xdKxBQH3QE1icdY22k5N0UL/nZn2ON+JevEK8UEBJsAPcmPWkrNhoIwk9MPN?=
- =?us-ascii?Q?jiWA/UUScjp5lTSgllmEGLeWhDoUau1One+qVtF0BstLQjk+XVZUEaAKIVgC?=
- =?us-ascii?Q?yEPhUDKP/4/Bm9ckuyV/Ce7saEFDYOGkRf0qaX4Cdj8eTrrQ+/Nu/Jo8SaGo?=
- =?us-ascii?Q?WbiZMCDzfp8yczqlRQIgLzjKjxPzk/B7NhCzyCCQ0X697hucJZ7b7LrWrSVQ?=
- =?us-ascii?Q?E8FeSydPKopGDLvHST2fAPW3/b3Th29C88TfGUdVTrZJAJoPvhs4Dz5DxIuL?=
- =?us-ascii?Q?93CsFph8QTElhDYquprQe8/4tfgow1JDfqyXdfbmbM3YuxbXAZAzJApWzldv?=
- =?us-ascii?Q?T/CyuVpXtmP1FiC+yoJFZvOoxCFNKPZUxhI3U/dy4wOLgM4Qj0dJ6zBBkt+q?=
- =?us-ascii?Q?cbZYCoJwBnBqeazJH6FOLoXKcYdQo8kk1cdv7UwrM/hvQMtrO2rkiAIV09Yv?=
- =?us-ascii?Q?CA0rdniO3nfdzYilWwtDiY/W/FQC9CNXGUuelx3GT4V+nCJtEWo3QQ4y5bfy?=
- =?us-ascii?Q?ppZ7bsMDjVkGnSed4Rd0w8Jkq06HWVWxNynyCfxPxD4llWziHSsufCZZb18u?=
- =?us-ascii?Q?+lcEGS1OsZp4RcvMx8V5UZgxlhXx1gwSFB+jYy1yWfGayHhWNaf3Y3+R9axJ?=
- =?us-ascii?Q?AT9une9cXctagAvdMLS7MQVKgITpKC61a90BQ9wRvQaHAB/eYlRaTvkZTepD?=
- =?us-ascii?Q?N0ap29CQALpR2NK/bulSWgxQBWWjYXQD5HOsFEGK3DKEh7KsouyIRYr/buJ4?=
- =?us-ascii?Q?1ti4WvsulMsObGinCur+3VNqbkUt4lNT6x+7aS6UglpselHQtFHiTvUfIEBq?=
- =?us-ascii?Q?EdZNCV4vcR2wBEXUXuqbW4VG7AB6R3y4pAWUPIh6j9L1df8kxRd/uNWALEFS?=
- =?us-ascii?Q?6/sG3gPxq9suCB5Ctav/ZTZghgkZ?=
+X-Microsoft-Antispam-Message-Info: 	=?us-ascii?Q?+Kjpyz0x5A5MqfFolAdcyxSMv6M41A4KEBt9ykzASQfLxKg5T1vVbPmMk5EF?=
+ =?us-ascii?Q?oM0/+zjmmKxEVxc6Nf3aMiWJDgWv5ClsWJIF0e1VhKe4cE6chyfh0reCW8en?=
+ =?us-ascii?Q?ucIrzze4rdUkN89WZX11PfIKFBVAoyaSZSTEJjQ7m4rA7Pp3gm5Setcbj7Mb?=
+ =?us-ascii?Q?q3bHE4KwCEKhRKPCeCzFO83Kq/Q7Q2oIaPoIJL3Vobxb22z4iymy0Hhhnyfw?=
+ =?us-ascii?Q?XqAzxOVc7KihqTiMkbQZK6qHTZUKJQaqXnbN1hEn/KjITvV5pfiHJTYUwthn?=
+ =?us-ascii?Q?1OPMAa+XW974P20mY2OQRf9qxCWAG4XQ1oHNlUWNIjx7xESj52LGf2v8CWYT?=
+ =?us-ascii?Q?Sm3NS/ombHNmve/le5oC2JizQUIJecPLliE4xPBgJNaoSXtx6ePhvmtz8ixn?=
+ =?us-ascii?Q?t53QmQANUjHNsO6OwFNPJvMDhsxiJgx1b3005+0jegXCpNPW8vztozG+oouS?=
+ =?us-ascii?Q?nMDlT1sJ+8XFa2H7+tj5ASdTR6NhIYr2FTt+xlCp8TUCY11S5dLcqlcvVdlr?=
+ =?us-ascii?Q?ZTwLKb2kIWpaa3tXIfI33mKwOL5g13wlLCv2dJmmhymkBkmsleACGXPYdqiF?=
+ =?us-ascii?Q?N7tnCtCW/dFomF16EB6jrsTbNVJrTCBOBPleP8ny4ks53XV/wKhGWck2L1rm?=
+ =?us-ascii?Q?s1mp5zVpzQdGvlnXJEWAq75iMJSMpAiTQ71uy43NfntcltK4Pjsdfy3pybJR?=
+ =?us-ascii?Q?R8mbTYinfrQeU4Y7IKBaRLjD3Qc+z1rPDUzgXbWUuUifNSGuKtMXcUDxJBfw?=
+ =?us-ascii?Q?GATlzagH/Os7r+4wXV567K1Hr9FmUeZsRqgB38itA2rr5yMftYSpJtSovNJA?=
+ =?us-ascii?Q?fd4V4525N9JR8mqX5d4H3ea6BB19grB0mraRyuNWACzbZhGU7MQ0BGJq9Aa9?=
+ =?us-ascii?Q?y67F9sew3VCkg50O2YN4MRjB0P66bKJ4zaWeGbffc/xBPz4K74JPVddynNZG?=
+ =?us-ascii?Q?ZOdcxQjMEFdvxDJV/QD/gFTgRjURpFqCwyrvlmmOGXOZMlNLzU9Hkqmk8jZd?=
+ =?us-ascii?Q?bX1qugUUTKd6wCUIGuseyEe+OoKRop0t8/tKLO7IQDbhMjAx6dX0Yfou8mN2?=
+ =?us-ascii?Q?ck3SPn9cqLWRxT0h75W/usZ+6F04cIJfT2d0E3ilhGBwiIfOaHIA+onI+La6?=
+ =?us-ascii?Q?4ho0noQ4bAiqo8bY34jW38EiKdRTeLvPOGvGHmoUJfDrF77c4GBN9wCHgJzB?=
+ =?us-ascii?Q?LG5NFB1fJwGBUnWSG4ikNrO1WD0sf+SvD3AR5NGKz7SpKfKapVR+RLko0Xhb?=
+ =?us-ascii?Q?S5GWrRSKgv1xUk+xoCSyJy+fYZkqYC2rLVu5hUjFZn3WYwCXfu62qoz+Otvx?=
+ =?us-ascii?Q?qb9/+xoVkP8piG67KihAnliR/Nj46v9JiUwZgWOLecapoSfUITqMSR9GqjQn?=
+ =?us-ascii?Q?aR00lus=3D?=
 X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB7096.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?DIQFdYYIRhgwMzJB4Vs4lps9YLmLgKClputLuTRnXklh9fQbiyecsHtTTzfa?=
- =?us-ascii?Q?VbG+LQIj0FCHbnu52fzSjVZxnRGKDSEoqM9cS+NpzP3CUFrsPXLfWzNqYN7P?=
- =?us-ascii?Q?x/yb2CPWzD1Xf6+okUboRwgNCiFECS2GdNlN3+Vk2KJl/i9aSs33L7tp9TMf?=
- =?us-ascii?Q?dufJF4trvaE0MZEYJWp2dPUVr7//gpAn0noZ/7OLNPkBPlepF8Sy6nYJ2ZNm?=
- =?us-ascii?Q?vTQhmUvHsYAHGZYVGFz4uNoV/WgLT2WCbaqlN+mSWgYpcFh8SzZFeBaisl1I?=
- =?us-ascii?Q?BII8G2lxX0CDnVFRI+0l6LugGBgDA6zSuA/MOAvsCJo+M1YB2iWzviMCH/Qi?=
- =?us-ascii?Q?U0nMD8Xq6Rv415jYkCFJLtEJLhnLdISYWK5CVbdPsX5RPaqAswrbfS3Rpu/D?=
- =?us-ascii?Q?loDQZTs+h6j6HZCojBFufsia4uB8zQG8QPUEG/tJ0lcgpm4x9DtGqODr67WG?=
- =?us-ascii?Q?uf27V5gKA3LOc+4Q9L8S9vfGC9rrnIrn46VYXpUoJNntun12RvbUmn9cB2+o?=
- =?us-ascii?Q?NkIfNW5FBXLEF+KAQlMehdFl79B+kCC4PtyDakvJaNOtwSUX2zERw6JuOri6?=
- =?us-ascii?Q?/yj9frDNv0ogpvci/hDgstLEn7kZ/FtYkNv18dxWg2vmSH2mdojr6xL1eFXT?=
- =?us-ascii?Q?U3yDFIOuOXOQqgH+hKrvuM4NLN3ZWTfMMe0L7G65ndTfbaUTSUdt8VCNhHI0?=
- =?us-ascii?Q?/ujkNWXs55WKNEe9S7InIrMfBlT2LKjrLJn+fIBFMAk5UM7xDzjxd/MvnIw2?=
- =?us-ascii?Q?B8VPk0Z/WE8sMue080Bs40vFODVhIfN7ZyFWJMU9u5voBrEHB8Ga6Q7ChyWl?=
- =?us-ascii?Q?yL/dYWm86hP/1rZB1UhMr+9eXQ96uoBrv5+YPAHmJOjPtYqrGc8FzqJlh1ua?=
- =?us-ascii?Q?lLCUYc3aakRycixohT2y08WCSDw6kykidzvOYHEeXZAYAgMX+HsbkoftUhkb?=
- =?us-ascii?Q?fPhSF0AlIxhJSv1InRnZQMCmpebtIRSXJU94GM2G2zzGT9VHnvg+fRZvKOy7?=
- =?us-ascii?Q?9wuoMbT/+8is5O8ac6ykVaMUGTEUnQfQbA2F5b9Yl4mfzgB2L/9zsc1SaLAL?=
- =?us-ascii?Q?5Kix1mOA9Hc3jsoX2VZabb+bmTIvHIMJ8H4dqsLNVvFDL1O1Ll6wF3Vh+gkf?=
- =?us-ascii?Q?jr7C6rY+xGhFKjYd1YSrTveo+cc0sHS0RCmwhkpR54+IJZIgaFidYu9GpJeT?=
- =?us-ascii?Q?ayvSyijHLac5aklplGlbnosw1CW+A1Mpr97beqFcbn+MxmJUTuINR8YN5lTv?=
- =?us-ascii?Q?/Aen+2h5A7e5y75/XZ/3kSyHgORTKxmyI29B9nZIhrVTVRo1f/9RrcTfnhB6?=
- =?us-ascii?Q?qbjdXSp+MfiuZ8LlpiCoEv3OYkaIQf8M8Sk7kiFulwbLA1sl8VFVlj8srSf7?=
- =?us-ascii?Q?D0sWiJNzwWbtUcuo67HlNtrupjNaODR4XF6PoOvZTv7wEigB2DCTczIeim3O?=
- =?us-ascii?Q?tlIMf7bEIGynahfizwo6/1DVbHsUVldlymbrzTYw1erg+myYx0oKrFbjz9yq?=
- =?us-ascii?Q?wjYXQsK2pZXXtYaF4y5gexbsFu475r4zuv6K11EHbxuu3ePmYhoTRpMsPpNr?=
- =?us-ascii?Q?RHJQtJGmem0iXLZn4Clrv01hM7qgBXA0DCNcaq+i?=
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?mCJXjDkroxk8CvMxIC8nd+1McmcqZeRjkY7kbu9cLfrchuqTleYagl6TcF2T?=
+ =?us-ascii?Q?8l7z0MC1MUi502mZ+my3+CBFc1pHNnJ4oAMkL4VD3DBDj79cX3/q1a6Vmd/V?=
+ =?us-ascii?Q?2qyBPULTjhd1UknkDhwKYvAeS2BdabRtaLKY6R9d+9j1u/nGnQub4J6PfQ8S?=
+ =?us-ascii?Q?wcXfxNQzBfBz2DQ615t1qa0w8FoVzidYwGuXch2oSM29sDRt99yBot2wdGYd?=
+ =?us-ascii?Q?Ugnbq/FM9KLDT62irSpCcUjxM09BAS1ndVOzP2ERZzRgOBYjFv06RHT9WTmN?=
+ =?us-ascii?Q?VlqFdMf2jEiuwFS+s2rnD7VqFha22mQ+MFDOryQJ//j9kEKYhNUa3SeaD+Ka?=
+ =?us-ascii?Q?qBBc/+Gy99BOIsjRAZqDfszZQHO9aUAmQYurcR2JvfTwdaVAW8pZkPcF9I5A?=
+ =?us-ascii?Q?fZwKklUiGQdXYFdOhP50vGofNsY4awI1sa03jH8ULeT+Qgc7KV2R2vrkQ4sO?=
+ =?us-ascii?Q?xnTClTcrRjbhdmEeccE/J0IfiS0d5WloMIlPRTktkWt5zA1wECfjprbxn0MB?=
+ =?us-ascii?Q?JfPD8sNpl8fcjVzDpvoDsIfHGh3JBHLM/H8RIIW8Ro1jdmaXRdPXkID0YAMU?=
+ =?us-ascii?Q?SBIYXCBaWigbVyznZRgL+NcPFI8KJiNZQRbbXKVoS5yI9nlLhq3Cv5Rzwsdb?=
+ =?us-ascii?Q?E6huWJdM0IkktX6As/vHMaFdJWpoXGN5w7tL4a5trXLXgvzbqq0TfBBNoMZU?=
+ =?us-ascii?Q?FZgcThRXEkwR8owcfF72lMiZR2Ngz8UlWE5S6SwE+HRCBBlXkSBHYjU1bLx/?=
+ =?us-ascii?Q?yrtY3XNVLXnd6ObFaOIFkMiOfVMVAAepuC4TuBoBiqo/FqVNKKln3PsOmgGw?=
+ =?us-ascii?Q?AW+aXz/btakXJedhvMAD1S1/I2eUI1bKn0hGNc/fytvWbZx3bx35vGkw+N74?=
+ =?us-ascii?Q?Hg1XRCXc/2wp+Xh1ITosLyVDN44y3NC4+dXUuC3u3gPVzeGm+uJGrsa5sl/Y?=
+ =?us-ascii?Q?7lvcCIEtwGJmFXaDuRYUaGBF0io4PI723VpYs6k5qngYqwQYXh6wezwBjztS?=
+ =?us-ascii?Q?h8rz6+an3hAzDD9+6u7uhbPAyNzLhDTitx/X07R0zMgfrdmhzGDJkOFZHQSP?=
+ =?us-ascii?Q?guKwWUVJKGwUMmlGfSlfMuDRtJaxJYZtXyiwqGnUbMQ3K9FKF1hSFdksRqmk?=
+ =?us-ascii?Q?2ZczfS9FFFcOiYY45jrTx7Roy0VevIgVOGbK6sHawDwDV5d/wEK533n7Bhfu?=
+ =?us-ascii?Q?wTB6MgPPkSCdRduaRNuFJaJXGy5qyTsj9uzgYn5o9GsO8+NIO0EQAmqV2rcT?=
+ =?us-ascii?Q?k/jFHbF74mnayFlryOQpOPbzEv+9ECQYqkSEz6J/8z8sO2pGJ06H6d5tNUWX?=
+ =?us-ascii?Q?TTDtR2XGoKndBa66qyg5RdpCyhxtwpstJhfKeCxv0P/1BAXyvU48po/vhgxX?=
+ =?us-ascii?Q?6cCJ3sTAoJB5SZYavN62Kx1t4DTIaSuSqxsnEpZYYpaSaqKtpCEjQnPHo8nJ?=
+ =?us-ascii?Q?CfaRdsVr96Hpx4nBpwx5SE4Zdi9js+1lb7q1O6cM6g5IhGUlCiKBSIWLE5jP?=
+ =?us-ascii?Q?EQ3z2QJPco5bh+qw9aSJlr68bqLqk1OYBRaNj/U/+Syb/PAv7gMssQMl9vvV?=
+ =?us-ascii?Q?YxTyFc5+iyxzw9mfdDqQLsxsGleNpPk4sZDSiKpm?=
 X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcad5ccd-e000-4c7d-0d89-08dd02d0bc64
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f98fa1f-48e2-4aee-0f61-08dd02f80f93
 X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB7096.apcprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 04:16:09.5256
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 08:57:39.5149
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nxaDI5SI/ID+6brTtnyEHXQQwwsjnNfAPuwG65uGwgpID7yXIgT9qhJJsEsh5nWvf78PJf64reI+9nACTkXj/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB6261
+X-MS-Exchange-CrossTenant-UserPrincipalName: QQbCPOTRxgR6qlvck3jN8ahdhV5plRJA1hAI5BGcLl2Wf6RTNC+o3hXSP3uI1BYA4gYAGLPAA1v6xoPI+63w/g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6661
 X-Spam-Status: No, score=-0.2 required=5.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,
+	SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -166,189 +166,70 @@ Cc: linux-kernel@vger.kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.o
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Once a pcluster is fully decompressed and there are no attached cached
-folios, its corresponding `struct z_erofs_pcluster` will be freed. This
-will significantly reduce the frequency of calls to erofs_shrink_scan()
-and the memory allocated for `struct z_erofs_pcluster`.
-
-The tables below show approximately a 96% reduction in the calls to
-erofs_shrink_scan() and in the memory allocated for `struct
-z_erofs_pcluster` after applying this patch. The results were obtained
-by performing a test to copy a 4.1GB partition on ARM64 Android devices
-running the 6.6 kernel with an 8-core CPU and 12GB of memory.
-
-1. The reduction in calls to erofs_shrink_scan():
-+-----------------+-----------+----------+---------+
-|                 | w/o patch | w/ patch |  diff   |
-+-----------------+-----------+----------+---------+
-| Average (times) |   11390   |   390    | -96.57% |
-+-----------------+-----------+----------+---------+
-
-2. The reduction in memory released by erofs_shrink_scan():
-+-----------------+-----------+----------+---------+
-|                 | w/o patch | w/ patch |  diff   |
-+-----------------+-----------+----------+---------+
-| Average (Byte)  | 133612656 | 4434552  | -96.68% |
-+-----------------+-----------+----------+---------+
+Add a sysfs node to drop all compression-related caches, including
+pclusters and attached compressed pages.
 
 Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
 ---
-v5 -> v6:
- - Fix issue: free pclusters when no folio is attached.
+ Documentation/ABI/testing/sysfs-fs-erofs |  7 +++++++
+ fs/erofs/sysfs.c                         | 11 +++++++++++
+ 2 files changed, 18 insertions(+)
 
-v4 -> v5:
- - modify subject to be more formal
- - `--pcl->lockref.count == 0` --> `!--pcl->lockref.count`
-
-v3 -> v4:
- - modify the patch as Gao Xiang suggested in v3.
-
-v2 -> v3:
- - rename erofs_prepare_to_release_pcluster() to __erofs_try_to_release_pcluster()
- - use trylock in z_erofs_put_pcluster() instead of erofs_try_to_release_pcluster()
-
-v1: https://lore.kernel.org/linux-erofs/588351c0-93f9-4a04-a923-15aae8b71d49@linux.alibaba.com/
-change since v1:
- - rebase this patch on "sunset z_erofs_workgroup` series
- - remove check on pcl->partial and get rid of `be->try_free`
- - update test results base on 6.6 kernel 
----
- fs/erofs/zdata.c | 57 ++++++++++++++++++++++++++++++++----------------
- 1 file changed, 38 insertions(+), 19 deletions(-)
-
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 6b73a2307460..877bce7709d5 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -885,14 +885,11 @@ static void z_erofs_rcu_callback(struct rcu_head *head)
- 			struct z_erofs_pcluster, rcu));
- }
- 
--static bool erofs_try_to_release_pcluster(struct erofs_sb_info *sbi,
-+static bool __erofs_try_to_release_pcluster(struct erofs_sb_info *sbi,
- 					  struct z_erofs_pcluster *pcl)
- {
--	int free = false;
--
--	spin_lock(&pcl->lockref.lock);
- 	if (pcl->lockref.count)
--		goto out;
-+		return false;
- 
- 	/*
- 	 * Note that all cached folios should be detached before deleted from
-@@ -900,7 +897,7 @@ static bool erofs_try_to_release_pcluster(struct erofs_sb_info *sbi,
- 	 * orphan old pcluster when the new one is available in the tree.
- 	 */
- 	if (erofs_try_to_free_all_cached_folios(sbi, pcl))
--		goto out;
-+		return false;
- 
- 	/*
- 	 * It's impossible to fail after the pcluster is freezed, but in order
-@@ -909,8 +906,16 @@ static bool erofs_try_to_release_pcluster(struct erofs_sb_info *sbi,
- 	DBG_BUGON(__xa_erase(&sbi->managed_pslots, pcl->index) != pcl);
- 
- 	lockref_mark_dead(&pcl->lockref);
--	free = true;
--out:
-+	return true;
-+}
+diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
+index 284224d1b56f..b66a3f6d3fdf 100644
+--- a/Documentation/ABI/testing/sysfs-fs-erofs
++++ b/Documentation/ABI/testing/sysfs-fs-erofs
+@@ -16,3 +16,10 @@ Description:	Control strategy of sync decompression:
+ 		  readahead on atomic contexts only.
+ 		- 1 (force on): enable for readpage and readahead.
+ 		- 2 (force off): disable for all situations.
 +
-+static bool erofs_try_to_release_pcluster(struct erofs_sb_info *sbi,
-+					  struct z_erofs_pcluster *pcl)
-+{
-+	bool free;
-+
-+	spin_lock(&pcl->lockref.lock);
-+	free = __erofs_try_to_release_pcluster(sbi, pcl);
- 	spin_unlock(&pcl->lockref.lock);
- 	if (free) {
- 		atomic_long_dec(&erofs_global_shrink_cnt);
-@@ -942,16 +947,25 @@ unsigned long z_erofs_shrink_scan(struct erofs_sb_info *sbi,
- 	return freed;
- }
++What:		/sys/fs/erofs/<disk>/drop_caches
++Date:		November 2024
++Contact:	"Guo Chunhai" <guochunhai@vivo.com>
++Description:	Writing 1 to this will cause the erofs to drop all
++		compression-related caches, including pclusters and attached
++		compressed pages. Any other value is invalid.
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index 63cffd0fd261..f068f01437d5 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -10,6 +10,7 @@
  
--static void z_erofs_put_pcluster(struct z_erofs_pcluster *pcl)
-+static void z_erofs_put_pcluster(struct erofs_sb_info *sbi,
-+		struct z_erofs_pcluster *pcl, bool try_free)
- {
-+	bool free = false;
-+
- 	if (lockref_put_or_lock(&pcl->lockref))
- 		return;
+ enum {
+ 	attr_feature,
++	attr_drop_caches,
+ 	attr_pointer_ui,
+ 	attr_pointer_bool,
+ };
+@@ -57,11 +58,13 @@ static struct erofs_attr erofs_attr_##_name = {			\
  
- 	DBG_BUGON(__lockref_is_dead(&pcl->lockref));
--	if (pcl->lockref.count == 1)
--		atomic_long_inc(&erofs_global_shrink_cnt);
--	--pcl->lockref.count;
-+	if (!--pcl->lockref.count) {
-+		if (try_free && xa_trylock(&sbi->managed_pslots)) {
-+			free = __erofs_try_to_release_pcluster(sbi, pcl);
-+			xa_unlock(&sbi->managed_pslots);
-+		}
-+		atomic_long_add(!free, &erofs_global_shrink_cnt);
-+	}
- 	spin_unlock(&pcl->lockref.lock);
-+	if (free)
-+		call_rcu(&pcl->rcu, z_erofs_rcu_callback);
- }
+ #ifdef CONFIG_EROFS_FS_ZIP
+ EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
++EROFS_ATTR_FUNC(drop_caches, 0200);
+ #endif
  
- static void z_erofs_pcluster_end(struct z_erofs_decompress_frontend *fe)
-@@ -972,7 +986,7 @@ static void z_erofs_pcluster_end(struct z_erofs_decompress_frontend *fe)
- 	 * any longer if the pcluster isn't hosted by ourselves.
- 	 */
- 	if (fe->mode < Z_EROFS_PCLUSTER_FOLLOWED_NOINPLACE)
--		z_erofs_put_pcluster(pcl);
-+		z_erofs_put_pcluster(EROFS_I_SB(fe->inode), pcl, false);
- 
- 	fe->pcl = NULL;
- }
-@@ -1274,6 +1288,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 	int i, j, jtop, err2;
- 	struct page *page;
- 	bool overlapped;
-+	bool try_free = true;
- 
- 	mutex_lock(&pcl->lock);
- 	be->nr_pages = PAGE_ALIGN(pcl->length + pcl->pageofs_out) >> PAGE_SHIFT;
-@@ -1331,9 +1346,12 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 		/* managed folios are still left in compressed_bvecs[] */
- 		for (i = 0; i < pclusterpages; ++i) {
- 			page = be->compressed_pages[i];
--			if (!page ||
--			    erofs_folio_is_managed(sbi, page_folio(page)))
-+			if (!page)
- 				continue;
-+			if (erofs_folio_is_managed(sbi, page_folio(page))) {
-+				try_free = false;
-+				continue;
-+			}
- 			(void)z_erofs_put_shortlivedpage(be->pagepool, page);
- 			WRITE_ONCE(pcl->compressed_bvecs[i].page, NULL);
- 		}
-@@ -1379,6 +1397,11 @@ static int z_erofs_decompress_pcluster(struct z_erofs_decompress_backend *be,
- 	/* pcluster lock MUST be taken before the following line */
- 	WRITE_ONCE(pcl->next, Z_EROFS_PCLUSTER_NIL);
- 	mutex_unlock(&pcl->lock);
-+
-+	if (z_erofs_is_inline_pcluster(pcl))
-+		z_erofs_free_pcluster(pcl);
-+	else
-+		z_erofs_put_pcluster(sbi, pcl, try_free);
- 	return err;
- }
- 
-@@ -1401,10 +1424,6 @@ static int z_erofs_decompress_queue(const struct z_erofs_decompressqueue *io,
- 		owned = READ_ONCE(be.pcl->next);
- 
- 		err = z_erofs_decompress_pcluster(&be, err) ?: err;
--		if (z_erofs_is_inline_pcluster(be.pcl))
--			z_erofs_free_pcluster(be.pcl);
--		else
--			z_erofs_put_pcluster(be.pcl);
+ static struct attribute *erofs_attrs[] = {
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	ATTR_LIST(sync_decompress),
++	ATTR_LIST(drop_caches),
+ #endif
+ 	NULL,
+ };
+@@ -163,6 +166,14 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
+ 			return -EINVAL;
+ 		*(bool *)ptr = !!t;
+ 		return len;
++	case attr_drop_caches:
++		ret = kstrtoul(skip_spaces(buf), 0, &t);
++		if (ret)
++			return ret;
++		if (t != 1)
++			return -EINVAL;
++		z_erofs_shrink_scan(sbi, ~0UL);
++		return len;
  	}
- 	return err;
+ 	return 0;
  }
 -- 
 2.34.1
