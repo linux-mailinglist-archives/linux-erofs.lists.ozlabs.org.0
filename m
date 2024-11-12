@@ -1,152 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1C109C5656
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 12:24:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1731410678;
-	bh=E/1/UxBloOLNJMsMuCZVi5UF3yiF3HPmHn1WM2SYY5c=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=lWDWp3LvvJ82Wl4wST/BPlfiEhMGJLD4SdKpDHyldSm8Sudpw3pCwNgaI0XlFmtUF
-	 ajqCr1UsZ6qdFKagfuQLUbciovoMxQTsvJYHQw57zEDf39OOBbFOt9gFz7STbrJiXN
-	 6s10B2BNMPPtW6xYlDAgWH8I76I1T5nRZ43i+5fhWJNRv6Q2c84pJ1joiB5mgICB/J
-	 F+uwF/1yq0lSegXUYFpcCJtW4S7xzK/ghzI3NfcdrhAEuhzMdKdbIh5YkqATJJ00/1
-	 9oNm+Lw3kA6USk4Y2RF6hf5IGmmAP9/FsMu65Qxm6hImydkmXyfvbDrrMOqS4PntJL
-	 9qmI6OSBYTghg==
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B2569C56DB
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 12:44:08 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XnkbB1fZGz2yZd
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 22:24:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Xnl1W1td2z2yb9
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 22:43:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:2011::615" arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731410675;
-	cv=pass; b=noMG/FLov69EUv1wljPHHojzmpbMQmuWV7/pywq8JVxKE12pEMhSaBXUGN+TKrWss7vYHVpu9M845b9OkPqUvg+OzWMbTW5anXyEn5n64fEP8DD4KBfXIDGEoTayXewnTr0ItILGQmdluhED95FR5bUntdflIh+rtaTaGhjD2f0jpiklxEsJN4K6p+lzxPqH1/pepmaG2giLvDE//MZbYYBfw0qHPv64iTI3kQL1q7iVvGTBKGMAM+JoDOa9lgOpD4nvZ4fIQcSu49z1dOtNOCFQmM35mTR80+A7khmdLfR6jV+jBrhAM5TGv/MlmETWGBsW4L0mhsBRET3Py6sFFg==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731410675; c=relaxed/relaxed;
-	bh=E/1/UxBloOLNJMsMuCZVi5UF3yiF3HPmHn1WM2SYY5c=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=cF7RGYEGUtGL+r9edcah2nqD+X+u38iXj51pnBgqIsg1JquGOt0+VtRmy5Kj+j+appQh+ZLIphLlazyIZ/blNwlJmEL+ZwWXmV2FwubvxDiNSJy5BFSSPMFGBZazb73yg1NsPmNHYruyc7w97dBS/BRR3AyJqBrQeWZ+QcYbvPOIty4Pps9ADRKIngflfW+39yjt1m9ZD/ipZ4L3JD0koXsYeHZD+zw359wUN3g39RJHmOTk0/6q7b5AadPbXfn0v07BFqud6sN37o9jU1TwlTRU7t5I5r0d+UIjkgp/UjqXcbmDZpikXdVWWJ3aOA/S8DQaGNqOXfM2CpWhwGn+Gw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=hO7wlBau; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:2011::615; helo=apc01-tyz-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org) smtp.mailfrom=vivo.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.15
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731411837;
+	cv=none; b=I9ns+Nvm+XJ6ie/My+2jt5QvhwdQIH/mBKLiCgxASe5+xqmgvt9I5D/zuOrI/8ZeQpH64sDTLDMQrtA89YNwEemFhbKT+mUw3IWKxLKrYV5USrE0d2IGYlcVO+0ShROjqCSDxhEsJDVPsiN3PCxpDUrKYPFsZ3kPeJfwLD42Mhg3laMpmUlIxyOn8n7/8UAcECsJtTih8MqcQnkB4LHfJkwWTlX3CuFsGJAUSil2UQ/YHwbU0yVJtWGgvb/4k1ijM1WHVxgbL8z26HRT7bXDHZ8TZTLrh9ayGy8Ufm7oYRbDAWIVLFY1Ff3fZbhLsIGd1S8FcJYl92NddVYIB9s0Sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1731411837; c=relaxed/relaxed;
+	bh=DvmadZv1fqmu7a0RI2zmb1+gvrKjNAjTtwa+fchuRwo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gAiyZQwXeI6GIB6KPFbhX2Gts6/vS8VovrsUs+IvoJdHc3SiVxlHw4OR7RAMrTbGhHjy7wGD/UC5FvFFcmozDZJc6b3TeFKIutLd4lmUgmR3eshtSL6lXJRJ7mLrUhuGjAzB5vU1qkq4ca5SXydIkMFGT1jHaS7oiCpXZe+Ozdv8xcKt4tr+Xu+LvxrDLFl4EppNWmy1znolTCft8qPw19zwI16751g1BpJJkpyIqpVRu706gZC2eSnvYXvH4Gx1FySyxnTInU5CyDMiT+cw0gXy7X1qznqetIV5V930PcrwROCGQSTwj+m9bUBTzVVKZ0iZI+7Yoy9t8XOiCeMYOA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FW7VMG9F; dkim-atps=neutral; spf=pass (client-ip=198.175.65.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=hO7wlBau;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FW7VMG9F;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f403:2011::615; helo=apc01-tyz-obe.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org)
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on20615.outbound.protection.outlook.com [IPv6:2a01:111:f403:2011::615])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Xnkb50YJFz2xZt
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2024 22:24:32 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XGvaebhFllnpLVUTNxyQKzhBtxAQOj2hkQhkSZbPiDN2STIboy0HOphDvQyENZasa2G261SOk4OUcVYgbQPK4qO7O3vkpmBKH2gICFWUNc+RIgTjDxE+uijx4UOxWaMVzlvgRn8rOUrfE+JLhrVyNb9qKvISlPqXhmotBPWPKlX+MfKi9z8gy+BnY5rVgJWhKklO/jTGHiDUYv6l6ymWkhxOdehLkkP1SkAnKxqyOdAul9UJyCvREiL83tDK+jvFH+ZIxKED+Wayp+B0ZzPD6HtRdYqyQ8DoBnth+RkkNCvzBQO/Pialj4RdIGn02IYZrPGmVJpbsfzOm1Z0xNeBjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E/1/UxBloOLNJMsMuCZVi5UF3yiF3HPmHn1WM2SYY5c=;
- b=DO09jtMsqR1Xl5QmcFRZNRJKpl6atvPHZYv2cVkk3PlNyCqoo3xe3BxnlyJIC9P06LMmT3Ra8IF/1vNA7VhDSAZcrgK4IZEYjSapaUzsxXZO3uyojVR0gxjrO1EsRHF/cFeQ2mGs0nH1V44Jq0IwEK+8AR/CBeQOW5IVJr4UQFfAxqJEIQhZFRvf6FaZIWwfjQtNgrVCa1qUpJMu6u/LQzK1ugwswgpmH6ObGEnKRV9ZylxFuibDF7Yia0dXDFUhVVK6hdlOC+ujonOPq1UTcgLs7SmVR4QK1Mvy/vKiGh+AfO8TFzzdkyd7xvnparbOUtzfgmr36DNLfdT5cIRcEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E/1/UxBloOLNJMsMuCZVi5UF3yiF3HPmHn1WM2SYY5c=;
- b=hO7wlBauLTzYDMt0l/betyPfoNxmMFfmqJhA11PmKaIoKM5R/a/5DkkTpNZFsnFwyALeiZJUNaluQluKw9cXLOxLQgh/wjWxw9o/azpdqr0qGjI9LSPLIBI2dVDlFs2tXx3smyDc5X36D+MOqmjCXSzk/GnpnDnYr/WuJIm5Rwc2cb1rTmb0Dxcn8hRl44QbG58LKH3mGcFAo5iwf4sTYmtxvRKqKgcKBbtU+D3JceGZ9fiKhOMWyR4CIoC5fx6+mLWhbI2RXYtp4gi7Kb28r/7DBR7Lj40vF5TUnkfRIWxbgQhQ4Ezp1RuqitpazOVRZ4aa3232OHewoqc7Y6QG1g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from TYZPR06MB7096.apcprd06.prod.outlook.com (2603:1096:405:b5::13)
- by SEYPR06MB6613.apcprd06.prod.outlook.com (2603:1096:101:169::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8158.16; Tue, 12 Nov
- 2024 11:24:10 +0000
-Received: from TYZPR06MB7096.apcprd06.prod.outlook.com
- ([fe80::6c3a:9f76:c4a5:c2b]) by TYZPR06MB7096.apcprd06.prod.outlook.com
- ([fe80::6c3a:9f76:c4a5:c2b%6]) with mapi id 15.20.8158.011; Tue, 12 Nov 2024
- 11:24:10 +0000
-To: xiang@kernel.org
-Subject: [PATCH v2] erofs: add sysfs node to drop internal caches
-Date: Tue, 12 Nov 2024 04:40:34 -0700
-Message-Id: <20241112114034.618402-1-guochunhai@vivo.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR04CA0014.apcprd04.prod.outlook.com
- (2603:1096:4:197::18) To TYZPR06MB7096.apcprd06.prod.outlook.com
- (2603:1096:405:b5::13)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Xnl1Q6LrFz2xxr
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2024 22:43:51 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1731411836; x=1762947836;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PO4EqrQG8RsV0jjl15L5FZ6DGDHaLJ4T2Tt9UahcMr0=;
+  b=FW7VMG9FczHDDxeqmTM/6d82NrQfR1qliwHmcLNdd84YGJtwBRQm4t0E
+   pm+u8j4CmnDPPRAswUffDxs7Sfb0Cs7YQTScGqLnKY17odTwamrtuw9se
+   rp0AILb/GHXuokWIiqRfkwzvB7TNZfvMsdyU5evN/uZZNQYVJ+dwZuUxS
+   Im77SoxcLVuiJMYaRVdAOdCC5z/pqSc9ldlLNXpToD/LyhTVsKneSWPj3
+   tSji9nZyOA6Xiaga8JLJkJdJ+yaLlVgT+4DHKB3eSd02EPQRVGg9Pa5Xa
+   h+JpHlzAChgDf09IXe5zz1w2JakNEsK2vTErQ6VB08Yf1YPvDMG5N1FUK
+   A==;
+X-CSE-ConnectionGUID: T1ua+DOfQpuIXye9bA2JRA==
+X-CSE-MsgGUID: cbUk3SHSROabKHhU55ro9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11222"; a="34943598"
+X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
+   d="scan'208";a="34943598"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Nov 2024 03:43:48 -0800
+X-CSE-ConnectionGUID: JRXgTNxdSRqQi1bW9R5BFg==
+X-CSE-MsgGUID: 93AprrR1TuSu8jYshNm7mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,147,1728975600"; 
+   d="scan'208";a="110705762"
+Received: from lkp-server01.sh.intel.com (HELO bcfed0da017c) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 12 Nov 2024 03:43:45 -0800
+Received: from kbuild by bcfed0da017c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tApJ8-0001Ev-1f;
+	Tue, 12 Nov 2024 11:43:42 +0000
+Date: Tue, 12 Nov 2024 19:42:55 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chunhai Guo <guochunhai@vivo.com>, xiang@kernel.org
+Subject: Re: [PATCH] erofs: clean up the cache if cached decompression is
+ disabled
+Message-ID: <202411121928.BzWJRXSl-lkp@intel.com>
+References: <20241112031513.528474-1-guochunhai@vivo.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR06MB7096:EE_|SEYPR06MB6613:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9b7ec70b-9820-4d51-443e-08dd030c8722
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info: 	=?us-ascii?Q?SNwdJ3Mqo8kfX2DRWz1KfVsKRus5CBB+ZPiEB6BwQzSFzbE9v2e3Casn9jLv?=
- =?us-ascii?Q?ExVIXUbg4J79ZG7O1UjS9PQkF1/XisGDraEZ2YKHbIeY0/PBCJn144utlgRY?=
- =?us-ascii?Q?atec17zpLx59Tzg+g+Bq5TOksQLppvvjmR+48qmi6+rkDkgi4bq31WPoaUwW?=
- =?us-ascii?Q?1MukpUoTVLkrsc3zF77woOhylxe7dCYKlXNHsaT7jBs5EAHfTiwhZOoqqOTP?=
- =?us-ascii?Q?i46ByWl9RVKo6QyueHgUU8aqsQQa9+yqYGOb+SYGKPlPe+lhRAFX1x1Q9Nvj?=
- =?us-ascii?Q?/PRb6bYIKkwyy4G8RJ9rU8HK+JZ5ydZYO1yA+vga+7p3g4EeBrHZof+MmjTp?=
- =?us-ascii?Q?UOuBhKmDvNA1wrzZAg+KOhDK2rM+dpNpZEVhkKVjuVKQS3+gxMCrCXvYRtK6?=
- =?us-ascii?Q?ZzRHDHypYM9TPgABOVYilMjj4hhyC6R67kAmMa5EHjRv4hGrFSH3+aBN+ZOF?=
- =?us-ascii?Q?P7BdNFq33s8AK9JNTSty4+/gNxIiMkr9w+JoesaLwmmocP84lyC6sxELynuc?=
- =?us-ascii?Q?VysxrUsc0Igm8CZ5R9X94AKmZ3PgtgqbTwN4MBtfjnduJkPmihLTM5ILu38B?=
- =?us-ascii?Q?IqrfdRQ2GXg36rSfIMeHUqKXCUM4mrHjGxE2KnajDLWkgKAaGoK6lqliNSlq?=
- =?us-ascii?Q?IdnFvr/RLhIYC69eAfm1CRiBKfoYIVMLJnF29rJZPoV4WXUX/J8APKcGZ2x4?=
- =?us-ascii?Q?M+box+dNUWSPzq+cyCpuxUxtNydlerO6Y0DAt2z5Q4x+jBWi+0vMaPBssiOS?=
- =?us-ascii?Q?7FR2U6mue+ceN6U/zKkYmnmWHjfDZ2nDBaJZslpm1oGeSV/jAF2Q5LIXelXQ?=
- =?us-ascii?Q?CviO0d1TVCHaGx9f+Mij0Vk/my7SMNLQMb1CPw6wnMeoFLPo+pZH1Oxrbqob?=
- =?us-ascii?Q?VWpeVE0ilMGEBfqCSCIYCnzQyC2syo1/NrgJpU56pYxjekgR0uUAho88RS8c?=
- =?us-ascii?Q?Lpblkok5DOuyFpY7hKesDvG5MCLEcWP9BDPO5QfQ8WCYIjDsz3HfYXlYk6/0?=
- =?us-ascii?Q?oMSdIvq/dYNK1OGoqrhTk40YZZVRv7ZUQXY3tFBurUiMZDWgyoVgJR+J5AjN?=
- =?us-ascii?Q?G8CLUECCZcbCTbxXEDeFGvakR38DNhrGJO1SdZVAM4CeAtBXapN7TOnTGQT8?=
- =?us-ascii?Q?Jgioh8VWfP/CC0qjQ2bMAksL0ylPw2qHcpcBPt10585ijNBe29Agec8sENlz?=
- =?us-ascii?Q?iqeFAyJVDspAvzjNfgWuwRg9+iyBaIxxyZ8LdoYE2aoH0vQ75m59d3a2YybW?=
- =?us-ascii?Q?dXPrT/gWEtFZbFFEYVSSLPJNdB1VKsbgrV4psn/K9ezqYbHiyur0wsKgDx7X?=
- =?us-ascii?Q?Tqros3MjIGMbvuWJPtxHLTaNR1MLkqIiArpQkcrGwEpf5NJSUZAJMbSqMFEZ?=
- =?us-ascii?Q?u/p2ADk=3D?=
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB7096.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?us-ascii?Q?HbJZDJoDFq2uD3fGruxNEYL6xVCFxWlgz99rqJIuLVf7wb9NJRTwyVXuzdfS?=
- =?us-ascii?Q?pSWLnf6Quwxbo71JYHV0ICnpmaRvs8VWm4gDI7bmtsK3NNwPdNEzE3z2bO/t?=
- =?us-ascii?Q?kSKMrPPBGUuV+MLSqTyKu2QP9jMbr8KHsMGD6I73B4tOtpLFm71QckGTnWE1?=
- =?us-ascii?Q?CKwjNegG7okQBDgATIU9y7DbjPo2hEvGv97BLp2Onvonhn0pqYNRj+uaQ28r?=
- =?us-ascii?Q?K8DQEf7ApI7/SnQs5tynafV9cBXGmnj/hbLBTRhu23JA/c0CR0TrrSkCZVnF?=
- =?us-ascii?Q?VVVApKJ3JP3XyytmcdXiR7QwhA9pgbcDxSsbyQ023r9gMMHg1oRmnJcd9Nw+?=
- =?us-ascii?Q?Tl91DIHxzrqF39oE8shqYleOqhZL87zp2p5bBJ35x2qbK4D5WhvQNtqmbmrI?=
- =?us-ascii?Q?kD06DB5ji0nxsKxSOjA95JKInDNKPTDpxUNKZk+6hs7mrxwuJVIpSCa5s2rG?=
- =?us-ascii?Q?3MgsYWPdEQurBs46besZBaeKkb2EPw5YOYUGTb1hODSG0YCA/JkCl5PZbm7B?=
- =?us-ascii?Q?Xrn06DQDECoE3bHiiurdw3dpDgONGeJS72ZdhjYzI/I/sc0q+zAUxLt8JY/j?=
- =?us-ascii?Q?1k/gEAe2tULESalI9Mr96T1awUioP8TldG29fXhx3eWbUHr8D9HsQw2m7vP3?=
- =?us-ascii?Q?PxRWkwniYH538Dk33NvzbWOiJmyHWRWzk8Ku3i7RkdX1fPLI5oVIh5ZtGO8a?=
- =?us-ascii?Q?JXoFfzdC/vVzOQ/iMtsnrWCk0rOEGmM+nWkZm1JGW/+08oNEJ875DRIVGn+1?=
- =?us-ascii?Q?LwVuXxyr1D4Sc7YuFmVB0h7vHyfuVK/bKN79zbfvXHGxuI6di9OTvzfFK9uK?=
- =?us-ascii?Q?ICs1S4l4E1AuK8G/cWKTWySxR1QCfoSUpinVSQ0/uxWyt/nqr+pPp/Ar74yh?=
- =?us-ascii?Q?+Ws0nhPtOTjSCt6ELxeN69FFr6gXda1WqJitLdw5FPQS4XXpIMhr2DNYKN0s?=
- =?us-ascii?Q?8hEo6XrhR0UUM1oGTfltE4P5pDIMdyxGfEDPnz4f/8Y18CKkLzg9l/6Tpi6d?=
- =?us-ascii?Q?oOdvXJ/3MNvB73OsGCJ+pDBYmlW+r6t3+OyrQ6ILN9KFijvmpbhXnJ9sIqxR?=
- =?us-ascii?Q?kGyCSXqxJoru+RKON8GccRrXDyh7RWyuPxvWgpz1b5TlnurQLK+zCWx1ueRH?=
- =?us-ascii?Q?9uzuK1R18wnzyW3bv8O5sm83PhvEG2/4yQFEdiPg89X31njVY8UmVFwYwTjT?=
- =?us-ascii?Q?Bj453u+wzEF6LlGc9YuRdwNrgv9Qgrg6aMJDd8fyjjFS9kGfyvs/NAJRfQV7?=
- =?us-ascii?Q?S7AYsS6WPYLPe2/A86m4fhRKRI61eGjCTn2oa6m0wsQQXaofLC1+KjeKnq19?=
- =?us-ascii?Q?r3CerkfppAH0Ws6kOWgSDSFlaX7LBDcwaYW9RsrMXvocJ59OK6KThsV/l1e+?=
- =?us-ascii?Q?dQlKVJoZRZbuChNiFLQ/F40zpfBDTSY1UrM4oWzhogcnXDo/XX83T9niyTDo?=
- =?us-ascii?Q?r/YupfxEfyQS+aVwtn+nFZiBQ6LGZ5DLSEiGVgOKzMsC0r7JUhw4qLnpwqRE?=
- =?us-ascii?Q?X1bpJ/K9KdaX7B9q/6zM8f1kbqzbf6cikhrFO5hypfrX+65BqVa0m5huEdVw?=
- =?us-ascii?Q?pe6h62EY+zPtHqDtHRaGy3UvC79vq9SeAQ61rUkg?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9b7ec70b-9820-4d51-443e-08dd030c8722
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB7096.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Nov 2024 11:24:09.9533
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IHMWIDkhNEju+MAYPmcuYMKYjmtes55S4HI8O+e1YJQjAurBSElVSGC5RJhg2lhoDmuwmoHMPlfbSVR9xEQ0jQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB6613
-X-Spam-Status: No, score=-0.2 required=5.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241112031513.528474-1-guochunhai@vivo.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
 	SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -160,117 +85,88 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Chunhai Guo via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Chunhai Guo <guochunhai@vivo.com>
-Cc: linux-kernel@vger.kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
+Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org, huyue2@coolpad.com, oe-kbuild-all@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Add a sysfs node to drop compression-related caches, currently used to
-drop in-memory pclusters and compressed folios.
+Hi Chunhai,
 
-Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
----
-v1: https://lore.kernel.org/linux-erofs/fabdfe9f-9293-45c2-8cf2-3d86c248ab4c@linux.alibaba.com
-change since v1:
- - Change subject as suggested by Gao Xiang.
- - Use different bits to indicate different meanings in the sysfs node.
----
- Documentation/ABI/testing/sysfs-fs-erofs | 11 +++++++++++
- fs/erofs/internal.h                      |  2 ++
- fs/erofs/sysfs.c                         | 15 +++++++++++++++
- fs/erofs/zdata.c                         |  1 -
- 4 files changed, 28 insertions(+), 1 deletion(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
-index 284224d1b56f..44d863cd07b5 100644
---- a/Documentation/ABI/testing/sysfs-fs-erofs
-+++ b/Documentation/ABI/testing/sysfs-fs-erofs
-@@ -16,3 +16,14 @@ Description:	Control strategy of sync decompression:
- 		  readahead on atomic contexts only.
- 		- 1 (force on): enable for readpage and readahead.
- 		- 2 (force off): disable for all situations.
-+
-+What:		/sys/fs/erofs/<disk>/drop_caches
-+Date:		November 2024
-+Contact:	"Guo Chunhai" <guochunhai@vivo.com>
-+Description:	Writing to this will drop compression-related caches,
-+		currently used to drop in-memory pclusters and
-+		compressed folios:
-+
-+		- 1 : drop in-memory compressed folios
-+		- 2 : drop in-memory pclusters
-+		- 3 : drop in-memory pclusters and compressed folios
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 3905d991c49b..0328e6b98c1b 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -450,6 +450,8 @@ static inline void erofs_pagepool_add(struct page **pagepool, struct page *page)
- void erofs_release_pages(struct page **pagepool);
- 
- #ifdef CONFIG_EROFS_FS_ZIP
-+#define MNGD_MAPPING(sbi)	((sbi)->managed_cache->i_mapping)
-+
- extern atomic_long_t erofs_global_shrink_cnt;
- void erofs_shrinker_register(struct super_block *sb);
- void erofs_shrinker_unregister(struct super_block *sb);
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index 63cffd0fd261..01d509e43827 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -10,6 +10,7 @@
- 
- enum {
- 	attr_feature,
-+	attr_drop_caches,
- 	attr_pointer_ui,
- 	attr_pointer_bool,
- };
-@@ -57,11 +58,13 @@ static struct erofs_attr erofs_attr_##_name = {			\
- 
- #ifdef CONFIG_EROFS_FS_ZIP
- EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
-+EROFS_ATTR_FUNC(drop_caches, 0200);
- #endif
- 
- static struct attribute *erofs_attrs[] = {
- #ifdef CONFIG_EROFS_FS_ZIP
- 	ATTR_LIST(sync_decompress),
-+	ATTR_LIST(drop_caches),
- #endif
- 	NULL,
- };
-@@ -163,6 +166,18 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
- 			return -EINVAL;
- 		*(bool *)ptr = !!t;
- 		return len;
-+	case attr_drop_caches:
-+		ret = kstrtoul(skip_spaces(buf), 0, &t);
-+		if (ret)
-+			return ret;
-+		if (t < 1 || t > 3)
-+			return -EINVAL;
-+
-+		if (t & 1)
-+			invalidate_mapping_pages(MNGD_MAPPING(sbi), 0, -1);
-+		if (t & 2)
-+			z_erofs_shrink_scan(sbi, ~0UL);
-+		return len;
- 	}
- 	return 0;
- }
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 877bce7709d5..01f147505487 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -119,7 +119,6 @@ static inline unsigned int z_erofs_pclusterpages(struct z_erofs_pcluster *pcl)
- 	return PAGE_ALIGN(pcl->pclustersize) >> PAGE_SHIFT;
- }
- 
--#define MNGD_MAPPING(sbi)	((sbi)->managed_cache->i_mapping)
- static bool erofs_folio_is_managed(struct erofs_sb_info *sbi, struct folio *fo)
- {
- 	return fo->mapping == MNGD_MAPPING(sbi);
+[auto build test ERROR on xiang-erofs/dev-test]
+[also build test ERROR on xiang-erofs/dev xiang-erofs/fixes linus/master v6.12-rc7 next-20241112]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Chunhai-Guo/erofs-clean-up-the-cache-if-cached-decompression-is-disabled/20241112-105927
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+patch link:    https://lore.kernel.org/r/20241112031513.528474-1-guochunhai%40vivo.com
+patch subject: [PATCH] erofs: clean up the cache if cached decompression is disabled
+config: x86_64-randconfig-004-20241112 (https://download.01.org/0day-ci/archive/20241112/202411121928.BzWJRXSl-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20241112/202411121928.BzWJRXSl-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202411121928.BzWJRXSl-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from fs/erofs/super.c:10:
+   In file included from include/linux/fs_context.h:14:
+   In file included from include/linux/security.h:33:
+   In file included from include/linux/mm.h:2213:
+   include/linux/vmstat.h:518:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
+     518 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> fs/erofs/super.c:749:20: error: no member named 'umount_mutex' in 'struct erofs_sb_info'
+     749 |                 mutex_lock(&sbi->umount_mutex);
+         |                             ~~~  ^
+   include/linux/mutex.h:166:44: note: expanded from macro 'mutex_lock'
+     166 | #define mutex_lock(lock) mutex_lock_nested(lock, 0)
+         |                                            ^~~~
+>> fs/erofs/super.c:750:3: error: call to undeclared function 'z_erofs_shrink_scan'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     750 |                 z_erofs_shrink_scan(sbi, ~0UL);
+         |                 ^
+   fs/erofs/super.c:751:22: error: no member named 'umount_mutex' in 'struct erofs_sb_info'
+     751 |                 mutex_unlock(&sbi->umount_mutex);
+         |                               ~~~  ^
+   1 warning and 3 errors generated.
+
+
+vim +749 fs/erofs/super.c
+
+   731	
+   732	static int erofs_fc_reconfigure(struct fs_context *fc)
+   733	{
+   734		struct super_block *sb = fc->root->d_sb;
+   735		struct erofs_sb_info *sbi = EROFS_SB(sb);
+   736		struct erofs_sb_info *new_sbi = fc->s_fs_info;
+   737	
+   738		DBG_BUGON(!sb_rdonly(sb));
+   739	
+   740		if (new_sbi->fsid || new_sbi->domain_id)
+   741			erofs_info(sb, "ignoring reconfiguration for fsid|domain_id.");
+   742	
+   743		if (test_opt(&new_sbi->opt, POSIX_ACL))
+   744			fc->sb_flags |= SB_POSIXACL;
+   745		else
+   746			fc->sb_flags &= ~SB_POSIXACL;
+   747	
+   748		if (new_sbi->opt.cache_strategy == EROFS_ZIP_CACHE_DISABLED) {
+ > 749			mutex_lock(&sbi->umount_mutex);
+ > 750			z_erofs_shrink_scan(sbi, ~0UL);
+   751			mutex_unlock(&sbi->umount_mutex);
+   752		}
+   753		sbi->opt = new_sbi->opt;
+   754	
+   755		fc->sb_flags |= SB_RDONLY;
+   756		return 0;
+   757	}
+   758	
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
