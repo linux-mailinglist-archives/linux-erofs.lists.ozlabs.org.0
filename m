@@ -1,49 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B86DC9C4C36
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 03:08:55 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id E99839C4CA0
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 03:33:01 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XnVFw0Fcgz2yXm
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 13:08:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XnVnh12DFz2yXY
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 13:32:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731377329;
-	cv=none; b=TJ1h75osbElC0mVcqXUAwyl0SHVEEMZ2KMZ08tAZOuhHuovUgp1+KCHizVMdMcYK5Lz0Mj3GchGmFnw78siqTWpCLzrSgr07EROQ3lgyyFM9uFHStDHc5WTnv5AJApER/xFtOGsHfm+Z4IcTlo/5zOV7bLauYQWslTCQsD5cD0nnF7hFcxkH7e7HE7T2s/+PEz5E3n7SCFoI/3YuTZtzV05ObA/aK1lN7IOmrpfL4XBweb1xzjjlSreroJqqlHb+QgFdjJ+TgFyZCNjPt8oxmYkL0Pr3XzSChf+LT+e3XdLPP07FxGFHkBH5F8gdyE/GIIjD2L8xmiinHSlHNZp0jw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731378774;
+	cv=none; b=igAmPB/owTWDAOQ5ccnKKDqv0dkrs1ZIrefYCWRnTisSADRe3OZW2mU3TNt33nU9iq58EUayMsUUYJpY16nBdWuniz7YxK90o7fY2Yi0vhr5rbZpkcCRDsoCXxiFMDdpPFKO285hbs7I5oK1yCr8hL3ikz8zbIgo/ZNePi0/br6DWhWTXx+JSrOE2NXdlTEjg4y8cQNeCx81yAFiykkhhSlwO47tqKbhYzGOwCyYE3y56Q8LqRJj8CBOQaciR1041MnHGEdrjwZdlrS9h6dFhs+DYGA3eCODHwHkXxLCyXlaS2DiEUv0nHc8wqSp6vmYw6Kw8tBJYK5WhbBsI/LyOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731377329; c=relaxed/relaxed;
-	bh=YAXAHtQpywINQQ9j646N68G7lbT4FT/X77uT0S3LtAU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UajgP9NkB0YhSG3WsrWTlfLpYo36CIO9J0Kepa7dN3yv7KEJ32ut3BzVR0zsOWhlHZjXQl9PNir8O6pa9Ym20SQyvaPZ3EQUnYq4v3gLf8RrGAOsXM4227whBVuQxsFhcyn55zIhR2FGPWrdjK3h1FneGZ2OEw5Sd+xQSEsGNbfvNvQBHdUBrlOYFsb0n5F0jXjZRxw2273PAhpN2zx5DNnvkzcYInae7cAnU5oODiCJzOV9iVp/7vF4VUx8KubZa+FOnCHxAI3bUBfHFpueLHzT2C0T6x85rqtG/ifZgblv2mGz0VUMRwlmdpGEV6B3bxlPlmJP9y75UmeaNFI/WA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=RrTqU7LL; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1731378774; c=relaxed/relaxed;
+	bh=Jbj91BmDvvsxwWvx8lHwWl07tIkYm+T47B95nubtj1Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WSKx3fxgAkR0oOhzJUTehkE1qZyS5G9UMiGWgiwyAnuE5XEWpaxPHYDMqQqLxXtnB5lba9GkJpex/ERlimagE6rUZy2QpEPsPfqpWwwuoam5c/PNGcZqhJeSDk8dYYAwPdzuTezR0Sa0GR98yaP5/HxV1rp1sl9+3QPbllbA4D2lxeukMqKHZHnt8KIq6gbHI0MENGbJ7xzbrFH8/abWAC91pxmFMDc7ADj4URcJpJlzTNNv6DE+W5FpIK2O/rSG+H5Jj1u/2bTZb1Dx3zC6GFHfK9jkfLjGXKlMudsvvIfnHFqT1rLDVUUphKxEmct+kZTpwULtmG+XMthyUIaqIA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=GBJ+52Xl; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=RrTqU7LL;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=GBJ+52Xl;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XnVFp5ySjz2xnc
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2024 13:08:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XnVnb0MxRz2xJK
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2024 13:32:45 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1731377313; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=YAXAHtQpywINQQ9j646N68G7lbT4FT/X77uT0S3LtAU=;
-	b=RrTqU7LLCuA2IOsgMHTKwnG0PzPwxG113+H6gxIQjR2NC+4SjmXnf+6KyYleHuIAU6Jv+w2wBGhweC47qBcxdF+TwZtASKY37mVK7xJM4T1fI6AfdbW+U7apd9O7E+rABKna53TJ5082Yp7xXk2f+91Hwt0EH1IfeRdNAdEqx8Y=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WJF8grv_1731377311 cluster:ay36)
+	t=1731378761; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Jbj91BmDvvsxwWvx8lHwWl07tIkYm+T47B95nubtj1Y=;
+	b=GBJ+52Xlh07HJJ5qVH6QxWNUOJj2Uki/1z9ZlpgYvJr1t4BU7BUHd4PV4mSnf1nm3vjkxPiMlLz/wRPki8Ada1kEpUO6Wew3gtSBdSYIRbFd7Ro+m97ejPHRU/B/ezZtBh5HhbEyD8vjHi33jyXAIZ7XSZ5lOSNegSnXSz4QhwA=
+Received: from 30.221.128.202(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WJFJuX2_1731378760 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 12 Nov 2024 10:08:32 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2] erofs-utils: lib: capture errors from {mkfs,rebuild}_handle_inode()
-Date: Tue, 12 Nov 2024 10:08:30 +0800
-Message-ID: <20241112020830.849210-1-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+          Tue, 12 Nov 2024 10:32:40 +0800
+Message-ID: <1ce4a2b4-1b2f-48d1-99e5-f664b760a7bd@linux.alibaba.com>
+Date: Tue, 12 Nov 2024 10:32:38 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] erofs: free pclusters if no cached folio attached
+To: Chunhai Guo <guochunhai@vivo.com>, xiang@kernel.org
+References: <20241111113842.469080-1-guochunhai@vivo.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20241111113842.469080-1-guochunhai@vivo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -60,56 +64,66 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: linux-kernel@vger.kernel.org, huyue2@coolpad.com, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently, the error code returned by erofs_{mkfs,rebuild}_handle_inode()
-in erofs_mkfs_dump_tree() may be ignored. This patch introduces `err2` to
-capture errors from {mkfs,rebuild}_handle_inode().
+Just two extra minor nits...
 
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
----
-v2: Clean up the patch and revise the commit message.
-v1: https://lore.kernel.org/all/20241111110926.3909753-1-hongzhen@linux.alibaba.com/
----
- lib/inode.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+First, the subject line would be
+"erofs: free pclusters if no cached folio is attached"
 
-diff --git a/lib/inode.c b/lib/inode.c
-index 7abde7f4a3b5..f553becb0be0 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -1706,7 +1706,7 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
- {
- 	struct erofs_sb_info *sbi = root->sbi;
- 	struct erofs_inode *dumpdir = erofs_igrab(root);
--	int err;
-+	int err, err2;
- 
- 	erofs_mark_parent_inode(root, root);	/* rootdir mark */
- 	root->next_dirwrite = NULL;
-@@ -1733,7 +1733,6 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
- 	}
- 
- 	do {
--		int err;
- 		struct erofs_inode *dir = dumpdir;
- 		/* used for adding sub-directories in reverse order due to FIFO */
- 		struct erofs_inode *head, **last = &head;
-@@ -1770,10 +1769,10 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
- 		}
- 		*last = dumpdir;	/* fixup the last (or the only) one */
- 		dumpdir = head;
--		err = erofs_mkfs_go(sbi, EROFS_MKFS_JOB_DIR_BH,
-+		err2 = erofs_mkfs_go(sbi, EROFS_MKFS_JOB_DIR_BH,
- 				    &dir, sizeof(dir));
--		if (err)
--			return err;
-+		if (err || err2)
-+			return err ? err : err2;
- 	} while (dumpdir);
- 
- 	return err;
--- 
-2.43.5
+On 2024/11/11 19:38, Chunhai Guo wrote:
+> Once a pcluster is fully decompressed and there are no attached cached
+> folios, its corresponding `struct z_erofs_pcluster` will be freed. This
+> will significantly reduce the frequency of calls to erofs_shrink_scan()
+> and the memory allocated for `struct z_erofs_pcluster`.
+> 
+> The tables below show approximately a 96% reduction in the calls to
+> erofs_shrink_scan() and in the memory allocated for `struct
+> z_erofs_pcluster` after applying this patch. The results were obtained
+> by performing a test to copy a 4.1GB partition on ARM64 Android devices
+> running the 6.6 kernel with an 8-core CPU and 12GB of memory.
+> 
+> 1. The reduction in calls to erofs_shrink_scan():
+> +-----------------+-----------+----------+---------+
+> |                 | w/o patch | w/ patch |  diff   |
+> +-----------------+-----------+----------+---------+
+> | Average (times) |   11390   |   390    | -96.57% |
+> +-----------------+-----------+----------+---------+
+> 
+> 2. The reduction in memory released by erofs_shrink_scan():
+> +-----------------+-----------+----------+---------+
+> |                 | w/o patch | w/ patch |  diff   |
+> +-----------------+-----------+----------+---------+
+> | Average (Byte)  | 133612656 | 4434552  | -96.68% |
+> +-----------------+-----------+----------+---------+
+> 
+> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
 
+...
+
+> -static void z_erofs_put_pcluster(struct z_erofs_pcluster *pcl)
+> +static void z_erofs_put_pcluster(struct erofs_sb_info *sbi,
+> +		struct z_erofs_pcluster *pcl, bool try_free)
+>   {
+> +	bool free = false;
+> +
+>   	if (lockref_put_or_lock(&pcl->lockref))
+>   		return;
+>   
+>   	DBG_BUGON(__lockref_is_dead(&pcl->lockref));
+> -	if (pcl->lockref.count == 1)
+> -		atomic_long_inc(&erofs_global_shrink_cnt);
+> -	--pcl->lockref.count;
+> +	if (--pcl->lockref.count == 0) {
+
+Second, EROFS codebase uses `!--pcl->lockref.count`
+coding style instead of `== 0` since the old checkpatch.pl
+will complain this and I'd like to keep consistentency..
+
+Otherwise it looks good to me, if you send out a
+new version, I will apply directly.
+
+Thanks,
+Gao Xiang
