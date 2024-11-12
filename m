@@ -2,54 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5171B9C4B7B
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 02:06:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 972739C4B7D
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 02:06:13 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XnSsK21YJz2yZ6
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 12:05:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XnSsb4t8mz2yZ7
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 12:06:11 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731373556;
-	cv=none; b=CQYOnIrO8qqIoSP7MokLfVFxbaV8k76Sc4uP4dkVV3+2skv5Jowlv6KsD12qPedafvb9zdPUH/Z11bpGdoggzSHwuywVa6douGS8Xuq93uTdLzvtM4hGD3kT+yX8+YzrLhJoIRJ1BVzwHJfPs4ZDxNYD+szVjgTfexpXBdNlsWHIg1suxEmscM2umh+waoGJUOuHOr8QuOEwGHQUBFYBWE8QW2tydrTS1MEzc+U0H6bpa8WP9ctefJVYcGnjgJuuKYUyiMTexJg1uifs+zgehv7W6osj5mnAmvJllfayDbK/Wiosf1EQha92pD+KuKSMO5YN1UWOuohdx/FePF0F9A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731373570;
+	cv=none; b=O9228jF33iLjWH8l3FBvfW0/QQdtM6uGlF991TgRlQP33tVMX0CNN03akF/vo+HhI8Pr1ZIvWFndl+oBgOmqEF1imp+cHKhd6Y4OFJbMjsLQsvKleM5zGCuoNKK0NwkUbOGxkIvuDUCJsryV/6/ttVR1VmfngrSxWy/J903C3aChxeXpq3jT2I1e/Fnle/tIYKxO4SwlQVMhwkEhFzxasnHTxnMxywv164m27/5Gi6WvD0WgGLjIr6Am5oTQvpYLHiC/+bqGHll9HhO1g/fJ4kzLa/iDRkVzbrottKmAHeFdveV7/q4kcJYAg9iHrL+EVoMZV0CHxWECXRHNuExThw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731373556; c=relaxed/relaxed;
-	bh=eARRj5ydQKtU144BhhuhRyCE/qbl+F/TcgxxJQx4RUk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=as/0SjvXZSZJlxtdyjdRYqR8uEuwcMiava9YprQEDW+ORfRgTeFMVN8nf4m7sxaHNxYLL+ZA1YmUNwPFVYOUa3ne7ibXbiCSnLYGpKo82duTPANyKPbZSWjh5K3kcmw4meBGa/Tju/KJVryUvV1z4eZnKMsk5u5Niu/Uz56+8Ijw4ysJCCvVE6JrkUhmKvI1TAhYrC/BHXfSTp3UfK1QhpFbH0IlEtFUP5rph2zB53G3n62jNxzknm7wN+acL4vlcQComdFZnr+xlbdY/twMGryEPPwD5IbWlI3EIul4hmaslpWlwEMu66Y6Oo6S6N4oNOTLdOCIQlOVK6QQgtXycg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YBfyUzTW; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1731373570; c=relaxed/relaxed;
+	bh=rrc1oKb01rK1vEbuHPVJOa+h96ngQQ/gq2O/ooStszo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VMMrVSzUXfLjgBRcgv+scLWpEP2puPPIsAMNRNdvgkz8Cu3ZHcE2X8WxlaYuNJBxOkisHmHHXaVvCGGe7avZJwVN/7cyAC5DnwWYJdqSBDEPZgD7rDnwEE3sHi3QoITSBcYza4ZPpQ2XNOl4lXNXG5dnKSn8fDfjbG277UB8APDSc/T1pksjgkAk28YatifxcgUUmTm74AilykhU7fnM/BXYvF8jpOwH3nBWPu6zH30LNM2IhVl8hn6Gt1uy+ama1YiStfSP3xdf2QycCJO7oqgEW+YuAzhQbSLF5tZBofqE8v8Ep+wtYWeqKJyWnPMjWzpvrTO7c0jURMjCunYD8Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d/hxC6Rp; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YBfyUzTW;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d/hxC6Rp;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XnSsC168nz2xfR
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2024 12:05:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XnSsY3QSvz2xfR
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2024 12:06:08 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1731373542; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=eARRj5ydQKtU144BhhuhRyCE/qbl+F/TcgxxJQx4RUk=;
-	b=YBfyUzTWI8nyT3t0T17gruVIO7YaUXZDQwnWnQtP/TeHP5vdnTslN2RZFAsERh/v5l3AspxiSmfquD3LjwKvaQGbppwk0jY7Yp0j8VDkprkuwfUL5LHFmDNQpXqSbT7dL9/euDDaeTOtRzlNRGERISkPi//+H+bvGV/Y+HjeYzc=
-Received: from 30.221.128.202(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WJF2ORl_1731373540 cluster:ay36)
+	t=1731373565; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=rrc1oKb01rK1vEbuHPVJOa+h96ngQQ/gq2O/ooStszo=;
+	b=d/hxC6RpKaHy4hrf+hWSJ6zaYB5QJ8O+fKj+v055drPPUZamJ6T+e5OD71n5V7M6faeAC/P2YYCG10rRGJwZtlC264jjVCg03Ge7DJ6TXMKxXkpHAHZ0XxWMrPRSBAaQzqhHRb7m6pj5fC9+gP9P1xJsLW/x1VV7pySoDn0OkB0=
+Received: from 30.221.128.202(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WJExm9j_1731373563 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 12 Nov 2024 09:05:41 +0800
-Message-ID: <71572068-5a5a-4e5f-a1b4-b7f5ed24244d@linux.alibaba.com>
-Date: Tue, 12 Nov 2024 09:05:39 +0800
+          Tue, 12 Nov 2024 09:06:04 +0800
+Message-ID: <9cdf389d-75a0-4529-a96f-23a4f2bcd4ee@linux.alibaba.com>
+Date: Tue, 12 Nov 2024 09:06:03 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mkfs: Fix input offset counting in headerball mode
-To: Mike Baynton <mike@mbaynton.com>, linux-erofs@lists.ozlabs.org,
- sam@posit.co
-References: <02a3a22d-782b-434b-b3e6-5138f77ee251@linux.alibaba.com>
- <20241111164819.560567-1-mike@mbaynton.com>
+Subject: Re: [PATCH] erofs: add sysfs node to control cached decompression
+ strategy
+To: Chunhai Guo <guochunhai@vivo.com>, "xiang@kernel.org" <xiang@kernel.org>
+References: <20241101124241.3090642-1-guochunhai@vivo.com>
+ <0fa61236-e84b-4a3d-9804-612b33d166da@linux.alibaba.com>
+ <e1b73e98-496c-4d39-b8b0-232cffa266ec@vivo.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20241111164819.560567-1-mike@mbaynton.com>
+In-Reply-To: <e1b73e98-496c-4d39-b8b0-232cffa266ec@vivo.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -66,70 +67,31 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "huyue2@coolpad.com" <huyue2@coolpad.com>, "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Mike,
 
-On 2024/11/12 00:48, Mike Baynton wrote:
-> When using --tar=headerball, most files included in the headerball are
-> not included in the EROFS image. mkfs.erofs typically exits prematurely,
-> having processed non-USTAR blocks as USTAR and believing they are
-> end-of-archive markers. (Other failure modes are probably also possible
-> if the input stream doesn't look like end-of-archive markers at the
-> locations that are being read.)
-> 
-> This is because we lost correct count of bytes that are read from the
-> input stream when in headerball (or ddtaridx) modes. We were assuming that
-> in these modes no data would be read following the ustar block, but in
-> case of things like PAX headers, lots more data may be read without
-> incrementing tar->offset.
-> 
-> This corrects by always incrementing the offset counter, and then
-> decrementing it again in the one case where headerballs differ -
-> regular file data blocks are not present.
-> 
-> Signed-off-by: Mike Baynton <mike@mbaynton.com>
-> ---
-> 
-> Thanks Gao for the suggestion, looks good to me and tests ok on my
-> sample headerball inputs. Let me know if you want me to resubmit this
-> with Co-developed-by / Signed-off-by you.
 
-I will add "erofs-utils:" prefix to the patch subject but no need
-to add "Co-developed-by" tag.
+On 2024/11/11 19:10, Chunhai Guo wrote:
+> 在 2024/11/11 10:28, Gao Xiang 写道:
+>> Hi Chunhai,
+>>
+>> On 2024/11/1 20:42, Chunhai Guo wrote:
+>>> Add sysfs node to control cached decompression strategy, and all the
+>>> cache will be cleaned up when the strategy is set to
+>>> EROFS_ZIP_CACHE_DISABLED.
+>>>
+>>> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+>> I guess remount could also change the decompression strategy?
+>> Or there are some other concern that remount is not usable
+>> for your use cases?
+> Yes, remount can change the strategy. However, the cache will not be
+> cleaned when the strategy is changed to EROFS_ZIP_CACHE_DISABLED. I will
+> make another patch to address this during remount. Thank you for your
+> suggestion.
 
-Btw, if some converter for headerball files from tarballs is
-available in public? It'd be better to get some tests for this
-feature.  `ddtaridx` is designed by some other team in Alibaba
-so I don't have a valid simple generator/converter too...
+Sounds good to me.
 
 Thanks,
 Gao Xiang
-
-> 
->   lib/tar.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/tar.c b/lib/tar.c
-> index b32abd4..990c6cb 100644
-> --- a/lib/tar.c
-> +++ b/lib/tar.c
-> @@ -808,13 +808,14 @@ out_eot:
->   	}
->   
->   	dataoff = tar->offset;
-> -	if (!(tar->headeronly_mode || tar->ddtaridx_mode))
-> -		tar->offset += st.st_size;
-> +	tar->offset += st.st_size;
->   	switch(th->typeflag) {
->   	case '0':
->   	case '7':
->   	case '1':
->   		st.st_mode |= S_IFREG;
-> +		if (tar->headeronly_mode || tar->ddtaridx_mode)
-> +			tar->offset -= st.st_size;
->   		break;
->   	case '2':
->   		st.st_mode |= S_IFLNK;
-
