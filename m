@@ -1,54 +1,49 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D01E79C4B8D
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 02:11:10 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B86DC9C4C36
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 03:08:55 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XnSzG05NJz2yYf
-	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 12:11:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XnVFw0Fcgz2yXm
+	for <lists+linux-erofs@lfdr.de>; Tue, 12 Nov 2024 13:08:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731373864;
-	cv=none; b=eVeE6evWVQXFNMLygv4pjBPNzeE/yGk/Wef8KU08p/NRJK9CrDSHNiRQRbjUileIFGwMmIJNPfkPjxNJ7Jv5AoDNvj+aCzvDe9EBIkvgetJNrgWNtBqPsBwNYC2h480bGf0X8iMdzKhyadT3c6eP/tLmPBTF3E3ISm5UuANXjvTS9T5voxJjkuMIfISFQnrLbC66ppK3bjuxcLmMrjHAYwLVqO6pdrbPsMrenKPe9BB2/XUK4n9lGI/Uod4LmW7WE1uwNIgZBWcYXjxb/ZslnGTvvRkRqoEfKuxXUnlfh9Hpjr5Tk8v9y25KsXayHLK/MIm2niVMqSzAePo4z7Vrzw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731377329;
+	cv=none; b=TJ1h75osbElC0mVcqXUAwyl0SHVEEMZ2KMZ08tAZOuhHuovUgp1+KCHizVMdMcYK5Lz0Mj3GchGmFnw78siqTWpCLzrSgr07EROQ3lgyyFM9uFHStDHc5WTnv5AJApER/xFtOGsHfm+Z4IcTlo/5zOV7bLauYQWslTCQsD5cD0nnF7hFcxkH7e7HE7T2s/+PEz5E3n7SCFoI/3YuTZtzV05ObA/aK1lN7IOmrpfL4XBweb1xzjjlSreroJqqlHb+QgFdjJ+TgFyZCNjPt8oxmYkL0Pr3XzSChf+LT+e3XdLPP07FxGFHkBH5F8gdyE/GIIjD2L8xmiinHSlHNZp0jw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731373864; c=relaxed/relaxed;
-	bh=q7oCKpsoAhbSTG9R6KFNp3G1KEsnEQyl3BDZDVztKbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ROauJYZUwa/dkpx/r6XoHWf2za5OwMeqKLc9M2mV5JbRKVGgwo5Bd07ibq7zifAFBpJyf3mEZFU3HeAU1RQ42wBsLTwqlZQD+smh6N86KLyCINN+x8HzYrzY/vZBAC/MJPs+b/jB8nmcoBQw2CbK7eT86TBVQ+38ZdMpcWx+GwEkp2YO/z7PsYtUN0y+N//bgCuUK5e0qD4bvccKpAChS1kwd4t79QAkcXrWdnSCqCaYyUWVc6LR1vzd0JiAEbXNa0bCgFUgGUO1//eZzQF43ceBAxg12Ry1ek3L1D8VEoU3O6iiExQ0I2rxQd+HOe7Q1E/izpudvY8iCqKi+CSflA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NxHYO9X5; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1731377329; c=relaxed/relaxed;
+	bh=YAXAHtQpywINQQ9j646N68G7lbT4FT/X77uT0S3LtAU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UajgP9NkB0YhSG3WsrWTlfLpYo36CIO9J0Kepa7dN3yv7KEJ32ut3BzVR0zsOWhlHZjXQl9PNir8O6pa9Ym20SQyvaPZ3EQUnYq4v3gLf8RrGAOsXM4227whBVuQxsFhcyn55zIhR2FGPWrdjK3h1FneGZ2OEw5Sd+xQSEsGNbfvNvQBHdUBrlOYFsb0n5F0jXjZRxw2273PAhpN2zx5DNnvkzcYInae7cAnU5oODiCJzOV9iVp/7vF4VUx8KubZa+FOnCHxAI3bUBfHFpueLHzT2C0T6x85rqtG/ifZgblv2mGz0VUMRwlmdpGEV6B3bxlPlmJP9y75UmeaNFI/WA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=RrTqU7LL; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NxHYO9X5;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=RrTqU7LL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XnSz86BJGz2xk7
-	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2024 12:10:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XnVFp5ySjz2xnc
+	for <linux-erofs@lists.ozlabs.org>; Tue, 12 Nov 2024 13:08:38 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1731373855; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=q7oCKpsoAhbSTG9R6KFNp3G1KEsnEQyl3BDZDVztKbE=;
-	b=NxHYO9X5tX3GCOWr/zOTSlnsLMhdPTolIr6JA9EAmQqUUdq4HJqYtapOzWI3wedplxwBSXmc373SnoBJaz4dbeO1Xr+OYKFlQ3kRcpmvpTIdBooV3Arfhxsd/h23LybXbpChsiLM5K9eLM9jOBPdxCN2t5UCeuOLX2EPb4rASlM=
-Received: from 30.221.128.202(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WJF2QG._1731373854 cluster:ay36)
+	t=1731377313; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=YAXAHtQpywINQQ9j646N68G7lbT4FT/X77uT0S3LtAU=;
+	b=RrTqU7LLCuA2IOsgMHTKwnG0PzPwxG113+H6gxIQjR2NC+4SjmXnf+6KyYleHuIAU6Jv+w2wBGhweC47qBcxdF+TwZtASKY37mVK7xJM4T1fI6AfdbW+U7apd9O7E+rABKna53TJ5082Yp7xXk2f+91Hwt0EH1IfeRdNAdEqx8Y=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WJF8grv_1731377311 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 12 Nov 2024 09:10:54 +0800
-Message-ID: <c0f5795a-991e-4d5a-86c3-5169dcbd7da1@linux.alibaba.com>
-Date: Tue, 12 Nov 2024 09:10:53 +0800
+          Tue, 12 Nov 2024 10:08:32 +0800
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2] erofs-utils: lib: capture errors from {mkfs,rebuild}_handle_inode()
+Date: Tue, 12 Nov 2024 10:08:30 +0800
+Message-ID: <20241112020830.849210-1-hongzhen@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: lib: capture errors from
- {mkfs,rebuild}_handle_inode()
-To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20241111110926.3909753-1-hongzhen@linux.alibaba.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20241111110926.3909753-1-hongzhen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -68,72 +63,53 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Currently, the error code returned by erofs_{mkfs,rebuild}_handle_inode()
+in erofs_mkfs_dump_tree() may be ignored. This patch introduces `err2` to
+capture errors from {mkfs,rebuild}_handle_inode().
 
+Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+---
+v2: Clean up the patch and revise the commit message.
+v1: https://lore.kernel.org/all/20241111110926.3909753-1-hongzhen@linux.alibaba.com/
+---
+ lib/inode.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-On 2024/11/11 19:09, Hongzhen Luo wrote:
-> Currently, the error code returned by erofs_{mkfs,rebuild}_handle_inode()
-> in erofs_mkfs_dump_tree() may be ignored. This patch introduces `err1` and
-> `err2` to capture errors from the {mkfs,rebuild}_handle_inode() functions.
-> 
-> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
-> ---
->   lib/inode.c | 14 +++++++-------
->   1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/lib/inode.c b/lib/inode.c
-> index 7abde7f4a3b5..e2ca07f1c18c 100644
-> --- a/lib/inode.c
-> +++ b/lib/inode.c
-> @@ -1733,7 +1733,7 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
-
-add `int err, err2` here.
-
->   	}
->   
->   	do {
-> -		int err;
-> +		int err1, err2;
-
-here the original `int err` is redundant.
-
->   		struct erofs_inode *dir = dumpdir;
->   		/* used for adding sub-directories in reverse order due to FIFO */
->   		struct erofs_inode *head, **last = &head;
-> @@ -1753,11 +1753,11 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
->   				erofs_mark_parent_inode(inode, dir);
->   
->   				if (!rebuild)
-> -					err = erofs_mkfs_handle_inode(inode);
-> +					err1 = erofs_mkfs_handle_inode(inode);
->   				else
-> -					err = erofs_rebuild_handle_inode(inode,
-> +					err1 = erofs_rebuild_handle_inode(inode,
->   								incremental);
-> -				if (err)
-> +				if (err1)
->   					break;
-
-no need to change this.
-
->   				if (S_ISDIR(inode->i_mode)) {
->   					*last = inode;
-> @@ -1770,10 +1770,10 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
->   		}
->   		*last = dumpdir;	/* fixup the last (or the only) one */
->   		dumpdir = head;
-> -		err = erofs_mkfs_go(sbi, EROFS_MKFS_JOB_DIR_BH,
-> +		err2 = erofs_mkfs_go(sbi, EROFS_MKFS_JOB_DIR_BH,
->   				    &dir, sizeof(dir));
-		err2 = ...
-
-> -		if (err)
-> -			return err;
-> +		if (err1 || err2)
-> +			return err1 ? err1 : err2;
-
-		if (err || err2)
-			return err ? err : err2;
->   	} while (dumpdir);
->   
->   	return err;
+diff --git a/lib/inode.c b/lib/inode.c
+index 7abde7f4a3b5..f553becb0be0 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -1706,7 +1706,7 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
+ {
+ 	struct erofs_sb_info *sbi = root->sbi;
+ 	struct erofs_inode *dumpdir = erofs_igrab(root);
+-	int err;
++	int err, err2;
+ 
+ 	erofs_mark_parent_inode(root, root);	/* rootdir mark */
+ 	root->next_dirwrite = NULL;
+@@ -1733,7 +1733,6 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
+ 	}
+ 
+ 	do {
+-		int err;
+ 		struct erofs_inode *dir = dumpdir;
+ 		/* used for adding sub-directories in reverse order due to FIFO */
+ 		struct erofs_inode *head, **last = &head;
+@@ -1770,10 +1769,10 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
+ 		}
+ 		*last = dumpdir;	/* fixup the last (or the only) one */
+ 		dumpdir = head;
+-		err = erofs_mkfs_go(sbi, EROFS_MKFS_JOB_DIR_BH,
++		err2 = erofs_mkfs_go(sbi, EROFS_MKFS_JOB_DIR_BH,
+ 				    &dir, sizeof(dir));
+-		if (err)
+-			return err;
++		if (err || err2)
++			return err ? err : err2;
+ 	} while (dumpdir);
+ 
+ 	return err;
+-- 
+2.43.5
 
