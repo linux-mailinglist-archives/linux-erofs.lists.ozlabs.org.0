@@ -1,58 +1,61 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38D9A9C8306
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Nov 2024 07:23:50 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D19FC9C8334
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Nov 2024 07:34:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Xpqq60571z2ytN
-	for <lists+linux-erofs@lfdr.de>; Thu, 14 Nov 2024 17:23:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Xpr3X3mBHz2ytN
+	for <lists+linux-erofs@lfdr.de>; Thu, 14 Nov 2024 17:34:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731565422;
-	cv=none; b=JwIFf30kTCv+ixU2sBx6as2iq+4OSXnz1qK64L9aS6RJqh6Ip+abLMREIRv3xpet+WO5lylb+0qnUh5vaxMaTZYrKPUNGWUBsF/xbDWv5CCg7LqLb2epJXEJXh5Ht5apScOxMhijBQYK8TtJHnZFwlgYUbzN3lSxeFRPx98wgDxag3Xg7TOBdTsXag9xPHBuwbiP0ijZ1Q4eSbkmxwgHKPD7qygx2U9k+HF3XYBW4X6fBZvXzryiwqj6p4cHdzUuKaNFx0wEv286PSdZ6gGBDkqZ2XCy2CBX4GM5QVJQxjahc6Tom8nFunSuZ8W8O/YS8TOaEzIAm8Y9VFUX6cvOAg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a03:a000:7:0:5054:ff:fe1c:15ff"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731566071;
+	cv=none; b=OKpUzLgGcwKwQvKCXN0cM/gS1+PUUdvdIJeKDXXcJa5zCGZcBG622yf2UkTekP2ErXHN1WQ8G1s0PE5IaG8KbG0lt9LYtpunpqp3QhF+UzVYcGOYGN2ExrCLvvCDZrqLReK5Ubb5AbPzmwKI5yJ+afwyivMVrjogO/m0VVK1HgJZOz82Y77lDjMtuDMVmzQ/eYCZVccPZBM/yY3Gr44yG5hbL8SlRtP5LVz5LBY3VSXhwo+WGaHnlfURlxXxJT57XQBtKIEF7gNgiB2XxXuSI+bqRVVEsdkdF2YecOa0d0XKI0npMPtrebwSFh1gQGImsAdT7j1NRacR0QE+KJxOcA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731565422; c=relaxed/relaxed;
-	bh=G6Rh8YayiJ3l9UGc9UACdDnDVmzCbGcYUPz+C6VwgWI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BBtUF1XK06Z56tzpWuecNud6Pwah4BUjGD3WpT9wW337fK8Wr06x0adtIsy6djuP5zCuNIUu17NyAuAd2VmqyTk29Mcc8No1YsNmYXRQvE17IR8p2g4SBv7Xct1VTIevV0WezC8hMk7/hUg8bSCNXtQ7fC+8HMYnYEggwvry1owi8jo6TA9tGwOBJSDpmzYJmT2P4D4OK/moWMQmjZ1xrzQLZ9ROU6z+bCwdBi8pPLOBCSnhLm/HWpJZ8FxHMOH/hYqx7HsqDWU9czX2zkBi1RIivhnJ1FJkmfbBXXtD9n4d5Q0h3qFgTsdez+gt7mRf0lw1UTYyTTZEKQ274LJqaw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VnF7r4UY; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1731566071; c=relaxed/relaxed;
+	bh=weLT0MTvye6xD6HZw1Bdz27SlRmDyDJkE8ZHqZy6GU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N+rqql+Xyywx8hQmKYHTJRRyRIX3lkK4U9ZVj0EzB7Y3m6YTRjfjqDl4yJNNm0UPiNSjN2ZBkBiXY0BYnpOm3DOLrF1Zyj1WaPreBmEFNGhSkLFR2waRO6b076f1LFE/icnpe0Dtz3+kkXBvbGslPw5GsOkn/4VBmbIEE2ay40s+O2kSNFcOPse/uQKcgMgsRYS/qRBsLiVwLC6HsGsSqblkrvwwt/Hn0TNtD1miEr3XEIx4Opp7YZA2PkCkbnH6+YQKDCLxxc8ynPU+Kole3tgV7XVMypwMHlJAHqw/RuZ1X+VAO6+5LNp2T2elfZTHQDLSwZOKQJLcVCypeSHaNw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=kZJ+0nCE; dkim-atps=neutral; spf=none (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org) smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VnF7r4UY;
+	dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=kZJ+0nCE;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=ftp.linux.org.uk (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org)
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Xpqpy2l53z2yR9
-	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Nov 2024 17:23:34 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1731565410; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=G6Rh8YayiJ3l9UGc9UACdDnDVmzCbGcYUPz+C6VwgWI=;
-	b=VnF7r4UYv9XLOmeVBTNFBYevwhG1DGged23BcqdI2BNgupy2jMRBfr+QIIteOEfETWg/FCbBAFVr5rsu64sTmE3aRd0g87QPwUXtDETbQAxa2hkw3wBPPiRIazxJbissUivVvgYXNkFDlWdeUyxzMSQDjLAGYhwYmcTdZ5LeVLI=
-Received: from 30.221.128.214(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WJNRdxs_1731565407 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 14 Nov 2024 14:23:28 +0800
-Message-ID: <61c24337-798d-4a2e-82bf-996e86d0c0fb@linux.alibaba.com>
-Date: Thu, 14 Nov 2024 14:23:27 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Xpr3V0r8Hz2yMv
+	for <linux-erofs@lists.ozlabs.org>; Thu, 14 Nov 2024 17:34:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=weLT0MTvye6xD6HZw1Bdz27SlRmDyDJkE8ZHqZy6GU8=; b=kZJ+0nCEz6IAjcPIH5Awlq0OTm
+	/sYOjJlK4oJ4pL8za0NvOpeExm1cVRpCux+SmOz4QRNEL4gLY4PQsNjEU4q/l/ONyjXjrjL0e0URJ
+	3hXeHWaWSVO7/UJATFq+0PR7CRLPKGt9OyxpmbayjcVLZGRh3yBYhryPZsiLSocgQXYmSLJmXF9Tu
+	/QmDJgT3FKCBHFOwWFT4ffFO0HsQcRqeG3p0jh0BIGOTR30A5dxilNud3tsIf7eFZkWdtOlgQ1TWz
+	nLcex60HNyej7jZukggLOEmT5JDZE387MF42/BOBMRZ3eIlIWtxf6xeL6RXeT3jdebnm2paUpBgI6
+	eVDk1mdg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tBTQs-0000000EoAm-41Xw;
+	Thu, 14 Nov 2024 06:34:23 +0000
+Date: Thu, 14 Nov 2024 06:34:22 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
 Subject: Re: [PATCH] erofs: fix file-backed mounts over FUSE
-To: Al Viro <viro@zeniv.linux.org.uk>
+Message-ID: <20241114063422.GM3387508@ZenIV>
 References: <20241114051957.419551-1-hsiangkao@linux.alibaba.com>
  <20241114060434.GL3387508@ZenIV>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20241114060434.GL3387508@ZenIV>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+ <61c24337-798d-4a2e-82bf-996e86d0c0fb@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <61c24337-798d-4a2e-82bf-996e86d0c0fb@linux.alibaba.com>
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	SPF_HELO_NONE,SPF_NONE autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -69,54 +72,23 @@ Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, syzbot+0b
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Al,
+On Thu, Nov 14, 2024 at 02:23:27PM +0800, Gao Xiang wrote:
 
-On 2024/11/14 14:04, Al Viro wrote:
-> On Thu, Nov 14, 2024 at 01:19:57PM +0800, Gao Xiang wrote:
+> > 3) AFAICS, (buf->kmap_type == EROFS_KMAP) == (buf->base != NULL).  What's
+> > the point of having that as a separate field?
 > 
->> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
->> index 6355866220ff..43c89194d348 100644
->> --- a/fs/erofs/data.c
->> +++ b/fs/erofs/data.c
->> @@ -38,7 +38,10 @@ void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset,
->>   	}
->>   	if (!folio || !folio_contains(folio, index)) {
->>   		erofs_put_metabuf(buf);
->> -		folio = read_mapping_folio(buf->mapping, index, NULL);
->> +		folio = buf->use_fp ?
->> +			read_mapping_folio(file_inode(buf->filp)->i_mapping,
->> +				index, buf->filp) :
->> +			read_mapping_folio(buf->mapping, index, NULL);
+> Once buf->kmap_type has EROFS_KMAP and EROFS_KMAP_ATOMIC, but it
+> seems that it can be cleaned up now.
 > 
-> UGH...
+> I will clean up later but it's a seperate story.
 > 
-> 1) 'filp' is an atrocious identifier.  Please, don't perpetuate
-> the piss-poor taste of AST - if you want to say 'file', say so.
-
-ok.
-
+> > 
+> > 4) Why bother with union?  Just have buf->file serve as your buf->use_fp
+> > and be done with that...
 > 
-> 2) there's ->f_mapping; no need to go through the file_inode().
+> I'd like to leave `struct erofs_buf` as small as possible since
+> it's on stack.
 
-Yeah, thanks for the suggestion.
-
-> 
-> 3) AFAICS, (buf->kmap_type == EROFS_KMAP) == (buf->base != NULL).  What's
-> the point of having that as a separate field?
-
-Once buf->kmap_type has EROFS_KMAP and EROFS_KMAP_ATOMIC, but it
-seems that it can be cleaned up now.
-
-I will clean up later but it's a seperate story.
-
-> 
-> 4) Why bother with union?  Just have buf->file serve as your buf->use_fp
-> and be done with that...
-
-I'd like to leave `struct erofs_buf` as small as possible since
-it's on stack.
-
-Leave two fields for this are also ok for me anyway.
-
-Thanks,
-Gao Xiang
+enum + bool eats at least as much as a pointer, and if it's on stack...
+an extra word is really noise - it's not as if you had a plenty of
+those in the current call chain at any given point.
