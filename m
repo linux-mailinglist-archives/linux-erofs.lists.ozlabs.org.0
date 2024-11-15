@@ -1,53 +1,68 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B85E89CF316
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Nov 2024 18:37:28 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FF6E9CF586
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Nov 2024 21:11:50 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Xqkjx0STnz3bW0
-	for <lists+linux-erofs@lfdr.de>; Sat, 16 Nov 2024 04:37:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Xqp800jbKz3bLS
+	for <lists+linux-erofs@lfdr.de>; Sat, 16 Nov 2024 07:11:44 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731692243;
-	cv=none; b=Wvv+CCw/IlvexHMDk+JswN+6BShAEhMeHFO55F1KsX7mlc5astyBFPrQWRY3gxwG9qEZa9O0e2Hsd/Vf0kcNjZlGtS7SFf3ukXV889wD++IGpDenJcjU6/DJnOs2IUNTHH/2utX0eC58lBzV2Oit5f9LpiCX64DBUmJIacItOjjjKE+PEKpVH30fXeCmRRmMvXnZw8RzzBtErnvY3aYJtbSShgbiZx5OKKBhAUUaYsAIN06CQHtDhSREN783goSXU47wFKckvtq5aw7RntYK2EW7IHGyqIU+T2mrGVaJzorV4VUZ3IHnSZJH31y1XmKwyE0AGuC5RE++ggvouUfJ2Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=136.144.140.114
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731701501;
+	cv=none; b=bRBgwnCpMXBOSKpgjB5oUtA3UHGTykwrdcQeuL956OsbcLUKD4jmHKlRD0i6AIvrXx32AkVfHAhxFzE0Z6IJ4Q5LUTRflMGrjtyKEGknjdJbGrh+fPZcpv+Bybre9ivUbeGPbug2PsWTVSRkKDVcTem39C6YNz63E/+m3zYBicrspzAxggM2qgUAeM4Co7U9suFzUC8EL1zITWtq7RzsDC26NUT1f4KjH8mEGnapkiDGzGVDfWa2EzP6a34vRJXSYtVgNlxjq9UJCve5LinDZ2T0Qhiw7/AwTv8y0nfnLmZLKElpgUuPBpe9M/jwH2i6okkFv5iRPF03Z77GmjW4dQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731692243; c=relaxed/relaxed;
-	bh=0C4zvkjgOBhm5nZYv4qVK0pKEHqWTMIfQl4q5rV5u+o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LWPM3FFMQKEULnhGuXNEntFTWvQcKWytw50Ccfvet+yRS+G8NGtXx5iqbGCFHbkbMHEW6/6rr7tQxDGtfTo0fFz5K6z5wDk4mV1F1H67dU5bLjOzypVeCsFYDll7lPyOxCdnhclfRKDO4yB/HanTHzhALNd/4lHkfzRsNs7ZDpBy5R/9Dh9XoBj6d5PMCa0gFABCKCBL98Q//UxwqVwlQ47zyPyDe7CRR4Lg1Iejv4GqE7Cu/4GLtUJzmf9iYtsKcIUEwvsfvi5u7JN/4Yyjo9ze3aLjJ9c0Xgvqn4qTrReD1z4T1Mag3Ltrue1IAIVIL5JAwNDiOps9KfoQIoaGJA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Y9FL03uf; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1731701501; c=relaxed/relaxed;
+	bh=1da3t6x+fQO90iML1j96gm3n46oBKBuH21WrjAs484Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GcE+pZ8ZR+bTiDkVJWvyBvSLrjoqgAJx/8l2SF4ftS+PkA8gCPA7SKInjLG5W/7KwWgNtSwPgdt48t318fcUktQ0W7if0C09N+hXfMmEdG6IrI+VEQsPIdA4bmBGw7bSMw109zlYtdiTua6f20Xs3IuLir42Gtn8p67rMs/ltpJt69ld68zXv2zUfmbE3LHVc1LPA3OcueOoYfwx9Kijl3MCT9bouqz7sGzsVbXGkdrE4wk640pzjUqttu+qiB0QylU4FlAwOw8jPbDiCdL0qJ5c9QpS9iROiv9sWMjLAakqGLHhAYZnmJr34lRlTNXCMkb5TbJYCkxQKK4R7b1LHA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; dkim=pass (4096-bit key; secure) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.a=rsa-sha256 header.s=key header.b=cHfjERfY; dkim-atps=neutral; spf=pass (client-ip=136.144.140.114; helo=bout3.ijzerbout.nl; envelope-from=kees@ijzerbout.nl; receiver=lists.ozlabs.org) smtp.mailfrom=ijzerbout.nl
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Y9FL03uf;
+	dkim=pass (4096-bit key; secure) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.a=rsa-sha256 header.s=key header.b=cHfjERfY;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Xqkjq45l8z2yGY
-	for <linux-erofs@lists.ozlabs.org>; Sat, 16 Nov 2024 04:37:16 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1731692231; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=0C4zvkjgOBhm5nZYv4qVK0pKEHqWTMIfQl4q5rV5u+o=;
-	b=Y9FL03uf5p2gy4KYuU/xlHFm2ofclQh5eIy92udWTDnPcEFpWDm4mDfxd1i1fOPPPx8TFearCCuZBHDD28GxOOFYWKpAOY3caamLzMyu32eoXV7W/a2XWBIubRTqkMfGJn9bTKAwdGROrRhe7kzR359m2POGGygdC9EXmETxG6A=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WJUJogH_1731692222 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 16 Nov 2024 01:37:10 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: handle NONHEAD !delta[1] lclusters gracefully
-Date: Sat, 16 Nov 2024 01:36:51 +0800
-Message-ID: <20241115173651.3339514-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=ijzerbout.nl (client-ip=136.144.140.114; helo=bout3.ijzerbout.nl; envelope-from=kees@ijzerbout.nl; receiver=lists.ozlabs.org)
+X-Greylist: delayed 571 seconds by postgrey-1.37 at boromir; Sat, 16 Nov 2024 07:11:38 AEDT
+Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Xqp7t6NmLz2yMP
+	for <linux-erofs@lists.ozlabs.org>; Sat, 16 Nov 2024 07:11:38 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
+	t=1731700922; bh=kTKcI7rAzWbnFx3Ax+rm7FwXA+3N7eD2+FIgr2oP7kg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cHfjERfY1/rAAYikk2QNbgGZwf8P76vzMPzQy0d38kXIISsg6cIu+TyONdT+1XA9d
+	 dnHVgoiBK/U+Ro40XfKwbu0kYfn03m1yCclV6oORc5HF1o34pGsZmNOzLqCRhoSAH+
+	 bVBVKjSR8nU5xVOSXJDnjtUPKMWJyAKcxgCzdVYtvgvWOYTpPivdsVJJLPoI2YBvDv
+	 YfdiF9W8RjIdBQ3sShsTkRNGpSMMNgugIUwUnbAbuBOE3sUaWPyxt1eEG2fB+9Ojh6
+	 clox9OhOuRhluFaZfycU5bW3lyo10aEcZYWTp4LajDyqEsevUsJGiGsQGbbtmUsAGw
+	 zM/4cMlJZi0LxU8Iz7pva37mepW1yCxANkesaw/WVrlzxEL2BBIYcvn4Ns+IWj/Pl9
+	 3xbzlIzCPENc15jBiKC3X5tUuOq6P+iM8sUBOmiD5JyFBSMXeuSuAu1HJ7Bbd4FyE/
+	 PBYXB2Di/tBAed2LS23SuHO40UV3Hf8QS8rw4yLte6S2qH/ZvWXvDoEQF9H7Wt0ZGA
+	 ysGoIjNlPNdRkfpyOTMNcAHMh4u1X1WsE3uuWa2Onkmd9yvzplXQr4YqjLyvanucka
+	 NQVkL1t60WZZNPUDpdDPVX+iR4y9mn87zk2epeaPRvd1Pow2ipBYG6a3996OgEmpKk
+	 fItX9fSiHH5XvvnpO8iKLYxA=
+Received: from [IPV6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a] (racer.ijzerbout.nl [IPv6:2a10:3781:99:1:1ac0:4dff:fea7:ec3a])
+	by bout3.ijzerbout.nl (Postfix) with ESMTPSA id 7CF6618A7E9;
+	Fri, 15 Nov 2024 21:02:00 +0100 (CET)
+Message-ID: <b7135da8-a04f-48ec-957f-09542178b861@ijzerbout.nl>
+Date: Fri, 15 Nov 2024 21:01:57 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 07/33] netfs: Abstract out a rolling folio buffer
+ implementation
+To: David Howells <dhowells@redhat.com>,
+ Christian Brauner <christian@brauner.io>, Steve French <smfrench@gmail.com>,
+ Matthew Wilcox <willy@infradead.org>
+References: <20241108173236.1382366-1-dhowells@redhat.com>
+ <20241108173236.1382366-8-dhowells@redhat.com>
+Content-Language: en-US
+From: Kees Bakker <kees@ijzerbout.nl>
+In-Reply-To: <20241108173236.1382366-8-dhowells@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -60,85 +75,76 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>, syzbot+6c0b301317aa0156f9eb@syzkaller.appspotmail.com
+Cc: Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Shyam Prasad N <sprasad@microsoft.com>, v9fs@lists.linux.dev, netdev@vger.kernel.org, Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, Tom Talpey <tom@talpey.com>, linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org, linux-mm@kvack.org, netfs@lists.linux.dev, Marc Dionne <marc.dionne@auristor.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Eric Van Hensbergen <ericvh@kernel.org>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-syzbot reported a WARNING in iomap_iter_done:
- iomap_fiemap+0x73b/0x9b0 fs/iomap/fiemap.c:80
- ioctl_fiemap fs/ioctl.c:220 [inline]
-
-Generally, NONHEAD lclusters won't have delta[1]==0, except for crafted
-images and filesystems created by pre-1.0 mkfs versions.
-
-Previously, it would immediately bail out if delta[1]==0, which led to
-inadequate decompressed lengths (thus FIEMAP is impacted).  Treat it as
-delta[1]=1 to work around these legacy mkfs versions.
-
-`lclusterbits > 14` is illegal for compact indexes, error out too.
-
-Reported-by: syzbot+6c0b301317aa0156f9eb@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/r/67373c0c.050a0220.2a2fcc.0079.GAE@google.com
-Fixes: d95ae5e25326 ("erofs: add support for the full decompressed length")
-Fixes: 001b8ccd0650 ("erofs: fix compact 4B support for 16k block size")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/zmap.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index a076cca1f547..4535f2f0a014 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -219,7 +219,7 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
- 	unsigned int amortizedshift;
- 	erofs_off_t pos;
- 
--	if (lcn >= totalidx)
-+	if (lcn >= totalidx || vi->z_logical_clusterbits > 14)
- 		return -EINVAL;
- 
- 	m->lcn = lcn;
-@@ -390,7 +390,7 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
- 	u64 lcn = m->lcn, headlcn = map->m_la >> lclusterbits;
- 	int err;
- 
--	do {
-+	while (1) {
- 		/* handle the last EOF pcluster (no next HEAD lcluster) */
- 		if ((lcn << lclusterbits) >= inode->i_size) {
- 			map->m_llen = inode->i_size - map->m_la;
-@@ -402,14 +402,16 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
- 			return err;
- 
- 		if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
--			DBG_BUGON(!m->delta[1] &&
--				  m->clusterofs != 1 << lclusterbits);
-+			/* work around invalid d1 generated by pre-1.0 mkfs */
-+			if (unlikely(!m->delta[1])) {
-+				m->delta[1] = 1;
-+				DBG_BUGON(1);
-+			}
- 		} else if (m->type == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
- 			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD1 ||
- 			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD2) {
--			/* go on until the next HEAD lcluster */
- 			if (lcn != headlcn)
--				break;
-+				break;	/* ends at the next HEAD lcluster */
- 			m->delta[1] = 1;
- 		} else {
- 			erofs_err(inode->i_sb, "unknown type %u @ lcn %llu of nid %llu",
-@@ -418,8 +420,7 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
- 			return -EOPNOTSUPP;
- 		}
- 		lcn += m->delta[1];
--	} while (m->delta[1]);
--
-+	}
- 	map->m_llen = (lcn << lclusterbits) + m->clusterofs - map->m_la;
- 	return 0;
- }
--- 
-2.43.5
+Op 08-11-2024 om 18:32 schreef David Howells:
+> A rolling buffer is a series of folios held in a list of folio_queues.  New
+> folios and folio_queue structs may be inserted at the head simultaneously
+> with spent ones being removed from the tail without the need for locking.
+>
+> The rolling buffer includes an iov_iter and it has to be careful managing
+> this as the list of folio_queues is extended such that an oops doesn't
+> incurred because the iterator was pointing to the end of a folio_queue
+> segment that got appended to and then removed.
+>
+> We need to use the mechanism twice, once for read and once for write, and,
+> in future patches, we will use a second rolling buffer to handle bounce
+> buffering for content encryption.
+>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Jeff Layton <jlayton@kernel.org>
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
+> ---
+>   fs/netfs/Makefile              |   1 +
+>   fs/netfs/buffered_read.c       | 119 ++++-------------
+>   fs/netfs/direct_read.c         |  14 +-
+>   fs/netfs/direct_write.c        |  10 +-
+>   fs/netfs/internal.h            |   4 -
+>   fs/netfs/misc.c                | 147 ---------------------
+>   fs/netfs/objects.c             |   2 +-
+>   fs/netfs/read_pgpriv2.c        |  32 ++---
+>   fs/netfs/read_retry.c          |   2 +-
+>   fs/netfs/rolling_buffer.c      | 225 +++++++++++++++++++++++++++++++++
+>   fs/netfs/write_collect.c       |  19 +--
+>   fs/netfs/write_issue.c         |  26 ++--
+>   include/linux/netfs.h          |  10 +-
+>   include/linux/rolling_buffer.h |  61 +++++++++
+>   include/trace/events/netfs.h   |   2 +
+>   15 files changed, 375 insertions(+), 299 deletions(-)
+>   create mode 100644 fs/netfs/rolling_buffer.c
+>   create mode 100644 include/linux/rolling_buffer.h
+> [...]
+> diff --git a/fs/netfs/direct_write.c b/fs/netfs/direct_write.c
+> index 88f2adfab75e..0722fb9919a3 100644
+> --- a/fs/netfs/direct_write.c
+> +++ b/fs/netfs/direct_write.c
+> @@ -68,19 +68,19 @@ ssize_t netfs_unbuffered_write_iter_locked(struct kiocb *iocb, struct iov_iter *
+>   		 * request.
+>   		 */
+>   		if (async || user_backed_iter(iter)) {
+> -			n = netfs_extract_user_iter(iter, len, &wreq->iter, 0);
+> +			n = netfs_extract_user_iter(iter, len, &wreq->buffer.iter, 0);
+>   			if (n < 0) {
+>   				ret = n;
+>   				goto out;
+>   			}
+> -			wreq->direct_bv = (struct bio_vec *)wreq->iter.bvec;
+> +			wreq->direct_bv = (struct bio_vec *)wreq->buffer.iter.bvec;
+>   			wreq->direct_bv_count = n;
+>   			wreq->direct_bv_unpin = iov_iter_extract_will_pin(iter);
+>   		} else {
+> -			wreq->iter = *iter;
+> +			wreq->buffer.iter = *iter;
+>   		}
+>   
+> -		wreq->io_iter = wreq->iter;
+> +		wreq->buffer.iter = wreq->buffer.iter;
+Is this correct, an assignment to itself?
+>   	}
+>   
+>   	__set_bit(NETFS_RREQ_USE_IO_ITER, &wreq->flags);
+> [...]
 
