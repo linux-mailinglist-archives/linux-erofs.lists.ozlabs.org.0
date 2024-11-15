@@ -1,80 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB3329CD602
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Nov 2024 04:55:04 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2A7669CDA05
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Nov 2024 08:46:53 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XqNSv43mQz30VJ
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Nov 2024 14:54:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XqTcV5jC1z30T8
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Nov 2024 18:46:50 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::334"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731642893;
-	cv=none; b=V9WGbaPYkKhCMnWF9gOeSC7up4Tsh0shOtioHGtVNVLcu2xkqmCyXkUSHNDIgNdnFP3Ch/LYvYgoGeKZAIsNodZ0pQCO3drRZ+AQCfCdfvh0gttu56zu+La5Rpb7u5/P4e81A9RiCSjVcWEZG07knkJ1hWO4dxhQTUtB2rTAgqe5pwMBDMBVbZDEl8tc0bjg5W1ZUWgNfI2MBsvwfZOeHxt5uaaLRiW5LT+/s4NuyPGYLhAE7PnJoUtCqt1HDx+UOH11SHzuUyXOWGTVF8v0pEDJwOVpqSQ9K1xHRtwKbM5kFjYXtYifHkPH3wEPxV1gVuJjKwkz4RDCtofinEfu0Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731656809;
+	cv=none; b=Dy768daq/I1VL8fLdyq1GtzEAOZ3xdtysLEYweEM3vx3Bp+kAyhr1Fsz9IPuvMfAS40ouU/6mQzdma88++oUR5B4SlM/RbJ77p+jJIeg/ii7YdFnBOxeH8V727u+Glpsm9bTrIkV0K2mg+J1o3MsYFRvo3AhbSGP4mdqe2rmlny3+LPXH8Ub42r85VM/OpuHLfHEIvW+exg9z10Qtv42Qrxio3GQxWhgwglNO4COmptvN1cHLGjF6/i/1cu/7V4slcLnu03SZX7XrzCrcoE1aJgZiwusvCHYbDJyb1plxtd9fhjXYTFJOTHF74PJEIpeZiPG8Oooqt4Vx5Qmpin8Ag==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731642893; c=relaxed/relaxed;
-	bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
-	h=From:Message-ID:To:Subject:Date:MIME-Version:Content-Type; b=o2g6+9U6SXwByxOVIpR3cNVG7qwuq8xftV7xMM62sUBrLwnVi+Bco/hGhf09TlIkRfULrV7eU+zNK0m43f4e1o19k9qrCPFUbMZi198mvzEnjkkTRmW5AzlWLyhpf74DKwqVy0l74j7MyayJP5BZHyjfDNCd4Vx6Dkj2VVx7lL+0bTaAbre+chY1jyD3N7232/6Gige+9gMb829iG0KowAMXelhpIvb6PvDu00dixQcFfH3PZQsvyPxKE9el3o7tckV7GdtqXZ9M6guKVe6+CTjEplvrSFg2x0lEOvP4Z7/WHBAaWx79iREg15cDkqbKElv8FNHZbjFGW4fkXGxyQw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=aA1X8JtY; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::334; helo=mail-wm1-x334.google.com; envelope-from=rahulsarkar7433@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1731656809; c=relaxed/relaxed;
+	bh=klSvFmmsqd9sENMEOR6smds4gtQMegD4wv7mVDkLMIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oTHSRJUd6x53MNxV+9++HkY5iC8/CiaX96TyQqJAT4eB6x7mEUp+rGkrY9lTNNBad4SjZs/xHYuWUQJ5HtQvl+D5T/QffEwKooMfnBkDBfuEmXrrSgniDrP8UiDYCVllOtnziYpr5BbOEVbgvUeJRKs0nWYtYhY3LezfSrCF2Fjn9m9aiGiIbB5abZme9iw855S2R0V0UE60EpTYL8noyU+En2nki8MLn79PWWd5Nfyii3F14kIV6YZ3VVnw+ObeMUn1SD4OGEhOyfNEM5SubW/DyHOxHUHzWwBgeU9iSevSc1e+yVstd5SOLFF89MGYpHNJDTlr7B6LoQrlet811Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fNc0iYZm; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=aA1X8JtY;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fNc0iYZm;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::334; helo=mail-wm1-x334.google.com; envelope-from=rahulsarkar7433@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XqNSp6xChz2yQJ
-	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Nov 2024 14:54:50 +1100 (AEDT)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-43158625112so12174565e9.3
-        for <linux-erofs@lists.ozlabs.org>; Thu, 14 Nov 2024 19:54:50 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XqTcP4KWgz2y65
+	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Nov 2024 18:46:39 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1731642885; x=1732247685; darn=lists.ozlabs.org;
-        h=mime-version:date:subject:to:reply-to:message-id:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
-        b=aA1X8JtYL1pwYALzrLPcr5buBmcjqRuMnhc1OxT7UlGmji33FkGjd+/8vVHguz7HZd
-         LHgRC9E+IoIqz1s6mbeYlO6TnfVb790a7VyV7EinPPYt+SgOecckF5eCRD8L1t55A0Qh
-         VrHo6Xmd89v7q4rbtOdnXA31XctTDyLts6F/gy8arN92gzgoEFOWzw86XHBzXL1ezesD
-         WpTD8CLYScpdrDQ+o0tDXVuCx/iRdAF7e+OkbQw2tfMjM3Yw8JPcqU3Q4g6c0N9iWPQi
-         ex+GgG+UB7QfhVnzSOXPa9dpEDID/JiQz5us7a3fiksPdjQmWYvyjaiazbomRvBPEuSi
-         HiSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731642885; x=1732247685;
-        h=mime-version:date:subject:to:reply-to:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mqk98GP19dZ+Ay7HEP68kLZER2bT/NkIqYTu8jMJ4BE=;
-        b=CjF12AWVNq+PILbcMnNTj/Nw3JnzizwpfIqeIXs1E5PZUMgt4hG6bD2w9m+FVwBPK9
-         R4H1ZH1AMfdiLDmoUbFIxbyueEHKAFqEpNChYJMvOCjw4D5dqWygZRqyXZ8Na9HYw5VG
-         3sY/lCZs5GtEt0GuDP+c/SpeGyqWR/NPTPfLDQWzE/8TEGh5b1HjmjQlztPx5Ip9k/gR
-         TZmWbkYfBNTYUmsOPXCR34vXsKN78bINtuc5fiYSs+jkDVnin34dFYHe0C8fsubOcGk9
-         1e/XSYHgbdv/gFDbEmiXUiWrBd7KfcxaLIgkq05EAMCccE2RaihR5w0U2Y7JQnujQsFX
-         FweQ==
-X-Gm-Message-State: AOJu0YwCMPgWgoz8/Pi2BwSqLC2LP+RgfPyT7kaYzsIjcbo6ZVJeYdsh
-	L9g5pNsjvEneuxXgNJ+dgKegxo+vIeubXUuOGliprr90BCQk0HwTKseIig==
-X-Google-Smtp-Source: AGHT+IEiJW349fjHXMqFMRg0yt3Fq1bxyq7nqq/2QPUZU7Y+lkAph3CqaHn0sBkmLGuoCPZ86k5yLw==
-X-Received: by 2002:a05:600c:5129:b0:431:54f3:11af with SMTP id 5b1f17b1804b1-432df78fd98mr7912235e9.31.1731642884804;
-        Thu, 14 Nov 2024 19:54:44 -0800 (PST)
-Received: from [87.120.84.56] ([87.120.84.56])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3821adadf8fsm3153911f8f.39.2024.11.14.19.54.43
-        for <linux-erofs@lists.ozlabs.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 14 Nov 2024 19:54:44 -0800 (PST)
-From: William Cheung <rahulsarkar7433@gmail.com>
-X-Google-Original-From: William Cheung <info@gmail.com>
-Message-ID: <de7fd6b6699abb0ddc1d95ddd95b44e63ac74fdc1bde5822ad0577f9d9541878@mx.google.com>
+	d=linux.alibaba.com; s=default;
+	t=1731656793; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=klSvFmmsqd9sENMEOR6smds4gtQMegD4wv7mVDkLMIg=;
+	b=fNc0iYZmGfDiRgKGTtP7RuH29ORJ8fGj+VE5e+6GoxaO1vB1fk1GcpObmENwjL82L2cMk9gtx18vulH1jaIFbr0ZP0JBCCb1uKDXSM2a9d54cWGDtfh2Ltttkjhu/WKFBwHkaY56hG15tOQ34+kWQLMAy31xmYvhk1YAXdcCB9E=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WJSN0YK_1731656787 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 15 Nov 2024 15:46:32 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: Lucrative Proposal
-Date: Thu, 14 Nov 2024 19:54:41 -0800
+Subject: [PATCH] erofs: clarify direct I/O support
+Date: Fri, 15 Nov 2024 15:46:25 +0800
+Message-ID: <20241115074625.2520728-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-X-Spam-Status: No, score=3.6 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.0
-X-Spam-Level: ***
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -87,8 +60,81 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: willchg@hotmail.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-I have a lucratuve proposal for you, reply for more info.
+Currently, only filesystems backed by block devices support direct I/O.
+
+Also remove the unnecessary strict checks that can be supported with iomap.
+
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/data.c  | 15 +--------------
+ fs/erofs/inode.c | 12 ++++++------
+ 2 files changed, 7 insertions(+), 20 deletions(-)
+
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index db4bde4c0852..bb9751f6dea8 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -413,22 +413,9 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 	if (IS_DAX(inode))
+ 		return dax_iomap_rw(iocb, to, &erofs_iomap_ops);
+ #endif
+-	if (iocb->ki_flags & IOCB_DIRECT) {
+-		struct block_device *bdev = inode->i_sb->s_bdev;
+-		unsigned int blksize_mask;
+-
+-		if (bdev)
+-			blksize_mask = bdev_logical_block_size(bdev) - 1;
+-		else
+-			blksize_mask = i_blocksize(inode) - 1;
+-
+-		if ((iocb->ki_pos | iov_iter_count(to) |
+-		     iov_iter_alignment(to)) & blksize_mask)
+-			return -EINVAL;
+-
++	if ((iocb->ki_flags & IOCB_DIRECT) && inode->i_sb->s_bdev)
+ 		return iomap_dio_rw(iocb, to, &erofs_iomap_ops,
+ 				    NULL, 0, NULL, 0);
+-	}
+ 	return filemap_read(iocb, to, 0);
+ }
+ 
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index db29190656eb..d4b89407822a 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -318,6 +318,7 @@ int erofs_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 		  unsigned int query_flags)
+ {
+ 	struct inode *const inode = d_inode(path->dentry);
++	struct block_device *bdev = inode->i_sb->s_bdev;
+ 	bool compressed =
+ 		erofs_inode_is_data_compressed(EROFS_I(inode)->datalayout);
+ 
+@@ -330,15 +331,14 @@ int erofs_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 	/*
+ 	 * Return the DIO alignment restrictions if requested.
+ 	 *
+-	 * In EROFS, STATX_DIOALIGN is not supported in ondemand mode and
+-	 * compressed files, so in these cases we report no DIO support.
++	 * In EROFS, STATX_DIOALIGN is only supported in bdev-based mode
++	 * and uncompressed inodes, otherwise we report no DIO support.
+ 	 */
+ 	if ((request_mask & STATX_DIOALIGN) && S_ISREG(inode->i_mode)) {
+ 		stat->result_mask |= STATX_DIOALIGN;
+-		if (!erofs_is_fscache_mode(inode->i_sb) && !compressed) {
+-			stat->dio_mem_align =
+-				bdev_logical_block_size(inode->i_sb->s_bdev);
+-			stat->dio_offset_align = stat->dio_mem_align;
++		if (bdev && !compressed) {
++			stat->dio_mem_align = bdev_dma_alignment(bdev) + 1;
++			stat->dio_offset_align = bdev_logical_block_size(bdev);
+ 		}
+ 	}
+ 	generic_fillattr(idmap, request_mask, inode, stat);
+-- 
+2.43.5
+
