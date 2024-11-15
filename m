@@ -1,46 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A7669CDA05
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Nov 2024 08:46:53 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F7D29CDAFB
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Nov 2024 09:56:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XqTcV5jC1z30T8
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Nov 2024 18:46:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XqW8w1YDMz30VZ
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Nov 2024 19:56:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731656809;
-	cv=none; b=Dy768daq/I1VL8fLdyq1GtzEAOZ3xdtysLEYweEM3vx3Bp+kAyhr1Fsz9IPuvMfAS40ouU/6mQzdma88++oUR5B4SlM/RbJ77p+jJIeg/ii7YdFnBOxeH8V727u+Glpsm9bTrIkV0K2mg+J1o3MsYFRvo3AhbSGP4mdqe2rmlny3+LPXH8Ub42r85VM/OpuHLfHEIvW+exg9z10Qtv42Qrxio3GQxWhgwglNO4COmptvN1cHLGjF6/i/1cu/7V4slcLnu03SZX7XrzCrcoE1aJgZiwusvCHYbDJyb1plxtd9fhjXYTFJOTHF74PJEIpeZiPG8Oooqt4Vx5Qmpin8Ag==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.99
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731660990;
+	cv=none; b=DRjv+PKihbz8GN68ayro3C6hJVkYXQ2N+y1k1Zw3cRsx4n+mtLo9qD07AboqIG3zN/wyQTDACYW99aLbjm/1vPVkhphA5LA/35ZrqY4NWgBWW1LXCSbLBt8WzlL4P3vUOmoFYlT5R1BJGzHd7JA6D6W4G/wIDr5rdvjYXgdIqehaqOd96J4Z+LaGindm76pLHVy8OK2nhEQ2zhyo+KBoOswEjrYQSYINh2JVc8tvogc37hePZydDNVTqOKwfIFXyyMQRRGWhA1yVXBEROQkEGvx4PZ9jXRMEn1vVJfhgi50fc6xsDB0aTNZOJeRdhK+jbWPVGQhdPvuyuVQTyp263w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731656809; c=relaxed/relaxed;
-	bh=klSvFmmsqd9sENMEOR6smds4gtQMegD4wv7mVDkLMIg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oTHSRJUd6x53MNxV+9++HkY5iC8/CiaX96TyQqJAT4eB6x7mEUp+rGkrY9lTNNBad4SjZs/xHYuWUQJ5HtQvl+D5T/QffEwKooMfnBkDBfuEmXrrSgniDrP8UiDYCVllOtnziYpr5BbOEVbgvUeJRKs0nWYtYhY3LezfSrCF2Fjn9m9aiGiIbB5abZme9iw855S2R0V0UE60EpTYL8noyU+En2nki8MLn79PWWd5Nfyii3F14kIV6YZ3VVnw+ObeMUn1SD4OGEhOyfNEM5SubW/DyHOxHUHzWwBgeU9iSevSc1e+yVstd5SOLFF89MGYpHNJDTlr7B6LoQrlet811Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fNc0iYZm; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1731660990; c=relaxed/relaxed;
+	bh=qhuNIe7GctcjaF7YhUU22U4ZtGXEt2Yn6iupOXsNEqk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TrGMJN1TqE9vX58xAXf7h/4XnjI0iAtRP9QbyJuN8rR30VI2f8ny4q3D13Ifp+UZ1hWsua6GqMUImZofB+yWgzsvpVBnHlo1HIhCuxA7VGBhOC3lVGLoIn7XEVm8dpfudqzZFciI2zHoQpsTKZCTfSANs1ckdLoe6QrzAwrX+XyphYXRgSSFjFfmY6jIGjN6Fky2TVh0n0OtrYz+kQh3uncwOgv+0th0nn9ewk91llG5rosich/RcR5Yne4deUJ16cNRrKI6y9zBEcqkYoOaRV1iRUlTBKF5WjSCKVoioGgjLfbDdub8/TjffS5imdBahTXv7uymtNVLyf9i5aIW5w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=bhG6LaTb; dkim-atps=neutral; spf=pass (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fNc0iYZm;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=bhG6LaTb;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XqTcP4KWgz2y65
-	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Nov 2024 18:46:39 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XqW8p535Jz2yDm
+	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Nov 2024 19:56:23 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1731656793; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=klSvFmmsqd9sENMEOR6smds4gtQMegD4wv7mVDkLMIg=;
-	b=fNc0iYZmGfDiRgKGTtP7RuH29ORJ8fGj+VE5e+6GoxaO1vB1fk1GcpObmENwjL82L2cMk9gtx18vulH1jaIFbr0ZP0JBCCb1uKDXSM2a9d54cWGDtfh2Ltttkjhu/WKFBwHkaY56hG15tOQ34+kWQLMAy31xmYvhk1YAXdcCB9E=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WJSN0YK_1731656787 cluster:ay36)
+	t=1731660978; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=qhuNIe7GctcjaF7YhUU22U4ZtGXEt2Yn6iupOXsNEqk=;
+	b=bhG6LaTbCsgiIleZoVnu/FEHfQT8VWJeJ071OPCALD8Pi4iWp1W4kUvHq6s/kISC4P/JrJiwP/I+EwCSkBS9eI8mn/xZTDXz02j9ePLeF0J6T1nxQhzlRJCaIXlzRBfu7cj02LvMW1EAuG632C0ZxYbfjwW9B4w814RT2QJWRlY=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WJT8Ado_1731660971 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 15 Nov 2024 15:46:32 +0800
+          Fri, 15 Nov 2024 16:56:16 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: clarify direct I/O support
-Date: Fri, 15 Nov 2024 15:46:25 +0800
-Message-ID: <20241115074625.2520728-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: mkfs: support data alignment
+Date: Fri, 15 Nov 2024 16:56:08 +0800
+Message-ID: <20241115085608.2635901-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -60,81 +60,115 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently, only filesystems backed by block devices support direct I/O.
+The underlay block storage could work in a stripe-like manner to improve
+performance and space efficiency.
 
-Also remove the unnecessary strict checks that can be supported with iomap.
+EROFS on-disk layout is flexible enough for such use cases.
 
+Cc: Changpeng Liu <changpeliu@tencent.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/data.c  | 15 +--------------
- fs/erofs/inode.c | 12 ++++++------
- 2 files changed, 7 insertions(+), 20 deletions(-)
+ include/erofs/cache.h |  3 +++
+ lib/cache.c           |  2 ++
+ man/mkfs.erofs.1      |  3 +++
+ mkfs/main.c           | 11 +++++++++++
+ 4 files changed, 19 insertions(+)
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index db4bde4c0852..bb9751f6dea8 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -413,22 +413,9 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 	if (IS_DAX(inode))
- 		return dax_iomap_rw(iocb, to, &erofs_iomap_ops);
- #endif
--	if (iocb->ki_flags & IOCB_DIRECT) {
--		struct block_device *bdev = inode->i_sb->s_bdev;
--		unsigned int blksize_mask;
--
--		if (bdev)
--			blksize_mask = bdev_logical_block_size(bdev) - 1;
--		else
--			blksize_mask = i_blocksize(inode) - 1;
--
--		if ((iocb->ki_pos | iov_iter_count(to) |
--		     iov_iter_alignment(to)) & blksize_mask)
--			return -EINVAL;
--
-+	if ((iocb->ki_flags & IOCB_DIRECT) && inode->i_sb->s_bdev)
- 		return iomap_dio_rw(iocb, to, &erofs_iomap_ops,
- 				    NULL, 0, NULL, 0);
--	}
- 	return filemap_read(iocb, to, 0);
- }
+diff --git a/include/erofs/cache.h b/include/erofs/cache.h
+index 5411eed..bd32602 100644
+--- a/include/erofs/cache.h
++++ b/include/erofs/cache.h
+@@ -64,6 +64,9 @@ struct erofs_bufmgr {
  
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index db29190656eb..d4b89407822a 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -318,6 +318,7 @@ int erofs_getattr(struct mnt_idmap *idmap, const struct path *path,
- 		  unsigned int query_flags)
- {
- 	struct inode *const inode = d_inode(path->dentry);
-+	struct block_device *bdev = inode->i_sb->s_bdev;
- 	bool compressed =
- 		erofs_inode_is_data_compressed(EROFS_I(inode)->datalayout);
+ 	/* last mapped buffer block to accelerate erofs_mapbh() */
+ 	struct erofs_buffer_block *last_mapped_block;
++
++	/* align data block addresses to multiples of `dsunit` */
++	unsigned int dsunit;
+ };
  
-@@ -330,15 +331,14 @@ int erofs_getattr(struct mnt_idmap *idmap, const struct path *path,
- 	/*
- 	 * Return the DIO alignment restrictions if requested.
- 	 *
--	 * In EROFS, STATX_DIOALIGN is not supported in ondemand mode and
--	 * compressed files, so in these cases we report no DIO support.
-+	 * In EROFS, STATX_DIOALIGN is only supported in bdev-based mode
-+	 * and uncompressed inodes, otherwise we report no DIO support.
- 	 */
- 	if ((request_mask & STATX_DIOALIGN) && S_ISREG(inode->i_mode)) {
- 		stat->result_mask |= STATX_DIOALIGN;
--		if (!erofs_is_fscache_mode(inode->i_sb) && !compressed) {
--			stat->dio_mem_align =
--				bdev_logical_block_size(inode->i_sb->s_bdev);
--			stat->dio_offset_align = stat->dio_mem_align;
-+		if (bdev && !compressed) {
-+			stat->dio_mem_align = bdev_dma_alignment(bdev) + 1;
-+			stat->dio_offset_align = bdev_logical_block_size(bdev);
- 		}
+ static inline const int get_alignsize(struct erofs_sb_info *sbi, int type,
+diff --git a/lib/cache.c b/lib/cache.c
+index 3208e9f..b782f25 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -330,6 +330,8 @@ static erofs_blk_t __erofs_mapbh(struct erofs_buffer_block *bb)
+ 
+ 	if (bb->blkaddr == NULL_ADDR) {
+ 		bb->blkaddr = bmgr->tail_blkaddr;
++		if (__erofs_unlikely(bmgr->dsunit) && bb->type == DATA)
++			bb->blkaddr = roundup(bb->blkaddr, bmgr->dsunit);
+ 		bmgr->last_mapped_block = bb;
+ 		erofs_bupdate_mapped(bb);
  	}
- 	generic_fillattr(idmap, request_mask, inode, stat);
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index abdd9b9..e7da588 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -138,6 +138,9 @@ the given primary algorithm, alternative algorithms can be specified with
+ are extended regular expressions, matched against absolute paths within
+ the output filesystem, with no leading /.
+ .TP
++.BI "\-\-dsunit=" #
++Align all data block addresses to multiples of #.
++.TP
+ .BI "\-\-exclude-path=" path
+ Ignore file that matches the exact literal path.
+ You may give multiple
+diff --git a/mkfs/main.c b/mkfs/main.c
+index d422787..c92f408 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -85,6 +85,7 @@ static struct option long_options[] = {
+ 	{"mkfs-time", no_argument, NULL, 525},
+ 	{"all-time", no_argument, NULL, 526},
+ 	{"sort", required_argument, NULL, 527},
++	{"dsunit", required_argument, NULL, 528},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -161,6 +162,7 @@ static void usage(int argc, char **argv)
+ 		" --blobdev=X           specify an extra device X to store chunked data\n"
+ 		" --chunksize=#         generate chunk-based files with #-byte chunks\n"
+ 		" --clean=X             run full clean build (default) or:\n"
++		" --dsunit=#            align all data block addresses to multiples of #\n"
+ 		" --incremental=X       run incremental build\n"
+ 		"                       (X = data|rvsp; data=full data, rvsp=space is allocated\n"
+ 		"                                       and filled with zeroes)\n"
+@@ -241,6 +243,7 @@ static unsigned int rebuild_src_count;
+ static LIST_HEAD(rebuild_src_list);
+ static u8 fixeduuid[16];
+ static bool valid_fixeduuid;
++static unsigned int dsunit;
+ 
+ static int erofs_mkfs_feat_set_legacy_compress(bool en, const char *val,
+ 					       unsigned int vallen)
+@@ -846,6 +849,13 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 			if (!strcmp(optarg, "none"))
+ 				erofstar.try_no_reorder = true;
+ 			break;
++		case 528:
++			dsunit = strtoul(optarg, &endptr, 0);
++			if (*endptr != '\0') {
++				erofs_err("invalid dsunit %s", optarg);
++				return -EINVAL;
++			}
++			break;
+ 		case 'V':
+ 			version();
+ 			exit(0);
+@@ -1308,6 +1318,7 @@ int main(int argc, char **argv)
+ 		}
+ 		sb_bh = NULL;
+ 	}
++	g_sbi.bmgr->dsunit = dsunit;
+ 
+ 	/* Use the user-defined UUID or generate one for clean builds */
+ 	if (valid_fixeduuid)
 -- 
 2.43.5
 
