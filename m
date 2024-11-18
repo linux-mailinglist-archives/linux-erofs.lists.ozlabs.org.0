@@ -2,83 +2,86 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3FAA9D157A
-	for <lists+linux-erofs@lfdr.de>; Mon, 18 Nov 2024 17:39:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B8479D16FB
+	for <lists+linux-erofs@lfdr.de>; Mon, 18 Nov 2024 18:20:37 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XsYJ01RbZz3bcX
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 Nov 2024 03:39:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XsZC55xLwz3bcs
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 Nov 2024 04:20:33 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731947982;
-	cv=none; b=fvEKRuQKuXlFI0rsFs93dZT40azfWuZW807QU5IRE8SBzPAsR38/FPdr6xCyaCH/xyBOlpM+uYtL2Z6xyFsxf+TRRRzODIcCWvnZPCFF0IcjXdTG/esj4Kzr58y/HWkSPXeNO3GXA1oq2/Ejcfcc/W8CRJyxNf/KjhlGmPLLtUPaIBylxkt9Qe5UgM1TGqArLp5hEtNUOVQuZsagIGd/0AUzlmWGx0qFZY7NkWeNbwHNrO+7nryWd/AD6xPbADhjqhNLaj3ZnHIwfqagh7p2XUWLoQr7VstKCdbWts3+g6XdJsln9wwyfa50E2jG1IcCm5+Wz6y9Oq65d/W7ORw8Qw==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731950431;
+	cv=none; b=YCFMshFvVWKLrDV4vO8hhuKIPyPqDp30Vq+vX5FjW0EK02JIVz0hhzWPVsPmwaJOPBrJoXPtN1w0iOef0xvktZpn6k5Y1PLLO56k/e9ZQmLmzC+blqWPRA4wF1TTruajnov62WQqj8Bq73w95s2BD2QEHbKUTRv3O3V1fhO8NHCmlqSWXC0teY6Z1a5DcI2WSFa/QQ2j5EZm9PalsUhORVUz6IPTnmI0YaJq0UtPBuI3aJgiSeTP+vtk0aHqBNBalXlnMSBoQuvKcOoLXaDl1hUB8S6TqR7n8Gp2dv+D7Xg7ed5mjQH65rCDezN8Mecc+NKcVx9AtINb19IBwzw77g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731947982; c=relaxed/relaxed;
-	bh=5TBgXpcOkE91KJWIrvCU0ksBJeSHSjTfC1vv3ct4vww=;
+	t=1731950431; c=relaxed/relaxed;
+	bh=FHIXshzU7B/fw7mP4ANo81ZSu1pvlr9VA+iMyEA9kz8=;
 	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=jmTnfq/5lxXlAyR4WwXjG+MOmhRZLDX/EaLpMMVMdxIXFnI9/wI6EBbpF4LGxABYRth4tRL3CjjRcUC0SK5tfwWT6HJdtzBtlzb8PO6D9FUSxUYXPN9Urg/Z1pBZHABxK8KNK8iMKaK/hGJ9MAiiQN6LeFEamV36CY3/2n15qHTN0S7oTC1JvcLZkUTlKgTJDacm3P2/M7yF8yB5aDxpTWfZAnm4peZatpvDDmL02K/Rv5SawbdXMb5ibnNHzRtBA8uBicj/uWQizuYEMIviGP+MziObk5+tfw9lpGezx1GkOR8cjX0EnY9Lbq2rjN63J0GiuaYg0XXBr0ISnQRY+w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FAYvSFxp; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZDWzewrN; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 Content-Type:Date:Message-ID; b=irMlKEvtT62K0ffdPte4o5LLx1vvhoqcjw1BAalj/yU+G4QTpJL3ZA2C0FOqEegH4SwL+9N2eWCDPDl+GzOUU798S6UKgf+R88pohCKU9prNxXmGXRSxAuXGbz1mHsu61d/yN8rZqe/04giaqWSzgPr5SmPCmUU19W1WKamCCQcdAHjiH72yl8XvBKA/J7eWZMKLB6WKt77o/8anH6YgCOfydwrHQ9s1cfYb9+N/mQRLgiS6yndRYm4WL2y5Tf2ub6grWM7xUUxgxrfKukhp4U6ZfrhkJxVrZ3X4yU3RNke8qT7J6hHfRkBfXFLZnv6HBQRpWkc6X4rb4g+Mjlp3Zg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PkvuyAmD; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WExsLe8N; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=FAYvSFxp;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=ZDWzewrN;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PkvuyAmD;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WExsLe8N;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XsYHw6zFmz2yWr
-	for <linux-erofs@lists.ozlabs.org>; Tue, 19 Nov 2024 03:39:39 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XsZC24Cvpz2yWr
+	for <linux-erofs@lists.ozlabs.org>; Tue, 19 Nov 2024 04:20:28 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731947976;
+	s=mimecast20190719; t=1731950425;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5TBgXpcOkE91KJWIrvCU0ksBJeSHSjTfC1vv3ct4vww=;
-	b=FAYvSFxpk4Tl7m9G+xpiVJYP820uAbRAfMzL4D613zvhwZfnkzxBryKzW8bkGv4xzg1oes
-	k4NWXshA2Dfj8zRWL49zEisZ/SpHsARW9dAfwsa05NOv+IK5tEnViyb9uR2cFAMF4CzTo9
-	3DzVtBsMDA5lNyLO6zEKNMrdOvz4734=
+	bh=FHIXshzU7B/fw7mP4ANo81ZSu1pvlr9VA+iMyEA9kz8=;
+	b=PkvuyAmDP/lS+z4Vli408Dy/08wbevlFxTRj0W/L3Flkt/ZglkUhypkcGn3hCjSDlYt9r4
+	Yibm0/5ianRmwd75mKkpkwERyY+JJa8CsL/Ys4zIsszZuqQB/iXOn6ze3rMQJIf/zFWxdk
+	sIeFmrrxD4WnemuuHRvRHzh7jxfqdpw=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731947977;
+	s=mimecast20190719; t=1731950426;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5TBgXpcOkE91KJWIrvCU0ksBJeSHSjTfC1vv3ct4vww=;
-	b=ZDWzewrNtx0KzIpfCm/qCvWA0oXI5vw4dwRU52IzpVQ3dKoNBfZ2L06+RmY73m8L4nNcbO
-	gUPZmdCqisqaXw+f1/14R7I2PDYBWyVmoV6zrh5rNEYRX5wodsPUvk/BjQwPR59PuQT3vu
-	cNB1rnXLywP/EM8CfrjOyJBhO4hoqHs=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=FHIXshzU7B/fw7mP4ANo81ZSu1pvlr9VA+iMyEA9kz8=;
+	b=WExsLe8NdmdwEV8UNbPW/jnEthNymL+W6S2Upcj/oz2ruBd+D6gMtm8EdFb1iRp4B3qdVK
+	6H0gfIT9UZ3oxSUlK/fo2Rbw2Zjkvo9fQS1qmsU1PoAzqkXT/n5HOoHvYRRy6M9sdXVGsu
+	GUqHSd2ZGQUw3Zoend87bMcyKbEVLSk=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-226-r1Nbp_NqPiyaaS_1Yh73TA-1; Mon,
- 18 Nov 2024 11:39:32 -0500
-X-MC-Unique: r1Nbp_NqPiyaaS_1Yh73TA-1
-X-Mimecast-MFC-AGG-ID: r1Nbp_NqPiyaaS_1Yh73TA
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-152-eXuZijuZMpiG0ZJ9iVPEIQ-1; Mon,
+ 18 Nov 2024 12:20:22 -0500
+X-MC-Unique: eXuZijuZMpiG0ZJ9iVPEIQ-1
+X-Mimecast-MFC-AGG-ID: eXuZijuZMpiG0ZJ9iVPEIQ
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6604A19560BA;
-	Mon, 18 Nov 2024 16:39:28 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A67371955D62;
+	Mon, 18 Nov 2024 17:20:16 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.42.28.207])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8E035195607C;
-	Mon, 18 Nov 2024 16:39:21 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 261D5195DF81;
+	Mon, 18 Nov 2024 17:20:08 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
 	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
 	Kingdom.
 	Registered in England and Wales under Company Registration No. 3798903
 From: David Howells <dhowells@redhat.com>
-In-Reply-To: <b7135da8-a04f-48ec-957f-09542178b861@ijzerbout.nl>
-References: <b7135da8-a04f-48ec-957f-09542178b861@ijzerbout.nl> <20241108173236.1382366-1-dhowells@redhat.com> <20241108173236.1382366-8-dhowells@redhat.com>
-To: Kees Bakker <kees@ijzerbout.nl>
-Subject: Re: [PATCH v4 07/33] netfs: Abstract out a rolling folio buffer implementation
+In-Reply-To: <20241114163931.GA1928968@thelio-3990X>
+References: <20241114163931.GA1928968@thelio-3990X> <20241108173236.1382366-1-dhowells@redhat.com> <20241108173236.1382366-29-dhowells@redhat.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [PATCH v4 28/33] netfs: Change the read result collector to only use one work item
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <941711.1731947960.1@warthog.procyon.org.uk>
-Date: Mon, 18 Nov 2024 16:39:20 +0000
-Message-ID: <941712.1731947960@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-ID: <948807.1731950408.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 18 Nov 2024 17:20:08 +0000
+Message-ID: <948808.1731950408@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Spam-Status: No, score=-0.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
 	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
@@ -95,17 +98,35 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Dominique Martinet <asmadeus@codewreck.org>, dhowells@redhat.com, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <christian@brauner.io>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: Dominique Martinet <asmadeus@codewreck.org>, dhowells@redhat.com, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Steve French <smfrench@gmail.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, linux-nfs@vger.kernel.org, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, Christian Brauner <brauner@kernel.org>, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Kees Bakker <kees@ijzerbout.nl> wrote:
+Nathan Chancellor <nathan@kernel.org> wrote:
 
-> > +		wreq->buffer.iter = wreq->buffer.iter;
-> Is this correct, an assignment to itself?
+> This change as commit 1bd9011ee163 ("netfs: Change the read result
+> collector to only use one work item") in next-20241114 causes a clang
+> warning:
+> =
 
-That should just be removed.  Both branches of the preceding if-statement set
-it.
+>   fs/netfs/read_retry.c:235:20: error: variable 'subreq' is uninitialize=
+d when used here [-Werror,-Wuninitialized]
+>     235 |         if (list_is_last(&subreq->rreq_link, &stream->subreque=
+sts))
+>         |                           ^~~~~~
+>   fs/netfs/read_retry.c:28:36: note: initialize the variable 'subreq' to=
+ silence this warning
+>      28 |         struct netfs_io_subrequest *subreq;
+>         |                                           ^
+>         |                                            =3D NULL
+> =
 
+> May be a shadowing issue, as adding KCFLAGS=3D-Wshadow shows:
+
+Yep.  I'll remove both shadowing variables (there's also one at line 45 in=
+ the
+bit that deals with the non-renegotiation case) and use the outermost one.
+
+Thanks,
 David
 
