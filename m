@@ -2,76 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E483E9D0DC7
-	for <lists+linux-erofs@lfdr.de>; Mon, 18 Nov 2024 11:08:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1731924524;
-	bh=SBGXcRO+8FEFM3k4xRoXCbbIG55nPObO6VpdHCFdPu8=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=kafTaxrK5xJmlQXR+7T0N1aeminHLaq/iONDYLIgfcIR9/duviqsbq8UyylhflMb6
-	 TULxFdGwY/q0BWijf3BjX8JvZDveoJEM3A0JozmKu0yMYHP9kwis7FmDMvpRecVZS0
-	 WldZ0EuWyDxHE77gvBRGrJGWZItK2Ggbnl+ird4ybqmi6wW4DbIRvoECxlm54pWBPR
-	 rGqG0XCAIUGX/jHwqwZFTxo6SoNkOKef4XZNBUx5jjo5WDTghW58mz+2rdTkkW2qH7
-	 m2lzI2gl/9Y3lLHMdG9UWqIv11A7VKiyoJpT9BWYOw4ABixepK7LjeRKORjDsSpfub
-	 mjPjh1++GAivA==
+	by mail.lfdr.de (Postfix) with ESMTPS id 666719D13A4
+	for <lists+linux-erofs@lfdr.de>; Mon, 18 Nov 2024 15:51:57 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XsNcr2XfHz30f5
-	for <lists+linux-erofs@lfdr.de>; Mon, 18 Nov 2024 21:08:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XsVvb3RyJz3bZ4
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 Nov 2024 01:51:55 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731924519;
-	cv=none; b=Y9T+D6oQCMQL8uSnftYwbfEwtixJ2ARZwLGnyUi12EFZwNVXgFFz4ut/WFhFlZc5fpJL/LARL9krSnI04lw1z7uD6DF2d4LSCavyR2bQtjm77B2www86pgMEsGAXS4BiFS8bgZfPPYjkore8RCP1tgv7Y0gZrEYH2SmNVsmkKJyH3xJswnvSx898PrnQsWEhJNi0CKvhPk2U3JXfghFx6R0wrRG5iVNlSm1MbLfCeuBHFlySP/LBqubOuJ0jUsk7lRjmYbAEkspY9MH9bDnk7mdcy3mOIRphuSdPfEJpBxrZtXLZhH6WX11oF1pkfPyYX/m/zyfcdjqCZRIARpRHPg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=46.23.108.219
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1731941513;
+	cv=none; b=P3DFven5QPEVETsM6LIlmFYMqGLg1l4xUE9IE2MPBcc+nqq3CT56H7NghSd7z39b0WH6/M5vKflK81Y5hSLmBUFpkpL5Ji9UyyiuOFQDp2qp1vWRPgAg/r81DBZt9cnhEsYSREj07uE6y2kNYv6Hk7XzLG1gjLVA659G5VEPtc4KOD/qzOLq7eQDBOrK+vigCT3A+rHrh0np2cg63OT1h+cjqnvYAeuys3LXyN66FpF8ukLGhjqo2m+25U3zZT/gmZCqxVBRnm1o5mqCtkeXpC8WnjPg6bXdNepSKv35vKO2i5uBbr3YSuPHVDMQZC/4QbdyiLd9dnVwtgObJN2Zig==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1731924519; c=relaxed/relaxed;
-	bh=SBGXcRO+8FEFM3k4xRoXCbbIG55nPObO6VpdHCFdPu8=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=P8OMAvvZ/3q2iV0zO2GL+fC3cNNZKGKVY5EHcEoNZN6OJ2+LeVA7jVvMO9iRd+4GvCLusV69SiW10wH+2qs0G7PNgSWbCIFBLIWy2mXJpeWVvxdKcALJTr7oN1rosdxIwWxN3g1JzvEKhgmMwZ2kmDH2KlI8K9m+Fv3/gCkBg7wroi8q9pB9Dc5VQSnjz46AWXVzpX70IQWNDrMVNmxK85ab2ndbf6xu6njVUm0U/2fuScyq2vk2DCOfPSWUU0pZR1rWlBKqjbXuh3LkD4HJClhFR8vpH9eMLfjn+0hdgRoDLT1/Ml40ZTX4p8lWkVt3bXnfnvCESy110cychg5xrg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hsLECLzJ; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1731941513; c=relaxed/relaxed;
+	bh=QEKffRNU9P/pEV4gWMII+BWZZPaRwacWCDpYqQwPgs4=;
+	h=To:Subject:Message-ID:Date:From:MIME-Version:Content-Type; b=oTvZqffl1vjCJJXyyNF56DmX92/0Uu+eAakH+WqxiYFn7KYOHYnYkQbJqSTBqSUdNUyinIFozLX05Ej25fm0grfq2JesnYdtQgm4w0vaUY59eCRcZ4CwgcHNCRWjIMNcHhbLIqYAJcHV45snGrXTuu0CYz3Rs9cMG5fi7E71XNWveH0ukkhIyEVqV4s6kkt71s/OYHJ/c14UDIb7NlbTZsGmyIHXXD41fCQKwZkvCU5GsWrNTIQUvXgQjy6+aDsY4PlxeBDzZRlLuv2eHgcmCpx7Ryhv0X15AWRNM4gPli+vPW8A8q4l5VAVbU9IS77DF0xwq6PnoDI3/ebcfBRJHw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jsdpg.com; dkim=pass (1024-bit key; unprotected) header.d=jsdpg.com header.i=@jsdpg.com header.a=rsa-sha1 header.s=mail header.b=O6sM8UIv; dkim-atps=neutral; spf=pass (client-ip=46.23.108.219; helo=zhimeike.com; envelope-from=fatbikeyx@sbzce.com; receiver=lists.ozlabs.org) smtp.mailfrom=sbzce.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jsdpg.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hsLECLzJ;
+	dkim=pass (1024-bit key; unprotected) header.d=jsdpg.com header.i=@jsdpg.com header.a=rsa-sha1 header.s=mail header.b=O6sM8UIv;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XsNcf03Kpz2xjw
-	for <linux-erofs@lists.ozlabs.org>; Mon, 18 Nov 2024 21:08:33 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 4B233A4160B;
-	Mon, 18 Nov 2024 10:06:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 731D2C4CED6;
-	Mon, 18 Nov 2024 10:08:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731924509;
-	bh=ElbV7+y46xOwExqz+QF3XktAt+Sx1IHP9XxevAPamFU=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=hsLECLzJWeIvPpsAAHBOOIrZ/skFjRU9YqYuQPERDT9sVHEH4Uz28A+QOOn8R10t5
-	 btkC9J4Op652G/F6H3Gz9T2g6OcSwA1YyxhSQ7kVVNrq5OMN+Bm+Lkd4psL4eKMCT8
-	 jp3PjFpzVUu84uOdbJDicysdDAU33IY9hpsZUp6Y9SscWS6UWEZS9cRTCB/V7TNnri
-	 AO7pH4eztBpR6Brw9opORCgv2sGBdsySleTmctnZQub2hNh23g/gdEOY3Io8129SZg
-	 UVtU7JeXwMfMBmM6O4FaRylTQ92z277I0GkDRRnAJsSQ20HgaX7NzzTljvRPnBuozp
-	 +8MNrkTuC/yrQ==
-Message-ID: <4dfbb8ba-f141-42d4-aedb-c6d98e8c930a@kernel.org>
-Date: Mon, 18 Nov 2024 18:08:26 +0800
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sbzce.com (client-ip=46.23.108.219; helo=zhimeike.com; envelope-from=fatbikeyx@sbzce.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 99 seconds by postgrey-1.37 at boromir; Tue, 19 Nov 2024 01:51:52 AEDT
+Received: from zhimeike.com (zhimeike.com [46.23.108.219])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XsVvX1xVXz2yn1
+	for <linux-erofs@lists.ozlabs.org>; Tue, 19 Nov 2024 01:51:52 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=mail; d=jsdpg.com;
+ h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
+ bh=P8iSxnoTCtadg/qh9Ex9Q2ptW0w=;
+ b=O6sM8UIvY/CsaYpQxfI/Hz9qd1x8B89tbDhy5EqArX/B5WTurjC+CzGFOMFRcHJccKu69jmmIM+q
+   hseLcCuz1XkK3kxvHHK1IbOGX/CqWfzch1RFLf2d5wNIcnQal6hQ4Luy+tLS/tC+orAUI+Qd3Wan
+   BwVTgF8ZBN/Gwxxic4U=
+To: linux-erofs@lists.ozlabs.org
+Subject: new fat tire electric bike
+Message-ID: <27cef0c33dfc5bd3dac0dcfc226069e1@cfamedical.com>
+Date: Mon, 18 Nov 2024 15:47:15 +0100
+From: "Jonathan Miller" <fatbikenl@jsdpg.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] erofs: get rid of erofs_{find,insert}_workgroup
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20241021035323.3280682-1-hsiangkao@linux.alibaba.com>
- <36d1653d-249a-47b0-a87c-1216ed5bf1ca@kernel.org>
- <bda19625-e43e-4ebe-82f5-dad860782e6d@linux.alibaba.com>
-Content-Language: en-US
-In-Reply-To: <bda19625-e43e-4ebe-82f5-dad860782e6d@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=1.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HTML_IMAGE_RATIO_02,
+	HTML_MESSAGE,MIME_HTML_ONLY,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
+	URIBL_BLACK autolearn=disabled version=4.0.0
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -84,109 +57,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Chao Yu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Chao Yu <chao@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Reply-To: fatbike@jsdpg.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/11/11 10:12, Gao Xiang wrote:
-> Hi Chao,
-> 
-> On 2024/11/7 11:09, Chao Yu wrote:
->> On 2024/10/21 11:53, Gao Xiang wrote:
->>> Just fold them into the only two callers since
->>> they are simple enough.
->>>
->>> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->>> ---
->>> v1: https://lore.kernel.org/r/20241017115705.877515-1-hsiangkao@linux.alibaba.com
->>> change since v1:
->>>   - !grp case should be handled properly mentioned by Chunhai;
->>>
->>>   fs/erofs/internal.h |  5 +----
->>>   fs/erofs/zdata.c    | 38 +++++++++++++++++++++++++---------
->>>   fs/erofs/zutil.c    | 50 +--------------------------------------------
->>>   3 files changed, 30 insertions(+), 63 deletions(-)
->>>
->>> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
->>> index 4efd578d7c62..8081ee43cd83 100644
->>> --- a/fs/erofs/internal.h
->>> +++ b/fs/erofs/internal.h
->>> @@ -457,10 +457,7 @@ void erofs_release_pages(struct page **pagepool);
->>>   #ifdef CONFIG_EROFS_FS_ZIP
->>>   void erofs_workgroup_put(struct erofs_workgroup *grp);
->>> -struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
->>> -                         pgoff_t index);
->>> -struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
->>> -                           struct erofs_workgroup *grp);
->>> +bool erofs_workgroup_get(struct erofs_workgroup *grp);
->>>   void erofs_workgroup_free_rcu(struct erofs_workgroup *grp);
->>>   void erofs_shrinker_register(struct super_block *sb);
->>>   void erofs_shrinker_unregister(struct super_block *sb);
->>> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
->>> index a569ff9dfd04..bb1b73d99d07 100644
->>> --- a/fs/erofs/zdata.c
->>> +++ b/fs/erofs/zdata.c
->>> @@ -714,9 +714,10 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
->>>   {
->>>       struct erofs_map_blocks *map = &fe->map;
->>>       struct super_block *sb = fe->inode->i_sb;
->>> +    struct erofs_sb_info *sbi = EROFS_SB(sb);
->>>       bool ztailpacking = map->m_flags & EROFS_MAP_META;
->>>       struct z_erofs_pcluster *pcl;
->>> -    struct erofs_workgroup *grp;
->>> +    struct erofs_workgroup *grp, *pre;
->>>       int err;
->>>       if (!(map->m_flags & EROFS_MAP_ENCODED) ||
->>> @@ -752,15 +753,23 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
->>>           pcl->obj.index = 0;    /* which indicates ztailpacking */
->>>       } else {
->>>           pcl->obj.index = erofs_blknr(sb, map->m_pa);
->>> -
->>> -        grp = erofs_insert_workgroup(fe->inode->i_sb, &pcl->obj);
->>> -        if (IS_ERR(grp)) {
->>> -            err = PTR_ERR(grp);
->>> -            goto err_out;
->>> +        while (1) {
->>> +            xa_lock(&sbi->managed_pslots);
->>> +            pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
->>> +                       NULL, grp, GFP_KERNEL);
->>> +            if (!pre || xa_is_err(pre) || erofs_workgroup_get(pre)) {
->>> +                xa_unlock(&sbi->managed_pslots);
->>> +                break;
->>> +            }
->>> +            /* try to legitimize the current in-tree one */
->>> +            xa_unlock(&sbi->managed_pslots);
->>> +            cond_resched();
->>>           }
->>> -
->>> -        if (grp != &pcl->obj) {
->>
->> Do we need to keep this logic?
-> 
-> Thanks for the review.  I think
-> 
->          if (grp != &pcl->obj)
-> 
-> equals to (pre && erofs_workgroup_get(pre)) here, so
-> 
->          } else if (pre) {
->              fe->pcl = container_of(pre,
->                  struct z_erofs_pcluster, obj);
->              err = -EEXIST;
->              goto err_out;
->          }
-> 
-> Handles this case.
-
-Xiang, thanks for your explanation.
-
-Reviewed-by: Chao Yu <chao@kernel.org>
-
-Thanks,
-
-> 
-> Thanks,
-> Gao Xiang
+<html>
+<head>
+</head>
+<body>
+Hi,<br /><br /> I hope this message finds you well.&nbsp;Are you ready to
+take your cycling experience to the next level? Whether you're an avid
+cyclist or someone looking to enjoy outdoor rides with ease, our 20 inch
+Fat Tire Electric Bike offers the perfect blend of power, comfort, and
+style for adults of all ages.<br /> <br /> Powerful and Efficient 500W
+Brushless Motor<br /> At the heart of this e-bike is the 500W brushless
+motor, delivering impressive power and a smooth, quiet ride. With this
+motor, you can easily tackle various terrains - from smooth city streets to
+rough trails. Whether you're commuting to work, running errands, or
+enjoying a weekend adventure, our e-bike will make every journey faster,
+smoother, and more enjoyable.<br /> <br /> Fast and Far-Ranging with a 48V
+15Ah Battery<br /> <br /> The 48V 15Ah removable battery ensures that you
+can ride longer distances with confidence. With a range of up to 60
+kilometers on a single charge, you can rely on your e-bike for your daily
+activities or even for a longer weekend ride. Plus, the battery is
+removable, making it convenient to charge at home or at your office.<br />
+<br /> You have up to 45 km/h (28 mph) of speed at your disposal. Feel the
+thrill of the ride while still staying within a comfortable and safe speed
+range, whether you're traveling through urban streets or countryside
+roads.<br /><br />If you'd like to purchase our ebike, please kindly reply
+to this email with your address, and we will arrange everything as soon as
+possible.<br /><br /><img
+src="https://v8fatbike.com/wp-content/uploads/2022/10/Fat-Tire-Bike-1-768x768.jpg"
+width="768" height="768" /><br /><img
+src="https://v8fatbike.com/wp-content/uploads/2022/10/V8-Fatbike-1-768x768.jpg"
+width="768" height="768" /><br /><img
+src="https://v8fatbike.com/wp-content/uploads/2022/10/OUXI-V8-Electric-Bike-2-768x768.jpg"
+width="768" height="768" /><br /> <br /> Superior 20 inch Fat Tires for
+Stability and Comfort<br /> <br /> One of the standout features of this
+electric bike is the 20 inch fat tires, designed for superior stability and
+control. These wider tires provide excellent traction on sand, snow, mud,
+and even gravel, ensuring you can ride on virtually any surface with ease.
+Whether you're cruising through a city park or heading off-road, these
+tires offer the support you need for a smooth, comfortable ride.<br /> <br
+/> 7-Speed Transmission for Easy Gear Shifting<br /> <br /> Our e-bike
+comes equipped with a 7-speed transmission, giving you full control over
+your riding experience. Whether you're climbing uphill or cruising down a
+flat road, you can shift gears effortlessly for the most efficient ride.
+This feature helps conserve battery life when riding on more challenging
+terrains, and provides a comfortable ride when you want to relax and take
+it easy.<br /> <br /> Durable, Stylish, and Eco-friendly Design<br /> <br
+/> Not only is this electric bike packed with performance features, but it
+also boasts a stylish and modern design. Its sturdy frame is built to last,
+and the sleek appearance makes it a head-turner wherever you go. Plus, by
+choosing an electric bike, you&rsquo;re making a positive impact on the
+environment. Say goodbye to gas emissions and hello to a greener way of
+getting around!<br /> <br /> Key Features of the 20 inch Fat Tire Electric
+Bike:<br /> <br /> 500W Brushless Motor for powerful and quiet
+performance<br /> 48V 15Ah Removable Battery for up to 60 km of range<br />
+Top Speed of 45 km/h (28 mph) for an exciting ride<br /> 20 inch Fat Tires
+for enhanced stability and off-road capability<br /> 7-Speed Transmission
+for easy shifting and control<br /> <br /> Why Choose Our Electric Bike?<br
+/> Comfort and Versatility: Perfect for commuting, weekend rides, or
+off-road adventures.<br /> Performance You Can Count On: With the 500W
+motor and high-quality battery, you can tackle almost any terrain with
+ease.<br /> The bike's design ensures it&rsquo;s easy to maintain and keep
+in top condition, so you can focus on riding, not repairs.<br /> <br /> If
+you'd like to purchase our ebike, please kindly reply to this email with
+your address, and we will arrange everything as soon as possible.<br />
+Thank you for considering our 20 inch Fat Tire Electric Bike. <br /> <br />
+Best regards,<br /> Jonathan Miller
+</body>
+</html>
 
