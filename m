@@ -2,40 +2,47 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BCEA9D8CE0
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Nov 2024 20:34:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C11749D9650
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Nov 2024 12:37:09 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Xxwqj4VBYz2ykZ
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Nov 2024 06:33:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XyLC73KdPz2yvw
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Nov 2024 22:37:07 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=194.169.172.120
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1732563231;
-	cv=none; b=ZgMV67dZ9dYY/87xG9931GfDtyzDpwlLfKWAATTQ2NcnBi/rvfiSNEr2r9Zp4n+H8hhArkAFkbRZMxKyJHJZTTZuHz5Ej/FXcVNai3ZI+bghcQfbim7so8eoyAcp6wk9R4vgn2sjNj3XWRBX8XesQF2ImyUzgxScFk7+/nbsY1WOQn8jVuD3oOf99HtZekckgBCurIG21bdqs2T1SFBxB+wAsr1aN5oln3FR1c7O5ivfrzGgGmod2lvxuvnoRr3qzczDhovGKSmfoSylje0uMU6PHSqhHiUYH0zFjt8mcpXlEetTxoeuxmrdXdjy190329yEikObdmbXyfzftD3RWg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=46.23.108.18
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1732621024;
+	cv=none; b=WASC90kFvrPWW0rJMQXZr772cAVzVRXKHMAWEI8OBfJ3jXWNatLogww1bs8/jjjmxxsKDL8Kv7x7AZ9v9kacQJorHk3+rXLVfgOIaGUPSgpM6YA1qg8MEGoGTHhZ3PCcL7aB3YYT8i4tmXtYyzbcpaRRfWYhQzXF1L5+XqR7t0ZyEYqT5rOwxg1kV26Mn3VdnA4ofYk+re2vDhOvzB91cTMTp7Al3stAhSRWzyaCzlfmuPWgUrMoWpyCau1YO/nSkmIOLNje4wlos+dWKRd+8giePdzUAkcXq4Ncs/psDu8CEKijNNw9rdVDEZqAd4IoZC2tOz4yWxFBo1XN2ZxFJQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1732563231; c=relaxed/relaxed;
-	bh=sjU08lJnF8yUuUOng57OaeuzJVE7XaNZaGH2eXnNkWo=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ij4aEbAod2x2Z/FJh+oyxTm+fqRpu7lC1zh7Fi6EKo0lJgANGrzD8vKM1+YF9AR+eirsxfvHXJh6SAflH6rtpWN2dBIeuTx04W/bL01Y0z+K/J4bHl4QLl3loj2Nt341M2LfWcFx5gUH+ufM5VGKaRm846ZjNjciT30fqp3BATC2hMzoYjuozfK0mn1s1NewZZjGaSaMOt9rIEwGci3uPitN7G6T2h8DQEk6aQbn0CW2ABQwDpc3Ow8UTYbFgrgbGdncWCokgnCTYVPSGBpKDAQmfedWj/a+LVTz9d8Q/n3pQrvB+KzbsfVpQ1SxZw5nh9reE8r9p8q4pErAO06rbw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=stormfieldcapital.com; spf=fail (client-ip=194.169.172.120; helo=wrong.brassroyale.com; envelope-from=info@stormfieldcapital.com; receiver=lists.ozlabs.org) smtp.mailfrom=stormfieldcapital.com
-Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=stormfieldcapital.com
-Authentication-Results: lists.ozlabs.org; spf=fail (SPF fail - not authorized) smtp.mailfrom=stormfieldcapital.com (client-ip=194.169.172.120; helo=wrong.brassroyale.com; envelope-from=info@stormfieldcapital.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 1806 seconds by postgrey-1.37 at boromir; Tue, 26 Nov 2024 06:33:49 AEDT
-Received: from wrong.brassroyale.com (wrong.brassroyale.com [194.169.172.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Xxwqd31KFz2yKD
-	for <linux-erofs@lists.ozlabs.org>; Tue, 26 Nov 2024 06:33:46 +1100 (AEDT)
-From: "Steven Pilato" <info@stormfieldcapital.com >
+	t=1732621024; c=relaxed/relaxed;
+	bh=rjmXIO4fBKcKttFIxOLt4TguCa48gQiq3l29py8MZzo=;
+	h=To:Subject:Message-ID:Date:From:MIME-Version:Content-Type; b=nh+hJBl76yIFgho2JZ7i6ZCeUlNn5fpEfgmRAjl7biFIBxA4sxMHTfw8gsiLL1NiEfdlX7ZaURYmPhJJCFhH+1/DnVMAqgnTS8WiszHVIlNidaFlG/Nb/c5cBL5Kgymq/igRPYPZE5Vc2J10yh9WCTQnhQDtHr6unkL+7ozbHW4ZZTvxBKh9XyxMMmBjYQK/a+jJ4JE87JI8PeAp4MelNXQrcXyM+GCQsZ4DVmXHxRMF/zRuacjvJEdEgfgCdIACgrKWsysbjGFge+cnosH2Mcm/CGuSQRAmKSQn7DOqn6fIN7SoRj62a2j6X59hiiykixCqxP92Vxtame6TnIYZSA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jiuzuzong.com; dkim=pass (1024-bit key; unprotected) header.d=jiuzuzong.com header.i=@jiuzuzong.com header.a=rsa-sha256 header.s=default header.b=Jy34k9bX; dkim-atps=neutral; spf=pass (client-ip=46.23.108.18; helo=mta2.rev.jiqirendaogui.com; envelope-from=epowergt@jiuzuzong.com; receiver=lists.ozlabs.org) smtp.mailfrom=jiuzuzong.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jiuzuzong.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=jiuzuzong.com header.i=@jiuzuzong.com header.a=rsa-sha256 header.s=default header.b=Jy34k9bX;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=jiuzuzong.com (client-ip=46.23.108.18; helo=mta2.rev.jiqirendaogui.com; envelope-from=epowergt@jiuzuzong.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 60 seconds by postgrey-1.37 at boromir; Tue, 26 Nov 2024 22:37:01 AEDT
+Received: from mta2.rev.jiqirendaogui.com (mta2.rev.jiqirendaogui.com [46.23.108.18])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XyLC16gdfz2yky
+	for <linux-erofs@lists.ozlabs.org>; Tue, 26 Nov 2024 22:37:01 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=jiuzuzong.com;
+ h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
+ bh=rjmXIO4fBKcKttFIxOLt4TguCa48gQiq3l29py8MZzo=;
+ b=Jy34k9bXQtZGLLhD4WqqrbTW8jF6y+9AUvMOJLTPgAT2YkUbnV7sSHA3+kQGhDQm/71B0XSAaeIO
+   RxAs1G48ZOTnABvOwTYBlkPdylOmO8T048aWW39hlhF9/Bqk0kPrlwBa+WWppesI9SdvW1jwpOXH
+   UQbyozIdOZlJZrV7smY=
 To: linux-erofs@lists.ozlabs.org
-Subject: Workable Proposal
-Date: 25 Nov 2024 11:03:34 -0800
-Message-ID: <20241125110333.418140EBF7910E56@stormfieldcapital.com>
+Subject: choose your Urban Cruiser fat tire ebike
+Message-ID: <b727e095ee9e6692b0e0a280b3ac4695@bbbike.org>
+Date: Tue, 26 Nov 2024 12:35:44 +0100
+From: "Darren Parker" <epowergt@jiuzuzong.com>
 MIME-Version: 1.0
-Content-Type: text/html
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.6 required=5.0 tests=HTML_MESSAGE,MIME_HTML_ONLY,
-	RCVD_IN_SBL_CSS,SPF_FAIL,SPF_HELO_NONE autolearn=disabled version=4.0.0
-X-Spam-Level: ****
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,HTML_IMAGE_RATIO_02,HTML_MESSAGE,
+	MIME_HTML_ONLY,SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -48,38 +55,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: iris@brassroyale.com
+Reply-To: darrenp@jiuzuzong.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<!DOCTYPE HTML>
-
-<html><head><title></title>
-<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+<html>
+<head>
 </head>
-<body style=3D"margin: 0.4em;">
-<div dir=3D"ltr">
-<div class=3D"yiv4656877892elementToProof" style=3D"color: rgb(0, 0, 0); fo=
-nt-family: Arial, sans-serif; font-size: 12pt;">
-Attn:&nbsp;linux-erofs.</div>
-<div style=3D"color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-siz=
-e: 12pt;">
-<br>
-</div>
-<div style=3D"color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-siz=
-e: 12pt;">I am reaching out to you because I have a serious client who want=
-s to invest either as a loan or as equity. This requires a competent manage=
-r with a secured and workable business plan that can turn good profit.</div=
-><div style=3D"color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-si=
-ze: 12pt;"><br>
-I look forward to hearing from you so that we can discuss your ideas and pr=
-ovide you with more detailed information.</div><div style=3D"color: rgb(0, =
-0, 0); font-family: Arial, sans-serif; font-size: 12pt;"><br>Sincerely</div=
-><div style=3D"color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-si=
-ze: 12pt;">Steven Pilato</div><div class=3D"yiv4656877892elementToProof" st=
-yle=3D"color: rgb(0, 0, 0); font-family: Arial, sans-serif; font-size: 12pt=
-;"></div>
-</div><p><br></p>
+<body>
+Hello,<br /> <br /> I hope you're doing well. As a leading manfacture in
+electric bike, we're excited to introduce our latest model &ndash; the
+Urban Cruiser. <br />This state-of-the-art e-bike offers a perfect
+combination of advanced technology and exceptional comfort, designed to
+elevate your riding experience. <br />Best of all, it's available for
+direct purchase from our warehouse in Germany, with fast and reliable
+delivery across the European Union in just 3-7 days.<br />For more details
+or to make a purchase, please don't hesitate to reach out. We'll need your
+address to calculate the shipping cost.<br /><br /><img
+src="https://www.ouhepower.com/wp-content/uploads/2021/11/leopard-fat-tyre-ebike-1.jpg"
+width="1020" height="767" /><br /><br /> <br /> Dual Suspension System:
+Enjoy a smooth ride no matter the terrain. The front features an 80mm air
+suspension, ensuring a cushioned ride even on bumpy roads. <br />The rear
+suspension absorbs shock, making it ideal for outdoor adventures.<br /><br
+/> Powerful 500W Motor: The Urban Cruiser is equipped with a
+high-performance 500W motor, enabling speeds of up to 30 MPH. <br />Whether
+you're cruising through the city, tackling mountain trails, or even riding
+on snow, this e-bike makes it effortless.<br /> <br /> Upgraded Battery:
+Our 48V 15AH lithium-ion battery offers a range of 40-54 miles per charge.
+The removable, dustproof, and waterproof design ensures reliability,
+safety, and longevity.<br /> <br /> Foldable and Lightweight: With
+dimensions of 33 x 16 x 30 inches when folded and a weight of just 71
+pounds, the Urban Cruiser is highly portable and perfect for both commuting
+and traveling. <br />Easily store it in your car trunk or carry it on
+public transport.<br /> <br /> Enhanced Riding Experience: The Urban
+Cruiser features an intuitive LCD display showing vital stats like speed,
+battery level, pedal assist, and distance traveled. <br />It also comes
+with front and rear mechanical disc brakes, a bright headlight, and an
+adjustable rear light for optimal safety. <br />Customize your ride with 3
+assist modes and a 7-speed gearbox.<br /> <br /><img
+src="https://electroheads.com/cdn/shop/files/ado-ado-beast-20f-250w-electric-bike-ex-display-electric-bikes-with-fat-tyres-31064042537073.jpg"
+width="1080" height="1080" /><br /> <br />Key Features:<br /> 20-Inch Fat
+Tires: Offers superior stability and comfort on a variety of surfaces.<br
+/> 500W Motor: Smooth, powerful, and efficient.<br /> 48V 15AH Battery:
+Long-lasting performance.<br /> Lightweight Aluminum Alloy Frame: Durable
+and stylish, perfect for urban environments.<br /> We&rsquo;re confident
+that the Urban Cruiser will transform your daily commute and outdoor
+exploration. <br />With direct shipping available from our German
+warehouse, your next cycling adventure is just a click away.<br /><br
+/>Upgraded Battery: Our 48V 15AH lithium-ion battery offers a range of
+40-54 miles per charge. The removable, dustproof, and waterproof design
+ensures reliability, safety, and longevity.<br /><br />Foldable and
+Lightweight: With dimensions of 33 x 16 x 30 inches when folded and a
+weight of just 71 pounds, the Urban Cruiser is highly portable and perfect
+for both commuting and traveling.<br />Easily store it in your car trunk or
+carry it on public transport.<br /><br />Enhanced Riding Experience: The
+Urban Cruiser features an intuitive LCD display showing vital stats like
+speed, battery level, pedal assist, and distance traveled.<br />It also
+comes with front and rear mechanical disc brakes, a bright headlight, and
+an adjustable rear light for optimal safety.<br />Customize your ride with
+3 assist modes and a 7-speed gearbox.<br /> <br /> For more details or to
+make a purchase, please don't hesitate to reach out. We'll need your
+address to calculate the shipping cost.<br /> <br /> Best regards,<br />
+Darren Parker<br /> Urban Cruiser Power<br /> <br /><br /><br /><br /><br
+/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
+/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
+/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
+/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
+/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
+/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
+/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+</body>
+</html>
 
-
-</body></html>
