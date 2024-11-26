@@ -1,48 +1,51 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C11749D9650
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Nov 2024 12:37:09 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08EA29D9C11
+	for <lists+linux-erofs@lfdr.de>; Tue, 26 Nov 2024 18:07:59 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XyLC73KdPz2yvw
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Nov 2024 22:37:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XyTXm1Ll0z301x
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Nov 2024 04:07:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=46.23.108.18
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1732621024;
-	cv=none; b=WASC90kFvrPWW0rJMQXZr772cAVzVRXKHMAWEI8OBfJ3jXWNatLogww1bs8/jjjmxxsKDL8Kv7x7AZ9v9kacQJorHk3+rXLVfgOIaGUPSgpM6YA1qg8MEGoGTHhZ3PCcL7aB3YYT8i4tmXtYyzbcpaRRfWYhQzXF1L5+XqR7t0ZyEYqT5rOwxg1kV26Mn3VdnA4ofYk+re2vDhOvzB91cTMTp7Al3stAhSRWzyaCzlfmuPWgUrMoWpyCau1YO/nSkmIOLNje4wlos+dWKRd+8giePdzUAkcXq4Ncs/psDu8CEKijNNw9rdVDEZqAd4IoZC2tOz4yWxFBo1XN2ZxFJQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.154.230.149
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1732640870;
+	cv=none; b=Jc65l6iG6B6iuE+oF6wgqKG1gpX+LyR5iAVR7tM7pEIptTsAW2BkMqpcBjuAE535HUKUB+NgePj9zIoydMnt3EL42BjBabHE2ORKYf2guBcM+MZ2IoOxQ6WULTwdv92vvKAhiKt0WyUu+YOF4y86d2qMzuL0CwZH0rehzDToQi1dS0/wx2IAhi/EtjqiYpiT/EgzN9zJcZemmmgJErqJ27aR32/hSbFKrBaK71v3HmxY4yiRexRbJCqMzVusz9sG0M0Nwbtepa6cJHKSVyeb65biPJjndt9o1YzCi/iRqX287/vAIERtJCC9HwppalMoyP9dvUHCbG4nhX52GVRufw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1732621024; c=relaxed/relaxed;
+	t=1732640870; c=relaxed/relaxed;
 	bh=rjmXIO4fBKcKttFIxOLt4TguCa48gQiq3l29py8MZzo=;
-	h=To:Subject:Message-ID:Date:From:MIME-Version:Content-Type; b=nh+hJBl76yIFgho2JZ7i6ZCeUlNn5fpEfgmRAjl7biFIBxA4sxMHTfw8gsiLL1NiEfdlX7ZaURYmPhJJCFhH+1/DnVMAqgnTS8WiszHVIlNidaFlG/Nb/c5cBL5Kgymq/igRPYPZE5Vc2J10yh9WCTQnhQDtHr6unkL+7ozbHW4ZZTvxBKh9XyxMMmBjYQK/a+jJ4JE87JI8PeAp4MelNXQrcXyM+GCQsZ4DVmXHxRMF/zRuacjvJEdEgfgCdIACgrKWsysbjGFge+cnosH2Mcm/CGuSQRAmKSQn7DOqn6fIN7SoRj62a2j6X59hiiykixCqxP92Vxtame6TnIYZSA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jiuzuzong.com; dkim=pass (1024-bit key; unprotected) header.d=jiuzuzong.com header.i=@jiuzuzong.com header.a=rsa-sha256 header.s=default header.b=Jy34k9bX; dkim-atps=neutral; spf=pass (client-ip=46.23.108.18; helo=mta2.rev.jiqirendaogui.com; envelope-from=epowergt@jiuzuzong.com; receiver=lists.ozlabs.org) smtp.mailfrom=jiuzuzong.com
+	h=To:Subject:Message-ID:Date:From:MIME-Version:Content-Type; b=Cd7VFk8Mq9dKbvnNnAdXzPAjeQR6X5VcA5Nw7/0eue5UfU4Y/vo1WJD+88LeeKvwDC23k6/6FcxLjVLLhjdnb90q/n6v5bVDnbxAPMz+Gf7vZT0uup3iQEiEAS17YoAG4OstN4XRmplBOub7Yp5opZjDKcAJujvHzkBNKJ6XMvQZn3pBZXxs/GECgtlNW88ombeQF+5tm82fgxXkVvRoTsu26ydbsCvHZlJS5twH2Cuhi40mz3UXu0NA3M7PKnJmmAbx3PZH3RNE9TGHclBKcxJ8sQTEIbNGSXxGxnwVNiGWEdyXpMYiJa81OWovcCHavl+ldwqafF87/WOuwxaAyA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jiuzuzong.com; dkim=pass (1024-bit key; unprotected) header.d=jiuzuzong.com header.i=@jiuzuzong.com header.a=rsa-sha256 header.s=default header.b=XsV0mcS5; dkim-atps=neutral; spf=pass (client-ip=192.154.230.149; helo=mta15.rev.ytqingfan.net; envelope-from=epowerrc@jiuzuzong.com; receiver=lists.ozlabs.org) smtp.mailfrom=jiuzuzong.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jiuzuzong.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=jiuzuzong.com header.i=@jiuzuzong.com header.a=rsa-sha256 header.s=default header.b=Jy34k9bX;
+	dkim=pass (1024-bit key; unprotected) header.d=jiuzuzong.com header.i=@jiuzuzong.com header.a=rsa-sha256 header.s=default header.b=XsV0mcS5;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=jiuzuzong.com (client-ip=46.23.108.18; helo=mta2.rev.jiqirendaogui.com; envelope-from=epowergt@jiuzuzong.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 60 seconds by postgrey-1.37 at boromir; Tue, 26 Nov 2024 22:37:01 AEDT
-Received: from mta2.rev.jiqirendaogui.com (mta2.rev.jiqirendaogui.com [46.23.108.18])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XyLC16gdfz2yky
-	for <linux-erofs@lists.ozlabs.org>; Tue, 26 Nov 2024 22:37:01 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=jiuzuzong.com (client-ip=192.154.230.149; helo=mta15.rev.ytqingfan.net; envelope-from=epowerrc@jiuzuzong.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 7286 seconds by postgrey-1.37 at boromir; Wed, 27 Nov 2024 04:07:49 AEDT
+Received: from mta15.rev.ytqingfan.net (mta15.rev.ytqingfan.net [192.154.230.149])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XyTXj5z1Dz2xps
+	for <linux-erofs@lists.ozlabs.org>; Wed, 27 Nov 2024 04:07:49 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=jiuzuzong.com;
  h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
  bh=rjmXIO4fBKcKttFIxOLt4TguCa48gQiq3l29py8MZzo=;
- b=Jy34k9bXQtZGLLhD4WqqrbTW8jF6y+9AUvMOJLTPgAT2YkUbnV7sSHA3+kQGhDQm/71B0XSAaeIO
-   RxAs1G48ZOTnABvOwTYBlkPdylOmO8T048aWW39hlhF9/Bqk0kPrlwBa+WWppesI9SdvW1jwpOXH
-   UQbyozIdOZlJZrV7smY=
+ b=XsV0mcS5moZ5EcgeVRMBq+9mAIRXOle+4L3BRg+UNh88dvgPBmRFocbNEEV4mgrue6XzLZ3fcU1d
+   FKVvq3bFQ80VBZLhQulO4vdvc0PyJpfrZpPqXrNSYT5B8y9sY7P8eNYIcuTlT270xE9P9w2kZmly
+   pPP/Dacavs+rKwx7Cz8=
 To: linux-erofs@lists.ozlabs.org
 Subject: choose your Urban Cruiser fat tire ebike
-Message-ID: <b727e095ee9e6692b0e0a280b3ac4695@bbbike.org>
-Date: Tue, 26 Nov 2024 12:35:44 +0100
-From: "Darren Parker" <epowergt@jiuzuzong.com>
+Message-ID: <2c78fbc8752e44dec5699bec65b69758@bbbike.org>
+Date: Tue, 26 Nov 2024 12:49:59 +0100
+From: "Darren Parker" <epowerzm@jiuzuzong.com>
 MIME-Version: 1.0
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,HTML_IMAGE_RATIO_02,HTML_MESSAGE,
-	MIME_HTML_ONLY,SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=2.2 required=5.0 tests=DATE_IN_PAST_03_06,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HTML_IMAGE_RATIO_02,
+	HTML_MESSAGE,MIME_HTML_ONLY,RCVD_IN_BL_SPAMCOP_NET,RCVD_IN_MSPIKE_BL,
+	RCVD_IN_MSPIKE_L5,SPF_HELO_PASS,SPF_PASS autolearn=disabled
+	version=4.0.0
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
