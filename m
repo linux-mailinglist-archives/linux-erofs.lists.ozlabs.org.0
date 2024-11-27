@@ -1,47 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8006D9DA4C1
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Nov 2024 10:29:10 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 390679DA4C2
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Nov 2024 10:29:12 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XyvK02Vbsz2ysd
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Nov 2024 20:29:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XyvK15JqFz30PF
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Nov 2024 20:29:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1732699746;
-	cv=none; b=WMGaAXG3ylL3tziX7E7KIV3Emz77PoLwEVEEgCF+++6FCITxpyuPuY0EP9e1RzgsNZYP5YsZbwmRX796/vhvVcLcCvoqMzsoXazZzQg6iCvvI8TesPVnAY4WrHlI3lci4QkTnQO+yV6GMkBtiiYTLVMvJeeQ1oSAaMKUS3JuKBK2Asobg0rhurbBghpWXGhgODlKocUiVvWo07c9Va/+0SxkJ/ycOIYz6GxvOn0HV5UISMcK0d1H4rc3lkduGiRVibMwXFjcp2i25hu4H+HbIse3204baZ+tTAjydZoSWwiuBcTNOffJwExMewgC7ndxcllhQ5tC+F6bXQ9TZe7ikA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1732699748;
+	cv=none; b=FM1ezAWunRN0sdhQ/txmT9BSom8dbV9gHcJO3QtpkKnh9tivF3cRtQcUW/WPFJ2Kq97Lju0CKmdmpsMjLB9QsaZMCgeug4aOwfrF8W846TbaqsN5hHUh7rIo46kcUPnMl0ud8vrCnfBkRbQbJbyIsv89TJx8UNjchqUkL5O8Syd8LDQ0KqXDuA5EgL3vJ+WOfIigOJhoxB0jQTjoIDoJ6l8f4oo6HCXzGo1ir6ufEk4/u0mimL2yz0p5EWdRra8bm0M95DLOs0DWbcPq43UV7s+JsY/Wti1412goC2/8G2WnW7Nqs4FMTWoFTUEAwXjBYJ7GnKVacpV9YZqVStg5dA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1732699746; c=relaxed/relaxed;
-	bh=zJnFZawhpcZnJMqZNkDFsZjCF8wXRQQR4Uv8vJTDHk0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d0szEfruJzdVDgsMKRBM3wXXiF8NB2P0eWn5Tik7ywULcEq440SX/lf22O4v8ZQUxATOl2UiyjfGgpIwnp2XX8aUMUE2EoMXT5arBG4OdtB0eu6MMwGz56ZJsPiD9b7RLYavC8jAMYwaA7ouKd7Z3OBWh3WPYzRaGA4gkchgNnzyqC3pwQQ76lDqmr4C5csy8q+o7tU4+TA1bS7F9jgKh0kyNwTkrLkRKNO13lIFnp2YeEoK+Nvmb80S2dfq9v1DCr0QqK6yOn+9bDDlPI5g3nxMgVCmMFcx7UqcXE/k37di2x3usBg2pamG2xLer1atNU3jDIvdVUoBOmSAfkDrCQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=bEL888uz; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1732699748; c=relaxed/relaxed;
+	bh=U8WnxbFXvO/Sq/oCkuIMzYvg15EKsZnP2G01AV51MmA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=l9aq42P2gjBVtSwdGXZ8CBcJUTlcMQn7tFP/P4z5rxmjmMHy8f8VTtKDYga3LUzXuaAaNeegs90ziNOqDjU2M/JUVS+Mti5M+PIrflNNGlWl/qdPvJFNKK237T4gwu77WN3EaCypeoaHjAEmSDpukfF6aMELYo1ymGAEDZiGvsRLoN63+Vf+ycXf8BjMmqMJekJ98m0iQj6fGcSRdrBHacsM96w5LyF3TVnGdcT2X2aSjEpOHW6M2U5mwzbZc0ANqauDDlg6PcJq0YkcfpTM4Q9AUOpXii8iPr6KVda6S9ewTw5vrYyFc3ZWUfWsqRYRStZkuAii3kKJEPAFeBiryg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ou5E+J1F; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=bEL888uz;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ou5E+J1F;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4XyvJx2XXjz2xjd
-	for <linux-erofs@lists.ozlabs.org>; Wed, 27 Nov 2024 20:29:04 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XyvJz3sMhz2xjd
+	for <linux-erofs@lists.ozlabs.org>; Wed, 27 Nov 2024 20:29:07 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1732699741; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=zJnFZawhpcZnJMqZNkDFsZjCF8wXRQQR4Uv8vJTDHk0=;
-	b=bEL888uzzYeLlwxgQd6rvwYebBEFY/xFNwHV0/rxlzA8krJAC6S4ZJTHhB3EWbKROHm+med70G5V2xLgUbC/yQWTflSe5mka8QZubkraBt5P+DzYVoppRvsjso2jIYQOJGxN/vG+yC02u8DNwpprYz5syDe/ZYmMUnDnV1W+dj0=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WKM0rJg_1732699738 cluster:ay36)
+	t=1732699743; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=U8WnxbFXvO/Sq/oCkuIMzYvg15EKsZnP2G01AV51MmA=;
+	b=ou5E+J1FEtRDyY5MZrPnORFpWsNzThb8LUomtE/3VrT/9hvGpO0Dh7UuZvfS15caGnW8J0KxonQHcJn7Jek8yWm87KlUZK5h2xzO+nwKiutQkOj+eQkHYSe6Tk3UiYMkVlIW4MHrq/DRha9q5FLWZhFrZYyvOQ/v0qXD28K5vpI=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WKMA4oh_1732699740 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 27 Nov 2024 17:28:59 +0800
+          Wed, 27 Nov 2024 17:29:01 +0800
 From: Hongzhen Luo <hongzhen@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/2] erofs-utils: introduce `struct erofs_rebuild_getdentry_ctx`
-Date: Wed, 27 Nov 2024 17:28:55 +0800
-Message-ID: <20241127092856.4106149-1-hongzhen@linux.alibaba.com>
+Subject: [PATCH 2/2] erofs-utils: rebuild: set the appropriate `dev` field for dirs
+Date: Wed, 27 Nov 2024 17:28:56 +0800
+Message-ID: <20241127092856.4106149-2-hongzhen@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20241127092856.4106149-1-hongzhen@linux.alibaba.com>
+References: <20241127092856.4106149-1-hongzhen@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -63,224 +66,112 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-There are so many parameters in erofs_rebuild_get_dentry(), let's
-wrap these parameters into `struct erofs_rebuild_getdentry_ctx`.
+Currently, setting a default `dev` value (i.e., 0) for directories
+during parsing tar files can lead to the following error:
 
+<E> erofs: bogus i_mode (0) @ nid 0
+<E> erofs: failed to read inode @ 0
+
+Consider the following incremental build scenario, where the path
+"dir1/dir2" is currently being parsed in tarerofs_parse_tar() and
+the directory "dir1" has never appeared before. erofs_rebuild_get_dentry()
+will call erofs_rebuild_mkdir() to allocate a new inode for "dir1",
+with its `dev` field set to 0 by default.
+
+During the dump tree phase, since `dir1->dev` matches `sbi->dev` (both are 0),
+erofs_rebuild_load_basedir() will be called to read the contents of directory
+"dir1" from the disk. However, since there is no information for the new directory
+"dir1" on the disk, the above error occurs.
+
+This patch resolves the above issue by setting the appropriate value
+for the directory's `dev` field during the tar file parsing phase.
+
+Fixes: f64d9d02576b ("erofs-utils: introduce incremental builds")
 Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
 ---
- include/erofs/rebuild.h | 12 +++++++--
- lib/rebuild.c           | 59 ++++++++++++++++++++++++-----------------
- lib/tar.c               | 17 +++++++++---
- 3 files changed, 59 insertions(+), 29 deletions(-)
+ include/erofs/rebuild.h | 1 +
+ lib/rebuild.c           | 7 +++++--
+ lib/tar.c               | 2 ++
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/include/erofs/rebuild.h b/include/erofs/rebuild.h
-index 59b2f6f57005..b37bc80e8a3c 100644
+index b37bc80e8a3c..b71cfdf1fff4 100644
 --- a/include/erofs/rebuild.h
 +++ b/include/erofs/rebuild.h
-@@ -15,8 +15,16 @@ enum erofs_rebuild_datamode {
- 	EROFS_REBUILD_DATA_FULL,
+@@ -22,6 +22,7 @@ struct erofs_rebuild_getdentry_ctx {
+ 	bool *whout;
+ 	bool *opq;
+ 	bool to_head;
++	int dev;
  };
  
--struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
--		char *path, bool aufs, bool *whout, bool *opq, bool to_head);
-+struct erofs_rebuild_getdentry_ctx {
-+	struct erofs_inode *pwd;
-+	char *path;
-+	bool aufs;
-+	bool *whout;
-+	bool *opq;
-+	bool to_head;
-+};
-+
-+struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_rebuild_getdentry_ctx *ctx);
- 
- int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
- 			    enum erofs_rebuild_datamode mode);
+ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_rebuild_getdentry_ctx *ctx);
 diff --git a/lib/rebuild.c b/lib/rebuild.c
-index b37823e48858..58f1701b3721 100644
+index 58f1701b3721..3fcb5c92b562 100644
 --- a/lib/rebuild.c
 +++ b/lib/rebuild.c
-@@ -16,6 +16,7 @@
- #include "erofs/blobchunk.h"
- #include "erofs/internal.h"
- #include "liberofs_uuid.h"
-+#include "erofs/rebuild.h"
+@@ -27,7 +27,7 @@
+ #endif
  
- #ifdef HAVE_LINUX_AUFS_TYPE_H
- #include <linux/aufs_type.h>
-@@ -58,18 +59,17 @@ static struct erofs_dentry *erofs_rebuild_mkdir(struct erofs_inode *dir,
- 	return d;
- }
- 
--struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
--		char *path, bool aufs, bool *whout, bool *opq, bool to_head)
-+struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_rebuild_getdentry_ctx *ctx)
+ static struct erofs_dentry *erofs_rebuild_mkdir(struct erofs_inode *dir,
+-						const char *s)
++						const char *s, int dev)
  {
- 	struct erofs_dentry *d = NULL;
--	unsigned int len = strlen(path);
--	char *s = path;
-+	unsigned int len = strlen(ctx->path);
-+	char *s = ctx->path;
- 
--	*whout = false;
--	*opq = false;
-+	*ctx->whout = false;
-+	*ctx->opq = false;
- 
--	while (s < path + len) {
--		char *slash = memchr(s, '/', path + len - s);
-+	while (s < ctx->path + len) {
-+		char *slash = memchr(s, '/', ctx->path + len - s);
- 
- 		if (slash) {
- 			if (s == slash) {
-@@ -82,22 +82,22 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
- 		if (!memcmp(s, ".", 2)) {
- 			/* null */
- 		} else if (!memcmp(s, "..", 3)) {
--			pwd = pwd->i_parent;
-+			ctx->pwd = ctx->pwd->i_parent;
- 		} else {
- 			struct erofs_inode *inode = NULL;
- 
--			if (aufs && !slash) {
-+			if (ctx->aufs && !slash) {
- 				if (!memcmp(s, AUFS_WH_DIROPQ, sizeof(AUFS_WH_DIROPQ))) {
--					*opq = true;
-+					*ctx->opq = true;
- 					break;
- 				}
- 				if (!memcmp(s, AUFS_WH_PFX, sizeof(AUFS_WH_PFX) - 1)) {
- 					s += sizeof(AUFS_WH_PFX) - 1;
--					*whout = true;
-+					*ctx->whout = true;
- 				}
- 			}
- 
--			list_for_each_entry(d, &pwd->i_subdirs, d_child) {
-+			list_for_each_entry(d, &ctx->pwd->i_subdirs, d_child) {
- 				if (!strcmp(d->name, s)) {
- 					if (d->type != EROFS_FT_DIR && slash)
- 						return ERR_PTR(-EIO);
-@@ -107,22 +107,22 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
- 			}
- 
- 			if (inode) {
--				if (to_head) {
-+				if (ctx->to_head) {
- 					list_del(&d->d_child);
--					list_add(&d->d_child, &pwd->i_subdirs);
-+					list_add(&d->d_child, &ctx->pwd->i_subdirs);
- 				}
--				pwd = inode;
-+				ctx->pwd = inode;
- 			} else if (!slash) {
--				d = erofs_d_alloc(pwd, s);
-+				d = erofs_d_alloc(ctx->pwd, s);
- 				if (IS_ERR(d))
- 					return d;
- 				d->type = EROFS_FT_UNKNOWN;
--				d->inode = pwd;
-+				d->inode = ctx->pwd;
- 			} else {
--				d = erofs_rebuild_mkdir(pwd, s);
-+				d = erofs_rebuild_mkdir(ctx->pwd, s);
- 				if (IS_ERR(d))
- 					return d;
--				pwd = d->inode;
-+				ctx->pwd = d->inode;
- 			}
- 		}
- 		if (slash) {
-@@ -267,6 +267,7 @@ static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
- {
- 	struct erofs_rebuild_dir_context *rctx = (void *)ctx;
- 	struct erofs_inode *mergedir = rctx->mergedir;
-+	struct erofs_rebuild_getdentry_ctx dctx;
- 	struct erofs_inode *dir = ctx->dir;
- 	struct erofs_inode *inode, *candidate;
- 	struct erofs_inode src;
-@@ -286,8 +287,12 @@ static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
- 	erofs_dbg("parsing %s", path);
- 	dname = path + strlen(mergedir->i_srcpath) + 1;
- 
--	d = erofs_rebuild_get_dentry(mergedir, dname, false,
--				     &dumb, &dumb, false);
-+	dctx.pwd = mergedir;
-+	dctx.path = dname;
-+	dctx.aufs = false;
-+	dctx.whout = dctx.opq = &dumb;
-+	dctx.to_head = false;
-+	d = erofs_rebuild_get_dentry(&dctx);
- 	if (IS_ERR(d)) {
- 		ret = PTR_ERR(d);
- 		goto out;
-@@ -435,6 +440,7 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
- static int erofs_rebuild_basedir_dirent_iter(struct erofs_dir_context *ctx)
- {
- 	struct erofs_rebuild_dir_context *rctx = (void *)ctx;
-+	struct erofs_rebuild_getdentry_ctx dctx;
- 	struct erofs_inode *dir = ctx->dir;
- 	struct erofs_inode *mergedir = rctx->mergedir;
+ 	struct erofs_inode *inode;
  	struct erofs_dentry *d;
-@@ -448,8 +454,13 @@ static int erofs_rebuild_basedir_dirent_iter(struct erofs_dir_context *ctx)
- 	dname = strndup(ctx->dname, ctx->de_namelen);
- 	if (!dname)
- 		return -ENOMEM;
--	d = erofs_rebuild_get_dentry(mergedir, dname, false,
--				     &dumb, &dumb, false);
-+
-+	dctx.pwd = mergedir;
-+	dctx.path = dname;
-+	dctx.aufs = false;
-+	dctx.whout = dctx.opq = &dumb;
-+	dctx.to_head = false;
-+	d = erofs_rebuild_get_dentry(&dctx);
+@@ -47,6 +47,7 @@ static struct erofs_dentry *erofs_rebuild_mkdir(struct erofs_inode *dir,
+ 	inode->i_gid = getgid();
+ 	inode->i_mtime = inode->sbi->build_time;
+ 	inode->i_mtime_nsec = inode->sbi->build_time_nsec;
++	inode->dev = dev;
+ 	erofs_init_empty_dir(inode);
+ 
+ 	d = erofs_d_alloc(dir, s);
+@@ -119,7 +120,7 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_rebuild_getdentry_ctx
+ 				d->type = EROFS_FT_UNKNOWN;
+ 				d->inode = ctx->pwd;
+ 			} else {
+-				d = erofs_rebuild_mkdir(ctx->pwd, s);
++				d = erofs_rebuild_mkdir(ctx->pwd, s, ctx->dev);
+ 				if (IS_ERR(d))
+ 					return d;
+ 				ctx->pwd = d->inode;
+@@ -292,6 +293,7 @@ static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
+ 	dctx.aufs = false;
+ 	dctx.whout = dctx.opq = &dumb;
+ 	dctx.to_head = false;
++	dctx.dev = dir->sbi->dev;
+ 	d = erofs_rebuild_get_dentry(&dctx);
  	if (IS_ERR(d)) {
  		ret = PTR_ERR(d);
- 		goto out;
+@@ -460,6 +462,7 @@ static int erofs_rebuild_basedir_dirent_iter(struct erofs_dir_context *ctx)
+ 	dctx.aufs = false;
+ 	dctx.whout = dctx.opq = &dumb;
+ 	dctx.to_head = false;
++	dctx.dev = dir->sbi->dev;
+ 	d = erofs_rebuild_get_dentry(&dctx);
+ 	if (IS_ERR(d)) {
+ 		ret = PTR_ERR(d);
 diff --git a/lib/tar.c b/lib/tar.c
-index 990c6cb1b372..60f12cc539c9 100644
+index 60f12cc539c9..a118c4fd76de 100644
 --- a/lib/tar.c
 +++ b/lib/tar.c
-@@ -657,6 +657,7 @@ int tarerofs_parse_tar(struct erofs_inode *root, struct erofs_tarfile *tar)
- 	char path[PATH_MAX];
- 	struct erofs_pax_header eh = tar->global;
- 	struct erofs_sb_info *sbi = root->sbi;
-+	struct erofs_rebuild_getdentry_ctx dctx;
- 	bool whout, opq, e = false;
- 	struct stat st;
- 	erofs_off_t tar_offset, dataoff;
-@@ -907,7 +908,13 @@ out_eot:
- 
- 	erofs_dbg("parsing %s (mode %05o)", eh.path, st.st_mode);
- 
--	d = erofs_rebuild_get_dentry(root, eh.path, tar->aufs, &whout, &opq, true);
-+	dctx.pwd = root;
-+	dctx.path = eh.path;
-+	dctx.aufs = tar->aufs;
-+	dctx.whout = &whout;
-+	dctx.opq = &opq;
-+	dctx.to_head = true;
-+	d = erofs_rebuild_get_dentry(&dctx);
+@@ -914,6 +914,7 @@ out_eot:
+ 	dctx.whout = &whout;
+ 	dctx.opq = &opq;
+ 	dctx.to_head = true;
++	dctx.dev = tar->dev;
+ 	d = erofs_rebuild_get_dentry(&dctx);
  	if (IS_ERR(d)) {
  		ret = PTR_ERR(d);
- 		goto out;
-@@ -945,8 +952,12 @@ out_eot:
- 		}
- 		d->inode = NULL;
- 
--		d2 = erofs_rebuild_get_dentry(root, eh.link, tar->aufs,
--					      &dumb, &dumb, false);
-+		dctx.pwd = root;
-+		dctx.path = eh.link;
-+		dctx.aufs = tar->aufs;
-+		dctx.whout = dctx.opq = &dumb;
-+		dctx.to_head = false;
-+		d2 = erofs_rebuild_get_dentry(&dctx);
+@@ -957,6 +958,7 @@ out_eot:
+ 		dctx.aufs = tar->aufs;
+ 		dctx.whout = dctx.opq = &dumb;
+ 		dctx.to_head = false;
++		dctx.dev = tar->dev;
+ 		d2 = erofs_rebuild_get_dentry(&dctx);
  		if (IS_ERR(d2)) {
  			ret = PTR_ERR(d2);
- 			goto out;
 -- 
 2.43.5
 
