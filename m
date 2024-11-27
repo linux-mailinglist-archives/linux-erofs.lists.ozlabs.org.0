@@ -2,50 +2,52 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08EA29D9C11
-	for <lists+linux-erofs@lfdr.de>; Tue, 26 Nov 2024 18:07:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BBD2E9DA42C
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Nov 2024 09:53:08 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XyTXm1Ll0z301x
-	for <lists+linux-erofs@lfdr.de>; Wed, 27 Nov 2024 04:07:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4XytWN0lLtz2ypP
+	for <lists+linux-erofs@lfdr.de>; Wed, 27 Nov 2024 19:53:04 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.154.230.149
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1732640870;
-	cv=none; b=Jc65l6iG6B6iuE+oF6wgqKG1gpX+LyR5iAVR7tM7pEIptTsAW2BkMqpcBjuAE535HUKUB+NgePj9zIoydMnt3EL42BjBabHE2ORKYf2guBcM+MZ2IoOxQ6WULTwdv92vvKAhiKt0WyUu+YOF4y86d2qMzuL0CwZH0rehzDToQi1dS0/wx2IAhi/EtjqiYpiT/EgzN9zJcZemmmgJErqJ27aR32/hSbFKrBaK71v3HmxY4yiRexRbJCqMzVusz9sG0M0Nwbtepa6cJHKSVyeb65biPJjndt9o1YzCi/iRqX287/vAIERtJCC9HwppalMoyP9dvUHCbG4nhX52GVRufw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1732697581;
+	cv=none; b=hFp11ZaspSiVhj4BBxJZ/gUP31wZqPl1oEs0WO7+y+h0jaSz0SrgBdxCccEYtlP0CfIacHRqXdUSLhwohUSzlEwfx61zEZ2n4/nerAWa1QwNSrRxwjPoYmUb8W92WmFa3N9Wt+uBARaj+4vFUIbOaa0pP/MoF5hN+4mpQdlDYxny3xONDXO9qPat0cfpzMDPCV8qKrDzA6k+gZM8odVeYEXRjB4qEyU39WkOjUJcyYe7eyGuOLDk0rjckewg9+eNJETNUWC0afEz+WwYaQCNdjPwGq7a7TBqc4GODzAdyxz/K/sBMrTnMkhF3C+0RwhkKyRmNPKmJ5t+Ff0iurufVw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1732640870; c=relaxed/relaxed;
-	bh=rjmXIO4fBKcKttFIxOLt4TguCa48gQiq3l29py8MZzo=;
-	h=To:Subject:Message-ID:Date:From:MIME-Version:Content-Type; b=Cd7VFk8Mq9dKbvnNnAdXzPAjeQR6X5VcA5Nw7/0eue5UfU4Y/vo1WJD+88LeeKvwDC23k6/6FcxLjVLLhjdnb90q/n6v5bVDnbxAPMz+Gf7vZT0uup3iQEiEAS17YoAG4OstN4XRmplBOub7Yp5opZjDKcAJujvHzkBNKJ6XMvQZn3pBZXxs/GECgtlNW88ombeQF+5tm82fgxXkVvRoTsu26ydbsCvHZlJS5twH2Cuhi40mz3UXu0NA3M7PKnJmmAbx3PZH3RNE9TGHclBKcxJ8sQTEIbNGSXxGxnwVNiGWEdyXpMYiJa81OWovcCHavl+ldwqafF87/WOuwxaAyA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jiuzuzong.com; dkim=pass (1024-bit key; unprotected) header.d=jiuzuzong.com header.i=@jiuzuzong.com header.a=rsa-sha256 header.s=default header.b=XsV0mcS5; dkim-atps=neutral; spf=pass (client-ip=192.154.230.149; helo=mta15.rev.ytqingfan.net; envelope-from=epowerrc@jiuzuzong.com; receiver=lists.ozlabs.org) smtp.mailfrom=jiuzuzong.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jiuzuzong.com
+	t=1732697581; c=relaxed/relaxed;
+	bh=/75P4yZ3HLTWLNgRcQezp8O8WllCY0JuxZe7FDTAslM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TsAq46GEEhmuKPDw9+3Xlk62qaUgSZiBPJW3O2o2iLb2U6exSps1BxO/vf9DjLCkN9skIJRRCjouaVXNa0MD/xr+sv4d2FFaFF13d2Phb9+2DRt526iq7Ow7BWT8RBgzpGvkSlxZB40fPpQ2FKrPzlmNZzJVcEl3AckGwquoQt/bjjxYmT4ZHr7mMS/HcMHWMTho+mjfFQMBEys/3u4Q4rmAD72SHK+gHBjh/iEyH46uT/6uH7fm6e9QUUeCye+hOsJNLgI0nYpn2AdvMYaZLV0l2D2qcGnn3M2BFUIjKBuourvZWmRn8eh22eUoR1vDLx2o5uopg6dvA2lZVfnr5g==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=bjoG0QYq; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=jiuzuzong.com header.i=@jiuzuzong.com header.a=rsa-sha256 header.s=default header.b=XsV0mcS5;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=bjoG0QYq;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=jiuzuzong.com (client-ip=192.154.230.149; helo=mta15.rev.ytqingfan.net; envelope-from=epowerrc@jiuzuzong.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 7286 seconds by postgrey-1.37 at boromir; Wed, 27 Nov 2024 04:07:49 AEDT
-Received: from mta15.rev.ytqingfan.net (mta15.rev.ytqingfan.net [192.154.230.149])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4XyTXj5z1Dz2xps
-	for <linux-erofs@lists.ozlabs.org>; Wed, 27 Nov 2024 04:07:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=jiuzuzong.com;
- h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
- bh=rjmXIO4fBKcKttFIxOLt4TguCa48gQiq3l29py8MZzo=;
- b=XsV0mcS5moZ5EcgeVRMBq+9mAIRXOle+4L3BRg+UNh88dvgPBmRFocbNEEV4mgrue6XzLZ3fcU1d
-   FKVvq3bFQ80VBZLhQulO4vdvc0PyJpfrZpPqXrNSYT5B8y9sY7P8eNYIcuTlT270xE9P9w2kZmly
-   pPP/Dacavs+rKwx7Cz8=
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4XytWG1Mlnz2xYs
+	for <linux-erofs@lists.ozlabs.org>; Wed, 27 Nov 2024 19:52:51 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1732697565; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=/75P4yZ3HLTWLNgRcQezp8O8WllCY0JuxZe7FDTAslM=;
+	b=bjoG0QYq70q7wPvo6W4maoKP6BgdT9PBAQp/Ev5rwdEyd3ZRudotQpG2rjloiB93ZhMpCMtiCUNqxNPeSsLVR6PtXBxzIu311aPYOUN451Q/pHin+Qv8O1cMjXvuaSBb8QgZI99QTA4w7zkqkg/5asQvbJc5h7z4iypI49X2AuA=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WKLmL2V_1732697558 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 27 Nov 2024 16:52:43 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: choose your Urban Cruiser fat tire ebike
-Message-ID: <2c78fbc8752e44dec5699bec65b69758@bbbike.org>
-Date: Tue, 26 Nov 2024 12:49:59 +0100
-From: "Darren Parker" <epowerzm@jiuzuzong.com>
+Subject: [PATCH] erofs: fix PSI memstall accounting
+Date: Wed, 27 Nov 2024 16:52:36 +0800
+Message-ID: <20241127085236.3538334-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=2.2 required=5.0 tests=DATE_IN_PAST_03_06,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HTML_IMAGE_RATIO_02,
-	HTML_MESSAGE,MIME_HTML_ONLY,RCVD_IN_BL_SPAMCOP_NET,RCVD_IN_MSPIKE_BL,
-	RCVD_IN_MSPIKE_L5,SPF_HELO_PASS,SPF_PASS autolearn=disabled
-	version=4.0.0
-X-Spam-Level: **
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -58,75 +60,41 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: darrenp@jiuzuzong.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Max Kellermann <max.kellermann@ionos.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<html>
-<head>
-</head>
-<body>
-Hello,<br /> <br /> I hope you're doing well. As a leading manfacture in
-electric bike, we're excited to introduce our latest model &ndash; the
-Urban Cruiser. <br />This state-of-the-art e-bike offers a perfect
-combination of advanced technology and exceptional comfort, designed to
-elevate your riding experience. <br />Best of all, it's available for
-direct purchase from our warehouse in Germany, with fast and reliable
-delivery across the European Union in just 3-7 days.<br />For more details
-or to make a purchase, please don't hesitate to reach out. We'll need your
-address to calculate the shipping cost.<br /><br /><img
-src="https://www.ouhepower.com/wp-content/uploads/2021/11/leopard-fat-tyre-ebike-1.jpg"
-width="1020" height="767" /><br /><br /> <br /> Dual Suspension System:
-Enjoy a smooth ride no matter the terrain. The front features an 80mm air
-suspension, ensuring a cushioned ride even on bumpy roads. <br />The rear
-suspension absorbs shock, making it ideal for outdoor adventures.<br /><br
-/> Powerful 500W Motor: The Urban Cruiser is equipped with a
-high-performance 500W motor, enabling speeds of up to 30 MPH. <br />Whether
-you're cruising through the city, tackling mountain trails, or even riding
-on snow, this e-bike makes it effortless.<br /> <br /> Upgraded Battery:
-Our 48V 15AH lithium-ion battery offers a range of 40-54 miles per charge.
-The removable, dustproof, and waterproof design ensures reliability,
-safety, and longevity.<br /> <br /> Foldable and Lightweight: With
-dimensions of 33 x 16 x 30 inches when folded and a weight of just 71
-pounds, the Urban Cruiser is highly portable and perfect for both commuting
-and traveling. <br />Easily store it in your car trunk or carry it on
-public transport.<br /> <br /> Enhanced Riding Experience: The Urban
-Cruiser features an intuitive LCD display showing vital stats like speed,
-battery level, pedal assist, and distance traveled. <br />It also comes
-with front and rear mechanical disc brakes, a bright headlight, and an
-adjustable rear light for optimal safety. <br />Customize your ride with 3
-assist modes and a 7-speed gearbox.<br /> <br /><img
-src="https://electroheads.com/cdn/shop/files/ado-ado-beast-20f-250w-electric-bike-ex-display-electric-bikes-with-fat-tyres-31064042537073.jpg"
-width="1080" height="1080" /><br /> <br />Key Features:<br /> 20-Inch Fat
-Tires: Offers superior stability and comfort on a variety of surfaces.<br
-/> 500W Motor: Smooth, powerful, and efficient.<br /> 48V 15AH Battery:
-Long-lasting performance.<br /> Lightweight Aluminum Alloy Frame: Durable
-and stylish, perfect for urban environments.<br /> We&rsquo;re confident
-that the Urban Cruiser will transform your daily commute and outdoor
-exploration. <br />With direct shipping available from our German
-warehouse, your next cycling adventure is just a click away.<br /><br
-/>Upgraded Battery: Our 48V 15AH lithium-ion battery offers a range of
-40-54 miles per charge. The removable, dustproof, and waterproof design
-ensures reliability, safety, and longevity.<br /><br />Foldable and
-Lightweight: With dimensions of 33 x 16 x 30 inches when folded and a
-weight of just 71 pounds, the Urban Cruiser is highly portable and perfect
-for both commuting and traveling.<br />Easily store it in your car trunk or
-carry it on public transport.<br /><br />Enhanced Riding Experience: The
-Urban Cruiser features an intuitive LCD display showing vital stats like
-speed, battery level, pedal assist, and distance traveled.<br />It also
-comes with front and rear mechanical disc brakes, a bright headlight, and
-an adjustable rear light for optimal safety.<br />Customize your ride with
-3 assist modes and a 7-speed gearbox.<br /> <br /> For more details or to
-make a purchase, please don't hesitate to reach out. We'll need your
-address to calculate the shipping cost.<br /> <br /> Best regards,<br />
-Darren Parker<br /> Urban Cruiser Power<br /> <br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-</body>
-</html>
+Max Kellermann recently reported psi_group_cpu.tasks[NR_MEMSTALL] is
+incorrect in 6.11.9 kernel.
+
+I think the root cause of the recent issue is that since the problematic
+commit, bio can be NULL so psi_memstall_leave() could be missed in
+z_erofs_submit_queue().
+
+Reported-by: Max Kellermann <max.kellermann@ionos.com>
+Closes: https://lore.kernel.org/r/CAKPOu+8tvSowiJADW2RuKyofL_CSkm_SuyZA7ME5vMLWmL6pqw@mail.gmail.com
+Fixes: 9e2f9d34dd12 ("erofs: handle overlapped pclusters out of crafted images properly")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/zdata.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 01f147505487..19ef4ff2a134 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1792,9 +1792,9 @@ static void z_erofs_submit_queue(struct z_erofs_decompress_frontend *f,
+ 			erofs_fscache_submit_bio(bio);
+ 		else
+ 			submit_bio(bio);
+-		if (memstall)
+-			psi_memstall_leave(&pflags);
+ 	}
++	if (memstall)
++		psi_memstall_leave(&pflags);
+ 
+ 	/*
+ 	 * although background is preferred, no one is pending for submission.
+-- 
+2.43.5
 
