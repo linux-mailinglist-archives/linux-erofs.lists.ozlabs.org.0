@@ -2,54 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D8639E1163
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2024 03:36:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 62DE49E116D
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2024 03:41:04 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y2PtC1NTyz301f
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2024 13:36:35 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y2PzK5y53z301x
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2024 13:41:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733193393;
-	cv=none; b=ZqX9yF2H9NVF3ec9LhxgpQnjapwxj+c/f2uaWFtB0U6m7quMYatVtzWl020Mxu74/E66T3H1ue8Wp61Nx95vbzZ2KQJxA3AhvE0BUWf1MxmqfGj5hCelZKgLSuYTiCuPB9E7kRt3SE/k608sYa3k4Fct6JWHpQTwR+ClnC3RDO8C6BEsiLdF2gh8qj4W6WbBVS/+HWWcHwYvJYU46WmZ8c5ZSkAp1pGsKrgolI9ZLVU+aNT9sFyWZXtmqkXKo7/R4tvehPrANPe/vnC1GLiAa7LKaayh5T6XlAN+GZhdgPhYEtO9XXVVmSQTROxYd0s0JPoxzjXYG3epVYKImqq+/w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733193660;
+	cv=none; b=iiYzmAO20yEJp2oc8sP/Zk+LcjY+tvgXtt5SrAJbPwqm1PFCKTEhm4Ghqtfwjpk2SM9ilibGQVzHPX/RfA6mrt1qWkZ5/wvvA/MLpL84yMI4q6BKOrtLQiilPkOgwelvKq6olGrnJpkS9OiGwzxf26baD4pJUwCNRohcrxgfRZ8OwG3km9kilNlJcBm9RivvhDZf0XcA0T0+XNmhkxatLM6E5f1cUyeuzMuhUNdV4DeA/p6yqxjrOz0YflsRBRWnThT8geMOBK8rYYUKGEe7BM5s1FEFjnU+QQ3CJgdKiegip9N+JxUL47JJqgksPruIcU03h+RqWMOCZxtIFsxgkQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1733193393; c=relaxed/relaxed;
-	bh=Sju/tH3q8xFRQRDsxvt2vnwsD3XkrAxFoLFmGr026FA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nlr0CKgs1vv+/KQSy7PnsqfgElFzU5ZkrRFxRSaSeskkhcyu2a4bneBwZzFYE1J+InSydllQGkUuLtnJh/gaBF7gPdYyZJmEmPzG3pTyZxLbWVmFTmw3fBPMkIfhsh461K4qB6K0LACXoh4LkB9K4dvK3tAWpEen4xs/k9aFSodNyIEjLvCzFx9rfplDt9+5E+LZ0YUgNd/DyH6wsoPdMWdPJLa8r5p1wdPH4w1HTXRx8G6QJ4kFX2CBSVqNwjXqKzAt/bLcOAKWXLcJDXVVzQ4wVHpBsNCgdHvIM3GerLn+HL4I1+eDBBu/YQQ8/FfEzYyj8PHH29J8cVQRGJu5zA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=mX7WZpWH; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1733193660; c=relaxed/relaxed;
+	bh=cOS7Bre2FnIZLB610BXielaQRRpp/ikbJgIMSajPh3s=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=d/AkWWF/n4qrUhStoJfAefrK9wBPq/JbxWWdghZTgt6Nx6Vw/jiNooj2mEgJ29kqjURz2/IBZxfsIcdSRT8Dkql/bHMKoaDWtuax7L/2QZtB5rCstZ4p/V7vroyaKz8fnZXYNGfkPOhOxzwHvQTX3Nx7wQDst/CjQkkAyBaDtVx1Pa6F0HO/0ZgWF/ucM0DI6vONY6e0sXsL9nJs1a+eVU8Scg1XFw18x3hw5HyW7EZcdI6cDonHZWLd6gWdj7vDGyYKWgt6E0328z4VilrYl1f4YyC0b7xVT+as/t1W6KzhBfrq0feF7x4gPr01WDvZmpaCMaINpLOBnSHdRX62qw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Sj6jFOB6; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=mX7WZpWH;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Sj6jFOB6;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y2Pt64SFLz2xpm
-	for <linux-erofs@lists.ozlabs.org>; Tue,  3 Dec 2024 13:36:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y2PzG31llz2xtK
+	for <linux-erofs@lists.ozlabs.org>; Tue,  3 Dec 2024 13:40:57 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1733193380; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Sju/tH3q8xFRQRDsxvt2vnwsD3XkrAxFoLFmGr026FA=;
-	b=mX7WZpWHaxmNinxYxG1nP1uJS9+P92AarjhvPHmQrkF6pxHYYktxLFfsjXUOJGbWff47Qw37mYopdxzI/XHH+rUReMB3bxNX3SKrqLjJfE65U+lgkf/FVhW2qg72l2/DSlBpLflzgB0Qqhseo17giZsANu65SK5NdSYMnDi/xkA=
-Received: from 30.221.129.129(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WKl0vK8_1733193379 cluster:ay36)
+	t=1733193652; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=cOS7Bre2FnIZLB610BXielaQRRpp/ikbJgIMSajPh3s=;
+	b=Sj6jFOB6Xya0hYdZ8idBrqoMt08g4dheZXz5JKBYASmWR5q5rj5iTBT/cXBxgdkwTY+50neof/A7P2hW1HijNLETts41zSKmiWwsoRMKqQMCJRnPc1XDSx1MBcfT0qi1O+pcF5zFFLnv9rVrR5oJGQwZJAJJClLTXVKlwS47Mhs=
+Received: from 30.221.129.129(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WKl-jJM_1733193650 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 03 Dec 2024 10:36:20 +0800
-Message-ID: <b47f5ed4-dfe8-4ecd-b69e-4907f3a1e04d@linux.alibaba.com>
-Date: Tue, 3 Dec 2024 10:36:18 +0800
+          Tue, 03 Dec 2024 10:40:51 +0800
+Message-ID: <6787d09b-4930-4e7c-a2c6-5bda0c78c926@linux.alibaba.com>
+Date: Tue, 3 Dec 2024 10:40:50 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] erofs-utils: mkfs: use scandir for stable output
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: Jooyung Han <jooyung@google.com>
 References: <20241203002720.3634151-1-jooyung@google.com>
  <a5b7aaf8-4b94-44dd-9bff-8e12080a8063@linux.alibaba.com>
  <CAO-8PLbD1hbRW24Xu+kJ6Ak9JZ+508sYgMa1oDB1PQ77YUptXg@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAO-8PLbD1hbRW24Xu+kJ6Ak9JZ+508sYgMa1oDB1PQ77YUptXg@mail.gmail.com>
+ <b47f5ed4-dfe8-4ecd-b69e-4907f3a1e04d@linux.alibaba.com>
+In-Reply-To: <b47f5ed4-dfe8-4ecd-b69e-4907f3a1e04d@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -72,25 +73,37 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 
 
-On 2024/12/3 10:20, Jooyung Han wrote:
-> Hi Gao,
+On 2024/12/3 10:36, Gao Xiang wrote:
 > 
-> I found that in the loop erofs_iget_from_srcpath() is called in
-> different order due to readdir and erofs_iget_from_srcpath() calls
-> erofs_new_inode() which fills i_ino[0] for newly created inode. I
-> think this i_ino[0] having different values caused the difference in
-> the output.
+> 
+> On 2024/12/3 10:20, Jooyung Han wrote:
+>> Hi Gao,
+>>
+>> I found that in the loop erofs_iget_from_srcpath() is called in
+>> different order due to readdir and erofs_iget_from_srcpath() calls
+>> erofs_new_inode() which fills i_ino[0] for newly created inode. I
+>> think this i_ino[0] having different values caused the difference in
+>> the output.
+> 
+> Oh, okay, that makes sense, I think we'd better move
+> 
+> inode->i_ino[0] = sbi->inos++;  /* inode serial number */
+> 
+> to erofs_mkfs_dump_tree()  (since we'd better to leave
+> i_ino[0] stable even without dumping from localdir later.)
+> and even clean up a bit.
+> 
+> If you don't have more time to clean up this, let's just
+> commit a patch to fix this directly.
 
-Oh, okay, that makes sense, I think we'd better move
-
-inode->i_ino[0] = sbi->inos++;  /* inode serial number */
-
-to erofs_mkfs_dump_tree()  (since we'd better to leave
-i_ino[0] stable even without dumping from localdir later.)
-and even clean up a bit.
-
-If you don't have more time to clean up this, let's just
-commit a patch to fix this directly.
+Actually I think `erofs_prepare_inode_buffer()` is a good place
+to fill i_ino[0], since it will stablize the exact physical
+place of an on-disk inode.
 
 Thanks,
 Gao Xiang
+
+> 
+> Thanks,
+> Gao Xiang
+
