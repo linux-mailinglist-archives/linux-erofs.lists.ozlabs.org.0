@@ -1,56 +1,87 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C8529E141A
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2024 08:28:45 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B23479E148F
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2024 08:45:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1733211950;
+	bh=EOWEfzvF8BjNRtXspH5PP7JyMv1ZiT9CTaBHiMWfkos=;
+	h=Date:Subject:To:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=ClZ9EL7qaHP03x1dq5yZ9bJxTwye1CgrhKtYcnf8VYcBu21IgRhzghz5ZkQbkBzH4
+	 YNlyk4yEfAgbKSIlssi7AimGmr7kSCLWhiYJVTSZRqrUNUGmEaE+ScdRNpAl7b0AAy
+	 qKhEZaz7JlUpM7hFLtvSz3Ms676YpgGr0PkSYyf8vNIC0hFcn3r3RQian2sMPgiZlC
+	 0Plx9PTCqO0i1nVJVmvDJ56SMJm3dUXFymOHrPwLQO320GRJbJkrL0YYCLrZGzYBRe
+	 bNec5qYwBw6hbUfHvbrCMKSkyFwIpv5dihO7AMqGHUBvx3PVsbObFZrLdBiT0pKkTw
+	 5xpfAE3wHvtOQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y2XMG6RFqz302D
-	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2024 18:28:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y2Xl242Z8z302W
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Dec 2024 18:45:50 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733210921;
-	cv=none; b=G2Nw+9y9rVXVAGUkW6l/12v62CgHimtaPAVerRqTA48F0o30Gd0lB+uGctyMezxYLE/Sv/yvgEtmMv6Yff+fAOm7oOnfMKc+Wx0X1R4BWjLnvUEj81Un0wqitiJD9jLtg/LsPgg9UZ/2cJZEmwLc+WKUBGTxvL47iZRO+OND5Bxkw0nNj+mLVVLlF4/x7ONM1vs/EEpl5aWNtWmh0dPdY+VYbGHraiyPWkVmBsqtzIx4lB09hyDD+PJx+HnOPQ8vXjEP2md2WoGSEusXLje9wssd4AFNQFFhlU3mhGTNmYII2BCYW1M23heFP0DhsQgAjN+7UwMAsvEYnSRaeyYVnA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::44a"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733211949;
+	cv=none; b=m7GFD3eCUYayeVJziSptR4YgasYF4VTQu8SviaNE/x92YMJ/iFJzPJCL4ek/FPK6uMupR/nz7PDJtRuMmNm1Sc2jPUl7cVACof8nCtVa50NQ40AhhZNVvILN8deAyEySCb1NsUUooMscZ7vo/mbzB0/2v4HruU54HsylH7pcNVqj5UO3dhDZxs+xUNjiqG0WGna1brnQZyBRMG3LhZO515v1z8lc7UWIbEkJetU4LUYUVELOMjQP2wbAhu0+9LkwJo2j355UPafX8y8gYsudNwDicKsnJtwk8kr0Qe9PvHciJcMefu1RRZN8VKmSmiOL4M1OiJWywqre3DiED7A3BQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1733210921; c=relaxed/relaxed;
-	bh=ffVwQCplrSSi42sdO0aUOX+pWOHj43NN6iV37ZyGKPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KWJipfk23FgPj2iC0JXgX29RlgzTpJkIafUz47qMKEOfKmnOiDrxkcxS0XgPVb7iJhPu2n6Q19WJL2bL50iJdjPYHuEKhAb3Xv6vuR6ZKnOoAynkhKbsle51S7SWeWu2805k0LY2P+NnZozRajrSGuOjTGrcThcm4wTLNlyqRuEmN+d7+R0eJ7GE6kmmWbeVd+qXCfDlON0gvCSMkczsSufq5O6Z0qwI3R8Im3QVz25UdOJKnxzteM44267jYaxuEE4xTHR3zH6Tv9pMC+GIUwiEKXjxnxh1jUMRbO/yLW7a4DIIiaYty1LW/GyAyGt/33UreNojczm8KxcQVDPx4w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WZMv2xMC; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1733211949; c=relaxed/relaxed;
+	bh=EOWEfzvF8BjNRtXspH5PP7JyMv1ZiT9CTaBHiMWfkos=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=M98VLbUa/e/l5uIdmN626nh4iz7RdUMUfg5qXhKN1g2Ns+N1Ca5XFesMSZpHS5Mq3cr5vdWdYpKUYXbg63c+iI1TisUVblhJwyCzj4bW/Gcs0NCir4W8hIUbZSU++/SB6vk+p5muT/hsVre4OSy0T/ieCpY3kba9xPDDrmPyMgbQNqECqebPyp/9CbiJGobv7Lgli3yOM9ofY/V6nojhg/HvHNf+te2pbR7ROmlIJy4wiHXKGVkSnyiDJjj9Fq9uOhEdpwhGnqautM9LPB5LJGSPfDpoy22YZ9CupqbDC1OD77aJ56oA3X/6bjEkwXqmT+YZG0JgCvcYasAdFSJSNg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=2MbpfX7+; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::44a; helo=mail-pf1-x44a.google.com; envelope-from=3jbdozwckcxaz44ea3ww44w1u.s421y3ad-u74v81y898.4f1qr8.47w@flex--jooyung.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=flex--jooyung.bounces.google.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WZMv2xMC;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=2MbpfX7+;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--jooyung.bounces.google.com (client-ip=2607:f8b0:4864:20::44a; helo=mail-pf1-x44a.google.com; envelope-from=3jbdozwckcxaz44ea3ww44w1u.s421y3ad-u74v81y898.4f1qr8.47w@flex--jooyung.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y2XM90y84z2yNn
-	for <linux-erofs@lists.ozlabs.org>; Tue,  3 Dec 2024 18:28:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y2Xky5k06z2yNP
+	for <linux-erofs@lists.ozlabs.org>; Tue,  3 Dec 2024 18:45:45 +1100 (AEDT)
+Received: by mail-pf1-x44a.google.com with SMTP id d2e1a72fcca58-7254237c888so4826877b3a.1
+        for <linux-erofs@lists.ozlabs.org>; Mon, 02 Dec 2024 23:45:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1733210909; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=ffVwQCplrSSi42sdO0aUOX+pWOHj43NN6iV37ZyGKPo=;
-	b=WZMv2xMCc77pQrw1/V2BhuPjHhMotN8PgmyWsIAEc2pMC4FHC3s0cIDKZb2rayXhF166ipN5lwZQKDPNwTtpLEsAK1JgXNldH9JigtQ2Z5V6b9xuqfiBWopX8enr7FTmer9Z0W59jaiQaq5PYtESYOZu2eA2SFy3QeWOFflsAzE=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WKlm0CQ_1733210902 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 03 Dec 2024 15:28:26 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+        d=google.com; s=20230601; t=1733211942; x=1733816742; darn=lists.ozlabs.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EOWEfzvF8BjNRtXspH5PP7JyMv1ZiT9CTaBHiMWfkos=;
+        b=2MbpfX7+0mFVhWoJMi9a8YdAwj+Of+3E3vUI2K6qNHrSnobUVxhiWapW4xjOYGLhzU
+         nqtJuWik49xrkcBNP2GcK54HwxM5A/6rnxmKDJIHkQQM3Oq94agsrtZeVo1e3oFZhfQA
+         ySIP/5tDDPl2uzBuNg0mxog/nMH/4IVplXfOUj9pu2BhL14OVUUS6C+vJkgKFUTYWpf7
+         lfLoDGa9h6CTN4dA5U2heh8EXia25Y77+aghNB8xLcFbTai/58xirBiUUNQEqwJ6vRG3
+         8yqMaE8AEiWcVtqvVXaUrF4Jq9Cl/IqREEGWFhef5FbaadwxsagbVgMcz/s5y239wgjC
+         JnRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733211942; x=1733816742;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EOWEfzvF8BjNRtXspH5PP7JyMv1ZiT9CTaBHiMWfkos=;
+        b=O6bx2ZIr3dlMoUKUPTgpgX6k8xyCeYBSV/uaSKQgF7j0IChTa51kaYch4uDXoGZBG8
+         XBJU3OEzDuonJaEWSuu3nvmfq+DJ5RmnhmykEaClP88Vx+/Z//ObI//Aph0WMGZX45r7
+         7ur3bRjXabF7Vn+a4kFkxv4xTfpK/LosjrNcWfhPj4bsr2GrKzE3sl+7jckm89kqVusl
+         eWH9jt/sArl7czXhRG0atK7LHws2WehsYxVdBWRtpa7k1azNJBw/v/i7LC3qlmrUzmdx
+         Vh9qa9HgxzA4VhfA9/GhUkFcgqxC8FIWbd72lchWD71fuW8kzxr88hsr8b11pGvXtWL7
+         YRFw==
+X-Gm-Message-State: AOJu0YzBpAKXaJpo9d4QimmW5YRomrCK6JXJpEDSS5qb33d8cV2y0ll/
+	7OFmZg4eGecpSq/DJSbjIcHTOBrr5rkd/xuEVYSZjgf3hG+h5tOY4ES3s4rhsTx8tmo0xy2iPxN
+	ap6Ultj2h9cDVID7+Nn5+h4/20zKyFO3uVHu2UpK5a02LVsjEQy0DU9Rk4QwRmfjqJtkzEaH7jA
+	6xVZ7jd8tdv1upGNQWr7CTMeswhDOPYuzM3s1P2Ch2FBAQ/Q==
+X-Google-Smtp-Source: AGHT+IGsvaE9AiSQJh9K9Q1bGiX8oxgKUfbdSzTWqhZTMZT4n/fYwRYsXfGywFLVjQwDRcKfuahc2jOXyf+5
+X-Received: from plez16.prod.google.com ([2002:a17:902:ccd0:b0:215:8dd3:abd0])
+ (user=jooyung job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ea07:b0:215:2ecf:92ac
+ with SMTP id d9443c01a7336-215bd111e0fmr17406745ad.30.1733211941911; Mon, 02
+ Dec 2024 23:45:41 -0800 (PST)
+Date: Tue,  3 Dec 2024 16:45:31 +0900
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.47.0.338.g60cca15819-goog
+Message-ID: <20241203074531.3728133-1-jooyung@google.com>
+Subject: [PATCH] erofs-utils: mkfs: make output stable
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: fix rare pcluster memory leak after unmounting
-Date: Tue,  3 Dec 2024 15:28:21 +0800
-Message-ID: <20241203072821.1885740-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <674c1235.050a0220.ad585.0032.GAE@google.com>
-References: <674c1235.050a0220.ad585.0032.GAE@google.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.6 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -63,65 +94,50 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>, syzbot+7ff87b095e7ca0c5ac39@syzkaller.appspotmail.com
+From: Jooyung Han via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Jooyung Han <jooyung@google.com>
+Cc: hsiangkao@linux.alibaba.com, Jooyung Han <jooyung@google.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-There may still exist some pcluster with valid reference counts
-during unmounting.  Instead of introducing another synchronization
-primitive, just try again as unmounting is relatively rare.  This
-approach is similar to z_erofs_cache_invalidate_folio().
+The iteration order of opendir/readdir depends on filesystem
+implementation. Initializng inode->i_ino[0] in the loop causes the
+output unstable even though the entries are sorted in
+erofs_prepare_dir_file().
 
-It was also reported by syzbot as a UAF due to commit f5ad9f9a603f
-("erofs: free pclusters if no cached folio is attached"):
+In this change,  inode->i_ino[0] is initialized in
+erofs_prepare_inode_buffer() instead to make the output stable. (not
+affected by readdir())
 
-BUG: KASAN: slab-use-after-free in do_raw_spin_trylock+0x72/0x1f0 kernel/locking/spinlock_debug.c:123
-..
- queued_spin_trylock include/asm-generic/qspinlock.h:92 [inline]
- do_raw_spin_trylock+0x72/0x1f0 kernel/locking/spinlock_debug.c:123
- __raw_spin_trylock include/linux/spinlock_api_smp.h:89 [inline]
- _raw_spin_trylock+0x20/0x80 kernel/locking/spinlock.c:138
- spin_trylock include/linux/spinlock.h:361 [inline]
- z_erofs_put_pcluster fs/erofs/zdata.c:959 [inline]
- z_erofs_decompress_pcluster fs/erofs/zdata.c:1403 [inline]
- z_erofs_decompress_queue+0x3798/0x3ef0 fs/erofs/zdata.c:1425
- z_erofs_decompressqueue_work+0x99/0xe0 fs/erofs/zdata.c:1437
- process_one_work kernel/workqueue.c:3229 [inline]
- process_scheduled_works+0xa68/0x1840 kernel/workqueue.c:3310
- worker_thread+0x870/0xd30 kernel/workqueue.c:3391
- kthread+0x2f2/0x390 kernel/kthread.c:389
- ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-However, it seems a long outstanding memory leak.  Fix it now.
-
-Fixes: f5ad9f9a603f ("erofs: free pclusters if no cached folio is attached")
-Reported-by: syzbot+7ff87b095e7ca0c5ac39@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/r/674c1235.050a0220.ad585.0032.GAE@google.com
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Test: mkfs.erofs ... inputdir(ext3)
+Test: mkfs.erofs ... inputdir(tmpfs)
+  # should generate the same output
+Change-Id: I41bb8d5487a77b83dfa69d3d085e38223ab17f87
+Signed-off-by: Jooyung Han <jooyung@google.com>
 ---
- fs/erofs/zutil.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ lib/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
-index 75704f58ecfa..0dd65cefce33 100644
---- a/fs/erofs/zutil.c
-+++ b/fs/erofs/zutil.c
-@@ -230,9 +230,10 @@ void erofs_shrinker_unregister(struct super_block *sb)
- 	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+diff --git a/lib/inode.c b/lib/inode.c
+index e2888a4..7e5c581 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -821,6 +821,7 @@ noinline:
+ 	bh->fsprivate = erofs_igrab(inode);
+ 	bh->op = &erofs_write_inode_bhops;
+ 	inode->bh = bh;
++	inode->i_ino[0] = ++inode->sbi->inos;  /* inode serial number */
+ 	return 0;
+ }
  
- 	mutex_lock(&sbi->umount_mutex);
--	/* clean up all remaining pclusters in memory */
--	z_erofs_shrink_scan(sbi, ~0UL);
--
-+	while (!xa_empty(&sbi->managed_pslots)) {
-+		z_erofs_shrink_scan(sbi, ~0UL);
-+		cond_resched();
-+	}
- 	spin_lock(&erofs_sb_list_lock);
- 	list_del(&sbi->list);
- 	spin_unlock(&erofs_sb_list_lock);
+@@ -1114,7 +1115,6 @@ struct erofs_inode *erofs_new_inode(struct erofs_sb_info *sbi)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	inode->sbi = sbi;
+-	inode->i_ino[0] = sbi->inos++;	/* inode serial number */
+ 	inode->i_count = 1;
+ 	inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+ 
 -- 
-2.43.5
+2.47.0.338.g60cca15819-goog
 
