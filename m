@@ -2,56 +2,100 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83ABE9E793E
-	for <lists+linux-erofs@lfdr.de>; Fri,  6 Dec 2024 20:46:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 498989E79DD
+	for <lists+linux-erofs@lfdr.de>; Fri,  6 Dec 2024 21:11:14 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y4hbK1Hpdz30fh
-	for <lists+linux-erofs@lfdr.de>; Sat,  7 Dec 2024 06:46:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y4j7g6jQWz30fW
+	for <lists+linux-erofs@lfdr.de>; Sat,  7 Dec 2024 07:11:11 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733514395;
-	cv=none; b=TZORp5bOAD/M+v1dWEsR9uTFVmqoiU9RYtTxoSBpLQYUIJdsu4m8227dapWS8HHdc8aJ76uBZAqVVdnEVj7pVsF69nvWuao88a2rkUxLHWVT0k6vEjpjnryeEVSk3XIAsQxTToK/LopFolub2xzG3/eqTww+EtSzKinbEw9Ho589ICOXQsd+hE7H8OVlxzIGWSq/+0E3CEquxlb9rWlO5XB5q8UjFq1rFzZRI0LamW7c/lx0Gi/A4LJi6BVgc4N1f7wpi1T/ElbgoJWPx6QsOLmi20TFujq+TLlypA+JBIrBKw6rr8getC2f7NfVy9L/EQq8xumgWMyUSqjUB1czWg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=202.12.124.147
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733515869;
+	cv=none; b=GX+lX4fSyC+hAFxLEWTADOOQf9ew3U19mzU+Sn9m60FgDPDvLkMSCg/twU9BUvAc07yCY4FySt0Sd8vHDSqUQN20cDLmTbiF9OxuZw7NrHAGiEr8OILt3a34kZ/Mc4lSYpNlyOJ7L5Jxn69JrTFZp9gr2sMe/YPFJFr/EDHlwO5s9TpAdJ5EVjYN+4tlmatLYH+3sUTx9d+osXXqLWkqGxwygS3AQaUN/Krs+9SF5H/Y1/vkjHd52PeefaJ7XiuAMAe3b9SJwqTPFKgCvXwuAepvYUOFjfQP9xLYz0TLt61l5hwiswNBFHzZIs3YlfSBGg158Ac+hOrzhTxqqXdUhg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1733514395; c=relaxed/relaxed;
-	bh=znDVf9UKy4sVxxwV3H0M/2TDDC96qLINJosGTeRPNbI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ggA3TgGv247sAoHV86QO9jGQdKxk7rh5QSBXZRFVGITFVMrO/cM8r2HvNQNk2TKIQZGbZrYveGyOwqLd86lZlk673jf7gn3AzIFSarCn/qy5Qxadv8yF34txC3WGMUavdf1DNiGxfMBzKp+23t5JXYMFFe1AlbdZlas0biMDkR7CQN8KTGDPbe2LGU7swqMRySG0fIQ06hLfmX8pjR06zcogorjEIOoJ7n04g2fvmSWSimRmZ6F0uqTYfBiXnqVPoWj7eH6iHG3wbuBhVvAH8WEviv4xDZ08uopPCe3KHeXXhZJdhVvz7nhGD2O+vSsuyN41WitvagRmuFFXy34P9Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=XiC5macx; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1733515869; c=relaxed/relaxed;
+	bh=1K/21ZIC4j6vjCwOfLkK8jcq7MeVBckc1YHVJfcTTAQ=;
+	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=Hju6LYi5afoEeuzknPInpY/ob9RkHzsuuTFr0p1eMcrY8FsRzISB/O4tXGNLdboD0HrdAEIMekoZ2BlENV8TQXaSH6+Yen/+wymAMZJWsdQZeg6A+3u0yYZ8NMl9Od24K/LpG74fNDLe3MkjsZ4s+k1EEWjnjIYQzCTwwOaL9xLYJpc4p3yqmfOXCEbMlwsjfKqZqSYW7Y9XKJjBVbkMLV9dJQGzbhsAmeVyZiRt+/Yy3IIKop6njSnCdbrm9Y7zxF1xR+YR4gHe8c9puWcn39wTUNkmXrPCl5ss2Lz+kmuXH1uHvd3yE+jNIJy3s+q7faeyrZYj5WLFj9J9FATCjQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=verbum.org; dkim=pass (2048-bit key; unprotected) header.d=verbum.org header.i=@verbum.org header.a=rsa-sha256 header.s=fm1 header.b=G2WqlMjM; dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm1 header.b=nWmnDl5o; dkim-atps=neutral; spf=pass (client-ip=202.12.124.147; helo=fout-b4-smtp.messagingengine.com; envelope-from=walters@verbum.org; receiver=lists.ozlabs.org) smtp.mailfrom=verbum.org
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=verbum.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=XiC5macx;
+	dkim=pass (2048-bit key; unprotected) header.d=verbum.org header.i=@verbum.org header.a=rsa-sha256 header.s=fm1 header.b=G2WqlMjM;
+	dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm1 header.b=nWmnDl5o;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=verbum.org (client-ip=202.12.124.147; helo=fout-b4-smtp.messagingengine.com; envelope-from=walters@verbum.org; receiver=lists.ozlabs.org)
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y4hb945MHz2yMF
-	for <linux-erofs@lists.ozlabs.org>; Sat,  7 Dec 2024 06:46:26 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1733514381; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=znDVf9UKy4sVxxwV3H0M/2TDDC96qLINJosGTeRPNbI=;
-	b=XiC5macxpGiEiJsksKxrBLvAV6m39jBhQq9PdVVxIqVPxX+c3sKgOODnnUHhkBZNOOgVS0JtFoIa0dLRkZjq6NLkBz1juRu0ouiA7fcYBuDEauna6b14QTue5puha8V9uSI963umA0zrGlWZklhRyI+e9T9rx8+Jv+WNEum86IA=
-Received: from 30.170.86.122(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WKxTiNf_1733514375 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 07 Dec 2024 03:46:19 +0800
-Message-ID: <17b4f35e-a365-4460-b2a4-9da660ae3e95@linux.alibaba.com>
-Date: Sat, 7 Dec 2024 03:46:13 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y4j7T4npxz2yHT
+	for <linux-erofs@lists.ozlabs.org>; Sat,  7 Dec 2024 07:11:00 +1100 (AEDT)
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id 3AA7D114010B;
+	Fri,  6 Dec 2024 15:10:58 -0500 (EST)
+Received: from phl-imap-06 ([10.202.2.83])
+  by phl-compute-02.internal (MEProxy); Fri, 06 Dec 2024 15:10:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verbum.org; h=cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1733515858;
+	 x=1733602258; bh=1K/21ZIC4j6vjCwOfLkK8jcq7MeVBckc1YHVJfcTTAQ=; b=
+	G2WqlMjM+tvfAyqx4muqV9ZikBAXHkzX6uF/cLczbhdAJuxsoH3Hn3m4H0wbBAJZ
+	rwtEDWo4XRgb4VUN7G3vm7nUmt+dX59mLGqHIOCINd0rHf1DtXElyqhhtOz42GcV
+	tlTGHqDG8JMFzSybMVYaA7zExfJWdOd/75tZn6arput8A5Mp501zgvsA7X7iE//T
+	FbxRiCiBU5Wpf1JT1d3wf0OWqOjGLTaAdFaK7oxNxHmjeRusvGfjomqoKpcDMATF
+	wQbA4RNqZ6o3KHldAQP6x5e8Dp4Da3HIqzOcTplBazZy2S2Nbd31LhAuIJJZLdW1
+	CVq8/q8f6ticklhmBGM0MA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm1; t=1733515858; x=1733602258; bh=1
+	K/21ZIC4j6vjCwOfLkK8jcq7MeVBckc1YHVJfcTTAQ=; b=nWmnDl5ohGVR4AEaV
+	en6NtqpUIUDpUPeO9FggCg4JHrjCWb54NHmzCHP6cGXsb4RDSieG4C8dq38wSoD9
+	yQ38BdGrQD6f7l7CtsOtXxYMXK20h6oKhlYb+emGGV0RL7knwJCAO+MYBquEe8QI
+	kr/wZUVJws4j+ynqP4hg9/IxWqfJyveuCs13FrLfPtCm9H7f3kYbJGTb1z3XKfFm
+	Zt12a4k8qfpixqooNM3bgQLViSjv8qG9dqOFJyT9lll8erSQHhw4uwnoyRyxPKSg
+	ebTEAftIKTXITRGqtrmlNBqY7cxnW1hBase4JNdoItlcnzrTJFku7V9AuX0G1dp/
+	OygHA==
+X-ME-Sender: <xms:UVpTZ8cXxMax3LmqimIuSCZl4X-TcQlHNRhMTgzb832FPRHEc_NsfQ>
+    <xme:UVpTZ-MFRZStpfWfCQ5RQ2ASGm7y8UjGHCLWA_eafGnJnVSwyz67Bx2Oz4yfqYUT4
+    S-9R0tvBOtrzpnp>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefuddrieelgddufedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefoggffhf
+    fvkfgjfhfutgfgsehtjeertdertddtnecuhfhrohhmpedfveholhhinhcuhggrlhhtvghr
+    shdfuceofigrlhhtvghrshesvhgvrhgsuhhmrdhorhhgqeenucggtffrrghtthgvrhhnpe
+    ejfedtvdegvdevueffgfeileeuteevffegjefgkeffvedutdejleffhedvueekgeenucff
+    ohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepfigrlhhtvghrshesvhgvrhgsuhhmrdhorhhgpdhnsggp
+    rhgtphhtthhopedvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehhshhirghngh
+    hkrghosehlihhnuhigrdgrlhhisggrsggrrdgtohhmpdhrtghpthhtoheplhhinhhugidq
+    vghrohhfsheslhhishhtshdrohiilhgrsghsrdhorhhg
+X-ME-Proxy: <xmx:UVpTZ9jLUWPGnIDzrkYHJ65oxta8PfoRDewNJbAChtf8MXUsJG7hYg>
+    <xmx:UVpTZx9H-0assWD7Zq_E9YwOsESSTX-XwK2I6yfybJSQU79CqmB6jw>
+    <xmx:UVpTZ4vmuqlbMMsVNuRgPpoVcHPKENBPS80GwjX7currSGMEw2ZAcw>
+    <xmx:UVpTZ4Gnv8JbGNOEyQidM4iMt02vjMyUeklnGUDb6rHsQti9QULKyA>
+    <xmx:UlpTZ1V3YtsgVYTNb1QidYPFOUOHqM78yGRjk_938Q6JmLGlIDnPNq3V>
+Feedback-ID: ibe7c40e9:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 57BA529C006F; Fri,  6 Dec 2024 15:10:57 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: mounting 4k blocksize on e.g. 64k hosts
-To: Colin Walters <walters@verbum.org>, linux-erofs@lists.ozlabs.org
+Date: Fri, 06 Dec 2024 15:10:36 -0500
+From: "Colin Walters" <walters@verbum.org>
+To: "Gao Xiang" <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+Message-Id: <55ea18fb-7309-4328-a2f9-bebb5db61e87@app.fastmail.com>
+In-Reply-To: <17b4f35e-a365-4460-b2a4-9da660ae3e95@linux.alibaba.com>
 References: <406ae215-0f60-4f19-9be9-122739682056@app.fastmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <406ae215-0f60-4f19-9be9-122739682056@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <17b4f35e-a365-4460-b2a4-9da660ae3e95@linux.alibaba.com>
+Subject: Re: mounting 4k blocksize on e.g. 64k hosts
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,SPF_PASS
+	autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -67,28 +111,17 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On Fri, Dec 6, 2024, at 2:46 PM, Gao Xiang wrote:
 
+> Did you try upstream kernels? It's already supported upstream
+> since Linux 6.4.
 
-On 2024/12/7 00:36, Colin Walters wrote:
-> Hi, today in the composefs[1] project we do checksumming of a "canonicalized" EROFS (i.e. not written by mkfs.erofs currently[2]), and we hardcode a 4k blocksize today.
-> 
-> It came up in https://issues.redhat.com/browse/RHEL-63985 that on ppc64le (at least Fedora derivatives?) use a 64k page size by default, and erofs refuses to mount:
-> 
-> `erofs: (device loop0): erofs_read_superblock: blkszbits 12 isn't supported on this platform `
-> 
-> How hard would that be to support? If we have to start dealing with different composefs digests per architecture, things would be really messy for us. Especially given even that's not sufficient because on e.g. aarch64 nowadays in RHEL we support both 4k and 64k page size kernels.
-> 
-> If it's not easy to support mounting 4k in erofs regardless of host page size, I think for our use case it's probably OK in this corner case to just read the entire EROFS into memory if that helps?
+Sorry, my bad. (It should have occurred to me to check, but this one popped back up on my radar when I'm trying to do several other things at the same time).
 
-Did you try upstream kernels? It's already supported upstream
-since Linux 6.4.
+Anyways looks like the fix specifically was https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d3c4bdcc756e60b95365c66ff58844ce75d1c8f8 ?
 
-I think RHEL 9 is lacking of many features.
+> I think RHEL 9 is lacking of many features.
 
-Thanks,
-Gao Xiang
-
-> 
-> [1] https://github.com/containers/composefs/
-> [2] https://github.com/containers/composefs/issues/335
+Yes, but I'll try to argue for refresh for 9.6. Thanks!
+(Just tried to cherry pick that one myself, some conflicts but looks tractable)
 
