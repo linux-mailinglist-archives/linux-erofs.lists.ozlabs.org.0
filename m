@@ -2,109 +2,61 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 827F29E7DAD
-	for <lists+linux-erofs@lfdr.de>; Sat,  7 Dec 2024 02:15:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D0EAE9E7EB1
+	for <lists+linux-erofs@lfdr.de>; Sat,  7 Dec 2024 08:26:17 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y4qtM2rtyz30fg
-	for <lists+linux-erofs@lfdr.de>; Sat,  7 Dec 2024 12:15:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y506Z5QXWz2yjR
+	for <lists+linux-erofs@lfdr.de>; Sat,  7 Dec 2024 18:26:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=121.200.0.92
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733534105;
-	cv=none; b=jQMkkGgFQccPE58uiZ3gJD4rsnkIcOR0Kov35mxUsA3aqz51hMnNTZX/NIFP7ihXR3u1Wzo27Fs+OSad+hniMj/wib1Tvrzl4RpUHhE2OmQmtXXqSV93YOBTesT/L68sYvCxMuRK7oLhPxXDhvUZiBl1Ch532pO+veqX6MmDpI/erP15beDCBp5Sk+OOJy73Z9cxlhYM50gBcmERrAgjFnZ0qxz8HhldxDiuLko5XA2AdnTB0XuglcjxUqFDiZmloSSZ2jdwbjbb01Bzk7QrxZJ2dC/ziVa7ZamjrP3ZbYxAc7slNIlYl7bM0ZfKSooCuTmMZZGcnXcbYOOpkKF9ug==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733556372;
+	cv=none; b=M382iy1JnDC5ukeGm0MFCtKi1seIGH+9jU6mO+eLdS6STZBF/RMTyOYdOZU4j6f0hSDc9ijkbgY2v5hWW/O0kGqNXcBdKYxG95pmajyK2f40Bs8DwD7ie8XjKrrmzCdYRN853s9If7d2xjD0zkABh1DDIKx2PoaEMAoA69PGLdcuCLAbjXhTpMvHhjc53jTWBPif4R1b/AmZAgd7Lv7kVc0OUAkE3wE3CO6v1+U6kGFd3Gzz0nYfjUL8phTHOLL33pkuDHvqBOceCNBu+T/Io8lHlfgwu4ioe6EvNfEwkB34ssbn3zgB/ryafbURGRPBSShT8FJzRzOuJaa5VkX/ZA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1733534105; c=relaxed/relaxed;
-	bh=GRaL2hK8NuZlae8PyxIIhe3sHr0DVaE2w+vRrG38gsM=;
+	t=1733556372; c=relaxed/relaxed;
+	bh=y+oO9bIIHn18zc5198NYDKQPj592/F4jQ6VWAm0ByBY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=lrOfI84ak/9tkF1zNUDoayF+eGGVt1IBhj1Ibe6cfpVhamWUkKkG+BJ4OR8sJyla3DMf28KFR5hoPze5Q01IccdAsExOm2W0GaBdj/Tedaf3QYRQOd3NHqtkAKvO2+uwJpS/0faFp3MBm+Rr9qWjhclN3ouQqVXuKBtxszrVaFkN3U0CAYzAsT/w90TDcT2EJaqn5pw66/tYizFaPSIQRJpAkhZjo4i1DExvhZxSxGkGoNWcUC7gI1dWg4ndGJsFsm1imTJp+amEijNl0B37EmtXxLVCqtSUenmpIPhtLekvjqXsJK7M/6OPZ8yH249arCXyuCM3QLLGIg9q2KWcCw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=neutral (client-ip=121.200.0.92; helo=smtp01.aussiebb.com.au; envelope-from=raven@themaw.net; receiver=lists.ozlabs.org) smtp.mailfrom=themaw.net
-Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=themaw.net
-Authentication-Results: lists.ozlabs.org; spf=neutral (access neither permitted nor denied) smtp.mailfrom=themaw.net (client-ip=121.200.0.92; helo=smtp01.aussiebb.com.au; envelope-from=raven@themaw.net; receiver=lists.ozlabs.org)
-X-Greylist: delayed 332 seconds by postgrey-1.37 at boromir; Sat, 07 Dec 2024 12:15:03 AEDT
-Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
+	 In-Reply-To:Content-Type; b=YbQJySwxGx/73a13koN4BhKKtqqu7LoDcsQPncoyZeQOUD6T49RShOfnIaimF7DAsV1cA95icVLyLKvK4xC25wpnPNgKu+1nvM6GDoJsdOmdTto5wkjW0wUN9uOvgsr677lu5EYY5cd33asLKacXOTfZ7yt1G7zoyjuahKk4foB92mE2Rs5u54fuwkPLA0dcoX4wIo/xfzqBPG6bFY5T1EAHDQeh31FjbME8EhK6alRDJtqECl5+R1/D014enicUmymqXwBpHLepQve6Szw2mPOqBwLY01lyW6rDRXsKI/4VVG8OiqSEDz/o/EhHBCSWyG88vvp+ZLOjUAsoq9hdVg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=J/1mXCBG; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=J/1mXCBG;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y4qtH6Y2Qz2xs8
-	for <linux-erofs@lists.ozlabs.org>; Sat,  7 Dec 2024 12:15:03 +1100 (AEDT)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp01.aussiebb.com.au (Postfix) with ESMTP id 567E910041B
-	for <linux-erofs@lists.ozlabs.org>; Sat,  7 Dec 2024 12:09:28 +1100 (AEDT)
-X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
-Received: from smtp01.aussiebb.com.au ([127.0.0.1])
-	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id CqfQpFjBfcda for <linux-erofs@lists.ozlabs.org>;
-	Sat,  7 Dec 2024 12:09:28 +1100 (AEDT)
-Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
-	id 46D31100462; Sat,  7 Dec 2024 12:09:28 +1100 (AEDT)
-X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
-X-Spam-Level: 
-X-Spam-Status: No, score=0.7 required=5.0 tests=SPF_HELO_NONE,SPF_NEUTRAL
-	autolearn=disabled version=4.0.0
-Received: from [192.168.1.229] (159-196-82-144.9fc452.per.static.aussiebb.net [159.196.82.144])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: ian146@aussiebb.com.au)
-	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id 30EC710041B
-	for <linux-erofs@lists.ozlabs.org>; Sat,  7 Dec 2024 12:09:26 +1100 (AEDT)
-Message-ID: <92d6b2fb-f06e-49ac-afe5-cccce5d75a92@themaw.net>
-Date: Sat, 7 Dec 2024 09:09:25 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y506P1Ybxz2y66
+	for <linux-erofs@lists.ozlabs.org>; Sat,  7 Dec 2024 18:25:59 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1733556353; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=y+oO9bIIHn18zc5198NYDKQPj592/F4jQ6VWAm0ByBY=;
+	b=J/1mXCBGPH5W7SkcaBzBEsZW65wqmuD7JSMwbrWcMcMw7IYndzl1qiRH2M69LJbQjKE9509ZAmJfvSrMF/nX3WAYunfWCOhwurPhvwcrO0/zTknyqXxsqjdg+kpH1uCvG69IRpM4C/j5o7IQD0KZ89air1qn6Yed9ydBJxvKuYU=
+Received: from 30.170.86.122(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WKyt4iy_1733556345 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 07 Dec 2024 15:25:50 +0800
+Message-ID: <30178625-90b6-4b9d-8cb8-89e6e22ca588@linux.alibaba.com>
+Date: Sat, 7 Dec 2024 15:25:44 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: mounting 4k blocksize on e.g. 64k hosts
-To: linux-erofs@lists.ozlabs.org
+To: Ian Kent <raven@themaw.net>, linux-erofs@lists.ozlabs.org
 References: <406ae215-0f60-4f19-9be9-122739682056@app.fastmail.com>
  <17b4f35e-a365-4460-b2a4-9da660ae3e95@linux.alibaba.com>
  <55ea18fb-7309-4328-a2f9-bebb5db61e87@app.fastmail.com>
  <99520f27-6080-43ae-9c60-cc30d3a8ff5f@linux.alibaba.com>
-Content-Language: en-US
-From: Ian Kent <raven@themaw.net>
-Autocrypt: addr=raven@themaw.net; keydata=
- xsFNBE6c/ycBEADdYbAI5BKjE+yw+dOE+xucCEYiGyRhOI9JiZLUBh+PDz8cDnNxcCspH44o
- E7oTH0XPn9f7Zh0TkXWA8G6BZVCNifG7mM9K8Ecp3NheQYCk488ucSV/dz6DJ8BqX4psd4TI
- gpcs2iDQlg5CmuXDhc5z1ztNubv8hElSlFX/4l/U18OfrdTbbcjF/fivBkzkVobtltiL+msN
- bDq5S0K2KOxRxuXGaDShvfbz6DnajoVLEkNgEnGpSLxQNlJXdQBTE509MA30Q2aGk6oqHBQv
- zxjVyOu+WLGPSj7hF8SdYOjizVKIARGJzDy8qT4v/TLdVqPa2d0rx7DFvBRzOqYQL13/Zvie
- kuGbj3XvFibVt2ecS87WCJ/nlQxCa0KjGy0eb3i4XObtcU23fnd0ieZsQs4uDhZgzYB8LNud
- WXx9/Q0qsWfvZw7hEdPdPRBmwRmt2O1fbfk5CQN1EtNgS372PbOjQHaIV6n+QQP2ELIa3X5Z
- RnyaXyzwaCt6ETUHTslEaR9nOG6N3sIohIwlIywGK6WQmRBPyz5X1oF2Ld9E0crlaZYFPMRH
- hQtFxdycIBpTlc59g7uIXzwRx65HJcyBflj72YoTzwchN6Wf2rKq9xmtkV2Eihwo8WH3XkL9
- cjVKjg8rKRmqIMSRCpqFBWJpT1FzecQ8EMV0fk18Q5MLj441yQARAQABzRtJYW4gS2VudCA8
- cmF2ZW5AdGhlbWF3Lm5ldD7CwXsEEwECACUCGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheA
- BQJOnjOcAhkBAAoJEOdnc4D1T9iphrYQALHK3J5rjzy4qPiLJ0EE9eJkyV1rqtzct5Ah9pu6
- LSkqxgQCfN3NmKOoj+TpbXGagg28qTGjkFvJSlpNY7zAj+fA11UVCxERgQBOJcPrbgaeYZua
- E4ST+w/inOdatNZRnNWGugqvez80QGuxFRQl1ttMaky7VxgwNTXcFNjClW3ifdD75gHlrU0V
- ZUULa1a0UVip0rNc7mFUKxhEUk+8NhowRZUk0nt1JUwezlyIYPysaN7ToVeYE4W0VgpWczmA
- tHtkRGIAgwL7DCNNJ6a+H50FEsyixmyr/pMuNswWbr3+d2MiJ1IYreZLhkGfNq9nG/+YK/0L
- Q2/OkIsz8bOrkYLTw8WwzfTz2RXV1N2NtsMKB/APMcuuodkSI5bzzgyu1cDrGLz43faFFmB9
- xAmKjibRLk6ChbmrZhuCYL0nn+RkL036jMLw5F1xiu2ltEgK2/gNJhm29iBhvScUKOqUnbPw
- DSMZ2NipMqj7Xy3hjw1CStEy3pCXp8/muaB8KRnf92VvjO79VEls29KuX6rz32bcBM4qxsVn
- cOqyghSE69H3q4SY7EbhdIfacUSEUV+m/pZK5gnJIl6n1Rh6u0MFXWttvu0j9JEl92Ayj8u8
- J/tYvFMpag3nTeC3I+arPSKpeWDX08oisrEp0Yw15r+6jbPjZNz7LvrYZ2fa3Am6KRn0zsFN
- BE6c/ycBEADZzcb88XlSiooYoEt3vuGkYoSkz7potX864MSNGekek1cwUrXeUdHUlw5zwPoC
- 4H5JF7D8q7lYoelBYJ+Mf0vdLzJLbbEtN5+v+s2UEbkDlnUQS1yRo1LxyNhJiXsQVr7WVA/c
- 8qcDWUYX7q/4Ckg77UO4l/eHCWNnHu7GkvKLVEgRjKPKroIEnjI0HMK3f6ABDReoc741RF5X
- X3qwmCgKZx0AkLjObXE3W769dtbNbWmW0lgFKe6dxlYrlZbq25Aubhcu2qTdQ/okx6uQ41+v
- QDxgYtocsT/CG1u0PpbtMeIm3mVQRXmjDFKjKAx9WOX/BHpk7VEtsNQUEp1lZo6hH7jeo5me
- CYFzgIbXdsMA9TjpzPpiWK9GetbD5KhnDId4ANMrWPNuGC/uPHDjtEJyf0cwknsRFLhL4/NJ
- KvqAuiXQ57x6qxrkuuinBQ3S9RR3JY7R7c3rqpWyaTuNNGPkIrRNyePky/ZTgTMA5of8Wioy
- z06XNhr6mG5xT+MHztKAQddV3xFy9f3Jrvtd6UvFbQPwG7Lv+/UztY5vPAzp7aJGz2pDbb0Q
- BC9u1mrHICB4awPlja/ljn+uuIb8Ow3jSy+Sx58VFEK7ctIOULdmnHXMFEihnOZO3NlNa6q+
- XZOK7J00Ne6y0IBAaNTM+xMF+JRc7Gx6bChES9vxMyMbXwARAQABwsFfBBgBAgAJBQJOnP8n
- AhsMAAoJEOdnc4D1T9iphf4QAJuR1jVyLLSkBDOPCa3ejvEqp4H5QUogl1ASkEboMiWcQJQd
- LaH6zHNySMnsN6g/UVhuviANBxtW2DFfANPiydox85CdH71gLkcOE1J7J6Fnxgjpc1Dq5kxh
- imBSqa2hlsKUt3MLXbjEYL5OTSV2RtNP04KwlGS/xMfNwQf2O2aJoC4mSs4OeZwsHJFVF8rK
- XDvL/NzMCnysWCwjVIDhHBBIOC3mecYtXrasv9nl77LgffyyaAAQZz7yZcvn8puj9jH9h+mr
- L02W+gd+Sh6Grvo5Kk4ngzfT/FtscVGv9zFWxfyoQHRyuhk0SOsoTNYN8XIWhosp9GViyDtE
- FXmrhiazz7XHc32u+o9+WugpTBZktYpORxLVwf9h1PY7CPDNX4EaIO64oyy9O3/huhOTOGha
- nVvqlYHyEYCFY7pIfaSNhgZs2aV0oP13XV6PGb5xir5ah+NW9gQk/obnvY5TAVtgTjAte5tZ
- +coCSBkOU1xMiW5Td7QwkNmtXKHyEF6dxCAMK1KHIqxrBaZO27PEDSHaIPHePi7y4KKq9C9U
- 8k5V5dFA0mqH/st9Sw6tFbqPkqjvvMLETDPVxOzinpU2VBGhce4wufSIoVLOjQnbIo1FIqWg
- Dx24eHv235mnNuGHrG+EapIh7g/67K0uAzwp17eyUYlE5BMcwRlaHMuKTil6
-In-Reply-To: <99520f27-6080-43ae-9c60-cc30d3a8ff5f@linux.alibaba.com>
+ <92d6b2fb-f06e-49ac-afe5-cccce5d75a92@themaw.net>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <92d6b2fb-f06e-49ac-afe5-cccce5d75a92@themaw.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -119,66 +71,81 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 7/12/24 04:21, Gao Xiang wrote:
->
->
-> On 2024/12/7 04:10, Colin Walters wrote:
->> On Fri, Dec 6, 2024, at 2:46 PM, Gao Xiang wrote:
+Hi Ian,
+
+On 2024/12/7 09:09, Ian Kent wrote:
+> On 7/12/24 04:21, Gao Xiang wrote:
 >>
->>> Did you try upstream kernels? It's already supported upstream
->>> since Linux 6.4.
 >>
->> Sorry, my bad. (It should have occurred to me to check, but this one 
->> popped back up on my radar when I'm trying to do several other things 
->> at the same time).
+>> On 2024/12/7 04:10, Colin Walters wrote:
+>>> On Fri, Dec 6, 2024, at 2:46 PM, Gao Xiang wrote:
+>>>
+>>>> Did you try upstream kernels? It's already supported upstream
+>>>> since Linux 6.4.
+>>>
+>>> Sorry, my bad. (It should have occurred to me to check, but this one popped back up on my radar when I'm trying to do several other things at the same time).
+>>>
+>>> Anyways looks like the fix specifically was https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d3c4bdcc756e60b95365c66ff58844ce75d1c8f8 ?
 >>
->> Anyways looks like the fix specifically was 
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d3c4bdcc756e60b95365c66ff58844ce75d1c8f8 
->> ?
->
-> Yes, although it has been supported for nearly two
-> years, but there are still many dependencies
-> against RHEL 9 kernel (5.14) codebase.
->
+>> Yes, although it has been supported for nearly two
+>> years, but there are still many dependencies
+>> against RHEL 9 kernel (5.14) codebase.
 >>
->>> I think RHEL 9 is lacking of many features.
+>>>
+>>>> I think RHEL 9 is lacking of many features.
+>>>
+>>> Yes, but I'll try to argue for refresh for 9.6. Thanks!
+>>> (Just tried to cherry pick that one myself, some conflicts but looks tractable)
 >>
->> Yes, but I'll try to argue for refresh for 9.6. Thanks!
->> (Just tried to cherry pick that one myself, some conflicts but looks 
->> tractable)
->
-> Actually, the PR below has been delayed for
-> months:
-> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/4123 
->
+>> Actually, the PR below has been delayed for
+>> months:
+>> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/4123
+> 
+> Indeed, yes.
+> 
+> 
+> I deferred it because I thought back porting the idmap type changes that came after
+> 
+> 5.14 was more important and the above MR was conflicting with them.
+> 
+> That was a large change and was difficult to get merged but it's done now.
 
-Indeed, yes.
+Thanks for the reply!
 
+Yeah, I thought it seems to be delayed due to some
+other high priority stuffs, but keep the codebase
+in line with Linux v6.1 or v6.6 is helpful to
+container use cases since I'm mainly working on
+this area these years, such as:
+  - large folios for better read performance;
+  - subpage block support (>= 512-byte blocks);
+  - FSDAX for page cache sharing into VMs;
+  - advanced compression features;
+  - and more.
 
-I deferred it because I thought back porting the idmap type changes that 
-came after
+> 
+> 
+>>
+>> I think it's not quite easy to just cherry-pick
+>> random commits due to twisted codebase cleanups,
+>> rolling the codebase to upstream v6.4 is a good
+>> choise for RHEL 9 long term maintainence.
+> 
+> Yes, cherry-picking commits is often hard to do and error prone.
+> 
+> 
+> I can't remember now how far I went with the above MR but I'll review
+> 
+> that when I look at getting this into RHEL for Colin.
+> 
+> If I need help I'll certainly reach out here, thanks very much offering to help.
 
-5.14 was more important and the above MR was conflicting with them.
+Thank you!
 
-That was a large change and was difficult to get merged but it's done now.
+Thanks,
+Gao Xiang
 
-
->
-> I think it's not quite easy to just cherry-pick
-> random commits due to twisted codebase cleanups,
-> rolling the codebase to upstream v6.4 is a good
-> choise for RHEL 9 long term maintainence.
-
-Yes, cherry-picking commits is often hard to do and error prone.
-
-
-I can't remember now how far I went with the above MR but I'll review
-
-that when I look at getting this into RHEL for Colin.
-
-If I need help I'll certainly reach out here, thanks very much offering 
-to help.
-
-
-Ian
+> 
+> 
+> Ian
 
