@@ -1,68 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 180839EE8CD
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 15:29:44 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 450399EE909
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 15:37:38 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1734013777;
-	bh=Vw59fwWNcYFhUTSVCXXtx18aTbsZAp80cgn4PewWGEc=;
+	s=201707; t=1734014254;
+	bh=/pf6ZQMeTVy0lhf6vha3VKUgLYs4gULR1rlR1YXSu2o=;
 	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=TfHvdYOmYaIDmbwqAXgGNR8aTyPz2r5y27yWakE0c59iDt/UywE1TMvx0km4gADPR
-	 YHKxg48Hqr0e1pg82JwefXZDbjd1rmBq61ruRElxlAf7gjnpXSFW2iz+u+r/GdtrTG
-	 VsDkAPJYWVSwDMAN8Wop+VKNwvXZMrHt6AXl8J97dldXcj4sAJ5IiJR4EL8Hg/3Ycj
-	 I+xB4D11fBR0OwzRI48CjNhO7hn0SvyKv068bCF+vUC/zIMNpOlghb7ZCgP9fmxDlO
-	 4lXYaJd98f9wnDvdkRw0GiEVlyAtp64ekvQmXXCtJCJRviOZQjdKPQzqdykLp561le
-	 HiVWGpUjRxjYw==
+	b=WxZG+30iKh368C5tpgHpXK5sWyXO16RsChPm0jCGD48FltOyNq2tp+tYixhdZtBdz
+	 1yRvJdHUl3rzrdpRzw7j/sx+bi8uQ0byIIZFTvL3K/G2cbzXeqS4AuZy2Z5nE/RdLk
+	 EBcBgjml3Md5Z3uMme6j1FOb0TU2VVGUHS1YUhzZ0OkN7RsCfvYDfkD0KDpPCrG/AT
+	 M9P/lsVOYrdN3u0sjIY/ICAF56hVqI9dY4M8RYx7PMy/NcbZ3BQC6clz9OWCJr0HaC
+	 sHA53uH7v9CI7EC5ZqYYZwVaTQIXJScTGcVZV1FiSRYJ7nKklWWAcH7EJRpGzptMCi
+	 P/dkyGj7U4OIA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8FGn5Pmpz30dt
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 01:29:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8FRy0J1Fz30Yb
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 01:37:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734013775;
-	cv=none; b=KkTNjVeOeO+hI91rPl0Y4b8+nGwsU0gxoK4YWM3ZTGS+Nmqpl36F6pMEPEtCGSygPD0uZgbGW9BpbccrJBuKeJRTqCZL+OwMgHAvsi9hMAjVGAufwphLg2m8ekfCaUiw2aqnYx7BBi0irfTDLx4j4kFGAYNcVP57LThxoTk7YRJQk0Gh+pvZdozAEt1RSbD8Nat+1nRkUI6ayjlCtQqemQtAPWNngNUUAQoEuxbiKPHYS4owfxwfuBos7UZ12t/1yQWFR1rwXd3cHvGtR1MIbJqH0PMIRKuDhnuwsbc5CLI1z+T2z4j9PSm3iTOoL/hg3MAGdNWNwitKr8ZAGGdtbQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734014252;
+	cv=none; b=m7f8Gy73jEMmsSQ5WngcoqzySaJyDIk0Pdb0Dx8Cr6/L1UG2nIIJ7AYodjB1vKoUbSjF2Y0HHbbvHvYUF9aKcZQFSLiJ6T8eHhmwv548HlpRkIhNB2kuKn8xs1uSZx9JjwbPGobeWD4mJYiOhfnlQh8LihmevoIZTpbbMU7qNBQgjtN6pSlco5D65MzzDxejUCP367Cq/rkkArF1seKiArbDTyUeQeTvUWWNF9E5Ttxf0IssNL0vbnEbmpzCSH0OhtyZrPi0jg9hUMvz49G/wiN0NL1GCpFqVV+rqJjSR/8ncAOUFtiQZqZEL5TeirhS9FKGwLgBAYcyuAwyihGIOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734013775; c=relaxed/relaxed;
-	bh=Vw59fwWNcYFhUTSVCXXtx18aTbsZAp80cgn4PewWGEc=;
+	t=1734014252; c=relaxed/relaxed;
+	bh=/pf6ZQMeTVy0lhf6vha3VKUgLYs4gULR1rlR1YXSu2o=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fY5HdR6pqHMCpaNlQCcXeKS07SMV0SY0XgklfSeddzd3J1JGRtCh+5wtHpL8ELHx7wg0MwbR5ZBxJHSm7twAE6XSYhLbDilMNgqbe+kPOAwI2CJdPOmapGGCNxl9aKGiuouE0ieeWw3ONOtXMC5AlN8cWz+HHyC5aNb+FggfT6lcWTUTuk+iQpZOxD5hGan3b+VOnccYSyqwadYQ7OD+geN9oig4yUlvPFTrbw1pc45fOy1PZKU6hR2KdkhYU4aR4RKqdG7eW4qQcigKrHz1MiCniioH/BhFSPROUAxLqzhM30gzRuiD4wW36Yqp3E16bXlG9DLLrHmcE9HvsVdMRg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Bg0uhqex; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:Content-Type; b=EOIzzcPpS2Q9o0H1MTP8aThwjK6OYtiPp+IuL+LyZjbBqbFOUUpvFRhA+hFOhdFuOD57qi1CJJXKeEWGV0RorUDWHrLw3vzI3uU0lkftlDIrVZCtGBrg7U2jnqNdfLkijMwloJ8sqsEJLhdxo3Z97tyPSWSGqDDwN6y4DRuxrXoTKH20NvJY5/g/pg3Vy4AWUHVPMrTMUA1zDdQQ85rNACxBGfmns32LgTTic6kFpKD8SX/ZqA/LkHWT6vo/xqH1oVcj1fLMMnUC8Qwc1l5OvBF3DYihLJLucVUOToVypIbqIlz+mJi6snScmH/ulHc8Pb2WVuIBLGUJYduHeuGsMQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=svVMeYP1; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Bg0uhqex;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=svVMeYP1;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8FGj6RtPz2yDH
-	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 01:29:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8FRt6kJxz30W0
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 01:37:30 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 4A32D5C64BA;
-	Thu, 12 Dec 2024 14:28:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27F75C4CECE;
-	Thu, 12 Dec 2024 14:29:29 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id 8AD35A4288F;
+	Thu, 12 Dec 2024 14:35:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F383C4CED4;
+	Thu, 12 Dec 2024 14:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734013771;
-	bh=mVgrWWMIeZsafZWqIfeueCOEnoMQ5kCaiHtNQxjCzgU=;
+	s=k20201202; t=1734014248;
+	bh=WsYDpOccyVPoDy4C8ZsKQB/iVD9Pz0H1m0VQR/wlZro=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=Bg0uhqexOt/uZKYiAxYFKMX3TWRogqdI8nFGRlR4W9qESV9tWzAKwhApYM769XDwh
-	 jSwcKIVdIjSFKuCR7Hw5KnPXgWmDxmeUttgK/71oBLg6WbRzBJXRNYWx7AVpHjAhqD
-	 7VxcdEV7ACb6vPB+0YnW40k3/quk1wWwS0GFidqVpvRCqElCT0SbMbBcbxYWn3Hrrs
-	 T/GECkABve1BfR/8imS/ijPqDSsCDzHu2LOZgXW0Ik3bYly7DmEAdgUQVBTeXhDtSU
-	 nPxHlyEjStIQs4xd7VlqkSHS6kvi/DKtz+93P5wup2QSzkDliTTkUnGF4DkMSQvrnv
-	 Py6NEFMCC47PA==
-Message-ID: <66102a6a-459b-4464-b782-4bd38db0ffd8@kernel.org>
-Date: Thu, 12 Dec 2024 22:29:31 +0800
+	b=svVMeYP1FzPClq2uVocAQss0DKp9XPiEk5Nl+z812Oni0C8cb8ZZI6RnN+3Q2dgac
+	 EI2Tf2V0qM7TRrHI3uyOb+suoP70wMdRKY54gptewoejv13Wqnmpl9K4v4QRJ9M5K0
+	 psURjxYZTu7YBov3HmN6zf+E7e2+dh8ZFlXD6FDeJiLW6q2C+wIsPzMLe/Rw8MnEhA
+	 Wb7vhWPy2K6rxTvV7xyaLU3HbwRsfyOCJJJqtvpcSLEFV+lWLJPqMwOjNLUsojUuNM
+	 vtMu5kgn3y/tah7ZQ4CUHdstv/CCCDTrnFBMWAOtKxlFRJTkXnhIlNxRgvQgWxF5N/
+	 taxHxtz+5YzEA==
+Message-ID: <60207b33-ed3c-48ef-95f6-076c2c12f177@kernel.org>
+Date: Thu, 12 Dec 2024 22:37:29 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] erofs: add erofs_sb_free() helper
+Subject: Re: [PATCH 2/4] erofs: use `struct erofs_device_info` for the primary
+ device
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 References: <20241212133504.2047178-1-hsiangkao@linux.alibaba.com>
+ <20241212133504.2047178-2-hsiangkao@linux.alibaba.com>
 Content-Language: en-US
 Autocrypt: addr=chao@kernel.org; keydata=
  xsFNBFYs6bUBEADJuxYGZRMvAEySns+DKVtVQRKDYcHlmj+s9is35mtlhrLyjm35FWJY099R
@@ -106,7 +108,7 @@ Autocrypt: addr=chao@kernel.org; keydata=
  92Qh98hAj3cMFKtEVbLKJvrc2AO+mQlS7zl1qWblEhpZnXi05S1AoT0gDW2lwe54VfT3ySon
  8Klpbp5W4eEoY21tLwuNzgUMxmycfM4GaJWNCncKuMT4qGVQO9SPFs0vgUrdBUC5Pn5ZJ46X
  mZA0DUz0S8BJtYGI0DUC/jAKhIgy1vAx39y7sAshwu2VILa71tXJ
-In-Reply-To: <20241212133504.2047178-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20241212133504.2047178-2-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -131,10 +133,8 @@ Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
 On 2024/12/12 21:35, Gao Xiang wrote:
-> Unify the common parts of erofs_fc_free() and erofs_kill_sb() as
-> erofs_sb_free().
-> 
-> Thus, fput() in erofs_fc_get_tree() is no longer needed, too.
+> Instead of just listing each one directly in `struct erofs_sb_info`
+> except that we still use `sb->s_bdev` for the primary block device.
 > 
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
