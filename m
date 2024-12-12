@@ -2,118 +2,82 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B4B09EE93D
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 15:46:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1734014768;
-	bh=rQkmPonXMI95Bua+3PtHEMunl7yre6ZV7GYraA6ndA4=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=DMNvvgbRYyEjl8IsU0vLVshUTGPgkk9F+KnUMzhjewcIfjb/PQOKfQZ77wuZsD81z
-	 HjLrq92z1UaxXsC7ZuiMJiBLsGWTxPXtx/9Z6dEVDucuQ7i8JhNak6sAujJF8KE2Tr
-	 DjAZu0+6Gh1vOZ66RULZUvBIMXoEznZrNTCjDEKOyhvGrfme/oai1RxedRvDdUZ8dT
-	 wcSJPRe/MSgZhFnTZPcsXhSmxQnlipcvQ/DCLjjNvloXnlfypPOMQO2qdW1aqhSgIG
-	 rWGYtP82blNWB95ujsjRtdofMHaNigAr29KWEYU9U8GbEheiTMomtMjvKXyqXGm24l
-	 yt97gd6LAe29w==
+	by mail.lfdr.de (Postfix) with ESMTPS id D62089EF328
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 17:56:28 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8Fdr0XD6z30dt
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 01:46:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8JX86BcNz30f8
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 03:56:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734014765;
-	cv=none; b=cnlscattEdVFDRxP5zCWyl7m1ZHBf1gPC6UferGLT2+u01kvkln/8D2yAtliLuDtwfuPmP9ISr7ET5ZDbt9eMxttgK8FUlAXQ4LyprJWT/5CkgWnnmeblUn6hsLUSGm8gXHlYBoEJ9X0GZFHZJqhcgs0klOCvLd8j/sDNzPOa4LV4dhiVYrzepxcOoZuyn2zZIHg3rJxdK9HseUq2LX0b2rbUuj4rNakPieNKbR1mspuPLUHYjTT57pioF2/Li+k3dW2c+TIL8Fe5cXm13LDHqoX+E1daYIOwkxZ5PwKgFwWTGMorC+WuGJs5zyj5BHMD+PdVVps3BbXAhChOkpyEA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::52a"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734022583;
+	cv=none; b=nrnfmIj/Cfbz2y6SCE926r0tyNXC5xs1aMyQukNuG07Z+vFIprrggYMfhQ2hEmbwIMPJmmadjyXbVV6fVAJchMrODwC6Vm9UGJ8/CExIQkQ6Lpw6o9CdqgMvQRyqJGB3rmqmH9lL/Dla4eKGC8ddh8PW7hQrIYUK9eFXhpP2Cy29eBV4mVgewkg3z34odfjp/KmYgaWA9ATtqcsuoe6i7LxZEObAK5XdmgMUXR9yuUFHnZeH/t6AqB0lGkDbbC5mbY7neGHr/n7AM3Ogc9N0lrvLTk9a48f2sWeQtODqIer/XvdwbBmqBPQKUxY0e/HLJlxW0+BAzE5/YSqLO6gfhA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734014765; c=relaxed/relaxed;
-	bh=rQkmPonXMI95Bua+3PtHEMunl7yre6ZV7GYraA6ndA4=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=n+68m06gTqRiBUqlDRjhNu3MPcrbHo5MC9tl9HnVIz91l4f1igHCMwwqfCavXIMeoa/zBBFWIoWLeLhyv8FSDF+pvAGrC8a1BvEPcwLWdBjqWVzA3M8zWRsA/O6rvwcHXmWsBqXdFvMdUNIVVcdCePW6Mhqk2bFtPnmBZOgLlrDYm5CvZUw0c3/MO5SofxriAqolKUNAqJk2Q/80TtSKQnvqUjMBxFqHVE4TLTQ2yl1LyupWgxLWYESnpShOHOhlEwxTMv8d6SQ/ojqVEI1ZRFGSELfGKgRmmkjQ3W/RXc7Ajx5zn0oNc3B06/X6IEPTtEmwhY4QdpYhaZfM36a6mw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=StN5UwQE; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1734022583; c=relaxed/relaxed;
+	bh=am/6otT4dYnTRPEFJkhxCfOv0MM6WrvrX7b6o+PwCiU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZDWpNwneWPWvcKPK5wylSlCCraV0LfWGHdLB4xOygIs/BcWMMlOWujRvSkS+NUR4BeSQH+0o+Rrx35j1aRjKsF++rqGqBm6gefs6cYO4zRMb1IbQPnl8rZ5MEBbJwqmcXnuCINblyDIYd2ZjupwTi8SPS6YJXKi6GKhtyr6j+yYZtqZbK0LnFb3969yEaIMpP+eLeAnYZ66zbvr8xewL5AKvueNBwGxHGF6Dv3X1MJJqmC5MbRqW5V0mSBxLtFE2dGc2CRI4XMPY3irkBCACzqgF3Y+BjM5CFESoO8dbX5eKtqe1RejnFZOf5o1c6EmNUnyRCtmJUpv+5PHTMdgpXg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=FnjEoY+v; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::52a; helo=mail-ed1-x52a.google.com; envelope-from=katexochen0@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=StN5UwQE;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=FnjEoY+v;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::52a; helo=mail-ed1-x52a.google.com; envelope-from=katexochen0@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8Fdm4XZGz2yDx
-	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 01:46:04 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 161B0A42827;
-	Thu, 12 Dec 2024 14:44:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01966C4CEDD;
-	Thu, 12 Dec 2024 14:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734014762;
-	bh=pfZdIL/6B+O8n6Ex2RE/C19Cex533Wk2zzc++OJm9dU=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=StN5UwQEn2K4VSc+bG/yQIwWzJAcyYPTAB0sh6uct/dp1j6OI8WmZiG1I4yE5y1HY
-	 K3QsOZmEOO9D4V8uncuPjuxw3wU2ksZLQs5acIBVkNxDAM9jHBrHVt9uSdA9cZ+PfI
-	 V1dfnfrDYk60XhLc6PiPYzL/f6nGebrAvqizwMibSUVs4hNG7MB1qFtHXDJ8LkYNhG
-	 XdJHOllNZ/mY8P5Z/aNqEvf4bHwULZgVB9hz+RvAHR1GSSk3xqiVishzMWayqOUQvw
-	 n60XBua3wQhTwW7Ra18RnE3jyzuK7RjTwXo1pYMZdpb6ywYEfEnFHFnZ38/ZyYgAsb
-	 AwzktGXuKaDBA==
-Message-ID: <d3ce3735-42c2-484a-84e1-8b70e5d53584@kernel.org>
-Date: Thu, 12 Dec 2024 22:46:02 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8JX56VjLz30WF
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 03:56:20 +1100 (AEDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-5cecbddb574so1417005a12.1
+        for <linux-erofs@lists.ozlabs.org>; Thu, 12 Dec 2024 08:56:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734022572; x=1734627372; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=am/6otT4dYnTRPEFJkhxCfOv0MM6WrvrX7b6o+PwCiU=;
+        b=FnjEoY+ve3E+wRozqqGJyf58wvOIMvfz/AbDqQ5T5zRnSBfbVuyEQZqRjVBVZWaRw1
+         WOi0P0y2EreRn9KK4iBSx6GhTLYokU1ttZ0jWLuSwmQIERjXsbn/3h2R8Qd0/TSLsEpd
+         v8VBTs8YdDyvUBu32BD0iEiXreeK5rCV1/ox6XdDIa4ImKpvwEYqo0IXloPhe+Cduto6
+         JuLGfpSEo1i/1qBfqgcc74UJ0Ig/H0znnccS/qnn/wTTFSe7ocbsouG0ez4Ey+cCjNYs
+         /IDRHWRZ6KikCmz+ZmnH3FgKwtmKWpdeAj2eIfSmdNUP01ZHPy/hZr3yaA3KuYjhV8xI
+         hB0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734022572; x=1734627372;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=am/6otT4dYnTRPEFJkhxCfOv0MM6WrvrX7b6o+PwCiU=;
+        b=K5MdLJOXbWcW8dhvkPq8y9nXiX/qDcH18zJRz5hYgPZIc7FRHgI9Cgd4ytPXw1siVq
+         tCbfXfYXm28GHGpUoVbWPF+6PHoMZ4VPhKN0u9oyBGwCSBuKlJvKgQVvcCk0gUM2hafd
+         ZjUoJzHbUtTCqm4xOKEcFKU7UdMKNUxEFfj6mViitIovMWWnyLwnnXvG4+StVXil+pjo
+         e3QVWLEyaA2EUuuJ+NA4Lh/6TUaXlO9wbeDZjUTvffAYOl4qIuDACRTUyIGT4jKVjgls
+         mGHWNJ4+qQxkFvR90ipteHtCVWrEqjSbkmJ1bJ2+8jPJBzrVcbi1l6fsRVXwEsR37ur1
+         lYZw==
+X-Gm-Message-State: AOJu0YzC4oQmNJtOoBFP2tDW+rh9Gh+lZXY8AunbrCzzYHLmClyZD75E
+	WUdy8mVTCoz6mrzZBhTnBnz6sIs5zQtjuTwU4R3Z4szAWgDjOdD9iax8EHNN
+X-Gm-Gg: ASbGncsq1jcdXf9kRywFyDWfjV9VwC0/APQWkwmr46v0HMJv8NkIayDiiWQiJn4IVhw
+	oZ6ziiPzggagBey9YkTqlRALeFRy04Vmk82xC/GkWI4QJNDZYgd8nX0Uo7RrVSpqxjXffTeKYlq
+	g1P+QRkgOp8yNWK276lsFCVA4Axlce58bPbA6lJW7olcl2F12BDfynEtomB+u6TngGg0iXH0wew
+	Ym96yJoAdeFiMQS6mNloyX7wFibkRh5dYjwr85u5m8/3Otw2QxTSWKIL7KVfKdMvv8X
+X-Google-Smtp-Source: AGHT+IH53mrgmjCcWJu3rcCPQC0BXtP/D7nKJzQLX17dBsjZIX2tMBxbyCSrWIhkWAEHTn7JClS0UA==
+X-Received: by 2002:a05:6402:210f:b0:5d0:e3fa:17ca with SMTP id 4fb4d7f45d1cf-5d632392822mr1250618a12.15.1734022571588;
+        Thu, 12 Dec 2024 08:56:11 -0800 (PST)
+Received: from np14s.fritz.box ([2a01:41e3:29fd:6800:c136:e024:bd3c:259c])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5d149a49dc6sm10473451a12.31.2024.12.12.08.56.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2024 08:56:11 -0800 (PST)
+From: Paul Meyer <katexochen0@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v3] erofs-utils: add --hard-dereference option
+Date: Thu, 12 Dec 2024 17:48:07 +0100
+Message-ID: <20241212165550.58756-1-katexochen0@gmail.com>
+X-Mailer: git-send-email 2.47.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] erofs: use buffered I/O for file-backed mounts by
- default
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20241212133504.2047178-4-hsiangkao@linux.alibaba.com>
- <20241212134336.2059899-1-hsiangkao@linux.alibaba.com>
-Content-Language: en-US
-Autocrypt: addr=chao@kernel.org; keydata=
- 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
-In-Reply-To: <20241212134336.2059899-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -126,32 +90,84 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Chao Yu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Chao Yu <chao@kernel.org>
-Cc: Derek McGowan <derek@mcg.dev>, LKML <linux-kernel@vger.kernel.org>
+Cc: Paul Meyer <katexochen0@gmail.com>, Leonard Cohnen <leonard.cohnen@gmail.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/12/12 21:43, Gao Xiang wrote:
-> For many use cases (e.g. container images are just fetched from remote),
-> performance will be impacted if underlay page cache is up-to-date but
-> direct i/o flushes dirty pages first.
-> 
-> Instead, let's use buffered I/O by default to keep in sync with loop
-> devices and add a (re)mount option to explicitly enable direct I/O
-> if supported by the underlying files.
-> 
-> The container startup time is improved as below:
->                                       unpack        1st run  non-1st runs
-> EROFS snapshotter buffered I/O file  4.586404265s  0.308s   0.198s
-> EROFS snapshotter direct I/O file    4.581742849s  2.238s   0.222s
-> EROFS snapshotter loop               4.596023152s  0.346s   0.201s
-> Overlayfs snapshotter                5.382851037s  0.206s   0.214s
-> 
-> Fixes: fb176750266a ("erofs: add file-backed mount support")
-> Cc: Derek McGowan <derek@mcg.dev>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Add option --hard-dereference to dereference hardlinks when
+creating an image. Instead of reusing the inode, hardlinks are added
+as separate inodes. This is useful for reproducible builds, when the
+rootfs is space-optimized using hardlinks on some machines, but not on
+others.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+Co-authored-by: Leonard Cohnen <leonard.cohnen@gmail.com>
+Signed-off-by: Paul Meyer <katexochen0@gmail.com>
+---
+v3: Fix commit title and body, fix usage ordering.
+v2: https://lore.kernel.org/all/20241212135630.15811-1-katexochen0@gmail.com/
+v1: https://lore.kernel.org/all/20241211150734.97830-1-katexochen0@gmail.com/
+---
 
-Thanks,
+ include/erofs/config.h | 1 +
+ lib/inode.c            | 2 +-
+ mkfs/main.c            | 5 +++++
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index cff4cea..bb03e70 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -58,6 +58,7 @@ struct erofs_configure {
+ 	bool c_extra_ea_name_prefixes;
+ 	bool c_xattr_name_filter;
+ 	bool c_ovlfs_strip;
++	bool c_hard_dereference;
+ 
+ #ifdef HAVE_LIBSELINUX
+ 	struct selabel_handle *sehnd;
+diff --git a/lib/inode.c b/lib/inode.c
+index 7e5c581..0404a8d 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -1141,7 +1141,7 @@ static struct erofs_inode *erofs_iget_from_srcpath(struct erofs_sb_info *sbi,
+ 	 * hard-link, just return it. Also don't lookup for directories
+ 	 * since hard-link directory isn't allowed.
+ 	 */
+-	if (!S_ISDIR(st.st_mode)) {
++	if (!S_ISDIR(st.st_mode) && (!cfg.c_hard_dereference)) {
+ 		inode = erofs_iget(st.st_dev, st.st_ino);
+ 		if (inode)
+ 			return inode;
+diff --git a/mkfs/main.c b/mkfs/main.c
+index d422787..b94923f 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -85,6 +85,7 @@ static struct option long_options[] = {
+ 	{"mkfs-time", no_argument, NULL, 525},
+ 	{"all-time", no_argument, NULL, 526},
+ 	{"sort", required_argument, NULL, 527},
++	{"hard-dereference", no_argument, NULL, 528},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -174,6 +175,7 @@ static void usage(int argc, char **argv)
+ 		" --force-gid=#         set all file gids to # (# = GID)\n"
+ 		" --uid-offset=#        add offset # to all file uids (# = id offset)\n"
+ 		" --gid-offset=#        add offset # to all file gids (# = id offset)\n"
++		" --hard-dereference    dereference hardlinks, add links as separate inodes\n"
+ 		" --ignore-mtime        use build time instead of strict per-file modification time\n"
+ 		" --max-extent-bytes=#  set maximum decompressed extent size # in bytes\n"
+ 		" --mount-point=X       X=prefix of target fs path (default: /)\n"
+@@ -846,6 +848,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 			if (!strcmp(optarg, "none"))
+ 				erofstar.try_no_reorder = true;
+ 			break;
++		case 528:
++			cfg.c_hard_dereference = true;
++			break;
+ 		case 'V':
+ 			version();
+ 			exit(0);
+-- 
+2.47.0
+
