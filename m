@@ -1,55 +1,49 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CDF29EE37C
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 10:55:14 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 483629EE7C0
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 14:35:31 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y87B70p5tz30Wj
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 20:55:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8D4F5N7Kz3c5t
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 00:35:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733997309;
-	cv=none; b=IfB2zFuTJ1iAPkfgL6UziKYXNvUepyNEGYm9YnKXy+uVSUZtl3cnX2m4JhPCe+2vX61Q+7bmUhpmO5WGffyX6ByVvZeQyd8NRcwrsVZC0Q+aYBwB6GOtbOb6rdiMabYyRA9IxoI/yFUgyQ9BfjnpugOJZn04dt1NOK4SLFmiIIjWeMpiqE+Wah8zcnz4QMBwcREMNIDnoZJ2sB9U+IemkqOsVMXukPdXFb3w3WY1M6Zro6LSdPpbvynI+eos83bYlujUtZWe28dpP7+vd6FfNL63rSks9wxw0r85G8a/QmpcougOrspmV6emUCuNQzKQ4Vf8/BmepVr9u8M4sNNrRQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734010521;
+	cv=none; b=kdPoL4rcGO7/9CywVm7jHzUcm0W7YydXpOsj7/fQqGiH2+MuTD9MF6JlMIKpyZWbeCSfZxwC4Zn6rF/ZCRtx8w6GzQAqBgHeUepMXnR/xSioK9OK8WxWhUGguFKMoO/i4s5Fw+eo38z1XCtek3Pk9fi5cvh+b52ikZ3W3AdHZHmmj1+5h/7RxkeX5l/w89Fwp64FupQfWSeD9hiOCNDmLBkvzewhtklI3a9OoF2JairVBXieXazqIw6KBX2kPA17Tca9/bs+WO9m3LiHYwUryPm/V9RULJd/zBpJmv5p2D8WD0dXyNw+MNwY7y325YuqFtjPkgaSRM+/BTwFlVE3ww==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1733997309; c=relaxed/relaxed;
-	bh=MhPxaohRtcVFCgu+6pO9PV+V21/fUNm3wSUdV7+Tv70=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=myjhYv6bT6bKcYNvHontDnCRi6i1y9CguPrwr1vcfpYJY1p23hGFy85NyKU14coJsXEqsx3Ey3h3EApCzKt0+sN9HLQJLLuSGym2wEpX1aJOMceHOdQS+5Fbj8r1tUPcaUd7fJ8GfBq0xmRL90+F42+cxk0kDY5R0wP0WxboSy7tE+gfLdUravpOskxT+XpasRDD4SBsJRaKE4MbugUrHN6NcPcbY0Td5lqoFwkVqmpho+rvK90JOtpdwxvBq7uyo27NchEPjOqPxUPCnhOjSz5x95t6UWhwSTMpi8rtR5+CFF3xFFhxUZM94kA6UZoGYc/rfVVhtuQTXA2fnxurig==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZaYjHNwh; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1734010521; c=relaxed/relaxed;
+	bh=Bep53u066GuA/RqqrsrzhZPJEa3VMPrE3kZ/DxaEDko=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FAIG6ptFDSlSFcHmZfX83hicngckXgwI9McYWTOpHd/9FKC3BpW/NmIZ7cQxZKpxdZxKccM5CD8sw6CpONZIgvGBhzHt71hXuQQOi9PdYvcFjKtEVVlYjHq3jpzXI2SDyORKkOAbAjkc34PPLntjCXZaVOIovEJ2drT/Xa//vmEuJHpmBL/dmABgoDyvaDH5z2znZRZ1ba1dx3X3g3/s7CHEO/8LoFp5LeokJPlyJkZYAeV+BIEFyWTG9HDVyvgPI2Qn0f20ns953gcWlIMaGC1ab8+4s+wJIGSSfBBOmIxXeQBnCG9apAA6GpAZNe8wBAuw9Xj97XzrDFOUNtx+hA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ro4D/85n; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZaYjHNwh;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ro4D/85n;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y87B30SMrz2yFP
-	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Dec 2024 20:55:04 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8D4703MXz30WD
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 00:35:17 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1733997299; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=MhPxaohRtcVFCgu+6pO9PV+V21/fUNm3wSUdV7+Tv70=;
-	b=ZaYjHNwh9poNsKnwIENBlRjYh4mRY+kFjOLS7Kf5wh44FHyZ/AaSt+KKe+5Qk/VwkGCT/uU1bAkXqd1pBJd8NZIOQoMkN0vUE7uAIWJSz/ojTz/FOWtK+EAF9sgtJOZ24mmAz1dOGogUYaZK+0taDqbk6ob9z2F9LefvvL3dGzE=
-Received: from 30.221.129.7(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WLLIZU1_1733997297 cluster:ay36)
+	t=1734010513; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Bep53u066GuA/RqqrsrzhZPJEa3VMPrE3kZ/DxaEDko=;
+	b=ro4D/85npPupCh4ig7cKRCaBahSSgEeMnCL+hmj9u+Aaq0pY4yuQC2DQ8gkY04flNlJiYvEG7w9uxse3MMJT4yHSiN93IyukND8rtXB7I7LUtkh+9ZyDDO2IKpWB7cF7qcJzzzjlKtqjxOg4JL7+Ix4lIjhYt90BenGThoi9iB0=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WLLvJn5_1734010505 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 12 Dec 2024 17:54:58 +0800
-Message-ID: <05bd2d2b-1008-4310-8e20-7e44399356d0@linux.alibaba.com>
-Date: Thu, 12 Dec 2024 17:54:57 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: add --hardlink-dereference option
-To: Paul M <katexochen0@gmail.com>
-References: <20241211150734.97830-1-katexochen0@gmail.com>
- <41009b11-08e2-4e48-99be-3d59666593ad@linux.alibaba.com>
- <CAGTe2AE9er2TXc0C2hBgincWXqPEmJzq8_nCzSyLTJkscYqg6w@mail.gmail.com>
+          Thu, 12 Dec 2024 21:35:10 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAGTe2AE9er2TXc0C2hBgincWXqPEmJzq8_nCzSyLTJkscYqg6w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH 1/4] erofs: add erofs_sb_free() helper
+Date: Thu, 12 Dec 2024 21:35:01 +0800
+Message-ID: <20241212133504.2047178-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -66,121 +60,96 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org, Leonard Cohnen <leonard.cohnen@gmail.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+Unify the common parts of erofs_fc_free() and erofs_kill_sb() as
+erofs_sb_free().
 
+Thus, fput() in erofs_fc_get_tree() is no longer needed, too.
 
-On 2024/12/12 17:40, Paul M wrote:
-> Hi Gao,
-> 
-> On 2024/12/11 17:11, Gao Xiang wrote:
->>
->> Hi Paul,
->>
->> On 2024/12/11 23:07, Paul Meyer wrote:
->>> Add option --hardlink-dereference to dereference hardlinks when
->>> creating an image. Instead of reusing the inode, hardlinks are added
->>> as separate inodes. This is useful for reproducible builds, when the
->>> rootfs is space-optimized using hardlinks on some machines, but not on
->>> others.
->>
->> Thanks for the patch!
->>
->> Yet I fail to parse the feature, why this feature is useful
->> for reproducible builds? IOWs, without this feature (or
->> hardlinks are used), what's the exact impact that you don't
->> want to?
-> 
-> Sure, here is our full use case: We are building an erofs image with Nix.
-> Nix stores the rootfs in the nix store (/nix/store). Now there is an option
-> in nix to enable store optimization via hardlinks. In case optimization is
-> enabled, files with identical content are turned into hardlinks to save space,
-> as nix store paths are read-only anyway. If I create a rootfs with
-> two identical files, those will be hardlinked on systems with optimization
-> enabled, but have different inodes on systems where optimization is disabled.
-> When building an erofs, the resulting image will have one inode less on
-> the system where files are hardlinked.
-> The goal is to make the image bit-by-bit reproducible on both systems.
-> By dereferencing hardlinks, we get the exact same image no matter whether
-> the system uses hardlink optimizations or not.
-> 
-> There is a comparable tar option with the same name.
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/super.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
-Ok, thanks for letting me know.
-That sounds more meaningful to me, but
-could you update the option as `--hard-dereference` (although
-I don't verify the tar behavior) and usage() too?
-
-Otherwise it looks good to me.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Paul
-> 
->>
->> Thanks,
->> Gao Xiang
->>
->>>
->>> Co-authored-by: Leonard Cohnen <leonard.cohnen@gmail.com>
->>> Signed-off-by: Paul Meyer <katexochen0@gmail.com>
->>> ---
->>>    include/erofs/config.h | 1 +
->>>    lib/inode.c            | 2 +-
->>>    mkfs/main.c            | 4 ++++
->>>    3 files changed, 6 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/include/erofs/config.h b/include/erofs/config.h
->>> index cff4cea..8399afb 100644
->>> --- a/include/erofs/config.h
->>> +++ b/include/erofs/config.h
->>> @@ -58,6 +58,7 @@ struct erofs_configure {
->>>        bool c_extra_ea_name_prefixes;
->>>        bool c_xattr_name_filter;
->>>        bool c_ovlfs_strip;
->>> +     bool c_hardlink_dereference;
->>>
->>>    #ifdef HAVE_LIBSELINUX
->>>        struct selabel_handle *sehnd;
->>> diff --git a/lib/inode.c b/lib/inode.c
->>> index 7e5c581..5d181b3 100644
->>> --- a/lib/inode.c
->>> +++ b/lib/inode.c
->>> @@ -1141,7 +1141,7 @@ static struct erofs_inode *erofs_iget_from_srcpath(struct erofs_sb_info *sbi,
->>>         * hard-link, just return it. Also don't lookup for directories
->>>         * since hard-link directory isn't allowed.
->>>         */
->>> -     if (!S_ISDIR(st.st_mode)) {
->>> +     if (!S_ISDIR(st.st_mode) && (!cfg.c_hardlink_dereference)) {
->>>                inode = erofs_iget(st.st_dev, st.st_ino);
->>>                if (inode)
->>>                        return inode;
->>> diff --git a/mkfs/main.c b/mkfs/main.c
->>> index d422787..09e39f5 100644
->>> --- a/mkfs/main.c
->>> +++ b/mkfs/main.c
->>> @@ -85,6 +85,7 @@ static struct option long_options[] = {
->>>        {"mkfs-time", no_argument, NULL, 525},
->>>        {"all-time", no_argument, NULL, 526},
->>>        {"sort", required_argument, NULL, 527},
->>> +     {"hardlink-dereference", no_argument, NULL, 528},
->>>        {0, 0, 0, 0},
->>>    };
->>>
->>> @@ -846,6 +847,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
->>>                        if (!strcmp(optarg, "none"))
->>>                                erofstar.try_no_reorder = true;
->>>                        break;
->>> +             case 528:
->>> +                     cfg.c_hardlink_dereference = true;
->>> +                     break;
->>>                case 'V':
->>>                        version();
->>>                        exit(0);
->>
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index c235a8e4315e..1ce5ca11d32b 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -703,16 +703,19 @@ static int erofs_fc_get_tree(struct fs_context *fc)
+ 			GET_TREE_BDEV_QUIET_LOOKUP : 0);
+ #ifdef CONFIG_EROFS_FS_BACKED_BY_FILE
+ 	if (ret == -ENOTBLK) {
++		struct file *file;
++
+ 		if (!fc->source)
+ 			return invalf(fc, "No source specified");
+-		sbi->fdev = filp_open(fc->source, O_RDONLY | O_LARGEFILE, 0);
+-		if (IS_ERR(sbi->fdev))
+-			return PTR_ERR(sbi->fdev);
++
++		file = filp_open(fc->source, O_RDONLY | O_LARGEFILE, 0);
++		if (IS_ERR(file))
++			return PTR_ERR(file);
++		sbi->fdev = file;
+ 
+ 		if (S_ISREG(file_inode(sbi->fdev)->i_mode) &&
+ 		    sbi->fdev->f_mapping->a_ops->read_folio)
+ 			return get_tree_nodev(fc, erofs_fc_fill_super);
+-		fput(sbi->fdev);
+ 	}
+ #endif
+ 	return ret;
+@@ -763,19 +766,24 @@ static void erofs_free_dev_context(struct erofs_dev_context *devs)
+ 	kfree(devs);
+ }
+ 
+-static void erofs_fc_free(struct fs_context *fc)
++static void erofs_sb_free(struct erofs_sb_info *sbi)
+ {
+-	struct erofs_sb_info *sbi = fc->s_fs_info;
+-
+-	if (!sbi)
+-		return;
+-
+ 	erofs_free_dev_context(sbi->devs);
+ 	kfree(sbi->fsid);
+ 	kfree(sbi->domain_id);
++	if (sbi->fdev)
++		fput(sbi->fdev);
+ 	kfree(sbi);
+ }
+ 
++static void erofs_fc_free(struct fs_context *fc)
++{
++	struct erofs_sb_info *sbi = fc->s_fs_info;
++
++	if (sbi) /* free here if an error occurs before transferring to sb */
++		erofs_sb_free(sbi);
++}
++
+ static const struct fs_context_operations erofs_context_ops = {
+ 	.parse_param	= erofs_fc_parse_param,
+ 	.get_tree       = erofs_fc_get_tree,
+@@ -813,15 +821,9 @@ static void erofs_kill_sb(struct super_block *sb)
+ 		kill_anon_super(sb);
+ 	else
+ 		kill_block_super(sb);
+-
+-	erofs_free_dev_context(sbi->devs);
+ 	fs_put_dax(sbi->dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
+-	kfree(sbi->fsid);
+-	kfree(sbi->domain_id);
+-	if (sbi->fdev)
+-		fput(sbi->fdev);
+-	kfree(sbi);
++	erofs_sb_free(sbi);
+ 	sb->s_fs_info = NULL;
+ }
+ 
+-- 
+2.43.5
 
