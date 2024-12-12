@@ -1,70 +1,70 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B76099EE921
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 15:42:08 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B4B09EE93D
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 15:46:10 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1734014526;
-	bh=RGN8s4JugYMtZ/mvIen0FNQuk3GV0HNmy4JXcwa4Olg=;
+	s=201707; t=1734014768;
+	bh=rQkmPonXMI95Bua+3PtHEMunl7yre6ZV7GYraA6ndA4=;
 	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=oQZ+ILN9qUqDY3ttYmlGFK+Hs5qulPsjQCeTAGaIGXQ7ZWGlz6cmZpkseir7AVj2H
-	 +gIIm1jX3MJ/I8a3i+YPs1MID4CBR0BNFCsvCtw2DVLHjjheuXzF4AH7TdKUBUVFpx
-	 PzKqDqooC/G1/WNohhI3LgJM7hVyYoTFxPbGyfNeXtJpVQDZ9Viwoa55zJLT7ivJF+
-	 VzfF3jyp2mm23gmoTuEpH6Oxz0I7dk+a4sX9ckbbbTeEtmkppEeX81K8PAi3p2kw83
-	 r+I6BZHLyXCrjNBJWHEJCGIPakz2oz5C8qRZfxRCyP+8nQk6I4ZMRRNeRf1GqGgpMX
-	 I2bs4OYVufxMw==
+	b=DMNvvgbRYyEjl8IsU0vLVshUTGPgkk9F+KnUMzhjewcIfjb/PQOKfQZ77wuZsD81z
+	 HjLrq92z1UaxXsC7ZuiMJiBLsGWTxPXtx/9Z6dEVDucuQ7i8JhNak6sAujJF8KE2Tr
+	 DjAZu0+6Gh1vOZ66RULZUvBIMXoEznZrNTCjDEKOyhvGrfme/oai1RxedRvDdUZ8dT
+	 wcSJPRe/MSgZhFnTZPcsXhSmxQnlipcvQ/DCLjjNvloXnlfypPOMQO2qdW1aqhSgIG
+	 rWGYtP82blNWB95ujsjRtdofMHaNigAr29KWEYU9U8GbEheiTMomtMjvKXyqXGm24l
+	 yt97gd6LAe29w==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8FYB0C0Pz30dt
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 01:42:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8Fdr0XD6z30dt
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 01:46:08 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734014524;
-	cv=none; b=Sma5gor9ryBpzA47VaMJ7TX0gkFXGiydXyTqBI2zFQrb9gBv3qg4iYOyJxV2ScEaWTqbIGNMMKt79AFY6FBGeFlI6XEOFGCZ2sObadfpj05l8Vr1R0AG6xIu1dksPQ1WbFaNhSX978m9NV48Vk1yYKQ7KP5n9hbTJgX5svtEX604CoegJG+gUYiZMNKu6b+1BG7W0/B0XjowTMQfFePPNrimqU6yZb1KB0KEY1QAs/Q9zYiQFH/MxcGbQpR2cPYkZXcmVJ3RRH6BvxTBOI+QLzbE9NJev0Xu0xnzv3pDhaTqqBRZrWop4AvBhg5lm9GZbFBIgrCYupp24Ey0yMca8w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734014765;
+	cv=none; b=cnlscattEdVFDRxP5zCWyl7m1ZHBf1gPC6UferGLT2+u01kvkln/8D2yAtliLuDtwfuPmP9ISr7ET5ZDbt9eMxttgK8FUlAXQ4LyprJWT/5CkgWnnmeblUn6hsLUSGm8gXHlYBoEJ9X0GZFHZJqhcgs0klOCvLd8j/sDNzPOa4LV4dhiVYrzepxcOoZuyn2zZIHg3rJxdK9HseUq2LX0b2rbUuj4rNakPieNKbR1mspuPLUHYjTT57pioF2/Li+k3dW2c+TIL8Fe5cXm13LDHqoX+E1daYIOwkxZ5PwKgFwWTGMorC+WuGJs5zyj5BHMD+PdVVps3BbXAhChOkpyEA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734014524; c=relaxed/relaxed;
-	bh=RGN8s4JugYMtZ/mvIen0FNQuk3GV0HNmy4JXcwa4Olg=;
+	t=1734014765; c=relaxed/relaxed;
+	bh=rQkmPonXMI95Bua+3PtHEMunl7yre6ZV7GYraA6ndA4=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=REeXqnNcH1MfCVSqOQE+oKGFddJqc1uHFGk/neODy9BDR/3Sm9uQgKWYCGnjtLaaOGgzO11kLoCBzIKj//ncNdBR+/Ej3o04fSseUyTI8J1kL1L9/K53oFY3tUXMs2WFJzloeZLRgTekEObQHyoEjS+k0k1qbSOZ69zvZS/0AhDiF9eyJf38D2YpzUFAWm4kQXgOECzEvaQ3tdOhaj9jb2g222KsoP5qlJ2Imqfj8qQJqnfKtmLSyMzOQns9/0MWYIo3x0OTFTNLKVLFeUxsHAKdDPx5c8fuBtZLMg0FXXveM6PkVdnxGvgkPDHOMshcOM+6l7QN60YnFBZfx3i8VQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=m5Kq/n1s; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:Content-Type; b=n+68m06gTqRiBUqlDRjhNu3MPcrbHo5MC9tl9HnVIz91l4f1igHCMwwqfCavXIMeoa/zBBFWIoWLeLhyv8FSDF+pvAGrC8a1BvEPcwLWdBjqWVzA3M8zWRsA/O6rvwcHXmWsBqXdFvMdUNIVVcdCePW6Mhqk2bFtPnmBZOgLlrDYm5CvZUw0c3/MO5SofxriAqolKUNAqJk2Q/80TtSKQnvqUjMBxFqHVE4TLTQ2yl1LyupWgxLWYESnpShOHOhlEwxTMv8d6SQ/ojqVEI1ZRFGSELfGKgRmmkjQ3W/RXc7Ajx5zn0oNc3B06/X6IEPTtEmwhY4QdpYhaZfM36a6mw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=StN5UwQE; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=m5Kq/n1s;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=StN5UwQE;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8FY74BjBz2yDH
-	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 01:42:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8Fdm4XZGz2yDx
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 01:46:04 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 375955C5EC4;
-	Thu, 12 Dec 2024 14:41:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ADA3C4CECE;
-	Thu, 12 Dec 2024 14:42:00 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id 161B0A42827;
+	Thu, 12 Dec 2024 14:44:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01966C4CEDD;
+	Thu, 12 Dec 2024 14:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734014521;
-	bh=ZBfMMagoTS8wTkSooqf9IrgDnucAG644HYKwvs5yghc=;
+	s=k20201202; t=1734014762;
+	bh=pfZdIL/6B+O8n6Ex2RE/C19Cex533Wk2zzc++OJm9dU=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=m5Kq/n1szXgKAl9irrDdriHBRQwcmoq72npgo0AauDfygyG682dvcWitHROf58WvJ
-	 qRox8UxMb3QLyfgySgYVoZI/4kpzDpZ4vAQeqhrYlgbuyHhKZABBDizlZ9JYAC42vj
-	 KSMRk+IJ1/UIB/ctmIPeMWqGhWXw8fd/Yy61dNZ+hwVgn/0NLlm0WuqdBGAZt20z20
-	 AoZSB0qF9PQeFYX6tViHkK+Vy/i68KR4ZleKgLWVxORrY5rVUlCpF2ckge8PpkP68a
-	 bvcWp1f6j7g2dtYSxcd3uwQ32fmUy7mSIlfSPsJ3Dd8oAZgngsQuNJoOfsC3m6M0A6
-	 TLFRRB2CzyzTQ==
-Message-ID: <8af03c36-04c2-4d21-9200-1e4c0c6a5078@kernel.org>
-Date: Thu, 12 Dec 2024 22:42:03 +0800
+	b=StN5UwQEn2K4VSc+bG/yQIwWzJAcyYPTAB0sh6uct/dp1j6OI8WmZiG1I4yE5y1HY
+	 K3QsOZmEOO9D4V8uncuPjuxw3wU2ksZLQs5acIBVkNxDAM9jHBrHVt9uSdA9cZ+PfI
+	 V1dfnfrDYk60XhLc6PiPYzL/f6nGebrAvqizwMibSUVs4hNG7MB1qFtHXDJ8LkYNhG
+	 XdJHOllNZ/mY8P5Z/aNqEvf4bHwULZgVB9hz+RvAHR1GSSk3xqiVishzMWayqOUQvw
+	 n60XBua3wQhTwW7Ra18RnE3jyzuK7RjTwXo1pYMZdpb6ywYEfEnFHFnZ38/ZyYgAsb
+	 AwzktGXuKaDBA==
+Message-ID: <d3ce3735-42c2-484a-84e1-8b70e5d53584@kernel.org>
+Date: Thu, 12 Dec 2024 22:46:02 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] erofs: reference `struct erofs_device_info` for
- erofs_map_dev
+Subject: Re: [PATCH v2 4/4] erofs: use buffered I/O for file-backed mounts by
+ default
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20241212133504.2047178-1-hsiangkao@linux.alibaba.com>
- <20241212133504.2047178-3-hsiangkao@linux.alibaba.com>
+References: <20241212133504.2047178-4-hsiangkao@linux.alibaba.com>
+ <20241212134336.2059899-1-hsiangkao@linux.alibaba.com>
 Content-Language: en-US
 Autocrypt: addr=chao@kernel.org; keydata=
  xsFNBFYs6bUBEADJuxYGZRMvAEySns+DKVtVQRKDYcHlmj+s9is35mtlhrLyjm35FWJY099R
@@ -108,7 +108,7 @@ Autocrypt: addr=chao@kernel.org; keydata=
  92Qh98hAj3cMFKtEVbLKJvrc2AO+mQlS7zl1qWblEhpZnXi05S1AoT0gDW2lwe54VfT3ySon
  8Klpbp5W4eEoY21tLwuNzgUMxmycfM4GaJWNCncKuMT4qGVQO9SPFs0vgUrdBUC5Pn5ZJ46X
  mZA0DUz0S8BJtYGI0DUC/jAKhIgy1vAx39y7sAshwu2VILa71tXJ
-In-Reply-To: <20241212133504.2047178-3-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20241212134336.2059899-1-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -128,17 +128,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: Chao Yu via Linux-erofs <linux-erofs@lists.ozlabs.org>
 Reply-To: Chao Yu <chao@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: Derek McGowan <derek@mcg.dev>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2024/12/12 21:35, Gao Xiang wrote:
-> Record `m_sb` and `m_dif` to replace `m_fscache`, `m_daxdev`, `m_fp`
-> and `m_dax_part_off` in order to simplify the codebase.
+On 2024/12/12 21:43, Gao Xiang wrote:
+> For many use cases (e.g. container images are just fetched from remote),
+> performance will be impacted if underlay page cache is up-to-date but
+> direct i/o flushes dirty pages first.
 > 
-> Note that `m_bdev` is still left since it can be assigned from
-> `sb->s_bdev` directly.
+> Instead, let's use buffered I/O by default to keep in sync with loop
+> devices and add a (re)mount option to explicitly enable direct I/O
+> if supported by the underlying files.
 > 
+> The container startup time is improved as below:
+>                                       unpack        1st run  non-1st runs
+> EROFS snapshotter buffered I/O file  4.586404265s  0.308s   0.198s
+> EROFS snapshotter direct I/O file    4.581742849s  2.238s   0.222s
+> EROFS snapshotter loop               4.596023152s  0.346s   0.201s
+> Overlayfs snapshotter                5.382851037s  0.206s   0.214s
+> 
+> Fixes: fb176750266a ("erofs: add file-backed mount support")
+> Cc: Derek McGowan <derek@mcg.dev>
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Chao Yu <chao@kernel.org>
