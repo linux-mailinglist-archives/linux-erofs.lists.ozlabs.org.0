@@ -2,52 +2,55 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC6D79EDDB7
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 03:38:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BE7B9EDDB9
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 03:40:02 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y7xTk5nCkz30VM
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 13:38:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y7xWy2fCkz30W0
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Dec 2024 13:39:58 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733971080;
-	cv=none; b=Ikg6aMgYLsm+tGm4kWISQR6sMej7PMRm49+KJdvvmGdAgU2jb73kMyMnR8Q8geVdd6L+m+HZbP4GsJj4g6HelrDYoy9tICurN+6t2PLf93dzqMLw7HonvuHc97ccCk/Y2DIHf5hDTFncqvMWR26s5x4suCDBNoeby96iqHcOo5foGPfXe2X1YwXlSkcaiD2VTUaCL6LSyVLyOtojXIl6LXJ4fG9LYIwdRKk+3ga3GMcFmILC5sHi504CRe6I1/fdIEDkjb52UH7H/m8GM4SQdfRXcOXull/BKZC70NMXPBcF+NWpAoBBSRWt5WpN8PujMmXGbMNgFYSwVHS+HbsQHg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1733971196;
+	cv=none; b=QODYkjTNPTcVpmpk9XoCBkhQ4sDJlXAxRppOvPI9oJFlwVrw2DXGwrNCQ4A/sS7P4VvTYuym0XoM48xs9vCqqBWAYRnXsTxj7DbE1D8HLMstpbQdc43vNjHmvSSQhOk0xyEOSXkiyTp6qbt7xutUHoPu8C5Tx3Zm19TQsS1Ju6TSJwbtQIHZExIQvJiN7jW7/xZSYkJj50VoLzyDVzQ3OJkocH5SvA6y1MjpomZpVwvb2JzMQ1N0xivCyD4/CemxmrMsxXR29OAXYaS/MgiKDZYpT3UR+u5rBq0QmJ7Myd0sbYDkfjQ7ZLQUCuGO1b8C/nDyk4NvII5tNWPlqhcZjg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1733971080; c=relaxed/relaxed;
-	bh=gu/xoflJF8PWAuUvKcFMh6/9TuZuICRr9lznBaUcGYg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RvP5JkifCqjpPyfwNhPUkIYIziv32Ie7CZdm51BA8T2zBtUN+agOpoP+GEa9jiE0kPUB9P3a9q0VlEZiBteBEVjBMfsgqsSGL+B6bYyGmaFudpRFKB6s2oRrvQ4XWFliNcbqFvyxx2rlk+CxoV9zipERUlaWk0cbWnHb3YDUjxR+ohc2q73ROdDNEER0L+8xzYbNOPZI82zy2yhrMUYFuRAMGfCcrhB32OC8kvuHVnw5x7154uWvsuSh/zmwv52/+EPRCbHE/2M4SR9r76nAF3Pw+QHjbZUKGd5mcK3hhaRqcve25RynbzVo1+DN6MxFWan3CiCwvcLbNsLmmuT03w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=mI5hhA5r; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1733971196; c=relaxed/relaxed;
+	bh=zvwBAjm4sRjF6VmYTwkZE+OC+nmPpYLZaHaDGt4Pxe8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GuD4BFsgXDf+7vCtvaKQ3HdYVDHL7JJ7opec14WbMmTRL0EITWIaX/ibDwzdGpaLykNAdn8Maalh3u6YspduAq+laxALzEPP5i/Sv53HMRKvhOnOczynMFCwrL4NyTDI1GDWFWqGev90tR3GoySgCuwJkLt/PGGTyMqzSB4HOxD54z8AHGUASDhrC8YVlZ5eTJ+kAtQZ/+Q2glc1sZDySjqwN19AbafBYsV5uuscOqkVfy1YbGpU2j5dgTnz+W6c3RiHqKt/oNICS2T1FXvTvIZDQeocRhMSOtGAar4hM3bwflWnyw1gvvappus6yITqoLSflTl+S96g26OyO/j2eQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=UZmQ10zD; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=mI5hhA5r;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=UZmQ10zD;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y7xTc2Wjvz2xHF
-	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Dec 2024 13:37:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y7xWv5fLsz2yFP
+	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Dec 2024 13:39:55 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1733971068; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=gu/xoflJF8PWAuUvKcFMh6/9TuZuICRr9lznBaUcGYg=;
-	b=mI5hhA5rxaCfyrlhO7beojrFaY95hqbIE0/iQRZeaNtrHHUmhkgbyglULelNRzXby05uLxFkFW/iOv3DZjrE13xzFJQvI9TYFzF/rt1E27r+2DwiDeGPvErWps03vUYXfiIf9Hx8qpzrbnQRVzM9eGkVzSqEcPjBcUvuvt66Jqk=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WLJyHuE_1733971058 cluster:ay36)
+	t=1733971191; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=zvwBAjm4sRjF6VmYTwkZE+OC+nmPpYLZaHaDGt4Pxe8=;
+	b=UZmQ10zDpDMm+BXD9lWCekhAOEvT40VI1Z13IExMMuZ3MGlpZvD85XBrEwYcMbv/x9cWiWj0FnhtQXJcvNuFF9lYITHFdWre0e3TElE9KhxMzTc+NgapdkvhsawEUxrhEcBBlpCcTB6RjannclfnQIU/gLivoDefjjp+cH6RQOs=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WLK-wx5_1733971189 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 12 Dec 2024 10:37:46 +0800
+          Thu, 12 Dec 2024 10:39:50 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: micro-optimize superblock checksum
-Date: Thu, 12 Dec 2024 10:37:37 +0800
-Message-ID: <20241212023737.1138989-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH RESEND] erofs: micro-optimize superblock checksum
+Date: Thu, 12 Dec 2024 10:39:48 +0800
+Message-ID: <20241212023948.1143038-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20241212023737.1138989-1-hsiangkao@linux.alibaba.com>
+References: <20241212023737.1138989-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-	autolearn=disabled version=4.0.0
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -72,8 +75,8 @@ is fixed.
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
  fs/erofs/erofs_fs.h |  3 ++-
- fs/erofs/super.c    | 31 ++++++++++++-------------------
- 2 files changed, 14 insertions(+), 20 deletions(-)
+ fs/erofs/super.c    | 30 +++++++++++-------------------
+ 2 files changed, 13 insertions(+), 20 deletions(-)
 
 diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
 index c8f2ae845bd2..199395ed1c1f 100644
@@ -97,18 +100,10 @@ index c8f2ae845bd2..199395ed1c1f 100644
  	__u8 blkszbits;         /* filesystem block size in bit shift */
  	__u8 sb_extslots;	/* superblock size = 128 + sb_extslots * 16 */
 diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 9166054370aa..6cc0c5ea5ff5 100644
+index 9166054370aa..faf1506c47f5 100644
 --- a/fs/erofs/super.c
 +++ b/fs/erofs/super.c
-@@ -6,6 +6,7 @@
-  */
- #include <linux/statfs.h>
- #include <linux/seq_file.h>
-+#include <linux/crc32.h>
- #include <linux/crc32c.h>
- #include <linux/fs_context.h>
- #include <linux/fs_parser.h>
-@@ -39,29 +40,21 @@ void _erofs_printk(struct super_block *sb, const char *fmt, ...)
+@@ -39,29 +39,21 @@ void _erofs_printk(struct super_block *sb, const char *fmt, ...)
  
  static int erofs_superblock_csum_verify(struct super_block *sb, void *sbdata)
  {
