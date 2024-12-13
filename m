@@ -1,68 +1,77 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F3649F050A
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 07:48:34 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A45E9F04D4
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 07:33:48 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8g0H6qfQz3bN8
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 17:48:31 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8fgG0n7nz3bM7
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 17:33:46 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=200.136.52.33
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734072510;
-	cv=none; b=eL8uNzoOH/pELxXcFEjI3VaQxUpsCeRo2pjkiF970AdPWrLXV4Inh2enSjrigznKzqOVi6F39ukrNzerJMT96+0fb709uQhnk3SakPa8omoVBnYpu1F/VOBFvBfVkI0ICK4WNV6KbpN3xfCAhRaB7LNGsYQbgYYXVYu8p+FBM4TLGqDCeLscBU+2AsR87mk1qvhLIggUKL7RLPLp2/+na0eaBg63wEK5jaR6BnBkCqJVb8A6oSnGcKyQY4bHX60fZFBwJ1znl9UCzu9RkYDqAzu2TX7rC8s7UTOF/4R1mjXJIOsHM4/KierXJjZOK9M2LuT7MGCoRwd4Wbqize85/g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=43.155.80.173
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734071624;
+	cv=none; b=ncmJJxcMA0qGJ62/yf7ZZFaA/xNl2xO4Xa4QF9myeOH2vqjH90YBj+jj4zeovnGGfTY14vJtcrA0ab0rewYkpcr5MtA4KOxwMhlE+FGFUjrHuRzvqAOeVL38drxJXQj+aCuLG+gzYerIB7dVp6nng5k35q983yV+Y0tJmsSdeO9QD2BhHoIQOfNzHFFy4SczIPOMp211RvyIB5G/ercAqoLl57+0/ioAzPtZC5Zo0H2JChqrjl0Mgy6hDryCrguFf6nXI6T+BOx6q60bxKzYS6XnYlN06W8SifrLRj6F1EFVPXJXwxFMeDqliSalbc1xwaWmC9aUvUTyULlVHLWifQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734072510; c=relaxed/relaxed;
-	bh=Cgr97JBiSX1QIcd2ZZZsKVChGTY1ZlWJ/4AhaVFA7Wc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WqfDWcK1VApFXAv17YwElZqg+eFNn6uu9YWy+KdZJr0bzSdM7JvNJHI06ZMHRkQN31bIKxtxSrfE+4oqUi5Jfc07c46y0qLdBgvac/vrPTOOy0UxaW/WUuW6chrAI9Of15IG/Qtrhq2fCPGhYhyRc0PpyWP+r4PBbl5MG5smgKBgeUhhBC0bL0nxA/Ph11+/NRR59HRJJPh18v2Bq2z3sPaH4PiRnebjd9wl/OEInb9RadDdeqR6kQbi14Jm6uY6tqHCvEjDvY8a5pdZLn78jGcc1JNzZYkqA/A2HSK/6QhRkdThV9T4CyONgfLHdgjYX8ZSY/tTZOvGh7AL7I3Pjw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=ipen.br; spf=pass (client-ip=200.136.52.33; helo=arara2.ipen.br; envelope-from=btv1==0775a20b9c2==tcwm179185@ipen.br; receiver=lists.ozlabs.org) smtp.mailfrom=ipen.br
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=ipen.br
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=ipen.br (client-ip=200.136.52.33; helo=arara2.ipen.br; envelope-from=btv1==0775a20b9c2==tcwm179185@ipen.br; receiver=lists.ozlabs.org)
-X-Greylist: delayed 1141 seconds by postgrey-1.37 at boromir; Fri, 13 Dec 2024 17:48:29 AEDT
-Received: from arara2.ipen.br (arara2.ipen.br [200.136.52.33])
+	t=1734071624; c=relaxed/relaxed;
+	bh=rgkmKvltYJABjccgvOwrI8jK6v7c367g8gECsvvgdKA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aluirkRbgI8qQnChuspQGXBbdrHV8NmsdbyoR8VxWgmvfTLOL1u+DDVDPYCkKFR6Qd0DdWQ7LnzW3VWEAXmXaplCFM1lroMbe/YTb06TSpZL6BH2tfElGorJPJUaYU4Bw0ZVqRPT/x4louR6iJ3qHDML1KLuIBzO4yuoORVWlwjZwf7iYgNHBsP7oFFe1w0fbuWJQ6yX1T0o+hKycXLHNKgAKh5zg1z6wwWNZy5yeUGZ3OVAPYQG6CxThBYm/BnyxXPD07zL8NDgZ9/LukZMzoEzmv1HzqZ6Gv9UhvbcCTu/Qrzq8/dFMJxXBXWhpP+2RG63zKrUocP9GPTNZHnU3g==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=deepin.org; dkim=pass (1024-bit key; unprotected) header.d=deepin.org header.i=@deepin.org header.a=rsa-sha256 header.s=ukjg2408 header.b=k6ugc5d2; dkim-atps=neutral; spf=pass (client-ip=43.155.80.173; helo=bg5.exmail.qq.com; envelope-from=heyuming@deepin.org; receiver=lists.ozlabs.org) smtp.mailfrom=deepin.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=deepin.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=deepin.org header.i=@deepin.org header.a=rsa-sha256 header.s=ukjg2408 header.b=k6ugc5d2;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=deepin.org (client-ip=43.155.80.173; helo=bg5.exmail.qq.com; envelope-from=heyuming@deepin.org; receiver=lists.ozlabs.org)
+Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.155.80.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8g0F3pkQz2yL0
-	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 17:48:29 +1100 (AEDT)
-X-ASG-Debug-ID: 1734071344-055fc729ec148a480002-dl881O
-Received: from arara.ipen.br (webmail.ip.ipen.br [10.0.10.11]) by arara2.ipen.br with ESMTP id nm1sGEo0UjsYuMXF for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 03:29:08 -0300 (BRT)
-X-Barracuda-Envelope-From: TCWM179185@ipen.br
-X-Barracuda-RBL-Trusted-Forwarder: 10.0.10.11
-Received: from ipen.br (unknown [102.129.145.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by arara.ipen.br (Postfix) with ESMTPSA id B6F8CFBE54C
-	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 01:25:17 -0300 (-03)
-X-Barracuda-Effective-Source-IP: UNKNOWN[102.129.145.191]
-X-Barracuda-Apparent-Source-IP: 102.129.145.191
-X-Barracuda-RBL-IP: 102.129.145.191
-From: <TCWM179185@ipen.br>
-To: linux-erofs@lists.ozlabs.org
-Subject: I urge you to understand my viewpoint accurately.
-Date: 13 Dec 2024 12:25:17 +0800
-X-ASG-Orig-Subj: I urge you to understand my viewpoint accurately.
-Message-ID: <20241213122517.67DC087D7B8503BA@ipen.br>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8fg96jJ3z2yhM
+	for <linux-erofs@lists.ozlabs.org>; Fri, 13 Dec 2024 17:33:41 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=deepin.org;
+	s=ukjg2408; t=1734071577;
+	bh=rgkmKvltYJABjccgvOwrI8jK6v7c367g8gECsvvgdKA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=k6ugc5d2KRnCp8Q7oqNdXoHBVuHhRINaoNCE3ovglLRjXNUFIMh+giHAH0GW49j/f
+	 En8qZFzgixxaczzkNKVTFoIBZPHnQ2Hf2tbVPWrg49iTWg3t3FCEnFw4c7J6R5mtGc
+	 wcKunI04vE8BEWNLxgRC1ydKSXXMgufVS4pZ4TO0=
+X-QQ-mid: bizesmtp85t1734071574tz4ggok3
+X-QQ-Originating-IP: lh5gcq4ISix5bu6PpG9nvXtuij1jl28rxAZuoyf7KuQ=
+Received: from ComixHe.tail207ab.ts.net ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Fri, 13 Dec 2024 14:32:53 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 9534306071855275332
+From: ComixHe <heyuming@deepin.org>
+To: hsiangkao@linux.alibaba.com
+Subject: [PATCH] erofs-utils: lib: correct erofsfuse build script
+Date: Fri, 13 Dec 2024 14:32:50 +0800
+Message-ID: <8725A28257A20420+20241213063250.314786-1-heyuming@deepin.org>
+X-Mailer: git-send-email 2.47.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Barracuda-Connect: webmail.ip.ipen.br[10.0.10.11]
-X-Barracuda-Start-Time: 1734071348
-X-Barracuda-URL: https://10.40.40.18:443/cgi-mod/mark.cgi
-X-Barracuda-Scan-Msg-Size: 512
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-BRTS-Evidence: 34fbb5788938ad5710ad28835fd12206-499-txt
-X-Virus-Scanned: by bsmtpd at ipen.br
-X-Barracuda-Spam-Score: 0.00
-X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=1000.0 tests=NO_REAL_NAME
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.45577
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
-	0.00 NO_REAL_NAME           From: does not include a real name
-X-Spam-Status: No, score=0.0 required=5.0 tests=SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.0
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:deepin.org:qybglogicsvrgz:qybglogicsvrgz8a-0
+X-QQ-XMAILINFO: MACXe2l6e7j9vsyjk6G9u6wToeghqP7beuyn4FD85DklItZa9eDmHBxd
+	tyJa+1ZxJkfnbjdd9+IGThLU5wn+3x/iT5s+O6IwdZEGqLl0O4sNIq0ltzTfiygeKh4djxF
+	ytpAszLsIMKa71NlHEfqwuGp3CUEHrJeglj08xAqBcq6drmT/R0dP/2KrA9DSCjcGYnV/T4
+	9koL1BX7flRc2dmW6M8RVKVJSMgdL4yB60ggbQhSlYlA66Oa1QZREvjpd9IZE4cDg8UPLc5
+	3zIAsPupYOn88aXVG0UBvazMbouPfO37hsRaWRaLU6Eo2b5K+7coYD+GfOCt7+tCGfiRW18
+	pZdzvoaChJnb3U3KMyrcidQyS6HDw65CFYh9D3uXRdguO8o3SrEgKGXRF6UsmdAg2US+rsU
+	Iu4QHH1SQjM2rEmb4GbJy+s/xmDr6jFahjBfUKWwy2a5Ls3DynFpPG7UucBxmYWOz5jYSZn
+	U2YLC2fwieQenBSKQ1r+wq+M4Py/TInaCSM9J7zlhvrx47aC0RG9RwfYRLLiadZOdYFu9I7
+	4/ZmaMdttXjRNhvPGBoe38YBd5NRk3MHqBQOY6kTkXSsqCnzxO7I8FPZGOGYFqEhyt+N72w
+	FjcMtfkNrAG5jsj3Hzew5WjiHGzhdCPzAf+pimhOC7MKDAm2dcBOxUyHuq64OpqImR9aGaB
+	9Zjhic3Cad/VqIHqGrbhA8Xo7p9xrTCZpKvA0VmYByRsx/7AF1vUBx0kV1/aCzfWqaI/VdH
+	yLzaV64+NAEhtPc0WCKPNW6HMI0duXJm7nHVr1IAH0DoqKLY2C/8ex/mabpPzvQTRJXfS2k
+	pjJJn5APGpjVSJZXUmiD+X3dEM458mN9G3HpKg0ynEXLTMNF4FY44xQYv9GYgYdryvg8F2W
+	7X7LECylpwuxO62CvTTqxFizDkhIJJ8uv91Rl2nN1H0=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -75,20 +84,38 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: t.mazowieckie@mazowieckie.org
+Cc: ComixHe <heyuming@deepin.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-I am Tomasz Chmielewski, a Portfolio Manager and Chartered=20
-Financial Analyst affiliated with Iwoca Poland Sp. Z OO in=20
-Poland. I have the privilege of working with distinguished=20
-investors who are eager to support your company's current=20
-initiatives, thereby broadening their investment portfolios. If=20
-this proposal aligns with your interests, I invite you to=20
-respond, and I will gladly share more information to assist you.
+Some of the symbols required by erofsfuse are provided by liberofs.
+When option 'enable-static-fuse' is set, all these object file should be
+exported to liberofsfuse.a
 
-=20
-Yours sincerely,=20
-Tomasz Chmielewski Warsaw, Mazowieckie,
-=20
-Poland.
+Signed-off-by: ComixHe <heyuming@deepin.org>
+---
+ fuse/Makefile.am | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fuse/Makefile.am b/fuse/Makefile.am
+index 1062b73..50186da 100644
+--- a/fuse/Makefile.am
++++ b/fuse/Makefile.am
+@@ -11,9 +11,9 @@ erofsfuse_LDADD = $(top_builddir)/lib/liberofs.la ${libfuse2_LIBS} ${libfuse3_LI
+ 	${libqpl_LIBS}
+ 
+ if ENABLE_STATIC_FUSE
+-lib_LIBRARIES = liberofsfuse.a
+-liberofsfuse_a_SOURCES = main.c
+-liberofsfuse_a_CFLAGS  = -Wall -I$(top_srcdir)/include
+-liberofsfuse_a_CFLAGS += -Dmain=erofsfuse_main ${libfuse2_CFLAGS} ${libfuse3_CFLAGS} ${libselinux_CFLAGS}
+-liberofsfuse_a_LIBADD  = $(top_builddir)/lib/liberofs.la
++lib_LTLIBRARIES = liberofsfuse.la
++liberofsfuse_la_SOURCES = main.c
++liberofsfuse_la_CFLAGS  = -Wall -I$(top_srcdir)/include
++liberofsfuse_la_CFLAGS += -Dmain=erofsfuse_main ${libfuse2_CFLAGS} ${libfuse3_CFLAGS} ${libselinux_CFLAGS}
++liberofsfuse_la_LIBADD  = $(top_builddir)/lib/liberofs.la
+ endif
+-- 
+2.47.1
+
