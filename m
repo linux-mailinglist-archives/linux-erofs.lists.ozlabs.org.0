@@ -2,80 +2,80 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08E909F0DBA
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 14:51:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 714359F0DBD
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 14:51:11 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8rMn0cNCz3bWP
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Dec 2024 00:51:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8rMx40nNz3bY7
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Dec 2024 00:51:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734097859;
-	cv=none; b=NnsZQr/Sfb603pVZ1bhKbZLmbqmnJ/A1zYzl4+3/fgUdAMcckd9yYlMD9F5LiCJ3l1OZ3yy4nRcz2zc7GioEhsYHoyXzQxZht+4TnDrjz3Aj9gue4TGL47b5Qsne3F+jWyJgkgVtNqGnovzdvTTOukmSqhm2O10TCRPmEPNw/XvVFKlYz3iT+NQu8JAuIf1FX+WwrKiEnAGZS8AwDrYhtzjzR1nMdTxVmmi95W2tsMmw/L4p6S7HFOD8+8Z3OhE3YUo4f32CX/8gKZ/f3m4vlwAach9eY7YTE9O6Q9Obs6c+jJnUgmAtHNeXzVAWwjgmJdzpFNmjw1RLGlJdFuyUPg==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734097867;
+	cv=none; b=TfZc4GMQi3Au9OZTeQZCMqC2R94O0NIApIS0E5BhnjzQkJ1peVZ8fZ4gunA9eohoiqXufSnOa5KeqgUvW0R8ENZ3IPFUi1wAUs5/BW3lxjXnpGGAE87s2fKlyOT2KOvbD8eVtozHCV/pSlhzoIPyDMvwfR3BTfF56CHaLDultI2iVat3eyN517dgRuGuJEHvzRSSC7/zO7BHXrffSlhVFpz2XM4UV6bTEsTdDysbyuiBRaERrvfidjeBwuDkTy1f4kkHY/c0iaqCUuo8pXg6l3RyqHXsawGQAbRFyVEaf0XggfT6HbmltojosfV0k4I96RnA+qS0XCh4q91V6MhtLg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734097859; c=relaxed/relaxed;
-	bh=5M1ENZFbO/mNMn248U1qss6F8q2hwKZC+45ijoUGNaQ=;
+	t=1734097867; c=relaxed/relaxed;
+	bh=PgqF6qS7NlWWtrfijPJ59f4qec6LLBa+L5U7UdJSTDg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OOSj9JqxcRKadGi0ym1UKUKXlLDnSSfs0KWACKPI8JZTZTxEISxPReJ3hvvFT+EuZTfOyz0Scytj4kZhg8Ht+IBaQVZ3DvUaAQ9yILETMy2Nbpg2LLgw8LogSSpQEKumcMaWhTMeX4/vzNr6pCC6a7OLw0gUXzwpGva7/lRzxXCMpM86treIb651+DvxuhcSILkMcCVOH+Uhx48Mriy7iUV16zTJ1WniDpTN5/Lw1LU5pGNB5WLdSmD//7YcQDpFqxRBqUUaMi6isXeqka8Y6keJOk0HrbYJS7KcnZg3fomB5b8/P8WBF1+vugf6Ti0fizyUux1EpUciDss7bn62yg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MwVdUgwf; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=N7L+xOIG; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version; b=nIw/bnojL3Vdo4EEC2k22n7tRtQnjDH3KeLc8jkKhSKXf5Kg3tzVBItYTHTbkY0G6VGO6OY5YlApQwWZpSCqi34p8XHCz//ilNEvpMbvqSkvbss5MUfjpBdwVmbKFpmGYbuUjPBSVbMtNGch14o9UUZzOF9fTjf2qUDX1UPoxAm4fC1Gg80mtfiu1IJ4dk+5T5z4sshMae9NjVApl84Rjy+ztoHUUtOIT//aWsOmGE7czdG/sYBVmzpk1dL+esauq+HPqq4EgR9/KWvlqsfO/Y6huiMHQ50siN99jogMz70HQv/2z2ZuNSIo4RYqjMoVO18xi0iGJm7pzbW9h+yjkw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JcRstcy+; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PESghaWs; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=MwVdUgwf;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=N7L+xOIG;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=JcRstcy+;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=PESghaWs;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8rMk3bX0z3bTf
-	for <linux-erofs@lists.ozlabs.org>; Sat, 14 Dec 2024 00:50:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8rMt4J9Sz3bTf
+	for <linux-erofs@lists.ozlabs.org>; Sat, 14 Dec 2024 00:51:06 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734097855;
+	s=mimecast20190719; t=1734097863;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5M1ENZFbO/mNMn248U1qss6F8q2hwKZC+45ijoUGNaQ=;
-	b=MwVdUgwfQSQIi4jmyuKEgAO2ZchpnKwypFPV9WsITKHn5sFkT/AA0Tl3NzjgFy9lKEMJ3l
-	1l2cWgmr3Jw5hO0t9OmBzeEwq2o7kuuuky/ianG5BZlHTSov57JhquBrIjyngLMZi+DT15
-	sjkfVw0YkZNQDEu/Ql3ozUoHhZIgU3Q=
+	bh=PgqF6qS7NlWWtrfijPJ59f4qec6LLBa+L5U7UdJSTDg=;
+	b=JcRstcy+VCNxqmVKzfis+b1DzdeNB1Gi5Es4W1U0wCY5NQXUpHEnVUumgKNG8BMRrKr5bw
+	2xniJS12sRPyqh/rev13K+4+gGYslCE66AYlg1Fo6Z5Y20wwaGurmPcyLP33EV3VTP1kKh
+	RY3o6ttNu9Fqm4NXfXd5l0q4FNwL5fY=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734097856;
+	s=mimecast20190719; t=1734097864;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5M1ENZFbO/mNMn248U1qss6F8q2hwKZC+45ijoUGNaQ=;
-	b=N7L+xOIGH6ysdQd2KxR6lkiNo5uPiOh3+urZJUvItES5v3fQj/vjDAcMk65AgupWn0NI/Q
-	0X4wOlXh5Y0/H4q/nv/p+Uh869DFAedja0jeKJNEHQrozOycl6e0BwNaZ7EXbDg5nBfA+E
-	Xojz8pUQkCYgbRma8Mcp9EoxpawHsEc=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=PgqF6qS7NlWWtrfijPJ59f4qec6LLBa+L5U7UdJSTDg=;
+	b=PESghaWsnZDwdJGKHvhYWzDf8ZmWj8MDcqj8rcHWsfRK/WJFhNTJDXnmyDJ51De72In89r
+	ZTmN5Fcru3JXnhgo5THw6EMSLpud+tyxlSm/SvtS+8QNdc50OAZdDl/VDOChoR+Oy7keIH
+	1JJ6zsuqA5STPXRyctFOtB7Pv7Wd3mw=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-492-komwBIjYNoKdH0VnGk57oA-1; Fri,
- 13 Dec 2024 08:50:52 -0500
-X-MC-Unique: komwBIjYNoKdH0VnGk57oA-1
-X-Mimecast-MFC-AGG-ID: komwBIjYNoKdH0VnGk57oA
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-144-5qCQLS_NOjiuU8cdRRSGCw-1; Fri,
+ 13 Dec 2024 08:50:58 -0500
+X-MC-Unique: 5qCQLS_NOjiuU8cdRRSGCw-1
+X-Mimecast-MFC-AGG-ID: 5qCQLS_NOjiuU8cdRRSGCw
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D61E71956056;
-	Fri, 13 Dec 2024 13:50:49 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8DA8F1955F54;
+	Fri, 13 Dec 2024 13:50:55 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.48])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EC2561956052;
-	Fri, 13 Dec 2024 13:50:44 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 51D89195605A;
+	Fri, 13 Dec 2024 13:50:50 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
-Subject: [PATCH 04/10] nfs: Fix oops in nfs_netfs_init_request() when copying to cache
-Date: Fri, 13 Dec 2024 13:50:04 +0000
-Message-ID: <20241213135013.2964079-5-dhowells@redhat.com>
+Subject: [PATCH 05/10] cachefiles: Parse the "secctx" immediately
+Date: Fri, 13 Dec 2024 13:50:05 +0000
+Message-ID: <20241213135013.2964079-6-dhowells@redhat.com>
 In-Reply-To: <20241213135013.2964079-1-dhowells@redhat.com>
 References: <20241213135013.2964079-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 X-Spam-Status: No, score=-0.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
 	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
@@ -92,62 +92,131 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Dave Wysochanski <dwysocha@redhat.com>, linux-cifs@vger.kernel.org, Max Kellermann <max.kellermann@ionos.com>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, ceph-devel@vger.kernel.org, Anna Schumaker <anna@kernel.org>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Trond Myklebust <trondmy@kernel.org>
+Cc: linux-cifs@vger.kernel.org, Max Kellermann <max.kellermann@ionos.com>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, ceph-devel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Trond Myklebust <trondmy@kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-When netfslib wants to copy some data that has just been read on behalf of
-nfs, it creates a new write request and calls nfs_netfs_init_request() to
-initialise it, but with a NULL file pointer.  This causes
-nfs_file_open_context() to oops - however, we don't actually need the nfs
-context as we're only going to write to the cache.
+From: Max Kellermann <max.kellermann@ionos.com>
 
-Fix this by just returning if we aren't given a file pointer and emit a
-warning if the request was for something other than copy-to-cache.
+Instead of storing an opaque string, call security_secctx_to_secid()
+right in the "secctx" command handler and store only the numeric
+"secid".  This eliminates an unnecessary string allocation and allows
+the daemon to receive errors when writing the "secctx" command instead
+of postponing the error to the "bind" command handler.  For example,
+if the kernel was built without `CONFIG_SECURITY`, "bind" will return
+`EOPNOTSUPP`, but the daemon doesn't know why.  With this patch, the
+"secctx" will instead return `EOPNOTSUPP` which is the right context
+for this error.
 
-Further, fix nfs_netfs_free_request() so that it doesn't try to free the
-context if the pointer is NULL.
+This patch adds a boolean flag `have_secid` because I'm not sure if we
+can safely assume that zero is the special secid value for "not set".
+This appears to be true for SELinux, Smack and AppArmor, but since
+this attribute is not documented, I'm unable to derive a stable
+guarantee for that.
 
-Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
-Reported-by: Max Kellermann <max.kellermann@ionos.com>
-Closes: https://lore.kernel.org/r/CAKPOu+9DyMbKLhyJb7aMLDTb=Fh0T8Teb9sjuf_pze+XWT1VaQ@mail.gmail.com/
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Trond Myklebust <trondmy@kernel.org>
-cc: Anna Schumaker <anna@kernel.org>
-cc: Dave Wysochanski <dwysocha@redhat.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-nfs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
+Link: https://lore.kernel.org/r/20241209141554.638708-1-max.kellermann@ionos.com/
 ---
- fs/nfs/fscache.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/cachefiles/daemon.c   | 14 +++++++-------
+ fs/cachefiles/internal.h |  3 ++-
+ fs/cachefiles/security.c |  6 +++---
+ 3 files changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-index 810269ee0a50..d49e4ce27999 100644
---- a/fs/nfs/fscache.c
-+++ b/fs/nfs/fscache.c
-@@ -263,6 +263,12 @@ int nfs_netfs_readahead(struct readahead_control *ractl)
- static atomic_t nfs_netfs_debug_id;
- static int nfs_netfs_init_request(struct netfs_io_request *rreq, struct file *file)
+diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+index 89b11336a836..1806bff8e59b 100644
+--- a/fs/cachefiles/daemon.c
++++ b/fs/cachefiles/daemon.c
+@@ -15,6 +15,7 @@
+ #include <linux/namei.h>
+ #include <linux/poll.h>
+ #include <linux/mount.h>
++#include <linux/security.h>
+ #include <linux/statfs.h>
+ #include <linux/ctype.h>
+ #include <linux/string.h>
+@@ -576,7 +577,7 @@ static int cachefiles_daemon_dir(struct cachefiles_cache *cache, char *args)
+  */
+ static int cachefiles_daemon_secctx(struct cachefiles_cache *cache, char *args)
  {
-+	if (!file) {
-+		if (WARN_ON_ONCE(rreq->origin != NETFS_PGPRIV2_COPY_TO_CACHE))
-+			return -EIO;
-+		return 0;
-+	}
-+
- 	rreq->netfs_priv = get_nfs_open_context(nfs_file_open_context(file));
- 	rreq->debug_id = atomic_inc_return(&nfs_netfs_debug_id);
- 	/* [DEPRECATED] Use PG_private_2 to mark folio being written to the cache. */
-@@ -274,7 +280,8 @@ static int nfs_netfs_init_request(struct netfs_io_request *rreq, struct file *fi
+-	char *secctx;
++	int err;
  
- static void nfs_netfs_free_request(struct netfs_io_request *rreq)
- {
--	put_nfs_open_context(rreq->netfs_priv);
-+	if (rreq->netfs_priv)
-+		put_nfs_open_context(rreq->netfs_priv);
+ 	_enter(",%s", args);
+ 
+@@ -585,16 +586,16 @@ static int cachefiles_daemon_secctx(struct cachefiles_cache *cache, char *args)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (cache->secctx) {
++	if (cache->have_secid) {
+ 		pr_err("Second security context specified\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	secctx = kstrdup(args, GFP_KERNEL);
+-	if (!secctx)
+-		return -ENOMEM;
++	err = security_secctx_to_secid(args, strlen(args), &cache->secid);
++	if (err)
++		return err;
+ 
+-	cache->secctx = secctx;
++	cache->have_secid = true;
+ 	return 0;
  }
  
- static struct nfs_netfs_io_data *nfs_netfs_alloc(struct netfs_io_subrequest *sreq)
+@@ -820,7 +821,6 @@ static void cachefiles_daemon_unbind(struct cachefiles_cache *cache)
+ 	put_cred(cache->cache_cred);
+ 
+ 	kfree(cache->rootdirname);
+-	kfree(cache->secctx);
+ 	kfree(cache->tag);
+ 
+ 	_leave("");
+diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
+index 7b99bd98de75..38c236e38cef 100644
+--- a/fs/cachefiles/internal.h
++++ b/fs/cachefiles/internal.h
+@@ -122,7 +122,6 @@ struct cachefiles_cache {
+ #define CACHEFILES_STATE_CHANGED	3	/* T if state changed (poll trigger) */
+ #define CACHEFILES_ONDEMAND_MODE	4	/* T if in on-demand read mode */
+ 	char				*rootdirname;	/* name of cache root directory */
+-	char				*secctx;	/* LSM security context */
+ 	char				*tag;		/* cache binding tag */
+ 	refcount_t			unbind_pincount;/* refcount to do daemon unbind */
+ 	struct xarray			reqs;		/* xarray of pending on-demand requests */
+@@ -130,6 +129,8 @@ struct cachefiles_cache {
+ 	struct xarray			ondemand_ids;	/* xarray for ondemand_id allocation */
+ 	u32				ondemand_id_next;
+ 	u32				msg_id_next;
++	u32				secid;		/* LSM security id */
++	bool				have_secid;	/* whether "secid" was set */
+ };
+ 
+ static inline bool cachefiles_in_ondemand_mode(struct cachefiles_cache *cache)
+diff --git a/fs/cachefiles/security.c b/fs/cachefiles/security.c
+index fe777164f1d8..fc6611886b3b 100644
+--- a/fs/cachefiles/security.c
++++ b/fs/cachefiles/security.c
+@@ -18,7 +18,7 @@ int cachefiles_get_security_ID(struct cachefiles_cache *cache)
+ 	struct cred *new;
+ 	int ret;
+ 
+-	_enter("{%s}", cache->secctx);
++	_enter("{%u}", cache->have_secid ? cache->secid : 0);
+ 
+ 	new = prepare_kernel_cred(current);
+ 	if (!new) {
+@@ -26,8 +26,8 @@ int cachefiles_get_security_ID(struct cachefiles_cache *cache)
+ 		goto error;
+ 	}
+ 
+-	if (cache->secctx) {
+-		ret = set_security_override_from_ctx(new, cache->secctx);
++	if (cache->have_secid) {
++		ret = set_security_override(new, cache->secid);
+ 		if (ret < 0) {
+ 			put_cred(new);
+ 			pr_err("Security denies permission to nominate security context: error %d\n",
 
