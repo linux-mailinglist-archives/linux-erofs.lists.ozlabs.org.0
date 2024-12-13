@@ -1,81 +1,81 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 70D9B9F0DC1
-	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 14:51:21 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E94B99F0DC5
+	for <lists+linux-erofs@lfdr.de>; Fri, 13 Dec 2024 14:51:32 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8rN73GdSz3bZf
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Dec 2024 00:51:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Y8rNM03p4z3bWy
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Dec 2024 00:51:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734097877;
-	cv=none; b=ObFPU4cGZK2X9fJZukoMqyi7IJpeTOHTqdMx6/zuBSfuNjaqIVqt9mdasPfG47xhF2yJen3DhEH9ThmaDYeZWxbaI547eE4Ftfx5rOAGUdEkxE+6rXqiJ5TkAP4I9KVGpTZh1lD/k6jvivLeJlUkHj6kN1FpHTj9Xt7sPe3aeo+zxKCRjZKhcOKwtBxA1rtB8fyP3NztiSbUJTSqD9gQac2bBnAuw9QuOCKG1JEzkPNwJ7rhxM8IGUlDI2eipiPVgkbaccJjJS+y1qNkgxiN+w1XcfZeZsqV3/jN8TERgQcAXVj8fowq9yOuASqvXk00riuAat/u6T8cqRdOyMCCog==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734097888;
+	cv=none; b=g4VaZptHM24hAG2HSmW/Us1FMiF0rgl7fptItpAvCgtuFgTpwDh1e3HAP2K+L2xlPM19+2th197ze2d4Lh3U7ke5IYlv/E5X2ShHn3+0vEIckr2j+6H7iIQbfF+OgRjvNxWNnRJSr5IasNuaOyWLKG0kOV26l6klvAwdPGkBN6h/Nu8+/4QQCsj4qtaIJrRSrFBz081vWRFWNMf/7xX5jJI7tTxu2EdKEp6QqnvI0xwujGEItCr0N0bXC+D/GWOF8AZ+Y2bH+8k+oLPP2D6IcdJ75O7mr676r4nG9pZAX5VH2OIYnIfdVRr+U4+6BTz5l+RbDLkroEhmzxTSDjbIWw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734097877; c=relaxed/relaxed;
-	bh=Iv9WM7D/h/d7OTq2M7QoeqOwEbcTnPmdrMlMHFXuPOU=;
+	t=1734097888; c=relaxed/relaxed;
+	bh=KjPETwBK7bWpM5YaAhKCzBXjAnc9nY6CVWmIFTOZIoE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IwmbVGrMfpjKFoF6gZTfEuCHAgR8aG+hbMoyHnmsRPKWv0pFL1HnNCKGkAXXABiS/q/ZQUSy6dNkSTc+EIuMati9ZYM8+TOiU29/6tqIBTYtWj4gN+9Fm3LmHOyaCnPGl+gyeDzR+rxWDJzLcDmob8oke9rwz65hkoMNfCvi58E6su28TGyymHeF8Hhwlli/8yCy/dPiLnMN3UZ+cVu+XzfE8Q641s4epssmCzotTkdtQhyZI7wXfWj0H0Tjuda9IDLHMoB+iuC/sRDZCors3SbmmWCxJaIIP3Q15bFb6o8r6FpQez9cgDTYDFE9sXqlFwd469Znm16C20Q143JSUg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Ua5JPQVZ; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Ua5JPQVZ; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+	 MIME-Version; b=nGoQeK9lRXnp7MG4XSTUufHETJKJarXNigth4hYZgTRk17azJbW71rtjahD2R1U/cb39F49tjLIRjEJ0ndMICNLZ9ZDnkwq/EWx0QilsGKgcl/SM+wMPrZ44tq9mDpyZ7RfDSxE1NEy6q0hA1+gX1J3YmpVl90DPq5MkVM+f4RSwf3H9d1GJeHzU8hvMiNpVhnbMp5TRYpy7kmSsK16BjQW4uKN0WExEB166s9Sowe/BrnBUHiyW5pTi6wnXwkPo9ZsQCSs/bGoVv9B2CupxMQoYZNaPT4r5vCyAzrT+KLml6kZNz5SvLb2XJWKe3IgBy3o+X8s2ElwRqZHh2ird1Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EXgwlPif; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EXgwlPif; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Ua5JPQVZ;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Ua5JPQVZ;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EXgwlPif;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=EXgwlPif;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8rN42qKZz3bTN
-	for <linux-erofs@lists.ozlabs.org>; Sat, 14 Dec 2024 00:51:16 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y8rNH3YR2z3bTJ
+	for <linux-erofs@lists.ozlabs.org>; Sat, 14 Dec 2024 00:51:27 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734097873;
+	s=mimecast20190719; t=1734097884;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Iv9WM7D/h/d7OTq2M7QoeqOwEbcTnPmdrMlMHFXuPOU=;
-	b=Ua5JPQVZ31HIxUGetiUzlknSomTKT7tJ3/3VaolcdGPQc/qi4yks9qfta8XyprOUDj+KRT
-	Wci7TYMv8UX289imu3eaeiSyYd1kDJ7EOdzJ+dJCCut/Y39Y+OWHhMH9IBAx71k+w6+xQy
-	hy9qvaggxNYnBZdi0gZxrAgmYEr2XXk=
+	bh=KjPETwBK7bWpM5YaAhKCzBXjAnc9nY6CVWmIFTOZIoE=;
+	b=EXgwlPifNHg/sMbyJAXCCFRuWn+R/15HMkuuqig5gyw/VN14HsTxZBclAn9EcC0b1u9umG
+	HW6YV/VJC2CZv73Gqb1bp59Qpm4U9WWD/10Bfw9s+0YjPUOwkg8FuytqK4lzd2FgIVhu+w
+	6NxyJagqxATlXBSDaE3gD09JF1u+Tb8=
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734097873;
+	s=mimecast20190719; t=1734097884;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Iv9WM7D/h/d7OTq2M7QoeqOwEbcTnPmdrMlMHFXuPOU=;
-	b=Ua5JPQVZ31HIxUGetiUzlknSomTKT7tJ3/3VaolcdGPQc/qi4yks9qfta8XyprOUDj+KRT
-	Wci7TYMv8UX289imu3eaeiSyYd1kDJ7EOdzJ+dJCCut/Y39Y+OWHhMH9IBAx71k+w6+xQy
-	hy9qvaggxNYnBZdi0gZxrAgmYEr2XXk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+	bh=KjPETwBK7bWpM5YaAhKCzBXjAnc9nY6CVWmIFTOZIoE=;
+	b=EXgwlPifNHg/sMbyJAXCCFRuWn+R/15HMkuuqig5gyw/VN14HsTxZBclAn9EcC0b1u9umG
+	HW6YV/VJC2CZv73Gqb1bp59Qpm4U9WWD/10Bfw9s+0YjPUOwkg8FuytqK4lzd2FgIVhu+w
+	6NxyJagqxATlXBSDaE3gD09JF1u+Tb8=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-649-Z0u6tnJ2N66YU4thKkuufg-1; Fri,
- 13 Dec 2024 08:51:11 -0500
-X-MC-Unique: Z0u6tnJ2N66YU4thKkuufg-1
-X-Mimecast-MFC-AGG-ID: Z0u6tnJ2N66YU4thKkuufg
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-39-NT_RY7GvPRmiuXhKw1jMLw-1; Fri,
+ 13 Dec 2024 08:51:18 -0500
+X-MC-Unique: NT_RY7GvPRmiuXhKw1jMLw-1
+X-Mimecast-MFC-AGG-ID: NT_RY7GvPRmiuXhKw1jMLw
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4184F1956089;
-	Fri, 13 Dec 2024 13:51:08 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F191719560BC;
+	Fri, 13 Dec 2024 13:51:14 +0000 (UTC)
 Received: from warthog.procyon.org.uk.com (unknown [10.42.28.48])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9E5001956086;
-	Fri, 13 Dec 2024 13:51:03 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B296F30044C1;
+	Fri, 13 Dec 2024 13:51:09 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
-Subject: [PATCH 07/10] netfs: Fix missing barriers by using clear_and_wake_up_bit()
-Date: Fri, 13 Dec 2024 13:50:07 +0000
-Message-ID: <20241213135013.2964079-8-dhowells@redhat.com>
+Subject: [PATCH 08/10] netfs: Work around recursion by abandoning retry if nothing read
+Date: Fri, 13 Dec 2024 13:50:08 +0000
+Message-ID: <20241213135013.2964079-9-dhowells@redhat.com>
 In-Reply-To: <20241213135013.2964079-1-dhowells@redhat.com>
 References: <20241213135013.2964079-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 X-Spam-Status: No, score=-0.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
 	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
@@ -92,77 +92,402 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-cifs@vger.kernel.org, Max Kellermann <max.kellermann@ionos.com>, v9fs@lists.linux.dev, Akira Yokosawa <akiyks@gmail.com>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, ceph-devel@vger.kernel.org, Zilin Guan <zilin@seu.edu.cn>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Trond Myklebust <trondmy@kernel.org>
+Cc: Lizhi Xu <lizhi.xu@windriver.com>, linux-cifs@vger.kernel.org, Max Kellermann <max.kellermann@ionos.com>, Dominique Martinet <asmadeus@codewreck.org>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, ceph-devel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Trond Myklebust <trondmy@kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Use clear_and_wake_up_bit() rather than something like:
+syzkaller reported recursion with a loop of three calls (netfs_rreq_assess,
+netfs_retry_reads and netfs_rreq_terminated) hitting the limit of the stack
+during an unbuffered or direct I/O read.
 
-	clear_bit_unlock(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
-	wake_up_bit(&rreq->flags, NETFS_RREQ_IN_PROGRESS);
+There are a number of issues:
 
-as there needs to be a barrier inserted between which is present in
-clear_and_wake_up_bit().
+ (1) There is no limit on the number of retries.
 
-Fixes: 288ace2f57c9 ("netfs: New writeback implementation")
+ (2) A subrequest is supposed to be abandoned if it does not transfer
+     anything (NETFS_SREQ_NO_PROGRESS), but that isn't checked under all
+     circumstances.
+
+ (3) The actual root cause, which is this:
+
+	if (atomic_dec_and_test(&rreq->nr_outstanding))
+		netfs_rreq_terminated(rreq, ...);
+
+     When we do a retry, we bump the rreq->nr_outstanding counter to
+     prevent the final cleanup phase running before we've finished
+     dispatching the retries.  The problem is if we hit 0, we have to do
+     the cleanup phase - but we're in the cleanup phase and end up
+     repeating the retry cycle, hence the recursion.
+
+Work around the problem by limiting the number of retries.  This is based
+on Lizhi Xu's patch[1], and makes the following changes:
+
+ (1) Replace NETFS_SREQ_NO_PROGRESS with NETFS_SREQ_MADE_PROGRESS and make
+     the filesystem set it if it managed to read or write at least one byte
+     of data.  Clear this bit before issuing a subrequest.
+
+ (2) Add a ->retry_count member to the subrequest and increment it any time
+     we do a retry.
+
+ (3) Remove the NETFS_SREQ_RETRYING flag as it is superfluous with
+     ->retry_count.  If the latter is non-zero, we're doing a retry.
+
+ (4) Abandon a subrequest if retry_count is non-zero and we made no
+     progress.
+
+ (5) Use ->retry_count in both the write-side and the read-size.
+
+[?] Question: Should I set a hard limit on retry_count in both read and
+    write?  Say it hits 50, we always abandon it.  The problem is that
+    these changes only mitigate the issue.  As long as it made at least one
+    byte of progress, the recursion is still an issue.  This patch
+    mitigates the problem, but does not fix the underlying cause.  I have
+    patches that will do that, but it's an intrusive fix that's currently
+    pending for the next merge window.
+
+The oops generated by KASAN looks something like:
+
+   BUG: TASK stack guard page was hit at ffffc9000482ff48 (stack is ffffc90004830000..ffffc90004838000)
+   Oops: stack guard page: 0000 [#1] PREEMPT SMP KASAN NOPTI
+   ...
+   RIP: 0010:mark_lock+0x25/0xc60 kernel/locking/lockdep.c:4686
+    ...
+    mark_usage kernel/locking/lockdep.c:4646 [inline]
+    __lock_acquire+0x906/0x3ce0 kernel/locking/lockdep.c:5156
+    lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5825
+    local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
+    ___slab_alloc+0x123/0x1880 mm/slub.c:3695
+    __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3908
+    __slab_alloc_node mm/slub.c:3961 [inline]
+    slab_alloc_node mm/slub.c:4122 [inline]
+    kmem_cache_alloc_noprof+0x2a7/0x2f0 mm/slub.c:4141
+    radix_tree_node_alloc.constprop.0+0x1e8/0x350 lib/radix-tree.c:253
+    idr_get_free+0x528/0xa40 lib/radix-tree.c:1506
+    idr_alloc_u32+0x191/0x2f0 lib/idr.c:46
+    idr_alloc+0xc1/0x130 lib/idr.c:87
+    p9_tag_alloc+0x394/0x870 net/9p/client.c:321
+    p9_client_prepare_req+0x19f/0x4d0 net/9p/client.c:644
+    p9_client_zc_rpc.constprop.0+0x105/0x880 net/9p/client.c:793
+    p9_client_read_once+0x443/0x820 net/9p/client.c:1570
+    p9_client_read+0x13f/0x1b0 net/9p/client.c:1534
+    v9fs_issue_read+0x115/0x310 fs/9p/vfs_addr.c:74
+    netfs_retry_read_subrequests fs/netfs/read_retry.c:60 [inline]
+    netfs_retry_reads+0x153a/0x1d00 fs/netfs/read_retry.c:232
+    netfs_rreq_assess+0x5d3/0x870 fs/netfs/read_collect.c:371
+    netfs_rreq_terminated+0xe5/0x110 fs/netfs/read_collect.c:407
+    netfs_retry_reads+0x155e/0x1d00 fs/netfs/read_retry.c:235
+    netfs_rreq_assess+0x5d3/0x870 fs/netfs/read_collect.c:371
+    netfs_rreq_terminated+0xe5/0x110 fs/netfs/read_collect.c:407
+    netfs_retry_reads+0x155e/0x1d00 fs/netfs/read_retry.c:235
+    netfs_rreq_assess+0x5d3/0x870 fs/netfs/read_collect.c:371
+    ...
+    netfs_rreq_terminated+0xe5/0x110 fs/netfs/read_collect.c:407
+    netfs_retry_reads+0x155e/0x1d00 fs/netfs/read_retry.c:235
+    netfs_rreq_assess+0x5d3/0x870 fs/netfs/read_collect.c:371
+    netfs_rreq_terminated+0xe5/0x110 fs/netfs/read_collect.c:407
+    netfs_retry_reads+0x155e/0x1d00 fs/netfs/read_retry.c:235
+    netfs_rreq_assess+0x5d3/0x870 fs/netfs/read_collect.c:371
+    netfs_rreq_terminated+0xe5/0x110 fs/netfs/read_collect.c:407
+    netfs_dispatch_unbuffered_reads fs/netfs/direct_read.c:103 [inline]
+    netfs_unbuffered_read fs/netfs/direct_read.c:127 [inline]
+    netfs_unbuffered_read_iter_locked+0x12f6/0x19b0 fs/netfs/direct_read.c:221
+    netfs_unbuffered_read_iter+0xc5/0x100 fs/netfs/direct_read.c:256
+    v9fs_file_read_iter+0xbf/0x100 fs/9p/vfs_file.c:361
+    do_iter_readv_writev+0x614/0x7f0 fs/read_write.c:832
+    vfs_readv+0x4cf/0x890 fs/read_write.c:1025
+    do_preadv fs/read_write.c:1142 [inline]
+    __do_sys_preadv fs/read_write.c:1192 [inline]
+    __se_sys_preadv fs/read_write.c:1187 [inline]
+    __x64_sys_preadv+0x22d/0x310 fs/read_write.c:1187
+    do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+    do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+
 Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
+Closes: https://syzkaller.appspot.com/bug?extid=1fc6f64c40a9d143cfb6
 Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Zilin Guan <zilin@seu.edu.cn>
-cc: Akira Yokosawa <akiyks@gmail.com>
+Suggested-by: Lizhi Xu <lizhi.xu@windriver.com>
+cc: Dominique Martinet <asmadeus@codewreck.org>
 cc: Jeff Layton <jlayton@kernel.org>
+cc: v9fs@lists.linux.dev
 cc: netfs@lists.linux.dev
 cc: linux-fsdevel@vger.kernel.org
+Link: https://lore.kernel.org/r/20241108034020.3695718-1-lizhi.xu@windriver.com/ [1]
 ---
- fs/netfs/read_collect.c  | 3 +--
- fs/netfs/write_collect.c | 9 +++------
- 2 files changed, 4 insertions(+), 8 deletions(-)
+ fs/9p/vfs_addr.c         |  6 +++++-
+ fs/afs/write.c           |  5 ++++-
+ fs/netfs/read_collect.c  | 15 +++++++++------
+ fs/netfs/read_retry.c    |  6 ++++--
+ fs/netfs/write_collect.c |  5 ++---
+ fs/netfs/write_issue.c   |  2 ++
+ fs/smb/client/cifssmb.c  | 13 +++++++++----
+ fs/smb/client/smb2pdu.c  |  9 ++++++---
+ include/linux/netfs.h    |  6 +++---
+ 9 files changed, 44 insertions(+), 23 deletions(-)
 
+diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+index 819c75233235..3bc9ce6c575e 100644
+--- a/fs/9p/vfs_addr.c
++++ b/fs/9p/vfs_addr.c
+@@ -57,6 +57,8 @@ static void v9fs_issue_write(struct netfs_io_subrequest *subreq)
+ 	int err, len;
+ 
+ 	len = p9_client_write(fid, subreq->start, &subreq->io_iter, &err);
++	if (len > 0)
++		__set_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags);
+ 	netfs_write_subrequest_terminated(subreq, len ?: err, false);
+ }
+ 
+@@ -80,8 +82,10 @@ static void v9fs_issue_read(struct netfs_io_subrequest *subreq)
+ 	if (pos + total >= i_size_read(rreq->inode))
+ 		__set_bit(NETFS_SREQ_HIT_EOF, &subreq->flags);
+ 
+-	if (!err)
++	if (!err) {
+ 		subreq->transferred += total;
++		__set_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags);
++	}
+ 
+ 	netfs_read_subreq_terminated(subreq, err, false);
+ }
+diff --git a/fs/afs/write.c b/fs/afs/write.c
+index 34107b55f834..ccb6aa8027c5 100644
+--- a/fs/afs/write.c
++++ b/fs/afs/write.c
+@@ -122,7 +122,7 @@ static void afs_issue_write_worker(struct work_struct *work)
+ 	if (subreq->debug_index == 3)
+ 		return netfs_write_subrequest_terminated(subreq, -ENOANO, false);
+ 
+-	if (!test_bit(NETFS_SREQ_RETRYING, &subreq->flags)) {
++	if (!subreq->retry_count) {
+ 		set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
+ 		return netfs_write_subrequest_terminated(subreq, -EAGAIN, false);
+ 	}
+@@ -149,6 +149,9 @@ static void afs_issue_write_worker(struct work_struct *work)
+ 	afs_wait_for_operation(op);
+ 	ret = afs_put_operation(op);
+ 	switch (ret) {
++	case 0:
++		__set_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags);
++		break;
+ 	case -EACCES:
+ 	case -EPERM:
+ 	case -ENOKEY:
 diff --git a/fs/netfs/read_collect.c b/fs/netfs/read_collect.c
-index b415e3972336..46ce3b7adf07 100644
+index 46ce3b7adf07..47ed3a5044e2 100644
 --- a/fs/netfs/read_collect.c
 +++ b/fs/netfs/read_collect.c
-@@ -379,8 +379,7 @@ static void netfs_rreq_assess(struct netfs_io_request *rreq)
- 	task_io_account_read(rreq->transferred);
+@@ -438,7 +438,7 @@ void netfs_read_subreq_progress(struct netfs_io_subrequest *subreq,
+ 	     rreq->origin == NETFS_READPAGE ||
+ 	     rreq->origin == NETFS_READ_FOR_WRITE)) {
+ 		netfs_consume_read_data(subreq, was_async);
+-		__clear_bit(NETFS_SREQ_NO_PROGRESS, &subreq->flags);
++		__set_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags);
+ 	}
+ }
+ EXPORT_SYMBOL(netfs_read_subreq_progress);
+@@ -497,7 +497,7 @@ void netfs_read_subreq_terminated(struct netfs_io_subrequest *subreq,
+ 		     rreq->origin == NETFS_READPAGE ||
+ 		     rreq->origin == NETFS_READ_FOR_WRITE)) {
+ 			netfs_consume_read_data(subreq, was_async);
+-			__clear_bit(NETFS_SREQ_NO_PROGRESS, &subreq->flags);
++			__set_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags);
+ 		}
+ 		rreq->transferred += subreq->transferred;
+ 	}
+@@ -511,10 +511,13 @@ void netfs_read_subreq_terminated(struct netfs_io_subrequest *subreq,
+ 		} else {
+ 			trace_netfs_sreq(subreq, netfs_sreq_trace_short);
+ 			if (subreq->transferred > subreq->consumed) {
+-				__set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
+-				__clear_bit(NETFS_SREQ_NO_PROGRESS, &subreq->flags);
+-				set_bit(NETFS_RREQ_NEED_RETRY, &rreq->flags);
+-			} else if (!__test_and_set_bit(NETFS_SREQ_NO_PROGRESS, &subreq->flags)) {
++				/* If we didn't read new data, abandon retry. */
++				if (subreq->retry_count &&
++				    test_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags)) {
++					__set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
++					set_bit(NETFS_RREQ_NEED_RETRY, &rreq->flags);
++				}
++			} else if (test_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags)) {
+ 				__set_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
+ 				set_bit(NETFS_RREQ_NEED_RETRY, &rreq->flags);
+ 			} else {
+diff --git a/fs/netfs/read_retry.c b/fs/netfs/read_retry.c
+index 0350592ea804..0e72e9226fc8 100644
+--- a/fs/netfs/read_retry.c
++++ b/fs/netfs/read_retry.c
+@@ -56,6 +56,8 @@ static void netfs_retry_read_subrequests(struct netfs_io_request *rreq)
+ 			if (test_bit(NETFS_SREQ_FAILED, &subreq->flags))
+ 				break;
+ 			if (__test_and_clear_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags)) {
++				__clear_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags);
++				subreq->retry_count++;
+ 				netfs_reset_iter(subreq);
+ 				netfs_reissue_read(rreq, subreq);
+ 			}
+@@ -137,7 +139,8 @@ static void netfs_retry_read_subrequests(struct netfs_io_request *rreq)
+ 			stream0->sreq_max_len = subreq->len;
  
- 	trace_netfs_rreq(rreq, netfs_rreq_trace_wake_ip);
--	clear_bit_unlock(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
--	wake_up_bit(&rreq->flags, NETFS_RREQ_IN_PROGRESS);
-+	clear_and_wake_up_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
+ 			__clear_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
+-			__set_bit(NETFS_SREQ_RETRYING, &subreq->flags);
++			__clear_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags);
++			subreq->retry_count++;
  
- 	trace_netfs_rreq(rreq, netfs_rreq_trace_done);
- 	netfs_clear_subrequests(rreq, false);
+ 			spin_lock_bh(&rreq->lock);
+ 			list_add_tail(&subreq->rreq_link, &rreq->subrequests);
+@@ -213,7 +216,6 @@ static void netfs_retry_read_subrequests(struct netfs_io_request *rreq)
+ 			subreq->error = -ENOMEM;
+ 		__clear_bit(NETFS_SREQ_FAILED, &subreq->flags);
+ 		__clear_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
+-		__clear_bit(NETFS_SREQ_RETRYING, &subreq->flags);
+ 	}
+ 	spin_lock_bh(&rreq->lock);
+ 	list_splice_tail_init(&queue, &rreq->subrequests);
 diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 1d438be2e1b4..82290c92ba7a 100644
+index 82290c92ba7a..ca3a11ed9b54 100644
 --- a/fs/netfs/write_collect.c
 +++ b/fs/netfs/write_collect.c
-@@ -501,8 +501,7 @@ static void netfs_collect_write_results(struct netfs_io_request *wreq)
- 		goto need_retry;
- 	if ((notes & MADE_PROGRESS) && test_bit(NETFS_RREQ_PAUSE, &wreq->flags)) {
- 		trace_netfs_rreq(wreq, netfs_rreq_trace_unpause);
--		clear_bit_unlock(NETFS_RREQ_PAUSE, &wreq->flags);
--		wake_up_bit(&wreq->flags, NETFS_RREQ_PAUSE);
-+		clear_and_wake_up_bit(NETFS_RREQ_PAUSE, &wreq->flags);
+@@ -179,7 +179,6 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
+ 				struct iov_iter source = subreq->io_iter;
+ 
+ 				iov_iter_revert(&source, subreq->len - source.count);
+-				__set_bit(NETFS_SREQ_RETRYING, &subreq->flags);
+ 				netfs_get_subrequest(subreq, netfs_sreq_trace_get_resubmit);
+ 				netfs_reissue_write(stream, subreq, &source);
+ 			}
+@@ -234,7 +233,7 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
+ 			/* Renegotiate max_len (wsize) */
+ 			trace_netfs_sreq(subreq, netfs_sreq_trace_retry);
+ 			__clear_bit(NETFS_SREQ_NEED_RETRY, &subreq->flags);
+-			__set_bit(NETFS_SREQ_RETRYING, &subreq->flags);
++			subreq->retry_count++;
+ 			stream->prepare_write(subreq);
+ 
+ 			part = min(len, stream->sreq_max_len);
+@@ -279,7 +278,7 @@ static void netfs_retry_write_stream(struct netfs_io_request *wreq,
+ 			subreq->start		= start;
+ 			subreq->debug_index	= atomic_inc_return(&wreq->subreq_counter);
+ 			subreq->stream_nr	= to->stream_nr;
+-			__set_bit(NETFS_SREQ_RETRYING, &subreq->flags);
++			subreq->retry_count	= 1;
+ 
+ 			trace_netfs_sreq_ref(wreq->debug_id, subreq->debug_index,
+ 					     refcount_read(&subreq->ref),
+diff --git a/fs/netfs/write_issue.c b/fs/netfs/write_issue.c
+index bf6d507578e5..ff0e82505a0b 100644
+--- a/fs/netfs/write_issue.c
++++ b/fs/netfs/write_issue.c
+@@ -244,6 +244,8 @@ void netfs_reissue_write(struct netfs_io_stream *stream,
+ 	iov_iter_advance(source, size);
+ 	iov_iter_truncate(&subreq->io_iter, size);
+ 
++	subreq->retry_count++;
++	__clear_bit(NETFS_SREQ_MADE_PROGRESS, &subreq->flags);
+ 	__set_bit(NETFS_SREQ_IN_PROGRESS, &subreq->flags);
+ 	netfs_do_issue_write(stream, subreq);
+ }
+diff --git a/fs/smb/client/cifssmb.c b/fs/smb/client/cifssmb.c
+index bd42a419458e..6cb1e81993f8 100644
+--- a/fs/smb/client/cifssmb.c
++++ b/fs/smb/client/cifssmb.c
+@@ -1319,14 +1319,16 @@ cifs_readv_callback(struct mid_q_entry *mid)
  	}
  
- 	if (notes & NEED_REASSESS) {
-@@ -605,8 +604,7 @@ void netfs_write_collection_worker(struct work_struct *work)
+ 	if (rdata->result == -ENODATA) {
+-		__set_bit(NETFS_SREQ_HIT_EOF, &rdata->subreq.flags);
+ 		rdata->result = 0;
++		__set_bit(NETFS_SREQ_HIT_EOF, &rdata->subreq.flags);
+ 	} else {
+ 		size_t trans = rdata->subreq.transferred + rdata->got_bytes;
+ 		if (trans < rdata->subreq.len &&
+ 		    rdata->subreq.start + trans == ictx->remote_i_size) {
+-			__set_bit(NETFS_SREQ_HIT_EOF, &rdata->subreq.flags);
+ 			rdata->result = 0;
++			__set_bit(NETFS_SREQ_HIT_EOF, &rdata->subreq.flags);
++		} else if (rdata->got_bytes > 0) {
++			__set_bit(NETFS_SREQ_MADE_PROGRESS, &rdata->subreq.flags);
+ 		}
+ 	}
  
- 	_debug("finished");
- 	trace_netfs_rreq(wreq, netfs_rreq_trace_wake_ip);
--	clear_bit_unlock(NETFS_RREQ_IN_PROGRESS, &wreq->flags);
--	wake_up_bit(&wreq->flags, NETFS_RREQ_IN_PROGRESS);
-+	clear_and_wake_up_bit(NETFS_RREQ_IN_PROGRESS, &wreq->flags);
+@@ -1670,10 +1672,13 @@ cifs_writev_callback(struct mid_q_entry *mid)
+ 		if (written > wdata->subreq.len)
+ 			written &= 0xFFFF;
  
- 	if (wreq->iocb) {
- 		size_t written = min(wreq->transferred, wreq->len);
-@@ -714,8 +712,7 @@ void netfs_write_subrequest_terminated(void *_op, ssize_t transferred_or_error,
+-		if (written < wdata->subreq.len)
++		if (written < wdata->subreq.len) {
+ 			result = -ENOSPC;
+-		else
++		} else {
+ 			result = written;
++			if (written > 0)
++				__set_bit(NETFS_SREQ_MADE_PROGRESS, &wdata->subreq.flags);
++		}
+ 		break;
+ 	case MID_REQUEST_SUBMITTED:
+ 	case MID_RETRY_NEEDED:
+diff --git a/fs/smb/client/smb2pdu.c b/fs/smb/client/smb2pdu.c
+index 010eae9d6c47..458b53d1f9cb 100644
+--- a/fs/smb/client/smb2pdu.c
++++ b/fs/smb/client/smb2pdu.c
+@@ -4615,6 +4615,7 @@ smb2_readv_callback(struct mid_q_entry *mid)
+ 			__set_bit(NETFS_SREQ_HIT_EOF, &rdata->subreq.flags);
+ 			rdata->result = 0;
+ 		}
++		__set_bit(NETFS_SREQ_MADE_PROGRESS, &rdata->subreq.flags);
+ 	}
+ 	trace_smb3_rw_credits(rreq_debug_id, subreq_debug_index, rdata->credits.value,
+ 			      server->credits, server->in_flight,
+@@ -4840,10 +4841,12 @@ smb2_writev_callback(struct mid_q_entry *mid)
+ 		if (written > wdata->subreq.len)
+ 			written &= 0xFFFF;
  
- 	trace_netfs_sreq(subreq, netfs_sreq_trace_terminated);
+-		if (written < wdata->subreq.len)
++		if (written < wdata->subreq.len) {
+ 			wdata->result = -ENOSPC;
+-		else
++		} else if (written > 0) {
+ 			wdata->subreq.len = written;
++			__set_bit(NETFS_SREQ_MADE_PROGRESS, &wdata->subreq.flags);
++		}
+ 		break;
+ 	case MID_REQUEST_SUBMITTED:
+ 	case MID_RETRY_NEEDED:
+@@ -5012,7 +5015,7 @@ smb2_async_writev(struct cifs_io_subrequest *wdata)
+ 	}
+ #endif
  
--	clear_bit_unlock(NETFS_SREQ_IN_PROGRESS, &subreq->flags);
--	wake_up_bit(&subreq->flags, NETFS_SREQ_IN_PROGRESS);
-+	clear_and_wake_up_bit(NETFS_SREQ_IN_PROGRESS, &subreq->flags);
+-	if (test_bit(NETFS_SREQ_RETRYING, &wdata->subreq.flags))
++	if (wdata->subreq.retry_count > 0)
+ 		smb2_set_replay(server, &rqst);
  
- 	/* If we are at the head of the queue, wake up the collector,
- 	 * transferring a ref to it if we were the ones to do so.
+ 	cifs_dbg(FYI, "async write at %llu %u bytes iter=%zx\n",
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index 5eaceef41e6c..4083d77e3f39 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -185,6 +185,7 @@ struct netfs_io_subrequest {
+ 	short			error;		/* 0 or error that occurred */
+ 	unsigned short		debug_index;	/* Index in list (for debugging output) */
+ 	unsigned int		nr_segs;	/* Number of segs in io_iter */
++	u8			retry_count;	/* The number of retries (0 on initial pass) */
+ 	enum netfs_io_source	source;		/* Where to read from/write to */
+ 	unsigned char		stream_nr;	/* I/O stream this belongs to */
+ 	unsigned char		curr_folioq_slot; /* Folio currently being read */
+@@ -194,14 +195,13 @@ struct netfs_io_subrequest {
+ #define NETFS_SREQ_COPY_TO_CACHE	0	/* Set if should copy the data to the cache */
+ #define NETFS_SREQ_CLEAR_TAIL		1	/* Set if the rest of the read should be cleared */
+ #define NETFS_SREQ_SEEK_DATA_READ	3	/* Set if ->read() should SEEK_DATA first */
+-#define NETFS_SREQ_NO_PROGRESS		4	/* Set if we didn't manage to read any data */
++#define NETFS_SREQ_MADE_PROGRESS	4	/* Set if we transferred at least some data */
+ #define NETFS_SREQ_ONDEMAND		5	/* Set if it's from on-demand read mode */
+ #define NETFS_SREQ_BOUNDARY		6	/* Set if ends on hard boundary (eg. ceph object) */
+ #define NETFS_SREQ_HIT_EOF		7	/* Set if short due to EOF */
+ #define NETFS_SREQ_IN_PROGRESS		8	/* Unlocked when the subrequest completes */
+ #define NETFS_SREQ_NEED_RETRY		9	/* Set if the filesystem requests a retry */
+-#define NETFS_SREQ_RETRYING		10	/* Set if we're retrying */
+-#define NETFS_SREQ_FAILED		11	/* Set if the subreq failed unretryably */
++#define NETFS_SREQ_FAILED		10	/* Set if the subreq failed unretryably */
+ };
+ 
+ enum netfs_io_origin {
 
