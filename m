@@ -2,91 +2,52 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F9FB9F2DF0
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Dec 2024 11:13:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DB1119F30ED
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Dec 2024 13:53:32 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YBbPn2kZCz2ywy
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Dec 2024 21:13:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YBfy204qJz304x
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Dec 2024 23:53:30 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::42d"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734344028;
-	cv=none; b=WHnlyDVjEIWpAgXUOdZW+EOWfo8LC4mRSHsnqniSba2R61VmO3KKDdaUrVuhT4VkB5L3vbO7JXjFdrACTzcvZYAlEFRRumQYWASKtt8G5u8RXI7erBorXm8W/lnWk/4NoMciv7ZvUig2wbVH0Vexir5TmPNQZzY/YT/fgBfD4HwPieiEDSJ4BhRlyLLpQz2ww6UHGUr9paNMaKBzpJPNDJ8waEpdZ6SNkJOtRztulCtCa/8j9191FQFVj5vc+Y7S4kTxNSuI6VRGLldZy0X4ismZHoAMBgs8RVISuSNgRDaf+9HQSFcp7d1ekW7Kzf09YjAGp0SY2DpfUbyK6QOSxw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734353607;
+	cv=none; b=ICgvMrqeNoLQuokk8qeNzxiEIh2BQ8sVUdctEUtGeZINHkTlNqBQfL2kQOZ+Ap+D0srhZskfVJz8rKMy0ZiRAJBHv0Av4zuHWU6/heSU2y56L7MwL/RRwp0KHv4UY6DG8fDgC/7zRuBL7MCzlq+gh86UBMnO56DBlZ5oMq5rf2FdGJHgW0xOBzoDXCGEZsH18edVWPdibF0KFzyfR5L1aBhTnRe+xS3NEPYnXdPVITLRBrGFGqf0bhme4lOOfhg0e37kidbtBQ5o8l+wEcXMYT0y4R3pqFdY2azHRQTbaEFXhKPP/S6aiK3nmuGFxCZayo6Lqx74ryQHhKq6RXpsEA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734344028; c=relaxed/relaxed;
-	bh=V9ZM1VYLJhmWw0JXWXrNZw/asAR3qnp4u24wAg0Zo6s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QRcAH5f8dWG3kB2xZANqcFqnjVfdHFg/R9dQbTkZlG8CHrG/xryaUXGvywYqtL38NLdlGUH26FIleRJJjhhM+Hz9Y5m8mvtqt4GX12vaWC2Hcj8rH9wT1IdH2BfMSie7gL58U28MTxCim9+7SqlniyRUjRJgdT7ZNEemSQW0M+IiXq7Q76hF+yujwj1skAy5SG6B5zkaEzekPOeGpro7VQXY56UaWcpNAj9uIUZWtzy6J0h8tc5YHWihB7lQEC7CEORDC2GZOn/Y7ZEgDh82amvQ2rEXF5MwNrFZXf6IYKENjE192zc/mTkge4Ue0gpViuysFfTQCVM9zn1pwtz0gA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Vpmr8fDo; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::42d; helo=mail-pf1-x42d.google.com; envelope-from=akiyks@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1734353607; c=relaxed/relaxed;
+	bh=igS+vMvKO7ShxBR7rp8ORXO+whr6YQCKn1xoR3jaKug=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ob9aoJDRI7B5d0JbEsm1Ji1qJQqzDGltIzxCsnvAm7Qzi2soJ3ygWbT7NDvg2XutEWHFhRcgZU9FCoFpCj8s8bl8Uww0uwh5UH9+d4q1RGgzDhOrdkuU9eV6pAyrpESCjXzb5VyCqxDF82KbTjvv4MzdVLDoiGXQcu7LsFkPZMRXRRfQEF8G9j8OcJWchHC60kavj/154U/h5dY9YA4U88U4SubrmDeIJJdlvcM2z8knh+Bleg+ci+cnWYH8HY9ADQ3k0yydJ/kTNZ0pMQFDhQ1H2x5BfA47AsgxYkYioo2FPOGCVwnE2dv9kWKHB+/7WOe+YNYF7CEMqp4FFJSykA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=vT2OitTD; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Vpmr8fDo;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=vT2OitTD;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42d; helo=mail-pf1-x42d.google.com; envelope-from=akiyks@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YBbPl2gdYz2xks
-	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Dec 2024 21:13:47 +1100 (AEDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-728e1799d95so4570225b3a.2
-        for <linux-erofs@lists.ozlabs.org>; Mon, 16 Dec 2024 02:13:47 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YBfxx6Q3Zz2yys
+	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Dec 2024 23:53:23 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734344025; x=1734948825; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V9ZM1VYLJhmWw0JXWXrNZw/asAR3qnp4u24wAg0Zo6s=;
-        b=Vpmr8fDosz5uXJ/psio/iPwchjANLJKOiR2Sm4v89kMxJCdac/zIX9x5t6nKw/Bvjp
-         bpeTsNFar5vEUQQh7PsWwyKX4NSd6APckvHAQJ1ewM2hSslBia1fRk/E9PjW8ullbPNb
-         7emJ257UI0CSig88h8dr0OnVgIHLlTj1p6f6zYAMWyJ5DMwz37lOqoMcYiXD7lz9DdL5
-         aFmISXC6lkllhwW5kEpwa7U7RNQjKhG1KwkHEIPTvb1rXqZ9aCJK/Eab6iVbA1LfLAqp
-         UX24c6z2z8aTvpKeUaRZef8vD6P49aXpJFurwO5KHsCcrvB8cNwatWkRmuKiw00I4D/l
-         CcCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734344025; x=1734948825;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V9ZM1VYLJhmWw0JXWXrNZw/asAR3qnp4u24wAg0Zo6s=;
-        b=TCxd0yIe4g1m9Jr8X52bp0grdmv32YGxRMsz+QV9bdui92wOhRUQHOFruCNvkXje4x
-         WIwdEONuoKje/BvQjNlNPlfUJBd/evw53DQjUprlU18IfYd5DfpmcgbBkCgy/Vn1M6q4
-         D3z+iz522ViAo/s5yKpjmxVc6paFfDTxSb3MJEqMaYbCQPIymbh2OQYAyV5EQgtLRt1V
-         V6yZZnw/+dfBPxZxzIqYzXR987VvttYSyZP4a3YASpH50C/TqMiIK68wP5cfOtLDyamt
-         6bIJB7/8PA907VbFaa0nW3aZSTO/SjmBfpuRN60NZBDy7blF662sNFY7SBxTmWWlfS5p
-         HqZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV2iRWnzTZg7veQvl7QV3wvkj/B5NkbVfKF2SxleFBl27i/rR2T+o/BldiOfL5ZKBnntPeIA40fs1JoLQ==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YxMZfc4/7bjWC+B90tMCTirusEpeGzB5vuzo4nhm2Q176UNfKEl
-	9X9zN47Jza+2Q6b2ZdLbTUa6Cn/lwg4QwcgDmnkETfcs9WHF8By1
-X-Gm-Gg: ASbGncvez1I0HYPlwQCIRaN3atwKg0G3UnQZ/6H5E0bRn7C3Y2tOcvuNs6LZiTiTX/A
-	842Il2YMqbvlJxKRfbVfU9/us+QVaUf7/Sh9mopxY7ThSMcmai68EmOypwHx9HWNY6K9e6FxrUN
-	pvkInJIpjzs2CCh3dfxIfig1L8bNPSRWNhqlifYc+xrxy01VoGmiGCCOziHPly63ah8hzzuzaIk
-	FAUmWP836NUDzntdEPW8z38lpZs37l6Y6ryb8C4Lx86LsJpuS38RweGtZL0or6Ul8aTGHxCsgUO
-	c4XncKlz5YFTPhGtOOHlX5I=
-X-Google-Smtp-Source: AGHT+IFq3zJyvoXfAV7XVBdCiDQC4vaO/7xLrUwixiOvu21RBmLw5wfgxXzoYw8zU6Yia4k+KM7puQ==
-X-Received: by 2002:a05:6a20:4304:b0:1e1:bdae:e045 with SMTP id adf61e73a8af0-1e1dfd91980mr18130458637.23.1734344023005;
-        Mon, 16 Dec 2024 02:13:43 -0800 (PST)
-Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72918bce39csm4517791b3a.189.2024.12.16.02.13.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Dec 2024 02:13:42 -0800 (PST)
-Message-ID: <843f5270-d715-4c98-b191-1c271eb418c5@gmail.com>
-Date: Mon, 16 Dec 2024 19:13:39 +0900
+	d=linux.alibaba.com; s=default;
+	t=1734353598; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=igS+vMvKO7ShxBR7rp8ORXO+whr6YQCKn1xoR3jaKug=;
+	b=vT2OitTDEUV3Hq0lirZbWg4so7nuZCfJMDX32v6nVDLFathXnMYSJsWBqdbc1rCYICgQop6Ta9gps0Pa7xXdHCYFpmerncInJ8y79zQlLnBHhrzha8BtvDjC0pGG+sSKcDLT+r24tPLgkqX8OjLFsaaXigCgGt/pRFQWmqIOcdw=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WLcksKQ_1734353592 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 16 Dec 2024 20:53:17 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v3 1/4] erofs: add erofs_sb_free() helper
+Date: Mon, 16 Dec 2024 20:53:07 +0800
+Message-ID: <20241216125310.930933-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/10] netfs: Remove redundant use of smp_rmb()
-To: David Howells <dhowells@redhat.com>,
- Christian Brauner <christian@brauner.io>
-References: <20241213135013.2964079-1-dhowells@redhat.com>
- <20241213135013.2964079-7-dhowells@redhat.com>
-Content-Language: en-US
-From: Akira Yokosawa <akiyks@gmail.com>
-In-Reply-To: <20241213135013.2964079-7-dhowells@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -99,33 +60,97 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-cifs@vger.kernel.org, Max Kellermann <max.kellermann@ionos.com>, v9fs@lists.linux.dev, Akira Yokosawa <akiyks@gmail.com>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, ceph-devel@vger.kernel.org, Zilin Guan <zilin@seu.edu.cn>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Trond Myklebust <trondmy@kernel.org>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-David Howells wrote:
-> From: Zilin Guan <zilin@seu.edu.cn>
-> 
-> The function netfs_unbuffered_write_iter_locked() in
-> fs/netfs/direct_write.c contains an unnecessary smp_rmb() call after
-> wait_on_bit(). Since wait_on_bit() already incorporates a memory barrier
-> that ensures the flag update is visible before the function returns, the
-> smp_rmb() provides no additional benefit and incurs unnecessary overhead.
-> 
-> This patch removes the redundant barrier to simplify and optimize the code.
-> 
-> Signed-off-by: Zilin Guan <zilin@seu.edu.cn>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Akira Yokosawa <akiyks@gmail.com>
+Unify the common parts of erofs_fc_free() and erofs_kill_sb() as
+erofs_sb_free().
 
-Reviewed-by: Akira Yokosawa <akiyks@gmail.com>
+Thus, fput() in erofs_fc_get_tree() is no longer needed, too.
 
-> cc: Jeff Layton <jlayton@kernel.org>
-> cc: netfs@lists.linux.dev
-> cc: linux-fsdevel@vger.kernel.org
-> Link: https://lore.kernel.org/r/20241207021952.2978530-1-zilin@seu.edu.cn/
-> ---
->  fs/netfs/direct_write.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
+Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/super.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index c235a8e4315e..de8e3ecc6381 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -703,16 +703,19 @@ static int erofs_fc_get_tree(struct fs_context *fc)
+ 			GET_TREE_BDEV_QUIET_LOOKUP : 0);
+ #ifdef CONFIG_EROFS_FS_BACKED_BY_FILE
+ 	if (ret == -ENOTBLK) {
++		struct file *file;
++
+ 		if (!fc->source)
+ 			return invalf(fc, "No source specified");
+-		sbi->fdev = filp_open(fc->source, O_RDONLY | O_LARGEFILE, 0);
+-		if (IS_ERR(sbi->fdev))
+-			return PTR_ERR(sbi->fdev);
++
++		file = filp_open(fc->source, O_RDONLY | O_LARGEFILE, 0);
++		if (IS_ERR(file))
++			return PTR_ERR(file);
++		sbi->fdev = file;
+ 
+ 		if (S_ISREG(file_inode(sbi->fdev)->i_mode) &&
+ 		    sbi->fdev->f_mapping->a_ops->read_folio)
+ 			return get_tree_nodev(fc, erofs_fc_fill_super);
+-		fput(sbi->fdev);
+ 	}
+ #endif
+ 	return ret;
+@@ -763,19 +766,24 @@ static void erofs_free_dev_context(struct erofs_dev_context *devs)
+ 	kfree(devs);
+ }
+ 
+-static void erofs_fc_free(struct fs_context *fc)
++static void erofs_sb_free(struct erofs_sb_info *sbi)
+ {
+-	struct erofs_sb_info *sbi = fc->s_fs_info;
+-
+-	if (!sbi)
+-		return;
+-
+ 	erofs_free_dev_context(sbi->devs);
+ 	kfree(sbi->fsid);
+ 	kfree(sbi->domain_id);
++	if (sbi->fdev)
++		fput(sbi->fdev);
+ 	kfree(sbi);
+ }
+ 
++static void erofs_fc_free(struct fs_context *fc)
++{
++	struct erofs_sb_info *sbi = fc->s_fs_info;
++
++	if (sbi) /* free here if an error occurs before transferring to sb */
++		erofs_sb_free(sbi);
++}
++
+ static const struct fs_context_operations erofs_context_ops = {
+ 	.parse_param	= erofs_fc_parse_param,
+ 	.get_tree       = erofs_fc_get_tree,
+@@ -813,15 +821,9 @@ static void erofs_kill_sb(struct super_block *sb)
+ 		kill_anon_super(sb);
+ 	else
+ 		kill_block_super(sb);
+-
+-	erofs_free_dev_context(sbi->devs);
+ 	fs_put_dax(sbi->dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
+-	kfree(sbi->fsid);
+-	kfree(sbi->domain_id);
+-	if (sbi->fdev)
+-		fput(sbi->fdev);
+-	kfree(sbi);
++	erofs_sb_free(sbi);
+ 	sb->s_fs_info = NULL;
+ }
+ 
+-- 
+2.43.5
 
