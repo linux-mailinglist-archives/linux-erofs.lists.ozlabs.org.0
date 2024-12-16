@@ -1,92 +1,95 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC9499F1F13
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Dec 2024 14:45:08 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1581E9F2DE6
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Dec 2024 11:11:47 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Y9SBT1DK2z3bPR
-	for <lists+linux-erofs@lfdr.de>; Sun, 15 Dec 2024 00:45:05 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YBbMN5kCDz2ywC
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Dec 2024 21:11:44 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734183903;
-	cv=none; b=NCLQUEyBhxfSRjK9VCi4YhtdMTqj9lc1Qf+Oyky/KqnYQYpgumBBZ5TpiAb+RbQCBjY/VXAQH619D4rldwkGzmfjIB2zcEChlfN5/JOO+b6LCEygci2RGnwoDllhSPAASd21XLj5P8uQN7jmKw2kNp73SGkJ+knTbAcoWWufR7L7y0pDr493LpgRAIljZDJgd8SdAymUjtafrTsI0dnFGf+O4JNmhPQjpHEGCyeJmERzC/Ysz053V07h4xqDyuB6Pm8BMp6NWxhiUizp3JF8yqP3mCWqLZ+6dE1P9hXQtiLhftsGW7DPenp5FK0aJt3hq7Wm6pEhGuoc25Ngn9di+A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::429"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734343902;
+	cv=none; b=QF+VagnTR6qJfTRSFdojsPsKfh4+aAlptNdpU8PBzeOq71cH2csX+uB9iD++/5e5LgpNrdgBO6pcgm0R1hJ5Z+yK9zHkQ3+nBwXgCK5xdzYQ78ND+I9ZiTk6tqqjxH1isLEeU0f/ARe/a2n+67WubgjW3cPx/DEY3V9JMHjUj7Ct9+uGys26tM9yqalDM3NMDkr0VJAgYw6WAGh7NRJ/i9tX6ZbYyk7V+eGcBspeIB4+tcupJP8hXaKSQqrKVFSAUHQkLP2i1vO09AczNGHfBDNfN+/7h2ALRQ7S9nFDwGGuClO+UUYX3vHX6FBbfikNZ7p9M8OIHxWkeG0UMsLNCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734183903; c=relaxed/relaxed;
-	bh=um83NFh7ZIRRd8ai46akYsrKyJ5hcwaKtVTR9gj1RFE=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=flZyWrKkNFU48qKr5hJ4pcQvMFqV5fFuZ3xf+RYqGaI/q6BrOoKV/NJE3EODIXbg+bIeF52ruO+QUexP9owhqhDuIniOQDu3q09iSHYHNw8rIyRRoQ1NjrvRwxsU31WD3f8IxgJwdZt5vxFwox2zpPcFVPWp5maD8DL0f7lEyhakbG4q4gw8IE3HyYDcszvfU88n9CnIaRN5WQkw6C+ul3joy8AHMaGqyHEWVG0vX0JaTAg/oZ2vP/+rpBoJAVJ2yqfhXx5theYLqBu1K3D7l1Wr0OHNOgGE9mpEa5FQ+Y15KPV6Zs0BK+C0bcdd10fWP6D08QZB9k7fuT36UJUHag==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jb3sjXPQ; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XfQ67DS9; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+	t=1734343902; c=relaxed/relaxed;
+	bh=l+ixtMUrgX7I9rD5qvImPgp6IqifPuxLwfcX3hM//qc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WaQOeiCh2B/8B7YGaX9iwJQsPK1/MvpmRpTAG+uM3IoDpC652UmghWURnFjou2vKMHZmDDj/ygys0hlLG9pu+36/CnqJ5VscSdlQhWWMnwdeAArm/M2nGSfRAtuIOekGUM+ZJ/9inZ8MJNf69l29usxRn6HeXRutt4Pnb28UwMUIgp0CEyBXAqeQ/lOJIWUIdN/lJ8DfQU99w+R2xBMZmB/OtOCCwGFnmhdbF713V87aLjAF+o5b8dpQpSEv+jiBWYTlAmu4wHEHtBg+hHzXeDigiIUHn2WubaV2dXgSLz/rmt4znDN1r3i+HmX60X9F1lQ2hxV4pUkmJ8jOMUOgLw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=bv+WLUzS; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::429; helo=mail-pf1-x429.google.com; envelope-from=akiyks@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Jb3sjXPQ;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XfQ67DS9;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=bv+WLUzS;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::429; helo=mail-pf1-x429.google.com; envelope-from=akiyks@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Y9SBP64Vvz2yJ5
-	for <linux-erofs@lists.ozlabs.org>; Sun, 15 Dec 2024 00:44:59 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734183895;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=um83NFh7ZIRRd8ai46akYsrKyJ5hcwaKtVTR9gj1RFE=;
-	b=Jb3sjXPQtHJuX/7nXJYOsTNk//t5xj2hfrYO6OGnyI1QDrXObAxHr2PB1JbZHBMHDCIRrp
-	Dn82JlsgkPxiLXVh3L/DUZ6Q+OAKc4fE28H3Jkz29q/RzWfQu1HmOLS563IKwE82ocb4zJ
-	xw6ldI1E4q2SeoqxZxkvs2sT6M8DefE=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734183896;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=um83NFh7ZIRRd8ai46akYsrKyJ5hcwaKtVTR9gj1RFE=;
-	b=XfQ67DS9YqeOaSg3t6A5hgTexqGSpkhnzVCtovpTIdQEh/4WXDPwvFO80vfHMSmL7z/QX7
-	N0O4L0m0dl6PsElnJOngIaD86GWzq1rPuxN38cfaAKjqOV0TR6vR9CQtzyZsSXhq05943X
-	l04AP9kB8j4u57iMxV+qXlew6QQTJhI=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-638-ql_YDdrZOJec0ZI5AmZePg-1; Sat,
- 14 Dec 2024 08:44:52 -0500
-X-MC-Unique: ql_YDdrZOJec0ZI5AmZePg-1
-X-Mimecast-MFC-AGG-ID: ql_YDdrZOJec0ZI5AmZePg
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A2AD4195608C;
-	Sat, 14 Dec 2024 13:44:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.48])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EDE4A195394B;
-	Sat, 14 Dec 2024 13:44:42 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <27fff669-bec4-4255-ba2f-4b154b474d97@gmail.com>
-References: <27fff669-bec4-4255-ba2f-4b154b474d97@gmail.com> <20241213135013.2964079-1-dhowells@redhat.com> <20241213135013.2964079-8-dhowells@redhat.com>
-To: Akira Yokosawa <akiyks@gmail.com>,
-    "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH 07/10] netfs: Fix missing barriers by using clear_and_wake_up_bit()
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YBbMK4ycxz2xbP
+	for <linux-erofs@lists.ozlabs.org>; Mon, 16 Dec 2024 21:11:40 +1100 (AEDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-725e71a11f7so3579284b3a.1
+        for <linux-erofs@lists.ozlabs.org>; Mon, 16 Dec 2024 02:11:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734343898; x=1734948698; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=l+ixtMUrgX7I9rD5qvImPgp6IqifPuxLwfcX3hM//qc=;
+        b=bv+WLUzSiFvW8evdy26Om/moWg882OB/iwyhNKJsTuok/GuU6mi1kBW/OdivsUkafs
+         r+ailYFjX5iFod5auaxaQTAGICQOWwIN/VkIo0n3iQIsVGdKdm72jyBnuDQYJg91Wkb/
+         kQQlgdd4PO/U4u80+HTseqQIzVrv5JD8eIi6c3UZIX3m6dLz6lJ87YI3FIfqDzNLmQwv
+         ayxLaSF6r9QFEHHCaz1jeRs2IXJTfz2NVcA6kfGhxSMPT17frARa52/nvo3QlEYcgTpO
+         EYTnfVCcsH/ZRbYLkO4//SZwXhfKC83HsGczKuMkkdebZ3JW2BG1I5zqHe0eJae+Xv4x
+         2VVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734343898; x=1734948698;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=l+ixtMUrgX7I9rD5qvImPgp6IqifPuxLwfcX3hM//qc=;
+        b=b4Sva13M5vwBMoSgMAfj1i/rR/0h0A/ZGIY2l6TbuRwVh9lQP2Zvosqd+2/g4FL4jL
+         F6kocmqOFT10xi7WQiV9LzBYr44pTVsqLpjx2wTgwO1b97+A6+XWO88zQ7u2fclfCKDM
+         LEjbcV4a46krogZj5CLOdFGJcZjKVkQODjLg4apRihgWHWjiRprX8fD4WaWQboDPPzWH
+         0WWHPSsuAgKNx4JbfeAV1gXL19hYZ4zBnVsPHPMaOiTmgnc96ne7Xb7JDGOcS2khQJAZ
+         D6+3Ab53+HH3HvpILcA9uqhE8RuJwCbN1251JDsdXU0ZVIQHWGdpcc0PAtwZGb4R5Zmi
+         7mgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+osbx40vsO9oOpp0d7d2GrUqI2OR56V9Gk/tbfkQIydNrd0b2E9oMSx4x1H+6DTBHyf6yvcf8Gn9ZKw==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0Ywy/r/F5jeogC7SbjwNgHYQW3/X6nFRsLKsDvyrqKeujON89vVz
+	TM3RJ29nQWSUIiwWbJA7DzanJejMFY8QqlBOzXg/39h6A3PZY06n
+X-Gm-Gg: ASbGnct/LEBgKffpAZjArFhffS+hWY9q1TuBMs844y+wsdcckP5FNsAVymz5qJydLhl
+	qVCrDtXUsJbq/absGYRAx2fGzIe44kTP2pFMlzZOjPisvu7+j+XYVOGtNJw/ThIIhvrK03uNrhT
+	mrfupNF5HWyztpNQPJYiuuRATbfMaFuTKdzOK3TF6bp6LO04Hd8xVMf8dKoRz5KoNVRhyAx10ti
+	vtx4VeRjr5U6OxYsoQlClSR7ajdSjONceK12wPXMNE6eOMZOm0WOWKoiwZWKF68hjY9yv3iG96n
+	Np0fVce6FadK3FWI5nioxa0=
+X-Google-Smtp-Source: AGHT+IGkvlAjtALOBMooHfO7cK9L9lvwDBwHCDIhwn8y88sRHLlwLffLXlgmsZ5Mm6dr710N1QQFRg==
+X-Received: by 2002:a05:6a20:a11c:b0:1e1:e1c0:1c05 with SMTP id adf61e73a8af0-1e1e1c0202amr16720966637.9.1734343898208;
+        Mon, 16 Dec 2024 02:11:38 -0800 (PST)
+Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-801d5c3a513sm3824066a12.72.2024.12.16.02.11.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Dec 2024 02:11:37 -0800 (PST)
+Message-ID: <554ff96b-5be5-46b0-ac8b-f178394856f3@gmail.com>
+Date: Mon, 16 Dec 2024 19:11:33 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3332015.1734183881.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 14 Dec 2024 13:44:41 +0000
-Message-ID: <3332016.1734183881@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
-X-Spam-Status: No, score=-0.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/10] netfs: Fix missing barriers by using
+ clear_and_wake_up_bit()
+To: David Howells <dhowells@redhat.com>, "Paul E. McKenney"
+ <paulmck@kernel.org>
+References: <27fff669-bec4-4255-ba2f-4b154b474d97@gmail.com>
+ <20241213135013.2964079-1-dhowells@redhat.com>
+ <20241213135013.2964079-8-dhowells@redhat.com>
+ <3332016.1734183881@warthog.procyon.org.uk>
+Content-Language: en-US
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <3332016.1734183881@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -99,69 +102,83 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-cifs@vger.kernel.org, Max Kellermann <max.kellermann@ionos.com>, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-mm@kvack.org, ceph-devel@vger.kernel.org, Zilin Guan <zilin@seu.edu.cn>, Christian Brauner <christian@brauner.io>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Trond Myklebust <trondmy@kernel.org>
+Cc: linux-cifs@vger.kernel.org, Max Kellermann <max.kellermann@ionos.com>, v9fs@lists.linux.dev, Akira Yokosawa <akiyks@gmail.com>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, ceph-devel@vger.kernel.org, Zilin Guan <zilin@seu.edu.cn>, Christian Brauner <christian@brauner.io>, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, Ilya Dryomov <idryomov@gmail.com>, Xiubo Li <xiubli@redhat.com>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org, Trond Myklebust <trondmy@kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-[Adding Paul McKenney as he's the expert.]
+David Howells wrote:
+> [Adding Paul McKenney as he's the expert.]
+> 
+> Akira Yokosawa <akiyks@gmail.com> wrote:
+> 
+>> David Howells wrote:
+>>> Use clear_and_wake_up_bit() rather than something like:
+>>>
+>>> 	clear_bit_unlock(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
+>>> 	wake_up_bit(&rreq->flags, NETFS_RREQ_IN_PROGRESS);
+>>>
+>>> as there needs to be a barrier inserted between which is present in
+>>> clear_and_wake_up_bit().
+>>
+>> If I am reading the kernel-doc comment of clear_bit_unlock() [1, 2]:
+>>
+>>     This operation is atomic and provides release barrier semantics.
+>>
+>> correctly, there already seems to be a barrier which should be
+>> good enough.
+>>
+>> [1]: https://www.kernel.org/doc/html/latest/core-api/kernel-api.html#c.clear_bit_unlock
+>> [2]: include/asm-generic/bitops/instrumented-lock.h
+>>
+>>>
+>>> Fixes: 288ace2f57c9 ("netfs: New writeback implementation")
+>>> Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
+>>
+>> So I'm not sure this fixes anything.
+>>
+>> What am I missing?
+> 
+> We may need two barriers.  You have three things to synchronise:
+> 
+>  (1) The stuff you did before unlocking.
+> 
+>  (2) The lock bit.
+> 
+>  (3) The task state.
+> 
+> clear_bit_unlock() interposes a release barrier between (1) and (2).
+> 
+> Neither clear_bit_unlock() nor wake_up_bit(), however, necessarily interpose a
+> barrier between (2) and (3).
 
-Akira Yokosawa <akiyks@gmail.com> wrote:
+Got it!
 
-> David Howells wrote:
-> > Use clear_and_wake_up_bit() rather than something like:
-> > =
+I was confused because I compared kernel-doc comments of clear_bit_unlock()
+and clear_and_wake_up_bit() only, without looking at latter's code.
 
-> > 	clear_bit_unlock(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
-> > 	wake_up_bit(&rreq->flags, NETFS_RREQ_IN_PROGRESS);
-> > =
+clear_and_wake_up_bit() has this description in its kernel-doc:
 
-> > as there needs to be a barrier inserted between which is present in
-> > clear_and_wake_up_bit().
-> =
+ * The designated bit is cleared and any tasks waiting in wait_on_bit()
+ * or similar will be woken.  This call has RELEASE semantics so that
+ * any changes to memory made before this call are guaranteed to be visible
+ * after the corresponding wait_on_bit() completes.
 
-> If I am reading the kernel-doc comment of clear_bit_unlock() [1, 2]:
-> =
+, without any mention of additional full barrier at your (3) above.
 
->     This operation is atomic and provides release barrier semantics.
-> =
+It might be worth mentioning it there.
 
-> correctly, there already seems to be a barrier which should be
-> good enough.
-> =
+Thoughts?
 
-> [1]: https://www.kernel.org/doc/html/latest/core-api/kernel-api.html#c.c=
-lear_bit_unlock
-> [2]: include/asm-generic/bitops/instrumented-lock.h
-> =
+FWIW,
 
-> > =
+Reviewed-by: Akira Yokosawa <akiyks@gmail.com>
 
-> > Fixes: 288ace2f57c9 ("netfs: New writeback implementation")
-> > Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
-> =
+>                               I'm not sure it entirely matters, but it seems
+> that since we have a function that combines the two, we should probably use
+> it - though, granted, it might not actually be a fix.
 
-> So I'm not sure this fixes anything.
-> =
+Looks like it should matter where smp_mb__after_atomic() is stronger than
+a plain barrier().
 
-> What am I missing?
-
-We may need two barriers.  You have three things to synchronise:
-
- (1) The stuff you did before unlocking.
-
- (2) The lock bit.
-
- (3) The task state.
-
-clear_bit_unlock() interposes a release barrier between (1) and (2).
-
-Neither clear_bit_unlock() nor wake_up_bit(), however, necessarily interpo=
-se a
-barrier between (2) and (3).  I'm not sure it entirely matters, but it see=
-ms
-that since we have a function that combines the two, we should probably us=
-e
-it - though, granted, it might not actually be a fix.
-
-David
+Akira
 
