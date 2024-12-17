@@ -2,70 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 701479F4CB5
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Dec 2024 14:46:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BA969F4D8E
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Dec 2024 15:24:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1734445450;
+	bh=X77ljd6MI8M+MpADdUzXBadNMgLcvrZWXODn/J2SgNQ=;
+	h=Date:To:Subject:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=m7MI7D7trA6g8waRgauxgacdRIoA1RRx1vO2CZRZhQxwyG7YSq1yJWqjpdbfoLIq1
+	 Bjp3NdaGAvWJz1qLb0ON8Nfk60NAV++4lJiApR7wq1zBszJ612dWBlE2MXLjWMrEGo
+	 Bv9Zv/LkNqu3P+1AHzRGb1kM5+rk/U+JkqUG402HDs+ZYuMDIWt7y4XmA9++NL4HYd
+	 QaQoWNLksHCDc9GQSycLjPdvVYUAx3k/we10QM+0CVTGBkLz9gweIU9AS+653E2Ckq
+	 7Fz9Z/tHNS2vjHeyDmge8AQF8+ZIPlLynY06CsVO4+nUJb+TMkK+1vnG8Bgt+z2PEF
+	 pKz0iKXmqocwQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YCJ4f2PMqz30Vf
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Dec 2024 00:46:26 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YCJwB5WDCz30hW
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Dec 2024 01:24:10 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.16
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734443184;
-	cv=none; b=Zs2+3ul7v4x/TiepPjuW+wd5P3+gMLWwXiX932Lg0zELZZNgALgBkEvH7ZGmbeMxo9CYX1goGM5yDHbJw9a29Q5A6mZyY5I+UWpueicS3n7Qw95FucjUu4nV3w2Xt9+r95UDaYka+JZFxsLoSuhRF+Ct/iz68Z4L1rKbcwdD5EX26PUPSM51YoUR7XntfKOi2mH3UBh4xNjiFt2wbJOGWCbXEJr0NQ8/mUP5pd2XQYsifroox+oaazXoATxEVUi7Aeww7FmQcog53NZnlL5gOY2oeit/pyWi0nGPp02kWQ25Gf6WWbBnh4Rw2SNZpctpGnag24ZZOJWI4c1z+WKIoQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734445449;
+	cv=none; b=Bd8T90yt8mU8LhsmVvQfoIY+FMXzKQLrRWIUArT9Y8nafvkPfilmjEoOobFyS9qk3fqCB29szqWsG80dq+PRYRmA3O3I8Z62G8bu0FPXTceEkxehsyOGM6dwRwsDMuHssh3DVJzDPvIkcyzxpIgd/rusHO4NhrOIuLlpR1IApFBkcGS03NH5mFh7cAk+XXHUB0z193sfWlp3ne9GA9j9rabiuTRR63UOEeFwKNN7RSMK4x3maFzwKIXyCKLYazd8L2v/fZOitVnkNo2VjxD8sUXDpGLAFFpKXapb2pS+FBH7MaLHfzRO7TxwXr0Y5KvYfXmhtmTgPKe1XSyLs6GNOQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734443184; c=relaxed/relaxed;
-	bh=vpHQVZiwYsNieYEpcVjMZYXQF7PIbEGsvf4XZCL+z3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=hIUfT/wnoTnJD/d5x+hfp1qXwKEcKyKKALGfdIgZK8hgFa2Yxi04lOOk8fFLRa20bbuUouk08Hxmv/B/OPt99sRq0Ttygg5ui6Du6F5kxhnEL5SE7GPYPAqBPLslJGCaIqO/PUMqIJqU/nK5l7aNW8EcrbC38KPSgFDPiJozg9I5woX2I8uaps8Lsc5WSeipIBXMyWx8nlJBXt6bbiOqreo42EkW3iJ2jDnvEYBkFkewhmEV37sao905cZ7YU0Cv2esdKuN882chCDtTSnTVtsbXIg14QsQFgGVTP0oO13Q8ylvbVqp/t9ucZll509MH7xdULq/1jl4ZzSBjmNb86w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ZL4pWbyn; dkim-atps=neutral; spf=pass (client-ip=198.175.65.16; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1734445449; c=relaxed/relaxed;
+	bh=X77ljd6MI8M+MpADdUzXBadNMgLcvrZWXODn/J2SgNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=imDvCRl2DqeJgq+1gSkpDsw7Ulsg62BttsnMCeSORQArSn1WOsEe+TZQCAfyWH0vKxHhRRubQQeKQ3XxiLCPkTBpIdhdhGE/5sa075vwxI7lpXWlIdkIBwYO+xHaM54FnvDv5H3zAmbWLFYpyR8wfPTU3Xi1z8StgMXPpEN9Vh5/L5ebZoiqb6y8wx4nS6p3MEE/cMU9KTnlcBh8OzjPyDilM6BfZWBB3xsTrLa2H0SflzmXM7S/DRYQmTyPDfkgAdLx86uH1hKIBOadUfHZWIe1bFFc2u3r/suzA9NVNl5OsH5rflz8Yjdprwz8tTymcDPYq2/29DO/k4v1iPp4Hw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Ag1JbsLD; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ZL4pWbyn;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Ag1JbsLD;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.16; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YCJ4X31Ylz2x9j
-	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Dec 2024 00:46:17 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1734443181; x=1765979181;
-  h=date:from:to:cc:subject:message-id;
-  bh=9pTqDYpPHgtx7+GtR8iTzQWGshjfe1ziE+lutzmhQdc=;
-  b=ZL4pWbynR0Y684ukw64HTPyoQT13a9LsVhR0RtZ5//wL1AdEz6XFnthq
-   ScE7gxydr1ItMKceWbmyMrqAie72CFwVSEmG7yl7t7jIfCpTgELuh9nqC
-   0NGvvxPhOG7e0mHBfG73dqRA1DAiFAz0Fc8XwOsibb1jFv+XYxD1VR6lF
-   dv93PVjd6scwddI6uneevwDkPDPo9H0kAJAaEF3XcgJXX7HOCTTHuUSn0
-   SbIas549+WWhBumDrei65Yzpu39eVfEbBbAzy+iG+weE+vRkLrWDuevj6
-   p1vySTqy8QyP5VBfqZbcC4E+ma8zF6vINqifWE7Q7OqA528AIaD8l0oZP
-   Q==;
-X-CSE-ConnectionGUID: V66rbZE1RT221gYRzebbUA==
-X-CSE-MsgGUID: 5MVCcqAOTkmKyqj507puQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="35018438"
-X-IronPort-AV: E=Sophos;i="6.12,241,1728975600"; 
-   d="scan'208";a="35018438"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 05:46:13 -0800
-X-CSE-ConnectionGUID: Sml32LhwQBeEdGMaD/dK5A==
-X-CSE-MsgGUID: NJCOss8HRJGE8HQ7VzAZ4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="102523923"
-Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 17 Dec 2024 05:46:11 -0800
-Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tNXtp-000F28-0E;
-	Tue, 17 Dec 2024 13:46:09 +0000
-Date: Tue, 17 Dec 2024 21:46:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 6422cde1b0d5a31b206b263417c1c2b3c80fe82c
-Message-ID: <202412172156.qJmQukst-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YCJw80zpfz30DV
+	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Dec 2024 01:24:08 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 4AEE05C5882;
+	Tue, 17 Dec 2024 14:23:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A7BEC4CED3;
+	Tue, 17 Dec 2024 14:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734445445;
+	bh=j3HRziA2BSqPktqBMFjFA6JGdKsy5NE/8LDdhAzqgWQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=Ag1JbsLDqEOmqLWOxJ2b2/gtGJiptyFZvUaPQF2iP6duiwvrC8dLKNZSN3LW0lso7
+	 lie5xEPnBOckCI+I7pApjdZWHjrirFn3VQ3o0xZif5VBpEo9mdJHdnvqslKzQWMoNB
+	 f0KrH2wvr9k/p35e8Lmhav8nAS/t4wtpQ5POocoh6tAjmqmxVAvUkHZggVYZFeiWP4
+	 hVtc61PHq3r2oPkR+/Mz+8fwO1psX00X97E5jqJF49TRCfMSmLwPtQRX+NelVeHAJV
+	 ixkmgFvdXYlQTkBErqW0igyDXU2HYbUXVqqN8HY+BmqcuVGFZ6RDN0/0RFoyQuGH/L
+	 yXAiKM+BJcyZA==
+Date: Tue, 17 Dec 2024 22:23:58 +0800
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [GIT PULL] erofs fixes for 6.13-rc4
+Message-ID: <Z2GJfmDTrzh0mM8P@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	chao@kernel.org, Yue Hu <zbestahu@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-Spam-Status: No, score=-5.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
 	SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -79,166 +80,71 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <xiang@kernel.org>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 6422cde1b0d5a31b206b263417c1c2b3c80fe82c  erofs: use buffered I/O for file-backed mounts by default
+Hi Linus,
 
-elapsed time: 1437m
+Could you consider these three fixes for 6.13-rc4?
 
-configs tested: 143
-configs skipped: 11
+The first one fixes a syzbot UAF report caused by a commit introduced
+in this cycle, but it also addresses a longstanding memory leak.  The
+second one resolves a PSI memstall mis-accounting issue.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+The remaining patches switch file-backed mounts to use buffered I/Os
+by default instead of direct I/Os, since the page cache of underlay
+files is typically valid and maybe even dirty.  This change also aligns
+with the default policy of loopback devices.  A mount option has been
+added to try to use direct I/Os explicitly.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-13.2.0
-arc                     nsimosci_hs_defconfig    gcc-13.2.0
-arc                   randconfig-001-20241216    gcc-13.2.0
-arc                   randconfig-002-20241216    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                         bcm2835_defconfig    clang-16
-arm                                 defconfig    clang-20
-arm                          exynos_defconfig    clang-20
-arm                         nhk8815_defconfig    clang-20
-arm                   randconfig-001-20241216    clang-15
-arm                   randconfig-002-20241216    gcc-14.2.0
-arm                   randconfig-003-20241216    clang-20
-arm                   randconfig-004-20241216    clang-17
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-14.2.0
-arm64                 randconfig-001-20241216    gcc-14.2.0
-arm64                 randconfig-002-20241216    clang-20
-arm64                 randconfig-003-20241216    gcc-14.2.0
-arm64                 randconfig-004-20241216    clang-15
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20241216    gcc-14.2.0
-csky                  randconfig-002-20241216    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                           allnoconfig    clang-20
-hexagon                          allyesconfig    clang-18
-hexagon                             defconfig    clang-20
-hexagon               randconfig-001-20241216    clang-20
-hexagon               randconfig-002-20241216    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20241217    clang-19
-i386        buildonly-randconfig-002-20241217    gcc-12
-i386        buildonly-randconfig-003-20241217    gcc-12
-i386        buildonly-randconfig-004-20241217    clang-19
-i386        buildonly-randconfig-005-20241217    clang-19
-i386        buildonly-randconfig-006-20241217    gcc-11
-i386                                defconfig    clang-19
-loongarch                        alldefconfig    gcc-14.2.0
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20241216    gcc-14.2.0
-loongarch             randconfig-002-20241216    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                          amiga_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                        bcm47xx_defconfig    clang-20
-mips                        bcm63xx_defconfig    clang-20
-mips                  cavium_octeon_defconfig    gcc-14.2.0
-mips                   sb1250_swarm_defconfig    gcc-14.2.0
-nios2                         10m50_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20241216    gcc-14.2.0
-nios2                 randconfig-002-20241216    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20241216    gcc-14.2.0
-parisc                randconfig-002-20241216    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc                       eiger_defconfig    clang-17
-powerpc                          g5_defconfig    gcc-14.2.0
-powerpc                 mpc836x_rdk_defconfig    clang-18
-powerpc                      ppc64e_defconfig    gcc-14.2.0
-powerpc               randconfig-001-20241216    clang-20
-powerpc               randconfig-002-20241216    clang-20
-powerpc               randconfig-003-20241216    gcc-14.2.0
-powerpc                      tqm8xx_defconfig    clang-20
-powerpc64             randconfig-001-20241216    clang-20
-powerpc64             randconfig-002-20241216    clang-15
-powerpc64             randconfig-003-20241216    gcc-14.2.0
-riscv                            allmodconfig    clang-20
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-20
-riscv                               defconfig    clang-19
-riscv                 randconfig-001-20241216    clang-20
-riscv                 randconfig-002-20241216    clang-15
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-20
-s390                             allyesconfig    gcc-14.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20241216    gcc-14.2.0
-s390                  randconfig-002-20241216    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                         ap325rxa_defconfig    gcc-14.2.0
-sh                                  defconfig    gcc-14.2.0
-sh                        dreamcast_defconfig    gcc-14.2.0
-sh                        edosk7705_defconfig    gcc-14.2.0
-sh                    randconfig-001-20241216    gcc-14.2.0
-sh                    randconfig-002-20241216    gcc-14.2.0
-sh                          urquell_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20241216    gcc-14.2.0
-sparc                 randconfig-002-20241216    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20241216    gcc-14.2.0
-sparc64               randconfig-002-20241216    gcc-14.2.0
-um                               alldefconfig    clang-19
-um                               allmodconfig    clang-20
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-20
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20241216    gcc-12
-um                    randconfig-002-20241216    gcc-12
-um                           x86_64_defconfig    clang-15
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20241216    gcc-12
-x86_64      buildonly-randconfig-002-20241216    gcc-12
-x86_64      buildonly-randconfig-003-20241216    clang-19
-x86_64      buildonly-randconfig-004-20241216    clang-19
-x86_64      buildonly-randconfig-005-20241216    clang-19
-x86_64      buildonly-randconfig-006-20241216    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                generic_kc705_defconfig    gcc-14.2.0
-xtensa                randconfig-001-20241216    gcc-14.2.0
-xtensa                randconfig-002-20241216    gcc-14.2.0
+All commits have been in -next and no potential merge conflict
+is observed.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Gao Xiang
+
+The following changes since commit 40384c840ea1944d7c5a392e8975ed088ecf0b37:
+
+  Linux 6.13-rc1 (2024-12-01 14:28:56 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.13-rc4-fixes
+
+for you to fetch changes up to 6422cde1b0d5a31b206b263417c1c2b3c80fe82c:
+
+  erofs: use buffered I/O for file-backed mounts by default (2024-12-16 21:02:07 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Fix (pcluster) memory leak and (sbi) UAF after umounting;
+
+ - Fix a case of PSI memstall mis-accounting;
+
+ - Use buffered I/Os by default for file-backed mounts.
+
+----------------------------------------------------------------
+Gao Xiang (6):
+      erofs: fix rare pcluster memory leak after unmounting
+      erofs: fix PSI memstall accounting
+      erofs: add erofs_sb_free() helper
+      erofs: use `struct erofs_device_info` for the primary device
+      erofs: reference `struct erofs_device_info` for erofs_map_dev
+      erofs: use buffered I/O for file-backed mounts by default
+
+Yue Hu (1):
+      MAINTAINERS: erofs: update Yue Hu's email address
+
+ MAINTAINERS         |  2 +-
+ fs/erofs/data.c     | 36 +++++++++----------------
+ fs/erofs/fileio.c   |  9 ++++---
+ fs/erofs/fscache.c  | 10 +++----
+ fs/erofs/internal.h | 15 ++++-------
+ fs/erofs/super.c    | 78 +++++++++++++++++++++++++++++------------------------
+ fs/erofs/zdata.c    |  4 +--
+ fs/erofs/zutil.c    |  7 ++---
+ 8 files changed, 79 insertions(+), 82 deletions(-)
