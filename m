@@ -2,86 +2,71 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 337D99F3B59
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Dec 2024 21:45:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 701479F4CB5
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Dec 2024 14:46:33 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YBsQq1Spkz30YL
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Dec 2024 07:45:39 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YCJ4f2PMqz30Vf
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Dec 2024 00:46:26 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734381938;
-	cv=none; b=koBC3PjRDpyVZ68dpFVskAMh7ROe7A/KziMeYFPQRts4jlY5U8inbiFIRuYSfYTj7toKujLudaQo5MonUnfWWfgyFpsdWElsVGU0OQwwlgNds9Xx339TvV64iWKbQiL5TQVIuQUpLWkXfElrGD1tqqwnc21zgtSZImMzZ5txKG618Kiio4PDdsrjZynikhdlpOQBL236LXt5QDTt32DWmTRZcjFo6ENhlTMAMm/u4cT9wGelXdhlIC0tiKUdtOynwGUkhew3lJ6irU2S3g0UR1JfyaXCdRx0aC+Baw/12xQJGeAcOTZWLFVoLxFw2ERP4OcCcqR1vIpB3YGQTTp5DA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.16
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734443184;
+	cv=none; b=Zs2+3ul7v4x/TiepPjuW+wd5P3+gMLWwXiX932Lg0zELZZNgALgBkEvH7ZGmbeMxo9CYX1goGM5yDHbJw9a29Q5A6mZyY5I+UWpueicS3n7Qw95FucjUu4nV3w2Xt9+r95UDaYka+JZFxsLoSuhRF+Ct/iz68Z4L1rKbcwdD5EX26PUPSM51YoUR7XntfKOi2mH3UBh4xNjiFt2wbJOGWCbXEJr0NQ8/mUP5pd2XQYsifroox+oaazXoATxEVUi7Aeww7FmQcog53NZnlL5gOY2oeit/pyWi0nGPp02kWQ25Gf6WWbBnh4Rw2SNZpctpGnag24ZZOJWI4c1z+WKIoQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734381938; c=relaxed/relaxed;
-	bh=Oo1wq8deJtNt2OQQxJVQAHf3OBjfRH+YniUEyQHkJfs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QlireBZoetyi+yj3wyQ4lWhACe3SnqdmFUfv8L7Hc18UuZVC36rj0uUCby0zle8v3wTTq1mc3RVwRinihIYrNCuMHNCKD4siG+yKjXJoUB66vuOCq9Z/XpuiIm10wgJX/5U2KaL0tVzKkfmnihUO5gCw3OzB6j8AK8za4o7je7/VHw82awvMCNODTJb81h7Rz2p4BaWhAFTVwMpGYM9wPs3zVFA40HmxFXZDyVfrvkXfu/1jw9ZFcnBnJKgVT68f/5Q79C6zX9wQI9bTzBuTu7RgGvyr3MTqLtIR2F96/KcT77+mGIbNWRBfttBeIjGsuQNhRureCwydd36R0EdYPQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=VDwHQU62; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=RIj7E6vY; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+	t=1734443184; c=relaxed/relaxed;
+	bh=vpHQVZiwYsNieYEpcVjMZYXQF7PIbEGsvf4XZCL+z3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=hIUfT/wnoTnJD/d5x+hfp1qXwKEcKyKKALGfdIgZK8hgFa2Yxi04lOOk8fFLRa20bbuUouk08Hxmv/B/OPt99sRq0Ttygg5ui6Du6F5kxhnEL5SE7GPYPAqBPLslJGCaIqO/PUMqIJqU/nK5l7aNW8EcrbC38KPSgFDPiJozg9I5woX2I8uaps8Lsc5WSeipIBXMyWx8nlJBXt6bbiOqreo42EkW3iJ2jDnvEYBkFkewhmEV37sao905cZ7YU0Cv2esdKuN882chCDtTSnTVtsbXIg14QsQFgGVTP0oO13Q8ylvbVqp/t9ucZll509MH7xdULq/1jl4ZzSBjmNb86w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ZL4pWbyn; dkim-atps=neutral; spf=pass (client-ip=198.175.65.16; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=VDwHQU62;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=RIj7E6vY;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=ZL4pWbyn;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.16; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YBsQn29G5z300g
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Dec 2024 07:45:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734381934;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Oo1wq8deJtNt2OQQxJVQAHf3OBjfRH+YniUEyQHkJfs=;
-	b=VDwHQU6255+nhMSZivKrf+aewrX0JXWZp1/8g6TFDuXlXrOWuIimVOftxoUYobE+I0I48E
-	MnoWgWfLdoKYd4pfQSrKZ9n0DnI376t6o0+Z4uumhPVRgMVIInF4+w4h9Kdj4AlLet23eV
-	sKjhw0EzHwsx+f2o6g2XdEUnFhOWydw=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1734381935;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Oo1wq8deJtNt2OQQxJVQAHf3OBjfRH+YniUEyQHkJfs=;
-	b=RIj7E6vYWgREgtGnZ1BuVHIliqTqY6kcIW+9CyVv2+KZt1KbtskMAHzpKKD9NBiog+XQhn
-	YGDtYl1zCIhptTJQANftn/tblzlBlTho5GdRDSINpjtFj7HGxB9BdApLDD2D80vX5dL+2X
-	Ty7qjHroxDqQ6kme+dPJFxj6PrJSYoM=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-465-XuzHjsQvNUyN5PcUdS5A8w-1; Mon,
- 16 Dec 2024 15:45:31 -0500
-X-MC-Unique: XuzHjsQvNUyN5PcUdS5A8w-1
-X-Mimecast-MFC-AGG-ID: XuzHjsQvNUyN5PcUdS5A8w
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8C74195608E;
-	Mon, 16 Dec 2024 20:45:28 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.48])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9BF4B19560A2;
-	Mon, 16 Dec 2024 20:45:22 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v5 32/32] netfs: Report on NULL folioq in netfs_writeback_unlock_folios()
-Date: Mon, 16 Dec 2024 20:41:22 +0000
-Message-ID: <20241216204124.3752367-33-dhowells@redhat.com>
-In-Reply-To: <20241216204124.3752367-1-dhowells@redhat.com>
-References: <20241216204124.3752367-1-dhowells@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
-X-Spam-Status: No, score=-0.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YCJ4X31Ylz2x9j
+	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Dec 2024 00:46:17 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1734443181; x=1765979181;
+  h=date:from:to:cc:subject:message-id;
+  bh=9pTqDYpPHgtx7+GtR8iTzQWGshjfe1ziE+lutzmhQdc=;
+  b=ZL4pWbynR0Y684ukw64HTPyoQT13a9LsVhR0RtZ5//wL1AdEz6XFnthq
+   ScE7gxydr1ItMKceWbmyMrqAie72CFwVSEmG7yl7t7jIfCpTgELuh9nqC
+   0NGvvxPhOG7e0mHBfG73dqRA1DAiFAz0Fc8XwOsibb1jFv+XYxD1VR6lF
+   dv93PVjd6scwddI6uneevwDkPDPo9H0kAJAaEF3XcgJXX7HOCTTHuUSn0
+   SbIas549+WWhBumDrei65Yzpu39eVfEbBbAzy+iG+weE+vRkLrWDuevj6
+   p1vySTqy8QyP5VBfqZbcC4E+ma8zF6vINqifWE7Q7OqA528AIaD8l0oZP
+   Q==;
+X-CSE-ConnectionGUID: V66rbZE1RT221gYRzebbUA==
+X-CSE-MsgGUID: 5MVCcqAOTkmKyqj507puQA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11288"; a="35018438"
+X-IronPort-AV: E=Sophos;i="6.12,241,1728975600"; 
+   d="scan'208";a="35018438"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2024 05:46:13 -0800
+X-CSE-ConnectionGUID: Sml32LhwQBeEdGMaD/dK5A==
+X-CSE-MsgGUID: NJCOss8HRJGE8HQ7VzAZ4w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="102523923"
+Received: from lkp-server01.sh.intel.com (HELO 82a3f569d0cb) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 17 Dec 2024 05:46:11 -0800
+Received: from kbuild by 82a3f569d0cb with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tNXtp-000F28-0E;
+	Tue, 17 Dec 2024 13:46:09 +0000
+Date: Tue, 17 Dec 2024 21:46:02 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 6422cde1b0d5a31b206b263417c1c2b3c80fe82c
+Message-ID: <202412172156.qJmQukst-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -94,97 +79,166 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: syzbot+af5c06208fa71bf31b16@syzkaller.appspotmail.com, Dominique Martinet <asmadeus@codewreck.org>, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, linux-afs@lists.infradead.org, Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, Chang Yu <marcus.yu.56@gmail.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, Ilya Dryomov <idryomov@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, linux-nfs@vger.kernel.org, netdev@vger.kernel.org, v9fs@lists.linux.dev, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, netfs@lists.linux.dev, linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-It seems that it's possible to get to netfs_writeback_unlock_folios() with
-an empty rolling buffer during buffered writes.  This should not be
-possible as the rolling buffer is initialised as the write request is set
-up and thereafter maintains at least one folio_queue struct therein until
-it gets destroyed.  This allows lockless addition and removal of
-folio_queue structs in the buffer because, unlike with a ring buffer, the
-producer and consumer each only need to look at and alter one pointer into
-the buffer.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 6422cde1b0d5a31b206b263417c1c2b3c80fe82c  erofs: use buffered I/O for file-backed mounts by default
 
-Now, the rolling buffer is only used for buffered I/O operations as
-netfs_collect_write_results() should only call
-netfs_writeback_unlock_folios() if the request is of origin type
-NETFS_WRITEBACK, NETFS_WRITETHROUGH or NETFS_PGPRIV2_COPY_TO_CACHE.
+elapsed time: 1437m
 
-So it would seem that one of the following occurred: (1) I/O started before
-the request was fully initialised, (2) the origin got switched mid-flow or
-(3) the request has already been freed and this is a UAF error.  I think
-the last is the most likely.
+configs tested: 143
+configs skipped: 11
 
-Make netfs_writeback_unlock_folios() report information about the request
-and subrequests if folioq is seen to be NULL to try and help debug this,
-throw a warning and return.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Note that this does not try to fix the problem.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                                 defconfig    gcc-13.2.0
+arc                     nsimosci_hs_defconfig    gcc-13.2.0
+arc                   randconfig-001-20241216    gcc-13.2.0
+arc                   randconfig-002-20241216    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-17
+arm                              allyesconfig    gcc-14.2.0
+arm                         bcm2835_defconfig    clang-16
+arm                                 defconfig    clang-20
+arm                          exynos_defconfig    clang-20
+arm                         nhk8815_defconfig    clang-20
+arm                   randconfig-001-20241216    clang-15
+arm                   randconfig-002-20241216    gcc-14.2.0
+arm                   randconfig-003-20241216    clang-20
+arm                   randconfig-004-20241216    clang-17
+arm64                            allmodconfig    clang-18
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-14.2.0
+arm64                 randconfig-001-20241216    gcc-14.2.0
+arm64                 randconfig-002-20241216    clang-20
+arm64                 randconfig-003-20241216    gcc-14.2.0
+arm64                 randconfig-004-20241216    clang-15
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20241216    gcc-14.2.0
+csky                  randconfig-002-20241216    gcc-14.2.0
+hexagon                          allmodconfig    clang-20
+hexagon                           allnoconfig    clang-20
+hexagon                          allyesconfig    clang-18
+hexagon                             defconfig    clang-20
+hexagon               randconfig-001-20241216    clang-20
+hexagon               randconfig-002-20241216    clang-20
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20241217    clang-19
+i386        buildonly-randconfig-002-20241217    gcc-12
+i386        buildonly-randconfig-003-20241217    gcc-12
+i386        buildonly-randconfig-004-20241217    clang-19
+i386        buildonly-randconfig-005-20241217    clang-19
+i386        buildonly-randconfig-006-20241217    gcc-11
+i386                                defconfig    clang-19
+loongarch                        alldefconfig    gcc-14.2.0
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20241216    gcc-14.2.0
+loongarch             randconfig-002-20241216    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                          amiga_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                        bcm47xx_defconfig    clang-20
+mips                        bcm63xx_defconfig    clang-20
+mips                  cavium_octeon_defconfig    gcc-14.2.0
+mips                   sb1250_swarm_defconfig    gcc-14.2.0
+nios2                         10m50_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20241216    gcc-14.2.0
+nios2                 randconfig-002-20241216    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20241216    gcc-14.2.0
+parisc                randconfig-002-20241216    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-16
+powerpc                       eiger_defconfig    clang-17
+powerpc                          g5_defconfig    gcc-14.2.0
+powerpc                 mpc836x_rdk_defconfig    clang-18
+powerpc                      ppc64e_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20241216    clang-20
+powerpc               randconfig-002-20241216    clang-20
+powerpc               randconfig-003-20241216    gcc-14.2.0
+powerpc                      tqm8xx_defconfig    clang-20
+powerpc64             randconfig-001-20241216    clang-20
+powerpc64             randconfig-002-20241216    clang-15
+powerpc64             randconfig-003-20241216    gcc-14.2.0
+riscv                            allmodconfig    clang-20
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-20
+riscv                               defconfig    clang-19
+riscv                 randconfig-001-20241216    clang-20
+riscv                 randconfig-002-20241216    clang-15
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-20
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-15
+s390                  randconfig-001-20241216    gcc-14.2.0
+s390                  randconfig-002-20241216    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                         ap325rxa_defconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                        dreamcast_defconfig    gcc-14.2.0
+sh                        edosk7705_defconfig    gcc-14.2.0
+sh                    randconfig-001-20241216    gcc-14.2.0
+sh                    randconfig-002-20241216    gcc-14.2.0
+sh                          urquell_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20241216    gcc-14.2.0
+sparc                 randconfig-002-20241216    gcc-14.2.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20241216    gcc-14.2.0
+sparc64               randconfig-002-20241216    gcc-14.2.0
+um                               alldefconfig    clang-19
+um                               allmodconfig    clang-20
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-20
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20241216    gcc-12
+um                    randconfig-002-20241216    gcc-12
+um                           x86_64_defconfig    clang-15
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20241216    gcc-12
+x86_64      buildonly-randconfig-002-20241216    gcc-12
+x86_64      buildonly-randconfig-003-20241216    clang-19
+x86_64      buildonly-randconfig-004-20241216    clang-19
+x86_64      buildonly-randconfig-005-20241216    clang-19
+x86_64      buildonly-randconfig-006-20241216    clang-19
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                generic_kc705_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20241216    gcc-14.2.0
+xtensa                randconfig-002-20241216    gcc-14.2.0
 
-Reported-by: syzbot+af5c06208fa71bf31b16@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=af5c06208fa71bf31b16
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Chang Yu <marcus.yu.56@gmail.com>
-Link: https://lore.kernel.org/r/ZxshMEW4U7MTgQYa@gmail.com/
-cc: Jeff Layton <jlayton@kernel.org>
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/netfs/write_collect.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
-
-diff --git a/fs/netfs/write_collect.c b/fs/netfs/write_collect.c
-index 1b7f53d01b8d..294f67795f79 100644
---- a/fs/netfs/write_collect.c
-+++ b/fs/netfs/write_collect.c
-@@ -21,6 +21,34 @@
- #define NEED_RETRY		0x10	/* A front op requests retrying */
- #define SAW_FAILURE		0x20	/* One stream or hit a permanent failure */
- 
-+static void netfs_dump_request(const struct netfs_io_request *rreq)
-+{
-+	pr_err("Request R=%08x r=%d fl=%lx or=%x e=%ld\n",
-+	       rreq->debug_id, refcount_read(&rreq->ref), rreq->flags,
-+	       rreq->origin, rreq->error);
-+	pr_err("  st=%llx tsl=%zx/%llx/%llx\n",
-+	       rreq->start, rreq->transferred, rreq->submitted, rreq->len);
-+	pr_err("  cci=%llx/%llx/%llx\n",
-+	       rreq->cleaned_to, rreq->collected_to, atomic64_read(&rreq->issued_to));
-+	pr_err("  iw=%pSR\n", rreq->netfs_ops->issue_write);
-+	for (int i = 0; i < NR_IO_STREAMS; i++) {
-+		const struct netfs_io_subrequest *sreq;
-+		const struct netfs_io_stream *s = &rreq->io_streams[i];
-+
-+		pr_err("  str[%x] s=%x e=%d acnf=%u,%u,%u,%u\n",
-+		       s->stream_nr, s->source, s->error,
-+		       s->avail, s->active, s->need_retry, s->failed);
-+		pr_err("  str[%x] ct=%llx t=%zx\n",
-+		       s->stream_nr, s->collected_to, s->transferred);
-+		list_for_each_entry(sreq, &s->subrequests, rreq_link) {
-+			pr_err("  sreq[%x:%x] sc=%u s=%llx t=%zx/%zx r=%d f=%lx\n",
-+			       sreq->stream_nr, sreq->debug_index, sreq->source,
-+			       sreq->start, sreq->transferred, sreq->len,
-+			       refcount_read(&sreq->ref), sreq->flags);
-+		}
-+	}
-+}
-+
- /*
-  * Successful completion of write of a folio to the server and/or cache.  Note
-  * that we are not allowed to lock the folio here on pain of deadlocking with
-@@ -87,6 +115,12 @@ static void netfs_writeback_unlock_folios(struct netfs_io_request *wreq,
- 	unsigned long long collected_to = wreq->collected_to;
- 	unsigned int slot = wreq->buffer.first_tail_slot;
- 
-+	if (WARN_ON_ONCE(!folioq)) {
-+		pr_err("[!] Writeback unlock found empty rolling buffer!\n");
-+		netfs_dump_request(wreq);
-+		return;
-+	}
-+
- 	if (wreq->origin == NETFS_PGPRIV2_COPY_TO_CACHE) {
- 		if (netfs_pgpriv2_unlock_copied_folios(wreq))
- 			*notes |= MADE_PROGRESS;
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
