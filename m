@@ -2,78 +2,54 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A49929F530D
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Dec 2024 18:25:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1734456299;
-	bh=14GzxjDK/S3YYwHbKCRpwfQ9SEoXUZxVLLUkAJGy88k=;
-	h=Subject:In-Reply-To:References:Date:To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=Tm+pIW4azc9iWEow2PXuYOTvHhpSdDxou6eD6OyrTmfsXx8XM6X6qQUeGMrgc/mUf
-	 VjSGIK0451r54icder0glJT2axk7tKECsi+FRgEPJuRS6nGSkz6aDhOaqq53SThVyg
-	 9rIOus3mgd7dZ314kIeR7jrccDlMWIQ8+opby5s+ANu94VQ4bbA5qjNHbmNXzYEDwp
-	 6Fgw/c09iNhZs7Q2bxl6fHOPzuR2whKyB8Gkp8OyA+EmZry7uRSqnfQP/d077Qd0fE
-	 tJB9/i9aCLF3AdXsjyAF6RoutHxCZhUn2pJkj1rtnW+ChbjsfibZW3yaoE2rYmgmdU
-	 T1UDl74NaBkMQ==
+	by mail.lfdr.de (Postfix) with ESMTPS id 986299F5F61
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Dec 2024 08:34:27 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YCNwq37bDz2yRZ
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Dec 2024 04:24:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YClmx4Nnjz30Tt
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Dec 2024 18:34:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734456297;
-	cv=none; b=TAWlbUQfL3LRobt62apAGSfR1syiIuB0Nw0hPNyjtVOBfJM9rhEhxGff9X+jl5Ya20PFzwqP5nWtAl7TGCixJkxom5/c+v4GrCT7diKylGLiL86sL/ooZHe96hKZzH7Wr2DhOjm8ANULqzXSDJGEQzXhzqO4+g70UvGnD+J/E7o57UiQF9uZv312IJhMxYfwshYktB6e8nv2Vp9iRMcsEUMks2G7DtC4+J2+pq+FkgXxl8hjF8g5TxvprcXkydY+bGddUK1FXRqSMt6oRj7UP5sI8WsGwT+Z8ZtiNhakFvgYiSii2l90336MUslBAZ+WakxFXEoAEnjdAuLwp1M1oQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734507264;
+	cv=none; b=IZsnS0wE6PNDceuwmQ8aNFMa/GMYExM1mzV+y6n2jGCu04W0nfcnspc0jS4sFoljwwn4Nn+iIwEbFzNPw5ptF+Siy9AOOWRxZAgZ5Q1UI0SO9V40PwDCslkEXMVKDAyXV8+rZXYBP+38a5OZfxJMBK42m+S9/XT0OWGnjQjO4daAJ2NDCbN5jrxlm13sDZtfHa0YKBrHqonERJS9dc0e8T6da9VJdZ162iwZrrhReSsk8Yq1TUDHHubXJAhiwcuL5NVc4qFyliNQ0/FpG8HxRSl4xjZUAS3+1iT9BJkh4+l0HGy27sXCylbbR1EJOi2IoEC1Jn8jIA5Zns/yECtThQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734456297; c=relaxed/relaxed;
-	bh=14GzxjDK/S3YYwHbKCRpwfQ9SEoXUZxVLLUkAJGy88k=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=HGZ1D+rCNcAy2pKxpANSTMjAeeBuU2fLh/Cu6WSUUVE1bAM9bOAcB6op8Gk5SN0c2yV/A9kQ9wTf4+Epnh66IwzlGTWLc0OPdW8d/5Ij8q0be/ebZ4raiZ2/eDpRvFwL45qwvkp0sacUbiQx+g1X9e4gnki/NG3Irjc5Al1GAxMejucfQQuvQPhdu5yKvayRuAJZXQZiyinRS4q7VQI2zJOQm2pq2siJAm255xwZK2TqGgHe4bfebM4ZQ5nqXHIxenPesSh0m4ssHSc1LR0/zM23eelCSwQ/UjHz8UOAmnypVLfXwLKkFa/1LFz5Jv3BBP0cu1CLvUPG7DnnaKJrew==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BMhcEoMr; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1734507264; c=relaxed/relaxed;
+	bh=j4lLzZoVi0ao2x/c0sZxGGH3JiAN5Xw0n47w3YG3S2w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jv63KZyKtqDo/7o1l/40x5YCb7rD2L3nDLNTP9YXGuOEiv7jv8La/HkNZwEeqdNJyvwvtv08yDPsSMTRdVY3cw4B6W8LPqt3ECeITOpCtx+ETt/zm0hzC4rEttEetKKptexOE2Vat6F82eQYBxKhTVFGvYg6s5Q6wE2EAQO1n4p//4WQPq2UqY60SY8P5shNuxwmQFHnaI2cAI+5069MNwQ8b3JGp07UhIz5GRf2TLUOZZ6MgxMoXsvjMnXIV+Ywc8AQMkv589D0SZDR9dRtKD0UNAnfjP8pydoANL+OdRKlinGe4Cf7mVPYOatA5tlU0H3AeRTaU5K4MhWe819pFA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KKgXwOOx; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BMhcEoMr;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KKgXwOOx;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YCNwj42dQz2yFP
-	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Dec 2024 04:24:53 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 5FA915C6705;
-	Tue, 17 Dec 2024 17:23:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 357D5C4CED3;
-	Tue, 17 Dec 2024 17:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734456277;
-	bh=oGndJHx3kPL6sY3zlsI7/o1jzzaoLFH/0rOCy8bQ5zs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=BMhcEoMr7JiqOVabmymFXIBDa0fYt8C7RQhWqXiZbI3nyCR37RNwrXOxsEt2mEcDo
-	 hBkN6ETFm1Iny4OpER/lBrQtgnNpJUXCWCHbGFA1aU+WOoue3kHIZjXhiUXL8tlAX8
-	 PuqFNYoNRu+sNxhAbZwlfkjvC/Ep2Glix3OjilZ2j1sqfYQorZE+8/aoweEIQePeFo
-	 luvS/imLwR+T2PNeGcNB8KlE4Lgk4iB4d4vWGO29v0aFytQJ7x1oTfMzBWZS6vmImi
-	 lrmPsymM0Lrm4pS+Qb2R5MV6i5u7usTfV+yeShQuh55Aoidl9AxUgvOyu6UODynddu
-	 pSD1wzOmrItGw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE1363806656;
-	Tue, 17 Dec 2024 17:24:55 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs fixes for 6.13-rc4
-In-Reply-To: <Z2GJfmDTrzh0mM8P@debian>
-References: <Z2GJfmDTrzh0mM8P@debian>
-X-PR-Tracked-List-Id: Development of Linux EROFS file system <linux-erofs.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <Z2GJfmDTrzh0mM8P@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.13-rc4-fixes
-X-PR-Tracked-Commit-Id: 6422cde1b0d5a31b206b263417c1c2b3c80fe82c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ed90ed56e4b1311797302c2e6107f5049ba4586d
-Message-Id: <173445629432.974395.9252918788891852590.pr-tracker-bot@kernel.org>
-Date: Tue, 17 Dec 2024 17:24:54 +0000
-To: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-X-Spam-Status: No, score=-5.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YClms0TfNz3064
+	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Dec 2024 18:34:17 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1734507251; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=j4lLzZoVi0ao2x/c0sZxGGH3JiAN5Xw0n47w3YG3S2w=;
+	b=KKgXwOOxvLP/wPNWhZCrAGOqd2HgEKgTyinaPaF5Yim76Q6WNot3Q0oEeB9mVhrbScUArWTmGaGSULixLQCkyKQmU83VoEWrPVxPQboClYqRuS3+9Qe1R446Rx/CT33e2s4+3a6NL3hpqQWNtybbz7ryemL7k0rIiw5x+tZmmrs=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WLlhlPH_1734507245 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 18 Dec 2024 15:34:10 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Subject: [PATCH 5.15.y] erofs: fix incorrect symlink detection in fast symlink
+Date: Wed, 18 Dec 2024 15:34:02 +0800
+Message-ID: <20241218073402.442917-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.6 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_SBL_A,
+	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -86,21 +62,73 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: pr-tracker-bot--- via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: pr-tracker-bot@kernel.org
-Cc: linux-erofs@lists.ozlabs.org, Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org, allison.karlitskaya@redhat.com
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-The pull request you sent on Tue, 17 Dec 2024 22:23:58 +0800:
+commit 9ed50b8231e37b1ae863f5dec8153b98d9f389b4 upstream.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.13-rc4-fixes
+Fast symlink can be used if the on-disk symlink data is stored
+in the same block as the on-disk inode, so we don’t need to trigger
+another I/O for symlink data.  However, currently fs correction could be
+reported _incorrectly_ if inode xattrs are too large.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ed90ed56e4b1311797302c2e6107f5049ba4586d
+In fact, these should be valid images although they cannot be handled as
+fast symlinks.
 
-Thank you!
+Many thanks to Colin for reporting this!
 
+Reported-by: Colin Walters <walters@verbum.org>
+Reported-by: https://honggfuzz.dev/
+Link: https://lore.kernel.org/r/bb2dd430-7de0-47da-ae5b-82ab2dd4d945@app.fastmail.com
+Fixes: 431339ba9042 ("staging: erofs: add inode operations")
+[ Note that it's a runtime misbehavior instead of a security issue. ]
+Link: https://lore.kernel.org/r/20240909031911.1174718-1-hsiangkao@linux.alibaba.com
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/inode.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
+
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 638bb70d0d65..c68258ae70d3 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -219,11 +219,14 @@ static int erofs_fill_symlink(struct inode *inode, void *data,
+ 			      unsigned int m_pofs)
+ {
+ 	struct erofs_inode *vi = EROFS_I(inode);
++	loff_t off;
+ 	char *lnk;
+ 
+-	/* if it cannot be handled with fast symlink scheme */
+-	if (vi->datalayout != EROFS_INODE_FLAT_INLINE ||
+-	    inode->i_size >= PAGE_SIZE || inode->i_size < 0) {
++	m_pofs += vi->xattr_isize;
++	/* check if it cannot be handled with fast symlink scheme */
++	if (vi->datalayout != EROFS_INODE_FLAT_INLINE || inode->i_size < 0 ||
++	    check_add_overflow(m_pofs, inode->i_size, &off) ||
++	    off > i_blocksize(inode)) {
+ 		inode->i_op = &erofs_symlink_iops;
+ 		return 0;
+ 	}
+@@ -232,17 +235,6 @@ static int erofs_fill_symlink(struct inode *inode, void *data,
+ 	if (!lnk)
+ 		return -ENOMEM;
+ 
+-	m_pofs += vi->xattr_isize;
+-	/* inline symlink data shouldn't cross page boundary as well */
+-	if (m_pofs + inode->i_size > PAGE_SIZE) {
+-		kfree(lnk);
+-		erofs_err(inode->i_sb,
+-			  "inline data cross block boundary @ nid %llu",
+-			  vi->nid);
+-		DBG_BUGON(1);
+-		return -EFSCORRUPTED;
+-	}
+-
+ 	memcpy(lnk, data + m_pofs, inode->i_size);
+ 	lnk[inode->i_size] = '\0';
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.43.5
+
