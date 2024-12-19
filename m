@@ -1,47 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00EC29F74F4
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2024 07:43:59 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2949C9F74F3
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2024 07:43:57 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YDLc957pMz3cCM
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YDLc92y1Xz3c6y
 	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2024 17:43:53 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734590631;
-	cv=none; b=H6DKC4nnzQVy3VOo4eLXWLQV6fG4lHCOP9rONErruxpW8EfCwPGuwirc1UFWMH/YajM/WVTcOl3qiIAxq4c43OQNHnTvkYbX1KaC7Gb2lq7VT2m7/h0wIZRB00PpnEaslKhthxX3gj9y1pW1ZYSw2jQs5x1uAYvYi6WY5I6fy95Yj6PNgSLxngya33WYGoYjfBWVkk34GfM5oyduFoTqBCHAQ5l7XoavnoaMd5eCyI0iESB2JcDmETQPIFeOGXmhzqK1udGQzKaB6Q+35UrY1xptYPhEroBCIfcFzwGoQ2VQcXZ3vuX4GVd1SgsNRjKrO38D7Bsprliyhhtoam6bIQ==
+	cv=none; b=XgeNr6w606ZYoXOUAjNaT2Bz1+aPSfjce2NSzLZ7iXfdBO/X8nImvrPJB84aJp+wnzIUv8k+hgYbQJoncLZTiwWxzNhdTo8+7w4+ZbKM5yg7eDAC+Bx4oK4C8wuzIgjCQ7g0mp3y2YlrxgpywK41MkOIH31PVVi3V2nqcNW0U5+4kqne9h3BdMBcUfCZqaRgCrf/Zf6/we3bCHjk+3QIVkUKNjmvwn+5KjR8Mmi8xG4bfWLmfMxloH1T0BCvMabGXHx9lIulr+WwO2Pb3OGhxtlzrxmmXV0JyXwuqg5u8xFcfKMvxL6QGcBLO4IPL4QessGYd15CigmAbjTHuVftxQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1734590631; c=relaxed/relaxed;
-	bh=rDALtUbt4fFVTRdA6qJno9OXV3pPIhD7DaNhTSUB0S4=;
+	bh=LxrH7tM1uJF9Nok9485ITyIfY2terkm7c/7hcWreI8Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mz+Ja+x5otsNz4BHf33LUgG5R02B9+boNy2U3uxl/nWYydfuya+dTZaENooFFwJcZUrzWXwdXx6kf6kcidRgoZWjYKKxAyx/c9cfuaiNiB2UqChu0o+/QKTHaaopuYMxCSR1em853FvkphDCisQqO74o1gOKaOz8BXo3TY2tG6lNPi8bzABUu21nvUAkAK1TdoOClba4FAkT1SWDc2bw8okBoouUMpO4wlcYP+kpabYzaNAlXtVGPWjUPQsMYOLqDn/wJP7wsAIRLTboQyND4XEMi17tCJ/q+3ZarI+L7NfLV7J85whp4UH+9nP88roQEduvWw1pWwuoWRRleot8Bg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Myj76a8H; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=UWxYRONOnDqcNlSsBoaC/FeWeaiNVy2Z/Uu5+BPakYcDJlczv/tUKGCJHbiuv+lZlSAZJUIaCt2hFFizdh0UpJJWvEBMtGhqZO0x/05wjVcfq2ycBEf/2aZLhWDCY8KR/4PsYMsetDUo7uLSYoGyG5VdoccXYKzNENVv8j7o8oB7PFSA0zeg9J0w65/bU0NfzQsf4CGgYz7SgQLqnglH/XbU4iTe/LL3Fl9GPcELtuzM7iKtNeG1jxU7x1ZZBcPXaiFqcKwO2VaHG2WJ+QJbdi7YQdSPNZkMce53jwM1Mj5oPAtbU1yeQ5D9Js4+HK/26kviK9kKkMlNl65yIdRjeg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Ot6aukL4; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Myj76a8H;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Ot6aukL4;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YDLc41LGZz2yRP
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YDLc41JPCz2yD8
 	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Dec 2024 17:43:47 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1734590623; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=rDALtUbt4fFVTRdA6qJno9OXV3pPIhD7DaNhTSUB0S4=;
-	b=Myj76a8HFylKp1quWfV9jfsdzNqvewmzAIrzSTfN+teMhKGWsHMdVuBU5ILCWqqgU32O69UtOYaw7rcjH30XsX3GhnYGTWvOsWRbIFu5jFQziE5kSQ78i2eoXnx3Ggl9mBp+KNGwCHSs29D28p8DrojVIUqKBGt4w3QeZKyEcKU=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WLpMVKa_1734590621 cluster:ay36)
+	t=1734590624; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=LxrH7tM1uJF9Nok9485ITyIfY2terkm7c/7hcWreI8Y=;
+	b=Ot6aukL4jPpoaBvdVwcsweWKDB60TD1p9S8FM6bWUHlPHe1H/Weocqy1oUpTXt2eMXbor28dL4d4ouF1h1KNuq8ljxTZFXwrlI3jNttH4NqlJKA3sjTNYdjilauPLWTfJITanjqNn6ov/veOTNHxMWKBIKXpRLkbtw5KrAqYgNk=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WLpMVL._1734590622 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 19 Dec 2024 14:43:41 +0800
+          Thu, 19 Dec 2024 14:43:42 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 3/4] erofs: support buffer block reservation
-Date: Thu, 19 Dec 2024 14:43:30 +0800
-Message-ID: <20241219064331.2223001-3-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 4/4] erofs-utils: mkfs: support data alignment
+Date: Thu, 19 Dec 2024 14:43:31 +0800
+Message-ID: <20241219064331.2223001-4-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20241219064331.2223001-1-hsiangkao@linux.alibaba.com>
 References: <20241219064331.2223001-1-hsiangkao@linux.alibaba.com>
@@ -67,167 +67,152 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-In order to support data alignment, add support for recording multiple
-block reservations.
+The underlay block storage could work in a stripe-like manner to improve
+performance and space efficiency.
 
+EROFS on-disk layout is flexible enough for such use cases.
+
+Cc: Changpeng Liu <changpeliu@tencent.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/cache.h | 11 +++++++----
- lib/cache.c           | 32 ++++++++++++++++----------------
- 2 files changed, 23 insertions(+), 20 deletions(-)
+ include/erofs/cache.h |  3 +++
+ lib/cache.c           | 25 ++++++++++++++++++++-----
+ man/mkfs.erofs.1      |  3 +++
+ mkfs/main.c           | 11 +++++++++++
+ 4 files changed, 37 insertions(+), 5 deletions(-)
 
 diff --git a/include/erofs/cache.h b/include/erofs/cache.h
-index 646d6de..d8559a8 100644
+index d8559a8..6ff80ab 100644
 --- a/include/erofs/cache.h
 +++ b/include/erofs/cache.h
-@@ -35,11 +35,14 @@ struct erofs_bhops {
+@@ -67,6 +67,9 @@ struct erofs_bufmgr {
  
- struct erofs_buffer_head {
- 	struct list_head list;
--	struct erofs_buffer_block *block;
--
-+	union {
-+		struct {
-+			struct erofs_buffer_block *block;
-+			const struct erofs_bhops *op;
-+		};
-+		erofs_blk_t nblocks;
-+	};
- 	erofs_off_t off;
--	const struct erofs_bhops *op;
--
- 	void *fsprivate;
+ 	/* last mapped buffer block to accelerate erofs_mapbh() */
+ 	struct erofs_buffer_block *last_mapped_block;
++
++	/* align data block addresses to multiples of `dsunit` */
++	unsigned int dsunit;
  };
  
+ static inline const int get_alignsize(struct erofs_sb_info *sbi, int type,
 diff --git a/lib/cache.c b/lib/cache.c
-index 1cc5007..cb05466 100644
+index cb05466..d3e2e62 100644
 --- a/lib/cache.c
 +++ b/lib/cache.c
-@@ -74,8 +74,7 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
+@@ -156,10 +156,15 @@ static int erofs_bfind_for_attach(struct erofs_bufmgr *bmgr,
+ 	bb = NULL;
+ 
+ 	/* try to find a most-fit mapped buffer block first */
+-	if (size + inline_ext >= blksiz)
++
++	if (__erofs_unlikely(bmgr->dsunit > 1)) {
++		used_before = blksiz - alignsize;
++	} else if (size + inline_ext >= blksiz) {
+ 		goto skip_mapped;
++	} else {
++		used_before = rounddown(blksiz - (size + inline_ext), alignsize);
++	}
+ 
+-	used_before = rounddown(blksiz - (size + inline_ext), alignsize);
+ 	for (; used_before; --used_before) {
+ 		struct list_head *bt = bmgr->mapped_buckets[type] + used_before;
+ 
+@@ -181,7 +186,7 @@ static int erofs_bfind_for_attach(struct erofs_bufmgr *bmgr,
+ 		ret = __erofs_battach(cur, NULL, size, alignsize,
+ 				      inline_ext, true);
+ 		if (ret < 0) {
+-			DBG_BUGON(1);
++			DBG_BUGON(!(bmgr->dsunit > 1));
+ 			continue;
+ 		}
+ 
+@@ -324,10 +329,20 @@ struct erofs_buffer_head *erofs_battach(struct erofs_buffer_head *bh,
+ static void __erofs_mapbh(struct erofs_buffer_block *bb)
  {
  	struct erofs_bufmgr *bmgr = bb->buffers.fsprivate;
- 	struct erofs_sb_info *sbi = bmgr->sbi;
--	const unsigned int blksiz = erofs_blksiz(sbi);
--	const unsigned int blkmask = blksiz - 1;
-+	const unsigned int blkmask = erofs_blksiz(sbi) - 1;
- 	erofs_off_t boff = bb->buffers.off;
- 	const erofs_off_t alignedoffset = roundup(boff, alignsize);
- 	bool tailupdate = false;
-@@ -87,7 +86,8 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
- 			+ inline_ext > blkmask)
- 		return -ENOSPC;
+-	erofs_blk_t blkaddr;
++	erofs_blk_t blkaddr = bmgr->tail_blkaddr;
  
--	oob = cmpsgn((alignedoffset & blkmask) + incr + inline_ext, blksiz);
-+	oob = cmpsgn(roundup(boff, alignsize) + incr + inline_ext,
-+		     bb->buffers.nblocks << sbi->blkszbits);
- 	if (oob >= 0) {
- 		/* the next buffer block should be NULL_ADDR all the time */
- 		if (oob && list_next_entry(bb, list)->blkaddr != NULL_ADDR)
-@@ -96,7 +96,7 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
- 		blkaddr = bb->blkaddr;
- 		if (blkaddr != NULL_ADDR) {
- 			tailupdate = (bmgr->tail_blkaddr == blkaddr +
--				      BLK_ROUND_UP(sbi, boff));
-+				      bb->buffers.nblocks);
- 			if (oob && !tailupdate)
- 				return -EINVAL;
- 		}
-@@ -110,10 +110,11 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
- 		}
- 		boff = alignedoffset + incr;
- 		bb->buffers.off = boff;
-+		bb->buffers.nblocks = max_t(erofs_blk_t, bb->buffers.nblocks,
-+					    BLK_ROUND_UP(sbi, boff));
- 		/* need to update the tail_blkaddr */
- 		if (tailupdate)
--			bmgr->tail_blkaddr = blkaddr +
--						BLK_ROUND_UP(sbi, boff);
-+			bmgr->tail_blkaddr = blkaddr + bb->buffers.nblocks;
+ 	if (bb->blkaddr == NULL_ADDR) {
+-		bb->blkaddr = bmgr->tail_blkaddr;
++		bb->blkaddr = blkaddr;
++		if (__erofs_unlikely(bmgr->dsunit > 1) && bb->type == DATA) {
++			struct erofs_buffer_block *pb = list_prev_entry(bb, list);
++
++			bb->blkaddr = roundup(blkaddr, bmgr->dsunit);
++			if (pb != &bmgr->blkh &&
++			    pb->blkaddr + pb->buffers.nblocks >= blkaddr) {
++				DBG_BUGON(pb->blkaddr + pb->buffers.nblocks > blkaddr);
++				pb->buffers.nblocks = bb->blkaddr - pb->blkaddr;
++			}
++		}
+ 		bmgr->last_mapped_block = bb;
  		erofs_bupdate_mapped(bb);
  	}
- 	return ((alignedoffset + incr + blkmask) & blkmask) + 1;
-@@ -266,6 +267,7 @@ struct erofs_buffer_head *erofs_balloc(struct erofs_bufmgr *bmgr,
- 		bb->type = type;
- 		bb->blkaddr = NULL_ADDR;
- 		bb->buffers.off = 0;
-+		bb->buffers.nblocks = 0;
- 		bb->buffers.fsprivate = bmgr;
- 		init_list_head(&bb->buffers.list);
- 		if (type == DATA)
-@@ -319,7 +321,7 @@ struct erofs_buffer_head *erofs_battach(struct erofs_buffer_head *bh,
- 	return nbh;
- }
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index 0093839..ee84163 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -149,6 +149,9 @@ the given primary algorithm, alternative algorithms can be specified with
+ are extended regular expressions, matched against absolute paths within
+ the output filesystem, with no leading /.
+ .TP
++.BI "\-\-dsunit=" #
++Align all data block addresses to multiples of #.
++.TP
+ .BI "\-\-exclude-path=" path
+ Ignore file that matches the exact literal path.
+ You may give multiple
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 9ca7dad..1f4b7c6 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -86,6 +86,7 @@ static struct option long_options[] = {
+ 	{"all-time", no_argument, NULL, 526},
+ 	{"sort", required_argument, NULL, 527},
+ 	{"hard-dereference", no_argument, NULL, 528},
++	{"dsunit", required_argument, NULL, 529},
+ 	{0, 0, 0, 0},
+ };
  
--static erofs_blk_t __erofs_mapbh(struct erofs_buffer_block *bb)
-+static void __erofs_mapbh(struct erofs_buffer_block *bb)
- {
- 	struct erofs_bufmgr *bmgr = bb->buffers.fsprivate;
- 	erofs_blk_t blkaddr;
-@@ -330,10 +332,9 @@ static erofs_blk_t __erofs_mapbh(struct erofs_buffer_block *bb)
- 		erofs_bupdate_mapped(bb);
- 	}
+@@ -162,6 +163,7 @@ static void usage(int argc, char **argv)
+ 		" --blobdev=X           specify an extra device X to store chunked data\n"
+ 		" --chunksize=#         generate chunk-based files with #-byte chunks\n"
+ 		" --clean=X             run full clean build (default) or:\n"
++		" --dsunit=#            align all data block addresses to multiples of #\n"
+ 		" --incremental=X       run incremental build\n"
+ 		"                       (X = data|rvsp; data=full data, rvsp=space is allocated\n"
+ 		"                                       and filled with zeroes)\n"
+@@ -243,6 +245,7 @@ static unsigned int rebuild_src_count;
+ static LIST_HEAD(rebuild_src_list);
+ static u8 fixeduuid[16];
+ static bool valid_fixeduuid;
++static unsigned int dsunit;
  
--	blkaddr = bb->blkaddr + BLK_ROUND_UP(bmgr->sbi, bb->buffers.off);
-+	blkaddr = bb->blkaddr + bb->buffers.nblocks;
- 	if (blkaddr > bmgr->tail_blkaddr)
- 		bmgr->tail_blkaddr = blkaddr;
--	return blkaddr;
- }
- 
- erofs_blk_t erofs_mapbh(struct erofs_bufmgr *bmgr,
-@@ -353,7 +354,7 @@ erofs_blk_t erofs_mapbh(struct erofs_bufmgr *bmgr,
+ static int erofs_mkfs_feat_set_legacy_compress(bool en, const char *val,
+ 					       unsigned int vallen)
+@@ -856,6 +859,13 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		case 528:
+ 			cfg.c_hard_dereference = true;
  			break;
- 
- 		DBG_BUGON(t->blkaddr != NULL_ADDR);
--		(void)__erofs_mapbh(t);
-+		__erofs_mapbh(t);
- 	} while (t != bb);
- 	return bmgr->tail_blkaddr;
- }
-@@ -389,7 +390,8 @@ int erofs_bflush(struct erofs_bufmgr *bmgr,
- 		if (p == bb)
- 			break;
- 
--		blkaddr = __erofs_mapbh(p);
-+		__erofs_mapbh(p);
-+		blkaddr = p->blkaddr + BLK_ROUND_UP(sbi, p->buffers.off);
- 
- 		list_for_each_entry_safe(bh, nbh, &p->buffers.list, list) {
- 			if (bh->op == &erofs_skip_write_bhops) {
-@@ -412,8 +414,7 @@ int erofs_bflush(struct erofs_bufmgr *bmgr,
- 					   padding, true);
- 
- 		if (p->type != DATA)
--			bmgr->metablkcnt +=
--				BLK_ROUND_UP(sbi, p->buffers.off);
-+			bmgr->metablkcnt += p->buffers.nblocks;
- 		erofs_dbg("block %u to %u flushed", p->blkaddr, blkaddr - 1);
- 		erofs_bfree(p);
++		case 529:
++			dsunit = strtoul(optarg, &endptr, 0);
++			if (*endptr != '\0') {
++				erofs_err("invalid dsunit %s", optarg);
++				return -EINVAL;
++			}
++			break;
+ 		case 'V':
+ 			version();
+ 			exit(0);
+@@ -1318,6 +1328,7 @@ int main(int argc, char **argv)
+ 		}
+ 		sb_bh = NULL;
  	}
-@@ -424,13 +425,12 @@ void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke)
- {
- 	struct erofs_buffer_block *const bb = bh->block;
- 	struct erofs_bufmgr *bmgr = bb->buffers.fsprivate;
--	struct erofs_sb_info *sbi = bmgr->sbi;
- 	const erofs_blk_t blkaddr = bh->block->blkaddr;
- 	bool rollback = false;
++	g_sbi.bmgr->dsunit = dsunit;
  
- 	/* tail_blkaddr could be rolled back after revoking all bhs */
- 	if (tryrevoke && blkaddr != NULL_ADDR &&
--	    bmgr->tail_blkaddr == blkaddr + BLK_ROUND_UP(sbi, bb->buffers.off))
-+	    bmgr->tail_blkaddr == blkaddr + bb->buffers.nblocks)
- 		rollback = true;
- 
- 	bh->op = &erofs_drop_directly_bhops;
-@@ -440,7 +440,7 @@ void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke)
- 		return;
- 
- 	if (!rollback && bb->type != DATA)
--		bmgr->metablkcnt += BLK_ROUND_UP(sbi, bb->buffers.off);
-+		bmgr->metablkcnt += bb->buffers.nblocks;
- 	erofs_bfree(bb);
- 	if (rollback)
- 		bmgr->tail_blkaddr = blkaddr;
+ 	/* Use the user-defined UUID or generate one for clean builds */
+ 	if (valid_fixeduuid)
 -- 
 2.43.5
 
