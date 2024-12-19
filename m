@@ -1,47 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B05E9F74F0
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2024 07:43:55 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 00EC29F74F4
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2024 07:43:59 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YDLc74hgbz30WR
-	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2024 17:43:51 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YDLc957pMz3cCM
+	for <lists+linux-erofs@lfdr.de>; Thu, 19 Dec 2024 17:43:53 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734590630;
-	cv=none; b=DI4Vw9jrHKg6Y/usHoRnhVkowwpZX9Q9A4A8wMhilctEc38alI4YKdBtLeMKIv811zhJWz082BwKTURq9KsDxS5Sbe7kG/3zyvhmYoJfAYPQBozetxQrcTb9lrIxsrcFYGWagnlnDPJgMH0XWDLxkHz6xFYXbXBJyfLcw7YYQ6P7rTkXkIAWueZJoE3PaiHxPDPxnxmbPN0PuG+jsD9rb/6PWro54H7BjOL+9sJqaqI2mMg7znwXAxxeBj+6UDazZVGsBVE0L0MDyJBXt+IwyScBDF6Zu9o4D7h/SbSpDRk6++bKfd3v98Sl9uRsV8UDzSRvrEoOaA2UwdXyQmqNRw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1734590631;
+	cv=none; b=H6DKC4nnzQVy3VOo4eLXWLQV6fG4lHCOP9rONErruxpW8EfCwPGuwirc1UFWMH/YajM/WVTcOl3qiIAxq4c43OQNHnTvkYbX1KaC7Gb2lq7VT2m7/h0wIZRB00PpnEaslKhthxX3gj9y1pW1ZYSw2jQs5x1uAYvYi6WY5I6fy95Yj6PNgSLxngya33WYGoYjfBWVkk34GfM5oyduFoTqBCHAQ5l7XoavnoaMd5eCyI0iESB2JcDmETQPIFeOGXmhzqK1udGQzKaB6Q+35UrY1xptYPhEroBCIfcFzwGoQ2VQcXZ3vuX4GVd1SgsNRjKrO38D7Bsprliyhhtoam6bIQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1734590630; c=relaxed/relaxed;
-	bh=ALwcBVgJHUKaRy6MlDz44NYHTpjVYbAW+v6dh9jrrmU=;
+	t=1734590631; c=relaxed/relaxed;
+	bh=rDALtUbt4fFVTRdA6qJno9OXV3pPIhD7DaNhTSUB0S4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GYlfavZLQ3e5Q5WMNlod3C4ozheJdEsfOY5s70ZMnUUW5mbmAzgaoD7sIeq/jiVaz3wEG9GkzyxGG4FjdZcEFrMePW2IqyDByyM3Vl5EX2jIfdAH5yzoOn91hiTtafRKTrdrt+QXVqoV0yU79aeLlcxzwh6mICInUDtC2x1VeUIEGzck/eLwUD/cjnL2MUFi4ewNdyLMOS5LEO9uQ+/WxNSUGZ7NOM5Uh509btG4ZGGimmmDIkhT/BFaNdjhYLTpK4fptIfOu0k3XCfI1z0kiJ10WaMLrGU/9HXeKRJzE7vKM8Wo1vaFIwfkDzakrgzY4gVrOIeTMFiSUZ2TMNpKMg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VMNUfFpZ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=Mz+Ja+x5otsNz4BHf33LUgG5R02B9+boNy2U3uxl/nWYydfuya+dTZaENooFFwJcZUrzWXwdXx6kf6kcidRgoZWjYKKxAyx/c9cfuaiNiB2UqChu0o+/QKTHaaopuYMxCSR1em853FvkphDCisQqO74o1gOKaOz8BXo3TY2tG6lNPi8bzABUu21nvUAkAK1TdoOClba4FAkT1SWDc2bw8okBoouUMpO4wlcYP+kpabYzaNAlXtVGPWjUPQsMYOLqDn/wJP7wsAIRLTboQyND4XEMi17tCJ/q+3ZarI+L7NfLV7J85whp4UH+9nP88roQEduvWw1pWwuoWRRleot8Bg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Myj76a8H; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VMNUfFpZ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Myj76a8H;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YDLc40hrwz2xHT
-	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Dec 2024 17:43:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YDLc41LGZz2yRP
+	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Dec 2024 17:43:47 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1734590622; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=ALwcBVgJHUKaRy6MlDz44NYHTpjVYbAW+v6dh9jrrmU=;
-	b=VMNUfFpZ7bCppqAhrxSTc9xerpy8BkNMCEgPoRJj2A7qtYyUYPVWtNELlxqQxlrZ1cg+fvlrH1LpAsBnJgm4OKn8PdTNnW4nZgx9GDUsiks7sjJImD0JyTJgb9dzRm//RDAjg9i1w+vFozB2GPBuPkbtOk4c9wUOti25ZJOGXEY=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WLpMVJc_1734590619 cluster:ay36)
+	t=1734590623; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=rDALtUbt4fFVTRdA6qJno9OXV3pPIhD7DaNhTSUB0S4=;
+	b=Myj76a8HFylKp1quWfV9jfsdzNqvewmzAIrzSTfN+teMhKGWsHMdVuBU5ILCWqqgU32O69UtOYaw7rcjH30XsX3GhnYGTWvOsWRbIFu5jFQziE5kSQ78i2eoXnx3Ggl9mBp+KNGwCHSs29D28p8DrojVIUqKBGt4w3QeZKyEcKU=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WLpMVKa_1734590621 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 19 Dec 2024 14:43:40 +0800
+          Thu, 19 Dec 2024 14:43:41 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH v2 2/4] erofs-utils: lib: move block boundary check into __erofs_battach()
-Date: Thu, 19 Dec 2024 14:43:29 +0800
-Message-ID: <20241219064331.2223001-2-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 3/4] erofs: support buffer block reservation
+Date: Thu, 19 Dec 2024 14:43:30 +0800
+Message-ID: <20241219064331.2223001-3-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20241219064331.2223001-1-hsiangkao@linux.alibaba.com>
 References: <20241219064331.2223001-1-hsiangkao@linux.alibaba.com>
@@ -67,84 +67,167 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-It should be guaranteed when buffers are attached, rather than
-scattered everywhere.
+In order to support data alignment, add support for recording multiple
+block reservations.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/cache.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ include/erofs/cache.h | 11 +++++++----
+ lib/cache.c           | 32 ++++++++++++++++----------------
+ 2 files changed, 23 insertions(+), 20 deletions(-)
 
+diff --git a/include/erofs/cache.h b/include/erofs/cache.h
+index 646d6de..d8559a8 100644
+--- a/include/erofs/cache.h
++++ b/include/erofs/cache.h
+@@ -35,11 +35,14 @@ struct erofs_bhops {
+ 
+ struct erofs_buffer_head {
+ 	struct list_head list;
+-	struct erofs_buffer_block *block;
+-
++	union {
++		struct {
++			struct erofs_buffer_block *block;
++			const struct erofs_bhops *op;
++		};
++		erofs_blk_t nblocks;
++	};
+ 	erofs_off_t off;
+-	const struct erofs_bhops *op;
+-
+ 	void *fsprivate;
+ };
+ 
 diff --git a/lib/cache.c b/lib/cache.c
-index 66bbdca..1cc5007 100644
+index 1cc5007..cb05466 100644
 --- a/lib/cache.c
 +++ b/lib/cache.c
-@@ -69,7 +69,7 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
- 			   struct erofs_buffer_head *bh,
- 			   erofs_off_t incr,
- 			   unsigned int alignsize,
--			   unsigned int extrasize,
-+			   unsigned int inline_ext,
- 			   bool dryrun)
+@@ -74,8 +74,7 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
  {
  	struct erofs_bufmgr *bmgr = bb->buffers.fsprivate;
-@@ -78,11 +78,16 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
- 	const unsigned int blkmask = blksiz - 1;
+ 	struct erofs_sb_info *sbi = bmgr->sbi;
+-	const unsigned int blksiz = erofs_blksiz(sbi);
+-	const unsigned int blkmask = blksiz - 1;
++	const unsigned int blkmask = erofs_blksiz(sbi) - 1;
  	erofs_off_t boff = bb->buffers.off;
  	const erofs_off_t alignedoffset = roundup(boff, alignsize);
--	const int oob = cmpsgn(roundup(((boff - 1) & blkmask) + 1, alignsize) +
--					incr + extrasize, blksiz);
  	bool tailupdate = false;
- 	erofs_blk_t blkaddr;
-+	int oob;
+@@ -87,7 +86,8 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
+ 			+ inline_ext > blkmask)
+ 		return -ENOSPC;
  
-+	/* inline data must never span block boundaries */
-+	if (erofs_blkoff(sbi, alignedoffset + incr + blkmask)
-+			+ inline_ext > blkmask)
-+		return -ENOSPC;
-+
-+	oob = cmpsgn((alignedoffset & blkmask) + incr + inline_ext, blksiz);
+-	oob = cmpsgn((alignedoffset & blkmask) + incr + inline_ext, blksiz);
++	oob = cmpsgn(roundup(boff, alignsize) + incr + inline_ext,
++		     bb->buffers.nblocks << sbi->blkszbits);
  	if (oob >= 0) {
  		/* the next buffer block should be NULL_ADDR all the time */
  		if (oob && list_next_entry(bb, list)->blkaddr != NULL_ADDR)
-@@ -111,7 +116,7 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
- 						BLK_ROUND_UP(sbi, boff);
+@@ -96,7 +96,7 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
+ 		blkaddr = bb->blkaddr;
+ 		if (blkaddr != NULL_ADDR) {
+ 			tailupdate = (bmgr->tail_blkaddr == blkaddr +
+-				      BLK_ROUND_UP(sbi, boff));
++				      bb->buffers.nblocks);
+ 			if (oob && !tailupdate)
+ 				return -EINVAL;
+ 		}
+@@ -110,10 +110,11 @@ static int __erofs_battach(struct erofs_buffer_block *bb,
+ 		}
+ 		boff = alignedoffset + incr;
+ 		bb->buffers.off = boff;
++		bb->buffers.nblocks = max_t(erofs_blk_t, bb->buffers.nblocks,
++					    BLK_ROUND_UP(sbi, boff));
+ 		/* need to update the tail_blkaddr */
+ 		if (tailupdate)
+-			bmgr->tail_blkaddr = blkaddr +
+-						BLK_ROUND_UP(sbi, boff);
++			bmgr->tail_blkaddr = blkaddr + bb->buffers.nblocks;
  		erofs_bupdate_mapped(bb);
  	}
--	return ((alignedoffset + incr - 1) & blkmask) + 1;
-+	return ((alignedoffset + incr + blkmask) & blkmask) + 1;
+ 	return ((alignedoffset + incr + blkmask) & blkmask) + 1;
+@@ -266,6 +267,7 @@ struct erofs_buffer_head *erofs_balloc(struct erofs_bufmgr *bmgr,
+ 		bb->type = type;
+ 		bb->blkaddr = NULL_ADDR;
+ 		bb->buffers.off = 0;
++		bb->buffers.nblocks = 0;
+ 		bb->buffers.fsprivate = bmgr;
+ 		init_list_head(&bb->buffers.list);
+ 		if (type == DATA)
+@@ -319,7 +321,7 @@ struct erofs_buffer_head *erofs_battach(struct erofs_buffer_head *bh,
+ 	return nbh;
  }
  
- int erofs_bh_balloon(struct erofs_buffer_head *bh, erofs_off_t incr)
-@@ -179,12 +184,10 @@ static int erofs_bfind_for_attach(struct erofs_bufmgr *bmgr,
- 			continue;
- 		}
- 
-+		usedmax = ret + inline_ext;
- 		/* should contain all data in the current block */
--		used = ret + inline_ext;
--		DBG_BUGON(used > blksiz);
--
-+		DBG_BUGON(usedmax > blksiz);
- 		bb = cur;
--		usedmax = used;
- 		break;
+-static erofs_blk_t __erofs_mapbh(struct erofs_buffer_block *bb)
++static void __erofs_mapbh(struct erofs_buffer_block *bb)
+ {
+ 	struct erofs_bufmgr *bmgr = bb->buffers.fsprivate;
+ 	erofs_blk_t blkaddr;
+@@ -330,10 +332,9 @@ static erofs_blk_t __erofs_mapbh(struct erofs_buffer_block *bb)
+ 		erofs_bupdate_mapped(bb);
  	}
  
-@@ -209,11 +212,8 @@ skip_mapped:
- 		if (ret < 0)
- 			continue;
+-	blkaddr = bb->blkaddr + BLK_ROUND_UP(bmgr->sbi, bb->buffers.off);
++	blkaddr = bb->blkaddr + bb->buffers.nblocks;
+ 	if (blkaddr > bmgr->tail_blkaddr)
+ 		bmgr->tail_blkaddr = blkaddr;
+-	return blkaddr;
+ }
  
--		used = (ret & (blksiz - 1)) + inline_ext;
--
--		/* should contain inline data in current block */
--		if (used > blksiz)
--			continue;
-+		used = ret + inline_ext;
-+		DBG_BUGON(used > blksiz);
+ erofs_blk_t erofs_mapbh(struct erofs_bufmgr *bmgr,
+@@ -353,7 +354,7 @@ erofs_blk_t erofs_mapbh(struct erofs_bufmgr *bmgr,
+ 			break;
  
- 		/*
- 		 * remaining should be smaller than before or
+ 		DBG_BUGON(t->blkaddr != NULL_ADDR);
+-		(void)__erofs_mapbh(t);
++		__erofs_mapbh(t);
+ 	} while (t != bb);
+ 	return bmgr->tail_blkaddr;
+ }
+@@ -389,7 +390,8 @@ int erofs_bflush(struct erofs_bufmgr *bmgr,
+ 		if (p == bb)
+ 			break;
+ 
+-		blkaddr = __erofs_mapbh(p);
++		__erofs_mapbh(p);
++		blkaddr = p->blkaddr + BLK_ROUND_UP(sbi, p->buffers.off);
+ 
+ 		list_for_each_entry_safe(bh, nbh, &p->buffers.list, list) {
+ 			if (bh->op == &erofs_skip_write_bhops) {
+@@ -412,8 +414,7 @@ int erofs_bflush(struct erofs_bufmgr *bmgr,
+ 					   padding, true);
+ 
+ 		if (p->type != DATA)
+-			bmgr->metablkcnt +=
+-				BLK_ROUND_UP(sbi, p->buffers.off);
++			bmgr->metablkcnt += p->buffers.nblocks;
+ 		erofs_dbg("block %u to %u flushed", p->blkaddr, blkaddr - 1);
+ 		erofs_bfree(p);
+ 	}
+@@ -424,13 +425,12 @@ void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke)
+ {
+ 	struct erofs_buffer_block *const bb = bh->block;
+ 	struct erofs_bufmgr *bmgr = bb->buffers.fsprivate;
+-	struct erofs_sb_info *sbi = bmgr->sbi;
+ 	const erofs_blk_t blkaddr = bh->block->blkaddr;
+ 	bool rollback = false;
+ 
+ 	/* tail_blkaddr could be rolled back after revoking all bhs */
+ 	if (tryrevoke && blkaddr != NULL_ADDR &&
+-	    bmgr->tail_blkaddr == blkaddr + BLK_ROUND_UP(sbi, bb->buffers.off))
++	    bmgr->tail_blkaddr == blkaddr + bb->buffers.nblocks)
+ 		rollback = true;
+ 
+ 	bh->op = &erofs_drop_directly_bhops;
+@@ -440,7 +440,7 @@ void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke)
+ 		return;
+ 
+ 	if (!rollback && bb->type != DATA)
+-		bmgr->metablkcnt += BLK_ROUND_UP(sbi, bb->buffers.off);
++		bmgr->metablkcnt += bb->buffers.nblocks;
+ 	erofs_bfree(bb);
+ 	if (rollback)
+ 		bmgr->tail_blkaddr = blkaddr;
 -- 
 2.43.5
 
