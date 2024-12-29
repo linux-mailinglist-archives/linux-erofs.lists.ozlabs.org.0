@@ -2,56 +2,65 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 997E59FD4F0
-	for <lists+linux-erofs@lfdr.de>; Fri, 27 Dec 2024 14:25:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B9979FDDE0
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 Dec 2024 08:45:36 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YKR7P2D40z308V
-	for <lists+linux-erofs@lfdr.de>; Sat, 28 Dec 2024 00:25:05 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YLWVh25JDz2yvl
+	for <lists+linux-erofs@lfdr.de>; Sun, 29 Dec 2024 18:45:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1735305902;
-	cv=none; b=on+VswqwhTqRW9iI+syIJarxW+X2ogfnwpirq7SrH1p6gmh3B+VtUOHWyla3natze2RnzzhkmKtx3DfHHC+dw+CBtIfmI6iqGrn44XpWEAm8iCI6ETY2CweMpD/jLw2l5eQkmtH4cKqkXT2UmPSiWf7J+cNT3M8bNKKK/YL8gnOMieMkAnQaXhYe5CJApRENrfvs2z4fLDnbUCBkrIEskgpcUe5vLnkAPZBVP7yOrIuWDkN4p1EdyQ+DZaP9Px6Z/HiOj2e862F7SqaPKAPQG7AyeV3NIHcoWq/qQwquH4bzLJ4hxCBlfe0K118Ft6Atfxo2eI5yubFIyXYltZjayA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.166.208
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1735458330;
+	cv=none; b=IJfOFfYRMmYtHIIhekfqWq1A1KjiSODOV2v0TCl7w7GbrlF6y1B9Rw4gE/CwxRXJ9mpOFag3QbIWPjHtOADOYhNGvTFpb2d23i5TskEjWbaUCsxeoPQw9bOeFi6LdOj4/IKtNhA995+CxI/WmR3bgNQE8HJIfN+YnxZf/LWA5HyKyycl4gfTSa4XE3EVuw6PpxbU5Ono8NBVx8Jhnd5YAhfySdiLrU/sVbdHbJ9/KwMJpjT7T+NVsBdf2aSM6yzfiaM5TXuObaNvJsduhckjI3U04kU8df1RMA1xgzXwtBODScnp1dW6jF/6V4swUeL2q0UysB06g3e2G7fePn1RLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1735305902; c=relaxed/relaxed;
-	bh=x4vDcVNJ2F16V9xkPHDZGvxWHJgKJICk0Unhuh84p8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BTD3Y4IXZ3rcwxjBHCJM1RzAghtwVLJoUwLNor8psYDSs1sYNqQ3rHiYkc/ZeU8tHh9OnnFGiOahjypZVw+pwsIy8VpD2NuSTGb+QkeoeHFSB86jMkP4IcXapNMFl5+6x2paqlRzuASm4eVAGXL7NoeIY4y0weY3uVVrQot9k3rQpntCB4lUtkfROKK7fnresVjP3hWWyCqp9Y1kPjf6ybBAKnWfzL6YoLhezH07xwZmkycMRhQcNocEUp4MBUtVRD/YCg80r+k0VPWrHCByDuZf2H6WI7sUgJxHXJ/h9fqu6ain3p5zSET+gkucrGXEbvh3z9E8adbMnQtGzX/HLQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=D91G9yi/; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=D91G9yi/;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	t=1735458330; c=relaxed/relaxed;
+	bh=nY6FF6wVIPIvHMSTg3r+V8IDeKu8vi/BaNbTpEgfI7Y=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=A1FEjfeOyq1//+5pgPMJX1+a/q3grueHyRVk2vapLrYbXPrXEWkdc3u+eLiG0HEsp1yYid9fnhFWMSNIIJCatLGh0hkqZoWnxil7S0o3I6u/P05J88BapfxgAq+1yZS0o1/A18F3qO7iyTcTS8l8rJ/izJJcEm9+NiUm548wP/Z9n2dRJip+Vlc+rTS2dc0eeE6uDLWhUgmJvGFHm0jLe3PePuABQYPqmuMQTpzRuzIGLSP+k+Yv0AkdEv/lsLav5zEgE/lTrYmR8W7N/3SJPYfNCKqmP5dA/s+qeM1rJhbr4rfPpz5cLsOKlE1OZuwfsOjjdQQLyZCRPl5qpU9wQA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass (client-ip=209.85.166.208; helo=mail-il1-f208.google.com; envelope-from=3ev5wzwkbabudjk5v66zcvaa3y.19916zfdzcx98ez8e.x97@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com
+Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.208; helo=mail-il1-f208.google.com; envelope-from=3ev5wzwkbabudjk5v66zcvaa3y.19916zfdzcx98ez8e.x97@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YKR7H6dLBz2xbQ
-	for <linux-erofs@lists.ozlabs.org>; Sat, 28 Dec 2024 00:24:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1735305892; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=x4vDcVNJ2F16V9xkPHDZGvxWHJgKJICk0Unhuh84p8w=;
-	b=D91G9yi/Kui/V0NNjXFw1xcCoX4yrejxHGX+lB39mbFpVJldap+xRNxUjTaQmgEV8QohDKNbgekjo7sO6HmqABiXQBktkLYBCQMtglNMhEOUrCaAmHp4tvLZI2Uz6e+rp85nwa8v01j9ibk6LdrlSrfLShfEH0i9L0+oT1DC6os=
-Received: from 30.41.193.152(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WMLO6hi_1735305889 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 27 Dec 2024 21:24:50 +0800
-Message-ID: <14b78097-ee6a-4e91-9688-172ce807299b@linux.alibaba.com>
-Date: Fri, 27 Dec 2024 21:24:48 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YLWVZ67Pzz2xLR
+	for <linux-erofs@lists.ozlabs.org>; Sun, 29 Dec 2024 18:45:25 +1100 (AEDT)
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3a7d60252cbso71000025ab.0
+        for <linux-erofs@lists.ozlabs.org>; Sat, 28 Dec 2024 23:45:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735458322; x=1736063122;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nY6FF6wVIPIvHMSTg3r+V8IDeKu8vi/BaNbTpEgfI7Y=;
+        b=RkJr/rTSF6U56UNFoW2Ri1+XVIx7MjnrfDyJCDS7uBQR7iFSCRdnRN0qr3VkqgBWbj
+         EsKK8HFI5MmE7tbTJPvXncRR0YugQVPKSnMY8UzJslPlU6qI2+hU3RMDfyWoEdQWljPJ
+         WptJT24Qhfka3AcZA4M+y/8BhLkm3u5DAIc6BbJbHstPU3ZtZlaKGf+5p5PsKvHpg2Vf
+         hENor7DHb3V60q0HdW7x5JDWPekDrgyohNgdoKOlNzR5aVwg716qiJLXPASUnfAvZBhU
+         VBhyRrtMiMSwApSyPNEY1sk2ZKMf9i3cTFrDqioDvLG6LmddCuJyh9m+3iXI/dpOeNw6
+         5fFA==
+X-Forwarded-Encrypted: i=1; AJvYcCWkxKMKkZV7uKDJZoIapsDjn8CWTtSgoqn0hLiQdlHeqK1y249nlRP27sGiUCcaXgbXDOVnU80l8zFqAw==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YzKJ3tCgMjJLsmcs9lpFMxWoS0sbjj4eH8YFv/NTbYkLyX4QX+o
+	e8NvvkuzhftzWBmfhNcrh6fuiDNEuScjyxY3ZKd1kqGytNmNsy7PcH2cUIdyMsYxom/R82qA0MN
+	kxp7f/lbgqmdQnulP7OFN/AIaPEU8c4r+xrsAckknzrvB17TSrJ/x/qU=
+X-Google-Smtp-Source: AGHT+IGKspHP6xb6eul/Z3USvCrw5kbj0TtsYcddWmq5Bh47TjtFUExS4AkuKmPn3eRPOY39g4v0ZIwLd423kYKBKRqUq6zKINOz
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] data corruption of init process
-To: Stefan Kerkmann <s.kerkmann@pengutronix.de>, linux-erofs@lists.ozlabs.org
-References: <c1e51e16-6cc6-49d0-a63e-4e9ff6c4dd53@pengutronix.de>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <c1e51e16-6cc6-49d0-a63e-4e9ff6c4dd53@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+X-Received: by 2002:a05:6e02:1c44:b0:3a7:c563:d3ad with SMTP id
+ e9e14a558f8ab-3c03093ec46mr274867815ab.11.1735458322154; Sat, 28 Dec 2024
+ 23:45:22 -0800 (PST)
+Date: Sat, 28 Dec 2024 23:45:22 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6770fe12.050a0220.226966.00bb.GAE@google.com>
+Subject: [syzbot] [erofs?] KMSAN: uninit-value in erofs_fc_fill_super
+From: syzbot <syzbot+1379ee6b9a14d5dacaf2@syzkaller.appspotmail.com>
+To: chao@kernel.org, dhavale@google.com, jefflexu@linux.alibaba.com, 
+	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, xiang@kernel.org, zbestahu@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=3.1 required=5.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+	SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -67,185 +76,92 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Stefan,
+Hello,
 
-On 2024/12/27 18:44, Stefan Kerkmann wrote:
-> Hello,
-> 
-> I have debugged a kernel panic issue on my i.MX6Q board and might be running
-> into a bug in erofs. The problem manifests in a crashed init process in user
-> space. The process is either killed by a SIGILL as it attempts to execute a
-> malformed instruction or SIGSEGV by dereferencing an invalid address.
-> 
-> Example of a crash:
-> 
-> [    5.896446] 8<--- cut here ---
-> [    5.899614] init: unhandled page fault (11) at 0x000008ec, code 0x005
-> [    5.906214] [000008ec] *pgd=00000000
-> [    5.909925] CPU: 0 UID: 0 PID: 1 Comm: init Not tainted 6.12.6-00006-gfa286c4fa82b-dirty #96
-> [    5.918604] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-> [    5.925351] PC is at 0x76ef6bbe
-> [    5.928698] LR is at 0x76efb619
-> [    5.931988] pc : [<76ef6bbe>]    lr : [<76efb619>]    psr: 200f0030
-> [    5.938500] sp : 7ee73b48  ip : ffffffff  fp : 004e0034
-> [    5.943908] r10: 00000009  r9 : 76efb5cd  r8 : 004e0034
-> [    5.949332] r7 : 7ee73b58  r6 : 00000000  r5 : 7ee73bb8  r4 : 76f08fd0
-> [    5.955952] r3 : 00000000  r2 : 7ee73d7c  r1 : 00000009  r0 : 00000000
-> [    5.962739] Flags: nzCv  IRQs on  FIQs on  Mode USER_32  ISA Thumb  Segment user
-> [    5.970282] Control: 50c5387d  Table: 1612c04a  DAC: 00000055
-> [    5.976193] Call trace:
-> [    5.976264] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-> 
-> So far I was able to gather the following clues:
-> 
-> 1. The crashes happen all the time and always have the same cause.
->    - Which corruption is triggered seems to be tied to the load on boot e.g., by
->      capturing many trace events I'll run into the SIGSEGV if I don't capture
->      SIGILL is triggered.
-> 2. Any compressed erfos will trigger the bug.
->    - I have tested lz4, lzma and zstd, so the concrete compression algorithm shouldn't matter.
-> 3. An uncompressed erofs didn't fail in my tests.
-> 4. Mounting the erofs from an initramfs or my local machine works just fine.
->    - The sha256 sums of any binary match the expected values.
-> 5. Forcing full file reads instead of partial reads prevents the memory corruption from happening.
->    - To force a full file read I "hacked" vfs_open to read to complete file via kernel_read_file
-> 6. I couldn't reproduce the bug in a qemu setup (yet?)
->    - I tried to force partial reads by slowing down the emulated disk by setting bps=202400, that didn't trigger it
-> 
->  From what I have gathered it looks like that partial reads of compressed files
-> lead to memory corruption of the decompressed file in specific circumstances
-> (which I lack the knowledge to debug). The modifications and .config of the
-> kernel I'm using to debug can be found in this branch:
-> https://github.com/KarlK90/linux/tree/debug/erofs.
-> 
-> This is my machine:
-> 
-> * ARM32 i.MX6Q SoC
->    - forced single core during debug by setting maxcpus=0
-> * 1 GiB RAM (2/2G Split)
->    - memtest=10 shows no problem
-> * 8GB eMMC (DDR54 Speed) with erofs rootfs
->    - erofs-util: 1.8.3
-> * Kernel and DT loaded via TFTP from the bootloader
->    - kernel: mainline v6.12.6
+syzbot found the following issue on:
 
-Thanks for your report!
+HEAD commit:    9b2ffa6148b1 Merge tag 'mtd/fixes-for-6.13-rc5' of git://g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=112374c4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f9048090d7bb0d06
+dashboard link: https://syzkaller.appspot.com/bug?extid=1379ee6b9a14d5dacaf2
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Linux 6.12 is a relative new kernel version, however my own
-stress test doesn't catch this issue.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-I think it may be better to try the following stuffs:
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/244f25c1a275/disk-9b2ffa61.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0d14fc6634fd/vmlinux-9b2ffa61.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/cb152a4c0fd2/bzImage-9b2ffa61.xz
 
-  1) Can your i.MX6Q board be switched to 6.6 LTS kernels, since
-     there are many products already using EROFS for 6.6 LTS, so
-     I wonder if it can be reprodced with old kernels like 6.6
-     too (If it can be easily tested, please help try).
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+1379ee6b9a14d5dacaf2@syzkaller.appspotmail.com
 
-  2) does your qemu test setup emulate ARM32 i.MX6Q SoC too?
+exFAT-fs (loop7): failed to load upcase table (idx : 0x00010000, chksum : 0x1a9973fb, utbl_chksum : 0xe619d30d)
+=====================================================
+BUG: KMSAN: uninit-value in erofs_read_superblock fs/erofs/super.c:274 [inline]
+BUG: KMSAN: uninit-value in erofs_fc_fill_super+0x66a/0x2520 fs/erofs/super.c:614
+ erofs_read_superblock fs/erofs/super.c:274 [inline]
+ erofs_fc_fill_super+0x66a/0x2520 fs/erofs/super.c:614
+ vfs_get_super fs/super.c:1280 [inline]
+ get_tree_nodev+0x183/0x350 fs/super.c:1299
+ erofs_fc_get_tree+0x34d/0x450 fs/erofs/super.c:721
+ vfs_get_tree+0xb1/0x5a0 fs/super.c:1814
+ do_new_mount+0x71f/0x15e0 fs/namespace.c:3507
+ path_mount+0x742/0x1f10 fs/namespace.c:3834
+ do_mount fs/namespace.c:3847 [inline]
+ __do_sys_mount fs/namespace.c:4057 [inline]
+ __se_sys_mount+0x722/0x810 fs/namespace.c:4034
+ __x64_sys_mount+0xe4/0x150 fs/namespace.c:4034
+ x64_sys_call+0x39bf/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:166
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-  3) Can you share your generated rootfs image to me so I could
-     debug?
+Uninit was created at:
+ __alloc_pages_noprof+0x9a7/0xe00 mm/page_alloc.c:4776
+ alloc_pages_mpol_noprof+0x299/0x990 mm/mempolicy.c:2269
+ alloc_pages_noprof mm/mempolicy.c:2348 [inline]
+ folio_alloc_noprof+0x1db/0x310 mm/mempolicy.c:2355
+ filemap_alloc_folio_noprof+0xa6/0x440 mm/filemap.c:1009
+ __filemap_get_folio+0xac4/0x1550 mm/filemap.c:1951
+ block_write_begin+0x6e/0x2b0 fs/buffer.c:2221
+ exfat_write_begin+0xfb/0x400 fs/exfat/inode.c:434
+ exfat_extend_valid_size fs/exfat/file.c:553 [inline]
+ exfat_file_write_iter+0x771/0x12a0 fs/exfat/file.c:598
+ do_iter_readv_writev+0x88a/0xa30
+ vfs_writev+0x56a/0x14f0 fs/read_write.c:1050
+ do_pwritev fs/read_write.c:1146 [inline]
+ __do_sys_pwritev2 fs/read_write.c:1204 [inline]
+ __se_sys_pwritev2+0x262/0x460 fs/read_write.c:1195
+ __x64_sys_pwritev2+0x11f/0x1a0 fs/read_write.c:1195
+ x64_sys_call+0x368c/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:329
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-  4) can you try to add the attached patch (writespace-damanged)
-     to your debug kernel in addition to your debug patch and
-     feed back the output?
-
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index fa51437e1d99..e1d918e0e6c7 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -272,6 +272,8 @@ void erofs_onlinefolio_split(struct folio *folio)
-  void erofs_onlinefolio_end(struct folio *folio, int err)
-  {
-         int orig, v;
-+       void *ptr;
-+       u32 hash;
-
-         do {
-                 orig = atomic_read((atomic_t *)&folio->private);
-@@ -281,6 +283,11 @@ void erofs_onlinefolio_end(struct folio *folio, int err)
-         if (v & ~EROFS_ONLINEFOLIO_EIO)
-                 return;
-         folio->private = 0;
-+
-+       ptr = kmap_local_folio(folio, 0);
-+       hash = fnv_32_buf(ptr, PAGE_SIZE, FNV1_32_INIT);
-+       erofs_info(NULL, "%px i_ino %lu, index %lu dst %px (%x)",
-+                  folio, folio->mapping->host->i_ino, folio->index, ptr, hash);
-         folio_end_read(folio, !(v & EROFS_ONLINEFOLIO_EIO));
-  }
+CPU: 1 UID: 0 PID: 8448 Comm: syz.7.643 Not tainted 6.13.0-rc4-syzkaller-00012-g9b2ffa6148b1 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+=====================================================
 
 
-> 
-> Here are some longer snippets of the augmented debug output:
-> 
-> Good case (forced full file reads):
-> 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-...
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-> 
-> Bad case:
-> 
-> [    5.348323] Run /sbin/init as init process
-> [    5.352588]   with arguments:
-> [    5.355645]     /sbin/init
-> [    5.358551]   with environment:
-> [    5.361822]     HOME=/
-> [    5.364324]     TERM=linux
-> [    5.370845] vfs_open: /usr/lib/systemd/systemd
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-Case 1:
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-
-  [    5.411541] erofs: (device mmcblk3p3): lz4        : src c1007000 dst: c10066cb in: 4096b (4cac566d) out: 6376b (dfcc8264)
-
-=======
-
-
-> [    5.400891] erofs: (device mmcblk3p3): lz4 partial: src 83e3d000 dst: 810fb6cb in: 4096b (45bf72c3) out: 2357b (6e052dd5)
-
-...
-
-> [    5.451237] erofs: (device mmcblk3p3): lz4        : src 83e3d000 dst: c100a6cb in: 4096b (45bf72c3) out: 6376b (dfcc8264)
-
-
-Case 2:
-
-> [    5.592080] erofs: (device mmcblk3p3): lz4        : src c102b000 dst: c102a485 in: 4096b (4aac6f77) out: 4289b (7dbbff69)
-
-=======
-
-> [    5.474078] erofs: (device mmcblk3p3): lz4 partial: src 83fe9000 dst: 810f7485 in: 4096b (17ce8f99) out: 2939b (a1ab12cf)
-
-...
-
-> [    5.764897] erofs: (device mmcblk3p3): lz4        : src 83fe9000 dst: c104c485 in: 4096b (17ce8f99) out: 4289b (7dbbff69)
-
-
-Case 3:
-
-> [    5.694724] erofs: (device mmcblk3p3): lz4        : src c103d000 dst: c103ccc6 in: 4096b (3c5b4505) out: 4175b (3bf4f1a9)
-
-=======
-
-> [    5.783592] erofs: (device mmcblk3p3): lz4 partial: src 83691000 dst: 810cacc6 in: 4096b (cd2f4c7c) out: 826b (21762da4)
-
-...
-
-> [    5.606916] erofs: (device mmcblk3p3): lz4        : src 83691000 dst: c102acc6 in: 4096b (cd2f4c7c) out: 4175b (3bf4f1a9)
-
-The odd thing is that the full hash is always the
-same (dfcc8264, 7dbbff69, 3bf4f1a9) but the input
-hash is somewhat different between good and bad
-cases.
-
-Could you also change the following line too?
-erofs_info(rq->sb, "lz4        : src %px dst: %px in: %ub (%x, %px, %lu) out: %ub (%x)", src + inputmargin, out, rq->inputsize, hash_in, rq->in[0],  rq->in[0]->index, rq->outputsize, hash_out);
-
-
-Thanks,
-Gao Xiang
-
-
+If you want to undo deduplication, reply with:
+#syz undup
