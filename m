@@ -1,48 +1,52 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E7FEA06D62
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Jan 2025 06:05:39 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B04EAA0718C
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Jan 2025 10:36:13 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YTCR44wgDz3bPR
-	for <lists+linux-erofs@lfdr.de>; Thu,  9 Jan 2025 16:05:36 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YTKRH1H2Qz3bx0
+	for <lists+linux-erofs@lfdr.de>; Thu,  9 Jan 2025 20:36:11 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1736399135;
-	cv=none; b=d2+N3QlR7mlnYML0RX0OC+ee2YThtyWsazYJhvQyFCx5f6qFHCSBqCPdDM3AkewTQkoKD9Ic7swkvzxnLP0lZA9iFz41CitV7ndONCvESZOB/mPqtEOTQHMBxoc9WDw6KnQ65UYvzjyszusDiAB60ac7n/qA71o8Ji1AzwlZK0GZ6dVyBgvCmEb5wdBubcczglGQTLPUfhM/Rfqrc9iGx9a2Onnfv0JTifYIffcS6nINV1OoRPsT9go64019DMjRTJNS5B/KfCd/tfYGQbVrluJQTvg5/IRIg0/+x0+zZrQdN2qqPJUR/VDGdlDsbZA3qf6baEdieJUXzSvkH60K2A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1736415369;
+	cv=none; b=maORngKBjBPyROiyvmXyYqwcJdgCrNXhTzS2LWQJstKyTk4V/8BlG8yzi8zVwdpUHf5pNSosqI0rCoNHuU2/4Ud4s2Y5r/VcAq9UNmEAJqQMy1lrcFr175/7L/wUlIdmgBCt7aUH+dVwlTFY6X3bJTQMSWss5Xq7ETmyK4Mq67JYb8d5kC4lmDLyb0k3tQazK9eQxgUE9tm0s/teGm+K1rdnZS8yHsJGMhHA5BpJq5dUwF2pJMeW48rVSahNMmY2KSqlZVRcIUEuu36Fx1itwj7qoNc4gdIodNfkVRWiE0/z3MziGldtRZDmncqibPoEm+3HI56q6fi9n2jIZhrUwA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1736399135; c=relaxed/relaxed;
-	bh=k59iyDtCkAlnEiHeLa/vsLC5xDJuK6tzMEkPE8H0ykA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RPMcvK1ql+xfb4zD5D8VEXgnL+gRk82vANGh4OFWsjeryysYMrnvDu/BivOE8ONzgCM42pnYP+JjPNsxkeGbsPdnE7O9PaixMD13uzaLFdlESp0Zbkh3FDDF9tTaCKtmk7CakA8M2lB0C/juZotodmz9hG4BxRE60zhMOn3VBx+/NUPwlLK1x/7PbOqO800EPB6/G51lhOIgvCSehjGKAW+4qTyTvB1s2BcVNc5WDQCuXkKlF+LasFz7PKydxTq+rqSVzMRVUQqwE/bZ5jQjB1oBvfHXguamXc7bP2hW1WST8kPLBYjJD3LVNu72aVvcIlBHbTyhrGiLJkHcnRujVw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=sGhVSHnU; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1736415369; c=relaxed/relaxed;
+	bh=6MwReKcTHarIR7S+YzzULAVDYGwpQ0caN8D1g4Fx+qo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UJBzQnVL7gKqmf9v//4TgeReLTorDKyObnLewTzk/go0kOnUdyQInev93fkxDVpkoLbeo9UHAGjuJ8fNZh6d8yNScs0uLev6tVOOYm+HmRh4INPJh0HJUCVKcaNDA2oUF/M6Fi0EU9BsgmUt4KWDRchGNZ2MzBy5XTqzvbi7+Gmukoy1JVcxXbW5mwcniOeT/yI6l2ouqNlBWURYs+EE+bsBEF5HF3SVzjJ4nQ9to+AGpj9+MVkjNwKWmjO4Wl0+UL8o21wdkWPclxJYjqcCBxFCzG/StkBHmMkvIHGBfZMuLinPd0CPYf/Uyeuc8CNs+LRGroQyH4YBn6DGlJQaOQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ctH/anJ3; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=sGhVSHnU;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ctH/anJ3;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YTCR02zlhz2yNs
-	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Jan 2025 16:05:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YTKRB3FQHz2xJ5
+	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Jan 2025 20:36:04 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1736399124; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=k59iyDtCkAlnEiHeLa/vsLC5xDJuK6tzMEkPE8H0ykA=;
-	b=sGhVSHnUre7zIJ9MaUDZjG6wbkxCyH3UwQ1w+3YEOTSZWM9b4SeSs7yi0ZapsKyx48QAiGnWNTNbCC2EOX8ExW8Ps5g1iiNMIaX3sK8Y5x3nCm0T4p49Vp9ON2BXMay0Ao+RO2uCg9eSx56Ow0UKHmqF6mNnE38rOFecdJz9eXU=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WNG4CPp_1736399114 cluster:ay36)
+	t=1736415357; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=6MwReKcTHarIR7S+YzzULAVDYGwpQ0caN8D1g4Fx+qo=;
+	b=ctH/anJ3gu0dS0RCHCWbvrdY+LEJkmrJIPdlJVQ0m689EIFAFwRe+WtTf//js9tK0h6jhmC0+lWEeZy2Bc1FfZ6HDQFxhv08lHobjV9BRdTQScSc5aizelxKUHoM8FbgIqLQIWbq/con13iKw/FG+YfmeLuOAXSMDhh3QwoJYac=
+Received: from 30.221.130.138(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WNHBp.N_1736415355 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 09 Jan 2025 13:05:21 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: fix crash when failing to build tree
-Date: Thu,  9 Jan 2025 13:05:14 +0800
-Message-ID: <20250109050514.3836023-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+          Thu, 09 Jan 2025 17:35:56 +0800
+Message-ID: <23f6b78d-513e-4044-9e39-927db2cea53d@linux.alibaba.com>
+Date: Thu, 9 Jan 2025 17:35:55 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [feature request] extract a single file from EROFS filesystem
+To: Daniel Erez <derez@redhat.com>, linux-erofs@lists.ozlabs.org
+References: <CAP84NrvY7nfYOdS6KbGeOCwGTKAdoNbgsu61S-YQj-3Bt4bCEg@mail.gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <CAP84NrvY7nfYOdS6KbGeOCwGTKAdoNbgsu61S-YQj-3Bt4bCEg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
@@ -60,33 +64,30 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, Jonathan Lebon <jonathan@jlebon.com>
+Cc: "Kaplan, Alona" <alkaplan@redhat.com>, Linoy Hadad <lhadad@redhat.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-For example: It crashes instead of cleanly erroring out if there's
-a file for which it doesn't have permissions to read (e.g. /etc/gshadow
-has mode 000).
+Hi,
 
-Reported-by: Jonathan Lebon <jonathan@jlebon.com>
-Fixes: 6a8e395ae4fd ("erofs-utils: fix up root inode for incremental builds")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- mkfs/main.c | 1 +
- 1 file changed, 1 insertion(+)
+On 2025/1/9 02:14, Daniel Erez wrote:
+> Hi,
+> 
+> According to fsck.erofs manual [1], the tool supports extracting the whole file system.
+> Would it be applicable to introduce an option for extracting a specific file from the image?
+> I.e. something similar to the '-extract-file' option available in unsquashfs tool [2].
+> Or, is there any other alternative for extracting a file from an EROFS image?
+> 
+> [1] https://man.archlinux.org/man/extra/erofs-utils/fsck.erofs.1.en#extract <https://man.archlinux.org/man/extra/erofs-utils/fsck.erofs.1.en#extract>
+> [2] https://manpages.debian.org/testing/squashfs-tools/unsquashfs.1.en.html#extract <https://manpages.debian.org/testing/squashfs-tools/unsquashfs.1.en.html#extract>
 
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 2988c65..624b191 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -1450,6 +1450,7 @@ int main(int argc, char **argv)
- 		root = erofs_mkfs_build_tree_from_path(&g_sbi, cfg.c_src_path);
- 		if (IS_ERR(root)) {
- 			err = PTR_ERR(root);
-+			root = NULL;
- 			goto exit;
- 		}
- 	}
--- 
-2.43.5
+I will add this later.
+
+Thanks,
+Gao Xiang
+
+> 
+> Thanks!
+> Daniel
+> 
 
