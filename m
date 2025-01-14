@@ -2,46 +2,49 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24152A10202
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Jan 2025 09:28:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CF3A7A10756
+	for <lists+linux-erofs@lfdr.de>; Tue, 14 Jan 2025 14:05:19 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YXMhr5dHcz30DL
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Jan 2025 19:28:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YXTrF2BYSz30RG
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 00:05:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1736843307;
-	cv=none; b=Je7VfyCFXY0t6di4L/j0pul96Fq9WwjLf9CfMYk/sPPd7ETdsldWna0d9S2vxFmwsm/G8UMwjj4b+EFfCYU5kgHFAb06pizKwy0B3VcPQ78zZeLe6HQ1yfoEXQJhqe7pTFUVtGQtQ08Vn9lMbW4LG2gQ2OTPWL2hpunCFVk0f1NeUEGu3AAhzodDvCksQYvO1X7Sx0Mxh/r3N+YFGbjCSG0eNr0MhBVd/d9QpFkOqjZD32I7mys65W4tv613HwZHZRaR6UL6+7VtobnEGgx22VSCEfdrv7pNmGIIHhAUw2QSZs/LEkpwB8UMqgzu3Zyf+UCIRsxslB/m10aSsnO3xw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1736859915;
+	cv=none; b=NxtFLg3c08pycWnNCWfYhPDb+T1nue0GnnyP1z2BQO4Q6YtVH1QRlb0LKOsMYMgxJtzuXf4LjU/3XaD0OVhZTLUEZHZJf3A/8HtOIkOKci11qMVuhG0o+seLnxtY/8WJqAaDPHiWjXOe+WdNn46n2PQaBRtZbhEpf98x16xPoFHlUrzzPZ/RaZ4hawjJdu19Yl1EXSvz9CeydXNu4dlxvuypd9KmPwoAV0wF6rhp3R91/O2kYrfz5gxd5PYDcYAHkACqs5fn01msAtcEEP403jD0elDa0bKW4SVNqh9SlN8bM24LDYhjuq0obCldLMh1YrjTe+zGrTLNgPbA3nEELg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1736843307; c=relaxed/relaxed;
-	bh=7XPgDDQ1CgGDc3sN4zJ8GISJcatuj4inkfzaFVSgP5s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O0qAZi8dCkW8qgXTVedeMbGvrLw5+2pvQVCjHumWvF3D12kHbFA5X+dF04R38HDJecE7nDBN9Gz1I/+iuu5w/jZxA+AGrq2Sm1eb2yUPldG9gBzQ6KcqqD/Rp0U4RvBXviBVr/x7Xtn/efuCdk4sX3SiOKS6AO3DZbwCcfGLd0iO9S7vmVQfqS4+u1Uv+JNDx6iWez3FgpOeD56l9MvsARXEkq43LL89wRbqZUSIR5S9IjNlzWdHg97L0v4Ropx7rYX5PmwjpltjnwRHlMOnIEXFathlw0zMNQgTlk8oKbKtlrNg9NVM5ov009CFYmyOSFigppxzpxlyM6nhvRu1Fw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=E6uSnL0b; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1736859915; c=relaxed/relaxed;
+	bh=MOQLw24UbhJ0+yCuKw+FR0D5mCkV3IXTCzxyOWOJ5yQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ibQht0A0rIZdyJMXGpyuEQw8pGTSAru69RV+rs4s+fgW+PsDXaBp2X8gOvAs2nGyRnZQ0PMUlSEAtF/HPtgEmySMFqhNPPjAea+f5b1uhles1K97dtD9t607IKu24hgfWzode8CryXtyvuickbGbcL/I/maxpkxEZfdR/gsWEabhNAJKEUXfCW+Q5rWypmVtPDRNidKhFqz5YzKJG4E6OWtth0uUczT7AA5hNgnH1YzlZTY2PTiNtl5YneEOwdVyzI0vYN7X0DWgmA68wLz31NSarMD17DaB11Ge5c1xwLasv3yADv14p1aZdCpmtAVl+vryebZrANnkbSzlmt9EMg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kCBTfTfu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=E6uSnL0b;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kCBTfTfu;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YXMhm4fd6z301n
-	for <linux-erofs@lists.ozlabs.org>; Tue, 14 Jan 2025 19:28:22 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YXTr71YfNz30Lt
+	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Jan 2025 00:05:08 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1736843297; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=7XPgDDQ1CgGDc3sN4zJ8GISJcatuj4inkfzaFVSgP5s=;
-	b=E6uSnL0bDHi+0eG81foCLsiEF2pTMoreuLE9M4S8UPBIYYyc84mybdZk5WrPBeYWCoer7tMg1V64Zs9jmTkGgI+7NlhO9sNNj7ZaqBYX1eS39pwiTsI3J07EUeAqpwzRR0T4VjWi7u41hP1U6lbZX4i0Bze2Ec6y4NAI0X9MU1A=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WNehOg-_1736843288 cluster:ay36)
+	t=1736859903; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=MOQLw24UbhJ0+yCuKw+FR0D5mCkV3IXTCzxyOWOJ5yQ=;
+	b=kCBTfTfuG+hJ4qrej1Kzs6UPMUpKWbQZ1I3wPUbKOMNN9p2MsYuljeldp3snC4sag8k9QqZSCmF+N8oJv472CW4T4xJuOEXHllKeVSUt5Cjv4xrWXOnHm3bxt94kkSb6vXWESFUopJHzwQnFIC0F86eHn3rtL6flcPkInxwGdjo=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WNfNthE_1736859896 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 14 Jan 2025 16:28:14 +0800
+          Tue, 14 Jan 2025 21:05:01 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH] include/linux/lz4.h: add some missing macros
-Date: Tue, 14 Jan 2025 16:28:07 +0800
-Message-ID: <20250114082807.827690-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2] include/linux/lz4.h: add some missing macros
+Date: Tue, 14 Jan 2025 21:04:54 +0800
+Message-ID: <20250114130454.1191150-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250114082807.827690-1-hsiangkao@linux.alibaba.com>
+References: <20250114082807.827690-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -78,13 +81,9 @@ Cc: Yann Collet <yann.collet.73@gmail.com>
 Cc: Nick Terrell <terrelln@fb.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-Hi,
-
-It doesn't change any logic, but it'd be helpful to be moved for
-the next 6.14 cycle if it looks good.
-
-I keep the internal "MAX_DISTANCE" as-is since no need to touch
-the real implementation for now.
+change since v1:
+ - should be `#define MAX_DISTANCE LZ4_DISTANCE_MAX` reported in
+   https://lore.kernel.org/r/202501142005.DqdNQGKc-lkp@intel.com
 
  fs/erofs/decompressor.c  | 7 -------
  include/linux/lz4.h      | 6 ++++++
@@ -153,7 +152,7 @@ index 0e31e6da5ce7..3a2cd9acada4 100644
  #include <linux/init.h>
  #include <linux/module.h>
 diff --git a/lib/lz4/lz4defs.h b/lib/lz4/lz4defs.h
-index cb358d6bde5a..76d187d225cd 100644
+index cb358d6bde5a..17277ec16919 100644
 --- a/lib/lz4/lz4defs.h
 +++ b/lib/lz4/lz4defs.h
 @@ -39,6 +39,7 @@
@@ -170,7 +169,7 @@ index cb358d6bde5a..76d187d225cd 100644
  
 -#define MAXD_LOG 16
 -#define MAX_DISTANCE ((1 << MAXD_LOG) - 1)
-+#define MAX_DISTANCE LZ4_MAX_DISTANCE
++#define MAX_DISTANCE LZ4_DISTANCE_MAX
  #define STEPSIZE sizeof(size_t)
  
  #define ML_BITS	4
