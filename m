@@ -2,52 +2,52 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18F3BA11E76
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 10:47:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 64AC0A11E77
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 10:47:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YY1PT5d9pz3bpx
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 20:47:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YY1PW14MPz3byh
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 20:47:27 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:7c80:54:3::133"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1736934444;
-	cv=none; b=eDewJprX34IhOQkCqb8pbattZsH8lDAK7JZanQkRxm21ZzRqx1kYM9vOzqkBvadjVQPxNj1CdNXZz3G58p3NXSuttTpS4ED2IE8XlGJwKFrFBxNeiLLGdmQtmaT60OlsFgpBRk0jWRZ2MqvEdDh9P1iDOTQT7tEdRpW55Ly9cPDccIjJ1CMA25Z7KnCYtHooGwXAVW+YJfFO+7umrQS8Xrc1Maoes0/709tj0LRQO1Tgms6MuXi7be3xs+Q6vSq6OSIz3U005e7yIBr+KHNZGVjiua/vMdGXsjqKv46ifzykSCPQ5a+Ua72tldDzLW9rPwxlICQ4Bgytqf+MR/Ktug==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1736934446;
+	cv=none; b=chDs7p5Y8X+c3nnF3JyLcPQmA9CqIFqy5g773Af4gcwKKQjjIVrqXwRxiS1OQHz5YPSTnTv/KnoorEH04iACxc5Vnf+US7qvV1nqCus490+UJn06HSX52pqOxT82OCTtFK9EEsrye4+EmMuvi1qS604Ia8y//elkWYKmVa1HGcK3YASBE3eNgnsdt4mzkQz0KM1Ch6a7sf471D5m7YVULvKePG2O0NPhX3RFgsmK9qGeClHKfqm+2zfJ/dvnQ2wNxBgPVFhF2jSeW0F4l6u5OfvdmXrLS7VFR4punPVpjdrMBMlGIWih4VmxGnjWIbC+Ec1nQ4/UBXvLOwmGWXvtGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1736934444; c=relaxed/relaxed;
-	bh=ExehWvHtv/dE+gm9ctBRtigxAXDYJyzO6NdGxVTaePM=;
+	t=1736934446; c=relaxed/relaxed;
+	bh=easVSrQ5eMjG5N5DCivClgnlxU07C0jtlUyU9+xSgOg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oBvldUvplwEhqRq71DZ84ZRpOh51vajACF1pRqOKOEhyqLMVoCemir5eGQAdhj5JKFVr3uCFgmT6AwFBCNLoONmk0+/6/sNDJ03gJ7qdLKTIjJnD1g+lCIOq0l7xB8CUxvyf6HZAF50TTpaok6TokGV1CNlqlkzR3eUuVQwTQPPOJuPR2wMkzAnbahBm5NjJv53pi+FaTsJtZus/0reUWdRKtifC9jQaZq6b27nYfsRUEDXFGXiQNw/zv/CTsuhqLyRJ9EXGjB+P8GnWFML2Alb7RhkOyjB0aeMPaqx5pO81f8cu8ehQHV3y755HEzMOY4w+vkn+dbQ3pDrHD8qtTQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=lst.de; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=TEcVQuCB; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+33aec566f0caf243ce7d+7815+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
+	 MIME-Version; b=BOgzLetl8a0OaLKx3JoTAqSpksqrSKxCGQWJAmdK+6Jdyumn9ko2e+9USDT+FX5O64toAg7ASIK37dRZH1H4KqCyPvbmV4MATau9pCz/Ikl59myZDR3nixK70EeNMUGbnmOJFg4EvVu3Blkndr3h7DJiA2m4dOFQ7V3lfFB3zAD7AlRklJACiFsr44B36cXpaVySL08DMWky4TF0k3w3X7aOQwwtgOKAb6C4GZx82gMfyZA6TO3jBMuuCg5/w3zv3MK0vcoi9a0JDpUGTE5JQz3R0Z+lT19qmR870QhrD89fsEgOzeVNnYuxsZsfJpnoDAI06pDCnaorMNAstSOxmQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=lst.de; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2i2h1J9W; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+33aec566f0caf243ce7d+7815+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=TEcVQuCB;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2i2h1J9W;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+33aec566f0caf243ce7d+7815+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YY1PR5K2Sz3dBZ
-	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Jan 2025 20:47:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YY1PV075yz3fV0
+	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Jan 2025 20:47:26 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=ExehWvHtv/dE+gm9ctBRtigxAXDYJyzO6NdGxVTaePM=; b=TEcVQuCBrtuxpbbGwt6sZya1tu
-	euTd+T6inBKAGmmi2u3vsBYnZAMN42UtOxfDQbtcaQY+y4YlogzvG+ik5Z3fK6g6hWY49bOafbOGk
-	vYdwQHhIbCq2HxTzWHQGstbvvu89Yi2f69H3/1xE/Fn9b+KU1Y6SQaOx2LceSGdunyhOdkRsM3AzS
-	G7csU4LgFummki3Fw0E7K67xdCtq2vdgxq/ySgQI3gw6PknJIX9ZvLOdLEOHL6gwIQQaVX4S8hhHH
-	b36fAJWyXzTQg04kE6Ul4Kyp3COkQxOz8WXCC+hGiLF920+djQ7z6tvkROeYhQcp5aEeqce5gIpzN
-	bTUGT7TA==;
+	bh=easVSrQ5eMjG5N5DCivClgnlxU07C0jtlUyU9+xSgOg=; b=2i2h1J9Wdt8M088Q+u5JEaevWW
+	cig673kf18t+fTojaEjdQziAxcx+drGWauAClKDHT/UuGsaAC5jUPljm6lj3FiI/ZT2R+fnfrFosl
+	T/5m9TTME/hTxgWyO2chfKfuxJJk9ibiNysBmGHOlUY9yFzH+A9P3g0yHcWmORuBvaVpV2gXZGa/H
+	8qHYA9jBGMk5O7uN7N2ZELltAQ+wZQeN01nT+lGegyy9gNmRjAC3Sd3BsGsIBpfeg5mvQVojnpVRs
+	jZ5PmkdpTl2fBcXol1sj7Hb2I5UxZph9NH5rpTLu/MJjIf4WjiDW09ksJ1wFvJXTJMv0O7ArCMqEq
+	Hbdh76Ag==;
 Received: from 2a02-8389-2341-5b80-7ef2-fcbf-2bb2-bbdf.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:7ef2:fcbf:2bb2:bbdf] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tXzzc-0000000BOhl-3P8y;
-	Wed, 15 Jan 2025 09:47:21 +0000
+	id 1tXzzf-0000000BOiV-15i5;
+	Wed, 15 Jan 2025 09:47:23 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 6/8] dcache: use lockref_init for d_lockref
-Date: Wed, 15 Jan 2025 10:46:42 +0100
-Message-ID: <20250115094702.504610-7-hch@lst.de>
+Subject: [PATCH 7/8] erofs: use lockref_init for pcl->lockref
+Date: Wed, 15 Jan 2025 10:46:43 +0100
+Message-ID: <20250115094702.504610-8-hch@lst.de>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250115094702.504610-1-hch@lst.de>
 References: <20250115094702.504610-1-hch@lst.de>
@@ -75,24 +75,23 @@ Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlab
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/dcache.c | 3 +--
+ fs/erofs/zdata.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/dcache.c b/fs/dcache.c
-index b4d5e9e1e43d..1a01d7a6a7a9 100644
---- a/fs/dcache.c
-+++ b/fs/dcache.c
-@@ -1681,9 +1681,8 @@ static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
- 	/* Make sure we always see the terminating NUL character */
- 	smp_store_release(&dentry->d_name.name, dname); /* ^^^ */
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 19ef4ff2a134..254f6ad2c336 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -747,8 +747,7 @@ static int z_erofs_register_pcluster(struct z_erofs_decompress_frontend *fe)
+ 	if (IS_ERR(pcl))
+ 		return PTR_ERR(pcl);
  
--	dentry->d_lockref.count = 1;
- 	dentry->d_flags = 0;
--	spin_lock_init(&dentry->d_lock);
-+	lockref_init(&dentry->d_lockref, 1);
- 	seqcount_spinlock_init(&dentry->d_seq, &dentry->d_lock);
- 	dentry->d_inode = NULL;
- 	dentry->d_parent = dentry;
+-	spin_lock_init(&pcl->lockref.lock);
+-	pcl->lockref.count = 1;		/* one ref for this request */
++	lockref_init(&pcl->lockref, 1); /* one ref for this request */
+ 	pcl->algorithmformat = map->m_algorithmformat;
+ 	pcl->length = 0;
+ 	pcl->partial = true;
 -- 
 2.45.2
 
