@@ -1,22 +1,22 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C50D7A11E6E
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 10:47:23 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4270EA11E72
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 10:47:27 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YY1PN3pJzz3bg4
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 20:47:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YY1PP1Gw6z3c5Z
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 20:47:21 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:7c80:54:3::133"
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1736934439;
-	cv=none; b=DcdnL8F3wk2e0nYcH5vxmvKWC+wdilC5GM3Ls7+mJ1C2/lNLUc0C1Ej+U5ZsUlT9QiVraE+FOsSk50Z9IXjlYANOE8Uz+dOf0X/Iv5/eZ5MClemDH36mdfA0mHIgRkif8jmuh03lXWo0tb5L6AscgiK3cy8QcDdGHTAb0G4+wAK2nZfIkEqmeNulG8fTM2xbnwPe209w947HG60Fvg6gjTqDXOCuEMv0f0m+xOdzF9few/1jf5U4lpUN3s6USRDHGt/dJGHrkxdZAawyFGdf83jhlXPrN+6xLzK8TJLa/+7xTvA4TX0S7sX7aftfN3oXLrNh1ZSXvu7XBpuKiarxGA==
+	cv=none; b=l4WtAvM5PQVrPvnNE4TEVXXXT+1a94JJVk+pbvVcPUm7FN2D9l2M3/x3mRBsZBzRVgvvTEvRyf6xUgd7QuhMmsbW8D0IXWFnV+4Wlp28o+TgzHU7DftmO9Py4jLtPAULOLTCUFSjrPD5EMHfw0K7qHK1lMvXnFjoFGhvvUpBaKbYVuTec4sqwic6Z41kNciHkoVLKYyNTDacyPOCt52nDEg8e5x+Ju1/4FxwdJ2BBb35yIjKJRApC9seHqGYIscZMxkDYRCV8cuwSRq4P1W3+cuhQJCxnWLcFCI/4tvnKgDG2raDJvrKYeSUCtOFTWu71jFLyPQpYLnIrLgVgPNG6A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1736934439; c=relaxed/relaxed;
-	bh=2emN2ZekPl9pUS8HrHL111sEmJvGZ8RKJUw7xW8tiZU=;
+	bh=JLpZrvaMc6GV46XbuHZJmt3meVmUGd1vvv0MgNmLkC4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LSMlpTUACi/AAvWzU4K/lIWZq01ICXN76wooWMWwTFAB5bpaC/aY7KNJeC3N7+pi9gntxKYfdR0dVzKCuT2zokZFzN+hbY5dGjmiJYQFiB7T3li3Xc/G0STUETq7T+iZbpmoHlspqwm51jcA1ochjkpJX/FMhO+XxartZUFsAQZ5KLxSx/iGavS2J0uXaiMBjurRvOzdIUqzhEuB9HSZL4AR8vh9kUv7xeG4nhSWGKpKgKJRQsGgRo4snaZYKtZFIZ9V8BWqjWRGsIAvwkIaSU9EuMua73D2XJW9P0fG9VcuTMMeqJyUh4lr3kfIrNrIhhzPyNscrShPHWn2qhGh0w==
+	 MIME-Version; b=iyD81uXHL5L1VC4yg7dFrBj5GZhCAN2pIskilv1IyjGzTvIXFoQ8XQNdIj060U9aX9vhf29txx0egEEt1jIXmBF0PDQm1nMerCmzp2fEynZJ0VNZY0wPYy6bTeSo5Rk3dRx0WOqTUZ3MO3fVu5FjESEqObIeJSWMznQRD7WVsYHzIaCK4xkdkgKQBe64VvFDECqtrRVa7Ya0i0iD3Ood8OCtiHKsOmQMlrR7tG6HVr9tYIAeEDPTPrgFIqgDz6ksgfPkcITNLdRUMrV/vtyjhWebv+kgjmezL8Ax6LpFcTD/IZt8fA0Yj3Ja7NTyHfO8Ag8Y9MXD+oknSOwFvlSbtg==
 ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+33aec566f0caf243ce7d+7815+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+33aec566f0caf243ce7d+7815+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
@@ -24,27 +24,27 @@ Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YY1PD21S8z30Wn
-	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Jan 2025 20:47:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YY1PF6Wb2z30fM
+	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Jan 2025 20:47:13 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
 	:Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=2emN2ZekPl9pUS8HrHL111sEmJvGZ8RKJUw7xW8tiZU=; b=g+5BuL+cWMKlkPq2h1gfpxLmjj
-	rywUnEu6MLP81WJIXN0CxJ3brcQ8Fja26vBn45gYLf5UPcaz+Mkjd8xR7XkSjCIruNVND/0pxuP2d
-	h4b+V2eX2CWFv7JUC/c24Zm565irmjyEeDFdYLVnSZZ2iFp2X2D4NjaGSPWms3998+G1D66YrZi9c
-	+JLYCK6Upy02luduPiZO2tB9WxIkXVGpUMexecOaZL9Ozn/q4RgIgOBmVaD5aSVvlLbha55jDIYpk
-	EKiV5yC5q1AXqGcmt0JUDE28B8UQqw0Qd4/3l82cCnojKvEmz4wbLBsT0kHJORBeUOfh24SodK03M
-	+3jlm7uQ==;
+	bh=JLpZrvaMc6GV46XbuHZJmt3meVmUGd1vvv0MgNmLkC4=; b=vnWbtQWrrFbO8X0TgMRPAb3tVY
+	2brCcEi1EjC/IEN5Xsm0cmRxzMpRg0Me95z04VjUJTfhoGUxgkc6rtgyCkdSRg+3U0O0D1uCWlZx4
+	2noVjW6ZSw1ew2Fd0Buq0vq6B/oKRzzZOeSWtkb2zJBcY+c/7pZkPksFZ6ah8B2Fq2Jr1G5VflSJO
+	77OftBY7nev+P89M32xt+VzoLXQxKgjhiJC7+JqZ/H1Oqs8NmDecshwkBsCcM/kNQqhBfVvUmLJbE
+	hh2hDAz9CNKsT+1PBSp9p9CuEWRUs6zihfOmiTLkm+CIEW9h9Ch7qHw5l775qXw2QsqrNhHWW4Etx
+	loKVmrIQ==;
 Received: from 2a02-8389-2341-5b80-7ef2-fcbf-2bb2-bbdf.cable.dynamic.v6.surfer.at ([2a02:8389:2341:5b80:7ef2:fcbf:2bb2:bbdf] helo=localhost)
 	by bombadil.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tXzzQ-0000000BOcl-1dG1;
-	Wed, 15 Jan 2025 09:47:08 +0000
+	id 1tXzzS-0000000BOdo-3nru;
+	Wed, 15 Jan 2025 09:47:11 +0000
 From: Christoph Hellwig <hch@lst.de>
 To: Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 1/8] lockref: remove lockref_put_not_zero
-Date: Wed, 15 Jan 2025 10:46:37 +0100
-Message-ID: <20250115094702.504610-2-hch@lst.de>
+Subject: [PATCH 2/8] lockref: improve the lockref_get_not_zero description
+Date: Wed, 15 Jan 2025 10:46:38 +0100
+Message-ID: <20250115094702.504610-3-hch@lst.de>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250115094702.504610-1-hch@lst.de>
 References: <20250115094702.504610-1-hch@lst.de>
@@ -70,66 +70,27 @@ Cc: Christian Brauner <brauner@kernel.org>, Andreas Gruenbacher <agruenba@redhat
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-lockref_put_not_zero is not used anywhere, and unless I'm missing
-something didn't end up being used used at all.  Remove it.
+lockref_put_return returns exactly -1 and not "an error" when the lockref
+is dead or locked.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/lockref.h |  1 -
- lib/lockref.c           | 28 ----------------------------
- 2 files changed, 29 deletions(-)
+ lib/lockref.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/lockref.h b/include/linux/lockref.h
-index c3a1f78bc884..e5aa0347f274 100644
---- a/include/linux/lockref.h
-+++ b/include/linux/lockref.h
-@@ -37,7 +37,6 @@ struct lockref {
- extern void lockref_get(struct lockref *);
- extern int lockref_put_return(struct lockref *);
- extern int lockref_get_not_zero(struct lockref *);
--extern int lockref_put_not_zero(struct lockref *);
- extern int lockref_put_or_lock(struct lockref *);
- 
- extern void lockref_mark_dead(struct lockref *);
 diff --git a/lib/lockref.c b/lib/lockref.c
-index 2afe4c5d8919..a68192c979b3 100644
+index a68192c979b3..b1b042a9a6c8 100644
 --- a/lib/lockref.c
 +++ b/lib/lockref.c
-@@ -81,34 +81,6 @@ int lockref_get_not_zero(struct lockref *lockref)
- }
- EXPORT_SYMBOL(lockref_get_not_zero);
- 
--/**
-- * lockref_put_not_zero - Decrements count unless count <= 1 before decrement
-- * @lockref: pointer to lockref structure
-- * Return: 1 if count updated successfully or 0 if count would become zero
-- */
--int lockref_put_not_zero(struct lockref *lockref)
--{
--	int retval;
--
--	CMPXCHG_LOOP(
--		new.count--;
--		if (old.count <= 1)
--			return 0;
--	,
--		return 1;
--	);
--
--	spin_lock(&lockref->lock);
--	retval = 0;
--	if (lockref->count > 1) {
--		lockref->count--;
--		retval = 1;
--	}
--	spin_unlock(&lockref->lock);
--	return retval;
--}
--EXPORT_SYMBOL(lockref_put_not_zero);
--
- /**
-  * lockref_put_return - Decrement reference count if possible
+@@ -86,7 +86,7 @@ EXPORT_SYMBOL(lockref_get_not_zero);
   * @lockref: pointer to lockref structure
+  *
+  * Decrement the reference count and return the new value.
+- * If the lockref was dead or locked, return an error.
++ * If the lockref was dead or locked, return -1.
+  */
+ int lockref_put_return(struct lockref *lockref)
+ {
 -- 
 2.45.2
 
