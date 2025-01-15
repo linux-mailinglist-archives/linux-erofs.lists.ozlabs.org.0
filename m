@@ -1,49 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 828DDA1080E
-	for <lists+linux-erofs@lfdr.de>; Tue, 14 Jan 2025 14:43:19 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A4D2A1173F
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 03:27:40 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YXVh34xc0z30TK
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 00:43:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YXqf1424xz3bSN
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Jan 2025 13:27:37 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=77.83.196.71
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1736862194;
-	cv=none; b=cRsGbWNvSY5QvCdTBWEXN2fB7hn+d0dhz+n7RJ+Jb750SzXDD9EhCZVtHCedxOvGdPtuYjFBXbXLZ7NZZxDmFBD4/wb3y38f1U0hMcZ9rfs0upGDMsKnHSz9DY8WGot3CpGy0h/COZk7H/hrNFf6KfqgCN98vfwZrrvu4d9HElYGnehK+0NwWYvfrOHxAdSUbnq3f1ukMQDP0DIoHWCB1iOhV/iGY/uKwzLHDBu/8Ji8RZ2PL+JeebsmcBWgPwTKCdWpVuvToBxrtF3FS3ZAZbTCu1y1fywew4hBh38xIXVfPL5jgtA+q950HzS845I0YdqU8m3w1rFKIz1GHjwwgg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1736908055;
+	cv=none; b=SpHOYlqU7xVMDdzi0DegntFVcWy/OdbXF5szG0GD2hhdBVtiXzeEUZxOwsouEhXjOMLJX4VmHr3NBIJv0UQ+hKd4ZbA0Hqj56WCgsUCuojQNIzNZcZY+Ph1d5JFhhoolSTCowQqqiEOpUnBjud9EikFSvbIqExDBsjStIEo38GlN1yLm9AnZDjKlhps1FEoPoM6njaegSJ/3T+fJk2F9rWyPQYtfu4VVp6HUPTNv52pfcgtRDOZ0kawh9DUZ2yetrXlkuD6wPXG77LktSvHONdfb3UjRpingEdctffR7AhZz7jK5VAhpuzwgtTh75gRTqcxu+47Kka7CS9c4fgccxg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1736862194; c=relaxed/relaxed;
-	bh=Lu9Vi/l3ALRQ7+BnmSWQozwvFekw1tUTrzc0q+8yjus=;
-	h=To:Subject:Message-ID:Date:From:MIME-Version:Content-Type; b=nJ+NQR1x7wWJVXL4Q3DpQKdQtJQHudN23C7m7b3AhhhhBJKsk6Ugsb61ORD4NcATUm7Mqj5ExZSDfG+TPzBzPcL75H2rwkXomErEKsEd/H57jXSIBI2n05o37TnjqWctGgOUsA2PNyQPbk6PJGUdEjYeYwkQL3mjVbTszYfqONU2tC5MUFadbe0LL5k/U3K13OXP14u/aE31FDpkFcAkptll+GQ3+UQLu2rLpG720J34EnnuSaOPN9bWGpAsOgn6ETzw14QcFXpRQBPoMtP37NOQSI+D41lOj+fk8iyv2WAK60iMk4rtg+osEVcG8k5fS+e6qGwZSnXyhlJ8uqDhKw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=wm-kc.com; dkim=pass (1024-bit key; unprotected) header.d=wm-kc.com header.i=@wm-kc.com header.a=rsa-sha256 header.s=default header.b=V+C3Ff9A; dkim-atps=neutral; spf=pass (client-ip=77.83.196.71; helo=alt-11.are.both.kmtxjs.cn; envelope-from=bounceidle@wm-kc.com; receiver=lists.ozlabs.org) smtp.mailfrom=wm-kc.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=wm-kc.com
+	t=1736908055; c=relaxed/relaxed;
+	bh=zlRBeGxU2+xtabwzkd8VwuKTRbdKkI377B64UDXBTus=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bGB1ihcNHcRCfbBQKlEOZ4/DIwCDeZXMbUqCiYfLVCzkfty9+JC7q2Kn1LflslpF2nB7LKEVOs5VdRJQX1C830OCgEi/2cZKfwRSKyocxUKowP8aWYb7+Veck2J3GRVzRPGmWj/yFtHFg4+EjaH/FoRrOkwbe/GueGqaCGo/ZpAmvyMMJewFMRDDydaZJzvlKAMBN5h0OoSCVz8BQdDGMwvdibdm0V6h2464METcyfU2F0Jk82wETiZoyGaQPc37px7ky1kuPmAKGdk/iZsZuk+yh9ViiUDlui2A6M1YANxnvzQPb3RKLjgtTpOdr04jSU5e8mBR15huCxISh4P0Cg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rZFPL1wo; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=wm-kc.com header.i=@wm-kc.com header.a=rsa-sha256 header.s=default header.b=V+C3Ff9A;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rZFPL1wo;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=wm-kc.com (client-ip=77.83.196.71; helo=alt-11.are.both.kmtxjs.cn; envelope-from=bounceidle@wm-kc.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 96 seconds by postgrey-1.37 at boromir; Wed, 15 Jan 2025 00:43:13 AEDT
-Received: from alt-11.are.both.kmtxjs.cn (alt-11.are.both.kmtxjs.cn [77.83.196.71])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YXVh12RwWz30Ff
-	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Jan 2025 00:43:13 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=wm-kc.com;
- h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
- bh=Lu9Vi/l3ALRQ7+BnmSWQozwvFekw1tUTrzc0q+8yjus=;
- b=V+C3Ff9AE5dpkocG0GTnqxVVkPbB/s2DMJuolV3eA0RtiZEbHRxoe00fQvECS3swrYg5YKKnOanZ
-   0x5rQHViQQkwI5ZR3/fsSc2iOrFZ4Mlvp3a+hCc+Bix6RBAATD9qTb1+Xke3QRZXRgTnT8DtLXkE
-   aWwdjpLr2mpOS77Gs1A=
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YXqdx3qNZz30NF
+	for <linux-erofs@lists.ozlabs.org>; Wed, 15 Jan 2025 13:27:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1736908048; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=zlRBeGxU2+xtabwzkd8VwuKTRbdKkI377B64UDXBTus=;
+	b=rZFPL1woblZ+yXDmNsyvSqvI2kVh4Yr6QUL6M1L1bRG0lecvozMy4dcXeDa9rBAYjlV5kae/0BwOGaGX+cTg1XFkh/tYIawd9AptWSLPjAS+K2QDm6/ppjdrJuvbQNLfqvwdvAQH+Yv3uvd7myO5gejfrgAQb0eUZJIqhgxLoR4=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WNguUym_1736908041 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 15 Jan 2025 10:27:26 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: EU fast shipment for ebikes
-Message-ID: <c483b3566380b62fd038569ea0207437@bestaliproducts>
-Date: Tue, 14 Jan 2025 13:57:09 +0100
-From: "E-Bicycle Sales Department" <ebikesales@wm-kc.com>
+Subject: [PATCH] erofs-utils: lib: dynamically sized `struct erofs_dentry`
+Date: Wed, 15 Jan 2025 10:27:20 +0800
+Message-ID: <20250115022720.2204033-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,HTML_IMAGE_RATIO_02,HTML_MESSAGE,
-	MIME_HTML_ONLY,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-	autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -56,77 +60,118 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: ebikesales@wm-kc.com
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<html>
-<head>
-</head>
-<body>
-Hi,<br /> <br /> I hope you're doing well! I'm excited to introduce our
-latest range of high-performance e-bikes, now available with fast, reliable
-delivery from our Germany warehouse. With a delivery time of just 3-7 days
-across the EU, you'll be riding your new e-bike in no time!<br /> <br /> We
-proudly offer three exceptional models designed to suit a variety of riding
-styles and preferences:<br />Let me now which model you are interested for
-purchasing, please simply send us your address, and we'll provide you with
-a customized quote.<br /> <br /> 1. Moped Cruiser<br /> Perfect for urban
-commuting, the Moped Cruiser offers a relaxed, stylish ride with excellent
-performance. Whether you're navigating busy city streets or enjoying a
-leisurely ride through scenic paths, this model is built for comfort and
-convenience.<br /><img
-src="https://v8fatbike.com/wp-content/uploads/2023/05/V8-bike-fat-tire.jpg"
-width="800" height="534" /><br /> <br /> 2. TrailBlazer<br /> For adventure
-seekers, the TrailBlazer is your go-to e-bike for off-road exploration.
-With its rugged design and powerful performance, it's ready to tackle any
-tough terrain. From mountain trails to dirt paths, the TrailBlazer takes it
-all in stride.<br /><img
-src="https://ookteks.com/wp-content/uploads/2023/11/10001.png" width="600"
-height="600" /><br /><br /> <br /> 3. Urban Cruiser<br /> Made for city
-life, the Urban Cruiser is ideal for daily commuting and short trips. With
-smooth handling and a sleek design, it's built for those who want both
-comfort and speed on their urban adventures.<br /><img
-src="https://electroheads.com/cdn/shop/files/ado-beast-testing.jpg"
-width="800" height="533" /><br /> <br /> Key Features Across All Models:<br
-/> Impressive 500W Motor: Delivering powerful acceleration and a smooth,
-efficient ride.<br /> Long-Lasting 48V 15AH Lithium-Ion Battery: Enjoy
-longer rides with minimal charging&mdash;perfect for both city commuting
-and longer distances.<br /> LCD Display: Stay informed with real-time
-updates on speed, battery status, support mode, and distance traveled.<br
-/> Mechanical Disc Brakes: Reliable stopping power, both front and rear,
-for maximum safety in any condition.<br /> Front and Rear Lights: Excellent
-visibility during night rides, ensuring your safety at all times.<br /> Fat
-Tires: Offering superior stability and comfort, whether you're on pavement,
-gravel, or snow.<br /> Lightweight Aluminum Frame: Combining durability and
-style for everyday use.<br /> 7-Speed Gear System and 3 Support Modes:
-Customize your ride to suit various terrains and preferences.<br /> Fast EU
-Shipping:<br /><br /> With our warehouse located in Germany, we guarantee
-fast shipping, delivering your e-bike in just 3-7 days across the EU.<br />
-<br /> We are committed to providing you with top-quality e-bikes that
-offer exceptional performance, reliability, and style. Whether you're
-looking for a city commuter, an off-road adventurer, or a weekend cruiser,
-we have the perfect bike for you.<br /> <br />Let me now which model you
-are interested for purchasing, please simply send us your address, and
-we'll provide you with a customized quote.<br /><br /> Looking forward to
-hearing from you and getting you on the road with one of our amazing
-e-bikes!<br /> <br /> Best regards,<br /> David Williams<br /> The Ebike
-Manufacture<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
-/><br /><br /><br /><br /><br /><br /><br /><br />Send address to unlist
-</body>
-</html>
+ - Reduced memory footprints;
+ - Optimize dname sorting and strlen(dname).
+
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ include/erofs/internal.h |  4 +++-
+ lib/inode.c              | 29 +++++++++++++++++++++--------
+ 2 files changed, 24 insertions(+), 9 deletions(-)
+
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 2edc1b4..596e363 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -314,15 +314,17 @@ static inline struct erofs_inode *erofs_parent_inode(struct erofs_inode *inode)
+ 
+ #define IS_ROOT(x)	((x) == erofs_parent_inode(x))
+ 
++#define EROFS_DENTRY_NAME_ALIGNMENT	4
+ struct erofs_dentry {
+ 	struct list_head d_child;	/* child of parent list */
+ 	union {
+ 		struct erofs_inode *inode;
+ 		erofs_nid_t nid;
+ 	};
+-	char name[EROFS_NAME_LEN];
++	unsigned char namelen;
+ 	u8 type;
+ 	bool validnid;
++	char name[];
+ };
+ 
+ static inline bool is_dot_dotdot_len(const char *name, unsigned int len)
+diff --git a/lib/inode.c b/lib/inode.c
+index 7ee5d78..e51c0fc 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -160,14 +160,22 @@ unsigned int erofs_iput(struct erofs_inode *inode)
+ struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
+ 				   const char *name)
+ {
+-	struct erofs_dentry *d = malloc(sizeof(*d));
++	unsigned int namelen = strlen(name);
++	unsigned int fsz = round_up(namelen + 1, EROFS_DENTRY_NAME_ALIGNMENT);
++	struct erofs_dentry *d;
+ 
++	if (namelen > EROFS_NAME_LEN) {
++		DBG_BUGON(1);
++		return ERR_PTR(-ENAMETOOLONG);
++	}
++	d = malloc(sizeof(*d) + fsz);
+ 	if (!d)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	strncpy(d->name, name, EROFS_NAME_LEN - 1);
+-	d->name[EROFS_NAME_LEN - 1] = '\0';
++	memcpy(d->name, name, namelen);
++	memset(d->name + namelen, 0, fsz - namelen);
+ 	d->inode = NULL;
++	d->namelen = namelen;
+ 	d->type = EROFS_FT_UNKNOWN;
+ 	d->validnid = false;
+ 	list_add_tail(&d->d_child, &parent->i_subdirs);
+@@ -208,10 +216,16 @@ int erofs_allocate_inode_bh_data(struct erofs_inode *inode, erofs_blk_t nblocks)
+ static int comp_subdir(const void *a, const void *b)
+ {
+ 	const struct erofs_dentry *da, *db;
++	int commonlen, sign;
+ 
+ 	da = *((const struct erofs_dentry **)a);
+ 	db = *((const struct erofs_dentry **)b);
+-	return strcmp(da->name, db->name);
++	commonlen = min(round_up(da->namelen, EROFS_DENTRY_NAME_ALIGNMENT),
++			round_up(db->namelen, EROFS_DENTRY_NAME_ALIGNMENT));
++	sign = memcmp(da->name, db->name, commonlen);
++	if (sign)
++		return sign;
++	return cmpsgn(da->namelen, db->namelen);
+ }
+ 
+ int erofs_init_empty_dir(struct erofs_inode *dir)
+@@ -260,7 +274,7 @@ static int erofs_prepare_dir_file(struct erofs_inode *dir,
+ 
+ 	/* let's calculate dir size */
+ 	list_for_each_entry(d, &dir->i_subdirs, d_child) {
+-		int len = strlen(d->name) + sizeof(struct erofs_dirent);
++		int len = d->namelen + sizeof(struct erofs_dirent);
+ 
+ 		if (erofs_blkoff(sbi, d_size) + len > erofs_blksiz(sbi))
+ 			d_size = round_up(d_size, erofs_blksiz(sbi));
+@@ -283,7 +297,7 @@ static void fill_dirblock(char *buf, unsigned int size, unsigned int q,
+ 
+ 	/* write out all erofs_dirents + filenames */
+ 	while (head != end) {
+-		const unsigned int namelen = strlen(head->name);
++		const unsigned int namelen = head->namelen;
+ 		struct erofs_dirent d = {
+ 			.nid = cpu_to_le64(head->nid),
+ 			.nameoff = cpu_to_le16(q),
+@@ -438,8 +452,7 @@ static int erofs_write_dir_file(struct erofs_inode *dir)
+ 		return ret;
+ 
+ 	list_for_each_entry(d, &dir->i_subdirs, d_child) {
+-		const unsigned int len = strlen(d->name) +
+-			sizeof(struct erofs_dirent);
++		unsigned int len = d->namelen + sizeof(struct erofs_dirent);
+ 
+ 		/* XXX: a bit hacky, but to avoid another traversal */
+ 		if (d->validnid && d->type == EROFS_FT_DIR) {
+-- 
+2.43.5
 
