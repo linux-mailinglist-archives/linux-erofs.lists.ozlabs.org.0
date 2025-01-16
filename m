@@ -1,76 +1,83 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 409CCA13558
-	for <lists+linux-erofs@lfdr.de>; Thu, 16 Jan 2025 09:32:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1737016323;
-	bh=rN0J1+seu0kQL0TljnKp9L4eqo2t0IggsjyZGXWUoVU=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=TpRcY+FSbTbYJvKuJLJnK8+3r0DaQgQ72aaR2bOq2u0JF5kkJISENGCOg/FP9LYI8
-	 8a0HjXyO1+6eqYgULl6PD8Yu07snWgIUftlDnUDrQp91lf+Lh/vUwHVwm6qHyBS3yq
-	 pEK8UQymZ/UfGYcNoFhcA//20VC0WtxwDuJNu14cS5c4euDxi6t/hpZCXhbBFXQEER
-	 V2BY2NQkYS2KXJGyOnazoWRhTDikBsnGfz+/qXDLJr9phezAV/bS+LENvSsrtKP4ca
-	 ZLiT7Ch3iTET+8H7U/Cfs3GNAOEmARhptubNC8BJVbh9hvjbYkU6GsAKnkYPbGNUp0
-	 7MRTuPHwVVrUg==
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id EEFAAA13580
+	for <lists+linux-erofs@lfdr.de>; Thu, 16 Jan 2025 09:37:26 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YYbh34shTz3by8
-	for <lists+linux-erofs@lfdr.de>; Thu, 16 Jan 2025 19:32:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YYbpD6518z3c6n
+	for <lists+linux-erofs@lfdr.de>; Thu, 16 Jan 2025 19:37:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737016321;
-	cv=none; b=T4cVEZ+cv8gJNi+Y3yZ3vMv0EVnkT/QZ8sRUuxdqF/uD8Hc7lEU49rQJ1hi/DFO4yNkNRLowz4b26xFYymk2cYxt3afwQWDLk9QX24WL15V7Pe/skMWAcRJ4aJWNPbYRBKyJus6oKueLUr9mTns7C/+vhAORTyy+qLtb5nGnzTIu7Zz+Wti2oqW1BWneyzF78EyCYDzttmJpDbeCFRU+TGWnrd2Z3IGicMo+bd0Vl5t8qNBnjIIg0AbNpoc6IMcLS/axn54kkkQ+VgkIWI73ixBWfA94HMIcrJGN8iTKbqfwsGONFOSpjUMyJiFAWqC9R+9GmBPBQ97V53TarEr4yw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=43.155.80.173
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737016643;
+	cv=none; b=Txk9hVq8gxPB9wkP+/UCiECxXwyP4F0MYnuuJ/lLpgIIgguM1c2jL2WBP1BcWmG0LaQSJsOpTvS3VdomxTWumetca1JL2SY+LaFgucaIK2WFWsQa5XvTBxSgJboDTVJ1gXWxnjCWvddyQ+xKqpVNTnSZttcON5uNisy1kP2mBooQVVWFW5p9Z+mBufECoDqdiJLTVHVaKbROrEJJmIxvoc8FGTCm+z6tM5kyM9Wl1SScUeVW5a7cAK+LRwgGvvJYYCtKkCnywwjx/rshZhgprozQ5UgmtdWsUTM9zNYii58pfe9KhIFODJbN5FdbUj1SD7Cw56XPotIB5gS9LkpA8A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1737016321; c=relaxed/relaxed;
-	bh=rN0J1+seu0kQL0TljnKp9L4eqo2t0IggsjyZGXWUoVU=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=WzkH3gb5Y6AqwjXRQ4JLfGuqVvCtcpd+ELpqKQvGMiXv0fnELN1+E1LBWxUU1TvTCEQUU4ZdGaQXnNfS68iitoq85I3nixUq+/TnY4gKwTzkCR0GHH4NKQaj2t8biuW8vTIC7wOW/PhBTajS1wQcYjvWzZz0yOjxQtY4hRvbapVUOXe3sK/MZGG3YP55Pa5ej51iaKIREbryUuItAqE46wQoRQsD+rDSJJo+7bd1jiXbUSbqn9qhbesmSm1Q8jgjWgWYvHavj+wfTHZcFE98k96nI8ByOzuB3ZELPhHEYbBhT4H5P4yZV7rZ2+TRc75c2MxKEmeGeifCiL+gRPca4Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Q98Qk1Sa; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1737016643; c=relaxed/relaxed;
+	bh=otpLROXolPbT7ec9YcvlHuENAhnyCwUjJEVlWqwt4N4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B995OgZs1TgFMsZ7vfOY6aZ3oCSaMTCtnqaD1FaBJrnpiilRncN0qrtyS8P7EKrICz8EPbfcjdue98TvY2OPGsUdu8mbOyD4SGhilyotMc5i2ViVlAttM1tO0j5JDc6ZRjO9OyVYKn2OBLiGvAJuxyQv8HH7EgJzJ2rPqTnQ63vpVeT2Nlg7YY1qTjYWAF3XOZpXI9x0pvhExeU5+P+Z7ctG8+z+4FTKgtwPzzSxbpHt+5ufMhaSbr31ftfVsfStKLEdusw5fn11AHKlXcT7E2gDRB3OHdg7/G4YyDk9umd8M8supwu9gd9F62hXjEk5L22rrAtFwN5kVMISnux9FA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; dkim=pass (1024-bit key; unprotected) header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=bM34JS1l; dkim-atps=neutral; spf=pass (client-ip=43.155.80.173; helo=bg5.exmail.qq.com; envelope-from=chenlinxuan@uniontech.com; receiver=lists.ozlabs.org) smtp.mailfrom=uniontech.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Q98Qk1Sa;
+	dkim=pass (1024-bit key; unprotected) header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=bM34JS1l;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=uniontech.com (client-ip=43.155.80.173; helo=bg5.exmail.qq.com; envelope-from=chenlinxuan@uniontech.com; receiver=lists.ozlabs.org)
+Received: from bg5.exmail.qq.com (bg5.exmail.qq.com [43.155.80.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YYbh12hVvz2ysc
-	for <linux-erofs@lists.ozlabs.org>; Thu, 16 Jan 2025 19:32:01 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 48A45A4116E;
-	Thu, 16 Jan 2025 08:30:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22A5FC4CED6;
-	Thu, 16 Jan 2025 08:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737016318;
-	bh=nM3Q7CZXxvDLM64A/7/nEQ//gngY5Eok3yDCRO4vquQ=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=Q98Qk1SaKAQ+0j09MuNoD375OlLzgR4MHhRxHC/4pqc31xV1KDn7ySLBXNSxkCvdV
-	 2nSSizY1xDC2qFUgPn9qQUgJ1jPTCmSnOwo76U+ULs6iMvgOXVc+XyapuiHNHn76ru
-	 2DVsgntk/L2Evs04b18UU7Jr6HIfuvYuuGidc0Xx+wLTSDGH18pPhIjPhrKHgvq7Ro
-	 /jk07ITsY+2SzIKduYSZtrsztUJxyq7ejIkFDzKQ5cLir4OpJrQIaJV7rJmal6yZ/3
-	 Tu5ckx3iXFXKaMnNgiqqwOMkk458+pMvNgcKbzUcvDfmR3ZDNKVQjUnngLy11Niaeo
-	 cHy+f8Ub50/JA==
-Message-ID: <11ffcd03-c3ce-4d2b-8360-1968092f72c1@kernel.org>
-Date: Thu, 16 Jan 2025 16:31:56 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YYbp933Ncz2yvs
+	for <linux-erofs@lists.ozlabs.org>; Thu, 16 Jan 2025 19:37:20 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1737016581;
+	bh=otpLROXolPbT7ec9YcvlHuENAhnyCwUjJEVlWqwt4N4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=bM34JS1lLXuARpjOE3ZKTyXHzxy4TBe/R4V0IRfsFAEC+dQM6f+BJjT+lEhrXB7f5
+	 CKbx9MlkzxJjoYGJcPD9w6YOskQmnsuDiBW6bwyTVDwOhRsBPyVprFg9V7OIToW3Bn
+	 sFNuwTRLyeRMMm8k0fpqP3t1K1hQu0BlBDImF4OI=
+X-QQ-mid: bizesmtp77t1737016563tkodmhws
+X-QQ-Originating-IP: R22WAXSZ8O0Y1UIQD9n02oQYDOsIlwAmFRJoliXHzBA=
+Received: from localhost.localdomain ( [113.57.152.160])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 16 Jan 2025 16:36:01 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 7777656777610264926
+From: Chen Linxuan <chenlinxuan@uniontech.com>
+To: Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>
+Subject: [PATCH v2] erofs(shrinker): return SHRINK_EMPTY if no objects to free
+Date: Thu, 16 Jan 2025 16:33:02 +0800
+Message-ID: <149E6E64B5B6B5E8+20250116083303.199817-1-chenlinxuan@uniontech.com>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: fix potential return value overflow of
- z_erofs_shrink_scan()
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20250114040058.459981-1-hsiangkao@linux.alibaba.com>
-Content-Language: en-US
-In-Reply-To: <20250114040058.459981-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
+X-QQ-XMAILINFO: N+gRuBp2eEM11ecl6HkjBu8gTd/Q2IREtOHMw/14si4jhpmV8i4GtKwE
+	axxVj8ANAxQWBSwNr35pT5FrxuF001cIKGWvS+qQsvKbLO0kmMb151fcMkQJmfFyUULl19A
+	xnD1OCK93WPSY5Jb+pLwLx8cuSH3DGUddVwNwFaJkJ8+NWfHqwbU0n+d4xEmhSikYHjue2U
+	KUnxHqTHv6rY53L9ACNlD0md+riFHb3ZjyV6Bu1FeLi6UYTD3vKixP3S9WZ15dUN+2qdGOG
+	b1FsQh/pMijcn0X2UquHFHrWwvNfDMI9CWvxfZclN4PaS41SeQ7BbTg9xr/t7BXeg/pbCKx
+	uhk/8wzHPLpgCK7l4GS0z9q98/MCBNjwKtuSjMQpyfFl3HOisXyWj4B4p4mH/Y7u5hCwT97
+	0tqnGKYxMJMfP6o00tqWBbT3NvDnrXcDWbMpUw15o7lHIxfl5fjb2UspuidR9cO/EzV8OLW
+	yG5URj52wqJE5cwTlz+f/oyLyXsktnXNf/w+gBlkYDFvx8Zs2bWDfV3gHgyLL3/FtQ8uA8P
+	RRSY+lEohfDfa8gOdfhePLMyqP6eNeC3Lgj+oWxuWgY0CAGrx/wiFI7wiCJFOuX69dVzW/F
+	m/X2LwrjZG2E/l+VpvfOeWsXyozEvFgi3VsJZMt2ZNmUbNBfHH3JYkRFFy1zjO56xkDbpAb
+	aEwu6SVKSw5mfhkZsGxTYv/XsCrhEB0RvO8ZC/xfQwrbgfEJ0EZJUoj8C7m69eotA8w2wML
+	CkpYFudghoS7kgQKQH5EgbTEmFdczDmO5F9EdSl0b61sq7ibVz01gDrYQnW0dEgLpJ4/F4l
+	BiEy7w8zjuBRzyN/I19FLJMYReoqOspPO8xc3LZuunGfM9Ehdku+n5FsGTQYYLO799hOZI+
+	o5pMKEFpQMT2OZPt6QJ3Xcx6Wq8eo2jjv8W5Uae9l6JONfFrYtinmRElxoa7WE398KutreI
+	xEC1t0X2R8j//t3ZTkmCUtsfhLSMae8IxFG6LaIhGU9IBvjD8egoDCjNDH0LN2BtUg2aV37
+	BzrOIQEg==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -83,24 +90,37 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Chao Yu via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Chao Yu <chao@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
+Cc: linux-erofs@lists.ozlabs.org, Chen Linxuan <chenlinxuan@uniontech.com>, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 1/14/25 12:00, Gao Xiang wrote:
-> z_erofs_shrink_scan() could return small numbers due to the mistyped
-> `freed`.
-> 
-> Although I don't think it has any visible impact.
+Comments in file include/linux/shrinker.h says that
+`count_objects` of `struct shrinker` should return SHRINK_EMPTY
+when there are no objects to free.
 
-Agreed, it's an extreme case...
+> If there are no objects to free, it should return SHRINK_EMPTY,
+> while 0 is returned in cases of the number of freeable items cannot
+> be determined or shrinker should skip this cache for this time
+> (e.g., their number is below shrinkable limit).
 
-> 
-> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+---
+ fs/erofs/zutil.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
+index 0dd65cefce33..83fbcab70a92 100644
+--- a/fs/erofs/zutil.c
++++ b/fs/erofs/zutil.c
+@@ -243,7 +243,7 @@ void erofs_shrinker_unregister(struct super_block *sb)
+ static unsigned long erofs_shrink_count(struct shrinker *shrink,
+ 					struct shrink_control *sc)
+ {
+-	return atomic_long_read(&erofs_global_shrink_cnt);
++	return atomic_long_read(&erofs_global_shrink_cnt) ?: SHRINK_EMPTY;
+ }
+ 
+ static unsigned long erofs_shrink_scan(struct shrinker *shrink,
+-- 
+2.43.0
 
-Thanks,
