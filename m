@@ -1,56 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 215F2A14CAD
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Jan 2025 11:01:14 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 247DDA14CB2
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Jan 2025 11:02:21 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YZFcR2XSCz3cmW
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Jan 2025 21:01:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YZFdk5txMz3cmW
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Jan 2025 21:02:18 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=114.132.67.179
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737108069;
-	cv=none; b=DwHkqkWFBVaKa+rjLPweuQ2wYfJ39v80AA5XnXNwtR/IaZ8K8VmVji3XzbMiSagWRf6tGv4MwpKNKYIvRzMSVR/HjMpbpdXo3gwKpxoKisZcVCcUkVfKzTao/EIgf+zLDYF0LSLiWOQQbZRSv4RdMYB8pgG7bLW0MU9QLuP84/kAEI1DgDDLuR73NqowMCdDifw4YwY5Gg6c/fq9eamnGCD5+AAVOYxECSKR+J1KaZQ9/KLSize/voGMCV2Oz5j/4Nnfkn4bGVZUaM7QhLnWvg7zyza2rt+7YBHSDY6CWBbz4basmL1YChLIMRKSLWdB4o3gtFfcvnGszCNuES6haA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=54.92.39.34
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737108137;
+	cv=none; b=RBiAdBJvdf6ZK9zQrrQ0JdnSHo9TemFRPdtsjGrTsTO5u/8V2aVoSdh49Tgufpn+ipPLY356ZJVamufUHuxKkb5J6j3dv1Xg+mj+LqTXPNDWIRu4A49p/602Ff+SUBUE58vz1FqxopQ7mUkl9bDOLLVt2HPqL79fq9pW2SD7NTH6MAEZiQFYt84vQP/9wXhxPDUBxxOqXZ0r348lJQUxYAIREmH7rmWASuGs1NgIRIG1m9yDkLjlHsznwiSpSM9BMiRVjcMEeyTtBKsbb0gF8mbw9k0QlOjJdAnkaPMUA1+S+HvIxokQZjavdBXUqNd+Foyj+9S7vjTYn1hEXZaVtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1737108069; c=relaxed/relaxed;
-	bh=iroahr4L/hXSymMs+KBf1zuyCZ3KWVQntlOvBOyyssg=;
+	t=1737108137; c=relaxed/relaxed;
+	bh=glprG9EU/c3C20X8BgxQluKLP8QndZuBpiazYVNfrzg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KAgVIb7Pcj0q3lcKq1b7NuJd567GNCM/tHwdVb+SNZ6hbt1Y2rNuDUmPZu2yx6QOl4QD1iWE6JuThnBC9nU32J0xfI68AP15uk1w2lO3gyiTT8vSdEx7JDf0rv5i6AZtvXiOAhWdKyTb9QqLA16c7bYMwXZmEVGLw3FpfagcXVPa1BcVqBrivRmPTfy+8r/vWxnm+gaU33hERsXaR7ZsE8GSCze4jjPRZG9HlJGjwYJHkBPr6osxRv6MZgv/NxOpg5rBmiTsNzZ67ZRDYOpAuWL1BnGkBUT0RGBGjB0Equbvb6/yPXvZcEeopkTxvGlEI+120gm7V/ywNWWEBRAZkw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; dkim=pass (1024-bit key; unprotected) header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=mMSaDguC; dkim-atps=neutral; spf=pass (client-ip=114.132.67.179; helo=bg1.exmail.qq.com; envelope-from=chenlinxuan@uniontech.com; receiver=lists.ozlabs.org) smtp.mailfrom=uniontech.com
+	 Content-Type:MIME-Version; b=h1S2a9Cc6q1jDdFblauMMek4CckuQQSdMKn3mcQYfQP56WodvQ+b5pKZ3KIzsa8QzkXmGLfHPwk3/7CABHgF75jcyDQ88EG7eu4/AsjZOxXirO5MkG10d92R2+iSFLKH93zZHIjw4oyfCQSkWr+02dp1X0CsxnyLSHZNQ12uO3KaEe4T3569Wh/ezBVHyOJP9oN05WYYdJgfD1wVEpIos1qPZ2vb3Ypu2YyQd73brOUs6TqiWW0Rz+zbSbK6TvripvKblPi/B0SKfr7C6KeOLR3pQwVG0C9ZUCmDDAnrXR6vgRqc5tD5jDq0KTzcGMKj15eZjPqxim3q1EgeXP0ZXw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; dkim=pass (1024-bit key; unprotected) header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=ZBRXhnyx; dkim-atps=neutral; spf=pass (client-ip=54.92.39.34; helo=smtpbgjp3.qq.com; envelope-from=chenlinxuan@uniontech.com; receiver=lists.ozlabs.org) smtp.mailfrom=uniontech.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=mMSaDguC;
+	dkim=pass (1024-bit key; unprotected) header.d=uniontech.com header.i=@uniontech.com header.a=rsa-sha256 header.s=onoh2408 header.b=ZBRXhnyx;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=uniontech.com (client-ip=114.132.67.179; helo=bg1.exmail.qq.com; envelope-from=chenlinxuan@uniontech.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 95868 seconds by postgrey-1.37 at boromir; Fri, 17 Jan 2025 21:01:07 AEDT
-Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.67.179])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=uniontech.com (client-ip=54.92.39.34; helo=smtpbgjp3.qq.com; envelope-from=chenlinxuan@uniontech.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 4086 seconds by postgrey-1.37 at boromir; Fri, 17 Jan 2025 21:02:15 AEDT
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YZFcN023sz2yRd
-	for <linux-erofs@lists.ozlabs.org>; Fri, 17 Jan 2025 21:01:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YZFdg56nsz2ygZ
+	for <linux-erofs@lists.ozlabs.org>; Fri, 17 Jan 2025 21:02:12 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1737108017;
-	bh=iroahr4L/hXSymMs+KBf1zuyCZ3KWVQntlOvBOyyssg=;
+	s=onoh2408; t=1737108087;
+	bh=glprG9EU/c3C20X8BgxQluKLP8QndZuBpiazYVNfrzg=;
 	h=Message-ID:Subject:From:To:Date:MIME-Version;
-	b=mMSaDguCicvMFv6Yq1XgZdwYhNSPFytKP8bUb6gtB8pdnj3hO5RZbZaYHnypd8M+E
-	 01wWgRclMx2Qu6/zlUQ4+nLVqgkV5dJBLgY/mbxEbzTzvlD2lsHGSibWrcJAlrCiRx
-	 rwz4I2BqzKeGCfdeZZwkRGsnVqJEgSbDJzfu+tR0=
-X-QQ-mid: bizesmtpsz13t1737108008tq1m1p
-X-QQ-Originating-IP: XftBdMHapIvM6TIJB5Um9hxzRHTjVtgMwVC/qP1x2yo=
+	b=ZBRXhnyx3ex8AALBMXbWLzLreqT1Fbb5ya32sABtXd7LJyNdhkphZWoPpw96J79YI
+	 3cZdB+EYT2G8z+5pAXP0QpkclaMOAPiXdmNK51WhdEEhiUmC1rmBOvsjXxVkYwRWmk
+	 ysMjSbVdaUyn1NWNTJa2dPq0twFH5bnHA9AiDbko=
+X-QQ-mid: bizesmtpsz6t1737108079tfx1978
+X-QQ-Originating-IP: VFnRGADdjR/Tl+pVgzKLw2jXQWF0sDRugEzWK1ybP6c=
 Received: from [10.20.53.121] ( [113.57.152.160])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Fri, 17 Jan 2025 18:00:06 +0800 (CST)
+	id ; Fri, 17 Jan 2025 18:01:17 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 12575968525061132533
-Message-ID: <F2BFB040EAD9A1F5+3902f0717d54a9990ffe8f042997c8586044d229.camel@uniontech.com>
+X-BIZMAIL-ID: 5411443667271281956
+Message-ID: <63C443BEC911CD0D+401525867484e4d20ad2e6f6809491a7efdf56f6.camel@uniontech.com>
 Subject: Re: [PATCH] erofs: add error log in erofs_fc_parse_param
 From: Chen Linxuan <chenlinxuan@uniontech.com>
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, Gao Xiang <xiang@kernel.org>, 
  Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, Jeffle Xu
  <jefflexu@linux.alibaba.com>,  Sandeep Dhavale <dhavale@google.com>
-Date: Fri, 17 Jan 2025 18:00:06 +0800
+Date: Fri, 17 Jan 2025 18:01:17 +0800
 In-Reply-To: <58cadb57-22ce-4818-af2b-9ae452c38f27@linux.alibaba.com>
 References: 	<F2F43EB045D266E8+20250117085244.326177-1-chenlinxuan@uniontech.com>
 	 <649afa9b-5724-4b52-8b9b-9a82a3c1468b@linux.alibaba.com>
@@ -62,27 +62,29 @@ User-Agent: Evolution 3.52.3-0ubuntu1
 MIME-Version: 1.0
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: M66kUMUCCKBmVLmqvRhpm8+Zr8Df0tOsniDz3Gi303+u6Ln1XpzbkRBo
-	8pmie3WyIVkmpU6y+GIM93vmwma7EfA8x5kzIRZij9rHZVnffqY2VkvsriJJQ3gh4DXtcUw
-	AuuJNrC5BIMP8wFtT4+jWTAyg1mz0q+7TZmLG5pzYhJdMYOuE8evyNTePOC6u/SsudffZn6
-	NARhrQB2xkxGM0beKsKu/sk5EoMOdJimLBd7TmUD94v10Z1MEDRnQGKAUC+LGcBbiBcNiE+
-	L63zvBlFP77aEFie0a0SbXlv3k2kM5vQ4oI1hVkxPksRIHJjfUFA86P2oQ2+Tl+rOQrmDdt
-	KKGSYPeh2HGNe/+kzj7VOhH1wv6zawoa5NgkQRLp1iM2KO09JKhb7XPvBnK6uIK0HjH2kW3
-	vtghedlo8mCJanVF7nt3YAHbu5fTfDgR4eoATThUn89SVm+Kj/3Wnd6eY8w5v4/+WVlnY5c
-	RMSNDuHyovbA6puV0ZgiFQnRYpRTbfgRejb9saFnGGsXr1wd+adel40bUjGTVFbHn1nC4bl
-	EMzuEDV0N/a1OEKyZjMdHtbHSbr5POjsOrWNapRFn2bve5UcepA6nsX8zu3CZMkZHo1cM06
-	ctEYkxFVNZiE+lR8+2x+jabE5Odqdueze9B98aBVH9FmVgU/D6SMznP2mVVpTO/oB3TNQeD
-	C4iXUxQHHdL/0cJaSRwEMeQoUie3zqAwYysWgzMMDQ0wvZ31t2VCq7i3IHHK7/u0CS1V0LS
-	6FDtnKm0LdDAI66G3Jtkoy/gSmnIRlfkbR2IXh7ri1uK+nhNzmzVSbcYrk0CsILDoU9fnWY
-	0ZUjIGB54mDoanO6FWd7Wq9rs0lu/TPXDVsjpXESbkFfcbq+vaKs+yxwlx+IQ0K3K5RWake
-	SR3GZVeDbALAwkXkagpH08gIs1QiKTETitH9ROeqNjWQ1GAwhNAPTC+MewR0UgMmNnpYC+d
-	cljZZp7XYGZE8S7gmAC8d3nLPDTEnRPI+lvaeKKQkolSuxC8OyGJPO8bjGIN42Eng4rNdQV
-	KBFabxqMc4kH25I4swqI+7rCsTkPk0Rhx5lP5YYQ==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+X-QQ-XMAILINFO: NAPEGMJiOsQ6nTcyN/S3HRqzwl2lWlXCPhQUu44qcaMklz8AvEZJjRcY
+	bsyEX40W2aV1tlinZLQspRojpQ8fHcFHIzZdNNMlTe/rcVn/91j5OxUUsRh9uyUeSMmfBJ+
+	JZPs5dSXRB8uqHb9YvYd1wc/Brh67ROiOGkMBFKbW6y16VEYQ658XpsrHqbk6WrQOBXv8HX
+	2IdXv8p3GLb1MpansXqa70iqyLa1ionKHqWXP7GAJjK5uFpVgZMDQ/V3pM4MGm7estgxwGS
+	/nXfxws2W5RP5DmyHfsyHFsamvqJ/fwlCoiB+R7f1ur4PT8A8cY8fbH1McHNjrVCD4puaeQ
+	O42Rz6Z+NZQDDpQAONbU/faeyjojHSOlkv0rqLzMZJ9tfJgeX6hJY7PEZjK+/Pk1rZliKSu
+	YWXohrOIKRf/LKo9ClAQmypgxQVcNHk9m/dhzdmq2y9/YC/rI1D4lzw7msSDrLdl3Lwmbbh
+	/eIcAVH7F5p/X/kEGqpG184AVbc3LnKhSwH5AtQVGCKsALRQyL1u8tldZeO7G5CWqoJVWaC
+	wJ0ISu8/nT1waOLzvik6m11NzBMVx3k78cZ1yCTh0wrcQ+Dz0SGbpLBQgnRfdqiPk5kBKqO
+	FTgdNdmwWf4rTq4WD1ZeooBnc4MZOeK9mUR7D8rAjU7qZhG2amawBG4AMT+tYT5j8JN6Jdg
+	yOQOok6nIYl2FI6qMli6WKhkvzRT3c2M4D8m8GpwQAPoUgaUGnE0LgAWbS74GrZ3++xEOcR
+	fYtHts6aEUboV/4OHj1NLiY1b93HQx2QIltVXhj7qLb0zzsf64CAGbXrrRqcu6d9PogYUri
+	59WqPCJqZlIeOoNcdia9/yyr6SLlHz5u7ozlJnJC6E94I1aCSCSQBJgXZsY+F24hQT7eyxA
+	328jeIF2DQ9zJ1GU7LMjM8u0I3uhZhC+U4nFP6Nk9o8UH6sAtdSlzRo+iizfOubQTTJdFqs
+	wpfeqextBJ0R6O+Tds5ycm5iQtlPUaO0ohypds2OoryFU1cVm6aaE0mBhsvoMQq3VPZ98mm
+	VdfriEHz20qEjREa7ZpII1xEIVGQ9GDO+WX0gBUgEL999l8xfy3jS/Cvl9sfch1wEXtnDE7
+	4li8R78jSNp
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
 X-QQ-RECHKSPAM: 0
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.0
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -135,7 +137,7 @@ On Fri, 2025-01-17 at 17:54 +0800, Gao Xiang wrote:
 >=20
 > How can it go wrong?
 
-What if we forget to update the switch branch for a new option?
+I will push a new patch just remove the `default:` branch later.
 
 >=20
 > Thanks,
