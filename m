@@ -1,73 +1,109 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6118AA1584F
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Jan 2025 20:45:47 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58A12A15AA1
+	for <lists+linux-erofs@lfdr.de>; Sat, 18 Jan 2025 01:55:10 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YZVZn32pkz3cmC
-	for <lists+linux-erofs@lfdr.de>; Sat, 18 Jan 2025 06:45:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YZdRt27hsz3clc
+	for <lists+linux-erofs@lfdr.de>; Sat, 18 Jan 2025 11:55:06 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.17
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737143135;
-	cv=none; b=MIpGl8z2M4roLDgALjOHg7RMZEFwVpB/dCGHJ2M2CfB+7ms15YEz6PW/xbiaIiWn9bLls9ja2EGWIsJ3TXXjIQLUF19GJqCBxCncPPFvgueIqM9q1B5SMaEHUyAz/GAAVoFr4u4PsUqsniNM/gl26R0B0qwPE7GHFYC9Qo8ASZKs1v89js1EoaeLYJY60ovQE3nh3tQxvMzC6Uruis1Z/jZcO/HFWHufML5v9wRNO98hEiKDPYi0F6CR+RSvy2ww5DSxCtb+06ufggUVKopjRwu2quOLBV4T70asBr/S+bo54GPVy1A8FyAnMY1U1DlFfIJ7Vmdmb3TzRIFIisElPQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=121.200.0.92
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737161704;
+	cv=none; b=XXv9X6IjOU90yxf7USmprOBOP4cpm4yXKz63oz06v8jAx4qt93Y/iOjNwRe2gm+LaHy9zDIHZS+f69S/rJvqg+CcQcrLEp5heBQP4+AOQJ3GBCokkjMAZEuX/b8qlGaUaPv1Oue6daMqLSGPKXP6EW1wSKx+6fjjndGnGHE0QwL4IfODUEK3GW/QP82pJCbN4ckp2KKHu4Miw8C95OwrMnJXV+A+hbQ53tGHZTqlUWpniqVQcFMZHzw1S85u6lg4v1emBHfERLhXTm49pCQikSpRxATsqg3z8Dvc5yl6q9U1i7S1prs85OuFacs3hbL0cK1aHFmCl65cqDQmsJWnQg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1737143135; c=relaxed/relaxed;
-	bh=4HyMvq5dRa6lVQgkIoAEnZcmn8BwJNUB/ol65RZY5ck=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=PLUyL56M9PicNUksA94+S4OKGPf+zL5KZMp8I1xDufbjowLACZAH1AbfMKlFpVTU1e0D9nrNNmmLDWxHcsSKoFoCYyUZej82nGVx/EwVdU3B/e71f/bTl9ePdJMg7qGWq7WXtI3gAg9LV89eP+djt/uO1R27aVkZsMUdCjANOtx2DLVAEMqrD63PW3f6ZHU0tyWpyOZa/L+9Lcjlu2+j8TGO/fjm2bI8XOh8MFf4jgvwVSJUM7ncRHE5ERWenA6Tz5wL4Sw/Qzlc9ZIuvnaP3TIw+gxGiUdOlnzPp7dWmzC/L3aCN4qeedwBpPuHArNG09zjTu7avLjO+VA6W2MpfA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dhAevKm7; dkim-atps=neutral; spf=pass (client-ip=198.175.65.17; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dhAevKm7;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.17; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1737161704; c=relaxed/relaxed;
+	bh=JC4eI/X47TUFizGfuEdtS//bzLSWmFxK4saasY63q+Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QU3sdX/ui8aCoH71iTfng3KFCmUSCrxBSxC20ceyKaqSJQXaS8p8eD84XA6qlfOzPGNquKXDRUh6UI9kxYnvzSn98wZC39SyNIdMj7un+OPLoJDQEbSWm8ZoIp9MXsTKRQpatf6bggVmB16879k0kOKbhE/sNcmaBoUfGTnnAqp+xqzlGNqvyXvfnmlXrrIWh5u9rzgE4MVVfedcUJMZS1BvlO3DsabGiACmu3HRKdw1s6Iv/FW7HdgnlJs9IqUaY5oOyFZc4KHXwDPrMoB3mHStCibKzFonb4Jyoa2NKQ0eohnAW3FiDhF22Z6b+GcxU6U9K/V5YRsfoIiZ0Lm7Cg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=neutral (client-ip=121.200.0.92; helo=smtp01.aussiebb.com.au; envelope-from=raven@themaw.net; receiver=lists.ozlabs.org) smtp.mailfrom=themaw.net
+Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=themaw.net
+Authentication-Results: lists.ozlabs.org; spf=neutral (access neither permitted nor denied) smtp.mailfrom=themaw.net (client-ip=121.200.0.92; helo=smtp01.aussiebb.com.au; envelope-from=raven@themaw.net; receiver=lists.ozlabs.org)
+X-Greylist: delayed 579 seconds by postgrey-1.37 at boromir; Sat, 18 Jan 2025 11:55:03 AEDT
+Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YZVZj2lzXz30WP
-	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Jan 2025 06:45:30 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1737143134; x=1768679134;
-  h=date:from:to:cc:subject:message-id;
-  bh=MCO4l1OQBmwdc03LYjvonTmzyZ1yzGv4H0GEP+iQjNs=;
-  b=dhAevKm7+RaGsBNK8HM8CFPL+jgWVpC2aWetQXeki9K+N3+9WeUfhvVK
-   MphbhdRwbCwmiRjN0Gxx69DtepCU26iDatAzIAUbI/kuQgU1rb7AoOahq
-   emmle0J1lJOJPG5BUgmBltKLMKDp5cgo6fNQ0SN3NQqGtlDzZ/q04uS3v
-   R44sixsRwQUnmxV7fTkb17tovqwKMmgtTa0eFG8yG/T0R8wpmFV4jfiE2
-   LawkKgqxgHmiJNX7hNuN8E3AQhmNmB9hBBsea/9SUV3eBbgw2OMmWqlwn
-   PGm5bJh3KfyTcj1wyXZDYtT3it8IDUN6rfieiXWMD4hG78v84MqlkPkLD
-   w==;
-X-CSE-ConnectionGUID: EfhCG2osTu+IwHVUFKcNTQ==
-X-CSE-MsgGUID: A9o3utksRt20ccjEFPyAww==
-X-IronPort-AV: E=McAfee;i="6700,10204,11318"; a="37610873"
-X-IronPort-AV: E=Sophos;i="6.13,213,1732608000"; 
-   d="scan'208";a="37610873"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2025 11:45:28 -0800
-X-CSE-ConnectionGUID: T8kcb+QjRqyA3bj9F6rXJw==
-X-CSE-MsgGUID: qhMcQ2HZShqMfK2D10nPTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.11,199,1725346800"; 
-   d="scan'208";a="110886700"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 17 Jan 2025 11:45:27 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tYsHU-000TeC-1q;
-	Fri, 17 Jan 2025 19:45:24 +0000
-Date: Sat, 18 Jan 2025 03:44:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 41fb0fabc40113769ce53ea85ffd1f4bc87ae03a
-Message-ID: <202501180338.N9OuQNBM-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YZdRq1nz2z30CD
+	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Jan 2025 11:55:03 +1100 (AEDT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp01.aussiebb.com.au (Postfix) with ESMTP id 63EA11006E4
+	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Jan 2025 11:45:19 +1100 (AEDT)
+X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
+Received: from smtp01.aussiebb.com.au ([127.0.0.1])
+	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 6GUm1FkT0-av for <linux-erofs@lists.ozlabs.org>;
+	Sat, 18 Jan 2025 11:45:19 +1100 (AEDT)
+Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
+	id 4AC53100766; Sat, 18 Jan 2025 11:45:17 +1100 (AEDT)
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
+X-Spam-Level: 
+X-Spam-Status: No, score=0.7 required=5.0 tests=SPF_HELO_NONE,SPF_NEUTRAL
+	autolearn=disabled version=4.0.0
+Received: from [192.168.1.229] (159-196-82-144.9fc452.per.static.aussiebb.net [159.196.82.144])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: ian146@aussiebb.com.au)
+	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id 677E2100766;
+	Sat, 18 Jan 2025 11:45:14 +1100 (AEDT)
+Message-ID: <9b2b5a34-cddd-41b2-9d1e-939b9f97b44b@themaw.net>
+Date: Sat, 18 Jan 2025 08:45:13 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs: add error log in erofs_fc_parse_param
+To: Chen Linxuan <chenlinxuan@uniontech.com>, Gao Xiang <xiang@kernel.org>,
+ Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+ Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>
+References: <F2F43EB045D266E8+20250117085244.326177-1-chenlinxuan@uniontech.com>
+Content-Language: en-US
+From: Ian Kent <raven@themaw.net>
+Autocrypt: addr=raven@themaw.net; keydata=
+ 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
+In-Reply-To: <F2F43EB045D266E8+20250117085244.326177-1-chenlinxuan@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -79,102 +115,66 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: 41fb0fabc40113769ce53ea85ffd1f4bc87ae03a  erofs: return SHRINK_EMPTY if no objects to free
+On 17/1/25 16:52, Chen Linxuan wrote:
+> While reading erofs code, I notice that `erofs_fc_parse_param` will
+> return -ENOPARAM, which means that erofs do not support this option,
+> without report anything when `fs_parse` return an unknown `opt`.
+>
+> But if an option is unknown to erofs, I mean that option not in
+> `erofs_fs_parameters` at all, `fs_parse` will return -ENOPARAM,
+> which means that `erofs_fs_parameters` should has returned earlier.
 
-elapsed time: 1444m
+I'm pretty sure than the vfs deals with reporting unknown options
 
-configs tested: 79
-configs skipped: 1
+and returns -EINVAL already.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
-tested configs:
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250117    gcc-13.2.0
-arc                   randconfig-002-20250117    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250117    clang-18
-arm                   randconfig-002-20250117    gcc-14.2.0
-arm                   randconfig-003-20250117    gcc-14.2.0
-arm                   randconfig-004-20250117    clang-16
-arm64                            allmodconfig    clang-18
-arm64                 randconfig-001-20250117    gcc-14.2.0
-arm64                 randconfig-002-20250117    clang-18
-arm64                 randconfig-003-20250117    clang-20
-arm64                 randconfig-004-20250117    gcc-14.2.0
-csky                  randconfig-001-20250117    gcc-14.2.0
-csky                  randconfig-002-20250117    gcc-14.2.0
-hexagon                          allmodconfig    clang-20
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250117    clang-20
-hexagon               randconfig-002-20250117    clang-20
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386        buildonly-randconfig-001-20250117    clang-19
-i386        buildonly-randconfig-002-20250117    clang-19
-i386        buildonly-randconfig-003-20250117    gcc-12
-i386        buildonly-randconfig-004-20250117    gcc-12
-i386        buildonly-randconfig-005-20250117    clang-19
-i386        buildonly-randconfig-006-20250117    gcc-11
-loongarch             randconfig-001-20250117    gcc-14.2.0
-loongarch             randconfig-002-20250117    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250117    gcc-14.2.0
-nios2                 randconfig-002-20250117    gcc-14.2.0
-parisc                randconfig-001-20250117    gcc-14.2.0
-parisc                randconfig-002-20250117    gcc-14.2.0
-powerpc               randconfig-001-20250117    gcc-14.2.0
-powerpc               randconfig-002-20250117    gcc-14.2.0
-powerpc               randconfig-003-20250117    gcc-14.2.0
-powerpc64             randconfig-001-20250117    clang-16
-powerpc64             randconfig-002-20250117    clang-20
-powerpc64             randconfig-003-20250117    gcc-14.2.0
-riscv                 randconfig-001-20250117    gcc-14.2.0
-riscv                 randconfig-002-20250117    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250117    gcc-14.2.0
-s390                  randconfig-002-20250117    clang-20
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250117    gcc-14.2.0
-sh                    randconfig-002-20250117    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250117    gcc-14.2.0
-sparc                 randconfig-002-20250117    gcc-14.2.0
-sparc64               randconfig-001-20250117    gcc-14.2.0
-sparc64               randconfig-002-20250117    gcc-14.2.0
-um                               allmodconfig    clang-20
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250117    clang-20
-um                    randconfig-002-20250117    gcc-12
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250117    gcc-12
-x86_64      buildonly-randconfig-002-20250117    gcc-12
-x86_64      buildonly-randconfig-003-20250117    gcc-12
-x86_64      buildonly-randconfig-004-20250117    gcc-12
-x86_64      buildonly-randconfig-005-20250117    gcc-12
-x86_64      buildonly-randconfig-006-20250117    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250117    gcc-14.2.0
-xtensa                randconfig-002-20250117    gcc-14.2.0
+I think the caller oferofs_fc_parse_param() is vfs_parse_fs_param()
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+and for an -ENOPARAM return will ultimately do this:
+
+return invalf(fc, "%s: Unknown parameter '%s'", fc->fs_type->name, 
+param->key);
+
+which does this.
+
+The thing about this is the mount API macro deals with (or it should,
+
+although I'm not sure that's completely sorted out yet) logging the
+
+message to the console log as well as possibly making it available to
+
+mount api system calls. I'm pretty sure this change will prevent the
+
+error message being available for mount api system calls to retrieve.
+
+Ian
+
+>
+> Entering `default` means `fs_parse` return something we unexpected.
+> I am not sure about it but I think we should return -EINVAL here,
+> just like `xfs_fs_parse_param`.
+>
+> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> ---
+>   fs/erofs/super.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 1fc5623c3a4d..67fc4c1deb98 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -509,7 +509,8 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+>   #endif
+>   		break;
+>   	default:
+> -		return -ENOPARAM;
+> +		errorfc(fc, "%s option not supported", param->key);
+> +		return -EINVAL;
+>   	}
+>   	return 0;
+>   }
