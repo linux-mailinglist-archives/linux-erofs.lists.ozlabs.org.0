@@ -1,42 +1,42 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58A12A15AA1
-	for <lists+linux-erofs@lfdr.de>; Sat, 18 Jan 2025 01:55:10 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F218A15AD4
+	for <lists+linux-erofs@lfdr.de>; Sat, 18 Jan 2025 02:25:41 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YZdRt27hsz3clc
-	for <lists+linux-erofs@lfdr.de>; Sat, 18 Jan 2025 11:55:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YZf756ldnz3clL
+	for <lists+linux-erofs@lfdr.de>; Sat, 18 Jan 2025 12:25:37 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=121.200.0.92
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737161704;
-	cv=none; b=XXv9X6IjOU90yxf7USmprOBOP4cpm4yXKz63oz06v8jAx4qt93Y/iOjNwRe2gm+LaHy9zDIHZS+f69S/rJvqg+CcQcrLEp5heBQP4+AOQJ3GBCokkjMAZEuX/b8qlGaUaPv1Oue6daMqLSGPKXP6EW1wSKx+6fjjndGnGHE0QwL4IfODUEK3GW/QP82pJCbN4ckp2KKHu4Miw8C95OwrMnJXV+A+hbQ53tGHZTqlUWpniqVQcFMZHzw1S85u6lg4v1emBHfERLhXTm49pCQikSpRxATsqg3z8Dvc5yl6q9U1i7S1prs85OuFacs3hbL0cK1aHFmCl65cqDQmsJWnQg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2403:5800:3:25::1001"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737163537;
+	cv=none; b=OgE1/JL4++HYQIgrDtyW9/vpW93Fu++giFUIYBRBYoK4PGBL2BS1e1+w4Ad0QTmkUxq1gdvacKb5nlOhirtXDH3yd8GMpPlc4QmlgOameDWJhobNnD3W5ZSoYHkXvBLHR+NuYG39b+F1rL0JLgU+6tJSLWzoZiw+9/Y0QaljgbL/KUkWnXCFDtVyFt0GO1fMDs7I7htA9bwLQ6Ws8MX6acfpWA1UCYxjeTzPbV+GjKQlnkFhFyXI2rdKFlUawbGJrd1tJ2ZlrE2qxw06l8gYmVF2aiCEgVqtNjHYCmcNQSURzFPi7I2/sEZAJR5uWJg99/QSCuZjjVdqXjSeKK9Vug==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1737161704; c=relaxed/relaxed;
-	bh=JC4eI/X47TUFizGfuEdtS//bzLSWmFxK4saasY63q+Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QU3sdX/ui8aCoH71iTfng3KFCmUSCrxBSxC20ceyKaqSJQXaS8p8eD84XA6qlfOzPGNquKXDRUh6UI9kxYnvzSn98wZC39SyNIdMj7un+OPLoJDQEbSWm8ZoIp9MXsTKRQpatf6bggVmB16879k0kOKbhE/sNcmaBoUfGTnnAqp+xqzlGNqvyXvfnmlXrrIWh5u9rzgE4MVVfedcUJMZS1BvlO3DsabGiACmu3HRKdw1s6Iv/FW7HdgnlJs9IqUaY5oOyFZc4KHXwDPrMoB3mHStCibKzFonb4Jyoa2NKQ0eohnAW3FiDhF22Z6b+GcxU6U9K/V5YRsfoIiZ0Lm7Cg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=neutral (client-ip=121.200.0.92; helo=smtp01.aussiebb.com.au; envelope-from=raven@themaw.net; receiver=lists.ozlabs.org) smtp.mailfrom=themaw.net
+	t=1737163537; c=relaxed/relaxed;
+	bh=6RWBjwCQMCBPfqKwLM5yv/tChABN1ezb2Eqd1URLcVg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZZnwH5TiuCSQEJ/D2wVYLTbVpfdi9Rvcqbdhpi1/JlAeucGBk5rA0AzpWEVGguaqCQ2/chc/Emdmcdz73J9AJZwBRezuTvVL9x9gBDpB6GMhrm7zLPZUaniHpeX//icXy08WQs+98hEWlNLYrDfMY3jKle3BbsUGSO4KVwiQJrVUCQCZN8MdPkxhKql6/0P8yWPyRAlZIkrMdJ+xysq/Z/l9L9ajyxhcMOh9Rv2E4QKY9dMky1EOm80/AQQV7Ce2FjndoTO6aHfMY1l/zNI2e24fcfrGO/hY6IboNPjwC2s3YYgBsK1qcmchYVjaD1B7Jwj3wQ6uTCCAhfMLYkWPmA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=neutral (client-ip=2403:5800:3:25::1001; helo=smtp01.aussiebb.com.au; envelope-from=raven@themaw.net; receiver=lists.ozlabs.org) smtp.mailfrom=themaw.net
 Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=themaw.net
-Authentication-Results: lists.ozlabs.org; spf=neutral (access neither permitted nor denied) smtp.mailfrom=themaw.net (client-ip=121.200.0.92; helo=smtp01.aussiebb.com.au; envelope-from=raven@themaw.net; receiver=lists.ozlabs.org)
-X-Greylist: delayed 579 seconds by postgrey-1.37 at boromir; Sat, 18 Jan 2025 11:55:03 AEDT
-Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
+Authentication-Results: lists.ozlabs.org; spf=neutral (access neither permitted nor denied) smtp.mailfrom=themaw.net (client-ip=2403:5800:3:25::1001; helo=smtp01.aussiebb.com.au; envelope-from=raven@themaw.net; receiver=lists.ozlabs.org)
+X-Greylist: delayed 2413 seconds by postgrey-1.37 at boromir; Sat, 18 Jan 2025 12:25:36 AEDT
+Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [IPv6:2403:5800:3:25::1001])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YZdRq1nz2z30CD
-	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Jan 2025 11:55:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YZf74644vz306S
+	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Jan 2025 12:25:36 +1100 (AEDT)
 Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp01.aussiebb.com.au (Postfix) with ESMTP id 63EA11006E4
-	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Jan 2025 11:45:19 +1100 (AEDT)
+	by smtp01.aussiebb.com.au (Postfix) with ESMTP id 543581008CD
+	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Jan 2025 12:25:36 +1100 (AEDT)
 X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
 Received: from smtp01.aussiebb.com.au ([127.0.0.1])
 	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 6GUm1FkT0-av for <linux-erofs@lists.ozlabs.org>;
-	Sat, 18 Jan 2025 11:45:19 +1100 (AEDT)
+	with ESMTP id 4gtDuio5nM9f for <linux-erofs@lists.ozlabs.org>;
+	Sat, 18 Jan 2025 12:25:36 +1100 (AEDT)
 Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
-	id 4AC53100766; Sat, 18 Jan 2025 11:45:17 +1100 (AEDT)
+	id 411C3100763; Sat, 18 Jan 2025 12:25:36 +1100 (AEDT)
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-Spam-Level: 
 X-Spam-Status: No, score=0.7 required=5.0 tests=SPF_HELO_NONE,SPF_NEUTRAL
@@ -46,19 +46,20 @@ Received: from [192.168.1.229] (159-196-82-144.9fc452.per.static.aussiebb.net [1
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: ian146@aussiebb.com.au)
-	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id 677E2100766;
-	Sat, 18 Jan 2025 11:45:14 +1100 (AEDT)
-Message-ID: <9b2b5a34-cddd-41b2-9d1e-939b9f97b44b@themaw.net>
-Date: Sat, 18 Jan 2025 08:45:13 +0800
+	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id A2431100763;
+	Sat, 18 Jan 2025 12:25:34 +1100 (AEDT)
+Message-ID: <a9ab830c-241d-4a78-9909-9c986ad91741@themaw.net>
+Date: Sat, 18 Jan 2025 09:25:33 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH] erofs: add error log in erofs_fc_parse_param
+From: Ian Kent <raven@themaw.net>
 To: Chen Linxuan <chenlinxuan@uniontech.com>, Gao Xiang <xiang@kernel.org>,
  Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
  Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>
 References: <F2F43EB045D266E8+20250117085244.326177-1-chenlinxuan@uniontech.com>
+ <9b2b5a34-cddd-41b2-9d1e-939b9f97b44b@themaw.net>
 Content-Language: en-US
-From: Ian Kent <raven@themaw.net>
 Autocrypt: addr=raven@themaw.net; keydata=
  xsFNBE6c/ycBEADdYbAI5BKjE+yw+dOE+xucCEYiGyRhOI9JiZLUBh+PDz8cDnNxcCspH44o
  E7oTH0XPn9f7Zh0TkXWA8G6BZVCNifG7mM9K8Ecp3NheQYCk488ucSV/dz6DJ8BqX4psd4TI
@@ -101,9 +102,9 @@ Autocrypt: addr=raven@themaw.net; keydata=
  +coCSBkOU1xMiW5Td7QwkNmtXKHyEF6dxCAMK1KHIqxrBaZO27PEDSHaIPHePi7y4KKq9C9U
  8k5V5dFA0mqH/st9Sw6tFbqPkqjvvMLETDPVxOzinpU2VBGhce4wufSIoVLOjQnbIo1FIqWg
  Dx24eHv235mnNuGHrG+EapIh7g/67K0uAzwp17eyUYlE5BMcwRlaHMuKTil6
-In-Reply-To: <F2F43EB045D266E8+20250117085244.326177-1-chenlinxuan@uniontech.com>
+In-Reply-To: <9b2b5a34-cddd-41b2-9d1e-939b9f97b44b@themaw.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
 Precedence: list
@@ -119,62 +120,75 @@ Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 17/1/25 16:52, Chen Linxuan wrote:
-> While reading erofs code, I notice that `erofs_fc_parse_param` will
-> return -ENOPARAM, which means that erofs do not support this option,
-> without report anything when `fs_parse` return an unknown `opt`.
+On 18/1/25 08:45, Ian Kent wrote:
+> On 17/1/25 16:52, Chen Linxuan wrote:
+>> While reading erofs code, I notice that `erofs_fc_parse_param` will
+>> return -ENOPARAM, which means that erofs do not support this option,
+>> without report anything when `fs_parse` return an unknown `opt`.
+>>
+>> But if an option is unknown to erofs, I mean that option not in
+>> `erofs_fs_parameters` at all, `fs_parse` will return -ENOPARAM,
+>> which means that `erofs_fs_parameters` should has returned earlier.
 >
-> But if an option is unknown to erofs, I mean that option not in
-> `erofs_fs_parameters` at all, `fs_parse` will return -ENOPARAM,
-> which means that `erofs_fs_parameters` should has returned earlier.
+> I'm pretty sure than the vfs deals with reporting unknown options
+>
+> and returns -EINVAL already.
+>
+>
+> I think the caller oferofs_fc_parse_param() is vfs_parse_fs_param()
+>
+> and for an -ENOPARAM return will ultimately do this:
+>
+> return invalf(fc, "%s: Unknown parameter '%s'", fc->fs_type->name, 
+> param->key);
+>
+> which does this.
+>
+> The thing about this is the mount API macro deals with (or it should,
+>
+> although I'm not sure that's completely sorted out yet) logging the
+>
+> message to the console log as well as possibly making it available to
+>
+> mount api system calls. I'm pretty sure this change will prevent the
+>
+> error message being available for mount api system calls to retrieve.
 
-I'm pretty sure than the vfs deals with reporting unknown options
+Actually no, removing the default switch branch does look like the right 
+thing
 
-and returns -EINVAL already.
+to do, my mistake. The call to fs_parse() will return -NOPARAM so the
+
+switch doesn't need to handle that case.
 
 
-I think the caller oferofs_fc_parse_param() is vfs_parse_fs_param()
-
-and for an -ENOPARAM return will ultimately do this:
-
-return invalf(fc, "%s: Unknown parameter '%s'", fc->fs_type->name, 
-param->key);
-
-which does this.
-
-The thing about this is the mount API macro deals with (or it should,
-
-although I'm not sure that's completely sorted out yet) logging the
-
-message to the console log as well as possibly making it available to
-
-mount api system calls. I'm pretty sure this change will prevent the
-
-error message being available for mount api system calls to retrieve.
-
-Ian
+Oops!
 
 >
-> Entering `default` means `fs_parse` return something we unexpected.
-> I am not sure about it but I think we should return -EINVAL here,
-> just like `xfs_fs_parse_param`.
+> Ian
 >
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> ---
->   fs/erofs/super.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 1fc5623c3a4d..67fc4c1deb98 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -509,7 +509,8 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->   #endif
->   		break;
->   	default:
-> -		return -ENOPARAM;
-> +		errorfc(fc, "%s option not supported", param->key);
-> +		return -EINVAL;
->   	}
->   	return 0;
->   }
+>>
+>> Entering `default` means `fs_parse` return something we unexpected.
+>> I am not sure about it but I think we should return -EINVAL here,
+>> just like `xfs_fs_parse_param`.
+>>
+>> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+>> ---
+>>   fs/erofs/super.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>> index 1fc5623c3a4d..67fc4c1deb98 100644
+>> --- a/fs/erofs/super.c
+>> +++ b/fs/erofs/super.c
+>> @@ -509,7 +509,8 @@ static int erofs_fc_parse_param(struct fs_context 
+>> *fc,
+>>   #endif
+>>           break;
+>>       default:
+>> -        return -ENOPARAM;
+>> +        errorfc(fc, "%s option not supported", param->key);
+>> +        return -EINVAL;
+>>       }
+>>       return 0;
+>>   }
