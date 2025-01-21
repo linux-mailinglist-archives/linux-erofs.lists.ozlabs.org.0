@@ -1,48 +1,54 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABC1AA17FDF
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 Jan 2025 15:34:19 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3905EA18055
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 Jan 2025 15:48:47 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YcqTj0vvhz30Vf
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2025 01:34:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YcqpN49Tmz30Vp
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2025 01:48:44 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737470055;
-	cv=none; b=UcA4IvvA+H6X+eIosCH7Jat3cFFG0yAKG2QLUKVvzrKDl27tBN1IrFSeIMTHaTuwv9ESrE7tC4llv8YqvwAdhrnCDNrgSFZEowbkS7Y6HEZ9y0HpFHegIFNeuU/jbaj2HAu4WJy1JmzW0cw1s8gv6vxNcheP1yAecSO5MMbStkfvnm/PLA7lN1v1fw9JX/8hi1O/SHP+KcVmcldh/4gASG4VUed3WqoLpECzxCdxnD7Aqg8nrBr2MSwEzNcb+krR+gNr0tvNjcN/6mjdztAGQgtdEEAhex9bRBvP5luTiYI2ZYbWBOnlBnztniZkAVL4Ef5v3xIyVAy5oEbx0SBIZQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.110
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737470922;
+	cv=none; b=Uur8FPhWmZgLv051NbTFGxXeuJcKYaNvPEXUJjU0Q/21jCV+7VQqWptMUU+T94I/V8P39uhU+HLp8m6DV0nu05s/+NPzm//21Nih4WtAD53E6kI7AboLnPrtCJYeAEGHpJjt7lK1t8LATgZQv9REkOzBZ+4gccGTY7kpWPCd8UQsOTOPTENTTadhhQkLV7c78F39hwr8rE730lp5+kbWJ2s7qspYFagkfYs6eFLuNNfMHUrEy5dbFaXcJdq+91AP3RlROh9EUVS0Q1JSZ5rfKKKmH1onuTdytAATJ1C3t3L5IxIOiKr/mnB9Dfm/g9di8BRRIvV+YvnGpl1IdaGyYg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1737470055; c=relaxed/relaxed;
-	bh=ucToi05wmq7fyixVv3OV3D9SGCWtVHRD1f79guZM8IE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IfpByfD0oiUVNY61tSFhT1sdd9qmf26QaGCAYPSN7yBisc4eCeJ7eOQxJ1OLujgA/t+cCZhngqwYM3i2ZkzyZnlis8WBRB11E+h1B7aK5Tpqkp+aus1APZPgrdOldYNBd1NpET2lzVzuwFbNHmQoiPo6CDbq8y07pbReyV8s3VTB6zW7NPxy1F5DtuXwUU1tMGOX8brafUHy0x6VUuKucFkZ8lI1HGUrXFt4x+m8wRrvvBVqZAeLZXjV00twglgzCfhB1uJAY/MD/Kxq1il7jcQ8SbAzFV4GJhtf10yB14SSC0FUaB9bJpdAn4UV2f/caYouqVqhgPmIqjwULRpHWw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yGnAokEJ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1737470922; c=relaxed/relaxed;
+	bh=06vwQqGY6Ex/VC+gHUMiTQa0cwSwUo7eLzwpwo9bAHU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EMSdgv4sSk0NbUvpYTZJjLtPNrjKxB63VXDal2oiRWID9y35GMs1rKmnd/a4aep2k6j0mZh/ODGW9AsxAOJrd1nBOh3q9PbDS2R9l7z4v57DnK+ohlfpGPLpL6AsZICzQfbInZ4+jA1HRwtFCgri5mRqyIl/VP1wY7yNCo21MXCfV5FpsyVD1kWK/gXtZojzLmXtE/3g+ZWViabn9nkHJdyL187lHCe9t2JeSJ4B+Z4pesM73croqkvwOe6KCIz/e7U5JTsoN6Xg+nKdHu7fveDs8zzTI/FHsRJbFLLOZPNLkmTAgsF5uXPuH7AhrAiTP9wTgAexJ2B5pynUjXmQqw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rn3riygj; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yGnAokEJ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rn3riygj;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YcqTc59QJz301Y
-	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Jan 2025 01:34:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YcqpJ2rRrz2yD5
+	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Jan 2025 01:48:38 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1737470047; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=ucToi05wmq7fyixVv3OV3D9SGCWtVHRD1f79guZM8IE=;
-	b=yGnAokEJWmjYZa6FfSY4cabIrPzbW+bhEacpW7a4LNI1XXqvTLz71RcaPuPz4BJzdfT5D9I6nsm78c/rcrY8t3ZQtPJRsyGLJ09fNfFZo1WR0+KvuN3qW5QN1y4jtD52S/b0FV0xZtAFOfccgCNmTRWAehE2vBPZPH0uXkJewf4=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WO5jA7W_1737470041 cluster:ay36)
+	t=1737470915; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=06vwQqGY6Ex/VC+gHUMiTQa0cwSwUo7eLzwpwo9bAHU=;
+	b=rn3riygjWkC3g8+Tcmj0vd3Ym7EAIcl97MW0zKVftzHFECvrOgZd6zZtbotYkZlnNZLqdkmMqpepGmo0Sfo5l1URs9/DBNjohkaaqEyOCuHgvjZi7JNDgHkFShd55k+NP901htsYSlPhCFhftnh0sLp3mt81mNaCgs8stKy3x6c=
+Received: from 30.15.253.55(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WO5i9QG_1737470913 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 21 Jan 2025 22:34:05 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: fix inefficient fragment deduplication
-Date: Tue, 21 Jan 2025 22:34:00 +0800
-Message-ID: <20250121143400.1857269-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+          Tue, 21 Jan 2025 22:48:34 +0800
+Message-ID: <77a04d2c-5abc-40e5-8b4c-9907f54bf3c0@linux.alibaba.com>
+Date: Tue, 21 Jan 2025 22:48:33 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v5 3/4] erofs: apply the page cache share feature
+To: Hongbo Li <lihongbo22@huawei.com>, linux-erofs@lists.ozlabs.org
+References: <20250105151208.3797385-1-hongzhen@linux.alibaba.com>
+ <20250105151208.3797385-4-hongzhen@linux.alibaba.com>
+ <5d34b289-c0f1-4c37-9536-fc955ce8b53b@huawei.com>
+From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+In-Reply-To: <5d34b289-c0f1-4c37-9536-fc955ce8b53b@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
@@ -60,217 +66,365 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Neal Gompa <ngompa13@gmail.com>, Jonathan Lebon <jonathan@jlebon.com>, Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently, long fragment comparisons could cause suboptimal results,
-leading to final image sizes still larger than expected:
- _________________________________________________________________________
-|______ Testset _____|        Vanilla          |          After           | Command Line
-|  CoreOS [1]        |   802107392 (765 MiB)   |   687501312 (656 MiB)    | -zlzma,6 -Eall-fragments,fragdedupe=inode -C131072
-|____________________|__ 771715072 (736 MiB) __|__ 658485248 (628 MiB)  __| -zlzma,6 -Eall-fragments,fragdedupe=inode -C1048576
-|  Fedora KIWI [2]   |_ 2584076288 (2465 MiB) _|_ 2550837248 (2433 MiB) __| -zlzma,6 -Eall-fragments,fragdedupe=inode -C1048576
-|____________________|_ 2843598848 (2712 MiB) _|_ 2810359808 (2681 MiB) __| (Fedora-KDE-Desktop-Live-Rawhide.0.x86_64.iso)
 
-Almost all images that use `-Eall-fragments` could benefit from this.
+On 2025/1/21 19:59, Hongbo Li wrote:
+>
+>
+> On 2025/1/5 23:12, Hongzhen Luo wrote:
+>> This modifies relevant functions to apply the page cache
+>> share feature.
+>>
+>> Below is the memory usage for reading all files in two different minor
+>> versions of container images:
+>>
+>> +-------------------+------------------+-------------+---------------+
+>> |       Image       | Page Cache Share | Memory (MB) | Memory     |
+>> |                   |                  |             | Reduction (%) |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     241     | -       |
+>> |       redis +------------------+-------------+---------------+
+>> |   7.2.4 & 7.2.5   |        Yes       |     163     | 33%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     872     | -       |
+>> |      postgres +------------------+-------------+---------------+
+>> |    16.1 & 16.2    |        Yes       |     630     | 28%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     2771    | -       |
+>> |     tensorflow +------------------+-------------+---------------+
+>> |  1.11.0 & 2.11.1  |        Yes       |     2340    | 16%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     926     | -       |
+>> |       mysql +------------------+-------------+---------------+
+>> |  8.0.11 & 8.0.12  |        Yes       |     735     | 21%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     390     | -       |
+>> |       nginx +------------------+-------------+---------------+
+>> |   7.2.4 & 7.2.5   |        Yes       |     219     | 44%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |       tomcat      |        No        |     924     | -       |
+>> | 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+>> |                   |        Yes       |     474     | 49%      |
+>> +-------------------+------------------+-------------+---------------+
+>>
+>> Additionally, the table below shows the runtime memory usage of the
+>> container:
+>>
+>> +-------------------+------------------+-------------+---------------+
+>> |       Image       | Page Cache Share | Memory (MB) | Memory     |
+>> |                   |                  |             | Reduction (%) |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |      35     | -       |
+>> |       redis +------------------+-------------+---------------+
+>> |   7.2.4 & 7.2.5   |        Yes       |      28     | 20%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     149     | -       |
+>> |      postgres +------------------+-------------+---------------+
+>> |    16.1 & 16.2    |        Yes       |      95     | 37%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     1028    | -       |
+>> |     tensorflow +------------------+-------------+---------------+
+>> |  1.11.0 & 2.11.1  |        Yes       |     930     | 10%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     155     | -       |
+>> |       mysql +------------------+-------------+---------------+
+>> |  8.0.11 & 8.0.12  |        Yes       |     132     | 15%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |      25     | -       |
+>> |       nginx +------------------+-------------+---------------+
+>> |   7.2.4 & 7.2.5   |        Yes       |      20     | 20%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |       tomcat      |        No        |     186     | -       |
+>> | 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+>> |                   |        Yes       |      98     | 48%      |
+>> +-------------------+------------------+-------------+---------------+
+>>
+>> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+>> ---
+>>   fs/erofs/data.c            | 14 +++++++--
+>>   fs/erofs/inode.c           |  5 ++-
+>>   fs/erofs/pagecache_share.c | 63 ++++++++++++++++++++++++++++++++++++++
+>>   fs/erofs/pagecache_share.h | 11 +++++++
+>>   fs/erofs/super.c           |  7 +++++
+>>   fs/erofs/zdata.c           |  9 ++++--
+>>   6 files changed, 104 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+>> index 0cd6b5c4df98..fb08acbeaab6 100644
+>> --- a/fs/erofs/data.c
+>> +++ b/fs/erofs/data.c
+>> @@ -5,6 +5,7 @@
+>>    * Copyright (C) 2021, Alibaba Cloud
+>>    */
+>>   #include "internal.h"
+>> +#include "pagecache_share.h"
+>>   #include <linux/sched/mm.h>
+>>   #include <trace/events/erofs.h>
+>>   @@ -370,12 +371,21 @@ int erofs_fiemap(struct inode *inode, struct 
+>> fiemap_extent_info *fieinfo,
+>>    */
+>>   static int erofs_read_folio(struct file *file, struct folio *folio)
+>>   {
+>> -    return iomap_read_folio(folio, &erofs_iomap_ops);
+>> +    int ret, pcshr;
+>> +
+>> +    pcshr = erofs_pcshr_read_begin(file, folio);
+>> +    ret = iomap_read_folio(folio, &erofs_iomap_ops);
+>> +    erofs_pcshr_read_end(file, folio, pcshr);
+>> +    return ret;
+>>   }
+>>     static void erofs_readahead(struct readahead_control *rac)
+>>   {
+>> -    return iomap_readahead(rac, &erofs_iomap_ops);
+>> +    int pcshr;
+>> +
+>> +    pcshr = erofs_pcshr_readahead_begin(rac);
+>> +    iomap_readahead(rac, &erofs_iomap_ops);
+>> +    erofs_pcshr_readahead_end(rac, pcshr);
+>>   }
+>>     static sector_t erofs_bmap(struct address_space *mapping, 
+>> sector_t block)
+>> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+>> index d4b89407822a..0b070f4b46b8 100644
+>> --- a/fs/erofs/inode.c
+>> +++ b/fs/erofs/inode.c
+>> @@ -5,6 +5,7 @@
+>>    * Copyright (C) 2021, Alibaba Cloud
+>>    */
+>>   #include "xattr.h"
+>> +#include "pagecache_share.h"
+>>   #include <trace/events/erofs.h>
+>>     static int erofs_fill_symlink(struct inode *inode, void *kaddr,
+>> @@ -212,7 +213,9 @@ static int erofs_fill_inode(struct inode *inode)
+>>       switch (inode->i_mode & S_IFMT) {
+>>       case S_IFREG:
+>>           inode->i_op = &erofs_generic_iops;
+>> -        if (erofs_inode_is_data_compressed(vi->datalayout))
+>> +        if (erofs_pcshr_fill_inode(inode) == 0)
+>> +            inode->i_fop = &erofs_pcshr_fops;
+>> +        else if (erofs_inode_is_data_compressed(vi->datalayout))
+>>               inode->i_fop = &generic_ro_fops;
+>>           else
+>>               inode->i_fop = &erofs_file_fops;
+>> diff --git a/fs/erofs/pagecache_share.c b/fs/erofs/pagecache_share.c
+>> index 703fd17c002c..22172b5e21c7 100644
+>> --- a/fs/erofs/pagecache_share.c
+>> +++ b/fs/erofs/pagecache_share.c
+>> @@ -22,6 +22,7 @@ struct erofs_pcshr_counter {
+>>     struct erofs_pcshr_private {
+>>       char fprt[PCSHR_FPRT_MAXLEN];
+>> +    struct mutex mutex;
+>>   };
+>>     static struct erofs_pcshr_counter mnt_counter = {
+>> @@ -84,6 +85,7 @@ static int erofs_fprt_set(struct inode *inode, void 
+>> *data)
+>>       if (!ano_private)
+>>           return -ENOMEM;
+>>       memcpy(ano_private, data, sizeof(size_t) + *(size_t *)data);
+>> +    mutex_init(&ano_private->mutex);
+>>       inode->i_private = ano_private;
+>>       return 0;
+>>   }
+>> @@ -226,3 +228,64 @@ const struct file_operations erofs_pcshr_fops = {
+>>       .get_unmapped_area = thp_get_unmapped_area,
+>>       .splice_read    = filemap_splice_read,
+>>   };
+>> +
+>> +int erofs_pcshr_read_begin(struct file *file, struct folio *folio)
+>> +{
+>> +    struct erofs_inode *vi;
+>> +    struct erofs_pcshr_private *ano_private;
+>> +
+>> +    if (!(file && file->private_data))
+>> +        return 0;
+>> +
+>> +    vi = file->private_data;
+>> +    if (vi->ano_inode != file_inode(file))
+>> +        return 0;
+>> +
+>> +    ano_private = vi->ano_inode->i_private;
+>> +    mutex_lock(&ano_private->mutex);
+> Can we lock in folio granularity? The erofs_pcshr_private mutex may 
+> limit the concurrent in reading.
+I’m sorry for the delay in responding; I just saw this message. I will
+send an improved version of the patch soon. Thanks for this suggestion.
+>> +    folio->mapping->host = &vi->vfs_inode;
+>> +    return 1;
+>> +}
+>> +
+>> +void erofs_pcshr_read_end(struct file *file, struct folio *folio, 
+>> int pcshr)
+>> +{
+>> +    struct erofs_pcshr_private *ano_private;
+>> +
+>> +    if (pcshr == 0)
+>> +        return;
+>> +
+>> +    ano_private = file_inode(file)->i_private;
+>> +    folio->mapping->host = file_inode(file);
+>> +    mutex_unlock(&ano_private->mutex);
+>> +}
+>> +
+>> +int erofs_pcshr_readahead_begin(struct readahead_control *rac)
+>> +{
+> May be the begin/end helpers for read and readahead can be used with 
+> the same helpers. They did the similar logic.
 
-[1] https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/41.20241215.3.0/x86_64/fedora-coreos-41.20241215.3.0-live.x86_64.iso
-[2] https://pagure.io/fedora-kiwi-descriptions.git
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- lib/compress.c  |   3 +-
- lib/fragments.c | 123 ++++++++++++++++++++++--------------------------
- 2 files changed, 57 insertions(+), 69 deletions(-)
+Okay, indeed! I will send an improved version later.
 
-diff --git a/lib/compress.c b/lib/compress.c
-index eb3190d..5c9c051 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -1534,7 +1534,8 @@ void *erofs_begin_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
- 
- 		if (cfg.c_fragdedupe == FRAGDEDUPE_INODE &&
- 		    inode->fragment_size < inode->i_size) {
--			erofs_dbg("Discard the sub-inode tail fragment @ nid %llu", inode->nid);
-+			erofs_dbg("Discard the sub-inode tail fragment of %s",
-+				  inode->i_srcpath);
- 			inode->fragment_size = 0;
- 		}
- 	}
-diff --git a/lib/fragments.c b/lib/fragments.c
-index f662cbc..32ac6f5 100644
---- a/lib/fragments.c
-+++ b/lib/fragments.c
-@@ -33,6 +33,7 @@ struct erofs_fragment_dedupe_item {
- 	u8			data[];
- };
- 
-+#define EROFS_FRAGMENT_INMEM_SZ_MAX	EROFS_CONFIG_COMPR_MAX_SZ
- #define EROFS_TOF_HASHLEN		16
- 
- #define FRAGMENT_HASHSIZE		65536
-@@ -62,96 +63,82 @@ static int z_erofs_fragments_dedupe_find(struct erofs_inode *inode, int fd,
- 	struct erofs_packed_inode *epi = inode->sbi->packedinode;
- 	struct erofs_fragment_dedupe_item *cur, *di = NULL;
- 	struct list_head *head = &epi->hash[FRAGMENT_HASH(crc)];
-+	unsigned int s1, e1;
-+	erofs_off_t deduped;
- 	u8 *data;
--	unsigned int length, e2, deduped;
--	erofs_off_t pos;
- 	int ret;
- 
- 	if (list_empty(head))
- 		return 0;
- 
--	/* XXX: no need to read so much for smaller? */
--	if (inode->i_size < EROFS_CONFIG_COMPR_MAX_SZ)
--		length = inode->i_size;
--	else
--		length = EROFS_CONFIG_COMPR_MAX_SZ;
--
--	data = malloc(length);
-+	s1 = min_t(u64, EROFS_FRAGMENT_INMEM_SZ_MAX, inode->i_size);
-+	data = malloc(s1);
- 	if (!data)
- 		return -ENOMEM;
- 
--	if (erofs_lseek64(fd, inode->i_size - length, SEEK_SET) < 0) {
--		ret = -errno;
--		goto out;
--	}
--
--	ret = read(fd, data, length);
--	if (ret != length) {
--		ret = -errno;
--		goto out;
-+	ret = pread(fd, data, s1, inode->i_size - s1);
-+	if (ret != s1) {
-+		free(data);
-+		return -errno;
- 	}
--
--	DBG_BUGON(length <= EROFS_TOF_HASHLEN);
--	e2 = length - EROFS_TOF_HASHLEN;
-+	e1 = s1 - EROFS_TOF_HASHLEN;
- 	deduped = 0;
--
- 	list_for_each_entry(cur, head, list) {
--		unsigned int e1, mn, i = 0;
-+		unsigned int e2, mn;
-+		erofs_off_t i, pos;
- 
- 		DBG_BUGON(cur->length <= EROFS_TOF_HASHLEN);
--		e1 = cur->length - EROFS_TOF_HASHLEN;
-+		e2 = cur->length - EROFS_TOF_HASHLEN;
- 
--		if (memcmp(cur->data + e1, data + e2, EROFS_TOF_HASHLEN))
-+		if (memcmp(data + e1, cur->data + e2, EROFS_TOF_HASHLEN))
- 			continue;
- 
-+		i = 0;
- 		mn = min(e1, e2);
--		while (i < mn && cur->data[e1 - i - 1] == data[e2 - i - 1])
-+		while (i < mn && cur->data[e2 - i - 1] == data[e1 - i - 1])
- 			++i;
- 
--		if (!di || i + EROFS_TOF_HASHLEN > deduped) {
--			deduped = i + EROFS_TOF_HASHLEN;
--			di = cur;
-+		i += EROFS_TOF_HASHLEN;
-+		if (i >= s1) {		/* full short match */
-+			DBG_BUGON(i > s1);
-+			pos = cur->pos + cur->length - s1;
-+			while (i < inode->i_size && pos) {
-+				char buf[2][16384];
-+				unsigned int sz;
-+
-+				sz = min_t(u64, pos, sizeof(buf[0]));
-+				sz = min_t(u64, sz, inode->i_size - i);
-+				if (pread(fileno(epi->file), buf[0], sz,
-+					  pos - sz) != sz)
-+					break;
-+				if (pread(fd, buf[1], sz,
-+					  inode->i_size - i - sz) != sz)
-+					break;
- 
--			/* full match */
--			if (i == e2)
--				break;
-+				if (memcmp(buf[0], buf[1], sz))
-+					break;
-+				pos -= sz;
-+				i += sz;
-+			}
- 		}
--	}
--	if (!di)
--		goto out;
--
--	DBG_BUGON(di->length < deduped);
--	pos = di->pos + di->length - deduped;
--	/* let's read more to dedupe as long as we can */
--	if (deduped == di->length) {
--		fflush(epi->file);
--
--		while(deduped < inode->i_size && pos) {
--			char buf[2][16384];
--			unsigned int sz = min_t(unsigned int, pos,
--						sizeof(buf[0]));
--
--			if (pread(fileno(epi->file), buf[0], sz,
--				  pos - sz) != sz)
--				break;
--			if (pread(fd, buf[1], sz,
--				  inode->i_size - deduped - sz) != sz)
--				break;
- 
--			if (memcmp(buf[0], buf[1], sz))
--				break;
--			pos -= sz;
--			deduped += sz;
--		}
-+		if (i <= deduped)
-+			continue;
-+		di = cur;
-+		deduped = i;
-+		if (deduped == inode->i_size)
-+			break;
- 	}
--	inode->fragment_size = deduped;
--	inode->fragmentoff = pos;
- 
--	erofs_dbg("Dedupe %llu tail data at %llu", inode->fragment_size | 0ULL,
--		  inode->fragmentoff | 0ULL);
--out:
- 	free(data);
--	return ret;
-+	if (deduped) {
-+		DBG_BUGON(!di);
-+		inode->fragment_size = deduped;
-+		inode->fragmentoff = di->pos + di->length - deduped;
-+		erofs_dbg("Dedupe %llu tail data at %llu",
-+			  inode->fragment_size | 0ULL, inode->fragmentoff | 0ULL);
-+	}
-+	return 0;
- }
- 
- int z_erofs_fragments_dedupe(struct erofs_inode *inode, int fd, u32 *tofcrc)
-@@ -186,10 +173,10 @@ static int z_erofs_fragments_dedupe_insert(struct list_head *hash, void *data,
- 
- 	if (len <= EROFS_TOF_HASHLEN)
- 		return 0;
--	if (len > EROFS_CONFIG_COMPR_MAX_SZ) {
--		data += len - EROFS_CONFIG_COMPR_MAX_SZ;
--		pos += len - EROFS_CONFIG_COMPR_MAX_SZ;
--		len = EROFS_CONFIG_COMPR_MAX_SZ;
-+	if (len > EROFS_FRAGMENT_INMEM_SZ_MAX) {
-+		data += len - EROFS_FRAGMENT_INMEM_SZ_MAX;
-+		pos += len - EROFS_FRAGMENT_INMEM_SZ_MAX;
-+		len = EROFS_FRAGMENT_INMEM_SZ_MAX;
- 	}
- 	di = malloc(sizeof(*di) + len);
- 	if (!di)
--- 
-2.43.5
+Best wishes,
 
+Hongzhen Luo
+
+>> +    struct erofs_inode *vi;
+>> +    struct file *file = rac->file;
+>> +    struct erofs_pcshr_private *ano_private;
+>> +
+>> +    if (!(file && file->private_data))
+>> +        return 0;
+>> +
+>> +    vi = file->private_data;
+>> +    if (vi->ano_inode != file_inode(file))
+>> +        return 0;
+>> +
+>> +    ano_private = file_inode(file)->i_private;
+>> +    mutex_lock(&ano_private->mutex);
+>> +    rac->mapping->host = &vi->vfs_inode;
+>> +    return 1;
+>> +}
+>> +
+>> +void erofs_pcshr_readahead_end(struct readahead_control *rac, int 
+>> pcshr)
+>> +{
+>> +    struct erofs_pcshr_private *ano_private;
+>> +
+>> +    if (pcshr == 0)
+>> +        return;
+>> +
+>> +    ano_private = file_inode(rac->file)->i_private;
+>> +    rac->mapping->host = file_inode(rac->file);
+>> +    mutex_unlock(&ano_private->mutex);
+>> +}
+>> diff --git a/fs/erofs/pagecache_share.h b/fs/erofs/pagecache_share.h
+>> index f3889d6889e5..abda2a60278b 100644
+>> --- a/fs/erofs/pagecache_share.h
+>> +++ b/fs/erofs/pagecache_share.h
+>> @@ -14,6 +14,12 @@ void erofs_pcshr_free_mnt(void);
+>>   int erofs_pcshr_fill_inode(struct inode *inode);
+>>   void erofs_pcshr_free_inode(struct inode *inode);
+>>   +/* switch between the anonymous inode and the real inode */
+>> +int erofs_pcshr_read_begin(struct file *file, struct folio *folio);
+>> +void erofs_pcshr_read_end(struct file *file, struct folio *folio, 
+>> int pcshr);
+>> +int erofs_pcshr_readahead_begin(struct readahead_control *rac);
+>> +void erofs_pcshr_readahead_end(struct readahead_control *rac, int 
+>> pcshr);
+>> +
+>>   #else
+>>     static inline int erofs_pcshr_init_mnt(void) { return 0; }
+>> @@ -21,6 +27,11 @@ static inline void erofs_pcshr_free_mnt(void) {}
+>>   static inline int erofs_pcshr_fill_inode(struct inode *inode) { 
+>> return -1; }
+>>   static inline void erofs_pcshr_free_inode(struct inode *inode) {}
+>>   +static inline int erofs_pcshr_read_begin(struct file *file, struct 
+>> folio *folio) { return 0; }
+>> +static inline void erofs_pcshr_read_end(struct file *file, struct 
+>> folio *folio, int pcshr) {}
+>> +static inline int erofs_pcshr_readahead_begin(struct 
+>> readahead_control *rac) { return 0; }
+>> +static inline void erofs_pcshr_readahead_end(struct 
+>> readahead_control *rac, int pcshr) {}
+>> +
+>>   #endif // CONFIG_EROFS_FS_PAGE_CACHE_SHARE
+>>     #endif
+>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>> index b4ce07dc931c..1b690eb6c1f1 100644
+>> --- a/fs/erofs/super.c
+>> +++ b/fs/erofs/super.c
+>> @@ -13,6 +13,7 @@
+>>   #include <linux/backing-dev.h>
+>>   #include <linux/pseudo_fs.h>
+>>   #include "xattr.h"
+>> +#include "pagecache_share.h"
+>>     #define CREATE_TRACE_POINTS
+>>   #include <trace/events/erofs.h>
+>> @@ -81,6 +82,7 @@ static void erofs_free_inode(struct inode *inode)
+>>   {
+>>       struct erofs_inode *vi = EROFS_I(inode);
+>>   +    erofs_pcshr_free_inode(inode);
+>>       if (inode->i_op == &erofs_fast_symlink_iops)
+>>           kfree(inode->i_link);
+>>       kfree(vi->xattr_shared_xattrs);
+>> @@ -683,6 +685,10 @@ static int erofs_fc_fill_super(struct 
+>> super_block *sb, struct fs_context *fc)
+>>       if (err)
+>>           return err;
+>>   +    err = erofs_pcshr_init_mnt();
+>> +    if (err)
+>> +        return err;
+>> +
+>>       erofs_info(sb, "mounted with root inode @ nid %llu.", 
+>> sbi->root_nid);
+>>       return 0;
+>>   }
+>> @@ -818,6 +824,7 @@ static void erofs_kill_sb(struct super_block *sb)
+>>           kill_anon_super(sb);
+>>       else
+>>           kill_block_super(sb);
+>> +    erofs_pcshr_free_mnt();
+>>       fs_put_dax(sbi->dif0.dax_dev, NULL);
+>>       erofs_fscache_unregister_fs(sb);
+>>       erofs_sb_free(sbi);
+>> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+>> index 19ef4ff2a134..fc2ed01eaabe 100644
+>> --- a/fs/erofs/zdata.c
+>> +++ b/fs/erofs/zdata.c
+>> @@ -5,6 +5,7 @@
+>>    * Copyright (C) 2022 Alibaba Cloud
+>>    */
+>>   #include "compress.h"
+>> +#include "pagecache_share.h"
+>>   #include <linux/psi.h>
+>>   #include <linux/cpuhotplug.h>
+>>   #include <trace/events/erofs.h>
+>> @@ -1891,9 +1892,10 @@ static int z_erofs_read_folio(struct file 
+>> *file, struct folio *folio)
+>>   {
+>>       struct inode *const inode = folio->mapping->host;
+>>       struct z_erofs_decompress_frontend f = 
+>> DECOMPRESS_FRONTEND_INIT(inode);
+>> -    int err;
+>> +    int err, pcshr;
+>>         trace_erofs_read_folio(folio, false);
+>> +    pcshr = erofs_pcshr_read_begin(file, folio);
+>>       f.headoffset = (erofs_off_t)folio->index << PAGE_SHIFT;
+>>         z_erofs_pcluster_readmore(&f, NULL, true);
+>> @@ -1909,6 +1911,7 @@ static int z_erofs_read_folio(struct file 
+>> *file, struct folio *folio)
+>>         erofs_put_metabuf(&f.map.buf);
+>>       erofs_release_pages(&f.pagepool);
+>> +    erofs_pcshr_read_end(file, folio, pcshr);
+>>       return err;
+>>   }
+>>   @@ -1918,8 +1921,9 @@ static void z_erofs_readahead(struct 
+>> readahead_control *rac)
+>>       struct z_erofs_decompress_frontend f = 
+>> DECOMPRESS_FRONTEND_INIT(inode);
+>>       struct folio *head = NULL, *folio;
+>>       unsigned int nr_folios;
+>> -    int err;
+>> +    int err, pcshr;
+>>   +    pcshr = erofs_pcshr_readahead_begin(rac);
+>>       f.headoffset = readahead_pos(rac);
+>>         z_erofs_pcluster_readmore(&f, rac, true);
+>> @@ -1947,6 +1951,7 @@ static void z_erofs_readahead(struct 
+>> readahead_control *rac)
+>>       (void)z_erofs_runqueue(&f, nr_folios);
+>>       erofs_put_metabuf(&f.map.buf);
+>>       erofs_release_pages(&f.pagepool);
+>> +    erofs_pcshr_readahead_end(rac, pcshr);
+>>   }
+>>     const struct address_space_operations z_erofs_aops = {
