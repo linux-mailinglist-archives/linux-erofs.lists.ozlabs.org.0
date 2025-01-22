@@ -1,48 +1,79 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E531A1909E
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2025 12:28:18 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 169A0A191EF
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2025 13:59:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1737550785;
+	bh=7op0893ajnBJ7/q77hQr7a6nEyYc+26OcR8rB/5KAIA=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=LpCp9SGv6P0biwKBK9SJ/RSAwnnd/ix4ABm7eOXR5NppJvwEIs7epEtNHEhQkVboD
+	 QJ8So775hoPKVFrFR79xyh4hdkpnMMAsCx4lGXedDyENoMtZHQhod5ii5DubROmwU8
+	 mLMUPZf6TZ9/Pqdvhw8XiRFsxLydfzvEPxvDWdbiyUEE+dHX1R65/J2mCfvctmDB9w
+	 lLC0R8CbF/rSHU3mi0kvZHqYZYdypikMmN79KmC5slRsgmr/83MvN56n1s3IqtImj/
+	 iZ37zjuik1/CJZ9Y/s4udycu3sRUV1y6nPmwlk5UK6L8VfqIUmmABfU93nfxTH7NzQ
+	 pzkrvGnrDWufQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YdMJb450Hz2ysW
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2025 22:28:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YdPL92tm9z3041
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2025 23:59:45 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=104.223.121.39
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737545294;
-	cv=none; b=dF82nHflGeV/9AzefQuLZrX1f6tOiPtGUjc+b8h35YI7WsdlVvi1USfJJKKNjB4znA7qqPOLoxZ5Zwvx1C+3v0/goZdGsALrRpFu8SHndCgIaHOXXXngiO5OzwZUDt5B7JMAOKWCmvmI+iEhfw4gdoBZPGTNRh6sjKuYB+IkviJaqBzytr3AAuTaQ6HmBuhbuIzp9cKm1BgD17DSTLSg24XQld3WwsSxF8JRBzeK4x2ul+mAyZBGQI5koEZ5J72W43sdrJTsjgKI7mNl7JnS994yD5Dr2UN1mnYz42bdoP/hSzIcUmIfhS0k2J2h8bdv5YkgiODtbaIa/bI8KiV6pA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737550783;
+	cv=none; b=RWAQQkhq9DZz6LsbcMWis6/tbmMDdv6hF1kuAz3wDKdlPYBNd7o/J5FBW2pZiUbdh061y1e3WYoEFPiFrVCJleUABGd1mXQ8ZuTgMLMHeYeb80qInh/4F4VY9+BWkdk7Gx/QfYJwwcGAErmQ+fCeKZ+jqNPWilr81H/vC9wUL3z1g1bM+kyVKovscPYmf0QC/NXCXvTQ5I4eMEzqfJ+bd7KHJtD2G9qs/4PS0oSQ5KzTt/TX8lBw2d3hwad4R50V8fUNnbLtUVRIJp/jGETr94s0Ttz9DFdLJ45o9OdIanVZeMHHQZf6mUjptbbzGiL57+ncvJcYBbbqelMHjkcv8A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1737545294; c=relaxed/relaxed;
-	bh=U9eXgDojy1IB352K4SSkg8Tnf+YXa4ado7v6NWvJKKA=;
-	h=To:Subject:Message-ID:Date:From:MIME-Version:Content-Type; b=XsCRmMAwXneaxaCzD7GCEaXX81xjDuPYvgKYP0Or3e0t06rJxz5De0PEI6ukIXbXdyIPIhDBP6fJ+e+F9/sKHd7e6fiEbFft1RJYiuZKH4WHw37bQMY0BUKGonD1TH50x6KirfiIUk1oDr/ZjXTQl/uxvZ21fGA/cqWbBplC3e7m1GIPZMTcc7oclikO35O8tB+s/OOEG2je7CG8HCGs+Ea4ic4tBm+nJwJKbYUwcslgqn4LCPajHWHGZwfO/jATaiKqBNRH1QLOhDbc952fmh8IKDyDV8xtnvxORkWtp3bBZb7DqiQodIAlzbch30Tpbelmu4csJYTqTPFgxdtjFg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jlmsx.net; dkim=pass (1024-bit key; unprotected) header.d=jlmsx.net header.i=@jlmsx.net header.a=rsa-sha256 header.s=default header.b=KrPvkHJw; dkim-atps=neutral; spf=pass (client-ip=104.223.121.39; helo=ctl-8.cee.tow.roav.cn; envelope-from=debounceut@jlmsx.net; receiver=lists.ozlabs.org) smtp.mailfrom=jlmsx.net
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jlmsx.net
+	t=1737550783; c=relaxed/relaxed;
+	bh=7op0893ajnBJ7/q77hQr7a6nEyYc+26OcR8rB/5KAIA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dhhs8YopUCMauVnydb08i7EcCzo7dyxJhcoLbaJs6fRZIcxnxg0ZhnmTIG0zZt8Ty/SXDENcyJ8m+uOoIi2pPW7qFSu8JnOvWvGRAjzDk1An+8zYD55tAIPZuAQAymIGyHM7CK2jOpRB9CJxFu5WYoOHMF799qttCA320KkmsYaEkOPCHBkh0xGZfZq9gafInDrXB8WuF5TRBPcdV9a9m8RM+ooKqsGVISL9fShjSfA732QW/ZyaZikpOEDBPJHDC59WmNsBKs6GDOdxtR/Vp7PofluSgLIhYXEMQf6Nv8CYSPbdmsAxEMIW6MMsuZNiD84ItPlWYzLOFhtZZhjY1Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=eUCNwC3o; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=jlmsx.net header.i=@jlmsx.net header.a=rsa-sha256 header.s=default header.b=KrPvkHJw;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=eUCNwC3o;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=jlmsx.net (client-ip=104.223.121.39; helo=ctl-8.cee.tow.roav.cn; envelope-from=debounceut@jlmsx.net; receiver=lists.ozlabs.org)
-X-Greylist: delayed 3622 seconds by postgrey-1.37 at boromir; Wed, 22 Jan 2025 22:28:13 AEDT
-Received: from ctl-8.cee.tow.roav.cn (ctl-8.cee.tow.roav.cn [104.223.121.39])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YdMJY3vwLz2yFQ
-	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Jan 2025 22:28:13 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=jlmsx.net;
- h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
- bh=U9eXgDojy1IB352K4SSkg8Tnf+YXa4ado7v6NWvJKKA=;
- b=KrPvkHJwIseRrnSRpa/XP6ri9FlwmqUzxZTNohyPx8+dZ603vjjPLTxr7TOuDfQqHVgKBQ3CwoTa
-   V2m0owzoz/eXR/xNOei6r+GSJGcK/vct/9jOG3acX+3Qj5i7Lup3HHVFcUhVLqlyTDMV1lbFAEBw
-   jWfGIFxtvcPt5AuA2aU=
-To: linux-erofs@lists.ozlabs.org
-Subject: how to upgrade your ebike for better performance
-Message-ID: <2136dcae135af2085c7707996b9540ca@belecke.de>
-Date: Wed, 22 Jan 2025 09:33:59 +0100
-From: "Alex" <electricif@jlmsx.net>
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YdPL66Dy7z2yvs
+	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Jan 2025 23:59:42 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 5B77D5C5E51;
+	Wed, 22 Jan 2025 12:59:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF56C4CED6;
+	Wed, 22 Jan 2025 12:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737550780;
+	bh=1O7EjoRi0846T1wB/xCHnXnCV0yisP9eHE9Wd/n21TY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eUCNwC3od4iDd3W1bJWmIdrRBnggFd1cAG0nRXhKvP88WXWPW54fSQjpH82E08Ltj
+	 Ukb0gr5Y6gkYkqzCRXZB86NkRuDqsgjX/Yr5eqC09T87m1N7yNl05mEIqmAQ4OhSlJ
+	 8cck40kthlsp8r5MDUibtrlwOh0fJ1q9SMUZZSfdY8zMMnqE2AXwTmCvhN8buQhCrD
+	 8VdkBN+Dj0xUlna+oNwACJ7nBnWA8/kr7WKCXYPEXVMziL+QWrJREHHH5CJa/YOz18
+	 96O3EpUC/57gfoOKg72l7P6FRxCfJs3+mLL/w94w/g+fcG6Ms/86DbnioCShDMP++b
+	 Dh+pNuKqwCpLw==
+Date: Wed, 22 Jan 2025 13:59:34 +0100
+To: Andreas Gruenbacher <agruenba@redhat.com>
+Subject: Re: [PATCH 8/8] gfs2: use lockref_init for qd_lockref
+Message-ID: <20250122-juckreiz-weiden-ee15107fd277@brauner>
+References: <20250116043226.GA23137@lst.de>
+ <20250115094702.504610-1-hch@lst.de>
+ <20250115094702.504610-9-hch@lst.de>
+ <CAHc6FU58eBO0i8er5+gK--eAMVHULCzHPnJ9H5oN12fr=AAnbg@mail.gmail.com>
+ <20250117160352.1881139-1-agruenba@redhat.com>
+ <20250120-tragbar-ertrinken-24f2bbc2beb4@brauner>
+ <CAHc6FU6EpaAyzFPdJUa97ZZP76PHxJb-vP8+tzcZFRYT5bZeGQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/html; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,HTML_IMAGE_RATIO_02,HTML_MESSAGE,
-	MIME_HTML_ONLY,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+In-Reply-To: <CAHc6FU6EpaAyzFPdJUa97ZZP76PHxJb-vP8+tzcZFRYT5bZeGQ@mail.gmail.com>
+X-Spam-Status: No, score=-0.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -56,71 +87,44 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Reply-To: ebikepro@jlmsx.net
+From: Christian Brauner via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Christian Brauner <brauner@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>, gfs2@lists.linux.dev, Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-<html>
-<head>
-</head>
-<body>
-Hi,<br /> <br /> I hope this message finds you well. We are excited to
-introduce our latest breakthrough in the e-bike world &ndash; the City
-Explorer. As a leader in the industry, we've designed this model to elevate
-your cycling experience with cutting-edge features and a sleek, modern
-look.<br /> <br /> The City Explorer combines advanced technology, superior
-comfort, and an intuitive design, making it the perfect choice for riders
-who value performance, style, and versatility. Whether you're navigating
-city streets or venturing on off-road trails, this e-bike ensures a smooth,
-fast, and enjoyable ride.<br /> <br /> Shipped directly from our warehouse
-in Germany, we offer quick and reliable shipment to any EU destination
-within 3 to 7 days.<br /> <br /> Should you have any questions, need
-additional information, or are ready to purchase, please provide your
-address, and we will send you a precise quote.<br /><br /><img
-src="https://thebikestoreonline.com/cdn/shop/products/81_0e247be7-cf89-4a08-853f-41610bbda6e8_713x.jpg"
-width="713" height="713" /><br /><img
-src="https://thebikestoreonline.com/cdn/shop/products/82_713x.jpg"
-width="713" height="713" /><br /><img
-src="https://thebikestoreonline.com/cdn/shop/products/15_713x.jpg"
-width="713" height="713" /><br /><img
-src="https://thebikestoreonline.com/cdn/shop/products/8_1100x.jpg"
-width="800" height="800" /><br /><br /> <br /> Key Features of the City
-Explorer:<br /> Dual Suspension System for Maximum Comfort<br /> <br /> The
-City Explorer features an 80mm front air suspension for a smooth ride over
-uneven surfaces. The rear suspension effectively absorbs shocks, making it
-ideal for long-distance rides or adventurous off-road journeys. Whether on
-paved roads or rugged terrain, this e-bike guarantees steady handling and
-unparalleled comfort.<br /> <br /> Impressive 500W Motor<br /> Equipped
-with a powerful 500W motor, the City Explorer reaches speeds of up to 45
-km/h. Whether cruising through urban environments, tackling steep inclines,
-or riding in challenging conditions, this e-bike offers the power needed
-for a thrilling, efficient ride.<br /> <br /> Long-Lasting 48V 15AH
-Lithium-Ion Battery<br /> The 48V 15AH battery provides a range of
-65&ndash;85 km per charge, depending on riding conditions and selected
-power mode. This durable, removable battery is both dustproof and
-waterproof, offering lasting convenience. Recharge it easily at home, work,
-or on the go to stay ready for your next journey.<br /> <br /> Compact and
-Foldable Design<br /> Weighing just 28 kg and measuring 84 x 40 x 76 cm
-when folded, the City Explorer is perfect for those on the go. It's easy to
-carry and store, making it an ideal choice for commuters and travelers.<br
-/> <br /> Enhanced User Experience<br /> The LCD display keeps you informed
-with real-time data on speed, battery status, assistance level, and
-distance traveled. The mechanical disc brakes, front and rear, provide
-reliable stopping power in all conditions. Front and rear lights ensure
-excellent visibility for safe night rides.<br /> <br /> Choose from three
-assistance levels and a 7-speed gear system to tailor your ride for various
-terrains and personal preferences.<br /> <br /> Additional Features:<br />
-20-inch Fat Tires: Offering maximum stability and comfort on any surface,
-whether pavement, gravel, or snow.<br /> Lightweight Aluminum Frame: A
-perfect balance of strength and style for daily use.<br /> Sleek, Modern
-Design: The City Explorer stands out with its contemporary, attractive
-appearance.<br /> We're confident the City Explorer will enhance your daily
-commute and take your outdoor adventures to the next level. With fast
-shipment from Germany, your next adventure is just a few clicks away.<br />
-<br /> If you have any questions, need more information, or are ready to
-make a purchase, don't hesitate to contact us. Simply provide your address,
-and we'll provide a tailored quote.<br /> <br /> Warm regards,<br /> Alex
-M&uuml;ller<br /> City Explorer Factory<br />
-</body>
-</html>
+On Mon, Jan 20, 2025 at 04:44:59PM +0100, Andreas Gruenbacher wrote:
+> On Mon, Jan 20, 2025 at 4:25 PM Christian Brauner <brauner@kernel.org> wrote:
+> > On Fri, Jan 17, 2025 at 05:03:51PM +0100, Andreas Gruenbacher wrote:
+> > > On Thu, 16 Jan 2025 05:32:26 +0100, Christoph Hellwig <hch@lst.de> wrote:
+> > > > Well, if you can fix it to start with 1 we could start out with 1
+> > > > as the default.  FYI, I also didn't touch the other gfs2 lockref
+> > > > because it initialize the lock in the slab init_once callback and
+> > > > the count on every initialization.
+> > >
+> > > Sure, can you add the below patch before the lockref_init conversion?
+> > >
+> > > Thanks,
+> > > Andreas
+> > >
+> > > --
+> > >
+> > > gfs2: Prepare for converting to lockref_init
+> > >
+> > > First, move initializing the glock lockref spin lock from
+> > > gfs2_init_glock_once() to gfs2_glock_get().
+> > >
+> > > Second, in qd_alloc(), initialize the lockref count to 1 to cover the
+> > > common case.  Compensate for that in gfs2_quota_init() by adjusting the
+> > > count back down to 0; this case occurs only when mounting the filesystem
+> > > rw.
+> > >
+> > > Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+> > > ---
+> >
+> > Can you send this as a proper separae patch, please?
+> 
+> Do you want this particular version which applies before Christoph's
+> patches or something that applies on top of Christoph's patches?
 
+On top, if you don't mind. Thank you!
