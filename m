@@ -2,49 +2,48 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06E31A18DB2
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2025 09:43:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E531A1909E
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2025 12:28:18 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YdHf36nHcz2ydG
-	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2025 19:43:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YdMJb450Hz2ysW
+	for <lists+linux-erofs@lfdr.de>; Wed, 22 Jan 2025 22:28:15 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=193.42.36.43
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737535386;
-	cv=none; b=DgtAwvBTQmdpDYJLO45T9EdjLxwj3GDys4EGvE8pKnr/DmljoxvlkDOnm+rrR65nUxW8uFeGTzoQ6dHm8SfG+uLlU3A3DhyLogjVsLlmAhEVadnRPFP9ATWg3ONS0NWXvmqA2aHJMvlXLN0ooNhmV92EpaLpwN7reGMCcZ1otDjt87FGLQeG4g9YDGuEUtOJvdAZD8OO9sdPOibBm1Sa6usL2B6B/dgE+vSSe4KF5E7FAG/XG86kXfYekM+PZEZObI2OX9sRNT5CVm+K63YxZ3ItuyTT2lEx460xFWVn60uZtgN5OfPQSPO0Z0GSZhRHlG6dTLdwIKQVlkPPOfl0qA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=104.223.121.39
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737545294;
+	cv=none; b=dF82nHflGeV/9AzefQuLZrX1f6tOiPtGUjc+b8h35YI7WsdlVvi1USfJJKKNjB4znA7qqPOLoxZ5Zwvx1C+3v0/goZdGsALrRpFu8SHndCgIaHOXXXngiO5OzwZUDt5B7JMAOKWCmvmI+iEhfw4gdoBZPGTNRh6sjKuYB+IkviJaqBzytr3AAuTaQ6HmBuhbuIzp9cKm1BgD17DSTLSg24XQld3WwsSxF8JRBzeK4x2ul+mAyZBGQI5koEZ5J72W43sdrJTsjgKI7mNl7JnS994yD5Dr2UN1mnYz42bdoP/hSzIcUmIfhS0k2J2h8bdv5YkgiODtbaIa/bI8KiV6pA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1737535386; c=relaxed/relaxed;
+	t=1737545294; c=relaxed/relaxed;
 	bh=U9eXgDojy1IB352K4SSkg8Tnf+YXa4ado7v6NWvJKKA=;
-	h=To:Subject:Message-ID:Date:From:MIME-Version:Content-Type; b=nsP58UZHit1y7GgcmiMTcLUC6cv3NVMqJPbP5S9U+jHyJgjNv8xQXJlhsQGcN9ZfKc7Noe+BFuUa1Mn/Gs9G/Ruzse5nMdV8ZbkGf0cJic49sv9xRke3ZDRbLr6LgQsk+D5DdHp8CncgRKZrnnCpa31RAM6kke4khhltcD1B4XtKsyCUhFLTA1UiUXPvgJqLurznvOHWCEDqAJQL1iEcu/ERv0abDbn35WhEioK2EcTSCVcNKQbV1GdvpP8CAuBM7pVud1dfHHRSPn0UXt6ST8aZ99MvEOkFY42TWSxJJ7rSD/Mh6KUByt5Qkqy4lvYgX9/NfIYv952p81+wvVVSMg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jlmsx.net; dkim=pass (1024-bit key; unprotected) header.d=jlmsx.net header.i=@jlmsx.net header.a=rsa-sha256 header.s=default header.b=RB3Y5Yru; dkim-atps=neutral; spf=pass (client-ip=193.42.36.43; helo=rtl-8.lee.few.panwen.net; envelope-from=debouncebu@jlmsx.net; receiver=lists.ozlabs.org) smtp.mailfrom=jlmsx.net
+	h=To:Subject:Message-ID:Date:From:MIME-Version:Content-Type; b=XsCRmMAwXneaxaCzD7GCEaXX81xjDuPYvgKYP0Or3e0t06rJxz5De0PEI6ukIXbXdyIPIhDBP6fJ+e+F9/sKHd7e6fiEbFft1RJYiuZKH4WHw37bQMY0BUKGonD1TH50x6KirfiIUk1oDr/ZjXTQl/uxvZ21fGA/cqWbBplC3e7m1GIPZMTcc7oclikO35O8tB+s/OOEG2je7CG8HCGs+Ea4ic4tBm+nJwJKbYUwcslgqn4LCPajHWHGZwfO/jATaiKqBNRH1QLOhDbc952fmh8IKDyDV8xtnvxORkWtp3bBZb7DqiQodIAlzbch30Tpbelmu4csJYTqTPFgxdtjFg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jlmsx.net; dkim=pass (1024-bit key; unprotected) header.d=jlmsx.net header.i=@jlmsx.net header.a=rsa-sha256 header.s=default header.b=KrPvkHJw; dkim-atps=neutral; spf=pass (client-ip=104.223.121.39; helo=ctl-8.cee.tow.roav.cn; envelope-from=debounceut@jlmsx.net; receiver=lists.ozlabs.org) smtp.mailfrom=jlmsx.net
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=jlmsx.net
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=jlmsx.net header.i=@jlmsx.net header.a=rsa-sha256 header.s=default header.b=RB3Y5Yru;
+	dkim=pass (1024-bit key; unprotected) header.d=jlmsx.net header.i=@jlmsx.net header.a=rsa-sha256 header.s=default header.b=KrPvkHJw;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=jlmsx.net (client-ip=193.42.36.43; helo=rtl-8.lee.few.panwen.net; envelope-from=debouncebu@jlmsx.net; receiver=lists.ozlabs.org)
-X-Greylist: delayed 3623 seconds by postgrey-1.37 at boromir; Wed, 22 Jan 2025 19:43:06 AEDT
-Received: from rtl-8.lee.few.panwen.net (rtl-8.lee.few.panwen.net [193.42.36.43])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YdHf21RwTz2xt7
-	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Jan 2025 19:43:06 +1100 (AEDT)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=jlmsx.net (client-ip=104.223.121.39; helo=ctl-8.cee.tow.roav.cn; envelope-from=debounceut@jlmsx.net; receiver=lists.ozlabs.org)
+X-Greylist: delayed 3622 seconds by postgrey-1.37 at boromir; Wed, 22 Jan 2025 22:28:13 AEDT
+Received: from ctl-8.cee.tow.roav.cn (ctl-8.cee.tow.roav.cn [104.223.121.39])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YdMJY3vwLz2yFQ
+	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Jan 2025 22:28:13 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=jlmsx.net;
  h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
  bh=U9eXgDojy1IB352K4SSkg8Tnf+YXa4ado7v6NWvJKKA=;
- b=RB3Y5Yrutsr4X9INCrckGWCJ9jSsUVzPP1V5M38eSALda0zG5JTAQvmTFzlC9N71aXPta3DGMK0Y
-   +uIxbhkEh3bf4VkCz1eaI6FF76EWs4yLcgQEuho35xI9T3VYRl++f5viN5rOCclZGNxx/2mJTJHW
-   xn80pUpLyfWqnuSs7rw=
+ b=KrPvkHJwIseRrnSRpa/XP6ri9FlwmqUzxZTNohyPx8+dZ603vjjPLTxr7TOuDfQqHVgKBQ3CwoTa
+   V2m0owzoz/eXR/xNOei6r+GSJGcK/vct/9jOG3acX+3Qj5i7Lup3HHVFcUhVLqlyTDMV1lbFAEBw
+   jWfGIFxtvcPt5AuA2aU=
 To: linux-erofs@lists.ozlabs.org
-Subject: ebike vs traditional bike: which one is better?
-Message-ID: <8d7b069618915af5142e931f5a3991ac@belecke.de>
-Date: Wed, 22 Jan 2025 08:43:30 +0100
-From: "Alex" <electricpr@jlmsx.net>
+Subject: how to upgrade your ebike for better performance
+Message-ID: <2136dcae135af2085c7707996b9540ca@belecke.de>
+Date: Wed, 22 Jan 2025 09:33:59 +0100
+From: "Alex" <electricif@jlmsx.net>
 MIME-Version: 1.0
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=4.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,HTML_IMAGE_RATIO_02,HTML_MESSAGE,
-	MIME_HTML_ONLY,RCVD_IN_MSPIKE_H2,RCVD_IN_SBL_CSS,RCVD_IN_VALIDITY_RPBL,
-	SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.0
-X-Spam-Level: ****
+	MIME_HTML_ONLY,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+	autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
