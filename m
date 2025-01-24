@@ -1,46 +1,46 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0717DA1A04A
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Jan 2025 10:01:33 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED2D9A1AED8
+	for <lists+linux-erofs@lfdr.de>; Fri, 24 Jan 2025 03:47:29 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Ydw0k2Hmvz304s
-	for <lists+linux-erofs@lfdr.de>; Thu, 23 Jan 2025 20:01:26 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YfMfl0jPnz30QX
+	for <lists+linux-erofs@lfdr.de>; Fri, 24 Jan 2025 13:47:27 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737622884;
-	cv=none; b=cbiQQs1qgQ1xruAnH8PEVjA4stsYFyBu0ic7Zss65aHsfGZSB8s38ir01uGMCZVbU4SzyXuaaGVIhW2xv2etJ5vLvt+9rHL8n0ovHitCnOCo6yF2xQ1GGH9URjF+oHqQIKVRR59edhdcxU7Jjf7F7cipYM11IrdF544Mdvp2Ie/Vov7LebjUiUOT4NbFD90FhiZcokqhvzvy+vj7tIdEJfJcfnkOXMI5r7U4e4U4fArw4H/cAPwczXMumd1niiQTuuKpuwrAG2LvUDKb+HdyN02Lp4XWhSVkFlo9ZbwmUl7SX3VLj3ANt03YYFeiTndLofdDKji9hOKGA+x5jwUdFQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737686845;
+	cv=none; b=moBWoYsQeJ0lqbvhtEWtj10S6qhw/5+vl5LRXlQlzyRar9obYWXDM5q9Uc13yVeaWKJg5CZ8cn0Rn4VNDXII1JWvuMzERCRDZL8ARxI+y/zryclRAafbqcWelmuxrs+LNRTcJ/6gzSvJGQJlP9xRvHiGmvscTnhZzqUpjmou1ZhxSpHm+Nphp/TXn90qyPOSrwAmoAo3f627qYIwMYTJpEzyFZQ7KJcgUNxMmRrPHPmNFRGbNroFJ1nOL2PtdCBIyhYbsHU4/eiGgF3Lmkbr78lAmKrXF5YvrvjqS3Y7K/snolvXFtodqJ270xL1AaRQrxp/yQk8ZUJjkAwd9aGYag==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1737622884; c=relaxed/relaxed;
-	bh=PpA2IB08pHCZzk9POa/pWBkRxPW6FVtTAzux8QczCPc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ing/VjkyFUfDQwaa5zYMOc26g1d4a7+xjSV7RKCGaAd7+33YphFm9xjb0dzKR48pX60MSvGX0UtVQSXzcMpNJ5PcYybVIOnK3+9aHVVJPIv1GYwVW9oJmZUSMwBBc9JBqz3/1C02lWFRlSZWI18PZmXnVBMGMpa4iDkshI30iPqduR3j6Bt9z+0I1ZeJKgBuSC38XQR6XU+sVCu5bhajGr9rnnkEZLkVLALjwUWPou0KLGMdu/gqaQFzC5V0Qh4EACbwmG86aEdPLSyu67/4XtmLogN6FEDWOIeIi0OFYvoQGrMsSwQq6QwsVNHwAfZyIeQ/vmO6aKe2SECJq7deiA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=F2OiD4BZ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1737686845; c=relaxed/relaxed;
+	bh=omVyYtcfGHSsIbFE2TsLXX+Zn6woRsryFWRi+UlB2T0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M30B3JVXOhFkTGN5EDlD9FKq5cKhfuD1iZbKZznBvyCES3fVqDIiAbXHYYJw4Gn6C8ikCqgTm8I8s+uAQ06dBPvupAdfVeA/zqC4EYYUWw4FBKlJ9jtYnz9url70Pw5+OFwJszpLamZ+VCFCS0Cr6jKuOBznquPzfeDefvZUI31twG0YoYOeSgYa3ZcmMbum0U6nfXVabSxzuhHVnL5JxEQhZY4E/EHLh8vynyp6fozsyjGzQztws670kLHmJHwSfiqBmJ1CSBkEMsFDqtMsnvIb2/EmOHzPpcrvwHo377qy1XpM4vTI1vq8R93O+JcYltFG6TjJv4a0G+BaZaiLMg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kpM+z0kv; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=F2OiD4BZ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kpM+z0kv;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Ydw0g2TBnz2yyx
-	for <linux-erofs@lists.ozlabs.org>; Thu, 23 Jan 2025 20:01:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YfMfh0jyhz2yMF
+	for <linux-erofs@lists.ozlabs.org>; Fri, 24 Jan 2025 13:47:22 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1737622876; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=PpA2IB08pHCZzk9POa/pWBkRxPW6FVtTAzux8QczCPc=;
-	b=F2OiD4BZ1uw4jSJcYdkQy+1mHz8seJtTuKVnycSgYrjYAlgOU6XzgBg5scbh7++XI9NmgrGb2QcIAA7DG+tPdnHI2FPp5yN/CX80yEYCR625y6+RvE/daUUxhe5GBPjxhimH+frncWtQW2bqTFtxsnDgJGYiojxEzg+y88N0fjs=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOBAKEy_1737622870 cluster:ay36)
+	t=1737686837; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=omVyYtcfGHSsIbFE2TsLXX+Zn6woRsryFWRi+UlB2T0=;
+	b=kpM+z0kvi8ZyKurrfcserJs642kZcz8uqtXW4CQEmCuG/3mLog0GGV7f24qZPrR+lTWe2lq1U/woEpENH7TW5K5AtsrAX3bgJ4YI6gPneuwgPEGFaXyEFKkk84+8pr+62rcCzZT+jJXQ6I1Vb70TqTcsPnPYiGgJYzpImzh7iwA=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOD30dn_1737686832 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 23 Jan 2025 17:01:15 +0800
+          Fri, 24 Jan 2025 10:47:16 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: refine z_erofs_get_extent_compressedlen()
-Date: Thu, 23 Jan 2025 17:01:09 +0800
-Message-ID: <20250123090109.973463-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: manpages: update new option of mkfs.erofs
+Date: Fri, 24 Jan 2025 10:47:11 +0800
+Message-ID: <20250124024711.2320620-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -60,92 +60,85 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
- - Set `compressedblks = 1` directly for non-bigpcluster cases.  This
-   simplifies the logic a bit since lcluster sizes larger than one block
-   are unsupported and the details remain unclear.
-
- - For Z_EROFS_LCLUSTER_TYPE_PLAIN pclusters, avoid assuming
-   `compressedblks = 1` by default.  Instead, check if
-   Z_EROFS_ADVISE_BIG_PCLUSTER_2 is set.
-
-It basically has no impact to existing valid images, but it's useful to
-find the gap to prepare for large PLAIN pclusters.
+Add `-E fragdedupe` and revise some descriptions.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/zmap.c | 36 ++++++++++++++++--------------------
- 1 file changed, 16 insertions(+), 20 deletions(-)
+ man/mkfs.erofs.1 | 33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index b9e35089c9b8..689437e99a5a 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -294,27 +294,23 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
- static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 					    unsigned int initial_lcn)
- {
--	struct super_block *sb = m->inode->i_sb;
--	struct erofs_inode *const vi = EROFS_I(m->inode);
--	struct erofs_map_blocks *const map = m->map;
--	const unsigned int lclusterbits = vi->z_logical_clusterbits;
--	unsigned long lcn;
-+	struct inode *inode = m->inode;
-+	struct super_block *sb = inode->i_sb;
-+	struct erofs_inode *vi = EROFS_I(inode);
-+	bool bigpcl1 = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1;
-+	bool bigpcl2 = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2;
-+	unsigned long lcn = m->lcn + 1;
- 	int err;
- 
--	DBG_BUGON(m->type != Z_EROFS_LCLUSTER_TYPE_PLAIN &&
--		  m->type != Z_EROFS_LCLUSTER_TYPE_HEAD1 &&
--		  m->type != Z_EROFS_LCLUSTER_TYPE_HEAD2);
-+	DBG_BUGON(m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
- 	DBG_BUGON(m->type != m->headtype);
- 
--	if (m->headtype == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
--	    ((m->headtype == Z_EROFS_LCLUSTER_TYPE_HEAD1) &&
--	     !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) ||
--	    ((m->headtype == Z_EROFS_LCLUSTER_TYPE_HEAD2) &&
--	     !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2))) {
--		map->m_plen = 1ULL << lclusterbits;
--		return 0;
--	}
--	lcn = m->lcn + 1;
-+	if ((m->headtype == Z_EROFS_LCLUSTER_TYPE_HEAD1 && !bigpcl1) ||
-+	    ((m->headtype == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
-+	      m->headtype == Z_EROFS_LCLUSTER_TYPE_HEAD2) && !bigpcl2) ||
-+	    (lcn << vi->z_logical_clusterbits) >= inode->i_size)
-+		m->compressedblks = 1;
-+
- 	if (m->compressedblks)
- 		goto out;
- 
-@@ -339,9 +335,9 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
- 		/*
- 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
--		 * rather than CBLKCNT, it's a 1 lcluster-sized pcluster.
-+		 * rather than CBLKCNT, it's a 1 block-sized pcluster.
- 		 */
--		m->compressedblks = 1 << (lclusterbits - sb->s_blocksize_bits);
-+		m->compressedblks = 1;
- 		break;
- 	case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
- 		if (m->delta[0] != 1)
-@@ -356,7 +352,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 		return -EFSCORRUPTED;
- 	}
- out:
--	map->m_plen = erofs_pos(sb, m->compressedblks);
-+	m->map->m_plen = erofs_pos(sb, m->compressedblks);
- 	return 0;
- err_bonus_cblkcnt:
- 	erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index 0093839..698ed5b 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -45,9 +45,10 @@ warning messages.
+ Limit how many xattrs will be inlined. The default is 2.
+ Disables storing xattrs if < 0.
+ .TP
+-.BI "\-E " extended-option \fR[\fP, ... \fR]\fP
++.BI "\-E " [^]extended-option \fR[\fP, ... \fR]\fP
+ Set extended options for the filesystem. Extended options are comma separated,
+-and may take an extra argument using the equals ('=') sign.
++and may take an extra argument using the equals ('=') sign.  To disable a
++feature, usually prefix the extended option name with a caret ('^') character.
+ The following extended options are supported:
+ .RS 1.2i
+ .TP
+@@ -74,20 +75,36 @@ Force generation of inode chunk format as a 4-byte block address array.
+ .BI force-chunk-indexes
+ Forcely generate inode chunk format as an 8-byte chunk index (with device ID).
+ .TP
++.BI [^]fragdedupe\fR[\fP= <inode|full> \fR]\fP
++Set the mode for fragment data deduplication.  It's effective only when
++\fI-E(all)-fragments\fR is used together.  If a caret ('^') character is set,
++fragment data deduplication is disabled.
++.RS 1.2i
++.TP
++.I inode
++Deduplicate fragment data only when the inode data is identical.  This option
++will result in faster image generation with the current codebase
++.TP
++.I full
++Always deduplicate fragment data if possible
++.RE
++.TP
+ .BI fragments\fR[\fP= size \fR]\fP
+ Pack the tail part (pcluster) of compressed files, or entire files, into a
+ special inode for smaller image sizes, and it may take an argument as the
+ pcluster size of the packed inode in bytes. (Linux v6.1+)
+ .TP
++.BI ^inline_data
++Don't inline regular files.  It's typically useful to enable FSDAX (Linux 5.15+)
++for those images, however, there could be other use cases too.
++.TP
+ .BI legacy-compress
+ Disable "inplace decompression" and "compacted indexes",
+ for compatibility with Linux pre-v5.4.
+ .TP
+-.BI noinline_data
+-Don't inline regular files to enable FSDAX for these files (Linux v5.15+).
+-.TP
+-.B ^xattr-name-filter
+-Turn off/on xattr name filter to optimize negative xattr lookups (Linux v6.6+).
++.B xattr-name-filter
++Enable a name filter for extended attributes to optimize negative lookups.
++(Linux v6.6+).
+ .TP
+ .BI ztailpacking
+ Pack the tail part (pcluster) of compressed files into its metadata to save
+@@ -97,7 +114,7 @@ more space and the tail part I/O. (Linux v5.17+)
+ .BI "\-L " volume-label
+ Set the volume label for the filesystem to
+ .IR volume-label .
+-The maximum length of the volume label is 16 bytes.
++The maximum length of the volume label is 15 bytes.
+ .TP
+ .BI "\-T " #
+ Specify a UNIX timestamp for image creation time for reproducible builds.
 -- 
 2.43.5
 
