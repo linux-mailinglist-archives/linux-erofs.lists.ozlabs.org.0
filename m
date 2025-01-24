@@ -1,47 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 66CF2A1B253
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4AECA1B254
 	for <lists+linux-erofs@lfdr.de>; Fri, 24 Jan 2025 10:06:47 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YfX4N4W80z30TC
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YfX4N6bYhz30fW
 	for <lists+linux-erofs@lfdr.de>; Fri, 24 Jan 2025 20:06:44 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737709602;
-	cv=none; b=H/09E21UJiKW6zSJW/lE5TDOXXQ6/pJ9BS7AVzqldQAaBWUHUOO3ade50KB0oBm7w5ksMUNrJtuL3vItHE6IYBXoo03rXH1XpcckaiJpXrZAXHe9nUEDjW5QPJCDDCaQkE/U1f4JO/6eINcnwovoMjnD12vJyKJMQ5udMHOIKaDuP2oarRVGurqVC/GazeTQzoBieM4AdjpxIQ+RAgcznP+HVuPHjtHJJ95DNO5ntWU42VwX7bbqv0kBsdxE/CMFUyoX/VrxVP0c1QUjnah6BiO2+++A8UTYhVl2DDcgiJTI+PnnYh+/73TkgIIRMW1NErCwZQxw2UEM+rh0vCdc3w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1737709603;
+	cv=none; b=aXyXh4damp8jRVvcuhROKI0QujfVtA/5QK2XT9cppSzs4jA39nU+fn1l9KFlGBv14kVSp2KNFYbB0IDq1ATG5I2mjfGKoXGljuCcQUuTxVsf4IAO1OiXAAI2+DiJJx7u43pqjDZGiY0415JEWptelcdzu8rUuZfSbPRKXERhMJsWRjcq5ONXdK2OBw6jEGn/WlDbqcHxiGlcP0BTFt1CidvBlWlYkZhPodbWZ4oJ5OYjpItbNINa8Tds56dfbcbc/VDrOiv0rV2MEWkaFkXkgUesmioAoddDWRLFnDYNvsn06D2sWTX4tp0KwvBUMXJ1jIdH2S0zZvzPjqoLcG8TcA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1737709602; c=relaxed/relaxed;
-	bh=1386E9BvVS5KYLJMRhFT0mXT/XvdPfpozHDvCxuHEuk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R+t9YS1pB50hATvkp3d+18fDyFVLjXOVhzw0amBP52mXT2yp9wLeGFAuprQhC6tZ5liRusTgbuwSnAdffzzQraQPfIpyXwOxgH05PId/Qa+KIeGNc2V1NJrACokYfsGB3Z5DRMlRgKGhQTtNyUtqTTdABnmqIAt2ayp8y0oFn9vizfHBnR0caoVX0kPTmzwJag1Qf4pESdEsJ3uRViElt4KZbFmuk6bAX7Q42feQWDGGFqoJj4ajVD0W7K2xMYP1MA1ABl5K2NCxqc7dVV01lvOJYbbWno0xU6ZDvqgFUvgYDRPSRAkS2bAZJMv8SO6W4fsLTdXdO9hKC2LpBilM9w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CNHLc7xx; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1737709603; c=relaxed/relaxed;
+	bh=ySCw4Q7at6+V+Ft/b/8LWE6ZewrOTHFZivzn4zpcyXA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Vm7GEFQQyZXD4W9kkLU5qAC6Wz2fbQQbJJRgMkVxR6xboC9noqinDI9zB1ORAuLMWqZvHmZAg8S50+QXyorql+KceyP+EgVrc6pPvycZJXnPiP7rBivJbKsHEz0xDCNuZYoSSurGnHnkWuJBRRTeV1DtaS0ausf6VEA5FhL99OtUqzUjQgnqZHWdDVs02ksq6muZpb2d8w6VfzDfB6a7tX5CFnd2j4H3UHc2gGr/sHEQk4FeBshh15QBFusTmsOJ6Ay5vhaza8gyuHTIsLedvAQ0psOgOkhcrTTq9JXNAxTnn0fDewXunO6VGG9ZnEIAdHZOJO/JKFadh7/qL2mLuw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Y81k7CUX; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=CNHLc7xx;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Y81k7CUX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YfX4K17DQz30NF
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YfX4K1T4Zz30Nc
 	for <linux-erofs@lists.ozlabs.org>; Fri, 24 Jan 2025 20:06:39 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1737709595; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=1386E9BvVS5KYLJMRhFT0mXT/XvdPfpozHDvCxuHEuk=;
-	b=CNHLc7xx/H+MQb8wCKkvq2b65Q71isr+KGaSFx8uLFn1m4XcdWPXcXHx4XxJ5okhZKjlUChA+pwbuvyGLuhknsgjjCGcbg7sRCGfNvlSwed8tWOeMnnbOTZgDGhD+TyrPLOzv0yyoF/Fjtl/K/bKvq64S+HNiI/VZD0Fo2Tevds=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOE.K0g_1737709589 cluster:ay36)
+	t=1737709596; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=ySCw4Q7at6+V+Ft/b/8LWE6ZewrOTHFZivzn4zpcyXA=;
+	b=Y81k7CUXKdLliuqjF+VfqBZfWymppexf8FdKpYCGNckUuqppeKw3uIPtwxGsJYAZkMLHphMbOkXgQZf65aQeHt9e1Q1eMhauJ2JMEAMDv32OTSDpNi9lvKEJXqUp7nFPZpMxuW0SOmkxxFojGTzvsuZM8XqCJnYk5Tglngjaxps=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOE.K25_1737709593 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 24 Jan 2025 17:06:33 +0800
+          Fri, 24 Jan 2025 17:06:34 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/2] erofs-utils: fsck: keep S{U,G}ID bits properly on extraction
-Date: Fri, 24 Jan 2025 17:06:27 +0800
-Message-ID: <20250124090628.2865088-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/2] erofs-utils: fsck: don't dump packed inode data if unneeded
+Date: Fri, 24 Jan 2025 17:06:28 +0800
+Message-ID: <20250124090628.2865088-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250124090628.2865088-1-hsiangkao@linux.alibaba.com>
+References: <20250124090628.2865088-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -64,50 +67,52 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-As chown(2) shown, "
-When the owner or group of an executable file are changed by an
-unprivileged user the S_ISUID and S_ISGID mode bits are cleared.
-POSIX does not specify whether this also should happen when root does
-the chown(); the Linux behavior depends on the kernel version."
+It was a vain attempt.
 
-Fix it by chown() first.
-
-Fixes: 412c8f908132 ("erofs-utils: fsck: add --extract=X support to extract to path X")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fsck/main.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fsck/main.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/fsck/main.c b/fsck/main.c
-index d375835..b1d6214 100644
+index b1d6214..372fee6 100644
 --- a/fsck/main.c
 +++ b/fsck/main.c
-@@ -300,6 +300,12 @@ static void erofsfsck_set_attributes(struct erofs_inode *inode, char *path)
- #endif
- 		erofs_warn("failed to set times: %s", path);
+@@ -518,6 +518,7 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+ 	struct erofs_map_blocks map = {
+ 		.index = UINT_MAX,
+ 	};
++	bool needdecode = fsckcfg.check_decomp && !erofs_is_packed_inode(inode);
+ 	int ret = 0;
+ 	bool compressed;
+ 	erofs_off_t pos = 0;
+@@ -552,7 +553,7 @@ static int erofs_verify_inode_data(struct erofs_inode *inode, int outfd)
+ 		pos += map.m_llen;
  
-+	if (fsckcfg.preserve_owner) {
-+		ret = lchown(path, inode->i_uid, inode->i_gid);
-+		if (ret < 0)
-+			erofs_warn("failed to change ownership: %s", path);
-+	}
-+
- 	if (!S_ISLNK(inode->i_mode)) {
- 		if (fsckcfg.preserve_perms)
- 			ret = chmod(path, inode->i_mode);
-@@ -308,12 +314,6 @@ static void erofsfsck_set_attributes(struct erofs_inode *inode, char *path)
- 		if (ret < 0)
- 			erofs_warn("failed to set permissions: %s", path);
- 	}
--
--	if (fsckcfg.preserve_owner) {
--		ret = lchown(path, inode->i_uid, inode->i_gid);
--		if (ret < 0)
--			erofs_warn("failed to change ownership: %s", path);
--	}
- }
+ 		/* should skip decomp? */
+-		if (map.m_la >= inode->i_size || !fsckcfg.check_decomp)
++		if (map.m_la >= inode->i_size || !needdecode)
+ 			continue;
  
- static int erofs_check_sb_chksum(void)
+ 		if (outfd >= 0 && !(map.m_flags & EROFS_MAP_MAPPED)) {
+@@ -918,7 +919,7 @@ static int erofsfsck_extract_inode(struct erofs_inode *inode)
+ 	int ret;
+ 	char *oldpath;
+ 
+-	if (!fsckcfg.extract_path) {
++	if (!fsckcfg.extract_path || erofs_is_packed_inode(inode)) {
+ verify:
+ 		/* verify data chunk layout */
+ 		return erofs_verify_inode_data(inode, -1);
+@@ -939,8 +940,6 @@ verify:
+ 		ret = erofs_extract_dir(inode);
+ 		break;
+ 	case S_IFREG:
+-		if (erofs_is_packed_inode(inode))
+-			goto verify;
+ 		ret = erofs_extract_file(inode);
+ 		break;
+ 	case S_IFLNK:
 -- 
 2.43.5
 
