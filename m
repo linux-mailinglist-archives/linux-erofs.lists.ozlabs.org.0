@@ -1,180 +1,69 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D2C0A25238
-	for <lists+linux-erofs@lfdr.de>; Mon,  3 Feb 2025 07:05:46 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B83CA28B4D
+	for <lists+linux-erofs@lfdr.de>; Wed,  5 Feb 2025 14:12:28 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1738562743;
-	bh=3kylJuipIr5lQRJtow9Joi3fMY6VejL15nquBkN782w=;
-	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=gSAtCR6WuuNTQRqGWY4ninwgff22kFFKbjfPLH9V6T9c7yiSuykC/0kd5S3H3eQ6v
-	 1ZxlP7drgHqeRlPCYrhFYTJWpwADYqnca0uE4tWKaS3JJ4c46QztBP47qV5uGPk4oD
-	 1jH9WlD6t1jkhxp3jNKmyFuDRpYX0l18axUh6Zo8yVdley9rPN0LhecUXQZttXx3CS
-	 7xT+43voGGkUlsC437n61pIuohx8ApWJvDegEkL6AMFMxN6CM7i9oriKYJLZsd9R9x
-	 wXV/djHWYq3gmv/EtrVF3iFMRR+ur2P3dYwtZPTCxwtCSjy4IXyw+lHStVgWL0jl34
-	 kGYQl5iyvBIMQ==
+	s=201707; t=1738761145;
+	bh=ZVs1hQNRbUhKk09ouz/d7EiudTwpTRIlIj8Cgi/tpmk=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:From;
+	b=dMaYm6KUbvQvMH87AnMe2/5mCL7C+9fL57YS7WP069wGkAqlx+NANQLVpzAT7DhZk
+	 ENV4Z+j+Frcpt9mUlBPUwCpiDQOWR9ZGCsNYOZVDbxznBp3ew7P9mxcERln3cTvqex
+	 c3kwcYqknv+49pPogD5z9epfpLH0r9ryHFFg6h21VDLqu3Y3mQQJKVM24NTeElC3PE
+	 fTTtDqZ17LoGSODTGK/EFhjmaeJDLLYjuDGAXLL6ANOTeQHR3IfdbHqAMT8awa02kE
+	 wOklX7829ssuU6Snx2Vq4C1sFcCFFQgXgtw76PrOdjbnPIP5HhsQUX+VGffAUve7lb
+	 hmp5GrxiIzL2Q==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YmbZv0z2dz2ytm
-	for <lists+linux-erofs@lfdr.de>; Mon,  3 Feb 2025 17:05:43 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Yp0yK4Z87z305m
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Feb 2025 00:12:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:200a::619" arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1738562740;
-	cv=pass; b=JDfCYEakeCbJkvsj3sTjbiYgpv1o/6Mt2y+OZM6O1D1DdZuFjQ3D1IRyoY6eM+i1II8+NteVXif4Q8bsTzzbsYaGPdL31PEN8X4tUF1QccVpEsbzqGDc4+NwSeuXeXg0s2HVpkKLN7CSAQ1j8gabNEphWQn116ii05blv/1ThOf21nv+KKfLk4e7gyJWGbMkkDGGGHMz8TpxJN6hEfVB+cIp5HSxO+qINxbjaUd1TFOZWEm6/7ESAVtpnjqJPeeyRisxHdHSgGvQtkoNJIyXiYv+EP72fVCQ5EsdjMNVmNVOrcpjS17DA7MjQkz9VhfBgnoLbIYUm7CamEdjKyvVZA==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1738562740; c=relaxed/relaxed;
-	bh=3kylJuipIr5lQRJtow9Joi3fMY6VejL15nquBkN782w=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ImV7jLDUwcthqTF5K5AhdQFwKgEP/4gaIN9tfDtt5TGcoYPCjbxU+/txdSsQpOK8tAda4KjrrFTf/tQTqu2VouiI/aHm5bcnYsukW6ZaJHAhEvZzsAA7lDPFW/JcJoSP2Cg6/UjXfzDVdi8yJW/qvDbYkaf1S4zovvpNNrsmmPwpLqwGjQIEydOZDA06c2BL/LrCt2sSs5pE6BEe9KZbotgUYj2f30flHwD+nACpR3fkrjbL8Kc5Uy1u/7dlWlxqGRrEsUVzG50iGyzDXTxzFJ/empDVDWS4QirIdVL9QzVODYnFdMdWA76lgEqkDIUVEXY9cZLPpfQ23mLeBBVWDA==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; dkim=pass (1024-bit key; unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=A/jz5Tko; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:200a::619; helo=nam12-mw2-obe.outbound.protection.outlook.com; envelope-from=love.kumar@amd.com; receiver=lists.ozlabs.org) smtp.mailfrom=amd.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1738761143;
+	cv=none; b=mfOWEsyeoFEhL/B/YD7fMzQuGWee4JPG7prUMGaP9hKsrn6G3OKyqZ8y3p78LwLEfTITO4IIi+JILpa/TJj4QjD1nWKMkie1UnappqIJ2b3fgdmm7yRZa83fz+ayyuvDkOl/W3xo29gLLXKN742ySj9uKzU13SzRjypp8jJ1qkrHSyj3YQpJR82lsILArX/Nrh5ZUDRACPmKy29wlVywZayD1ztjA/Jbw8a+r6q406aaT5zKSHAGstcCKVM3YPZoR8cn8bSscSbRBWnTj7CI2Yr+cclIDCdSWG3PLEekApU1CpmSiKEYq4hzETJjwEeOwXhRqsVFe+A4NJAiziWCdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1738761143; c=relaxed/relaxed;
+	bh=ZVs1hQNRbUhKk09ouz/d7EiudTwpTRIlIj8Cgi/tpmk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FBhA7kebvnjKsVkvrUolfBcvYXVrybShheLm14K3RH1U1N4xeS6lLS6KA6f3BW7ykU/HlwnUPmyVHIrmVW+OWfN3T6JuHeTHlcpZ/zXQAUMoOqQ/bbiwmzzzxm5pKTpSyhTtAixnsEyi2ZcgMzZM8PG1PEyBL2JDQkwPVaEk2HNEAe69UdmZWIH/OAWmWzjcamNJv1k9bvk8aLlMJhmJK06jiFYyL7m4vA1OxUB945cxlj1gKE0tZjSqXpuBJXySZ/CnAEPdctEy68jfT1Yy/C1TzEEQiutn+YEt3govQHzd4JPjKxtX2GMzSnc3EI3q+gjJCG2YGhhL/wKFOvKbtg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HdooJvAf; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=A/jz5Tko;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HdooJvAf;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=amd.com (client-ip=2a01:111:f403:200a::619; helo=nam12-mw2-obe.outbound.protection.outlook.com; envelope-from=love.kumar@amd.com; receiver=lists.ozlabs.org)
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on20619.outbound.protection.outlook.com [IPv6:2a01:111:f403:200a::619])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (secp384r1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YmbZq1k7Tz2xb3
-	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Feb 2025 17:05:38 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ir3EJvXdE28L2j+AQ6A/mzYi2vAOBypVLbgB0+1x2bq3Mo9oSidDog/Xjid/BSF6YF3yii9JgG1bI0lVsnOnQkghfNsBzRwy6Pazf/uWp2B8vDX/MZiWlnPjRbkYRzWPrp5NWfGJ1ALOgg6kLUcwMm+yJh2oO9glPPW1DKsr0XdFTobC6+YyJhC+88/Caz8aykE4V090WuThpl/quSSy5w9aYDLvWj6PYOqm6gKPNELts2klPiV93BtLExt9nfvr6+EZRkrozN6cDAqDi6t4UVCGKL8pl1GY5SOgKeWDi/gbCQShw42dHKz2O0VstypUwbdyhmmd2MnpnIwE4nno/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3kylJuipIr5lQRJtow9Joi3fMY6VejL15nquBkN782w=;
- b=fe2C40pYdQKEftrHi2Dvo85dCNFz7idhnEaqfebJg2s/dlL0k4g0chai3f47L82gSvVEJWvMATmgoyAGvlAJ2+yuCycBguXMNRopSIzbbr5fPKf219qjD3A22Du7LneGE20FZY5nsP63ePTWl2i9jRzRBlZ+QHP3erQ6GYgja7ymFcBWNWFAyZuE+Xur6JZQzWiMnVQXm2NgGglNynjFKlqq4kupcYgxbtxtQIHyN0/Ue+maZsFcoq2WHCYHcLLZFVTEvW+grE32KDr4UCyB+IgO5R4b1sYKwor2jxk4U8bohZUaLULABrjAmQ9s/hUrLsvln/o7/IwhrL/OaqFa5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3kylJuipIr5lQRJtow9Joi3fMY6VejL15nquBkN782w=;
- b=A/jz5TkonP2kQMSeRkL15fLvit530ao2CncFBMC0iIXZE7+O0v6QQWSZ115shlgWSO+rEyEONMdWvVHx1Sswi2mHXZH+FBqiAbxbiLUjB+rlbs5LQj1RZF1FIgJMl3qpH1TjlMLAq/TFHILcDV6HWX2tjE2Jn/dOASILJ3RoCeg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6538.namprd12.prod.outlook.com (2603:10b6:510:1f1::11)
- by SA1PR12MB8886.namprd12.prod.outlook.com (2603:10b6:806:375::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8398.24; Mon, 3 Feb
- 2025 06:05:15 +0000
-Received: from PH7PR12MB6538.namprd12.prod.outlook.com
- ([fe80::f0e4:5de5:39b7:ea7f]) by PH7PR12MB6538.namprd12.prod.outlook.com
- ([fe80::f0e4:5de5:39b7:ea7f%6]) with mapi id 15.20.8398.025; Mon, 3 Feb 2025
- 06:05:15 +0000
-Message-ID: <7bc236dc-4cdb-4b43-a752-f9d6dcfa9498@amd.com>
-Date: Mon, 3 Feb 2025 11:34:22 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] test/py: Shorten u_boot_console
-To: Simon Glass <sjg@chromium.org>, Tom Rini <trini@konsulko.com>
-References: <20250125213150.1608395-1-sjg@chromium.org>
- <20250125213150.1608395-2-sjg@chromium.org>
- <20250125215055.GF60249@bill-the-cat>
- <CAFLszTjG0P0bdwziV4irtiU1JGNMwnoiLO9xhPxLQa9GZPVBtA@mail.gmail.com>
- <20250125225510.GJ60249@bill-the-cat>
- <CAFLszTj7no1azG+Us4toZA00O79sZpr3qgtoD69UpQFVNjAhoQ@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CAFLszTj7no1azG+Us4toZA00O79sZpr3qgtoD69UpQFVNjAhoQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0071.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:23::16) To PH7PR12MB6538.namprd12.prod.outlook.com
- (2603:10b6:510:1f1::11)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Yp0yF6LYfz2xH8
+	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Feb 2025 00:12:21 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 57B65A431FC
+	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Feb 2025 13:10:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB48C4CEE2;
+	Wed,  5 Feb 2025 13:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738761138;
+	bh=6J2OF/NuDHMwqVK9xVwjY357Q8NfV3FYdNlq7DSpMZU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HdooJvAfgZEkGgi9Vfb2zcThYoz6eMVA1AZRlAONvguLiZKRR6aumy4QE7ygACuPt
+	 X7AMF5u8eXkLdid9Bjic4J6/UUKcUzmTV7T7g+rQfHFJBcQrY5FPrAFWnwI8bzLZuV
+	 TVKlixNkLeQXqv2ielPzhNchmTOHUJn2536DQ32NvherFAwah3z8mxmgMRTPFgNM+x
+	 WuBuVoTJv1mUTSefv1XVHPPL13W+M8Nh4qT2EgEdeO+vBB5hcR/oQRTSh7uX6n0MNa
+	 kRyIGtSP6kKvxGugsuehsJlbmlN2dDRNY8zRxLAbBkKy1kT6OnJhI2etHDAm/HCJ4d
+	 ZNIg+NDJBWiIQ==
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH] erofs-utils: contrib: add stress test
+Date: Wed,  5 Feb 2025 21:11:25 +0800
+Message-Id: <20250205131125.794-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6538:EE_|SA1PR12MB8886:EE_
-X-MS-Office365-Filtering-Correlation-Id: f22ec493-f65b-4db4-732b-08dd4418ba2a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: 	=?utf-8?B?akgvcnNsVzRxNGhDcndtbEZnWXdxWU0zYlFPdW5LY0ZlbFd1TG9GZHpRcHcr?=
- =?utf-8?B?YkpvbnJwbEtpRUpQcDNwTjRTMXNkWUtzQjFqVStmVTlMQ05zU2FzdTB6eGZo?=
- =?utf-8?B?ZklXcUJxZ3l3TjFaRUwwNmpJK2hmTWo4c1gyVnYvOFhkNjFVWjk1dWJ3eVBC?=
- =?utf-8?B?VjJmV3R3dCtRUjl3UTJPVzFxb2pZRVhtTkQwVzBHdmk5YnJ2WUZTVkxMaDZT?=
- =?utf-8?B?YTlBanlmdFh3QWxIRXBvU21sdy9hbEx1RkhibUkycXNYZEY3V1BPWU9hYmZM?=
- =?utf-8?B?RTViZTk0N0dsWnUvUUhjSHVjSUpObVlrNXdNbFBnNFQxczdUZy9oNDJZcU5X?=
- =?utf-8?B?aU1TbVdHV0pUTmxDVWlUYklnTG4wemZwTTlIOXRtWmp4RjNFQ2U1YWlpd01X?=
- =?utf-8?B?bHdLb055VmNUSElJVUp1bHJGTkpURjNTZVBwc0d2YWExMW81SnM0N2d3WmxM?=
- =?utf-8?B?QVBUcmUyWC9mTnMvS1l6WVpEcHd6WkhWeWlqOUYxMGM3N2g1Z2lyV2U1ZHNR?=
- =?utf-8?B?bkd3eENHRzNWVUZmMW5MYmNHVlFkbWhoWnlFYXY3aXJKWXRORHRZUVdGOGU2?=
- =?utf-8?B?VVBQYTVBRlFVS0dYUEhSVEg0V1k0RmtMaEMvZmpPSFJNZzlVUEMxRkRWVkYx?=
- =?utf-8?B?VjlGeERUU1VQNVRlaDdCWjNnbTBzSXd2L2tzb3ltQjRqSFArVS8yempoMzZH?=
- =?utf-8?B?UEpTb1RjWEFiQWZ1NGxzakwya3VwZStPYm52WDk4MmwvRzBtS2lpbUk1WDBN?=
- =?utf-8?B?OXJJSGcyZ0hIU29vZWdKU3FyMkRiNjdrTkpHWWJLMDBIME02Sy9hcWRBK3FX?=
- =?utf-8?B?OVY5OXpGM3RVckZuZlJMZGlzc2k0K0VUVmw5T01IN3pHMmVTM3hFV016cFBD?=
- =?utf-8?B?bjhQTWVrNVY0cklhM2Y4ejRtYVFWcWc0dGNWYXdSaC9PbDhLQm9nN1JjUjZL?=
- =?utf-8?B?L3pxbzlFamRaWGZuRlNyYkcrQUVuT1hpdFB3SExpMDZkSFY3N2NzRXJTN1E1?=
- =?utf-8?B?M3BIYkcveDNNOXVxaEhZQ3JjMnhZYW5JV3lRK3d5M3JHZ3hNRnR2WEZsKy9m?=
- =?utf-8?B?Y2hJMnBVUlc2Wm1iNi9jYnN5REtibHh2V3A4QnlyVk9IekxZVWNjQnVaV09F?=
- =?utf-8?B?R1RETWl4dlQ0VWRSZFdzd2NZcGVNRFdFUUI5RzFyWHNCVWgzL000VnlHR1BI?=
- =?utf-8?B?WWZ1Qlc1MWNxMWpwU0FRYkdKZkxVYU1ybklySCtudkgwaXNIWS9Cb1lacktM?=
- =?utf-8?B?YWNmNC8ydUlINWo0QWtNalZ2RWpLODJhZDJqOHZIV3NEcnNjeDd3R0Y3WWVp?=
- =?utf-8?B?ZkNyd1hZdURoS2dTSG1MR2MvbGpYWXE1aUFwUWk4MjB0OU1zNzZLZmJ6SllR?=
- =?utf-8?B?ZEppUEVWN2ZEWjdJVGlGbjgvZW4vTDNmYmxUMHM0aS9hVkhZMkFjOXRIdnBt?=
- =?utf-8?B?ODBjdndxWlUvamNnTGNDRnBIM2krQ1dnQi9jWVU1UlZoeFhtdGhoTk9hY2I5?=
- =?utf-8?B?RGsycFJsL1gzdTdqSVV0bUR2YW43VU9lZ0puR3RFemVWR2ZGQ3pCWnhkUGZp?=
- =?utf-8?B?d2YzVzlUaGRxWlcvUXhyRG9Nc3o4ZjAyZTJocXIzVTRzelZCRlM4ZG1ZSDZP?=
- =?utf-8?B?S3Fja0xSRUpML0MwK056aGRwNmRMV2k2K0Y2bHNjRkJNaVZKQ1NKNElLTjlh?=
- =?utf-8?B?a0Qyckc4MkdBbXY4Q21JN1F3R0EzMENISzJpYlBTUkkrU3greUpTaEdXQzRq?=
- =?utf-8?B?WlBLL2E2b05YQmZXUTdvTEw3UmRFazRFYzZpTTZsWldRU0V6SXVmajl0SUpw?=
- =?utf-8?B?U0s3MzVCWER3SnBHV3BSamhscXVCQzVldlRqd1dQeWlhVUxJWkRPOHAxakR3?=
- =?utf-8?Q?EtzrQconfNgrz?=
-X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6538.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?R1U5c0dab0lOZjltNHJxa3JqclFObExadmhWdml4VFViSzduazNYM3Iyc05W?=
- =?utf-8?B?VUtjT0ZsL3dja1QyaldLRXY0OW5DMTZjTFZYTnQ3UEd5WDlna2hnRmhYdTh5?=
- =?utf-8?B?Mld3aHdPUms0VExrUW13dUFGZU5qN3ZNb1BBUGF4Z2RjSjRCY1YvTlhpQTVi?=
- =?utf-8?B?bUtESGdwcWQ0Y0VoNnFIN0JpRFEyaU53d253bTdOY0ludGgyNk1zb3c4RXIv?=
- =?utf-8?B?OTNnL2lqOFB1d1RGQy9ITjg0YmRXQ3FhMlJaVWRvR2RaeVpVYVU1T2pwRlE5?=
- =?utf-8?B?S1BVOUxQb2hZcFU5bWQwaVFYNkh1a21kbFFaaE1DNUdUblUvVkNvTzRXVmt2?=
- =?utf-8?B?WnVucW9KazJaSEhGaUJoV2ZWSEdMWGp0dnYvNUk1SVo1V0s1dVROMGd2aXMy?=
- =?utf-8?B?U0Exa1czYkV1TDNTdCtLOVZmSlcxVlJ0ejFVK3Zmd3B2MTRqcVBicHcrRlVJ?=
- =?utf-8?B?K0FXbFA2NVZqNjltU09WVFZXQnZjNkxnTkROY1BsZmtSNC9xVGJ3dEdBVVlY?=
- =?utf-8?B?OHNXcWRMbGo1cEVRT3hienVjT1FVUERZcDErbGJDd2RKQmV4M053ajZjS2Qx?=
- =?utf-8?B?VitnR0ZBOFo2VnZsQ2pVOFJSWnl0anMxYmptR2RPSWJjYkdQSEZYUDZyM0dB?=
- =?utf-8?B?VlVackswdmcwVy9BWmtUNlVKVXdGL256VUw0Sk9BVjJ4Q21mVFNibmNubzNH?=
- =?utf-8?B?RnNkdWhWZlNMdUwzN3RuS3B3VGRxNVdSdUN5KzFLZFNTcXNuVVFodDdSNHBt?=
- =?utf-8?B?aE5UUDBydUNVc2I0MDlnS3lqUjM4eWVOSnZxbkNmNWt1NENTUTRjVFdEMm8v?=
- =?utf-8?B?cGRtR1FMelArQmVxVlZHQ25Ua3lFWTJXdExmdnNMSXdieDk4ZG5mYzc1cWM1?=
- =?utf-8?B?VHR2aDVZcTZzbG5MY2JtQzdPTnhpQ3RXQlpOV1JObUZFNmp2UndzWThUd1Zy?=
- =?utf-8?B?Q2tUY2xLeFBSRWdoM1Y3ekZLU3BjczNoTHBLRlZEM3VWU29sS2lHYnBDMkpH?=
- =?utf-8?B?UW11eUUxeFNsc3pYNE0wZWxaWkxnZksyemVZR2N1WDQ1SzkzdnIwRTFtSU0z?=
- =?utf-8?B?ZFRIME1TUUJQYnBySVQ1M2xUM2hJSE4wL1lqSTZ4cWY3alY5aWhBb0tCYUVB?=
- =?utf-8?B?TVh0eVRtaUM4clZkZER1dFpLVUpnUHd6czFXS2RNSjY0MGRCYk1sSVhkK1RK?=
- =?utf-8?B?N1N3UHF0dmdhVUVRc2hlZlpYczE5d3lTejFxc3puOXZ0SFMwUmkvVG1DZmlr?=
- =?utf-8?B?c1V3dGo2ZldaV3dLdk1CWnplVjZYbGoveURUZVpSM0w4Vlk2aTgwN3hLWEtY?=
- =?utf-8?B?QzVZUDBqRG1qNW9GOWxqMVNjYUhSYkYyUlozSEhMZDhjbmNiZ2RzTDZ4SWxH?=
- =?utf-8?B?aWpwN0NuU2E5clNBU3daUE84STZKdHNnVlNmN1ZPa2RiUnFBTnhjbEJtRE5h?=
- =?utf-8?B?UTBMcUQ4UXNsUzhFTWN3UjhRTFh3Z0h6UG9LaHpjSXIxN3RheDZiTWtoSlM2?=
- =?utf-8?B?Q1hzQWk3aVVEVVdEWjRGdjUxL29US2FNbFkyVTZ3ejRhTURtbUt1QW5IRVNG?=
- =?utf-8?B?OWVSTzlZRmxjaC9NbWRnZ0FmZEc1T1FrN3hhM3VHT0FNa3BYK2pnL1lwREt1?=
- =?utf-8?B?VmRTekxmdlM2eklQeG5OL01sOVI0SUxERldNUnpEb0NMQnhna0JwaFFrWmJL?=
- =?utf-8?B?YndHb1BKWW84bW5MQzZ3ZThLVTh2dklqc3dwNzBJT1dFNGJ5WGxRcFdUeHZ1?=
- =?utf-8?B?TGd0TzJTMUE5dzFRRjdzS1FyYnVqa01oYmpUcHM0ZTladG1LWWxqK0FPUGQw?=
- =?utf-8?B?MG8vWDlqQ2wyL050OWJzdlpkdzVsRDFOTEU4bDcrMGU4RDhjS2gzZjM1Wkli?=
- =?utf-8?B?eEs2UXE5bTdIY2hZQi90aEZwYlU3Unk3d2tWajdXdy8vMGdKcFNFUkVORkNs?=
- =?utf-8?B?Q3Ewd29mV1BzbVZwdHlUbFI0am51SzFkOW5KcEljVXNsZXduS1lBcmVPeFg2?=
- =?utf-8?B?cTRTRGtZdFhHc2Jpd3VNbThVNnY1THRqeCs5NVJ4aXVXSjhXSTJFWHdhMjhQ?=
- =?utf-8?B?UTdmWjFxZUh4SHJpcmpaQ29BVGorTCtPMzdWNXl0cDFwcGhnNmd2Vy9PazZ1?=
- =?utf-8?Q?0Ml8=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f22ec493-f65b-4db4-732b-08dd4418ba2a
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6538.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Feb 2025 06:05:15.5428
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2adfpCv9I6QAucSkNNYD/RdIoVrza01b6C0rq25wyjiL0+qWWvOqqs4uTxEel4D7
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB8886
-X-Spam-Status: No, score=-0.5 required=5.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -187,70 +76,837 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Love Kumar via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Love Kumar <love.kumar@amd.com>
-Cc: Dmitry Rokosov <ddrokosov@salutedevices.com>, Joao Marcos Costa <jmcosta944@gmail.com>, Guillaume La Roque <glaroque@baylibre.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Patrick Rudolph <patrick.rudolph@9elements.com>, William Zhang <william.zhang@broadcom.com>, Stephen Warren <swarren@nvidia.com>, Sean Anderson <sean.anderson@seco.com>, Richard Weinberger <richard@nod.at>, Michal Simek <michal.simek@amd.com>, Peter Robinson <pbrobinson@gmail.com>, Roger Knecht <rknecht@pm.me>, Julien Masson <jmasson@baylibre.com>, Weizhao Ouyang <o451686892@gmail.com>, Jerome Forissier <jerome.forissier@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Tim Harvey <tharvey@gateworks.com>, Igor Opaniuk <igor.opaniuk@gmail.com>, Sam Protsenko <semen.protsenko@linaro.org>, Andrew Goodbody <andrew.goodbody@linaro.org>, Caleb Connolly <caleb.connolly@linaro.org>, U-Boot Mailing List <u-boot@lists.denx.de>, Mattijs Korpershoek <mkorpershoek@baylibre.com>, Padmarao Begari <padmarao.begari@amd.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, linux-erofs@lists.ozlabs.org, Jens Wiklander <jens.wiklander@linaro.org>
+From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Gao Xiang <xiang@kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Simon,
+Just import it as an in-tree component for tests.
 
-On 26/01/25 4:28 am, Simon Glass wrote:
-> Hi Tom,
-> 
-> On Sat, 25 Jan 2025 at 15:55, Tom Rini <trini@konsulko.com> wrote:
->>
->> On Sat, Jan 25, 2025 at 03:42:00PM -0700, Simon Glass wrote:
->>> Hi Tom,
->>>
->>> On Sat, 25 Jan 2025 at 14:51, Tom Rini <trini@konsulko.com> wrote:
->>>>
->>>> On Sat, Jan 25, 2025 at 02:31:36PM -0700, Simon Glass wrote:
->>>>
->>>>> This fixture name is quite long and results in lots of verbose code.
->>>>> We know this is U-Boot so the 'u_boot_' part is not necessary.
->>>>>
->>>>> But it is also a bit of a misnomer, since it provides access to all the
->>>>> information available to tests. It is not just the console.
->>>>>
->>>>> It would be too confusing to use con as it would be confused with
->>>>> config and it is probably too short.
->>>>>
->>>>> So shorten it to 'ubpy'.
->>>>>
->>>>> Signed-off-by: Simon Glass <sjg@chromium.org>
->>>> [snip]
->>>>>   102 files changed, 2591 insertions(+), 2591 deletions(-)
->>>>
->>>> First, I'm not sure I like "ubpy". I believe "u_boot_console" is because
->>>> it's how we interact with the stdin/stdout of the running U-Boot. And
->>>> indeed it provides more than that. But ubpy is too abstract and unclear,
->>>> and looking at the diffstat, I don't know that big global rename is
->>>> justified to save text space.
->>>
->>> I actually get quite confused hunting around in the fixtures so I
->>> suspect others do too. I would like to settle on some better names.
->>>
->>> Yes, I don't like ubpy much, either. Your favourite AI suggests
->>> 'fixture' or 'test_env', both I which I prefer. The only challenge is
->>> that 'env' has various other meanings in U-Boot.
->>
->> Yes, until someone has a better suggestion than "ubpy", we should leave
->> things alone. "fixture" has its own meaning within pytest and so that
->> would also be confusing.
-> 
-> Yes, ideas welcome. Arguably it is confusing that this one fixture
-> provides a gateway to all the others.
+Signed-off-by: Gao Xiang <xiang@kernel.org>
+---
+ Makefile.am         |   1 +
+ configure.ac        |   3 +-
+ contrib/Makefile.am |   8 +
+ contrib/stress.c    | 773 ++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 784 insertions(+), 1 deletion(-)
+ create mode 100644 contrib/Makefile.am
+ create mode 100644 contrib/stress.c
 
-I have a couple of names to suggest:
-1) "ubintf"/"ub_interface" - As it interacts with U-Boot during testing 
-and acts as the primary interface.
-2) "ubman"/"ub_manager" - As it manages multiple things in tests, not 
-only limited to console.
+diff --git a/Makefile.am b/Makefile.am
+index fc464e8..f8a967f 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -6,3 +6,4 @@ SUBDIRS = man lib mkfs dump fsck
+ if ENABLE_FUSE
+ SUBDIRS += fuse
+ endif
++SUBDIRS += contrib
+diff --git a/configure.ac b/configure.ac
+index 0a069c5..858b2b8 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -647,5 +647,6 @@ AC_CONFIG_FILES([Makefile
+ 		 mkfs/Makefile
+ 		 dump/Makefile
+ 		 fuse/Makefile
+-		 fsck/Makefile])
++		 fsck/Makefile
++		 contrib/Makefile])
+ AC_OUTPUT
+diff --git a/contrib/Makefile.am b/contrib/Makefile.am
+new file mode 100644
+index 0000000..613b348
+--- /dev/null
++++ b/contrib/Makefile.am
+@@ -0,0 +1,8 @@
++# SPDX-License-Identifier: GPL-2.0+
++# Makefile.am
++
++AUTOMAKE_OPTIONS	= foreign
++noinst_PROGRAMS		= stress
++
++stress_CFLAGS = -Wall -I$(top_srcdir)/include
++stress_SOURCES = stress.c
+diff --git a/contrib/stress.c b/contrib/stress.c
+new file mode 100644
+index 0000000..8f4d793
+--- /dev/null
++++ b/contrib/stress.c
+@@ -0,0 +1,773 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * stress test for EROFS filesystem
++ *
++ * Copyright (C) 2019-2025 Gao Xiang <xiang@kernel.org>
++ */
++#define _GNU_SOURCE
++#include "erofs/defs.h"
++#include <errno.h>
++#include <sched.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <dirent.h>
++#include <sys/stat.h>
++#include <sys/wait.h>
++#include <time.h>
++#include <unistd.h>
++#include <fcntl.h>
++
++#define MAX_CHUNKSIZE		(2 * 1024 * 1024)
++#define MAX_SCAN_CHUNKSIZE	(256 * 1024)
++
++bool superuser;
++unsigned int nprocs = 1, loops = 1, r_seed;
++unsigned int procid;
++volatile sig_atomic_t should_stop;
++
++enum {
++	DROP_PAGE_CACHE,
++	DROP_SLAB_CACHE,
++	COMPACT_MEMORY,
++};
++
++enum {
++	OP_GETDENTS,
++	OP_READLINK,
++	OP_SEQREAD_ALIGNED,
++	OP_SEQREAD_UNALIGNED,
++	OP_READ,
++	OP_FADVISE,
++	OP_DROP_CACHES,
++};
++
++struct opdesc {
++	char	*name;
++	int	(*func)(int op, unsigned int sn);
++	int	freq;
++	bool	requireroot;
++};
++
++extern struct opdesc ops[];
++
++static int drop_caches_f(int op, unsigned int sn)
++{
++	static const char *procfile[] = {
++		[DROP_PAGE_CACHE] = "/proc/sys/vm/drop_caches",
++		[DROP_SLAB_CACHE] = "/proc/sys/vm/drop_caches",
++		[COMPACT_MEMORY] = "/proc/sys/vm/compact_memory",
++	};
++	static const char *val[] = {
++		[DROP_PAGE_CACHE] = "1\n",
++		[DROP_SLAB_CACHE] = "2\n",
++		[COMPACT_MEMORY] = "1\n",
++	};
++	int mode = random() % ARRAY_SIZE(val);
++	FILE *f;
++	clock_t start;
++
++	if (!procfile[mode])
++		return -EINVAL;
++
++	printf("%d[%u]/%u %s: %s=%s", getpid(), procid, sn, __func__,
++	       procfile[mode], val[mode]);
++
++	f = fopen(procfile[mode], "w");
++	if (!f)
++		return -errno;
++
++	start = clock();
++	while (clock() < start + CLOCKS_PER_SEC) {
++		fputs(val[mode], f);
++		(void)sched_yield();
++	}
++	fclose(f);
++	return 0;
++}
++
++struct fent {
++	char *subpath;
++	int  fd, chkfd;
++};
++
++#define FT_DIR	0
++#define FT_DIRm	(1 << FT_DIR)
++#define FT_REG	1
++#define FT_REGm	(1 << FT_REG)
++#define FT_SYM	2
++#define FT_SYMm	(1 << FT_SYM)
++#define FT_DEV	3
++#define FT_DEVm	(1 << FT_DEV)
++#define FT_nft	4
++#define FT_ANYm	((1 << FT_nft) - 1)
++
++#define	FLIST_SLOT_INCR	16
++
++struct flist {
++	int nfiles, nslots;
++	struct fent *fents;
++} flists[FT_nft];
++
++static struct fent *add_to_flist(int type, char *subpath)
++{
++	struct fent *fep;
++	struct flist *ftp;
++
++	ftp = &flists[type];
++	if (ftp->nfiles >= ftp->nslots) {
++		ftp->nslots += FLIST_SLOT_INCR;
++		ftp->fents = realloc(ftp->fents,
++				     ftp->nslots * sizeof(struct fent));
++		if (!ftp->fents)
++			return NULL;
++	}
++	fep = &ftp->fents[ftp->nfiles++];
++	fep->subpath = strdup(subpath);
++	fep->fd = -1;
++	fep->chkfd = -1;
++	return fep;
++}
++
++static inline bool is_dot_dotdot(const char *name)
++{
++	if (name[0] != '.')
++		return false;
++
++	return name[1] == '\0' || (name[1] == '.' && name[2] == '\0');
++}
++
++static int walkdir(struct fent *ent)
++{
++	const char *dirpath = ent->subpath;
++	int ret = 0;
++	struct dirent *dp;
++	DIR *_dir;
++
++	_dir = opendir(dirpath);
++	if (!_dir) {
++		fprintf(stderr, "failed to opendir at %s: %s\n",
++			dirpath, strerror(errno));
++		return -errno;
++	}
++
++	while (1) {
++		char subpath[PATH_MAX];
++		struct stat st;
++
++		/*
++		 * set errno to 0 before calling readdir() in order to
++		 * distinguish end of stream and from an error.
++		 */
++		errno = 0;
++		dp = readdir(_dir);
++		if (!dp)
++			break;
++
++		if (is_dot_dotdot(dp->d_name))
++			continue;
++
++		sprintf(subpath, "%s/%s", dirpath, dp->d_name);
++
++		if (lstat(subpath, &st))
++			continue;
++
++		switch (st.st_mode & S_IFMT) {
++		case S_IFDIR:
++			ent = add_to_flist(FT_DIR, subpath);
++			if (ent == NULL) {
++				ret = -ENOMEM;
++				goto err_closedir;
++			}
++			ret = walkdir(ent);
++			if (ret)
++				goto err_closedir;
++			break;
++		case S_IFREG:
++			ent = add_to_flist(FT_REG, subpath);
++			if (ent == NULL) {
++				ret = -ENOMEM;
++				goto err_closedir;
++			}
++			break;
++		case S_IFLNK:
++			ent = add_to_flist(FT_SYM, subpath);
++			if (ent == NULL) {
++				ret = -ENOMEM;
++				goto err_closedir;
++			}
++			break;
++		default:
++			break;
++		}
++	}
++	if (errno)
++		ret = -errno;
++err_closedir:
++	closedir(_dir);
++	return ret;
++}
++
++static int init_filetable(int testdir_fd)
++{
++	struct fent *fent;
++
++	fent = add_to_flist(FT_DIR, ".");
++	if (!fent)
++		return -ENOMEM;
++	fchdir(testdir_fd);
++	return walkdir(fent);
++}
++
++static struct fent *getfent(int which, int r)
++{
++	int		totalsum = 0; /* total number of matching files */
++	int		partialsum = 0; /* partial sum of matching files */
++	struct flist	*flp;
++	int		i, x;
++
++	totalsum = 0;
++	for (i = 0, flp = flists; i < FT_nft; ++i, ++flp)
++		if (which & (1 << i))
++			totalsum += flp->nfiles;
++
++	if (!totalsum)
++		return NULL;
++
++	/*
++	 * Now we have possible matches between 0..totalsum-1.
++	 * And we use r to help us choose which one we want,
++	 * which when bounded by totalsum becomes x.
++	 */
++	x = (int)(r % totalsum);
++
++	for (i = 0, flp = flists; i < FT_nft; i++, flp++) {
++		if (which & (1 << i)) {
++			if (x < partialsum + flp->nfiles)
++				return &flp->fents[x - partialsum];
++			partialsum += flp->nfiles;
++		}
++	}
++	fprintf(stderr, "%s failure\n", __func__);
++	return NULL;
++}
++
++static int testdir_fd = -1, chkdir_fd = -1;
++
++static int __getdents_f(unsigned int sn, struct fent *fe)
++{
++	int dfd;
++	DIR *dir;
++
++	dfd = openat(testdir_fd, fe->subpath, O_DIRECTORY);
++	if (dfd < 0) {
++		fprintf(stderr, "%d[%u]/%u getdents_f: failed to open directory %s",
++			getpid(), procid, sn, fe->subpath);
++		return -errno;
++	}
++
++	dir = fdopendir(dfd);
++	while (readdir64(dir) != NULL)
++		continue;
++	closedir(dir);
++	return 0;
++}
++
++static int getdents_f(int op, unsigned int sn)
++{
++	struct fent *fe;
++
++	fe = getfent(FT_DIRm, random());
++	if (!fe)
++		return 0;
++	printf("%d[%u]/%u %s: %s\n", getpid(), procid, sn, __func__,
++	       fe->subpath);
++	return __getdents_f(sn, fe);
++}
++
++static int readlink_f(int op, unsigned int sn)
++{
++	char buf1[PATH_MAX], buf2[PATH_MAX];
++	struct fent *fe;
++	ssize_t sz;
++
++	fe = getfent(FT_SYMm, random());
++	if (!fe)
++		return 0;
++
++	printf("%d[%u]/%u %s: %s\n", getpid(), procid, sn, __func__,
++	       fe->subpath);
++	sz = readlinkat(testdir_fd, fe->subpath, buf1, PATH_MAX - 1);
++	if (sz < 0) {
++		fprintf(stderr, "%d[%u]/%u %s: failed to readlinkat %s: %d",
++			getpid(), procid, sn, __func__, fe->subpath, errno);
++		return -errno;
++	}
++
++	if (chkdir_fd >= 0) {
++		if (sz != readlinkat(testdir_fd, fe->subpath, buf2,
++				     PATH_MAX - 1)) {
++			fprintf(stderr, "%d[%u]/%u %s: symlink length mismatch @%s\n",
++				getpid(), procid, sn, __func__, fe->subpath);
++			return -E2BIG;
++		}
++		if (memcmp(buf1, buf2, sz)) {
++			fprintf(stderr, "%d[%u]/%u %s: symlink mismatch @%s\n",
++				getpid(), procid, sn, __func__, fe->subpath);
++			return -EBADMSG;
++		}
++	}
++	return 0;
++}
++
++static int tryopen(unsigned int sn, const char *op, struct fent *fe)
++{
++	if (fe->fd < 0) {
++		fe->fd = openat(testdir_fd, fe->subpath, O_RDONLY);
++		if (fe->fd < 0) {
++			fprintf(stderr, "%d[%u]/%u %s: failed to open %s: %d",
++				getpid(), procid, sn, op, fe->subpath, errno);
++			return -errno;
++		}
++		/* use force_page_cache_readahead for every read request */
++		posix_fadvise(fe->fd, 0, 0, POSIX_FADV_RANDOM);
++	}
++
++	if (chkdir_fd >= 0 && fe->chkfd < 0)
++		fe->chkfd = openat(chkdir_fd, fe->subpath, O_RDONLY);
++	return 0;
++}
++
++static int fadvise_f(int op, unsigned int sn)
++{
++	struct fent *fe;
++	int ret;
++
++	fe = getfent(FT_REGm, random());
++	if (!fe)
++		return 0;
++	ret = tryopen(sn, __func__, fe);
++	if (ret)
++		return ret;
++
++	printf("%d[%u]/%u %s: %s\n", getpid(), procid, sn,
++	       __func__, fe->subpath);
++	ret = posix_fadvise(fe->fd, 0, 0, POSIX_FADV_DONTNEED);
++	if (!ret)
++		return 0;
++	fprintf(stderr, "%d(%u)/%u %s: posix_fadvise %s failed %d\n",
++		getpid(), procid, sn, __func__, fe->subpath, errno);
++	return -errno;
++}
++
++static int __read_f(unsigned int sn, struct fent *fe, uint64_t filesize)
++{
++	static char buf[MAX_CHUNKSIZE], chkbuf[MAX_CHUNKSIZE];
++	uint64_t lr, off, len, trimmed;
++	size_t nread, nread2;
++
++	lr = ((uint64_t) random() << 32) + random();
++	off = lr % filesize;
++	len = (random() % MAX_CHUNKSIZE) + 1;
++	trimmed = len;
++
++	if (off + len > filesize) {
++		uint64_t a = filesize - off + 16 * getpagesize();
++
++		if (len > a)
++			len %= a;
++		trimmed = len <= filesize - off ? len : filesize - off;
++	}
++
++	printf("%d[%u]/%u read_f: %llu bytes @ %llu\n", getpid(), procid, sn,
++	       len | 0ULL, off | 0ULL);
++	nread = pread64(fe->fd, buf, len, off);
++	if (nread != trimmed) {
++		fprintf(stderr, "%d[%u]/%u read_f: failed to read %llu bytes @ %llu of %s\n",
++			getpid(), procid, sn, len | 0ULL, off | 0ULL,
++			fe->subpath);
++		return -errno;
++	}
++
++	if (fe->chkfd < 0)
++		return 0;
++
++	nread2 = pread64(fe->chkfd, chkbuf, len, off);
++	if (nread2 <= 0) {
++		fprintf(stderr, "%d[%u]/%u read_f: failed to check %llu bytes @ %llu of %s\n",
++			getpid(), procid, sn, len | 0ULL, off | 0ULL,
++			fe->subpath);
++		return -errno;
++	}
++
++	if (nread != nread2) {
++		fprintf(stderr, "%d[%u]/%u read_f: size mismatch %llu bytes @ %llu of %s\n",
++			getpid(), procid, sn, len | 0ULL, off | 0ULL,
++			fe->subpath);
++		return -EFBIG;
++	}
++
++	if (memcmp(buf, chkbuf, nread)) {
++		fprintf(stderr, "%d[%u]/%u read_f: data mismatch %llu bytes @ %llu of %s\n",
++			getpid(), procid, sn, len | 0ULL, off | 0ULL,
++			fe->subpath);
++		return -EBADMSG;
++	}
++	return 0;
++}
++
++static int read_f(int op, unsigned int sn)
++{
++	struct fent *fe;
++	ssize_t fsz;
++	int ret;
++
++	fe = getfent(FT_REGm, random());
++	if (!fe)
++		return 0;
++	ret = tryopen(sn, __func__, fe);
++	if (ret)
++		return ret;
++
++	fsz = lseek64(fe->fd, 0, SEEK_END);
++	if (fsz <= 0) {
++		if (!fsz) {
++			printf("%d[%u]/%u %s: zero size @ %s\n",
++			       getpid(), procid, sn, __func__, fe->subpath);
++			return 0;
++		}
++		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
++			getpid(), procid, sn, __func__, fe->subpath, errno);
++		return -errno;
++	}
++	return __read_f(sn, fe, fsz);
++}
++
++static int __doscan_f(unsigned int sn, const char *op, struct fent *fe,
++		      uint64_t filesize, uint64_t chunksize)
++{
++	static char buf[MAX_SCAN_CHUNKSIZE], chkbuf[MAX_SCAN_CHUNKSIZE];
++	uint64_t pos;
++
++	printf("%d[%u]/%u %s: filesize %llu, chunksize %llu @ %s\n",
++	       getpid(), procid, sn, op, (unsigned long long)filesize,
++	       (unsigned long long)chunksize, fe->subpath);
++
++	for (pos = 0; pos < filesize; pos += chunksize) {
++		ssize_t nread, nread2;
++
++		nread = pread64(fe->fd, buf, chunksize, pos);
++
++		if (nread <= 0)
++			return -errno;
++
++		if (nread < chunksize && nread != filesize - pos)
++			return -ERANGE;
++
++		if (fe->chkfd < 0)
++			continue;
++
++		nread2 = pread64(fe->chkfd, chkbuf, chunksize, pos);
++		if (nread2 <= 0)
++			return -errno;
++
++		if (nread != nread2)
++			return -EFBIG;
++
++		if (memcmp(buf, chkbuf, nread)) {
++			fprintf(stderr, "%d[%u]/%u %s: %llu bytes mismatch @ %llu of %s\n",
++				getpid(), procid, sn, op, chunksize | 0ULL,
++				pos | 0ULL, fe->subpath);
++			return -EBADMSG;
++		}
++	}
++	return 0;
++}
++
++static int doscan_f(int op, unsigned int sn)
++{
++	struct fent *fe;
++	uint64_t chunksize;
++	ssize_t fsz;
++	int ret;
++
++	fe = getfent(FT_REGm, random());
++	if (!fe)
++		return 0;
++	ret = tryopen(sn, __func__, fe);
++	if (ret)
++		return ret;
++
++	fsz = lseek64(fe->fd, 0, SEEK_END);
++	if (fsz <= 0) {
++		if (!fsz) {
++			printf("%d[%u]/%u %s: zero size @ %s\n",
++			       getpid(), procid, sn, __func__, fe->subpath);
++			return 0;
++		}
++		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
++			getpid(), procid, sn, __func__, fe->subpath, errno);
++		return -errno;
++	}
++	chunksize = ((uint64_t)random() * random() % MAX_SCAN_CHUNKSIZE) + 1;
++	return __doscan_f(sn, __func__, fe, fsz, chunksize);
++}
++
++static int doscan_aligned_f(int op, unsigned int sn)
++{
++	const int psz = getpagesize();
++	struct fent *fe;
++	uint64_t chunksize, maxchunksize;
++	ssize_t fsz;
++	int ret;
++
++	fe = getfent(FT_REGm, random());
++	if (!fe)
++		return 0;
++	ret = tryopen(sn, __func__, fe);
++	if (ret)
++		return ret;
++	fsz = lseek64(fe->fd, 0, SEEK_END);
++	if (fsz <= psz) {
++		if (fsz >= 0) {
++			printf("%d[%u]/%u %s: size too small %lld @ %s\n",
++			       getpid(), procid, sn, __func__, fsz | 0LL,
++			       fe->subpath);
++			return 0;
++		}
++		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
++			getpid(), procid, sn, __func__, fe->subpath, errno);
++		return -errno;
++	}
++
++	maxchunksize = (fsz - psz > MAX_SCAN_CHUNKSIZE ?
++			MAX_SCAN_CHUNKSIZE : fsz - psz);
++	chunksize = random() * random() % maxchunksize;
++	chunksize = (((chunksize - 1) / psz) + 1) * psz;
++	if (!chunksize)
++		chunksize = psz;
++	return __doscan_f(sn, __func__, fe, fsz, chunksize);
++}
++
++void randomdelay(void)
++{
++	uint64_t lr = ((uint64_t) random() << 32) + random();
++	clock_t start;
++	clock_t length = (lr % CLOCKS_PER_SEC) >> 1;
++
++	start = clock();
++	while (clock() < start + length)
++		(void)sched_yield();
++}
++
++void sg_handler(int signum)
++{
++	switch (signum) {
++	case SIGTERM:
++		should_stop = 1;
++		break;
++	default:
++		break;
++	}
++}
++
++struct opdesc ops[] = {
++	[OP_GETDENTS]		= { "getdents", getdents_f, 5, false },
++	[OP_READLINK]		= { "readlink", readlink_f, 5, false },
++	[OP_SEQREAD_ALIGNED]	= { "readscan_aligned", doscan_aligned_f, 10, false },
++	[OP_SEQREAD_UNALIGNED]	= { "readscan_unaligned", doscan_f, 10, false },
++	[OP_READ]		= { "read", read_f, 30, false},
++	[OP_FADVISE]		= { "fadvise", fadvise_f, 3, false},
++	[OP_DROP_CACHES]	= { "drop_caches", drop_caches_f, 1, true},
++};
++
++static int parse_options(int argc, char *argv[])
++{
++	char *testdir, *chkdir;
++	int opt;
++
++	while ((opt = getopt(argc, argv, "l:p:s:")) != -1) {
++		switch (opt) {
++		case 'l':
++			loops = atoi(optarg);
++			if (loops < 0) {
++				fprintf(stderr, "invalid loops %d\n", loops);
++				return -EINVAL;
++			}
++			break;
++		case 'p':
++			nprocs = atoi(optarg);
++			if (nprocs < 0) {
++				fprintf(stderr, "invalid workers %d\n",
++					nprocs);
++				return -EINVAL;
++			}
++			break;
++		case 's':
++			r_seed = atoi(optarg);
++			if (r_seed < 0) {
++				fprintf(stderr, "invalid random seed %d\n",
++					r_seed);
++				return -EINVAL;
++			}
++			break;
++		default: /* '?' */
++			return -EINVAL;
++		}
++	}
++
++	if (optind >= argc)
++		return -EINVAL;
++
++	testdir = argv[optind++];
++	if (testdir) {
++		testdir_fd = open(testdir, O_PATH);
++		if (testdir_fd < 0) {
++			fprintf(stderr, "cannot open testdir fd @ %s: %s\n",
++				testdir, strerror(errno));
++			return 1;
++		}
++	}
++
++	if (argc > optind) {
++		chkdir = argv[optind++];
++
++		chkdir_fd = open(chkdir, O_PATH);
++		if (chkdir_fd < 0) {
++			fprintf(stderr, "cannot open checkdir fd @ %s: %s\n",
++				chkdir, strerror(errno));
++			return 1;
++		}
++	}
++	return 0;
++}
++
++static void usage(void)
++{
++	fputs("usage: [options] TESTDIR [COMPRDIR]\n\n"
++	      "Stress test for EROFS filesystem, where TESTDIR is the directory to test and\n"
++	      "COMPRDIR (optional) serves as a directory for data comparison.\n"
++	      " -l#     Number of times each worker should loop (0 for infinite, default: 1)\n"
++	      " -p#     Number of parallel worker processes (default: 1)\n"
++	      " -s#     Seed for random generator (default: random)\n",
++	      stderr);
++}
++
++unsigned int *freq_table;
++int freq_table_size;
++
++static void doproc(void)
++{
++	unsigned int sn;
++
++	srandom(r_seed + procid);
++	for (sn = 0; !should_stop && (!loops || sn < loops); ++sn) {
++		int op, err;
++
++		op = freq_table[random() % freq_table_size];
++		if (op >= ARRAY_SIZE(ops)) {
++			fprintf(stderr, "%d[%u]/%u %s: internal error\n",
++				getpid(), procid, sn, __func__);
++			abort();
++		}
++
++		if (sn && op != OP_DROP_CACHES)
++			randomdelay();
++		err = ops[op].func(op, sn);
++		if (err) {
++			fprintf(stderr, "%d[%u]/%u test failed (%d): %s\n",
++				getpid(), procid, sn, err, strerror(-err));
++			exit(1);
++		}
++	}
++}
++
++static void make_freq_table(void)
++{
++	int f, i;
++	struct opdesc *p;
++
++	for (p = ops, f = 0; p < ops + ARRAY_SIZE(ops); p++) {
++		if (!superuser && p->requireroot)
++			continue;
++		f += p->freq;
++	}
++	freq_table = malloc(f * sizeof(*freq_table));
++	freq_table_size = f;
++	for (p = ops, i = 0; p < ops + ARRAY_SIZE(ops); p++) {
++		if (!superuser && p->requireroot)
++			continue;
++		for (f = 0; f < p->freq; f++, i++)
++			freq_table[i] = p - ops;
++	}
++}
++
++int main(int argc, char *argv[])
++{
++	unsigned int i;
++	int err, stat;
++	struct sigaction action;
++
++	err = parse_options(argc, argv);
++	if (err) {
++		if (err == -EINVAL)
++			usage();
++		return 1;
++	}
++
++	err = init_filetable(testdir_fd);
++	if (err) {
++		fprintf(stderr, "cannot initialize file table: %s\n",
++			strerror(errno));
++		return 1;
++	}
++
++	superuser = (geteuid() == 0);
++	setpgid(0, 0);
++	action.sa_handler = sg_handler;
++	action.sa_flags = 0;
++
++	if (sigaction(SIGTERM, &action, 0)) {
++		perror("sigaction failed");
++		exit(1);
++	}
++
++	if (!r_seed)
++		r_seed = (time(NULL) ? : 1);
++	make_freq_table();
++
++	/* spawn nprocs processes */
++	for (i = 0; i < nprocs; ++i) {
++		if (fork() == 0) {
++			action.sa_handler = SIG_DFL;
++			sigemptyset(&action.sa_mask);
++			if (sigaction(SIGTERM, &action, 0)) {
++				perror("sigaction failed");
++				exit(1);
++			}
++			procid = i;
++			doproc();
++			return 0;
++		}
++	}
++
++	err = 0;
++	while (wait(&stat) > 0 && !should_stop) {
++		if (!WIFEXITED(stat)) {
++			err = 1;
++			break;
++		}
++
++		if (WEXITSTATUS(stat)) {
++			err = WEXITSTATUS(stat);
++			break;
++		}
++	}
++	action.sa_flags = SA_RESTART;
++	sigaction(SIGTERM, &action, 0);
++	kill(-getpid(), SIGTERM);
++	/* wait until all children exit */
++	while (wait(&stat) > 0)
++		continue;
++	return err;
++}
+-- 
+2.30.2
 
-Regards,
-Love Kumar
-
-> 
-> Regards,
-> Simon
