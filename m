@@ -2,46 +2,46 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80F60A2A8D3
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Feb 2025 13:51:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E7607A2A8D4
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Feb 2025 13:51:10 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YpcR71hRjz3cp1
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YpcR74HwPz3d9s
 	for <lists+linux-erofs@lfdr.de>; Thu,  6 Feb 2025 23:50:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.99
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1738846255;
-	cv=none; b=KKrYgHVF9/ehrzYfNL60OELEr8+XYtDSgc5avcqUhQXQYwaEkj7YLOCv+UPXo+2ALdjpRjiRvbm0Wn+5oNnb/vvI24YkJw3+L8mE3SfKapwwRUCey3JpOH5iGhbp4THgOD3i3mb8kah7oAvki0CUfNAb/Py086XvIGyZNLDMetRk8n9g35fM+6o+zBCIArxznJdSH/gYTCTGjlz1hzKilQ2C3mYY17actI71JYswYl8hCnpWwYZJX6I7/zxM5BuBiC0cURXa0eFCKkFuWfGPYBFhjuJBThygV5uUlpdiMzmvkvEQHkq57MXIoGud8JTRzaoKvyol9RqAUuWRAER6Zw==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1738846256;
+	cv=none; b=SCu6kPeRiNHBKsgtYsUBO4nUGKzvrpMNU0HarSalxWq5WUvUhd3RheBhYKdvp67x4GsfTWeFFDymYDVFy30rwmPNeq6Xx5Ya10JC9FeI1IWvYV+bpm9xFwYfQRlaDaJ5dp7NF7gqDZccvWjaD0JpzAlXwGNVW9zOKvqFJMVOBVYS9zKqqHmqzmtVIXk8R0csO5jYWLMRF23h+BiSJnwD8kX5d10M1EvJ7QAoyl/Cltf9yCXdhlZc2GWwUC4Ogwj6RG/x5dqsiIiHTKKdEOBZdP2W0LrQf4RFE6a7eI07bymbE4L/hzmLoNpuhqUyIwCCZHyEPN/DKwF+7bnTBUd30Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1738846255; c=relaxed/relaxed;
-	bh=M+e9oVc/L9fE0eOiNJm65p0H8wHZ7HKQpCZeJG2vr8o=;
+	t=1738846256; c=relaxed/relaxed;
+	bh=5uZiqRm5vQ4OFRhAJR0Fo+wj2s4XUx6quBRBJMrtmh8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dQ2UJoxJcaDVFXm8UkkZkwRlWRsDhBgk/afn2mwJGag61PZJmO8mr7YdCs6gl9hx7cl99qY0ETjVmuhtN+2lGS+IDidrHWTXrY9aQQD2CQDQFaXSrYDS/pjbjkFSeYwtrKqQn1yD4sAOKym+jTZEigwocZpJQKf3RamXrT6RxPQFEq/BDASMhFYBt9HVrklnCB5e9SsedINEFej4DRrIClz7Tperbqdpwe6fDIHHtAh7pEfph5o5GT0oLHpPt9Q3MOinr9PeEjooNc77QJx/ta3E2qYuJxLwru68uMkBnhyPg1BVTLoXbzsm44aN/56yJ5bXxF8vI8bWSn7N91KcjA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KOHM5OEa; dkim-atps=neutral; spf=pass (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=jsp+PE5noJaXNw/GERBiILUSmZxPFx6n3SKqqC4oFK2ECFpa4A2BRndjVRf9GWWpL+NNZImMsobTGV5nhmJczzTlkhVhtdXTGv1p3kyNGLsR8IaWXOB4hPMp4jx06YnpXDFZvOO6oieef7t83zU39vHirNFlidI3P679nYVEva38kB99Zun1goa2+6m9JxTNr/59gBJOunBQ45EEgdoqb+FQD8c1c0BVH6dyMyQbz2kMxZgfxiw5Z+gbFcBOHPH4SLuuCcWUhpO2Hfs6yVOQyF3MTM/id/U0q1zGLMMDpAbOBooLFy+bJJf6WjyaXwjGrwfpNWgiTTHjqGm8fXknRA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=h3iBDXB8; dkim-atps=neutral; spf=pass (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KOHM5OEa;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=h3iBDXB8;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
 Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YpcR24B9wz30Vm
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YpcR30VWTz30HB
 	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Feb 2025 23:50:54 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
 	t=1738846251; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=M+e9oVc/L9fE0eOiNJm65p0H8wHZ7HKQpCZeJG2vr8o=;
-	b=KOHM5OEai6sxozPdaLo88gpdH+V3HZzAG7lYJ5+DgOZdmYXc5i+JuIAUPHSif6/QCd7TgwDuEBG4hKH2fhUY24mP6U7jFHKJmjk6Rf9JSPkGD3xovHyXPq7g8ZmnWz7b9s06WpkafxJoxV/eFgriB0ERowk07QFuqQ3JiRSlGqA=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOwMl7J_1738846249 cluster:ay36)
+	bh=5uZiqRm5vQ4OFRhAJR0Fo+wj2s4XUx6quBRBJMrtmh8=;
+	b=h3iBDXB8jz42t9ZzvJjsA+BpoLirnbrC9cMFxBdnSlSgXAfeMtmxtJW8cN3TFjJ3e0H4QjWthH+fC6VINlKY4j0h9m6pAbh/wrkkUExaloQWjtSyZHMx/3TpnL8cqcGIGrN1yl9O3dmrhKSLucUiAqOsgoiSnS3N9okLCbcabm8=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOwMl7m_1738846250 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 06 Feb 2025 20:50:49 +0800
+          Thu, 06 Feb 2025 20:50:50 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 8/9] erofs-utils: lib: refine z_erofs_get_extent_compressedlen()
-Date: Thu,  6 Feb 2025 20:50:33 +0800
-Message-ID: <20250206125034.1462966-8-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 9/9] erofs-utils: lib: clean up z_erofs_extent_lookback
+Date: Thu,  6 Feb 2025 20:50:34 +0800
+Message-ID: <20250206125034.1462966-9-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250206125034.1462966-1-hsiangkao@linux.alibaba.com>
 References: <20250206125034.1462966-1-hsiangkao@linux.alibaba.com>
@@ -67,73 +67,90 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Source kernel commit: 8f9530aeeb4f756bdfa70510b40e5d28ea3c742e
+Source kernel commit: ab474fccd04509db89fde8d3b28c39aa9a47db64
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/zmap.c | 30 ++++++++++++------------------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+ lib/zmap.c | 60 ++++++++++++++++++++++++------------------------------
+ 1 file changed, 27 insertions(+), 33 deletions(-)
 
 diff --git a/lib/zmap.c b/lib/zmap.c
-index b2aa483..24bdff7 100644
+index 24bdff7..2287bed 100644
 --- a/lib/zmap.c
 +++ b/lib/zmap.c
-@@ -320,26 +320,20 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
+@@ -273,46 +273,40 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+ 				   unsigned int lookback_distance)
  {
  	struct erofs_inode *const vi = m->inode;
- 	struct erofs_sb_info *sbi = vi->sbi;
 -	struct erofs_map_blocks *const map = m->map;
--	const unsigned int lclusterbits = vi->z_logical_clusterbits;
--	unsigned long lcn;
-+	bool bigpcl1 = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1;
-+	bool bigpcl2 = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2;
-+	unsigned long lcn = m->lcn + 1;
- 	int err;
+ 	const unsigned int lclusterbits = vi->z_logical_clusterbits;
+-	unsigned long lcn = m->lcn;
+-	int err;
  
--	DBG_BUGON(m->type != Z_EROFS_LCLUSTER_TYPE_PLAIN &&
--		  m->type != Z_EROFS_LCLUSTER_TYPE_HEAD1 &&
--		  m->type != Z_EROFS_LCLUSTER_TYPE_HEAD2);
-+	DBG_BUGON(m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
- 	DBG_BUGON(m->type != m->headtype);
- 
--	if (m->headtype == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
--	    ((m->headtype == Z_EROFS_LCLUSTER_TYPE_HEAD1) &&
--	     !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1)) ||
--	    ((m->headtype == Z_EROFS_LCLUSTER_TYPE_HEAD2) &&
--	     !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_2))) {
--		map->m_plen = 1 << lclusterbits;
--		return 0;
+-	if (lcn < lookback_distance) {
+-		erofs_err("bogus lookback distance @ nid %llu",
+-			  (unsigned long long)vi->nid);
+-		DBG_BUGON(1);
+-		return -EFSCORRUPTED;
 -	}
-+	if ((m->headtype == Z_EROFS_LCLUSTER_TYPE_HEAD1 && !bigpcl1) ||
-+	    ((m->headtype == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
-+	      m->headtype == Z_EROFS_LCLUSTER_TYPE_HEAD2) && !bigpcl2) ||
-+	    (lcn << vi->z_logical_clusterbits) >= vi->i_size)
-+		m->compressedblks = 1;
++	while (m->lcn >= lookback_distance) {
++		unsigned long lcn = m->lcn - lookback_distance;
++		int err;
  
--	lcn = m->lcn + 1;
- 	if (m->compressedblks)
- 		goto out;
+-	/* load extent head logical cluster if needed */
+-	lcn -= lookback_distance;
+-	err = z_erofs_load_lcluster_from_disk(m, lcn, false);
+-	if (err)
+-		return err;
++		err = z_erofs_load_lcluster_from_disk(m, lcn, false);
++		if (err)
++			return err;
  
-@@ -364,9 +358,9 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
- 		/*
- 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
--		 * rather than CBLKCNT, it's a 1 lcluster-sized pcluster.
-+		 * rather than CBLKCNT, it's a 1 block-sized pcluster.
- 		 */
--		m->compressedblks = 1 << (lclusterbits - sbi->blkszbits);
-+		m->compressedblks = 1;
- 		break;
- 	case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
- 		if (m->delta[0] != 1)
-@@ -381,7 +375,7 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 		return -EFSCORRUPTED;
+-	switch (m->type) {
+-	case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
+-		if (!m->delta[0]) {
+-			erofs_err("invalid lookback distance 0 @ nid %llu",
+-				  (unsigned long long)vi->nid);
++		switch (m->type) {
++		case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
++			lookback_distance = m->delta[0];
++			if (!lookback_distance)
++				goto err_bogus;
++			continue;
++		case Z_EROFS_LCLUSTER_TYPE_PLAIN:
++		case Z_EROFS_LCLUSTER_TYPE_HEAD1:
++		case Z_EROFS_LCLUSTER_TYPE_HEAD2:
++			m->headtype = m->type;
++			m->map->m_la = (lcn << lclusterbits) | m->clusterofs;
++			return 0;
++		default:
++			erofs_err("unknown type %u @ lcn %lu of nid %llu",
++				  m->type, lcn, vi->nid | 0ULL);
+ 			DBG_BUGON(1);
+-			return -EFSCORRUPTED;
++			return -EOPNOTSUPP;
+ 		}
+-		return z_erofs_extent_lookback(m, m->delta[0]);
+-	case Z_EROFS_LCLUSTER_TYPE_PLAIN:
+-	case Z_EROFS_LCLUSTER_TYPE_HEAD1:
+-	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
+-		m->headtype = m->type;
+-		map->m_la = (lcn << lclusterbits) | m->clusterofs;
+-		break;
+-	default:
+-		erofs_err("unknown type %u @ lcn %lu of nid %llu",
+-			  m->type, lcn, (unsigned long long)vi->nid);
+-		DBG_BUGON(1);
+-		return -EOPNOTSUPP;
  	}
- out:
--	map->m_plen = m->compressedblks << sbi->blkszbits;
-+	m->map->m_plen = erofs_pos(sbi, m->compressedblks);
- 	return 0;
- err_bonus_cblkcnt:
- 	erofs_err("bogus CBLKCNT @ lcn %lu of nid %llu",
+-	return 0;
++err_bogus:
++	erofs_err("bogus lookback distance %u @ lcn %lu of nid %llu",
++		  lookback_distance, m->lcn | 0ULL, vi->nid);
++	DBG_BUGON(1);
++	return -EFSCORRUPTED;
+ }
+ 
+ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
 -- 
 2.43.5
 
