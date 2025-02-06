@@ -2,68 +2,52 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B83CA28B4D
-	for <lists+linux-erofs@lfdr.de>; Wed,  5 Feb 2025 14:12:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1738761145;
-	bh=ZVs1hQNRbUhKk09ouz/d7EiudTwpTRIlIj8Cgi/tpmk=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:From;
-	b=dMaYm6KUbvQvMH87AnMe2/5mCL7C+9fL57YS7WP069wGkAqlx+NANQLVpzAT7DhZk
-	 ENV4Z+j+Frcpt9mUlBPUwCpiDQOWR9ZGCsNYOZVDbxznBp3ew7P9mxcERln3cTvqex
-	 c3kwcYqknv+49pPogD5z9epfpLH0r9ryHFFg6h21VDLqu3Y3mQQJKVM24NTeElC3PE
-	 fTTtDqZ17LoGSODTGK/EFhjmaeJDLLYjuDGAXLL6ANOTeQHR3IfdbHqAMT8awa02kE
-	 wOklX7829ssuU6Snx2Vq4C1sFcCFFQgXgtw76PrOdjbnPIP5HhsQUX+VGffAUve7lb
-	 hmp5GrxiIzL2Q==
+	by mail.lfdr.de (Postfix) with ESMTPS id 872ABA29F85
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Feb 2025 04:57:45 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Yp0yK4Z87z305m
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Feb 2025 00:12:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YpNbp4j02z30BG
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Feb 2025 14:57:42 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1738761143;
-	cv=none; b=mfOWEsyeoFEhL/B/YD7fMzQuGWee4JPG7prUMGaP9hKsrn6G3OKyqZ8y3p78LwLEfTITO4IIi+JILpa/TJj4QjD1nWKMkie1UnappqIJ2b3fgdmm7yRZa83fz+ayyuvDkOl/W3xo29gLLXKN742ySj9uKzU13SzRjypp8jJ1qkrHSyj3YQpJR82lsILArX/Nrh5ZUDRACPmKy29wlVywZayD1ztjA/Jbw8a+r6q406aaT5zKSHAGstcCKVM3YPZoR8cn8bSscSbRBWnTj7CI2Yr+cclIDCdSWG3PLEekApU1CpmSiKEYq4hzETJjwEeOwXhRqsVFe+A4NJAiziWCdQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1738814260;
+	cv=none; b=QE7LlmKfCMnWtqjklPJ+pPIvebzPV01qkforU2f3l6Ekn6y9gDQn4DElvjVJN5xLqr2JuxJDpQVnhyvkZ7djEtiFMzEIWHvjERi/0XayMVFxytStS+6zl17uGemGw+DCpufTvWrxlU4h0pjOtN0MZWQeXmYxqWyi8bCnvXgQFQA3yRZl1i7jaceXcbljrb9s/DqSVyN/+zhBGAtyOzSm6wyNJvgoDmnL0fWplqY6lg1XCfXKJS4KnpLAe829cOSvPqmri/VtJB9cqO9+QNhUgyHu6LvyK7XpTWkSpVV7d6+njWSNm16hW716Lgdz9Fg42sCEW8BQsVxft3nn2mmOXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1738761143; c=relaxed/relaxed;
-	bh=ZVs1hQNRbUhKk09ouz/d7EiudTwpTRIlIj8Cgi/tpmk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FBhA7kebvnjKsVkvrUolfBcvYXVrybShheLm14K3RH1U1N4xeS6lLS6KA6f3BW7ykU/HlwnUPmyVHIrmVW+OWfN3T6JuHeTHlcpZ/zXQAUMoOqQ/bbiwmzzzxm5pKTpSyhTtAixnsEyi2ZcgMzZM8PG1PEyBL2JDQkwPVaEk2HNEAe69UdmZWIH/OAWmWzjcamNJv1k9bvk8aLlMJhmJK06jiFYyL7m4vA1OxUB945cxlj1gKE0tZjSqXpuBJXySZ/CnAEPdctEy68jfT1Yy/C1TzEEQiutn+YEt3govQHzd4JPjKxtX2GMzSnc3EI3q+gjJCG2YGhhL/wKFOvKbtg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HdooJvAf; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1738814260; c=relaxed/relaxed;
+	bh=6tE60E8Zw9Mlr6VV4wOis2vVdFekpRTmAnbVAjFXlgo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G4XfDp/2rv84ZWydwwQoakBYLrfvcdwHPVrcqTpHfqo/GTJKxLPp5r/TuueFMcufetmIUBdHZjVFZkSBVI8mcr9vDVKSHmbfcdM+YdC77aNlBtrWgX4nD1+HTnPeIBQz4BaZ1z8IUjHnQIJCt4orj/sJe376woxvXB71BmCSDFI48weEt2F8vUzBWVGvFFpR16AHGco20kkPaiWaMkrNMfF8jfmQ14NVnjchnqzlszjcLMEGEA2rakDm2BOM1Fwcf0Kc4vp9ZGxsJHcgHQIqJorbaOiDJq8vxmVzfOTkjocpvK8VcHqy5/6vm1/GYxcX2WEDVjP2wQjppqSiWSrhgg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=M6XE50Ek; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=HdooJvAf;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=M6XE50Ek;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Yp0yF6LYfz2xH8
-	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Feb 2025 00:12:21 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 57B65A431FC
-	for <linux-erofs@lists.ozlabs.org>; Wed,  5 Feb 2025 13:10:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EB48C4CEE2;
-	Wed,  5 Feb 2025 13:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738761138;
-	bh=6J2OF/NuDHMwqVK9xVwjY357Q8NfV3FYdNlq7DSpMZU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HdooJvAfgZEkGgi9Vfb2zcThYoz6eMVA1AZRlAONvguLiZKRR6aumy4QE7ygACuPt
-	 X7AMF5u8eXkLdid9Bjic4J6/UUKcUzmTV7T7g+rQfHFJBcQrY5FPrAFWnwI8bzLZuV
-	 TVKlixNkLeQXqv2ielPzhNchmTOHUJn2536DQ32NvherFAwah3z8mxmgMRTPFgNM+x
-	 WuBuVoTJv1mUTSefv1XVHPPL13W+M8Nh4qT2EgEdeO+vBB5hcR/oQRTSh7uX6n0MNa
-	 kRyIGtSP6kKvxGugsuehsJlbmlN2dDRNY8zRxLAbBkKy1kT6OnJhI2etHDAm/HCJ4d
-	 ZNIg+NDJBWiIQ==
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YpNbk0KPVz2y33
+	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Feb 2025 14:57:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1738814252; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=6tE60E8Zw9Mlr6VV4wOis2vVdFekpRTmAnbVAjFXlgo=;
+	b=M6XE50EkDcYu1xlmM/w6f5TcFKbnFx+gyZ95B6PNYCPfu3zfky5guatoAtwsaWKtD+G/sb/6ncbsQ7guhly/quv2FFXSn/NMuFYiL4cLZ0jQzeXuISr3UqDWuHShHsdcfFYD2SHoPUheZl0KkjGbhrqU/HYjc2FA9doTo5kz0XA=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOuQHQg_1738814244 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 06 Feb 2025 11:57:30 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: contrib: add stress test
-Date: Wed,  5 Feb 2025 21:11:25 +0800
-Message-Id: <20250205131125.794-1-xiang@kernel.org>
-X-Mailer: git-send-email 2.30.2
+Subject: [PATCH v2] erofs-utils: contrib: add stress test
+Date: Thu,  6 Feb 2025 11:57:22 +0800
+Message-ID: <20250206035722.716849-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -76,20 +60,23 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Gao Xiang via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Gao Xiang <xiang@kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+
+From: Gao Xiang <xiang@kernel.org>
 
 Just import it as an in-tree component for tests.
 
 Signed-off-by: Gao Xiang <xiang@kernel.org>
 ---
+changes since v1:
+ - Limit to the linux platform for now.
+
  Makefile.am         |   1 +
- configure.ac        |   3 +-
- contrib/Makefile.am |   8 +
- contrib/stress.c    | 773 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 784 insertions(+), 1 deletion(-)
+ configure.ac        |  15 +-
+ contrib/Makefile.am |  11 +
+ contrib/stress.c    | 776 ++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 802 insertions(+), 1 deletion(-)
  create mode 100644 contrib/Makefile.am
  create mode 100644 contrib/stress.c
 
@@ -103,10 +90,29 @@ index fc464e8..f8a967f 100644
  endif
 +SUBDIRS += contrib
 diff --git a/configure.ac b/configure.ac
-index 0a069c5..858b2b8 100644
+index 0a069c5..c922f73 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -647,5 +647,6 @@ AC_CONFIG_FILES([Makefile
+@@ -20,6 +20,18 @@ AC_PROG_INSTALL
+ 
+ LT_INIT
+ 
++AC_CANONICAL_TARGET
++
++build_linux=no
++case "${target_os}" in
++  linux*)
++    build_linux=yes
++    ;;
++esac
++
++# OS-specific treatment
++AM_CONDITIONAL([OS_LINUX], [test "$build_linux" = "yes"])
++
+ # Test presence of pkg-config
+ AC_MSG_CHECKING([pkg-config m4 macros])
+ if test m4_ifdef([PKG_CHECK_MODULES], [yes], [no]) = "yes"; then
+@@ -647,5 +659,6 @@ AC_CONFIG_FILES([Makefile
  		 mkfs/Makefile
  		 dump/Makefile
  		 fuse/Makefile
@@ -116,24 +122,27 @@ index 0a069c5..858b2b8 100644
  AC_OUTPUT
 diff --git a/contrib/Makefile.am b/contrib/Makefile.am
 new file mode 100644
-index 0000000..613b348
+index 0000000..4eb7abe
 --- /dev/null
 +++ b/contrib/Makefile.am
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,11 @@
 +# SPDX-License-Identifier: GPL-2.0+
 +# Makefile.am
 +
 +AUTOMAKE_OPTIONS	= foreign
++
++if OS_LINUX
 +noinst_PROGRAMS		= stress
 +
 +stress_CFLAGS = -Wall -I$(top_srcdir)/include
 +stress_SOURCES = stress.c
++endif
 diff --git a/contrib/stress.c b/contrib/stress.c
 new file mode 100644
-index 0000000..8f4d793
+index 0000000..eedd9b9
 --- /dev/null
 +++ b/contrib/stress.c
-@@ -0,0 +1,773 @@
+@@ -0,0 +1,776 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
 + * stress test for EROFS filesystem
@@ -351,7 +360,10 @@ index 0000000..8f4d793
 +	fent = add_to_flist(FT_DIR, ".");
 +	if (!fent)
 +		return -ENOMEM;
-+	fchdir(testdir_fd);
++	if (fchdir(testdir_fd) < 0) {
++		perror("failed to fchdir");
++		return -errno;
++	}
 +	return walkdir(fent);
 +}
 +
@@ -908,5 +920,5 @@ index 0000000..8f4d793
 +	return err;
 +}
 -- 
-2.30.2
+2.43.5
 
