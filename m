@@ -1,53 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88DDCA2BBA3
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Feb 2025 07:41:49 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1295A2BBD8
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Feb 2025 07:52:54 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Yq4Bg09hbz30Tf
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Feb 2025 17:41:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Yq4RS3cPRz30W9
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Feb 2025 17:52:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1738910505;
-	cv=none; b=C1jST/a/i07b+H3xUk4GQ5w8qaQQcc3rBH1nzQyu6Gi1sP8Zr4MYDI3I55HUw8p8fluOclkv5a4cKkXzGX1s7ZTZzqkPl3JFIz5j6S4hRnhopgIt5Ww+VF+I8uyEtUvoLMMJyE7elmmztVt3O8BVhbRITubRJ4smJAoZY63laJoigC8PQBvbs7X/oW+qmQAb5kL471EgduQCPcRbPoljz1Qd9fYR2XS2vNYWmwQ1vcRJ65ujKM5o7cZtampje2VzO8ldVWz7VmoF4L67+5AvlXhaZ8u8TtAp81I3ibJW/eqDsZ8hKJ1orXNtWs2IZNt+xHgh1Wxbd9BsHgLuflkcew==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=104.223.121.4
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1738911170;
+	cv=none; b=WJQEWKFTmXzg7EvFJERUwReGyA9s++q9Op0yb1EzX2M1/AZ+9yMtxO9RRSkDRBt4AjIlAw4NRc/jM+Yx19IlNKNO+0s20fqfdMHJxCVqLFDQkQJi7mlp2XdhL0MVEnyxydShkpy6zFBsdBTlg3jxUvb230hoWhaSFr1AgF1kXqaWLPgGtgPGhQw5aRC2zi7jKKHwvLD6L5wGhvfYFIcRNGar6k3rj6Fv0MuxMgMr5p0kebwD3w6X192Rg5MVQmextgTCc/6SQgvbyc/sfyHXSLgqOJYsN9uwfISaoGLGzadchAt8giCQEi9ycCj4F9676vNIkOEOMcr5QuEuAmNFlQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1738910505; c=relaxed/relaxed;
-	bh=IckZPfDGFvE/+XKynooSNpFYbiDfWKFfsthqL+N1SNQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cStQHCgrTrwjepbD6iCngLwZ/VmWDtJS07th6HHSq7Mq3M0LGzsm1yCA5fIQT9VElzDxaGPElvEXc8Hb0F1Rj9s+ZUNcHim8fnLB8xa1KsNGbWkxnv1DDHODj3mmFDNKvrT0UJsrW5pqAxHDlZtsCs3lY7boqtYPb60c0q63atImS5oZtk0zWzLDf/iphHh/pqfTEAmFZBvmHflSVfJf6CeT4dg2drzbE5CDfAYlGW2SH9O6bjkT2FTkd1Zru31CeWzofan0eFF11CTApjKMdVha95VtU7lrWb1mMX8f5AVZPmx3GkKKiA+Cy+gYSvDCQzdizH1QjHHyMEo16Tk3Mw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=W1Klz7nc; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1738911170; c=relaxed/relaxed;
+	bh=+8+6ZUNhq+YWE8bKOu3+ezQdDyl05PkSsXV5gKLlceY=;
+	h=To:Subject:Message-ID:Date:From:MIME-Version:Content-Type; b=lAqUNhiqp6rjzizlphjWbWJYBi5iSBWaVwWXKaNqaW3u2dLLtsqXbTnaXjbc5HF9sj1gAroHoas8uCmVbFlDq8/aZ3l+gh5aB2t/bva6jnPr/E6bu+0RKLhto8lM+8Azw2ZAF3BSGxSi4apvjD7WLTnsd0/mODCREIuQiA2AaNhCZmUjzSjDbRNb+j9Y8cDnneOudk6eycX4ltqGHx6ukXWWl8KBqLv0b7dUXfTytLmLBVWc1Lo4FG+1yktb2CvCRw5e/hNrCbZy9dNYTn+SM06g01SMsy8DSIv9nIEaKnQJ99BvMMXZSkOapAntZ2TB/TrGsYm3DpzRCwtX/SrLkw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=cjcex.net; dkim=pass (1024-bit key; unprotected) header.d=cjcex.net header.i=@cjcex.net header.a=rsa-sha256 header.s=default header.b=fiDYvXZU; dkim-atps=neutral; spf=pass (client-ip=104.223.121.4; helo=rtl-11.bae.fit.huangyuwang.com; envelope-from=techprooj@cjcex.net; receiver=lists.ozlabs.org) smtp.mailfrom=cjcex.net
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=cjcex.net
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=W1Klz7nc;
+	dkim=pass (1024-bit key; unprotected) header.d=cjcex.net header.i=@cjcex.net header.a=rsa-sha256 header.s=default header.b=fiDYvXZU;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Yq4Bb3qgJz304Z
-	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Feb 2025 17:41:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1738910499; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=IckZPfDGFvE/+XKynooSNpFYbiDfWKFfsthqL+N1SNQ=;
-	b=W1Klz7ncmMMsLjd9XhCqOjJ3f6v2um2rK4r6xpPtPxFsXMAYSgIIxsXiHe5Ivycvd6kVadZjaKMVAvPoeXkIrC9pvj9C3PRoMBhcxnVPA+QNSMSfknU7eGv0/RzFrCBCiMPnHDZ5bnbBwIShjaxcq17AodEKvtH2wAUii9mwsJE=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WOySS0b_1738910496 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 07 Feb 2025 14:41:36 +0800
-From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cjcex.net (client-ip=104.223.121.4; helo=rtl-11.bae.fit.huangyuwang.com; envelope-from=techprooj@cjcex.net; receiver=lists.ozlabs.org)
+X-Greylist: delayed 118 seconds by postgrey-1.37 at boromir; Fri, 07 Feb 2025 17:52:49 AEDT
+Received: from rtl-11.bae.fit.huangyuwang.com (rtl-11.bae.fit.huangyuwang.com [104.223.121.4])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Yq4RP4yhZz30Pp
+	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Feb 2025 17:52:49 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=default; d=cjcex.net;
+ h=To:Subject:Message-ID:Date:From:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding;
+ bh=+8+6ZUNhq+YWE8bKOu3+ezQdDyl05PkSsXV5gKLlceY=;
+ b=fiDYvXZUUSOOC5h6nXRsp1fXNI3Fxuq0cdYRNEW9mUuHv9wpd0lfHv+XwW4txFf75jpOut2wM5dI
+   1cREW5TPbIjpyPL2nls8cY7SB8a64/LmqaFx3UpqkBC3POthbucd6n8pzm8Xavu5NA+s9omr2Re8
+   l+rgUW2fRN/VpRutD84=
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH RESEND] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify switches
-Date: Fri,  7 Feb 2025 14:41:35 +0800
-Message-ID: <20250207064135.2249529-1-hongzhen@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+Subject: =?UTF-8?B?anVzdCBmb2xsb3dpbmcgdXAgdG8gc2VlIGlmIHlvdeKAmXJlIHN0aWxsIGludGVyZXN0ZWQgaW4gZS1iaWtlcw==?=
+Message-ID: <007ee518e3e8ad8995d954c9e6d1a7ed@bestbeginnermotorcycles.com>
+Date: Fri, 07 Feb 2025 07:51:42 +0100
+From: "Tech Pro" <techprotu@cjcex.net>
 MIME-Version: 1.0
+Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+X-Spam-Status: No, score=4.3 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,HTML_IMAGE_RATIO_04,HTML_MESSAGE,
+	MIME_HTML_ONLY,RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L5,RCVD_IN_PSBL,
+	SPF_HELO_PASS,SPF_PASS,URIBL_BLACK autolearn=disabled version=4.0.0
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -60,132 +57,84 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-kernel@vger.kernel.org
+Reply-To: techpro@cjcex.net
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-There's no need to enumerate each type.  No logic changes.
-
-Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
----
- fs/erofs/zmap.c | 59 ++++++++++++++++++-------------------------------
- 1 file changed, 22 insertions(+), 37 deletions(-)
-
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index 689437e99a5a..0ee78413bfd5 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -265,24 +265,20 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
- 		if (err)
- 			return err;
- 
--		switch (m->type) {
--		case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
-+		if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
- 			lookback_distance = m->delta[0];
- 			if (!lookback_distance)
- 				goto err_bogus;
- 			continue;
--		case Z_EROFS_LCLUSTER_TYPE_PLAIN:
--		case Z_EROFS_LCLUSTER_TYPE_HEAD1:
--		case Z_EROFS_LCLUSTER_TYPE_HEAD2:
-+		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 			m->headtype = m->type;
- 			m->map->m_la = (lcn << lclusterbits) | m->clusterofs;
- 			return 0;
--		default:
--			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
--				  m->type, lcn, vi->nid);
--			DBG_BUGON(1);
--			return -EOPNOTSUPP;
- 		}
-+		erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
-+			  m->type, lcn, vi->nid);
-+		DBG_BUGON(1);
-+		return -EOPNOTSUPP;
- 	}
- err_bogus:
- 	erofs_err(sb, "bogus lookback distance %u @ lcn %lu of nid %llu",
-@@ -329,35 +325,28 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
- 	DBG_BUGON(lcn == initial_lcn &&
- 		  m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
- 
--	switch (m->type) {
--	case Z_EROFS_LCLUSTER_TYPE_PLAIN:
--	case Z_EROFS_LCLUSTER_TYPE_HEAD1:
--	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
-+	if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
-+		if (m->delta[0] != 1) {
-+			erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
-+			DBG_BUGON(1);
-+			return -EFSCORRUPTED;
-+		}
-+		if (m->compressedblks)
-+			goto out;
-+	} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 		/*
- 		 * if the 1st NONHEAD lcluster is actually PLAIN or HEAD type
- 		 * rather than CBLKCNT, it's a 1 block-sized pcluster.
- 		 */
- 		m->compressedblks = 1;
--		break;
--	case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
--		if (m->delta[0] != 1)
--			goto err_bonus_cblkcnt;
--		if (m->compressedblks)
--			break;
--		fallthrough;
--	default:
--		erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn,
--			  vi->nid);
--		DBG_BUGON(1);
--		return -EFSCORRUPTED;
-+		goto out;
- 	}
-+	erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
-+	DBG_BUGON(1);
-+	return -EFSCORRUPTED;
- out:
- 	m->map->m_plen = erofs_pos(sb, m->compressedblks);
- 	return 0;
--err_bonus_cblkcnt:
--	erofs_err(sb, "bogus CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
--	DBG_BUGON(1);
--	return -EFSCORRUPTED;
- }
- 
- static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
-@@ -386,9 +375,7 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
- 				m->delta[1] = 1;
- 				DBG_BUGON(1);
- 			}
--		} else if (m->type == Z_EROFS_LCLUSTER_TYPE_PLAIN ||
--			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD1 ||
--			   m->type == Z_EROFS_LCLUSTER_TYPE_HEAD2) {
-+		} else if (m->type < Z_EROFS_LCLUSTER_TYPE_MAX) {
- 			if (lcn != headlcn)
- 				break;	/* ends at the next HEAD lcluster */
- 			m->delta[1] = 1;
-@@ -452,8 +439,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		}
- 		/* m.lcn should be >= 1 if endoff < m.clusterofs */
- 		if (!m.lcn) {
--			erofs_err(inode->i_sb,
--				  "invalid logical cluster 0 at nid %llu",
-+			erofs_err(inode->i_sb, "invalid logical cluster 0 at nid %llu",
- 				  vi->nid);
- 			err = -EFSCORRUPTED;
- 			goto unmap_out;
-@@ -469,8 +455,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 			goto unmap_out;
- 		break;
- 	default:
--		erofs_err(inode->i_sb,
--			  "unknown type %u @ offset %llu of nid %llu",
-+		erofs_err(inode->i_sb, "unknown type %u @ offset %llu of nid %llu",
- 			  m.type, ofs, vi->nid);
- 		err = -EOPNOTSUPP;
- 		goto unmap_out;
--- 
-2.43.5
+<html>
+<head>
+</head>
+<body>
+Hi,<br /> <br /> We are excited to introduce two of our latest e-bike
+models, designed to meet a variety of riding needs while combining style,
+performance, and cutting-edge technology. Whether you're commuting through
+the city, taking weekend adventures, or simply enjoying a smooth ride,
+these models offer versatility, comfort, and impressive performance.<br />
+<br /> Both models are shipped directly from our warehouse in Germany,
+ensuring fast and reliable arrival across the EU within 3&ndash;7 business
+days. We take pride in providing a seamless purchase and delivery
+experience, so you can start enjoying your new e-bike as soon as
+possible.<br /><br />If you're interested in purchasing or would like a
+shipping cost estimate, simply provide your address, and we'll send you a
+detailed quote based on your location. Additionally, we offer a variety of
+accessories like custom locks, helmets, and bike bags to enhance your
+riding experience.<br /> <br /> Moped Cruise E-Bike: Classic Style with
+Modern Features<br /> The VintageCruise E-Bike brings together the
+nostalgic look of a classic moped with the latest e-bike innovations,
+perfect for those who appreciate retro aesthetics combined with modern
+technology. Key features include:<br /> <br /> Motor: 500W motor for smooth
+acceleration, delivering dependable power whether you're cruising on flat
+roads or tackling gentle inclines.<br /> Battery: 48V 15AH lithium battery,
+providing an impressive range of up to 55 miles on a single charge, so you
+can enjoy extended rides without constantly worrying about recharging.<br
+/> Brakes: Front and rear disc brakes for precise and reliable stopping
+power in all conditions.<br /> Tires: 20-inch fat tires offer superior grip
+and comfort, perfect for city streets, parks, and light trails.<br />
+Design: Retro-inspired moped design, carefully crafted with a modern touch
+for daily use. The frame is durable, and the bike's overall design
+maintains an eye-catching aesthetic while being functional.<br /> Lighting:
+Integrated lighting system, ensuring you stay visible and safe, even in
+low-light or night-time conditions.<br /> This model arrives 80 percent
+pre-assembled, making the setup process quick and hassle-free. We also
+offer a 1-year warranty and lifetime technical support to ensure peace of
+mind for every rider. Our team is always available to assist with any
+questions, whether you're assembling your e-bike or need technical
+advice.<br /><br /><img
+src="https://eridefox.com/wp-content/uploads/2023/03/Ouxi-V8-Electric-Bike-Conquer-the-Hills-1-768x512.jpg"
+width="768" height="512" /><br /><br /><br /><br /> <br /> Urban Explorer
+X: Performance and Comfort for City and Trail<br /> The UrbanExplorer X is
+a high-performance e-bike built for comfort and versatility. Ideal for both
+city streets and light trails, this e-bike will meet all your commuting and
+outdoor exploration needs. Key features include:<br /> <br /> Dual
+Suspension System: Equipped with 80mm front air suspension and a rear shock
+absorber, the UrbanExplorer X guarantees a smooth and comfortable ride,
+even on rough roads or bumpy trails.<br /> Motor: The 500W motor delivers
+powerful performance, reaching speeds up to 45 km/h, allowing you to
+effortlessly navigate through city traffic or cruise down scenic paths.<br
+/> Battery: The removable 48V 15AH lithium-ion battery ensures a range of
+65&ndash;85 km per charge. Perfect for long trips or daily commutes, it's
+designed for quick, convenient charging.<br /> Foldable Design: The e-bike
+weighs only 32 kg and features a compact, foldable design, making it easy
+to store or transport. It's a great option for those who need a practical
+e-bike that fits into an active urban lifestyle.<br /> Features: An LCD
+display keeps you informed about speed, battery status, and other important
+data. The 7-speed gear system, along with 5 different assist levels,
+provides customizable riding options for any terrain. Integrated mechanical
+disc brakes offer reliable stopping power in various weather conditions.<br
+/> Tires: 20-inch fat tires provide superior stability, whether you're
+riding on paved roads, gravel paths, or even light snow, ensuring traction
+and safety on diverse surfaces.<br /> Whether you're commuting to work,
+running errands, or exploring new trails, the UrbanExplorer X ensures you
+can enjoy your journey with confidence and comfort.<br /> <br /><img
+src="https://bicycleland.co.uk/wp-content/uploads/2021/09/ADO-A20F-Electric-Bike-UK-MTB-E-bike-Sale-London-E-Bikes.jpg"
+width="600" height="600" /><br /><img
+src="https://bicycleland.co.uk/wp-content/uploads/2021/09/ado_a20f_electric_bike-15mph-speed-20_inch_fat_tire_ebike-250w_watts_motor-50_mile_electric_riding_range-ado_bike_UK.jpg"
+width="600" height="600" /><br /><img
+src="https://bicycleland.co.uk/wp-content/uploads/2021/09/ADO-A20F-Electric-Bike-UK-ADO-E-bikes-for-sales-with-free-bicycle-parts-and-repair.jpg"
+width="600" height="600" /><br /><br /> <br /> We look forward to hearing
+from you soon.<br /> <br /> Best regards,<br /> Alex Ryan<br /> The E-Bike
+Expert<br /><br /><br /><br /><br /><br />If you are not interested in our
+ebikes, please send email address which we can unlist for you.
+</body>
+</html>
 
