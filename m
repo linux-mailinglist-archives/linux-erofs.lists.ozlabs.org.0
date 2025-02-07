@@ -2,56 +2,53 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18C32A2BED4
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Feb 2025 10:11:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B19ACA2BEEB
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Feb 2025 10:14:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Yq7Vt4PZXz30VL
-	for <lists+linux-erofs@lfdr.de>; Fri,  7 Feb 2025 20:11:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Yq7Zw1LnXz30VM
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Feb 2025 20:14:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1738919460;
-	cv=none; b=HXalUx0IOHoa+f66D8YlPaaysULwIw917+SKrN5fMyQwqR97qOPPUz7vbHvApsVUGZt6+VkTSRis9AMsXECsislyk4fYjRikv4to8uHb0cTliyas2pPmZ0zKb2XW+52NeWUM2GYOZh+Jc3uWIpOplhqz3ZgrCPO8pPhe5ZGpt3BJ8F/Pa1DMrHaGzrkERM339GiD2McEyk6piaE7f8KzfzXusaTzSr4egL5ISxSamwkzKZE/QKwdXNgRugkXcxllG8tMglCTRI6Nbh+Ofr/tY4gsme4oAHdPHhksBhUqaRa2Q+RxKU1hYBHEGoFyn2a8yVf4XFZ2B0mOhvKFKww6pQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1738919670;
+	cv=none; b=Gk8+j4NhkXN2Kkt0h9YizBTapMg/Avvfxx3ZUmMfTJDg8hznc/RzofxksWaNkdEXf5CELUimF1U+KuHt3jY686mQBUrH++wByTYb3J3wotv3+Uypu1tRNqK2MQKGbdbl6IySN68+6ppqb5wtveHGyVrDeR0iK0tYuE92ffc9rpZrdtraKdRsYeYwYTpq7fn7OU2a+hZqoiTY4sdQAOYc4Q7uTT3AkKiU/uVQV1ClxTqXbTC2BBJ2+Ho2C6cMsBpQHEeqMjyoV5dKcn/B0OxZXHNLtdWuAaHu4RSq8fgspUH3pe5OCsMmQeaxOznwuwsnc/Q2f3tGQ/cFUUiOIuWNOg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1738919460; c=relaxed/relaxed;
-	bh=srTohFrkLUWkNmQn0i+d/kVtXnoicbZijIYddqpXBbA=;
+	t=1738919670; c=relaxed/relaxed;
+	bh=DCJRQQSMDhi4PPr4vjXgNPiPlE/jCmmPdCQjjVLbenU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G3FGrbfPc5iQbo6P+hSU3QnCe35h32fiAGsJhNwwsmR1SVx8XQ/68KNGjDhza1qidpLQMHi32zcnVXeCXoFbLu+XHlIWo8RGykqV56mFd5X+w1P82gqbuYjUZ6KGAdCGFqnLdGJFOfCCvSrNAa77LFQhdplYlOh5cFpe2oFaL4dKYpnv6ReqxZY7QyKGdXozI8tdJxCZLe7a2cACYc3g3vV6/jIAUs2gUvrTYsgB/h3zQYPdlLO/+D2P4tBJIMvAkayHp9p2ehaqZFy8T8HZyZ8XOtprFnioUZ3vgyAchPRmZkxupECgqmfnxXp+SrU/ogz7J4fe5+1r0OwopZeMag==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=OzRoIq2O; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=XSJZ+UMWiQck4QmjaS8r8QM3eegMEWK5174gxOLKU0upGaQcK9lwJuSlIMxre/fuVg/+RhxRdQSTiQ1ogvbdiNTq2ouBU25MsExhhcJP9emMgXRhAdt/weCaxADqhZvClOYA1nArimPUIRMOg8ym4pwULjAFWHqg7x+zgGIxeofXYf+zoGNCq2TZylWZR17CiF034DNoIlaVe+7Prj228LtU4joI/YpMsLvpj/RkPSbPlRCaxl9bXe6gXgGSbM9/AoSH5UhR7RVXTWQTk+3B3T59jDonWx0e7NsbIUTzq/df/cV6SW9AiUj/ZLNehorVM+v2YmRTPW50jtGDskMapA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=l+gyVjHX; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=OzRoIq2O;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=l+gyVjHX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Yq7Vp5TCFz2y66
-	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Feb 2025 20:10:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Yq7Zs2yhmz30Ss
+	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Feb 2025 20:14:29 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1738919453; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=srTohFrkLUWkNmQn0i+d/kVtXnoicbZijIYddqpXBbA=;
-	b=OzRoIq2OMJVFwsrDsxQiTVk+aAYbiF1tpq+6TfoKUvY5ZGsQC0plfNx2QP6hy8KFuDWz742oTYRybGnajkAZvuWbfUufR7fmz6LvgP3BBmbuEgGBph2vW+KLjYph1qTx65IUO7gpmphAeMcBSjNbpl/e/lq3bvOKn12MFkERn08=
-Received: from 30.74.129.145(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOyyqss_1738919452 cluster:ay36)
+	t=1738919665; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=DCJRQQSMDhi4PPr4vjXgNPiPlE/jCmmPdCQjjVLbenU=;
+	b=l+gyVjHXiCz61H7zuiR2QM1fkODxgrH2dFAMCXiYAQRe/pA090HbHKUcOym9hRT9GAz5l0NY97JrbzUK+OOAhPoKdc33K82IBsFtMyii9hctGDTuwGID7dkXi84XC1Q3wmW/YLydq7UHeBlGzDbHQaK1bLM0c2LSnJ++RH9Rk8A=
+Received: from 30.74.129.145(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WOyysU1_1738919663 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 07 Feb 2025 17:10:52 +0800
-Message-ID: <c1a59a9b-2fc1-426e-99e0-26380fcbb4de@linux.alibaba.com>
-Date: Fri, 7 Feb 2025 17:10:51 +0800
+          Fri, 07 Feb 2025 17:14:23 +0800
+Message-ID: <29c5e464-4a11-42f4-b303-279c4b642471@linux.alibaba.com>
+Date: Fri, 7 Feb 2025 17:14:23 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify
+Subject: Re: [PATCH v3] erofs: use Z_EROFS_LCLUSTER_TYPE_MAX to simplify
  switches
-To: Hongbo Li <lihongbo22@huawei.com>,
- Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20250207080829.2405528-1-hongzhen@linux.alibaba.com>
- <f4319592-df8f-4468-b8fb-7fcbc51804c6@linux.alibaba.com>
- <10e648ae-7e0b-4560-a73d-b728efbc9e15@huawei.com>
+To: Hongzhen Luo <hongzhen@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <20250207085056.2502010-1-hongzhen@linux.alibaba.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <10e648ae-7e0b-4560-a73d-b728efbc9e15@huawei.com>
+In-Reply-To: <20250207085056.2502010-1-hongzhen@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -72,42 +69,48 @@ Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Hi Hongbo,
 
-On 2025/2/7 16:57, Hongbo Li via Linux-erofs wrote:
+
+On 2025/2/7 16:50, Hongzhen Luo wrote:
+> There's no need to enumerate each type.  No logic changes.
 > 
-
-...
-
->>> @@ -329,35 +328,31 @@ static int z_erofs_get_extent_compressedlen(struct z_erofs_maprecorder *m,
->>>       DBG_BUGON(lcn == initial_lcn &&
->>>             m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD);
->>> -    switch (m->type) {
->>> -    case Z_EROFS_LCLUSTER_TYPE_PLAIN:
->>> -    case Z_EROFS_LCLUSTER_TYPE_HEAD1:
->>> -    case Z_EROFS_LCLUSTER_TYPE_HEAD2:
->>> +    if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
->>> +        erofs_err(sb, "cannot found CBLKCNT @ lcn %lu of nid %llu", lcn, vi->nid);
->>> +        DBG_BUGON(1);
->>> +        return -EFSCORRUPTED;
->>> +    }
->>
->> No, I don't think it's equivalent, please use
->> the previous version for this part instead.
+> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+> ---> v3: Code cleanup, remove logically inequivalent changes.
+> v2: https://lore.kernel.org/all/20250207080829.2405528-1-hongzhen@linux.alibaba.com/
+> v1: https://lore.kernel.org/all/20250207064135.2249529-1-hongzhen@linux.alibaba.com/
+> ---
+>   fs/erofs/zmap.c | 60 +++++++++++++++++++------------------------------
+>   1 file changed, 23 insertions(+), 37 deletions(-)
 > 
-> I think this version doesn't consider the fallthrough case. May be just use the goto statement can keep equivalent.
+> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+> index 689437e99a5a..7dba1573498b 100644
+> --- a/fs/erofs/zmap.c
+> +++ b/fs/erofs/zmap.c
+> @@ -265,23 +265,20 @@ static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
+>   		if (err)
+>   			return err;
+>   
+> -		switch (m->type) {
+> -		case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
+> +		if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
+> +			erofs_err(sb, "unknown type %u @ lcn %lu of nid %llu",
+> +				  m->type, lcn, vi->nid);
+> +			DBG_BUGON(1);
+> +			return -EOPNOTSUPP;
+> +		} else if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
+>   			lookback_distance = m->delta[0];
+>   			if (!lookback_distance)
+>   				goto err_bogus;'
 
-For this particular part, I tend to use the first
-version since it's already simple enough anyway.
+Maybe just kill `goto err_bogus;` too, like:
+                         if (!lookback_distance) {
+                                 erofs_err(sb, "bogus lookback distance %u @ lcn %lu of nid %llu",
+                                           lookback_distance, m->lcn, vi->nid);
+                                 DBG_BUGON(1);
+                                 return -EFSCORRUPTED;
+                         }
+
+Otherwise it looks good to me.
 
 Thanks,
 Gao Xiang
-
-> 
-> Thanks,
-> Hongbo
-> 
->>
->> Thanks,
->> Gao Xiang
-
