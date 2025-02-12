@@ -2,57 +2,84 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92B84A32A20
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 16:33:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id ECBD1A32A66
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 16:46:35 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YtMlm1XLjz3bjb
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Feb 2025 02:33:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YtN2x3J2Fz3blB
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Feb 2025 02:46:33 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739374403;
-	cv=none; b=S+ucSg0+Q764tT5CguOhXstbL8fSTs7gWZMZm1urt8HFtm38VGV2qwwStv45zSkoYXI3+GpDwkhwLrv3DotfF7iaZimPIpRqlXZK9mDBKJhqS/PK6BcCm58PV3g+5GT8T2QdvL6GyD1K1GozsIILotsDI5lP10cII9oMT9YrwM5HiuT7wszIenjzePhqtdyroc3b0WTEJQhxMasfZoTb/NgPPCemF45/Bf69n5vKcUSeonPepVHExBSlGQ5JhZDY3KCORR59iDF4STAiAiBHeTpgGif6SO1KAwCtw0OSxZ66M9SqkmXe5cAjZsdDAlLDjHHqVGvw1tSFHmo7ScKJdw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::a35"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739375192;
+	cv=none; b=Dd8/mpAdtArqCk0nnZ4NmWaccoFSgep4vd+e0+7eJ9r/rrqLTw3DRRzfkRm5ATnT/FCsWNdnjBNtgl15FltqAqeS4+KblcJnFPVJmbzQQHCIumDGpYgbsA72Lj4mSwqY6KHW0JAHtgQLBV3m0Fn2lPjEFtM//OtX09IesC7rvn3n4rgiIZzx+71dC4cPdgLFiMABjcWpjZEgFV1aRTiKBHffkikiVjz/J9hSkVpq6xN4Tmk44S5FywcdbBMtCmw8gHp3fXgAl12RrRSMynMeX+knW9D0KalZdulRDx1XGgMuS1wEdYs8+QMYjDjdvmDVYSn0CU0x7R7ILFwwB1ku5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1739374403; c=relaxed/relaxed;
-	bh=XL8IDPZGBf7QrlZ+HcsVFr0MP1RcuEc5LblpFL8S14w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GfO+MTBfS5De6G4koSO/1Zf+FXijnUsN3Kiulzw32xaGUwFCWil3Un5uQEZP0Jbai64YyB9H80Cqhlt42qNXxHe8u+jR3W1Wr8He1sVlWAyPs7hh2Ul1C2NE5Z7yXgHz0IT4k3u6a/G2ZyEZti6cMW07kLQ5EPDO0Ct7PGvpEnlKleL8LdnIyZVU5ZcGD5aB2Y7gGEDOG0a/MCad2I6a/W5J6nCMqNuzs/EEOTH54lZ8kA17A4qDPGH5wLgfaTOzDlXCblR3WenpnCCSbigAnGxHF1KaZ0Lsd5TAaxJ7gZmdt2obnGJs53m5Zkd13FIy0D/BnXo5b4Dgx1X1NyDbXQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WNOafbPH; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1739375192; c=relaxed/relaxed;
+	bh=BKRx6rA6j8Lll2ToKch4l26Y6wZ1aehzxdgKxHRJqkM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CRTJwf1RrHnjcjGcrWsZcUFvrBqLi3ivIOADXB6n5LLT+6KKfWfAS1FvI/6Jz4SMuBvxER5UxMXpCTE75MFaKx0Oe7YWWla2dUJIufYDChaUzvkxKiEfGD0QibopvpQClxzhvBJnP0TXe0hWPA+Hq1/vPVwlarevGkInWxnOWCOJWzW+7N/+XKItUY7hoFdHjn2tGY55/6ySjMb7r1WN2+1QXDF+xaIDj31dKbPHxzpyGvlVaoHznUDEEDVvgw0Awqm21bOaXCfKaiAJPtoSJJZ+g38A2zkDmKdbzSlAg+1p0jPgvuFN7ZSqlnjsgzMFx5U6rvtwEwu3UoxTDkKrkA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=cOY6DAOv; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::a35; helo=mail-vk1-xa35.google.com; envelope-from=jonathanbaror@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WNOafbPH;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=cOY6DAOv;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::a35; helo=mail-vk1-xa35.google.com; envelope-from=jonathanbaror@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YtMlj2lRGz2ypP
-	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Feb 2025 02:33:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YtN2v2rX0z2yDD
+	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Feb 2025 02:46:30 +1100 (AEDT)
+Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-51eb1818d4fso4149349e0c.1
+        for <linux-erofs@lists.ozlabs.org>; Wed, 12 Feb 2025 07:46:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739374395; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=XL8IDPZGBf7QrlZ+HcsVFr0MP1RcuEc5LblpFL8S14w=;
-	b=WNOafbPHXu2BxLpanTA/KpEOUFKswKpueJhetKxe9F46ZXd6fn6OKv5xGcrC7/yLm4MHfmSPwxI/IXt7NlGjxbHdD0uXS6oRixrtsGFPi9IMBV2RTarN2CYqQd65Nzfsg/+gNkGfiF4ttkFWmKeKY/6PV7I4JrD0JerFmISjJ9g=
-Received: from 30.41.15.245(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WPKeHaJ_1739374392 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Feb 2025 23:33:13 +0800
-Message-ID: <e16c4550-2a42-40d9-a57a-9be488f89381@linux.alibaba.com>
-Date: Wed, 12 Feb 2025 23:33:12 +0800
+        d=gmail.com; s=20230601; t=1739375188; x=1739979988; darn=lists.ozlabs.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BKRx6rA6j8Lll2ToKch4l26Y6wZ1aehzxdgKxHRJqkM=;
+        b=cOY6DAOvzJlMicgt1LlmXi2be+oXLnGW0/46joib4gmdQHXRVT5M8CvV6KzpkD3tlA
+         GvgjvnwvF69iVSHyYI9qW8raXmKw7z+yUJHPYtRhSKRfgcxOpWDAnZQ1Mtt5Z+X+9ZqD
+         GhShvjwFdIrUJfS/O1EomTzQJVhmpq0yEeCd9tPbZPxmCICyZpLIFt6BsIrog4lRT1kU
+         nXUOHQ6q/V/lcRr6bNa+WVrFQJ9CPKIYPE4IVPj6MFgbIZpLYQGJGfjhW80RnI9gCzM4
+         9WmRCUF5ncYo5jIVqTUJYOClo8lNyiw9ee51d5zlXjW6dyhol8KqHq5qg+BwWab2OSwP
+         YzEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739375188; x=1739979988;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BKRx6rA6j8Lll2ToKch4l26Y6wZ1aehzxdgKxHRJqkM=;
+        b=V0b1kXZRcgtwTcR5NnkeIUm2BMPx1AsBZcF5ohz/VbchVthGsxaA/2ScM/InHpySsT
+         YmN5i8dYPIvbrZPjWNgahKyc9jLthCvwbhSBZhm/pKhXvgALxz6ti18ppJ7hfv084wtP
+         GerP8b3Xm4/HhqF6Pc4J3lz4+0uMCweaK8ACaCaKyj14VUFdIQGpwXqqDvMxYdWECYfK
+         bW7KaXs2/8bVzenxDm1Ttc24ewNzrKn/M8LLZr8MFiBXj1VOQCHFCzK606eOCDb6AjfD
+         eE/qlYe41tpAwzTRedpUHYFVXB2yRYYGGoUeMTGt9ZF3r5JckqznRnypOlna6iHZvPJb
+         RxsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTqHOw77J/2zA68nIV0Hm6/qNHMBcWTTyC2JDwvgvHvaCbVe/pFvyHFXrpmP/ihSIlg63Ynl40y2wkvw==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YwS1gG9ZVOYP8nxsjwFowHKp9yBTSoeNTg2QpN4WgpMkcmjPslH
+	SeY9qtFl08WA2oqngLMYa8j4jqmTrR8Io3ekym3OlMyXYn8kiWQAPfNcLm7AiRX3UW0TglGWyyO
+	W1mZmlpdkGb/TYFRvMcl+mwLOqoM=
+X-Gm-Gg: ASbGncuYMWV1whfGHf3dsFmuWcOldJSY+u3EY9uUhS6Pz963PzWLb4BKG747YOr/+am
+	QMvVC1N2f0XKw79dkl/lrxopD+y3YDPQie+Lk+jC23lc4onO4B63/Y2MASEyW3BmbDDJ1Ugv0O8
+	vrEtQ1tDLhFtKBxXTyqr6o9AJ4lk3Z
+X-Google-Smtp-Source: AGHT+IFUXaj7pTxF+MMgx2A3vgbdnaaqDBZCKi1lpvLbMUVAg6VzSFiet0KiSGrIxW7sDjggSm+oP6QQxJUntUpYnuM=
+X-Received: by 2002:a05:6122:658b:b0:520:42d3:91ca with SMTP id
+ 71dfb90a1353d-52067b20b17mr3010344e0c.1.1739375188096; Wed, 12 Feb 2025
+ 07:46:28 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fs/erofs: fix an integer overflow in symlink resolution
-To: Jonathan Bar Or <jonathanbaror@gmail.com>
 References: <20250212093057.3975104-1-hsiangkao@linux.alibaba.com>
- <CABMsoEFTGzKhFn7eB0cjg2peCd_DubF-X6Rpq2+1cRVm_J0Q0g@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CABMsoEFTGzKhFn7eB0cjg2peCd_DubF-X6Rpq2+1cRVm_J0Q0g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+ <CABMsoEFTGzKhFn7eB0cjg2peCd_DubF-X6Rpq2+1cRVm_J0Q0g@mail.gmail.com> <e16c4550-2a42-40d9-a57a-9be488f89381@linux.alibaba.com>
+In-Reply-To: <e16c4550-2a42-40d9-a57a-9be488f89381@linux.alibaba.com>
+From: Jonathan Bar Or <jonathanbaror@gmail.com>
+Date: Wed, 12 Feb 2025 07:46:16 -0800
+X-Gm-Features: AWEUYZkYSt-qan01dEQcZ8ZySJsluC3srYsglELxaBdiBlDAXSsTROq9M9DPYKs
+Message-ID: <CABMsoEE1mi2RaUgNU7Q-DxbmMZ-i2hWODJrX1NfxyNKDRv517w@mail.gmail.com>
+Subject: Re: [PATCH] fs/erofs: fix an integer overflow in symlink resolution
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Content-Type: multipart/alternative; boundary="00000000000037c400062df3d80e"
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HTML_MESSAGE,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -69,22 +96,68 @@ Cc: u-boot@lists.denx.de, linux-erofs@lists.ozlabs.org, Tom Rini <trini@konsulko
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+--00000000000037c400062df3d80e
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Got it, looks good.
 
-On 2025/2/12 22:17, Jonathan Bar Or wrote:
-> This is good, but may I suggest using __builtin_add_overflow instead?
+Jonathan
 
-They are just the same.
+On Wed, Feb 12, 2025, 7:33=E2=80=AFAM Gao Xiang <hsiangkao@linux.alibaba.co=
+m> wrote:
 
-erofs-utils follows the kernel style, mostly the kernel doesn't
-directly use __builtin_add_overflow, instead it has a wrapper
-check_add_overflow().
+>
+>
+> On 2025/2/12 22:17, Jonathan Bar Or wrote:
+> > This is good, but may I suggest using __builtin_add_overflow instead?
+>
+> They are just the same.
+>
+> erofs-utils follows the kernel style, mostly the kernel doesn't
+> directly use __builtin_add_overflow, instead it has a wrapper
+> check_add_overflow().
+>
+> I could use __builtin_add_overflow for u-boot only.
+>
+> Thanks,
+> Gao Xiang
+>
+> >
+> > Jonathan
+> >
+>
 
-I could use __builtin_add_overflow for u-boot only.
+--00000000000037c400062df3d80e
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Gao Xiang
+<p dir=3D"ltr">Got it, looks good.</p>
+<p dir=3D"ltr">Jonathan</p>
+<br><div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=
+=3D"gmail_attr">On Wed, Feb 12, 2025, 7:33=E2=80=AFAM Gao Xiang &lt;<a href=
+=3D"mailto:hsiangkao@linux.alibaba.com">hsiangkao@linux.alibaba.com</a>&gt;=
+ wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8=
+ex;border-left:1px #ccc solid;padding-left:1ex"><br>
+<br>
+On 2025/2/12 22:17, Jonathan Bar Or wrote:<br>
+&gt; This is good, but may I suggest using __builtin_add_overflow instead?<=
+br>
+<br>
+They are just the same.<br>
+<br>
+erofs-utils follows the kernel style, mostly the kernel doesn&#39;t<br>
+directly use __builtin_add_overflow, instead it has a wrapper<br>
+check_add_overflow().<br>
+<br>
+I could use __builtin_add_overflow for u-boot only.<br>
+<br>
+Thanks,<br>
+Gao Xiang<br>
+<br>
+&gt; <br>
+&gt; Jonathan<br>
+&gt; <br>
+</blockquote></div>
 
-> 
-> Jonathan
-> 
+--00000000000037c400062df3d80e--
