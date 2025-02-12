@@ -2,52 +2,79 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D6F6A32F68
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 20:16:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EFA2A3326C
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 23:24:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YtSht5b3gz3blg
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Feb 2025 06:16:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YtXt76Mpyz30VF
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Feb 2025 09:24:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=47.90.199.11
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739387772;
-	cv=none; b=niJptLOuVyZOgp8rhB1nJMiU1Om69SMRWCWLc6J0NHY49Wk+jvqZs62mpfmeuQv243b2JFVgQ413+m/K30RhVpv5RSyqcnNhgS+u8dQH/q1rySVoWTbM7xo224LgKPqekDxSmhlm0EzQGaKnTBNeuqKE4FaIROl7yFRLMiloT3C5r4Zcp/Hb97YVGD9eQgJZxjRQ0IQkiY50ToI7nj1bmrFueRVMhIGJqQKcJKzmIY9OR97L1rjwtj2aVJggAOjxbrPJRRfgDQ35kPn/sJfGDIy/+xt9HHebrbolFAQqN9FraMOvlMs+Z4V4CnVcfUVcxRwbW0fBtxePInn8evJfzg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.129.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739399070;
+	cv=none; b=Ns+JA0ZnDmRQ1yq8zUHfVvgL9gFXPQXyqvSS70ovcDeTJvAR+2wO/N0wdoxAQdSWf/A2nxbLLjyyZRXA2oslzfICHqD7dj/vFz4O0MuQryJrZs+OTjRuSGC46/EPg8YN6HUAVpseLNN2n0U/K4PwC7pbr5D5l2c/88xsaD9sC0U+3d8XtOuQrAzbAx+NbBbaS91xOJdP6K1KSzsxjBVxYzfkxLOMr2/AyvwhNTuUNECudLEBJptErztFy/iWqlq9TVwpz+7BnEoU5oLGxfg4bjney1Eym6hJ+zrOmlIvLnr6btelgU/5l5se9e11gxmGetScmUd/hMam+A5uYEFFvA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1739387772; c=relaxed/relaxed;
-	bh=kFQJI6u47HQWfpZWMqBgzAxqvzzo88hw7u4+p7TMHTM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QLbxnLxtIYAEEURCCziNqAEYwA5RwgDVNeQCYavVOB4Xj4LAjx6HLx06TvkjVzdmEzJx36FJteRRRAvkdPD0aes+7CFN7TsSWsgD8V/fbkKqgTjmcaBmcA7cKy607kbVI99LLw3UPLVBu9WUT1kHqOpgoNR9u/eUDIH7Lf//1SFY0pPU8g91S7jDfhjIUTsK6t54OeN8GKLXeS9CzaU+DYceM1rZ9NI83excbT0jEm7Jubeq4PNMM2pE+ktFRgELvCMKvVT5G4wpd1tOW1fiiuJXSg6KfS9s0Xt8mZpByB4lPCvwAM7tiDC2f5j/pQfh0D63prxqFjv4vaTS6ePhUQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=THbY8cPn; dkim-atps=neutral; spf=pass (client-ip=47.90.199.11; helo=out199-11.us.a.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1739399070; c=relaxed/relaxed;
+	bh=j/hFCuHm3dQy3yCXNlW7/z5EXWgYM+xOP2nJGIBn15Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=STIfiCrVVHDiH5UoTTQ+k1XnnXL6XT3mc+f8124UrhRwxJKgycV92WhHDBfbWs6sPA27NZWUnrO2/nQMnciV4Y43a5EboKd+QkrMKWNCrOu8axb8hYQUswwXdYCXwKceWT3DFxwqjZGQLTcfesZCi9Iz/wxHVccWQ3U66aodDdjKSgTpqRLpzeLYMxKbXvBvPRy5SEwAfmBrsnl67ZZb0zr2ddpfGalpyPQLlcrVRsJH/bvnFMJLAH61y6SXP1PK44iwAmtMTjA+kYCcdMiwN4blS8ttBcFdIxv9heIDEbBCZRTxAhd/KecL0JLHgzzeox6PSxOQ6IhU5BSIChrhKg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Bbffjb2n; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=h4597n6l; dkim-atps=neutral; spf=pass (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=THbY8cPn;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=Bbffjb2n;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=h4597n6l;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=47.90.199.11; helo=out199-11.us.a.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out199-11.us.a.mail.aliyun.com (out199-11.us.a.mail.aliyun.com [47.90.199.11])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.129.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=dhowells@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YtShp1xK5z30TM
-	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Feb 2025 06:16:08 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739387752; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=kFQJI6u47HQWfpZWMqBgzAxqvzzo88hw7u4+p7TMHTM=;
-	b=THbY8cPnL3jYoVrFEaP2d7nhPqOdJnXvxYmo3XR8oZeWhA3cs+Sx0JyXQSEFEY58zwQ+Bzjjx8Cb0ZQMuhAE+hvneY1XtfQCFjvmXEZuk6BKzWTUa9Db5cDEVQFnLQ6gtKZhuSz+EEFRQp/WFoQf3Jy7rc0Rf1PhX7rsbI7JYQU=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WPL-1b0_1739387746 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 13 Feb 2025 03:15:51 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: reduce default dict size for LZMA
-Date: Thu, 13 Feb 2025 03:15:45 +0800
-Message-ID: <20250212191545.580768-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YtXt55xF6z307V
+	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Feb 2025 09:24:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739399061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=j/hFCuHm3dQy3yCXNlW7/z5EXWgYM+xOP2nJGIBn15Q=;
+	b=Bbffjb2n20i4wPWH+dKTMaVn1FDC9OT2iRVuwDF+EMneJbYRg0l3R/G/qO8PULdBJM1dnt
+	qQebRsM5Nn8v4j2el7msZfiHKmwPbCEOn9+ZxIX99vk1eLASMZOruesMh5lzFvHVvmyjvI
+	HOQ9B8E/UUlosxW9zhFHKIrhvgwHLI0=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739399062;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=j/hFCuHm3dQy3yCXNlW7/z5EXWgYM+xOP2nJGIBn15Q=;
+	b=h4597n6lWAf1hI/jAlwiMjUarMkKpgU7ktyedBYJZeVPitNtt7W5D1aKxeJV1eCAnfJjAr
+	ahpNE/ggtVhnVXC76oIaFNz1civmAREBOcZC4wiSQ9VyXW0lV5XVCvTHcigJkLudbk1AHC
+	VB13yK+F5Bpb66jtSytxODvoBzcmK6Y=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-605-iPLvlH5hPsCaSV9rKTnwgQ-1; Wed,
+ 12 Feb 2025 17:24:18 -0500
+X-MC-Unique: iPLvlH5hPsCaSV9rKTnwgQ-1
+X-Mimecast-MFC-AGG-ID: iPLvlH5hPsCaSV9rKTnwgQ
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 25E25180087B;
+	Wed, 12 Feb 2025 22:24:13 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.92])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CBFAE19560A3;
+	Wed, 12 Feb 2025 22:24:05 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>
+Subject: [PATCH 0/3] netfs: Miscellaneous fixes
+Date: Wed, 12 Feb 2025 22:23:58 +0000
+Message-ID: <20250212222402.3618494-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-14.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
-	RCVD_IN_VALIDITY_RPBL,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -60,48 +87,58 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Paulo Alcantara <pc@manguebit.com>, Steve French <sfrench@samba.org>, Max Kellermann <max.kellermann@ionos.com>, linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org, Dominique Martinet <asmadeus@codewreck.org>, Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org, v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Ihor Solodrai <ihor.solodrai@linux.dev>, Tom Talpey <tom@talpey.com>, linux-mm@kvack.org, Marc Dionne <marc.dionne@auristor.com>, netfs@lists.linux.dev, ceph-devel@vger.kernel.org, Eric Van Hensbergen <ericvh@kernel.org>, linux-erofs@lists.ozlabs.org, linux-afs@lists.infradead.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Change the default dictionary size to 4 times the pcluster size.
-This will halve the LZMA internal dictionary size to a maximum of
-4MiB per LZMA worker (one worker per CPU in the kernel implementation
-unless the module parameter `lzma_streams=` is given.)
+Hi Christian,
 
-It has a very slight impact on the final image sizes, yet users can
-always use `-zlzma,dictsize=` to specify a custom value.
+Here are some miscellaneous fixes and changes for netfslib, if you could
+pull them:
 
-  _________________________________________________________________________
- |______ Testset _____|_______ Vanilla _________|_________ After __________| Command Line
- |  CoreOS            |   741978112 (708 MiB)   |   742293504 (708 MiB)    | -zlzma,6 -Eall-fragments,fragdedupe=inode -C8192
- |                    |   687501312 (656 MiB)   |   687652864 (656 MiB)    | -zlzma,6 -Eall-fragments,fragdedupe=inode -C131072
- |____________________|__ 658485248 (628 MiB) __|__ 658698240 (629 MiB)  __| -zlzma,6 -Eall-fragments,fragdedupe=inode -C1048576
- |  Fedora KIWI       |  2974957568 (2838 MiB)  |  2977394688 (2840 MiB)   | -zlzma,6 -Eall-fragments,fragdedupe=inode -C8192
- |                    |  2684272640 (2560 MiB)  |  2686750720 (2563 MiB)   | -zlzma,6 -Eall-fragments,fragdedupe=inode -C131072
- |____________________|_ 2550800384 (2433 MiB) _|_ 2553278464 (2435 MiB) __| -zlzma,6 -Eall-fragments,fragdedupe=inode -C1048576
- |  AOSP system       |   432562176 (413 MiB)   |   432738304 (413 MiB)    | -zlzma,6 -Eall-fragments,fragdedupe=inode -C8192
- |  partition         |   393277440 (376 MiB)   |   393351168 (376 MiB)    | -zlzma,6 -Eall-fragments,fragdedupe=inode -C131072
- |____________________|__ 379260928 (362 MiB) __|__ 379285504 (362 MiB)  __| -zlzma,6 -Eall-fragments,fragdedupe=inode -C1048576
+ (1) Fix a number of read-retry hangs, including:
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- lib/compressor_liblzma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+     (a) Incorrect getting/putting of references on subreqs as we retry
+     	 them.
 
-diff --git a/lib/compressor_liblzma.c b/lib/compressor_liblzma.c
-index d609a28..c4ba585 100644
---- a/lib/compressor_liblzma.c
-+++ b/lib/compressor_liblzma.c
-@@ -75,7 +75,7 @@ static int erofs_compressor_liblzma_setdictsize(struct erofs_compress *c,
- 			dict_size = erofs_compressor_lzma.default_dictsize;
- 		} else {
- 			dict_size = min_t(u32, Z_EROFS_LZMA_MAX_DICT_SIZE,
--					  cfg.c_mkfs_pclustersize_max << 3);
-+					  cfg.c_mkfs_pclustersize_max << 2);
- 			if (dict_size < 32768)
- 				dict_size = 32768;
- 		}
--- 
-2.43.5
+     (b) Failure to track whether a last old subrequest in a retried set is
+     	 superfluous.
+
+     (c) Inconsistency in the usage of wait queues used for subrequests
+     	 (ie. using clear_and_wake_up_bit() whilst waiting on a private
+     	 waitqueue).
+
+     	 (Note that waitqueue consistency also needs looking at for
+     	 netfs_io_request structs.)
+
+ (2) Add stats counters for retries and publish in /proc/fs/netfs/stats.
+     This is not a fix per se, but is useful in debugging and shouldn't
+     otherwise change the operation of the code.
+
+ (3) Fix the ordering of queuing subrequests with respect to setting the
+     request flag that says we've now queued them all.
+
+The patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
+
+Thanks,
+David
+
+David Howells (3):
+  netfs: Fix a number of read-retry hangs
+  netfs: Add retry stat counters
+  netfs: Fix setting NETFS_RREQ_ALL_QUEUED to be after all subreqs
+    queued
+
+ fs/netfs/buffered_read.c     | 19 +++++++++++-----
+ fs/netfs/internal.h          |  4 ++++
+ fs/netfs/read_collect.c      |  6 +++--
+ fs/netfs/read_retry.c        | 43 +++++++++++++++++++++++++++---------
+ fs/netfs/stats.c             |  9 ++++++++
+ fs/netfs/write_issue.c       |  1 +
+ fs/netfs/write_retry.c       |  2 ++
+ include/linux/netfs.h        |  2 +-
+ include/trace/events/netfs.h |  4 +++-
+ 9 files changed, 70 insertions(+), 20 deletions(-)
 
