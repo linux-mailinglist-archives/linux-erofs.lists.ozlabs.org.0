@@ -1,53 +1,84 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEDD6A325E7
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 13:36:58 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 177A0A3283C
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 15:17:59 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YtHr445PWz30WT
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 23:36:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YtL4h2xG9z3bgV
+	for <lists+linux-erofs@lfdr.de>; Thu, 13 Feb 2025 01:17:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739363810;
-	cv=none; b=oxA3byER2NjqlzEqxfTzT1+mZZ8wYbXa64rYFD5sqRASsjT1wZJQrGlxoWuBYSwd0sAP6WQYT6cVAsXC1Y4Lzik26J8sn8sD7MmMfe55Pnn8CuaCsFxfpbpLRlr9vEK560FA0b33k9jFWc2R5/jYFWnIYiZlo/hPFGLJWwfRshtneWMtop8zajMlOd/2p9c4yrQ6YwlXNapg+u/fj27c9ZiFWigmS9Yl3eC5Q4X/IoE8hw5Aon0+hwebCwYvLzuZz4YReDRjhjusq8kXuWmISC2sfZIAaXsjhlM0Jikw23YlHklDrrRECzwCFK/YXw7FclcjPSxkt/qimKSraT2QKQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::934"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739369874;
+	cv=none; b=kSfDcVSL0M9WPw7zrGmblGxQT4GgtF0dsdTCJLClnOf3tsdzcsIme8L0WUpsAfhjzPmIjnclwvIAcPobh4z1REZGkMLbgUdxpaMIqxdCRRT0mzQN3h4J/rkhbPUkQbGdZ6XZjQMkjydnMdHl1HiWRkTj9UP6E5y0jTSHlhC0alOy8UwbJ8oSjykwW+7fJc2XOWop8Rv7g9fyb8+sNSU98h0zn5pCQwWTRhgSQDluiUXPRhNVRsEDfVceXPITsyEueNLmAtLCz1kchAOW9aocv8dMYj2IR4Owhsw1RTXAiKYrAo74xY5siDJQH2HspKRbzXTcNSg7get3gKA0HAiDWw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1739363810; c=relaxed/relaxed;
-	bh=VwaQhtT3dooH8oGFClEAADD59R5Nv/aFfonYee/4ANU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=orbqZX1KIU08TIopPcrYWWDUQSYsJ6eGOqo/SK2j0KWLhGdZw/YvvAxc1y3AUk3+iobt4ESFb4BMda2iRkrEqbz+MunmvV12hZ4F97GEag6li/sCmNiqfuyljUry/DLnKVQUP3U9hI2QNDvBB9sR48QEFiBrHAH5U48LK4MWCvwuGFbSNhQSR3iYkqeQDr/otUDyTUWhgw/visDqCin1NRHmZBNJ3Bw15RMUXC6ZOCgtX6kQW0iTok0Ypq4o5dCXWdDjYhE6/ecKE+6XWadNRnSod+EWDbVGZxaKBjmqoDB/Gb4vvVJmBgDdVHHXdUjLFy0wo6IgoJTCxxS7OchEfw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=b9tCP5eW; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1739369874; c=relaxed/relaxed;
+	bh=sMTOEpIGPzDjriMcfE3z1fAYuZCnOU9pT8OdLZbYB2s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BV+9mfy1/1Y+zvew2S/t0Opo8HOMmLghNSL4E0PhdYRf3/dueQsdA6ggEeahkHDbdV/tE5uBFRJTVNzRbFU4EbBLnES+5sjokf/MtOTjDkI+wZulxIDYnwcnhPABlsQIzW41Xe7DEBin5qgrxw/mbSOOUuTplW9Rb7AxyI3bE3OhkRv4vAkmK/sEy5bpTesol2wzvu0/rHf5DSvXxeywvQU9X5I5MODEPVhezts5MtGD8jvkn/o6/7E4TZbWYKS4/zDS2YkAEqjgIn1vylUswHt9MnbaUGKZm+CM+MPFpQ5iYzAFuyfCNwzxnriHBG7JsCK0sY0HMuAQeoMu9JjyPA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=SI+t7l2n; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::934; helo=mail-ua1-x934.google.com; envelope-from=jonathanbaror@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=b9tCP5eW;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=SI+t7l2n;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::934; helo=mail-ua1-x934.google.com; envelope-from=jonathanbaror@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YtHr11QP6z2xr4
-	for <linux-erofs@lists.ozlabs.org>; Wed, 12 Feb 2025 23:36:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YtL4d1rDZz2yD8
+	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Feb 2025 01:17:52 +1100 (AEDT)
+Received: by mail-ua1-x934.google.com with SMTP id a1e0cc1a2514c-86715793b1fso1270119241.0
+        for <linux-erofs@lists.ozlabs.org>; Wed, 12 Feb 2025 06:17:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1739363803; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=VwaQhtT3dooH8oGFClEAADD59R5Nv/aFfonYee/4ANU=;
-	b=b9tCP5eWqnpZfNwF7z0Vij1TmTri4xmiRRTG7uNYaHRZ51nP278EduRm7y6S2yEPVH8CIsa5LnVx4ftAaRVJppIQJx1ZCb/AwZLtNCXP1UYRiAZLEQX/XWWrnrJQ9LevnnIiQm5/+8T2pkJMhnOATYMzktyx4Ct87tfDsJp7Ok8=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WPKD0cE_1739363794 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 12 Feb 2025 20:36:41 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs-utils: mkfs: fragment: gracefully exit if temporary storage is low
-Date: Wed, 12 Feb 2025 20:36:33 +0800
-Message-ID: <20250212123633.40004-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+        d=gmail.com; s=20230601; t=1739369869; x=1739974669; darn=lists.ozlabs.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sMTOEpIGPzDjriMcfE3z1fAYuZCnOU9pT8OdLZbYB2s=;
+        b=SI+t7l2nxWiWqv2pPm5sIqNpj68Pdcdy6+g4a5mb3PdDwoJ5ptErEFgL0egQB/NlWy
+         RdtZjJRZsiQB4EpL8TD+GsjapCZKn42FZeQit5Ay1MrzCa5kNfQUF5aTZtlro4uSSx80
+         MTjC6fuHaSweK1nnZXTrh06KSRRaeoOyyTkZ+m2kX24tlbJ+9FbioSyutpP2yuDRwu1O
+         6e9aSVD0ouPoGaOi04iBKzOxhVo/nrPN/56s0kO5Mz5qqrhw7x8AlX22iCBdOFIMe1pA
+         /phXnyGe2yQtpPqNYz099axkBTb2iU+A77G/tdDkoktNJ00PLqLiYyhfS37xIj31UMIj
+         hr4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739369869; x=1739974669;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sMTOEpIGPzDjriMcfE3z1fAYuZCnOU9pT8OdLZbYB2s=;
+        b=P8E4Z/P/ZzQYFsfEpS69AROeMa0tOiQ/LLV8XFMNB8SZQQ2jjgAaypouGfMFVcSsbV
+         63RWVd2vTUQGoj/YKQKpI8WwnR5QLZrUpuSXq2xuepjH1t1MdBK2XogJTgXlY6Q7lH10
+         9w6OzoawNCKbYIS/bFRr7tYZ/OS/Z06xthaJ8vxDBeW1agyAdzlxK98J/is0vAiMVzOZ
+         mWI+gq8ylnnorpTl95ki2KlT0vwvhgtwZcp4CCN47hhTBIiRVXUcAql8yG1qIMTjCXcH
+         ylTIS1dBDGOKDHlRuKJypQIkJJnlHftaoAFIECR7XgeuugvACYJiPZ+0lKxJrMpx64l8
+         y6Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCVeBDxVJHAlQV3NfSubZek9OX/UhB6difqKIFlwTVff7VaVMFi/8xNlEBBPXcyD3UZ2D2Tjx3X53gdGBA==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YxhmaqLvW/RhBjKBrj/RIY4ciIhPOop4QwQE6DPXa1QdoGWZdRf
+	vhyHPxRxvWiTsg+Vdr+da9FLLs00ryZVHqXEY5GSd+mXo3wPDBUjCI/ZgCW0dqsoGrM885eUFNs
+	2bsXkqTLt1Dbu/J45yXWXyz/HmszO6vZuG0s=
+X-Gm-Gg: ASbGncuKDK6o4G/T0IE8flVfrsA7bCgZR7cCFSjOfl2jU1dklM5k3LZ++aYA0NdQcTV
+	x7a8WQaaxlKcrR/8D2PX7Qpz1Xb1xg8RwhwXZfo3sFfFECNXoNf6CGrHa8kyScQb0Ar72h1ccA4
+	/vudNPQias7nSIrDvAKWIXFIk2ip/5
+X-Google-Smtp-Source: AGHT+IF4p5XbCQk3FJC0EJmp3js78LUq1/V2TdVqNhXrMKYwDkdg4YRxVP+t0hMiXAq0xk+EYRHlg0P1QsMMDYmjNVs=
+X-Received: by 2002:a05:6102:510b:b0:4ba:9a20:dd05 with SMTP id
+ ada2fe7eead31-4bbf21e5e76mr2484187137.10.1739369869481; Wed, 12 Feb 2025
+ 06:17:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+References: <20250212093057.3975104-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250212093057.3975104-1-hsiangkao@linux.alibaba.com>
+From: Jonathan Bar Or <jonathanbaror@gmail.com>
+Date: Wed, 12 Feb 2025 06:17:38 -0800
+X-Gm-Features: AWEUYZmcsZ6sfMf4c1fdlvjM2nz5ygGVNhDxhNwJ60-ie_Pa9NhvYLrzqEgoL6Y
+Message-ID: <CABMsoEFTGzKhFn7eB0cjg2peCd_DubF-X6Rpq2+1cRVm_J0Q0g@mail.gmail.com>
+Subject: Re: [PATCH] fs/erofs: fix an integer overflow in symlink resolution
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Content-Type: multipart/alternative; boundary="000000000000342251062df29b7d"
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HTML_MESSAGE,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -60,84 +91,99 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: u-boot@lists.denx.de, linux-erofs@lists.ozlabs.org, Tom Rini <trini@konsulko.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently, EROFS keeps all fragments into a temporary file for later
-packed inode compression.  However, this could trigger an unexpected
-segfault if temporary storage runs low.
+--000000000000342251062df29b7d
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Print a proper error message and gracefully exit.
+This is good, but may I suggest using __builtin_add_overflow instead?
 
-Closes: https://github.com/erofs/erofs-utils/issues/13
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/internal.h | 3 ++-
- lib/fragments.c          | 4 ++++
- lib/inode.c              | 8 +++-----
- 3 files changed, 9 insertions(+), 6 deletions(-)
+Jonathan
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 5f5bc10..2f71557 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -256,7 +256,6 @@ struct erofs_inode {
- 	unsigned int eof_tailrawsize;
- 
- 	union {
--		void *compressmeta;
- 		void *chunkindexes;
- 		struct {
- 			uint16_t z_advise;
-@@ -274,6 +273,8 @@ struct erofs_inode {
- #define z_idata_size	idata_size
- 		};
- 	};
-+	void *compressmeta;
-+
- #ifdef WITH_ANDROID
- 	uint64_t capabilities;
- #endif
-diff --git a/lib/fragments.c b/lib/fragments.c
-index 32ac6f5..9633a2b 100644
---- a/lib/fragments.c
-+++ b/lib/fragments.c
-@@ -266,6 +266,10 @@ int z_erofs_pack_file_from_fd(struct erofs_inode *inode, int fd, u32 tofcrc)
- 	else
- 		rc = 0;
- out:
-+	if (rc)
-+		erofs_err("Failed to record %llu-byte fragment data @ %llu for nid %llu: %d",
-+			  inode->fragment_size | 0ULL,
-+			  inode->fragmentoff | 0ULL, inode->nid | 0ULL, rc);
- 	if (memblock)
- 		munmap(memblock, inode->i_size);
- 	return rc;
-diff --git a/lib/inode.c b/lib/inode.c
-index e51c0fc..434eafb 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -141,16 +141,14 @@ unsigned int erofs_iput(struct erofs_inode *inode)
- 		free(d);
- 
- 	free(inode->compressmeta);
--	if (inode->eof_tailraw)
--		free(inode->eof_tailraw);
-+	free(inode->eof_tailraw);
- 	list_del(&inode->i_hash);
--	if (inode->i_srcpath)
--		free(inode->i_srcpath);
-+	free(inode->i_srcpath);
- 
- 	if (inode->datasource == EROFS_INODE_DATA_SOURCE_DISKBUF) {
- 		erofs_diskbuf_close(inode->i_diskbuf);
- 		free(inode->i_diskbuf);
--	} else if (inode->i_link) {
-+	} else {
- 		free(inode->i_link);
- 	}
- 	free(inode);
--- 
-2.43.5
+On Wed, Feb 12, 2025, 1:31=E2=80=AFAM Gao Xiang <hsiangkao@linux.alibaba.co=
+m> wrote:
 
+> See the original report [1], otherwise len + 1 will be overflowed.
+>
+> Note that EROFS archive can record arbitary symlink sizes in principle,
+> so we don't assume a short number like 4096.
+>
+> [1] https://lore.kernel.org/r/20250210164151.GN1233568@bill-the-cat
+> Fixes: 830613f8f5bb ("fs/erofs: add erofs filesystem support")
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+>  fs/erofs/fs.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/fs/erofs/fs.c b/fs/erofs/fs.c
+> index 7bd2e8fcfc..64a6c8cad8 100644
+> --- a/fs/erofs/fs.c
+> +++ b/fs/erofs/fs.c
+> @@ -63,6 +63,9 @@ static int erofs_readlink(struct erofs_inode *vi)
+>         char *target;
+>         int err;
+>
+> +       if (len >=3D SIZE_MAX)
+> +               return -EFSCORRUPTED;
+> +
+>         target =3D malloc(len + 1);
+>         if (!target)
+>                 return -ENOMEM;
+> --
+> 2.43.5
+>
+>
+
+--000000000000342251062df29b7d
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<p dir=3D"ltr">This is good, but may I suggest using __builtin_add_overflow=
+ instead?</p>
+<p dir=3D"ltr">Jonathan</p>
+<br><div class=3D"gmail_quote gmail_quote_container"><div dir=3D"ltr" class=
+=3D"gmail_attr">On Wed, Feb 12, 2025, 1:31=E2=80=AFAM Gao Xiang &lt;<a href=
+=3D"mailto:hsiangkao@linux.alibaba.com">hsiangkao@linux.alibaba.com</a>&gt;=
+ wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8=
+ex;border-left:1px #ccc solid;padding-left:1ex">See the original report [1]=
+, otherwise len + 1 will be overflowed.<br>
+<br>
+Note that EROFS archive can record arbitary symlink sizes in principle,<br>
+so we don&#39;t assume a short number like 4096.<br>
+<br>
+[1] <a href=3D"https://lore.kernel.org/r/20250210164151.GN1233568@bill-the-=
+cat" rel=3D"noreferrer noreferrer" target=3D"_blank">https://lore.kernel.or=
+g/r/20250210164151.GN1233568@bill-the-cat</a><br>
+Fixes: 830613f8f5bb (&quot;fs/erofs: add erofs filesystem support&quot;)<br=
+>
+Signed-off-by: Gao Xiang &lt;<a href=3D"mailto:hsiangkao@linux.alibaba.com"=
+ target=3D"_blank" rel=3D"noreferrer">hsiangkao@linux.alibaba.com</a>&gt;<b=
+r>
+---<br>
+=C2=A0fs/erofs/fs.c | 3 +++<br>
+=C2=A01 file changed, 3 insertions(+)<br>
+<br>
+diff --git a/fs/erofs/fs.c b/fs/erofs/fs.c<br>
+index 7bd2e8fcfc..64a6c8cad8 100644<br>
+--- a/fs/erofs/fs.c<br>
++++ b/fs/erofs/fs.c<br>
+@@ -63,6 +63,9 @@ static int erofs_readlink(struct erofs_inode *vi)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 char *target;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 int err;<br>
+<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0if (len &gt;=3D SIZE_MAX)<br>
++=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -EFSCORRUPTE=
+D;<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 target =3D malloc(len + 1);<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!target)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENOMEM;<br>
+-- <br>
+2.43.5<br>
+<br>
+</blockquote></div>
+
+--000000000000342251062df29b7d--
