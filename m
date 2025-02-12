@@ -2,87 +2,178 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 214FCA3198B
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 00:28:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7DF55A31DA7
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 05:58:40 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YsyLn59htz30Q3
-	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 10:28:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Yt5gK55Trz30WY
+	for <lists+linux-erofs@lfdr.de>; Wed, 12 Feb 2025 15:58:37 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::929"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739316527;
-	cv=none; b=ix8g9jrqh7XtDeWBUigLXnfr8c3qOFgzcETPHvxXmePeVdkYnFB9T0PdaXy/NonJMoSU4JkfYy0cQFxBVklGAcvNRoDza3Ax5b75xV7WWcrUozFkb90e3b/BrA7Nygb+/0Yv8P8cIE0x6E0e7hEw6fEWb1R1n2pnCMXg2tYFCK0S1EB6jwjmzK7KD/nHyXmMbAT/KQTTKSdkkNderl/9sPMLzq7wW6IAExQA/BlxETj1WS18XnneBrc4n1azuyTVlHDMQz8AKrxZj+pmJ23ESVJrN/2KDl6c3KEjB9exu0oJLPwBq2Q20tzfX3qVK4ZVAfODL5xbsD7I3K6l0NFyEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1739316527; c=relaxed/relaxed;
-	bh=qQnH5P2GeliKHpjzSCME0Gs+xwrAlvlU/ufLz+3IVsQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jSPm9eCVyapXBjvHZ8oAojwNMh0fNf0v5/fy3ZuoFgxXmLU3NB6icHvI6qLKxIjDShd2XjLioEHYjPrjouotU+a7UAxCKp3cq5T2CPJaLsBhH3c4AjXyxs7CdQJjjZdh2vG428w5E5cV/fR1LWcoloK/jCFglCTLydIPgE6hLAQzKgJsOSi26ZmYf9pxgNzUQkqRM0Gy06OPqA9UUtl80AXY1R6AweNtiprx8lx1VKeI5Mk5jrO9mPPw7bgGjNpJmfgk3sErp8Af0Z1Jz6PlJUGIsShsmq76ofmfhv6sSGDEDXAG8Nvxbqo5WGKwfHGWVjspa6sfoP5CT4RF5lQeOg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=VdDiHY39; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::929; helo=mail-ua1-x929.google.com; envelope-from=jonathanbaror@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=fail smtp.remote-ip=192.198.163.15
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739336316;
+	cv=fail; b=Icluzb50PZJMfMBuVIpk+bVTHfmnzdcGnSxcQy9W/e5ZZrIiL7iDb3qXZ5riceUig2csf/3eCkmDP5xWk6E+1Tm0aqYjXUS8J8ZT8c5WBKgMqxUD0AAkqG42th8R2wGR302dNNULbDa52ON9tzy1KuyJz7ccHw6KliqFHnKyveA94vmCUIhbDnVQ+bx+OHTKi7l6B9wvk1j+EMxzdRDmPzU9kGaAP1f0wLKrSllLRZvd5EewfwM0EqVMC5dHHjtDoBBZV51Dimq63zwAD81oKA160jHBZUfPs6gSGnxf0zBhP8DQieWJA6N7rsBBDJ3PgEM8ahHySU1rlNrEWKqe9w==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1739336316; c=relaxed/relaxed;
+	bh=9xS19ITpW6p3lFQ69S9JrjzYnurvyZFlE9K3RIGnEBE=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=FYpU55jOdj9cVKN2DPPHabt5yJO8mkUEv4qHrRozHL0lzw1YPIS772bWtbij+VE1kRqBVk3rOtVTUIEZnWNAf3PwgI7WxvvSQMkrqVya/lAp7Qaq48SwEzv4B3+/wNO6QXRJv7Bc0YxqwTeRzTdhnTrzI5q/nVn8RCUGBfuTLyxqvjV/YNNye2wGbZeWWv2zlhYg+Jyc6iY7Joas+Gff9PKG6xhgoEPnIwpoNBNlfghQ4LCzmzO1adMdZ2fES4ErEeLIbPgs29jTOeq20MJbqw0OuJ4E8qoFPFtYqPKb4X/huumfKMH8ffd3DHnAwiFqSPMP5U/GFJisehxwxt7EGQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=DzX9hrno; dkim-atps=neutral; spf=pass (client-ip=192.198.163.15; helo=mgamail.intel.com; envelope-from=oliver.sang@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=VdDiHY39;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=DzX9hrno;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::929; helo=mail-ua1-x929.google.com; envelope-from=jonathanbaror@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.15; helo=mgamail.intel.com; envelope-from=oliver.sang@intel.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 63 seconds by postgrey-1.37 at boromir; Wed, 12 Feb 2025 15:58:33 AEDT
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YsyLk6086z2xmk
-	for <linux-erofs@lists.ozlabs.org>; Wed, 12 Feb 2025 10:28:45 +1100 (AEDT)
-Received: by mail-ua1-x929.google.com with SMTP id a1e0cc1a2514c-8641c7574a5so1761959241.1
-        for <linux-erofs@lists.ozlabs.org>; Tue, 11 Feb 2025 15:28:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739316523; x=1739921323; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qQnH5P2GeliKHpjzSCME0Gs+xwrAlvlU/ufLz+3IVsQ=;
-        b=VdDiHY39Gj/+AR77YQPwZiIKqQjSlnhBma0q+UvLUDIYFm9MQhyDSLNcQC1/oeHmCK
-         b5cmuU3pdDYBVv2EylTxVlN33940U/uKhz+EoMizuaaAgvcMRUhAj/DzofMwbVlbJRt1
-         khwAF05edPrbhPCJjLTLNCuLCQwh2cBqbeNPRvN10tULpA9uuVT65AhjCB8bM9UvNPc6
-         maJ/jFXzuYkQz5Cq9FcVTPrt037t3nLJWPYQo34ef8owMAR24X1fxUI71asb2xkegeA0
-         P4hszI+c6UODHlTAQSmz7cELsP9MM+mbp2MDQjElBJf0TwuK/iNzlDU6dn46jqW44GX5
-         kweA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739316523; x=1739921323;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qQnH5P2GeliKHpjzSCME0Gs+xwrAlvlU/ufLz+3IVsQ=;
-        b=X2dXRclhQfIKsggvLiLyBm9CDsipz/77MLZ/uoKmmwsMgl6WtORs9XaEZNJQFmMgbG
-         t7rslEp5JcUUByIaadDE2c6r2WohLzA+FvHXMIjY7M3WXjYiRrqPDNZZPNQLWF07r6Q2
-         0Zcf/ho9EelM+wDGNsknPbrYTw2jwjqqYMZxTRmgDGgaX1+7VNOcC/Ya4PFY9T6W4qvC
-         D5okiwGtUDrzNS56tg0RWZBBCvANqumddrVVIui45BoNj0+g6nPku7d89CfFX1xXTSag
-         +HrnJTTlZtEalL3AUQHxmyZF93JOMirX07/HoThsO2vPBGra7hkOht1MqREDUFcXPulP
-         6Rrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXqZEuZvFCpxSW9ZnubO9Pva7jwH5iBNz4YIuY4Z4d87iaIo0X3WSOSPLsT9aJiyLhbpbN4Cy2rpP7Ehw==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YxLcHw2ymyrRHf+xrFxa3pZwskIeKE1BQyyfGNmdiUGZgGv9Scw
-	rVTpszlh9aXCvcFCnz7/ZXzgceEumhHU0VGunhwHMzMT38TE5g0jtscJ4QCHINF4f+DMxLG01jQ
-	BZA/OvZH9EwmN9OkojIp4dRyuZ7Y=
-X-Gm-Gg: ASbGncsM9ttlg62XPe2laWH+kiC24/vx5p4s6aaR6ZE4r53nVEp3f7YSCt/PpSfsCzn
-	IWvrYdrE5zWFmyUB1dsNHGZo5KYglGzfU/Zjt3pXPGkiBed61hpgFSfi+S6F26fPgrgh33T8NQt
-	A3u5fUDqKjbCcaHBC+9T1vqmzAEGTE
-X-Google-Smtp-Source: AGHT+IHM4M9TMOu+WRtw2j+hdcsgiv9ZnObcd9GSSwp8rRqwkq8/a4xgvi2/qLZ6cPgUgTgZYUl+xDdb7mxpUMRTgRg=
-X-Received: by 2002:a05:6102:2d02:b0:4ba:9a20:dcff with SMTP id
- ada2fe7eead31-4bbf217a378mr1729167137.11.1739316522993; Tue, 11 Feb 2025
- 15:28:42 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Yt5gF6HHlz2yJL
+	for <linux-erofs@lists.ozlabs.org>; Wed, 12 Feb 2025 15:58:33 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739336314; x=1770872314;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=AQpPbs3ANiO1zq2hKzoZ8mztP1k1Qwws2zEi1j6lenE=;
+  b=DzX9hrnoK2FgvDLXlM+LK+K7VRvYrXonT6oGEaYH2yLdkMpvI4GNSB8A
+   xJbYf1Kv6E5ABC8dNrvpFtiBeLPlSLMg/y9dSA+Dfr71pOIfjK3BBxoG2
+   NtJoqjwrV06ihHAxcBIXehPDlPP9YNNutVy/sDWCh16TITKn2wd/z+yRR
+   NjKrLdfgCOWlnGCYOPzJFDcctTq9SgZXXniA4vlUUfGxhTAn3V30i8kf+
+   3nj/Spe7g2lsFGcAgNKSII648mlAB9ekJnHlSmEDS+LiodrxpGx/QKh1r
+   E7+Eg2XTZ89Ssb5/BbFaN5MjASJvPIFtMaAP9mp8/gNVqVe0++FEC4bg8
+   w==;
+X-CSE-ConnectionGUID: 7XmOfixiQsKQGYo6dD4SoA==
+X-CSE-MsgGUID: W7DK01YQQUKdcMX2o/OBWA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11342"; a="40122051"
+X-IronPort-AV: E=Sophos;i="6.13,279,1732608000"; 
+   d="scan'208";a="40122051"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 20:57:25 -0800
+X-CSE-ConnectionGUID: iVq0sBg+QEqvWFSfYrLTJQ==
+X-CSE-MsgGUID: 6kJ4X5b+S2OKsq0KR4WeKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="113608302"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 11 Feb 2025 20:57:24 -0800
+Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 11 Feb 2025 20:57:24 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44 via Frontend Transport; Tue, 11 Feb 2025 20:57:24 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.177)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 11 Feb 2025 20:57:22 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yKLj7DOMTgx0hPSW8+c0iJIr6MMT2h4jO+I8QvYu6Hug5c2r4+PZXkY48OZE1wuHPqZf1GpYu5tshs+ELjYqhdi2Fatw+j1NmMEx2AzvgBnAjJRrZyH2aNYHQJavOkRLbGbr6OPHaDW8d9noBiOHQZerxJwD7ZIE2t5LHV4Q1Q6U8Fl/lvqApGmwxzf1YgyutgRNxN4P6JHevhLtCmvbglfAQ9gJZpIISIfLPzw4QIsWUlamrdwn7/bIkoNTig5zeeUWZGUQjVDY6D4EWK8bx3OlY34FxpeZ1C/2ksZgLPkZ+JuGeA20J+UnkYodOHXlKWpbXhMnQ8VaAy8x7xHIQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9xS19ITpW6p3lFQ69S9JrjzYnurvyZFlE9K3RIGnEBE=;
+ b=nMI92rH0fDDDf8rVdmxegIxVWxm4KvaLE3lDWEZ6/L26BJk+cgwBWW5rEr7jyLGF3/jQIi3zsu/W1xgl4//nfqrb9rDqDINc/HHw20Hro8YA8JrjT47FmbCtzRJvHQVt/jffrw3KwzlDdoczM/8cOyBU5z8ftA7R/rRwPNcKycT66Xmkl5szkWEmCfRgMAOHv2n0zrYnt20M/RJfk5XRjv559uU/fYVW2jQ1/A4JfqIMEqqjljBHzaSJALFj7trjzFHrLv9lOlXMecMfZFhy6/SmvKZXXJLduNhX8vtC0QtN1GAg02G3tE27ZAgyaFZVCsoMSHzhq/0QJTUCEFJEdA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+ by CH3PR11MB8702.namprd11.prod.outlook.com (2603:10b6:610:1cb::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Wed, 12 Feb
+ 2025 04:57:21 +0000
+Received: from LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
+ ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8422.015; Wed, 12 Feb 2025
+ 04:57:21 +0000
+Date: Wed, 12 Feb 2025 12:57:07 +0800
+From: kernel test robot <oliver.sang@intel.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Subject: [linus:master] [treewide]  b04e317b52:
+ INFO:task_blocked_for_more_than#seconds
+Message-ID: <202502121025.55bfa801-lkp@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: SG2PR02CA0026.apcprd02.prod.outlook.com
+ (2603:1096:3:18::14) To LV3PR11MB8603.namprd11.prod.outlook.com
+ (2603:10b6:408:1b6::9)
 MIME-Version: 1.0
-References: <CABMsoEGyEgWGHYMoL9kH2Os_=krqSTwdLaMu+XSOJd+micYpGQ@mail.gmail.com>
- <20250207155048.GX1233568@bill-the-cat> <CABMsoEGLaMGch7gEuGGcyPy5REj4RDAFmX=AGnOmMnnbuSmhWA@mail.gmail.com>
- <20250210164151.GN1233568@bill-the-cat> <7e9d99b5-59c9-47ed-a5c9-c4449e3068c0@linux.alibaba.com>
- <CABMsoEGMq0b71ZbukBz5kbiHQhWHdG_dBzbk6eH+6My7MVGEsQ@mail.gmail.com> <20250211212909.GI1233568@bill-the-cat>
-In-Reply-To: <20250211212909.GI1233568@bill-the-cat>
-From: Jonathan Bar Or <jonathanbaror@gmail.com>
-Date: Tue, 11 Feb 2025 15:28:32 -0800
-X-Gm-Features: AWEUYZlZ16m252xxTRccJyCo60a0nbsuSjNk4KsZSrKCO8dPXOXA4rIKe54zACg
-Message-ID: <CABMsoEGs5N9Uhz-wW2_cq=HguLf8PivRukXJBLnSO+_-+NsJeg@mail.gmail.com>
-Subject: Re: Security vulnerabilities report to Das-U-Boot
-To: Tom Rini <trini@konsulko.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|CH3PR11MB8702:EE_
+X-MS-Office365-Filtering-Correlation-Id: c46323ac-296c-42bc-785a-08dd4b21bb95
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?uo0w6I6vEaKTOCsL7J8ifJ45cTTuQ7UqOValydjixMDw3twVrS4OVfepdsDw?=
+ =?us-ascii?Q?PcyRBJ07OcBrIf/LxcwO/99xJKp9q0UG29kWiCFHsxg6fpaJa+Oz4o5aBLl1?=
+ =?us-ascii?Q?3rznIjpUm1kISONqnkSnFlac+Fr2j85zPQiKhlw9az66GnuRfky7G7GJnI0A?=
+ =?us-ascii?Q?E+LmTkYnsVET7KtAFJthQuNXyp846a+QPGAkwYEoTPuneoan5UMt8CmzZ4Bm?=
+ =?us-ascii?Q?PGSdCSfNHSORQ3nELCE5IoWY1O12yKyZOioIebPLhVzYLeQe7ltUV7TxO7NB?=
+ =?us-ascii?Q?1Y31gxPssspJHy1rQPtlnPkxLQ6ipFsvp7smEw4wETmrpj+RsElD3MItteKI?=
+ =?us-ascii?Q?HLq5901/2WweX8xqFcUOrMUydVquWbPktX2zxTv7+STmLBpUAfHGJx9wPm2Y?=
+ =?us-ascii?Q?t3vi6rg0W6AOLMRJEsW3ZyobsLab8zfYT2J+m/DNmL8Wub0xShPZ/Equrk7v?=
+ =?us-ascii?Q?oMxvfvwJmuNkWzg6QgNdlqhczdn6rHlgfRoJmtXiM3+FyEvX+JgAsaBKr3cN?=
+ =?us-ascii?Q?zzQdHHp/h+2L1BrnRCgnKwmRrvv3Zo5hBDHAICua8UY8QQLY6E+TOpBuczJb?=
+ =?us-ascii?Q?uGJSJDdW8lvhXl57ggD2fjDJRRghlTrldMYRDwjvSKc6GTCyXi7X1r3G0cLb?=
+ =?us-ascii?Q?AimKgWsXQnIDu9KRpYiYqytOo5OPnomE9kzKlxTdyhTXenvFRqo1YjqYppOA?=
+ =?us-ascii?Q?ElkWo4Jio+ThalcuafQd95MXdjbsc/HuUYBtT2dD9Fz0pJ3DOQKtmijV5Ovc?=
+ =?us-ascii?Q?o7cALViBOWMmD1k784EuIu94EuhRHfeYoTA567j4Vx0ZpuqP1rzPmbieRXVp?=
+ =?us-ascii?Q?ooTTOvT7sedV/V8LQFCE+sdJeaOrZBlXUo7egVjtCKEGtnCgnoU8avPHbbtx?=
+ =?us-ascii?Q?pAN59K3QId/lVaP4Igc2wD0YcgTHnR5dS8uamFQa0cIJDGmcRk85gbzTOi2d?=
+ =?us-ascii?Q?PDZglBkS+0wrxllbCQz87gtFV5kcAKqTYRGTjYBfqVu7gKSJEHFGob1h5/Sr?=
+ =?us-ascii?Q?dsJSTZH6ZU9w82PCl6c7aRcg5mUiyfX5pl+14LRRrNhM37QF+BlCSn4lzFTc?=
+ =?us-ascii?Q?g89pe1eGkrcAfAXybcl4bs4r1S1h0sInVBFTDSz0vq7qhZoYzx6CcDyCO0YA?=
+ =?us-ascii?Q?fM3yb5SQOLQ2SosVItpZv99z02frAPl8Ya0OItxnfUJRNS1kKNTB9Zqh4++R?=
+ =?us-ascii?Q?AgjA/6/dv52kckc2NEDO0wZRmLf8o7dMXqnSpZ/kVsP/jf+dAnVldB7Z7pNM?=
+ =?us-ascii?Q?iDOl7LsH8MLafJ6UkaVsAhdIVf/Z4fBgEtX8oAXl22JcHEvbmGlVHMSdIUE8?=
+ =?us-ascii?Q?qFrzxZ/Y/XMbQrOwBl1wDiZZYzTRUi506Vh7xI1JhYRwGw=3D=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?zrKrFoT4L86AWYuH+4n/i+5S8HqBpf07m7dbtjR2bNubIPSfZD0CxtYiWnGI?=
+ =?us-ascii?Q?IZYTXsIYzwHfKJwpQ/bMO/St9qOKjiyDE9yefNmRWqsHbTjZEXSb7taSbCQN?=
+ =?us-ascii?Q?og5mlqxO97K36cVDO/bEb08/Xr9YVMidqiX+q6LQot08/Y1Mdavzk/2wb0Ul?=
+ =?us-ascii?Q?eONBUAEi5CvvN5yxSRg+2yzZHtjSLIGkC7eIXosoCubODr+GXoId2Kl2dYiR?=
+ =?us-ascii?Q?GBqP6AQQgf3v47OvaqLhy2jiB/fGJm05fwHDvyUP4BIyZrHAPYxPvjjDYwbI?=
+ =?us-ascii?Q?Tqf+xQCrfLDR48HYbugCOUO0ByYZCB4KfM2raXDndeWQYocG+5FwBxCM9/gt?=
+ =?us-ascii?Q?RpsElh6ziUsMIJv0tgoL8gAd5ra4a2dG3SuqEowlqLRlw/g9gr33oOn+klaP?=
+ =?us-ascii?Q?Pz1yyu29HJYWzhgA3MlJor8pbLNKsQwrdAQavL12BkJ/f/hbgVAa3GMthBTm?=
+ =?us-ascii?Q?iyxl5hXShF4y4Y/l1JWPXKQ48dUy/HXWZIZ4bBlp/ERV694qTwVLCG/dE0eT?=
+ =?us-ascii?Q?Qq0sar7zOzrqHmqeT44C3wWkOfdv6Yq9LJTbfTjxxbC9k/mVZIaWgeBM1rdL?=
+ =?us-ascii?Q?cSLrAwqvB8KRwrGPhHEt5TfFCgKk546ho1u1w28kOLhnPincavBJIHZdywh/?=
+ =?us-ascii?Q?fmBaJufw9XzebE2AAWIo//oLG27Aa8z+czUrDEN8EoWTULL4OlOSzg+WEESe?=
+ =?us-ascii?Q?33UE7E2S2rU20bt+zPAJ8W3hmplA1W70Ngdy3dusV5l8Y+Mp1GYn6J1csKyp?=
+ =?us-ascii?Q?fyOdiEvOEPYC+how3CWISze2NYRurdV+reYXeB+mERwnrXuKNyh9TDhkfzez?=
+ =?us-ascii?Q?Qjg6etk+wglUQvPh0yeURScQWDkhZuhzKr2K0ayIDWti2iiZ2wMJHXaicpxz?=
+ =?us-ascii?Q?rDDelL1nq1gng185xUrdqLfaB14V17D2jQra/nRyzrtDr9gCbzGyAIYd47SQ?=
+ =?us-ascii?Q?+twN0sbDFcQ1Ygw2aUJ+q16JANTTiBdNHSdWWc8iXoTTVcpUh7YC6YbGca56?=
+ =?us-ascii?Q?GpHfaIwvBJHzCOB8mxalwLmgPRol7bursofdO6I+nxWEozermfdqx430ihHY?=
+ =?us-ascii?Q?FuuE0Ml447SuO50C4yWZCfkoLdbXwKCI2vwKhbKNwNSrwTi7Ia/y62Rf+CW6?=
+ =?us-ascii?Q?qQtXn0NHnt/FN+cPrz/P7JAc3nR9MSDW+ZrWR4QOHHsdqDz1j+uYCm813zli?=
+ =?us-ascii?Q?lCg+RQ1Ll9a02Z1XgPvlOFf4UQHWOA6XDNO1bozzEj7vScdCG1xnc9nVIRAw?=
+ =?us-ascii?Q?95X3RJ+ULbOzzn38nA7ANxAgyZS+6yAEt0bFPYqbTWero443GbTVzA6X8KVb?=
+ =?us-ascii?Q?Y/YUTyptjMOiHkZqBYLznIQZo6yLm8VX8io3tPPNlMXfqcqLTclejBZ3HnRf?=
+ =?us-ascii?Q?2c3VYENz1vPWtZtYl2JLBkZ19E9yOwO5vY5MmJiKFy2yIqomrUOBN04EALgv?=
+ =?us-ascii?Q?Ikn5uuyWY2y/6MzzJ82VDvTbva1LY9HakhtJ1VhPZx0wd3cSVtCiZ6hOQPaN?=
+ =?us-ascii?Q?9vi9+iLOJMKetZUBETrR4dH7fHhmLTGtDqDnHAKWe99i6oFnBl3RQJfMG+KK?=
+ =?us-ascii?Q?odjtyn67cplQrrV4FDt5AfAgflHlHWDET4srGm3FaAT+DakLoxJLdtQTndb5?=
+ =?us-ascii?Q?TA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c46323ac-296c-42bc-785a-08dd4b21bb95
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Feb 2025 04:57:21.0389
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LyN3mmZxBrwyJ6R8ZuLzRn9HoAcyKcqw/XreDJlhnnDYmw3Nn/aRxGMumgMEHGQ+sJiYnz2JYqc+wINeTP4EZA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8702
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.5 required=5.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -95,132 +186,111 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Joao Marcos Costa <jmcosta944@gmail.com>, u-boot@lists.denx.de, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+Cc: kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, Dan Carpenter <dan.carpenter@linaro.org>, chrome-platform@lists.linux.dev, lkp@intel.com, intel-wired-lan@lists.osuosl.org, linux-media@vger.kernel.org, freedreno@lists.freedesktop.org, linux-watchdog@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org, virtualization@lists.linux.dev, rcu@vger.kernel.org, netdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, oliver.sang@intel.com, linux-crypto@vger.kernel.org, oe-lkp@lists.linux.dev, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Thank you, I've reached out to MITRE for CVE numbers, I will
-communicate them once assigned (hopefully within a few days).
 
-Best regards,
-              Jonathan
 
-On Tue, Feb 11, 2025 at 1:29=E2=80=AFPM Tom Rini <trini@konsulko.com> wrote=
-:
->
-> On Tue, Feb 11, 2025 at 08:26:37AM -0800, Jonathan Bar Or wrote:
-> > Hi Tom and the rest of the team,
-> >
-> > Please let me know about fix time, whether this is acknowledged and
-> > whether you're going to request CVE IDs for those or if I should do
-> > it.
-> > The reason is that I found similar issues in other bootloaders, so I'm
-> > trying to synchronize all of them. For what it's worth, Barebox has
-> > similar issues and are currently fixing.
->
-> Yes, these seem valid. We don't have a CVE requesting authority so if
-> you want them, go ahead and request them. You saw Gao Xiang's response
-> for erofs, and I'm hoping one of the squashfs maintainers will chime in.
->
-> >
-> > Best regards,
-> >              Jonathan
-> >
-> > On Mon, Feb 10, 2025 at 7:51=E2=80=AFPM Gao Xiang <hsiangkao@linux.alib=
-aba.com> wrote:
-> > >
-> > > Hi Tom,
-> > >
-> > > On 2025/2/11 00:41, Tom Rini wrote:
-> > > > On Fri, Feb 07, 2025 at 09:53:01AM -0800, Jonathan Bar Or wrote:
-> > > >
-> > > >> Thank you.
-> > > >>
-> > > >> So, I'm attaching my findings in a md file - see attachment.
-> > > >> All of those could be avoided by using safe math, such as
-> > > >> __builtin_mul_overflow and __builtin_add_overflow, which are used =
-in some
-> > > >> modules in Das-U-Boot.
-> > > >> There are many cases where seemingly unsafe addition and multiplic=
-ation can
-> > > >> cause integer overflows, but not all are exploitable - I believe t=
-he ones I
-> > > >> report here are.
-> > > >>
-> > > >> Let me know your thoughts.
-> > > >
-> > > > Adding in the eorfs and squashfs maintainers..
-> > > >
-> > > >>
-> > > >> Best regards,
-> > > >>              Jonathan
-> > > >>
-> > > >> On Fri, Feb 7, 2025 at 7:50=E2=80=AFAM Tom Rini <trini@konsulko.co=
-m> wrote:
-> > > >>
-> > > >>> On Thu, Feb 06, 2025 at 07:47:54PM -0800, Jonathan Bar Or wrote:
-> > > >>>
-> > > >>>> Dear U-boot maintainers,
-> > > >>>>
-> > > >>>> What is the best way of reporting security vulnerabilities (memo=
-ry
-> > > >>>> corruption issues) to Das-U-Boot? Is there a PGP key I should be=
- using?
-> > > >>>> I have 4 issues that I think are worth fixing (with very easy fi=
-xes).
-> > > >>>>
-> > > >>>> Best regards,
-> > > >>>>              Jonathan
-> > > >>>
-> > > >>> Hey. As per https://docs.u-boot.org/en/latest/develop/security.ht=
-ml
-> > > >>> please post them to the list in public. If you have possible solu=
-tions
-> > > >>> for them as well that's even better. Thanks!
-> > > >>>
-> > > >>> --
-> > > >>> Tom
-> > > >>>
-> > > >
-> > > >> Filesystem-based Das-U-Boot issues.
-> > > >>
-> > > >> =3D=3D erofs
-> > > >>
-> > > >> =3D=3D=3D Integer overflow leading to buffer overflow in symlink r=
-esolution
-> > > >> In file `fs.c`, when resolving symlinks, the function `erofs_off_t=
-` gets an `erofs_inode` argument and performs a lookup on the symlink.
-> > > >> The function blindly trusts the `i_size` member of the input as su=
-ch:
-> > > >>
-> > > >> ```c
-> > > >>      size_t len =3D vi->i_size;
-> > > >>      char *target;
-> > > >>      int err;
-> > > >>
-> > > >>      target =3D malloc(len + 1);
-> > > >>      if (!target)
-> > > >>              return -ENOMEM;
-> > > >>      target[len] =3D '\0';
-> > > >>
-> > > >>      err =3D erofs_pread(vi, target, len, 0);
-> > > >>      if (err)
-> > > >>              goto err_out;
-> > > >> ```
-> > > >>
-> > > >> The `erofs_inode` structure's `i_size` member is defined with the =
-type `erofs_off_t` (which is a 64-bit unsigned integer).
-> > > >> Thereofre, if supplied as 0xFFFFFFFFFFFFFFFF, the `len + 1` input =
-to `malloc` would overflow to 0, allocating a chunk with 0.
-> > > >> That chunk (saved in `target`) is later written with `erofs_pread`=
-, overriding the chunk with partial data controlled by an attacker.
-> > > >> Therefore, we will have a heap buffer overflow due to an integer o=
-verflow in `len` calculation.
-> > >
-> > > Yeah, it's a corner case, I will try to address it later.
-> > >
-> > > Thanks,
-> > > Gao Xiang
->
-> --
-> Tom
+Hello,
+
+
+we noticed the issue happens with a low rate on this commit, but keeps clean
+on parent when we even run the tests up to 999 times. just FYI.
+
+41f70d8e16349c65 b04e317b522630b46f78ee62ecb
+---------------- ---------------------------
+       fail:runs  %reproduction    fail:runs
+           |             |             |
+           :999          2%          16:999   dmesg.INFO:task_blocked_for_more_than#seconds
+           :999          2%          16:999   dmesg.Kernel_panic-not_syncing:hung_task:blocked_tasks
+
+
+kernel test robot noticed "INFO:task_blocked_for_more_than#seconds" on:
+
+commit: b04e317b522630b46f78ee62ecbdc5734e8d43de ("treewide: Introduce kthread_run_worker[_on_cpu]()")
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+
+[test failed on linus/master      7ee983c850b40043ac4751836fbd9a2b4d0c5937]
+[test failed on linux-next/master ed58d103e6da15a442ff87567898768dc3a66987]
+
+in testcase: rcuscale
+version: 
+with following parameters:
+
+	runtime: 300s
+	scale_type: rcu
+
+
+
+config: i386-randconfig-052-20250205
+compiler: gcc-12
+test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+
+(please refer to attached dmesg/kmsg for entire log/backtrace)
+
+
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <oliver.sang@intel.com>
+| Closes: https://lore.kernel.org/oe-lkp/202502121025.55bfa801-lkp@intel.com
+
+
+[ 1023.501569][   T32] INFO: task UVCG:82 blocked for more than 491 seconds.
+[ 1023.510932][   T32]       Tainted: G                T  6.13.0-rc2-00014-gb04e317b5226 #1
+[ 1023.528506][   T32] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1023.551252][   T32] task:UVCG            state:D stack:0     pid:82    tgid:82    ppid:2      flags:0x00004000
+[ 1023.582336][   T32] Call Trace:
+[ 1023.599286][ T32] __schedule (kernel/sched/core.c:5372 kernel/sched/core.c:6756) 
+[ 1023.617204][ T32] ? __this_cpu_preempt_check (lib/smp_processor_id.c:67) 
+[ 1023.637326][ T32] schedule (kernel/sched/core.c:6834 kernel/sched/core.c:6848) 
+[ 1023.653175][ T32] schedule_preempt_disabled (kernel/sched/core.c:6906) 
+[ 1023.672095][ T32] kthread (kernel/kthread.c:453) 
+[ 1023.684220][ T32] ? kthread_flush_work (kernel/kthread.c:970) 
+[ 1023.700611][ T32] ? kthread_is_per_cpu (kernel/kthread.c:413) 
+[ 1023.716756][ T32] ret_from_fork (arch/x86/kernel/process.c:153) 
+[ 1023.732758][ T32] ? kthread_is_per_cpu (kernel/kthread.c:413) 
+[ 1023.748605][ T32] ret_from_fork_asm (arch/x86/entry/entry_32.S:737) 
+[ 1023.764004][ T32] entry_INT80_32 (arch/x86/entry/entry_32.S:942) 
+[ 1023.776959][   T32]
+[ 1023.776959][   T32] Showing all locks held in the system:
+[ 1023.803410][   T32] 1 lock held by khungtaskd/32:
+[ 1023.815913][ T32] #0: c3baa3d4 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire (include/linux/rcupdate.h:336) 
+[ 1023.842061][   T32] 1 lock held by in:imklog/227:
+[ 1023.849815][ T32] #0: ecd0e884 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos (fs/file.c:1194) 
+[ 1023.877481][   T32] 1 lock held by dmesg/494:
+[ 1023.885260][   T32] 2 locks held by depmod/567:
+[ 1023.903871][   T32]
+[ 1023.907007][   T32] =============================================
+[ 1023.907007][   T32]
+[ 1023.938278][   T32] Kernel panic - not syncing: hung_task: blocked tasks
+[ 1023.951013][   T32] CPU: 0 UID: 0 PID: 32 Comm: khungtaskd Tainted: G                T  6.13.0-rc2-00014-gb04e317b5226 #1 78ab3595737b7bb7ccfbfed5c1dcb65e25af99a7
+[ 1023.973770][   T32] Tainted: [T]=RANDSTRUCT
+[ 1023.979010][   T32] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+[ 1023.991787][   T32] Call Trace:
+[ 1023.995862][ T32] dump_stack_lvl (lib/dump_stack.c:122) 
+[ 1024.001535][ T32] dump_stack (lib/dump_stack.c:130) 
+[ 1024.006622][ T32] panic (kernel/panic.c:258 kernel/panic.c:375) 
+[ 1024.011360][ T32] check_hung_uninterruptible_tasks (kernel/hung_task.c:239) 
+[ 1024.018678][ T32] watchdog (kernel/hung_task.c:398) 
+[ 1024.023798][ T32] kthread (kernel/kthread.c:466) 
+[ 1024.028697][ T32] ? check_hung_uninterruptible_tasks (kernel/hung_task.c:380) 
+[ 1024.036601][ T32] ? kthread_is_per_cpu (kernel/kthread.c:413) 
+[ 1024.042763][ T32] ret_from_fork (arch/x86/kernel/process.c:153) 
+[ 1024.048431][ T32] ? kthread_is_per_cpu (kernel/kthread.c:413) 
+[ 1024.054588][ T32] ret_from_fork_asm (arch/x86/entry/entry_32.S:737) 
+[ 1024.060422][ T32] entry_INT80_32 (arch/x86/entry/entry_32.S:942) 
+[ 1024.067908][   T32] Kernel Offset: disabled
+
+
+
+The kernel config and materials to reproduce are available at:
+https://download.01.org/0day-ci/archive/20250212/202502121025.55bfa801-lkp@intel.com
+
+
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
