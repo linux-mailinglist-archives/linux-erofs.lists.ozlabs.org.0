@@ -1,47 +1,50 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21E79A3633D
-	for <lists+linux-erofs@lfdr.de>; Fri, 14 Feb 2025 17:36:33 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B5353A3633E
+	for <lists+linux-erofs@lfdr.de>; Fri, 14 Feb 2025 17:36:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Yvd3f6sG2z3bpL
-	for <lists+linux-erofs@lfdr.de>; Sat, 15 Feb 2025 03:36:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Yvd3h2G9Qz3c5B
+	for <lists+linux-erofs@lfdr.de>; Sat, 15 Feb 2025 03:36:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739550989;
-	cv=none; b=cKQX21RtD6YkNGaVn6ycDUgHbOY/Sb36CaLAB2CvfkSex9XBX+ZY0PAaKc+xFItVXXrhSIMRwB5xAq4BuhXh1XxqV9xaYeLz7rAZfmiAasHodIRHV1R2i0FaH2Z1IIWkNBk5QKxCWR8MTi80sagh8uG5z4o66meiN2nh3ev2ybheI6F+L3sPTaNKom5/X7uDN3PUjQ4z//ov8uOKsdGPVfr+i0CcDKm6a1bOSLOYdEPX5zJP/a+zIXMJ6TUhfhcSo93fn9/599DsMiyPmSTS0qyHIWYJrhCdKz5N8F4VYXJp+qM9t0aieAqEdfYw7WoJ8CLnqi6zBI/9zUBcTkT/5w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739550991;
+	cv=none; b=UqU5+kkwvP9513pD9EGaT4lyqZiTBP9rxN8EAX3bjDA1F822256ZDfQWq29zB/ZbAbiKu8wtL0gVDQWpZETEjqQVlH4+GcTSwH9hSaKlcQZ/prUcKaa0NHWqR/EGDCIdYVLHTxy+1SOnGZlwI/k4BaxzfYklZNeqx1//qHrhPdyIvEO7Ra+YI2Rc0hShF459d/DQqxZRZq/W1JQ70Bp2e17MwJOqC5qYlsSslNnuZDFC65SITCa6klHLtnKidKHSmfySnW+zlYbhLRXtQh+UGXKSkDNg7NgwXLPLEwdlSaCAuaGD9VGJx+5BugrZ6dP1cVEvWSDhPnzk2oFCw70jnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1739550989; c=relaxed/relaxed;
-	bh=0eOsDYvK+OYbxa0M1Fn4XOCc/LJX+6PVK9Wd166I15k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z5/xqt1+1xaAYBlf7znKLJYlIoY1HWWyf0Euvpv7FP4vWrZ7K1ndHT73N6ac2iTcoP0p8Ow6AR+i6t/Ic4/7tVMv6IrxDeE0bn1OepRMnHvxyOAsWKNQV1mwNDa/km5nB9EfzJOrXJ1IfKksVtAphTkY99SOp4ryqSbrB6PTy3e6Y7eGxEWbeLiSBbnXDOMoNbKUbucCJ0UOyoviv03h5gX0tUDhJpDx1QyTJeL9wL5N/HRiWl7BjXcacHXAky0g/iY8i+2bxgBetKb7Ags9xlaJ8EePq2fkRWVCq85fkOMynYyloPK3HRZ3YBqf0/+i1YQnQOSmQQAHcMNzGWzh6g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=npuGE6n/; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1739550991; c=relaxed/relaxed;
+	bh=yyTDASHc+pPtE6Ts02DQJLMTodxCtqqDk+RpTYx6V4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=auyjUpT4Prgk+ua1GKtzyT/rj8WHneK8uLp2ayIREbUeMXa7U6BAuc0k8Bk+GUzd0M4iWHcxI3xXFRoC08K265wkLQ1gKs/3cqmQoNl6/QPMiq6WDiTPj7CYYdXCF+EGzOf475GxpS/JcHVPu3aUdEVJa9Kjwdi1k6hQEQPFeGS7WCo+xHWsuIY/Og3qAVY+9Cvb/6a4BwFWfXtQIqn4GVmAppXwX6ePPssMXNG+3V4lnpnZLXKlUoN8iooW+l8In3+z07YioqFEd1DbVPwcDjh3TtK3tlJkt3aBYDlpXvnT6cHEOvjk7SRkQZCZLzzWcbcZ5wfegnEr/78fbrS6xg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yXen3lXX; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=npuGE6n/;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yXen3lXX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Yvd3c2spyz304f
-	for <linux-erofs@lists.ozlabs.org>; Sat, 15 Feb 2025 03:36:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Yvd3f2Fz0z3bgV
+	for <linux-erofs@lists.ozlabs.org>; Sat, 15 Feb 2025 03:36:29 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1739550984; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=0eOsDYvK+OYbxa0M1Fn4XOCc/LJX+6PVK9Wd166I15k=;
-	b=npuGE6n/QONd52Kd8+t+bf0SEatkEfFblLDMZdZoelyrJxwcl/nzEbgiETW+l0p5uM1SR1tTwOL1MFxjN7jeYVcHr5ROsMZVBjgEpAHc8YKjL1z1d+GdB3xTfNeUR+HgyNHUhPrPZygbbhFQLwD2NhInRHQlrL3Mh3Krpv1s+Wo=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WPRMuay_1739550982 cluster:ay36)
+	t=1739550986; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=yyTDASHc+pPtE6Ts02DQJLMTodxCtqqDk+RpTYx6V4A=;
+	b=yXen3lXXW6LZEhL4xhl47Yns7pXqwrblfOZbGxuHnQRpobbrBMTwssLa9H059o14BbYg/XOsd+w88pOl96n8c5Ao7fC4aR/cZck1FIeEx33m61iehFSGvSj38KsVCg82FHouausB2TZB62rk9JUaKCRIQa5bslFDC58xc5ElYKU=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WPRMubW_1739550983 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 15 Feb 2025 00:36:23 +0800
+          Sat, 15 Feb 2025 00:36:24 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH 1/2] erofs-utils: mkfs: add per-segment reaper for multi-threaded compression
-Date: Sat, 15 Feb 2025 00:36:20 +0800
-Message-ID: <20250214163621.4109215-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/2] erofs-utils: avoid overly large temporary buffers for compressed data
+Date: Sat, 15 Feb 2025 00:36:21 +0800
+Message-ID: <20250214163621.4109215-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250214163621.4109215-1-hsiangkao@linux.alibaba.com>
+References: <20250214163621.4109215-1-hsiangkao@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -64,127 +67,54 @@ Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Replace the old per-inode reaper to avoid unnecessary memory overhead.
-It also speeds up the multithreaded compression a bit.
+... and use `EROFS_MAX_BLOCK_SIZE * 2` to avoid potential issues
+with buggy compressors.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/compress.c | 31 ++++++++++++++-----------------
- 1 file changed, 14 insertions(+), 17 deletions(-)
+ lib/compress.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/lib/compress.c b/lib/compress.c
-index 604a04c..e9a4459 100644
+index e9a4459..da3fded 100644
 --- a/lib/compress.c
 +++ b/lib/compress.c
-@@ -52,23 +52,21 @@ struct z_erofs_compress_ictx {		/* inode context */
- 	u8 *metacur;
- 	struct list_head extents;
- 	u16 clusterofs;
--
- 	int seg_num;
- 
- #if EROFS_MT_ENABLED
- 	pthread_mutex_t mutex;
- 	pthread_cond_t cond;
--	int nfini;
- 
- 	struct erofs_compress_work *mtworks;
+@@ -26,6 +26,8 @@
+ #include "erofs/workqueue.h"
  #endif
- };
  
- struct z_erofs_compress_sctx {		/* segment context */
-+	struct list_head extents;
- 	struct z_erofs_compress_ictx *ictx;
- 
- 	u8 *queue;
--	struct list_head extents;
- 	struct z_erofs_extent_item *pivot;
- 
- 	struct erofs_compress *chandle;
-@@ -98,6 +96,7 @@ struct erofs_compress_work {
- 	/* Note: struct erofs_work must be the first member */
- 	struct erofs_work work;
- 	struct z_erofs_compress_sctx ctx;
-+	pthread_cond_t cond;
- 	struct erofs_compress_work *next;
- 
- 	unsigned int alg_id;
-@@ -1307,12 +1306,10 @@ void z_erofs_mt_workfn(struct erofs_work *work, void *tlsp)
- 				       EROFS_NULL_ADDR);
- 
- out:
--	cwork->errcode = ret;
-+	DBG_BUGON(ret > 0);
- 	pthread_mutex_lock(&ictx->mutex);
--	if (++ictx->nfini >= ictx->seg_num) {
--		DBG_BUGON(ictx->nfini > ictx->seg_num);
--		pthread_cond_signal(&ictx->cond);
--	}
-+	cwork->errcode = ret;
-+	pthread_cond_signal(&cwork->cond);
- 	pthread_mutex_unlock(&ictx->mutex);
- }
- 
-@@ -1346,6 +1343,7 @@ int z_erofs_merge_segment(struct z_erofs_compress_ictx *ictx,
- 		}
- 	}
- 	free(sctx->membuf);
-+	sctx->membuf = NULL;
- 	return ret;
- }
- 
-@@ -1358,7 +1356,6 @@ int z_erofs_mt_compress(struct z_erofs_compress_ictx *ictx)
- 	int i;
- 
- 	ictx->seg_num = nsegs;
--	ictx->nfini = 0;
- 	pthread_mutex_init(&ictx->mutex, NULL);
- 	pthread_cond_init(&ictx->cond, NULL);
- 
-@@ -1374,6 +1371,7 @@ int z_erofs_mt_compress(struct z_erofs_compress_ictx *ictx)
- 			cur = calloc(1, sizeof(*cur));
- 			if (!cur)
- 				return -ENOMEM;
-+			pthread_cond_init(&cur->cond, NULL);
- 		}
- 		*last = cur;
- 		last = &cur->next;
-@@ -1396,6 +1394,7 @@ int z_erofs_mt_compress(struct z_erofs_compress_ictx *ictx)
- 		cur->alg_name = ccfg->handle.alg->name;
- 		cur->comp_level = ccfg->handle.compression_level;
- 		cur->dict_size = ccfg->handle.dict_size;
-+		cur->errcode = 1;	/* mark as "in progress" */
- 
- 		cur->work.fn = z_erofs_mt_workfn;
- 		erofs_queue_work(&z_erofs_mt_ctrl.wq, &cur->work);
-@@ -1412,11 +1411,6 @@ int erofs_mt_write_compressed_file(struct z_erofs_compress_ictx *ictx)
- 	erofs_blk_t blkaddr, compressed_blocks = 0;
- 	int ret;
- 
--	pthread_mutex_lock(&ictx->mutex);
--	while (ictx->nfini < ictx->seg_num)
--		pthread_cond_wait(&ictx->cond, &ictx->mutex);
--	pthread_mutex_unlock(&ictx->mutex);
--
- 	bh = erofs_balloc(sbi->bmgr, DATA, 0, 0);
- 	if (IS_ERR(bh)) {
- 		ret = PTR_ERR(bh);
-@@ -1431,9 +1425,12 @@ int erofs_mt_write_compressed_file(struct z_erofs_compress_ictx *ictx)
- 		cur = head;
- 		head = cur->next;
- 
--		if (cur->errcode) {
--			ret = cur->errcode;
--		} else {
-+		pthread_mutex_lock(&ictx->mutex);
-+		while ((ret = cur->errcode) > 0)
-+			pthread_cond_wait(&cur->cond, &ictx->mutex);
-+		pthread_mutex_unlock(&ictx->mutex);
++#define Z_EROFS_DESTBUF_SZ	(Z_EROFS_PCLUSTER_MAX_SIZE + EROFS_MAX_BLOCK_SIZE * 2)
 +
-+		if (!ret) {
- 			int ret2;
+ /* compressing configuration specified by users */
+ struct erofs_compress_cfg {
+ 	struct erofs_compress handle;
+@@ -554,7 +556,7 @@ static bool z_erofs_fixup_deduped_fragment(struct z_erofs_compress_sctx *ctx)
+ static int __z_erofs_compress_one(struct z_erofs_compress_sctx *ctx,
+ 				  struct z_erofs_inmem_extent *e)
+ {
+-	static char g_dstbuf[EROFS_CONFIG_COMPR_MAX_SZ + EROFS_MAX_BLOCK_SIZE];
++	static char g_dstbuf[Z_EROFS_DESTBUF_SZ];
+ 	char *dstbuf = ctx->destbuf ?: g_dstbuf;
+ 	struct z_erofs_compress_ictx *ictx = ctx->ictx;
+ 	struct erofs_inode *inode = ictx->inode;
+@@ -1218,8 +1220,7 @@ void *z_erofs_mt_wq_tls_alloc(struct erofs_workqueue *wq, void *ptr)
+ 	if (!tls->queue)
+ 		goto err_free_priv;
  
- 			cur->ctx.blkaddr = blkaddr;
+-	tls->destbuf = calloc(1, EROFS_CONFIG_COMPR_MAX_SZ +
+-			      EROFS_MAX_BLOCK_SIZE);
++	tls->destbuf = calloc(1, Z_EROFS_DESTBUF_SZ);
+ 	if (!tls->destbuf)
+ 		goto err_free_queue;
+ 
+@@ -1291,6 +1292,7 @@ void z_erofs_mt_workfn(struct erofs_work *work, void *tlsp)
+ 		goto out;
+ 
+ 	sctx->pclustersize = z_erofs_get_max_pclustersize(inode);
++	DBG_BUGON(sctx->pclustersize > Z_EROFS_PCLUSTER_MAX_SIZE);
+ 	sctx->queue = tls->queue;
+ 	sctx->destbuf = tls->destbuf;
+ 	sctx->chandle = &tls->ccfg[cwork->alg_id].handle;
 -- 
 2.43.5
 
