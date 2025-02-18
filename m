@@ -1,70 +1,235 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 222E7A396E4
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2025 10:21:43 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1F3C9A3A19E
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2025 16:45:25 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1739870500;
-	bh=ZCtAjWsH8jT9hnaqtoB68T1TFs75Fw+Uj5uC9nRt6n0=;
+	s=201707; t=1739893520;
+	bh=MRfaKfeufvxkkvqv2d5BGpaRadieW92IjClEVFaoBEY=;
 	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
 	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
 	 From;
-	b=ESB06D67v5G92TGHjXeZlKBgbwk+/PvKxmSaIGrjsMGyHBA/ARN4TidBubpPn5ps3
-	 pNJKiQNiByk3wWXXcdYyr88wDMHESOUGM7ZO7ObnzPFSRvV4+LsE6bApA+/Cg2Gs9W
-	 6QIfXJ+aYi93KKMmQvGyUf3isvCvQ+tZ1j7vVmLjboVFoX8lusLBk4e9iYjGX8DOYD
-	 g0L9TWzydDCsN1kncs+wYVBVWS1ZtPdoInDTqCYCa0Sfgp6CzeMf85AKtL1G371gUP
-	 Nv3gNJ0Q6rpDfwe1/MoSwrWgw2eelJKVuij5nKuWJUkWK6vNllIG0C/k5nOSilUGmb
-	 GPmwM1rax7QJA==
+	b=HA7bqTQazwi4qtC9EeXVp8Nc+Spn8zQb1HblJaVbmS391VUUmvK3zGYm/JpXaQ6rS
+	 wIp9yBh768waGdnCQdh3dnGJxZ6oc3EuO/U1bs0anid2L3/ALAEcQHmwaBS+0No2Lo
+	 5b6WqDBaBwivhHIGT4XONzqpKf/1Qw8Cf+whDyw4N+EMnfIHPH7qvo4WTDXtvm1Qkl
+	 F3PpW73iSvhnTxohN5po45eM6dmANngrhHbTTf4udUjzV+gk7Sm89GJFqASw0Cprq5
+	 mlOxOwPwTSjeKQxdLXkO+l6rcBfpEz/jCSEZ51B3yyKvpofL/USm+qsiln59XuoCKB
+	 gJjaVia7Bhtpg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YxvD4335Sz30Nl
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2025 20:21:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Yy3km3pdfz30Q3
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2025 02:45:20 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.35
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739870499;
-	cv=none; b=BcZBc1AmXolqXZxBSnxgqoaOnWacuq9ibZJF+KOheTxV4nZZkL8BWE64rFoJ9jSJ1h8QH0tgKp2+l0bL///2k/p4IxnLOExrKJ1ols9jFdR+xIsqTz3lYFd0Fl86dzks0xYAWggenOB5dXTh8R5jCLWHz2f2ppNBBjQCaFhekDwe5RHXxmmJfJWwki/eKH8izYryFIuqKexA+bbJAg9md6TB0Hvx0ZuyXJEKsAaR0Yi3cuY3TVlwjHEfE0xhucB18ebictbIJ6EbpsIM6NkljLQUrxDZ+IYzTT62o6X5c0XcgFr6Cr6LI46upYDS2k4HqUhrkY0zyg4dQ0oXGa6dGQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1739870499; c=relaxed/relaxed;
-	bh=ZCtAjWsH8jT9hnaqtoB68T1TFs75Fw+Uj5uC9nRt6n0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=YrVWEDpvKbmCtBEfw0bhnVdxUGBdbpM4VAUMrJ7TDzmpIkAmDvJc1WsPpbRqQ80qv44NMXNIkWHHwG0Y8A2rl7ExlkXFfX5qAMApqIF7nzZwEvrHqg02SdgbkG0K6LbapC3cISCforjGCPhBFrDbPONTRX46WaXv0eXs7wbinzlDXF6zhSum/SBiPRA6Ju2kDCAvLSShBng0ScnSSoB+SJwG3kF+Y89cIO2P+LitjOhlSfvebzSNOpIMRNWd0DlHbYJEhfECykkNoynwMLmFSubQuKUvarjZ02dZZkfzhgVdkd5W6va7tzQnhDKD1jawZrFGI+eM8YPkHGhRS8UQUA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.35; helo=szxga07-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.35; helo=szxga07-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=205.220.177.32 arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739893518;
+	cv=pass; b=ZPIZZIE4IFBHeOEGmyfXr9b2DCoQpjiX97mJuA8tjo2zl9JhQ5vtOkP4dhmcyI3s3vmEfMCgjkoHzZ+AJSD8EPTele7umqLdrZXNMVxSnTfEkwegOhVKKBnSljq6FHJRm0BItIQQjsH8vnkpN+9XO34EsvUjp6R3WQKBV4VnIe3xL8mOqGLVSudLKLgdcexHL/BzRM246OrURxnK7UdzCL7J2fp++x/VR4PGQ93K33mrSrIlm4/pm3iXXr+EXb4Xymm04uFuEZZe8s5llFjO+8a0Y+AF22weYEVBTK/Gv+6xP5HJa2UccJbH1cY9bq2EaRoYMH2wn98tCnPpI8owqw==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1739893518; c=relaxed/relaxed;
+	bh=MRfaKfeufvxkkvqv2d5BGpaRadieW92IjClEVFaoBEY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nzA6MXtZq0oiwqKTMLl0Lo8ASNtVdO/aIX9V9SiPYdVLSHdJad62ae3sSPmlhgxMBhD90s83zLA4dqxRuasHcsd83eVItZxCESPZQHT5mHfvSmqr70Oi3pt646FF+l7kcGWx1ctfwmY+VpplsiThcVFGSDc1in9LC5kOtwZqmuz5ELVIcid/DRBRia8/K/Po3GUHJ626VT4IQF0j3MsGK/o4I0rVenjZTqvyEb29WyEMrsYTKLaiAcZ3e4RkTKJZzJPUctsfTLCACicGOKuDqBkCun/iJjUb6SLx0drT8X/WFRuwJtftBZXk2LgFb+lDgRGikRtK9GENpyFWAtl1aQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2023-11-20 header.b=kBIJZj/r; dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=sZLB5UsO; dkim-atps=neutral; spf=pass (client-ip=205.220.177.32; helo=mx0b-00069f02.pphosted.com; envelope-from=chuck.lever@oracle.com; receiver=lists.ozlabs.org) smtp.mailfrom=oracle.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2023-11-20 header.b=kBIJZj/r;
+	dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=sZLB5UsO;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=oracle.com (client-ip=205.220.177.32; helo=mx0b-00069f02.pphosted.com; envelope-from=chuck.lever@oracle.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 5212 seconds by postgrey-1.37 at boromir; Wed, 19 Feb 2025 02:45:16 AEDT
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YxvD158mbz2yTy
-	for <linux-erofs@lists.ozlabs.org>; Tue, 18 Feb 2025 20:21:37 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Yxv7P5668z1wn7M;
-	Tue, 18 Feb 2025 17:17:37 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id B723E1A016C;
-	Tue, 18 Feb 2025 17:21:31 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 18 Feb 2025 17:21:27 +0800
-Message-ID: <cf270a65-c9fa-453a-b7a0-01708063f73e@huawei.com>
-Date: Tue, 18 Feb 2025 17:21:27 +0800
-MIME-Version: 1.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Yy3kh41ynz2xFm
+	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2025 02:45:15 +1100 (AEDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IEHpKw009051;
+	Tue, 18 Feb 2025 14:17:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=MRfaKfeufvxkkvqv2d5BGpaRadieW92IjClEVFaoBEY=; b=
+	kBIJZj/rhJKfA4ZKGFmMOFPILVJ+tuMYguP8BrVsLi1ehOlBcHSwrBflSjCZSoye
+	FjobQKh75mseWs9b05an5NSJ46aiDKU4EH5hkD4bDaJvuX2qEV1RU45zQ+uHLLEN
+	TXtkrFtXJ6H60WUoCFnQso5BTm0Ywm2IZBUQ51yQO1RAvhISmtWkelOJ1rDr91r2
+	olGvnAvhb2d3GwuykByUEuMWCBMc3Oohw5eA7V3kgyaw1UgaUgptfqnN682PsXg/
+	oG1AC+aytFYspMMmXRAwoOH8Ha/wN/dk7Mv3LtAEmapCZx2fa1J6sR+g9wpVkDS+
+	IGjZZ1FQPyX0dyTYP5sAOQ==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44thq2prb2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Feb 2025 14:17:51 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51ICmuBx036727;
+	Tue, 18 Feb 2025 14:17:43 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2047.outbound.protection.outlook.com [104.47.70.47])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44thc9349v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Feb 2025 14:17:42 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SYz1U77tPRDbVjXjVca23nx5gVd5JxWIlnfbXKKmwMTQkb1gXl2oxo3FNQVF4lbSGoTH8VTx9ZKg7q12/g497spzNcJUCk3wQCRnxXApSOR28lR1uARuqKA2HXkdM+vBItsSw7wS3CEnUgOFD0tyG+mzuofwiLUzPpLNMypAJ48qXd3qOiZ8Cu9I75ufVVO60ldHJWGR/kBww91tGYeZEttTimk+b+E7bJ1DbQHM3hHZttHghhqpIYjz4TmIbZ5ME7LGzJy9Er4CNH1Wp/REEUDjuLHHf1xGWe7ZQ0hV1kcmDSC3ENxACO2CkS9J5/Wt/Wv+PPMjxaZeIZ8oKglxEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MRfaKfeufvxkkvqv2d5BGpaRadieW92IjClEVFaoBEY=;
+ b=YDRgMRtUXuS/9M5uq2LhdvendzgEHfr9Tqivvfp8Ghlv/VmDGRwEeLtSfcHKO1ow4rtJOb6V9GbFFm4zlQ7ZHX9/7pLV/CIFGUvm9EIh9XXBdWccTjjtmrmZtw8CZHPhHxodh0EtdrbkkWw2yBodVAFzy9b0iruDgumBR2fllc5R4CQa2pytSI7ZsF2Jbf+OWFCh9IctCY0QVeaFFM/AULDCGf9UeC8YhS+J2Lj/5XtTD8oWQwNC9OSh8qWiOD1KaD/4cEVIa3Xjakd9UZJQl2KXebrK3263E0pf6HQ2k+MLHg8qV6ZxrtfLGRNjJrxidDDxoc2hIDaGWmsoxlsOJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MRfaKfeufvxkkvqv2d5BGpaRadieW92IjClEVFaoBEY=;
+ b=sZLB5UsO/p5Phb+Oz/k/KBFpjEUS3ZLmZq2/Xy7Ctm2P0iNlC3XYwN+4CFZkFv7eyrkU/bWcWoxZ3uRsXwTnpT7kHCUKwlrA/upouSUzBAzuGwLmnwlsofxuxj8holx2N7z/Hhj9lXCv2PSBu+SovJreskTEzEQdrbbCbjL/VOE=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by MN2PR10MB4175.namprd10.prod.outlook.com (2603:10b6:208:1d9::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.19; Tue, 18 Feb
+ 2025 14:17:40 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%6]) with mapi id 15.20.8445.017; Tue, 18 Feb 2025
+ 14:17:40 +0000
+Message-ID: <7b7492c0-a3a7-470b-b7aa-697ac790a94b@oracle.com>
+Date: Tue, 18 Feb 2025 09:17:35 -0500
 User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC] mm: alloc_pages_bulk: remove assumption of populating only
  NULL elements
-To: Dave Chinner <david@fromorbit.com>
+To: Yunsheng Lin <linyunsheng@huawei.com>, Yishai Hadas <yishaih@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Sandeep Dhavale <dhavale@google.com>, Carlos Maiolino <cem@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+        Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>
 References: <20250217123127.3674033-1-linyunsheng@huawei.com>
- <Z7Oqy2j4xew7FW9Z@dread.disaster.area>
+ <abc3ae0b-620a-4e4a-8dd8-f8e7d3764b3a@oracle.com>
+ <cc6fc730-e5f4-485b-b0b6-ec70374b3ab1@huawei.com>
 Content-Language: en-US
-In-Reply-To: <Z7Oqy2j4xew7FW9Z@dread.disaster.area>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <cc6fc730-e5f4-485b-b0b6-ec70374b3ab1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.120.129]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemf200006.china.huawei.com (7.185.36.61)
-X-Spam-Status: No, score=-2.3 required=5.0 tests=RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
+X-ClientProxiedBy: CH5PR04CA0017.namprd04.prod.outlook.com
+ (2603:10b6:610:1f4::17) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MN2PR10MB4175:EE_
+X-MS-Office365-Filtering-Correlation-Id: 657a4f68-d01b-4ae6-85bd-08dd50270086
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: 	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
+X-Microsoft-Antispam-Message-Info: 	=?utf-8?B?M0pob29vVEFhTjU5YkZXeWFRVGxQZFdrWkpuN1Y0UGZsdG9GRmh0UnRDL1Nw?=
+ =?utf-8?B?MFpPbEJhSWo2c2NoK2Uxc2xza3B5bG1WZnV5QVMzeEVQQVlNZVR0c3hYRHhP?=
+ =?utf-8?B?V3BuQTB1MjFEUVVzQVBCMlEyTUozMVczVHZpTUV2U3JkUkU3RzNiMUNYS2sy?=
+ =?utf-8?B?MER1YWF4TnpTVTYzaGZkb1VvUnRuYjZqWCs0TjM4MGhBNzJXVXVGYVEzdkVF?=
+ =?utf-8?B?aTUydUFVclNISjdPNWlHa1B2VnVua1cxakpwSncwUkYxMEZFTUlNNUdOZW9Y?=
+ =?utf-8?B?VHRPdkpHN0VHclVoUFIwTlZXSm93VUhieHVkc05ReFc2NWZuVkdJU256RERV?=
+ =?utf-8?B?SW42K2Z1dzdaQmlWdVNRRjU1ZlNEUnI0alNqYmZ2TTlzLzBBczh0R09JcXNy?=
+ =?utf-8?B?dU81L0h0MlBFWDNhUTRkTHoxSkUvWWhhQlAvSStSeFZKNSsvMk9LRnkzQTdo?=
+ =?utf-8?B?eVh5TXNQcWlidlhhR2loOGY1VDNhR2tWb0Z2OW9VWmFmdjE1TG1KUWpVeDk2?=
+ =?utf-8?B?M0JOZG9CandOSnJGdVZzbG9YQTVoTmYycnZ0eWNzeUpPd084ZXl0Y2QzNDVa?=
+ =?utf-8?B?dWozQ1AxUW01RjlWbzdLZXJmOHh3SkVsU1I1T0EzTWhTY2h6TW1scUtKUlJY?=
+ =?utf-8?B?M3pvamFhanNZdDRwVFMrdE42U3YxMkxHTGxMYWJPM1FwVTY0Yk9sajIxVTU3?=
+ =?utf-8?B?cVpTd3gvbGw2R0Z4YmEvQ2NKMFNnMjhrYkZUQUFhZkxKeERqR1VEcGp0a2Vz?=
+ =?utf-8?B?YlMwTS90bXZHL0RDWGl4Ly8wcWxxY0FwUEdYQUZjQWpZdGhDaEtZTXhuNzZj?=
+ =?utf-8?B?RmVMakEwdkZZNEZvMElGZ0w5SmpDdnYwTEFyMHZEMFh4SXBOREdtazBPUjJY?=
+ =?utf-8?B?Vjl1Zm9GS2p3RC8rbGNjRkZIL21FY05qV3EySGRiTlFSNHIvZnIvcVJnVFBu?=
+ =?utf-8?B?SlYvZ1gzaVlhalUyRkxzM2FyVlNkTEYrQzFKYmJJM2x1TzdBUDl4SXg1NTRV?=
+ =?utf-8?B?MU92RFBQUUlOd0FiQzhsVENqTVU2UEI3bnMxNkFlbHhIbjQrWkNUTEpNcXF1?=
+ =?utf-8?B?b1EvTkozMWFDN2FTdE9BNWpzbittRlFpYXBaa3h1UjNVZld6bWJqYlpMbWlw?=
+ =?utf-8?B?Q01uZEM1a2FSa3ZyMXkvakhjbDhBUWFQNDRzYXhtcnFTR2E5YlFkdENBdThm?=
+ =?utf-8?B?Y3p6MkdYSk52eWJybnIrQWoyaDBUN1M2aHlhVmVWN0NieHZOK3crYmJsSXZG?=
+ =?utf-8?B?SFZYb3VtQXRtOU9UY05nK1JSRWlDaWVjZE9vWktTaTBRUHhFRnk2a2pvWHg0?=
+ =?utf-8?B?aWJNZUhwVEJlYlBJZEpTZ0UyRnB2N2c1ckl2R2FHQ2szcmtRSzBGZEZlc21x?=
+ =?utf-8?B?aDE2SlJ5eDV1eXI3OGNKMGZFOVo3NUZrMzJQVDZrc0wzQkprQi9Qd05RejQ3?=
+ =?utf-8?B?dU5sVy9mMkxKNzc5V1lFZ1V1bWQ2Tmt3OEF2Tk4zNHBMSUtTTnZEOHVHZjBs?=
+ =?utf-8?B?ZTU3UWRub3BPUUNwc0NKNHQrWkM2NTdicVJpSzU0S0JURXFUTmNuZWhTYVk0?=
+ =?utf-8?B?TGM2K05xWDBGdkhqNDZzbVlRbG5aS3B3WXJXZ0pRdDRKMHFPSVgxRzhKUklm?=
+ =?utf-8?B?S05YbWg2VnJuSHVReVkvTmRsN2tPTVFSQTF2NzVwd3VNNVBIKzFubWF4eFRE?=
+ =?utf-8?B?KzVXNGRSYlZXOTRMNkxlYkJnRUZRZDgxWVFweTBteGcxd2lWY0F3bVBCS3p5?=
+ =?utf-8?B?ZVdxbzhQM1NXOFlZZVNiUVJiV0xLWVJHYkFIZGVHNVNSMitiQ0xSVFZPeWpJ?=
+ =?utf-8?B?K1dLcWRqKy9uZkkwWWdPYmpRS3NGbzR4QTZ1Yk5idWRlcXZvRWt0NWRUdGdU?=
+ =?utf-8?B?UW85WUZPemNQcUJnY29OUjB2bzZlTG5zNXBKK0V1Nm50WGZ1bS9yK1NjckZH?=
+ =?utf-8?Q?M6IZkcs2BMM=3D?=
+X-Forefront-Antispam-Report: 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 	=?utf-8?B?K0R1RlYrYW9La3g5MGtEbUpGQnJxYklMV01tbko3Mmtka0h4QlhLQ3JPVlA1?=
+ =?utf-8?B?cDg1TndIaXFKUXI1RWYzTW5zaHM5bXp1YjZHRjJNUTduOXJ5Rm1DTlM4Sy8y?=
+ =?utf-8?B?c3h4cUNSQ3FkT1YxUEc2Mi9uN3pXQ3ZHeFM3dVdTNTZFeWFaRjZGaGlGbDBJ?=
+ =?utf-8?B?U2JaZkRUWG5hS0o2QjQ4TGQxUXQ2NGhZQXhLSlhsQjlKR1FjdTRsbkRSYlJq?=
+ =?utf-8?B?bjgwSU10ZXBRZzlaTjhUVHZ6TUowSXVRK3NxZllCako5UEdONUE5VHRkZ1U1?=
+ =?utf-8?B?SlJ6K0lRU2R2NjFxeHVwVnpsMEJEbk1LOHBIckF6TUhTMDlaTFJacEh6N1JH?=
+ =?utf-8?B?cFdlSXJCWHdlTUVtWVlHUkt3dEtFK1ZlYVdrQ3E0cStWUDRCaURyUzBaa0VK?=
+ =?utf-8?B?RzdnWjErcWxqOVBpdit5bEZSN1FER0lFY0gvUEgvVHFXRU9MYllFR25LMitt?=
+ =?utf-8?B?ZlNxR0NLMWJwOC90OTUwSzhobFlob3JZSk92OTlteU5oangwRVJ2bVF5KzA1?=
+ =?utf-8?B?T3JHTmtmRHNHRFpSUW1hc3JNaXMrYmlBTWtyaTQ3bE1FczVuZGhCYVl0RVZ2?=
+ =?utf-8?B?SW4rTTNFZjRjZWZGdXM0cWFDVzBabThsOCtkUktScldlcVMzWlV1akh3Snh1?=
+ =?utf-8?B?Q3BzTWY0c2pqNGoyaXU2dTZxb2EyUkJSOE5xOHkyQUluVll1WXFReHphU3Nx?=
+ =?utf-8?B?MEREbFRva1BlU2E1cXJ4ZGRQc1paVzBSbGpCTyt3RFlIbTYxMmdVU1FtYVV4?=
+ =?utf-8?B?bFF3eCt1ZUVlcDdoc3VKT1ZVb2xpcmx3Rml2T0dIUWRiakpMVHRlTHllUGpn?=
+ =?utf-8?B?ZnpYL0ttbXFaaFJ4Tk81Ni9xQmNOQzJyMUY4a1FpY1Y4QVVyYUpONC9lREQ0?=
+ =?utf-8?B?VDdCQ1JOVmdOQ1JpbUI2K1JmVTZmOVRzVmxabmtsbjJHYzhTSmw5VjFhTzY1?=
+ =?utf-8?B?NGxJbkZKWDFiZndzRktTZGxDRnRNcElKNlFsWncvYzNERjk5NzU4bDVQbSt4?=
+ =?utf-8?B?OGNiMXdFVitOSjc0UVViZ042WlZjcHFhandianpGYzNUMlFTaFhyTk5UTGM2?=
+ =?utf-8?B?bG9ZTU9ZRThPSlFYbEZBY1EzQzc2aGoxMGxPQWVIaWhoaFg4ekh3d1RwcU9k?=
+ =?utf-8?B?RzVqOUhFRmZNVzc4TVFLUjVDZ2pNNCtuUkVkWmJpKzNOTW13dFpyQTJxZHlB?=
+ =?utf-8?B?NmZ3cjErT3ZzN0JVampiQXNjMXRHTVdJMXRoVWxZMWxQZGlud3hqZDR1SXp2?=
+ =?utf-8?B?OEphU2IwRFdpeHFQNkFJcnZNQ2lHKzA3V3lrclVPc2FMbzZmSWZPZmVyb2lD?=
+ =?utf-8?B?OE1vTnJpUzhkOTNrQUxJY05QSkdmVWpPQjdaTGtUT0hnMkg0LytDMkRwRndD?=
+ =?utf-8?B?Q0hBeDMycGFDeU5tN3dENFNWYTNCRlZHanRVSVUrR1BFdW9qb1pQV2I5dE5V?=
+ =?utf-8?B?eXA4WEJHL2sxZmd1QksvSGNlai9ScGdYMDJtQmNWVk1BRHZQQVlBajJJWG1m?=
+ =?utf-8?B?UzhvUGZOa0o5Tnk4Ty92RW1JRCtndnRnWVJnT1pIUzQ2Z0xEWFlvU2MxekZB?=
+ =?utf-8?B?aTczVVdnamI5L0FNbzJ0UnBYYVkyN2o0NTFJZm9xWHYzUHQ4QVdoV004cTg3?=
+ =?utf-8?B?Si90RytZaFNPbHJFQVRyaGFtcGJsVmtYS21zSE9EZ1BhK3FnVm92UDhzRDZC?=
+ =?utf-8?B?Nm1JcEVoMjdPZnl2U0NyMnRlVGJpNjdrTytIREhMQVMvNXZ6SnpialVyU2VR?=
+ =?utf-8?B?dVl5MmVvcjdOVE1jUEh4d2RNSjkxL1k3UzdmQWMxY0tKV2poVGFIQWFNV1hu?=
+ =?utf-8?B?M0N1dXRTbEM2anVkbXlJOWNoWTNublJ1NW50TUtZd2F3azlXM2J1cnRhakJp?=
+ =?utf-8?B?ZXgzZEErak8wS3FXK1ptdFVQUFJ1a2drVjhIZmVVZVpoTlg5YWhXc0kwR2Z4?=
+ =?utf-8?B?bzdOTmFMdlBSbWRadFN0M0N5Y3dVbDB1Y3NtclZ0eWJiUFN3bFVDRFNMOCtk?=
+ =?utf-8?B?KzVmWU9VWnVsTGFQa0k2czE2Q1RlY0RkYWV4V3htclU5cmozMTV1bExYaUJL?=
+ =?utf-8?B?cllCeVluRmVudUV0RzRCWWVHYlAxTjd6NjhsbUdmSXZUZFcrSHc2dG1Hcjlm?=
+ =?utf-8?Q?2mlF+MEhNzMiKdTf4lHlktU7J?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 	zH1rtrLYUO9kfVUlDLACMMIqs7TxmPvWp0y9X82snWEqTTgSSg9Z0mpJwMrbgBE680JUNjLJgJjevu9nE33GEFZeY5ngAWMtbHVetuC7YEPpn3j7ZJSwp6P0p3pfopPcLvm+J3GDG/XDvjfKCqPTwKHZPxKNY8IBPHCRzuF546iipH68Gwr2fR2QigXBJM0CHOOpOTgnRHxZ3wALqgYloFkqUdbXxKh/zP2pzQbQNRgMJB8aUS9PV9thXt/hDsObHPCLBLLOiMv0kN2vt5PK9fRJHDNbrYw4DKnVUdTO2kyswLuZ/9uc+hVVGGOzc/HXBnru7EWsWvIeeQW24Oq/9QhgqSJYQOqM8IhUeEfk8341FCzvebcvkA6nsIfalkNSjctL3si/tzLhtqX0zTTR8q1KYzHbyOF9912Ll97Vo57oNZjnA2ZHdFPix5pUnXvkN3EPb1zRi/fv1P3gGldlGvu/LQntwXWv6+nAvws/KEbgcxf5uc7i4zeRpiAznF681pmtQ7/og/EaJ3hKlnoz7pRZE4g47ahzVaCzVXLJsFlJe46oN07D3juEA/YghLcT+MvWfrbr+vYkvxFgWWuVYVf7n4j96d0uGBiVrEff7Bc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 657a4f68-d01b-4ae6-85bd-08dd50270086
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2025 14:17:40.0840
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: vAjHVCU6oTuoGS8/WcqmWhtj9cXlvIn2MuFVJT4QCQM9ByAXyahiEoADNFKpEjWaa4XCq/7oUev+Fi9iPmpz0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4175
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-18_07,2025-02-18_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 adultscore=0
+ spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2501170000
+ definitions=main-2502180108
+X-Proofpoint-ORIG-GUID: KRjixLD1fAdMJ0NS3dDvWbHrlcF_0kHJ
+X-Proofpoint-GUID: KRjixLD1fAdMJ0NS3dDvWbHrlcF_0kHJ
+X-Spam-Status: No, score=1.1 required=5.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+	RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,URI_DOTEDU
+	autolearn=disabled version=4.0.0
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -77,119 +242,75 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Yunsheng Lin via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Yunsheng Lin <linyunsheng@huawei.com>
-Cc: kvm@vger.kernel.org, Neil Brown <neilb@suse.de>, "Darrick J.
- Wong" <djwong@kernel.org>, Carlos Maiolino <cem@kernel.org>, Chris Mason <clm@fb.com>, Eric Dumazet <edumazet@google.com>, Anna Schumaker <anna@kernel.org>, Dai Ngo <Dai.Ngo@oracle.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Kevin Tian <kevin.tian@intel.com>, Olga Kornievskaia <okorniev@redhat.com>, Jesper Dangaard Brouer <hawk@kernel.org>, Josef Bacik <josef@toxicpanda.com>, virtualization@lists.linux.dev, Tom Talpey <tom@talpey.com>, Alex Williamson <alex.williamson@redhat.com>, David Sterba <dsterba@suse.com>, linux-nfs@vger.kernel.org, Yishai Hadas <yishaih@nvidia.com>, linux-mm@kvack.org, linux-erofs@lists.ozlabs.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, linux-xfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, linux-btrfs@vger.kernel.org, Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Mel Gorman <mgorman@techsingularity.net>, "David S. Miller" <davem@davemloft.net>, Trond Myklebust <trondmy@kernel.org>, Luiz Capitulino <luizcap@redhat.com>
+From: Chuck Lever via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, kvm@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>, linux-btrfs@vger.kernel.org, Luiz Capitulino <luizcap@redhat.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On 2025/2/18 5:31, Dave Chinner wrote:
-
-...
-
-> .....
+On 2/18/25 4:16 AM, Yunsheng Lin wrote:
+> On 2025/2/17 22:20, Chuck Lever wrote:
+>> On 2/17/25 7:31 AM, Yunsheng Lin wrote:
+>>> As mentioned in [1], it seems odd to check NULL elements in
+>>> the middle of page bulk allocating,
+>>
+>> I think I requested that check to be added to the bulk page allocator.
+>>
+>> When sending an RPC reply, NFSD might release pages in the middle of
 > 
->> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
->> index 15bb790359f8..9e1ce0ab9c35 100644
->> --- a/fs/xfs/xfs_buf.c
->> +++ b/fs/xfs/xfs_buf.c
->> @@ -377,16 +377,17 @@ xfs_buf_alloc_pages(
->>  	 * least one extra page.
->>  	 */
->>  	for (;;) {
->> -		long	last = filled;
->> +		long	alloc;
->>  
->> -		filled = alloc_pages_bulk(gfp_mask, bp->b_page_count,
->> -					  bp->b_pages);
->> +		alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - refill,
->> +					 bp->b_pages + refill);
->> +		refill += alloc;
->>  		if (filled == bp->b_page_count) {
->>  			XFS_STATS_INC(bp->b_mount, xb_page_found);
->>  			break;
->>  		}
->>  
->> -		if (filled != last)
->> +		if (alloc)
->>  			continue;
+> It seems there is no usage of the page bulk allocation API in fs/nfsd/
+> or fs/nfs/, which specific fs the above 'NFSD' is referring to?
+
+NFSD is in fs/nfsd/, and it is the major consumer of
+net/sunrpc/svc_xprt.c.
+
+
+>> the rq_pages array, marking each of those array entries with a NULL
+>> pointer. We want to ensure that the array is refilled completely in this
+>> case.
+>>
 > 
-> You didn't even compile this code - refill is not defined
-> anywhere.
+> I did some researching, it seems you requested that in [1]?
+> It seems the 'holes are always at the start' for the case in that
+> discussion too, I am not sure if the case is referring to the caller
+> in net/sunrpc/svc_xprt.c? If yes, it seems caller can do a better
+> job of bulk allocating pages into a whole array sequentially without
+> checking NULL elements first before doing the page bulk allocation
+> as something below:
 > 
-> Even if it did complile, you clearly didn't test it. The logic is
-> broken (what updates filled?) and will result in the first
-> allocation attempt succeeding and then falling into an endless retry
-> loop.
-
-Ah, the 'refill' is a typo, it should be 'filled' instead of 'refill'.
-The below should fix the compile error:
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -379,9 +379,9 @@ xfs_buf_alloc_pages(
-        for (;;) {
-                long    alloc;
-
--               alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - refill,
--                                        bp->b_pages + refill);
--               refill += alloc;
-+               alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - filled,
-+                                        bp->b_pages + filled);
-+               filled += alloc;
-                if (filled == bp->b_page_count) {
-                        XFS_STATS_INC(bp->b_mount, xb_page_found);
-                        break;
-
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -663,9 +663,10 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
+>                 pages = RPCSVC_MAXPAGES;
+>         }
 > 
-> i.e. you stepped on the API landmine of your own creation where
-> it is impossible to tell the difference between alloc_pages_bulk()
-> returning "memory allocation failed, you need to retry" and
-> it returning "array is full, nothing more to allocate". Both these
-> cases now return 0.
-
-As my understanding, alloc_pages_bulk() will not be called when
-"array is full" as the above 'filled == bp->b_page_count' checking
-has ensured that if the array is not passed in with holes in the
-middle for xfs.
-
+> -       for (filled = 0; filled < pages; filled = ret) {
+> -               ret = alloc_pages_bulk(GFP_KERNEL, pages, rqstp->rq_pages);
+> -               if (ret > filled)
+> +       for (filled = 0; filled < pages; filled += ret) {
+> +               ret = alloc_pages_bulk(GFP_KERNEL, pages - filled,
+> +                                      rqstp->rq_pages + filled);
+> +               if (ret)
+>                         /* Made progress, don't sleep yet */
+>                         continue;
 > 
-> The existing code returns nr_populated in both cases, so it doesn't
-> matter why alloc_pages_bulk() returns with nr_populated != full, it
-> is very clear that we still need to allocate more memory to fill it.
-
-I am not sure if the array will be passed in with holes in the
-middle for the xfs fs as mentioned above, if not, it seems to be
-a typical use case like the one in mempolicy.c as below:
-
-https://elixir.bootlin.com/linux/v6.14-rc1/source/mm/mempolicy.c#L2525
-
+> @@ -674,7 +675,7 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
+>                         set_current_state(TASK_RUNNING);
+>                         return false;
+>                 }
+> -               trace_svc_alloc_arg_err(pages, ret);
+> +               trace_svc_alloc_arg_err(pages, filled);
+>                 memalloc_retry_wait(GFP_KERNEL);
+>         }
+>         rqstp->rq_page_end = &rqstp->rq_pages[pages];
 > 
-> The whole point of the existing API is to prevent callers from
-> making stupid, hard to spot logic mistakes like this. Forcing
-> callers to track both empty slots and how full the array is itself,
-> whilst also constraining where in the array empty slots can occur
-> greatly reduces both the safety and functionality that
-> alloc_pages_bulk() provides. Anyone that has code that wants to
-> steal a random page from the array and then refill it now has a heap
-> more complex code to add to their allocator wrapper.
-
-Yes, I am agreed that it might be better to provide a common API or
-wrapper if there is some clear use case that need to pass in an array
-with holes in the middle by adding a new API like refill_pages_bulk()
-as below.
-
 > 
-> IOWs, you just demonstrated why the existing API is more desirable
-> than a highly constrained, slightly faster API that requires callers
-> to get every detail right. i.e. it's hard to get it wrong with the
-> existing API, yet it's so easy to make mistakes with the proposed
-> API that the patch proposing the change has serious bugs in it.
+> 1. https://lkml.iu.edu/hypermail/linux/kernel/2103.2/09060.html
 
-IMHO, if the API is about refilling pages for the only NULL elements,
-it seems better to add a API like refill_pages_bulk() for that, as
-the current API seems to be prone to error of not initializing the
-array to zero before calling alloc_pages_bulk().
+I still don't see what is broken about the current API.
 
-> 
-> -Dave.
+Anyway, any changes in svc_alloc_arg() will need to be run through the
+upstream NFSD CI suite before they are merged.
+
+
+-- 
+Chuck Lever
