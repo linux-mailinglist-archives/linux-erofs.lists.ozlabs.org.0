@@ -2,71 +2,84 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DBCDCA38F1A
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Feb 2025 23:33:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 793E4A396B8
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2025 10:16:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1739870176;
+	bh=inAViMfXCQsf9ol1yPw8VadPDpS0D7kAWmkLjZ1Q7Cs=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=RuwtEYDY8gnRANeDfBtgw5P1P8vJpCHPXTjTWIPuMmLf7RqiZDs5RgQ5G+PZa0Rs8
+	 fJhtnGDceAwh2vC6r2M+XSnCjKqEoajIVjJMiJY375eRXKnoiN3SjmYdaQUY4U0cKo
+	 jKrchI65FqJw3qKlY34qXCJ9HOb4IpgbkuNdlgNMemtsRGXcK/rY9O7K5lDP00FO0D
+	 +QIMsoZHEWjb4L0u+BSeAo9kjk7/2xiH770azd696/xhoBoMKPrRb6nDHMuUOt9u16
+	 OvD/hL7FMcunnjL+axXUA/BsfKdWqdJYI6ezjKi13S3hAN0i2hdCE2z+uGedVaZuU1
+	 7Q7BYoBDzoPpg==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YxcrY2ZTvz3bkT
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2025 09:33:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Yxv5r69Mqz30Ns
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Feb 2025 20:16:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.15
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739831627;
-	cv=none; b=R1Kx+cnrocz469McPCpHToylJEDr6SHinLUWmpkvbLZ0LtG8FVvfPyv4cGkDLTYW2d5sQDJgHKULhmOlLyeBgAu1jGOBxoB/WjN3BvUYOV3Q9ttm4P344AM0Ix+P1FpdkMSH3avN8YUAMrtBxVIfFutD021i78SdfGKDNRNDyqFGqUWx51p632NpXBJmaiH/Ooiu6Ol/SMi+Jp3d2Mzv28cZrGxUg+CTYASordMGGp6BpmYHkgSspTm5vngnD+5f5GXQ2xwBGkCo62u9Jqfr6EzQdmnyORM6drqDOsF5h8urG4tmKB+or1Y/Soj8eN3QolXbaK83r2CIqwp4lC+h5Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.35
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739870175;
+	cv=none; b=m/5qTDBm2B40pawAKz7r8aqyyX6gyi2nKRkqnfAtm+dwCLbYeq3iQzjcY/FhNoYeoXVmkf5mLFz/9xY//XXjFhUleZ9YGy7Zn5xUdP3X/wULnk94tc1KbgR2oWJHNRe3BFNj5oIWmDpDA3O7Kh10qjJcgnXYn665A8D4W7+AgHH89+kMu61pVdN8kNuKSEtB+RSDhCV9ioeD1OTxMPbdtZQHrxeMAL508tLb6TX8/UtTJr5mOF5vRcUf4qRIYBMJEs8nTYgLGBoQEBEBkwBEjiJBBCmMweoRWUMOorBXtECOWy5o/oXOPHDHgvciNNamfxP9KsHTgs76GX0dNJ7xbg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1739831627; c=relaxed/relaxed;
-	bh=dbtmc79miKfvKI4Ne9JyX95istodSrFWb3apToVga+Q=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=e3d9tU5wlsxVJBokbw4rG2NBfMxqlTqXrN64XraEY/eTYMuK1oSOdAXwk66gt7WEU/8lhivjbfg0vAm5S0xU/xbEZV3/z4FemPOBbLqwdWQx3WznCusBYg4cl+hZSnp7/O7zMkh74iKpicVQhOH76CEv1JxAOYo8+JuGdNhIdRpG3g545J1cogbZakuXesO2MVF1maaKz+Mw2Jl+JCjxsUoi3h6hsMyuycAwRsSDJK+vEvVjulH1e0D2DIiIVqX6kotGO1yZNoGQyyDVTnqtxIvulfGc6miFXf+PukXxtRus9ZLKn+n4L1n25B2KeWCz3G8buPQZjn9gjWAA3tCPZQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fk7M7aVr; dkim-atps=neutral; spf=pass (client-ip=198.175.65.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fk7M7aVr;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	t=1739870175; c=relaxed/relaxed;
+	bh=inAViMfXCQsf9ol1yPw8VadPDpS0D7kAWmkLjZ1Q7Cs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EQFUWWn8DD5dho5K29w2hg+2DGcRZSvxz/AI8U7Q6+NqVK+gmQyIoNjCpOXbA5aBqOQ2/KhSMbuSU+WiwbjY2q/dCSK3+Ghtgr4+J6YlvH6uO267Tu/FJ2GrRhvq+JV2oWtlvSMYqLLGSpcj0JzINYjsXi8AkuuSKR5aHKmoxcfMgkQgBCPniveZ8WNIt0jHpbT4Tb1ZUOFrAZBVgNj4x9K9IfykhathDpvSDJRrU9bzTGVWocEev+5/B8SpbGcQdGl/76NhfYTGEpHvLX2jZiHzBd0MGyXxwQ2iMn5AlYVX8GICilJCVp/OOFDij+FBDlFtuZ6M9cc5D4V/XGubcA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.35; helo=szxga07-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.35; helo=szxga07-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YxcrT2tVLz2yTy
-	for <linux-erofs@lists.ozlabs.org>; Tue, 18 Feb 2025 09:33:42 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739831626; x=1771367626;
-  h=date:from:to:cc:subject:message-id;
-  bh=ygkx9/rwQmrtkuInPix9fta11xBCov0BkiazA35PvY8=;
-  b=fk7M7aVrkahxnqGG0nKqABmwTqdGnd375xNFhbqCEz75bJLNACd9Mi8x
-   hp6tGr8ui6f2gxm3oiWouYkl5spVddzR3JXDVAt1EjopUpDc2wkZTh/8v
-   prmDnabJOC+ZbddbqgfqRjSIuPt5hMIsp+EmE6yHtStJQkDY9OJJ7ZEpH
-   jdqOj6gZqrWkXJ/RQiz8CDo+yqg6artb3QNg2Td924zgCB0EIt5i65/u4
-   04ao5R81zrQFSbFm1GZPt+vGO8lcgy/+nA2zkhzddLKhd1BoO0sr0l9EO
-   zcuhsHBiBh94FB9knDqydxUDzSMnwfZOXQHlwvubAHfirmN/sGNqr2Ors
-   A==;
-X-CSE-ConnectionGUID: GMjidgQRT/eVM+gVl36tgQ==
-X-CSE-MsgGUID: yikx3TYQTZWw8FaJTTQKYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11348"; a="44170926"
-X-IronPort-AV: E=Sophos;i="6.13,294,1732608000"; 
-   d="scan'208";a="44170926"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Feb 2025 14:33:37 -0800
-X-CSE-ConnectionGUID: ymYj60jhQ0esrE/bPY6UHA==
-X-CSE-MsgGUID: AhSeRbltT9O2zLOhMYH73w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,294,1732608000"; 
-   d="scan'208";a="114871732"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 17 Feb 2025 14:33:36 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tk9gD-001DeN-2w;
-	Mon, 17 Feb 2025 22:33:33 +0000
-Date: Tue, 18 Feb 2025 06:32:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 78ee54f6e0e8c9c1c39651ef79fe716c8717e403
-Message-ID: <202502180643.VsKcqpFw-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Yxv5n3rHQz3039
+	for <linux-erofs@lists.ozlabs.org>; Tue, 18 Feb 2025 20:16:11 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Yxv141mCDz1wn7M;
+	Tue, 18 Feb 2025 17:12:08 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 46C8E180214;
+	Tue, 18 Feb 2025 17:16:02 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 18 Feb 2025 17:16:01 +0800
+Message-ID: <cc6fc730-e5f4-485b-b0b6-ec70374b3ab1@huawei.com>
+Date: Tue, 18 Feb 2025 17:16:00 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] mm: alloc_pages_bulk: remove assumption of populating only
+ NULL elements
+To: Chuck Lever <chuck.lever@oracle.com>, Yishai Hadas <yishaih@nvidia.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Shameer Kolothum
+	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>, Josef
+ Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Gao Xiang
+	<xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>,
+	Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+	<anna@kernel.org>, Jeff Layton <jlayton@kernel.org>, Neil Brown
+	<neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+References: <20250217123127.3674033-1-linyunsheng@huawei.com>
+ <abc3ae0b-620a-4e4a-8dd8-f8e7d3764b3a@oracle.com>
+Content-Language: en-US
+In-Reply-To: <abc3ae0b-620a-4e4a-8dd8-f8e7d3764b3a@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.120.129]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
+X-Spam-Status: No, score=-0.3 required=5.0 tests=RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_PASS,URI_DOTEDU autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -79,122 +92,61 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+From: Yunsheng Lin via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: linux-nfs@vger.kernel.org, kvm@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>, linux-btrfs@vger.kernel.org, Luiz Capitulino <luizcap@redhat.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 78ee54f6e0e8c9c1c39651ef79fe716c8717e403  erofs: get rid of erofs_kmap_type
+On 2025/2/17 22:20, Chuck Lever wrote:
+> On 2/17/25 7:31 AM, Yunsheng Lin wrote:
+>> As mentioned in [1], it seems odd to check NULL elements in
+>> the middle of page bulk allocating,
+> 
+> I think I requested that check to be added to the bulk page allocator.
+> 
+> When sending an RPC reply, NFSD might release pages in the middle of
 
-elapsed time: 743m
+It seems there is no usage of the page bulk allocation API in fs/nfsd/
+or fs/nfs/, which specific fs the above 'NFSD' is referring to?
 
-configs tested: 99
-configs skipped: 1
+> the rq_pages array, marking each of those array entries with a NULL
+> pointer. We want to ensure that the array is refilled completely in this
+> case.
+> 
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+I did some researching, it seems you requested that in [1]?
+It seems the 'holes are always at the start' for the case in that
+discussion too, I am not sure if the case is referring to the caller
+in net/sunrpc/svc_xprt.c? If yes, it seems caller can do a better
+job of bulk allocating pages into a whole array sequentially without
+checking NULL elements first before doing the page bulk allocation
+as something below:
 
-tested configs:
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250217    gcc-13.2.0
-arc                   randconfig-002-20250217    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250217    gcc-14.2.0
-arm                   randconfig-002-20250217    gcc-14.2.0
-arm                   randconfig-003-20250217    gcc-14.2.0
-arm                   randconfig-004-20250217    clang-19
-arm64                            allmodconfig    clang-18
-arm64                 randconfig-001-20250217    gcc-14.2.0
-arm64                 randconfig-002-20250217    clang-21
-arm64                 randconfig-003-20250217    clang-15
-arm64                 randconfig-004-20250217    gcc-14.2.0
-csky                  randconfig-001-20250217    gcc-14.2.0
-csky                  randconfig-002-20250217    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250217    clang-21
-hexagon               randconfig-002-20250217    clang-14
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250217    clang-19
-i386        buildonly-randconfig-002-20250217    gcc-12
-i386        buildonly-randconfig-003-20250217    clang-19
-i386        buildonly-randconfig-004-20250217    gcc-12
-i386        buildonly-randconfig-005-20250217    gcc-12
-i386        buildonly-randconfig-006-20250217    clang-19
-i386                                defconfig    clang-19
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch             randconfig-001-20250217    gcc-14.2.0
-loongarch             randconfig-002-20250217    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250217    gcc-14.2.0
-nios2                 randconfig-002-20250217    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                randconfig-001-20250217    gcc-14.2.0
-parisc                randconfig-002-20250217    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-16
-powerpc               randconfig-001-20250217    clang-17
-powerpc               randconfig-002-20250217    clang-15
-powerpc               randconfig-003-20250217    gcc-14.2.0
-powerpc64             randconfig-001-20250217    clang-19
-powerpc64             randconfig-002-20250217    clang-21
-powerpc64             randconfig-003-20250217    clang-15
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-21
-riscv                 randconfig-001-20250217    gcc-14.2.0
-riscv                 randconfig-002-20250217    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-21
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250217    gcc-14.2.0
-s390                  randconfig-002-20250217    clang-18
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250217    gcc-14.2.0
-sh                    randconfig-002-20250217    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250217    gcc-14.2.0
-sparc                 randconfig-002-20250217    gcc-14.2.0
-sparc64               randconfig-001-20250217    gcc-14.2.0
-sparc64               randconfig-002-20250217    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250217    clang-19
-um                    randconfig-002-20250217    clang-17
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250217    gcc-12
-x86_64      buildonly-randconfig-002-20250217    clang-19
-x86_64      buildonly-randconfig-003-20250217    clang-19
-x86_64      buildonly-randconfig-004-20250217    gcc-12
-x86_64      buildonly-randconfig-005-20250217    gcc-12
-x86_64      buildonly-randconfig-006-20250217    clang-19
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250217    gcc-14.2.0
-xtensa                randconfig-002-20250217    gcc-14.2.0
++++ b/net/sunrpc/svc_xprt.c
+@@ -663,9 +663,10 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
+                pages = RPCSVC_MAXPAGES;
+        }
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-       for (filled = 0; filled < pages; filled = ret) {
+-               ret = alloc_pages_bulk(GFP_KERNEL, pages, rqstp->rq_pages);
+-               if (ret > filled)
++       for (filled = 0; filled < pages; filled += ret) {
++               ret = alloc_pages_bulk(GFP_KERNEL, pages - filled,
++                                      rqstp->rq_pages + filled);
++               if (ret)
+                        /* Made progress, don't sleep yet */
+                        continue;
+
+@@ -674,7 +675,7 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
+                        set_current_state(TASK_RUNNING);
+                        return false;
+                }
+-               trace_svc_alloc_arg_err(pages, ret);
++               trace_svc_alloc_arg_err(pages, filled);
+                memalloc_retry_wait(GFP_KERNEL);
+        }
+        rqstp->rq_page_end = &rqstp->rq_pages[pages];
+
+
+1. https://lkml.iu.edu/hypermail/linux/kernel/2103.2/09060.html
