@@ -1,92 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 998BAA3AC8F
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2025 00:31:09 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79168A3BC98
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2025 12:20:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1739964017;
+	bh=dY7Gt9qEGYe1IjZ8rjKeImlNYqpxqYeaVVm+8ncP1tk=;
+	h=Date:Subject:To:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=CwaEiwis84M6vGxLphAAYPVQQOVMwe6/kzjpeb2wjp3XoUrSjvqQtgzWGGYZKSM6K
+	 +h7fYgAoTWkN9UYBrSxCr9k87+Cm5h5r8PxXc7CYZyMaqsI7EKa52Y3ZPW6Xf87K+T
+	 js0lY/tn+PYPOMOFhxhyAIjHxZNYiUu3vo9K3w4dcXQQ9H35ntF95Pr+BZ6cTggHRf
+	 siBmjgNApqb3skhDBtbZJR843S9eg2bJfbRx8hPs4ePhFzrI5Bwzju6qO5tfddeWL9
+	 RB/w91sGDF+d0FzPe1TrqTqT682SNYqUH1HbfV9/pR9ZS1bSpHCybxDTDiBjH3iGc/
+	 XsE8u7yeLkUaA==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YyG4C3jFPz30TQ
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2025 10:31:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4YyYpT6m81z30TJ
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Feb 2025 22:20:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::632"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739921465;
-	cv=none; b=f9YhkZ4sRmGQdHeDcgtFOuLNX5lWv8Vo0pPmbKnI+fTum8icquW7zCbjuoLZmQFDQ5Kcv2A5ldc6wD+ik2qrWjctSWN/5ftSVbQEKNlswT3jXu7IVrZVO0SZWiVKdtsWFrRlcjRHpEVGOobUTiixZnaIGYUux2b3pgYU+Xpsetr5zZlNzv8zt5Oy/7gBbR4ygsQ1RgrCGEx7Er/6j28+nrTopKCbf7GjVj1T5Luf4WyouW/mubLfM2guiPN4HZmGbVvkGSDaxv8LWlqE2O31WcEyzqTcI81CW9dzHy6tDUSLnc64sEYrj1Hs5+U44SZyJapp4q2aRJVtfBRzLp5pMg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.32
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1739964016;
+	cv=none; b=gorY6MI/VYRH34PKN2gZgyTeqUaLHdJPwdNVf3fTPioBvvJvt4VK4BS+IEslzVI4kxE5CWOFvHUFSQQWq0lcxI338tP97+SCzzJX/m7+NQCNJTZx+68bpe6PiznPoupuea4PbVZvojAjOBRJbeAeH58F5FiOn/jp2k/N1fHGaX/SafuMrTuCcxP2u6LSSHOuReJuR5M4MZ4tQDI+ihGeQd5xXU/xTg7nHGxTNqIfSMZZtBMZ0zDKHT7LCzqxiNoawlxyVMYf1J0XLjxsXVeO+Mq3lDqbH0aom+lhuQOI32QK58lC0GsK9yUBB74WLiib3DoFZIwCxopCA9Uj9JzxBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1739921465; c=relaxed/relaxed;
-	bh=WPhspwsKzxQxyliqvSvVrQUJp0CAezLZJGZq/vM9U8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fm4Ep7bJhJU6WS/l7ijYq0bfFqcO8kreeXMmC1uVtSdT3kc5bIitfQDf7Blswrb1UmNFm7MyJ8syMcPLU22xH4/0jbLp335RvCcZO1TFB8gMpUP7eeq/zY10AVqFiKy6ggeGw9FKheOmLvN0+MI3SPZXLuI8ztUIq4JWlYNvH+uUPAvg9PnJ5ZBeAqep9EVGeR+/px8NDGksWcMs7dOynnMWrnR/JoVJSkH2/Cu+1Bwd7iC84Gzu4TZ91/nbeZHrhX4DPq6qwi6MDQOS61CRyYAJHj+237KJ+JM1B5cmt4erj1prtcnzYaMknVJ8aoORnRAmcJ+kHQiGUYC5F3lrmQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=konsulko.com; dkim=pass (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=RWC2tFmP; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::632; helo=mail-pl1-x632.google.com; envelope-from=trini@konsulko.com; receiver=lists.ozlabs.org) smtp.mailfrom=konsulko.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=konsulko.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=konsulko.com header.i=@konsulko.com header.a=rsa-sha256 header.s=google header.b=RWC2tFmP;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=konsulko.com (client-ip=2607:f8b0:4864:20::632; helo=mail-pl1-x632.google.com; envelope-from=trini@konsulko.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1739964016; c=relaxed/relaxed;
+	bh=dY7Gt9qEGYe1IjZ8rjKeImlNYqpxqYeaVVm+8ncP1tk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mq7rHZxBMOIapjoDIxEyRrMqH80CBrmIUC+IHsRdMSBAFwSozV4r50oruNQ6qqW/IXdfX7hM5NhjBBiqXU3IojwVbc6IFdW3WhdIlkA3IkbsDtf6TLNS52Ni70wkSiGnYqPpsSiizBaBWBdm1OLo0ln6sodeItz9VOIAZc/Fnqc/TIhYQ9HZRCEFgG+uIvDg7EDJpJegnaUuocCL2O+4ReZ4FJ9p8DkJS2zgCbEBmhixjN+T8/SSEqyKKoEpCjjh7F05LWtw3O6NdV1manIEmHhv/IggdAAhoXWsohOhsH2uo/R3GTFbdPI5/jCZNKVnfxpu4N5lwO6cYSWyv2rBPQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.32; helo=szxga06-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.32; helo=szxga06-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YyG452vDnz2ysh
-	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2025 10:31:01 +1100 (AEDT)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-220e989edb6so122735005ad.1
-        for <linux-erofs@lists.ozlabs.org>; Tue, 18 Feb 2025 15:31:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google; t=1739921459; x=1740526259; darn=lists.ozlabs.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WPhspwsKzxQxyliqvSvVrQUJp0CAezLZJGZq/vM9U8w=;
-        b=RWC2tFmPsezXCxJHqONRdSfAyTPOH+K9LnLG8h9UnthZu8J7WGWufB+inyADuvSVMM
-         EJQ50EOWMVFsYifs13+YSw+QZtd9bMDNdYJwtKW9DLAIlu1TZZEkf/MwO7FkFqCtN6+o
-         EvT16GQcFcKRdQHLacS0kzzWZU4ix6BQ1wiyA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739921459; x=1740526259;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WPhspwsKzxQxyliqvSvVrQUJp0CAezLZJGZq/vM9U8w=;
-        b=KHMXXtL+Rg2XTz3z+WilZ5CUwsnk1H1QK2q4/QAU3psA09A6hPSU3n3fyNsqeafYmk
-         g/ZuNOyJI2Ysve9cJSRz9whsJ6G0GFeaLG7MWsKo/ijo32DXTshaLEULKaawBzkM8bsv
-         HeAYtxpqDbgg6KaGG68q8KYNkP4rp7g4Q4B2+INgfxWXAHuZY4ZngAjM6TMQs10GxeYX
-         +aE7h8DsuI7A7GM1Hk23aYcON9Z5m1ADW2BgoZSO52T6qFdEK2h+RzMkhnG7i+/GMIRc
-         9MdGlMi0jk0k7iOAgYahguInoir4YDXgUc0R/TRBxbyvkL7evFFps/MHbu+fbzFpDAH9
-         ItuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrOBg/ZLQLQy3YM52/VvVe4fh/wJoPXjd42uctWGWuCnCg2S6fZYvGZDMhDi2ed79EKGEBujzjZ0Sv5g==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YzyjNqUyDcZ0tarjrAEhmyumbkMYpWiG+avt74gFQHzCx8JVMxZ
-	dRRG1+QK87BtmioIHqmnWSgIaA2YtQY/OsPOHFIAT2tTxMd/mWRjXWwP0ylMTNY=
-X-Gm-Gg: ASbGncuSwLWj8ucFieWJ54jv6ZXesaU0/MEaTzUNmZSNe9YPeQxfZ4rka/ZYx+jatbT
-	cj1Fb0B68cbzcfraOKeM/PX5Hi7nECdNb3qPZ0NhGftre6tqNWn+HFYmqyBNzIJ9yumvbF8ur7I
-	6jWN/2yAa7TyB46hSDivPERlsepKXqvOphabTIDcn0gp5ESXFF8iHCMyrrxRDxfp/CE+P3vQIP5
-	mksFaPkdfFSrKD+YQOQI1wg6Fdb7IWF2997FXDafbkjUW3doltzUk4urP0UyRiVREKuBNUW/Umx
-	33uFQrADD/ynKg==
-X-Google-Smtp-Source: AGHT+IHNt95oG1yVvkU7qQaPH8y6pOFVzehCfsBBXvgd+F04xG1BZKHr5hisa5l8PEYZhW8MV6JRVw==
-X-Received: by 2002:a17:902:ce06:b0:21d:3bee:990c with SMTP id d9443c01a7336-221040a99cemr250492695ad.42.1739921458893;
-        Tue, 18 Feb 2025 15:30:58 -0800 (PST)
-Received: from bill-the-cat ([189.177.125.6])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220e21d2453sm88280255ad.184.2025.02.18.15.30.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 15:30:58 -0800 (PST)
-Date: Tue, 18 Feb 2025 17:30:55 -0600
-From: Tom Rini <trini@konsulko.com>
-To: Jonathan Bar Or <jonathanbaror@gmail.com>,
-	Joao Marcos Costa <jmcosta944@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2] fs/erofs: fix an integer overflow in symlink
- resolution
-Message-ID: <20250218233055.GN1233568@bill-the-cat>
-References: <20250213112847.1848317-1-hsiangkao@linux.alibaba.com>
- <173990731183.1542939.8486402584511743095.b4-ty@konsulko.com>
- <CABMsoEF3xcbpFXMAYW-ZzQUfZp3zVf8FsKmtxQ7wfVxu3zjOcA@mail.gmail.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4YyYpQ3Tn9z30Nc
+	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Feb 2025 22:20:14 +1100 (AEDT)
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4YyYpr37n2z22kst;
+	Wed, 19 Feb 2025 19:20:36 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9333E140360;
+	Wed, 19 Feb 2025 19:20:05 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 19 Feb 2025 19:20:05 +0800
+Message-ID: <c9950a79-7bcb-41c2-a59e-af315dc6d7ff@huawei.com>
+Date: Wed, 19 Feb 2025 19:20:04 +0800
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="294FnAg8Qefqg6nM"
-Content-Disposition: inline
-In-Reply-To: <CABMsoEF3xcbpFXMAYW-ZzQUfZp3zVf8FsKmtxQ7wfVxu3zjOcA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] mm: alloc_pages_bulk: remove assumption of populating only
+ NULL elements
+To: Dave Chinner <david@fromorbit.com>
+References: <20250217123127.3674033-1-linyunsheng@huawei.com>
+ <Z7Oqy2j4xew7FW9Z@dread.disaster.area>
+ <cf270a65-c9fa-453a-b7a0-01708063f73e@huawei.com>
+ <Z7T4NZAn4wD_DLTl@dread.disaster.area>
+Content-Language: en-US
+In-Reply-To: <Z7T4NZAn4wD_DLTl@dread.disaster.area>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.120.129]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -99,73 +79,174 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: u-boot@lists.denx.de, linux-erofs@lists.ozlabs.org, Gao Xiang <hsiangkao@linux.alibaba.com>
+From: Yunsheng Lin via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: kvm@vger.kernel.org, Neil Brown <neilb@suse.de>, "Darrick J.
+ Wong" <djwong@kernel.org>, Carlos Maiolino <cem@kernel.org>, Chris Mason <clm@fb.com>, Eric Dumazet <edumazet@google.com>, Anna Schumaker <anna@kernel.org>, Dai Ngo <Dai.Ngo@oracle.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Kevin Tian <kevin.tian@intel.com>, Olga Kornievskaia <okorniev@redhat.com>, Jesper Dangaard Brouer <hawk@kernel.org>, Josef Bacik <josef@toxicpanda.com>, virtualization@lists.linux.dev, Tom Talpey <tom@talpey.com>, Alex Williamson <alex.williamson@redhat.com>, David Sterba <dsterba@suse.com>, linux-nfs@vger.kernel.org, Yishai Hadas <yishaih@nvidia.com>, linux-mm@kvack.org, linux-erofs@lists.ozlabs.org, Ilias Apalodimas <ilias.apalodimas@linaro.org>, Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org, Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, linux-xfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>, linux-btrfs@vger.kernel.org, Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Mel Gorman <mgorman@techsingularity.net>, "David S. Miller" <davem@davemloft.net>, Trond Myklebust <trondmy@kernel.org>, Luiz Capitulino <luizcap@redhat.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
+On 2025/2/19 5:14, Dave Chinner wrote:
+> On Tue, Feb 18, 2025 at 05:21:27PM +0800, Yunsheng Lin wrote:
+>> On 2025/2/18 5:31, Dave Chinner wrote:
+>>
+>> ...
+>>
+>>> .....
+>>>
+>>>> diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+>>>> index 15bb790359f8..9e1ce0ab9c35 100644
+>>>> --- a/fs/xfs/xfs_buf.c
+>>>> +++ b/fs/xfs/xfs_buf.c
+>>>> @@ -377,16 +377,17 @@ xfs_buf_alloc_pages(
+>>>>  	 * least one extra page.
+>>>>  	 */
+>>>>  	for (;;) {
+>>>> -		long	last = filled;
+>>>> +		long	alloc;
+>>>>  
+>>>> -		filled = alloc_pages_bulk(gfp_mask, bp->b_page_count,
+>>>> -					  bp->b_pages);
+>>>> +		alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - refill,
+>>>> +					 bp->b_pages + refill);
+>>>> +		refill += alloc;
+>>>>  		if (filled == bp->b_page_count) {
+>>>>  			XFS_STATS_INC(bp->b_mount, xb_page_found);
+>>>>  			break;
+>>>>  		}
+>>>>  
+>>>> -		if (filled != last)
+>>>> +		if (alloc)
+>>>>  			continue;
+>>>
+>>> You didn't even compile this code - refill is not defined
+>>> anywhere.
+>>>
+>>> Even if it did complile, you clearly didn't test it. The logic is
+>>> broken (what updates filled?) and will result in the first
+>>> allocation attempt succeeding and then falling into an endless retry
+>>> loop.
+>>
+>> Ah, the 'refill' is a typo, it should be 'filled' instead of 'refill'.
+>> The below should fix the compile error:
+>> --- a/fs/xfs/xfs_buf.c
+>> +++ b/fs/xfs/xfs_buf.c
+>> @@ -379,9 +379,9 @@ xfs_buf_alloc_pages(
+>>         for (;;) {
+>>                 long    alloc;
+>>
+>> -               alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - refill,
+>> -                                        bp->b_pages + refill);
+>> -               refill += alloc;
+>> +               alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - filled,
+>> +                                        bp->b_pages + filled);
+>> +               filled += alloc;
+>>                 if (filled == bp->b_page_count) {
+>>                         XFS_STATS_INC(bp->b_mount, xb_page_found);
+>>                         break;
+>>
+>>>
+>>> i.e. you stepped on the API landmine of your own creation where
+>>> it is impossible to tell the difference between alloc_pages_bulk()
+>>> returning "memory allocation failed, you need to retry" and
+>>> it returning "array is full, nothing more to allocate". Both these
+>>> cases now return 0.
+>>
+>> As my understanding, alloc_pages_bulk() will not be called when
+>> "array is full" as the above 'filled == bp->b_page_count' checking
+>> has ensured that if the array is not passed in with holes in the
+>> middle for xfs.
+> 
+> You miss the point entirely. Previously, alloc_pages_bulk() would
+> return a value that would tell us the array is full, even if we
+> call it with a full array to begin with.
+> 
+> Now it fails to tell us that the array is full, and we have to track
+> that precisely ourselves - it is impossible to tell the difference
+> between "array is full" and "allocation failed". Not being able to
+> determine from the allocation return value whether the array is
+> ready for use or whether another go-around to fill it is needed is a
+> very poor API choice, regardless of anything else.
+> 
+> You've already demonstrated this: tracking array usage in every
+> caller is error-prone and much harder to get right than just having
+> alloc_pages_bulk() do everything for us.
 
---294FnAg8Qefqg6nM
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+While I am agreed that it might be hard to track array usage in every
+caller to see if removing assumption of populating only NULL elements
+cause problem for them, I still think the page bulk alloc API before
+this patch have some space for improvement from performance and
+easy-to-use perspective as the most existing calllers of page bulk
+alloc API are trying to bulk allocate the page for the whole array
+sequentially.
 
-On Tue, Feb 18, 2025 at 03:24:08PM -0800, Jonathan Bar Or wrote:
-> That's great! Thank you for your work!
->=20
-> Any expected fixes on the other issues I raised Tom?
-> I'm asking specifically because GRUB2 maintainers are working on
-> solving very similar issues in their repository for SquashFS (being
-> rolled out right now).
-> It'd be best to solve ASAP as people might realize the similarities
-> between GRUB2 and U-boot in that module.
+> 
+>>> The existing code returns nr_populated in both cases, so it doesn't
+>>> matter why alloc_pages_bulk() returns with nr_populated != full, it
+>>> is very clear that we still need to allocate more memory to fill it.
+>>
+>> I am not sure if the array will be passed in with holes in the
+>> middle for the xfs fs as mentioned above, if not, it seems to be
+>> a typical use case like the one in mempolicy.c as below:
+>>
+>> https://elixir.bootlin.com/linux/v6.14-rc1/source/mm/mempolicy.c#L2525
+> 
+> That's not "typical" usage. That is implementing "try alloc" fast
+> path that avoids memory reclaim with a slow path fallback to fill
+> the rest of the array when the fast path fails.
+> 
+> No other users of alloc_pages_bulk() is trying to do this.
 
-Adding back in the squashfs maintainers.
+What I meant by "typical" usage is the 'page_array + nr_allocated'
+trick that avoids the NULL checking when page bulk allocation API
+is used in mm/mempolicy.c, most of existing callers for page bulk
+allocation in other places seems likely to be changed to do the
+similar trick as this patch does.
 
->=20
-> Best regards,
->            Jonathan
->=20
-> On Tue, Feb 18, 2025 at 11:35=E2=80=AFAM Tom Rini <trini@konsulko.com> wr=
-ote:
-> >
-> > On Thu, 13 Feb 2025 19:28:47 +0800, Gao Xiang wrote:
-> >
-> > > See the original report [1], otherwise len + 1 will be overflowed.
-> > >
-> > > Note that EROFS archive can record arbitary symlink sizes in principl=
-e,
-> > > so we don't assume a short number like 4096.
-> > >
-> > > [1] https://lore.kernel.org/r/20250210164151.GN1233568@bill-the-cat
-> > >
-> > > [...]
-> >
-> > Applied to u-boot/master, thanks!
-> >
-> > --
-> > Tom
-> >
-> >
+> 
+> Indeed, it looks somewhat pointless to do this here (i.e. premature
+> optimisation!), because the only caller of
+> alloc_pages_bulk_mempolicy_noprof() has it's own fallback slowpath
+> for when alloc_pages_bulk() can't fill the entire request.
+> 
+>>> IOWs, you just demonstrated why the existing API is more desirable
+>>> than a highly constrained, slightly faster API that requires callers
+>>> to get every detail right. i.e. it's hard to get it wrong with the
+>>> existing API, yet it's so easy to make mistakes with the proposed
+>>> API that the patch proposing the change has serious bugs in it.
+>>
+>> IMHO, if the API is about refilling pages for the only NULL elements,
+>> it seems better to add a API like refill_pages_bulk() for that, as
+>> the current API seems to be prone to error of not initializing the
+>> array to zero before calling alloc_pages_bulk().
+> 
+> How is requiring a well defined initial state for API parameters
+> "error prone"?  What code is failing to do the well known, defined
+> initialisation before calling alloc_pages_bulk()?
+> 
+> Allowing uninitialised structures in an API (i.e. unknown initial
+> conditions) means we cannot make assumptions about the structure
+> contents within the API implementation.  We cannot assume that all
+> variables are zero on the first use, nor can we assume that anything
+> that is zero has a valid state.
 
---=20
-Tom
+It seems the above is the main differenece we see from the API perspective,
+as I see the array as output parameter and you seems to treat the array as
+both input and output parameter?
 
---294FnAg8Qefqg6nM
-Content-Type: application/pgp-signature; name="signature.asc"
+The kmem_cache_alloc_bulk() API related API seems to treat the array as
+output parameter too as this patch does, the difference from this patch
+is that if there is no enough memory, it will free the allocated memory
+and return 0 to the caller while this patch returns already allocated
+memory to its caller even when there is no enough memory.
 
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEEGjx/cOCPqxcHgJu/FHw5/5Y0tywFAme1GCsACgkQFHw5/5Y0
-tyyBRgwAqMaHU2UGacIzn3exB9KF56+eL303p1iRmZa/Ovn/uQ8hU0lvLGRgZZI2
-p5Jv1e5lTh8pNZIsZPdfhwBKXyD9o3yMepGD4CnR400/KXiKGL/1hk3kG0rMDWhN
-vedBD4ATrbebbOVYX7cmrVppMyc2tjdGJ1qhNB+0211JzSExpPyVs5dcVpCAlPKx
-oe5+SnJx9VO0u5aoLm1K3JsKvlHZ1ldPt/bCQPMWOrZMY3XXEB4cFJfx/Ua71OO6
-ROSYp77j1d0tlx40OiXxWaT70qlNu61/ptvnM3M6sKm8k6sZ/m66ibu9dKF0S1Fn
-8WiQcdm89Hx7QLFd/wFRPtsxPH6sOjY6yidASWEkGKIBXTkf/04tt1irVL6PZNa8
-VuLDyRO9YFsvLsScp9zzvqosvEDNqLa4LJU2sww0HOPMljymxoTjB1wrb5abZBge
-zBLBc65ADUulE1QGmWi3hzjVGKp4r9n1lm9YzMVZqhVCK8cfxuLFLRSLYO6QsjzQ
-ZgdIG5ym
-=opwn
------END PGP SIGNATURE-----
-
---294FnAg8Qefqg6nM--
+> 
+> Again, this is poor API design - structures passed to interfaces
+> -should- have a well defined initial state, either set by a *_init()
+> function or by defining the initial state to be all zeros (i.e. via
+> memset, kzalloc, etc).
+> 
+> Performance and speed is not an excuse for writing fragile, easy to
+> break code and APIs.
+> 
+> -Dave.
