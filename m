@@ -1,72 +1,90 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4AE96A407CE
-	for <lists+linux-erofs@lfdr.de>; Sat, 22 Feb 2025 12:06:27 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F977A40B96
+	for <lists+linux-erofs@lfdr.de>; Sat, 22 Feb 2025 21:48:15 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Z0PM43BBNz306x
-	for <lists+linux-erofs@lfdr.de>; Sat, 22 Feb 2025 22:06:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Z0fGF57S1z30CL
+	for <lists+linux-erofs@lfdr.de>; Sun, 23 Feb 2025 07:48:05 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.14
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740222382;
-	cv=none; b=f3P4gzjnF8SiLv88KQb2baHerOf53azhT8RrgHR0LE/2wZQHU/M0ss/SDZZTZSa0OozhdiV31oHF4tEOW0ix91ovoOJQ9IOh7WgBsvBNq5k5AThCLnxW1MfuNVe55g0Qya609COdBy2EpT7gm81o4KbDiO8IgXJYcafl3jibl09yEwLV4mk+/744ZTj2QZLpGi4P9w3Sm57asipFR8LT/STApIOw2kXypKz54No/zkgw3nkY44cZEDMWiBYSc0smYp2wWm1iwEdAm0evL9We8pBIlA6IF4aQjRceLHLcZjURD15pAMjGddqBkfMOuiIsjApEx0ssbv5iilOwDrCuSQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::e31"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740257283;
+	cv=none; b=MWNkEOmJ1WsF8/ORE6T4q8Jc1mjsNMSrd1A2nK5SUDSxQ0GQshn0Q6pX0pI+NIcvtIh61mMFNHWn8sBaJTzva8yREcpQ/E8lmD+/ivuRg1kk5rpT13clJn563bKa4GifuuQmcsw58qcNCo+7MPBHYG67EWZTKrQ7xIvvUmQMY7U3DJqL5VBHp04ab1dUWoqBSiIOVVaRode44m7aItzdP0kY86VRZkhSBIQ31zThJaAW1I7wXNxnmO8LMHOnBlCQPYAhbIcFfDoBeKIoOLC5E4aVo5ydX/i0g3CX4VRDBTqq1NlhPfXFGW1FJtwA0Oukz7ojnbfu6lJW9hkp18WanA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1740222382; c=relaxed/relaxed;
-	bh=Sl9czl4fExLFYPwIaSO1IOOu4ykZ9rpXeljBCwBC4Pg=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=cAxqoupxBePc2HprnDDA1CPzxcsxN1SaaFHsBf+JPYg7htosXr0wT3kgepcGHp5ioH7P0RESQ2R4Qk50oRGJV1z/jJCWW0iK05X7w4FPgEDbEIHUAZ6F1o49AnMmRIrXP580lufbBZ+pCMoHyUQh0wFnrs/YeHw1qRI35MitSI0f7RiUqCQ6hltPGHDlZ2MdjRZLtySemPT7TytceQShZWQ7n8446BKmuAdEsjHOY4mtijGDmLykpZGMNVXdz89HtDvViST9JPQA2n7YZgtc9agV6bKO+DS7Gb28o2qTIEG/WQnhKXidGh+HKUktKnUxS7D3xjq5lsDbMgo/YgAK+A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NGVjf/ki; dkim-atps=neutral; spf=pass (client-ip=192.198.163.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1740257283; c=relaxed/relaxed;
+	bh=tcLRcReYHNg+jHASaYLW15SWxOcxWSRO/Z6Fnu09K4c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iqhmnATdg8DIR0DpJVKo4nZDr3XsznDDxpa9+2fm/00rvelmJ3XJedwA/Ff4x51exDE4IlRQKDSGhBAiFFfchAMyHYSrp3vC1xwhf1JJ0j62FJOggTw18mG7dYVqWfHeEr67vnp/mYE3W8XJ1AI8V1dYEaecJLavjUOWK3quzmutm0lj7Abkt1rR2BCoBpA3Pl+dGIUevGCURvUlDU31T/WgXqoWIHgWbyxB6i6br7ru/t4gznkC7iHS3tcUoTMg2/dbEKLbP95DGpeBXcYYOvIZrBLo/YA+tbBzqTJqWso/x1GvlpBtLIJxjUD+aw1ZsdMNUD1Rf714e8hBXXaHrw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Zz7ufYkv; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::e31; helo=mail-vs1-xe31.google.com; envelope-from=jonathanbaror@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NGVjf/ki;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Zz7ufYkv;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::e31; helo=mail-vs1-xe31.google.com; envelope-from=jonathanbaror@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z0PLz21bxz2xtK
-	for <linux-erofs@lists.ozlabs.org>; Sat, 22 Feb 2025 22:06:17 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740222380; x=1771758380;
-  h=date:from:to:cc:subject:message-id;
-  bh=lVCjbnJSUBjz7deuiXPlWiNFP2M0asq8/E/ZSStcB9w=;
-  b=NGVjf/kid01nnqjbu4e16G1VtEpGtSfAqqlD24OiSmmaO48LCFJYl1zT
-   cg6DJg/JWc3jPXEap+EHTrq1ydJczAzbISjgMOvAGZr7dmkyjHw8rPJtS
-   3ntdtvPYGP6SaaUFQLDSfbK67i3LwyveBPtPQzFlNP1OaGH88DzIavQEJ
-   2hhw+FwfRXj/KYiCXNOFoit+A0CsKhlsR+IzMDgZSFjkQnUDCrC3VhBPk
-   fSqq9IFRk358m5X6Gap+4ecnIwBwYKN2cA6THYicqjIPGuGqxhDKHwgIV
-   Vihvsw/0O088ITk53rswktVlyxSPf/0ktNdmzyil57RVAO2akdepDOOp7
-   w==;
-X-CSE-ConnectionGUID: pzy2J/eRTcGHoHHVYxmloQ==
-X-CSE-MsgGUID: dat4FPhxQ8GVqkRGq4QZGg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="41299729"
-X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
-   d="scan'208";a="41299729"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2025 03:06:14 -0800
-X-CSE-ConnectionGUID: F/1ObAgrStydqmkvag7zCA==
-X-CSE-MsgGUID: 3taGlpnNR4yLC/qbkN4x7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="146497302"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 22 Feb 2025 03:06:12 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tlnKk-0006VJ-1g;
-	Sat, 22 Feb 2025 11:06:10 +0000
-Date: Sat, 22 Feb 2025 19:05:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 67039e1ee225d4b41dd8166791e130f237b68ce4
-Message-ID: <202502221918.zpXPHTLw-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.7 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z0fGB3gMLz2ywh
+	for <linux-erofs@lists.ozlabs.org>; Sun, 23 Feb 2025 07:48:01 +1100 (AEDT)
+Received: by mail-vs1-xe31.google.com with SMTP id ada2fe7eead31-4be6599024cso2150915137.3
+        for <linux-erofs@lists.ozlabs.org>; Sat, 22 Feb 2025 12:48:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740257276; x=1740862076; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tcLRcReYHNg+jHASaYLW15SWxOcxWSRO/Z6Fnu09K4c=;
+        b=Zz7ufYkvwUOxQwbL9uztca1F8MlNuq+pBJ0s9zz7Lsj56g7vQpX+LXY4h4Bq9MdIN/
+         /eAkvpfD9egzMfp8gMIYGg3Yx7WmKB6rCuFMvY1EeQw48zRp/i4KXc1F1uZod2qVFrN7
+         dfcESSh7rhj5IT8dT83JaaHEZLStCviElbdUU1tbwQdeF53pE1syn/VfyOoFGsGlsahn
+         mM8whCG98zgUEbC9MHT7o7GFLYaR0I4AlvSh2sWXuzDtQaGG3Cy12eCNj6ChqwAO0ecn
+         pFfpWS+qxjJvlq7W99fmCJi1zkhyOJYCoZxKdql9pzYbH4NNMxxLpx+W3P09qlvsa4zX
+         XLWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740257276; x=1740862076;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tcLRcReYHNg+jHASaYLW15SWxOcxWSRO/Z6Fnu09K4c=;
+        b=vy+uv2NZx8d6ivYX5RReYrQjijPJ96HBHgKHfILtMkvI4B5RdrFDPxAcOEqpfSYtUd
+         fcZLDudqC6lhfyS4p470Z7RPgMe+7Y2TSMroog3t1r7nLaJGjwjsOWKcrfp/MXaoh9WM
+         Qh+Q5vGXbojTdHvjnWdnwWaudiC3fd7VZTrpxb+QS7YwTRRZYk21OsAiKlU4Db1YK/p8
+         2pKHa9J9UJ1q2tVQBhP1K1RvUlHfTV+qWtkYWfaFUmlS/DSMI78nMbhLctieZnPDgV4K
+         v3EgNftdEpIEz6ebkvKTigB2FW4nNPIkutwAu7FeXmc8CPbxIy5tZZk5XDhK79HRz76W
+         zECw==
+X-Forwarded-Encrypted: i=1; AJvYcCXUeTmSs67qAhqjWmwDvFrRHJIBcqkuPHrCBZY/q1E5pD24ib7kCvnQACgGnyd1wgVRVgQqwH31AUMstw==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YyEuYou9IX3vP0c46Ylia4wVd8DnWZmMZL6iNCq1pVLdakL9R10
+	ZPw5xquWMpRNvZ0eJiMblMGqs6IPPl5/4vmTascx1NBgNwjoe40fs0/lqyPjqBRHeYrIcGkjzcP
+	YhKAYOA82P63lf1y4sYRxjZB11LM=
+X-Gm-Gg: ASbGnctCqVj5diQZz1GK3ftlXEwfSuf2cr3SARd7M3DdxaLpdbRBlgeT/Z8wPRSMPc6
+	utmllww1obl6TsSLPdogoLDrPnxEooiI16O4LdJy9xD3yqdyg3TG/yccz+gTMVaTfXlrmBOYBmO
+	j8F/C2C2KWjy8MbUHPoYGfhzPLJu99x+qL4JnO0Q==
+X-Google-Smtp-Source: AGHT+IFq5w9QVYB027ZgOUqp+q6hXHguOwg+4CMia/YUW7un5v3K2GCkkIoG/lcYJ8vEziig2WnCj3PkX5kmS7lrxzw=
+X-Received: by 2002:a05:6102:d8d:b0:4bb:e8c5:b162 with SMTP id
+ ada2fe7eead31-4bfc00689b3mr4519512137.10.1740257276346; Sat, 22 Feb 2025
+ 12:47:56 -0800 (PST)
+MIME-Version: 1.0
+References: <CABMsoEGyEgWGHYMoL9kH2Os_=krqSTwdLaMu+XSOJd+micYpGQ@mail.gmail.com>
+ <20250207155048.GX1233568@bill-the-cat> <CABMsoEGLaMGch7gEuGGcyPy5REj4RDAFmX=AGnOmMnnbuSmhWA@mail.gmail.com>
+ <20250210164151.GN1233568@bill-the-cat> <7e9d99b5-59c9-47ed-a5c9-c4449e3068c0@linux.alibaba.com>
+ <CABMsoEGMq0b71ZbukBz5kbiHQhWHdG_dBzbk6eH+6My7MVGEsQ@mail.gmail.com>
+ <20250211212909.GI1233568@bill-the-cat> <8734gjsh8t.fsf@bootlin.com>
+ <CABMsoEGq+s2qudAHVwydpwXw_ROVfgw90yU7+VKYO6x27AWdew@mail.gmail.com> <CABMsoEFcL-D2OzJWQM685TfLq20L+d2gNmy4XD7yW6aDwpKb4w@mail.gmail.com>
+In-Reply-To: <CABMsoEFcL-D2OzJWQM685TfLq20L+d2gNmy4XD7yW6aDwpKb4w@mail.gmail.com>
+From: Jonathan Bar Or <jonathanbaror@gmail.com>
+Date: Sat, 22 Feb 2025 12:47:45 -0800
+X-Gm-Features: AWEUYZmxqtkIhHB2xdwy-6M0RUTehhAYi9TC1JJc0-bUL3X1fsJxX-lpnSyA0r8
+Message-ID: <CABMsoEEQPvHM7jKYZZE1UaTgVTuN-TneVi8X9LRsr3+bD7xH3Q@mail.gmail.com>
+Subject: Re: Security vulnerabilities report to Das-U-Boot
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -79,86 +97,78 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: linux-erofs@lists.ozlabs.org
+Cc: Tom Rini <trini@konsulko.com>, u-boot@lists.denx.de, Joao Marcos Costa <jmcosta944@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 67039e1ee225d4b41dd8166791e130f237b68ce4  erofs: clean up header parsing for ztailpacking and fragments
+Hello Tom and team,
 
-elapsed time: 1450m
+Looks like all of the issues were fixed and merged - am I correct?
+I intend to make a public disclosure March 19th, is that okay?
 
-configs tested: 63
-configs skipped: 1
+Best,
+       Jonathan
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                           allyesconfig    gcc-14.2.0
-arc                  randconfig-001-20250221    gcc-13.2.0
-arc                  randconfig-002-20250221    gcc-13.2.0
-arm                  randconfig-001-20250221    gcc-14.2.0
-arm                  randconfig-002-20250221    clang-19
-arm                  randconfig-003-20250221    gcc-14.2.0
-arm                  randconfig-004-20250221    clang-21
-arm64                randconfig-001-20250221    clang-15
-arm64                randconfig-002-20250221    clang-21
-arm64                randconfig-003-20250221    clang-21
-arm64                randconfig-004-20250221    gcc-14.2.0
-csky                 randconfig-001-20250221    gcc-14.2.0
-csky                 randconfig-002-20250221    gcc-14.2.0
-hexagon                         allmodconfig    clang-21
-hexagon                         allyesconfig    clang-18
-hexagon              randconfig-001-20250221    clang-21
-hexagon              randconfig-002-20250221    clang-21
-i386       buildonly-randconfig-001-20250221    gcc-12
-i386       buildonly-randconfig-002-20250221    gcc-12
-i386       buildonly-randconfig-003-20250221    gcc-12
-i386       buildonly-randconfig-004-20250221    gcc-12
-i386       buildonly-randconfig-005-20250221    clang-19
-i386       buildonly-randconfig-006-20250221    clang-19
-loongarch            randconfig-001-20250221    gcc-14.2.0
-loongarch            randconfig-002-20250221    gcc-14.2.0
-nios2                randconfig-001-20250221    gcc-14.2.0
-nios2                randconfig-002-20250221    gcc-14.2.0
-parisc               randconfig-001-20250221    gcc-14.2.0
-parisc               randconfig-002-20250221    gcc-14.2.0
-powerpc              randconfig-001-20250221    clang-21
-powerpc              randconfig-002-20250221    clang-21
-powerpc              randconfig-003-20250221    clang-17
-powerpc64            randconfig-001-20250221    clang-21
-powerpc64            randconfig-002-20250221    clang-21
-powerpc64            randconfig-003-20250221    clang-19
-riscv                randconfig-001-20250221    clang-21
-riscv                randconfig-002-20250221    clang-21
-s390                            allmodconfig    clang-19
-s390                            allyesconfig    gcc-14.2.0
-s390                 randconfig-001-20250221    gcc-14.2.0
-s390                 randconfig-002-20250221    gcc-14.2.0
-sh                              allmodconfig    gcc-14.2.0
-sh                              allyesconfig    gcc-14.2.0
-sh                   randconfig-001-20250221    gcc-14.2.0
-sh                   randconfig-002-20250221    gcc-14.2.0
-sparc                           allmodconfig    gcc-14.2.0
-sparc                randconfig-001-20250221    gcc-14.2.0
-sparc                randconfig-002-20250221    gcc-14.2.0
-sparc64              randconfig-001-20250221    gcc-14.2.0
-sparc64              randconfig-002-20250221    gcc-14.2.0
-um                              allmodconfig    clang-21
-um                              allyesconfig    gcc-12
-um                   randconfig-001-20250221    gcc-12
-um                   randconfig-002-20250221    gcc-12
-x86_64                           allnoconfig    clang-19
-x86_64     buildonly-randconfig-001-20250221    gcc-12
-x86_64     buildonly-randconfig-002-20250221    clang-19
-x86_64     buildonly-randconfig-003-20250221    clang-19
-x86_64     buildonly-randconfig-004-20250221    clang-19
-x86_64     buildonly-randconfig-005-20250221    clang-19
-x86_64     buildonly-randconfig-006-20250221    clang-19
-xtensa               randconfig-001-20250221    gcc-14.2.0
-xtensa               randconfig-002-20250221    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Fri, Feb 14, 2025 at 7:24=E2=80=AFPM Jonathan Bar Or <jonathanbaror@gmai=
+l.com> wrote:
+>
+> Please disregard the previous message, those are the actual CVE numbers:
+>
+> - CVE-2025-26726 :SquashFS directory table parsing buffer overflow
+> - CVE-2025-26727: SquashFS inode parsing buffer overflow.
+> - CVE-2025-26728: SquashFS nested file reading buffer overflow.
+> - CVE-2025-26729: EroFS symlink resolution buffer overflow.
+>
+> Best regards,
+>            Jonathan
+>
+>
+> On Fri, Feb 14, 2025 at 7:17=E2=80=AFPM Jonathan Bar Or <jonathanbaror@gm=
+ail.com> wrote:
+> >
+> > Hi folks.
+> >
+> > Here are the CVEs assigned by MITRE:
+> > - CVE-2025-26721: buffer overflow in the persistent storage for file cr=
+eation
+> > - CVE-2025-26722: buffer overflow in SquashFS symlink resolution
+> > - CVE-2025-26723: buffer overflow in EXT4 symlink resolution
+> > - CVE-2025-26724: buffer overflow in CramFS symlink resolution
+> > - CVE-2025-26724: buffer overflow in JFFS2 dirent parsing
+> >
+> > Best regards,
+> >            Jonathan
+> >
+> > On Wed, Feb 12, 2025 at 12:24=E2=80=AFAM Miquel Raynal
+> > <miquel.raynal@bootlin.com> wrote:
+> > >
+> > > Hello Tom,
+> > >
+> > > On 11/02/2025 at 15:29:09 -06, Tom Rini <trini@konsulko.com> wrote:
+> > >
+> > > > On Tue, Feb 11, 2025 at 08:26:37AM -0800, Jonathan Bar Or wrote:
+> > > >> Hi Tom and the rest of the team,
+> > > >>
+> > > >> Please let me know about fix time, whether this is acknowledged an=
+d
+> > > >> whether you're going to request CVE IDs for those or if I should d=
+o
+> > > >> it.
+> > > >> The reason is that I found similar issues in other bootloaders, so=
+ I'm
+> > > >> trying to synchronize all of them. For what it's worth, Barebox ha=
+s
+> > > >> similar issues and are currently fixing.
+> > > >
+> > > > Yes, these seem valid. We don't have a CVE requesting authority so =
+if
+> > > > you want them, go ahead and request them. You saw Gao Xiang's respo=
+nse
+> > > > for erofs, and I'm hoping one of the squashfs maintainers will chim=
+e
+> > > > in.
+> > >
+> > > Either Jo=C3=A3o or me, we will have a look.
+> > >
+> > > Thanks,
+> > > Miqu=C3=A8l
