@@ -1,53 +1,72 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5E782A3F09F
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Feb 2025 10:41:17 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AE96A407CE
+	for <lists+linux-erofs@lfdr.de>; Sat, 22 Feb 2025 12:06:27 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4YzlWG2Nfmz30Vb
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Feb 2025 20:41:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Z0PM43BBNz306x
+	for <lists+linux-erofs@lfdr.de>; Sat, 22 Feb 2025 22:06:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740130872;
-	cv=none; b=bJp5l2NUE+yrUTwWvJvRmTmSVuso7o3kf8jYsMRvoJJhr7DZB9ir/sjDEs7mbHMdIi4nnrnzP1yeS9kTBNka9gKw10n+32OkYMIKpgCobTD4bTNrF8hZDWPxrzq/X0Kd6gb8QK9xmTNq3JQrpKDhNyaMds9OKv2kgOwfwEXP4orxr3PAO+QtGhv/UQVcMT88yCKiL5RZvBIJlZaN7bTSmCr0QY8H0V/r21wmg2OXMEUH7HHY/HlPbYiwVhPZjRFhI3VDMv1Ert9mgH7vFu2fUxxrXJzu4AeYP4SchgwY/PTXBWA7Zu5Nm3YiQUKTI40sBJpvvhMVamjkZ9Sip4IDcQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.14
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740222382;
+	cv=none; b=f3P4gzjnF8SiLv88KQb2baHerOf53azhT8RrgHR0LE/2wZQHU/M0ss/SDZZTZSa0OozhdiV31oHF4tEOW0ix91ovoOJQ9IOh7WgBsvBNq5k5AThCLnxW1MfuNVe55g0Qya609COdBy2EpT7gm81o4KbDiO8IgXJYcafl3jibl09yEwLV4mk+/744ZTj2QZLpGi4P9w3Sm57asipFR8LT/STApIOw2kXypKz54No/zkgw3nkY44cZEDMWiBYSc0smYp2wWm1iwEdAm0evL9We8pBIlA6IF4aQjRceLHLcZjURD15pAMjGddqBkfMOuiIsjApEx0ssbv5iilOwDrCuSQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1740130872; c=relaxed/relaxed;
-	bh=TfkidDMxPMlQA/XL/XYnY8kMut3kWfLopLNxuBD/amA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QEXixTFwUDq0aY7o4/BvImyoDGGM6672HB1Ua6F6upMbKWf6x6s6dzg+Rv1xErsa7JRjE94O150AWRVf3lqQTCMNFjrvtJvoMhHVdY2OcL0WYjS/XJpED3cljYlT/Psp6pszkz90vGSGz1SM8sDbYSEPTxqtuDa7O7qdHY/aAAcuzYD5i6ONxOa7beJB2kc6Uu3s1ifzFKLKK2bA/hdjdSSrNaD9ElCO27ke0xz2Tt9ozs1myLQODfQAsvAD7iSIajczWlmADLHgiVHYugRbZZY5/P8Y3efnhvY9izmuNKwRNhtGzcWqRXTM5Qb2oV4usXlW5f6W1uuXqZErY2I54w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FAMFFCM3; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1740222382; c=relaxed/relaxed;
+	bh=Sl9czl4fExLFYPwIaSO1IOOu4ykZ9rpXeljBCwBC4Pg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=cAxqoupxBePc2HprnDDA1CPzxcsxN1SaaFHsBf+JPYg7htosXr0wT3kgepcGHp5ioH7P0RESQ2R4Qk50oRGJV1z/jJCWW0iK05X7w4FPgEDbEIHUAZ6F1o49AnMmRIrXP580lufbBZ+pCMoHyUQh0wFnrs/YeHw1qRI35MitSI0f7RiUqCQ6hltPGHDlZ2MdjRZLtySemPT7TytceQShZWQ7n8446BKmuAdEsjHOY4mtijGDmLykpZGMNVXdz89HtDvViST9JPQA2n7YZgtc9agV6bKO+DS7Gb28o2qTIEG/WQnhKXidGh+HKUktKnUxS7D3xjq5lsDbMgo/YgAK+A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NGVjf/ki; dkim-atps=neutral; spf=pass (client-ip=192.198.163.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=FAMFFCM3;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=NGVjf/ki;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4YzlW93kdKz2xCd
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Feb 2025 20:41:08 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740130862; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=TfkidDMxPMlQA/XL/XYnY8kMut3kWfLopLNxuBD/amA=;
-	b=FAMFFCM3Hj8LtZsTLeq7zUBgV61FrnoU5ARjzehcsQeuSjCXNBr0L+fwKR+TztZ6myeNVwTlDtP4kxhlKVHJ4Kn/BbI6eoHwhBqwmGkqql3pHQD+OWlmckXjEFAVtbsZragjlDyVckvoFhkHpBnE9Ra87apa1xnUPi8yJeoOui4=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WPvxQPd_1740130856 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 21 Feb 2025 17:41:01 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Subject: [PATCH] erofs: clean up header parsing for ztailpacking and fragments
-Date: Fri, 21 Feb 2025 17:40:55 +0800
-Message-ID: <20250221094055.4014984-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z0PLz21bxz2xtK
+	for <linux-erofs@lists.ozlabs.org>; Sat, 22 Feb 2025 22:06:17 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740222380; x=1771758380;
+  h=date:from:to:cc:subject:message-id;
+  bh=lVCjbnJSUBjz7deuiXPlWiNFP2M0asq8/E/ZSStcB9w=;
+  b=NGVjf/kid01nnqjbu4e16G1VtEpGtSfAqqlD24OiSmmaO48LCFJYl1zT
+   cg6DJg/JWc3jPXEap+EHTrq1ydJczAzbISjgMOvAGZr7dmkyjHw8rPJtS
+   3ntdtvPYGP6SaaUFQLDSfbK67i3LwyveBPtPQzFlNP1OaGH88DzIavQEJ
+   2hhw+FwfRXj/KYiCXNOFoit+A0CsKhlsR+IzMDgZSFjkQnUDCrC3VhBPk
+   fSqq9IFRk358m5X6Gap+4ecnIwBwYKN2cA6THYicqjIPGuGqxhDKHwgIV
+   Vihvsw/0O088ITk53rswktVlyxSPf/0ktNdmzyil57RVAO2akdepDOOp7
+   w==;
+X-CSE-ConnectionGUID: pzy2J/eRTcGHoHHVYxmloQ==
+X-CSE-MsgGUID: dat4FPhxQ8GVqkRGq4QZGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="41299729"
+X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
+   d="scan'208";a="41299729"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2025 03:06:14 -0800
+X-CSE-ConnectionGUID: F/1ObAgrStydqmkvag7zCA==
+X-CSE-MsgGUID: 3taGlpnNR4yLC/qbkN4x7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="146497302"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa001.fm.intel.com with ESMTP; 22 Feb 2025 03:06:12 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tlnKk-0006VJ-1g;
+	Sat, 22 Feb 2025 11:06:10 +0000
+Date: Sat, 22 Feb 2025 19:05:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 67039e1ee225d4b41dd8166791e130f237b68ce4
+Message-ID: <202502221918.zpXPHTLw-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.7 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -60,121 +79,86 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
+Cc: linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Simplify the logic in z_erofs_fill_inode_lazy() by combining the
-handling of ztailpacking and fragments, as they are mutually exclusive.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 67039e1ee225d4b41dd8166791e130f237b68ce4  erofs: clean up header parsing for ztailpacking and fragments
 
-Note that `h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT` is handled
-above, so no need to duplicate the check.
+elapsed time: 1450m
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/zmap.c | 47 +++++++++++++++++++----------------------------
- 1 file changed, 19 insertions(+), 28 deletions(-)
+configs tested: 63
+configs skipped: 1
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index a0c1c6450a55..bdac20800ded 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -394,7 +394,8 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
- static int z_erofs_do_map_blocks(struct inode *inode,
- 				 struct erofs_map_blocks *map, int flags)
- {
--	struct erofs_inode *const vi = EROFS_I(inode);
-+	struct erofs_inode *vi = EROFS_I(inode);
-+	struct super_block *sb = inode->i_sb;
- 	bool ztailpacking = vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER;
- 	bool fragment = vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
- 	struct z_erofs_maprecorder m = {
-@@ -439,7 +440,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		}
- 		/* m.lcn should be >= 1 if endoff < m.clusterofs */
- 		if (!m.lcn) {
--			erofs_err(inode->i_sb, "invalid logical cluster 0 at nid %llu",
-+			erofs_err(sb, "invalid logical cluster 0 at nid %llu",
- 				  vi->nid);
- 			err = -EFSCORRUPTED;
- 			goto unmap_out;
-@@ -455,7 +456,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 			goto unmap_out;
- 		break;
- 	default:
--		erofs_err(inode->i_sb, "unknown type %u @ offset %llu of nid %llu",
-+		erofs_err(sb, "unknown type %u @ offset %llu of nid %llu",
- 			  m.type, ofs, vi->nid);
- 		err = -EOPNOTSUPP;
- 		goto unmap_out;
-@@ -474,10 +475,17 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		map->m_flags |= EROFS_MAP_META;
- 		map->m_pa = vi->z_idataoff;
- 		map->m_plen = vi->z_idata_size;
-+		if (!map->m_plen ||
-+		    erofs_blkoff(sb, map->m_pa) + map->m_plen > sb->s_blocksize) {
-+			erofs_err(sb, "invalid tail-packing pclustersize %llu",
-+				  map->m_plen);
-+			err = -EFSCORRUPTED;
-+			goto unmap_out;
-+		}
- 	} else if (fragment && m.lcn == vi->z_tailextent_headlcn) {
- 		map->m_flags |= EROFS_MAP_FRAGMENT;
- 	} else {
--		map->m_pa = erofs_pos(inode->i_sb, m.pblk);
-+		map->m_pa = erofs_pos(sb, m.pblk);
- 		err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
- 		if (err)
- 			goto unmap_out;
-@@ -496,7 +504,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		afmt = m.headtype == Z_EROFS_LCLUSTER_TYPE_HEAD2 ?
- 			vi->z_algorithmtype[1] : vi->z_algorithmtype[0];
- 		if (!(EROFS_I_SB(inode)->available_compr_algs & (1 << afmt))) {
--			erofs_err(inode->i_sb, "inconsistent algorithmtype %u for nid %llu",
-+			erofs_err(sb, "inconsistent algorithmtype %u for nid %llu",
- 				  afmt, vi->nid);
- 			err = -EFSCORRUPTED;
- 			goto unmap_out;
-@@ -593,33 +601,16 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 		goto out_put_metabuf;
- 	}
- 
--	if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER) {
--		struct erofs_map_blocks map = {
--			.buf = __EROFS_BUF_INITIALIZER
--		};
--
--		vi->z_idata_size = le16_to_cpu(h->h_idata_size);
--		err = z_erofs_do_map_blocks(inode, &map,
--					    EROFS_GET_BLOCKS_FINDTAIL);
--		erofs_put_metabuf(&map.buf);
--
--		if (!map.m_plen ||
--		    erofs_blkoff(sb, map.m_pa) + map.m_plen > sb->s_blocksize) {
--			erofs_err(sb, "invalid tail-packing pclustersize %llu",
--				  map.m_plen);
--			err = -EFSCORRUPTED;
--		}
--		if (err < 0)
--			goto out_put_metabuf;
--	}
--
--	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER &&
--	    !(h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT)) {
-+	if (vi->z_advise & (Z_EROFS_ADVISE_INLINE_PCLUSTER |
-+			    Z_EROFS_ADVISE_FRAGMENT_PCLUSTER)) {
- 		struct erofs_map_blocks map = {
- 			.buf = __EROFS_BUF_INITIALIZER
- 		};
- 
--		vi->z_fragmentoff = le32_to_cpu(h->h_fragmentoff);
-+		if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER)
-+			vi->z_idata_size = le16_to_cpu(h->h_idata_size);
-+		else
-+			vi->z_fragmentoff = le32_to_cpu(h->h_fragmentoff);
- 		err = z_erofs_do_map_blocks(inode, &map,
- 					    EROFS_GET_BLOCKS_FINDTAIL);
- 		erofs_put_metabuf(&map.buf);
--- 
-2.43.5
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                           allyesconfig    gcc-14.2.0
+arc                  randconfig-001-20250221    gcc-13.2.0
+arc                  randconfig-002-20250221    gcc-13.2.0
+arm                  randconfig-001-20250221    gcc-14.2.0
+arm                  randconfig-002-20250221    clang-19
+arm                  randconfig-003-20250221    gcc-14.2.0
+arm                  randconfig-004-20250221    clang-21
+arm64                randconfig-001-20250221    clang-15
+arm64                randconfig-002-20250221    clang-21
+arm64                randconfig-003-20250221    clang-21
+arm64                randconfig-004-20250221    gcc-14.2.0
+csky                 randconfig-001-20250221    gcc-14.2.0
+csky                 randconfig-002-20250221    gcc-14.2.0
+hexagon                         allmodconfig    clang-21
+hexagon                         allyesconfig    clang-18
+hexagon              randconfig-001-20250221    clang-21
+hexagon              randconfig-002-20250221    clang-21
+i386       buildonly-randconfig-001-20250221    gcc-12
+i386       buildonly-randconfig-002-20250221    gcc-12
+i386       buildonly-randconfig-003-20250221    gcc-12
+i386       buildonly-randconfig-004-20250221    gcc-12
+i386       buildonly-randconfig-005-20250221    clang-19
+i386       buildonly-randconfig-006-20250221    clang-19
+loongarch            randconfig-001-20250221    gcc-14.2.0
+loongarch            randconfig-002-20250221    gcc-14.2.0
+nios2                randconfig-001-20250221    gcc-14.2.0
+nios2                randconfig-002-20250221    gcc-14.2.0
+parisc               randconfig-001-20250221    gcc-14.2.0
+parisc               randconfig-002-20250221    gcc-14.2.0
+powerpc              randconfig-001-20250221    clang-21
+powerpc              randconfig-002-20250221    clang-21
+powerpc              randconfig-003-20250221    clang-17
+powerpc64            randconfig-001-20250221    clang-21
+powerpc64            randconfig-002-20250221    clang-21
+powerpc64            randconfig-003-20250221    clang-19
+riscv                randconfig-001-20250221    clang-21
+riscv                randconfig-002-20250221    clang-21
+s390                            allmodconfig    clang-19
+s390                            allyesconfig    gcc-14.2.0
+s390                 randconfig-001-20250221    gcc-14.2.0
+s390                 randconfig-002-20250221    gcc-14.2.0
+sh                              allmodconfig    gcc-14.2.0
+sh                              allyesconfig    gcc-14.2.0
+sh                   randconfig-001-20250221    gcc-14.2.0
+sh                   randconfig-002-20250221    gcc-14.2.0
+sparc                           allmodconfig    gcc-14.2.0
+sparc                randconfig-001-20250221    gcc-14.2.0
+sparc                randconfig-002-20250221    gcc-14.2.0
+sparc64              randconfig-001-20250221    gcc-14.2.0
+sparc64              randconfig-002-20250221    gcc-14.2.0
+um                              allmodconfig    clang-21
+um                              allyesconfig    gcc-12
+um                   randconfig-001-20250221    gcc-12
+um                   randconfig-002-20250221    gcc-12
+x86_64                           allnoconfig    clang-19
+x86_64     buildonly-randconfig-001-20250221    gcc-12
+x86_64     buildonly-randconfig-002-20250221    clang-19
+x86_64     buildonly-randconfig-003-20250221    clang-19
+x86_64     buildonly-randconfig-004-20250221    clang-19
+x86_64     buildonly-randconfig-005-20250221    clang-19
+x86_64     buildonly-randconfig-006-20250221    clang-19
+xtensa               randconfig-001-20250221    gcc-14.2.0
+xtensa               randconfig-002-20250221    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
