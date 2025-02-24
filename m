@@ -1,80 +1,76 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EDDD0A4199A
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2025 10:53:57 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 277F6A419DC
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2025 10:58:56 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1740390835;
-	bh=Krn4gjvkBmqA/FwymkhlEO2A4LIP8vepXPsLolf9PO8=;
-	h=Date:To:Subject:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=KBcyFGBG9PSqEJ+fkR/IyOqYxvtxI4ji26ZgtNy/UqQDFhOCRrgaOLkXbewPKUDki
-	 5VdvGp8g6VacTCzryvuvV8+NhXc1Q1Gbv4LP/SipGtoF1fI8dbh5zoShH1droNvenT
-	 uVU2awRN1uzF7TQ7RhzLwU4lafcyLmc9I+rqcxotyTXi9mr/9uAhQdaMMEnv5JX9j9
-	 ge0itnURPBKRjUh4BEiXtezIVT15uL6SpD7kJlR1tXUlCmO5X72cDemYSl/Y8PSs6a
-	 EcemZAHQBfZkfi588CcncdEfBk8tmX81/M6wHzm+6FVszgH4HGL/k1Kig5zxMxl4Vo
-	 r9bLaJgXxp9mA==
+	s=201707; t=1740391133;
+	bh=ajsOfd9FBnSAmCDC0EG4GS29hmOQ4DtAyNnSn8VTz3M=;
+	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
+	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
+	 From;
+	b=nWr1ydtusgut9hOYzxcQZNa/NYDqJzPOYsB4jgCbdOQ0nSPGXNbSaJm8lwy6MGuUG
+	 Pct8Sy8c54wSvBl6UkqaxF16Yik7D+IIQktB16LBrLSAp3t9yTBWV6QF79KXqO5+Jr
+	 8GW/xPCPXiAYVFTAfVhpb6/nrX9OwZIxdJtTQsZiZ8VpV7sbtzDOy2W/jigkxKPy43
+	 5qOCkxdLPMD6e4q6hCWbespW/kDJqeqI4JqwB91KEFHwbB6qF69ZyRr04zTS/FuKU0
+	 A9eqXcJGr28b367ZBNNgNCL8TVaqBhQzNMR39gfZ6tUPv+SrUfCOgLrlK2QKk7Rvb6
+	 HvzxolRAi54Ug==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Z1bfW1bX4z305D
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2025 20:53:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Z1bmF4j31z3057
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2025 20:58:53 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740390833;
-	cv=none; b=BY3igau21GJkFBItvvNL2t93coXNysjRFIn0n7t3qXn0q0Dwh/RaA6eSjaRFsB5ndn9nqKRrzcmUylrwvC0DWakoLYYhZbAeaA3FSwf5w3s9enCcZY2dC1iqQrzAf1yXx9ZRTlDZyKARUOMIlu0Z+Rk7leTCy7YdNK7vvSzA0XkbiAc41XSQCR0iLmjePpAiG92lxtzwnNNyxU1EAIIKCD+O5xMk5SDXMxDKqDK9s/3I3nHNJi1y1ulOidWvX4rnvQgTj3MYYYLA1na81lnE8+XX+C+wCptnRuK0w6uFOn8mkQ4x6GoJ8BhROO5Y1amLon1JHaYoeUZhqQLhvGqn5g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740391132;
+	cv=none; b=A2Gwc3zBdLC3ieTakO6jJT870EwIQdbayqpT3k6SVfuqZBPEeUu86Op6MCtmLsYcP2usqa1I1Cti5VnWO/TzXp4s+T1zk4xJ5NIYSFNAu76mbSMlk/rXp7+TVVse2qiP3UZObMmu0QF1ratY09sRCQYYg8HYAQxM0aqj6WCPzlZ71MnKANIPHu6owcHBs+657T2L0M3Gcpj1bVbsM0A0c6O6yFq6B++emia0n4gTYUZ+Cz6mWavoKemdgCY8c7mlEQlefdTROpHcytyTo/mEYCu355BmmSD3zMq57NK/TEvdjkv5cGhXg9Jxse6rg6dPMjX8CvDe+KDKJdwL5Q/X6A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1740390833; c=relaxed/relaxed;
-	bh=Krn4gjvkBmqA/FwymkhlEO2A4LIP8vepXPsLolf9PO8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LzYHiB5fHQJsbrOv5J9HifHsQEJwz+ZySYNBz+Prrd0dn1WhaeU/KQvmNiTqnLOdkxNrHXKe3VbJUwMAefOiMEzKSWtA2vscxxhhXGLhSYsmmlVdIoqnk9dessP/UYcVz2n9SOs8aFASebxluQGr9FyA++PxCDkhOjsMjvtHyc6nmex5Ip502Hex0foZNmhieWuHSmoWYdNn83mIgGQXgwZAQRPgf7iTStXHa3nsErSiPWTxO8zIQZifXsY8otbm9Vr4iMKkPbJoyBKWMMW8FquD4A0Wb44y8xxPD/TckeBtloGITQD7YwD0mjtNXnqeCJTrg/dG1ocZkeoC9dS75g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=u0usiYCP; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=gustavoars@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	t=1740391132; c=relaxed/relaxed;
+	bh=ajsOfd9FBnSAmCDC0EG4GS29hmOQ4DtAyNnSn8VTz3M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fwhaBnCgtFmTIfVSmEdI8leicypwBWoa0DtEUyyJZiRFDY+VZJxfmkw3xc1HXhZwDsmrj3okhtvOk1JxKd5H2F4bDAEUZGryfWUupkTN/iogIUAeCfgXBjBMZ/jnTdGpMFU8aenKwth1+4OROZrMfegdQq4CEOc+iUdUC7fYMY3bOKkd8OmWyB6aVbHiQKupUF8EofXe8lZVmmpXU1MYTZrb+xBwwcCQfRI2B9G101Y6l7y167c+llAoigAWOxTLB6E1Gxu29oghxDpQgUpfs49E/IvqAdAQNvoPszi2fr7PKgEqkOCyTVfbD6Dx86YM2DLFeu7huEndJ6JiLw/nAw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=PO1llj0k; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gustavoars@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=u0usiYCP;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=PO1llj0k;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=gustavoars@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gustavoars@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z1bfS2HTzz2xgv
-	for <linux-erofs@lists.ozlabs.org>; Mon, 24 Feb 2025 20:53:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z1bmC1npjz2yDS
+	for <linux-erofs@lists.ozlabs.org>; Mon, 24 Feb 2025 20:58:51 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 10BE75C5D8E;
-	Mon, 24 Feb 2025 09:53:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 349C1C4CED6;
-	Mon, 24 Feb 2025 09:53:39 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 2998161193;
+	Mon, 24 Feb 2025 09:58:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30C03C4CED6;
+	Mon, 24 Feb 2025 09:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740390829;
-	bh=g6VMlunQlRDJng03dDx4fAmN66ot/J1KNDpnUBk3Uyk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=u0usiYCPpGjJz7W/r+tTDedwSQMO7Lzj2OGrQ7vpI1I6Ni/J58p4fjs01N0vVrCAy
-	 CupqoMmeyJpmyBT33Swem7HP4O4OA6qZfthw2HnsZgFr0H9T56aiYr5z8HSIvhJ3wo
-	 ILS61Ps7NSn2v37GJTsxM5FAS2tS1WmZhYCJYPxRjxaqBATn6A3KKZsis22HoJbvBC
-	 y5bUAgcJHr9xYjQfadxhzbrj9AfhEsQrt1QeJxY+PA7PsZYrl0y2GkNEOsO7eMJumX
-	 eTDcPsCHnH8iIhJ75t4YE7EeEjvUZNPoyVSCrYXZ1Xo9lYedRKjQFhXI8schHBm7m7
-	 B5W68rNG+/KDA==
-Date: Mon, 24 Feb 2025 20:23:38 +1030
-To: Jens Axboe <axboe@kernel.dk>, Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai3@huawei.com>, Carlos Maiolino <cem@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>, Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>, Coly Li <colyli@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH 0/8][next] Avoid a couple hundred
- -Wflex-array-member-not-at-end warnings
-Message-ID: <cover.1739957534.git.gustavoars@kernel.org>
+	s=k20201202; t=1740391128;
+	bh=ZjDnXrksprqcdBpDIG/amfeXKgB6c4lJruai5qe5AhA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PO1llj0k12h5/Jb8CQuV57BkdgYfH/eqbVrzvtMdBv4G6bGDgxunu7xzsOu2NcAHI
+	 PlCedtu+UkUKI2UZXTaIRl0ltFlFDeBPxRC83CzYSEPFqd9bp3ovwjLYLSljJxTagn
+	 oQMHZa4qstKk4u3mvru+7XQSTjUiTQk13D5PzzBJChsWn2qBBphPqTK7QToFd0sa+8
+	 1ke1OxIH4CQChKZDNFzuPV765Og8okFL3psFARQzGAGcWXX7OWRgBsLkFUxf0X+hBS
+	 nkPPO3ctYZmqfgdFMDw2V+50D0ky4xivMPA1a1rP4V7OeKV3G3ikmsJPkHkS3frsB8
+	 HeGzCJ72wsshw==
+Date: Mon, 24 Feb 2025 20:28:43 +1030
+To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>
+Subject: [PATCH 4/8][next] erofs: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <334f60e884cc0314ef98731e60a1b419e462e2d2.1739957534.git.gustavoars@kernel.org>
+References: <cover.1739957534.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-1.1 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
+In-Reply-To: <cover.1739957534.git.gustavoars@kernel.org>
+X-Spam-Status: No, score=-0.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -89,51 +85,152 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
 From: "Gustavo A. R. Silva via Linux-erofs" <linux-erofs@lists.ozlabs.org>
 Reply-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-raid@vger.kernel.org, linux-bcache@vger.kernel.org, linux-hardening@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
+Cc: linux-hardening@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-This patch series aims to fix a couple hundred -Wflex-array-member-not-at-end
-warnings by creating a new tagged struct `struct bio_hdr` within flexible
-structure `struct bio`.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-This new tagged struct will be used to fix problematic declarations
-of middle-flex-arrays in composite structs, like these[1][2][3], for
-instance.
+Change the type of the middle struct member currently causing trouble from
+`struct bio` to `struct bio_hdr`.
 
-[1] https://git.kernel.org/linus/a7e8997ae18c42d3
-[2] https://git.kernel.org/linus/c1ddb29709e675ea
-[3] https://git.kernel.org/linus/57be3d3562ca4aa6
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure `struct bio`, through which we can access the
+flexible-array member in it, if necessary.
 
-Gustavo A. R. Silva (8):
-  block: blk_types.h: Use struct_group_tagged() in flex struct bio
-  md/raid5-ppl: Avoid -Wflex-array-member-not-at-end warning
-  xfs: Avoid -Wflex-array-member-not-at-end warnings
-  erofs: Avoid -Wflex-array-member-not-at-end warnings
-  btrfs: Avoid -Wflex-array-member-not-at-end warnings
-  nvme: target: Avoid -Wflex-array-member-not-at-end warnings
-  md/raid5: Avoid -Wflex-array-member-not-at-end warnings
-  bcache: Avoid -Wflex-array-member-not-at-end warnings
+With these changes fix the following warnings:
+fs/erofs/fileio.c:10:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/erofs/fscache.c:179:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
- drivers/md/bcache/bcache.h     |  4 +-
- drivers/md/bcache/journal.c    | 10 ++--
- drivers/md/bcache/journal.h    |  4 +-
- drivers/md/bcache/super.c      |  8 ++--
- drivers/md/raid5-ppl.c         |  8 ++--
- drivers/md/raid5.c             | 10 ++--
- drivers/md/raid5.h             |  2 +-
- drivers/nvme/target/nvmet.h    |  4 +-
- drivers/nvme/target/passthru.c |  2 +-
- drivers/nvme/target/zns.c      |  2 +-
- fs/btrfs/disk-io.c             |  4 +-
- fs/btrfs/volumes.h             |  2 +-
- fs/erofs/fileio.c              | 25 ++++++----
- fs/erofs/fscache.c             | 13 +++---
- fs/xfs/xfs_log.c               | 15 +++---
- fs/xfs/xfs_log_priv.h          |  2 +-
- include/linux/blk_types.h      | 84 ++++++++++++++++++----------------
- 17 files changed, 107 insertions(+), 92 deletions(-)
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/erofs/fileio.c  | 25 +++++++++++++++----------
+ fs/erofs/fscache.c | 13 +++++++------
+ 2 files changed, 22 insertions(+), 16 deletions(-)
 
+diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
+index 0ffd1c63beeb..3080963caf78 100644
+--- a/fs/erofs/fileio.c
++++ b/fs/erofs/fileio.c
+@@ -7,7 +7,7 @@
+ 
+ struct erofs_fileio_rq {
+ 	struct bio_vec bvecs[16];
+-	struct bio bio;
++	struct bio_hdr bio;
+ 	struct kiocb iocb;
+ 	struct super_block *sb;
+ };
+@@ -26,20 +26,21 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
+ 
+ 	if (ret > 0) {
+ 		if (ret != rq->bio.bi_iter.bi_size) {
+-			bio_advance(&rq->bio, ret);
+-			zero_fill_bio(&rq->bio);
++			bio_advance(container_of(&rq->bio, struct bio, __hdr),
++				    ret);
++			zero_fill_bio(container_of(&rq->bio, struct bio, __hdr));
+ 		}
+ 		ret = 0;
+ 	}
+ 	if (rq->bio.bi_end_io) {
+-		rq->bio.bi_end_io(&rq->bio);
++		rq->bio.bi_end_io(container_of(&rq->bio, struct bio, __hdr));
+ 	} else {
+-		bio_for_each_folio_all(fi, &rq->bio) {
++		bio_for_each_folio_all(fi, container_of(&rq->bio, struct bio, __hdr)) {
+ 			DBG_BUGON(folio_test_uptodate(fi.folio));
+ 			erofs_onlinefolio_end(fi.folio, ret);
+ 		}
+ 	}
+-	bio_uninit(&rq->bio);
++	bio_uninit(container_of(&rq->bio, struct bio, __hdr));
+ 	kfree(rq);
+ }
+ 
+@@ -68,7 +69,8 @@ static struct erofs_fileio_rq *erofs_fileio_rq_alloc(struct erofs_map_dev *mdev)
+ 	struct erofs_fileio_rq *rq = kzalloc(sizeof(*rq),
+ 					     GFP_KERNEL | __GFP_NOFAIL);
+ 
+-	bio_init(&rq->bio, NULL, rq->bvecs, ARRAY_SIZE(rq->bvecs), REQ_OP_READ);
++	bio_init(container_of(&rq->bio, struct bio, __hdr), NULL, rq->bvecs,
++		 ARRAY_SIZE(rq->bvecs), REQ_OP_READ);
+ 	rq->iocb.ki_filp = mdev->m_dif->file;
+ 	rq->sb = mdev->m_sb;
+ 	return rq;
+@@ -76,12 +78,13 @@ static struct erofs_fileio_rq *erofs_fileio_rq_alloc(struct erofs_map_dev *mdev)
+ 
+ struct bio *erofs_fileio_bio_alloc(struct erofs_map_dev *mdev)
+ {
+-	return &erofs_fileio_rq_alloc(mdev)->bio;
++	return container_of(&erofs_fileio_rq_alloc(mdev)->bio, struct bio, __hdr);
+ }
+ 
+ void erofs_fileio_submit_bio(struct bio *bio)
+ {
+-	return erofs_fileio_rq_submit(container_of(bio, struct erofs_fileio_rq,
++	return erofs_fileio_rq_submit(container_of(&bio->__hdr,
++						   struct erofs_fileio_rq,
+ 						   bio));
+ }
+ 
+@@ -150,7 +153,9 @@ static int erofs_fileio_scan_folio(struct erofs_fileio *io, struct folio *folio)
+ 			}
+ 			if (!attached++)
+ 				erofs_onlinefolio_split(folio);
+-			if (!bio_add_folio(&io->rq->bio, folio, len, cur))
++			if (!bio_add_folio(container_of(&io->rq->bio,
++							struct bio, __hdr),
++					   folio, len, cur))
+ 				goto io_retry;
+ 			io->dev.m_pa += len;
+ 		}
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index ce3d8737df85..719ec96c8f22 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -176,7 +176,7 @@ static int erofs_fscache_read_io_async(struct fscache_cookie *cookie,
+ 
+ struct erofs_fscache_bio {
+ 	struct erofs_fscache_io io;
+-	struct bio bio;		/* w/o bdev to share bio_add_page/endio() */
++	struct bio_hdr bio;	/* w/o bdev to share bio_add_page/endio() */
+ 	struct bio_vec bvecs[BIO_MAX_VECS];
+ };
+ 
+@@ -187,7 +187,7 @@ static void erofs_fscache_bio_endio(void *priv,
+ 
+ 	if (IS_ERR_VALUE(transferred_or_error))
+ 		io->bio.bi_status = errno_to_blk_status(transferred_or_error);
+-	io->bio.bi_end_io(&io->bio);
++	io->bio.bi_end_io(container_of(&io->bio, struct bio, __hdr));
+ 	BUILD_BUG_ON(offsetof(struct erofs_fscache_bio, io) != 0);
+ 	erofs_fscache_io_put(&io->io);
+ }
+@@ -197,17 +197,18 @@ struct bio *erofs_fscache_bio_alloc(struct erofs_map_dev *mdev)
+ 	struct erofs_fscache_bio *io;
+ 
+ 	io = kmalloc(sizeof(*io), GFP_KERNEL | __GFP_NOFAIL);
+-	bio_init(&io->bio, NULL, io->bvecs, BIO_MAX_VECS, REQ_OP_READ);
++	bio_init(container_of(&io->bio, struct bio, __hdr), NULL, io->bvecs,
++		 BIO_MAX_VECS, REQ_OP_READ);
+ 	io->io.private = mdev->m_dif->fscache->cookie;
+ 	io->io.end_io = erofs_fscache_bio_endio;
+ 	refcount_set(&io->io.ref, 1);
+-	return &io->bio;
++	return container_of(&io->bio, struct bio, __hdr);
+ }
+ 
+ void erofs_fscache_submit_bio(struct bio *bio)
+ {
+-	struct erofs_fscache_bio *io = container_of(bio,
+-			struct erofs_fscache_bio, bio);
++	struct erofs_fscache_bio *io =
++		container_of(&bio->__hdr, struct erofs_fscache_bio, bio);
+ 	int ret;
+ 
+ 	iov_iter_bvec(&io->io.iter, ITER_DEST, io->bvecs, bio->bi_vcnt,
 -- 
 2.43.0
 
