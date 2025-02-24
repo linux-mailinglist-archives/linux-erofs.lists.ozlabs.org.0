@@ -1,76 +1,53 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 277F6A419DC
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2025 10:58:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1740391133;
-	bh=ajsOfd9FBnSAmCDC0EG4GS29hmOQ4DtAyNnSn8VTz3M=;
-	h=Date:To:Subject:References:In-Reply-To:List-Id:List-Unsubscribe:
-	 List-Archive:List-Post:List-Help:List-Subscribe:From:Reply-To:Cc:
-	 From;
-	b=nWr1ydtusgut9hOYzxcQZNa/NYDqJzPOYsB4jgCbdOQ0nSPGXNbSaJm8lwy6MGuUG
-	 Pct8Sy8c54wSvBl6UkqaxF16Yik7D+IIQktB16LBrLSAp3t9yTBWV6QF79KXqO5+Jr
-	 8GW/xPCPXiAYVFTAfVhpb6/nrX9OwZIxdJtTQsZiZ8VpV7sbtzDOy2W/jigkxKPy43
-	 5qOCkxdLPMD6e4q6hCWbespW/kDJqeqI4JqwB91KEFHwbB6qF69ZyRr04zTS/FuKU0
-	 A9eqXcJGr28b367ZBNNgNCL8TVaqBhQzNMR39gfZ6tUPv+SrUfCOgLrlK2QKk7Rvb6
-	 HvzxolRAi54Ug==
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB618A41F3C
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2025 13:38:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Z1bmF4j31z3057
-	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2025 20:58:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Z1gHw5MwMz30Vl
+	for <lists+linux-erofs@lfdr.de>; Mon, 24 Feb 2025 23:38:04 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740391132;
-	cv=none; b=A2Gwc3zBdLC3ieTakO6jJT870EwIQdbayqpT3k6SVfuqZBPEeUu86Op6MCtmLsYcP2usqa1I1Cti5VnWO/TzXp4s+T1zk4xJ5NIYSFNAu76mbSMlk/rXp7+TVVse2qiP3UZObMmu0QF1ratY09sRCQYYg8HYAQxM0aqj6WCPzlZ71MnKANIPHu6owcHBs+657T2L0M3Gcpj1bVbsM0A0c6O6yFq6B++emia0n4gTYUZ+Cz6mWavoKemdgCY8c7mlEQlefdTROpHcytyTo/mEYCu355BmmSD3zMq57NK/TEvdjkv5cGhXg9Jxse6rg6dPMjX8CvDe+KDKJdwL5Q/X6A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740400682;
+	cv=none; b=ZXQxmU06zuV6GLBV4qUeUUndjeCHIKV8hReL11yrakUY+kdinHPmFEdkQqM2XsRn6BgCjE0Tfj0c7Vz7C9DvBewE6FlkoXT6lGBktsZvvzRXXl41dwGr+yUBeH4zJiFx7dprKvRoAQKAaWTMzQVVlZmMgSImJtOSg7YY3tWacBVxcqO3Rp+SmWVtaQu6DhhzO3l2OmuQq5rRBp75U/NdPU8H9QhAnu0lkdGYzFyeONpkm9bCpkhTTcLg5c+0RUW/lNSRLAzTUU+A8sWQPSvRqqzOJYDh+SJ0dTWdBqn66j/221lz+Ul6hMqGcOQ5M8JfsBJ/2pNukLF1T1Du/vgqVQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1740391132; c=relaxed/relaxed;
-	bh=ajsOfd9FBnSAmCDC0EG4GS29hmOQ4DtAyNnSn8VTz3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fwhaBnCgtFmTIfVSmEdI8leicypwBWoa0DtEUyyJZiRFDY+VZJxfmkw3xc1HXhZwDsmrj3okhtvOk1JxKd5H2F4bDAEUZGryfWUupkTN/iogIUAeCfgXBjBMZ/jnTdGpMFU8aenKwth1+4OROZrMfegdQq4CEOc+iUdUC7fYMY3bOKkd8OmWyB6aVbHiQKupUF8EofXe8lZVmmpXU1MYTZrb+xBwwcCQfRI2B9G101Y6l7y167c+llAoigAWOxTLB6E1Gxu29oghxDpQgUpfs49E/IvqAdAQNvoPszi2fr7PKgEqkOCyTVfbD6Dx86YM2DLFeu7huEndJ6JiLw/nAw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=PO1llj0k; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gustavoars@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1740400682; c=relaxed/relaxed;
+	bh=kmX+/KBPQc3cQhROjOMmtM1SZ96Zp/Yb5gAWSXOJdx8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nawt/Dkv4ZyUESRIGHlrQuzC73iE+wq2C4iw2YbtnAHLLDBOS6RR9PeD/eWzkRvxX1dmNcnzESaw1t21HOUe1RhYchlFen3tjzZiy6VqDy5loXr5vJp29t957Ckhp6biq74ClZzksQn6NVYSkN0oowi+LxiyXx7SjiDCS77egL1XU/gFzjhAkHkgeXhRU1G3lk1LwDPCuKSyNSSoqMMibx5X1Mje0aSNdno7T4XUmeq+MCAZ/DP4JQyWY1reOpn7Sxg0EQpYC76/TyzyHzgHA5By5dwprgcHZayWhJtV0dkKFcSe+Ws7EdIf92Bx5/eVGBzedTP5cAkdYoOOIjWe8Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=jz6NvqAW; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=PO1llj0k;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=jz6NvqAW;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gustavoars@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z1bmC1npjz2yDS
-	for <linux-erofs@lists.ozlabs.org>; Mon, 24 Feb 2025 20:58:51 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 2998161193;
-	Mon, 24 Feb 2025 09:58:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30C03C4CED6;
-	Mon, 24 Feb 2025 09:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740391128;
-	bh=ZjDnXrksprqcdBpDIG/amfeXKgB6c4lJruai5qe5AhA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PO1llj0k12h5/Jb8CQuV57BkdgYfH/eqbVrzvtMdBv4G6bGDgxunu7xzsOu2NcAHI
-	 PlCedtu+UkUKI2UZXTaIRl0ltFlFDeBPxRC83CzYSEPFqd9bp3ovwjLYLSljJxTagn
-	 oQMHZa4qstKk4u3mvru+7XQSTjUiTQk13D5PzzBJChsWn2qBBphPqTK7QToFd0sa+8
-	 1ke1OxIH4CQChKZDNFzuPV765Og8okFL3psFARQzGAGcWXX7OWRgBsLkFUxf0X+hBS
-	 nkPPO3ctYZmqfgdFMDw2V+50D0ky4xivMPA1a1rP4V7OeKV3G3ikmsJPkHkS3frsB8
-	 HeGzCJ72wsshw==
-Date: Mon, 24 Feb 2025 20:28:43 +1030
-To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>
-Subject: [PATCH 4/8][next] erofs: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <334f60e884cc0314ef98731e60a1b419e462e2d2.1739957534.git.gustavoars@kernel.org>
-References: <cover.1739957534.git.gustavoars@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z1gHr1NNpz2yRM
+	for <linux-erofs@lists.ozlabs.org>; Mon, 24 Feb 2025 23:37:58 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740400674; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=kmX+/KBPQc3cQhROjOMmtM1SZ96Zp/Yb5gAWSXOJdx8=;
+	b=jz6NvqAWqbuN2Xh8q2z70EcRF7xQ+jzXXphOUymKMqEPUuMc2vlfNl3b24Nz5Z0JdUYr24hd+tuTzYes5sNF+zATBP+VNbI5LsZRSh9f3zTWJqBEkNUK1QqjBOuRQSam7RZ8NAW/N+PXL6VmpfjtYEXLtZ5Vr9iPnBIu9v6GFNo=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WQ7ms9G_1740400668 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 24 Feb 2025 20:37:52 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: [PATCH v2 1/2] erofs: simplify tail inline pcluster handling
+Date: Mon, 24 Feb 2025 20:37:46 +0800
+Message-ID: <20250224123747.1387122-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1739957534.git.gustavoars@kernel.org>
-X-Spam-Status: No, score=-0.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -83,154 +60,112 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: "Gustavo A. R. Silva via Linux-erofs" <linux-erofs@lists.ozlabs.org>
-Reply-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Commit ab92184ff8f1 ("erofs: add on-disk compressed tail-packing inline
+support") introduced the flag `Z_EROFS_ADVISE_INLINE_PCLUSTER`, which is
+redundant because `h_idata_size != 0` serves the same purpose.
 
-Change the type of the middle struct member currently causing trouble from
-`struct bio` to `struct bio_hdr`.
+Additionally, merge `z_idataoff` and `z_fragmentoff` since these two
+features are mutually exclusive for a given inode.
 
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure `struct bio`, through which we can access the
-flexible-array member in it, if necessary.
-
-With these changes fix the following warnings:
-fs/erofs/fileio.c:10:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/erofs/fscache.c:179:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/fileio.c  | 25 +++++++++++++++----------
- fs/erofs/fscache.c | 13 +++++++------
- 2 files changed, 22 insertions(+), 16 deletions(-)
+new patch.
 
-diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-index 0ffd1c63beeb..3080963caf78 100644
---- a/fs/erofs/fileio.c
-+++ b/fs/erofs/fileio.c
-@@ -7,7 +7,7 @@
+ fs/erofs/internal.h |  9 ++-------
+ fs/erofs/zmap.c     | 19 ++++++++++---------
+ 2 files changed, 12 insertions(+), 16 deletions(-)
+
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index f955793146f4..afce4b03f586 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -265,13 +265,8 @@ struct erofs_inode {
+ 			unsigned char  z_algorithmtype[2];
+ 			unsigned char  z_logical_clusterbits;
+ 			unsigned long  z_tailextent_headlcn;
+-			union {
+-				struct {
+-					erofs_off_t    z_idataoff;
+-					unsigned short z_idata_size;
+-				};
+-				erofs_off_t z_fragmentoff;
+-			};
++			erofs_off_t    z_fragmentoff;
++			unsigned short z_idata_size;
+ 		};
+ #endif	/* CONFIG_EROFS_FS_ZIP */
+ 	};
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index a0c1c6450a55..9518d341cd82 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -395,8 +395,8 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 				 struct erofs_map_blocks *map, int flags)
+ {
+ 	struct erofs_inode *const vi = EROFS_I(inode);
+-	bool ztailpacking = vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER;
+ 	bool fragment = vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
++	bool ztailpacking = vi->z_idata_size;
+ 	struct z_erofs_maprecorder m = {
+ 		.inode = inode,
+ 		.map = map,
+@@ -415,9 +415,8 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 	if (err)
+ 		goto unmap_out;
  
- struct erofs_fileio_rq {
- 	struct bio_vec bvecs[16];
--	struct bio bio;
-+	struct bio_hdr bio;
- 	struct kiocb iocb;
- 	struct super_block *sb;
- };
-@@ -26,20 +26,21 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
+-	if (ztailpacking && (flags & EROFS_GET_BLOCKS_FINDTAIL))
+-		vi->z_idataoff = m.nextpackoff;
+-
++	if ((flags & EROFS_GET_BLOCKS_FINDTAIL) && ztailpacking)
++		vi->z_fragmentoff = m.nextpackoff;
+ 	map->m_flags = EROFS_MAP_MAPPED | EROFS_MAP_ENCODED;
+ 	end = (m.lcn + 1ULL) << lclusterbits;
  
- 	if (ret > 0) {
- 		if (ret != rq->bio.bi_iter.bi_size) {
--			bio_advance(&rq->bio, ret);
--			zero_fill_bio(&rq->bio);
-+			bio_advance(container_of(&rq->bio, struct bio, __hdr),
-+				    ret);
-+			zero_fill_bio(container_of(&rq->bio, struct bio, __hdr));
- 		}
- 		ret = 0;
+@@ -472,7 +471,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
  	}
- 	if (rq->bio.bi_end_io) {
--		rq->bio.bi_end_io(&rq->bio);
-+		rq->bio.bi_end_io(container_of(&rq->bio, struct bio, __hdr));
- 	} else {
--		bio_for_each_folio_all(fi, &rq->bio) {
-+		bio_for_each_folio_all(fi, container_of(&rq->bio, struct bio, __hdr)) {
- 			DBG_BUGON(folio_test_uptodate(fi.folio));
- 			erofs_onlinefolio_end(fi.folio, ret);
- 		}
+ 	if (ztailpacking && m.lcn == vi->z_tailextent_headlcn) {
+ 		map->m_flags |= EROFS_MAP_META;
+-		map->m_pa = vi->z_idataoff;
++		map->m_pa = vi->z_fragmentoff;
+ 		map->m_plen = vi->z_idata_size;
+ 	} else if (fragment && m.lcn == vi->z_tailextent_headlcn) {
+ 		map->m_flags |= EROFS_MAP_FRAGMENT;
+@@ -565,6 +564,10 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 	vi->z_advise = le16_to_cpu(h->h_advise);
+ 	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
+ 	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
++	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER)
++		vi->z_fragmentoff = le32_to_cpu(h->h_fragmentoff);
++	else
++		vi->z_idata_size = le16_to_cpu(h->h_idata_size);
+ 
+ 	headnr = 0;
+ 	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX ||
+@@ -593,18 +596,16 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		goto out_put_metabuf;
  	}
--	bio_uninit(&rq->bio);
-+	bio_uninit(container_of(&rq->bio, struct bio, __hdr));
- 	kfree(rq);
- }
  
-@@ -68,7 +69,8 @@ static struct erofs_fileio_rq *erofs_fileio_rq_alloc(struct erofs_map_dev *mdev)
- 	struct erofs_fileio_rq *rq = kzalloc(sizeof(*rq),
- 					     GFP_KERNEL | __GFP_NOFAIL);
+-	if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER) {
++	if (vi->z_idata_size) {
+ 		struct erofs_map_blocks map = {
+ 			.buf = __EROFS_BUF_INITIALIZER
+ 		};
  
--	bio_init(&rq->bio, NULL, rq->bvecs, ARRAY_SIZE(rq->bvecs), REQ_OP_READ);
-+	bio_init(container_of(&rq->bio, struct bio, __hdr), NULL, rq->bvecs,
-+		 ARRAY_SIZE(rq->bvecs), REQ_OP_READ);
- 	rq->iocb.ki_filp = mdev->m_dif->file;
- 	rq->sb = mdev->m_sb;
- 	return rq;
-@@ -76,12 +78,13 @@ static struct erofs_fileio_rq *erofs_fileio_rq_alloc(struct erofs_map_dev *mdev)
+-		vi->z_idata_size = le16_to_cpu(h->h_idata_size);
+ 		err = z_erofs_do_map_blocks(inode, &map,
+ 					    EROFS_GET_BLOCKS_FINDTAIL);
+ 		erofs_put_metabuf(&map.buf);
  
- struct bio *erofs_fileio_bio_alloc(struct erofs_map_dev *mdev)
- {
--	return &erofs_fileio_rq_alloc(mdev)->bio;
-+	return container_of(&erofs_fileio_rq_alloc(mdev)->bio, struct bio, __hdr);
- }
- 
- void erofs_fileio_submit_bio(struct bio *bio)
- {
--	return erofs_fileio_rq_submit(container_of(bio, struct erofs_fileio_rq,
-+	return erofs_fileio_rq_submit(container_of(&bio->__hdr,
-+						   struct erofs_fileio_rq,
- 						   bio));
- }
- 
-@@ -150,7 +153,9 @@ static int erofs_fileio_scan_folio(struct erofs_fileio *io, struct folio *folio)
- 			}
- 			if (!attached++)
- 				erofs_onlinefolio_split(folio);
--			if (!bio_add_folio(&io->rq->bio, folio, len, cur))
-+			if (!bio_add_folio(container_of(&io->rq->bio,
-+							struct bio, __hdr),
-+					   folio, len, cur))
- 				goto io_retry;
- 			io->dev.m_pa += len;
- 		}
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index ce3d8737df85..719ec96c8f22 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -176,7 +176,7 @@ static int erofs_fscache_read_io_async(struct fscache_cookie *cookie,
- 
- struct erofs_fscache_bio {
- 	struct erofs_fscache_io io;
--	struct bio bio;		/* w/o bdev to share bio_add_page/endio() */
-+	struct bio_hdr bio;	/* w/o bdev to share bio_add_page/endio() */
- 	struct bio_vec bvecs[BIO_MAX_VECS];
- };
- 
-@@ -187,7 +187,7 @@ static void erofs_fscache_bio_endio(void *priv,
- 
- 	if (IS_ERR_VALUE(transferred_or_error))
- 		io->bio.bi_status = errno_to_blk_status(transferred_or_error);
--	io->bio.bi_end_io(&io->bio);
-+	io->bio.bi_end_io(container_of(&io->bio, struct bio, __hdr));
- 	BUILD_BUG_ON(offsetof(struct erofs_fscache_bio, io) != 0);
- 	erofs_fscache_io_put(&io->io);
- }
-@@ -197,17 +197,18 @@ struct bio *erofs_fscache_bio_alloc(struct erofs_map_dev *mdev)
- 	struct erofs_fscache_bio *io;
- 
- 	io = kmalloc(sizeof(*io), GFP_KERNEL | __GFP_NOFAIL);
--	bio_init(&io->bio, NULL, io->bvecs, BIO_MAX_VECS, REQ_OP_READ);
-+	bio_init(container_of(&io->bio, struct bio, __hdr), NULL, io->bvecs,
-+		 BIO_MAX_VECS, REQ_OP_READ);
- 	io->io.private = mdev->m_dif->fscache->cookie;
- 	io->io.end_io = erofs_fscache_bio_endio;
- 	refcount_set(&io->io.ref, 1);
--	return &io->bio;
-+	return container_of(&io->bio, struct bio, __hdr);
- }
- 
- void erofs_fscache_submit_bio(struct bio *bio)
- {
--	struct erofs_fscache_bio *io = container_of(bio,
--			struct erofs_fscache_bio, bio);
-+	struct erofs_fscache_bio *io =
-+		container_of(&bio->__hdr, struct erofs_fscache_bio, bio);
- 	int ret;
- 
- 	iov_iter_bvec(&io->io.iter, ITER_DEST, io->bvecs, bio->bi_vcnt,
+-		if (!map.m_plen ||
+-		    erofs_blkoff(sb, map.m_pa) + map.m_plen > sb->s_blocksize) {
++		if (erofs_blkoff(sb, map.m_pa) + map.m_plen > sb->s_blocksize) {
+ 			erofs_err(sb, "invalid tail-packing pclustersize %llu",
+ 				  map.m_plen);
+ 			err = -EFSCORRUPTED;
 -- 
-2.43.0
+2.43.5
 
