@@ -2,77 +2,67 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF051A495EA
-	for <lists+linux-erofs@lfdr.de>; Fri, 28 Feb 2025 10:52:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
-	s=201707; t=1740736326;
-	bh=faYVp8GFkdLY2L6w497VKx8qV+0YitNpq/szlX93xhA=;
-	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
-	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
-	b=mbELs0U8qYhw/ypePl04kG2yg/NskZtklTXUZBtX52GZfpQ/byQSNn9cyI0jsySAr
-	 UPYpHl0/u1UTcjWqN4/0JLZXyiMmsLxOFgdrD5pTmr9fUh1JTLuSFTpJx4kQukwz7c
-	 g4NJl2pXsd5zA4vo9NyoX01/Phe8k0YiM4jKaAEjMANLgXvYA9KfNayR0Wwre2C8WZ
-	 b/dmxxbGuSvH9LwQ71rN1QL19fla4rOyzKP6LC3SCR4RvQVKSR2gy83dtzJZ4S44wH
-	 LG9OaSvHfEIKBq14elrrPe/17kC5rHcRUjYohK+Eo/wyTqkg0u0nAZqT6MTWskQst6
-	 xEAEFkPrr+tPw==
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EE58A49F89
+	for <lists+linux-erofs@lfdr.de>; Fri, 28 Feb 2025 17:57:37 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Z43QZ3Rsnz3bwX
-	for <lists+linux-erofs@lfdr.de>; Fri, 28 Feb 2025 20:52:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Z4DsL56jLz3c1w
+	for <lists+linux-erofs@lfdr.de>; Sat,  1 Mar 2025 03:57:26 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.188
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740736325;
-	cv=none; b=LzwoP3N2AOJMkxbEkgE/+qo76xcE6rHv6/XQbU0X0OCcYDzBYnPd/dyvconRDV5SZdNH+iBS0NLakkweSNO8v4vLiP4fzNroW6CFgTKyO3GCLIAlFzrqBz8yX0mgBQJxOGgII2Pr0eaaMYJ55qEObwEJPybEKS8YQmC09UzrJRLKBrNE0/+EB/W/6Dq6WknUn3khJWj5hr9mEKu/b7r7QSGmXqyg2NUE+dEk2ZGTaoweBylLrjb9EElHE2hvLHZfHwUBei5qDy1BtK8WbMUA+BLmLgqkh9nZvN5F6CIGpMLggFowZ0Ktn8lrpvx6ohWzTb/xcomqomRa8I0yF/napg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.16.41.108
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740761844;
+	cv=none; b=gup5XYoyh8hAAam0Kg1BsexM4UrboqpOBTTIZQ7ZvOVBnidUnh7Nb29/jLVrWOS/44VrjBjpU/TNT074K0HGLca6L5BZWaHusENV2MCL9+KHSgjynE1srj6G9Z+kL21ScPYcMAvqmPEGhN7fELpyHdFN7pSfigJ+GLP2nN/v82TplcAbKckWR3X4fcLnuMN/FAuS3HgoIBZs9Kd/mmJ5sH6fexwSj4jCf/yPLJnwiK7GeQ1F5KVtL0zuYe880znvMb+5UIzB7yYzyznZH1UcOz3ioCxThUdyhMmuQ6m9jYSiuVrIRZuPpPvsJJUqdHE8ZknWYZwcC86LH+HSkYxZdg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1740736325; c=relaxed/relaxed;
-	bh=faYVp8GFkdLY2L6w497VKx8qV+0YitNpq/szlX93xhA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kPflwF8MiaOcFMsFoMeJQKpheTTwuFaD0g2X2zExPFh3wUvFIz/nYz5lL1LVwHtDtRlXZHh0cJ1F04cPUCHPwBCi46xZ02/LEyI9ekvW+yZ9lQ2MqPX6omAmQEUPtmD15FJXHo/8WR7Hsfbgb8rbkAnxeSo9JfZyyUDMYTJiRJfjNny1WbMR96AZ27acsWSeYhxtKHeyY7XsGy7tT2PDoIgGyCK5tkTDrKu6Bpi+lauXiDgvbOxGDdc8irCi3Jxx7m6BvobBwH4jupTMfoz4IBHbax0AXU30tsgGyDDUYOtKM8h5wc5yESTGKmYVRqCHYuUIlI3nWy8PWOEDxgYv/w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1740761844; c=relaxed/relaxed;
+	bh=kRQ70sVXyqLeMUokAjV42mjATF1YB0UFdNJz6A64LDw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GUoy9XPtM3M2HxhbpDut7ngLwrDFCXPGHT2tVO+5IMdsVFynBolv6WenAc6Vl31xfhxrhhS32eoEjPThtuGbauIiI+/F3qSPeAGJNx4XmnmtpMj7gVgjd8XILul6Sipsyz5IwI6nYHFhcRnkMfiXZregTQo9yaO+BooAw+4Y1OjOk5KfyYY5SOZGbUaV9ZFR4iHORvHWOcJn8OSYFCWbQ9ABiuxSlaD9rbjGraXr0O+M0pKstHdUzdqRZs+qJd/7LUx3VPG3oKJj8RHr6Fy32CY9rXP1UcMHAQxQVdRLIhAHN5KnpT09O0vsC9MzZCr13mpuAJxFLfVDzaVk/1O2hg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass (client-ip=195.16.41.108; helo=mail-gw02.astralinux.ru; envelope-from=apanov@astralinux.ru; receiver=lists.ozlabs.org) smtp.mailfrom=astralinux.ru
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=astralinux.ru (client-ip=195.16.41.108; helo=mail-gw02.astralinux.ru; envelope-from=apanov@astralinux.ru; receiver=lists.ozlabs.org)
+X-Greylist: delayed 330 seconds by postgrey-1.37 at boromir; Sat, 01 Mar 2025 03:57:22 AEDT
+Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [195.16.41.108])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z43QW1Rh9z2xGC
-	for <linux-erofs@lists.ozlabs.org>; Fri, 28 Feb 2025 20:52:01 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Z43NZ5t4zzVmX2;
-	Fri, 28 Feb 2025 17:50:22 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 737AB1800B3;
-	Fri, 28 Feb 2025 17:51:54 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 28 Feb 2025 17:51:54 +0800
-To: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Shameer
- Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian
-	<kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>, Chris
- Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
-	<dsterba@suse.com>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
- Dhavale <dhavale@google.com>, Carlos Maiolino <cem@kernel.org>, "Darrick J.
- Wong" <djwong@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jesper
- Dangaard Brouer <hawk@kernel.org>, Ilias Apalodimas
-	<ilias.apalodimas@linaro.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Trond Myklebust
-	<trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Chuck Lever
-	<chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Subject: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating only NULL elements
-Date: Fri, 28 Feb 2025 17:44:20 +0800
-Message-ID: <20250228094424.757465-1-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.30.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z4DsG6YCGz3bnx
+	for <linux-erofs@lists.ozlabs.org>; Sat,  1 Mar 2025 03:57:22 +1100 (AEDT)
+Received: from gca-msk-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw02.astralinux.ru (Postfix) with ESMTP id ED45A1F9D3;
+	Fri, 28 Feb 2025 19:51:41 +0300 (MSK)
+Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail03.astralinux.ru [10.177.185.108])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
+	Fri, 28 Feb 2025 19:51:38 +0300 (MSK)
+Received: from rbta-msk-lt-156703.astralinux.ru (unknown [10.177.20.117])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4Z4Dkd0wkWz1h0PW;
+	Fri, 28 Feb 2025 19:51:37 +0300 (MSK)
+From: Alexey Panov <apanov@astralinux.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 6.1 0/2] erofs: handle overlapped pclusters out of crafted images properly
+Date: Fri, 28 Feb 2025 19:51:01 +0300
+Message-Id: <20250228165103.26775-1-apanov@astralinux.ru>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.90.30.45]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemf200006.china.huawei.com (7.185.36.61)
-X-Spam-Status: No, score=-2.3 required=5.0 tests=RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+X-KSMG-AntiPhishing: NotDetected, bases: 2025/02/28 15:31:00
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: apanov@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_uf_ne_domains}, {Tracking_internal2}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;lore.kernel.org:7.1.1;astralinux.ru:7.1.1;new-mail.astralinux.ru:7.1.1;127.0.0.199:7.1.2;nvd.nist.gov:7.1.1, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 191391 [Feb 28 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/02/28 06:44:00 #27492638
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected, bases: 2025/02/28 15:31:00
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
+X-Spam-Status: No, score=0.0 required=5.0 tests=SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
@@ -86,301 +76,25 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-From: Yunsheng Lin via Linux-erofs <linux-erofs@lists.ozlabs.org>
-Reply-To: Yunsheng Lin <linyunsheng@huawei.com>
-Cc: linux-nfs@vger.kernel.org, kvm@vger.kernel.org, linux-erofs@lists.ozlabs.org, Dave Chinner <david@fromorbit.com>, virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, linux-mm@kvack.org, Yunsheng Lin <linyunsheng@huawei.com>, netdev@vger.kernel.org, Mel Gorman <mgorman@techsingularity.net>, linux-btrfs@vger.kernel.org, Luiz Capitulino <luizcap@redhat.com>
+Cc: Max Kellermann <max.kellermann@ionos.com>, lvc-project@linuxtesting.org, Chao Yu <chao@kernel.org>, linux-kernel@vger.kernel.org, Alexey Panov <apanov@astralinux.ru>, Yue Hu <huyue2@coolpad.com>, Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-As mentioned in [1], it seems odd to check NULL elements in
-the middle of page bulk allocating, and it seems caller can
-do a better job of bulk allocating pages into a whole array
-sequentially without checking NULL elements first before
-doing the page bulk allocation for most of existing users.
+Commit 9e2f9d34dd12 ("erofs: handle overlapped pclusters out of crafted
+images properly") fixes CVE-2024-47736 [1] but brings another problem [2].
+So commit 1a2180f6859c ("erofs: fix PSI memstall accounting") should be
+backported too.
 
-Through analyzing of bulk allocation API used in fs, it
-seems that the callers are depending on the assumption of
-populating only NULL elements in fs/btrfs/extent_io.c and
-net/sunrpc/svc_xprt.c while erofs and btrfs don't, see:
-commit 91d6ac1d62c3 ("btrfs: allocate page arrays using bulk page allocator")
-commit d6db47e571dc ("erofs: do not use pagepool in z_erofs_gbuf_growsize()")
-commit c9fa563072e1 ("xfs: use alloc_pages_bulk_array() for buffers")
-commit f6e70aab9dfe ("SUNRPC: refresh rq_pages using a bulk page allocator")
+[1] https://nvd.nist.gov/vuln/detail/CVE-2024-47736
+[2] https://lore.kernel.org/all/CAKPOu+8tvSowiJADW2RuKyofL_CSkm_SuyZA7ME5vMLWmL6pqw@mail.gmail.com/
 
-Change SUNRPC and btrfs to not depend on the assumption.
-Other existing callers seems to be passing all NULL elements
-via memset, kzalloc, etc.
+Gao Xiang (2):
+  erofs: handle overlapped pclusters out of crafted images properly
+  erofs: fix PSI memstall accounting
 
-Remove assumption of populating only NULL elements and treat
-page_array as output parameter like kmem_cache_alloc_bulk().
-Remove the above assumption also enable the caller to not
-zero the array before calling the page bulk allocating API,
-which has about 1~2 ns performance improvement for the test
-case of time_bench_page_pool03_slow() for page_pool in a
-x86 vm system, this reduces some performance impact of
-fixing the DMA API misuse problem in [2], performance
-improves from 87.886 ns to 86.429 ns.
+ fs/erofs/zdata.c | 66 +++++++++++++++++++++++++-----------------------
+ 1 file changed, 34 insertions(+), 32 deletions(-)
 
-1. https://lore.kernel.org/all/bd8c2f5c-464d-44ab-b607-390a87ea4cd5@huawei.com/
-2. https://lore.kernel.org/all/20250212092552.1779679-1-linyunsheng@huawei.com/
-CC: Jesper Dangaard Brouer <hawk@kernel.org>
-CC: Luiz Capitulino <luizcap@redhat.com>
-CC: Mel Gorman <mgorman@techsingularity.net>
-CC: Dave Chinner <david@fromorbit.com>
-CC: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Acked-by: Jeff Layton <jlayton@kernel.org>
----
-V2:
-1. Drop RFC tag and rebased on latest linux-next.
-2. Fix a compile error for xfs.
-3. Defragmemt the page_array for SUNRPC and btrfs.
----
- drivers/vfio/pci/virtio/migrate.c |  2 --
- fs/btrfs/extent_io.c              | 23 +++++++++++++++++-----
- fs/erofs/zutil.c                  | 12 ++++++------
- fs/xfs/xfs_buf.c                  |  9 +++++----
- mm/page_alloc.c                   | 32 +++++--------------------------
- net/core/page_pool.c              |  3 ---
- net/sunrpc/svc_xprt.c             | 22 +++++++++++++++++----
- 7 files changed, 52 insertions(+), 51 deletions(-)
-
-diff --git a/drivers/vfio/pci/virtio/migrate.c b/drivers/vfio/pci/virtio/migrate.c
-index ba92bb4e9af9..9f003a237dec 100644
---- a/drivers/vfio/pci/virtio/migrate.c
-+++ b/drivers/vfio/pci/virtio/migrate.c
-@@ -91,8 +91,6 @@ static int virtiovf_add_migration_pages(struct virtiovf_data_buffer *buf,
- 		if (ret)
- 			goto err_append;
- 		buf->allocated_length += filled * PAGE_SIZE;
--		/* clean input for another bulk allocation */
--		memset(page_list, 0, filled * sizeof(*page_list));
- 		to_fill = min_t(unsigned int, to_alloc,
- 				PAGE_SIZE / sizeof(*page_list));
- 	} while (to_alloc > 0);
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index f0a1da40d641..ef52cedd9873 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -623,13 +623,26 @@ int btrfs_alloc_page_array(unsigned int nr_pages, struct page **page_array,
- 			   bool nofail)
- {
- 	const gfp_t gfp = nofail ? (GFP_NOFS | __GFP_NOFAIL) : GFP_NOFS;
--	unsigned int allocated;
-+	unsigned int allocated, ret;
- 
--	for (allocated = 0; allocated < nr_pages;) {
--		unsigned int last = allocated;
-+	/* Defragment page_array so pages can be bulk allocated into remaining
-+	 * NULL elements sequentially.
-+	 */
-+	for (allocated = 0, ret = 0; ret < nr_pages; ret++) {
-+		if (page_array[ret]) {
-+			page_array[allocated] = page_array[ret];
-+			if (ret != allocated)
-+				page_array[ret] = NULL;
-+
-+			allocated++;
-+		}
-+	}
- 
--		allocated = alloc_pages_bulk(gfp, nr_pages, page_array);
--		if (unlikely(allocated == last)) {
-+	while (allocated < nr_pages) {
-+		ret = alloc_pages_bulk(gfp, nr_pages - allocated,
-+				       page_array + allocated);
-+		allocated += ret;
-+		if (unlikely(!ret)) {
- 			/* No progress, fail and do cleanup. */
- 			for (int i = 0; i < allocated; i++) {
- 				__free_page(page_array[i]);
-diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
-index 55ff2ab5128e..1c50b5e27371 100644
---- a/fs/erofs/zutil.c
-+++ b/fs/erofs/zutil.c
-@@ -85,13 +85,13 @@ int z_erofs_gbuf_growsize(unsigned int nrpages)
- 
- 		for (j = 0; j < gbuf->nrpages; ++j)
- 			tmp_pages[j] = gbuf->pages[j];
--		do {
--			last = j;
--			j = alloc_pages_bulk(GFP_KERNEL, nrpages,
--					     tmp_pages);
--			if (last == j)
-+
-+		for (last = j; last < nrpages; last += j) {
-+			j = alloc_pages_bulk(GFP_KERNEL, nrpages - last,
-+					     tmp_pages + last);
-+			if (!j)
- 				goto out;
--		} while (j != nrpages);
-+		}
- 
- 		ptr = vmap(tmp_pages, nrpages, VM_MAP, PAGE_KERNEL);
- 		if (!ptr)
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 5d560e9073f4..b4e95b2dd0f0 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -319,16 +319,17 @@ xfs_buf_alloc_pages(
- 	 * least one extra page.
- 	 */
- 	for (;;) {
--		long	last = filled;
-+		long	alloc;
- 
--		filled = alloc_pages_bulk(gfp_mask, bp->b_page_count,
--					  bp->b_pages);
-+		alloc = alloc_pages_bulk(gfp_mask, bp->b_page_count - filled,
-+					 bp->b_pages + filled);
-+		filled += alloc;
- 		if (filled == bp->b_page_count) {
- 			XFS_STATS_INC(bp->b_mount, xb_page_found);
- 			break;
- 		}
- 
--		if (filled != last)
-+		if (alloc)
- 			continue;
- 
- 		if (flags & XBF_READ_AHEAD) {
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index f07c95eb5ac1..625d14ee4a41 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -4599,9 +4599,6 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
-  * This is a batched version of the page allocator that attempts to
-  * allocate nr_pages quickly. Pages are added to the page_array.
-  *
-- * Note that only NULL elements are populated with pages and nr_pages
-- * is the maximum number of pages that will be stored in the array.
-- *
-  * Returns the number of pages in the array.
-  */
- unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
-@@ -4617,29 +4614,18 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
- 	struct alloc_context ac;
- 	gfp_t alloc_gfp;
- 	unsigned int alloc_flags = ALLOC_WMARK_LOW;
--	int nr_populated = 0, nr_account = 0;
--
--	/*
--	 * Skip populated array elements to determine if any pages need
--	 * to be allocated before disabling IRQs.
--	 */
--	while (nr_populated < nr_pages && page_array[nr_populated])
--		nr_populated++;
-+	int nr_populated = 0;
- 
- 	/* No pages requested? */
- 	if (unlikely(nr_pages <= 0))
- 		goto out;
- 
--	/* Already populated array? */
--	if (unlikely(nr_pages - nr_populated == 0))
--		goto out;
--
- 	/* Bulk allocator does not support memcg accounting. */
- 	if (memcg_kmem_online() && (gfp & __GFP_ACCOUNT))
- 		goto failed;
- 
- 	/* Use the single page allocator for one page. */
--	if (nr_pages - nr_populated == 1)
-+	if (nr_pages == 1)
- 		goto failed;
- 
- #ifdef CONFIG_PAGE_OWNER
-@@ -4711,24 +4697,16 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
- 	/* Attempt the batch allocation */
- 	pcp_list = &pcp->lists[order_to_pindex(ac.migratetype, 0)];
- 	while (nr_populated < nr_pages) {
--
--		/* Skip existing pages */
--		if (page_array[nr_populated]) {
--			nr_populated++;
--			continue;
--		}
--
- 		page = __rmqueue_pcplist(zone, 0, ac.migratetype, alloc_flags,
- 								pcp, pcp_list);
- 		if (unlikely(!page)) {
- 			/* Try and allocate at least one page */
--			if (!nr_account) {
-+			if (!nr_populated) {
- 				pcp_spin_unlock(pcp);
- 				goto failed_irq;
- 			}
- 			break;
- 		}
--		nr_account++;
- 
- 		prep_new_page(page, 0, gfp, 0);
- 		set_page_refcounted(page);
-@@ -4738,8 +4716,8 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
- 	pcp_spin_unlock(pcp);
- 	pcp_trylock_finish(UP_flags);
- 
--	__count_zid_vm_events(PGALLOC, zone_idx(zone), nr_account);
--	zone_statistics(zonelist_zone(ac.preferred_zoneref), zone, nr_account);
-+	__count_zid_vm_events(PGALLOC, zone_idx(zone), nr_populated);
-+	zone_statistics(zonelist_zone(ac.preferred_zoneref), zone, nr_populated);
- 
- out:
- 	return nr_populated;
-diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-index acef1fcd8ddc..200b99375cb6 100644
---- a/net/core/page_pool.c
-+++ b/net/core/page_pool.c
-@@ -544,9 +544,6 @@ static noinline netmem_ref __page_pool_alloc_pages_slow(struct page_pool *pool,
- 	if (unlikely(pool->alloc.count > 0))
- 		return pool->alloc.cache[--pool->alloc.count];
- 
--	/* Mark empty alloc.cache slots "empty" for alloc_pages_bulk */
--	memset(&pool->alloc.cache, 0, sizeof(void *) * bulk);
--
- 	nr_pages = alloc_pages_bulk_node(gfp, pool->p.nid, bulk,
- 					 (struct page **)pool->alloc.cache);
- 	if (unlikely(!nr_pages))
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index ae25405d8bd2..80fbc4ffef6d 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -663,9 +663,23 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
- 		pages = RPCSVC_MAXPAGES;
- 	}
- 
--	for (filled = 0; filled < pages; filled = ret) {
--		ret = alloc_pages_bulk(GFP_KERNEL, pages, rqstp->rq_pages);
--		if (ret > filled)
-+	/* Defragment the rqstp->rq_pages so pages can be bulk allocated into
-+	 * remaining NULL elements sequentially.
-+	 */
-+	for (filled = 0, ret = 0; ret < pages; ret++) {
-+		if (rqstp->rq_pages[ret]) {
-+			rqstp->rq_pages[filled] = rqstp->rq_pages[ret];
-+			if (ret != filled)
-+				rqstp->rq_pages[ret] = NULL;
-+
-+			filled++;
-+		}
-+	}
-+
-+	for (; filled < pages; filled += ret) {
-+		ret = alloc_pages_bulk(GFP_KERNEL, pages - filled,
-+				       rqstp->rq_pages + filled);
-+		if (ret)
- 			/* Made progress, don't sleep yet */
- 			continue;
- 
-@@ -674,7 +688,7 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
- 			set_current_state(TASK_RUNNING);
- 			return false;
- 		}
--		trace_svc_alloc_arg_err(pages, ret);
-+		trace_svc_alloc_arg_err(pages, filled);
- 		memalloc_retry_wait(GFP_KERNEL);
- 	}
- 	rqstp->rq_page_end = &rqstp->rq_pages[pages];
 -- 
-2.33.0
+2.39.5
 
