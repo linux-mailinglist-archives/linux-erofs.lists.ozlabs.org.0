@@ -2,46 +2,46 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5925A4AC62
-	for <lists+linux-erofs@lfdr.de>; Sat,  1 Mar 2025 15:50:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F3FD0A4AC69
+	for <lists+linux-erofs@lfdr.de>; Sat,  1 Mar 2025 15:50:44 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Z4p0N0xhSz3cB1
-	for <lists+linux-erofs@lfdr.de>; Sun,  2 Mar 2025 01:50:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Z4p0T3zslz3cDh
+	for <lists+linux-erofs@lfdr.de>; Sun,  2 Mar 2025 01:50:33 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740840624;
-	cv=none; b=BIMzeT0SZBxHr64NZbFgaGomd+w06EM4afgdaMJqX2fOyenhh5jCLxmm5J3KsxNHBLaVzRYH+eqWvufMaT15gY8Dq1RLNHBBz3nbHNroHkl93LUXChgs347lZvBrkKd+fAalSoTP8xqrBNA8BnKCOWV75sCo52uIIMg3TOEQeGFkoL/wF0VdzUBMiqYCVFsxvcKRC22CmrnPQFQqLEB7xKpmaaVwLCDLdKepQRv0BEl6+k6GrYb78CuujuqxMFwR/DDJVrldXrM8OLnsGZwMmYqgLNneM/kpBbYz8bk/P7JR7iHdziB8ros68WwmTDyYyRWsR9zMXwAHcCAjS+7HkA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740840626;
+	cv=none; b=KBfsmWIHHyhl3J5C9dxNQEV700ywQwVMVLKK+rV/3ykPRDLBGWDbEhl76pZLe/UDLgtPDGNZ4XFvxqMlSHCyCY1PUhHQIhK8FiLHAD/8fXPVtpzoyMBs29fGhuFnPgAvLdhv+DDq7fk5BSTVU0xFruashPv2CdSdQdJHNr/x08j9ieV+OmUA9JjXVnw+9qZv9QSmwMg8Ly+QdCOqKzXJCgUZbcFAlHzkmXsCFlS4AA2tAvC74jO2Gjqg/w5KgnVwhm2bZYF0ZHFkutNcAugFNb1R4JIdCqTGhsQ/kbYwPbUdN3ZGeiCVCIleowTl4/BcqiDRwMjLuec2H0LBmqE93Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1740840624; c=relaxed/relaxed;
-	bh=wz9frzctN1J75p3iB2EhAvBmgsu+2wgIZcjjMDkmW/o=;
+	t=1740840626; c=relaxed/relaxed;
+	bh=cEQ88iz4dOmNw4DeKVvc23lhQVA1B+Iv1dIwRL42kpM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g5geiPFEkBrjZu6GPp8JoN/W2e5GNtyz6c3Ph9YOXQi2iuYWG9d5KZo6vQ20lsMAAPpU1pVA9y54uW3Gh5d2AZLxU1RBE5AzE0KA3gRQ4+5jvtF7ax+flHTCGwV6tE+6kAm5Q8sespJoUEdu/B+ip/vx/sBveLKa9eM1aboKacs0UGJoqikDVLx59R5gn5hkWgX1Xmm6vhWsQkxpECsEd7+1UNaF1i+rOrDdyYgfIx0OfpdGdEhypRYsdVtfuOG1tVkzkWb3x5s9s5GBl6wgdFmG4AXSdAiSKCegokhH/Zrm8nqbRO0ifp6c9Hu30dGnsXe34OD+ANbQKD8jXZu9Ig==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fl4G5tdu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=acndKF1HSFPpGt1L0vNdIwIG+rmPgoRcg5WDTWaCGCvNRa77BAERdA9nOUWJUlcMSMpGZ+BTuZkziz9JbIIH/p+j7CVlj5kbQPXPZ/LU4hczaEldO+buxi/MpnbDSIz5oU1Hby6kPsX8/x+pd4jldWRt4qSXcj06vwFwzW0yu4lFkL+izuI5nZ0at3nuTpG5fRQkZbyAK4en9pFsvnDUdRbkjViYa66V/7trho20F2Ae1iX4VbITsrFg4dnGwJO1p9LtpQVHT3xxzR+A26i6h5y6OLEBJNhi6ArLpUJugd9XOYooqBkCz5YXjVEx/HkOAARLqOavQKJVU5RSqLenCQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=dBwZWNLz; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fl4G5tdu;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=dBwZWNLz;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z4p0F17Dsz2xCW
-	for <linux-erofs@lists.ozlabs.org>; Sun,  2 Mar 2025 01:50:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z4p0G06Xmz2xDD
+	for <linux-erofs@lists.ozlabs.org>; Sun,  2 Mar 2025 01:50:21 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1740840616; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=wz9frzctN1J75p3iB2EhAvBmgsu+2wgIZcjjMDkmW/o=;
-	b=fl4G5tduyYpplGZuyDIpuq0CEuzBMg1get/fGRjDFXQzOgboeTgKdw7AWVZuDXcRGtoAfLMzDMRlVPwQa4hwEFQBuddMeJ94TgP9EapOsnO9RTMuUpH9CJIwN77hw3QoMJCPrDQSRXg0UATVtbz9L95F6NDwHCD7HmJswNpzw0E=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WQSgWR0_1740840615 cluster:ay36)
+	t=1740840617; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=cEQ88iz4dOmNw4DeKVvc23lhQVA1B+Iv1dIwRL42kpM=;
+	b=dBwZWNLzFjxOzux7d7yHh23P6buBwCeQ0bQXIqoLxFBIY3QMpq70dv0kfC4raPoI/LkwM6yhNzad+hYT2aJqEdGNNjFTrx6dDxzDbySOuCzZUU1iYtb0OOen1jyzs+Uh/BmHLdW25q0mvqkSJ3N1zmn6dxg3WRV9lcz30jBj7NM=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WQSgWRM_1740840616 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 01 Mar 2025 22:50:15 +0800
+          Sat, 01 Mar 2025 22:50:16 +0800
 From: Hongzhen Luo <hongzhen@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [RFC PATCH v6 4/7] erofs: introduce the page cache share feature
-Date: Sat,  1 Mar 2025 22:49:41 +0800
-Message-ID: <20250301145002.2420830-5-hongzhen@linux.alibaba.com>
+Subject: [RFC PATCH v6 5/7] erofs: support unencoded inodes for page cache share
+Date: Sat,  1 Mar 2025 22:49:42 +0800
+Message-ID: <20250301145002.2420830-6-hongzhen@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250301145002.2420830-1-hongzhen@linux.alibaba.com>
 References: <20250301145002.2420830-1-hongzhen@linux.alibaba.com>
@@ -67,401 +67,470 @@ Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-Currently, reading files with different paths (or names) but the same
-content will consume multiple copies of the page cache, even if the
-content of these page caches is the same. For example, reading
-identical files (e.g., *.so files) from two different minor versions of
-container images will cost multiple copies of the same page cache,
-since different containers have different mount points. Therefore,
-sharing the page cache for files with the same content can save memory.
+This patch adds inode page cache sharing functionality for unencoded
+files.
 
-This introduces the page cache share feature in erofs. It allocate a
-deduplicated inode and use its page cache as shared. Reads for files
-with identical content will ultimately be routed to the page cache of
-the deduplicated inode. In this way, a single page cache satisfies
-multiple read requests for different files with the same contents.
+I conducted experiments in the container environment. Below is the
+memory usage for reading all files in two different minor versions
+of container images:
+
++-------------------+------------------+-------------+---------------+
+|       Image       | Page Cache Share | Memory (MB) |    Memory     |
+|                   |                  |             | Reduction (%) |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     241     |       -       |
+|       redis       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |     163     |      33%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     872     |       -       |
+|      postgres     +------------------+-------------+---------------+
+|    16.1 & 16.2    |        Yes       |     630     |      28%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     2771    |       -       |
+|     tensorflow    +------------------+-------------+---------------+
+|  2.11.0 & 2.11.1  |        Yes       |     2340    |      16%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     926     |       -       |
+|       mysql       +------------------+-------------+---------------+
+|  8.0.11 & 8.0.12  |        Yes       |     735     |      21%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     390     |       -       |
+|       nginx       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |     219     |      44%      |
++-------------------+------------------+-------------+---------------+
+|       tomcat      |        No        |     924     |       -       |
+| 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+|                   |        Yes       |     474     |      49%      |
++-------------------+------------------+-------------+---------------+
+
+Additionally, the table below shows the runtime memory usage of the
+container:
+
++-------------------+------------------+-------------+---------------+
+|       Image       | Page Cache Share | Memory (MB) |    Memory     |
+|                   |                  |             | Reduction (%) |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |      35     |       -       |
+|       redis       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |      28     |      20%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     149     |       -       |
+|      postgres     +------------------+-------------+---------------+
+|    16.1 & 16.2    |        Yes       |      95     |      37%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     1028    |       -       |
+|     tensorflow    +------------------+-------------+---------------+
+|  2.11.0 & 2.11.1  |        Yes       |     930     |      10%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     155     |       -       |
+|       mysql       +------------------+-------------+---------------+
+|  8.0.11 & 8.0.12  |        Yes       |     132     |      15%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |      25     |       -       |
+|       nginx       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |      20     |      20%      |
++-------------------+------------------+-------------+---------------+
+|       tomcat      |        No        |     186     |       -       |
+| 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+|                   |        Yes       |      98     |      48%      |
++-------------------+------------------+-------------+---------------+
 
 Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
 ---
- fs/erofs/Makefile   |   1 +
- fs/erofs/internal.h |  17 ++++
- fs/erofs/ishare.c   | 238 ++++++++++++++++++++++++++++++++++++++++++++
- fs/erofs/ishare.h   |  28 ++++++
- fs/erofs/super.c    |  28 +++++-
- 5 files changed, 311 insertions(+), 1 deletion(-)
- create mode 100644 fs/erofs/ishare.c
- create mode 100644 fs/erofs/ishare.h
+ fs/erofs/data.c     | 82 ++++++++++++++++++++++++++++++++++++++++----
+ fs/erofs/inode.c    |  5 +++
+ fs/erofs/internal.h |  4 +++
+ fs/erofs/ishare.c   | 83 +++++++++++++++++++++++++++++++++++++++++++++
+ fs/erofs/ishare.h   | 27 +++++++++++++++
+ fs/erofs/super.c    | 11 ++++++
+ 6 files changed, 205 insertions(+), 7 deletions(-)
 
-diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
-index 4331d53c7109..2eb35bec8472 100644
---- a/fs/erofs/Makefile
-+++ b/fs/erofs/Makefile
-@@ -9,3 +9,4 @@ erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
- erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
- erofs-$(CONFIG_EROFS_FS_BACKED_BY_FILE) += fileio.o
- erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
-+erofs-$(CONFIG_EROFS_FS_INODE_SHARE) += ishare.o
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 21bf9b694048..49613b257a6a 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -286,6 +286,22 @@ struct erofs_inode {
- 		};
- #endif	/* CONFIG_EROFS_FS_ZIP */
- 	};
-+#ifdef CONFIG_EROFS_FS_INODE_SHARE
-+	union {
-+		/* internal dedup inode */
-+		struct {
-+			char *fingerprint;
-+			spinlock_t lock;
-+			/* all backing inodes */
-+			struct list_head backing_head;
-+		};
-+
-+		struct {
-+			struct inode *ishare;
-+			struct list_head backing_link;
-+		};
-+	};
-+#endif
- 	/* the corresponding vfs inode */
- 	struct inode vfs_inode;
- };
-@@ -382,6 +398,7 @@ extern const struct inode_operations erofs_dir_iops;
- 
- extern const struct file_operations erofs_file_fops;
- extern const struct file_operations erofs_dir_fops;
-+extern const struct file_operations erofs_ishare_fops;
- 
- extern const struct iomap_ops z_erofs_iomap_report_ops;
- 
-diff --git a/fs/erofs/ishare.c b/fs/erofs/ishare.c
-new file mode 100644
-index 000000000000..77786ec6834e
---- /dev/null
-+++ b/fs/erofs/ishare.c
-@@ -0,0 +1,238 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) 2024, Alibaba Cloud
-+ */
-+#include <linux/xxhash.h>
-+#include <linux/refcount.h>
-+#include <linux/mount.h>
-+#include <linux/mutex.h>
-+#include <linux/ramfs.h>
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index 0cd6b5c4df98..b7d7e67832eb 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2021, Alibaba Cloud
+  */
+ #include "internal.h"
 +#include "ishare.h"
-+#include "internal.h"
-+#include "xattr.h"
-+
-+static DEFINE_MUTEX(erofs_ishare_lock);
-+static struct vfsmount *erofs_ishare_mnt;
-+static refcount_t erofs_ishare_supers;
-+
-+int erofs_ishare_init(struct super_block *sb)
-+{
-+	struct vfsmount *mnt = NULL;
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+
-+	if (!sbi->ishare_key)
-+		return 0;
-+
-+	mutex_lock(&erofs_ishare_lock);
-+	if (erofs_ishare_mnt) {
-+		refcount_inc(&erofs_ishare_supers);
-+	} else {
-+		mnt = kern_mount(&erofs_anon_fs_type);
-+		if (!IS_ERR(mnt)) {
-+			erofs_ishare_mnt = mnt;
-+			refcount_set(&erofs_ishare_supers, 1);
-+		}
-+	}
-+	mutex_unlock(&erofs_ishare_lock);
-+	return IS_ERR(mnt) ? PTR_ERR(mnt) : 0;
-+}
-+
-+void erofs_ishare_exit(struct super_block *sb)
-+{
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+	struct vfsmount *tmp;
-+
-+	if (!sbi->ishare_key || !erofs_ishare_mnt)
-+		return;
-+
-+	kfree(sbi->ishare_key);
-+
-+	mutex_lock(&erofs_ishare_lock);
-+	if (refcount_dec_and_test(&erofs_ishare_supers)) {
-+		tmp = erofs_ishare_mnt;
-+		erofs_ishare_mnt = NULL;
-+		mutex_unlock(&erofs_ishare_lock);
-+		kern_unmount(tmp);
-+		mutex_lock(&erofs_ishare_lock);
-+	}
-+	mutex_unlock(&erofs_ishare_lock);
-+}
-+
-+static int erofs_ishare_iget5_eq(struct inode *inode, void *data)
-+{
-+	struct erofs_inode *vi = EROFS_I(inode);
-+
-+	return vi->fingerprint && memcmp(vi->fingerprint, data,
-+			sizeof(size_t) + *(size_t *)data) == 0;
-+}
-+
-+static int erofs_ishare_iget5_set(struct inode *inode, void *data)
-+{
-+	struct erofs_inode *vi = EROFS_I(inode);
-+
-+	vi->fingerprint = data;
-+	INIT_LIST_HEAD(&vi->backing_head);
-+	spin_lock_init(&vi->lock);
-+	return 0;
-+}
-+
-+bool erofs_ishare_fill_inode(struct inode *inode)
-+{
-+	struct erofs_inode *vi = EROFS_I(inode);
-+	struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
-+	struct inode *idedup;
-+	/*
-+	 * fingerprint layout:
-+	 * fingerprint length + fingerprint content (xattr_value + domain_id)
-+	 */
-+	char *ishare_key = sbi->ishare_key, *fingerprint;
-+	ssize_t ishare_vlen;
-+	unsigned long hash;
-+	int key_idx;
-+
-+	if (!sbi->domain_id || !ishare_key)
-+		return false;
-+
-+	key_idx = sbi->ishare_key_idx;
-+	ishare_vlen = erofs_getxattr(inode, key_idx, ishare_key, NULL, 0);
-+	if (ishare_vlen <= 0 || ishare_vlen > (1 << sbi->blkszbits))
-+		return false;
-+
-+	fingerprint = kmalloc(sizeof(ssize_t) + ishare_vlen +
-+			      strlen(sbi->domain_id), GFP_KERNEL);
-+	if (!fingerprint)
-+		return false;
-+
-+	*(ssize_t *)fingerprint = ishare_vlen + strlen(sbi->domain_id);
-+	if (ishare_vlen != erofs_getxattr(inode, key_idx, ishare_key,
-+					  fingerprint + sizeof(ssize_t),
-+					  ishare_vlen)) {
-+		kfree(fingerprint);
-+		return false;
-+	}
-+
-+	memcpy(fingerprint + sizeof(ssize_t) + ishare_vlen,
-+	       sbi->domain_id, strlen(sbi->domain_id));
-+	hash = xxh32(fingerprint + sizeof(ssize_t),
-+		     ishare_vlen + strlen(sbi->domain_id), hash);
-+	idedup = iget5_locked(erofs_ishare_mnt->mnt_sb, hash,
-+			      erofs_ishare_iget5_eq, erofs_ishare_iget5_set,
-+			      fingerprint);
-+	if (!idedup) {
-+		kfree(fingerprint);
-+		return false;
-+	}
-+
-+	INIT_LIST_HEAD(&vi->backing_link);
-+	vi->ishare = idedup;
-+	spin_lock(&EROFS_I(idedup)->lock);
-+	list_add(&vi->backing_link, &EROFS_I(idedup)->backing_head);
-+	spin_unlock(&EROFS_I(idedup)->lock);
-+
-+	if (!(idedup->i_state & I_NEW)) {
-+		kfree(fingerprint);
-+		return true;
-+	}
-+
-+	if (erofs_inode_is_data_compressed(vi->datalayout))
-+		idedup->i_mapping->a_ops = &z_erofs_aops;
-+	else
-+		idedup->i_mapping->a_ops = &erofs_aops;
-+	idedup->i_mode = vi->vfs_inode.i_mode;
-+	i_size_write(idedup, vi->vfs_inode.i_size);
-+	unlock_new_inode(idedup);
-+	return true;
-+}
-+
-+void erofs_ishare_free_inode(struct inode *inode)
-+{
-+	struct erofs_inode *vi = EROFS_I(inode);
-+	struct inode *idedup = vi->ishare;
-+
-+	if (!idedup)
-+		return;
-+
-+	spin_lock(&EROFS_I(idedup)->lock);
-+	list_del(&vi->backing_link);
-+	spin_unlock(&EROFS_I(idedup)->lock);
-+	iput(idedup);
-+	vi->ishare = NULL;
-+}
-+
-+static int erofs_ishare_file_open(struct inode *realinode,
-+				  struct file *realfile)
-+{
-+	struct file *file;
-+	struct inode *inode;
-+
-+	inode = EROFS_I(realinode)->ishare;
-+	if (!inode)
-+		return -EINVAL;
-+
-+	file = alloc_file_pseudo(inode, erofs_ishare_mnt, "erofs_ishare_file",
-+				 O_RDONLY, &erofs_file_fops);
-+	if (IS_ERR(file))
-+		return PTR_ERR(file);
-+
-+	file_ra_state_init(&file->f_ra, realfile->f_mapping);
-+	file->private_data = EROFS_I(realinode);
-+	ihold(inode);
-+
-+	realfile->private_data = file;
-+	return 0;
-+}
-+
-+static int erofs_ishare_file_release(struct inode *inode, struct file *file)
-+{
-+	if (!file->private_data)
-+		return -EINVAL;
-+
-+	fput((struct file *)file->private_data);
-+	file->private_data = NULL;
-+	return 0;
-+}
-+
-+static ssize_t erofs_ishare_file_read_iter(struct kiocb *iocb,
-+					   struct iov_iter *to)
-+{
-+	struct file *backing_file = iocb->ki_filp->private_data;
-+	struct inode *inode = file_inode(iocb->ki_filp);
-+	struct kiocb dedup_iocb;
-+	ssize_t nread;
-+
-+	if (!iov_iter_count(to))
-+		return 0;
-+
-+	/* fallback to the original file in DAX or DIRECT mode */
-+	if (IS_DAX(inode) || (iocb->ki_flags & IOCB_DIRECT))
-+		backing_file = iocb->ki_filp;
-+
-+	kiocb_clone(&dedup_iocb, iocb, backing_file);
-+	nread = filemap_read(&dedup_iocb, to, 0);
-+	iocb->ki_pos = dedup_iocb.ki_pos;
-+	touch_atime(&iocb->ki_filp->f_path);
-+
-+	return nread;
-+}
-+
-+static int erofs_ishare_mmap(struct file *file, struct vm_area_struct *vma)
-+{
-+	struct file *backing_file = file->private_data;
-+
-+	if (!backing_file)
-+		return -EINVAL;
-+
-+	vma_set_file(vma, backing_file);
-+	vma->vm_ops = &generic_file_vm_ops;
-+	return 0;
-+}
-+
-+const struct file_operations erofs_ishare_fops = {
-+	.open		= erofs_ishare_file_open,
-+	.llseek		= generic_file_llseek,
-+	.read_iter	= erofs_ishare_file_read_iter,
-+	.mmap		= erofs_ishare_mmap,
-+	.release	= erofs_ishare_file_release,
-+	.get_unmapped_area = thp_get_unmapped_area,
-+	.splice_read	= filemap_splice_read,
-+};
-diff --git a/fs/erofs/ishare.h b/fs/erofs/ishare.h
-new file mode 100644
-index 000000000000..54f2251c8179
---- /dev/null
-+++ b/fs/erofs/ishare.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Copyright (C) 2024, Alibaba Cloud
-+ */
-+#ifndef __EROFS_ISHARE_H
-+#define __EROFS_ISHARE_H
-+
-+#include <linux/fs.h>
-+#include <linux/spinlock.h>
-+#include "internal.h"
-+
-+#ifdef CONFIG_EROFS_FS_INODE_SHARE
-+
-+int erofs_ishare_init(struct super_block *sb);
-+void erofs_ishare_exit(struct super_block *sb);
-+bool erofs_ishare_fill_inode(struct inode *inode);
-+void erofs_ishare_free_inode(struct inode *inode);
-+
-+#else
-+
-+static inline int erofs_ishare_init(struct super_block *sb) { return 0; }
-+static inline void erofs_ishare_exit(struct super_block *sb) {}
-+static inline bool erofs_ishare_fill_inode(struct inode *inode) { return false; }
-+static inline void erofs_ishare_free_inode(struct inode *inode) {}
-+
-+#endif // CONFIG_EROFS_FS_INODE_SHARE
-+
-+#endif
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index ceab0c29b061..98d8b58afe5e 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -13,6 +13,7 @@
- #include <linux/backing-dev.h>
- #include <linux/pseudo_fs.h>
- #include "xattr.h"
-+#include "ishare.h"
- 
- #define CREATE_TRACE_POINTS
+ #include <linux/sched/mm.h>
  #include <trace/events/erofs.h>
-@@ -857,9 +858,34 @@ static struct file_system_type erofs_fs_type = {
- };
- MODULE_ALIAS_FS("erofs");
  
-+#ifdef CONFIG_EROFS_FS_INODE_SHARE
-+static void erofs_free_dedup_inode(struct inode *inode)
-+{
-+	struct erofs_inode *vi = EROFS_I(inode);
-+
-+	kfree(vi->fingerprint);
-+	kmem_cache_free(erofs_inode_cachep, vi);
-+};
-+#else
-+#define erofs_free_dedup_inode NULL
-+#endif
-+
-+static const struct super_operations erofs_anon_sops = {
-+	.statfs = simple_statfs,
-+	.alloc_inode = erofs_alloc_inode,
-+	.free_inode = erofs_free_dedup_inode,
-+};
-+
-+
- static int erofs_anon_init_fs_context(struct fs_context *fc)
- {
--	return init_pseudo(fc, EROFS_SUPER_MAGIC) ? 0 : -ENOMEM;
-+	struct pseudo_fs_context *ctx;
-+
-+	ctx = init_pseudo(fc, EROFS_SUPER_MAGIC);
-+	if (ctx)
-+		ctx->ops = &erofs_anon_sops;
-+
-+	return ctx ? 0 : -ENOMEM;
+@@ -267,18 +268,44 @@ void erofs_onlinefolio_end(struct folio *folio, int err)
+ 	folio_end_read(folio, !(v & EROFS_ONLINEFOLIO_EIO));
  }
  
- struct file_system_type erofs_anon_fs_type = {
++struct erofs_iomap {
++	void *base;
++	struct inode *realinode;
++};
++
+ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+ 		unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
+ {
+ 	int ret;
+-	struct super_block *sb = inode->i_sb;
++	struct super_block *sb;
+ 	struct erofs_map_blocks map;
+ 	struct erofs_map_dev mdev;
++	struct inode *realinode = inode;
++	struct erofs_iomap *erofs_iomap;
++	bool is_ishare = erofs_is_ishare_inode(inode);
++
++	if (is_ishare) {
++		if (!iomap->private) {
++			erofs_iomap = kzalloc(sizeof(*erofs_iomap),
++					      GFP_KERNEL);
++			if (!erofs_iomap)
++				return -ENOMEM;
++			erofs_iomap->realinode = erofs_ishare_iget(inode);
++			if (!erofs_iomap->realinode) {
++				kfree(erofs_iomap);
++				return -EINVAL;
++			}
++			iomap->private = erofs_iomap;
++		}
++		erofs_iomap = iomap->private;
++		realinode = erofs_iomap->realinode;
++	}
+ 
++	sb = realinode->i_sb;
+ 	map.m_la = offset;
+ 	map.m_llen = length;
+ 
+-	ret = erofs_map_blocks(inode, &map);
++	ret = erofs_map_blocks(realinode, &map);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -297,7 +324,11 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+ 		iomap->bdev = mdev.m_bdev;
+ 	iomap->length = map.m_llen;
+ 	iomap->flags = 0;
+-	iomap->private = NULL;
++
++	if (is_ishare)
++		erofs_iomap->base = NULL;
++	else
++		iomap->private = NULL;
+ 
+ 	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
+ 		iomap->type = IOMAP_HOLE;
+@@ -316,7 +347,10 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+ 		if (IS_ERR(ptr))
+ 			return PTR_ERR(ptr);
+ 		iomap->inline_data = ptr;
+-		iomap->private = buf.base;
++		if (is_ishare)
++			erofs_iomap->base = buf.base;
++		else
++			iomap->private = buf.base;
+ 	} else {
+ 		iomap->type = IOMAP_MAPPED;
+ 		iomap->addr = mdev.m_pa;
+@@ -329,7 +363,17 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+ static int erofs_iomap_end(struct inode *inode, loff_t pos, loff_t length,
+ 		ssize_t written, unsigned int flags, struct iomap *iomap)
+ {
+-	void *ptr = iomap->private;
++	struct erofs_iomap *erofs_iomap;
++	bool is_ishare;
++	void *ptr;
++
++	is_ishare = erofs_is_ishare_inode(inode);
++	if (is_ishare) {
++		erofs_iomap = iomap->private;
++		ptr = erofs_iomap->base;
++	} else {
++		ptr = iomap->private;
++	}
+ 
+ 	if (ptr) {
+ 		struct erofs_buf buf = {
+@@ -342,6 +386,13 @@ static int erofs_iomap_end(struct inode *inode, loff_t pos, loff_t length,
+ 	} else {
+ 		DBG_BUGON(iomap->type == IOMAP_INLINE);
+ 	}
++
++	if (is_ishare) {
++		erofs_ishare_iput(erofs_iomap->realinode);
++		kfree(erofs_iomap);
++		iomap->private = NULL;
++	}
++
+ 	return written;
+ }
+ 
+@@ -370,12 +421,29 @@ int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+  */
+ static int erofs_read_folio(struct file *file, struct folio *folio)
+ {
+-	return iomap_read_folio(folio, &erofs_iomap_ops);
++	struct erofs_read_ctx rdctx = {
++		.file = file,
++		.inode = folio_inode(folio),
++	};
++	int ret;
++
++	erofs_read_begin(&rdctx);
++	ret = iomap_read_folio(folio, &erofs_iomap_ops);
++	erofs_read_end(&rdctx);
++
++	return ret;
+ }
+ 
+ static void erofs_readahead(struct readahead_control *rac)
+ {
+-	return iomap_readahead(rac, &erofs_iomap_ops);
++	struct erofs_read_ctx rdctx = {
++		.file = rac->file,
++		.inode = rac->mapping->host,
++	};
++
++	erofs_read_begin(&rdctx);
++	iomap_readahead(rac, &erofs_iomap_ops);
++	erofs_read_end(&rdctx);
+ }
+ 
+ static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index d4b89407822a..77893761d773 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2021, Alibaba Cloud
+  */
+ #include "xattr.h"
++#include "ishare.h"
+ #include <trace/events/erofs.h>
+ 
+ static int erofs_fill_symlink(struct inode *inode, void *kaddr,
+@@ -216,6 +217,10 @@ static int erofs_fill_inode(struct inode *inode)
+ 			inode->i_fop = &generic_ro_fops;
+ 		else
+ 			inode->i_fop = &erofs_file_fops;
++#ifdef CONFIG_EROFS_FS_INODE_SHARE
++		if (erofs_ishare_fill_inode(inode))
++			inode->i_fop = &erofs_ishare_fops;
++#endif
+ 		break;
+ 	case S_IFDIR:
+ 		inode->i_op = &erofs_dir_iops;
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 49613b257a6a..d736e4b57701 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -294,11 +294,15 @@ struct erofs_inode {
+ 			spinlock_t lock;
+ 			/* all backing inodes */
+ 			struct list_head backing_head;
++			/* processing list */
++			struct list_head processing_head;
+ 		};
+ 
+ 		struct {
+ 			struct inode *ishare;
+ 			struct list_head backing_link;
++			struct list_head processing_link;
++			atomic_t processing_count;
+ 		};
+ 	};
+ #endif
+diff --git a/fs/erofs/ishare.c b/fs/erofs/ishare.c
+index 77786ec6834e..e68bb1a6cf4b 100644
+--- a/fs/erofs/ishare.c
++++ b/fs/erofs/ishare.c
+@@ -72,6 +72,7 @@ static int erofs_ishare_iget5_set(struct inode *inode, void *data)
+ 
+ 	vi->fingerprint = data;
+ 	INIT_LIST_HEAD(&vi->backing_head);
++	INIT_LIST_HEAD(&vi->processing_head);
+ 	spin_lock_init(&vi->lock);
+ 	return 0;
+ }
+@@ -124,7 +125,9 @@ bool erofs_ishare_fill_inode(struct inode *inode)
+ 	}
+ 
+ 	INIT_LIST_HEAD(&vi->backing_link);
++	INIT_LIST_HEAD(&vi->processing_link);
+ 	vi->ishare = idedup;
++
+ 	spin_lock(&EROFS_I(idedup)->lock);
+ 	list_add(&vi->backing_link, &EROFS_I(idedup)->backing_head);
+ 	spin_unlock(&EROFS_I(idedup)->lock);
+@@ -236,3 +239,83 @@ const struct file_operations erofs_ishare_fops = {
+ 	.get_unmapped_area = thp_get_unmapped_area,
+ 	.splice_read	= filemap_splice_read,
+ };
++
++void erofs_read_begin(struct erofs_read_ctx *rdctx)
++{
++	struct erofs_inode *vi_real, *vi_dedup;
++
++	if (!rdctx->file || !erofs_is_ishare_inode(rdctx->inode))
++		return;
++
++	vi_real = rdctx->file->private_data;
++	vi_dedup = EROFS_I(file_inode(rdctx->file));
++
++	spin_lock(&vi_dedup->lock);
++	if (!list_empty(&vi_real->processing_link)) {
++		atomic_inc(&vi_real->processing_count);
++	} else {
++		list_add(&vi_real->processing_link,
++			 &vi_dedup->processing_head);
++		atomic_set(&vi_real->processing_count, 1);
++	}
++	spin_unlock(&vi_dedup->lock);
++}
++
++void erofs_read_end(struct erofs_read_ctx *rdctx)
++{
++	struct erofs_inode *vi_real, *vi_dedup;
++
++	if (!rdctx->file || !erofs_is_ishare_inode(rdctx->inode))
++		return;
++
++	vi_real = rdctx->file->private_data;
++	vi_dedup = EROFS_I(file_inode(rdctx->file));
++
++	spin_lock(&vi_dedup->lock);
++	if (atomic_dec_and_test(&vi_real->processing_count))
++		list_del_init(&vi_real->processing_link);
++	spin_unlock(&vi_dedup->lock);
++}
++
++/*
++ * erofs_ishare_iget - find the backing inode.
++ */
++struct inode *erofs_ishare_iget(struct inode *inode)
++{
++	struct erofs_inode *vi_real, *vi_dedup;
++	struct inode *realinode;
++
++	if (!erofs_is_ishare_inode(inode))
++		return igrab(inode);
++
++	vi_dedup = EROFS_I(inode);
++	spin_lock(&vi_dedup->lock);
++	/* try processing inodes first */
++	if (!list_empty(&vi_dedup->processing_head)) {
++		list_for_each_entry(vi_real, &vi_dedup->processing_head,
++				    processing_link) {
++			realinode = igrab(&vi_real->vfs_inode);
++			if (realinode) {
++				spin_unlock(&vi_dedup->lock);
++				return realinode;
++			}
++		}
++	}
++
++	/* fall back to all backing inodes */
++	DBG_BUGON(list_empty(&vi_dedup->backing_head));
++	list_for_each_entry(vi_real, &vi_dedup->backing_head, backing_link) {
++		realinode = igrab(&vi_real->vfs_inode);
++		if (realinode)
++			break;
++	}
++	spin_unlock(&vi_dedup->lock);
++
++	DBG_BUGON(!realinode);
++	return realinode;
++}
++
++void erofs_ishare_iput(struct inode *realinode)
++{
++	iput(realinode);
++}
+diff --git a/fs/erofs/ishare.h b/fs/erofs/ishare.h
+index 54f2251c8179..a0ff9403511b 100644
+--- a/fs/erofs/ishare.h
++++ b/fs/erofs/ishare.h
+@@ -9,6 +9,11 @@
+ #include <linux/spinlock.h>
+ #include "internal.h"
+ 
++struct erofs_read_ctx {
++	struct file *file; /* may be NULL */
++	struct inode *inode;
++};
++
+ #ifdef CONFIG_EROFS_FS_INODE_SHARE
+ 
+ int erofs_ishare_init(struct super_block *sb);
+@@ -16,6 +21,20 @@ void erofs_ishare_exit(struct super_block *sb);
+ bool erofs_ishare_fill_inode(struct inode *inode);
+ void erofs_ishare_free_inode(struct inode *inode);
+ 
++static inline bool erofs_is_ishare_inode(struct inode *inode)
++{
++
++	return !erofs_is_fscache_mode(inode->i_sb) &&
++	       inode->i_sb->s_type == &erofs_anon_fs_type;
++}
++
++/* read/readahead */
++void erofs_read_begin(struct erofs_read_ctx *rdctx);
++void erofs_read_end(struct erofs_read_ctx *rdctx);
++
++struct inode *erofs_ishare_iget(struct inode *inode);
++void erofs_ishare_iput(struct inode *realinode);
++
+ #else
+ 
+ static inline int erofs_ishare_init(struct super_block *sb) { return 0; }
+@@ -23,6 +42,14 @@ static inline void erofs_ishare_exit(struct super_block *sb) {}
+ static inline bool erofs_ishare_fill_inode(struct inode *inode) { return false; }
+ static inline void erofs_ishare_free_inode(struct inode *inode) {}
+ 
++static inline bool erofs_is_ishare_inode(struct inode *inode) { return false; }
++
++static inline void erofs_read_begin(struct erofs_read_ctx *rdctx) {}
++static inline void erofs_read_end(struct erofs_read_ctx *rdctx) {}
++
++static inline struct inode *erofs_ishare_iget(struct inode *inode) { return inode; }
++static inline void erofs_ishare_iput(struct inode *realinode) {}
++
+ #endif // CONFIG_EROFS_FS_INODE_SHARE
+ 
+ #endif
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 98d8b58afe5e..64ef5c78fedd 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -82,6 +82,7 @@ static void erofs_free_inode(struct inode *inode)
+ {
+ 	struct erofs_inode *vi = EROFS_I(inode);
+ 
++	erofs_ishare_free_inode(inode);
+ 	if (inode->i_op == &erofs_fast_symlink_iops)
+ 		kfree(inode->i_link);
+ 	kfree(vi->xattr_shared_xattrs);
+@@ -688,6 +689,12 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	if (err)
+ 		return err;
+ 
++	if (sbi->ishare_key) {
++		err = erofs_ishare_init(sb);
++		if (err)
++			return err;
++	}
++
+ 	erofs_info(sb, "mounted with root inode @ nid %llu.", sbi->root_nid);
+ 	return 0;
+ }
+@@ -823,6 +830,10 @@ static void erofs_kill_sb(struct super_block *sb)
+ 		kill_anon_super(sb);
+ 	else
+ 		kill_block_super(sb);
++
++	if (sbi->ishare_key)
++		erofs_ishare_exit(sb);
++
+ 	fs_put_dax(sbi->dif0.dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
+ 	erofs_sb_free(sbi);
 -- 
 2.43.5
 
