@@ -1,47 +1,47 @@
 Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF7F9A4AC64
-	for <lists+linux-erofs@lfdr.de>; Sat,  1 Mar 2025 15:50:35 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBE21A4AC66
+	for <lists+linux-erofs@lfdr.de>; Sat,  1 Mar 2025 15:50:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Z4p0P5GKsz3cWY
-	for <lists+linux-erofs@lfdr.de>; Sun,  2 Mar 2025 01:50:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Z4p0Q25jRz3ccV
+	for <lists+linux-erofs@lfdr.de>; Sun,  2 Mar 2025 01:50:30 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740840625;
-	cv=none; b=UqRfmKHG7O/m+kVDftn+EZcZEmM+A7BN2gJnoLw4IJGuCcUYi/sAZ1v9rC/IfXkf9gHdyeQbS01GMqp/m3dqpeAVsBIeRlCL1P3yOSLrJptzJVWMZsCUfOhDi7H1jJEoq8QWtNHDdk+CmgF/TEBLPHQB7STF3CQhDbJwAWLI7lztzJfj2TOX089l6Yq0sUXA+REuH6FBkLKPLJ0kMtVhTyswHVzuLPPnD5MlnaLVlMTsm9xNV6C8C3Vjdhbuum9Tq/PnFJXCF9sDGH7/5hWFc9mR0a69LqWUWu81Ul/aCitMPFfKAy8qZnLw6FEmq8fCom6AeCQMB103XVAVL0gS3w==
+	cv=none; b=g5VEXvdRE3KBF6G4dpKH6eGXDHGVpzedaAxn0HDP0mJiBQGDDLjPHqG0woTi5ZE+2mgITSTXvR48S9BTZ/je43LIEAKwvfgVsBZxSHXk0VgdzvK6OJqau2xCRVIYRhq9xbadYP7LOd/VVlqZT4xhY7jo+X+niNNX2jMWrg5udYhV3n/SGisMeaDHZgyOTjnpMue3NuMjhEbExXVDXrm5WNa2umYgBHmIuK7+T3dV30L18kK5OhTQrChNOCsndzbmTLVb15A8ySKzbf5kTlGaUBzri2I6Da9SDPULhBHNGR60ZGrBJIKmcitEUnIFlcz3Y2Ay/u7Y/cnZIkGu/vCq7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1740840625; c=relaxed/relaxed;
-	bh=wO9fUs9nTc63v3PD92iK3A86VObYSvLUKYRWlwxrLN8=;
+	bh=6USqGVcPTi586mkMaCckvU+yah8nBs9aiwe4n8Cy5OI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ai7CJtHxonUf+Gpt2cpGKtvoOTuUKR4Q/mJA9mM62CrX5p7C6mmGonVmpZ+Co0IGKo7R7ZxXRDdym9GjWv9mNUA69xGqXv7ESQZo6KXzCScXa9sB0HL0iPqwzFNcjKCVe/JbJH779hxSVz2J5veJA939dx29cRVjlo+l7mie9esUdx+SQqiQtBKkdeGvILrftzs7iQzQjOjw09od9NkJPuplXvCc+3vWVnOVkNj9aGC1JbFv8eZ60WYj9xFngGoE3U5GP7fybRhn4xpInHK2bC+1NTC/3kUPAO15i9QMujwkS9zvRnk2Ok4lJfA16HC26MMqgi131ceR3SImKjtBnw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nvTWuCC6; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=fnjHiaS4/vIDwr6gCP/+kjV/tPo/k5LdWivTpTEyMPZjSOLFEl5yOt+Z5Nix0qe3G+1b+g2JTt/jiRVdB9zgO0uE+EvK0RlRC/DdSgoXdegj/SQujr/n/nChyTbxAdg51wVD3H4DuixG/BIkzOdhCqGozrCHD5Kb5omA9MCoz0mUdrBMYFPyj1U3ssxtMx2UM3tJxmRVoyKB/PYB+PZuT3d/EbjlngyhzAyGIyWr4cXIsanLtycwgPWBY1G6p2hxAfp6vMzZ9rjG96Nq+Z7MYRYnoj7ooTOd1BUzOIFZge9ZOsjjKtog2U5b4GxG/JnBcpPQQtrNxdlAw5T7RGFF7A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Ke4fZbPz; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nvTWuCC6;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Ke4fZbPz;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hongzhen@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z4p0F0R35z2x9j
-	for <linux-erofs@lists.ozlabs.org>; Sun,  2 Mar 2025 01:50:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z4p0F14tJz2xBb
+	for <linux-erofs@lists.ozlabs.org>; Sun,  2 Mar 2025 01:50:20 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
 	t=1740840616; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=wO9fUs9nTc63v3PD92iK3A86VObYSvLUKYRWlwxrLN8=;
-	b=nvTWuCC6FGM5GE4mqDxiJDmY7jdB93lSqZohZZnhJz6n4zaSdsnVgClVVFXgxzdF8vr3AVbxebmgRtLErHy0DGCayZ/VkfL0MTNsoJUED74O0VVswsR2RckQLscRj/AN/lo5yWOItwoV/Z37p5PQFXx5lt3Xdp5Hhs1hFgAXjAE=
-Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WQSfpY4_1740840614 cluster:ay36)
+	bh=6USqGVcPTi586mkMaCckvU+yah8nBs9aiwe4n8Cy5OI=;
+	b=Ke4fZbPzE5selIlKd7PrZaBev1MRBTs1UwwYd4PZP1LJGnOFe3OLXKs1ru7RNjptHgKm6LIWF6nCoecyLT4Qd1AqygdGc0954YzLINgS4dcwejP9xUMiz0lvY+cm33dLClqobWiFBrRQWe9TAcVZeRI/adGsENZvDW0oXwMUdbM=
+Received: from localhost(mailfrom:hongzhen@linux.alibaba.com fp:SMTPD_---0WQSgWQj_1740840614 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 01 Mar 2025 22:50:14 +0800
+          Sat, 01 Mar 2025 22:50:15 +0800
 From: Hongzhen Luo <hongzhen@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Subject: [RFC PATCH v6 2/7] erofs: support user-defined fingerprint name
-Date: Sat,  1 Mar 2025 22:49:39 +0800
-Message-ID: <20250301145002.2420830-3-hongzhen@linux.alibaba.com>
+Subject: [RFC PATCH v6 3/7] erofs: support domain-specific page cache share
+Date: Sat,  1 Mar 2025 22:49:40 +0800
+Message-ID: <20250301145002.2420830-4-hongzhen@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250301145002.2420830-1-hongzhen@linux.alibaba.com>
 References: <20250301145002.2420830-1-hongzhen@linux.alibaba.com>
@@ -67,188 +67,57 @@ Cc: linux-kernel@vger.kernel.org
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-When creating the EROFS image, users can specify the fingerprint name.
-This is to prepare for the upcoming inode page cache share.
+Only files in the same domain will share the page cache. Also modify
+the sysfs related content in preparation for the upcoming page cache
+share feature.
 
 Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
 ---
- fs/erofs/Kconfig    | 10 +++++++++
- fs/erofs/erofs_fs.h |  9 ++++++---
- fs/erofs/internal.h |  6 ++++++
- fs/erofs/super.c    |  4 ++++
- fs/erofs/xattr.c    | 49 +++++++++++++++++++++++++++++++++++++++++++++
- fs/erofs/xattr.h    |  6 ++++++
- 6 files changed, 81 insertions(+), 3 deletions(-)
+ fs/erofs/super.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 6ea60661fa55..d2416d35035a 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -178,3 +178,13 @@ config EROFS_FS_PCPU_KTHREAD_HIPRI
- 	  at higher priority.
- 
- 	  If unsure, say N.
-+
-+config EROFS_FS_INODE_SHARE
-+	bool "EROFS inode page cache share support"
-+	depends on EROFS_FS && EROFS_FS_XATTR
-+	default n
-+	help
-+	  This permits EROFS to share page cache for files with same
-+	  fingerprints.
-+
-+	  If unsure, say N.
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 199395ed1c1f..261bd9bd47c4 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -30,6 +30,7 @@
- #define EROFS_FEATURE_INCOMPAT_FRAGMENTS	0x00000020
- #define EROFS_FEATURE_INCOMPAT_DEDUPE		0x00000020
- #define EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES	0x00000040
-+#define EROFS_FEATURE_INCOMPAT_ISHARE_KEY	0x00000080
- #define EROFS_ALL_FEATURE_INCOMPAT		\
- 	(EROFS_FEATURE_INCOMPAT_ZERO_PADDING | \
- 	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
-@@ -40,7 +41,8 @@
- 	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING | \
- 	 EROFS_FEATURE_INCOMPAT_FRAGMENTS | \
- 	 EROFS_FEATURE_INCOMPAT_DEDUPE | \
--	 EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES)
-+	 EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES | \
-+	 EROFS_FEATURE_INCOMPAT_ISHARE_KEY)
- 
- #define EROFS_SB_EXTSLOT_SIZE	16
- 
-@@ -84,8 +86,9 @@ struct erofs_super_block {
- 	__le32 xattr_prefix_start;	/* start of long xattr prefixes */
- 	__le64 packed_nid;	/* nid of the special packed inode */
- 	__u8 xattr_filter_reserved; /* reserved for xattr name filter */
--	__u8 reserved2[23];
--};
-+	__le32 ishare_key_start; /* start of ishare key */
-+	__u8 reserved2[19];
-+} __packed;
- 
- /*
-  * EROFS inode datalayout (i_format in on-disk inode):
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 47004eb89838..21bf9b694048 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -166,6 +166,11 @@ struct erofs_sb_info {
- 	struct erofs_domain *domain;
- 	char *fsid;
- 	char *domain_id;
-+
-+	/* inode page cache share support */
-+	u32 ishare_key_start;
-+	int ishare_key_idx;
-+	char *ishare_key;
- };
- 
- #define EROFS_SB(sb) ((struct erofs_sb_info *)(sb)->s_fs_info)
-@@ -233,6 +238,7 @@ EROFS_FEATURE_FUNCS(ztailpacking, incompat, INCOMPAT_ZTAILPACKING)
- EROFS_FEATURE_FUNCS(fragments, incompat, INCOMPAT_FRAGMENTS)
- EROFS_FEATURE_FUNCS(dedupe, incompat, INCOMPAT_DEDUPE)
- EROFS_FEATURE_FUNCS(xattr_prefixes, incompat, INCOMPAT_XATTR_PREFIXES)
-+EROFS_FEATURE_FUNCS(ishare_key, incompat, INCOMPAT_ISHARE_KEY)
- EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
- EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
- 
 diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index eb052a770088..6af02cc8b8c6 100644
+index 6af02cc8b8c6..ceab0c29b061 100644
 --- a/fs/erofs/super.c
 +++ b/fs/erofs/super.c
-@@ -313,6 +313,8 @@ static int erofs_read_superblock(struct super_block *sb)
- 	sbi->packed_nid = le64_to_cpu(dsb->packed_nid);
- 	sbi->inos = le64_to_cpu(dsb->inos);
+@@ -489,6 +489,8 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 		if (!sbi->fsid)
+ 			return -ENOMEM;
+ 		break;
++#endif
++#if defined(CONFIG_EROFS_FS_ONDEMAND) || defined(CONFIG_EROFS_FS_INODE_SHARE)
+ 	case Opt_domain_id:
+ 		kfree(sbi->domain_id);
+ 		sbi->domain_id = kstrdup(param->string, GFP_KERNEL);
+@@ -558,16 +560,16 @@ static void erofs_set_sysfs_name(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
  
-+	sbi->ishare_key_start = le32_to_cpu(dsb->ishare_key_start);
-+
- 	sbi->build_time = le64_to_cpu(dsb->build_time);
- 	sbi->build_time_nsec = le32_to_cpu(dsb->build_time_nsec);
- 
-@@ -676,6 +678,8 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 	if (err)
- 		return err;
- 
-+	erofs_xattr_set_ishare_key(sb);
-+
- 	erofs_set_sysfs_name(sb);
- 	err = erofs_register_sysfs(sb);
- 	if (err)
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index 7940241d9355..30a64ac3239a 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -549,3 +549,52 @@ struct posix_acl *erofs_get_acl(struct inode *inode, int type, bool rcu)
- 	return acl;
+-	if (sbi->domain_id)
++	if (sbi->domain_id && !sbi->ishare_key)
+ 		super_set_sysfs_name_generic(sb, "%s,%s", sbi->domain_id,
+ 					     sbi->fsid);
+ 	else if (sbi->fsid)
+ 		super_set_sysfs_name_generic(sb, "%s", sbi->fsid);
+-	else if (erofs_is_fileio_mode(sbi))
++	else if (!sb->s_bdi || !sb->s_bdi->dev)
++		super_set_sysfs_name_id(sb);
++	else
+ 		super_set_sysfs_name_generic(sb, "%s",
+ 					     bdi_dev_name(sb->s_bdi));
+-	else
+-		super_set_sysfs_name_id(sb);
  }
- #endif
-+
-+#ifdef CONFIG_EROFS_FS_INODE_SHARE
-+void erofs_xattr_set_ishare_key(struct super_block *sb)
-+{
-+	struct erofs_sb_info *sbi = EROFS_SB(sb);
-+	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-+	struct xattr_handler const *handler;
-+	erofs_off_t pos;
-+	char *key;
-+	int len, i;
-+	void *ptr;
-+
-+	if (!erofs_sb_has_fragments(sbi) || !erofs_sb_has_ishare_key(sbi) ||
-+	    !sbi->packed_inode)
-+		return;
-+
-+	buf.mapping = sbi->packed_inode->i_mapping;
-+	pos = sbi->ishare_key_start << 2;
-+	ptr = erofs_read_metadata(sb, &buf, &pos, &len);
-+
-+	if (IS_ERR(ptr)) {
-+		erofs_put_metabuf(&buf);
-+		return;
-+	}
-+
-+	for (i = 0; ARRAY_SIZE(erofs_xattr_handlers); i++) {
-+		handler = erofs_xattr_handlers[i];
-+		if (!handler)
-+			break;
-+		if (!memcmp(handler->prefix, ptr, strlen(handler->prefix)))
-+			break;
-+	}
-+
-+	if (!handler)
-+		return;
-+
-+	len -= strlen(handler->prefix);
-+	key = kzalloc(len + 1, GFP_KERNEL);
-+	if (!key) {
-+		erofs_put_metabuf(&buf);
-+		return;
-+	}
-+
-+	memcpy(key, ptr + strlen(handler->prefix), len);
-+	sbi->ishare_key = key;
-+	sbi->ishare_key_idx = handler->flags;
-+	erofs_put_metabuf(&buf);
-+}
-+#endif
-diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
-index b246cd0e135e..24a243165417 100644
---- a/fs/erofs/xattr.h
-+++ b/fs/erofs/xattr.h
-@@ -70,4 +70,10 @@ struct posix_acl *erofs_get_acl(struct inode *inode, int type, bool rcu);
- #define erofs_get_acl	(NULL)
- #endif
  
-+#ifdef CONFIG_EROFS_FS_INODE_SHARE
-+void erofs_xattr_set_ishare_key(struct super_block *sb);
-+#else
-+static inline void erofs_xattr_set_ishare_key(struct super_block *sb) {}
+ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+@@ -965,6 +967,8 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
+ #ifdef CONFIG_EROFS_FS_ONDEMAND
+ 	if (sbi->fsid)
+ 		seq_printf(seq, ",fsid=%s", sbi->fsid);
 +#endif
-+
++#if defined(CONFIG_EROFS_FS_ONDEMAND) || defined(CONFIG_EROFS_FS_INODE_SHARE)
+ 	if (sbi->domain_id)
+ 		seq_printf(seq, ",domain_id=%s", sbi->domain_id);
  #endif
 -- 
 2.43.5
