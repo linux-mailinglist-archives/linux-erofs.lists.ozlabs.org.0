@@ -2,62 +2,72 @@ Return-Path: <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72A5DA4BAA9
-	for <lists+linux-erofs@lfdr.de>; Mon,  3 Mar 2025 10:20:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BCEFEA4CE07
+	for <lists+linux-erofs@lfdr.de>; Mon,  3 Mar 2025 23:16:20 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lists.ozlabs.org;
+	s=201707; t=1741040175;
+	bh=H8+6Qjc9M00FFIfUS1VQxKiaqk5I7RHzna9bLYoohmw=;
+	h=To:Subject:Date:List-Id:List-Unsubscribe:List-Archive:List-Post:
+	 List-Help:List-Subscribe:From:Reply-To:Cc:From;
+	b=h9z1sAxI4SjIEED27mhloQiE3C+hKen7WaF4BsSn0RBBvIXrZcn//WPJn8+dR3wAQ
+	 umwTjcTxbDk4eOW9zLM26tuYVlPfebmMqdQgflK24g7chbh0zBpt4vp92CFFL4+N7Y
+	 CVRRKMQGTuZp08h4waWkadRYiayQbqIbNIVPaka4LmPJ7isGwrMQF7MVx9ify7eXg0
+	 zb6nY089gAQZUQqmFO4HYH5qAHFle/497fOn03PeiAiEa0eC4SvcV7dsBKd9W+EsUb
+	 xHU0iSgmyW6AooXWI82le3nw4M2xIfxHd7RuhxkPzSv/umEJFvVl0+fzyLtuhb6YB+
+	 PI4v3W28LpVtQ==
 Received: from boromir.ozlabs.org (localhost [IPv6:::1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Z5tZh3Bbqz30W6
-	for <lists+linux-erofs@lfdr.de>; Mon,  3 Mar 2025 20:20:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Z6Cnq47LKz3bn0
+	for <lists+linux-erofs@lfdr.de>; Tue,  4 Mar 2025 09:16:15 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Delivered-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=83.149.199.84
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1740993626;
-	cv=none; b=Zrc1S/rmOMhR4NQ7+zZIYnBnTi7lVhXvsVtXxKyHeooEQUgy21P3nuLcgnmosjaJAISNP9jFGOWs6yTq4VkXjhSV+ZSAorTVRs2fWiFnHLK4pnZPx1U8nQDC5IdCy9WgxqMOALkkzh+WNKSxpruAbX+YyGv59IbqYJrYHsN4WBkFYlM6l+ClZ47rCABkVJGiwXAS1wJVxlA/UbUui674vDHS8RSWEA2MoCrB2eWUOS/BwITzM6HWozoltH9go+So9me4LaiMcWltrtRNcsAd8AVRYDroSBIeUtQeJr8/C7K/vRjkfYstN44whQuAXWFJ7Fgoznbq5xa/y437YOvATw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=185.159.82.73
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1741040174;
+	cv=none; b=lVCD+6wqQJNvOqc2BusrMmWm8QJizX9U6YyM2a/s2jFIn1GXz9bxpuMLsla66Pb0aRGzDeXR788LbX4l/fe2TIx+7XGCqAFS43QmUC1iSpApbYpHHLF6AVQglu1YEvUt8l8E4vEs1OXGSQ0YhjLn7bBZ4vRaQUJjhZFjCjUo88e+WGa3+DS1/rzgXyUKvl8OhUjE2db3vZbn8u9G4iIQALtLd3WjdqHZEXHoumtx64LcBR0Dlqq5+rbItLksI8pZ6K6IbsmapwTxmbNeiTlMnf5eWocw28bP7xw8JZtnWW8LziXZ+Mlto+aQPVIGCwI1/cQuptux0DJO4d+DPIGiWw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1740993626; c=relaxed/relaxed;
-	bh=yIKMCXjADGPI9vSNBDHS/nd+SYypPRjQI0Yuanov3Qo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HKlDv4h+++Ove6MYfqP6E++tZPKgb7Ra3avYNyn2nRMNhuQ6jtcH3MAGwZVJbljlUPj57ONSBxE0BW8IfsNx0yT4A+ONM3E9XZdgfZEVS6UCTZ8khhclG8XeBxX1j3mxZZaoRlRQCRECmxL/02KXZTRuJqIzwE02mB6UbNkqb0NhpQX9Rm09LQZkXruUZTTbwPSWSV0ES7Plc5y8zVOaMKfZnw0e1kf+ZLIR4N4viQM2bhu7Tef4HV0GbYNigHHXT6yYbt/rP3SpOh9QX5ZEXac2o/RYYTlT2ycuEzYg0n0gkRA7ApR9uNVeNy6Ili4uYPeiPY/s9JPMkZ1alg0yPg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; dkim=pass (1024-bit key; unprotected) header.d=ispras.ru header.i=@ispras.ru header.a=rsa-sha256 header.s=default header.b=QD19GFDn; dkim-atps=neutral; spf=pass (client-ip=83.149.199.84; helo=mail.ispras.ru; envelope-from=pchelkin@ispras.ru; receiver=lists.ozlabs.org) smtp.mailfrom=ispras.ru
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+	t=1741040174; c=relaxed/relaxed;
+	bh=H8+6Qjc9M00FFIfUS1VQxKiaqk5I7RHzna9bLYoohmw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WbLbx+2ADR8jJRmbiErATfRwVTwJmtA5IMP2vZTucQTts9ZpltzCCKvH31Y/onIoCQOg/rhwSxvAuMiNDQkhBehSjna/5bzaCX8JmicGz0bRJdtVFRBIHVXpu7LUI5Qvz3DnogEfPbByQcMphi9WlqC98XyPfFcoS74h+tmF0ym23SlOhRbHwQlg6d2905BLE0wE8CnE55A1AIQUizMfAUI8aHJlw1BIQIDSh1eGeoSmgXY4z12SEeTyjVWiYXH/T/ZwoUNOaBAmCxrjjaiIsUwLwQ708hab0AY/g5opCJlgS2DwXGjb9fICe3q6unxDDYCJCiBQ+J1xIYRqh6brWg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=tgekh.com; dkim=pass (2048-bit key; unprotected) header.d=tgekh.com header.i=@tgekh.com header.a=rsa-sha256 header.s=default header.b=GecFHhlo; dkim-atps=neutral; spf=pass (client-ip=185.159.82.73; helo=postal.tgekh.com; envelope-from=sender@tgekh.com; receiver=lists.ozlabs.org) smtp.mailfrom=tgekh.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=tgekh.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=ispras.ru header.i=@ispras.ru header.a=rsa-sha256 header.s=default header.b=QD19GFDn;
+	dkim=pass (2048-bit key; unprotected) header.d=tgekh.com header.i=@tgekh.com header.a=rsa-sha256 header.s=default header.b=GecFHhlo;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=ispras.ru (client-ip=83.149.199.84; helo=mail.ispras.ru; envelope-from=pchelkin@ispras.ru; receiver=lists.ozlabs.org)
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=tgekh.com (client-ip=185.159.82.73; helo=postal.tgekh.com; envelope-from=sender@tgekh.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 888 seconds by postgrey-1.37 at boromir; Tue, 04 Mar 2025 09:16:13 AEDT
+Received: from postal.tgekh.com (postal.tgekh.com [185.159.82.73])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z5tZd4NmDz2xX3
-	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Mar 2025 20:20:22 +1100 (AEDT)
-Received: from localhost (unknown [10.10.165.8])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 8831B40777AA;
-	Mon,  3 Mar 2025 09:19:47 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 8831B40777AA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1740993587;
-	bh=yIKMCXjADGPI9vSNBDHS/nd+SYypPRjQI0Yuanov3Qo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QD19GFDnVVSEW2TPegnX5m+IPQD8wVX37hdWPaB/UAca3TyA7LdBSYAGiq90pL1UE
-	 1EFflh50LWMZruaNbXDPr/WkuGwxpJq8R46YRtYmvz1OM7gawDBePpqo56iGTdn0r1
-	 ldKi4jkplYJ34W28PyZRfaZniDUKOhvTrTERuJdA=
-Date: Mon, 3 Mar 2025 12:19:47 +0300
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH 6.1 1/2] erofs: handle overlapped pclusters out of
- crafted images properly
-Message-ID: <whxlizkpoqifmcvjbxt35bnj5jpc5cx6wzy3nq47zteu5pefq3@umdsbzhl3wqm>
-References: <20250228165103.26775-1-apanov@astralinux.ru>
- <20250228165103.26775-2-apanov@astralinux.ru>
- <kcsbxadkk4wow7554zonb6cjvzmkh2pbncsvioloucv3npvbtt@rpthpmo7cjja>
- <fb801c0f-105e-4aa7-80e2-fcf622179446@linux.alibaba.com>
- <3vutme7tf24cqdfbf4wjti22u6jfxjewe6gt4ufppp4xplyb5e@xls7aozstoqr>
- <0417518e-d02e-48a9-a9ce-8d2be53bc1bd@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z6Cnn5HKyz2y92
+	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Mar 2025 09:16:13 +1100 (AEDT)
+Received: from hosted-by.tnahosting.net (unknown [169.197.131.201])
+	by postal.tgekh.com (Postfix) with ESMTPSA id 8C96BD29EC
+	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Mar 2025 21:55:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tgekh.com;
+	s=default; t=1741038959;
+	bh=H8+6Qjc9M00FFIfUS1VQxKiaqk5I7RHzna9bLYoohmw=; h=From:To:Subject;
+	b=GecFHhloZtanZ04j1Jopwqy+5rZEKiJKcvlQ+/zwB0BTIaIF9Q3KeH0NRbQn2l1UC
+	 pzLQumx+SG/bOZOB/gwxnB5WfpXuYwWhlmmZQltf5922d6yzppFi6V2HlTk0mNtShQ
+	 AvafZyRBW6gZqyO9Xj0wVPmSqU+gvQOFpxK/i3n52Vx3esbm3w8HP6UluaXxT3fBAD
+	 cMnZo3c4SmL5GKIhsbaBNc9zPoSOMcZtUU+yrrtqYlOKGCzOJBD00ccSh/3qYxl50m
+	 B8A/xIe299oibSjmVA3N9S68IQa0dQPFmq3MihiWkSbKRE8oxNZUUkUW5ur5Yf7Nzj
+	 Oml70HO4IrQyw==
+Authentication-Results: postal.tgekh.com;
+        spf=pass (sender IP is 169.197.131.201) smtp.mailfrom=sender@tgekh.com smtp.helo=hosted-by.tnahosting.net
+Received-SPF: pass (postal.tgekh.com: connection is authenticated)
+To: linux-erofs@lists.ozlabs.org
+Subject: Project Financial Support
+Date: 3 Mar 2025 13:55:56 -0800
+Message-ID: <20250303135556.E746BA551D09C9B7@tgekh.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0417518e-d02e-48a9-a9ce-8d2be53bc1bd@linux.alibaba.com>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.0
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.3 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
+	FREEMAIL_REPLYTO_END_DIGIT,HTML_MESSAGE,HTML_MIME_NO_HTML_TAG,
+	MIME_HTML_ONLY,REPTO_419_FRAUD_GM_LOOSE,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.0
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-BeenThere: linux-erofs@lists.ozlabs.org
 X-Mailman-Version: 2.1.29
@@ -70,40 +80,27 @@ List-Post: <mailto:linux-erofs@lists.ozlabs.org>
 List-Help: <mailto:linux-erofs-request@lists.ozlabs.org?subject=help>
 List-Subscribe: <https://lists.ozlabs.org/listinfo/linux-erofs>,
  <mailto:linux-erofs-request@lists.ozlabs.org?subject=subscribe>
-Cc: Max Kellermann <max.kellermann@ionos.com>, lvc-project@linuxtesting.org, syzbot+de04e06b28cfecf2281c@syzkaller.appspotmail.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Alexey Panov <apanov@astralinux.ru>, Yue Hu <huyue2@coolpad.com>, syzbot+4fc98ed414ae63d1ada2@syzkaller.appspotmail.com, syzbot+c8c8238b394be4a1087d@syzkaller.appspotmail.com
+From: Frank Dawson via Linux-erofs <linux-erofs@lists.ozlabs.org>
+Reply-To: frankjody21@gmail.com
+Cc: Frank Dawson <sender@tgekh.com>
 Errors-To: linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org
 Sender: "Linux-erofs" <linux-erofs-bounces+lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 
-On Mon, 03. Mar 08:31, Gao Xiang wrote:
-> On 2025/3/3 02:13, Fedor Pchelkin wrote:
-> > My concern was that in 6.1 and 6.6 there is still a pattern at that
-> > place, not directly related to 2080ca1ed3e4 ("erofs: tidy up
-> > `struct z_erofs_bvec`"):
-> > 
-> > 1. checking ->private against Z_EROFS_PREALLOCATED_PAGE
-> > 2. zeroing out ->private if the previous check holds true
-> > 
-> > // 6.1/6.6 fragment
-> > 
-> > 	if (page->private == Z_EROFS_PREALLOCATED_PAGE) {
-> > 		WRITE_ONCE(pcl->compressed_bvecs[nr].page, page);
-> > 		set_page_private(page, 0);
-> > 		tocache = true;
-> > 		goto out_tocache;
-> > 	}
-> > 
-> > while the upstream patch changed the situation. If it's okay then no
-> > remarks from me. Sorry for the noise..
-> 
-> Yeah, yet as I mentioned `set_page_private(page, 0);`
-> seems redundant from the codebase, I'm fine with either
-> way.
-
-Somehow I've written that mail without seeing your last reply there first.
-Now everything is clear.
-
-I'll kindly ask Alexey to send the v2 with minor adjustments to
-generally non-minor merge conflict resolutions and the backporter's
-comment though.
-
-And again, thanks for clarifying all this.
+I hope this message finds you well.<br>
+<br>
+My name is Frank Jody Dawson, and I am an investment consultant representin=
+g private investors seeking to explore investment opportunities in various =
+sectors globally. These investors are interested in partnering with busines=
+ses or entrepreneurs who can demonstrate strong potential for growth and su=
+ccess.<br>
+<br>
+They offer financing options with flexible terms and a competitive annual r=
+eturn on investment of 3%. This funding can be utilized for business expans=
+ion, new projects, or mergers, depending on your needs.<br>
+<br>
+If you are working on a promising venture or project that requires funding,=
+ I would be happy to discuss the possibilities further. Please feel free to=
+ respond at your convenience to explore potential collaboration.<br>
+<br>
+Best regards,<br>
+Frank Jody Dawson=20
