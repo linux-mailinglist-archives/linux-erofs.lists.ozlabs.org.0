@@ -1,73 +1,92 @@
-Return-Path: <linux-erofs+bounces-13-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-14-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1925A54BBE
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Mar 2025 14:15:25 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 882CEA5587F
+	for <lists+linux-erofs@lfdr.de>; Thu,  6 Mar 2025 22:14:50 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Z7qfM12wxz3bvW;
-	Fri,  7 Mar 2025 00:15:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Z82HV47s3z2ydQ;
+	Fri,  7 Mar 2025 08:14:46 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.13
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1741266923;
-	cv=none; b=EuzKhuRrtteeZgolNHnimCrgt1sOnvmnoApxfJAh8lqjTLI2t40kvN3hJPFSPbmnVn9BoDL1pJRUyhf/sR+lq1+MGAgyQ3P0Vaq5cQI/QjoVWF9r+IBnFWDqdE1zFTiuM1j5spz6xVTdmldWnCVkdY0gTUHug2lCwZMic2Zmy26jRLf3U/JskspqQXOqslYsICQHiL5a1L9MP0K29SFeuK1ohCcxepzNa/Pt9wwh33MwaiiqqWU1H60tuJP8Ko+gT6cULqMXKAQErHntOhL2J5ja3FGBrY/zvFYMAC276hz/jHXi51hlUWXQRHlacxUo/DcWaWVDj1Ny+7lMu3FU4w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1741295686;
+	cv=none; b=AchDOr8+KRcWsBicXc7fczFgDhq1ZaYJw5W8PP2hjN6WiLXmxLfcTloflMGrLiv1jh4WU7xV/3gc7GxiKu00L/MMUM9vDgm2oijX591U8SxWc76BNtUrcoano7E0PK0xgjvjVIAyL9Gvxof6xk3/reCkqEpZMavN5Q3k/Mkc9l96OOUxtt4+BoO/gtgyRo3AG3ga+qnnpCNvHfZk3x7Ad1RA3hq5EUAtO5OjUaYNyNtb2x5yiMcR7zSwzfvhkY2ebQM1A9VfRvT5/7nU+V42fyd9ZRsKXyoEVFmV57Btoa0P67HQ4lPs2r+tsmvdFH+dKBG1GoKvpDyJNhhNh3QxqQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1741266923; c=relaxed/relaxed;
-	bh=3HOP6zHoh91OI2sk7Mv+cFjxENP3wkocUDCiOdMirKo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=hxhLQe5t8nC3oJCFH18uW0v+gRTqRGd8oV3OkuFIkbMJIKDn8Dt4OtMwb1hu80/wUl2CR0by6swKQY9s2bDrGppmAWclGBiLMiGvlRHCpe81Uq8wg5+KDNGCMk4gym/Y8LHTHuaSwmbc2gmbGndyhcCLaSIrkQx5muKBg28EU2zBQu0+C0HUrbcKHVCrep03vAE/7xfA/xu0+9oFTZty4INqxjcFfxdzcPCrBhO4/hCmY4ZrdYlYQSBRajZELaRloZjZr7vaNNnKkqGqMcZMS8Lf3tfchC7b1VYG+lHpOUG/jV3XouSLhUJWHhXW9r3lK2L4kPRm41ZoWVbkf5IYHw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FDr2LWRK; dkim-atps=neutral; spf=pass (client-ip=192.198.163.13; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1741295686; c=relaxed/relaxed;
+	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=YqXu+CSM0ysb2nudO0SrVKqVYyJcAc6PdlxnIpOb09YaLBf33sbR7cIUvizQlVBHBqpdW3IY6+EdvHVIUaNx6nBMwrX6O9plpfisvXbNkmeN8Z/0ZFdmfo8gPRBnkebt4zsWUB/fzO3MW6xKzW8xlNfLawc6IeyQzW5Rywc8g0oB+R1tTQE1rVnHm3vfEIDjba5jY42tfvN9n4On7Vdg0bxWLla37ugyCYp8wDTV9JIaXaB1i+sTxL79eze4yy/1JDmyYy5438nG+QTG3AjpGtDVj8dI9BcEjsylAfhdsj6+xaJmxglrjtpXEWo34qPw/uJmqFqfr68tbcDV0F/IMg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de; dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=tKlJ2CN0; dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=cuwYJRYL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=tKlJ2CN0; dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=cuwYJRYL; dkim-atps=neutral; spf=pass (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=neilb@suse.de; receiver=lists.ozlabs.org) smtp.mailfrom=suse.de
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=FDr2LWRK;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=tKlJ2CN0;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=cuwYJRYL;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=tKlJ2CN0;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=cuwYJRYL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.13; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.de (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=neilb@suse.de; receiver=lists.ozlabs.org)
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z7qfK07lCz3btp
-	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Mar 2025 00:15:18 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1741266921; x=1772802921;
-  h=date:from:to:cc:subject:message-id;
-  bh=FSHRV+6riNIzURdB66xOPZ3Cj96XnVbERcCQVfS3SaU=;
-  b=FDr2LWRKYJKN7PvvPdhN3EqVhNd8FvnvMGUph592lqkiuel/ZutQTKJ+
-   8dg+wymBMUc3W4ZkjmsbFEUsFbZVLBR6MeiO8zfeOoCZVE8nonaWiKkgG
-   1RJnjRDq4Au17l4Wa5/igw+FEcYDXc4NJ/BKZe3w1uZ/j9XSCvYHDbRZq
-   YKoabZTLUBNpLGBBHsFchfRXhKtojrqhWq52eQCtPDUokPZe+DNmNDf/Y
-   +8XgU6TPD8yjudWL52wrQO5SxWOZpL0QEWrgrW4vRjGhCl1d46Y6NrURA
-   bpu/MpGM90bfy/XQrMV1BDBctavTitbSdvd6cyeJivdH9pRZ8Icy3bVd7
-   A==;
-X-CSE-ConnectionGUID: G2DoyXNTQImQkFOJpQ/zJA==
-X-CSE-MsgGUID: jVo10GA7QkeygjzlLCgwOw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11365"; a="45078933"
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="45078933"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2025 05:15:15 -0800
-X-CSE-ConnectionGUID: pk3DnbmVQWOvgr8h2pz5GA==
-X-CSE-MsgGUID: YJlZiJz1Szegax4JKS4w5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,226,1736841600"; 
-   d="scan'208";a="123602038"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 06 Mar 2025 05:15:14 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tqB4C-000N5u-0O;
-	Thu, 06 Mar 2025 13:15:12 +0000
-Date: Thu, 06 Mar 2025 21:14:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- e6e330b7b0cae104cd8932fec64582b8da195260
-Message-ID: <202503062124.pJRJ4LSB-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.7 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.0
-X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z82HS6JRyz2yVV
+	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Mar 2025 08:14:44 +1100 (AEDT)
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D3BE321172;
+	Thu,  6 Mar 2025 21:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741295675; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
+	b=tKlJ2CN0wPg7rRWhJblyU+m6/5JlLhvjqJs9DUQdv95bf35qpGhbrKpwR4L1ubUl6HHzMC
+	ojHovccIPbw0DHajEIngncj4h9SzsPp7jcDSVykyVxYvu+K6xi485lt2OJtDUqbxaO8V2q
+	1Vt+eGq4eU93co2ldGDFw3X1pdN63uY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741295675;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
+	b=cuwYJRYLTPadg9cLaIfWHdAJDR33+mWHNeymeUhWYbcZ+XGJ68tR+aeh5VXxvpzyhsQA8a
+	TbH2enWt9B0YdnCg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1741295675; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
+	b=tKlJ2CN0wPg7rRWhJblyU+m6/5JlLhvjqJs9DUQdv95bf35qpGhbrKpwR4L1ubUl6HHzMC
+	ojHovccIPbw0DHajEIngncj4h9SzsPp7jcDSVykyVxYvu+K6xi485lt2OJtDUqbxaO8V2q
+	1Vt+eGq4eU93co2ldGDFw3X1pdN63uY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1741295675;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
+	b=cuwYJRYLTPadg9cLaIfWHdAJDR33+mWHNeymeUhWYbcZ+XGJ68tR+aeh5VXxvpzyhsQA8a
+	TbH2enWt9B0YdnCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D40E13A61;
+	Thu,  6 Mar 2025 21:14:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id MBkAMC0QymdSewAAD6G6ig
+	(envelope-from <neilb@suse.de>); Thu, 06 Mar 2025 21:14:21 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -77,150 +96,128 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-digest@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
+MIME-Version: 1.0
+From: "NeilBrown" <neilb@suse.de>
+To: "Yunsheng Lin" <linyunsheng@huawei.com>
+Cc: "Qu Wenruo" <wqu@suse.com>, "Yishai Hadas" <yishaih@nvidia.com>,
+ "Jason Gunthorpe" <jgg@ziepe.ca>,
+ "Shameer Kolothum" <shameerali.kolothum.thodi@huawei.com>,
+ "Kevin Tian" <kevin.tian@intel.com>,
+ "Alex Williamson" <alex.williamson@redhat.com>, "Chris Mason" <clm@fb.com>,
+ "Josef Bacik" <josef@toxicpanda.com>, "David Sterba" <dsterba@suse.com>,
+ "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
+ "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
+ "Sandeep Dhavale" <dhavale@google.com>, "Carlos Maiolino" <cem@kernel.org>,
+ "Darrick J. Wong" <djwong@kernel.org>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Jesper Dangaard Brouer" <hawk@kernel.org>,
+ "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
+ "David S. Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
+ "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
+ "Simon Horman" <horms@kernel.org>, "Trond Myklebust" <trondmy@kernel.org>,
+ "Anna Schumaker" <anna@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
+ "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+ "Luiz Capitulino" <luizcap@redhat.com>,
+ "Mel Gorman" <mgorman@techsingularity.net>,
+ "Dave Chinner" <david@fromorbit.com>, kvm@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
+ linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
+ only NULL elements
+In-reply-to: <f834a7cd-ca0a-4495-a787-134810aa0e4d@huawei.com>
+References: <>, <f834a7cd-ca0a-4495-a787-134810aa0e4d@huawei.com>
+Date: Fri, 07 Mar 2025 08:14:14 +1100
+Message-id: <174129565467.33508.7106343513316364028@noble.neil.brown.name>
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.993];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_TWELVE(0.00)[44];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.com,nvidia.com,ziepe.ca,huawei.com,intel.com,redhat.com,fb.com,toxicpanda.com,kernel.org,gmail.com,linux.alibaba.com,google.com,linux-foundation.org,linaro.org,davemloft.net,oracle.com,talpey.com,techsingularity.net,fromorbit.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
+	R_RATELIMIT(0.00)[to_ip_from(RL4q5k5kyydt8nhc3xa4shdp4c),from(RLewrxuus8mos16izbn)];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.0
+X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: e6e330b7b0cae104cd8932fec64582b8da195260  erofs: move {in,out}pages into struct z_erofs_decompress_req
+On Thu, 06 Mar 2025, Yunsheng Lin wrote:
+> On 2025/3/6 7:41, NeilBrown wrote:
+> > On Wed, 05 Mar 2025, Yunsheng Lin wrote:
+> >>
+> >> For the existing btrfs and sunrpc case, I am agreed that there
+> >> might be valid use cases too, we just need to discuss how to
+> >> meet the requirements of different use cases using simpler, more
+> >> unified and effective APIs.
+> > 
+> > We don't need "more unified".
+> 
+> What I meant about 'more unified' is how to avoid duplicated code as
+> much as possible for two different interfaces with similar‌ functionality.
+> 
+> The best way I tried to avoid duplicated code as much as possible is
+> to defragment the page_array before calling the alloc_pages_bulk()
+> for the use case of btrfs and sunrpc so that alloc_pages_bulk() can
+> be removed of the assumption populating only NULL elements, so that
+> the API is simpler and more efficient.
+> 
+> > 
+> > If there are genuinely two different use cases with clearly different
+> > needs - even if only slightly different - then it is acceptable to have
+> > two different interfaces.  Be sure to choose names which emphasise the
+> > differences.
+> 
+> The best name I can come up with for the use case of btrfs and sunrpc
+> is something like alloc_pages_bulk_refill(), any better suggestion about
+> the naming?
 
-elapsed time: 1445m
+I think alloc_pages_bulk_refill() is a good name.
 
-configs tested: 129
-configs skipped: 1
+So:
+- alloc_pages_bulk() would be given an uninitialised array of page
+  pointers and a required count and would return the number of pages
+  that were allocated
+- alloc_pages_bulk_refill() would be given an initialised array of page
+  pointers some of which might be NULL.  It would attempt to allocate
+  pages for the non-NULL pointers and return the total number of
+  allocated pages in the array - just like the current
+  alloc_pages_bulk().
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+sunrpc could usefully use both of these interfaces.
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                   randconfig-001-20250305    gcc-13.2.0
-arc                   randconfig-001-20250306    gcc-13.2.0
-arc                   randconfig-002-20250305    gcc-13.2.0
-arc                   randconfig-002-20250306    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-17
-arm                              allyesconfig    gcc-14.2.0
-arm                   randconfig-001-20250305    gcc-14.2.0
-arm                   randconfig-001-20250306    gcc-14.2.0
-arm                   randconfig-002-20250305    clang-19
-arm                   randconfig-002-20250306    gcc-14.2.0
-arm                   randconfig-003-20250305    gcc-14.2.0
-arm                   randconfig-003-20250306    gcc-14.2.0
-arm                   randconfig-004-20250305    gcc-14.2.0
-arm                   randconfig-004-20250306    clang-18
-arm64                            allmodconfig    clang-18
-arm64                             allnoconfig    gcc-14.2.0
-arm64                 randconfig-001-20250305    clang-15
-arm64                 randconfig-001-20250306    gcc-14.2.0
-arm64                 randconfig-002-20250305    gcc-14.2.0
-arm64                 randconfig-002-20250306    gcc-14.2.0
-arm64                 randconfig-003-20250305    clang-21
-arm64                 randconfig-003-20250306    gcc-14.2.0
-arm64                 randconfig-004-20250305    gcc-14.2.0
-arm64                 randconfig-004-20250306    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                  randconfig-001-20250306    gcc-14.2.0
-csky                  randconfig-002-20250306    gcc-14.2.0
-hexagon                          allmodconfig    clang-21
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-18
-hexagon               randconfig-001-20250306    clang-21
-hexagon               randconfig-002-20250306    clang-19
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386        buildonly-randconfig-001-20250305    clang-19
-i386        buildonly-randconfig-001-20250306    clang-19
-i386        buildonly-randconfig-002-20250305    clang-19
-i386        buildonly-randconfig-002-20250306    clang-19
-i386        buildonly-randconfig-003-20250305    clang-19
-i386        buildonly-randconfig-003-20250306    clang-19
-i386        buildonly-randconfig-004-20250305    clang-19
-i386        buildonly-randconfig-004-20250306    gcc-12
-i386        buildonly-randconfig-005-20250305    clang-19
-i386        buildonly-randconfig-005-20250306    gcc-12
-i386        buildonly-randconfig-006-20250305    gcc-12
-i386        buildonly-randconfig-006-20250306    clang-19
-i386                                defconfig    clang-19
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250306    gcc-14.2.0
-loongarch             randconfig-002-20250306    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250306    gcc-14.2.0
-nios2                 randconfig-002-20250306    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                randconfig-001-20250306    gcc-14.2.0
-parisc                randconfig-002-20250306    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc               randconfig-001-20250306    clang-21
-powerpc               randconfig-002-20250306    clang-18
-powerpc               randconfig-003-20250306    gcc-14.2.0
-powerpc64             randconfig-001-20250306    clang-18
-powerpc64             randconfig-002-20250306    clang-21
-powerpc64             randconfig-003-20250306    clang-18
-riscv                             allnoconfig    gcc-14.2.0
-riscv                 randconfig-001-20250305    clang-19
-riscv                 randconfig-001-20250306    clang-18
-riscv                 randconfig-002-20250305    gcc-14.2.0
-riscv                 randconfig-002-20250306    gcc-14.2.0
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250305    gcc-14.2.0
-s390                  randconfig-001-20250306    gcc-14.2.0
-s390                  randconfig-002-20250305    gcc-14.2.0
-s390                  randconfig-002-20250306    clang-19
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250305    gcc-14.2.0
-sh                    randconfig-001-20250306    gcc-14.2.0
-sh                    randconfig-002-20250305    gcc-14.2.0
-sh                    randconfig-002-20250306    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250305    gcc-14.2.0
-sparc                 randconfig-001-20250306    gcc-14.2.0
-sparc                 randconfig-002-20250305    gcc-14.2.0
-sparc                 randconfig-002-20250306    gcc-14.2.0
-sparc64               randconfig-001-20250305    gcc-14.2.0
-sparc64               randconfig-001-20250306    gcc-14.2.0
-sparc64               randconfig-002-20250305    gcc-14.2.0
-sparc64               randconfig-002-20250306    gcc-14.2.0
-um                               allmodconfig    clang-21
-um                                allnoconfig    clang-18
-um                               allyesconfig    gcc-12
-um                    randconfig-001-20250305    clang-19
-um                    randconfig-001-20250306    gcc-12
-um                    randconfig-002-20250305    gcc-12
-um                    randconfig-002-20250306    clang-16
-x86_64                            allnoconfig    clang-19
-x86_64                           allyesconfig    clang-19
-x86_64      buildonly-randconfig-001-20250305    clang-19
-x86_64      buildonly-randconfig-001-20250306    gcc-11
-x86_64      buildonly-randconfig-002-20250305    gcc-12
-x86_64      buildonly-randconfig-002-20250306    clang-19
-x86_64      buildonly-randconfig-003-20250305    clang-19
-x86_64      buildonly-randconfig-003-20250306    clang-19
-x86_64      buildonly-randconfig-004-20250305    gcc-12
-x86_64      buildonly-randconfig-004-20250306    clang-19
-x86_64      buildonly-randconfig-005-20250305    clang-19
-x86_64      buildonly-randconfig-005-20250306    clang-19
-x86_64      buildonly-randconfig-006-20250305    clang-19
-x86_64      buildonly-randconfig-006-20250306    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250305    gcc-14.2.0
-xtensa                randconfig-001-20250306    gcc-14.2.0
-xtensa                randconfig-002-20250305    gcc-14.2.0
-xtensa                randconfig-002-20250306    gcc-14.2.0
+alloc_pages_bulk() could be implemented by initialising the array and
+then calling alloc_pages_bulk_refill().  Or alloc_pages_bulk_refill()
+could be implemented by compacting the pages and then calling
+alloc_pages_bulk().
+If we could duplicate the code and have two similar but different
+functions.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The documentation for _refill() should make it clear that the pages
+might get re-ordered.
+
+Having looked at some of the callers I agree that the current interface
+is not ideal for many of them, and that providing a simpler interface
+would help.
+
+Thanks,
+NeilBrown
 
