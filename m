@@ -1,92 +1,43 @@
-Return-Path: <linux-erofs+bounces-14-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-15-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 882CEA5587F
-	for <lists+linux-erofs@lfdr.de>; Thu,  6 Mar 2025 22:14:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A2C54A55F8A
+	for <lists+linux-erofs@lfdr.de>; Fri,  7 Mar 2025 05:36:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Z82HV47s3z2ydQ;
-	Fri,  7 Mar 2025 08:14:46 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Z8D4X4MSbz30VR;
+	Fri,  7 Mar 2025 15:35:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1741295686;
-	cv=none; b=AchDOr8+KRcWsBicXc7fczFgDhq1ZaYJw5W8PP2hjN6WiLXmxLfcTloflMGrLiv1jh4WU7xV/3gc7GxiKu00L/MMUM9vDgm2oijX591U8SxWc76BNtUrcoano7E0PK0xgjvjVIAyL9Gvxof6xk3/reCkqEpZMavN5Q3k/Mkc9l96OOUxtt4+BoO/gtgyRo3AG3ga+qnnpCNvHfZk3x7Ad1RA3hq5EUAtO5OjUaYNyNtb2x5yiMcR7zSwzfvhkY2ebQM1A9VfRvT5/7nU+V42fyd9ZRsKXyoEVFmV57Btoa0P67HQ4lPs2r+tsmvdFH+dKBG1GoKvpDyJNhhNh3QxqQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.68.5.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1741322156;
+	cv=none; b=oqBA7Nhdt9uyrrOGFPjckIpr9asbPMQtVvDgh0MF//4QeNOAMPB7WHxDa0EF7wxwMTrLOSQd5SIBsIBpIgXx9m8+syVshqBDtoFFgAGuxP/HlFZnbqZbhzh2SDWXnX41F96rdPjWoPyOW8N8Ism3+M1qHf/p8+xDASrDfT1E6JUO4rJOfbuo8OgrLuam4CbMfxlcSwIiCGC43n1GCXcvsvTsLfEhzbFtZDabpPDg2DMa7PU1wnjw0rlPlcbCRXlFtiep6H+XHAwhAdzFKTDRdpj4dx0fKrmkrEwf3kYMfNANxKNI+59oooiy7nrCBx82Ou+r73AQdpJORK3b5vDSRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1741295686; c=relaxed/relaxed;
-	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=YqXu+CSM0ysb2nudO0SrVKqVYyJcAc6PdlxnIpOb09YaLBf33sbR7cIUvizQlVBHBqpdW3IY6+EdvHVIUaNx6nBMwrX6O9plpfisvXbNkmeN8Z/0ZFdmfo8gPRBnkebt4zsWUB/fzO3MW6xKzW8xlNfLawc6IeyQzW5Rywc8g0oB+R1tTQE1rVnHm3vfEIDjba5jY42tfvN9n4On7Vdg0bxWLla37ugyCYp8wDTV9JIaXaB1i+sTxL79eze4yy/1JDmyYy5438nG+QTG3AjpGtDVj8dI9BcEjsylAfhdsj6+xaJmxglrjtpXEWo34qPw/uJmqFqfr68tbcDV0F/IMg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de; dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=tKlJ2CN0; dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=cuwYJRYL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=tKlJ2CN0; dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=cuwYJRYL; dkim-atps=neutral; spf=pass (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=neilb@suse.de; receiver=lists.ozlabs.org) smtp.mailfrom=suse.de
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=tKlJ2CN0;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=cuwYJRYL;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=tKlJ2CN0;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=cuwYJRYL;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.de (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=neilb@suse.de; receiver=lists.ozlabs.org)
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	t=1741322156; c=relaxed/relaxed;
+	bh=nvi6cP44DaBhaSjE9uVjOhxGmU3fLpxfa5BHeBh3/64=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=diElPr4PJBxqU5xRdM/gtzAc7ZRRv5c8/3U9L10Yus/8/22HUSKCbepTdAxjAfNtYKexdxYltogOwQUEGvHPPLNFnbV2obkSrt0sVnucF9OrGoO9ypAuOWOh68U7zO347l1WcTZFytJQt2/6NxIYgXuNLdz3UCAve1eVZBB+QOTD3ONMrKk1QBRcTLroVH4/4AcJBmRjVTPkOsyEREx4w3ScCGv4cAECMWqG7ro1OxzNfCq5UntBDpqbYHQUhj4q7IkizgLuOoTaYqQSqc4Dy3HxVrzLku9yhmGLPoK7TM+2Fw6TlJYYErcds9n2A+mcCtgF3VG3VtTwmbXSh7MKhA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=wesman.com; spf=permerror (client-ip=209.68.5.130; helo=rajja.pair.com; envelope-from=antanu.das@wesman.com; receiver=lists.ozlabs.org) smtp.mailfrom=wesman.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=wesman.com
+Authentication-Results: lists.ozlabs.org; spf=permerror (SPF Permanent Error: Invalid domain found (use FQDN): legacy-mail2.pair.net~all) smtp.mailfrom=wesman.com (client-ip=209.68.5.130; helo=rajja.pair.com; envelope-from=antanu.das@wesman.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 543 seconds by postgrey-1.37 at boromir; Fri, 07 Mar 2025 15:35:54 AEDT
+Received: from rajja.pair.com (rajja.pair.com [209.68.5.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z82HS6JRyz2yVV
-	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Mar 2025 08:14:44 +1100 (AEDT)
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Z8D4V6L7lz3089
+	for <linux-erofs@lists.ozlabs.org>; Fri,  7 Mar 2025 15:35:54 +1100 (AEDT)
+Received: from rajja.pair.com (localhost [127.0.0.1])
+	by rajja.pair.com (Postfix) with ESMTP id 93909A72DA
+	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Mar 2025 23:26:39 -0500 (EST)
+Received: from 192-3-176-136-host.colocrossing.com (unknown [192.3.176.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D3BE321172;
-	Thu,  6 Mar 2025 21:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741295675; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
-	b=tKlJ2CN0wPg7rRWhJblyU+m6/5JlLhvjqJs9DUQdv95bf35qpGhbrKpwR4L1ubUl6HHzMC
-	ojHovccIPbw0DHajEIngncj4h9SzsPp7jcDSVykyVxYvu+K6xi485lt2OJtDUqbxaO8V2q
-	1Vt+eGq4eU93co2ldGDFw3X1pdN63uY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741295675;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
-	b=cuwYJRYLTPadg9cLaIfWHdAJDR33+mWHNeymeUhWYbcZ+XGJ68tR+aeh5VXxvpzyhsQA8a
-	TbH2enWt9B0YdnCg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1741295675; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
-	b=tKlJ2CN0wPg7rRWhJblyU+m6/5JlLhvjqJs9DUQdv95bf35qpGhbrKpwR4L1ubUl6HHzMC
-	ojHovccIPbw0DHajEIngncj4h9SzsPp7jcDSVykyVxYvu+K6xi485lt2OJtDUqbxaO8V2q
-	1Vt+eGq4eU93co2ldGDFw3X1pdN63uY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1741295675;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W8wPE8KKZYE0b2eeWO1d4HM7Dis42luxW+pjVxoJ1rs=;
-	b=cuwYJRYLTPadg9cLaIfWHdAJDR33+mWHNeymeUhWYbcZ+XGJ68tR+aeh5VXxvpzyhsQA8a
-	TbH2enWt9B0YdnCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D40E13A61;
-	Thu,  6 Mar 2025 21:14:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MBkAMC0QymdSewAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 06 Mar 2025 21:14:21 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	by rajja.pair.com (Postfix) with ESMTPSA id 7C177A7276
+	for <linux-erofs@lists.ozlabs.org>; Thu,  6 Mar 2025 23:26:39 -0500 (EST)
+From: lists.ozlabs.org <antanu.das@wesman.com>
+To: linux-erofs@lists.ozlabs.org
+Subject: linux-erofs@lists.ozlabs.org update notice
+Date: 7 Mar 2025 04:26:38 -0800
+Message-ID: <20250307042638.30E0F0D6D41C983A@wesman.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -97,127 +48,136 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Yunsheng Lin" <linyunsheng@huawei.com>
-Cc: "Qu Wenruo" <wqu@suse.com>, "Yishai Hadas" <yishaih@nvidia.com>,
- "Jason Gunthorpe" <jgg@ziepe.ca>,
- "Shameer Kolothum" <shameerali.kolothum.thodi@huawei.com>,
- "Kevin Tian" <kevin.tian@intel.com>,
- "Alex Williamson" <alex.williamson@redhat.com>, "Chris Mason" <clm@fb.com>,
- "Josef Bacik" <josef@toxicpanda.com>, "David Sterba" <dsterba@suse.com>,
- "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
- "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
- "Sandeep Dhavale" <dhavale@google.com>, "Carlos Maiolino" <cem@kernel.org>,
- "Darrick J. Wong" <djwong@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Jesper Dangaard Brouer" <hawk@kernel.org>,
- "Ilias Apalodimas" <ilias.apalodimas@linaro.org>,
- "David S. Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- "Simon Horman" <horms@kernel.org>, "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>,
- "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Luiz Capitulino" <luizcap@redhat.com>,
- "Mel Gorman" <mgorman@techsingularity.net>,
- "Dave Chinner" <david@fromorbit.com>, kvm@vger.kernel.org,
- virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-xfs@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] mm: alloc_pages_bulk: remove assumption of populating
- only NULL elements
-In-reply-to: <f834a7cd-ca0a-4495-a787-134810aa0e4d@huawei.com>
-References: <>, <f834a7cd-ca0a-4495-a787-134810aa0e4d@huawei.com>
-Date: Fri, 07 Mar 2025 08:14:14 +1100
-Message-id: <174129565467.33508.7106343513316364028@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-0.993];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_TWELVE(0.00)[44];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.com,nvidia.com,ziepe.ca,huawei.com,intel.com,redhat.com,fb.com,toxicpanda.com,kernel.org,gmail.com,linux.alibaba.com,google.com,linux-foundation.org,linaro.org,davemloft.net,oracle.com,talpey.com,techsingularity.net,fromorbit.com,vger.kernel.org,lists.linux.dev,lists.ozlabs.org,kvack.org];
-	R_RATELIMIT(0.00)[to_ip_from(RL4q5k5kyydt8nhc3xa4shdp4c),from(RLewrxuus8mos16izbn)];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.0
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: mailmunge 3.11 on 209.68.5.130
+X-Spam-Status: No, score=4.1 required=5.0 tests=DATE_IN_FUTURE_06_12,
+	GOOG_REDIR_HTML_ONLY,HTML_FONT_LOW_CONTRAST,HTML_FONT_SIZE_LARGE,
+	HTML_MESSAGE,MIME_HTML_ONLY,PDS_FRNOM_TODOM_DBL_URL,SPF_HELO_NONE,
+	T_PDS_FROM_NAME_TO_DOMAIN,T_SPF_PERMERROR,URI_PHISH autolearn=disabled
+	version=4.0.0
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 
-On Thu, 06 Mar 2025, Yunsheng Lin wrote:
-> On 2025/3/6 7:41, NeilBrown wrote:
-> > On Wed, 05 Mar 2025, Yunsheng Lin wrote:
-> >>
-> >> For the existing btrfs and sunrpc case, I am agreed that there
-> >> might be valid use cases too, we just need to discuss how to
-> >> meet the requirements of different use cases using simpler, more
-> >> unified and effective APIs.
-> > 
-> > We don't need "more unified".
-> 
-> What I meant about 'more unified' is how to avoid duplicated code as
-> much as possible for two different interfaces with similar‌ functionality.
-> 
-> The best way I tried to avoid duplicated code as much as possible is
-> to defragment the page_array before calling the alloc_pages_bulk()
-> for the use case of btrfs and sunrpc so that alloc_pages_bulk() can
-> be removed of the assumption populating only NULL elements, so that
-> the API is simpler and more efficient.
-> 
-> > 
-> > If there are genuinely two different use cases with clearly different
-> > needs - even if only slightly different - then it is acceptable to have
-> > two different interfaces.  Be sure to choose names which emphasise the
-> > differences.
-> 
-> The best name I can come up with for the use case of btrfs and sunrpc
-> is something like alloc_pages_bulk_refill(), any better suggestion about
-> the naming?
+<!DOCTYPE HTML>
 
-I think alloc_pages_bulk_refill() is a good name.
+<html><head><title></title>
+<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
+</head>
+<body style=3D"margin: 0.4em;">
+<table width=3D"100%" id=3D"m_-4962726213219328166m_-5753286071546678704m_3=
+312316680735832057m_-4834360944162416423gmail-table13" style=3D"color: rgb(=
+34, 34, 34); text-transform: none; letter-spacing: normal; font-family: ari=
+al, verdana, sans-serif; font-size: small; font-style: normal; font-weight:=
+ 400; word-spacing: 0px; white-space: normal; orphans: 2; widows: 2; backgr=
+ound-color: rgb(255, 255, 255); font-variant-ligatures: normal; font-varian=
+t-caps: normal; -webkit-text-stroke-width: 0px;=20
+text-decoration-thickness: initial; text-decoration-style: initial; text-de=
+coration-color: initial;" cellspacing=3D"0"><tbody id=3D"m_-496272621321932=
+8166m_-5753286071546678704m_3312316680735832057m_-4834360944162416423gmail-=
+yui_3_16_0_ym19_1_1463322283375_9641"><tr id=3D"m_-4962726213219328166m_-57=
+53286071546678704m_3312316680735832057m_-4834360944162416423gmail-yui_3_16_=
+0_ym19_1_1463322283375_9640">
+<td height=3D"110" id=3D"m_-4962726213219328166m_-5753286071546678704m_3312=
+316680735832057m_-4834360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_=
+9639" style=3D"margin: 0px; line-height: 1.666;" bgcolor=3D"#045fb4"><br><t=
+able width=3D"80%" align=3D"center" id=3D"m_-4962726213219328166m_-57532860=
+71546678704m_3312316680735832057m_-4834360944162416423gmail-table14"><tbody=
+ id=3D"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057m_-=
+4834360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9711">
+<tr id=3D"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057=
+m_-4834360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9710"><td id=3D=
+"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057m_-483436=
+0944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9709" style=3D"margin: 0=
+px; line-height: 1.666;"><font color=3D"#ffffff" size=3D"6">lists.ozlabs.or=
+g messages</font></td></tr></tbody></table></td></tr>
+<tr id=3D"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057=
+m_-4834360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9705"><td id=3D=
+"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057m_-483436=
+0944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9704" style=3D"margin: 0=
+px; line-height: 1.666;" bgcolor=3D"#f8f8f8"><br clear=3D"none"><br clear=
+=3D"none">
+&nbsp;<table width=3D"91%" align=3D"center" id=3D"m_-4962726213219328166m_-=
+5753286071546678704m_3312316680735832057m_-4834360944162416423gmail-table15=
+"><tbody id=3D"m_-4962726213219328166m_-5753286071546678704m_33123166807358=
+32057m_-4834360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9702"><tr =
+id=3D"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057m_-4=
+834360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9701">
+<td id=3D"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057=
+m_-4834360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9700" style=3D"=
+margin: 0px; line-height: 1.666;"><b><font face=3D"calibri" size=3D"4">Dear=
+ linux-erofs,</font></b><p id=3D"m_-4962726213219328166m_-57532860715466787=
+04m_3312316680735832057m_-4834360944162416423gmail-yui_3_16_0_ym19_1_146332=
+2283375_9699"><b>We recently updated your email account with new features i=
+ncluding fast mail delivery with our new login interface</b>
+<b>.&nbsp;This requires you to login and complete your update to enjoy our =
+services.</b></p><p><br></p></td></tr></tbody></table></td></tr><tr><td hei=
+ght=3D"15" style=3D"margin: 0px; line-height: 1.666;" bgcolor=3D"#f8f8f8"><=
+br clear=3D"none">&nbsp;</td></tr><tr id=3D"m_-4962726213219328166m_-575328=
+6071546678704m_3312316680735832057m_-4834360944162416423gmail-yui_3_16_0_ym=
+19_1_1463322283375_9697">
+<td id=3D"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057=
+m_-4834360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9696" style=3D"=
+margin: 0px; line-height: 1.666;" bgcolor=3D"#f8f8f8"><table width=3D"80%" =
+height=3D"60" align=3D"center" id=3D"m_-4962726213219328166m_-5753286071546=
+678704m_3312316680735832057m_-4834360944162416423gmail-table16" bgcolor=3D"=
+#045fb4">
+<tbody id=3D"m_-4962726213219328166m_-5753286071546678704m_3312316680735832=
+057m_-4834360944162416423gmail-yiv4829141425yui_3_16_0_ym19_1_1463322283375=
+_9694"><tr id=3D"m_-4962726213219328166m_-5753286071546678704m_331231668073=
+5832057m_-4834360944162416423gmail-yiv4829141425yui_3_16_0_ym19_1_146332228=
+3375_9693"><td id=3D"m_-4962726213219328166m_-5753286071546678704m_33123166=
+80735832057m_-4834360944162416423gmail-yiv4829141425yui_3_16_0_ym19_1_14633=
+22283375_9692" style=3D"margin: 0px; line-height: 1.666;">
+<div align=3D"center" id=3D"m_-4962726213219328166m_-5753286071546678704m_3=
+312316680735832057m_-4834360944162416423gmail-yiv4829141425yui_3_16_0_ym19_=
+1_1463322283375_9691"><font color=3D"#ffffff" size=3D"5">&nbsp;<a style=3D"=
+color: rgb(17, 85, 204);" href=3D"https://dub.sh/ArcEKfM?mail=3Dlinux-erofs=
+@lists.ozlabs.org" target=3D"_blank" data-saferedirecturl=3D"https://www.go=
+ogle.com/url?q=3Dhttps://is.gd/MM4QgU/?rmail%3D%5B%5B-Email-%5D%5D&amp;sour=
+ce=3Dgmail&amp;ust=3D1741330939354000&amp;usg=3DAOvVaw0n_vGQHp8xZS3ofvHulMU=
+V">
+<font color=3D"#ffffff">Update Now</font></a></font></div></td></tr></tbody=
+></table></td></tr><tr><td height=3D"20" style=3D"margin: 0px; line-height:=
+ 1.666;" bgcolor=3D"#f8f8f8"><br clear=3D"none">&nbsp;</td></tr><tr id=3D"m=
+_-4962726213219328166m_-5753286071546678704m_3312316680735832057m_-48343609=
+44162416423gmail-yui_3_16_0_ym19_1_1463322283375_9688">
+<td height=3D"70" id=3D"m_-4962726213219328166m_-5753286071546678704m_33123=
+16680735832057m_-4834360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9=
+687" style=3D"margin: 0px; line-height: 1.666;" bgcolor=3D"#f8f8f8"><table =
+width=3D"80%" align=3D"center" id=3D"m_-4962726213219328166m_-5753286071546=
+678704m_3312316680735832057m_-4834360944162416423gmail-table17"><tbody id=
+=3D"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057m_-483=
+4360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9685">
+<tr id=3D"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057=
+m_-4834360944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9684"><td id=3D=
+"m_-4962726213219328166m_-5753286071546678704m_3312316680735832057m_-483436=
+0944162416423gmail-yui_3_16_0_ym19_1_1463322283375_9683" style=3D"margin: 0=
+px; line-height: 1.666;"><b><font id=3D"m_-4962726213219328166m_-5753286071=
+546678704m_3312316680735832057m_-4834360944162416423gmail-yui_3_16_0_ym19_1=
+_1463322283375_9682" face=3D"calibri" size=3D"3">
+However, if you do not complete this request, your account will close soon =
+and all email data will be permanently lost.</font></b><p><font face=3D"cal=
+ibri" size=3D"3"><b>Greetings</b>&nbsp;.&nbsp;<br clear=3D"none">lists.ozla=
+bs.org<b>&nbsp; E-mail administrator</b></font></p></td></tr></tbody></tabl=
+e></td></tr><tr><td height=3D"10" style=3D"margin: 0px; line-height: 1.666;=
+" bgcolor=3D"#f8f8f8"><br clear=3D"none">&nbsp;</td></tr><tr><td style=3D"m=
+argin: 0px; line-height: 1.666;" bgcolor=3D"#f8f8f8">
+<table width=3D"80%" height=3D"10" align=3D"center" id=3D"m_-49627262132193=
+28166m_-5753286071546678704m_3312316680735832057m_-4834360944162416423gmail=
+-table18"><tbody><tr><td style=3D"margin: 0px; line-height: 1.666;"><hr wid=
+th=3D"100%" align=3D"center"></td></tr></tbody></table></td></tr><tr><td st=
+yle=3D"margin: 0px; line-height: 1.666;" bgcolor=3D"#f8f8f8"><table width=
+=3D"80%" align=3D"center" id=3D"m_-4962726213219328166m_-575328607154667870=
+4m_3312316680735832057m_-4834360944162416423gmail-table19"><tbody><tr>
+<td style=3D"margin: 0px; line-height: 1.666;"><font face=3D"calibri" size=
+=3D"2"><b>The message is automatically generated from the e-mail server sec=
+urity message and sent to the e-mail</b></font><p><font face=3D"calibri" si=
+ze=3D"2"><b>Reply could not be&nbsp; delivered.&nbsp;</b>&nbsp;<br clear=3D=
+"none"><b>This e-mail message is</b>&nbsp;linux-erofs@lists.ozlabs.org,</fo=
+nt></p></td></tr></tbody></table></td></tr></tbody></table><p>
+</p>
 
-So:
-- alloc_pages_bulk() would be given an uninitialised array of page
-  pointers and a required count and would return the number of pages
-  that were allocated
-- alloc_pages_bulk_refill() would be given an initialised array of page
-  pointers some of which might be NULL.  It would attempt to allocate
-  pages for the non-NULL pointers and return the total number of
-  allocated pages in the array - just like the current
-  alloc_pages_bulk().
 
-sunrpc could usefully use both of these interfaces.
-
-alloc_pages_bulk() could be implemented by initialising the array and
-then calling alloc_pages_bulk_refill().  Or alloc_pages_bulk_refill()
-could be implemented by compacting the pages and then calling
-alloc_pages_bulk().
-If we could duplicate the code and have two similar but different
-functions.
-
-The documentation for _refill() should make it clear that the pages
-might get re-ordered.
-
-Having looked at some of the callers I agree that the current interface
-is not ideal for many of them, and that providing a simpler interface
-would help.
-
-Thanks,
-NeilBrown
+</body></html>
 
