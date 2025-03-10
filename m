@@ -1,48 +1,48 @@
-Return-Path: <linux-erofs+bounces-34-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-33-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 227CCA59057
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Mar 2025 10:55:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 82716A59055
+	for <lists+linux-erofs@lfdr.de>; Mon, 10 Mar 2025 10:55:15 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZBC1X6hjpz30VV;
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZBC1X1HjGz30Tf;
 	Mon, 10 Mar 2025 20:55:12 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1741600512;
-	cv=none; b=NuMqjUTDJCsWSNGeHFgh0t8iXJhH22gfNOim/a7J8qM+3N61FIrGuumCPHHlIsQuV/hJFa1IwU9QFYHhn7ZJ6EtGcIDbZ4vT33IlkUH5vtHOzzV4XAXSQE/PcamrcLCsvSXfmzdSNnLUTyj0GVZCYUVwFSJ0Mi5cvAWNQnO3NXzmEvI94B3gWI+Uwg70ctSeWOtRX8ilZMEnZ2382smy+qnyNpzjDBwsf2/7xlYBr16QkQbshAE+87B1vwkxBst5xH01MnyZiNqBsfaI7uy4a5QD2Q6ZwB/POwFH5mnzWkADxPUrknUuCyHjAr+d1d+yhtj2mT92trmHGp3BFbkIIw==
+	cv=none; b=W8njPMoYgePg6a9rH+S2T5/O+0LTvK+1vrckP8f2ocnQBNnKCL22zakAjOPH6PRTYv8WmoO25vkvxJfVOK+bp9pFB0WTyM3map3R8fQLVDiEmDAMPJeC5E3F1vsmPIHBFRRw3Us6oM2/kXIDaPQmOnnoXeHZ6F50wlQyIEUbzXeOqGPzl93YDBnZYpD0g4Nqq4aVnSM1qMNS+CEFC3g70bb7SxLG0s31O8zOlY+dTJrWzw8XItAre8Pj+ELOEKw/leQbwYcqVi2+l+XsmzbGJxQwxLZNb/ssf/1849jPL32SW/GuBzZyN9zIVMicE2E3onqjHhov0dPMg0uR9b+j8Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1741600512; c=relaxed/relaxed;
-	bh=uroFFZkg+9TmfgPuBM9ZBqZ5Jlq2UIuIm35LWHZSJMM=;
+	bh=XkR7fIg1S/Lk9bWN6A3/iG9/WpYW4a9EMWzI9Z0Fxtk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mfeP1iGC7PUA1CdZmlDEToiECq3zHPdntw5olohvBdEt8we8s3pkzz08RTfDorZFCtr9h2PU7mt3r+CWU5bPiXqMlkwJ++sGmHAWvnClnlQ1QX9bWcVyKwJStJRGPYJaI8OkOmOVkUAh/2m41VhEf5gYEQg2zFpsuEH+cYGC0B9f+e5QAfXzZ3MJdZWbuOifuoidA7Jcb3MBxMOg2mMzpMTTusvUPf5a1xEWzU//dXByL0eXLcz8H0HcKxFdxl3UPhMxDP1gbu4JhciZviYqWa/6C08/8osz14DBeRHAtR4HTZy0PinPRoE4hb4GyvoYT9Q9LkzKSFjS89qXeusOdQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uvFj1rIT; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=Yftq6AslDf1YZRF/Y0iiUsc0hIrpo3tpnnbsdYpszPIKfiPuTu6PMOzmSvpyvO8awuYDzK7j5RroqJTZp8PcN6G+dFmdJzLL+9zFhhIIQSW9v+fUjzRurWGy7GtdQ1oZ8h+CwkX4WRWv9KzZ1dOvEX+LDk6s6GKQXeD8R1mzc7C825H2+WfMd2QAVgPCRm6GgJhnCfVS3n7zC61zEc8bFH2AV+h/imlJMd3Qukkcrwngs2rp6A5qiOf2Eg406b+prm0Ci20MUAWZRPRRkq1ZACdvSp1reOSI7txYPZrT+ePlDGKgUR4ghhpIJVv/DOxysNAZoHPOBRspqbtrwryvBg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=TkpyQdT/; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uvFj1rIT;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=TkpyQdT/;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZBC1V073xz2ykX
-	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Mar 2025 20:55:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZBC1V4yxbz305v
+	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Mar 2025 20:55:10 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1741600505; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=uroFFZkg+9TmfgPuBM9ZBqZ5Jlq2UIuIm35LWHZSJMM=;
-	b=uvFj1rITMbGXpsaYdJi7hAytlyWqWGtk/EvABF2Ym521jbO4nD0gWKGdRv2BiT3N1rl2xOHI83aQwhdoLSwvrAX9FUenjizVv7caalmPBQVMBXJUXzhja4g1crBmeRv9UdDNGe65Q8E3CQ4Gta46DGc57uBaN3zMQRK0UpejCPc=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WR1F3x1_1741600504 cluster:ay36)
+	t=1741600506; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=XkR7fIg1S/Lk9bWN6A3/iG9/WpYW4a9EMWzI9Z0Fxtk=;
+	b=TkpyQdT/9mlpH1L58bPYAzaR8TEBplmCqGiuB10AZwatrz+JPZaGxQ7p0zHkgfAZlj/zliq/v/M3gCqGI+XChBkh92r9WrnjYWTtmHfAwjGVkJTiTLJcN7PdUSr7c23Qdy8Q4i8uUU98QMXdEYONLb3m996lzZqFw0WJEr04aPA=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WR1F3xk_1741600505 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 10 Mar 2025 17:55:05 +0800
+          Mon, 10 Mar 2025 17:55:06 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: LKML <linux-kernel@vger.kernel.org>,
 	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 01/10] erofs: get rid of erofs_map_blocks_flatmode()
-Date: Mon, 10 Mar 2025 17:54:51 +0800
-Message-ID: <20250310095459.2620647-2-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 02/10] erofs: simplify erofs_{read,fill}_inode()
+Date: Mon, 10 Mar 2025 17:54:52 +0800
+Message-ID: <20250310095459.2620647-3-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250310095459.2620647-1-hsiangkao@linux.alibaba.com>
 References: <20250310095459.2620647-1-hsiangkao@linux.alibaba.com>
@@ -63,169 +63,207 @@ X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
 X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 
-It's simple enough to be folded into erofs_map_blocks().
+ - Switch to on-stack `copied` since it's just 64 bytes;
+
+ - Get rid of `nblks` and derive `i_blocks` directly;
+
+ - Use `inode_set_mtime()` instead of `inode_set_ctime()`
+   to follow the ondisk naming;
+
+ - Rearrange the code.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/data.c | 117 +++++++++++++++++++-----------------------------
- 1 file changed, 47 insertions(+), 70 deletions(-)
+ fs/erofs/inode.c | 92 ++++++++++++++++++------------------------------
+ 1 file changed, 35 insertions(+), 57 deletions(-)
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 1d2cb0fa1baf..2f45e39ce8c7 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -70,58 +70,39 @@ void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
- 	return erofs_bread(buf, offset, need_kmap);
- }
- 
--static int erofs_map_blocks_flatmode(struct inode *inode,
--				     struct erofs_map_blocks *map)
--{
--	struct erofs_inode *vi = EROFS_I(inode);
--	struct super_block *sb = inode->i_sb;
--	bool tailendpacking = (vi->datalayout == EROFS_INODE_FLAT_INLINE);
--	erofs_blk_t lastblk = erofs_iblks(inode) - tailendpacking;
--
--	map->m_flags = EROFS_MAP_MAPPED;	/* no hole in flat inodes */
--	if (map->m_la < erofs_pos(sb, lastblk)) {
--		map->m_pa = erofs_pos(sb, vi->raw_blkaddr) + map->m_la;
--		map->m_plen = erofs_pos(sb, lastblk) - map->m_la;
--	} else {
--		DBG_BUGON(!tailendpacking);
--		map->m_pa = erofs_iloc(inode) + vi->inode_isize +
--			vi->xattr_isize + erofs_blkoff(sb, map->m_la);
--		map->m_plen = inode->i_size - map->m_la;
--
--		/* inline data should be located in the same meta block */
--		if (erofs_blkoff(sb, map->m_pa) + map->m_plen > sb->s_blocksize) {
--			erofs_err(sb, "inline data across blocks @ nid %llu", vi->nid);
--			DBG_BUGON(1);
--			return -EFSCORRUPTED;
--		}
--		map->m_flags |= EROFS_MAP_META;
--	}
--	return 0;
--}
--
- int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map)
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 4936bd43c438..c8ede541c239 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -27,29 +27,27 @@ static int erofs_fill_symlink(struct inode *inode, void *kaddr,
+ static int erofs_read_inode(struct inode *inode)
  {
-+	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
  	struct super_block *sb = inode->i_sb;
-+	unsigned int unit, blksz = sb->s_blocksize;
++	erofs_blk_t blkaddr = erofs_blknr(sb, erofs_iloc(inode));
++	unsigned int ofs = erofs_blkoff(sb, erofs_iloc(inode));
++	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
  	struct erofs_inode *vi = EROFS_I(inode);
- 	struct erofs_inode_chunk_index *idx;
--	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
--	u64 chunknr;
--	unsigned int unit;
-+	erofs_blk_t startblk;
-+	bool tailpacking;
- 	erofs_off_t pos;
+-	const erofs_off_t inode_loc = erofs_iloc(inode);
+-	erofs_blk_t blkaddr, nblks = 0;
 -	void *kaddr;
-+	u64 chunknr;
++	struct erofs_inode_extended *die, copied;
+ 	struct erofs_inode_compact *dic;
+-	struct erofs_inode_extended *die, *copied = NULL;
+ 	union erofs_inode_i_u iu;
+-	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+-	unsigned int ifmt, ofs;
++	unsigned int ifmt;
++	void *ptr;
  	int err = 0;
  
- 	trace_erofs_map_blocks_enter(inode, map, 0);
- 	map->m_deviceid = 0;
--	if (map->m_la >= inode->i_size) {
--		/* leave out-of-bound access unmapped */
--		map->m_flags = 0;
--		map->m_plen = map->m_llen;
-+	map->m_flags = 0;
-+	if (map->m_la >= inode->i_size)
- 		goto out;
--	}
- 
- 	if (vi->datalayout != EROFS_INODE_CHUNK_BASED) {
--		err = erofs_map_blocks_flatmode(inode, map);
-+		tailpacking = (vi->datalayout == EROFS_INODE_FLAT_INLINE);
-+		pos = erofs_pos(sb, erofs_iblks(inode) - tailpacking);
-+
-+		map->m_flags = EROFS_MAP_MAPPED;
-+		if (map->m_la < pos) {
-+			map->m_pa = erofs_pos(sb, vi->raw_blkaddr) + map->m_la;
-+			map->m_llen = pos - map->m_la;
-+		} else {
-+			map->m_pa = erofs_iloc(inode) + vi->inode_isize +
-+				vi->xattr_isize + erofs_blkoff(sb, map->m_la);
-+			map->m_llen = inode->i_size - map->m_la;
-+			map->m_flags |= EROFS_MAP_META;
-+		}
- 		goto out;
- 	}
- 
-@@ -134,45 +115,41 @@ int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map)
- 	pos = ALIGN(erofs_iloc(inode) + vi->inode_isize +
- 		    vi->xattr_isize, unit) + unit * chunknr;
- 
--	kaddr = erofs_read_metabuf(&buf, sb, pos, true);
+-	blkaddr = erofs_blknr(sb, inode_loc);
+-	ofs = erofs_blkoff(sb, inode_loc);
+-
+-	kaddr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr), true);
 -	if (IS_ERR(kaddr)) {
--		err = PTR_ERR(kaddr);
-+	idx = erofs_read_metabuf(&buf, sb, pos, true);
-+	if (IS_ERR(idx)) {
-+		err = PTR_ERR(idx);
- 		goto out;
+-		erofs_err(sb, "failed to get inode (nid: %llu) page, err %ld",
+-			  vi->nid, PTR_ERR(kaddr));
+-		return PTR_ERR(kaddr);
++	ptr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr), true);
++	if (IS_ERR(ptr)) {
++		err = PTR_ERR(ptr);
++		erofs_err(sb, "failed to get inode (nid: %llu) page, err %d",
++			  vi->nid, err);
++		goto err_out;
  	}
- 	map->m_la = chunknr << vi->chunkbits;
--	map->m_plen = min_t(erofs_off_t, 1UL << vi->chunkbits,
--			round_up(inode->i_size - map->m_la, sb->s_blocksize));
--
--	/* handle block map */
--	if (!(vi->chunkformat & EROFS_CHUNK_FORMAT_INDEXES)) {
--		__le32 *blkaddr = kaddr;
--
--		if (le32_to_cpu(*blkaddr) == EROFS_NULL_ADDR) {
--			map->m_flags = 0;
--		} else {
--			map->m_pa = erofs_pos(sb, le32_to_cpu(*blkaddr));
-+	map->m_llen = min_t(erofs_off_t, 1UL << vi->chunkbits,
-+			    round_up(inode->i_size - map->m_la, blksz));
-+	if (vi->chunkformat & EROFS_CHUNK_FORMAT_INDEXES) {
-+		startblk = le32_to_cpu(idx->blkaddr);
-+		if (startblk != EROFS_NULL_ADDR) {
-+			map->m_deviceid = le16_to_cpu(idx->device_id) &
-+				EROFS_SB(sb)->device_id_mask;
-+			map->m_pa = erofs_pos(sb, startblk);
-+			map->m_flags = EROFS_MAP_MAPPED;
-+		}
-+	} else {
-+		startblk = le32_to_cpu(*(__le32 *)idx);
-+		if (startblk != EROFS_NULL_ADDR) {
-+			map->m_pa = erofs_pos(sb, startblk);
- 			map->m_flags = EROFS_MAP_MAPPED;
+ 
+-	dic = kaddr + ofs;
++	dic = ptr + ofs;
+ 	ifmt = le16_to_cpu(dic->i_format);
+ 	if (ifmt & ~EROFS_I_ALL) {
+ 		erofs_err(sb, "unsupported i_format %u of nid %llu",
+@@ -76,23 +74,18 @@ static int erofs_read_inode(struct inode *inode)
+ 		} else {
+ 			const unsigned int gotten = sb->s_blocksize - ofs;
+ 
+-			copied = kmalloc(vi->inode_isize, GFP_KERNEL);
+-			if (!copied) {
+-				err = -ENOMEM;
+-				goto err_out;
+-			}
+-			memcpy(copied, dic, gotten);
+-			kaddr = erofs_read_metabuf(&buf, sb,
++			memcpy(&copied, dic, gotten);
++			ptr = erofs_read_metabuf(&buf, sb,
+ 					erofs_pos(sb, blkaddr + 1), true);
+-			if (IS_ERR(kaddr)) {
+-				erofs_err(sb, "failed to get inode payload block (nid: %llu), err %ld",
+-					  vi->nid, PTR_ERR(kaddr));
+-				kfree(copied);
+-				return PTR_ERR(kaddr);
++			if (IS_ERR(ptr)) {
++				err = PTR_ERR(ptr);
++				erofs_err(sb, "failed to get inode payload block (nid: %llu), err %d",
++					  vi->nid, err);
++				goto err_out;
+ 			}
+ 			ofs = vi->inode_isize - gotten;
+-			memcpy((u8 *)copied + gotten, kaddr, ofs);
+-			die = copied;
++			memcpy((u8 *)&copied + gotten, ptr, ofs);
++			die = &copied;
  		}
--		goto out_unlock;
--	}
--	/* parse chunk indexes */
--	idx = kaddr;
--	switch (le32_to_cpu(idx->blkaddr)) {
--	case EROFS_NULL_ADDR:
--		map->m_flags = 0;
--		break;
--	default:
--		map->m_deviceid = le16_to_cpu(idx->device_id) &
--			EROFS_SB(sb)->device_id_mask;
--		map->m_pa = erofs_pos(sb, le32_to_cpu(idx->blkaddr));
--		map->m_flags = EROFS_MAP_MAPPED;
--		break;
+ 		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
+ 
+@@ -101,12 +94,10 @@ static int erofs_read_inode(struct inode *inode)
+ 		i_uid_write(inode, le32_to_cpu(die->i_uid));
+ 		i_gid_write(inode, le32_to_cpu(die->i_gid));
+ 		set_nlink(inode, le32_to_cpu(die->i_nlink));
+-		/* each extended inode has its own timestamp */
+-		inode_set_ctime(inode, le64_to_cpu(die->i_mtime),
++		inode_set_mtime(inode, le64_to_cpu(die->i_mtime),
+ 				le32_to_cpu(die->i_mtime_nsec));
+ 
+ 		inode->i_size = le64_to_cpu(die->i_size);
+-		kfree(copied);
+ 		break;
+ 	case EROFS_INODE_LAYOUT_COMPACT:
+ 		vi->inode_isize = sizeof(struct erofs_inode_compact);
+@@ -118,8 +109,7 @@ static int erofs_read_inode(struct inode *inode)
+ 		i_uid_write(inode, le16_to_cpu(dic->i_uid));
+ 		i_gid_write(inode, le16_to_cpu(dic->i_gid));
+ 		set_nlink(inode, le16_to_cpu(dic->i_nlink));
+-		/* use build time for compact inodes */
+-		inode_set_ctime(inode, sbi->build_time, sbi->build_time_nsec);
++		inode_set_mtime(inode, sbi->build_time, sbi->build_time_nsec);
+ 
+ 		inode->i_size = le32_to_cpu(dic->i_size);
+ 		break;
+@@ -141,7 +131,7 @@ static int erofs_read_inode(struct inode *inode)
+ 	case S_IFLNK:
+ 		vi->raw_blkaddr = le32_to_cpu(iu.raw_blkaddr);
+ 		if(S_ISLNK(inode->i_mode)) {
+-			err = erofs_fill_symlink(inode, kaddr, ofs);
++			err = erofs_fill_symlink(inode, ptr, ofs);
+ 			if (err)
+ 				goto err_out;
+ 		}
+@@ -161,10 +151,13 @@ static int erofs_read_inode(struct inode *inode)
+ 		goto err_out;
  	}
--out_unlock:
+ 
+-	/* total blocks for compressed files */
+-	if (erofs_inode_is_data_compressed(vi->datalayout)) {
+-		nblks = le32_to_cpu(iu.compressed_blocks);
+-	} else if (vi->datalayout == EROFS_INODE_CHUNK_BASED) {
++	if (erofs_inode_is_data_compressed(vi->datalayout))
++		inode->i_blocks = le32_to_cpu(iu.compressed_blocks) <<
++					(sb->s_blocksize_bits - 9);
++	else
++		inode->i_blocks = round_up(inode->i_size, sb->s_blocksize) >> 9;
++
++	if (vi->datalayout == EROFS_INODE_CHUNK_BASED) {
+ 		/* fill chunked inode summary info */
+ 		vi->chunkformat = le16_to_cpu(iu.c.format);
+ 		if (vi->chunkformat & ~EROFS_CHUNK_FORMAT_ALL) {
+@@ -176,22 +169,15 @@ static int erofs_read_inode(struct inode *inode)
+ 		vi->chunkbits = sb->s_blocksize_bits +
+ 			(vi->chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
+ 	}
+-	inode_set_mtime_to_ts(inode,
+-			      inode_set_atime_to_ts(inode, inode_get_ctime(inode)));
++	inode_set_atime_to_ts(inode,
++			      inode_set_ctime_to_ts(inode, inode_get_mtime(inode)));
+ 
+ 	inode->i_flags &= ~S_DAX;
+ 	if (test_opt(&sbi->opt, DAX_ALWAYS) && S_ISREG(inode->i_mode) &&
+ 	    (vi->datalayout == EROFS_INODE_FLAT_PLAIN ||
+ 	     vi->datalayout == EROFS_INODE_CHUNK_BASED))
+ 		inode->i_flags |= S_DAX;
+-
+-	if (!nblks)
+-		/* measure inode.i_blocks as generic filesystems */
+-		inode->i_blocks = round_up(inode->i_size, sb->s_blocksize) >> 9;
+-	else
+-		inode->i_blocks = nblks << (sb->s_blocksize_bits - 9);
+ err_out:
+-	DBG_BUGON(err);
  	erofs_put_metabuf(&buf);
- out:
--	if (!err)
--		map->m_llen = map->m_plen;
-+	if (!err) {
-+		map->m_plen = map->m_llen;
-+		/* inline data should be located in the same meta block */
-+		if ((map->m_flags & EROFS_MAP_META) &&
-+		    erofs_blkoff(sb, map->m_pa) + map->m_plen > blksz) {
-+			erofs_err(sb, "inline data across blocks @ nid %llu", vi->nid);
-+			DBG_BUGON(1);
-+			return -EFSCORRUPTED;
-+		}
-+	}
- 	trace_erofs_map_blocks_exit(inode, map, 0, err);
  	return err;
  }
+@@ -202,13 +188,10 @@ static int erofs_fill_inode(struct inode *inode)
+ 	int err;
+ 
+ 	trace_erofs_fill_inode(inode);
+-
+-	/* read inode base data from disk */
+ 	err = erofs_read_inode(inode);
+ 	if (err)
+ 		return err;
+ 
+-	/* setup the new inode */
+ 	switch (inode->i_mode & S_IFMT) {
+ 	case S_IFREG:
+ 		inode->i_op = &erofs_generic_iops;
+@@ -229,15 +212,10 @@ static int erofs_fill_inode(struct inode *inode)
+ 			inode->i_op = &erofs_symlink_iops;
+ 		inode_nohighmem(inode);
+ 		break;
+-	case S_IFCHR:
+-	case S_IFBLK:
+-	case S_IFIFO:
+-	case S_IFSOCK:
++	default:
+ 		inode->i_op = &erofs_generic_iops;
+ 		init_special_inode(inode, inode->i_mode, inode->i_rdev);
+ 		return 0;
+-	default:
+-		return -EFSCORRUPTED;
+ 	}
+ 
+ 	mapping_set_large_folios(inode->i_mapping);
 -- 
 2.43.5
 
