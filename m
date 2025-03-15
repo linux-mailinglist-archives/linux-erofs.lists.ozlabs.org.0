@@ -1,43 +1,73 @@
-Return-Path: <linux-erofs+bounces-56-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-57-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 47EB8A5F484
-	for <lists+linux-erofs@lfdr.de>; Thu, 13 Mar 2025 13:32:24 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id BDC40A6234B
+	for <lists+linux-erofs@lfdr.de>; Sat, 15 Mar 2025 01:40:51 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZD6MT4sbXz30Tp;
-	Thu, 13 Mar 2025 23:32:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZF2TY3Wvrz30VJ;
+	Sat, 15 Mar 2025 11:40:49 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1741869141;
-	cv=none; b=TVKg2UE+K+XrgVeUlan7lqSlSneuX2ZnoEJ8neo/QHcIeTi9tlLtkHtoLELH/hJpDtbiHH1bp4LziyXbIY+YbeniL/ZzyNoK3t8fgAhEtt/FvD8nYAGHTT45wj2JsaapkqVIHO1a9uiNyAnBhBj3TzBw/i8nKN6wuO4awADVzy5HqSkFKHRNbAdN0+48R0+hrUyCUXfQGvkqCRUO4UO9/DZZ+a7ZAANlXqtZ95p2HMBSwX0vVueI0tBjepzAStm6GnYal3KRkiJjGPSX+MSQsNd65pRC78N3oT1432BgCidd2igyddy6tjD/D6X7YDdoJYBv3hZd+PoO6RSyRv2qyQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.18
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1741999249;
+	cv=none; b=RF5iJdimDzpBqARxAQ84kuNDbGH3J84/fctGyWaEUNlW3dNlkTCDpNujboBEfG0iCD89duaY8hvIymSO3YqmcGj2vBvAbooxXhHO4IHmk0rtKqBMJaKv+x9qIFAxSodW+2O49L1Ox+jSvce8TwxPq8nNdqtLTu2MZcH1gW/rxZGyw1ifVVTitSWsOL8zyNZ/Xs8DceFI59PFAp1sVM857g+OZI0NAspxo5WeulhwjNW2xNCojSg3nib0fGFMkEkhT0bXc6CSfoxwtLjY4o57z0EAv94LSyU1pbz+22JJQFnDuxpyIWG/J7DXlVjMnLArzouKVJN67Kd5LNL2H7vYhQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1741869141; c=relaxed/relaxed;
-	bh=3WDK/Qfa9S1cCBkG0hM40846x6GSEdu8RcSL8OPjHcs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AoIeP38THdI7L52fx/0aPUkIy9FnIiNnYH/K+JiPVHbrOvYzzNMZN9kcZEY6c8oPy5RwWRoTlkdkirUlssuqCx8f/UA2ETMeNL0rWow20rUmpO4ZxTb/UbPvDVlxBCz2q0LPFlfsm+s6QUdsA3x7fRxpzR19KtDVIaolOoFsMqwYPJAJCk4V87iaxkHT+lOLWCXgpLz2dVxjHbac1U8Zb0Do/H5b+2mVvRPFu87bH/qyrw+lHEl7yKdoF6zPlZ/cmQWyynp6L8Ek98Kk6nzy2ZG1eAOFtNIC86w2bL97Y5LBHqjm/5hparaawRh//AL7POQq7pe2/u3I/48wTpQcuQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tntN1TdT; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1741999249; c=relaxed/relaxed;
+	bh=jbAH0DguPPXe//vfFf+rYHiFIOCUuOShmH/xlerI+Kg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=hnVNzHGD/+hjOZ2t319OAtUgKETExSkYVeyV2BUt4LgkiC8NNuQRobhUZoQt4Fwbh55oRTeQeyLAzWZEM1GxTjRzgXoc3wZAImlzwR0fPdBzJvZNLkWAy5Tg9jc49x7h46kMA4cTeSz/OGI+SFplK4Ibbz/YFdcTdtS8aj/Lr8A+wz8Cp2Y6vwNCKVO0Vsbee5h18aI3TXxC2RGS2ZYXRNhtHDHpVcjt/MTds8hcpc7qbwCLM5klRfKJTilwmn1lVpaViSwMepInXN7pcU1lr9d2VbQDGu/mK3B23pxfjq/0Q78dA1UbskIMCCrYA7WkbRfokZcUPRDWI4rNFVGOTw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=beRPxMLw; dkim-atps=neutral; spf=pass (client-ip=192.198.163.18; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tntN1TdT;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=beRPxMLw;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.18; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZD6MR71Z2z30Lt
-	for <linux-erofs@lists.ozlabs.org>; Thu, 13 Mar 2025 23:32:18 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1741869132; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=3WDK/Qfa9S1cCBkG0hM40846x6GSEdu8RcSL8OPjHcs=;
-	b=tntN1TdTCKoqDIFAcbOVscI1LzsoEZAQzQRa+up7vnPygi2lOuwkqfNshy8g4KFjw/Eb7hb54ZX/wEmkv2fE1GPG4qXKX0s0Wc6xrLc2jg7Cld5wWp2dht7gxTWmiqZl1DUvMs0Sv3WoyO+ynMxA6lqyyXAIKJ/66GTEJpA/5fE=
-Received: from 30.134.66.95(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WRGv2EA_1741869130 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 13 Mar 2025 20:32:10 +0800
-Message-ID: <751a34e5-5305-4c7f-9568-57cb6931c51b@linux.alibaba.com>
-Date: Thu, 13 Mar 2025 20:32:09 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZF2TW17l3z30T3
+	for <linux-erofs@lists.ozlabs.org>; Sat, 15 Mar 2025 11:40:45 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741999247; x=1773535247;
+  h=date:from:to:cc:subject:message-id;
+  bh=oSbsMKaAqNx+Uq9dObmy7HlFs3NqWbLVbxAawGzOS00=;
+  b=beRPxMLwuY88pNT7F1szxEVBjZfseWmmqQd9+jcanXb4/kjI/KpJSDt1
+   lZmJxX0hVtSt+O9zF/1S5wGz/lyTTn92vDqJewvG+G5cBkPT1U08062LD
+   NQNOpri5jb56TYdF44zgeclAA2Icm4CGEOXMOBfiNrrxzlQaslc/w0Mgo
+   HGnORj1BnLEK87Y2O3FGGnHs887GBrBQYwvghCWNeXUVIYSbpm4UrsdCc
+   scyNI+1Avgy4O94phYzdn3uHsYpvKFonPVndRmIMoilM8ynlcxgcaicqy
+   ZdimrTXcA6MNLCOvWu11x6MKKgrnrBEi2yx5He+jGhKCEvCF1qR6Q+ldL
+   w==;
+X-CSE-ConnectionGUID: 503kOXJVQjGrkByiu42cdw==
+X-CSE-MsgGUID: yGDS7z0KS16Mj8Tm+fbYfA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11373"; a="42414169"
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="42414169"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2025 17:40:41 -0700
+X-CSE-ConnectionGUID: /RPFubIFQp+BjXBMLqXZlw==
+X-CSE-MsgGUID: wJeHNJoDTzqOzvOb/RT0yw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,246,1736841600"; 
+   d="scan'208";a="122375189"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa008.jf.intel.com with ESMTP; 14 Mar 2025 17:40:39 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ttFZt-000AxJ-0e;
+	Sat, 15 Mar 2025 00:40:37 +0000
+Date: Sat, 15 Mar 2025 08:40:13 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ a650001ce7e5f700bd23e92a02893dbc07fc8a20
+Message-ID: <202503150807.ee7yLsop-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.7 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.0
+X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -47,72 +77,112 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-digest@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/10] erofs: 48-bit layout support
-To: Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20250310095459.2620647-1-hsiangkao@linux.alibaba.com>
- <695b5311-d0bb-422c-9a96-52cfcc72afb4@kernel.org>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <695b5311-d0bb-422c-9a96-52cfcc72afb4@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.0
-X-Spam-Checker-Version: SpamAssassin 4.0.0 (2022-12-13) on lists.ozlabs.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: a650001ce7e5f700bd23e92a02893dbc07fc8a20  erofs: enable 48-bit layout support
 
+elapsed time: 1452m
 
-On 2025/3/13 20:06, Chao Yu wrote:
-> On 2025/3/10 17:54, Gao Xiang wrote:
->> Hi folks,
->>
->> The current 32-bit block addressing limits EROFS to a 16TiB maximum
->> volume size with 4KiB blocks.  However, several new use cases now
->> require larger capacity support:
->>   - Massive datasets for model training to boost random sampling
->>     performance for each epoch;
->>   - Object storage clients using EROFS direct passthrough.
->>
->> This extends core on-disk structures to support 48-bit block addressing,
->> such as inodes, device slots, and inode chunks.
->>
->> In addition, it introduces an mtime field to 32-byte compact inodes for
->> basic timestamp support, as well as expands the superblock root NID to
->> an 8-byte rootnid_8b for out-of-place update incremental builds.
->>
->> In order to support larger images beyond 32-bit block addressing and
->> efficient indexing of large compression units for compressed data, and
->> to better support popular compression algorithms (mainly Zstd) that
->> still lack native fixed-sized output compression support, introduce
->> byte-oriented encoded extents, so that these compressors are allowed
->> to retain their current methods.
->>
->> Therefore, it speeds up Zstd image building a lot by using:
->> Processor: Intel(R) Xeon(R) Platinum 8163 CPU @ 2.50GHz * 96
->> Dataset: enwik9
->> Build time Size Type Command Line
->> 3m52.339s 266653696 FO -C524288 -zzstd,22
->> 3m48.549s 266174464 FO -E48bit -C524288 -zzstd,22
->> 0m12.821s 272134144 FI -E48bit -C1048576 --max-extent-bytes=1048576 -zzstd,22
->>
->> It has been stress-tested on my local setup for a while without any
->> strange happens.
-> 
-> Cool, good work! For this serial,
-> 
-> Acked-by: Chao Yu <chao@kernel.org>
-> 
-> Hoping to grab continuous free slots to check the details, then we can
-> change it to rvb status before merge window. :)
+configs tested: 91
+configs skipped: 2
 
-Thanks, I don't find any issue so far and users would like to
-get 48-bit addressing and quick Zstd compression. It's not a
-complex update anyway.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks,
-Gao Xiang
+tested configs:
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                   randconfig-001-20250314    gcc-13.2.0
+arc                   randconfig-002-20250314    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250314    clang-21
+arm                   randconfig-002-20250314    gcc-14.2.0
+arm                   randconfig-003-20250314    gcc-14.2.0
+arm                   randconfig-004-20250314    gcc-14.2.0
+arm64                            allmodconfig    clang-18
+arm64                 randconfig-001-20250314    gcc-14.2.0
+arm64                 randconfig-002-20250314    clang-21
+arm64                 randconfig-003-20250314    clang-15
+arm64                 randconfig-004-20250314    clang-21
+csky                  randconfig-001-20250314    gcc-14.2.0
+csky                  randconfig-002-20250314    gcc-14.2.0
+hexagon                          allmodconfig    clang-21
+hexagon                          allyesconfig    clang-18
+hexagon               randconfig-001-20250314    clang-21
+hexagon               randconfig-002-20250314    clang-21
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250314    clang-19
+i386        buildonly-randconfig-002-20250314    clang-19
+i386        buildonly-randconfig-003-20250314    gcc-12
+i386        buildonly-randconfig-004-20250314    gcc-12
+i386        buildonly-randconfig-005-20250314    gcc-12
+i386        buildonly-randconfig-006-20250314    gcc-12
+i386                                defconfig    clang-19
+loongarch             randconfig-001-20250314    gcc-14.2.0
+loongarch             randconfig-002-20250314    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250314    gcc-14.2.0
+nios2                 randconfig-002-20250314    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250314    gcc-14.2.0
+parisc                randconfig-002-20250314    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc               randconfig-001-20250314    clang-21
+powerpc               randconfig-002-20250314    gcc-14.2.0
+powerpc               randconfig-003-20250314    gcc-14.2.0
+powerpc64             randconfig-001-20250314    gcc-14.2.0
+powerpc64             randconfig-002-20250314    clang-17
+powerpc64             randconfig-003-20250314    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                 randconfig-001-20250314    clang-19
+riscv                 randconfig-002-20250314    gcc-14.2.0
+s390                             allmodconfig    clang-19
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250314    gcc-14.2.0
+s390                  randconfig-002-20250314    gcc-14.2.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250314    gcc-14.2.0
+sh                    randconfig-002-20250314    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250314    gcc-14.2.0
+sparc                 randconfig-002-20250314    gcc-14.2.0
+sparc64               randconfig-001-20250314    gcc-14.2.0
+sparc64               randconfig-002-20250314    gcc-14.2.0
+um                               allmodconfig    clang-21
+um                                allnoconfig    clang-18
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250314    gcc-12
+um                    randconfig-002-20250314    gcc-12
+x86_64                            allnoconfig    clang-19
+x86_64                           allyesconfig    clang-19
+x86_64      buildonly-randconfig-001-20250314    clang-19
+x86_64      buildonly-randconfig-002-20250314    clang-19
+x86_64      buildonly-randconfig-003-20250314    gcc-12
+x86_64      buildonly-randconfig-004-20250314    clang-19
+x86_64      buildonly-randconfig-005-20250314    gcc-12
+x86_64      buildonly-randconfig-006-20250314    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250314    gcc-14.2.0
+xtensa                randconfig-002-20250314    gcc-14.2.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
