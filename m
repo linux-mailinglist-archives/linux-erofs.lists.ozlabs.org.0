@@ -1,54 +1,46 @@
-Return-Path: <linux-erofs+bounces-86-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-87-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10975A6835F
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Mar 2025 04:00:13 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 322CDA68524
+	for <lists+linux-erofs@lfdr.de>; Wed, 19 Mar 2025 07:38:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZHYNV51Ddz2ym2;
-	Wed, 19 Mar 2025 14:00:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZHfDW3kywz2yf3;
+	Wed, 19 Mar 2025 17:38:35 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1742353210;
-	cv=none; b=QBcwJe3BgszK89B0eird6m2sX37gEkP+mZnpt8SxICrhEceVacvAhz2UIC2bI9QRdECVGwGGOD/852UzBowrF6KaKkuMbxJOm8liVonfpD6k8vWKEneBouX5TbtZJ4a7CbqfWyXP2fGcfS4ZZ1/fvnruaKkiz/JOXhMcb0AsbV7orzCuBNojhFwUf/bcQFkIlD/VRVwfnZb/wXbH7uKmVKJ8pjYr3YAHNG1HQy0RZ7LyObcJi7LRjINuW+dDE9hp1WVD7pdSYZtDzmNVJMeyGM3WSxbAuWkNXOpkrG4fseIKn9zFFNWrVqD1lO5u3asQ33wcLXAwj/JqWviFwk68CQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=213.95.11.211
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1742366315;
+	cv=none; b=QlhJQNm+oXOFLonm2N0tK9hswUSDuI3iopb5TcmZrvWM2cOrEyI8NKLCWgzKF8rrPYP8ysg992IV1VcPHqpYc5rA5Wn7X9hoUOYQLQqiM7ouJ1uhkHW7+6GJSbuQjr6ndWfQd/hFDgk649zgaQRjmwPnpVliWbxBGohIbCjSUu3+2T1rQCbzKh7Dmsx5EbNmEngGnGOzwUcTvAdw/QBY4Qhk5zQsZBgV3miCcq7DqvBj/5DKlL4mWrh41YxA+CizqbzPA6BB4YBEATrgz5oBqt4QoprFDMTR1z5lusiNXkUm/qdennbvH17o+9YruvA977YgpXczzX+0rtmRJNYG/A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1742353210; c=relaxed/relaxed;
-	bh=VUPAqvDxo94oQ2Yp5DEmT3wiJN+0p+J2Q0KkA4Qbhbg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z0S47bv75MQ5Op+/238Bo03SStoyqSa3DoRN7YS/VAguAAfQ7s+baeOy813jTwVVpxJwtqM+OQU6tJxXeBhFiR2t5QAArVCcXH/otmrt6UnmeI2lLRRGcQ5hyogqovFPaS1K2Ids/Op+mk6W5KBpZTEvPXTMwRNC0vI1QozgxZR8InAZ3jU6uNWEUv8wzAS3CZ8nZnWC+ig5uPOEB36AMHcdKEExuK084ZJbPTWrIkV72Q+KVLFOjIch6MEpMRPWfHzqrAgAPtOE2yebU9soKyp4kg1yxwEOf5oSQ122cZEPgFTpxA0NJbvOzQd1xbRiBvQEgD0iddpID5Udyb8Wbw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qv2fikDj; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qv2fikDj;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1742366315; c=relaxed/relaxed;
+	bh=IIMGo8sm/a3iFodn9ekFI0Udc15SNFtMglcWAu9rGPk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iQbfEZWo2t8r+XmJWomlvtrhdMlILyaBWwrZkn+apRVXSB6/IhU+guaj/8dOiP6fi4DjN4Gi6O8H75mIwmMLxevUtqBuNfl9X7z4qSckLplkOoO2tG6l/9MxO5es08qZbA46uo1TXAPQJvmLEpkftSiwZko4jJ+9O8i/XXRUN8hqpNxoaZPnAqBVAKcurJdePPWXrPBAbMB6tnTQ6Q+BAWmCcPIzcumCQJnLXRD7MhhXeXNG0JeVFkoWb5TsF84knw6BD/KHIFf//IKtwLPAnAdz/n9aZEGg5RUt0b4PfeFq+ZiYCjt0g3dEwTX4bOMgsVNdilz0518r9kD0G7GTjA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass (client-ip=213.95.11.211; helo=verein.lst.de; envelope-from=hch@lst.de; receiver=lists.ozlabs.org) smtp.mailfrom=lst.de
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=lst.de (client-ip=213.95.11.211; helo=verein.lst.de; envelope-from=hch@lst.de; receiver=lists.ozlabs.org)
+X-Greylist: delayed 542 seconds by postgrey-1.37 at boromir; Wed, 19 Mar 2025 17:38:34 AEDT
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZHYNS6yg1z2yf3
-	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Mar 2025 14:00:07 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1742353203; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=VUPAqvDxo94oQ2Yp5DEmT3wiJN+0p+J2Q0KkA4Qbhbg=;
-	b=qv2fikDjSm56Bm1A4VK+FablqbrN844AQThl8c+rKeoInloV2YvITYl3nOYsrQWaVAndQ0fCtYilEhtvebUyat4vTlH7Gp3k957WUVw2JvN5X1Hb7o/dKzi2Gr880CYMSc0mJD0HYYocB83n5Oti9iZUR6nsiAlzhXI5a5eT5cQ=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WS-6Nzc_1742353195 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 19 Mar 2025 11:00:00 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-fsdevel@vger.kernel.org,
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZHfDV3QRkz2yb9
+	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Mar 2025 17:38:34 +1100 (AEDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 7E20F68BFE; Wed, 19 Mar 2025 07:29:23 +0100 (CET)
+Date: Wed, 19 Mar 2025 07:29:23 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
 	Christian Brauner <brauner@kernel.org>,
-	Brian Foster <bfoster@redhat.com>
-Cc: linux-erofs@lists.ozlabs.org,
-	linux-xfs@vger.kernel.org,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Bo Liu <liubo03@inspur.com>,
-	Christoph Hellwig <hch@lst.de>,
-	"Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH -next] iomap: fix inline data on buffered read
-Date: Wed, 19 Mar 2025 10:59:53 +0800
-Message-ID: <20250319025953.3559299-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Andreas Gruenbacher <agruenba@redhat.com>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org, gfs2@lists.linux.dev
+Subject: Re: [PATCH 3/8] lockref: use bool for false/true returns
+Message-ID: <20250319062923.GA23686@lst.de>
+References: <20250115094702.504610-1-hch@lst.de> <20250115094702.504610-4-hch@lst.de> <ptwb6urnzbov545jsndxa4d324ezvor5vutbcev64dwauibwaj@kammuj4pbi45> <CAGudoHEW=MmNLQSnvZ3MJy0KAnGuKKNGevOccd2LdiuUWcb0Yg@mail.gmail.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -59,60 +51,25 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGudoHEW=MmNLQSnvZ3MJy0KAnGuKKNGevOccd2LdiuUWcb0Yg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=0.0 required=3.0 tests=SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Previously, iomap_readpage_iter() returning 0 would break out of the
-loops of iomap_readahead_iter(), which is what iomap_read_inline_data()
-relies on.
+On Tue, Mar 18, 2025 at 04:51:27PM +0100, Mateusz Guzik wrote:
+> fwiw I confirmed clang does *not* have the problem, I don't know about gcc 14.
+> 
+> Maybe I'll get around to testing it, but first I'm gonna need to carve
+> out the custom asm into a standalone testcase.
+> 
+> Regardless, 13 suffering the problem is imo a good enough reason to
+> whack the change.
 
-However, commit d9dc477ff6a2 ("iomap: advance the iter directly on
-buffered read") changes this behavior without calling
-iomap_iter_advance(), which causes EROFS to get stuck in
-iomap_readpage_iter().
-
-It seems iomap_iter_advance() cannot be called in
-iomap_read_inline_data() because of the iomap_write_begin() path, so
-handle this in iomap_readpage_iter() instead.
-
-Reported-by: Bo Liu <liubo03@inspur.com>
-Fixes: d9dc477ff6a2 ("iomap: advance the iter directly on buffered read")
-Cc: Brian Foster <bfoster@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/iomap/buffered-io.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index d52cfdc299c4..2d6e1e3be747 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -372,9 +372,15 @@ static int iomap_readpage_iter(struct iomap_iter *iter,
- 	struct iomap_folio_state *ifs;
- 	size_t poff, plen;
- 	sector_t sector;
-+	int ret;
- 
--	if (iomap->type == IOMAP_INLINE)
--		return iomap_read_inline_data(iter, folio);
-+	if (iomap->type == IOMAP_INLINE) {
-+		ret = iomap_read_inline_data(iter, folio);
-+		if (ret)
-+			return ret;
-+		plen = length;
-+		goto done;
-+	}
- 
- 	/* zero post-eof blocks as the page may be mapped */
- 	ifs = ifs_alloc(iter->inode, folio, iter->flags);
--- 
-2.43.5
+Reverting a change because a specific compiler generates sligtly worse
+code without even showing it has any real life impact feels like I'm
+missing something important.
 
 
