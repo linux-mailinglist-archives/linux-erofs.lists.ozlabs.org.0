@@ -1,41 +1,54 @@
-Return-Path: <linux-erofs+bounces-104-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-107-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19CC3A6C6DF
-	for <lists+linux-erofs@lfdr.de>; Sat, 22 Mar 2025 02:22:56 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E8A5A6CC49
+	for <lists+linux-erofs@lfdr.de>; Sat, 22 Mar 2025 21:35:27 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZKM4s3vBWz2ytg;
-	Sat, 22 Mar 2025 12:22:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZKrfd3J13z2ySh;
+	Sun, 23 Mar 2025 07:35:21 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.189
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1742606573;
-	cv=none; b=OKQsiMq4N9pSCcZTZ7hMHVHVdqnmz4NlOR9Qn1bqMgx80g2VsDp4Lc15bW9Vbdtnarc6XlVzUt4YdKGY/RX55FhNp606RTQxkexnSldWjj+mLF9R56RjKmi3xjCrFqjlKrNme9t2KXOOl40s8PIcrpCeow5FW/Gb5VM17ZvJhPBBrh7QW0hOzVpdUN3oA6d889M43gBYUk4qoXMQGy+4fySn7y8HLJkiQwpDNgwdurNM4aB+10/zaQoR4sBzLgMmKBEsCX1nuE7nRd6ybOb+IVtbDvTFfI5rnnVPuHes3JKoHs8QN8WMSK+N2PkgPuw5LrTUHTCjBC3iZLdC16rDiA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1742675721;
+	cv=none; b=CXPsFRzAovt7pIrdqtTi4lVy60uW1/2leKlH/nNzp+GZX7uey8KQHI6Pi6KyehwLw0GQNwRFfvEU1+CHg1dhrbt4o4khM9gX1X8Cau0f/MPOpzBN/qZlEpWZZrbabDkNYvWVj3beM9MU7WcJj2dcHR7R4YcZqCyNdI9/Ztek7T8q41E4i98JhLye5q+NT70Qdb3yo+2Lk1uFw6wyNYqn5VfqoNqMvO2k1Szg1cOvqXulRUSxIe3G6rBqT27o1DOkEHX+KLQ6ot4Q1YA4qXhJbaUbHYd4qH8bMnQUaOYt1jg+k87wRPXY/orU4QnEoRFPUrJO/3aahLh2SzSUrRI57g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1742606573; c=relaxed/relaxed;
-	bh=Whi0+D9X3ZV2w4nG1x+bBNyDlslenHwDy7JMgCI9WOA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Yqi7geMCnKl1oGl5aviKTAG1nK9OOPcb4cKP8399l7QE3IU/fdI7X6yAhjvFklkVTccjGSfGyjSk1ntaLzI6MlbNVP7hEM8d40j5HUanEy83AEL7FAmFpKdfbTPBPqBXKVSKN8MVF0zhJkwgfgWWsJM+bw3oqs99w1ivUpVLlTsl9QO+dtz8MheyJDrDPRQe5B7PFhoiaXtyswT0kOtNljOeVhBUDmlIIY21OdV7aGPPPfSCitRAoyEEHs+92lcTz9YocSJF52/PT1sopDdw0a2/J3dc/7FrNgHr2WEQ6PdCyBsXQrxbT60fsG9A3dSLujnnUiR+aeLPz7JCmqM7Rw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.189; helo=szxga03-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=szxga03-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1742675721; c=relaxed/relaxed;
+	bh=nZAGmlZwhiqZBoXhOGR4vrGflS3zWC6/zziEHigl+IE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MtNuH55fteGeWV2WqTQx2OP26QxvQs6PZGbt0Pmco5P1bGujeUbwq5b2TOgj/TaieQkCjOBaAUjLCQZpZLDxZoPoOQl0ulUMDAMCHddcKfzqOs7KDGwtG0/PGYC9bp+SzUxWJlwMigxbKSI/FLmqA8oN63fzyXTTKJgGRJGitdrfRvxYf9WpssAwodsuF0FwitEOdfWPX/tDe9TlTUuWBuxGzjh/oVWLCQGlZVyUGbhlcsfjfV2pyym+HZx2Cy5MZVoQ8GRDSGQN2uA4vLMCAvhB/p2MxDo3OdpijY9dxjyqczsDQc6T//nY8IGM4+YO4fTDHqrW1Dz8R97V/V1/tg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qQ++w9SX; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=devnull+julian.stecklina.cyberus-technology.de@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=qQ++w9SX;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=devnull+julian.stecklina.cyberus-technology.de@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZKM4r3blrz2ydj
-	for <linux-erofs@lists.ozlabs.org>; Sat, 22 Mar 2025 12:22:51 +1100 (AEDT)
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZKM0x6fPkzFrCy
-	for <linux-erofs@lists.ozlabs.org>; Sat, 22 Mar 2025 09:19:29 +0800 (CST)
-Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3A4D11800B4
-	for <linux-erofs@lists.ozlabs.org>; Sat, 22 Mar 2025 09:22:45 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 22 Mar 2025 09:22:44 +0800
-Message-ID: <b9fccfab-77bc-4a77-b480-e8da1995e520@huawei.com>
-Date: Sat, 22 Mar 2025 09:22:43 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZKrfb3X0Tz2yTP
+	for <linux-erofs@lists.ozlabs.org>; Sun, 23 Mar 2025 07:35:19 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 8B05D5C4C25;
+	Sat, 22 Mar 2025 20:32:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E2746C4CEDD;
+	Sat, 22 Mar 2025 20:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742675715;
+	bh=BqYZpH0UiavMMal11keGKaBoUo5bpmMxlDCKzw1Ly2A=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=qQ++w9SX0vNEnL3vYRfbiKR/Qvu+jnUraHP5nquD/6swnBVQDCpp2hj/woU7KuZoh
+	 wuVt3Ke2ZH8Ds91dEQauJzAwPkdoJnpL88ZA0KwkcQSkHyTbMe+U/Of3tSvD8HGGHq
+	 cGsh/9sxcNGAqBNcNGX/hdj+xmTKLE0tm4xyZffpSrOCkWUzNf6uWpQMr5L3xy8mmj
+	 tvYS4Tg1la07G7WRq8kAkCiRNe/ls9A8LsZ2l4rWgRd+/kyBLbECuSqVYCYCF4JsB0
+	 /UK1sIOW4FKckBqjmvABIaYgwWYD+Ys75voiqE1sjdJmMGRMbF1ul9f16/xWGnJDuw
+	 2TWXyLYJcjZ6g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C0EC35FFC;
+	Sat, 22 Mar 2025 20:35:14 +0000 (UTC)
+From: Julian Stecklina via B4 Relay <devnull+julian.stecklina.cyberus-technology.de@kernel.org>
+Subject: [PATCH v2 0/9] initrd: cleanup and erofs support
+Date: Sat, 22 Mar 2025 21:34:12 +0100
+Message-Id: <20250322-initrd-erofs-v2-0-d66ee4a2c756@cyberus-technology.de>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -46,80 +59,118 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v6 3/7] erofs: support domain-specific page cache
- share
-Content-Language: en-US
-To: <linux-erofs@lists.ozlabs.org>
-References: <20250301145002.2420830-1-hongzhen@linux.alibaba.com>
- <20250301145002.2420830-4-hongzhen@linux.alibaba.com>
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20250301145002.2420830-4-hongzhen@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemo500009.china.huawei.com (7.202.194.199)
-X-Spam-Status: No, score=-3.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-B4-Tracking: v=1; b=H4sIAMQe32cC/3XMQQ6CMBCF4auQWTsGiiC48h6GBW2nMIlpzRSJh
+ PTuVvYu/5e8b4dIwhThVuwgtHLk4HOoUwFmHv1EyDY3qFI1Za1KZM+LWCQJLuK1pV41zrq2M5A
+ vLyHHn4N7DLlnjkuQ7dDX6rf+gdYKK6wbrbXq60vbjXezaZJ3xIXM7MMzTNvZEgwppS8JgT30t
+ AAAAA==
+X-Change-ID: 20250320-initrd-erofs-76e925fdf68c
+To: Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Gao Xiang <xiang@kernel.org>, 
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-erofs@lists.ozlabs.org, 
+ Julian Stecklina <julian.stecklina@cyberus-technology.de>, 
+ Niklas Sturm <niklas.sturm@secunet.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742675712; l=3257;
+ i=julian.stecklina@cyberus-technology.de; s=20250320;
+ h=from:subject:message-id;
+ bh=BqYZpH0UiavMMal11keGKaBoUo5bpmMxlDCKzw1Ly2A=;
+ b=/HaQH4dsGXfsHwAm/6oa8WAEYcLbW08CzgyyRCZ+LZG0q+uisaMe5G6LQ3QXxCEgqyOGnYwUU
+ nkvDSuyxtGkAdFImX7HqJ4sntWriaHu7HcpiTN7J586G3+Di7DiIDBv
+X-Developer-Key: i=julian.stecklina@cyberus-technology.de; a=ed25519;
+ pk=m051/8gQfs5AmkACfykwRcD6CUr2T7DQ9OA5eBgyy7c=
+X-Endpoint-Received: by B4 Relay for
+ julian.stecklina@cyberus-technology.de/20250320 with auth_id=363
+X-Original-From: Julian Stecklina <julian.stecklina@cyberus-technology.de>
+Reply-To: julian.stecklina@cyberus-technology.de
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+On my journey towards adding erofs support for initrd, Al Viro
+suggested to move the filesystem detection code into the respective
+filesystem modules. This patch series implements this, while also
+adding erofs support.
+
+To achieve this, I added a macro initrd_fs_detect() that allows
+filesystem modules to add a filesystem detection hooks. I then moved
+all existing filesystem detection code to this new API. While I was
+there I also tried to clean up some of the code.
+
+I've tested these changes with the following kinds of initrd
+images:
+
+- ext2
+- Minix v1
+- cramfs (padded/unpadded)
+- romfs
+- squashfs
+- erofs
+
+initrds are still relevant, because they have some advantages over
+initramfs. They don't require unpacking all files before starting the
+init process and allows them to stay compressed in memory. They also
+allow using advanced file system features, such as extended
+attributes. In the NixOS community, we are heavy users of erofs, due
+to its sweet spot of compression, speed and features.
+
+That being said, I'm totally in favor of cutting down the supported
+filesystems for initrd and further simplify the code. I would be
+surprised, if anyone is using ext2 or Minix v1 filesystems (64 MiB
+filesystem size limit!) or cramfs (16 MiB file size limit!) as an
+initrd these days! Squashfs and erofs seem genuinely useful, though.
+
+Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
+---
+Changes in v2:
+- Remove more legacy code
+- Introduce initrd_fs_detect
+- Move all other initrd filesystems to the new API
+- Link to v1: https://lore.kernel.org/r/20250320-initrd-erofs-v1-1-35bbb293468a@cyberus-technology.de
+
+---
+Julian Stecklina (9):
+      initrd: remove ASCII spinner
+      initrd: fix double fput for truncated ramdisks
+      initrd: add a generic mechanism to add fs detectors
+      fs: minix: register an initrd fs detector
+      fs: cramfs: register an initrd fs detector
+      fs: romfs: register an initrd fs detector
+      fs: squashfs: register an initrd fs detector
+      fs: ext2, ext4: register an initrd fs detector
+      fs: erofs: register an initrd fs detector
+
+ fs/cramfs/Makefile                |   5 ++
+ fs/cramfs/initrd.c                |  41 +++++++++++++
+ fs/erofs/Makefile                 |   5 ++
+ fs/erofs/initrd.c                 |  19 ++++++
+ fs/ext2/Makefile                  |   5 ++
+ fs/ext2/initrd.c                  |  27 +++++++++
+ fs/ext4/Makefile                  |   4 ++
+ fs/minix/Makefile                 |   5 ++
+ fs/minix/initrd.c                 |  23 +++++++
+ fs/romfs/Makefile                 |   4 ++
+ fs/romfs/initrd.c                 |  22 +++++++
+ fs/squashfs/Makefile              |   5 ++
+ fs/squashfs/initrd.c              |  23 +++++++
+ include/asm-generic/vmlinux.lds.h |   6 ++
+ include/linux/ext2_fs.h           |   9 ---
+ include/linux/initrd.h            |  37 ++++++++++++
+ init/do_mounts_rd.c               | 122 ++++++++------------------------------
+ 17 files changed, 257 insertions(+), 105 deletions(-)
+---
+base-commit: 88d324e69ea9f3ae1c1905ea75d717c08bdb8e15
+change-id: 20250320-initrd-erofs-76e925fdf68c
+
+Best regards,
+-- 
+Julian Stecklina <julian.stecklina@cyberus-technology.de>
 
 
-On 2025/3/1 22:49, Hongzhen Luo wrote:
-> Only files in the same domain will share the page cache. Also modify
-> the sysfs related content in preparation for the upcoming page cache
-> share feature.
-> 
-> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
-> ---
->   fs/erofs/super.c | 12 ++++++++----
->   1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 6af02cc8b8c6..ceab0c29b061 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -489,6 +489,8 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->   		if (!sbi->fsid)
->   			return -ENOMEM;
->   		break;
-> +#endif
-> +#if defined(CONFIG_EROFS_FS_ONDEMAND) || defined(CONFIG_EROFS_FS_INODE_SHARE)
->   	case Opt_domain_id:
->   		kfree(sbi->domain_id);
->   		sbi->domain_id = kstrdup(param->string, GFP_KERNEL);
-> @@ -558,16 +560,16 @@ static void erofs_set_sysfs_name(struct super_block *sb)
->   {
->   	struct erofs_sb_info *sbi = EROFS_SB(sb);
->   
-> -	if (sbi->domain_id)
-> +	if (sbi->domain_id && !sbi->ishare_key)
->   		super_set_sysfs_name_generic(sb, "%s,%s", sbi->domain_id,
->   					     sbi->fsid);
->   	else if (sbi->fsid)
->   		super_set_sysfs_name_generic(sb, "%s", sbi->fsid);
-> -	else if (erofs_is_fileio_mode(sbi))
-I think there is no need to change this, because the inode page cache is 
-just a mode for reading, not like a super block type.
-> +	else if (!sb->s_bdi || !sb->s_bdi->dev)
-> +		super_set_sysfs_name_id(sb);
-> +	else
->   		super_set_sysfs_name_generic(sb, "%s",
->   					     bdi_dev_name(sb->s_bdi));
-> -	else
-> -		super_set_sysfs_name_id(sb);
->   }
->   
->   static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
-> @@ -965,6 +967,8 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
->   #ifdef CONFIG_EROFS_FS_ONDEMAND
->   	if (sbi->fsid)
->   		seq_printf(seq, ",fsid=%s", sbi->fsid);
-> +#endif
-> +#if defined(CONFIG_EROFS_FS_ONDEMAND) || defined(CONFIG_EROFS_FS_INODE_SHARE)
->   	if (sbi->domain_id)
->   		seq_printf(seq, ",domain_id=%s", sbi->domain_id);
->   #endif
 
