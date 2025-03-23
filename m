@@ -1,77 +1,50 @@
-Return-Path: <linux-erofs+bounces-117-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-118-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1256FA6CD4D
-	for <lists+linux-erofs@lfdr.de>; Sun, 23 Mar 2025 00:37:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 16D7CA6CDDD
+	for <lists+linux-erofs@lfdr.de>; Sun, 23 Mar 2025 05:35:14 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZKwhc5l4Zz2ygk;
-	Sun, 23 Mar 2025 10:37:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZL3JC2XTmz2ySR;
+	Sun, 23 Mar 2025 15:35:07 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.9
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1742686640;
-	cv=none; b=dVcoVZRjV9Y2TxglSUXDvAAuZ10E4UOqo3TzUReA8V8W8Lcp1OcXfpYVd9kXx3d6MJVSAly50pYhKrbL5AOQnHXF/D348D1nCPl0DCil24gIXhOonJK+W43xrOQvZSt0g6drpIab4Sh7fEL3wWesJguKTDLH9DgcKVosb+XGUTEPwLJ3T8V1vuvPcxahUvG3LZe9Fkmj6PVU9IffVnsLRb8kMR1ShhHGE6W+bf+OL6yoDQ68bHL0HRpMdX7Lv6ZijUqMHPiNUjwqBNcOgfVOcbpaX/MD4WnKArAKuzSsQ1RJsF0GTNFyXSZniXEv3Q2WB/kygQwxu8/DXHqutGlcyw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1742704507;
+	cv=none; b=PrL2MmWf6K/IIXeJxcEfRzoTyyOKdW5EqKCEKIgjcD2/8RFxQF1Nm4iv//9MqoAzweFXyM/E+TYreZa8Byuueo8PahX1Yyq+gefmCyPnUyPrK+12Hxk4sGnUtxltDlr8LULXKmstRiz41dBiJFBWEf7LZEUJz0T9BMtSv8yk530btDz6iAHxjg8RCsbeXbyJ9PhdmnxbCHLVz77EB9bYi/cQMGnZsQeocNqJDefX5GdA/5ztBHejG2ORCSvlLS0c6b/Tt0h2tB5eMni2h5SSYYeVr3uxoYyb+Mq2FYkYVn+ShOMJu5tEFdyANdhYqsCqsMTr4ohCwEVRTjh+98JHyw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1742686640; c=relaxed/relaxed;
-	bh=RJyLqTt76DE2f1gCHP179gAf9drjXptTmeBN7wwXPQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AXzTfPKkM9slzdX/wOsfCeuuEW2bD9c2qY0NNpqFoNIfDGQoaBDXKfxKPfYfFqwmRJHZRatj335qPGyv8oRriDPj8BV3udCCiTwaLIDeU4s+blygQ4zOr5Hvd+RezVLthkUAsFM7j4nb5yKcSFI/XHMUX0FjTKqpgCoyU5NipTJ+fm1iNIMV4AxVdJ6WFHcdLNtcEhL3Cj8p53rdyCdKGsM07fe02bSvmsYDIACVKvvmxDJq94vt6Oyj614tgC7IqQmj6/rgw9rmnDnpHyJnc3RqT1YdFvxk8cGWtLZHFCzLIf3ZQ9yimNt6kbQlNejijzj29P0wYRrwaSvLkx5XIw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=d+2k/GMz; dkim-atps=neutral; spf=pass (client-ip=192.198.163.9; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1742704507; c=relaxed/relaxed;
+	bh=PdtAujwpQdZFvgT5i003qvJImrNA2HooR7JUWNNORZA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aDhKocczm6nZGdhc5WK1zKpTZ1nqGEZb/w0/UHEwlyiMqIQgQlWOtcE3uub/hcfQ19DcuITBfIBM9kLrdSUefACcwCu7pf9F7krSW6oSpNlNkeU3lEXoFn5RqKrglc+hMFHpdQaNTy3zoMo8N74poQTx9yZCZXrY4XVcX8Ijokj7kg0+WOQXYyEkp7O3Z+s6P0ifw1Sz/HyBsaG6W03INcqUa4A9TSC5axoItGGY6+FiTKcOh6C716k2a0/Gv7D3jvEUJej1GcvI0m6NIALAp6ZrvXMbPW+J27o0VzuCC4fIO3TMnMHz7t9uom+InRlfDRL+ju3UdbZR12jU864C/A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JAJUGe7c; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=d+2k/GMz;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=JAJUGe7c;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.9; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZKwhb4Jh1z2yfD
-	for <linux-erofs@lists.ozlabs.org>; Sun, 23 Mar 2025 10:37:19 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742686640; x=1774222640;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/fL38PohfZNzoYeO4e3wD60/qTiXOlKjNyMjNKu+IRc=;
-  b=d+2k/GMz21belDr3CbeaAsj4Qg2a6NT+JHRKG/1WBHlN8e5+1hGuFYfP
-   PZauu3mlM44Ovku1ofwOeyoBNImSqodIdZkPRnvEVy+/PJ433WQn6m4Tt
-   dTJAyWg0nxZs/rH7R2HECmwghtgCCxjBzGMIPdN1c091NxK1ziAzb1oV/
-   jNJxYUal2RfOLxVtfwwOBFUTcDrZYjQnJfarFQYQtyOsDhotxW+tS1tB4
-   jQ72VaiXb1nV+qKEqbiTXL0ztLIXOKd7rjMzx6lpce4UUrmMJC3pf2fND
-   0S8qX7BjzHdcGvNuKtQFZ882mRHbRuPSL0Gnp+oWAdd0063ZSSqUVujW4
-   w==;
-X-CSE-ConnectionGUID: sLB5TIC+SLGqlbFjkcLNJg==
-X-CSE-MsgGUID: K7MvRaC+TKyXXiYPZbObqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11381"; a="54553326"
-X-IronPort-AV: E=Sophos;i="6.14,268,1736841600"; 
-   d="scan'208";a="54553326"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2025 16:37:11 -0700
-X-CSE-ConnectionGUID: Q4gcij9bRf6YlCYCu1aUrA==
-X-CSE-MsgGUID: T10ovpUaTTKIen4JafwWaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,268,1736841600"; 
-   d="scan'208";a="128530006"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 22 Mar 2025 16:37:08 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tw8On-0002SR-1u;
-	Sat, 22 Mar 2025 23:37:05 +0000
-Date: Sun, 23 Mar 2025 07:36:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Julian Stecklina via B4 Relay <devnull+julian.stecklina.cyberus-technology.de@kernel.org>,
-	Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Gao Xiang <xiang@kernel.org>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-	Julian Stecklina <julian.stecklina@cyberus-technology.de>
-Subject: Re: [PATCH v2 8/9] fs: ext2, ext4: register an initrd fs detector
-Message-ID: <202503230718.5DYAbNZO-lkp@intel.com>
-References: <20250322-initrd-erofs-v2-8-d66ee4a2c756@cyberus-technology.de>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZL3J86SbSz2yRm
+	for <linux-erofs@lists.ozlabs.org>; Sun, 23 Mar 2025 15:35:03 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1742704498; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=PdtAujwpQdZFvgT5i003qvJImrNA2HooR7JUWNNORZA=;
+	b=JAJUGe7c/YoYg5HXOxZ+nvghYqg3JA2bEv4Gqj7g4BKkO7rLIgJ81oTozyxlYnxWnZS/3Ncr4BZHdg0eVrnapoMX5VKm+SuuvqcCRNMoWoAy73I71mNkkcJDgZ1dOQZg2pief15VTObWYVe59jvrv+JJAOxQcx7pcOC9yCKa1rg=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WSQCy-x_1742704492 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sun, 23 Mar 2025 12:34:56 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH v3 2/2] erofs-utils: mkfs: implement multi-threaded fragments
+Date: Sun, 23 Mar 2025 12:34:51 +0800
+Message-ID: <20250323043451.2907228-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250321162019.43511-1-hsiangkao@linux.alibaba.com>
+References: <20250321162019.43511-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -82,54 +55,334 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250322-initrd-erofs-v2-8-d66ee4a2c756@cyberus-technology.de>
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Julian,
+Currently, only `-Eall-fragments` is allowed for multi-threaded
+compression.  However, in many cases, we don't want the entire file
+merged into the packed inode, as it may impact runtime performance.
 
-kernel test robot noticed the following build errors:
+Let's implement multi-threaded compression for `-Efragments` now,
+although it's still not very fast and need to optimize performance
+even further for this option.
 
-[auto build test ERROR on 88d324e69ea9f3ae1c1905ea75d717c08bdb8e15]
+Note that the image sizes could be larger without `-Ededupe` compared
+to `-Eall-fragments` since the head parts aren't deduplicated for now.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Julian-Stecklina-via-B4-Relay/initrd-remove-ASCII-spinner/20250323-043649
-base:   88d324e69ea9f3ae1c1905ea75d717c08bdb8e15
-patch link:    https://lore.kernel.org/r/20250322-initrd-erofs-v2-8-d66ee4a2c756%40cyberus-technology.de
-patch subject: [PATCH v2 8/9] fs: ext2, ext4: register an initrd fs detector
-config: i386-buildonly-randconfig-001-20250323 (https://download.01.org/0day-ci/archive/20250323/202503230718.5DYAbNZO-lkp@intel.com/config)
-compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250323/202503230718.5DYAbNZO-lkp@intel.com/reproduce)
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+change since v2:
+ - fix up broken `-Ededupe` fallback.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503230718.5DYAbNZO-lkp@intel.com/
+ lib/compress.c  | 137 +++++++++++++++++++++++++++++++-----------------
+ lib/fragments.c |  14 ++---
+ lib/inode.c     |   2 +-
+ 3 files changed, 93 insertions(+), 60 deletions(-)
 
-All errors (new ones prefixed by >>):
-
->> fs/ext2/initrd.c:27:33: error: too many arguments provided to function-like macro invocation
-      27 | initrd_fs_detect(detect_ext2fs, BLOCK_SIZE);
-         |                                 ^
-   include/linux/initrd.h:63:9: note: macro 'initrd_fs_detect' defined here
-      63 | #define initrd_fs_detect(detectfn)
-         |         ^
->> fs/ext2/initrd.c:27:1: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
-      27 | initrd_fs_detect(detect_ext2fs, BLOCK_SIZE);
-         | ^
-         | int
-   2 errors generated.
-
-
-vim +27 fs/ext2/initrd.c
-
-    26	
-  > 27	initrd_fs_detect(detect_ext2fs, BLOCK_SIZE);
-
+diff --git a/lib/compress.c b/lib/compress.c
+index 0b48c06..32f58b5 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -110,9 +110,10 @@ struct erofs_compress_work {
+ };
+ 
+ static struct {
+-	struct erofs_workqueue wq;
++	struct erofs_workqueue wq, fwq;
+ 	struct erofs_compress_work *idle;
+ 	pthread_mutex_t mutex;
++	bool hasfwq;
+ } z_erofs_mt_ctrl;
+ #endif
+ 
+@@ -577,11 +578,11 @@ static int __z_erofs_compress_one(struct z_erofs_compress_sctx *ctx,
+ 	if (len <= ctx->pclustersize) {
+ 		if (!final || !len)
+ 			return 1;
+-		if (inode->fragment_size && !ictx->fix_dedupedfrag) {
+-			ctx->pclustersize = roundup(len, blksz);
+-			goto fix_dedupedfrag;
+-		}
+ 		if (may_packing) {
++			if (inode->fragment_size && !ictx->fix_dedupedfrag) {
++				ctx->pclustersize = roundup(len, blksz);
++				goto fix_dedupedfrag;
++			}
+ 			e->length = len;
+ 			goto frag_packing;
+ 		}
+@@ -1056,7 +1057,22 @@ int z_erofs_compress_segment(struct z_erofs_compress_sctx *ctx,
+ 			     u64 offset, erofs_blk_t blkaddr)
+ {
+ 	struct z_erofs_compress_ictx *ictx = ctx->ictx;
++	struct erofs_inode *inode = ictx->inode;
++	bool frag = cfg.c_fragments && !erofs_is_packed_inode(inode) &&
++		ctx->seg_idx >= ictx->seg_num - 1;
+ 	int fd = ictx->fd;
++	int ret;
++
++	DBG_BUGON(offset != -1 && frag && inode->fragment_size);
++	if (offset != -1 && frag && !inode->fragment_size &&
++	    cfg.c_fragdedupe != FRAGDEDUPE_OFF) {
++		ret = z_erofs_fragments_dedupe(inode, fd, &ictx->tof_chksum);
++		if (ret < 0)
++			return ret;
++		if (inode->fragment_size > ctx->remaining)
++			inode->fragment_size = ctx->remaining;
++		ctx->remaining -= inode->fragment_size;
++	}
+ 
+ 	ctx->blkaddr = blkaddr;
+ 	while (ctx->remaining) {
+@@ -1088,8 +1104,7 @@ int z_erofs_compress_segment(struct z_erofs_compress_sctx *ctx,
+ 	}
+ 
+ 	/* generate an extra extent for the deduplicated fragment */
+-	if (ctx->seg_idx >= ictx->seg_num - 1 &&
+-	    ictx->inode->fragment_size && !ictx->fragemitted) {
++	if (frag && inode->fragment_size && !ictx->fragemitted) {
+ 		struct z_erofs_extent_item *ei;
+ 
+ 		ei = malloc(sizeof(*ei));
+@@ -1097,7 +1112,7 @@ int z_erofs_compress_segment(struct z_erofs_compress_sctx *ctx,
+ 			return -ENOMEM;
+ 
+ 		ei->e = (struct z_erofs_inmem_extent) {
+-			.length = ictx->inode->fragment_size,
++			.length = inode->fragment_size,
+ 			.compressedblks = 0,
+ 			.raw = false,
+ 			.partial = false,
+@@ -1207,6 +1222,8 @@ err_free_idata:
+ 	return ret;
+ }
+ 
++static struct z_erofs_compress_ictx g_ictx;
++
+ #ifdef EROFS_MT_ENABLED
+ void *z_erofs_mt_wq_tls_alloc(struct erofs_workqueue *wq, void *ptr)
+ {
+@@ -1354,9 +1371,12 @@ int z_erofs_mt_compress(struct z_erofs_compress_ictx *ictx)
+ 	struct erofs_compress_work *cur, *head = NULL, **last = &head;
+ 	struct erofs_compress_cfg *ccfg = ictx->ccfg;
+ 	struct erofs_inode *inode = ictx->inode;
+-	int nsegs = DIV_ROUND_UP(inode->i_size, cfg.c_mkfs_segment_size);
+-	int i;
++	unsigned int segsz = cfg.c_mkfs_segment_size;
++	int nsegs, i;
+ 
++	nsegs = DIV_ROUND_UP(inode->i_size - inode->fragment_size, segsz);
++	if (!nsegs)
++		nsegs = 1;
+ 	ictx->seg_num = nsegs;
+ 	pthread_mutex_init(&ictx->mutex, NULL);
+ 	pthread_cond_init(&ictx->cond, NULL);
+@@ -1385,13 +1405,6 @@ int z_erofs_mt_compress(struct z_erofs_compress_ictx *ictx)
+ 		};
+ 		init_list_head(&cur->ctx.extents);
+ 
+-		if (i == nsegs - 1)
+-			cur->ctx.remaining = inode->i_size -
+-					      inode->fragment_size -
+-					      i * cfg.c_mkfs_segment_size;
+-		else
+-			cur->ctx.remaining = cfg.c_mkfs_segment_size;
+-
+ 		cur->alg_id = ccfg->handle.alg->id;
+ 		cur->alg_name = ccfg->handle.alg->name;
+ 		cur->comp_level = ccfg->handle.compression_level;
+@@ -1399,6 +1412,17 @@ int z_erofs_mt_compress(struct z_erofs_compress_ictx *ictx)
+ 		cur->errcode = 1;	/* mark as "in progress" */
+ 
+ 		cur->work.fn = z_erofs_mt_workfn;
++		if (i >= nsegs - 1) {
++			cur->ctx.remaining = inode->i_size -
++					inode->fragment_size - (u64)i * segsz;
++			if (z_erofs_mt_ctrl.hasfwq) {
++				erofs_queue_work(&z_erofs_mt_ctrl.fwq,
++						 &cur->work);
++				continue;
++			}
++		} else {
++			cur->ctx.remaining = segsz;
++		}
+ 		erofs_queue_work(&z_erofs_mt_ctrl.wq, &cur->work);
+ 	}
+ 	ictx->mtworks = head;
+@@ -1460,14 +1484,53 @@ out:
+ 	free(ictx);
+ 	return ret;
+ }
+-#endif
+ 
+-static struct z_erofs_compress_ictx g_ictx;
++static int z_erofs_mt_init(void)
++{
++	unsigned int workers = cfg.c_mt_workers;
++	int ret;
++
++	if (workers < 1)
++		return 0;
++	if (workers >= 1 && cfg.c_dedupe) {
++		erofs_warn("multi-threaded dedupe is NOT implemented for now");
++		cfg.c_mt_workers = 0;
++	} else {
++		if (cfg.c_fragments && workers > 1) {
++			ret = erofs_alloc_workqueue(&z_erofs_mt_ctrl.fwq, 1, 32,
++						    z_erofs_mt_wq_tls_alloc,
++						    z_erofs_mt_wq_tls_free);
++			if (ret)
++				return ret;
++			z_erofs_mt_ctrl.hasfwq = true;
++			--workers;
++		}
++
++		ret = erofs_alloc_workqueue(&z_erofs_mt_ctrl.wq, workers,
++					    workers << 2,
++					    z_erofs_mt_wq_tls_alloc,
++					    z_erofs_mt_wq_tls_free);
++		if (ret)
++			return ret;
++		z_erofs_mt_enabled = true;
++	}
++	pthread_mutex_init(&g_ictx.mutex, NULL);
++	pthread_cond_init(&g_ictx.cond, NULL);
++	return 0;
++}
++#else
++static int z_erofs_mt_init(void)
++{
++	return 0;
++}
++#endif
+ 
+ void *erofs_begin_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
+ {
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 	struct z_erofs_compress_ictx *ictx;
++	bool all_fragments = cfg.c_all_fragments &&
++					!erofs_is_packed_inode(inode);
+ 	int ret;
+ 
+ 	/* initialize per-file compression setting */
+@@ -1502,8 +1565,7 @@ void *erofs_begin_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
+ 	inode->idata_size = 0;
+ 	inode->fragment_size = 0;
+ 
+-	if (!z_erofs_mt_enabled ||
+-	    (cfg.c_all_fragments && !erofs_is_packed_inode(inode))) {
++	if (!z_erofs_mt_enabled || all_fragments) {
+ #ifdef EROFS_MT_ENABLED
+ 		pthread_mutex_lock(&g_ictx.mutex);
+ 		if (g_ictx.seg_num)
+@@ -1529,7 +1591,7 @@ void *erofs_begin_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
+ 	 * parts into the packed inode.
+ 	 */
+ 	if (cfg.c_fragments && !erofs_is_packed_inode(inode) &&
+-	    cfg.c_fragdedupe != FRAGDEDUPE_OFF) {
++	    ictx == &g_ictx && cfg.c_fragdedupe != FRAGDEDUPE_OFF) {
+ 		ret = z_erofs_fragments_dedupe(inode, fd, &ictx->tof_chksum);
+ 		if (ret < 0)
+ 			goto err_free_ictx;
+@@ -1547,8 +1609,7 @@ void *erofs_begin_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
+ 	ictx->fix_dedupedfrag = false;
+ 	ictx->fragemitted = false;
+ 
+-	if (cfg.c_all_fragments && !erofs_is_packed_inode(inode) &&
+-	    !inode->fragment_size) {
++	if (all_fragments && !inode->fragment_size) {
+ 		ret = z_erofs_pack_file_from_fd(inode, fd, ictx->tof_chksum);
+ 		if (ret)
+ 			goto err_free_idata;
+@@ -1819,30 +1880,7 @@ int z_erofs_compress_init(struct erofs_sb_info *sbi, struct erofs_buffer_head *s
+ 	}
+ 
+ 	z_erofs_mt_enabled = false;
+-#ifdef EROFS_MT_ENABLED
+-	if (cfg.c_mt_workers >= 1 && (cfg.c_dedupe ||
+-				      (cfg.c_fragments && !cfg.c_all_fragments))) {
+-		if (cfg.c_dedupe)
+-			erofs_warn("multi-threaded dedupe is NOT implemented for now");
+-		if (cfg.c_fragments)
+-			erofs_warn("multi-threaded fragments is NOT implemented for now");
+-		cfg.c_mt_workers = 0;
+-	}
+-
+-	if (cfg.c_mt_workers >= 1) {
+-		ret = erofs_alloc_workqueue(&z_erofs_mt_ctrl.wq,
+-					    cfg.c_mt_workers,
+-					    cfg.c_mt_workers << 2,
+-					    z_erofs_mt_wq_tls_alloc,
+-					    z_erofs_mt_wq_tls_free);
+-		if (ret)
+-			return ret;
+-		z_erofs_mt_enabled = true;
+-	}
+-	pthread_mutex_init(&g_ictx.mutex, NULL);
+-	pthread_cond_init(&g_ictx.cond, NULL);
+-#endif
+-	return 0;
++	return z_erofs_mt_init();
+ }
+ 
+ int z_erofs_compress_exit(void)
+@@ -1858,6 +1896,9 @@ int z_erofs_compress_exit(void)
+ 	if (z_erofs_mt_enabled) {
+ #ifdef EROFS_MT_ENABLED
+ 		ret = erofs_destroy_workqueue(&z_erofs_mt_ctrl.wq);
++		if (ret)
++			return ret;
++		ret = erofs_destroy_workqueue(&z_erofs_mt_ctrl.fwq);
+ 		if (ret)
+ 			return ret;
+ 		while (z_erofs_mt_ctrl.idle) {
+diff --git a/lib/fragments.c b/lib/fragments.c
+index fecebb5..41b9912 100644
+--- a/lib/fragments.c
++++ b/lib/fragments.c
+@@ -146,21 +146,13 @@ int z_erofs_fragments_dedupe(struct erofs_inode *inode, int fd, u32 *tofcrc)
+ 	if (inode->i_size <= EROFS_TOF_HASHLEN)
+ 		return 0;
+ 
+-	if (erofs_lseek64(fd, inode->i_size - EROFS_TOF_HASHLEN, SEEK_SET) < 0)
+-		return -errno;
+-
+-	ret = read(fd, data_to_hash, EROFS_TOF_HASHLEN);
++	ret = pread(fd, data_to_hash, EROFS_TOF_HASHLEN,
++		    inode->i_size - EROFS_TOF_HASHLEN);
+ 	if (ret != EROFS_TOF_HASHLEN)
+ 		return -errno;
+ 
+ 	*tofcrc = erofs_crc32c(~0, data_to_hash, EROFS_TOF_HASHLEN);
+-	ret = z_erofs_fragments_dedupe_find(inode, fd, *tofcrc);
+-	if (ret < 0)
+-		return ret;
+-	ret = lseek(fd, 0, SEEK_SET);
+-	if (ret < 0)
+-		return -errno;
+-	return 0;
++	return z_erofs_fragments_dedupe_find(inode, fd, *tofcrc);
+ }
+ 
+ static int z_erofs_fragments_dedupe_insert(struct list_head *hash, void *data,
+diff --git a/lib/inode.c b/lib/inode.c
+index 8c9a8ec..c4edd43 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -1312,7 +1312,7 @@ struct erofs_mkfs_dfops {
+ 	bool idle;	/* initialize as false before the dfops worker runs */
+ };
+ 
+-#define EROFS_MT_QUEUE_SIZE 128
++#define EROFS_MT_QUEUE_SIZE 256
+ 
+ static void erofs_mkfs_flushjobs(struct erofs_sb_info *sbi)
+ {
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.5
+
 
