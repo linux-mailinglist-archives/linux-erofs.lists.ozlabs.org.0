@@ -1,47 +1,50 @@
-Return-Path: <linux-erofs+bounces-144-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-143-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6FACA7C95C
-	for <lists+linux-erofs@lfdr.de>; Sat,  5 Apr 2025 15:39:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B5DC7A7C95D
+	for <lists+linux-erofs@lfdr.de>; Sat,  5 Apr 2025 15:40:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZVGmp5gl1z2yGY;
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZVGmp3p7tz2ySY;
 	Sun,  6 Apr 2025 00:39:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1743860394;
-	cv=none; b=E1O1E5Hqpc3AEyGZw+P1Ic9fUAPE7Lb6UYu6aUFCVQsh3Pd5bbzxDEIobiFhMpMdDbtn2787VW65B6uQeUwr1z0IEMZcMeDRsxGU7rpQQmhlYcFsqsskX8z/2fpK0UCl2ZNNMxGsChNrLpUcUKT9nc8uJbS7QfscOalDdUZ36zub6+kPrDwQrvNYqDZ8LAnKra5YrA+UKMU1n/grxHE/ft8DsnLgDoCjSaK+Ct+ibc7UzBMZHCE8dUKKW/n+7fk+y4tO4SIkRd1OEasTZ2cam9cKFMe7AWUuLeARGA9VNT2UhtopsBaQEEGge8n+a+S4PQbWIMuPWPBwLqMfFGXm8A==
+	cv=none; b=SOxyx37qWWZ1RXbDOY0XbJdKBXF0v2jMmpASpjcyyjvoZHngfKdWUBfpi39U4FcWN9QKzBMD43LJ6hkyxlsffO4POHcq0z7p2aUrE0n1D3JhtgIUq4DlyfhmaPnsrHNtect6KKUZvLedW7l1Y4SxZWQc9lczaW6bN6+hHe2ZhCfZKS9xYz1nn01UZY0ueyf/JRT536g7YlYv9IehOM0BhqhG7CwCt8sGVSdSEEyXn1gxGRJNW1l4kTJf/8d6FDKgzOKaQZ5zcwWScz2UkORrBPJBI9nZx4D004pNI5xW0NCNb5s2ZenJo6gmIx1DZ9VpQCJz+S61sUJIOO6EU7fVsQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1743860394; c=relaxed/relaxed;
-	bh=lREHCsv0mHK22l/DpMvzSGoMFcuU6VKe1VOxw4FZ9B8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Geh95iVDpRAghjWTKY89aKc/4mCFfbHt7Gj05po+bY1JY4ZBcIUY+DG4MopgbmUxRZ6LWrbRVqczl7HsgPkw2QqFiKIJZmoFOqAqzOVFay84ol2BKXkwvCkiKEV7c2WFEkpG9GmM7fGYdpTmmXmjkwpbZGFSmTWlKYG9cj3N6HZ8bCHkRnwNTxeh0RsFTjDQCTjXrRZNWmAWjHIjZu2fQwMwa7Ctpc2hXVkKb0tC6AvDSq/tNCdgo43foKjcJO3X2ib70+SUkYun4802HyLk1KPDNMUh5CePByrSdFgevugCM3Ba+seGi1TYd2PBvx1AVYPz/F1P+NeahdTzDhoUXA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZkUJZYQJ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	bh=gVLYILLjez9DB4oFkmkmyWymFEdgZJoo6701vCBMGuo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WUhJsBNLPtN88jM22xs5NW2Kze0V8yoQcKkzPxrgUxqQ2VE99qnD7ooDOhX25h3xBuMEdejYYxwT6VvsO1t7JqlQ4TzZCpW7UNhGOS3J7n2jN1VZUVwuj9xKJPBZtYfsAM41OnM/V3CONDKBRHt0nLTApgv6FWtgkD0sx96IKpi0htjO+cn72XMnbJ/LXfTWN8mxTEEusrQBANT4Htua4UBGzq0W8S6modn8+dsMoY1pBN1t3yUf9URQ41iucwOiWWR2iivDMqRiL2cooEQ/NgplNf2JlSNRnNbnXrLTcKkuOe7Ai7IJgk7A2cn6pHSXPpwjZg6JG/5+CS/fIODxbA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ejsJBV1p; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZkUJZYQJ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ejsJBV1p;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZVGml3gYQz2ySW
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZVGml3GJ0z2yGY
 	for <linux-erofs@lists.ozlabs.org>; Sun,  6 Apr 2025 00:39:49 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1743860385; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=lREHCsv0mHK22l/DpMvzSGoMFcuU6VKe1VOxw4FZ9B8=;
-	b=ZkUJZYQJjeA9NP8SSjcCm+3U1A1yvjmET91/21qrPk7Ih6ki3POWJz0QwA7lOCB/VndxxBI1D5OIv0G+yf0tQlw+AOuIYWUBUPm/gHzcREc5DXhGJjms4GCKciP+sg8OU9CEM9Ik/zkse8SOd3RlvlfZBPKOrTZ532syl7/87Hg=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WVGxffq_1743860378 cluster:ay36)
+	t=1743860386; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=gVLYILLjez9DB4oFkmkmyWymFEdgZJoo6701vCBMGuo=;
+	b=ejsJBV1pQ6kadz5WcI9Q+dDVOBAuxOTKos1NJtF7ALEPbQNQoG7nuVPkXyygUCBlr0VTI9yVS3hzDd/CrMqXBEommYDKtSvatxdG0i7iVdncdhybylqcOfCf0Kxr3FDiJs4S8YijULK6uu8Aapkpzxa0c0VDAvnoV2xY4rXVB70=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WVGxfh3_1743860383 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 05 Apr 2025 21:39:43 +0800
+          Sat, 05 Apr 2025 21:39:44 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 1/2] erofs-utils: allocate `struct erofs_inode` with zeroed memory
-Date: Sat,  5 Apr 2025 21:39:36 +0800
-Message-ID: <20250405133937.2665477-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/2] erofs-utils: lib: use atomic operations for `vi->flags`
+Date: Sat,  5 Apr 2025 21:39:37 +0800
+Message-ID: <20250405133937.2665477-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250405133937.2665477-1-hsiangkao@linux.alibaba.com>
+References: <20250405133937.2665477-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -53,72 +56,111 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+X-Spam-Status: No, score=-16.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_MSPIKE_H2,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-The kernel implementation has the same constraint, so the code can
-be shared.
+Since `vi->flags` can be accessed by multiple threads.
 
-Fixes: 9fd2a2250fa9 ("erofs-utils: fuse: switch to FUSE 2/3 lowlevel APIs")
-Fixes: f44043561491 ("erofs-utils: introduce fsck.erofs")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fsck/main.c | 5 +----
- fuse/main.c | 6 +++---
- 2 files changed, 4 insertions(+), 7 deletions(-)
+ include/erofs/atomic.h   | 5 +++++
+ include/erofs/internal.h | 9 ++++++---
+ lib/xattr.c              | 6 ++----
+ lib/zmap.c               | 4 ++--
+ 4 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/fsck/main.c b/fsck/main.c
-index 0e8b944..f7e33c0 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -974,12 +974,9 @@ verify:
- static int erofsfsck_check_inode(erofs_nid_t pnid, erofs_nid_t nid)
- {
- 	int ret, i;
--	struct erofs_inode inode;
-+	struct erofs_inode inode = {.sbi = &g_sbi, .nid = nid};
+diff --git a/include/erofs/atomic.h b/include/erofs/atomic.h
+index f28687e..142590b 100644
+--- a/include/erofs/atomic.h
++++ b/include/erofs/atomic.h
+@@ -22,6 +22,11 @@ __n;})
+ 	__atomic_store(ptr, &__n, __ATOMIC_RELAXED); \
+ } while(0)
  
- 	erofs_dbg("check inode: nid(%llu)", nid | 0ULL);
--
--	inode.nid = nid;
--	inode.sbi = &g_sbi;
- 	ret = erofs_read_inode_from_disk(&inode);
- 	if (ret) {
- 		if (ret == -EIO)
-diff --git a/fuse/main.c b/fuse/main.c
-index cb2759e..db4f323 100644
---- a/fuse/main.c
-+++ b/fuse/main.c
-@@ -231,7 +231,7 @@ static void erofsfuse_open(fuse_req_t req, fuse_ino_t ino,
- 		return;
++#define erofs_atomic_set_bit(bit, ptr) do { \
++	typeof(*ptr) __n = (1 << bit);    \
++	__atomic_or_fetch(ptr, __n, __ATOMIC_ACQ_REL); \
++} while(0)
++
+ #define erofs_atomic_test_and_set(ptr) \
+ 	__atomic_test_and_set(ptr, __ATOMIC_RELAXED)
+ 
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 2f71557..90bee07 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -176,8 +176,11 @@ EROFS_FEATURE_FUNCS(xattr_prefixes, incompat, INCOMPAT_XATTR_PREFIXES)
+ EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
+ EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
+ 
+-#define EROFS_I_EA_INITED	(1 << 0)
+-#define EROFS_I_Z_INITED	(1 << 1)
++#define EROFS_I_EA_INITED_BIT	0
++#define EROFS_I_Z_INITED_BIT	1
++
++#define EROFS_I_EA_INITED	(1 << EROFS_I_EA_INITED_BIT)
++#define EROFS_I_Z_INITED	(1 << EROFS_I_Z_INITED_BIT)
+ 
+ struct erofs_diskbuf;
+ 
+@@ -191,7 +194,7 @@ struct erofs_inode {
+ 
+ 	union {
+ 		/* (erofsfuse) runtime flags */
+-		unsigned int flags;
++		erofs_atomic_t flags;
+ 
+ 		/* (mkfs.erofs) next pointer for directory dumping */
+ 		struct erofs_inode *next_dirwrite;
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 976df14..68a96cc 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -1056,7 +1056,7 @@ static int init_inode_xattrs(struct erofs_inode *vi)
+ 	int ret = 0;
+ 
+ 	/* the most case is that xattrs of this inode are initialized. */
+-	if (vi->flags & EROFS_I_EA_INITED)
++	if (erofs_atomic_read(&vi->flags) & EROFS_I_EA_INITED)
+ 		return ret;
+ 
+ 	/*
+@@ -1117,9 +1117,7 @@ static int init_inode_xattrs(struct erofs_inode *vi)
+ 			le32_to_cpu(*(__le32 *)(it.kaddr + it.ofs));
+ 		it.ofs += sizeof(__le32);
  	}
+-
+-	vi->flags |= EROFS_I_EA_INITED;
+-
++	erofs_atomic_set_bit(EROFS_I_EA_INITED_BIT, &vi->flags);
+ 	return ret;
+ }
  
--	vi = (struct erofs_inode *)malloc(sizeof(struct erofs_inode));
-+	vi = calloc(1, sizeof(struct erofs_inode));
- 	if (!vi) {
- 		fuse_reply_err(req, ENOMEM);
- 		return;
-@@ -281,7 +281,7 @@ static void erofsfuse_opendir(fuse_req_t req, fuse_ino_t ino,
- 	int ret;
- 	struct erofs_inode *vi;
+diff --git a/lib/zmap.c b/lib/zmap.c
+index 70ff898..2a9baba 100644
+--- a/lib/zmap.c
++++ b/lib/zmap.c
+@@ -557,7 +557,7 @@ static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
+ 	struct erofs_sb_info *sbi = vi->sbi;
+ 	int err, headnr;
  
--	vi = (struct erofs_inode *)malloc(sizeof(struct erofs_inode));
-+	vi = calloc(1, sizeof(struct erofs_inode));
- 	if (!vi) {
- 		fuse_reply_err(req, ENOMEM);
- 		return;
-@@ -324,7 +324,7 @@ static void erofsfuse_lookup(fuse_req_t req, fuse_ino_t parent,
- 	struct fuse_entry_param fentry = { 0 };
- 	struct erofsfuse_lookupdir_context ctx = { 0 };
+-	if (vi->flags & EROFS_I_Z_INITED)
++	if (erofs_atomic_read(&vi->flags) & EROFS_I_Z_INITED)
+ 		return 0;
  
--	vi = (struct erofs_inode *)malloc(sizeof(struct erofs_inode));
-+	vi = calloc(1, sizeof(struct erofs_inode));
- 	if (!vi) {
- 		fuse_reply_err(req, ENOMEM);
- 		return;
+ 	pos = round_up(erofs_iloc(vi) + vi->inode_isize + vi->xattr_isize, 8);
+@@ -624,7 +624,7 @@ static int z_erofs_fill_inode_lazy(struct erofs_inode *vi)
+ 			return err;
+ 	}
+ out:
+-	vi->flags |= EROFS_I_Z_INITED;
++	erofs_atomic_set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
+ 	return 0;
+ }
+ 
 -- 
 2.43.5
 
