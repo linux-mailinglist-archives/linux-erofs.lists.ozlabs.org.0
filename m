@@ -1,46 +1,47 @@
-Return-Path: <linux-erofs+bounces-149-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-150-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B9A2A7CCA8
-	for <lists+linux-erofs@lfdr.de>; Sun,  6 Apr 2025 05:49:00 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E75C8A7CDB8
+	for <lists+linux-erofs@lfdr.de>; Sun,  6 Apr 2025 13:27:56 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZVdcR1gDSz2yNG;
-	Sun,  6 Apr 2025 13:48:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZVqnz4kDNz2y3b;
+	Sun,  6 Apr 2025 21:27:51 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1743911335;
-	cv=none; b=RFK8T8VCbEkmNY77axGWiSqpVsKue2GljSrBIDIMtpl44ublX17CcIauIKsv3yvLtt/AZxWLs6ezUr7uNNnH0PFneKBF5bmZnn3o34N6QGBVYUkZ2yRZ/OsWEGODjm+DTUJ1sbTIyOnfydVQEUJW39SN+A+5DfTctJl89udWMSy2YlSajjPJNyny/CxOjU5Dq8y7pn1oaYTRDDRNamc1QFhg2WD6a8KQO2E+TryOE8oUMYSqtiYPE6iee/PjBLuecYnBpf1XvVNc6mIysrOXDwxIKNh/XlhWeuRCrBUJNZfoMU0hlUto/1DgpemBKtr6Lz4ht3NC7IJzrJGF/iPJMg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1743938871;
+	cv=none; b=YCEh8PwZ5LiJIXJ03gIYg/vZdWzU8az4chkGClJA9pci8f28n1rgAo+stG55fm7IhXlK+Ez8EElh6vpAS5Q+lUTlCcLsWkAYb1zLAg8gf18HYwenLMKqKbaZUWb9fzFCssVVQPu68OlpllRvr2uRihkTAbu3qcmInj71v4b1ZanHOnZfRMklzeTnhPCRyCrYqcBoPt7hoAeSgVM1UaDRhEU5hJnVIh+u+66EUz8XT5d4vJXCzVVWlGMb/VRpAHmbkNoQb7VGvlPfo/wY4SoOYMSEiy/+4vR4VfsLMSYDY1SZQ11q0kszt8vcASn1/u+nAOP7iiC30CO2c/du5wRLIg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1743911335; c=relaxed/relaxed;
-	bh=XEecAMyjFckUHQOa2nuFktf6pNQiDYrLzcHPcob3l20=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kanvh3JhoPSePgPdEhZbgUyHwu8hJq7VdLIaMQeyHMgd+ZrvADv6EaOKunwQm5FxjyggumYw4ix5i9TZ8e4R6W3bQYs+JlYfCXZgFvnlq5H2stCSaVSkr/S6szl8m36rlnorejLaPwCDf2zeWbRNsxdNZxDTrK/Gx6TijPIixwCJSrygAl0L2rnG4h5ODHPiBs2KqDFizgfXmH1WWbbQyZg04Epr1zCWtZmFIAmjJcpgKvY01HzsTZT2XuX2S3DgoeqX3qPTlzLD07JSPRT1RpbzZFApXrt9tSGmEJb+e+Ui5BKj8B2T+KgXKJ1KVeuaGqS2uWHKI7WZ8tDrnFYYJA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kzzDVidq; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1743938871; c=relaxed/relaxed;
+	bh=P6zdQnz+bNQEGWj4yoImSam/kgvgbYt/VrmJ15YyIiI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HZJ6OgkLb0y/TIurizEbPAE4WK9okGaA3f3QuWKsStrPUwUAJq3DPCKIQZWrs3tPUx+Ihz8deag73sX+6ST3dunNe9534xOUnKNuZzYMwZ6mf1zZi8vfFCzeuOlQbymPZRdDrjwGtYgatV33EDMcSOeIXjJhpyiO3dLhsNQWFQpKH4HXHewDvwcNP5aturs0N8xyN1PXWlUgEOtb1PKjXspmyK2Hq4QRtElJ1q0pT1su2Qe5tDGlOKUlzntoKznugNYnjfwlNVNPgPUL1+1kX4PvThezpI3TVy01LWpoQifLoYzrX2NqYRy5ZkOI0tZkuAr8pSV5blVnqRuupqBKsA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qSfSx7tZ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kzzDVidq;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qSfSx7tZ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZVdcP5Dvbz2xs7
-	for <linux-erofs@lists.ozlabs.org>; Sun,  6 Apr 2025 13:48:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZVqnw69mRz2xsW
+	for <linux-erofs@lists.ozlabs.org>; Sun,  6 Apr 2025 21:27:47 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1743911328; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=XEecAMyjFckUHQOa2nuFktf6pNQiDYrLzcHPcob3l20=;
-	b=kzzDVidq7v1U6MqWeMNw2BjRoMLrHnuASLfwnYGwXsvJ2e+OwHG+MARVASKCgSj6KPvs6wigEuSjfrREo+/MhDqS+REpkLICiIp6vtEjc89Fe6EsUiFuURFf7kUQ4GVDgB1xDSQHcHs4/fdOKe0SmYwke6kK/LV+/Ca5tSFrt5I=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WVRu7SS_1743911322 cluster:ay36)
+	t=1743938863; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=P6zdQnz+bNQEGWj4yoImSam/kgvgbYt/VrmJ15YyIiI=;
+	b=qSfSx7tZEvcNftMHRA0ATLyrtsrpcf9jMQf9zeNYg06YlkgLlNXLYcnv+pRxyga6FnsO2qsya17eaYG/9X2Nj1VT4BuQpmXooiLNg52pIk/DqRx7zlNNSZZ1qE19LuKIACvl8gI+9GznWJo/+CsN9fixwj2HOxmw09s/8wXGopQ=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WVY5XuN_1743938856 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sun, 06 Apr 2025 11:48:46 +0800
+          Sun, 06 Apr 2025 19:27:41 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs-utils: lib: fix `fragmentoff` larger than 4GiB
-Date: Sun,  6 Apr 2025 11:48:41 +0800
-Message-ID: <20250406034841.3931822-1-hsiangkao@linux.alibaba.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Kelvin Zhang <zhangkelvin@google.com>
+Subject: [PATCH] AOSP: erofs-utils: mkfs: remove block list implementation
+Date: Sun,  6 Apr 2025 19:27:35 +0800
+Message-ID: <20250406112735.348328-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -59,109 +60,262 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-The `EROFS_INODE_COMPRESSED_FULL` datalayout should be used forcibly.
+The current Android doesn't use this method.  Let's remove it
+for simplicity, as it's difficult to verify its functionality
+without setuping the Android environment.
 
-Fixes: cf04b8b78f09 ("erofs-utils: mkfs: implement extent-based deduplication")
+Cc: Kelvin Zhang <zhangkelvin@google.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/fragments.h |  1 -
- lib/compress.c            | 13 +++++++++++--
- lib/fragments.c           | 25 ++++++-------------------
- 3 files changed, 17 insertions(+), 22 deletions(-)
+ include/erofs/block_list.h | 20 ----------
+ lib/blobchunk.c            | 11 ------
+ lib/block_list.c           | 77 --------------------------------------
+ lib/compress.c             |  3 --
+ lib/inode.c                |  5 ---
+ mkfs/main.c                | 13 -------
+ 6 files changed, 129 deletions(-)
 
-diff --git a/include/erofs/fragments.h b/include/erofs/fragments.h
-index ccfdd9b..a57b63c 100644
---- a/include/erofs/fragments.h
-+++ b/include/erofs/fragments.h
-@@ -17,7 +17,6 @@ extern const char *erofs_frags_packedname;
+diff --git a/include/erofs/block_list.h b/include/erofs/block_list.h
+index 8cc87d7..9d06c9c 100644
+--- a/include/erofs/block_list.h
++++ b/include/erofs/block_list.h
+@@ -18,26 +18,6 @@ FILE *erofs_blocklist_close(void);
  
- int z_erofs_fragments_dedupe(struct erofs_inode *inode, int fd, u32 *tofcrc);
+ void tarerofs_blocklist_write(erofs_blk_t blkaddr, erofs_blk_t nblocks,
+ 			      erofs_off_t srcoff, unsigned int zeroedlen);
+-#ifdef WITH_ANDROID
+-void erofs_droid_blocklist_write(struct erofs_inode *inode,
+-				 erofs_blk_t blk_start, erofs_blk_t nblocks);
+-void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+-					  erofs_blk_t blkaddr);
+-void erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
+-					erofs_blk_t blk_start, erofs_blk_t nblocks,
+-					bool first_extent, bool last_extent);
+-#else
+-static inline void erofs_droid_blocklist_write(struct erofs_inode *inode,
+-				 erofs_blk_t blk_start, erofs_blk_t nblocks) {}
+-static inline void
+-erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+-					  erofs_blk_t blkaddr) {}
+-static inline void
+-erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
+-				   erofs_blk_t blk_start, erofs_blk_t nblocks,
+-				   bool first_extent, bool last_extent) {}
+-#endif
+-
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index e6386d6..de9150f 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -145,7 +145,6 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 	erofs_blk_t extent_end, chunkblks;
+ 	erofs_off_t source_offset;
+ 	unsigned int dst, src, unit, zeroedlen;
+-	bool first_extent = true;
  
--void z_erofs_fragments_commit(struct erofs_inode *inode);
- int z_erofs_pack_file_from_fd(struct erofs_inode *inode, int fd, u32 tofcrc);
- int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
- 			   unsigned int len, u32 tofcrc);
+ 	if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
+ 		unit = sizeof(struct erofs_inode_chunk_index);
+@@ -176,11 +175,6 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 				tarerofs_blocklist_write(extent_start,
+ 						extent_end - extent_start,
+ 						source_offset, 0);
+-				erofs_droid_blocklist_write_extent(inode,
+-					extent_start,
+-					extent_end - extent_start,
+-					first_extent, false);
+-				first_extent = false;
+ 			}
+ 			extent_start = idx.blkaddr;
+ 			source_offset = chunk->sourceoffset;
+@@ -203,11 +197,6 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 		tarerofs_blocklist_write(extent_start, extent_end - extent_start,
+ 					 source_offset, zeroedlen);
+ 	}
+-	erofs_droid_blocklist_write_extent(inode, extent_start,
+-			extent_start == EROFS_NULL_ADDR ?
+-					0 : extent_end - extent_start,
+-					   first_extent, true);
+-
+ 	return erofs_dev_write(inode->sbi, inode->chunkindexes, off,
+ 			       inode->extent_isize);
+ }
+diff --git a/lib/block_list.c b/lib/block_list.c
+index 6bbe4ec..4a6466d 100644
+--- a/lib/block_list.c
++++ b/lib/block_list.c
+@@ -44,80 +44,3 @@ void tarerofs_blocklist_write(erofs_blk_t blkaddr, erofs_blk_t nblocks,
+ 		fprintf(block_list_fp, "%08x %8x %08" PRIx64 "\n",
+ 			blkaddr, nblocks, srcoff);
+ }
+-
+-#ifdef WITH_ANDROID
+-static void blocklist_write(const char *path, erofs_blk_t blk_start,
+-			    erofs_blk_t nblocks, bool first_extent,
+-			    bool last_extent)
+-{
+-	const char *fspath = erofs_fspath(path);
+-
+-	if (first_extent) {
+-		fprintf(block_list_fp, "/%s", cfg.mount_point);
+-
+-		if (fspath[0] != '/')
+-			fprintf(block_list_fp, "/");
+-
+-		fprintf(block_list_fp, "%s", fspath);
+-	}
+-
+-	if (nblocks == 1)
+-		fprintf(block_list_fp, " %u", blk_start);
+-	else
+-		fprintf(block_list_fp, " %u-%u", blk_start,
+-			blk_start + nblocks - 1);
+-
+-	if (last_extent)
+-		fprintf(block_list_fp, "\n");
+-}
+-
+-void erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
+-					erofs_blk_t blk_start,
+-					erofs_blk_t nblocks, bool first_extent,
+-					bool last_extent)
+-{
+-	if (!block_list_fp || !cfg.mount_point)
+-		return;
+-
+-	if (!nblocks) {
+-		if (last_extent)
+-			fprintf(block_list_fp, "\n");
+-		return;
+-	}
+-
+-	blocklist_write(inode->i_srcpath, blk_start, nblocks, first_extent,
+-			last_extent);
+-}
+-
+-void erofs_droid_blocklist_write(struct erofs_inode *inode,
+-				 erofs_blk_t blk_start, erofs_blk_t nblocks)
+-{
+-	if (!block_list_fp || !cfg.mount_point || !nblocks)
+-		return;
+-
+-	blocklist_write(inode->i_srcpath, blk_start, nblocks,
+-			true, !inode->idata_size);
+-}
+-
+-void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
+-					  erofs_blk_t blkaddr)
+-{
+-	if (!block_list_fp || !cfg.mount_point)
+-		return;
+-
+-	/* XXX: a bit hacky.. may need a better approach */
+-	if (S_ISDIR(inode->i_mode) || S_ISLNK(inode->i_mode))
+-		return;
+-
+-	/* XXX: another hack, which means it has been outputed before */
+-	if (erofs_blknr(inode->sbi, inode->i_size)) {
+-		if (blkaddr == NULL_ADDR)
+-			fprintf(block_list_fp, "\n");
+-		else
+-			fprintf(block_list_fp, " %u\n", blkaddr);
+-		return;
+-	}
+-	if (blkaddr != NULL_ADDR)
+-		blocklist_write(inode->i_srcpath, blkaddr, 1, true, true);
+-}
+-#endif
 diff --git a/lib/compress.c b/lib/compress.c
-index 9f71022..1742529 100644
+index 1742529..d046112 100644
 --- a/lib/compress.c
 +++ b/lib/compress.c
-@@ -1004,7 +1004,13 @@ static void *z_erofs_write_indexes(struct z_erofs_compress_ictx *ctx)
- 	struct z_erofs_extent_item *ei, *n;
- 	void *metabuf;
+@@ -1238,9 +1238,6 @@ int erofs_commit_compressed_file(struct z_erofs_compress_ictx *ictx,
+ 		DBG_BUGON(ret);
+ 	}
+ 	inode->compressmeta = compressmeta;
+-	if (!erofs_is_packed_inode(inode))
+-		erofs_droid_blocklist_write(inode, pstart >> bbits,
+-					    inode->u.i_blocks);
+ 	return 0;
  
--	if (!cfg.c_legacy_compress && !ctx->dedupe &&
-+	/*
-+	 * If the packed inode is larger than 4GiB, the full fragmentoff
-+	 * will be recorded by switching to the noncompact layout anyway.
-+	 */
-+	if (inode->fragment_size && inode->fragmentoff >> 32) {
-+		inode->datalayout = EROFS_INODE_COMPRESSED_FULL;
-+	} else if (!cfg.c_legacy_compress && !ctx->dedupe &&
- 	    inode->z_logical_clusterbits <= 14) {
- 		if (inode->z_logical_clusterbits <= 12)
- 			inode->z_advise |= Z_EROFS_ADVISE_COMPACTED_2B;
-@@ -1165,7 +1171,10 @@ int erofs_commit_compressed_file(struct z_erofs_compress_ictx *ictx,
- 	u8 *compressmeta;
- 	int ret;
- 
--	z_erofs_fragments_commit(inode);
-+	if (inode->fragment_size) {
-+		inode->z_advise |= Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
-+		erofs_sb_set_fragments(inode->sbi);
-+	}
- 
- 	/* fall back to no compression mode */
- 	DBG_BUGON(pstart < (!!inode->idata_size) << bbits);
-diff --git a/lib/fragments.c b/lib/fragments.c
-index 41b9912..9dfe0e3 100644
---- a/lib/fragments.c
-+++ b/lib/fragments.c
-@@ -179,21 +179,6 @@ static int z_erofs_fragments_dedupe_insert(struct list_head *hash, void *data,
+ err_free_meta:
+diff --git a/lib/inode.c b/lib/inode.c
+index 108aa9e..7a10624 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -564,7 +564,6 @@ static int write_uncompressed_file_from_fd(struct erofs_inode *inode, int fd)
+ 			return -EIO;
+ 		}
+ 	}
+-	erofs_droid_blocklist_write(inode, inode->u.i_blkaddr, nblocks);
  	return 0;
  }
  
--void z_erofs_fragments_commit(struct erofs_inode *inode)
--{
--	if (!inode->fragment_size)
--		return;
--	/*
--	 * If the packed inode is larger than 4GiB, the full fragmentoff
--	 * will be recorded by switching to the noncompact layout anyway.
--	 */
--	if (inode->fragmentoff >> 32)
--		inode->datalayout = EROFS_INODE_COMPRESSED_FULL;
+@@ -843,8 +842,6 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
+ 
+ 		ibh->fsprivate = erofs_igrab(inode);
+ 		ibh->op = &erofs_write_inline_bhops;
 -
--	inode->z_advise |= Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
--	erofs_sb_set_fragments(inode->sbi);
--}
+-		erofs_droid_blocklist_write_tail_end(inode, NULL_ADDR);
+ 	} else {
+ 		int ret;
+ 		erofs_off_t pos, zero_pos;
+@@ -899,8 +896,6 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
+ 		inode->idata_size = 0;
+ 		free(inode->idata);
+ 		inode->idata = NULL;
 -
- int z_erofs_pack_file_from_fd(struct erofs_inode *inode, int fd, u32 tofcrc)
- {
- 	struct erofs_packed_inode *epi = inode->sbi->packedinode;
-@@ -250,8 +235,9 @@ int z_erofs_pack_file_from_fd(struct erofs_inode *inode, int fd, u32 tofcrc)
- 		}
+-		erofs_droid_blocklist_write_tail_end(inode, erofs_blknr(sbi, pos));
  	}
- 
--	erofs_dbg("Recording %llu fragment data at %llu",
--		  inode->fragment_size | 0ULL, inode->fragmentoff | 0ULL);
-+	erofs_dbg("Recording %llu fragment data at %llu of %s",
-+		  inode->fragment_size | 0ULL, inode->fragmentoff | 0ULL,
-+		  inode->i_srcpath);
- 
- 	if (memblock)
- 		rc = z_erofs_fragments_dedupe_insert(
-@@ -289,8 +275,9 @@ int z_erofs_pack_fragments(struct erofs_inode *inode, void *data,
- 		return -EIO;
+ out:
+ 	/* now bh_data can drop directly */
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 6d1a2de..2907789 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -63,7 +63,6 @@ static struct option long_options[] = {
+ #ifdef WITH_ANDROID
+ 	{"product-out", required_argument, NULL, 513},
+ 	{"fs-config-file", required_argument, NULL, 514},
+-	{"block-list-file", required_argument, NULL, 515},
+ #endif
+ 	{"ovlfs-strip", optional_argument, NULL, 516},
+ 	{"offset", required_argument, NULL, 517},
+@@ -213,7 +212,6 @@ static void usage(int argc, char **argv)
+ 		"Android-specific options:\n"
+ 		" --product-out=X       X=product_out directory\n"
+ 		" --fs-config-file=X    X=fs_config file\n"
+-		" --block-list-file=X   X=block_list file\n"
+ #endif
+ #ifdef EROFS_MT_ENABLED
+ 		, erofs_get_available_processors() /* --workers= */
+@@ -723,9 +721,6 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		case 514:
+ 			cfg.fs_config_file = optarg;
+ 			break;
+-		case 515:
+-			cfg.block_list_file = optarg;
+-			break;
+ #endif
+ 		case 'C':
+ 			i = strtoull(optarg, &endptr, 0);
+@@ -1241,14 +1236,6 @@ int main(int argc, char **argv)
+ 		erofs_err("failed to load fs config %s", cfg.fs_config_file);
+ 		return 1;
  	}
- 
--	erofs_dbg("Recording %llu fragment data at %llu",
--		  inode->fragment_size | 0ULL, inode->fragmentoff | 0ULL);
-+	erofs_dbg("Recording %llu fragment data at %llu of %s",
-+		  inode->fragment_size | 0ULL, inode->fragmentoff | 0ULL,
-+		  inode->i_srcpath);
- 
- 	ret = z_erofs_fragments_dedupe_insert(&epi->hash[FRAGMENT_HASH(tofcrc)],
- 					      data, len, inode->fragmentoff);
+-
+-	if (cfg.block_list_file) {
+-		blklst = fopen(cfg.block_list_file, "w");
+-		if (!blklst || erofs_blocklist_open(blklst, false)) {
+-			erofs_err("failed to open %s", cfg.block_list_file);
+-			return 1;
+-		}
+-	}
+ #endif
+ 	erofs_show_config();
+ 	if (cfg.c_fragments || cfg.c_extra_ea_name_prefixes) {
 -- 
 2.43.5
 
