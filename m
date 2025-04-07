@@ -1,80 +1,43 @@
-Return-Path: <linux-erofs+bounces-153-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-154-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25B05A7DC84
-	for <lists+linux-erofs@lfdr.de>; Mon,  7 Apr 2025 13:40:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 355E9A7E524
+	for <lists+linux-erofs@lfdr.de>; Mon,  7 Apr 2025 17:49:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZWS2554Y2z2yfv;
-	Mon,  7 Apr 2025 21:40:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZWYYf0116z2yrv;
+	Tue,  8 Apr 2025 01:49:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744026029;
-	cv=none; b=CliaAMCng2cH+oELCt0sKXQRKLxPcD6YBB93KCZszrEDXBXAVwvQXsMBUAUxIqcpZDYZX2qvWLJ1BeTUoAAK3UYsUWmZkNlp/HOQSA2HRlPoyZpLmt34YMyCT1ZtSGyrEyHzzdnI0eo7Mqptvi36WINMfmbW34iAk0Ed/vhTwhmVJb73jPUSQF13C9yizUkQrzXLPTHLA7yJtszUsjAYhN8k3lbcbuerYwJANV+60l6oEmicRWLpgFdqMbZSppCmLgBrBq8u88pfU3QIXIm8ggcnII9HwQx9XYxbMggz2TdIiFHUUUt6v+7iJ7Znt8Y/LW46zwGdO6DdAiIraeid4Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744040981;
+	cv=none; b=Zi6J5ddEYBGLfqm0Noqj2JDAmlO6BG5D3NPEh/jUHiEky2yf3SAMCvyk/FhLeUT8k+UWX7hEBAyBfKDt/gusieO7ejo6KhQ8K+zt2/Du2qyG1HdYeWbWdsKrY5K4hH7J/De+IOCktPXm6hJF48MOLrTKrR1LZt245dUPJZQXTToAuQxeUzzC9CjTc9iMzaS6pSRR4azKIKhx3HyTELWpzYrVQZGy7UNo447svpDcKQCUdOYfOkPb04uysBtDMCIXUK9XKurxY2G1/MYs0KKSpnbxXkAoCwpkr1EtMgQ25Wg6Chz4pD0smE2ch5A7Bx+uLq9/NR8pCEay4o9gsGaHlQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1744026029; c=relaxed/relaxed;
-	bh=fHbPi1JEW/89my5vo0fU+kVo3zInspEejiOOz7JNSc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HjS4K/ZFqZCMftxTuCp73QRxhd6t3Sdw+JbLtMmOCQqCcOX4CNGr92dyvacxwZsw98bAUnWSwZPSDtaM7O4idEPdc8i2NMvgRbJrCpTLgKrEQJz4xjuauhDT2juHPUiZXCXwmWZqaH5vBHetl4OK6+ZvZeS36uFUtv8rBPWQ4DVtnubmWKScSRPd2j6IlQE1xwbtRjaiX/VQeXuX/D8z4noH9+uqaoX7tsVR7AOn/eofwGWQU9QbrM0x5qoJNZ9WN0lTCT+4b+TT6PIBEaqzeFgRVXaiVimRhqvSy4o5bCrQeNOvpuzEI/4qGqC738nVBAC5jej5cSSbfohEy1OSOg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WR+7tGOp; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=YDe36PjC; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=kzak@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+	t=1744040981; c=relaxed/relaxed;
+	bh=Uuao6a3Hk9qEI19jH9g3VC8nk2PN+ye3kVNY+myZ3fI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mImZ/BPb/KyIbagY9W9krjnDbzlBQsjeh6yB59dDXZXOlfZQmeV5UaeMysDtt3n/+Pwoq6PfpuX+BdlQ+BITRyAZjbmW2xSfHTodCsTGGdEg6WXq93b9hKnkjwG7STFERKBI++WB2w/yXdS5PuS1sOvJz7D2Wv0UurxdrWxRKeoBaTZRm6HBoilMQLXFu5NG8vhthR14Idzbf9LcmAOmLMy3u0Gf7ga32G3/CKiGQcIXzqXIEPB+RvYThCyCUoU9fK5kvw2rtRhf0vjCZSpkTav/gFUhkEMQaTYkXyAH4dDyp7pMB6nTJo8Z5SGW5XDJTWVHCfb336DeWhiTvGvzGw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=w52YeEHR; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=WR+7tGOp;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=YDe36PjC;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=w52YeEHR;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=kzak@redhat.com; receiver=lists.ozlabs.org)
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZWS240DBpz2ydt
-	for <linux-erofs@lists.ozlabs.org>; Mon,  7 Apr 2025 21:40:25 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744026021;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fHbPi1JEW/89my5vo0fU+kVo3zInspEejiOOz7JNSc8=;
-	b=WR+7tGOpduxLI6EAivUVmYN7C1Up2u/LqEEzlMnEK0P4CYLOyomPo9gHS6y5rR8px8SIdT
-	HChxXSMedSfyIEfMXQMn8UzOSo7eEMwMHX0qCCBOo+IKRWFRVvXw9rOuvLm908Lq1qre+X
-	H0kz1jOJ04ZcuyMuzmRrARVAxa+a9ck=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744026022;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fHbPi1JEW/89my5vo0fU+kVo3zInspEejiOOz7JNSc8=;
-	b=YDe36PjC+gjMO0NZsZO4c1/30owqoISfQh/DrXK42c8WWN0Ob2PvMNfd3ddpnBQ6YAWrfN
-	Z9jqUJWyfLvrZRW2Ngy7b5zZXGBRwYV4+kh8U7UwXNWqf2MEN181ZTRvyXv9J5gKTPbSGm
-	bCRPLyM3b2MVmzmO/+LRVvXtrmYP2rw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-34-tzx01GQ1OQWyu-mSribLXw-1; Mon,
- 07 Apr 2025 07:40:18 -0400
-X-MC-Unique: tzx01GQ1OQWyu-mSribLXw-1
-X-Mimecast-MFC-AGG-ID: tzx01GQ1OQWyu-mSribLXw_1744026016
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2BEF91956080;
-	Mon,  7 Apr 2025 11:40:16 +0000 (UTC)
-Received: from ws.net.home (unknown [10.45.224.198])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 324F31955BC0;
-	Mon,  7 Apr 2025 11:40:11 +0000 (UTC)
-Date: Mon, 7 Apr 2025 13:40:08 +0200
-From: Karel Zak <kzak@redhat.com>
-To: Sheng Yong <shengyong2021@gmail.com>
-Cc: xiang@kernel.org, hsiangkao@linux.alibaba.com, chao@kernel.org, 
-	zbestahu@gmail.com, jefflexu@linux.alibaba.com, dhavale@google.com, 
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sheng Yong <shengyong1@xiaomi.com>, 
-	Wang Shuai <wangshuai12@xiaomi.com>
-Subject: Re: [PATCH v3 2/2] erofs: add 'offset' mount option for file-backed
- & bdev-based mounts
-Message-ID: <7nupludayogog6jylmwnxwel4zlvfxeozzcg5qkf5g5a5fpt7g@3bgvpbqfuxxa>
-References: <20250407110551.1538457-1-shengyong1@xiaomi.com>
- <20250407110551.1538457-2-shengyong1@xiaomi.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZWYYb5k51z2yrh
+	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Apr 2025 01:49:38 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744040974; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Uuao6a3Hk9qEI19jH9g3VC8nk2PN+ye3kVNY+myZ3fI=;
+	b=w52YeEHRNnQwdbFtyiklWiwDRAm340eUSWdLCSYzTVlNE6IJT9d+fLmv5SvZ5eY5rEApIQYNllFLg/o+9JBylJ6DQiJ9WH3eQNcqqizDwoScGa1uGzBoQnzsCON1vYT60SdMmZhpSZlQcI4y8CwyTn5H9bjxbOX+F4xbRfXUmr0=
+Received: from 30.134.66.95(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WW11ulY_1744040971 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 07 Apr 2025 23:49:32 +0800
+Message-ID: <d4eae031-8fbb-45e2-bdf4-f3a8a034b8ad@linux.alibaba.com>
+Date: Mon, 7 Apr 2025 23:49:31 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -85,45 +48,65 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250407110551.1538457-2-shengyong1@xiaomi.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] erofs: add 'offset' mount option for file-backed &
+ bdev-based mounts
+To: Karel Zak <kzak@redhat.com>, Sheng Yong <shengyong2021@gmail.com>
+Cc: xiang@kernel.org, chao@kernel.org, zbestahu@gmail.com,
+ jefflexu@linux.alibaba.com, dhavale@google.com,
+ linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ Sheng Yong <shengyong1@xiaomi.com>, Wang Shuai <wangshuai12@xiaomi.com>
+References: <20250407110551.1538457-1-shengyong1@xiaomi.com>
+ <20250407110551.1538457-2-shengyong1@xiaomi.com>
+ <7nupludayogog6jylmwnxwel4zlvfxeozzcg5qkf5g5a5fpt7g@3bgvpbqfuxxa>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <7nupludayogog6jylmwnxwel4zlvfxeozzcg5qkf5g5a5fpt7g@3bgvpbqfuxxa>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Apr 07, 2025 at 07:05:51PM +0800, Sheng Yong wrote:
-> From: Sheng Yong <shengyong1@xiaomi.com>
+Hi Karel,
+
+On 2025/4/7 19:40, Karel Zak wrote:
+> On Mon, Apr 07, 2025 at 07:05:51PM +0800, Sheng Yong wrote:
+>> From: Sheng Yong <shengyong1@xiaomi.com>
+>>
+>> When attempting to use an archive file, such as APEX on android,
+>> as a file-backed mount source, it fails because EROFS image within
+>> the archive file does not start at offset 0. As a result, a loop
+>> device is still needed to attach the image file at an appropriate
+>> offset first. Similarly, if an EROFS image within a block device
+>> does not start at offset 0, it cannot be mounted directly either.
 > 
-> When attempting to use an archive file, such as APEX on android,
-> as a file-backed mount source, it fails because EROFS image within
-> the archive file does not start at offset 0. As a result, a loop
-> device is still needed to attach the image file at an appropriate
-> offset first. Similarly, if an EROFS image within a block device
-> does not start at offset 0, it cannot be mounted directly either.
+> Does it work with mount(8)? The mount option offset= has been defined
+> for decades as userspace-only and is used for loop devices. If I
+> remember correctly, libmount does not send the option to the kernel at
+> all. The option also triggers loop device usage by mount(8).
+> 
+> In recent years, we use the "X-" prefix for userspace options.
+> Unfortunately, loop=, offset=, and sizelimit= are older than any
+> currently used convention (I see the option in mount code from year
+> 1998).
+> 
+> We can improve it in libmount and add any if-erofs hack there, but my
+> suggestion is to select a better name for the mount option. For
+> example, erofsoff=, erostart=, fsoffset=, start=, or similar.
 
-Does it work with mount(8)? The mount option offset= has been defined
-for decades as userspace-only and is used for loop devices. If I
-remember correctly, libmount does not send the option to the kernel at
-all. The option also triggers loop device usage by mount(8).
+Thanks for your suggestion!
 
-In recent years, we use the "X-" prefix for userspace options.
-Unfortunately, loop=, offset=, and sizelimit= are older than any
-currently used convention (I see the option in mount code from year
-1998).
+it's somewhat weird to use erofsprefix here, I think fsoffset
+may be fine.
 
-We can improve it in libmount and add any if-erofs hack there, but my
-suggestion is to select a better name for the mount option. For
-example, erofsoff=, erostart=, fsoffset=, start=, or similar.
+Thanks,
+Gao Xiang
 
-    Karel
-
-
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+> 
+>      Karel
+> 
+> 
 
 
