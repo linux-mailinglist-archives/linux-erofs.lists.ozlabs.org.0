@@ -1,48 +1,86 @@
-Return-Path: <linux-erofs+bounces-150-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-151-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E75C8A7CDB8
-	for <lists+linux-erofs@lfdr.de>; Sun,  6 Apr 2025 13:27:56 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id C671CA7DBDC
+	for <lists+linux-erofs@lfdr.de>; Mon,  7 Apr 2025 13:07:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZVqnz4kDNz2y3b;
-	Sun,  6 Apr 2025 21:27:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZWRHP1gbDz2yhb;
+	Mon,  7 Apr 2025 21:06:57 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1743938871;
-	cv=none; b=YCEh8PwZ5LiJIXJ03gIYg/vZdWzU8az4chkGClJA9pci8f28n1rgAo+stG55fm7IhXlK+Ez8EElh6vpAS5Q+lUTlCcLsWkAYb1zLAg8gf18HYwenLMKqKbaZUWb9fzFCssVVQPu68OlpllRvr2uRihkTAbu3qcmInj71v4b1ZanHOnZfRMklzeTnhPCRyCrYqcBoPt7hoAeSgVM1UaDRhEU5hJnVIh+u+66EUz8XT5d4vJXCzVVWlGMb/VRpAHmbkNoQb7VGvlPfo/wY4SoOYMSEiy/+4vR4VfsLMSYDY1SZQ11q0kszt8vcASn1/u+nAOP7iiC30CO2c/du5wRLIg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::52f"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744024017;
+	cv=none; b=EH42/fRQ1fbVHp3cvI6CoxBev0U8DHBgtQiIatL2gvBBtv4DJx7tU+lyKScaSlpy84MyQw1rq7rvb5dCI9A/JZEGbW3coQU+GvC1Yy6xJNCyUPo64GvaFDIWBNT0s8mk7FbTxgPglXhobUGeINrhBpho98BQMoCBdNc7hRdLPLXoy41+TUPUjLZZedA3lFEd9gKxNbWvEiD6VkCt12uhJmhjkoh3FEHTsy4NiY9yLLmkGUXgwEa+bUWiYCNwTsrO3YtJL8kWcjJJoNN6nm4ZvJ07h7vK+rlzJFeiiWL6A0MHdmoNyEluSq0ciIEtnoqzQF/28cvDX7mBNoxUsrBr0Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1743938871; c=relaxed/relaxed;
-	bh=P6zdQnz+bNQEGWj4yoImSam/kgvgbYt/VrmJ15YyIiI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HZJ6OgkLb0y/TIurizEbPAE4WK9okGaA3f3QuWKsStrPUwUAJq3DPCKIQZWrs3tPUx+Ihz8deag73sX+6ST3dunNe9534xOUnKNuZzYMwZ6mf1zZi8vfFCzeuOlQbymPZRdDrjwGtYgatV33EDMcSOeIXjJhpyiO3dLhsNQWFQpKH4HXHewDvwcNP5aturs0N8xyN1PXWlUgEOtb1PKjXspmyK2Hq4QRtElJ1q0pT1su2Qe5tDGlOKUlzntoKznugNYnjfwlNVNPgPUL1+1kX4PvThezpI3TVy01LWpoQifLoYzrX2NqYRy5ZkOI0tZkuAr8pSV5blVnqRuupqBKsA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qSfSx7tZ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1744024017; c=relaxed/relaxed;
+	bh=ZOptbtbOKUdHNzNg9ygqhPthLmzyP2uo7jPEq6N+YNQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KOnxrWO6XD410e4G90KAJSRjPMEGXPTOkJOlSBFm/3bqw4otKgEN6RDSUU/Af1Ia5nRy3FFq6Zd/PadeLuZ5oaJDdO02cPJeIMeJnRIv7nCcy8duu9H16ek/aBLf4JGm02hgFSK5HTZ4s9Pk/i5KFsmiFQo5JhpEwswFYJCqqRNRmnC07WR4JOfuIkg+ai2mPzwiw3trLYMoq6qz3cDMblBHZ1dBaz1ZrLcVc7bbctFbQ8T1tWoVu7F/nCF0mdlJHsEAWcCJXl0dryvTWF7fCwjpLGE1ohe1GHzeJwP/P5rxyjNFYpJ6TzIwam/G9Un3//JGh4/IqDrL/Ao+GvQQlw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=hT1zS5eA; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::52f; helo=mail-pg1-x52f.google.com; envelope-from=shengyong2021@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qSfSx7tZ;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=hT1zS5eA;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::52f; helo=mail-pg1-x52f.google.com; envelope-from=shengyong2021@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZVqnw69mRz2xsW
-	for <linux-erofs@lists.ozlabs.org>; Sun,  6 Apr 2025 21:27:47 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1743938863; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=P6zdQnz+bNQEGWj4yoImSam/kgvgbYt/VrmJ15YyIiI=;
-	b=qSfSx7tZEvcNftMHRA0ATLyrtsrpcf9jMQf9zeNYg06YlkgLlNXLYcnv+pRxyga6FnsO2qsya17eaYG/9X2Nj1VT4BuQpmXooiLNg52pIk/DqRx7zlNNSZZ1qE19LuKIACvl8gI+9GznWJo/+CsN9fixwj2HOxmw09s/8wXGopQ=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WVY5XuN_1743938856 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sun, 06 Apr 2025 19:27:41 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Kelvin Zhang <zhangkelvin@google.com>
-Subject: [PATCH] AOSP: erofs-utils: mkfs: remove block list implementation
-Date: Sun,  6 Apr 2025 19:27:35 +0800
-Message-ID: <20250406112735.348328-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZWRHM2qTmz2y92
+	for <linux-erofs@lists.ozlabs.org>; Mon,  7 Apr 2025 21:06:54 +1000 (AEST)
+Received: by mail-pg1-x52f.google.com with SMTP id 41be03b00d2f7-af51e820336so3842445a12.1
+        for <linux-erofs@lists.ozlabs.org>; Mon, 07 Apr 2025 04:06:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744024012; x=1744628812; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZOptbtbOKUdHNzNg9ygqhPthLmzyP2uo7jPEq6N+YNQ=;
+        b=hT1zS5eAAYee2OYWW7kz2CFe0HHMHO3Ks3rMkUZuPU6OHqNS3O/Q4FMWvzTTW2IF0I
+         pa9yEu5+iMAhZuWULmwyoPtbHBZXlkMd8jif0y3vNZLylW3oZlLQgYJQbE9VefWXYu5e
+         Tl45MElqLkZn5AxV1VDvqD2PN9xNJY5xGKeo1EDAL68NcyYdIt/MglZKuBCGmtkz0hzb
+         CxZJ+TbYYfGJM0eFqJ26xuXOAhlp+3u0xF88O426DnKL4rbzgxdvIL6Qj3djlOaEw76T
+         IJiccPgfON7gEvqgZMF8qqAvLRVTBx/OnON20IRk+3cb69ziaedsJmgJiXBq5UmKO1e/
+         ++xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744024012; x=1744628812;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZOptbtbOKUdHNzNg9ygqhPthLmzyP2uo7jPEq6N+YNQ=;
+        b=Vu8MGd/9Dmi6wwyPGWiXAGI6HTGZg9PdvU0ymXlAPh+Q1NnCm/QDaSzr/7ummrxdDk
+         tESB3u/Af7hkAb7+yQoK8TEqYh85VIAMgJDfh3ybHiGRkzgUl5QMm2+WmbmkriPaPkSm
+         Uhvdf20H6Ptcf0dH5XHN3hBMftzGXqQlhvvSX1YzAy3XyjQnsK6bCLx+2MoAPoH9Vnbt
+         6JlGQsZAQtDVjY4y1ffVAA4uSJfSF21QIfy2xrfcMe83DqxWbMLQ5oHC12z5z3EfsnAB
+         qlKjErv4/aJT0w8WaWoAaXkIwWBfOfwSu6R9qCOWWNdHAxfdZ5WUqGIxjrQhRlHDZw3o
+         xWbw==
+X-Gm-Message-State: AOJu0YzykPAMpzRb8xAUo0V8/6zO5aaWxpjoCw0mEpk6rTUp+hVNNjsG
+	cT0pPQ1h7po4cHrB4yaiuoVV1Xf1s8535IW4VKcZ5+IZlAl8CHM+
+X-Gm-Gg: ASbGncsSn+j3ALV9xwFTqBE9Q5/G3ckCjIHogniE+qEMEbq7lBmPMDkxLr6jLXYu82Q
+	wpEznwY1s9i2k4Y31rZG9tjF+iZK6GNbenMuY4CPac0zlLqLo/8oQY51TJccHq7j3OmgueoyZc3
+	VfwfYhPUHHTCQwVXQGjEJc8etUl5nUiD06cmrEpiMU2WoUpTmjzllMEU500mtFqG1fPm3IquE29
+	wYkZ/FnYdqoJUZpCmhNzYHuHRvuips/tBMm9JglEQFD/0r3QwzIXuOPLKbEJMHy3KF/UhD57Dbh
+	ZEGqLOTdXOULaoBf8k9lf1gdEOtWHdG82akTag9o7wuMVDGGVspwbIDycPxNpQ==
+X-Google-Smtp-Source: AGHT+IEER9gMFbZAIOso3TAQGWYEqTKd27YcUoJoECCDkKgwZqvn74/cLLH1AbzkTcSTwTfsj0FPkg==
+X-Received: by 2002:a17:90b:2d0d:b0:2fe:b735:87da with SMTP id 98e67ed59e1d1-306af5f1de3mr14855986a91.0.1744024012042;
+        Mon, 07 Apr 2025 04:06:52 -0700 (PDT)
+Received: from PC.mioffice.cn ([43.224.245.227])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3057cb5d672sm8783946a91.31.2025.04.07.04.06.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Apr 2025 04:06:51 -0700 (PDT)
+From: Sheng Yong <shengyong2021@gmail.com>
+X-Google-Original-From: Sheng Yong <shengyong1@xiaomi.com>
+To: xiang@kernel.org,
+	hsiangkao@linux.alibaba.com,
+	chao@kernel.org,
+	zbestahu@gmail.com,
+	jefflexu@linux.alibaba.com,
+	dhavale@google.com
+Cc: linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Sheng Yong <shengyong1@xiaomi.com>
+Subject: [PATCH v3 1/2] erofs: set error to bio if file-backed IO fails
+Date: Mon,  7 Apr 2025 19:05:50 +0800
+Message-ID: <20250407110551.1538457-1-shengyong1@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -54,269 +92,40 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-The current Android doesn't use this method.  Let's remove it
-for simplicity, as it's difficult to verify its functionality
-without setuping the Android environment.
+From: Sheng Yong <shengyong1@xiaomi.com>
 
-Cc: Kelvin Zhang <zhangkelvin@google.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+If a file-backed IO fails before submitting the bio to the lower
+filesystem, an error is returned, but the bio->bi_status is not
+marked as an error. However, the error information should be passed
+to the end_io handler. Otherwise, the IO request will be treated as
+successful.
+
+Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/block_list.h | 20 ----------
- lib/blobchunk.c            | 11 ------
- lib/block_list.c           | 77 --------------------------------------
- lib/compress.c             |  3 --
- lib/inode.c                |  5 ---
- mkfs/main.c                | 13 -------
- 6 files changed, 129 deletions(-)
+ fs/erofs/fileio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/erofs/block_list.h b/include/erofs/block_list.h
-index 8cc87d7..9d06c9c 100644
---- a/include/erofs/block_list.h
-+++ b/include/erofs/block_list.h
-@@ -18,26 +18,6 @@ FILE *erofs_blocklist_close(void);
- 
- void tarerofs_blocklist_write(erofs_blk_t blkaddr, erofs_blk_t nblocks,
- 			      erofs_off_t srcoff, unsigned int zeroedlen);
--#ifdef WITH_ANDROID
--void erofs_droid_blocklist_write(struct erofs_inode *inode,
--				 erofs_blk_t blk_start, erofs_blk_t nblocks);
--void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
--					  erofs_blk_t blkaddr);
--void erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
--					erofs_blk_t blk_start, erofs_blk_t nblocks,
--					bool first_extent, bool last_extent);
--#else
--static inline void erofs_droid_blocklist_write(struct erofs_inode *inode,
--				 erofs_blk_t blk_start, erofs_blk_t nblocks) {}
--static inline void
--erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
--					  erofs_blk_t blkaddr) {}
--static inline void
--erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
--				   erofs_blk_t blk_start, erofs_blk_t nblocks,
--				   bool first_extent, bool last_extent) {}
--#endif
--
- #ifdef __cplusplus
- }
- #endif
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index e6386d6..de9150f 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -145,7 +145,6 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
- 	erofs_blk_t extent_end, chunkblks;
- 	erofs_off_t source_offset;
- 	unsigned int dst, src, unit, zeroedlen;
--	bool first_extent = true;
- 
- 	if (inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
- 		unit = sizeof(struct erofs_inode_chunk_index);
-@@ -176,11 +175,6 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
- 				tarerofs_blocklist_write(extent_start,
- 						extent_end - extent_start,
- 						source_offset, 0);
--				erofs_droid_blocklist_write_extent(inode,
--					extent_start,
--					extent_end - extent_start,
--					first_extent, false);
--				first_extent = false;
- 			}
- 			extent_start = idx.blkaddr;
- 			source_offset = chunk->sourceoffset;
-@@ -203,11 +197,6 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
- 		tarerofs_blocklist_write(extent_start, extent_end - extent_start,
- 					 source_offset, zeroedlen);
+diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
+index bec4b56b3826..4fa0a0121288 100644
+--- a/fs/erofs/fileio.c
++++ b/fs/erofs/fileio.c
+@@ -32,6 +32,8 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
+ 		ret = 0;
  	}
--	erofs_droid_blocklist_write_extent(inode, extent_start,
--			extent_start == EROFS_NULL_ADDR ?
--					0 : extent_end - extent_start,
--					   first_extent, true);
--
- 	return erofs_dev_write(inode->sbi, inode->chunkindexes, off,
- 			       inode->extent_isize);
- }
-diff --git a/lib/block_list.c b/lib/block_list.c
-index 6bbe4ec..4a6466d 100644
---- a/lib/block_list.c
-+++ b/lib/block_list.c
-@@ -44,80 +44,3 @@ void tarerofs_blocklist_write(erofs_blk_t blkaddr, erofs_blk_t nblocks,
- 		fprintf(block_list_fp, "%08x %8x %08" PRIx64 "\n",
- 			blkaddr, nblocks, srcoff);
- }
--
--#ifdef WITH_ANDROID
--static void blocklist_write(const char *path, erofs_blk_t blk_start,
--			    erofs_blk_t nblocks, bool first_extent,
--			    bool last_extent)
--{
--	const char *fspath = erofs_fspath(path);
--
--	if (first_extent) {
--		fprintf(block_list_fp, "/%s", cfg.mount_point);
--
--		if (fspath[0] != '/')
--			fprintf(block_list_fp, "/");
--
--		fprintf(block_list_fp, "%s", fspath);
--	}
--
--	if (nblocks == 1)
--		fprintf(block_list_fp, " %u", blk_start);
--	else
--		fprintf(block_list_fp, " %u-%u", blk_start,
--			blk_start + nblocks - 1);
--
--	if (last_extent)
--		fprintf(block_list_fp, "\n");
--}
--
--void erofs_droid_blocklist_write_extent(struct erofs_inode *inode,
--					erofs_blk_t blk_start,
--					erofs_blk_t nblocks, bool first_extent,
--					bool last_extent)
--{
--	if (!block_list_fp || !cfg.mount_point)
--		return;
--
--	if (!nblocks) {
--		if (last_extent)
--			fprintf(block_list_fp, "\n");
--		return;
--	}
--
--	blocklist_write(inode->i_srcpath, blk_start, nblocks, first_extent,
--			last_extent);
--}
--
--void erofs_droid_blocklist_write(struct erofs_inode *inode,
--				 erofs_blk_t blk_start, erofs_blk_t nblocks)
--{
--	if (!block_list_fp || !cfg.mount_point || !nblocks)
--		return;
--
--	blocklist_write(inode->i_srcpath, blk_start, nblocks,
--			true, !inode->idata_size);
--}
--
--void erofs_droid_blocklist_write_tail_end(struct erofs_inode *inode,
--					  erofs_blk_t blkaddr)
--{
--	if (!block_list_fp || !cfg.mount_point)
--		return;
--
--	/* XXX: a bit hacky.. may need a better approach */
--	if (S_ISDIR(inode->i_mode) || S_ISLNK(inode->i_mode))
--		return;
--
--	/* XXX: another hack, which means it has been outputed before */
--	if (erofs_blknr(inode->sbi, inode->i_size)) {
--		if (blkaddr == NULL_ADDR)
--			fprintf(block_list_fp, "\n");
--		else
--			fprintf(block_list_fp, " %u\n", blkaddr);
--		return;
--	}
--	if (blkaddr != NULL_ADDR)
--		blocklist_write(inode->i_srcpath, blkaddr, 1, true, true);
--}
--#endif
-diff --git a/lib/compress.c b/lib/compress.c
-index 1742529..d046112 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -1238,9 +1238,6 @@ int erofs_commit_compressed_file(struct z_erofs_compress_ictx *ictx,
- 		DBG_BUGON(ret);
- 	}
- 	inode->compressmeta = compressmeta;
--	if (!erofs_is_packed_inode(inode))
--		erofs_droid_blocklist_write(inode, pstart >> bbits,
--					    inode->u.i_blocks);
- 	return 0;
- 
- err_free_meta:
-diff --git a/lib/inode.c b/lib/inode.c
-index 108aa9e..7a10624 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -564,7 +564,6 @@ static int write_uncompressed_file_from_fd(struct erofs_inode *inode, int fd)
- 			return -EIO;
- 		}
- 	}
--	erofs_droid_blocklist_write(inode, inode->u.i_blkaddr, nblocks);
- 	return 0;
- }
- 
-@@ -843,8 +842,6 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
- 
- 		ibh->fsprivate = erofs_igrab(inode);
- 		ibh->op = &erofs_write_inline_bhops;
--
--		erofs_droid_blocklist_write_tail_end(inode, NULL_ADDR);
+ 	if (rq->bio.bi_end_io) {
++		if (ret < 0 && !rq->bio.bi_status)
++			rq->bio.bi_status = errno_to_blk_status(ret);
+ 		rq->bio.bi_end_io(&rq->bio);
  	} else {
- 		int ret;
- 		erofs_off_t pos, zero_pos;
-@@ -899,8 +896,6 @@ static int erofs_write_tail_end(struct erofs_inode *inode)
- 		inode->idata_size = 0;
- 		free(inode->idata);
- 		inode->idata = NULL;
--
--		erofs_droid_blocklist_write_tail_end(inode, erofs_blknr(sbi, pos));
- 	}
- out:
- 	/* now bh_data can drop directly */
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 6d1a2de..2907789 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -63,7 +63,6 @@ static struct option long_options[] = {
- #ifdef WITH_ANDROID
- 	{"product-out", required_argument, NULL, 513},
- 	{"fs-config-file", required_argument, NULL, 514},
--	{"block-list-file", required_argument, NULL, 515},
- #endif
- 	{"ovlfs-strip", optional_argument, NULL, 516},
- 	{"offset", required_argument, NULL, 517},
-@@ -213,7 +212,6 @@ static void usage(int argc, char **argv)
- 		"Android-specific options:\n"
- 		" --product-out=X       X=product_out directory\n"
- 		" --fs-config-file=X    X=fs_config file\n"
--		" --block-list-file=X   X=block_list file\n"
- #endif
- #ifdef EROFS_MT_ENABLED
- 		, erofs_get_available_processors() /* --workers= */
-@@ -723,9 +721,6 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		case 514:
- 			cfg.fs_config_file = optarg;
- 			break;
--		case 515:
--			cfg.block_list_file = optarg;
--			break;
- #endif
- 		case 'C':
- 			i = strtoull(optarg, &endptr, 0);
-@@ -1241,14 +1236,6 @@ int main(int argc, char **argv)
- 		erofs_err("failed to load fs config %s", cfg.fs_config_file);
- 		return 1;
- 	}
--
--	if (cfg.block_list_file) {
--		blklst = fopen(cfg.block_list_file, "w");
--		if (!blklst || erofs_blocklist_open(blklst, false)) {
--			erofs_err("failed to open %s", cfg.block_list_file);
--			return 1;
--		}
--	}
- #endif
- 	erofs_show_config();
- 	if (cfg.c_fragments || cfg.c_extra_ea_name_prefixes) {
+ 		bio_for_each_folio_all(fi, &rq->bio) {
 -- 
-2.43.5
+2.43.0
 
 
