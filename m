@@ -1,69 +1,82 @@
-Return-Path: <linux-erofs+bounces-157-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-158-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AB52A7F3DD
-	for <lists+linux-erofs@lfdr.de>; Tue,  8 Apr 2025 06:59:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 89531A7F83C
+	for <lists+linux-erofs@lfdr.de>; Tue,  8 Apr 2025 10:46:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZWv4n1ppfz2ygY;
-	Tue,  8 Apr 2025 14:59:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZX0761TjCz2yyT;
+	Tue,  8 Apr 2025 18:46:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::633"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744088361;
-	cv=none; b=f8EEigzlYYIwMg8eYn1K23BTKW3XKUOqMnyeFx1I0QM0B5SId+FXjojVnMcirH4MlKc4SKeoUijjghSkwiXe1kPED2OLXSMfs9FmKlbXtsWNd8PD0FZyKRpVjF42iv6AY5WcuEeWUpD8R3No8L6W+9YtQhsriCJnLI1L7/9rIvO3l/QrO31X1HZSqTyEcC60H7HJGKHCGiCLXa7XE0rmyH6bqKrY9ifeZKegtovbiBzgRnNpuInpqJId8ZjZB1XBrSCwokjMBF21VMVnRy445D8Ox4WAIrqIBTfsGKI2thsXZRbSrd6tYeE1KcwIUXSSD6dKjWrfVR6E2VV1pcxFJA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=170.10.133.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744102002;
+	cv=none; b=VbaNGQChZykbB0/bHoNyQm+pXQUhKMimZOir6bZpAG71xvKcRaBFSzSX4QFUHB0Dxw3jMsCv4azXjYwG/pk9Hb85szA3nMvYmQQQKWsoozIc1EApvtWsD1Y29cplpn1rlO/PV0lSmxQWdZfSZ4RkJzvNpHavEut6f0UC5vZQpWsSfDtzO1yde/igeistW/mEGsDYbdj2WEIm8+P/Ea1yCaFg1bR0cjFVZwGUer4XIyki3GTF16gVmchT4+Wy/TBjOONZEr9mqz4b855tcUgXYuJmZVfzE0TTuMvp7A0S+NyAyAlBo+aRY43FdQRt3WP0FAbRIroIG9Xswx1pXlsTag==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1744088361; c=relaxed/relaxed;
-	bh=lPyKFL6EYtrBQlINHjnofiBgH1A/3A3RrizKk2o/+FQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LwMT4FnjR1QKNmdvlPOtYGGjhsxp8UtXLl+Nlun4FsUeaF7wOJQA5dnnYImYAbEv+73kTsGsQxMLISixLVbajrTqbhj2KWjAVazHi2Tgpz/4J4Wv47O+l2Bdt9faKStjOjoGKmiR+mfDbsFBNm3lKDa5fbt8QdC7fkGQGFjxt98u5Wv85+X+3ON9Bde220eLh0smiRl0hTpO2EwfcdiuKYQ5VUHLizV56l25kCtjw+S78+xKhOXwkqc1EiQwu65RqrVqE78tI48IZ3G010EIKpebd7Ve703OsrIOkSaLpYO03NH8ZC8PqvVYB7TpzQDyGuyeeaIX9KV1y9uDKfJK1Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=WGFlEwUL; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::633; helo=mail-ej1-x633.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org) smtp.mailfrom=google.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
+	t=1744102002; c=relaxed/relaxed;
+	bh=TG5DMStY3ZVURXCJczyNhF/JQw67BLGSt3SBnSQ+h7E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P6MbQ2vG0fu016SPwR0yM+os0xbOAfpmYV3ukjymNSGD7dQG7omn5FFjbsfzPcdDQAux2yOQnOAPX4RcPrS9teHPHtrfL1uYi4ywobP4WgenhXj8WcF6zkv5+6cwoDuSVQQD8vnPXi2eJ5ryA22NE+fcXOJFFEaczCNyeu1sMqTSubAK2NZ8Arfy3n1sjmmVcnaz98jojRSW71O43Zh2HzeMHwzRJbMkekfG5zBbKQeoL826PChvNRBl1I675IvXrotP1jX5Xqa8OmbE2yRMmF00EX1X9M+wcTnj9lNYorNtw6OjbYjmVKzDwTW87j75O0eDWRpNM37DAiqIGFhqRQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XSnhe9UG; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XSnhe9UG; dkim-atps=neutral; spf=pass (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=kzak@redhat.com; receiver=lists.ozlabs.org) smtp.mailfrom=redhat.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=WGFlEwUL;
+	dkim=pass (1024-bit key; unprotected) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XSnhe9UG;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.a=rsa-sha256 header.s=mimecast20190719 header.b=XSnhe9UG;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=google.com (client-ip=2a00:1450:4864:20::633; helo=mail-ej1-x633.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org)
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=redhat.com (client-ip=170.10.133.124; helo=us-smtp-delivery-124.mimecast.com; envelope-from=kzak@redhat.com; receiver=lists.ozlabs.org)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZWv4l2Pnzz2yft
-	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Apr 2025 14:59:18 +1000 (AEST)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so627574866b.2
-        for <linux-erofs@lists.ozlabs.org>; Mon, 07 Apr 2025 21:59:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1744088355; x=1744693155; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lPyKFL6EYtrBQlINHjnofiBgH1A/3A3RrizKk2o/+FQ=;
-        b=WGFlEwULbmf2tAZUKIYm/I0V1ZYtChlz7/F5np3PGga2y1feCyAeqB4jPXgskNfxSW
-         1KiXLP2yFnASZM81ygb/KF1gFbkn48hhJIKzD7V4oAJ62ooDEs/OtnNSb0hG2+ktRGJa
-         71KFuPaH5crtFrCzoUPO6ONflBFmnGN3qdyJV0IrNa1CGKGUMvihpuicSXN+6HDkaQRE
-         moO/Rm8pdK3ejz8L5AjDBfqL39IV31YBzDKtXpQ/oGPxt7EFdh+Nf2k6m8NidTqU/95V
-         0juPeZQZxLVVgmVYTX+KgW9g22aoDOK2GpOREQCzBUVXOGv11nZppChkvgYQhP2Tw04I
-         goeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744088355; x=1744693155;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lPyKFL6EYtrBQlINHjnofiBgH1A/3A3RrizKk2o/+FQ=;
-        b=TBEBdG3sTsW9F88dLIQP4kbmEEzH5S6r3Kzp9OulUgx6nSPEsL9grYAL93cUtyboIl
-         m3OZD8Z9tqCMQ9amw6laQoRgKBbEtaAhT7RMVMswa8bab1LebJ3LeokpXnrCTfzmaVDv
-         CwGHdYBBA4XGFC78qs01VLkphPwyXoG28E5m1kvdWVaJqYRbFWXQexy0lHDem5zijcXk
-         CnQY8Xz/QtSMEL8jzk3cMcF7Lwqwaqk8sRvJ0q3TODjXFVPz5NHMuMnuTG/b2FRkZcT3
-         d/T2fcVrVY8OU/vGF4kAUmnA0KQvoAUpR7HPzIRpKbtZq8vWYnrHopa0+MPVwGXHW6NM
-         NPlg==
-X-Gm-Message-State: AOJu0YwaCJ/x+0J93qN0QwuSp0QE4M9GZPkNzNVtnswUo88ZwKvrWSgk
-	0i972RCvORTLVnMOIYQUPA4hZz9Kwdhb0Q3OS4tVrwrfBjqTYc3b7VrT2C2kBnitjnyvv3kMcrk
-	xxHYoPnfQBQ+PHeYv0gctptb3OsVfBKehgJMG
-X-Gm-Gg: ASbGncs0wCbmu7rRIg9LGp/0TIvUKDp3vi7PGXwBhKq+POIgcFPsLMZdkN6J4U/huv+
-	Dyy0WA36qHVfaVn5uqgigzwvkojE61jMaqnXTcKR4joDtfqnV4Miay/pJgJDQ38HZKYjBtPSBsA
-	l79k//LiKDDwQnfg+ousC+JQ==
-X-Google-Smtp-Source: AGHT+IHMBU+wq6W4T0NSttj+q7k5OMgLNQuKpd0k4v5A7VJLj6wPKTL5/A69Xh6L5iIW/4Jk2sxylEsG5cY8WRJ7HAs=
-X-Received: by 2002:a17:907:3f24:b0:ac7:7f14:f31b with SMTP id
- a640c23a62f3a-ac7d1824971mr1478492866b.3.1744088355421; Mon, 07 Apr 2025
- 21:59:15 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZX0750RLrz2yy9
+	for <linux-erofs@lists.ozlabs.org>; Tue,  8 Apr 2025 18:46:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744101997;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TG5DMStY3ZVURXCJczyNhF/JQw67BLGSt3SBnSQ+h7E=;
+	b=XSnhe9UGprYCJz0EHiABCbKQLuTA/MZpc9WTEoLtnxUOdvwqx1LE0cUGbFYmABacDkdWX0
+	9Kf88de6OqQ2dTvi4nwzxIry7Y0jJpXEOFBTJab/SAO/P2iVDT6L0bTX5/zNrTH/TgfNAv
+	fyFtuADxV4GWatmXp/KGnbhKJVw7FcI=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744101997;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TG5DMStY3ZVURXCJczyNhF/JQw67BLGSt3SBnSQ+h7E=;
+	b=XSnhe9UGprYCJz0EHiABCbKQLuTA/MZpc9WTEoLtnxUOdvwqx1LE0cUGbFYmABacDkdWX0
+	9Kf88de6OqQ2dTvi4nwzxIry7Y0jJpXEOFBTJab/SAO/P2iVDT6L0bTX5/zNrTH/TgfNAv
+	fyFtuADxV4GWatmXp/KGnbhKJVw7FcI=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-464-o7R7vcNUOIWYCKBAwq3gyA-1; Tue,
+ 08 Apr 2025 04:46:31 -0400
+X-MC-Unique: o7R7vcNUOIWYCKBAwq3gyA-1
+X-Mimecast-MFC-AGG-ID: o7R7vcNUOIWYCKBAwq3gyA_1744101989
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E29661955DDE;
+	Tue,  8 Apr 2025 08:46:28 +0000 (UTC)
+Received: from ws.net.home (unknown [10.45.224.198])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 93E3D180B48E;
+	Tue,  8 Apr 2025 08:46:25 +0000 (UTC)
+Date: Tue, 8 Apr 2025 10:46:22 +0200
+From: Karel Zak <kzak@redhat.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Sheng Yong <shengyong2021@gmail.com>, xiang@kernel.org, 
+	chao@kernel.org, zbestahu@gmail.com, jefflexu@linux.alibaba.com, 
+	dhavale@google.com, linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	Sheng Yong <shengyong1@xiaomi.com>, Wang Shuai <wangshuai12@xiaomi.com>
+Subject: Re: [PATCH v3 2/2] erofs: add 'offset' mount option for file-backed
+ & bdev-based mounts
+Message-ID: <gk7jzl7pktrdpznqp2hiuflx56xyttw4v4z3epia2ziw4oz547@cft7fyeoirfr>
+References: <20250407110551.1538457-1-shengyong1@xiaomi.com>
+ <20250407110551.1538457-2-shengyong1@xiaomi.com>
+ <7nupludayogog6jylmwnxwel4zlvfxeozzcg5qkf5g5a5fpt7g@3bgvpbqfuxxa>
+ <d4eae031-8fbb-45e2-bdf4-f3a8a034b8ad@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -74,57 +87,34 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-References: <20250402202728.2157627-1-dhavale@google.com> <CAB=BE-TzPKSsHo_nvMuGkB_4JbbP8OZ81ce=76y-28nAeZiniQ@mail.gmail.com>
- <da085862-1c82-4b3e-82ea-b54e2432d96d@linux.alibaba.com>
-In-Reply-To: <da085862-1c82-4b3e-82ea-b54e2432d96d@linux.alibaba.com>
-From: Sandeep Dhavale <dhavale@google.com>
-Date: Mon, 7 Apr 2025 21:59:03 -0700
-X-Gm-Features: ATxdqUH2xMaLI3V97urZLNZW_D7772R4FJJb9-wv2H5MVDeiqjePJE35yusKzi0
-Message-ID: <CAB=BE-T7s7zgExm+A1zqbUFE3SOdB_YzJZgsp4sYBBt2V_EA5Q@mail.gmail.com>
-Subject: Re: [PATCH v2] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-16.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4eae031-8fbb-45e2-bdf4-f3a8a034b8ad@linux.alibaba.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Apr 7, 2025 at 8:07=E2=80=AFPM Gao Xiang <hsiangkao@linux.alibaba.c=
-om> wrote:
->
-> Hi Sandeep,
->
-Hi Gao,
-> On 2025/4/8 10:53, Sandeep Dhavale wrote:
-> > Hi,
-> > Gentle ping for review in case this slipped through the list.
->
-> I'm working on internal stuffs (unrelated to erofs,
-> currently I have to handle erofs stuffs totally in my
-> spare time), also does it really need to be resolved now?
->
-I totally understand.
+On Mon, Apr 07, 2025 at 11:49:31PM +0800, Gao Xiang wrote:
+> On 2025/4/7 19:40, Karel Zak wrote:
+> > We can improve it in libmount and add any if-erofs hack there, but my
+> > suggestion is to select a better name for the mount option. For
+> > example, erofsoff=, erostart=, fsoffset=, start=, or similar.
+> 
+> Thanks for your suggestion!
+> 
+> it's somewhat weird to use erofsprefix here, I think fsoffset
+> may be fine.
 
-> It's not like a bugfix, if it's not urgent it will be
-> landed upstream in the next merge window.
->
-Yes, the next merge window is fine. I was just making sure that I
-collect feedback in case you think this needs any more refinements.
+Yes, fsoffset sounds good. I anticipate more filesystems will support
+file-backed mounts in the future, making this option reusable.
 
-Thanks,
-Sandeep.
+    Karel
 
-> Thanks,
-> Gao Xiang
-> >
-> > Thanks,
-> > Sandeep.
->
+-- 
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
+
 
