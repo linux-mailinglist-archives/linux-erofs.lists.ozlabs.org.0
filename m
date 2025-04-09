@@ -1,87 +1,84 @@
-Return-Path: <linux-erofs+bounces-178-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-179-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86692A82D07
-	for <lists+linux-erofs@lfdr.de>; Wed,  9 Apr 2025 19:01:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 22F1CA82F47
+	for <lists+linux-erofs@lfdr.de>; Wed,  9 Apr 2025 20:52:36 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZXq3F1drNz30W5;
-	Thu, 10 Apr 2025 03:01:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZXsWd2GX0z2yqc;
+	Thu, 10 Apr 2025 04:52:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=202.12.124.157
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744218073;
-	cv=none; b=LmrfwqEIAJN4xqhug+wk9bByzWZ6rIGENZeCqXpay86FDo5TGOfoIjwpqPzJWZBA2Zyb6ACLX2swDC5jcDqqs8KdX/y1nfP9k/7H3WodL6PEULuf7oK/wRup/AjdXsgA6QNaJrLEF3jUD4E2CVkcFq+UEoBuJSBg5i7Q6GIRjXSc+juZz9iM0b3PgJpFzaYjqOIe1zdLTe/WyPYv+oDU+oeQZ6NMgCA0k++3PK+jZ7qgaOYHEoBjMG/bD47pUDsfJ4m25rRLqpmZVr5R5BFDLn6rnAW7iGbPacd1kSsfpvxNtzuqXZV/6HV53QfUkUaPllpzocglW9MEyBA/6I+zdw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::432"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744224749;
+	cv=none; b=nGoVVkMhLI5DbOu2uVT0zLL7Hi2ELwvUEC20vOFTmPyQE7z7uhjQ5BNPlK4n/qFYWw7IsaTwwvvAcXh305NWgpqQhpDb76z8I7cIAnUDZct0XdVS2o1kpBEjcwgu3hdM6oTOBHmfml+gSsy00yRRtqw5MPAZCuZfphOEMcb2y8ZhqbLN6EacrDpx5z1KpNnyZ1P0cN4rsrpn5rrEgKxZqwcbYqUWIoHvhxiEDMtlZttylTfbY8AccwixJ1yq3oF1L/XmlAMDwsKm4glP+0R0Bh/XwyN8WeYMzk1NjnPmt3UtufzmIQsT2CbN+9yd5BTzv/Ll/bhgIIXDoJy2Us1iSw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1744218073; c=relaxed/relaxed;
-	bh=CL4ye0q+ZgR9oyb0q5UVNLnXHxRvzPk9CRl1I4YNH+A=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=gYoeF3UqH2DnEBmLuNs7YNAI3gSeTbGv2QhD6i25V8np+wThEzX++KMug/xoOYjERYsj5uMiy6RjvWtU8YmEDnIXNTOSdkWf3dg7bCEssRBQ3Zh55swCzD6IK1i1Dn9rDPDwT2swocsBpvCYSq85uR+dsOPqOKTsFB43qGf7UaK15vQRSHupFx/i10fnX+FYMLIEGbg1P/JMr/Zy3I7aKWivzV0RB+oYB1waJIEKEHvht76Xk3IAk068E0iy8F1I0GXIcBIXyB3rFF7WMra4fkk64ePqAM+KPtwDrU+kQcAdUp5yiuBzIO30ppUthfUY6kpig79NDQ78f7z7E1pUkQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=verbum.org; dkim=pass (2048-bit key; unprotected) header.d=verbum.org header.i=@verbum.org header.a=rsa-sha256 header.s=fm2 header.b=HuL8J/jh; dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=Fb/ks+7B; dkim-atps=neutral; spf=pass (client-ip=202.12.124.157; helo=fhigh-b6-smtp.messagingengine.com; envelope-from=walters@verbum.org; receiver=lists.ozlabs.org) smtp.mailfrom=verbum.org
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=verbum.org
+	t=1744224749; c=relaxed/relaxed;
+	bh=xCVIdbEnISAVHM1v2E2J31fW79EefnXRviLqNVsb5SI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hRr0+IIgRUakDy4+6eeaq4T7a1IpblWXxJmGseT1dlb9yosPrjpM1zR9nwdlhKvHro/WxOl1sKeHZ3QH8PdXAOHHNg81atcq5PJ3jHYPwrEcq6M6XSl9lwi9S6zzm2yMeSo6LprAieUsiqR/XfL9wkYi6hHfn/Qn8Nm+f6IiggN4Yrs4Zlw40UvKRB8b3mawtQ5dGAUCmxG/4Il5CGsXtMASD6X9SK3NOGsDJqtcdOpCkY3cmBhQjb+aWEAE8iCZhZ//mKzPx5HpIW0iY5soygxqz7/Mf1vDft9tpfvolOyXl4j+BwX+iHc2q0+Pe3W0YO+nDyZxpj4quMdMADngrw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Jd2Gx5jF; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::432; helo=mail-wr1-x432.google.com; envelope-from=david.laight.linux@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=verbum.org header.i=@verbum.org header.a=rsa-sha256 header.s=fm2 header.b=HuL8J/jh;
-	dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=Fb/ks+7B;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Jd2Gx5jF;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=verbum.org (client-ip=202.12.124.157; helo=fhigh-b6-smtp.messagingengine.com; envelope-from=walters@verbum.org; receiver=lists.ozlabs.org)
-X-Greylist: delayed 545 seconds by postgrey-1.37 at boromir; Thu, 10 Apr 2025 03:01:09 AEST
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2a00:1450:4864:20::432; helo=mail-wr1-x432.google.com; envelope-from=david.laight.linux@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZXq3941Crz30VJ
-	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Apr 2025 03:01:09 +1000 (AEST)
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 537D725400B8;
-	Wed,  9 Apr 2025 12:52:01 -0400 (EDT)
-Received: from phl-imap-06 ([10.202.2.83])
-  by phl-compute-10.internal (MEProxy); Wed, 09 Apr 2025 12:52:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verbum.org; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1744217521;
-	 x=1744303921; bh=CL4ye0q+ZgR9oyb0q5UVNLnXHxRvzPk9CRl1I4YNH+A=; b=
-	HuL8J/jhrt6JxphJS+byIZOFq0OeTG5LHkGGKDLBYZeyaiX4nYCKMXyf6RBEGuvM
-	4/wLSEGk8R3Vk3NDlkkUg7ZnxEMKVrM5p0RM2C1zVP7EreYTCC/hBOWNcLuHbIUF
-	3NZxS2NyqU2XOHFxHc1C+zb5Dk/QzolGylH2enaW6aFFgRkmGXNuvzIwaFVTzwR0
-	L5BcMjgOSxKG891nv+stlPxMkOzrAwruu+4H2l+H+tjWhBofEoa0sISktTtqseYj
-	Edb4kSf4wfU8+cb4yR+MaDPoaOCGFQXKBWVlO5RkUJ4E0C/tXaeJvSI8kQnbSKkN
-	qVqn98ITxKgeP3Cw9URSJg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm2; t=1744217521; x=1744303921; bh=C
-	L4ye0q+ZgR9oyb0q5UVNLnXHxRvzPk9CRl1I4YNH+A=; b=Fb/ks+7BOX/aPMGlf
-	Y1DIY3V+OcAW222L6P5x4IQNkQ1dBaq4Ur4d+CO+wRsUfcP3SzIQAlp+nzcONcop
-	QhyVJddaS2XrFw9B2dsGBDtnHNp/SiRw8ldu4u1arnu5hVUYBd2kexhGMbOhYNSv
-	6vVD+oL7HsJWbY/gvv56Bl+LOrJaRnqBRyh9IP+fGeg5vXplGn1+2SP+I1J3umlZ
-	Z2eXOzUXPFFATqVlpR2EoqpgUmp6xJcHoINCbcW17OOZbXIkL+AJq6LgcMehHJM1
-	fnmKbtJc51dg7NFPF7FiRkYqKQ/oGIN/QeRrK2dL98WAyrtC/nnXjbG0QbC3zIsh
-	BdOqw==
-X-ME-Sender: <xms:sKX2ZyLBCWlMTeoo5VC4wxp196rKN8HJYviju7DRKDKxzR8nkGPlKw>
-    <xme:sKX2Z6Lj-Utk3IEwprK0C6N4xVwQYW9AxjT9VStqyWQzTGljydR3RzcId7ShtcrtG
-    pCM9xqlXvKPZnXG>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvtdeiheefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefogg
-    ffhffvkfgjfhfutgfgsehtqhertdertdejnecuhfhrohhmpedfveholhhinhcuhggrlhht
-    vghrshdfuceofigrlhhtvghrshesvhgvrhgsuhhmrdhorhhgqeenucggtffrrghtthgvrh
-    hnpeetffdvudegfeefgfejleevgfdujedtgeefkeetteelvdfgleehteefveduteevveen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeifrghlth
-    gvrhhssehvvghrsghumhdrohhrghdpnhgspghrtghpthhtohepvddpmhhouggvpehsmhht
-    phhouhhtpdhrtghpthhtohephhhsihgrnhhgkhgroheslhhinhhugidrrghlihgsrggsrg
-    drtghomhdprhgtphhtthhopehlihhnuhigqdgvrhhofhhssehlihhsthhsrdhoiihlrggs
-    shdrohhrgh
-X-ME-Proxy: <xmx:sKX2ZyvQoSh0Qxu-ZK7wYOweQaVAdq9WYyIaK_eOwd5EXCPSGX5UXQ>
-    <xmx:sKX2Z3awcyRVyRnT8iQVMk00eeXOAyOLAFVe30tYbi_-yD2ocOs47g>
-    <xmx:sKX2Z5bq17JoJBp0WYuXXIzV2aQcDlGJek_sugE9aay51_5OUk_n3Q>
-    <xmx:sKX2ZzBC4Pl6JP5YLkNNJNv1hz1s6A8TMPzi0Yq9NeNel9B-2zx-wA>
-    <xmx:saX2Z3w1q3ULZPhQiteSeIST3fZ12o4CsrNsmBBHCHrQR0Nfq7OQrIjQ>
-Feedback-ID: ibe7c40e9:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 6E8ED29C0072; Wed,  9 Apr 2025 12:52:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZXsWc1HRbz2yfM
+	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Apr 2025 04:52:27 +1000 (AEST)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-39129fc51f8so5967927f8f.0
+        for <linux-erofs@lists.ozlabs.org>; Wed, 09 Apr 2025 11:52:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744224744; x=1744829544; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xCVIdbEnISAVHM1v2E2J31fW79EefnXRviLqNVsb5SI=;
+        b=Jd2Gx5jFClI8/89E5ejrcYz7EoQxSQQ7MCkIJWbdC7IkI8m+ujeqa3Qt10O6q8Ngha
+         pfEnWXciFY1sClmgiNNfvod8WEOsGt8fxACGkPgd7OGafzVV949mzMESJrHoFSsGY7Fs
+         h1cOIX1/PUa1sJ6F+btuMfUuwoWHgukNOs/Sk/5QtLvwDNbV68OMpQ/PGXJiKVLeh24z
+         Aw3ilso0uB0B6GYSyek4yk+5kzEq25XBIr7Fig0XX7UnzTc+1a8SDjecP5YFU1KYaBlK
+         oib+xmgzzdbcRmtObKbdbJpmJQOHiWyXyfBsbW8TbyrU3O6EwhLqPg8+iQM7jsXNaH31
+         DTwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744224744; x=1744829544;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xCVIdbEnISAVHM1v2E2J31fW79EefnXRviLqNVsb5SI=;
+        b=cP7uQ5Xit4ltB+jVkhc3CYqxEPf9pQPL75Y7rlmzFyiRuV22hDn/TgDaWP5q474YL0
+         bfCSm60MpYqMfM/rap+9ZGpDxAJ5VzQzdpob1u7uBixrrXCeG4pUlbM92oHaIRewEqKp
+         7atOIRo6zWTWEWBhox/2+YmwILcvTjn8PsL+uXRzRJK2dGtpBQnpwljKmlsAUHQfB+ou
+         C+YYHNX7d1mabWqaySkGAw+BxMzPzr1fm8XQvnxNQrCrwHCrKUgiBSRvsHht4xuFkaM/
+         vOhyeh5PJq/SdbrYIJD/Dj6BjHeXOp2E+44Jxq/pMTZh49wCn65ctDfljZdhNxoEByE9
+         Xw0g==
+X-Gm-Message-State: AOJu0Yz5g4ad+U3bU/j7/R5FdCvZEdkbDuqw1Ybclu8ioqWEgJss35kh
+	cffoH8v+iwAtI3vm9f8iJfpO9pojPbmSIfHg0wFz4X2MPY3PRCsD
+X-Gm-Gg: ASbGncuQH0hYFcQhzLhsp40f9U61hORG7+y2COJCvKjLuctlAn4NahLXgImx+YenmSN
+	UcJWaXAZzqkDGEo0DZppFo/pNm6YLMftOnUcIPmgLzhBNWuyyCR1wDAPLulSyPm6FqQJwgU+/WL
+	y74jm3bbzf+JZwyqkBCU61DUHIkOdl7rn9mjfnw3intHzVFUEccas+rsiScUKEUOD7DGvhSgls5
+	ZWmgT9sRqSwn8dzyDF9AQNc7zk84XtEq8rx+HWJkaoOSe/p6YYJGijJxzXHBsv3CDrYLRC19NTP
+	kFYrHh1oU2ZXE05NdQFYZ/NGPr5cI9ttaB3wfmhi7dgE4RqAOff8JB2K6QRW7vLav1/YTzbuv/z
+	jRK4=
+X-Google-Smtp-Source: AGHT+IFzHMs8v+x+fqbf8EJaLOokSyNCKkLysUCzAg9iwIuL/fHNWqtDfjEXm8SBtK1JSxE2iUr9OA==
+X-Received: by 2002:a5d:5c84:0:b0:391:2932:e67b with SMTP id ffacd0b85a97d-39d87ac017dmr4022308f8f.35.1744224743857;
+        Wed, 09 Apr 2025 11:52:23 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893f0b90sm2391844f8f.79.2025.04.09.11.52.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 11:52:23 -0700 (PDT)
+Date: Wed, 9 Apr 2025 19:52:22 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+ kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 1/2] erofs: add __packed annotation to union(__le16..)
+Message-ID: <20250409195222.4cadc368@pumpkin>
+In-Reply-To: <20250408114448.4040220-1-hsiangkao@linux.alibaba.com>
+References: <20250408114448.4040220-1-hsiangkao@linux.alibaba.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -92,39 +89,74 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-X-ThreadId: T558f9dd975fc88e3
-Date: Wed, 09 Apr 2025 12:51:40 -0400
-From: "Colin Walters" <walters@verbum.org>
-To: "Gao Xiang" <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-Message-Id: <0f9fea0f-22b1-4407-98e6-c8df41293b81@app.fastmail.com>
-In-Reply-To: <20250409061731.1267689-1-hsiangkao@linux.alibaba.com>
-References: <3bc4c375-9a5b-41cc-a91c-a15fb4b073ba@app.fastmail.com>
- <20250409061731.1267689-1-hsiangkao@linux.alibaba.com>
-Subject: Re: [PATCH] erofs-utils: lib: fix `1UL << vi->u.chunkbits` on 32-bit platforms
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,SPF_PASS
-	autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Patch looks sane to me.
+On Tue,  8 Apr 2025 19:44:47 +0800
+Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
-On Wed, Apr 9, 2025, at 2:17 AM, Gao Xiang wrote:
+> I'm unsure why they aren't 2 bytes in size only in arm-linux-gnueabi.
 
-> I think it should be fixed on the kernel side too, yet I rarely look
-> after 32-bit platforms due to lack of test environments. =20
+IIRC one of the arm ABI aligns structures on 32 bit boundaries.
 
-It is relatively easy to run 32 bit containers on a 64bit host, that=E2=80=
-=99s what the Debian CI environment that hit this is doing.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/r/202504051202.DS7QIknJ-lkp@intel.com
+> Fixes: 61ba89b57905 ("erofs: add 48-bit block addressing on-disk support")
+> Fixes: efb2aef569b3 ("erofs: add encoded extent on-disk definition")
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> ---
+>  fs/erofs/erofs_fs.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+> index 61a5ee11f187..94bf636776b0 100644
+> --- a/fs/erofs/erofs_fs.h
+> +++ b/fs/erofs/erofs_fs.h
+> @@ -56,7 +56,7 @@ struct erofs_super_block {
+>  	union {
+>  		__le16 rootnid_2b;	/* nid of root directory */
+>  		__le16 blocks_hi;	/* (48BIT on) blocks count MSB */
+> -	} rb;
+> +	} __packed rb;
+>  	__le64 inos;            /* total valid ino # (== f_files - f_favail) */
+>  	__le64 epoch;		/* base seconds used for compact inodes */
+>  	__le32 fixed_nsec;	/* fixed nanoseconds for compact inodes */
+> @@ -148,7 +148,7 @@ union erofs_inode_i_nb {
+>  	__le16 nlink;		/* if EROFS_I_NLINK_1_BIT is unset */
+>  	__le16 blocks_hi;	/* total blocks count MSB */
+>  	__le16 startblk_hi;	/* starting block number MSB */
+> -};
+> +} __packed;
 
-I think the bigger question here is fuzzing on 32 bit right? That likely=
- would have caught this quickly.
+That shouldn't be necessary and will kill performance on some systems.
+The 'packed' on the member should be enough to reduce the size.
 
-I don=E2=80=99t know=E2=80=A6roughly though it feels to me as long as th=
-e Linux kernel supports 32 bit we are going to keep getting pulled to do=
- so too. Especially there=E2=80=99s a long tail of 32 bit ARM out there =
-as I understand it.
+I'd add a compile assert (of some form) on the size of the structure.
 
->
+	David
+
+>  
+>  /* 32-byte reduced form of an ondisk inode */
+>  struct erofs_inode_compact {
+> @@ -369,9 +369,9 @@ struct z_erofs_map_header {
+>  			 * bit 7   : pack the whole file into packed inode
+>  			 */
+>  			__u8	h_clusterbits;
+> -		};
+> +		} __packed;
+>  		__le16 h_extents_hi;	/* extent count MSB */
+> -	};
+> +	} __packed;
+
+Ditto
+
+>  };
+>  
+>  enum {
+
 
