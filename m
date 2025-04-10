@@ -1,43 +1,44 @@
-Return-Path: <linux-erofs+bounces-180-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-181-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88903A834DD
-	for <lists+linux-erofs@lfdr.de>; Thu, 10 Apr 2025 01:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 79E50A837CB
+	for <lists+linux-erofs@lfdr.de>; Thu, 10 Apr 2025 06:24:11 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZY0Gw1tJzz305v;
-	Thu, 10 Apr 2025 09:56:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZY6CF0mc1z3bgn;
+	Thu, 10 Apr 2025 14:24:09 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744243016;
-	cv=none; b=DxLBq5OprWDVOOrakSq3TcvQyFD/AsJGkvcwwssHPW+B3w41PwNTGe14l0dqGCSbyHD5JVIkAah2J6y321TKpJhxMuYNyyb37a8ytivTC756PgdN6B5iAUlUlZeUHCN8NnCoAKjatWvT+ZYxBDEVOKn3u4cGkhY0idTSDLfbqgbmnU6GlXEXckmTTnmGiDCPYJO/5yYDY8Lg67i+lyvXs6h1es7leNfpBwm+7e3qOVhkFlMWns/2HjfKW2dWoXw0RLp0vMzKOXnybL5audmlvE5wc6DH0rsllgrX92vO2sNUCi42RoVXiLw/YQvPzYWI8BI27GlSMidTW0dZPw+oCQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=210.51.61.248
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744259049;
+	cv=none; b=nfby1rk3CaXk6BQ+lDD7IdEqHC++anXmxlD7mAQa/hWauoelPMS36vFX99I2b28sGAk4u9+8lmQTEn6kbG1XP5AtkGW6dc/UdOX57eh1v4xwE7CFq/9Gu2K/Lr7xlRvLU7MYTa3XH+riPJEbYwHqFZvcp1EXIPl/D+akwGTuxFy8WrGJpS8MV0hajfeHwfB62jWAwSlfJ8/cJFlvrQzbAz2QifXB8k15rKVW1/NLHyMagIN2yTotKU4KIuodVP05qz+a5tUndDw4wTyyy2vQa28BYZTEWqVKfc44n+xnnQDhnThJHpEmYqFN169PQiXTft6IFuaqrMx9MZme5W0jVg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1744243016; c=relaxed/relaxed;
-	bh=Aoq6JYCaV1p9yraciQnzm7D38594vGRZlTcVPXdUJs8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k4PQ2n9Md+b6HjYKZyBLe9Cim8XmfseHuVkwP/A/i6qrPTCGmKHX5pXKEL0ak4yeM9IsXr84ipLlEe023nxniOKC8umgNhrTbTxhcDcTx2G9duW1xvVAohuahIdYIrTY+SdIvt7IpW5KsGeNintKLow3XatyrMx9EliIa59ge+HhD7dm5TDFtC6yxFbqE5rjW2AKHzIgK8NJjPld/TomaIsPstmLdG4lI4wVoh0DVacKzSKtBR/X9PqscwEJ8bKscMLkkQbl6voHTXIvvJSVThZiBR1pg7rFAh5QE4qFbfdbKMpr1BF8vcXOhekO0GYrC8tZrwl93wOvMq3uydzBcg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Xioj6Bbo; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Xioj6Bbo;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1744259049; c=relaxed/relaxed;
+	bh=MPf8lUtR8JjSG7X+9BDlJZvd5HRURL6kR2YpH6MOosk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iGc7MCPwljtkXVSAv5ObCM3yyzdRs2A/nj1B0/uOuZq1SDDZ0MDLp6sZ2F+/ZVDMAwhGoedpiP4dsqec5QhIaVu2N+mHTROSB9MFDobUuNU//V0AbKMZSxHFJJZZb5PkDEwJAWuGbmBrHIMK8oHfUffTs/0Bd7qUAzgaH9VN+ysEoQKdLgmQVvvW7JT7lvGgUQjs95yXSW4AgZDMPm4qTOiH+S0bPqfF5A1FaclRiGKFN3zHi9VDMj1G2Rz5W712hK5i6VBjfo12M3zgTiMBk3CFiPRYk36GVfhbrnmLIZulq5D/A7KmilYSUtGjxs4IWqKfJr9+N8Z+7w8Q3c3LVQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass (client-ip=210.51.61.248; helo=ssh248.corpemail.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org) smtp.mailfrom=inspur.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=inspur.com (client-ip=210.51.61.248; helo=ssh248.corpemail.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 65 seconds by postgrey-1.37 at boromir; Thu, 10 Apr 2025 14:24:07 AEST
+Received: from ssh248.corpemail.net (ssh248.corpemail.net [210.51.61.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZY0Gt4QJnz2y92
-	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Apr 2025 09:56:53 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744243009; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Aoq6JYCaV1p9yraciQnzm7D38594vGRZlTcVPXdUJs8=;
-	b=Xioj6Bbo71r4nQHT40k9TzdYci02/ewVcJ92B6cVv3807jZcUx44Rk7RpG6ro5NWMHobF7QOwMT8g5Alw9JXbBN8MYHjsHgQ4tXmeGe+CHEn/TCJWIlR6KHYdcqEaoKA95Qt0MEeI2UtvvVINjEXWJSu/JLQ509XEwOm/DniS00=
-Received: from 30.134.5.237(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WWLx0T9_1744243006 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 10 Apr 2025 07:56:46 +0800
-Message-ID: <7af3e868-04cb-47b1-a81b-651be3756ec5@linux.alibaba.com>
-Date: Thu, 10 Apr 2025 07:56:45 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZY6CC29btz2yf3
+	for <linux-erofs@lists.ozlabs.org>; Thu, 10 Apr 2025 14:24:07 +1000 (AEST)
+Received: from jtjnmail201622.home.langchao.com
+        by ssh248.corpemail.net ((D)) with ASMTP (SSL) id 202504101222467137;
+        Thu, 10 Apr 2025 12:22:46 +0800
+Received: from localhost.localdomain (10.94.13.146) by
+ jtjnmail201622.home.langchao.com (10.100.2.22) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Thu, 10 Apr 2025 12:22:46 +0800
+From: Bo Liu <liubo03@inspur.com>
+To: <xiang@kernel.org>, <chao@kernel.org>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
+	<liubo03@inspur.com>
+Subject: [PATCH 0/2] erofs: support deflate decompress by using Intel QAT
+Date: Thu, 10 Apr 2025 00:20:46 -0400
+Message-ID: <20250410042048.3044-1-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -48,131 +49,63 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] erofs: add __packed annotation to union(__le16..)
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- kernel test robot <lkp@intel.com>
-References: <20250408114448.4040220-1-hsiangkao@linux.alibaba.com>
- <20250409195222.4cadc368@pumpkin>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250409195222.4cadc368@pumpkin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain
+X-Originating-IP: [10.94.13.146]
+X-ClientProxiedBy: Jtjnmail201613.home.langchao.com (10.100.2.13) To
+ jtjnmail201622.home.langchao.com (10.100.2.22)
+tUid: 2025410122246b0df1532b0f6c621da8f7d37d98b692f
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
+X-Spam-Status: No, score=0.0 required=3.0 tests=SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi David,
+This patch introdueces the use of the Intel QAT to decompress compressed
+data in the EROFS filesystem, aiming to improve the decompression speed
+of compressed datea.
 
-On 2025/4/10 02:52, David Laight wrote:
-> On Tue,  8 Apr 2025 19:44:47 +0800
-> Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
-> 
->> I'm unsure why they aren't 2 bytes in size only in arm-linux-gnueabi.
-> 
-> IIRC one of the arm ABI aligns structures on 32 bit boundaries.
+We created a 285MiB compressed file and then used the following command to
+create EROFS images with different cluster size.
+     # mkfs.erofs -zdeflate,level=9 -C16384
 
-Thanks for your reply, but I'm not sure if it's the issue.
+fio command was used to test random read and small random read(~5%) and
+sequential read performance.
+     # fio -filename=testfile  -bs=4k -rw=read -name=job1
+     # fio -filename=testfile  -bs=4k -rw=randread -name=job1
+     # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
 
-> 
->>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Closes: https://lore.kernel.org/r/202504051202.DS7QIknJ-lkp@intel.com
->> Fixes: 61ba89b57905 ("erofs: add 48-bit block addressing on-disk support")
->> Fixes: efb2aef569b3 ("erofs: add encoded extent on-disk definition")
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->> ---
->>   fs/erofs/erofs_fs.h | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
->> index 61a5ee11f187..94bf636776b0 100644
->> --- a/fs/erofs/erofs_fs.h
->> +++ b/fs/erofs/erofs_fs.h
->> @@ -56,7 +56,7 @@ struct erofs_super_block {
->>   	union {
->>   		__le16 rootnid_2b;	/* nid of root directory */
->>   		__le16 blocks_hi;	/* (48BIT on) blocks count MSB */
->> -	} rb;
->> +	} __packed rb;
->>   	__le64 inos;            /* total valid ino # (== f_files - f_favail) */
->>   	__le64 epoch;		/* base seconds used for compact inodes */
->>   	__le32 fixed_nsec;	/* fixed nanoseconds for compact inodes */
->> @@ -148,7 +148,7 @@ union erofs_inode_i_nb {
->>   	__le16 nlink;		/* if EROFS_I_NLINK_1_BIT is unset */
->>   	__le16 blocks_hi;	/* total blocks count MSB */
->>   	__le16 startblk_hi;	/* starting block number MSB */
->> -};
->> +} __packed;
-> 
-> That shouldn't be necessary and will kill performance on some systems.
-> The 'packed' on the member should be enough to reduce the size.
+Here are some performance numbers for reference:
 
-It cannot be resolved by the following diff:
+Processors: Intel(R) Xeon(R) 6766E(144 core)
+Memory:     521 GiB
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 94bf636776b0..1f6233dfdcb0 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -148,14 +148,14 @@ union erofs_inode_i_nb {
-         __le16 nlink;           /* if EROFS_I_NLINK_1_BIT is unset */
-         __le16 blocks_hi;       /* total blocks count MSB */
-         __le16 startblk_hi;     /* starting block number MSB */
--} __packed;
-+};
+|-----------------------------------------------------------------------------|
+|           | Cluster size | sequential read | randread  | small randread(5%) |
+|-----------|--------------|-----------------|-----------|--------------------|
+| Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
+| Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
+| Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
+| Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
+| Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
+| deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
+| deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
+| deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
+| deflate   |    65536     |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
+| deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
 
-  /* 32-byte reduced form of an ondisk inode */
-  struct erofs_inode_compact {
-         __le16 i_format;        /* inode format hints */
-         __le16 i_xattr_icount;
-         __le16 i_mode;
--       union erofs_inode_i_nb i_nb;
-+       union erofs_inode_i_nb i_nb __packed;
-         __le32 i_size;
-         __le32 i_mtime;
-         union erofs_inode_i_u i_u;
-@@ -171,7 +171,7 @@ struct erofs_inode_extended {
-         __le16 i_format;        /* inode format hints */
-         __le16 i_xattr_icount;
-         __le16 i_mode;
--       union erofs_inode_i_nb i_nb;
-+       union erofs_inode_i_nb i_nb __packed;
-         __le64 i_size;
-         union erofs_inode_i_u i_u;
+Bo Liu (2):
+  erofs: remove duplicate code
+  erofs: support deflate decompress by using Intel QAT
 
-I doesn't work and will report
+ fs/erofs/decompressor_deflate.c | 145 +++++++++++++++++++++++++++++++-
+ fs/erofs/internal.h             |   1 +
+ fs/erofs/sysfs.c                |  30 +++++++
+ fs/erofs/zdata.c                |   1 -
+ 4 files changed, 175 insertions(+), 2 deletions(-)
 
-In file included from <command-line>:
-In function 'erofs_check_ondisk_layout_definitions',
-     inlined from 'erofs_module_init' at ../fs/erofs/super.c:817:2:
-./../include/linux/compiler_types.h:542:38: error: call to '__compiletime_assert_332' declared with attribute error: BUILD_BUG_ON failed: sizeof(struct erofs_inode_compact) != 32
-   542 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-       |
+-- 
+2.31.1
 
-> 
-> I'd add a compile assert (of some form) on the size of the structure.
-
-you mean
-
-@@ -435,6 +435,7 @@ static inline void erofs_check_ondisk_layout_definitions(void)
-         };
-
-         BUILD_BUG_ON(sizeof(struct erofs_super_block) != 128);
-+       BUILD_BUG_ON(sizeof(union erofs_inode_i_nb) != 2);
-         BUILD_BUG_ON(sizeof(struct erofs_inode_compact) != 32);
-
-?
-
-
-./../include/linux/compiler_types.h:542:38: error: call to '__compiletime_assert_332' declared with attribute error: BUILD_BUG_ON failed: sizeof(union erofs_inode_i_nb) != 2
-   542 |  _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-       |                                      ^
-
-That doesn't work too.
-
-Thanks,
-Gao Xiang
 
