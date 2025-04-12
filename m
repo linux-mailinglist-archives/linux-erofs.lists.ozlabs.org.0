@@ -1,72 +1,69 @@
-Return-Path: <linux-erofs+bounces-195-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-196-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48019A855B7
-	for <lists+linux-erofs@lfdr.de>; Fri, 11 Apr 2025 09:45:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 211BFA86D93
+	for <lists+linux-erofs@lfdr.de>; Sat, 12 Apr 2025 16:16:43 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZYpcH16l4z3c5N;
-	Fri, 11 Apr 2025 17:44:47 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZZbFP2Cd1z30hF;
+	Sun, 13 Apr 2025 00:16:09 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.14
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744357487;
-	cv=none; b=URkc6L/yrydJ/5DFu0wPKt8n2ZjEVeO/dFNx5FafmG6MwHbpgo98cAkIWvZWeeTYnWuEcZ5K1mbT7R+cSfgXQOzwFJuwzcwguOQN4SLPgb1H0H/TsU/0PXDUcoa0M8VA6+bkZCaOEYwZEAy6CBGtJPwM2AKryGl//MsTMDmJN1pwzmclhReQANOCNA7H2bmpwFn81wy+YT+/H4ZpGpX0u43kuBYXUp6WDMz51/DiSppic/t/JWPDQyQUM500S623OuTXKUuOnvcDT0mACHOMvUYgGltPmtaI8G7SnkltfTrzwucPtrGj3xUnGsbiez9qqCtFqJQ9jPH1HIIE1qGl+A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=5.199.136.28
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744467369;
+	cv=none; b=KHaCTOpjuIRsbLLWlFfvH2TDopBtyy2kQKgl04qY8gWg3lIEYm26LTQHEwZQtCSnriE/t9yDuhWEpMrEONjVlT2kbVrMC+nSeJuzK/KQtgv0+eZ8SgZDGiRYjZKXUsoP7d5jxGbg88ihwXpvSlnv2ILk6a9KfKMLV8wakGRKNENbmAAETO0017lUU1oRjhV2ylNUeSIZ+ABpLqhyIfIJ+TxqV1tw9kVhQ0WPWZh7p2pWHRqJBBU+uwHz1m+PfY3lJbww/mVadDe91Vqdnm1fj+iE1p2fWkqhM/zu4JkinTQW3Ouml4xuTx+f2kA8SfmkfRpoyWMLNy0wpe8H33CHBw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1744357487; c=relaxed/relaxed;
-	bh=AZo9EMKWJYXi3pMZawuNQq0YSXGKAQJeUVVpovoAsy0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LdHusrSuXSr34SYemvkxzSTIZCjaXehpV7moAA5YPlxBlQQ+mh48E8cvPONK6NFu8w9AWzjyd0i4hev71oDxLIixjZKb8BD2Jw6w5jXjdcutMGuGPyJG3SswNuJwfl03sZ/RUGPEZczfzHlhipnOugUx69bn4CksIzMt3kiPspEKMB9eDi/UsxtdIXTBWqqwYO8cSIhNw3J/yudZFNj4haDKCnWuWbUCskASJR0+uWpVNTKEmScfXv2xrUTr7/5PmeCNBi1CuN1Yyf3ZYyvwxGx4rV/TXwgWgqNlk6lRZPIUBxvODmheKlXCOkxb9hzoRnyfzfL7q65D0/1aSIrAUg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=IWSVGd8O; dkim-atps=neutral; spf=pass (client-ip=192.198.163.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1744467369; c=relaxed/relaxed;
+	bh=2eYcc9iagiRSkffTNOH2pp6v9FqlkPr6nivkhdioa8E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BHYaFzomjMf0ZKxRDBfV9o9RtnyS/7v23ynB02YXEyWKOI0EcX7xaOzUq8vXkvie6x9yslTjgkmTricGJnXQ5iM4BDpVe1BQbZ27b+uLoYqgVMDzAm59KL5WQQ3UGtNZUgW1SAIgeAKgIX1Yrr+aPzP1euL13z1WkGv8XCmvKYXxB7uIuJGGQ/CYrBu/E4KYk3/sOecGj9zs2+FNYFrD0lI0lwehyqtb8wWXwQsuNxcVPf8u0BfLyT9ZgWnwZRRDKJ9cIGaQZEvLOxmTntb0jtZhfg/lEs6tKNh9yUHpI7f3hmcQ8mcmgUUIiYDSNMC3Pl7g4FePWsZ+Brtuft9YcQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net; dkim=pass (4096-bit key; secure) header.d=envs.net header.i=@envs.net header.a=rsa-sha256 header.s=modoboa header.b=ngpbSQsc; dkim-atps=neutral; spf=pass (client-ip=5.199.136.28; helo=mail.envs.net; envelope-from=xtex@envs.net; receiver=lists.ozlabs.org) smtp.mailfrom=envs.net
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=envs.net
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=IWSVGd8O;
+	dkim=pass (4096-bit key; secure) header.d=envs.net header.i=@envs.net header.a=rsa-sha256 header.s=modoboa header.b=ngpbSQsc;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=envs.net (client-ip=5.199.136.28; helo=mail.envs.net; envelope-from=xtex@envs.net; receiver=lists.ozlabs.org)
+X-Greylist: delayed 354 seconds by postgrey-1.37 at boromir; Sun, 13 Apr 2025 00:16:03 AEST
+Received: from mail.envs.net (mail.envs.net [5.199.136.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZYpcG09BFz3c2G
-	for <linux-erofs@lists.ozlabs.org>; Fri, 11 Apr 2025 17:44:45 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744357486; x=1775893486;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BatrTrRZ7JbnzpwmHwqLBJA+VfyF2JrypX+7zybZCtk=;
-  b=IWSVGd8Oeq+R51ltW3il5blLh9K/9VAnI0sS9OfMjPEU65Ix/6Qm1DJI
-   rgN6p11vg8TFo0Gyp8l1Jx9PNM3QShzCFprF1au9W1g4kD/Z/XRIzY75e
-   BruqZm40sNm2359rbbtWJOoQk69bu+YwleZCcWXCnbwbkJCDjJmIc8Fq7
-   gl/urhmgzScYRb1wwAH2V7hCIGXgO9I/UJqvEPxkSLjCfNuXb/r3uFOJq
-   BK9pFoCXvIDuFkHiKF86iW7tmUZKL9xcmPiZnr5aX/cNIe1RiwUzwJJ6m
-   mX2x65ZQ3xHsbB+K+l4KAvdUmI2xGQqR0hhB2qXcrF165CnRgXFWvRZ+M
-   w==;
-X-CSE-ConnectionGUID: Ts2y4u6iT2uWgXBCrZwG9A==
-X-CSE-MsgGUID: uDE0xtezRQCwIEJHdz9S0A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11400"; a="46067874"
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="46067874"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2025 00:44:44 -0700
-X-CSE-ConnectionGUID: yco92PoOR6OZAG9251mptA==
-X-CSE-MsgGUID: YPEP/conRxqdoCsd2q8WeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,203,1739865600"; 
-   d="scan'208";a="133230360"
-Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 11 Apr 2025 00:44:42 -0700
-Received: from kbuild by b207828170a5 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u3944-000Aws-0L;
-	Fri, 11 Apr 2025 07:44:40 +0000
-Date: Fri, 11 Apr 2025 15:44:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org, chao@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	Bo Liu <liubo03@inspur.com>
-Subject: Re: [PATCH 2/2] erofs: support deflate decompress by using Intel QAT
-Message-ID: <202504111545.9ZYfP6Gr-lkp@intel.com>
-References: <20250410042048.3044-3-liubo03@inspur.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZZbFH2Lxlz2ypV
+	for <linux-erofs@lists.ozlabs.org>; Sun, 13 Apr 2025 00:16:03 +1000 (AEST)
+Received: from localhost (mail.envs.net [127.0.0.1])
+	by mail.envs.net (Postfix) with ESMTP id B1B1038A4037;
+	Sat, 12 Apr 2025 14:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=envs.net; s=modoboa;
+	t=1744467002; bh=2eYcc9iagiRSkffTNOH2pp6v9FqlkPr6nivkhdioa8E=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ngpbSQscUUi91IuhWlnnrkToYEqDFqGEK3cC1dhn/1ZZq6IfKjkQcAcndeCtXwN3v
+	 WwxXdIlTAs18Mda0LSwMnxI7/PZTjl1KMgmImuBl8+vtlE1JltpTZKYZWKj2x9MNGV
+	 jQo0YM34r6ETZxO5WrM28nFzup+A7DsRCCLmdESNJhyFrOKgciFemaeWZQkIZSiOWw
+	 RwtfEZPe3h9GgKN+K452F1hHLpG8a7aorRGdJF62DLBClRTsDVW9eGIeJWbRyY6G60
+	 Dlin4elW4G9wAVzvfRXJmosdSOrh6K7gTwuqf6FgTlfUFnUpjtAGqMH5uG4+9OZZGO
+	 9ISfwH0dgsQArxV0vx3qXVAai+G56EUFoYGeDpCAr+8n/hoJGveNvRmhM0VoEBQnT4
+	 bgTO1ImoR4XudIUXEXN9QqdBSV9tlMmOBg1P9X+sE72NQllRIuppqaFifE9DOF8+Oj
+	 pVd28tDsT5+oP/sFxBrfG/2rAio24vsS3dQBa7dODf1T7v2Q19DZKk/BXJ0AduuCLZ
+	 8qyg/G9GDiqR1MamHKuHjq6v8McRqGIF/mHBg3V7UgRyR/M7LxkrBQ40bcv95WD2Nx
+	 N+wG35rJ9qy66o3lYCKON2ZfIDnchyv4EbkKJnpU/2H3rBTpK6dZ8rt5HIs2rnQAA+
+	 85ThQcXmdokAR9gEGWl/v0gw=
+X-Virus-Scanned: Debian amavisd-new at mail.envs.net
+Received: from mail.envs.net ([127.0.0.1])
+	by localhost (mail.envs.net [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id h359pY2B7BK0; Sat, 12 Apr 2025 14:10:00 +0000 (UTC)
+Received: from xtexx.eu.org (unknown [223.73.102.141])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.envs.net (Postfix) with ESMTPSA;
+	Sat, 12 Apr 2025 14:09:59 +0000 (UTC)
+From: Bingwu Zhang <xtex@envs.net>
+To: Gao Xiang <xiang@kernel.org>
+Cc: Bingwu Zhang <xtex@aosc.io>,
+	linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] erofs-utils: add contrib/stress to .gitignore
+Date: Sat, 12 Apr 2025 22:09:38 +0800
+Message-ID: <20250412140940.88303-1-xtex@envs.net>
+X-Mailer: git-send-email 2.49.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -77,83 +74,31 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410042048.3044-3-liubo03@inspur.com>
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Bo,
+From: Bingwu Zhang <xtex@aosc.io>
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Bingwu Zhang <xtex@aosc.io>
+---
+ .gitignore | 1 +
+ 1 file changed, 1 insertion(+)
 
-[auto build test ERROR on xiang-erofs/dev-test]
-[also build test ERROR on xiang-erofs/dev linus/master v6.15-rc1]
-[cannot apply to xiang-erofs/fixes next-20250411]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+diff --git a/.gitignore b/.gitignore
+index 33e5d30a9cdf..348896103d66 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -31,3 +31,4 @@ stamp-h1
+ /fuse/erofsfuse
+ /dump/dump.erofs
+ /fsck/fsck.erofs
++/contrib/stress
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bo-Liu/erofs-remove-duplicate-code/20250410-122442
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-patch link:    https://lore.kernel.org/r/20250410042048.3044-3-liubo03%40inspur.com
-patch subject: [PATCH 2/2] erofs: support deflate decompress by using Intel QAT
-config: x86_64-buildonly-randconfig-003-20250411 (https://download.01.org/0day-ci/archive/20250411/202504111545.9ZYfP6Gr-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250411/202504111545.9ZYfP6Gr-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504111545.9ZYfP6Gr-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> fs/erofs/sysfs.c:136:12: error: no member named 'erofs_tfm' in 'struct erofs_sb_info'
-     136 |                 if (sbi->erofs_tfm)
-         |                     ~~~  ^
-   fs/erofs/sysfs.c:138:33: error: no member named 'erofs_tfm' in 'struct erofs_sb_info'
-     138 |                                 crypto_comp_alg_common(sbi->erofs_tfm)->base.cra_driver_name);
-         |                                                        ~~~  ^
-   2 errors generated.
-
-
-vim +136 fs/erofs/sysfs.c
-
-   115	
-   116	static ssize_t erofs_attr_show(struct kobject *kobj,
-   117					struct attribute *attr, char *buf)
-   118	{
-   119		struct erofs_sb_info *sbi = container_of(kobj, struct erofs_sb_info,
-   120							s_kobj);
-   121		struct erofs_attr *a = container_of(attr, struct erofs_attr, attr);
-   122		unsigned char *ptr = __struct_ptr(sbi, a->struct_type, a->offset);
-   123	
-   124		switch (a->attr_id) {
-   125		case attr_feature:
-   126			return sysfs_emit(buf, "supported\n");
-   127		case attr_pointer_ui:
-   128			if (!ptr)
-   129				return 0;
-   130			return sysfs_emit(buf, "%u\n", *(unsigned int *)ptr);
-   131		case attr_pointer_bool:
-   132			if (!ptr)
-   133				return 0;
-   134			return sysfs_emit(buf, "%d\n", *(bool *)ptr);
-   135		case attr_comp_crypto:
- > 136			if (sbi->erofs_tfm)
-   137				return sysfs_emit(buf, "%s\n",
-   138					crypto_comp_alg_common(sbi->erofs_tfm)->base.cra_driver_name);
-   139			else
-   140				return sysfs_emit(buf, "NONE\n");
-   141		}
-   142		return 0;
-   143	}
-   144	
-
+base-commit: 3689cbc2349bff05807d2f939146e92eb1bfaea1
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
 
