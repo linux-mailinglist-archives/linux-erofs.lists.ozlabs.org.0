@@ -1,41 +1,43 @@
-Return-Path: <linux-erofs+bounces-202-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-203-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C478FA89E75
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Apr 2025 14:45:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 21D5BA8AD88
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Apr 2025 03:22:20 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZcP5X0G80z2yRn;
-	Tue, 15 Apr 2025 22:45:36 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Zcjtd3VtMz3blC;
+	Wed, 16 Apr 2025 11:22:17 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.191
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744721135;
-	cv=none; b=bG+e2xfK+4HnG3JXvfEpHyzDwfeCcIs6PQVApQbAfhCO02E+SpE1XkOTzMOGBwW9c6yXt4qWU35/fb30zRStepJutPFUvdO8gbctyguFlZZQ+5VMMfY/zgyD6e2G6l1I7hLCAXPs657r9oD1SlRALTUYp+mH6RISF56rQDQw99fk9rg1kD1Rl90DA8dCPUwTNGhl+N03BlLb01zcPaLDkumAUoG5o8D//kRveWDDngiHtrD7U589hXWoEbwlHQrqCcKXM7unYKz71483LezOmFVbDgFi1/PiUxPd75xrePILDBGdZgwuHr3msUl2vLt0kg2/FIGdnluUvhQVQwE/Nw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.99
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744766537;
+	cv=none; b=HH2odW2VFoOX9FIVUT/bBIS1brBnH8hpdhJAdEZrPRp51iRvKGJj+dc5G3oYsw2nq5NtzBadOojL6JnjsqiyepOdriUVMmLKhjDxMPBmndJWjj+aWhebXM21J51bqVx5FfffvlLbFuRXSZDY/cT7nWdKAghYe6isqtXrVy5c8Az+jV96NfrWXOGfVyGdBRtIiem1VEzrLt/xanKJVHW1Tw+atzx1Nc5rab2cLU0axHurVKByF8il1VcpuWg4pBPCQzHYsFdh3Bf45Vq0sZxKSq35VDPShi1MWChuRn+UJnNe3GJFHqwQCB2hwR1ScV4VezIFiJ5K60mCTaDoPZ8MyA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1744721135; c=relaxed/relaxed;
-	bh=8N2Jc2uZaYhxmLQ/+doBZEiJCv3LMHYnuzSJdtKLCY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=b+abkfNZ6wZjj7B9ocgRKwOg89KcwQ2mC93mzUIKLJ1ilOmN8xZgBlFf9ys7ccOO2n5F+BFCKqIrs0jKCQDHo4QWZOjwhjHOFsmhBEkeA5thK+/jdLBHPMVPzK0v/DmurQMUbPrWqzdUHheP4yfAqwn1BDPIZ61z2oiLtL6+cMDhi0hHf8OkUoXLx4TZo7zQgAXRiEgKBKyfFIuxmH+PypC1TAhQsM2vHkKX7kT+b+NS5Jp58L0aYhS0s07QAM9tlDwDPDIRkw0fSqTSMNwxanjC5JmYjUIiD1BBew4yevAa4PwFYxIFcwaVI+NRO7BTNUJTf8gkbfjcFGH5l/m8bA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1744766537; c=relaxed/relaxed;
+	bh=S+gSHUgnZJkpNQEKAUzU8Rgqjm+4Add/shFYdufCnCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AMq/NC56ThBzOh8p3MKwKMbKJlgNE8TCA2485NT3rS3gjKs+wMXPDHjHyEoYiaFDR7mk26m2EvXjXNg0QNeqsgGsVFwnQxCzsLt8TEJVYMjJ3ZbjNZf001a5nLHawcD3rixKBWUtMuCslYghrOP1voSC5cftipo0SgirQbGsybs8/JKUDuDJ/ust88XyJOKCjtsmMtADc4VMPjRip/AIhHLYc/NORNmua86MF0LAABQoLY98OPfBCoVhNEwdODjtI/UxgpeaxzRqKLPUAnqMI1NgRBObH6fmk7+DjreWogZNU46wlmY1aRbMWsSQpC10w5XGMq38sm8NSLPYQ0VI+g==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZGv0qAEb; dkim-atps=neutral; spf=pass (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZGv0qAEb;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZcP5V3yW2z2y3b
-	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Apr 2025 22:45:32 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZcP374bdHz1R7gs;
-	Tue, 15 Apr 2025 20:43:31 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id D4EBE1A016C;
-	Tue, 15 Apr 2025 20:45:27 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 15 Apr 2025 20:45:27 +0800
-Message-ID: <28772dbe-1ae9-4ff7-91ef-c45d174b88d6@huawei.com>
-Date: Tue, 15 Apr 2025 20:45:22 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zcjtb1pFHz3bkG
+	for <linux-erofs@lists.ozlabs.org>; Wed, 16 Apr 2025 11:22:13 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1744766529; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=S+gSHUgnZJkpNQEKAUzU8Rgqjm+4Add/shFYdufCnCM=;
+	b=ZGv0qAEb+m439MJrk9UtfFszgYekavOh323gFVAsXI/cgM2gquDk84uCP3QxSvIYmcCjSKXtPNrtjYk9kNTBCaWjDPg7Tggl8igJ1a6P43RlAlNuQ/gaRsUMvZb1XXvmpVjU2DsulWB82GJRiatIZL/tv6JzwP2DtjblHYhWIXA=
+Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WX6j.0Y_1744766526 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 16 Apr 2025 09:22:07 +0800
+Message-ID: <a1e86463-3427-4715-a4a2-0ef88cca6135@linux.alibaba.com>
+Date: Wed, 16 Apr 2025 09:22:06 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -47,193 +49,196 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm: alloc_pages_bulk: support both simple and
- full-featured API
-To: Chuck Lever <chuck.lever@oracle.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Yishai Hadas <yishaih@nvidia.com>, Jason
- Gunthorpe <jgg@ziepe.ca>, Shameer Kolothum
-	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>, Josef
- Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Gao Xiang
-	<xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
-	<tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong
- Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
-	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Jesper Dangaard Brouer
-	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
-	<anna@kernel.org>
-CC: Luiz Capitulino <luizcap@redhat.com>, Mel Gorman
-	<mgorman@techsingularity.net>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-	<linux-mm@kvack.org>, <linux-nfs@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<netdev@vger.kernel.org>
-References: <20250414120819.3053967-1-linyunsheng@huawei.com>
- <18713073-342e-48b2-9864-24004445e234@oracle.com>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <18713073-342e-48b2-9864-24004445e234@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
+Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
+References: <20250402202728.2157627-1-dhavale@google.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250402202728.2157627-1-dhavale@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.120.129]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemf200006.china.huawei.com (7.185.36.61)
-X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On 2025/4/15 1:39, Chuck Lever wrote:
-> On 4/14/25 8:08 AM, Yunsheng Lin wrote:
->> As mentioned in [1], it seems odd to check NULL elements in
->> the middle of page bulk allocating, and it seems caller can
->> do a better job of bulk allocating pages into a whole array
->> sequentially without checking NULL elements first before
->> doing the page bulk allocation for most of existing users
->> by passing 'page_array + allocated' and 'nr_pages - allocated'
->> when calling subsequent page bulk alloc API so that NULL
->> checking can be avoided, see the pattern in mm/mempolicy.c.
->>
->> Through analyzing of existing bulk allocation API users, it
->> seems only the fs users are depending on the assumption of
->> populating only NULL elements, see:
->> commit 91d6ac1d62c3 ("btrfs: allocate page arrays using bulk page allocator")
->> commit d6db47e571dc ("erofs: do not use pagepool in z_erofs_gbuf_growsize()")
->> commit f6e70aab9dfe ("SUNRPC: refresh rq_pages using a bulk page allocator")
->> commit 88e4d41a264d ("SUNRPC: Use __alloc_bulk_pages() in svc_init_buffer()")
->>
->> The current API adds a mental burden for most users. For most
->> users, their code would be much cleaner if the interface accepts
->> an uninitialised array with length, and were told how many pages
->> had been stored in that array, so support one simple and one
->> full-featured to meet the above different use cases as below:
->> - alloc_pages_bulk() would be given an uninitialised array of page
->>   pointers and a required count and would return the number of
->>   pages that were allocated.
->> - alloc_pages_bulk_refill() would be given an initialised array
->>   of page pointers some of which might be NULL. It would attempt
->>   to allocate pages for the non-NULL pointers, return 0 if all
->>   pages are allocated, -EAGAIN if at least one page allocated,
->>   ok to try again immediately or -ENOMEM if don't bother trying
->>   again soon, which provides a more consistent semantics than the
->>   current API as mentioned in [2], at the cost of the pages might
->>   be getting re-ordered to make the implementation simpler.
->>
->> Change the existing fs users to use the full-featured API, except
->> for the one for svc_init_buffer() in net/sunrpc/svc.c. Other
->> existing callers can use the simple API as they seems to be passing
->> all NULL elements via memset, kzalloc, etc, only remove unnecessary
->> memset for existing users calling the simple API in this patch.
->>
->> The test result for xfstests full test:
->> Before this patch:
->> btrfs/default: 1061 tests, 3 failures, 290 skipped, 13152 seconds
->>   Failures: btrfs/012 btrfs/226
->>   Flaky: generic/301: 60% (3/5)
->> Totals: 1073 tests, 290 skipped, 13 failures, 0 errors, 12540s
->>
->> nfs/loopback: 530 tests, 3 failures, 392 skipped, 3942 seconds
->>   Failures: generic/464 generic/551
->>   Flaky: generic/650: 40% (2/5)
->> Totals: 542 tests, 392 skipped, 12 failures, 0 errors, 3799s
->>
->> After this patch:
->> btrfs/default: 1061 tests, 2 failures, 290 skipped, 13446 seconds
->>   Failures: btrfs/012 btrfs/226
->> Totals: 1069 tests, 290 skipped, 10 failures, 0 errors, 12853s
->>
->> nfs/loopback: 530 tests, 3 failures, 392 skipped, 4103 seconds
->>   Failures: generic/464 generic/551
->>   Flaky: generic/650: 60% (3/5)
->> Totals: 542 tests, 392 skipped, 13 failures, 0 errors, 3933s
+Hi,
+
+On 2025/4/3 04:27, Sandeep Dhavale wrote:
+> Currently, when EROFS is built with per-CPU workers, the workers are
+> started and CPU hotplug hooks are registered during module initialization.
+> This leads to unnecessary worker start/stop cycles during CPU hotplug
+> events, particularly on Android devices that frequently suspend and resume.
 > 
-> Hi -
+> This change defers the initialization of per-CPU workers and the
+> registration of CPU hotplug hooks until the first EROFS mount. This
+> ensures that these resources are only allocated and managed when EROFS is
+> actually in use.
 > 
-> The "after" run for NFS took longer, and not by a little bit. Can you
-> explain the difference?
-
-Ah, I overlooked the difference as I was not looking to have a performance
-comparasion using xfstest full test due to possible noise, so the above test
-might be done with other job like kernel compiling behind the scenes as it
-was tested with the same machine where I was doing some kernel compiling.
-
-And I used a temporary patch to enable the using of full-featured API in
-page_pool to test if the full-featured API will cause performance regression
-for the existing users in fs as mentioned at the end of commit log.
-
+> The tear down of per-CPU workers and unregistration of CPU hotplug hooks
+> still occurs during z_erofs_exit_subsystem(), but only if they were
+> initialized.
 > 
-> You can expunge the flakey test (generic/650) to help make the results
-> more directly comparable. 650 is a CPU hot-plugging test.
-
-I retested in a newer and more powerful machine without obvious heavy job
-behind the scenes based on linux-next-20250411, and the flakey test seems
-gone too.
-
-before:
--------------------- Summary report
-KERNEL:    kernel 6.15.0-rc1-next-20250411-xfstests #369 SMP PREEMPT_DYNAMIC Tue Apr 15 16:17:08 CST 2025 x86_64
-CMDLINE:   full
-CPUS:      2
-MEM:       1972.54
-
-nfs/loopback: 539 tests, 4 failures, 400 skipped, 2364 seconds
-  Failures: generic/169 generic/363 generic/464 generic/551
-Totals: 555 tests, 400 skipped, 20 failures, 0 errors, 2205s
-
-after:
--------------------- Summary report
-KERNEL:    kernel 6.15.0-rc1-next-20250411-xfstests-00001-g316d17a7f7bb #370 SMP PREEMPT_DYNAMIC Tue Apr 15 19:57:48 CST 2025 x86_64
-CMDLINE:   full
-CPUS:      2
-MEM:       1972.54
-
-nfs/loopback: 539 tests, 4 failures, 400 skipped, 2327 seconds
-  Failures: generic/169 generic/363 generic/464 generic/551
-Totals: 555 tests, 400 skipped, 20 failures, 0 errors, 2148s
-
+> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> ---
+> v1: https://lore.kernel.org/linux-erofs/20250331022011.645533-2-dhavale@google.com/
+> Changes since v1:
+> - Get rid of erofs_mount_count based init and tear down of resources
+> - Initialize resource in z_erofs_init_super() as suggested by Gao
+> - Introduce z_erofs_init_workers_once() and track it using atomic bool
+> - Improve commit message
 > 
+>   fs/erofs/internal.h |  2 ++
+>   fs/erofs/zdata.c    | 57 ++++++++++++++++++++++++++++++++++-----------
+>   2 files changed, 46 insertions(+), 13 deletions(-)
 > 
->> The stress test also suggest there is no regression for the erofs
->> too.
->>
->> Using the simple API also enable the caller to not zero the array
->> before calling the page bulk allocating API, which has about 1~2 ns
->> performance improvement for time_bench_page_pool03_slow() test case
->> of page_pool in a x86 vm system, this reduces some performance impact
->> of fixing the DMA API misuse problem in [3], performance improves
->> from 87.886 ns to 86.429 ns.
->>
->> Also a temporary patch to enable the using of full-featured API in
->> page_pool suggests that the new full-featured API doesn't seem to have
->> noticeable performance impact for the existing users, like SUNRPC, btrfs
->> and erofs.
->>
->> 1. https://lore.kernel.org/all/bd8c2f5c-464d-44ab-b607-390a87ea4cd5@huawei.com/
->> 2. https://lore.kernel.org/all/180818a1-b906-4a0b-89d3-34cb71cc26c9@huawei.com/
->> 3. https://lore.kernel.org/all/20250212092552.1779679-1-linyunsheng@huawei.com/
->> CC: Jesper Dangaard Brouer <hawk@kernel.org>
->> CC: Luiz Capitulino <luizcap@redhat.com>
->> CC: Mel Gorman <mgorman@techsingularity.net>
->> Suggested-by: Neil Brown <neilb@suse.de>
->> Acked-by: Jeff Layton <jlayton@kernel.org>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> ---
->> V3:
->> 1. Provide both simple and full-featured API as suggested by NeilBrown.
->> 2. Do the fs testing as suggested in V2.
->>
->> V2:
->> 1. Drop RFC tag.
->> 2. Fix a compile error for xfs.
->> 3. Defragmemt the page_array for SUNRPC and btrfs.
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 4ac188d5d894..bbc92ee41846 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -450,6 +450,7 @@ int z_erofs_gbuf_growsize(unsigned int nrpages);
+>   int __init z_erofs_gbuf_init(void);
+>   void z_erofs_gbuf_exit(void);
+>   int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb);
+> +int z_erofs_init_workers_once(void);
+>   #else
+>   static inline void erofs_shrinker_register(struct super_block *sb) {}
+>   static inline void erofs_shrinker_unregister(struct super_block *sb) {}
+> @@ -458,6 +459,7 @@ static inline void erofs_exit_shrinker(void) {}
+>   static inline int z_erofs_init_subsystem(void) { return 0; }
+>   static inline void z_erofs_exit_subsystem(void) {}
+>   static inline int z_erofs_init_super(struct super_block *sb) { return 0; }
+> +static inline int z_erofs_init_workers_once(void) { return 0; };
+
+Why we need this? I think it's unused if decompression
+subsystem is disabled.
+
+>   #endif	/* !CONFIG_EROFS_FS_ZIP */
+>   
+>   #ifdef CONFIG_EROFS_FS_BACKED_BY_FILE
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 0671184d9cf1..75f0adcff97b 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -11,6 +11,7 @@
+>   
+>   #define Z_EROFS_PCLUSTER_MAX_PAGES	(Z_EROFS_PCLUSTER_MAX_SIZE / PAGE_SIZE)
+>   #define Z_EROFS_INLINE_BVECS		2
+> +static atomic_t erofs_percpu_workers_initialized = ATOMIC_INIT(0);
+>   
+>   struct z_erofs_bvec {
+>   	struct page *page;
+> @@ -403,10 +404,44 @@ static inline int erofs_cpu_hotplug_init(void) { return 0; }
+>   static inline void erofs_cpu_hotplug_destroy(void) {}
+
+I wonder those helpers are still needed since we have
+z_erofs_init_pcpu_workers().
+
+>   #endif
+>   
+> -void z_erofs_exit_subsystem(void)
+> +static int z_erofs_init_workers(void)
+
+I think we need to rename it as
+`static int z_erofs_init_pcpu_workers(void)`
+
+>   {
+> -	erofs_cpu_hotplug_destroy();
+> +	int err;
+> +
+> +	err = erofs_init_percpu_workers();
+> +	if (err)
+> +		goto err_init_percpu_workers;
+> +
+> +	err = erofs_cpu_hotplug_init();
+> +	if (err < 0)
+> +		goto err_cpuhp_init;
+> +	return err;
+> +
+> +err_cpuhp_init:
+>   	erofs_destroy_percpu_workers();
+> +err_init_percpu_workers:
+> +	atomic_set(&erofs_percpu_workers_initialized, 0);
+> +	return err;
+> +}
+> +
+> +int z_erofs_init_workers_once(void)
+
+I'd like to inline them into z_erofs_init_super().
+
+> +{
+> +	if (atomic_xchg(&erofs_percpu_workers_initialized, 1))
+> +		return 0;
+> +	return z_erofs_init_workers();
+> +}
+> +
+> +static void z_erofs_destroy_workers(void)
+
+z_erofs_destroy_pcpu_workers()
+
+> +{
+> +	if (atomic_xchg(&erofs_percpu_workers_initialized, 0)) {
+
+	if (atomic_xchg(&erofs_percpu_workers_initialized, 0))
+		return;
+
+> +		erofs_cpu_hotplug_destroy();
+> +		erofs_destroy_percpu_workers();
+> +	}
+> +}
+> +
+> +void z_erofs_exit_subsystem(void)
+> +{
+> +	z_erofs_destroy_workers();
+>   	destroy_workqueue(z_erofs_workqueue);
+>   	z_erofs_destroy_pcluster_pool();
+>   	z_erofs_exit_decompressor();
+> @@ -430,19 +465,8 @@ int __init z_erofs_init_subsystem(void)
+>   		goto err_workqueue_init;
+>   	}
+>   
+> -	err = erofs_init_percpu_workers();
+> -	if (err)
+> -		goto err_pcpu_worker;
+> -
+> -	err = erofs_cpu_hotplug_init();
+> -	if (err < 0)
+> -		goto err_cpuhp_init;
+>   	return err;
+>   
+> -err_cpuhp_init:
+> -	erofs_destroy_percpu_workers();
+> -err_pcpu_worker:
+> -	destroy_workqueue(z_erofs_workqueue);
+>   err_workqueue_init:
+>   	z_erofs_destroy_pcluster_pool();
+>   err_pcluster_pool:
+> @@ -645,6 +669,13 @@ static const struct address_space_operations z_erofs_cache_aops = {
+>   int z_erofs_init_super(struct super_block *sb)
+>   {
+>   	struct inode *const inode = new_inode(sb);
+> +	int err;
+
+	struct inode *inode;
+	int err;
+
+	err = z_erofs_init_workers_once();
+	if (err)
+		return err;
+	inode = new_inode(sb);
+	...
+
+> +
+> +	err = z_erofs_init_workers_once();
+> +	if (err) {
+> +		iput(inode);
+
+To avoid such unnecessary iput() here...
+
+Thanks,
+Gao Xiang
 
