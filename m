@@ -1,43 +1,96 @@
-Return-Path: <linux-erofs+bounces-203-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-204-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21D5BA8AD88
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Apr 2025 03:22:20 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 875B3A950A2
+	for <lists+linux-erofs@lfdr.de>; Mon, 21 Apr 2025 14:15:22 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Zcjtd3VtMz3blC;
-	Wed, 16 Apr 2025 11:22:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Zh47m6T4qz3cC9;
+	Mon, 21 Apr 2025 22:15:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.99
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1744766537;
-	cv=none; b=HH2odW2VFoOX9FIVUT/bBIS1brBnH8hpdhJAdEZrPRp51iRvKGJj+dc5G3oYsw2nq5NtzBadOojL6JnjsqiyepOdriUVMmLKhjDxMPBmndJWjj+aWhebXM21J51bqVx5FfffvlLbFuRXSZDY/cT7nWdKAghYe6isqtXrVy5c8Az+jV96NfrWXOGfVyGdBRtIiem1VEzrLt/xanKJVHW1Tw+atzx1Nc5rab2cLU0axHurVKByF8il1VcpuWg4pBPCQzHYsFdh3Bf45Vq0sZxKSq35VDPShi1MWChuRn+UJnNe3GJFHqwQCB2hwR1ScV4VezIFiJ5K60mCTaDoPZ8MyA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745237716;
+	cv=none; b=OdOsR1434/SmTEyzxGJliNY5Re1LasAJFq2EEN/GfejLCgJwEbjtA4bNkzj5QxQpzpuuJW45S7qv8m7qvwv+22WuRIK8lcWTvshXnor9iy0oKn4OJwuR5JANvR7fBsnoWB6F0e1B3lKe2Dn388vx2fH9sIUPMMygHRXIzEIOsB+HNgwfva9Pimeg4xa+Rrmb5m+u5WE2JpqEAsBQuiLNByuzHtmmajmyDgJWrKhLZ8mZTTvI8nVNMqso1xYreNWVoVLSY5bQb7SocIoWMX3hvLevGRSYE9j6ENccaL20i+UtYKZkZ8S+1U1tn3b8S1jFFFmsWinmNA08TlEt1EuIaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1744766537; c=relaxed/relaxed;
-	bh=S+gSHUgnZJkpNQEKAUzU8Rgqjm+4Add/shFYdufCnCM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AMq/NC56ThBzOh8p3MKwKMbKJlgNE8TCA2485NT3rS3gjKs+wMXPDHjHyEoYiaFDR7mk26m2EvXjXNg0QNeqsgGsVFwnQxCzsLt8TEJVYMjJ3ZbjNZf001a5nLHawcD3rixKBWUtMuCslYghrOP1voSC5cftipo0SgirQbGsybs8/JKUDuDJ/ust88XyJOKCjtsmMtADc4VMPjRip/AIhHLYc/NORNmua86MF0LAABQoLY98OPfBCoVhNEwdODjtI/UxgpeaxzRqKLPUAnqMI1NgRBObH6fmk7+DjreWogZNU46wlmY1aRbMWsSQpC10w5XGMq38sm8NSLPYQ0VI+g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZGv0qAEb; dkim-atps=neutral; spf=pass (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1745237716; c=relaxed/relaxed;
+	bh=tWZuyOPV3ZhxXb54Kv6P2lfcRRZ7Gz6kG50s/6q3zLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bVxSM1TpYRvewIiaoiyU1xIC0pXodQCyc+efG99kb4C1/jbrqYhB8F9d8OKznwef82Dtcbqpci6i0oGi++O+DRuiYiRteU6W4EE8aamON9nDPKlXQdSTSeSq9g26AJqr2DH6eVxs9hChD8kHgFwq6uybtT6IXs0YQWgEhZs3JGWV40RSzqRBUfr4WH5imMQwJBlUXOIqGIk6jPH/KG/NAiudu2wg85OHbAhJBzMYkJ0VcwPl1dOKRskwzp+r1CL7hoST1WOItYuTJOHTWOY5SBB1Z02vETOpuF941jADfoYTmA2QDHl8pE7FDbTH2x/mmYWiP4mNh/3EtOKZfHtBJw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=DnDpLrr1; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=leon@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZGv0qAEb;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=DnDpLrr1;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=leon@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zcjtb1pFHz3bkG
-	for <linux-erofs@lists.ozlabs.org>; Wed, 16 Apr 2025 11:22:13 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1744766529; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=S+gSHUgnZJkpNQEKAUzU8Rgqjm+4Add/shFYdufCnCM=;
-	b=ZGv0qAEb+m439MJrk9UtfFszgYekavOh323gFVAsXI/cgM2gquDk84uCP3QxSvIYmcCjSKXtPNrtjYk9kNTBCaWjDPg7Tggl8igJ1a6P43RlAlNuQ/gaRsUMvZb1XXvmpVjU2DsulWB82GJRiatIZL/tv6JzwP2DtjblHYhWIXA=
-Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WX6j.0Y_1744766526 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 16 Apr 2025 09:22:07 +0800
-Message-ID: <a1e86463-3427-4715-a4a2-0ef88cca6135@linux.alibaba.com>
-Date: Wed, 16 Apr 2025 09:22:06 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zh47l1RS3z3c8x
+	for <linux-erofs@lists.ozlabs.org>; Mon, 21 Apr 2025 22:15:15 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id AFD1949E67;
+	Mon, 21 Apr 2025 12:15:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFD2C4CEE4;
+	Mon, 21 Apr 2025 12:15:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745237712;
+	bh=NWY7vWz9LzFUvuTqvqdXLpzUQJzDyIOXn3ZAziazYMw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DnDpLrr1aHd6v+YaqiTVi2NrCjjqZu8qRp4T5eBxEGHEGLls9Xv56HZnNIu1x6t0f
+	 dl+gI15q1YitWz+mjG7ItcVAvLiKl6QBqOdWtJqcd+y6fYesCChZ0PO0KBWzqORQwl
+	 B5j03gVqzZ/7JkWoPuTIoRDfvgQkSsUzc7fGCxgSmu0CW4oDj789SP3RnY1mVvkgab
+	 XbdEqHCD2yky9eaO2m4+0OUvRO8bs9+5fl5EdTZFONbgZykPs7lxvp2su+DzZiHlWn
+	 S5V3c/DOm3VClEII7k2kPf1/a6kI0/jT+Q9VJI4gxtOdCP4Ch+9yFGVU+3uAYqhjMe
+	 KmhiBG/k+m5Kw==
+Date: Sun, 20 Apr 2025 14:21:10 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Yunsheng Lin <linyunsheng@huawei.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Luiz Capitulino <luizcap@redhat.com>,
+	Mel Gorman <mgorman@techsingularity.net>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v3] mm: alloc_pages_bulk: support both simple and
+ full-featured API
+Message-ID: <20250420112110.GA32613@unreal>
+References: <20250414120819.3053967-1-linyunsheng@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -48,197 +101,446 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
-Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
-References: <20250402202728.2157627-1-dhavale@google.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250402202728.2157627-1-dhavale@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414120819.3053967-1-linyunsheng@huawei.com>
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DATE_IN_PAST_24_48,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi,
-
-On 2025/4/3 04:27, Sandeep Dhavale wrote:
-> Currently, when EROFS is built with per-CPU workers, the workers are
-> started and CPU hotplug hooks are registered during module initialization.
-> This leads to unnecessary worker start/stop cycles during CPU hotplug
-> events, particularly on Android devices that frequently suspend and resume.
+On Mon, Apr 14, 2025 at 08:08:11PM +0800, Yunsheng Lin wrote:
+> As mentioned in [1], it seems odd to check NULL elements in
+> the middle of page bulk allocating, and it seems caller can
+> do a better job of bulk allocating pages into a whole array
+> sequentially without checking NULL elements first before
+> doing the page bulk allocation for most of existing users
+> by passing 'page_array + allocated' and 'nr_pages - allocated'
+> when calling subsequent page bulk alloc API so that NULL
+> checking can be avoided, see the pattern in mm/mempolicy.c.
 > 
-> This change defers the initialization of per-CPU workers and the
-> registration of CPU hotplug hooks until the first EROFS mount. This
-> ensures that these resources are only allocated and managed when EROFS is
-> actually in use.
+> Through analyzing of existing bulk allocation API users, it
+> seems only the fs users are depending on the assumption of
+> populating only NULL elements, see:
+> commit 91d6ac1d62c3 ("btrfs: allocate page arrays using bulk page allocator")
+> commit d6db47e571dc ("erofs: do not use pagepool in z_erofs_gbuf_growsize()")
+> commit f6e70aab9dfe ("SUNRPC: refresh rq_pages using a bulk page allocator")
+> commit 88e4d41a264d ("SUNRPC: Use __alloc_bulk_pages() in svc_init_buffer()")
 > 
-> The tear down of per-CPU workers and unregistration of CPU hotplug hooks
-> still occurs during z_erofs_exit_subsystem(), but only if they were
-> initialized.
+> The current API adds a mental burden for most users. For most
+> users, their code would be much cleaner if the interface accepts
+> an uninitialised array with length, and were told how many pages
+> had been stored in that array, so support one simple and one
+> full-featured to meet the above different use cases as below:
+> - alloc_pages_bulk() would be given an uninitialised array of page
+>   pointers and a required count and would return the number of
+>   pages that were allocated.
+> - alloc_pages_bulk_refill() would be given an initialised array
+>   of page pointers some of which might be NULL. It would attempt
+>   to allocate pages for the non-NULL pointers, return 0 if all
+>   pages are allocated, -EAGAIN if at least one page allocated,
+>   ok to try again immediately or -ENOMEM if don't bother trying
+>   again soon, which provides a more consistent semantics than the
+>   current API as mentioned in [2], at the cost of the pages might
+>   be getting re-ordered to make the implementation simpler.
 > 
-> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> Change the existing fs users to use the full-featured API, except
+> for the one for svc_init_buffer() in net/sunrpc/svc.c. Other
+> existing callers can use the simple API as they seems to be passing
+> all NULL elements via memset, kzalloc, etc, only remove unnecessary
+> memset for existing users calling the simple API in this patch.
+> 
+> The test result for xfstests full test:
+> Before this patch:
+> btrfs/default: 1061 tests, 3 failures, 290 skipped, 13152 seconds
+>   Failures: btrfs/012 btrfs/226
+>   Flaky: generic/301: 60% (3/5)
+> Totals: 1073 tests, 290 skipped, 13 failures, 0 errors, 12540s
+> 
+> nfs/loopback: 530 tests, 3 failures, 392 skipped, 3942 seconds
+>   Failures: generic/464 generic/551
+>   Flaky: generic/650: 40% (2/5)
+> Totals: 542 tests, 392 skipped, 12 failures, 0 errors, 3799s
+> 
+> After this patch:
+> btrfs/default: 1061 tests, 2 failures, 290 skipped, 13446 seconds
+>   Failures: btrfs/012 btrfs/226
+> Totals: 1069 tests, 290 skipped, 10 failures, 0 errors, 12853s
+> 
+> nfs/loopback: 530 tests, 3 failures, 392 skipped, 4103 seconds
+>   Failures: generic/464 generic/551
+>   Flaky: generic/650: 60% (3/5)
+> Totals: 542 tests, 392 skipped, 13 failures, 0 errors, 3933s
+> 
+> The stress test also suggest there is no regression for the erofs
+> too.
+> 
+> Using the simple API also enable the caller to not zero the array
+> before calling the page bulk allocating API, which has about 1~2 ns
+> performance improvement for time_bench_page_pool03_slow() test case
+> of page_pool in a x86 vm system, this reduces some performance impact
+> of fixing the DMA API misuse problem in [3], performance improves
+> from 87.886 ns to 86.429 ns.
+> 
+> Also a temporary patch to enable the using of full-featured API in
+> page_pool suggests that the new full-featured API doesn't seem to have
+> noticeable performance impact for the existing users, like SUNRPC, btrfs
+> and erofs.
+> 
+> 1. https://lore.kernel.org/all/bd8c2f5c-464d-44ab-b607-390a87ea4cd5@huawei.com/
+> 2. https://lore.kernel.org/all/180818a1-b906-4a0b-89d3-34cb71cc26c9@huawei.com/
+> 3. https://lore.kernel.org/all/20250212092552.1779679-1-linyunsheng@huawei.com/
+> CC: Jesper Dangaard Brouer <hawk@kernel.org>
+> CC: Luiz Capitulino <luizcap@redhat.com>
+> CC: Mel Gorman <mgorman@techsingularity.net>
+> Suggested-by: Neil Brown <neilb@suse.de>
+> Acked-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 > ---
-> v1: https://lore.kernel.org/linux-erofs/20250331022011.645533-2-dhavale@google.com/
-> Changes since v1:
-> - Get rid of erofs_mount_count based init and tear down of resources
-> - Initialize resource in z_erofs_init_super() as suggested by Gao
-> - Introduce z_erofs_init_workers_once() and track it using atomic bool
-> - Improve commit message
+> V3:
+> 1. Provide both simple and full-featured API as suggested by NeilBrown.
+> 2. Do the fs testing as suggested in V2.
 > 
->   fs/erofs/internal.h |  2 ++
->   fs/erofs/zdata.c    | 57 ++++++++++++++++++++++++++++++++++-----------
->   2 files changed, 46 insertions(+), 13 deletions(-)
+> V2:
+> 1. Drop RFC tag.
+> 2. Fix a compile error for xfs.
+> 3. Defragmemt the page_array for SUNRPC and btrfs.
+> ---
+>  drivers/vfio/pci/mlx5/cmd.c       |  2 --
+>  drivers/vfio/pci/virtio/migrate.c |  2 --
+>  fs/btrfs/extent_io.c              | 21 +++++++++---------
+>  fs/erofs/zutil.c                  | 11 +++++----
+>  include/linux/gfp.h               | 37 +++++++++++++++++++++++++++++++
+>  include/trace/events/sunrpc.h     | 12 +++++-----
+>  kernel/bpf/arena.c                |  1 -
+>  mm/page_alloc.c                   | 32 +++++---------------------
+>  net/core/page_pool.c              |  3 ---
+>  net/sunrpc/svc_xprt.c             | 12 ++++++----
+>  10 files changed, 72 insertions(+), 61 deletions(-)
 > 
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 4ac188d5d894..bbc92ee41846 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -450,6 +450,7 @@ int z_erofs_gbuf_growsize(unsigned int nrpages);
->   int __init z_erofs_gbuf_init(void);
->   void z_erofs_gbuf_exit(void);
->   int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb);
-> +int z_erofs_init_workers_once(void);
->   #else
->   static inline void erofs_shrinker_register(struct super_block *sb) {}
->   static inline void erofs_shrinker_unregister(struct super_block *sb) {}
-> @@ -458,6 +459,7 @@ static inline void erofs_exit_shrinker(void) {}
->   static inline int z_erofs_init_subsystem(void) { return 0; }
->   static inline void z_erofs_exit_subsystem(void) {}
->   static inline int z_erofs_init_super(struct super_block *sb) { return 0; }
-> +static inline int z_erofs_init_workers_once(void) { return 0; };
+> diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
+> index 11eda6b207f1..fb094527715f 100644
+> --- a/drivers/vfio/pci/mlx5/cmd.c
+> +++ b/drivers/vfio/pci/mlx5/cmd.c
+> @@ -446,8 +446,6 @@ static int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
+>  		if (ret)
+>  			goto err_append;
+>  		buf->allocated_length += filled * PAGE_SIZE;
+> -		/* clean input for another bulk allocation */
+> -		memset(page_list, 0, filled * sizeof(*page_list));
+>  		to_fill = min_t(unsigned int, to_alloc,
+>  				PAGE_SIZE / sizeof(*page_list));
 
-Why we need this? I think it's unused if decompression
-subsystem is disabled.
+If it is possible, let's drop this hunk to reduce merge conflicts.
+The whole mlx5vf_add_migration_pages() is planned to be rewritten.
+https://lore.kernel.org/linux-rdma/076a3991e663fe07c1a5395f5805c514b63e4d94.1744825142.git.leon@kernel.org/
 
->   #endif	/* !CONFIG_EROFS_FS_ZIP */
->   
->   #ifdef CONFIG_EROFS_FS_BACKED_BY_FILE
-> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> index 0671184d9cf1..75f0adcff97b 100644
-> --- a/fs/erofs/zdata.c
-> +++ b/fs/erofs/zdata.c
-> @@ -11,6 +11,7 @@
->   
->   #define Z_EROFS_PCLUSTER_MAX_PAGES	(Z_EROFS_PCLUSTER_MAX_SIZE / PAGE_SIZE)
->   #define Z_EROFS_INLINE_BVECS		2
-> +static atomic_t erofs_percpu_workers_initialized = ATOMIC_INIT(0);
->   
->   struct z_erofs_bvec {
->   	struct page *page;
-> @@ -403,10 +404,44 @@ static inline int erofs_cpu_hotplug_init(void) { return 0; }
->   static inline void erofs_cpu_hotplug_destroy(void) {}
+Thanks
 
-I wonder those helpers are still needed since we have
-z_erofs_init_pcpu_workers().
 
->   #endif
->   
-> -void z_erofs_exit_subsystem(void)
-> +static int z_erofs_init_workers(void)
-
-I think we need to rename it as
-`static int z_erofs_init_pcpu_workers(void)`
-
->   {
-> -	erofs_cpu_hotplug_destroy();
-> +	int err;
-> +
-> +	err = erofs_init_percpu_workers();
-> +	if (err)
-> +		goto err_init_percpu_workers;
-> +
-> +	err = erofs_cpu_hotplug_init();
-> +	if (err < 0)
-> +		goto err_cpuhp_init;
-> +	return err;
-> +
-> +err_cpuhp_init:
->   	erofs_destroy_percpu_workers();
-> +err_init_percpu_workers:
-> +	atomic_set(&erofs_percpu_workers_initialized, 0);
-> +	return err;
-> +}
-> +
-> +int z_erofs_init_workers_once(void)
-
-I'd like to inline them into z_erofs_init_super().
-
-> +{
-> +	if (atomic_xchg(&erofs_percpu_workers_initialized, 1))
-> +		return 0;
-> +	return z_erofs_init_workers();
-> +}
-> +
-> +static void z_erofs_destroy_workers(void)
-
-z_erofs_destroy_pcpu_workers()
-
-> +{
-> +	if (atomic_xchg(&erofs_percpu_workers_initialized, 0)) {
-
-	if (atomic_xchg(&erofs_percpu_workers_initialized, 0))
-		return;
-
-> +		erofs_cpu_hotplug_destroy();
-> +		erofs_destroy_percpu_workers();
-> +	}
-> +}
-> +
-> +void z_erofs_exit_subsystem(void)
-> +{
-> +	z_erofs_destroy_workers();
->   	destroy_workqueue(z_erofs_workqueue);
->   	z_erofs_destroy_pcluster_pool();
->   	z_erofs_exit_decompressor();
-> @@ -430,19 +465,8 @@ int __init z_erofs_init_subsystem(void)
->   		goto err_workqueue_init;
->   	}
->   
-> -	err = erofs_init_percpu_workers();
-> -	if (err)
-> -		goto err_pcpu_worker;
+>  	} while (to_alloc > 0);
+> diff --git a/drivers/vfio/pci/virtio/migrate.c b/drivers/vfio/pci/virtio/migrate.c
+> index ba92bb4e9af9..9f003a237dec 100644
+> --- a/drivers/vfio/pci/virtio/migrate.c
+> +++ b/drivers/vfio/pci/virtio/migrate.c
+> @@ -91,8 +91,6 @@ static int virtiovf_add_migration_pages(struct virtiovf_data_buffer *buf,
+>  		if (ret)
+>  			goto err_append;
+>  		buf->allocated_length += filled * PAGE_SIZE;
+> -		/* clean input for another bulk allocation */
+> -		memset(page_list, 0, filled * sizeof(*page_list));
+>  		to_fill = min_t(unsigned int, to_alloc,
+>  				PAGE_SIZE / sizeof(*page_list));
+>  	} while (to_alloc > 0);
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index 197f5e51c474..51ef15703900 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -623,21 +623,22 @@ int btrfs_alloc_page_array(unsigned int nr_pages, struct page **page_array,
+>  			   bool nofail)
+>  {
+>  	const gfp_t gfp = nofail ? (GFP_NOFS | __GFP_NOFAIL) : GFP_NOFS;
+> -	unsigned int allocated;
 > -
-> -	err = erofs_cpu_hotplug_init();
-> -	if (err < 0)
-> -		goto err_cpuhp_init;
->   	return err;
->   
-> -err_cpuhp_init:
-> -	erofs_destroy_percpu_workers();
-> -err_pcpu_worker:
-> -	destroy_workqueue(z_erofs_workqueue);
->   err_workqueue_init:
->   	z_erofs_destroy_pcluster_pool();
->   err_pcluster_pool:
-> @@ -645,6 +669,13 @@ static const struct address_space_operations z_erofs_cache_aops = {
->   int z_erofs_init_super(struct super_block *sb)
->   {
->   	struct inode *const inode = new_inode(sb);
-> +	int err;
-
-	struct inode *inode;
-	int err;
-
-	err = z_erofs_init_workers_once();
-	if (err)
-		return err;
-	inode = new_inode(sb);
-	...
-
+> -	for (allocated = 0; allocated < nr_pages;) {
+> -		unsigned int last = allocated;
+> +	int ret;
+>  
+> -		allocated = alloc_pages_bulk(gfp, nr_pages, page_array);
+> -		if (unlikely(allocated == last)) {
+> +	do {
+> +		ret = alloc_pages_bulk_refill(gfp, nr_pages, page_array);
+> +		if (unlikely(ret == -ENOMEM)) {
+>  			/* No progress, fail and do cleanup. */
+> -			for (int i = 0; i < allocated; i++) {
+> -				__free_page(page_array[i]);
+> -				page_array[i] = NULL;
+> +			for (int i = 0; i < nr_pages; i++) {
+> +				if (page_array[i]) {
+> +					__free_page(page_array[i]);
+> +					page_array[i] = NULL;
+> +				}
+>  			}
+>  			return -ENOMEM;
+>  		}
+> -	}
+> +	} while (ret == -EAGAIN);
 > +
-> +	err = z_erofs_init_workers_once();
-> +	if (err) {
-> +		iput(inode);
-
-To avoid such unnecessary iput() here...
-
-Thanks,
-Gao Xiang
+>  	return 0;
+>  }
+>  
+> diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
+> index 55ff2ab5128e..6ce11a8a261c 100644
+> --- a/fs/erofs/zutil.c
+> +++ b/fs/erofs/zutil.c
+> @@ -68,7 +68,7 @@ int z_erofs_gbuf_growsize(unsigned int nrpages)
+>  	struct page **tmp_pages = NULL;
+>  	struct z_erofs_gbuf *gbuf;
+>  	void *ptr, *old_ptr;
+> -	int last, i, j;
+> +	int ret, i, j;
+>  
+>  	mutex_lock(&gbuf_resize_mutex);
+>  	/* avoid shrinking gbufs, since no idea how many fses rely on */
+> @@ -86,12 +86,11 @@ int z_erofs_gbuf_growsize(unsigned int nrpages)
+>  		for (j = 0; j < gbuf->nrpages; ++j)
+>  			tmp_pages[j] = gbuf->pages[j];
+>  		do {
+> -			last = j;
+> -			j = alloc_pages_bulk(GFP_KERNEL, nrpages,
+> -					     tmp_pages);
+> -			if (last == j)
+> +			ret = alloc_pages_bulk_refill(GFP_KERNEL, nrpages,
+> +						      tmp_pages);
+> +			if (ret == -ENOMEM)
+>  				goto out;
+> -		} while (j != nrpages);
+> +		} while (ret == -EAGAIN);
+>  
+>  		ptr = vmap(tmp_pages, nrpages, VM_MAP, PAGE_KERNEL);
+>  		if (!ptr)
+> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+> index c9fa6309c903..cf6100981fd6 100644
+> --- a/include/linux/gfp.h
+> +++ b/include/linux/gfp.h
+> @@ -244,6 +244,43 @@ unsigned long alloc_pages_bulk_mempolicy_noprof(gfp_t gfp,
+>  #define alloc_pages_bulk(_gfp, _nr_pages, _page_array)		\
+>  	__alloc_pages_bulk(_gfp, numa_mem_id(), NULL, _nr_pages, _page_array)
+>  
+> +/*
+> + * alloc_pages_bulk_refill_noprof - Refill order-0 pages to an array
+> + * @gfp: GFP flags for the allocation when refilling
+> + * @nr_pages: The size of refilling array
+> + * @page_array: The array to refill order-0 pages
+> + *
+> + * Note that only NULL elements are populated with pages and the pages might
+> + * get re-ordered.
+> + *
+> + * Return 0 if all pages are refilled, -EAGAIN if at least one page is refilled,
+> + * ok to try again immediately or -ENOMEM if no page is refilled and don't
+> + * bother trying again soon.
+> + */
+> +static inline int alloc_pages_bulk_refill_noprof(gfp_t gfp, int nr_pages,
+> +						 struct page **page_array)
+> +{
+> +	int allocated = 0, i;
+> +
+> +	for (i = 0; i < nr_pages; i++) {
+> +		if (page_array[i]) {
+> +			swap(page_array[allocated], page_array[i]);
+> +			allocated++;
+> +		}
+> +	}
+> +
+> +	i = alloc_pages_bulk_noprof(gfp, numa_mem_id(), NULL,
+> +				    nr_pages - allocated,
+> +				    page_array + allocated);
+> +	if (likely(allocated + i == nr_pages))
+> +		return 0;
+> +
+> +	return i ? -EAGAIN : -ENOMEM;
+> +}
+> +
+> +#define alloc_pages_bulk_refill(...)				\
+> +	alloc_hooks(alloc_pages_bulk_refill_noprof(__VA_ARGS__))
+> +
+>  static inline unsigned long
+>  alloc_pages_bulk_node_noprof(gfp_t gfp, int nid, unsigned long nr_pages,
+>  				   struct page **page_array)
+> diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+> index 5d331383047b..cb8899f1cbdc 100644
+> --- a/include/trace/events/sunrpc.h
+> +++ b/include/trace/events/sunrpc.h
+> @@ -2143,23 +2143,23 @@ TRACE_EVENT(svc_wake_up,
+>  TRACE_EVENT(svc_alloc_arg_err,
+>  	TP_PROTO(
+>  		unsigned int requested,
+> -		unsigned int allocated
+> +		int ret
+>  	),
+>  
+> -	TP_ARGS(requested, allocated),
+> +	TP_ARGS(requested, ret),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(unsigned int, requested)
+> -		__field(unsigned int, allocated)
+> +		__field(int, ret)
+>  	),
+>  
+>  	TP_fast_assign(
+>  		__entry->requested = requested;
+> -		__entry->allocated = allocated;
+> +		__entry->ret = ret;
+>  	),
+>  
+> -	TP_printk("requested=%u allocated=%u",
+> -		__entry->requested, __entry->allocated)
+> +	TP_printk("requested=%u ret=%d",
+> +		__entry->requested, __entry->ret)
+>  );
+>  
+>  DECLARE_EVENT_CLASS(svc_deferred_event,
+> diff --git a/kernel/bpf/arena.c b/kernel/bpf/arena.c
+> index 0d56cea71602..9022c4440814 100644
+> --- a/kernel/bpf/arena.c
+> +++ b/kernel/bpf/arena.c
+> @@ -445,7 +445,6 @@ static long arena_alloc_pages(struct bpf_arena *arena, long uaddr, long page_cnt
+>  			return 0;
+>  	}
+>  
+> -	/* zeroing is needed, since alloc_pages_bulk() only fills in non-zero entries */
+>  	pages = kvcalloc(page_cnt, sizeof(struct page *), GFP_KERNEL);
+>  	if (!pages)
+>  		return 0;
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d7cfcfa2b077..59a4fe23e62a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4784,9 +4784,6 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
+>   * This is a batched version of the page allocator that attempts to
+>   * allocate nr_pages quickly. Pages are added to the page_array.
+>   *
+> - * Note that only NULL elements are populated with pages and nr_pages
+> - * is the maximum number of pages that will be stored in the array.
+> - *
+>   * Returns the number of pages in the array.
+>   */
+>  unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+> @@ -4802,29 +4799,18 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+>  	struct alloc_context ac;
+>  	gfp_t alloc_gfp;
+>  	unsigned int alloc_flags = ALLOC_WMARK_LOW;
+> -	int nr_populated = 0, nr_account = 0;
+> -
+> -	/*
+> -	 * Skip populated array elements to determine if any pages need
+> -	 * to be allocated before disabling IRQs.
+> -	 */
+> -	while (nr_populated < nr_pages && page_array[nr_populated])
+> -		nr_populated++;
+> +	int nr_populated = 0;
+>  
+>  	/* No pages requested? */
+>  	if (unlikely(nr_pages <= 0))
+>  		goto out;
+>  
+> -	/* Already populated array? */
+> -	if (unlikely(nr_pages - nr_populated == 0))
+> -		goto out;
+> -
+>  	/* Bulk allocator does not support memcg accounting. */
+>  	if (memcg_kmem_online() && (gfp & __GFP_ACCOUNT))
+>  		goto failed;
+>  
+>  	/* Use the single page allocator for one page. */
+> -	if (nr_pages - nr_populated == 1)
+> +	if (nr_pages == 1)
+>  		goto failed;
+>  
+>  #ifdef CONFIG_PAGE_OWNER
+> @@ -4896,24 +4882,16 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+>  	/* Attempt the batch allocation */
+>  	pcp_list = &pcp->lists[order_to_pindex(ac.migratetype, 0)];
+>  	while (nr_populated < nr_pages) {
+> -
+> -		/* Skip existing pages */
+> -		if (page_array[nr_populated]) {
+> -			nr_populated++;
+> -			continue;
+> -		}
+> -
+>  		page = __rmqueue_pcplist(zone, 0, ac.migratetype, alloc_flags,
+>  								pcp, pcp_list);
+>  		if (unlikely(!page)) {
+>  			/* Try and allocate at least one page */
+> -			if (!nr_account) {
+> +			if (!nr_populated) {
+>  				pcp_spin_unlock(pcp);
+>  				goto failed_irq;
+>  			}
+>  			break;
+>  		}
+> -		nr_account++;
+>  
+>  		prep_new_page(page, 0, gfp, 0);
+>  		set_page_refcounted(page);
+> @@ -4923,8 +4901,8 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
+>  	pcp_spin_unlock(pcp);
+>  	pcp_trylock_finish(UP_flags);
+>  
+> -	__count_zid_vm_events(PGALLOC, zone_idx(zone), nr_account);
+> -	zone_statistics(zonelist_zone(ac.preferred_zoneref), zone, nr_account);
+> +	__count_zid_vm_events(PGALLOC, zone_idx(zone), nr_populated);
+> +	zone_statistics(zonelist_zone(ac.preferred_zoneref), zone, nr_populated);
+>  
+>  out:
+>  	return nr_populated;
+> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
+> index 7745ad924ae2..2431d2f6d610 100644
+> --- a/net/core/page_pool.c
+> +++ b/net/core/page_pool.c
+> @@ -541,9 +541,6 @@ static noinline netmem_ref __page_pool_alloc_pages_slow(struct page_pool *pool,
+>  	if (unlikely(pool->alloc.count > 0))
+>  		return pool->alloc.cache[--pool->alloc.count];
+>  
+> -	/* Mark empty alloc.cache slots "empty" for alloc_pages_bulk */
+> -	memset(&pool->alloc.cache, 0, sizeof(void *) * bulk);
+> -
+>  	nr_pages = alloc_pages_bulk_node(gfp, pool->p.nid, bulk,
+>  					 (struct page **)pool->alloc.cache);
+>  	if (unlikely(!nr_pages))
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index ae25405d8bd2..1191686fc0af 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -653,7 +653,8 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
+>  {
+>  	struct svc_serv *serv = rqstp->rq_server;
+>  	struct xdr_buf *arg = &rqstp->rq_arg;
+> -	unsigned long pages, filled, ret;
+> +	unsigned long pages;
+> +	int ret;
+>  
+>  	pages = (serv->sv_max_mesg + 2 * PAGE_SIZE) >> PAGE_SHIFT;
+>  	if (pages > RPCSVC_MAXPAGES) {
+> @@ -663,9 +664,12 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
+>  		pages = RPCSVC_MAXPAGES;
+>  	}
+>  
+> -	for (filled = 0; filled < pages; filled = ret) {
+> -		ret = alloc_pages_bulk(GFP_KERNEL, pages, rqstp->rq_pages);
+> -		if (ret > filled)
+> +	while (true) {
+> +		ret = alloc_pages_bulk_refill(GFP_KERNEL, pages, rqstp->rq_pages);
+> +		if (!ret)
+> +			break;
+> +
+> +		if (ret == -EAGAIN)
+>  			/* Made progress, don't sleep yet */
+>  			continue;
+>  
+> -- 
+> 2.33.0
+> 
 
