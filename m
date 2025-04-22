@@ -1,47 +1,50 @@
-Return-Path: <linux-erofs+bounces-208-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-206-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94ED0A96AAC
-	for <lists+linux-erofs@lfdr.de>; Tue, 22 Apr 2025 14:45:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C5C9A96AA9
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Apr 2025 14:45:28 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Zhhm62Zt2z3bjg;
-	Tue, 22 Apr 2025 22:45:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Zhhm500Nbz3bsT;
+	Tue, 22 Apr 2025 22:45:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.191
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745325926;
-	cv=none; b=XDyqrkWrpEDlKz6j5ESwX9pieewu6JnYN8eqadwp5l0QGtMtGGp6nvCHGR2ttsOelCDZaE703yxnf+4/BhvSBpDuTE8yCau16C3gN0gnm5c4VOFmskgMcofPGX4uYw9plzMPFF2ZMfe/L2KnR6EdTSLkzTG+V5CkkU+Hm8mQcg471AFNLiMvJAx/mR2lnZ/KWhZvV+n3SDB40HfRC63bNHZochInOgsgX00sTjrwBAiKzxoZmweJbWAo+G0i3hw1EdgRqFmMhMgtoZIYKRJz8Sk+dFWWtxOK4BTdici5ZTffUqKHlzKQg0dS83k/p9+6HzSsxuoZwsLF6k0VXLMVuQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745325924;
+	cv=none; b=kAT2tK0X2ndKuzWCeeEe0b+Ir0BJy9EB2ihQAZq+4nSJio7EshgBaOHoof+Mmi6vGRO56Yd+Rh6yBumv7NBw1h9f2PvL1/oMoXheYcQKZ9tWeIjJZOLAGpNUgdw3Ijk6XCmWTZQuGY9iepwEsSKkXLJZkU/xDfS6H3tLCBA6Vzvh6Jt6y2xsfE0N75gg8t6o20LnzMrrpuuLDxzVY2swXHEw72JbyplKw+7MBaGPmMA4kM1cUAzrkkI2Ogdq9oU7dThms7BAtJCxNVyCZwklWNyoLZarDpo1RGJxLo9xVw+0cv1nHAXGyzwQIhvPasrHuW034gkeUawkOuOAhtuBig==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745325926; c=relaxed/relaxed;
-	bh=aHan3RwYSCT+TN8Xg/ZcO+UbpDpowddr71Nc7IbxIcI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q1HuzRYf4V3Eek17QpxOBEAx5QSw2oxBQ0RUd16Xy2Jbl5yFHi9+w9q+7SSwC+r71sFnanNoY9hPbZud0hU4e9o+Ath7JIr0ZHT2LrvUmPZRtc/4SWMwhZKPjVrq/yN2bpU4lXrjrDF8GqUb263r4x7ce6/rAVVOLFfeVjJbOC9BidosfuppoyqPWzFagC/dnol5/SO3bYSnbsA5SpALDtI1bh3+XgmaxXv7rB5fBYnLxSrAPR5/4u3zDiPzhP3qHqsbCLVyABKmvm+CLgtzDdMmlN0mlER09HtOSmQQ+akE1aJTyEmP0TCK5JIQ8mnIh+HUYc1kgjnwXBFVhOcGug==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+	t=1745325924; c=relaxed/relaxed;
+	bh=9CzYmadcOk2sQWtijiRnwP6SuTv70c2Zdty2hYFhFFA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mjrJs5XONYEwEDMKjYaLZDg3HN+iPvGC7TvOZMMSpKclrn9URpqISbmg9avqAoUqLXAr62m1h0ICgau/e8G2aJd+1tu3baYdJ7F8X0EvpyY457N/6PXplvflaySer0HfDTvSyBmu3iwBtUWrWNHH28cx6EAzvjpMt1X9HlkU2Wf/AprLDoyG/hjWUHnPezZh6BMnnGvq5zZPEX5jlC6a19RfzAbX7+c/v3OK6Bft7m/tjuHVdK1DiA9VNj97qfKIUnFeDG/VLctWD71MgXNe0EqnIdgK8ZfbVYEAMqx1mlZulytskgmU2tHTazerc5tqq53AXjNDHkV6Pg8wtHFbvQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zhhm34qQkz304l
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zhhm35c67z3bZs
 	for <linux-erofs@lists.ozlabs.org>; Tue, 22 Apr 2025 22:45:22 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Zhhlg3S2Tz1j5wk;
-	Tue, 22 Apr 2025 20:45:03 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZhhgB046hzvWrn;
+	Tue, 22 Apr 2025 20:41:10 +0800 (CST)
 Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id 69CA11402CE;
+	by mail.maildlp.com (Postfix) with ESMTPS id C2017180080;
 	Tue, 22 Apr 2025 20:45:18 +0800 (CST)
 Received: from huawei.com (10.67.174.162) by kwepemo500009.china.huawei.com
  (7.202.194.199) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 22 Apr
- 2025 20:45:17 +0800
+ 2025 20:45:18 +0800
 From: Hongbo Li <lihongbo22@huawei.com>
 To: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
 	<jefflexu@linux.alibaba.com>
 CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
 	<lihongbo22@huawei.com>
-Subject: [PATCH RFC 0/4] erofs-utils: Add --meta_fix and --meta_only format options
-Date: Tue, 22 Apr 2025 12:36:08 +0000
-Message-ID: <20250422123612.261764-1-lihongbo22@huawei.com>
+Subject: [PATCH RFC 1/4] erofs-utils: lib: introduce --meta_fix format option
+Date: Tue, 22 Apr 2025 12:36:09 +0000
+Message-ID: <20250422123612.261764-2-lihongbo22@huawei.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20250422123612.261764-1-lihongbo22@huawei.com>
+References: <20250422123612.261764-1-lihongbo22@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -57,45 +60,90 @@ Content-Type: text/plain
 X-Originating-IP: [10.67.174.162]
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  kwepemo500009.china.huawei.com (7.202.194.199)
-X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-3.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-In this patchset, we have added two formatting options --meta_fix and
---meta_only to extend the ability of EROFS. In the case of using OBS,
-we can convert the directory tree structure from OBS into the erofs
-image and implement on-demand loading logic based on this. Since OBS
-objects are often large, we need to separate the metadata area from
-the data area, which is the reason we introduce the --meta_fix option.
-To accelerate the formatting process, we can skip the formatting of
-the raw data by adding --meta_only option.
+The option --meta_fix format option allow the mkfs.erofs
+can fix the metadata area at the front of the image file.
+It makes the disk format easier.
 
-A simple usage example is as follows:
-  1. Build one xattr with OBS key in s3fs.
-  2. mkfs.erofs --meta_fix --meta_only data.img /mnt/s3fs to format
-  3. Implement the loading logic in kernel or userspace.
+Now we only allow to fix the metadata area at the front
+in EROFS_INODE_FLAG_PLAIN layout.
 
-Based on the above logic, we can easily expose the directory tree
-from OBS to users in the form of the EROFS file system and implement
-on-demand data loading for large OBS objects.
+Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+---
+ include/erofs/config.h |  1 +
+ mkfs/main.c            | 22 ++++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-Hongbo Li (4):
-  erofs-utils: lib: introduce --meta_fix format option
-  erofs-utils: lib: Implement the main logic for --meta_fix option
-  erofs-utils: lib: add --meta_only format option
-  erofs-utils: lib: remove the compile warning
-
- include/erofs/blobraw.h |  29 +++++++++
- include/erofs/config.h  |   2 +
- lib/Makefile.am         |   3 +-
- lib/blobraw.c           | 129 ++++++++++++++++++++++++++++++++++++++++
- lib/decompress.c        |   3 +
- lib/inode.c             |   6 ++
- mkfs/main.c             |  49 +++++++++++++++
- 7 files changed, 220 insertions(+), 1 deletion(-)
- create mode 100755 include/erofs/blobraw.h
- create mode 100755 lib/blobraw.c
-
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index 92c1467..ac6dd9b 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -66,6 +66,7 @@ struct erofs_configure {
+ 	bool c_xattr_name_filter;
+ 	bool c_ovlfs_strip;
+ 	bool c_hard_dereference;
++	bool c_meta_fix;
+ 
+ #ifdef HAVE_LIBSELINUX
+ 	struct selabel_handle *sehnd;
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 6d1a2de..42635c6 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -87,6 +87,7 @@ static struct option long_options[] = {
+ 	{"sort", required_argument, NULL, 527},
+ 	{"hard-dereference", no_argument, NULL, 528},
+ 	{"dsunit", required_argument, NULL, 529},
++	{"meta_fix", no_argument, NULL, 530},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -191,6 +192,7 @@ static void usage(int argc, char **argv)
+ 		"                                            headerball=file data is omited in the source stream)\n"
+ 		" --ovlfs-strip=<0,1>   strip overlayfs metadata in the target image (e.g. whiteouts)\n"
+ 		" --quiet               quiet execution (do not write anything to standard output.)\n"
++		" --meta_fix            make metadata area fixed at the front of the image file\n"
+ #ifndef NDEBUG
+ 		" --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
+ 		" --random-algorithms   randomize per-file algorithms (debugging only)\n"
+@@ -886,6 +888,9 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 				return -EINVAL;
+ 			}
+ 			break;
++		case 530:
++			cfg.c_meta_fix = true;
++			break;
+ 		case 'V':
+ 			version();
+ 			exit(0);
+@@ -903,6 +908,23 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		return -EINVAL;
+ 	}
+ 
++	if (cfg.c_meta_fix) {
++		if (cfg.c_compr_opts[0].alg) {
++			erofs_err("--meta_fix cannot be used with compress case");
++			return -EINVAL;
++		}
++
++		if (cfg.c_chunkbits) {
++			erofs_err("--meta_fix cannot be used with --chunksize");
++			return -EINVAL;
++		}
++
++		if (cfg.c_inline_data) {
++			erofs_info("--meta_fix force to turn off the inline_data");
++			cfg.c_inline_data = false;
++		}
++	}
++
+ 	/* TODO: can be implemented with (deviceslot) mapped_blkaddr */
+ 	if (cfg.c_blobdev_path &&
+ 	    cfg.c_force_chunkformat == FORCE_INODE_BLOCK_MAP) {
 -- 
 2.22.0
 
