@@ -1,41 +1,47 @@
-Return-Path: <linux-erofs+bounces-205-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-208-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C8FAA96734
-	for <lists+linux-erofs@lfdr.de>; Tue, 22 Apr 2025 13:23:02 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94ED0A96AAC
+	for <lists+linux-erofs@lfdr.de>; Tue, 22 Apr 2025 14:45:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Zhfwz704Tz2yrM;
-	Tue, 22 Apr 2025 21:22:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Zhhm62Zt2z3bjg;
+	Tue, 22 Apr 2025 22:45:26 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745320979;
-	cv=none; b=F3Jh5UvMuKbG4i50RMEBDVTY8OK96pY67WgdxevVQOoICN+WXMN7dlFoDgKPdp/jjLegspwIb4h0lXtfpufpci8SuSHSfwN2wCA/jjsGvqgTs6F+S8rv0Rueyh9tLUW6x1QU+aSYX4CiXsIg1aSkcZivULNAB9sFuDw/OR/q5CZqe6Z+XQOTsCJgf7ndXmuz+/kJ8xlKXgO/cHTdacPomLqJrtcBCr3U+T9T0jbsLPFXE58TuFqvkrOVhv5N/U6Azom38ceRNfrUw618mRlY43QQGjLRoiQigYq3Guqyu0dSxoB3NlfN9W+3kzQoz8M0o8Ph3foOfeKme81PuLjgGg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.191
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745325926;
+	cv=none; b=XDyqrkWrpEDlKz6j5ESwX9pieewu6JnYN8eqadwp5l0QGtMtGGp6nvCHGR2ttsOelCDZaE703yxnf+4/BhvSBpDuTE8yCau16C3gN0gnm5c4VOFmskgMcofPGX4uYw9plzMPFF2ZMfe/L2KnR6EdTSLkzTG+V5CkkU+Hm8mQcg471AFNLiMvJAx/mR2lnZ/KWhZvV+n3SDB40HfRC63bNHZochInOgsgX00sTjrwBAiKzxoZmweJbWAo+G0i3hw1EdgRqFmMhMgtoZIYKRJz8Sk+dFWWtxOK4BTdici5ZTffUqKHlzKQg0dS83k/p9+6HzSsxuoZwsLF6k0VXLMVuQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745320979; c=relaxed/relaxed;
-	bh=OqUvGb/NeuZBLQIo7HiJxW1y6UF/RrjPcLqaKD9mJUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jH9ZwGJHIDjFw1u4d63QOro7d7ORLqOOyNyiVDq72+pEblBywJeca6qQ2WVQ20IoIucGo1JBqzOaU7NtdpDoeYH6wIeK0BJuQH/K1/9/kfdI9ci4dE241TMNgnYZOQBsLTLGrM4+TTZgGq7TAwRnOPSldQDzm9UzpR6ukTPz3C8nllucXvBowD1198mZCPmnicoDuz+BagLb/KHOXWH91VL/pVmeDjQ4x3XGaXML9ii8OqzRebqtOz6bVZh1UeBs7IIddU70GJYlThefDy6I/XoE/U0wHIQGOSEhVNw2x/9F7+Xud8Tpt53/IHUtL7ZM1kQGSXpGDsYfT+2fIryt0g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+	t=1745325926; c=relaxed/relaxed;
+	bh=aHan3RwYSCT+TN8Xg/ZcO+UbpDpowddr71Nc7IbxIcI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Q1HuzRYf4V3Eek17QpxOBEAx5QSw2oxBQ0RUd16Xy2Jbl5yFHi9+w9q+7SSwC+r71sFnanNoY9hPbZud0hU4e9o+Ath7JIr0ZHT2LrvUmPZRtc/4SWMwhZKPjVrq/yN2bpU4lXrjrDF8GqUb263r4x7ce6/rAVVOLFfeVjJbOC9BidosfuppoyqPWzFagC/dnol5/SO3bYSnbsA5SpALDtI1bh3+XgmaxXv7rB5fBYnLxSrAPR5/4u3zDiPzhP3qHqsbCLVyABKmvm+CLgtzDdMmlN0mlER09HtOSmQQ+akE1aJTyEmP0TCK5JIQ8mnIh+HUYc1kgjnwXBFVhOcGug==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=linyunsheng@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zhfwy1HVlz2xpn
-	for <linux-erofs@lists.ozlabs.org>; Tue, 22 Apr 2025 21:22:56 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Zhfr23R0RzvWrs;
-	Tue, 22 Apr 2025 19:18:42 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 395C9180087;
-	Tue, 22 Apr 2025 19:22:51 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 22 Apr 2025 19:22:50 +0800
-Message-ID: <cd6db77d-fcb4-44d9-8f1b-61749b411c33@huawei.com>
-Date: Tue, 22 Apr 2025 19:22:50 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zhhm34qQkz304l
+	for <linux-erofs@lists.ozlabs.org>; Tue, 22 Apr 2025 22:45:22 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Zhhlg3S2Tz1j5wk;
+	Tue, 22 Apr 2025 20:45:03 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 69CA11402CE;
+	Tue, 22 Apr 2025 20:45:18 +0800 (CST)
+Received: from huawei.com (10.67.174.162) by kwepemo500009.china.huawei.com
+ (7.202.194.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 22 Apr
+ 2025 20:45:17 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
+	<jefflexu@linux.alibaba.com>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<lihongbo22@huawei.com>
+Subject: [PATCH RFC 0/4] erofs-utils: Add --meta_fix and --meta_only format options
+Date: Tue, 22 Apr 2025 12:36:08 +0000
+Message-ID: <20250422123612.261764-1-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.22.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -46,88 +52,51 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm: alloc_pages_bulk: support both simple and
- full-featured API
-To: Leon Romanovsky <leon@kernel.org>, Andrew Morton
-	<akpm@linux-foundation.org>
-CC: Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>, Shameer
- Kolothum <shameerali.kolothum.thodi@huawei.com>, Kevin Tian
-	<kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>, Chris
- Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba
-	<dsterba@suse.com>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
- Dhavale <dhavale@google.com>, Chuck Lever <chuck.lever@oracle.com>, Jeff
- Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
-	<okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
-	<tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
-	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong
- Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
-	<haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Jesper Dangaard Brouer
-	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
-	<anna@kernel.org>, Luiz Capitulino <luizcap@redhat.com>, Mel Gorman
-	<mgorman@techsingularity.net>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <virtualization@lists.linux.dev>,
-	<linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-	<linux-mm@kvack.org>, <linux-nfs@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<netdev@vger.kernel.org>
-References: <20250414120819.3053967-1-linyunsheng@huawei.com>
- <20250420112110.GA32613@unreal>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <20250420112110.GA32613@unreal>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.120.129]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemf200006.china.huawei.com (7.185.36.61)
-X-Spam-Status: No, score=-3.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.162]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
+X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On 2025/4/20 19:21, Leon Romanovsky wrote:
+In this patchset, we have added two formatting options --meta_fix and
+--meta_only to extend the ability of EROFS. In the case of using OBS,
+we can convert the directory tree structure from OBS into the erofs
+image and implement on-demand loading logic based on this. Since OBS
+objects are often large, we need to separate the metadata area from
+the data area, which is the reason we introduce the --meta_fix option.
+To accelerate the formatting process, we can skip the formatting of
+the raw data by adding --meta_only option.
 
-...
+A simple usage example is as follows:
+  1. Build one xattr with OBS key in s3fs.
+  2. mkfs.erofs --meta_fix --meta_only data.img /mnt/s3fs to format
+  3. Implement the loading logic in kernel or userspace.
 
->>
->> diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
->> index 11eda6b207f1..fb094527715f 100644
->> --- a/drivers/vfio/pci/mlx5/cmd.c
->> +++ b/drivers/vfio/pci/mlx5/cmd.c
->> @@ -446,8 +446,6 @@ static int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
->>  		if (ret)
->>  			goto err_append;
->>  		buf->allocated_length += filled * PAGE_SIZE;
->> -		/* clean input for another bulk allocation */
->> -		memset(page_list, 0, filled * sizeof(*page_list));
->>  		to_fill = min_t(unsigned int, to_alloc,
->>  				PAGE_SIZE / sizeof(*page_list));
-> 
-> If it is possible, let's drop this hunk to reduce merge conflicts.
-> The whole mlx5vf_add_migration_pages() is planned to be rewritten.
-> https://lore.kernel.org/linux-rdma/076a3991e663fe07c1a5395f5805c514b63e4d94.1744825142.git.leon@kernel.org/
+Based on the above logic, we can easily expose the directory tree
+from OBS to users in the form of the EROFS file system and implement
+on-demand data loading for large OBS objects.
 
-It seems mlx5vf_add_migration_pages() is changed to use the pattern
-of passing 'page_array + allocated' and 'nr_pages - allocated' in the
-above patch, so I think it is ok to drop the above hunk.
+Hongbo Li (4):
+  erofs-utils: lib: introduce --meta_fix format option
+  erofs-utils: lib: Implement the main logic for --meta_fix option
+  erofs-utils: lib: add --meta_only format option
+  erofs-utils: lib: remove the compile warning
 
-Hi, Andrew
-Do you want me to resend this patch without the above hunk or it is
-possible that you can drop the above hunk when committing if there
-is no other comment need fixing?
+ include/erofs/blobraw.h |  29 +++++++++
+ include/erofs/config.h  |   2 +
+ lib/Makefile.am         |   3 +-
+ lib/blobraw.c           | 129 ++++++++++++++++++++++++++++++++++++++++
+ lib/decompress.c        |   3 +
+ lib/inode.c             |   6 ++
+ mkfs/main.c             |  49 +++++++++++++++
+ 7 files changed, 220 insertions(+), 1 deletion(-)
+ create mode 100755 include/erofs/blobraw.h
+ create mode 100755 lib/blobraw.c
 
-> 
-> Thanks
-> 
-> 
+-- 
+2.22.0
 
 
