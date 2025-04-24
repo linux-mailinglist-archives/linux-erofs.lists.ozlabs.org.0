@@ -1,41 +1,43 @@
-Return-Path: <linux-erofs+bounces-228-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-229-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE8D5A9A56C
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Apr 2025 10:12:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DF6C7A9ACBB
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Apr 2025 14:02:04 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Zjpbp4sWQz3bnm;
-	Thu, 24 Apr 2025 18:12:06 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Zjvj644sMz3bpS;
+	Thu, 24 Apr 2025 22:02:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.255
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745482326;
-	cv=none; b=bjL5DfsWEU9sKQZcuHqiPgLCn7hr39WzzxtvoMk+Q08tIT0LsxYtLI/uevHBHNFOXfDKgJIAUIT++8FuQRssZTPCb6nP2G5vcu2nOl3EFbUpTSNpUJga3jcYxV43t7jF95rHQtIp1DdseQDZWed4bwEF/FuO1ipwRgfF61ayRhGfLcTytoO9KkBMGCKZZY/yu0iCAxfuUZ04jEUM8QhpBTH8XJiC/d9WMLzUPl6kcOVLqwwK8iotl1LcAHWSntyOkBs3eD1gZyqiTzU1fpu11ZTU6QOwJ4MUyvMdgSl30+piU1RjR8gqPjmlmLkfp+YTDAP84Rflfx0KbO8LYw2yeQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745496122;
+	cv=none; b=epkwy3Wz54kZ2jrzDjUwKBbC2Nxwq6Cmc0+loH/cJr/0W9EvFLEf213d3j1eB9e10N7ZcMtvFMTnI/uzp8gjybhsU8WZqSFEvFPwo1ruZV6bvUNhDqiLjMPBu6PZBZ2kOBjgKCaah/3TIBV4Su9s0TXEK+nNaWhB3U+2f7E2ZPfVCCXhkOorFU1R3LW1vRNvAucDhpDaqpmR1UsbUoaVr/M+Vp/jBUDeVr6gtkC570Oqym65NyDXiqCIxiyrRdxHKZgc+HWtAsEG9p47kJ4EQU2BlWuNFF2+1cqLa+GM67xKb+GPFJnU7Xr1UGRQOSVS7yv6Hslnm6mNizAvWR1ypg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745482326; c=relaxed/relaxed;
-	bh=hBTqcjAVtwy+teOG072x4FMsEuklr/DJlFHn1O3fdKM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EYRMai4QvevAh70k0Kp3pcENZsVHeq8yDi5AHo1LXUUIqSs2RnJ8hw85tB1bK1flLarYc3lFzWvhzib1Nd0C0z5y61zk1DHX0DzPG4KQzuh/RcB7UXGhhhLJTeZFGi7MoTwJC5mi1Xqd5lMpEYwDoT8Ki2qgx8Npg7RTq+8uRI1+TKPQsKnITMoGqLQBsZRCC8/RGvY15+Hogh/JolLKcGPQsO+5lSpFZl2rJWaiyZDQl5FrnX7KTxpO3d/faAliAfgkcgwO2jHH1+QHpnYkoqcUIS/0yN+ntzaIb7g8E763lXIMLO9190mrJAZpaUvMuqfcl06XkxuqnLcxsgXuXw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.255; helo=szxga08-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.255; helo=szxga08-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1745496122; c=relaxed/relaxed;
+	bh=jEWEujvBUseKWtPgyTikCBEDnCiDZZvgtDeXnqe3SCY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j5nkxrvHs5Z2qW2zO7Abgxie4gwBoqu7ANNnIk3ZrN90CHVojTZ2fPfgPc1xxRfuGK25gfhTQvrJAwmVEc48EoOZa0rMNRkIJX7IFveEp7QdJnhYIdz7Vij8yTIBZvCPWsTVQpDT1+xvXXz3PJ7ew5jCHtpakNkvRe7JxpNesGvEu5Nq+uPxnfjtyAvWAeJFsfZzfSiUqE6G8hNKI4yg5c9pWduG4NadIRHZTIFRHicw1+FTZ9KDWEI63CW5EXHrONRW42fCSiTKiRnM+9iodcelms33HORp7FXNAJVSH+2Q7OOVa1E40SvKXYTD4ZZ2Iszr7rYx/sm85XaWkHJLLg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YXA/CUJz; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YXA/CUJz;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zjpbn2Bscz3bnL
-	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Apr 2025 18:12:03 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4ZjpZT62l4z1d0mt;
-	Thu, 24 Apr 2025 16:10:57 +0800 (CST)
-Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id E1927180B51;
-	Thu, 24 Apr 2025 16:11:57 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 24 Apr 2025 16:11:57 +0800
-Message-ID: <b6d8f4eb-e1ab-4a83-b552-0b58ec120299@huawei.com>
-Date: Thu, 24 Apr 2025 16:11:56 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zjvj44Wnsz3bnL
+	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Apr 2025 22:01:59 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745496115; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=jEWEujvBUseKWtPgyTikCBEDnCiDZZvgtDeXnqe3SCY=;
+	b=YXA/CUJzrdeiiOZjRjGmv0wTXUCpNMt9UtyJWCPnS/Megmh+LDtvIXYLDbvtAYXBXNYIiqDsmF+2gnKKjZK9lzas8Q5IsH0TV98U7XHdQdDekGJjS3m6mAgcniipnkqHLVGA2aTmxTt1gJ96jZvExrDV5FX8gqUbhcYvU6cYxIM=
+Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WXzJhjX_1745496113 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 24 Apr 2025 20:01:53 +0800
+Message-ID: <001afbdc-27a7-4adf-abd7-21d1053ee399@linux.alibaba.com>
+Date: Thu, 24 Apr 2025 20:01:53 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -47,112 +49,103 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Maybe update the minextblks in wrong way?
-To: Sandeep Dhavale <dhavale@google.com>
-CC: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML
-	<linux-kernel@vger.kernel.org>, linux-erofs mailing list
-	<linux-erofs@lists.ozlabs.org>
-References: <50dc6bdc-ee62-41f1-b8e5-be64defb07c6@huawei.com>
- <CAB=BE-R4uPFeBSt6Z4Khv6_OjAu9=WoJR-VGG8eG0spAaovE1w@mail.gmail.com>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <CAB=BE-R4uPFeBSt6Z4Khv6_OjAu9=WoJR-VGG8eG0spAaovE1w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [question] Status of dictionary preload compression?
+To: Simon Hosie <sh1efs@xn--tkuka-m3a3v.nz>
+Cc: Linux Erofs <linux-erofs@lists.ozlabs.org>
+References: <OOZ5vdV--F-9@xn--tkuka-m3a3v.nz>
+ <8beeddff-816d-40ad-ae8b-a7c40748a59c@linux.alibaba.com>
+ <OOaCwCu--F-9@xn--tkuka-m3a3v.nz>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <OOaCwCu--F-9@xn--tkuka-m3a3v.nz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemo500009.china.huawei.com (7.202.194.199)
-X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 
 
-On 2025/4/24 14:51, Sandeep Dhavale wrote:
-> On Wed, Apr 23, 2025 at 6:50 PM Hongbo Li <lihongbo22@huawei.com> wrote:
+On 2025/4/24 13:14, Simon Hosie wrote:
+> 23 Apr 2025, 17:27 by hsiangkao@linux.alibaba.com:
+> 
+>> Hi Simon,
 >>
->> Hi Sandeep,
->>     The consecutive chunks will be merged if possible, but after commit
->> 545988a65131 ("erofs-utils: lib: Fix calculation of minextblks when
->> working with sparse files"), the @minextblks will be updated into a
->> smaller value even the chunks are consecutive by blobchunks.c:379. I
->> think maybe the last operation that updates @minextblks is unnecessary,
->> since this value would have already been adjusted earlier when handling
->> discontinuous chunks. Likes:
+>> On 2025/4/24 03:24, Simon Hosie wrote:
 >>
->> ```
->> --- a/lib/blobchunk.c
->> +++ b/lib/blobchunk.c
->> @@ -376,7 +376,6 @@ int erofs_blob_write_chunked_file(struct erofs_inode
->> *inode, int fd,
->>                   *(void **)idx++ = chunk;
->>                   lastch = chunk;
->>           }
->> -       erofs_update_minextblks(sbi, interval_start, pos, &minextblks);
->>           inode->datalayout = EROFS_INODE_CHUNK_BASED;
->>           free(chunkdata);
->>           return erofs_blob_mergechunks(inode, chunkbits,
+>>> I've struggled to determine if this is already a feature or in development or not (possibly because of overloading of the term "dictionary"), so I apologise in advance if the following brief is redundant:
+>>>
+>>> Compressors like LZ4, zstd, and even gzip talk about "dictionary compression" meaning to pre-load the history window of the compressor and decompressor, before the file is processed, with pre-arranged patterns; so that back references can be made for text the first time it appears in the file, rather than having to build up that window from an empty set at the beginning of the file by encoding everything as literals.
+>>>
+>>> This can lead to an improvement in compression ratio.
+>>>
+>>> It's generally only useful for small files because in a larger file the back-reference widow is established early and remains full of reference material for the rest of the file; but this should also benefit block-based compression which faces a loss of history at every entry point.
+>>>
+>>> So that's what I'm talking about; and my question, simply, is is this is a feature (or a planned feature) of erofs?  Something involving storing a set of uncompressed dictionary preload chunks within the filesystem which are then used as the starting dictionary when compressing and decompressing the small chunks of each file?
+>>>
+>>> In my imagination such a filesystem might provide a palette of uncompressed, and page-aligned, dictionaries and each file (or each cluster?) would give an index to the entry which it will use.  Typically that choice might be implied by the file type, but sometimes files can have different dispositions as you seek through them, or a .txt file may contain English or Chinese or ASCII art, each demanding different dictionaries.  Making the right choice is an external optimisation problem.
+>>>
 >>
->> ```
->> This way can reduces the chunk index array's size. And what about your
->> opinion?
+>> Thanks for your interest.
+>>
+>> I know the dictionary compression (and the benefit for small
+>> compression units as you said 4KiB compression) and it's on
+>> our TODO list for years.
+>>
+>> Actually I made an erofs-utils dictionary compresion demo 4
+>> years ago (but EROFS doesn't implement compression deduplication
+>> at that time):
+>> https://github.com/erofs/erofs-utils/tree/experimental-dictdemo
+>>
+>> The discussion part of this topic is the dictionary granularity:
+>>   1) per-filesystem ?  I think it's almost useless, but it
+>>   has least extra dictionary I/O.
+>>   2) per-inode?
+>>   3) per-(sub)inode?
+>>
+>> Since EROFS also supports compressed data deduplication (which
+>> means a pcluster can be used for different parts of an inode or
+>> different inodes), it makes the design for dictionary generation
+>> (since some uncompressed data can be deduplicated) and selection
+>> harder.
+>>
+>> If you have more ideas about the dictionary granularity and
+>> the whole process, I'm very interested in hearing more.
 >>
 >> Thanks,
->> Hongbo
+>> Gao Xiang
+>>
+> Ok, well the model I had in mind was to allocate maybe a few hundred kB of the filesystem image to various dictionaries optimised for different file types.  Some plain text dictionaries, a generic JSON dictionary, a generic XML dictionary, a shared object dictionary, etc..., and you enumerate those so that each file can choose the right dictionary using just a one-byte index into the table.
 > 
-> Hi Hongbo,
-> I think the last call is necessary to handle the tail end which is not
-> handled in the for loop. But I understand that if the file is
-> contiguous then the last call can reduce minextblks.
+> Hopefully an app will only work intensively with a couple of file types at a time so only a couple of dictionaries need be paged in at a time.
+> My intuition tells me that diminishing returns will have set in well before 256 different dictionaries, and that having more than that would be mostly harmful; but I guess that's a thing which needs testing.
+> I understand right now every file can specify a compression method for itself, so in that same data structure it makes sense to also specify the index number of the dictionary for the compression if the chosen compression method uses a dictionary.
+> 
+> By default mkfs would probably just look at the input files and a directory full of pre-cooked dictionaries, and based on the extension of the file and the availability of a matching dictionary it would put that dictionary in the next slot and mark all matching files as being compressed against that dictionary number.
+> 
+> Then the user can look at which sets of file types missed out on a dictionary and how much space they're using, and they can decide if they want to make another dictionary for those files as well, or just make them share a dictionary with another file type. Or maybe they want to split a group of files because they'll benefit from having different versions of a dictionary.  Or maybe they'll write their own optimiser to decide the optimal file groups by grinding on the problem with hundreds of GPUs for weeks on end.
+> 
+> If one file is particularly large it might warrant a dedicated dictionary, but I wouldn't plan for that as the general case.
+> 
+> Once those decisions have been finalised the dictionaries can be re-optimised against the actual files to get the best compression.
+> 
+> There's also the question of whether a file would want to select two or three small dictionaries to concatenate.  Like, for an XML file containing English tags and Chinese text, or something like that.  Or it might want to switch dictionaries halfway through the file.  That's probably over-engineering, though.
+> 
+> I think that's more or less all the things I've thought about the problem so far.
 
-Ok, also should update is_contiguous in another place when we found the 
-dedup chunk for non-sparse file?
+Ok, I know your idea on this. My overall thought is to get the
+numbers and demo first, and then think more how to land this.
+If you're interested in developping this, that's awesome!
 
-By the way, why we should use the value of lowbit instead of the (end - 
-start) >> sbi->blkszbits to update minextblks? The lowbit will get the 
-smaller value.
+BTW, one part I'm not sure if you noticed is that small files
+(or even the whole files) can be moved to the virtual fragment
+inode and compression together by using `-Efragments` (or even
+`-Eall-fragments`) option.
+
+So I think we have to develop sub-file dictionary support,
+otherwise it will be conflict with fragment compression feature.
 
 Thanks,
-Hongbo
-> 
-> Does the below patch address your concern to conditionally call the
-> last erofs_update_minextblks()?
-> 
-> Thanks,
-> Sandeep.
-> 
-> diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-> index de9150f..47fe923 100644
-> --- a/lib/blobchunk.c
-> +++ b/lib/blobchunk.c
-> @@ -303,6 +303,7 @@ int erofs_blob_write_chunked_file(struct
-> erofs_inode *inode, int fd,
->          lastch = NULL;
->          minextblks = BLK_ROUND_UP(sbi, inode->i_size);
->          interval_start = 0;
-> +       bool is_contiguous = true;
-> 
->          for (pos = 0; pos < inode->i_size; pos += len) {
->   #ifdef SEEK_DATA
-> @@ -332,6 +333,7 @@ int erofs_blob_write_chunked_file(struct
-> erofs_inode *inode, int fd,
->                                  erofs_update_minextblks(sbi, interval_start,
->                                                          pos, &minextblks);
->                                  interval_start = pos;
-> +                               is_contiguous = false;
->                          }
->                          do {
->                                  *(void **)idx++ = &erofs_holechunk;
-> @@ -365,7 +367,8 @@ int erofs_blob_write_chunked_file(struct
-> erofs_inode *inode, int fd,
->                  *(void **)idx++ = chunk;
->                  lastch = chunk;
->          }
-> -       erofs_update_minextblks(sbi, interval_start, pos, &minextblks);
-> +       if (!is_contiguous)
-> +               erofs_update_minextblks(sbi, interval_start, pos, &minextblks);
->          inode->datalayout = EROFS_INODE_CHUNK_BASED;
->          free(chunkdata);
->          return erofs_blob_mergechunks(inode, chunkbits,
-> 
+Gao Xiang
 
