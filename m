@@ -1,43 +1,61 @@
-Return-Path: <linux-erofs+bounces-230-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-231-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A7D9A9ACC1
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Apr 2025 14:02:31 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B2804A9AD92
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Apr 2025 14:36:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Zjvjd2Hwmz3bqQ;
-	Thu, 24 Apr 2025 22:02:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZjwSX3W53z3bnL;
+	Thu, 24 Apr 2025 22:36:12 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745496149;
-	cv=none; b=cXjCCA8jA6CUAUBtiwP0Vm0yzwkifXkVhExVi0sRj//VuqQMXi2uDqSVtQwWk3LlTbWZAukVrpHWqSdNGw0KSSbR2XcO5RbtlDb2suQ+t+yo1Q26CJfhp3vxiMtQ2ToEwjY1zjBU7b0gDTwM6bDysPlRib2RVU5l1Ae0XsLAH31bbyZKKhEn+dZGoP/tXdmym4w7MpoznBrwZWOQag90PdHT28ILECrxurToA0IDUeke00yBhhQ5TlYyV2hWGug9Jjc55Cyr8zuqp46AuFLgZsxDdH+m/sWcpPcRChtGsrRdl7TxuxP9121SLoUshDRbVZtMyj1ZXEpcYpcPQE0Jnw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745498172;
+	cv=none; b=ga8jVb3pfq9Vtd3lSyjOJ7xv9bL96Rc6S0YTjOyAVolLtIkTGEYrU3Kur2A1CM01SJ6OqWocKrDubZ9yLkmvSAjVVdX2R5au7qRK8IjSaOP8Dv0lLBF3nhtgO5E1eFX+gkUgZNmRgHxSJtrPQ29/ne9WsYaeb/RC2aEY6F5epQKcRFX5C4HC41lFtaFLow7P3XwUlGclp9A1F4waUzhbSAGtsK9msBm6AhZc5929VdlKwdQG+ZXnxoEMyP/acNUOkIRzGhs/gpwSBgoUt6mgrDTcIWKmfHfrQx/v0UdJthLM0FwW/UvguO1nAAsf1wlvk1p/EkLgHTP8a9dhSLBeqA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745496149; c=relaxed/relaxed;
-	bh=gkOUV6sGAuQr29EThkOThv0b6KbqR66Yzqjl3hHT0Ss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hg95/1Anqr1eyaVRiwA9qk+hf8YWcajmmyOrSB9i2jqMyS3MNaobshwbKMOOrcT8iPsEZdLxWIq1qsy0EMG9saoixGXrrCHqCJFbuer2FouSwkDZYuCMv3PcXMHdRdq2hWGsv9YrD7HKG3hD+TpmFK2Sl+ioQZ5F+aQevAIfTXfm+GssjUDh0y4g6zYipTYypVhr4XYUFeBj2AOIdLQRrkZqic0G0R1YrvIv7FTyyXwr1hjmvSTtn+2nwB4QgDAJ+LMA+Xu8D4IGfYqy4to/I4oRcnvsMROEfVtSHgmm5Hk3GyPnIunK/Ukm7tzPb+2bv6jRA4MWH6O9GoImLHPMPQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KSu2zW6l; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1745498172; c=relaxed/relaxed;
+	bh=TpccWIASOGr+zIVEKPV01QJ4yrwRzokx05WRReK/Vl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ohAxR0CETsInhUVblKvXfNxFoOACt0NL8ErXIrEeoV4FedKxTz0mq5UZwBhGdwWoWzJRI+QfLxQt17BvBVgVOWFazCrm8Q+Q0ZsneGyfXAz3UoWqHLVmQobPjEQzziGKuL8JUb+ctNeY6xUuFGt9ylyMscZRB5r3kyyqZljOos4mzPiO8w9geePAfwsAXNIF2zjVirS2BXADdTFnT0ythIzhlV+qBpkKPeBzcDtai0G/um7X7SfHdW5tABzBleoSVVDNZ7hKOjQMwc2Tg6RGDoNfRvlU36Ig+UFzRvPjp3LPya6ow7eoFkeqpqvieCzXC2QwMLIus2kXj4xwZGpfHQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=WnIUHPM7; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KSu2zW6l;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=WnIUHPM7;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zjvjc3S2Gz3bnL
-	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Apr 2025 22:02:28 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1745496143; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=gkOUV6sGAuQr29EThkOThv0b6KbqR66Yzqjl3hHT0Ss=;
-	b=KSu2zW6lhKEpgMFaKAFic1+cKnzfGp3GUlvegBX9WfXRuue/QlTqGL2NYVCkExpx+SZUhb4VyBW8P6CcRNSi2JNgBlLxwgae6mHcYtmZ76Mw7Bfvz3XnFvU+FUAVGZDL5GBtPHQ2nTfd9rap7uohn7g7qyo+4M3ISqmB6LVAVTQ=
-Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WXzKPyD_1745496140 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 24 Apr 2025 20:02:20 +0800
-Message-ID: <b286966f-abf3-47a8-85a7-6856784a4c43@linux.alibaba.com>
-Date: Thu, 24 Apr 2025 20:02:20 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZjwSR4S7dz2yk3
+	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Apr 2025 22:36:07 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id AC4045C6331;
+	Thu, 24 Apr 2025 12:33:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E6F4C4CEE3;
+	Thu, 24 Apr 2025 12:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745498163;
+	bh=gyLKJpkdxFDFqRDP2lvYlS2eIaXf05tk+g+rAtKA0d0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WnIUHPM7VI8re50OA8Z/ApWLAC0O2DQikmJ19NUdNGQEjq95/VQPyTfIhVeZRCb5w
+	 bpoKIgP5YBgk1QXyAr+Clmk4dFXvxdhVMpjYr3wsr1+JKZ2u/bhrzM3Rizh/GabeOW
+	 hedqdmj87qCznU4Tr17xoYbGQPqUKdphyV4bu9gcyQdDh+Jb2OVstyYk2gB33h8V83
+	 fcWL1KNLTHAx3yyAeJ+pRPb7NWx7BvIR5kK44qs4LRGP/TpYttiTyBL10yww3xiMjj
+	 REnHhnriFl3mmOILl4yoj0QzPPb/jaV/dRluQGN1h1ydFYpxlGN0biwAVAH56+CtBp
+	 NLf7rFbc48Fwg==
+Date: Thu, 24 Apr 2025 20:35:57 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: xiang@kernel.org, chao@kernel.org, huyue2@coolpad.com,
+	jefflexu@linux.alibaba.com, dhavale@google.com,
+	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: erofs: add myself as reviewer
+Message-ID: <aAowLQIqX8qq68SV@debian>
+Mail-Followup-To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org,
+	chao@kernel.org, huyue2@coolpad.com, jefflexu@linux.alibaba.com,
+	dhavale@google.com, linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+References: <20250424030653.3308358-1-lihongbo22@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -48,40 +66,50 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Sandeep Dhavale <dhavale@google.com>
-Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>,
- Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
- Jeffle Xu <jefflexu@linux.alibaba.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-References: <20250423061023.131354-1-dhavale@google.com>
- <94c702b9-cad5-4727-a7f1-16de1827841e@linux.alibaba.com>
- <CAB=BE-SwcvC0sDXAVoK+C9V8Ags+1VanWY_n1hgg8k+UmKH+0A@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAB=BE-SwcvC0sDXAVoK+C9V8Ags+1VanWY_n1hgg8k+UmKH+0A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250424030653.3308358-1-lihongbo22@huawei.com>
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-
-
-On 2025/4/24 14:04, Sandeep Dhavale wrote:
->> I could fix up this part manually if you don't have strong
->> opinion on this.
->>
+On Thu, Apr 24, 2025 at 11:06:53AM +0800, Hongbo Li wrote:
+> I have a solid background in file systems and since much of my
+> recent work has focused on EROFS, I am familiar with it. Now I
+> have the time and am willing to help review EROFS patches.
 > 
-> Hi Gao,
-> I don't have any objection to styling as it is subjective. I am ok
-> with the fixup.
+> I hope my participation can be helpful to the EROFS patch review
+> process.
+> 
+> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
 
-Ok, thanks for the confirmation!
+Sounds good to me.  Thanks for your interest for
+reviewing EROFS patches:
+
+Acked-by: Gao Xiang <xiang@kernel.org>
 
 Thanks,
 Gao Xiang
+
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index fa1e04e87d1d..f286c96ea7db 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8719,6 +8719,7 @@ M:	Chao Yu <chao@kernel.org>
+>  R:	Yue Hu <zbestahu@gmail.com>
+>  R:	Jeffle Xu <jefflexu@linux.alibaba.com>
+>  R:	Sandeep Dhavale <dhavale@google.com>
+> +R:	Hongbo Li <lihongbo22@huawei.com>
+>  L:	linux-erofs@lists.ozlabs.org
+>  S:	Maintained
+>  W:	https://erofs.docs.kernel.org
+> -- 
+> 2.34.1
+> 
+> 
 
