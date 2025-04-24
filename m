@@ -1,43 +1,43 @@
-Return-Path: <linux-erofs+bounces-220-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-221-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8E04A99D08
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Apr 2025 02:31:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E5CDA99D12
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Apr 2025 02:40:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZjcNk4mrrz30HB;
-	Thu, 24 Apr 2025 10:31:50 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZjcZG6bBcz2ykX;
+	Thu, 24 Apr 2025 10:40:06 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745454710;
-	cv=none; b=Y4wLO//A64S01bcY0TsNrYH0UcSSyYzQrzwgIRYS7iJGIGArSNNvYhU+5lCH6n3W+5wqsCWCnNmBSBSawnDbCzxQaw0l7jad+z/xs+64WGKsF2veGuLoBA5OYbZCnNeQ1Wuk9yMR4WXWEv+z1byCqph0Is3owB4+IC6UJo/LiIq8fQQqoHmwzLcPFWaIDxI1BCnINd/zk2pi082nrwKhNuztAg9v6Ar9qJCbKu2Wc8WfPAnMfqdpoOTPPN26LJpvWm7J6HiJ7E/fCcrT+M4hWEpoFiraqj72SVf2WMGP39t6wixx1IR8riENYax3DGIILL092d3ZL188Il+E34iv3Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745455206;
+	cv=none; b=M/XIwQwL0z7I4zBwyVf/FsEpEHfm+pQW99OW8rZsjid/rm85Kr4fL2nL1jir9q/+Wufg/VGC+e77WTqfsUMnhW4kizYJAodf5Uguyb67HCYgzC4mDCYhnWd7vvTrOKyKYpvOwYDEWkCIpOkh10A3aaQVyghvEgKBbsqbKfrDgxbfaIWEcbYTg6Glkd334Yliy2aryNI05bup2VbLAS+L6ErD89ssK0C/3+8nnxr2PuWxLLUq6Pjs41Cs4UuoAfra5hFhXb55GbVf+UAqxLgJs5bi8QI2lkvp/zMjX08/XYjNPYEk5l58DrkCUfjs/ySvhR0bcxVEpiSDRk1x65ZdGA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745454710; c=relaxed/relaxed;
-	bh=c8ZCQX8M22/L+jhRyOZyyKQ/yi6W0hwrq83O3s9SBSE=;
+	t=1745455206; c=relaxed/relaxed;
+	bh=KrasVHKeX0M1f6t3pOw5wX2ePphli8GZb/0iP/2r4iI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HPFP+AsNkamquWdQGV5quKevtJ2kiKXt1qdvm9YrJfujxuhTDDjWE0afHpgSTMALZT3cvGe0AOQ1Heus1LEAfcemZ45jqCuWsDfp3ZhoHdRLU0djlZsplIWDbuWGPHZ3CK7f5DCYfztD5cIOgUN3BUw5nCYLdK9OnVwDGVGa7ccW/1WBDfJUyak8V/Jb3mGhu32ccf5hiwmPqLKRSOdW3DVhGerQygnEFcBF2YGicV9I9dfCgU9Bw2Na5PvRlwHYf/ZguBIzULrvSLda8H5octiLvupbTNPxDPoZrD04vJCS9ENRL05dKCLJQFZZNh4OU8JthPs5tRGGnRq7Z/PwSQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=pXPx8hNx; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=ErMX1VqE/A+BYOCwwdqgqnf3Ar16a9u6wjJFVcqy8D//5VxTlNXC0xQjPnYvjFyLqgDLUlOCnLdBgNxIDWpgiOBeH83TuScT+BoiZyMo0XotrE6CubRF9nrQexuz1DfeOhv5z/5SOYjhinj9PnHt4ILY+2N68FjtW6G9U6m1+mPf0894uQ1SZmOwbRBK41W5tCYht83ImgzVh8qgVugMt0BpIyuVdRuj+RVy7suw1U27sHMhXdkY+eDE1JIRDUSi8VRurLBE29jcdrB+iDYlYm9CCSw/9as/FB16FHciTcrTQJK1GUpo5UJUGmC+WeFWODQYbzjp34wf7eBrONS8Fg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MRz2J4BX; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=pXPx8hNx;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MRz2J4BX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZjcNj4gyJz2ykX
-	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Apr 2025 10:31:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZjcZD5Phcz2xRv
+	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Apr 2025 10:40:03 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1745454705; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=c8ZCQX8M22/L+jhRyOZyyKQ/yi6W0hwrq83O3s9SBSE=;
-	b=pXPx8hNxYFNmpvsLdMss92Pu7HcUCEq7QvPYcDShlg2Usqasmv2Fx4NHqjufcO3NTQOl6aioZ/6Dn2kxX1JpLdZ9k+FVXH/8XSlorqnH2DQCQTyOzpwy5sPyR0KUx4UTW8MtJkCaqn9A2LqArJTZcP6VIm5lIm6Wd34cdEjXlP8=
-Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WXw4zKR_1745454703 cluster:ay36)
+	t=1745455199; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=KrasVHKeX0M1f6t3pOw5wX2ePphli8GZb/0iP/2r4iI=;
+	b=MRz2J4BXtrPJN6FrVyvj5M7pzjWl4xIBhWN1a2qS5pEFI724hI3ZK6ZakGh2Rqa7uLCgR5KfKEabXN2U7o/K5MlmWWjdXCdsvS6Pg943bDm4OXGLdn/AUliFMS6qPxedqegkEQylld4/CHGjrsBzkiyJa/MEpmdPmtxAyyUN72c=
+Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WXw3bPW_1745455197 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 24 Apr 2025 08:31:43 +0800
-Message-ID: <94c702b9-cad5-4727-a7f1-16de1827841e@linux.alibaba.com>
-Date: Thu, 24 Apr 2025 08:31:42 +0800
+          Thu, 24 Apr 2025 08:39:58 +0800
+Message-ID: <bcf043d2-e96b-4f8d-b83b-de2b5ad4657e@linux.alibaba.com>
+Date: Thu, 24 Apr 2025 08:39:57 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,17 +49,18 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
-Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
-References: <20250423061023.131354-1-dhavale@google.com>
+Subject: Re: [PATCH RFC 0/4] erofs-utils: Add --meta_fix and --meta_only
+ format options
+To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org, chao@kernel.org,
+ huyue2@coolpad.com, jefflexu@linux.alibaba.com
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20250422123612.261764-1-lihongbo22@huawei.com>
+ <2408568f-a9e6-4e32-83b2-e79aee83a55a@linux.alibaba.com>
+ <406b4b4e-1a1e-4618-87b8-7b104838770f@huawei.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250423061023.131354-1-dhavale@google.com>
+In-Reply-To: <406b4b4e-1a1e-4618-87b8-7b104838770f@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -68,49 +69,32 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 
 
-On 2025/4/23 14:10, Sandeep Dhavale wrote:
-> Currently, when EROFS is built with per-CPU workers, the workers are
-> started and CPU hotplug hooks are registered during module initialization.
-> This leads to unnecessary worker start/stop cycles during CPU hotplug
-> events, particularly on Android devices that frequently suspend and resume.
+On 2025/4/22 22:37, Hongbo Li wrote:
 > 
-> This change defers the initialization of per-CPU workers and the
-> registration of CPU hotplug hooks until the first EROFS mount. This
-> ensures that these resources are only allocated and managed when EROFS is
-> actually in use.
 > 
-> The tear down of per-CPU workers and unregistration of CPU hotplug hooks
-> still occurs during z_erofs_exit_subsystem(), but only if they were
-> initialized.
-> 
-> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> On 2025/4/22 21:50, Gao Xiang wrote:
+>> Hi Hongbo,
+>>
+>> On 2025/4/22 20:36, Hongbo Li wrote:
+>>> In this patchset, we have added two formatting options --meta_fix and
+>>> --meta_only to extend the ability of EROFS. In the case of using OBS,
+>>> we can convert the directory tree structure from OBS into the erofs
+>>> image and implement on-demand loading logic based on this. Since OBS
+>>> objects are often large, we need to separate the metadata area from
+>>> the data area, which is the reason we introduce the --meta_fix option.
+>>> To accelerate the formatting process, we can skip the formatting of
+>>> the raw data by adding --meta_only option.
+>>
+>> Thanks for the patches!
+>>
+>> I wonder if it's possible to reuse blobchunk.c codebase for
+>> such usage in the short term.
+>>
+> Our initial plan was to reuse the blobchunk.c logic, but we found that the chunk-based layout has some minor issues when handling contiguous blocks—it would result in multiple elements in the chunk index array (whereas blobraw expects only oversized chunks).
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Sorry for late reply.
 
-> ---
-
-...
-
->   int z_erofs_init_super(struct super_block *sb)
->   {
-> -	struct inode *const inode = new_inode(sb);
-> +	struct inode *inode;
-> +	int err;
->   
-> +	err = z_erofs_init_pcpu_workers();
-> +	if (err)
-> +		return err;
-> +
-> +	inode = new_inode(sb);
->   	if (!inode)
->   		return -ENOMEM;
-> +
-
-I think the new blank line is redundant, the setup part
-should be next to new_inode().
-
-I could fix up this part manually if you don't have strong
-opinion on this.
+It seems blobchunk bugs? Could you submit fixes for this?
 
 Thanks,
 Gao Xiang
