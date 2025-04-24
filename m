@@ -1,54 +1,68 @@
-Return-Path: <linux-erofs+bounces-225-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-226-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C5B8A9A060
-	for <lists+linux-erofs@lfdr.de>; Thu, 24 Apr 2025 07:14:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ECE04A9A0D2
+	for <lists+linux-erofs@lfdr.de>; Thu, 24 Apr 2025 08:05:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZjkgF6BHsz3bn8;
-	Thu, 24 Apr 2025 15:14:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZjlnS0gT5z3bnL;
+	Thu, 24 Apr 2025 16:05:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=185.205.69.214
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745471689;
-	cv=none; b=X7XigO3IFqNqIBdF19EBqwFQOecXxFFxQly7lgKmq2OT2lNeNFMsOKwiBvx5jzjrU2bqfSzDYLCIJM4RfiY/3KZKkC3qnN77clH6+NAn9n22ws4Mm7m+KTUAb5uE/ECvcTQr13a+dSb17FXxg8auww8f06Tx9umDj7lrbIrqkTQc7NwLqDMhVhT2PMbLj9V62TVGIWkaMMbcUCp51bG9wuCziUuasmnf7lXxFhakKBQsLvP+IP0sorQ9Ak2197+/HWMNS+BSJkTKdjaKW8rbu/TIZP/RnyimfoX3Uo2Ei4dXTcfDKr0dATQY4KXCwO5BP3UkmcO5rv+6aE6MT35bnw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::52a"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745474716;
+	cv=none; b=WCKkB9sEswFMIgp3hNwFxnXqcJFblUvmflbT1m/Xk9J4q6Fe7X/2ZY6pzmGai8/1ozeuxH3txM5Pg2W4UDAq+S3MPrTxS9106OgOQjVG0n4FieE/eIqtNm0cDgQ3rkATQ06pTXKL7dN2i5QtNUV6GnzHdC3Wx+Fy5LPKJGus5Hacn/9IPWtgVh58isYqHRhPBOurlCxnu6CW6SrgCTl+BV2R8YlbC+LLa5ZwsWXQheYAWSTDlmSP0I/VLx3uVnUC0WdCDIB4Zm3IABgiSBalMG86WmJrGQpqo/+rf8TxJi084xT+sSP3ZJ76jg7d42iXU10uCEXLwJNSuVFGCY7t5Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745471689; c=relaxed/relaxed;
-	bh=Y7b/FkAwTTMzKnfbfR2Lpq+H3cr3ZdMVYEgXp7+9oXk=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=NpSuQXmxhXZs1Jihi64dpBmJVZ8O/U/uWZnDVet/V8jEI38nS9z8uUVyBW8UfYfXqi0v3Zk3bnyw9R0IZnFpuYfWkF8kmpTOvpOnBCxVh/eibEho/LCpeGdcTfqLw9ThDvDsFBR1xEZp/Iqd2RmtuJscR2fV2IUa9JtdqHveGg2AD2s/khOipq7YShKHdmlqd8heSZLHeyYa8vuzEL5fLz0cmsgLz9L4pIAG2X9LAlNsVTobm5K1mM9HuC5vmV7ttMcuDqSR4p4NIJcxlD5gOHk8dguxvqKkcHtAz8tkDhRL7j4EuAD11X4zFNZVO4/hsKD6IGPky4u8iH+ooYJs8w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xn--tkuka-m3a3v.nz; dkim=pass (2048-bit key; secure) header.d=xn--tkuka-m3a3v.nz header.i=@xn--tkuka-m3a3v.nz header.a=rsa-sha256 header.s=s1 header.b=YV5tv00r; dkim-atps=neutral; spf=none (client-ip=185.205.69.214; helo=mail.w14.tutanota.de; envelope-from=sh1efs@xn--tkuka-m3a3v.nz; receiver=lists.ozlabs.org) smtp.mailfrom=xn--tkuka-m3a3v.nz
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=xn--tkuka-m3a3v.nz
+	t=1745474716; c=relaxed/relaxed;
+	bh=FgLcY9UoJi4Lz6XopnViT8Ecbt0JoHdDYBsvaCncXhQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IBFLyltF1vO15mbLwK+no7YhLqQ9vbBTiIYjryR7ngcDydks1oZN2CgonzZsAuuHUeivA0UUUcWShUmnemNoqXxkWFRDDu8RIMFcrQXgkHeTrsbs4HOm1Dt/aBVEHuoDc+KEoKGixbOVDGJ2IvEFZkZLFCfTdColgJVoO/3aMPDBy69UZ4r0LHbs2xHytgjpbX+BPk3X1d9uD2+zvQhhp87pJRTIMTLTV0dpdUXcaMsyu+ZjuVRw80VwfeIY++oORIKtNekukNWnWHKoxVA6besPJxNiczc4QIx8lcwFn+xx+EyYJrwvL6xzZz/Z1Bt3iAOhFbNgrHReE0co5AEYnw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=REMoE7D2; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::52a; helo=mail-ed1-x52a.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org) smtp.mailfrom=google.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=xn--tkuka-m3a3v.nz header.i=@xn--tkuka-m3a3v.nz header.a=rsa-sha256 header.s=s1 header.b=YV5tv00r;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=REMoE7D2;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=xn--tkuka-m3a3v.nz (client-ip=185.205.69.214; helo=mail.w14.tutanota.de; envelope-from=sh1efs@xn--tkuka-m3a3v.nz; receiver=lists.ozlabs.org)
-Received: from mail.w14.tutanota.de (mail.w14.tutanota.de [185.205.69.214])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=google.com (client-ip=2a00:1450:4864:20::52a; helo=mail-ed1-x52a.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org)
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZjkgD4YqFz3blc
-	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Apr 2025 15:14:48 +1000 (AEST)
-Received: from tutadb.w10.tutanota.de (w10.api.tuta.com [IPv6:fd:ac::d:10])
-	by mail.w14.tutanota.de (Postfix) with ESMTP id A35D87E95F62
-	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Apr 2025 07:14:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745471654;
-	s=s1; d=xn--tkuka-m3a3v.nz;
-	h=From:From:To:To:Subject:Subject:Content-Description:Content-ID:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Cc:Cc:Date:Date:In-Reply-To:In-Reply-To:MIME-Version:MIME-Version:Message-ID:Message-ID:Reply-To:References:References:Sender;
-	bh=Y7b/FkAwTTMzKnfbfR2Lpq+H3cr3ZdMVYEgXp7+9oXk=;
-	b=YV5tv00r2TgtW93Rs4oW2QPLiiJY6T+ZkaGpTDxlEvBlECT5pxwQR9Au1zgTX1qJ
-	z19O0yU2qqT20gVO6gjQXfvOAmrI0olj6oFisKlaWyst+fKYIcTnm/pM1yOMWHufjAf
-	Rqxgf3fBDGlWfuxEugWnXo2dpCO25qeKQ3QZIvfiKbvedj7vX1XhQOFHsv5fM6OCrml
-	kW+crUzanNhYhTaF3pheWToZkmN6ktr67meoMnI5zTGJpXTRdsss7ASepyB1219m2RN
-	quGT9giVom+VP60cHX9XC22h6sjzPachxmdzs5N4kAkoaqd/1PHS1586Ya+Gyd1wBlc
-	CiLS8hjOcQ==
-Date: Thu, 24 Apr 2025 07:14:14 +0200 (CEST)
-From: Simon Hosie <sh1efs@xn--tkuka-m3a3v.nz>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Linux Erofs <linux-erofs@lists.ozlabs.org>
-Message-ID: <OOaCwCu--F-9@xn--tkuka-m3a3v.nz>
-In-Reply-To: <8beeddff-816d-40ad-ae8b-a7c40748a59c@linux.alibaba.com>
-References: <OOZ5vdV--F-9@xn--tkuka-m3a3v.nz> <8beeddff-816d-40ad-ae8b-a7c40748a59c@linux.alibaba.com>
-Subject: Re: [question] Status of dictionary preload compression?
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZjlnQ0Cx2z3blc
+	for <linux-erofs@lists.ozlabs.org>; Thu, 24 Apr 2025 16:05:13 +1000 (AEST)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-5f4d28d9fd8so811402a12.3
+        for <linux-erofs@lists.ozlabs.org>; Wed, 23 Apr 2025 23:05:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745474707; x=1746079507; darn=lists.ozlabs.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FgLcY9UoJi4Lz6XopnViT8Ecbt0JoHdDYBsvaCncXhQ=;
+        b=REMoE7D2ov7P7ceb5YmTF09aqs+bx7kaUIpTjTXN4UseVWp4ASkH9Bdm1x/BgLc9Tl
+         ZoIoTJxMeCWYmbcNh+BpAQjJEbQqiPM4/uzwFD/NYj0oaoWHev9VSZ//RDu4xAExLysp
+         iL0ST8I5f6nHPmh1h3CrbtzAzhoFwFDEQvg4GzWH2fQWF1eO4oJe+eFbTiNa3jmilmNZ
+         JUT9GqmyW8AxAfOESQR3RgZhFEErnWIML0m1rW3nqZymzQELZtw8Jd+nUpkrowGMiaof
+         cTuJde7AOfxn9ypjbi0qx0WNsBQrvF8/x7b9YOXLei9k66VgNHXaYRrSqTX+dDqq2Kbk
+         RFnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745474707; x=1746079507;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FgLcY9UoJi4Lz6XopnViT8Ecbt0JoHdDYBsvaCncXhQ=;
+        b=qkngP3AxIpZJpQHSK4SewGs5Yfx5vlKG7Tx8JmMi1bt5Vks8CFp6iPIU6XXXyp5k/j
+         HQpjmvBynzGnnlgeS0OxYztoltmdOfZD/TTzqxPjxhMDrSra02zko1b6zjersId4kcRj
+         PCFPNfB/9/ZtCVF59lWo+nTq+YBTJDs5DYs0VryFrS5/pJUsjbJIIrp5hA8Vbb+GebXy
+         LBQOrG80qbwxyOzigvTPXJhiBSvrYHLlF57aJ1jenzcWLIudjyEyo8VPAw7PbkdfmIJc
+         /Ik+1PzFnipDMzkKt+oLLRcpGyAeITq5egANkDIsNix/lI671sPmte24byCwksRgjIyV
+         DDxg==
+X-Gm-Message-State: AOJu0YywyfnM4wxNDf767MI6tMacn7cPjMKUdjGCx4jcLIQySloZS2HN
+	dIBkmrvoprRzwp6eXFnQxnNmEzRwKzCxpqHaCeWrIxAH3lCSg9xyYN5oHjN/A23nbUeTJA8bsvH
+	CBzTKwUAeuIiHpqdOJVN5GTbKDYonoTwg8Maq
+X-Gm-Gg: ASbGncsgS7KHpKKvDdtIoXaRObrm5+on7LiFUZe3oS1bLIIH1F9Doix8ZdJYuZildWW
+	zV1wXerY/clJiuiXr5E5N0l5GBLg0ZpwDFCmimk8AJJD2bNOkFJqS4HHVXt3n/aJQ1QQlrOyKNp
+	c1OtimJ86AIvcJFAleEeDEfw==
+X-Google-Smtp-Source: AGHT+IGY004qp6xO5hpjOrDdxnAVM0lG2ykMQcFg2nQh/uVt+HQBW4bobGq43stu5J/Kmy7rjJ4V4FN8UhJ7Tau1rYc=
+X-Received: by 2002:a17:907:6d1e:b0:acb:8492:fe with SMTP id
+ a640c23a62f3a-ace5748b945mr131046766b.52.1745474707507; Wed, 23 Apr 2025
+ 23:05:07 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -59,124 +73,38 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+References: <20250423061023.131354-1-dhavale@google.com> <94c702b9-cad5-4727-a7f1-16de1827841e@linux.alibaba.com>
+In-Reply-To: <94c702b9-cad5-4727-a7f1-16de1827841e@linux.alibaba.com>
+From: Sandeep Dhavale <dhavale@google.com>
+Date: Wed, 23 Apr 2025 23:04:55 -0700
+X-Gm-Features: ATxdqUGZy1kQsEX662y0kBBC-fBrdY3CPiMMq1EptitRYRNGrcUwldc7K2xvlN0
+Message-ID: <CAB=BE-SwcvC0sDXAVoK+C9V8Ags+1VanWY_n1hgg8k+UmKH+0A@mail.gmail.com>
+Subject: Re: [PATCH v4] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-16.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-23 Apr 2025, 17:27 by hsiangkao@linux.alibaba.com:
+> I could fix up this part manually if you don't have strong
+> opinion on this.
+>
 
-> Hi Simon,
->
-> On 2025/4/24 03:24, Simon Hosie wrote:
->
->> I've struggled to determine if this is already a feature or in developme=
-nt or not (possibly because of overloading of the term "dictionary"), so I =
-apologise in advance if the following brief is redundant:
->>
->> Compressors like LZ4, zstd, and even gzip talk about "dictionary compres=
-sion" meaning to pre-load the history window of the compressor and decompre=
-ssor, before the file is processed, with pre-arranged patterns; so that bac=
-k references can be made for text the first time it appears in the file, ra=
-ther than having to build up that window from an empty set at the beginning=
- of the file by encoding everything as literals.
->>
->> This can lead to an improvement in compression ratio.
->>
->> It's generally only useful for small files because in a larger file the =
-back-reference widow is established early and remains full of reference mat=
-erial for the rest of the file; but this should also benefit block-based co=
-mpression which faces a loss of history at every entry point.
->>
->> So that's what I'm talking about; and my question, simply, is is this is=
- a feature (or a planned feature) of erofs?=C2=A0 Something involving stori=
-ng a set of uncompressed dictionary preload chunks within the filesystem wh=
-ich are then used as the starting dictionary when compressing and decompres=
-sing the small chunks of each file?
->>
->> In my imagination such a filesystem might provide a palette of uncompres=
-sed, and page-aligned, dictionaries and each file (or each cluster?) would =
-give an index to the entry which it will use.=C2=A0 Typically that choice m=
-ight be implied by the file type, but sometimes files can have different di=
-spositions as you seek through them, or a .txt file may contain English or =
-Chinese or ASCII art, each demanding different dictionaries.=C2=A0 Making t=
-he right choice is an external optimisation problem.
->>
->
-> Thanks for your interest.
->
-> I know the dictionary compression (and the benefit for small
-> compression units as you said 4KiB compression) and it's on
-> our TODO list for years.
->
-> Actually I made an erofs-utils dictionary compresion demo 4
-> years ago (but EROFS doesn't implement compression deduplication
-> at that time):
-> https://github.com/erofs/erofs-utils/tree/experimental-dictdemo
->
-> The discussion part of this topic is the dictionary granularity:
->  1) per-filesystem ?  I think it's almost useless, but it
->  has least extra dictionary I/O.
->  2) per-inode?
->  3) per-(sub)inode?
->
-> Since EROFS also supports compressed data deduplication (which
-> means a pcluster can be used for different parts of an inode or
-> different inodes), it makes the design for dictionary generation
-> (since some uncompressed data can be deduplicated) and selection
-> harder.
->
-> If you have more ideas about the dictionary granularity and
-> the whole process, I'm very interested in hearing more.
->
+Hi Gao,
+I don't have any objection to styling as it is subjective. I am ok
+with the fixup.
+
+Thanks,
+Sandeep.
+
 > Thanks,
 > Gao Xiang
 >
-Ok, well the model I had in mind was to allocate maybe a few hundred kB of =
-the filesystem image to various dictionaries optimised for different file t=
-ypes.=C2=A0 Some plain text dictionaries, a generic JSON dictionary, a gene=
-ric XML dictionary, a shared object dictionary, etc..., and you enumerate t=
-hose so that each file can choose the right dictionary using just a one-byt=
-e index into the table.
-
-Hopefully an app will only work intensively with a couple of file types at =
-a time so only a couple of dictionaries need be paged in at a time.
-My intuition tells me that diminishing returns will have set in well before=
- 256 different dictionaries, and that having more than that would be mostly=
- harmful; but I guess that's a thing which needs testing.
-I understand right now every file can specify a compression method for itse=
-lf, so in that same data structure it makes sense to also specify the index=
- number of the dictionary for the compression if the chosen compression met=
-hod uses a dictionary.
-
-By default mkfs would probably just look at the input files and a directory=
- full of pre-cooked dictionaries, and based on the extension of the file an=
-d the availability of a matching dictionary it would put that dictionary in=
- the next slot and mark all matching files as being compressed against that=
- dictionary number.
-
-Then the user can look at which sets of file types missed out on a dictiona=
-ry and how much space they're using, and they can decide if they want to ma=
-ke another dictionary for those files as well, or just make them share a di=
-ctionary with another file type. Or maybe they want to split a group of fil=
-es because they'll benefit from having different versions of a dictionary.=
-=C2=A0 Or maybe they'll write their own optimiser to decide the optimal fil=
-e groups by grinding on the problem with hundreds of GPUs for weeks on end.
-
-If one file is particularly large it might warrant a dedicated dictionary, =
-but I wouldn't plan for that as the general case.
-
-Once those decisions have been finalised the dictionaries can be re-optimis=
-ed against the actual files to get the best compression.
-
-There's also the question of whether a file would want to select two or thr=
-ee small dictionaries to concatenate.=C2=A0 Like, for an XML file containin=
-g English tags and Chinese text, or something like that.=C2=A0 Or it might =
-want to switch dictionaries halfway through the file.=C2=A0 That's probably=
- over-engineering, though.
-
-I think that's more or less all the things I've thought about the problem s=
-o far.
 
