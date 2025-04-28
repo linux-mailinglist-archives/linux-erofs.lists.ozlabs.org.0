@@ -1,68 +1,87 @@
-Return-Path: <linux-erofs+bounces-250-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-251-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6B58A9FC8D
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Apr 2025 23:49:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AE623A9FD8B
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Apr 2025 01:09:46 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZmcYM41G4z2yyJ;
-	Tue, 29 Apr 2025 07:49:43 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZmfKg5k1Fz2yvv;
+	Tue, 29 Apr 2025 09:09:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::62a"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745876983;
-	cv=none; b=GKjCo7TRcEv36c5YtlkqZ2jsx/7YTFzP1NMGV2mu5gFYu19uEOwH458iBCnLHC3Rjabii6eZKMRTcJ5ZsS03sQWsQ349T0t7WAN/x9Az4Sp5BYlIWzjF5K30Rr4SHzLLiUUL2yRbntAm4zj0AhM8owkfRja4pMPUuRRzXeFd9ay1bECuKsovULIfOMLI6/EHjU9GYsmOcRt9KJszwhnTG9AHS6JzTpisuS4tuCZFjY0AKalJoZzvj+MffudK0ZFVMB+S/bz/sl8gfmGdMK2DIglhcWoAinDo5MyE9GIpQhPID5OLYB3QRA0MbRCw8Ok6zcLLgV2XtWxaVudmGpLApQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::629"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745881783;
+	cv=none; b=PnJvK+JZ0foP114zDOmo9Ok8sm5RGQ/hGZKGNjL60CQ+mL9C8Ie4Jceqpr8Xvwaqui9msxcOfe6T3eUvw30aLA7ZyqlYxNq6eC1bHqDN2sR1z7P3zfOJ/SDcc7GLgYEgNFxkYxfklZUSosRRqYzE8uXfE4F0OJKYfFWJNGpwMHoaJR3iPfp5yY5mEoLiLEzf3SHl7rR6Tv2jk+GuHZeoTKHazRV/9cnYPR7V9QHa7otZH1W8NrXYtQw+r3NeQGgut8d9XqJBjxkixnzBTunFYarUUjNEjXqXxw9M2jCQf6P7YIxBQffSV6ekhHAJ24ahUiU/l322uAVN9FKEIxf5Rw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745876983; c=relaxed/relaxed;
-	bh=+X7+Sy3CmnHgJcf9KaxAsnYxZIlm7xiKcJg4Tb8SkUk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cbdisyYDLsdciZSM2NLRaiYmPB+YX8RFnUffM90YnmXN4P8gKf0v4kT23ExC0bat/KE1+VZMCbHp9ypbXCQCxwzr/uz0UTWN186AFRQrsd4LVeKaxtsr+11ZQb1T3301pk8OnI94voyV9mjX7cctT6unRdo2sDmzYKMKclQdndhJIqbNjirpXrXXlihhq7YL8fkP8GohNOkqWtHl6XggWSJt4mc102QKYvJ/zjkw/EbozjGehpKj59rxY5pQC0J8nGxZNm0GdRKQLEy/JlTysPiJSiV0xaJfhe1kqbePBMp2Ao+u0vhEbKtK8Cg0OENT3/nn4rLL2eCBgjwMMijbGQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=kP6Ko9i+; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::62a; helo=mail-ej1-x62a.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org) smtp.mailfrom=google.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
+	t=1745881783; c=relaxed/relaxed;
+	bh=vuwPRT6I+AQPMIHK3FEvwFoI62Ft+AE7bxY+V5erSDY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FqJYBGEvMK/FohNkGJJGwb1zq80L6SwUGCKDQH0XVFEV0Ms6VQQzzMMizj7qxXEwypfA7xUvIk0XcdFlc8hOwRnBBI8kegXxVLtOVQK5NcUSWrAuoE1LE9ZXo2mfeZP+4FySHiF1Y29pi732+GcbPjDJJlHIWNgy6kTC1T8a5E+Jpoh5hgz78hDPNzqe3Gi/fpoFOifOKDYapiMs7S/LEI3PoyORdyD6oY2RHrCwbI5s39wNlgwdPvToxzzpWoHNlPYDDMny+yiWM2vRYRwNTlNp4hJdsFkwlHZUF9edT+MpRHJKm8zWMNxZDZKr46+HVCUjzorrcF5CZ65XY/5bPw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; dkim=pass (2048-bit key; unprotected) header.d=ionos.com header.i=@ionos.com header.a=rsa-sha256 header.s=google header.b=NlyoSqKL; dkim-atps=neutral; spf=permerror (client-ip=2a00:1450:4864:20::629; helo=mail-ej1-x629.google.com; envelope-from=max.kellermann@ionos.com; receiver=lists.ozlabs.org) smtp.mailfrom=ionos.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=kP6Ko9i+;
+	dkim=pass (2048-bit key; unprotected) header.d=ionos.com header.i=@ionos.com header.a=rsa-sha256 header.s=google header.b=NlyoSqKL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=google.com (client-ip=2a00:1450:4864:20::62a; helo=mail-ej1-x62a.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org)
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+Authentication-Results: lists.ozlabs.org; spf=permerror (SPF Permanent Error: Void lookup limit of 2 exceeded) smtp.mailfrom=ionos.com (client-ip=2a00:1450:4864:20::629; helo=mail-ej1-x629.google.com; envelope-from=max.kellermann@ionos.com; receiver=lists.ozlabs.org)
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZmcYK62qBz2ywC
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 07:49:41 +1000 (AEST)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-ac2c663a3daso1045916466b.2
-        for <linux-erofs@lists.ozlabs.org>; Mon, 28 Apr 2025 14:49:40 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZmfKd5C45z2yvs
+	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 09:09:39 +1000 (AEST)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-acb415dd8faso740998566b.2
+        for <linux-erofs@lists.ozlabs.org>; Mon, 28 Apr 2025 16:09:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745876977; x=1746481777; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+X7+Sy3CmnHgJcf9KaxAsnYxZIlm7xiKcJg4Tb8SkUk=;
-        b=kP6Ko9i+Dfd2cL/HjUV1hNUTcrOl17EI4O+yoUCk0NomoF20BtDXf/ItHE7iWcfgkH
-         5LbICRuwXI8bgSOqlCc27ug3o5DvwrtwiJY/JojYICbirz1XiKwM4XvlO2+PdlGyKaLg
-         t7mwtaHBsq9sjFOZPkf406WJnToTZ3M6FKPABSzA16JHiMlOvACCKVkRsnVQQulcoTrH
-         3M/qvTYazJ397sN2q8/ICDbmer2/W8VB0tGjy9NqsRHKKYernuLkZ8Ma9GD0+k9OPQI8
-         JBjy5JavAYqPNVYSUa8RYHeOtWLO5+RJe5/VX95P7Qxq097qLzr8MVjvFjNB9Lm7s4Hb
-         6jGw==
+        d=ionos.com; s=google; t=1745881775; x=1746486575; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vuwPRT6I+AQPMIHK3FEvwFoI62Ft+AE7bxY+V5erSDY=;
+        b=NlyoSqKLV/3gB7j7PhWYQXOHX3QFVSKFPbwySH1BpX4FGroVrAIowQsjJavvbJApCF
+         qzADMUq8Ht/lgrCa/5ce6Uc9zwYtsCQD3k9HGs0W2o9VFMQAlLdbu/QEZ5BjlMqJcK5b
+         PYeHkQ9fSVQXbjLuavcEQ64sEFCJ55+OdwqP/HCIxNlY703429uugpFuyc+TEmccRbVN
+         uDcrM+CU5uUvv6RLJYbT9tuFe5/dsWnb5xloiBmSQCrG2wjHMCTlYYEALexl4bzAsSfv
+         gB2autI3tSmBpRJJqHXtZtjRSXjVqU+VfLrih4DcAsk6xLaRNz80IppPqA5IXJRwPNDP
+         r6gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745876977; x=1746481777;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745881775; x=1746486575;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+X7+Sy3CmnHgJcf9KaxAsnYxZIlm7xiKcJg4Tb8SkUk=;
-        b=oc9Gvgi5bWSxqtsUF3PWh6zUyiaZ2Z/zSG6PBXbggr/4lmAzTI8T5wwUp5AlGFq3Mr
-         noOi7N3IdiO82g8avmVEheBrAp3AhiLt+YQnDEXAV7qUTxrWLLY7m22le6b7KyAipdWT
-         HPGWOQMaH5Hk5zaem8WRW4BcJKaSAP1omElvpTwWoSBxFbISzJubdqy58eKu0POL+jKO
-         gfT839JwaTn+6zoD3rzHPRnzrGUHqHjGuZn+LyZFmRF37Zp/p1wDQznJkjS8pLVarX4p
-         ApQTt+gz5M8XVgl/4umkcVnAIhN09YN60SdpU0/pxnwB7UoIDaX7nywBY7cpFXZ/MahV
-         RRIQ==
-X-Gm-Message-State: AOJu0YydAyC0VYeHhaDS//VDu8ZeSgmWo6bjmVgbk8FMCU2slWdwTrSp
-	+RahxyST8dP2ioKuDkYMLSbGp4bmhw+OsAODLlRXEU2Ky4+r7GQlj2H0N6xBxh0idlmLJD4dcfJ
-	lDHllbYJVqZoIJyiufjj9W0gcXEUFNGUgZXGi
-X-Gm-Gg: ASbGncuuAMklOZemDx9XIuN0R42rUElYcFGm2zXbAlBh6+rUvdNEdCvR6tN7pXxMAko
-	gaN/4VuB4AS7Y4vi21QCXQIQT134f/1w4WAcx8fiyeYhRjqur3JOrTvzQPNXd7FijRD6visRYfY
-	cBlHX3bKPL43JGt++U7GQenGIAoDYHkRFrUC9PoIYb/8/c3r9U8eEo
-X-Google-Smtp-Source: AGHT+IEhiL11RcDgB5cdm/WKbBzF4reBDVGF/eKqJBGAFN4+OR+rR4wotFOAWpQCpwoRviJDtI5D1kPWUosQ4mYyNnQ=
-X-Received: by 2002:a17:907:9495:b0:ace:6882:510d with SMTP id
- a640c23a62f3a-ace848f79d2mr984974166b.24.1745876976648; Mon, 28 Apr 2025
- 14:49:36 -0700 (PDT)
+        bh=vuwPRT6I+AQPMIHK3FEvwFoI62Ft+AE7bxY+V5erSDY=;
+        b=OU3a+3IH6MC7gx1j4ePM8TtQR/YevGxX3SVfX+RVcwpopc7gvHZ7yY+MMx6ahLV0oY
+         SY1vZfrE3Bwf8DsVcBblQLkYDKCEnCzzyxMRDgiBjz2ZjRGWs6dlTX+VG1ztCo4cJU9R
+         K9027jZTQ3tovkTAc1iEjBTNQkgIOA82JtxvrnUPGYtlS73nXA7/fn290T5Z3HaoXsSD
+         GuDiuWs2p0OEovOD9Oa2OU0jwE8LnqH0sTMFVATs9q1mx8expDdlPIZTqUasWtn++PDx
+         V765ntay1P2ji63MESWOwi+D9RCYlLLLNneN6qylmFfr2oXf022TPftMVRiEZ9HNgHGv
+         M0QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXs9I3AG8KGGgGfRkvb7txNiLzsU0lRniHSy6DvVCvyqHgvfgH+/Spny7rTf/4D46+Q/kWOhnlyRQX17w==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YxWm+Cxxng9DvCW4CPqnKs99OlXvYnB0ZXLCjbSbo1ozQn4NKTV
+	UaXdTiIpOlv8NPAcBl8HDjMbdPR4tnW7u+lcCREKGma9IyRNJ4BVktPG1e2kCyk=
+X-Gm-Gg: ASbGncus+KdwP6T8XfLNEAHnnjhC6F8CkHhHf4qIFUXl2k3ssDjl8JrkPeBOwtu6z6j
+	S7WSiF4YBUjqhVZIx4xNqF7iIlwM6bfpSLhyOzphTW0xNeLQY0As21kStO9DtgBKqS65Lc9dQZz
+	HV+B63J0E+2xayyBAvJOpLhshfpUtvWCdMjMQHRU+YYzMd9lg0izWh0paXczfE6i099UrPvvaDp
+	uPJhMIY9ZvMWOfCI5rnfkbQ8xIfbVdhJhF72zrc91NGx/cSNojp7VVn4XTGqCQlZF0QUwRfk9cl
+	YKVAmGevKRDBstygF+8uRle1T+z49nHi+Du5iykb2fmsyKKr7Gy+AfoC4mYL+G/KK1Snp0fiTbO
+	ZPZQ3gdKiwyREPC7NmlBllLj4wSh7MrxCmrwa39nP
+X-Google-Smtp-Source: AGHT+IE5dJK+12G6ixtMDx/8QmYuexDS2b/NTuouKDmQ+p4y/0Up7a/b/rL1ILFQJAuAfI+CdQ8jOw==
+X-Received: by 2002:a17:907:940d:b0:ac7:b368:b193 with SMTP id a640c23a62f3a-acec4cdf8a0mr160727866b.27.1745881775464;
+        Mon, 28 Apr 2025 16:09:35 -0700 (PDT)
+Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e595abfsm687547266b.86.2025.04.28.16.09.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 16:09:35 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	zbestahu@gmail.com,
+	jefflexu@linux.alibaba.com,
+	dhavale@google.com,
+	linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] fs/erofs/fileio: call erofs_onlinefolio_split() after bio_add_folio()
+Date: Tue, 29 Apr 2025 01:09:33 +0200
+Message-ID: <20250428230933.3422273-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.47.2
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -74,59 +93,66 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20250423061023.131354-1-dhavale@google.com> <894ca2d3-e680-4395-9887-2b6060fc8096@kernel.org>
-In-Reply-To: <894ca2d3-e680-4395-9887-2b6060fc8096@kernel.org>
-From: Sandeep Dhavale <dhavale@google.com>
-Date: Mon, 28 Apr 2025 14:49:25 -0700
-X-Gm-Features: ATxdqUFDtwc5SK3EYtcYAuQ_6XyuzSDvFJe-PtDs8peDgGVgf_ScKK1LcKd9hxc
-Message-ID: <CAB=BE-Ru31S1Qq0Gmi9UXtaL6k4dcLdTUa-CJbmhuXb7a2dSeQ@mail.gmail.com>
-Subject: Re: [PATCH v4] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Chao Yu <chao@kernel.org>
-Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
-	hsiangkao@linux.alibaba.com, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+	T_SPF_PERMERROR autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Chao,
+If bio_add_folio() fails (because it is full),
+erofs_fileio_scan_folio() needs to submit the I/O request via
+erofs_fileio_rq_submit() and allocate a new I/O request with an empty
+`struct bio`.  Then it retries the bio_add_folio() call.
 
->
-> - mount #1                              - mount #2
->  - z_erofs_init_pcpu_workers
->   - atomic_xchg(, 1)
->                                          - z_erofs_init_pcpu_workers
->                                           - atomic_xchg(, 1)
->                                           : return 0 since atomic variable is 1
->                                           it will run w/o percpu workers and hotplug
->   : update atomic variable to 1
->   - erofs_init_percpu_workers
->   : fail
->   - atomic_set(, 0)
->   : update atomic variable to 0 & fail the mount
->
-> Can we add some logs to show we succeed/fail to initialize workers or
-> hotplugs? As for mount #2, it expects it will run w/ them, but finally
-> it may not. So we'd better have a simple way to know?
->
-> Thanks,
->
-What you have laid out as race, indeed can happen if
-erofs_init_percpu_workers() fails with ENOMEM. For me that is still
-not catastrophic as workqueue fallback is in place so the filesystem
-is still functional.  And at the next mount, the logic will be
-reattempted as the atomic variable is reset to 0 after failure.
+However, at this point, erofs_onlinefolio_split() has already been
+called which increments `folio->private`; the retry will call
+erofs_onlinefolio_split() again, but there will never be a matching
+erofs_onlinefolio_end() call.  This leaves the folio locked forever
+and all waiters will be stuck in folio_wait_bit_common().
 
-If you still think we need to have a log message, I will be happy to
-spin up the next revision with logging for ENOMEM.
+This bug has been added by commit ce63cb62d794 ("erofs: support
+unencoded inodes for fileio"), but was practically unreachable because
+there was room for 256 folios in the `struct bio` - until commit
+9f74ae8c9ac9 ("erofs: shorten bvecs[] for file-backed mounts") which
+reduced the array capacity to 16 folios.
 
-Thanks for the review!
+It was now trivial to trigger the bug by manually invoking readahead
+from userspace, e.g.:
 
-Regards,
-Sandeep.
+ posix_fadvise(fd, 0, st.st_size, POSIX_FADV_WILLNEED);
+
+This should be fixed by invoking erofs_onlinefolio_split() only after
+bio_add_folio() has succeeded.  This is safe: asynchronous completions
+invoking erofs_onlinefolio_end() will not unlock the folio because
+erofs_fileio_scan_folio() is still holding a reference to be released
+by erofs_onlinefolio_end() at the end.
+
+Fixes: ce63cb62d794 ("erofs: support unencoded inodes for fileio")
+Fixes: 9f74ae8c9ac9 ("erofs: shorten bvecs[] for file-backed mounts")
+Cc: stable@vger.kernel.org
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+---
+ fs/erofs/fileio.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
+index 4fa0a0121288..60c7cc4c105c 100644
+--- a/fs/erofs/fileio.c
++++ b/fs/erofs/fileio.c
+@@ -150,10 +150,10 @@ static int erofs_fileio_scan_folio(struct erofs_fileio *io, struct folio *folio)
+ 				io->rq->bio.bi_iter.bi_sector = io->dev.m_pa >> 9;
+ 				attached = 0;
+ 			}
+-			if (!attached++)
+-				erofs_onlinefolio_split(folio);
+ 			if (!bio_add_folio(&io->rq->bio, folio, len, cur))
+ 				goto io_retry;
++			if (!attached++)
++				erofs_onlinefolio_split(folio);
+ 			io->dev.m_pa += len;
+ 		}
+ 		cur += len;
+-- 
+2.47.2
+
 
