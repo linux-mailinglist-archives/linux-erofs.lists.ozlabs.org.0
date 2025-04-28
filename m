@@ -1,61 +1,68 @@
-Return-Path: <linux-erofs+bounces-249-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-250-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB590A9F43C
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Apr 2025 17:18:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A6B58A9FC8D
+	for <lists+linux-erofs@lfdr.de>; Mon, 28 Apr 2025 23:49:49 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZmRsc3X4rz3064;
-	Tue, 29 Apr 2025 01:18:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZmcYM41G4z2yyJ;
+	Tue, 29 Apr 2025 07:49:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745853492;
-	cv=none; b=I2JiytcIpklXv3b0KV6b4YcYypfLYdnwn2vcwuit/4Du7+xXznQwpR23x4WtE/nFjnlgmS7m/lmSYzBDA8Qo9PckoHXpdww3/5b8El2z1568425s+rW4f5hVXyc9GVRpVpb8pEacvwSqHir0yJjLFNKxlVGGhiMI4XphIEvdPK03rKLbe7wf71qBLUPyarOSW53ms9m2VLRpDrW9ZZNP42aVai5BpJqt/YfLle8EYsnjV2YdTMApD/UHW/NoBKemIlzpRBYeukOx3wIiGKH7B6qUo7cXbL73otnME4cVelsXr4OciO34nk2ecLpemlGIIOmOb0q+s4e0F8mknp3AAw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::62a"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745876983;
+	cv=none; b=GKjCo7TRcEv36c5YtlkqZ2jsx/7YTFzP1NMGV2mu5gFYu19uEOwH458iBCnLHC3Rjabii6eZKMRTcJ5ZsS03sQWsQ349T0t7WAN/x9Az4Sp5BYlIWzjF5K30Rr4SHzLLiUUL2yRbntAm4zj0AhM8owkfRja4pMPUuRRzXeFd9ay1bECuKsovULIfOMLI6/EHjU9GYsmOcRt9KJszwhnTG9AHS6JzTpisuS4tuCZFjY0AKalJoZzvj+MffudK0ZFVMB+S/bz/sl8gfmGdMK2DIglhcWoAinDo5MyE9GIpQhPID5OLYB3QRA0MbRCw8Ok6zcLLgV2XtWxaVudmGpLApQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745853492; c=relaxed/relaxed;
-	bh=zz0OwfUHedCQiTy4RL46gpqtmPf9VrB1yVPpphpkBZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEEJyUyUYMrv1tGuXj0kzBcXrQjf5yB9Kngj46f/U1skqPNG1wyuG0oFDIosA3MgDFsZnSgkob2lMldMiAxkFlZvIxJvzSc7W3vzR3fAJeM7M/u+5dfInkv0ea6AkK/kZnasnwejjWhO9nW1KYmCsF6PEYSPsDSb6bD+/JVLjDf7yprL1A7zATtcSeIklCMkP1YK6Y37TdeY603sNi3wfyAPxhkffwPV10xMVv/yyayzZeDOGWEz+s20zWaqc6v5KAC71X9ecqaOPPlsuDabHBqn+m8/tK1OiZ6libHVHinR5Ndk0nt0Y38VaQE2GHgGWXfQih5CcIhK0T0bKyumXQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OM2D782X; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1745876983; c=relaxed/relaxed;
+	bh=+X7+Sy3CmnHgJcf9KaxAsnYxZIlm7xiKcJg4Tb8SkUk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cbdisyYDLsdciZSM2NLRaiYmPB+YX8RFnUffM90YnmXN4P8gKf0v4kT23ExC0bat/KE1+VZMCbHp9ypbXCQCxwzr/uz0UTWN186AFRQrsd4LVeKaxtsr+11ZQb1T3301pk8OnI94voyV9mjX7cctT6unRdo2sDmzYKMKclQdndhJIqbNjirpXrXXlihhq7YL8fkP8GohNOkqWtHl6XggWSJt4mc102QKYvJ/zjkw/EbozjGehpKj59rxY5pQC0J8nGxZNm0GdRKQLEy/JlTysPiJSiV0xaJfhe1kqbePBMp2Ao+u0vhEbKtK8Cg0OENT3/nn4rLL2eCBgjwMMijbGQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=kP6Ko9i+; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::62a; helo=mail-ej1-x62a.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org) smtp.mailfrom=google.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OM2D782X;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=kP6Ko9i+;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=google.com (client-ip=2a00:1450:4864:20::62a; helo=mail-ej1-x62a.google.com; envelope-from=dhavale@google.com; receiver=lists.ozlabs.org)
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZmRsb61BVz3055
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 01:18:11 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 2300A4A547;
-	Mon, 28 Apr 2025 15:18:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EADEC4CEE4;
-	Mon, 28 Apr 2025 15:18:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745853489;
-	bh=0QaZy3x9iZ+hVcd/x8o7A0W/pgFKdMUgTsqmMwkaCSg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OM2D782XSDdLRIq2ieqOHPLD1hOcs5bva6n2UnFdZX8gOZ3pKKgGvTBeNInln1x/C
-	 UjVr4X/Lt7irzYQ+a34LIeNhXw2XwCKSF4GPHLlmDFkttVlXFYIhOMvXIKzVtfBQmA
-	 ECg6D6Lv1omDioGpP1E76hW4OHtMeNMe0JsYAeVMGAE7D7A2VVprmrNWoNS+LVN34F
-	 D4VYfHA9IsMZyJsCTrzXmv4ZaRVTgI+ZPzFUFNcrQqbCWKlb/LdiVOWtCZn08VopT+
-	 EKVOLOpW7qDLShNBfYegcH6GAtt+kmQbmRgc42zx16jVe/oJWNb99XrIy/gWX9KQkE
-	 fQq97LuMAgDrw==
-Date: Mon, 28 Apr 2025 23:17:59 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: xiang@kernel.org, chao@kernel.org, zbestahu@gmail.com,
-	jefflexu@linux.alibaba.com, dhavale@google.com,
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] erofs: remove unused enum type
-Message-ID: <aA+cJ+aMfWdfMBWH@debian>
-Mail-Followup-To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org,
-	chao@kernel.org, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
-	dhavale@google.com, linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-References: <20250428142631.488431-1-lihongbo22@huawei.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZmcYK62qBz2ywC
+	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 07:49:41 +1000 (AEST)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-ac2c663a3daso1045916466b.2
+        for <linux-erofs@lists.ozlabs.org>; Mon, 28 Apr 2025 14:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745876977; x=1746481777; darn=lists.ozlabs.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+X7+Sy3CmnHgJcf9KaxAsnYxZIlm7xiKcJg4Tb8SkUk=;
+        b=kP6Ko9i+Dfd2cL/HjUV1hNUTcrOl17EI4O+yoUCk0NomoF20BtDXf/ItHE7iWcfgkH
+         5LbICRuwXI8bgSOqlCc27ug3o5DvwrtwiJY/JojYICbirz1XiKwM4XvlO2+PdlGyKaLg
+         t7mwtaHBsq9sjFOZPkf406WJnToTZ3M6FKPABSzA16JHiMlOvACCKVkRsnVQQulcoTrH
+         3M/qvTYazJ397sN2q8/ICDbmer2/W8VB0tGjy9NqsRHKKYernuLkZ8Ma9GD0+k9OPQI8
+         JBjy5JavAYqPNVYSUa8RYHeOtWLO5+RJe5/VX95P7Qxq097qLzr8MVjvFjNB9Lm7s4Hb
+         6jGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745876977; x=1746481777;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+X7+Sy3CmnHgJcf9KaxAsnYxZIlm7xiKcJg4Tb8SkUk=;
+        b=oc9Gvgi5bWSxqtsUF3PWh6zUyiaZ2Z/zSG6PBXbggr/4lmAzTI8T5wwUp5AlGFq3Mr
+         noOi7N3IdiO82g8avmVEheBrAp3AhiLt+YQnDEXAV7qUTxrWLLY7m22le6b7KyAipdWT
+         HPGWOQMaH5Hk5zaem8WRW4BcJKaSAP1omElvpTwWoSBxFbISzJubdqy58eKu0POL+jKO
+         gfT839JwaTn+6zoD3rzHPRnzrGUHqHjGuZn+LyZFmRF37Zp/p1wDQznJkjS8pLVarX4p
+         ApQTt+gz5M8XVgl/4umkcVnAIhN09YN60SdpU0/pxnwB7UoIDaX7nywBY7cpFXZ/MahV
+         RRIQ==
+X-Gm-Message-State: AOJu0YydAyC0VYeHhaDS//VDu8ZeSgmWo6bjmVgbk8FMCU2slWdwTrSp
+	+RahxyST8dP2ioKuDkYMLSbGp4bmhw+OsAODLlRXEU2Ky4+r7GQlj2H0N6xBxh0idlmLJD4dcfJ
+	lDHllbYJVqZoIJyiufjj9W0gcXEUFNGUgZXGi
+X-Gm-Gg: ASbGncuuAMklOZemDx9XIuN0R42rUElYcFGm2zXbAlBh6+rUvdNEdCvR6tN7pXxMAko
+	gaN/4VuB4AS7Y4vi21QCXQIQT134f/1w4WAcx8fiyeYhRjqur3JOrTvzQPNXd7FijRD6visRYfY
+	cBlHX3bKPL43JGt++U7GQenGIAoDYHkRFrUC9PoIYb/8/c3r9U8eEo
+X-Google-Smtp-Source: AGHT+IEhiL11RcDgB5cdm/WKbBzF4reBDVGF/eKqJBGAFN4+OR+rR4wotFOAWpQCpwoRviJDtI5D1kPWUosQ4mYyNnQ=
+X-Received: by 2002:a17:907:9495:b0:ace:6882:510d with SMTP id
+ a640c23a62f3a-ace848f79d2mr984974166b.24.1745876976648; Mon, 28 Apr 2025
+ 14:49:36 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -67,46 +74,59 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250428142631.488431-1-lihongbo22@huawei.com>
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+References: <20250423061023.131354-1-dhavale@google.com> <894ca2d3-e680-4395-9887-2b6060fc8096@kernel.org>
+In-Reply-To: <894ca2d3-e680-4395-9887-2b6060fc8096@kernel.org>
+From: Sandeep Dhavale <dhavale@google.com>
+Date: Mon, 28 Apr 2025 14:49:25 -0700
+X-Gm-Features: ATxdqUFDtwc5SK3EYtcYAuQ_6XyuzSDvFJe-PtDs8peDgGVgf_ScKK1LcKd9hxc
+Message-ID: <CAB=BE-Ru31S1Qq0Gmi9UXtaL6k4dcLdTUa-CJbmhuXb7a2dSeQ@mail.gmail.com>
+Subject: Re: [PATCH v4] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Chao Yu <chao@kernel.org>
+Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
+	hsiangkao@linux.alibaba.com, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Apr 28, 2025 at 02:26:31PM +0000, Hongbo Li wrote:
-> Opt_err is not used in EROFS, we can remove it.
-> 
-> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
-> ---
->  fs/erofs/super.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index c1c350c6fbf4..fd365a611f13 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -356,8 +356,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
->  
->  enum {
->  	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
-> -	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio,
-> -	Opt_err
-> +	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio
+Hi Chao,
 
-We'd better to leave the trailing ',' so that we don't need to change
-this line again if a new line is introduced.
+>
+> - mount #1                              - mount #2
+>  - z_erofs_init_pcpu_workers
+>   - atomic_xchg(, 1)
+>                                          - z_erofs_init_pcpu_workers
+>                                           - atomic_xchg(, 1)
+>                                           : return 0 since atomic variable is 1
+>                                           it will run w/o percpu workers and hotplug
+>   : update atomic variable to 1
+>   - erofs_init_percpu_workers
+>   : fail
+>   - atomic_set(, 0)
+>   : update atomic variable to 0 & fail the mount
+>
+> Can we add some logs to show we succeed/fail to initialize workers or
+> hotplugs? As for mount #2, it expects it will run w/ them, but finally
+> it may not. So we'd better have a simple way to know?
+>
+> Thanks,
+>
+What you have laid out as race, indeed can happen if
+erofs_init_percpu_workers() fails with ENOMEM. For me that is still
+not catastrophic as workqueue fallback is in place so the filesystem
+is still functional.  And at the next mount, the logic will be
+reattempted as the atomic variable is reset to 0 after failure.
 
-Otherwise LGTM.
+If you still think we need to have a log message, I will be happy to
+spin up the next revision with logging for ENOMEM.
 
-Thanks,
-Gao Xiang
+Thanks for the review!
 
->  };
->  
->  static const struct constant_table erofs_param_cache_strategy[] = {
-> -- 
-> 2.22.0
-> 
+Regards,
+Sandeep.
 
