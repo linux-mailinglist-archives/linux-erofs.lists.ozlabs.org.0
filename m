@@ -1,61 +1,61 @@
-Return-Path: <linux-erofs+bounces-248-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-249-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79813A9F431
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Apr 2025 17:16:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AB590A9F43C
+	for <lists+linux-erofs@lfdr.de>; Mon, 28 Apr 2025 17:18:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZmRqM1Fjpz2xKN;
-	Tue, 29 Apr 2025 01:16:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZmRsc3X4rz3064;
+	Tue, 29 Apr 2025 01:18:12 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745853375;
-	cv=none; b=T5VOESOzPJqo5bOS2/a7ecGgs3er2PjtIsTz991nQcaIvFDTfa92zXxfG0KfHmX2+iOm04vveP8dKIvwGFP1/3HoZa3eV+2S6aS+/3HAyzCESq4F5F5v7+eSBaYo0J4EMit+OjUtI0N5i64/xF0ejT2jrZ4kIcwim43O8GDMh1pZUsZZefTnqIf3tgRSwifpKlgstXSL++sCvZg2ci7XjAvXZ+OlchT+avPGKLTQetP8PsWOA3GlQduzCjTM2aMSwHvNXMwh/A3DougHKEo3XLaToL5iqlitEGh6x42YlkDZc4YPSw+DqWI8k8fiZVnz/Yrkoe6/cuja7OX8yq8sdA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745853492;
+	cv=none; b=I2JiytcIpklXv3b0KV6b4YcYypfLYdnwn2vcwuit/4Du7+xXznQwpR23x4WtE/nFjnlgmS7m/lmSYzBDA8Qo9PckoHXpdww3/5b8El2z1568425s+rW4f5hVXyc9GVRpVpb8pEacvwSqHir0yJjLFNKxlVGGhiMI4XphIEvdPK03rKLbe7wf71qBLUPyarOSW53ms9m2VLRpDrW9ZZNP42aVai5BpJqt/YfLle8EYsnjV2YdTMApD/UHW/NoBKemIlzpRBYeukOx3wIiGKH7B6qUo7cXbL73otnME4cVelsXr4OciO34nk2ecLpemlGIIOmOb0q+s4e0F8mknp3AAw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745853375; c=relaxed/relaxed;
-	bh=+4TP/vOOqK0+ANtWn9LasfGAUghAo4D8hy/H5EabMDw=;
+	t=1745853492; c=relaxed/relaxed;
+	bh=zz0OwfUHedCQiTy4RL46gpqtmPf9VrB1yVPpphpkBZI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KOA/mb+5eYL+KUSMygpFtdDJqVQH1730G7zBl2Z39JPblFDS/aHsndtWwjV1haZ75aG5uMipz7qzT+JS5Nc1tjhYDP7F1D72P5+fsDA/TfZV1cUwz4f2WKNiASSNL27j3ixbTIqUd9TCgAF/jnkVUnOmPwFQjgBbrZWywh3b08J1IvHFHRYHsR97wkjnrMhKXeOfsCvnbDJ7QEmigH2+nNuuGsMaAWDFRmADfKoqX0mtSgw14Rl9fMnLqDkOl/WPKJ9Vkm9uf5FkFaDBU4o3ZGgFiF4AmW+0VtM/G+eOGKfkCBp4nYlF/5gIumuRKjLvEZDrw8BwEHv8OyOu6+oyAw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=h5VwCP2e; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=iEEJyUyUYMrv1tGuXj0kzBcXrQjf5yB9Kngj46f/U1skqPNG1wyuG0oFDIosA3MgDFsZnSgkob2lMldMiAxkFlZvIxJvzSc7W3vzR3fAJeM7M/u+5dfInkv0ea6AkK/kZnasnwejjWhO9nW1KYmCsF6PEYSPsDSb6bD+/JVLjDf7yprL1A7zATtcSeIklCMkP1YK6Y37TdeY603sNi3wfyAPxhkffwPV10xMVv/yyayzZeDOGWEz+s20zWaqc6v5KAC71X9ecqaOPPlsuDabHBqn+m8/tK1OiZ6libHVHinR5Ndk0nt0Y38VaQE2GHgGWXfQih5CcIhK0T0bKyumXQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OM2D782X; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=h5VwCP2e;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OM2D782X;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZmRqK3v6Zz3050
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 01:16:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZmRsb61BVz3055
+	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 01:18:11 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 86E066115B;
-	Mon, 28 Apr 2025 15:15:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C71A1C4CEE4;
-	Mon, 28 Apr 2025 15:16:07 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 2300A4A547;
+	Mon, 28 Apr 2025 15:18:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EADEC4CEE4;
+	Mon, 28 Apr 2025 15:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745853370;
-	bh=ixHI9t3N23ED6dDVYDV0WmtU+0Xqf66gQA70/o/CM7k=;
+	s=k20201202; t=1745853489;
+	bh=0QaZy3x9iZ+hVcd/x8o7A0W/pgFKdMUgTsqmMwkaCSg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h5VwCP2eCrsMhRGLALQAhjED1V4kxIWySGNE/2hR2rK7E+iVDift/Qqex+2NtL+y9
-	 wXydoh+a9z/bv7/ANuvmGqCeYVoTZUxPWy1S9S8PG6BcCaI/3zaoUEt8lLPaJkiQFh
-	 XrIH5qNzoEVvPc/Y5gQ8oVdS8ODxaeKB1XgxcTUhIz718uROh69XESoTAlp72kdVVh
-	 7g89J/0BnEH07Nj8NR8IaSosWylRB5gI/HZ36jx0RVRIeGzyUVLbv+TrecvbJmufjG
-	 xCXdU9OLkVP4F3bYZjeMhyYo2UVnrV95OX1ACeKy6ecvgEo7gVFGbJZsxNesNNVYWl
-	 TarGHbdtH1nuw==
-Date: Mon, 28 Apr 2025 23:16:03 +0800
+	b=OM2D782XSDdLRIq2ieqOHPLD1hOcs5bva6n2UnFdZX8gOZ3pKKgGvTBeNInln1x/C
+	 UjVr4X/Lt7irzYQ+a34LIeNhXw2XwCKSF4GPHLlmDFkttVlXFYIhOMvXIKzVtfBQmA
+	 ECg6D6Lv1omDioGpP1E76hW4OHtMeNMe0JsYAeVMGAE7D7A2VVprmrNWoNS+LVN34F
+	 D4VYfHA9IsMZyJsCTrzXmv4ZaRVTgI+ZPzFUFNcrQqbCWKlb/LdiVOWtCZn08VopT+
+	 EKVOLOpW7qDLShNBfYegcH6GAtt+kmQbmRgc42zx16jVe/oJWNb99XrIy/gWX9KQkE
+	 fQq97LuMAgDrw==
+Date: Mon, 28 Apr 2025 23:17:59 +0800
 From: Gao Xiang <xiang@kernel.org>
 To: Hongbo Li <lihongbo22@huawei.com>
 Cc: xiang@kernel.org, chao@kernel.org, zbestahu@gmail.com,
 	jefflexu@linux.alibaba.com, dhavale@google.com,
 	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] erofs: reject unknown option if it is not supported
-Message-ID: <aA+bsw09PHTQWUXK@debian>
+Subject: Re: [PATCH] erofs: remove unused enum type
+Message-ID: <aA+cJ+aMfWdfMBWH@debian>
 Mail-Followup-To: Hongbo Li <lihongbo22@huawei.com>, xiang@kernel.org,
 	chao@kernel.org, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
 	dhavale@google.com, linux-erofs@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org
-References: <20250428142545.484818-1-lihongbo22@huawei.com>
+References: <20250428142631.488431-1-lihongbo22@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -69,53 +69,44 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250428142545.484818-1-lihongbo22@huawei.com>
+In-Reply-To: <20250428142631.488431-1-lihongbo22@huawei.com>
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Apr 28, 2025 at 02:25:45PM +0000, Hongbo Li wrote:
-> Some options are supported depending on different compiling config,
-> and these option will not fail during mount if they are not
-> supported. This is very weird, so we can reject them if they are
-> not supported.
+On Mon, Apr 28, 2025 at 02:26:31PM +0000, Hongbo Li wrote:
+> Opt_err is not used in EROFS, we can remove it.
 > 
-
-If it's an invalid option, we should reject it immediately.
-
-But for unsupported options, I don't think we always error
-out. e.g. for some options like (acl, noacl) ext4 will just
-ignore if ACL is unsupported.
-
-I think EROFS should follows that, otherwise users might use
-"noacl" to disable ACL explicitly, but it will fail unexpectedly
-if unsupported.
-
-But I agree that for "fsid", "domain_id" and "directio", we
-could error out instead.
-
 > Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
 > ---
->  fs/erofs/super.c | 39 ++++++++++++++++++---------------------
->  1 file changed, 18 insertions(+), 21 deletions(-)
+>  fs/erofs/super.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
 > diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index cadec6b1b554..c1c350c6fbf4 100644
+> index c1c350c6fbf4..fd365a611f13 100644
 > --- a/fs/erofs/super.c
 > +++ b/fs/erofs/super.c
-> @@ -374,16 +374,26 @@ static const struct constant_table erofs_dax_param_enums[] = {
->  };
+> @@ -356,8 +356,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
 >  
->  static const struct fs_parameter_spec erofs_fs_parameters[] = {
-> +#ifdef CONFIG_EROFS_FS_XATTR
->  	fsparam_flag_no("user_xattr",	Opt_user_xattr),
-> +#endif
+>  enum {
+>  	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
+> -	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio,
+> -	Opt_err
+> +	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio
 
-Another thing is that I'm not sure if "user_xattr" option is really
-needed, we might just kill this option since all recent fses don't
-have such configuration and user_xattrs should be supported by default.
+We'd better to leave the trailing ',' so that we don't need to change
+this line again if a new line is introduced.
+
+Otherwise LGTM.
 
 Thanks,
 Gao Xiang
+
+>  };
+>  
+>  static const struct constant_table erofs_param_cache_strategy[] = {
+> -- 
+> 2.22.0
+> 
 
