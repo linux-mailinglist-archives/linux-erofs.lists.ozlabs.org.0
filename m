@@ -1,41 +1,50 @@
-Return-Path: <linux-erofs+bounces-258-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-259-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25BD9AA00FF
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Apr 2025 06:00:19 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA10EAA025D
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Apr 2025 08:06:03 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Zmmmw6Yhnz3050;
-	Tue, 29 Apr 2025 14:00:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZmqZ040K2z305n;
+	Tue, 29 Apr 2025 16:06:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.190
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745899216;
-	cv=none; b=IZVxZQW5avrSfFstEVNH4v5BuPQKajP2DwFLeylNCwO/z8997E6EDtDucmbfj6gUUL1cPMPJcExOlGUXsU/hEgTw1c1/39lqjTU2OxK6MLEOUUDLBrINumVvGuDGft9dXQ+h3g71np+mJxuA4ulogPmJeSqSGgtXaRVnZ3rdEbFokcA+iBmHwVEr+ZGDKD6XSyIXGxIfHgfPyEh2RfaKi11dVvoMJgtZCyvUpQsUYmf8sRiOzmsSgpu1lWeI7VahDcJRCESA55+9mQ1LOGoJtUBqkky/d3b4Bco0E1NcjYP7uSVZwsszQfOhazGekndOpeLW4dJCyvqSCb4YSXNwPA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745906760;
+	cv=none; b=oElLQdsm7hyMJwtChaa3wgsvr8O9E7qajHQ63YeTeWm2Fa4iqWp9Wp3ZyTrHy8F4WSghGx1s5reQXBZfaUMgWNPPp/RonIxGc/vIUP891COv/sXNrhyM8M2N+gZnTbqyMD1MV+B1D5cor08/Kfi5eu2wsVSu0qsPOHlc4FHyOkYvIMXT9dKbDKF6lAZWN/Sukzqu0WSERKl/qoEZF5kCEneNpQxpTCBiu+w8TgjPecn4vkEBTwCwBmJJ4LYqkT/9+ypN6XGlGHIFbfVKtbsel6KlEWdwOvLd740WnXs/g39ulVC8GwbKJjWsJ6jsKQkIahXavo5CATpZ3PaknrtTEw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745899216; c=relaxed/relaxed;
-	bh=sR+v3+9uoAyaWL7QHTixjdaDNQFFdcIvHSBPkEZuxpw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UGjbxxMYA7B2Th+Gvi2iWfwT+OzGlURu/0xEwsx2UzIenGfLQ1t6I/xub0SyoQRY7S2V/FTzuFyT5QL7N2G1Y5hFP0JxRkUj1bKXiaScfja2SO1qFPfuJzpI1pkVQKuoJnlleRPem4k+TxIPoZ3yrqKU2Bo/IL243hlBENhlV+MWatp9RZAZpGsMs1EcoiNjY4MJQpxu+4zQYUnbTypjuRa8UJgoZi+uMDFWbZSdvs+ss7AhyKMzBRyR5hTiiTHnETBLIQgGqbYMP1uVe4/Q3QD/QwaRfvl+d98FPOm+7MqFy52888PwLsJm91nUI8d62Qe6GC8R0BmWcGykb6I9iQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.190; helo=szxga04-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.190; helo=szxga04-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1745906760; c=relaxed/relaxed;
+	bh=iXFcMGqQ/CaGrnhIj8vz7T2gg2HN8WLIqcbEuKJwQis=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=oGzkyxyxTe0ETiuE/jFY6vrOaiHAvL4WHQv4hS2heqi+8hFkVf84vqBLy71vCcflpkFHyqgiJL+S4bZ6a2ZKqV+LdTCqTT2Ofgik55LY+tMXMyM9/8ZQGaYku9Rf3dVZbur+ySq1PLxRsOQCNf7Rl9R/gxSyeKPt8Vjp1z4FEGqHnV2CqTvwdPI+qsniEhpyEGapD2d27GC4WidZafO2ictDOnXGs4n/p1s3Dt/lgNVDif9qCvwYSVmDJ8cKbyiLaL4zs3iQ+aHWwN52YS0Ok8X0AkyZEkF4KmyOKDe7+/4GN00coSpJnevv+5oNQkLJ/pp3VvpjcZEs2U/b+c41IQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rjVmOTkn; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=rjVmOTkn;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zmmmv6yCWz2yfv
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 14:00:14 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZmmmJ27H3z2TSDC
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 11:59:44 +0800 (CST)
-Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id 34B921A016C
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 12:00:08 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 29 Apr 2025 12:00:07 +0800
-Message-ID: <7fbeb0c8-6608-4104-8c2e-fe1902ed6af5@huawei.com>
-Date: Tue, 29 Apr 2025 12:00:07 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZmqYz5MH0z305P
+	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 16:05:59 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 6D4815C3A69;
+	Tue, 29 Apr 2025 06:03:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A861BC4CEE3;
+	Tue, 29 Apr 2025 06:05:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745906757;
+	bh=osey/MsMTgZ5rcmu+YckxKbf+eT/klV73D3B34U5ERw=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=rjVmOTknBYqZDyu4xqC3gzzRqAGU8STvlr8+VcbXcFQ4a15jcCELyRv2Odzws/AOR
+	 j0L2DX8DpFvxGEKP+G2eSOQGqKx4isFxzv/aDaSjAerMwIVJSCjEgl2JibiRCr6zmw
+	 hm9zXms6cTOHv2tnKugtP7YkgNFCUyrmeiWOqB5aC91lgCFm1GjNl/Zbfz4DvxV9tz
+	 PQmteP3QxQSaMBOXINAkapuLYF5XKop15TrkPbfLTGLhg98rG/Y8t+kHoM7a7jd2DD
+	 sbaaprAnCC13BfgAsJnX7LlgmODrS1fzQd9JnTY8H9nC3uDQx+23BemGL+gRZxpmSY
+	 Bs10lG8HiaKvQ==
+Message-ID: <aced334a-e542-42b9-ade4-00f6773c2d45@kernel.org>
+Date: Tue, 29 Apr 2025 14:05:53 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -48,51 +57,71 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: reject unknown option if it is not supported
+Cc: chao@kernel.org, linux-erofs@lists.ozlabs.org,
+ Gao Xiang <xiang@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+ Jeffle Xu <jefflexu@linux.alibaba.com>, hsiangkao@linux.alibaba.com,
+ kernel-team@android.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Sandeep Dhavale <dhavale@google.com>
+References: <20250423061023.131354-1-dhavale@google.com>
+ <894ca2d3-e680-4395-9887-2b6060fc8096@kernel.org>
+ <CAB=BE-Ru31S1Qq0Gmi9UXtaL6k4dcLdTUa-CJbmhuXb7a2dSeQ@mail.gmail.com>
 Content-Language: en-US
-To: <linux-erofs@lists.ozlabs.org>
-References: <20250428142545.484818-1-lihongbo22@huawei.com>
- <aA+bsw09PHTQWUXK@debian> <22e9fd7b-5e45-4f7c-b9fd-36e76118653f@huawei.com>
- <aBBNf1u+8yyAXrV3@debian>
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <aBBNf1u+8yyAXrV3@debian>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <CAB=BE-Ru31S1Qq0Gmi9UXtaL6k4dcLdTUa-CJbmhuXb7a2dSeQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemo500009.china.huawei.com (7.202.194.199)
-X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+Hi Sandeep,
 
+On 4/29/25 05:49, Sandeep Dhavale wrote:
+> Hi Chao,
+> 
+>>
+>> - mount #1                              - mount #2
+>>  - z_erofs_init_pcpu_workers
+>>   - atomic_xchg(, 1)
+>>                                          - z_erofs_init_pcpu_workers
+>>                                           - atomic_xchg(, 1)
+>>                                           : return 0 since atomic variable is 1
+>>                                           it will run w/o percpu workers and hotplug
+>>   : update atomic variable to 1
+>>   - erofs_init_percpu_workers
+>>   : fail
+>>   - atomic_set(, 0)
+>>   : update atomic variable to 0 & fail the mount
+>>
+>> Can we add some logs to show we succeed/fail to initialize workers or
+>> hotplugs? As for mount #2, it expects it will run w/ them, but finally
+>> it may not. So we'd better have a simple way to know?
+>>
+>> Thanks,
+>>
+> What you have laid out as race, indeed can happen if
+> erofs_init_percpu_workers() fails with ENOMEM. For me that is still
+> not catastrophic as workqueue fallback is in place so the filesystem
+> is still functional.  And at the next mount, the logic will be
+> reattempted as the atomic variable is reset to 0 after failure.
 
-On 2025/4/29 11:54, Gao Xiang wrote:
-> On Tue, Apr 29, 2025 at 11:46:39AM +0800, Hongbo Li wrote:
+Yeah, correct.
+
 > 
-> ...
-> 
->>>
->>> Another thing is that I'm not sure if "user_xattr" option is really
->>> needed, we might just kill this option since all recent fses don't
->>> have such configuration and user_xattrs should be supported by default.
->>>
->> Yeah, perhaps this option should be removed along with
->> CONFIG_EROFS_FS_XATTR, as xattr can be also consider as a type of data that
->> we cannot modify.
-> 
-> You meant remove "CONFIG_EROFS_FS_XATTR"? but some embedded
-> use cases don't need xattrs anyway.
-> 
-> I mean just kill "user_xattr" option and leave user xattrs on
-> all the time.
-ok, it seems reasonable.
+> If you still think we need to have a log message, I will be happy to
+> spin up the next revision with logging for ENOMEM.
+
+I guess it will be good to add log for such case, thanks. :)
 
 Thanks,
-Hongbo
 
 > 
-> Thanks,
-> Gao Xiang
+> Thanks for the review!
 > 
+> Regards,
+> Sandeep.
+
 
