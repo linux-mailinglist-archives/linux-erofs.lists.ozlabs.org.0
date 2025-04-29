@@ -1,41 +1,57 @@
-Return-Path: <linux-erofs+bounces-268-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-270-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E901AA0DB2
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Apr 2025 15:45:42 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6B44AA0DF6
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Apr 2025 15:54:47 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4Zn1mN0Bllz30Vs;
-	Tue, 29 Apr 2025 23:45:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Zn1ys2K9pz30Vy;
+	Tue, 29 Apr 2025 23:54:45 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745934339;
-	cv=none; b=gdGd/TjJ2MelP3aqLBmxfN8CJnD4SCV/nb+piPmMXlb4iUH0BxoNoUcNQQOZb7jk1QyevXzGmN44DI14S1rEMWupKT2ExIOuwCzyeIA2sWkhxcoUgDXPIwVd6LA9np4vOaXfEzq1O0P6ArCsx8bzWweXLdOdTVJDVxBUWFypxyCU7amxVOXKpqMlRtSwAR7pF891r0gz4LoGNWDfhBteRwivBi1hoUaT933xZz+2Vztifq0YGi9dR/GJOCacEEZ09Lq3cU3T6n+q8/FTVgyWOyYlIZ+1XpLATntELA6hiLNYrEq2EtrdmzDXJ1AB8S27sVfDG93u222/VTUS7Vk1Fg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745934885;
+	cv=none; b=e08ivsayAReWnaodoNQYMHmRsyWg4BXLySMuzvMQ06Ty4F/WZOuhak62r73CTTnidkRNtMbBYLPXzUVEKoMUiqLEE6I8d7R/J4Ktr0AqXIKFOjfFVgpeu7PSVSOFG68R+pSciBHouu3LbADYVkdTZk2duehn+aJU59CxXkQgql4OwbQ2pu12Ei98ef7r862xmcqemybJOQEX/pW9Qp3TGk97iqWErTfN0UnIXi4hTKEtA/vv1lsVFORvojv2U1+RQb6vVhEQmmJhlvmu6DC3+x+KwtMt3IKRxgDQyb82Y0WYBERVOI8rqTUjlTgPVKQr9wPSPsB/Im1qbmpTW4E3/w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745934339; c=relaxed/relaxed;
-	bh=qm94qmWrMYnQkPthq7mKpdmpUQzoGGqSR6xiR4FKQco=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jipycwuMWvs5e+SkHHV2JzVzgBXpPEKAlUEP7bWQfTNS0iq4CxjsZLkeRiLjjExpVDlWale0ewmZ2Be11b9sYDPjOu9ANdbf1W+ueSKKvUG1vJ8dTXPue4o9GYqjX78k3i7cVpe75C2WHdSSYcQsdL5mNs+6pn97G3UDUmYEGbtu85X10jOaQDDKW3u2/KCVAYD92cptRKIJzgVOrjfqHAtYs2QrD8eiuF7MzlzDQgQy4htUJT37dmjTaJOeO2wtbQzdDROS+0POLImvO5CDOQv6T8G4AtN5YMCht/BuSPcwU1Omt+hnieWYzHoH1JMs4ga6+871IPphPhAtI1ITmw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1745934885; c=relaxed/relaxed;
+	bh=g/1AMs9gTwWi9IYQnT9945hFSVSyCAbNlUK2wflFeCE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nAgkuF/1XEH/mbSpIGr/5CtZ1ITB6xIO7hUPlSrL298tHnCxb5edudyBf/LeHtj6AjaCzR7T2SVBe9qATuDzWVtgucxgc6t7U0CaDI9Xr7kgO/TrH/3KB2tCLCd6Jd8xLqcc7gAfwOO5H/vf5/EBnz4rU/XwKT9jeuMjlsi/rWQ08vGWUyW0VwJRj9XiL1gp7e12cOSmD/ka+EYS/rS4UGRLROVwBeSO7UzTsge7m9d97+KVjJkV3nvveIXJp1gjie+Mj9gMJ7R+3ryVSONNn+pVA/Ds2Bfy9b9GY8afclbOj3KyMZYr+iiTT4M1hkbBZk2s7KFE4qhrAQGkO6C9Lw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gB8RDVTE; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gB8RDVTE;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zn1mF6Zsdz2xHp
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 23:45:31 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Zn1gG5PbCzvWx6
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 21:41:14 +0800 (CST)
-Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id A7F3A1401E0
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 21:45:26 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 29 Apr 2025 21:45:26 +0800
-Message-ID: <eceecf11-2d2e-452d-9b60-27805ac18188@huawei.com>
-Date: Tue, 29 Apr 2025 21:45:25 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zn1yq02XHz30Tm
+	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 23:54:42 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 9A32CA4B4D6;
+	Tue, 29 Apr 2025 13:49:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A859C4CEE3;
+	Tue, 29 Apr 2025 13:54:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745934880;
+	bh=8v49i3m44AsbGJeT2yKfNY19q3FOegNFZ6oMOv789W8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gB8RDVTEWoqDU3jzMG8gyyCMKwXs+G7h8EEkMjV7vaBB/EJayXHL+V83cSzxLil4P
+	 s4tPvyKx58WDMcfHZfxkFle1uY4ykXTWWLQqClaCV9r6Iuy0V1wQVjIsQe/xOfBsPi
+	 zEOZe+BmXZvDpFOqo6SLYHm5YauzSPrzgnghI71Vr+oSbDJH7byK8lY0zyx1GlKl5l
+	 8JO+Y2IOP9sfK8PJRkK3SjdVQpi0+RwBePaYJeJHrdHasLuAyt3Qgc9W0H9HFiqsDO
+	 orG4VqrZY2uh30xGux5Da4x0TK9W///ZE+svPkOvUhKHBt6ioK/VL1/2ttdtSo5zv8
+	 FrJ2QwBk/dWOw==
+Date: Tue, 29 Apr 2025 21:54:34 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Alexander Egorenkov <egorenar@linux.ibm.com>
+Cc: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH v1 1/1] erofs-utils: fix endiannes issue
+Message-ID: <aBDaGgtXhaCr9p0p@debian>
+Mail-Followup-To: Alexander Egorenkov <egorenar@linux.ibm.com>,
+	hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org
+References: <20250429073052.53681-1-egorenar@linux.ibm.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -47,133 +63,107 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: fix file handle encoding for 64-bit NIDs
-To: <linux-erofs@lists.ozlabs.org>
-References: <20250429074109.689075-1-lihongbo22@huawei.com>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20250429074109.689075-1-lihongbo22@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemo500009.china.huawei.com (7.202.194.199)
-X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250429073052.53681-1-egorenar@linux.ibm.com>
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+Hi Alexander,
 
+On Tue, Apr 29, 2025 at 09:30:52AM +0200, Alexander Egorenkov wrote:
+> From: Super User <root@a8345034.lnxne.boe>
 
-On 2025/4/29 15:41, Hongbo Li wrote:
-> In erofs, the inode number has the location information of
-> files. The default encode_fh uses the ino32, this will lack
-> of some information when the file is too big. So we need
-> the internal helpers to encode filehandle.
+Thanks for catching this, the "From:" line seems invalid, so
+I change it as "From: Alexander Egorenkov <egorenar@linux.ibm.com>"
+
 > 
-> It is easy to reproduce test:
->    1. prepare an erofs image with nid bigger than UINT_MAX
->    2. mount -t erofs foo.img /mnt/erofs
->    3. set exportfs with configuration: /mnt/erofs *(rw,sync,
->       no_root_squash)
->    4. mount -t nfs $IP:/mnt/erofs /mnt/nfs
->    5. md5sum /mnt/nfs/foo # foo is the file which nid bigger
->       than UINT_MAX.
-> For overlayfs case, the under filesystem's file handle is
-> encoded in ovl_fb.fid, it is same as NFS's case.
+> Macros __BYTE_ORDER, __LITTLE_ENDIAN and __BIG_ENDIAN are defined in
+> user space header 'endian.h'. Not including this header results in
+> the condition #if __BYTE_ORDER == __LITTLE_ENDIAN being always true, even on
+> BE architectures (e.g. s390x). Due to this bug the compressor library was
+> built for LE byte-order on BE arch s390x.
 > 
-> Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
-> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> Fixes: bc99c763e3fe ("erofs-utils: switch to effective unaligned access")
+> Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
 > ---
-> v1: https://lore.kernel.org/all/20250429011139.686847-1-lihongbo22@huawei.com/
->    - Encode generation into file handle and minor clean code.
->    - Update the commiti's title.
-> ---
->   fs/erofs/super.c | 54 +++++++++++++++++++++++++++++++++++++++++-------
->   1 file changed, 46 insertions(+), 8 deletions(-)
+>  include/erofs/defs.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index cadec6b1b554..aef5d0ca1695 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -511,24 +511,62 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->   	return 0;
->   }
->   
-> -static struct inode *erofs_nfs_get_inode(struct super_block *sb,
-> -					 u64 ino, u32 generation)
-> +static int erofs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
-> +			   struct inode *parent)
->   {
-> -	return erofs_iget(sb, ino);
-> +	int len = parent ? 6 : 3;
-> +	erofs_nid_t nid;
-> +	u32 generation;
-> +
-> +	if (*max_len < len) {
-> +		*max_len = len;
-> +		return FILEID_INVALID;
-> +	}
-> +
-> +	nid = EROFS_I(inode)->nid;
-> +	generation = inode->i_generation;
-> +	fh[0] = (u32)(nid >> 32);
-> +	fh[1] = (u32)(nid & 0xffffffff);
-> +	fh[2] = generation;
-> +
-> +	if (parent) {
-> +		nid = EROFS_I(parent)->nid;
-> +		generation = parent->i_generation;
-> +
-> +		fh[3] = (u32)(nid >> 32);
-> +		fh[4] = (u32)(nid & 0xffffffff);
-> +		fh[5] = generation;
-> +	}
-> +
-> +	*max_len = len;
-> +	return parent ? FILEID_INO64_GEN_PARENT : FILEID_INO64_GEN;
->   }
->   
->   static struct dentry *erofs_fh_to_dentry(struct super_block *sb,
->   		struct fid *fid, int fh_len, int fh_type)
->   {
-> -	return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
-> -				    erofs_nfs_get_inode);
-> +	erofs_nid_t nid;
-> +
-> +	if ((fh_type != FILEID_INO64_GEN &&
-> +	     fh_type != FILEID_INO64_GEN_PARENT) || fh_len < 3)
-> +		return NULL;
-> +
-> +	nid = (u64) fid->raw[0] << 32;
-> +	nid |= (u64) fid->raw[1];
-> +	return d_obtain_alias(erofs_iget(sb, nid));
->   }
->   
->   static struct dentry *erofs_fh_to_parent(struct super_block *sb,
->   		struct fid *fid, int fh_len, int fh_type)
->   {
-> -	return generic_fh_to_parent(sb, fid, fh_len, fh_type,
-> -				    erofs_nfs_get_inode);
-> +	erofs_nid_t nid;
-> +
-> +	if (fh_type != FILEID_INO64_GEN_PARENT || fh_len < 6)
-> +		return NULL;
-> +
-> +	nid = (u64) fid->raw[2] << 32;
-> +	nid |= (u64) fid->raw[3];
-Sorry, I forget change here, I will send the next version.
-> +	return d_obtain_alias(erofs_iget(sb, nid));
->   }
->   
->   static struct dentry *erofs_get_parent(struct dentry *child)
-> @@ -544,7 +582,7 @@ static struct dentry *erofs_get_parent(struct dentry *child)
->   }
->   
->   static const struct export_operations erofs_export_ops = {
-> -	.encode_fh = generic_encode_ino32_fh,
-> +	.encode_fh = erofs_encode_fh,
->   	.fh_to_dentry = erofs_fh_to_dentry,
->   	.fh_to_parent = erofs_fh_to_parent,
->   	.get_parent = erofs_get_parent,
+> diff --git a/include/erofs/defs.h b/include/erofs/defs.h
+> index 051a270531ca..196dfa8191a8 100644
+> --- a/include/erofs/defs.h
+> +++ b/include/erofs/defs.h
+> @@ -19,6 +19,7 @@ extern "C"
+>  #include <inttypes.h>
+>  #include <limits.h>
+>  #include <stdbool.h>
+> +#include <endian.h>
+
+I guess it could break MacOS compilation, so I update as below:
+
+From d55344291092b69a2ba6f11dbcda52fa534ac124 Mon Sep 17 00:00:00 2001
+From: Alexander Egorenkov <egorenar@linux.ibm.com>
+Date: Tue, 29 Apr 2025 09:30:52 +0200
+Subject: [PATCH] erofs-utils: fix endiannes issue
+
+Macros __BYTE_ORDER, __LITTLE_ENDIAN and __BIG_ENDIAN are defined in
+user space header 'endian.h'. Not including this header results in
+the condition #if __BYTE_ORDER == __LITTLE_ENDIAN being always true,
+even on BE architectures (e.g. s390x). Due to this bug the compressor
+library was built for LE byte-order on BE arch s390x.
+
+Fixes: bc99c763e3fe ("erofs-utils: switch to effective unaligned access")
+Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+Reviewed-by: Ian Kent <raven@themaw.net>
+Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ configure.ac         |  1 +
+ include/erofs/defs.h | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index 6e1e7a1..88f1cbe 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -194,6 +194,7 @@ AC_ARG_WITH(selinux,
+ AC_CHECK_HEADERS(m4_flatten([
+ 	dirent.h
+ 	execinfo.h
++	endian.h
+ 	fcntl.h
+ 	getopt.h
+ 	inttypes.h
+diff --git a/include/erofs/defs.h b/include/erofs/defs.h
+index 051a270..21e0f09 100644
+--- a/include/erofs/defs.h
++++ b/include/erofs/defs.h
+@@ -24,6 +24,21 @@ extern "C"
+ #include <config.h>
+ #endif
+ 
++#ifdef HAVE_ENDIAN_H
++#include <endian.h>
++#else
++/* Use GNU C predefined macros as a fallback */
++#ifndef __BYTE_ORDER
++#define __BYTE_ORDER	__BYTE_ORDER__
++#endif
++#ifndef __LITTLE_ENDIAN
++#define __LITTLE_ENDIAN	__ORDER_LITTLE_ENDIAN__
++#endif
++#ifndef __BIG_ENDIAN
++#define __BIG_ENDIAN	__ORDER_BIG_ENDIAN__
++#endif
++#endif
++
+ #ifdef HAVE_LINUX_TYPES_H
+ #include <linux/types.h>
+ #endif
+-- 
+2.30.2
+
 
