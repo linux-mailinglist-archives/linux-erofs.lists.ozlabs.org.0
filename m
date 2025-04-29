@@ -1,47 +1,64 @@
-Return-Path: <linux-erofs+bounces-252-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-253-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B24C0A9FEF0
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Apr 2025 03:20:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EC3B3AA0028
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Apr 2025 05:07:08 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZmjDf6HNXz2yGM;
-	Tue, 29 Apr 2025 11:20:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZmlbZ0m3cz301N;
+	Tue, 29 Apr 2025 13:07:06 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.189
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745889634;
-	cv=none; b=nRchBwNv/XZOehh4u88nuJIsJjZa+SRP1Nr2SRRBo7NinemgDrDreYr8dumkTs0FHHqUPJeakTwJ8avmTtluRfDJnDXnxbuZPmQNeAzZ7cikEKGESVnVOCppVkVM7OsUec4WudtjABLWgk9NECwW9cfmcdOfI+0/ee/9b5DbFGsXARRmSuFoI9J44gg2mTo8dcQ2WhwtIQMM4BC7ZhRmIKF0Y30KH9KiBNPldaXeV6qB4hwNl66D4HNI7k78Zt6u5+fvB1gyS0ah8PI9w1sMQc+A/Dhbw/PYh0KTJgaMFtSr8fLeyzbTiF/0NajPzL0T+wC7teDr28aJeneKms3O4Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1745896026;
+	cv=none; b=AdFi4zSMqI4a5XZouvN3akN5GdCBH7jsVrVajXzNDcPjZl6ktO1DQcDMBs+RONVq6QKVw236WkF73eBORnzKEnrGSMSMEh0ifNud4+Qwrx9+RV76E+j/SMPx/n9gv0+ay4DrNW6A3WoEcrDfFKbqA9oTatEI/5ko6ofAsdRljQ3lMVPQwkMMK1g9X+e9Q4ZqaJjiwVnW6mrTMpqCC18Gid54XZ2yFrdTBZzJJKyEN0Uo2S1HuRvrrSlbKpVD4ByJzEeZbGRDGDoHk7YPBWT5ApYl9PG1d7wekDqWbxdXUKp7qn79FGeqr3matVgIZYFqnrwrAHodJuPnBOkjIe8CKw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1745889634; c=relaxed/relaxed;
-	bh=xdxgL/MB0Gr9efSQGNxTVTVZ31csnH5lE62RSikUaqw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oa8Tk1qozqVvUnMVqadV1Oo1uh+zeAFr3ejAfPa2nAs55jR1KMm7rxsD7wREvjzKZssN0OYwLT5cbVhRUF/A57oYtGU3VS1nw+xoC/I6CNBcbx7CFQP94jZzK9lP7zQ5zD+rrPt/QkgjIJ3U5rUNz+CHdcEv/CUizOqsX97tkstmzIRFz0J3r4sraHCdDf5SCbrC1Kn+lTQEI/gN68zov49zExZ9EHEQ5/VIAPGMFhT09lduRiRLqizUSt4hI3B+9Q++2MQM9m98k4JQEIYODVorc2siibXf0sJwXxZI1NrQ2349/AWA7D/YBRx7U7CZWb6C0HRP5wv1JD89FAlh3Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.189; helo=szxga03-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=szxga03-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1745896026; c=relaxed/relaxed;
+	bh=t9l6HhvuEGwMpECMABK6OK3y29OjPG7ym0N9xxDBtQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MQieWI2qZdAIye7NwhQCB5tIVABDhfrTOL6+5fZsXJekblku7mj/Q6clq30i2uocyZKr1+pp/Y5mYRQ2X06BdMqZ2Ck5/MpHS/sVFmnHu4o9QNyRNhbN4LEKZwREd25idjgI1xZ0VHW6eiE883bHL1NFfQU1pRJFwk+morKYPqHxrLX8UdX3AwJb+2R5MA2yiK6qflkB77yxHlR09F8O59IhwnqKCLjBSh7+0NqRau4EXs/eCuj4X9n+Wwf4qDCvDknsqIVoTsDrJIbXGrbCC5QW9xNJ2aRBYOx8Cn774yyqkEdpIqOfigdjLfdigtlDA8/C1YI1ORTFNrBr9fsBjg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=NPGkMOG/; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=NPGkMOG/;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZmjDd32Vhz2xd4
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 11:20:31 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Zmj8P5Dm5zLpdR;
-	Tue, 29 Apr 2025 09:16:53 +0800 (CST)
-Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id D9A901401E0;
-	Tue, 29 Apr 2025 09:20:25 +0800 (CST)
-Received: from huawei.com (10.67.174.162) by kwepemo500009.china.huawei.com
- (7.202.194.199) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 29 Apr
- 2025 09:20:25 +0800
-From: Hongbo Li <lihongbo22@huawei.com>
-To: <xiang@kernel.org>, <chao@kernel.org>, <zbestahu@gmail.com>,
-	<jefflexu@linux.alibaba.com>
-CC: <dhavale@google.com>, <linux-erofs@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>, <lihongbo22@huawei.com>
-Subject: [PATCH] erofs: encode file handle with the internal helpers
-Date: Tue, 29 Apr 2025 01:11:39 +0000
-Message-ID: <20250429011139.686847-1-lihongbo22@huawei.com>
-X-Mailer: git-send-email 2.22.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZmlbY0cQVz2yfy
+	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Apr 2025 13:07:05 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 8F8D761139;
+	Tue, 29 Apr 2025 03:06:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DDFFC4CEE4;
+	Tue, 29 Apr 2025 03:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745896021;
+	bh=Q670eReyAtJoadARUJrI2RpbKjr3KWV2o+ElngikDiE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NPGkMOG/bb287fpr0RQ0Bf7QJgyDzWisVOWqcRgnvLQRaciyvwDt/JwqkkQNDq4hX
+	 iTajprmqF/tiZlcv0e/D2FMUZNuFmhlMm7gOu0subQR1B03+6VKUGm16jvhLPq9pQo
+	 Ii45Fw2NTfj0vQQ+CvUsq7TYIQXIoVJ92H+UbhhOpOFwA2fI9gDQmcIZa9evO2L9Bg
+	 3eiaKq+Fw/L8ZDr3tIZMdPxF3XzL/L0yO13IVGGXTYqnfLqerYmwYU3nZxHDdRgrQr
+	 l+TSPqq/42wZgvmfkoMnZkOeYMbf41are0G8eJmbEX8WloWYC2L4j4A3x3hS0j/5DC
+	 Jb1QyLjrGeFEw==
+Date: Tue, 29 Apr 2025 11:06:52 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: xiang@kernel.org, chao@kernel.org, zbestahu@gmail.com,
+	jefflexu@linux.alibaba.com, dhavale@google.com,
+	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] fs/erofs/fileio: call erofs_onlinefolio_split() after
+ bio_add_folio()
+Message-ID: <aBBCTGo7I4OHyVAH@debian>
+Mail-Followup-To: Max Kellermann <max.kellermann@ionos.com>,
+	xiang@kernel.org, chao@kernel.org, zbestahu@gmail.com,
+	jefflexu@linux.alibaba.com, dhavale@google.com,
+	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+References: <20250428230933.3422273-1-max.kellermann@ionos.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -53,122 +70,51 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.67.174.162]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemo500009.china.huawei.com (7.202.194.199)
-X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250428230933.3422273-1-max.kellermann@ionos.com>
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-In erofs, the inode number has the location information of
-files. The default encode_fh uses the ino32, this will lack
-of some information when the file is too big. So we need
-the internal helpers to encode filehandle.
+On Tue, Apr 29, 2025 at 01:09:33AM +0200, Max Kellermann wrote:
+> If bio_add_folio() fails (because it is full),
+> erofs_fileio_scan_folio() needs to submit the I/O request via
+> erofs_fileio_rq_submit() and allocate a new I/O request with an empty
+> `struct bio`.  Then it retries the bio_add_folio() call.
+> 
+> However, at this point, erofs_onlinefolio_split() has already been
+> called which increments `folio->private`; the retry will call
+> erofs_onlinefolio_split() again, but there will never be a matching
+> erofs_onlinefolio_end() call.  This leaves the folio locked forever
+> and all waiters will be stuck in folio_wait_bit_common().
+> 
+> This bug has been added by commit ce63cb62d794 ("erofs: support
+> unencoded inodes for fileio"), but was practically unreachable because
+> there was room for 256 folios in the `struct bio` - until commit
+> 9f74ae8c9ac9 ("erofs: shorten bvecs[] for file-backed mounts") which
+> reduced the array capacity to 16 folios.
+> 
+> It was now trivial to trigger the bug by manually invoking readahead
+> from userspace, e.g.:
+> 
+>  posix_fadvise(fd, 0, st.st_size, POSIX_FADV_WILLNEED);
+> 
+> This should be fixed by invoking erofs_onlinefolio_split() only after
+> bio_add_folio() has succeeded.  This is safe: asynchronous completions
+> invoking erofs_onlinefolio_end() will not unlock the folio because
+> erofs_fileio_scan_folio() is still holding a reference to be released
+> by erofs_onlinefolio_end() at the end.
+> 
+> Fixes: ce63cb62d794 ("erofs: support unencoded inodes for fileio")
+> Fixes: 9f74ae8c9ac9 ("erofs: shorten bvecs[] for file-backed mounts")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 
-Since i_generation in EROFS is not used, here we only encode
-the nid into file handle when it is exported. So it is easy
-to parse the dentry from file handle.
+Thanks for catching this! LGTM:
+Reviewed-by: Gao Xiang <xiang@kernel.org>
 
-It is easy to reproduce test:
-  1. prepare an erofs image with nid bigger than UINT_MAX
-  2. mount -t erofs foo.img /mnt/erofs
-  3. set exportfs with configuration: /mnt/erofs *(rw,sync,
-     no_root_squash)
-  4. mount -t nfs $IP:/mnt/erofs /mnt/nfs
-  5. md5sum /mnt/nfs/foo # foo is the file which nid bigger
-     than UINT_MAX.
-For overlayfs case, the under filesystem's file handle is
-encoded in ovl_fb.fid, it is same as NFS's case.
-
-Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
----
- fs/erofs/super.c | 51 ++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 43 insertions(+), 8 deletions(-)
-
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index cadec6b1b554..8f787c47e04d 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -511,24 +511,59 @@ static int erofs_fc_parse_param(struct fs_context *fc,
- 	return 0;
- }
- 
--static struct inode *erofs_nfs_get_inode(struct super_block *sb,
--					 u64 ino, u32 generation)
-+static int erofs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
-+			   struct inode *parent)
- {
--	return erofs_iget(sb, ino);
-+	int len = parent ? 4 : 2;
-+	erofs_nid_t nid;
-+
-+	if (*max_len < len) {
-+		*max_len = len;
-+		return FILEID_INVALID;
-+	}
-+
-+	nid = EROFS_I(inode)->nid;
-+	fh[0] = (u32)(nid >> 32);
-+	fh[1] = (u32)(nid & 0xffffffff);
-+
-+	if (parent) {
-+		nid = EROFS_I(parent)->nid;
-+
-+		fh[2] = (u32)(nid >> 32);
-+		fh[3] = (u32)(nid & 0xffffffff);
-+	}
-+
-+	*max_len = len;
-+	return parent ? FILEID_INO64_GEN_PARENT : FILEID_INO64_GEN;
- }
- 
- static struct dentry *erofs_fh_to_dentry(struct super_block *sb,
- 		struct fid *fid, int fh_len, int fh_type)
- {
--	return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
--				    erofs_nfs_get_inode);
-+	erofs_nid_t nid;
-+
-+	if ((fh_type != FILEID_INO64_GEN &&
-+	     fh_type != FILEID_INO64_GEN_PARENT) || fh_len < 2)
-+		return NULL;
-+
-+	nid = (u64) fid->raw[0] << 32;
-+	nid |= (u64) fid->raw[1];
-+
-+	return d_obtain_alias(erofs_iget(sb, nid));
- }
- 
- static struct dentry *erofs_fh_to_parent(struct super_block *sb,
- 		struct fid *fid, int fh_len, int fh_type)
- {
--	return generic_fh_to_parent(sb, fid, fh_len, fh_type,
--				    erofs_nfs_get_inode);
-+	erofs_nid_t nid;
-+
-+	if (fh_type != FILEID_INO64_GEN_PARENT || fh_len < 4)
-+		return NULL;
-+
-+	nid = (u64) fid->raw[2] << 32;
-+	nid |= (u64) fid->raw[3];
-+
-+	return d_obtain_alias(erofs_iget(sb, nid));
- }
- 
- static struct dentry *erofs_get_parent(struct dentry *child)
-@@ -544,7 +579,7 @@ static struct dentry *erofs_get_parent(struct dentry *child)
- }
- 
- static const struct export_operations erofs_export_ops = {
--	.encode_fh = generic_encode_ino32_fh,
-+	.encode_fh = erofs_encode_fh,
- 	.fh_to_dentry = erofs_fh_to_dentry,
- 	.fh_to_parent = erofs_fh_to_parent,
- 	.get_parent = erofs_get_parent,
--- 
-2.22.0
-
+Thanks,
+Gao Xiang
 
