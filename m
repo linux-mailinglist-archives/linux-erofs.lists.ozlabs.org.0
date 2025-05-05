@@ -1,66 +1,62 @@
-Return-Path: <linux-erofs+bounces-273-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-274-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A5548AA8CC5
-	for <lists+linux-erofs@lfdr.de>; Mon,  5 May 2025 09:05:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FF04AA9F21
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 May 2025 00:20:05 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZrXbt1bfjz2yf9;
-	Mon,  5 May 2025 17:05:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Zrwv40xrQz2xRw;
+	Tue,  6 May 2025 08:20:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::d32"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746428730;
-	cv=none; b=Fapj35y07nZQXcT/JBEeRrsOEnfIftdPxajb1BZivfYSSJ/VEB8J1ZAftMimAskKg8xMKDfWNtzwxLm7oX6kniYmlrLoaikWFqutJ+zHl9NA8CIS66S74w8/EJ06tHevWiDD0vIUYAVJHPJF1XbkXGYkgDjhp2fvSJQ+vQf03K9xlITRoZHNwrcMNpT/BpFMeO8yJvZEK9ADbPqqTvVjG2Bd0YLNvz7lh81uTg4a2Sb6mhR/lo1/NCFxkZ4wdF6v2kreBuB4YLQUobYfoNcWboEjeDoY8a+C0PFaxKObYguf3J2TOz8N/ltzfTT5+mgdfMjltKHPMLXw9908tST3mA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746483600;
+	cv=none; b=ZwMdoVNFurXS73vyolZO8r4SLS2/TljrrNVU2OB5lD8Vy6EXOt1bwVa04KwFqFVG/DKI2hXoMLP3oPD8xCleZ5FncfpdRIh8JI+QLHsXwkVxiq6wvIY0b/IS6+4NEfMVieY/aXCwN27Nr4WQHyLpqOSrK2pmsWE7gihbigl1FGTHY6AHCbCFCRmf3nNxeAfSwPjPCaUletid4Id5nUb4iaDqRQ6QGjwrC9PkuBaFckg1UmUk0fb8FeJ8PCA+DypAq5HrmZc8FFfn+xHUhLLRqmyIII1HKYT7CC2rBb/vlSnNhTlqRukCKhN2X/3xNjRiytHpu6A1ol3HVAUV5dEp7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1746428730; c=relaxed/relaxed;
-	bh=JGaaJUIIwtR1DVaio2jXTpHdWP2TwJjQThPkJN2qE+Y=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=YDiL1D9hGtFhhr4pTKv8ENrj14DBFESWkcGLMHIySyxiWk0IRQNcudm/ocXX4vYopPE2sw5cOJVjnS29sgtowp2eBVgDZ2jx+l16TYb/gIAdxsSfo0Ndj8+TDcoRsAIhI9jFjQ6ndYbjkXrlJDh307pBy3V1YIUYVorZ9dYIEbDMrx7UtRuWIhIyes1fUdfI1AFJcNj7Ntxe21nwfqsgO4nhJ/YtaPMYlZYBTsOrDZ65NaaPsulQX2hknAriF4wIZDBsUJra/bh03eAn+mQfXTeiSQdrvReB0uzXdPz/OVcEvAKHoUNQsG+cdXcMOoNUzT56oU4GAba930M33/koIQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=OBV9PRqD; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::d32; helo=mail-io1-xd32.google.com; envelope-from=justindunce42@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1746483600; c=relaxed/relaxed;
+	bh=as1QsQfIXzu5ZSdFhwZ2N/Q3z9ioftHBikn3XHpfaYw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Ae5iLhybzgqqzUrt4cz5gD9Tvvpmvfaopbab46nc5wtRhaJPJ9Ea3/TNStMUdlHJr/PAHZdEiEw9WAX+N4eW9bgHRlyhyNgVRHpkz7+RMaWyAycl47ZgRq3difSIWPg/+qwGnChK7gwtSvw8lWGsnml6fwwDFx+e5ztJjIGOhh5AWEF/mWTM3fRA0qZmuEgPXtJfM1aSno6o2yDdyoVfuJzsJdseWowtbJ4hUyXYudgf6P40pEZMwvJ8Gyi5GBDh+TKeYFgR6riegq4Jft4eb51eSkDiOdJrQB4u+6WG+01BWVjspiBs8qfKMGA+lC09OPUa7/AFt1QO1ebaD56G3w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Bo0leVPf; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=OBV9PRqD;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Bo0leVPf;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::d32; helo=mail-io1-xd32.google.com; envelope-from=justindunce42@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=sashal@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZrXbr2z2vz2yMt
-	for <linux-erofs@lists.ozlabs.org>; Mon,  5 May 2025 17:05:27 +1000 (AEST)
-Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-85e751cffbeso363217139f.0
-        for <linux-erofs@lists.ozlabs.org>; Mon, 05 May 2025 00:05:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746428723; x=1747033523; darn=lists.ozlabs.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JGaaJUIIwtR1DVaio2jXTpHdWP2TwJjQThPkJN2qE+Y=;
-        b=OBV9PRqDk/BZO8a37E98j0OWspX6nT7JwBHHsE8i+RBll6opmW9Bu42OrFMO0tsoZc
-         Fug4YkDscM8pGdpM1k/C5ewV/CjLjH3OoRss3UrzBGoworj3BKqjskzlp3OmSQrhM7K3
-         tQQ7Jz0hyYeUxJHfGnmpybxBIxVuIYQG9JefbrxLV5SQrW+SXfFpwMKFGc0YtiF7tYxN
-         B/CV3aWJ8Zqyr1oK06MTCX5XpGUm231H4MuUud7D6KDuP2XApgXaf/K2qR1ExWT23sll
-         47co3mqrP50LFZ4yMqvvOk0hu0iHxnEapn0LzpIvlyroWBzmzRAoQzumv4jCmFRXZtxL
-         27Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746428723; x=1747033523;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JGaaJUIIwtR1DVaio2jXTpHdWP2TwJjQThPkJN2qE+Y=;
-        b=mD43U84PGgJWD8DHSjaOxPXx0tKYsxgxWRes7D0iZxLSiBaZhmNuWG6Hl1/uWYcd7N
-         Ipaxx3j6OCb9PDgwTR9HKodY9Fqvkag2rCYcokegFu0AvyQM7dBYNVTC3zR1P+lRWWF8
-         K9sZ6CrBHiEYWo9IOQH0G0Pt3saeHOs1X2intkE4B7mQU9Ac8ci+fu8lYgVgtPF+4ir4
-         KfTUz8agzIFaigEtzw5Bt6KT2QrqRqa11u6MR0CVv6wMHqGgS6QGMhxUZgLbjpshgElf
-         P/P50Q/nLJ2CaGFv9+M+Zdea8pWh7rgWz1nwaOYGDx6EHVcovBgz8t2dlCVTQU/uQQs/
-         imkg==
-X-Gm-Message-State: AOJu0YzDpznapNoCn1ygWQSQNP9hpRQD6GJtwMa+uGql5Xr/lx4v5FGr
-	ytIutTVPL5Seq8hHdaufqO86hD9hR7ssfdyOIDZy8V6auxSONUBbY4G0JhaKWY/3OFOeA09HxKQ
-	agRr2WFsLK4+yX1cZL6CxlSir034cNGJd
-X-Gm-Gg: ASbGncvcp7Tcl0Lxvc6guKP9+g6SnQtXHw8PhVYbIaLOaBKXNOcfo6wBkVergJg2XdA
-	hemag3m/BkYv412VWPLdItyVvfVTwrkrB3ygflUKLw/R2wTYDDld2rkdvLTdOROuQTWYbfdoD1+
-	jz/aXAFGPS2vhSyAjz3b2oe7I=
-X-Google-Smtp-Source: AGHT+IFnuL9l9Ldp8NNdVG6A+Kk7Zhc/eqS75bVEjIwjcgMySu036N++YjjDYWqrnRqZAwl8z5gjQLDwLT7UlMAl0yE=
-X-Received: by 2002:a05:6602:2b0b:b0:85b:35b1:53b4 with SMTP id
- ca18e2360f4ac-86713bac130mr514908839f.12.1746428723464; Mon, 05 May 2025
- 00:05:23 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zrwv23yqjz2xQD
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 May 2025 08:19:58 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 803DE5C5AA1;
+	Mon,  5 May 2025 22:17:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91842C4CEED;
+	Mon,  5 May 2025 22:19:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746483595;
+	bh=joWpyZQT2nEC7J9Y8zTtzzueP7E0nQji06uAZAxZrY0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Bo0leVPfjFWM3USys6yphhyObGCp5jAEnA5/vqJ97UNXPTHlc8IpAVxv35l2fWQb5
+	 27FuGL0snmoIQM5f5z6c/Oc+8xv/bsrTXlFAfBmCRGzNrqIkRoxJuXhe9pYhIzCkAo
+	 jFm4tQ0nsXXlh9OvyzWg0Ii4NI7VqprUU3cmHWzZPiwCbhd2e+qQhSTfBou69X8AlR
+	 qt/bt5SVV2djJepEuPstv8ugyS3R3GQhdZ/VzAn9n8lG9Dk4YUxxVatxNMcN4VVsxR
+	 y6igi45wrsM1z/xC24Hg0vOPmWXY14kDRFTtJVRmiii23z+thgbXlx/vlWEeXY0UfO
+	 B0DF0N9dY8Avw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Chao Yu <chao@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	xiang@kernel.org,
+	linux-erofs@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 6.14 134/642] erofs: initialize decompression early
+Date: Mon,  5 May 2025 18:05:50 -0400
+Message-Id: <20250505221419.2672473-134-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
+References: <20250505221419.2672473-1-sashal@kernel.org>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -72,83 +68,184 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-From: Justin Ding <justindunce42@gmail.com>
-Date: Mon, 5 May 2025 14:05:12 +0700
-X-Gm-Features: ATxdqUFTTK8bm9Jz1FEhQSkw-GHva-ci97UydShDemcLngHgRWitfctQ1NwV_DI
-Message-ID: <CAHCY0fXs+fKxn6EgiLrus3=DJ+me=tP=j42DKt9ceY15KB18-A@mail.gmail.com>
-Subject: =?UTF-8?B?6Z2i5a+557q357mB55qE5bu66K6uIOWmguS9leWBmuWHuuaYjuaZuueahOWBpeW6t+mAiQ==?=
-	=?UTF-8?B?5oup?=
-To: linux-erofs@lists.ozlabs.org, dennis.pausch@uni-marburg.de, 
-	ppaul@csmcri.org, lmcbain@nacubo.org, lcping0926@126.com
-Content-Type: multipart/alternative; boundary="000000000000b00d1a06345e1f96"
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	HTML_MESSAGE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.5
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
---000000000000b00d1a06345e1f96
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-KuS9oOWlveWQl++8nyoNCg0K5aaC5LuK77yM5LuO6aWu6aOf5Yiw6KGl5YWF5YmC44CB5bCP5bel
-5YW35ZKM6ZS754K86K6h5YiS77yM5aSn6YeP55qE5YGl5bq35bu66K6u57q36Iez5rKT5p2l77yM
-6K6p5Lq655ay5LqO6YCJ5oup4oCc5q2j56Gu4oCd55qE6YGT6Lev44CCDQoNCuaIkeS7rOivpeWm
-guS9leaOjOaOp+iHquW3seeahOWBpeW6t+iAjOS4jemZt+WFpeWbsOWig+WRou+8nw0KDQrmnKzm
-lofmjIflh7rluK7liqnkvaDnvKnlsI/pgInmi6nojIPlm7TnmoTlm5vnp43mlrnms5XjgIINCg0K
-54K55Ye76ZO+5o6l77yM5oKo5bCG6I635b6X5a6d6LS155qE5L+h5oGv77yM5LiN5a656ZSZ6L+H
-77yBDQoNCmh0dHBzOi8vdGlueXVybC5jb20vM3h1YW4temUtbWluZy16aGkNCg0K56Wd5L2g5ZKM
-5L2g55qE5a625Lq65aW96L+Q77yBDQoNCg0KDQotLS0NCg0K5Lq65b+D5ZCR5ZaE77yM5pyq5p2l
-5Y+v5pyfDQo=
---000000000000b00d1a06345e1f96
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit fe1e57d44d7f106df9048e815e4862cf63921220 ]
 
-<div dir=3D"ltr"><p style=3D"color:rgb(0,0,0);font-family:&quot;Times New R=
-oman&quot;;font-size:medium"><span class=3D"gmail-auto-style1" style=3D"fon=
-t-family:&quot;Microsoft YaHei&quot;"><strong>=E4=BD=A0=E5=A5=BD=E5=90=97=
-=EF=BC=9F</strong></span><br class=3D"gmail-auto-style1" style=3D"font-fami=
-ly:&quot;Microsoft YaHei&quot;"><br class=3D"gmail-auto-style1" style=3D"fo=
-nt-family:&quot;Microsoft YaHei&quot;"><span class=3D"gmail-auto-style1" st=
-yle=3D"font-family:&quot;Microsoft YaHei&quot;">=E5=A6=82=E4=BB=8A=EF=BC=8C=
-=E4=BB=8E=E9=A5=AE=E9=A3=9F=E5=88=B0=E8=A1=A5=E5=85=85=E5=89=82=E3=80=81=E5=
-=B0=8F=E5=B7=A5=E5=85=B7=E5=92=8C=E9=94=BB=E7=82=BC=E8=AE=A1=E5=88=92=EF=BC=
-=8C=E5=A4=A7=E9=87=8F=E7=9A=84=E5=81=A5=E5=BA=B7=E5=BB=BA=E8=AE=AE=E7=BA=B7=
-=E8=87=B3=E6=B2=93=E6=9D=A5=EF=BC=8C=E8=AE=A9=E4=BA=BA=E7=96=B2=E4=BA=8E=E9=
-=80=89=E6=8B=A9=E2=80=9C=E6=AD=A3=E7=A1=AE=E2=80=9D=E7=9A=84=E9=81=93=E8=B7=
-=AF=E3=80=82</span><br class=3D"gmail-auto-style1" style=3D"font-family:&qu=
-ot;Microsoft YaHei&quot;"><br class=3D"gmail-auto-style1" style=3D"font-fam=
-ily:&quot;Microsoft YaHei&quot;"><span class=3D"gmail-auto-style1" style=3D=
-"font-family:&quot;Microsoft YaHei&quot;">=E6=88=91=E4=BB=AC=E8=AF=A5=E5=A6=
-=82=E4=BD=95=E6=8E=8C=E6=8E=A7=E8=87=AA=E5=B7=B1=E7=9A=84=E5=81=A5=E5=BA=B7=
-=E8=80=8C=E4=B8=8D=E9=99=B7=E5=85=A5=E5=9B=B0=E5=A2=83=E5=91=A2=EF=BC=9F</s=
-pan><br class=3D"gmail-auto-style1" style=3D"font-family:&quot;Microsoft Ya=
-Hei&quot;"><br class=3D"gmail-auto-style1" style=3D"font-family:&quot;Micro=
-soft YaHei&quot;"><span class=3D"gmail-auto-style1" style=3D"font-family:&q=
-uot;Microsoft YaHei&quot;">=E6=9C=AC=E6=96=87=E6=8C=87=E5=87=BA=E5=B8=AE=E5=
-=8A=A9=E4=BD=A0=E7=BC=A9=E5=B0=8F=E9=80=89=E6=8B=A9=E8=8C=83=E5=9B=B4=E7=9A=
-=84=E5=9B=9B=E7=A7=8D=E6=96=B9=E6=B3=95=E3=80=82</span><br class=3D"gmail-a=
-uto-style1" style=3D"font-family:&quot;Microsoft YaHei&quot;"><br class=3D"=
-gmail-auto-style1" style=3D"font-family:&quot;Microsoft YaHei&quot;"><span =
-class=3D"gmail-auto-style1" style=3D"font-family:&quot;Microsoft YaHei&quot=
-;">=E7=82=B9=E5=87=BB=E9=93=BE=E6=8E=A5=EF=BC=8C=E6=82=A8=E5=B0=86=E8=8E=B7=
-=E5=BE=97=E5=AE=9D=E8=B4=B5=E7=9A=84=E4=BF=A1=E6=81=AF=EF=BC=8C=E4=B8=8D=E5=
-=AE=B9=E9=94=99=E8=BF=87=EF=BC=81</span><br class=3D"gmail-auto-style1" sty=
-le=3D"font-family:&quot;Microsoft YaHei&quot;"><br class=3D"gmail-auto-styl=
-e1" style=3D"font-family:&quot;Microsoft YaHei&quot;"><span class=3D"gmail-=
-auto-style1" style=3D"font-family:&quot;Microsoft YaHei&quot;"><a href=3D"h=
-ttps://tinyurl.com/3xuan-ze-ming-zhi">https://tinyurl.com/3xuan-ze-ming-zhi=
-</a></span></p><p style=3D"color:rgb(0,0,0);font-family:&quot;Times New Rom=
-an&quot;;font-size:medium"><span class=3D"gmail-auto-style1" style=3D"font-=
-family:&quot;Microsoft YaHei&quot;">=E7=A5=9D=E4=BD=A0=E5=92=8C=E4=BD=A0=E7=
-=9A=84=E5=AE=B6=E4=BA=BA=E5=A5=BD=E8=BF=90=EF=BC=81</span><br class=3D"gmai=
-l-auto-style1" style=3D"font-family:&quot;Microsoft YaHei&quot;"></p><p cla=
-ss=3D"gmail-auto-style1" style=3D"font-family:&quot;Microsoft YaHei&quot;;f=
-ont-size:medium;color:rgb(0,0,0)">=C2=A0</p><p class=3D"gmail-auto-style9" =
-style=3D"font-size:11.5pt;color:rgb(91,102,116)">---</p><p class=3D"gmail-a=
-uto-style14" style=3D"font-family:&quot;Microsoft YaHei&quot;;color:rgb(0,1=
-23,255);font-size:medium">=E4=BA=BA=E5=BF=83=E5=90=91=E5=96=84=EF=BC=8C=E6=
-=9C=AA=E6=9D=A5=E5=8F=AF=E6=9C=9F</p></div>
+ - Rename erofs_init_managed_cache() to z_erofs_init_super();
+ - Move the initialization of managed_pslots into z_erofs_init_super() too;
+ - Move z_erofs_init_super() and packed inode preparation upwards, before
+   the root inode initialization.
 
---000000000000b00d1a06345e1f96--
+Therefore, the root directory can also be compressible.
+
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Acked-by: Chao Yu <chao@kernel.org>
+Link: https://lore.kernel.org/r/20250317054840.3483000-1-hsiangkao@linux.alibaba.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/erofs/internal.h |  4 ++--
+ fs/erofs/super.c    | 46 ++++++++++++++++++++++-----------------------
+ fs/erofs/zdata.c    |  4 ++--
+ 3 files changed, 26 insertions(+), 28 deletions(-)
+
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index efd25f3101f1f..2b8d9a10f0026 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -446,6 +446,7 @@ int __init erofs_init_shrinker(void);
+ void erofs_exit_shrinker(void);
+ int __init z_erofs_init_subsystem(void);
+ void z_erofs_exit_subsystem(void);
++int z_erofs_init_super(struct super_block *sb);
+ unsigned long z_erofs_shrink_scan(struct erofs_sb_info *sbi,
+ 				  unsigned long nr_shrink);
+ int z_erofs_map_blocks_iter(struct inode *inode, struct erofs_map_blocks *map,
+@@ -455,7 +456,6 @@ void z_erofs_put_gbuf(void *ptr);
+ int z_erofs_gbuf_growsize(unsigned int nrpages);
+ int __init z_erofs_gbuf_init(void);
+ void z_erofs_gbuf_exit(void);
+-int erofs_init_managed_cache(struct super_block *sb);
+ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb);
+ #else
+ static inline void erofs_shrinker_register(struct super_block *sb) {}
+@@ -464,7 +464,7 @@ static inline int erofs_init_shrinker(void) { return 0; }
+ static inline void erofs_exit_shrinker(void) {}
+ static inline int z_erofs_init_subsystem(void) { return 0; }
+ static inline void z_erofs_exit_subsystem(void) {}
+-static inline int erofs_init_managed_cache(struct super_block *sb) { return 0; }
++static inline int z_erofs_init_super(struct super_block *sb) { return 0; }
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
+ 
+ #ifdef CONFIG_EROFS_FS_BACKED_BY_FILE
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 9f2bce5af9c83..b30125a2a5011 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -631,9 +631,16 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	else
+ 		sb->s_flags &= ~SB_POSIXACL;
+ 
+-#ifdef CONFIG_EROFS_FS_ZIP
+-	xa_init(&sbi->managed_pslots);
+-#endif
++	err = z_erofs_init_super(sb);
++	if (err)
++		return err;
++
++	if (erofs_sb_has_fragments(sbi) && sbi->packed_nid) {
++		inode = erofs_iget(sb, sbi->packed_nid);
++		if (IS_ERR(inode))
++			return PTR_ERR(inode);
++		sbi->packed_inode = inode;
++	}
+ 
+ 	inode = erofs_iget(sb, sbi->root_nid);
+ 	if (IS_ERR(inode))
+@@ -645,24 +652,11 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 		iput(inode);
+ 		return -EINVAL;
+ 	}
+-
+ 	sb->s_root = d_make_root(inode);
+ 	if (!sb->s_root)
+ 		return -ENOMEM;
+ 
+ 	erofs_shrinker_register(sb);
+-	if (erofs_sb_has_fragments(sbi) && sbi->packed_nid) {
+-		sbi->packed_inode = erofs_iget(sb, sbi->packed_nid);
+-		if (IS_ERR(sbi->packed_inode)) {
+-			err = PTR_ERR(sbi->packed_inode);
+-			sbi->packed_inode = NULL;
+-			return err;
+-		}
+-	}
+-	err = erofs_init_managed_cache(sb);
+-	if (err)
+-		return err;
+-
+ 	err = erofs_xattr_prefixes_init(sb);
+ 	if (err)
+ 		return err;
+@@ -798,6 +792,16 @@ static int erofs_init_fs_context(struct fs_context *fc)
+ 	return 0;
+ }
+ 
++static void erofs_drop_internal_inodes(struct erofs_sb_info *sbi)
++{
++	iput(sbi->packed_inode);
++	sbi->packed_inode = NULL;
++#ifdef CONFIG_EROFS_FS_ZIP
++	iput(sbi->managed_cache);
++	sbi->managed_cache = NULL;
++#endif
++}
++
+ static void erofs_kill_sb(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
+@@ -807,6 +811,7 @@ static void erofs_kill_sb(struct super_block *sb)
+ 		kill_anon_super(sb);
+ 	else
+ 		kill_block_super(sb);
++	erofs_drop_internal_inodes(sbi);
+ 	fs_put_dax(sbi->dif0.dax_dev, NULL);
+ 	erofs_fscache_unregister_fs(sb);
+ 	erofs_sb_free(sbi);
+@@ -817,17 +822,10 @@ static void erofs_put_super(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *const sbi = EROFS_SB(sb);
+ 
+-	DBG_BUGON(!sbi);
+-
+ 	erofs_unregister_sysfs(sb);
+ 	erofs_shrinker_unregister(sb);
+ 	erofs_xattr_prefixes_cleanup(sb);
+-#ifdef CONFIG_EROFS_FS_ZIP
+-	iput(sbi->managed_cache);
+-	sbi->managed_cache = NULL;
+-#endif
+-	iput(sbi->packed_inode);
+-	sbi->packed_inode = NULL;
++	erofs_drop_internal_inodes(sbi);
+ 	erofs_free_dev_context(sbi->devs);
+ 	sbi->devs = NULL;
+ 	erofs_fscache_unregister_fs(sb);
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index d771e06db7386..4490761018c9b 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -644,18 +644,18 @@ static const struct address_space_operations z_erofs_cache_aops = {
+ 	.invalidate_folio = z_erofs_cache_invalidate_folio,
+ };
+ 
+-int erofs_init_managed_cache(struct super_block *sb)
++int z_erofs_init_super(struct super_block *sb)
+ {
+ 	struct inode *const inode = new_inode(sb);
+ 
+ 	if (!inode)
+ 		return -ENOMEM;
+-
+ 	set_nlink(inode, 1);
+ 	inode->i_size = OFFSET_MAX;
+ 	inode->i_mapping->a_ops = &z_erofs_cache_aops;
+ 	mapping_set_gfp_mask(inode->i_mapping, GFP_KERNEL);
+ 	EROFS_SB(sb)->managed_cache = inode;
++	xa_init(&EROFS_SB(sb)->managed_pslots);
+ 	return 0;
+ }
+ 
+-- 
+2.39.5
+
 
