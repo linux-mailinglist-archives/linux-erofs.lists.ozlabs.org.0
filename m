@@ -1,48 +1,37 @@
-Return-Path: <linux-erofs+bounces-278-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-279-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5121AAC12E
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 May 2025 12:19:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 36C8DAAC43A
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 May 2025 14:32:52 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZsDrn2BsVz2y06;
-	Tue,  6 May 2025 20:19:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZsHq16R9hz2xrL;
+	Tue,  6 May 2025 22:32:45 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746526745;
-	cv=none; b=Vj+tDPW+4rsjfgG0GJAEoeGJcDoNgAeUnHJFx2SjUG5A+4oBk2Vt+LQzJsQFX0++Hhdtx1zawDR7Mer9J0tWtQ73PZ1VhF3S7TCLZ4NgaRz1luXV6VSKUBJEnxDiJVw5WIjwaAwBl7Jq9JSKN2SvbmZbp+sTLxcgDa5RxwgBgF/lJtMO8q4+y806AtE2mBb0YulmGqkI7KmssxzW48e5BBr9h46tUu/5zXy1EYGiXhPHSIpgF/PKFBMyn90zlYLM8fmnCb+8vZII40DyFQD+/lCCgpvLd2tr/JVPFhZkeZMk+ZWBYDc984Vp68zc4Xx0EHAGUijQnikBv2PFchmLJQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=93.87.244.166
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746534765;
+	cv=none; b=GBEQEDGvr55rmPcStjGJGtUqlV+yAlDL15ra8B3KndnI2QXG6T0jnQVEe9tS24TauKG6++1bNLNUsrQQeLNOhI9nmPT5n+rdnmqq4+g3gUOWliZP2CwbkQpgFtwlkSgCnAaZi57XgiThHNfgbO1lMcMohQ5db+6KyEytdlRSdkxQUJevwleJsGTn1k+QkeL0KRC2RYnzQ1FVffcwfpEVlhYp0tRv/tkSpxGZnTwC3G2vwrjQrDWDP01MIfuo4Wb8vfETLcXhVpbyrns4DGxqkfN5w77acHADPrOut+ANSVdvf/7B9PB9sTNFFZbmqYPwnq5VUPy4loBIz4cIuZWDKw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1746526745; c=relaxed/relaxed;
-	bh=6hlGv60zt643L8hENoGWYQs5XN30zIHiFR6c1sWi65I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HOaI83270PWJ7rUn0VLB0TSgBVJU141UmnC6QRWCVd/O0jbywdPY+zM5KVC38J05XnkkHkNXvvrYfw2lrFD1n9FsjfF9WzzvKZjvI3qRnsn6c76wX2ef24FxYixbDDpqgRbiU5Oup18M5QqRS9KQx7G23oHSil9AJ1f65GX/f8b0uJE82S9zXEFsMru+z2UMzLULzCv+miq/rxIqv9bqTgTJ+MLYZxBIQyh0Pu1Usm29tNP2sZAVHy3cINkNUK3cF51otMrJuM+awLhbNWArGhPjx0ixNNAzqYZDT6qPDMtjrxu0jJwjCVlSHWrfmjksJ7m+5kC14hLlHbeaSHCzTQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NWAO8PhA; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NWAO8PhA;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZsDrl1bnPz2xVq
-	for <linux-erofs@lists.ozlabs.org>; Tue,  6 May 2025 20:19:01 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746526737; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=6hlGv60zt643L8hENoGWYQs5XN30zIHiFR6c1sWi65I=;
-	b=NWAO8PhA4eUiay0Ymp9lxFBmwZ23v/9p8aiB4vimfB0sBCACZAm79mNCSEPWajV0k8iWJMhKLr4fBF/ijsqXpyRMb7WLgQPx8rF+i/dyLpuLgDiW80pWJQb2uAyxdcRmMF0SQ0IxSk2p3CTbWMA7osr2s/kDan9w+Y1BhZTi684=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WZSt-3o_1746526730 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 06 May 2025 18:18:56 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+	t=1746534765; c=relaxed/relaxed;
+	bh=bPHNZfrBrMpyyBWxSeLFFLdVPDOsh+0lErIsEFl9zIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VvMi7X/hwKt17Nw/Moe/0Pjk8KFs8FNrVO8qKgKQOXDoyQja1QRjDsbGF4qDoSqART5vh2OA294mox84Nz8iJMv3EnaxAEBBBlH74mX+xKDNTWWGEpG76VVphmzkxqKFXUGkL8SvwVQ9ofmsOLyOcQOlTsSutisODdu+uaHkyAogVqS5QNHbfxC068G+S8Amj0rTcyJ3ShYT9G6r+IF6BBDph1J196HBlc3akVEMYq0x2CShQYbqn0umkdHAyawEJpVpygHtAJvPH/rLvJrAHa2bOybGRZRj/YBrxGTyFpf3jX17sOwbpKlNl97Yysd6w7G6UmjT/qgImwzSrJhroA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=arvanta.net; spf=pass (client-ip=93.87.244.166; helo=fx.arvanta.net; envelope-from=mps@arvanta.net; receiver=lists.ozlabs.org) smtp.mailfrom=arvanta.net
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=arvanta.net
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=arvanta.net (client-ip=93.87.244.166; helo=fx.arvanta.net; envelope-from=mps@arvanta.net; receiver=lists.ozlabs.org)
+X-Greylist: delayed 1298 seconds by postgrey-1.37 at boromir; Tue, 06 May 2025 22:32:45 AEST
+Received: from fx.arvanta.net (93-87-244-166.static.isp.telekom.rs [93.87.244.166])
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZsHq10lXbz2xjN
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 May 2025 22:32:44 +1000 (AEST)
+Received: from m1pro.arvanta.net (m1pro.arvanta.net [10.5.1.11])
+	by fx.arvanta.net (Postfix) with SMTP id 036AE12D06;
+	Tue, 06 May 2025 14:11:02 +0200 (CEST)
+Date: Tue, 6 May 2025 14:11:02 +0200
+From: Milan =?utf-8?Q?P=2E_Stani=C4=87?= <mps@arvanta.net>
 To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs: ensure the extra temporary copy is valid for shortened bvecs
-Date: Tue,  6 May 2025 18:18:50 +0800
-Message-ID: <20250506101850.191506-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+Cc: Natanael Copa <ncopa@alpinelinux.org>
+Subject: build of erofs-utils 1.8.6 fails with musl libc
+Message-ID: <20250506121102.GA15164@m1pro.arvanta.net>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -54,143 +43,174 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: multipart/mixed; boundary="9TaaRju0Leuc0oCB"
+Content-Disposition: inline
+X-Spam-Status: No, score=0.0 required=3.0 tests=SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-When compressed data deduplication is enabled, multiple logical extents
-may reference the same compressed physical cluster.
 
-The previous commit 94c43de73521 ("erofs: fix wrong primary bvec
-selection on deduplicated extents") already avoids using shortened
-bvecs.  However, in such cases, the extra temporary buffers also
-need to be preserved for later use in z_erofs_fill_other_copies() to
-to prevent data corruption.
+--9TaaRju0Leuc0oCB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-IOWs, extra temporary buffers have to be retained not only due to
-varying start relative offsets (`pageofs_out`, as indicated by
-`pcl->multibases`) but also because of shortened bvecs.
+Hi,
 
-android.hardware.graphics.composer@2.1.so : 270696 bytes
-   0:        0..  204185 |  204185 :  628019200.. 628084736 |   65536
--> 1:   204185..  225536 |   21351 :  544063488.. 544129024 |   65536
-   2:   225536..  270696 |   45160 :          0..         0 |       0
+I'm maintainer of erofs-utils for Alpine linux, distribution which use
+musl libc instead of glibc.
 
-com.android.vndk.v28.apex : 93814897 bytes
-...
-   364: 53869896..54095257 |  225361 :  543997952.. 544063488 |   65536
--> 365: 54095257..54309344 |  214087 :  544063488.. 544129024 |   65536
-   366: 54309344..54514557 |  205213 :  544129024.. 544194560 |   65536
-...
+Building version 1.8.6 gives error:
+------------------
+Making all in contrib
+make[2]: Entering directory '/home/mps/aports/community/erofs-utils/src/erofs-utils-1.8.6/contrib'
+cc -DHAVE_CONFIG_H -I. -I..   -DNDEBUG -Wall -I../include -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -MT stress-stress.o -MD -MP -MF .deps/stress-stress.Tpo -c -o stress-stress.o `test -f 'stress.c' || echo './'`stress.c
+stress.c: In function '__getdents_f':
+stress.c:274:16: error: implicit declaration of function 'readdir64'; did you mean 'readdir_r'? [-Wimplicit-function-declaration]
+  274 |         while (readdir64(dir) != NULL)
+      |                ^~~~~~~~~
+      |                readdir_r
+stress.c:274:31: warning: comparison between pointer and integer
+  274 |         while (readdir64(dir) != NULL)
+      |                               ^~
+stress.c: In function '__read_f':
+stress.c:431:17: error: implicit declaration of function 'pread64'; did you mean 'pread'? [-Wimplicit-function-declaration]
+  431 |         nread = pread64(fe->fd, buf, len, off);
+      |                 ^~~~~~~
+      |                 pread
+stress.c: In function 'read_f':
+stress.c:480:15: error: implicit declaration of function 'lseek64'; did you mean 'lseek'? [-Wimplicit-function-declaration]
+  480 |         fsz = lseek64(fe->fd, 0, SEEK_END);
+      |               ^~~~~~~
+      |               lseek
+make[2]: *** [Makefile:420: stress-stress.o] Error 1
+make[2]: Leaving directory '/home/mps/aports/community/erofs-utils/src/erofs-utils-1.8.6/contrib'
+make[1]: *** [Makefile:447: all-recursive] Error 1
+make[1]: Leaving directory '/home/mps/aports/community/erofs-utils/src/erofs-utils-1.8.6'
+make: *** [Makefile:379: all] Error 2
+>>> ERROR: erofs-utils: build failed
+>>> erofs-utils: Uninstalling dependencies...
+(1/19) Purging .makedepends-erofs-utils (20250506.063719)
+------------------
 
-Both 204185 and 54095257 have the same start relative offset of 3481,
-but the logical page 55 of `android.hardware.graphics.composer@2.1.so`
-ranges from 225280 to 229632, forming a shortened bvec [225280, 225536)
-that cannot be used for decompressing the range from 54095257 to
-54309344 of `com.android.vndk.v28.apex`.
+This is because musl use readdir, pread and lseek instead of readdir64,
+pread64 and lseek64.
+(IMO musl does this properly)
 
-Since `pcl->multibases` is already meaningless, just mark `keepxcpy`
-on demand for simplicity.
+Natanael Copa <ncopa@alpinelinux.org> created patch with which I build
+erofs-utils successfully. I'm attaching patch to this mail.
 
-Again, this issue can only lead to data corruption if `-Ededupe` is on.
+Feel free to contact me if you more information or to try some new
+patches.
 
-Fixes: 94c43de73521 ("erofs: fix wrong primary bvec selection on deduplicated extents")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- fs/erofs/zdata.c | 31 ++++++++++++++-----------------
- 1 file changed, 14 insertions(+), 17 deletions(-)
+-- 
+Kind regards
 
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 5c061aaeeb45..b8e6b76c23d5 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -79,9 +79,6 @@ struct z_erofs_pcluster {
- 	/* L: whether partial decompression or not */
- 	bool partial;
- 
--	/* L: indicate several pageofs_outs or not */
--	bool multibases;
--
- 	/* L: whether extra buffer allocations are best-effort */
- 	bool besteffort;
- 
-@@ -1046,8 +1043,6 @@ static int z_erofs_scan_folio(struct z_erofs_frontend *f,
- 				break;
- 
- 			erofs_onlinefolio_split(folio);
--			if (f->pcl->pageofs_out != (map->m_la & ~PAGE_MASK))
--				f->pcl->multibases = true;
- 			if (f->pcl->length < offset + end - map->m_la) {
- 				f->pcl->length = offset + end - map->m_la;
- 				f->pcl->pageofs_out = map->m_la & ~PAGE_MASK;
-@@ -1093,7 +1088,6 @@ struct z_erofs_backend {
- 	struct page *onstack_pages[Z_EROFS_ONSTACK_PAGES];
- 	struct super_block *sb;
- 	struct z_erofs_pcluster *pcl;
--
- 	/* pages with the longest decompressed length for deduplication */
- 	struct page **decompressed_pages;
- 	/* pages to keep the compressed data */
-@@ -1102,6 +1096,8 @@ struct z_erofs_backend {
- 	struct list_head decompressed_secondary_bvecs;
- 	struct page **pagepool;
- 	unsigned int onstack_used, nr_pages;
-+	/* indicate if temporary copies should be preserved for later use */
-+	bool keepxcpy;
- };
- 
- struct z_erofs_bvec_item {
-@@ -1112,18 +1108,20 @@ struct z_erofs_bvec_item {
- static void z_erofs_do_decompressed_bvec(struct z_erofs_backend *be,
- 					 struct z_erofs_bvec *bvec)
- {
-+	int poff = bvec->offset + be->pcl->pageofs_out;
- 	struct z_erofs_bvec_item *item;
--	unsigned int pgnr;
--
--	if (!((bvec->offset + be->pcl->pageofs_out) & ~PAGE_MASK) &&
--	    (bvec->end == PAGE_SIZE ||
--	     bvec->offset + bvec->end == be->pcl->length)) {
--		pgnr = (bvec->offset + be->pcl->pageofs_out) >> PAGE_SHIFT;
--		DBG_BUGON(pgnr >= be->nr_pages);
--		if (!be->decompressed_pages[pgnr]) {
--			be->decompressed_pages[pgnr] = bvec->page;
-+	struct page **page;
-+
-+	if (!(poff & ~PAGE_MASK) && (bvec->end == PAGE_SIZE ||
-+			bvec->offset + bvec->end == be->pcl->length)) {
-+		DBG_BUGON((poff >> PAGE_SHIFT) >= be->nr_pages);
-+		page = be->decompressed_pages + (poff >> PAGE_SHIFT);
-+		if (!*page) {
-+			*page = bvec->page;
- 			return;
- 		}
-+	} else {
-+		be->keepxcpy = true;
+
+--9TaaRju0Leuc0oCB
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename=fix-read-pread-seek-64.patch
+
+diff --git a/contrib/stress.c b/contrib/stress.c
+index d8def6a..0593d71 100644
+--- a/contrib/stress.c
++++ b/contrib/stress.c
+@@ -271,7 +271,7 @@ static int __getdents_f(unsigned int sn, struct fent *fe)
  	}
  
- 	/* (cold path) one pcluster is requested multiple times */
-@@ -1289,7 +1287,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_backend *be, int err)
- 					.alg = pcl->algorithmformat,
- 					.inplace_io = overlapped,
- 					.partial_decoding = pcl->partial,
--					.fillgaps = pcl->multibases,
-+					.fillgaps = be->keepxcpy,
- 					.gfp = pcl->besteffort ? GFP_KERNEL :
- 						GFP_NOWAIT | __GFP_NORETRY
- 				 }, be->pagepool);
-@@ -1346,7 +1344,6 @@ static int z_erofs_decompress_pcluster(struct z_erofs_backend *be, int err)
+ 	dir = fdopendir(dfd);
+-	while (readdir64(dir) != NULL)
++	while (readdir(dir) != NULL)
+ 		continue;
+ 	closedir(dir);
+ 	return 0;
+@@ -428,7 +428,7 @@ static int __read_f(unsigned int sn, struct fent *fe, uint64_t filesize)
  
- 	pcl->length = 0;
- 	pcl->partial = true;
--	pcl->multibases = false;
- 	pcl->besteffort = false;
- 	pcl->bvset.nextpage = NULL;
- 	pcl->vcnt = 0;
--- 
-2.43.5
+ 	printf("%d[%u]/%u read_f: %llu bytes @ %llu of %s\n", getpid(), procid,
+ 	       sn, len | 0ULL, off | 0ULL, fe->subpath);
+-	nread = pread64(fe->fd, buf, len, off);
++	nread = pread(fe->fd, buf, len, off);
+ 	if (nread != trimmed) {
+ 		fprintf(stderr, "%d[%u]/%u read_f: failed to read %llu bytes @ %llu of %s\n",
+ 			getpid(), procid, sn, len | 0ULL, off | 0ULL,
+@@ -439,7 +439,7 @@ static int __read_f(unsigned int sn, struct fent *fe, uint64_t filesize)
+ 	if (fe->chkfd < 0)
+ 		return 0;
+ 
+-	nread2 = pread64(fe->chkfd, chkbuf, len, off);
++	nread2 = pread(fe->chkfd, chkbuf, len, off);
+ 	if (nread2 <= 0) {
+ 		fprintf(stderr, "%d[%u]/%u read_f: failed to check %llu bytes @ %llu of %s\n",
+ 			getpid(), procid, sn, len | 0ULL, off | 0ULL,
+@@ -477,14 +477,14 @@ static int read_f(int op, unsigned int sn)
+ 	if (ret)
+ 		return ret;
+ 
+-	fsz = lseek64(fe->fd, 0, SEEK_END);
++	fsz = lseek(fe->fd, 0, SEEK_END);
+ 	if (fsz <= 0) {
+ 		if (!fsz) {
+ 			printf("%d[%u]/%u %s: zero size @ %s\n",
+ 			       getpid(), procid, sn, __func__, fe->subpath);
+ 			return 0;
+ 		}
+-		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
++		fprintf(stderr, "%d[%u]/%u %s: lseek %s failed %d\n",
+ 			getpid(), procid, sn, __func__, fe->subpath, errno);
+ 		return -errno;
+ 	}
+@@ -504,7 +504,7 @@ static int __doscan_f(unsigned int sn, const char *op, struct fent *fe,
+ 	for (pos = 0; pos < filesize; pos += chunksize) {
+ 		ssize_t nread, nread2;
+ 
+-		nread = pread64(fe->fd, buf, chunksize, pos);
++		nread = pread(fe->fd, buf, chunksize, pos);
+ 
+ 		if (nread <= 0)
+ 			return -errno;
+@@ -515,7 +515,7 @@ static int __doscan_f(unsigned int sn, const char *op, struct fent *fe,
+ 		if (fe->chkfd < 0)
+ 			continue;
+ 
+-		nread2 = pread64(fe->chkfd, chkbuf, chunksize, pos);
++		nread2 = pread(fe->chkfd, chkbuf, chunksize, pos);
+ 		if (nread2 <= 0)
+ 			return -errno;
+ 
+@@ -547,14 +547,14 @@ static int doscan_f(int op, unsigned int sn)
+ 	if (ret)
+ 		return ret;
+ 
+-	fsz = lseek64(fe->fd, 0, SEEK_END);
++	fsz = lseek(fe->fd, 0, SEEK_END);
+ 	if (fsz <= 0) {
+ 		if (!fsz) {
+ 			printf("%d[%u]/%u %s: zero size @ %s\n",
+ 			       getpid(), procid, sn, __func__, fe->subpath);
+ 			return 0;
+ 		}
+-		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
++		fprintf(stderr, "%d[%u]/%u %s: lseek %s failed %d\n",
+ 			getpid(), procid, sn, __func__, fe->subpath, errno);
+ 		return -errno;
+ 	}
+@@ -576,7 +576,7 @@ static int doscan_aligned_f(int op, unsigned int sn)
+ 	ret = tryopen(sn, __func__, fe);
+ 	if (ret)
+ 		return ret;
+-	fsz = lseek64(fe->fd, 0, SEEK_END);
++	fsz = lseek(fe->fd, 0, SEEK_END);
+ 	if (fsz <= psz) {
+ 		if (fsz >= 0) {
+ 			printf("%d[%u]/%u %s: size too small %lld @ %s\n",
+@@ -584,7 +584,7 @@ static int doscan_aligned_f(int op, unsigned int sn)
+ 			       fe->subpath);
+ 			return 0;
+ 		}
+-		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
++		fprintf(stderr, "%d[%u]/%u %s: lseek %s failed %d\n",
+ 			getpid(), procid, sn, __func__, fe->subpath, errno);
+ 		return -errno;
+ 	}
 
+--9TaaRju0Leuc0oCB--
 
