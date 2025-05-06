@@ -1,37 +1,43 @@
-Return-Path: <linux-erofs+bounces-279-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-280-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36C8DAAC43A
-	for <lists+linux-erofs@lfdr.de>; Tue,  6 May 2025 14:32:52 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62F3FAAC45C
+	for <lists+linux-erofs@lfdr.de>; Tue,  6 May 2025 14:38:48 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZsHq16R9hz2xrL;
-	Tue,  6 May 2025 22:32:45 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZsHxs6QS9z2xrL;
+	Tue,  6 May 2025 22:38:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=93.87.244.166
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746534765;
-	cv=none; b=GBEQEDGvr55rmPcStjGJGtUqlV+yAlDL15ra8B3KndnI2QXG6T0jnQVEe9tS24TauKG6++1bNLNUsrQQeLNOhI9nmPT5n+rdnmqq4+g3gUOWliZP2CwbkQpgFtwlkSgCnAaZi57XgiThHNfgbO1lMcMohQ5db+6KyEytdlRSdkxQUJevwleJsGTn1k+QkeL0KRC2RYnzQ1FVffcwfpEVlhYp0tRv/tkSpxGZnTwC3G2vwrjQrDWDP01MIfuo4Wb8vfETLcXhVpbyrns4DGxqkfN5w77acHADPrOut+ANSVdvf/7B9PB9sTNFFZbmqYPwnq5VUPy4loBIz4cIuZWDKw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746535121;
+	cv=none; b=V5A6a7QJIIsXAmAfeghOpldJ1BzjdUNi9BVl9aLvGm9/qvUjeGhTnfEbzR18lvmDMi4n6hyq8qOo16y0y/WZdf41MZg18bz6nIugpG0nUb8j4XoxBpEH1xK7H/9HFLvr74Q1M2XO4yvyqCXX40uvG9VM0wmt+W2M0vZEqkVFjRHaqBhmYKwSMYS7kq9omcgzImhTjOtBSHjfl2BS4E4oiXIq7ey2p9k03GqykDK15CxT2ylGEjCwkrpbazHq6H1PsYEq6U1tAWaaKScg+d/Ywb/FzLRf9q7IzW4pJkSdededAFjMZ4WA7/60AVRvNGtJAb1hwtl4Mi/R7dUOeJ1s0w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1746534765; c=relaxed/relaxed;
-	bh=bPHNZfrBrMpyyBWxSeLFFLdVPDOsh+0lErIsEFl9zIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VvMi7X/hwKt17Nw/Moe/0Pjk8KFs8FNrVO8qKgKQOXDoyQja1QRjDsbGF4qDoSqART5vh2OA294mox84Nz8iJMv3EnaxAEBBBlH74mX+xKDNTWWGEpG76VVphmzkxqKFXUGkL8SvwVQ9ofmsOLyOcQOlTsSutisODdu+uaHkyAogVqS5QNHbfxC068G+S8Amj0rTcyJ3ShYT9G6r+IF6BBDph1J196HBlc3akVEMYq0x2CShQYbqn0umkdHAyawEJpVpygHtAJvPH/rLvJrAHa2bOybGRZRj/YBrxGTyFpf3jX17sOwbpKlNl97Yysd6w7G6UmjT/qgImwzSrJhroA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=arvanta.net; spf=pass (client-ip=93.87.244.166; helo=fx.arvanta.net; envelope-from=mps@arvanta.net; receiver=lists.ozlabs.org) smtp.mailfrom=arvanta.net
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=arvanta.net
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=arvanta.net (client-ip=93.87.244.166; helo=fx.arvanta.net; envelope-from=mps@arvanta.net; receiver=lists.ozlabs.org)
-X-Greylist: delayed 1298 seconds by postgrey-1.37 at boromir; Tue, 06 May 2025 22:32:45 AEST
-Received: from fx.arvanta.net (93-87-244-166.static.isp.telekom.rs [93.87.244.166])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZsHq10lXbz2xjN
-	for <linux-erofs@lists.ozlabs.org>; Tue,  6 May 2025 22:32:44 +1000 (AEST)
-Received: from m1pro.arvanta.net (m1pro.arvanta.net [10.5.1.11])
-	by fx.arvanta.net (Postfix) with SMTP id 036AE12D06;
-	Tue, 06 May 2025 14:11:02 +0200 (CEST)
-Date: Tue, 6 May 2025 14:11:02 +0200
-From: Milan =?utf-8?Q?P=2E_Stani=C4=87?= <mps@arvanta.net>
-To: linux-erofs@lists.ozlabs.org
-Cc: Natanael Copa <ncopa@alpinelinux.org>
-Subject: build of erofs-utils 1.8.6 fails with musl libc
-Message-ID: <20250506121102.GA15164@m1pro.arvanta.net>
+	t=1746535121; c=relaxed/relaxed;
+	bh=cayzg0gES0OSMF5RppmGNlwrHS/3kdF3lPzpkpw7ynI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kSeLr5bb7nMzoO9LmeADwLwqNRbRiNeH6IsdZf+rTscPeOrP8tQziHysL4x+dMutDWnleZ7wCUw6tfIon+hwQ4Iqc/4ErjKg+tbACjejlFxnf4RIOBrU4ofhBHlC0TqW0R/hgHoWZDmQK6zYA2JIvDUGrJu/aeBQUJuEHhv/T4s3FOfebDXL/8/Last/TLtPggtZ9bivMzzYJ4o7dfD/8AYbGBLh5pfOy0K5i6okb2NuvEpvh4XOoUjChCnu+MECQ5CcZ8eCwd11lFM38Ctynxq67fkb2NoxeT/3wqlR4LdTd/YTlunxyLVQ91kVjgWe1ppjYXJVTpIQVTInfe6z8w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=PeV4dGHU; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=PeV4dGHU;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZsHxq6xBFz2xjN
+	for <linux-erofs@lists.ozlabs.org>; Tue,  6 May 2025 22:38:38 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746535114; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=cayzg0gES0OSMF5RppmGNlwrHS/3kdF3lPzpkpw7ynI=;
+	b=PeV4dGHU2X4h7/1BvS63IntSqvntdUeICG6q3EN9xeTHj9u72qAnbck/LK2CH7BFid0uLNjUpJhk4wPkaDg180/Qz6OaZD3dG5Ip52LKxaCzsQIwaxKBovTPVvGXz8v/IyhfaoRGEh0xrQKa3Bz/maMb6S8iJO3BQDVE6fCjLhg=
+Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WZUchPI_1746535111 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 06 May 2025 20:38:31 +0800
+Message-ID: <aaf3f255-3273-4d31-86c1-4e05c59b7389@linux.alibaba.com>
+Date: Tue, 6 May 2025 20:38:30 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -43,174 +49,78 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="9TaaRju0Leuc0oCB"
-Content-Disposition: inline
-X-Spam-Status: No, score=0.0 required=3.0 tests=SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: build of erofs-utils 1.8.6 fails with musl libc
+To: =?UTF-8?Q?Milan_P=2E_Stani=C4=87?= <mps@arvanta.net>,
+ linux-erofs@lists.ozlabs.org
+Cc: Natanael Copa <ncopa@alpinelinux.org>
+References: <20250506121102.GA15164@m1pro.arvanta.net>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250506121102.GA15164@m1pro.arvanta.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+Hi Milan,
 
---9TaaRju0Leuc0oCB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2025/5/6 20:11, Milan P. Stanić wrote:
+> Hi,
+> 
+> I'm maintainer of erofs-utils for Alpine linux, distribution which use
+> musl libc instead of glibc.
+> 
+> Building version 1.8.6 gives error:
+> ------------------
+> Making all in contrib
+> make[2]: Entering directory '/home/mps/aports/community/erofs-utils/src/erofs-utils-1.8.6/contrib'
+> cc -DHAVE_CONFIG_H -I. -I..   -DNDEBUG -Wall -I../include -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -MT stress-stress.o -MD -MP -MF .deps/stress-stress.Tpo -c -o stress-stress.o `test -f 'stress.c' || echo './'`stress.c
+> stress.c: In function '__getdents_f':
+> stress.c:274:16: error: implicit declaration of function 'readdir64'; did you mean 'readdir_r'? [-Wimplicit-function-declaration]
+>    274 |         while (readdir64(dir) != NULL)
+>        |                ^~~~~~~~~
+>        |                readdir_r
+> stress.c:274:31: warning: comparison between pointer and integer
+>    274 |         while (readdir64(dir) != NULL)
+>        |                               ^~
+> stress.c: In function '__read_f':
+> stress.c:431:17: error: implicit declaration of function 'pread64'; did you mean 'pread'? [-Wimplicit-function-declaration]
+>    431 |         nread = pread64(fe->fd, buf, len, off);
+>        |                 ^~~~~~~
+>        |                 pread
+> stress.c: In function 'read_f':
+> stress.c:480:15: error: implicit declaration of function 'lseek64'; did you mean 'lseek'? [-Wimplicit-function-declaration]
+>    480 |         fsz = lseek64(fe->fd, 0, SEEK_END);
+>        |               ^~~~~~~
+>        |               lseek
+> make[2]: *** [Makefile:420: stress-stress.o] Error 1
+> make[2]: Leaving directory '/home/mps/aports/community/erofs-utils/src/erofs-utils-1.8.6/contrib'
+> make[1]: *** [Makefile:447: all-recursive] Error 1
+> make[1]: Leaving directory '/home/mps/aports/community/erofs-utils/src/erofs-utils-1.8.6'
+> make: *** [Makefile:379: all] Error 2
+>>>> ERROR: erofs-utils: build failed
+>>>> erofs-utils: Uninstalling dependencies...
+> (1/19) Purging .makedepends-erofs-utils (20250506.063719)
+> ------------------
+> 
+> This is because musl use readdir, pread and lseek instead of readdir64,
+> pread64 and lseek64.
+> (IMO musl does this properly)
+> 
+> Natanael Copa <ncopa@alpinelinux.org> created patch with which I build
+> erofs-utils successfully. I'm attaching patch to this mail.
+> 
+> Feel free to contact me if you more information or to try some new
+> patches.
 
-Hi,
+Thanks!  I will look into that later and feedback.
 
-I'm maintainer of erofs-utils for Alpine linux, distribution which use
-musl libc instead of glibc.
+Thanks,
+Gao Xiang
 
-Building version 1.8.6 gives error:
-------------------
-Making all in contrib
-make[2]: Entering directory '/home/mps/aports/community/erofs-utils/src/erofs-utils-1.8.6/contrib'
-cc -DHAVE_CONFIG_H -I. -I..   -DNDEBUG -Wall -I../include -Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -MT stress-stress.o -MD -MP -MF .deps/stress-stress.Tpo -c -o stress-stress.o `test -f 'stress.c' || echo './'`stress.c
-stress.c: In function '__getdents_f':
-stress.c:274:16: error: implicit declaration of function 'readdir64'; did you mean 'readdir_r'? [-Wimplicit-function-declaration]
-  274 |         while (readdir64(dir) != NULL)
-      |                ^~~~~~~~~
-      |                readdir_r
-stress.c:274:31: warning: comparison between pointer and integer
-  274 |         while (readdir64(dir) != NULL)
-      |                               ^~
-stress.c: In function '__read_f':
-stress.c:431:17: error: implicit declaration of function 'pread64'; did you mean 'pread'? [-Wimplicit-function-declaration]
-  431 |         nread = pread64(fe->fd, buf, len, off);
-      |                 ^~~~~~~
-      |                 pread
-stress.c: In function 'read_f':
-stress.c:480:15: error: implicit declaration of function 'lseek64'; did you mean 'lseek'? [-Wimplicit-function-declaration]
-  480 |         fsz = lseek64(fe->fd, 0, SEEK_END);
-      |               ^~~~~~~
-      |               lseek
-make[2]: *** [Makefile:420: stress-stress.o] Error 1
-make[2]: Leaving directory '/home/mps/aports/community/erofs-utils/src/erofs-utils-1.8.6/contrib'
-make[1]: *** [Makefile:447: all-recursive] Error 1
-make[1]: Leaving directory '/home/mps/aports/community/erofs-utils/src/erofs-utils-1.8.6'
-make: *** [Makefile:379: all] Error 2
->>> ERROR: erofs-utils: build failed
->>> erofs-utils: Uninstalling dependencies...
-(1/19) Purging .makedepends-erofs-utils (20250506.063719)
-------------------
+> 
 
-This is because musl use readdir, pread and lseek instead of readdir64,
-pread64 and lseek64.
-(IMO musl does this properly)
-
-Natanael Copa <ncopa@alpinelinux.org> created patch with which I build
-erofs-utils successfully. I'm attaching patch to this mail.
-
-Feel free to contact me if you more information or to try some new
-patches.
-
--- 
-Kind regards
-
-
---9TaaRju0Leuc0oCB
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename=fix-read-pread-seek-64.patch
-
-diff --git a/contrib/stress.c b/contrib/stress.c
-index d8def6a..0593d71 100644
---- a/contrib/stress.c
-+++ b/contrib/stress.c
-@@ -271,7 +271,7 @@ static int __getdents_f(unsigned int sn, struct fent *fe)
- 	}
- 
- 	dir = fdopendir(dfd);
--	while (readdir64(dir) != NULL)
-+	while (readdir(dir) != NULL)
- 		continue;
- 	closedir(dir);
- 	return 0;
-@@ -428,7 +428,7 @@ static int __read_f(unsigned int sn, struct fent *fe, uint64_t filesize)
- 
- 	printf("%d[%u]/%u read_f: %llu bytes @ %llu of %s\n", getpid(), procid,
- 	       sn, len | 0ULL, off | 0ULL, fe->subpath);
--	nread = pread64(fe->fd, buf, len, off);
-+	nread = pread(fe->fd, buf, len, off);
- 	if (nread != trimmed) {
- 		fprintf(stderr, "%d[%u]/%u read_f: failed to read %llu bytes @ %llu of %s\n",
- 			getpid(), procid, sn, len | 0ULL, off | 0ULL,
-@@ -439,7 +439,7 @@ static int __read_f(unsigned int sn, struct fent *fe, uint64_t filesize)
- 	if (fe->chkfd < 0)
- 		return 0;
- 
--	nread2 = pread64(fe->chkfd, chkbuf, len, off);
-+	nread2 = pread(fe->chkfd, chkbuf, len, off);
- 	if (nread2 <= 0) {
- 		fprintf(stderr, "%d[%u]/%u read_f: failed to check %llu bytes @ %llu of %s\n",
- 			getpid(), procid, sn, len | 0ULL, off | 0ULL,
-@@ -477,14 +477,14 @@ static int read_f(int op, unsigned int sn)
- 	if (ret)
- 		return ret;
- 
--	fsz = lseek64(fe->fd, 0, SEEK_END);
-+	fsz = lseek(fe->fd, 0, SEEK_END);
- 	if (fsz <= 0) {
- 		if (!fsz) {
- 			printf("%d[%u]/%u %s: zero size @ %s\n",
- 			       getpid(), procid, sn, __func__, fe->subpath);
- 			return 0;
- 		}
--		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
-+		fprintf(stderr, "%d[%u]/%u %s: lseek %s failed %d\n",
- 			getpid(), procid, sn, __func__, fe->subpath, errno);
- 		return -errno;
- 	}
-@@ -504,7 +504,7 @@ static int __doscan_f(unsigned int sn, const char *op, struct fent *fe,
- 	for (pos = 0; pos < filesize; pos += chunksize) {
- 		ssize_t nread, nread2;
- 
--		nread = pread64(fe->fd, buf, chunksize, pos);
-+		nread = pread(fe->fd, buf, chunksize, pos);
- 
- 		if (nread <= 0)
- 			return -errno;
-@@ -515,7 +515,7 @@ static int __doscan_f(unsigned int sn, const char *op, struct fent *fe,
- 		if (fe->chkfd < 0)
- 			continue;
- 
--		nread2 = pread64(fe->chkfd, chkbuf, chunksize, pos);
-+		nread2 = pread(fe->chkfd, chkbuf, chunksize, pos);
- 		if (nread2 <= 0)
- 			return -errno;
- 
-@@ -547,14 +547,14 @@ static int doscan_f(int op, unsigned int sn)
- 	if (ret)
- 		return ret;
- 
--	fsz = lseek64(fe->fd, 0, SEEK_END);
-+	fsz = lseek(fe->fd, 0, SEEK_END);
- 	if (fsz <= 0) {
- 		if (!fsz) {
- 			printf("%d[%u]/%u %s: zero size @ %s\n",
- 			       getpid(), procid, sn, __func__, fe->subpath);
- 			return 0;
- 		}
--		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
-+		fprintf(stderr, "%d[%u]/%u %s: lseek %s failed %d\n",
- 			getpid(), procid, sn, __func__, fe->subpath, errno);
- 		return -errno;
- 	}
-@@ -576,7 +576,7 @@ static int doscan_aligned_f(int op, unsigned int sn)
- 	ret = tryopen(sn, __func__, fe);
- 	if (ret)
- 		return ret;
--	fsz = lseek64(fe->fd, 0, SEEK_END);
-+	fsz = lseek(fe->fd, 0, SEEK_END);
- 	if (fsz <= psz) {
- 		if (fsz >= 0) {
- 			printf("%d[%u]/%u %s: size too small %lld @ %s\n",
-@@ -584,7 +584,7 @@ static int doscan_aligned_f(int op, unsigned int sn)
- 			       fe->subpath);
- 			return 0;
- 		}
--		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
-+		fprintf(stderr, "%d[%u]/%u %s: lseek %s failed %d\n",
- 			getpid(), procid, sn, __func__, fe->subpath, errno);
- 		return -errno;
- 	}
-
---9TaaRju0Leuc0oCB--
 
