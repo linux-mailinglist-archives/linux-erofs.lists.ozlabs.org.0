@@ -1,52 +1,47 @@
-Return-Path: <linux-erofs+bounces-291-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-292-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4F05AADA7F
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 May 2025 10:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DF5B3AADA8A
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 May 2025 10:52:46 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZsprJ4RnCz2xtt;
-	Wed,  7 May 2025 18:50:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4Zspth52Swz2y8W;
+	Wed,  7 May 2025 18:52:44 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746607840;
-	cv=none; b=JPuyskPa7c5OPSts78frHMa7Ec2wBlMgKKJd4P/PX9zrmfQbjE9fDWqVja8Msi93Mwd+xsV2kHcOqq+SEKnfk7wnZ9jSq7Gkz2qHOu2uwYgAqBk/juRDjei2e5DNTQIJP5W71/3m5P8wR2ZClBletv1Zby9mrc7VhXzkzOataBN6p3pRZG3wvv+DfznOWC0n0je/rmo1cDnjQGT6HogYPl+YJiLR5yZ2F8mMzfSaFVaAtuHE1kTq3+8Rq8K5jLlyDvJFHWC4GbvzO7FMdqVaNdymFQxZvxFyC3dfl8BETMO5E1AQIGDPjGLgfBnnzgQBAVoSblELr+euORiutZndsQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746607964;
+	cv=none; b=iL3Y87dRQLYXNpAGUyAONeFFTprzMDTkxVWB6VzYqtKCukAndshssLasPEWAeqLs/u7uKWL0z1KMT7bdDOHo5WFs2nptOGgqXXm2XTqd7yUHgTafnWVvie171gLW54KvcR0lZyn8MfOHxC5QCztAdMzyfIpIGEo1VmE1VJpIuTjhWCp+dfmK5DOzcxGcmPgEOF7Tk7owBQpJpICbePFO09ODrj0Pu7Q/E74RygSpQo7O5XQRDlyg+UXDAZOnXcptjvhDbMKN5+5r1uu7zwgGopsQCropo2KS8lhWy2kzpOObAK68HS4TdT5FCIaCYxPTxlknlXoEgss7du8USRoyFg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1746607840; c=relaxed/relaxed;
-	bh=sLxJgc5SagfLNnwAm6WhyJp+Nu3mjUtQ+1tmwucK0Jc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UMU4cjEH+/weKxdFVK0RTSjNfIWmWJhVYrM14+NvM8jdJ8uLE36PQphTCf97F21n5CsK2t8l9KDt0xwNdoNYaKViNm/RVXDudLbWUug4EQ+Xe2yz4NuXq6YjZfCglJGRtc12vtW6Dp9NRp9G8h5awfy3ts6EhX2bK/XtXNvlo+BOBCy1/1/XbffEL/am7wme7u0s0OaiYDlBO76ByNBB+Fp2NajDTuTUKC54QUNf3QcqZ1vV0yYJZvYBpv+LYGz12JrSA2QSOTu3JKu3Tbarh54cd8OvOg/QkA5AsRUvwIFsbnU211sGMEV+qSTLDwKIY1Nb8Z5e6xtp2ooqn89ZRA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=jjiIKSyE; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1746607964; c=relaxed/relaxed;
+	bh=+CnyOV07IRl0v8m6jeMov4kf/jJ2ETLfejuO0UiutE4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X0r2oG3I15SwBtlORiWkgMDNXpgFe3CF6pA4+DFAbIcFEgXKnBbJdEfEX+7mM9RCMlXcQYUejVJ2gwU0ZrhfaS5eb8F2rkp3CAHtla7VpHM/E0yMkrOw+ZKCLz3f1K4FjRnftpyhH2m/oZN3Sws3Jk6Wuh7/EJiJJxIGeAEvodhquA0HF781y9KenqMBwu29WQtVT9fPvCUphVNldNR8JWiWnh6eGmgnteLzgWl94EQYXLCrBbV2w40jRwgLB1OfFMb0hXB0vUK3w+4+wy8Io6IoT68f5yrSyNcPfOs8uSpQUBN+W0Bhm5R2eHwNubkanNweUaNBSFTaZPT8dznglg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rSrR/8Ka; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=jjiIKSyE;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rSrR/8Ka;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZsprG4PY7z2xGv
-	for <linux-erofs@lists.ozlabs.org>; Wed,  7 May 2025 18:50:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4Zsptg5nWQz2xtt
+	for <linux-erofs@lists.ozlabs.org>; Wed,  7 May 2025 18:52:43 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1746607832; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=sLxJgc5SagfLNnwAm6WhyJp+Nu3mjUtQ+1tmwucK0Jc=;
-	b=jjiIKSyEZmLQ3Ig7LclIHUWdG0ayfuTmbnxL6VQRcRxBbnrilIuaPcWVTBM0A+MtZVCvgSWr3Ane4ZcrT9qK/wN/2erCB2naFqFK4iu1R47aZeLWiPa5ihKDa5MEi7ynfdOlxLUYrhaM4Tqh7o/NB2tx39QazvQFGe8woGtiMYI=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WZopEnq_1746607822 cluster:ay36)
+	t=1746607960; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=+CnyOV07IRl0v8m6jeMov4kf/jJ2ETLfejuO0UiutE4=;
+	b=rSrR/8KakOfuJazpbkkTQEM0JBw3e3WKvmcm+H4LVCL3TUOLJjC5nZJWMCHjfIg6DQmI218R0OdaasQRuyUIVf8pTrNUfm9vPOiZxT8n/qwRppb6gnfKGnDdKRmoGTWt1HrYyfAEQOQw55f/PcSCI2y7b02gP8V8vdcLYiQ7/K0=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WZoa95v_1746607957 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 07 May 2025 16:50:30 +0800
+          Wed, 07 May 2025 16:52:38 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: Natanael Copa <ncopa@alpinelinux.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	=?UTF-8?q?Milan=20P=20=2E=20Stani=C4=87?= <ps@arvanta.net>
-Subject: [PATCH] erofs-utils: fix build failure with musl libc
-Date: Wed,  7 May 2025 16:50:21 +0800
-Message-ID: <20250507085021.1943927-1-hsiangkao@linux.alibaba.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: fix `z_erofs_fixup_insize` defined but not used
+Date: Wed,  7 May 2025 16:52:36 +0800
+Message-ID: <20250507085236.1947828-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250506121102.GA15164@m1pro.arvanta.net>
-References: <20250506121102.GA15164@m1pro.arvanta.net>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -58,7 +53,6 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
@@ -66,138 +60,28 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-because musl use readdir, pread and lseek instead of readdir64,
-pread64 and lseek64.
-
-Reported-by: Milan P. Stanić <ps@arvanta.net>
-Thanks-to: Natanael Copa <ncopa@alpinelinux.org>
+Fixes: b08e804b1dd1 ("erofs-utils: lib: wrap up zeropadding calculation")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-Hi,
+ lib/decompress.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Due to the original patch lacks of the commit message and
-SOB, so I revised myself.
-
-I add "_FILE_OFFSET_BITS 64" in the top since "contrib/stress.c"
-can be compiled individually.
-
-Feel free to repost a formal patch if inappropriate.
-
-Thanks,
-Gao Xiang
-
- contrib/stress.c | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
-
-diff --git a/contrib/stress.c b/contrib/stress.c
-index d8def6a..0ef8c67 100644
---- a/contrib/stress.c
-+++ b/contrib/stress.c
-@@ -4,6 +4,7 @@
-  *
-  * Copyright (C) 2019-2025 Gao Xiang <xiang@kernel.org>
-  */
-+#define _FILE_OFFSET_BITS 64
- #define _GNU_SOURCE
- #include "erofs/defs.h"
- #include <errno.h>
-@@ -271,7 +272,7 @@ static int __getdents_f(unsigned int sn, struct fent *fe)
- 	}
+diff --git a/lib/decompress.c b/lib/decompress.c
+index 3f553a8..1f9daea 100644
+--- a/lib/decompress.c
++++ b/lib/decompress.c
+@@ -9,9 +9,9 @@
+ #include "erofs/err.h"
+ #include "erofs/print.h"
  
- 	dir = fdopendir(dfd);
--	while (readdir64(dir) != NULL)
-+	while (readdir(dir) != NULL)
- 		continue;
- 	closedir(dir);
- 	return 0;
-@@ -428,7 +429,7 @@ static int __read_f(unsigned int sn, struct fent *fe, uint64_t filesize)
+-static unsigned int z_erofs_fixup_insize(const u8 *padbuf, unsigned int padbufsize)
++static inline u32 z_erofs_fixup_insize(const u8 *padbuf, u32 padbufsize)
+ {
+-	unsigned int inputmargin;
++	u32 inputmargin;
  
- 	printf("%d[%u]/%u read_f: %llu bytes @ %llu of %s\n", getpid(), procid,
- 	       sn, len | 0ULL, off | 0ULL, fe->subpath);
--	nread = pread64(fe->fd, buf, len, off);
-+	nread = pread(fe->fd, buf, len, off);
- 	if (nread != trimmed) {
- 		fprintf(stderr, "%d[%u]/%u read_f: failed to read %llu bytes @ %llu of %s\n",
- 			getpid(), procid, sn, len | 0ULL, off | 0ULL,
-@@ -439,7 +440,7 @@ static int __read_f(unsigned int sn, struct fent *fe, uint64_t filesize)
- 	if (fe->chkfd < 0)
- 		return 0;
- 
--	nread2 = pread64(fe->chkfd, chkbuf, len, off);
-+	nread2 = pread(fe->chkfd, chkbuf, len, off);
- 	if (nread2 <= 0) {
- 		fprintf(stderr, "%d[%u]/%u read_f: failed to check %llu bytes @ %llu of %s\n",
- 			getpid(), procid, sn, len | 0ULL, off | 0ULL,
-@@ -477,14 +478,14 @@ static int read_f(int op, unsigned int sn)
- 	if (ret)
- 		return ret;
- 
--	fsz = lseek64(fe->fd, 0, SEEK_END);
-+	fsz = lseek(fe->fd, 0, SEEK_END);
- 	if (fsz <= 0) {
- 		if (!fsz) {
- 			printf("%d[%u]/%u %s: zero size @ %s\n",
- 			       getpid(), procid, sn, __func__, fe->subpath);
- 			return 0;
- 		}
--		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
-+		fprintf(stderr, "%d[%u]/%u %s: lseek %s failed %d\n",
- 			getpid(), procid, sn, __func__, fe->subpath, errno);
- 		return -errno;
- 	}
-@@ -504,7 +505,7 @@ static int __doscan_f(unsigned int sn, const char *op, struct fent *fe,
- 	for (pos = 0; pos < filesize; pos += chunksize) {
- 		ssize_t nread, nread2;
- 
--		nread = pread64(fe->fd, buf, chunksize, pos);
-+		nread = pread(fe->fd, buf, chunksize, pos);
- 
- 		if (nread <= 0)
- 			return -errno;
-@@ -515,7 +516,7 @@ static int __doscan_f(unsigned int sn, const char *op, struct fent *fe,
- 		if (fe->chkfd < 0)
- 			continue;
- 
--		nread2 = pread64(fe->chkfd, chkbuf, chunksize, pos);
-+		nread2 = pread(fe->chkfd, chkbuf, chunksize, pos);
- 		if (nread2 <= 0)
- 			return -errno;
- 
-@@ -547,14 +548,14 @@ static int doscan_f(int op, unsigned int sn)
- 	if (ret)
- 		return ret;
- 
--	fsz = lseek64(fe->fd, 0, SEEK_END);
-+	fsz = lseek(fe->fd, 0, SEEK_END);
- 	if (fsz <= 0) {
- 		if (!fsz) {
- 			printf("%d[%u]/%u %s: zero size @ %s\n",
- 			       getpid(), procid, sn, __func__, fe->subpath);
- 			return 0;
- 		}
--		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
-+		fprintf(stderr, "%d[%u]/%u %s: lseek %s failed %d\n",
- 			getpid(), procid, sn, __func__, fe->subpath, errno);
- 		return -errno;
- 	}
-@@ -576,7 +577,7 @@ static int doscan_aligned_f(int op, unsigned int sn)
- 	ret = tryopen(sn, __func__, fe);
- 	if (ret)
- 		return ret;
--	fsz = lseek64(fe->fd, 0, SEEK_END);
-+	fsz = lseek(fe->fd, 0, SEEK_END);
- 	if (fsz <= psz) {
- 		if (fsz >= 0) {
- 			printf("%d[%u]/%u %s: size too small %lld @ %s\n",
-@@ -584,7 +585,7 @@ static int doscan_aligned_f(int op, unsigned int sn)
- 			       fe->subpath);
- 			return 0;
- 		}
--		fprintf(stderr, "%d[%u]/%u %s: lseek64 %s failed %d\n",
-+		fprintf(stderr, "%d[%u]/%u %s: lseek %s failed %d\n",
- 			getpid(), procid, sn, __func__, fe->subpath, errno);
- 		return -errno;
- 	}
+ 	for (inputmargin = 0; inputmargin < padbufsize &&
+ 	     !padbuf[inputmargin]; ++inputmargin);
 -- 
 2.43.5
 
