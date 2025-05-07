@@ -1,43 +1,41 @@
-Return-Path: <linux-erofs+bounces-286-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-287-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B05A3AAD2E4
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 May 2025 03:43:50 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59143AAD2F4
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 May 2025 03:53:55 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZsdMm2ZWkz2ydN;
-	Wed,  7 May 2025 11:43:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZsdZy3c8sz2ySf;
+	Wed,  7 May 2025 11:53:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746582228;
-	cv=none; b=mtDYUYfsDR6TeOsN6wMbKtG6al9FIOTSn0Ezh6madJC6xcq4o+IOxRPK5h1NKOf69YleCeaerZCQquGdu7ZUwgLHbyh7CeHWHGZZedyMgIkO6twqOBR5ZpNozZsNPaeZtlivtf+nHHcNTHPsK7pG0jq9BPLWWdAefS4gc4jYtPsw4Jie0xPyMeXKlO5Kaj5kkAd/HtOgfBZDwRON8hIZXsJkb7pQ+6/y0qoWeeYITsDt/mfIkNeVEV32m1FIj6S7dH8g5JF/NuOItJql2x7MFjJnj1IA1jIeFlMrHf/dRWxh1aJRRkx73CqjTvxBGscX+92ISbyxVqcSENJShEIWkA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746582810;
+	cv=none; b=m1qosYg3zNidwFSwdFlPvZHPyk0Hey4UDwaoAuysojxI9JipYdNLgEG3HlSi7EiX029+dWc18utAdms05Qz9X7SBZFYOh1JKb/SMiqY6w9rfCmZyBieHZu4HSavDS0epLi9E4YOdsUoyUaXhOEfIUicQW0DgIjGq0bb4kUy+kg+WRtR6L+RDILLs7P+NmdLsFn/y/lQWEWjDbzclPAc5dxyjtpdOo0r+VZxUNgq+lV2no0bngNCvjZI9LE3OWLpRJkagSiud+LfmkfsS2ArZgPEGnvrX8Vmeu/bMBWfAZrjlDPDAgErXIT/GGHuo2j0ibCTt3J21CLhpIpZfqhuPyg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1746582228; c=relaxed/relaxed;
-	bh=y9Yi0r9ZK/5+UwwW0HQooou6AaN4L3BQNIjxgZbMIXA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bo79mAV5Jrlt8IiiV1VjQhlz5bsvww5HN31+5OTrmvfG92SxH/pV7pvGxZcY5DizL9rKZqo9KKMSlqtXRKQyXlZYAAxPwXAIVp6mf8SQPqxpRA4m9xzSoKrUlLXOlUlMLfsvTeJlp92etbgWd8lRG43+A9a82xGKEovhbcBEcdpju4n+Y7G1b4kYSM0+C1LARRP+0Jb8kkvWWhusdeTNRIcowpm9uuiD+/TKhIGBhXoLiM78nvPE5FX6gsBaJhdd1gvRsqiOT8rDZjhcdEnb7r4hgQaobExOxTJ7GFjmxb7UwRgQoievQBNn5zwkxnaLaRQTAuLnAQ3JQaZAAK494g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=K//IcyDw; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=K//IcyDw;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1746582810; c=relaxed/relaxed;
+	bh=lkqVR8Crw9bFGx6zLCYGX+F33caKvKeq3TWzbUeSwik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VjICK6dBygHki3Qtcfa9OYL8tAsEsPTPumHpwYF98wYLa8QJ/1nzA5eZrie7GETvebBV3Qlj74D5dembubjZ7KdK+tRS9SCbBB9hXfJDV+iPa8Sza+sVOr6Vo8x3GjW/WzBgBtQPFzNuNM7kN7h/ofWHgW7Ra1AIVdOZ+DePRT6I0TtwR/EtmhRhCknX+9+uHXCUKqyNBbdU/0tB1jQWPd4uRGJN+tGnjAcKMYTICnpk4KLE4PqbcDB7roGIDCbnsrKOcR1jpK8jFRG8KKx4gvi55VmhxN96J5SLqHeZorJEMc0EE0S4W99F4X4RbFnRKmwI2uB1S9+Wd7DhXyUweA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZsdMk2n6dz2yGx
-	for <linux-erofs@lists.ozlabs.org>; Wed,  7 May 2025 11:43:45 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1746582221; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=y9Yi0r9ZK/5+UwwW0HQooou6AaN4L3BQNIjxgZbMIXA=;
-	b=K//IcyDw5e59FW7WoGHgJXNeHJGfomI3nXHzgkwFL3jHdysz96d3MmG4EcZZDsT6nQIBYTZZ9Rx2G2PmxgEgHKjYgXdSiTnovEZCFcA4OdwCr64POViudez3+++Sq9gR3iSasU4GrDc/j5CYVnM+G5wGC6N/f5oNhAMOGafyoMM=
-Received: from 30.221.131.179(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WZhchsg_1746582218 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 07 May 2025 09:43:38 +0800
-Message-ID: <db000560-e185-4ff5-916c-cffd190cb543@linux.alibaba.com>
-Date: Wed, 7 May 2025 09:43:38 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZsdZx2cMrz2yLJ
+	for <linux-erofs@lists.ozlabs.org>; Wed,  7 May 2025 11:53:27 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZsdYM0z0xz13KbK;
+	Wed,  7 May 2025 09:52:07 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id D1DFD180B5A;
+	Wed,  7 May 2025 09:53:23 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 7 May 2025 09:53:23 +0800
+Message-ID: <3e068311-9223-4c1b-9091-15eb2d867ede@huawei.com>
+Date: Wed, 7 May 2025 09:53:22 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,117 +48,178 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: ensure the extra temporary copy is valid for
- shortened bvecs
-To: Hongbo Li <lihongbo22@huawei.com>, linux-erofs@lists.ozlabs.org
-References: <20250506101850.191506-1-hsiangkao@linux.alibaba.com>
- <d1a4ac64-9e5a-45e2-905a-90f61a3d5d43@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <d1a4ac64-9e5a-45e2-905a-90f61a3d5d43@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v3] erofs: fix file handle encoding for 64-bit NIDs
+Content-Language: en-US
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, <xiang@kernel.org>,
+	<chao@kernel.org>, <zbestahu@gmail.com>, <jefflexu@linux.alibaba.com>
+CC: <dhavale@google.com>, <linux-erofs@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250429134257.690176-1-lihongbo22@huawei.com>
+ <18d272ce-6a80-4fdc-b67b-ddc2ffa522d4@linux.alibaba.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <18d272ce-6a80-4fdc-b67b-ddc2ffa522d4@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
+X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 
 
-On 2025/5/7 09:40, Hongbo Li wrote:
+On 2025/5/6 23:10, Gao Xiang wrote:
+> Hi Hongbo,
 > 
+> On 2025/4/29 21:42, Hongbo Li wrote:
+>> In erofs, the inode number has the location information of
+>> files. The default encode_fh uses the ino32, this will lack
+>> of some information when the file is too big. So we need
+>> the internal helpers to encode filehandle.
 > 
-> On 2025/5/6 18:18, Gao Xiang wrote:
->> When compressed data deduplication is enabled, multiple logical extents
->> may reference the same compressed physical cluster.
->>
->> The previous commit 94c43de73521 ("erofs: fix wrong primary bvec
->> selection on deduplicated extents") already avoids using shortened
->> bvecs.  However, in such cases, the extra temporary buffers also
->> need to be preserved for later use in z_erofs_fill_other_copies() to
->> to prevent data corruption.
->>
->> IOWs, extra temporary buffers have to be retained not only due to
->> varying start relative offsets (`pageofs_out`, as indicated by
->> `pcl->multibases`) but also because of shortened bvecs.
->>
->> android.hardware.graphics.composer@2.1.so : 270696 bytes
->>     0:        0..  204185 |  204185 :  628019200.. 628084736 |   65536
->> -> 1:   204185..  225536 |   21351 :  544063488.. 544129024 |   65536
->>     2:   225536..  270696 |   45160 :          0..         0 |       0
->>
->> com.android.vndk.v28.apex : 93814897 bytes
->> ...
->>     364: 53869896..54095257 |  225361 :  543997952.. 544063488 |   65536
->> -> 365: 54095257..54309344 |  214087 :  544063488.. 544129024 |   65536
->>     366: 54309344..54514557 |  205213 :  544129024.. 544194560 |   65536
->> ...
->>
->> Both 204185 and 54095257 have the same start relative offset of 3481,
->> but the logical page 55 of `android.hardware.graphics.composer@2.1.so`
->> ranges from 225280 to 229632, forming a shortened bvec [225280, 225536)
->> that cannot be used for decompressing the range from 54095257 to
->> 54309344 of `com.android.vndk.v28.apex`.
->>
->> Since `pcl->multibases` is already meaningless, just mark `keepxcpy`
->> on demand for simplicity.
->>
->> Again, this issue can only lead to data corruption if `-Ededupe` is on.
->>
->> Fixes: 94c43de73521 ("erofs: fix wrong primary bvec selection on deduplicated extents")
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->> ---
->>   fs/erofs/zdata.c | 31 ++++++++++++++-----------------
->>   1 file changed, 14 insertions(+), 17 deletions(-)
->>
->> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
->> index 5c061aaeeb45..b8e6b76c23d5 100644
->> --- a/fs/erofs/zdata.c
->> +++ b/fs/erofs/zdata.c
->> @@ -79,9 +79,6 @@ struct z_erofs_pcluster {
->>       /* L: whether partial decompression or not */
->>       bool partial;
->> -    /* L: indicate several pageofs_outs or not */
->> -    bool multibases;
->> -
->>       /* L: whether extra buffer allocations are best-effort */
->>       bool besteffort;
->> @@ -1046,8 +1043,6 @@ static int z_erofs_scan_folio(struct z_erofs_frontend *f,
->>                   break;
->>               erofs_onlinefolio_split(folio);
->> -            if (f->pcl->pageofs_out != (map->m_la & ~PAGE_MASK))
->> -                f->pcl->multibases = true;
->>               if (f->pcl->length < offset + end - map->m_la) {
->>                   f->pcl->length = offset + end - map->m_la;
->>                   f->pcl->pageofs_out = map->m_la & ~PAGE_MASK;
->> @@ -1093,7 +1088,6 @@ struct z_erofs_backend {
->>       struct page *onstack_pages[Z_EROFS_ONSTACK_PAGES];
->>       struct super_block *sb;
->>       struct z_erofs_pcluster *pcl;
->> -
->>       /* pages with the longest decompressed length for deduplication */
->>       struct page **decompressed_pages;
->>       /* pages to keep the compressed data */
->> @@ -1102,6 +1096,8 @@ struct z_erofs_backend {
->>       struct list_head decompressed_secondary_bvecs;
->>       struct page **pagepool;
->>       unsigned int onstack_used, nr_pages;
->> +    /* indicate if temporary copies should be preserved for later use */
->> +    bool keepxcpy;
->>   };
->>   struct z_erofs_bvec_item {
->> @@ -1112,18 +1108,20 @@ struct z_erofs_bvec_item {
->>   static void z_erofs_do_decompressed_bvec(struct z_erofs_backend *be,
->>                        struct z_erofs_bvec *bvec)
->>   {
->> +    int poff = bvec->offset + be->pcl->pageofs_out;
+> EROFS uses NID to indicate the on-disk inode offset, which can
+> exceed 32 bits. However, the default encode_fh uses the ino32,
+> thus it doesn't work if the image is large than 128GiB.
 > 
-> Looks good!
-> 
-> Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
+Thanks for helping me correct my description.
 
-Thanks, and the stress test also passes. Will submit it soon.
+Here, an image larger than 128GiB won't trigger NID reversal. It 
+requires a 128GiB file inside, and the NID of the second file may exceed 
+U32 during formatting. So here can we change it to "However, the default 
+encode_fh uses the ino32, thus it may not work if there exist a file 
+which is large than 128GiB." ?
 
 Thanks,
-Gao Xiang
+Hongbo
+
+> Let's introduce our own helpers to encode file handles.
+> 
+>>
+>> It is easy to reproduce test:
+> 
+> It's easy to reproduce:
+> 
+>>    1. prepare an erofs image with nid bigger than UINT_MAX
+> 
+>       1. Prepare an EROFS image with NIDs larger than U32_MAX
+> 
+>>    2. mount -t erofs foo.img /mnt/erofs
+>>    3. set exportfs with configuration: /mnt/erofs *(rw,sync,
+>>       no_root_squash)
+>>    4. mount -t nfs $IP:/mnt/erofs /mnt/nfs
+>>    5. md5sum /mnt/nfs/foo # foo is the file which nid bigger
+>>       than UINT_MAX.
+>> For overlayfs case, the under filesystem's file handle is
+>> encoded in ovl_fb.fid, it is same as NFS's case.
+>>
+>> Fixes: 3e917cc305c6 ("erofs: make filesystem exportable")
+>> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+>> ---
+>> v2: 
+>> https://lore.kernel.org/all/20250429074109.689075-1-lihongbo22@huawei.com/
+>>    - Assign parent nid with correct value.
+>>
+>> v1: 
+>> https://lore.kernel.org/all/20250429011139.686847-1-lihongbo22@huawei.com/
+>>     - Encode generation into file handle and minor clean code.
+>>     - Update the commiti's title.
+>> ---
+>>   fs/erofs/super.c | 54 +++++++++++++++++++++++++++++++++++++++++-------
+>>   1 file changed, 46 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>> index cadec6b1b554..28b3701165cc 100644
+>> --- a/fs/erofs/super.c
+>> +++ b/fs/erofs/super.c
+>> @@ -511,24 +511,62 @@ static int erofs_fc_parse_param(struct 
+>> fs_context *fc,
+>>       return 0;
+>>   }
+>> -static struct inode *erofs_nfs_get_inode(struct super_block *sb,
+>> -                     u64 ino, u32 generation)
+>> +static int erofs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
+>> +               struct inode *parent)
+>>   {
+>> -    return erofs_iget(sb, ino);
+>> +    int len = parent ? 6 : 3;
+>> +    erofs_nid_t nid;
+> 
+> Just `erofs_nid_t nid = EROFS_I(inode)->nid;`?
+> 
+> I think the compiler will optimize out `if (*max_len < len)`.
+> 
+>> +    u32 generation;
+> 
+> It seems it's unnecessary to introduce `generation` variable here?
+> 
+>> +
+>> +    if (*max_len < len) {
+>> +        *max_len = len;
+>> +        return FILEID_INVALID;
+>> +    }
+>> +
+>> +    nid = EROFS_I(inode)->nid;
+>> +    generation = inode->i_generation;
+> 
+> So drop these two lines.
+> 
+>> +    fh[0] = (u32)(nid >> 32);
+>> +    fh[1] = (u32)(nid & 0xffffffff);
+>> +    fh[2] = generation;
+>> +
+>> +    if (parent) {
+>> +        nid = EROFS_I(parent)->nid;
+>> +        generation = parent->i_generation;
+>> +
+>> +        fh[3] = (u32)(nid >> 32);
+>> +        fh[4] = (u32)(nid & 0xffffffff);
+>> +        fh[5] = generation;
+> 
+>          fh[5] = parent->i_generation;
+> 
+>> +    }
+>> +
+>> +    *max_len = len;
+>> +    return parent ? FILEID_INO64_GEN_PARENT : FILEID_INO64_GEN;
+>>   }
+>>   static struct dentry *erofs_fh_to_dentry(struct super_block *sb,
+>>           struct fid *fid, int fh_len, int fh_type)
+>>   {
+>> -    return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
+>> -                    erofs_nfs_get_inode);
+>> +    erofs_nid_t nid;
+>> +
+>> +    if ((fh_type != FILEID_INO64_GEN &&
+>> +         fh_type != FILEID_INO64_GEN_PARENT) || fh_len < 3)
+>> +        return NULL;
+>> +
+>> +    nid = (u64) fid->raw[0] << 32;
+>> +    nid |= (u64) fid->raw[1];
+> 
+> Unnecessary nid variable.
+> 
+>> +    return d_obtain_alias(erofs_iget(sb, nid));
+> 
+>      return d_obtain_alias(erofs_iget(sb,
+>              ((u64)fid->raw[0] << 32) | fid->raw[1]));
+> 
+>>   }
+>>   static struct dentry *erofs_fh_to_parent(struct super_block *sb,
+>>           struct fid *fid, int fh_len, int fh_type)
+>>   {
+>> -    return generic_fh_to_parent(sb, fid, fh_len, fh_type,
+>> -                    erofs_nfs_get_inode);
+>> +    erofs_nid_t nid;
+>> +
+>> +    if (fh_type != FILEID_INO64_GEN_PARENT || fh_len < 6)
+>> +        return NULL;
+>> +
+>> +    nid = (u64) fid->raw[3] << 32;
+>> +    nid |= (u64) fid->raw[4];
+> 
+> Same here.
+> 
+> Thanks,
+> Gao Xiang
 
