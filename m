@@ -1,50 +1,41 @@
-Return-Path: <linux-erofs+bounces-289-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-290-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4360AAD401
-	for <lists+linux-erofs@lfdr.de>; Wed,  7 May 2025 05:20:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EDA2AAD5CF
+	for <lists+linux-erofs@lfdr.de>; Wed,  7 May 2025 08:15:23 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZsgWr332Zz2ydN;
-	Wed,  7 May 2025 13:20:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZslP44ksZz2ymg;
+	Wed,  7 May 2025 16:15:20 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746588056;
-	cv=none; b=AetYdH4zpc1TlCuzuDZTR0j0IFg07tDkqOMFoTbkpvfB3+7ZyHzHiDLPDE3nNtkJB4FUzKk6N9w6JOtIM+L9kTUqR8x/XUb8DK+5l+/B8Y0PUgu5vyi4ewcKfRc6XO8i0sBGjbO4F6M0JZASpfVVRUCbdSj3DaQdya41PxVRP24eCkZl8xgFhh/R/XDrZsKiycd0JT8IjRb2rLZcM/PsZ+BN2vlIbMpqoTIIJYajPZx+PGhwUxWOaLb8CcfJ0b2iU+KF+16k2y60QLvsxvzl1M1spuJFiwmJd3ToXQ2UyZeRVwWJw8MsAtCHciJQKve4ohYE1FBlwR/Dnq+uXwb78g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.191
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1746598520;
+	cv=none; b=gMuK3faqij+TYRaQsdkwwSPRYvTUlkkPzySR7RsoYPi2t8u8EZQIqlSWje5DCJMNxtJ7FQhlp5az6jYYN6T8ylg2XWn6fxeQcYSoJ56KbZ/jMGEiQmPjCU7EhqFEHmFah93xRn0tn3SgXs94ScvEaKsKWAk+dmNUGzmOBOnvR7sDWgSL4pmDlxsMYLv1A/NAuJv5ASedftEQMvYaHfL3dQYRUugTP2FU9l9l9Ybf+9UdwB15QFMfpnW9ZLIUpaMfTOksnVSpTYEe4YZmz6AivCa60qwXk+JWMg0zwXKgw6RqKFi7GZSxYMb5aHYQUc6qmdDkGw+mWTE60Go99RJvVw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1746588056; c=relaxed/relaxed;
-	bh=gQkijhP9xBXsa6mv/4CeSYnLUG5H7NYWHBmlNBuwIq0=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=YaQFYJptylC7s9QstW4Igk6wheRC3AhRRUl5+2KGuD/4spZgAk+v2Yg/O81CzF1rO0CPw/XpLkqvPOWbsqOV/DNIGb+N6+lAFPuZmtUWRlolGgl5Sunb9hs7l+5ksxF0/jRKDWhbeA6L/f1UACNI3ZYDN47ydpRoGt9FWpzSBrQ3db1gxVhdYY5xmue7FflEwcHVs30hM3QgDBxXgq7cUBTlTilBacP6O90epg1yzhqgHocyBJ+Q27L5yf48jC6WkOP+EZm5boEib8xN6RnImTjajdA6uEEGQT7qdAMaKAgDjBoW5u5KJpxxEhPWirR5V1rijdTvoIxRmogvyNlY/A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=tkhVW8Tc; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=tkhVW8Tc;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1746598520; c=relaxed/relaxed;
+	bh=ryj5zxaIIhVI6bR/IDoSekAENp/t8nrBKO/kTEpCeT4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=UM6AZHtPKjy+QHQVTh1DuAnU7tHfe4qeJw/TEt4ccK5WO3V93cv+vHqj6orynJFDB6KTkCln5REC56X/mI6bplbYe3Bs/m1n2LtLKF4sOkKXxyTn2X+mINfuK+2Bk/qmjMt7WbetaceLZaO+GI2Lb6QEgBhLx7wCSDhLIy6C8H4dDNFcsPuxBdNe+Kf2gPlG6YLVEbOaEgzB7KrbS6mqxuoJFscB04r/F72b4/NLIXArTxNYf7Uz1Tu5uoP8RHFvjQ0XCgF6ZDC3kZ5/1JfrF7mIwHfleujOK/fKKbCaHPL23A5v6zPXvk3vVqadyU5HK7j2pNyKSm/C/5ynYlSFJA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZsgWq4TcPz2yGx
-	for <linux-erofs@lists.ozlabs.org>; Wed,  7 May 2025 13:20:55 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by dfw.source.kernel.org (Postfix) with ESMTP id 302EE5C5932;
-	Wed,  7 May 2025 03:18:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E24C6C4CEE4;
-	Wed,  7 May 2025 03:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746588052;
-	bh=gcMNJz9YPaS5D5JY2/OC6sEBas2990lNVCdQwzme6Jw=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=tkhVW8TcblEVlJt9mjbkdcqGRsh/C5EjgOiw6tDn1fSvr/1usm+b8gImlgB9zX1cR
-	 QuxDT4aOCLleN5nMNf3dSfKAkhJEhD/CYpKygJaYIhQRtrj9kndw4OOfdeX48CkCZ4
-	 AGecGy8ABi/qirfz4EvhShvMbvGVZrRtq0vRC5SaE3EC+w82OnsNG1/kpmpXX4LBNi
-	 uZY2rQWnyNxPLYDGvdTynDqXgU1zzs8P+DUEjEnfkmn+xZC1Dt01wKpJpa4hJwrJ0F
-	 UFhir0xlM0bhPzs9l6+NRGGuUPFXdFnw5skP4RBO+/D7ygUSjvvXtikC4FC8Zh3jI4
-	 FXWFM2ssvs9VA==
-Message-ID: <4a70799a-ebca-44a4-bf8e-c47e54717dd7@kernel.org>
-Date: Wed, 7 May 2025 11:20:47 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZslP30vzwz2ydl
+	for <linux-erofs@lists.ozlabs.org>; Wed,  7 May 2025 16:15:17 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZslLV1kzgz1R7Yj;
+	Wed,  7 May 2025 14:13:06 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 21A4F140113;
+	Wed,  7 May 2025 14:15:12 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 7 May 2025 14:15:11 +0800
+Message-ID: <40f2f891-bd09-4600-9540-b6e6fa977958@huawei.com>
+Date: Wed, 7 May 2025 14:15:10 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -57,42 +48,85 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, hsiangkao@linux.alibaba.com, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
- Gao Xiang <xiang@kernel.org>, Yue Hu <zbestahu@gmail.com>,
- Jeffle Xu <jefflexu@linux.alibaba.com>
-References: <20250506225743.308517-1-dhavale@google.com>
+Subject: Re: [PATCH v3] erofs: fix file handle encoding for 64-bit NIDs
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, <xiang@kernel.org>,
+	<chao@kernel.org>, <zbestahu@gmail.com>, <jefflexu@linux.alibaba.com>
+CC: <dhavale@google.com>, <linux-erofs@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250429134257.690176-1-lihongbo22@huawei.com>
+ <18d272ce-6a80-4fdc-b67b-ddc2ffa522d4@linux.alibaba.com>
+ <3e068311-9223-4c1b-9091-15eb2d867ede@huawei.com>
+ <1151f059-fd08-4dba-9448-c8c535ea8700@linux.alibaba.com>
 Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250506225743.308517-1-dhavale@google.com>
-Content-Type: text/plain; charset=UTF-8
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <1151f059-fd08-4dba-9448-c8c535ea8700@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
+X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On 5/7/25 06:57, Sandeep Dhavale wrote:
-> Currently, when EROFS is built with per-CPU workers, the workers are
-> started and CPU hotplug hooks are registered during module initialization.
-> This leads to unnecessary worker start/stop cycles during CPU hotplug
-> events, particularly on Android devices that frequently suspend and resume.
-> 
-> This change defers the initialization of per-CPU workers and the
-> registration of CPU hotplug hooks until the first EROFS mount. This
-> ensures that these resources are only allocated and managed when EROFS is
-> actually in use.
-> 
-> The tear down of per-CPU workers and unregistration of CPU hotplug hooks
-> still occurs during z_erofs_exit_subsystem(), but only if they were
-> initialized.
-> 
-> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+
+On 2025/5/7 10:42, Gao Xiang wrote:
+> 
+> 
+> On 2025/5/7 09:53, Hongbo Li wrote:
+>>
+>>
+>> On 2025/5/6 23:10, Gao Xiang wrote:
+>>> Hi Hongbo,
+>>>
+>>> On 2025/4/29 21:42, Hongbo Li wrote:
+>>>> In erofs, the inode number has the location information of
+>>>> files. The default encode_fh uses the ino32, this will lack
+>>>> of some information when the file is too big. So we need
+>>>> the internal helpers to encode filehandle.
+>>>
+>>> EROFS uses NID to indicate the on-disk inode offset, which can
+>>> exceed 32 bits. However, the default encode_fh uses the ino32,
+>>> thus it doesn't work if the image is large than 128GiB.
+>>>
+>> Thanks for helping me correct my description.
+>>
+>> Here, an image larger than 128GiB won't trigger NID reversal. It 
+>> requires a 128GiB file inside, and the NID of the second file may 
+>> exceed U32 during formatting. So here can we change it to "However, 
+>> the default encode_fh uses the ino32, thus it may not work if there 
+>> exist a file which is large than 128GiB." ?
+> 
+> Why? Currently EROFS doesn't arrange inode metadata
+> together, but close to its data (or its directory)
+> if possible for data locality.
+> 
+> So NIDs can exceed 32-bit for images larger than
+> 128 GiB.
+> 
+
+Ok, I see your point, and you are right. It doesn't have to be a 128GiB 
+file, but it is easy to construct this kind of EROFS image by large 
+file. Such as:
+
+mkfs.erofs -d7 --tar=f --clean=data foo.erofs 128g-file.tar  # the nid 
+of 128g-file is 39.
+mkfs.erofs -d7 --tar=f --incremental=data 1b-file.tar  # the nid of 
+1b-file is 4294967425.
+
+Thank you again for your review, I will send the next version of the 
+patch later.
 
 Thanks,
+Hongbo
+
+> Thanks,
+> Gao Xiang
+> 
+>>
+>> Thanks,
+>> Hongbo
+>>
+> 
 
