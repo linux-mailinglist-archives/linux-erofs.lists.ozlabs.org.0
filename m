@@ -1,43 +1,41 @@
-Return-Path: <linux-erofs+bounces-305-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-306-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1141AB4B34
-	for <lists+linux-erofs@lfdr.de>; Tue, 13 May 2025 07:47:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 60E26AB4C70
+	for <lists+linux-erofs@lfdr.de>; Tue, 13 May 2025 09:06:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZxQV74qzGz2yFK;
-	Tue, 13 May 2025 15:47:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZxSFJ22pkz2yFK;
+	Tue, 13 May 2025 17:06:28 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1747115247;
-	cv=none; b=BJOGSTwLgtCMB/wzU7aSo0iIDy5bFAUMKALZF2i4Vs7KuOeLN2Z+bWZG81aT/OyJqhzyjBAWNdtr0cMhZhTKGUAPRIXzTPqcRXY1ozyywsWOJ6NLPCzVleIFbKBhdklc/eUtF2fVMrsW7kwjgNzcZy5ozBl3oIxxPNT4ty1gIraIrNvBjLgzcd03nimniyOQbKcD2fQdSxtFfvrG/ifAKBdsyXxAVAy5RgunVmoNLg54rk0Isk4KtNhLMJCFgdwav9veN1xkmPgb8NFlz4ScYTITkmXKtjvtX3vLIvX0GqatuY3W743jSXD8IZyo5PDsNCai4Tg5Nxa6N6rmjAWe9A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1747119988;
+	cv=none; b=mf3vckp7qOMoxGIHoHXV2y6DfwXjKEcCaaWiXp8P3JqL+jHac/zwI+anIt7cQkaEPSWfRFaa69g4HMzFtfDlq5wCtMeRZtJeRNYP75tuZ8WcNeyNQNWpAvr3+JX+uLlaIktap/Lw7KYGnIUCGCqEyBPq6d9zyKHEh/5d2dXC6DBWjKFVXnl1107xwGJQ73A3PjHwOibWzaevtiouVLZbPxe7KjA9NX9lM2kTKThQDYCvE+1SB2U0IzMVL5a6MdB7/GDYBc8PWBz6XG9YA/nhySuPiL4tRmmti1A3/5nCjSs/U9ojobKBvby+FIVuR/tDDK3o6nI0Y38C0Y8Nuva7vg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1747115247; c=relaxed/relaxed;
-	bh=aS4dH0hOydCMzOt3b8MdnPAbV0/OYJB5Wc6WlcVrhQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=npBzN7q+nLlWi+Ofd5zEZ3jtWW7UWfVbgnPR9TlknkWoDjsEXDAUPk/k3LGmYyRMQVlyA2+4Kw11Fj7OkC/3ZxFpOtCwQwqowl8JOuUzh0ALUCMk6Z/u/cuFg9wbHP0osGvxS8hymatj8OcRELo4i8Q5Ipkne0Sbg/fBMOMkw0qS9IB0dDt5falXuTqJ+kT1LlmvmiZztrajkOy4rcDiGgD3dJsgZtwaTSDDzYZfYk9yfIjrCxm4bw8NQFdDU3kveTwddT6p96PDMgANFwupfyoshVFkh/S94IYL+y34z3LZuEXaoxr19eLMCPcPx05kQnYLNOgYsrHduGgXzNN4Tg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Eu4hX0Er; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Eu4hX0Er;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1747119988; c=relaxed/relaxed;
+	bh=LKZ80Pe6o+2t3BpLyA16cuVsK40010kcBQVadYp4fRE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=l4P3QvwCrSlHOW9N+b37VkH1m5enjWY13fsAc+q5c1BWlKWzKhVX32BmbYh9ahzIQlguFIDFI22CxY9NANcISBDb03lONeylAVSKdaTzoGxov6ydgUcJDR3eJ1+Y7tKqpnjcSkX78isK202uZMYoiaHCBWk5pll2hqBM5NepFb5q6Zu7IFEV7WB5Q38Ptiw3FW2taHQoKTJz+Icrs3CMoWI9X+pBRIqzP/idwdmOC96Y1AYXTPiYzpL9X1C1HBBcYpQUHJkx6ctHAU/IiHxFMHg17W9FTIR5o01N5h42GOcGAzBoJLrEfM6COpxrzod2FHIObVIHvwA5bKEdeBeQ6w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZxQV52HXTz2xgX
-	for <linux-erofs@lists.ozlabs.org>; Tue, 13 May 2025 15:47:23 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747115239; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=aS4dH0hOydCMzOt3b8MdnPAbV0/OYJB5Wc6WlcVrhQU=;
-	b=Eu4hX0ErePbbq4EH6MxPJCyXKPspKhh9MZMb7uk5DPbxCngDZuSSnMWxwdCOlWjc/cEmueEh0WjWScSg+DjPnuXA+sKiJ2uy8uWKHNGnVw6t48vPe8tP92PVA9f8hY48PKuGjsxc+9ljmMc4rjIzyyjHMgNxO2EyBICSdLzMfWc=
-Received: from 30.221.133.89(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WaUWcCa_1747115236 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 13 May 2025 13:47:17 +0800
-Message-ID: <3617ba19-e721-4e70-bb94-8a207d2aa8a6@linux.alibaba.com>
-Date: Tue, 13 May 2025 13:47:16 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZxSFG557Xz2xgQ
+	for <linux-erofs@lists.ozlabs.org>; Tue, 13 May 2025 17:06:24 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZxS8918NdzyVL4
+	for <linux-erofs@lists.ozlabs.org>; Tue, 13 May 2025 15:02:01 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 34F5E1402EC
+	for <linux-erofs@lists.ozlabs.org>; Tue, 13 May 2025 15:06:19 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 13 May 2025 15:06:18 +0800
+Message-ID: <4aced850-18a0-4b05-80f4-4f690e387a13@huawei.com>
+Date: Tue, 13 May 2025 15:06:18 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,354 +48,277 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] erofs: support deflate decompress by using Intel QAT
-To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org, chao@kernel.org
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20250410042048.3044-1-liubo03@inspur.com>
- <20250410042048.3044-3-liubo03@inspur.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250410042048.3044-3-liubo03@inspur.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v4 2/2] erofs: add 'fsoffset' mount option for file-backed
+ & bdev-based mounts
+Content-Language: en-US
+To: <linux-erofs@lists.ozlabs.org>
+References: <20250408122351.2104507-1-shengyong1@xiaomi.com>
+ <20250408122351.2104507-2-shengyong1@xiaomi.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20250408122351.2104507-2-shengyong1@xiaomi.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
+X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Bo,
 
-On 2025/4/10 12:20, Bo Liu wrote:
-> This patch introdueces the use of the Intel QAT to decompress compressed
-> data in the EROFS filesystem, aiming to improve the decompression speed
-> of compressed datea.
-> 
-> We created a 285MiB compressed file and then used the following command to
-> create EROFS images with different cluster size.
->       # mkfs.erofs -zdeflate,level=9 -C16384
-> 
-> fio command was used to test random read and small random read(~5%) and
-> sequential read performance.
->       # fio -filename=testfile  -bs=4k -rw=read -name=job1
->       # fio -filename=testfile  -bs=4k -rw=randread -name=job1
->       # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
-> 
-> Here are some performance numbers for reference:
-> 
-> Processors: Intel(R) Xeon(R) 6766E(144 core)
-> Memory:     521 GiB
-> 
-> |-----------------------------------------------------------------------------|
-> |           | Cluster size | sequential read | randread  | small randread(5%) |
-> |-----------|--------------|-----------------|-----------|--------------------|
-> | Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
-> | Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
-> | Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
-> | Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
-> | Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
-> | deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
-> | deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
-> | deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
-> | deflate   |    65536     |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
-> | deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
-> 
-> Signed-off-by: Bo Liu <liubo03@inspur.com>
 
-Sorry for late reply due to internal stuffs.
+On 2025/4/8 20:23, Sheng Yong wrote:
+> From: Sheng Yong <shengyong1@xiaomi.com>
+> 
+> When attempting to use an archive file, such as APEX on android,
+> as a file-backed mount source, it fails because EROFS image within
+> the archive file does not start at offset 0. As a result, a loop
+> device is still needed to attach the image file at an appropriate
+> offset first. Similarly, if an EROFS image within a block device
+> does not start at offset 0, it cannot be mounted directly either.
+> 
+> To address this issue, this patch adds a new mount option `fsoffset=x'
+> to accept a start offset for both file-backed and bdev-based mounts.
+> The offset should be aligned to block size. EROFS will add this offset
 
+Hi Yong,
+
+Why the offset should be aligned to block size? I mean, we can use the 
+original offset directly during read, and then add this offset after 
+reading.
+
+Thanks,
+Hongbo
+> before performing read requests.
+> 
+> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+> Signed-off-by: Wang Shuai <wangshuai12@xiaomi.com>
 > ---
->   fs/erofs/decompressor_deflate.c | 145 +++++++++++++++++++++++++++++++-
->   fs/erofs/internal.h             |   1 +
->   fs/erofs/sysfs.c                |  30 +++++++
->   3 files changed, 175 insertions(+), 1 deletion(-)
+>   Documentation/filesystems/erofs.rst |  1 +
+>   fs/erofs/data.c                     |  8 ++++++--
+>   fs/erofs/fileio.c                   |  4 +++-
+>   fs/erofs/internal.h                 |  2 ++
+>   fs/erofs/super.c                    | 24 +++++++++++++++++++++++-
+>   fs/erofs/zdata.c                    | 22 ++++++++++++++--------
+>   6 files changed, 49 insertions(+), 12 deletions(-)
+> ---
+> v4: * change mount option `offset=x' to `fsoffset=x'
 > 
-> diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
-> index c6908a487054..a293c44e86d2 100644
-> --- a/fs/erofs/decompressor_deflate.c
-> +++ b/fs/erofs/decompressor_deflate.c
-> @@ -1,5 +1,8 @@
->   // SPDX-License-Identifier: GPL-2.0-or-later
->   #include <linux/zlib.h>
-> +#include <linux/scatterlist.h>
-> +#include <crypto/acompress.h>
-
-I guess we could move this feature into a new file called
-"decompressor_crypto.c"?
-
-> +
->   #include "compress.h"
+> v3: * rename `offs' to `off'
+>      * parse offset using fsparam_u64 and validate it in fill_super
+>      * update bi_sector inline
+>      https://lore.kernel.org/linux-erofs/98585dd8-d0b6-4000-b46d-a08c64eae44d@linux.alibaba.com
+> 
+> v2: * add a new mount option `offset=X' for start offset, and offset
+>         should be aligned to PAGE_SIZE
+>      * add start offset for both file-backed and bdev-based mounts
+>      https://lore.kernel.org/linux-erofs/0725c2ec-528c-42a8-9557-4713e7e35153@linux.alibaba.com
+> 
+> v1: https://lore.kernel.org/all/20250324022849.2715578-1-shengyong1@xiaomi.com/
+> 
+> diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
+> index c293f8e37468..0fa4c7826203 100644
+> --- a/Documentation/filesystems/erofs.rst
+> +++ b/Documentation/filesystems/erofs.rst
+> @@ -128,6 +128,7 @@ device=%s              Specify a path to an extra device to be used together.
+>   fsid=%s                Specify a filesystem image ID for Fscache back-end.
+>   domain_id=%s           Specify a domain ID in fscache mode so that different images
+>                          with the same blobs under a given domain ID can share storage.
+> +fsoffset=%s            Specify image offset for file-backed or bdev-based mounts.
+>   ===================    =========================================================
 >   
->   struct z_erofs_deflate {
-> @@ -97,7 +100,7 @@ static int z_erofs_load_deflate_config(struct super_block *sb,
->   	return -ENOMEM;
->   }
+>   Sysfs Entries
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index 2409d2ab0c28..7da503480f4d 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -27,9 +27,12 @@ void erofs_put_metabuf(struct erofs_buf *buf)
 >   
-> -static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
-> +static int __z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
->   				      struct page **pgpl)
+>   void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool need_kmap)
 >   {
->   	struct super_block *sb = rq->sb;
-> @@ -178,6 +181,146 @@ static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
->   	return err;
->   }
+> -	pgoff_t index = offset >> PAGE_SHIFT;
+> +	pgoff_t index;
+>   	struct folio *folio = NULL;
 >   
-> +static int z_erofs_crypto_decompress_mem(struct z_erofs_decompress_req *rq)
-> +{
-> +	struct erofs_sb_info *sbi = EROFS_SB(rq->sb);
-> +	unsigned int nrpages_out =
-> +				PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
-> +	unsigned int nrpages_in = PAGE_ALIGN(rq->inputsize) >> PAGE_SHIFT;
-
-I've optimized out those fields in
-commit 0243cc257ffa ("erofs: move {in,out}pages into struct z_erofs_decompress_req")
-
-so we don't need to recalculate here again.
-
-> +	struct sg_table st_src, st_dst;
-> +	struct scatterlist *sg_src, *sg_dst;
-> +	struct acomp_req *req;
-> +	struct crypto_wait wait;
-> +	u8 *headpage;
-> +	int ret, i;
+> +	offset += buf->off;
+> +	index = offset >> PAGE_SHIFT;
 > +
-> +	WARN_ON(!*rq->in);
-> +	headpage = kmap_local_page(*rq->in);
+>   	if (buf->page) {
+>   		folio = page_folio(buf->page);
+>   		if (folio_file_page(folio, index) != buf->page)
+> @@ -54,6 +57,7 @@ void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb)
+>   	struct erofs_sb_info *sbi = EROFS_SB(sb);
+>   
+>   	buf->file = NULL;
+> +	buf->off = sbi->dif0.off;
+>   	if (erofs_is_fileio_mode(sbi)) {
+>   		buf->file = sbi->dif0.file;	/* some fs like FUSE needs it */
+>   		buf->mapping = buf->file->f_mapping;
+> @@ -299,7 +303,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>   		iomap->private = buf.base;
+>   	} else {
+>   		iomap->type = IOMAP_MAPPED;
+> -		iomap->addr = mdev.m_pa;
+> +		iomap->addr = EROFS_SB(sb)->dif0.off + mdev.m_pa;
+>   		if (flags & IOMAP_DAX)
+>   			iomap->addr += mdev.m_dif->dax_part_off;
+>   	}
+> diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
+> index 4fa0a0121288..2c003cbb0fbb 100644
+> --- a/fs/erofs/fileio.c
+> +++ b/fs/erofs/fileio.c
+> @@ -52,7 +52,9 @@ static void erofs_fileio_rq_submit(struct erofs_fileio_rq *rq)
+>   
+>   	if (!rq)
+>   		return;
+> -	rq->iocb.ki_pos = rq->bio.bi_iter.bi_sector << SECTOR_SHIFT;
 > +
-> +	ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
-> +				min_t(unsigned int, rq->inputsize,
-> +							rq->sb->s_blocksize - rq->pageofs_in));
-> +
-> +	kunmap_local(headpage);
-> +	if (ret) {
-> +		return ret;
-> +	}
-
-Unnecessary brace.
-
-> +
-> +	req = acomp_request_alloc(sbi->erofs_tfm);
-> +	if (!req) {
-> +		erofs_err(rq->sb, "failed to alloc decompress request");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	if (sg_alloc_table(&st_src, nrpages_in, GFP_KERNEL)) {
-> +		acomp_request_free(req);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	if (sg_alloc_table(&st_dst, nrpages_out, GFP_KERNEL)) {
-> +		acomp_request_free(req);
-> +		sg_free_table(&st_src);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	for_each_sg(st_src.sgl, sg_src, nrpages_in, i) {
-> +		if (i == 0)
-> +			sg_set_page(sg_src, rq->in[0],
-> +					PAGE_SIZE - rq->pageofs_in, rq->pageofs_in);
-> +		else
-> +			sg_set_page(sg_src, rq->in[i], PAGE_SIZE, 0);
-
-^ should we consider rq->inputsize here?
-
-> +	}
-> +
-> +	i = 0;
-> +	for_each_sg(st_dst.sgl, sg_dst, nrpages_out, i) {
-> +		if (i == 0)
-> +			sg_set_page(sg_dst, rq->out[0],
-> +					PAGE_SIZE - rq->pageofs_out, rq->pageofs_out);
-> +		 else
-> +			sg_set_page(sg_dst, rq->out[i], PAGE_SIZE, 0);
-
-^ should we consider rq->outputsize here?
-
-> +	}
-> +
-> +	acomp_request_set_params(req, st_src.sgl,
-> +				st_dst.sgl, rq->inputsize, rq->outputsize);
-> +
-> +	crypto_init_wait(&wait);
-> +	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
-> +						crypto_req_done, &wait);
-> +
-> +	ret = crypto_wait_req(crypto_acomp_decompress(req), &wait);
-> +	if (ret < 0) {
-> +		if (ret == -EBADMSG && rq->partial_decoding) {
-
-Does QAT support partial decompression?
-
-> +			ret = 0;
-> +		} else {
-> +			erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
-> +					ret, rq->inputsize, rq->pageofs_in, rq->outputsize);
-> +			ret = -EIO;
-> +		}
-> +	} else {
-> +		ret = 0;
-> +	}
-> +
-> +	acomp_request_free(req);
-> +	sg_free_table(&st_src);
-> +	sg_free_table(&st_dst);
-> +	return ret;
-> +}
-> +
-> +static int z_erofs_crypto_prepare_dstpages(struct z_erofs_decompress_req *rq,
-> +							struct page **pagepool)
-> +{
-> +	const unsigned int nr =
-> +				PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
-
-same here.
-
-Also I suggest fold this `z_erofs_crypto_prepare_dstpages()` into
-__z_erofs_deflate_crypto_decompress().
-
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < nr; ++i) {
-> +		struct page *const page = rq->out[i];
-> +		struct page *victim;
-> +
-> +		if (!page) {
-> +			victim = __erofs_allocpage(pagepool, rq->gfp, true);
-> +			if (!victim)
-> +				return -ENOMEM;
-> +			set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
-> +			rq->out[i] = victim;
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int __z_erofs_deflate_crypto_decompress(struct z_erofs_decompress_req *rq,
-> +									 struct page **pgpl)
-
-It seems this function can be used for other hardware
-accelerators, so I guess z_erofs_crypto_decompress is
-enough.
-
-> +{
-> +	const unsigned int nrpages_out =
-> +			PAGE_ALIGN(rq->pageofs_out + rq->outputsize) >> PAGE_SHIFT;
-> +	int ret;
-> +
-> +	/* one optimized fast path only for non bigpcluster cases yet */
-> +	if (rq->inputsize <= PAGE_SIZE && nrpages_out == 1 && !rq->inplace_io) {
-> +		WARN_ON(!*rq->out);
-> +		goto dstmap_out;
-> +	}
-> +
-> +	ret = z_erofs_crypto_prepare_dstpages(rq, pgpl);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +dstmap_out:
-> +	return z_erofs_crypto_decompress_mem(rq);
-> +}
-> +
-> +static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
-> +				struct page **pgpl)
-
-I wonder if it's possible to add a hardware acceleralor list
-such as
-
-struct z_erofs_crypto_engine {
-	char *name;
-	struct z_erofs_decompressor *decomp;
-	bool enabled;
-};
-
-struct z_erofs_crypto_engine eng = {
-	{ "qat_deflate", &z_erofs_deflate_decomp },
-	...
-
-};
-
-so that we could add more hardware accelerators easily.
-
-> +{
-> +	struct super_block *sb = rq->sb;
-> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> +
-> +	if (sbi->erofs_tfm)
-> +		return __z_erofs_deflate_crypto_decompress(rq, pgpl);
-> +	else
-> +		return __z_erofs_deflate_decompress(rq, pgpl);
-> +}
-> +
->   const struct z_erofs_decompressor z_erofs_deflate_decomp = {
->   	.config = z_erofs_load_deflate_config,
->   	.decompress = z_erofs_deflate_decompress,
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h> index 4ac188d5d894..96fcee07d353 100644
+> +	rq->iocb.ki_pos = EROFS_SB(rq->sb)->dif0.off +
+> +				(rq->bio.bi_iter.bi_sector << SECTOR_SHIFT);
+>   	rq->iocb.ki_ioprio = get_current_ioprio();
+>   	rq->iocb.ki_complete = erofs_fileio_ki_complete;
+>   	if (test_opt(&EROFS_SB(rq->sb)->opt, DIRECT_IO) &&
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index 4ac188d5d894..10656bd986bd 100644
 > --- a/fs/erofs/internal.h
 > +++ b/fs/erofs/internal.h
-> @@ -122,6 +122,7 @@ struct erofs_sb_info {
->   	/* pseudo inode to manage cached pages */
->   	struct inode *managed_cache;
+> @@ -43,6 +43,7 @@ struct erofs_device_info {
+>   	char *path;
+>   	struct erofs_fscache *fscache;
+>   	struct file *file;
+> +	loff_t off;
+>   	struct dax_device *dax_dev;
+>   	u64 dax_part_off;
 >   
-> +	struct crypto_acomp *erofs_tfm;
->   	struct erofs_sb_lz4_info lz4;
->   #endif	/* CONFIG_EROFS_FS_ZIP */
->   	struct inode *packed_inode;
-> diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-> index dad4e6c6c155..d4630697dafd 100644
-> --- a/fs/erofs/sysfs.c
-> +++ b/fs/erofs/sysfs.c
-> @@ -5,6 +5,7 @@
->    */
->   #include <linux/sysfs.h>
->   #include <linux/kobject.h>
-> +#include <crypto/acompress.h>
->   
->   #include "internal.h"
->   
-> @@ -13,6 +14,7 @@ enum {
->   	attr_drop_caches,
->   	attr_pointer_ui,
->   	attr_pointer_bool,
-> +	attr_comp_crypto,
+> @@ -199,6 +200,7 @@ enum {
+>   struct erofs_buf {
+>   	struct address_space *mapping;
+>   	struct file *file;
+> +	loff_t off;
+>   	struct page *page;
+>   	void *base;
 >   };
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index cadec6b1b554..e96fea9f2d18 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -356,7 +356,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
 >   
 >   enum {
-> @@ -59,12 +61,14 @@ static struct erofs_attr erofs_attr_##_name = {			\
->   #ifdef CONFIG_EROFS_FS_ZIP
->   EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
->   EROFS_ATTR_FUNC(drop_caches, 0200);
-> +EROFS_ATTR_FUNC(comp_crypto, 0644);
->   #endif
->   
->   static struct attribute *erofs_attrs[] = {
->   #ifdef CONFIG_EROFS_FS_ZIP
->   	ATTR_LIST(sync_decompress),
->   	ATTR_LIST(drop_caches),
-> +	ATTR_LIST(comp_crypto),
->   #endif
->   	NULL,
+>   	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
+> -	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio,
+> +	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio, Opt_fsoffset,
+>   	Opt_err
 >   };
-> @@ -128,6 +132,12 @@ static ssize_t erofs_attr_show(struct kobject *kobj,
->   		if (!ptr)
->   			return 0;
->   		return sysfs_emit(buf, "%d\n", *(bool *)ptr);
-> +	case attr_comp_crypto:
-> +		if (sbi->erofs_tfm)
-> +			return sysfs_emit(buf, "%s\n",
-> +				crypto_comp_alg_common(sbi->erofs_tfm)->base.cra_driver_name);
-> +		else
-> +			return sysfs_emit(buf, "NONE\n");
+>   
+> @@ -384,6 +384,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
+>   	fsparam_string("fsid",		Opt_fsid),
+>   	fsparam_string("domain_id",	Opt_domain_id),
+>   	fsparam_flag_no("directio",	Opt_directio),
+> +	fsparam_u64("fsoffset",		Opt_fsoffset),
+>   	{}
+>   };
+>   
+> @@ -507,6 +508,9 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+>   		errorfc(fc, "%s option not supported", erofs_fs_parameters[opt].name);
+>   #endif
+>   		break;
+> +	case Opt_fsoffset:
+> +		sbi->dif0.off = result.uint_64;
+> +		break;
 >   	}
 >   	return 0;
 >   }
-> @@ -181,6 +191,26 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
->   		if (t & 1)
->   			invalidate_mapping_pages(MNGD_MAPPING(sbi), 0, -1);
->   		return len;
-> +	case attr_comp_crypto:
-
-Then I'd like to make this sysfs to enable accelerators.
-
-Thanks,
-Gao XIang
+> @@ -600,6 +604,22 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>   				&sbi->dif0.dax_part_off, NULL, NULL);
+>   	}
+>   
+> +	if (sbi->dif0.off) {
+> +		loff_t devsz;
+> +
+> +		if (sbi->dif0.off & ((1 << sbi->blkszbits) - 1))
+> +			return invalfc(fc, "fsoffset %lld not aligned to block size",
+> +				       sbi->dif0.off);
+> +		if (sb->s_bdev)
+> +			devsz = bdev_nr_bytes(sb->s_bdev);
+> +		else if (erofs_is_fileio_mode(sbi))
+> +			devsz = i_size_read(file_inode(sbi->dif0.file));
+> +		else
+> +			return invalfc(fc, "fsoffset only supports file or bdev backing");
+> +		if (sbi->dif0.off + (1 << sbi->blkszbits) > devsz)
+> +			return invalfc(fc, "fsoffset exceeds device size");
+> +	}
+> +
+>   	err = erofs_read_superblock(sb);
+>   	if (err)
+>   		return err;
+> @@ -948,6 +968,8 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
+>   	if (sbi->domain_id)
+>   		seq_printf(seq, ",domain_id=%s", sbi->domain_id);
+>   #endif
+> +	if (sbi->dif0.off)
+> +		seq_printf(seq, ",fsoffset=%lld", sbi->dif0.off);
+>   	return 0;
+>   }
+>   
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 0671184d9cf1..671527b63c6d 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -1624,7 +1624,8 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
+>   				 bool *force_fg, bool readahead)
+>   {
+>   	struct super_block *sb = f->inode->i_sb;
+> -	struct address_space *mc = MNGD_MAPPING(EROFS_SB(sb));
+> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
+> +	struct address_space *mc = MNGD_MAPPING(sbi);
+>   	struct z_erofs_pcluster **qtail[NR_JOBQUEUES];
+>   	struct z_erofs_decompressqueue *q[NR_JOBQUEUES];
+>   	struct z_erofs_pcluster *pcl, *next;
+> @@ -1673,12 +1674,15 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
+>   			if (bio && (cur != last_pa ||
+>   				    bio->bi_bdev != mdev.m_bdev)) {
+>   drain_io:
+> -				if (erofs_is_fileio_mode(EROFS_SB(sb)))
+> +				if (erofs_is_fileio_mode(sbi)) {
+>   					erofs_fileio_submit_bio(bio);
+> -				else if (erofs_is_fscache_mode(sb))
+> +				} else if (erofs_is_fscache_mode(sb)) {
+>   					erofs_fscache_submit_bio(bio);
+> -				else
+> +				} else {
+> +					bio->bi_iter.bi_sector +=
+> +						sbi->dif0.off >> SECTOR_SHIFT;
+>   					submit_bio(bio);
+> +				}
+>   
+>   				if (memstall) {
+>   					psi_memstall_leave(&pflags);
+> @@ -1703,7 +1707,7 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
+>   			}
+>   
+>   			if (!bio) {
+> -				if (erofs_is_fileio_mode(EROFS_SB(sb)))
+> +				if (erofs_is_fileio_mode(sbi))
+>   					bio = erofs_fileio_bio_alloc(&mdev);
+>   				else if (erofs_is_fscache_mode(sb))
+>   					bio = erofs_fscache_bio_alloc(&mdev);
+> @@ -1732,12 +1736,14 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
+>   	} while (next != Z_EROFS_PCLUSTER_TAIL);
+>   
+>   	if (bio) {
+> -		if (erofs_is_fileio_mode(EROFS_SB(sb)))
+> +		if (erofs_is_fileio_mode(sbi)) {
+>   			erofs_fileio_submit_bio(bio);
+> -		else if (erofs_is_fscache_mode(sb))
+> +		} else if (erofs_is_fscache_mode(sb)) {
+>   			erofs_fscache_submit_bio(bio);
+> -		else
+> +		} else {
+> +			bio->bi_iter.bi_sector += sbi->dif0.off >> SECTOR_SHIFT;
+>   			submit_bio(bio);
+> +		}
+>   	}
+>   	if (memstall)
+>   		psi_memstall_leave(&pflags);
 
