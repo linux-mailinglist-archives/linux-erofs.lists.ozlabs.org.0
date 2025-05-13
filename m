@@ -1,41 +1,43 @@
-Return-Path: <linux-erofs+bounces-306-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-307-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60E26AB4C70
-	for <lists+linux-erofs@lfdr.de>; Tue, 13 May 2025 09:06:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF423AB4C92
+	for <lists+linux-erofs@lfdr.de>; Tue, 13 May 2025 09:17:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ZxSFJ22pkz2yFK;
-	Tue, 13 May 2025 17:06:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ZxSTn51zfz2yFK;
+	Tue, 13 May 2025 17:17:17 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1747119988;
-	cv=none; b=mf3vckp7qOMoxGIHoHXV2y6DfwXjKEcCaaWiXp8P3JqL+jHac/zwI+anIt7cQkaEPSWfRFaa69g4HMzFtfDlq5wCtMeRZtJeRNYP75tuZ8WcNeyNQNWpAvr3+JX+uLlaIktap/Lw7KYGnIUCGCqEyBPq6d9zyKHEh/5d2dXC6DBWjKFVXnl1107xwGJQ73A3PjHwOibWzaevtiouVLZbPxe7KjA9NX9lM2kTKThQDYCvE+1SB2U0IzMVL5a6MdB7/GDYBc8PWBz6XG9YA/nhySuPiL4tRmmti1A3/5nCjSs/U9ojobKBvby+FIVuR/tDDK3o6nI0Y38C0Y8Nuva7vg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1747120637;
+	cv=none; b=j44Q/EexPT4FFjlmUa0zIUhdY/a4AS8SHS/BT4p9AXbJZLnOnCKbbwsv5lnbO+4qqO/gl/J7r6agjweqsAXUkOl1H6LhaB5Z1Y9N0tOvXCe5tFIXzfU3NcFQ96FqqOWliYd3oAQF1mzGBuDe39jHlHo42QqgjzNP8CUWttUQRiJAkKMJgJ1bfxSmohlIYxoI8krLFGuhM+yy4DvTc3/GGw+qYRr8vNzMV8JzM5cojFnqYdyIte1EjBiQJ1cSJ2FFD9mkX+tpmywkphfNCKfCSQvy/NHOuSZLToCh+jfDNRg9QNXo5DfMVdppuRNGezHbl6xLVakRMIeXGlYcHwnTXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1747119988; c=relaxed/relaxed;
-	bh=LKZ80Pe6o+2t3BpLyA16cuVsK40010kcBQVadYp4fRE=;
+	t=1747120637; c=relaxed/relaxed;
+	bh=fP8M5x2O0Q4shZ299CnxDV5ETn/5L7lKCTDwIFxMRZ0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=l4P3QvwCrSlHOW9N+b37VkH1m5enjWY13fsAc+q5c1BWlKWzKhVX32BmbYh9ahzIQlguFIDFI22CxY9NANcISBDb03lONeylAVSKdaTzoGxov6ydgUcJDR3eJ1+Y7tKqpnjcSkX78isK202uZMYoiaHCBWk5pll2hqBM5NepFb5q6Zu7IFEV7WB5Q38Ptiw3FW2taHQoKTJz+Icrs3CMoWI9X+pBRIqzP/idwdmOC96Y1AYXTPiYzpL9X1C1HBBcYpQUHJkx6ctHAU/IiHxFMHg17W9FTIR5o01N5h42GOcGAzBoJLrEfM6COpxrzod2FHIObVIHvwA5bKEdeBeQ6w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	 In-Reply-To:Content-Type; b=AYw0f0hhoJ16Wk/LBgER2GhncsyNZ69Vl53pltaeS0Divpf01uousULC1NHYlGB/+JGQSYxLwfx3DPE+HUVz/Moh2gc2MtN0Z5Gwwg+5IBLi7DKjQFtox+n6oQ6vzMDXoL2uMLhQKp9GuOigX4JGEHCrASu492VoIrPHlFZ4Ap44A3rb7IwaY1mX0hI0P9Xw8Zfj6AbYVJWxA5bO2HBdzSWHG7alsL/xwXSIiaSS+BFcHJcJr8ZDVMEv1ZvJo3PFJNf+1uCI3L+qU+Pqq7JfIq2/UmZh7GNw2sBJWRBFI8038c7xf+GXmxu/YvVs1tbtYsjHSUURKsvF1Fz+7gNxaQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=jTZ8gaQk; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=jTZ8gaQk;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZxSFG557Xz2xgQ
-	for <linux-erofs@lists.ozlabs.org>; Tue, 13 May 2025 17:06:24 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZxS8918NdzyVL4
-	for <linux-erofs@lists.ozlabs.org>; Tue, 13 May 2025 15:02:01 +0800 (CST)
-Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id 34F5E1402EC
-	for <linux-erofs@lists.ozlabs.org>; Tue, 13 May 2025 15:06:19 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 13 May 2025 15:06:18 +0800
-Message-ID: <4aced850-18a0-4b05-80f4-4f690e387a13@huawei.com>
-Date: Tue, 13 May 2025 15:06:18 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ZxSTl2wpJz2xgQ
+	for <linux-erofs@lists.ozlabs.org>; Tue, 13 May 2025 17:17:12 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747120628; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=fP8M5x2O0Q4shZ299CnxDV5ETn/5L7lKCTDwIFxMRZ0=;
+	b=jTZ8gaQkvnw2/7UK0VjgxHzrD5CaZ+kF0RCpKOFWtq9h8Yhh8onFJ1li/Rnt2bHv1/7LjPg8LIhmOVX4Dd6/BM4ThnhSkfzNnx1MOQTKCPNkirC9/Oeyu2iSoL32qtv3FIuFZ2ZZnNHtOvc5GlE1ioAH4rr3B7VPYqH/YC5EXCI=
+Received: from 30.221.133.89(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WaVp9Sn_1747120625 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 13 May 2025 15:17:06 +0800
+Message-ID: <c5110e03-90ea-40be-b05f-bc920332a1e1@linux.alibaba.com>
+Date: Tue, 13 May 2025 15:17:05 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,275 +52,53 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 2/2] erofs: add 'fsoffset' mount option for file-backed
  & bdev-based mounts
-Content-Language: en-US
-To: <linux-erofs@lists.ozlabs.org>
+To: Hongbo Li <lihongbo22@huawei.com>, linux-erofs@lists.ozlabs.org
 References: <20250408122351.2104507-1-shengyong1@xiaomi.com>
  <20250408122351.2104507-2-shengyong1@xiaomi.com>
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20250408122351.2104507-2-shengyong1@xiaomi.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+ <4aced850-18a0-4b05-80f4-4f690e387a13@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <4aced850-18a0-4b05-80f4-4f690e387a13@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemo500009.china.huawei.com (7.202.194.199)
-X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 
 
-On 2025/4/8 20:23, Sheng Yong wrote:
-> From: Sheng Yong <shengyong1@xiaomi.com>
+On 2025/5/13 15:06, Hongbo Li wrote:
 > 
-> When attempting to use an archive file, such as APEX on android,
-> as a file-backed mount source, it fails because EROFS image within
-> the archive file does not start at offset 0. As a result, a loop
-> device is still needed to attach the image file at an appropriate
-> offset first. Similarly, if an EROFS image within a block device
-> does not start at offset 0, it cannot be mounted directly either.
 > 
-> To address this issue, this patch adds a new mount option `fsoffset=x'
-> to accept a start offset for both file-backed and bdev-based mounts.
-> The offset should be aligned to block size. EROFS will add this offset
+> On 2025/4/8 20:23, Sheng Yong wrote:
+>> From: Sheng Yong <shengyong1@xiaomi.com>
+>>
+>> When attempting to use an archive file, such as APEX on android,
+>> as a file-backed mount source, it fails because EROFS image within
+>> the archive file does not start at offset 0. As a result, a loop
+>> device is still needed to attach the image file at an appropriate
+>> offset first. Similarly, if an EROFS image within a block device
+>> does not start at offset 0, it cannot be mounted directly either.
+>>
+>> To address this issue, this patch adds a new mount option `fsoffset=x'
+>> to accept a start offset for both file-backed and bdev-based mounts.
+>> The offset should be aligned to block size. EROFS will add this offset
+> 
+> Hi Yong,
+> 
+> Why the offset should be aligned to block size? I mean, we can use the original offset directly during read, and then add this offset after reading.
 
-Hi Yong,
-
-Why the offset should be aligned to block size? I mean, we can use the 
-original offset directly during read, and then add this offset after 
-reading.
+Currently metabuf and bio are all block-based I/Os (otherwise
+taking metadata for example, it could cross page boundary), I
+uess it's complex to support unaligned offsets.  Also it seems
+lack of use cases?
 
 Thanks,
-Hongbo
-> before performing read requests.
+Gao Xiang
+
 > 
-> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
-> Signed-off-by: Wang Shuai <wangshuai12@xiaomi.com>
-> ---
->   Documentation/filesystems/erofs.rst |  1 +
->   fs/erofs/data.c                     |  8 ++++++--
->   fs/erofs/fileio.c                   |  4 +++-
->   fs/erofs/internal.h                 |  2 ++
->   fs/erofs/super.c                    | 24 +++++++++++++++++++++++-
->   fs/erofs/zdata.c                    | 22 ++++++++++++++--------
->   6 files changed, 49 insertions(+), 12 deletions(-)
-> ---
-> v4: * change mount option `offset=x' to `fsoffset=x'
-> 
-> v3: * rename `offs' to `off'
->      * parse offset using fsparam_u64 and validate it in fill_super
->      * update bi_sector inline
->      https://lore.kernel.org/linux-erofs/98585dd8-d0b6-4000-b46d-a08c64eae44d@linux.alibaba.com
-> 
-> v2: * add a new mount option `offset=X' for start offset, and offset
->         should be aligned to PAGE_SIZE
->      * add start offset for both file-backed and bdev-based mounts
->      https://lore.kernel.org/linux-erofs/0725c2ec-528c-42a8-9557-4713e7e35153@linux.alibaba.com
-> 
-> v1: https://lore.kernel.org/all/20250324022849.2715578-1-shengyong1@xiaomi.com/
-> 
-> diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
-> index c293f8e37468..0fa4c7826203 100644
-> --- a/Documentation/filesystems/erofs.rst
-> +++ b/Documentation/filesystems/erofs.rst
-> @@ -128,6 +128,7 @@ device=%s              Specify a path to an extra device to be used together.
->   fsid=%s                Specify a filesystem image ID for Fscache back-end.
->   domain_id=%s           Specify a domain ID in fscache mode so that different images
->                          with the same blobs under a given domain ID can share storage.
-> +fsoffset=%s            Specify image offset for file-backed or bdev-based mounts.
->   ===================    =========================================================
->   
->   Sysfs Entries
-> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-> index 2409d2ab0c28..7da503480f4d 100644
-> --- a/fs/erofs/data.c
-> +++ b/fs/erofs/data.c
-> @@ -27,9 +27,12 @@ void erofs_put_metabuf(struct erofs_buf *buf)
->   
->   void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool need_kmap)
->   {
-> -	pgoff_t index = offset >> PAGE_SHIFT;
-> +	pgoff_t index;
->   	struct folio *folio = NULL;
->   
-> +	offset += buf->off;
-> +	index = offset >> PAGE_SHIFT;
-> +
->   	if (buf->page) {
->   		folio = page_folio(buf->page);
->   		if (folio_file_page(folio, index) != buf->page)
-> @@ -54,6 +57,7 @@ void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb)
->   	struct erofs_sb_info *sbi = EROFS_SB(sb);
->   
->   	buf->file = NULL;
-> +	buf->off = sbi->dif0.off;
->   	if (erofs_is_fileio_mode(sbi)) {
->   		buf->file = sbi->dif0.file;	/* some fs like FUSE needs it */
->   		buf->mapping = buf->file->f_mapping;
-> @@ -299,7 +303,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->   		iomap->private = buf.base;
->   	} else {
->   		iomap->type = IOMAP_MAPPED;
-> -		iomap->addr = mdev.m_pa;
-> +		iomap->addr = EROFS_SB(sb)->dif0.off + mdev.m_pa;
->   		if (flags & IOMAP_DAX)
->   			iomap->addr += mdev.m_dif->dax_part_off;
->   	}
-> diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-> index 4fa0a0121288..2c003cbb0fbb 100644
-> --- a/fs/erofs/fileio.c
-> +++ b/fs/erofs/fileio.c
-> @@ -52,7 +52,9 @@ static void erofs_fileio_rq_submit(struct erofs_fileio_rq *rq)
->   
->   	if (!rq)
->   		return;
-> -	rq->iocb.ki_pos = rq->bio.bi_iter.bi_sector << SECTOR_SHIFT;
-> +
-> +	rq->iocb.ki_pos = EROFS_SB(rq->sb)->dif0.off +
-> +				(rq->bio.bi_iter.bi_sector << SECTOR_SHIFT);
->   	rq->iocb.ki_ioprio = get_current_ioprio();
->   	rq->iocb.ki_complete = erofs_fileio_ki_complete;
->   	if (test_opt(&EROFS_SB(rq->sb)->opt, DIRECT_IO) &&
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index 4ac188d5d894..10656bd986bd 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -43,6 +43,7 @@ struct erofs_device_info {
->   	char *path;
->   	struct erofs_fscache *fscache;
->   	struct file *file;
-> +	loff_t off;
->   	struct dax_device *dax_dev;
->   	u64 dax_part_off;
->   
-> @@ -199,6 +200,7 @@ enum {
->   struct erofs_buf {
->   	struct address_space *mapping;
->   	struct file *file;
-> +	loff_t off;
->   	struct page *page;
->   	void *base;
->   };
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index cadec6b1b554..e96fea9f2d18 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -356,7 +356,7 @@ static void erofs_default_options(struct erofs_sb_info *sbi)
->   
->   enum {
->   	Opt_user_xattr, Opt_acl, Opt_cache_strategy, Opt_dax, Opt_dax_enum,
-> -	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio,
-> +	Opt_device, Opt_fsid, Opt_domain_id, Opt_directio, Opt_fsoffset,
->   	Opt_err
->   };
->   
-> @@ -384,6 +384,7 @@ static const struct fs_parameter_spec erofs_fs_parameters[] = {
->   	fsparam_string("fsid",		Opt_fsid),
->   	fsparam_string("domain_id",	Opt_domain_id),
->   	fsparam_flag_no("directio",	Opt_directio),
-> +	fsparam_u64("fsoffset",		Opt_fsoffset),
->   	{}
->   };
->   
-> @@ -507,6 +508,9 @@ static int erofs_fc_parse_param(struct fs_context *fc,
->   		errorfc(fc, "%s option not supported", erofs_fs_parameters[opt].name);
->   #endif
->   		break;
-> +	case Opt_fsoffset:
-> +		sbi->dif0.off = result.uint_64;
-> +		break;
->   	}
->   	return 0;
->   }
-> @@ -600,6 +604,22 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->   				&sbi->dif0.dax_part_off, NULL, NULL);
->   	}
->   
-> +	if (sbi->dif0.off) {
-> +		loff_t devsz;
-> +
-> +		if (sbi->dif0.off & ((1 << sbi->blkszbits) - 1))
-> +			return invalfc(fc, "fsoffset %lld not aligned to block size",
-> +				       sbi->dif0.off);
-> +		if (sb->s_bdev)
-> +			devsz = bdev_nr_bytes(sb->s_bdev);
-> +		else if (erofs_is_fileio_mode(sbi))
-> +			devsz = i_size_read(file_inode(sbi->dif0.file));
-> +		else
-> +			return invalfc(fc, "fsoffset only supports file or bdev backing");
-> +		if (sbi->dif0.off + (1 << sbi->blkszbits) > devsz)
-> +			return invalfc(fc, "fsoffset exceeds device size");
-> +	}
-> +
->   	err = erofs_read_superblock(sb);
->   	if (err)
->   		return err;
-> @@ -948,6 +968,8 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
->   	if (sbi->domain_id)
->   		seq_printf(seq, ",domain_id=%s", sbi->domain_id);
->   #endif
-> +	if (sbi->dif0.off)
-> +		seq_printf(seq, ",fsoffset=%lld", sbi->dif0.off);
->   	return 0;
->   }
->   
-> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> index 0671184d9cf1..671527b63c6d 100644
-> --- a/fs/erofs/zdata.c
-> +++ b/fs/erofs/zdata.c
-> @@ -1624,7 +1624,8 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
->   				 bool *force_fg, bool readahead)
->   {
->   	struct super_block *sb = f->inode->i_sb;
-> -	struct address_space *mc = MNGD_MAPPING(EROFS_SB(sb));
-> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
-> +	struct address_space *mc = MNGD_MAPPING(sbi);
->   	struct z_erofs_pcluster **qtail[NR_JOBQUEUES];
->   	struct z_erofs_decompressqueue *q[NR_JOBQUEUES];
->   	struct z_erofs_pcluster *pcl, *next;
-> @@ -1673,12 +1674,15 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
->   			if (bio && (cur != last_pa ||
->   				    bio->bi_bdev != mdev.m_bdev)) {
->   drain_io:
-> -				if (erofs_is_fileio_mode(EROFS_SB(sb)))
-> +				if (erofs_is_fileio_mode(sbi)) {
->   					erofs_fileio_submit_bio(bio);
-> -				else if (erofs_is_fscache_mode(sb))
-> +				} else if (erofs_is_fscache_mode(sb)) {
->   					erofs_fscache_submit_bio(bio);
-> -				else
-> +				} else {
-> +					bio->bi_iter.bi_sector +=
-> +						sbi->dif0.off >> SECTOR_SHIFT;
->   					submit_bio(bio);
-> +				}
->   
->   				if (memstall) {
->   					psi_memstall_leave(&pflags);
-> @@ -1703,7 +1707,7 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
->   			}
->   
->   			if (!bio) {
-> -				if (erofs_is_fileio_mode(EROFS_SB(sb)))
-> +				if (erofs_is_fileio_mode(sbi))
->   					bio = erofs_fileio_bio_alloc(&mdev);
->   				else if (erofs_is_fscache_mode(sb))
->   					bio = erofs_fscache_bio_alloc(&mdev);
-> @@ -1732,12 +1736,14 @@ static void z_erofs_submit_queue(struct z_erofs_frontend *f,
->   	} while (next != Z_EROFS_PCLUSTER_TAIL);
->   
->   	if (bio) {
-> -		if (erofs_is_fileio_mode(EROFS_SB(sb)))
-> +		if (erofs_is_fileio_mode(sbi)) {
->   			erofs_fileio_submit_bio(bio);
-> -		else if (erofs_is_fscache_mode(sb))
-> +		} else if (erofs_is_fscache_mode(sb)) {
->   			erofs_fscache_submit_bio(bio);
-> -		else
-> +		} else {
-> +			bio->bi_iter.bi_sector += sbi->dif0.off >> SECTOR_SHIFT;
->   			submit_bio(bio);
-> +		}
->   	}
->   	if (memstall)
->   		psi_memstall_leave(&pflags);
+> Thanks,
+> Hongbo
+
 
