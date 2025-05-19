@@ -1,70 +1,76 @@
-Return-Path: <linux-erofs+bounces-341-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-342-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 390C5ABB12C
-	for <lists+linux-erofs@lfdr.de>; Sun, 18 May 2025 20:07:10 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FC09ABB30A
+	for <lists+linux-erofs@lfdr.de>; Mon, 19 May 2025 03:59:13 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4b0pgC5QHjz2xpn;
-	Mon, 19 May 2025 04:07:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4b117x0j5Hz2yVV;
+	Mon, 19 May 2025 11:59:09 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.14
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1747591623;
-	cv=none; b=liZl1VcZhvWPceEzWe7tPcVqK5K1QwbexP79sr1IKHOO7oRMbW4aPZkWdtmeJ6DiywNmC2Hp+VLQc7gHRWR7UhuXe334EFSygps5QCTshYwZn2alat/kC0vtjG0xrn9O2yoEHwg7MBNFDWbLNhn8jYV1fT8ZqpYXBgngJzSfD2swOCNP83Ih0kmmslKgkk4g75SskM/fxfB2+OXoxRTJnkkFyEJh6TRbkkpxFWb403PDKnhI6BVWLygrO9p472jMBmOu9wMXvLsNBlnzSsWoDXbx2/WXHUeKG3iYz37Xpq2toRltlfFj76eSYyG3ByiuejrveCLcjImDifDzpyRz4w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::62a"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1747619949;
+	cv=none; b=BdXzKos/3XpBOvu0Pn40oytxOOE1Onall+EBJOufObexrwizkEqAvZ7AitMERE8HPk6vGlrteGCGF0p9UdGHnOBAQKogQf/ZlIEQnpH6RDgQXuDYB73903oVYFiC3+D9hzWuDisKs24HhaodSezqJygQvyhn5gEQRa/zHEmMK0ty26+rnZfC1282afJlIV5ioZqTl6sU1qzldYphgv7ZRzMnAipP9zzR6doAxM21lZVi76DoFIVn59RjPZVuvEtAgyhAzkNYNsvuMFCIdVWsCMJ9jXD3Rn7ppdmpVCujRsiwcnnRjYA/85IEg0vS3J0xIve1CrhzW44MJU1uqcH7jw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1747591623; c=relaxed/relaxed;
-	bh=dbGMwysZU8LaipEdpyyfKTQxUZ/1HxbIy9hSnMZ3APs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BwYu5+qG34LIKWcmjY/J7ub5AzY2/sVCdedrBhD+zciEjACyDRd/uCeH7oxtX/1WvWGkuiTENp7p5ckkkwK8OlBoblL0rMYj6R6GRgwA77YfEWa3YYJwBZbBLMf4EKPLcHhsR+rWz4kVKR7UamIT7f/TGMNPL/f7Y9xH19LtMwFN+JDvcXnFomR2YkFsKvY9ax0jyqR4vBRWCmTBclpRuPYeT+xXvsGG7ba8hxT1NfcKNbX4tYw/45tRSKWXvZE4AaCkz8aEdExq0/yVTzOuYFKcVIPycgyaqmfDtSL1mAYh+0WdE6euADupLVjrx2eBfmhOo6XJcZeJLtHqUnYFvg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=DXBWSJl5; dkim-atps=neutral; spf=pass (client-ip=198.175.65.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1747619949; c=relaxed/relaxed;
+	bh=465ybCN69urWCKwsV8zHhnkvhBdyoDe9eDKU2Bo8TAI=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Zf5KIN2Ox1ho3wuuq8sRKA5JihGAoskzZSrYqh5iXQP2bNpGcXzEMy5410x2+Tg9E59jEsF8tQvaGIqVs8dKMg1rwPuGatvHuWAgptWL3CmmOwJHqW9dP/YcD7GaIOp9wH7RYoflMBJLf1YmBKEOe3fIBl2LW8lZjuebwiIesNpP8LkBRVmJmOM1VblsdTLmxyWXlYGp7CNkJZzoBsFVTRz4yAPlCP7afYLblWqO/GYXR/puY+lH6LjucCkQvoxK4H38/BPHi9f6+LkbJpqv4/jdSjm/QfAFnY9+wn5MhvaEEJHVDPd+Ees4QNz9Q5UUd0htFEpx6WwDhHyEJSO8UQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=hfm9C2k8; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::62a; helo=mail-pl1-x62a.google.com; envelope-from=shengyong2021@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=DXBWSJl5;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=hfm9C2k8;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62a; helo=mail-pl1-x62a.google.com; envelope-from=shengyong2021@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4b0pg85k1Zz2xlL
-	for <linux-erofs@lists.ozlabs.org>; Mon, 19 May 2025 04:06:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747591622; x=1779127622;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=ttGQYBloj0CoC1/5y7KQia+rkjJ2ddx/y9RCzSACYjw=;
-  b=DXBWSJl5bWrL+kCEwb7/uuyy5h/1JfhXMZqlALAaBCtWxs6PHJYHesa2
-   81fytnxapBzCRFFw5xThFSSbRC79NRqCbYK5Twvx+ViaPSw/UYBrJMAbd
-   eB7eZEf32FkHbQTCfdWRbBihYPWgJkZWdMF7x3fapMLeV8q5aXVpDewH/
-   hRoqSIILfYDCHAbO8+IvF/gU49MVvb1YfsFgXAWrVXDVSMSiChRljKirI
-   rE9kYWh66tZm6LGsnZMN0ZdHJxzoYEIW6/SXoEzAvltx/kjd2qrBnhBIh
-   ThfvPHbrd1uwf1e627OTwidK6E0MEIMiQSfFWBBkwdyQ+UarNtKFezgmD
-   w==;
-X-CSE-ConnectionGUID: OHkqBalbSi+PnvPW9vBrUw==
-X-CSE-MsgGUID: /EI6iN9PQxCKoSv/dCbFzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11437"; a="53313033"
-X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
-   d="scan'208";a="53313033"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2025 11:06:56 -0700
-X-CSE-ConnectionGUID: KtMrLVZtQ7OEBDsyosuChQ==
-X-CSE-MsgGUID: gJV9Pz4JQSG6ZcMEwg3VKQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,299,1739865600"; 
-   d="scan'208";a="139217654"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 18 May 2025 11:06:54 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uGiPT-000Ky5-2v;
-	Sun, 18 May 2025 18:06:51 +0000
-Date: Mon, 19 May 2025 02:06:37 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sheng Yong <shengyong1@xiaomi.com>
-Cc: oe-kbuild-all@lists.linux.dev, Xiang Gao <xiang@kernel.org>,
-	linux-erofs@lists.ozlabs.org, Wang Shuai <wangshuai12@xiaomi.com>
-Subject: [xiang-erofs:dev-test 5/5] fs/erofs/super.c:659:22: error: no member
- named 'off' in 'struct erofs_device_info'
-Message-ID: <202505190150.4HUHevyn-lkp@intel.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4b117v2Jhhz2yFQ
+	for <linux-erofs@lists.ozlabs.org>; Mon, 19 May 2025 11:59:06 +1000 (AEST)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-231f325366eso19685025ad.1
+        for <linux-erofs@lists.ozlabs.org>; Sun, 18 May 2025 18:59:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747619943; x=1748224743; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:cc:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=465ybCN69urWCKwsV8zHhnkvhBdyoDe9eDKU2Bo8TAI=;
+        b=hfm9C2k8z0xiPYnCJFPAiKqZfSFH6eLjRPKGV1a2wjs0UbUIc+JAnR7t4o5iKC+8+W
+         iLAWJXwxNDLQA9iy8x7KtuGWT3t+tEUub55/P5AWZbiQ05fZ6aYR0ePush7b3hRAhQ7N
+         vG87RKj4lJFk8pk6cFW2nRYUtdawtw61WNBQLP0Mh9aAWuR8YxEKZ2fuOiHU0+fxOnRZ
+         obrKZxRvkb7IbYiMWZki9wBE1bZuVEfnfwjspOCfGLNM75/asaC+LSk/pUfd7Z+Ekpmp
+         slKfOG19o0K2S9R/kbvMqL17nuDkQqMfHXt9eRvhfbz2l8Jl/elrRiLNlF9OwaxNbshh
+         OwNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747619943; x=1748224743;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:cc:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=465ybCN69urWCKwsV8zHhnkvhBdyoDe9eDKU2Bo8TAI=;
+        b=bStzCup6V/yB3AZbjup6Dx0xB66iAfrIX+JVIS41CQsWJUtPa6ozFoGcfAX7WyuJpa
+         W5c0a9IpmuBPnhwEgmDEmkucgk1B9f9D6dXMzNk8KCVTVkOVIb5WYq96a4yJHUqbMkYu
+         Sgr58H7SzVU9GoMJL72EI7kVGXx/+Ebm09RlJzjhkeddqJoKif+/b03yQQOapRKrPYo8
+         V7+LiW5nuDNh0H6GR54LZh0F8aEKmzSQZ57lqvtt8252f9BH++/bIHT31VFyvRD7Ysnl
+         L5akfyKNnPo2ZFgkxYXLCKQHhnGoP9YQQ+eUmPa8waTBiuv1iyI9Uykszg+Q3BqhHt9k
+         f+ng==
+X-Forwarded-Encrypted: i=1; AJvYcCUGYlEtFnMUD2AMUffB8ioHKcLg7x+r4+v5Nef/J5uab4G5tAUyKutCKIllmgy3kFQaBoNwihCKflLIqw==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YwKVPRPgHir9b+0i7jfyy0yDOvRd3Bm+oNEia893d+xJbpjX20h
+	t3bC3cMvzXYE0BF/orIkTs6IlG1Sw0I5Ur1aYl6RGroNzo9hysObe5xX
+X-Gm-Gg: ASbGnctUsI+a9fhHmMZfziQeCDTNP0HXHylHCgIjpCW11DpfTeqyM+SZuH+6VAoof3I
+	LCJ1H0GwleV3hyYk7yH9zfruSrUjYaycqk36DvT2//GaQonHN9+OFDOhKed9gpLuZcD8so2GGA6
+	0/sQmtl7iMyBb57E6VKYeiLIADwuCBa+WyZf7rGUpg+Kkchef9cWtiyO0sK2rLIbUDUsA7RvQQr
+	nrlbbX2otKnzeapP2sgWn6XggPkxX6TNpdzX1BD5vldsauMERhdfWw7/15wWjMYEL1hb/EjYbeW
+	TkLmay/z4IHQdGHvwkz4nNa0HYrupAxLCfmWguDY9bo9aHHtFQMwuNLnZzvuOmA=
+X-Google-Smtp-Source: AGHT+IGtbaL6Rwx3Tp83tljaaL5Fb4pAonzvRiQVTrT6/GDNWs9E3hM2f206ofLvP2fHF/APsFgzIw==
+X-Received: by 2002:a17:902:f643:b0:224:1294:1d24 with SMTP id d9443c01a7336-231d43dc980mr123322975ad.3.1747619942933;
+        Sun, 18 May 2025 18:59:02 -0700 (PDT)
+Received: from [10.189.144.225] ([43.224.245.249])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4aff935sm49179165ad.94.2025.05.18.18.59.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 May 2025 18:59:02 -0700 (PDT)
+Message-ID: <2faff963-c96c-4576-8680-a3e9b432aba5@gmail.com>
+Date: Mon, 19 May 2025 09:58:59 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -76,166 +82,61 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Cc: shengyong2021@gmail.com, oe-kbuild-all@lists.linux.dev,
+ Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org,
+ Wang Shuai <wangshuai12@xiaomi.com>
+Subject: Re: [xiang-erofs:dev-test 5/5] fs/erofs/super.c:659:22: error: no
+ member named 'off' in 'struct erofs_device_info'
+To: kernel test robot <lkp@intel.com>, Sheng Yong <shengyong1@xiaomi.com>
+References: <202505190150.4HUHevyn-lkp@intel.com>
+Content-Language: en-US, fr-CH
+From: Sheng Yong <shengyong2021@gmail.com>
+In-Reply-To: <202505190150.4HUHevyn-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-head:   7cd18799175c533c3f9b1c2b2cb6551e2a86c921
-commit: 7cd18799175c533c3f9b1c2b2cb6551e2a86c921 [5/5] erofs: add 'fsoffset' mount option to specify filesystem offset
-config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20250519/202505190150.4HUHevyn-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505190150.4HUHevyn-lkp@intel.com/reproduce)
+On 5/19/25 02:06, kernel test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+> head:   7cd18799175c533c3f9b1c2b2cb6551e2a86c921
+> commit: 7cd18799175c533c3f9b1c2b2cb6551e2a86c921 [5/5] erofs: add 'fsoffset' mount option to specify filesystem offset
+> config: x86_64-allmodconfig (https://download.01.org/0day-ci/archive/20250519/202505190150.4HUHevyn-lkp@intel.com/config)
+> compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250519/202505190150.4HUHevyn-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202505190150.4HUHevyn-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> fs/erofs/super.c:659:22: error: no member named 'off' in 'struct erofs_device_info'
+>       659 |                                        sbi->dif0.off, 1 << sbi->blkszbits);
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505190150.4HUHevyn-lkp@intel.com/
+Hi, Xiang,
 
-All errors (new ones prefixed by >>):
+dif0.off has already been changed to dif0.fsoff, shall I resend the patch to fix that?
 
->> fs/erofs/super.c:659:22: error: no member named 'off' in 'struct erofs_device_info'
-     659 |                                        sbi->dif0.off, 1 << sbi->blkszbits);
-         |                                        ~~~~~~~~~ ^
-   include/linux/fs_context.h:239:52: note: expanded from macro 'invalfc'
-     239 | #define invalfc(fc, fmt, ...) (errorfc(fc, fmt, ## __VA_ARGS__), -EINVAL)
-         |                                                    ^~~~~~~~~~~
-   include/linux/fs_context.h:227:65: note: expanded from macro 'errorfc'
-     227 | #define errorfc(fc, fmt, ...) __plog((&(fc)->log), 'e', fmt, ## __VA_ARGS__)
-         |                                                                 ^~~~~~~~~~~
-   include/linux/fs_context.h:192:17: note: expanded from macro '__plog'
-     192 |                                         l, fmt, ## __VA_ARGS__)
-         |                                                    ^~~~~~~~~~~
-   1 error generated.
+thanks,
+shengyong
 
+>           |                                        ~~~~~~~~~ ^
+>     include/linux/fs_context.h:239:52: note: expanded from macro 'invalfc'
+>       239 | #define invalfc(fc, fmt, ...) (errorfc(fc, fmt, ## __VA_ARGS__), -EINVAL)
+>           |                                                    ^~~~~~~~~~~
+>     include/linux/fs_context.h:227:65: note: expanded from macro 'errorfc'
+>       227 | #define errorfc(fc, fmt, ...) __plog((&(fc)->log), 'e', fmt, ## __VA_ARGS__)
+>           |                                                                 ^~~~~~~~~~~
+>     include/linux/fs_context.h:192:17: note: expanded from macro '__plog'
+>       192 |                                         l, fmt, ## __VA_ARGS__)
+>           |                                                    ^~~~~~~~~~~
+>     1 error generated.
+[...]
 
-vim +659 fs/erofs/super.c
-
-   602	
-   603	static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
-   604	{
-   605		struct inode *inode;
-   606		struct erofs_sb_info *sbi = EROFS_SB(sb);
-   607		int err;
-   608	
-   609		sb->s_magic = EROFS_SUPER_MAGIC;
-   610		sb->s_flags |= SB_RDONLY | SB_NOATIME;
-   611		sb->s_maxbytes = MAX_LFS_FILESIZE;
-   612		sb->s_op = &erofs_sops;
-   613	
-   614		sbi->blkszbits = PAGE_SHIFT;
-   615		if (!sb->s_bdev) {
-   616			sb->s_blocksize = PAGE_SIZE;
-   617			sb->s_blocksize_bits = PAGE_SHIFT;
-   618	
-   619			if (erofs_is_fscache_mode(sb)) {
-   620				err = erofs_fscache_register_fs(sb);
-   621				if (err)
-   622					return err;
-   623			}
-   624			err = super_setup_bdi(sb);
-   625			if (err)
-   626				return err;
-   627		} else {
-   628			if (!sb_set_blocksize(sb, PAGE_SIZE)) {
-   629				errorfc(fc, "failed to set initial blksize");
-   630				return -EINVAL;
-   631			}
-   632	
-   633			sbi->dif0.dax_dev = fs_dax_get_by_bdev(sb->s_bdev,
-   634					&sbi->dif0.dax_part_off, NULL, NULL);
-   635		}
-   636	
-   637		err = erofs_read_superblock(sb);
-   638		if (err)
-   639			return err;
-   640	
-   641		if (sb->s_blocksize_bits != sbi->blkszbits) {
-   642			if (erofs_is_fscache_mode(sb)) {
-   643				errorfc(fc, "unsupported blksize for fscache mode");
-   644				return -EINVAL;
-   645			}
-   646	
-   647			if (erofs_is_fileio_mode(sbi)) {
-   648				sb->s_blocksize = 1 << sbi->blkszbits;
-   649				sb->s_blocksize_bits = sbi->blkszbits;
-   650			} else if (!sb_set_blocksize(sb, 1 << sbi->blkszbits)) {
-   651				errorfc(fc, "failed to set erofs blksize");
-   652				return -EINVAL;
-   653			}
-   654		}
-   655	
-   656		if (sbi->dif0.fsoff) {
-   657			if (sbi->dif0.fsoff & (sb->s_blocksize - 1))
-   658				return invalfc(fc, "fsoffset %llu is not aligned to block size %u",
- > 659					       sbi->dif0.off, 1 << sbi->blkszbits);
-   660			if (erofs_is_fscache_mode(sb))
-   661				return invalfc(fc, "cannot use fsoffset in fscache mode");
-   662		}
-   663	
-   664		if (test_opt(&sbi->opt, DAX_ALWAYS)) {
-   665			if (!sbi->dif0.dax_dev) {
-   666				errorfc(fc, "DAX unsupported by block device. Turning off DAX.");
-   667				clear_opt(&sbi->opt, DAX_ALWAYS);
-   668			} else if (sbi->blkszbits != PAGE_SHIFT) {
-   669				errorfc(fc, "unsupported blocksize for DAX");
-   670				clear_opt(&sbi->opt, DAX_ALWAYS);
-   671			}
-   672		}
-   673	
-   674		sb->s_time_gran = 1;
-   675		sb->s_xattr = erofs_xattr_handlers;
-   676		sb->s_export_op = &erofs_export_ops;
-   677	
-   678		if (test_opt(&sbi->opt, POSIX_ACL))
-   679			sb->s_flags |= SB_POSIXACL;
-   680		else
-   681			sb->s_flags &= ~SB_POSIXACL;
-   682	
-   683		err = z_erofs_init_super(sb);
-   684		if (err)
-   685			return err;
-   686	
-   687		if (erofs_sb_has_fragments(sbi) && sbi->packed_nid) {
-   688			inode = erofs_iget(sb, sbi->packed_nid);
-   689			if (IS_ERR(inode))
-   690				return PTR_ERR(inode);
-   691			sbi->packed_inode = inode;
-   692		}
-   693	
-   694		inode = erofs_iget(sb, sbi->root_nid);
-   695		if (IS_ERR(inode))
-   696			return PTR_ERR(inode);
-   697	
-   698		if (!S_ISDIR(inode->i_mode)) {
-   699			erofs_err(sb, "rootino(nid %llu) is not a directory(i_mode %o)",
-   700				  sbi->root_nid, inode->i_mode);
-   701			iput(inode);
-   702			return -EINVAL;
-   703		}
-   704		sb->s_root = d_make_root(inode);
-   705		if (!sb->s_root)
-   706			return -ENOMEM;
-   707	
-   708		erofs_shrinker_register(sb);
-   709		err = erofs_xattr_prefixes_init(sb);
-   710		if (err)
-   711			return err;
-   712	
-   713		erofs_set_sysfs_name(sb);
-   714		err = erofs_register_sysfs(sb);
-   715		if (err)
-   716			return err;
-   717	
-   718		erofs_info(sb, "mounted with root inode @ nid %llu.", sbi->root_nid);
-   719		return 0;
-   720	}
-   721	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
