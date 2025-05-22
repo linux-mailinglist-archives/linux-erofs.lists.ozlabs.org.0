@@ -1,61 +1,42 @@
-Return-Path: <linux-erofs+bounces-356-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-357-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E86DCAC0748
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 May 2025 10:38:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EFDC0AC074F
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 May 2025 10:39:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4b31sn44Smz3c3w;
-	Thu, 22 May 2025 18:38:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4b31tc5CjTz3c3w;
+	Thu, 22 May 2025 18:39:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=210.51.26.146
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1747903133;
-	cv=none; b=Lk6BrAn9Q74B1uIZRBe3UVjLJuW7y8+SU6QeBz8fhHox9OQAEYPTDlq40Y5nMwb9ehAak8fv81JaHCX5sChJdHn3KHPxzryi99/sM1+YH8xRXRn+4fi5JTkX6xoc4T5nQY+WKOQYD6/FWkczhXQmYVuef9/+V6yRcR1BGJfljQabB9CyuP/t0x6bKUG5qDvQm+wYf8rkyoXDihVi0u8jcfsd/tMjDMREDVzINZjiOKzXe9gRKLT37rmc1m+ZHvEOUxfmjOwdVfAvlLDTwkLlWVR5KFhYYwMFzX9HwDEbo8+bybVxSHz9l7LkCmtC1cDonqmXlH31zbIOoLS7RIxeLg==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1747903176;
+	cv=none; b=mosZYfVR2/YBEw5y4mp4xcf3odtQrYrZOOcU0XXsx56XsPqkSEn9UAZcMqNa6ih3d2nd6FQymxZTnZDVemO7UFfjn1UnRei7IyT+fpYzytZftjkUMKly6drGQEelVO64nypqL9zUMFwWSLPgEmdgM8Kt+3ieMakmGunKGGHU2NGpF9/3YCdQxG6s9gINvlEhfHK9uyjRjJSeraF7HXVmBBCxE+X5+3/TTIo8Edwdzc91TWTgEzL0fXkpBFKCJeoMG361b3D45YDkY7NvJqE7MbJUuwESPUOfTlSbMwOi4rFpOoqJ3XmNw8mzTQZmkwJIicIFOW/IDVDc25npQpSCXA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1747903133; c=relaxed/relaxed;
-	bh=XUu3adw2Xu1dz6X/hwzLHCsUAxoGnS7+zsPqTp+baVU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=R3oG8Vza2gbreL5Yt2+Xu6acBbU4NzjjcBv+z56SM8MSuoZ+hltH5u4OSq8nlOzpqJhw8c8NP/1Wbk8ghGqsb1kE/dMdMBwiKk5oNuh62P/e8mydgl0QMra377J8GkZjeXM5lFbTs2UzF/0ES3yMxoJiIfiwzKod383RE2+S3Tb/0hCgLFl001mOBr6eGgPYCTn+GceUgqjqH29qL49k0wz09QbrW2TtgvxZD1tfNZf+U/JdaW1ZSrMEqJXJI6fTjoLNhtxI4XnlN6GJRtffAFVRASIHHrXUTjl4YI6btSeyzmkX/Npu+OPaXeAdTkFfNQDzt2IxyQa+6npB9+bktQ==
+	t=1747903176; c=relaxed/relaxed;
+	bh=vWw+XFkCM8ApDPtWW7CR2u2Y1W+khLQIsCxvZeqVAEU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=A8yhSConSJEeaWL8gsgs20Q3M6G5QC18UU/YBKFJ0js8XAVQFSA22Sot9WGM4nzG6XZIIaWMcoX1zl4B/gIYF/CyIyN79BuavpA7w0rDklD5dtQynBSt8h3Idin74q581bTzNK9YqpgVDPzYo8dAe3gh0f/kc+TzPwQ8CzT9DWlEfAK9DFwuOmEPYa6/QJ0nAWA6GJqIV6aAvevdlpC0FLGhEaaUNuO20swHA6N82k1ZvqR5GJfSRjlmEfkR+A9Rk0/ujzAWbeOymFlVQAMkaIDHW7wyz9jufx0CjUhOcVTquFOmSdcIWtaGoqPl7eS0K94ejFF5CWXfY9I24dg3ag==
 ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass (client-ip=210.51.26.146; helo=unicom146.biz-email.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org) smtp.mailfrom=inspur.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=inspur.com (client-ip=210.51.26.146; helo=unicom146.biz-email.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org)
 Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4b31sm3KnPz3c3D
-	for <linux-erofs@lists.ozlabs.org>; Thu, 22 May 2025 18:38:49 +1000 (AEST)
-Received: from jtjnmail201622.home.langchao.com
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202505221638412659;
-        Thu, 22 May 2025 16:38:41 +0800
-Received: from jtjnmail201622.home.langchao.com (10.100.2.22) by
- jtjnmail201622.home.langchao.com (10.100.2.22) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 22 May 2025 16:38:41 +0800
-Received: from jtjnmail201622.home.langchao.com ([fe80::15c3:8d74:3aa6:25f6])
- by jtjnmail201622.home.langchao.com ([fe80::15c3:8d74:3aa6:25f6%7]) with mapi
- id 15.01.2507.039; Thu, 22 May 2025 16:38:41 +0800
-From: =?utf-8?B?Qm8gTGl1ICjliJjms6IpLea1qua9ruS/oeaBrw==?=
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4b31tb2rlWz3c3D
+	for <linux-erofs@lists.ozlabs.org>; Thu, 22 May 2025 18:39:35 +1000 (AEST)
+Received: from jtjnmail201608.home.langchao.com
+        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202505221639283288;
+        Thu, 22 May 2025 16:39:28 +0800
+Received: from localhost.localdomain (10.94.19.116) by
+ jtjnmail201608.home.langchao.com (10.100.2.8) with Microsoft SMTP Server id
+ 15.1.2507.39; Thu, 22 May 2025 16:39:29 +0800
+From: Bo Liu <liubo03@inspur.com>
+To: <xiang@kernel.org>, <chao@kernel.org>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
 	<liubo03@inspur.com>
-To: "hsiangkao@linux.alibaba.com" <hsiangkao@linux.alibaba.com>,
-	"xiang@kernel.org" <xiang@kernel.org>, "chao@kernel.org" <chao@kernel.org>
-CC: "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v6] erofs: support deflate decompress by using Intel QAT
-Thread-Topic: [PATCH v6] erofs: support deflate decompress by using Intel QAT
-Thread-Index: AQHbyvGRgY5hMCky9Uqppe0YISlvV7PdzKiAgACGaWA=
-Date: Thu, 22 May 2025 08:38:41 +0000
-Message-ID: <3bab0dfa463743cb92b56e20ffe55af9@inspur.com>
-References: <c5129488f0303e9b3544ab995500c4a522-5-25linux.alibaba.com@g.corp-email.com>
- <c4829613-1fea-488d-9d58-373e0d3b6bc1@linux.alibaba.com>
-In-Reply-To: <c4829613-1fea-488d-9d58-373e0d3b6bc1@linux.alibaba.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator:
-x-originating-ip: [120.224.42.184]
-Content-Type: multipart/signed; micalg=SHA1;
-	protocol="application/x-pkcs7-signature";
-	boundary="----=_NextPart_000_0058_01DBCB37.A0821100"
+Subject: [PATCH v7] erofs: support deflate decompress by using Intel QAT
+Date: Thu, 22 May 2025 04:39:20 -0400
+Message-ID: <20250522083920.19855-1-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -67,7 +48,9 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-tUid: 2025522163841745fd774eb8092f15146d8a35c497a6e
+Content-Type: text/plain
+X-Originating-IP: [10.94.19.116]
+tUid: 202552216392848a677c210fdf2f1bb577e2644e93859
 X-Abuse-Reports-To: service@corp-email.com
 Abuse-Reports-To: service@corp-email.com
 X-Complaints-To: service@corp-email.com
@@ -76,128 +59,464 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=RCVD_IN_DNSWL_LOW,
 	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-------=_NextPart_000_0058_01DBCB37.A0821100
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+This patch introdueces the use of the Intel QAT to decompress compressed
+data in the EROFS filesystem, aiming to improve the decompression speed
+of compressed datea.
 
+We created a 285MiB compressed file and then used the following command to
+create EROFS images with different cluster size.
+     # mkfs.erofs -zdeflate,level=9 -C16384
 
+fio command was used to test random read and small random read(~5%) and
+sequential read performance.
+     # fio -filename=testfile  -bs=4k -rw=read -name=job1
+     # fio -filename=testfile  -bs=4k -rw=randread -name=job1
+     # fio -filename=testfile  -bs=4k -rw=randread --io_size=14m -name=job1
 
->-----Original Message-----
->From: Gao Xiang <hsiangkao@linux.alibaba.com>
->Sent: Thursday, May 22, 2025 4:34 PM
->To: Bo Liu (=E5=88=98=E6=B3=A2)-=E6=B5=AA=E6=BD=AE=E4=BF=A1=E6=81=AF =
-<liubo03@inspur.com>; xiang@kernel.org;
->chao@kernel.org
->Cc: linux-erofs@lists.ozlabs.org; linux-kernel@vger.kernel.org
->Subject: Re: [PATCH v6] erofs: support deflate decompress by using =
-Intel QAT
->
->
->
->On 2025/5/22 16:14, Bo Liu wrote:
->
->...
->
->> +
->> +static int __z_erofs_crypto_decompress(struct z_erofs_decompress_req =
-*rq,
->> +				struct crypto_acomp *tfm)
->> +{
->> +	struct sg_table st_src, st_dst;
->> +	struct acomp_req *req;
->> +	struct crypto_wait wait;
->> +	u8 *headpage;
->> +	int ret;
->> +
->> +	headpage =3D kmap_local_page(*rq->in);
->> +	ret =3D z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
->> +				min_t(unsigned int, rq->inputsize,
->> +							rq->sb->s_blocksize - rq->pageofs_in));
->
->Please fix the alignment of this line.
->
->Thanks,
->Gao Xiang
+Here are some performance numbers for reference:
 
-Sorry, I will fix it right now.
+Processors: Intel(R) Xeon(R) 6766E(144 core)
+Memory:     521 GiB
 
-Thanks,
+|-----------------------------------------------------------------------------|
+|           | Cluster size | sequential read | randread  | small randread(5%) |
+|-----------|--------------|-----------------|-----------|--------------------|
+| Intel QAT |    4096      |    538  MiB/s   | 112 MiB/s |     20.76 MiB/s    |
+| Intel QAT |    16384     |    699  MiB/s   | 158 MiB/s |     21.02 MiB/s    |
+| Intel QAT |    65536     |    917  MiB/s   | 278 MiB/s |     20.90 MiB/s    |
+| Intel QAT |    131072    |    1056 MiB/s   | 351 MiB/s |     23.36 MiB/s    |
+| Intel QAT |    262144    |    1145 MiB/s   | 431 MiB/s |     26.66 MiB/s    |
+| deflate   |    4096      |    499  MiB/s   | 108 MiB/s |     21.50 MiB/s    |
+| deflate   |    16384     |    422  MiB/s   | 125 MiB/s |     18.94 MiB/s    |
+| deflate   |    65536     |    452  MiB/s   | 159 MiB/s |     13.02 MiB/s    |
+| deflate   |    131072    |    452  MiB/s   | 177 MiB/s |     11.44 MiB/s    |
+| deflate   |    262144    |    466  MiB/s   | 194 MiB/s |     10.60 MiB/s    |
 
-Bo Liu
+Signed-off-by: Bo Liu <liubo03@inspur.com>
+---
+v1: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/
+v2: https://lore.kernel.org/linux-erofs/20250410042048.3044-1-liubo03@inspur.com/T/#t
+v3: https://lore.kernel.org/linux-erofs/20250516082634.3801-1-liubo03@inspur.com/
+v4: https://lore.kernel.org/linux-erofs/20250521100326.2867828-1-hsiangkao@linux.alibaba.com/
+v5: https://lore.kernel.org/linux-erofs/f245b9edfc1b4205804c415cc0608558@inspur.com/T/#t
+v6: https://lore.kernel.org/linux-erofs/20250522081433.16812-1-liubo03@inspur.com/T/#u
+change since v6:
+ - update code style.
 
-------=_NextPart_000_0058_01DBCB37.A0821100
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
+ Documentation/ABI/testing/sysfs-fs-erofs |   9 ++
+ fs/erofs/Kconfig                         |  14 ++
+ fs/erofs/Makefile                        |   1 +
+ fs/erofs/compress.h                      |  10 ++
+ fs/erofs/decompressor_crypto.c           | 186 +++++++++++++++++++++++
+ fs/erofs/decompressor_deflate.c          |  17 ++-
+ fs/erofs/sysfs.c                         |  34 ++++-
+ fs/erofs/zdata.c                         |   1 +
+ 8 files changed, 269 insertions(+), 3 deletions(-)
+ create mode 100644 fs/erofs/decompressor_crypto.c
 
-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
-MAwGCisGAQQBgjcKAwQwRAYJKoZIhvcNAQkPBDcwNTAOBggqhkiG9w0DAgICAIAwDgYIKoZIhvcN
-AwQCAgCAMAcGBSsOAwIHMAoGCCqGSIb3DQMHMB0GA1UdDgQWBBTkHdp/y3+DuDJ13Q1YzgU9iV7N
-dzAfBgNVHSMEGDAWgBReWQOmtExYYJFO9h61pTmmMsE1ajCCAQ8GA1UdHwSCAQYwggECMIH/oIH8
-oIH5hoG6bGRhcDovLy9DTj1JTlNQVVItQ0EsQ049SlRDQTIwMTIsQ049Q0RQLENOPVB1YmxpYyUy
-MEtleSUyMFNlcnZpY2VzLENOPVNlcnZpY2VzLENOPUNvbmZpZ3VyYXRpb24sREM9aG9tZSxEQz1s
-YW5nY2hhbyxEQz1jb20/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdD9iYXNlP29iamVjdENsYXNz
-PWNSTERpc3RyaWJ1dGlvblBvaW50hjpodHRwOi8vSlRDQTIwMTIuaG9tZS5sYW5nY2hhby5jb20v
-Q2VydEVucm9sbC9JTlNQVVItQ0EuY3JsMIIBKQYIKwYBBQUHAQEEggEbMIIBFzCBsQYIKwYBBQUH
-MAKGgaRsZGFwOi8vL0NOPUlOU1BVUi1DQSxDTj1BSUEsQ049UHVibGljJTIwS2V5JTIwU2Vydmlj
-ZXMsQ049U2VydmljZXMsQ049Q29uZmlndXJhdGlvbixEQz1ob21lLERDPWxhbmdjaGFvLERDPWNv
-bT9jQUNlcnRpZmljYXRlP2Jhc2U/b2JqZWN0Q2xhc3M9Y2VydGlmaWNhdGlvbkF1dGhvcml0eTBh
-BggrBgEFBQcwAoZVaHR0cDovL0pUQ0EyMDEyLmhvbWUubGFuZ2NoYW8uY29tL0NlcnRFbnJvbGwv
-SlRDQTIwMTIuaG9tZS5sYW5nY2hhby5jb21fSU5TUFVSLUNBLmNydDBBBgNVHREEOjA4oCIGCisG
-AQQBgjcUAgOgFAwSbGl1Ym8wM0BpbnNwdXIuY29tgRJsaXVibzAzQGluc3B1ci5jb20wDQYJKoZI
-hvcNAQELBQADggEBAA+BaY3B3qXmvZq7g7tZLzq2VQjU//XHTmyl58GLDWdVHsuX3lrAGwEfLVnU
-odpvthjtb7T7xEUzJh4F62zLFSm8HOBPH1B+6SFQKChHZeM0pauvXr1krRtVv82RgLsU26XrXFUP
-N+NcPwt7vOw1zHOiDic4anL3A9gsuDljAi2l+CA5RY05yL+8orasEAhOYL6+ks9aB8QiCxbZzShk
-DTMkrh0N1DjoBLaibtnlI/fxOUYM6vgdiI+FC02G41B364ZAc1mabSFvGIP6cIdr/olprPQOj9cq
-6zMi05qUBUj22hDvhcY0TlT4fEJSrvblp/LG6qTtVI3ilUAxhe8i9cIxggOTMIIDjwIBATBwMFkx
-EzARBgoJkiaJk/IsZAEZFgNjb20xGDAWBgoJkiaJk/IsZAEZFghsYW5nY2hhbzEUMBIGCgmSJomT
-8ixkARkWBGhvbWUxEjAQBgNVBAMTCUlOU1BVUi1DQQITfgAA0dHVTGwIT1/wiwAAAADR0TAJBgUr
-DgMCGgUAoIIB+DAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTA1
-MjIwODM2MTFaMCMGCSqGSIb3DQEJBDEWBBQbDexK/2pduA7TpPXOwsh6ZPZo4TB/BgkrBgEEAYI3
-EAQxcjBwMFkxEzARBgoJkiaJk/IsZAEZFgNjb20xGDAWBgoJkiaJk/IsZAEZFghsYW5nY2hhbzEU
-MBIGCgmSJomT8ixkARkWBGhvbWUxEjAQBgNVBAMTCUlOU1BVUi1DQQITfgAA0dHVTGwIT1/wiwAA
-AADR0TCBgQYLKoZIhvcNAQkQAgsxcqBwMFkxEzARBgoJkiaJk/IsZAEZFgNjb20xGDAWBgoJkiaJ
-k/IsZAEZFghsYW5nY2hhbzEUMBIGCgmSJomT8ixkARkWBGhvbWUxEjAQBgNVBAMTCUlOU1BVUi1D
-QQITfgAA0dHVTGwIT1/wiwAAAADR0TCBkwYJKoZIhvcNAQkPMYGFMIGCMAoGCCqGSIb3DQMHMAsG
-CWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJYIZIAWUDBAECMA4GCCqGSIb3DQMCAgIAgDANBggq
-hkiG9w0DAgIBQDAHBgUrDgMCGjALBglghkgBZQMEAgMwCwYJYIZIAWUDBAICMAsGCWCGSAFlAwQC
-ATANBgkqhkiG9w0BAQEFAASCAQB6q6Zq5W1oPrF/bcMLyvGx4Q2p7+VUnKHocNNg8ZD0JZ8kKwR6
-FyqdIXUbxfvca6M9zV0AYnnmn6bDuv+VR+prQB6fSFQuM870F76mN0l0P7RdNAj0gaEbE6YZLt8e
-aHsGWThqCov26bvr8zNxFXuX9tt3avUj1dhcwpgyYlrG0nqr3Vdbzr2mLs6O/+pZOWWV2UGK9djU
-bpcmCpyXOhK125ev0DSIeKnsOZbp+vxpQkuiC51LH0sB1N+3nnNvNu+2AVhJsWvjUdKp5/cbn3lZ
-x+oiPA08KpOiBO4aRGNngczoZ9ys23iBt6mdm96TrNoH9fZwFwUeaEjm8mjQswM5AAAAAAAA
+diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
+index b134146d735b..4d024f043ea1 100644
+--- a/Documentation/ABI/testing/sysfs-fs-erofs
++++ b/Documentation/ABI/testing/sysfs-fs-erofs
+@@ -27,3 +27,12 @@ Description:	Writing to this will drop compression-related caches,
+ 		- 1 : invalidate cached compressed folios
+ 		- 2 : drop in-memory pclusters
+ 		- 3 : drop in-memory pclusters and cached compressed folios
++
++What:		/sys/fs/erofs/accel
++Date:		May 2025
++Contact:	"Bo Liu" <liubo03@inspur.com>
++Description:	Used to set or show hardware accelerators in effect
++		and multiple accelerators are separated by '\n'.
++		Supported accelerator(s): qat_deflate.
++		Disable all accelerators with an empty string (echo > accel).
++
+diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+index 331e49cd1b8d..74e878a9784a 100644
+--- a/fs/erofs/Kconfig
++++ b/fs/erofs/Kconfig
+@@ -144,6 +144,20 @@ config EROFS_FS_ZIP_ZSTD
+ 
+ 	  If unsure, say N.
+ 
++config EROFS_FS_ZIP_ACCEL
++	bool "EROFS hardware decompression support"
++	depends on EROFS_FS_ZIP
++	help
++	  Saying Y here includes hardware accelerator support for reading
++	  EROFS file systems containing compressed data.  It gives better
++	  decompression speed than the software-implemented decompression, and
++	  it costs lower CPU overhead.
++
++	  Hardware accelerator support is an experimental feature for now and
++	  file systems are still readable without selecting this option.
++
++	  If unsure, say N.
++
+ config EROFS_FS_ONDEMAND
+ 	bool "EROFS fscache-based on-demand read support (deprecated)"
+ 	depends on EROFS_FS
+diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+index 4331d53c7109..549abc424763 100644
+--- a/fs/erofs/Makefile
++++ b/fs/erofs/Makefile
+@@ -7,5 +7,6 @@ erofs-$(CONFIG_EROFS_FS_ZIP) += decompressor.o zmap.o zdata.o zutil.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_LZMA) += decompressor_lzma.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_DEFLATE) += decompressor_deflate.o
+ erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
++erofs-$(CONFIG_EROFS_FS_ZIP_ACCEL) += decompressor_crypto.o
+ erofs-$(CONFIG_EROFS_FS_BACKED_BY_FILE) += fileio.o
+ erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
+diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
+index 2704d7a592a5..6a3dc3ba406a 100644
+--- a/fs/erofs/compress.h
++++ b/fs/erofs/compress.h
+@@ -76,4 +76,14 @@ int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
+ 			 unsigned int padbufsize);
+ int __init z_erofs_init_decompressor(void);
+ void z_erofs_exit_decompressor(void);
++int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++				struct page **pgpl);
++int z_erofs_crypto_enable_engine(const char *name, int len);
++#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
++void z_erofs_crypto_disable_all_engines(void);
++int z_erofs_crypto_show_engines(char *buf, int size, char sep);
++#else
++static inline void z_erofs_crypto_disable_all_engines(void) {}
++static inline int z_erofs_crypto_show_engines(char *buf, int size, char sep) { return 0; }
++#endif
+ #endif
+diff --git a/fs/erofs/decompressor_crypto.c b/fs/erofs/decompressor_crypto.c
+new file mode 100644
+index 000000000000..f4891d335792
+--- /dev/null
++++ b/fs/erofs/decompressor_crypto.c
+@@ -0,0 +1,186 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++#include <linux/scatterlist.h>
++#include <crypto/acompress.h>
++
++#include "compress.h"
++
++static int __z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++				struct crypto_acomp *tfm)
++{
++	struct sg_table st_src, st_dst;
++	struct acomp_req *req;
++	struct crypto_wait wait;
++	u8 *headpage;
++	int ret;
++
++	headpage = kmap_local_page(*rq->in);
++	ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
++						min_t(unsigned int, rq->inputsize,
++							 rq->sb->s_blocksize - rq->pageofs_in));
++	kunmap_local(headpage);
++	if (ret)
++		return ret;
++
++	req = acomp_request_alloc(tfm);
++	if (!req)
++		return -ENOMEM;
++
++	ret = sg_alloc_table_from_pages_segment(&st_src, rq->in, rq->inpages,
++			rq->pageofs_in, rq->inputsize, UINT_MAX, GFP_KERNEL);
++	if (ret < 0)
++		goto failed_src_alloc;
++
++	ret = sg_alloc_table_from_pages_segment(&st_dst, rq->out, rq->outpages,
++			rq->pageofs_out, rq->outputsize, UINT_MAX, GFP_KERNEL);
++	if (ret < 0)
++		goto failed_dst_alloc;
++
++	acomp_request_set_params(req, st_src.sgl,
++		st_dst.sgl, rq->inputsize, rq->outputsize);
++
++	crypto_init_wait(&wait);
++	acomp_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
++				crypto_req_done, &wait);
++
++	ret = crypto_wait_req(crypto_acomp_decompress(req), &wait);
++	if (ret) {
++		erofs_err(rq->sb, "failed to decompress %d in[%u, %u] out[%u]",
++			  ret, rq->inputsize, rq->pageofs_in, rq->outputsize);
++		ret = -EIO;
++	}
++
++	sg_free_table(&st_dst);
++failed_dst_alloc:
++	sg_free_table(&st_src);
++failed_src_alloc:
++	acomp_request_free(req);
++	return ret;
++}
++
++struct z_erofs_crypto_engine {
++	char *crypto_name;
++	struct crypto_acomp *tfm;
++};
++
++struct z_erofs_crypto_engine *z_erofs_crypto[Z_EROFS_COMPRESSION_MAX] = {
++	[Z_EROFS_COMPRESSION_LZ4] = (struct z_erofs_crypto_engine[]) {
++		{},
++	},
++	[Z_EROFS_COMPRESSION_LZMA] = (struct z_erofs_crypto_engine[]) {
++		{},
++	},
++	[Z_EROFS_COMPRESSION_DEFLATE] = (struct z_erofs_crypto_engine[]) {
++		{ .crypto_name = "qat_deflate", },
++		{},
++	},
++	[Z_EROFS_COMPRESSION_ZSTD] = (struct z_erofs_crypto_engine[]) {
++		{},
++	},
++};
++
++static DECLARE_RWSEM(z_erofs_crypto_rwsem);
++
++static struct crypto_acomp *z_erofs_crypto_get_engine(int alg)
++{
++	struct z_erofs_crypto_engine *e;
++
++	for (e = z_erofs_crypto[alg]; e->crypto_name; ++e)
++		if (e->tfm)
++			return e->tfm;
++	return NULL;
++}
++
++
++int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
++				 struct page **pgpl)
++{
++	struct crypto_acomp *tfm;
++	int i, err;
++
++	down_read(&z_erofs_crypto_rwsem);
++	tfm = z_erofs_crypto_get_engine(rq->alg);
++	if (!tfm) {
++		err = -EOPNOTSUPP;
++		goto out;
++	}
++
++	for (i = 0; i < rq->outpages; i++) {
++		struct page *const page = rq->out[i];
++		struct page *victim;
++
++		if (!page) {
++			victim = __erofs_allocpage(pgpl, rq->gfp, true);
++			if (!victim) {
++				err = -ENOMEM;
++				goto out;
++			}
++			set_page_private(victim, Z_EROFS_SHORTLIVED_PAGE);
++			rq->out[i] = victim;
++		}
++	}
++
++	err = __z_erofs_crypto_decompress(rq, tfm);
++out:
++	up_read(&z_erofs_crypto_rwsem);
++	return err;
++}
++
++int z_erofs_crypto_enable_engine(const char *name, int len)
++{
++	struct z_erofs_crypto_engine *e;
++	struct crypto_acomp *tfm;
++	int alg;
++
++	down_write(&z_erofs_crypto_rwsem);
++	for (alg = 0; alg < Z_EROFS_COMPRESSION_MAX; ++alg) {
++		for (e = z_erofs_crypto[alg]; e->crypto_name; ++e) {
++			if (!strncmp(name, e->crypto_name, len)) {
++				if (e->tfm)
++					break;
++				tfm = crypto_alloc_acomp(e->crypto_name, 0, 0);
++				if (IS_ERR(tfm)) {
++					up_write(&z_erofs_crypto_rwsem);
++					return -EOPNOTSUPP;
++				}
++				e->tfm = tfm;
++				break;
++			}
++		}
++	}
++	up_write(&z_erofs_crypto_rwsem);
++	return 0;
++}
++
++void z_erofs_crypto_disable_all_engines(void)
++{
++	struct z_erofs_crypto_engine *e;
++	int alg;
++
++	down_write(&z_erofs_crypto_rwsem);
++	for (alg = 0; alg < Z_EROFS_COMPRESSION_MAX; ++alg) {
++		for (e = z_erofs_crypto[alg]; e->crypto_name; ++e) {
++			if (!e->tfm)
++				continue;
++			crypto_free_acomp(e->tfm);
++			e->tfm = NULL;
++		}
++	}
++	up_write(&z_erofs_crypto_rwsem);
++}
++
++int z_erofs_crypto_show_engines(char *buf, int size, char sep)
++{
++	struct z_erofs_crypto_engine *e;
++	int alg, len = 0;
++
++	for (alg = 0; alg < Z_EROFS_COMPRESSION_MAX; ++alg) {
++		for (e = z_erofs_crypto[alg]; e->crypto_name; ++e) {
++			if (!e->tfm)
++				continue;
++			len += scnprintf(buf + len, size - len, "%s%c",
++					 e->crypto_name, sep);
++		}
++	}
++	return len;
++}
++
+diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
+index c6908a487054..e4c9df9d7978 100644
+--- a/fs/erofs/decompressor_deflate.c
++++ b/fs/erofs/decompressor_deflate.c
+@@ -97,7 +97,7 @@ static int z_erofs_load_deflate_config(struct super_block *sb,
+ 	return -ENOMEM;
+ }
+ 
+-static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
++static int __z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+ 				      struct page **pgpl)
+ {
+ 	struct super_block *sb = rq->sb;
+@@ -178,6 +178,21 @@ static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+ 	return err;
+ }
+ 
++static int z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
++				struct page **pgpl)
++{
++#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
++	int err;
++
++	if (!rq->partial_decoding) {
++		err = z_erofs_crypto_decompress(rq, pgpl);
++		if (err != -EOPNOTSUPP)
++			return err;
++	}
++#endif
++	return __z_erofs_deflate_decompress(rq, pgpl);
++}
++
+ const struct z_erofs_decompressor z_erofs_deflate_decomp = {
+ 	.config = z_erofs_load_deflate_config,
+ 	.decompress = z_erofs_deflate_decompress,
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index dad4e6c6c155..1239d452f45f 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -7,12 +7,14 @@
+ #include <linux/kobject.h>
+ 
+ #include "internal.h"
++#include "compress.h"
+ 
+ enum {
+ 	attr_feature,
+ 	attr_drop_caches,
+ 	attr_pointer_ui,
+ 	attr_pointer_bool,
++	attr_accel,
+ };
+ 
+ enum {
+@@ -60,14 +62,26 @@ static struct erofs_attr erofs_attr_##_name = {			\
+ EROFS_ATTR_RW_UI(sync_decompress, erofs_mount_opts);
+ EROFS_ATTR_FUNC(drop_caches, 0200);
+ #endif
++#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
++EROFS_ATTR_FUNC(accel, 0644);
++#endif
+ 
+-static struct attribute *erofs_attrs[] = {
++static struct attribute *erofs_sb_attrs[] = {
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	ATTR_LIST(sync_decompress),
+ 	ATTR_LIST(drop_caches),
+ #endif
+ 	NULL,
+ };
++ATTRIBUTE_GROUPS(erofs_sb);
++
++static struct attribute *erofs_attrs[] = {
++#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
++	ATTR_LIST(accel),
++#endif
++	NULL,
++};
++
+ ATTRIBUTE_GROUPS(erofs);
+ 
+ /* Features this copy of erofs supports */
+@@ -128,6 +142,8 @@ static ssize_t erofs_attr_show(struct kobject *kobj,
+ 		if (!ptr)
+ 			return 0;
+ 		return sysfs_emit(buf, "%d\n", *(bool *)ptr);
++	case attr_accel:
++		return z_erofs_crypto_show_engines(buf, PAGE_SIZE, '\n');
+ 	}
+ 	return 0;
+ }
+@@ -181,6 +197,19 @@ static ssize_t erofs_attr_store(struct kobject *kobj, struct attribute *attr,
+ 		if (t & 1)
+ 			invalidate_mapping_pages(MNGD_MAPPING(sbi), 0, -1);
+ 		return len;
++#endif
++#ifdef CONFIG_EROFS_FS_ZIP_ACCEL
++	case attr_accel:
++		buf = skip_spaces(buf);
++		z_erofs_crypto_disable_all_engines();
++		while (*buf) {
++			t = strcspn(buf, "\n");
++			ret = z_erofs_crypto_enable_engine(buf, t);
++			if (ret < 0)
++				return ret;
++			buf += buf[t] != '\0' ? t + 1 : t;
++		}
++		return len;
+ #endif
+ 	}
+ 	return 0;
+@@ -199,12 +228,13 @@ static const struct sysfs_ops erofs_attr_ops = {
+ };
+ 
+ static const struct kobj_type erofs_sb_ktype = {
+-	.default_groups = erofs_groups,
++	.default_groups = erofs_sb_groups,
+ 	.sysfs_ops	= &erofs_attr_ops,
+ 	.release	= erofs_sb_release,
+ };
+ 
+ static const struct kobj_type erofs_ktype = {
++	.default_groups = erofs_groups,
+ 	.sysfs_ops	= &erofs_attr_ops,
+ };
+ 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 0671184d9cf1..f02bf95aeb3f 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -409,6 +409,7 @@ void z_erofs_exit_subsystem(void)
+ 	erofs_destroy_percpu_workers();
+ 	destroy_workqueue(z_erofs_workqueue);
+ 	z_erofs_destroy_pcluster_pool();
++	z_erofs_crypto_disable_all_engines();
+ 	z_erofs_exit_decompressor();
+ }
+ 
+-- 
+2.31.1
 
-------=_NextPart_000_0058_01DBCB37.A0821100--
 
