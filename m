@@ -1,50 +1,48 @@
-Return-Path: <linux-erofs+bounces-378-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-379-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87A90ACB9FF
-	for <lists+linux-erofs@lfdr.de>; Mon,  2 Jun 2025 19:08:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 22F0DACBEAF
+	for <lists+linux-erofs@lfdr.de>; Tue,  3 Jun 2025 05:08:41 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bB0fy1kw6z2y8l;
-	Tue,  3 Jun 2025 03:08:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bBFz93BWvz2yGM;
+	Tue,  3 Jun 2025 13:08:37 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1748884121;
-	cv=none; b=BSehcS9DGt78ISshvvThSgYgYfZ1OibpqTkcb/ptq/8/lqJXg/MZxz1ZZJMcsb42s7ali5nUMYEtufOWbfWM/rjwGmSiVDaTVzgfR+tGR4jWpGUsM+JWcAAeUXHjLyKyvuK0aKxiuiqQCXG2e6D6/6Qs7CTJ6lfGwkf1CFw8wMjhANU50rTwIL3XviJYt1ZBrnCeu4xUDy/pl83y8YrqAorQHFvWMI/2Gd6zn3zThcwUd9A1TmUxfjWwA7XJV7LkMLF0sTHPKtXPTe11YMc7WMX5Smnp/86DIaeuqSKZFX2N0/U7NFkrl66ABL+rfNdw459wfbr1EvWAIQoC6S2ncg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1748920117;
+	cv=none; b=mbb/BwPoZVX4ayofb8SRCGk/UTMeNQkm5vcr/Nqses1eIaD5MlyeWpnNY3wIHOirr5M7YH6FwXINMxdUFQpGf74tJ3btpSuOvNdyPv/rrcFRomxztDFtP5nQDPoI1Cv60dUdOMnTs7cfWk0Tntn5jmV9CTx0b+BQEzSkRkLPhlTaAnaZKOOKxYjG8tr0IraXFUwon4S1oz8SV6FHYcYBlchHDmGr7nTKwRcZ/4OhzR+hY+EYLpFzpyh04ytBXZBdIbs3Sklmnx41srDgDH8t057YJ2xDLBaW6AebGc1RUbFYiJgkA82xlHgce+nx/WEO9c1jsAf+qIhiUUO5SRRzrQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1748884121; c=relaxed/relaxed;
-	bh=lc+DEamDSfRrtRfYvXJhzn0P0HnN5KoH3zIJyV5c1Po=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gqhYh5sdRDTQ61Eqrt718ZG1xKfTICJCu1I0K/knqZJt0g4ar2eKpE7wZbH6Be6ttOJayCu/SVZUh4RilUdG/p5d1JJ/ttxFnotPQ2q6YDnjwg+y1HC/YEU0nx4ZZ47CPjweTPAoB8E1CovSiAGu9YUW44oTs0ZZvt0HhBw8ZbHSJciEkaU5oe6I+tHSb0x4fVMf8u5nmh5HOYqGHmpmv3pj5kgOBd8X96/49Msc4K1OJ7tdXgFORQ1u6X+hg9lw0UfXwqtRv7QTfZrDlAc8PUPRNar52IDrzd2tchMV10dSVofhG+6SnOvW6MHYhrsE+03YSjUXth1RKj0gSxbJbA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=eocPpelt; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=eocPpelt;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1748920117; c=relaxed/relaxed;
+	bh=YZmeCfH5LWWp7BXtD1PuEh0gAPBJYiWVLxMg6cDuq0o=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GTHe8aoMjmqpw2KCNcowkviiB7bQJJ+RFIYMAs35z4HCiBOads/DIHg4g+j9L0w+lcGaLrP6/DcNhPKnpy+A0tU98Qzmhbcq9S50s9Z32r6A84dX0verP0w6Q8zoaOUulKUFuTtLHdIxIFgwRUjTVdgc7JKWjoW0rnUNrEUaZga8LJmJGOccJmLD+TSkg7pZfecZyYLYv/XwEVUuo/CJJX03nu+eDthg/2j+tOd/zVrbg/YmliMqhQGwshD6Pcgcml5jjfw04aZz5qDKzEN3FwGBuL0evEg6/9j8arwZczlbcLv+FbpeqT1dFMbEHg3WP5q9snmmdVJWdxIi0lSdqQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bB0fv1pMhz2xfB
-	for <linux-erofs@lists.ozlabs.org>; Tue,  3 Jun 2025 03:08:37 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748884113; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=lc+DEamDSfRrtRfYvXJhzn0P0HnN5KoH3zIJyV5c1Po=;
-	b=eocPpeltunbUzE88tXtQlhalem5IhCRG3lwAip/xf2MiQObSPin+lYQdHxpH66MBwaGxjQNsgF1rki1GzD8tFSc3cnNkZOsAG7KAb8GVHwN8dP08TrydC1Vy/ja8UseLEGVR/+p+kgOjKSEZrFPlx8cX2ZSSlNShelqpuO2eHgo=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wcdijid_1748884105 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 03 Jun 2025 01:08:30 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v2] erofs-utils: mkfs: fix image reproducibility of `-E(all-)fragments`
-Date: Tue,  3 Jun 2025 01:08:23 +0800
-Message-ID: <20250602170823.1201737-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <9a234fc8-2ef0-435b-bc25-47881182d6c5@huawei.com>
-References: <9a234fc8-2ef0-435b-bc25-47881182d6c5@huawei.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bBFz765XNz2xpl
+	for <linux-erofs@lists.ozlabs.org>; Tue,  3 Jun 2025 13:08:33 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bBFws3wjGz13LxV;
+	Tue,  3 Jun 2025 11:06:37 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4CF03180A9E;
+	Tue,  3 Jun 2025 11:08:29 +0800 (CST)
+Received: from huawei.com (10.67.174.162) by kwepemo500009.china.huawei.com
+ (7.202.194.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 3 Jun
+ 2025 11:08:28 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <hsiangkao@linux.alibaba.com>
+CC: <linux-erofs@lists.ozlabs.org>
+Subject: [PATCH v3] erofs-utils: mkfs: fix image reproducibility of `-E(all-)fragments`
+Date: Tue, 3 Jun 2025 03:08:14 +0000
+Message-ID: <20250603030814.487212-1-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20250602170823.1201737-1-hsiangkao@linux.alibaba.com>
+References: <20250602170823.1201737-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -57,48 +55,48 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.162]
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
+X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 The timestamp of the packed inode should be fixed to the build time.
 
 Fixes: 9fa9b017f773 ("erofs-utils: mkfs: support fragments")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+[hongbo: minor adjust]
+Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
 ---
+change since v2:
+ - compare path with strcmp;
+
 change since v1:
  - fix time assignment (assign `i_mtime_nsec` too) [Hongbo];
-
- lib/inode.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+---
+ lib/inode.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/lib/inode.c b/lib/inode.c
-index 7a10624..9095ebc 100644
+index 108aa9e..46eb686 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
-@@ -910,7 +910,8 @@ out:
- 	return 0;
- }
- 
--static bool erofs_should_use_inode_extended(struct erofs_inode *inode)
-+static bool erofs_should_use_inode_extended(struct erofs_inode *inode,
-+					    const char *path)
- {
- 	if (cfg.c_force_inodeversion == FORCE_INODE_EXTENDED)
- 		return true;
-@@ -924,7 +925,8 @@ static bool erofs_should_use_inode_extended(struct erofs_inode *inode)
+@@ -929,7 +929,8 @@ static bool erofs_should_use_inode_extended(struct erofs_inode *inode)
  		return true;
  	if (inode->i_nlink > USHRT_MAX)
  		return true;
 -	if ((inode->i_mtime != inode->sbi->build_time ||
-+	if (path != EROFS_PACKED_INODE &&
++	if (strcmp(inode->i_srcpath, EROFS_PACKED_INODE) &&
 +	    (inode->i_mtime != inode->sbi->build_time ||
  	     inode->i_mtime_nsec != inode->sbi->build_time_nsec) &&
  	    !cfg.c_ignore_mtime)
  		return true;
-@@ -1016,6 +1018,11 @@ int __erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+@@ -1021,6 +1022,11 @@ int __erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
  		erofs_err("gid overflow @ %s", path);
  	inode->i_gid += cfg.c_gid_offset;
  
@@ -110,7 +108,7 @@ index 7a10624..9095ebc 100644
  	inode->i_mtime = st->st_mtime;
  	inode->i_mtime_nsec = ST_MTIM_NSEC(st);
  
-@@ -1029,7 +1036,6 @@ int __erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+@@ -1034,7 +1040,6 @@ int __erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
  	default:
  		break;
  	}
@@ -118,25 +116,7 @@ index 7a10624..9095ebc 100644
  	return 0;
  }
  
-@@ -1065,7 +1071,7 @@ static int erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
- 	if (!inode->i_srcpath)
- 		return -ENOMEM;
- 
--	if (erofs_should_use_inode_extended(inode)) {
-+	if (erofs_should_use_inode_extended(inode, path)) {
- 		if (cfg.c_force_inodeversion == FORCE_INODE_COMPACT) {
- 			erofs_err("file %s cannot be in compact form",
- 				  inode->i_srcpath);
-@@ -1610,7 +1616,7 @@ static int erofs_rebuild_handle_inode(struct erofs_inode *inode,
- 	erofs_update_progressinfo("Processing %s ...", trimmed);
- 	free(trimmed);
- 
--	if (erofs_should_use_inode_extended(inode)) {
-+	if (erofs_should_use_inode_extended(inode, inode->i_srcpath)) {
- 		if (cfg.c_force_inodeversion == FORCE_INODE_COMPACT) {
- 			erofs_err("file %s cannot be in compact form",
- 				  inode->i_srcpath);
 -- 
-2.43.5
+2.22.0
 
 
