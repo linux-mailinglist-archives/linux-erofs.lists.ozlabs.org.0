@@ -1,50 +1,48 @@
-Return-Path: <linux-erofs+bounces-404-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-406-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 794D2AD99AE
-	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jun 2025 04:33:17 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B709AD9BE6
+	for <lists+linux-erofs@lfdr.de>; Sat, 14 Jun 2025 11:46:13 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bK0gG0Z7fz2xHp;
-	Sat, 14 Jun 2025 12:33:14 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bKBGp2HmTz2xd3;
+	Sat, 14 Jun 2025 19:46:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1749868394;
-	cv=none; b=C9fay6H6XZ3qfGmJ8bMHyQoDYi0U6wjCplgVbokNwW2tJFMFL01DH9wqedEnZT7Prhbv5R3HogtsLcT7MQIgcxyZdSCzGqpel289ya/pqueov60UqzJ/ueuLpEg/833WKFrhpWLaDmLY2oUmTkgraBjaCY/kofRsV9pORAFK7+9sxzm3P59cussYXVy6U5bZqeNx5a3fKXqw3AAHTQmhCKwlju6JRUAqOdLqDO7qS+Fd6AZ1oJxrJxmlNFaaxgKi1lB7AjLZREkpOQnk5U960zQbBJGcUCOP55G7/UVWKv1V6qRg7HXFPIlhfAzmTFiMbomyHQIPiGmEI1WRtG4ssw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.166.198
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1749894370;
+	cv=none; b=WstrLx/7B4QgW0lCuh4DtIF1l6VLE8R4WWqZqlKuL5GTBxnXB3OVVqA639eAgR+GBlrvDTXYziVwLditOl5w9yMrR1WmB1vRQDSpeprLW/ZJNWfrgpdcfFYr2LLQvJISor922/zGDJKQvY5zy2pl43kKPh28P5ZsZeZ5Q9XOEOc/IPcRtyqeHZMbn3Lmq/XBR4gRGmc7xJrWE3/zfpUZbffnrhlQ6t+Bt+wk5zU+Ps5Ammdu1e9Gqjn4YjrKCihidm8HBLyE0b4lpfUvkdFZwTDZPMbqG/uS+PpnVdvVpgqDVT/Q/WcdwT7ebgayoFw1qtvqUmipcyCegT7BH8lztg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1749868394; c=relaxed/relaxed;
-	bh=dAOZ/rDEJBzB4QwBf9KhBRruaTdFjmV6uOwxhL0KLpE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I9NLkEmykkNGFF0TR6kHHccczjs/BALuvMdKh2EnAKY4Qtq0w+3IgT5Qt2kAOfgwOiwmZyQa0jPgar9rCep9XAdbiaTvD3+ckSn11+4/c97cZb7K8MAXroovyHQ9diHyJokMEmXd7WIOgfjS3CRrlUp6wuBPEGSUgE4lPqj3kPUDmXr9MZe9iRsG/Ilwxx8snE4XYaZdTH9OYxFhkAq17MRu54cqOIvrmM7G25eLgDPjhQZ30CknU/PTmmbwzJOGsWoSeR60RIK/B8V6DUmg6cWhWVhIOV/S1n0abCcATwmwVfgzZRTdweJKj0rfLMayIl2MjKhTzFhQxsq8exkKwQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=HCuuhdMB; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=HCuuhdMB;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	t=1749894370; c=relaxed/relaxed;
+	bh=OOullEj6fbTIFAODytKrgDERNVpRSjN594Q2Nd4pVdg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=WBZsVjr5oXFWMd3pJHBDd6YGVVeaE2vaPnpIVFQSOjha6sxI9pmh1HzHj9C5cmA2eoxJtmalZzsphyMEhgdz964db+wKkHmp2VnYXIlxfnnlR+VFCp4udkkipaNVL9VxPqxIuiOk+/MsgPgSkF+DOe8td2sIU3JPffMCyms3YAejqcGO7HBNzP/njeAsMOF5m1LletU2BgaIL44pCjkV+7TvKy7YMnIYsOTnrHiJ4/2viyrDq6Qt/cqse7ZCxrJVjHRxFt9R3AcYcvtQIR06CLw3cINEUx5JHO0+1k3nVPEgtC4fnUzxKCexB79DI8Vp6h9RiblXiguBi9mLev5Ipg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass (client-ip=209.85.166.198; helo=mail-il1-f198.google.com; envelope-from=32krnaakbaoevbcndoohudsslg.jrrjohxvhufrqwhqw.frp@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com
+Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.166.198; helo=mail-il1-f198.google.com; envelope-from=32krnaakbaoevbcndoohudsslg.jrrjohxvhufrqwhqw.frp@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bK0gD2CmVz2xS2
-	for <linux-erofs@lists.ozlabs.org>; Sat, 14 Jun 2025 12:33:11 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1749868388; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=dAOZ/rDEJBzB4QwBf9KhBRruaTdFjmV6uOwxhL0KLpE=;
-	b=HCuuhdMBPyFM5KReoNSExKRFEK2k0bSYzLDzG4w7fhS4Ouhb9Q8o6ba4k2Ck7fZi+rCvK2kpAh0sMpEXxVMu/aMzdGWGhcn8QwF6uRN5j6ZnzAHxONLYVGZ7DnnAMt/cfY5d4mq6XrmjZ7ehYM7zbMbsY/0sUnR3gor9ordP+rE=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wdm5aFk_1749868385 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sat, 14 Jun 2025 10:33:06 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 3/3] erofs-utils: mkfs: handle early exit of the dfops worker
-Date: Sat, 14 Jun 2025 10:32:59 +0800
-Message-ID: <20250614023259.1688845-3-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250614023259.1688845-1-hsiangkao@linux.alibaba.com>
-References: <20250614023259.1688845-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bKBGj710Wz2xHZ
+	for <linux-erofs@lists.ozlabs.org>; Sat, 14 Jun 2025 19:46:05 +1000 (AEST)
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddc5137992so32895195ab.2
+        for <linux-erofs@lists.ozlabs.org>; Sat, 14 Jun 2025 02:46:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749894362; x=1750499162;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OOullEj6fbTIFAODytKrgDERNVpRSjN594Q2Nd4pVdg=;
+        b=wgtSItWSJx6/m4rNxR9sWhMQdt7YSxxK2C23cTF6ePshTZXVJsvrhx67KCGPP2n/GO
+         nJjCL+j9dk0oV45Uv0+AnJiaC6WPFGxPSAhUcivmK6HQcamvihhTNDFiT/HgfUOTAo1K
+         FUxkdLLqtxJBkZ9USRzT0jukkyaOF8Sn5fhtq6EZJICFED0bGuaWkVXj0B+UIPjl5Y7z
+         02BborOeJb8c+mIEJ3IG7P+oD60V93ll7UaurfJ9kfS/VX5T9JX+cWuuFZI7FuIEd+rw
+         MjAD7CQPDYn5sfiMEgTCMMvRlyW7hRY2f/NVAB6SROkrlxg3MbPsrY1mv3NixpgFONE3
+         +56w==
+X-Forwarded-Encrypted: i=1; AJvYcCWRZ0JoUPdb0TbGYozuM873q74zHmIr68Cr2DqCmkKCodRWGwg7xlSpnyHIcaCauovVJrZ8mqH/ZdQMUQ==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YzFtXbOIxgCT1We5o0pgielmtm77JJ9ZgwxZONGPA7PkdiZRyVT
+	N5EvLLzBUtWVDEk48PseDmYbBPCpIlWS4R2ptHheGKeh5oUsvEkenhJio9Ch/1keppNWnvMvFkL
+	8KqGXnTHrh5Kc40ku6XPA/wmrqiMikATYCrEDvL6boKahGMKHvKZTfmmU7MU=
+X-Google-Smtp-Source: AGHT+IEVUfA3mPXS3hA0DJoSSRV+Ghh9W3bYlbB4sUQ+RiorkpWaQkzcHee8EanONeMMSXpA5+N9R0E0c+PhDvzwN0h/7WUL0Klg
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -56,87 +54,47 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Received: by 2002:a05:6e02:170b:b0:3dd:bfbc:2e84 with SMTP id
+ e9e14a558f8ab-3de07cd17c6mr26890655ab.19.1749894362680; Sat, 14 Jun 2025
+ 02:46:02 -0700 (PDT)
+Date: Sat, 14 Jun 2025 02:46:02 -0700
+In-Reply-To: <684cb499.a00a0220.c6bd7.0010.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <684d44da.050a0220.be214.02b2.GAE@google.com>
+Subject: Re: [syzbot] [iomap?] [erofs?] WARNING in iomap_iter (5)
+From: syzbot <syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com>
+To: brauner@kernel.org, chao@kernel.org, djwong@kernel.org, eadavis@qq.com, 
+	hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com, xiang@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=2.8 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H2,SORTED_RECIPS,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Otherwise, the main thread will be stuck due to the full queue.
+syzbot has bisected this issue to:
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- lib/inode.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+commit 1d191b4ca51d73699cb127386b95ac152af2b930
+Author: Gao Xiang <hsiangkao@linux.alibaba.com>
+Date:   Mon Mar 10 09:54:58 2025 +0000
 
-diff --git a/lib/inode.c b/lib/inode.c
-index 39ffebc..db26236 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -1393,6 +1393,7 @@ struct erofs_mkfs_dfops {
- 	struct erofs_mkfs_jobitem *queue;
- 	unsigned int entries, head, tail;
- 	bool idle;	/* initialize as false before the dfops worker runs */
-+	bool exited;
- };
- 
- static void erofs_mkfs_flushjobs(struct erofs_sb_info *sbi)
-@@ -1443,6 +1444,10 @@ static void *z_erofs_mt_dfops_worker(void *arg)
- 		ret = erofs_mkfs_jobfn(item);
- 		erofs_mkfs_pop_jobitem(dfops);
- 	} while (!ret);
-+
-+	dfops->exited = true;
-+	if (ret < 0)
-+		pthread_cond_signal(&dfops->full);
- 	pthread_exit((void *)(uintptr_t)(ret < 0 ? ret : 0));
- }
- 
-@@ -1454,8 +1459,13 @@ static int erofs_mkfs_go(struct erofs_sb_info *sbi,
- 
- 	pthread_mutex_lock(&q->lock);
- 
--	while (q->tail - q->head >= q->entries)
-+	while (q->tail - q->head >= q->entries) {
-+		if (q->exited) {
-+			pthread_mutex_unlock(&q->lock);
-+			return -ECHILD;
-+		}
- 		pthread_cond_wait(&q->full, &q->lock);
-+	}
- 
- 	item = q->queue + (q->tail++ & (q->entries - 1));
- 	item->type = type;
-@@ -1912,9 +1922,10 @@ static int erofs_get_fdlimit(void)
- 
- static int erofs_mkfs_build_tree(struct erofs_mkfs_buildtree_ctx *ctx)
- {
-+	struct erofs_sb_info *sbi = ctx->sbi ? ctx->sbi : ctx->u.root->sbi;
- 	struct erofs_mkfs_dfops *q;
- 	int err, err2;
--	struct erofs_sb_info *sbi = ctx->sbi ? ctx->sbi : ctx->u.root->sbi;
-+	void *retval;
- 
- 	q = calloc(1, sizeof(*q));
- 	if (!q)
-@@ -1946,9 +1957,13 @@ static int erofs_mkfs_build_tree(struct erofs_mkfs_buildtree_ctx *ctx)
- 
- 	err = __erofs_mkfs_build_tree(ctx);
- 	erofs_mkfs_go(sbi, ~0, NULL, 0);
--	err2 = pthread_join(sbi->dfops_worker, NULL);
--	if (!err)
-+	err2 = pthread_join(sbi->dfops_worker, &retval);
-+	DBG_BUGON(!q->exited);
-+	if (!err || err == -ECHILD) {
- 		err = err2;
-+		if (!err)
-+			err = (intptr_t)retval;
-+	}
- 
- fail:
- 	pthread_cond_destroy(&q->empty);
--- 
-2.43.5
+    erofs: implement encoded extent metadata
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1352dd70580000
+start commit:   02adc1490e6d Merge tag 'spi-fix-v6.16-rc1' of git://git.ke..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=10d2dd70580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1752dd70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=162faeb2d1eaefb4
+dashboard link: https://syzkaller.appspot.com/bug?extid=d8f000c609f05f52d9b5
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=115f9e0c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1688b10c580000
+
+Reported-by: syzbot+d8f000c609f05f52d9b5@syzkaller.appspotmail.com
+Fixes: 1d191b4ca51d ("erofs: implement encoded extent metadata")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
