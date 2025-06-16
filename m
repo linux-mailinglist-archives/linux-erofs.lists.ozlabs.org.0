@@ -1,48 +1,48 @@
-Return-Path: <linux-erofs+bounces-423-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-424-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C012ADBB26
-	for <lists+linux-erofs@lfdr.de>; Mon, 16 Jun 2025 22:28:23 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F7E3ADBB60
+	for <lists+linux-erofs@lfdr.de>; Mon, 16 Jun 2025 22:43:02 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bLhQr5rGBz2yMD;
-	Tue, 17 Jun 2025 06:28:20 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bLhll4P2Fz307q;
+	Tue, 17 Jun 2025 06:42:59 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2001:8b0:10b:1236::1"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750105700;
-	cv=none; b=BYfmTvbSH9dr6r5oElKrE5Ffy/o7X8V2F4JvA5LAEgmN2SfU6KC2aDtQOGzHKfrOTP1SSi/Bfj7yGe9KULFp+pK+NA7RlMrWG7KilcF3FVgPS37X63sLUv6aAv9nWAI9NEjAmYQ16dy+QvF4nELw6jfgsxtPC2gfHFuZyXRfrqpAQ4CS5eXTcLQsxc0ZF7/bdOKbLRoibJtI/7vzK9PVptySFRyZs+QI+R852vljpQAvnC4U7LE1mnhbOWSy5Zgm4Y65wYb3oTpExZbDJNpBElGdqBCaEGo3EB9lHVilTS2OlT+JtgWypC1xUvYhratP2iOLddlqN8SyBEwfMROeKQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a03:a000:7:0:5054:ff:fe1c:15ff"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750106579;
+	cv=none; b=CkBFzAO6Ti16kkbNcHtwJIFJiyQ0i0FhUJLKmCJCafMzz9fhGJfcYdq2EunSJNJOlrqepTpzcBppEPUJCcfW7riXn8qUDzNFP/DRc1st3FsM09UlfeSPr1YQEc/z3d78aKrtRu0tO/r7D2p79aunJIYSamYB/LZv0rtEoCqbSgkQYKlk4ljX28TIqNMd7KWqETqnPfS9qvuqevwwn2/84UNvhXApa9Hky6OfmLMziZuuLvyVQGSYg7zW1vh72bAouPEAkXVjf34ykJ+Xq9haMhsSfoE+3s1/Vd5z7Te1Nni8ZKk0mkNLRMnYA7XJQyv8vu8l+/fwtKN6cEw/gDjZng==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1750105700; c=relaxed/relaxed;
-	bh=rMTsK0YsjlB18wsT75a6evHrM3XMSVJTrFI3gzXouMw=;
+	t=1750106579; c=relaxed/relaxed;
+	bh=alq/Pjol9hRHmsoK4W/c2CtmXHL3bnmjTRKmw+CMrtk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cj8r9iBRRcRdnJRXGXeysnmNpWhCoe9z0tKBfoGAJzOUgTlk7uyWj8nmzkYY6JfP1F3Cp9rkaKZwosGoUqWhRxtHrokqv3x+kszvoaqUXSRSxGMgA/hqjXW71tu4OEjbMycI3r1nDA9KDe03vYCbRNLts1vm7cfjxaLMZiN/ZDSkpUSQt7b8fBnO4sAhUjGWtxmA+hqap84XNWzpooHruYZGv07yXpXGzB0T6KgRs5rjYDFbSW8xI+T0Fj9GEdWx8dg5Krh06bretlpL23uF51J5BT2+6h3C2z+44FvYU2w1kbm2SkWGdr+ANTWW+lVmYNsfBgvM8jII2X12unL3Kg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=XSnCmY0M; dkim-atps=neutral; spf=none (client-ip=2001:8b0:10b:1236::1; helo=casper.infradead.org; envelope-from=willy@infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=infradead.org
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=iwZn0Q+FvTOCsJ4hDcb0WxjMsYLRTSQ+Je7PdAtUMIfPO3nTnzL4X2EVsjy2F6dVUG8ncBj1kVukQ+TMnMPs9Ed3QyfwcdQcVhmEWtJvt9UzeYbNuM+eMW6zsKKVq39PewyM5XcnUlaMAnie7YsL+++jZepfTpssrnyqXCvi6wt3FcArsATqHxLWWEnmd4ZDRgj+qKi06hmKdrsigCChOdYv744npq/U79/aIADK2ita+RraZqVnMqe5wznDlvqomW7QCMhOPhr762hzQdr/kopmMBqFq0T4g1IzkR0l6l2usl0WeQDJ2iv8TOZnx1NZyZnXb09aiElUkUZBrYNwOg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=A7p+Acvn; dkim-atps=neutral; spf=none (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org) smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=XSnCmY0M;
+	dkim=pass (2048-bit key; unprotected) header.d=linux.org.uk header.i=@linux.org.uk header.a=rsa-sha256 header.s=zeniv-20220401 header.b=A7p+Acvn;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=infradead.org (client-ip=2001:8b0:10b:1236::1; helo=casper.infradead.org; envelope-from=willy@infradead.org; receiver=lists.ozlabs.org)
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=ftp.linux.org.uk (client-ip=2a03:a000:7:0:5054:ff:fe1c:15ff; helo=zeniv.linux.org.uk; envelope-from=viro@ftp.linux.org.uk; receiver=lists.ozlabs.org)
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bLhQl1bpXz2xck
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Jun 2025 06:28:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bLhlf488jz2xck
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Jun 2025 06:42:53 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rMTsK0YsjlB18wsT75a6evHrM3XMSVJTrFI3gzXouMw=; b=XSnCmY0Ml7NLCrMRP4OfNwKCxm
-	t3knyrRU4umUwqGsAQ78VDJwhklMHyppjzgkgSiDjEr1eDLbkdmMI1Ud09tK10NOTGSkVr9OAVdA5
-	yeDW00x8GaS/9hTn/5iTIiI7ZEmOX2IYVaYsUKHT/a7Sh9XTAvxkYrLcfI6adjZOgVZ/EQ8izXpRS
-	N7CyfmoYNKAXSZWjXkcw7dH2WIhiyXqdB2rcIWxw4KPMz9e5BecjG1NA5nrYsPuYwy5tj/ShXnUjZ
-	Hx7i1JazW+vFcm5JpzfYFwz2+TREcWXzGJRoblKfrG12x8d/ZXuZZBMy93UQ4ahuLIE/06ESgJ7x2
-	dKaQyh9w==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRGPu-0000000GKxl-3X50;
-	Mon, 16 Jun 2025 20:26:54 +0000
-Date: Mon, 16 Jun 2025 21:26:54 +0100
-From: Matthew Wilcox <willy@infradead.org>
+	bh=alq/Pjol9hRHmsoK4W/c2CtmXHL3bnmjTRKmw+CMrtk=; b=A7p+Acvn5uycXyz3kLo38iW9Ad
+	D+bYigpKSwXx9Qqj1iM2cauc4vJVM5S4cn4cbXzLSyPr5aCY6CT2OVFHXSo8Ysd1LMe4PIHVof75s
+	4ixGU0gXpw9fxNXo/FZ31klq9ihs5qru2SnNaJuY3SsfiDVgdbRXOX9BVI2VDLVAd+vUo1oJFU8Te
+	frcwrPbBPewoCrxwD5QpKNqhm3CGjwSVicr7Dykb5NZb2DUD7NyCDlrCYxIHPR3p2qtE9G2el/ykq
+	A/AlxzwslpPcDC/i4wy3o5P2e7I9G86mm6pGM50kd8VFzxMarLvEuy3Rg4LaGo1AqBnz7BuHEsWZB
+	PDLsSc+w==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRGeL-00000002Qr4-0IjJ;
+	Mon, 16 Jun 2025 20:41:49 +0000
+Date: Mon, 16 Jun 2025 21:41:49 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
 	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
@@ -59,7 +59,6 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	David Sterba <dsterba@suse.com>,
 	David Howells <dhowells@redhat.com>,
 	Marc Dionne <marc.dionne@auristor.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
 	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
 	Benjamin LaHaise <bcrl@kvack.org>,
 	Miklos Szeredi <miklos@szeredi.hu>,
@@ -109,6 +108,7 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Naohiro Aota <naohiro.aota@wdc.com>,
 	Johannes Thumshirn <jth@kernel.org>,
 	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
 	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
 	Pedro Falcato <pfalcato@suse.de>, linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
@@ -127,11 +127,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
 	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
 	linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH 04/10] fs/dax: make it possible to check dev dax support
- without a VMA
-Message-ID: <aFB-Do9FE6H9SsGY@casper.infradead.org>
+Subject: Re: [PATCH 00/10] convert the majority of file systems to
+ mmap_prepare
+Message-ID: <20250616204149.GK1880847@ZenIV>
 References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
- <b09de1e8544384074165d92d048e80058d971286.1750099179.git.lorenzo.stoakes@oracle.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -145,31 +144,27 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b09de1e8544384074165d92d048e80058d971286.1750099179.git.lorenzo.stoakes@oracle.com>
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
-	autolearn=disabled version=4.0.1
+In-Reply-To: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=0.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	SPF_HELO_NONE,SPF_NONE autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Jun 16, 2025 at 08:33:23PM +0100, Lorenzo Stoakes wrote:
->  fs/ext4/file.c      |  2 +-
->  fs/xfs/xfs_file.c   |  3 ++-
+On Mon, Jun 16, 2025 at 08:33:19PM +0100, Lorenzo Stoakes wrote:
+> REVIEWER'S NOTES
+> ================
+> 
+> I am basing this on the mm-new branch in Andrew's tree, so let me know if I
+> should rebase anything here. Given the mm bits touched I did think perhaps
+> we should take it through the mm tree, however it may be more sensible to
+> take it through an fs tree - let me know!
+> 
+> Apologies for the noise/churn, but there are some prerequisite steps here
+> that inform an ordering - "fs: consistently use file_has_valid_mmap_hooks()
+> helper" being especially critical, and so I put the bulk of the work in the
+> same series.
+> 
+> Let me know if there's anything I can do to make life easier here.
 
-Both of these already have the inode from the file ...
-
-> +static inline bool daxdev_mapping_supported(vm_flags_t vm_flags,
-> +					    struct file *file,
-> +					    struct dax_device *dax_dev)
->  {
-> -	if (!(vma->vm_flags & VM_SYNC))
-> +	if (!(vm_flags & VM_SYNC))
->  		return true;
-> -	if (!IS_DAX(file_inode(vma->vm_file)))
-> +	if (!IS_DAX(file_inode(file)))
->  		return false;
->  	return dax_synchronous(dax_dev);
-
-... and the only thing this function uses from the file is the inode.
-So maybe pass in the inode rather than the file?
-
+Documentation/filesystems/porting.rst?
 
