@@ -1,65 +1,65 @@
-Return-Path: <linux-erofs+bounces-448-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-449-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04A27ADC9C1
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Jun 2025 13:46:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 17219ADC9D4
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Jun 2025 13:48:36 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bM4np4vlSz30GV;
-	Tue, 17 Jun 2025 21:46:06 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bM4rd5n7sz30MZ;
+	Tue, 17 Jun 2025 21:48:33 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750160766;
-	cv=none; b=MCFgUAuwLnRiktinDCBt24CpCxGQdCJD1cLtiyJK8D6heKx1jc+iGRMyWVr8Z7TN4C+G4T4AEWF9Pwbe0vPnKXzrJG0mOyiPiL04MY+WNyoToy7hmJ4r7Ncya0Gvn4nm4BzplchVj/VH6lemtjtON0NwYb/BfuFfK7Yd3+Xugzy0uWhi5PVNdrNy+dypyFzJxYNXx8MKAKSwlWWUZr1zcaKoYz1k0cimUfgmmr1LKXykwneU06pswsGWXFDxtByolqhCutWyzbVVErwqOesxAg0aIagUWuvHBi07eRkoTZT8Gn6vq76j/vp5SzxNgOkrNkKg58XZDPa7U4KKc7SdSg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750160913;
+	cv=none; b=c6OVxIbEExeGjHcDqFw48EjlvDQfvU5wUZjHw3Fn2/hDhsfnmBtNq+bqa2RX3HK1SMoFAml9pB5qiDwpC+ExbBGiZ4wacbOuMqYA8QFaw3wfxG4657kD8QjKW/FnDG4MZhbYW8Sf1H1CCDkRklUCobgoZ3/zLyZs9yKBxsfbvOt2Aet4warr2ILwMpjvsUOMzzpXVusdJuUdWPIE7TsTxS5f5/zEdNF1yO0MoUotbTbz4dLiN5LxCVPdreloajs7UYkjoNx1nKdkucypSnVTY4of1Zeywbsj6GoNHXYefdfqNJ2qVgrB6c3kFEgSzlj0UEyRv8shXFTtLBnJ1//8QQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1750160766; c=relaxed/relaxed;
-	bh=dJhc/xLFMoBcJaq1EUp+bwPxRKCz82LTkTE0hRnLfZw=;
+	t=1750160913; c=relaxed/relaxed;
+	bh=lIpP5iOY84H59tRkmuJOo9CYvchrtq9t6gV5oxKPio4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B9FOWpVmFAWHj/ePcpLlmwsOiCjACUAm2qnFLep2IJQwwv30lsr9OrA7A7YiNZJnu22WvgbGFImcrd7OIRlQn03HOh09vplv58CR2FlgwIKdw21gGNVsP6IrJ6C03Fo/SaPIoIMkIVRL2ctYnKHQTpUGNZx1lZ35+lzsX3YN+vDNvrJ4cWiNd0j8mnzBo9Ge7hblNe63lZKX3Ti8uOaSd90enMj7HUx4i++6CVTV4nn63p870y27haNa28v5ks0tA4pjm7J+MsbjAMT8WuXZjiAE62LmBqSsaG7V/FCKKmHNsIojiXdhgVVc+jPxVQ5U90Nbs1y5VkiG7HWQ2hNycw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=LKZAHZAC; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=TN/4H3t28OjbNlpGCWujnaOAyQdeMCKqZanKOIGQnudJbwn3p55ZIefJuHEu9VHzELlepgTF4qy1i7szBKwmubC/IJYfqlypcGawnJqzNV+fnPkWs9FfYsFYKw61xyHohJxFwaEWTdVVTDW3TaGaGPMq7NnWI83PON++uNmzhHpdAABLh1yOdI0fLzuuKDT59tTpO1iHaN+PwJHCg8W2oAMa3cOwJpPACmqApOHVlPCvX+IWo4B0Oeb9LUFl9cK9ZhgPKtlgUdRSYTbItYhgFZZZFoHG9jGc8vBp51dT5y/fiI84TP3dwONGHd123R4oKDaCj/9qxMnDHuQ/o1zHUg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=i76Wd947; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=LKZAHZAC;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=i76Wd947;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bM4nn6ds6z307V
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Jun 2025 21:46:05 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bM4rd0hFvz30GV
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Jun 2025 21:48:33 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 27AE1448BF;
-	Tue, 17 Jun 2025 11:46:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E2A2C4CEE3;
-	Tue, 17 Jun 2025 11:45:40 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id E682744DD6;
+	Tue, 17 Jun 2025 11:48:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40C6FC4CEE3;
+	Tue, 17 Jun 2025 11:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750160763;
-	bh=StMBYKo3IYdJvpDPP28DVy7nnfZ5iZVxiZzaq3OT7Gk=;
+	s=k20201202; t=1750160910;
+	bh=Vnr3kmvDQPz8s5uZNmSkWKP9XPj/+f6PNSLS1Tx/MzQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LKZAHZAC9vUoLxqJ9kPw7y11d1vccxwHwO+yliNT9fTET47uPMg0jRAi/9kqollS2
-	 3j8hdqKrliDMUGiMhPw2i9dqvvInebMc6yA2lG7rgUpPGh/yxB0XWm17UXOqauVCc6
-	 Sagcwo9PDm6boEPAX0mIsK8saf5hKwJj0gSqfvOJcC35Ur+DJm/pIWbzY5aT2H/9YC
-	 9jut3Jn0eTCrVe+VIPmIgpnff0NScXFO+hEPUf2CI9uzx8gHglPFlh4VWh+b/JQt0q
-	 u82czCjtFdfG73DgONm2+NtA0s6Hq8jxAqKfQtbaaS8tUES6NzxY9nC8fYbzwdQBIB
-	 OrD8iaWSk5iyQ==
-Date: Tue, 17 Jun 2025 13:45:37 +0200
+	b=i76Wd947DS4XwAcDpAS8fpuf+Ela4lfUx5B4Zl+sE1WJ8kzwgrCbFciE3rigUUS/6
+	 wkwvrTbKDnBSYG4C5HYytRyvy7B3ZkCeJ/5F35ij31zEXxn65NXesNNhKSYHlLq/2D
+	 R33NY8eYZWteN9O+9G//EUF0UQxUiz+Y2C7gC+ejd2PqldQ355joR8oksRp/9Bu+B9
+	 HCJ+eqE2ygFdOjJuUuFVDO+rKmgk2g66UaZmVaAWhJlsobI+L+ldnr5kvasHnLLQtL
+	 3ZDhNpWvRvvYFALgNe61XXKpKO8zT2d+3DmY+NeMp1GFEAHy45cWCYw7RMgE+f8kCe
+	 WOUfPvP6PlRuw==
+Date: Tue, 17 Jun 2025 13:48:04 +0200
 From: Christian Brauner <brauner@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
+To: Jan Kara <jack@suse.cz>
 Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Jens Axboe <axboe@kernel.dk>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Christian Schoenebeck <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, 
-	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, Benjamin LaHaise <bcrl@kvack.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, "Tigran A . Aivazian" <aivazian.tigran@gmail.com>, 
-	Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
+	David Sterba <dsterba@suse.com>, David Howells <dhowells@redhat.com>, 
+	Marc Dionne <marc.dionne@auristor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Benjamin LaHaise <bcrl@kvack.org>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Amir Goldstein <amir73il@gmail.com>, Kent Overstreet <kent.overstreet@linux.dev>, 
+	"Tigran A . Aivazian" <aivazian.tigran@gmail.com>, Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
 	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>, 
 	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
 	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
@@ -95,12 +95,14 @@ Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
 	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
 	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org, linux-cifs@vger.kernel.org, 
 	samba-technical@lists.samba.org, linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH 06/10] fs/xfs: transition from deprecated .mmap hook to
- .mmap_prepare
-Message-ID: <20250617-herdplatte-ringkampf-8e8b439e81f2@brauner>
+Subject: Re: [PATCH 03/10] fs: consistently use file_has_valid_mmap_hooks()
+ helper
+Message-ID: <20250617-mitstreiter-bewahren-455b96bd1d50@brauner>
 References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
- <cba8b29ba5f225df8f63f50182d5f6e0fcf94456.1750099179.git.lorenzo.stoakes@oracle.com>
- <aFD4M48RMZB0Hj-f@infradead.org>
+ <b68145b609532e62bab603dd9686faa6562046ec.1750099179.git.lorenzo.stoakes@oracle.com>
+ <aFD5AP7B80np-Szz@infradead.org>
+ <b91c387e-5226-4c5e-94c3-04e80409ed62@lucifer.local>
+ <kzp4cei5qq6gbtzzng7hmqj5avzblopfzzrks4e2gahcdvr7ro@cwziankavxw4>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -114,24 +116,39 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aFD4M48RMZB0Hj-f@infradead.org>
+In-Reply-To: <kzp4cei5qq6gbtzzng7hmqj5avzblopfzzrks4e2gahcdvr7ro@cwziankavxw4>
 X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Jun 16, 2025 at 10:08:03PM -0700, Christoph Hellwig wrote:
-> On Mon, Jun 16, 2025 at 08:33:25PM +0100, Lorenzo Stoakes wrote:
-> >  STATIC int
-> > -xfs_file_mmap(
-> > -	struct file		*file,
-> > -	struct vm_area_struct	*vma)
-> > +xfs_file_mmap_prepare(
-> > +	struct vm_area_desc *desc)
+On Tue, Jun 17, 2025 at 12:08:13PM +0200, Jan Kara wrote:
+> On Tue 17-06-25 06:25:34, Lorenzo Stoakes wrote:
+> > On Mon, Jun 16, 2025 at 10:11:28PM -0700, Christoph Hellwig wrote:
+> > > On Mon, Jun 16, 2025 at 08:33:22PM +0100, Lorenzo Stoakes wrote:
+> > > > Since commit c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file
+> > > > callback"), the f_op->mmap() hook has been deprecated in favour of
+> > > > f_op->mmap_prepare().
+> > > >
+> > > > Additionally, commit bb666b7c2707 ("mm: add mmap_prepare() compatibility
+> > > > layer for nested file systems") permits the use of the .mmap_prepare() hook
+> > > > even in nested filesystems like overlayfs.
+> > > >
+> > > > There are a number of places where we check only for f_op->mmap - this is
+> > > > incorrect now mmap_prepare exists, so update all of these to use the
+> > > > general helper file_has_valid_mmap_hooks().
+> > > >
+> > > > Most notably, this updates the elf logic to allow for the ability to
+> > > > execute binaries on filesystems which have the .mmap_prepare hook, but
+> > > > additionally we update nested filesystems.
+> > >
+> > > Can you please give the function a better name before spreading it?
+> > > file operations aren't hooks by any classic definition.
+> > >
+> > 
+> > can_mmap_file()?
 > 
-> Please stick to the existing alignment for the declarations.
-> 
-> Otherwise this looks good.
+> I like this name more as well :). With this patch looks good to me. Again a
 
 Fixed in-tree.
 
