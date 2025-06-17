@@ -1,47 +1,47 @@
-Return-Path: <linux-erofs+bounces-429-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-430-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16E39ADC133
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Jun 2025 07:09:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1797EADC14E
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Jun 2025 07:11:07 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bLvzt3q0Zz2yMD;
-	Tue, 17 Jun 2025 15:09:14 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bLw20596dz307V;
+	Tue, 17 Jun 2025 15:11:04 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:7c80:54:3::133"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750136954;
-	cv=none; b=lUJETP65EkoD+Xm4t3dcRh9jpuW/z8rXY6B4BngnsYbJQ5Q/CaQkWvuQEez+QsO7y8AgWwfsWrf2xEXjTv3uACYqrRm+HW/oA1EwQ2ukgCwd7YQvO71WP2ZPNnwyHyV/6ud2BAHIWxaSb9ZFN67EZ+R71LlsT6d8KrwNLFN21FDPKwjIylgG7CgTalAIJ6gj9AT2OLp5/+Yji0m8vm4O/nBk4xSo7o6IpuIsG4GnpxDiURoPtRIIqAGzaThgYKeE0T346UuJpQ9RHzbOQUnBRKtWXKUHeyoJ63NCf/8lpu72kvMwYmvOxEDD0FkrbZPP2TJ0wVe7ZC1yqz7hVm9NEw==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750137064;
+	cv=none; b=RSilHvN0+1leXt002g3bwTzKpKE1N23Qp7u2sXLaLWSA2k/rvZh9KqDG8l8EJSf6LIDBjACta3iZelaUIqpV+Az9NVTq1COxfW6DvabmpvRKDpUbY0fkUJFR0CMka4tbBo6g48AWf1y3cdt/D08yeeHynLY5CgiZSHXcZnXJCoF4v4GalJwVLXyMv9BvpdUnAFf9hDJR2up914vc7hMDnaULyaBF6Dx/+YIAmHOf/bwDCo3wZXr57U5E59XIbXbMhE4q9kze6nIEYXRKoJA/b5bIp3RBE4K3XOdVNBP+00Qd77/OtneHxrpk8RtKoKfrWEbx3axA9fkLoqoAixWnJQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1750136954; c=relaxed/relaxed;
-	bh=MnSFdd8xjqrBRMNrjDtPx5JnmQica7Kdjxsp8Q9K/Q4=;
+	t=1750137064; c=relaxed/relaxed;
+	bh=7hewv5VaHf/nCFVYzE18Jb3sDfwjWx9bJqENJtpan9o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oX8quj+CVHqFk2oVKF36a5E5diXCtIVedOedsQpEREOsweYKvaOWFFOoI0IWxMBVYBUVKslnpepYzGPb897SAPFbttFe7YXYLjYkhZPLYCliSFJzl4ySMDgF9fi7QtMl0KOXhMFck5aYibUgBVzZatNk+9xmTkG/xpqifWOY0Kc6/aBNMB90jEm7iO0u33P0eR+ccAiCX7RP9yhy51/0RWFQWFbp3IDnCOs+zXgmLukPeAyhTb3piOIZC+V0uGuVNUGfYtzctC8gZTU7QEsamYX5jUC1bMkCzjhWakRBOqXk+2DTneZSwcNrfhCEViz0VXGgdjGCizN2h3bvjY1F7Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QNDoywVG; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+4b43f024140bdadcbbf7+7968+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=iUvYMoVBr2z99SXdhtGtf18KlyQA4sRf+xycU84UIDAMRdui5ZcOf0pffFCozk2evoJE8r/WnKoBSGuwbYgINp7SmCMMB1OTfHLrrYTpW3OP+YnPwv9mxweHnYi5t8CAjr9id9cIXvieMVwCnq3bI55R2i+rX0bHtzTIKC6u2s5BlV2fWtsGq90hCC9qzzY+VZmDEUdYkLhrHhln3D21s+2ytGT857W0LsEPxa6wiNx8vr729oadpSM2hFQ0ZpCnZXaL9ycf/gUkEbC2Gvg38HW93bBP+rV0tOXcnurIQoUR5voKgfGDB6gUUuUO7ql3097iEN7J90XXt67BhbYe+w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JLzFVcD4; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+4b43f024140bdadcbbf7+7968+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QNDoywVG;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=JLzFVcD4;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+4b43f024140bdadcbbf7+7968+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bLvzq56V2z2xHv
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Jun 2025 15:09:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bLw200whGz2xHv
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Jun 2025 15:11:04 +1000 (AEST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
 	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=MnSFdd8xjqrBRMNrjDtPx5JnmQica7Kdjxsp8Q9K/Q4=; b=QNDoywVGRFryPFg2RDAGbDqnER
-	kMwwVaNvmdaPWaUdYiw4uVs1cwpES6Y1BZK6zmz6epnmQf/31dqrJ33hky4AO7LYDYrEmHWzT5Bgg
-	VyfgKX5JeKt2VwytR3aURQTHJg+QRiPTD7MQPSSkuL5gSVT+THSOdd4vmpMu97aV9REIFv8EPvGoL
-	F3fP2a1meh2mhDu+1cb3aNJjUMgJcQcJkdsXsvzXczzr8NFZjGt/s0pWBSaW/4wNY4j8IybNcONJm
-	YgcOcrsyjgwc13MQm/OFO8/8KkG1q6x4Z+oB+mDwuoX4JPhpMCDIGJM1OzS7S4z578+cbogTh+9t6
-	xs0eBXpg==;
+	bh=7hewv5VaHf/nCFVYzE18Jb3sDfwjWx9bJqENJtpan9o=; b=JLzFVcD4P4hX82nyMOI+BRPTFS
+	9m9nUf8QSnN3KcOf1hfPPNg8SY5CD8KGmTwZG9p42mwem0h3+g+jr8vmH1IdJ03DA5flPOfwfb8Kb
+	2p/Z3NPif2HWA7V7Zh1b/Hzs0cuKS7D2jEWqmC6rRRVe5v+D58zBUGfE4pJ1gAH0HUd1EKkuocvQE
+	/AS7xYTlLDrNF7H7t6M6DnRrb6AncDawE5sQF8d0UGBLNipdl/wWjLzy7Aye1Ze+VzA+g0jzxlIg8
+	VUglo0acb2sgxrdZjdYWcBo4907Ol02gnYVbwtHB4bd+XE+ZjOsUlox9yo8MazTrsTyF2g2LImZhO
+	mwKximfw==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uROYF-00000006DYq-2nid;
-	Tue, 17 Jun 2025 05:08:03 +0000
-Date: Mon, 16 Jun 2025 22:08:03 -0700
+	id 1uROac-00000006E8g-3Ody;
+	Tue, 17 Jun 2025 05:10:30 +0000
+Date: Mon, 16 Jun 2025 22:10:30 -0700
 From: Christoph Hellwig <hch@infradead.org>
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -128,11 +128,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
 	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
 	linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH 06/10] fs/xfs: transition from deprecated .mmap hook to
- .mmap_prepare
-Message-ID: <aFD4M48RMZB0Hj-f@infradead.org>
+Subject: Re: [PATCH 01/10] mm: rename call_mmap/mmap_prepare to
+ vfs_mmap/mmap_prepare
+Message-ID: <aFD4xtpot22xvTEq@infradead.org>
 References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
- <cba8b29ba5f225df8f63f50182d5f6e0fcf94456.1750099179.git.lorenzo.stoakes@oracle.com>
+ <8d389f4994fa736aa8f9172bef8533c10a9e9011.1750099179.git.lorenzo.stoakes@oracle.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -146,22 +146,27 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cba8b29ba5f225df8f63f50182d5f6e0fcf94456.1750099179.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <8d389f4994fa736aa8f9172bef8533c10a9e9011.1750099179.git.lorenzo.stoakes@oracle.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Jun 16, 2025 at 08:33:25PM +0100, Lorenzo Stoakes wrote:
->  STATIC int
-> -xfs_file_mmap(
-> -	struct file		*file,
-> -	struct vm_area_struct	*vma)
-> +xfs_file_mmap_prepare(
-> +	struct vm_area_desc *desc)
+On Mon, Jun 16, 2025 at 08:33:20PM +0100, Lorenzo Stoakes wrote:
+> The call_mmap() function violates the existing convention in
+> include/linux/fs.h whereby invocations of virtual file system hooks is
+> performed by functions prefixed with vfs_xxx().
+> 
+> Correct this by renaming call_mmap() to vfs_mmap(). This also avoids
+> confusion as to the fact that f_op->mmap_prepare may be invoked here.
+> 
+> Also rename __call_mmap_prepare() function to vfs_mmap_prepare() and adjust
+> to accept a file parameter, this is useful later for nested file systems.
+> 
+> Finally, fix up the VMA userland tests and ensure the mmap_prepare -> mmap
+> shim is implemented there.
 
-Please stick to the existing alignment for the declarations.
+Can we please just kill these silly call_* helpers instead?
 
-Otherwise this looks good.
 
