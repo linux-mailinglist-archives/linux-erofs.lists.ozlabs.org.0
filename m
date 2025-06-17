@@ -1,49 +1,46 @@
-Return-Path: <linux-erofs+bounces-435-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-436-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B99CADC1DF
-	for <lists+linux-erofs@lfdr.de>; Tue, 17 Jun 2025 07:41:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C6BC0ADC6D1
+	for <lists+linux-erofs@lfdr.de>; Tue, 17 Jun 2025 11:42:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bLwhk1c0Xz30MY;
-	Tue, 17 Jun 2025 15:41:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bM22x3pBBz30T9;
+	Tue, 17 Jun 2025 19:42:17 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750138870;
-	cv=none; b=OnuXNXVZv2mzNJ/o+C80qGeEKMdPFm9+yuA9rpUfUeb9lqW8q2vt7Ic++M0kfdwoBLHMSjZ//NYVZQiIR1f+qt9qvTHVApCW9pBDRu4CQklgWi6MjsEWd1+CNmVF+37lbYEKgMmtJtxiTDlS7ExHTGL1Y4Ya0hoP4DZ+eNtwxREZgl6U/6Wz41LOsmVo8wFWxt3mNesNtFeem62dSc0wFvyqzXt62d5iaXKqC1Pm1S1oyC/4mT7unT3C64b6P7ed9N1V5GRHgN9vzmBPLTxmpYwnMK0ny/ngyd7G9J95jWwnx8fkVFFp6R81jN+dIjGgHjdgKOAaowM9hg5GMsC49Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750153337;
+	cv=none; b=V4eM6w6pVzffNbt/fSDaS/dyxsev3bTNlGvxomvdWWZETgWo4WmsAO8M35Q2l7RoJ8m9/IpcreNmVmpWsFLFNtRUjnt51rdpw1p9rKOg7zG3q6V5TuxjrfP8yDYVXzVhyB1bk+q75yY4RA6Hz0WtPM+KIIVpXGCS+680BMhFCUZqx2sWRA+yZNlsh32pgg8fdoLn6wAER+WTKzbJCmjJZLuuSGxm2R6+3tqyJ+7uul2P101Ab1W1tu8hKsc0U9XKbPpdswPmE6lo4c/DFkM5nqF80R3pNXzYoLka12oaek0aR5U+GR4XL/58UNJAyavMGwd1IGDkKwSDMHYYa39bwA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1750138870; c=relaxed/relaxed;
-	bh=nk7HqULbpBMmwe47ngETLVBM1WQjusixsRNJ+uUQpcc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mi8WrQ2It0Og6vDAqZBqhgNiexR+JrcvznAMFkBYwuwq57oKvpmFzsap5xYPJuOCG/Wwt0us3M+FlW/PtxCwW1pNR6rJx5Qq9uMlZhC60OjOcUOmrfmZ0UnPQnPnfPH8H7n1ysYs7rS1dEQVV1DlPmPkoLqxHXn6eoVhrXmMC5xigshMvS91otbNQdvad1fnKPkMZhv21uIyUvX86KnKoCsGGykT7dgJlrgCsJV9XnePxPOXVzoLMXtbHiYLB4TF8gZ1qkwE0ymnlhE/W/9Mil9zh6E1MZdRDKGg4PFzbtF9bcR2YQKQiRxFV5KdNBC6wKCK20YMCoYhT4YFbUVdhw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=UGqUoDcX; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1750153337; c=relaxed/relaxed;
+	bh=btgETz8gblwBZr1BVSyxp5VIZgp8dPEXK6kl9hpz2XE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bv0bzvhhILrAkTnNt/Py5XSTUDGLybxXXi/ctUsoxgx5JXKyHFJXM6h5B4uvJupPEAav8XGTt4g++zby4lrzDD38hi3YO/znMg8FMTmoxH1BGF1ZMRfC5uZeQvl0UkZSFToINaw/VzPBs2VYXGFsTRxaVkpteY6x7C44d2gXJKYitdljUTNZk0XA8mRUkRR6faStuHEJXqpYwEHnMtGsx1NgYJ2lywc1sZGXED0fd9mgtHGvmpQLWeQbTHsIlefE1hKvJ+DZXkUe1W4Nz/sRYu6JX4dk2tdl0iVOzr1PsACGwRRqUHYrNEmkiVo0J1vofMZ7ia2kD66ZVBkUw0TuYA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tL14vyg7; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=UGqUoDcX;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=tL14vyg7;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bLwhg3pLbz30Lt
-	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Jun 2025 15:41:06 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bM22v3kxSz30T8
+	for <linux-erofs@lists.ozlabs.org>; Tue, 17 Jun 2025 19:42:14 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1750138862; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=nk7HqULbpBMmwe47ngETLVBM1WQjusixsRNJ+uUQpcc=;
-	b=UGqUoDcXc/B/OnU3UvUIswt/CNRrUyeH2FkXqW5bUIV+uEtQ6yRKVGdOFbp3FOOjOhzU+nfSbkPuRm5Bkt48jeflQcD2FnPZIc1X7AGEaIIjbBiGKhDAlUUQkBx4RdUds668PQIHIL0oaxI7hcQXLbO/BVyZmlJUorUeSkYiepY=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0We7iSMz_1750138856 cluster:ay36)
+	t=1750153330; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=btgETz8gblwBZr1BVSyxp5VIZgp8dPEXK6kl9hpz2XE=;
+	b=tL14vyg7wJG9bY99NsimQB1QZ3BY8tO8+w6GMWkFwNL+viudy9HelxSP6+FH9p8rESoY91yInyLokb57iklftMS5nc+her02Puc1c64OCcCNNDB7IJA+K2/SnV6hZWESPE4sAfGnabDjJXhz90xJNK+tyfU6ZWyhezL2mMuxbC4=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0We8vjyz_1750153324 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 17 Jun 2025 13:41:01 +0800
+          Tue, 17 Jun 2025 17:42:08 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] erofs: remove unused trace event erofs_destroy_inode
-Date: Tue, 17 Jun 2025 13:40:56 +0800
-Message-ID: <20250617054056.3232365-1-hsiangkao@linux.alibaba.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: lib: fix two integer handling issues
+Date: Tue, 17 Jun 2025 17:42:04 +0800
+Message-ID: <20250617094204.3562711-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -63,47 +60,43 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-The trace event `erofs_destroy_inode` was added but remains unused. This
-unused event contributes approximately 5KB to the kernel module size.
-
-Reported-by: Steven Rostedt <rostedt@goodmis.org>
-Closes: https://lore.kernel.org/r/20250612224906.15000244@batman.local.home
-Fixes: 13f06f48f7bf ("staging: erofs: support tracepoint")
-Cc: stable@vger.kernel.org
+Coverity-id: 554931
+Coverity-id: 555116
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/trace/events/erofs.h | 18 ------------------
- 1 file changed, 18 deletions(-)
+ lib/super.c | 5 +++++
+ lib/vmdk.c  | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
-index a5f4b9234f46..dad7360f42f9 100644
---- a/include/trace/events/erofs.h
-+++ b/include/trace/events/erofs.h
-@@ -211,24 +211,6 @@ TRACE_EVENT(erofs_map_blocks_exit,
- 		  show_mflags(__entry->mflags), __entry->ret)
- );
+diff --git a/lib/super.c b/lib/super.c
+index beab74e..a300a5f 100644
+--- a/lib/super.c
++++ b/lib/super.c
+@@ -327,6 +327,11 @@ int erofs_write_device_table(struct erofs_sb_info *sbi)
+ 		return -EINVAL;
  
--TRACE_EVENT(erofs_destroy_inode,
--	TP_PROTO(struct inode *inode),
--
--	TP_ARGS(inode),
--
--	TP_STRUCT__entry(
--		__field(	dev_t,		dev		)
--		__field(	erofs_nid_t,	nid		)
--	),
--
--	TP_fast_assign(
--		__entry->dev	= inode->i_sb->s_dev;
--		__entry->nid	= EROFS_I(inode)->nid;
--	),
--
--	TP_printk("dev = (%d,%d), nid = %llu", show_dev_nid(__entry))
--);
--
- #endif /* _TRACE_EROFS_H */
+ 	pos = erofs_btell(bh, false);
++	if (pos == NULL_ADDR_UL) {
++		DBG_BUGON(1);
++		return -EINVAL;
++	}
++
+ 	i = 0;
+ 	do {
+ 		struct erofs_deviceslot dis = {
+diff --git a/lib/vmdk.c b/lib/vmdk.c
+index 06d4a49..8080c51 100644
+--- a/lib/vmdk.c
++++ b/lib/vmdk.c
+@@ -60,7 +60,7 @@ int erofs_dump_vmdk_desc(FILE *f, struct erofs_sb_info *sbi)
+ 		const char *name = sbi->devs[i].src_path ?:
+ 				(const char *)sbi->devs[i].tag;
  
-  /* This part must be outside protection */
+-		sectors = sbi->devs[i].blocks << (sbi->blkszbits - 9);
++		sectors = (u64)sbi->devs[i].blocks << (sbi->blkszbits - 9);
+ 		ret = erofs_vmdk_desc_add_extent(f, sectors, name, 0);
+ 		if (ret)
+ 			return ret;
 -- 
 2.43.5
 
