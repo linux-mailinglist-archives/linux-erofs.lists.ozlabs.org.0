@@ -1,47 +1,50 @@
-Return-Path: <linux-erofs+bounces-466-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-465-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28984ADE788
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Jun 2025 11:58:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 50275ADE787
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Jun 2025 11:58:42 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bMfMN0bcDz2xS2;
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bMfMN06hwz2xS0;
 	Wed, 18 Jun 2025 19:58:40 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750240719;
-	cv=none; b=k32/SGLuotnX0keFz4ybTunaD832mZ3/3eIEWcb+ol9sVMe4QDZWxs7B7/FV+833e1Je+SUEIaMuGp7G759wgTTtYrE/N15OozxIISP+GcduweuCFHgNb36mwh2+4VkaN09Lzmzcf43OTi8C5feH/WNNsXqAGtLqPecjqokHecmBMTjER3/z2PLMBLDPMz0Or30KgAp4Y2MSMKzDOQDYuH3J+sQwSp3U869j1BuZwcR2QiVW9/GjKAoXzuRz3A3A+xVqiEf7L21l/GXXLYR3mWZ9Twuy8U/IIsGP1lbV1xl+20NIC2o/aVLVCRVbzAvngKiUBhwfRnr/G9e9wrC21Q==
+	cv=none; b=GHKkk9VWaOO98PSytXNdvqjPTvSfutQ/hKsvXFadF0GJKQbu8DD+t6a2eNnNV2a2FjXlMTIoPcwPFG0dnp8PT1YrngEtBcidmSuuY80FCyWaA4O35Z7hLwwX5K4bmNfyewPUpl8rX/T9kIw15BCdg4Mr6gvQAwpbHREUEBNh44hcHWMKT1B10KdQyOBvTt7AOaU3z/5e4fVQMOn1AGV5pa0XbutxjjsFaKAUC5Mkq4OuE7UT/e7NOjT4zezqCUz6QLzaEU/lcZNOl+Gk89+oqeFLt9QQxW81DtfsTeJEORbZMPl2pepTNdJyFvpKDCPkU9p5ppyAW0dLsW0kUZzFIw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1750240719; c=relaxed/relaxed;
-	bh=HS702DW3mB+zAU3aPOwCwXHQmxZaTNWFVusCiYB31J8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kekp5Sj1DqWmoxl2JDrmHD38xrTDtlbEp4nOeBS1OLYrQG9qVdJwQ1GpyXt0Gp94xJeTx/1XTXnZmKnPsDYe9il+iGuUftsisp3o9GeZLDnmnC9tq3QzKUdroDE9dmckoppkrSO81zm0/VTwqbTDlsyTJR+2iXeu4hNxFA6NrYpYPQ4HfFhNYc0D8Srv2LGCPBiSE7EWy9HlH193+NgIW4Q8rXsGgQJ3w8P0CDtSt8nWyxxO844iNglgfFSjOu4eJcL+meI+saKjOax3pe+T0u+7FUe5B090iPYSI/SwZTQeqXAEMfllWa8TURIr+mx4riiIK3FikDCu9YH7TtToeQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=P0T+1xQb; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	bh=0AdCLfbT8fM4JFpIVrrTiVg3e3Dzmj4Hy6X2MoxGMoU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FrwkPFHoTyJ4H7i1YLRCwhoBpJIoOMRF7CGywtsuSF5l+HnOL7/XvZmRRuKLv10giLfdF8cFMtMMSo3THFH5u7L8KKFaKhsOztBScaRbSZWj2COZa4EDW07hLSfUPaKj1tDUnIVOPRiuag8ntTambMbw40XThOv+uvdpP0Z76Re2rprauyMqAAGAFcA7BYZJhFk/gf6fIrAu/orkLw27Z2JefkR/vZ5Xpj24X+4HpYQtwLtSWc/ChNvrB0WglVmnrySmLk8UDcPg3UMx/dTPzM1JA8o4QATAToFzrQx/QrJYrmqiZxpdNXCt0Z86Hc/WaCj+02U2Dp2PKU6emiJ5QA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YRwc3nHj; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=P0T+1xQb;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YRwc3nHj;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bMfML0H7Nz2xPc
-	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Jun 2025 19:58:36 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bMfML1CfYz2xRt
+	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Jun 2025 19:58:37 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1750240713; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=HS702DW3mB+zAU3aPOwCwXHQmxZaTNWFVusCiYB31J8=;
-	b=P0T+1xQb98dfzsTXA4L0HEU6E6f/t4sS2hPuUgAb1lDxHELOwl9ZNSJBPTpJ2jS0iG6ph4Ibhs1UIduyB8JtLFYnLNo5OCxoz7D4d+1MBU6iW+Rh5SPK2TOi5enfSKrm+vDLv20oYsD8QAnLysWFfoakR2HqDYHFhQgd+BlZAXM=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WeDAHYI_1750240707 cluster:ay36)
+	t=1750240714; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=0AdCLfbT8fM4JFpIVrrTiVg3e3Dzmj4Hy6X2MoxGMoU=;
+	b=YRwc3nHjwFuNyT3pz59adotwKf2lXPOAaDt7Ia/27c7I7T7umXLDa3Gf454zj/ldxncZalJEwvEyHrOzHveFpTnBpjunQ0VMUDeASG+ppxHdJlv2PzVSGWao8I46YxV2XrrOtMeZHrCZSKT+EB2rttS4mJhFpy1AJhmju2lFKls=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WeDAHZN_1750240711 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 18 Jun 2025 17:58:31 +0800
+          Wed, 18 Jun 2025 17:58:32 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 1/2] erofs-utils: lib: introduce mutex & rwlock wrappers
-Date: Wed, 18 Jun 2025 17:58:25 +0800
-Message-ID: <20250618095826.1291494-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/2] erofs-utils: lib: refine the inode hash table
+Date: Wed, 18 Jun 2025 17:58:26 +0800
+Message-ID: <20250618095826.1291494-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250618095826.1291494-1-hsiangkao@linux.alibaba.com>
+References: <20250618095826.1291494-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -56,205 +59,175 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-To avoid too many `#ifdef EROFS_MT_ENABLED`s.
+ - Increase the hash table entries to 65536;
+ - Protect the hash table with `erofs_rwsem`.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/lock.h | 44 +++++++++++++++++++++++++++++++++++++++++++
- lib/fragments.c      | 45 ++++++++++++++------------------------------
- 2 files changed, 58 insertions(+), 31 deletions(-)
- create mode 100644 include/erofs/lock.h
+ include/erofs/inode.h |  2 +-
+ lib/inode.c           | 65 +++++++++++++++++++++++--------------------
+ lib/rebuild.c         |  2 +-
+ 3 files changed, 37 insertions(+), 32 deletions(-)
 
-diff --git a/include/erofs/lock.h b/include/erofs/lock.h
-new file mode 100644
-index 0000000..f7a4b47
---- /dev/null
-+++ b/include/erofs/lock.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+#ifndef __EROFS_LOCK_H
-+#define __EROFS_LOCK_H
-+
-+#include "defs.h"
-+
-+#if defined(HAVE_PTHREAD_H) && defined(EROFS_MT_ENABLED)
-+#include <pthread.h>
-+
-+typedef pthread_mutex_t erofs_mutex_t;
-+
-+static inline void erofs_mutex_init(erofs_mutex_t *lock)
-+{
-+	pthread_mutex_init(lock, NULL);
-+}
-+#define erofs_mutex_lock	pthread_mutex_lock
-+#define erofs_mutex_unlock	pthread_mutex_unlock
-+
-+typedef pthread_rwlock_t erofs_rwsem_t;
-+
-+static inline void erofs_init_rwsem(erofs_rwsem_t *lock)
-+{
-+	pthread_rwlock_init(lock, NULL);
-+}
-+#define erofs_down_read		pthread_rwlock_rdlock
-+#define erofs_down_write	pthread_rwlock_wrlock
-+#define erofs_up_read		pthread_rwlock_unlock
-+#define erofs_up_write		pthread_rwlock_unlock
-+#else
-+typedef struct {} erofs_mutex_t;
-+
-+static inline void erofs_mutex_init(erofs_mutex_t *lock) {}
-+static inline void erofs_mutex_lock(erofs_mutex_t *lock) {}
-+static inline void erofs_mutex_unlock(erofs_mutex_t *lock) {}
-+
-+typedef struct {} erofs_rwsem_t;
-+static inline void erofs_init_rwsem(erofs_rwsem_t *lock) {}
-+static inline void erofs_down_read(erofs_rwsem_t *lock) {}
-+static inline void erofs_down_write(erofs_rwsem_t *lock) {}
-+static inline void erofs_up_read(erofs_rwsem_t *lock) {}
-+static inline void erofs_up_write(erofs_rwsem_t *lock) {}
-+
-+#endif
-+#endif
-diff --git a/lib/fragments.c b/lib/fragments.c
-index 0784a82..28963cd 100644
---- a/lib/fragments.c
-+++ b/lib/fragments.c
-@@ -19,6 +19,7 @@
- #include "erofs/internal.h"
- #include "erofs/fragments.h"
- #include "erofs/bitops.h"
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index eb8f45b..fe86101 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -27,8 +27,8 @@ umode_t erofs_ftype_to_mode(unsigned int ftype, unsigned int perm);
+ unsigned char erofs_ftype_to_dtype(unsigned int filetype);
+ void erofs_inode_manager_init(void);
+ void erofs_insert_ihash(struct erofs_inode *inode);
++void erofs_remove_ihash(struct erofs_inode *inode);
+ struct erofs_inode *erofs_iget(dev_t dev, ino_t ino);
+-struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid);
+ unsigned int erofs_iput(struct erofs_inode *inode);
+ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
+ int erofs_iflush(struct erofs_inode *inode);
+diff --git a/lib/inode.c b/lib/inode.c
+index 6b42fc9..a2ee522 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -6,9 +6,6 @@
+  * with heavy changes by Gao Xiang <xiang@kernel.org>
+  */
+ #define _GNU_SOURCE
+-#ifdef EROFS_MT_ENABLED
+-#include <pthread.h>
+-#endif
+ #include <string.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+@@ -19,6 +16,7 @@
+ #endif
+ #include <dirent.h>
+ #include "erofs/print.h"
 +#include "erofs/lock.h"
- #include "liberofs_private.h"
- #ifdef HAVE_SYS_SENDFILE_H
- #include <sys/sendfile.h>
-@@ -38,18 +39,14 @@ struct erofs_fragmentitem {
+ #include "erofs/diskbuf.h"
+ #include "erofs/inode.h"
+ #include "erofs/cache.h"
+@@ -85,48 +83,50 @@ unsigned char erofs_ftype_to_dtype(unsigned int filetype)
+ 	return erofs_dtype_by_ftype[filetype];
+ }
  
- struct erofs_fragment_bucket {
- 	struct list_head hash;
--#ifdef EROFS_MT_ENABLED
--	pthread_rwlock_t lock;
--#endif
-+	erofs_rwsem_t lock;
- };
+-#define NR_INODE_HASHTABLE	16384
+-
+-struct list_head inode_hashtable[NR_INODE_HASHTABLE];
++static struct list_head erofs_ihash[65536];
++static erofs_rwsem_t erofs_ihashlock;
  
- struct erofs_packed_inode {
- 	struct erofs_fragment_bucket *bks;
- 	int fd;
- 	unsigned long *uptodate;
--#if EROFS_MT_ENABLED
--	pthread_mutex_t mutex;
--#endif
-+	erofs_mutex_t mutex;
- 	u64 uptodate_bits;
- };
+ void erofs_inode_manager_init(void)
+ {
+ 	unsigned int i;
  
-@@ -146,9 +143,7 @@ int erofs_fragment_findmatch(struct erofs_inode *inode, int fd, u32 tofh)
- 	e1 = s1 - EROFS_TOF_HASHLEN;
- 	deduped = 0;
+-	for (i = 0; i < NR_INODE_HASHTABLE; ++i)
+-		init_list_head(&inode_hashtable[i]);
++	for (i = 0; i < ARRAY_SIZE(erofs_ihash); ++i)
++		init_list_head(&erofs_ihash[i]);
++	erofs_init_rwsem(&erofs_ihashlock);
+ }
  
--#ifdef EROFS_MT_ENABLED
--	pthread_rwlock_rdlock(&bk->lock);
--#endif
-+	erofs_down_read(&bk->lock);
- 	list_for_each_entry(cur, &bk->hash, list) {
- 		unsigned int e2, mn;
- 		erofs_off_t inmax, i;
-@@ -181,9 +176,7 @@ int erofs_fragment_findmatch(struct erofs_inode *inode, int fd, u32 tofh)
- 		if (deduped == inode->i_size)
- 			break;
- 	}
--#ifdef EROFS_MT_ENABLED
--	pthread_rwlock_unlock(&bk->lock);
--#endif
-+	erofs_up_read(&bk->lock);
- 	free(data);
- 	if (deduped) {
- 		DBG_BUGON(!fi);
-@@ -348,30 +341,23 @@ int erofs_fragment_commit(struct erofs_inode *inode, u32 tofh)
- 	offset += fi->length;
+ void erofs_insert_ihash(struct erofs_inode *inode)
+ {
+-	unsigned int nr = (inode->i_ino[1] ^ inode->dev) % NR_INODE_HASHTABLE;
++	u32 nr = (inode->i_ino[1] ^ inode->dev) % ARRAY_SIZE(erofs_ihash);
  
- 	if (!list_empty(&fi->list)) {
--#ifdef EROFS_MT_ENABLED
- 		struct erofs_fragment_bucket *bk = &epi->bks[FRAGMENT_HASH(tofh)];
--#endif
- 		void *nb;
+-	list_add(&inode->i_hash, &inode_hashtable[nr]);
++	erofs_down_write(&erofs_ihashlock);
++	list_add(&inode->i_hash, &erofs_ihash[nr]);
++	erofs_up_write(&erofs_ihashlock);
+ }
  
- 		sz = min_t(u64, fi->length, EROFS_FRAGMENT_INMEM_SZ_MAX);
--#ifdef EROFS_MT_ENABLED
--		pthread_rwlock_wrlock(&bk->lock);
--#endif
-+
-+		erofs_down_write(&bk->lock);
- 		memmove(fi->data, fi->data + fi->length - sz, sz);
+-/* get the inode from the (source) inode # */
+-struct erofs_inode *erofs_iget(dev_t dev, ino_t ino)
++void erofs_remove_ihash(struct erofs_inode *inode)
+ {
+-	struct list_head *head =
+-		&inode_hashtable[(ino ^ dev) % NR_INODE_HASHTABLE];
+-	struct erofs_inode *inode;
+-
+-	list_for_each_entry(inode, head, i_hash)
+-		if (inode->i_ino[1] == ino && inode->dev == dev)
+-			return erofs_igrab(inode);
+-	return NULL;
++	erofs_down_write(&erofs_ihashlock);
++	list_del(&inode->i_hash);
++	erofs_up_write(&erofs_ihashlock);
+ }
  
- 		nb = realloc(fi->data, sz);
- 		if (!nb) {
--#ifdef EROFS_MT_ENABLED
--			pthread_rwlock_unlock(&bk->lock);
--#endif
-+			erofs_up_write(&bk->lock);
- 			fi->data = NULL;
- 			return -ENOMEM;
- 		}
- 		fi->data = nb;
- 		fi->pos = (erofs_off_t)offset;
--#ifdef EROFS_MT_ENABLED
--		pthread_rwlock_unlock(&bk->lock);
--#endif
-+		erofs_up_write(&bk->lock);
- 		inode->fragmentoff = fi->pos - len;
- 		return 0;
- 	}
-@@ -451,9 +437,7 @@ int erofs_packedfile_init(struct erofs_sb_info *sbi, bool fragments_mkfs)
- 		}
- 		for (i = 0; i < FRAGMENT_HASHSIZE; ++i) {
- 			init_list_head(&epi->bks[i].hash);
--#ifdef EROFS_MT_ENABLED
--			pthread_rwlock_init(&epi->bks[i].lock, NULL);
--#endif
-+			erofs_init_rwsem(&epi->bks[i].lock);
- 		}
- 	}
+-struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid)
++/* get the inode from the (source) inode # */
++struct erofs_inode *erofs_iget(dev_t dev, ino_t ino)
+ {
+-	struct list_head *head =
+-		&inode_hashtable[nid % NR_INODE_HASHTABLE];
+-	struct erofs_inode *inode;
++	u32 nr = (ino ^ dev) % ARRAY_SIZE(erofs_ihash);
++	struct list_head *head = &erofs_ihash[nr];
++	struct erofs_inode *ret = NULL, *inode;
  
-@@ -489,6 +473,7 @@ int erofs_packedfile_init(struct erofs_sb_info *sbi, bool fragments_mkfs)
- 			err = -ENOMEM;
- 			goto err_out;
- 		}
-+		erofs_mutex_init(&epi->mutex);
- 	}
- 	return 0;
+-	list_for_each_entry(inode, head, i_hash)
+-		if (inode->nid == nid)
+-			return erofs_igrab(inode);
+-	return NULL;
++	erofs_down_read(&erofs_ihashlock);
++	list_for_each_entry(inode, head, i_hash) {
++		if (inode->i_ino[1] == ino && inode->dev == dev) {
++			ret = erofs_igrab(inode);
++			break;
++		}
++	}
++	erofs_up_read(&erofs_ihashlock);
++	return ret;
+ }
  
-@@ -616,23 +601,21 @@ int erofs_packedfile_read(struct erofs_sb_info *sbi,
- 			uptodate = __erofs_test_bit(bnr, epi->uptodate);
- 			if (!uptodate) {
- #if EROFS_MT_ENABLED
--				pthread_mutex_lock(&epi->mutex);
-+				erofs_mutex_lock(&epi->mutex);
- 				uptodate = __erofs_test_bit(bnr, epi->uptodate);
- 				if (!uptodate) {
- #endif
- 					free(buffer);
- 					buffer = erofs_packedfile_preload(&pi, &map);
- 					if (IS_ERR(buffer)) {
--#if EROFS_MT_ENABLED
--						pthread_mutex_unlock(&epi->mutex);
--#endif
-+						erofs_mutex_unlock(&epi->mutex);
- 						buffer = NULL;
- 						goto fallback;
- 					}
+ unsigned int erofs_iput(struct erofs_inode *inode)
+@@ -142,7 +142,7 @@ unsigned int erofs_iput(struct erofs_inode *inode)
  
- #if EROFS_MT_ENABLED
- 				}
--				pthread_mutex_unlock(&epi->mutex);
-+				erofs_mutex_unlock(&epi->mutex);
- #endif
- 			}
+ 	free(inode->compressmeta);
+ 	free(inode->eof_tailraw);
+-	list_del(&inode->i_hash);
++	erofs_remove_ihash(inode);
+ 	free(inode->i_srcpath);
  
+ 	if (inode->datasource == EROFS_INODE_DATA_SOURCE_DISKBUF) {
+@@ -1094,6 +1094,11 @@ struct erofs_inode *erofs_new_inode(struct erofs_sb_info *sbi)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	inode->sbi = sbi;
++	/*
++	 * By default, newly allocated in-memory inodes are associated with
++	 * the target filesystem rather than any other foreign sources.
++	 */
++	inode->dev = sbi->dev;
+ 	inode->i_count = 1;
+ 	inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+ 
+@@ -1707,7 +1712,7 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
+ 	if (incremental) {
+ 		root->dev = root->sbi->dev;
+ 		root->i_ino[1] = sbi->root_nid;
+-		list_del(&root->i_hash);
++		erofs_remove_ihash(root);
+ 		erofs_insert_ihash(root);
+ 	} else if (cfg.c_root_xattr_isize) {
+ 		if (cfg.c_root_xattr_isize > EROFS_XATTR_ALIGN(
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+index 5787bb3..b61af15 100644
+--- a/lib/rebuild.c
++++ b/lib/rebuild.c
+@@ -481,7 +481,7 @@ static int erofs_rebuild_basedir_dirent_iter(struct erofs_dir_context *ctx)
+ 		if (S_ISDIR(inode->i_mode) &&
+ 		    (ctx->de_ftype == EROFS_FT_DIR ||
+ 		     ctx->de_ftype == EROFS_FT_UNKNOWN)) {
+-			list_del(&inode->i_hash);
++			erofs_remove_ihash(inode);
+ 			inode->dev = dir->sbi->dev;
+ 			inode->i_ino[1] = ctx->de_nid;
+ 			erofs_insert_ihash(inode);
 -- 
 2.43.5
 
