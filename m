@@ -1,50 +1,181 @@
-Return-Path: <linux-erofs+bounces-465-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-467-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50275ADE787
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Jun 2025 11:58:42 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F12FCADF36A
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Jun 2025 19:06:16 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bMfMN06hwz2xS0;
-	Wed, 18 Jun 2025 19:58:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bMqrk2bp1z2xS2;
+	Thu, 19 Jun 2025 03:06:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750240719;
-	cv=none; b=GHKkk9VWaOO98PSytXNdvqjPTvSfutQ/hKsvXFadF0GJKQbu8DD+t6a2eNnNV2a2FjXlMTIoPcwPFG0dnp8PT1YrngEtBcidmSuuY80FCyWaA4O35Z7hLwwX5K4bmNfyewPUpl8rX/T9kIw15BCdg4Mr6gvQAwpbHREUEBNh44hcHWMKT1B10KdQyOBvTt7AOaU3z/5e4fVQMOn1AGV5pa0XbutxjjsFaKAUC5Mkq4OuE7UT/e7NOjT4zezqCUz6QLzaEU/lcZNOl+Gk89+oqeFLt9QQxW81DtfsTeJEORbZMPl2pepTNdJyFvpKDCPkU9p5ppyAW0dLsW0kUZzFIw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750266373;
+	cv=none; b=A+9M8fcpvK81O/FCxH4q+d9To2vgqJq8pWnnCQYAVgGSh3Qx0DQwdrJ+jag1AORGg2cgOft+R4tj1rfo0EoucvJPmyULRlKXs1HAI5dBNAzUikaBLYQLw3h2koEvVMkgv4qz4VzQeuxN3AgaY0hraSGQnWVWz9r64lTtylnDEvC2Zezek0pQL82BjrAv1NQU58cDpgqjGVUpv7OXxRfPLVgXGM5ziRa/oi/kCa3aGK1DtVrWBB3nY7ZU3knETnbvNIZ/Pplj8avd2Mzm1oBnu1UbQXIFC016WnwdfQOfnLU5peBFCcL8UQRgxzFwnFyg1JCHocy+XW3AKkFkbzQWiw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1750240719; c=relaxed/relaxed;
-	bh=0AdCLfbT8fM4JFpIVrrTiVg3e3Dzmj4Hy6X2MoxGMoU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FrwkPFHoTyJ4H7i1YLRCwhoBpJIoOMRF7CGywtsuSF5l+HnOL7/XvZmRRuKLv10giLfdF8cFMtMMSo3THFH5u7L8KKFaKhsOztBScaRbSZWj2COZa4EDW07hLSfUPaKj1tDUnIVOPRiuag8ntTambMbw40XThOv+uvdpP0Z76Re2rprauyMqAAGAFcA7BYZJhFk/gf6fIrAu/orkLw27Z2JefkR/vZ5Xpj24X+4HpYQtwLtSWc/ChNvrB0WglVmnrySmLk8UDcPg3UMx/dTPzM1JA8o4QATAToFzrQx/QrJYrmqiZxpdNXCt0Z86Hc/WaCj+02U2Dp2PKU6emiJ5QA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YRwc3nHj; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1750266373; c=relaxed/relaxed;
+	bh=SAxHe4/SFOgVVfwP/YkVikw5O0UdBvLzL0DaWVhZNTM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J8s3HpmuSmyAPjwr0XY2GINp2x3JfCwwbRN0eVG63ipeZ60F6SDx0L0jc1b5fA44KYvdCi24COCOCeXwi4l/dPwUP6/gxtNUtBz9wBt8s0WvCoZeCOMWY/Hlgh2NltO5UgzHWjgiruHUtTSEQYVwn5612+uOaZ76HGX0yOrz8CnLaXA/2FFfDEUytJb++Eq6fZyb4xPKdSG+0zqQbVcgy2H8sMYpdZP/1Yrxj6YO2qyEtNNB/hAdyogkuG6bAXZC2SCF5WgOlIwNkEDpgxyxN2yXsih3tBHWCR6Hb3bFaQnQnIGIT6o6Rxo0V6cSzk6y1dHVHrvLkKGxS7WXcxs2Aw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz; dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=NHroZLiP; dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=G3RePS1F; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=NHroZLiP; dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=G3RePS1F; dkim-atps=neutral; spf=pass (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=dsterba@suse.cz; receiver=lists.ozlabs.org) smtp.mailfrom=suse.cz
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YRwc3nHj;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=NHroZLiP;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=G3RePS1F;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=NHroZLiP;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=G3RePS1F;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=dsterba@suse.cz; receiver=lists.ozlabs.org)
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bMfML1CfYz2xRt
-	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Jun 2025 19:58:37 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750240714; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=0AdCLfbT8fM4JFpIVrrTiVg3e3Dzmj4Hy6X2MoxGMoU=;
-	b=YRwc3nHjwFuNyT3pz59adotwKf2lXPOAaDt7Ia/27c7I7T7umXLDa3Gf454zj/ldxncZalJEwvEyHrOzHveFpTnBpjunQ0VMUDeASG+ppxHdJlv2PzVSGWao8I46YxV2XrrOtMeZHrCZSKT+EB2rttS4mJhFpy1AJhmju2lFKls=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WeDAHZN_1750240711 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 18 Jun 2025 17:58:32 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 2/2] erofs-utils: lib: refine the inode hash table
-Date: Wed, 18 Jun 2025 17:58:26 +0800
-Message-ID: <20250618095826.1291494-2-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250618095826.1291494-1-hsiangkao@linux.alibaba.com>
-References: <20250618095826.1291494-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bMqrh2DgSz2xC3
+	for <linux-erofs@lists.ozlabs.org>; Thu, 19 Jun 2025 03:06:11 +1000 (AEST)
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 788C91F7BD;
+	Wed, 18 Jun 2025 17:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750266368;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SAxHe4/SFOgVVfwP/YkVikw5O0UdBvLzL0DaWVhZNTM=;
+	b=NHroZLiPV+1/rO8sD9qZX/5PHN5D5Rfo5Zb5aOHdYXCyTajLXhRkymKkUo6NqEKT1i51Wq
+	3jzRv5I50TsK881TQSExVKFBTV1uPJb21aJuIaeXllkCTjwU0SL7U9SX534GcVuTrf9MkN
+	z5adrX6FKDM+9HUfScghJAj+d4/N4Kw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750266368;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SAxHe4/SFOgVVfwP/YkVikw5O0UdBvLzL0DaWVhZNTM=;
+	b=G3RePS1FfsxZPpVKpINLhWACefVqXMozYLP/NJ+59JpdNLld0DBJsRsQUOr6wb7MNlldLN
+	KfEZjWEX4nPtmqCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750266368;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SAxHe4/SFOgVVfwP/YkVikw5O0UdBvLzL0DaWVhZNTM=;
+	b=NHroZLiPV+1/rO8sD9qZX/5PHN5D5Rfo5Zb5aOHdYXCyTajLXhRkymKkUo6NqEKT1i51Wq
+	3jzRv5I50TsK881TQSExVKFBTV1uPJb21aJuIaeXllkCTjwU0SL7U9SX534GcVuTrf9MkN
+	z5adrX6FKDM+9HUfScghJAj+d4/N4Kw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750266368;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SAxHe4/SFOgVVfwP/YkVikw5O0UdBvLzL0DaWVhZNTM=;
+	b=G3RePS1FfsxZPpVKpINLhWACefVqXMozYLP/NJ+59JpdNLld0DBJsRsQUOr6wb7MNlldLN
+	KfEZjWEX4nPtmqCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D50B313721;
+	Wed, 18 Jun 2025 17:06:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 4kJvM//xUmgeMgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 18 Jun 2025 17:06:07 +0000
+Date: Wed, 18 Jun 2025 19:06:06 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	David Sterba <dsterba@suse.com>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Benjamin LaHaise <bcrl@kvack.org>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	"Tigran A . Aivazian" <aivazian.tigran@gmail.com>,
+	Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, Xiubo Li <xiubli@redhat.com>,
+	Ilya Dryomov <idryomov@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>,
+	coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>,
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Bob Copeland <me@bobcopeland.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, v9fs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
+	linux-aio@kvack.org, linux-unionfs@vger.kernel.org,
+	linux-bcachefs@vger.kernel.org, linux-mm@kvack.org,
+	linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+	codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
+	jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+	ocfs2-devel@lists.linux.dev,
+	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+	linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
+Subject: Re: [PATCH 10/10] fs: replace mmap hook with .mmap_prepare for
+ simple mappings
+Message-ID: <20250618170606.GI4037@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
+ <f528ac4f35b9378931bd800920fee53fc0c5c74d.1750099179.git.lorenzo.stoakes@oracle.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -56,179 +187,76 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f528ac4f35b9378931bd800920fee53fc0c5c74d.1750099179.git.lorenzo.stoakes@oracle.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Result: default: False [-0.50 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	FORGED_RECIPIENTS(2.00)[m:akpm@linux-foundation.org,m:axboe@kernel.dk,m:rodrigo.vivi@intel.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:ericvh@kernel.org,m:lucho@ionkov.net,m:asmadeus@codewreck.org,m:linux_oss@crudebyte.com,m:marc.dionne@auristor.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:bcrl@kvack.org,m:amir73il@gmail.com,m:aivazian.tigran@gmail.com,m:kees@kernel.org,m:clm@fb.com,m:idryomov@gmail.com,m:jaharkes@cs.cmu.edu,m:coda@cs.cmu.edu,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:linkinjeon@kernel.org,m:adilger.kernel@dilger.ca,m:jaegeuk@kernel.org,m:slava@dubeyko.com,m:frank.li@vivo.com,m:anton.ivanov@cambridgegreys.com,m:mikulas@artax.karlin.mff.cuni.cz,m:dwmw2@infradead.org,m:shaggy@kernel.org,m:trondmy@kernel.org,m:anna@kernel.org,m:konishi.ryusuke@gmail.com,m:mark@fasheh.com,m:jlbec@evilplan.org,m:me@bobcopeland.com,m:ronniesahlberg@gmail.com,m:chengzhihao1@huawei.com,m:cem@kernel.org,m:dlemoal@kernel.or
+ g,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:dan.j.williams@intel.com,m:willy@infradead.org,m:jannh@google.com,m:linux-aio@kvack.org,m:linux-mm@kvack.org,m:codalist@coda.cs.cmu.edu,s:linux-mtd@lists.infradead.org,s:linux-um@lists.infradead.org,s:ntfs3@lists.linux.dev,s:nvdimm@lists.linux.dev,s:ocfs2-devel@lists.linux.dev,s:devel@lists.orangefs.org,s:samba-technical@lists.samba.org,s:jfs-discussion@lists.sourceforge.net,s:linux-f2fs-devel@lists.sourceforge.net,s:linux-karma-devel@lists.sourceforge.net];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,oracle.com,kernel.dk,linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,kernel.org,ionkov.net,codewreck.org,crudebyte.com,suse.com,redhat.com,auristor.com,zeniv.linux.org.uk,suse.cz,kvack.org,szeredi.hu,linux.dev,fb.com,toxicpanda.com,cs.cmu.edu,tyhicks.com,linux.alibaba.com,google.com,huawei.com,samsung.com,sony.com,mit.edu,dilger.ca,mail.parknet.co.jp,dubeyko.com,physik.fu-berlin.de,vivo.com,nod.at,cambridgegreys.com,sipsolutions.net,artax.karlin.mff.cuni.cz,infradead.org,paragon-software.com,fasheh.com,evilplan.org,bobcopeland.com,omnibond.com,samba.org,manguebit.org,microsoft.com,talpey.com,wdc.com,suse.de,vger.kernel.org,lists.freedesktop.org,lists.linux.dev,lists.infradead.org,coda.cs.cmu.edu,lists.ozlabs.org,lists.sourceforge.net,lists.orangefs.org,lists.samba.org];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLghqfk66faf4qxrpoiianeeaj)];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[113];
+	TAGGED_RCPT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,suse.cz:mid,oracle.com:email,imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Level: 
+X-Spam-Score: -0.50
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
- - Increase the hash table entries to 65536;
- - Protect the hash table with `erofs_rwsem`.
+On Mon, Jun 16, 2025 at 08:33:29PM +0100, Lorenzo Stoakes wrote:
+> Since commit c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file
+> callback"), the f_op->mmap() hook has been deprecated in favour of
+> f_op->mmap_prepare().
+> 
+> This callback is invoked in the mmap() logic far earlier, so error handling
+> can be performed more safely without complicated and bug-prone state
+> unwinding required should an error arise.
+> 
+> This hook also avoids passing a pointer to a not-yet-correctly-established
+> VMA avoiding any issues with referencing this data structure.
+> 
+> It rather provides a pointer to the new struct vm_area_desc descriptor type
+> which contains all required state and allows easy setting of required
+> parameters without any consideration needing to be paid to locking or
+> reference counts.
+> 
+> Note that nested filesystems like overlayfs are compatible with an
+> .mmap_prepare() callback since commit bb666b7c2707 ("mm: add mmap_prepare()
+> compatibility layer for nested file systems").
+> 
+> In this patch we apply this change to file systems with relatively simple
+> mmap() hook logic - exfat, ceph, f2fs, bcachefs, zonefs, btrfs, ocfs2,
+> orangefs, nilfs2, romfs, ramfs and aio.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/inode.h |  2 +-
- lib/inode.c           | 65 +++++++++++++++++++++++--------------------
- lib/rebuild.c         |  2 +-
- 3 files changed, 37 insertions(+), 32 deletions(-)
+For
 
-diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index eb8f45b..fe86101 100644
---- a/include/erofs/inode.h
-+++ b/include/erofs/inode.h
-@@ -27,8 +27,8 @@ umode_t erofs_ftype_to_mode(unsigned int ftype, unsigned int perm);
- unsigned char erofs_ftype_to_dtype(unsigned int filetype);
- void erofs_inode_manager_init(void);
- void erofs_insert_ihash(struct erofs_inode *inode);
-+void erofs_remove_ihash(struct erofs_inode *inode);
- struct erofs_inode *erofs_iget(dev_t dev, ino_t ino);
--struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid);
- unsigned int erofs_iput(struct erofs_inode *inode);
- erofs_nid_t erofs_lookupnid(struct erofs_inode *inode);
- int erofs_iflush(struct erofs_inode *inode);
-diff --git a/lib/inode.c b/lib/inode.c
-index 6b42fc9..a2ee522 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -6,9 +6,6 @@
-  * with heavy changes by Gao Xiang <xiang@kernel.org>
-  */
- #define _GNU_SOURCE
--#ifdef EROFS_MT_ENABLED
--#include <pthread.h>
--#endif
- #include <string.h>
- #include <stdlib.h>
- #include <stdio.h>
-@@ -19,6 +16,7 @@
- #endif
- #include <dirent.h>
- #include "erofs/print.h"
-+#include "erofs/lock.h"
- #include "erofs/diskbuf.h"
- #include "erofs/inode.h"
- #include "erofs/cache.h"
-@@ -85,48 +83,50 @@ unsigned char erofs_ftype_to_dtype(unsigned int filetype)
- 	return erofs_dtype_by_ftype[filetype];
- }
- 
--#define NR_INODE_HASHTABLE	16384
--
--struct list_head inode_hashtable[NR_INODE_HASHTABLE];
-+static struct list_head erofs_ihash[65536];
-+static erofs_rwsem_t erofs_ihashlock;
- 
- void erofs_inode_manager_init(void)
- {
- 	unsigned int i;
- 
--	for (i = 0; i < NR_INODE_HASHTABLE; ++i)
--		init_list_head(&inode_hashtable[i]);
-+	for (i = 0; i < ARRAY_SIZE(erofs_ihash); ++i)
-+		init_list_head(&erofs_ihash[i]);
-+	erofs_init_rwsem(&erofs_ihashlock);
- }
- 
- void erofs_insert_ihash(struct erofs_inode *inode)
- {
--	unsigned int nr = (inode->i_ino[1] ^ inode->dev) % NR_INODE_HASHTABLE;
-+	u32 nr = (inode->i_ino[1] ^ inode->dev) % ARRAY_SIZE(erofs_ihash);
- 
--	list_add(&inode->i_hash, &inode_hashtable[nr]);
-+	erofs_down_write(&erofs_ihashlock);
-+	list_add(&inode->i_hash, &erofs_ihash[nr]);
-+	erofs_up_write(&erofs_ihashlock);
- }
- 
--/* get the inode from the (source) inode # */
--struct erofs_inode *erofs_iget(dev_t dev, ino_t ino)
-+void erofs_remove_ihash(struct erofs_inode *inode)
- {
--	struct list_head *head =
--		&inode_hashtable[(ino ^ dev) % NR_INODE_HASHTABLE];
--	struct erofs_inode *inode;
--
--	list_for_each_entry(inode, head, i_hash)
--		if (inode->i_ino[1] == ino && inode->dev == dev)
--			return erofs_igrab(inode);
--	return NULL;
-+	erofs_down_write(&erofs_ihashlock);
-+	list_del(&inode->i_hash);
-+	erofs_up_write(&erofs_ihashlock);
- }
- 
--struct erofs_inode *erofs_iget_by_nid(erofs_nid_t nid)
-+/* get the inode from the (source) inode # */
-+struct erofs_inode *erofs_iget(dev_t dev, ino_t ino)
- {
--	struct list_head *head =
--		&inode_hashtable[nid % NR_INODE_HASHTABLE];
--	struct erofs_inode *inode;
-+	u32 nr = (ino ^ dev) % ARRAY_SIZE(erofs_ihash);
-+	struct list_head *head = &erofs_ihash[nr];
-+	struct erofs_inode *ret = NULL, *inode;
- 
--	list_for_each_entry(inode, head, i_hash)
--		if (inode->nid == nid)
--			return erofs_igrab(inode);
--	return NULL;
-+	erofs_down_read(&erofs_ihashlock);
-+	list_for_each_entry(inode, head, i_hash) {
-+		if (inode->i_ino[1] == ino && inode->dev == dev) {
-+			ret = erofs_igrab(inode);
-+			break;
-+		}
-+	}
-+	erofs_up_read(&erofs_ihashlock);
-+	return ret;
- }
- 
- unsigned int erofs_iput(struct erofs_inode *inode)
-@@ -142,7 +142,7 @@ unsigned int erofs_iput(struct erofs_inode *inode)
- 
- 	free(inode->compressmeta);
- 	free(inode->eof_tailraw);
--	list_del(&inode->i_hash);
-+	erofs_remove_ihash(inode);
- 	free(inode->i_srcpath);
- 
- 	if (inode->datasource == EROFS_INODE_DATA_SOURCE_DISKBUF) {
-@@ -1094,6 +1094,11 @@ struct erofs_inode *erofs_new_inode(struct erofs_sb_info *sbi)
- 		return ERR_PTR(-ENOMEM);
- 
- 	inode->sbi = sbi;
-+	/*
-+	 * By default, newly allocated in-memory inodes are associated with
-+	 * the target filesystem rather than any other foreign sources.
-+	 */
-+	inode->dev = sbi->dev;
- 	inode->i_count = 1;
- 	inode->datalayout = EROFS_INODE_FLAT_PLAIN;
- 
-@@ -1707,7 +1712,7 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
- 	if (incremental) {
- 		root->dev = root->sbi->dev;
- 		root->i_ino[1] = sbi->root_nid;
--		list_del(&root->i_hash);
-+		erofs_remove_ihash(root);
- 		erofs_insert_ihash(root);
- 	} else if (cfg.c_root_xattr_isize) {
- 		if (cfg.c_root_xattr_isize > EROFS_XATTR_ALIGN(
-diff --git a/lib/rebuild.c b/lib/rebuild.c
-index 5787bb3..b61af15 100644
---- a/lib/rebuild.c
-+++ b/lib/rebuild.c
-@@ -481,7 +481,7 @@ static int erofs_rebuild_basedir_dirent_iter(struct erofs_dir_context *ctx)
- 		if (S_ISDIR(inode->i_mode) &&
- 		    (ctx->de_ftype == EROFS_FT_DIR ||
- 		     ctx->de_ftype == EROFS_FT_UNKNOWN)) {
--			list_del(&inode->i_hash);
-+			erofs_remove_ihash(inode);
- 			inode->dev = dir->sbi->dev;
- 			inode->i_ino[1] = ctx->de_nid;
- 			erofs_insert_ihash(inode);
--- 
-2.43.5
+>  fs/btrfs/file.c       |  7 ++++---
 
+Acked-by: David Sterba <dsterba@suse.com>
 
