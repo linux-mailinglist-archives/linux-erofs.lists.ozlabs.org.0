@@ -1,46 +1,47 @@
-Return-Path: <linux-erofs+bounces-476-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-477-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 43095AE1CF8
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Jun 2025 16:00:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A15DEAE1EA8
+	for <lists+linux-erofs@lfdr.de>; Fri, 20 Jun 2025 17:31:28 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bNzdm6qczz2yFK;
-	Sat, 21 Jun 2025 00:00:44 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bP1fM4qDVz2yFK;
+	Sat, 21 Jun 2025 01:31:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750428044;
-	cv=none; b=l8csFPafJknDVqFXcNQO+Dpw2wxu8BJSfN64cH4gTWFxR9P+qoH2vfRg11fqSIBPJeWYgWjrjd/C4COFQunwEHb8oup5Vjp1UiTohoPxvT7YhXbQhqLRV2UQXIzMh/CoPbsEvC+RtkesseZiAiIxAnw9AS69ADHOhUrzeVaPjKQLrv3AfJLg1EbTJzo6VvkTwYQo7eN2J7ck0pvKXgvVGIvKOifGJWMtwAcURTGWSixPp69P2BlRTm4NflvmpglKyHOk0VxWvSdztqBAoBcA80JMVILce6t6sHvThBg+BB0fLOm+pzsRsmLyDiksiBsElITt9CjqIX1rZnCLn8TVlw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.110
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750433483;
+	cv=none; b=n6r6PBjLjBsAwt/crFDK742SEmK6MQ4yZ/kIIMLIVgmmf645KLshGMGpFsfHVYFgRu6u9/XGWUqoeTYmcdZzIlZ6pMa6Z2lKkaCmwWrgQRMwGAC4XLErZboZjInIH/3k3/2swwO8YFLPVnhAzX02xJgvVpO1BptQENODY8wcV0ETjJcEKoZ2ipLeQ8kzeAIDbrJGMbQE/AqmPW2YA7Nj/7mmqwOqONcmf1e6aVb9Pw2mpIVtHrBRYF3NxtYwStGQmaFNrBFsVw3SnQLf18kBPdVPWel0Q6rTkDLChh93MgSB6DxAA/RVq2eApPxToaIDmagfLwY83I4XNXh4CNnTxw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1750428044; c=relaxed/relaxed;
-	bh=Qp9Zu+pxMlQo328MqSz39C11Z+hXjkNUFPzyliQ+beI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kEs4WaP9jmoP+euBM1MmspLdpio79HQM5YsETU9g+uGqM25uM6mPF9wJSSq/vABV1G9EIZMGWl69dmR8ei5Efs6nx3yMpd9s6capbTiT/eeRn0zQV1FB+DWjXF0a2xFgZkYwC22HH4bcqKW41R4LHeoKRbIwsQB8X1Y2vmKhQisQsGDequcylKe5pJpoJkv9S24jCyFGQW3nx0iIerCHWkQAvtYHvuQOfjQa3tongSdYu+d1iDfsfxFyxkDyWpx4ULZDYaPFs3vZXBo9/vyUjeKa4oNUU5HYTGg6C/lffIOCzpyzq6BYg/EAYirOX7vLSSodUKhDxBKZZig5Qy1idQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=AXQW2Y5v; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1750433483; c=relaxed/relaxed;
+	bh=4b3junzA/3eGGOZfK804nE/zow3RypRUFyM0P4FTq5g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zjw7sWpDI33PpxhYxyK9wEKitNRekwwl1xchOnGk9QVX9c5fvpwlkIdWGKljVMOL6aUyL1Y+1HRahACDZrzvYPNGCEhFwVOrzFY8uj798CBDFp3Tbk1ryJ+LDewI46uWV8D6jfy4fz4XTHe9YHPXG5lBoJx3520fgv7HfeyH8siH6GutrL6kwObtAvLFo5ZluQvERkSuiDIrW6qiOIBC51iObGpqVoYB4vuwszLEa8LKQXT4JgRJWK5OgpMjh+L+ZN/65axE1wwkGHK7k8e519TWADoWOtZCSKFTIKiYzAFjy70f+lU6Tpe1s+aD6AflFzccgdlc2/raQRFZg5gTDQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=eLr8JIbt; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=AXQW2Y5v;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=eLr8JIbt;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bNzdk4x3Bz2xHZ
-	for <linux-erofs@lists.ozlabs.org>; Sat, 21 Jun 2025 00:00:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bP1fK0wVdz2y2B
+	for <linux-erofs@lists.ozlabs.org>; Sat, 21 Jun 2025 01:31:19 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1750428036; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Qp9Zu+pxMlQo328MqSz39C11Z+hXjkNUFPzyliQ+beI=;
-	b=AXQW2Y5vE05V6ZDC5evKh8cJXGWyIMFnUiVH6eY8kv8YUfIdmjW8uzkOMlT5SL0z9Vyvw63Jp75zkTx0HpVIH6ZUjcHwe5ZGlhcbOvDebJpq0v8Ek1Zr5ktsXOeXOWm0vcHORzQkX6sg5tHt2wr7Veq3E0oT8poR/iGZzDjVreY=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WeKyTHz_1750428030 cluster:ay36)
+	t=1750433475; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=4b3junzA/3eGGOZfK804nE/zow3RypRUFyM0P4FTq5g=;
+	b=eLr8JIbtLVZCiTo1W5BG17L1coI4Q7EsQPzCp1xXXxB12mz6toLjKoptSIzysiaDZDds2bU3IzY9XWjK0MFWrjVN67igCU659cBoEZTmJqOCmgM9A1TGxbtTtfSH3xlrl4W7cz53M0SWYigzW4AVUKU3Rp6SALH7GjnCQV0E590=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WeLDrbC_1750433469 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 20 Jun 2025 22:00:34 +0800
+          Fri, 20 Jun 2025 23:31:13 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs-utils: lib: fix sub-page block handling in erofs_read_superblock()
-Date: Fri, 20 Jun 2025 22:00:29 +0800
-Message-ID: <20250620140029.1243087-1-hsiangkao@linux.alibaba.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs: remove a superfluous check for encoded extents
+Date: Fri, 20 Jun 2025 23:31:08 +0800
+Message-ID: <20250620153108.1368029-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -60,49 +61,32 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-`sbi->sb_size > (1 << sbi->blkszbits) - EROFS_SUPER_OFFSET ` doesn't
-work correctly when the block size is 1024.
+It is possible when an inode is split into segments for multi-threaded
+compression, and the tail extent of a segment could also be small.
 
+Fixes: 1d191b4ca51d ("erofs: implement encoded extent metadata")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/super.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ fs/erofs/zmap.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/lib/super.c b/lib/super.c
-index fb644bc..8efef50 100644
---- a/lib/super.c
-+++ b/lib/super.c
-@@ -76,13 +76,13 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
- {
- 	u8 data[EROFS_MAX_BLOCK_SIZE];
- 	struct erofs_super_block *dsb;
--	int ret;
-+	int read, ret;
- 
--	sbi->blkszbits = ilog2(EROFS_MAX_BLOCK_SIZE);
--	ret = erofs_blk_read(sbi, 0, data, 0, erofs_blknr(sbi, sizeof(data)));
--	if (ret < 0) {
-+	read = erofs_io_pread(&sbi->bdev, data, 0, EROFS_MAX_BLOCK_SIZE);
-+	if (read < EROFS_SUPER_END) {
-+		ret = read < 0 ? read : -EIO;
- 		erofs_err("cannot read erofs superblock: %d", ret);
--		return -EIO;
-+		return ret;
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 6afcb054780d..0bebc6e3a4d7 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -639,12 +639,6 @@ static int z_erofs_map_blocks_ext(struct inode *inode,
+ 		}
  	}
- 	dsb = (struct erofs_super_block *)(data + EROFS_SUPER_OFFSET);
+ 	map->m_llen = lend - map->m_la;
+-	if (!last && map->m_llen < sb->s_blocksize) {
+-		erofs_err(sb, "extent too small %llu @ offset %llu of nid %llu",
+-			  map->m_llen, map->m_la, vi->nid);
+-		DBG_BUGON(1);
+-		return -EFSCORRUPTED;
+-	}
+ 	return 0;
+ }
  
-@@ -105,9 +105,8 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
- 	}
- 
- 	sbi->sb_size = 128 + dsb->sb_extslots * EROFS_SB_EXTSLOT_SIZE;
--	if (sbi->sb_size > (1 << sbi->blkszbits) - EROFS_SUPER_OFFSET) {
--		erofs_err("invalid sb_extslots %u (more than a fs block)",
--			  dsb->sb_extslots);
-+	if (sbi->sb_size > read - EROFS_SUPER_OFFSET) {
-+		erofs_err("invalid sb_extslots %u", dsb->sb_extslots);
- 		return -EINVAL;
- 	}
- 	sbi->primarydevice_blocks = le32_to_cpu(dsb->blocks_lo);
 -- 
 2.43.5
 
