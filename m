@@ -1,59 +1,73 @@
-Return-Path: <linux-erofs+bounces-478-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-479-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 518BCAE23E7
-	for <lists+linux-erofs@lfdr.de>; Fri, 20 Jun 2025 23:18:35 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A63FAE2844
+	for <lists+linux-erofs@lfdr.de>; Sat, 21 Jun 2025 11:31:49 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bP9Lx02VNz30Pn;
-	Sat, 21 Jun 2025 07:18:33 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bPTct3MQcz2yF0;
+	Sat, 21 Jun 2025 19:31:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.3.254.239
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750454312;
-	cv=none; b=Y8K9RFvp94j1wne+WfQ1xro+dzaOUUhOHZRV7iwBJLj2rVasleHRJtQB/pC4GkEXCf7KsLWckszbh+rAxBnwDGEdUjSOAygLXzGFcspxHxv/ighDj2QH+pO9bQO65em5VZPafkMVjPVW+ZG4sUvlRx1cqlJbb2cvlAuqF4qqWbMIcxnl/IkmB7Oo7BNKgPRlchO8U29R2cKBbsxBcs4Uo7LY6OJb6ltcvuVMlgdfFa/NQoP3Wo4+YMvmGpI0qliE51NAQVsYFuXwADhtV7EExiHdG8ONLHxpfE07JPxfinwZF2Rlxh7rP0DPlKGWfH+wo00GjIAgRvhewZsTgMtF9g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.19
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750498302;
+	cv=none; b=i9sHXCa9sYy11MOKntN+7ufN1TrZhk1v1K+euqlGm7GTL9FYezKrTwt2SjVUtsXeOd4fddD7HTuUBRL4irCKtc/cLZeTiTlhILC92dCMWA8lg+P3T/CNpEjAgEYhkVytUUQfYf0Q7uqf9aQ2jBY2KTSlRNOooLDwZkK5F16sPRV9Te08UaGpqfMu7sbUdk9v680Yr2xSHe6lKZbWS/qHNjS2xRx9GaMpK1u3rXanjbbNB9ShK4rTXblSyWNa0vYV4BtSgJKS/IDaks4Fp8gaUWzix8yyx8Iy7D9viiMmVlre/YYVMwms6SQnapoPx8f7ETCLxzshrlnu7a5SvqAy/w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1750454312; c=relaxed/relaxed;
-	bh=4vx1+CZa1waCPYmulwx5tPt5o5n9pTt2TQ9W/g6rnpg=;
-	h=Message-ID:Date:Subject:From:To:MIME-Version:Content-Type:
-	 References; b=e4Fyp+WGa9vswbCSll3hexbVfVQOSMg00zj1mea2qbMV35s/0fY1zg3JI91gggcJDxtmfM7c/zyWbvUeYm0J5SOaw8FIZ428XF3psEGDrmiYPM9IY+E4wMcGhD0YSXb2u/Rybua64EalVBEPYgkTEyIGu7h1SXY34oa1y7G7ZadBWlbL9/P1gM8shu+sffOrsArdfQ8xW2FmdjiLHU7vTjBV8QKkkGH1XsjMYoZIklkMTFeZb56g8WYAICI7bLf4mz3S9y5jpMzOVoOX7W1PQ8exUpEliVeNyQku03CP0VlJ6HsTTQyxs1N2KkScIiq2UvjbwEDtJKzVKyTzuVzxgw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=sh.abgev.com; dkim=fail header.d=sh.abgev.com header.i=egan@sh.abgev.com header.a=rsa-sha256 header.s=selector2 header.b=r0xCeLMj reason="key not found in DNS"; dkim=pass (2048-bit key; unprotected) header.d=sh.abgev.com header.i=@sh.abgev.com header.a=rsa-sha256 header.s=mailer header.b=n03ur43t; dkim-atps=neutral; spf=pass (client-ip=192.3.254.239; helo=packaging.qualityassuredmanufacturing.com; envelope-from=gayla.groat@zjdobest.com; receiver=lists.ozlabs.org) smtp.helo=packaging.qualityassuredmanufacturing.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=sh.abgev.com
+	t=1750498302; c=relaxed/relaxed;
+	bh=3Pa8HljFQF67P43t0Cnjma6P44AEIvVQqQ8ZsgJMqn4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=ViJQhHNrirKk+LfU+Q0ih7nRxGSUbpGUitDm0cyHDutKAk155aKOWZtQYEIptkEYaMwdgSxaoEfJv9Hp11ksOMKPLBtvsVx7uVrPY3AGoynYddHVuLoxifmcC3inBw96a9slFDpZmk2UM3sgg2cYRRBHuodG5G3QErBFvG+4uRUnhqPeO20yrF8CuQdR70TD8HGcegWE02mHLcyJAnUmeca9Up3MPGUS6gq21Z26/1NQz48sLk5yCzubUhjKQxcQiGx1kppJqYcs88lCOUcFYqYwtBPwwRz5OK16vnwAbh67EeISaglJiL4jZg67lU46IHW6GqfUieUAODRvfYw/Tg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hIArkC8X; dkim-atps=neutral; spf=pass (client-ip=198.175.65.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="key not found in DNS" header.d=sh.abgev.com header.i=egan@sh.abgev.com header.a=rsa-sha256 header.s=selector2 header.b=r0xCeLMj;
-	dkim=pass (2048-bit key; unprotected) header.d=sh.abgev.com header.i=@sh.abgev.com header.a=rsa-sha256 header.s=mailer header.b=n03ur43t;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=hIArkC8X;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.helo=packaging.qualityassuredmanufacturing.com (client-ip=192.3.254.239; helo=packaging.qualityassuredmanufacturing.com; envelope-from=gayla.groat@zjdobest.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 1205 seconds by postgrey-1.37 at boromir; Sat, 21 Jun 2025 07:18:31 AEST
-Received: from packaging.qualityassuredmanufacturing.com (packaging.qualityassuredmanufacturing.com [192.3.254.239])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bP9Lv0D3Vz2y2B
-	for <linux-erofs@lists.ozlabs.org>; Sat, 21 Jun 2025 07:18:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=selector2; d=sh.abgev.com;
- h=Message-ID:Date:Subject:From:Reply-To:To:MIME-Version:Content-Type:
- References; i=egan@sh.abgev.com;
- bh=4vx1+CZa1waCPYmulwx5tPt5o5n9pTt2TQ9W/g6rnpg=;
- b=r0xCeLMj1lZ+jl3ijq5gp1MqoION3k/VEyteI+C+IvBDCV3zns8YrVi+TBgidec4BHVZtpOyN8pe
-   BtOQ0oBOwLyTZLgjnvx3dwgMOdLFwveP0f5hEPUK2f431T7dudpxr5q/y6AeqTqAQaean3GVmSYA
-   fNrgpAOauoeEJoY5NNs=
-DKIM-Signature: v=1; a=rsa-sha256;
- bh=4vx1+CZa1waCPYmulwx5tPt5o5n9pTt2TQ9W/g6rnpg=; d=sh.abgev.com;
- h=Message-ID: Date: Subject: From: Reply-To: To: MIME-Version: Content-Type:
- References; i=@sh.abgev.com; s=mailer; c=relaxed/relaxed; t=1750453101;
- b=n03ur43tCfbmgZfKo2c2f/LA/vzomNo2n/TglVcCTM6nUa4nurJU2QzXoNgsY7a9axkITvSpq
- MouSloIe70b81uRvc/bhM5+PAo2xuZ7wNEDL4YtpLaFgHgSjnah5KzfaQyHa1Om2H93AUI5ez
- QmjrjP92JZV7ZgSoXKrK8UQ5uYDckE7ajokvLU8o9arqhifJizMp60wfNS28pRJ0h/m2FugrE
- VBZ4f+OP6WXDbJEE7Egve6OeSckW32+CBtYS+CcAmpJkrr5CWE0x8goMCTUw0pq7HNxjNE1py
- dp63deo9PSJfoMk4OxJeAJzQFtt1sLNpPa5Ht+nHtRaRf/uOZQ==
-Message-ID: <212b59316e5111c3dd3630a9fe0acf700504a604@zjdobest.com>
-Date: Fri, 20 Jun 2025 20:58:21 +0000
-Subject: Unlock expert-level precision through our comprehensive range of
- advanced CNC services tailored specifically toward achieving superior
- manufacturing outcomes.
-From: Carole Pagano <egan@sh.abgev.com>
-Reply-To: Carole Pagano <info@en.preassem.com>
-To: Linux erofs <linux-erofs@lists.ozlabs.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bPTcr0QHxz2xsW
+	for <linux-erofs@lists.ozlabs.org>; Sat, 21 Jun 2025 19:31:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750498301; x=1782034301;
+  h=date:from:to:cc:subject:message-id;
+  bh=Vf/JlBIobefmO7WN2eP2EYZUDYzLJU5zjIIVQ5UEtcY=;
+  b=hIArkC8Xmtl4pTVwSaji2urH2fnUsMKw88Jj/66yt9lY96xSRxC9ekYY
+   sCByx8iSMK6cz66SpQHY2VaVZZTzFwVrGJj4Viki4QPPyui+7liKMZs3M
+   zKU6WnaG2Id4SeGHqcEM5Lz+ldpAozQr26LI4kPDPYbrbb+SlhRzEbtH8
+   6PMJ9ks/p0AEyOIWO69N+jS/e0mPV5HpTcO8NqaKHJLpa8ovTgjXKDqrs
+   Uqr1cUPMZk+ZkdJ+Bk7usmCQ/1mY3d+MnZp+7U5P0de4U5lTqHV9U5+Uk
+   Px0wYBv1dYfCbzUcxjq9kEWYFWTvtJihq2XXrkI9xAgraJU0tUHKEcyCg
+   Q==;
+X-CSE-ConnectionGUID: Pd4gqx8AQ2u7MRHm3Gyy+w==
+X-CSE-MsgGUID: YEzfs0HrQeq6RhFDmEPtKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11469"; a="52632767"
+X-IronPort-AV: E=Sophos;i="6.16,254,1744095600"; 
+   d="scan'208";a="52632767"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2025 02:31:35 -0700
+X-CSE-ConnectionGUID: MMwTG2NRT9G/eiIDWusbug==
+X-CSE-MsgGUID: 8wcYqD3QSYCp5Ca9LTzNZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,254,1744095600"; 
+   d="scan'208";a="155511635"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 21 Jun 2025 02:31:33 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uSuZP-000MW4-0G;
+	Sat, 21 Jun 2025 09:31:31 +0000
+Date: Sat, 21 Jun 2025 17:31:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 417b8af2e30d7f131682a893ad79c506fd39c624
+Message-ID: <202506211710.PlwGYmkP-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -64,146 +78,188 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="_=_swift_1750453101_9b98fdae7c0cfcbf1de41066cd8f0e63_=_"
-References: yr932esdqpb5c
-X-Spam-Flag: YES
-X-Spam-Status: Yes, score=3.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HTML_FONT_LOW_CONTRAST,
-	HTML_MESSAGE,RCVD_IN_SBL_CSS,SPF_HELO_PASS,SPF_NONE autolearn=disabled
-	version=4.0.1
-X-Spam-Report: 
-	*  3.6 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-	*      [192.3.254.239 listed in zen.spamhaus.org]
-	* -0.0 SPF_HELO_PASS SPF: HELO matches SPF record
-	*  0.0 SPF_NONE SPF: sender does not publish an SPF Record
-	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-	*      valid
-	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
-	*       domain
-	*  0.0 HEADER_FROM_DIFFERENT_DOMAINS From and EnvelopeFrom 2nd level mail
-	*      domains are different
-	*  0.0 HTML_FONT_LOW_CONTRAST BODY: HTML font color similar or identical to
-	*       background
-	*  0.0 HTML_MESSAGE BODY: HTML included in message
-X-Spam-Level: ***
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 417b8af2e30d7f131682a893ad79c506fd39c624  erofs: remove a superfluous check for encoded extents
 
---_=_swift_1750453101_9b98fdae7c0cfcbf1de41066cd8f0e63_=_
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 991m
 
- Hello Linux erofs,
-I trust this email finds you living life to the fulle=
-st.
+configs tested: 167
+configs skipped: 3
 
-It is my pleasure to introduce Cnm Precision Molding Design Co., L=
-td
-(CNM), a leading provider of prototype development and short-run
-man=
-ufacturing services for global innovators since 2000. Located
-within Shen=
-zhen=E2=80=99s high-tech corridor, we offer full-service turnkey
-solution=
-s covering SLA/SLS rapid prototyping, vacuum casting,
-precision CNC machi=
-ning, sheet-metal fabrication as well as complete
-surface finishing and a=
-ssembly under one roof.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Our facility features 35+ CNC machines, vacuum=
- casting systems, UV
-curing ovens and a specialized hardware division to =
-support production
-runs from single prototypes through short-run manufact=
-uring while
-ensuring precision tolerances and expedited delivery. We prov=
-ide
-material solutions across diverse polymers including ABS/PC/Nylon/PMM=
-A
-as well as aluminum/copper/stainless steel alloys tailored for
-automo=
-tive components, medical instrumentation, consumer electronics
-systems & =
-robotic applications.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                              allmodconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                              allyesconfig    gcc-15.1.0
+arc                      axs103_smp_defconfig    gcc-15.1.0
+arc                   randconfig-001-20250621    gcc-8.5.0
+arc                   randconfig-002-20250621    gcc-10.5.0
+arm                              allmodconfig    gcc-15.1.0
+arm                               allnoconfig    clang-21
+arm                               allnoconfig    gcc-15.1.0
+arm                              allyesconfig    gcc-15.1.0
+arm                            dove_defconfig    gcc-15.1.0
+arm                            hisi_defconfig    gcc-15.1.0
+arm                             mxs_defconfig    clang-21
+arm                       omap2plus_defconfig    gcc-15.1.0
+arm                         orion5x_defconfig    clang-21
+arm                   randconfig-001-20250621    clang-21
+arm                   randconfig-002-20250621    gcc-15.1.0
+arm                   randconfig-003-20250621    clang-20
+arm                   randconfig-004-20250621    gcc-8.5.0
+arm                         vf610m4_defconfig    gcc-15.1.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250621    clang-21
+arm64                 randconfig-002-20250621    gcc-15.1.0
+arm64                 randconfig-003-20250621    clang-17
+arm64                 randconfig-004-20250621    gcc-10.5.0
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20250621    gcc-15.1.0
+csky                  randconfig-002-20250621    gcc-15.1.0
+hexagon                          alldefconfig    clang-21
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                           allnoconfig    gcc-15.1.0
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250621    clang-21
+hexagon               randconfig-002-20250621    clang-16
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250621    clang-20
+i386        buildonly-randconfig-002-20250621    gcc-12
+i386        buildonly-randconfig-003-20250621    clang-20
+i386        buildonly-randconfig-004-20250621    clang-20
+i386        buildonly-randconfig-005-20250621    clang-20
+i386        buildonly-randconfig-006-20250621    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+loongarch             randconfig-001-20250621    gcc-12.4.0
+loongarch             randconfig-002-20250621    gcc-15.1.0
+m68k                             alldefconfig    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+m68k                           sun3_defconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                        bcm63xx_defconfig    clang-21
+mips                         bigsur_defconfig    gcc-15.1.0
+mips                      bmips_stb_defconfig    clang-21
+nios2                         3c120_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250621    gcc-9.3.0
+nios2                 randconfig-002-20250621    gcc-12.4.0
+openrisc                          allnoconfig    clang-21
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                         allyesconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+openrisc                    or1ksim_defconfig    gcc-15.1.0
+parisc                           allmodconfig    gcc-15.1.0
+parisc                            allnoconfig    clang-21
+parisc                            allnoconfig    gcc-15.1.0
+parisc                           allyesconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20250621    gcc-10.5.0
+parisc                randconfig-002-20250621    gcc-12.4.0
+powerpc                          allmodconfig    gcc-15.1.0
+powerpc                           allnoconfig    clang-21
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc                          allyesconfig    clang-21
+powerpc                    amigaone_defconfig    gcc-15.1.0
+powerpc                    ge_imp3a_defconfig    gcc-15.1.0
+powerpc                     kmeter1_defconfig    gcc-15.1.0
+powerpc                     ksi8560_defconfig    gcc-15.1.0
+powerpc                     mpc512x_defconfig    clang-21
+powerpc                     mpc5200_defconfig    clang-21
+powerpc               randconfig-001-20250621    clang-17
+powerpc               randconfig-002-20250621    clang-19
+powerpc               randconfig-003-20250621    gcc-8.5.0
+powerpc                     tqm8555_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20250621    gcc-11.5.0
+powerpc64             randconfig-002-20250621    gcc-13.3.0
+powerpc64             randconfig-003-20250621    gcc-11.5.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    clang-21
+riscv                             allnoconfig    gcc-15.1.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250621    clang-21
+riscv                 randconfig-002-20250621    gcc-8.5.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250621    clang-21
+s390                  randconfig-002-20250621    clang-21
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sh                          landisk_defconfig    gcc-15.1.0
+sh                     magicpanelr2_defconfig    gcc-15.1.0
+sh                    randconfig-001-20250621    gcc-15.1.0
+sh                    randconfig-002-20250621    gcc-15.1.0
+sh                          rsk7203_defconfig    gcc-15.1.0
+sh                      rts7751r2d1_defconfig    gcc-15.1.0
+sh                           se7343_defconfig    gcc-15.1.0
+sh                           se7780_defconfig    gcc-15.1.0
+sh                        sh7785lcr_defconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                 randconfig-001-20250621    gcc-15.1.0
+sparc                 randconfig-002-20250621    gcc-15.1.0
+sparc64               randconfig-001-20250621    gcc-8.5.0
+sparc64               randconfig-002-20250621    gcc-13.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                    randconfig-001-20250621    clang-21
+um                    randconfig-002-20250621    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250621    gcc-12
+x86_64      buildonly-randconfig-002-20250621    clang-20
+x86_64      buildonly-randconfig-003-20250621    gcc-12
+x86_64      buildonly-randconfig-004-20250621    gcc-12
+x86_64      buildonly-randconfig-005-20250621    gcc-12
+x86_64      buildonly-randconfig-006-20250621    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                                  kexec    clang-20
+x86_64                randconfig-001-20250621    gcc-12
+x86_64                randconfig-002-20250621    gcc-12
+x86_64                randconfig-003-20250621    gcc-12
+x86_64                randconfig-004-20250621    gcc-12
+x86_64                randconfig-005-20250621    gcc-12
+x86_64                randconfig-006-20250621    gcc-12
+x86_64                randconfig-007-20250621    gcc-12
+x86_64                randconfig-008-20250621    gcc-12
+x86_64                randconfig-071-20250621    gcc-12
+x86_64                randconfig-072-20250621    gcc-12
+x86_64                randconfig-073-20250621    gcc-12
+x86_64                randconfig-074-20250621    gcc-12
+x86_64                randconfig-075-20250621    gcc-12
+x86_64                randconfig-076-20250621    gcc-12
+x86_64                randconfig-077-20250621    gcc-12
+x86_64                randconfig-078-20250621    gcc-12
+x86_64                               rhel-9.4    clang-20
+x86_64                           rhel-9.4-bpf    gcc-12
+x86_64                         rhel-9.4-kunit    gcc-12
+x86_64                           rhel-9.4-ltp    gcc-12
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
+xtensa                randconfig-001-20250621    gcc-12.4.0
+xtensa                randconfig-002-20250621    gcc-15.1.0
 
-Our team consisting of over one hundred skilled =
-individuals is fully
-committed to maintaining rigoro us international sta=
-ndards, including
-first-artic le inspection processes and SPC data tracki=
-ng for every
-order we handle=E2=80=94ensuring precision at each stage fro=
-m design through
-delivery.
-
-I would appreciate the opportunity to exp=
-lore your upcoming
-requirements and illustrate how our comprehensive solu=
-tions can
-optimize efficiency in development cycles while minimizing expe=
-nses.
-Please do not hesitate to reach out for a call or site tour
-
-Tr=
-uly yours,
-Jame Rufeyr932esdqpb5c=20
-
---_=_swift_1750453101_9b98fdae7c0cfcbf1de41066cd8f0e63_=_
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE html>
-<html>
-<head><meta charset=3D"utf-8"/>
-=09<title> Unl=
-ock expert-level precision through our comprehensive range of advanced CNC =
-services tailored specifically toward achieving superior manufacturing outc=
-omes.</title>
-</head>
-<body>Hello Linux erofs,<br />
-I trust this ema=
-il finds you living life to the fullest.<br />
-<br />
-It is my pleasure=
- to introduce Cnm Precision Molding Design Co., Ltd (CNM), a leading provid=
-er of prototype development and short-run manufacturing services for global=
- innovators since 2000. Located within Shenzhen=E2=80=99s high-tech corrido=
-r, we offer full-service turnkey solutions covering SLA/SLS rapid prototypi=
-ng, vacuum casting, precision CNC machining, sheet-metal fabrication as wel=
-l as complete surface finishing and assembly under one roof.<br />
-<br />=
-
-Our facility features 35+ CNC machines, vacuum casting systems, UV curin=
-g ovens and a specialized hardware division to support production runs from=
- single prototypes through short-run manufacturing while ensuring precision=
- tolerances and expedited delivery. We provide material solutions across di=
-verse polymers including ABS/PC/Nylon/PMMA as well as aluminum/copper/stain=
-less steel alloys tailored for automotive components, medical instrumentati=
-on, consumer electronics systems & robotic applications.<br />
-<br />
-O=
-ur team consisting of over one hundred skilled individuals is fully committ=
-ed to maintaining rigoro us international standards, including first-artic =
-le inspection processes and SPC data tracking for every order we handle=
-=E2=80=94ensuring precision at each stage from design through delivery.<br =
-/>
-<br />
-I would appreciate the opportunity to explore your upcoming r=
-equirements and illustrate how our comprehensive solutions can optimize eff=
-iciency in development cycles while minimizing expenses. Please do not hesi=
-tate to reach out for a call or site tour<br />
-<br />
-Truly yours,<br =
-/>
-Jame Rufe<span style=3D"color:#ffffff;"><span style=3D"font-size:8px;"=
->yr932esdqpb5c</span></span>
-</body>
-</html>
-
---_=_swift_1750453101_9b98fdae7c0cfcbf1de41066cd8f0e63_=_--
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
