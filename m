@@ -1,69 +1,87 @@
-Return-Path: <linux-erofs+bounces-483-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-484-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3B30AE2A55
-	for <lists+linux-erofs@lfdr.de>; Sat, 21 Jun 2025 18:35:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B8726AE3B1D
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Jun 2025 11:51:35 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bPg252P4Jz2xlL;
-	Sun, 22 Jun 2025 02:35:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bQjyl0RLpz2xHW;
+	Mon, 23 Jun 2025 19:51:27 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750523741;
-	cv=none; b=bLuCtwhlMaK5LnlqaoRP8aWxI5PgJbgG28sXIttJxOTwHdMNBCeotuvcqY9yP9Er4kKTreUmGYylAYk9ofCon1Cl4VH6wOwk/4fV+3W/Mf1AfPWQYvU3whTGiNrVU9jJceyBYeXNrsGsIz3Ao30wprhFaJqZJ27j1qANlxFbSu5e9AAquZTCL0xBGnfOd/y+wL9Cw6bv+DMnhrqgbADlt+bIHU5Q+1bR9K6lPTa3qRC5vbhRxVQ6qq4trSenOreTkO5LJnC553gNqP50+GzEkKwPV9ZCQxjv2bfkhccyB64RUWJFfQfAO8J+hbEehZYKS9fXAz8mesTWlubWBDDV8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1750523741; c=relaxed/relaxed;
-	bh=tGhScSNhYyoLxmCATNO3yqLkPXca6d2QK1ujiuvFJso=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=UeM/JINMV+lA5puR144iV+hgelX5/fpjgFfsuUqZtTGZOtTRSNPI0/oV6+qjgfrFHrWEjOW0wzhBDZicFO9S7de9T4ymb+1DcNbc9y1dBoa1SkeaJ+NfnA0nQy4lQkWUUmDsm940Aikitm0D+lfezvhbOlA8Pz1zIkWbmXnfcgHDTNwMZRaX1wszCZq3NOtdlEAtqm6HF83qhsH5q51/jz5FKJHVpL5pt84Y9T62B8K/h4dcbZZN6DmWnXj45ecsKec445Mq7y9qOeX3C3Rgj69BFGn4WdBA6iewRTDFYOk8PrN7A9N4Ot4cbAXpW/RLpTTFZtlUYoMvgAKix3Ss/w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=S+vZksUd; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:2415::628" arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750672286;
+	cv=pass; b=XSuzvRPShqvI02klc4ur6dVPczVMWTprcIhjUuh2LxYByoOOml52I+u7UYsyG0x5YJPKgzPSdyqrJSBqzlMdocosZU3diJVcH0p8QT5xHstYMnr0Eu+1VOBW4Pv2izAhAQIGDpFN9NKar+U2Yw6Y3wfadCnQWB07qwAifTjugtxxOmsS6vZxGpJH2sAl5MprN2NZeRFXkvHKjm9hcygMn2hDcaUHFMVA9Gm0+F5zOFODdkv912zcV7WGPht0RpPidacmn8vUGw5a0lP/Io7z+Io0Vk8hm9hXuFwcS/vZaGmTSR2STURVSWets8lHmsYfFKnPX3ftOGDBDpdUEgDb8g==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1750672286; c=relaxed/relaxed;
+	bh=aai6tISOHJBDHPBKuHq7jDpuz1N4BLyKb2RTot3ncf0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hv6kPmL+vwRvMySkZ02bGppvhdENcvrBNZTShucEN/PmgC6X0wMRgiBgNqeWk+Arm2hFQqESvOIJ6GLC0Y8NIdAGDkbNH9JYdGTUAZ0f/3ke9JEEM1MkwGUSvF9UDggYrdYn5vl0EiOVjdu6QbrfLynyi6KsQPMIIbp711k6+bqP0OQF8iq7ltsuEzU3ARZ3gLilRHNEB0UyDUIAIRHt8IcYSwVdYLa3jDygNtij6jOk2FCtru9rQwzafgUb0Q4HhfsOzPdxik3bqDsxaKp2DqBfI7thqDPrdXi9WkFxH/+kXft6gp/k5ea220Fx0Xr5PIQo903d5Pd/cdM4HMav5Q==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; dkim=pass (1024-bit key; unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=I9CsgjfH; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:2415::628; helo=nam11-dm6-obe.outbound.protection.outlook.com; envelope-from=shivankg@amd.com; receiver=lists.ozlabs.org) smtp.mailfrom=amd.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=S+vZksUd;
+	dkim=pass (1024-bit key; unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=I9CsgjfH;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=amd.com (client-ip=2a01:111:f403:2415::628; helo=nam11-dm6-obe.outbound.protection.outlook.com; envelope-from=shivankg@amd.com; receiver=lists.ozlabs.org)
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on20628.outbound.protection.outlook.com [IPv6:2a01:111:f403:2415::628])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (secp384r1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bPg243FwBz2xPc
-	for <linux-erofs@lists.ozlabs.org>; Sun, 22 Jun 2025 02:35:40 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 009694A64F;
-	Sat, 21 Jun 2025 16:35:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D300DC4CEEE;
-	Sat, 21 Jun 2025 16:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750523736;
-	bh=zwX3PSozj6/GLOmVZwxvGwE85lFfWGoGDVeisaH3FCU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=S+vZksUdSYMEQYajwEtzQw7Ldf9OfT37zlIwO3hUeMaUdl+vz+V4BWemxvjEMIvtc
-	 jO/scsxNUtuikSmWaEbxICav3bv9IC82khKItem7sgkEDhD2tOQPiECmYgY9YR19Zd
-	 MZ8GyG/qS49ejFsQpVrWF7yY69x60HbzmOpNH5jxRhrDWsJ+1/y3X4VColLoqMb51h
-	 UIuqnS2NvhzpSQQrI2lXtScyYOLmyciXW1iAB5hDt/fA78vopE3gVLSbTQEVGMVsoi
-	 klIdrARH4kmGCSavU+jDJl01Gh8oqwZCbmTreh5qb5GiE91ENub9TQ5f7Dk138k3n3
-	 v2w+NoU7VLYxg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE0238111DD;
-	Sat, 21 Jun 2025 16:36:05 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs fixes for 6.16-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aFbFC3q0SNO7ZkQi@debian>
-References: <aFbFC3q0SNO7ZkQi@debian>
-X-PR-Tracked-List-Id: <linux-erofs.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <aFbFC3q0SNO7ZkQi@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.16-rc3-fixes
-X-PR-Tracked-Commit-Id: 417b8af2e30d7f131682a893ad79c506fd39c624
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1f9378d4a7dd862b28d83a062a2dcc6ef1a0daa7
-Message-Id: <175052376417.1897727.2751233102628770913.pr-tracker-bot@kernel.org>
-Date: Sat, 21 Jun 2025 16:36:04 +0000
-To: Gao Xiang <xiang@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Tatsuyuki Ishi <ishitatsuyuki@google.com>, Hongbo Li <lihongbo22@huawei.com>, Chao Yu <chao@kernel.org>
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bQjyZ5mWhz2xHT
+	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Jun 2025 19:51:16 +1000 (AEST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iDFLk/XFVnW7mHLsYPl+wE5iwUp4bRd1z71Q39mQe74Oo7MfW6dzX5s54WqJJJ5ZprNroxHIlJxgwycxYW/FfdGC+77Z51kkV9wKP3INkMFE9qIOJ6j0HE6uIDNfrkj1ZnXK4roPGNGS+UeOLO8xRHLjnk37HaFN2o1Nvyf/4D6xnPurqtDkEQ/Ppq8GZZKaM69Ss2+dJv4Aa7kJvzJHtXAVNWeZ0mg9RySIYwt5rW0pw3XscaAfRD/SlqzChrGQj00EqtBmN/hhkWlM3ravWE9u6p84h+VEpaV+NSwFNFC00bGuFMIMivNnWRIoSPsvTt1tLKP8pEWlICN+2TcwjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aai6tISOHJBDHPBKuHq7jDpuz1N4BLyKb2RTot3ncf0=;
+ b=KRnap/2LaEozHxmjbi3uGly171fpesKzaMDGHeQSUr1PIiXAG38iexz3UfKbLlWk+E67LymJNFxLL0fPys9AT5Br8kVrHqtK5QB4+2z1m005Izv7JVRBXrP6BH+xK5F1SAXCwDkiPYQzEgqGkhykuahYP4R9HDPupTnZg1cvmkc+qc9TNE1AbtMKjULeExYz/atM7P+dwKz1UhA5lgvZ9V7Y+jFdVJIBmbcL/wXNGNSF2m8QS7AYrVwRBJp51IxXOOTpYuJjlBZGD/smGGHRO+z7cK6i9cP8c6WGoEi0NYxzwd2QK9aoSDnr2CxOsRClb07jx1VbM332wSc5UXdLtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.dev smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aai6tISOHJBDHPBKuHq7jDpuz1N4BLyKb2RTot3ncf0=;
+ b=I9CsgjfHeZt7/zJH0t987avoZWeEMJOYwTjXiBSRruS8OWb83Rx27MZ1natEbPJ6FwsZx7Wwi88iqZ6fPxFPTdDd7mVqOCpGkNN3SvxY+fvnhLgWTq75Kk80sJBft4/52aA6z+58uQCgN69nNgncWVuQdpNLK0hIXzp8feg8prg=
+Received: from DM6PR08CA0059.namprd08.prod.outlook.com (2603:10b6:5:1e0::33)
+ by SJ1PR12MB6194.namprd12.prod.outlook.com (2603:10b6:a03:458::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Mon, 23 Jun
+ 2025 09:50:54 +0000
+Received: from DS1PEPF00017091.namprd03.prod.outlook.com
+ (2603:10b6:5:1e0:cafe::e9) by DM6PR08CA0059.outlook.office365.com
+ (2603:10b6:5:1e0::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.29 via Frontend Transport; Mon,
+ 23 Jun 2025 09:50:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF00017091.mail.protection.outlook.com (10.167.17.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8880.14 via Frontend Transport; Mon, 23 Jun 2025 09:50:53 +0000
+Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 23 Jun
+ 2025 04:50:46 -0500
+From: Shivank Garg <shivankg@amd.com>
+To: <kent.overstreet@linux.dev>, <clm@fb.com>, <josef@toxicpanda.com>,
+	<dsterba@suse.com>, <xiang@kernel.org>, <chao@kernel.org>,
+	<jaegeuk@kernel.org>, <willy@infradead.org>, <akpm@linux-foundation.org>,
+	<david@redhat.com>, <vbabka@suse.cz>
+CC: <zbestahu@gmail.com>, <jefflexu@linux.alibaba.com>, <dhavale@google.com>,
+	<lihongbo22@huawei.com>, <pankaj.gupta@amd.com>,
+	<linux-bcachefs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+	<linux-f2fs-devel@lists.sourceforge.net>, <linux-fsdevel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <kvm@vger.kernel.org>, <linux-coco@lists.linux.dev>,
+	Shivank Garg <shivankg@amd.com>
+Subject: [PATCH V2 1/2] mm/filemap: Add NUMA mempolicy support to filemap_alloc_folio()
+Date: Mon, 23 Jun 2025 09:39:41 +0000
+Message-ID: <20250623093939.1323623-4-shivankg@amd.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -74,17 +92,255 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017091:EE_|SJ1PR12MB6194:EE_
+X-MS-Office365-Filtering-Correlation-Id: 838974f4-c710-4b0b-073b-08ddb23b71ec
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|7416014|1800799024|36860700013|921020|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?anw+Z1BK4R2vbqiHmDUWFIwNPGJmfZmz5540NEzd6dPqQSn3i4ve0w4c8e9X?=
+ =?us-ascii?Q?R4wbg/ZB3PL5m+lo8PVFiUrDrtgi3o5kSq57BimDqEjceLkO18q8btWlJLGg?=
+ =?us-ascii?Q?oROzwo9AZ1IU6d8jqfHQt6Y6rgEkYKgnttbvSyErGNaEXraKHF94np7GeSKZ?=
+ =?us-ascii?Q?1FFNtUvqn/fZ9FEsJNdIQgfrjQVDuF1pK+6jmEWL4AZj5S/x6G7wThFAwcSk?=
+ =?us-ascii?Q?iXpkaNDryxhE4Ojui5PeW18U/AM3CflhBBUMhCv6VUfub9QJHk4owcAE1EgG?=
+ =?us-ascii?Q?RZxs+oxFItfvWXBeCA6j56rJbqY7POWEFoCtlnMBPmQS8NqE8ZbDlL+sware?=
+ =?us-ascii?Q?gZqvafPj69XBuHdiHxOEOk3ua1jbz73YnH1stY8Pem1UqSmwOkH/6ah77DSK?=
+ =?us-ascii?Q?RKirrlt5bekdEoym/LMmZOGxU2tm2dUCWWvavmXAljNiKM8kl4u2OwBtFwZL?=
+ =?us-ascii?Q?6DWQpqSGFUULP905kxyxi8zVZt8L9nMMzW7H9dfd+oOfgj2KVqOy7pDx3HWq?=
+ =?us-ascii?Q?JtxmhKfY3wei5shi+GNLPrnMlGXt1++v5iEffcux+Pftzsoo0nNbhUewZB2v?=
+ =?us-ascii?Q?qULAKXSRk6LKHsNg0zjqOSsNKKm8aOgfsJ2B9ponCLFKgeP8pQI8WjjXdXN/?=
+ =?us-ascii?Q?oD6mrezTiZ8RFLBED6FB2K0pEWtyHWtznRpuIZNRHQ3JiowhFHqMCRAXqeiQ?=
+ =?us-ascii?Q?USNffEE0DofFXmVd8VTfdQcT68BaBeL5BuKebiZZX34bFxUuxKQMR9ZpmsEx?=
+ =?us-ascii?Q?8xgYGZEKZbMyhqeyiypOuuU+cJo1yQm2TNtNe1/DJl1RH+3eehx7PzhLUZDT?=
+ =?us-ascii?Q?Gx8MgMUqPOwzzzfxRasDkG7j1Oy5xc6OxT1R4Qn+YYaah4mK+fAPbakAi76W?=
+ =?us-ascii?Q?7366YCXNQUJ/yBNDKEQJlkx4/wn6xyLzRTAeAGa0gzj0p5SLhkoJusMS9Rra?=
+ =?us-ascii?Q?zR5diTsQpByJYRRzjbRwhzO3vjGHYqaZ9iQeFus73h+yKNHIsUqNA9kF13xR?=
+ =?us-ascii?Q?3NhXTZMkH7iCIhfVZl7RJJH+meCVxkxtF7XWfv/Ize74mQlJqOMBJw0UqyPr?=
+ =?us-ascii?Q?uuCAmDXZ8A9vnY4Ya1QQSvh7oD4dIT5AqWMkDokdK9PVEhSDKIO3pkPy4nej?=
+ =?us-ascii?Q?ics7WWz8WJtzp0RjOi3dPv1pfsmGp4yLjV2y8xMAAhxlJILqnIiJ7WNk6CN9?=
+ =?us-ascii?Q?OIyxBqfkcgq2eHynTJDnOOOz2qzeewpnP6p7Qmx8ZWbyQDATcs1dCkaXt2nZ?=
+ =?us-ascii?Q?MOcQUa+rFJrmmdtO7GaNk3kq8Tf56qOe9IMEleNJJXIg1NVoWGvJRjEJaSLy?=
+ =?us-ascii?Q?W9w9s1QsLrtPdXNCfBxoUgQ0Sywhuwb/2PDVDNV3XUrSQDN3GCHTIvSK/aBy?=
+ =?us-ascii?Q?v7uGnug6UnWbP20b/yA37FrizDXBisbmx52slyOJ4A9KvACLgW4Z2j9mtgyY?=
+ =?us-ascii?Q?AUU1QJ9Dn1NeVHv0nSmLi2gDA340gZloKYcPZaQenl6rE/zm7ZQgUmxH9yS3?=
+ =?us-ascii?Q?IFxletNtIcTMMaB6wWnIi2Kg4efHrJGoZjjL4asxjQIWYj+s7zAK7v9qcA?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(7416014)(1800799024)(36860700013)(921020)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jun 2025 09:50:53.9816
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 838974f4-c710-4b0b-073b-08ddb23b71ec
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF00017091.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6194
+X-Spam-Status: No, score=-3.1 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-The pull request you sent on Sat, 21 Jun 2025 22:43:23 +0800:
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.16-rc3-fixes
+Add a mempolicy parameter to filemap_alloc_folio() to enable NUMA-aware
+page cache allocations. This will be used by upcoming changes to
+support NUMA policies in guest-memfd, where guest_memory needs to be
+allocated according to NUMA policy specified by the VMM.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1f9378d4a7dd862b28d83a062a2dcc6ef1a0daa7
+All existing users pass NULL maintaining current behavior.
 
-Thank you!
+Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Signed-off-by: Shivank Garg <shivankg@amd.com>
+---
+Changes in V2:
+- fix checkpatch warnings.
+- touch up commit description and fix code alignments to make it
+  more readable.
 
+V1: https://lore.kernel.org/all/20250620143502.3055777-1-willy@infradead.org
+
+ fs/bcachefs/fs-io-buffered.c |  2 +-
+ fs/btrfs/compression.c       |  4 ++--
+ fs/btrfs/verity.c            |  2 +-
+ fs/erofs/zdata.c             |  2 +-
+ fs/f2fs/compress.c           |  2 +-
+ include/linux/pagemap.h      |  8 +++++---
+ mm/filemap.c                 | 14 +++++++++-----
+ mm/readahead.c               |  2 +-
+ 8 files changed, 21 insertions(+), 15 deletions(-)
+
+diff --git a/fs/bcachefs/fs-io-buffered.c b/fs/bcachefs/fs-io-buffered.c
+index 66bacdd49f78..392344232b16 100644
+--- a/fs/bcachefs/fs-io-buffered.c
++++ b/fs/bcachefs/fs-io-buffered.c
+@@ -124,7 +124,7 @@ static int readpage_bio_extend(struct btree_trans *trans,
+ 			if (folio && !xa_is_value(folio))
+ 				break;
+ 
+-			folio = filemap_alloc_folio(readahead_gfp_mask(iter->mapping), order);
++			folio = filemap_alloc_folio(readahead_gfp_mask(iter->mapping), order, NULL);
+ 			if (!folio)
+ 				break;
+ 
+diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
+index 48d07939fee4..a0808c8f897f 100644
+--- a/fs/btrfs/compression.c
++++ b/fs/btrfs/compression.c
+@@ -474,8 +474,8 @@ static noinline int add_ra_bio_pages(struct inode *inode,
+ 			continue;
+ 		}
+ 
+-		folio = filemap_alloc_folio(mapping_gfp_constraint(mapping,
+-								   ~__GFP_FS), 0);
++		folio = filemap_alloc_folio(mapping_gfp_constraint(mapping, ~__GFP_FS),
++					    0, NULL);
+ 		if (!folio)
+ 			break;
+ 
+diff --git a/fs/btrfs/verity.c b/fs/btrfs/verity.c
+index b7a96a005487..c43a789ba6d2 100644
+--- a/fs/btrfs/verity.c
++++ b/fs/btrfs/verity.c
+@@ -742,7 +742,7 @@ static struct page *btrfs_read_merkle_tree_page(struct inode *inode,
+ 	}
+ 
+ 	folio = filemap_alloc_folio(mapping_gfp_constraint(inode->i_mapping, ~__GFP_FS),
+-				    0);
++				    0, NULL);
+ 	if (!folio)
+ 		return ERR_PTR(-ENOMEM);
+ 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index fe8071844724..00e9160a0d24 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -562,7 +562,7 @@ static void z_erofs_bind_cache(struct z_erofs_frontend *fe)
+ 			 * Allocate a managed folio for cached I/O, or it may be
+ 			 * then filled with a file-backed folio for in-place I/O
+ 			 */
+-			newfolio = filemap_alloc_folio(gfp, 0);
++			newfolio = filemap_alloc_folio(gfp, 0, NULL);
+ 			if (!newfolio)
+ 				continue;
+ 			newfolio->private = Z_EROFS_PREALLOCATED_FOLIO;
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index b3c1df93a163..7ef937dd7624 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1942,7 +1942,7 @@ void f2fs_cache_compressed_page(struct f2fs_sb_info *sbi, struct page *page,
+ 		return;
+ 	}
+ 
+-	cfolio = filemap_alloc_folio(__GFP_NOWARN | __GFP_IO, 0);
++	cfolio = filemap_alloc_folio(__GFP_NOWARN | __GFP_IO, 0, NULL);
+ 	if (!cfolio)
+ 		return;
+ 
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index e63fbfbd5b0f..78ea357d2077 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -646,9 +646,11 @@ static inline void *detach_page_private(struct page *page)
+ }
+ 
+ #ifdef CONFIG_NUMA
+-struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order);
++struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order,
++		struct mempolicy *policy);
+ #else
+-static inline struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order)
++static inline struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order,
++		struct mempolicy *policy)
+ {
+ 	return folio_alloc_noprof(gfp, order);
+ }
+@@ -659,7 +661,7 @@ static inline struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int o
+ 
+ static inline struct page *__page_cache_alloc(gfp_t gfp)
+ {
+-	return &filemap_alloc_folio(gfp, 0)->page;
++	return &filemap_alloc_folio(gfp, 0, NULL)->page;
+ }
+ 
+ static inline gfp_t readahead_gfp_mask(struct address_space *x)
+diff --git a/mm/filemap.c b/mm/filemap.c
+index bada249b9fb7..a30cd4dd085a 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -989,11 +989,16 @@ int filemap_add_folio(struct address_space *mapping, struct folio *folio,
+ EXPORT_SYMBOL_GPL(filemap_add_folio);
+ 
+ #ifdef CONFIG_NUMA
+-struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order)
++struct folio *filemap_alloc_folio_noprof(gfp_t gfp, unsigned int order,
++		struct mempolicy *policy)
+ {
+ 	int n;
+ 	struct folio *folio;
+ 
++	if (policy)
++		return folio_alloc_mpol_noprof(gfp, order, policy,
++				NO_INTERLEAVE_INDEX, numa_node_id());
++
+ 	if (cpuset_do_page_mem_spread()) {
+ 		unsigned int cpuset_mems_cookie;
+ 		do {
+@@ -1977,7 +1982,7 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
+ 			err = -ENOMEM;
+ 			if (order > min_order)
+ 				alloc_gfp |= __GFP_NORETRY | __GFP_NOWARN;
+-			folio = filemap_alloc_folio(alloc_gfp, order);
++			folio = filemap_alloc_folio(alloc_gfp, order, NULL);
+ 			if (!folio)
+ 				continue;
+ 
+@@ -2516,7 +2521,7 @@ static int filemap_create_folio(struct kiocb *iocb, struct folio_batch *fbatch)
+ 	if (iocb->ki_flags & (IOCB_NOWAIT | IOCB_WAITQ))
+ 		return -EAGAIN;
+ 
+-	folio = filemap_alloc_folio(mapping_gfp_mask(mapping), min_order);
++	folio = filemap_alloc_folio(mapping_gfp_mask(mapping), min_order, NULL);
+ 	if (!folio)
+ 		return -ENOMEM;
+ 	if (iocb->ki_flags & IOCB_DONTCACHE)
+@@ -3853,8 +3858,7 @@ static struct folio *do_read_cache_folio(struct address_space *mapping,
+ repeat:
+ 	folio = filemap_get_folio(mapping, index);
+ 	if (IS_ERR(folio)) {
+-		folio = filemap_alloc_folio(gfp,
+-					    mapping_min_folio_order(mapping));
++		folio = filemap_alloc_folio(gfp, mapping_min_folio_order(mapping), NULL);
+ 		if (!folio)
+ 			return ERR_PTR(-ENOMEM);
+ 		index = mapping_align_index(mapping, index);
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 20d36d6b055e..0b2aec0231e6 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -183,7 +183,7 @@ static struct folio *ractl_alloc_folio(struct readahead_control *ractl,
+ {
+ 	struct folio *folio;
+ 
+-	folio = filemap_alloc_folio(gfp_mask, order);
++	folio = filemap_alloc_folio(gfp_mask, order, NULL);
+ 	if (folio && ractl->dropbehind)
+ 		__folio_set_dropbehind(folio);
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.43.0
+
 
