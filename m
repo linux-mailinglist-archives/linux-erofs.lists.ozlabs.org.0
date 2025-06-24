@@ -1,63 +1,66 @@
-Return-Path: <linux-erofs+bounces-486-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-487-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBB23AE3FCA
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Jun 2025 14:23:34 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BDA1AE6437
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Jun 2025 14:06:05 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bQnLC71Mgz2yF0;
-	Mon, 23 Jun 2025 22:23:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bRNvZ06NFz30MY;
+	Tue, 24 Jun 2025 22:06:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2001:8b0:10b:1236::1"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750681411;
-	cv=none; b=c7nLtgFz6pKum8q8y/+Z+QeeXs4bPebN/MZf8+qEB7tOK+YVk9aw3pUJlqed4M01c4ew9vCwDRDQ+SMjqcp5oMyh5/jwsVFw5lTMFd0IJXOb4hLrcbfyO38zHksaYcUynQiifSl9qSz3HgHM4HLVx6n5lNSsylq1Qm7WwKoJ3PdbJqovzPJUBZBijkPrv1ThMdq5vC2rNfW2Codex4IFtQD69PRaSfDDx535N9I0+7hSzsc4osoVXsqw0BvlQiZHlJjZVMgj/H9qAVwefaDXeyRAzdzP+7PtFZKUMnml2r0pWZUjL72UueOK4wkc0RaResoRWslXp6AjCp4qtKeSeg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::42f"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1750766761;
+	cv=none; b=izBVLDmUFSCZn0sm8mgL4co+6eSWehOExHk6vlj+2izoyF4pDLZiQS4tgY/4uo5dF5OJe+XcZmAVrtw5xbCIm6PDunzTnzg9TbiK9zieAdEBGS4iYNNZZFtgonAceXQ1J7LMFfCluCO3J1uL+AACHI+eZ4VGdeC5f80q2Qqw6Vqrg7dYS+MmTrWg/fGlfbkJhTrx4BlmHCVMgVvWlMDrUWghp4J02mDbJnJHfBlYFCaxx0FgaBZDRKxCxfJ5RIy4RWCB3b8PpXZ7Zn9jyA4Fuhv/Or3liIB0wOkIeDJGTtkxwb9YhUueMfAIp2EePTo5kqvdmLObS1ufC4Pv8oQGnQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1750681411; c=relaxed/relaxed;
-	bh=3oCr8/2E/ECUGMdCQG5uK2s/rAaWdb4SF8d9yHw1SGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h5rULcfX0/nSvOY7SSC1GoKtfhjdIc9YisUUuUMpEE9+6PwNQMaXeO3auKOfYFZfjMSpy4UBT0uklkdynYK9+2AU4lT7Dy3O/ANVi5PCXA9m2yb6mclHPZd/NfPIQgxZKZj8NO2ygI576A4ofwPyBhp8U8vTP9WmtrA/nXK2qPoY7nV6E/BK7Fd/jdG29tHfCFffU5bEy+p9KvOBEEluJzUPLvz97n8Q3uHc22PlBjxn/fpHoZ2QtW77R2iRIs2Yw1y+jmckGfFpdGFr0kWZehldv2aGT3PQmXjlIwWaAqlw/846OxXasmo1xZR1zVnJvuo8B+wTc409YngizPIijg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=LnNB/HnR; dkim-atps=neutral; spf=none (client-ip=2001:8b0:10b:1236::1; helo=casper.infradead.org; envelope-from=willy@infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=infradead.org
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=infradead.org
+	t=1750766761; c=relaxed/relaxed;
+	bh=Sh7c6kew5778xkT2w/ivEsewc4Q0gkbMeZ6m7AAGY/k=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=JHStfKF/sV4JuvBB+haaW1u7Ps1477ueviz9K7ZU3HYsOgqYBOa7vV2xt5iZYHB3twigEbG+t8giXCt76zTnCyNSN+8iXGNA2rEGVRe39/aUVCYofgt6X/9efNqPzKrBwnjm/7XEi+AKPqgSF4xElbJrQnoDjwZT+fZKnjJj1kPwmC97qTkK2a7RVPcBKXL1gfwHzz7l+4kIyVpDk21spBdtlickBgnvbr0NUwcv1RwbAhHdlzyMAsW4UbgBorwgocAiipdjCkKg3vC42ub2DgqeFjvxVv+YPg9sOPeBCzfHj5kQx6hVkxPXR3KUgaYAvaUZlDqujGyKtXT4bzpCog==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=NfjCmc21; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::42f; helo=mail-pf1-x42f.google.com; envelope-from=khanhlongfaq@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=casper.20170209 header.b=LnNB/HnR;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=NfjCmc21;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=infradead.org (client-ip=2001:8b0:10b:1236::1; helo=casper.infradead.org; envelope-from=willy@infradead.org; receiver=lists.ozlabs.org)
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::42f; helo=mail-pf1-x42f.google.com; envelope-from=khanhlongfaq@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bQnL42FbHz2xRq
-	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Jun 2025 22:23:22 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3oCr8/2E/ECUGMdCQG5uK2s/rAaWdb4SF8d9yHw1SGc=; b=LnNB/HnRw1ZuK8fdt8rSMJ2ZYs
-	q+mW5oayHUBd2qfRNZL5j0uUh9ko/ejIS840XHJrbvp0XXsnPshvxo22sJ2/tdoYi6ERn4uQPoids
-	wWMoD9y+CL3Eubvm4JTJtsfBUMB3K5F7LRxS8wdG6bSZK4z6byuJQYa85lbqNFDJRZj4Ia/+OYd8d
-	9ipCORuobaKsyF0cXHA8WHbUY6oPA7b/XkqQtx4BeOji44BWo4jJcuXOvV5cy7UrNymptQgKKmQ04
-	nj/lr96lizIJt52vWyInxpNXHVuHv8TrB4k/r+WH2R08hi5XIz+wWuYWais41pGsOlRtF3aaeYV3n
-	Lx7l0xHw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uTgCR-00000003OC9-0JQF;
-	Mon, 23 Jun 2025 12:22:59 +0000
-Date: Mon, 23 Jun 2025 13:22:58 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Shivank Garg <shivankg@amd.com>
-Cc: kent.overstreet@linux.dev, clm@fb.com, josef@toxicpanda.com,
-	dsterba@suse.com, xiang@kernel.org, chao@kernel.org,
-	jaegeuk@kernel.org, akpm@linux-foundation.org, david@redhat.com,
-	vbabka@suse.cz, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
-	dhavale@google.com, lihongbo22@huawei.com, pankaj.gupta@amd.com,
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	kvm@vger.kernel.org, linux-coco@lists.linux.dev
-Subject: Re: [PATCH V2 1/2] mm/filemap: Add NUMA mempolicy support to
- filemap_alloc_folio()
-Message-ID: <aFlHIjLBwn3LQFMC@casper.infradead.org>
-References: <20250623093939.1323623-4-shivankg@amd.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bRNvX0RQtz2xHZ
+	for <linux-erofs@lists.ozlabs.org>; Tue, 24 Jun 2025 22:05:58 +1000 (AEST)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-74801bc6dc5so4215276b3a.1
+        for <linux-erofs@lists.ozlabs.org>; Tue, 24 Jun 2025 05:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750766756; x=1751371556; darn=lists.ozlabs.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Sh7c6kew5778xkT2w/ivEsewc4Q0gkbMeZ6m7AAGY/k=;
+        b=NfjCmc21O2Zvlf36EGVBYXFHtWhAoly3lzVqa7cqU7xMSwiAVxfAvh7chuUKp1XvgM
+         4t3aRe4qktdXgrXIfk9ciWAKRXBUvrFr5BY3iXuElSDd4fD1IuWWdZ8VwTOylM7PSLPt
+         Em9GigfYC5yMzQHMUptNmXpo1tB5I7e8AtY7i6Yiehng63u1sFe67L6PVhF4M5oqdF1+
+         OVwUTskBkM1kn3UvN4R8G7gKYMwv/mcf8OlclteiRaxN9do+c7TRYK2MyhwjdhSGia/V
+         pUuErCeeqiwXnXTUIpRCByq1vaR4awXK4EuUjKqvyYOWsBil165V5FdZzixosRvkTfM4
+         GZ0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750766756; x=1751371556;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Sh7c6kew5778xkT2w/ivEsewc4Q0gkbMeZ6m7AAGY/k=;
+        b=SLUDu+/C+FPR4DRpWGE9p/bB+dFntwi+czpX/vsN0RzpXodHoktyTA+GpphrT05Ok3
+         KBy7K2t177mPZp1cpsjJGn6ccqvcf5rRJJVvg8syMnsUklR9DohNFdxK6dkVM6w8fTCU
+         eJ5TupGU5FfgrXJR4MmUt9ns62OzWKe+xUrRUl6zCJuKU0vfW/R7KNl9W1LSsHU5j86o
+         WO5o9yk0nXRzMd311MUIuEAaFbeBZYa16QreP/mOvb9onE/dVdFsFT+1q56IuIdU9RkG
+         VXlHnK5+NfXJ+enBQSUjBo0G1Zyq2nRmuKq4GYQ5YlvbonBZjnmMejlh9zcCNNkQa1nA
+         5duA==
+X-Gm-Message-State: AOJu0Yz+HgQFoQ/0Mzcj3K5/jBuLAYsIPWnWjbZ+YPf+obbiN29Ox/Fu
+	10+vsY/8eSotWhslDsnR9oBsOC8TDIWQqsTDj1OWTqlSpswxpe+vvLI6t82I/7oBJlYUSSkIG46
+	+1FNhHs3fjAFH+VvmgVU2pOKEC4i91O33Kkkw
+X-Gm-Gg: ASbGncuY1ExlX9BKczBPwxxU3g/aB2ehiJrW4uOXeQ31GNqwMaZdCnvUzOAtU3SwCjj
+	Y1u6gGZRGEgVssvIKuuAoLC/FC/AGaf67ZyGO6JF0I3paH5iN96mDUsdBBBdBQGEvnpTBoOy5oa
+	MuHyRJ9mZ19bcnUXEEiGXw5+LECLxmLj3Jj95XuIJqF7Nu
+X-Google-Smtp-Source: AGHT+IETAb5yfj0q/tba6+sGsTpLnZExMkwPJoTfAX7SjuuLxRea45rLGklvofc+G3SJUsSortYjI7fiqLKYvkCpabU=
+X-Received: by 2002:a05:6a00:14d1:b0:74a:cd4d:c0a6 with SMTP id
+ d2e1a72fcca58-74acd4dc5edmr1406097b3a.5.1750766755736; Tue, 24 Jun 2025
+ 05:05:55 -0700 (PDT)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -69,26 +72,70 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623093939.1323623-4-shivankg@amd.com>
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
-	autolearn=disabled version=4.0.1
+From: Bridget Khanh <khanhlongfaq@gmail.com>
+Date: Tue, 24 Jun 2025 19:05:44 +0700
+X-Gm-Features: AX0GCFtfGtdlBLseSLZebtzZPg4YLv4xgG2eOIYg10ebsNVMydw6mTuLtqCn3dQ
+Message-ID: <CAOFBJ_EGV8JDW+_HwYTvpsMYoj70AjJ44bc-9Scra4iqE0cWPA@mail.gmail.com>
+Subject: =?UTF-8?B?Oeenjei1mumSseaKgOiDvSDkuIDlubTlhoXlj6/lrabkvJrlubbojrforqTor4E=?=
+To: linux-erofs@lists.ozlabs.org, byndxwb@163.com, xiaol@eol.cn, 
+	sjyz.sl@cqust.edu.cn, livey@psb.vib-ugent.be
+Content-Type: multipart/alternative; boundary="0000000000008f74810638502603"
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HTML_MESSAGE,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Jun 23, 2025 at 09:39:41AM +0000, Shivank Garg wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Add a mempolicy parameter to filemap_alloc_folio() to enable NUMA-aware
-> page cache allocations. This will be used by upcoming changes to
-> support NUMA policies in guest-memfd, where guest_memory needs to be
-> allocated according to NUMA policy specified by the VMM.
-> 
-> All existing users pass NULL maintaining current behavior.
+--0000000000008f74810638502603
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-I don't want to see this as a separate series.  I want to see it as part
-of the series that introduces the user.
+KuS9oOWlvSEqDQoNCuaXoOiuuuaYr+WvueebruWJjeeahOW3peS9nOWSjOaKpemFrOaEn+WIsOWO
+jOWApuW4jOacm+aUueihjO+8jOi/mOaYr+W+heS4muS4reWvu+aJvui/m+WFpeafkOihjOS4muea
+hOaxguiBjOKAnOaVsumXqOegluKAne+8jOWcqOaWsOmihuWfn+iOt+W+l+ebuOWFs+e7k+S4muiu
+pOivgemDveS8muS9v+S9oOmdouWvueacquadpeaXtuS/oeW/g+a7oea7oeOAgg0KDQrogIzlrp7p
+mYXkuIrvvIzmnInkuIDkupvmioDog73lrabkuaDotbfmnaXlubbkuI3pnIDopoHpgqPkuYjplb/n
+moTml7bpl7TvvIzog73lpJ/lvojlv6vlhaXmiYvvvIzogIzkuJTolqrmsLTlubbkuI3kvY7vvIzl
+sLHkuJrliY3mma/kuZ/lvojlub/pmJTjgIINCg0K6L+Z56+H5paH56ug5oyH5Ye65LqGOeenjeWc
+qOS4gOW5tOWGheWPr+S7peWtpuS8muW5tuiOt+W+l+S4k+S4muiupOivgeeahOi1mumSseaKgOiD
+veOAgg0KDQropoHpmIXor7vlrozmlbTmlofnq6DvvIzor7fngrnlh7vkuIvpnaLnmoTpk77mjqXv
+vJoNCg0KaHR0cHM6Ly90aW55dXJsLmNvbS85LXpob25nLXpodWFucWlhbi1qaW5lbmcNCg0K56Wd
+5L2g5LiA5YiH6YO95aW977yBDQoNCi0tLQ0KDQrkuJbnlYzlm6DlloToia/ogIzmuKnmmpbvvIzl
+m6DnnJ/nm7jogIzmuIXphpINCg==
+--0000000000008f74810638502603
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-Andrew, please drop these two patches from your tree.
+PGRpdiBkaXI9Imx0ciI+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUxIiBzdHlsZT0iZm9udC1m
+YW1pbHk6JnF1b3Q7TWljcm9zb2Z0IFlhSGVpJnF1b3Q7O2NvbG9yOnJnYigwLDAsMCk7Zm9udC1z
+aXplOm1lZGl1bSI+PHN0cm9uZz7kvaDlpb0hPC9zdHJvbmc+PC9wPjxwIGNsYXNzPSJnbWFpbC1h
+dXRvLXN0eWxlMSIgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhlaSZxdW90
+Oztjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtc2l6ZTptZWRpdW0iPuaXoOiuuuaYr+WvueebruWJjeea
+hOW3peS9nOWSjOaKpemFrOaEn+WIsOWOjOWApuW4jOacm+aUueihjO+8jOi/mOaYr+W+heS4muS4
+reWvu+aJvui/m+WFpeafkOihjOS4mueahOaxguiBjOKAnOaVsumXqOegluKAne+8jOWcqOaWsOmi
+huWfn+iOt+W+l+ebuOWFs+e7k+S4muiupOivgemDveS8muS9v+S9oOmdouWvueacquadpeaXtuS/
+oeW/g+a7oea7oeOAgjwvcD48cCBjbGFzcz0iZ21haWwtYXV0by1zdHlsZTEiIHN0eWxlPSJmb250
+LWZhbWlseTomcXVvdDtNaWNyb3NvZnQgWWFIZWkmcXVvdDs7Y29sb3I6cmdiKDAsMCwwKTtmb250
+LXNpemU6bWVkaXVtIj7ogIzlrp7pmYXkuIrvvIzmnInkuIDkupvmioDog73lrabkuaDotbfmnaXl
+ubbkuI3pnIDopoHpgqPkuYjplb/nmoTml7bpl7TvvIzog73lpJ/lvojlv6vlhaXmiYvvvIzogIzk
+uJTolqrmsLTlubbkuI3kvY7vvIzlsLHkuJrliY3mma/kuZ/lvojlub/pmJTjgII8L3A+PHAgY2xh
+c3M9ImdtYWlsLWF1dG8tc3R5bGUxIiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7TWljcm9zb2Z0
+IFlhSGVpJnF1b3Q7O2NvbG9yOnJnYigwLDAsMCk7Zm9udC1zaXplOm1lZGl1bSI+6L+Z56+H5paH
+56ug5oyH5Ye65LqGOeenjeWcqOS4gOW5tOWGheWPr+S7peWtpuS8muW5tuiOt+W+l+S4k+S4muiu
+pOivgeeahOi1mumSseaKgOiDveOAgjwvcD48cCBjbGFzcz0iZ21haWwtYXV0by1zdHlsZTEiIHN0
+eWxlPSJmb250LWZhbWlseTomcXVvdDtNaWNyb3NvZnQgWWFIZWkmcXVvdDs7Y29sb3I6cmdiKDAs
+MCwwKTtmb250LXNpemU6bWVkaXVtIj7opoHpmIXor7vlrozmlbTmlofnq6DvvIzor7fngrnlh7vk
+uIvpnaLnmoTpk77mjqXvvJo8L3A+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUxIiBzdHlsZT0i
+Zm9udC1mYW1pbHk6JnF1b3Q7TWljcm9zb2Z0IFlhSGVpJnF1b3Q7O2NvbG9yOnJnYigwLDAsMCk7
+Zm9udC1zaXplOm1lZGl1bSI+PGEgaHJlZj0iaHR0cHM6Ly90aW55dXJsLmNvbS85LXpob25nLXpo
+dWFucWlhbi1qaW5lbmciPmh0dHBzOi8vdGlueXVybC5jb20vOS16aG9uZy16aHVhbnFpYW4tamlu
+ZW5nPC9hPjwvcD48cCBjbGFzcz0iZ21haWwtYXV0by1zdHlsZTEiIHN0eWxlPSJmb250LWZhbWls
+eTomcXVvdDtNaWNyb3NvZnQgWWFIZWkmcXVvdDs7Y29sb3I6cmdiKDAsMCwwKTtmb250LXNpemU6
+bWVkaXVtIj7npZ3kvaDkuIDliIfpg73lpb3vvIE8L3A+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5
+bGU5IiBzdHlsZT0iZm9udC1zaXplOjExLjVwdDtjb2xvcjpyZ2IoOTEsMTAyLDExNikiPi0tLTwv
+cD48cCBjbGFzcz0iZ21haWwtYXV0by1zdHlsZTE0IiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7
+TWljcm9zb2Z0IFlhSGVpJnF1b3Q7O2NvbG9yOnJnYigwLDEyMywyNTUpO2ZvbnQtc2l6ZTptZWRp
+dW0iPuS4lueVjOWboOWWhOiJr+iAjOa4qeaalu+8jOWboOecn+ebuOiAjOa4hemGkjwvcD48L2Rp
+dj4NCg==
+--0000000000008f74810638502603--
 
