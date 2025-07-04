@@ -1,47 +1,47 @@
-Return-Path: <linux-erofs+bounces-513-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-514-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56D37AF89DA
-	for <lists+linux-erofs@lfdr.de>; Fri,  4 Jul 2025 09:46:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A1AAAAF89DC
+	for <lists+linux-erofs@lfdr.de>; Fri,  4 Jul 2025 09:46:06 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bYQfn4pzGz30VR;
-	Fri,  4 Jul 2025 17:45:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bYQfp61nqz30T8;
+	Fri,  4 Jul 2025 17:45:54 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1751615153;
-	cv=none; b=MpDhctm/QNm09iv9xf85S/9PPXDq6hwUC1+cBfMWs2pcrnf60s0SGLCkdZ8Ki3P3uvq1bkN+o51Brk2/FsUk9t8C1ZU1GVOXyyOXVZBpKbR3NnFvYJ1YVOHdPambvpmnq9ElT12p3ZCClECRsIOFCcdfjFh6YeTIXKAr3iuq7y5e4xcwV5k4DGs9dLL2E+CQNfU0mJ6tTIrvdepSsZ/htDmRSxusEO3dt8oTK1UuENylxgxFwSP38IvKXgfetc3k3lyOADBQTVKIZ3IkyzL5jRz14tlwTEjEPl1LWQisPLtpWzliHXuYT9WbUuscV8AxkqZ9/dQKiVSbSOdGFiRJvA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1751615154;
+	cv=none; b=g9snpU0KC9ptDiYoKOk9Q3gS+i910KHB6A4spaGU0nSUnTVzSnftXS43qASDb7Rr+9yfL7/Eb5kURnUysU59+i+WKcFVGxI9f7c4NQHXrNX8n7/IdRsjumlHxS14qAzhMBcbZbtdfu2r+eWPI8VjatrEKkApy3WlgHDqV7syxKOQewB9JhRBtb8jDbLJHh+LSDtGuqto9doEY5RrBv6WFj7UGe0qvBFNptDP7gk2HmmtYdsQHDCw/5IqY2GnsauX7blIaAizmb9/Ytoax8R2Gku+ggZu+aff4KwLF17vMLjJBTABnTQ74JJsPW1EL4ZLO4diDjBqC0xsoiQAetApoA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1751615153; c=relaxed/relaxed;
-	bh=opaI9MdfYhbFwIaQoIbWP8dC09GEhqLVS6JQ2dydl0I=;
+	t=1751615154; c=relaxed/relaxed;
+	bh=icmDI3LDr/i3FxIZnEbCG/vCBVMPtYex0cczRp8AGAA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QCIP5041o9mHhp3PwNXRVulJrvOwGsL9szn98SeaxiVf914Q4/Hnlsv3wld+tZbG07OLBQu371MMU8xJn02EgNRlj1gJIHaxCxWF5M+9tOf1/GH/7AXrAg/mcIpUU1ssTmwqiH9VlG5FunyeIBhG3UwEeQMhyjzl2Dz4MSDvTaXs6zRAnGyGtKtoqb4hmjc46gf2K1eS6LE836qHduaXZsEryO3gl5EksavSICc6U40CcQIfBxep36dV96FcpJaakw7VD0Ll2eiWr3WoFXY8Ts8iFVoUH48QYyuct0FGu+x397ipe77l+BWCYKJ0LBy98zpFqc81b+EPseNYjNRuhA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Pr3nfc+m; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=PXoNZmHwzdKYD4eQBKtnr0ykMnA76wkz2M0QR7d6pZ65Q5u+WUsmzFswB38LLMnVtr8H3qDBAWES17XUOwSZ6WbR67Nm/JKrTrQ8u267EUy3Aik79+VkwxQ2FEVYNwJ7bov0Iq313jE+Oh+M3m1KpN6sIO3tdSnKDMCx4Pq0jPg/EnKtRu1q72a9Tkrxz+zLWgmya8pJevZE5kMar80qLVxZyE0/L948w2wBavOLMABt2TmiN0n9kR8Vw8Jqb67+/+GARlsYt3+o/V/Bs9wikaPQuxVQ/LYdhqz4OVv1IOLPrlDZgX5XjJl3QxZATgplPHF1nm0VSjEwHbMEhCWL0A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VhsT+EwQ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Pr3nfc+m;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VhsT+EwQ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bYQfk2CFwz30T8
-	for <linux-erofs@lists.ozlabs.org>; Fri,  4 Jul 2025 17:45:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bYQfl2MyPz2xQ4
+	for <linux-erofs@lists.ozlabs.org>; Fri,  4 Jul 2025 17:45:50 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
 	t=1751615146; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=opaI9MdfYhbFwIaQoIbWP8dC09GEhqLVS6JQ2dydl0I=;
-	b=Pr3nfc+mfPJD1YpWFhNPAMEFlmD2TcKKZxpRpk+/Y+cNqYaAngmmQLLXzrKLFYuc5Kh6pyufGVq4S6TrksHhlLG62vFh2SKfGGCfHg7TdcITPFr7cvOnpfV6DG+P50jgxC1JTuDP/T5fqopu0C8TikmTIlbs4qFQZGSlmBIaOxY=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WhDC7Bg_1751615144 cluster:ay36)
+	bh=icmDI3LDr/i3FxIZnEbCG/vCBVMPtYex0cczRp8AGAA=;
+	b=VhsT+EwQ6VZ40YDzNg4wvWqt/RzLrFOQOCDwtWbU3IveJWlp7qEBHvG862M+fJNaC5pPSRO8G8LlQIHDTvXdqsiXwLE8Arc41MzQwp9K1gT/EL3kXJWWRBZOYy7GaQ4lKB33ziZ8WUxtVyGuE4XUCECUkAFCwVI4HVbt46Hs3CU=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WhDC7C3_1751615145 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 04 Jul 2025 15:45:45 +0800
+          Fri, 04 Jul 2025 15:45:46 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v3 for-merge 4/9] erofs-utils: lib: sync up with the 48-bit kernel erofs_fs.h
-Date: Fri,  4 Jul 2025 15:45:30 +0800
-Message-ID: <20250704074535.2308212-5-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v3 for-merge 5/9] erofs-utils: implement 48-bit block addressing for unencoded inodes
+Date: Fri,  4 Jul 2025 15:45:31 +0800
+Message-ID: <20250704074535.2308212-6-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250704074535.2308212-1-hsiangkao@linux.alibaba.com>
 References: <20250704074535.2308212-1-hsiangkao@linux.alibaba.com>
@@ -63,588 +63,534 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Keep in sync with the related kernel commits:
-commit 61ba89b57905 ("erofs: add 48-bit block addressing on-disk support")
-commit efb2aef569b3 ("erofs: add encoded extent on-disk definition")
+.. Also port the same kernel logic to erofsfuse and dump.erofs.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/internal.h |   4 +-
- include/erofs_fs.h       | 191 ++++++++++++++++++---------------------
- lib/blobchunk.c          |  16 ++--
- lib/compress.c           |   2 +-
- lib/data.c               |   8 +-
- lib/inode.c              |   6 +-
- lib/namei.c              |   4 +-
- lib/super.c              |  24 ++---
- lib/zmap.c               |   2 +-
- 9 files changed, 121 insertions(+), 136 deletions(-)
+ dump/main.c              |   3 +-
+ include/erofs/internal.h |  21 +++---
+ include/erofs_fs.h       |   2 +-
+ lib/blobchunk.c          |   2 +-
+ lib/block_list.c         |   8 +--
+ lib/data.c               | 143 +++++++++++++++------------------------
+ lib/inode.c              |  18 ++---
+ lib/namei.c              |  35 +++++++---
+ lib/super.c              |  18 +++--
+ mkfs/main.c              |   8 +--
+ 10 files changed, 124 insertions(+), 134 deletions(-)
 
+diff --git a/dump/main.c b/dump/main.c
+index 44f65dab..993d9386 100644
+--- a/dump/main.c
++++ b/dump/main.c
+@@ -104,6 +104,7 @@ static struct erofsdump_feature feature_lists[] = {
+ 	{ false, EROFS_FEATURE_INCOMPAT_FRAGMENTS, "fragments" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_DEDUPE, "dedupe" },
+ 	{ false, EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES, "xattr_prefixes" },
++	{ false, EROFS_FEATURE_INCOMPAT_48BIT, "48bit" },
+ };
+ 
+ static int erofsdump_readdir(struct erofs_dir_context *ctx);
+@@ -623,7 +624,7 @@ static void erofsdump_print_supported_compressors(FILE *f, unsigned int mask)
+ 
+ static void erofsdump_show_superblock(void)
+ {
+-	time_t time = g_sbi.build_time;
++	time_t time = g_sbi.epoch + g_sbi.build_time;
+ 	char uuid_str[37];
+ 	int i = 0;
+ 
 diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index 200146bd..a294561f 100644
+index a294561f..51def099 100644
 --- a/include/erofs/internal.h
 +++ b/include/erofs/internal.h
-@@ -60,8 +60,8 @@ struct erofs_bufmgr;
- struct erofs_device_info {
- 	char *src_path;
- 	u8 tag[64];
--	u32 blocks;
--	u32 mapped_blkaddr;
-+	erofs_blk_t blocks;
-+	erofs_blk_t uniaddr;
- };
+@@ -41,15 +41,14 @@ typedef unsigned short umode_t;
  
- /* all filesystem-wide lz4 configurations */
-diff --git a/include/erofs_fs.h b/include/erofs_fs.h
-index 269d3021..ce319d79 100644
---- a/include/erofs_fs.h
-+++ b/include/erofs_fs.h
-@@ -31,25 +31,19 @@
- #define EROFS_FEATURE_INCOMPAT_FRAGMENTS	0x00000020
- #define EROFS_FEATURE_INCOMPAT_DEDUPE		0x00000020
- #define EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES	0x00000040
-+#define EROFS_FEATURE_INCOMPAT_48BIT		0x00000080
- #define EROFS_ALL_FEATURE_INCOMPAT		\
--	(EROFS_FEATURE_INCOMPAT_ZERO_PADDING | \
--	 EROFS_FEATURE_INCOMPAT_COMPR_CFGS | \
--	 EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER | \
--	 EROFS_FEATURE_INCOMPAT_CHUNKED_FILE | \
--	 EROFS_FEATURE_INCOMPAT_DEVICE_TABLE | \
--	 EROFS_FEATURE_INCOMPAT_COMPR_HEAD2 | \
--	 EROFS_FEATURE_INCOMPAT_ZTAILPACKING | \
--	 EROFS_FEATURE_INCOMPAT_FRAGMENTS | \
--	 EROFS_FEATURE_INCOMPAT_DEDUPE | \
--	 EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES)
-+	((EROFS_FEATURE_INCOMPAT_48BIT << 1) - 1)
+ typedef u64 erofs_off_t;
+ typedef u64 erofs_nid_t;
+-/* data type for filesystem-wide blocks number */
+-typedef u32 erofs_blk_t;
++typedef u64 erofs_blk_t;
  
- #define EROFS_SB_EXTSLOT_SIZE	16
+ /* global sbi */
+ extern struct erofs_sb_info g_sbi;
  
- struct erofs_deviceslot {
- 	u8 tag[64];		/* digest(sha256), etc. */
--	__le32 blocks;		/* total fs blocks of this device */
--	__le32 mapped_blkaddr;	/* map starting at mapped_blkaddr */
--	u8 reserved[56];
-+	__le32 blocks_lo;	/* total blocks count of this device */
-+	__le32 uniaddr_lo;	/* unified starting block of this device */
-+	__le32 blocks_hi;	/* total blocks count MSB */
-+	__le16 uniaddr_hi;	/* unified starting block MSB */
-+	u8 reserved[50];
- };
- #define EROFS_DEVT_SLOT_SIZE	sizeof(struct erofs_deviceslot)
+ #define erofs_blksiz(sbi)	(1u << (sbi)->blkszbits)
+-#define erofs_blknr(sbi, addr)  ((addr) >> (sbi)->blkszbits)
+-#define erofs_blkoff(sbi, addr) ((addr) & (erofs_blksiz(sbi) - 1))
++#define erofs_blknr(sbi, pos)	((pos) >> (sbi)->blkszbits)
++#define erofs_blkoff(sbi, pos)	((pos) & (erofs_blksiz(sbi) - 1))
+ #define erofs_pos(sbi, nr)      ((erofs_off_t)(nr) << (sbi)->blkszbits)
+ #define BLK_ROUND_UP(sbi, addr)	\
+ 	(roundup(addr, erofs_blksiz(sbi)) >> (sbi)->blkszbits)
+@@ -90,8 +89,8 @@ struct erofs_sb_info {
+ 	u64 total_blocks;
+ 	u64 primarydevice_blocks;
  
-@@ -60,13 +54,14 @@ struct erofs_super_block {
- 	__le32 feature_compat;
- 	__u8 blkszbits;         /* filesystem block size in bit shift */
- 	__u8 sb_extslots;	/* superblock size = 128 + sb_extslots * 16 */
--
--	__le16 root_nid;	/* nid of root directory */
-+	union {
-+		__le16 rootnid_2b;	/* nid of root directory */
-+		__le16 blocks_hi;	/* (48BIT on) blocks count MSB */
-+	} rb;
- 	__le64 inos;            /* total valid ino # (== f_files - f_favail) */
--
--	__le64 build_time;      /* compact inode time derivation */
--	__le32 build_time_nsec;	/* compact inode time derivation in ns scale */
--	__le32 blocks;          /* used for statfs */
-+	__le64 epoch;		/* base seconds used for compact inodes */
-+	__le32 fixed_nsec;	/* fixed nanoseconds for compact inodes */
-+	__le32 blocks_lo;	/* blocks count LSB */
- 	__le32 meta_blkaddr;	/* start block address of metadata area */
- 	__le32 xattr_blkaddr;	/* start block address of shared xattr area */
- 	__u8 uuid[16];          /* 128-bit uuid for volume */
-@@ -85,7 +80,10 @@ struct erofs_super_block {
- 	__le32 xattr_prefix_start;	/* start of long xattr prefixes */
- 	__le64 packed_nid;	/* nid of the special packed inode */
- 	__u8 xattr_filter_reserved; /* reserved for xattr name filter */
--	__u8 reserved2[23];
-+	__u8 reserved[3];
-+	__le32 build_time;	/* seconds added to epoch for mkfs time */
-+	__le64 rootnid_8b;	/* (48BIT on) nid of root directory */
-+	__u8 reserved2[8];
- };
+-	erofs_blk_t meta_blkaddr;
+-	erofs_blk_t xattr_blkaddr;
++	u32 meta_blkaddr;
++	u32 xattr_blkaddr;
  
- /*
-@@ -116,19 +114,19 @@ static inline bool erofs_inode_is_data_compressed(unsigned int datamode)
- #define EROFS_I_VERSION_MASK            0x01
- #define EROFS_I_DATALAYOUT_MASK         0x07
+ 	u32 feature_compat;
+ 	u32 feature_incompat;
+@@ -100,8 +99,9 @@ struct erofs_sb_info {
+ 	unsigned char blkszbits;
  
--#define EROFS_I_VERSION_BIT             0
--#define EROFS_I_DATALAYOUT_BIT          1
--#define EROFS_I_ALL_BIT			4
--
--#define EROFS_I_ALL	((1 << EROFS_I_ALL_BIT) - 1)
-+#define EROFS_I_VERSION_BIT	0
-+#define EROFS_I_DATALAYOUT_BIT	1
-+#define EROFS_I_NLINK_1_BIT	4	/* non-directory compact inodes only */
-+#define EROFS_I_DOT_OMITTED_BIT	4	/* (directories) omit the `.` dirent */
-+#define EROFS_I_ALL		((1 << (EROFS_I_NLINK_1_BIT + 1)) - 1)
+ 	u32 sb_size;			/* total superblock size */
+-	u32 build_time_nsec;
+-	u64 build_time;
++	u32 build_time;
++	u32 fixed_nsec;
++	u64 epoch;
  
- /* indicate chunk blkbits, thus 'chunksize = blocksize << chunk blkbits' */
- #define EROFS_CHUNK_FORMAT_BLKBITS_MASK		0x001F
--/* with chunk indexes or just a 4-byte blkaddr array */
-+/* with chunk indexes or just a 4-byte block array */
- #define EROFS_CHUNK_FORMAT_INDEXES		0x0020
-+#define EROFS_CHUNK_FORMAT_48BIT		0x0040
+ 	/* what we really care is nid, rather than ino.. */
+ 	erofs_nid_t root_nid;
+@@ -174,6 +174,7 @@ EROFS_FEATURE_FUNCS(ztailpacking, incompat, INCOMPAT_ZTAILPACKING)
+ EROFS_FEATURE_FUNCS(fragments, incompat, INCOMPAT_FRAGMENTS)
+ EROFS_FEATURE_FUNCS(dedupe, incompat, INCOMPAT_DEDUPE)
+ EROFS_FEATURE_FUNCS(xattr_prefixes, incompat, INCOMPAT_XATTR_PREFIXES)
++EROFS_FEATURE_FUNCS(48bit, incompat, INCOMPAT_48BIT)
+ EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
+ EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
  
--#define EROFS_CHUNK_FORMAT_ALL	\
--	(EROFS_CHUNK_FORMAT_BLKBITS_MASK | EROFS_CHUNK_FORMAT_INDEXES)
-+#define EROFS_CHUNK_FORMAT_ALL	((EROFS_CHUNK_FORMAT_48BIT << 1) - 1)
- 
- /* 32-byte on-disk inode */
- #define EROFS_INODE_LAYOUT_COMPACT	0
-@@ -141,45 +139,40 @@ struct erofs_inode_chunk_info {
- };
- 
- union erofs_inode_i_u {
--	/* total compressed blocks for compressed inodes */
--	__le32 compressed_blocks;
--
--	/* block address for uncompressed flat inodes */
--	__le32 raw_blkaddr;
--
--	/* for device files, used to indicate old/new device # */
--	__le32 rdev;
--
--	/* for chunk-based files, it contains the summary info */
-+	__le32 blocks_lo;	/* total blocks count (if compressed inodes) */
-+	__le32 startblk_lo;	/* starting block number (if flat inodes) */
-+	__le32 rdev;		/* device ID (if special inodes) */
- 	struct erofs_inode_chunk_info c;
- };
- 
-+union erofs_inode_i_nb {
-+	__le16 nlink;		/* if EROFS_I_NLINK_1_BIT is unset */
-+	__le16 blocks_hi;	/* total blocks count MSB */
-+	__le16 startblk_hi;	/* starting block number MSB */
-+};
-+
- /* 32-byte reduced form of an ondisk inode */
- struct erofs_inode_compact {
- 	__le16 i_format;	/* inode format hints */
--
--/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
- 	__le16 i_xattr_icount;
- 	__le16 i_mode;
--	__le16 i_nlink;
-+	union erofs_inode_i_nb i_nb;
- 	__le32 i_size;
--	__le32 i_reserved;
-+	__le32 i_mtime;
- 	union erofs_inode_i_u i_u;
- 
- 	__le32 i_ino;		/* only used for 32-bit stat compatibility */
- 	__le16 i_uid;
- 	__le16 i_gid;
--	__le32 i_reserved2;
-+	__le32 i_reserved;
- };
- 
- /* 64-byte complete form of an ondisk inode */
- struct erofs_inode_extended {
- 	__le16 i_format;	/* inode format hints */
--
--/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
- 	__le16 i_xattr_icount;
- 	__le16 i_mode;
--	__le16 i_reserved;
-+	union erofs_inode_i_nb i_nb;
- 	__le64 i_size;
- 	union erofs_inode_i_u i_u;
- 
-@@ -249,6 +242,7 @@ static inline unsigned int erofs_xattr_ibody_size(__le16 i_xattr_icount)
- 	if (!i_xattr_icount)
- 		return 0;
- 
-+	/* 1 header + n-1 * 4 bytes inline xattr to keep continuity */
- 	return sizeof(struct erofs_xattr_ibody_header) +
- 		sizeof(__u32) * (le16_to_cpu(i_xattr_icount) - 1);
- }
-@@ -267,11 +261,11 @@ static inline unsigned int erofs_xattr_entry_size(struct erofs_xattr_entry *e)
- /* 4-byte block address array */
- #define EROFS_BLOCK_MAP_ENTRY_SIZE	sizeof(__le32)
- 
--/* 8-byte inode chunk indexes */
-+/* 8-byte inode chunk index */
- struct erofs_inode_chunk_index {
--	__le16 advise;		/* always 0, don't care for now */
-+	__le16 startblk_hi;	/* starting block number MSB */
- 	__le16 device_id;	/* back-end storage id (with bits masked) */
--	__le32 blkaddr;		/* start block address of this inode chunk */
-+	__le32 startblk_lo;	/* starting block number of this chunk */
- };
- 
- /* dirent sorts in alphabet order, thus we can do binary search */
-@@ -345,21 +339,20 @@ struct z_erofs_zstd_cfgs {
- #define Z_EROFS_ZSTD_MAX_DICT_SIZE      Z_EROFS_PCLUSTER_MAX_SIZE
- 
- /*
-- * bit 0 : COMPACTED_2B indexes (0 - off; 1 - on)
-- *  e.g. for 4k logical cluster size,      4B        if compacted 2B is off;
-- *                                  (4B) + 2B + (4B) if compacted 2B is on.
-- * bit 1 : HEAD1 big pcluster (0 - off; 1 - on)
-- * bit 2 : HEAD2 big pcluster (0 - off; 1 - on)
-- * bit 3 : tailpacking inline pcluster (0 - off; 1 - on)
-- * bit 4 : interlaced plain pcluster (0 - off; 1 - on)
-- * bit 5 : fragment pcluster (0 - off; 1 - on)
-+ * Enable COMPACTED_2B for EROFS_INODE_COMPRESSED_COMPACT inodes:
-+ *   4B (disabled) vs 4B+2B+4B (enabled)
-  */
- #define Z_EROFS_ADVISE_COMPACTED_2B		0x0001
-+/* Enable extent metadata for EROFS_INODE_COMPRESSED_FULL inodes */
-+#define Z_EROFS_ADVISE_EXTENTS			0x0001
- #define Z_EROFS_ADVISE_BIG_PCLUSTER_1		0x0002
- #define Z_EROFS_ADVISE_BIG_PCLUSTER_2		0x0004
- #define Z_EROFS_ADVISE_INLINE_PCLUSTER		0x0008
- #define Z_EROFS_ADVISE_INTERLACED_PCLUSTER	0x0010
- #define Z_EROFS_ADVISE_FRAGMENT_PCLUSTER	0x0020
-+/* Indicate the record size for each extent if extent metadata is used */
-+#define Z_EROFS_ADVISE_EXTRECSZ_BIT		1
-+#define Z_EROFS_ADVISE_EXTRECSZ_MASK		0x3
- 
- #define Z_EROFS_FRAGMENT_INODE_BIT              7
- struct z_erofs_map_header {
-@@ -371,45 +364,24 @@ struct z_erofs_map_header {
- 			/* indicates the encoded size of tailpacking data */
- 			__le16  h_idata_size;
- 		};
-+		__le32 h_extents_lo;	/* extent count LSB */
- 	};
- 	__le16	h_advise;
--	/*
--	 * bit 0-3 : algorithm type of head 1 (logical cluster type 01);
--	 * bit 4-7 : algorithm type of head 2 (logical cluster type 11).
--	 */
--	__u8	h_algorithmtype;
--	/*
--	 * bit 0-2 : logical cluster bits - 12, e.g. 0 for 4096;
--	 * bit 3-6 : reserved;
--	 * bit 7   : move the whole file into packed inode or not.
--	 */
--	__u8	h_clusterbits;
-+	union {
-+		struct {
-+			/* algorithm type (bit 0-3: HEAD1; bit 4-7: HEAD2) */
-+			__u8	h_algorithmtype;
-+			/*
-+			 * bit 0-3 : logical cluster bits - blkszbits
-+			 * bit 4-6 : reserved
-+			 * bit 7   : pack the whole file into packed inode
-+			 */
-+			__u8	h_clusterbits;
-+		};
-+		__le16 h_extents_hi;	/* extent count MSB */
-+	};
- };
- 
--/*
-- * On-disk logical cluster type:
-- *    0   - literal (uncompressed) lcluster
-- *    1,3 - compressed lcluster (for HEAD lclusters)
-- *    2   - compressed lcluster (for NONHEAD lclusters)
-- *
-- * In detail,
-- *    0 - literal (uncompressed) lcluster,
-- *        di_advise = 0
-- *        di_clusterofs = the literal data offset of the lcluster
-- *        di_blkaddr = the blkaddr of the literal pcluster
-- *
-- *    1,3 - compressed lcluster (for HEAD lclusters)
-- *        di_advise = 1 or 3
-- *        di_clusterofs = the decompressed data offset of the lcluster
-- *        di_blkaddr = the blkaddr of the compressed pcluster
-- *
-- *    2 - compressed lcluster (for NONHEAD lclusters)
-- *        di_advise = 2
-- *        di_clusterofs =
-- *           the decompressed data offset in its own HEAD lcluster
-- *        di_u.delta[0] = distance to this HEAD lcluster
-- *        di_u.delta[1] = distance to the next HEAD lcluster
-- */
- enum {
- 	Z_EROFS_LCLUSTER_TYPE_PLAIN	= 0,
- 	Z_EROFS_LCLUSTER_TYPE_HEAD1	= 1,
-@@ -423,11 +395,7 @@ enum {
- /* (noncompact only, HEAD) This pcluster refers to partial decompressed data */
- #define Z_EROFS_LI_PARTIAL_REF		(1 << 15)
- 
--/*
-- * D0_CBLKCNT will be marked _only_ at the 1st non-head lcluster to store the
-- * compressed block count of a compressed extent (in logical clusters, aka.
-- * block count of a pcluster).
-- */
-+/* Set on 1st non-head lcluster to store compressed block counti (in blocks) */
- #define Z_EROFS_LI_D0_CBLKCNT		(1 << 11)
- 
- struct z_erofs_lcluster_index {
-@@ -436,19 +404,36 @@ struct z_erofs_lcluster_index {
- 	__le16 di_clusterofs;
+@@ -218,8 +219,8 @@ struct erofs_inode {
+ 	u32 i_nlink;
  
  	union {
--		/* for the HEAD lclusters */
--		__le32 blkaddr;
-+		__le32 blkaddr;		/* for the HEAD lclusters */
- 		/*
--		 * for the NONHEAD lclusters
- 		 * [0] - distance to its HEAD lcluster
- 		 * [1] - distance to the next HEAD lcluster
- 		 */
--		__le16 delta[2];
-+		__le16 delta[2];	/* for the NONHEAD lclusters */
- 	} di_u;
- };
+-		u32 i_blkaddr;
+-		u32 i_blocks;
++		erofs_blk_t i_blkaddr;
++		erofs_blk_t i_blocks;
+ 		u32 i_rdev;
+ 		struct {
+ 			unsigned short	chunkformat;
+diff --git a/include/erofs_fs.h b/include/erofs_fs.h
+index ce319d79..41a398cb 100644
+--- a/include/erofs_fs.h
++++ b/include/erofs_fs.h
+@@ -256,7 +256,7 @@ static inline unsigned int erofs_xattr_entry_size(struct erofs_xattr_entry *e)
+ }
  
--#define Z_EROFS_FULL_INDEX_ALIGN(end)	\
--	(round_up(end, 8) + sizeof(struct z_erofs_map_header) + 8)
-+#define Z_EROFS_MAP_HEADER_END(end)	\
-+	(round_up(end, 8) + sizeof(struct z_erofs_map_header))
-+#define Z_EROFS_FULL_INDEX_START(end)	(Z_EROFS_MAP_HEADER_END(end) + 8)
-+
-+#define Z_EROFS_EXTENT_PLEN_PARTIAL	BIT(27)
-+#define Z_EROFS_EXTENT_PLEN_FMT_BIT	28
-+#define Z_EROFS_EXTENT_PLEN_MASK	((Z_EROFS_PCLUSTER_MAX_SIZE << 1) - 1)
-+struct z_erofs_extent {
-+	__le32 plen;		/* encoded length */
-+	__le32 pstart_lo;	/* physical offset */
-+	__le32 pstart_hi;	/* physical offset MSB */
-+	__le32 lstart_lo;	/* logical offset */
-+	__le32 lstart_hi;	/* logical offset MSB (>= 4GiB inodes) */
-+	__u8 reserved[12];	/* for future use */
-+};
-+
-+static inline int z_erofs_extent_recsize(unsigned int advise)
-+{
-+	return 4 << ((advise >> Z_EROFS_ADVISE_EXTRECSZ_BIT) &
-+		Z_EROFS_ADVISE_EXTRECSZ_MASK);
-+}
+ /* represent a zeroed chunk (hole) */
+-#define EROFS_NULL_ADDR			-1
++#define EROFS_NULL_ADDR			-1ULL
  
- /* check the EROFS on-disk layout strictly at compile time */
- static inline void erofs_check_ondisk_layout_definitions(void)
+ /* 4-byte block address array */
+ #define EROFS_BLOCK_MAP_ENTRY_SIZE	sizeof(__le32)
 diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index 8c55277f..18eafdce 100644
+index 18eafdce..38c44229 100644
 --- a/lib/blobchunk.c
 +++ b/lib/blobchunk.c
-@@ -157,32 +157,32 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+@@ -157,7 +157,7 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
  		chunk = *(void **)(inode->chunkindexes + src);
  
  		if (chunk->blkaddr == EROFS_NULL_ADDR) {
--			idx.blkaddr = EROFS_NULL_ADDR;
-+			idx.startblk_lo = EROFS_NULL_ADDR;
+-			idx.startblk_lo = EROFS_NULL_ADDR;
++			idx.startblk_lo = (u32)EROFS_NULL_ADDR;
  		} else if (chunk->device_id) {
  			DBG_BUGON(!(inode->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES));
--			idx.blkaddr = chunk->blkaddr;
-+			idx.startblk_lo = chunk->blkaddr;
- 			extent_start = EROFS_NULL_ADDR;
- 		} else {
--			idx.blkaddr = remapped_base + chunk->blkaddr;
-+			idx.startblk_lo = remapped_base + chunk->blkaddr;
- 		}
+ 			idx.startblk_lo = chunk->blkaddr;
+diff --git a/lib/block_list.c b/lib/block_list.c
+index 4a6466de..f8dc9138 100644
+--- a/lib/block_list.c
++++ b/lib/block_list.c
+@@ -38,9 +38,9 @@ void tarerofs_blocklist_write(erofs_blk_t blkaddr, erofs_blk_t nblocks,
+ 		return;
  
- 		if (extent_start == EROFS_NULL_ADDR ||
--		    idx.blkaddr != extent_end) {
-+		    idx.startblk_lo != extent_end) {
- 			if (extent_start != EROFS_NULL_ADDR) {
- 				remaining_blks -= extent_end - extent_start;
- 				tarerofs_blocklist_write(extent_start,
- 						extent_end - extent_start,
- 						source_offset, 0);
- 			}
--			extent_start = idx.blkaddr;
-+			extent_start = idx.startblk_lo;
- 			source_offset = chunk->sourceoffset;
- 		}
--		extent_end = idx.blkaddr + chunkblks;
-+		extent_end = idx.startblk_lo + chunkblks;
- 		idx.device_id = cpu_to_le16(chunk->device_id);
--		idx.blkaddr = cpu_to_le32(idx.blkaddr);
-+		idx.startblk_lo = cpu_to_le32(idx.startblk_lo);
- 
- 		if (unit == EROFS_BLOCK_MAP_ENTRY_SIZE)
--			memcpy(inode->chunkindexes + dst, &idx.blkaddr, unit);
-+			memcpy(inode->chunkindexes + dst, &idx.startblk_lo, unit);
- 		else
- 			memcpy(inode->chunkindexes + dst, &idx, sizeof(idx));
- 	}
-diff --git a/lib/compress.c b/lib/compress.c
-index 6f65993c..6e7b5241 100644
---- a/lib/compress.c
-+++ b/lib/compress.c
-@@ -137,7 +137,7 @@ struct z_erofs_mgr {
- 
- static bool z_erofs_mt_enabled;
- 
--#define Z_EROFS_LEGACY_MAP_HEADER_SIZE	Z_EROFS_FULL_INDEX_ALIGN(0)
-+#define Z_EROFS_LEGACY_MAP_HEADER_SIZE	Z_EROFS_FULL_INDEX_START(0)
- 
- static void z_erofs_fini_full_indexes(struct z_erofs_compress_ictx *ctx)
- {
+ 	if (zeroedlen)
+-		fprintf(block_list_fp, "%08x %8x %08" PRIx64 " %08u\n",
+-			blkaddr, nblocks, srcoff, zeroedlen);
++		fprintf(block_list_fp, "%08llx %8llx %08" PRIx64 " %08u\n",
++			blkaddr | 0ULL, nblocks | 0ULL, srcoff, zeroedlen);
+ 	else
+-		fprintf(block_list_fp, "%08x %8x %08" PRIx64 "\n",
+-			blkaddr, nblocks, srcoff);
++		fprintf(block_list_fp, "%08llx %8llx %08" PRIx64 "\n",
++			blkaddr | 0ULL, nblocks | 0ULL, srcoff);
+ }
 diff --git a/lib/data.c b/lib/data.c
-index 0f79f789..2547615f 100644
+index 2547615f..f674230c 100644
 --- a/lib/data.c
 +++ b/lib/data.c
-@@ -117,14 +117,14 @@ int __erofs_map_blocks(struct erofs_inode *inode,
- 	}
- 	/* parse chunk indexes */
- 	idx = (void *)buf + erofs_blkoff(sbi, pos);
--	switch (le32_to_cpu(idx->blkaddr)) {
-+	switch (le32_to_cpu(idx->startblk_lo)) {
- 	case EROFS_NULL_ADDR:
- 		map->m_flags = 0;
- 		break;
- 	default:
- 		map->m_deviceid = le16_to_cpu(idx->device_id) &
- 			sbi->device_id_mask;
--		map->m_pa = erofs_pos(sbi, le32_to_cpu(idx->blkaddr));
-+		map->m_pa = erofs_pos(sbi, le32_to_cpu(idx->startblk_lo));
- 		map->m_flags = EROFS_MAP_MAPPED;
- 		break;
- 	}
-@@ -154,9 +154,9 @@ int erofs_map_dev(struct erofs_sb_info *sbi, struct erofs_map_dev *map)
- 			erofs_off_t startoff, length;
+@@ -10,81 +10,46 @@
+ #include "erofs/decompress.h"
+ #include "erofs/fragments.h"
  
- 			dif = sbi->devs + id;
--			if (!dif->mapped_blkaddr)
-+			if (!dif->uniaddr)
- 				continue;
--			startoff = erofs_pos(sbi, dif->mapped_blkaddr);
-+			startoff = erofs_pos(sbi, dif->uniaddr);
- 			length = erofs_pos(sbi, dif->blocks);
+-static int erofs_map_blocks_flatmode(struct erofs_inode *inode,
+-				     struct erofs_map_blocks *map,
+-				     int flags)
+-{
+-	int err = 0;
+-	erofs_blk_t nblocks, lastblk;
+-	u64 offset = map->m_la;
+-	struct erofs_inode *vi = inode;
+-	struct erofs_sb_info *sbi = inode->sbi;
+-	bool tailendpacking = (vi->datalayout == EROFS_INODE_FLAT_INLINE);
+-
+-	trace_erofs_map_blocks_flatmode_enter(inode, map, flags);
+-
+-	nblocks = BLK_ROUND_UP(sbi, inode->i_size);
+-	lastblk = nblocks - tailendpacking;
+-
+-	/* there is no hole in flatmode */
+-	map->m_flags = EROFS_MAP_MAPPED;
+-
+-	if (offset < erofs_pos(sbi, lastblk)) {
+-		map->m_pa = erofs_pos(sbi, vi->u.i_blkaddr) + map->m_la;
+-		map->m_plen = erofs_pos(sbi, lastblk) - offset;
+-	} else if (tailendpacking) {
+-		/* 2 - inode inline B: inode, [xattrs], inline last blk... */
+-		map->m_pa = erofs_iloc(vi) + vi->inode_isize +
+-			vi->xattr_isize + erofs_blkoff(sbi, map->m_la);
+-		map->m_plen = inode->i_size - offset;
+-
+-		/* inline data should be located in the same meta block */
+-		if (erofs_blkoff(sbi, map->m_pa) + map->m_plen >
+-							erofs_blksiz(sbi)) {
+-			erofs_err("inline data cross block boundary @ nid %" PRIu64,
+-				  vi->nid);
+-			DBG_BUGON(1);
+-			err = -EFSCORRUPTED;
+-			goto err_out;
+-		}
+-
+-		map->m_flags |= EROFS_MAP_META;
+-	} else {
+-		erofs_err("internal error @ nid: %" PRIu64 " (size %llu), m_la 0x%" PRIx64,
+-			  vi->nid, (unsigned long long)inode->i_size, map->m_la);
+-		DBG_BUGON(1);
+-		err = -EIO;
+-		goto err_out;
+-	}
+-
+-	map->m_llen = map->m_plen;
+-err_out:
+-	trace_erofs_map_blocks_flatmode_exit(inode, map, flags, 0);
+-	return err;
+-}
+-
+ int __erofs_map_blocks(struct erofs_inode *inode,
+ 		       struct erofs_map_blocks *map, int flags)
+ {
+ 	struct erofs_inode *vi = inode;
+ 	struct erofs_sb_info *sbi = inode->sbi;
++	unsigned int unit, blksz = 1 << sbi->blkszbits;
+ 	struct erofs_inode_chunk_index *idx;
+ 	u8 buf[EROFS_MAX_BLOCK_SIZE];
+-	u64 chunknr;
+-	unsigned int unit;
++	erofs_blk_t startblk, addrmask, nblocks;
++	bool tailpacking;
+ 	erofs_off_t pos;
++	u64 chunknr;
+ 	int err = 0;
  
- 			if (map->m_pa >= startoff &&
+ 	map->m_deviceid = 0;
+-	if (map->m_la >= inode->i_size) {
+-		/* leave out-of-bound access unmapped */
+-		map->m_flags = 0;
+-		map->m_plen = 0;
++	map->m_flags = 0;
++	if (map->m_la >= inode->i_size)
+ 		goto out;
+-	}
+ 
+-	if (vi->datalayout != EROFS_INODE_CHUNK_BASED)
+-		return erofs_map_blocks_flatmode(inode, map, flags);
++	if (vi->datalayout != EROFS_INODE_CHUNK_BASED) {
++		tailpacking = (vi->datalayout == EROFS_INODE_FLAT_INLINE);
++		if (!tailpacking && vi->u.i_blkaddr == EROFS_NULL_ADDR) {
++			map->m_llen = inode->i_size - map->m_la;
++			goto out;
++		}
++		nblocks = BLK_ROUND_UP(sbi, inode->i_size);
++		pos = erofs_pos(sbi, nblocks - tailpacking);
++
++		map->m_flags = EROFS_MAP_MAPPED;
++		if (map->m_la < pos) {
++			map->m_pa = erofs_pos(sbi, vi->u.i_blkaddr) + map->m_la;
++			map->m_llen = pos - map->m_la;
++		} else {
++			map->m_pa = erofs_iloc(inode) + vi->inode_isize +
++				vi->xattr_isize + erofs_blkoff(sbi, map->m_la);
++			map->m_llen = inode->i_size - map->m_la;
++			map->m_flags |= EROFS_MAP_META;
++		}
++		goto out;
++	}
+ 
+ 	if (vi->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)
+ 		unit = sizeof(*idx);			/* chunk index */
+@@ -99,37 +64,39 @@ int __erofs_map_blocks(struct erofs_inode *inode,
+ 	if (err < 0)
+ 		return -EIO;
+ 
++	idx = (void *)buf + erofs_blkoff(sbi, pos);
+ 	map->m_la = chunknr << vi->u.chunkbits;
+-	map->m_plen = min_t(erofs_off_t, 1ULL << vi->u.chunkbits,
+-			roundup(inode->i_size - map->m_la, erofs_blksiz(sbi)));
+-
+-	/* handle block map */
+-	if (!(vi->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES)) {
+-		__le32 *blkaddr = (void *)buf + erofs_blkoff(sbi, pos);
+-
+-		if (le32_to_cpu(*blkaddr) == EROFS_NULL_ADDR) {
+-			map->m_flags = 0;
+-		} else {
+-			map->m_pa = erofs_pos(sbi, le32_to_cpu(*blkaddr));
++	map->m_llen = min_t(erofs_off_t, 1ULL << vi->u.chunkbits,
++			    round_up(inode->i_size - map->m_la, blksz));
++	if (vi->u.chunkformat & EROFS_CHUNK_FORMAT_INDEXES) {
++		addrmask = (vi->u.chunkformat & EROFS_CHUNK_FORMAT_48BIT) ?
++			BIT_ULL(48) - 1 : BIT_ULL(32) - 1;
++		startblk = (((u64)le16_to_cpu(idx->startblk_hi) << 32) |
++			le32_to_cpu(idx->startblk_lo)) & addrmask;
++		if ((startblk ^ EROFS_NULL_ADDR) & addrmask) {
++			map->m_deviceid = le16_to_cpu(idx->device_id) &
++				sbi->device_id_mask;
++			map->m_pa = erofs_pos(sbi, startblk);
++			map->m_flags = EROFS_MAP_MAPPED;
++		}
++	} else {
++		startblk = le32_to_cpu(*(__le32 *)idx);
++		if (startblk != EROFS_NULL_ADDR) {
++			map->m_pa = erofs_pos(sbi, startblk);
+ 			map->m_flags = EROFS_MAP_MAPPED;
+ 		}
+-		goto out;
+-	}
+-	/* parse chunk indexes */
+-	idx = (void *)buf + erofs_blkoff(sbi, pos);
+-	switch (le32_to_cpu(idx->startblk_lo)) {
+-	case EROFS_NULL_ADDR:
+-		map->m_flags = 0;
+-		break;
+-	default:
+-		map->m_deviceid = le16_to_cpu(idx->device_id) &
+-			sbi->device_id_mask;
+-		map->m_pa = erofs_pos(sbi, le32_to_cpu(idx->startblk_lo));
+-		map->m_flags = EROFS_MAP_MAPPED;
+-		break;
+ 	}
+ out:
+-	map->m_llen = map->m_plen;
++	if (!err) {
++		map->m_plen = map->m_llen;
++		/* inline data should be located in the same meta block */
++		if ((map->m_flags & EROFS_MAP_META) &&
++		    erofs_blkoff(sbi, map->m_pa) + map->m_plen > blksz) {
++			erofs_err("inline data across blocks @ nid %llu", vi->nid);
++			DBG_BUGON(1);
++			return -EFSCORRUPTED;
++		}
++	}
+ 	return err;
+ }
+ 
 diff --git a/lib/inode.c b/lib/inode.c
-index a1fe4ae9..5ccffc09 100644
+index 5ccffc09..026a71b4 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
-@@ -603,18 +603,18 @@ int erofs_iflush(struct erofs_inode *inode)
- 	    S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
- 		u1.rdev = cpu_to_le32(inode->u.i_rdev);
- 	else if (is_inode_layout_compression(inode))
--		u1.compressed_blocks = cpu_to_le32(inode->u.i_blocks);
-+		u1.blocks_lo = cpu_to_le32(inode->u.i_blocks);
- 	else if (inode->datalayout == EROFS_INODE_CHUNK_BASED)
- 		u1.c.format = cpu_to_le16(inode->u.chunkformat);
- 	else
--		u1.raw_blkaddr = cpu_to_le32(inode->u.i_blkaddr);
-+		u1.startblk_lo = cpu_to_le32(inode->u.i_blkaddr);
+@@ -923,8 +923,8 @@ static bool erofs_should_use_inode_extended(struct erofs_inode *inode,
+ 	if (inode->i_nlink > USHRT_MAX)
+ 		return true;
+ 	if (path != EROFS_PACKED_INODE &&
+-	    (inode->i_mtime != inode->sbi->build_time ||
+-	     inode->i_mtime_nsec != inode->sbi->build_time_nsec) &&
++	    (inode->i_mtime != inode->sbi->epoch ||
++	     inode->i_mtime_nsec != inode->sbi->fixed_nsec) &&
+ 	    !cfg.c_ignore_mtime)
+ 		return true;
+ 	return false;
+@@ -1016,8 +1016,8 @@ int __erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+ 	inode->i_gid += cfg.c_gid_offset;
  
- 	switch (inode->inode_isize) {
- 	case sizeof(struct erofs_inode_compact):
- 		u.dic.i_format = cpu_to_le16(0 | (inode->datalayout << 1));
- 		u.dic.i_xattr_icount = cpu_to_le16(icount);
- 		u.dic.i_mode = cpu_to_le16(inode->i_mode);
--		u.dic.i_nlink = cpu_to_le16(inode->i_nlink);
-+		u.dic.i_nb.nlink = cpu_to_le16(inode->i_nlink);
- 		u.dic.i_size = cpu_to_le32((u32)inode->i_size);
+ 	if (path == EROFS_PACKED_INODE) {
+-		inode->i_mtime = sbi->build_time;
+-		inode->i_mtime_nsec = sbi->build_time_nsec;
++		inode->i_mtime = sbi->epoch + sbi->build_time;
++		inode->i_mtime_nsec = sbi->fixed_nsec;
+ 		return 0;
+ 	}
+ 	inode->i_mtime = st->st_mtime;
+@@ -1025,11 +1025,11 @@ int __erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
  
- 		u.dic.i_ino = cpu_to_le32(inode->i_ino[0]);
+ 	switch (cfg.c_timeinherit) {
+ 	case TIMESTAMP_CLAMPING:
+-		if (inode->i_mtime < sbi->build_time)
++		if (inode->i_mtime < sbi->epoch + sbi->build_time)
+ 			break;
+ 	case TIMESTAMP_FIXED:
+-		inode->i_mtime = sbi->build_time;
+-		inode->i_mtime_nsec = sbi->build_time_nsec;
++		inode->i_mtime = sbi->epoch + sbi->build_time;
++		inode->i_mtime_nsec = sbi->fixed_nsec;
+ 	default:
+ 		break;
+ 	}
+@@ -2048,8 +2048,8 @@ struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi)
+ 	root->i_srcpath = strdup("/");
+ 	root->i_mode = S_IFDIR | 0777;
+ 	root->i_parent = root;
+-	root->i_mtime = root->sbi->build_time;
+-	root->i_mtime_nsec = root->sbi->build_time_nsec;
++	root->i_mtime = root->sbi->epoch + root->sbi->build_time;
++	root->i_mtime_nsec = root->sbi->fixed_nsec;
+ 	erofs_init_empty_dir(root);
+ 	return root;
+ }
 diff --git a/lib/namei.c b/lib/namei.c
-index b40f092c..66b8eef4 100644
+index 66b8eef4..dec544c9 100644
 --- a/lib/namei.c
 +++ b/lib/namei.c
-@@ -77,7 +77,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
- 		iu = dic->i_u;
+@@ -28,9 +28,9 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ 	char buf[sizeof(struct erofs_inode_extended)];
+ 	erofs_off_t inode_loc = erofs_iloc(vi);
+ 	struct erofs_sb_info *sbi = vi->sbi;
++	erofs_blk_t addrmask = BIT_ULL(48) - 1;
++	struct erofs_inode_extended *die, copied;
+ 	struct erofs_inode_compact *dic;
+-	struct erofs_inode_extended *die;
+-	union erofs_inode_i_u iu;
+ 
+ 	DBG_BUGON(!sbi);
+ 	ret = erofs_dev_read(sbi, 0, buf, inode_loc, sizeof(*dic));
+@@ -60,7 +60,8 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ 		vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
+ 		vi->i_mode = le16_to_cpu(die->i_mode);
+ 		vi->i_ino[0] = le32_to_cpu(die->i_ino);
+-		iu = die->i_u;
++		copied.i_u = die->i_u;
++		copied.i_nb = die->i_nb;
+ 		vi->i_uid = le32_to_cpu(die->i_uid);
+ 		vi->i_gid = le32_to_cpu(die->i_gid);
+ 		vi->i_nlink = le32_to_cpu(die->i_nlink);
+@@ -74,13 +75,21 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ 		vi->xattr_isize = erofs_xattr_ibody_size(dic->i_xattr_icount);
+ 		vi->i_mode = le16_to_cpu(dic->i_mode);
+ 		vi->i_ino[0] = le32_to_cpu(dic->i_ino);
+-		iu = dic->i_u;
++		copied.i_u = dic->i_u;
++		copied.i_nb = dic->i_nb;
  		vi->i_uid = le16_to_cpu(dic->i_uid);
  		vi->i_gid = le16_to_cpu(dic->i_gid);
--		vi->i_nlink = le16_to_cpu(dic->i_nlink);
-+		vi->i_nlink = le16_to_cpu(dic->i_nb.nlink);
+-		vi->i_nlink = le16_to_cpu(dic->i_nb.nlink);
+-
+-		vi->i_mtime = sbi->build_time;
+-		vi->i_mtime_nsec = sbi->build_time_nsec;
++		if (!S_ISDIR(vi->i_mode) &&
++		    ((ifmt >> EROFS_I_NLINK_1_BIT) & 1)) {
++			vi->i_nlink = 1;
++			copied.i_nb = dic->i_nb;
++		} else {
++			vi->i_nlink = le16_to_cpu(dic->i_nb.nlink);
++			copied.i_nb.startblk_hi = 0;
++			addrmask = BIT_ULL(32) - 1;
++		}
++		vi->i_mtime = sbi->epoch + le32_to_cpu(dic->i_mtime);
++		vi->i_mtime_nsec = sbi->fixed_nsec;
  
- 		vi->i_mtime = sbi->build_time;
- 		vi->i_mtime_nsec = sbi->build_time_nsec;
-@@ -94,7 +94,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ 		vi->i_size = le32_to_cpu(dic->i_size);
+ 		break;
+@@ -94,11 +103,15 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
  	case S_IFREG:
  	case S_IFDIR:
  	case S_IFLNK:
--		vi->u.i_blkaddr = le32_to_cpu(iu.raw_blkaddr);
-+		vi->u.i_blkaddr = le32_to_cpu(iu.startblk_lo);
+-		vi->u.i_blkaddr = le32_to_cpu(iu.startblk_lo);
++		vi->u.i_blkaddr = le32_to_cpu(copied.i_u.startblk_lo) |
++			((u64)le16_to_cpu(copied.i_nb.startblk_hi) << 32);
++		if (vi->datalayout == EROFS_INODE_FLAT_PLAIN &&
++		    !((vi->u.i_blkaddr ^ EROFS_NULL_ADDR) & addrmask))
++			vi->u.i_blkaddr = EROFS_NULL_ADDR;
  		break;
  	case S_IFCHR:
  	case S_IFBLK:
+-		vi->u.i_rdev = erofs_new_decode_dev(le32_to_cpu(iu.rdev));
++		vi->u.i_rdev = erofs_new_decode_dev(le32_to_cpu(copied.i_u.rdev));
+ 		break;
+ 	case S_IFIFO:
+ 	case S_IFSOCK:
+@@ -113,7 +126,7 @@ int erofs_read_inode_from_disk(struct erofs_inode *vi)
+ 	vi->flags = 0;
+ 	if (vi->datalayout == EROFS_INODE_CHUNK_BASED) {
+ 		/* fill chunked inode summary info */
+-		vi->u.chunkformat = le16_to_cpu(iu.c.format);
++		vi->u.chunkformat = le16_to_cpu(copied.i_u.c.format);
+ 		if (vi->u.chunkformat & ~EROFS_CHUNK_FORMAT_ALL) {
+ 			erofs_err("unsupported chunk format %x of nid %llu",
+ 				  vi->u.chunkformat, vi->nid | 0ULL);
 diff --git a/lib/super.c b/lib/super.c
-index cc0ccb46..6a59a236 100644
+index 6a59a236..e4696f87 100644
 --- a/lib/super.c
 +++ b/lib/super.c
-@@ -63,8 +63,8 @@ static int erofs_init_devices(struct erofs_sb_info *sbi,
- 			return ret;
- 		}
- 
--		sbi->devs[i].mapped_blkaddr = le32_to_cpu(dis.mapped_blkaddr);
--		sbi->devs[i].blocks = le32_to_cpu(dis.blocks);
-+		sbi->devs[i].uniaddr = le32_to_cpu(dis.uniaddr_lo);
-+		sbi->devs[i].blocks = le32_to_cpu(dis.blocks_lo);
- 		memcpy(sbi->devs[i].tag, dis.tag, sizeof(dis.tag));
- 		sbi->total_blocks += sbi->devs[i].blocks;
- 		pos += EROFS_DEVT_SLOT_SIZE;
-@@ -109,19 +109,19 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
- 		erofs_err("invalid sb_extslots %u", dsb->sb_extslots);
- 		return -EINVAL;
- 	}
--	sbi->primarydevice_blocks = le32_to_cpu(dsb->blocks);
-+	sbi->primarydevice_blocks = le32_to_cpu(dsb->blocks_lo);
- 	sbi->meta_blkaddr = le32_to_cpu(dsb->meta_blkaddr);
- 	sbi->xattr_blkaddr = le32_to_cpu(dsb->xattr_blkaddr);
+@@ -115,13 +115,20 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
  	sbi->xattr_prefix_start = le32_to_cpu(dsb->xattr_prefix_start);
  	sbi->xattr_prefix_count = dsb->xattr_prefix_count;
  	sbi->islotbits = EROFS_ISLOTBITS;
--	sbi->root_nid = le16_to_cpu(dsb->root_nid);
-+	sbi->root_nid = le16_to_cpu(dsb->rb.rootnid_2b);
+-	sbi->root_nid = le16_to_cpu(dsb->rb.rootnid_2b);
++	if (erofs_sb_has_48bit(sbi) && dsb->rootnid_8b) {
++		sbi->root_nid = le64_to_cpu(dsb->rootnid_8b);
++		sbi->primarydevice_blocks = (sbi->primarydevice_blocks << 32) |
++				le16_to_cpu(dsb->rb.blocks_hi);
++	} else {
++		sbi->root_nid = le16_to_cpu(dsb->rb.rootnid_2b);
++	}
  	sbi->packed_nid = le64_to_cpu(dsb->packed_nid);
  	sbi->inos = le64_to_cpu(dsb->inos);
  	sbi->checksum = le32_to_cpu(dsb->checksum);
  
--	sbi->build_time = le64_to_cpu(dsb->build_time);
--	sbi->build_time_nsec = le32_to_cpu(dsb->build_time_nsec);
-+	sbi->build_time = le64_to_cpu(dsb->epoch);
-+	sbi->build_time_nsec = le32_to_cpu(dsb->fixed_nsec);
+-	sbi->build_time = le64_to_cpu(dsb->epoch);
+-	sbi->build_time_nsec = le32_to_cpu(dsb->fixed_nsec);
++	sbi->epoch = (s64)le64_to_cpu(dsb->epoch);
++	sbi->fixed_nsec = le32_to_cpu(dsb->fixed_nsec);
++	sbi->build_time = le32_to_cpu(dsb->build_time);
  
  	memcpy(&sbi->uuid, dsb->uuid, sizeof(dsb->uuid));
  
-@@ -164,10 +164,10 @@ int erofs_writesb(struct erofs_sb_info *sbi, struct erofs_buffer_head *sb_bh)
- 	struct erofs_super_block sb = {
- 		.magic     = cpu_to_le32(EROFS_SUPER_MAGIC_V1),
+@@ -166,8 +173,9 @@ int erofs_writesb(struct erofs_sb_info *sbi, struct erofs_buffer_head *sb_bh)
  		.blkszbits = sbi->blkszbits,
--		.root_nid  = cpu_to_le16(sbi->root_nid),
-+		.rb.rootnid_2b  = cpu_to_le16(sbi->root_nid),
+ 		.rb.rootnid_2b  = cpu_to_le16(sbi->root_nid),
  		.inos      = cpu_to_le64(sbi->inos),
--		.build_time = cpu_to_le64(sbi->build_time),
--		.build_time_nsec = cpu_to_le32(sbi->build_time_nsec),
-+		.epoch     = cpu_to_le64(sbi->build_time),
-+		.fixed_nsec = cpu_to_le32(sbi->build_time_nsec),
+-		.epoch     = cpu_to_le64(sbi->build_time),
+-		.fixed_nsec = cpu_to_le32(sbi->build_time_nsec),
++		.epoch     = cpu_to_le64(sbi->epoch),
++		.build_time = cpu_to_le64(sbi->build_time),
++		.fixed_nsec = cpu_to_le32(sbi->fixed_nsec),
  		.meta_blkaddr  = cpu_to_le32(sbi->meta_blkaddr),
  		.xattr_blkaddr = cpu_to_le32(sbi->xattr_blkaddr),
  		.xattr_prefix_count = sbi->xattr_prefix_count,
-@@ -183,7 +183,7 @@ int erofs_writesb(struct erofs_sb_info *sbi, struct erofs_buffer_head *sb_bh)
- 	char *buf;
- 	int ret;
+diff --git a/mkfs/main.c b/mkfs/main.c
+index c266f617..579b90fe 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -1231,11 +1231,11 @@ static void erofs_mkfs_showsummaries(void)
+ 	fprintf(stdout, "------\nFilesystem UUID: %s\n"
+ 		"Filesystem total blocks: %llu (of %u-byte blocks)\n"
+ 		"Filesystem total inodes: %llu\n"
+-		"Filesystem %s metadata blocks: %u\n"
++		"Filesystem %s metadata blocks: %llu\n"
+ 		"Filesystem %s deduplicated bytes (of source files): %llu\n",
+ 		uuid_str, g_sbi.total_blocks | 0ULL, 1U << g_sbi.blkszbits,
+ 		g_sbi.inos | 0ULL,
+-		incr, erofs_total_metablocks(g_sbi.bmgr),
++		incr, erofs_total_metablocks(g_sbi.bmgr) | 0ULL,
+ 		incr, g_sbi.saved_by_deduplication | 0ULL);
+ }
  
--	sb.blocks       = cpu_to_le32(sbi->primarydevice_blocks);
-+	sb.blocks_lo	= cpu_to_le32(sbi->primarydevice_blocks);
- 	memcpy(sb.uuid, sbi->uuid, sizeof(sb.uuid));
- 	memcpy(sb.volume_name, sbi->volume_name, sizeof(sb.volume_name));
+@@ -1268,10 +1268,10 @@ int main(int argc, char **argv)
  
-@@ -359,8 +359,8 @@ int erofs_write_device_table(struct erofs_sb_info *sbi)
- 	i = 0;
- 	do {
- 		struct erofs_deviceslot dis = {
--			.mapped_blkaddr = cpu_to_le32(nblocks),
--			.blocks = cpu_to_le32(sbi->devs[i].blocks),
-+			.uniaddr_lo = cpu_to_le32(nblocks),
-+			.blocks_lo = cpu_to_le32(sbi->devs[i].blocks),
- 		};
+ 	if (cfg.c_unix_timestamp != -1) {
+ 		g_sbi.build_time      = cfg.c_unix_timestamp;
+-		g_sbi.build_time_nsec = 0;
++		g_sbi.fixed_nsec      = 0;
+ 	} else if (!gettimeofday(&t, NULL)) {
+ 		g_sbi.build_time      = t.tv_sec;
+-		g_sbi.build_time_nsec = t.tv_usec;
++		g_sbi.fixed_nsec      = t.tv_usec;
+ 	}
  
- 		memcpy(dis.tag, sbi->devs[i].tag, sizeof(dis.tag));
-diff --git a/lib/zmap.c b/lib/zmap.c
-index 07c6a83c..83833859 100644
---- a/lib/zmap.c
-+++ b/lib/zmap.c
-@@ -30,7 +30,7 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
- {
- 	struct erofs_inode *const vi = m->inode;
- 	struct erofs_sb_info *sbi = vi->sbi;
--	const erofs_off_t pos = Z_EROFS_FULL_INDEX_ALIGN(erofs_iloc(vi) +
-+	const erofs_off_t pos = Z_EROFS_FULL_INDEX_START(erofs_iloc(vi) +
- 			vi->inode_isize + vi->xattr_isize) +
- 			lcn * sizeof(struct z_erofs_lcluster_index);
- 	erofs_blk_t eblk = erofs_blknr(sbi, pos);
+ 	err = erofs_dev_open(&g_sbi, cfg.c_img_path, O_RDWR |
 -- 
 2.43.5
 
