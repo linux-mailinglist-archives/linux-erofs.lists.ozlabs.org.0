@@ -1,51 +1,60 @@
-Return-Path: <linux-erofs+bounces-611-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-613-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8C80B03A5A
-	for <lists+linux-erofs@lfdr.de>; Mon, 14 Jul 2025 11:09:27 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6145CB03AFA
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Jul 2025 11:39:47 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bgc2T4B6lz3bpL;
-	Mon, 14 Jul 2025 19:09:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bgcjY0B0dz3bsM;
+	Mon, 14 Jul 2025 19:39:45 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.99
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752484161;
-	cv=none; b=cUnPf+4Uu7mL/uHQZSHRQQ39DSfHG8aEa09B46DsToKdSO2xocfBQ4nAsYqswgw1Le//n1VGB44S80sVIplzV7QEvO54ZgDGw8NKyEOfsPkyGoSQ5DJYmmJCFwITPywhd12LWij1GMqKrPSD6RKFDovrTxoN19S06eAhAZgaCeNXaoxIc4qf+8+ieEgx1PP75zmExAzFZ+oMK9g/jrMUfY07Bphpql4ehHq1elYwNF2Y0wTPtIeIuRZpmOfBiY158AbsuRYIYb469fu+u7N8RmaJ9Y4qptvXYZcTpAk1Q81nhhfZjAh09Mg3xWhFuu2NUoBfWSqwxYScbSNsv1W7cA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752485984;
+	cv=none; b=Z+KxXnTX8XsDHoGv4vQsUyxixVbyX8shHL79rV1ghqoAapMiYjglyEqTNa99+j563Azpcjkr6DrIKBPmhmmbedTkTCuwz7aVnufYqmIsnBbg8YSmJpcGY3bX128FxLE221ZIkKeczb6CVRzEDlg4vbJjVqlDWRqnoDE2by/YKZm33wOGUAzl37kd8NjNyEbb1l0v/mbh9An+KQvYV/x6HG1XdixQDpQNgFxwV+iaD4FZZxBltvvVkABiNw8IaUF7XGkfx6JPtOw9znIAWHYHaaEsTBgut/iqP8wMZWu8wH0I1uppc+rnXRLWOCzfAaCZp4jLqBAX77SBDr0HRFshJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752484161; c=relaxed/relaxed;
-	bh=eW36RIA3QHI60sWmZ+PaXRGfXltJSG358ob9Xx4SKNI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bMzyDG9c/6TGjKnTGqSaI5OJ9BrstHIwLuskWwxgvKPTpvk9x7NTAmYgEGpawzU2CbcQ9eB2c5KpoeODt/JTIEd4DkaEv5pfIhOFm+YmRxzIqnSYmVLXFcb3+2LztdemF0GQ8OSbuVLBauNeYM37TIbQEc3IZ35cTGdpmodUJXuS8wn1TG6rMql6r0HWye60YprTAaJa+ypZfO2noYMfwqYtrUrw6z2TheJkvJ2vIfcj0e1c5rCmws7cPIuPM0X7ZJmPxBhv4pSsQf5ogN3fNGR7SKRnBYCHmolLpPAWj1KmzBaX86rJHW+2M3V9I/W8ZPSzdf92KLIUMMTcjGN6Cg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kTat4hT8; dkim-atps=neutral; spf=pass (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1752485984; c=relaxed/relaxed;
+	bh=zNm2/1s55g68H47obpXRJTWJGopAdliR0XEPK9/4LPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EMtRg3LXossiVkbSo6usHm4C1NkZiAWaDfJQVy5dUt/9CjFbj2hbErTj1xuTRBpNUVZP5JX/1hUvGGrA1fJenh4LuPK3bW/Qf2GtG0lTZJX4M7li6HWnIyrkCYVOU8z/IUnros1T8Ub2lASGzixLyfQzrSHFqIp03jPuTO6ZBdzx5U/k2QbqS+7VoHZcNHZaHg2mGp0fNEa4FRbtRnN4OXHCRrhvRTSCt/3BuJ92JIly2E4Bkah0ozYNKXhPPChxmeLEd6QxP3bG3VsuwgZEu9ZE0o39IZKCx9dVKuHrrXTorhPvmFzqrAJdgYat2MR+56vPLF0Ikowf2sVFJxAV0w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=lg9+S2UT; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=kTat4hT8;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=lg9+S2UT;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bgc2R6GNsz3bnc
-	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Jul 2025 19:09:18 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1752484154; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=eW36RIA3QHI60sWmZ+PaXRGfXltJSG358ob9Xx4SKNI=;
-	b=kTat4hT8jLh5QITlDt18cowsxkASIhfPXiqatUePakzZVOY96tJBH/1nmAv1lt3JbzBKMTNaCQ6mV3CvYcbOnP7SZvTxJt+UoQLUsP/OjhzOPs232QYyXp4hVcRHyPVfyNdfd67ntIV8tMiETnxM2H/T/nkrSWpHW40FMpSxQPE=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WissJ87_1752484152 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 14 Jul 2025 17:09:13 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 2/2] erofs: unify meta buffers in z_erofs_fill_inode()
-Date: Mon, 14 Jul 2025 17:09:07 +0800
-Message-ID: <20250714090907.4095645-2-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250714090907.4095645-1-hsiangkao@linux.alibaba.com>
-References: <20250714090907.4095645-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bgcjX2C5Qz3bqQ
+	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Jul 2025 19:39:44 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 3AD8545EA4;
+	Mon, 14 Jul 2025 09:39:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955BFC4CEED;
+	Mon, 14 Jul 2025 09:39:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752485982;
+	bh=cQ0TpDO9ZCOEo8C3OLkJivTCTe9XM5S/iXQQdJiXaQ4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lg9+S2UTu8r1DfSFfWgiSttKR4mGPbsogToufb1yH4UYTqHgfmYM9qgSiH/PSlm6a
+	 dkCWpi/Hkc5RN8oOgA5LDiLXurN5oe7L2XLFhjfF/Wt5B5sE0ugbs/pulsTSpigeGV
+	 YGLu3ncijh/24AMqk6fR9eZkG4V5u3qqKPXrWzSmEIhX8i5QD59VEsUONHEEcbZwHt
+	 lV20tOG4xqyargOpayFDiH9RU2RbcpQt099Q1P0VPDUc5dogsnXlgGw1M28G1tN/Rc
+	 ZAM3bjysKI88DmYLq/kWCZyyoSD5ajtARtVl6eqgtA9GSC8L/XbzthdoYxbyO3S8wB
+	 J4l92Nm7UfOEw==
+From: Chao Yu <chao@kernel.org>
+To: xiang@kernel.org
+Cc: linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH v3] erofs: support to readahead dirent blocks in erofs_readdir()
+Date: Mon, 14 Jul 2025 17:39:35 +0800
+Message-ID: <20250714093935.200749-1-chao@kernel.org>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -58,111 +67,144 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-There is no need to keep additional local metabufs since we already
-have one in `struct erofs_map_blocks`.
+This patch supports to readahead more blocks in erofs_readdir(), it can
+enhance readdir performance in large direcotry.
 
-This was actually a leftover when applying meta buffers to zmap
-operations, see commit 09c543798c3c ("erofs: use meta buffers for
-zmap operations").
+readdir test in a large directory which contains 12000 sub-files.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+		files_per_second
+Before:		926385.54
+After:		2380435.562
+
+Meanwhile, let's introduces a new sysfs entry to control readahead
+bytes to provide more flexible policy for readahead of readdir().
+- location: /sys/fs/erofs/<disk>/dir_ra_bytes
+- default value: 16384
+- disable readahead: set the value to 0
+
+Signed-off-by: Chao Yu <chao@kernel.org>
 ---
- fs/erofs/zmap.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+v3:
+- add EROFS prefix for macro
+- update new sysfs interface to 1) use bytes instead of pages
+2) remove upper boundary limitation
+- fix bug of pageidx calculation
+ Documentation/ABI/testing/sysfs-fs-erofs |  8 ++++++++
+ fs/erofs/dir.c                           | 13 +++++++++++++
+ fs/erofs/internal.h                      |  4 ++++
+ fs/erofs/super.c                         |  2 ++
+ fs/erofs/sysfs.c                         |  2 ++
+ 5 files changed, 29 insertions(+)
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index ff1d0751fc61..9afc8a68bacb 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -620,13 +620,12 @@ static int z_erofs_map_blocks_ext(struct inode *inode,
+diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
+index bf3b6299c15e..85fa56ca092c 100644
+--- a/Documentation/ABI/testing/sysfs-fs-erofs
++++ b/Documentation/ABI/testing/sysfs-fs-erofs
+@@ -35,3 +35,11 @@ Description:	Used to set or show hardware accelerators in effect
+ 		and multiple accelerators are separated by '\n'.
+ 		Supported accelerator(s): qat_deflate.
+ 		Disable all accelerators with an empty string (echo > accel).
++
++What:		/sys/fs/erofs/<disk>/dir_ra_bytes
++Date:		July 2025
++Contact:	"Chao Yu" <chao@kernel.org>
++Description:	Used to set or show readahead bytes during readdir(), by
++		default the value is 16384.
++
++		- 0: disable readahead.
+diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
+index 3e4b38bec0aa..950d6b0046f4 100644
+--- a/fs/erofs/dir.c
++++ b/fs/erofs/dir.c
+@@ -47,8 +47,10 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 	struct inode *dir = file_inode(f);
+ 	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+ 	struct super_block *sb = dir->i_sb;
++	struct file_ra_state *ra = &f->f_ra;
+ 	unsigned long bsz = sb->s_blocksize;
+ 	unsigned int ofs = erofs_blkoff(sb, ctx->pos);
++	unsigned long nr_pages = DIV_ROUND_UP_POW2(dir->i_size, PAGE_SIZE);
+ 	int err = 0;
+ 	bool initial = true;
+ 
+@@ -63,6 +65,17 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 			break;
+ 		}
+ 
++		/* readahead blocks to enhance performance in large directory */
++		if (EROFS_I_SB(dir)->dir_ra_bytes) {
++			unsigned long idx = DIV_ROUND_UP(ctx->pos, PAGE_SIZE);
++			pgoff_t ra_pages = DIV_ROUND_UP(
++				EROFS_I_SB(dir)->dir_ra_bytes, PAGE_SIZE);
++
++			if (nr_pages - idx > 1 && !ra_has_index(ra, idx))
++				page_cache_sync_readahead(dir->i_mapping, ra,
++					f, idx, min(nr_pages - idx, ra_pages));
++		}
++
+ 		de = erofs_bread(&buf, dbstart, true);
+ 		if (IS_ERR(de)) {
+ 			erofs_err(sb, "failed to readdir of logical block %llu of nid %llu",
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 0d19bde8c094..4399b9332307 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -157,6 +157,7 @@ struct erofs_sb_info {
+ 	/* sysfs support */
+ 	struct kobject s_kobj;		/* /sys/fs/erofs/<devname> */
+ 	struct completion s_kobj_unregister;
++	erofs_off_t dir_ra_bytes;
+ 
+ 	/* fscache support */
+ 	struct fscache_volume *volume;
+@@ -238,6 +239,9 @@ EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
+ #define EROFS_I_BL_XATTR_BIT	(BITS_PER_LONG - 1)
+ #define EROFS_I_BL_Z_BIT	(BITS_PER_LONG - 2)
+ 
++/* default readahead size of directory */
++#define EROFS_DIR_RA_BYTES	16384
++
+ struct erofs_inode {
+ 	erofs_nid_t nid;
+ 
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index e1e9f06e8342..38fc4813a896 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -715,6 +715,8 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	if (err)
+ 		return err;
+ 
++	sbi->dir_ra_bytes = EROFS_DIR_RA_BYTES;
++
+ 	erofs_info(sb, "mounted with root inode @ nid %llu.", sbi->root_nid);
  	return 0;
  }
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index eed8797a193f..9d9f820a5621 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -65,12 +65,14 @@ EROFS_ATTR_FUNC(drop_caches, 0200);
+ #ifdef CONFIG_EROFS_FS_ZIP_ACCEL
+ EROFS_ATTR_FUNC(accel, 0644);
+ #endif
++EROFS_ATTR_RW_UI(dir_ra_bytes, erofs_sb_info);
  
--static int z_erofs_fill_inode_lazy(struct inode *inode)
-+static int z_erofs_fill_inode(struct inode *inode, struct erofs_map_blocks *map)
- {
- 	struct erofs_inode *const vi = EROFS_I(inode);
- 	struct super_block *const sb = inode->i_sb;
- 	int err, headnr;
- 	erofs_off_t pos;
--	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
- 	struct z_erofs_map_header *h;
- 
- 	if (test_bit(EROFS_I_Z_INITED_BIT, &vi->flags)) {
-@@ -646,7 +645,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 		goto out_unlock;
- 
- 	pos = ALIGN(erofs_iloc(inode) + vi->inode_isize + vi->xattr_isize, 8);
--	h = erofs_read_metabuf(&buf, sb, pos);
-+	h = erofs_read_metabuf(&map->buf, sb, pos);
- 	if (IS_ERR(h)) {
- 		err = PTR_ERR(h);
- 		goto out_unlock;
-@@ -684,7 +683,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 		erofs_err(sb, "unknown HEAD%u format %u for nid %llu, please upgrade kernel",
- 			  headnr + 1, vi->z_algorithmtype[headnr], vi->nid);
- 		err = -EOPNOTSUPP;
--		goto out_put_metabuf;
-+		goto out_unlock;
- 	}
- 
- 	if (!erofs_sb_has_big_pcluster(EROFS_SB(sb)) &&
-@@ -693,7 +692,7 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 		erofs_err(sb, "per-inode big pcluster without sb feature for nid %llu",
- 			  vi->nid);
- 		err = -EFSCORRUPTED;
--		goto out_put_metabuf;
-+		goto out_unlock;
- 	}
- 	if (vi->datalayout == EROFS_INODE_COMPRESSED_COMPACT &&
- 	    !(vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1) ^
-@@ -701,27 +700,20 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 		erofs_err(sb, "big pcluster head1/2 of compact indexes should be consistent for nid %llu",
- 			  vi->nid);
- 		err = -EFSCORRUPTED;
--		goto out_put_metabuf;
-+		goto out_unlock;
- 	}
- 
- 	if (vi->z_idata_size ||
- 	    (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER)) {
--		struct erofs_map_blocks map = {
--			.buf = __EROFS_BUF_INITIALIZER
--		};
--
--		err = z_erofs_map_blocks_fo(inode, &map,
-+		err = z_erofs_map_blocks_fo(inode, map,
- 					    EROFS_GET_BLOCKS_FINDTAIL);
--		erofs_put_metabuf(&map.buf);
- 		if (err < 0)
--			goto out_put_metabuf;
-+			goto out_unlock;
- 	}
- done:
- 	/* paired with smp_mb() at the beginning of the function */
- 	smp_mb();
- 	set_bit(EROFS_I_Z_INITED_BIT, &vi->flags);
--out_put_metabuf:
--	erofs_put_metabuf(&buf);
- out_unlock:
- 	clear_and_wake_up_bit(EROFS_I_BL_Z_BIT, &vi->flags);
- 	return err;
-@@ -739,7 +731,7 @@ int z_erofs_map_blocks_iter(struct inode *inode, struct erofs_map_blocks *map,
- 		map->m_la = inode->i_size;
- 		map->m_flags = 0;
- 	} else {
--		err = z_erofs_fill_inode_lazy(inode);
-+		err = z_erofs_fill_inode(inode, map);
- 		if (!err) {
- 			if (vi->datalayout == EROFS_INODE_COMPRESSED_FULL &&
- 			    (vi->z_advise & Z_EROFS_ADVISE_EXTENTS))
+ static struct attribute *erofs_sb_attrs[] = {
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	ATTR_LIST(sync_decompress),
+ 	ATTR_LIST(drop_caches),
+ #endif
++	ATTR_LIST(dir_ra_bytes),
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(erofs_sb);
 -- 
-2.43.5
+2.49.0
 
 
