@@ -1,67 +1,59 @@
-Return-Path: <linux-erofs+bounces-602-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-603-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4189EB0323B
-	for <lists+linux-erofs@lfdr.de>; Sun, 13 Jul 2025 18:55:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C31A7B0338A
+	for <lists+linux-erofs@lfdr.de>; Mon, 14 Jul 2025 02:02:25 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bgBQd2Hnqz3bkL;
-	Mon, 14 Jul 2025 02:55:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bgMvL33b2z3bh6;
+	Mon, 14 Jul 2025 10:02:22 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::b36"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752425721;
-	cv=none; b=GtY9aspTSP/XFS+b3Q+V+LveKYRx7zmCmj4Ofvkc3Euzjs7XqwtBvc3iuRWjME3RZwkBra0cszHHHzDEmK4HJBblRa24Fgy/DvddBPW5VKDCW+GzlyuWd7xUP8v4n0LzrZ7TZ2bwlzq3EoN4SXQV/0fuyly5K1HMDgQbBX4eECH8PduiClPaj9Pqsasa92W1hDLnjXRYJ5y2llCbvcF+SEb+gbsA8c5rOMfJQsFj2LaiFKsAI3VT7smTgvUMRgKYPZbcM91l7iakJ7Rc8Lgs/7SBMlsxpSe+WzNgzN3rCYCtp6I+2nU/XxIsD2hEsxPT2EkrYn4RKt7OFA2s6sfiQw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752451342;
+	cv=none; b=Q84vK87ZYgQFWkM19iKyANactdCI7jlkoT/0RSyU1qaZO+ww8h0dxvMzBXYvJXv2es0mIHzqt3jYFvFMmzt6P4coJ2JDDpIeY57KwSOhJsnV+JBwVRCUs77z2919TFZba3qd7kau2yMtwoVt/N/alfGMQXh+4FkQXR9bWBoFwOU8bPRDZknXJctk7homfGfXCn0wbiHU9+vOckBM3d4sUkodHh2nns4pBBHfLR8f4UKg2L9I9drtQX8iB+cE0a/2GfP2WZDR+OHtpMCmcf3mvAYspVRVOh4nyNphrFTPWEfZ0OvbF8fl7le2MkiFj0RU4/VOKcsCtRfVlRR+ozTNEQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752425721; c=relaxed/relaxed;
-	bh=sgEEsXi7M/FefltXwa+r2QHZXdOG891MG8fVVpsnS3A=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=jnzc516Y03Zm1gOFyG17MF1vH8N1+1SsoBJ+gZkp0j7A6lFXFT5T/iuATy+Hgi4PoWYzGNjOzkLZB0joegMXlPhoJFRa8pv6FZD0dOewxDzmjAeqrcr9oJARDUhQ1xCCFeVKfacqhi/ngCTZMkZ4Un8WeaJwlA6Fg3vgedA8xiIbstPjHx23TNfX6rdp4EBkQa7c6unPFYnsG9UwCx2/e5Bw9e2I35FFiqiKTrBslBlzP+ZEaWVJPvbFZR5vbWxfKMjvLixz9JBI8x1kdAR3oHvX1isGSvxKN7K+lR+/liw/+JTho5yNV5j6jX9BPOvEylTrFxfHT6lk7khO9qTx1Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Lh7GGUtG; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::b36; helo=mail-yb1-xb36.google.com; envelope-from=arthur200126@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1752451342; c=relaxed/relaxed;
+	bh=UqYMPBt11GmFgH3VJiBy1Uzc03wz22u99xVh6u+NJfc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b3ouQviThGsD4Fjp1lO2Q6cTwjOQeGKn8lUZQwC2oB/6vD8H6rCLPt1xv04bVBlY6DRFXsQmJ73Je0JbzcRuELYyKmXX5ro6DDJVe4NBP1gV4noIDRbJXTDPYkbXaw+kKalcqwYP3K7pB6VStVe/ydKB0rq0KaLMuXg65fREGzyyzgdhhRUQx9z6fJSS52gURzdClk89eWXyCCKMRXOHXTqOAxTMUpCVm7hgYVc2U50de2OqqSRO/jkLT0Hy8iWIJz7a1JFKflTMcJgibr4FTFVILdCmlE1/taYNLlewQVNAe1PRRVs19v9OeGK/JX+2z92RRKru7E0DuwyywwQ37w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JsXnzGFh; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=Lh7GGUtG;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JsXnzGFh;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::b36; helo=mail-yb1-xb36.google.com; envelope-from=arthur200126@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bgBQc37sfz3bh6
-	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Jul 2025 02:55:19 +1000 (AEST)
-Received: by mail-yb1-xb36.google.com with SMTP id 3f1490d57ef6-e8b67d2acfbso3194443276.2
-        for <linux-erofs@lists.ozlabs.org>; Sun, 13 Jul 2025 09:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752425717; x=1753030517; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sgEEsXi7M/FefltXwa+r2QHZXdOG891MG8fVVpsnS3A=;
-        b=Lh7GGUtGshle0iDuV697tVhSm/oprTE31MorVkpO24HdMEa0gByFP8hHZQgggU3AXO
-         L3Ack4VvzwCAiVXDEgN8JlB+d4ZFJ2hI7BXSscWkuiVps4zYQ0zArlDXGgk3DpkjNDDv
-         5T9+FumV/eRG6qCoLlySIbqEa6JE01MtS+fr2YkasRfNMXwugHOnSMrgZdGvR0ajGhAH
-         XuFfLKQtfCy3kIUlyZYRjW3X+h+eTWFyjSfjVQMmQw+EAlyg7NFsBkrZq63jw7ZQoweQ
-         4lS4dXCq1ciDSUggN+jvuGu9i+tWoC3nhUJw4gYnOvuUa0MOBKwZxF3j7Rpl+gk13DJ9
-         UlKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752425717; x=1753030517;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sgEEsXi7M/FefltXwa+r2QHZXdOG891MG8fVVpsnS3A=;
-        b=q18sf+F2NnDBJv9bEZs6sNYp/P5wCBA3SvBFpZvN4G+ZM64h8jDeQHXJB+CQZw+sOj
-         6FPqaiVRZzX688h3NHNgqi0a454s/g+yyjABzj7ndnJXKQCOocla+uvzdMP8vtIWzAE9
-         JHEs7JuThpgF6cC68pLwmNpIBy7mNYg4923/Od78Wd4oe6a7gGBs1U8hF57HEXeO1Tbm
-         cMvb/rsb40SJXKl9AS5AXiewB3k5PZ/H3WKRg0hJnAQxQhCRzvs7ys5mxmGNlvH34oX1
-         /nDOn2bunU6Ln9kIwSDECOtuekOP10PHKiaeesTfZBPoaZjFcPou64CD946g/EMGoEq3
-         nYOA==
-X-Gm-Message-State: AOJu0YxkOuhPzEAM/Yom790oIsJBBxclLnsgAh8edBwSu+sbEEy20LLd
-	A8WKIdSU5rH9clSn9ljTNQheL0KHLEYBn9ZgUqNjnyijZ9cApgshURhDTEEK52FGlZs3TCqOaJh
-	C32bspJnixaze5XlH3Xti3HOjucCtSZbbwktf1IQ=
-X-Gm-Gg: ASbGncvS/O32sgg9JIK+6aCwS6AULAA57Z7vXlVsAzDJcv27rQi/xO068VvWKhNW93p
-	HgrE6i13Nyly5uPQvKpxwNR2lmgpWvJEGDKb6Lvlok71QsvLfgxilDUotEsxQPXj1scO7p6TqwU
-	RYeyB6loLTjJRVbDPBkbpkMzesE8tb7oqxSZkVr1FJZsspFI6W31NTzSTD19FHR14YvBDj7+SDA
-	0o2CZfUeg==
-X-Google-Smtp-Source: AGHT+IF+xJ9qxDnDreojBui7vQKakLAPes+LSvUgB7xPydy6N2aP31vvJ/5X8ohbRGoXpFbkePA9FYLbPMRH0UuYFJA=
-X-Received: by 2002:a05:690c:4a0e:b0:708:be8b:841e with SMTP id
- 00721157ae682-717d5e4dbaamr163826087b3.36.1752425717464; Sun, 13 Jul 2025
- 09:55:17 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bgMvK4GvJz30Lt
+	for <linux-erofs@lists.ozlabs.org>; Mon, 14 Jul 2025 10:02:21 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 457C961130;
+	Mon, 14 Jul 2025 00:02:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D57CC4CEE3;
+	Mon, 14 Jul 2025 00:02:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752451338;
+	bh=Fqq+fKzWejvAKCF58NUZl2Ez+dooav2W/TYgdeVhSJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JsXnzGFhNEAuw5IZutA6XxGzeApGqyaT+liKGkwlTQBQH9yXhFtqxyklblNw2DFWN
+	 36qZ+Yfh4cIxPDObnOVwvHMPfI+OjwRcWHg1pXo1ugHWTCdiJ9cfaghrlaIvG5LLdq
+	 SnXSL6kZHke2COVHeHYJCQ10o95dYBzT7h1w76wfJbrcaVDVK0NGfnYLSI9346J05r
+	 226a3Ok9qPNh0+Y2ymXEZolbbFCs/4vLLl0R0bkGuBvGKV5i/QtTFWtESWAex6byxA
+	 h1nPb4qlo6/tkDtzazDdLwSdvhv+RbnVKTxdikm/KMlHSro3I3VGdCX1MHh7EL18aX
+	 CUWX7CWp4H0Ag==
+Date: Mon, 14 Jul 2025 08:02:13 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Mingye Wang <arthur200126@gmail.com>
+Cc: hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org,
+	derez@redhat.com
+Subject: Re: [feature request] extract a single file from EROFS filesystem
+Message-ID: <aHRJBVY1r0epiRpy@debian>
+Mail-Followup-To: Mingye Wang <arthur200126@gmail.com>,
+	hsiangkao@linux.alibaba.com, linux-erofs@lists.ozlabs.org,
+	derez@redhat.com
+References: <CAD66C+YsAUG2Qtt9i5vbn5qPRfE0OHtAwyTUiZJaYrzrkTfYDg@mail.gmail.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -73,45 +65,49 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-From: Mingye Wang <arthur200126@gmail.com>
-Date: Mon, 14 Jul 2025 00:55:06 +0800
-X-Gm-Features: Ac12FXxDymTixJKqkK1UEQUskY_i3VU6GZbJyOYrq24AAawVDygjZKNz4v_sMh0
-Message-ID: <CAD66C+YsAUG2Qtt9i5vbn5qPRfE0OHtAwyTUiZJaYrzrkTfYDg@mail.gmail.com>
-Subject: Re: [feature request] extract a single file from EROFS filesystem
-To: hsiangkao@linux.alibaba.com
-Cc: linux-erofs@lists.ozlabs.org, derez@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAD66C+YsAUG2Qtt9i5vbn5qPRfE0OHtAwyTUiZJaYrzrkTfYDg@mail.gmail.com>
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi all,
+Hi Mingye,
 
->Gao Xiang Thu, 09 Jan 2025 01:36:16 -0800
->On 2025/1/9 02:14, Daniel Erez wrote:
->>Would it be applicable to introduce an option for extracting a specific file
->>from the image?
->>I.e. something similar to the '-extract-file' option available in unsquashfs tool [2].
->I will add this later.
+On Mon, Jul 14, 2025 at 12:55:06AM +0800, Mingye Wang wrote:
+> Hi all,
+> 
+> >Gao Xiang Thu, 09 Jan 2025 01:36:16 -0800
+> >On 2025/1/9 02:14, Daniel Erez wrote:
+> >>Would it be applicable to introduce an option for extracting a specific file
+> >>from the image?
+> >>I.e. something similar to the '-extract-file' option available in unsquashfs tool [2].
+> >I will add this later.
+> 
+> I am seeing a need for a similar feature in making dracut's lsinitrd
+> work... a little better. I should add two cents of my own.
 
-I am seeing a need for a similar feature in making dracut's lsinitrd
-work... a little better. I should add two cents of my own.
+dump.erofs already supports `--cat` command to dump a single file.
 
-* In "unsquashfs" there's not only '-extract-file' for passing in a
-list of files, but also a possibility for a list of paths to be
-specified directly as arguments. This would appear outlandish on an
-fsck utility.
-* When extracting single files it might be desirable to *not* verify
-and pretend-extract the other files.
+> 
+> * In "unsquashfs" there's not only '-extract-file' for passing in a
+> list of files, but also a possibility for a list of paths to be
+> specified directly as arguments. This would appear outlandish on an
+> fsck utility.
 
-Because of these two reasons, I think it might be best to make an
-"unerofs" for extraction purposes instead of adding more things to the
-"fsck" tool. An initial version can just be a separate "main" fuction
-in fsck.c that gets used when an argv[0] equal to "unerofs" or ending
-with "/unerofs" is found.
+Can those be replaced as dump.erofs --cat?
 
-Sincerely,
-Mingye Wang (Artoria2e5)
+> * When extracting single files it might be desirable to *not* verify
+> and pretend-extract the other files.
+
+`fsck.erofs` can be used to dump a subtree in the future (exclude file
+pattern can be applied), fsck/dump/mkfs tools are more common for
+generic filesystems.
+
+Mimick Squashfs-specific is not EROFS will do since I do see `un`-prefix
+is common and lack of (even defacto) standardization.
+
+Thanks,
+Gao Xiang
 
