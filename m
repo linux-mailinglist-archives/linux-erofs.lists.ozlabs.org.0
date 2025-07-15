@@ -1,50 +1,50 @@
-Return-Path: <linux-erofs+bounces-618-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-619-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 286C4B04DDD
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Jul 2025 04:35:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2101BB04DE0
+	for <lists+linux-erofs@lfdr.de>; Tue, 15 Jul 2025 04:37:03 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bh3FX2DXJz3bwL;
-	Tue, 15 Jul 2025 12:35:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bh3HJ5yrmz3bwp;
+	Tue, 15 Jul 2025 12:37:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752546928;
-	cv=none; b=NVZN30N2A54js6f63xThmkX54aA1vYjbiy7+woFW2s5n2FGKZZKDQExo/GBoeGhszz6vCfWelUQuwHTCJ9H27aRTmS006zZi8fYcbI62Ubg2QkFIq/IYUgVSjKDeQ+tKxb6Nill4O3tLiUPM6DQMcdk6/XALmkHyVptzWgoVg4XhQ+3FUyLoqTofRK5ujtKhygiJt8FQ4pzVFy/9Fly/n7J/cVmhCersTllxt5GhRucB+lq2zlE2fU9XuqOCPTdxc7ZW9DoyGz+R2cxsN4X1yce+JZG1P48/xpBRWmC2QGHY7lDR1hhYWkK8zU+Nrt74oy+XJH+wVuOAGVzgSzwYOg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752547020;
+	cv=none; b=Zk+b4Sd4OG0mJ/15lw0vuftQGsVrxOxmNvY7pjJOKWNlAsVzfORQ3Dv3XFjp/rpYqG5kJaODt8jQKLNxCbyY0jbdgAjU5Z6kzxaE6Iyu9wvg6sX0bB3CEDcjoPSGeMBZM6Q6nfbw6C5wBlmiwZTYlwELxmJSY5JwGYFCcGQaHHPkh4eb+8BYJUxiIzL0m3X8yqD84rt/L/rJ5sOn1EwwCfhG+/ga5HX/NrTMpSEpVFLtbKOsoGECl0CtuX2JFo0HL3b/eJEI/Vg3JpoaF44QmjMH3nlrrgtxynzbA9lyG41qZ2QAUZrCKZAXe32bz1JUIZm2Bw8hyraaeMi+xvaN7w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752546928; c=relaxed/relaxed;
-	bh=plgSZwUsi7p9/9srE0O02dF9lLoHBqrr2fxdbxpAYdc=;
+	t=1752547020; c=relaxed/relaxed;
+	bh=U/NdrzgyrlEdE2+NBmFHTxuu2zIPoYjGijYMnDwRrqI=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=WdgPSgj5rfbTv9ek67kaNTHnqkq+SUt7U3W4ZD2/A5FYrXCH2Nun0BHgOC6HmjH0Spuj+yZ1sRUwhNzZHzxj8leuUlRpWgUFrgDKABenZtP7T4EIQmeT9j1gRkAJUvnJ6S+6oADEPfCZAEy7TJP0YokeMWg5Q1j0Wgsu957jsnedpVO0hTJ7OKJGLH2voD2Z1bn+nKe0DeRLbT+kvjqgR5Wb0u8RNCM+gSHZg2cb0SVrmpQYG5Y2QzQGM+ayMa61JEAa2WDAPrCQFxq4j+6btjYbpgOdDnQWS0DdOoqlroXaxTtvu5++gG0GpFM7+jGX0ME9pkf2TJ6huaz5FNwNOQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=m7+UXwy0; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:Content-Type; b=ON/aowvN0GWd/RU86uS0DToPOMExW0OL5Gm5a/tEscANibi27WSAyu2fmjiBre6GbOyl2/ZDzDkXZGnxMIe/VBUFOzxeJ1eq8IlGdDsGqBoGFCg4T1IVf2hB2cET/ePGou1/1oqtQBqAAvpvsW3ziWzwEFoM0QD8mtrhzHYHekrmcURr7YtYfpRzSDFdbRd2Vjt/P0A6S94wsYUn8u/uqHAIWWXdWIQ8422WzkfzEw3NwVv6JRwfysdIyLKSAzcNgzVikPkHCAihbg4oUmtuEEnUEuGS38ovN3araoXE9rYSHUcx4vn5LiPU9OQ2BjqETjzNCDHuBHt+d7psNihJyw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ST84jJ2E; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=m7+UXwy0;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ST84jJ2E;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bh3FW3pg9z30W9
-	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Jul 2025 12:35:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bh3HJ1xzvz3bwf
+	for <linux-erofs@lists.ozlabs.org>; Tue, 15 Jul 2025 12:37:00 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 2506661475;
-	Tue, 15 Jul 2025 02:35:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56EA8C4CEED;
-	Tue, 15 Jul 2025 02:35:23 +0000 (UTC)
+	by nyc.source.kernel.org (Postfix) with ESMTP id 3524CA502C2;
+	Tue, 15 Jul 2025 02:36:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 055F6C4CEED;
+	Tue, 15 Jul 2025 02:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752546924;
-	bh=3rn5X2804zVLNExXY9lUnvlDzx6yI9nWMKAmgXGBuuI=;
+	s=k20201202; t=1752547016;
+	bh=KRgeF7wD/feJDZX13wASjrkKxr7mSsP2tkO3lDVNsIY=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=m7+UXwy06qyrxWX+pLnP3KZaCuMcFX/M2DEK0SFQM+YtQEpPlIejmMINTF19ZorMO
-	 c8PFrAWFLUi30MjoN6dUcGj9FakgyO0VivjaafzTaCBtAqJuWXuW/tmJ7Uaji4+uB8
-	 XnQ5Un3rxS2koRRMg8e0HDJtKdP6k9GM5PvWDStl9mB+o5xUyiDzZlmJuQqfCDlutY
-	 Gs0M64FxJbORRhRJ+7HavV6sa+Vaa7D94QvpyNbgOx2Uo+Smxr9g+V+n0Jv1IdA7kl
-	 QRL11tYptJmSvLXhcETuodALybw7ftdjLfIKPfgGSgjIZozfceqKg6NGgy3yi+xLA4
-	 Lm9fXALjHwoWQ==
-Message-ID: <4c651095-7840-4015-acb0-1375ca428317@kernel.org>
-Date: Tue, 15 Jul 2025 10:35:21 +0800
+	b=ST84jJ2E0VrrhM1RGegBuPswbGnUshbWFe9DEgzeTQl7f/7qHkyNoYxlNGc3xiZPm
+	 YCe7sJ4KxL022JM19LzgGvQJtiWTME7cfW7+H6BVoEftzfIp6dnI9uaSwBTG7O6Sfe
+	 sNmHA47PGfk9cOrP+4qN8ohelyViQMoJDg/94xBD99n2m3vCr2IvMrKvApQ8gThcuF
+	 k/R47P2eHhiDIp5vOavcR4+bmuslbxN/MjBYiMwgSkJgJguBABQldpkFIePvFtfNAT
+	 qqjeoGxcz4KZ8jpqk3WZ6fhSp+ouPAVJIsK7HXoCo+om5Dv8QJG/XW4EoAczKA2ENC
+	 ERk6QuPjT5IFQ==
+Message-ID: <10a23be8-ae70-47ba-88e6-9e0bd07b9b1f@kernel.org>
+Date: Tue, 15 Jul 2025 10:36:54 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -57,35 +57,28 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, xiang@kernel.org, hsiangkao@linux.alibaba.com,
- kernel-team@android.com
-Subject: Re: [PATCH] erofs-utils: lib: fix memory leak in xattr handling
-To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org
-References: <20250711233548.195561-1-dhavale@google.com>
+Cc: chao@kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] erofs: remove need_kmap in erofs_read_metabuf()
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <20250714090907.4095645-1-hsiangkao@linux.alibaba.com>
 Content-Language: en-US
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250711233548.195561-1-dhavale@google.com>
+In-Reply-To: <20250714090907.4095645-1-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On 7/12/25 07:35, Sandeep Dhavale wrote:
-> In android the LeakSanitizer reported memory leaks originating
-> from functions like erofs_get_selabel_xattr.
+On 7/14/25 17:09, Gao Xiang wrote:
+>  - need_kmap is always true except for a ztailpacking case; thus, just
+>    open-code that one;
 > 
-> The root cause is that the 'kvbuf' buffer, which is allocated to
-> store xattr data, was not being freed when its owning
-> 'xattr_item' struct was deallocated. The functions put_xattritem()
-> and erofs_cleanxattrs() were freeing the xattr_item struct but
-> neglected to free the kvbuf pointer within it.
+>  - The upcoming metadata compression will add a new boolean, so simplify
+>    this first.
 > 
-> This patch fixes the leak by adding the necessary free() calls for
-> kvbuf in both functions.
-> 
-> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Chao Yu <chao@kernel.org>
 
