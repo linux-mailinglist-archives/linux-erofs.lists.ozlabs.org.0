@@ -1,110 +1,43 @@
-Return-Path: <linux-erofs+bounces-626-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-627-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 186DAB06886
-	for <lists+linux-erofs@lfdr.de>; Tue, 15 Jul 2025 23:26:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B8CDB069E8
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jul 2025 01:32:26 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bhXLK1H9Sz2xgQ;
-	Wed, 16 Jul 2025 07:26:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bhb7q5kpdz30T3;
+	Wed, 16 Jul 2025 09:32:23 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=202.12.124.140
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752614777;
-	cv=none; b=b702Ulnbzf9rUfKwuruxwCAuptXCGioCH3jDbhiEuP2V1XJJLQNkhWlfstMuaMo4XjCwyKtAE9SpF1djMABpDgKHAVeTORs2vLN1OSJIZP/gCXSRIFbgt920gYukKT7yPA+B1JUHGeZnMJWJ/LZDVLPka2GiOkmlyvm0jYknp+7cqlnRFhZscN6hj8PUbtPOrLsfV0IuaH3sP1iHiTkJP0Vffaqan0YbCxCBcfwn5mVV0ImZtY+udTRQ2eBGhFfdTkUqYnWwx+BPj1O0IzYhSAJjRks6sPfDM7d+VvO1SER8q/UB/jaoKOF3yuwDl/ejeDaoSr0T4F0/daZmqp3Xqw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752622343;
+	cv=none; b=YsW47+spoW1h1ah2oep33reQHvS8tBxRGYW4kM+NqtvsEhRsBfF0Ydfa19myK1hIzNG4yCnpDbIx3SFLAfunXZs9pOX84lOoeOqYuLOgupMZqyusqR2Hvp4WI0zPN3M71Y56ycaAcQnGWMm7O2LY1GspMivUcGDWXd2sXo8Hw83vFuVwuHpUPvYh/HsCEKCIlw9IMG87ZNdQ9N73cwiM6xEi8aW7Gs9Nvagcj8ss0wrFxIewhw87ZQydTMQrwcwzJU0Ip8saQi3S6he7hcOmKKhqRhEo9MOqiQFN76hNbu91GQfq5UscnPTgsg2RZKz0YUTN1AEkHvyTlA6ySTf76A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752614777; c=relaxed/relaxed;
-	bh=UYHWhle+vhSoss1fvdZ2btqEJcq1ge5i+HAEGBVMw8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=av1EVYdMIuEhZgD6n88Gk6bfnFbzHOlyuCP9RI0gSBlsoJgXHMBFZoEQSF/vlQCwSuIzD9c8Ah9TL+on+Wr8263eR8ShxYC+MJWaZhpeflR6QBhT51g+Q4YBd/ohQCfoktdUZUajAnwfNlEiH7rvYWSbWMHbK2mmeKncp93ptm8Hhc4B5c8uVH2pjHY0F3bKzhdQ4YBnv0SGRJy+ecZXafNxkASi5PEmrlcUCLk5BCv4vShHm6DjgRCOy60y2U9aSGn7lksANyCbWBB8pmsXq06P9kxUDXpSwvi1qZokQRA0+dcAZ3ZZykfe+YxP526Q9k7wQ2HXExRJWm2BcGBD4Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=bur.io; dkim=pass (2048-bit key; unprotected) header.d=bur.io header.i=@bur.io header.a=rsa-sha256 header.s=fm3 header.b=lRkCdsfV; dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=Ce9F+IH1; dkim-atps=neutral; spf=pass (client-ip=202.12.124.140; helo=flow-b5-smtp.messagingengine.com; envelope-from=boris@bur.io; receiver=lists.ozlabs.org) smtp.mailfrom=bur.io
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=bur.io
+	t=1752622343; c=relaxed/relaxed;
+	bh=nUy4PEMS4CazYHiywIu/1adtHnlC3QRDbiuwxgypLnQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gJ2e4lJZ/OKKN9tRu2b9R7AuM1n0YD8zG0QjHUTtEfxSihvdxCxVqyWtUDKMr9kxhjpwonxcrzPKR5kDjcA1pDxhobz835cunlz3wjuaw0mkxHNAK/nitEUN1XA7CK2bEBjH4UuAPlcBoQ3t69RVBkICALC2Hq2yrhgbV2PHCmh4TS7z+pzzsVNTIGVYuTiCws4OQ0lX/7PC1POm07YI6rFFkCKuY1XJnCnFDUhK+CTKrRAkeBfOGCxYoFoiS0zZG6OWlKcOm5KHXQ9MaAlR0nzHeYLO+vFeRIamL9nvu8H13qMx9oSyBqvXc+RFjzlHTny79Mexsgz0esNEcBiIgw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uVh9tRTK; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=bur.io header.i=@bur.io header.a=rsa-sha256 header.s=fm3 header.b=lRkCdsfV;
-	dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=Ce9F+IH1;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=uVh9tRTK;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=bur.io (client-ip=202.12.124.140; helo=flow-b5-smtp.messagingengine.com; envelope-from=boris@bur.io; receiver=lists.ozlabs.org)
-X-Greylist: delayed 309 seconds by postgrey-1.37 at boromir; Wed, 16 Jul 2025 07:26:14 AEST
-Received: from flow-b5-smtp.messagingengine.com (flow-b5-smtp.messagingengine.com [202.12.124.140])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bhXLG1gjkz2xfR
-	for <linux-erofs@lists.ozlabs.org>; Wed, 16 Jul 2025 07:26:14 +1000 (AEST)
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailflow.stl.internal (Postfix) with ESMTP id 62E9B1300E65;
-	Tue, 15 Jul 2025 17:21:01 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Tue, 15 Jul 2025 17:21:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=cc:cc
-	:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1752614461; x=1752621661; bh=UYHWhle+vh
-	Soss1fvdZ2btqEJcq1ge5i+HAEGBVMw8w=; b=lRkCdsfVtMWMwLHZr39F7f/8mX
-	921zmhadMTq7JcDH40jPOUA3zEj3R8hvQ31WXo8U+bDofR3ATiX4rwN3fcki5uL8
-	IVnPSyWwglK5YOStOSWQGsJlswe1a/bgW4B6uDqK+n0gpg8LHvZFjWWUcG7ZIsD5
-	DxuALrsh3O1VydYoDvs9AOccGag8gaCIl8ND1nBlAyE/w+1pho7we6cRkuD9WWhE
-	xvf2bWjKL1ux0lIVVQDBG+eZ6QqsFwW0BaE/VyP+OkDaIWye4XLGehVLoILn5kDJ
-	+xXs4v++Br2DKNV3PlvDZcRaf9VjLw6d6OD6ws8kKE331gCAlGxUn4d88x9A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1752614461; x=1752621661; bh=UYHWhle+vhSoss1fvdZ2btqEJcq1ge5i+HA
-	EGBVMw8w=; b=Ce9F+IH1uvDNbsSwJIOP/rG/i042S/gMBWsX56WO7ElW3Brcxmj
-	c1JjYLwvXBU+k0VWWkBnSh50U7X4rUP8GAZWPiuGETvDoibxN2/HRM1Plm8bl8qY
-	vu50j3amKiU4VMH4HzDgz05hzNo5aTorV31PNArsuFQBCWB6HMYcxYwQ+jobOedV
-	NtLRKYyUhzppcTmuTu6k1K/7xHIEtx1/XKMnqfGHQQN6ixZ5iJGW4nMdFVcc4zMi
-	eK+JRLEKsiUH6f6pZTdSS6m/cJmNYwKQ9XszzgDD598L05RWFPyW0ezHAewLufF9
-	C1jEE3fzp1bmaBf72mOvXoP8C7TURS3nvUw==
-X-ME-Sender: <xms:O8Z2aBb2o3WSeJkNDpvVK_1CfhO4HXwOqnefRuxSnSagyMaVbJ7BrQ>
-    <xme:O8Z2aGPom1oJq26vkt0eDfcvv5b9IgnfKOZSLKeR1XIUY2ArbYSHbT7-Yl8HRO6Pg
-    CPMcXGd7bN_Xioq4Do>
-X-ME-Received: <xmr:O8Z2aE1jUd0BIG6M25PzLxIX8T39DGUUxYmmeFZKMyQVOs9BWD3JTG-OHP0aibjjwSIvQ21iW1vsIlJSisds4TExpqs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdehheeklecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhrihhsuceu
-    uhhrkhhovhcuoegsohhrihhssegsuhhrrdhioheqnecuggftrfgrthhtvghrnhepkedvke
-    ffjeellefhveehvdejudfhjedthfdvveeiieeiudfguefgtdejgfefleejnecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghorhhishessghurh
-    drihhopdhnsggprhgtphhtthhopedvgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthht
-    ohepfihilhhlhiesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegtlhhmsehfsg
-    drtghomhdprhgtphhtthhopehjohhsvghfsehtohigihgtphgrnhgurgdrtghomhdprhgt
-    phhtthhopegushhtvghrsggrsehsuhhsvgdrtghomhdprhgtphhtthhopehlihhnuhigqd
-    gsthhrfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhitghosehf
-    lhhugihnihgtrdhnvghtpdhrtghpthhtohepgihirghngheskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheptghhrghosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhig
-    qdgvrhhofhhssehlihhsthhsrdhoiihlrggsshdrohhrgh
-X-ME-Proxy: <xmx:O8Z2aKl8sgIcZ83waB3ooxuEhOSaVUsZcdWFiIg6hl8aj7u3eVSUsg>
-    <xmx:O8Z2aC6he-On3LWoKqy9AnQ59r2GaSw5CGT9VR3Z3zM5QWA25DXqJA>
-    <xmx:O8Z2aLnJYp_POSGdFf9OLum21MHWKvZ7zEj6d5IqEt_FNGLQPwIRKA>
-    <xmx:O8Z2aMRfslUUz8n58RzMU71E6Do8GJBcqd7ZWglxBBPvoJasm0MSFw>
-    <xmx:PcZ2aBt1WhpTWdR5pXv9pupYXwxThC7C0L11zr9gt1KsmEnOtMWynpYe>
-Feedback-ID: i083147f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 15 Jul 2025 17:20:58 -0400 (EDT)
-Date: Tue, 15 Jul 2025 14:22:33 -0700
-From: Boris Burkov <boris@bur.io>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-	Nicolas Pitre <nico@fluxnic.net>, Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
-	David Howells <dhowells@redhat.com>, netfs@lists.linux.dev,
-	Paulo Alcantara <pc@manguebit.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	ntfs3@lists.linux.dev, Steve French <sfrench@samba.org>,
-	linux-cifs@vger.kernel.org,
-	Phillip Lougher <phillip@squashfs.org.uk>
-Subject: Re: Compressed files & the page cache
-Message-ID: <20250715212233.GA1680311@zen.localdomain>
-References: <aHa8ylTh0DGEQklt@casper.infradead.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bhb7m6Tw4z30T0
+	for <linux-erofs@lists.ozlabs.org>; Wed, 16 Jul 2025 09:32:19 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1752622334; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=nUy4PEMS4CazYHiywIu/1adtHnlC3QRDbiuwxgypLnQ=;
+	b=uVh9tRTKyYCBTKheLSpfjGOd5Ayv9BMukBadlr0pOkUwfpFNQLqGBvc6vKJ9GIa/TilYONz1fFTrTbzN4hkZHNhdZYPEPgj/zADJp5M2+PJYAWvJnShJK34IZKS+BMUf4yfCDXtNLVoY5g8fpxYnq76szlS/cfhWt7s1vh9eg0g=
+Received: from 30.170.233.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wj1gQiN_1752622331 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 16 Jul 2025 07:32:12 +0800
+Message-ID: <e5165052-ead3-47f4-88f6-84eb23dc34df@linux.alibaba.com>
+Date: Wed, 16 Jul 2025 07:32:10 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -116,15 +49,36 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: Compressed files & the page cache
+To: Matthew Wilcox <willy@infradead.org>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ linux-btrfs@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ linux-erofs@lists.ozlabs.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+ linux-f2fs-devel@lists.sourceforge.net, Jan Kara <jack@suse.cz>,
+ linux-fsdevel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+ Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
+ David Howells <dhowells@redhat.com>, netfs@lists.linux.dev,
+ Paulo Alcantara <pc@manguebit.org>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+ ntfs3@lists.linux.dev, Steve French <sfrench@samba.org>,
+ linux-cifs@vger.kernel.org, Phillip Lougher <phillip@squashfs.org.uk>,
+ Hailong Liu <hailong.liu@oppo.com>, Barry Song <21cnbao@gmail.com>
+References: <aHa8ylTh0DGEQklt@casper.infradead.org>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 In-Reply-To: <aHa8ylTh0DGEQklt@casper.infradead.org>
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,SPF_PASS
-	autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Tue, Jul 15, 2025 at 09:40:42PM +0100, Matthew Wilcox wrote:
+Hi Matthew,
+
+On 2025/7/16 04:40, Matthew Wilcox wrote:
 > I've started looking at how the page cache can help filesystems handle
 > compressed data better.  Feedback would be appreciated!  I'll probably
 > say a few things which are obvious to anyone who knows how compressed
@@ -134,58 +88,19 @@ On Tue, Jul 15, 2025 at 09:40:42PM +0100, Matthew Wilcox wrote:
 > plaintext into variable-sized compressed blocks.  This would be a good
 > point to stop reading and tell me about counterexamples.
 
-As far as I know, btrfs with zstd does not used fixed size plaintext. I
-am going off the btrfs logic itself, not the zstd internals which I am
-sadly ignorant of. We are using the streaming interface for whatever
-that is worth.
+At least the typical EROFS compresses variable-sized plaintext (at least
+one block, e.g. 4k, but also 4k+1, 4k+2, ...) into fixed-sized compressed
+blocks for efficient I/Os, which is really useful for small compression
+granularity (e.g. 4KiB, 8KiB) because use cases like Android are usually
+under memory pressure so large compression granularity is almost
+unacceptable in the low memory scenarios, see:
+https://erofs.docs.kernel.org/en/latest/design.html
 
-Through the following callpath, the len is piped from the async_chunk\
-through to zstd via the slightly weirdly named total_out parameter:
-
-compress_file_range()
-  btrfs_compress_folios()
-    compression_compress_pages()
-      zstd_compress_folios()
-        zstd_get_btrfs_parameters() // passes len
-        zstd_init_cstream() // passes len
-        for-each-folio:
-          zstd_compress_stream() // last folio is truncated if short
-  
-# bpftrace to check the size in the zstd callsite
-$ sudo bpftrace -e 'fentry:zstd_init_cstream {printf("%llu\n", args.pledged_src_size);}'
-Attaching 1 probe...
-76800
-
-# diff terminal, write a compressed extent with a weird source size
-$ sudo dd if=/dev/zero of=/mnt/lol/foo bs=75k count=1
-
-We do operate in terms of folios for calling zstd_compress_stream, so
-that can be thought of as a fixed size plaintext block, but even so, we
-pass in a short block for the last one:
-$ sudo bpftrace -e 'fentry:zstd_compress_stream {printf("%llu\n", args.input->size);}'
-Attaching 1 probe...
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-4096
-3072
+Currently EROFS works pretty well on these devices and has been
+successfully deployed in billions of real devices.
 
 > 
-> From what I've been reading in all your filesystems is that you want to
+>  From what I've been reading in all your filesystems is that you want to
 > allocate extra pages in the page cache in order to store the excess data
 > retrieved along with the page that you're actually trying to read.  That's
 > because compressing in larger chunks leads to better compression.
@@ -201,23 +116,31 @@ Attaching 1 probe...
 > 
 > So, my proposal is that filesystems tell the page cache that their minimum
 > folio size is the compression block size.  That seems to be around 64k,
-
-btrfs has a max uncompressed extent size of 128K, for what it's worth.
-In practice, many compressed files are comprised of a large number of
-compressed extents each representing a 128k plaintext extent.
-
-Not sure if that is exactly the constant you are concerned with here, or
-if it refutes your idea in any way, just figured I would mention it as
-well.
-
 > so not an unreasonable minimum allocation size.  That removes all the
-> extra code in filesystems to allocate extra memory in the page cache.
-> It means we don't attempt to track dirtiness at a sub-folio granularity
+> extra code in filesystems to allocate extra memory in the page cache.> It means we don't attempt to track dirtiness at a sub-folio granularity
 > (there's no point, we have to write back the entire compressed bock
 > at once).  We also get a single virtually contiguous block ... if you're
 > willing to ditch HIGHMEM support.  Or there's a proposal to introduce a
 > vmap_file() which would give us a virtually contiguous chunk of memory
 > (and could be trivially turned into a noop for the case of trying to
 > vmap a single large folio).
+
+I don't see this will work for EROFS because EROFS always supports
+variable uncompressed extent lengths and that will break typical
+EROFS use cases and on-disk formats.
+
+Other thing is that large order folios (physical consecutive) will
+caused "increase the latency on UX task with filemap_fault()"
+because of high-order direct reclaims, see:
+https://android-review.googlesource.com/c/kernel/common/+/3692333
+so EROFS will not set min-order and always support order-0 folios.
+
+I think EROFS will not use this new approach, vmap() interface is
+always the case for us.
+
+Thanks,
+Gao Xiang
+
 > 
+
 
