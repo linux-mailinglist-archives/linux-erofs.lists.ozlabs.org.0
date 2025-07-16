@@ -1,70 +1,39 @@
-Return-Path: <linux-erofs+bounces-644-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-645-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0947BB07FCA
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jul 2025 23:41:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B0DFDB080BE
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Jul 2025 00:57:25 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bj8df74R4z3bby;
-	Thu, 17 Jul 2025 07:41:42 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bjBJd3PjPz2yDk;
+	Thu, 17 Jul 2025 08:57:05 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.14
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752702102;
-	cv=none; b=dDp34q467n/eIcWWLXIA9fXhwqDy5VEWttsqZDiJD7uLnvUejy0nSRtS3z2pZlXxn+FNQksUaMqd2sovpWiVUujzkOkdvEkuAWSAfVPOVcA8tv0wBnVulyPI4HjzEDK0nQFZXwy13hgPOMWHfBo+FC2RBZWQYn+8yg7ybUR/T5TYLtVuLJSjzu2/SVY/509m/VJPNnLQTnDNlS84p3rtzf1DFfZBnPXDlZ9ZGWsztSnLw4Ad7ebkRJTObT1qktiA+Rc08ExCOJaDpyqnluH8UxZ0PQ50L8pydXgdvYjuA8LZEfySKZj6dATB1kZ1KRmP2omiK0fzNHR3oSP1qsJ8ag==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=188.121.53.35
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752706625;
+	cv=none; b=hkThB/+e6oC+nRKei4xJTtuJ2IrRvdfotmmknlRFBgSD8ukQ3zSTCoiPiwCHn71a2Io9lD8esRbZ0VQsPlGmxPL9SDj4DOjWZ7Jo76X5E1rS3/MfFgNDPiKPpvwmymYziQ5NiwWeJ+ou/eNb1Dsm19mTrCEjMNZcJC4ouukX/MPJGpuiO04tLly2AsgHVwbEcT5oSGW9YD1Jm566MVAknon+X+QFnRKiKxzsXGY2eSCkEZ59+4Xib57V6JBDell0hFUM/WzAvxl1/TQFtVJaY0nJozS2Dj6dIXmLP15L63rscprA59x1sGJMyWbxmBFjQuaouraFEhTOToSxoKyqEg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752702102; c=relaxed/relaxed;
-	bh=LapNa/l4khs4D9QAnepv8/Zpkwj2fZdqLX3POoTk4Ew=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=XckstxZC2CnnScyxrjYB93eNrs4uOU0VwpLCmQtcvJNVyGh7ir7c6U0KtxxkoiYgkAK4skP4hQy0/yPZsns04gh/2rZjUkGUjTQ74ba07RBZ5nI5MSpoB30FJLNm10JYognrVuiI26lZIGQxxnzFWLXu+1WahKro5Vw5hLChaSsmliY+xzV7lKoQcs31NLap0dr77gdt6WVv+hza3AAIX9tGco0dyqo3RLqjwwP/fGFR5FtWEw5WFfZkLB1+/OsYwIFvy3YPwzNssNBfWpJ3xrk/9KlJ6XBxK1u2mqQnZW41ua6/nNho4tIdmwJ8Zdq4oUzSXRoPO9I2swjPwXuNag==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fiRN5uCS; dkim-atps=neutral; spf=pass (client-ip=198.175.65.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=fiRN5uCS;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	t=1752706625; c=relaxed/relaxed;
+	bh=LXw6ldY+YQgvzasUoEe9Ha+WGxfEFTQd/LtLVKR9rZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aKjKb4aCQA5T2lpdcJ72rS8QcDDfayMtj/10AqeDCjqd2rOl3G1jfAq9CRVnGoTy44tUS3xE6/w5BWuZvcyIjmALttRLNTq3naexOiT3HDQ9wN3GvLjWNQqUyyiFflD//ws5ZS4FFy6dmpa2q0WpoI925BibAoCxR+HUr1uPXFcMNR+QT889KKi8oAGyMV/igb65n9jvNBojA0TI4Je+vBTlC3Z6txTI4UvhYiBMFTBL0QIqHBuhYNrI2djn6OVbq4cqXBqibK4inPqwYg311cSnFS6xzNXbcZh15mV7PTGiIKYx6GgfT67IhgcobLAotNP2HIfFNhGf9krTc5MOHg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass (client-ip=188.121.53.35; helo=sxb1plsmtpa01-04.prod.sxb1.secureserver.net; envelope-from=phillip@squashfs.org.uk; receiver=lists.ozlabs.org) smtp.mailfrom=squashfs.org.uk
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=squashfs.org.uk (client-ip=188.121.53.35; helo=sxb1plsmtpa01-04.prod.sxb1.secureserver.net; envelope-from=phillip@squashfs.org.uk; receiver=lists.ozlabs.org)
+X-Greylist: delayed 987 seconds by postgrey-1.37 at boromir; Thu, 17 Jul 2025 08:57:04 AEST
+Received: from sxb1plsmtpa01-04.prod.sxb1.secureserver.net (sxb1plsmtpa01-04.prod.sxb1.secureserver.net [188.121.53.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bj8df1gvCz30Vn
-	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 07:41:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1752702102; x=1784238102;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=ejg2NgilfZsuVgEFKYoLPFPHlHYZj5/iFnKoONmMhKg=;
-  b=fiRN5uCSnqFHmxi8XpKtbRPDU82Je7TmX4PsXQaZUtistZuulDP855+V
-   qecWPqs69iIk36YpTxqVoQH3okqOT+6XoyCaHXmnt9toAg21+tqP+wRyP
-   JSmBLeoTGHSCLabwZuNJsmW4QgoBP90PqhMTIkLqV0HZzKTnlOZchNr8K
-   /MJbN371af0wTECEw0DsMre0f3jXm1eUoHmqLCmA0zwDqcs+LLmDInxuD
-   cNqbA6HBMXBZGLzJKrcQsFqFm4YlOrlZT6hb9agp2/32Euv7h2F3mz1Ss
-   PVnfSaywE4a6TfMskT5iS8s67d3jd1RSeFHRNgrvnQT3bjaeqFQb/1K7H
-   w==;
-X-CSE-ConnectionGUID: q+PzUiZmQNKwV7TiNC4y7A==
-X-CSE-MsgGUID: 3avBduc3TxmdQ2OCND7sjg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="58734945"
-X-IronPort-AV: E=Sophos;i="6.16,316,1744095600"; 
-   d="scan'208";a="58734945"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2025 14:41:34 -0700
-X-CSE-ConnectionGUID: 82IF38aYQYCyYIQnQH3sJQ==
-X-CSE-MsgGUID: McomF0g2SXOr2Hp0Kq6nvQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,316,1744095600"; 
-   d="scan'208";a="157285490"
-Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 16 Jul 2025 14:41:32 -0700
-Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uc9sY-000CsC-2C;
-	Wed, 16 Jul 2025 21:41:30 +0000
-Date: Thu, 17 Jul 2025 05:40:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bo Liu <liubo03@inspur.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test 7/7] fs/erofs/internal.h:288:31: warning:
- shift count >= width of type
-Message-ID: <202507170506.Wzz1lR5I-lkp@intel.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bjBJc1zf2z2xlL
+	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 08:57:03 +1000 (AEST)
+Received: from [192.168.178.95] ([82.69.79.175])
+	by :SMTPAUTH: with ESMTPSA
+	id cAlKuoVr96J4FcAlNu4Dmt; Wed, 16 Jul 2025 15:38:10 -0700
+X-CMAE-Analysis: v=2.4 cv=TYmWtQQh c=1 sm=1 tr=0 ts=687829d2
+ a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+ a=IkcTkHD0fZMA:10 a=Z9je9KOXq8erZ9ix0VAA:9 a=QEXdDO2ut3YA:10
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk
+Message-ID: <f4b9faf9-8efd-4396-b080-e712025825ab@squashfs.org.uk>
+Date: Wed, 16 Jul 2025 23:37:28 +0100
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -76,111 +45,104 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: Compressed files & the page cache
+To: Matthew Wilcox <willy@infradead.org>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ linux-btrfs@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ linux-erofs@lists.ozlabs.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+ linux-f2fs-devel@lists.sourceforge.net, Jan Kara <jack@suse.cz>,
+ linux-fsdevel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+ Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
+ David Howells <dhowells@redhat.com>, netfs@lists.linux.dev,
+ Paulo Alcantara <pc@manguebit.org>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+ ntfs3@lists.linux.dev, Steve French <sfrench@samba.org>,
+ linux-cifs@vger.kernel.org
+References: <aHa8ylTh0DGEQklt@casper.infradead.org>
+Content-Language: en-US
+From: Phillip Lougher <phillip@squashfs.org.uk>
+In-Reply-To: <aHa8ylTh0DGEQklt@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfF7PhqfDTvf0GLbE+ZqPgfM1AhwOJlHSpsMzx6XOcDZuT9YqsTaq8QVlGaLYbZSCACkmupuX6+moDnsLw8z6oXo/oW+NBiLgU6y5TBJWXg6tV88e5Euj
+ 1giZ2fZsoopVdzm/v4Tlp3z0KvSwDUxO6m0SnvjOtH9zvReYNZLA2FNMM+DrFEJFaiIkCvRrmoBmbv4h3OnUHX5sclo1/Wezm+BEj6dLaDXAyuKVHku8Kvy6
+ 3A9SkS3ZtrCtIQcuDoAamTotabkyq8u+NbETcu+wgZcHz79D2Cqa4hBUqSAxUGPLdjqjvKdz0Y+w0IVDS3aE1LUKcnIDytVIxDas6bwTbJD2/Yz7PsjwtKtl
+ JoRL1DOXscuVOLxBvw+0xQnpDotzu0Vo1GrTRn1rfHJKD4Exmb3wOCyCD+h2AYMKaGBCjBVgXvf5G6DK3/s3MVbkLRjH09uolqpyyQAsKggrC2Moa3qwKWia
+ tBwCIdLZWPpQOFc2HOlLjv7vmcMVwr97TODyoKXcYSBdRG5Aj19H80t7Vc1kPbVELOFd5EDHNfQ8ATDugkZBq2J/V21dERsOluc2pak7RNmbJyOzrPcIwalB
+ Nf6fEekDRHicDoV2q2tew6sPotWewTjdjMw9iwbRhZpamiZqsp/XI9f5XhZcOQoUdsCy/ey/U995vHBeMMo6H0yRk9BNVCMpINAVKCtQmjIv7xNp+Ioo2Sxs
+ gPnTBcUD++qhM8KfplNiTcJXoQ96eTIssdBe+BMWUXv1qhpWQ9GKojXGcX8mKMvEG7sKSgFMNrc3J5Xm28GieZWCzy/+ZDv2I7VwecP2j5T1w/WLBfHEUgk5
+ gufg4AqEMh/tWtnL4rvSfpFcA6zbEUbuBjvPEzIYLlyjogb7n+266BU1vQZO72XCtgIJOh/KDHsuteA4LS7mxuWjWepHBR+R1mjV5Mwu
+X-Spam-Status: No, score=-0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-head:   33656c801bc94615e8b02f01f36eff752dc5086b
-commit: 33656c801bc94615e8b02f01f36eff752dc5086b [7/7] erofs: implement metadata compression
-config: hexagon-randconfig-001-20250717 (https://download.01.org/0day-ci/archive/20250717/202507170506.Wzz1lR5I-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250717/202507170506.Wzz1lR5I-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507170506.Wzz1lR5I-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   In file included from fs/erofs/data.c:7:
->> fs/erofs/internal.h:288:31: warning: shift count >= width of type [-Wshift-count-overflow]
-     288 |         return EROFS_I(inode)->nid & BIT(EROFS_DIRENT_NID_METABOX_BIT);
-         |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/vdso/bits.h:7:26: note: expanded from macro 'BIT'
-       7 | #define BIT(nr)                 (UL(1) << (nr))
-         |                                        ^  ~~~~
-   In file included from fs/erofs/data.c:7:
-   fs/erofs/internal.h:294:45: warning: shift count >= width of type [-Wshift-count-overflow]
-     294 |         erofs_nid_t nid_lo = EROFS_I(inode)->nid & EROFS_DIRENT_NID_MASK;
-         |                                                    ^~~~~~~~~~~~~~~~~~~~~
-   fs/erofs/erofs_fs.h:275:33: note: expanded from macro 'EROFS_DIRENT_NID_MASK'
-     275 | #define EROFS_DIRENT_NID_MASK           (BIT(EROFS_DIRENT_NID_METABOX_BIT) - 1)
-         |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/vdso/bits.h:7:26: note: expanded from macro 'BIT'
-       7 | #define BIT(nr)                 (UL(1) << (nr))
-         |                                        ^  ~~~~
-   2 warnings generated.
---
-   In file included from fs/erofs/super.c:14:
-   In file included from fs/erofs/xattr.h:9:
->> fs/erofs/internal.h:288:31: warning: shift count >= width of type [-Wshift-count-overflow]
-     288 |         return EROFS_I(inode)->nid & BIT(EROFS_DIRENT_NID_METABOX_BIT);
-         |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/vdso/bits.h:7:26: note: expanded from macro 'BIT'
-       7 | #define BIT(nr)                 (UL(1) << (nr))
-         |                                        ^  ~~~~
-   In file included from fs/erofs/super.c:14:
-   In file included from fs/erofs/xattr.h:9:
-   fs/erofs/internal.h:294:45: warning: shift count >= width of type [-Wshift-count-overflow]
-     294 |         erofs_nid_t nid_lo = EROFS_I(inode)->nid & EROFS_DIRENT_NID_MASK;
-         |                                                    ^~~~~~~~~~~~~~~~~~~~~
-   fs/erofs/erofs_fs.h:275:33: note: expanded from macro 'EROFS_DIRENT_NID_MASK'
-     275 | #define EROFS_DIRENT_NID_MASK           (BIT(EROFS_DIRENT_NID_METABOX_BIT) - 1)
-         |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/vdso/bits.h:7:26: note: expanded from macro 'BIT'
-       7 | #define BIT(nr)                 (UL(1) << (nr))
-         |                                        ^  ~~~~
->> fs/erofs/super.c:327:26: warning: shift count >= width of type [-Wshift-count-overflow]
-     327 |                 if (sbi->metabox_nid & BIT(EROFS_DIRENT_NID_METABOX_BIT))
-         |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/vdso/bits.h:7:26: note: expanded from macro 'BIT'
-       7 | #define BIT(nr)                 (UL(1) << (nr))
-         |                                        ^  ~~~~
-   3 warnings generated.
---
-   In file included from fs/erofs/fscache.c:8:
->> fs/erofs/internal.h:288:31: warning: shift count >= width of type [-Wshift-count-overflow]
-     288 |         return EROFS_I(inode)->nid & BIT(EROFS_DIRENT_NID_METABOX_BIT);
-         |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/vdso/bits.h:7:26: note: expanded from macro 'BIT'
-       7 | #define BIT(nr)                 (UL(1) << (nr))
-         |                                        ^  ~~~~
-   In file included from fs/erofs/fscache.c:8:
-   fs/erofs/internal.h:294:45: warning: shift count >= width of type [-Wshift-count-overflow]
-     294 |         erofs_nid_t nid_lo = EROFS_I(inode)->nid & EROFS_DIRENT_NID_MASK;
-         |                                                    ^~~~~~~~~~~~~~~~~~~~~
-   fs/erofs/erofs_fs.h:275:33: note: expanded from macro 'EROFS_DIRENT_NID_MASK'
-     275 | #define EROFS_DIRENT_NID_MASK           (BIT(EROFS_DIRENT_NID_METABOX_BIT) - 1)
-         |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/vdso/bits.h:7:26: note: expanded from macro 'BIT'
-       7 | #define BIT(nr)                 (UL(1) << (nr))
-         |                                        ^  ~~~~
->> fs/erofs/fscache.c:277:46: error: too few arguments to function call, expected 4, have 3
-     277 |                 src = erofs_read_metabuf(&buf, sb, map.m_pa);
-         |                       ~~~~~~~~~~~~~~~~~~                   ^
-   fs/erofs/internal.h:400:7: note: 'erofs_read_metabuf' declared here
-     400 | void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
-         |       ^                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     401 |                          erofs_off_t offset, bool in_metabox);
-         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   2 warnings and 1 error generated.
 
 
-vim +288 fs/erofs/internal.h
+On 15/07/2025 21:40, Matthew Wilcox wrote:
+> I've started looking at how the page cache can help filesystems handle
+> compressed data better.  Feedback would be appreciated!  I'll probably
+> say a few things which are obvious to anyone who knows how compressed
+> files work, but I'm trying to be explicit about my assumptions.
+> 
+> First, I believe that all filesystems work by compressing fixed-size
+> plaintext into variable-sized compressed blocks.  This would be a good
+> point to stop reading and tell me about counterexamples.
 
-   285	
-   286	static inline bool erofs_inode_in_metabox(struct inode *inode)
-   287	{
- > 288		return EROFS_I(inode)->nid & BIT(EROFS_DIRENT_NID_METABOX_BIT);
-   289	}
-   290	
+For Squashfs Yes.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+>>From what I've been reading in all your filesystems is that you want to
+> allocate extra pages in the page cache in order to store the excess data
+> retrieved along with the page that you're actually trying to read.  That's
+> because compressing in larger chunks leads to better compression.
+> 
+
+Yes.
+
+> There's some discrepancy between filesystems whether you need scratch
+> space for decompression.  Some filesystems read the compressed data into
+> the pagecache and decompress in-place, while other filesystems read the
+> compressed data into scratch pages and decompress into the page cache.
+> 
+
+Squashfs uses scratch pages.
+
+> There also seems to be some discrepancy between filesystems whether the
+> decompression involves vmap() of all the memory allocated or whether the
+> decompression routines can handle doing kmap_local() on individual pages.
+> 
+
+Squashfs does both, and this depends on whether the decompression
+algorithm implementation in the kernel is multi-shot or single-shot.
+
+The zlib/xz/zstd decompressors are multi-shot, in that you can call them
+multiply, giving them an extra input or output buffer when it runs out.
+This means you can get them to output into a 4K page at a time, without
+requiring the pages to be contiguous.  kmap_local() can be called on each
+page before passing it to the decompressor.
+
+The lzo/lz4 decompressors are single-shot, they expect to be called once,
+with a single contiguous input buffer containing the data to be
+decompressed, and a single contiguous output buffer large enough to hold
+all the uncompressed data.
+
+> So, my proposal is that filesystems tell the page cache that their minimum
+> folio size is the compression block size.  That seems to be around 64k,
+> so not an unreasonable minimum allocation size.  That removes all the
+> extra code in filesystems to allocate extra memory in the page cache.
+> It means we don't attempt to track dirtiness at a sub-folio granularity
+> (there's no point, we have to write back the entire compressed bock
+> at once).  We also get a single virtually contiguous block ... if you're
+> willing to ditch HIGHMEM support.  Or there's a proposal to introduce a
+> vmap_file() which would give us a virtually contiguous chunk of memory
+> (and could be trivially turned into a noop for the case of trying to
+> vmap a single large folio).
+> 
+
+The compression block size in Squashfs can be 4K to 1M in size.
+
+Phillip
 
