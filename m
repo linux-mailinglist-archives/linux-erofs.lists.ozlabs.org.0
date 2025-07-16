@@ -1,52 +1,70 @@
-Return-Path: <linux-erofs+bounces-642-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-643-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73889B07C74
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jul 2025 19:59:17 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD088B07FC9
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jul 2025 23:41:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bj3hx6K2xz30VZ;
-	Thu, 17 Jul 2025 03:59:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bj8dd5QDgz3bb2;
+	Thu, 17 Jul 2025 07:41:41 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752688753;
-	cv=none; b=eQJh7dvqvpqZdS/DsmH5zFf5MS5C/8YDTM9PhRlGKdICUCA7CccoNDI5WNlb6rJSZJhMioZCWqmhjZ28SCchJ0fKEw3+xjY4pS9R9d05T+zgRcAxGnCd/eaN1tozEivGItbg7UUrhuRX1cwg85dtgdDnKoR2NKwK0y2rf6JDike+tbQlj48NMjvuD0VhckqUjGz1zUB/QfVyY+zDI1PXayyhW0hW88C3DcREtrAvdYBrwicdbf3aIBo1mUFWju/XRf2ILT2WmB0VktOtIEJTdYse3T0hOAbZ6NR00cTDxiYO8lXFwFo4KZIWVQpFvX2R13Clg3GT9qcN0/+DsxCByw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.14
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752702101;
+	cv=none; b=fqoVhvs0RqzQhmuIUyG+q6JJXeWJS7RNWfCLLHraBGDZrODrRwQu8d6JK0/DZ6PRxLXutR+YhQnSB3j9+5EklwSinaEdHxc30YfRpiVDbUbQPb0xjnMDzRbIaNfGlv9UmvC4uXfHsPZ3hJqmp0Rqs32H+3M6tOtmVZdTA2nQMlYk07R3VTXoquYp6cu3sqvAIM1dqnceZJHms8ffJaw8ioLQDtZ4NbeUAVgK8oAq3zO6tzbMRoRJgUwvcrL+iu3rtPtHM50h6xFDDKjY+n1Rtip8Cis0yVT1QhcZc2W1sM3WtQh5wjY41FuaVf8lsttZbXOsKXTzHm2NiIiuEUxjog==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752688753; c=relaxed/relaxed;
-	bh=RIDJmwnRFY5Lgtn5mS4ZPerHm9LTSIuiArOTbMHLm1M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QvGyaoZLeQ/QtKnB0421Z0x2XfNQg9Pl6wCEnuu+zBJgqHvg7Z5G1w7s8HLqUVYklhu1IXlyCuKLyDGtsXqCOjXjYIz0THsANSxFvOUdbmoozG9wyuFcRqrPOfrAerWHerDr0KHy9AHLHV9qENwI286SvjBaek4wo7ygHz+5p87Ckcf2ASKOstMpxGcowQNv9f0pvg16Ck8U1AtHanpLJhksrzayyiTCz1S/8dpvuoH3SWWELUztBbKJWWuL2uPOKccunJpJkcljhm5zd0dRxGn5Epl0z6hB5uFDkeB2O9H5Zl3gzM/lGHXSErMKiaZPgvUYwm7ukJoiGH9EtJoivA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=lGMNM6hg; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1752702101; c=relaxed/relaxed;
+	bh=gBEwlkP+Bc6krFxNXH1k7+w+KsMB1v8WMDgiUL+F8eQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=E8nTcziguAfRZWjxR6zI40GMAd/x7L87n6mNazDAedTPllT8Ph5Ps/7aSVqDRv1huWL69Ljfl/gVZDXKnDxLkgLfrowvL7Ly+sreUvb3Y2LgBd4ueMo67KnggNkFW8Loywy2GSvme1mZ1PFgd9z2jgGDtNaaWNBGevRFPNgtjwRQUAJLF4UrnTUtTEvEa9w1v/P7iGyPwu1CGlBtT/kbag64KKjCBb93WGU0yRDnn3vGWQlgJxwe8q/4UD5U7MrXNnSqkzjzx11voDU2zwwRJNrwccLoOrwiJkbc6tg2rMaAnrVTosJ4PLyHQEKkoySgJJtLmu67+ZobDNednsN3/w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Zg/36ZLy; dkim-atps=neutral; spf=pass (client-ip=198.175.65.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=lGMNM6hg;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Zg/36ZLy;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bj3hv5BSdz3069
-	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 03:59:10 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1752688746; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=RIDJmwnRFY5Lgtn5mS4ZPerHm9LTSIuiArOTbMHLm1M=;
-	b=lGMNM6hg4u0FhrZG73qGESHERxUOPHHpNAZlwdCOQ54rEkSF4D4pk1/b9O3tI0JCJaJPjMjuMOHHrrp4G9aTISBKOUYd+wQ9R/boPtf2Iw5wzq1eoVFcNk3OyZnBLHuywBJEVk8Zwrhl8M7i8tYw+zRDXebI27TNf91/aXT1/gc=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wj5VlPl_1752688740 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 17 Jul 2025 01:59:05 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Bo Liu <liubo03@inspur.com>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v4 2/2] erofs: implement metadata compression
-Date: Thu, 17 Jul 2025 01:58:59 +0800
-Message-ID: <20250716175859.345578-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250716173314.308744-3-hsiangkao@linux.alibaba.com>
-References: <20250716173314.308744-3-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bj8db4QlTz30Vn
+	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 07:41:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1752702100; x=1784238100;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=bPyWDybtxiIXDsQOutP6Ugd1kU7Qh/rouJ5vJEPlErs=;
+  b=Zg/36ZLyEfVGi2OaFzfmXwWuyVBybLxAXRok4AVH8oht+37PbiToaqjw
+   tmBPEoquQCm/4d9R8vY/NpntYZ4iRTWGk5QVgjZcSc9OfPGaGxpudtpUh
+   2sPpX+65IdSg6JFqDS0MF91uhKC84jrXiCoi1UFG373D30+2yB7PWq9ZM
+   M2PmS/ZKl7h6ng82sCOuYak76bvYzEb+QR88FnHMpYdaJna3C7m8okNoD
+   Yi8DjE7ZY1krWTdH0rqN0ZQccGAitqMnkg0M6dvWNXHDxrMD29CkdEZLI
+   FHbDQd/Jc4K8N7J80zeWtHE4MbMHyQcLpCiLoWf65lsb52uMXHuEeFE5e
+   g==;
+X-CSE-ConnectionGUID: A6jMGOZiTVe0aGRvphTaTw==
+X-CSE-MsgGUID: NqFYmHE8QsO3jcrrgVl9LA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11493"; a="58734941"
+X-IronPort-AV: E=Sophos;i="6.16,316,1744095600"; 
+   d="scan'208";a="58734941"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2025 14:41:34 -0700
+X-CSE-ConnectionGUID: 4RulU/OFTRSkXVR8hV9XWg==
+X-CSE-MsgGUID: Ge0fdliISNSKia8q3XHLSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,316,1744095600"; 
+   d="scan'208";a="157285489"
+Received: from lkp-server01.sh.intel.com (HELO 9ee84586c615) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 16 Jul 2025 14:41:32 -0700
+Received: from kbuild by 9ee84586c615 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uc9sY-000Cs9-26;
+	Wed, 16 Jul 2025 21:41:30 +0000
+Date: Thu, 17 Jul 2025 05:40:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bo Liu <liubo03@inspur.com>
+Cc: oe-kbuild-all@lists.linux.dev, Xiang Gao <xiang@kernel.org>,
+	linux-erofs@lists.ozlabs.org
+Subject: [xiang-erofs:dev-test 7/7] fs/erofs/fscache.c:277:23: error: too few
+ arguments to function 'erofs_read_metabuf'; expected 4, have 3
+Message-ID: <202507170548.rvm67YSU-lkp@intel.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -58,557 +76,200 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Bo Liu <liubo03@inspur.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+head:   33656c801bc94615e8b02f01f36eff752dc5086b
+commit: 33656c801bc94615e8b02f01f36eff752dc5086b [7/7] erofs: implement metadata compression
+config: arc-randconfig-002-20250717 (https://download.01.org/0day-ci/archive/20250717/202507170548.rvm67YSU-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250717/202507170548.rvm67YSU-lkp@intel.com/reproduce)
 
-Thanks to the meta buffer infrastructure, metadata-compressed inodes are
-just read from the metabox inode instead of the blockdevice (or backing
-file) inode.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507170548.rvm67YSU-lkp@intel.com/
 
-The same is true for shared extended attributes.
+All error/warnings (new ones prefixed by >>):
 
-Co-developed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-Signed-off-by: Bo Liu <liubo03@inspur.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-changes since v3:
- - add the missing sysfs part;
+   In file included from include/linux/bits.h:6,
+                    from include/linux/ratelimit_types.h:5,
+                    from include/linux/printk.h:9,
+                    from include/asm-generic/bug.h:22,
+                    from arch/arc/include/asm/bug.h:30,
+                    from include/linux/bug.h:5,
+                    from include/linux/vfsdebug.h:5,
+                    from include/linux/fs.h:5,
+                    from fs/erofs/internal.h:10,
+                    from fs/erofs/xattr.h:9,
+                    from fs/erofs/inode.c:7:
+   fs/erofs/internal.h: In function 'erofs_inode_in_metabox':
+>> include/vdso/bits.h:7:40: warning: left shift count >= width of type [-Wshift-count-overflow]
+       7 | #define BIT(nr)                 (UL(1) << (nr))
+         |                                        ^~
+   fs/erofs/internal.h:288:38: note: in expansion of macro 'BIT'
+     288 |         return EROFS_I(inode)->nid & BIT(EROFS_DIRENT_NID_METABOX_BIT);
+         |                                      ^~~
+   fs/erofs/internal.h: In function 'erofs_iloc':
+>> include/vdso/bits.h:7:40: warning: left shift count >= width of type [-Wshift-count-overflow]
+       7 | #define BIT(nr)                 (UL(1) << (nr))
+         |                                        ^~
+   fs/erofs/erofs_fs.h:275:42: note: in expansion of macro 'BIT'
+     275 | #define EROFS_DIRENT_NID_MASK           (BIT(EROFS_DIRENT_NID_METABOX_BIT) - 1)
+         |                                          ^~~
+   fs/erofs/internal.h:294:52: note: in expansion of macro 'EROFS_DIRENT_NID_MASK'
+     294 |         erofs_nid_t nid_lo = EROFS_I(inode)->nid & EROFS_DIRENT_NID_MASK;
+         |                                                    ^~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/bits.h:6,
+                    from include/linux/string_helpers.h:5,
+                    from include/linux/seq_file.h:7,
+                    from fs/erofs/super.c:8:
+   fs/erofs/internal.h: In function 'erofs_inode_in_metabox':
+>> include/vdso/bits.h:7:40: warning: left shift count >= width of type [-Wshift-count-overflow]
+       7 | #define BIT(nr)                 (UL(1) << (nr))
+         |                                        ^~
+   fs/erofs/internal.h:288:38: note: in expansion of macro 'BIT'
+     288 |         return EROFS_I(inode)->nid & BIT(EROFS_DIRENT_NID_METABOX_BIT);
+         |                                      ^~~
+   fs/erofs/internal.h: In function 'erofs_iloc':
+>> include/vdso/bits.h:7:40: warning: left shift count >= width of type [-Wshift-count-overflow]
+       7 | #define BIT(nr)                 (UL(1) << (nr))
+         |                                        ^~
+   fs/erofs/erofs_fs.h:275:42: note: in expansion of macro 'BIT'
+     275 | #define EROFS_DIRENT_NID_MASK           (BIT(EROFS_DIRENT_NID_METABOX_BIT) - 1)
+         |                                          ^~~
+   fs/erofs/internal.h:294:52: note: in expansion of macro 'EROFS_DIRENT_NID_MASK'
+     294 |         erofs_nid_t nid_lo = EROFS_I(inode)->nid & EROFS_DIRENT_NID_MASK;
+         |                                                    ^~~~~~~~~~~~~~~~~~~~~
+   fs/erofs/super.c: In function 'erofs_read_superblock':
+>> include/vdso/bits.h:7:40: warning: left shift count >= width of type [-Wshift-count-overflow]
+       7 | #define BIT(nr)                 (UL(1) << (nr))
+         |                                        ^~
+   fs/erofs/super.c:327:40: note: in expansion of macro 'BIT'
+     327 |                 if (sbi->metabox_nid & BIT(EROFS_DIRENT_NID_METABOX_BIT))
+         |                                        ^~~
+--
+   In file included from include/linux/bits.h:6,
+                    from include/linux/bitops.h:6,
+                    from include/linux/kernel.h:23,
+                    from include/linux/fs_context.h:11,
+                    from include/linux/pseudo_fs.h:4,
+                    from fs/erofs/fscache.c:6:
+   fs/erofs/internal.h: In function 'erofs_inode_in_metabox':
+>> include/vdso/bits.h:7:40: warning: left shift count >= width of type [-Wshift-count-overflow]
+       7 | #define BIT(nr)                 (UL(1) << (nr))
+         |                                        ^~
+   fs/erofs/internal.h:288:38: note: in expansion of macro 'BIT'
+     288 |         return EROFS_I(inode)->nid & BIT(EROFS_DIRENT_NID_METABOX_BIT);
+         |                                      ^~~
+   fs/erofs/internal.h: In function 'erofs_iloc':
+>> include/vdso/bits.h:7:40: warning: left shift count >= width of type [-Wshift-count-overflow]
+       7 | #define BIT(nr)                 (UL(1) << (nr))
+         |                                        ^~
+   fs/erofs/erofs_fs.h:275:42: note: in expansion of macro 'BIT'
+     275 | #define EROFS_DIRENT_NID_MASK           (BIT(EROFS_DIRENT_NID_METABOX_BIT) - 1)
+         |                                          ^~~
+   fs/erofs/internal.h:294:52: note: in expansion of macro 'EROFS_DIRENT_NID_MASK'
+     294 |         erofs_nid_t nid_lo = EROFS_I(inode)->nid & EROFS_DIRENT_NID_MASK;
+         |                                                    ^~~~~~~~~~~~~~~~~~~~~
+   fs/erofs/fscache.c: In function 'erofs_fscache_data_read_slice':
+>> fs/erofs/fscache.c:277:23: error: too few arguments to function 'erofs_read_metabuf'; expected 4, have 3
+     277 |                 src = erofs_read_metabuf(&buf, sb, map.m_pa);
+         |                       ^~~~~~~~~~~~~~~~~~
+   In file included from fs/erofs/fscache.c:8:
+   fs/erofs/internal.h:400:7: note: declared here
+     400 | void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
+         |       ^~~~~~~~~~~~~~~~~~
 
- Documentation/ABI/testing/sysfs-fs-erofs |  2 +-
- fs/erofs/data.c                          | 59 +++++++++++++++---------
- fs/erofs/decompressor.c                  |  2 +-
- fs/erofs/erofs_fs.h                      |  2 +-
- fs/erofs/fileio.c                        |  2 +-
- fs/erofs/inode.c                         |  5 +-
- fs/erofs/internal.h                      | 17 +++++--
- fs/erofs/super.c                         | 22 ++++++++-
- fs/erofs/sysfs.c                         |  2 +
- fs/erofs/xattr.c                         | 20 +++++---
- fs/erofs/zdata.c                         |  5 +-
- fs/erofs/zmap.c                          | 16 ++++---
- 12 files changed, 106 insertions(+), 48 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
-index bf3b6299c15e..ad6d1a3ccd4e 100644
---- a/Documentation/ABI/testing/sysfs-fs-erofs
-+++ b/Documentation/ABI/testing/sysfs-fs-erofs
-@@ -5,7 +5,7 @@ Description:	Shows all enabled kernel features.
- 		Supported features:
- 		zero_padding, compr_cfgs, big_pcluster, chunked_file,
- 		device_table, compr_head2, sb_chksum, ztailpacking,
--		dedupe, fragments.
-+		dedupe, fragments, 48bit, metabox.
- 
- What:		/sys/fs/erofs/<disk>/sync_decompress
- Date:		November 2021
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 383c1337e157..f46c47335b9c 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -49,11 +49,18 @@ void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool need_kmap)
- 	return buf->base + (offset & ~PAGE_MASK);
- }
- 
--void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb)
-+int erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb,
-+		       bool in_metabox)
- {
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 
- 	buf->file = NULL;
-+	if (in_metabox) {
-+		if (unlikely(!sbi->metabox_inode))
-+			return -EFSCORRUPTED;
-+		buf->mapping = sbi->metabox_inode->i_mapping;
-+		return 0;
-+	}
- 	buf->off = sbi->dif0.fsoff;
- 	if (erofs_is_fileio_mode(sbi)) {
- 		buf->file = sbi->dif0.file;	/* some fs like FUSE needs it */
-@@ -62,12 +69,17 @@ void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb)
- 		buf->mapping = sbi->dif0.fscache->inode->i_mapping;
- 	else
- 		buf->mapping = sb->s_bdev->bd_mapping;
-+	return 0;
- }
- 
- void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
--			 erofs_off_t offset)
-+			 erofs_off_t offset, bool in_metabox)
- {
--	erofs_init_metabuf(buf, sb);
-+	int err;
-+
-+	err = erofs_init_metabuf(buf, sb, in_metabox);
-+	if (err)
-+		return ERR_PTR(err);
- 	return erofs_bread(buf, offset, true);
- }
- 
-@@ -118,7 +130,7 @@ int erofs_map_blocks(struct inode *inode, struct erofs_map_blocks *map)
- 	pos = ALIGN(erofs_iloc(inode) + vi->inode_isize +
- 		    vi->xattr_isize, unit) + unit * chunknr;
- 
--	idx = erofs_read_metabuf(&buf, sb, pos);
-+	idx = erofs_read_metabuf(&buf, sb, pos, erofs_inode_in_metabox(inode));
- 	if (IS_ERR(idx)) {
- 		err = PTR_ERR(idx);
- 		goto out;
-@@ -264,7 +276,6 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 
- 	map.m_la = offset;
- 	map.m_llen = length;
--
- 	ret = erofs_map_blocks(inode, &map);
- 	if (ret < 0)
- 		return ret;
-@@ -273,35 +284,37 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	iomap->length = map.m_llen;
- 	iomap->flags = 0;
- 	iomap->private = NULL;
-+	iomap->addr = IOMAP_NULL_ADDR;
- 	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
- 		iomap->type = IOMAP_HOLE;
--		iomap->addr = IOMAP_NULL_ADDR;
- 		return 0;
- 	}
- 
--	mdev = (struct erofs_map_dev) {
--		.m_deviceid = map.m_deviceid,
--		.m_pa = map.m_pa,
--	};
--	ret = erofs_map_dev(sb, &mdev);
--	if (ret)
--		return ret;
--
--	if (flags & IOMAP_DAX)
--		iomap->dax_dev = mdev.m_dif->dax_dev;
--	else
--		iomap->bdev = mdev.m_bdev;
--
--	iomap->addr = mdev.m_dif->fsoff + mdev.m_pa;
--	if (flags & IOMAP_DAX)
--		iomap->addr += mdev.m_dif->dax_part_off;
-+	if (!(map.m_flags & EROFS_MAP_META) || !erofs_inode_in_metabox(inode)) {
-+		mdev = (struct erofs_map_dev) {
-+			.m_deviceid = map.m_deviceid,
-+			.m_pa = map.m_pa,
-+		};
-+		ret = erofs_map_dev(sb, &mdev);
-+		if (ret)
-+			return ret;
-+
-+		if (flags & IOMAP_DAX)
-+			iomap->dax_dev = mdev.m_dif->dax_dev;
-+		else
-+			iomap->bdev = mdev.m_bdev;
-+		iomap->addr = mdev.m_dif->fsoff + mdev.m_pa;
-+		if (flags & IOMAP_DAX)
-+			iomap->addr += mdev.m_dif->dax_part_off;
-+	}
- 
- 	if (map.m_flags & EROFS_MAP_META) {
- 		void *ptr;
- 		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
- 
- 		iomap->type = IOMAP_INLINE;
--		ptr = erofs_read_metabuf(&buf, sb, mdev.m_pa);
-+		ptr = erofs_read_metabuf(&buf, sb, map.m_pa,
-+					 erofs_inode_in_metabox(inode));
- 		if (IS_ERR(ptr))
- 			return PTR_ERR(ptr);
- 		iomap->inline_data = ptr;
-diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index 358061d7b660..354762c9723f 100644
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -467,7 +467,7 @@ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
- 		return -EOPNOTSUPP;
- 	}
- 
--	erofs_init_metabuf(&buf, sb);
-+	(void)erofs_init_metabuf(&buf, sb, false);
- 	offset = EROFS_SUPER_OFFSET + sbi->sb_size;
- 	alg = 0;
- 	for (algs = sbi->available_compr_algs; algs; algs >>= 1, ++alg) {
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 0c9047e4a295..a61831a82a73 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -34,7 +34,7 @@
- #define EROFS_FEATURE_INCOMPAT_48BIT		0x00000080
- #define EROFS_FEATURE_INCOMPAT_METABOX		0x00000100
- #define EROFS_ALL_FEATURE_INCOMPAT		\
--	((EROFS_FEATURE_INCOMPAT_48BIT << 1) - 1)
-+	((EROFS_FEATURE_INCOMPAT_METABOX << 1) - 1)
- 
- #define EROFS_SB_EXTSLOT_SIZE	16
- 
-diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-index 3ee082476c8c..b7b3432a9882 100644
---- a/fs/erofs/fileio.c
-+++ b/fs/erofs/fileio.c
-@@ -115,7 +115,7 @@ static int erofs_fileio_scan_folio(struct erofs_fileio *io, struct folio *folio)
- 			void *src;
- 
- 			src = erofs_read_metabuf(&buf, inode->i_sb,
--						 map->m_pa + ofs);
-+				map->m_pa + ofs, erofs_inode_in_metabox(inode));
- 			if (IS_ERR(src)) {
- 				err = PTR_ERR(src);
- 				break;
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 47215c5e3385..045ccca6ab30 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -29,6 +29,7 @@ static int erofs_read_inode(struct inode *inode)
- 	struct super_block *sb = inode->i_sb;
- 	erofs_blk_t blkaddr = erofs_blknr(sb, erofs_iloc(inode));
- 	unsigned int ofs = erofs_blkoff(sb, erofs_iloc(inode));
-+	bool in_mbox = erofs_inode_in_metabox(inode);
- 	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 	erofs_blk_t addrmask = BIT_ULL(48) - 1;
-@@ -39,7 +40,7 @@ static int erofs_read_inode(struct inode *inode)
- 	void *ptr;
- 	int err = 0;
- 
--	ptr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr));
-+	ptr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr), in_mbox);
- 	if (IS_ERR(ptr)) {
- 		err = PTR_ERR(ptr);
- 		erofs_err(sb, "failed to read inode meta block (nid: %llu): %d",
-@@ -78,7 +79,7 @@ static int erofs_read_inode(struct inode *inode)
- 
- 			memcpy(&copied, dic, gotten);
- 			ptr = erofs_read_metabuf(&buf, sb,
--					erofs_pos(sb, blkaddr + 1));
-+					erofs_pos(sb, blkaddr + 1), in_mbox);
- 			if (IS_ERR(ptr)) {
- 				err = PTR_ERR(ptr);
- 				erofs_err(sb, "failed to read inode payload block (nid: %llu): %d",
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index ad932f670bb6..a0e1b0b06d33 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -125,6 +125,7 @@ struct erofs_sb_info {
- 	struct erofs_sb_lz4_info lz4;
- #endif	/* CONFIG_EROFS_FS_ZIP */
- 	struct inode *packed_inode;
-+	struct inode *metabox_inode;
- 	struct erofs_dev_context *devs;
- 	u64 total_blocks;
- 
-@@ -148,6 +149,7 @@ struct erofs_sb_info {
- 	/* what we really care is nid, rather than ino.. */
- 	erofs_nid_t root_nid;
- 	erofs_nid_t packed_nid;
-+	erofs_nid_t metabox_nid;
- 	/* used for statfs, f_files - f_favail */
- 	u64 inos;
- 
-@@ -281,12 +283,20 @@ struct erofs_inode {
- 
- #define EROFS_I(ptr)	container_of(ptr, struct erofs_inode, vfs_inode)
- 
-+static inline bool erofs_inode_in_metabox(struct inode *inode)
-+{
-+	return EROFS_I(inode)->nid & BIT(EROFS_DIRENT_NID_METABOX_BIT);
-+}
-+
- static inline erofs_off_t erofs_iloc(struct inode *inode)
- {
- 	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
-+	erofs_nid_t nid_lo = EROFS_I(inode)->nid & EROFS_DIRENT_NID_MASK;
- 
-+	if (erofs_inode_in_metabox(inode))
-+		return nid_lo << sbi->islotbits;
- 	return erofs_pos(inode->i_sb, sbi->meta_blkaddr) +
--		(EROFS_I(inode)->nid << sbi->islotbits);
-+		(nid_lo << sbi->islotbits);
- }
- 
- static inline unsigned int erofs_inode_version(unsigned int ifmt)
-@@ -385,9 +395,10 @@ void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
- void erofs_unmap_metabuf(struct erofs_buf *buf);
- void erofs_put_metabuf(struct erofs_buf *buf);
- void *erofs_bread(struct erofs_buf *buf, erofs_off_t offset, bool need_kmap);
--void erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb);
-+int erofs_init_metabuf(struct erofs_buf *buf, struct super_block *sb,
-+		       bool in_metabox);
- void *erofs_read_metabuf(struct erofs_buf *buf, struct super_block *sb,
--			 erofs_off_t offset);
-+			 erofs_off_t offset, bool in_metabox);
- int erofs_map_dev(struct super_block *sb, struct erofs_map_dev *dev);
- int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
- 		 u64 start, u64 len);
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index bc27fa3bd678..539551cf59db 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -141,7 +141,7 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
- 	struct erofs_deviceslot *dis;
- 	struct file *file;
- 
--	dis = erofs_read_metabuf(buf, sb, *pos);
-+	dis = erofs_read_metabuf(buf, sb, *pos, false);
- 	if (IS_ERR(dis))
- 		return PTR_ERR(dis);
- 
-@@ -258,7 +258,7 @@ static int erofs_read_superblock(struct super_block *sb)
- 	void *data;
- 	int ret;
- 
--	data = erofs_read_metabuf(&buf, sb, 0);
-+	data = erofs_read_metabuf(&buf, sb, 0, false);
- 	if (IS_ERR(data)) {
- 		erofs_err(sb, "cannot read erofs superblock");
- 		return PTR_ERR(data);
-@@ -319,6 +319,14 @@ static int erofs_read_superblock(struct super_block *sb)
- 		sbi->root_nid = le16_to_cpu(dsb->rb.rootnid_2b);
- 	}
- 	sbi->packed_nid = le64_to_cpu(dsb->packed_nid);
-+	if (erofs_sb_has_metabox(sbi)) {
-+		if (sbi->sb_size <= offsetof(struct erofs_super_block,
-+					     metabox_nid))
-+			return -EFSCORRUPTED;
-+		sbi->metabox_nid = le64_to_cpu(dsb->metabox_nid);
-+		if (sbi->metabox_nid & BIT(EROFS_DIRENT_NID_METABOX_BIT))
-+			return -EFSCORRUPTED;	/* self-loop detection */
-+	}
- 	sbi->inos = le64_to_cpu(dsb->inos);
- 
- 	sbi->epoch = (s64)le64_to_cpu(dsb->epoch);
-@@ -335,6 +343,8 @@ static int erofs_read_superblock(struct super_block *sb)
- 
- 	if (erofs_sb_has_48bit(sbi))
- 		erofs_info(sb, "EXPERIMENTAL 48-bit layout support in use. Use at your own risk!");
-+	if (erofs_sb_has_metabox(sbi))
-+		erofs_info(sb, "EXPERIMENTAL metadata compression support in use. Use at your own risk!");
- 	if (erofs_is_fscache_mode(sb))
- 		erofs_info(sb, "[deprecated] fscache-based on-demand read feature in use. Use at your own risk!");
- out:
-@@ -690,6 +700,12 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
- 			return PTR_ERR(inode);
- 		sbi->packed_inode = inode;
- 	}
-+	if (erofs_sb_has_metabox(sbi)) {
-+		inode = erofs_iget(sb, sbi->metabox_nid);
-+		if (IS_ERR(inode))
-+			return PTR_ERR(inode);
-+		sbi->metabox_inode = inode;
-+	}
- 
- 	inode = erofs_iget(sb, sbi->root_nid);
- 	if (IS_ERR(inode))
-@@ -845,6 +861,8 @@ static void erofs_drop_internal_inodes(struct erofs_sb_info *sbi)
- {
- 	iput(sbi->packed_inode);
- 	sbi->packed_inode = NULL;
-+	iput(sbi->metabox_inode);
-+	sbi->metabox_inode = NULL;
- #ifdef CONFIG_EROFS_FS_ZIP
- 	iput(sbi->managed_cache);
- 	sbi->managed_cache = NULL;
-diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
-index eed8797a193f..a9fe35ba0906 100644
---- a/fs/erofs/sysfs.c
-+++ b/fs/erofs/sysfs.c
-@@ -95,6 +95,7 @@ EROFS_ATTR_FEATURE(ztailpacking);
- EROFS_ATTR_FEATURE(fragments);
- EROFS_ATTR_FEATURE(dedupe);
- EROFS_ATTR_FEATURE(48bit);
-+EROFS_ATTR_FEATURE(metabox);
- 
- static struct attribute *erofs_feat_attrs[] = {
- 	ATTR_LIST(zero_padding),
-@@ -108,6 +109,7 @@ static struct attribute *erofs_feat_attrs[] = {
- 	ATTR_LIST(fragments),
- 	ATTR_LIST(dedupe),
- 	ATTR_LIST(48bit),
-+	ATTR_LIST(metabox),
- 	NULL,
- };
- ATTRIBUTE_GROUPS(erofs_feat);
-diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-index 9cf84717a92e..6d2da6ad2be2 100644
---- a/fs/erofs/xattr.c
-+++ b/fs/erofs/xattr.c
-@@ -77,7 +77,9 @@ static int erofs_init_inode_xattrs(struct inode *inode)
- 	}
- 
- 	it.buf = __EROFS_BUF_INITIALIZER;
--	erofs_init_metabuf(&it.buf, sb);
-+	ret = erofs_init_metabuf(&it.buf, sb, erofs_inode_in_metabox(inode));
-+	if (ret)
-+		goto out_unlock;
- 	it.pos = erofs_iloc(inode) + vi->inode_isize;
- 
- 	/* read in shared xattr array (non-atomic, see kmalloc below) */
-@@ -326,6 +328,9 @@ static int erofs_xattr_iter_inline(struct erofs_xattr_iter *it,
- 		return -ENOATTR;
- 	}
- 
-+	ret = erofs_init_metabuf(&it->buf, it->sb, erofs_inode_in_metabox(inode));
-+	if (ret)
-+		return ret;
- 	remaining = vi->xattr_isize - xattr_header_sz;
- 	it->pos = erofs_iloc(inode) + vi->inode_isize + xattr_header_sz;
- 
-@@ -362,7 +367,12 @@ static int erofs_xattr_iter_shared(struct erofs_xattr_iter *it,
- 	struct super_block *const sb = it->sb;
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
- 	unsigned int i;
--	int ret = -ENOATTR;
-+	int ret;
-+
-+	ret = erofs_init_metabuf(&it->buf, sb,
-+				 erofs_sb_has_shared_ea_in_metabox(sbi));
-+	if (ret)
-+		return ret;
- 
- 	for (i = 0; i < vi->xattr_shared_count; ++i) {
- 		it->pos = erofs_pos(sb, sbi->xattr_blkaddr) +
-@@ -378,7 +388,7 @@ static int erofs_xattr_iter_shared(struct erofs_xattr_iter *it,
- 		if ((getxattr && ret != -ENOATTR) || (!getxattr && ret))
- 			break;
- 	}
--	return ret;
-+	return i ? ret : -ENOATTR;
- }
- 
- int erofs_getxattr(struct inode *inode, int index, const char *name,
-@@ -413,7 +423,6 @@ int erofs_getxattr(struct inode *inode, int index, const char *name,
- 
- 	it.sb = inode->i_sb;
- 	it.buf = __EROFS_BUF_INITIALIZER;
--	erofs_init_metabuf(&it.buf, it.sb);
- 	it.buffer = buffer;
- 	it.buffer_size = buffer_size;
- 	it.buffer_ofs = 0;
-@@ -439,7 +448,6 @@ ssize_t erofs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
- 
- 	it.sb = dentry->d_sb;
- 	it.buf = __EROFS_BUF_INITIALIZER;
--	erofs_init_metabuf(&it.buf, it.sb);
- 	it.dentry = dentry;
- 	it.buffer = buffer;
- 	it.buffer_size = buffer_size;
-@@ -485,7 +493,7 @@ int erofs_xattr_prefixes_init(struct super_block *sb)
- 	if (sbi->packed_inode)
- 		buf.mapping = sbi->packed_inode->i_mapping;
- 	else
--		erofs_init_metabuf(&buf, sb);
-+		(void)erofs_init_metabuf(&buf, sb, false);
- 
- 	for (i = 0; i < sbi->xattr_prefix_count; i++) {
- 		void *ptr = erofs_read_metadata(sb, &buf, &pos, &len);
-diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-index 0d1ddd9b15de..792f20888a8f 100644
---- a/fs/erofs/zdata.c
-+++ b/fs/erofs/zdata.c
-@@ -855,7 +855,10 @@ static int z_erofs_pcluster_begin(struct z_erofs_frontend *fe)
- 		/* bind cache first when cached decompression is preferred */
- 		z_erofs_bind_cache(fe);
- 	} else {
--		erofs_init_metabuf(&map->buf, sb);
-+		ret = erofs_init_metabuf(&map->buf, sb,
-+					 erofs_inode_in_metabox(fe->inode));
-+		if (ret)
-+			return ret;
- 		ptr = erofs_bread(&map->buf, map->m_pa, false);
- 		if (IS_ERR(ptr)) {
- 			ret = PTR_ERR(ptr);
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index b72a0e3f9362..a93efd95c555 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -17,7 +17,7 @@ struct z_erofs_maprecorder {
- 	u16 delta[2];
- 	erofs_blk_t pblk, compressedblks;
- 	erofs_off_t nextpackoff;
--	bool partialref;
-+	bool partialref, in_mbox;
- };
- 
- static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
-@@ -31,7 +31,7 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
- 	struct z_erofs_lcluster_index *di;
- 	unsigned int advise;
- 
--	di = erofs_read_metabuf(&m->map->buf, inode->i_sb, pos);
-+	di = erofs_read_metabuf(&m->map->buf, inode->i_sb, pos, m->in_mbox);
- 	if (IS_ERR(di))
- 		return PTR_ERR(di);
- 	m->lcn = lcn;
-@@ -146,7 +146,7 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
- 	else
- 		return -EOPNOTSUPP;
- 
--	in = erofs_read_metabuf(&m->map->buf, m->inode->i_sb, pos);
-+	in = erofs_read_metabuf(&m->map->buf, inode->i_sb, pos, m->in_mbox);
- 	if (IS_ERR(in))
- 		return PTR_ERR(in);
- 
-@@ -392,6 +392,7 @@ static int z_erofs_map_blocks_fo(struct inode *inode,
- 	struct z_erofs_maprecorder m = {
- 		.inode = inode,
- 		.map = map,
-+		.in_mbox = erofs_inode_in_metabox(inode),
- 	};
- 	int err = 0;
- 	unsigned int endoff, afmt;
-@@ -521,6 +522,7 @@ static int z_erofs_map_blocks_ext(struct inode *inode,
- 	unsigned int recsz = z_erofs_extent_recsize(vi->z_advise);
- 	erofs_off_t pos = round_up(Z_EROFS_MAP_HEADER_END(erofs_iloc(inode) +
- 				   vi->inode_isize + vi->xattr_isize), recsz);
-+	bool in_mbox = erofs_inode_in_metabox(inode);
- 	erofs_off_t lend = inode->i_size;
- 	erofs_off_t l, r, mid, pa, la, lstart;
- 	struct z_erofs_extent *ext;
-@@ -530,7 +532,7 @@ static int z_erofs_map_blocks_ext(struct inode *inode,
- 	map->m_flags = 0;
- 	if (recsz <= offsetof(struct z_erofs_extent, pstart_hi)) {
- 		if (recsz <= offsetof(struct z_erofs_extent, pstart_lo)) {
--			ext = erofs_read_metabuf(&map->buf, sb, pos);
-+			ext = erofs_read_metabuf(&map->buf, sb, pos, in_mbox);
- 			if (IS_ERR(ext))
- 				return PTR_ERR(ext);
- 			pa = le64_to_cpu(*(__le64 *)ext);
-@@ -543,7 +545,7 @@ static int z_erofs_map_blocks_ext(struct inode *inode,
- 		}
- 
- 		for (; lstart <= map->m_la; lstart += 1 << vi->z_lclusterbits) {
--			ext = erofs_read_metabuf(&map->buf, sb, pos);
-+			ext = erofs_read_metabuf(&map->buf, sb, pos, in_mbox);
- 			if (IS_ERR(ext))
- 				return PTR_ERR(ext);
- 			map->m_plen = le32_to_cpu(ext->plen);
-@@ -563,7 +565,7 @@ static int z_erofs_map_blocks_ext(struct inode *inode,
- 		for (l = 0, r = vi->z_extents; l < r; ) {
- 			mid = l + (r - l) / 2;
- 			ext = erofs_read_metabuf(&map->buf, sb,
--						 pos + mid * recsz);
-+						 pos + mid * recsz, in_mbox);
- 			if (IS_ERR(ext))
- 				return PTR_ERR(ext);
- 
-@@ -645,7 +647,7 @@ static int z_erofs_fill_inode(struct inode *inode, struct erofs_map_blocks *map)
- 		goto out_unlock;
- 
- 	pos = ALIGN(erofs_iloc(inode) + vi->inode_isize + vi->xattr_isize, 8);
--	h = erofs_read_metabuf(&map->buf, sb, pos);
-+	h = erofs_read_metabuf(&map->buf, sb, pos, erofs_inode_in_metabox(inode));
- 	if (IS_ERR(h)) {
- 		err = PTR_ERR(h);
- 		goto out_unlock;
+vim +/erofs_read_metabuf +277 fs/erofs/fscache.c
+
+5375e7c8b0fef1 Jeffle Xu 2022-04-25  253  
+f2151df5743536 Jingbo Xu 2024-03-08  254  static int erofs_fscache_data_read_slice(struct erofs_fscache_rq *req)
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  255  {
+f2151df5743536 Jingbo Xu 2024-03-08  256  	struct address_space *mapping = req->mapping;
+1ae9470c3e1462 Jingbo Xu 2022-09-22  257  	struct inode *inode = mapping->host;
+1ae9470c3e1462 Jingbo Xu 2022-09-22  258  	struct super_block *sb = inode->i_sb;
+f2151df5743536 Jingbo Xu 2024-03-08  259  	struct erofs_fscache_io *io;
+1ae9470c3e1462 Jingbo Xu 2022-09-22  260  	struct erofs_map_blocks map;
+1ae9470c3e1462 Jingbo Xu 2022-09-22  261  	struct erofs_map_dev mdev;
+f2151df5743536 Jingbo Xu 2024-03-08  262  	loff_t pos = req->start + req->submitted;
+1ae9470c3e1462 Jingbo Xu 2022-09-22  263  	size_t count;
+1ae9470c3e1462 Jingbo Xu 2022-09-22  264  	int ret;
+1ae9470c3e1462 Jingbo Xu 2022-09-22  265  
+1ae9470c3e1462 Jingbo Xu 2022-09-22  266  	map.m_la = pos;
+8b58f9f0216212 Jingbo Xu 2023-02-09  267  	ret = erofs_map_blocks(inode, &map);
+1ae9470c3e1462 Jingbo Xu 2022-09-22  268  	if (ret)
+1ae9470c3e1462 Jingbo Xu 2022-09-22  269  		return ret;
+1ae9470c3e1462 Jingbo Xu 2022-09-22  270  
+1ae9470c3e1462 Jingbo Xu 2022-09-22  271  	if (map.m_flags & EROFS_MAP_META) {
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  272  		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+f2151df5743536 Jingbo Xu 2024-03-08  273  		struct iov_iter iter;
+076d965eb812f2 Al Viro   2024-04-25  274  		size_t size = map.m_llen;
+1ae9470c3e1462 Jingbo Xu 2022-09-22  275  		void *src;
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  276  
+296e7ef18fbd6e Gao Xiang 2025-07-14 @277  		src = erofs_read_metabuf(&buf, sb, map.m_pa);
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  278  		if (IS_ERR(src))
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  279  			return PTR_ERR(src);
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  280  
+de4eda9de2d957 Al Viro   2022-09-15  281  		iov_iter_xarray(&iter, ITER_DEST, &mapping->i_pages, pos, PAGE_SIZE);
+076d965eb812f2 Al Viro   2024-04-25  282  		if (copy_to_iter(src, size, &iter) != size) {
+75e43355cbe4d5 Jingbo Xu 2022-11-04  283  			erofs_put_metabuf(&buf);
+1ae9470c3e1462 Jingbo Xu 2022-09-22  284  			return -EFAULT;
+75e43355cbe4d5 Jingbo Xu 2022-11-04  285  		}
+1ae9470c3e1462 Jingbo Xu 2022-09-22  286  		iov_iter_zero(PAGE_SIZE - size, &iter);
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  287  		erofs_put_metabuf(&buf);
+f2151df5743536 Jingbo Xu 2024-03-08  288  		req->submitted += PAGE_SIZE;
+be62c519886115 Jingbo Xu 2022-12-01  289  		return 0;
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  290  	}
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  291  
+f2151df5743536 Jingbo Xu 2024-03-08  292  	count = req->len - req->submitted;
+1442b02b66ad2c Jeffle Xu 2022-04-25  293  	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
+f2151df5743536 Jingbo Xu 2024-03-08  294  		struct iov_iter iter;
+f2151df5743536 Jingbo Xu 2024-03-08  295  
+de4eda9de2d957 Al Viro   2022-09-15  296  		iov_iter_xarray(&iter, ITER_DEST, &mapping->i_pages, pos, count);
+1ae9470c3e1462 Jingbo Xu 2022-09-22  297  		iov_iter_zero(count, &iter);
+f2151df5743536 Jingbo Xu 2024-03-08  298  		req->submitted += count;
+be62c519886115 Jingbo Xu 2022-12-01  299  		return 0;
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  300  	}
+bd735bdaa62fb6 Jeffle Xu 2022-04-25  301  
+be62c519886115 Jingbo Xu 2022-12-01  302  	count = min_t(size_t, map.m_llen - (pos - map.m_la), count);
+e6d9f9ba111b56 Jingbo Xu 2022-11-04  303  	DBG_BUGON(!count || count % PAGE_SIZE);
+e6d9f9ba111b56 Jingbo Xu 2022-11-04  304  
+1442b02b66ad2c Jeffle Xu 2022-04-25  305  	mdev = (struct erofs_map_dev) {
+1442b02b66ad2c Jeffle Xu 2022-04-25  306  		.m_deviceid = map.m_deviceid,
+1442b02b66ad2c Jeffle Xu 2022-04-25  307  		.m_pa = map.m_pa,
+1442b02b66ad2c Jeffle Xu 2022-04-25  308  	};
+1442b02b66ad2c Jeffle Xu 2022-04-25  309  	ret = erofs_map_dev(sb, &mdev);
+1442b02b66ad2c Jeffle Xu 2022-04-25  310  	if (ret)
+1ae9470c3e1462 Jingbo Xu 2022-09-22  311  		return ret;
+1442b02b66ad2c Jeffle Xu 2022-04-25  312  
+f2151df5743536 Jingbo Xu 2024-03-08  313  	io = erofs_fscache_req_io_alloc(req);
+f2151df5743536 Jingbo Xu 2024-03-08  314  	if (!io)
+f2151df5743536 Jingbo Xu 2024-03-08  315  		return -ENOMEM;
+f2151df5743536 Jingbo Xu 2024-03-08  316  	iov_iter_xarray(&io->iter, ITER_DEST, &mapping->i_pages, pos, count);
+f8d920a402aec3 Gao Xiang 2024-12-13  317  	ret = erofs_fscache_read_io_async(mdev.m_dif->fscache->cookie,
+f2151df5743536 Jingbo Xu 2024-03-08  318  			mdev.m_pa + (pos - map.m_la), io);
+f2151df5743536 Jingbo Xu 2024-03-08  319  	erofs_fscache_req_io_put(io);
+d435d53228dd03 Xin Yin   2022-05-09  320  
+f2151df5743536 Jingbo Xu 2024-03-08  321  	req->submitted += count;
+be62c519886115 Jingbo Xu 2022-12-01  322  	return ret;
+5bd9628b784cc5 Sun Ke    2022-08-15  323  }
+d435d53228dd03 Xin Yin   2022-05-09  324  
+
+:::::: The code at line 277 was first introduced by commit
+:::::: 296e7ef18fbd6e85c8660f0ec94358ac4263cd57 erofs: remove need_kmap in erofs_read_metabuf()
+
+:::::: TO: Gao Xiang <hsiangkao@linux.alibaba.com>
+:::::: CC: Gao Xiang <hsiangkao@linux.alibaba.com>
+
 -- 
-2.43.5
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
