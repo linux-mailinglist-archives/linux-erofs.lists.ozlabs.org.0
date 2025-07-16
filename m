@@ -1,69 +1,78 @@
-Return-Path: <linux-erofs+bounces-631-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-632-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 481E3B06C15
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jul 2025 05:21:44 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81779B06CDB
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jul 2025 06:55:21 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bhhDK67vTz30T0;
-	Wed, 16 Jul 2025 13:21:37 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bhkJQ518kz30T0;
+	Wed, 16 Jul 2025 14:55:18 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2001:4860:4864:20::44"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752636097;
-	cv=none; b=Akudb2GoImPst2eywDbzjfIsvujOehTnmKJlcePsUxGL5mCySIHxU48sLgis8CPmtpA4BIbTuFMQ+J/f1x39I8IaBQcZ/jdfjJYV5TdbBA+UMLFCQtt6fMd039Pcgj4u71MM8JwtGaI77E13HUuu568/xHTfOyvmdDySTWJ4BQZI9AHKSioFEc12mqs/vh2ApsjwuDB5Ylh0hqL+XNCMxmvMmI49RpC5tkmooGnS8e4gxX53fimuzDGQeI+hWX8JRyKJVhwmuZnLZ4e4zXHhciW8ZgirpXHzBT7RXkBEFCBwsGqGC8rZRSWKD4Qvvsd/tzHEkRkF3Flt14VO7gIXhQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::42f"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752641718;
+	cv=none; b=Xb2XMVqHVMhKxHGCs/maKlmWR6UkjXj8qRd4gNT/iK1o3ZkpvC//hfHgGryOXSeTP5fQkgLJjcnG02oVYBn/Ic7qVT3P+AT4ecF2mi9gaDrNBuDnFfkChr+BNydJKip9T+hsVYkdQb99wFCu2IiFRlIbtPhmBzEAJU8XW6Rov0uxlckS+baOOVycAkCcKeaATYWqcNkdicYFKifxsMgDh2CMBjcyebOBwVHNkV0Zla+9Pc8ARgtoQSTJx0cEyaTlQJDFn2kRJrq42UmE9jCO3IFKQ6+3UILwP6FGWMAPR5RCVUiNJU20RYppVW2hz5CdBarkmgFjSOaXM5jQ6RBAUw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752636097; c=relaxed/relaxed;
-	bh=InUiyMm7gr3COTuSD5WM9WcRkq/+CKpu41nT3AXnmRI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=C0wSC6XBH+9O7xINEwusIwwftIAZ7nwDSo9vxKcJ8VBbjZ/Qkw/3VXKvv1o3ToB6WEL1HRUdXbWgVxvBIkjs0hx/KiZhNKbDLAgive2tISrHlL7IOncXghGhb7CqcsxfJ5gndiIsQ82GWuluWfAL6OiHy3BxXRAWwLiawHtkYCkJ8jHbOFdQ6gb+k4WFszL27YuCrj99nPqqZmvImV8h1gbMhXQxiswyu2rM0K2+jLOabLZogdATnI0OmYkG6HznIplb5JGgTsPCmvSO0IkNhVVzaVFnjDeVYFLBkFQGM9zIKvGtIyviLkF1hkEYWF99KhKq88ufhgn73p0c/RkV1Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=RFeiLlZW; dkim-atps=neutral; spf=pass (client-ip=2001:4860:4864:20::44; helo=mail-oa1-x44.google.com; envelope-from=nzzhao.sigma@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1752641718; c=relaxed/relaxed;
+	bh=KUlf376OMv1XrkJW2oCmSZAdKifpL8InJUYTeCpUwoM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=I1w5lVLsfSIA9xRKChYF7ODkxdkZs53/8CBHNoAUhQDeJ/yJX/9OT0Oah8lgKyUnPjDPFLTtc3+5B0NJwkyVmAbA/LTAyC6JG9qsNN3fJ1/oY8zLYQvpKipIWHf/Spa0o/37JtiKv14ruC04NtWD4vRStXNVXAB7Is1CPHV2dd5CZnjH7Dqw2lwfYiX/yPhpZSRtfkmrL0niuBArI0Gx7kvX9hR8vzH7MWBgaHaZajRYATF3sCSjK2mCO6hftB47KP8jSz6lX0gTM2FZjH/uBvW3NSDtyPOwOB54gGnsU9RiTBgaoR5K92pY/CcaOIK2fOzJt/CoI1Gs7gYkcR7/VQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; dkim=pass (2048-bit key; unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=DXsXyNuM; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::42f; helo=mail-wr1-x42f.google.com; envelope-from=wqu@suse.com; receiver=lists.ozlabs.org) smtp.mailfrom=suse.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=RFeiLlZW;
+	dkim=pass (2048-bit key; unprotected) header.d=suse.com header.i=@suse.com header.a=rsa-sha256 header.s=google header.b=DXsXyNuM;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2001:4860:4864:20::44; helo=mail-oa1-x44.google.com; envelope-from=nzzhao.sigma@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-oa1-x44.google.com (mail-oa1-x44.google.com [IPv6:2001:4860:4864:20::44])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.com (client-ip=2a00:1450:4864:20::42f; helo=mail-wr1-x42f.google.com; envelope-from=wqu@suse.com; receiver=lists.ozlabs.org)
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bhhDH4fXlz2ySY
-	for <linux-erofs@lists.ozlabs.org>; Wed, 16 Jul 2025 13:21:34 +1000 (AEST)
-Received: by mail-oa1-x44.google.com with SMTP id 586e51a60fabf-2c6ed7efb1dso4042901fac.2
-        for <linux-erofs@lists.ozlabs.org>; Tue, 15 Jul 2025 20:21:34 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bhkJN3yKxz2ySY
+	for <linux-erofs@lists.ozlabs.org>; Wed, 16 Jul 2025 14:55:15 +1000 (AEST)
+Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-3a54700a46eso3850568f8f.1
+        for <linux-erofs@lists.ozlabs.org>; Tue, 15 Jul 2025 21:55:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752636090; x=1753240890; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=InUiyMm7gr3COTuSD5WM9WcRkq/+CKpu41nT3AXnmRI=;
-        b=RFeiLlZWx2Eg5FnUiw9IzIoOlXhJ1IFr10jxm6cp3k2eghtWlyKNrwIi0TTyiqCFOq
-         wNbc4GHRd7OXgrm3Sw32J3np242TcwrUyX47EN9YW5z3R2PGlTwgBoMJhqIjXs94zrmS
-         xjpXaMxrHZBpvMZid3edhA4ZsMEgVMykE0O5WVlhefx9g3qAoGGtixeD41D8VlqzlhvS
-         YNuKIw5+D+iIeWT/bKPURDabk+R31cm3uPRAqbDt3s5Ar9fjNLhoWhPSc+5xqucdzcvK
-         iacWv2FStE4AuwKPaLPdWnZJI7MBOvMakEOoIo/j+iscyXnokERZgKkjYay9ivXY1ZfL
-         TI+g==
+        d=suse.com; s=google; t=1752641710; x=1753246510; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=KUlf376OMv1XrkJW2oCmSZAdKifpL8InJUYTeCpUwoM=;
+        b=DXsXyNuMESIjftvgqRw5m+ej76QJFeqxi1uwvacP3gDEKVc1Psy220gjmIbHr7scY9
+         tDOcK4q7QrSvco3yWdCmtLzi36ityh/XKElJU9ErbMbOSNwNTdInzjUIoa9zCQcB4gP2
+         5EStV7JTn7w7fCxDxF7CpD1Mhzg9c+U//hNnq/Nupu/yIggOR0nkV/i/SkUH4aNOelYr
+         7FISTUKiuOkqRYS52xjM3VIiYi3SdtRgZcgyoWAJYkPo6UUJfaQ6CrTPTb/xMu61N2Ml
+         y3SgaaXr1qBhRqHT58JuMStrYpo/yUf1MOUs49v7OgtBNpjiDKq6ypWpl+Lsdn3OZhMw
+         scTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752636090; x=1753240890;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1752641710; x=1753246510;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=InUiyMm7gr3COTuSD5WM9WcRkq/+CKpu41nT3AXnmRI=;
-        b=AkLtO1hSx+EhEGRIH+4fvIFCLWYXRLVgtUBplVGgQRR5mw8tYCnIg7oaB91PfJBzO/
-         YptUADVr2bWbFbnlbs2ILK9n3n7yvk91fC/eA+96p8pczqRfWxL5j19Lzg4zbDFZKOcy
-         ETiY7VMg6x9KGmI+Zrx2xTMALf2iyRHmroyRzQlUSMuow5WRrC4VUggO1Ds13V40njEA
-         Ps2DJM6F/6rPA3+kYGKjh6S9UkwArD8fvwufz+n+04bArrlNAu8seoP2dKMiAqwKUQFv
-         l99zGy+LnfpIcipQsJ8oPHuRF4uzohw94cQl4qi4SFJ3IsqkCNIWRRsxLvtAhICMuu7z
-         j+nA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4bD1OUqgKbtLn12xVbVkPb3O55TRQqtsKFiAdx17oho4TyMfmQkL2dhQu8mReASjq/DYkqRv16cGSnw==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0Yz8Tk85SaLb3lR90cKjGasfrotYlTcAbGf2CmyQo81dPpRRFNIP
-	9RC92KvvZmyokvbcERg8kzw1BBIBMX/E2jqA9o6S3uvaMJVfSvdF/XUxp6JCoKFOKw+IXe8SnkK
-	7Vw44d0rcaMQf9cZn2RJvTfUkAePnC5Y=
-X-Gm-Gg: ASbGncsNI7IJZ6z9QVB4wMToyTk8ZTJqRdou8q0wNxDQ9n0PFdQmF7YWKvM0YuD3ekj
-	TzJ8gZtfTVR0DFbC1kHclEUYpTit2Q3wHmd1uvHK1J3bp5vGaUEKM9DvRCzFxX11pNjo6J+rvDW
-	+GKIgY/7i5ry2enme70rfJJQHPMxd86TJ3UFOXUlzWsGlBu5xEDXCxxv2Zv555wJt6jeZ91Rsz1
-	7cVqpvekFqMPLiR
-X-Google-Smtp-Source: AGHT+IFyLwkV9mILJQbV+kbn7RjvFiGLh7yKX5x2YaAx2SKlK7xvUhTjS6vpStp4kfPeSkmgwOKnQtHPTOz5BVne74A=
-X-Received: by 2002:a05:6870:d88a:b0:2d5:336f:1b5c with SMTP id
- 586e51a60fabf-2ffb24d192amr988390fac.34.1752636090098; Tue, 15 Jul 2025
- 20:21:30 -0700 (PDT)
+        bh=KUlf376OMv1XrkJW2oCmSZAdKifpL8InJUYTeCpUwoM=;
+        b=Bk+9KVkcfOFO+wGN8KGgK0cK/ighQ10RtFdOib466tCaminfHPZHZQK3fbmWFntpgn
+         s5Vouz79qsBAN8tRpApsOfEv4B7Hsw9aaMXWi+8GI/avtH5l0Ksi1dcx+0/KTGsx8JVJ
+         9UDJMXnZILin6XhpmVcIn/PdHo9YB1h4SQXc7pFV8E+JWrO2r+p8hxffqv54wzFQQt6g
+         4MvIpS1S+wYwNxEdAI9OLmLIF92Q6UyeGtVboOe4Tk0zWeCq71ZOlf7IOCufZbdc372i
+         23GeYwl+orOvluPkLZhSRmkmKOzxlqTq5Rfn1pZTXmfv/gRYjMHPNcUHzRjFAb5D1BRT
+         Ky8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUuhE/hntVVh6bEJRFE32mynXNO3K5bEZhY9pGH5Ar0sEKpf3pU5SZCWvJp1QKMny7SZt8IrDakJQH42w==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YyFlEN6jDe9w6l3raeBoBBxQ6pqnI1nn4KWW3Orx9Qxl6l91HDx
+	H8LDCaaBaMVipyZqZgEMspgHesHJ1Unm7+e/HMu+UR3o3C4GU31lSs1laPwYLFZW+fQ=
+X-Gm-Gg: ASbGncsHO7wMrWoUJHyc5uAwibxTeL5R2xWSmSoUFK0oKQa8uHa2DQA830N/9anVFeS
+	eZnp0bYXQqVbPY08BGaQTastHLMQl/3Cu40EYGWMUkMamxBNV8lrHXE9AdwwhBClyRspDwBxm8F
+	CxtCYNfQCgv7dj3sW79hgDZpZEIdJOljzl7feAhvJTuJ7qA6yWCQXp9RvPB0LEkRwTrdObbtK2+
+	aIh0dgklcimrdMPPn4GPDe8yzTxiPGKsAPmResE2FDK50q4GBvICQVAuLDXeNl3uaDN2buWVRnV
+	IpOk1B75zYIgcwKcXeIviAfJO4KnQ/mAlcCTssHdqEZYa+JkK2AdW6OJ7qoGMKW9jFS6WsCN9U5
+	FbxBIkNEcnZnRIJQM+RJx2Z5FxbwDNmnI7LlQTlgTNgypi0q7qA==
+X-Google-Smtp-Source: AGHT+IGQoacjNokIlv9kK4wCibwhRBT2cyuhZxnrQDEDj6ZSWUyIJyb34LpzcuPXzslTfEZGpbv7Yw==
+X-Received: by 2002:a5d:5f50:0:b0:3a4:d53d:be20 with SMTP id ffacd0b85a97d-3b60dd54803mr1041332f8f.18.1752641709469;
+        Tue, 15 Jul 2025 21:55:09 -0700 (PDT)
+Received: from ?IPV6:2403:580d:fda1::299? (2403-580d-fda1--299.ip6.aussiebb.net. [2403:580d:fda1::299])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ec6b4cda5sm11051963b3a.108.2025.07.15.21.55.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Jul 2025 21:55:08 -0700 (PDT)
+Message-ID: <b43fe06d-204b-4f47-a7ff-0c405365bc48@suse.com>
+Date: Wed, 16 Jul 2025 14:24:58 +0930
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -75,105 +84,149 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-From: Nanzhe Zhao <nzzhao.sigma@gmail.com>
-Date: Wed, 16 Jul 2025 11:21:18 +0800
-X-Gm-Features: Ac12FXxyvfNuoq6EvJBxQuF0ETJxEKTBdNSnwB_ChV1lMjyZmff8pJLBThDiALw
-Message-ID: <CAMLCH1HCPByhWGQjix6040fZuZhjkj19k=4pqmNzPDtGeZ0Q6A@mail.gmail.com>
-Subject: Re: [f2fs-dev] Compressed files & the page cache
-To: Matthew Wilcox <willy@infradead.org>
-Cc: almaz.alexandrovich@paragon-software.com, Chao Yu <chao@kernel.org>, clm@fb.com, 
-	dhowells@redhat.com, dsterba@suse.com, dwmw2@infradead.org, jack@suse.cz, 
-	"jaegeuk@kernel.org" <jaegeuk@kernel.org>, josef@toxicpanda.com, linux-btrfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
-	"linux-f2fs-devel@lists.sourceforge.net" <linux-f2fs-devel@lists.sourceforge.net>, linux-fsdevel@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, netfs@lists.linux.dev, nico@fluxnic.net, 
-	ntfs3@lists.linux.dev, pc@manguebit.org, phillip@squashfs.org.uk, 
-	richard@nod.at, sfrench@samba.org, xiang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Compressed files & the page cache
+To: Gao Xiang <hsiangkao@linux.alibaba.com>,
+ Matthew Wilcox <willy@infradead.org>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ linux-btrfs@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ linux-erofs@lists.ozlabs.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+ linux-f2fs-devel@lists.sourceforge.net, Jan Kara <jack@suse.cz>,
+ linux-fsdevel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+ Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
+ David Howells <dhowells@redhat.com>, netfs@lists.linux.dev,
+ Paulo Alcantara <pc@manguebit.org>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+ ntfs3@lists.linux.dev, Steve French <sfrench@samba.org>,
+ linux-cifs@vger.kernel.org, Phillip Lougher <phillip@squashfs.org.uk>
+References: <aHa8ylTh0DGEQklt@casper.infradead.org>
+ <2806a1f3-3861-49df-afd4-f7ac0beae43c@suse.com>
+ <eeee0704-9e76-4152-bb8e-b5a0e096ec18@linux.alibaba.com>
+Content-Language: en-US
+From: Qu Wenruo <wqu@suse.com>
+Autocrypt: addr=wqu@suse.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNGFF1IFdlbnJ1byA8d3F1QHN1c2UuY29tPsLAlAQTAQgAPgIbAwULCQgHAgYVCAkKCwIE
+ FgIDAQIeAQIXgBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXVgBQkQ/lqxAAoJEMI9kfOh
+ Jf6o+jIH/2KhFmyOw4XWAYbnnijuYqb/obGae8HhcJO2KIGcxbsinK+KQFTSZnkFxnbsQ+VY
+ fvtWBHGt8WfHcNmfjdejmy9si2jyy8smQV2jiB60a8iqQXGmsrkuR+AM2V360oEbMF3gVvim
+ 2VSX2IiW9KERuhifjseNV1HLk0SHw5NnXiWh1THTqtvFFY+CwnLN2GqiMaSLF6gATW05/sEd
+ V17MdI1z4+WSk7D57FlLjp50F3ow2WJtXwG8yG8d6S40dytZpH9iFuk12Sbg7lrtQxPPOIEU
+ rpmZLfCNJJoZj603613w/M8EiZw6MohzikTWcFc55RLYJPBWQ+9puZtx1DopW2jOwE0EWdWB
+ rwEIAKpT62HgSzL9zwGe+WIUCMB+nOEjXAfvoUPUwk+YCEDcOdfkkM5FyBoJs8TCEuPXGXBO
+ Cl5P5B8OYYnkHkGWutAVlUTV8KESOIm/KJIA7jJA+Ss9VhMjtePfgWexw+P8itFRSRrrwyUf
+ E+0WcAevblUi45LjWWZgpg3A80tHP0iToOZ5MbdYk7YFBE29cDSleskfV80ZKxFv6koQocq0
+ vXzTfHvXNDELAuH7Ms/WJcdUzmPyBf3Oq6mKBBH8J6XZc9LjjNZwNbyvsHSrV5bgmu/THX2n
+ g/3be+iqf6OggCiy3I1NSMJ5KtR0q2H2Nx2Vqb1fYPOID8McMV9Ll6rh8S8AEQEAAcLAfAQY
+ AQgAJgIbDBYhBC3fcuWlpVuonapC4cI9kfOhJf6oBQJnEXWBBQkQ/lrSAAoJEMI9kfOhJf6o
+ cakH+QHwDszsoYvmrNq36MFGgvAHRjdlrHRBa4A1V1kzd4kOUokongcrOOgHY9yfglcvZqlJ
+ qfa4l+1oxs1BvCi29psteQTtw+memmcGruKi+YHD7793zNCMtAtYidDmQ2pWaLfqSaryjlzR
+ /3tBWMyvIeWZKURnZbBzWRREB7iWxEbZ014B3gICqZPDRwwitHpH8Om3eZr7ygZck6bBa4MU
+ o1XgbZcspyCGqu1xF/bMAY2iCDcq6ULKQceuKkbeQ8qxvt9hVxJC2W3lHq8dlK1pkHPDg9wO
+ JoAXek8MF37R8gpLoGWl41FIUb3hFiu3zhDDvslYM4BmzI18QgQTQnotJH8=
+In-Reply-To: <eeee0704-9e76-4152-bb8e-b5a0e096ec18@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Dear Matthew and other filesystem developers,
-
-I've been experimenting with implementing large folio support for
-compressed files in F2FS locally, and I'd like to describe the
-situation from the F2FS perspective.
-
-> First, I believe that all filesystems work by compressing fixed-size
-> plaintext into variable-sized compressed blocks.
-
-Well, yes. F2FS's current compression implementation does compress
-fixed-size memory into variable-sized blocks. However, F2FS operates
-on a fixed-size unit called a "cluster." A file is logically divided
-into these clusters, and each cluster corresponds to a fixed number of
-contiguous page indices. The cluster size is 4 << n pages, with n
-typically defaulting to 0 (making a 4-page cluster).
-
-F2FS can only perform compression on a per-cluster basis; it cannot
-operate on a unit larger than the logical size of a cluster. So, for a
-16-page folio with a 4-page cluster size, we would have to split the
-folio into four separate clusters. We then perform compression on each
-cluster individually and write back each compressed result to disk
-separately.We cannot perform compression on the whole large chunk of
-folio. In fact, the fact that a large folio can span multiple clusters
-was the main headache in my attempt to implement large folio support
-for F2FS compression.
-
-Why is this the case? It's due to F2FS's current on-disk layout for
-compressed data. Each cluster is prefixed by a special block address,
-COMPRESS_ADDR, which separates one cluster from the next on disk.
-Furthermore, after F2FS compresses the original data in a cluster, the
-space freed up within that cluster remains reserved on disk; it is not
-released for other files to use. You may have heard that F2FS
-compression doesn't actually save space for the user=E2=80=94this is the
-reason. In F2FS, the model is not what we might intuitively expect=E2=80=94=
-a
-large chunk of data being compressed into a series of tightly packed
-data blocks on disk (which I assume is the model other filesystems
-adopt).
-
-So, regarding:
-
-> So, my proposal is that filesystems tell the page cache that their minimu=
-m
-> folio size is the compression block size. That seems to be around 64k,
-> so not an unreasonable minimum allocation size.
 
 
-F2FS doesn't have a uniform "compression block size." It purely
-depends on the configured cluster size, and the resulting compressed
-size is determined by the compression ratio. For example, a 4-page
-cluster could be compressed down to a single block.
+在 2025/7/16 10:46, Gao Xiang 写道:
+> ...
+> 
+>>
+>>>
+>>> There's some discrepancy between filesystems whether you need scratch
+>>> space for decompression.  Some filesystems read the compressed data into
+>>> the pagecache and decompress in-place, while other filesystems read the
+>>> compressed data into scratch pages and decompress into the page cache.
+>>
+>> Btrfs goes the scratch pages way. Decompression in-place looks a 
+>> little tricky to me. E.g. what if there is only one compressed page, 
+>> and it decompressed to 4 pages.
+> 
+> Decompression in-place mainly optimizes full decompression (so that CPU
+> cache line won't be polluted by temporary buffers either), in fact,
+> EROFS supports the hybird way.
+> 
+>>
+>> Won't the plaintext over-write the compressed data halfway?
+> 
+> Personally I'm very familiar with LZ4, LZMA, and DEFLATE
+> algorithm internals, and I also have experience to build LZMA,
+> DEFLATE compressors.
+> 
+> It's totally workable for LZ4, in short it will read the compressed
+> data at the end of the decompressed buffers, and the proper margin
+> can make this almost always succeed.
 
-Regarding the folio order, perhaps we could set its maximum order to
-match the cluster size, while keeping the minimum order at 0. However,
-for smaller cluster sizes, this would completely limit the potential
-of using larger folios. My own current implementation makes no
-assumptions about the maximum folio order. As I am a student, I lack
-extensive experience, so it's difficult for me to evaluate the pros
-and cons of these two approaches. I believe Mr Chao Yu could provide a
-more constructive suggestion on this point.
+I guess that's why btrfs can not go that way.
 
-Thinking about a possible implementation for your proposal of a 64KB
-size and in-place compression in the context of F2FS, I think the
-possible approach may be to set the maximum folio order to 4 pages.
-This would align with the default cluster size (especially relevant as
-F2FS moves to support 16K pages and blocks). We could then perform
-compression in-place, eliminating the need for scratch pages (which
-are the compressed pages/folios in the F2FS context) and also disable
-per-page dirty tracking for that folio.
+Due to data COW, we're totally possible to hit a case that we only want 
+to read out one single plaintext block from a compressed data extent 
+(the compressed size can even be larger than one block).
 
-However, F2FS has fallback logic for when compression fails during
-writeback. The original F2FS logic still relies on per-page dirty
-tracking for writes. If we were to completely remove per-page tracking
-for the folio,then in compression failure case we would bear the cost
-of one write amplification.
+In that case such in-place decompression will definitely not work.
 
-These are just my personal thoughts on your proposal. I believe Mr
-Chao Yu can provide more detailed insights into the specifics of F2FS.
+[...]
 
-Best regards
+>> All the decompression/compression routines all support swapping input/ 
+>> output buffer when one of them is full.
+>> So kmap_local() is completely feasible.
+> 
+> I think one of the btrfs supported algorithm LZO is not,
+
+It is, the tricky part is btrfs is implementing its own TLV structure 
+for LZO compression.
+
+And btrfs does extra padding to ensure no TLV (compressed data + header) 
+structure will cross block boundary.
+
+So btrfs LZO compression is still able to swap out input/output halfway, 
+mostly due to the btrfs' specific design.
+
+Thanks,
+Qu
+
+> because the
+> fastest LZ77-family algorithms like LZ4, LZO just operates on virtual
+> consecutive buffers and treat the decompressed buffer as LZ77 sliding
+> window.
+> 
+> So that either you need to allocate another temporary consecutive
+> buffer (I believe that is what btrfs does) or use vmap() approach,
+> EROFS is interested in the vmap() one.
+> 
+> Thanks,
+> Gao Xiang
+> 
+>>
+>> Thanks,
+>> Qu
+>>
+>>>
+>>> So, my proposal is that filesystems tell the page cache that their 
+>>> minimum
+>>> folio size is the compression block size.  That seems to be around 64k,
+>>> so not an unreasonable minimum allocation size.  That removes all the
+>>> extra code in filesystems to allocate extra memory in the page cache.
+>>> It means we don't attempt to track dirtiness at a sub-folio granularity
+>>> (there's no point, we have to write back the entire compressed bock
+>>> at once).  We also get a single virtually contiguous block ... if you're
+>>> willing to ditch HIGHMEM support.  Or there's a proposal to introduce a
+>>> vmap_file() which would give us a virtually contiguous chunk of memory
+>>> (and could be trivially turned into a noop for the case of trying to
+>>> vmap a single large folio).
+>>>
+>>>
+> 
+
 
