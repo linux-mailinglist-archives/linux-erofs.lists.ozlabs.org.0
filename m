@@ -1,52 +1,52 @@
-Return-Path: <linux-erofs+bounces-641-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-642-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF1E8B07C1B
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jul 2025 19:33:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 73889B07C74
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jul 2025 19:59:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bj37F3hHQz30VZ;
-	Thu, 17 Jul 2025 03:33:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bj3hx6K2xz30VZ;
+	Thu, 17 Jul 2025 03:59:13 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752687209;
-	cv=none; b=doq7Lr28H5Poj28WehHTDlPbY4zKUEoDP4wD3No3sOkNWxouTaqbjaLKPtcP0FhbUPCQPdmNugbr3VeUuTgzPVfIEhQSaP0AJdbljN4EvQUHcP0LKOzWUxmXnyhJnMXZg7ZFT9+aqGTIOHtqYwsMF0bn4eroJSCMHTUKcn2OEl2PkKqcK92xBPWYpsuZuPf2DoQG6Xrvjh0erIEyZ4OC07OYyTFGpt+/zeXxAcoggTbRnym5iTj/4OJ8SMKPHNqJUJL2L/WH2QoiqZnxasXEclWZs9ROp2cwHS8oqxJnaPO2ykZ06awerfS5tIEGQf8SsjliDb6DErqvT0Y4OvLIhQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752688753;
+	cv=none; b=eQJh7dvqvpqZdS/DsmH5zFf5MS5C/8YDTM9PhRlGKdICUCA7CccoNDI5WNlb6rJSZJhMioZCWqmhjZ28SCchJ0fKEw3+xjY4pS9R9d05T+zgRcAxGnCd/eaN1tozEivGItbg7UUrhuRX1cwg85dtgdDnKoR2NKwK0y2rf6JDike+tbQlj48NMjvuD0VhckqUjGz1zUB/QfVyY+zDI1PXayyhW0hW88C3DcREtrAvdYBrwicdbf3aIBo1mUFWju/XRf2ILT2WmB0VktOtIEJTdYse3T0hOAbZ6NR00cTDxiYO8lXFwFo4KZIWVQpFvX2R13Clg3GT9qcN0/+DsxCByw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752687209; c=relaxed/relaxed;
-	bh=wQc79DnXDtcgGScN75+Cggp4+0TZnbzqVXm/nl2v5UI=;
+	t=1752688753; c=relaxed/relaxed;
+	bh=RIDJmwnRFY5Lgtn5mS4ZPerHm9LTSIuiArOTbMHLm1M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GhjOOQfqgz9JtNzhkqTNnlNUsXySgE+R4kTDWdPPp9xEHu+rM+001uDgIads6N40O2p01CIlFTuR5QKLtx8arIWgW5H6vCfTuYXB7+uCMHmf1IZJz1Q93tOnJKDWtN7ykHLaxZhc9giJfjC5vraXp6o0cftM6YVB9VAQQPBK6bQuCKuN28bhGtwIKnaWPSVS1V5QbZ1Ww720uLv9E5QhgPa4owmjvBj+m7MdOu71sfhDwwUNhPq4T8yRCoRA5Y8S3216GzAMiksp6t5P75JiSa3hxna/jNQ/WcNwhOUOQeiPbeLg3GjmCl4g+AES7KZBMcZaPpBI5FXbpf1VJeeY0A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nuzr3DkE; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=QvGyaoZLeQ/QtKnB0421Z0x2XfNQg9Pl6wCEnuu+zBJgqHvg7Z5G1w7s8HLqUVYklhu1IXlyCuKLyDGtsXqCOjXjYIz0THsANSxFvOUdbmoozG9wyuFcRqrPOfrAerWHerDr0KHy9AHLHV9qENwI286SvjBaek4wo7ygHz+5p87Ckcf2ASKOstMpxGcowQNv9f0pvg16Ck8U1AtHanpLJhksrzayyiTCz1S/8dpvuoH3SWWELUztBbKJWWuL2uPOKccunJpJkcljhm5zd0dRxGn5Epl0z6hB5uFDkeB2O9H5Zl3gzM/lGHXSErMKiaZPgvUYwm7ukJoiGH9EtJoivA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=lGMNM6hg; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nuzr3DkE;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=lGMNM6hg;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bj37C2Wcnz30Vb
-	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 03:33:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bj3hv5BSdz3069
+	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 03:59:10 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1752687203; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=wQc79DnXDtcgGScN75+Cggp4+0TZnbzqVXm/nl2v5UI=;
-	b=nuzr3DkEfZJczraiMlKoW1YdTfYS9hl8RQLtUmqKYu8yKga0xqnEuNF1GfHHholjIMPQQAC3H8GBBw2CIdbjOu3Ow6jAuATicR4DZljKTUEuYDSkHGxq8quEYP0JO+HNpylZBLWIsahh1Kx4Cg9Ju4zDUhluOBnC+cZWknGyYME=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wj5Vb7s_1752687200 cluster:ay36)
+	t=1752688746; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=RIDJmwnRFY5Lgtn5mS4ZPerHm9LTSIuiArOTbMHLm1M=;
+	b=lGMNM6hg4u0FhrZG73qGESHERxUOPHHpNAZlwdCOQ54rEkSF4D4pk1/b9O3tI0JCJaJPjMjuMOHHrrp4G9aTISBKOUYd+wQ9R/boPtf2Iw5wzq1eoVFcNk3OyZnBLHuywBJEVk8Zwrhl8M7i8tYw+zRDXebI27TNf91/aXT1/gc=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wj5VlPl_1752688740 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 17 Jul 2025 01:33:21 +0800
+          Thu, 17 Jul 2025 01:59:05 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: LKML <linux-kernel@vger.kernel.org>,
 	Bo Liu <liubo03@inspur.com>,
 	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v3 2/2] erofs: implement metadata compression
-Date: Thu, 17 Jul 2025 01:33:14 +0800
-Message-ID: <20250716173314.308744-3-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v4 2/2] erofs: implement metadata compression
+Date: Thu, 17 Jul 2025 01:58:59 +0800
+Message-ID: <20250716175859.345578-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250716173314.308744-1-hsiangkao@linux.alibaba.com>
-References: <20250716173314.308744-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250716173314.308744-3-hsiangkao@linux.alibaba.com>
+References: <20250716173314.308744-3-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -77,18 +77,36 @@ Co-developed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 Signed-off-by: Bo Liu <liubo03@inspur.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/data.c         | 59 +++++++++++++++++++++++++----------------
- fs/erofs/decompressor.c |  2 +-
- fs/erofs/erofs_fs.h     |  2 +-
- fs/erofs/fileio.c       |  2 +-
- fs/erofs/inode.c        |  5 ++--
- fs/erofs/internal.h     | 17 +++++++++---
- fs/erofs/super.c        | 22 +++++++++++++--
- fs/erofs/xattr.c        | 20 +++++++++-----
- fs/erofs/zdata.c        |  5 +++-
- fs/erofs/zmap.c         | 16 ++++++-----
- 10 files changed, 103 insertions(+), 47 deletions(-)
+changes since v3:
+ - add the missing sysfs part;
 
+ Documentation/ABI/testing/sysfs-fs-erofs |  2 +-
+ fs/erofs/data.c                          | 59 +++++++++++++++---------
+ fs/erofs/decompressor.c                  |  2 +-
+ fs/erofs/erofs_fs.h                      |  2 +-
+ fs/erofs/fileio.c                        |  2 +-
+ fs/erofs/inode.c                         |  5 +-
+ fs/erofs/internal.h                      | 17 +++++--
+ fs/erofs/super.c                         | 22 ++++++++-
+ fs/erofs/sysfs.c                         |  2 +
+ fs/erofs/xattr.c                         | 20 +++++---
+ fs/erofs/zdata.c                         |  5 +-
+ fs/erofs/zmap.c                          | 16 ++++---
+ 12 files changed, 106 insertions(+), 48 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
+index bf3b6299c15e..ad6d1a3ccd4e 100644
+--- a/Documentation/ABI/testing/sysfs-fs-erofs
++++ b/Documentation/ABI/testing/sysfs-fs-erofs
+@@ -5,7 +5,7 @@ Description:	Shows all enabled kernel features.
+ 		Supported features:
+ 		zero_padding, compr_cfgs, big_pcluster, chunked_file,
+ 		device_table, compr_head2, sb_chksum, ztailpacking,
+-		dedupe, fragments.
++		dedupe, fragments, 48bit, metabox.
+ 
+ What:		/sys/fs/erofs/<disk>/sync_decompress
+ Date:		November 2021
 diff --git a/fs/erofs/data.c b/fs/erofs/data.c
 index 383c1337e157..f46c47335b9c 100644
 --- a/fs/erofs/data.c
@@ -398,6 +416,26 @@ index bc27fa3bd678..539551cf59db 100644
  #ifdef CONFIG_EROFS_FS_ZIP
  	iput(sbi->managed_cache);
  	sbi->managed_cache = NULL;
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index eed8797a193f..a9fe35ba0906 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -95,6 +95,7 @@ EROFS_ATTR_FEATURE(ztailpacking);
+ EROFS_ATTR_FEATURE(fragments);
+ EROFS_ATTR_FEATURE(dedupe);
+ EROFS_ATTR_FEATURE(48bit);
++EROFS_ATTR_FEATURE(metabox);
+ 
+ static struct attribute *erofs_feat_attrs[] = {
+ 	ATTR_LIST(zero_padding),
+@@ -108,6 +109,7 @@ static struct attribute *erofs_feat_attrs[] = {
+ 	ATTR_LIST(fragments),
+ 	ATTR_LIST(dedupe),
+ 	ATTR_LIST(48bit),
++	ATTR_LIST(metabox),
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(erofs_feat);
 diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
 index 9cf84717a92e..6d2da6ad2be2 100644
 --- a/fs/erofs/xattr.c
