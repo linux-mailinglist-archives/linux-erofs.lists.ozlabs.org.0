@@ -1,47 +1,46 @@
-Return-Path: <linux-erofs+bounces-635-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-638-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4719B07186
-	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jul 2025 11:23:14 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91B16B07B1C
+	for <lists+linux-erofs@lfdr.de>; Wed, 16 Jul 2025 18:25:04 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bhrFX3gsXz30VV;
-	Wed, 16 Jul 2025 19:23:12 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bj1cD0MdTz2ySY;
+	Thu, 17 Jul 2025 02:25:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.99
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752657792;
-	cv=none; b=UTydyHbPBwMKGQ3Y8RZgfGtOunpTNqOifmJAo1xp5iZerPJ4mASQSztNsgpsVNVlTYzbxuQvRQhID7u4r9DLwpwrFo2QWXXPf92KkNfqCdMKkue1UBLSxLPdX5GuVLOB5YHd0IFcFNKLF2fByUWKMrrLWWjzfNbuYUD7nJJ4tD1NBKAsBw/trTA1kyrRnQYvefNPfcTrJuFWu13GyS3dgLleBgjkZBR2AWRPdrKw5e9XnAByQoGTcIU1Us8MJ4xL9uJio78q6ntUNQg8DqvjDMXceOoTDahNCIsq/UEkqJxKRLFAVXWq9AC2og+KBDMKE/q41D2Z/dopigESsB5n4g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752683099;
+	cv=none; b=H93nnLG19iZXFj4FQ+ZhfzuRVX6YqgAyvb1ZAnGQHY4GPiPM/AJ0CP/Wo6jPRtkRlGvTZbxVTrmfciNVQssznAYJO1d1SbJ29IrF4frg+N7Gh58cqn8ZLj7Ai4fuKYfOyRwph52xL0eSQWNzeZscap2C45vZST9a5V8quNa3TnXQoxrSFe7LVVNUbmWCDJaFCp68iz0mOJLr1wNG33TTasJlh5PJr9zkdV+ISKvtcbL2c/+Ng+utVT4ptl4+IRczXvsV89bl3ZLlxN6X0QaZQE+wgH3EvbWClt16aEDUF8QtTQi/KUjr1h+aMMUQ0ScFoOiDDz6IqggS888N1TaRmg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752657792; c=relaxed/relaxed;
-	bh=oRq1da1ShbWLicICYakMfFg739TWglB9aY30Dnetp14=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m7w/mrY81+XJvPMvxaiSnNnFCuYvdsNsNBM4Qaie+pgteJ2Q7GAflks7ATZR3fk4Fu/AN/hU3PQGCqvw5x0JT8t4JVIRhRv2mCuukzhunys/1TFcvlh3JhJRTIWOgbYMmkPCRSh8V5NSNMR+7qbnkmX4NaM8UctYVwAaUD0ny7SmIKrlz87LHAE9jFHZlYVt92HiWv1kzvUsIFmJgqxIkazOahH7MsY/K6chChPiiw7+102d/3eQj/JXYpSNY20sR1heGS80+o7VShBshaYodGZQ1kvUhpPnBDV6jqEoLB0YjxxJJxZiwVM2PMmaXlaDiE529RkmW83HH6sP4mWfRw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d/68gguZ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1752683099; c=relaxed/relaxed;
+	bh=hUrvBhpLJeo5e2F+FxUovDoRKL1vlAGdqOeC7hnz8Fs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VfQ1nh9r+yKiJXfRG32w/mvJ6JaINPo1+ZZF5f6mf6JwXLT0eeRGOaI1XvB8ccR7FtYYFbt0wl7IT2VmlOPQYR7pt+8KoLOZPAn7UQD+dltBVsfa6MC+HLYq192jwCE1Id1LgjFlaivDP1DT0Fz3l+mh6/+v30GS0EOFj25JgXaL6qb9dhgET3mYdAOW674nsOvNnoHzZ6mEsYhDVRW3wE9S7QzqVxVbpVaLfNWdrvPpmmc0P8wy9f3JSZVk2MW6dqF6nowZ6yHgj2F0EFFNB2uY4zGCNu5llJ0d9Zbu4S7/g1jxWKhc103F/ei4eR9QRZ2ZfzBspR+OGNjAkBMt0w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MKv+AWyp; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=d/68gguZ;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MKv+AWyp;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bhrFV0ypJz30T8
-	for <linux-erofs@lists.ozlabs.org>; Wed, 16 Jul 2025 19:23:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bj1c772Fxz30VZ
+	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 02:24:54 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1752657783; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=oRq1da1ShbWLicICYakMfFg739TWglB9aY30Dnetp14=;
-	b=d/68gguZZyVdAaiKc5amjvZhwrHqEPk7e00lsbzZU2NQH4DFMYbaiA6XuaSURBqrcoe5pCeaEXsp6IRLb7Ig5y0Wa+0XH1WjDumayoc2qtumiE+b5ZSfkTRPGCin2RBkFozn5bBTKdIkQdVevUOcw72rgWVgO97CZdzYttkplh0=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wj3WLvn_1752657776 cluster:ay36)
+	t=1752683089; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=hUrvBhpLJeo5e2F+FxUovDoRKL1vlAGdqOeC7hnz8Fs=;
+	b=MKv+AWyprCytdTIYbQevY6YNUWt0JdowRJaPBpchRXNgW5ZEh0HPsfqqDlpoZCJ8+zxPcfWu7d9ODYGac41udrokB3MHxmLn7i5f+5NJech6luUdbor/ZGjaE+MSZQbq5dWr+dHWgL+dXfruUTPVU8QKU3/+G73uo/TWrhRud6M=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wj5JWtY_1752683083 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 16 Jul 2025 17:23:01 +0800
+          Thu, 17 Jul 2025 00:24:47 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs: refine erofs_iomap_begin()
-Date: Wed, 16 Jul 2025 17:22:54 +0800
-Message-ID: <20250716092254.3826715-1-hsiangkao@linux.alibaba.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH 1/3] erofs-utils: mkfs: don't generate encoded extents for ztailpacking
+Date: Thu, 17 Jul 2025 00:24:39 +0800
+Message-ID: <20250716162441.209783-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -61,73 +60,37 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
- - Avoid calling erofs_map_dev() for unmapped extents;
+.. Need more library work for ztailpacking.
 
- - Assign `iomap->addr` for inline extents too (since they have physical
-   location).
-
+Fixes: f978245e9da8 ("erofs-utils: support encoded extents")
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- fs/erofs/data.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ lib/compress.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index dd7d86809c18..383c1337e157 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -269,6 +269,16 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	if (ret < 0)
- 		return ret;
+diff --git a/lib/compress.c b/lib/compress.c
+index a57bb6a3..22fb5d6d 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -1142,7 +1142,8 @@ static void *z_erofs_write_indexes(struct z_erofs_compress_ictx *ctx)
+ 	struct z_erofs_extent_item *ei, *n;
+ 	void *metabuf;
  
-+	iomap->offset = map.m_la;
-+	iomap->length = map.m_llen;
-+	iomap->flags = 0;
-+	iomap->private = NULL;
-+	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
-+		iomap->type = IOMAP_HOLE;
-+		iomap->addr = IOMAP_NULL_ADDR;
-+		return 0;
-+	}
-+
- 	mdev = (struct erofs_map_dev) {
- 		.m_deviceid = map.m_deviceid,
- 		.m_pa = map.m_pa,
-@@ -277,22 +287,14 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	if (ret)
- 		return ret;
+-	if (erofs_sb_has_48bit(sbi)) {
++	/* TODO: support writing encoded extents for ztailpacking later. */
++	if (erofs_sb_has_48bit(sbi) && !inode->idata_size) {
+ 		metabuf = z_erofs_write_extents(ctx);
+ 		if (metabuf != ERR_PTR(-EAGAIN)) {
+ 			if (IS_ERR(metabuf))
+@@ -1181,6 +1182,8 @@ static void *z_erofs_write_indexes(struct z_erofs_compress_ictx *ctx)
+ 	ctx->metacur = metabuf + Z_EROFS_LEGACY_MAP_HEADER_SIZE;
+ 	ctx->clusterofs = 0;
+ 	list_for_each_entry_safe(ei, n, &ctx->extents, list) {
++		DBG_BUGON(ei->list.next != &ctx->extents &&
++			  ctx->clusterofs + ei->e.length < erofs_blksiz(sbi));
+ 		z_erofs_write_full_indexes(ctx, &ei->e);
  
--	iomap->offset = map.m_la;
- 	if (flags & IOMAP_DAX)
- 		iomap->dax_dev = mdev.m_dif->dax_dev;
- 	else
- 		iomap->bdev = mdev.m_bdev;
--	iomap->length = map.m_llen;
--	iomap->flags = 0;
--	iomap->private = NULL;
- 
--	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
--		iomap->type = IOMAP_HOLE;
--		iomap->addr = IOMAP_NULL_ADDR;
--		if (!iomap->length)
--			iomap->length = length;
--		return 0;
--	}
-+	iomap->addr = mdev.m_dif->fsoff + mdev.m_pa;
-+	if (flags & IOMAP_DAX)
-+		iomap->addr += mdev.m_dif->dax_part_off;
- 
- 	if (map.m_flags & EROFS_MAP_META) {
- 		void *ptr;
-@@ -306,9 +308,6 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 		iomap->private = buf.base;
- 	} else {
- 		iomap->type = IOMAP_MAPPED;
--		iomap->addr = mdev.m_dif->fsoff + mdev.m_pa;
--		if (flags & IOMAP_DAX)
--			iomap->addr += mdev.m_dif->dax_part_off;
- 	}
- 	return 0;
- }
+ 		list_del(&ei->list);
 -- 
 2.43.5
 
