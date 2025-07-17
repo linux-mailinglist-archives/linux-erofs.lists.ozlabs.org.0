@@ -1,43 +1,69 @@
-Return-Path: <linux-erofs+bounces-651-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-652-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 319A9B0830E
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Jul 2025 04:45:24 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A089B0831B
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Jul 2025 04:49:57 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bjHN15MYzz2yDk;
-	Thu, 17 Jul 2025 12:45:21 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bjHTH0w7gz2yDk;
+	Thu, 17 Jul 2025 12:49:55 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752720321;
-	cv=none; b=SOYzTudiPbZ9r4mvfucMFruKu6Ubnc5CMUl/7qNN0k+bjaLMG9cO86JZJNYcXBlidSxka+DiWnKzpT7uUu1rgnqMDEI56i8i7K+2+1VRZjAa4mYZNwdFJhd4MgyeUCWVp/BZ+jIEAvPqi1k/a1MtNYTN2RFQkbBH1ZWuJf5EjB8K6jzHDTtliq+1PB28euxyQARyAp4zQkpn1dHJic8vo9mIvUOI/yaRemNsX3soCn0gUaLCPxcTT3tDXvtG7y9583/Xe1EjIhUh0WyUCSSQTG7lRG/v385+FJdVCcclcbZwrtcT1MTxDnI9xt3kGqPYQIcS3awWzB7XaTOzmdOH5w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752720595;
+	cv=none; b=D52IHywIyDDRckU1hiqwHwhuKHqHwcE0Yatn/U0D53KHNGT7hJUcrqGcxHA3Gu1jRw3qSrrzrxEKG0hxtvifwcaAUlWICOXaaoPYaBn2fluwWRk88yhOsE4PGVfJEULI9xDfSJK48U6llNeYvJE4kpZbwg4CxWcM0/P79/hFXW+DIp1+dda8e6qw0bba2ZxDBxXI69wLw4fGWoEW4Wz/4OdezICQZSehDpAacM2Z4U99zQ0/ebV5ZVLPNQOG/d4752XbkE1P2lWoSEldlbAUXoH31NtoEJdaKvAI9uXLECl7gjRT6gIwhHN/PHi008hn7B7r2DKDJYUXtu0u53JSAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752720321; c=relaxed/relaxed;
-	bh=F9d/4K1zkZPJB2kB2UUc/hygJIY+cwOrg7BW+ay7QlY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nf1JkSIb1WmsARfW9bu4s+ueJaguCmZZ0XY6NTvT8RIOwP0auXAynVta2307pj/NLyGuhBrtlg1us/mbhpOfJAGuFrCFBfPzTklwmaRnqxwiPCoZrOFRxqZ1wQ/r+HYH82JKVVA9Dz0yo+qpbqbKDwLOOhTY8jG9lTMghXjwr3fbIeeLULX+7PBNUdqi8JS+ABS/bfa7CqylPMJCmKkVHtbFLSbhu+2dMXH0O1Clsii2KkxOFNkTxoQp9/2Zs9lwMSXc3TN2gzXsnRwOxF89fnpbGfIts2v2Uy6Y1cFwH2R1eGQKxTRxcsB7aF5ghfPQh3C8dhuRsAZFpQ9Oh4vGAA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Vx01FsU3; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1752720595; c=relaxed/relaxed;
+	bh=n2mVmLfdEaLhFKe7KNMxfXRgw5ihLFB2hA1zHsFemk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M8ibv26PJY9FFiCZIBSEnAuO+akIYK8GTyjwU0hKQjvGPT0k1Rv9Q8yuEnB7eFO07wJhp0XP/lXV6Amrqjx2WtOmbn7QBgSCWkrGLiIQaklPpqTEfwi6poqPNeI4U0llpD6+R/Td6IjMY1eazOKYhMAnhbw+RUD37DqrChrljidH+K3OhPL0t89aw3CTEtJSBe4jz9pM8/TQFZQ3JpDTQaBY8+/BfZxEqnsNICRe3Nyqvzx7KF9kXv8JDhyliqlGqlPqL+HQoJzUnWhCLkqYA/rE/MoqExnqHPaE3kRNeeOQrObriynb6hGkiVPdLve+xEXMwKbl7Cuc6wxEYMuhIA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Dxj0Av8D; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=ebiggers@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Vx01FsU3;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Dxj0Av8D;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=ebiggers@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bjHMz6ytfz2xlM
-	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 12:45:18 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1752720313; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=F9d/4K1zkZPJB2kB2UUc/hygJIY+cwOrg7BW+ay7QlY=;
-	b=Vx01FsU3NNw4IHGitl/+eR1bcDY+kxIHXMb55i+jRSuNQ0DgsKEOmXAQDwbO+PYchs/0lh7hFmSp/tFcuGI9sYHe8Z2vBlVzHlyii8eqG2W/3NBteGddkkQp6YOAveWv/BXQrhk9tBxaWdnlYEe4wKc40YhGwxsM6xGtj6zcXDQ=
-Received: from 30.221.131.143(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wj6Uh3P_1752720311 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 17 Jul 2025 10:45:12 +0800
-Message-ID: <c46f71ae-f04c-4aa6-99fb-cf8f8e751589@linux.alibaba.com>
-Date: Thu, 17 Jul 2025 10:45:11 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bjHTG1Zs9z2xlM
+	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 12:49:54 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id A53B2A576DD;
+	Thu, 17 Jul 2025 02:49:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E1B0C4CEE7;
+	Thu, 17 Jul 2025 02:49:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752720591;
+	bh=+3M7g91K1wbKWaHCHWCVlTkf6dVFqoCHka6+sKX8uc0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Dxj0Av8D5AZtIisXh2L9yJig4uXBQuxbS9ixY/JMlxvl70bIPu8iWlVqGEzCoOgUi
+	 +5jU7iXSPRY863B1eVwqkKI4XyGU8N1oiPiSPYP3NlYWjMsCzjY3/zNUSeI4PfvJj0
+	 n7GfspSMnUer51mMfjRjFN8s+TltBz1xAqzFf/4SamHGdauI6kCAc8//1mfU95Af06
+	 zzmzEaGEDSNSTgcJHuXYUJGBMCRzfTCgpsxnK/GcWE+60f/gZxYXyl9b+IaN0vufU4
+	 oIMmh0U1QCuDEp6Cvy24xlk5jGum/YFcnprJ1x7H5mudjZboZP0UCU72iFYOMe7L+u
+	 czU/b0esZtW6Q==
+Date: Wed, 16 Jul 2025 19:49:03 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Phillip Lougher <phillip@squashfs.org.uk>
+Cc: Matthew Wilcox <willy@infradead.org>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	linux-erofs@lists.ozlabs.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+	linux-f2fs-devel@lists.sourceforge.net, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
+	David Howells <dhowells@redhat.com>, netfs@lists.linux.dev,
+	Paulo Alcantara <pc@manguebit.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	ntfs3@lists.linux.dev, Steve French <sfrench@samba.org>,
+	linux-cifs@vger.kernel.org
+Subject: Re: Compressed files & the page cache
+Message-ID: <20250717024903.GA1288@sol>
+References: <aHa8ylTh0DGEQklt@casper.infradead.org>
+ <f4b9faf9-8efd-4396-b080-e712025825ab@squashfs.org.uk>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,68 +75,52 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: fix build error with
- CONFIG_EROFS_FS_ZIP_ACCEL=y
-To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org, chao@kernel.org
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20250717015848.4804-1-liubo03@inspur.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250717015848.4804-1-liubo03@inspur.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f4b9faf9-8efd-4396-b080-e712025825ab@squashfs.org.uk>
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+On Wed, Jul 16, 2025 at 11:37:28PM +0100, Phillip Lougher wrote:
+> > There also seems to be some discrepancy between filesystems whether the
+> > decompression involves vmap() of all the memory allocated or whether the
+> > decompression routines can handle doing kmap_local() on individual pages.
+> > 
+> 
+> Squashfs does both, and this depends on whether the decompression
+> algorithm implementation in the kernel is multi-shot or single-shot.
+> 
+> The zlib/xz/zstd decompressors are multi-shot, in that you can call them
+> multiply, giving them an extra input or output buffer when it runs out.
+> This means you can get them to output into a 4K page at a time, without
+> requiring the pages to be contiguous.  kmap_local() can be called on each
+> page before passing it to the decompressor.
 
+While those compression libraries do provide streaming APIs, it's sort
+of an illusion.  They still need the uncompressed data in a virtually
+contiguous buffer for the LZ77 match finding and copying to work.  So,
+internally they copy the uncompressed data into a virtually contiguous
+buffer.  I suspect that vmap() (or vm_map_ram() which is what f2fs uses)
+is actually more efficient than these streaming APIs, since it avoids
+the internal copy.  But it would need to be measured.
 
-On 2025/7/17 09:58, Bo Liu wrote:
-> fix build err:
->   ld.lld: error: undefined symbol: crypto_req_done
->     referenced by decompressor_crypto.c
->         fs/erofs/decompressor_crypto.o:(z_erofs_crypto_decompress) in archive vmlinux.a
->     referenced by decompressor_crypto.c
->         fs/erofs/decompressor_crypto.o:(z_erofs_crypto_decompress) in archive vmlinux.a
-> 
->   ld.lld: error: undefined symbol: crypto_acomp_decompress
->     referenced by decompressor_crypto.c
->         fs/erofs/decompressor_crypto.o:(z_erofs_crypto_decompress) in archive vmlinux.a
-> 
->   ld.lld: error: undefined symbol: crypto_alloc_acomp
->     referenced by decompressor_crypto.c
->         fs/erofs/decompressor_crypto.o:(z_erofs_crypto_enable_engine) in archive vmlinux.a
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202507161032.QholMPtn-lkp@intel.com/
-> Fixes: b4a29efc5146 ("erofs: support DEFLATE decompression by using Intel QAT")
-> Signed-off-by: Bo Liu <liubo03@inspur.com>
-> 
-> v1: https://lore.kernel.org/linux-erofs/7a1dbee70a604583bae5a29f690f4231@inspur.com/T/#t
-> 
-> change since v1:
-> - add Fixes commits
-> ---
->   fs/erofs/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-> index 6beeb7063871..60510a041bf1 100644
-> --- a/fs/erofs/Kconfig
-> +++ b/fs/erofs/Kconfig
-> @@ -147,6 +147,7 @@ config EROFS_FS_ZIP_ZSTD
->   config EROFS_FS_ZIP_ACCEL
->   	bool "EROFS hardware decompression support"
->   	depends on EROFS_FS_ZIP
-> +	select CRYPTO
+> > So, my proposal is that filesystems tell the page cache that their minimum
+> > folio size is the compression block size.  That seems to be around 64k,
+> > so not an unreasonable minimum allocation size.  That removes all the
+> > extra code in filesystems to allocate extra memory in the page cache.
+> > It means we don't attempt to track dirtiness at a sub-folio granularity
+> > (there's no point, we have to write back the entire compressed bock
+> > at once).  We also get a single virtually contiguous block ... if you're
+> > willing to ditch HIGHMEM support.  Or there's a proposal to introduce a
+> > vmap_file() which would give us a virtually contiguous chunk of memory
+> > (and could be trivially turned into a noop for the case of trying to
+> > vmap a single large folio).
 
-After testing, I think we should rely on
-CRYPTO_ACOMP or CRYPTO_ACOMP2 instead.
+... but of course, if we could get a virtually contiguous buffer
+"for free" (at least in the !HIGHMEM case) as in the above proposal,
+that would clearly be the best option.
 
-Otherwise it will still fails.
-
-Thanks,
-Gao Xiang
+- Eric
 
