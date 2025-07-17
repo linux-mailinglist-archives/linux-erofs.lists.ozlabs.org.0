@@ -1,43 +1,43 @@
-Return-Path: <linux-erofs+bounces-650-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-651-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C2BAB082A7
-	for <lists+linux-erofs@lfdr.de>; Thu, 17 Jul 2025 03:59:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 319A9B0830E
+	for <lists+linux-erofs@lfdr.de>; Thu, 17 Jul 2025 04:45:24 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bjGLg4z1tz2yF1;
-	Thu, 17 Jul 2025 11:59:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bjHN15MYzz2yDk;
+	Thu, 17 Jul 2025 12:45:21 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=210.51.61.247
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752717547;
-	cv=none; b=Gtw7mgHPLRYhe2f2WTV+EXu7A7SYxUwKFjhEHqeF98ocaaFodMnhdVXi/6y0SYdbn+R35a36ysQ8LpaDbsbKVa4ZgfG8+l2OnOEEJ4GE1hwe+CSCoVHZIUeGIwiznbzpYZcoDExtmCYpSldXrZTyt02kHojXX52OcnjPghR67nA6RireXXyvgxEInSESSHPcpeMcQA4/p9zjoLF5pGVy8zr2pFUOXZhHNvZdEkFD5Zh/w0xHjgLaCDwfcPgJxoRYoy6chV113XY0Uh2vc+3NMGDrCbE6x/C2bTd1cnZ+dsfhdR6/HKKtZ6nGudfCpjGpNfhECWrEMxd4N/2vp2fNGA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752720321;
+	cv=none; b=SOYzTudiPbZ9r4mvfucMFruKu6Ubnc5CMUl/7qNN0k+bjaLMG9cO86JZJNYcXBlidSxka+DiWnKzpT7uUu1rgnqMDEI56i8i7K+2+1VRZjAa4mYZNwdFJhd4MgyeUCWVp/BZ+jIEAvPqi1k/a1MtNYTN2RFQkbBH1ZWuJf5EjB8K6jzHDTtliq+1PB28euxyQARyAp4zQkpn1dHJic8vo9mIvUOI/yaRemNsX3soCn0gUaLCPxcTT3tDXvtG7y9583/Xe1EjIhUh0WyUCSSQTG7lRG/v385+FJdVCcclcbZwrtcT1MTxDnI9xt3kGqPYQIcS3awWzB7XaTOzmdOH5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752717547; c=relaxed/relaxed;
-	bh=N8M3/dOOczfrUoDujFmC0xvnF/Lg8Z70JkSj4q+LSGw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iB+2de2xXRfQVC3fyTNLE+hT65H8Bq9XHzTgZPT+tGG/jg4e6yW2oLRwaiicPq/qw46nr4Hq3VK7EIYp5Kv/UHa44rnWgTiLlu7v7rwLJrr41VA8zqbvXyaZxd01LMjXQiOB/tTONBWX28HkCXGy/o8mxJiXa9YT51B8OJBxla5qviSTTeVslSjffsY2Gac2iNneg4kNPwyqfoJcBnNbwX1kYfR9fYF5QYbibE1EXufXn2Pr2O+rYPHbwRm0GetkR6WKSUS8iFT0MhSd0HN0fW+mfY5GrX3rq49wsiVRa4BYI79xmiO+HSWSokpV74zDNg9f5GyVPmCL6E+2diSSrQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass (client-ip=210.51.61.247; helo=ssh247.corpemail.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org) smtp.mailfrom=inspur.com
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=inspur.com (client-ip=210.51.61.247; helo=ssh247.corpemail.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org)
-Received: from ssh247.corpemail.net (ssh247.corpemail.net [210.51.61.247])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1752720321; c=relaxed/relaxed;
+	bh=F9d/4K1zkZPJB2kB2UUc/hygJIY+cwOrg7BW+ay7QlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nf1JkSIb1WmsARfW9bu4s+ueJaguCmZZ0XY6NTvT8RIOwP0auXAynVta2307pj/NLyGuhBrtlg1us/mbhpOfJAGuFrCFBfPzTklwmaRnqxwiPCoZrOFRxqZ1wQ/r+HYH82JKVVA9Dz0yo+qpbqbKDwLOOhTY8jG9lTMghXjwr3fbIeeLULX+7PBNUdqi8JS+ABS/bfa7CqylPMJCmKkVHtbFLSbhu+2dMXH0O1Clsii2KkxOFNkTxoQp9/2Zs9lwMSXc3TN2gzXsnRwOxF89fnpbGfIts2v2Uy6Y1cFwH2R1eGQKxTRxcsB7aF5ghfPQh3C8dhuRsAZFpQ9Oh4vGAA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Vx01FsU3; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Vx01FsU3;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bjGLf23KXz2yDk
-	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 11:59:03 +1000 (AEST)
-Received: from jtjnmail201622.home.langchao.com
-        by ssh247.corpemail.net ((D)) with ASMTP (SSL) id 202507170958577543;
-        Thu, 17 Jul 2025 09:58:57 +0800
-Received: from localhost.localdomain (10.94.15.194) by
- jtjnmail201622.home.langchao.com (10.100.2.22) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.57; Thu, 17 Jul 2025 09:58:57 +0800
-From: Bo Liu <liubo03@inspur.com>
-To: <xiang@kernel.org>, <chao@kernel.org>
-CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
-	<liubo03@inspur.com>
-Subject: [PATCH v2] erofs: fix build error with CONFIG_EROFS_FS_ZIP_ACCEL=y
-Date: Wed, 16 Jul 2025 21:58:48 -0400
-Message-ID: <20250717015848.4804-1-liubo03@inspur.com>
-X-Mailer: git-send-email 2.18.2
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bjHMz6ytfz2xlM
+	for <linux-erofs@lists.ozlabs.org>; Thu, 17 Jul 2025 12:45:18 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1752720313; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=F9d/4K1zkZPJB2kB2UUc/hygJIY+cwOrg7BW+ay7QlY=;
+	b=Vx01FsU3NNw4IHGitl/+eR1bcDY+kxIHXMb55i+jRSuNQ0DgsKEOmXAQDwbO+PYchs/0lh7hFmSp/tFcuGI9sYHe8Z2vBlVzHlyii8eqG2W/3NBteGddkkQp6YOAveWv/BXQrhk9tBxaWdnlYEe4wKc40YhGwxsM6xGtj6zcXDQ=
+Received: from 30.221.131.143(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wj6Uh3P_1752720311 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 17 Jul 2025 10:45:12 +0800
+Message-ID: <c46f71ae-f04c-4aa6-99fb-cf8f8e751589@linux.alibaba.com>
+Date: Thu, 17 Jul 2025 10:45:11 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,61 +49,68 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.94.15.194]
-X-ClientProxiedBy: Jtjnmail201615.home.langchao.com (10.100.2.15) To
- jtjnmail201622.home.langchao.com (10.100.2.22)
-tUid: 20257170958579e39912c5d14bf5a236e6e429856e73f
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
-X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_MSPIKE_H5,
-	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] erofs: fix build error with
+ CONFIG_EROFS_FS_ZIP_ACCEL=y
+To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org, chao@kernel.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20250717015848.4804-1-liubo03@inspur.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250717015848.4804-1-liubo03@inspur.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-fix build err:
- ld.lld: error: undefined symbol: crypto_req_done
-   referenced by decompressor_crypto.c
-       fs/erofs/decompressor_crypto.o:(z_erofs_crypto_decompress) in archive vmlinux.a
-   referenced by decompressor_crypto.c
-       fs/erofs/decompressor_crypto.o:(z_erofs_crypto_decompress) in archive vmlinux.a
 
- ld.lld: error: undefined symbol: crypto_acomp_decompress
-   referenced by decompressor_crypto.c
-       fs/erofs/decompressor_crypto.o:(z_erofs_crypto_decompress) in archive vmlinux.a
 
- ld.lld: error: undefined symbol: crypto_alloc_acomp
-   referenced by decompressor_crypto.c
-       fs/erofs/decompressor_crypto.o:(z_erofs_crypto_enable_engine) in archive vmlinux.a
+On 2025/7/17 09:58, Bo Liu wrote:
+> fix build err:
+>   ld.lld: error: undefined symbol: crypto_req_done
+>     referenced by decompressor_crypto.c
+>         fs/erofs/decompressor_crypto.o:(z_erofs_crypto_decompress) in archive vmlinux.a
+>     referenced by decompressor_crypto.c
+>         fs/erofs/decompressor_crypto.o:(z_erofs_crypto_decompress) in archive vmlinux.a
+> 
+>   ld.lld: error: undefined symbol: crypto_acomp_decompress
+>     referenced by decompressor_crypto.c
+>         fs/erofs/decompressor_crypto.o:(z_erofs_crypto_decompress) in archive vmlinux.a
+> 
+>   ld.lld: error: undefined symbol: crypto_alloc_acomp
+>     referenced by decompressor_crypto.c
+>         fs/erofs/decompressor_crypto.o:(z_erofs_crypto_enable_engine) in archive vmlinux.a
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202507161032.QholMPtn-lkp@intel.com/
+> Fixes: b4a29efc5146 ("erofs: support DEFLATE decompression by using Intel QAT")
+> Signed-off-by: Bo Liu <liubo03@inspur.com>
+> 
+> v1: https://lore.kernel.org/linux-erofs/7a1dbee70a604583bae5a29f690f4231@inspur.com/T/#t
+> 
+> change since v1:
+> - add Fixes commits
+> ---
+>   fs/erofs/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+> index 6beeb7063871..60510a041bf1 100644
+> --- a/fs/erofs/Kconfig
+> +++ b/fs/erofs/Kconfig
+> @@ -147,6 +147,7 @@ config EROFS_FS_ZIP_ZSTD
+>   config EROFS_FS_ZIP_ACCEL
+>   	bool "EROFS hardware decompression support"
+>   	depends on EROFS_FS_ZIP
+> +	select CRYPTO
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202507161032.QholMPtn-lkp@intel.com/
-Fixes: b4a29efc5146 ("erofs: support DEFLATE decompression by using Intel QAT")
-Signed-off-by: Bo Liu <liubo03@inspur.com>
+After testing, I think we should rely on
+CRYPTO_ACOMP or CRYPTO_ACOMP2 instead.
 
-v1: https://lore.kernel.org/linux-erofs/7a1dbee70a604583bae5a29f690f4231@inspur.com/T/#t
+Otherwise it will still fails.
 
-change since v1:
-- add Fixes commits
----
- fs/erofs/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 6beeb7063871..60510a041bf1 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -147,6 +147,7 @@ config EROFS_FS_ZIP_ZSTD
- config EROFS_FS_ZIP_ACCEL
- 	bool "EROFS hardware decompression support"
- 	depends on EROFS_FS_ZIP
-+	select CRYPTO
- 	help
- 	  Saying Y here includes hardware accelerator support for reading
- 	  EROFS file systems containing compressed data.  It gives better
--- 
-2.31.1
-
+Thanks,
+Gao Xiang
 
