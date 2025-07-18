@@ -1,47 +1,47 @@
-Return-Path: <linux-erofs+bounces-670-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-668-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8DFEB09BC3
-	for <lists+linux-erofs@lfdr.de>; Fri, 18 Jul 2025 08:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A715B09BC1
+	for <lists+linux-erofs@lfdr.de>; Fri, 18 Jul 2025 08:54:41 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bk0s70t1mz3blg;
-	Fri, 18 Jul 2025 16:54:35 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bk0s64Yygz30WS;
+	Fri, 18 Jul 2025 16:54:34 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752821675;
-	cv=none; b=Y8Di2jlCxQeQDoIdW9GjbaO5uu7Sy0cmRppj0YmC2sR0CZLlnlC8TeGt1ujMrvrhdUwFo75A154BUAw0uD41TBb6ca8Zul1JyaG7SbJqB8P7ooyG3KyyEiYEzg189o68PLSjmrQjma56qv6TR1PPiRp+/EmTmpiIW8B7VXMA1qbQFp85XdlVYe3/Au5tw3/2I7TRkZ5eGwsPaXt4Sg2dnH8DEToaumMP0JkAnQr5g6B+am4Xe9FPM5i8SnvoH8zu9kgeWGZQtC7viNNi5mervgdAv8tBSK+9qq8ovE//coHwfLjBm5HXdH0TpUzV/XNfYG9siPX6tMy6PxjKQDBA8Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1752821674;
+	cv=none; b=DVCmRkLA6x3S8f1vLr2ZsjNVg96gs/WUdLGrp3LZ6MVrWt7I/7MQKs/Amigs8Gx7F6N0bJiFT0C5+a5siXT5f6rUsn74wnr/2fx7nGyaZLxHva35cfWvlLweY93cBzfFfHE23sF37gaTMGtzX+xk3QOjA1Zpx9CT7SoxuvD5WvP3p0n68hdeUg1Qb95GVnIcw2qgfIadyKn0/qRdqH4ng4eMCpsBtTUIZtPVFORG6qSP095exdu//3/OUtUksbeWC20C0VMsc/xVrlOLdnwd5EYhOPcedkysaNmic5yohAAa8sDijMTyq+0pzRMs3WAn58Qby1YXonwaLBCu9NM0nw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1752821675; c=relaxed/relaxed;
-	bh=as/gZsVCWgs98YhpEWbt3n4Uo7CsDkbGMN9R+qWs1Tg=;
+	t=1752821674; c=relaxed/relaxed;
+	bh=VXvpuroeXhDb+0RQM8/1WDWjuB+F6dEllY8amoAq6Ng=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iz3scAg4HwZKf8eDDutXzEiINq7DUzCxqWIqIbUSGf3gx3ymx0LkEhQtuPJgS3XbWfyyqDh4NfY3ylYTlpLJhlq+NYB/ZdHX8EbcsusIBbBbJZDGMQXfUUCSNOEuoFkfl0t3xXFJE82txTs8ZFyubLpk95Pqh0UdYraDJihpUsPSWkrYUO7rEpsIwFWmmAxRVBBICVAQvnziv+lr/NJn90EWSKUlibkSfEJHKQ0J2y/hCklwXeEAwJ0gKUeCKkBrYNmVREpTtI6zxvpLl/FYwNtoFbMgQPqerEa/hBuYjP1CoDBeZVt2IAvdCNODVG1CRTWAXOgaeBGcKUeI0FLSTA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nmzZ5ijo; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=CnahFxjagYxgfD9LZtz9rGOPB5yeMpJ0dh6fjUd4ukLht0rCkX1KL/wHGsxwnLC7iT8avbUWt3Ir1X/L6kcU0GsjQpCiE2Y4bD4pGrKJy4iv0EuGWDG+BBLbvM2RbkAH6lHa+Z06frXw2758yIWHliobJx+joV2SNO1quh/gwSF7W0np3X5XEQM7rKT3NCPKxlekaYV4DYZqVCQ60RZ1zMctTtkMVzL9sDIYWnZ6r1r7+q7UbAniex2ItwIxjBI8ldyhU1sHvhSXV764DsEz13NC0a08iR89mOtD4ZrC3/3OF9zPoMs/9xc+grbx3sRaucwVAhiEhsYklyWsZCdS3Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=dJurfKJS; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nmzZ5ijo;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=dJurfKJS;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bk0s33YYzz30RJ
-	for <linux-erofs@lists.ozlabs.org>; Fri, 18 Jul 2025 16:54:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bk0s348Smz30RK
+	for <linux-erofs@lists.ozlabs.org>; Fri, 18 Jul 2025 16:54:31 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1752821666; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=as/gZsVCWgs98YhpEWbt3n4Uo7CsDkbGMN9R+qWs1Tg=;
-	b=nmzZ5ijo5r/Qm2kjD4ucEHXHqjgdzIJ0+qVsPgAYhObGEXQ3vw3r6Yvb8g6vLWZvM2Spr+a99T5X2Dz2g1gdTl65RoRpt5tIxX9fahzKZ7oc9UKDMbaV7RVK/fsYWkH7AC3oy/iffRCCj1fHljjQYsYq4QyvsMwtkvUXf5EEE1A=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WjBMlQh_1752821664 cluster:ay36)
+	t=1752821667; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=VXvpuroeXhDb+0RQM8/1WDWjuB+F6dEllY8amoAq6Ng=;
+	b=dJurfKJSyNgzE0PEX4EbPtqXuKtrk2tRUoQGMZ8lBQRlaY2m6XWjsnA+1bSDwAcz3guVBAjGMwpZdoERMIZ2N8FV3+uzbLIfmjg0UMoF3GJogo1ChAu9kXoZOfjJ8yevy9dw3DJm2rcENWYi4Y5PY+kiWA0+5DkwQu3RKBI8caY=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WjBMlR3_1752821665 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 18 Jul 2025 14:54:25 +0800
+          Fri, 18 Jul 2025 14:54:26 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 02/11] erofs-utils: lib: consolidate erofs_iflush()
-Date: Fri, 18 Jul 2025 14:54:10 +0800
-Message-ID: <20250718065419.3338307-2-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 03/11] erofs-utils: use virtual file interface for the buffer manager
+Date: Fri, 18 Jul 2025 14:54:11 +0800
+Message-ID: <20250718065419.3338307-3-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250718065419.3338307-1-hsiangkao@linux.alibaba.com>
 References: <20250718065419.3338307-1-hsiangkao@linux.alibaba.com>
@@ -63,189 +63,168 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-.. Avoid erofs_dev_write() and use the bdev virtual file instead.
+In order to prepare for the upcoming metadata compression.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/internal.h |  3 +-
- lib/blobchunk.c          |  6 ++--
- lib/inode.c              | 67 +++++++++++++++++++---------------------
- lib/super.c              |  1 -
- 4 files changed, 35 insertions(+), 42 deletions(-)
+ include/erofs/cache.h    |  9 +++++----
+ include/erofs/internal.h |  6 ------
+ include/erofs/io.h       |  2 +-
+ lib/cache.c              | 12 +++++++++---
+ lib/io.c                 |  6 +++---
+ mkfs/main.c              |  4 ++--
+ 6 files changed, 20 insertions(+), 19 deletions(-)
 
+diff --git a/include/erofs/cache.h b/include/erofs/cache.h
+index 0c665e8f..d5618c00 100644
+--- a/include/erofs/cache.h
++++ b/include/erofs/cache.h
+@@ -57,18 +57,18 @@ struct erofs_buffer_block {
+ };
+ 
+ struct erofs_bufmgr {
+-	struct erofs_sb_info *sbi;
+-
+ 	/* buckets for all buffer blocks to boost up allocation */
+ 	struct list_head watermeter[META + 1][2][EROFS_MAX_BLOCK_SIZE];
+ 	unsigned long bktmap[META + 1][2][EROFS_MAX_BLOCK_SIZE / BITS_PER_LONG];
+ 
+ 	struct erofs_buffer_block blkh;
+-	erofs_blk_t tail_blkaddr, metablkcnt;
++	struct erofs_sb_info *sbi;
++	struct erofs_vfile *vf;
+ 
+ 	/* last mapped buffer block to accelerate erofs_mapbh() */
+ 	struct erofs_buffer_block *last_mapped_block;
+ 
++	erofs_blk_t tail_blkaddr, metablkcnt;
+ 	/* align data block addresses to multiples of `dsunit` */
+ 	unsigned int dsunit;
+ };
+@@ -122,7 +122,8 @@ static inline int erofs_bh_flush_generic_end(struct erofs_buffer_head *bh)
+ }
+ 
+ struct erofs_bufmgr *erofs_buffer_init(struct erofs_sb_info *sbi,
+-				       erofs_blk_t startblk);
++				       erofs_blk_t startblk,
++				       struct erofs_vfile *vf);
+ int erofs_bh_balloon(struct erofs_buffer_head *bh, erofs_off_t incr);
+ 
+ struct erofs_buffer_head *erofs_balloc(struct erofs_bufmgr *bmgr,
 diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index b5df8a48..65d40840 100644
+index 65d40840..1431c16d 100644
 --- a/include/erofs/internal.h
 +++ b/include/erofs/internal.h
-@@ -95,7 +95,6 @@ struct erofs_sb_info {
- 	u32 feature_compat;
- 	u32 feature_incompat;
- 
--	unsigned char islotbits;
- 	unsigned char blkszbits;
- 
- 	u32 sb_size;			/* total superblock size */
-@@ -293,7 +292,7 @@ static inline erofs_off_t erofs_iloc(struct erofs_inode *inode)
- 	struct erofs_sb_info *sbi = inode->sbi;
- 
- 	return erofs_pos(sbi, sbi->meta_blkaddr) +
--			(inode->nid << sbi->islotbits);
-+			(inode->nid << EROFS_ISLOTBITS);
- }
- 
- static inline bool is_inode_layout_compression(struct erofs_inode *inode)
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index 3388ce0d..bbc69cfb 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -193,7 +193,6 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
- 		else
- 			memcpy(inode->chunkindexes + dst, &idx, sizeof(idx));
- 	}
--	off = roundup(off, unit);
- 	if (extent_start != EROFS_NULL_ADDR) {
- 		extent_end = min(extent_end, extent_start + remaining_blks);
- 		zeroedlen = inode->i_size & (erofs_blksiz(sbi) - 1);
-@@ -202,8 +201,9 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
- 		tarerofs_blocklist_write(extent_start, extent_end - extent_start,
- 					 source_offset, zeroedlen);
- 	}
--	return erofs_dev_write(inode->sbi, inode->chunkindexes, off,
--			       inode->extent_isize);
-+	off = roundup(off, unit);
-+	return erofs_io_pwrite(&sbi->bdev, inode->chunkindexes,
-+			       off, inode->extent_isize);
- }
- 
- int erofs_blob_mergechunks(struct erofs_inode *inode, unsigned int chunkbits,
-diff --git a/lib/inode.c b/lib/inode.c
-index 4f6715af..f7c6b87f 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -609,22 +609,23 @@ int erofs_write_unencoded_file(struct erofs_inode *inode, int fd, u64 fpos)
- 
- int erofs_iflush(struct erofs_inode *inode)
- {
--	const u16 icount = EROFS_INODE_XATTR_ICOUNT(inode->xattr_isize);
-+	u16 icount = EROFS_INODE_XATTR_ICOUNT(inode->xattr_isize);
- 	struct erofs_sb_info *sbi = inode->sbi;
--	erofs_off_t off;
-+	struct erofs_buffer_head *bh = inode->bh;
-+	erofs_off_t off = erofs_iloc(inode);
- 	union {
- 		struct erofs_inode_compact dic;
- 		struct erofs_inode_extended die;
- 	} u = {};
- 	union erofs_inode_i_u u1;
- 	union erofs_inode_i_nb nb;
-+	unsigned int iovcnt = 0;
-+	struct iovec iov[2];
-+	char *xattrs = NULL;
- 	bool nlink_1 = true;
- 	int ret, fmt;
- 
--	if (inode->bh)
--		off = erofs_btell(inode->bh, false);
--	else
--		off = erofs_iloc(inode);
-+	DBG_BUGON(bh && erofs_btell(bh, false) != off);
- 
- 	if (S_ISCHR(inode->i_mode) || S_ISBLK(inode->i_mode) ||
- 	    S_ISFIFO(inode->i_mode) || S_ISSOCK(inode->i_mode))
-@@ -702,41 +703,41 @@ int erofs_iflush(struct erofs_inode *inode)
- 	default:
- 		erofs_err("unsupported on-disk inode version of nid %llu",
- 			  (unsigned long long)inode->nid);
--		BUG_ON(1);
-+		DBG_BUGON(1);
-+		return -EOPNOTSUPP;
- 	}
- 
--	ret = erofs_dev_write(sbi, &u, off, inode->inode_isize);
--	if (ret)
--		return ret;
--	off += inode->inode_isize;
--
-+	iov[iovcnt++] = (struct iovec){ .iov_base = &u,
-+					.iov_len = inode->inode_isize };
- 	if (inode->xattr_isize) {
--		char *xattrs = erofs_export_xattr_ibody(inode);
--
-+		xattrs = erofs_export_xattr_ibody(inode);
- 		if (IS_ERR(xattrs))
- 			return PTR_ERR(xattrs);
--
--		ret = erofs_dev_write(sbi, xattrs, off, inode->xattr_isize);
--		free(xattrs);
--		if (ret)
--			return ret;
--
--		off += inode->xattr_isize;
-+		iov[iovcnt++] = (struct iovec){ .iov_base = xattrs,
-+						.iov_len = inode->xattr_isize };
- 	}
- 
-+	ret = erofs_io_pwritev(&sbi->bdev, iov, iovcnt, off);
-+	free(xattrs);
-+	if (ret != inode->inode_isize + inode->xattr_isize)
-+		return ret < 0 ? ret : -EIO;
-+
-+	off += ret;
- 	if (inode->extent_isize) {
- 		if (inode->datalayout == EROFS_INODE_CHUNK_BASED) {
- 			ret = erofs_blob_write_chunk_indexes(inode, off);
--			if (ret)
--				return ret;
--		} else {
--			/* write compression metadata */
-+		} else {	/* write compression metadata */
- 			off = roundup(off, 8);
--			ret = erofs_dev_write(sbi, inode->compressmeta, off,
--					      inode->extent_isize);
--			if (ret)
--				return ret;
-+			ret = erofs_io_pwrite(&sbi->bdev, inode->compressmeta,
-+					      off, inode->extent_isize);
- 		}
-+		if (ret != inode->extent_isize)
-+			return ret < 0 ? ret : -EIO;
-+	}
-+	if (bh) {
-+		inode->bh = NULL;
-+		erofs_iput(inode);
-+		return erofs_bh_flush_generic_end(bh);
- 	}
+@@ -487,12 +487,6 @@ static inline int erofs_dev_write(struct erofs_sb_info *sbi, const void *buf,
  	return 0;
  }
-@@ -744,15 +745,9 @@ int erofs_iflush(struct erofs_inode *inode)
- static int erofs_bh_flush_write_inode(struct erofs_buffer_head *bh)
- {
- 	struct erofs_inode *inode = bh->fsprivate;
--	int ret;
  
- 	DBG_BUGON(inode->bh != bh);
--	ret = erofs_iflush(inode);
--	if (ret)
--		return ret;
--	inode->bh = NULL;
--	erofs_iput(inode);
--	return erofs_bh_flush_generic_end(bh);
-+	return erofs_iflush(inode);
+-static inline int erofs_dev_fillzero(struct erofs_sb_info *sbi, u64 offset,
+-				     size_t len, bool pad)
+-{
+-	return erofs_io_fallocate(&sbi->bdev, offset, len, pad);
+-}
+-
+ static inline int erofs_dev_resize(struct erofs_sb_info *sbi,
+ 				   erofs_blk_t blocks)
+ {
+diff --git a/include/erofs/io.h b/include/erofs/io.h
+index 101a5ba4..14d6e45f 100644
+--- a/include/erofs/io.h
++++ b/include/erofs/io.h
+@@ -59,7 +59,7 @@ ssize_t erofs_io_pwrite(struct erofs_vfile *vf, const void *buf, u64 pos, size_t
+ ssize_t erofs_io_pwritev(struct erofs_vfile *vf, const struct iovec *iov,
+ 			 int iovcnt, u64 pos);
+ int erofs_io_fsync(struct erofs_vfile *vf);
+-ssize_t erofs_io_fallocate(struct erofs_vfile *vf, u64 offset, size_t len, bool pad);
++int erofs_io_fallocate(struct erofs_vfile *vf, u64 offset, size_t len, bool pad);
+ int erofs_io_ftruncate(struct erofs_vfile *vf, u64 length);
+ ssize_t erofs_io_pread(struct erofs_vfile *vf, void *buf, u64 offset, size_t len);
+ ssize_t erofs_io_read(struct erofs_vfile *vf, void *buf, size_t len);
+diff --git a/lib/cache.c b/lib/cache.c
+index b3cf1c48..079465ed 100644
+--- a/lib/cache.c
++++ b/lib/cache.c
+@@ -29,7 +29,8 @@ const struct erofs_bhops erofs_skip_write_bhops = {
+ };
+ 
+ struct erofs_bufmgr *erofs_buffer_init(struct erofs_sb_info *sbi,
+-				       erofs_blk_t startblk)
++				       erofs_blk_t startblk,
++				       struct erofs_vfile *vf)
+ {
+ 	unsigned int blksiz = erofs_blksiz(sbi);
+ 	struct erofs_bufmgr *bmgr;
+@@ -54,6 +55,7 @@ struct erofs_bufmgr *erofs_buffer_init(struct erofs_sb_info *sbi,
+ 	bmgr->last_mapped_block = &bmgr->blkh;
+ 	bmgr->metablkcnt = 0;
+ 	bmgr->dsunit = 0;
++	bmgr->vf = vf ?: &sbi->bdev;
+ 	return bmgr;
  }
  
- static struct erofs_bhops erofs_write_inode_bhops = {
-diff --git a/lib/super.c b/lib/super.c
-index 0533a7c8..e5364d27 100644
---- a/lib/super.c
-+++ b/lib/super.c
-@@ -114,7 +114,6 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
- 	sbi->xattr_blkaddr = le32_to_cpu(dsb->xattr_blkaddr);
- 	sbi->xattr_prefix_start = le32_to_cpu(dsb->xattr_prefix_start);
- 	sbi->xattr_prefix_count = dsb->xattr_prefix_count;
--	sbi->islotbits = EROFS_ISLOTBITS;
- 	if (erofs_sb_has_48bit(sbi) && dsb->rootnid_8b) {
- 		sbi->root_nid = le64_to_cpu(dsb->rootnid_8b);
- 		sbi->primarydevice_blocks = (sbi->primarydevice_blocks << 32) |
+@@ -482,9 +484,13 @@ int erofs_bflush(struct erofs_bufmgr *bmgr,
+ 			continue;
+ 
+ 		padding = blksiz - (p->buffers.off & (blksiz - 1));
+-		if (padding != blksiz)
+-			erofs_dev_fillzero(sbi, erofs_pos(sbi, blkaddr) - padding,
++		if (padding != blksiz) {
++			ret = erofs_io_fallocate(bmgr->vf,
++					   erofs_pos(sbi, blkaddr) - padding,
+ 					   padding, true);
++			if (ret < 0)
++				return ret;
++		}
+ 
+ 		if (p->type != DATA)
+ 			bmgr->metablkcnt += p->buffers.nblocks;
+diff --git a/lib/io.c b/lib/io.c
+index aa043cae..983d9bf9 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -147,8 +147,8 @@ int erofs_io_fsync(struct erofs_vfile *vf)
+ 	return 0;
+ }
+ 
+-ssize_t erofs_io_fallocate(struct erofs_vfile *vf, u64 offset,
+-			   size_t len, bool zeroout)
++int erofs_io_fallocate(struct erofs_vfile *vf, u64 offset,
++		       size_t len, bool zeroout)
+ {
+ 	static const char zero[EROFS_MAX_BLOCK_SIZE] = {0};
+ 	ssize_t ret;
+@@ -167,7 +167,7 @@ ssize_t erofs_io_fallocate(struct erofs_vfile *vf, u64 offset,
+ 	while (len > EROFS_MAX_BLOCK_SIZE) {
+ 		ret = erofs_io_pwrite(vf, zero, offset, EROFS_MAX_BLOCK_SIZE);
+ 		if (ret < 0)
+-			return ret;
++			return (int)ret;
+ 		len -= ret;
+ 		offset += ret;
+ 	}
+diff --git a/mkfs/main.c b/mkfs/main.c
+index fce26336..30804d10 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -1377,7 +1377,7 @@ int main(int argc, char **argv)
+ 	}
+ 
+ 	if (!incremental_mode) {
+-		g_sbi.bmgr = erofs_buffer_init(&g_sbi, 0);
++		g_sbi.bmgr = erofs_buffer_init(&g_sbi, 0, NULL);
+ 		if (!g_sbi.bmgr) {
+ 			err = -ENOMEM;
+ 			goto exit;
+@@ -1405,7 +1405,7 @@ int main(int argc, char **argv)
+ 			u.startblk = DIV_ROUND_UP(u.st.st_size, erofs_blksiz(&g_sbi));
+ 		else
+ 			u.startblk = g_sbi.primarydevice_blocks;
+-		g_sbi.bmgr = erofs_buffer_init(&g_sbi, u.startblk);
++		g_sbi.bmgr = erofs_buffer_init(&g_sbi, u.startblk, NULL);
+ 		if (!g_sbi.bmgr) {
+ 			err = -ENOMEM;
+ 			goto exit;
 -- 
 2.43.5
 
