@@ -1,43 +1,50 @@
-Return-Path: <linux-erofs+bounces-684-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-685-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D8AFB0BB42
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Jul 2025 05:14:19 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 862F8B0BB4B
+	for <lists+linux-erofs@lfdr.de>; Mon, 21 Jul 2025 05:16:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bllqX13dTz2yRD;
-	Mon, 21 Jul 2025 13:14:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bllt04FNBz2yRD;
+	Mon, 21 Jul 2025 13:16:24 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753067656;
-	cv=none; b=fkTsi9jYPhzarbv15bfm852AfTvwfWGS4EytsmKm9omFDuhCJKfg3/qod7Id+ypUcB27EWwby4Rol8LeMbA00cnC5fCvBdtnOQ70m2XtlUi+k9HyZvomRUaiwoPGf6plG/6BoZY+7MgnaMVc+8UidDm8BaDBjaEI0EgVdOfzt021RK8A5cOrHyPpQOyWrpRRaffEUA52KmUcdSKRrec4lhO8dhUWmEMYsmCYiUvbUNWYUEVLiCv5+NcKDVCPrQ/Qf6U8J2ou42SZmNrDt/Z8fcRVM64H5zBu6KNE6ps3rSNL3B8A+eHZLwp+xPHs43INQ4CqMd/bcGF9M4gwg9b1GQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753067784;
+	cv=none; b=OSWM14ZLcGA2PDcN/jnZp3NmZhO4d9PbdLUa7rQnTZUGv3RhsvYO7+35UZXijWGZHE/spYMVojpuBVwaWlwS53uQmUametAmuX5qu1bBh7tT6aZIlNgYTA6B/Stkha97aQAX3gw/oY8dgGCm9L/v1SO7YedIsq5K6mBb+6EN7gmObwxcrww61XSsTgnyjETZSVFd7erqGvh9tSB27gTQ+cEW2L7RZEKv1kdXCMIPZGxiJ+rUu7Y2atc0dZTwYP2AnBjB6oGzbY6fyQKj1r+r0AnOHmXkSMk5ct47GGZ2nZ9Hc7iA24aM9Ri5VMjCy0qLlld9S0401eaVtguuoXEOQA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1753067656; c=relaxed/relaxed;
-	bh=lCr7ru8zjyenyzhIwOzkZiA0apFYT5PO1pQKlR1f6Gw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nC2OC4y4QgPEqGgen37YzBs9Jqudy7/G7qz8hN2GvpCwMGlf6jH8sdxEELs43SwokUNzCBYIpHdDGDqmM5XcAMRWXXRhBVfOb/C3vkQ9kQJOMIjR6FglMLQUMNOcectmur9gfRDfIqswBlb5T3iieJikuLNU8Icdje1i7cnJxGvoT7xXUnadqEM14EEYyT14KOAmAqgwKOccZQFtb+qmto66ZXVwBo275cbcSiw8Na7evJ5D4S1D15TVgdMAt0O3lLpkOGxqtiXrKKFuJ1boZHHGCt200ZbgOrv77mN6KgVa58Ge00OOeGlrd1qJvrYhJs4ShpInyHZt955hV+Bp1A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fziExLzu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1753067784; c=relaxed/relaxed;
+	bh=UZNobycrt1GsYLZvNyC5pbNZtPHtfZQOh4kQPqr8i2Y=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=kQFw7VoZ36BxuXFAyuiu7RDN1Pdq5c7Jg4LLyLQT31I2lDFtWGLnxtfqKJibEGcd/l3/9XaV4CUh2nTKbB69oOXvFfSLLvcw1oQs406v8jFuAc2jXmG/NMUjFWeuIv+A1Gr26KZQbV77hWV6zgGoFrsmIJ2yalBMx5l0c9mIbtpbof9MRMgbOmko+gLP5h25Oq0REzIJ8hTguNexWkQ7DOgqsMQXbkrnw2QCwxdJ8bKJ+Z1wxI2n/Uqo14oZirWQJUUUpUnclRDZD7tQek3NFfp53OGxPmLKh5Wf/2p0Y/f6qnkB4NOd/GLmxzckc0oqHjWTuuInA7neQ2S9Es9yjw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=oCgoyB/a; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=fziExLzu;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=oCgoyB/a;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bllqT6PjKz2yFQ
-	for <linux-erofs@lists.ozlabs.org>; Mon, 21 Jul 2025 13:14:12 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1753067648; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=lCr7ru8zjyenyzhIwOzkZiA0apFYT5PO1pQKlR1f6Gw=;
-	b=fziExLzuV0rwx+GNWyk/aJVvLiw1lgfmtG0LVBGZ/fXM0/0zWxg0EtREi2ma38nXPryOAVmk72zNme1RDevzg4cZAmIbEFy4vq17BzYaoHwhzcXIYN+J2mYubwxO/v6uCpPangEKOAXY+UpHDPG/3hV4FABx7exXkQlz7jwfW3Y=
-Received: from 30.221.132.193(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WjIdN4u_1753067645 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 21 Jul 2025 11:14:06 +0800
-Message-ID: <7ea73f49-df4b-4f88-8b23-c917b4a9bd8a@linux.alibaba.com>
-Date: Mon, 21 Jul 2025 11:14:02 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bllsz4yHdz2yFQ
+	for <linux-erofs@lists.ozlabs.org>; Mon, 21 Jul 2025 13:16:23 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by nyc.source.kernel.org (Postfix) with ESMTP id 32A88A52746;
+	Mon, 21 Jul 2025 03:16:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B29F4C4CEE7;
+	Mon, 21 Jul 2025 03:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753067780;
+	bh=Nw5seF9MEuTiXjenbHZetewAcRt6dVK+T1m7D8mi55o=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=oCgoyB/aaQ8DLJ+mYs4v/2103iPAE62a9RHCFTaZNsGmEYABYmPkhyorCrp0XnIfz
+	 v2vl9VU+vljvsmIHtblflE1CdZuqOIaxTij2NZbFjzxXfM2Ycqszuma7HyOuqlsrDz
+	 0SjUAWhAgQBL1osZ59uRBSEbeo4HzLm4IjUHwIN8LyomgAabgN6Jk0H+RMeJB2Nihm
+	 r9k10CVM05fBFn4XQOnNtNGXscg7BfW/iOrA36h/ll9hmSkqqIBSDLqILTv3Zc+mLZ
+	 msp58fUzfO9SEGFC+L/hLxfqQb6uK6kZWcFLaoUqxBMipLijA9Qt64OS75n7wAWZ1+
+	 5rUhLWuniej/g==
+Message-ID: <e2aeb886-cb45-4f75-aaf9-7f0855b3a87a@kernel.org>
+Date: Mon, 21 Jul 2025 11:16:16 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,80 +57,110 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Compressed files & the page cache
-To: Barry Song <21cnbao@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- linux-btrfs@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>,
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- linux-erofs@lists.ozlabs.org, Jaegeuk Kim <jaegeuk@kernel.org>,
- linux-f2fs-devel@lists.sourceforge.net, Jan Kara <jack@suse.cz>,
- linux-fsdevel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
- Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
- David Howells <dhowells@redhat.com>, netfs@lists.linux.dev,
- Paulo Alcantara <pc@manguebit.org>,
- Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
- ntfs3@lists.linux.dev, Steve French <sfrench@samba.org>,
- linux-cifs@vger.kernel.org, Phillip Lougher <phillip@squashfs.org.uk>,
- Hailong Liu <hailong.liu@oppo.com>, Qu Wenruo <quwenruo.btrfs@gmx.com>
-References: <aHa8ylTh0DGEQklt@casper.infradead.org>
- <e5165052-ead3-47f4-88f6-84eb23dc34df@linux.alibaba.com>
- <b61c4b7f-4bb1-4551-91ba-a0e0ffd19e75@linux.alibaba.com>
- <CAGsJ_4xJjwsvMpeBV-QZFoSznqhiNSFtJu9k6da_T-T-a6VwNw@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAGsJ_4xJjwsvMpeBV-QZFoSznqhiNSFtJu9k6da_T-T-a6VwNw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Cc: chao@kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, Yue Hu <zbestahu@gmail.com>,
+ Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
+ <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>
+Subject: Re: [PATCH v4] erofs: support to readahead dirent blocks in
+ erofs_readdir()
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, xiang@kernel.org
+References: <20250721021352.2495371-1-chao@kernel.org>
+ <085b2e3f-223f-4867-9fac-99cf7cb2fa21@linux.alibaba.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <085b2e3f-223f-4867-9fac-99cf7cb2fa21@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Barry,
-
-On 2025/7/21 09:02, Barry Song wrote:
-> On Wed, Jul 16, 2025 at 8:28 AM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->>
-
-...
-
->>
->> ... high-order folios can cause side effects on embedded devices
->> like routers and IoT devices, which still have MiBs of memory (and I
->> believe this won't change due to their use cases) but they also use
->> Linux kernel for quite long time.  In short, I don't think enabling
->> large folios for those devices is very useful, let alone limiting
->> the minimum folio order for them (It would make the filesystem not
->> suitable any more for those users.  At least that is what I never
->> want to do).  And I believe this is different from the current LBS
->> support to match hardware characteristics or LBS atomic write
->> requirement.
+On 7/21/25 10:24, Gao Xiang wrote:
 > 
-> Given the difficulty of allocating large folios, it's always a good
-> idea to have order-0 as a fallback. While I agree with your point,
-> I have a slightly different perspective — enabling large folios for
-> those devices might be beneficial, but the maximum order should
-> remain small. I'm referring to "small" large folios.
+> 
+> On 2025/7/21 10:13, Chao Yu wrote:
+>> This patch supports to readahead more blocks in erofs_readdir(), it can
+>> enhance readdir performance in large direcotry.
+>>
+>> readdir test in a large directory which contains 12000 sub-files.
+>>
+>>         files_per_second
+>> Before:        926385.54
+>> After:        2380435.562
+>>
+>> Meanwhile, let's introduces a new sysfs entry to control readahead
+>> bytes to provide more flexible policy for readahead of readdir().
+>> - location: /sys/fs/erofs/<disk>/dir_ra_bytes
+>> - default value: 16384
+>> - disable readahead: set the value to 0
+>>
+>> Signed-off-by: Chao Yu <chao@kernel.org>
+>> ---
+>> v4:
+>> - clean up codes and comments
+>>   Documentation/ABI/testing/sysfs-fs-erofs |  8 ++++++++
+>>   fs/erofs/dir.c                           | 14 ++++++++++++++
+>>   fs/erofs/internal.h                      |  4 ++++
+>>   fs/erofs/super.c                         |  2 ++
+>>   fs/erofs/sysfs.c                         |  2 ++
+>>   5 files changed, 30 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
+>> index bf3b6299c15e..85fa56ca092c 100644
+>> --- a/Documentation/ABI/testing/sysfs-fs-erofs
+>> +++ b/Documentation/ABI/testing/sysfs-fs-erofs
+>> @@ -35,3 +35,11 @@ Description:    Used to set or show hardware accelerators in effect
+>>           and multiple accelerators are separated by '\n'.
+>>           Supported accelerator(s): qat_deflate.
+>>           Disable all accelerators with an empty string (echo > accel).
+>> +
+>> +What:        /sys/fs/erofs/<disk>/dir_ra_bytes
+>> +Date:        July 2025
+>> +Contact:    "Chao Yu" <chao@kernel.org>
+>> +Description:    Used to set or show readahead bytes during readdir(), by
+>> +        default the value is 16384.
+>> +
+>> +        - 0: disable readahead.
+>> diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
+>> index 3e4b38bec0aa..99745c272b60 100644
+>> --- a/fs/erofs/dir.c
+>> +++ b/fs/erofs/dir.c
+>> @@ -47,8 +47,12 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+>>       struct inode *dir = file_inode(f);
+>>       struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+>>       struct super_block *sb = dir->i_sb;
+>> +    struct file_ra_state *ra = &f->f_ra;
+>>       unsigned long bsz = sb->s_blocksize;
+>>       unsigned int ofs = erofs_blkoff(sb, ctx->pos);
+>> +    pgoff_t ra_pages = DIV_ROUND_UP_POW2(
+>> +            EROFS_I_SB(dir)->dir_ra_bytes, PAGE_SIZE);
+>> +    pgoff_t nr_pages = DIV_ROUND_UP_POW2(dir->i_size, PAGE_SIZE);
+>>       int err = 0;
+>>       bool initial = true;
+>>   @@ -63,6 +67,16 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+>>               break;
+>>           }
+>>   +        /* readahead blocks to enhance performance in large directory */
+>> +        if (ra_pages) {
+>> +            pgoff_t idx = DIV_ROUND_UP(ctx->pos, PAGE_SIZE);
+> 
+> Can we use DIV_ROUND_UP_POW2 here too? If it's okay,
+> I will update the patch manually when applied.
 
-Yeah, agreed. Having a way to limit the maximum order for those small
-devices (rather than disabling it completely) would be helpful.  At
-least "small" large folios could still provide benefits when memory
-pressure is light.
+Xiang,
+
+Yeah, looks fine to me.
+
+Please go ahead to update it while applying, thanks for your help. :)
 
 Thanks,
-Gao Xiang
 
 > 
-> Still, even with those, allocation can be difficult — especially
-> since so many other allocations (which aren't large folios) can cause
-> fragmentation. So having order-0 as a fallback remains important.
+> Otherwise it looks good to me,
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 > 
-> It seems we're missing a mechanism to enable "small" large folios
-> for files. For anon large folios, we do have sysfs knobs—though they
-> don’t seem to be universally appreciated. :-)
-> 
-> Thanks
-> Barry
+> Thanks,
+> Gao Xiang
 
 
