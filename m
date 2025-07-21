@@ -1,71 +1,60 @@
-Return-Path: <linux-erofs+bounces-681-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-682-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21555B0B9AD
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Jul 2025 03:03:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB03AB0B9ED
+	for <lists+linux-erofs@lfdr.de>; Mon, 21 Jul 2025 04:14:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4blhw6555rz30WT;
-	Mon, 21 Jul 2025 11:03:02 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4blkVD3M59z2yZ6;
+	Mon, 21 Jul 2025 12:14:12 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::92e"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753059782;
-	cv=none; b=oORIPjvrRdP8Qe//HzbtbSvqqhOOELezQqGzWMIXTDiCQrJapJzJk+bA5iVgwUeMgXRlYcwPKfyDZGj+Kyog9vs1vnk9to8yavhNvhpxDRJ1f23kD57MzEf/HME0SENeGG8vqevULSTJ2aedhOfAC4XUG8gRHtUvFl2FvAhVepb+yQVlG+MSg7l6J30ZjahR2uy2E72ITRUDP47Bp3VmcIAL4amc/uB/Qu6gK6pkhKjHfpZcctxhydOpNj4fEoY7SAguja/3KgRnFmRYYTHSCdJ3Qwh3Cog3UNga8g9WSUiaJxC08cZIqaWwbbQEo0UKC8KywQ30KFbb8yT16Z6wtA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753064052;
+	cv=none; b=P5jW5xll0oTbNL4shyywjMzKt1WLNjvOFRDoFNqrDfg0ELLUIwYuSgUNGU3IIESBFo7exuXWHHu0Tvan85brZQjunrl//xJDIosZUkfPUDChX6kZArkK+0y4bTKarIcdxc94ZUaHdL3Dlh71gKdBz1ZO1JR1n8zMt6RjQBuPnGpKWykk+UhnasuxAjdSMO/BCZQhBACakkaAoApXGEBJlVYjVc+MG3Pu+v36YiiMLJ1wAC2WjWadRrR5+aQePKP2TJTJkJsIYYZUieCuinqei/0FaPtGfzNqw8At3kTLjsS2jMT5NLFMas5UvhJIFWGNCiWLfkLLpQ46l/dQ/f7P8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1753059782; c=relaxed/relaxed;
-	bh=TUWA5dQohEpiNzIiLQ5yB5KcDd7NwkYx6hF+GZtItHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AtgDz9HwSLItzUt0NNMq2eqXTRWIt1dHHkeBqrby3QiPx0rT9BMmpgnlWiryltqdzylEgo0rc/FvK6WJVObvk+1Jt+43bV4OOCIrZ0e1az6gJhgd8sZKZaDDDMmWrnQhSbVw8XT7i18UFq3rVHEC/3K16YITx4iAiXlMz1zQ4oxQ5udfAGU+1Dov4ToCoLdLxnoeW1WIpDTwBXx7qlcoEc1Xb7bQMvEA44fxovha5FotBDO/zPEQEapAQ5IqAB2jDhy0dlIRwerLfGewE72BoXbft3s1BrF70Wzqr+/8ieyfMWt7hhuYI/k0D4JK0ChJqlUv7t7CDmr+LO2AVA0yNA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=e/TlEvlE; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::92e; helo=mail-ua1-x92e.google.com; envelope-from=21cnbao@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1753064052; c=relaxed/relaxed;
+	bh=zd8xSIPULHPVfmAxq7ARf2FJdzUDH/wsvW5FDulqCx0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ux89lka4s804PUfhR5mJ46/elS1kOper9uBpAsdDXwLMue1fcFtgP+2nl0pDm+hXJpoU0DC+9XREGOObqLqK/HRxhoh9go84qW35QsjNkDB0l6ScwtXf3x88EayFrsmlPXbd+Wtn6gMfC9O2oUZu3J6ChMc5FSjn5xZLO26eyr/fvW/hnvMndQl9ksiuuezyZiwdccqe/5dSG9gSXV35i+WQ/EsCxtUltbCr9f6PDZVxpZJj9LzP8+Y7KdPAekth0Jws1rNJeLSfA9+G4vXxsa7kLfY2N1PYcDxheP0WwrfI2MHw7ljalp9IubPHXTj4yN9qfwtF135+qavEugELKg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hN63Xhh9; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=e/TlEvlE;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=hN63Xhh9;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::92e; helo=mail-ua1-x92e.google.com; envelope-from=21cnbao@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4blhw5403hz2yfx
-	for <linux-erofs@lists.ozlabs.org>; Mon, 21 Jul 2025 11:03:00 +1000 (AEST)
-Received: by mail-ua1-x92e.google.com with SMTP id a1e0cc1a2514c-87f32826f22so5254300241.0
-        for <linux-erofs@lists.ozlabs.org>; Sun, 20 Jul 2025 18:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1753059777; x=1753664577; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TUWA5dQohEpiNzIiLQ5yB5KcDd7NwkYx6hF+GZtItHM=;
-        b=e/TlEvlE/SdXYtOAdnHZVQAFnHLrufo/GgxJvctcxVdvMtoI7o/hEsPkc105N9NRBD
-         nWhz/giFfgZCnuOyZi7zwSgZMfihc3Ji7YtpN/QAN06T8lIAPm7jFOxcoi6ErID4OR92
-         Rw6wgExlgYZc4bThh9LYIk+tPYnpnp/wIbQvowKorfT6C3uct3AHyi3D8zIPhRbeYToA
-         gFUVQPfWoJMi8bFP30HyrdYd0mwsb64f0s9G3HvC5SDYP7Lj+dczs3w4q1pR9xr/IoEl
-         1uqMnpspxAzIIwEoM5I0SMCHW2y5Hn/STFqGj4Pl7yaQo3eHIQcwK4s/LxOSpu/eHIEk
-         yPOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753059777; x=1753664577;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TUWA5dQohEpiNzIiLQ5yB5KcDd7NwkYx6hF+GZtItHM=;
-        b=tYUT05AVQzwwVkClnz6Qx8WNkqyF8142h3Ex3+uIYnzVPoj0KPEqzVhnWY/WKxsKTA
-         D1FoZ2GZfXHpzHM8ALnJyYCsvQg+A4MSi8a2dTxkdLyMfYBT5lm2AF919SeL3/OGIewm
-         5AxcneLVKH1Dxa+msF7cZWfu4/I5ReRe2pskWaA6/dmPpSeUX1eQkp7du1rfW5DrEmuc
-         CgfXwlmMNjdm/yh+N08kWa/x75R+iGKTFbOa1d/eziY4yWOGMg/UxEPlge+Pmuk0B9vk
-         5BhKtOX+t5WIVyapBvg1V8R/EClKqvkXEAlo2bKbkA+cxsa290wWimZ0mZEMYTbaZJ6x
-         qqtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEPLBo/yWUux2AfCrA1Mvh4DJsaOx58H2vdPxpSx8b0C3XrfhCIG7vW6sx89FfWMzUfVEsz6p9yvJe6w==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YzeNG2Zv7VJMyheWt+OYN6p1PwIQyW8v6oWHpVMYSjT4ufgyzH/
-	3GvT99t7wh9Rq6IA4Xze0pimhNQXmbFbHvd1MZXYvHFr1wqlxt5s3IsGnh//KV9GNAGpZiosSNO
-	jazTYiQK+Cutz9YS2yRHsMj+XB+5recY=
-X-Gm-Gg: ASbGncsKeAhM6cEZLenJ8tscQCY/i6sk3VQpANVDuAM/2uogHtvnVmDtW4mHR2PGkPh
-	T+xhqFPA7KKfzVtFBnO5GRgzaPg5lHcMcAktHPvYTeOYxdQSVM6wo1WRx44ajDWl2WPXfXZOTSu
-	jcEpFpwAY5Ic0/84skkL0+75fAWwCevcEPq6RAdlQcYbVexInCgCGezBWnG/r9CCY6RAmkJJKV1
-	mBsrg8=
-X-Google-Smtp-Source: AGHT+IEmfqw92aWBN5S+l0I76SU0igPCpvqCsAsKehe4/Ig+tf7XCtcGuzfl8boXl3T7O5lTenPtedOe1kc4xTvXkm8=
-X-Received: by 2002:a05:6102:30c8:10b0:4e9:9221:46d5 with SMTP id
- ada2fe7eead31-4f9a863ff9fmr3911618137.3.1753059777443; Sun, 20 Jul 2025
- 18:02:57 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4blkVC3wkBz2yFP
+	for <linux-erofs@lists.ozlabs.org>; Mon, 21 Jul 2025 12:14:11 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 53A125C576A;
+	Mon, 21 Jul 2025 02:14:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14A9FC4CEE7;
+	Mon, 21 Jul 2025 02:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753064049;
+	bh=bXdrSCzVGyERWLaj+SxFuNiWIdAvQDaET3Ilr8mDXME=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hN63Xhh9JT+U1GvHxt65UyY7zvku4uKdxAQbtNBBsa7VcwvlIhS591PS3ph6gJksB
+	 YJ1gG0Wd6XyGIHMJgKcRCBx1KH3Kn42L/iunnlGiA+wHcjya/vR4SAL+/LsZnxksvu
+	 V0nT3Dx1Qg7erFFv2QF9+ltnBUPfPTY89pmHIHHffTOB01dUxtxiljw+ZOuYWzvsk6
+	 XOpBJNOCjVLAWsYGNmtQHe/IN857NaeDfF32zPAb7JayiKi9acVqY196mP1eJG1HVu
+	 QPySSZH1kKVo8VReU03vWwp44sFfuD5ptQ+eCJnGsXsbXPFYz6/qYdcLwc85BjwQ4J
+	 b5b6IAuzuocKA==
+From: Chao Yu <chao@kernel.org>
+To: xiang@kernel.org
+Cc: linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH v4] erofs: support to readahead dirent blocks in erofs_readdir()
+Date: Mon, 21 Jul 2025 10:13:52 +0800
+Message-ID: <20250721021352.2495371-1-chao@kernel.org>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -77,145 +66,143 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <aHa8ylTh0DGEQklt@casper.infradead.org> <e5165052-ead3-47f4-88f6-84eb23dc34df@linux.alibaba.com>
- <b61c4b7f-4bb1-4551-91ba-a0e0ffd19e75@linux.alibaba.com>
-In-Reply-To: <b61c4b7f-4bb1-4551-91ba-a0e0ffd19e75@linux.alibaba.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Mon, 21 Jul 2025 09:02:45 +0800
-X-Gm-Features: Ac12FXxvyCQ0eeZOJnljUPiNW1hOMFbnyUUqpvxURHtPLurlhEFVPbwv81doELM
-Message-ID: <CAGsJ_4xJjwsvMpeBV-QZFoSznqhiNSFtJu9k6da_T-T-a6VwNw@mail.gmail.com>
-Subject: Re: Compressed files & the page cache
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Matthew Wilcox <willy@infradead.org>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, 
-	Nicolas Pitre <nico@fluxnic.net>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, 
-	linux-erofs@lists.ozlabs.org, Jaegeuk Kim <jaegeuk@kernel.org>, 
-	linux-f2fs-devel@lists.sourceforge.net, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, 
-	Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, 
-	David Howells <dhowells@redhat.com>, netfs@lists.linux.dev, 
-	Paulo Alcantara <pc@manguebit.org>, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, ntfs3@lists.linux.dev, 
-	Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org, 
-	Phillip Lougher <phillip@squashfs.org.uk>, Hailong Liu <hailong.liu@oppo.com>, 
-	Qu Wenruo <quwenruo.btrfs@gmx.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Wed, Jul 16, 2025 at 8:28=E2=80=AFAM Gao Xiang <hsiangkao@linux.alibaba.=
-com> wrote:
->
->
->
-> On 2025/7/16 07:32, Gao Xiang wrote:
-> > Hi Matthew,
-> >
-> > On 2025/7/16 04:40, Matthew Wilcox wrote:
-> >> I've started looking at how the page cache can help filesystems handle
-> >> compressed data better.  Feedback would be appreciated!  I'll probably
-> >> say a few things which are obvious to anyone who knows how compressed
-> >> files work, but I'm trying to be explicit about my assumptions.
-> >>
-> >> First, I believe that all filesystems work by compressing fixed-size
-> >> plaintext into variable-sized compressed blocks.  This would be a good
-> >> point to stop reading and tell me about counterexamples.
-> >
-> > At least the typical EROFS compresses variable-sized plaintext (at leas=
-t
-> > one block, e.g. 4k, but also 4k+1, 4k+2, ...) into fixed-sized compress=
-ed
-> > blocks for efficient I/Os, which is really useful for small compression
-> > granularity (e.g. 4KiB, 8KiB) because use cases like Android are usuall=
-y
-> > under memory pressure so large compression granularity is almost
-> > unacceptable in the low memory scenarios, see:
-> > https://erofs.docs.kernel.org/en/latest/design.html
-> >
-> > Currently EROFS works pretty well on these devices and has been
-> > successfully deployed in billions of real devices.
-> >
-> >>
-> >>  From what I've been reading in all your filesystems is that you want =
-to
-> >> allocate extra pages in the page cache in order to store the excess da=
-ta
-> >> retrieved along with the page that you're actually trying to read.  Th=
-at's
-> >> because compressing in larger chunks leads to better compression.
-> >>
-> >> There's some discrepancy between filesystems whether you need scratch
-> >> space for decompression.  Some filesystems read the compressed data in=
-to
-> >> the pagecache and decompress in-place, while other filesystems read th=
-e
-> >> compressed data into scratch pages and decompress into the page cache.
-> >>
-> >> There also seems to be some discrepancy between filesystems whether th=
-e
-> >> decompression involves vmap() of all the memory allocated or whether t=
-he
-> >> decompression routines can handle doing kmap_local() on individual pag=
-es.
-> >>
-> >> So, my proposal is that filesystems tell the page cache that their min=
-imum
-> >> folio size is the compression block size.  That seems to be around 64k=
-,
-> >> so not an unreasonable minimum allocation size.  That removes all the
-> >> extra code in filesystems to allocate extra memory in the page cache.>=
- It means we don't attempt to track dirtiness at a sub-folio granularity
-> >> (there's no point, we have to write back the entire compressed bock
-> >> at once).  We also get a single virtually contiguous block ... if you'=
-re
-> >> willing to ditch HIGHMEM support.  Or there's a proposal to introduce =
-a
-> >> vmap_file() which would give us a virtually contiguous chunk of memory
-> >> (and could be trivially turned into a noop for the case of trying to
-> >> vmap a single large folio).
-> >
-> > I don't see this will work for EROFS because EROFS always supports
-> > variable uncompressed extent lengths and that will break typical
-> > EROFS use cases and on-disk formats.
-> >
-> > Other thing is that large order folios (physical consecutive) will
-> > caused "increase the latency on UX task with filemap_fault()"
-> > because of high-order direct reclaims, see:
-> > https://android-review.googlesource.com/c/kernel/common/+/3692333
-> > so EROFS will not set min-order and always support order-0 folios.
-> >
-> > I think EROFS will not use this new approach, vmap() interface is
-> > always the case for us.
->
-> ... high-order folios can cause side effects on embedded devices
-> like routers and IoT devices, which still have MiBs of memory (and I
-> believe this won't change due to their use cases) but they also use
-> Linux kernel for quite long time.  In short, I don't think enabling
-> large folios for those devices is very useful, let alone limiting
-> the minimum folio order for them (It would make the filesystem not
-> suitable any more for those users.  At least that is what I never
-> want to do).  And I believe this is different from the current LBS
-> support to match hardware characteristics or LBS atomic write
-> requirement.
+This patch supports to readahead more blocks in erofs_readdir(), it can
+enhance readdir performance in large direcotry.
 
-Given the difficulty of allocating large folios, it's always a good
-idea to have order-0 as a fallback. While I agree with your point,
-I have a slightly different perspective =E2=80=94 enabling large folios for
-those devices might be beneficial, but the maximum order should
-remain small. I'm referring to "small" large folios.
+readdir test in a large directory which contains 12000 sub-files.
 
-Still, even with those, allocation can be difficult =E2=80=94 especially
-since so many other allocations (which aren't large folios) can cause
-fragmentation. So having order-0 as a fallback remains important.
+		files_per_second
+Before:		926385.54
+After:		2380435.562
 
-It seems we're missing a mechanism to enable "small" large folios
-for files. For anon large folios, we do have sysfs knobs=E2=80=94though the=
-y
-don=E2=80=99t seem to be universally appreciated. :-)
+Meanwhile, let's introduces a new sysfs entry to control readahead
+bytes to provide more flexible policy for readahead of readdir().
+- location: /sys/fs/erofs/<disk>/dir_ra_bytes
+- default value: 16384
+- disable readahead: set the value to 0
 
-Thanks
-Barry
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+v4:
+- clean up codes and comments
+ Documentation/ABI/testing/sysfs-fs-erofs |  8 ++++++++
+ fs/erofs/dir.c                           | 14 ++++++++++++++
+ fs/erofs/internal.h                      |  4 ++++
+ fs/erofs/super.c                         |  2 ++
+ fs/erofs/sysfs.c                         |  2 ++
+ 5 files changed, 30 insertions(+)
+
+diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
+index bf3b6299c15e..85fa56ca092c 100644
+--- a/Documentation/ABI/testing/sysfs-fs-erofs
++++ b/Documentation/ABI/testing/sysfs-fs-erofs
+@@ -35,3 +35,11 @@ Description:	Used to set or show hardware accelerators in effect
+ 		and multiple accelerators are separated by '\n'.
+ 		Supported accelerator(s): qat_deflate.
+ 		Disable all accelerators with an empty string (echo > accel).
++
++What:		/sys/fs/erofs/<disk>/dir_ra_bytes
++Date:		July 2025
++Contact:	"Chao Yu" <chao@kernel.org>
++Description:	Used to set or show readahead bytes during readdir(), by
++		default the value is 16384.
++
++		- 0: disable readahead.
+diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
+index 3e4b38bec0aa..99745c272b60 100644
+--- a/fs/erofs/dir.c
++++ b/fs/erofs/dir.c
+@@ -47,8 +47,12 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 	struct inode *dir = file_inode(f);
+ 	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+ 	struct super_block *sb = dir->i_sb;
++	struct file_ra_state *ra = &f->f_ra;
+ 	unsigned long bsz = sb->s_blocksize;
+ 	unsigned int ofs = erofs_blkoff(sb, ctx->pos);
++	pgoff_t ra_pages = DIV_ROUND_UP_POW2(
++			EROFS_I_SB(dir)->dir_ra_bytes, PAGE_SIZE);
++	pgoff_t nr_pages = DIV_ROUND_UP_POW2(dir->i_size, PAGE_SIZE);
+ 	int err = 0;
+ 	bool initial = true;
+ 
+@@ -63,6 +67,16 @@ static int erofs_readdir(struct file *f, struct dir_context *ctx)
+ 			break;
+ 		}
+ 
++		/* readahead blocks to enhance performance in large directory */
++		if (ra_pages) {
++			pgoff_t idx = DIV_ROUND_UP(ctx->pos, PAGE_SIZE);
++			pgoff_t pages = min(nr_pages - idx, ra_pages);
++
++			if (pages > 1 && !ra_has_index(ra, idx))
++				page_cache_sync_readahead(dir->i_mapping, ra,
++							f, idx, pages);
++		}
++
+ 		de = erofs_bread(&buf, dbstart, true);
+ 		if (IS_ERR(de)) {
+ 			erofs_err(sb, "failed to readdir of logical block %llu of nid %llu",
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 0d19bde8c094..8b1372521790 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -157,6 +157,7 @@ struct erofs_sb_info {
+ 	/* sysfs support */
+ 	struct kobject s_kobj;		/* /sys/fs/erofs/<devname> */
+ 	struct completion s_kobj_unregister;
++	erofs_off_t dir_ra_bytes;
+ 
+ 	/* fscache support */
+ 	struct fscache_volume *volume;
+@@ -238,6 +239,9 @@ EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
+ #define EROFS_I_BL_XATTR_BIT	(BITS_PER_LONG - 1)
+ #define EROFS_I_BL_Z_BIT	(BITS_PER_LONG - 2)
+ 
++/* default readahead size of directories */
++#define EROFS_DIR_RA_BYTES	16384
++
+ struct erofs_inode {
+ 	erofs_nid_t nid;
+ 
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index e1e9f06e8342..38fc4813a896 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -715,6 +715,8 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	if (err)
+ 		return err;
+ 
++	sbi->dir_ra_bytes = EROFS_DIR_RA_BYTES;
++
+ 	erofs_info(sb, "mounted with root inode @ nid %llu.", sbi->root_nid);
+ 	return 0;
+ }
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index eed8797a193f..9d9f820a5621 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -65,12 +65,14 @@ EROFS_ATTR_FUNC(drop_caches, 0200);
+ #ifdef CONFIG_EROFS_FS_ZIP_ACCEL
+ EROFS_ATTR_FUNC(accel, 0644);
+ #endif
++EROFS_ATTR_RW_UI(dir_ra_bytes, erofs_sb_info);
+ 
+ static struct attribute *erofs_sb_attrs[] = {
+ #ifdef CONFIG_EROFS_FS_ZIP
+ 	ATTR_LIST(sync_decompress),
+ 	ATTR_LIST(drop_caches),
+ #endif
++	ATTR_LIST(dir_ra_bytes),
+ 	NULL,
+ };
+ ATTRIBUTE_GROUPS(erofs_sb);
+-- 
+2.49.0
+
 
