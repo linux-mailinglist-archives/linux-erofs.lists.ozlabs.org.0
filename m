@@ -1,50 +1,114 @@
-Return-Path: <linux-erofs+bounces-687-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-688-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 184BEB0C052
-	for <lists+linux-erofs@lfdr.de>; Mon, 21 Jul 2025 11:29:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A0DCAB0C13B
+	for <lists+linux-erofs@lfdr.de>; Mon, 21 Jul 2025 12:26:04 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4blw8T0C2xz2xS2;
-	Mon, 21 Jul 2025 19:29:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4blxPh4tn7z2xKd;
+	Mon, 21 Jul 2025 20:26:00 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=147.75.193.91
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753090168;
-	cv=none; b=MEa7iJuxQpTfqXRX6VzL4D7OgtRSXIuZBQnIz/MGarGy94Bx68PNy9ETW0RE1dXx7ZI3mEZhc7lyG2WITzAC5hmK3Sv0feRND/WOYP6JLFPkMUMiibzjGX80+TNaVL/YCZxMcWbxCjsMBpZJwEqJaJy1YpZZm85FrDfgZaP/O8agS55dE7taOnySjP9wv3V0fGkWwssmpc1I/HRgLprloFQG1cqSSrZ8KqbwXJlM/36pLSdD32R30vjcAnAGREUfHl52oE+Ao7Xw95JyCBWmRRTRm3waTkPLsl0Uma4OmgsDHsb91xIQ8oWICJwvu9XegP3sw0DWdq6FCm2mDLnY8w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753093560;
+	cv=none; b=I9CfUF5A/hcC/2H5JiVv2xx5O4drVXWl2JfNPaCovXRv29kj3NDZYs13QWS3bkQ7adPCs2LzrtG38PChKoAsONDiBdGNvELKaylp/OI9wl69tu0HnuC2qm5H2Rbzrs9hTK4unMRpM7ItpBKruIoZfZYZNvEZMAIernW2oNHPwGkbhd5m9TETzvhKsgcisim0iQmJxCjG5Ht38k1clecMiSMtIa5iTnNetrPdHpneFGYSQMpBhxU834MtNh2erDI5x5z9RyrUet8PDNIfBD5ZvlQo/I/R/L9rEbU/jf6v+rgwOa9rS5xntadij8kxXyD2Y6886rVtnwcnEfrM9+HYzA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1753090168; c=relaxed/relaxed;
-	bh=P7hzKQ/AUOqVuvGZfgUv+EifATlVwALDFQzAEjnT5Tc=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=E1OHnUsyKhS90wCMwp1YkrwNhNzcnf2Ht4QE03WxGo2bXD2QRZROBhQWPKtTinTSRXUFsX5kls+k8c5L06REyoYgxKBDICslnjGlYnWri84oG7gMZH1E0kA8qjpJz3iFOfV2CSfgsxESJr/E/7Qzo4uhe1ccSWpffbp8WNxGtzlkfmkRi/wlXU0ak5y6ENSOe+VQaB78ht8SLAHAsNJ9/Se/hTxChEhmhrM7N2KVADDixmNrZB5QuycWn0uEq5aqNIIIpaVlIodrInM9DXYATG6EvV72PRgCIEG30702Yl8pNKQ6tclaMliiwoF9m6JFqk+iSPHuSV3tUztp8i3WwA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=g1uxGS41; dkim-atps=neutral; spf=pass (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1753093560; c=relaxed/relaxed;
+	bh=baH6ow82NzmU1jGwAd7SMMrxH3jdioo5q/Xo9G5hG+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DVwz+MCPsxNm+Cm6Q81HEbuVkrB+RWPkthSyKsBLKInWg/MpDPoVLUF1+N6FLH/fmy8x8+c5OZiocz7vmcJKE/KsQQWp+10u7EVVTva+CqGT0jj3q5phRW3KRahZPl/8Czj7+r0gm8FHuToEBj5hGPEs0yifnpYYIlhIG+/VbNmyL5/82u/IosC75Z1qS85sK4PeHdZ30ablIRQA+1QYn4KB5OrnvaFYSFaA1KZQbiSxo4sGUUiaB4I+izT14A/lOmbL917gHJyfDAfncCnlJfXaQXy6is5VFXuMpZW32oTqleWZaIrBRImxnZjrE676c7AFVpLXq10q7XcSvBcJ6g==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz; dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=GGCpmZZg; dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=TiuaNzkK; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=GGCpmZZg; dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=TiuaNzkK; dkim-atps=neutral; spf=pass (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org) smtp.mailfrom=suse.cz
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=g1uxGS41;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=GGCpmZZg;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=TiuaNzkK;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=GGCpmZZg;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=TiuaNzkK;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=147.75.193.91; helo=nyc.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [147.75.193.91])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4blw8S34Jzz2xHY
-	for <linux-erofs@lists.ozlabs.org>; Mon, 21 Jul 2025 19:29:28 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id E09D9A52849;
-	Mon, 21 Jul 2025 09:29:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F210C4CEF1;
-	Mon, 21 Jul 2025 09:29:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753090165;
-	bh=dSHvmJ7mbIS5KasPwwUPeZlFBFSMCYHiOvHBW84+ptE=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=g1uxGS410mdQwGvjQTs4rGmq/G1SuyJTRQyjAbyZUz6e88K62W1ra8PVSR8Kfaci/
-	 uf+9qO+vNOtZTHQqClufBXJq9orgXSsXyRA/FYN8A+gBiOS3A1s4zdHJHB4pY54k9c
-	 nm1fyjj/GW+Zozyj80ReKoejBC73/3unLcLILrSQ1JT2wc3kFmYTF6hqkgzZ+I9JYo
-	 Tk1bQaGJ5kPyEgR5OQ5XSLjjjytlH9G9wEw/ySBogoWCLbs0duYLuzMsGy9PUbpfSJ
-	 qaRDTzjhqyzPBci7Yubu/PKn8I+dZQPutNyQH54XxmJI3PBpg5An0fpXRBfoAx2s8z
-	 MGwhJCXvqTRRQ==
-Message-ID: <fadcc64f-d95d-4902-ae4f-981c91babed6@kernel.org>
-Date: Mon, 21 Jul 2025 17:29:22 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4blxPf6Tvrz2xHp
+	for <linux-erofs@lists.ozlabs.org>; Mon, 21 Jul 2025 20:25:58 +1000 (AEST)
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 51A1E1F397;
+	Mon, 21 Jul 2025 10:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1753093555; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=baH6ow82NzmU1jGwAd7SMMrxH3jdioo5q/Xo9G5hG+4=;
+	b=GGCpmZZgbAB5XlOhPaT/l0zeSwhiqSn6JbNbcSAdSIrsIWr7T0Mc7Nurq9TLL5MlDIKSzb
+	G3mxxnF5X/WFL2F9PDn8NfEprPokB+uugrjkHFG+jVRlyIUBsFn+89vrEh51dQKAspuIIa
+	bOQxVSvP+dassyYss7hQFywZfgAWP9Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1753093555;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=baH6ow82NzmU1jGwAd7SMMrxH3jdioo5q/Xo9G5hG+4=;
+	b=TiuaNzkKooiGvnBZgx/DGGdlv5vk/tkXPxkZgwh1y7czyZp1RZa8jl8Z3vpXSlkZ0+KbS8
+	LZDo/WglGtJ31cBg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=GGCpmZZg;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=TiuaNzkK
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1753093555; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=baH6ow82NzmU1jGwAd7SMMrxH3jdioo5q/Xo9G5hG+4=;
+	b=GGCpmZZgbAB5XlOhPaT/l0zeSwhiqSn6JbNbcSAdSIrsIWr7T0Mc7Nurq9TLL5MlDIKSzb
+	G3mxxnF5X/WFL2F9PDn8NfEprPokB+uugrjkHFG+jVRlyIUBsFn+89vrEh51dQKAspuIIa
+	bOQxVSvP+dassyYss7hQFywZfgAWP9Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1753093555;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=baH6ow82NzmU1jGwAd7SMMrxH3jdioo5q/Xo9G5hG+4=;
+	b=TiuaNzkKooiGvnBZgx/DGGdlv5vk/tkXPxkZgwh1y7czyZp1RZa8jl8Z3vpXSlkZ0+KbS8
+	LZDo/WglGtJ31cBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3453C13A88;
+	Mon, 21 Jul 2025 10:25:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Lyt7DLMVfmi/GgAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 21 Jul 2025 10:25:55 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 5D047A0884; Mon, 21 Jul 2025 12:25:54 +0200 (CEST)
+Date: Mon, 21 Jul 2025 12:25:54 +0200
+From: Jan Kara <jack@suse.cz>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Barry Song <21cnbao@gmail.com>, Matthew Wilcox <willy@infradead.org>, 
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>, 
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, linux-erofs@lists.ozlabs.org, 
+	Jaegeuk Kim <jaegeuk@kernel.org>, linux-f2fs-devel@lists.sourceforge.net, Jan Kara <jack@suse.cz>, 
+	linux-fsdevel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, 
+	Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, 
+	David Howells <dhowells@redhat.com>, netfs@lists.linux.dev, Paulo Alcantara <pc@manguebit.org>, 
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, ntfs3@lists.linux.dev, Steve French <sfrench@samba.org>, 
+	linux-cifs@vger.kernel.org, Phillip Lougher <phillip@squashfs.org.uk>, 
+	Hailong Liu <hailong.liu@oppo.com>, Qu Wenruo <quwenruo.btrfs@gmx.com>
+Subject: Re: Compressed files & the page cache
+Message-ID: <z2ule3ilnnpoevo5mvt3intvjtuyud7vg3pbfauon47fhr4owa@giaehpbie4a5>
+References: <aHa8ylTh0DGEQklt@casper.infradead.org>
+ <e5165052-ead3-47f4-88f6-84eb23dc34df@linux.alibaba.com>
+ <b61c4b7f-4bb1-4551-91ba-a0e0ffd19e75@linux.alibaba.com>
+ <CAGsJ_4xJjwsvMpeBV-QZFoSznqhiNSFtJu9k6da_T-T-a6VwNw@mail.gmail.com>
+ <7ea73f49-df4b-4f88-8b23-c917b4a9bd8a@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -56,40 +120,87 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Bo Liu <liubo03@inspur.com>
-Subject: Re: [PATCH v6 2/2] erofs: implement metadata compression
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20250717070804.1446345-3-hsiangkao@linux.alibaba.com>
- <20250718031942.3052585-1-hsiangkao@linux.alibaba.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250718031942.3052585-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7ea73f49-df4b-4f88-8b23-c917b4a9bd8a@linux.alibaba.com>
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 51A1E1F397
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[28];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.com];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL76kpr34nasjgd69zbi7paxtw)];
+	MISSING_XM_UA(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,infradead.org,fb.com,toxicpanda.com,suse.com,vger.kernel.org,fluxnic.net,kernel.org,lists.ozlabs.org,lists.sourceforge.net,suse.cz,nod.at,lists.infradead.org,redhat.com,lists.linux.dev,manguebit.org,paragon-software.com,samba.org,squashfs.org.uk,oppo.com,gmx.com];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Score: -4.01
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On 7/18/25 11:19, Gao Xiang wrote:
-> From: Bo Liu <liubo03@inspur.com>
+On Mon 21-07-25 11:14:02, Gao Xiang wrote:
+> Hi Barry,
 > 
-> Thanks to the meta buffer infrastructure, metadata-compressed inodes are
-> just read from the metabox inode instead of the blockdevice (or backing
-> file) inode.
+> On 2025/7/21 09:02, Barry Song wrote:
+> > On Wed, Jul 16, 2025 at 8:28 AM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+> > > 
 > 
-> The same is true for shared extended attributes.
+> ...
 > 
-> When metadata compression is enabled, inode numbers are divided from
-> on-disk NIDs because of non-LTS 32-bit application compatibility.
+> > > 
+> > > ... high-order folios can cause side effects on embedded devices
+> > > like routers and IoT devices, which still have MiBs of memory (and I
+> > > believe this won't change due to their use cases) but they also use
+> > > Linux kernel for quite long time.  In short, I don't think enabling
+> > > large folios for those devices is very useful, let alone limiting
+> > > the minimum folio order for them (It would make the filesystem not
+> > > suitable any more for those users.  At least that is what I never
+> > > want to do).  And I believe this is different from the current LBS
+> > > support to match hardware characteristics or LBS atomic write
+> > > requirement.
+> > 
+> > Given the difficulty of allocating large folios, it's always a good
+> > idea to have order-0 as a fallback. While I agree with your point,
+> > I have a slightly different perspective — enabling large folios for
+> > those devices might be beneficial, but the maximum order should
+> > remain small. I'm referring to "small" large folios.
 > 
-> Co-developed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> Signed-off-by: Bo Liu <liubo03@inspur.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Yeah, agreed. Having a way to limit the maximum order for those small
+> devices (rather than disabling it completely) would be helpful.  At
+> least "small" large folios could still provide benefits when memory
+> pressure is light.
 
-Acked-by: Chao Yu <chao@kernel.org>
+Well, in the page cache you can tune not only the minimum but also the
+maximum order of a folio being allocated for each inode. Btrfs and ext4
+already use this functionality. So in principle the functionality is there,
+it is "just" a question of proper user interfaces or automatic logic to
+tune this limit.
 
-Thanks,
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
