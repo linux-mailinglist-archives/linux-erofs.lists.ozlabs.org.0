@@ -1,43 +1,60 @@
-Return-Path: <linux-erofs+bounces-707-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-708-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9549B132ED
-	for <lists+linux-erofs@lfdr.de>; Mon, 28 Jul 2025 04:15:23 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5BAEB1332B
+	for <lists+linux-erofs@lfdr.de>; Mon, 28 Jul 2025 04:51:29 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4br2BJ0j2yz307K;
-	Mon, 28 Jul 2025 12:15:20 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4br2zz4hDFz307K;
+	Mon, 28 Jul 2025 12:51:27 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753668920;
-	cv=none; b=VMatmH3ia+PAcpev5qTLmFIuTfszOdk8xTVncSqG50XJpf6PGimzL4LDSUTuCTBo3UX3/RWoo56Wnceamk5jUs/natmHSeeOTQz1gZ7ts+HQiVWs0EBkVlmnQLcgZJvRyWrVpevptTImWpnSabxvoJSr6RqeYib0uxr5v5sGsLa3SE0ACTGxL/ogmvG8IHVuHzM/FvAixlCivS9pAn3/w3WbfcBTasHOaTFsdhbdiDxQQkAMr+Bp6E3FFQ18pEZmCJ4DwC9wWLJer0+BVP1pJHDNls2ue8QRSBsleJEYwMCyGvgpfI61Xiin1AUt9HWQrcO6kZ/FjXmdB9VRVKjhHA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753671087;
+	cv=none; b=bpTmed8Ut6OSeBjmX3FUMS3hd5hS43WMGW+APAk2bRWVlr4gZqi0mwI4XApdD+ffmRB1E24qEFTQ0zEHDoXrui9nW/yVYMUWoy3j4A0rq55K5MlI3bnQHXPjgfZN04XGE/plghNXW2G6d3h0gdN2NbNRr2WrWDgH1+7eVuNeEz/AN+xBhwsttFrIgW8arujN/rqiEzMSy/i9KEwvHr5cpNtj3F4AIfhALEbkyUgh6EHn2Bashg+KmmcsjUCM8eLNu/3CLnWH+0CDUYKp7evVeEqf441GeYNugffx3Jm7ezWH9c5cFDdXxbRmDCpIljCTVOdXEs107BfyqlOMzcn45w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1753668920; c=relaxed/relaxed;
-	bh=FEPnAFfBuhelvYgk4HkToaKPJkYvMhErtm3vm6ZD9KQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kwinhpVnG747cIN9g4h8BRKheKPIo53tftjF9UborFyX/NNrV7bR/LTEENK2/0rokeeyt483xmOm8Je2f84l5bqQclcdkiExw8SyKYOzRxH8XJ9x/1e+kly5ntHzjFA/1GhernI9yCSmJk5AYavG09v8wSTyhHse8t+Vup7KZ63CWy8fswxEPrdh82p1QnMmAA3WWb54kjzhBwKir4vL5tL2prgda0ggBLjVEbn9Zha0ABLcmtYU/Hi7406mrpyUaBYsJCpZ/cnOuO+AvJh5Ux3hydJe/+kDr5Xo6Ninx598u4UaJ2ixp9fw0a5TTg19FKjG3MqWZqgZ3p1Ks9u1VA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NerZxr1y; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1753671087; c=relaxed/relaxed;
+	bh=Zq1RnGGxvQEyOwnIYsYhj8A70n0T5U5dDOZErhUI5to=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=B6UOxib6tOK9b/1aRqP/lttKsCN2iinEC4oxwaixiVzX/3plMd+0HIz1Fie4/wbomrl2ojl0TftJ2Ez7QuNM/QLeMJjXqQ2oljnvlea2RSAn95EItJIg9bCpPlH00xA07sP3fwkXx2BbP+0xDnOLLkdJ2kkU/lEpt1r0IEEWuZL7QfJiehqbIv7U8/Ay8k0+Ed0PJ3Kp4MAkTRJG3gkeFNMHDol+vX98xlpdQoXF49nDWbfLBFuU6X93bhkT/VLjm7gAuAFVKWRze7X2EjKoOQdGPAFIcZqMNqP/Zhb8OM7OGiN93QY3KrgKqcF4MNT3Epd4rzOol72Mkdn0zRUXLA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=PsPxrXbB; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=NerZxr1y;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=PsPxrXbB;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4br2BF5bRRz2xRq
-	for <linux-erofs@lists.ozlabs.org>; Mon, 28 Jul 2025 12:15:15 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1753668910; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=FEPnAFfBuhelvYgk4HkToaKPJkYvMhErtm3vm6ZD9KQ=;
-	b=NerZxr1yutztUFt0ZhdqJcHkmcfHUY9p1HZmvioKeX6lTQqoeRz/rkUjMK2NZNFOIoCxqyWznTBG+dOoTLIFzu5R8zV1VbWpnFro4KjOB6wvQrYVHMhZf4iNAbe9kTb5++pqoNZgxSQwBRNwt7Kni1JqdfzYAI+nj5clj/mzNHU=
-Received: from 30.221.131.28(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WkBZsOZ_1753668908 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 28 Jul 2025 10:15:09 +0800
-Message-ID: <1af1693e-a56e-4835-9744-e0190c28b1ea@linux.alibaba.com>
-Date: Mon, 28 Jul 2025 10:15:08 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4br2zy3KzSz2xRq
+	for <linux-erofs@lists.ozlabs.org>; Mon, 28 Jul 2025 12:51:26 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 1ACAB601D4;
+	Mon, 28 Jul 2025 02:51:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 447BFC4CEEB;
+	Mon, 28 Jul 2025 02:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753671082;
+	bh=Ka6HpcbV3v4iMb9TmNQTjH+8ndDpD9uqux9pQEtKHHs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=PsPxrXbBdGMIHEzpyoCyyxn+Zjb7ljzpblXmSkEP0ehpURkfbCBQ4gNodymblMm0A
+	 4d5gR94vKhoaPeBro7pu2oDwgpmVLcRDyk5lwI+TUFd/3ww/PJ3SWsnlkMt46pxry+
+	 81L4J5Nt2PLk9ZdClQuEvrVIOvcZ2k9nzabcyY31mc2ukOq73RksJE1V/a2y/fochA
+	 e8SI9qD4KMV5bfNjdXfCkYH27c23HjxBBdE/NfV6yQBaAl59QrbWtOUG7D2fIXHgv4
+	 9CWc9SL9laRqrHmy1xbdkD/Yjc68ry3+tkkfus/bnGs1+ygM4lwK7VwM3BAmEvLiv6
+	 3qKVQ0tyGycuw==
+Date: Mon, 28 Jul 2025 10:51:16 +0800
+From: Gao Xiang <xiang@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Chao Yu <chao@kernel.org>, Bo Liu <liubo03@inspur.com>,
+	Hongbo Li <lihongbo22@huawei.com>
+Subject: [GIT PULL] erofs updates for 6.17-rc1
+Message-ID: <aIblpKzSWEEYwQ06@debian>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+	Chao Yu <chao@kernel.org>, Bo Liu <liubo03@inspur.com>,
+	Hongbo Li <lihongbo22@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,70 +66,87 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] erofs: Fallback to normal access if DAX is not
- supported on extra device
-To: Yuezhang Mo <Yuezhang.Mo@sony.com>, xiang@kernel.org, chao@kernel.org,
- huyue2@coolpad.com, jefflexu@linux.alibaba.com, dhavale@google.com
-Cc: linux-erofs@lists.ozlabs.org, Friendy Su <friendy.su@sony.com>,
- Jacky Cao <jacky.cao@sony.com>, Daniel Palmer <daniel.palmer@sony.com>
-References: <20250728014920.1658799-2-Yuezhang.Mo@sony.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250728014920.1658799-2-Yuezhang.Mo@sony.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Yuezhang,
+Hi Linus,
 
-On 2025/7/28 09:49, Yuezhang Mo wrote:
-> If using multiple devices, we should check if the extra device support
-> DAX instead of checking the primary device when deciding if to use DAX
-> to access a file.
-> 
-> If an extra device does not support DAX we should fallback to normal
-> access otherwise the data on that device will be inaccessible.
-> 
-> Signed-off-by: Yuezhang Mo <Yuezhang.Mo@sony.com>
-> Reviewed-by: Friendy Su <friendy.su@sony.com>
-> Reviewed-by: Jacky Cao <jacky.cao@sony.com>
-> Reviewed-by: Daniel Palmer <daniel.palmer@sony.com>
-> ---
->   fs/erofs/super.c | 23 ++++++++++++++---------
->   1 file changed, 14 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index e1020aa60771..ad1578bb0f7b 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -174,6 +174,11 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
->   		if (!erofs_is_fileio_mode(sbi)) {
->   			dif->dax_dev = fs_dax_get_by_bdev(file_bdev(file),
->   					&dif->dax_part_off, NULL, NULL);
-> +			if (!dif->dax_dev && test_opt(&sbi->opt, DAX_ALWAYS)) {
-> +				erofs_info(sb, "DAX unsupported by %s. Turning off DAX.",
-> +						dif->path);
+Could you consider this pull request for 6.17-rc1?
 
-The patch itself looks good to me, yes, I don't think out
-a reasonable way to enable partial DAX for multiple devices.
+In this cycle, metadata compression is now supported due to user
+requests [1].  It can be useful for embedded use cases or archiving
+a large number of small files.
 
-So it'd better to just disable such case.
+Additionally, readdir performance has been improved by enabling
+readahead (note that it was already common practice for ext3/4 non-dx
+and f2fs directories).  We may consider further improvements later to
+align with ext4's s_inode_readahead_blks behavior for slow devices too.
 
-Just a nitpick, it would be better to align `dif->path` to the
-following char of `(` in the line above.
+The remaining commits are minor.  All commits have been in -next and no
+potential merge conflict is observed.
 
-Also if it's possible, please remove the unnecessary comment
-("/* handle multiple devices */") above erofs_scan_devices()
-together since:
-
-  - it was obvious and it might be not inaccurrate;
-
-  - it now handles some primary device stuff too.
+[1] https://issues.redhat.com/browse/RHEL-75783
 
 Thanks,
-Gao XIang
+Gao Xiang 
+
+The following changes since commit 89be9a83ccf1f88522317ce02f854f30d6115c41:
+
+  Linux 6.16-rc7 (2025-07-20 15:18:33 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.17-rc1
+
+for you to fetch changes up to df0ce6cefa453d2236381645e529a27ef2f0a573:
+
+  erofs: support to readahead dirent blocks in erofs_readdir() (2025-07-24 19:44:08 +0800)
+
+----------------------------------------------------------------
+Changes since last update:
+
+ - Add support for metadata compression;
+
+ - Enable readahead for directories to improve readdir performance;
+
+ - Minor fixes and cleanups.
+
+----------------------------------------------------------------
+Bo Liu (OpenAnolis) (2):
+      erofs: fix build error with CONFIG_EROFS_FS_ZIP_ACCEL=y
+      erofs: implement metadata compression
+
+Chao Yu (2):
+      erofs: do sanity check on m->type in z_erofs_load_compact_lcluster()
+      erofs: support to readahead dirent blocks in erofs_readdir()
+
+Gao Xiang (6):
+      erofs: get rid of {get,put}_page() for ztailpacking data
+      erofs: remove need_kmap in erofs_read_metabuf()
+      erofs: unify meta buffers in z_erofs_fill_inode()
+      erofs: refine erofs_iomap_begin()
+      erofs: remove ENOATTR definition
+      erofs: add on-disk definition for metadata compression
+
+ Documentation/ABI/testing/sysfs-fs-erofs |  10 ++-
+ fs/erofs/Kconfig                         |   2 +
+ fs/erofs/data.c                          |  64 ++++++++------
+ fs/erofs/decompressor.c                  |   2 +-
+ fs/erofs/dir.c                           |  17 +++-
+ fs/erofs/erofs_fs.h                      |  15 +++-
+ fs/erofs/fileio.c                        |   2 +-
+ fs/erofs/fscache.c                       |   3 +-
+ fs/erofs/inode.c                         |  21 ++---
+ fs/erofs/internal.h                      |  40 ++++++++-
+ fs/erofs/super.c                         |  23 ++++-
+ fs/erofs/sysfs.c                         |   4 +
+ fs/erofs/xattr.c                         |  56 +++++++------
+ fs/erofs/xattr.h                         |   3 -
+ fs/erofs/zdata.c                         |  20 +++--
+ fs/erofs/zmap.c                          | 140 +++++++++++++------------------
+ 16 files changed, 255 insertions(+), 167 deletions(-)
 
