@@ -1,43 +1,41 @@
-Return-Path: <linux-erofs+bounces-714-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-715-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id AAE20B14692
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Jul 2025 05:05:18 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6161DB14698
+	for <lists+linux-erofs@lfdr.de>; Tue, 29 Jul 2025 05:07:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4brgFS3S5Bz3064;
-	Tue, 29 Jul 2025 13:05:16 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4brgH73LdYz3064;
+	Tue, 29 Jul 2025 13:06:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753758316;
-	cv=none; b=gYWlswuRkagnI/jaPDRRUhVnTj2u1GewqxdPZkjz8Qk48Ld23HDDgeRRFpKcXz+0XQvEnDR+OaktiFSrK8aZrd3MLnalrBrMRiMCwaNCD8UnLgynVoo7vpvy1p6wEPiQIvsHKpmogXoiuRQoONYS1B8wwB4bChtQ78/hXGyJvQt30qX1CNoAZVtMzz9/UINOg7vlUjQNVjMPaNoA+fRg7VP1aC2wEJFrMtOxS48NrOZyOqb83F1IJxM04EWIsEH/kee+DcqQpqH5xEv3FtjOjX5uiOwYVExEWKMmunTJI939SG8ilpsWT/i6Lf1FHMn3bHv7ho36zq1GXIIbbwSPXw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753758403;
+	cv=none; b=o3bNnvYrGYxQ9U6ZtfuxTrySK6LUYRkL4OoYkuA89SRNq4V1hJbW2CNbIDFwt6yl+mKX/8i4cf9HoKyq9gadmKsCVTH9i1emiAfRE7nWWL1JkmIrS3QmYqmtB2S4pXgGQxRrH9dzoa8QlSexVwG3snciUAzW848IOmsYYq13hOYKnplhcq93OReN18NnfM3jfl+Xq807m4WH2no9ZwKvkmlR8erAo43KR571DMBsoEjAwthgBXoCj/H7QrKcP4R8ah5f1EIEZ0WfJVuVmiLU35H7ROyszqgFI6bqDcEkeaU6BLiJrgRMWm7OuVnSvh0n+QKFtAkNhcBjQvbksOy/Fg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1753758316; c=relaxed/relaxed;
-	bh=x2+gTP4QsoLIGG6pxYP6dnx1USzMnwdCSmpmAc+c4GM=;
+	t=1753758403; c=relaxed/relaxed;
+	bh=dbSiZNLXK9EzRZuY5aZM6+vlJwXZqZVzp+LE7v4u1dg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Z6BqQoIcgl7Q3ld2imL2Ds1EeohBzdknimKtmxbJyNWj/5gfkuU/7ey/zGBb3I5opjSovv1mMnxAK6rtXNGTU3725SFqj/k6cfkioV2JD7LOHu9sfXixc0ufwgk8r2RsBsaCyyYq/VNra61Fm3XW/JvKzJtKsngEDod8rWJLu1GUyQGA7ePrhJ2Iw2btdhshQTl8xtD4ulzI7a5BtcMeCr5f2aHGez3lIiC8sjc3tzN6VYVo2MJzBvS8nw2FPQDxR+huRNTIreeQ83lV2nxT9t47Ne0CWxfmXp5/+MV4TbtAbwvnCKxLSoK2i5cMrzMoUvtT6m/4pak32cgw7zepKA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=PmREMnAe; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=PmREMnAe;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 In-Reply-To:Content-Type; b=AahaEgvQYGb/CT9BqAN563nSqHAunfz4Q/RMIT02fw0T/UvueLxlttwveVJ+mVF7lLUX7kkcInj+EkKscwQtOT4eyRYfBO6rX0+1DtJXSkipH2e4fZrhBYIjmpIW43TyZOrbwvQNdGL6QKr+48vTTXD6wLmdsA/xCjYj6GV4FX07mLCjFuYwf2aq3BQUh8AY2aet+f12Lj1YpT8ucZLLhovj4AJnho2IbQFgeIPBpPbM78u8tU8dHOEtTVPSRVf1wddZovWQLfZ3hJXfuw7ye1r/Dr4UvRjvDx+Z+4kb2VzBkTD7ZdDmSfUJ19xneBAgsmzbAGF8d74Y/eYqLc8rFQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4brgFP6Dwyz2xCd
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Jul 2025 13:05:12 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1753758307; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=x2+gTP4QsoLIGG6pxYP6dnx1USzMnwdCSmpmAc+c4GM=;
-	b=PmREMnAeyRfqjr9biqWBJuZlGmL4oP9R1ahDpEZY4eukKcqoOeUCgI8ATxJ52j11/wXT8L4hh9Z9GXS5FanKkYiMQcDoH9I2gp0Y5B287ZKVRciacjsMrOMeZUkNbRCt1Q8IKAc0SQuYYnsPmAEqLMAtoF6zsgwtccgkurCXzJ8=
-Received: from 30.221.131.110(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WkOBKnd_1753758305 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 29 Jul 2025 11:05:05 +0800
-Message-ID: <ab965624-949a-454c-a4d0-2edb7d9265bc@linux.alibaba.com>
-Date: Tue, 29 Jul 2025 11:05:04 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4brgH62fZ6z2xCd
+	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Jul 2025 13:06:41 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4brgCT2BrKz13MdJ;
+	Tue, 29 Jul 2025 11:03:33 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id B32C3180B73;
+	Tue, 29 Jul 2025 11:06:37 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 29 Jul 2025 11:06:37 +0800
+Message-ID: <469d7d39-dde1-41f8-9d72-1c1a30a2b577@huawei.com>
+Date: Tue, 29 Jul 2025 11:06:37 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,40 +48,103 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] erofs: Fallback to normal access if DAX is not
+Subject: Re: [PATCH v2] erofs: Fallback to normal access if DAX is not
  supported on extra device
-To: Hongbo Li <lihongbo22@huawei.com>, linux-erofs@lists.ozlabs.org
-References: <20250728014920.1658799-2-Yuezhang.Mo@sony.com>
- <78fe79f9-627c-4f8b-98c6-f01be34871d7@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <78fe79f9-627c-4f8b-98c6-f01be34871d7@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Language: en-US
+To: <linux-erofs@lists.ozlabs.org>, <Yuezhang.Mo@sony.com>
+References: <20250728045409.1678099-2-Yuezhang.Mo@sony.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20250728045409.1678099-2-Yuezhang.Mo@sony.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
+X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Hongbo,
 
-On 2025/7/28 18:50, Hongbo Li wrote:
+Hi Yuezhang,
+
+On 2025/7/28 12:54, Yuezhang Mo wrote:
+> If using multiple devices, we should check if the extra device support
+> DAX instead of checking the primary device when deciding if to use DAX
+> to access a file.
 > 
-
-...
-
->> -        } else if (sbi->blkszbits != PAGE_SHIFT) {
->> -            errorfc(fc, "unsupported blocksize for DAX");
->> -            clear_opt(&sbi->opt, DAX_ALWAYS);
->> -        }
->> +    if (test_opt(&sbi->opt, DAX_ALWAYS) && sbi->blkszbits != PAGE_SHIFT) {
->> +        errorfc(fc, "unsupported blocksize for DAX");
+> If an extra device does not support DAX we should fallback to normal
+> access otherwise the data on that device will be inaccessible.
 > 
-> How about using the info log? Can we consider using infofc in this case?
+> Signed-off-by: Yuezhang Mo <Yuezhang.Mo@sony.com>
+> Reviewed-by: Friendy Su <friendy.su@sony.com>
+> Reviewed-by: Jacky Cao <jacky.cao@sony.com>
+> Reviewed-by: Daniel Palmer <daniel.palmer@sony.com>
+> ---
+>   fs/erofs/super.c | 24 ++++++++++++++----------
+>   1 file changed, 14 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index e1020aa60771..b08016bf9d1e 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -174,6 +174,11 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+>   		if (!erofs_is_fileio_mode(sbi)) {
+>   			dif->dax_dev = fs_dax_get_by_bdev(file_bdev(file),
+>   					&dif->dax_part_off, NULL, NULL);
+> +			if (!dif->dax_dev && test_opt(&sbi->opt, DAX_ALWAYS)) {
+> +				erofs_info(sb, "DAX unsupported by %s. Turning off DAX.",
+> +					   dif->path);
+> +				clear_opt(&sbi->opt, DAX_ALWAYS);
+> +			}
+>   		} else if (!S_ISREG(file_inode(file)->i_mode)) {
+>   			fput(file);
+>   			return -EINVAL;
+> @@ -210,8 +215,13 @@ static int erofs_scan_devices(struct super_block *sb,
+>   			  ondisk_extradevs, sbi->devs->extra_devices);
+>   		return -EINVAL;
+>   	}
+> -	if (!ondisk_extradevs)
+> +	if (!ondisk_extradevs) {
+> +		if (test_opt(&sbi->opt, DAX_ALWAYS) && !sbi->dif0.dax_dev) {
+> +			erofs_info(sb, "DAX unsupported by block device. Turning off DAX.");
+> +			clear_opt(&sbi->opt, DAX_ALWAYS);
+> +		}
+>   		return 0;
+> +	}
+>   
+>   	if (!sbi->devs->extra_devices && !erofs_is_fscache_mode(sb))
+>   		sbi->devs->flatdev = true;
+> @@ -338,7 +348,6 @@ static int erofs_read_superblock(struct super_block *sb)
+>   	if (ret < 0)
+>   		goto out;
+>   
+> -	/* handle multiple devices */
+>   	ret = erofs_scan_devices(sb, dsb);
+>   
+>   	if (erofs_sb_has_48bit(sbi))
+> @@ -671,14 +680,9 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>   			return invalfc(fc, "cannot use fsoffset in fscache mode");
+>   	}
+>   
+> -	if (test_opt(&sbi->opt, DAX_ALWAYS)) {
+> -		if (!sbi->dif0.dax_dev) {
+> -			errorfc(fc, "DAX unsupported by block device. Turning off DAX.");
+> -			clear_opt(&sbi->opt, DAX_ALWAYS);
+> -		} else if (sbi->blkszbits != PAGE_SHIFT) {
+> -			errorfc(fc, "unsupported blocksize for DAX");
+> -			clear_opt(&sbi->opt, DAX_ALWAYS);
+> -		}
+> +	if (test_opt(&sbi->opt, DAX_ALWAYS) && sbi->blkszbits != PAGE_SHIFT) {
+> +		errorfc(fc, "unsupported blocksize for DAX");
 
-I think you suggestion sounds better, but how about
-sending to the original author?
+How about using the info log? Can we consider using infofc in this case?
 
 Thanks,
-Gao Xiang
+Hongbo
+
+> +		clear_opt(&sbi->opt, DAX_ALWAYS);
+>   	}
+>   
+>   	sb->s_time_gran = 1;
 
