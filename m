@@ -1,52 +1,52 @@
-Return-Path: <linux-erofs+bounces-716-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-724-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 686D7B14CFA
-	for <lists+linux-erofs@lfdr.de>; Tue, 29 Jul 2025 13:25:10 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BC89B15AFA
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Jul 2025 10:55:35 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4brtLC3ZTLz2yrT;
-	Tue, 29 Jul 2025 21:25:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bsQz91WbPz3blF;
+	Wed, 30 Jul 2025 18:55:33 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.188
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753788307;
-	cv=none; b=VddlIFQVbO3ce1n4AEym2sYlrq9YLP7ETugINItTGrMeFLEtsOaHON9srlrfHIQ6sRmjZSlLYf8vDmXrQv5dTWNHsB7b/QwtVz5h70NIrkjW8vBmvJe4lZ0HAIpjOmx/YhGx3qE6Zg6AkKENyDtcmEXdyygkWzdj8m3AKeGhYZjexeOZwSQ+SahKwLw7SE5eBNgtpQwkbmdGizWHKvW3hSy9aoP2bTEOj9iudUiiljDcWYpLchyadtpNEe8CoQA9iySQ8v+1GWBibJbnXfRnUDbWlGzvLtxT/5abceKdJ0eRV1CMv94ArQjETabxDDTu0HpAocUOID7S19+V57z3GA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=139.178.84.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753865733;
+	cv=none; b=gTSQOFWf9zktmSlWiU1baZKdH7yCLZ+0yEWYm4oLbe0v+eaC/GkvDPq/audJLYZWKIPucZswQM+Eh2I/mAq7HNd/aVDBvg7wMO4h7cVfxqMOB0D0LP20zH0bUZQmjHlq4ZITqX8igsyeKbt3w7umv1uJEHC0unOI1KJl4bKYJO2DAq9v2M11o6uGq0ucaRqAMnAf6Ix5KseDK5Pl6GLAPdcw2djPs7ppRH+2GZUyIpmcuNqgFy/CKwPaQ+w0ABY/f80pSreWnuGY3gdUiM+nn5DqzIE5srgGKCfmVijQHfmFxCFeafRpEiWZJKr312O29uxKklDvGiKwNs8fnYcuAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1753788307; c=relaxed/relaxed;
-	bh=6PN/JxmdcKKYFua8VdnymRB7T9cPHrLP2OiIvQJ7YS4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gXn10jhw7suQswJldhH/7/tQUv+eImy7B9hUW4FEW7MsUPeuedH+YrpDD1JMoh9N6iZOrFi2sT+5DSDzaCOF7mrZBg71g0DVgXQtAOvSeaVecxlK55/O1fPYkbkWTaPapwns2nvr6ZXTMhPwsto+Q2iFUADDHd1zbhfRyUe1zBfc8o9gma5Xg1RefxpvBzT3Q0T4Pm6hGlp39Mv/F8nt9sp8cbqRT5MPOzMeGasSR5PQh0bQemjzjqhh85wAjBpyAfvxFwJi4ZrAIN4WfOaWBK0XK5EyDLnEZ18i64ZgAhCw0zu6ti2bcgcZWuZWmHLlHXU9QDab/Eou7ukHNXvI/A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.188; helo=szxga02-in.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 1069 seconds by postgrey-1.37 at boromir; Tue, 29 Jul 2025 21:25:04 AEST
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1753865733; c=relaxed/relaxed;
+	bh=pyv+uVe2xSZblNN12qgM2X2mojWO6Wet9EMuowF2p7o=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=IDaip39M6Zjaf3JKX4aERvKzQOrrBk40qwah7X8gQjWL7C7toW7f7k5R7zkMWLMH7Wa0OJIR4uwoLzWjmHHy+3fM2kzJUHApFyBe+Tey1eoP9Ep1leV1AAx/86D/oE+0dm1uuCjJtPJYMiO3CEyhnls06WvugifovikJvtfqlpiV86S1IUhVwcXlpB6kE1xgxWNmew/vTnHGVGy13vQYB19Od3TRE9mC8OPo91+Oi5ZYOfRj+gB6fNrUuRRke3p57ESgEAp1jooTv7cottTCeTR7WzIwurt0ya3H5NJsYF9R0fhpTbLuSKlom2plnXr2nn/yO7gkKcPsAsTZK83TIw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=Lc4PZgzL; dkim-atps=neutral; spf=pass (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=Lc4PZgzL;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=139.178.84.217; helo=dfw.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4brtL85JXcz2y82
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Jul 2025 21:25:02 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4brswY1SJqztSwq
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Jul 2025 19:06:21 +0800 (CST)
-Received: from kwepemp500007.china.huawei.com (unknown [7.202.195.151])
-	by mail.maildlp.com (Postfix) with ESMTPS id 19552180B52
-	for <linux-erofs@lists.ozlabs.org>; Tue, 29 Jul 2025 19:07:24 +0800 (CST)
-Received: from localhost.localdomain (10.175.124.27) by
- kwepemp500007.china.huawei.com (7.202.195.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 29 Jul 2025 19:07:23 +0800
-From: Yifan Zhao <zhaoyifan28@huawei.com>
-To: <linux-erofs@lists.ozlabs.org>
-CC: <jingrui@huawei.com>, <wayne.ma@huawei.com>, <zhurui10@huawei.com>,
-	<songgongzheng@huawei.com>, <lihongbo22@huawei.com>, <qinbinjuan@huawei.com>,
-	<caihaomin@huawei.com>, <caihe@huawei.com>, zhaoyifan
-	<zhaoyifan28@huawei.com>
-Subject: [RFC 4/4] erofs-utils: mkfs: support EROFS index-only image generation from S3
-Date: Tue, 29 Jul 2025 19:06:10 +0800
-Message-ID: <20250729110610.3438246-5-zhaoyifan28@huawei.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250729110610.3438246-1-zhaoyifan28@huawei.com>
-References: <20250729110610.3438246-1-zhaoyifan28@huawei.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bsQz83CdVz2yGf
+	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Jul 2025 18:55:32 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by dfw.source.kernel.org (Postfix) with ESMTP id 4AC165C48A9;
+	Wed, 30 Jul 2025 08:55:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 958FEC4CEF5;
+	Wed, 30 Jul 2025 08:55:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1753865730;
+	bh=W9VzuvIhcsWBHY97iqUaQSl3iZJgOaKqkWDCRL4G044=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=Lc4PZgzLCIyBsMffn/udNAqUemnW+H8nWcfPrQX30LXp8EYz4ZNDcxCaIt1KK6QnI
+	 jsoMTQxsGYSs9HmH9NGAWqQ3GJznL3Pa10TkWen24mrM0yp5S2oWFy4feFzq4hZjtF
+	 biaBB7Bd9Sm/AWVyBaCyh/dYdmxYPqmIw5phjlus=
+Subject: Patch "erofs: simplify z_erofs_transform_plain()" has been added to the 6.1-stable tree
+To: chao@kernel.org,gregkh@linuxfoundation.org,hsiangkao@linux.alibaba.com,huyue2@coolpad.com,jan.kiszka@siemens.com,linux-erofs@lists.ozlabs.org,s.kerkmann@pengutronix.de
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Wed, 30 Jul 2025 10:55:13 +0200
+In-Reply-To: <20250722100029.3052177-5-hsiangkao@linux.alibaba.com>
+Message-ID: <2025073013-boogeyman-deluge-56c0@gregkh>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -58,678 +58,107 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.175.124.27]
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemp500007.china.huawei.com (7.202.195.151)
-X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-stable: commit
+X-Patchwork-Hint: ignore 
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SORTED_RECIPS,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: zhaoyifan <zhaoyifan28@huawei.com>
 
-This patch introduces experimental S3 support for mkfs.erofs, allowing EROFS
-images to be generated from AWS S3 (and other S3 API compatible services).
+This is a note to let you know that I've just added the patch titled
 
-Currently the functionality is limited:
-- only index-only EROFS image generation are supported
-- only AWS Signature Version 2 is supported
-- only S3 object name and size are respected during image generation
+    erofs: simplify z_erofs_transform_plain()
 
-Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+to the 6.1-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     erofs-simplify-z_erofs_transform_plain.patch
+and it can be found in the queue-6.1 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From stable+bounces-163684-greg=kroah.com@vger.kernel.org Tue Jul 22 12:04:46 2025
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+Date: Tue, 22 Jul 2025 18:00:28 +0800
+Subject: erofs: simplify z_erofs_transform_plain()
+To: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kiszka <jan.kiszka@siemens.com>, Stefan Kerkmann <s.kerkmann@pengutronix.de>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Gao Xiang <hsiangkao@linux.alibaba.com>, Yue Hu <huyue2@coolpad.com>, Chao Yu <chao@kernel.org>
+Message-ID: <20250722100029.3052177-5-hsiangkao@linux.alibaba.com>
+
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+
+commit c5539762f32e97c5e16215fa1336e32095b8b0fd upstream.
+
+Use memcpy_to_page() instead of open-coding them.
+
+In addition, add a missing flush_dcache_page() even though almost all
+modern architectures clear `PG_dcache_clean` flag for new file cache
+pages so that it doesn't change anything in practice.
+
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Reviewed-by: Yue Hu <huyue2@coolpad.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Link: https://lore.kernel.org/r/20230627161240.331-2-hsiangkao@linux.alibaba.com
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/erofs/s3.h |   2 +
- lib/s3.c           | 605 +++++++++++++++++++++++++++++++++++++++++++++
- mkfs/main.c        |   5 +-
- 3 files changed, 610 insertions(+), 2 deletions(-)
+ fs/erofs/decompressor.c |   19 ++++++++-----------
+ 1 file changed, 8 insertions(+), 11 deletions(-)
 
-diff --git a/include/erofs/s3.h b/include/erofs/s3.h
-index 16a06c9..a975fbb 100644
---- a/include/erofs/s3.h
-+++ b/include/erofs/s3.h
-@@ -33,6 +33,8 @@ struct erofs_s3 {
- 	enum s3erofs_signature_version sig;
- };
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -323,7 +323,7 @@ static int z_erofs_transform_plain(struc
+ 	const unsigned int lefthalf = rq->outputsize - righthalf;
+ 	const unsigned int interlaced_offset =
+ 		rq->alg == Z_EROFS_COMPRESSION_SHIFTED ? 0 : rq->pageofs_out;
+-	unsigned char *src, *dst;
++	u8 *src;
  
-+int s3erofs_build_trees(struct erofs_inode *root, struct erofs_s3 *s3cfg);
-+
- #ifdef __cplusplus
- }
- #endif
-diff --git a/lib/s3.c b/lib/s3.c
-index bbd35a4..a0810e4 100644
---- a/lib/s3.c
-+++ b/lib/s3.c
-@@ -4,4 +4,609 @@
-  *             http://www.huawei.com/
-  * Created by Yifan Zhao <zhaoyifan28@huawei.com>
-  */
-+#include <stdlib.h>
-+#include <time.h>
-+#include <curl/curl.h>
-+#include <libxml/parser.h>
-+#include <openssl/hmac.h>
-+#include "erofs/internal.h"
-+#include "erofs/print.h"
- #include "erofs/s3.h"
-+#include "erofs/inode.h"
-+#include "erofs/blobchunk.h"
-+#include "erofs/rebuild.h"
-+
-+#define S3EROFS_MAX_QUERY_PARAMS    16
-+#define S3EROFS_URL_LEN		    8192
-+#define S3EROFS_CANONICAL_QUERY_LEN 2048
-+
-+#define BASE64_ENCODE_LEN(len) (((len + 2) / 3) * 4)
-+
-+static CURL *easy_curl;
-+
-+struct s3erofs_query_params {
-+	int num;
-+	const char *key[S3EROFS_MAX_QUERY_PARAMS];
-+	const char *value[S3EROFS_MAX_QUERY_PARAMS];
-+};
-+
-+static void s3erofs_prepare_url(const char *endpoint, const char *bucket, const char *object,
-+				struct s3erofs_query_params *params, char *url,
-+				enum s3erofs_url_style url_style)
-+{
-+	const char *schema = NULL;
-+	const char *host = NULL;
-+	size_t pos = 0;
-+	int i;
-+
-+	if (!endpoint || !bucket || !url) {
-+		return;
-+	}
-+
-+	if (strncmp(endpoint, "https://", 8) == 0) {
-+		schema = "https://";
-+		host = endpoint + 8;
-+	} else if (strncmp(endpoint, "http://", 7) == 0) {
-+		schema = "http://";
-+		host = endpoint + 7;
-+	} else {
-+		schema = "https://";
-+		host = endpoint;
-+	}
-+
-+	if (url_style == S3EROFS_URL_STYLE_VIRTUAL_HOST) {
-+		pos += snprintf(url, S3EROFS_URL_LEN, "%s%s.%s", schema, bucket, host);
-+	} else {
-+		pos += snprintf(url, S3EROFS_URL_LEN, "%s%s/%s", schema, host, bucket);
-+	}
-+
-+	if (object) {
-+		pos += snprintf(url + pos, S3EROFS_URL_LEN - pos, "/%s", object);
-+	}
-+
-+	for (i = 0; i < params->num; i++) {
-+		pos += snprintf(url + pos, S3EROFS_URL_LEN - pos, "%c%s=%s", (i == 0 ? '?' : '&'),
-+				params->key[i], params->value[i]);
-+	}
-+}
-+
-+static char *get_canonical_headers(const struct curl_slist *list) { return ""; }
-+
-+static char *s3erofs_sigv2_header(const struct curl_slist *headers, const char *method,
-+				  const char *content_md5, const char *content_type,
-+				  const char *date, const char *canonical_query, const char *ak,
-+				  const char *sk)
-+{
-+	char *str, *output = NULL;
-+	u8 *hmac_signature;
-+	unsigned int len = 0, pos = 0, output_len;
-+	const char *canonical_headers = get_canonical_headers(headers);
-+	const char *prefix = "Authorization: AWS ";
-+
-+	if (!method || !date || !ak || !sk) {
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (!content_md5)
-+		content_md5 = "";
-+	if (!content_type)
-+		content_type = "";
-+	if (!canonical_query)
-+		canonical_query = "/";
-+
-+	len += strlen(method) + 1;
-+	len += strlen(content_md5) + 1;
-+	len += strlen(content_type) + 1;
-+	len += strlen(date) + 1;
-+	len += strlen(canonical_headers);
-+	len += strlen(canonical_query);
-+
-+	str = (char *)malloc(++len);
-+	if (!str)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pos += snprintf(str + pos, len - pos, "%s\n", method);
-+	pos += snprintf(str + pos, len - pos, "%s\n", content_md5);
-+	pos += snprintf(str + pos, len - pos, "%s\n", content_type);
-+	pos += snprintf(str + pos, len - pos, "%s\n", date);
-+	pos += snprintf(str + pos, len - pos, "%s", canonical_headers);
-+	pos += snprintf(str + pos, len - pos, "%s", canonical_query);
-+
-+	hmac_signature = (u8 *)malloc(EVP_MAX_MD_SIZE);
-+	if (!hmac_signature)
-+		goto free_string;
-+
-+	if (!HMAC(EVP_sha1(), sk, strlen(sk), (u8 *)str, strlen(str), hmac_signature, &len))
-+		goto free_hmac;
-+
-+	output_len = BASE64_ENCODE_LEN(len);
-+	output_len += strlen(prefix);
-+	output_len += strlen(ak);
-+	/* for ':' between ak and signature*/
-+	output_len += 1;
-+
-+	output = (char *)malloc(output_len);
-+	if (!output)
-+		goto free_hmac;
-+
-+	memcpy(output, prefix, strlen(prefix));
-+	memcpy(output + strlen(prefix), ak, strlen(ak));
-+	output[strlen(prefix) + strlen(ak)] = ':';
-+
-+	EVP_EncodeBlock((unsigned char *)output + strlen(prefix) + strlen(ak) + 1, hmac_signature,
-+			len);
-+
-+free_hmac:
-+	free(hmac_signature);
-+free_string:
-+	free(str);
-+	return output ?: ERR_PTR(-ENOMEM);
-+}
-+
-+static void s3erofs_now_rfc1123(char *buf, size_t maxlen)
-+{
-+	time_t now = time(NULL);
-+	struct tm *ptm = gmtime(&now);
-+	strftime(buf, maxlen, "%a, %d %b %Y %H:%M:%S GMT", ptm);
-+}
-+
-+struct s3erofs_curl_request {
-+	const char *method;
-+	char url[S3EROFS_URL_LEN];
-+	char canonical_query[S3EROFS_CANONICAL_QUERY_LEN];
-+};
-+
-+struct s3erofs_curl_response {
-+	char *data;
-+	size_t size;
-+};
-+
-+static size_t s3erofs_request_write_memory_cb(void *contents, size_t size, size_t nmemb,
-+					      void *userp)
-+{
-+	size_t realsize = size * nmemb;
-+	struct s3erofs_curl_response *response = (struct s3erofs_curl_response *)userp;
-+	void *tmp;
-+
-+	tmp = realloc(response->data, response->size + realsize + 1);
-+	if (tmp == NULL)
-+		return 0;
-+
-+	response->data = tmp;
-+
-+	memcpy(response->data + response->size, contents, realsize);
-+	response->size += realsize;
-+	response->data[response->size] = '\0';
-+
-+	return realsize;
-+}
-+
-+static int s3erofs_request_insert_auth(struct curl_slist **request_headers, const char *method,
-+				       const char *canonical_query, const char *ak, const char *sk)
-+{
-+	char date_header[40];
-+	const char *date_prefix = "Date: ";
-+	size_t date_prefix_len = strlen(date_prefix);
-+	char *sigv2_header;
-+
-+	memcpy(date_header, date_prefix, date_prefix_len);
-+	s3erofs_now_rfc1123(date_header + date_prefix_len, sizeof(date_header) - date_prefix_len);
-+
-+	sigv2_header = s3erofs_sigv2_header(*request_headers, method, NULL, NULL,
-+					    date_header + date_prefix_len, canonical_query, ak, sk);
-+	if (IS_ERR(sigv2_header))
-+		return PTR_ERR(sigv2_header);
-+
-+	*request_headers = curl_slist_append(*request_headers, date_header);
-+	*request_headers = curl_slist_append(*request_headers, sigv2_header);
-+
-+	free(sigv2_header);
-+	return 0;
-+}
-+
-+static int s3erofs_request_perform(struct erofs_s3 *s3cfg, struct s3erofs_curl_request *req,
-+				   struct s3erofs_curl_response *resp)
-+{
-+	struct curl_slist *request_headers = NULL;
-+	long http_code = 0;
-+	int ret;
-+
-+	ret = s3erofs_request_insert_auth(&request_headers, req->method, req->canonical_query,
-+					  s3cfg->access_key, s3cfg->secret_key);
-+	if (ret < 0) {
-+		erofs_err("failed to insert auth headers\n");
-+		return ret;
-+	}
-+
-+	curl_easy_setopt(easy_curl, CURLOPT_URL, req->url);
-+	curl_easy_setopt(easy_curl, CURLOPT_WRITEDATA, resp);
-+	curl_easy_setopt(easy_curl, CURLOPT_HTTPHEADER, request_headers);
-+
-+	ret = curl_easy_perform(easy_curl);
-+	if (ret != CURLE_OK) {
-+		erofs_err("curl_easy_perform() failed: %s\n", curl_easy_strerror(ret));
-+		ret = -EIO;
-+		goto err_header;
-+	}
-+
-+	ret = curl_easy_getinfo(easy_curl, CURLINFO_RESPONSE_CODE, &http_code);
-+	if (ret != CURLE_OK) {
-+		erofs_err("curl_easy_getinfo() failed: %s\n", curl_easy_strerror(ret));
-+		ret = -EIO;
-+		goto err_header;
-+	}
-+
-+	if (!(http_code >= 200 && http_code < 300)) {
-+		erofs_err("request failed with HTTP code %ld\n", http_code);
-+		ret = -EIO;
-+	}
-+
-+err_header:
-+	curl_slist_free_all(request_headers);
-+	return ret;
-+}
-+
-+struct s3erofs_object_info {
-+	char *key;
-+	u64 size;
-+};
-+
-+struct s3erofs_object_iterator {
-+	struct s3erofs_object_info *objects;
-+	int cur, total;
-+
-+	struct erofs_s3 *s3cfg;
-+	const char *prefix, *delimiter;
-+
-+	char *next_marker;
-+	bool is_truncated;
-+};
-+
-+static int s3erofs_parse_list_objects_one(xmlNodePtr node, struct s3erofs_object_info *info)
-+{
-+	xmlNodePtr child;
-+	xmlChar *str;
-+
-+	for (child = node->children; child; child = child->next) {
-+		if (child->type == XML_ELEMENT_NODE) {
-+			str = xmlNodeGetContent(child);
-+			if (!str) {
-+				return -ENOMEM;
-+			}
-+
-+			if (xmlStrEqual(child->name, (const xmlChar *)"Key")) {
-+				info->key = strdup((char *)str);
-+			} else if (xmlStrEqual(child->name, (const xmlChar *)"Size")) {
-+				info->size = atoll((char *)str);
-+			}
-+
-+			xmlFree(str);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int s3erofs_parse_list_objects_result(const char *data, int len,
-+					     struct s3erofs_object_iterator *it)
-+{
-+	xmlDocPtr doc = NULL;
-+	xmlNodePtr root = NULL, node;
-+	xmlChar *str;
-+	xmlNodePtr contents_nodes[1000];
-+	int contents_count = 0;
-+	int i = 0;
-+	int ret = 0;
-+	void *tmp;
-+
-+	doc = xmlReadMemory(data, len, NULL, NULL, 0);
-+	if (!doc) {
-+		erofs_err("failed to parse XML data\n");
-+		return -EINVAL;
-+	}
-+
-+	root = xmlDocGetRootElement(doc);
-+	if (!root) {
-+		erofs_err("failed to get root element\n");
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (!xmlStrEqual(root->name, (const xmlChar *)"ListBucketResult")) {
-+		erofs_err("invalid root element: expected ListBucketResult, got %s", root->name);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	for (node = root->children; node; node = node->next) {
-+		if (node->type == XML_ELEMENT_NODE) {
-+			if (xmlStrEqual(node->name, (const xmlChar *)"Contents")) {
-+				if (contents_count < 1000)
-+					contents_nodes[contents_count++] = node;
-+			} else if (xmlStrEqual(node->name, (const xmlChar *)"IsTruncated")) {
-+				str = xmlNodeGetContent(node);
-+				if (str) {
-+					it->is_truncated =
-+					    xmlStrEqual(str, (const xmlChar *)"true") ? true
-+										      : false;
-+					xmlFree(str);
-+				}
-+			} else if (xmlStrEqual(node->name, (const xmlChar *)"NextMarker")) {
-+				str = xmlNodeGetContent(node);
-+				if (str) {
-+					if (it->next_marker)
-+						free(it->next_marker);
-+					it->next_marker = strdup((char *)str);
-+					if (!it->next_marker) {
-+						xmlFree(str);
-+						ret = -ENOMEM;
-+						goto out;
-+					}
-+					xmlFree(str);
-+				}
-+			}
-+		}
-+	}
-+
-+	if (contents_count == 0)
-+		goto out;
-+
-+	tmp = realloc(it->objects, contents_count * sizeof(struct s3erofs_object_info));
-+	if (!tmp) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+	memset(tmp, 0, contents_count * sizeof(struct s3erofs_object_info));
-+	it->objects = tmp;
-+
-+	for (i = 0; i < contents_count; i++) {
-+		ret = s3erofs_parse_list_objects_one(contents_nodes[i], &it->objects[i]);
-+		if (ret < 0) {
-+			erofs_err("failed to parse contents node #%d", i);
-+			while (--i >= 0)
-+				free(it->objects[i].key);
-+			free(it->objects);
-+			goto out;
-+		}
-+	}
-+
-+	it->total = contents_count;
-+
-+out:
-+	xmlFreeDoc(doc);
-+	return ret;
-+}
-+
-+static int s3erofs_list_objects(struct s3erofs_object_iterator *it)
-+{
-+	struct s3erofs_curl_request req = {0};
-+	struct s3erofs_curl_response resp = {0};
-+	struct s3erofs_query_params params = {0};
-+	int ret = 0;
-+
-+	struct erofs_s3 *s3cfg = it->s3cfg;
-+
-+	if (it->prefix && strlen(it->prefix ) > 1024) {
-+		erofs_err("prefix is too long");
-+		return -EINVAL;
-+	}
-+
-+	if (it->delimiter && strlen(it->delimiter) > 1024) {
-+		erofs_err("delimiter is too long");
-+		return -EINVAL;
-+	}
-+
-+	if (it->prefix) {
-+		params.key[params.num] = "prefix";
-+		params.value[params.num] = it->prefix;
-+		++params.num;
-+	}
-+
-+	if (it->delimiter) {
-+		params.key[params.num] = "delimiter";
-+		params.value[params.num] = it->delimiter;
-+		++params.num;
-+	}
-+
-+	if (it->next_marker) {
-+		params.key[params.num] = "marker";
-+		params.value[params.num] = it->next_marker;
-+		++params.num;
-+	}
-+
-+	params.key[params.num] = "max-keys";
-+	params.value[params.num] = "1000";
-+	++params.num;
-+
-+	req.method = "GET";
-+	s3erofs_prepare_url(s3cfg->endpoint, s3cfg->bucket, NULL, &params, req.url,
-+				s3cfg->url_style);
-+	snprintf(req.canonical_query, S3EROFS_CANONICAL_QUERY_LEN, "/%s", s3cfg->bucket);
-+
-+	ret = s3erofs_request_perform(s3cfg, &req, &resp);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = s3erofs_parse_list_objects_result(resp.data, resp.size, it);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static struct s3erofs_object_iterator *
-+s3erofs_create_object_iterator(struct erofs_s3 *s3cfg, const char *prefix,
-+			       const char *delimiter)
-+{
-+	struct s3erofs_object_iterator *it = calloc(1, sizeof(*it));
-+
-+	it->s3cfg = s3cfg;
-+	it->prefix = prefix;
-+	it->delimiter = delimiter;
-+
-+	it->is_truncated = true;
-+
-+	return it;
-+}
-+
-+static void s3erofs_destroy_object_iterator(struct s3erofs_object_iterator *it)
-+{
-+	if (it->next_marker)
-+		free(it->next_marker);
-+	if (it->objects) {
-+		for (int i = 0; i < it->total; i++)
-+			free(it->objects[i].key);
-+		free(it->objects);
-+	}
-+
-+	free(it);
-+}
-+
-+static struct s3erofs_object_info *
-+s3erofs_get_next_object(struct s3erofs_object_iterator *it)
-+{
-+	int ret = 0;
-+
-+	if (it->cur < it->total) {
-+		return &it->objects[it->cur++];
-+	}
-+
-+	if (it->is_truncated) {
-+		ret = s3erofs_list_objects(it);
-+		if (ret < 0)
-+			return ERR_PTR(ret);
-+
-+		it->cur = 0;
-+		return &it->objects[it->cur++];
-+	}
-+
-+	return NULL;
-+}
-+
-+static int s3erofs_global_init(void)
-+{
-+	int ret;
-+
-+	ret = curl_global_init(CURL_GLOBAL_DEFAULT);
-+	if (ret != CURLE_OK)
-+		return -EIO;
-+
-+	easy_curl = curl_easy_init();
-+	if (!easy_curl) {
-+		curl_global_cleanup();
-+		return -EIO;
-+	}
-+
-+	curl_easy_setopt(easy_curl, CURLOPT_WRITEFUNCTION, s3erofs_request_write_memory_cb);
-+	curl_easy_setopt(easy_curl, CURLOPT_FOLLOWLOCATION, 1L);
-+	curl_easy_setopt(easy_curl, CURLOPT_TIMEOUT, 30L);
-+
-+	xmlInitParser();
-+
-+	return ret;
-+}
-+
-+static void s3erofs_global_exit(void)
-+{
-+	if (!easy_curl)
-+		return;
-+
-+	xmlCleanupParser();
-+
-+	curl_easy_cleanup(easy_curl);
-+	easy_curl = NULL;
-+
-+	curl_global_cleanup();
-+}
-+
-+int s3erofs_build_trees(struct erofs_inode *root, struct erofs_s3 *s3cfg)
-+{
-+	struct erofs_sb_info *sbi = root->sbi;
-+	struct s3erofs_object_iterator *iter;
-+	struct s3erofs_object_info *obj;
-+	struct erofs_dentry *d;
-+	struct erofs_inode *inode;
-+	struct stat st;
-+	bool dumb;
-+	int ret = 0;
-+
-+	st.st_uid = getuid();
-+	st.st_gid = getgid();
-+
-+	/* XXX */
-+	st.st_mtime = sbi->epoch;
-+
-+	ret = s3erofs_global_init();
-+	if (ret) {
-+		erofs_err("failed to initialize s3erofs: %s", erofs_strerror(ret));
-+		return ret;
-+	}
-+
-+	iter = s3erofs_create_object_iterator(s3cfg, NULL, NULL);
-+	if (IS_ERR(iter)) {
-+		erofs_err("failed to create object iterator");
-+		ret = PTR_ERR(iter);
-+		goto err_global;
-+	}
-+
-+	while (1) {
-+		obj = s3erofs_get_next_object(iter);
-+		if (!obj) {
-+			break;
-+		} else if (IS_ERR(obj)) {
-+			erofs_err("failed to get next object");
-+			ret = PTR_ERR(obj);
-+			goto err_iter;
-+		}
-+
-+		d = erofs_rebuild_get_dentry(root, obj->key, false, &dumb, &dumb, false);
-+		if (IS_ERR(d)) {
-+			ret = PTR_ERR(d);
-+			goto err_iter;
-+		}
-+
-+		if (d->type == EROFS_FT_DIR) {
-+			inode = d->inode;
-+			inode->i_mode = S_IFDIR | 0750;
-+		} else {
-+			inode = erofs_new_inode(sbi);
-+			if (IS_ERR(inode)) {
-+				ret = PTR_ERR(inode);
-+				goto err_iter;
-+			}
-+
-+			inode->i_mode = S_IFREG | 0640;
-+			inode->i_parent = d->inode;
-+
-+			d->inode = inode;
-+			d->type = EROFS_FT_REG_FILE;
-+		}
-+
-+		inode->i_srcpath = strdup(obj->key);
-+		if (!inode->i_srcpath) {
-+			ret = -ENOMEM;
-+			goto err_iter;
-+		}
-+
-+		ret = __erofs_fill_inode(inode, &st, obj->key);
-+		if (ret)
-+			goto err_iter;
-+		inode->i_size = obj->size;
-+
-+		if (S_ISDIR(inode->i_mode)) {
-+			ret = erofs_init_empty_dir(inode);
-+			if (ret)
-+				goto err_iter;
-+		} else {
-+			ret = erofs_write_zero_inode(inode);
-+			if (ret)
-+				goto err_iter;
-+		}
-+	}
-+
-+err_iter:
-+	s3erofs_destroy_object_iterator(iter);
-+err_global:
-+	s3erofs_global_exit();
-+	return ret;
-+}
-\ No newline at end of file
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 22a8c6a..7338ed7 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -1738,8 +1738,9 @@ int main(int argc, char **argv)
- 				goto exit;
- #ifdef HAVE_S3
- 		} else if (source_mode == EROFS_MKFS_SOURCE_S3) {
--			err = -EOPNOTSUPP;
--			goto exit;
-+			err = s3erofs_build_trees(root, &s3cfg);
-+			if (err)
-+				goto exit;
- #endif
+ 	if (outpages > 2 && rq->alg == Z_EROFS_COMPRESSION_SHIFTED) {
+ 		DBG_BUGON(1);
+@@ -336,22 +336,19 @@ static int z_erofs_transform_plain(struc
+ 	}
+ 
+ 	src = kmap_local_page(rq->in[inpages - 1]) + rq->pageofs_in;
+-	if (rq->out[0]) {
+-		dst = kmap_local_page(rq->out[0]);
+-		memcpy(dst + rq->pageofs_out, src + interlaced_offset,
+-		       righthalf);
+-		kunmap_local(dst);
+-	}
++	if (rq->out[0])
++		memcpy_to_page(rq->out[0], rq->pageofs_out,
++			       src + interlaced_offset, righthalf);
+ 
+ 	if (outpages > inpages) {
+ 		DBG_BUGON(!rq->out[outpages - 1]);
+ 		if (rq->out[outpages - 1] != rq->in[inpages - 1]) {
+-			dst = kmap_local_page(rq->out[outpages - 1]);
+-			memcpy(dst, interlaced_offset ? src :
+-					(src + righthalf), lefthalf);
+-			kunmap_local(dst);
++			memcpy_to_page(rq->out[outpages - 1], 0, src +
++					(interlaced_offset ? 0 : righthalf),
++				       lefthalf);
+ 		} else if (!interlaced_offset) {
+ 			memmove(src, src + righthalf, lefthalf);
++			flush_dcache_page(rq->in[inpages - 1]);
  		}
- 
--- 
-2.46.0
+ 	}
+ 	kunmap_local(src);
 
+
+Patches currently in stable-queue which might be from hsiangkao@linux.alibaba.com are
+
+queue-6.1/erofs-sunset-erofs_dbg.patch
+queue-6.1/erofs-simplify-z_erofs_transform_plain.patch
+queue-6.1/erofs-get-rid-of-debug_one_dentry.patch
+queue-6.1/erofs-drop-z_erofs_page_mark_eio.patch
+queue-6.1/erofs-address-d-cache-aliasing.patch
 
