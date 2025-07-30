@@ -1,52 +1,52 @@
-Return-Path: <linux-erofs+bounces-721-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-725-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0FFBAB15AF7
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Jul 2025 10:55:25 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id E479CB15AFB
+	for <lists+linux-erofs@lfdr.de>; Wed, 30 Jul 2025 10:55:37 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bsQyy4wVyz30Vq;
-	Wed, 30 Jul 2025 18:55:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bsQzC5lRdz3blH;
+	Wed, 30 Jul 2025 18:55:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:45d1:ec00::3"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753865722;
-	cv=none; b=ZILAdqbzUHdOwrQeV+8EBiPkyAbg3KMkkUN+CKjnebduOdwDrjF/TKImhoML4560pcMSWluhXRSC0iwMgfAQTtkRM1sAloy0agtniYs4R5RS2S7Xz9wkwjj0uufasxNZvSbyY9L7E6ahfwIbquP8or0DBdWUgDSfNeRucBjhmT8ihaudt1wtRspaHWAFgCDH2/xdjs/feibH95QgASlsssOav9yAbDpRViGAPNk0+3cfrmElEhrHNIystTN+lsQCKSkst5s3vY2XKk7xjVDI4WaedNN3phBYrPPihn/UFLqIdzoocI9isIJU85KbuGbc+OjC8G+wcf1f7cAdzqxeUw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2604:1380:4641:c500::1"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753865735;
+	cv=none; b=HZ+Ifc7jorN/zAzqqDIXmNiCDV3oIHs2mk3W4yPcaB4rEgzZq/8/2PZfSGLZ7mrG0B7xAZ93eCbNSe3NYP7QyZ4mvnMLoV+vzzss581Z28YbSIHLL6gPMMPN6OIvlxY2T2F1W9zyH7m2oTlpc6ozBA5IsXuQjS6Y+fMuhzuHlpX4GNPuCFj5IJRFyFYdFXeXOar5qG2MtQVsFmVi7g+RPm7ZGfC5v7RpKoet5H4iyYr2MztotO5Xuo+O7zn21Upz8MIwPEp681rAKgphV3Ea2KrS8/SVMP94aKT7/gQEbToMVbRknMFCD1mymP8i5kbUj+/LySxJPeNSlialq06VfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1753865722; c=relaxed/relaxed;
-	bh=zLvjfX1S/0NYpgfQLcJZXjZokklhTu7TKvkg+0KOyRk=;
+	t=1753865735; c=relaxed/relaxed;
+	bh=Tf6SebstndB3nzfeYr6WeXalvUJ90KfOjmg7Aqy/RkA=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=keV8uNKlEbPHo0+20EYxYYSYCj/83iZSItxA2JBfkMnbmjYykqcijnBDWTInKn5yxmZlKzsmgvGTK7bPZRwB1Hsjg1MfB7CL3Fu5YrdD+KCAfIUNlkrjgCnXTsdJzl5fLd9YJfVHxtFMTYLSwrMXRwmiYEOK0JTrHDEARh2Me2XvEjliAUpv8z0+IYYBxClqXMP6gUB7GB/xfSLXLfsKR4VJXO+Mm7EiameR0l93+HekyQNNWbwf1yJHWvXwwetv1a5zzt7D34Ch0wqTsW1lti8E6S5WXR3za/UaVyQvjhH7m0iA1vFp1dY20dHS0m6O13kBz2P/cJYe0xKKPAJm8g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=p+/20L1V; dkim-atps=neutral; spf=pass (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+	 Content-Type; b=br/EagRNdh9xamwS1A+6QfvLy3MlJeEbNh5bxz0uarwhVQ6Y7foBdRt+4fur8ZjVLFW0V87aq5drBdBrSq5c6nmZBMA27ZgQBugfit176WK5zq3FZdazYy+C53giX6L+D0RxDER8lCB9x7cK1gzbFA2GB0GNKGWtVMHzX5h/FlHvHdnKArbjtiLg6NNu0Y1O9wgcEKdsZde6O+5+ynJ9kV59Dj++3koLBTMOjx1gJpnVvyIqhHg9fjcvVq17s5x7CLrfz4sSwiNvwNGOSZk+2AEiobSXg/p2sqODN/0tpwB7PtkQITJnLUPnSVVxRf+OMyoAkeXlLOt+lSGvFkmXPA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=kjtMu1hs; dkim-atps=neutral; spf=pass (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=p+/20L1V;
+	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=kjtMu1hs;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2604:1380:45d1:ec00::3; helo=nyc.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from nyc.source.kernel.org (nyc.source.kernel.org [IPv6:2604:1380:45d1:ec00::3])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2604:1380:4641:c500::1; helo=dfw.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bsQyx1Ly1z2yGf
-	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Jul 2025 18:55:20 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bsQzC0Qbgz2yGf
+	for <linux-erofs@lists.ozlabs.org>; Wed, 30 Jul 2025 18:55:35 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by nyc.source.kernel.org (Postfix) with ESMTP id 0838CA55186;
-	Wed, 30 Jul 2025 08:55:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F599C4CEE7;
-	Wed, 30 Jul 2025 08:55:16 +0000 (UTC)
+	by dfw.source.kernel.org (Postfix) with ESMTP id 632CF5C4C41;
+	Wed, 30 Jul 2025 08:55:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7158C4CEF8;
+	Wed, 30 Jul 2025 08:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1753865717;
-	bh=4jI+jVldqhtLInFLzElSM362IPLjXIV7jmIfJPg1qNI=;
+	s=korg; t=1753865733;
+	bh=h+irDCpvDwY14pHQIS6P/IVocNx/1eyxe5yxxO8KnVA=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=p+/20L1ViQ9E2+o+THi1DAIBHPrS9cJFZ/t5SNYFbcho53M1MO5MfPUW94eDo95r4
-	 zPzUhi+WRf6HDOQ34Qz8c5kjW/DIgQajZn4SjUA4heDtGHKmnx80EutOgoB0LrqO72
-	 WiHM9RK8jouahD/GxPZxK5cCpbtSrZ7zw+ve+ano=
-Subject: Patch "erofs: address D-cache aliasing" has been added to the 6.1-stable tree
-To: gregkh@linuxfoundation.org,hsiangkao@linux.alibaba.com,jan.kiszka@siemens.com,linux-erofs@lists.ozlabs.org,s.kerkmann@pengutronix.de
+	b=kjtMu1hsxYRhcCIbxWDVM16scZH7PDrAO7yl+P24UtFur262DLDSC+DdKx5N2GSJC
+	 326RZBUKBD8KjGQt9d1c/S5vnWwIeHAFt/PtHk0pzQPiaWtXD63lw0uhZ50J9N5E/i
+	 OK4DJ/UGMIc1enLPmF55GAQCkzD3KJbsShfOgxnI=
+Subject: Patch "erofs: sunset erofs_dbg()" has been added to the 6.1-stable tree
+To: chao@kernel.org,gregkh@linuxfoundation.org,hsiangkao@linux.alibaba.com,jan.kiszka@siemens.com,linux-erofs@lists.ozlabs.org,s.kerkmann@pengutronix.de
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Wed, 30 Jul 2025 10:55:13 +0200
-In-Reply-To: <20250722100029.3052177-6-hsiangkao@linux.alibaba.com>
-Message-ID: <2025073013-tried-democrat-cb97@gregkh>
+In-Reply-To: <20250722100029.3052177-3-hsiangkao@linux.alibaba.com>
+Message-ID: <2025073013-balsamic-capsize-81c7@gregkh>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -62,162 +62,134 @@ Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
 X-stable: commit
 X-Patchwork-Hint: ignore 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SORTED_RECIPS,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 
 This is a note to let you know that I've just added the patch titled
 
-    erofs: address D-cache aliasing
+    erofs: sunset erofs_dbg()
 
 to the 6.1-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     erofs-address-d-cache-aliasing.patch
+     erofs-sunset-erofs_dbg.patch
 and it can be found in the queue-6.1 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From hsiangkao@linux.alibaba.com Tue Jul 22 12:00:48 2025
+From hsiangkao@linux.alibaba.com Tue Jul 22 12:00:54 2025
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-Date: Tue, 22 Jul 2025 18:00:29 +0800
-Subject: erofs: address D-cache aliasing
+Date: Tue, 22 Jul 2025 18:00:26 +0800
+Subject: erofs: sunset erofs_dbg()
 To: stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jan Kiszka <jan.kiszka@siemens.com>, Stefan Kerkmann <s.kerkmann@pengutronix.de>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Gao Xiang <hsiangkao@linux.alibaba.com>
-Message-ID: <20250722100029.3052177-6-hsiangkao@linux.alibaba.com>
+Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Gao Xiang <hsiangkao@linux.alibaba.com>, Chao Yu <chao@kernel.org>
+Message-ID: <20250722100029.3052177-3-hsiangkao@linux.alibaba.com>
 
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-commit 27917e8194f91dffd8b4825350c63cb68e98ce58 upstream.
+commit 10656f9ca60ed85f4cfc06bcbe1f240ee310fa8c upstream.
 
-Flush the D-cache before unlocking folios for compressed inodes, as
-they are dirtied during decompression.
+Such debug messages are rarely used now.  Let's get rid of these,
+and revert locally if they are needed for debugging.
 
-Avoid calling flush_dcache_folio() on every CPU write, since it's more
-like playing whack-a-mole without real benefit.
-
-It has no impact on x86 and arm64/risc-v: on x86, flush_dcache_folio()
-is a no-op, and on arm64/risc-v, PG_dcache_clean (PG_arch_1) is clear
-for new page cache folios.  However, certain ARM boards are affected,
-as reported.
-
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Closes: https://lore.kernel.org/r/c1e51e16-6cc6-49d0-a63e-4e9ff6c4dd53@pengutronix.de
-Closes: https://lore.kernel.org/r/38d43fae-1182-4155-9c5b-ffc7382d9917@siemens.com
-Tested-by: Jan Kiszka <jan.kiszka@siemens.com>
-Tested-by: Stefan Kerkmann <s.kerkmann@pengutronix.de>
-Link: https://lore.kernel.org/r/20250709034614.2780117-2-hsiangkao@linux.alibaba.com
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Link: https://lore.kernel.org/r/20230414083027.12307-1-hsiangkao@linux.alibaba.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/erofs/decompressor.c |    6 ++----
- fs/erofs/zdata.c        |   32 +++++++++++++++++++-------------
- 2 files changed, 21 insertions(+), 17 deletions(-)
+ fs/erofs/inode.c    |    3 ---
+ fs/erofs/internal.h |    2 --
+ fs/erofs/namei.c    |    9 +++------
+ fs/erofs/zdata.c    |    5 -----
+ fs/erofs/zmap.c     |    3 ---
+ 5 files changed, 3 insertions(+), 19 deletions(-)
 
---- a/fs/erofs/decompressor.c
-+++ b/fs/erofs/decompressor.c
-@@ -342,14 +342,12 @@ static int z_erofs_transform_plain(struc
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -26,9 +26,6 @@ static void *erofs_read_inode(struct ero
+ 	blkaddr = erofs_blknr(sb, inode_loc);
+ 	*ofs = erofs_blkoff(sb, inode_loc);
  
- 	if (outpages > inpages) {
- 		DBG_BUGON(!rq->out[outpages - 1]);
--		if (rq->out[outpages - 1] != rq->in[inpages - 1]) {
-+		if (rq->out[outpages - 1] != rq->in[inpages - 1])
- 			memcpy_to_page(rq->out[outpages - 1], 0, src +
- 					(interlaced_offset ? 0 : righthalf),
- 				       lefthalf);
--		} else if (!interlaced_offset) {
-+		else if (!interlaced_offset)
- 			memmove(src, src + righthalf, lefthalf);
--			flush_dcache_page(rq->in[inpages - 1]);
--		}
- 	}
- 	kunmap_local(src);
- 	return 0;
+-	erofs_dbg("%s, reading inode nid %llu at %u of blkaddr %u",
+-		  __func__, vi->nid, *ofs, blkaddr);
+-
+ 	kaddr = erofs_read_metabuf(buf, sb, blkaddr, EROFS_KMAP);
+ 	if (IS_ERR(kaddr)) {
+ 		erofs_err(sb, "failed to get inode (nid: %llu) page, err %ld",
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -32,10 +32,8 @@ __printf(3, 4) void _erofs_info(struct s
+ #define erofs_info(sb, fmt, ...) \
+ 	_erofs_info(sb, __func__, fmt "\n", ##__VA_ARGS__)
+ #ifdef CONFIG_EROFS_FS_DEBUG
+-#define erofs_dbg(x, ...)       pr_debug(x "\n", ##__VA_ARGS__)
+ #define DBG_BUGON               BUG_ON
+ #else
+-#define erofs_dbg(x, ...)       ((void)0)
+ #define DBG_BUGON(x)            ((void)(x))
+ #endif	/* !CONFIG_EROFS_FS_DEBUG */
+ 
+--- a/fs/erofs/namei.c
++++ b/fs/erofs/namei.c
+@@ -203,16 +203,13 @@ static struct dentry *erofs_lookup(struc
+ 
+ 	err = erofs_namei(dir, &dentry->d_name, &nid, &d_type);
+ 
+-	if (err == -ENOENT) {
++	if (err == -ENOENT)
+ 		/* negative dentry */
+ 		inode = NULL;
+-	} else if (err) {
++	else if (err)
+ 		inode = ERR_PTR(err);
+-	} else {
+-		erofs_dbg("%s, %pd (nid %llu) found, d_type %u", __func__,
+-			  dentry, nid, d_type);
++	else
+ 		inode = erofs_iget(dir->i_sb, nid);
+-	}
+ 	return d_splice_alias(inode, dentry);
+ }
+ 
 --- a/fs/erofs/zdata.c
 +++ b/fs/erofs/zdata.c
-@@ -123,9 +123,11 @@ static inline unsigned int z_erofs_pclus
+@@ -818,8 +818,6 @@ repeat:
  
- /*
-  * bit 30: I/O error occurred on this page
-+ * bit 29: CPU has dirty data in D-cache (needs aliasing handling);
-  * bit 0 - 29: remaining parts to complete this page
-  */
--#define Z_EROFS_PAGE_EIO			(1 << 30)
-+#define Z_EROFS_ONLINEPAGE_EIO		30
-+#define Z_EROFS_ONLINEPAGE_DIRTY	29
- 
- static inline void z_erofs_onlinepage_init(struct page *page)
- {
-@@ -144,7 +146,7 @@ static inline void z_erofs_onlinepage_sp
- 	atomic_inc((atomic_t *)&page->private);
- }
- 
--static void z_erofs_onlinepage_endio(struct page *page, int err)
-+static void z_erofs_onlinepage_end(struct page *page, int err, bool dirty)
- {
- 	int orig, v;
- 
-@@ -152,16 +154,20 @@ static void z_erofs_onlinepage_endio(str
- 
- 	do {
- 		orig = atomic_read((atomic_t *)&page->private);
--		v = (orig - 1) | (err ? Z_EROFS_PAGE_EIO : 0);
-+		DBG_BUGON(orig <= 0);
-+		v = dirty << Z_EROFS_ONLINEPAGE_DIRTY;
-+		v |= (orig - 1) | (!!err << Z_EROFS_ONLINEPAGE_EIO);
- 	} while (atomic_cmpxchg((atomic_t *)&page->private, orig, v) != orig);
- 
--	if (!(v & ~Z_EROFS_PAGE_EIO)) {
--		set_page_private(page, 0);
--		ClearPagePrivate(page);
--		if (!(v & Z_EROFS_PAGE_EIO))
--			SetPageUptodate(page);
--		unlock_page(page);
--	}
-+	if (v & (BIT(Z_EROFS_ONLINEPAGE_DIRTY) - 1))
-+		return;
-+	set_page_private(page, 0);
-+	ClearPagePrivate(page);
-+	if (v & BIT(Z_EROFS_ONLINEPAGE_DIRTY))
-+		flush_dcache_page(page);
-+	if (!(v & BIT(Z_EROFS_ONLINEPAGE_EIO)))
-+		SetPageUptodate(page);
-+	unlock_page(page);
- }
- 
- #define Z_EROFS_ONSTACK_PAGES		32
-@@ -925,7 +931,7 @@ next_part:
- 		goto repeat;
- 
- out:
--	z_erofs_onlinepage_endio(page, err);
-+	z_erofs_onlinepage_end(page, err, false);
+ 	if (offset + cur < map->m_la ||
+ 	    offset + cur >= map->m_la + map->m_llen) {
+-		erofs_dbg("out-of-range map @ pos %llu", offset + cur);
+-
+ 		if (z_erofs_collector_end(fe))
+ 			fe->backmost = false;
+ 		map->m_la = offset + cur;
+@@ -935,9 +933,6 @@ out:
+ 	if (err)
+ 		z_erofs_page_mark_eio(page);
+ 	z_erofs_onlinepage_endio(page);
+-
+-	erofs_dbg("%s, finish page: %pK spiltted: %u map->m_llen %llu",
+-		  __func__, page, spiltted, map->m_llen);
  	return err;
  }
  
-@@ -1028,7 +1034,7 @@ static void z_erofs_fill_other_copies(st
- 			cur += len;
- 		}
- 		kunmap_local(dst);
--		z_erofs_onlinepage_endio(bvi->bvec.page, err);
-+		z_erofs_onlinepage_end(bvi->bvec.page, err, true);
- 		list_del(p);
- 		kfree(bvi);
- 	}
-@@ -1196,7 +1202,7 @@ out:
- 		/* recycle all individual short-lived pages */
- 		if (z_erofs_put_shortlivedpage(be->pagepool, page))
- 			continue;
--		z_erofs_onlinepage_endio(page, err);
-+		z_erofs_onlinepage_end(page, err, true);
- 	}
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -603,9 +603,6 @@ static int z_erofs_do_map_blocks(struct
  
- 	if (be->decompressed_pages != be->onstack_pages)
+ unmap_out:
+ 	erofs_unmap_metabuf(&m.map->buf);
+-	erofs_dbg("%s, m_la %llu m_pa %llu m_llen %llu m_plen %llu m_flags 0%o",
+-		  __func__, map->m_la, map->m_pa,
+-		  map->m_llen, map->m_plen, map->m_flags);
+ 	return err;
+ }
+ 
 
 
 Patches currently in stable-queue which might be from hsiangkao@linux.alibaba.com are
