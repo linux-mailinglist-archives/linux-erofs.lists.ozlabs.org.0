@@ -1,43 +1,47 @@
-Return-Path: <linux-erofs+bounces-729-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-731-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A49F7B1636C
-	for <lists+linux-erofs@lfdr.de>; Wed, 30 Jul 2025 17:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D81BB16ABF
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Jul 2025 05:17:00 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bsbLc2S3Fz2yRn;
-	Thu, 31 Jul 2025 01:12:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bsvQ050mWz2yLB;
+	Thu, 31 Jul 2025 13:16:56 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753888376;
-	cv=none; b=gCdAMSpAKrX3PpB+WIrevVBauka7JFmTEo7cus0Nu5Y7NjlLhtuEjzDTM37pSX71eS9tC7Q6wC0is6Fy/uXpVLRwOiEYR/NbZpoMfdBBU2xhG7BU3j19XXCyDjb5th9ctczS2q+m7tzTMfdcYWJCH7ks2/idWbYGVJNB+P/cIC+j53BVvnP1bRoeeItplFPy/Q8vwHq/QvTUn93fIgQcaL13uv5MQxcCGbrHhaxFkH8BdQ4dg2+mki1SYEYDhEPHv08B9GuRAk1FXSYtMrBcogQNDtBUCr0iZHgkmpOs0p+nfSKSVYejtNcJrYkb29WnguPWBqK9bh2IisRmUpfHIA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753931816;
+	cv=none; b=Mv2VmLnZlNOxTHX/xeKKaPr/RE41hMrOjzbhQnTMG8r8yP8OwO2yjORshnV/2UDLZD+PZQYiThe+b0QtyToGJEPkm0oetMXb2x0q4I0s7YCB9W4SWvRfrZEKVr/KpjcAl496ySEJkkt5cL/UFC9LE5iQO8Bh9fgT9LprUqwTFgyp77nIFBv7zEOHca1PgH8rYJ4MTgJ9VFoUmnmHD+Q/QBe1jw7YbCD+QNMKpmzB0TBoaAJ2u84SyrjANNoAOFP1YPA2Z4ztiDWFOqZ81hqJbcKt5FkN4P0fht4+sxuqnKAMSRyghuEVQwAP5CbyYTC67E4S2c9s/Hn7DD+9RhZxig==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1753888376; c=relaxed/relaxed;
-	bh=6sT7aVW3MQBG7miFtEu5bR6UM9le1ET/SznYRdA7Jy0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HgEOsuuFZBTA6r+BR34rHLi1wBJbJgOrizex436+yG7U7WNq6xdFkqFpJltADQDFXUIo19Dyc7BiOgYwN4EHeJK0SsPNydYpbmKb8tdP7G3yi6iYH6CMXHQGBw0nkWA7ORhN6HcjpGX/urKIHjqNP4cWU5iOfEs2919giWchf+JqjDJBwLrq7e0aNNolcxLIDLhql8huGjsqXK0sqzNLfBdh0fwDxWkCUKpLgY4oAz2ajelahhkd/5cYEim4soIeIUnh6cJaw6yDLtcFIyiPfc6YXnVkHsvmsD48+k/eBioyeZH38pxhqkznWT8SbsWPp2zhu4VqdLOZqQNIlVpZVA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=iNYgOyep; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1753931816; c=relaxed/relaxed;
+	bh=M8JBkmnDA9Pji9iiftTSD8jZ8cmtP+RgVvH74YS83ME=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k1QmOkkLLLD+CC3+O+VGLaChl59TXCM4rDq5Sb+pZMTcYWv/1hoEA+fwVftrEbrcut2fzyzoI4lXmtfxuIw0lSlbd5uTzXg0iVfNywaGWKMpClPnMdkEizY/yA9o8KjlUUFJUasR6cS97jMoTgC+nlc7pQBOrfEArwiEwKa5qPcJjcd9i58lIt9MHerID+tiY/rHGPAQDvVAo24BI1NDlZc0bPAeVkp7RC6ljTxjRuDfWOKqHBC3juDRTLsfoIP52KQ47ADfI7GSAoA1AKLd9K1vBGiEvLKin93zA0pE8tgHtXXPTa3IbReRMbveOfqSLt5qNkNpJvWUwbxY3V4PoA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rTbHMv8t; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=iNYgOyep;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rTbHMv8t;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bsbLZ2tQHz2xtt
-	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Jul 2025 01:12:52 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bsvPy5kYqz2yKw
+	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Jul 2025 13:16:53 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1753888368; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=6sT7aVW3MQBG7miFtEu5bR6UM9le1ET/SznYRdA7Jy0=;
-	b=iNYgOyepszTMlHhdNDF0/Oc94/z1TdF2zYKmTkD31S9KatwVIm0Puc1qBvvKdYRdwK2/zjG9wA5VKi/i0j05aBMrC606kNdWeFIOqxq99yBDV/Bqqu4T8uGeef7jrInl1nrSTkyziP0IpnuPSCKzZzMTpbCZ1OuWcuKmeVcKthY=
-Received: from 30.170.233.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WkV9HNb_1753888365 cluster:ay36)
+	t=1753931809; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=M8JBkmnDA9Pji9iiftTSD8jZ8cmtP+RgVvH74YS83ME=;
+	b=rTbHMv8tHpdeKarkfAnGvd7kccpX+RAZrOCWAl0ciYuCuthYq16RsTY4NmO0mpLQZGi5aydHrzkP2+0lWPaf7yLW8so++mc7KcREbo/oomzxZib15ch2t+MMuURx7lz7DO49Gj2R3Fp0GT7HWS1TFfDk/G12VqYWjAX4od8Y+X0=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WkWixDS_1753931803 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 30 Jul 2025 23:12:46 +0800
-Message-ID: <d744137b-11b4-4ce9-a4c1-ba10e24adb9a@linux.alibaba.com>
-Date: Wed, 30 Jul 2025 23:12:45 +0800
+          Thu, 31 Jul 2025 11:16:46 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH 1/3] erofs-utils: lib: get rid of erofs_init_empty_dir()
+Date: Thu, 31 Jul 2025 11:16:40 +0800
+Message-ID: <20250731031642.2139859-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,56 +53,181 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: Do not select tristate symbols from bool symbols
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Gao Xiang
- <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
- Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
- <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
- Bo Liu <liubo03@inspur.com>, Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-kbuild@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-References: <da1b899e511145dd43fd2d398f64b2e03c6a39e7.1753879351.git.geert+renesas@glider.be>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <da1b899e511145dd43fd2d398f64b2e03c6a39e7.1753879351.git.geert+renesas@glider.be>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Greet,
+... and defer insertion of `.` and `..` entries when preparing
+directory inodes.
 
-On 2025/7/30 20:44, Geert Uytterhoeven wrote:
-> The EROFS filesystem has many configurable options, controlled through
-> boolean Kconfig symbols.  When enabled, these options may need to enable
-> additional library functionality elsewhere.  Currently this is done by
-> selecting the symbol for the additional functionality.  However, if
-> EROFS_FS itself is modular, and the target symbol is a tristate symbol,
-> the additional functionality is always forced built-in.
-> 
-> Selecting tristate symbols from a tristate symbol does keep modular
-> transitivity.  Hence fix this by moving selects of tristate symbols to
-> the main EROFS_FS symbol.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Triggered by noticing that commit 5e0bf36fd156b8d9 ("erofs: fix build
-> error with CONFIG_EROFS_FS_ZIP_ACCEL=y") caused CONFIG_CRYPTO_DEFLATE
-> and CONFIG_ZLIB_DEFLATE to change from m to y in m68k/allmodconfig.
-> 
-> Unfortunately Kconfig cannot be changed easily to detect this
-> automatically, as it cannot distinguish between a "bool" symbol
-> representing a configurable option in a module, and a driver that cannot
-> be a module.
-> ---
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ include/erofs/inode.h |  1 -
+ lib/inode.c           | 52 +++++++++++++++++++++----------------------
+ lib/rebuild.c         |  4 ++--
+ lib/tar.c             |  4 +---
+ 4 files changed, 28 insertions(+), 33 deletions(-)
 
-Thanks, it looks good to me, will upstream in this cycle:
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index fe86101d..b0ac5bee 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -37,7 +37,6 @@ struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
+ int erofs_allocate_inode_bh_data(struct erofs_inode *inode, erofs_blk_t nblocks);
+ bool erofs_dentry_is_wht(struct erofs_sb_info *sbi, struct erofs_dentry *d);
+ int erofs_rebuild_dump_tree(struct erofs_inode *dir, bool incremental);
+-int erofs_init_empty_dir(struct erofs_inode *dir);
+ int __erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+ 		       const char *path);
+ struct erofs_inode *erofs_new_inode(struct erofs_sb_info *sbi);
+diff --git a/lib/inode.c b/lib/inode.c
+index 4f6715af..cbce712b 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -226,9 +226,14 @@ static int comp_subdir(const void *a, const void *b)
+ 	return cmpsgn(da->namelen, db->namelen);
+ }
+ 
+-int erofs_init_empty_dir(struct erofs_inode *dir)
++static int erofs_prepare_dir_file(struct erofs_inode *dir,
++				  unsigned int nr_subdirs)
+ {
+-	struct erofs_dentry *d;
++	struct erofs_sb_info *sbi = dir->sbi;
++	struct erofs_dentry *d, *n, **sorted_d;
++	bool dot_omitted = cfg.c_dot_omitted;
++	unsigned int i;
++	unsigned int d_size = 0;
+ 
+ 	/* dot is pointed to the current dir inode */
+ 	d = erofs_d_alloc(dir, ".");
+@@ -244,18 +249,7 @@ int erofs_init_empty_dir(struct erofs_inode *dir)
+ 	d->inode = erofs_igrab(erofs_parent_inode(dir));
+ 	d->type = EROFS_FT_DIR;
+ 
+-	dir->i_nlink = 2;
+-	return 0;
+-}
+-
+-static int erofs_prepare_dir_file(struct erofs_inode *dir,
+-				  unsigned int nr_subdirs)
+-{
+-	struct erofs_sb_info *sbi = dir->sbi;
+-	struct erofs_dentry *d, *n, **sorted_d;
+-	bool dot_omitted = cfg.c_dot_omitted;
+-	unsigned int i;
+-	unsigned int d_size = 0;
++	nr_subdirs += 2;
+ 
+ 	sorted_d = malloc(nr_subdirs * sizeof(d));
+ 	if (!sorted_d)
+@@ -1564,11 +1558,7 @@ static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
+ 	}
+ 	closedir(_dir);
+ 
+-	ret = erofs_init_empty_dir(dir);
+-	if (ret)
+-		return ret;
+-
+-	ret = erofs_prepare_dir_file(dir, nr_subdirs + 2); /* sort subdirs */
++	ret = erofs_prepare_dir_file(dir, nr_subdirs); /* sort subdirs */
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1615,6 +1605,13 @@ bool erofs_dentry_is_wht(struct erofs_sb_info *sbi, struct erofs_dentry *d)
+ 	return false;
+ }
+ 
++static void erofs_dentry_kill(struct erofs_dentry *d)
++{
++	list_del(&d->d_child);
++	erofs_d_invalidate(d);
++	free(d);
++}
++
+ static int erofs_rebuild_handle_directory(struct erofs_inode *dir,
+ 					  bool incremental)
+ {
+@@ -1625,22 +1622,23 @@ static int erofs_rebuild_handle_directory(struct erofs_inode *dir,
+ 	int ret;
+ 
+ 	nr_subdirs = 0;
+-	i_nlink = 0;
++	i_nlink = 2;
+ 
+ 	list_for_each_entry_safe(d, n, &dir->i_subdirs, d_child) {
++		if (is_dot_dotdot(d->name)) {
++			DBG_BUGON(1);
++			erofs_dentry_kill(d);
++			continue;
++		}
+ 		if (delwht && erofs_dentry_is_wht(sbi, d)) {
+ 			erofs_dbg("remove whiteout %s", d->inode->i_srcpath);
+-			list_del(&d->d_child);
+-			erofs_d_invalidate(d);
+-			free(d);
++			erofs_dentry_kill(d);
+ 			continue;
+ 		}
+ 		i_nlink += (d->type == EROFS_FT_DIR);
+ 		++nr_subdirs;
+ 	}
+-
+-	DBG_BUGON(i_nlink < 2);		/* should have `.` and `..` */
+-	DBG_BUGON(nr_subdirs < i_nlink);
++	DBG_BUGON(nr_subdirs + 2 < i_nlink);
+ 	ret = erofs_prepare_dir_file(dir, nr_subdirs);
+ 	if (ret)
+ 		return ret;
+@@ -2134,6 +2132,6 @@ struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi)
+ 	root->i_parent = root;
+ 	root->i_mtime = root->sbi->epoch + root->sbi->build_time;
+ 	root->i_mtime_nsec = root->sbi->fixed_nsec;
+-	erofs_init_empty_dir(root);
++	root->i_nlink = 2;
+ 	return root;
+ }
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+index c580f81f..26bc9aca 100644
+--- a/lib/rebuild.c
++++ b/lib/rebuild.c
+@@ -59,7 +59,7 @@ static struct erofs_dentry *erofs_rebuild_mkdir(struct erofs_inode *dir,
+ 	inode->i_mtime = dir->i_mtime;
+ 	inode->i_mtime_nsec = dir->i_mtime_nsec;
+ 	inode->dev = dir->dev;
+-	erofs_init_empty_dir(inode);
++	inode->i_nlink = 2;
+ 
+ 	d = erofs_d_alloc(dir, s);
+ 	if (IS_ERR(d)) {
+@@ -241,7 +241,7 @@ static int erofs_rebuild_update_inode(struct erofs_sb_info *dst_sb,
+ 		inode->u.i_rdev = erofs_new_encode_dev(inode->u.i_rdev);
+ 		break;
+ 	case S_IFDIR:
+-		err = erofs_init_empty_dir(inode);
++		inode->i_nlink = 2;
+ 		break;
+ 	case S_IFLNK:
+ 		inode->i_link = malloc(inode->i_size + 1);
+diff --git a/lib/tar.c b/lib/tar.c
+index 72c12ed0..3146fc9d 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -1122,9 +1122,7 @@ new_inode:
+ 		}
+ 		inode->i_nlink++;
+ 	} else if (!inode->i_nlink) {
+-		ret = erofs_init_empty_dir(inode);
+-		if (ret)
+-			goto out;
++		inode->i_nlink = 2;
+ 	}
+ 
+ 	ret = tarerofs_merge_xattrs(&eh.xattrs, &tar->global.xattrs);
+-- 
+2.43.5
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-Thanks,
-Gao Xiang
 
