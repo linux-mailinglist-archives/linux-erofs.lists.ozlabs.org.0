@@ -1,47 +1,50 @@
-Return-Path: <linux-erofs+bounces-731-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-730-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D81BB16ABF
-	for <lists+linux-erofs@lfdr.de>; Thu, 31 Jul 2025 05:17:00 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBDCEB16ABD
+	for <lists+linux-erofs@lfdr.de>; Thu, 31 Jul 2025 05:16:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bsvQ050mWz2yLB;
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bsvQ04FZ9z305v;
 	Thu, 31 Jul 2025 13:16:56 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1753931816;
-	cv=none; b=Mv2VmLnZlNOxTHX/xeKKaPr/RE41hMrOjzbhQnTMG8r8yP8OwO2yjORshnV/2UDLZD+PZQYiThe+b0QtyToGJEPkm0oetMXb2x0q4I0s7YCB9W4SWvRfrZEKVr/KpjcAl496ySEJkkt5cL/UFC9LE5iQO8Bh9fgT9LprUqwTFgyp77nIFBv7zEOHca1PgH8rYJ4MTgJ9VFoUmnmHD+Q/QBe1jw7YbCD+QNMKpmzB0TBoaAJ2u84SyrjANNoAOFP1YPA2Z4ztiDWFOqZ81hqJbcKt5FkN4P0fht4+sxuqnKAMSRyghuEVQwAP5CbyYTC67E4S2c9s/Hn7DD+9RhZxig==
+	cv=none; b=keED3xaDAlC7cWfMnOjb4EuzfWSq7egtSOsb+ID7p4gk6Z9FThKd9c5m+dUfmCx3uU/Eip+dAiVfgcwGyZ/7pS99G7W6KwqAvVzQeCqms+xBXOjy/VCRmkRQDVH//5MuCH711qfSlgdMPtlrGzli0g2MojbzntePnNLO7/WeGtRclNfNKaCSBWgVL8D7E/cc3IhvGed6DCFXHrvOas/LDk7wq+eu6+3MGJoGTTIJ4rzDKDSBw8ecBG75aanNJU97vgOqgJEK/AsM8gF0T9IfmobySji8stlsHnc1J7NnJiHJU+9pmBLXkG3xjcNl5kY0zheRIyYPBCBT99Q/NPwDRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1753931816; c=relaxed/relaxed;
-	bh=M8JBkmnDA9Pji9iiftTSD8jZ8cmtP+RgVvH74YS83ME=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k1QmOkkLLLD+CC3+O+VGLaChl59TXCM4rDq5Sb+pZMTcYWv/1hoEA+fwVftrEbrcut2fzyzoI4lXmtfxuIw0lSlbd5uTzXg0iVfNywaGWKMpClPnMdkEizY/yA9o8KjlUUFJUasR6cS97jMoTgC+nlc7pQBOrfEArwiEwKa5qPcJjcd9i58lIt9MHerID+tiY/rHGPAQDvVAo24BI1NDlZc0bPAeVkp7RC6ljTxjRuDfWOKqHBC3juDRTLsfoIP52KQ47ADfI7GSAoA1AKLd9K1vBGiEvLKin93zA0pE8tgHtXXPTa3IbReRMbveOfqSLt5qNkNpJvWUwbxY3V4PoA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rTbHMv8t; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	bh=6EcR3moSvTqpQ0lJaGVrWZFAImWGpFOco0AlAHrf/Ak=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RAOd7kuTQZpz+v42hrV5KavA56qq1lDRs59RB2StcnVVscO+1Pwup4M+piMNxDbA92++weM9Z/wWGjgOo3heXYqKpiOeQx36QhNde86BxkcJ86kglUAMOkyRGJm9fhuLwXFwrEIDVEFNSt/rXPS/3Pj+G4NdExwZtWkZFSo73SOtBkKpvl8fL2gaxYNWBIvSP3rx9Tt8YIXLlox1Xv0wOi2C1BpiaZ7FIznrsktxXYOGg0XQm7M3zYYApTUM3C5ofWyqV4kSE25EiJ51/hXQ9dGBdF49C0/u9hY1DYyZOHm/ShJiHIfFhekbFEsfoiz3y92bk6ekq3EJIqTfIqw3LQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Za6+JJNc; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rTbHMv8t;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Za6+JJNc;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bsvPy5kYqz2yKw
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bsvPy75d6z2yLB
 	for <linux-erofs@lists.ozlabs.org>; Thu, 31 Jul 2025 13:16:53 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
 	t=1753931809; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=M8JBkmnDA9Pji9iiftTSD8jZ8cmtP+RgVvH74YS83ME=;
-	b=rTbHMv8tHpdeKarkfAnGvd7kccpX+RAZrOCWAl0ciYuCuthYq16RsTY4NmO0mpLQZGi5aydHrzkP2+0lWPaf7yLW8so++mc7KcREbo/oomzxZib15ch2t+MMuURx7lz7DO49Gj2R3Fp0GT7HWS1TFfDk/G12VqYWjAX4od8Y+X0=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WkWixDS_1753931803 cluster:ay36)
+	bh=6EcR3moSvTqpQ0lJaGVrWZFAImWGpFOco0AlAHrf/Ak=;
+	b=Za6+JJNcR6dG/jzt+sWIsmO5lvEJP4KaLe8rACnm0V8txWc4e9QSy4GFGc070rpGaR+ADlCMQ4WmdaD79Gblzi/ti6TId/a8ODp9g+AgvhtWr4AxMP5tbA/t1PwvCwC2T/V8zkfCXIP/UyIvRPX2V23P2dIxseM2+LrLpR1IZrY=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WkWixEb_1753931807 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 31 Jul 2025 11:16:46 +0800
+          Thu, 31 Jul 2025 11:16:47 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 1/3] erofs-utils: lib: get rid of erofs_init_empty_dir()
-Date: Thu, 31 Jul 2025 11:16:40 +0800
-Message-ID: <20250731031642.2139859-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH 2/3] erofs-utils: avoid `.` dirent insertion if dot_omitted is enabled
+Date: Thu, 31 Jul 2025 11:16:41 +0800
+Message-ID: <20250731031642.2139859-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250731031642.2139859-1-hsiangkao@linux.alibaba.com>
+References: <20250731031642.2139859-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -60,173 +63,66 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-... and defer insertion of `.` and `..` entries when preparing
-directory inodes.
+It's also used for the upcoming sort optimization.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/inode.h |  1 -
- lib/inode.c           | 52 +++++++++++++++++++++----------------------
- lib/rebuild.c         |  4 ++--
- lib/tar.c             |  4 +---
- 4 files changed, 28 insertions(+), 33 deletions(-)
+ lib/inode.c | 26 +++++++++++---------------
+ 1 file changed, 11 insertions(+), 15 deletions(-)
 
-diff --git a/include/erofs/inode.h b/include/erofs/inode.h
-index fe86101d..b0ac5bee 100644
---- a/include/erofs/inode.h
-+++ b/include/erofs/inode.h
-@@ -37,7 +37,6 @@ struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
- int erofs_allocate_inode_bh_data(struct erofs_inode *inode, erofs_blk_t nblocks);
- bool erofs_dentry_is_wht(struct erofs_sb_info *sbi, struct erofs_dentry *d);
- int erofs_rebuild_dump_tree(struct erofs_inode *dir, bool incremental);
--int erofs_init_empty_dir(struct erofs_inode *dir);
- int __erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
- 		       const char *path);
- struct erofs_inode *erofs_new_inode(struct erofs_sb_info *sbi);
 diff --git a/lib/inode.c b/lib/inode.c
-index 4f6715af..cbce712b 100644
+index cbce712b..59031144 100644
 --- a/lib/inode.c
 +++ b/lib/inode.c
-@@ -226,9 +226,14 @@ static int comp_subdir(const void *a, const void *b)
- 	return cmpsgn(da->namelen, db->namelen);
- }
+@@ -235,12 +235,15 @@ static int erofs_prepare_dir_file(struct erofs_inode *dir,
+ 	unsigned int i;
+ 	unsigned int d_size = 0;
  
--int erofs_init_empty_dir(struct erofs_inode *dir)
-+static int erofs_prepare_dir_file(struct erofs_inode *dir,
-+				  unsigned int nr_subdirs)
- {
--	struct erofs_dentry *d;
-+	struct erofs_sb_info *sbi = dir->sbi;
-+	struct erofs_dentry *d, *n, **sorted_d;
-+	bool dot_omitted = cfg.c_dot_omitted;
-+	unsigned int i;
-+	unsigned int d_size = 0;
+-	/* dot is pointed to the current dir inode */
+-	d = erofs_d_alloc(dir, ".");
+-	if (IS_ERR(d))
+-		return PTR_ERR(d);
+-	d->inode = erofs_igrab(dir);
+-	d->type = EROFS_FT_DIR;
++	if (!dot_omitted) {
++		/* dot is pointed to the current dir inode */
++		d = erofs_d_alloc(dir, ".");
++		if (IS_ERR(d))
++			return PTR_ERR(d);
++		d->inode = erofs_igrab(dir);
++		d->type = EROFS_FT_DIR;
++	}
++	dir->dot_omitted = dot_omitted;
  
- 	/* dot is pointed to the current dir inode */
- 	d = erofs_d_alloc(dir, ".");
-@@ -244,18 +249,7 @@ int erofs_init_empty_dir(struct erofs_inode *dir)
+ 	/* dotdot is pointed to the parent dir */
+ 	d = erofs_d_alloc(dir, "..");
+@@ -249,24 +252,17 @@ static int erofs_prepare_dir_file(struct erofs_inode *dir,
  	d->inode = erofs_igrab(erofs_parent_inode(dir));
  	d->type = EROFS_FT_DIR;
  
--	dir->i_nlink = 2;
--	return 0;
--}
+-	nr_subdirs += 2;
 -
--static int erofs_prepare_dir_file(struct erofs_inode *dir,
--				  unsigned int nr_subdirs)
--{
--	struct erofs_sb_info *sbi = dir->sbi;
--	struct erofs_dentry *d, *n, **sorted_d;
--	bool dot_omitted = cfg.c_dot_omitted;
--	unsigned int i;
--	unsigned int d_size = 0;
-+	nr_subdirs += 2;
- 
++	nr_subdirs += 1 + !dot_omitted;
  	sorted_d = malloc(nr_subdirs * sizeof(d));
  	if (!sorted_d)
-@@ -1564,11 +1558,7 @@ static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
- 	}
- 	closedir(_dir);
+ 		return -ENOMEM;
  
--	ret = erofs_init_empty_dir(dir);
--	if (ret)
--		return ret;
--
--	ret = erofs_prepare_dir_file(dir, nr_subdirs + 2); /* sort subdirs */
-+	ret = erofs_prepare_dir_file(dir, nr_subdirs); /* sort subdirs */
- 	if (ret)
- 		return ret;
- 
-@@ -1615,6 +1605,13 @@ bool erofs_dentry_is_wht(struct erofs_sb_info *sbi, struct erofs_dentry *d)
- 	return false;
- }
- 
-+static void erofs_dentry_kill(struct erofs_dentry *d)
-+{
-+	list_del(&d->d_child);
-+	erofs_d_invalidate(d);
-+	free(d);
-+}
-+
- static int erofs_rebuild_handle_directory(struct erofs_inode *dir,
- 					  bool incremental)
- {
-@@ -1625,22 +1622,23 @@ static int erofs_rebuild_handle_directory(struct erofs_inode *dir,
- 	int ret;
- 
- 	nr_subdirs = 0;
--	i_nlink = 0;
-+	i_nlink = 2;
- 
+-	dir->dot_omitted = dot_omitted;
+ 	i = 0;
  	list_for_each_entry_safe(d, n, &dir->i_subdirs, d_child) {
-+		if (is_dot_dotdot(d->name)) {
-+			DBG_BUGON(1);
-+			erofs_dentry_kill(d);
-+			continue;
-+		}
- 		if (delwht && erofs_dentry_is_wht(sbi, d)) {
- 			erofs_dbg("remove whiteout %s", d->inode->i_srcpath);
--			list_del(&d->d_child);
--			erofs_d_invalidate(d);
+ 		list_del(&d->d_child);
+-		if (dot_omitted && !strcmp(d->name, ".")) {
+-			erofs_iput(d->inode);
 -			free(d);
-+			erofs_dentry_kill(d);
- 			continue;
- 		}
- 		i_nlink += (d->type == EROFS_FT_DIR);
- 		++nr_subdirs;
+-			continue;
+-		}
+ 		sorted_d[i++] = d;
  	}
--
--	DBG_BUGON(i_nlink < 2);		/* should have `.` and `..` */
--	DBG_BUGON(nr_subdirs < i_nlink);
-+	DBG_BUGON(nr_subdirs + 2 < i_nlink);
- 	ret = erofs_prepare_dir_file(dir, nr_subdirs);
- 	if (ret)
- 		return ret;
-@@ -2134,6 +2132,6 @@ struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi)
- 	root->i_parent = root;
- 	root->i_mtime = root->sbi->epoch + root->sbi->build_time;
- 	root->i_mtime_nsec = root->sbi->fixed_nsec;
--	erofs_init_empty_dir(root);
-+	root->i_nlink = 2;
- 	return root;
- }
-diff --git a/lib/rebuild.c b/lib/rebuild.c
-index c580f81f..26bc9aca 100644
---- a/lib/rebuild.c
-+++ b/lib/rebuild.c
-@@ -59,7 +59,7 @@ static struct erofs_dentry *erofs_rebuild_mkdir(struct erofs_inode *dir,
- 	inode->i_mtime = dir->i_mtime;
- 	inode->i_mtime_nsec = dir->i_mtime_nsec;
- 	inode->dev = dir->dev;
--	erofs_init_empty_dir(inode);
-+	inode->i_nlink = 2;
- 
- 	d = erofs_d_alloc(dir, s);
- 	if (IS_ERR(d)) {
-@@ -241,7 +241,7 @@ static int erofs_rebuild_update_inode(struct erofs_sb_info *dst_sb,
- 		inode->u.i_rdev = erofs_new_encode_dev(inode->u.i_rdev);
- 		break;
- 	case S_IFDIR:
--		err = erofs_init_empty_dir(inode);
-+		inode->i_nlink = 2;
- 		break;
- 	case S_IFLNK:
- 		inode->i_link = malloc(inode->i_size + 1);
-diff --git a/lib/tar.c b/lib/tar.c
-index 72c12ed0..3146fc9d 100644
---- a/lib/tar.c
-+++ b/lib/tar.c
-@@ -1122,9 +1122,7 @@ new_inode:
- 		}
- 		inode->i_nlink++;
- 	} else if (!inode->i_nlink) {
--		ret = erofs_init_empty_dir(inode);
--		if (ret)
--			goto out;
-+		inode->i_nlink = 2;
- 	}
- 
- 	ret = tarerofs_merge_xattrs(&eh.xattrs, &tar->global.xattrs);
+-	DBG_BUGON(i + dot_omitted != nr_subdirs);
++	DBG_BUGON(i != nr_subdirs);
+ 	qsort(sorted_d, i, sizeof(d), comp_subdir);
+ 	while (i)
+ 		list_add(&sorted_d[--i]->d_child, &dir->i_subdirs);
 -- 
 2.43.5
 
