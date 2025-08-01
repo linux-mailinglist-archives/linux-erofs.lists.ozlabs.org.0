@@ -1,41 +1,43 @@
-Return-Path: <linux-erofs+bounces-743-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-744-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A93F5B17E54
-	for <lists+linux-erofs@lfdr.de>; Fri,  1 Aug 2025 10:32:12 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86D59B17E65
+	for <lists+linux-erofs@lfdr.de>; Fri,  1 Aug 2025 10:37:55 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4btfMC6hT5z2yfL;
-	Fri,  1 Aug 2025 18:32:07 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4btfTs16Pqz2yfL;
+	Fri,  1 Aug 2025 18:37:53 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.32
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754037127;
-	cv=none; b=SAMnjm5X2NbfCLcQaEQ+9ywQLMpru9fx0F2KQPojFaDiPAoOjkAfWuvqxx2CDNINDpg275rrh/tutJjxi/e9nbV4T6vlTA/wxsFgEK26F+9+x9GDl/WWJRi+1VV/yjhSqbiiWfmOTxv8GO+YwVvJp347eE9nK/aRrxdFRmuIO5vxEkbNd2CzPIrjauOVDu2KqFuYmRzoFB4aUpLWOSQjYiz0S1NVz3ql2p+hZT+ePwJ0esO1o6kZG/j7s1CwM3iv17lUt0toZ/KGEDfcN2xL1xF2XrdVUyzDIkvyRLejvIXsW660nh0L1UBH9eOIXwnx+U2LiSLkj7sLuro7rs7OUQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754037473;
+	cv=none; b=LPZ6tPs/2Y5UjMB5WJpUJlAR570apD/smd3w7T3V1rcf6xvARH8wEGdOytHApLDB50lXhBLJ6VAQqyerhAdP5n9QA383D8K3Z9Xa1NjRny0sroPPRu/JX2dguBMQHdhuPuT/tSELskuyk/BpclL0rQao1zEIhVGGQ/9Hm4s55s9tUiKgYcIL+xfG7vZGl63m//BkNgXeIAq5xY75/EurwNkI/PCFumOJfXUmVZkAbZ9IxC4z/BQd6PY9DoBRnbuBOg7Nz4eFJo510MF5U9hXkPARm4oKK2TNjKWWxAONIZB2iXFVuML1JwTTeAmBfEiI0GJg+xWnvU3uZsav4CCSOw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1754037127; c=relaxed/relaxed;
-	bh=JGQqL2HX01yrzzDn1gKb/JoyZIxV2s/PgBt0EItsdXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LgwqEmg7sKyi3T8ts//rAtdbQbjvqrqKZGi8PLcvD3hkT6Cb2229feFuLFe46neV8zD+po53EP9eAsPnAsHHhCnC8ruc8SPYcvOhuFd4RBD7D/Cznnh6l1pHZvAAl90scwxceoOb2BSfxj+BVKwQGjwsslXbMHR8ceyShYHmrkyhwRPQclcHN+iayGZMNxmfGppjiSvR3JrRwMD3bO/5nDqjKV/PKT1hhzlmg2pdcS6bkzbeyKybJu4PvqSGWp8SUIsjdWUCHV0bY0apnf15/Dpaoy6ij/gQFakRkuHcTES703q0C79C8EG/UN3Zo2NneapTRTPtJOoKBvPvL6GZuA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.32; helo=szxga06-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.32; helo=szxga06-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1754037473; c=relaxed/relaxed;
+	bh=2u6HJAuWwQk7yiY4mZMfIwoscojl6KSzE6Jssbh1E78=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X3CLf5xdLoCh4dyXyur0lYW3RtXDPqdnW8IaioPihOf1xUHIJ9XYpWqUzTqm/TPMijKepY8aRXbVXbCdPHVzAbbJoPryUa41raCwGO9j3OlDCao0JmAEK/2pZH67neFK4fDnhUn5rf8ChJ8C6zfB0F5+rutKmSQHLxBVB98glK33HPZAYZ0Tk6JGJkzj4HNfuscN6a7m9XlJd80A4EXxoFInOFPjLY9OREfrvJbWzXflh031SoHv6FnareB3eYGh0d+aYyeYI3N5xeOxfkOblVu1mc01ZNwx9nwIo2BI98m+FlC/0V3UKhPzhimfmdm1ckVzV/BhRUowbpoCxGFcpQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YKm1NQsO; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=YKm1NQsO;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4btfMB2d7cz2y82
-	for <linux-erofs@lists.ozlabs.org>; Fri,  1 Aug 2025 18:32:03 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4btfND6jyzz27hcx;
-	Fri,  1 Aug 2025 16:33:00 +0800 (CST)
-Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0FD511A016C;
-	Fri,  1 Aug 2025 16:31:59 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 1 Aug 2025 16:31:58 +0800
-Message-ID: <7cf57bb4-caff-4d27-af23-d69ca3b3b75b@huawei.com>
-Date: Fri, 1 Aug 2025 16:31:58 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4btfTq2mlcz2y82
+	for <linux-erofs@lists.ozlabs.org>; Fri,  1 Aug 2025 18:37:50 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1754037466; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=2u6HJAuWwQk7yiY4mZMfIwoscojl6KSzE6Jssbh1E78=;
+	b=YKm1NQsOIpG+mVKkn1zK2UKrE0my1c1T7UOdhkUvmFTf1E/J54qQBO99mJAibeXb01OVRjHzn0x4airbNpYtTzIGaAlQ/6CDXop0p+0+SaS6MYIwmJWCuyV7oHVG+tEL8seId2cL8D8HN+Id1J43boOvVVhjlYznFqqDGzbkPy8=
+Received: from 30.221.131.201(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wkdm5fL_1754037464 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 01 Aug 2025 16:37:45 +0800
+Message-ID: <0f00d052-f7e5-4006-89ba-4fdbd1453269@linux.alibaba.com>
+Date: Fri, 1 Aug 2025 16:37:43 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,197 +51,68 @@ Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 3/4] erofs-utils: mkfs: introduce `--s3=...` option
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
-CC: <jingrui@huawei.com>, Yifan Zhao <zhaoyifan28@huawei.com>
+To: Hongbo Li <lihongbo22@huawei.com>, linux-erofs@lists.ozlabs.org
+Cc: jingrui@huawei.com, Yifan Zhao <zhaoyifan28@huawei.com>
 References: <97aa3cdb-076b-4af2-a110-79250b74fc7a@linux.alibaba.com>
  <20250801073046.1900016-1-zhaoyifan28@huawei.com>
  <20250801073046.1900016-2-zhaoyifan28@huawei.com>
  <26bee370-2cd1-43d3-b83e-af6e91253939@linux.alibaba.com>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <26bee370-2cd1-43d3-b83e-af6e91253939@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+ <7cf57bb4-caff-4d27-af23-d69ca3b3b75b@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <7cf57bb4-caff-4d27-af23-d69ca3b3b75b@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemo500009.china.huawei.com (7.202.194.199)
-X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+Hi Hongbo,
 
+On 2025/8/1 16:31, Hongbo Li wrote:
 
-On 2025/8/1 15:46, Gao Xiang wrote:
-> 
-> 
-> On 2025/8/1 15:30, Yifan Zhao wrote:
->> From: zhaoyifan <zhaoyifan28@huawei.com>
->>
->> This patch introduces configuration options for the upcoming 
->> experimental S3
->> support, including configuration parsing and passwd_file reading logic.
->>
->> User could specify the following options:
->> - S3 service endpoint (Compulsory)
->> - S3 credentials file, in the format of "$ak:%sk" (Optional)
->> - S3 API calling style (Optional)
->> - S3 API signature version, only sigV2 supported yet (Optional)
->>
->> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
->> ---
->> change since v1:
->> - rename: include/erofs/s3.h => lib/liberofs_s3.h
->> - add liberofs_s3.h in this patch rather than previous one
->>
->>   lib/liberofs_s3.h |  40 +++++++++
->>   lib/remotes/s3.c  |   3 +-
->>   mkfs/main.c       | 220 ++++++++++++++++++++++++++++++++++++++++------
->>   3 files changed, 233 insertions(+), 30 deletions(-)
->>   create mode 100644 lib/liberofs_s3.h
->>
->> diff --git a/lib/liberofs_s3.h b/lib/liberofs_s3.h
->> new file mode 100644
->> index 0000000..16a06c9
->> --- /dev/null
->> +++ b/lib/liberofs_s3.h
->> @@ -0,0 +1,40 @@
->> +/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
->> +/*
->> + * Copyright (C) 2025 HUAWEI, Inc.
->> + *             http://www.huawei.com/
->> + * Created by Yifan Zhao <zhaoyifan28@huawei.com>
->> + */
->> +#ifndef __EROFS_S3_H
->> +#define __EROFS_S3_H
->> +
->> +#ifdef __cplusplus
->> +extern "C" {
->> +#endif
->> +
->> +enum s3erofs_url_style {
->> +    S3EROFS_URL_STYLE_PATH,          // Path style: 
->> https://s3.amazonaws.com/bucket/object
->> +    S3EROFS_URL_STYLE_VIRTUAL_HOST,  // Virtual host style: 
->> https://bucket.s3.amazonaws.com/object
->> +};
->> +
->> +enum s3erofs_signature_version {
->> +    S3EROFS_SIGNATURE_VERSION_2,
->> +    S3EROFS_SIGNATURE_VERSION_4,
->> +};
->> +
->> +#define S3_ACCESS_KEY_LEN 256
->> +#define S3_SECRET_KEY_LEN 256
->> +
->> +struct erofs_s3 {
->> +    const char *endpoint, *bucket;
->> +    char access_key[S3_ACCESS_KEY_LEN + 1];
->> +    char secret_key[S3_SECRET_KEY_LEN + 1];
->> +
->> +    enum s3erofs_url_style url_style;
->> +    enum s3erofs_signature_version sig;
->> +};
->> +
->> +#ifdef __cplusplus
->> +}
->> +#endif
->> +
->> +#endif
->> \ No newline at end of file
->> diff --git a/lib/remotes/s3.c b/lib/remotes/s3.c
->> index ed2b023..358ee91 100644
->> --- a/lib/remotes/s3.c
->> +++ b/lib/remotes/s3.c
->> @@ -3,4 +3,5 @@
->>    * Copyright (C) 2025 HUAWEI, Inc.
->>    *             http://www.huawei.com/
->>    * Created by Yifan Zhao <zhaoyifan28@huawei.com>
->> - */
->> \ No newline at end of file
->> + */
->> +#include "liberofs_s3.h"
->> \ No newline at end of file
->> diff --git a/mkfs/main.c b/mkfs/main.c
->> index 3aa1421..f524f45 100644
->> --- a/mkfs/main.c
->> +++ b/mkfs/main.c
->> @@ -31,6 +31,7 @@
->>   #include "../lib/liberofs_private.h"
->>   #include "../lib/liberofs_uuid.h"
->>   #include "../lib/liberofs_metabox.h"
->> +#include "../lib/liberofs_s3.h"
->>   #include "../lib/compressor.h"
->>   static struct option long_options[] = {
->> @@ -59,6 +60,9 @@ static struct option long_options[] = {
->>       {"gid-offset", required_argument, NULL, 17},
->>       {"tar", optional_argument, NULL, 20},
->>       {"aufs", no_argument, NULL, 21},
->> +#ifdef HAVE_S3
->> +    {"s3", required_argument, NULL, 22},
->> +#endif
->>       {"mount-point", required_argument, NULL, 512},
->>       {"xattr-prefix", required_argument, NULL, 19},
->>   #ifdef WITH_ANDROID
->> @@ -197,6 +201,12 @@ static void usage(int argc, char **argv)
->>           " --root-xattr-isize=#  ensure the inline xattr size of the 
->> root directory is # bytes at least\n"
->>           " --aufs                replace aufs special files with 
->> overlayfs metadata\n"
->>           " --sort=<path,none>    data sorting order for tarballs as 
->> input (default: path)\n"
->> +#ifdef HAVE_S3
-> 
-> HAVE_S3 is a bit odd, how about using
-> S3_ENABLED (like LZ4_ENABLED?)
-> 
-> 
->> +        " --s3=X                generate an index-only image from 
->> s3-compatible object store backend\n"
->> +        "   [,passwd_file=Y]    X=endpoint, Y=s3 credentials file\n"
-> 
-> What's s3 credentials file? Is it documented
-> somewhere? Why is it named as passwd_file?
-> 
-> Can we have an option to pass in accesskey
-> too?
+...
 
-This follows the format of s3fs-fuse. Storing the ak/sk in a file is for 
-security purposes. The file permission is set to 600 to prevent non-root 
-users from accessing the ak/sk.
+>>> +#ifdef HAVE_S3
+>>
+>> HAVE_S3 is a bit odd, how about using
+>> S3_ENABLED (like LZ4_ENABLED?)
+>>
+>>
+>>> +        " --s3=X                generate an index-only image from s3-compatible object store backend\n"
+>>> +        "   [,passwd_file=Y]    X=endpoint, Y=s3 credentials file\n"
+>>
+>> What's s3 credentials file? Is it documented
+>> somewhere? Why is it named as passwd_file?
+>>
+>> Can we have an option to pass in accesskey
+>> too?
+> 
+> This follows the format of s3fs-fuse. Storing the ak/sk in a file is for security purposes. The file permission is set to 600 to prevent non-root users from accessing the ak/sk.
 
-[1] https://github.com/s3fs-fuse/s3fs-fuse
+Understood, I wonder if the format is documented in
+the AWS website or somewhere?
+
+If it's only an implementation in s3fs-fuse, we might
+need to document the format in the mkfs.erofs manpage
+for example. (Although it's not needed in this patch,
+maybe a follow-up patch.)
+
+Also even I agree it's useful for security purposes,
+it's still useful to have an _alternative_ way to
+pass in plain ak/sk if possible.
+
+`passwd_file` makes sense to me now since s3fs-fuse
+uses this name too!
 
 Thanks,
-Hongbo
+Gao Xiang
 
 > 
-> 
->> +        "   [,style=Z]          S3 API calling style (Z = vhost|path) 
->> (default: vhost)\n"
->> +        "   [,sig=<2,4>]        S3 API signature version (default: 2)\n"
->> +#endif
->>           " --tar=X               generate a full or index-only image 
->> from a tarball(-ish) source\n"
->>           "                       (X = f|i|headerball; f=full mode, 
->> i=index mode,\n"
->>           "                                            headerball=file 
->> data is omited in the source stream)\n"
->> @@ -247,6 +257,10 @@ static struct erofs_tarfile erofstar = {
->>   static bool incremental_mode;
->>   static u8 metabox_algorithmid;
->> +#ifdef HAVE_S3
->> +static struct erofs_s3 s3cfg;
->> +#endif
->> +
->>   enum {
->>       EROFS_MKFS_DATA_IMPORT_DEFAULT,
->>       EROFS_MKFS_DATA_IMPORT_FULLDATA,
->> @@ -257,6 +271,9 @@ enum {
->>   enum {
->>       EROFS_MKFS_SOURCE_DEFAULT,
-> 
-> EROFS_MKFS_SOURCE_LOCALDIR,
+> [1] https://github.com/s3fs-fuse/s3fs-fuse
 > 
 > Thanks,
-> Gao Xiang
+> Hongbo
+> 
 
