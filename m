@@ -1,43 +1,65 @@
-Return-Path: <linux-erofs+bounces-749-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-750-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1464AB186E7
-	for <lists+linux-erofs@lfdr.de>; Fri,  1 Aug 2025 19:49:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 548DEB19D85
+	for <lists+linux-erofs@lfdr.de>; Mon,  4 Aug 2025 10:21:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bttkY5fL3z3bmc;
-	Sat,  2 Aug 2025 03:49:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bwTzp6r1Vz3069;
+	Mon,  4 Aug 2025 18:21:42 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=191.252.27.238
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754070581;
-	cv=none; b=ViTWA4YMmH+pMxZBNzDzqZo8FmTWmpViRxdIYDuYLH7xnhOmGk+rej1NYTOW+BS/LJd7B0ZsG0W0W8LBydE3GXdsTnUl1XSknciiYKAgU2N9BEProl9QabMKsrbAm8IKmNG1iSySd/7lcRD83ZpxErGJCZgZ/vv4Z5+Rpuvl3vyxINSlxuoqc+/I1l4VOCtw21WKDl+3Q9njcRDv96Y6yTGRGmfEOtrqIDZ3tZw4ymufHGzth62LcMWghoIyWODsyiQLyCdItML1gHnu9BW4YvJy3PhTlrUiU41cBWdFtTPtouzgAFxZ/eK0uR7JijkVyijG9f5eXf0HnS2ZzJvhaA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2001:cf8:acf:41::8"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754295702;
+	cv=none; b=CwotTGXKJSutdln0L9AnYAHrxch7uEybPU+XgNybCMihdoERXVdHGW5sAfWJh8prOQ3z/exrdoq5irxP+TA0tPyW1NMjp1KLYmnxqexNcPmX+kxxwidlruup2B9y6O3+jHVFasxgG7QaqMraLDR/cN6qEL0a/y+hMveZ7w+E4aIJWe27u6YW4b6ZNKeH8NHivq5ZMDKw401OqPz1wgNAkoZSweXBCeVQNHPlb4d+rV9VdF4McN0gFE0XTuwZ2KE9LZGFPHXGXCnQf6JoFa+IQmMtGFv/SwqX8PKgF4XS3LPQJA9UkqJ8a/QLfPLCxzyngQ4PagJAhBakRC24UrJjdg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1754070581; c=relaxed/relaxed;
-	bh=XZTDp7b9CyDerRJtUz8cxEW/8UbWPrQuvTAA6VYAcbY=;
-	h=Date:From:To:Subject:Mime-Version:Content-Type:Message-ID; b=o06Ihw3E4RmHqlVrWUoW4C+75jI9jDj64rq/ubLCV+6OuQAnDzjDY9Xl7KUoF5dD3VYsU0BE8g5ugF9fXxJ2r6kwI9YYniZcUxr53CA7t9kerHSQjolrNCXTT9Yb0fpTBLXdZNQz5lruGlOVpU/XigkvmjyRHETLlEalYleRznRwIXaHy68xjtlyXV1bbOa1sf3a+iIb16xsCi+E8xnLWK/UzD9CQdNHV5YHI8WqzUqsYEOgL4dEwnZIzmAZTcRlbxTgekQdNhB6FUjwsHwpG6MyTcQeUw5bwj8cQ6R3WvZ2p32rev9E3iyTt52V7AvS2WURnohMibzzpWpecKkGTA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=rhotelcentral.emktlw-02.com; dkim=pass (1024-bit key; unprotected) header.d=emktlw-02.com header.i=@emktlw-02.com header.a=rsa-sha256 header.s=emktlw header.b=t+Ay1zxm; dkim-atps=neutral; spf=pass (client-ip=191.252.27.238; helo=mail27238.delibird-emkt0003.lwdlv.com.br; envelope-from=199841@rhotelcentral.emktlw-02.com; receiver=lists.ozlabs.org) smtp.mailfrom=rhotelcentral.emktlw-02.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=rhotelcentral.emktlw-02.com
+	t=1754295702; c=relaxed/relaxed;
+	bh=xWMc5gIVslD2m7qCcmSOv878Vhx9knGZUvOI9vbZvJ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yxxd/tbq2MG+BygwF2cA7OnwHmJ1BmpEuTSOVL5VzHnTAB5zAcF3dOaXlF5DZpUXTfEcb2LDAgO7FuWVuEWbRJKro7/93tJlqpP8FJK1P7MCGharnP5jU/Uz7i2CdB1ftJyeNuc0WWpXLoAxUwyYyl7qxSyZYAxyzXruvrpQ/Rhsf0TdFUdrR11LigxisfedTQayYiX6BQQ+SVYpHzM4/ehqP6h9lBsHQQe5v0zWOOxMYaQnk9ewsYiFwwpnqitxcgM1fwKTHXDAyTo16Z1CsV6JEkEX4FItOAUs2LJZgFU/p1a7pFkp5FV6n9zkBDjxYXH0847eQcKXTx2FjYORyw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=sony.com; dkim=pass (2048-bit key; unprotected) header.d=sony.com header.i=@sony.com header.a=rsa-sha256 header.s=s1jp header.b=xWaNusGp; dkim-atps=neutral; spf=pass (client-ip=2001:cf8:acf:41::8; helo=jpms-ob02-os7.noc.sony.co.jp; envelope-from=yuezhang.mo@sony.com; receiver=lists.ozlabs.org) smtp.mailfrom=sony.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=sony.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=emktlw-02.com header.i=@emktlw-02.com header.a=rsa-sha256 header.s=emktlw header.b=t+Ay1zxm;
+	dkim=pass (2048-bit key; unprotected) header.d=sony.com header.i=@sony.com header.a=rsa-sha256 header.s=s1jp header.b=xWaNusGp;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=rhotelcentral.emktlw-02.com (client-ip=191.252.27.238; helo=mail27238.delibird-emkt0003.lwdlv.com.br; envelope-from=199841@rhotelcentral.emktlw-02.com; receiver=lists.ozlabs.org)
-X-Greylist: delayed 603 seconds by postgrey-1.37 at boromir; Sat, 02 Aug 2025 03:49:39 AEST
-Received: from mail27238.delibird-emkt0003.lwdlv.com.br (mail27238.delibird-emkt0003.lwdlv.com.br [191.252.27.238])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bttkW1jkdz3bmC
-	for <linux-erofs@lists.ozlabs.org>; Sat,  2 Aug 2025 03:49:39 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=emktlw; d=emktlw-02.com;
- h=Date:From:Reply-To:To:Subject:Mime-Version:Content-Type:List-Unsubscribe:
- Message-ID;
- bh=XZTDp7b9CyDerRJtUz8cxEW/8UbWPrQuvTAA6VYAcbY=;
- b=t+Ay1zxmrZqQ6Pbrg1JQAPj1ESLqCUB65OzX/49vRjHxSStCc/I1jgkf8wv+IUOLtZXxUnfSj2s2
-   BfPfIAa7rLCGqfQz4rCM4rt77GN9SNFV4A2+CY2mc6BZJtNLRwCKvntPm/qM7JiV00xmGsVKTLhz
-   znvKABT9bPT4HX+786g=
-Received: from localhost (191.252.190.5) by mail27238.delibird-emkt0003.lwdlv.com.br id hhjv1u2n8lgb for <linux-erofs@lists.ozlabs.org>; Fri, 1 Aug 2025 14:39:12 -0300 (envelope-from <199841@rhotelcentral.emktlw-02.com>)
-Date: Fri, 1 Aug 2025 14:39:12 -0300
-From: ReclameAQUI <reservas@rhotelcentral.emktlw-02.com>
-Reply-To: reservas@hotelcentral-ro.com.br
-To: linux-erofs@lists.ozlabs.org
-Subject: ReclameAQUI
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sony.com (client-ip=2001:cf8:acf:41::8; helo=jpms-ob02-os7.noc.sony.co.jp; envelope-from=yuezhang.mo@sony.com; receiver=lists.ozlabs.org)
+Received: from jpms-ob02-os7.noc.sony.co.jp (jpms-ob02-os7.noc.sony.co.jp [IPv6:2001:cf8:acf:41::8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bwTzn6VFsz2yPS
+	for <linux-erofs@lists.ozlabs.org>; Mon,  4 Aug 2025 18:21:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=sony.com; s=s1jp; t=1754295702; x=1785831702;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=xWMc5gIVslD2m7qCcmSOv878Vhx9knGZUvOI9vbZvJ4=;
+  b=xWaNusGpLs2q6KriBVA9l/CR4/z9F5RwMkI7h1lCkQtxBRiHF4f1cAnp
+   9Tnx8j8jaWymRGZyBOz+bBPo7rf6ERxvTR6UqnASv/nFC54Cr8vZ+trUv
+   pZhqbAEXXDIdmMZGLhBeLWxcDVbmZYoGXyCao5939ILHKjwjx6LhhGnqb
+   c5aiu+Gu/9Qi/fE9NOuh3bCFG6BCX4I9v2KHICFhFJ9/JN54BfX/8h09U
+   O22WNOWCvCoHmJz1df/p3KOLRKO5BnoSuQmkw1rS2ft0UUKMVTGDHSfNq
+   /3ho+c92FbKgOINe73+Y3SVLizMUGO+9pP3i9YnclVV+zVhAO5EtDf29Y
+   w==;
+Received: from unknown (HELO jpmta-ob02-os7.noc.sony.co.jp) ([IPv6:2001:cf8:acf:1104::7])
+  by jpms-ob02-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2025 17:21:33 +0900
+X-IronPort-AV: E=Sophos;i="6.17,258,1747666800"; 
+   d="scan'208";a="13948604"
+Received: from unknown (HELO cscsh-7000014390..) ([43.82.111.225])
+  by jpmta-ob02-os7.noc.sony.co.jp with ESMTP; 04 Aug 2025 17:21:32 +0900
+From: Yuezhang Mo <Yuezhang.Mo@sony.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	huyue2@coolpad.com,
+	jefflexu@linux.alibaba.com,
+	dhavale@google.com,
+	lihongbo22@huawei.com
+Cc: linux-erofs@lists.ozlabs.org,
+	Yuezhang Mo <Yuezhang.Mo@sony.com>,
+	Friendy Su <friendy.su@sony.com>,
+	Jacky Cao <jacky.cao@sony.com>,
+	Daniel Palmer <daniel.palmer@sony.com>
+Subject: [PATCH v3] erofs: Fallback to normal access if DAX is not supported on extra device
+Date: Mon,  4 Aug 2025 16:20:31 +0800
+Message-ID: <20250804082030.3667257-2-Yuezhang.Mo@sony.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -48,136 +70,94 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-Mime-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="--==_mimepart_688cfbb2c55f6_1f8333fe2697396743236512";
- charset=UTF-8
-List-Unsubscribe: <mailto:6351-7ud-7-7-bcdb6b06dcba0fca7bf901823d8dc437ca85eaf7@unsubscribes.mktnaweb.com>,
- <http://emailmarketing.locaweb.com.br/accounts/199841/unsubscribes/7/8141?emkt_c=1754059914&emkt_v=bGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZw&envelope_id=7>
-Precedence: bulk
-x-account-id: 199841
-x-contact-id: 8141
-x-envelope-id: 7
-x-message-id: 7
-x-locaweb-id: HV1mAT7WLYfREaYCQzUSbyHfPMIA4X-sYSIaIdeEx8vhBy6icq87ocxm-w7oThqxcZdjvud1xevSZAfpH5oSnEwRT4GGlR1RGpeWUO45GZuhVaP33tWCHAIPE88UDIb7ht9nWKKnpj1WzAxVNO1X9Zhb4Nv8w5apoB2cB40tnneAbuL20E1unYIAx4SDxGwj
-x-locaweb-id2: NTI2NTYzNmM2MTZkNjU0MTUxNTU0OTIwM2M3MjY1NzM2NTcyNzY2MTczNDA3MjY4NmY3NDY1NmM2MzY1NmU3NDcyNjE2YzJlNjU2ZDZiNzQ2Yzc3MmQzMDMyMmU2MzZmNmQzZQ==
-Feedback-ID: 199841:7:c:emktlw
-Message-ID: <0.8.0.AC.1DC030B315E05F2.7C3EE@mail27238.delibird-emkt0003.lwdlv.com.br>
-X-Spam-Status: No, score=0.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HTML_FONT_LOW_CONTRAST,HTML_MESSAGE,MIME_QP_LONG_LINE,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+If using multiple devices, we should check if the extra device support
+DAX instead of checking the primary device when deciding if to use DAX
+to access a file.
 
-----==_mimepart_688cfbb2c55f6_1f8333fe2697396743236512
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+If an extra device does not support DAX we should fallback to normal
+access otherwise the data on that device will be inaccessible.
 
-ReclameAQUI=0D
-Prezado(a),=0D
-Informamos que recebemos uma reclama=C3=A7=C3=A3o registrada por um de se=
-us clientes atrav=C3=A9s da plataforma=C2=A0Reclame Aqui.=0D
-Pedimos que verifique os detalhes da reclama=C3=A7=C3=A3o o quanto antes =
-para tomar as provid=C3=AAncias necess=C3=A1rias e evitar maiores contrat=
-empos. Confira os detalhes abaixo:=0D
-ACESSE A RECLAMA=C3=87=C3=83O=0D
-Data:=C2=A00108/2025=0D
-Hor=C3=A1rio:=C2=A014:35:11=0D
-Protocolo de registro:=C2=A0614430455-6000519-2025=0D
-Solicitamos a especial gentileza de analisar o teor da reclama=C3=A7=C3=A3=
-o e fazer sua r=C3=A9plica em at=C3=A9 24 horas.=0D
-Se voc=C3=AA n=C3=A3o deseja mais receber nossos e-mails, cancele sua ins=
-cri=C3=A7=C3=A3o atrav=C3=A9s do link %{link}=
+Signed-off-by: Yuezhang Mo <Yuezhang.Mo@sony.com>
+Reviewed-by: Friendy Su <friendy.su@sony.com>
+Reviewed-by: Jacky Cao <jacky.cao@sony.com>
+Reviewed-by: Daniel Palmer <daniel.palmer@sony.com>
+---
 
-----==_mimepart_688cfbb2c55f6_1f8333fe2697396743236512
-Content-Type: text/html;
- charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Changes of v3:
+  - uniformly use erofs_info() to output the logs of turning off DAX
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www=
-.w3.org/TR/REC-html40/loose.dtd">=0D
-<html xmlns=3D"http://www.w3.org/1999/xhtml">=0D
-<head>=0D
-	<title></title>=0D
-	<meta content=3D"text/html; charset=3Dwindows-1252" http-equiv=3D"Conten=
-t-Type" /><meta name=3D"GENERATOR" content=3D"MSHTML 11.00.10570.1001" />=
-=0D
-</head>=0D
-<body>=0D
-<div style=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; FONT-FAMILY: Arial=
-, sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: non=
-e; FONT-WEIGHT: 400; COLOR: rgb(44,54,58); PADDING-BOTTOM: 15px; FONT-STY=
-LE: normal; TEXT-ALIGN: center; PADDING-TOP: 15px; PADDING-LEFT: 15px; OR=
-PHANS: 2; WIDOWS: 2; LETTER-SPACING: normal; PADDING-RIGHT: 15px; BACKGRO=
-UND-COLOR: rgb(242,242,242); TEXT-INDENT: 0px; font-variant-ligatures: no=
-rmal; font-variant-caps: normal; -webkit-text-stroke-width: 0px; text-dec=
-oration-thickness: initial; text-decoration-style: initial; text-decorati=
-on-color: initial"><span style=3D"BOX-SIZING: border-box; FONT-SIZE: 28px=
-; FONT-FAMILY: &quot;Arial Black&quot;, sans-serif; FONT-WEIGHT: bold; FO=
-NT-STYLE: italic"><strong style=3D"BOX-SIZING: border-box; FONT-WEIGHT: b=
-older"><span style=3D"BOX-SIZING: border-box; COLOR: rgb(163,200,0)">Recl=
-ame</span><span style=3D"BOX-SIZING: border-box; COLOR: rgb(0,122,61)">AQ=
-UI</span></strong></span></div>=0D
-=0D
-<div style=3D"BOX-SIZING: border-box; FONT-SIZE: 14px; FONT-FAMILY: Arial=
-, sans-serif; WHITE-SPACE: normal; WORD-SPACING: 0px; TEXT-TRANSFORM: non=
-e; FONT-WEIGHT: 400; COLOR: rgb(51,51,51); PADDING-BOTTOM: 20px; FONT-STY=
-LE: normal; TEXT-ALIGN: left; PADDING-TOP: 20px; PADDING-LEFT: 20px; ORPH=
-ANS: 2; WIDOWS: 2; LETTER-SPACING: normal; PADDING-RIGHT: 20px; TEXT-INDE=
-NT: 0px; font-variant-ligatures: normal; font-variant-caps: normal; -webk=
-it-text-stroke-width: 0px; text-decoration-thickness: initial; text-decor=
-ation-style: initial; text-decoration-color: initial">=0D
-<p style=3D"BOX-SIZING: border-box; FONT-SIZE: 16px; MARGIN: 0px">Prezado=
-(a),</p>=0D
-=0D
-<p style=3D"BOX-SIZING: border-box; FONT-SIZE: 16px; MARGIN-TOP: 0px">Inf=
-ormamos que recebemos uma reclama=C3=A7=C3=A3o registrada por um de seus =
-clientes atrav=C3=A9s da plataforma<span>&nbsp;</span><strong style=3D"BO=
-X-SIZING: border-box; FONT-WEIGHT: bolder">Reclame Aqui</strong>.</p>=0D
-=0D
-<p style=3D"BOX-SIZING: border-box; FONT-SIZE: 16px; MARGIN-TOP: 0px">Ped=
-imos que verifique os detalhes da reclama=C3=A7=C3=A3o o quanto antes par=
-a tomar as provid=C3=AAncias necess=C3=A1rias e evitar maiores contratemp=
-os. Confira os detalhes abaixo:</p>=0D
-=0D
-<p style=3D"BOX-SIZING: border-box; TEXT-ALIGN: center; MARGIN: 20px 0px"=
-><a href=3D"https://emailmarketing.locaweb.com.br/accounts/199841/message=
-s/7/clicks/8141/7?envelope_id=3D7" rel=3D"noreferrer" style=3D"BOX-SIZING=
-: border-box; FONT-SIZE: 16px; TEXT-DECORATION: none; FONT-WEIGHT: bold; =
-COLOR: rgb(255,255,255); PADDING-BOTTOM: 12px; PADDING-TOP: 12px; PADDING=
--LEFT: 25px; DISPLAY: inline-block; PADDING-RIGHT: 25px; BACKGROUND-COLOR=
-: rgb(0,122,61); border-radius: 5px" target=3D"_blank">ACESSE A RECLAMA=C3=
-=87=C3=83O</a></p>=0D
-=0D
-<ul style=3D"LIST-STYLE-TYPE: none; BOX-SIZING: border-box; FONT-SIZE: 16=
-px; MARGIN-TOP: 0px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px; PADDING-LEFT:=
- 0px; PADDING-RIGHT: 0px">=0D
-	<li style=3D"BOX-SIZING: border-box"><strong style=3D"BOX-SIZING: border=
--box; FONT-WEIGHT: bolder">Data:</strong><span>&nbsp;01</span>08/2025</li=
->=0D
-	<li style=3D"BOX-SIZING: border-box"><strong style=3D"BOX-SIZING: border=
--box; FONT-WEIGHT: bolder">Hor=C3=A1rio:</strong><span>&nbsp;14</span>:35=
-:11</li>=0D
-	<li style=3D"BOX-SIZING: border-box"><strong style=3D"BOX-SIZING: border=
--box; FONT-WEIGHT: bolder">Protocolo de registro:</strong><span>&nbsp;</s=
-pan>614430455-6000519-2025</li>=0D
-</ul>=0D
-=0D
-<p style=3D"BOX-SIZING: border-box; FONT-SIZE: 16px; MARGIN-TOP: 0px">Sol=
-icitamos a especial gentileza de analisar o teor da reclama=C3=A7=C3=A3o =
-e fazer sua r=C3=A9plica em at=C3=A9 24 horas.</p>=0D
-</div>=0D
-<div style=3D"text-align:center;"><p><span style=3D"color:#ffffff;"><span=
- style=3D"font-family:arial,helvetica,sans-serif;">Se voc=C3=AA n=C3=A3o =
-deseja mais receber nossos e-mails, </span></span><span style=3D"font-fam=
-ily:arial,helvetica,sans-serif;"><a href=3D"http://emailmarketing.locaweb=
-.com.br/accounts/199841/unsubscribes/7/8141?emkt_c=3D1754059914&amp;emkt_v=3D=
-bGludXgtZXJvZnNAbGlzdHMub3psYWJzLm9yZw&amp;envelope_id=3D7"><span style=3D"color:#ffffff;">cancele a su=
-a inscri=C3=A7=C3=A3o.</span></a></span></p></div><img src=3D"http://emai=
-lmarketing.locaweb.com.br/accounts/199841/messages/7/openings/8141?envelo=
-pe_id=3D7" width=3D"1" height=3D"1" border=3D"0" alt=3D"" /></body>=0D
-</html>=0D
+Changes of v2:
+  - fix the indentation alignment of `dif->path`
+  - remove the unnecessary comment
 
-----==_mimepart_688cfbb2c55f6_1f8333fe2697396743236512--
+ fs/erofs/super.c | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index e1020aa60771..8c7a5985b4ee 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -174,6 +174,11 @@ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+ 		if (!erofs_is_fileio_mode(sbi)) {
+ 			dif->dax_dev = fs_dax_get_by_bdev(file_bdev(file),
+ 					&dif->dax_part_off, NULL, NULL);
++			if (!dif->dax_dev && test_opt(&sbi->opt, DAX_ALWAYS)) {
++				erofs_info(sb, "DAX unsupported by %s. Turning off DAX.",
++					   dif->path);
++				clear_opt(&sbi->opt, DAX_ALWAYS);
++			}
+ 		} else if (!S_ISREG(file_inode(file)->i_mode)) {
+ 			fput(file);
+ 			return -EINVAL;
+@@ -210,8 +215,13 @@ static int erofs_scan_devices(struct super_block *sb,
+ 			  ondisk_extradevs, sbi->devs->extra_devices);
+ 		return -EINVAL;
+ 	}
+-	if (!ondisk_extradevs)
++	if (!ondisk_extradevs) {
++		if (test_opt(&sbi->opt, DAX_ALWAYS) && !sbi->dif0.dax_dev) {
++			erofs_info(sb, "DAX unsupported by block device. Turning off DAX.");
++			clear_opt(&sbi->opt, DAX_ALWAYS);
++		}
+ 		return 0;
++	}
+ 
+ 	if (!sbi->devs->extra_devices && !erofs_is_fscache_mode(sb))
+ 		sbi->devs->flatdev = true;
+@@ -338,7 +348,6 @@ static int erofs_read_superblock(struct super_block *sb)
+ 	if (ret < 0)
+ 		goto out;
+ 
+-	/* handle multiple devices */
+ 	ret = erofs_scan_devices(sb, dsb);
+ 
+ 	if (erofs_sb_has_48bit(sbi))
+@@ -671,14 +680,9 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 			return invalfc(fc, "cannot use fsoffset in fscache mode");
+ 	}
+ 
+-	if (test_opt(&sbi->opt, DAX_ALWAYS)) {
+-		if (!sbi->dif0.dax_dev) {
+-			errorfc(fc, "DAX unsupported by block device. Turning off DAX.");
+-			clear_opt(&sbi->opt, DAX_ALWAYS);
+-		} else if (sbi->blkszbits != PAGE_SHIFT) {
+-			errorfc(fc, "unsupported blocksize for DAX");
+-			clear_opt(&sbi->opt, DAX_ALWAYS);
+-		}
++	if (test_opt(&sbi->opt, DAX_ALWAYS) && sbi->blkszbits != PAGE_SHIFT) {
++		erofs_info(sb, "unsupported blocksize for DAX");
++		clear_opt(&sbi->opt, DAX_ALWAYS);
+ 	}
+ 
+ 	sb->s_time_gran = 1;
+-- 
+2.43.0
+
 
