@@ -1,43 +1,53 @@
-Return-Path: <linux-erofs+bounces-753-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-754-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03DEDB19E13
-	for <lists+linux-erofs@lfdr.de>; Mon,  4 Aug 2025 10:59:59 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E7E9B19EF6
+	for <lists+linux-erofs@lfdr.de>; Mon,  4 Aug 2025 11:46:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bwVqw521fz3069;
-	Mon,  4 Aug 2025 18:59:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bwWt86VMBz30Yb;
+	Mon,  4 Aug 2025 19:46:56 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754297996;
-	cv=none; b=WxAVVK8hz5lKDaCJ2WRo72X6wYAsi+mmvZ4dJntg33T4fNoO/yg2OuuNIsRf4r74jyYF77+y7ERA8gd6af7U68BzonZyNgT5RuY2OE7SOc8u5Rnw20YNpqM8fZv82xb2u7s0GkXX9R9hWMwSxXg2CGpc0Uyzg77QJ6SWYEhWMjzMdXW2ZDesV71uOexA0PzBAZd4dK22qjPmTrVlPhj69ItdNo2ph0X0O8KSNlP/XmTv5bYdQGvgGtfnAxwEEGSZpaY002H6DHPZMaJ5j9ji07ImzP+Bj2t4FfsR8kUYhGR21vdZRt4WOzWfyBfEZ8kWXYcbnCvHJyqg3ZZd+ko8TQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=101.36.218.33
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754300816;
+	cv=none; b=exUpQvAAlBd3e8/NffargyFTFgXkWdMxSw3W3gqR1f69vq0DmBa7KpvVmu0YVzl/GcUKUqOyvim6B0KP/2pQazwtAN7vXwNIgq7JkQZlhd/Euz52R4u10ASGDNraTshzXokK3AT/xuwEslVVDbMiE4ikhfzY9IPgEGv4Md7GZTf8kxFNUc3GpNTZaw7cPc9NMyJOtzWeG3CwuKiZqnNgY18KUItMfG3r4awdwixyibC/gzfODeELPHgdGLYY7fekbJOJbNKLrttWq8FBn+nfmh6sEd1ZnOH63+1od88CgXrqnha0Y9Nu9k/E7t5DC5ZKcZhiSrm3vYPZ6dBC0x+cUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1754297996; c=relaxed/relaxed;
-	bh=kVDqTQkWRvs+VsDEwe5bifWicO5KdITd3j+JwjIPmo4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L7WiOoyX+o47mKBIiXmS+58f+Pjr5kYBIKZbREL+d5NojIKwrdrYHpfvBO6aWbd0s/Our6ny4XbJYZkYy4lqv7mhAurMV1A8Q6dqiNhc2Lw7ugDh+1/2Pi5YGwEgh9w2LSQROh7DlUbEMLNoFABvFpC7pKSrwlvRVKTk6MXkt0jtXY+UrxsNVj0qYSw3wgiPY01PyGOQZa170zq/W2WyUu/Nu3R2n6EXKPs7b6NUheZ3ChRKNkxrxndGXYnsmuIevtQeCjJrUqqHDcawf2asseWEEbQ+v6fuYcJQLhf4MJpWd1SLa6O/v1C/TTFjihAxfYTxte5RklMzJKbMrDaYjg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=pOfWZ00g; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1754300816; c=relaxed/relaxed;
+	bh=eTtBouiPcuO1vnvhYaGg0gydb3FQa81D2ULvJnG6mWo=;
+	h=Date:To:Cc:From:Content-Type:Subject:Mime-Version:Message-Id; b=L/4bianf3cKObD2+8PAafNOqcinYxIz4Su5zUUJehztzUgv2sDUk+JUkrOTLRO/Sl1iEqNP7T9QsIGeMwFrPY9SCjUcMxlOIoNZNZ0djjNeMfjsF478TSxxQRcg90Y3VVH5RLePMvuOocM8Ekkbrbw36bUJO5Be2/0FIelbLBNcOzu0RzL3OWCYviOzb6nXwEeyMjLzVo43zVePthxmRUi46VzDA9bThxULUGC7ba0kVuPzZN2n53Id0fW/ZbdCqbtp5YTm61jD7McAKDRjPYDM6gzkw17a366gNzKrLviCxlldGRcGk6OVccslmLQcUaZcBiUp650ZdhjiX6E0Nrg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=lixiang.com; dkim=pass (2048-bit key; unprotected) header.d=lixiang-com.20200927.dkim.feishu.cn header.i=@lixiang-com.20200927.dkim.feishu.cn header.a=rsa-sha256 header.s=s1 header.b=uhg910oh; dkim-atps=neutral; spf=pass (client-ip=101.36.218.33; helo=lf-2-33.ptr.blmpb.com; envelope-from=liujunli@lixiang.com; receiver=lists.ozlabs.org) smtp.mailfrom=lixiang.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=lixiang.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=pOfWZ00g;
+	dkim=pass (2048-bit key; unprotected) header.d=lixiang-com.20200927.dkim.feishu.cn header.i=@lixiang-com.20200927.dkim.feishu.cn header.a=rsa-sha256 header.s=s1 header.b=uhg910oh;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=lixiang.com (client-ip=101.36.218.33; helo=lf-2-33.ptr.blmpb.com; envelope-from=liujunli@lixiang.com; receiver=lists.ozlabs.org)
+Received: from lf-2-33.ptr.blmpb.com (lf-2-33.ptr.blmpb.com [101.36.218.33])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bwVqt2wjCz2yLB
-	for <linux-erofs@lists.ozlabs.org>; Mon,  4 Aug 2025 18:59:53 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1754297989; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=kVDqTQkWRvs+VsDEwe5bifWicO5KdITd3j+JwjIPmo4=;
-	b=pOfWZ00geFfmH/+kpsyY9DhzCYQNFoCYhgtcZpW5UkPybwgQ/LdPFuhlX0VLZNqWpTr/+yP+i/RxrYG2/NDs2mL3tWA6UleiFM2SwqglFAnvbXRIc5c3HbdY/ul4UO9medWbtwtZjt56dI4QQGylX8V1Y3F9CAZW6sXExevrKRg=
-Received: from 30.221.131.110(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WkxxuDS_1754297987 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 04 Aug 2025 16:59:48 +0800
-Message-ID: <4978e947-f68f-455a-a318-5f365d686496@linux.alibaba.com>
-Date: Mon, 4 Aug 2025 16:59:47 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bwWt604Jjz3069
+	for <linux-erofs@lists.ozlabs.org>; Mon,  4 Aug 2025 19:46:52 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=lixiang-com.20200927.dkim.feishu.cn; t=1754300554;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=eTtBouiPcuO1vnvhYaGg0gydb3FQa81D2ULvJnG6mWo=;
+ b=uhg910ohwKggnxVCPrWeXhyt4XxmQVRD05lncZrQvGBEgRW0Jruhi5++c2mk4N0Sc+4Zru
+ 8GX547U8kmb6L7tc/p7M9vA3A77wrDfUcd7Ejta/TE8p56FeBrwC96sHDbUsBM6WhsCoil
+ g3bqfWEXc8d1ci21+lC+q/Ya/suyHUdInPqn7eJwQSQl9dMiJ+3IxNFBetJUp4q2nP9FhC
+ 7LiepQ9feAhA8r03BBzRUGnSG7nALZtJLPQMg5j7uwO3QO2O2Gz5ecStdxUvy97q1KGXAR
+ VAyIEmwaRK34D047S9dFgVZnEd+H7E3gYfNnudfUCfAK8Dk9E2h6jOShVPmO+g==
+Date: Mon,  4 Aug 2025 17:38:12 +0800
+X-Lms-Return-Path: <lba+268908088+54e1c2+lists.ozlabs.org+liujunli@lixiang.com>
+To: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Cc: <xiang@kernel.org>, <chao@kernel.org>, <yangsonghua@lixiang.com>, 
+	"Junli Liu" <liujunli@lixiang.com>
+From: "Junli Liu" <liujunli@lixiang.com>
+Content-Type: multipart/alternative;
+ boundary=335a754728878a2e4651eaa1d3d2d16a1569e66f81f5bf8e88d2ec9b24f6
+Subject: [PATCH v2] erofs: fix atomic context detection when !CONFIG_DEBUG_LOCK_ALLOC
+X-Original-From: Junli Liu <liujunli@lixiang.com>
+Content-Transfer-Encoding: 8bit
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -48,163 +58,266 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: Fix detection of atomic context to prevent
- sleeping in invalid context
-To: Junli Liu <liujunli@lixiang.com>, linux-erofs@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, gao.xiang@linux.alibaba.com,
- linux-mediatek@lists.infradead.org, chao@kernel.org, xiang@kernel.org,
- yangsonghua@lixiang.com
-References: <20250804082912.242580-1-liujunli@lixiang.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250804082912.242580-1-liujunli@lixiang.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Mime-Version: 1.0
+Message-Id: <20250804093811.295563-1-liujunli@lixiang.com>
+Received: from PC-YLX4T052.company.local ([58.33.109.195]) by smtp.feishu.cn with ESMTPS; Mon, 04 Aug 2025 17:42:31 +0800
+X-Mailer: git-send-email 2.25.1
+X-Spam-Status: No, score=0.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HTML_MESSAGE,MSGID_FROM_MTA_HEADER,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Junli,
+--335a754728878a2e4651eaa1d3d2d16a1569e66f81f5bf8e88d2ec9b24f6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-The patch format is broken, please check your email client (you
-could just use a simple `git send-email` to submit) and (if
-possible) send to yourself first.
-
-I think the subject can just be
-
-subject: erofs: fix atomic context detection when !CONFIG_DEBUG_LOCK_ALLOC
-
-On 2025/8/4 16:29, Junli Liu wrote:
-> From: Junli liu
-> 
-> The current atomic context detection is insufficient and can lead to
-> sleeping function calls in invalid contexts, causing kernel warnings
-> and potential system instability. See the stacktrace [1]
-
-Yes, the issue is still valid, and it was discussed before in:
-https://lore.kernel.org/r/58b661d0-0ebb-4b45-a10d-c5927fb791cd@paulmck-laptop
-
-I prefer to apply to CONFIG_PREEMPT_COUNT cases only since
-I don't see any real Android user uses !CONFIG_PREEMPT_COUNT.
-
-But the commit message can be further improved as:
-
-"Since EROFS handles decompression in non-atomic contexts due to
+Since EROFS handles decompression in non-atomic contexts due to
 uncontrollable decompression latencies and vmap() usage, it tries
 to detect atomic contexts and only kicks off a kworker on demand
 in order to reduce unnecessary scheduling overhead.
 
 However, the current approach is insufficient and can lead to
 sleeping function calls in invalid contexts, causing kernel
-warnings and potential system instability. See the stacktrace [1]"
+warnings and potential system instability. See the stacktrace [1]
+
+The current implementation only checks rcu_read_lock_any_held(),
+which behaves inconsistently across different kernel configurations:
+
+- When CONFIG_DEBUG_LOCK_ALLOC is enabled: correctly detects RCU
+  critical sections by checking rcu_lock_map
+- When CONFIG_DEBUG_LOCK_ALLOC is disabled: compiles to
+  "!preemptible()", which only checks preempt_count and misses
+  RCU critical sections
+
+This patch introduces z_erofs_in_atomic() to provide comprehensive
+atomic context detection:
+
+1. Check RCU preemption depth when CONFIG_PREEMPTION is enabled,
+   as RCU critical sections may not affect preempt_count but still
+   require atomic handling
+
+2. Always use async processing when CONFIG_PREEMPT_COUNT is disabled,
+   as preemption state cannot be reliably determined
+
+3. Fall back to standard preemptible() check for remaining cases
+
+The function replaces the previous complex condition check and ensures
+that z_erofs always uses (kthread_)work in atomic contexts to minimize
+scheduling overhead and prevent sleeping in invalid contexts.
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[1] Problem stacktrace
+BUG: sleeping function called from invalid context at
+kernel/locking/rtmutex_api.c:510
+in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 107,
+name: irq/54-ufshcd
+preempt_count: 0, expected: 0
+RCU nest depth: 2, expected: 0
+
+Link: https://lore.kernel.org/r/58b661d0-0ebb-4b45-a10d-c5927fb791cd@paulmc=
+k-laptop
+Signed-off-by: Junli Liu <liujunli@lixiang.com>
+---
+ fs/erofs/zdata.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 792f20888..2d7329700 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1432,6 +1432,16 @@ static void z_erofs_decompressqueue_kthread_work(str=
+uct kthread_work *work)
+ }
+ #endif
+=20
++/* Use (kthread_)work in atomic contexts to minimize scheduling overhead *=
+/
++static inline bool z_erofs_in_atomic(void)
++{
++	if (IS_ENABLED(CONFIG_PREEMPTION) && rcu_preempt_depth())
++		return true;
++	if (!IS_ENABLED(CONFIG_PREEMPT_COUNT))
++		return true;
++	return !preemptible();
++}
++
+ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
+ 				       int bios)
+ {
+@@ -1446,8 +1456,7 @@ static void z_erofs_decompress_kickoff(struct z_erofs=
+_decompressqueue *io,
+=20
+ 	if (atomic_add_return(bios, &io->pending_bios))
+ 		return;
+-	/* Use (kthread_)work and sync decompression for atomic contexts only */
+-	if (!in_task() || irqs_disabled() || rcu_read_lock_any_held()) {
++	if (z_erofs_in_atomic()) {
+ #ifdef CONFIG_EROFS_FS_PCPU_KTHREAD
+ 		struct kthread_worker *worker;
+=20
+--=20
+2.25.1
+
+=E5=A3=B0=E6=98=8E=EF=BC=9A=E8=BF=99=E5=B0=81=E9=82=AE=E4=BB=B6=E5=8F=AA=E5=
+=85=81=E8=AE=B8=E6=96=87=E4=BB=B6=E6=8E=A5=E6=94=B6=E8=80=85=E9=98=85=E8=AF=
+=BB=EF=BC=8C=E6=9C=89=E5=BE=88=E9=AB=98=E7=9A=84=E6=9C=BA=E5=AF=86=E6=80=A7=
+=E8=A6=81=E6=B1=82=E3=80=82=E7=A6=81=E6=AD=A2=E5=85=B6=E4=BB=96=E4=BA=BA=E4=
+=BD=BF=E7=94=A8=E3=80=81=E6=89=93=E5=BC=80=E3=80=81=E5=A4=8D=E5=88=B6=E6=88=
+=96=E8=BD=AC=E5=8F=91=E9=87=8C=E9=9D=A2=E7=9A=84=E4=BB=BB=E4=BD=95=E5=86=85=
+=E5=AE=B9=E3=80=82=E5=A6=82=E6=9E=9C=E6=9C=AC=E9=82=AE=E4=BB=B6=E9=94=99=E8=
+=AF=AF=E5=9C=B0=E5=8F=91=E7=BB=99=E4=BA=86=E4=BD=A0=EF=BC=8C=E8=AF=B7=E8=81=
+=94=E7=B3=BB=E9=82=AE=E4=BB=B6=E5=8F=91=E5=87=BA=E8=80=85=E5=B9=B6=E5=88=A0=
+=E9=99=A4=E8=BF=99=E4=B8=AA=E6=96=87=E4=BB=B6=E3=80=82=E6=9C=BA=E5=AF=86=E5=
+=8F=8A=E6=B3=95=E5=BE=8B=E7=9A=84=E7=89=B9=E6=9D=83=E5=B9=B6=E4=B8=8D=E5=9B=
+=A0=E4=B8=BA=E8=AF=AF=E5=8F=91=E9=82=AE=E4=BB=B6=E8=80=8C=E6=94=BE=E5=BC=83=
+=E6=88=96=E4=B8=A7=E5=A4=B1=E3=80=82=E4=BB=BB=E4=BD=95=E6=8F=90=E5=87=BA=E7=
+=9A=84=E8=A7=82=E7=82=B9=E6=88=96=E6=84=8F=E8=A7=81=E5=8F=AA=E5=B1=9E=E4=BA=
+=8E=E4=BD=9C=E8=80=85=E7=9A=84=E4=B8=AA=E4=BA=BA=E8=A7=81=E8=A7=A3=EF=BC=8C=
+=E5=B9=B6=E4=B8=8D=E4=B8=80=E5=AE=9A=E4=BB=A3=E8=A1=A8=E6=9C=AC=E5=85=AC=E5=
+=8F=B8=E3=80=82
+Disclaimer: This email is intended to be read only by the designated recipi=
+ent of the document and has high confidentiality requirements. Anyone else =
+is prohibited from using, opening, copying or forwarding any of the content=
+s inside. If this email was sent to you by mistake, please contact the send=
+er of the email and delete this file immediately. Confidentiality and legal=
+ privileges are not waived or lost by misdirected emails. Any views or opin=
+ions expressed in the email are those of the author and do not necessarily =
+represent those of the Company.
 
 
-Also shorten the commit message to 72 chars per line at maximum.
+--335a754728878a2e4651eaa1d3d2d16a1569e66f81f5bf8e88d2ec9b24f6
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset=UTF-8
 
-> 
-> The current implementation only checks rcu_read_lock_any_held(), which
-> behaves inconsistently across different kernel configurations:
-> 
-> - When CONFIG_DEBUG_LOCK_ALLOC is enabled: correctly detects RCU critical
-> sections by checking rcu_lock_map
-> - When CONFIG_DEBUG_LOCK_ALLOC is disabled: compiles to "!preemptible()",
-> which only checks preempt_count and misses RCU critical sections
-> 
-> This patch introduces z_erofs_in_atomic() to provide comprehensive atomic
-> context detection:
-> 
-> 1. Check RCU preemption depth when CONFIG_PREEMPTION is enabled, as RCU
-> critical sections may not affect preempt_count but still require
-> atomic handling
-> 
-> 2. Always use async processing when CONFIG_PREEMPT_COUNT is disabled,
-> as preemption state cannot be reliably determined
-> 
-> 3. Fall back to standard preemptible() check for remaining cases
-> 
-> The function replaces the previous complex condition check and ensures
-> that z_erofs always uses (kthread_)work in atomic contexts to minimize
-> scheduling overhead and prevent sleeping in invalid contexts.
-> 
-> ==============================================
-> [1] Problem stacktrace
-> [ 61.266692] BUG: sleeping function called from invalid context at kernel/locking/rtmutex_api.c:510
-> [ 61.266702] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 107, name: irq/54-ufshcd
-> [ 61.266704] preempt_count: 0, expected: 0
-> [ 61.266705] RCU nest depth: 2, expected: 0
-> [ 61.266710] CPU: 0 UID: 0 PID: 107 Comm: irq/54-ufshcd Tainted: G W O 6.12.17 #1
-> [ 61.266714] Tainted: [W]=WARN, [O]=OOT_MODULE
-> [ 61.266715] Hardware name: schumacher (DT)
-> [ 61.266717] Call trace:
-> [ 61.266718] dump_backtrace+0x9c/0x100
-> [ 61.266727] show_stack+0x20/0x38
-> [ 61.266728] dump_stack_lvl+0x78/0x90
-> [ 61.266734] dump_stack+0x18/0x28
-> [ 61.266736] __might_resched+0x11c/0x180
-> [ 61.266743] __might_sleep+0x64/0xc8
-> [ 61.266745] mutex_lock+0x2c/0xc0
-> [ 61.266748] z_erofs_decompress_queue+0xe8/0x978
-> [ 61.266753] z_erofs_decompress_kickoff+0xa8/0x190
-> [ 61.266756] z_erofs_endio+0x168/0x288
-> [ 61.266758] bio_endio+0x160/0x218
-> [ 61.266762] blk_update_request+0x244/0x458
-> [ 61.266766] scsi_end_request+0x38/0x278
-> [ 61.266770] scsi_io_completion+0x4c/0x600
-> [ 61.266772] scsi_finish_command+0xc8/0xe8
-> [ 61.266775] scsi_complete+0x88/0x148
-> [ 61.266777] blk_mq_complete_request+0x3c/0x58
-> [ 61.266780] scsi_done_internal+0xcc/0x158
-> [ 61.266782] scsi_done+0x1c/0x30
-> [ 61.266783] ufshcd_compl_one_cqe+0x12c/0x438
-> [ 61.266786] __ufshcd_transfer_req_compl+0x2c/0x78
-> [ 61.266788] ufshcd_poll+0xf4/0x210
-> [ 61.266789] ufshcd_transfer_req_compl+0x50/0x88
-> [ 61.266791] ufshcd_intr+0x21c/0x7c8
-> [ 61.266792] irq_forced_thread_fn+0x44/0xd8
-> [ 61.266796] irq_thread+0x1a4/0x358
-> [ 61.266799] kthread+0x12c/0x138
-> [ 61.266802] ret_from_fork+0x10/0x20
-> 
-> Signed-off-by: Junli Liu
-> ---
-> fs/erofs/zdata.c | 14 ++++++++++++--
-> 1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> index 792f20888..1883781c9 100644
-> --- a/fs/erofs/zdata.c
-> +++ b/fs/erofs/zdata.c
-> @@ -1432,6 +1432,16 @@ static void z_erofs_decompressqueue_kthread_work(struct kthread_work *work)
-> }
-> #endif
-> 
-> +/* Use (kthread_)work in atomic contexts to minimize scheduling overhead */
-> +static inline bool z_erofs_in_atomic(void)
-> +{
-> + if (IS_ENABLED(CONFIG_PREEMPTION) && rcu_preempt_depth())
-> + return true;
-> + if (!IS_ENABLED(CONFIG_PREEMPT_COUNT))
-> + return true;
-> + return !preemptible();
-> +}
-> +
-> static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
-> int bios)
-> {
-> @@ -1446,8 +1456,8 @@ static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue *io,
-> 
-> if (atomic_add_return(bios, &io->pending_bios))
-> return;
-> - /* Use (kthread_)work and sync decompression for atomic contexts only */
-> - if (!in_task() || irqs_disabled() || rcu_read_lock_any_held()) {
-> +
-> + if (z_erofs_in_atomic()) {
-
-Please avoid the unnecessary new line in the next version.
-
-Thanks,
-Gao XIang
+<p>Since EROFS handles decompression in non-atomic contexts due to
+<br>uncontrollable decompression latencies and vmap() usage, it tries
+<br>to detect atomic contexts and only kicks off a kworker on demand
+<br>in order to reduce unnecessary scheduling overhead.
+<br>
+<br>However, the current approach is insufficient and can lead to
+<br>sleeping function calls in invalid contexts, causing kernel
+<br>warnings and potential system instability. See the stacktrace [1]
+<br>
+<br>The current implementation only checks rcu_read_lock_any_held(),
+<br>which behaves inconsistently across different kernel configurations:
+<br>
+<br>- When CONFIG_DEBUG_LOCK_ALLOC is enabled: correctly detects RCU
+<br>  critical sections by checking rcu_lock_map
+<br>- When CONFIG_DEBUG_LOCK_ALLOC is disabled: compiles to
+<br>  "!preemptible()", which only checks preempt_count and misses
+<br>  RCU critical sections
+<br>
+<br>This patch introduces z_erofs_in_atomic() to provide comprehensive
+<br>atomic context detection:
+<br>
+<br>1. Check RCU preemption depth when CONFIG_PREEMPTION is enabled,
+<br>   as RCU critical sections may not affect preempt_count but still
+<br>   require atomic handling
+<br>
+<br>2. Always use async processing when CONFIG_PREEMPT_COUNT is disabled,
+<br>   as preemption state cannot be reliably determined
+<br>
+<br>3. Fall back to standard preemptible() check for remaining cases
+<br>
+<br>The function replaces the previous complex condition check and ensures
+<br>that z_erofs always uses (kthread_)work in atomic contexts to minimize
+<br>scheduling overhead and prevent sleeping in invalid contexts.
+<br>
+<br>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+<br>[1] Problem stacktrace
+<br>BUG: sleeping function called from invalid context at
+<br>kernel/locking/rtmutex_api.c:510
+<br>in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 107,
+<br>name: irq/54-ufshcd
+<br>preempt_count: 0, expected: 0
+<br>RCU nest depth: 2, expected: 0
+<br>
+<br>Link: https://lore.kernel.org/r/58b661d0-0ebb-4b45-a10d-c5927fb791cd@pa=
+ulmck-laptop
+<br>Signed-off-by: Junli Liu <liujunli@lixiang.com>
+<br>---
+<br> fs/erofs/zdata.c | 13 +++++++++++--
+<br> 1 file changed, 11 insertions(+), 2 deletions(-)
+<br>
+<br>diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+<br>index 792f20888..2d7329700 100644
+<br>--- a/fs/erofs/zdata.c
+<br>+++ b/fs/erofs/zdata.c
+<br>@@ -1432,6 +1432,16 @@ static void z_erofs_decompressqueue_kthread_work=
+(struct kthread_work *work)
+<br> }
+<br> #endif
+<br>=20
+<br>+/* Use (kthread_)work in atomic contexts to minimize scheduling overhe=
+ad */
+<br>+static inline bool z_erofs_in_atomic(void)
+<br>+{
+<br>+	if (IS_ENABLED(CONFIG_PREEMPTION) && rcu_preempt_depth())
+<br>+		return true;
+<br>+	if (!IS_ENABLED(CONFIG_PREEMPT_COUNT))
+<br>+		return true;
+<br>+	return !preemptible();
+<br>+}
+<br>+
+<br> static void z_erofs_decompress_kickoff(struct z_erofs_decompressqueue =
+*io,
+<br> 				       int bios)
+<br> {
+<br>@@ -1446,8 +1456,7 @@ static void z_erofs_decompress_kickoff(struct z_e=
+rofs_decompressqueue *io,
+<br>=20
+<br> 	if (atomic_add_return(bios, &io->pending_bios))
+<br> 		return;
+<br>-	/* Use (kthread_)work and sync decompression for atomic contexts only=
+ */
+<br>-	if (!in_task() || irqs_disabled() || rcu_read_lock_any_held()) {
+<br>+	if (z_erofs_in_atomic()) {
+<br> #ifdef CONFIG_EROFS_FS_PCPU_KTHREAD
+<br> 		struct kthread_worker *worker;
+<br>=20
+<br>--=20
+<br>2.25.1</p><meta data-version=3D"editor_version_1.2.12"/><div data-zone-=
+id=3D"0" data-line-index=3D"0" data-line=3D"true" style=3D"white-space: pre=
+-wrap; margin-top: 4px; margin-bottom: 4px; line-height: 1.6;"><br></div><d=
+iv data-zone-id=3D"0" data-line-index=3D"1" data-line=3D"true" style=3D"whi=
+te-space: pre-wrap; margin-top: 4px; margin-bottom: 4px; line-height: 1.6;"=
+><div style=3D"text-align: left;"><span style=3D"font-size: 12px;"><span st=
+yle=3D"font-family: helvetica;"><span style=3D"color: rgb(143, 149, 158);">=
+=E5=A3=B0=E6=98=8E=EF=BC=9A=E8=BF=99=E5=B0=81=E9=82=AE=E4=BB=B6=E5=8F=AA=E5=
+=85=81=E8=AE=B8=E6=96=87=E4=BB=B6=E6=8E=A5=E6=94=B6=E8=80=85=E9=98=85=E8=AF=
+=BB=EF=BC=8C=E6=9C=89=E5=BE=88=E9=AB=98=E7=9A=84=E6=9C=BA=E5=AF=86=E6=80=A7=
+=E8=A6=81=E6=B1=82=E3=80=82=E7=A6=81=E6=AD=A2=E5=85=B6=E4=BB=96=E4=BA=BA=E4=
+=BD=BF=E7=94=A8=E3=80=81=E6=89=93=E5=BC=80=E3=80=81=E5=A4=8D=E5=88=B6=E6=88=
+=96=E8=BD=AC=E5=8F=91=E9=87=8C=E9=9D=A2=E7=9A=84=E4=BB=BB=E4=BD=95=E5=86=85=
+=E5=AE=B9=E3=80=82=E5=A6=82=E6=9E=9C=E6=9C=AC=E9=82=AE=E4=BB=B6=E9=94=99=E8=
+=AF=AF=E5=9C=B0=E5=8F=91=E7=BB=99=E4=BA=86=E4=BD=A0=EF=BC=8C=E8=AF=B7=E8=81=
+=94=E7=B3=BB=E9=82=AE=E4=BB=B6=E5=8F=91=E5=87=BA=E8=80=85=E5=B9=B6=E5=88=A0=
+=E9=99=A4=E8=BF=99=E4=B8=AA=E6=96=87=E4=BB=B6=E3=80=82=E6=9C=BA=E5=AF=86=E5=
+=8F=8A=E6=B3=95=E5=BE=8B=E7=9A=84=E7=89=B9=E6=9D=83=E5=B9=B6=E4=B8=8D=E5=9B=
+=A0=E4=B8=BA=E8=AF=AF=E5=8F=91=E9=82=AE=E4=BB=B6=E8=80=8C=E6=94=BE=E5=BC=83=
+=E6=88=96=E4=B8=A7=E5=A4=B1=E3=80=82=E4=BB=BB=E4=BD=95=E6=8F=90=E5=87=BA=E7=
+=9A=84=E8=A7=82=E7=82=B9=E6=88=96=E6=84=8F=E8=A7=81=E5=8F=AA=E5=B1=9E=E4=BA=
+=8E=E4=BD=9C=E8=80=85=E7=9A=84=E4=B8=AA=E4=BA=BA=E8=A7=81=E8=A7=A3=EF=BC=8C=
+=E5=B9=B6=E4=B8=8D=E4=B8=80=E5=AE=9A=E4=BB=A3=E8=A1=A8=E6=9C=AC=E5=85=AC=E5=
+=8F=B8=E3=80=82
+</span></span></span></div></div><div data-zone-id=3D"0" data-line-index=3D=
+"2" data-line=3D"true" style=3D"white-space: pre-wrap; margin-top: 4px; mar=
+gin-bottom: 4px; line-height: 1.6;"><div style=3D"text-align: left;"><span =
+style=3D"font-size: 12px;"><span style=3D"color: rgb(143, 149, 158);">Discl=
+aimer: This email is intended to be read only by the designated recipient o=
+f the document and has high confidentiality requirements. Anyone else is pr=
+ohibited from using, opening, copying or forwarding any of the contents ins=
+ide. If this email was sent to you by mistake, please contact the sender of=
+ the email and delete this file immediately. Confidentiality and legal priv=
+ileges are not waived or lost by misdirected emails. Any views or opinions =
+expressed in the email are those of the author and do not necessarily repre=
+sent those of the Company.</span></span><span style=3D"font-size: 12px;"><s=
+pan style=3D"font-family: helvetica;"><span style=3D"color: rgb(143, 149, 1=
+58);">
+</span></span></span></div></div><div data-zone-id=3D"0" data-line-index=3D=
+"3" data-line=3D"true" style=3D"white-space: pre-wrap; margin-top: 4px; mar=
+gin-bottom: 4px; line-height: 1.6;"><br></div>
+--335a754728878a2e4651eaa1d3d2d16a1569e66f81f5bf8e88d2ec9b24f6--
 
