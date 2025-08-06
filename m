@@ -1,49 +1,52 @@
-Return-Path: <linux-erofs+bounces-775-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-777-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 394A3B1C7B2
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Aug 2025 16:36:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CA25EB1C7B5
+	for <lists+linux-erofs@lfdr.de>; Wed,  6 Aug 2025 16:36:43 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bxtCL70bcz3bnm;
-	Thu,  7 Aug 2025 00:36:30 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bxtCM5xKGz2ygJ;
+	Thu,  7 Aug 2025 00:36:31 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754490990;
-	cv=none; b=g7IHkCPE6RbSkRSiS6F2hIkasZ0aLNS8PabkGzc083MyH9Yz3jlkV1SqgDVZ+gBUd4vwQPEISwYsDS2FrXCgoaPDVhz7eDXYXq+2vJsOooEFt268rQLUQ2E8sCcMZUtZNzNbS9JvCtFzwHRm1dfIL05iVNjFEIeYDJ2RxnqkmEyemsJplWFcbY6OrmNUzGBylx6Rt2PaU95NlafMspShW4VU+UDiDmBw+BR5QMihv6tcx2yFTSTM5ljf8Nat/bpXSz8aUuofR9uOxm3hhTSabwW1r6KFl6JG7njSZdbDh/oammiDuSUSXw/ZIRmzcUWgVryRNf/Boy3w4zpa8gRAhg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754490991;
+	cv=none; b=G6n1yRjdJfejLkm+p6bGDJ3eyNWfq+cjw2khI/TZ6Q9WliSn6RnZW+hT6JV+vprOI5vqSWjyKvUdicMYnPBJHYJS/B0su50f7eYx7fB8ZxqNHnpjdyuZsX2qMhtlah630rwj64/N+v6NYebuEMCjfYuEvUIwflb0Xi8XIB/6E13Vr4HogIf8mk21NQ7+mFggfYbMS1oTSDqB1SbBBu4CkUTTC8X4ZNtwDG3vtkfuBwpxqjtwh3EDK/DmrQieMnkIVwVgVQp7ijzutDYz0+u7XvZXJ7jR8Bna16oSlK6DZc06tUQ1weYnmCKfk+rQJluH0uKnyNHyq/CRAIJTG/J80A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1754490990; c=relaxed/relaxed;
-	bh=spsPfxmkFwiAA3DrBwjMbBcj6jb0q2vilrQ/3ZB7C5g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H+hN0FNPH7OlehH2zi9aDMeAqH11o/BpVXpZL0Dj4z8ogfK43TygLfPoWic53PheNC28ceT4A2h528xqTxxU7YD3SpudNB4zGUf3UgErNOue4p8i9iNseAF97ofLAYLauAAB4ZLwd1ZNdlCxlE24L/bpc/Fu4zPWby/khG6z/AieSt0EqY6clFxU4QzDRm+iroX887JypzLqVTBWjAtj0VTpgFNUzfsKmUPbR+66151v3RImxiuS2t+NDxJ0HMogRBANAKqtalCxWWvUvoz+C/r4vWbCQcYBZLRAZ52XTU0cEESJoczUpver8oRl1LXrOSDfldeXC0LP0MfU3S9+6g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=XzkKTnYd; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1754490991; c=relaxed/relaxed;
+	bh=hF4flzkd9Z3lOqjQElAOdV+JqLADVB09I+GeqoFX9Eo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PdTuibH+j8cqouXAIIzIihoWiH76TYkSGsDzfUtOwRTeylGAGqTYJAkeFnqwVMsOv6VDk7EQcz//4PsMVO6u7hSGt7mXo2roCY+CfZix4N8adSCbzYziU0EZnrBmxkZm5+lwsnyylK1ki3sTDxJP+WwycW6KTzK0LfL+luLhHGw5n852h1FxAg6a+W3G1vDAIRNv5ZKCWBVjD1j/kyvRbS7f/2MWpabO09368FBNzArfU5tnzIv2QyTsilFlfdW+kxzN6XE7nZZ4Wfjtb1MTRteBx/SXhLusLDek0eZW7WH46ueLcRXPBpITAryKtHEfoEEefgSC065VL2G4m5dEaA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=krpgDmkG; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=XzkKTnYd;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=krpgDmkG;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bxtCK1rc6z30W5
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bxtCK2915z3bnB
 	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Aug 2025 00:36:27 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1754490981; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=spsPfxmkFwiAA3DrBwjMbBcj6jb0q2vilrQ/3ZB7C5g=;
-	b=XzkKTnYdcfN1gb0KEJXypxsJ17bAGfBPF/brpNj9193GgeNBYYgVGxS9p0q6t3SZ8nW/5pNQw3DcbcWTxVmORf5tBwES8nDjK0JeO7joRcACtnOZ+X9imLNb8cwa9Eg+93RRQ0pZ5ZYzToq2RJrYMKTT82Hl8gNBGMIW6jih9ng=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WlBLAuL_1754490975 cluster:ay36)
+	t=1754490984; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=hF4flzkd9Z3lOqjQElAOdV+JqLADVB09I+GeqoFX9Eo=;
+	b=krpgDmkGEcU7qXCIdsi2y06bcLEQZuxoC10BT6gD1wLKGU8cCLvy0b37VbdLBZgpr4KsQB+i3Cj6r4ux63yGiTiLs8X1UPBtKgSYcNxJ4PfDBz1Lvd60b8t7jI3FrVB6+uodCKC9caLjMICeV7n/SjHpCWtFzI6OewttiEpRoHE=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WlBLAvG_1754490979 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 06 Aug 2025 22:36:19 +0800
+          Wed, 06 Aug 2025 22:36:20 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Yifan Zhao <zhaoyifan28@huawei.com>,
 	Hongbo Li <lihongbo22@huawei.com>,
 	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v5 1/4] erofs-utils: mkfs: introduce source_mode enumeration
-Date: Wed,  6 Aug 2025 22:36:11 +0800
-Message-ID: <20250806143615.1661283-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v5 2/4] erofs-utils: introduce extra build dependencies for S3 support
+Date: Wed,  6 Aug 2025 22:36:12 +0800
+Message-ID: <20250806143615.1661283-2-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250806143615.1661283-1-hsiangkao@linux.alibaba.com>
+References: <20250806143615.1661283-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -64,187 +67,225 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 From: Yifan Zhao <zhaoyifan28@huawei.com>
 
-Currently, mkfs controls different image build execution flows through
-the global variables `tar_mode` and `rebuild_mode`, while these two
-modes together with localdir mode are mutually exclusive.
+This patch adds additional dependencies on libcurl, openssl and libxml2
+library for the upcoming S3 data source support, with libcurl to
+interact with S3 API, openssl to generate S3 auth signature and libxml2
+to parse response body.
 
-Let's replace them with a new variable `source_mode` to simplify the
-logic.
+erofs-utils: introduce extra build dependencies for S3 support
+
+This patch adds additional dependencies on libcurl, openssl, and libxml2
+for the upcoming S3 data source support:
+ - libcurl is used to interact with the S3 API;
+ - openssl is used to generate S3 authentication signatures;
+ - libxml2 is used to parse response bodies;
+
+These dependencies are optional and controlled using the
+`--with-{libcurl,openssl,libxml2}` configure options.
+
+Additionally, a new `--enable-s3` option is introduced to enable S3
+support.  It will report an error if any of the three required libraries
+doesn't work properly.
 
 Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- mkfs/main.c | 78 ++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 44 insertions(+), 34 deletions(-)
+ configure.ac     | 129 ++++++++++++++++++++++++++++++++++++++++++++++-
+ lib/Makefile.am  |   1 +
+ mkfs/Makefile.am |   3 +-
+ 3 files changed, 131 insertions(+), 2 deletions(-)
 
-diff --git a/mkfs/main.c b/mkfs/main.c
-index dc2df06..ab27b77 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -244,7 +244,7 @@ static int pclustersize_metabox = -1;
- static struct erofs_tarfile erofstar = {
- 	.global.xattrs = LIST_HEAD_INIT(erofstar.global.xattrs)
- };
--static bool tar_mode, rebuild_mode, incremental_mode;
-+static bool incremental_mode;
- static u8 metabox_algorithmid;
+diff --git a/configure.ac b/configure.ac
+index da6ae48..7769ac9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -24,7 +24,7 @@ esac
+ # OS-specific treatment
+ AM_CONDITIONAL([OS_LINUX], [test "$build_linux" = "yes"])
  
- enum {
-@@ -254,6 +254,12 @@ enum {
- 	EROFS_MKFS_DATA_IMPORT_SPARSE,
- } dataimport_mode;
+-AM_INIT_AUTOMAKE([foreign -Wall])
++AM_INIT_AUTOMAKE([foreign subdir-objects -Wall])
  
-+static enum {
-+	EROFS_MKFS_SOURCE_LOCALDIR,
-+	EROFS_MKFS_SOURCE_TAR,
-+	EROFS_MKFS_SOURCE_REBUILD,
-+} source_mode;
+ # Checks for programs.
+ AM_PROG_AR
+@@ -165,6 +165,22 @@ AC_ARG_WITH(xxhash,
+    [AS_HELP_STRING([--with-xxhash],
+       [Enable and build with libxxhash support @<:@default=auto@:>@])])
+ 
++AC_ARG_WITH(libcurl,
++   [AS_HELP_STRING([--with-libcurl],
++      [Enable and build with libcurl support @<:@default=auto@:>@])])
 +
- static unsigned int rebuild_src_count, total_ccfgs;
- static LIST_HEAD(rebuild_src_list);
- static u8 fixeduuid[16];
-@@ -499,7 +505,7 @@ static void mkfs_parse_tar_cfg(char *cfg)
- {
- 	char *p;
++AC_ARG_WITH(openssl,
++   [AS_HELP_STRING([--with-openssl],
++      [Enable and build with openssl support @<:@default=auto@:>@])])
++
++AC_ARG_WITH(libxml2,
++   [AS_HELP_STRING([--with-libxml2],
++      [Enable and build with libxml2 support @<:@default=auto@:>@])])
++
++AC_ARG_ENABLE(s3,
++   [AS_HELP_STRING([--enable-s3], [enable s3 image generation support @<:@default=no@:>@])],
++   [enable_s3="$enableval"], [enable_s3="no"])
++
+ AC_ARG_ENABLE(fuse,
+    [AS_HELP_STRING([--enable-fuse], [enable erofsfuse @<:@default=no@:>@])],
+    [enable_fuse="$enableval"], [enable_fuse="no"])
+@@ -583,6 +599,91 @@ AS_IF([test "x$with_xxhash" != "xno"], [
+   ])
+ ])
  
--	tar_mode = true;
-+	source_mode = EROFS_MKFS_SOURCE_TAR;
- 	if (!cfg)
- 		return;
- 	p = strchr(cfg, ',');
-@@ -616,7 +622,30 @@ static int mkfs_parse_sources(int argc, char *argv[], int optind)
- 	int err, fd;
- 	char *s;
++# Configure libcurl
++have_libcurl="no"
++AS_IF([test "x$with_libcurl" != "xno"], [
++  PKG_CHECK_MODULES([libcurl], [libcurl], [
++    # Paranoia: don't trust the result reported by pkgconfig before trying out
++    saved_LIBS="$LIBS"
++    saved_CPPFLAGS=${CPPFLAGS}
++    CPPFLAGS="${libcurl_CFLAGS} ${CPPFLAGS}"
++    LIBS="${libcurl_LIBS} $LIBS"
++    AC_CHECK_HEADERS([curl/curl.h],[
++      AC_CHECK_LIB(curl, curl_easy_perform, [], [
++        AC_MSG_ERROR([libcurl doesn't work properly])])
++      AC_CHECK_DECL(curl_easy_perform, [have_libcurl="yes"],
++        [AC_MSG_ERROR([libcurl doesn't work properly])], [[
++#include <curl/curl.h>
++      ]])
++    ])
++    LIBS="${saved_LIBS}"
++    CPPFLAGS="${saved_CPPFLAGS}"], [
++    AS_IF([test "x$with_libcurl" = "xyes"], [
++      AC_MSG_ERROR([Cannot find proper libcurl])
++    ])
++  ])
++])
++
++# Configure openssl
++have_openssl="no"
++AS_IF([test "x$with_openssl" != "xno"], [
++  PKG_CHECK_MODULES([openssl], [openssl], [
++    # Paranoia: don't trust the result reported by pkgconfig before trying out
++    saved_LIBS="$LIBS"
++    saved_CPPFLAGS=${CPPFLAGS}
++    CPPFLAGS="${openssl_CFLAGS} ${CPPFLAGS}"
++    LIBS="${openssl_LIBS} $LIBS"
++    AC_CHECK_HEADERS([openssl/hmac.h],[
++      AC_CHECK_LIB(ssl, EVP_sha1, [], [
++        AC_MSG_ERROR([openssl doesn't work properly])])
++      AC_CHECK_DECL(EVP_sha1, [have_openssl="yes"],
++        [AC_MSG_ERROR([openssl doesn't work properly])], [[
++#include <openssl/hmac.h>
++      ]])
++    ])
++    LIBS="${saved_LIBS}"
++    CPPFLAGS="${saved_CPPFLAGS}"], [
++    AS_IF([test "x$with_openssl" = "xyes"], [
++      AC_MSG_ERROR([Cannot find proper openssl])
++    ])
++  ])
++])
++
++# Configure libxml2
++have_libxml2="no"
++AS_IF([test "x$with_libxml2" != "xno"], [
++  PKG_CHECK_MODULES([libxml2], [libxml-2.0], [
++    # Paranoia: don't trust the result reported by pkgconfig before trying out
++    saved_LIBS="$LIBS"
++    saved_CPPFLAGS=${CPPFLAGS}
++    CPPFLAGS="${libxml2_CFLAGS} ${CPPFLAGS}"
++    LIBS="${libxml2_LIBS} $LIBS"
++    AC_CHECK_HEADERS([libxml/parser.h],[
++      AC_CHECK_LIB(xml2, xmlReadMemory, [], [
++        AC_MSG_ERROR([libxml2 doesn't work properly])])
++      AC_CHECK_DECL(xmlReadMemory, [have_libxml2="yes"],
++        [AC_MSG_ERROR([libxml2 doesn't work properly])], [[
++#include <libxml/parser.h>
++      ]])
++    ])
++    LIBS="${saved_LIBS}"
++    CPPFLAGS="${saved_CPPFLAGS}"], [
++    AS_IF([test "x$with_libxml2" = "xyes"], [
++      AC_MSG_ERROR([Cannot find proper libxml2])
++    ])
++  ])
++])
++
++AS_IF([test "x$enable_s3" != "xno"], [
++  AS_IF(
++    [test "x$have_libcurl" = "xyes" && \
++     test "x$have_openssl" = "xyes" && \
++     test "x$have_libxml2" = "xyes"],
++    [have_s3="yes"],
++    [have_s3="no"
++     AC_MSG_ERROR([S3 disabled: missing libcurl, openssl, or libxml2])])
++  ], [have_s3="no"])
++
+ # Enable 64-bit off_t
+ CFLAGS+=" -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
  
--	if (tar_mode) {
-+	switch (source_mode) {
-+	case EROFS_MKFS_SOURCE_LOCALDIR:
-+		err = lstat((s = argv[optind++]), &st);
-+		if (err) {
-+			erofs_err("failed to stat %s: %s", s,
-+				  erofs_strerror(-errno));
-+			return -ENOENT;
-+		}
-+		if (S_ISDIR(st.st_mode)) {
-+			cfg.c_src_path = realpath(s, NULL);
-+			if (!cfg.c_src_path) {
-+				erofs_err("failed to parse source directory: %s",
-+					  erofs_strerror(-errno));
-+				return -ENOENT;
-+			}
-+			erofs_set_fs_root(cfg.c_src_path);
-+		} else {
-+			cfg.c_src_path = strdup(s);
-+			if (!cfg.c_src_path)
-+				return -ENOMEM;
-+			source_mode = EROFS_MKFS_SOURCE_REBUILD;
-+		}
-+		break;
-+	case EROFS_MKFS_SOURCE_TAR:
- 		cfg.c_src_path = strdup(argv[optind++]);
- 		if (!cfg.c_src_path)
- 			return -ENOMEM;
-@@ -640,30 +669,13 @@ static int mkfs_parse_sources(int argc, char *argv[], int optind)
- 			}
- 			erofstar.ios.dumpfd = fd;
- 		}
--	} else {
--		err = lstat((s = argv[optind++]), &st);
--		if (err) {
--			erofs_err("failed to stat %s: %s", s,
--				  erofs_strerror(-errno));
--			return -ENOENT;
--		}
--		if (S_ISDIR(st.st_mode)) {
--			cfg.c_src_path = realpath(s, NULL);
--			if (!cfg.c_src_path) {
--				erofs_err("failed to parse source directory: %s",
--					  erofs_strerror(-errno));
--				return -ENOENT;
--			}
--			erofs_set_fs_root(cfg.c_src_path);
--		} else {
--			cfg.c_src_path = strdup(s);
--			if (!cfg.c_src_path)
--				return -ENOMEM;
--			rebuild_mode = true;
--		}
-+		break;
-+	default:
-+		erofs_err("unexpected source_mode: %d", source_mode);
-+		return -EINVAL;
- 	}
+@@ -606,6 +707,10 @@ AM_CONDITIONAL([ENABLE_LIBDEFLATE], [test "x${have_libdeflate}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_LIBZSTD], [test "x${have_libzstd}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_QPL], [test "x${have_qpl}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_XXHASH], [test "x${have_xxhash}" = "xyes"])
++AM_CONDITIONAL([ENABLE_LIBCURL], [test "x${have_libcurl}" = "xyes"])
++AM_CONDITIONAL([ENABLE_OPENSSL], [test "x${have_openssl}" = "xyes"])
++AM_CONDITIONAL([ENABLE_LIBXML2], [test "x${have_libxml2}" = "xyes"])
++AM_CONDITIONAL([ENABLE_S3], [test "x${have_s3}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_STATIC_FUSE], [test "x${enable_static_fuse}" = "xyes"])
  
--	if (rebuild_mode) {
-+	if (source_mode == EROFS_MKFS_SOURCE_REBUILD) {
- 		char *srcpath = cfg.c_src_path;
- 		struct erofs_sb_info *src;
+ if test "x$have_uuid" = "xyes"; then
+@@ -657,6 +762,28 @@ if test "x$have_xxhash" = "xyes"; then
+   AC_DEFINE([HAVE_XXHASH], 1, [Define to 1 if xxhash is found])
+ fi
  
-@@ -1083,7 +1095,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
- 		err = mkfs_parse_sources(argc, argv, optind);
- 		if (err)
- 			return err;
--	} else if (!tar_mode) {
-+	} else if (source_mode != EROFS_MKFS_SOURCE_TAR) {
- 		erofs_err("missing argument: SOURCE(s)");
- 		return -EINVAL;
- 	} else {
-@@ -1383,7 +1395,7 @@ int main(int argc, char **argv)
- 	if (cfg.c_random_pclusterblks)
- 		srand(time(NULL));
- #endif
--	if (tar_mode) {
-+	if (source_mode == EROFS_MKFS_SOURCE_TAR) {
- 		if (dataimport_mode == EROFS_MKFS_DATA_IMPORT_RVSP)
- 			erofstar.rvsp_mode = true;
- 		erofstar.dev = rebuild_src_count + 1;
-@@ -1403,9 +1415,7 @@ int main(int argc, char **argv)
- 			g_sbi.blkszbits = 9;
- 			tar_index_512b = true;
- 		}
--	}
--
--	if (rebuild_mode) {
-+	} else if (source_mode == EROFS_MKFS_SOURCE_REBUILD) {
- 		struct erofs_sb_info *src;
- 
- 		erofs_warn("EXPERIMENTAL rebuild mode in use. Use at your own risk!");
-@@ -1465,7 +1475,7 @@ int main(int argc, char **argv)
- 	else if (!incremental_mode)
- 		erofs_uuid_generate(g_sbi.uuid);
- 
--	if (tar_mode && !erofstar.index_mode) {
-+	if (source_mode == EROFS_MKFS_SOURCE_TAR && !erofstar.index_mode) {
- 		err = erofs_diskbuf_init(1);
- 		if (err) {
- 			erofs_err("failed to initialize diskbuf: %s",
-@@ -1528,7 +1538,7 @@ int main(int argc, char **argv)
- 
- 	erofs_inode_manager_init();
- 
--	if (tar_mode) {
-+	if (source_mode == EROFS_MKFS_SOURCE_TAR) {
- 		root = erofs_rebuild_make_root(&g_sbi);
- 		if (IS_ERR(root)) {
- 			err = PTR_ERR(root);
-@@ -1543,7 +1553,7 @@ int main(int argc, char **argv)
- 		err = erofs_rebuild_dump_tree(root, incremental_mode);
- 		if (err < 0)
- 			goto exit;
--	} else if (rebuild_mode) {
-+	} else if (source_mode == EROFS_MKFS_SOURCE_REBUILD) {
- 		root = erofs_rebuild_make_root(&g_sbi);
- 		if (IS_ERR(root)) {
- 			err = PTR_ERR(root);
-@@ -1663,7 +1673,7 @@ exit:
- 	erofs_rebuild_cleanup();
- 	erofs_diskbuf_exit();
- 	erofs_exit_configure();
--	if (tar_mode) {
-+	if (source_mode == EROFS_MKFS_SOURCE_TAR) {
- 		erofs_iostream_close(&erofstar.ios);
- 		if (erofstar.ios.dumpfd >= 0)
- 			close(erofstar.ios.dumpfd);
++if test "x$have_libcurl" = "xyes"; then
++  AC_DEFINE([HAVE_LIBCURL], 1, [Define to 1 if libcurl is found])
++  AC_SUBST([libcurl_LIBS])
++  AC_SUBST([libcurl_CFLAGS])
++fi
++
++if test "x$have_openssl" = "xyes"; then
++  AC_DEFINE([HAVE_OPENSSL], 1, [Define to 1 if openssl is found])
++  AC_SUBST([openssl_LIBS])
++  AC_SUBST([openssl_CFLAGS])
++fi
++
++if test "x$have_libxml2" = "xyes"; then
++  AC_DEFINE([HAVE_LIBXML2], 1, [Define to 1 if libxml2 is found])
++  AC_SUBST([libxml2_LIBS])
++  AC_SUBST([libxml2_CFLAGS])
++fi
++
++if test "x$have_s3" = "xyes"; then
++  AC_DEFINE([S3EROFS_ENABLED], 1, [Define to 1 if s3 is enabled])
++fi
++
+ # Dump maximum block size
+ AS_IF([test "x$erofs_cv_max_block_size" = "x"],
+       [$erofs_cv_max_block_size = 4096], [])
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 0db81df..6458acf 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -66,6 +66,7 @@ liberofs_la_CFLAGS += ${libxxhash_CFLAGS}
+ else
+ liberofs_la_SOURCES += xxhash.c
+ endif
++liberofs_la_CFLAGS += ${libcurl_CFLAGS} ${openssl_CFLAGS} ${libxml2_CFLAGS}
+ if ENABLE_EROFS_MT
+ liberofs_la_LDFLAGS = -lpthread
+ liberofs_la_SOURCES += workqueue.c
+diff --git a/mkfs/Makefile.am b/mkfs/Makefile.am
+index 2499242..b84b4c1 100644
+--- a/mkfs/Makefile.am
++++ b/mkfs/Makefile.am
+@@ -7,4 +7,5 @@ mkfs_erofs_SOURCES = main.c
+ mkfs_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
+ mkfs_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
+ 	${libuuid_LIBS} ${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} \
+-	${libdeflate_LIBS} ${libzstd_LIBS} ${libqpl_LIBS} ${libxxhash_LIBS}
++	${libdeflate_LIBS} ${libzstd_LIBS} ${libqpl_LIBS} ${libxxhash_LIBS} \
++	${libcurl_LIBS} ${openssl_LIBS} ${libxml2_LIBS}
 -- 
 2.43.5
 
