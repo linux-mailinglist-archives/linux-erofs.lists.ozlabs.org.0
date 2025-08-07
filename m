@@ -1,52 +1,50 @@
-Return-Path: <linux-erofs+bounces-776-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-779-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8A6FB1C7B1
-	for <lists+linux-erofs@lfdr.de>; Wed,  6 Aug 2025 16:36:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ED6D9B1D103
+	for <lists+linux-erofs@lfdr.de>; Thu,  7 Aug 2025 04:48:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bxtCM4hJNz30W5;
-	Thu,  7 Aug 2025 00:36:31 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4byBS42NDPz30VV;
+	Thu,  7 Aug 2025 12:48:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.110
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754490991;
-	cv=none; b=LS9YMf/uG0jepoCtGRy99WVm1MVSKx0mcJ+xQI3e2kHEZRCnAPSL1m9OlG9o/efWg7HolK7CmqpIW09qO0q8r5pux0HFrHFpsExVDs6fo3erFfRRs2kWZp8EULBXPyyvlyfC3yHeIkIJkGtM3x7JYQ70zLk8KVCFL2y4oOpQrCgI1jA6DPMQzwDhfjPIzNNp0d9HEZtQTwNQVQxwuLOH23wxCPRfkHx9ERrH7bWAFiMi6gxwM4W+JMsv2wW885Ol5kttVtFtXbsDZn1iVZiyekN1++3XaP/hPnL4k1YC7OgOugCByq5qjRt875mps+OJHwUezXPOuAR8yFJU+NWJ7w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754534916;
+	cv=none; b=bJLKVHyH44NHND29GLzRHL7sDyjvrrmWg3cTwL2Zur/Uf8DP47rist/MBR3ogcKa1/UfGlmzp0LPT1MSyp5jSyagmSzKwVjHEOQKYLQXj+f/nfCbGlHVPn58w0M03LVXtznzt7+wl++bK+C1WrsQ+6iz2QLr2+Jxj5Jbfyr0rttlpnS0B4N5XbXMbtQPkiaVEOkuwSWALzsZdN5eUS06g2+mYPZGJ3Xv+5SDYbSbgXV2Z2V3C1X4leXumDv2XNygHWJvDN07Z+o8g1COXjZXLYRmgdIfj+0jNs5qBn1Fru5WANuYJjbQ1LUDR1ztcn5GT74HurG6W1+l08DSbymMQQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1754490991; c=relaxed/relaxed;
-	bh=SWLSD8JcZNs1tQeBKrpieWGaJ/yoxLVBw1lVgMl1ezw=;
+	t=1754534916; c=relaxed/relaxed;
+	bh=zclXyLZGTB7KG2ugo2/M53dWfMAk/WXMrk2ub7uq9Ic=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Lq4fX2vQPcTZG+DLmEKRbTEg8EfZWs6/JnRXjsINcBaTvFQ8+Dyp48Ri9fgheojXkneWysC87ah0UXHJvzhvr16gPz/b3Md4mxhNwZ6elZd346kunnFO9aqPx+1MQ/I2+KZAGoRbglUQHLgNRFTw8CYi3C8eDmuaUwlne7k9S8Lqu9qv2AzWKmH27a35AyzpI4b2fCWlhAto/NSq/Vo9hlUSCb8raBT/6HzTqzIuTfuYRKj80yBONC/SQT5MY2lDiORJL/IDVoYYC1VXlYLICFbM3rpj8Qrh6tVBjW6d5E/KWXu5Pf42/XdU7N3h/s7MtxxGZrkRggp8Y/BeQKRkOg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Kr/a+S2M; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=JlUK80O8Xq4AbetLP4goulvzRFRnNi0/bO0z1Sf2f+EPMZ5PQMlvaISllINSVO7hQUFP4b8VL5+UvW3ezm5vS8DN9fmKePJZ7Lf1I17c16ex30FoEAgjMjqzsrrCH8KlJ1WZ26hewbe9o3Ys3i0ahV2gw7+Pc70ucXGhMkorAqGex9UYR4k0ne6rGb6M8pb62MFvnLFcrQHBRjc3jPgW+lSFGYnE2EjvErdz7wXd1C+4o1mXJNw6cZ8gnzeFEN+gDWH3CTy/ff6o/9/wd+AbTHIvNVLMmR3LOBArDfo9lDG2E6Tvj3ycRd2lC7TcB6H6pI1F4qCQQ6sw43fsGpf+Mw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WC6EEIaf; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Kr/a+S2M;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WC6EEIaf;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bxtCK0r4Zz2ygJ
-	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Aug 2025 00:36:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4byBS06Dw3z2xfR
+	for <linux-erofs@lists.ozlabs.org>; Thu,  7 Aug 2025 12:48:31 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1754490984; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=SWLSD8JcZNs1tQeBKrpieWGaJ/yoxLVBw1lVgMl1ezw=;
-	b=Kr/a+S2MdKIvYSUYxgUXZsIhSjw5j24f0w8I2Lq9zhO5mw8rvMVzIp05hOtX1CpVin8D2gzQXhsAc6h92wjY7R3XOFn+UOgHMVGohP8OmoBEViGRqAQfo3SYRZLmSIS5RCFw9cTM1ajdAVTj+4nr9kI735XUhaw3Ka1oQOGVEGw=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WlBLAvp_1754490982 cluster:ay36)
+	t=1754534905; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=zclXyLZGTB7KG2ugo2/M53dWfMAk/WXMrk2ub7uq9Ic=;
+	b=WC6EEIafyDjfhtA50J9MGczXzf6QkD3D4rU8WDnpq0w70Gy139yaF9R6wS4v1asNT+6UKY595zy1VbiPxkwycUUpWH//Fdf6+zHDeSlzWojJPP7mm1j8eBsFLrlf0t4u5euC6r3pRxquWYOrzt+KndU/Ar2R9S45D9V7CmAgjSE=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WlCW9jW_1754534900 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 06 Aug 2025 22:36:22 +0800
+          Thu, 07 Aug 2025 10:48:24 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: Yifan Zhao <zhaoyifan28@huawei.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v5 4/4] erofs-utils: mkfs: support EROFS meta-only image generation from S3
-Date: Wed,  6 Aug 2025 22:36:14 +0800
-Message-ID: <20250806143615.1661283-4-hsiangkao@linux.alibaba.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH v3 2/2] erofs-utils: introduce metadata compression [metabox]
+Date: Thu,  7 Aug 2025 10:48:19 +0800
+Message-ID: <20250807024819.2635947-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250806143615.1661283-1-hsiangkao@linux.alibaba.com>
-References: <20250806143615.1661283-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250805083121.3479866-2-hsiangkao@linux.alibaba.com>
+References: <20250805083121.3479866-2-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -65,704 +63,898 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Yifan Zhao <zhaoyifan28@huawei.com>
+This implements metadata compression for mkfs.erofs.
 
-This patch introduces experimental S3 support for mkfs.erofs, allowing
-EROFS images to be generated from AWS S3 and/or other S3 API-compatible
-services.
+It introduces a new command-line option `-m <size>[:algorithm]`.  If
+specified, all inode metadata will be kept in a special inode called
+`the metabox inode`.
 
-Here are the current limitations:
- - Only meta-only EROFS image generation is supported;
- - Only AWS Signature Version 2 is supported;
- - The S3 object names and sizes are strictly respected during image
-   generation.
+The metabox inode will be compressed using the specified physical
+cluster size <size>.  For example:
 
-Co-Developed-by: Hongbo Li <lihongbo22@huawei.com>
-Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
-Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+  $ mkfs.erofs -zlzma -C1048576 -m 4096 foo.erofs foo
+
+will compress metadata in 4096-byte pclusters.
+
+EROFS supports multiple algorithms within a filesystem, so metadata can
+be compressed with a different algorithm.  For instance, LZMA may be too
+slow for metadata, but users may still want to save metadata space:
+
+  $ mkfs.erofs -zlzma -C1048576 -m4096:lz4hc,12 foo.erofs foo
+Or
+  $ mkfs.erofs -zlzma:lz4hc,12 -C1048576 -m4096:1 foo.erofs foo
+
+will compress metadata in 4096-byte pclusters using LZ4HC level 12.
+
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/Makefile.am   |   3 +
- lib/liberofs_s3.h |   2 +
- lib/remotes/s3.c  | 621 ++++++++++++++++++++++++++++++++++++++++++++++
- mkfs/main.c       |   9 +-
- 4 files changed, 633 insertions(+), 2 deletions(-)
- create mode 100644 lib/remotes/s3.c
+change since v2:
+ - Assign EROFS_NID_UNALLOCATED for rebuild mode too;
 
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 6458acf..b079897 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -67,6 +67,9 @@ else
- liberofs_la_SOURCES += xxhash.c
- endif
- liberofs_la_CFLAGS += ${libcurl_CFLAGS} ${openssl_CFLAGS} ${libxml2_CFLAGS}
-+if ENABLE_S3
-+liberofs_la_SOURCES += remotes/s3.c
-+endif
- if ENABLE_EROFS_MT
- liberofs_la_LDFLAGS = -lpthread
- liberofs_la_SOURCES += workqueue.c
-diff --git a/lib/liberofs_s3.h b/lib/liberofs_s3.h
-index fbf2f80..fbcb8a6 100644
---- a/lib/liberofs_s3.h
-+++ b/lib/liberofs_s3.h
-@@ -33,6 +33,8 @@ struct erofs_s3 {
- 	enum s3erofs_signature_version sig;
- };
+ include/erofs/blobchunk.h |   3 +-
+ include/erofs/compress.h  |  11 ----
+ include/erofs/config.h    |   2 +
+ include/erofs/fragments.h |   5 ++
+ include/erofs/inode.h     |   2 +
+ include/erofs/internal.h  |   5 +-
+ lib/Makefile.am           |   5 +-
+ lib/blobchunk.c           |   6 +-
+ lib/compress.c            |  26 ++++++--
+ lib/config.c              |   1 +
+ lib/inode.c               | 129 +++++++++++++++++++++++++-------------
+ lib/liberofs_metabox.h    |  20 ++++++
+ lib/metabox.c             |  78 +++++++++++++++++++++++
+ lib/rebuild.c             |   2 +-
+ mkfs/main.c               |  65 +++++++++++++++++--
+ 15 files changed, 285 insertions(+), 75 deletions(-)
+ create mode 100644 lib/liberofs_metabox.h
+ create mode 100644 lib/metabox.c
+
+diff --git a/include/erofs/blobchunk.h b/include/erofs/blobchunk.h
+index 619155f..ef06773 100644
+--- a/include/erofs/blobchunk.h
++++ b/include/erofs/blobchunk.h
+@@ -16,7 +16,8 @@ extern "C"
  
-+int s3erofs_build_trees(struct erofs_inode *root, struct erofs_s3 *s3cfg);
-+
+ struct erofs_blobchunk *erofs_get_unhashed_chunk(unsigned int device_id,
+ 		erofs_blk_t blkaddr, erofs_off_t sourceoffset);
+-int erofs_blob_write_chunk_indexes(struct erofs_inode *inode, erofs_off_t off);
++int erofs_write_chunk_indexes(struct erofs_inode *inode, struct erofs_vfile *vf,
++			      erofs_off_t off);
+ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd,
+ 				  erofs_off_t startoff);
+ int erofs_write_zero_inode(struct erofs_inode *inode);
+diff --git a/include/erofs/compress.h b/include/erofs/compress.h
+index 4731a8b..d5b2519 100644
+--- a/include/erofs/compress.h
++++ b/include/erofs/compress.h
+@@ -30,17 +30,6 @@ int z_erofs_compress_exit(struct erofs_sb_info *sbi);
+ const char *z_erofs_list_supported_algorithms(int i, unsigned int *mask);
+ const struct erofs_algorithm *z_erofs_list_available_compressors(int *i);
+ 
+-static inline bool erofs_is_packed_inode(struct erofs_inode *inode)
+-{
+-	erofs_nid_t packed_nid = inode->sbi->packed_nid;
+-
+-	if (inode->nid == EROFS_PACKED_NID_UNALLOCATED) {
+-		DBG_BUGON(packed_nid != EROFS_PACKED_NID_UNALLOCATED);
+-		return true;
+-	}
+-	return (packed_nid > 0 && inode->nid == packed_nid);
+-}
+-
  #ifdef __cplusplus
  }
  #endif
-diff --git a/lib/remotes/s3.c b/lib/remotes/s3.c
-new file mode 100644
-index 0000000..c81675d
---- /dev/null
-+++ b/lib/remotes/s3.c
-@@ -0,0 +1,621 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+/*
-+ * Copyright (C) 2025 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Yifan Zhao <zhaoyifan28@huawei.com>
-+ */
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <time.h>
-+#include <curl/curl.h>
-+#include <libxml/parser.h>
-+#include <openssl/hmac.h>
-+#include "erofs/internal.h"
-+#include "erofs/print.h"
-+#include "erofs/inode.h"
-+#include "erofs/blobchunk.h"
-+#include "erofs/rebuild.h"
-+#include "liberofs_s3.h"
-+
-+#define S3EROFS_MAX_QUERY_PARAMS	16
-+#define S3EROFS_URL_LEN			8192
-+#define S3EROFS_CANONICAL_QUERY_LEN	2048
-+
-+#define BASE64_ENCODE_LEN(len) (((len + 2) / 3) * 4)
-+
-+static CURL *easy_curl;
-+
-+struct s3erofs_query_params {
-+	int num;
-+	const char *key[S3EROFS_MAX_QUERY_PARAMS];
-+	const char *value[S3EROFS_MAX_QUERY_PARAMS];
-+};
-+
-+struct s3erofs_curl_request {
-+	const char *method;
-+	char url[S3EROFS_URL_LEN];
-+	char canonical_query[S3EROFS_CANONICAL_QUERY_LEN];
-+};
-+
-+static int s3erofs_prepare_url(struct s3erofs_curl_request *req,
-+			       const char *endpoint,
-+			       const char *bucket, const char *object,
-+			       struct s3erofs_query_params *params,
-+			       enum s3erofs_url_style url_style)
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index e4d2bb3..8c40fd1 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -79,11 +79,13 @@ struct erofs_configure {
+ 	struct erofs_compr_opts c_compr_opts[EROFS_MAX_COMPR_CFGS];
+ 	char c_force_inodeversion;
+ 	char c_force_chunkformat;
++	u8 c_mkfs_metabox_algid;
+ 	/* < 0, xattr disabled and INT_MAX, always use inline xattrs */
+ 	int c_inline_xattr_tolerance;
+ 	u32 c_mkfs_pclustersize_max;
+ 	u32 c_mkfs_pclustersize_def;
+ 	u32 c_mkfs_pclustersize_packed;
++	s32 c_mkfs_pclustersize_metabox;
+ 	u32 c_max_decompressed_extent_bytes;
+ 	u64 c_unix_timestamp;
+ 	u32 c_uid, c_gid;
+diff --git a/include/erofs/fragments.h b/include/erofs/fragments.h
+index 112f002..7c7acf4 100644
+--- a/include/erofs/fragments.h
++++ b/include/erofs/fragments.h
+@@ -15,6 +15,11 @@ extern "C"
+ extern const char *erofs_frags_packedname;
+ #define EROFS_PACKED_INODE	erofs_frags_packedname
+ 
++static inline bool erofs_is_packed_inode(struct erofs_inode *inode)
 +{
-+	static const char https[] = "https://";
-+	const char *schema, *host;
-+	char *url = req->url;
-+	int pos, i;
++	return inode->i_srcpath == EROFS_PACKED_INODE;
++}
 +
-+	if (!endpoint || !bucket)
+ u32 z_erofs_fragments_tofh(struct erofs_inode *inode, int fd, erofs_off_t fpos);
+ int erofs_fragment_findmatch(struct erofs_inode *inode, int fd, u32 tofh);
+ 
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index b0ac5be..ce86f59 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -15,6 +15,8 @@ extern "C"
+ 
+ #include "erofs/internal.h"
+ 
++#define EROFS_NID_UNALLOCATED	-1ULL
++
+ static inline struct erofs_inode *erofs_igrab(struct erofs_inode *inode)
+ {
+ 	(void)erofs_atomic_inc_return(&inode->i_count);
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index de6f4ea..e9b9099 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -83,11 +83,10 @@ struct erofs_xattr_prefix_item {
+ 	u8 infix_len;
+ };
+ 
+-#define EROFS_PACKED_NID_UNALLOCATED	-1
+-
+ struct erofs_mkfs_dfops;
+ struct erofs_packed_inode;
+ struct z_erofs_mgr;
++struct erofs_metaboxmgr;
+ 
+ struct erofs_sb_info {
+ 	struct erofs_sb_lz4_info lz4;
+@@ -149,6 +148,7 @@ struct erofs_sb_info {
+ #endif
+ 	struct erofs_bufmgr *bmgr;
+ 	struct z_erofs_mgr *zmgr;
++	struct erofs_metaboxmgr *m2gr;
+ 	struct erofs_packed_inode *packedinode;
+ 	struct erofs_buffer_head *bh_devt;
+ 	bool useqpl;
+@@ -245,6 +245,7 @@ struct erofs_inode {
+ 	/* inline tail-end packing size */
+ 	unsigned short idata_size;
+ 	char datasource;
++	bool in_metabox;
+ 	bool compressed_idata;
+ 	bool lazy_tailblock;
+ 	bool opaque;
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 688403b..0db81df 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -28,7 +28,8 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
+       $(top_srcdir)/include/erofs/fragments.h \
+       $(top_srcdir)/include/erofs/rebuild.h \
+       $(top_srcdir)/lib/liberofs_private.h \
+-      $(top_srcdir)/lib/liberofs_xxhash.h
++      $(top_srcdir)/lib/liberofs_xxhash.h \
++      $(top_srcdir)/lib/liberofs_metabox.h
+ 
+ noinst_HEADERS += compressor.h
+ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+@@ -36,7 +37,7 @@ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+ 		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
+ 		      fragments.c dedupe.c uuid_unparse.c uuid.c tar.c \
+ 		      block_list.c rebuild.c diskbuf.c bitops.c dedupe_ext.c \
+-		      vmdk.c
++		      vmdk.c metabox.c
+ 
+ liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
+ if ENABLE_LZ4
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index bbc69cf..157b9a9 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -133,8 +133,8 @@ static int erofs_blob_hashmap_cmp(const void *a, const void *b,
+ 		      sizeof(ec1->sha256));
+ }
+ 
+-int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+-				   erofs_off_t off)
++int erofs_write_chunk_indexes(struct erofs_inode *inode, struct erofs_vfile *vf,
++			      erofs_off_t off)
+ {
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 	erofs_blk_t remaining_blks = BLK_ROUND_UP(sbi, inode->i_size);
+@@ -202,7 +202,7 @@ int erofs_blob_write_chunk_indexes(struct erofs_inode *inode,
+ 					 source_offset, zeroedlen);
+ 	}
+ 	off = roundup(off, unit);
+-	return erofs_io_pwrite(&sbi->bdev, inode->chunkindexes,
++	return erofs_io_pwrite(vf, inode->chunkindexes,
+ 			       off, inode->extent_isize);
+ }
+ 
+diff --git a/lib/compress.c b/lib/compress.c
+index 22fb5d6..0bfad3f 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -25,6 +25,7 @@
+ #ifdef EROFS_MT_ENABLED
+ #include "erofs/workqueue.h"
+ #endif
++#include "liberofs_metabox.h"
+ 
+ #define Z_EROFS_DESTBUF_SZ	(Z_EROFS_PCLUSTER_MAX_SIZE + EROFS_MAX_BLOCK_SIZE * 2)
+ 
+@@ -459,6 +460,8 @@ static unsigned int z_erofs_get_max_pclustersize(struct erofs_inode *inode)
+ {
+ 	if (erofs_is_packed_inode(inode)) {
+ 		return cfg.c_mkfs_pclustersize_packed;
++	} else if (erofs_is_metabox_inode(inode)) {
++		return cfg.c_mkfs_pclustersize_metabox;
+ #ifndef NDEBUG
+ 	} else if (cfg.c_random_pclusterblks) {
+ 		unsigned int pclusterblks =
+@@ -567,7 +570,8 @@ static int __z_erofs_compress_one(struct z_erofs_compress_sctx *ctx,
+ 	unsigned int len = ctx->tail - ctx->head;
+ 	bool is_packed_inode = erofs_is_packed_inode(inode);
+ 	bool tsg = (ctx->seg_idx + 1 >= ictx->seg_num), final = !ctx->remaining;
+-	bool may_packing = (cfg.c_fragments && tsg && final && !is_packed_inode);
++	bool may_packing = (cfg.c_fragments && tsg && final && !is_packed_inode &&
++			    !erofs_is_metabox_inode(inode));
+ 	bool data_unaligned = ictx->data_unaligned;
+ 	bool may_inline = (cfg.c_ztailpacking && !data_unaligned && tsg &&
+ 			   final && !may_packing);
+@@ -1247,6 +1251,7 @@ int z_erofs_compress_segment(struct z_erofs_compress_sctx *ctx,
+ 	struct z_erofs_compress_ictx *ictx = ctx->ictx;
+ 	struct erofs_inode *inode = ictx->inode;
+ 	bool frag = cfg.c_fragments && !erofs_is_packed_inode(inode) &&
++		!erofs_is_metabox_inode(inode) &&
+ 		ctx->seg_idx >= ictx->seg_num - 1;
+ 	int fd = ictx->fd;
+ 	int ret;
+@@ -1764,8 +1769,9 @@ void *erofs_begin_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
+ {
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 	struct z_erofs_compress_ictx *ictx;
+-	bool all_fragments = cfg.c_all_fragments &&
+-					!erofs_is_packed_inode(inode);
++	bool frag = cfg.c_fragments && !erofs_is_packed_inode(inode) &&
++		!erofs_is_metabox_inode(inode);
++	bool all_fragments = cfg.c_all_fragments && frag;
+ 	int ret;
+ 
+ 	/* initialize per-file compression setting */
+@@ -1799,8 +1805,10 @@ void *erofs_begin_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
+ 			return ERR_PTR(-ENOMEM);
+ 	}
+ 	ictx->fd = fd;
+-
+-	ictx->ccfg = &sbi->zmgr->ccfg[inode->z_algorithmtype[0]];
++	if (erofs_is_metabox_inode(inode))
++		ictx->ccfg = &sbi->zmgr->ccfg[cfg.c_mkfs_metabox_algid];
++	else
++		ictx->ccfg = &sbi->zmgr->ccfg[inode->z_algorithmtype[0]];
+ 	inode->z_algorithmtype[0] = ictx->ccfg->algorithmtype;
+ 	inode->z_algorithmtype[1] = 0;
+ 	ictx->data_unaligned = erofs_sb_has_48bit(sbi) &&
+@@ -1809,7 +1817,7 @@ void *erofs_begin_compressed_file(struct erofs_inode *inode, int fd, u64 fpos)
+ 	if (cfg.c_fragments && !cfg.c_dedupe && !ictx->data_unaligned)
+ 		inode->z_advise |= Z_EROFS_ADVISE_INTERLACED_PCLUSTER;
+ 
+-	if (cfg.c_fragments && !erofs_is_packed_inode(inode)) {
++	if (frag) {
+ 		ictx->tofh = z_erofs_fragments_tofh(inode, fd, fpos);
+ 		if (ictx == &g_ictx && cfg.c_fragdedupe != FRAGDEDUPE_OFF) {
+ 			/*
+@@ -2107,6 +2115,12 @@ int z_erofs_compress_init(struct erofs_sb_info *sbi, struct erofs_buffer_head *s
+ 		return -EINVAL;
+ 	}
+ 
++	if (cfg.c_mkfs_pclustersize_metabox > (s32)cfg.c_mkfs_pclustersize_max) {
++		erofs_err("invalid pclustersize for the metabox file %u",
++			  cfg.c_mkfs_pclustersize_metabox);
 +		return -EINVAL;
++	}
 +
-+	schema = strstr(endpoint, "://");
-+	if (!schema) {
-+		schema = https;
-+		host = endpoint;
+ 	if (sb_bh && erofs_sb_has_compr_cfgs(sbi)) {
+ 		ret = z_erofs_build_compr_cfgs(sbi, sb_bh, max_dict_size);
+ 		if (ret)
+diff --git a/lib/config.c b/lib/config.c
+index 848bc59..f7c6fba 100644
+--- a/lib/config.c
++++ b/lib/config.c
+@@ -36,6 +36,7 @@ void erofs_init_configure(void)
+ 	cfg.c_uid = -1;
+ 	cfg.c_gid = -1;
+ 	cfg.c_max_decompressed_extent_bytes = -1;
++	cfg.c_mkfs_pclustersize_metabox = -1;
+ 	erofs_stdout_tty = isatty(STDOUT_FILENO);
+ }
+ 
+diff --git a/lib/inode.c b/lib/inode.c
+index 1168dbf..3d64dcb 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -28,6 +28,12 @@
+ #include "erofs/blobchunk.h"
+ #include "erofs/fragments.h"
+ #include "liberofs_private.h"
++#include "liberofs_metabox.h"
++
++static inline bool erofs_is_special_identifier(const char *path)
++{
++	return path == EROFS_PACKED_INODE || path == EROFS_METABOX_INODE;
++}
+ 
+ #define S_SHIFT                 12
+ static unsigned char erofs_ftype_by_mode[S_IFMT >> S_SHIFT] = {
+@@ -143,7 +149,8 @@ unsigned int erofs_iput(struct erofs_inode *inode)
+ 	free(inode->compressmeta);
+ 	free(inode->eof_tailraw);
+ 	erofs_remove_ihash(inode);
+-	free(inode->i_srcpath);
++	if (!erofs_is_special_identifier(inode->i_srcpath))
++		free(inode->i_srcpath);
+ 
+ 	if (inode->datasource == EROFS_INODE_DATA_SOURCE_DISKBUF) {
+ 		erofs_diskbuf_close(inode->i_diskbuf);
+@@ -380,19 +387,32 @@ erofs_nid_t erofs_lookupnid(struct erofs_inode *inode)
+ 	struct erofs_buffer_head *const bh = inode->bh;
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 	erofs_off_t off, meta_offset;
++	erofs_nid_t nid;
+ 
+-	if (bh && (long long)inode->nid <= 0) {
++	if (bh && inode->nid == EROFS_NID_UNALLOCATED) {
+ 		erofs_mapbh(NULL, bh->block);
+ 		off = erofs_btell(bh, false);
+ 
+-		meta_offset = erofs_pos(sbi, sbi->meta_blkaddr);
+-		DBG_BUGON(off < meta_offset);
+-		inode->nid = (off - meta_offset) >> EROFS_ISLOTBITS;
+-		erofs_dbg("Assign nid %llu to file %s (mode %05o)",
+-			  inode->nid, inode->i_srcpath, inode->i_mode);
++		if (!inode->in_metabox) {
++			meta_offset = erofs_pos(sbi, sbi->meta_blkaddr);
++			DBG_BUGON(off < meta_offset);
++		} else {
++			meta_offset = 0;
++		}
++
++		nid = (off - meta_offset) >> EROFS_ISLOTBITS;
++		inode->nid = nid |
++			(u64)inode->in_metabox << EROFS_DIRENT_NID_METABOX_BIT;
++		erofs_dbg("Assign nid %s%llu to file %s (mode %05o)",
++			  inode->in_metabox ? "[M]" : "", nid,
++			  inode->i_srcpath, inode->i_mode);
++	}
++	if (__erofs_unlikely(IS_ROOT(inode))) {
++		if (inode->in_metabox)
++			DBG_BUGON(!erofs_sb_has_48bit(sbi));
++		else if (inode->nid > 0xffff)
++			return sbi->root_nid;
+ 	}
+-	if (__erofs_unlikely(IS_ROOT(inode)) && inode->nid > 0xffff)
+-		return sbi->root_nid;
+ 	return inode->nid;
+ }
+ 
+@@ -578,6 +598,9 @@ int erofs_write_file_from_buffer(struct erofs_inode *inode, char *buf)
+ /* rules to decide whether a file could be compressed or not */
+ static bool erofs_file_is_compressible(struct erofs_inode *inode)
+ {
++	if (erofs_is_metabox_inode(inode) &&
++	    cfg.c_mkfs_pclustersize_metabox < 0)
++		return false;
+ 	if (cfg.c_compress_hints_file)
+ 		return z_erofs_apply_compress_hints(inode);
+ 	return true;
+@@ -663,6 +686,8 @@ int erofs_iflush(struct erofs_inode *inode)
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 	struct erofs_buffer_head *bh = inode->bh;
+ 	erofs_off_t off = erofs_iloc(inode);
++	struct erofs_bufmgr *ibmgr = inode->in_metabox ?
++				erofs_metabox_bmgr(sbi) : sbi->bmgr;
+ 	union {
+ 		struct erofs_inode_compact dic;
+ 		struct erofs_inode_extended die;
+@@ -767,7 +792,7 @@ int erofs_iflush(struct erofs_inode *inode)
+ 						.iov_len = inode->xattr_isize };
+ 	}
+ 
+-	ret = erofs_io_pwritev(&sbi->bdev, iov, iovcnt, off);
++	ret = erofs_io_pwritev(ibmgr->vf, iov, iovcnt, off);
+ 	free(xattrs);
+ 	if (ret != inode->inode_isize + inode->xattr_isize)
+ 		return ret < 0 ? ret : -EIO;
+@@ -775,10 +800,10 @@ int erofs_iflush(struct erofs_inode *inode)
+ 	off += ret;
+ 	if (inode->extent_isize) {
+ 		if (inode->datalayout == EROFS_INODE_CHUNK_BASED) {
+-			ret = erofs_blob_write_chunk_indexes(inode, off);
++			ret = erofs_write_chunk_indexes(inode, ibmgr->vf, off);
+ 		} else {	/* write compression metadata */
+ 			off = roundup(off, 8);
+-			ret = erofs_io_pwrite(&sbi->bdev, inode->compressmeta,
++			ret = erofs_io_pwrite(ibmgr->vf, inode->compressmeta,
+ 					      off, inode->extent_isize);
+ 		}
+ 		if (ret != inode->extent_isize)
+@@ -844,14 +869,16 @@ static bool erofs_inode_need_48bit(struct erofs_inode *inode)
+ 
+ static int erofs_prepare_inode_buffer(struct erofs_inode *inode)
+ {
+-	struct erofs_bufmgr *bmgr = inode->sbi->bmgr;
++	struct erofs_sb_info *sbi = inode->sbi;
++	struct erofs_bufmgr *bmgr = sbi->bmgr;
++	struct erofs_bufmgr *ibmgr = bmgr;
+ 	unsigned int inodesize;
+ 	struct erofs_buffer_head *bh, *ibh;
+ 
+ 	DBG_BUGON(inode->bh || inode->bh_inline);
+ 
+ 	if (erofs_inode_need_48bit(inode)) {
+-		if (!erofs_sb_has_48bit(inode->sbi))
++		if (!erofs_sb_has_48bit(sbi))
+ 			return -ENOSPC;
+ 		if (inode->inode_isize == sizeof(struct erofs_inode_compact) &&
+ 		    inode->i_nlink != 1)
+@@ -882,7 +909,13 @@ static int erofs_prepare_inode_buffer(struct erofs_inode *inode)
+ 			inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+ 	}
+ 
+-	bh = erofs_balloc(bmgr, INODE, inodesize, inode->idata_size);
++	if (!erofs_is_special_identifier(inode->i_srcpath) &&
++	    erofs_metabox_bmgr(sbi))
++		inode->in_metabox = true;
++
++	if (inode->in_metabox)
++		ibmgr = erofs_metabox_bmgr(sbi) ?: bmgr;
++	bh = erofs_balloc(ibmgr, INODE, inodesize, inode->idata_size);
+ 	if (bh == ERR_PTR(-ENOSPC)) {
+ 		int ret;
+ 
+@@ -895,7 +928,7 @@ noinline:
+ 		ret = erofs_prepare_tail_block(inode);
+ 		if (ret)
+ 			return ret;
+-		bh = erofs_balloc(bmgr, INODE, inodesize, 0);
++		bh = erofs_balloc(ibmgr, INODE, inodesize, 0);
+ 		if (IS_ERR(bh))
+ 			return PTR_ERR(bh);
+ 		DBG_BUGON(inode->bh_inline);
+@@ -907,7 +940,7 @@ noinline:
+ 			erofs_dbg("Inline %scompressed data (%u bytes) to %s",
+ 				  inode->compressed_idata ? "" : "un",
+ 				  inode->idata_size, inode->i_srcpath);
+-			erofs_sb_set_ztailpacking(inode->sbi);
++			erofs_sb_set_ztailpacking(sbi);
+ 		} else {
+ 			inode->datalayout = EROFS_INODE_FLAT_INLINE;
+ 			erofs_dbg("Inline tail-end data (%u bytes) to %s",
+@@ -926,20 +959,24 @@ noinline:
+ 	bh->fsprivate = erofs_igrab(inode);
+ 	bh->op = &erofs_write_inode_bhops;
+ 	inode->bh = bh;
+-	inode->i_ino[0] = ++inode->sbi->inos;  /* inode serial number */
++	inode->i_ino[0] = ++sbi->inos;	/* inode serial number */
+ 	return 0;
+ }
+ 
+ static int erofs_bh_flush_write_inline(struct erofs_buffer_head *bh)
+ {
+ 	struct erofs_inode *const inode = bh->fsprivate;
++	struct erofs_sb_info *sbi = inode->sbi;
++	struct erofs_bufmgr *ibmgr = inode->in_metabox ?
++				erofs_metabox_bmgr(sbi) : sbi->bmgr;
+ 	const erofs_off_t off = erofs_btell(bh, false);
+ 	int ret;
+ 
+-	ret = erofs_dev_write(inode->sbi, inode->idata, off, inode->idata_size);
+-	if (ret)
++	ret = erofs_io_pwrite(ibmgr->vf, inode->idata, off, inode->idata_size);
++	if (ret < 0)
+ 		return ret;
+-
++	if (ret != inode->idata_size)
++		return -EIO;
+ 	free(inode->idata);
+ 	inode->idata = NULL;
+ 
+@@ -1048,7 +1085,7 @@ static bool erofs_should_use_inode_extended(struct erofs_inode *inode,
+ 		return true;
+ 	if (inode->i_nlink > USHRT_MAX)
+ 		return true;
+-	if (path != EROFS_PACKED_INODE && !cfg.c_ignore_mtime &&
++	if (!erofs_is_special_identifier(path) && !cfg.c_ignore_mtime &&
+ 	    !erofs_sb_has_48bit(inode->sbi) &&
+ 	    inode->i_mtime != inode->sbi->epoch)
+ 		return true;
+@@ -1078,7 +1115,7 @@ int erofs_droid_inode_fsconfig(struct erofs_inode *inode,
+ 	if (!cfg.fs_config_file && !cfg.mount_point)
+ 		return 0;
+ 	/* avoid loading special inodes */
+-	if (path == EROFS_PACKED_INODE)
++	if (erofs_is_special_identifier(path))
+ 		return 0;
+ 
+ 	if (!cfg.mount_point ||
+@@ -1140,7 +1177,7 @@ int __erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+ 		erofs_err("gid overflow @ %s", path);
+ 	inode->i_gid += cfg.c_gid_offset;
+ 
+-	if (path == EROFS_PACKED_INODE) {
++	if (erofs_is_special_identifier(path)) {
+ 		inode->i_mtime = sbi->epoch + sbi->build_time;
+ 		inode->i_mtime_nsec = sbi->fixed_nsec;
+ 		return 0;
+@@ -1189,9 +1226,13 @@ static int erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+ 		return -EINVAL;
+ 	}
+ 
+-	inode->i_srcpath = strdup(path);
+-	if (!inode->i_srcpath)
+-		return -ENOMEM;
++	if (erofs_is_special_identifier(path)) {
++		inode->i_srcpath = (char *)path;
 +	} else {
-+		host = schema + sizeof("://") - 1;
-+		schema = strndup(endpoint, host - endpoint);
-+		if (!schema)
++		inode->i_srcpath = strdup(path);
++		if (!inode->i_srcpath)
 +			return -ENOMEM;
 +	}
-+
-+	if (url_style == S3EROFS_URL_STYLE_VIRTUAL_HOST)
-+		pos = snprintf(url, S3EROFS_URL_LEN, "%s%s.%s", schema, bucket, host);
-+	else
-+		pos = snprintf(url, S3EROFS_URL_LEN, "%s%s/%s", schema, host, bucket);
-+
-+	if (object) {
-+		pos += snprintf(url + pos, S3EROFS_URL_LEN - pos, "/%s", object);
-+		i = snprintf(req->canonical_query, S3EROFS_CANONICAL_QUERY_LEN,
-+			     "/%s/%s", bucket, object);
-+	} else {
-+		i = snprintf(req->canonical_query, S3EROFS_CANONICAL_QUERY_LEN,
-+			 "/%s/", bucket);
-+	}
-+	req->canonical_query[i] = '\0';
-+
-+	erofs_err("url: %s", url);
-+
-+	for (i = 0; i < params->num; i++)
-+		pos += snprintf(url + pos, S3EROFS_URL_LEN - pos, "%c%s=%s", (!i ? '?' : '&'),
-+				params->key[i], params->value[i]);
-+	if (schema != https)
-+		free((void *)schema);
-+	return 0;
-+}
-+
-+static char *get_canonical_headers(const struct curl_slist *list) { return ""; }
-+
-+// See: https://docs.aws.amazon.com/AmazonS3/latest/API/RESTAuthentication.html#ConstructingTheAuthenticationHeader
-+static char *s3erofs_sigv2_header(const struct curl_slist *headers, const char *method,
-+				  const char *content_md5, const char *content_type,
-+				  const char *date, const char *canonical_query, const char *ak,
-+				  const char *sk)
-+{
-+	u8 hmac_signature[EVP_MAX_MD_SIZE];
-+	char *str, *output = NULL;
-+	unsigned int len, pos, output_len;
-+	const char *canonical_headers = get_canonical_headers(headers);
-+	const char *prefix = "Authorization: AWS ";
-+
-+	if (!method || !date || !ak || !sk)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (!content_md5)
-+		content_md5 = "";
-+	if (!content_type)
-+		content_type = "";
-+	if (!canonical_query)
-+		canonical_query = "/";
-+
-+	pos = asprintf(&str, "%s\n%s\n%s\n%s\n%s%s", method, content_md5,
-+		       content_type, date, canonical_headers, canonical_query);
-+	if (pos < 0)
-+		return ERR_PTR(-ENOMEM);
-+
-+	if (!HMAC(EVP_sha1(), sk, strlen(sk), (u8 *)str, strlen(str), hmac_signature, &len))
-+		goto free_string;
-+
-+	output_len = BASE64_ENCODE_LEN(len);
-+	output_len += strlen(prefix);
-+	output_len += strlen(ak);
-+	output_len += 1;	/* for ':' between ak and signature */
-+
-+	output = (char *)malloc(output_len + 1);
-+	if (!output)
-+		goto free_string;
-+
-+	pos = snprintf(output, output_len, "%s%s:", prefix, ak);
-+	if (pos < 0)
-+		goto free_string;
-+	EVP_EncodeBlock((u8 *)output + pos, hmac_signature, len);
-+free_string:
-+	free(str);
-+	return output ?: ERR_PTR(-ENOMEM);
-+}
-+
-+static void s3erofs_now_rfc1123(char *buf, size_t maxlen)
-+{
-+	time_t now = time(NULL);
-+	struct tm *ptm = gmtime(&now);
-+	strftime(buf, maxlen, "%a, %d %b %Y %H:%M:%S GMT", ptm);
-+}
-+
-+struct s3erofs_curl_response {
-+	char *data;
-+	size_t size;
-+};
-+
-+static size_t s3erofs_request_write_memory_cb(void *contents, size_t size, size_t nmemb,
-+					      void *userp)
-+{
-+	size_t realsize = size * nmemb;
-+	struct s3erofs_curl_response *response = (struct s3erofs_curl_response *)userp;
-+	void *tmp;
-+
-+	tmp = realloc(response->data, response->size + realsize + 1);
-+	if (tmp == NULL)
-+		return 0;
-+
-+	response->data = tmp;
-+
-+	memcpy(response->data + response->size, contents, realsize);
-+	response->size += realsize;
-+	response->data[response->size] = '\0';
-+	return realsize;
-+}
-+
-+static int s3erofs_request_insert_auth(struct curl_slist **request_headers, const char *method,
-+				       const char *canonical_query, const char *ak, const char *sk)
-+{
-+	const char date_prefix[] = "Date: ";
-+	char date_header[64];
-+	char *sigv2_header;
-+
-+	memcpy(date_header, date_prefix, sizeof(date_prefix) - 1);
-+	s3erofs_now_rfc1123(date_header + sizeof(date_prefix) - 1,
-+			    sizeof(date_header) - sizeof(date_prefix) + 1);
-+
-+	sigv2_header = s3erofs_sigv2_header(*request_headers, method, NULL, NULL,
-+					    date_header + sizeof(date_prefix) - 1,
-+					    canonical_query, ak, sk);
-+	if (IS_ERR(sigv2_header))
-+		return PTR_ERR(sigv2_header);
-+
-+	*request_headers = curl_slist_append(*request_headers, date_header);
-+	*request_headers = curl_slist_append(*request_headers, sigv2_header);
-+
-+	free(sigv2_header);
-+	return 0;
-+}
-+
-+static int s3erofs_request_perform(struct erofs_s3 *s3cfg,
-+				   struct s3erofs_curl_request *req, void *resp)
-+{
-+	struct curl_slist *request_headers = NULL;
-+	long http_code = 0;
-+	int ret;
-+
-+	ret = s3erofs_request_insert_auth(&request_headers, req->method, req->canonical_query,
-+					  s3cfg->access_key, s3cfg->secret_key);
-+	if (ret < 0) {
-+		erofs_err("failed to insert auth headers");
-+		return ret;
-+	}
-+
-+	curl_easy_setopt(easy_curl, CURLOPT_URL, req->url);
-+	curl_easy_setopt(easy_curl, CURLOPT_WRITEDATA, resp);
-+	curl_easy_setopt(easy_curl, CURLOPT_HTTPHEADER, request_headers);
-+
-+	ret = curl_easy_perform(easy_curl);
-+	if (ret != CURLE_OK) {
-+		erofs_err("curl_easy_perform() failed: %s", curl_easy_strerror(ret));
-+		ret = -EIO;
-+		goto err_header;
-+	}
-+
-+	ret = curl_easy_getinfo(easy_curl, CURLINFO_RESPONSE_CODE, &http_code);
-+	if (ret != CURLE_OK) {
-+		erofs_err("curl_easy_getinfo() failed: %s", curl_easy_strerror(ret));
-+		ret = -EIO;
-+		goto err_header;
-+	}
-+
-+	if (!(http_code >= 200 && http_code < 300)) {
-+		erofs_err("request failed with HTTP code %ld", http_code);
-+		ret = -EIO;
-+	}
-+
-+err_header:
-+	curl_slist_free_all(request_headers);
-+	return ret;
-+}
-+
-+struct s3erofs_object_info {
-+	char *key;
-+	u64 size;
-+	time_t mtime;
-+};
-+
-+struct s3erofs_object_iterator {
-+	struct s3erofs_object_info *objects;
-+	int cur;
-+
-+	struct erofs_s3 *s3cfg;
-+	const char *prefix, *delimiter;
-+
-+	char *next_marker;
-+	bool is_truncated;
-+};
-+
-+static int s3erofs_parse_list_objects_one(xmlNodePtr node,
-+					  struct s3erofs_object_info *info)
-+{
-+	xmlNodePtr child;
-+	xmlChar *str;
-+
-+	for (child = node->children; child; child = child->next) {
-+		if (child->type == XML_ELEMENT_NODE) {
-+			str = xmlNodeGetContent(child);
-+			if (!str)
-+				return -ENOMEM;
-+
-+			if (xmlStrEqual(child->name, (const xmlChar *)"LastModified")) {
-+				struct tm tm = {};
-+
-+				if (sscanf((char *)str, "%d-%d-%dT%d:%d:%d",
-+					&tm.tm_year, &tm.tm_mon, &tm.tm_mday,
-+					&tm.tm_hour, &tm.tm_min, &tm.tm_sec) != 6) {
-+					xmlFree(str);
-+					return -EIO;
-+				}
-+				tm.tm_year -= 1900;
-+				tm.tm_mon -= 1;
-+				info->mtime = mktime(&tm);
-+			}
-+			if (xmlStrEqual(child->name, (const xmlChar *)"Key")) {
-+				info->key = strdup((char *)str);
-+			} else if (xmlStrEqual(child->name, (const xmlChar *)"Size")) {
-+				info->size = atoll((char *)str);
-+			}
-+			xmlFree(str);
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int s3erofs_parse_list_objects_result(const char *data, int len,
-+					     struct s3erofs_object_iterator *it)
-+{
-+	xmlNodePtr root = NULL, node, next;
-+	int ret, i, contents_count;
-+	xmlDocPtr doc = NULL;
-+	xmlChar *str;
-+	void *tmp;
-+
-+	doc = xmlReadMemory(data, len, NULL, NULL, 0);
-+	if (!doc) {
-+		erofs_err("failed to parse XML data");
-+		return -EINVAL;
-+	}
-+
-+	root = xmlDocGetRootElement(doc);
-+	if (!root) {
-+		erofs_err("failed to get root element");
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (!xmlStrEqual(root->name, (const xmlChar *)"ListBucketResult")) {
-+		erofs_err("invalid root element: expected ListBucketResult, got %s", root->name);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	contents_count = 1;
-+	for (node = root->children; node; node = next) {
-+		next = node->next;
-+		if (node->type == XML_ELEMENT_NODE) {
-+			if (xmlStrEqual(node->name, (const xmlChar *)"Contents")) {
-+				++contents_count;
-+				continue;
-+			}
-+			if (xmlStrEqual(node->name, (const xmlChar *)"IsTruncated")) {
-+				str = xmlNodeGetContent(node);
-+				if (str) {
-+					it->is_truncated =
-+						!!xmlStrEqual(str, (const xmlChar *)"true");
-+					xmlFree(str);
-+				}
-+			} else if (xmlStrEqual(node->name, (const xmlChar *)"NextMarker")) {
-+				str = xmlNodeGetContent(node);
-+				if (str) {
-+					free(it->next_marker);
-+					it->next_marker = strdup((char *)str);
-+					xmlFree(str);
-+					if (!it->next_marker) {
-+						ret = -ENOMEM;
-+						goto out;
-+					}
-+				}
-+			}
-+			xmlUnlinkNode(node);
-+		}
-+		xmlUnlinkNode(node);
-+		xmlFreeNode(node);
-+	}
-+
-+	i = 0;
-+	if (it->objects) {
-+		for (; it->objects[i].key; ++i) {
-+			free(it->objects[i].key);
-+			it->objects[i].key = NULL;
-+		}
-+	}
-+
-+	if (i + 1 < contents_count) {
-+		tmp = malloc(contents_count * sizeof(*it->objects));
-+		if (!tmp) {
-+			ret = -ENOMEM;
-+			goto out;
-+		}
-+		free(it->objects);
-+		it->objects = tmp;
-+		it->objects[0].key = NULL;
-+	}
-+	it->cur = 0;
-+
-+	ret = 0;
-+	for (i = 0, node = root->children; node; node = node->next) {
-+		if (__erofs_unlikely(i >= contents_count - 1)) {
-+			DBG_BUGON(1);
-+			continue;
-+		}
-+		ret = s3erofs_parse_list_objects_one(node, &it->objects[i]);
-+		if (ret < 0) {
-+			erofs_err("failed to parse contents node %s: %s",
-+				  (const char *)node->name, erofs_strerror(ret));
-+			break;
-+		}
-+		it->objects[++i].key = NULL;
-+	}
-+	if (!ret)
-+		ret = i;
-+out:
-+	xmlFreeDoc(doc);
-+	return ret;
-+}
-+
-+static int s3erofs_list_objects(struct s3erofs_object_iterator *it)
-+{
-+	struct s3erofs_curl_request req = {};
-+	struct s3erofs_curl_response resp = {};
-+	struct s3erofs_query_params params;
-+	int ret = 0;
-+
-+	struct erofs_s3 *s3cfg = it->s3cfg;
-+
-+	if (it->prefix && strlen(it->prefix) > 1024) {
-+		erofs_err("prefix is too long");
-+		return -EINVAL;
-+	}
-+
-+	if (it->delimiter && strlen(it->delimiter) > 1024) {
-+		erofs_err("delimiter is too long");
-+		return -EINVAL;
-+	}
-+
-+	params.num = 0;
-+	if (it->prefix) {
-+		params.key[params.num] = "prefix";
-+		params.value[params.num] = it->prefix;
-+		++params.num;
-+	}
-+
-+	if (it->delimiter) {
-+		params.key[params.num] = "delimiter";
-+		params.value[params.num] = it->delimiter;
-+		++params.num;
-+	}
-+
-+	if (it->next_marker) {
-+		params.key[params.num] = "marker";
-+		params.value[params.num] = it->next_marker;
-+		++params.num;
-+	}
-+
-+	params.key[params.num] = "max-keys";
-+	params.value[params.num] = "1000";
-+	++params.num;
-+
-+	req.method = "GET";
-+	ret = s3erofs_prepare_url(&req, s3cfg->endpoint, s3cfg->bucket, NULL,
-+				  &params, s3cfg->url_style);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = s3erofs_request_perform(s3cfg, &req, &resp);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = s3erofs_parse_list_objects_result(resp.data, resp.size, it);
-+	if (ret < 0)
-+		return ret;
-+	free(resp.data);
-+	return 0;
-+}
-+
-+static struct s3erofs_object_iterator *
-+s3erofs_create_object_iterator(struct erofs_s3 *s3cfg, const char *prefix,
-+			       const char *delimiter)
-+{
-+	struct s3erofs_object_iterator *iter;
-+
-+	iter = calloc(1, sizeof(struct s3erofs_object_iterator));
-+	if (!iter)
-+		return ERR_PTR(-ENOMEM);
-+	iter->s3cfg = s3cfg;
-+	iter->prefix = prefix;
-+	iter->delimiter = delimiter;
-+	iter->is_truncated = true;
-+	return iter;
-+}
-+
-+static void s3erofs_destroy_object_iterator(struct s3erofs_object_iterator *it)
-+{
-+	int i;
-+
-+	if (it->next_marker)
-+		free(it->next_marker);
-+	if (it->objects) {
-+		for (i = 0; it->objects[i].key; ++i)
-+			free(it->objects[i].key);
-+		free(it->objects);
-+	}
-+	free(it);
-+}
-+
-+static struct s3erofs_object_info *
-+s3erofs_get_next_object(struct s3erofs_object_iterator *it)
-+{
-+	int ret;
-+
-+	if (it->objects && it->objects[it->cur].key)
-+		return &it->objects[it->cur++];
-+
-+	if (it->is_truncated) {
-+		ret = s3erofs_list_objects(it);
-+		if (ret < 0)
-+			return ERR_PTR(ret);
-+		return &it->objects[it->cur++];
-+	}
-+	return NULL;
-+}
-+
-+static int s3erofs_global_init(void)
-+{
-+	if (curl_global_init(CURL_GLOBAL_DEFAULT) != CURLE_OK)
-+		return -EIO;
-+
-+	easy_curl = curl_easy_init();
-+	if (!easy_curl)
-+		goto out_err;
-+
-+	if (curl_easy_setopt(easy_curl, CURLOPT_WRITEFUNCTION,
-+			     s3erofs_request_write_memory_cb) != CURLE_OK)
-+		goto out_err;
-+
-+	if (curl_easy_setopt(easy_curl, CURLOPT_FOLLOWLOCATION, 1L) != CURLE_OK)
-+		goto out_err;
-+
-+	if (curl_easy_setopt(easy_curl, CURLOPT_TIMEOUT, 30L) != CURLE_OK)
-+		goto out_err;
-+
-+	if (curl_easy_setopt(easy_curl, CURLOPT_USERAGENT,
-+			     "liberofs/" PACKAGE_VERSION) != CURLE_OK)
-+		goto out_err;
-+
-+	xmlInitParser();
-+	return 0;
-+out_err:
-+	curl_global_cleanup();
-+	return -EIO;
-+}
-+
-+static void s3erofs_global_exit(void)
-+{
-+	if (!easy_curl)
-+		return;
-+
-+	xmlCleanupParser();
-+
-+	curl_easy_cleanup(easy_curl);
-+	easy_curl = NULL;
-+
-+	curl_global_cleanup();
-+}
-+
-+int s3erofs_build_trees(struct erofs_inode *root, struct erofs_s3 *s3cfg)
-+{
+ 
+ 	if (erofs_should_use_inode_extended(inode, path)) {
+ 		if (cfg.c_force_inodeversion == FORCE_INODE_COMPACT) {
+@@ -1226,6 +1267,7 @@ struct erofs_inode *erofs_new_inode(struct erofs_sb_info *sbi)
+ 	inode->dev = sbi->dev;
+ 	inode->i_count = 1;
+ 	inode->datalayout = EROFS_INODE_FLAT_PLAIN;
++	inode->nid = EROFS_NID_UNALLOCATED;
+ 
+ 	init_list_head(&inode->i_hash);
+ 	init_list_head(&inode->i_subdirs);
+@@ -1269,22 +1311,28 @@ static struct erofs_inode *erofs_iget_from_srcpath(struct erofs_sb_info *sbi,
+ 	return inode;
+ }
+ 
+-static void erofs_fixup_meta_blkaddr(struct erofs_inode *rootdir)
++static void erofs_fixup_meta_blkaddr(struct erofs_inode *root)
+ {
+ 	const erofs_off_t rootnid_maxoffset = 0xffff << EROFS_ISLOTBITS;
+-	struct erofs_buffer_head *const bh = rootdir->bh;
+-	struct erofs_sb_info *sbi = rootdir->sbi;
+-	erofs_off_t off, meta_offset;
++	struct erofs_buffer_head *const bh = root->bh;
 +	struct erofs_sb_info *sbi = root->sbi;
-+	struct s3erofs_object_iterator *iter;
-+	struct s3erofs_object_info *obj;
-+	struct erofs_dentry *d;
-+	struct erofs_inode *inode;
-+	struct stat st;
-+	bool dumb;
-+	int ret = 0;
-+
-+	st.st_uid = root->i_uid;
-+	st.st_gid = root->i_gid;
-+
-+	ret = s3erofs_global_init();
-+	if (ret) {
-+		erofs_err("failed to initialize s3erofs: %s", erofs_strerror(ret));
-+		return ret;
++	erofs_off_t meta_offset = 0;
++	erofs_off_t off;
+ 
+ 	erofs_mapbh(NULL, bh->block);
+ 	off = erofs_btell(bh, false);
+-
+-	if (off > rootnid_maxoffset)
+-		meta_offset = round_up(off - rootnid_maxoffset, erofs_blksiz(sbi));
+-	else
+-		meta_offset = 0;
++	if (!root->in_metabox && off > rootnid_maxoffset)
++		meta_offset = round_up(off - rootnid_maxoffset,
++				       erofs_blksiz(sbi));
++	else if (root->in_metabox && !erofs_sb_has_48bit(sbi)) {
++		sbi->build_time = sbi->epoch;
++		sbi->epoch = max_t(s64, 0, (s64)sbi->build_time - UINT32_MAX);
++		sbi->build_time -= sbi->epoch;
++		erofs_sb_set_48bit(sbi);
 +	}
+ 	sbi->meta_blkaddr = erofs_blknr(sbi, meta_offset);
+-	rootdir->nid = (off - meta_offset) >> EROFS_ISLOTBITS;
++	root->nid = ((off - meta_offset) >> EROFS_ISLOTBITS) |
++		((u64)root->in_metabox << EROFS_DIRENT_NID_METABOX_BIT);
+ }
+ 
+ static int erofs_inode_reserve_data_blocks(struct erofs_inode *inode)
+@@ -2076,7 +2124,7 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(struct erofs_sb_info *sbi,
+ 	if (IS_ERR(inode))
+ 		return inode;
+ 
+-	if (name == EROFS_PACKED_INODE) {
++	if (erofs_is_special_identifier(name)) {
+ 		st.st_uid = st.st_gid = 0;
+ 		st.st_nlink = 0;
+ 	}
+@@ -2087,11 +2135,6 @@ struct erofs_inode *erofs_mkfs_build_special_from_fd(struct erofs_sb_info *sbi,
+ 		return ERR_PTR(ret);
+ 	}
+ 
+-	if (name == EROFS_PACKED_INODE) {
+-		inode->sbi->packed_nid = EROFS_PACKED_NID_UNALLOCATED;
+-		inode->nid = inode->sbi->packed_nid;
+-	}
+-
+ 	if (cfg.c_compr_opts[0].alg &&
+ 	    erofs_file_is_compressible(inode)) {
+ 		ictx = erofs_begin_compressed_file(inode, fd, 0);
+diff --git a/lib/liberofs_metabox.h b/lib/liberofs_metabox.h
+new file mode 100644
+index 0000000..a783678
+--- /dev/null
++++ b/lib/liberofs_metabox.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
++#ifndef __EROFS_LIB_LIBEROFS_METABOX_H
++#define __EROFS_LIB_LIBEROFS_METABOX_H
 +
-+	iter = s3erofs_create_object_iterator(s3cfg, NULL, NULL);
-+	if (IS_ERR(iter)) {
-+		erofs_err("failed to create object iterator");
-+		ret = PTR_ERR(iter);
-+		goto err_global;
++#include "erofs/internal.h"
++
++extern const char *erofs_metabox_identifier;
++#define EROFS_METABOX_INODE	erofs_metabox_identifier
++
++static inline bool erofs_is_metabox_inode(struct erofs_inode *inode)
++{
++	return inode->i_srcpath == EROFS_METABOX_INODE;
++}
++
++void erofs_metabox_exit(struct erofs_sb_info *sbi);
++int erofs_metabox_init(struct erofs_sb_info *sbi);
++struct erofs_bufmgr *erofs_metabox_bmgr(struct erofs_sb_info *sbi);
++int erofs_metabox_iflush(struct erofs_sb_info *sbi);
++
++#endif
+diff --git a/lib/metabox.c b/lib/metabox.c
+new file mode 100644
+index 0000000..a4c0822
+--- /dev/null
++++ b/lib/metabox.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
++#include <stdlib.h>
++#include "erofs/cache.h"
++#include "erofs/inode.h"
++#include "liberofs_private.h"
++#include "liberofs_metabox.h"
++
++const char *erofs_metabox_identifier = "metabox";
++
++struct erofs_metaboxmgr {
++	struct erofs_vfile vf;
++	struct erofs_bufmgr *bmgr;
++};
++
++void erofs_metabox_exit(struct erofs_sb_info *sbi)
++{
++	struct erofs_metaboxmgr *m2gr = sbi->m2gr;
++
++	if (!m2gr)
++		return;
++	DBG_BUGON(!m2gr->bmgr);
++	erofs_buffer_exit(m2gr->bmgr);
++	close(m2gr->vf.fd);
++	free(m2gr);
++}
++
++int erofs_metabox_init(struct erofs_sb_info *sbi)
++{
++	struct erofs_metaboxmgr *m2gr;
++	int ret;
++
++	m2gr = malloc(sizeof(*m2gr));
++	if (!m2gr)
++		return -ENOMEM;
++
++	ret = erofs_tmpfile();
++	if (ret < 0)
++		goto out_err;
++
++	m2gr->vf = (struct erofs_vfile){ .fd = ret };
++	m2gr->bmgr = erofs_buffer_init(sbi, 0, &m2gr->vf);
++	if (m2gr->bmgr) {
++		erofs_sb_set_metabox(sbi);
++		sbi->m2gr = m2gr;
++		return 0;
 +	}
-+
-+	while (1) {
-+		obj = s3erofs_get_next_object(iter);
-+		if (!obj) {
-+			break;
-+		} else if (IS_ERR(obj)) {
-+			erofs_err("failed to get next object");
-+			ret = PTR_ERR(obj);
-+			goto err_iter;
-+		}
-+
-+		d = erofs_rebuild_get_dentry(root, obj->key, false, &dumb, &dumb, false);
-+		if (IS_ERR(d)) {
-+			ret = PTR_ERR(d);
-+			goto err_iter;
-+		}
-+		if (d->type == EROFS_FT_DIR) {
-+			inode = d->inode;
-+			inode->i_mode = S_IFDIR | 0755;
-+		} else {
-+			inode = erofs_new_inode(sbi);
-+			if (IS_ERR(inode)) {
-+				ret = PTR_ERR(inode);
-+				goto err_iter;
-+			}
-+
-+			inode->i_mode = S_IFREG | 0644;
-+			inode->i_parent = d->inode;
-+			inode->i_nlink = 1;
-+
-+			d->inode = inode;
-+			d->type = EROFS_FT_REG_FILE;
-+		}
-+		inode->i_srcpath = strdup(obj->key);
-+		if (!inode->i_srcpath) {
-+			ret = -ENOMEM;
-+			goto err_iter;
-+		}
-+		st.st_mtime = obj->mtime;
-+		ret = __erofs_fill_inode(inode, &st, obj->key);
-+		if (!ret && S_ISREG(inode->i_mode)) {
-+			inode->i_size = obj->size;
-+			ret = erofs_write_zero_inode(inode);
-+		}
-+		if (ret)
-+			goto err_iter;
-+	}
-+
-+err_iter:
-+	s3erofs_destroy_object_iterator(iter);
-+err_global:
-+	s3erofs_global_exit();
++	ret = -ENOMEM;
++out_err:
++	free(m2gr);
 +	return ret;
 +}
++
++struct erofs_bufmgr *erofs_metabox_bmgr(struct erofs_sb_info *sbi)
++{
++	return sbi->m2gr ? sbi->m2gr->bmgr : NULL;
++}
++
++int erofs_metabox_iflush(struct erofs_sb_info *sbi)
++{
++	struct erofs_metaboxmgr *m2gr = sbi->m2gr;
++	struct erofs_inode *inode;
++	int err;
++
++	if (!m2gr || !erofs_sb_has_metabox(sbi))
++		return -EINVAL;
++
++	err = erofs_bflush(m2gr->bmgr, NULL);
++	if (err)
++		return err;
++
++	if (erofs_io_lseek(&m2gr->vf, 0, SEEK_END) <= 0)
++		return 0;
++	inode = erofs_mkfs_build_special_from_fd(sbi, m2gr->vf.fd,
++						 EROFS_METABOX_INODE);
++	sbi->metabox_nid = erofs_lookupnid(inode);
++	erofs_iput(inode);
++	return 0;
++}
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+index 0475699..95a8b3f 100644
+--- a/lib/rebuild.c
++++ b/lib/rebuild.c
+@@ -409,7 +409,7 @@ static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
+ 
+ 	/* reset sbi, nid after subdirs are all loaded for the final dump */
+ 	inode->sbi = &g_sbi;
+-	inode->nid = 0;
++	inode->nid = EROFS_NID_UNALLOCATED;
+ out:
+ 	free(path);
+ 	return ret;
 diff --git a/mkfs/main.c b/mkfs/main.c
-index ecc1bbe..d8dcedb 100644
+index 30804d1..dc2df06 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -1735,8 +1735,13 @@ int main(int argc, char **argv)
- 				goto exit;
- #ifdef S3EROFS_ENABLED
- 		} else if (source_mode == EROFS_MKFS_SOURCE_S3) {
--			err = -EOPNOTSUPP;
--			goto exit;
-+			if (incremental_mode ||
-+			    dataimport_mode != EROFS_MKFS_DATA_IMPORT_RVSP)
-+				err = -EOPNOTSUPP;
-+			else
-+				err = s3erofs_build_trees(root, &s3cfg);
-+			if (err)
-+				goto exit;
- #endif
+@@ -30,6 +30,7 @@
+ #include "erofs/rebuild.h"
+ #include "../lib/liberofs_private.h"
+ #include "../lib/liberofs_uuid.h"
++#include "../lib/liberofs_metabox.h"
+ #include "../lib/compressor.h"
+ 
+ static struct option long_options[] = {
+@@ -159,6 +160,8 @@ static void usage(int argc, char **argv)
+ 		" -C#                   specify the size of compress physical cluster in bytes\n"
+ 		" -EX[,...]             X=extended options\n"
+ 		" -L volume-label       set the volume label (maximum 15 bytes)\n"
++		" -m#[:X]               enable metadata compression (# = physical cluster size in bytes;\n"
++		"                                                    X = another compression algorithm for metadata)\n"
+ 		" -T#                   specify a fixed UNIX timestamp # as build time\n"
+ 		"    --all-time         the timestamp is also applied to all files (default)\n"
+ 		"    --mkfs-time        the timestamp is applied as build time only\n"
+@@ -237,10 +240,12 @@ static void version(void)
+ }
+ 
+ static unsigned int pclustersize_packed, pclustersize_max;
++static int pclustersize_metabox = -1;
+ static struct erofs_tarfile erofstar = {
+ 	.global.xattrs = LIST_HEAD_INIT(erofstar.global.xattrs)
+ };
+ static bool tar_mode, rebuild_mode, incremental_mode;
++static u8 metabox_algorithmid;
+ 
+ enum {
+ 	EROFS_MKFS_DATA_IMPORT_DEFAULT,
+@@ -249,7 +254,7 @@ enum {
+ 	EROFS_MKFS_DATA_IMPORT_SPARSE,
+ } dataimport_mode;
+ 
+-static unsigned int rebuild_src_count;
++static unsigned int rebuild_src_count, total_ccfgs;
+ static LIST_HEAD(rebuild_src_list);
+ static u8 fixeduuid[16];
+ static bool valid_fixeduuid;
+@@ -575,19 +580,19 @@ static int mkfs_parse_one_compress_alg(char *alg,
+ 
+ static int mkfs_parse_compress_algs(char *algs)
+ {
+-	unsigned int i;
+ 	char *s;
+ 	int ret;
+ 
+-	for (s = strtok(algs, ":"), i = 0; s; s = strtok(NULL, ":"), ++i) {
+-		if (i >= EROFS_MAX_COMPR_CFGS - 1) {
++	for (s = strtok(algs, ":"); s; s = strtok(NULL, ":")) {
++		if (total_ccfgs >= EROFS_MAX_COMPR_CFGS - 1) {
+ 			erofs_err("too many algorithm types");
+ 			return -EINVAL;
  		}
  
+-		ret = mkfs_parse_one_compress_alg(s, &cfg.c_compr_opts[i]);
++		ret = mkfs_parse_one_compress_alg(s, &cfg.c_compr_opts[total_ccfgs]);
+ 		if (ret)
+ 			return ret;
++		++total_ccfgs;
+ 	}
+ 	return 0;
+ }
+@@ -694,7 +699,7 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 	bool quiet = false;
+ 	bool has_timestamp = false;
+ 
+-	while ((opt = getopt_long(argc, argv, "C:E:L:T:U:b:d:x:z:Vh",
++	while ((opt = getopt_long(argc, argv, "C:E:L:T:U:b:d:m:x:z:Vh",
+ 				  long_options, NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'z':
+@@ -849,6 +854,25 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 			}
+ 			pclustersize_max = i;
+ 			break;
++		case 'm': {
++			char *algid = strchr(optarg, ':');
++
++			if (algid) {
++				algid[0] = '\0';
++				metabox_algorithmid =
++					strtoul(algid + 1, &endptr, 0);
++				if (*endptr != '\0') {
++					err = mkfs_parse_one_compress_alg(algid + 1,
++							&cfg.c_compr_opts[total_ccfgs]);
++					if (err)
++						return err;
++					metabox_algorithmid = total_ccfgs++;
++				}
++			}
++			pclustersize_metabox = atoi(optarg);
++			break;
++		}
++
+ 		case 11:
+ 			i = strtol(optarg, &endptr, 0);
+ 			if (*endptr != '\0') {
+@@ -1108,6 +1132,18 @@ static int mkfs_parse_options_cfg(int argc, char *argv[])
+ 		cfg.c_mkfs_pclustersize_packed = pclustersize_packed;
+ 	}
+ 
++	if (pclustersize_metabox >= 0) {
++		if (pclustersize_metabox &&
++		    (pclustersize_metabox < erofs_blksiz(&g_sbi) ||
++		     pclustersize_metabox % erofs_blksiz(&g_sbi))) {
++			erofs_err("invalid pcluster size %u for the metabox inode",
++				  pclustersize_metabox);
++			return -EINVAL;
++		}
++		cfg.c_mkfs_pclustersize_metabox = pclustersize_metabox;
++		cfg.c_mkfs_metabox_algid = metabox_algorithmid;
++	}
++
+ 	if (has_timestamp && cfg.c_timeinherit == TIMESTAMP_UNSPECIFIED)
+ 		cfg.c_timeinherit = TIMESTAMP_FIXED;
+ 	return 0;
+@@ -1334,6 +1370,15 @@ int main(int argc, char **argv)
+ 		}
+ 	}
+ 
++	if (cfg.c_mkfs_pclustersize_metabox >= 0) {
++		err = erofs_metabox_init(&g_sbi);
++		if (err) {
++			erofs_err("failed to initialize metabox: %s",
++				  erofs_strerror(err));
++			return 1;
++		}
++	}
++
+ #ifndef NDEBUG
+ 	if (cfg.c_random_pclusterblks)
+ 		srand(time(NULL));
+@@ -1541,6 +1586,13 @@ int main(int argc, char **argv)
+ 		}
+ 	}
+ 
++	if (erofs_sb_has_metabox(&g_sbi)) {
++		erofs_update_progressinfo("Handling metabox ...");
++		erofs_metabox_iflush(&g_sbi);
++		if (err)
++			goto exit;
++	}
++
+ 	if ((cfg.c_fragments || cfg.c_extra_ea_name_prefixes) &&
+ 	    erofs_sb_has_fragments(&g_sbi)) {
+ 		erofs_update_progressinfo("Handling packed data ...");
+@@ -1594,6 +1646,7 @@ int main(int argc, char **argv)
+ exit:
+ 	if (root)
+ 		erofs_iput(root);
++	erofs_metabox_exit(&g_sbi);
+ 	z_erofs_compress_exit(&g_sbi);
+ 	z_erofs_dedupe_exit();
+ 	z_erofs_dedupe_ext_exit();
 -- 
 2.43.5
 
