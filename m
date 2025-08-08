@@ -1,41 +1,41 @@
-Return-Path: <linux-erofs+bounces-803-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-804-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D1E8B1E2F2
-	for <lists+linux-erofs@lfdr.de>; Fri,  8 Aug 2025 09:16:31 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64631B1E2F4
+	for <lists+linux-erofs@lfdr.de>; Fri,  8 Aug 2025 09:16:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bywLg6Qgqz3cPM;
-	Fri,  8 Aug 2025 17:16:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4bywMC1RfBz3cQq;
+	Fri,  8 Aug 2025 17:16:55 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.187
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754637387;
-	cv=none; b=MAq2vIr+xEQ+CRIYQCisHOmIX/cRgR9e9MMjFMqUo7+oYUyCNALDascCHHNUOMpOQluDGb/WmvIaDqd2olROYvQ9AWWXeuWzfPgo+LXo05zl2YSGnULImRvb+yJBLmjpY1wOh22+CCj+1gvkQ0dqvZrvlSlDiNo7PjeYrFsNyhzzsgIqBjAHCabblg7MUQuYDh9XFoSAppmnMiShIYBYw7+tLraSVHbgvXtqO5j4xLrJZlpIQYwiW1W+V54t8d1wFly2JmqrETu4cb6Es1BaLXGBnsvHFymbYvQI5VXJfJbybbay3C1MZdPoSqmZcKT8mHVp9t5SBzn26oSPMINGFg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.189
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754637415;
+	cv=none; b=OE4N8p0ZKcB2Trefs+gr2NljKEPPPLRX6KiopOb5ZTUZen7dFTVOjTU4HDQ7ioCCviNzziI2b5q3T6KT1zB8meyf8zKhP7q7YnY8KdZsej///rR8RgeKN7GoSjykAjF4GFiQN8h8ClOcUKeBc7+E8TZEGDmv7ywdnu6yQIW9pb47Gaaj+zXOvqBk9eMgx0iuS3F/Pop81xrJi2zT7WQg4OWsAWH1KMQQzHiX5KCCOZmd7FP2P2QCUGN42dmsYzcnmBsQ4Sf7xIN+BA+0UGxaNPkP3WvRhbf8wjyJzEOEh3UBfOjm2thOz2QQfKz6WqZ2bZnDzeOD3qLNYn9D40JQAw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1754637387; c=relaxed/relaxed;
-	bh=jY8PvYNXM5qeFR6HvgeRPCO0sfXrhNHO9dhgFzYJZwM=;
+	t=1754637415; c=relaxed/relaxed;
+	bh=HLwmESKmDXSg/QZ3rqbIeVyFi3/uDFVTuR7gFVQYEhA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hyp0/DferKtWAy+I3k7VLzb/eHPXlFYpqLnKu/jHp9T6SVBW4HQ0mEdwPlBS2U0j27cemuqteStOKmz9RyIdTN2bR/LSyU5r50ik6rkQgoTKUmbmCVNEcGHOzPZ7s6q09j+8G3kkW8KeghG4odcal2ZfzOdp32IqzK0mBQfsItxSDNMPnFLbj263G1RzeYayatEejLrFblA/AkXZayiuJ+ZMM00y0pKVab1IDolHIN3CTC79qU0vYEJsE7iVc+zUT2jvEfafr94dAL6/09BBo5IvLesAclpEGfHqs2XR+Uc2E7ti5sZIMZIPEMR4WRWhHdYWkCsaCBm3d1JMb+xZqg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+	 In-Reply-To:Content-Type; b=iLN8c1dAFDbg7tcS6LyroFqkn+Ukdr9CWzD7719MvNFtkznA5rj6Rzr8Ob46z04DwQLyUL751cRJLxmuf2b3+p08Qv89HHLqz4to1DdSPI2FaS0vx5cyCVuj2QOiCsFO33UOBWdARNWo8ynGLvN1V3apAUrIbXBZKiI8TyPFIRifX8iiOm1bVdsQGFhbpXhuBuNfTuNc/lb5ZlCkj4vjcm7TJz75In6MRbR50TtNyMszvsLa5r8NKryzuBGMefDe3DvNgRXN4BaEmjWlU10+B0WYDiOsWW+OtPgVUYugwQKpNm51n7tn9QrTJlkn0crvO2XSWTp92/xSl3sWx/ZCjA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.189; helo=szxga03-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.187; helo=szxga01-in.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.189; helo=szxga03-in.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bywLb3jBPz3cPG
-	for <linux-erofs@lists.ozlabs.org>; Fri,  8 Aug 2025 17:16:20 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bywDk681Kz14M8d;
-	Fri,  8 Aug 2025 15:11:18 +0800 (CST)
-Received: from kwepemp500007.china.huawei.com (unknown [7.202.195.151])
-	by mail.maildlp.com (Postfix) with ESMTPS id EBA63180B63;
-	Fri,  8 Aug 2025 15:16:15 +0800 (CST)
-Received: from [100.103.109.96] (100.103.109.96) by
- kwepemp500007.china.huawei.com (7.202.195.151) with Microsoft SMTP Server
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4bywMB1ny4z3cPG
+	for <linux-erofs@lists.ozlabs.org>; Fri,  8 Aug 2025 17:16:54 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4bywG84Nh6zLpsK;
+	Fri,  8 Aug 2025 15:12:32 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 29AED1800B2;
+	Fri,  8 Aug 2025 15:16:50 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 8 Aug 2025 15:16:15 +0800
-Message-ID: <db416c94-af21-4dd6-ac5b-160c6298cb06@huawei.com>
-Date: Fri, 8 Aug 2025 15:16:15 +0800
+ 15.2.1544.11; Fri, 8 Aug 2025 15:16:49 +0800
+Message-ID: <b9c8395a-e50a-46ad-89b9-5679f8b71fad@huawei.com>
+Date: Fri, 8 Aug 2025 15:16:49 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,45 +50,37 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v7 4/4] erofs-utils: mkfs: support EROFS meta-only image
  generation from S3
+Content-Language: en-US
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
-CC: Hongbo Li <lihongbo22@huawei.com>
+CC: Yifan Zhao <zhaoyifan28@huawei.com>
 References: <20250808031508.346771-1-hsiangkao@linux.alibaba.com>
  <20250808031508.346771-4-hsiangkao@linux.alibaba.com>
-From: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
+From: Hongbo Li <lihongbo22@huawei.com>
 In-Reply-To: <20250808031508.346771-4-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [100.103.109.96]
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemp500007.china.huawei.com (7.202.195.151)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Tested:
+Hi Xiang,
 
-- special filename: 'test%^&hidden.txt'  'test space.txt'  '测试文件.txt'
-
-- manyfiles (>1000) directory
-
-- path-style obs backend
-
-Tested-by: Yifan Zhao <zhaoyifan28@huawei.com>
-
-On 2025/8/8 11:15, Gao Xiang Wrote:
+On 2025/8/8 11:15, Gao Xiang wrote:
 > From: Yifan Zhao <zhaoyifan28@huawei.com>
->
+> 
 > This patch introduces experimental S3 support for mkfs.erofs, allowing
 > EROFS images to be generated from AWS S3 and/or other S3 API-compatible
 > services.
->
+> 
 > Here are the current limitations:
 >   - Only meta-only EROFS image generation is supported;
 >   - Only AWS Signature Version 2 is supported;
 >   - The S3 object names and sizes are strictly respected during image
 >     generation.
->
+> 
 > Co-developed-by: Hongbo Li <lihongbo22@huawei.com>
 > Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
 > Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
@@ -97,14 +89,14 @@ On 2025/8/8 11:15, Gao Xiang Wrote:
 > v7:
 >   - Fix `NextMarker` omission on the standard AWS S3;
 >   - Add `prefix` support for S3 ListObjects.
->
+> 
 >   lib/Makefile.am   |   3 +
 >   lib/liberofs_s3.h |   3 +
 >   lib/remotes/s3.c  | 670 ++++++++++++++++++++++++++++++++++++++++++++++
 >   mkfs/main.c       |  10 +-
 >   4 files changed, 684 insertions(+), 2 deletions(-)
 >   create mode 100644 lib/remotes/s3.c
->
+> 
 > diff --git a/lib/Makefile.am b/lib/Makefile.am
 > index 6458acf..b079897 100644
 > --- a/lib/Makefile.am
@@ -821,6 +813,27 @@ On 2025/8/8 11:15, Gao Xiang Wrote:
 > -			goto exit;
 > +			if (incremental_mode ||
 > +			    dataimport_mode != EROFS_MKFS_DATA_IMPORT_ZEROFILL)
+
+Did you forget setting dataimport_mode as EROFS_MKFS_DATA_IMPORT_ZEROFILL?
+
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 07bc3ed..edc8fff 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -1220,6 +1220,7 @@ static int mkfs_parse_options_cfg(int argc, char 
+*argv[])
+                         err = mkfs_parse_s3_cfg(optarg);
+                         if (err)
+                                 return err;
++                       dataimport_mode = EROFS_MKFS_DATA_IMPORT_ZEROFILL;
+                         break;
+  #endif
+                 case 'V':
+
+
+Thanks,
+Hongbo
+
 > +				err = -EOPNOTSUPP;
 > +			else
 > +				err = s3erofs_build_trees(root, &s3cfg,
