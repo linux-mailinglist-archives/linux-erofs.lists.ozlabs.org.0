@@ -1,47 +1,50 @@
-Return-Path: <linux-erofs+bounces-810-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-811-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15D0AB1F4FA
-	for <lists+linux-erofs@lfdr.de>; Sat,  9 Aug 2025 16:34:11 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 948BAB1FD91
+	for <lists+linux-erofs@lfdr.de>; Mon, 11 Aug 2025 03:59:28 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4bzk1D1CRFz2yD5;
-	Sun, 10 Aug 2025 00:34:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4c0d9T54wTz3cf7;
+	Mon, 11 Aug 2025 11:59:25 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754750048;
-	cv=none; b=Z0R7djzioektPbcpKUich3BziMk1WB/QCf8W5oARjjYX3++BNydmTmTFuiajKHCOQyvr0QQFu4LV9l0AL/MO3YufH6z0bxsRX1oq15ZQoM70z5ttgEsA7K3Rvbcb2OWxNRDKsNdHZDBfIfI0rz0z06u42AQdSFK2RDrRYTx4gAu0bjCs+dxBdBWTxZRQo0gXmjE+igcIWh3DrjcXGSx8shoBELlpNG5N/2izIi/wNZwsXWEJwZhAquXbxn0MF/MKi7D8LShLo3Uii/QbOVUiWKD7xLfMR+6pcWf5CGWJAo3Xt8UqLuYZJ2xSRX19XTcV15g4LhIxMF1STbeekEO3bw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1754877565;
+	cv=none; b=LazR2QqCGK/vBWT0j3YHCDwqfAumiPr0VL43v7wg/UfWwim16BkfdJhEezuAaqtDCcBQU+V2/OcBBKk+MmgW9noebXlsf5KQzLeTe/tshgNPpXAfd06vKf83GHA6+cUM8agNb4DdP2qM0HsS1Qth23wauMGNGB0wi3p+ux1ej0sU/I2o22efSxRdcPxrd/Ns/XzQ9ZuFrv6fFB9pd4WPDwmVSgVxVcFfLZu2o/z/T0chkQlOynQ5HFDkVg8N/DZ1Vdm1wU3twhSRlUW6kw+MaKw+O1fh3JwAg7eVb7TUwGGO1lwQ2djxFvK02Nogq7f4N9pXCxS5rjn20xLU8dQtCw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1754750048; c=relaxed/relaxed;
-	bh=TKD/J9Xxw6EKqdctvBcQxkU6JwGkyYp5H+SRIuZQWKc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DxRHvpbYLP8kFmaR2nLohkJCb38jbIjE3T2cAqfB0RKoeN9u0ur2opA+Eygk3iarL4AJDofJJBDV3OenKRYaqizviDTBGpxwPdc0i9I2UN9QlFQDJEQ5Y1W7WZxEIo/nUgUcbISHEMJgYksIlYsFvNybrXl0rx4DD69j1X7dIj1f2K48YpjUirXdljQIHFkZT20+3jGId5FDb6ZP5CV8xhF+WvlLi08gAFNESvR8X8hAr88apwjdn4RbzgYrB/ydZmDd4FzKN7UwbTDlvLekdTzqflQbJayi9IFfNPIjRAMNNgJIpigb0XO9+I/s/kqvT4RzjagG3SpBXeouMPyMnw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rrGmQgKk; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1754877565; c=relaxed/relaxed;
+	bh=IONjw1X50QGYP0mFmMH0BW9D+7FZRSpe64XF3vvty8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UxqhzZxAXoHepsa2lGH0xeJFUKP0lPD/1VA7rcI/FWCqAfXnlmJ+K4yEdxP0LwRDeo76zwu08hkmIdrBtZUCd6gZXZ2J8/EEw6ThNHCzdGQS4evsxgrqHTR27b6JiaNXX6apxoicqcBeVHfaXo0pksvtg/TYPNYyLUmzgXgfKLU8qH3hE1PfiyI/TOJynil2zVqciE7BeVpLieXOYxjjRCqJidDT/5Z0koj3anpNJFp/Cf+hiu2t8jGbGW2pov/VbF3AF8xKXxQTSogCCdwFKW9btuVucpLRNrTyT4TaCkhFU/IeqlwyP6JdtPnC8Ii+Tf7h1LyWLY63gRVRsC1+xw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ai9Zcp0O; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=rrGmQgKk;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ai9Zcp0O;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4bzk1B1lNwz2xPv
-	for <linux-erofs@lists.ozlabs.org>; Sun, 10 Aug 2025 00:34:04 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4c0d9R4Vbdz3cdm
+	for <linux-erofs@lists.ozlabs.org>; Mon, 11 Aug 2025 11:59:22 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1754750038; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=TKD/J9Xxw6EKqdctvBcQxkU6JwGkyYp5H+SRIuZQWKc=;
-	b=rrGmQgKkzfVahqgxUAV+tdxrMjM+hzWva05J4aTVF1rCdN/Q7qY8nJzkjqEPlAh47ToAXT2aOWjKKxBQDeIAJBP9Ae+AWHcfA2B38fNfgPsgeAUhLjJJ37voTk91XoMNlemitczPmeGpRF9AbxwgD7HRsNNlmjbBy94pQMtDTPE=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WlK9023_1754750031 cluster:ay36)
+	t=1754877557; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=IONjw1X50QGYP0mFmMH0BW9D+7FZRSpe64XF3vvty8k=;
+	b=ai9Zcp0OU82Rc+VgqfpzVlIlu0RcqKxDpYCH9rJOlCwrkI6HQm66KRRdnp1kOXqVgdwVW98clPDnA5+e24fS1lsha0dvW+cbWqvOmvz/4UMsE+/a0x0F9hfuC3yxIb+cKBQTH/xyKFQr1ijwRYOSjBIgOn6ZKtSAfUTUuXoX9Oo=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WlNYAEB_1754877551 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 09 Aug 2025 22:33:55 +0800
+          Mon, 11 Aug 2025 09:59:15 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs-utils: mkfs: support full image generation from S3
-Date: Sat,  9 Aug 2025 22:33:50 +0800
-Message-ID: <20250809143350.3010270-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2] erofs-utils: mkfs: support full image generation from S3
+Date: Mon, 11 Aug 2025 09:59:10 +0800
+Message-ID: <20250811015910.1446727-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250809143350.3010270-1-hsiangkao@linux.alibaba.com>
+References: <20250809143350.3010270-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -64,10 +67,13 @@ Preliminary implementation without multipart downloading.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
+v2:
+ - fix compile error due to undefined EROFS_MKFS_SOURCE_S3.
+
  lib/liberofs_s3.h |   2 +-
  lib/remotes/s3.c  | 119 ++++++++++++++++++++++++++++++++++++++++++----
- mkfs/main.c       |   8 ++--
- 3 files changed, 115 insertions(+), 14 deletions(-)
+ mkfs/main.c       |  10 ++--
+ 3 files changed, 115 insertions(+), 16 deletions(-)
 
 diff --git a/lib/liberofs_s3.h b/lib/liberofs_s3.h
 index 4ac03d5..27b041c 100644
@@ -271,10 +277,20 @@ index 46fba6b..1497b54 100644
  		if (ret)
  			goto err_iter;
 diff --git a/mkfs/main.c b/mkfs/main.c
-index d3bd1cd..5e4a35c 100644
+index d3bd1cd..804d483 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -1639,7 +1639,8 @@ int main(int argc, char **argv)
+@@ -271,9 +271,7 @@ enum {
+ static enum {
+ 	EROFS_MKFS_SOURCE_LOCALDIR,
+ 	EROFS_MKFS_SOURCE_TAR,
+-#ifdef S3EROFS_ENABLED
+ 	EROFS_MKFS_SOURCE_S3,
+-#endif
+ 	EROFS_MKFS_SOURCE_REBUILD,
+ } source_mode;
+ 
+@@ -1639,7 +1637,8 @@ int main(int argc, char **argv)
  	else if (!incremental_mode)
  		erofs_uuid_generate(g_sbi.uuid);
  
@@ -284,7 +300,7 @@ index d3bd1cd..5e4a35c 100644
  		err = erofs_diskbuf_init(1);
  		if (err) {
  			erofs_err("failed to initialize diskbuf: %s",
-@@ -1749,11 +1750,12 @@ int main(int argc, char **argv)
+@@ -1749,11 +1748,12 @@ int main(int argc, char **argv)
  			}
  
  			if (incremental_mode ||
