@@ -1,43 +1,66 @@
-Return-Path: <linux-erofs+bounces-817-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-818-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 101B6B27C14
-	for <lists+linux-erofs@lfdr.de>; Fri, 15 Aug 2025 11:04:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AED27B27D94
+	for <lists+linux-erofs@lfdr.de>; Fri, 15 Aug 2025 11:55:08 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4c3GQR5T14z3cbX;
-	Fri, 15 Aug 2025 19:04:47 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4c3HXT4xnhz3cd1;
+	Fri, 15 Aug 2025 19:55:05 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1755248687;
-	cv=none; b=j87vcZ/YianjP+Psqmqg03LmW0cBpH/XXR3T55LP2Nda0nqAw8fyHe3eu1qDpibHhivFgtu0Xc+X7zeKDEYQJMJxru2RO/9JNefhrKXKIDyFTwsvtq1YCyuXfBx9n8mabWoxGpNNGPmpCwSl9iHxE5XgMnKJdT9Arb1dBa4xFNzRQY5QzEaAg8ni29R6FLBawcHtGLY40fxo23Roo5zL50o11ktu57Z1/HprIbaTAgCzZC0vDBa/hYqP2suZf0mLDU2hk7ROAehpks+jLmh0ZYuEfuGqG0Y2eadUyhZKzGLEDb8+fdresQj7LIvfJs+y9IiblyoLwjhRnl15YWDHYw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=81.70.192.198
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1755251705;
+	cv=none; b=LZIJEBljXERf2HRkuYRhrbJKfg+NviEpfj8hapiCzXRHzVF+GuU1Yew7bHc36pW4FcGS33JwXbUFCowFCylA3GupIc5I+vh4okTYYVshV+ebV9FD22zYyC5fSMwASJFfqg9vqUZiZPkd5/gjh7NdKZ+ezwa8+9O8xFkKWTAAOjwUAcMV+NpG4LJAcLz6wO7s2UMvGqyI66Y54+O2EV7KAtghUudFl4M4Tb6udh0WRF+TYHKqDbKM8Y0bETYN1pTluhLpQS2DLn5JY8RU+3KdQZD2TmKYZnYDNqERLFaLWiI6cUelXlDz30Ruc/Sld8y1jIx+GEu5jtEtKRfuJgvnTQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1755248687; c=relaxed/relaxed;
-	bh=hIHiy+yF+yyWBe4KsSBHqI7dPVSsarhV91g3c9GikRA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k8qXVdvR11zc5VtG2qe3U1szty5n7gKVHiZIzIcCwNAOGC/2tnV96C28gM3bAzKCQh1sT86siXPJC3/yj+t5CqiC0bXuesBYEWmoC/k1BU3lmT59YxgZsTec5T6uhWU52oOfqhpNd6vBJlrpWUchNLbFngwq/RLZRS2SFKKTHEBAujDQlcf+SHkaCw3qi8egjPqvZzWw99l1EcZT0r5K9XA7dz7tmh3VhUyYG6EMge1VAO2u5H7mGlNvg4fbMD64yVEpWcZVU/pWZIcWXQpT7KXuEQKYoGcv7l+aMTEVV9XJZsf8W7z2RkhyPivm4M3wamvsrtiDNucIgilph8vCQg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Ru4M+Ooa; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1755251705; c=relaxed/relaxed;
+	bh=rixGrBynn2pcBX29SfwOC5rR66w5EkxfPX8rJ/+E5kI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CBgpjiwdNZfbtSvFGUYxYPfRua0Wy/cDElLB6k4eEHahwnMusnYY+ZxS0dbVoG+3cMo0dUknlUKHO/pE5tvQxvIROJVYgU7jerw/18LttNBs4CRehoB1+yOuYyAqZB0AfXSacMW7DyzKigBPSLSODUKkZ4BS4NpcVLfkC1rfrnpkCtwk1zrg5UwQTmo2icjMhTVhqJgE8kE6Zxa3HO2YrLn0f/U1is5UocRs5194s6UM8/MKehpasjvhiB8vexqXmPyiFAYe70qOjAAR/177tSxP81gQlgPjJHsXsCUSQZzW45eQ3mPWmt0d4ZRbTuR+SfLb1ONqrm6zFwqQZsOdYw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=honor.com; dkim=pass (1024-bit key; unprotected) header.d=honor.com header.i=@honor.com header.a=rsa-sha256 header.s=dkim header.b=Xy8HLeHH; dkim-atps=neutral; spf=pass (client-ip=81.70.192.198; helo=mta22.hihonor.com; envelope-from=wangzijie1@honor.com; receiver=lists.ozlabs.org) smtp.mailfrom=honor.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=honor.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Ru4M+Ooa;
+	dkim=pass (1024-bit key; unprotected) header.d=honor.com header.i=@honor.com header.a=rsa-sha256 header.s=dkim header.b=Xy8HLeHH;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=honor.com (client-ip=81.70.192.198; helo=mta22.hihonor.com; envelope-from=wangzijie1@honor.com; receiver=lists.ozlabs.org)
+Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4c3GQP4H3Hz3cZs
-	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Aug 2025 19:04:45 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1755248680; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=hIHiy+yF+yyWBe4KsSBHqI7dPVSsarhV91g3c9GikRA=;
-	b=Ru4M+OoaSUcwy15/2ZwvAVTf9m/Xcn9nZf4rE+ZqvHAsfKK4jTw/UdUjnYAePhTtMJDnOvrXGL7u4w5Oin5ff95iuY30J9QiyQDX5ypIMjd8aBXCT2uafP7Cm3OH72I2x30Gw/YvnqZswInHwDRuLaeen5xhSM0VGMzyj93YmUg=
-Received: from 30.221.130.189(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wlobxuj_1755248678 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 15 Aug 2025 17:04:38 +0800
-Message-ID: <f2c93019-5f92-4ee2-88bc-feda330d8a55@linux.alibaba.com>
-Date: Fri, 15 Aug 2025 17:04:37 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4c3HXS0Qgfz3ccV
+	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Aug 2025 19:55:03 +1000 (AEST)
+dkim-signature: v=1; a=rsa-sha256; d=honor.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=To:From;
+	bh=rixGrBynn2pcBX29SfwOC5rR66w5EkxfPX8rJ/+E5kI=;
+	b=Xy8HLeHHGRy0e+DfxoQT9hSYJxxAto0SIjYSb2v++79SO33iXT3kTCASwN0zpbwOCjvUPICvo
+	JMGQO7/nFfAB284uDjOTWZPDxSn/hw2ZNJv4OEbtR6ewWGx9D/dgPhbA5nV48aQdHg0PmsJ0u55
+	mLujDo1yXhX2E/nUcvulV8o=
+Received: from mta20.hihonor.com (unknown [172.31.8.5])
+	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4c3HXD4ZhtzYl3bl
+	for <linux-erofs@lists.ozlabs.org>; Fri, 15 Aug 2025 17:54:52 +0800 (CST)
+Received: from w013.hihonor.com (unknown [10.68.26.19])
+	by mta20.hihonor.com (SkyGuard) with ESMTPS id 4c3HX165c6zYmKJ9;
+	Fri, 15 Aug 2025 17:54:41 +0800 (CST)
+Received: from a011.hihonor.com (10.68.31.243) by w013.hihonor.com
+ (10.68.26.19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 15 Aug
+ 2025 17:54:50 +0800
+Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
+ (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 15 Aug
+ 2025 17:54:49 +0800
+From: wangzijie <wangzijie1@honor.com>
+To: <hsiangkao@linux.alibaba.com>
+CC: <bintian.wang@honor.com>, <feng.han@honor.com>,
+	<linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<stopire@gmail.com>, <wangzijie1@honor.com>, <xiang@kernel.org>,
+	<zhaoyifan28@huawei.com>
+Subject: Re: [PATCH] erofs-utils: avoid redundant memcpy and sha256() for dedupe
+Date: Fri, 15 Aug 2025 17:54:49 +0800
+Message-ID: <20250815095449.4163442-1-wangzijie1@honor.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <f2c93019-5f92-4ee2-88bc-feda330d8a55@linux.alibaba.com>
+References: <f2c93019-5f92-4ee2-88bc-feda330d8a55@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,42 +72,42 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs-utils: avoid redundant memcpy and sha256() for
- dedupe
-To: wangzijie <wangzijie1@honor.com>, xiang@kernel.org
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- bintian.wang@honor.com, feng.han@honor.com, Yifan Zhao <stopire@gmail.com>,
- Yifan Zhao <zhaoyifan28@huawei.com>
-References: <20250815084428.4157034-1-wangzijie1@honor.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250815084428.4157034-1-wangzijie1@honor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.144.23.14]
+X-ClientProxiedBy: w010.hihonor.com (10.68.28.113) To a011.hihonor.com
+ (10.68.31.243)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Zijie,
 
-On 2025/8/15 16:44, wangzijie wrote:
-> We have already use xxh64() for filtering first for dedupe, when we
-> need to skip the same xxh64 hash, no need to do memcpy and sha256(),
-> relocate the code to avoid it.
+> Hi Zijie,
 > 
-> Signed-off-by: wangzijie <wangzijie1@honor.com>
+> On 2025/8/15 16:44, wangzijie wrote:
+> > We have already use xxh64() for filtering first for dedupe, when we
+> > need to skip the same xxh64 hash, no need to do memcpy and sha256(),
+> > relocate the code to avoid it.
+> > 
+> > Signed-off-by: wangzijie <wangzijie1@honor.com>
+> 
+> Thanks for the patch, it makes sense to me since we only keep one
+> record according to xxh64 (instead of sha256) for now:
+> 
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> 
+> Although I think multi-threaded deduplication is more useful, see:
+> https://github.com/erofs/erofs-utils/issues/25
+> but I'm not sure if you're interested in it... ;-)
 
-Thanks for the patch, it makes sense to me since we only keep one
-record according to xxh64 (instead of sha256) for now:
+Hi Xiang,
+Thank you for providing this information, I want to optimize mkfs time with
+dedupe option and send this patch. I will find time to research Yifan's demo
+of multi-threaded deduplication and try to provide some help.
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Thanks,
+> Gao Xiang
 
-Although I think multi-threaded deduplication is more useful, see:
-https://github.com/erofs/erofs-utils/issues/25
-but I'm not sure if you're interested in it... ;-)
 
-Thanks,
-Gao Xiang
 
