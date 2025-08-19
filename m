@@ -1,47 +1,47 @@
-Return-Path: <linux-erofs+bounces-835-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-832-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2865FB2B784
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 Aug 2025 05:28:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 52ADFB2B780
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 Aug 2025 05:28:37 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4c5Zmf5QwXz3clh;
-	Tue, 19 Aug 2025 13:28:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4c5Zmd0vzLz3clc;
+	Tue, 19 Aug 2025 13:28:33 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1755574114;
-	cv=none; b=kKcH5z02dgOJ08IVfD4krOYOSPzUWZ7KALbe/x9XntJA/t14djRicSq21+/OVNpTWCf4dDYq9MB9+0MS1FphVEC8cLOaShouCUr//lf7eMoiCrk1SguwOiVKMIsUEsYHX2zfiGUHOAnX3TEOV2FGaq0JnHo8DKZoUWMvpH/nfE1yDDfJ9XZ9OEkYCfGgxsOCbSwUcKw5AY06kiZnkyK3xcyewXj3Kb6ZKX1PutHTYrup+8+lxOxUjD02BFszKVm0lgtlQlsyqmDEdwQUspd5jcApK1ye6sLLGOIRPrQdFGCKju8EKjhWWSIOM0hz0mjIDwYalPa7M1K6re+s7DGkVQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1755574113;
+	cv=none; b=B7mLiYNgaCbIRfCSOkIhbXLbKgqj3yWY01XSTJwomyM4kEuKo3k7xtiLbewN10QS7WAyx/Zd1Vas1hfhFyouR4ITKWYbhsTtFcYti9tHlHTWxs52drShhnaMgz4LqjNPbhdAwMRe0NXVekPisM+KNIofNUji7WfRYP2FFlHFoqmSz6JrJ/mRAt3n8kFnB2ZwGr22ZBFsWBmDDelZhRN+H6Ivsi3LCC091SbAd1/rTXMy2P9vNVD847VYlFieaWLqvtxeODLhwvsEm1REPrJGcfwaeWtYgLlkxwU3ooW3jP8x2Vm8kChe3bLQ/jpIqg/+/KMLsl+PbrmCV6yZk1obqQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1755574114; c=relaxed/relaxed;
-	bh=hiVTGGBly1nLLjNGNja6V5dYjZ3woS+qTfyRPehJh2Q=;
+	t=1755574113; c=relaxed/relaxed;
+	bh=cI/crzWpLkoo+5fKuz88P117NwtHOOIqR0EvsIso42M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WnZZRp7UYim+rdnRtQCRH7KQDs1+iz0yYFjSHTlCCLg0amVKtrWXpeonpyW5dxzAeKzVb6+OljJM6q34YtmK4yXgtCrTysL3BcOFZ7zNwhPvJYU3LIczijgqIQAl7ws4SO63CJlVRf7Lv1/TyZmVYdDx7bnYr6PIK1pCemp8nybK9yif0DcX//fAZiaWwLx9qNq1ggjV1WpJClF2HcTcEu+VIZ0NZCbVCxLbKnl9qz+Zgg3+IPN6I6yA9YGRDZNLSrovrV2100zM8LrEjUmlg8XiARTIDjDIlGs/CgHuXSKZQAyU4d8/47fBz0RfXl4NnQIxU0qnCF0Ky7nmmDD8qg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=BOzZbZG2; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=VqnWYhoUoHp/KTmBwvyu7zwCs4Xi+7GOEHjedUylVk83E7r1C7lMTaZp0uTBZ6MpixYv9OcpGfoogCSLI+ycouOarjztpMckLvMBnUFeYfcXWLXYM8FrCGqeF11WUJ9CDFR3hkULDIKhJ/AM9Z67pDym+/g9T2NnQ1ztlirLx3S20IG0BSeTK/ET4XXdlhmceV8SwRfW62LCvAGi9U2WFSDQ60O8gpj4v86eDW/6p0vuWxLoNGA1CnlNpu+ufyIF68zrYktp+T7oEEFbOhXT4vcXt7wMdQ3tG/d2/k7tKv71hU/+v4LOS1kBpb2FV5tW/iETWc1gOhpG38it/H3JwQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MhB0eEO/; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=BOzZbZG2;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MhB0eEO/;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4c5ZmZ6FWNz3clH
-	for <linux-erofs@lists.ozlabs.org>; Tue, 19 Aug 2025 13:28:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4c5Zmb0ZHdz3clR
+	for <linux-erofs@lists.ozlabs.org>; Tue, 19 Aug 2025 13:28:30 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1755574106; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=hiVTGGBly1nLLjNGNja6V5dYjZ3woS+qTfyRPehJh2Q=;
-	b=BOzZbZG2qumDvZ1VI0jOoHhWsRAc3ny45DoAMkdaI79RXxnaJZE025LlQIqcqGOdyFkssgk6f0YG/CyY+30jHcV7ogNa8d4ca2DI9uU+9zZV8ocuaTUNJCdzk0vMsFKE3kfoGP7J1e9TRdYrTNmg2ei/s96CFkUzN0ikELOQWvA=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wm5DR6F_1755574104 cluster:ay36)
+	t=1755574107; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=cI/crzWpLkoo+5fKuz88P117NwtHOOIqR0EvsIso42M=;
+	b=MhB0eEO/Zvo2+/9Ey6yBfdrP3tmY2BjjWtCOp2FzdAFPKKKMJvct0qzcluSA9dVB2UGFlO+0XY1mJEcj2pqLdf6H1Vn6yFlgq1uUA87kz8jvPlDyqwhWYQSUYoAA+IlpgExQiDc076ZW2BjDzwWpqAq221VHxKkCT8RkHNvJSrM=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wm5DR6V_1755574104 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 19 Aug 2025 11:28:24 +0800
+          Tue, 19 Aug 2025 11:28:25 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v3 2/7] erofs-utils: lib: introduce an importer framework
-Date: Tue, 19 Aug 2025 11:28:13 +0800
-Message-ID: <20250819032818.3598157-2-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v3 3/7] erofs-utils: lib: adapt importer for filesystem tree dumping
+Date: Tue, 19 Aug 2025 11:28:14 +0800
+Message-ID: <20250819032818.3598157-3-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20250819032818.3598157-1-hsiangkao@linux.alibaba.com>
 References: <20250819032818.3598157-1-hsiangkao@linux.alibaba.com>
@@ -63,279 +63,253 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Introduce a generic importer mechanism to import data into the EROFS
-filesystem tree using specific configuration parameters.
-
-This allows mkfs parameters to be moved out of `struct erofs_configure`
-and configured per instance.
+Convert erofs_mkfs_build_tree_from_path() and erofs_rebuild_dump_tree()
+to erofs_importer_load_tree().
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- include/erofs/importer.h | 31 ++++++++++++++++
- lib/Makefile.am          |  3 +-
- lib/importer.c           | 79 ++++++++++++++++++++++++++++++++++++++++
- mkfs/main.c              | 44 ++++++----------------
- 4 files changed, 123 insertions(+), 34 deletions(-)
- create mode 100644 include/erofs/importer.h
- create mode 100644 lib/importer.c
+ include/erofs/importer.h |  2 ++
+ include/erofs/inode.h    |  7 ++--
+ lib/inode.c              | 76 ++++++++++++++--------------------------
+ mkfs/main.c              | 16 +++++----
+ 4 files changed, 43 insertions(+), 58 deletions(-)
 
 diff --git a/include/erofs/importer.h b/include/erofs/importer.h
-new file mode 100644
-index 0000000..7c29e03
---- /dev/null
+index 7c29e03..541a86d 100644
+--- a/include/erofs/importer.h
 +++ b/include/erofs/importer.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+/*
-+ * Copyright (C) 2025 Alibaba Cloud
-+ */
-+#ifndef __EROFS_IMPORTER_H
-+#define __EROFS_IMPORTER_H
-+
-+#ifdef __cplusplus
-+extern "C"
-+{
-+#endif
-+
-+#include "internal.h"
-+
-+struct erofs_importer_params {
-+};
-+
-+struct erofs_importer {
-+	struct erofs_importer_params *params;
-+	struct erofs_sb_info *sbi;
-+};
-+
-+void erofs_importer_preset(struct erofs_importer_params *params);
-+int erofs_importer_init(struct erofs_importer *im);
-+void erofs_importer_exit(struct erofs_importer *im);
-+
-+#ifdef __cplusplus
-+}
-+#endif
-+
-+#endif
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index a3972b1..f485440 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -27,6 +27,7 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
-       $(top_srcdir)/include/erofs/compress_hints.h \
-       $(top_srcdir)/include/erofs/fragments.h \
-       $(top_srcdir)/include/erofs/rebuild.h \
-+      $(top_srcdir)/include/erofs/importer.h \
-       $(top_srcdir)/lib/liberofs_private.h \
-       $(top_srcdir)/lib/liberofs_xxhash.h \
-       $(top_srcdir)/lib/liberofs_metabox.h \
-@@ -38,7 +39,7 @@ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
- 		      compress_hints.c hashmap.c sha256.c blobchunk.c dir.c \
- 		      fragments.c dedupe.c uuid_unparse.c uuid.c tar.c \
- 		      block_list.c rebuild.c diskbuf.c bitops.c dedupe_ext.c \
--		      vmdk.c metabox.c global.c
-+		      vmdk.c metabox.c global.c importer.c
+@@ -13,11 +13,13 @@ extern "C"
+ #include "internal.h"
  
- liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
- if ENABLE_LZ4
-diff --git a/lib/importer.c b/lib/importer.c
-new file mode 100644
-index 0000000..74bd24a
---- /dev/null
-+++ b/lib/importer.c
-@@ -0,0 +1,79 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-+/*
-+ * Copyright (C) 2025 Alibaba Cloud
-+ */
-+#include "erofs/fragments.h"
+ struct erofs_importer_params {
++	char *source;
+ };
+ 
+ struct erofs_importer {
+ 	struct erofs_importer_params *params;
+ 	struct erofs_sb_info *sbi;
++	struct erofs_inode *root;
+ };
+ 
+ void erofs_importer_preset(struct erofs_importer_params *params);
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index ce86f59..9d05aaa 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -23,6 +23,8 @@ static inline struct erofs_inode *erofs_igrab(struct erofs_inode *inode)
+ 	return inode;
+ }
+ 
++struct erofs_importer;
++
+ u32 erofs_new_encode_dev(dev_t dev);
+ unsigned char erofs_mode_to_ftype(umode_t mode);
+ umode_t erofs_ftype_to_mode(unsigned int ftype, unsigned int perm);
+@@ -38,12 +40,11 @@ struct erofs_dentry *erofs_d_alloc(struct erofs_inode *parent,
+ 				   const char *name);
+ int erofs_allocate_inode_bh_data(struct erofs_inode *inode, erofs_blk_t nblocks);
+ bool erofs_dentry_is_wht(struct erofs_sb_info *sbi, struct erofs_dentry *d);
+-int erofs_rebuild_dump_tree(struct erofs_inode *dir, bool incremental);
+ int __erofs_fill_inode(struct erofs_inode *inode, struct stat *st,
+ 		       const char *path);
+ struct erofs_inode *erofs_new_inode(struct erofs_sb_info *sbi);
+-struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_sb_info *sbi,
+-						    const char *path);
++int erofs_importer_load_tree(struct erofs_importer *im, bool rebuild,
++			     bool incremental);
+ struct erofs_inode *erofs_mkfs_build_special_from_fd(struct erofs_sb_info *sbi,
+ 						     int fd, const char *name);
+ int erofs_fixup_root_inode(struct erofs_inode *root);
+diff --git a/lib/inode.c b/lib/inode.c
+index 3d64dcb..2599772 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -27,6 +27,7 @@
+ #include "erofs/compress_hints.h"
+ #include "erofs/blobchunk.h"
+ #include "erofs/fragments.h"
 +#include "erofs/importer.h"
-+#include "erofs/config.h"
-+#include "erofs/dedupe.h"
-+#include "erofs/inode.h"
-+#include "erofs/print.h"
-+#include "erofs/lock.h"
-+#include "liberofs_metabox.h"
+ #include "liberofs_private.h"
+ #include "liberofs_metabox.h"
+ 
+@@ -1275,9 +1276,8 @@ struct erofs_inode *erofs_new_inode(struct erofs_sb_info *sbi)
+ 	return inode;
+ }
+ 
+-/* get the inode from the source path */
+-static struct erofs_inode *erofs_iget_from_srcpath(struct erofs_sb_info *sbi,
+-						   const char *path)
++static struct erofs_inode *erofs_iget_from_local(struct erofs_sb_info *sbi,
++						 const char *path)
+ {
+ 	struct stat st;
+ 	struct erofs_inode *inode;
+@@ -1644,7 +1644,7 @@ static int erofs_mkfs_handle_directory(struct erofs_inode *dir)
+ 		if (ret < 0 || ret >= PATH_MAX)
+ 			goto err_closedir;
+ 
+-		inode = erofs_iget_from_srcpath(sbi, buf);
++		inode = erofs_iget_from_local(sbi, buf);
+ 		if (IS_ERR(inode)) {
+ 			ret = PTR_ERR(inode);
+ 			goto err_closedir;
+@@ -1880,9 +1880,10 @@ static void erofs_mark_parent_inode(struct erofs_inode *inode,
+ 	inode->i_parent = (void *)((unsigned long)dir | 1);
+ }
+ 
+-static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
++static int erofs_mkfs_dump_tree(struct erofs_importer *im, bool rebuild,
+ 				bool incremental)
+ {
++	struct erofs_inode *root = im->root;
+ 	struct erofs_sb_info *sbi = root->sbi;
+ 	struct erofs_inode *dumpdir = erofs_igrab(root);
+ 	int err, err2;
+@@ -1964,12 +1965,8 @@ static int erofs_mkfs_dump_tree(struct erofs_inode *root, bool rebuild,
+ }
+ 
+ struct erofs_mkfs_buildtree_ctx {
+-	struct erofs_sb_info *sbi;
+-	union {
+-		const char *path;
+-		struct erofs_inode *root;
+-	} u;
+-	bool incremental;
++	struct erofs_importer *im;
++	bool rebuild, incremental;
+ };
+ #ifndef EROFS_MT_ENABLED
+ #define __erofs_mkfs_build_tree erofs_mkfs_build_tree
+@@ -1977,26 +1974,22 @@ struct erofs_mkfs_buildtree_ctx {
+ 
+ static int __erofs_mkfs_build_tree(struct erofs_mkfs_buildtree_ctx *ctx)
+ {
+-	bool from_path = !!ctx->sbi;
+-	struct erofs_inode *root;
+-	int err;
++	struct erofs_importer *im = ctx->im;
+ 
+-	if (from_path) {
+-		root = erofs_iget_from_srcpath(ctx->sbi, ctx->u.path);
+-		if (IS_ERR(root))
+-			return PTR_ERR(root);
+-	} else {
+-		root = ctx->u.root;
+-	}
++	if (!ctx->rebuild) {
++		struct erofs_importer_params *params = im->params;
++		struct stat st;
++		int err;
+ 
+-	err = erofs_mkfs_dump_tree(root, !from_path, ctx->incremental);
+-	if (err) {
+-		if (from_path)
+-			erofs_iput(root);
+-		return err;
++		err = lstat(params->source, &st);
++		if (err)
++			return -errno;
 +
-+static EROFS_DEFINE_MUTEX(erofs_importer_global_mutex);
-+static bool erofs_importer_global_initialized;
-+
-+void erofs_importer_preset(struct erofs_importer_params *params)
-+{
-+	*params = (struct erofs_importer_params) {};
-+}
-+
-+void erofs_importer_global_init(void)
-+{
-+	if (erofs_importer_global_initialized)
-+		return;
-+	erofs_mutex_lock(&erofs_importer_global_mutex);
-+	if (!erofs_importer_global_initialized) {
-+		erofs_inode_manager_init();
-+		erofs_importer_global_initialized = true;
-+	}
-+	erofs_mutex_unlock(&erofs_importer_global_mutex);
-+}
-+
-+int erofs_importer_init(struct erofs_importer *im)
-+{
++		err = erofs_fill_inode(im->root, &st, params->source);
++		if (err)
++			return err;
+ 	}
+-	ctx->u.root = root;
+-	return 0;
++	return erofs_mkfs_dump_tree(im, ctx->rebuild, ctx->incremental);
+ }
+ 
+ #ifdef EROFS_MT_ENABLED
+@@ -2024,7 +2017,8 @@ static int erofs_get_fdlimit(void)
+ 
+ static int erofs_mkfs_build_tree(struct erofs_mkfs_buildtree_ctx *ctx)
+ {
+-	struct erofs_sb_info *sbi = ctx->sbi ? ctx->sbi : ctx->u.root->sbi;
++	struct erofs_importer *im = ctx->im;
 +	struct erofs_sb_info *sbi = im->sbi;
-+	const char *subsys = NULL;
-+	int err;
-+
-+	erofs_importer_global_init();
-+
-+	if (cfg.c_fragments || cfg.c_extra_ea_name_prefixes) {
-+		subsys = "packedfile";
-+		if (!cfg.c_mkfs_pclustersize_packed)
-+			cfg.c_mkfs_pclustersize_packed = cfg.c_mkfs_pclustersize_def;
-+
-+		err = erofs_packedfile_init(sbi, cfg.c_fragments);
-+		if (err)
-+			goto out_err;
-+	}
-+
-+	if (cfg.c_mkfs_pclustersize_metabox >= 0) {
-+		subsys = "metabox";
-+		err = erofs_metabox_init(sbi);
-+		if (err)
-+			goto out_err;
-+	}
-+
-+	if (cfg.c_fragments) {
-+		subsys = "dedupe_ext";
-+		err = z_erofs_dedupe_ext_init();
-+		if (err)
-+			goto out_err;
-+	}
-+	return 0;
-+
-+out_err:
-+	erofs_err("failed to initialize %s: %s", subsys, erofs_strerror(-err));
-+	return err;
-+}
-+
-+void erofs_importer_exit(struct erofs_importer *im)
-+{
-+	struct erofs_sb_info *sbi = im->sbi;
-+
-+	z_erofs_dedupe_ext_exit();
-+	erofs_metabox_exit(sbi);
-+	erofs_packedfile_exit(sbi);
-+}
+ 	struct erofs_mkfs_dfops *q;
+ 	int err, err2;
+ 	void *retval;
+@@ -2078,28 +2072,12 @@ fail:
+ }
+ #endif
+ 
+-struct erofs_inode *erofs_mkfs_build_tree_from_path(struct erofs_sb_info *sbi,
+-						    const char *path)
+-{
+-	struct erofs_mkfs_buildtree_ctx ctx = {
+-		.sbi = sbi,
+-		.u.path = path,
+-	};
+-	int err;
+-
+-	if (!sbi)
+-		return ERR_PTR(-EINVAL);
+-	err = erofs_mkfs_build_tree(&ctx);
+-	if (err)
+-		return ERR_PTR(err);
+-	return ctx.u.root;
+-}
+-
+-int erofs_rebuild_dump_tree(struct erofs_inode *root, bool incremental)
++int erofs_importer_load_tree(struct erofs_importer *im, bool rebuild,
++			     bool incremental)
+ {
+ 	return erofs_mkfs_build_tree(&((struct erofs_mkfs_buildtree_ctx) {
+-		.sbi = NULL,
+-		.u.root = root,
++		.im = im,
++		.rebuild = rebuild,
+ 		.incremental = incremental,
+ 	}));
+ }
 diff --git a/mkfs/main.c b/mkfs/main.c
-index b8773fd..8b18b35 100644
+index 8b18b35..9039710 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -16,6 +16,7 @@
- #include "erofs/config.h"
- #include "erofs/print.h"
- #include "erofs/cache.h"
-+#include "erofs/importer.h"
- #include "erofs/diskbuf.h"
- #include "erofs/inode.h"
- #include "erofs/tar.h"
-@@ -1475,6 +1476,11 @@ static void erofs_mkfs_showsummaries(void)
- 
- int main(int argc, char **argv)
- {
-+	struct erofs_importer_params importer_params;
-+	struct erofs_importer importer = {
-+		.params = &importer_params,
-+		.sbi = &g_sbi,
-+	};
- 	struct erofs_buffer_head *sb_bh;
- 	struct erofs_inode *root = NULL;
- 	bool tar_index_512b = false;
-@@ -1488,6 +1494,7 @@ int main(int argc, char **argv)
- 	if (err)
- 		return 1;
- 	erofs_mkfs_default_options();
-+	erofs_importer_preset(&importer_params);
- 
- 	err = mkfs_parse_options_cfg(argc, argv);
- 	erofs_show_progs(argc, argv);
-@@ -1534,26 +1541,10 @@ int main(int argc, char **argv)
- 	}
+@@ -1542,6 +1542,7 @@ int main(int argc, char **argv)
  #endif
  	erofs_show_config();
--	if (cfg.c_fragments || cfg.c_extra_ea_name_prefixes) {
--		if (!cfg.c_mkfs_pclustersize_packed)
--			cfg.c_mkfs_pclustersize_packed = cfg.c_mkfs_pclustersize_def;
  
--		err = erofs_packedfile_init(&g_sbi, cfg.c_fragments);
--		if (err) {
--			erofs_err("failed to initialize packedfile: %s",
--				  strerror(-err));
--			goto exit;
--		}
--	}
++	importer_params.source = cfg.c_src_path;
+ 	err = erofs_importer_init(&importer);
+ 	if (err)
+ 		goto exit;
+@@ -1694,12 +1695,12 @@ int main(int argc, char **argv)
+ 		if (cfg.c_extra_ea_name_prefixes)
+ 			erofs_xattr_flush_name_prefixes(&g_sbi);
+ 
+-		root = erofs_mkfs_build_tree_from_path(&g_sbi, cfg.c_src_path);
++		root = erofs_new_inode(&g_sbi);
+ 		if (IS_ERR(root)) {
+ 			err = PTR_ERR(root);
+-			root = NULL;
+ 			goto exit;
+ 		}
++		incremental_mode = false;
+ 	} else {
+ 		root = erofs_rebuild_make_root(&g_sbi);
+ 		if (IS_ERR(root)) {
+@@ -1740,12 +1741,15 @@ int main(int argc, char **argv)
+ 				goto exit;
+ #endif
+ 		}
 -
--	if (cfg.c_mkfs_pclustersize_metabox >= 0) {
--		err = erofs_metabox_init(&g_sbi);
--		if (err) {
--			erofs_err("failed to initialize metabox: %s",
--				  erofs_strerror(err));
+-		err = erofs_rebuild_dump_tree(root, incremental_mode);
+-		if (err)
 -			goto exit;
--		}
--	}
-+	err = erofs_importer_init(&importer);
+ 	}
+ 
++	importer.root = root;
++	err = erofs_importer_load_tree(&importer,
++				       source_mode != EROFS_MKFS_SOURCE_LOCALDIR,
++				       incremental_mode);
 +	if (err)
 +		goto exit;
- 
- #ifndef NDEBUG
- 	if (cfg.c_random_pclusterblks)
-@@ -1677,15 +1668,6 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
--	if (cfg.c_fragments) {
--		err = z_erofs_dedupe_ext_init();
--		if (err) {
--			erofs_err("failed to initialize extent deduplication: %s",
--				  erofs_strerror(err));
--			goto exit;
--		}
--	}
--
- 	if (cfg.c_chunkbits) {
- 		err = erofs_blob_init(cfg.c_blobdev_path, 1 << cfg.c_chunkbits);
- 		if (err)
-@@ -1701,8 +1683,6 @@ int main(int argc, char **argv)
- 		}
- 	}
- 
--	erofs_inode_manager_init();
--
- 	if (source_mode == EROFS_MKFS_SOURCE_LOCALDIR) {
- 		err = erofs_build_shared_xattrs_from_path(&g_sbi, cfg.c_src_path);
- 		if (err) {
-@@ -1837,10 +1817,8 @@ int main(int argc, char **argv)
- exit:
- 	if (root)
- 		erofs_iput(root);
--	erofs_metabox_exit(&g_sbi);
- 	z_erofs_compress_exit(&g_sbi);
- 	z_erofs_dedupe_exit();
--	z_erofs_dedupe_ext_exit();
- 	blklst = erofs_blocklist_close();
- 	if (blklst)
- 		fclose(blklst);
-@@ -1849,7 +1827,6 @@ exit:
- 	erofs_cleanup_exclude_rules();
- 	if (cfg.c_chunkbits)
- 		erofs_blob_exit();
--	erofs_packedfile_exit(&g_sbi);
- 	erofs_xattr_cleanup_name_prefixes();
- 	erofs_rebuild_cleanup();
- 	erofs_diskbuf_exit();
-@@ -1858,6 +1835,7 @@ exit:
- 		if (erofstar.ios.dumpfd >= 0)
- 			close(erofstar.ios.dumpfd);
- 	}
-+	erofs_importer_exit(&importer);
- 
- 	if (err) {
- 		erofs_err("\tCould not format the device : %s\n",
++
+ 	if (tar_index_512b) {
+ 		if (!g_sbi.extra_devices) {
+ 			DBG_BUGON(1);
 -- 
 2.43.5
 
