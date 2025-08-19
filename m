@@ -1,50 +1,47 @@
-Return-Path: <linux-erofs+bounces-831-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-836-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C17B2B2B6E8
-	for <lists+linux-erofs@lfdr.de>; Tue, 19 Aug 2025 04:20:39 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6182DB2B785
+	for <lists+linux-erofs@lfdr.de>; Tue, 19 Aug 2025 05:28:45 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4c5YGD4tW5z3cky;
-	Tue, 19 Aug 2025 12:20:36 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4c5Zmg0N9Mz3clH;
+	Tue, 19 Aug 2025 13:28:35 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1755570036;
-	cv=none; b=UnYci+D9GrS7/UybepsGfaUUqvY16A75zNtkxzUGxtDhkQm5duZkPnnvLGKObxa/jlPycRTZeV1uF2StS6fJNJB8gJrg9G7Ys4ZkAClf6dpcylvGVV3BmBgwu9XGjdyGW2a33INGrxLwIfceqxxHxXhL++9/ABhVHHqnuRlVKub1uT2BMR96CV6uVH4/Nt1RB66qUTGrfKqF5WUW+lDDg/+8Af0oZv55m1Xk/w6TPxpYa48dw6gAIRhJitbp+/msFBWVCgrRlqv4HIuElAed1B1tVMfh+me6c/trG+0J3kDcZc1oRpkIb2z783ffwOzC7j7vquw9I8pltci4vMwCtQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1755574115;
+	cv=none; b=LwvIIsB3elLXOw6NZR0vT2n8YeUQcjO11RtZTC0DDp6O39HAqwpq8/Kgb23XwXtnQi2NmMGlKpurrfhu38aAeS1nTWo8k2aufAco45n/V+qM+Ew3vXWtDtMDIRD47WAtjqMY+NV5lqS0vO+c96AVqCKdGlmYf1gMTEizrtpml8frOqSp4rCVqqXxMIQND5u2CpMlaIXYOV9UEhZosb/tARvUXMQ/z4+Ea8H2XNQR5YyPvAggBWMi6r/ce5hVVliqOeIs4PRGD+lzC09jNxDW4DaAsgP5hBr+dIMBUd4LyELZOD5unRrz5tLk6AMzKHnuxMpawdsX9K52u+/d8jVRDA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1755570036; c=relaxed/relaxed;
-	bh=rVoBi9K67TJcOZxk68cTgCGLGVivLeOjIek+PMokqPE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dvt6qkph5VO0jY9KBsC+77asZ33ry3jCaPLD84MjMT+3lNSegEC+dBVpp5JtMClmM9VBQegEmEEGP4GuS4obbd85Vzf2511Nbdx+SuZ5UQSlaJ0FH7Ja+r6UA3UC1p8tCLvfW67PneWXV3b/XWVvzvQkHuWL2rPfiw8jDWSYyK/K7HaP2ya4zvXwh9oC5GRZdwhrTniMVqyN30dhplpSgdkrk4rGWzn3qRRDKolM6A4XlMbqn+X2r/QoYUuot0zYrrS7Ue0ysxZ4/w5Jvna+DvFXFZSrc3Hwjw1SJ4T2ERJRLom2vQASBVfypuhnCNvqrdpLGb++YLsLrGdVQql5Pg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=O55vlrpi; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1755574115; c=relaxed/relaxed;
+	bh=wwtnIW0/TYuqxwz+yc9qWTo3bl/wega8jX9CQIgJxWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F8phtQrNwNsEyMXxvs0rbxhFH8TFeC8JXm6urPULwvPo/apuHBtXycsR6K+hyr+b30RV7bYm5fz+vxa/PHF0k3Qs2IQp9mSCPo7YSlF4ET6PikEkiOcrKZYDEeV/DBIyCCmtUKyU4M7l/u0jEW+oNK3mzShgj0QXAVko8J2rulVFEh4HurKXifrBTxJmHgag7c5srpSJ/pJn1el6ow0gChy4nWnGJYy+bPEkb2WVT1CuQ4EkN3M1fODH0oDeS8Meym7PMZGWGg29l74crt7OqwxaHXUw62b8TnHFMAzaVdDlHcnkKNHlO93/HmaPBGM0feSnRqDjgYIzhPTIMAuiKA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wEARnTul; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=O55vlrpi;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wEARnTul;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
 Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4c5YGC3z7Lz3ck9
-	for <linux-erofs@lists.ozlabs.org>; Tue, 19 Aug 2025 12:20:35 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4c5ZmZ5nXHz3cb5
+	for <linux-erofs@lists.ozlabs.org>; Tue, 19 Aug 2025 13:28:29 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1755570031; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=rVoBi9K67TJcOZxk68cTgCGLGVivLeOjIek+PMokqPE=;
-	b=O55vlrpiKE0W6dQSO4IcwbqxMS3NFQ9g4pVN7aaAoDYS9Yh2Snn4g0td37GkkxzXLEf3BcB7NXE//kxJvunrKvEwa4GZYVJaJyUm9gl4kbv2dJnKjm3rJqiAEMcnUY28d/uXRgu5rWIrib9jBL+7UYGabbo/wvwGYC/p2PVJViA=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wm530ex_1755570029 cluster:ay36)
+	t=1755574105; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=wwtnIW0/TYuqxwz+yc9qWTo3bl/wega8jX9CQIgJxWQ=;
+	b=wEARnTulCJ50qPDGTHBj9Tf8qBr2oewWCTd9uJqD/DnQj77JIT8MimDNBCbVlK6Z1dPTe6LKuJ48XqLeSC3GulmuGn6uhKdLtDf/3HOsOFynyTL0F9csfL4xCDVsLMhCwoI2FETYQhieJqVayoNugzMZcvlUYlfxNaHBwvti71w=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wm5DR3o_1755574098 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 19 Aug 2025 10:20:29 +0800
+          Tue, 19 Aug 2025 11:28:23 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v2 1/7] erofs-utils: lib: introduce liberofs_global_{init,exit}
-Date: Tue, 19 Aug 2025 10:20:28 +0800
-Message-ID: <20250819022028.3469405-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v3 1/7] erofs-utils: lib: introduce liberofs_global_{init,exit}
+Date: Tue, 19 Aug 2025 11:28:12 +0800
+Message-ID: <20250819032818.3598157-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250818144741.2586329-1-hsiangkao@linux.alibaba.com>
-References: <20250818144741.2586329-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -75,18 +72,14 @@ backend.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-v2:
- - update the commit message;
- - fix non-MT compile error.
-
  include/erofs/internal.h |  3 ++
  include/erofs/lock.h     |  6 ++++
  lib/Makefile.am          |  5 ++--
- lib/global.c             | 55 ++++++++++++++++++++++++++++++++++
+ lib/global.c             | 57 +++++++++++++++++++++++++++++++++++
  lib/liberofs_s3.h        |  1 +
  lib/remotes/s3.c         | 65 ++++++++++++++++++----------------------
  mkfs/main.c              | 22 +++++++-------
- 7 files changed, 109 insertions(+), 48 deletions(-)
+ 7 files changed, 111 insertions(+), 48 deletions(-)
  create mode 100644 lib/global.c
 
 diff --git a/include/erofs/internal.h b/include/erofs/internal.h
@@ -152,10 +145,10 @@ index b079897..a3972b1 100644
  if ENABLE_LZ4
 diff --git a/lib/global.c b/lib/global.c
 new file mode 100644
-index 0000000..2f9abd6
+index 0000000..b1a6d76
 --- /dev/null
 +++ b/lib/global.c
-@@ -0,0 +1,55 @@
+@@ -0,0 +1,57 @@
 +// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
 +/*
 + * Copyright (C) 2025 Alibaba Cloud
@@ -171,7 +164,9 @@ index 0000000..2f9abd6
 +#include "erofs/config.h"
 +
 +static EROFS_DEFINE_MUTEX(erofs_global_mutex);
++#ifdef HAVE_LIBCURL
 +static bool erofs_global_curl_initialized;
++#endif
 +
 +int liberofs_global_init(void)
 +{
