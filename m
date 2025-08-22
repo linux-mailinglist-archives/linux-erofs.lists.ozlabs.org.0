@@ -1,42 +1,42 @@
-Return-Path: <linux-erofs+bounces-867-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-868-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3BA5B30E5D
-	for <lists+linux-erofs@lfdr.de>; Fri, 22 Aug 2025 07:56:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DC8D2B30E65
+	for <lists+linux-erofs@lfdr.de>; Fri, 22 Aug 2025 08:00:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4c7Tvb6jmRz3brR;
-	Fri, 22 Aug 2025 15:56:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4c7V0h3QQbz3cBW;
+	Fri, 22 Aug 2025 16:00:36 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.65
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1755842171;
-	cv=none; b=hD32pQVk3HCYfqklSMIdexiKdjHIGQqiT+ymhegnL8bIUrsOpyxzgtZ/B6KtziuD7TTaLpEBMaCQxwFRjxM16Ymx+yZ0crBQ5yBPDJ+PUvV7JUUbKpr/8XT93I8lq6SFCDSVIMZuFyi9NMvniYd6YtjxWqk01tDrsBgkfN6UYs2fVT64mFhlA2FuBcSv5ziRUvxvKbzvOrJqCDvyVHwInMXqIcwlC6fAjuG5d4/Ubt39MaMPh4A7JremnH284Zk6UIsSOVlJfdQxFTdyZ9amWwTlQq+99BHYQDwmrIANvxqjDlPbGUBh9OqCgkgtfvg3PuFFcqtmhVzh3OO2Y5gOrQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.57
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1755842436;
+	cv=none; b=fCvIq9rXmxISyf3kQHbskJCdWo+jN8N5Mhn4ZA9+QxjRoI0zDz7Jtye57Mdfpqqkv1ieHZvQzlzWejPmqr/iyz/V5tjozRfhwY3i32sW7n9ZMY5ikmQd7zfuy81bgAtGeW8UIk9pWPOQU1FxuZVPAlNa2MY2KDqFZbZX6izl7j8OUNmT3v1y6EuWWYDiPDphUnINHwINYxUqJHwhN4atmOSTMUohWLoUUNjOJFeujO8e4K1Qzfg3YHs4MVg4IOPI/BSoTWAv/NOG6gkG7RTmaqJnwAC6PhciPOswLTPBLzYf5ruGoNNSuAX5Snc9f3FjgxmUZaEAS9MVGsjkTgoSsA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1755842171; c=relaxed/relaxed;
+	t=1755842436; c=relaxed/relaxed;
 	bh=K8ATM3J3FBoWFCpG7G6iY30BhA7hiQ9ej6o+nuTi7b0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D9J8i53P4rC78eXRHvLOJZ825xzJZy5mZk20jE7rj5c/driKZd9ka/9UAuHZVKlwQFYFa8IdURaElesq29dp4HVvrZc0hwnhUjm0PANuOBzqz9EJ9iz5f2BZtOlYqES/wudgF1CJYFA006BjIm7vQiN1XyVRoqGIF+yVESN+lDE8MHR5Zy/+w+kfRhceVDBeOS/XScP7tKvLRDzUpWqbHzz1XxsI53syhDEhueNZTpvhuOKf1OnvW3bPFqzRg0H95bcTPV/Wl+EjIpGsfydcawLO488uTklGJBT4wkiXaY3J0vH9sxsZyIAvJAkX7WPcPAIXdfyRaARrHMIuDverjw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.65; helo=out28-65.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	 MIME-Version; b=Je8fJYpK0kzFXVm188v4yIfserVs6uyY5mZmeYL37vP01muW/H8zWyUNNfx+35hdtrcmcImAb8MEvFzMDRnknIKNxnpAp5rl2qdh5f/DHkq4h+aHZHT66aQuwtjoGtnrCh1flskV0yTEIoqgHpVHvMMd0xXmGjVNOW19jEgKi+GUqMOLvoOriTV1eEWj/4wIl5xZxzXqluzRwiyiPI3EBHAXDq0htmmMqRwZAokdIWtVakUk2PdzlbWcjcFu/sK71FDUAXGBhqkeJtd5kDf63caGKRj1vbnpgmjICYPXCDKElvJBSAWaFCYL5FLQkjsdXyE2FOq5YZ+rb1qv6mNiWw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.57; helo=out28-57.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.65; helo=out28-65.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-65.mail.aliyun.com (out28-65.mail.aliyun.com [115.124.28.65])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.57; helo=out28-57.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-57.mail.aliyun.com (out28-57.mail.aliyun.com [115.124.28.57])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4c7TvW4KxFz2xPx
-	for <linux-erofs@lists.ozlabs.org>; Fri, 22 Aug 2025 15:56:05 +1000 (AEST)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eMh9Xxq_1755842158 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4c7V0f38tLz30MY
+	for <linux-erofs@lists.ozlabs.org>; Fri, 22 Aug 2025 16:00:34 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eMgfW.k_1755842428 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Fri, 22 Aug 2025 13:55:59 +0800
+          Fri, 22 Aug 2025 14:00:29 +0800
 From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
 	Chengyu Zhu <hudson@cyzhu.com>,
 	Changzhi Xie <sa.z@qq.com>
-Subject: [PATCH v3] erofs-utils: add OCI registry support
-Date: Fri, 22 Aug 2025 13:55:56 +0800
-Message-ID: <20250822055556.12522-1-hudson@cyzhu.com>
+Subject: [PATCH v4] erofs-utils: add OCI registry support
+Date: Fri, 22 Aug 2025 14:00:25 +0800
+Message-ID: <20250822060025.14787-1-hudson@cyzhu.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250821073258.89073-1-hudson@cyzhu.com>
 References: <20250821073258.89073-1-hudson@cyzhu.com>
