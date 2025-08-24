@@ -1,43 +1,52 @@
-Return-Path: <linux-erofs+bounces-895-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-896-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D82F7B32D6D
-	for <lists+linux-erofs@lfdr.de>; Sun, 24 Aug 2025 06:03:00 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DC63B32D84
+	for <lists+linux-erofs@lfdr.de>; Sun, 24 Aug 2025 06:21:44 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4c8gJ20xBwz30Vr;
-	Sun, 24 Aug 2025 14:02:58 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4c8gjb5drbz30Vr;
+	Sun, 24 Aug 2025 14:21:39 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756008178;
-	cv=none; b=H3BJETTMDVVsEu6sxlpL8PCfqEzOltDthLsbYJKK4ioPE9Tzm4r2ynmINNIdxmUKSPRFXGyT7wnYPERvZYc854JuoQaXBjXhA+njT9kN935XRSVnXr8wvtZd9CDizGo/4YDyNywPgg0HHafOrIGewl6aWCTl5Xj1MIFGEGp2secw2vkUou8RWAbsNbHs1IpbHtILaTjzhIBC00lNnC2J+cKNkGdhFF0l/Y7KVNKOyatoUCr6GJoKEyG8yFoGa4iQUayTMAEQifHwiY+VwUzuw9UAltFBq5dSGhVrMKmhFdLCLhGP+ATXjXbJT4j3at8bGBbpZzQHgo4UE495VfqkhQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756009299;
+	cv=none; b=YdSTk5J+kpV60JjUhEVFjHdbrB+rxAdQ8DtEqCENktCmTBTnQnjppNFKom1nq9dYwdSrI7JONvbKXmpji0CBVZm7SnyN+kqbcB1C1YH7oVs9TV/emwdmIyVghKLo364TeLTWfOaFjU2JfLwwKTuaTHUSWW16yzWLXWoYznXbtQYMzgIWv4VpHRoy8q7uZje9ySWS+StiXM/an7qglyTveeOBvvMLLZVpBiiUYPumP2FZN06nbwBpDmlzpGDbXlHrt2dtztL3r/YkS+MfBKfblH1oXHt/sw4AkjI70RgI13tht9WqvrjYjgqc59PTIJmX4RkEE0RadSkybcfNSWFlBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1756008178; c=relaxed/relaxed;
-	bh=+D/cc1NGlapS8Z7tnT1Auy/6NgrLSBebNAep/aDhZl8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Z90SUUYqnyihO4ZbzMg47wx12xYLkZBuvwwpVeXVMUw8BjTN10elBslBctPrO8ZK7LCil1CcQjIDP8rGi+BPmWTOWi2ohkoPGbbu/rQr2j6Azw2kfOqZ0HowtNKu7UKdppY5jgYUMmr7D/5y9cP+1w+WF8SKL5dXeVOWRaiFyhpmQmOam+UNkZ1aQj0IVSN4/nvAk2AaHGTKEALzJH3v5xLYBeGuF7pKv1SP/7UcwUWh/Mu81/wirfPALL0WpMkuJU3J+QiJzrtI8MdAJhwFIwHj8hbyAEczvdk6cNxdgesoSAavP5kIPuPmJqlyXXMQW2313Amv2HHGCfvXkBgvlg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=lw+LlyiF; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1756009299; c=relaxed/relaxed;
+	bh=FWNcMrqa7fea4DWK3k+kaYsa2tiNCaroVzz0Etqf4Ws=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FfdrTQMFEeTOu0/kGUdrpnYuWY2NB+50gWRTrq1KIlmeDbpuG5cdON5Z+8AlviMy9wweADL4QQ/sdhooOfriUQqB3EmxSZIlPpe7KIv+QfK7IkQQQaBxOX2lOS8MbCqjLp3yyjetCOMVrgDgO9eQ7KZ0KzdRxaJ0EqqG+UPeorWbeCRLHMfFx7j7w8ZonQa9DWOkHlO7ZvsBmnxZ/d4MpnIKDxhgKeevaoH3tQDbSDbfwYL5VeOgXl1ZSVnIiVsqGu1/lqQMLMGovS0wAkMlD2sdeW4st1ng4OXrf1ICUfpyt6j4p+0iUvVMclM87zQ0misJB6x1qhRdtIerUUjNnA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=R5US02Gh; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=lw+LlyiF;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=R5US02Gh;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4c8gHz17Cnz30FR
-	for <linux-erofs@lists.ozlabs.org>; Sun, 24 Aug 2025 14:02:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4c8gjY44lzz30FR
+	for <linux-erofs@lists.ozlabs.org>; Sun, 24 Aug 2025 14:21:35 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1756008169; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=+D/cc1NGlapS8Z7tnT1Auy/6NgrLSBebNAep/aDhZl8=;
-	b=lw+LlyiFj19KLIbVpTCEBS9zjCWpXllD/9Y1GkMXFXvOBwJ9u5xPY0T88G2oNcp30yGYjyVn7/vT0yMyMmB/y4kI+4AsODWMZ9qOvIZZ32mZMocNYCNfAZId+WZf7oJ4pwSNx6Og2HQwA+yioqGnIPZoisHmBsqeOeMMfmoqAc4=
-Received: from 30.180.0.242(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WmNdq31_1756008166 cluster:ay36)
+	t=1756009291; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=FWNcMrqa7fea4DWK3k+kaYsa2tiNCaroVzz0Etqf4Ws=;
+	b=R5US02Gh1abzNH58e7Rm8WI0ycnXPxUt7e678HMNRQGjUvVZZnewReoXhnYc3wmYe9nGorX2ZRxc2IsOjyjbOiq2gRtFWlCMz6uRBuHUUNG8pmdLz6dYvrzhegkYTlnXtZbulRf+0hUZVwJU1npBsWJjrxzHyqHzGF2v9iOBxys=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WmNjkWY_1756009284 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sun, 24 Aug 2025 12:02:47 +0800
-Message-ID: <217a3ea2-3755-49c1-aef4-6b9ca0d5bd54@linux.alibaba.com>
-Date: Sun, 24 Aug 2025 12:02:46 +0800
+          Sun, 24 Aug 2025 12:21:29 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	syzbot+5a398eb460ddaa6f242f@syzkaller.appspotmail.com
+Subject: [PATCH v2] erofs: fix invalid algorithm for encoded extents
+Date: Sun, 24 Aug 2025 12:21:23 +0800
+Message-ID: <20250824042123.333183-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250823093018.3117864-1-hsiangkao@linux.alibaba.com>
+References: <20250823093018.3117864-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,16 +58,6 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] erofs-utils: mkfs: Implement 'dsunit' alignment on
- blobdev
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Friendy Su <friendy.su@sony.com>, linux-erofs@lists.ozlabs.org
-Cc: Yuezhang Mo <Yuezhang.Mo@sony.com>, Daniel Palmer <daniel.palmer@sony.com>
-References: <20250823083453.249576-1-friendy.su@sony.com>
- <d1426b16-f5df-4587-813b-a244b4debc84@linux.alibaba.com>
-In-Reply-To: <d1426b16-f5df-4587-813b-a244b4debc84@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
@@ -66,51 +65,149 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Friendy,
+The current algorithm sanity checks do not properly apply to new
+encoded extents.
 
-On 2025/8/23 17:14, Gao Xiang wrote:
-> 
-> 
+Unify the algorithm format check with Z_EROFS_COMPRESSION_RUNTIME_MAX
+and ensure consistency with sbi->available_compr_algs.
 
-...
+Reported-and-tested-by: syzbot+5a398eb460ddaa6f242f@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/r/68a8bd20.050a0220.37038e.005a.GAE@google.com
+Fixes: 1d191b4ca51d ("erofs: implement encoded extent metadata")
+Thanks-to: Edward Adam Davis <eadavis@qq.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+v2:
+ - should be checked with Z_EROFS_COMPRESSION_RUNTIME_MAX instead.
 
->> ---
->>   lib/blobchunk.c  | 18 ++++++++++++++++++
->>   man/mkfs.erofs.1 | 15 +++++++++++++++
->>   mkfs/main.c      | 12 ++++++++++++
->>   3 files changed, 45 insertions(+)
->>
->> diff --git a/lib/blobchunk.c b/lib/blobchunk.c
->> index bbc69cf..69c70e9 100644
->> --- a/lib/blobchunk.c
->> +++ b/lib/blobchunk.c
->> @@ -309,6 +309,24 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd,
->>       minextblks = BLK_ROUND_UP(sbi, inode->i_size);
->>       interval_start = 0;
->> +    /*
->> +     * dsunit <= chunksize, deduplication will not cause unalignment,
->> +     * we can do align with confidence
->> +     */
->> +    if (sbi->bmgr->dsunit > 1 &&
->> +        sbi->bmgr->dsunit <= 1u << (chunkbits - sbi->blkszbits)) {
-> 
-> Sigh, I meant (sbi->bmgr->dsunit >= 1u << (chunkbits - sbi->blkszbits))
-> 
-> Let's ignore sbi->bmgr->dsunit < 1u << (chunkbits - sbi->blkszbits).
+ fs/erofs/zmap.c | 66 +++++++++++++++++++++++++++----------------------
+ 1 file changed, 36 insertions(+), 30 deletions(-)
 
-Sorry, your patch is absolutely correct.
-
-I was looking at this in rush, sorry for the noise.
-
-I will submit this later soon. (busy in other personal
-stuffs this weekend.)
-
-Thanks,
-Gao Xiang
-
-
-> 
-> Thanks,
-> Gao Xiang
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index a93efd95c555..dcbc83ebd636 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -394,10 +394,10 @@ static int z_erofs_map_blocks_fo(struct inode *inode,
+ 		.map = map,
+ 		.in_mbox = erofs_inode_in_metabox(inode),
+ 	};
+-	int err = 0;
+-	unsigned int endoff, afmt;
++	unsigned int endoff;
+ 	unsigned long initial_lcn;
+ 	unsigned long long ofs, end;
++	int err;
+ 
+ 	ofs = flags & EROFS_GET_BLOCKS_FINDTAIL ? inode->i_size - 1 : map->m_la;
+ 	if (fragment && !(flags & EROFS_GET_BLOCKS_FINDTAIL) &&
+@@ -482,20 +482,15 @@ static int z_erofs_map_blocks_fo(struct inode *inode,
+ 			err = -EFSCORRUPTED;
+ 			goto unmap_out;
+ 		}
+-		afmt = vi->z_advise & Z_EROFS_ADVISE_INTERLACED_PCLUSTER ?
+-			Z_EROFS_COMPRESSION_INTERLACED :
+-			Z_EROFS_COMPRESSION_SHIFTED;
++		if (vi->z_advise & Z_EROFS_ADVISE_INTERLACED_PCLUSTER)
++			map->m_algorithmformat = Z_EROFS_COMPRESSION_INTERLACED;
++		else
++			map->m_algorithmformat = Z_EROFS_COMPRESSION_SHIFTED;
++	} else if (m.headtype == Z_EROFS_LCLUSTER_TYPE_HEAD2) {
++		map->m_algorithmformat = vi->z_algorithmtype[1];
+ 	} else {
+-		afmt = m.headtype == Z_EROFS_LCLUSTER_TYPE_HEAD2 ?
+-			vi->z_algorithmtype[1] : vi->z_algorithmtype[0];
+-		if (!(EROFS_I_SB(inode)->available_compr_algs & (1 << afmt))) {
+-			erofs_err(sb, "inconsistent algorithmtype %u for nid %llu",
+-				  afmt, vi->nid);
+-			err = -EFSCORRUPTED;
+-			goto unmap_out;
+-		}
++		map->m_algorithmformat = vi->z_algorithmtype[0];
+ 	}
+-	map->m_algorithmformat = afmt;
+ 
+ 	if ((flags & EROFS_GET_BLOCKS_FIEMAP) ||
+ 	    ((flags & EROFS_GET_BLOCKS_READMORE) &&
+@@ -626,9 +621,9 @@ static int z_erofs_fill_inode(struct inode *inode, struct erofs_map_blocks *map)
+ {
+ 	struct erofs_inode *const vi = EROFS_I(inode);
+ 	struct super_block *const sb = inode->i_sb;
+-	int err, headnr;
+-	erofs_off_t pos;
+ 	struct z_erofs_map_header *h;
++	erofs_off_t pos;
++	int err = 0;
+ 
+ 	if (test_bit(EROFS_I_Z_INITED_BIT, &vi->flags)) {
+ 		/*
+@@ -642,7 +637,6 @@ static int z_erofs_fill_inode(struct inode *inode, struct erofs_map_blocks *map)
+ 	if (wait_on_bit_lock(&vi->flags, EROFS_I_BL_Z_BIT, TASK_KILLABLE))
+ 		return -ERESTARTSYS;
+ 
+-	err = 0;
+ 	if (test_bit(EROFS_I_Z_INITED_BIT, &vi->flags))
+ 		goto out_unlock;
+ 
+@@ -679,15 +673,6 @@ static int z_erofs_fill_inode(struct inode *inode, struct erofs_map_blocks *map)
+ 	else if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER)
+ 		vi->z_idata_size = le16_to_cpu(h->h_idata_size);
+ 
+-	headnr = 0;
+-	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX ||
+-	    vi->z_algorithmtype[++headnr] >= Z_EROFS_COMPRESSION_MAX) {
+-		erofs_err(sb, "unknown HEAD%u format %u for nid %llu, please upgrade kernel",
+-			  headnr + 1, vi->z_algorithmtype[headnr], vi->nid);
+-		err = -EOPNOTSUPP;
+-		goto out_unlock;
+-	}
+-
+ 	if (!erofs_sb_has_big_pcluster(EROFS_SB(sb)) &&
+ 	    vi->z_advise & (Z_EROFS_ADVISE_BIG_PCLUSTER_1 |
+ 			    Z_EROFS_ADVISE_BIG_PCLUSTER_2)) {
+@@ -726,6 +711,29 @@ static int z_erofs_fill_inode(struct inode *inode, struct erofs_map_blocks *map)
+ 	return err;
+ }
+ 
++static int z_erofs_map_sanity_check(struct inode *inode,
++				    struct erofs_map_blocks *map)
++{
++	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
++
++	if (!(map->m_flags & EROFS_MAP_ENCODED))
++		return 0;
++	if (unlikely(map->m_algorithmformat >= Z_EROFS_COMPRESSION_RUNTIME_MAX)) {
++		erofs_err(inode->i_sb, "unknown algorithm %d @ pos %llu for nid %llu, please upgrade kernel",
++			  map->m_algorithmformat, map->m_la, EROFS_I(inode)->nid);
++		return -EOPNOTSUPP;
++	}
++	if (unlikely(!(sbi->available_compr_algs & (1 << map->m_algorithmformat)))) {
++		erofs_err(inode->i_sb, "inconsistent algorithmtype %u for nid %llu",
++			  map->m_algorithmformat, EROFS_I(inode)->nid);
++		return -EFSCORRUPTED;
++	}
++	if (unlikely(map->m_plen > Z_EROFS_PCLUSTER_MAX_SIZE ||
++		     map->m_llen > Z_EROFS_PCLUSTER_MAX_DSIZE))
++		return -EOPNOTSUPP;
++	return 0;
++}
++
+ int z_erofs_map_blocks_iter(struct inode *inode, struct erofs_map_blocks *map,
+ 			    int flags)
+ {
+@@ -746,10 +754,8 @@ int z_erofs_map_blocks_iter(struct inode *inode, struct erofs_map_blocks *map,
+ 			else
+ 				err = z_erofs_map_blocks_fo(inode, map, flags);
+ 		}
+-		if (!err && (map->m_flags & EROFS_MAP_ENCODED) &&
+-		    unlikely(map->m_plen > Z_EROFS_PCLUSTER_MAX_SIZE ||
+-			     map->m_llen > Z_EROFS_PCLUSTER_MAX_DSIZE))
+-			err = -EOPNOTSUPP;
++		if (!err)
++			err = z_erofs_map_sanity_check(inode, map);
+ 		if (err)
+ 			map->m_llen = 0;
+ 	}
+-- 
+2.43.5
 
 
