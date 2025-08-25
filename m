@@ -1,42 +1,42 @@
-Return-Path: <linux-erofs+bounces-902-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-903-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0897DB33A13
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Aug 2025 11:02:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 49C3EB33B2B
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Aug 2025 11:33:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4c9Ptp62nKz3cdD;
-	Mon, 25 Aug 2025 19:02:10 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4c9QZg0HdPz3cfT;
+	Mon, 25 Aug 2025 19:33:15 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.60
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756112530;
-	cv=none; b=Rcj9QZyUpwwGBUXxOaI/cObeEW7hVziNbShYftWVZoPWk4PJ3ANN02H1ooGn5oMLx/mezquutxC8vD2pBufXFerEQxReybVj5xEVGVMc9+xqWdjkDSe7OIdMIrsitReWZhvKGJmoMqjrQrVLjIX4NhLg8ZD3Hb4eXoZSp9dHrcvc8CwD71o9yt5QKDMS36wNb290M09CkKkO0SUnyCRUf0/5N9UmwiT3v7bmAtlMRMlBsKxzhN44ZH8t9OjU5hAdN8HRCMtKYVy3nF6B1DK3TvTp+A2RovFZPYLpRqW0GRo3alXk3N5hJzmgs4rMF2khrEHUa/VMsB2iN46k5E3x5A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.42
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756114394;
+	cv=none; b=gnAf2evJNcG8xDET8nJY/wmLhyMOgkwn5aRB5DpFWr4mj9NDsmeA1bHa4HIKZ6yFZPjaXox8nqtDAzqsMUYqABg0GmCWRgsgS/0Cjum/qfsgt5ADGp6KxLbbYAnEqYlVGszzSGqsVB0NAAY34zDksVLeHRqapDhcudEBJMVRpCrw8XjkUwHoRwvT/Ej/r02vPiP7u9z6uSB55EfP92RQJpWm2J9ejKebsEHkNav/MqP/n2ryFbywm0g8qTbyAB9LWbB3n3Q0wyDb34EH12Fjn8pMplcx9NutoHTJa2g1hWFRGfeVZsMu20HQ/a3oz6vA3sxFPFK7KtbOReynkJZKCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1756112530; c=relaxed/relaxed;
-	bh=7WOx6uLxgsTXbQddF6dFqO5Ym/6ghb97XrUUxn4vrFc=;
+	t=1756114394; c=relaxed/relaxed;
+	bh=9lhTvZQrJMSSEpCZAs55GBs/QphIQcKzTDu6zKvM5H4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ELleD6wTWdVRR7JGSyRAtS/bAsSbW4AGTn/PXcfKy0p0N1pokt3kLRIwsqTt3bzmPZqT1TNEvAV4bLit10ydQu13lTqAMr3x11R6OZIRLaHvGSlEIwQPRYtqnMIQFvAdtvrtaklhTbi11QUpwXrcVQWVwJND7rCU4PTGpkAqmgmbDJzyEZcvmyuIXjjQxCjlBpP+B/rRIaTvtSYeCIiNt+o3Z/VFvaudiOGHwRSYw3BP1XZTBoSjWO/LHih4riX0pTcN+u5izAXfqCANSiefyElUnpr7LDxSMzZM37klSXrKCvMPZB1w6/B1yfAKoQ37y2hQ6sESJ6jf3K5MQt5JUg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.60; helo=out28-60.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	 MIME-Version; b=BTXbXcGZNMuY87Chs4T08tjWCII5Hz8ZPzfEPiur2SgIrvIVOK4vzoc+3KT/cR+rM4Byq1IkuZgGnPNxIWr9BM6H/V/jBja0h+5/tZYXd1PtbH0DsJ1A+glQbqVQTiTuFtEh8OCzLoKMK3imFUvhVrZurmioxWXbq9nHYQspya4K9eTVJKGvzVp1BySJvBjTUd5PFyY/bD1N9dadSHfDP4PkuVQ+sbL+t/+y3CanObCOoa6aegjsQcpS+W4FzabG7EMAFRRYeqm7jQDPAfeN49h9Yfo+qr08SNw/nFn/Tk4YtrW1H/boF8KmSj/JsdUKRQbNXMvm0suGyE+pyKH5EQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.42; helo=out28-42.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.60; helo=out28-60.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-60.mail.aliyun.com (out28-60.mail.aliyun.com [115.124.28.60])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.42; helo=out28-42.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-42.mail.aliyun.com (out28-42.mail.aliyun.com [115.124.28.42])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4c9Ptm29v0z3ccl
-	for <linux-erofs@lists.ozlabs.org>; Mon, 25 Aug 2025 19:02:05 +1000 (AEST)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eP-J7mG_1756112519 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4c9QZc6P27z3cfH
+	for <linux-erofs@lists.ozlabs.org>; Mon, 25 Aug 2025 19:33:11 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eP1qbir_1756114384 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Mon, 25 Aug 2025 17:02:00 +0800
+          Mon, 25 Aug 2025 17:33:05 +0800
 From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
-	Chengyu Zhu <hudson@cyzhu.com>,
+	Chengyu Zhu <hudsonzhu@tencent.com>,
 	Changzhi Xie <sa.z@qq.com>
-Subject: [PATCH v6] erofs-utils: add OCI registry support
-Date: Mon, 25 Aug 2025 17:01:55 +0800
-Message-ID: <20250825090155.90587-1-hudson@cyzhu.com>
+Subject: [PATCH v6-rebased] erofs-utils: add OCI registry support
+Date: Mon, 25 Aug 2025 17:33:01 +0800
+Message-ID: <20250825093301.9227-1-hudson@cyzhu.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250821073258.89073-1-hudson@cyzhu.com>
 References: <20250821073258.89073-1-hudson@cyzhu.com>
@@ -57,7 +57,7 @@ X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Chengyu Zhu <hudson@cyzhu.com>
+From: Chengyu Zhu <hudsonzhu@tencent.com>
 
 This patch adds support for building EROFS filesystems from
 OCI-compliant container registries, enabling users to create EROFS
@@ -87,14 +87,14 @@ e.g.:
   image.erofs ubuntu
 
 Signed-off-by: Changzhi Xie <sa.z@qq.com>
-Signed-off-by: Chengyu Zhu <hudson@cyzhu.com>
+Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 ---
  configure.ac       |   45 ++
  lib/Makefile.am    |    8 +-
- lib/liberofs_oci.h |   89 ++++
- lib/remotes/oci.c  | 1031 ++++++++++++++++++++++++++++++++++++++++++++
+ lib/liberofs_oci.h |   90 ++++
+ lib/remotes/oci.c  | 1032 ++++++++++++++++++++++++++++++++++++++++++++
  mkfs/main.c        |  296 ++++++++++++-
- 5 files changed, 1467 insertions(+), 2 deletions(-)
+ 5 files changed, 1469 insertions(+), 2 deletions(-)
  create mode 100644 lib/liberofs_oci.h
  create mode 100644 lib/remotes/oci.c
 
@@ -206,10 +206,10 @@ index 955495d..118b047 100644
 +endif
 diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
 new file mode 100644
-index 0000000..05efbbc
+index 0000000..c4a4c78
 --- /dev/null
 +++ b/lib/liberofs_oci.h
-@@ -0,0 +1,89 @@
+@@ -0,0 +1,90 @@
 +/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
 +/*
 + * Copyright (C) 2025 Tencent, Inc.
@@ -229,6 +229,7 @@ index 0000000..05efbbc
 +
 +struct erofs_inode;
 +struct CURL;
++struct erofs_importer;
 +
 +/*
 + * struct erofs_oci_params - OCI configuration
@@ -291,7 +292,7 @@ index 0000000..05efbbc
 + *
 + * Return: 0 on success, negative errno on failure
 + */
-+int ocierofs_build_trees(struct erofs_inode *root, struct erofs_oci *oci,
++int ocierofs_build_trees(struct erofs_importer *importer, struct erofs_oci *oci,
 +			 bool fillzero);
 +
 +#ifdef __cplusplus
@@ -301,10 +302,10 @@ index 0000000..05efbbc
 +#endif /* __EROFS_OCI_H */
 diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
 new file mode 100644
-index 0000000..3fb2ef7
+index 0000000..7f167e1
 --- /dev/null
 +++ b/lib/remotes/oci.c
-@@ -0,0 +1,1031 @@
+@@ -0,0 +1,1032 @@
 +// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
 +/*
 + * Copyright (C) 2025 Tencent, Inc.
@@ -321,6 +322,7 @@ index 0000000..3fb2ef7
 +#include <errno.h>
 +#include <curl/curl.h>
 +#include <json-c/json.h>
++#include "erofs/importer.h"
 +#include "erofs/internal.h"
 +#include "erofs/print.h"
 +#include "erofs/inode.h"
@@ -1007,7 +1009,7 @@ index 0000000..3fb2ef7
 +	return ERR_PTR(ret);
 +}
 +
-+static int ocierofs_extract_layer(struct erofs_oci *oci, struct erofs_inode *root,
++static int ocierofs_extract_layer(struct erofs_oci *oci, struct erofs_importer *importer,
 +				 const char *layer_digest, const char *auth_header,
 +				 int layer_index)
 +{
@@ -1017,7 +1019,7 @@ index 0000000..3fb2ef7
 +	int ret, fd = -1;
 +	long http_code;
 +
-+	if (!oci || !root || !layer_digest || layer_index < 0) {
++	if (!oci || !importer || !layer_digest || layer_index < 0) {
 +		erofs_err("invalid parameters for layer extraction");
 +		return -EINVAL;
 +	}
@@ -1096,10 +1098,10 @@ index 0000000..3fb2ef7
 +		goto out;
 +	}
 +
-+	ret = tarerofs_parse_tar(root, &stream.tarfile);
++	ret = tarerofs_parse_tar(importer, &stream.tarfile);
 +	while (!ret) {
 +		/* Continue parsing until end of archive */
-+		ret = tarerofs_parse_tar(root, &stream.tarfile);
++		ret = tarerofs_parse_tar(importer, &stream.tarfile);
 +	}
 +
 +	erofs_iostream_close(&stream.tarfile.ios);
@@ -1127,7 +1129,7 @@ index 0000000..3fb2ef7
 +	return ret;
 +}
 +
-+int ocierofs_build_trees(struct erofs_inode *root, struct erofs_oci *oci,
++int ocierofs_build_trees(struct erofs_importer *importer, struct erofs_oci *oci,
 +			 bool fillzero)
 +{
 +	char *auth_header = NULL;
@@ -1136,7 +1138,7 @@ index 0000000..3fb2ef7
 +	int layer_count = 0;
 +	int ret, i;
 +
-+	if (!root || !oci)
++	if (!importer || !oci)
 +		return -EINVAL;
 +
 +	if (oci->params.username && oci->params.password &&
@@ -1204,7 +1206,7 @@ index 0000000..3fb2ef7
 +		free(trimmed);
 +
 +		if (!fillzero) {
-+			ret = ocierofs_extract_layer(oci, root, layers_info[i],
++			ret = ocierofs_extract_layer(oci, importer, layers_info[i],
 +						    auth_header, i);
 +			if (ret) {
 +				erofs_err("failed to extract layer %d: %s", i,
@@ -1223,7 +1225,7 @@ index 0000000..3fb2ef7
 +			if (fillzero)
 +				continue;
 +
-+			ret = ocierofs_extract_layer(oci, root, layers_info[i],
++			ret = ocierofs_extract_layer(oci, importer, layers_info[i],
 +						    auth_header, i);
 +			if (ret) {
 +				erofs_err("failed to extract layer %d: %s", i,
