@@ -1,73 +1,53 @@
-Return-Path: <linux-erofs+bounces-898-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-899-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24321B3350F
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Aug 2025 06:31:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F674B336FB
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Aug 2025 08:56:52 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4c9Hv033Hgz3cPG;
-	Mon, 25 Aug 2025 14:31:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4c9M6B1JzPz2xBV;
+	Mon, 25 Aug 2025 16:56:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.9
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756096316;
-	cv=none; b=Gg/S86UKavyMbT+EfalVGzOBGtVsP6sDKLxAf3iNXNekpUYfNXZwKNb3VutYGVyq8GzHQZQSojJPa+ZgnhYyBLDd7khs30KmvEdx2gHmjc4+Ir/N3I5DcQA8ThjzzQPoxKqweKK3HfQHfogLFxJDo9PjCpEAWaxE2D6ABCNsCy5QarGF4vIo8PfnohYsToSrVRPgFRCQ96LiTOerqxZx0q63q6YYG1iJahB0R8WDeE/KSeSywA6t9hr1zGzKNqOP8sc5dwBUYPi6ydsBGSvBVvJc2T1alzDkA9lPAhkfHtEuBsz2zsZAV9F/UKi97v3d5m+HCGqyv7+EMIUGFZzH9Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756105010;
+	cv=none; b=YTah7QPpj6fKSxZi/O1peDKP+o3WzCH+hk8dItM7O18c5CyuCflDjHPM4xS4DbHm7fj3uDrdolAEc3fJZ37iyNa025v5djKjkwalRiavXfY2JdcqEsUZDnQQcWTTwiWpTqKWm7YFw01Mp8NIBqRwCPJRQFBE8jaHV+XZFOpVhH+Q0AK04pvi6YktKyce5RE2VoFemTLCrMA0HH8ssnYPsGQleUgsPW11AEaWNnhzLHNdlv73qlle9BxJrLrHGeO74ieYy2SROfY91T3hF3JsM2wZ+wqsX/imPtPY5AWrkNvygv2dQ7pV23kay/6nHj1bsZfaXyRlZGzaaJMZJuI5Bw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1756096316; c=relaxed/relaxed;
-	bh=H18wORDgLB/rxIR7jCitXbLypHZNd2IRVKCbqrpcWW0=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=PQ4VE63l9ucrUBn34K9dhzSL/gJhb9KlJXyE2rf3xms636su6UiH4zCdcQMgR4R2kFc3Jk3xsN1XDJbzun84Cuyc0IhjZ03gtkjlELdcFUdXZYmGBnf8IrBiigUEbFd4y7BLQ+tnQwjKsHadtFql3U/JuVng6khxmwR9m1t0XkE7lrYphP87AmUW/iH5WPADTWzUh1XsgxTdXcOLZNRMRz7M3/BUrujyd6ADykxxCbHb/NgrrOzSQs+sDLHxFWsMd2s9V+UJx/E7RiQdQbxMb6zJOiUTa0yiNOs7jw70eYvcG/n/XeNMMInLBRvYVa+L06UXPLX5/rsbaooQUYXtQw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=bTDJI8an; dkim-atps=neutral; spf=pass (client-ip=192.198.163.9; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1756105010; c=relaxed/relaxed;
+	bh=lGj8Uhs5AvVLXm4j/p+T7V74+SPXhbNIumRIVY3Ycgs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ndQegCP1ePIP1YqZaZDlPvEafZWs9K1IBxnAcCiV8RxGx4pFkYnTf+mlgmmp1xZNYsPiiBU2Z1yf3CiLCFUtw+x5k6zL+dOl/u7ijnzSvmnZGAwOuBOwud8ibI35EeZXvyJ6hBGv+4qDSWEitEYJ8nhNk/qQXrZziiqk3UgfMGvB+KTqBtu89wNlNiXNJmKfrFFtfaZc6I3ysEsEgieNaASJ8bFd3yQ1e7ElfFe6wod51Ncy46ngwggPFFCsKadbY26vJdPTRraGuf6YCMpdSM6so9OrzFB2MpbDqKk1J5iGqURNVSqV4VsOblYvWpxpsNQVaEZl8r8ywwXnTdCyDw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=vlic72jl; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=bTDJI8an;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=vlic72jl;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.9; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4c9Htt39w4z3cDN
-	for <linux-erofs@lists.ozlabs.org>; Mon, 25 Aug 2025 14:31:48 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1756096310; x=1787632310;
-  h=date:from:to:cc:subject:message-id;
-  bh=fXfwo+jdBntkOnqA7IZfFuSRd+ZfUUAmimEdSH50H98=;
-  b=bTDJI8ang1UakWgi+Si7ZDiQx9x2hWzdTpEwyM/XtW2N4XZPv4IhqP1L
-   VLq+GEjpk3Nb9rwVXKbrVkmjk8XeUW9FA7Vucgf6LJEzXh0+8UcCwXJzl
-   DP9Yohfpn7xiKfdmxsp1Y0eGSXWu5ydeWMSy+K/yLbj3ngufXRx1dCZRV
-   qWYemijgyifZrVzgQug1uHa0d2FQsdRz0v+oOQXj02B24Ejk8I/Ryac6d
-   TIZAoRuPqGMzEuHCdLG1q9VVj9A3w5a6vLUNXRBBHEgCwhpLKM7KtuucX
-   QPXKXJE4+S3PX8PBvx0GtgYbl9w5fL4hJMVGIWxDPrpTsWfzcghhy5cgP
-   w==;
-X-CSE-ConnectionGUID: 5g5KUqKqTSCOfJDeWNhlBw==
-X-CSE-MsgGUID: iBl4zEfMRlyfVkTXozKmbg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11532"; a="69012373"
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="69012373"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2025 21:31:44 -0700
-X-CSE-ConnectionGUID: 0AMZLhLKSMir2MWdwpkuWg==
-X-CSE-MsgGUID: nJVpXwpqTWC23qAEUaRHEA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
-   d="scan'208";a="168435086"
-Received: from lkp-server02.sh.intel.com (HELO 4ea60e6ab079) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 24 Aug 2025 21:31:43 -0700
-Received: from kbuild by 4ea60e6ab079 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uqOrs-000NMK-18;
-	Mon, 25 Aug 2025 04:31:40 +0000
-Date: Mon, 25 Aug 2025 12:31:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 27ad534606c4cd8bd816b929e46e8a8eeb6cb07d
-Message-ID: <202508251211.2SMAmo19-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4c9M665Cgqz3cYy
+	for <linux-erofs@lists.ozlabs.org>; Mon, 25 Aug 2025 16:56:45 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1756105001; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=lGj8Uhs5AvVLXm4j/p+T7V74+SPXhbNIumRIVY3Ycgs=;
+	b=vlic72jlyzvGRQkhNE1UFJxHDX6BFmOGJxAeJkPJsOQ5tbdwzU/RiMStEaKRRl75ow52W57ZzL75W+N6UEODyDwq78Qgw68eW0tD78tK9lfDa6OS1lXxJGdv8LrrTS0sOIT4krTSdZbd7Gv6oo+76A37K7//J1rWfU/ZHW7kGiM=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WmSImL5_1756104995 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 25 Aug 2025 14:56:39 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Friendy Su <friendy.su@sony.com>,
+	Yuezhang Mo <Yuezhang.Mo@sony.com>,
+	Daniel Palmer <daniel.palmer@sony.com>
+Subject: Re: [PATCH v2] erofs-utils: mkfs: Implement 'dsunit' alignment on blobdev
+Date: Mon, 25 Aug 2025 14:56:35 +0800
+Message-ID: <20250825065635.2318673-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250822084241.170054-1-friendy.su@sony.com>
+References: <20250822084241.170054-1-friendy.su@sony.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -78,179 +58,131 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 27ad534606c4cd8bd816b929e46e8a8eeb6cb07d  erofs: fix invalid algorithm for encoded extents
+Hi Friendy,
 
-elapsed time: 764m
+I applied the version as below:
 
-configs tested: 158
-configs skipped: 4
+Thanks,
+Gao Xiang
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+From 631ebfada7b6733ed31d70692f08a4e0bd3dc0b8 Mon Sep 17 00:00:00 2001
+From: Friendy Su <friendy.su@sony.com>
+Date: Sat, 23 Aug 2025 16:34:53 +0800
+Subject: [PATCH v2 applied] erofs-utils: mkfs: Implement 'dsunit' alignment on blobdev
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20250825    gcc-8.5.0
-arc                   randconfig-002-20250825    gcc-12.5.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                                 defconfig    clang-22
-arm                        keystone_defconfig    gcc-15.1.0
-arm                          moxart_defconfig    gcc-15.1.0
-arm                   randconfig-001-20250825    gcc-12.5.0
-arm                   randconfig-002-20250825    gcc-13.4.0
-arm                   randconfig-003-20250825    gcc-8.5.0
-arm                   randconfig-004-20250825    clang-22
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-arm64                 randconfig-001-20250825    gcc-8.5.0
-arm64                 randconfig-002-20250825    gcc-8.5.0
-arm64                 randconfig-003-20250825    clang-22
-arm64                 randconfig-004-20250825    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-csky                  randconfig-001-20250824    gcc-10.5.0
-csky                  randconfig-001-20250825    gcc-12.5.0
-csky                  randconfig-002-20250824    gcc-15.1.0
-csky                  randconfig-002-20250825    gcc-11.5.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon                             defconfig    clang-22
-hexagon               randconfig-001-20250824    clang-22
-hexagon               randconfig-001-20250825    clang-18
-hexagon               randconfig-002-20250824    clang-22
-hexagon               randconfig-002-20250825    clang-22
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250824    gcc-12
-i386        buildonly-randconfig-002-20250824    gcc-12
-i386        buildonly-randconfig-003-20250824    gcc-12
-i386        buildonly-randconfig-004-20250824    gcc-12
-i386        buildonly-randconfig-005-20250824    gcc-12
-i386        buildonly-randconfig-006-20250824    gcc-12
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20250824    gcc-12.5.0
-loongarch             randconfig-001-20250825    gcc-12.5.0
-loongarch             randconfig-002-20250824    clang-22
-loongarch             randconfig-002-20250825    clang-18
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                           ip27_defconfig    gcc-15.1.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20250824    gcc-8.5.0
-nios2                 randconfig-001-20250825    gcc-8.5.0
-nios2                 randconfig-002-20250824    gcc-9.5.0
-nios2                 randconfig-002-20250825    gcc-9.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20250824    gcc-9.5.0
-parisc                randconfig-001-20250825    gcc-8.5.0
-parisc                randconfig-002-20250824    gcc-14.3.0
-parisc                randconfig-002-20250825    gcc-9.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc                     ep8248e_defconfig    gcc-15.1.0
-powerpc                     ksi8560_defconfig    gcc-15.1.0
-powerpc                 mpc832x_rdb_defconfig    gcc-15.1.0
-powerpc                       ppc64_defconfig    clang-22
-powerpc                      ppc6xx_defconfig    gcc-15.1.0
-powerpc                     rainier_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20250824    gcc-9.5.0
-powerpc               randconfig-001-20250825    clang-22
-powerpc               randconfig-002-20250824    clang-22
-powerpc               randconfig-002-20250825    clang-22
-powerpc               randconfig-003-20250824    gcc-12.5.0
-powerpc               randconfig-003-20250825    clang-22
-powerpc                     tqm8540_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20250824    gcc-8.5.0
-powerpc64             randconfig-001-20250825    gcc-13.4.0
-powerpc64             randconfig-002-20250824    gcc-13.4.0
-powerpc64             randconfig-002-20250825    gcc-15.1.0
-powerpc64             randconfig-003-20250824    gcc-12.5.0
-powerpc64             randconfig-003-20250825    clang-20
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20250825    clang-18
-riscv                 randconfig-002-20250825    gcc-12.5.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20250825    gcc-12.5.0
-s390                  randconfig-002-20250825    gcc-8.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20250825    gcc-14.3.0
-sh                    randconfig-002-20250825    gcc-13.4.0
-sh                           se7619_defconfig    gcc-15.1.0
-sh                           se7712_defconfig    gcc-15.1.0
-sh                        sh7757lcr_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20250825    gcc-15.1.0
-sparc                 randconfig-002-20250825    gcc-14.3.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20250825    clang-22
-sparc64               randconfig-002-20250825    clang-22
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250825    clang-22
-um                    randconfig-002-20250825    clang-20
-um                           x86_64_defconfig    clang-22
-x86_64                           alldefconfig    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250825    clang-20
-x86_64      buildonly-randconfig-002-20250825    gcc-12
-x86_64      buildonly-randconfig-003-20250825    gcc-12
-x86_64      buildonly-randconfig-004-20250825    clang-20
-x86_64      buildonly-randconfig-005-20250825    clang-20
-x86_64      buildonly-randconfig-006-20250825    clang-20
-x86_64                              defconfig    gcc-11
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20250825    gcc-8.5.0
-xtensa                randconfig-002-20250825    gcc-10.5.0
+Align inode data to huge pages on blobdev, where dsunit * blocksize =
+2MiB.
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+When a file is mmap()'ed with dax=always, aligning to huge pages allows
+the kernel to map a 2M huge page per page fault, instead of mapping
+a 4KiB normal page for each page fault.
+
+This greatly improves mmap() performance by reducing times of page
+fault being triggered.
+
+Note that `chunksize` should not be smaller than `dsunit` so that
+data alignment is preserved after deduplication.
+
+Signed-off-by: Friendy Su <friendy.su@sony.com>
+Reviewed-by: Yuezhang Mo <Yuezhang.Mo@sony.com>
+Reviewed-by: Daniel Palmer <daniel.palmer@sony.com>
+[ Gao Xiang: refine some informational messages. ]
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ lib/blobchunk.c  | 19 +++++++++++++++++++
+ man/mkfs.erofs.1 | 13 +++++++++++++
+ mkfs/main.c      | 15 +++++++++++++++
+ 3 files changed, 47 insertions(+)
+
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index af6ddd7..4ed463f 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -309,6 +309,25 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd,
+ 	minextblks = BLK_ROUND_UP(sbi, inode->i_size);
+ 	interval_start = 0;
+ 
++	/*
++	 * If dsunit <= chunksize, deduplication will not cause misalignment,
++	 * so it's uncontroversial to apply the current data alignment policy.
++	 */
++	if (sbi->bmgr->dsunit > 1 &&
++	    sbi->bmgr->dsunit <= 1u << (chunkbits - sbi->blkszbits)) {
++		off_t off = lseek(blobfile, 0, SEEK_CUR);
++
++		off = roundup(off, sbi->bmgr->dsunit * erofs_blksiz(sbi));
++		if (lseek(blobfile, off, SEEK_SET) != off) {
++			ret = -errno;
++			erofs_err("failed to lseek blobdev@0x%llx: %s", off,
++				  erofs_strerror(ret));
++			goto err;
++		}
++		erofs_dbg("Align /%s on block #%d (0x%llx)",
++			  erofs_fspath(inode->i_srcpath), erofs_blknr(sbi, off), off);
++	}
++
+ 	for (pos = 0; pos < inode->i_size; pos += len) {
+ #ifdef SEEK_DATA
+ 		off_t offset = lseek(fd, pos + startoff, SEEK_DATA);
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index 63f7a2f..cc5a310 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -168,6 +168,19 @@ the output filesystem, with no leading /.
+ .TP
+ .BI "\-\-dsunit=" #
+ Align all data block addresses to multiples of #.
++
++If \fI--dsunit\fR and \fI--chunksize\fR are both set, \fI--dsunit\fR will be
++ignored if it is larger than \fI--chunksize\fR.
++
++If \fI--dsunit\fR is larger, it spans multiple chunks, for example:
++\fI-b 4096\fR, \fI--dsunit 512\fR (2MiB), \fI--chunksize 4096\fR
++
++Once a chunk is deduplicated, all subsequent chunks will no longer be
++aligned. For optimal performance, it is recommended to set \fI--dsunit\fR to
++the same value as \fI--chunksize\fR:
++
++E.g. \fI-b\fR 4096, \fI--dsunit 512\fR (2MiB), \fI--chunksize $((4096*512))\fR
++
+ .TP
+ .BI "\-\-exclude-path=" path
+ Ignore file that matches the exact literal path.
+diff --git a/mkfs/main.c b/mkfs/main.c
+index e0ba55d..2e6de00 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -1298,6 +1298,21 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+ 		return -EINVAL;
+ 	}
+ 
++	/*
++	 * chunksize must be greater than or equal to dsunit to keep
++	 * data alignment working.
++	 *
++	 * If chunksize is smaller than dsunit (e.g., chunksize=4K, dsunit=2M),
++	 * deduplicating a chunk will cause all subsequent data to become
++	 * unaligned. Therefore, let's issue a warning here and still skip
++	 * alignment for now.
++	 */
++	if (cfg.c_chunkbits && dsunit &&
++	    1u << (cfg.c_chunkbits - g_sbi.blkszbits) < dsunit) {
++		erofs_warn("chunksize %u bytes is smaller than dsunit %u blocks, ignore dsunit !",
++			   1u << cfg.c_chunkbits, dsunit);
++	}
++
+ 	if (pclustersize_packed) {
+ 		if (pclustersize_packed < (1U << mkfs_blkszbits) ||
+ 		    pclustersize_packed % (1U << mkfs_blkszbits)) {
+-- 
+2.43.5
+
 
