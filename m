@@ -1,174 +1,45 @@
-Return-Path: <linux-erofs+bounces-901-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-902-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C36BB338F5
-	for <lists+linux-erofs@lfdr.de>; Mon, 25 Aug 2025 10:32:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0897DB33A13
+	for <lists+linux-erofs@lfdr.de>; Mon, 25 Aug 2025 11:02:15 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4c9PD817qwz3cZN;
-	Mon, 25 Aug 2025 18:32:08 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4c9Ptp62nKz3cdD;
+	Mon, 25 Aug 2025 19:02:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=fail smtp.remote-ip=185.132.183.11
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756110728;
-	cv=fail; b=EIF7HMzCVGp+wgdElspVhYuA9bzCoDqAiPGWneWqZtlGL4+RKEw7r5it9P7Le21y4XfMLht0EyY7PKGxxMz77exAD3D8kR+IMlf6VYB4JBGCxgcBxy+xwVLf+uMgZ5E5QUvsSoXxN3zRU9c2zpv7UailEReGBxrT18GCFbP/eDLjUiv6P98e8NU1vrspOQ0TCCnHF6pskJZAIg8pPHiPA43eGA09Xsq+ihwEMTGj9lANTo1Mp188GNXePandn/dNNIqkhKOp29oPasCA4qdfa9MVYBM893pq9OFAm/azS/YMnUBsO9k61iFx30CAqhUOwTNxxFQi0/vc/y1a913qSw==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1756110728; c=relaxed/relaxed;
-	bh=7b2bZmci6/44Aij4XPcyOobBz+wOj1DBjY5ZcW92s4I=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=g7Pc6jz6S+cS53Eek2OcPSioMNd3b0ULgHHKE7MBYMyKaLNvDUesgKXXJn/l8TpOrjpWflxJo7zgBXFnDru9IMpXTp9+m1yF/eGIpBxfdnml9yBY9SJLTuXZzbZlP7YMQUdr8BwyFVUVM3fg5/Ce++OgxSeQ/JBRgWI6BzVfIhJfllgAau6pbpFlDCEFFIcpLSiP9dzauhSGLEMMR/QwFpdrLElD1F6qsJ1164liZp7CSibISzfDG6HGCeTVrTLT8tjX5AvmnOO+/CFtuT8CsEwfHVtF/LmB447XbRB9ys4eQIiypIQYQfJ53fD4uKUvqQ0sVKoiTyHAS+FOk58RmQ==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=sony.com; dkim=pass (2048-bit key; unprotected) header.d=sony.com header.i=@sony.com header.a=rsa-sha256 header.s=S1 header.b=lYYZhePG; dkim-atps=neutral; spf=pass (client-ip=185.132.183.11; helo=mx07-001d1705.pphosted.com; envelope-from=friendy.su@sony.com; receiver=lists.ozlabs.org) smtp.mailfrom=sony.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=sony.com header.i=@sony.com header.a=rsa-sha256 header.s=S1 header.b=lYYZhePG;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sony.com (client-ip=185.132.183.11; helo=mx07-001d1705.pphosted.com; envelope-from=friendy.su@sony.com; receiver=lists.ozlabs.org)
-Received: from mx07-001d1705.pphosted.com (mx07-001d1705.pphosted.com [185.132.183.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.60
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756112530;
+	cv=none; b=Rcj9QZyUpwwGBUXxOaI/cObeEW7hVziNbShYftWVZoPWk4PJ3ANN02H1ooGn5oMLx/mezquutxC8vD2pBufXFerEQxReybVj5xEVGVMc9+xqWdjkDSe7OIdMIrsitReWZhvKGJmoMqjrQrVLjIX4NhLg8ZD3Hb4eXoZSp9dHrcvc8CwD71o9yt5QKDMS36wNb290M09CkKkO0SUnyCRUf0/5N9UmwiT3v7bmAtlMRMlBsKxzhN44ZH8t9OjU5hAdN8HRCMtKYVy3nF6B1DK3TvTp+A2RovFZPYLpRqW0GRo3alXk3N5hJzmgs4rMF2khrEHUa/VMsB2iN46k5E3x5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1756112530; c=relaxed/relaxed;
+	bh=7WOx6uLxgsTXbQddF6dFqO5Ym/6ghb97XrUUxn4vrFc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ELleD6wTWdVRR7JGSyRAtS/bAsSbW4AGTn/PXcfKy0p0N1pokt3kLRIwsqTt3bzmPZqT1TNEvAV4bLit10ydQu13lTqAMr3x11R6OZIRLaHvGSlEIwQPRYtqnMIQFvAdtvrtaklhTbi11QUpwXrcVQWVwJND7rCU4PTGpkAqmgmbDJzyEZcvmyuIXjjQxCjlBpP+B/rRIaTvtSYeCIiNt+o3Z/VFvaudiOGHwRSYw3BP1XZTBoSjWO/LHih4riX0pTcN+u5izAXfqCANSiefyElUnpr7LDxSMzZM37klSXrKCvMPZB1w6/B1yfAKoQ37y2hQ6sESJ6jf3K5MQt5JUg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.60; helo=out28-60.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.60; helo=out28-60.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-60.mail.aliyun.com (out28-60.mail.aliyun.com [115.124.28.60])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4c9PD66JDqz3cZM
-	for <linux-erofs@lists.ozlabs.org>; Mon, 25 Aug 2025 18:32:05 +1000 (AEST)
-Received: from pps.filterd (m0209326.ppops.net [127.0.0.1])
-	by mx08-001d1705.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 57P3YoPr016164;
-	Mon, 25 Aug 2025 08:31:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sony.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=S1; bh=7b2bZmc
-	i6/44Aij4XPcyOobBz+wOj1DBjY5ZcW92s4I=; b=lYYZhePG3JHsqyJvMzjs8ko
-	zblQoOT1Hw5DEiuDNxtXYZe5kLuA/WrwVTn9w7genBeeE5vrXijwy01qgFH+Njgn
-	51FEP0GApS8jDYiVrkEDiuc3OYYvRiaIXgbh06HxL5oJQQMpZyeFqGrOW2ZnoxQ4
-	6crmJ+li/5g8Vctqi3zWd3gTdxcxoG+jJXZxqg2pFHJvHECiXvE5prR3B5vmAG6h
-	ZrkgJYLuH3EACwzFuJcn4yg7aqrbeghVaOKuPwo35gcQ03cqu/nou0mqjAZJn5Nr
-	ORKze+TUVcb8DjlLspt/IhVstueaS12LNpN8/+K3qKnGNMXDPfN5Tp0XlccW5Sg=
-	=
-Received: from seypr02cu001.outbound.protection.outlook.com (mail-koreacentralazon11013063.outbound.protection.outlook.com [40.107.44.63])
-	by mx08-001d1705.pphosted.com (PPS) with ESMTPS id 48q3ue1jq3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 25 Aug 2025 08:31:54 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PWTHv+t5csExKPPeLOdlAdCSLJpltnHLWr7lvTyB+Xy4p04fCNKbD0xXwA2xz+CcI2w7zjkoufIW2NpUObXqod2j8uvhaaiwwcg3ysdxiKwXc4XhyHo1cDNnwCk+qBfklK4PlTZx5fLgHHAtXwrtQqfQEJhSMFVOFyZlqSCdljbXDaGlg9qlNY5aCOP0b6pN0qOyi5LG3fGoW8UZ23sIPc5m7e8fklVGV10jC2e4TBdedK8GuEu/Pq+/jQwokiQZzD+ELvKlBlk9EDS7uajKN0lPf1+wynUtl4UR+f87ik43I1mMccbKZMzxTKELJOZFy3spyH4iAbgCUrwI+9Kfjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gdqHRzfoPeR60Xv/qFbGd0qbRpLQo9umY13OYw0ouKI=;
- b=ObCEienR9f2b6hE/SKJrM0QV2z+5lHPLLU2rGHdbLXk/uaNMGDlaPlV8ID/wO8EQig5vCtF/6hTXn+3JytoXLN2IhPINj9GKmvlQVnxQ/3aVHEAknCiQOMVfxhoLi3Oe1rkKnSNuAAoEc/CftBXEYzB8N2d8RPadlnk4GW35JdrKfuI6H133ghxOAVDtdtuMgzKrFD0I7QZ38QBZ1DISbJKWS0BIjF1JewII9VzYtq1AKNdbGW6rWx03jmLf48ZJvIDH+tB8j/rbJRKnT/PDOji1xkkSMH5lMfolhYPN2SndRN2Gy8OQzarTobU1gamQ/YKo5LSY61JzM9vx/pHuWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
- dkim=pass header.d=sony.com; arc=none
-Received: from TY0PR04MB6191.apcprd04.prod.outlook.com (2603:1096:400:32c::12)
- by TY0PR04MB7325.apcprd04.prod.outlook.com (2603:1096:405:12::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9052.19; Mon, 25 Aug
- 2025 08:31:46 +0000
-Received: from TY0PR04MB6191.apcprd04.prod.outlook.com
- ([fe80::ec62:d940:3c6e:2882]) by TY0PR04MB6191.apcprd04.prod.outlook.com
- ([fe80::ec62:d940:3c6e:2882%5]) with mapi id 15.20.9052.019; Mon, 25 Aug 2025
- 08:31:45 +0000
-From: "Friendy.Su@sony.com" <Friendy.Su@sony.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>,
-        "linux-erofs@lists.ozlabs.org"
-	<linux-erofs@lists.ozlabs.org>
-CC: "Yuezhang.Mo@sony.com" <Yuezhang.Mo@sony.com>,
-        "Daniel.Palmer@sony.com"
-	<Daniel.Palmer@sony.com>
-Subject: Re: [PATCH v2] erofs-utils: mkfs: Implement 'dsunit' alignment on
- blobdev
-Thread-Topic: [PATCH v2] erofs-utils: mkfs: Implement 'dsunit' alignment on
- blobdev
-Thread-Index: AQHcE0FlQsf/d+kYlkqYaNKU6IkKzbRy9EiAgAAaeLM=
-Date: Mon, 25 Aug 2025 08:31:45 +0000
-Message-ID:
- <TY0PR04MB61916FA5AC045C756077C621FD3EA@TY0PR04MB6191.apcprd04.prod.outlook.com>
-References: <20250822084241.170054-1-friendy.su@sony.com>
- <20250825065635.2318673-1-hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250825065635.2318673-1-hsiangkao@linux.alibaba.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY0PR04MB6191:EE_|TY0PR04MB7325:EE_
-x-ms-office365-filtering-correlation-id: 09eb0bfd-681f-4589-fd61-08dde3b1d3c5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|10070799003|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?N2dCbHVWb3NPcVNzaDNVZ01aRTdFbUg3a2lvVGp5clJMcDJqdkQvclBwYm8y?=
- =?utf-8?B?Qm5veUdqVi9ud0MvTlFTZVBPZ0xhbGlLaUZUZGRJZGdaU1BPdXdleDRXNERQ?=
- =?utf-8?B?NUxNRzh5UVF6SndZVCtrckhwMmRUYzJtcjZxTE9ETlNncFl3ZHhMalVoSmhU?=
- =?utf-8?B?bFJxWHRzYXU2eDQ1VGhQWkpnOFhVM202NTJpWnNpck9Rcm13ekNwR3lKdVcw?=
- =?utf-8?B?eHJhb0NFOXlpZGlpRmEvMzZFd3M1NHM4QmdYQkc2d0VVRGN1VmdmWVRIQzcy?=
- =?utf-8?B?aWZjSFdxT3VqMThacHk0Z0dVcUVlYk9kVkhnbGl2dEMzU0tnalhkYTdwWmxV?=
- =?utf-8?B?OVhueEFqRkRsRklETUJaSDhiSitVbUdPaDBLZGtHY01MUGpBUE5qdnNJNXlz?=
- =?utf-8?B?MFI3elBjY0RMaSsybFIzSFhaY0h5THVlMzRWSnFUSExTZ1l0ZlFOY1QvRGw3?=
- =?utf-8?B?VVdzZVUzeEpYcTA5Qzlub2RsazlleE1kNjVFdmJscHpvOEJRRytnT3dSNFhX?=
- =?utf-8?B?bEluSWpBSUJxRC83RllNcElKbitmL2xXRTBIRjRXT3dzWlpvOU5FSTZjR25L?=
- =?utf-8?B?TmtnTjM3WG8rWmRsaTFhL3MxVnpRemxtVUdFczJnMEZSVWlad0UzQThaWXJk?=
- =?utf-8?B?UjNZOW5hWkJpb2JmZDVOc3RLK0g4R0xoaUl6OU00dXpoRWU3a2ZKdnlhcXdW?=
- =?utf-8?B?N3lwN2lKSThtb3JFNkdRTDlieXRrZytlN3h4VldmRER3MGpYSEZGN2RzMVVt?=
- =?utf-8?B?Zk9aMk90VzBzK01jbHB4VUJmUkZGRFU2dWJ6d2RBUXV3ZFU0ZDBsVFgwYWk4?=
- =?utf-8?B?WC9rK01jNURCcHJ6MndZdFZnNDByK1AzRkp3SDB0T2kxUkpPYVVQWTBLTFJk?=
- =?utf-8?B?VFpQN05sRWZYTW5COXpYNjkyZWhvQVd1NHdIWFR5RjlTQVVRZ2V3WHFVOGZi?=
- =?utf-8?B?d0w0Z1VERW5SbkVkanVoV3BSWGEzVjNLcktGZ1lxYnNscTVpUEdkbFVPMjBJ?=
- =?utf-8?B?MU02dHg2OVRQL0xpbDJzZ2tqTkl5OFlHLzJWN0R0QjdzeWRXeDMzaXZyOU1C?=
- =?utf-8?B?ZUJjTnNsZysrcFM4RUwwOXgzb3Z0RDFySDdoYUQyNU10RWNPNVY3aTdSYlVl?=
- =?utf-8?B?TkdRVk9VTFg0UmswSEo1L3lGdDdneHdlY0R6SzhoaUM0aEYydHc3SmE4VDlU?=
- =?utf-8?B?cHNhQ3ZEWmhob1lkNXVaUXQwRVdheTFBY2RKcnBFU3MwbVpkdy9ZUnBlTjEw?=
- =?utf-8?B?L2g5eUM3WHBiS1RtYS83ZlFPWHpqTG0rY0NkeHhFTVd2Ulg0dHB5TTJaWjJ1?=
- =?utf-8?B?VUZja0lwU3ZtOTlLakw1WGtTcndBNGN6OUFoMnNxbWw2N3hlcktaUXVoclE4?=
- =?utf-8?B?YjgxSFNTNFVDbGFZN2VCNzlFYjgyTEhJSlRxdDA0emVtcFI2YVZxRUlFaE1T?=
- =?utf-8?B?V2R0RFAzOGpXcm9keUg0S1QxV1lqZzlCNTJFMEJBbGtEL25qQXZsZkJPa3Rn?=
- =?utf-8?B?TjVuNVhCMnNkMHhydkpKbnVaSnoxZldkN0QzbWlsOUgxMXJZdjRhclRKRlp6?=
- =?utf-8?B?RWE1c000Sk9WVndZa2lPNnZPNWJHOUEvdjZuQVN3ekJUcDkxVlJqL3NaSGRm?=
- =?utf-8?B?VGwzR3g0Y3FlSjlTSkwwOEE4UVNwV3E1aW9ONnRGeVdNbUgxY20zVmE4TjNi?=
- =?utf-8?B?c2svUG1LWHZZYTgzcS9SMk5pR1QrcmZxMmc0c2haMHBVNThiNXVsNUFPcmpk?=
- =?utf-8?B?RWVXa3g0bkJBbjg4SmJMbldsdUxRYjJsMEoxNERBWVlJWUFKakE1K3duK29x?=
- =?utf-8?B?WGhqemV3VDB2Y256UFFrdzdqWTloRkppUHl2WXlwaEJoUUdaSFhmWmc1U0FI?=
- =?utf-8?B?YUVBaGVtWGRpclJZYTdVWXRmeWMwenRpdk9BZG1Ka1dGUUJUNzA0d29WdWRV?=
- =?utf-8?B?TWJ0NlA0MW9iVWJYNHhxQ3QzQ3F4K0V1UmwzRXUvV0dkeUVvWlRoNTMxdWNh?=
- =?utf-8?Q?OJu7Qs733g3Sc2rd9TKCHDGjmdizSM=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY0PR04MB6191.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(10070799003)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?SllBNVNIRmFib0xUdFdLQksvdUtHWWgydWxNdnZpNWZUdFVZZXZyN3ZaZFVj?=
- =?utf-8?B?R2RQZEh4c2pMbDVpYjBhd2tKNFIzakZWN2kwZHZJUU1LZ01MbDZnejBSSXBt?=
- =?utf-8?B?RXJDNzUwdXQ0dTBQbEJDNTRhT21oY09TcXplZzEyK08zWDZ0dXRwZUw4S3E4?=
- =?utf-8?B?SFNnVDh1cFQyV2RMMjEzUnVQZjRwNy8xQmxIVW5YN3Y1aXhHMnRtVk1tdlUz?=
- =?utf-8?B?cE1mM3ppRkVmbU9oQ3laVEEwUGx1aForczdZRU9jQjRJZGg3QVkyTnZoSnh2?=
- =?utf-8?B?SjJJaTZkNDlEZWxMaWlBS2w4RExWck95Zmd4Y0ZOQ243NXpycC9UOFJ1UVZt?=
- =?utf-8?B?ak9YanBBVUZMR1pyTGVKTjFvQWRFSnRZY2J3blk2Uy9yMkVzeG9rV3JIMGhE?=
- =?utf-8?B?R1UxMWd0NWRtSDdaOWVKSXMyMjA4Y1hoaW9PT3d2UXRESHVCa1ZwMzdDYSt1?=
- =?utf-8?B?VzhQMzF4ci9UV0RmU3o0ZzViTGI4LzFHRG9OcUlVT1FUVE9YUTlpVXMvSldP?=
- =?utf-8?B?Zk40TUhQaFduUlU3amtmMzhNVUozOEJnbW9oNGtoWlVGS2ZjcnZNQWFWU3I0?=
- =?utf-8?B?SXk3cG1wOHJTWS9ud0RTRWdRelhTd1kvaiswdFZWeTU5VnR4bUpWWWd0SDh0?=
- =?utf-8?B?SWxsOGgrMmIrL21YQW9hNW01U2lSSHJHSWFMMUlKOW9Wd0l2U1RGb0NBaUlS?=
- =?utf-8?B?N1IwWVkrSWpvMlVyeTdla2JyTXJpUEtPNytYVkhONElIclZJL0lMRUhEQlB5?=
- =?utf-8?B?QUZ4RlZpZDlGeE1nSmVxTGtJSFhHTnRBMEpYd3RSeFlHMFo4STkwNnZPNTMw?=
- =?utf-8?B?N1FPNURyck9UcHFxQzV2ZkhtMkFEZjh4ZmdENDZBWStWakJaeXZ6T1g1d1kz?=
- =?utf-8?B?bzd4UURJeUFCQkh3MmVxVDRTQ2lxUnVhS1lnaFErNGgwd2JQUHBHbG9LV1Y2?=
- =?utf-8?B?K016VHN4RzJQOUNMMmkzQm1kU2JMaVJnbzlUZ2pOY0xMaUJWNmtsQjhzT25W?=
- =?utf-8?B?aU8zTktVbXhCYkFMTWJOekZ0dUh1SEROWURBZW5mWWd1eGdMOUZnOGJzZG9o?=
- =?utf-8?B?dkVJanY5UHlicERNRGdDMjErYVVoNjdEYXNlZ2wwRDE1dEE4VTg5cGd2T2Vn?=
- =?utf-8?B?UGFKZTcwUW9ic29WUWpNTFlJbzJacXo4OE9QaXpnaWROVHB2Sitmbk82RWxM?=
- =?utf-8?B?WW14d1laYlc3ODFQdC9WTkNXQmdzaGhUajJUQ3FOeTNFWDJwMmkxeFowclNn?=
- =?utf-8?B?bXdTdStwSVA1VUlLam95ZzZKa2ZsWUgzVC92WkJHTlFzR0RBNFlDd2Y3NVZk?=
- =?utf-8?B?YkdaSGttVFUxKzlNUVB5ZG44VHVtc1AyS3hQUnFHMXB3U2JSSEU1VnhwQTlv?=
- =?utf-8?B?dFZhWmVKam53bmFZOW1rdk81WHhPaXdlS1B0MUlSSjRTRkxBS2tPcm54UFl4?=
- =?utf-8?B?UmJqTXkrZ1lZZzdBeXpBeHc1TzBkQTFHVE10ZHZwWG1jZnR4bFRUN1VJRGdI?=
- =?utf-8?B?QnAzTzZIY2pXTXJHSHRqUmFSV08ra2NqRW9RUkpqeGloZVVteDBia0ZMN21R?=
- =?utf-8?B?S216MllpR2FZdmsvVHZZVW5xa1phQnJhUE5TMVB5SjdRTmhPRGY4eEw3dUlZ?=
- =?utf-8?B?YVBmOUZRK3NDVUdyVndGVXoySjFFaWhqZWtMRmErOXU2Z0E1VERqQXBLSjJ5?=
- =?utf-8?B?dTF3b0l1S2RyZFdNK3daYUpxZm9uU1dOWkZFUEhpWGNyR3NsS3cvYTNVOWhJ?=
- =?utf-8?B?L3puUTRrSTJWTEdud3k2QTYrTnNUcW41aFFic25RN1J2ZHZ1U3FNdmc0UWox?=
- =?utf-8?B?V3NQYUMxMGFYbDNiOEU0WXFpS093SDR1U3YzaDZFZjdMTjFNc29sQzI4bFBI?=
- =?utf-8?B?Kys5WVc0eEpqUnB5cU9LcUtXc0pnanRpci82ZGJIWWlVWE1aYlRENVkzNlRC?=
- =?utf-8?B?bThFUm9lR0E4ZWREdENWZklpbzFoVkVNbnhnaUp5ZDJIZlowVU1aS3R4Q1Av?=
- =?utf-8?B?UklFb0dYQnNablc3TytpQ2RPbHRKeDJzZjF6ZEI3ajMyMnpXMzgwMTJMdlY2?=
- =?utf-8?B?MjVuTUQxSmQzdmh4L294eGdFZHc5N0NrbnczNTZnTW5tdzlzM24xdHBicEJX?=
- =?utf-8?B?VTRpMGZQdGRDYXFneFQ5ZitEajlWYjIrUnJqUk1hZlF4dkYyeU9vcVI4S2JX?=
- =?utf-8?Q?asvmtdZsp2blNIJyaX+p3wQ=3D?=
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4c9Ptm29v0z3ccl
+	for <linux-erofs@lists.ozlabs.org>; Mon, 25 Aug 2025 19:02:05 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eP-J7mG_1756112519 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Mon, 25 Aug 2025 17:02:00 +0800
+From: ChengyuZhu6 <hudson@cyzhu.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: xiang@kernel.org,
+	hsiangkao@linux.alibaba.com,
+	Chengyu Zhu <hudson@cyzhu.com>,
+	Changzhi Xie <sa.z@qq.com>
+Subject: [PATCH v6] erofs-utils: add OCI registry support
+Date: Mon, 25 Aug 2025 17:01:55 +0800
+Message-ID: <20250825090155.90587-1-hudson@cyzhu.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250821073258.89073-1-hudson@cyzhu.com>
+References: <20250821073258.89073-1-hudson@cyzhu.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -180,190 +51,1669 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	wdeRgEHOgLaPOqCHLOEDcdZ0YVk74XrBUQif8GfUpVXYZz4yhHpBdthmrvm1mKlA98kY6cgrMghpPS14eXFBNPCg/ytiYPHodHDwSkl0ygngp4ssDgAFA9dzeQX0p8o6WE8zmJvzTjEEFNfNTTRVUyA6zpYb+1liHm6leeX/vASTLAjXTSOEcZ979GpXQ655HzT95peSOqQc8LehxT1HLA4+DsXZeaQYyVs7xKpzHfEd7eQbkCDTbOYio6eqLDM3CG571hUvE9ebVaiD2lPHwo8S5GOwHrjHhqTYpFTZ0i56788h2DSvY4bvypYpPRcWFgIl+hiYl9Dr5p8emiw7so++MplIiE9ESe4B0kV7NJISlZnHbZwt06/AEuDsx1C02qrrGgIGyKJzyohqLzf8UKD2AIM8SFcGj4hEGSTpLnbOBmoD12E5qAqwsTwYqITWTK/qMWwtYEmKRdTQHG0Yeb6uVbhs0hYJLB6mBgJl4i+JKDaTgQ5jZGaYGauE50IjIGn+IcKxiijo0t59bqe8V3FFPgPtSAg7LHGKRCJ22a+K/52o4u1gO5ps8MDHHcE4quzKLfstmNB2MpvzHHzeJU2f+BfLAzwMQdk2vFXOzPFQPfJaEwQq/kaged8+XTpn
-X-OriginatorOrg: sony.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY0PR04MB6191.apcprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09eb0bfd-681f-4589-fd61-08dde3b1d3c5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Aug 2025 08:31:45.7575
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JkhR/2mCfoKMP74HUziJfUsQV3JwFUnR1yuU+dyMlfQWgjjtLfhwF+jaXAxbp5LIld5yB3mOXD8/sgbyNM9vVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY0PR04MB7325
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwODIzMDAxMCBTYWx0ZWRfXyjiJQX5ftYjn nSu/mYzZtij3WKYpuDcSlN2xOwHuhd2+3hA6FDxfj+dBWh70n8NlWUl98VS7hEMaU1y9eIWLb2/ wEYpNf3LYq0TqdZQCNk+uphJ4K0i7zhc6+fUF2nZyAsdtWUhXc2GS4y3uRK5NsQVVpan13GCq9M
- 737ndiRyOsxA1FuE1O5Z+3YZiFa54TGn44mSUalO1ceIaFiZFcIHfzgckX0wEuLbVtiXon4BhCI 7wFjMyADWSpRHW20SoMYi7/qR8nc5mmTyaDfvSAJK5ZNnQtOzPENHjZa1UMXYXRCqqQlIfUumQL aEmpLQGKufEqWErBjXEY38qbJOeDMW3oe2kqUO7U4UfLUWb1RTXtVjBOzJzE1Xp3tbJi7y1BAgw yE8MlmTN
-X-Proofpoint-GUID: v6Eqm3zX3HeSO1g3_tDa9b8oEMh__UJC
-X-Proofpoint-ORIG-GUID: v6Eqm3zX3HeSO1g3_tDa9b8oEMh__UJC
-X-Authority-Analysis: v=2.4 cv=G6YcE8k5 c=1 sm=1 tr=0 ts=68ac1f7a cx=c_pps a=iSFZqEFXVSVjeMW94vgYYg==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=2OwXVqhp2XgA:10 a=7j0FZ4iXMVMA:10 a=xR56lInIT_wA:10 a=SRrdq9N9AAAA:8 a=voM4FWlXAAAA:8 a=z6gsHLkEAAAA:8 a=61dmBc3scJhz3e39i-wA:9 a=QEXdDO2ut3YA:10 a=IC2XNlieTeVoXbcui8wp:22
-X-Sony-Outbound-GUID: v6Eqm3zX3HeSO1g3_tDa9b8oEMh__UJC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-08-25_04,2025-08-20_03,2025-03-28_01
-X-Spam-Status: No, score=-3.8 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,T_FILL_THIS_FORM_SHORT,UNPARSEABLE_RELAY
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi, Gao,=20
+From: Chengyu Zhu <hudson@cyzhu.com>
 
-It looks nice.
+This patch adds support for building EROFS filesystems from
+OCI-compliant container registries, enabling users to create EROFS
+images directly from container images stored in registries like
+Docker Hub, Quay.io, etc.
 
-Thank you !
+The implementation includes:
+- OCI remote backend with registry authentication support
+- Manifest parsing for Docker v2 and OCI v1 formats
+- Layer extraction and tar processing integration
+- Multi-platform image selection capability
+- Both anonymous and authenticated registry access
+- Comprehensive build system integration
 
-Friendy
+Configure: ./configure --enable-oci
+New mkfs.erofs option: --oci-options=[option] target source-image
 
+Supported options:
+- platform=os/arch (default: linux/amd64)
+- layer=N (extract specific layer, default: all layers)
+- username/password (basic authentication)
 
-________________________________________
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-Sent: Monday, August 25, 2025 14:56
-To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang; Su, Friendy; Mo, Yuezhang; Palmer, Daniel (SGC)
-Subject: Re: [PATCH v2] erofs-utils: mkfs: Implement 'dsunit' alignment on =
-blobdev
+e.g.:
+- mkfs.erofs \
+  --oci-options=platform=linux/amd64, \
+  username=1234,password=1234 \
+  image.erofs ubuntu
 
-Hi Friendy, I applied the version as below: Thanks, Gao Xiang From 631ebfad=
-a7b6733ed31d70692f08a4e0bd3dc0b8 Mon Sep 17 00:=E2=80=8A00:=E2=80=8A00 2001=
- From: Friendy Su <friendy.=E2=80=8Asu@=E2=80=8Asony.=E2=80=8Acom> Date: Sa=
-t, 23 Aug 2025 16:=E2=80=8A34:=E2=80=8A53 +0800 Subject: [PATCH v2 applied]
-
-
-Hi Friendy,
-
-I applied the version as below:
-
-Thanks,
-Gao Xiang
-
-From 631ebfada7b6733ed31d70692f08a4e0bd3dc0b8 Mon Sep 17 00:00:00 2001
-From: Friendy Su <friendy.su@sony.com>
-Date: Sat, 23 Aug 2025 16:34:53 +0800
-Subject: [PATCH v2 applied] erofs-utils: mkfs: Implement 'dsunit' alignment=
- on blobdev
-
-Align inode data to huge pages on blobdev, where dsunit * blocksize =3D
-2MiB.
-
-When a file is mmap()'ed with dax=3Dalways, aligning to huge pages allows
-the kernel to map a 2M huge page per page fault, instead of mapping
-a 4KiB normal page for each page fault.
-
-This greatly improves mmap() performance by reducing times of page
-fault being triggered.
-
-Note that `chunksize` should not be smaller than `dsunit` so that
-data alignment is preserved after deduplication.
-
-Signed-off-by: Friendy Su <friendy.su@sony.com>
-Reviewed-by: Yuezhang Mo <Yuezhang.Mo@sony.com>
-Reviewed-by: Daniel Palmer <daniel.palmer@sony.com>
-[ Gao Xiang: refine some informational messages. ]
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Changzhi Xie <sa.z@qq.com>
+Signed-off-by: Chengyu Zhu <hudson@cyzhu.com>
 ---
- lib/blobchunk.c  | 19 +++++++++++++++++++
- man/mkfs.erofs.1 | 13 +++++++++++++
- mkfs/main.c      | 15 +++++++++++++++
- 3 files changed, 47 insertions(+)
+ configure.ac       |   45 ++
+ lib/Makefile.am    |    8 +-
+ lib/liberofs_oci.h |   89 ++++
+ lib/remotes/oci.c  | 1031 ++++++++++++++++++++++++++++++++++++++++++++
+ mkfs/main.c        |  296 ++++++++++++-
+ 5 files changed, 1467 insertions(+), 2 deletions(-)
+ create mode 100644 lib/liberofs_oci.h
+ create mode 100644 lib/remotes/oci.c
 
-diff --git a/lib/blobchunk.c b/lib/blobchunk.c
-index af6ddd7..4ed463f 100644
---- a/lib/blobchunk.c
-+++ b/lib/blobchunk.c
-@@ -309,6 +309,25 @@ int erofs_blob_write_chunked_file(struct erofs_inode *=
-inode, int fd,
-        minextblks =3D BLK_ROUND_UP(sbi, inode->i_size);
-        interval_start =3D 0;
-
-+       /*
-+        * If dsunit <=3D chunksize, deduplication will not cause misalignm=
-ent,
-+        * so it's uncontroversial to apply the current data alignment poli=
-cy.
-+        */
-+       if (sbi->bmgr->dsunit > 1 &&
-+           sbi->bmgr->dsunit <=3D 1u << (chunkbits - sbi->blkszbits)) {
-+               off_t off =3D lseek(blobfile, 0, SEEK_CUR);
+diff --git a/configure.ac b/configure.ac
+index 1efb57a..135365e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -177,10 +177,19 @@ AC_ARG_WITH(libxml2,
+    [AS_HELP_STRING([--with-libxml2],
+       [Enable and build with libxml2 support @<:@default=auto@:>@])])
+ 
++AC_ARG_WITH(json_c,
++   [AS_HELP_STRING([--with-json-c],
++      [Enable and build with json-c support @<:@default=auto@:>@])])
 +
-+               off =3D roundup(off, sbi->bmgr->dsunit * erofs_blksiz(sbi));
-+               if (lseek(blobfile, off, SEEK_SET) !=3D off) {
-+                       ret =3D -errno;
-+                       erofs_err("failed to lseek blobdev@0x%llx: %s", off,
-+                                 erofs_strerror(ret));
-+                       goto err;
-+               }
-+               erofs_dbg("Align /%s on block #%d (0x%llx)",
-+                         erofs_fspath(inode->i_srcpath), erofs_blknr(sbi, =
-off), off);
-+       }
+ AC_ARG_ENABLE(s3,
+    [AS_HELP_STRING([--enable-s3], [enable s3 image generation support @<:@default=no@:>@])],
+    [enable_s3="$enableval"], [enable_s3="no"])
+ 
++AC_ARG_ENABLE(oci,
++    AS_HELP_STRING([--enable-oci],
++                   [enable OCI registry based input support @<:@default=no@:>@]),
++    [enable_oci="$enableval"],[enable_oci="no"])
 +
-        for (pos =3D 0; pos < inode->i_size; pos +=3D len) {
- #ifdef SEEK_DATA
-                off_t offset =3D lseek(fd, pos + startoff, SEEK_DATA);
-diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
-index 63f7a2f..cc5a310 100644
---- a/man/mkfs.erofs.1
-+++ b/man/mkfs.erofs.1
-@@ -168,6 +168,19 @@ the output filesystem, with no leading /.
- .TP
- .BI "\-\-dsunit=3D" #
- Align all data block addresses to multiples of #.
+ AC_ARG_ENABLE(fuse,
+    [AS_HELP_STRING([--enable-fuse], [enable erofsfuse @<:@default=no@:>@])],
+    [enable_fuse="$enableval"], [enable_fuse="no"])
+@@ -624,6 +633,37 @@ AS_IF([test "x$with_libcurl" != "xno"], [
+   ])
+ ])
+ 
++# Configure json-c
++have_json_c="no"
++AS_IF([test "x$with_json_c" != "xno"], [
++  PKG_CHECK_MODULES([json_c], [json-c], [
++    saved_LIBS="$LIBS"
++    saved_CPPFLAGS=${CPPFLAGS}
++    CPPFLAGS="${json_c_CFLAGS} ${CPPFLAGS}"
++    LIBS="${json_c_LIBS} $LIBS"
++    AC_CHECK_HEADERS([json-c/json.h],[
++      AC_CHECK_DECL(json_tokener_parse, [have_json_c="yes"],
++        [AC_MSG_ERROR([json-c doesn't work properly])], [[
++#include <json-c/json.h>
++      ]])
++    ])
++    LIBS="${saved_LIBS}"
++    CPPFLAGS="${saved_CPPFLAGS}"
++  ], [
++    AC_MSG_ERROR([Cannot find proper json-c])
++  ])
++])
 +
-+If \fI--dsunit\fR and \fI--chunksize\fR are both set, \fI--dsunit\fR will =
-be
-+ignored if it is larger than \fI--chunksize\fR.
++# Validate dependencies for OCI registry
++AS_IF([test "x$enable_oci" = "xyes"], [
++  AS_IF([test "x$have_libcurl" = "xyes" -a "x$have_json_c" = "xyes"], [
++    have_oci="yes"
++  ], [
++    have_oci="no"
++    AC_MSG_ERROR([OCI registry disabled: missing libcurl or json-c])
++  ])
++], [have_oci="no"])
 +
-+If \fI--dsunit\fR is larger, it spans multiple chunks, for example:
-+\fI-b 4096\fR, \fI--dsunit 512\fR (2MiB), \fI--chunksize 4096\fR
+ # Configure openssl
+ have_openssl="no"
+ AS_IF([test "x$with_openssl" != "xno"], [
+@@ -713,6 +753,7 @@ AM_CONDITIONAL([ENABLE_OPENSSL], [test "x${have_openssl}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_LIBXML2], [test "x${have_libxml2}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_S3], [test "x${have_s3}" = "xyes"])
+ AM_CONDITIONAL([ENABLE_STATIC_FUSE], [test "x${enable_static_fuse}" = "xyes"])
++AM_CONDITIONAL([ENABLE_OCI], [test "x${have_oci}" = "xyes"])
+ 
+ if test "x$have_uuid" = "xyes"; then
+   AC_DEFINE([HAVE_LIBUUID], 1, [Define to 1 if libuuid is found])
+@@ -785,6 +826,10 @@ if test "x$have_s3" = "xyes"; then
+   AC_DEFINE([S3EROFS_ENABLED], 1, [Define to 1 if s3 is enabled])
+ fi
+ 
++if test "x$have_oci" = "xyes"; then
++  AC_DEFINE([OCIEROFS_ENABLED], 1, [Define to 1 if OCI registry is enabled])
++fi
 +
-+Once a chunk is deduplicated, all subsequent chunks will no longer be
-+aligned. For optimal performance, it is recommended to set \fI--dsunit\fR =
-to
-+the same value as \fI--chunksize\fR:
+ # Dump maximum block size
+ AS_IF([test "x$erofs_cv_max_block_size" = "x"],
+       [$erofs_cv_max_block_size = 4096], [])
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 955495d..118b047 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -42,6 +42,7 @@ liberofs_la_SOURCES = config.c io.c cache.c super.c inode.c xattr.c exclude.c \
+ 		      vmdk.c metabox.c global.c importer.c
+ 
+ liberofs_la_CFLAGS = -Wall ${libuuid_CFLAGS} -I$(top_srcdir)/include
++liberofs_la_LDFLAGS =
+ if ENABLE_LZ4
+ liberofs_la_CFLAGS += ${liblz4_CFLAGS}
+ liberofs_la_SOURCES += compressor_lz4.c
+@@ -73,6 +74,11 @@ if ENABLE_S3
+ liberofs_la_SOURCES += remotes/s3.c
+ endif
+ if ENABLE_EROFS_MT
+-liberofs_la_LDFLAGS = -lpthread
++liberofs_la_LDFLAGS += -lpthread
+ liberofs_la_SOURCES += workqueue.c
+ endif
++if ENABLE_OCI
++liberofs_la_SOURCES += remotes/oci.c
++liberofs_la_CFLAGS += ${libcurl_CFLAGS} ${json_c_CFLAGS}
++liberofs_la_LDFLAGS += ${libcurl_LIBS} ${json_c_LIBS}
++endif
+diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
+new file mode 100644
+index 0000000..05efbbc
+--- /dev/null
++++ b/lib/liberofs_oci.h
+@@ -0,0 +1,89 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
++/*
++ * Copyright (C) 2025 Tencent, Inc.
++ *             http://www.tencent.com/
++ */
++#ifndef __EROFS_OCI_H
++#define __EROFS_OCI_H
 +
-+E.g. \fI-b\fR 4096, \fI--dsunit 512\fR (2MiB), \fI--chunksize $((4096*512)=
-)\fR
++#include <stdbool.h>
 +
- .TP
- .BI "\-\-exclude-path=3D" path
- Ignore file that matches the exact literal path.
++#define DOCKER_REGISTRY "docker.io"
++#define DOCKER_API_REGISTRY "registry-1.docker.io"
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++struct erofs_inode;
++struct CURL;
++
++/*
++ * struct erofs_oci_params - OCI configuration
++ * @registry:         registry hostname (e.g., "registry-1.docker.io")
++ * @repository:       image repository (e.g., "library/ubuntu")
++ * @tag:              image tag or digest (e.g., "latest" or sha256:...)
++ * @platform:         target platform in "os/arch" format (e.g., "linux/amd64")
++ * @username:         username for authentication (optional)
++ * @password:         password for authentication (optional)
++ * @layer_index:      specific layer to extract (-1 for all layers)
++ */
++struct erofs_oci_params {
++	char *registry;
++	char *repository;
++	char *tag;
++	char *platform;
++	char *username;
++	char *password;
++	int layer_index;
++};
++
++/*
++ * struct erofs_oci - Combined OCI client structure
++ * @curl:             CURL handle for HTTP requests
++ * @params:           OCI configuration parameters
++ */
++struct erofs_oci {
++	struct CURL *curl;
++	struct erofs_oci_params params;
++};
++
++/*
++ * ocierofs_init - Initialize OCI client with default parameters
++ * @oci: OCI client structure to initialize
++ *
++ * Return: 0 on success, negative errno on failure
++ */
++int ocierofs_init(struct erofs_oci *oci);
++
++/*
++ * ocierofs_cleanup - Clean up OCI client and free allocated resources
++ * @oci: OCI client structure to clean up
++ */
++void ocierofs_cleanup(struct erofs_oci *oci);
++
++/*
++ * erofs_oci_params_set_string - Set a string field with dynamic allocation
++ * @field: pointer to the string field to set
++ * @value: string value to set
++ *
++ * Return: 0 on success, negative errno on failure
++ */
++int erofs_oci_params_set_string(char **field, const char *value);
++
++/*
++ * ocierofs_build_trees - Build file trees from OCI container image layers
++ * @root:     root inode to build the file tree under
++ * @oci:      OCI client structure with configured parameters
++ * @fillzero: if true, only create inodes without downloading actual data
++ *
++ * Return: 0 on success, negative errno on failure
++ */
++int ocierofs_build_trees(struct erofs_inode *root, struct erofs_oci *oci,
++			 bool fillzero);
++
++#ifdef __cplusplus
++}
++#endif
++
++#endif /* __EROFS_OCI_H */
+diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
+new file mode 100644
+index 0000000..3fb2ef7
+--- /dev/null
++++ b/lib/remotes/oci.c
+@@ -0,0 +1,1031 @@
++// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
++/*
++ * Copyright (C) 2025 Tencent, Inc.
++ *             http://www.tencent.com/
++ */
++#define _GNU_SOURCE
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <unistd.h>
++#include <fcntl.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <errno.h>
++#include <curl/curl.h>
++#include <json-c/json.h>
++#include "erofs/internal.h"
++#include "erofs/print.h"
++#include "erofs/inode.h"
++#include "erofs/blobchunk.h"
++#include "erofs/diskbuf.h"
++#include "erofs/rebuild.h"
++#include "erofs/tar.h"
++#include "liberofs_oci.h"
++#include "liberofs_private.h"
++
++#define DOCKER_MEDIATYPE_MANIFEST_V2 \
++	"application/vnd.docker.distribution.manifest.v2+json"
++#define DOCKER_MEDIATYPE_MANIFEST_V1 \
++	"application/vnd.docker.distribution.manifest.v1+json"
++#define DOCKER_MEDIATYPE_MANIFEST_LIST \
++	"application/vnd.docker.distribution.manifest.list.v2+json"
++#define OCI_MEDIATYPE_MANIFEST "application/vnd.oci.image.manifest.v1+json"
++#define OCI_MEDIATYPE_INDEX "application/vnd.oci.image.index.v1+json"
++
++struct erofs_oci_request {
++	char *url;
++	struct curl_slist *headers;
++};
++
++struct erofs_oci_response {
++	char *data;
++	size_t size;
++	long http_code;
++};
++
++struct erofs_oci_stream {
++	struct erofs_tarfile tarfile;
++	int temp_fd;
++	int layer_index;
++};
++
++static size_t ocierofs_write_callback(void *contents, size_t size,
++				     size_t nmemb, void *userp)
++{
++	size_t realsize = size * nmemb;
++	struct erofs_oci_response *resp = userp;
++	char *ptr;
++
++	if (!resp || !contents)
++		return 0;
++
++	if (resp->data == NULL)
++		resp->size = 0;
++
++	ptr = realloc(resp->data, resp->size + realsize + 1);
++	if (!ptr) {
++		erofs_err("failed to allocate memory for response data");
++		return 0;
++	}
++
++	resp->data = ptr;
++	memcpy(&resp->data[resp->size], contents, realsize);
++	resp->size += realsize;
++	resp->data[resp->size] = '\0';
++	return realsize;
++}
++
++static size_t ocierofs_layer_write_callback(void *contents, size_t size,
++					   size_t nmemb, void *userp)
++{
++	struct erofs_oci_stream *stream = userp;
++	size_t realsize = size * nmemb;
++
++	if (stream->temp_fd < 0)
++		return 0;
++
++	if (write(stream->temp_fd, contents, realsize) != realsize) {
++		erofs_err("failed to write layer data for layer %d",
++			  stream->layer_index);
++		return 0;
++	}
++
++	return realsize;
++}
++
++static int ocierofs_curl_setup_common_options(struct CURL *curl)
++{
++	curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
++	curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 30L);
++	curl_easy_setopt(curl, CURLOPT_TIMEOUT, 120L);
++	curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
++	curl_easy_setopt(curl, CURLOPT_USERAGENT, "ocierofs/" PACKAGE_VERSION);
++
++	return 0;
++}
++
++static int ocierofs_curl_setup_basic_auth(struct CURL *curl, const char *username,
++					 const char *password)
++{
++	char *userpwd;
++
++	if (asprintf(&userpwd, "%s:%s", username, password) == -1)
++		return -ENOMEM;
++
++	curl_easy_setopt(curl, CURLOPT_USERPWD, userpwd);
++	curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
++
++	free(userpwd);
++	return 0;
++}
++
++static int ocierofs_curl_clear_auth(struct CURL *curl)
++{
++	curl_easy_setopt(curl, CURLOPT_USERPWD, NULL);
++	curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_NONE);
++
++	return 0;
++}
++
++enum ocierofs_http_method { OCIEROFS_HTTP_GET, OCIEROFS_HTTP_HEAD };
++
++static int ocierofs_curl_setup_request_ex(struct CURL *curl, const char *url,
++					 enum ocierofs_http_method method,
++					 struct curl_slist *headers,
++					 size_t (*write_func)(void *, size_t, size_t, void *),
++					 void *write_data,
++					 size_t (*header_func)(void *, size_t, size_t, void *),
++					 void *header_data)
++{
++	curl_easy_setopt(curl, CURLOPT_URL, url);
++
++	if (method == OCIEROFS_HTTP_HEAD) {
++		curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
++	} else {
++		curl_easy_setopt(curl, CURLOPT_NOBODY, 0L);
++		curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
++	}
++
++	if (write_func) {
++		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_func);
++		curl_easy_setopt(curl, CURLOPT_WRITEDATA, write_data);
++	}
++
++	curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, header_func);
++	curl_easy_setopt(curl, CURLOPT_HEADERDATA, header_data);
++
++	if (headers)
++		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
++
++	return 0;
++}
++
++static int ocierofs_curl_perform(struct CURL *curl, long *http_code_out)
++{
++	CURLcode res;
++	long http_code = 0;
++
++	res = curl_easy_perform(curl);
++	if (res != CURLE_OK) {
++		erofs_err("curl request failed: %s", curl_easy_strerror(res));
++		return -EIO;
++	}
++
++	if (http_code_out) {
++		res = curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &http_code);
++		if (res != CURLE_OK) {
++			erofs_err("failed to get HTTP response code: %s",
++				  curl_easy_strerror(res));
++			return -EIO;
++		}
++		*http_code_out = http_code;
++	}
++	return 0;
++}
++
++static int ocierofs_request_perform(struct erofs_oci *oci,
++				   struct erofs_oci_request *req,
++				   struct erofs_oci_response *resp)
++{
++	int ret;
++
++	ret = ocierofs_curl_setup_request_ex(oci->curl, req->url,
++					    OCIEROFS_HTTP_GET,
++					    req->headers,
++					    ocierofs_write_callback, resp,
++					    NULL, NULL);
++	if (ret)
++		return ret;
++
++	ret = ocierofs_curl_perform(oci->curl, &resp->http_code);
++	if (ret)
++		return ret;
++
++	if (resp->http_code < 200 || resp->http_code >= 300)
++		return -EIO;
++
++	return 0;
++}
++
++static int ocierofs_parse_auth_header(const char *auth_header,
++				     char **realm_out, char **service_out, char **scope_out)
++{
++	const char *p, *start;
++	char *value;
++	size_t len;
++	char *realm = NULL, *service = NULL, *scope = NULL;
++
++	if (!auth_header || strncmp(auth_header, "Bearer ", strlen("Bearer ")) != 0)
++		return -EINVAL;
++
++	p = auth_header + strlen("Bearer ");
++
++	p = strstr(p, "realm=\"");
++	if (p) {
++		p += strlen("realm=\"");
++		start = p;
++		p = strchr(start, '"');
++		if (p) {
++			len = p - start;
++			value = strndup(start, len);
++			if (!value)
++				goto enomem;
++			realm = value;
++		}
++	}
++
++	p = strstr(auth_header, "service=\"");
++	if (p) {
++		p += strlen("service=\"");
++		start = p;
++		p = strchr(start, '"');
++		if (p) {
++			len = p - start;
++			value = strndup(start, len);
++			if (!value)
++				goto enomem;
++			service = value;
++		}
++	}
++
++	p = strstr(auth_header, "scope=\"");
++	if (p) {
++		p += strlen("scope=\"");
++		start = p;
++		p = strchr(start, '"');
++		if (p) {
++			len = p - start;
++			value = strndup(start, len);
++			if (!value)
++				goto enomem;
++			scope = value;
++		}
++	}
++
++	if (realm_out) {
++		*realm_out = realm;
++		realm = NULL;
++	}
++	if (service_out) {
++		*service_out = service;
++		service = NULL;
++	}
++	if (scope_out) {
++		*scope_out = scope;
++		scope = NULL;
++	}
++
++	free(realm);
++	free(service);
++	free(scope);
++	return 0;
++
++enomem:
++	free(realm);
++	free(service);
++	free(scope);
++	return -ENOMEM;
++}
++
++static char *ocierofs_get_auth_token_with_url(struct erofs_oci *oci,
++					     const char *auth_url,
++					     const char *service,
++					     const char *repository,
++					     const char *username,
++					     const char *password)
++{
++	struct erofs_oci_request req = {};
++	struct erofs_oci_response resp = {};
++	json_object *root, *token_obj, *access_token_obj;
++	const char *token;
++	char *auth_header = NULL;
++	int ret;
++
++	if (!auth_url || !service || !repository)
++		return ERR_PTR(-EINVAL);
++
++	if (asprintf(&req.url, "%s?service=%s&scope=repository:%s:pull",
++		     auth_url, service, repository) == -1) {
++		return ERR_PTR(-ENOMEM);
++	}
++
++	erofs_dbg("Requesting auth token from: %s", req.url);
++
++	if (username && password && *username) {
++		ret = ocierofs_curl_setup_basic_auth(oci->curl, username,
++						    password);
++		if (ret)
++			goto out_url;
++	}
++
++	ret = ocierofs_request_perform(oci, &req, &resp);
++
++	ocierofs_curl_clear_auth(oci->curl);
++
++	if (ret)
++		goto out_url;
++
++	if (!resp.data) {
++		erofs_err("empty response from auth server");
++		ret = -EINVAL;
++		goto out_url;
++	}
++
++	root = json_tokener_parse(resp.data);
++	if (!root) {
++		erofs_err("failed to parse auth response");
++		ret = -EINVAL;
++		goto out_url;
++	}
++
++	if (!json_object_object_get_ex(root, "token", &token_obj) &&
++	    !json_object_object_get_ex(root, "access_token", &access_token_obj)) {
++		erofs_err("no token found in auth response");
++		ret = -EINVAL;
++		goto out_json;
++	}
++
++	token = json_object_get_string(token_obj ? token_obj : access_token_obj);
++	if (!token) {
++		erofs_err("invalid token in auth response");
++		ret = -EINVAL;
++		goto out_json;
++	}
++
++	if (asprintf(&auth_header, "Authorization: Bearer %s", token) == -1) {
++		ret = -ENOMEM;
++		goto out_json;
++	}
++
++out_json:
++	json_object_put(root);
++out_url:
++	free(req.url);
++	free(resp.data);
++	return ret ? ERR_PTR(ret) : auth_header;
++}
++
++static char *ocierofs_discover_auth_endpoint(struct erofs_oci *oci,
++					    const char *registry,
++					    const char *repository)
++{
++	struct erofs_oci_response resp = {};
++	char *realm = NULL;
++	char *result = NULL;
++	char *test_url;
++	const char *api_registry;
++	CURLcode res;
++	long http_code;
++
++	api_registry = (!strcmp(registry, DOCKER_REGISTRY)) ? DOCKER_API_REGISTRY : registry;
++
++	if (asprintf(&test_url, "https://%s/v2/%s/manifests/nonexistent",
++	     api_registry, repository) == -1) {
++		return NULL;
++	}
++
++	curl_easy_reset(oci->curl);
++	ocierofs_curl_setup_common_options(oci->curl);
++
++	ocierofs_curl_setup_request_ex(oci->curl, test_url,
++				      OCIEROFS_HTTP_HEAD,
++				      NULL,
++				      NULL, NULL,
++				      ocierofs_write_callback, &resp);
++
++	res = curl_easy_perform(oci->curl);
++	curl_easy_getinfo(oci->curl, CURLINFO_RESPONSE_CODE, &http_code);
++
++	if (res == CURLE_OK && (http_code == 401 || http_code == 403 ||
++	    http_code == 404) && resp.data) {
++		char *www_auth = strstr(resp.data, "WWW-Authenticate:");
++
++		if (www_auth) {
++			char *line_end = strchr(www_auth, '\n');
++
++			if (line_end)
++				*line_end = '\0';
++
++			www_auth += strlen("WWW-Authenticate:");
++			while (*www_auth == ' ')
++				www_auth++;
++
++			if (ocierofs_parse_auth_header(www_auth, &realm, NULL, NULL) == 0) {
++				result = realm;
++				realm = NULL;
++			}
++		}
++	}
++
++	free(realm);
++	free(resp.data);
++	free(test_url);
++	return result;
++}
++
++static char *ocierofs_get_auth_token(struct erofs_oci *oci, const char *registry,
++				    const char *repository, const char *username,
++				    const char *password)
++{
++	char *auth_header = NULL;
++	char *discovered_auth_url = NULL;
++	const char *service = registry;
++
++	if (!strcmp(registry, DOCKER_API_REGISTRY) ||
++	    !strcmp(registry, DOCKER_REGISTRY)) {
++		service = "registry.docker.io";
++		auth_header = ocierofs_get_auth_token_with_url(oci,
++							      "https://auth.docker.io/token",
++							      service, repository,
++							      username, password);
++		if (!IS_ERR(auth_header))
++			return auth_header;
++	}
++
++	discovered_auth_url = ocierofs_discover_auth_endpoint(oci, registry, repository);
++	if (discovered_auth_url) {
++		auth_header = ocierofs_get_auth_token_with_url(oci, discovered_auth_url,
++							      service, repository,
++							      username, password);
++		free(discovered_auth_url);
++		if (!IS_ERR(auth_header))
++			return auth_header;
++	}
++
++	static const char * const auth_patterns[] = {
++		"https://%s/v2/auth",
++		"https://auth.%s/token",
++		"https://%s/token",
++		NULL
++	};
++
++	for (int i = 0; auth_patterns[i]; i++) {
++		char *auth_url;
++
++		if (asprintf(&auth_url, auth_patterns[i], registry) == -1)
++			continue;
++
++		auth_header = ocierofs_get_auth_token_with_url(oci, auth_url,
++							      service, repository,
++							      username, password);
++		free(auth_url);
++
++		if (!IS_ERR(auth_header))
++			return auth_header;
++	}
++
++	return ERR_PTR(-ENOENT);
++}
++
++static char *ocierofs_get_manifest_digest(struct erofs_oci *oci,
++					 const char *registry,
++					 const char *repository, const char *tag,
++					 const char *platform,
++					 const char *auth_header)
++{
++	struct erofs_oci_request req = {};
++	struct erofs_oci_response resp = {};
++	json_object *root, *manifests, *manifest, *platform_obj, *arch_obj;
++	json_object *os_obj, *digest_obj, *schema_obj, *media_type_obj;
++	char *digest = NULL;
++	const char *api_registry;
++	int ret = 0, len, i;
++
++	if (!registry || !repository || !tag || !platform)
++		return ERR_PTR(-EINVAL);
++
++	memset(&resp, 0, sizeof(resp));
++
++	api_registry = (!strcmp(registry, DOCKER_REGISTRY)) ? DOCKER_API_REGISTRY : registry;
++
++	if (asprintf(&req.url, "https://%s/v2/%s/manifests/%s",
++	     api_registry, repository, tag) == -1) {
++		return ERR_PTR(-ENOMEM);
++	}
++
++	if (auth_header && strstr(auth_header, "Bearer"))
++		req.headers = curl_slist_append(req.headers, auth_header);
++
++	req.headers = curl_slist_append(req.headers,
++		"Accept: " DOCKER_MEDIATYPE_MANIFEST_LIST ","
++		OCI_MEDIATYPE_INDEX "," DOCKER_MEDIATYPE_MANIFEST_V1 ","
++		DOCKER_MEDIATYPE_MANIFEST_V2);
++
++	ret = ocierofs_request_perform(oci, &req, &resp);
++	if (ret)
++		goto out;
++
++	if (!resp.data) {
++		erofs_err("empty response from manifest request");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	root = json_tokener_parse(resp.data);
++	if (!root) {
++		erofs_err("failed to parse manifest JSON");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (json_object_object_get_ex(root, "schemaVersion", &schema_obj)) {
++		if (json_object_get_int(schema_obj) == 1) {
++			digest = strdup(tag);
++			ret = 0;
++			goto out_json;
++		}
++	}
++
++	if (json_object_object_get_ex(root, "mediaType", &media_type_obj)) {
++		const char *media_type = json_object_get_string(media_type_obj);
++
++		if (!strcmp(media_type, DOCKER_MEDIATYPE_MANIFEST_V2) ||
++		    !strcmp(media_type, OCI_MEDIATYPE_MANIFEST)) {
++			digest = strdup(tag);
++			ret = 0;
++			goto out_json;
++		}
++	}
++
++	if (!json_object_object_get_ex(root, "manifests", &manifests)) {
++		erofs_err("no manifests found in manifest list");
++		ret = -EINVAL;
++		goto out_json;
++	}
++
++	len = json_object_array_length(manifests);
++	for (i = 0; i < len; i++) {
++		manifest = json_object_array_get_idx(manifests, i);
++
++		if (json_object_object_get_ex(manifest, "platform",
++					     &platform_obj) &&
++		    json_object_object_get_ex(platform_obj, "architecture",
++					     &arch_obj) &&
++		    json_object_object_get_ex(platform_obj, "os", &os_obj) &&
++		    json_object_object_get_ex(manifest, "digest", &digest_obj)) {
++			const char *arch = json_object_get_string(arch_obj);
++			const char *os = json_object_get_string(os_obj);
++			char manifest_platform[64];
++
++			snprintf(manifest_platform, sizeof(manifest_platform),
++				 "%s/%s", os, arch);
++			if (!strcmp(manifest_platform, platform)) {
++				digest = strdup(json_object_get_string(digest_obj));
++				break;
++			}
++		}
++	}
++
++	if (!digest)
++		ret = -ENOENT;
++
++out_json:
++	json_object_put(root);
++out:
++	free(resp.data);
++	if (req.headers)
++		curl_slist_free_all(req.headers);
++	free(req.url);
++
++	return ret ? ERR_PTR(ret) : digest;
++}
++
++static char **ocierofs_get_layers_info(struct erofs_oci *oci,
++				       const char *registry,
++				       const char *repository,
++				       const char *digest,
++				       const char *auth_header,
++				       int *layer_count)
++{
++	struct erofs_oci_request req = {};
++	struct erofs_oci_response resp = {};
++	json_object *root, *layers, *layer, *digest_obj;
++	char **layers_info = NULL;
++	const char *api_registry;
++	int ret, len, i;
++
++	if (!registry || !repository || !digest || !layer_count)
++		return ERR_PTR(-EINVAL);
++
++	*layer_count = 0;
++	memset(&resp, 0, sizeof(resp));
++	api_registry = (!strcmp(registry, DOCKER_REGISTRY)) ? DOCKER_API_REGISTRY : registry;
++
++	if (asprintf(&req.url, "https://%s/v2/%s/manifests/%s",
++	     api_registry, repository, digest) == -1) {
++		return ERR_PTR(-ENOMEM);
++	}
++
++	if (auth_header && strstr(auth_header, "Bearer"))
++		req.headers = curl_slist_append(req.headers, auth_header);
++
++	req.headers = curl_slist_append(req.headers,
++		"Accept: " OCI_MEDIATYPE_MANIFEST "," DOCKER_MEDIATYPE_MANIFEST_V2);
++
++	ret = ocierofs_request_perform(oci, &req, &resp);
++	if (ret)
++		goto out;
++
++	if (!resp.data) {
++		erofs_err("empty response from layers request");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	root = json_tokener_parse(resp.data);
++	if (!root) {
++		erofs_err("failed to parse manifest JSON");
++		ret = -EINVAL;
++		goto out;
++	}
++
++	if (!json_object_object_get_ex(root, "layers", &layers) ||
++	    json_object_get_type(layers) != json_type_array) {
++		erofs_err("no layers found in manifest");
++		ret = -EINVAL;
++		goto out_json;
++	}
++
++	len = json_object_array_length(layers);
++	if (len == 0) {
++		erofs_err("empty layer list in manifest");
++		ret = -EINVAL;
++		goto out_json;
++	}
++
++	layers_info = calloc(len, sizeof(char *));
++	if (!layers_info) {
++		ret = -ENOMEM;
++		goto out_json;
++	}
++
++	for (i = 0; i < len; i++) {
++		layer = json_object_array_get_idx(layers, i);
++
++		if (!json_object_object_get_ex(layer, "digest", &digest_obj)) {
++			erofs_err("failed to parse layer %d", i);
++			ret = -EINVAL;
++			goto out_free;
++		}
++
++		layers_info[i] = strdup(json_object_get_string(digest_obj));
++		if (!layers_info[i]) {
++			ret = -ENOMEM;
++			goto out_free;
++		}
++	}
++
++	*layer_count = len;
++	json_object_put(root);
++	free(resp.data);
++	if (req.headers)
++		curl_slist_free_all(req.headers);
++	free(req.url);
++	return layers_info;
++
++out_free:
++	if (layers_info) {
++		for (int j = 0; j < i; j++)
++			free(layers_info[j]);
++	}
++	free(layers_info);
++out_json:
++	json_object_put(root);
++out:
++	free(resp.data);
++	if (req.headers)
++		curl_slist_free_all(req.headers);
++	free(req.url);
++	return ERR_PTR(ret);
++}
++
++static int ocierofs_extract_layer(struct erofs_oci *oci, struct erofs_inode *root,
++				 const char *layer_digest, const char *auth_header,
++				 int layer_index)
++{
++	struct erofs_oci_request req = {};
++	struct erofs_oci_stream stream = {};
++	const char *api_registry;
++	int ret, fd = -1;
++	long http_code;
++
++	if (!oci || !root || !layer_digest || layer_index < 0) {
++		erofs_err("invalid parameters for layer extraction");
++		return -EINVAL;
++	}
++
++	memset(&stream, 0, sizeof(stream));
++	stream.layer_index = layer_index;
++
++	stream.temp_fd = erofs_tmpfile();
++	if (stream.temp_fd < 0) {
++		erofs_err("failed to create temporary file for layer %d",
++			  layer_index);
++		return -errno;
++	}
++
++	api_registry = (!strcmp(oci->params.registry, DOCKER_REGISTRY)) ?
++		       DOCKER_API_REGISTRY : oci->params.registry;
++
++	if (asprintf(&req.url, "https://%s/v2/%s/blobs/%s",
++	     api_registry, oci->params.repository,
++	     layer_digest) == -1) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	if (auth_header && strstr(auth_header, "Bearer"))
++		req.headers = curl_slist_append(req.headers, auth_header);
++
++	curl_easy_reset(oci->curl);
++
++	ret = ocierofs_curl_setup_common_options(oci->curl);
++	if (ret)
++		goto out;
++
++	ret = ocierofs_curl_setup_request_ex(oci->curl, req.url,
++					    OCIEROFS_HTTP_GET,
++					    req.headers,
++					    ocierofs_layer_write_callback,
++					    &stream,
++					    NULL, NULL);
++	if (ret)
++		goto out;
++
++	ret = ocierofs_curl_perform(oci->curl, &http_code);
++	if (ret)
++		goto out;
++
++	if (http_code < 200 || http_code >= 300) {
++		erofs_err("HTTP request failed with code %ld", http_code);
++		ret = -EIO;
++		goto out;
++	}
++
++	if (lseek(stream.temp_fd, 0, SEEK_SET) < 0) {
++		erofs_err("failed to seek to beginning of temp file: %s",
++			  strerror(errno));
++		ret = -errno;
++		goto out;
++	}
++
++	fd = dup(stream.temp_fd);
++	if (fd < 0) {
++		erofs_err("failed to duplicate temp file descriptor: %s",
++			  strerror(errno));
++		ret = -errno;
++		goto out;
++	}
++
++	memset(&stream.tarfile, 0, sizeof(stream.tarfile));
++	init_list_head(&stream.tarfile.global.xattrs);
++
++	ret = erofs_iostream_open(&stream.tarfile.ios, fd,
++				  EROFS_IOS_DECODER_GZIP);
++	if (ret) {
++		erofs_err("failed to initialize tar stream: %s",
++			  erofs_strerror(ret));
++		goto out;
++	}
++
++	ret = tarerofs_parse_tar(root, &stream.tarfile);
++	while (!ret) {
++		/* Continue parsing until end of archive */
++		ret = tarerofs_parse_tar(root, &stream.tarfile);
++	}
++
++	erofs_iostream_close(&stream.tarfile.ios);
++
++	if (ret < 0 && ret != -ENODATA) {
++		erofs_err("failed to process tar stream: %s",
++			  erofs_strerror(ret));
++		goto out;
++	}
++
++	ret = 0;
++
++out:
++	if (fd >= 0)
++		close(fd);
++
++	if (stream.temp_fd >= 0)
++		close(stream.temp_fd);
++
++	if (req.headers)
++		curl_slist_free_all(req.headers);
++
++	free(req.url);
++
++	return ret;
++}
++
++int ocierofs_build_trees(struct erofs_inode *root, struct erofs_oci *oci,
++			 bool fillzero)
++{
++	char *auth_header = NULL;
++	char *manifest_digest = NULL;
++	char **layers_info = NULL;
++	int layer_count = 0;
++	int ret, i;
++
++	if (!root || !oci)
++		return -EINVAL;
++
++	if (oci->params.username && oci->params.password &&
++	    oci->params.username[0] && oci->params.password[0]) {
++		auth_header = ocierofs_get_auth_token(oci,
++						     oci->params.registry,
++						     oci->params.repository,
++						     oci->params.username,
++						     oci->params.password);
++		if (IS_ERR(auth_header)) {
++			auth_header = NULL;
++			ret = ocierofs_curl_setup_basic_auth(oci->curl,
++							    oci->params.username,
++							    oci->params.password);
++			if (ret)
++				goto out;
++		}
++	} else {
++		auth_header = ocierofs_get_auth_token(oci,
++						     oci->params.registry,
++						     oci->params.repository,
++						     NULL, NULL);
++		if (IS_ERR(auth_header))
++			auth_header = NULL;
++	}
++
++	manifest_digest = ocierofs_get_manifest_digest(oci, oci->params.registry,
++						      oci->params.repository,
++						      oci->params.tag,
++						      oci->params.platform,
++						      auth_header);
++	if (IS_ERR(manifest_digest)) {
++		ret = PTR_ERR(manifest_digest);
++		erofs_err("failed to get manifest digest: %s",
++			  erofs_strerror(ret));
++		goto out_auth;
++	}
++
++	layers_info = ocierofs_get_layers_info(oci, oci->params.registry,
++					      oci->params.repository,
++					      manifest_digest, auth_header,
++					      &layer_count);
++	if (IS_ERR(layers_info)) {
++		ret = PTR_ERR(layers_info);
++		erofs_err("failed to get layers info: %s",
++			  erofs_strerror(ret));
++		goto out_manifest;
++	}
++
++	if (oci->params.layer_index >= 0) {
++		char *trimmed;
++
++		if (oci->params.layer_index >= layer_count) {
++			erofs_err("layer index %d exceeds available layers (%d)",
++				  oci->params.layer_index, layer_count);
++			ret = -EINVAL;
++			goto out_layers;
++		}
++
++		i = oci->params.layer_index;
++		trimmed = erofs_trim_for_progressinfo(layers_info[i],
++				sizeof("Extracting layer  ...") - 1);
++		erofs_update_progressinfo("Extracting layer %d: %s ...", i,
++					  trimmed);
++		free(trimmed);
++
++		if (!fillzero) {
++			ret = ocierofs_extract_layer(oci, root, layers_info[i],
++						    auth_header, i);
++			if (ret) {
++				erofs_err("failed to extract layer %d: %s", i,
++					  erofs_strerror(ret));
++				goto out_layers;
++			}
++		}
++	} else {
++		for (i = 0; i < layer_count; i++) {
++			char *trimmed = erofs_trim_for_progressinfo(layers_info[i],
++					sizeof("Extracting layer  ...") - 1);
++			erofs_update_progressinfo("Extracting layer %s ...",
++					  trimmed);
++			free(trimmed);
++
++			if (fillzero)
++				continue;
++
++			ret = ocierofs_extract_layer(oci, root, layers_info[i],
++						    auth_header, i);
++			if (ret) {
++				erofs_err("failed to extract layer %d: %s", i,
++					  erofs_strerror(ret));
++				goto out_layers;
++			}
++		}
++	}
++
++	ret = 0;
++
++out_layers:
++	for (i = 0; i < layer_count; i++)
++		free(layers_info[i]);
++	free(layers_info);
++out_manifest:
++	free(manifest_digest);
++out_auth:
++	free(auth_header);
++
++	if (oci->params.username && oci->params.password &&
++	    oci->params.username[0] && oci->params.password[0] &&
++	    !auth_header) {
++		ocierofs_curl_clear_auth(oci->curl);
++	}
++
++out:
++	return ret;
++}
++
++int ocierofs_init(struct erofs_oci *oci)
++{
++	if (!oci)
++		return -EINVAL;
++
++	memset(oci, 0, sizeof(*oci));
++
++	if (curl_global_init(CURL_GLOBAL_DEFAULT) != CURLE_OK)
++		return -EIO;
++
++	oci->curl = curl_easy_init();
++	if (!oci->curl) {
++		curl_global_cleanup();
++		return -EIO;
++	}
++
++	if (ocierofs_curl_setup_common_options(oci->curl)) {
++		ocierofs_cleanup(oci);
++		return -EIO;
++	}
++
++	if (erofs_oci_params_set_string(&oci->params.platform,
++				"linux/amd64") ||
++	    erofs_oci_params_set_string(&oci->params.registry,
++				DOCKER_API_REGISTRY) ||
++	    erofs_oci_params_set_string(&oci->params.tag, "latest")) {
++		ocierofs_cleanup(oci);
++		return -ENOMEM;
++	}
++
++	oci->params.layer_index = -1; /* -1 means extract all layers */
++
++	return 0;
++}
++
++void ocierofs_cleanup(struct erofs_oci *oci)
++{
++	if (!oci)
++		return;
++
++	if (oci->curl) {
++		curl_easy_cleanup(oci->curl);
++		oci->curl = NULL;
++	}
++	curl_global_cleanup();
++
++	free(oci->params.registry);
++	free(oci->params.repository);
++	free(oci->params.tag);
++	free(oci->params.platform);
++	free(oci->params.username);
++	free(oci->params.password);
++
++	oci->params.registry = NULL;
++	oci->params.repository = NULL;
++	oci->params.tag = NULL;
++	oci->params.platform = NULL;
++	oci->params.username = NULL;
++	oci->params.password = NULL;
++}
++
++int erofs_oci_params_set_string(char **field, const char *value)
++{
++	char *new_value;
++
++	if (!field)
++		return -EINVAL;
++
++	if (!value) {
++		free(*field);
++		*field = NULL;
++		return 0;
++	}
++
++	new_value = strdup(value);
++	if (!new_value)
++		return -ENOMEM;
++
++	free(*field);
++	*field = new_value;
++	return 0;
++}
 diff --git a/mkfs/main.c b/mkfs/main.c
-index e0ba55d..2e6de00 100644
+index e0ba55d..403cd6a 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -1298,6 +1298,21 @@ static int mkfs_parse_options_cfg(struct erofs_impor=
-ter_params *params,
-                return -EINVAL;
-        }
-
-+       /*
-+        * chunksize must be greater than or equal to dsunit to keep
-+        * data alignment working.
-+        *
-+        * If chunksize is smaller than dsunit (e.g., chunksize=3D4K, dsuni=
-t=3D2M),
-+        * deduplicating a chunk will cause all subsequent data to become
-+        * unaligned. Therefore, let's issue a warning here and still skip
-+        * alignment for now.
-+        */
-+       if (cfg.c_chunkbits && dsunit &&
-+           1u << (cfg.c_chunkbits - g_sbi.blkszbits) < dsunit) {
-+               erofs_warn("chunksize %u bytes is smaller than dsunit %u bl=
-ocks, ignore dsunit !",
-+                          1u << cfg.c_chunkbits, dsunit);
-+       }
+@@ -32,6 +32,7 @@
+ #include "../lib/liberofs_uuid.h"
+ #include "../lib/liberofs_metabox.h"
+ #include "../lib/liberofs_s3.h"
++#include "../lib/liberofs_oci.h"
+ #include "../lib/compressor.h"
+ 
+ static struct option long_options[] = {
+@@ -95,6 +96,9 @@ static struct option long_options[] = {
+ 	{"vmdk-desc", required_argument, NULL, 532},
+ #ifdef S3EROFS_ENABLED
+ 	{"s3", required_argument, NULL, 533},
++#endif
++#ifdef OCIEROFS_ENABLED
++	{"oci-options", required_argument, NULL, 534},
+ #endif
+ 	{0, 0, 0, 0},
+ };
+@@ -206,6 +210,14 @@ static void usage(int argc, char **argv)
+ 		"   [,passwd_file=Y]    X=endpoint, Y=s3fs-compatible password file\n"
+ 		"   [,urlstyle=Z]       S3 API calling style (Z = vhost|path) (default: vhost)\n"
+ 		"   [,sig=<2,4>]        S3 API signature version (default: 2)\n"
++#endif
++#ifdef OCIEROFS_ENABLED
++		" --oci-options=X       specify OCI options\n"
++		"   X=platform=Y,layer=Z,username=U,password=P\n"
++		"   platform=Y          Y=platform (default: linux/amd64)\n"
++		"   layer=Z             Z=layer index to extract (0-based; omit to extract all layers)\n"
++		"   username=U          U=username for authentication (optional)\n"
++		"   password=P          P=password for authentication (optional)\n"
+ #endif
+ 		" --tar=X               generate a full or index-only image from a tarball(-ish) source\n"
+ 		"                       (X = f|i|headerball; f=full mode, i=index mode,\n"
+@@ -261,6 +273,11 @@ static u8 metabox_algorithmid;
+ static struct erofs_s3 s3cfg;
+ #endif
+ 
++#ifdef OCIEROFS_ENABLED
++static struct erofs_oci ocicfg;
++static char *oci_options;
++#endif
 +
-        if (pclustersize_packed) {
-                if (pclustersize_packed < (1U << mkfs_blkszbits) ||
-                    pclustersize_packed % (1U << mkfs_blkszbits)) {
---
-2.43.5
-
+ enum {
+ 	EROFS_MKFS_DATA_IMPORT_DEFAULT,
+ 	EROFS_MKFS_DATA_IMPORT_FULLDATA,
+@@ -272,6 +289,7 @@ static enum {
+ 	EROFS_MKFS_SOURCE_LOCALDIR,
+ 	EROFS_MKFS_SOURCE_TAR,
+ 	EROFS_MKFS_SOURCE_S3,
++	EROFS_MKFS_SOURCE_OCI,
+ 	EROFS_MKFS_SOURCE_REBUILD,
+ } source_mode;
+ 
+@@ -672,6 +690,235 @@ static int mkfs_parse_s3_cfg(char *cfg_str)
+ }
+ #endif
+ 
++#ifdef OCIEROFS_ENABLED
++static int parse_oci_platform_option(const char *opt, char *options_copy)
++{
++	const char *p;
++
++	p = strstr(opt, "platform=");
++	if (p) {
++		if (erofs_oci_params_set_string(&ocicfg.params.platform,
++						p + strlen("platform="))) {
++			erofs_err("failed to set platform");
++			free(options_copy);
++			return -ENOMEM;
++		}
++		return 0;
++	}
++	return -EINVAL;
++}
++
++static int parse_oci_layer_option(const char *opt, char *options_copy)
++{
++	const char *p;
++
++	p = strstr(opt, "layer=");
++	if (p) {
++		ocicfg.params.layer_index = atoi(p + strlen("layer="));
++		if (ocicfg.params.layer_index < 0) {
++			erofs_err("invalid layer index %d",
++				  ocicfg.params.layer_index);
++			free(options_copy);
++			return -EINVAL;
++		}
++		return 0;
++	}
++	return -EINVAL;
++}
++
++static int parse_oci_username_option(const char *opt, char *options_copy)
++{
++	const char *p;
++
++	p = strstr(opt, "username=");
++	if (p) {
++		if (erofs_oci_params_set_string(&ocicfg.params.username,
++						p + strlen("username="))) {
++			erofs_err("failed to set username");
++			free(options_copy);
++			return -ENOMEM;
++		}
++		return 0;
++	}
++	return -EINVAL;
++}
++
++static int parse_oci_password_option(const char *opt, char *options_copy)
++{
++	const char *p;
++
++	p = strstr(opt, "password=");
++	if (p) {
++		if (erofs_oci_params_set_string(&ocicfg.params.password,
++						p + strlen("password="))) {
++			erofs_err("failed to set password");
++			free(options_copy);
++			return -ENOMEM;
++		}
++		return 0;
++	}
++	return -EINVAL;
++}
++
++static int mkfs_parse_oci_options(const char *options_str)
++{
++	char *opt, *q, *options_copy;
++	int ret;
++
++	if (!options_str)
++		return 0;
++
++	options_copy = strdup(options_str);
++	if (!options_copy)
++		return -ENOMEM;
++
++	opt = options_copy;
++	while (opt) {
++		q = strchr(opt, ',');
++		if (q)
++			*q = '\0';
++
++		ret = parse_oci_platform_option(opt, options_copy);
++		if (ret == 0) {
++			opt = q ? q + 1 : NULL;
++			continue;
++		}
++
++		ret = parse_oci_layer_option(opt, options_copy);
++		if (ret == 0) {
++			opt = q ? q + 1 : NULL;
++			continue;
++		}
++
++		ret = parse_oci_username_option(opt, options_copy);
++		if (ret == 0) {
++			opt = q ? q + 1 : NULL;
++			continue;
++		}
++
++		ret = parse_oci_password_option(opt, options_copy);
++		if (ret == 0) {
++			opt = q ? q + 1 : NULL;
++			continue;
++		}
++
++		erofs_err("invalid --oci-options value %s", opt);
++		free(options_copy);
++		return -EINVAL;
++	}
++
++	free(options_copy);
++	return 0;
++}
++
++static int mkfs_parse_oci_ref(const char *ref_str)
++{
++	char *slash, *colon, *dot;
++	const char *repo_part;
++	size_t len;
++
++	slash = strchr(ref_str, '/');
++	if (slash) {
++		dot = strchr(ref_str, '.');
++		if (dot && dot < slash) {
++			char *registry_str;
++
++			len = slash - ref_str;
++			registry_str = strndup(ref_str, len);
++
++			if (!registry_str) {
++				erofs_err("failed to allocate memory for registry");
++				return -ENOMEM;
++			}
++			if (erofs_oci_params_set_string(&ocicfg.params.registry,
++							registry_str)) {
++				free(registry_str);
++				erofs_err("failed to set registry");
++				return -ENOMEM;
++			}
++			free(registry_str);
++			repo_part = slash + 1;
++		} else {
++			repo_part = ref_str;
++		}
++	} else {
++		repo_part = ref_str;
++	}
++
++	colon = strchr(repo_part, ':');
++	if (colon) {
++		char *repo_str;
++
++		len = colon - repo_part;
++		repo_str = strndup(repo_part, len);
++
++		if (!repo_str) {
++			erofs_err("failed to allocate memory for repository");
++			return -ENOMEM;
++		}
++
++		if (!strchr(repo_str, '/') &&
++		    (!strcmp(ocicfg.params.registry, DOCKER_API_REGISTRY) ||
++		     !strcmp(ocicfg.params.registry, DOCKER_REGISTRY))) {
++			char *full_repo;
++
++			if (asprintf(&full_repo, "library/%s", repo_str) == -1) {
++				free(repo_str);
++				erofs_err("failed to allocate memory for full repository name");
++				return -ENOMEM;
++			}
++			free(repo_str);
++			repo_str = full_repo;
++		}
++
++		if (erofs_oci_params_set_string(&ocicfg.params.repository,
++						repo_str)) {
++			free(repo_str);
++			erofs_err("failed to set repository");
++			return -ENOMEM;
++		}
++		free(repo_str);
++
++		if (erofs_oci_params_set_string(&ocicfg.params.tag,
++						colon + 1)) {
++			erofs_err("failed to set tag");
++			return -ENOMEM;
++		}
++	} else {
++		char *repo_str = strdup(repo_part);
++
++		if (!repo_str) {
++			erofs_err("failed to allocate memory for repository");
++			return -ENOMEM;
++		}
++
++		if (!strchr(repo_str, '/') &&
++		    (!strcmp(ocicfg.params.registry, DOCKER_API_REGISTRY) ||
++		     !strcmp(ocicfg.params.registry, DOCKER_REGISTRY))) {
++			char *full_repo;
++
++			if (asprintf(&full_repo, "library/%s", repo_str) == -1) {
++				free(repo_str);
++				erofs_err("failed to allocate memory for full repository name");
++				return -ENOMEM;
++			}
++			free(repo_str);
++			repo_str = full_repo;
++		}
++
++		if (erofs_oci_params_set_string(&ocicfg.params.repository,
++						repo_str)) {
++			free(repo_str);
++			erofs_err("failed to set repository");
++			return -ENOMEM;
++		}
++		free(repo_str);
++	}
++
++	return 0;
++}
++#endif
++
+ static int mkfs_parse_one_compress_alg(char *alg,
+ 				       struct erofs_compr_opts *copts)
+ {
+@@ -826,6 +1073,18 @@ static int mkfs_parse_sources(int argc, char *argv[], int optind)
+ 		if (!cfg.c_src_path)
+ 			return -ENOMEM;
+ 		break;
++#endif
++#ifdef OCIEROFS_ENABLED
++	case EROFS_MKFS_SOURCE_OCI:
++		if (optind < argc) {
++			cfg.c_src_path = strdup(argv[optind++]);
++			if (!cfg.c_src_path)
++				return -ENOMEM;
++		} else {
++			erofs_err("missing OCI source argument");
++			return -EINVAL;
++		}
++		break;
+ #endif
+ 	default:
+ 		erofs_err("unexpected source_mode: %d", source_mode);
+@@ -1221,6 +1480,14 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+ 			if (err)
+ 				return err;
+ 			break;
++#endif
++#ifdef OCIEROFS_ENABLED
++		case 534:
++			oci_options = strdup(optarg);
++			if (!oci_options)
++				return -ENOMEM;
++			source_mode = EROFS_MKFS_SOURCE_OCI;
++			break;
+ #endif
+ 		case 'V':
+ 			version();
+@@ -1592,7 +1859,8 @@ int main(int argc, char **argv)
+ 		erofs_uuid_generate(g_sbi.uuid);
+ 
+ 	if ((source_mode == EROFS_MKFS_SOURCE_TAR && !erofstar.index_mode) ||
+-	    (source_mode == EROFS_MKFS_SOURCE_S3)) {
++	    (source_mode == EROFS_MKFS_SOURCE_S3) ||
++	    (source_mode == EROFS_MKFS_SOURCE_OCI)) {
+ 		err = erofs_diskbuf_init(1);
+ 		if (err) {
+ 			erofs_err("failed to initialize diskbuf: %s",
+@@ -1702,6 +1970,28 @@ int main(int argc, char **argv)
+ 			err = s3erofs_build_trees(&importer, &s3cfg,
+ 						  cfg.c_src_path,
+ 				dataimport_mode == EROFS_MKFS_DATA_IMPORT_ZEROFILL);
++#endif
++#ifdef OCIEROFS_ENABLED
++		} else if (source_mode == EROFS_MKFS_SOURCE_OCI) {
++			err = ocierofs_init(&ocicfg);
++			if (err)
++				goto exit;
++
++			err = mkfs_parse_oci_options(oci_options);
++			if (err)
++				goto exit;
++			err = mkfs_parse_oci_ref(cfg.c_src_path);
++			if (err)
++				goto exit;
++
++			if (incremental_mode ||
++			    dataimport_mode == EROFS_MKFS_DATA_IMPORT_RVSP)
++				err = -EOPNOTSUPP;
++			else
++				err = ocierofs_build_trees(&importer, &ocicfg,
++					dataimport_mode == EROFS_MKFS_DATA_IMPORT_ZEROFILL);
++			if (err)
++				goto exit;
+ #endif
+ 	}
+ 	if (err < 0)
+@@ -1767,6 +2057,10 @@ exit:
+ 		erofs_blob_exit();
+ 	erofs_xattr_cleanup_name_prefixes();
+ 	erofs_rebuild_cleanup();
++#ifdef OCIEROFS_ENABLED
++	ocierofs_cleanup(&ocicfg);
++	free(oci_options);
++#endif
+ 	erofs_diskbuf_exit();
+ 	if (source_mode == EROFS_MKFS_SOURCE_TAR) {
+ 		erofs_iostream_close(&erofstar.ios);
+-- 
+2.51.0
 
 
