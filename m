@@ -1,41 +1,44 @@
-Return-Path: <linux-erofs+bounces-939-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-940-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E00C1B3D87E
-	for <lists+linux-erofs@lfdr.de>; Mon,  1 Sep 2025 07:10:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 726BCB3DA91
+	for <lists+linux-erofs@lfdr.de>; Mon,  1 Sep 2025 09:01:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cFcQl4Wjpz2yrp;
-	Mon,  1 Sep 2025 15:10:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cFftJ3BnFz2yvk;
+	Mon,  1 Sep 2025 17:01:28 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.60
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756703455;
-	cv=none; b=nqZH3v6YlMxlcm7LcPGh8Jld8jpTp90xvWx3/HCYfvJWWNWL+DbuM5rrD5FwGKfSCah2LeP44fuHAtX4H9X3xm8AmkN9+2sNUUNCf79ISecH9kwmu4LF6eJwg4EP6TZhEFqD6/qj+4eMufjyU012uyfEg5m89CEs6/sn8L0SJaFLhcFScSz037+OFhC7YUM1zPUSWuCnrPxam4pCqUdF4OA1VEF53iAn3QUuXG61aiU46Z0AEkeNl4KOs4YH7ZmPr+13zB98ctpWjUIcWAXLSFQScE1sINkfOC59IyOhV4Y04lOrMkuiEJGuAgVb3ZbC/2ZHfYSi3DHff5UFubs9jw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.63
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756710088;
+	cv=none; b=J9zUKcLRbbAOYIu0rcSbV+TDdsJmap39OomEnbEsmKdbsDJrY+M9UAfqw0H2IV7iixBZiJXJGJ9KoWSAr7VqEIsnQKceA5yVWuziN6ESCKvN10gu3GVHV7VA078jrNKgLG4jE1PzcDmfyp9FtJK8+dY2o741tWmn4qeKUPQGLt5k6zbTpdY1SMtHHJjOfc8Dyd+CFi/qP/npWUmmO2WmwNzHCxBVXB2nXkyixZsxRztNWA1Luiut71lRo+5yepaogJlsKJQrCgUQ1cWyKIDpwQL+WD/Zh5kozQcKEgNm/Z7w+xPARyNKl8Kmh6XGbCffzX5ksWsOGfdskWXhOVVYHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1756703455; c=relaxed/relaxed;
-	bh=O/W2cUHXFCtktIbaod0LBqzhLHAKTFaIs0QdFr6jmpI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HI148fLj3h3x+OKx4TtCh7FHiV8VQl9NRlXYfw2uK902y0tQhpTGDIDl9uVm0us29NkpHrJDVu2fhUgWYeVXdbF9NLDjeymP9+WLxOqgSe8uxFM9DoOc2muTMWlJibz972X7QxFLh/ceMjqtJy5ATaKOaUH70SVGTOBmxx4hlmld3qgIdvrtUfH3+TM2YBjBzWah/f/2W8YnRwIqSp6JCbTdT7B10Rf9D2UKrpQiBBJOcJIY26ieenXtNtvHbjl7WPUFouEPI8Np5SvDFpXS8c/OBnuG1f4lnDchBiR8wkXekX+Au57XPOnzjeL/M6WFPVYnNk2/kymtuxF5sjMp1Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.60; helo=out28-60.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	t=1756710088; c=relaxed/relaxed;
+	bh=SHcH81/8mpxXTnMPFboTmHAYSyJorLO3waV8xzCIHGs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TPOsJ7cvFw8WumwDrXyX6AQnvKt/70qJdakbfJ8ivylc3VfujLoLYjMN5fKW7eknT2wcNrlJDDV4SMuQWYtRPCaHoTFkqF7Kke2f0OCdvctZZMDv0cfOfnSYy/JqIm8X8/wafS6p009XiudPm2KionamlRUgOoTJuJ0bTV5cBaOkttiN1astkQv8mK6w73MeqrbBhPuV3lSk4zBq0RJ7P2OJJct6rObpe10WXr+U6nD36JOkpskUY1/XTlRsWzXFEE9/LCC2OepDN85AiYsEE045AHg6A7EsdfD6d9s8q36LgNMu6IZoEb9bD3EPzNE6kSRqXpCgLFbWcVYjd8hasQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.63; helo=out28-63.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.60; helo=out28-60.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-60.mail.aliyun.com (out28-60.mail.aliyun.com [115.124.28.60])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.63; helo=out28-63.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-63.mail.aliyun.com (out28-63.mail.aliyun.com [115.124.28.63])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cFcQj2ptnz2xWc
-	for <linux-erofs@lists.ozlabs.org>; Mon,  1 Sep 2025 15:10:51 +1000 (AEST)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eUgyVNl_1756703444 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cFftG42sXz2ytT
+	for <linux-erofs@lists.ozlabs.org>; Mon,  1 Sep 2025 17:01:23 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eUkxQah_1756710077 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Mon, 01 Sep 2025 13:10:45 +0800
+          Mon, 01 Sep 2025 15:01:18 +0800
 From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
 	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v1] erofs-utils: refactor OCI code for better modularity
-Date: Mon,  1 Sep 2025 13:10:42 +0800
-Message-ID: <20250901051042.10905-1-hudson@cyzhu.com>
+Subject: [PATCH v1-changed] erofs-utils: refactor OCI code for better modularity
+Date: Mon,  1 Sep 2025 15:01:15 +0800
+Message-ID: <20250901070115.70603-1-hudson@cyzhu.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250901051042.10905-1-hudson@cyzhu.com>
+References: <20250901051042.10905-1-hudson@cyzhu.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -67,13 +70,13 @@ Refactor OCI code to improve code organization and maintainability:
 
 Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 ---
- lib/liberofs_oci.h |  89 ++++++++
- lib/remotes/oci.c  | 536 ++++++++++++++++++++++++++++++++++-----------
+ lib/liberofs_oci.h | 100 +++++++++
+ lib/remotes/oci.c  | 540 +++++++++++++++++++++++++++++++++------------
  mkfs/main.c        | 200 +----------------
- 3 files changed, 503 insertions(+), 322 deletions(-)
+ 3 files changed, 506 insertions(+), 334 deletions(-)
 
 diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
-index 3a8108b..bd83966 100644
+index 3a8108b..698fe07 100644
 --- a/lib/liberofs_oci.h
 +++ b/lib/liberofs_oci.h
 @@ -19,6 +19,23 @@ struct erofs_inode;
@@ -100,7 +103,7 @@ index 3a8108b..bd83966 100644
  /**
   * struct erofs_oci_params - OCI configuration parameters
   * @registry: registry hostname (e.g., "registry-1.docker.io")
-@@ -88,6 +105,78 @@ int erofs_oci_params_set_string(char **field, const char *value);
+@@ -88,6 +105,89 @@ int erofs_oci_params_set_string(char **field, const char *value);
   */
  int ocierofs_build_trees(struct erofs_importer *importer, struct erofs_oci *oci);
  
@@ -176,11 +179,22 @@ index 3a8108b..bd83966 100644
 +int ocierofs_prepare_auth(struct erofs_oci *oci, char **auth_header_out,
 +			  bool *using_basic_auth);
 +
++/**
++ * ocierofs_curl_clear_auth - Clear basic authentication from CURL handle
++ * @curl: CURL handle to clear authentication from
++ *
++ * Clear basic authentication credentials from a CURL handle.
++ * This should be called after using basic authentication to clean up.
++ *
++ * Return: 0 on success, negative errno on failure
++ */
++int ocierofs_curl_clear_auth(struct CURL *curl);
++
  #ifdef __cplusplus
  }
  #endif
 diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index 0fb8c1f..803175a 100644
+index 0fb8c1f..9774d8d 100644
 --- a/lib/remotes/oci.c
 +++ b/lib/remotes/oci.c
 @@ -42,7 +42,6 @@ struct erofs_oci_response {
@@ -191,6 +205,15 @@ index 0fb8c1f..803175a 100644
  	const char *digest;
  	int blobfd;
  };
+@@ -111,7 +110,7 @@ static int ocierofs_curl_setup_basic_auth(struct CURL *curl, const char *usernam
+ 	return 0;
+ }
+ 
+-static int ocierofs_curl_clear_auth(struct CURL *curl)
++int ocierofs_curl_clear_auth(struct CURL *curl)
+ {
+ 	curl_easy_setopt(curl, CURLOPT_USERPWD, NULL);
+ 	curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_NONE);
 @@ -181,7 +180,7 @@ static int ocierofs_request_perform(struct erofs_oci *oci,
  
  	ret = ocierofs_curl_setup_rq(oci->curl, req->url,
@@ -462,115 +485,69 @@ index 0fb8c1f..803175a 100644
  
  	if (lseek(stream.blobfd, 0, SEEK_SET) < 0) {
  		erofs_err("failed to seek to beginning of temp file: %s",
-@@ -830,36 +961,73 @@ static int ocierofs_extract_layer(struct erofs_oci *oci, struct erofs_importer *
+@@ -830,162 +961,125 @@ static int ocierofs_extract_layer(struct erofs_oci *oci, struct erofs_importer *
  		goto out;
  	}
  
 -	memset(&stream.tarfile, 0, sizeof(stream.tarfile));
 -	init_list_head(&stream.tarfile.global.xattrs);
-+	return stream.blobfd;
- 
+-
 -	ret = erofs_iostream_open(&stream.tarfile.ios, stream.blobfd,
 -				  EROFS_IOS_DECODER_GZIP);
 -	if (ret) {
 -		erofs_err("failed to initialize tar stream: %s",
-+out:
-+	if (stream.blobfd >= 0)
-+		close(stream.blobfd);
-+	return ret;
-+}
-+
-+int ocierofs_prepare_layers(struct erofs_oci *oci, char **auth_header,
-+			   bool *using_basic, char **manifest_digest,
-+			   struct ocierofs_layer_info ***layers,
-+			   int *layer_count, int *start_index)
-+{
-+	int ret;
-+
-+	ret = ocierofs_prepare_auth(oci, auth_header, using_basic);
-+	if (ret)
-+		return ret;
-+
-+	*manifest_digest = ocierofs_get_manifest_digest(oci, oci->params.registry,
-+						       oci->params.repository,
-+						       oci->params.tag,
-+						       oci->params.platform,
-+						       *auth_header);
-+	if (IS_ERR(*manifest_digest)) {
-+		ret = PTR_ERR(*manifest_digest);
-+		erofs_err("failed to get manifest digest: %s",
- 			  erofs_strerror(ret));
+-			  erofs_strerror(ret));
 -		goto out;
-+		goto out_auth;
- 	}
- 
+-	}
+-
 -	do {
 -		ret = tarerofs_parse_tar(importer, &stream.tarfile);
 -		/* Continue parsing until end of archive */
 -	} while (!ret);
 -	erofs_iostream_close(&stream.tarfile.ios);
-+	*layers = ocierofs_fetch_layers_info(oci, oci->params.registry,
-+					   oci->params.repository,
-+					   *manifest_digest, *auth_header,
-+					   layer_count);
-+	if (IS_ERR(*layers)) {
-+		ret = PTR_ERR(*layers);
-+		erofs_err("failed to get image layers: %s", erofs_strerror(ret));
-+		goto out_manifest;
-+	}
- 
+-
 -	if (ret < 0 && ret != -ENODATA) {
 -		erofs_err("failed to process tar stream: %s",
 -			  erofs_strerror(ret));
 -		goto out;
-+	if (oci->params.layer_index >= 0) {
-+		if (oci->params.layer_index >= *layer_count) {
-+			erofs_err("layer index %d exceeds available layers (%d)",
-+				  oci->params.layer_index, *layer_count);
-+			ret = -EINVAL;
-+			goto out_layers;
-+		}
-+		*layer_count = 1;
-+		*start_index = oci->params.layer_index;
-+	} else {
-+		*start_index = 0;
- 	}
+-	}
 -	ret = 0;
++	return stream.blobfd;
  
--out:
--	if (stream.blobfd >= 0)
--		close(stream.blobfd);
+ out:
+ 	if (stream.blobfd >= 0)
+ 		close(stream.blobfd);
 -	if (req.headers)
 -		curl_slist_free_all(req.headers);
 -	free(req.url);
-+	return 0;
-+
-+out_layers:
-+	free(*layers);
-+	*layers = NULL;
-+out_manifest:
-+	free(*manifest_digest);
-+	*manifest_digest = NULL;
-+out_auth:
-+	free(*auth_header);
-+	*auth_header = NULL;
-+	if (*using_basic)
-+		ocierofs_curl_clear_auth(oci->curl);
  	return ret;
  }
  
-@@ -877,102 +1045,48 @@ int ocierofs_build_trees(struct erofs_importer *importer, struct erofs_oci *oci)
+-/**
+- * ocierofs_build_trees - Build file trees from OCI container image layers
+- * @importer: EROFS importer structure
+- * @oci: OCI client structure with configured parameters
+- *
+- * Extract and build file system trees from all layers of an OCI container
+- * image.
+- *
+- * Return: 0 on success, negative errno on failure
+- */
+-int ocierofs_build_trees(struct erofs_importer *importer, struct erofs_oci *oci)
++int ocierofs_prepare_layers(struct erofs_oci *oci, char **auth_header,
++			   bool *using_basic, char **manifest_digest,
++			   struct ocierofs_layer_info ***layers,
++			   int *layer_count, int *start_index)
  {
- 	char *auth_header = NULL;
- 	char *manifest_digest = NULL;
+-	char *auth_header = NULL;
+-	char *manifest_digest = NULL;
 -	char **layers = NULL;
-+	struct ocierofs_layer_info **layers = NULL;
- 	int layer_count = 0;
- 	int ret, i;
-+	bool using_basic = false;
- 
- 	if (!importer || !oci)
- 		return -EINVAL;
+-	int layer_count = 0;
+-	int ret, i;
+-
+-	if (!importer || !oci)
+-		return -EINVAL;
++	int ret;
  
 -	if (oci->params.username && oci->params.password &&
 -	    oci->params.username[0] && oci->params.password[0]) {
@@ -595,46 +572,93 @@ index 0fb8c1f..803175a 100644
 -		if (IS_ERR(auth_header))
 -			auth_header = NULL;
 -	}
--
++	ret = ocierofs_prepare_auth(oci, auth_header, using_basic);
++	if (ret)
++		return ret;
+ 
 -	manifest_digest = ocierofs_get_manifest_digest(oci, oci->params.registry,
--						       oci->params.repository,
--						       oci->params.tag,
--						       oci->params.platform,
++	*manifest_digest = ocierofs_get_manifest_digest(oci, oci->params.registry,
+ 						       oci->params.repository,
+ 						       oci->params.tag,
+ 						       oci->params.platform,
 -						       auth_header);
 -	if (IS_ERR(manifest_digest)) {
 -		ret = PTR_ERR(manifest_digest);
--		erofs_err("failed to get manifest digest: %s",
--			  erofs_strerror(ret));
--		goto out_auth;
--	}
--
++						       *auth_header);
++	if (IS_ERR(*manifest_digest)) {
++		ret = PTR_ERR(*manifest_digest);
+ 		erofs_err("failed to get manifest digest: %s",
+ 			  erofs_strerror(ret));
+ 		goto out_auth;
+ 	}
+ 
 -	layers = ocierofs_get_layers_info(oci, oci->params.registry,
 -					  oci->params.repository,
 -					  manifest_digest, auth_header,
 -					  &layer_count);
 -	if (IS_ERR(layers)) {
 -		ret = PTR_ERR(layers);
--		erofs_err("failed to get image layers: %s", erofs_strerror(ret));
--		goto out_manifest;
--	}
--
--	if (oci->params.layer_index >= 0) {
++	*layers = ocierofs_fetch_layers_info(oci, oci->params.registry,
++					   oci->params.repository,
++					   *manifest_digest, *auth_header,
++					   layer_count);
++	if (IS_ERR(*layers)) {
++		ret = PTR_ERR(*layers);
+ 		erofs_err("failed to get image layers: %s", erofs_strerror(ret));
+ 		goto out_manifest;
+ 	}
+ 
+ 	if (oci->params.layer_index >= 0) {
 -		if (oci->params.layer_index >= layer_count) {
--			erofs_err("layer index %d exceeds available layers (%d)",
++		if (oci->params.layer_index >= *layer_count) {
+ 			erofs_err("layer index %d exceeds available layers (%d)",
 -				  oci->params.layer_index, layer_count);
--			ret = -EINVAL;
--			goto out_layers;
--		}
++				  oci->params.layer_index, *layer_count);
+ 			ret = -EINVAL;
+ 			goto out_layers;
+ 		}
 -		layer_count = 1;
 -		i = oci->params.layer_index;
--	} else {
++		*layer_count = 1;
++		*start_index = oci->params.layer_index;
+ 	} else {
 -		i = 0;
--	}
++		*start_index = 0;
+ 	}
+ 
++	return 0;
++
++out_layers:
++	free(*layers);
++	*layers = NULL;
++out_manifest:
++	free(*manifest_digest);
++	*manifest_digest = NULL;
++out_auth:
++	free(*auth_header);
++	*auth_header = NULL;
++	if (*using_basic)
++		ocierofs_curl_clear_auth(oci->curl);
++	return ret;
++}
++
++int ocierofs_build_trees(struct erofs_importer *importer, struct erofs_oci *oci)
++{
++	char *auth_header = NULL;
++	char *manifest_digest = NULL;
++	struct ocierofs_layer_info **layers = NULL;
++	int layer_count = 0;
++	int ret, i;
++	bool using_basic = false;
++
++	if (!importer || !oci)
++		return -EINVAL;
++
 +	ret = ocierofs_prepare_layers(oci, &auth_header, &using_basic,
 +				     &manifest_digest, &layers, &layer_count, &i);
 +	if (ret)
 +		return ret;
- 
++
  	while (i < layer_count) {
 -		char *trimmed = erofs_trim_for_progressinfo(layers[i],
 +		char *trimmed = erofs_trim_for_progressinfo(layers[i]->digest,
@@ -682,7 +706,20 @@ index 0fb8c1f..803175a 100644
  	return ret;
  }
  
-@@ -1066,3 +1180,177 @@ int erofs_oci_params_set_string(char **field, const char *value)
+-/**
+- * ocierofs_init - Initialize OCI client with default parameters
+- * @oci: OCI client structure to initialize
+- *
+- * Initialize OCI client structure, set up CURL handle, and configure
+- * default parameters including platform (linux/amd64), registry
+- * (registry-1.docker.io), and tag (latest).
+- *
+- * Return: 0 on success, negative errno on failure
+- */
+ int ocierofs_init(struct erofs_oci *oci)
+ {
+ 	if (!oci)
+@@ -1066,3 +1160,177 @@ int erofs_oci_params_set_string(char **field, const char *value)
  	*field = new_value;
  	return 0;
  }
