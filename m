@@ -1,47 +1,46 @@
-Return-Path: <linux-erofs+bounces-970-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-971-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91E10B434C8
-	for <lists+linux-erofs@lfdr.de>; Thu,  4 Sep 2025 09:57:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C5D6B434E6
+	for <lists+linux-erofs@lfdr.de>; Thu,  4 Sep 2025 10:01:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cHWzQ2ZJQz2xnM;
-	Thu,  4 Sep 2025 17:57:22 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cHX4g56mzz2xnM;
+	Thu,  4 Sep 2025 18:01:55 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756972642;
-	cv=none; b=Aix+grc5b4tyykHQiiwiSycGIyedV8qAItaNAQKZTZEd/NPUq/7IpO3VuJ0l/S1OszWSR//0tFEkv+kF2B9TUnXiXHMxxR1yGeSWWolqFhhfVOVHT7ZG2CR8I8IXhaBiSw98ndrTSF1I+Ln/hfuuLzme0PF/tGq9KrFLpX79z/v/aXBkEgGpSoY8mlHjJ14+oLdALP84R20ca2mlZWYrb5BS1kqoDk6rmoNlwimYkSdziKUTX31uHaLiRnfmuPffhLuDcwCVeU8R6xJtoewRjs7NwM0xKgWl2jnD3y7w3JykAQEPPKmp1WgHY96h3/MsHtlrbX7/1dL+IIYibVfywQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1756972915;
+	cv=none; b=LCcxO26381ii6GPMI17Z4b4F+Q/js5uykCH/EUhbQtf2zoDrlqlQ2KuNw2PZRhJeO+OhhU+6qqsvQNE5QmB0iqL9/W4ixF9UHIz1kwz/WA1w3aQWD0sGjKFVslCjqzhZ3KT6I+YvB3hpzS/3xSFNrv2jfP85Z452J5ztkh3GDkvCyYrfEqaf9eVXItBo/5cKWLucpQOBihgI5qt9Pxx1VvJAAhbmGd5BqGCyeo6YtQ5ov+kuUtS9Alqax5I0b4tqyHK7H9IVJZJEev/Dzoet/3t6xGl4Y5yp+6OvGCzDplnYGfut81ZzFnP1wcsFBTyHlUFM1KDpX+DlZ7KWs9HEJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1756972642; c=relaxed/relaxed;
-	bh=zrQ6jSogSG+NLQE8Ui8aw19HhkdgE7qs5tWT6ZdounQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b2izYa1P+7+23snd+bXAIO0GWgq8VNdJDZoAjDmq9bdLKKDAHlHWOkogrZf6MT3vg/EVtXSRcAHfx32Rokjfcaf+qrvgM5zXd4tT7+86sCFzV9gL9pS3a1y0DlGcjaizR1LgyyLq/vRtoUh41xWCB0oBRE6Fmu34yiweBBJAoWPhU5tvo24BKjQ2E5x5cIdccTK6FLfsZxSgn//cn1ZBHwfbI4kzLqQIXtHwpwFaP+AV1LlP/G5PIqWtx9E3CwNm5Me/E7vhSkvtfzXHCRxFYJTC03qWeJVDKEFd+SIs8ege9OitW3n9kZrdCsDxE1l1fUWIM5PMWrfr7j0jV5Rv4w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=twsZ1te9; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1756972915; c=relaxed/relaxed;
+	bh=JR64S8O2lZM6CkUs7pyiGPnq1tliCRap0mtIkQwAhpA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QeiwqJOgqL595Dhh1tiOfrilI4jU5E65iNi4IS1FYHdFH/5h4PSmoZ1fg2wjyf3O/EWWpd5owziVplM4e4K6WqKBTuK6bx4TBTRftZOZg0mF2tMycFZX7pm3iu4r26PuBABT8nqRtsV76rtOIklnN55DDc/fwRGmDyTx8V+QG7OvLrJ62R6wTK2rlzDax+0B34IRbSeTJGvvsHr6ww1EfIJ8RH1HHnRWlJCh4b8nm910uBDycpW7Dq/aG4UaXemFvUpj9B5t8AyJWLZOHGSD8+piIZHwEUxYMcCrAlHlOjPAnDCZZDZYphbzLdyB6TB7P6oYjlMrcGE6L6HialidQg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Xog4BuiL; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=twsZ1te9;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Xog4BuiL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cHWzM0F6Dz2xd6
-	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Sep 2025 17:57:17 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cHX4f6KpBz2xd6
+	for <linux-erofs@lists.ozlabs.org>; Thu,  4 Sep 2025 18:01:54 +1000 (AEST)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1756972633; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=zrQ6jSogSG+NLQE8Ui8aw19HhkdgE7qs5tWT6ZdounQ=;
-	b=twsZ1te9eTP0jWffeL8FOowrtGG8xuAikNnWby3u+vKeJZZGyghAmiHyDSvQ9tqARrmg4TWUwrbeUdfnQn9+qojNcQ3PNmb/uTAVDTT4MA2bSackZuQASI1OflgNz2CIjy4fcP7XIbnogpp5mk8DzeYU6HsSMsjMxLvYlD1vTKY=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WnF..rn_1756972626 cluster:ay36)
+	t=1756972910; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=JR64S8O2lZM6CkUs7pyiGPnq1tliCRap0mtIkQwAhpA=;
+	b=Xog4BuiLknxq4temP2XOicT1uVVMbhyZrtkVWNueXPx5eIlr9inFryF/q8FUL0/De8c6KkP7vnMTlQqgUQpruoCgF6j1ejPm4mNymEsNxcfba6uLwn3dN4qkR5mzPyh+uuOv6AyZMQrD7QS5wNSbIzzOvhuCh/kCz8VDeh0CpaE=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WnF5lK9_1756972908 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 04 Sep 2025 15:57:12 +0800
+          Thu, 04 Sep 2025 16:01:48 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH] erofs-utils: lib: oci: cleanup ocierofs_get_auth_token()
-Date: Thu,  4 Sep 2025 15:57:04 +0800
-Message-ID: <20250904075704.4024908-1-hsiangkao@linux.alibaba.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: lib: introduce erofs_io_close()
+Date: Thu,  4 Sep 2025 16:01:46 +0800
+Message-ID: <20250904080146.4031880-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -57,120 +56,183 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,T_FILL_THIS_FORM_FRAUD_PHISH,
-	T_FILL_THIS_FORM_SHORT,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
- - `registry` and `repository` doesn't need to be passed in again;
+Since virtual files may have their own `.close()`.
 
- - `ctx->auth_header` can be assigned directly.
-
-Cc: Chengyu Zhu <hudsonzhu@tencent.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/remotes/oci.c | 46 +++++++++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 21 deletions(-)
+ include/erofs/io.h |  3 +++
+ lib/io.c           | 11 +++++++++--
+ lib/metabox.c      |  2 +-
+ lib/tar.c          |  2 +-
+ mount/main.c       | 24 ++++++++++++------------
+ 5 files changed, 26 insertions(+), 16 deletions(-)
 
-diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index f2b08b2..189b634 100644
---- a/lib/remotes/oci.c
-+++ b/lib/remotes/oci.c
-@@ -511,9 +511,8 @@ static char *ocierofs_discover_auth_endpoint(struct ocierofs_ctx *ctx,
- 	return result;
+diff --git a/include/erofs/io.h b/include/erofs/io.h
+index 370765f..a9f6d2e 100644
+--- a/include/erofs/io.h
++++ b/include/erofs/io.h
+@@ -41,6 +41,7 @@ struct erofs_vfops {
+ 			    off_t *pos, size_t count);
+ 	int (*xcopy)(struct erofs_vfile *vout, off_t pos,
+ 		     struct erofs_vfile *vin, unsigned int len, bool noseek);
++	void (*close)(struct erofs_vfile *vf);
+ };
+ 
+ /* don't extend this; instead, use payload for any extra information */
+@@ -87,6 +88,8 @@ static inline int erofs_pread(struct erofs_vfile *vf, void *buf,
+ 	return read != len ? -EIO : 0;
  }
  
--static char *ocierofs_get_auth_token(struct ocierofs_ctx *ctx, const char *registry,
--				     const char *repository, const char *username,
--				     const char *password)
-+static int ocierofs_get_auth_token(struct ocierofs_ctx *ctx, const char *username,
-+				   const char *password)
++void erofs_io_close(struct erofs_vfile *vf);
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/lib/io.c b/lib/io.c
+index ff3b794..629af9c 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -380,8 +380,7 @@ out:
+ 
+ void erofs_dev_close(struct erofs_sb_info *sbi)
  {
- 	static const char * const auth_patterns[] = {
- 		"https://%s/v2/auth",
-@@ -521,8 +520,9 @@ static char *ocierofs_get_auth_token(struct ocierofs_ctx *ctx, const char *regis
- 		"https://%s/token",
- 		NULL,
- 	};
--	char *auth_header = NULL;
--	char *discovered_auth_url = NULL;
-+	const char *registry = ctx->registry;
-+	const char *repository = ctx->repository;
-+	char *auth_header, *discovered_auth_url;
- 	char *discovered_service = NULL;
- 	const char *service = registry;
- 	bool docker_reg;
-@@ -535,8 +535,10 @@ static char *ocierofs_get_auth_token(struct ocierofs_ctx *ctx, const char *regis
- 		auth_header = ocierofs_get_auth_token_with_url(ctx,
- 				"https://auth.docker.io/token", service, repository,
- 				username, password);
--		if (!IS_ERR(auth_header))
--			return auth_header;
-+		if (!IS_ERR(auth_header)) {
-+			ctx->auth_header = auth_header;
-+			return 0;
-+		}
- 	}
- 
- 	discovered_auth_url = ocierofs_discover_auth_endpoint(ctx, registry, repository);
-@@ -579,8 +581,10 @@ static char *ocierofs_get_auth_token(struct ocierofs_ctx *ctx, const char *regis
- 							       username, password);
- 		free(discovered_auth_url);
- 		free(discovered_service);
--		if (!IS_ERR(auth_header))
--			return auth_header;
-+		if (!IS_ERR(auth_header)) {
-+			ctx->auth_header = auth_header;
-+			return 0;
-+		}
- 	}
- 
- 	for (i = 0; auth_patterns[i]; i++) {
-@@ -594,12 +598,16 @@ static char *ocierofs_get_auth_token(struct ocierofs_ctx *ctx, const char *regis
- 							       username, password);
- 		free(auth_url);
- 
--		if (!IS_ERR(auth_header))
--			return auth_header;
--		if (!docker_reg)
--			return NULL;
-+		if (!IS_ERR(auth_header)) {
-+			ctx->auth_header = auth_header;
-+			return 0;
-+		}
-+		if (!docker_reg) {
-+			ctx->auth_header = NULL;
-+			return 0;
-+		}
- 	}
--	return ERR_PTR(-ENOENT);
-+	return -ENOENT;
+-	if (!sbi->bdev.ops)
+-		close(sbi->bdev.fd);
++	erofs_io_close(&sbi->bdev);
+ 	free(sbi->devname);
+ 	sbi->devname = NULL;
+ 	sbi->bdev.fd = -1;
+@@ -657,3 +656,11 @@ int erofs_io_xcopy(struct erofs_vfile *vout, off_t pos,
+ 	} while (len);
+ 	return 0;
+ }
++
++void erofs_io_close(struct erofs_vfile *vf)
++{
++	if (vf->ops)
++		return vf->ops->close(vf);
++	close(vf->fd);
++	vf->fd = -1;
++}
+diff --git a/lib/metabox.c b/lib/metabox.c
+index fdc46eb..abde5e6 100644
+--- a/lib/metabox.c
++++ b/lib/metabox.c
+@@ -21,7 +21,7 @@ void erofs_metabox_exit(struct erofs_sb_info *sbi)
+ 		return;
+ 	DBG_BUGON(!m2gr->bmgr);
+ 	erofs_buffer_exit(m2gr->bmgr);
+-	close(m2gr->vf.fd);
++	erofs_io_close(&m2gr->vf);
+ 	free(m2gr);
  }
  
- static char *ocierofs_get_manifest_digest(struct ocierofs_ctx *ctx,
-@@ -863,19 +871,15 @@ static int ocierofs_prepare_auth(struct ocierofs_ctx *ctx,
- 				 const char *password)
- {
- 	char *auth_header = NULL;
--	int ret = 0;
-+	int ret;
+diff --git a/lib/tar.c b/lib/tar.c
+index fe801e2..c8fd48e 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -65,7 +65,7 @@ void erofs_iostream_close(struct erofs_iostream *ios)
+ #endif
+ 		return;
+ 	}
+-	close(ios->vf.fd);
++	erofs_io_close(&ios->vf);
+ }
  
- 	ctx->using_basic = false;
- 	free(ctx->auth_header);
- 	ctx->auth_header = NULL;
+ int erofs_iostream_open(struct erofs_iostream *ios, int fd, int decoder)
+diff --git a/mount/main.c b/mount/main.c
+index a270f0a..149bb53 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -267,8 +267,8 @@ static void *erofsmount_nbd_loopfn(void *arg)
+ 			break;
+ 		}
+ 	}
+-	close(ctx->vd.fd);
+-	close(ctx->sk.fd);
++	erofs_io_close(&ctx->vd);
++	erofs_io_close(&ctx->sk);
+ 	return (void *)(uintptr_t)err;
+ }
  
--	auth_header = ocierofs_get_auth_token(ctx, ctx->registry,
--					      ctx->repository,
--					      username, password);
--	if (!IS_ERR(auth_header)) {
--		ctx->auth_header = auth_header;
-+	ret = ocierofs_get_auth_token(ctx, username, password);
-+	if (!ret)
- 		return 0;
--	}
+@@ -288,15 +288,15 @@ static int erofsmount_startnbd(int nbdfd, const char *source)
  
- 	if (username && password && *username && *password) {
- 		ret = ocierofs_curl_setup_basic_auth(ctx->curl,
+ 	err = erofs_nbd_connect(nbdfd, 9, INT64_MAX >> 9);
+ 	if (err < 0) {
+-		close(ctx.vd.fd);
++		erofs_io_close(&ctx.vd);
+ 		goto out_closefd;
+ 	}
+ 	ctx.sk.fd = err;
+ 
+ 	err = -pthread_create(&th, NULL, erofsmount_nbd_loopfn, &ctx);
+ 	if (err) {
+-		close(ctx.vd.fd);
+-		close(ctx.sk.fd);
++		erofs_io_close(&ctx.vd);
++		erofs_io_close(&ctx.sk);
+ 		goto out_closefd;
+ 	}
+ 
+@@ -392,7 +392,7 @@ static int erofsmount_startnbd_nl(pid_t *pid, const char *source)
+ 	err = pipe(pipefd);
+ 	if (err < 0) {
+ 		err = -errno;
+-		close(ctx.vd.fd);
++		erofs_io_close(&ctx.vd);
+ 		return err;
+ 	}
+ 	if ((*pid = fork()) == 0) {
+@@ -400,12 +400,12 @@ static int erofsmount_startnbd_nl(pid_t *pid, const char *source)
+ 
+ 		/* Otherwise, NBD disconnect sends SIGPIPE, skipping cleanup */
+ 		if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) {
+-			close(ctx.vd.fd);
++			erofs_io_close(&ctx.vd);
+ 			exit(EXIT_FAILURE);
+ 		}
+ 		recp = erofsmount_write_recovery_info(source);
+ 		if (IS_ERR(recp)) {
+-			close(ctx.vd.fd);
++			erofs_io_close(&ctx.vd);
+ 			exit(EXIT_FAILURE);
+ 		}
+ 		num = -1;
+@@ -414,7 +414,7 @@ static int erofsmount_startnbd_nl(pid_t *pid, const char *source)
+ 			ctx.sk.fd = err;
+ 			err = erofsmount_nbd_fix_backend_linkage(num, &recp);
+ 			if (err) {
+-				close(ctx.sk.fd);
++				erofs_io_close(&ctx.sk);
+ 			} else {
+ 				err = write(pipefd[1], &num, sizeof(int));
+ 				if (err < 0)
+@@ -427,7 +427,7 @@ static int erofsmount_startnbd_nl(pid_t *pid, const char *source)
+ 				}
+ 			}
+ 		}
+-		close(ctx.vd.fd);
++		erofs_io_close(&ctx.vd);
+ out_fork:
+ 		(void)unlink(recp);
+ 		free(recp);
+@@ -529,10 +529,10 @@ static int erofsmount_reattach(const char *target)
+ 				return EXIT_FAILURE;
+ 			return EXIT_SUCCESS;
+ 		}
+-		close(ctx.sk.fd);
++		erofs_io_close(&ctx.sk);
+ 		err = 0;
+ 	}
+-	close(ctx.vd.fd);
++	erofs_io_close(&ctx.vd);
+ err_line:
+ 	free(line);
+ err_identifier:
 -- 
 2.43.5
 
