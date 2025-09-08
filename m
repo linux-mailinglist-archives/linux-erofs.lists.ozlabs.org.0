@@ -1,44 +1,35 @@
-Return-Path: <linux-erofs+bounces-982-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-983-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 97843B489E3
-	for <lists+linux-erofs@lfdr.de>; Mon,  8 Sep 2025 12:18:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D5086B48A8B
+	for <lists+linux-erofs@lfdr.de>; Mon,  8 Sep 2025 12:52:56 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cL2wL1Yhrz2xgX;
-	Mon,  8 Sep 2025 20:18:26 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cL3h6311jz2xgX;
+	Mon,  8 Sep 2025 20:52:54 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.59
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757326706;
-	cv=none; b=Y512l8F0Vp+ZQWF8P4xkoYTIOeUHLDSjd2Z8b3AbQZWin8BmlxxQ7/IbLMwRV7gvt7lC2HoHCsSGlbY9QMvEYzpwXvONiwg7fW0CYQEhD4irhBUxZixXV37OU4hal8K2AMfd49Ny3GFCcGdTUAIaFdKh6RvwIVJabjEkAIKQBgnKxik/Sxl958DazhDUKGCyG3xc5fTQU8Yvh5TvAaPqb+gLW8u4gyGC+5SCInKZTp0sZAJyWXqTuGGh6LSkAkyGGBGrLASJ/6j2Ry/77XFfCjnrXL/cvQ4UC5KAHH2sodKckBYGasSA52xHmRwc2qh9pKECw9r/kEIcoWPpQGJXNQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.43
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757328774;
+	cv=none; b=PUT+1T5IjUVRev1kvjc4f35DtRolOXQzZtYvQyvVEG8LAjgpiuJLM4huBuoFlbx9/bOSaZHeg/x4Up4XvCaPZQyRMqv36ejAe6Xy3MY9+JUfe+RRDp2XKfQNFCg1fh4zcwFJ0xXvmwsBvPQYRvKzMdzkAWszdnHZtRWZOTuX01E8rDVDwR/Mq6qK7walYPSpdcZWFUXPAGQmKmRZyh1arePGvS/xK4BeFxN+XIxm1HFDbGrxVHUno1cnL42Edkb8mCR+9i1p6dVQu8oZyzNi/RcYQ4RuUYRJJkO805+IWjs2AVFLuFHL1mamRqZx7+bvqkNmmjPGWJ3zRrxpXWLUjA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1757326706; c=relaxed/relaxed;
-	bh=7Lwb2Ym0nspf2IrkzPqVCJJc/o3ULrByf5qroG5UYuQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=km8MGzrnPVBlHqXxmJH4raKULp/nsggpm53ukcDI4NupJHR3TMTya9HXsll05TDpw1WPGf8Hu9az5DGVHxGHRHOzR3qonZBTF2AZZIVvD4RICqYr8HwbDUXBsCE3evfW2lYATmEdvT4MVVmxtFm/+PrlvQZs5sZzuFBG0hVtXO5gRzdzRTYXuy51Ib7gOKTkA9zsw/wOdYjsMsH+KiDVErL5Di+GbhWKPecpNMOmc4+fcLlcSochtAzOLEOHSiSs9nWsZZcDnOw+nGscjBbrI0FCyBDRzeeu0NixsYR1p9ukLHrh5fT6eRoAkZLpN2tiv6RYDR9lkarWBHQ7qy1HtA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.59; helo=out28-59.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	t=1757328774; c=relaxed/relaxed;
+	bh=rlFdRCmEfaiHEH2YYHIiVRBtSOcKO50YmrMUDDMKOcE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=VQUirPBnaxLslwKGlyxRygwBvWXnji7pCe9i4+87eiu5lQbPEOguUsnPulsxL2bz8Ih0v5k27etqAA84w1lzyIBHlaSwhqrn0hFj8UGVOrnBMnZby0syzsp94ltAkD5k87yWcowfUg246e8+iD9nGJp4NmEqaM3/1AycAmjfYLdzSK9m46YCu4fOC34Dq8WMQ89GbVwTOO9hVwBvHL/HbJ68B6/eNP75WWiuM0+rWq5Y8+qj5kNBqRITEExnMhsEaQgqKcN7zXKymXn+YnwTrudnLf+yI16CpT+a9Ld3vhANxPhUA0jy/q2p43LxmPooJnlKlrkQWPaQy7mRqocxBw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.43; helo=out28-43.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.59; helo=out28-59.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-59.mail.aliyun.com (out28-59.mail.aliyun.com [115.124.28.59])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.43; helo=out28-43.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-43.mail.aliyun.com (out28-43.mail.aliyun.com [115.124.28.43])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cL2wJ3bFMz2xQ6
-	for <linux-erofs@lists.ozlabs.org>; Mon,  8 Sep 2025 20:18:21 +1000 (AEST)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eaK8Kqf_1757326694 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cL3h42QgYz2xQ6
+	for <linux-erofs@lists.ozlabs.org>; Mon,  8 Sep 2025 20:52:49 +1000 (AEST)
+Received: from smtpclient.apple(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eaMbggF_1757328763 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Mon, 08 Sep 2025 18:18:15 +0800
-From: ChengyuZhu6 <hudson@cyzhu.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org,
-	hsiangkao@linux.alibaba.com,
-	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v3] erofs-utils: add NBD-backed OCI image mounting
-Date: Mon,  8 Sep 2025 18:18:13 +0800
-Message-ID: <20250908101813.53349-1-hudson@cyzhu.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250905143021.91960-1-hudson@cyzhu.com>
-References: <20250905143021.91960-1-hudson@cyzhu.com>
+          Mon, 08 Sep 2025 18:52:44 +0800
+Content-Type: text/plain;
+	charset=utf-8
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,648 +40,453 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [PATCH v2] erofs-utils: add NBD-backed OCI image mounting
+From: hudsonZhu <hudson@cyzhu.com>
+In-Reply-To: <799913f4-39a6-48f8-9aaf-a43b425fab71@linux.alibaba.com>
+Date: Mon, 8 Sep 2025 18:52:33 +0800
+Cc: linux-erofs@lists.ozlabs.org,
+ xiang@kernel.org,
+ Chengyu Zhu <hudsonzhu@tencent.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7BF4FCC2-2A65-41A9-83C8-B268D111757A@cyzhu.com>
+References: <20250904100719.31892-1-hudson@cyzhu.com>
+ <20250905143021.91960-1-hudson@cyzhu.com>
+ <799913f4-39a6-48f8-9aaf-a43b425fab71@linux.alibaba.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
 X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Chengyu Zhu <hudsonzhu@tencent.com>
+>> +	if (offset >=3D blob_size)
+>=20
+> It's possible that NBD reads offset >=3D blob_size here, so I think =
+you
+> should
+>=20
+> 	if (offset >=3D blob_size) {
+> 		*out_size =3D 0;
+> 		return 0;
+> 	}
+>=20
+> Here.
+Done.
 
-- Add HTTP range downloads for OCI blobs
-- Introduce ocierofs_iostream for virtual file I/O
-- Add oci option for OCI image mounting with NBD backend
+>> +		return 0;
+>> +
+>> +	if (length && offset + (off_t)length > blob_size)
+>=20
+>=20
+> 		why `(off_t)length`? since length is already `off_t`.
+>=20
+>=20
+>> +		length =3D (size_t)(blob_size - offset);
+>=20
+>=20
+> 	if (offset + length > blob_size)
+> 		length =3D blob_size - offset.
+>=20
+> ?
+Done.
 
-New mount.erofs -t erofs.nbd option: -o=[options] source-image mountpoint
 
-Supported oci options:
-- oci.platform=os/arch (default: linux/amd64)
-- oci=N (extract specific layer, default: all layers)
-- oci.username/oci.password (basic authentication)
+>> +		if (!offset) {
+>> +			*out_buf =3D resp.data;
+>> +			*out_size =3D resp.size;
+>> +			resp.data =3D NULL;
+>> +			ret =3D 0;
+>> +		} else {
+>=20
+> 		} else if (offset < resp.size) {
+> 			available =3D resp.size - offset;
+> 			...
+> 		}
+Done.
 
-e.g.:
-sudo mount.erofs -t erofs.nbd  -o 'oci=0,oci.platform=linux/amd64' \
-quay.io/chengyuzhu6/golang:1.22.8-erofs /mnt
+>>    			err =3D IS_ERR(id) ? PTR_ERR(id) :
+>> @@ -789,9 +887,19 @@ int main(int argc, char *argv[])
+>>  	}
+>>    	if (mountcfg.backend =3D=3D EROFSNBD) {
+>> -		err =3D erofsmount_nbd(mountcfg.device, mountcfg.target,
+>> -				     mountcfg.fstype, mountcfg.flags,
+>> -				     mountcfg.options);
+>> +		if (mountcfg.use_oci) {
+>> +			struct erofs_vfile vfile =3D {};
+>=20
+> Could you just move this to
+> 	ocierofs_io_open() instead?
+>=20
+> e.g.
+> 	vfile =3D (struct erofs_vfile){.ops =3D &ocierofs_io_vfops};
+> 	*(struct ocierofs_iostream **)vfile->payload =3D oci_iostream;
+Done.
 
-Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
----
- lib/liberofs_oci.h |   8 +-
- lib/remotes/oci.c  | 245 ++++++++++++++++++++++++++++++++++++++++++++-
- mount/Makefile.am  |   2 +-
- mount/main.c       | 195 ++++++++++++++++++++++++++++--------
- 4 files changed, 403 insertions(+), 47 deletions(-)
+>> +
+>> +			ocicfg.image_ref =3D mountcfg.device;
+>> +			src.vf =3D &vfile;
+>> +			err =3D erofsmount_nbd(src, EROFSNBD_SOURCE_OCI, =
+mountcfg.target,
+>> +					     mountcfg.fstype, =
+mountcfg.flags, mountcfg.options);
+>> +		} else {
+>> +			src.device_path =3D mountcfg.device;
+>> +			err =3D erofsmount_nbd(src, =
+EROFSNBD_SOURCE_LOCAL, mountcfg.target,
+>> +					     mountcfg.fstype, =
+mountcfg.flags,
+>> +					     mountcfg.options);
+>> +		}
+>=20
+> I think you could just
+>=20
+> 		struct erofs_vfile vfile;
+> 		int sourcetype;
+>=20
+> 		if (mountcfg.use_oci) {
+> 			sourcetype =3D EROFSNBD_SOURCE_OCI;
+> 			ocicfg.image_ref =3D mountcfg.device;
+> 			src.vf =3D &vfile;
+> 		} else {
+> 			sourcetype =3D EROFSNBD_SOURCE_LOCAL;
+> 			src.device_path =3D mountcfg.device;
+> 		}
+>=20
+> 		err =3D erofsmount_nbd(src, sourcetype, mountcfg.target,
+> 				     mountcfg.fstype, mountcfg.flags,
+> 				     mountcfg.options);
+>=20
+Done.
 
-diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
-index 2896308..678fcf3 100644
---- a/lib/liberofs_oci.h
-+++ b/lib/liberofs_oci.h
-@@ -55,7 +55,11 @@ struct ocierofs_ctx {
- 	int layer_count;
- };
- 
--int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config *config);
-+struct ocierofs_iostream {
-+	struct ocierofs_ctx *ctx;
-+	struct erofs_vfile *vf;
-+	u64 offset;
-+};
- 
- /*
-  * ocierofs_build_trees - Build file trees from OCI container image layers
-@@ -67,6 +71,8 @@ int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config *config
- int ocierofs_build_trees(struct erofs_importer *importer,
- 			 const struct ocierofs_config *cfg);
- 
-+int ocierofs_io_open(struct erofs_vfile *vf, const struct ocierofs_config *cfg);
-+
- #ifdef __cplusplus
- }
- #endif
-diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index f2b08b2..7375c40 100644
---- a/lib/remotes/oci.c
-+++ b/lib/remotes/oci.c
-@@ -16,6 +16,7 @@
- #include <json-c/json.h>
- #include "erofs/importer.h"
- #include "erofs/internal.h"
-+#include "erofs/io.h"
- #include "erofs/print.h"
- #include "erofs/tar.h"
- #include "liberofs_oci.h"
-@@ -33,6 +34,8 @@
- #define OCI_MEDIATYPE_MANIFEST "application/vnd.oci.image.manifest.v1+json"
- #define OCI_MEDIATYPE_INDEX "application/vnd.oci.image.index.v1+json"
- 
-+#define OCIEROFS_IO_CHUNK_SIZE 32768
-+
- struct ocierofs_request {
- 	char *url;
- 	struct curl_slist *headers;
-@@ -1032,7 +1035,7 @@ static int ocierofs_parse_ref(struct ocierofs_ctx *ctx, const char *ref_str)
-  *
-  * Return: 0 on success, negative errno on failure
-  */
--int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config *config)
-+static int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config *config)
- {
- 	int ret;
- 
-@@ -1226,3 +1229,243 @@ int ocierofs_build_trees(struct erofs_importer *importer,
- 	ocierofs_ctx_cleanup(&ctx);
- 	return ret;
- }
-+
-+static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset, size_t length,
-+					void **out_buf, size_t *out_size)
-+{
-+	struct ocierofs_request req = {};
-+	struct ocierofs_response resp = {};
-+	const char *api_registry;
-+	char rangehdr[64];
-+	long http_code = 0;
-+	int ret;
-+	int index = ctx->layer_index;
-+	u64 blob_size = ctx->layers[index]->size;
-+	size_t available;
-+	size_t copy_size;
-+
-+	if (offset < 0)
-+		return -EINVAL;
-+
-+	if (offset >= blob_size) {
-+		*out_size = 0;
-+		return 0;
-+	}
-+
-+	if (length && offset + length > blob_size)
-+		length = (size_t)(blob_size - offset);
-+
-+	api_registry = ocierofs_get_api_registry(ctx->registry);
-+	if (asprintf(&req.url, "https://%s/v2/%s/blobs/%s",
-+	     api_registry, ctx->repository, ctx->layers[index]->digest) == -1)
-+		return -ENOMEM;
-+
-+	if (length)
-+		snprintf(rangehdr, sizeof(rangehdr), "Range: bytes=%lld-%lld",
-+			 (long long)offset, (long long)(offset + (off_t)length - 1));
-+	else
-+		snprintf(rangehdr, sizeof(rangehdr), "Range: bytes=%lld-",
-+			 (long long)offset);
-+
-+	if (ctx->auth_header && strstr(ctx->auth_header, "Bearer"))
-+		req.headers = curl_slist_append(req.headers, ctx->auth_header);
-+	req.headers = curl_slist_append(req.headers, rangehdr);
-+
-+	curl_easy_reset(ctx->curl);
-+
-+	ret = ocierofs_curl_setup_common_options(ctx->curl);
-+	if (ret)
-+		goto out;
-+
-+	ret = ocierofs_curl_setup_rq(ctx->curl, req.url, OCIEROFS_HTTP_GET,
-+				     req.headers,
-+				     ocierofs_write_callback,
-+				     &resp, NULL, NULL);
-+	if (ret)
-+		goto out;
-+
-+	ret = ocierofs_curl_perform(ctx->curl, &http_code);
-+	if (ret)
-+		goto out;
-+
-+	if (http_code == 206) {
-+		*out_buf = resp.data;
-+		*out_size = resp.size;
-+		resp.data = NULL;
-+		ret = 0;
-+	} else if (http_code == 200) {
-+		ret = 0;
-+
-+		if (!offset) {
-+			*out_buf = resp.data;
-+			*out_size = resp.size;
-+			resp.data = NULL;
-+		} else if (offset < resp.size) {
-+			available = resp.size - offset;
-+			copy_size = length ? min_t(size_t, length, available) : available;
-+
-+			*out_buf = malloc(copy_size);
-+			if (!*out_buf) {
-+				ret = -ENOMEM;
-+				goto out;
-+			}
-+			memcpy(*out_buf, resp.data + offset, copy_size);
-+			*out_size = copy_size;
-+		}
-+	} else {
-+		erofs_err("HTTP range request failed with code %ld", http_code);
-+		ret = -EIO;
-+	}
-+
-+out:
-+	if (req.headers)
-+		curl_slist_free_all(req.headers);
-+	free(req.url);
-+	free(resp.data);
-+	return ret;
-+}
-+
-+static ssize_t ocierofs_io_pread(struct erofs_vfile *vf, void *buf, size_t len, u64 offset)
-+{
-+	struct ocierofs_iostream *oci_iostream = *(struct ocierofs_iostream **)vf->payload;
-+	void *download_buf = NULL;
-+	size_t download_size = 0;
-+	ssize_t ret;
-+
-+	ret = ocierofs_download_blob_range(oci_iostream->ctx, offset, len,
-+					   &download_buf, &download_size);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (download_buf && download_size > 0) {
-+		memcpy(buf, download_buf, download_size);
-+		free(download_buf);
-+		return download_size;
-+	}
-+
-+	return 0;
-+}
-+
-+static ssize_t ocierofs_io_read(struct erofs_vfile *vf, void *buf, size_t len)
-+{
-+	struct ocierofs_iostream *oci_iostream = *(struct ocierofs_iostream **)vf->payload;
-+	ssize_t ret;
-+
-+	ret = ocierofs_io_pread(vf, buf, len, oci_iostream->offset);
-+	if (ret > 0)
-+		oci_iostream->offset += ret;
-+
-+	return ret;
-+}
-+
-+static ssize_t ocierofs_io_sendfile(struct erofs_vfile *vout, struct erofs_vfile *vin,
-+			       off_t *pos, size_t count)
-+{
-+	struct ocierofs_iostream *oci_iostream = *(struct ocierofs_iostream **)vin->payload;
-+	static char buf[OCIEROFS_IO_CHUNK_SIZE];
-+	ssize_t total_written = 0;
-+	ssize_t ret = 0;
-+
-+	while (count > 0) {
-+		size_t to_read = min_t(size_t, count, OCIEROFS_IO_CHUNK_SIZE);
-+		u64 read_offset = pos ? *pos : oci_iostream->offset;
-+
-+		ret = ocierofs_io_pread(vin, buf, to_read, read_offset);
-+		if (ret <= 0) {
-+			if (ret < 0 && total_written == 0)
-+				return ret;
-+			break;
-+		}
-+		ssize_t written = __erofs_io_write(vout->fd, buf, ret);
-+
-+		if (written < 0) {
-+			erofs_err("OCI I/O sendfile: failed to write to output: %s",
-+				  strerror(errno));
-+			ret = -errno;
-+			break;
-+		}
-+
-+		if (written != ret) {
-+			erofs_err("OCI I/O sendfile: partial write: %zd != %zd", written, ret);
-+			ret = written;
-+		}
-+
-+		total_written += ret;
-+		count -= ret;
-+		if (pos)
-+			*pos += ret;
-+		else
-+			oci_iostream->offset += ret;
-+	}
-+
-+	return count;
-+}
-+
-+static void ocierofs_io_close(struct erofs_vfile *vfile)
-+{
-+	struct ocierofs_iostream *oci_iostream = *(struct ocierofs_iostream **)vfile->payload;
-+
-+	ocierofs_ctx_cleanup(oci_iostream->ctx);
-+	free(oci_iostream->ctx);
-+	free(oci_iostream);
-+	*(struct ocierofs_iostream **)vfile->payload = NULL;
-+}
-+
-+static int ocierofs_is_erofs_native_image(struct ocierofs_ctx *ctx)
-+{
-+	if (ctx->layer_count > 0 && ctx->layers[0] &&
-+	    ctx->layers[0]->media_type) {
-+		const char *media_type = ctx->layers[0]->media_type;
-+		size_t len = strlen(media_type);
-+
-+		if (len >= 6 && strcmp(media_type + len - 6, ".erofs") == 0)
-+			return 0;
-+	}
-+	return -ENOENT;
-+}
-+
-+static struct erofs_vfops ocierofs_io_vfops = {
-+	.pread = ocierofs_io_pread,
-+	.read = ocierofs_io_read,
-+	.sendfile = ocierofs_io_sendfile,
-+	.close = ocierofs_io_close,
-+};
-+
-+int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cfg)
-+{
-+	struct ocierofs_ctx *ctx;
-+	struct ocierofs_iostream *oci_iostream = NULL;
-+	int err;
-+
-+	ctx = calloc(1, sizeof(*ctx));
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	err = ocierofs_init(ctx, cfg);
-+	if (err) {
-+		free(ctx);
-+		return err;
-+	}
-+
-+	err = ocierofs_is_erofs_native_image(ctx);
-+	if (err) {
-+		ocierofs_ctx_cleanup(ctx);
-+		free(ctx);
-+		return err;
-+	}
-+
-+	oci_iostream = calloc(1, sizeof(*oci_iostream));
-+	if (!oci_iostream) {
-+		ocierofs_ctx_cleanup(ctx);
-+		free(ctx);
-+		return -ENOMEM;
-+	}
-+
-+	oci_iostream->ctx = ctx;
-+	oci_iostream->offset = 0;
-+	*vfile = (struct erofs_vfile){.ops = &ocierofs_io_vfops};
-+	oci_iostream->vf = vfile;
-+	*(struct ocierofs_iostream **)vfile->payload = oci_iostream;
-+
-+	return 0;
-+}
-diff --git a/mount/Makefile.am b/mount/Makefile.am
-index d93f3f4..0b4447f 100644
---- a/mount/Makefile.am
-+++ b/mount/Makefile.am
-@@ -9,5 +9,5 @@ mount_erofs_SOURCES = main.c
- mount_erofs_CFLAGS = -Wall -I$(top_srcdir)/include
- mount_erofs_LDADD = $(top_builddir)/lib/liberofs.la ${libselinux_LIBS} \
- 	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} \
--	${libzstd_LIBS} ${libqpl_LIBS} ${libxxhash_LIBS} ${libnl3_LIBS}
-+	${libzstd_LIBS} ${libqpl_LIBS} ${libxxhash_LIBS} ${libnl3_LIBS} ${openssl_LIBS}
- endif
-diff --git a/mount/main.c b/mount/main.c
-index 2826dac..c3e4f9e 100644
---- a/mount/main.c
-+++ b/mount/main.c
-@@ -15,6 +15,7 @@
- #include "erofs/err.h"
- #include "erofs/io.h"
- #include "../lib/liberofs_nbd.h"
-+#include "../lib/liberofs_oci.h"
- #ifdef HAVE_LINUX_LOOP_H
- #include <linux/loop.h>
- #else
-@@ -34,6 +35,8 @@ struct loop_info {
- #include <sys/sysmacros.h>
- #endif
- 
-+static struct ocierofs_config ocicfg;
-+
- enum erofs_backend_drv {
- 	EROFSAUTO,
- 	EROFSLOCAL,
-@@ -56,12 +59,84 @@ static struct erofsmount_cfg {
- 	long flags;
- 	enum erofs_backend_drv backend;
- 	enum erofsmount_mode mountmode;
-+	bool use_oci;
- } mountcfg = {
- 	.full_options = "ro",
- 	.flags = MS_RDONLY,		/* default mountflags */
- 	.fstype = "erofs",
- };
- 
-+enum erofs_nbd_source_type {
-+	EROFSNBD_SOURCE_LOCAL,
-+	EROFSNBD_SOURCE_OCI,
-+};
-+
-+union erofs_nbd_source {
-+	const char *device_path;
-+	struct erofs_vfile *vf;
-+};
-+
-+union erofs_nbd_source src;
-+
-+#ifdef OCIEROFS_ENABLED
-+static int erofsmount_parse_oci_option(struct ocierofs_config *oci_cfg, const char *option)
-+{
-+	char *p;
-+
-+	p = strstr(option, "oci=");
-+	if (p != NULL) {
-+		p += strlen("oci=");
-+		{
-+			char *endptr;
-+			unsigned long v = strtoul(p, &endptr, 10);
-+
-+			if (endptr == p || *endptr != '\0')
-+				return -EINVAL;
-+			oci_cfg->layer_index = (int)v;
-+		}
-+	} else {
-+		p = strstr(option, "oci.platform=");
-+		if (p != NULL) {
-+			p += strlen("oci.platform=");
-+			free(oci_cfg->platform);
-+			oci_cfg->platform = strdup(p);
-+			if (!oci_cfg->platform)
-+				return -ENOMEM;
-+		} else {
-+			p = strstr(option, "oci.username=");
-+			if (p != NULL) {
-+				p += strlen("oci.username=");
-+				free(oci_cfg->username);
-+				oci_cfg->username = strdup(p);
-+				if (!oci_cfg->username)
-+					return -ENOMEM;
-+			} else {
-+				p = strstr(option, "oci.password=");
-+				if (p != NULL) {
-+					p += strlen("oci.password=");
-+					free(oci_cfg->password);
-+					oci_cfg->password = strdup(p);
-+					if (!oci_cfg->password)
-+						return -ENOMEM;
-+				} else {
-+					return -EINVAL;
-+				}
-+			}
-+		}
-+	}
-+
-+	if (ocicfg.platform || ocicfg.username || ocicfg.password || ocicfg.layer_index != 0)
-+		mountcfg.use_oci = true;
-+
-+	return 0;
-+}
-+#else
-+static int erofsmount_parse_oci_option(struct ocierofs_config *oci_cfg, const char *option)
-+{
-+	return -EINVAL;
-+}
-+#endif
-+
- static long erofsmount_parse_flagopts(char *s, long flags, char **more)
- {
- 	static const struct {
-@@ -86,33 +161,42 @@ static long erofsmount_parse_flagopts(char *s, long flags, char **more)
- 	for (;;) {
- 		char *comma;
- 		int i;
-+		int err;
- 
- 		comma = strchr(s, ',');
- 		if (comma)
- 			*comma = '\0';
--		for (i = 0; i < ARRAY_SIZE(opts); ++i) {
--			if (!strcasecmp(s, opts[i].name)) {
--				if (opts[i].flags < 0)
--					flags &= opts[i].flags;
--				else
--					flags |= opts[i].flags;
--				break;
--			}
--		}
- 
--		if (more && i >= ARRAY_SIZE(opts)) {
--			int sl = strlen(s);
--			char *new = *more;
-+		if (strncmp(s, "oci", 3) == 0) {
-+			err = erofsmount_parse_oci_option(&ocicfg, s);
-+
-+			if (err < 0)
-+				return err;
-+		} else {
-+			for (i = 0; i < ARRAY_SIZE(opts); ++i) {
-+				if (!strcasecmp(s, opts[i].name)) {
-+					if (opts[i].flags < 0)
-+						flags &= opts[i].flags;
-+					else
-+						flags |= opts[i].flags;
-+					break;
-+				}
-+			}
- 
--			i = new ? strlen(new) : 0;
--			new = realloc(new, i + strlen(s) + 2);
--			if (!new)
--				return -ENOMEM;
--			if (i)
--				new[i++] = ',';
--			memcpy(new + i, s, sl);
--			new[i + sl] = '\0';
--			*more = new;
-+			if (more && i >= ARRAY_SIZE(opts)) {
-+				int sl = strlen(s);
-+				char *new = *more;
-+
-+				i = new ? strlen(new) : 0;
-+				new = realloc(new, i + strlen(s) + 2);
-+				if (!new)
-+					return -ENOMEM;
-+				if (i)
-+					new[i++] = ',';
-+				memcpy(new + i, s, sl);
-+				new[i + sl] = '\0';
-+				*more = new;
-+			}
- 		}
- 
- 		if (!comma)
-@@ -272,21 +356,31 @@ static void *erofsmount_nbd_loopfn(void *arg)
- 	return (void *)(uintptr_t)err;
- }
- 
--static int erofsmount_startnbd(int nbdfd, const char *source)
-+static int erofsmount_startnbd(int nbdfd, union erofs_nbd_source source,
-+			       enum erofs_nbd_source_type source_type)
- {
- 	struct erofsmount_nbd_ctx ctx = {};
- 	uintptr_t retcode;
- 	pthread_t th;
- 	int err, err2;
-+	int blkbits = 9;
-+	u64 blocks = INT64_MAX >> blkbits;
- 
--	err = open(source, O_RDONLY);
--	if (err < 0) {
--		err = -errno;
--		goto out_closefd;
-+	if (source_type == EROFSNBD_SOURCE_OCI) {
-+		err = ocierofs_io_open(source.vf, &ocicfg);
-+		if (err)
-+			goto out_closefd;
-+		ctx.vd = *source.vf;
-+	} else {
-+		err = open(source.device_path, O_RDONLY);
-+		if (err < 0) {
-+			err = -errno;
-+			goto out_closefd;
-+		}
-+		ctx.vd.fd = err;
- 	}
--	ctx.vd.fd = err;
- 
--	err = erofs_nbd_connect(nbdfd, 9, INT64_MAX >> 9);
-+	err = erofs_nbd_connect(nbdfd, blkbits, blocks);
- 	if (err < 0) {
- 		erofs_io_close(&ctx.vd);
- 		goto out_closefd;
-@@ -532,9 +626,9 @@ err_identifier:
- 	return err;
- }
- 
--static int erofsmount_nbd(const char *source, const char *mountpoint,
--			  const char *fstype, int flags,
--			  const char *options)
-+static int erofsmount_nbd(union erofs_nbd_source source, enum erofs_nbd_source_type source_type,
-+			  const char *mountpoint, const char *fstype,
-+			  int flags, const char *options)
- {
- 	bool is_netlink = false;
- 	char nbdpath[32], *id;
-@@ -549,9 +643,16 @@ static int erofsmount_nbd(const char *source, const char *mountpoint,
- 	}
- 	flags |= MS_RDONLY;
- 
--	err = erofsmount_startnbd_nl(&pid, source);
--	if (err < 0) {
--		erofs_info("Fall back to ioctl-based NBD; failover is unsupported");
-+	if (source_type == EROFSNBD_SOURCE_LOCAL) {
-+		err = erofsmount_startnbd_nl(&pid, source.device_path);
-+		if (err >= 0) {
-+			num = err;
-+			(void)snprintf(nbdpath, sizeof(nbdpath), "/dev/nbd%d", num);
-+			is_netlink = true;
-+		}
-+	}
-+
-+	if (!is_netlink) {
- 		num = erofs_nbd_devscan();
- 		if (num < 0)
- 			return num;
-@@ -561,14 +662,11 @@ static int erofsmount_nbd(const char *source, const char *mountpoint,
- 		if (nbdfd < 0)
- 			return -errno;
- 
--		if ((pid = fork()) == 0)
--			return erofsmount_startnbd(nbdfd, source) ?
-+		if ((pid = fork()) == 0) {
-+			return erofsmount_startnbd(nbdfd, source, source_type) ?
- 				EXIT_FAILURE : EXIT_SUCCESS;
-+		}
- 		close(nbdfd);
--	} else {
--		num = err;
--		(void)snprintf(nbdpath, sizeof(nbdpath), "/dev/nbd%d", num);
--		is_netlink = true;
- 	}
- 
- 	while (1) {
-@@ -586,7 +684,7 @@ static int erofsmount_nbd(const char *source, const char *mountpoint,
- 		if (err < 0)
- 			err = -errno;
- 
--		if (!err && is_netlink) {
-+		if (!err && is_netlink && source_type == EROFSNBD_SOURCE_LOCAL) {
- 			id = erofs_nbd_get_identifier(num);
- 
- 			err = IS_ERR(id) ? PTR_ERR(id) :
-@@ -756,6 +854,8 @@ err_out:
- 
- int main(int argc, char *argv[])
- {
-+	struct erofs_vfile vfile;
-+	int sourcetype;
- 	int err;
- 
- 	erofs_init_configure();
-@@ -789,9 +889,16 @@ int main(int argc, char *argv[])
- 	}
- 
- 	if (mountcfg.backend == EROFSNBD) {
--		err = erofsmount_nbd(mountcfg.device, mountcfg.target,
--				     mountcfg.fstype, mountcfg.flags,
--				     mountcfg.options);
-+		if (mountcfg.use_oci) {
-+			src.vf = &vfile;
-+			sourcetype = EROFSNBD_SOURCE_OCI;
-+			ocicfg.image_ref = mountcfg.device;
-+		} else {
-+			src.device_path = mountcfg.device;
-+			sourcetype = EROFSNBD_SOURCE_LOCAL;
-+		}
-+		err = erofsmount_nbd(src, sourcetype, mountcfg.target,
-+				     mountcfg.fstype, mountcfg.flags, mountcfg.options);
- 		goto exit;
- 	}
- 
--- 
-2.51.0
+Thanks,
+Chengyu
+
+
+> 2025=E5=B9=B49=E6=9C=888=E6=97=A5 16:35=EF=BC=8CGao Xiang =
+<hsiangkao@linux.alibaba.com> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> Hi Chengyu,
+>=20
+> On 2025/9/5 22:30, ChengyuZhu6 wrote:
+>> From: Chengyu Zhu <hudsonzhu@tencent.com>
+>> - Add HTTP range downloads for OCI blobs
+>> - Introduce ocierofs_iostream for virtual file I/O
+>> - Add oci option for OCI image mounting with NBD backend
+>> New mount.erofs -t erofs.nbd option: -o=3D[options] source-image =
+mountpoint
+>> Supported oci options:
+>> - oci.platform=3Dos/arch (default: linux/amd64)
+>> - oci=3DN (extract specific layer, default: all layers)
+>> - oci.username/oci.password (basic authentication)
+>> e.g.:
+>> sudo mount.erofs -t erofs.nbd  -o 'oci=3D0,oci.platform=3Dlinux/amd64' =
+\
+>> quay.io/chengyuzhu6/golang:1.22.8-erofs /mnt
+>> Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
+>=20
+> Sorry for late reply.
+>=20
+>> ---
+>>  lib/liberofs_oci.h |   8 +-
+>>  lib/remotes/oci.c  | 247 =
+++++++++++++++++++++++++++++++++++++++++++++-
+>>  mount/Makefile.am  |   2 +-
+>>  mount/main.c       | 196 +++++++++++++++++++++++++++--------
+>>  4 files changed, 406 insertions(+), 47 deletions(-)
+>> diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
+>> index 2896308..873a560 100644
+>> --- a/lib/liberofs_oci.h
+>> +++ b/lib/liberofs_oci.h
+>> @@ -55,7 +55,11 @@ struct ocierofs_ctx {
+>>  	int layer_count;
+>>  };
+>>  -int ocierofs_init(struct ocierofs_ctx *ctx, const struct =
+ocierofs_config *config);
+>> +struct ocierofs_iostream {
+>> +	struct ocierofs_ctx *ctx;
+>> +	struct erofs_vfile vf;
+>=20
+> Why need this?
+>=20
+>> +	u64 offset;
+>> +};
+>>    /*
+>>   * ocierofs_build_trees - Build file trees from OCI container image =
+layers
+>> @@ -67,6 +71,8 @@ int ocierofs_init(struct ocierofs_ctx *ctx, const =
+struct ocierofs_config *config
+>>  int ocierofs_build_trees(struct erofs_importer *importer,
+>>  			 const struct ocierofs_config *cfg);
+>>  +int ocierofs_io_open(struct erofs_vfile *vf, const struct =
+ocierofs_config *cfg);
+>> +
+>>  #ifdef __cplusplus
+>>  }
+>>  #endif
+>> diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
+>> index f2b08b2..ba01a0e 100644
+>> --- a/lib/remotes/oci.c
+>> +++ b/lib/remotes/oci.c
+>> @@ -16,6 +16,7 @@
+>>  #include <json-c/json.h>
+>>  #include "erofs/importer.h"
+>>  #include "erofs/internal.h"
+>> +#include "erofs/io.h"
+>>  #include "erofs/print.h"
+>>  #include "erofs/tar.h"
+>>  #include "liberofs_oci.h"
+>> @@ -33,6 +34,8 @@
+>>  #define OCI_MEDIATYPE_MANIFEST =
+"application/vnd.oci.image.manifest.v1+json"
+>>  #define OCI_MEDIATYPE_INDEX =
+"application/vnd.oci.image.index.v1+json"
+>>  +#define OCIEROFS_IO_CHUNK_SIZE 32768
+>> +
+>>  struct ocierofs_request {
+>>  	char *url;
+>>  	struct curl_slist *headers;
+>> @@ -1032,7 +1035,7 @@ static int ocierofs_parse_ref(struct =
+ocierofs_ctx *ctx, const char *ref_str)
+>>   *
+>>   * Return: 0 on success, negative errno on failure
+>>   */
+>> -int ocierofs_init(struct ocierofs_ctx *ctx, const struct =
+ocierofs_config *config)
+>> +static int ocierofs_init(struct ocierofs_ctx *ctx, const struct =
+ocierofs_config *config)
+>>  {
+>>  	int ret;
+>>  @@ -1226,3 +1229,245 @@ int ocierofs_build_trees(struct =
+erofs_importer *importer,
+>>  	ocierofs_ctx_cleanup(&ctx);
+>>  	return ret;
+>>  }
+>> +
+>> +static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, =
+off_t offset, size_t length,
+>> +					void **out_buf, size_t =
+*out_size)
+>> +{
+>> +	struct ocierofs_request req =3D {};
+>> +	struct ocierofs_response resp =3D {};
+>> +	const char *api_registry;
+>> +	char rangehdr[64];
+>> +	long http_code =3D 0;
+>> +	int ret;
+>> +	int index =3D ctx->layer_index;
+>> +	u64 blob_size =3D ctx->layers[index]->size;
+>> +	size_t available;
+>> +	size_t copy_size;
+>> +
+>> +	if (offset < 0)
+>> +		return -EINVAL;
+>> +
+>> +	if (offset >=3D blob_size)
+>=20
+> It's possible that NBD reads offset >=3D blob_size here, so I think =
+you
+> should
+>=20
+> 	if (offset >=3D blob_size) {
+> 		*out_size =3D 0;
+> 		return 0;
+> 	}
+>=20
+> here.
+>=20
+>> +		return 0;
+>> +
+>> +	if (length && offset + (off_t)length > blob_size)
+>=20
+>=20
+> 		why `(off_t)length`? since length is already `off_t`.
+>=20
+>=20
+>> +		length =3D (size_t)(blob_size - offset);
+>=20
+>=20
+> 	if (offset + length > blob_size)
+> 		length =3D blob_size - offset.
+>=20
+> ?
+>=20
+>> +
+>> +	api_registry =3D ocierofs_get_api_registry(ctx->registry);
+>> +	if (asprintf(&req.url, "https://%s/v2/%s/blobs/%s",
+>> +	     api_registry, ctx->repository, ctx->layers[index]->digest) =
+=3D=3D -1)
+>> +		return -ENOMEM;
+>> +
+>> +	if (length)
+>> +		snprintf(rangehdr, sizeof(rangehdr), "Range: =
+bytes=3D%lld-%lld",
+>> +			 (long long)offset, (long long)(offset + =
+(off_t)length - 1));
+>> +	else
+>> +		snprintf(rangehdr, sizeof(rangehdr), "Range: =
+bytes=3D%lld-",
+>> +			 (long long)offset);
+>> +
+>> +	if (ctx->auth_header && strstr(ctx->auth_header, "Bearer"))
+>> +		req.headers =3D curl_slist_append(req.headers, =
+ctx->auth_header);
+>> +	req.headers =3D curl_slist_append(req.headers, rangehdr);
+>> +
+>> +	curl_easy_reset(ctx->curl);
+>> +
+>> +	ret =3D ocierofs_curl_setup_common_options(ctx->curl);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret =3D ocierofs_curl_setup_rq(ctx->curl, req.url, =
+OCIEROFS_HTTP_GET,
+>> +				     req.headers,
+>> +				     ocierofs_write_callback,
+>> +				     &resp, NULL, NULL);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret =3D ocierofs_curl_perform(ctx->curl, &http_code);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	if (http_code =3D=3D 206) {
+>> +		*out_buf =3D resp.data;
+>> +		*out_size =3D resp.size;
+>> +		resp.data =3D NULL;
+>> +		ret =3D 0;
+>> +	} else if (http_code =3D=3D 200) {
+>=20
+> 		ret =3D 0;
+>=20
+>> +		if (!offset) {
+>> +			*out_buf =3D resp.data;
+>> +			*out_size =3D resp.size;
+>> +			resp.data =3D NULL;
+>> +			ret =3D 0;
+>> +		} else {
+>=20
+> 		} else if (offset < resp.size) {
+> 			available =3D resp.size - offset;
+> 			...
+> 		}
+>=20
+>> +			if (offset < resp.size) {
+>> +				available =3D resp.size - offset;
+>> +				copy_size =3D length ? min_t(size_t, =
+length, available) : available;
+>> +
+>> +				*out_buf =3D malloc(copy_size);
+>> +				if (!*out_buf) {
+>> +					ret =3D -ENOMEM;
+>> +					goto out;
+>> +				}
+>> +				memcpy(*out_buf, resp.data + offset, =
+copy_size);
+>> +				*out_size =3D copy_size;
+>> +				ret =3D 0;
+>> +			} else {
+>> +				ret =3D 0;
+>> +			}
+>> +		}
+>> +	} else {
+>> +		erofs_err("HTTP range request failed with code %ld", =
+http_code);
+>> +		ret =3D -EIO;
+>> +	}
+>> +
+>> +out:
+>> +	if (req.headers)
+>> +		curl_slist_free_all(req.headers);
+>> +	free(req.url);
+>> +	free(resp.data);
+>> +	return ret;
+>> +}
+>> +
+>=20
+> ...
+>=20
+>> diff --git a/mount/Makefile.am b/mount/Makefile.am
+>> index d93f3f4..0b4447f 100644
+>> --- a/mount/Makefile.am
+>> +++ b/mount/Makefile.am
+>> @@ -9,5 +9,5 @@ mount_erofs_SOURCES =3D main.c
+>>  mount_erofs_CFLAGS =3D -Wall -I$(top_srcdir)/include
+>>  mount_erofs_LDADD =3D $(top_builddir)/lib/liberofs.la =
+${libselinux_LIBS} \
+>>  	${liblz4_LIBS} ${liblzma_LIBS} ${zlib_LIBS} ${libdeflate_LIBS} \
+>> -	${libzstd_LIBS} ${libqpl_LIBS} ${libxxhash_LIBS} ${libnl3_LIBS}
+>> +	${libzstd_LIBS} ${libqpl_LIBS} ${libxxhash_LIBS} ${libnl3_LIBS} =
+${openssl_LIBS}
+>>  endif
+>> diff --git a/mount/main.c b/mount/main.c
+>> index 2826dac..359dbbf 100644
+>> --- a/mount/main.c
+>> +++ b/mount/main.c
+>> @@ -15,6 +15,7 @@
+>=20
+> ...
+>=20
+>=20
+>> +
+>=20
+>>    			err =3D IS_ERR(id) ? PTR_ERR(id) :
+>> @@ -789,9 +887,19 @@ int main(int argc, char *argv[])
+>>  	}
+>>    	if (mountcfg.backend =3D=3D EROFSNBD) {
+>> -		err =3D erofsmount_nbd(mountcfg.device, mountcfg.target,
+>> -				     mountcfg.fstype, mountcfg.flags,
+>> -				     mountcfg.options);
+>> +		if (mountcfg.use_oci) {
+>> +			struct erofs_vfile vfile =3D {};
+>=20
+> Could you just move this to
+> 	ocierofs_io_open() instead?
+>=20
+> e.g.
+> 	vfile =3D (struct erofs_vfile){.ops =3D &ocierofs_io_vfops};
+> 	*(struct ocierofs_iostream **)vfile->payload =3D oci_iostream;
+>=20
+>> +
+>> +			ocicfg.image_ref =3D mountcfg.device;
+>> +			src.vf =3D &vfile;
+>> +			err =3D erofsmount_nbd(src, EROFSNBD_SOURCE_OCI, =
+mountcfg.target,
+>> +					     mountcfg.fstype, =
+mountcfg.flags, mountcfg.options);
+>> +		} else {
+>> +			src.device_path =3D mountcfg.device;
+>> +			err =3D erofsmount_nbd(src, =
+EROFSNBD_SOURCE_LOCAL, mountcfg.target,
+>> +					     mountcfg.fstype, =
+mountcfg.flags,
+>> +					     mountcfg.options);
+>> +		}
+>=20
+> I think you could just
+>=20
+> 		struct erofs_vfile vfile;
+> 		int sourcetype;
+>=20
+> 		if (mountcfg.use_oci) {
+> 			sourcetype =3D EROFSNBD_SOURCE_OCI;
+> 			ocicfg.image_ref =3D mountcfg.device;
+> 			src.vf =3D &vfile;
+> 		} else {
+> 			sourcetype =3D EROFSNBD_SOURCE_LOCAL;
+> 			src.device_path =3D mountcfg.device;
+> 		}
+>=20
+> 		err =3D erofsmount_nbd(src, sourcetype, mountcfg.target,
+> 				     mountcfg.fstype, mountcfg.flags,
+> 				     mountcfg.options);
+>=20
+> Thanks,
+> Gao Xiang
+>=20
+>>  		goto exit;
+>>  	}
+>> =20
 
 
