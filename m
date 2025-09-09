@@ -1,43 +1,44 @@
-Return-Path: <linux-erofs+bounces-995-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-996-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 968FBB4A9F4
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Sep 2025 12:14:55 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0BE4B4AA9E
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Sep 2025 12:28:16 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cLfnn1hyjz3cYg;
-	Tue,  9 Sep 2025 20:14:53 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cLg5B33M2z30DX;
+	Tue,  9 Sep 2025 20:28:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.99
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757412893;
-	cv=none; b=gXeislj6YbzZCQjnoX3+lxwZbTZu6wKcWLEgJ0htJsBcoeEjc7pklGsn8Dp2BTk5/ZHIeOZiNspaQkuPIQ99kOMZdwA9NoC9wDJp+l9FcYTMfYnigPO6WmUP2M+WAw+wkVg3/9Qj8Zd1XkfSYRydrObdK2TxUfn/OEfcuYtPiM3dVKGD7nQFI8aE8tDXCApukOy6IBDjOzS3w6P5xnIsM52lUGKdWDV8sCq8DhDL5fYrUsZz/cT+vqvotrV608VWWUxJ8mtxZ1qFr7Bl7DLmd8BeU2h0RXp+xJJahWvasyEsDir9IhuOIRLzzSGYgTdClNLRtz9uo6qScO9tcOoAqg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.79
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757413694;
+	cv=none; b=dCzQ7AL0rsf14MS5jmnwSvUAlFfz7ubgTw2Nu6mEyOFMjjDDeagS9DqzkkMy0a1UjURvfBsu/FP7qIEO+AVgDT5vkX1xGwLM7SUDzKERYxIoCkivklPIgYq0YhVRJaapeOIA2wqfYN8kfM0O7uSS6PgQT0UUXcnGlrdHeZzwNzNEGd8Rx+y7B4eTBh7JmZcX5QMeGTiUit7onTH1wUtIC6Ijwb1HzzFo5KHXspnfio9b6z3AiJ8lX5xXG0Sv5mZBRQgqPZvMw2tBgs2IszVvdZM+zjq1C1gSC/WF4Qyx7cCSCvJk8stMdFggRLv3F0l0wA1SXW/mmAybpYdu+Kezuw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1757412893; c=relaxed/relaxed;
-	bh=ISZnF6CE1CQnUI8RD9yn7SvKLUEWh5h6VEuQp2ZmujQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gnja/W6Jr+anqSTthnnviASPqZw8TagQBu+WKWay08YFrL5Mw5wrQbvDJ2eu0FIOWLnp/YTPGCqL69LqhFKZoqC0amIaU75p8RmrDoB/niuoXIHEivP5f3eLsGnoVZ8qNpj28JHA+zwDly/2QRPi2lUBgMQhFocQ3nP2w0isiHQNjfmV96gaJHFWiJbN6acGm8NbKNrQOBqAzOSlNdxIIIcbchJe7nOjJSjQIvnJ4AH24qZFYwxumrqcVK91n0rFovWK+T5PEP2UsPFIYwsYTGrgfaFEulEcuWClA94eqLU7YZbcgaaxpbdEHmWZpPpcuP2OQB3dEidMMjhYUKJVzg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=e4A2NIfE; dkim-atps=neutral; spf=pass (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=e4A2NIfE;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	t=1757413694; c=relaxed/relaxed;
+	bh=NjhDaRv/3vG7+O1eKhZKPkmvecWilNQOyeGxk5bhT/Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Kk5T6lSnmKEShnt3lb3vonwoZYDFVJxrZbeP5KTt4SkxKZdq6W4hTO/bBQGe+DMGzWbBpEtD4ExVdV6P+kMWbtBvdYqHFvJ1fnJ5tbGqj/zGl4Qs5o48WbnRiK/935YDPg3HEf7mhOPWiO3OmH3Wrl/sJ2UmergWmFYJLtS3OldO0kdMeFG+aPhLIqIoKf03dCe5asdeQXOJsSFC9E+YMjW1bfycAziQyJYfHUuAgzEDJ5dkB3Y5XaSOHkNRklWO+RcZiYYZOD4tcis1CxRXt3/kfKbdoWAy4XpCFrtl474gUCvI+LnxFsLUtLzV9pgWA9qjaHKAQdw2HQx84Fmg/w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.79; helo=out28-79.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.79; helo=out28-79.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-79.mail.aliyun.com (out28-79.mail.aliyun.com [115.124.28.79])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cLfnl2gMhz30PF
-	for <linux-erofs@lists.ozlabs.org>; Tue,  9 Sep 2025 20:14:50 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1757412886; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=ISZnF6CE1CQnUI8RD9yn7SvKLUEWh5h6VEuQp2ZmujQ=;
-	b=e4A2NIfEty9NIzkP86RJL0h+Gq+UqkplpfK5Hwqagwvpo+oJiTn2sQUuzvq7zQuRtsTUX1ifzMQtFiMFTp2ihAXpNvAEXj1g1XPEt/r24qV8xwBZFwni3Rj7eZcE4a/N3MCNdm0r2fy5nqTyK8Sy/zJ7CgEertsaDw6kYP3MPk0=
-Received: from 30.221.131.27(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WndQPmv_1757412884 cluster:ay36)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cLg585vvjz2yr8
+	for <linux-erofs@lists.ozlabs.org>; Tue,  9 Sep 2025 20:28:10 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eb8ypGG_1757413682 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Tue, 09 Sep 2025 18:14:44 +0800
-Message-ID: <51a52ed7-ed26-46ba-88e1-a45049d613a7@linux.alibaba.com>
-Date: Tue, 9 Sep 2025 18:14:43 +0800
+          Tue, 09 Sep 2025 18:28:03 +0800
+From: ChengyuZhu6 <hudson@cyzhu.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: xiang@kernel.org,
+	hsiangkao@linux.alibaba.com,
+	Chengyu Zhu <hudsonzhu@tencent.com>
+Subject: [PATCH v3] erofs-utils: mount: add OCI recovery support for NBD reattach
+Date: Tue,  9 Sep 2025 18:28:01 +0800
+Message-ID: <20250909102801.90540-1-hudson@cyzhu.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250909070909.83921-1-hudson@cyzhu.com>
+References: <20250909070909.83921-1-hudson@cyzhu.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,155 +50,367 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] erofs-utils: fix memory leaks and allocation issue
-To: "Yuezhang.Mo@sony.com" <Yuezhang.Mo@sony.com>,
- "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
-Cc: "Friendy.Su@sony.com" <Friendy.Su@sony.com>,
- "Daniel.Palmer@sony.com" <Daniel.Palmer@sony.com>
-References: <20250909025247.572442-2-Yuezhang.Mo@sony.com>
- <0f01805f-434c-4b7a-b6da-52efbbff2b87@linux.alibaba.com>
- <PUZPR04MB6316D33745FEA0695A05078C810FA@PUZPR04MB6316.apcprd04.prod.outlook.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <PUZPR04MB6316D33745FEA0695A05078C810FA@PUZPR04MB6316.apcprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+From: Chengyu Zhu <hudsonzhu@tencent.com>
 
+This commit implements recovery support for OCI-based NBD mounts,
+allowing the system to properly reattach NBD devices after
+NBD disconnection.
 
-On 2025/9/9 18:01, Yuezhang.Mo@sony.com wrote:
-> On 2025/9/9 15:26, Gao Xiang wrote:
->> Hi Yuezhang,
->>
->> On 2025/9/9 10:52, Yuezhang Mo wrote:
->>> This patch addresses 4 memory leaks and 1 allocation issue to
->>> ensure proper cleanup and allocation:
->>>
->>> 1. Fixed memory leak by freeing sbi->zmgr in z_erofs_compress_exit().
->>> 2. Fixed memory leak by freeing inode->chunkindexes in erofs_iput().
->>> 3. Fixed incorrect allocation of chunk index array in
->>>      erofs_rebuild_write_blob_index() to ensure correct array allocation
->>>      and avoid out-of-bounds access.
->>> 4. Fixed memory leak of struct erofs_blobchunk not being freed by
->>>      calling erofs_blob_exit() in rebuild mode.
->>> 5. Fix memory leak by calling erofs_put_super().
->>>      In main(), erofs_read_superblock() is called only to get the block
->>>      size. In erofs_mkfs_rebuild_load_trees(), erofs_read_superblock()
->>>      is called again, causing sbi->devs to be overwritten without being
->>>      released.
->>>
->>> Signed-off-by: Yuezhang Mo <Yuezhang.Mo@sony.com>
->>> Reviewed-by: Friendy Su <friendy.su@sony.com>
->>> Reviewed-by: Daniel Palmer <daniel.palmer@sony.com>
->>
->> Thanks for your patch and sorry for a bit delay...
->>
->>> ---
->>>    lib/compress.c | 2 ++
->>>    lib/inode.c    | 3 +++
->>>    lib/rebuild.c  | 2 +-
->>>    mkfs/main.c    | 3 ++-
->>>    4 files changed, 8 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/lib/compress.c b/lib/compress.c
->>> index 622a205..dd537ec 100644
->>> --- a/lib/compress.c
->>> +++ b/lib/compress.c
->>> @@ -2171,5 +2171,7 @@ int z_erofs_compress_exit(struct erofs_sb_info *sbi)
->>>                }
->>>    #endif
->>>        }
->>> +
->>> +     free(sbi->zmgr);
->>>        return 0;
->>>    }
->>> diff --git a/lib/inode.c b/lib/inode.c
->>> index 7ee6b3d..0882875 100644
->>> --- a/lib/inode.c
->>> +++ b/lib/inode.c
->>> @@ -159,6 +159,9 @@ unsigned int erofs_iput(struct erofs_inode *inode)
->>>        } else {
->>>                free(inode->i_link);
->>>        }
->>> +
->>> +     if (inode->chunkindexes)
->>> +             free(inode->chunkindexes);
->>
->> For now, this needs a check
->>
->>          if (inode->datalayout == EROFS_INODE_CHUNK_BASED)
->>                  free(inode->chunkindexes);
->>
->> I admit it's not very clean, but otherwise it doesn't work
->> since `chunkindexes` is in a union.
->>
-> 
-> Okay, I will change to this check.
-> 
->>>        free(inode);
->>>        return 0;
->>>    }
->>> diff --git a/lib/rebuild.c b/lib/rebuild.c
->>> index 0358567..18e5204 100644
->>> --- a/lib/rebuild.c
->>> +++ b/lib/rebuild.c
->>> @@ -186,7 +186,7 @@ static int erofs_rebuild_write_blob_index(struct erofs_sb_info *dst_sb,
->>>
->>>        unit = sizeof(struct erofs_inode_chunk_index);
->>>        inode->extent_isize = count * unit;
->>> -     idx = malloc(max(sizeof(*idx), sizeof(void *)));
->>> +     idx = calloc(count, max(sizeof(*idx), sizeof(void *)));
->>>        if (!idx)
->>>                return -ENOMEM;
->>>        inode->chunkindexes = idx;
->>> diff --git a/mkfs/main.c b/mkfs/main.c
->>> index 28588db..bcde787 100644
->>> --- a/mkfs/main.c
->>> +++ b/mkfs/main.c
->>> @@ -1702,6 +1702,7 @@ int main(int argc, char **argv)
->>>                        goto exit;
->>>                }
->>>                mkfs_blkszbits = src->blkszbits;
->>> +             erofs_put_super(src);
->>
->> Do you really need to fix this now (considering `mkfs.erofs`
->> will exit finally)?
-> 
-> As you said, mkfs.erofs will exit finally, it won't affect users
-> without this fix.
-> 
-> The main purpose of this patch is to fix the memory allocation
-> issue in erofs_rebuild_write_blob_index(). It will cause a
-> segmentation fault if there are deduplications(If there are few
-> files, no segmentation fault occurs, but the files will be
-> inaccessible.).
+Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
+---
+ lib/liberofs_oci.h |   5 ++
+ lib/remotes/oci.c  | 129 +++++++++++++++++++++++++++++++++++++++++
+ mount/main.c       | 141 ++++++++++++++++++++++++++++++++++++---------
+ 3 files changed, 247 insertions(+), 28 deletions(-)
 
-Yes, so I tend to not fix `erofs_put_super()` in this patch.
-
-> 
->>
->> In priciple, I think it should be fixed with a reference and
->> something similiar to the kernel fill_super.
->>
->> I'm not sure if you have more time to improve this anyway,
->> but the current usage is not perfect on my side...
-> 
-> The memory leak is caused by the erofs_sb_info of the first blob
-> device being initialized twice, how to fix with reference? I do not
-> get your point.
-
-I think we should skip erofs_read_superblock() if sbi is
-initialized at least.
-
-As for reference I meant vfs_get_super() likewise, it calls
-fill_super() if .s_root is NULL.
-
-Thanks,
-Gao Xiang
+diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
+index 01a83aa..e910e6a 100644
+--- a/lib/liberofs_oci.h
++++ b/lib/liberofs_oci.h
+@@ -71,6 +71,11 @@ int ocierofs_build_trees(struct erofs_importer *importer,
+ 			 const struct ocierofs_config *cfg);
+ int ocierofs_io_open(struct erofs_vfile *vf, const struct ocierofs_config *cfg);
+ 
++int ocierofs_b64_encode_userpass(const char *username, const char *password,
++				 char **out_b64);
++int ocierofs_b64_decode_userpass(const char *b64,
++				 char **out_user, char **out_pass);
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
+index de18daa..4e46e0b 100644
+--- a/lib/remotes/oci.c
++++ b/lib/remotes/oci.c
+@@ -1471,6 +1471,135 @@ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cf
+ 	*(struct ocierofs_iostream **)vfile->payload = oci_iostream;
+ 	return 0;
+ }
++
++static const char ocierofs_b64_tbl[] =
++	"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
++
++int ocierofs_b64_encode_userpass(const char *username, const char *password,
++				 char **out_b64)
++{
++	const unsigned char *in;
++	size_t ulen = username ? strlen(username) : 0;
++	size_t plen = password ? strlen(password) : 0;
++	size_t inlen = ulen + 1 + plen;
++	size_t outlen;
++	unsigned char *buf;
++	char *out;
++	size_t i, j;
++	unsigned int octet_a, octet_b, octet_c, triple;
++
++	if (!out_b64)
++		return -EINVAL;
++	*out_b64 = NULL;
++
++	buf = malloc(inlen + 1);
++	if (!buf)
++		return -ENOMEM;
++	memcpy(buf, username ? username : "", ulen);
++	buf[ulen] = ':';
++	memcpy(buf + ulen + 1, password ? password : "", plen);
++	buf[inlen] = '\0';
++	in = buf;
++
++	outlen = 4 * ((inlen + 2) / 3);
++	out = malloc(outlen + 1);
++	if (!out) {
++		free(buf);
++		return -ENOMEM;
++	}
++
++	for (i = 0, j = 0; i < inlen;) {
++		octet_a = i < inlen ? in[i++] : 0;
++		octet_b = i < inlen ? in[i++] : 0;
++		octet_c = i < inlen ? in[i++] : 0;
++		triple = (octet_a << 16) | (octet_b << 8) | octet_c;
++		out[j++] = ocierofs_b64_tbl[(triple >> 18) & 0x3F];
++		out[j++] = ocierofs_b64_tbl[(triple >> 12) & 0x3F];
++		out[j++] = (i - 1 > inlen) ? '=' : ocierofs_b64_tbl[(triple >> 6) & 0x3F];
++		out[j++] = (i > inlen) ? '=' : ocierofs_b64_tbl[triple & 0x3F];
++	}
++	if (inlen % 3 == 1) {
++		out[outlen - 1] = '=';
++		out[outlen - 2] = '=';
++	} else if (inlen % 3 == 2) {
++		out[outlen - 1] = '=';
++	}
++	out[outlen] = '\0';
++	free(buf);
++	*out_b64 = out;
++	return 0;
++}
++
++static int ocierofs_b64_inv(int c)
++{
++	if (c >= 'A' && c <= 'Z')
++		return c - 'A';
++	if (c >= 'a' && c <= 'z')
++		return c - 'a' + 26;
++	if (c >= '0' && c <= '9')
++		return c - '0' + 52;
++	if (c == '+')
++		return 62;
++	if (c == '/')
++		return 63;
++	return -1;
++}
++
++int ocierofs_b64_decode_userpass(const char *b64,
++				 char **out_user, char **out_pass)
++{
++	size_t len, i, j;
++	unsigned char *out;
++	int val = 0, valb = -8, c;
++
++	if (!b64 || !out_user || !out_pass)
++		return -EINVAL;
++	*out_user = NULL;
++	*out_pass = NULL;
++
++	len = strlen(b64);
++	out = malloc(len * 3 / 4 + 1);
++	if (!out)
++		return -ENOMEM;
++
++	for (i = 0, j = 0; i < len; i++) {
++		c = b64[i];
++
++		if (c == '=')
++			break;
++		c = ocierofs_b64_inv(c);
++		if (c < 0)
++			continue;
++		val = (val << 6) + c;
++		valb += 6;
++		if (valb >= 0) {
++			out[j++] = (unsigned char)((val >> valb) & 0xFF);
++			valb -= 8;
++		}
++	}
++	out[j] = '\0';
++
++	{
++		char *colon = (char *)memchr(out, ':', j);
++
++		if (!colon) {
++			free(out);
++			return -EINVAL;
++		}
++		*colon = '\0';
++		*out_user = strdup((char *)out);
++		*out_pass = strdup(colon + 1);
++		free(out);
++		if (!*out_user || !*out_pass) {
++			free(*out_user);
++			free(*out_pass);
++			*out_user = *out_pass = NULL;
++			return -ENOMEM;
++		}
++	}
++	return 0;
++}
++
+ #else
+ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cfg)
+ {
+diff --git a/mount/main.c b/mount/main.c
+index c52ac3b..4fe54c5 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -401,10 +401,48 @@ out_closefd:
+ 	return err;
+ }
+ 
+-static char *erofsmount_write_recovery_info(const char *source)
++static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *source)
++{
++	char *b64cred = NULL;
++	int ret;
++
++	if (source->ocicfg.username || source->ocicfg.password) {
++		ret = ocierofs_b64_encode_userpass(
++			source->ocicfg.username,
++			source->ocicfg.password,
++			&b64cred);
++		if (ret) {
++			fclose(f);
++			return ret;
++		}
++	}
++	ret = fprintf(f, "OCI_LAYER %s %s %s %d\n",
++		       source->ocicfg.image_ref ?: "",
++		       source->ocicfg.platform ?: "",
++		       b64cred ?: "",
++		       source->ocicfg.layer_index);
++	free(b64cred);
++	return ret < 0 ? -ENOMEM : 0;
++}
++
++static int erofsmount_write_recovery_local(FILE *f, struct erofs_nbd_source *source)
+ {
+-	char recp[] = "/var/run/erofs/mountnbd_XXXXXX";
+ 	char *realp;
++	int err;
++
++	realp = realpath(source->device_path, NULL);
++	if (!realp)
++		return -errno;
++
++	/* TYPE<LOCAL> <SOURCE PATH>\n(more..) */
++	err = fprintf(f, "LOCAL %s\n", realp) < 0;
++	free(realp);
++	return err ? -ENOMEM : 0;
++}
++
++static char *erofsmount_write_recovery_info(struct erofs_nbd_source *source)
++{
++	char recp[] = "/var/run/erofs/mountnbd_XXXXXX";
+ 	int fd, err;
+ 	FILE *f;
+ 
+@@ -424,20 +462,62 @@ static char *erofsmount_write_recovery_info(const char *source)
+ 		return ERR_PTR(-errno);
+ 	}
+ 
+-	realp = realpath(source, NULL);
+-	if (!realp) {
+-		fclose(f);
+-		return ERR_PTR(-errno);
++	if (source->type == EROFSNBD_SOURCE_OCI) {
++		err = erofsmount_write_recovery_oci(f, source);
++		if (err) {
++			fclose(f);
++			return ERR_PTR(err);
++		}
++	} else {
++		err = erofsmount_write_recovery_local(f, source);
++		if (err) {
++			fclose(f);
++			return ERR_PTR(err);
++		}
+ 	}
+-	/* TYPE<LOCAL> <SOURCE PATH>\n(more..) */
+-	err = fprintf(f, "LOCAL %s\n", realp) < 0;
++
+ 	fclose(f);
+-	free(realp);
+-	if (err)
+-		return ERR_PTR(-ENOMEM);
+ 	return strdup(recp) ?: ERR_PTR(-ENOMEM);
+ }
+ 
++static int erofsmount_parse_recovery_ocilayer(struct ocierofs_config *oci_cfg,
++					      char *source)
++{
++	char *platform, *b64cred, *layer_str;
++	int err;
++	char *endptr;
++	unsigned long v;
++
++	platform = strchr(source, ' ');
++	if (platform) {
++		*platform++ = '\0';
++		oci_cfg->image_ref = source;
++		oci_cfg->platform = platform;
++	} else {
++		oci_cfg->image_ref = source;
++	}
++
++	b64cred = strchr(platform ?: source, ' ');
++	if (b64cred) {
++		*b64cred++ = '\0';
++		err = ocierofs_b64_decode_userpass(b64cred,
++						   &oci_cfg->username,
++						   &oci_cfg->password);
++		if (err)
++			return err;
++	}
++
++	layer_str = strchr(b64cred ?: (platform ?: source), ' ');
++	if (layer_str) {
++		*layer_str++ = '\0';
++		v = strtoul(layer_str, &endptr, 10);
++		if (endptr == layer_str || *endptr != '\0')
++			return -EINVAL;
++		oci_cfg->layer_index = (int)v;
++	}
++	return 0;
++}
++
+ static int erofsmount_nbd_fix_backend_linkage(int num, char **recp)
+ {
+ 	char *newrecp;
+@@ -491,15 +571,10 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
+ 				exit(EXIT_FAILURE);
+ 			ctx.vd.fd = err;
+ 		}
+-
+-		if (source->type == EROFSNBD_SOURCE_LOCAL) {
+-			recp = erofsmount_write_recovery_info(source->device_path);
+-			if (IS_ERR(recp)) {
+-				erofs_io_close(&ctx.vd);
+-				exit(EXIT_FAILURE);
+-			}
+-		} else {
+-			recp = NULL;
++		recp = erofsmount_write_recovery_info(source);
++		if (IS_ERR(recp)) {
++			erofs_io_close(&ctx.vd);
++			exit(EXIT_FAILURE);
+ 		}
+ 
+ 		num = -1;
+@@ -595,19 +670,29 @@ static int erofsmount_reattach(const char *target)
+ 		*(source++) = '\0';
+ 	}
+ 
+-	if (strcmp(line, "LOCAL")) {
++	if (!strcmp(line, "LOCAL")) {
++		err = open(source, O_RDONLY);
++		if (err < 0) {
++			err = -errno;
++			goto err_line;
++		}
++		ctx.vd.fd = err;
++	} else if (!strcmp(line, "OCI_LAYER")) {
++		struct ocierofs_config oci_cfg = {};
++
++		err = erofsmount_parse_recovery_ocilayer(&oci_cfg, source);
++		if (err)
++			goto err_line;
++
++		err = ocierofs_io_open(&ctx.vd, &oci_cfg);
++		if (err < 0)
++			goto err_line;
++	} else {
+ 		err = -EOPNOTSUPP;
+ 		erofs_err("unsupported source type %s recorded in recovery file", line);
+ 		goto err_line;
+ 	}
+ 
+-	err = open(source, O_RDONLY);
+-	if (err < 0) {
+-		err = -errno;
+-		goto err_line;
+-	}
+-	ctx.vd.fd = err;
+-
+ 	err = erofs_nbd_nl_reconnect(nbdnum, identifier);
+ 	if (err >= 0) {
+ 		ctx.sk.fd = err;
+-- 
+2.51.0
 
 
