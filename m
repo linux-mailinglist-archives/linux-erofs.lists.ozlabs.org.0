@@ -1,41 +1,41 @@
-Return-Path: <linux-erofs+bounces-989-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-990-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C396CB4A3C9
-	for <lists+linux-erofs@lfdr.de>; Tue,  9 Sep 2025 09:38:17 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EB33B4A3EF
+	for <lists+linux-erofs@lfdr.de>; Tue,  9 Sep 2025 09:40:19 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cLbJg1Wcrz30N8;
-	Tue,  9 Sep 2025 17:37:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cLbMN6pxWz30Ng;
+	Tue,  9 Sep 2025 17:40:16 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.78
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757403475;
-	cv=none; b=UeitiPV7LuMy5R7nArxnBnTtiBbqVHlIrPsE5JVt7K6VVl7fHU/0p9snyVSTh1Yknr7ukUejSZVxtQTIHof28jYOFeVzsmoz2eJpvEi6e/FQd31FeEm7DqZh75YABWw2UZSG+Ox5RY6adFOUfnyyP2r73Yx+I/Ek2rI3SkohoS7HAWQnkzEPcldCQ9OTcz1km1cfkXp8Gh4jBgLlV83zPo8Lq7ySpmPLxy9OVE/VloAoa9auzWjdpqSVgYqaKeAltbbHUrL6yo5++RewK7HVsXEOt99r49fJtdrM0XSo9/kf3a0+eEUS3DbM1UeHp6t6gZORFy1SO2p3XFMiI/qOoQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.59
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757403616;
+	cv=none; b=C2tQfFMsfY0TrwzrEa85gY16rFcb+y53pKfK2Mwh/OWKGeBAOj2lLns1BIs501KNIh5cy6Gxz4OVkp4i4qELUCKn9fnJDIILZbLLMLLVDv1n/UdBtKO09EY9g/rMNOFpXrSgcG5vYV7kmFKLYcAnQbJeop4Bl7BPurpsBzZcS8I0u0mvai3ed4WWEqgAkr+6+Cb4tIA7ObZ2H5nqnbyMJ1+s+TuFRURAmrmDTrmObkdXTb/5nqWPq5yC5GoQO2lF3KnwJJCw8I6xVbQwbuV+85AnvmuTCUXQGAR2Opi1InMmGaQIU9ZOXgrFrYJTkbiiD+1STA1hmp8TxLTtvQBUhg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1757403475; c=relaxed/relaxed;
+	t=1757403616; c=relaxed/relaxed;
 	bh=9xvNfBqQOqUWKpBE4u/xP5LmFCfQGdpy0370+qpMcYI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j5uEZNemRfhIhWM2T4Ed8gp5wd08bEZjvZHh561zsvpe1KiQNITbHHxUTElkpdh5WQsQ+RB/302etWfkckkAhYYaAwswzNpwfgbeqthnZH9vxjNb7ZbcoFk87zHN/ClRm2mZi1eFL/PH+QBGgtudHgzVOJERXWdg4yHia29tM3Q53t8iwSpMZXA8aL+/9uJEUF5hi8WTg95W2MnskGNXzq2ADHHGyLnlbBwRR1PwjFtoVGhTAhj3AtawMY3u6Qf8SwJIbnjLMYibB3aOSyVZ2ZVawA8A/cBg9j8q3dKcPa0RfUTdIHQIrm4zzzAvosLVuvix6XPRHI1krSQjJWNY2g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.78; helo=out28-78.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	 MIME-Version; b=YypQJOZYRXWvKVgpUu4NKm7dcHANYX+FyPMbgihGvnBef4AkFNn8H+PVCKdHIXV+2JtjRjKkxjCtjuBRPL7Kl7J+dCd4hcal8pNWd0zakiXQ0vuspD+FP8/8RRlwhFt+iIZbuWo+nlP44ckqoVHKVYckkssin5DkobYni9X8MyKZ6wHCe4lIGVnJDIZ8aFH8ExheZXJ7Np18i9bLKXHu0VGxwLIcPJ5US61HlXDBvXP2Vf8BAstCXd3WnUTIC5rQaRf7nFnkTq6IX8KPsHjSmLI8dsbuwnlE/+H9qJ/qdsHUkvZ+FdQIpBfQZV6bpKlthUelw9bNStvhU5NAMHdt3Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.59; helo=out28-59.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.78; helo=out28-78.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-78.mail.aliyun.com (out28-78.mail.aliyun.com [115.124.28.78])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.59; helo=out28-59.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-59.mail.aliyun.com (out28-59.mail.aliyun.com [115.124.28.59])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cLbJd64Dqz2yqh
-	for <linux-erofs@lists.ozlabs.org>; Tue,  9 Sep 2025 17:37:51 +1000 (AEST)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eb17-wi_1757403466 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cLbMM6nGXz2yqh
+	for <linux-erofs@lists.ozlabs.org>; Tue,  9 Sep 2025 17:40:15 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eb0EXKc_1757403608 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Tue, 09 Sep 2025 15:37:47 +0800
+          Tue, 09 Sep 2025 15:40:09 +0800
 From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
 	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v2] erofs-utils:mount: fix memory leak in erofs_nbd_get_identifier
-Date: Tue,  9 Sep 2025 15:37:45 +0800
-Message-ID: <20250909073745.99080-1-hudson@cyzhu.com>
+Subject: [PATCH v2-changed] erofs-utils: mount: fix memory leak in erofs_nbd_get_identifier
+Date: Tue,  9 Sep 2025 15:40:08 +0800
+Message-ID: <20250909074008.1051-1-hudson@cyzhu.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250909065500.75576-1-hudson@cyzhu.com>
 References: <20250909065500.75576-1-hudson@cyzhu.com>
