@@ -1,41 +1,41 @@
-Return-Path: <linux-erofs+bounces-1000-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1002-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 276BAB50C51
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Sep 2025 05:26:43 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AB5EB50C63
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Sep 2025 05:44:30 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cM5hK09wMz3cc0;
-	Wed, 10 Sep 2025 13:26:41 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cM64q48kMz3ccw;
+	Wed, 10 Sep 2025 13:44:27 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.87
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757474800;
-	cv=none; b=LHpmDdnAQVO6MbwmLuKH2FQ8dtJkpkHdLStZZ9KOjQmXeRXzzqslzx9nZgqzV4j6SvCvaltTPy/SsoVOTNC7nC8D1rEcp+HrwInH4+0Xylf0aoX0koCE2n9/S+pmAy1IFDh9IzM2/ICLwyT1YfHuJq0yvhGkNjSelm5+tB0m+n9dOm9knnBjKxZvxApkLSE4kR9jcunlyWDLc66c8zth358O3dIpvgXhe6UstC3lu6P+dvx7Sk1wBTI2EZILEpMm8fdw5ME/yGyUXgTS+vnSh34piLh0lddsQ8AeU3e1yega5iPy0s4HeeLChLVXVVl/lVjRF/YCo5U8TZ4/JKk6Og==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.38
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757475867;
+	cv=none; b=hQY9JQw5tOmZi8cW3LxuNp5Ny+OHljSOL91DTIkYHxXilrExBIpJ6o3PlgBgP8MH86GA6X7r79soSa1BWmpkILrhsiG2PETemxaXC4zFEUr4rIU21e7QLhVMmEJfl0iDSnBJbDn3MyiWBQgeTXgx426OFNh8ZUo/swfIzZacFwO6k5yYcbzj8AMQQbhsPR1QAVSpy0LQop4AOSZ4w+e9AgIwcC7Xt2QM6k8t2H+IYWn7Y2XzzXxX5FiqAnxpv1MwBXAi/8HMM2EQo77q1gagoRhfwa5y6l87tfGzWwJe5sWG6lZ3WX/yxz/ql6oQ2y5xx+GKZGTo7Uz98z1uiduO5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1757474800; c=relaxed/relaxed;
-	bh=GDL3EEIxzUuE/NUXKVAE2Sq1Oj/wrhtkiCg90dM/mTY=;
+	t=1757475867; c=relaxed/relaxed;
+	bh=04NFMl+9F6X/4YM9jG+TNNiWRfNrPDlLj/OzsEgcFdg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eYwN9bpJzHoiK2kd+cuRZQ+RLsmplGZx32JBhVJQGNGAaYH8C4ZZt+bCZBJ2O6fccBZ+Y0/GwDQK4p0TpBxIo/4ztoOn22fRahJ29yH/EYXIMJvFvLu/L6DC4g8HXzG14QjS61Q6dkxrHvjuQqETc0Cst13GXi30OPO5ykYOZKLCgJURFZVFwbOGeXOdHxiEFkQV9EtB3fZmncVIh3R7PGMEjS4q8WT/MKhHkUQfY8EuEwZ+oKmSN1ENWCQsfZOM1edNfKbs9SRjqKjpLXLYIaqfWDo4f5rV/UZwGsm2ojHPoSeyMFYtDoXwRUfYRDGdtFHONf2Ox9T28X056rZI0g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.87; helo=out28-87.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	 MIME-Version; b=jksIuKx1nr906N7/U/rBPyqETKzOpXLLjSmA45JpgerGctrwC3Qiqz1qhc1J1q1YIXbSho8q1n4i6Njp6Nbr/ENHCXjNrkItexEHANJSBO/gdvMMKEJVVWNYCSDjiaUugWWFviVaEy2newpWksrAndW6gqjM5XbIb14ajYYjUmLBq/k+KMPPVql/SIsHmXt6PbNljrvDPc7PJKHmqyjKhV+zFhA1BL+60GFYOTzH/kQ7DksAzHFhV43OmDemRy9sehfeY2PlEthaKAkHRtF2J0x3wWvElsmJbqPJoiajDOKeyxMex1XxfUbPEj+DYaSTRvuUaiLGE4XBaLfydrJGDQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.38; helo=out28-38.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.87; helo=out28-87.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-87.mail.aliyun.com (out28-87.mail.aliyun.com [115.124.28.87])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.38; helo=out28-38.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-38.mail.aliyun.com (out28-38.mail.aliyun.com [115.124.28.38])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cM5hH3pMsz304l
-	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Sep 2025 13:26:36 +1000 (AEST)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.ebhyYCq_1757474787 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cM64p2FPYz30Ff
+	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Sep 2025 13:44:25 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.ebi0g1p_1757475858 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Wed, 10 Sep 2025 11:26:29 +0800
+          Wed, 10 Sep 2025 11:44:19 +0800
 From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
 	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v5] erofs-utils: mount: add OCI recovery support for NBD reattach
-Date: Wed, 10 Sep 2025 11:26:27 +0800
-Message-ID: <20250910032627.4398-1-hudson@cyzhu.com>
+Subject: [PATCH v6] erofs-utils: mount: add OCI recovery support for NBD reattach
+Date: Wed, 10 Sep 2025 11:44:18 +0800
+Message-ID: <20250910034418.13262-1-hudson@cyzhu.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250909070909.83921-1-hudson@cyzhu.com>
 References: <20250909070909.83921-1-hudson@cyzhu.com>
@@ -52,8 +52,8 @@ Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
-	version=4.0.1
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 From: Chengyu Zhu <hudsonzhu@tencent.com>
@@ -65,9 +65,9 @@ NBD disconnection.
 Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 ---
  lib/liberofs_oci.h |   3 +
- lib/remotes/oci.c  |  77 ++++++++++++++++++++++
- mount/main.c       | 155 +++++++++++++++++++++++++++++++++++++--------
- 3 files changed, 207 insertions(+), 28 deletions(-)
+ lib/remotes/oci.c  |  77 +++++++++++++++++++++++
+ mount/main.c       | 153 ++++++++++++++++++++++++++++++++++++---------
+ 3 files changed, 205 insertions(+), 28 deletions(-)
 
 diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
 index 01a83aa..aa41141 100644
@@ -179,10 +179,10 @@ index de18daa..7f16741 100644
  int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cfg)
  {
 diff --git a/mount/main.c b/mount/main.c
-index c52ac3b..7d52ac8 100644
+index c52ac3b..f6d0e1e 100644
 --- a/mount/main.c
 +++ b/mount/main.c
-@@ -401,10 +401,47 @@ out_closefd:
+@@ -401,10 +401,45 @@ out_closefd:
  	return err;
  }
  
@@ -196,10 +196,8 @@ index c52ac3b..7d52ac8 100644
 +		b64cred = ocierofs_encode_userpass(
 +			source->ocicfg.username,
 +			source->ocicfg.password);
-+		if (IS_ERR(b64cred)) {
-+			fclose(f);
++		if (IS_ERR(b64cred))
 +			return PTR_ERR(b64cred);
-+		}
 +	}
 +	ret = fprintf(f, "OCI_LAYER %s %s %s %d\n",
 +		       source->ocicfg.image_ref ?: "",
@@ -232,7 +230,7 @@ index c52ac3b..7d52ac8 100644
  	int fd, err;
  	FILE *f;
  
-@@ -424,20 +461,77 @@ static char *erofsmount_write_recovery_info(const char *source)
+@@ -424,20 +459,77 @@ static char *erofsmount_write_recovery_info(const char *source)
  		return ERR_PTR(-errno);
  	}
  
@@ -319,7 +317,7 @@ index c52ac3b..7d52ac8 100644
  static int erofsmount_nbd_fix_backend_linkage(int num, char **recp)
  {
  	char *newrecp;
-@@ -491,15 +585,10 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
+@@ -491,15 +583,10 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
  				exit(EXIT_FAILURE);
  			ctx.vd.fd = err;
  		}
@@ -339,7 +337,7 @@ index c52ac3b..7d52ac8 100644
  		}
  
  		num = -1;
-@@ -595,19 +684,29 @@ static int erofsmount_reattach(const char *target)
+@@ -595,19 +682,29 @@ static int erofsmount_reattach(const char *target)
  		*(source++) = '\0';
  	}
  
