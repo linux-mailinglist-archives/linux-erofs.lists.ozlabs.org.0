@@ -1,44 +1,58 @@
-Return-Path: <linux-erofs+bounces-1002-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1003-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AB5EB50C63
-	for <lists+linux-erofs@lfdr.de>; Wed, 10 Sep 2025 05:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CCFE5B50CFE
+	for <lists+linux-erofs@lfdr.de>; Wed, 10 Sep 2025 07:06:47 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cM64q48kMz3ccw;
-	Wed, 10 Sep 2025 13:44:27 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cM7vn1sn9z3cjQ;
+	Wed, 10 Sep 2025 15:06:45 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.38
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757475867;
-	cv=none; b=hQY9JQw5tOmZi8cW3LxuNp5Ny+OHljSOL91DTIkYHxXilrExBIpJ6o3PlgBgP8MH86GA6X7r79soSa1BWmpkILrhsiG2PETemxaXC4zFEUr4rIU21e7QLhVMmEJfl0iDSnBJbDn3MyiWBQgeTXgx426OFNh8ZUo/swfIzZacFwO6k5yYcbzj8AMQQbhsPR1QAVSpy0LQop4AOSZ4w+e9AgIwcC7Xt2QM6k8t2H+IYWn7Y2XzzXxX5FiqAnxpv1MwBXAi/8HMM2EQo77q1gagoRhfwa5y6l87tfGzWwJe5sWG6lZ3WX/yxz/ql6oQ2y5xx+GKZGTo7Uz98z1uiduO5w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2001:cf8:acf:41::8"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757480805;
+	cv=none; b=nVEFz4u9Bved8Id4dU21yQARGgm6QnpmN1cdP1MJzr5TpvYg8sp2lLyBz0LEESumWhNc/hlehYPG6PbGbldZ7JF1NYGWaDVvssyEJtBBrHEn4kBMxsLNba6/gIasAnyM9hJilLVBCOfowFTfnPXWIqZU7ELPBg1nJybew9tdmF8YD3/a54fiDObcIF7oTPtJ8SkSAYTq49mJLoOssUgNV0SQLvlaR0GJ4DhzbPQA37PZ3mvzrwIk3UIuYEYpPnLKS+SDJU3dRSIGxtgRFXmTPhadfTDFeJS2iM6WPE2CmINN+MdB2GluHnq67kzzHKd8WwboAwTPvTA41qQZXaG9RQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1757475867; c=relaxed/relaxed;
-	bh=04NFMl+9F6X/4YM9jG+TNNiWRfNrPDlLj/OzsEgcFdg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jksIuKx1nr906N7/U/rBPyqETKzOpXLLjSmA45JpgerGctrwC3Qiqz1qhc1J1q1YIXbSho8q1n4i6Njp6Nbr/ENHCXjNrkItexEHANJSBO/gdvMMKEJVVWNYCSDjiaUugWWFviVaEy2newpWksrAndW6gqjM5XbIb14ajYYjUmLBq/k+KMPPVql/SIsHmXt6PbNljrvDPc7PJKHmqyjKhV+zFhA1BL+60GFYOTzH/kQ7DksAzHFhV43OmDemRy9sehfeY2PlEthaKAkHRtF2J0x3wWvElsmJbqPJoiajDOKeyxMex1XxfUbPEj+DYaSTRvuUaiLGE4XBaLfydrJGDQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.38; helo=out28-38.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.38; helo=out28-38.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-38.mail.aliyun.com (out28-38.mail.aliyun.com [115.124.28.38])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1757480805; c=relaxed/relaxed;
+	bh=HNPEvRpgKlRzSoOyuQviI0bF59SESvr15wXc5Hp7O0Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IhSmds2sPOLZc6k/T5d1tpBtFhN8Ps4IX74WktutZQopVe4LgyPk06bPXFHxgC5mao6zBSCUVfZwQ9UGREZbd/cq1MLXnuyTtHs6+eNsm+Wvn7UVlangUhruduGaEHZq8ke7u/y04WPI+/HwN16EOJDr/+AOHiB2qP3q2uIFduT9YTKXCLYI7Ac1s20Lv57A7pSQhGnuqvPOyOSEvdMLKUpxpqjU5FY+9OqgqdnPR51b5zuY2DSlFFH1PA4fSpX15PbABxmJ7iQ6Xl8aJUrV6eM1V9CtNY/XkDZZIgimkmlcw6zz0IPcw3GPC/naGk0fFVmKWbghWCYue+hmlmuhUg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=sony.com; dkim=pass (2048-bit key; unprotected) header.d=sony.com header.i=@sony.com header.a=rsa-sha256 header.s=s1jp header.b=Jk+/yZgo; dkim-atps=neutral; spf=pass (client-ip=2001:cf8:acf:41::8; helo=jpms-ob02-os7.noc.sony.co.jp; envelope-from=yuezhang.mo@sony.com; receiver=lists.ozlabs.org) smtp.mailfrom=sony.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=sony.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=sony.com header.i=@sony.com header.a=rsa-sha256 header.s=s1jp header.b=Jk+/yZgo;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=sony.com (client-ip=2001:cf8:acf:41::8; helo=jpms-ob02-os7.noc.sony.co.jp; envelope-from=yuezhang.mo@sony.com; receiver=lists.ozlabs.org)
+Received: from jpms-ob02-os7.noc.sony.co.jp (jpms-ob02-os7.noc.sony.co.jp [IPv6:2001:cf8:acf:41::8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cM64p2FPYz30Ff
-	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Sep 2025 13:44:25 +1000 (AEST)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.ebi0g1p_1757475858 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Wed, 10 Sep 2025 11:44:19 +0800
-From: ChengyuZhu6 <hudson@cyzhu.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cM7vm21TNz3cjL
+	for <linux-erofs@lists.ozlabs.org>; Wed, 10 Sep 2025 15:06:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=sony.com; s=s1jp; t=1757480804; x=1789016804;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HNPEvRpgKlRzSoOyuQviI0bF59SESvr15wXc5Hp7O0Y=;
+  b=Jk+/yZgoMa7Rq697guDWy57T5IfkNlrCIZr1kKP4IFpW/J9Ut3WRBPpv
+   HaxR9w5ZvJbMr1oFs7H1dajg3TpplZjK0As+aakUkhH2vZxTyMfVW2IEc
+   jcQPQtlsE5W/10/oLuI/q1ekmS/JwkblYNCuYwBZwWDFaOFgY65frWlas
+   P2CLer/5+eDlqEKAxTIeGPAPMnXRuz9eby7COZDiqyw1Y1RWU7dAADDKb
+   7HgVl7oxmAiClCNacSO25EQJ08ly4jI/qzuxFU6rUJjHcF0slR3lt9iqL
+   EqWT00sc7gLt86RowngA01Yz9+RfXqBFb6Fn5V3vUBuQ7WHJKp3X7Zh+J
+   w==;
+Received: from unknown (HELO jpmta-ob01-os7.noc.sony.co.jp) ([IPv6:2001:cf8:acf:1104::6])
+  by jpms-ob02-os7.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Sep 2025 14:06:37 +0900
+X-IronPort-AV: E=Sophos;i="6.18,253,1751209200"; 
+   d="scan'208";a="30785495"
+Received: from unknown (HELO cscsh-7000014390..) ([43.82.111.225])
+  by jpmta-ob01-os7.noc.sony.co.jp with ESMTP; 10 Sep 2025 14:06:37 +0900
+From: Yuezhang Mo <Yuezhang.Mo@sony.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org,
-	hsiangkao@linux.alibaba.com,
-	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v6] erofs-utils: mount: add OCI recovery support for NBD reattach
-Date: Wed, 10 Sep 2025 11:44:18 +0800
-Message-ID: <20250910034418.13262-1-hudson@cyzhu.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20250909070909.83921-1-hudson@cyzhu.com>
-References: <20250909070909.83921-1-hudson@cyzhu.com>
+Cc: Yuezhang Mo <Yuezhang.Mo@sony.com>,
+	Friendy Su <friendy.su@sony.com>,
+	Daniel Palmer <daniel.palmer@sony.com>
+Subject: [PATCH v2] erofs-utils: fix memory leaks and allocation issue
+Date: Wed, 10 Sep 2025 13:05:46 +0800
+Message-ID: <20250910050545.735649-2-Yuezhang.Mo@sony.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -51,331 +65,105 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
-	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Chengyu Zhu <hudsonzhu@tencent.com>
+This patch addresses 4 memory leaks and 1 allocation issue to
+ensure proper cleanup and allocation:
 
-This commit implements recovery support for OCI-based NBD mounts,
-allowing the system to properly reattach NBD devices after
-NBD disconnection.
+1. Fixed memory leak by freeing sbi->zmgr in z_erofs_compress_exit().
+2. Fixed memory leak by freeing inode->chunkindexes in erofs_iput().
+3. Fixed incorrect allocation of chunk index array in
+   erofs_rebuild_write_blob_index() to ensure correct array allocation
+   and avoid out-of-bounds access.
+4. Fixed memory leak of struct erofs_blobchunk not being freed by
+   calling erofs_blob_exit() in rebuild mode.
+5. Fixed memory leak caused by repeated initialization of the first
+   blob device's sbi by checking whether sbi has been initialized.
 
-Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
+Signed-off-by: Yuezhang Mo <Yuezhang.Mo@sony.com>
+Reviewed-by: Friendy Su <friendy.su@sony.com>
+Reviewed-by: Daniel Palmer <daniel.palmer@sony.com>
 ---
- lib/liberofs_oci.h |   3 +
- lib/remotes/oci.c  |  77 +++++++++++++++++++++++
- mount/main.c       | 153 ++++++++++++++++++++++++++++++++++++---------
- 3 files changed, 205 insertions(+), 28 deletions(-)
+ lib/compress.c |  2 ++
+ lib/inode.c    |  3 +++
+ lib/rebuild.c  | 13 ++++++++-----
+ mkfs/main.c    |  2 +-
+ 4 files changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
-index 01a83aa..aa41141 100644
---- a/lib/liberofs_oci.h
-+++ b/lib/liberofs_oci.h
-@@ -71,6 +71,9 @@ int ocierofs_build_trees(struct erofs_importer *importer,
- 			 const struct ocierofs_config *cfg);
- int ocierofs_io_open(struct erofs_vfile *vf, const struct ocierofs_config *cfg);
- 
-+char *ocierofs_encode_userpass(const char *username, const char *password);
-+int ocierofs_decode_userpass(const char *b64, char **out_user, char **out_pass);
-+
- #ifdef __cplusplus
- }
+diff --git a/lib/compress.c b/lib/compress.c
+index 622a205..dd537ec 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -2171,5 +2171,7 @@ int z_erofs_compress_exit(struct erofs_sb_info *sbi)
+ 		}
  #endif
-diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index de18daa..7f16741 100644
---- a/lib/remotes/oci.c
-+++ b/lib/remotes/oci.c
-@@ -24,6 +24,7 @@
- #include "erofs/io.h"
- #include "erofs/print.h"
- #include "erofs/tar.h"
-+#include "liberofs_base64.h"
- #include "liberofs_oci.h"
- #include "liberofs_private.h"
- 
-@@ -1471,6 +1472,82 @@ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cf
- 	*(struct ocierofs_iostream **)vfile->payload = oci_iostream;
+ 	}
++
++	free(sbi->zmgr);
  	return 0;
  }
+diff --git a/lib/inode.c b/lib/inode.c
+index 7ee6b3d..38e2bb2 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -159,6 +159,9 @@ unsigned int erofs_iput(struct erofs_inode *inode)
+ 	} else {
+ 		free(inode->i_link);
+ 	}
 +
-+char *ocierofs_encode_userpass(const char *username, const char *password)
-+{
-+	size_t ulen = username ? strlen(username) : 0;
-+	size_t plen = password ? strlen(password) : 0;
-+	size_t inlen = ulen + 1 + plen;
-+	size_t outlen;
-+	unsigned char *buf;
-+	char *out;
-+	int ret;
-+
-+	buf = malloc(inlen + 1);
-+	if (!buf)
-+		return ERR_PTR(-ENOMEM);
-+	memcpy(buf, username ? username : "", ulen);
-+	buf[ulen] = ':';
-+	memcpy(buf + ulen + 1, password ? password : "", plen);
-+	buf[inlen] = '\0';
-+
-+	outlen = 4 * ((inlen + 2) / 3);
-+	out = malloc(outlen + 1);
-+	if (!out) {
-+		free(buf);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	ret = erofs_base64_encode(buf, inlen, out);
-+	if (ret < 0) {
-+		free(buf);
-+		free(out);
-+		return ERR_PTR(ret);
-+	}
-+	out[ret] = '\0';
-+	free(buf);
-+	return out;
-+}
-+
-+int ocierofs_decode_userpass(const char *b64, char **out_user, char **out_pass)
-+{
-+	size_t len;
-+	unsigned char *out;
-+	int ret;
-+	char *colon;
-+
-+	if (!b64 || !out_user || !out_pass)
-+		return -EINVAL;
-+	*out_user = NULL;
-+	*out_pass = NULL;
-+
-+	len = strlen(b64);
-+	out = malloc(len * 3 / 4 + 1);
-+	if (!out)
-+		return -ENOMEM;
-+	ret = erofs_base64_decode(b64, len, out);
-+	if (ret < 0) {
-+		free(out);
-+		return ret;
-+	}
-+	out[ret] = '\0';
-+	colon = (char *)memchr(out, ':', ret);
-+	if (!colon) {
-+		free(out);
-+		return -EINVAL;
-+	}
-+	*colon = '\0';
-+	*out_user = strdup((char *)out);
-+	*out_pass = strdup(colon + 1);
-+	free(out);
-+	if (!*out_user || !*out_pass) {
-+		free(*out_user);
-+		free(*out_pass);
-+		*out_user = *out_pass = NULL;
-+		return -ENOMEM;
-+	}
-+	return 0;
-+}
-+
- #else
- int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cfg)
- {
-diff --git a/mount/main.c b/mount/main.c
-index c52ac3b..f6d0e1e 100644
---- a/mount/main.c
-+++ b/mount/main.c
-@@ -401,10 +401,45 @@ out_closefd:
- 	return err;
++	if (inode->datalayout == EROFS_INODE_CHUNK_BASED)
++		free(inode->chunkindexes);
+ 	free(inode);
+ 	return 0;
  }
+diff --git a/lib/rebuild.c b/lib/rebuild.c
+index 0358567..461e18e 100644
+--- a/lib/rebuild.c
++++ b/lib/rebuild.c
+@@ -186,7 +186,7 @@ static int erofs_rebuild_write_blob_index(struct erofs_sb_info *dst_sb,
  
--static char *erofsmount_write_recovery_info(const char *source)
-+static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *source)
-+{
-+	char *b64cred = NULL;
-+	int ret;
-+
-+	if (source->ocicfg.username || source->ocicfg.password) {
-+		b64cred = ocierofs_encode_userpass(
-+			source->ocicfg.username,
-+			source->ocicfg.password);
-+		if (IS_ERR(b64cred))
-+			return PTR_ERR(b64cred);
-+	}
-+	ret = fprintf(f, "OCI_LAYER %s %s %s %d\n",
-+		       source->ocicfg.image_ref ?: "",
-+		       source->ocicfg.platform ?: "",
-+		       b64cred ?: "",
-+		       source->ocicfg.layer_index);
-+	free(b64cred);
-+	return ret < 0 ? -ENOMEM : 0;
-+}
-+
-+static int erofsmount_write_recovery_local(FILE *f, struct erofs_nbd_source *source)
- {
--	char recp[] = "/var/run/erofs/mountnbd_XXXXXX";
- 	char *realp;
-+	int err;
-+
-+	realp = realpath(source->device_path, NULL);
-+	if (!realp)
-+		return -errno;
-+
-+	/* TYPE<LOCAL> <SOURCE PATH>\n(more..) */
-+	err = fprintf(f, "LOCAL %s\n", realp) < 0;
-+	free(realp);
-+	return err ? -ENOMEM : 0;
-+}
-+
-+static char *erofsmount_write_recovery_info(struct erofs_nbd_source *source)
-+{
-+	char recp[] = "/var/run/erofs/mountnbd_XXXXXX";
- 	int fd, err;
- 	FILE *f;
- 
-@@ -424,20 +459,77 @@ static char *erofsmount_write_recovery_info(const char *source)
- 		return ERR_PTR(-errno);
+ 	unit = sizeof(struct erofs_inode_chunk_index);
+ 	inode->extent_isize = count * unit;
+-	idx = malloc(max(sizeof(*idx), sizeof(void *)));
++	idx = calloc(count, max(sizeof(*idx), sizeof(void *)));
+ 	if (!idx)
+ 		return -ENOMEM;
+ 	inode->chunkindexes = idx;
+@@ -428,10 +428,13 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
+ 		erofs_uuid_unparse_lower(sbi->uuid, uuid_str);
+ 		fsid = uuid_str;
  	}
- 
--	realp = realpath(source, NULL);
--	if (!realp) {
--		fclose(f);
--		return ERR_PTR(-errno);
-+	if (source->type == EROFSNBD_SOURCE_OCI) {
-+		err = erofsmount_write_recovery_oci(f, source);
-+		if (err) {
-+			fclose(f);
-+			return ERR_PTR(err);
-+		}
-+	} else {
-+		err = erofsmount_write_recovery_local(f, source);
-+		if (err) {
-+			fclose(f);
-+			return ERR_PTR(err);
+-	ret = erofs_read_superblock(sbi);
+-	if (ret) {
+-		erofs_err("failed to read superblock of %s", fsid);
+-		return ret;
++
++	if (!sbi->devs) {
++		ret = erofs_read_superblock(sbi);
++		if (ret) {
++			erofs_err("failed to read superblock of %s", fsid);
++			return ret;
 +		}
  	}
--	/* TYPE<LOCAL> <SOURCE PATH>\n(more..) */
--	err = fprintf(f, "LOCAL %s\n", realp) < 0;
-+
- 	fclose(f);
--	free(realp);
--	if (err)
--		return ERR_PTR(-ENOMEM);
- 	return strdup(recp) ?: ERR_PTR(-ENOMEM);
- }
  
-+/**
-+ * Parses input string in format: "image_ref [platform] [b64cred_or_layer] [layer]"
-+ * Supports 4 scenarios:
-+ * 1. "image_ref platform" - basic format with platform
-+ * 2. "image_ref platform layer" - with layer index only
-+ * 3. "image_ref platform b64cred" - with base64 credentials
-+ * 4. "image_ref platform b64cred layer" - with both credentials and layer
-+ */
-+static int erofsmount_parse_recovery_ocilayer(struct ocierofs_config *oci_cfg,
-+					      char *source)
-+{
-+	char *tokens[4] = {0};
-+	int token_count = 0;
-+	char *p = source;
-+	int err;
-+	char *endptr;
-+	unsigned long v;
-+
-+	while (token_count < 4 && (p = strchr(p, ' ')) != NULL) {
-+		*p++ = '\0';
-+		while (*p == ' ')
-+			p++;
-+		if (*p == '\0')
-+			break;
-+		tokens[token_count++] = p;
-+	}
-+
-+	oci_cfg->image_ref = source;
-+	if (token_count > 0)
-+		oci_cfg->platform = tokens[0];
-+
-+	if (token_count > 1) {
-+		v = strtoul(tokens[1], &endptr, 10);
-+		if (endptr == tokens[1] || *endptr != '\0') {
-+			err = ocierofs_decode_userpass(tokens[1], &oci_cfg->username,
-+						       &oci_cfg->password);
-+			if (err)
-+				return err;
-+
-+			if (token_count > 2) {
-+				v = strtoul(tokens[2], &endptr, 10);
-+				if (endptr == tokens[2] || *endptr != '\0')
-+					return -EINVAL;
-+				oci_cfg->layer_index = (int)v;
-+			}
-+		} else {
-+			oci_cfg->layer_index = (int)v;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int erofsmount_nbd_fix_backend_linkage(int num, char **recp)
- {
- 	char *newrecp;
-@@ -491,15 +583,10 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
- 				exit(EXIT_FAILURE);
- 			ctx.vd.fd = err;
- 		}
--
--		if (source->type == EROFSNBD_SOURCE_LOCAL) {
--			recp = erofsmount_write_recovery_info(source->device_path);
--			if (IS_ERR(recp)) {
--				erofs_io_close(&ctx.vd);
--				exit(EXIT_FAILURE);
--			}
--		} else {
--			recp = NULL;
-+		recp = erofsmount_write_recovery_info(source);
-+		if (IS_ERR(recp)) {
-+			erofs_io_close(&ctx.vd);
-+			exit(EXIT_FAILURE);
- 		}
- 
- 		num = -1;
-@@ -595,19 +682,29 @@ static int erofsmount_reattach(const char *target)
- 		*(source++) = '\0';
- 	}
- 
--	if (strcmp(line, "LOCAL")) {
-+	if (!strcmp(line, "LOCAL")) {
-+		err = open(source, O_RDONLY);
-+		if (err < 0) {
-+			err = -errno;
-+			goto err_line;
-+		}
-+		ctx.vd.fd = err;
-+	} else if (!strcmp(line, "OCI_LAYER")) {
-+		struct ocierofs_config oci_cfg = {};
-+
-+		err = erofsmount_parse_recovery_ocilayer(&oci_cfg, source);
-+		if (err)
-+			goto err_line;
-+
-+		err = ocierofs_io_open(&ctx.vd, &oci_cfg);
-+		if (err < 0)
-+			goto err_line;
-+	} else {
- 		err = -EOPNOTSUPP;
- 		erofs_err("unsupported source type %s recorded in recovery file", line);
- 		goto err_line;
- 	}
- 
--	err = open(source, O_RDONLY);
--	if (err < 0) {
--		err = -errno;
--		goto err_line;
--	}
--	ctx.vd.fd = err;
--
- 	err = erofs_nbd_nl_reconnect(nbdnum, identifier);
- 	if (err >= 0) {
- 		ctx.sk.fd = err;
+ 	inode.nid = sbi->root_nid;
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 28588db..3dd5815 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -1908,7 +1908,7 @@ exit:
+ 	erofs_dev_close(&g_sbi);
+ 	erofs_cleanup_compress_hints();
+ 	erofs_cleanup_exclude_rules();
+-	if (cfg.c_chunkbits)
++	if (cfg.c_chunkbits || source_mode == EROFS_MKFS_SOURCE_REBUILD)
+ 		erofs_blob_exit();
+ 	erofs_xattr_cleanup_name_prefixes();
+ 	erofs_rebuild_cleanup();
 -- 
-2.51.0
+2.43.0
 
 
