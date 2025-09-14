@@ -1,58 +1,69 @@
-Return-Path: <linux-erofs+bounces-1028-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1029-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30FB3B56400
-	for <lists+linux-erofs@lfdr.de>; Sun, 14 Sep 2025 02:04:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id F130BB5640D
+	for <lists+linux-erofs@lfdr.de>; Sun, 14 Sep 2025 02:41:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cPT1h06pHz30BW;
-	Sun, 14 Sep 2025 10:04:56 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cPTqX0Xpmz30FR;
+	Sun, 14 Sep 2025 10:41:12 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757808295;
-	cv=none; b=BwNijgZox4pIUAkaOCitecmaWNQFpYAz1G1wVFy1mmHiqdWjoqzHP88puQN+fHOtPfNCldRd6cKCZZNGnHua2Ck67pBrvPCuLF4AvMqFRiWtdPL8ugsN1rIEQWFvb/9llB0b6q2NX/dInPw0Vbk+BBZhTI8ctMwQKfD4k5MeRaAn0XOOBpcYgYdrHOOdsbRPen7gvy1E74rwXyB+IU1oYAeEPz7xbfzMHiCly98iGLpMMh7evlKV0S++vD2b76aofDW0mHLNs+FwXHmt2pnmHrZqwlDhlt+ODyGZJRUCV5xXsZOtlr4c0AACtCS5tWeVzHULwQW5ISGZDLdKY8wOPQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1757810472;
+	cv=none; b=UtJygZrmLn78LcnEyg1wdrgq3IUBgAa6lLgrxjQlQiFPwvdazaXZnJV54qWc2vkFlfimuHc5eLF/jXBvLz3O7PaFaaY2dy1MzetKfRDFtgpPjYARWQzoywxa63CBZnaUM+p7BiPBToFfHGEs5c2ohmjzhGMuZT+QKx3UHb7FQQw6gSRVsZGcP4nsbcu+Cnn/7C9LRPCfU+QdVRXt20MJ8VDMte7z9n5lhU8nSz2yct2tZUAoopoDx1VCXPb/kVXEa7iJJCLz8nj8Q72mUjVHH2f/efglx2kGAfPzOZcB+FG+Oe79XnVip3AvRrNJxpWB4aVKXDRgRSf4MUidrxngtQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1757808295; c=relaxed/relaxed;
-	bh=CBKdU/D6FCgf78FWCspAfZkrvHLAybEesqY2aHFhS4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=STaqVblILFaZ3uetc7eNODIJ4NCu7saB/v6JTMPAGACFQnJa+jd12rSpTkhudDu80F6OHz9PgQ7Qyo0eoHHtPGUN44czOic7nmytmJ4NDwvPqRazbML5qQ3EVW4cz26YgRstZwD+QqwVGRw9J24u7dbsepxqgU7vcIo8zzajZ3azkMEEX4zX5kVncSUYnZVOLhn12nYW8RsyLR5tCw4388IApaT7zyoUtz75r0LiPxXy5HFnEgstqNPlPKSx1oiFKAg27jVXkYI24PFuPucRFy0nZHUZCQrK74eVapc20Aq6s4IAEf1JmrjJeRCg+Qy+YglPoxuAZQBUqcigYVmnGw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=YonLBBL9; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	t=1757810472; c=relaxed/relaxed;
+	bh=EupQ4fwtOeRZK5UWvMFU5U6NGoRR2mCvOQPbLpO62nk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Q7wbMNJ3st9P/iDVN5MGiYvMaT2OWkMmsIrWI5TRavbljIOze/66CXy/ubHnaiFt5QcjxKdrjwsAG3bHpx46qtFe4K/F5o40yBFMiAHpl2jfGzXsj4S114LRjB3LUMiQyTNZDBQTaL0wdOLUK7EQ7oT1/eylSw0OwOcgvM6MCZZ9RJUs+vob+QEXXqepyR8rG49s2qhPsl3tEFgtxckDtskbyWQYgAL27YiF880dN2G2H8YKkWw9/4oPG2Wb3L3UkFZ2WDP6/aaX1z+lho/aT27tDfk9sWANmdQ9TO8sXeAS6Iu45Sj+lHF3nPL2oscgG3HI6Shjzxa3PiOUhJhOZQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=B+5Lqycv; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=YonLBBL9;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=B+5Lqycv;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cPT1g2Cr8z304x
-	for <linux-erofs@lists.ozlabs.org>; Sun, 14 Sep 2025 10:04:55 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cPTqS4LrCz304f
+	for <linux-erofs@lists.ozlabs.org>; Sun, 14 Sep 2025 10:41:08 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 150DC444E4;
-	Sun, 14 Sep 2025 00:04:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46D9EC4CEEB;
-	Sun, 14 Sep 2025 00:04:51 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id E15EB60250;
+	Sun, 14 Sep 2025 00:41:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC7DC4CEF7;
+	Sun, 14 Sep 2025 00:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757808292;
-	bh=jhxlJQ1D3aXAHnveeb4Bqd8Arf+9bkmDUaPFFpf52EY=;
-	h=Date:From:To:Cc:Subject:From;
-	b=YonLBBL9XtJ+Z0e/O+tCbfXvL6N+OUUSx0O+4ZY8zkbqFYwwcuGwb2DQzzvMViBOW
-	 eJr3CoHMaKPAqlWFmGWX6Mas2AmXCk77nBobHu1BO1j4fBwqSJ8EydCWmneA2gEBlP
-	 ig/rjUXLR8YnHz2BWaaeKaSjyXMtHbZRraBeGF7HY04+K6ckCdplV9V7jqKDvdMsVp
-	 vcixJuiiHTFjqePvV5DqEudbzflM+waY/0r8P4ZUG3wCCRj8aMHiapYZpuFs6cl8ea
-	 7ZKn+DHyu69hW42bOSXoxvS/PSsu1bDnzbOBXrZMm+2iDENxhktNDGDDx0U9wifgBa
-	 dw553Bv7E3xKg==
-Date: Sun, 14 Sep 2025 08:04:47 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Yuezhang Mo <Yuezhang.Mo@sony.com>, Chao Yu <chao@kernel.org>
-Subject: [GIT PULL] erofs fixes for 6.17-rc6
-Message-ID: <aMYGn1hQjWaQCaiM@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Yuezhang Mo <Yuezhang.Mo@sony.com>, Chao Yu <chao@kernel.org>
+	s=k20201202; t=1757810465;
+	bh=OAUb8ZvYxN36zVsX7xEQ0Pg09I6w5MYWXOCYnHvxvNs=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=B+5LqycvwYenDk0DWunYKipABIPpLnJoz9Mv6/l48ucKT1FIlZ9ryHsP5sJk9KxSn
+	 txWhYuB2oEbkElnYIZTBwTUBVU79L5SMphB+IKkpMWk5sRUIeu660AZUJDurSNzZUg
+	 B7BtCJMvHuURV7EryaLLoAUicVFGA4pEC+5Fm3rNV13A58R32eKab7S09sAWenYoba
+	 JUvFmZB6W/hQ2gffNRoPVU5as9jaDx/HnVOIFsxo7AvM1nU8hC9S9Ql2Y3U6dMhW0u
+	 gmnrl2ltPZ1CfMWUS238vase3Hr8xpR2xzm3p8BIjW1SEz8l8HCcjKZu0cBIiLTe80
+	 sZnBBwlQ9uWbA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE9B383BF4E;
+	Sun, 14 Sep 2025 00:41:08 +0000 (UTC)
+Subject: Re: [GIT PULL] erofs fixes for 6.17-rc6
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <aMYGn1hQjWaQCaiM@debian>
+References: <aMYGn1hQjWaQCaiM@debian>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aMYGn1hQjWaQCaiM@debian>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.17-rc6-fixes
+X-PR-Tracked-Commit-Id: 1fcf686def19064a7b5cfaeb28c1f1a119900a2b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f83a4f2a4d8c485922fba3018a64fc8f4cfd315f
+Message-Id: <175781046727.3349841.6826201067650734287.pr-tracker-bot@kernel.org>
+Date: Sun, 14 Sep 2025 00:41:07 +0000
+To: Gao Xiang <xiang@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Yuezhang Mo <Yuezhang.Mo@sony.com>, Chao Yu <chao@kernel.org>
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -63,57 +74,17 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Linus,
+The pull request you sent on Sun, 14 Sep 2025 08:04:47 +0800:
 
-Could you consider those fixes for 6.17-rc6?
+> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.17-rc6-fixes
 
-A few new random fixes as shown below..
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f83a4f2a4d8c485922fba3018a64fc8f4cfd315f
 
-Thanks,
-Gao Xiang
+Thank you!
 
-The following changes since commit c17b750b3ad9f45f2b6f7e6f7f4679844244f0b9:
-
-  Linux 6.17-rc2 (2025-08-17 15:22:10 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.17-rc6-fixes
-
-for you to fetch changes up to 1fcf686def19064a7b5cfaeb28c1f1a119900a2b:
-
-  erofs: fix long xattr name prefix placement (2025-09-12 03:37:07 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Fix invalid algorithm dereference in encoded extents;
-
- - Add missing dax_break_layout_final(), since recent FSDAX fixes
-   didn't cover EROFS;
-
- - Arrange long xattr name prefixes more properly.
-
-----------------------------------------------------------------
-Gao Xiang (2):
-      erofs: fix invalid algorithm for encoded extents
-      erofs: fix long xattr name prefix placement
-
-Yuezhang Mo (1):
-      erofs: fix runtime warning on truncate_folio_batch_exceptionals()
-
- fs/erofs/erofs_fs.h |  8 ++++---
- fs/erofs/internal.h |  1 +
- fs/erofs/super.c    | 12 ++++++++++
- fs/erofs/xattr.c    | 13 ++++++++---
- fs/erofs/zmap.c     | 67 +++++++++++++++++++++++++++++------------------------
- 5 files changed, 65 insertions(+), 36 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
