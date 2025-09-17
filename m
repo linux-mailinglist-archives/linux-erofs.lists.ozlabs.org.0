@@ -1,44 +1,48 @@
-Return-Path: <linux-erofs+bounces-1038-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1041-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B98FB59C1E
-	for <lists+linux-erofs@lfdr.de>; Tue, 16 Sep 2025 17:34:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AEDE9B7DE03
+	for <lists+linux-erofs@lfdr.de>; Wed, 17 Sep 2025 14:35:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cR5YJ5XP7z300F;
-	Wed, 17 Sep 2025 01:34:28 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cRWpG4DDTz3cQx;
+	Wed, 17 Sep 2025 18:17:10 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.67
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758036868;
-	cv=none; b=YpGqYag4S3IbCKS1LWA7/ygJdormu7aOXjmmD2Njd0YIUG25mUnLC8ZkH5Pnjk8Cg12KRcZKE3QZutwVM1tVqMC8IFj3QJdqBMdVdz9r0HYm2HlrDGlSfJcgKixe8yMiTT70W0Sr969Qk+uWFuiAC6t5ev+0xXnGsV+l7Hz6rbP6aIwqBSmdUCwcsRBB5YYfUzkcD2QoygfCfYdI6IwD8wTmXICZGR+FlQ3QDhkNIiP8O2g3NjnAbs/PedFm/+RFCcsdTMnAdYHuV/6PFgQmgfLLwK1mTnXNsY2cuhHruk+9EBP6duqQoV7RdqRhOx1OGXHypGkdhYGqWsopYS8POA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758097030;
+	cv=none; b=c7Kj6r33G6BlukesRulDBuB8hs7sAIYq9kIM1USqOadcKFtIEIWzeD4vrHAjBPR8gAFmtnpfT83k5fIlYptAuTwMFhxL2yeY3tr1DcYdh1DCxAfWKwIyTKgt3K9D9a4pYJ1Ek/EVVWvQAQk4wElS5FqbGV+YG4VKQGLMDjJkG1mciVG2pr+MxYhpIWNzFNWAOojDBZ+Tgj0jFsg9xLUY7GXsC8YXT3C3D+81fwXF5RsbsF4rVsmn3NbCkijHhD8LqaT29SL5a+mQdTZdtkF/r6ZsIq7qcOVzgaWSnyzSLqzDGYQMdzMsmaV/nA66/Q6HHMhB/KpZcEAP4BvRyVz/1A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1758036868; c=relaxed/relaxed;
-	bh=MEt66bpKknIvB4LfezTFBVBmS18orDWZH2SDIP664XM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dXSt8Wlulsy29D0hKBqgTzUdyeJrPyEpDknrjHLlxtSGGNgiToUkHHLi1TNC9eXSFpVpEuxZpi+EITYQiWNy/XcSDT0A8HwOY4f80xaUk1tsTICGY6FIw4qeItEFKHUX1U0NNN9XdGhfcLWtDAS1LyUgRUSELp+aBJ2fbOdRYawiie6VAFuB8NzZOLINu5w1EMMHpA9iUN/aifDbsVOuHQWAH1AAaqzLK9S+UAZHqqPSdK9wgh6cl5p9umkEQby96THd7auu3vjnQwSLfyblr40a1SKUB9lLpuOnj32I1TgOXzI6VDlTvwoxGXagQqpQdiuzc0e+WT+4rGtgBoqp7g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.67; helo=out28-67.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.67; helo=out28-67.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-67.mail.aliyun.com (out28-67.mail.aliyun.com [115.124.28.67])
+	t=1758097030; c=relaxed/relaxed;
+	bh=4Ati7d+esreYnKq2jdfy9MHBOfk5mfVL70wJHzUfJck=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ohOGvXXcpeXZruW0qEr5JXZwXnR4ctMTh8TDsow4PExhF3AMtpfoK/uw0EwuFIlojap3UgZm7sKTL1wXIpn6uRK+qDDMGrcqD0zErPFDtqC1pot2T9HJQeL7FaIhNcGfiZ9kuy2dejjFRu2ozjXdr1OExH4tb8dEbJE1d8b4wkG/hcVODAJjJ8TntSt/8JkNQ0xPyk8pLQcKx/Zo+FUSOIOLK6hSRHAlLFKYcbaDBvU1PXRGUb0kC8UB2SVlYzuTqDE96wNNDwmWqTMO4nC+EmnFmeX/tHx8qJhf7FtiSsR6kem/MufEN08ffjIS5H4slG/Cdorc/ojEiQozp4c0aQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=llsYWMHn; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=llsYWMHn;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cR5YH0N40z2yVP
-	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Sep 2025 01:34:24 +1000 (AEST)
-Received: from HUDSONZHU-MB0.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.egUhTaL_1758036855 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cRWpC5C2Vz3bjb
+	for <linux-erofs@lists.ozlabs.org>; Wed, 17 Sep 2025 18:17:06 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1758097021; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=4Ati7d+esreYnKq2jdfy9MHBOfk5mfVL70wJHzUfJck=;
+	b=llsYWMHnZpEKwSVzDGTRS+6tCS02HBQPO0iyvt5Ifbh752BloxBDPl+jVHE8amYjuLUa9CgGlVP9JKWRtMk1KrNjgiHLriwOsB2QFpHFpRvdUSg/JfJQpONaGxf+eAAqgGBntURiEVWOUYr1xhuXsKbCMMuujyyW0iJqXBU1SxQ=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WoBqWKE_1758097015 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 16 Sep 2025 23:34:16 +0800
-From: ChengyuZhu6 <hudson@cyzhu.com>
+          Wed, 17 Sep 2025 16:17:00 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org,
-	hsiangkao@linux.alibaba.com,
-	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v2] erofs-utils: oci: add support for indexing by layer digest
-Date: Tue, 16 Sep 2025 23:34:15 +0800
-Message-ID: <20250916153415.93839-1-hudson@cyzhu.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <06E91C03-951E-46B5-85C9-8F61F9BDE8EF@cyzhu.com>
-References: <06E91C03-951E-46B5-85C9-8F61F9BDE8EF@cyzhu.com>
+Cc: hudson@cyzhu.com,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH 1/2] erofs-utils: tar: support gzip index generation
+Date: Wed, 17 Sep 2025 16:16:52 +0800
+Message-ID: <20250917081654.3603244-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -51,592 +55,443 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
-	version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Chengyu Zhu <hudsonzhu@tencent.com>
+Let's support AWS SOCI-compatible zinfo version v2 generation.
 
-Add support for indexing by layer_digest string for more precise
-and reliable OCI layer identification. This change affects both mkfs.erofs
-and mount.erofs tools.
+Since an OCI image layer cannot be randomly accessed, the new gzip
+index can be used for OCI gzip random access.
 
-Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
+Example:
+ $ mkfs.erofs --tar=i --gzinfo=foo.zinfo foo.tarmeta.erofs foo.tgz
+
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/liberofs_oci.h |   6 +-
- lib/remotes/oci.c  |  89 +++++++++++++++++++------
- mkfs/main.c        |  75 +++++++++++++--------
- mount/main.c       | 160 +++++++++++++++++++++++++++++++++------------
- 4 files changed, 240 insertions(+), 90 deletions(-)
+ include/erofs/tar.h  |   7 +-
+ lib/Makefile.am      |   2 +
+ lib/gzran.c          | 216 +++++++++++++++++++++++++++++++++++++++++++
+ lib/liberofs_gzran.h |  21 +++++
+ lib/tar.c            |  20 ++++
+ mkfs/main.c          |  23 +++++
+ 6 files changed, 288 insertions(+), 1 deletion(-)
+ create mode 100644 lib/gzran.c
+ create mode 100644 lib/liberofs_gzran.h
 
-diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
-index aa41141..621eb2b 100644
---- a/lib/liberofs_oci.h
-+++ b/lib/liberofs_oci.h
-@@ -21,7 +21,8 @@ struct erofs_importer;
-  * @platform: target platform in "os/arch" format (e.g., "linux/amd64")
-  * @username: username for authentication (optional)
-  * @password: password for authentication (optional)
-- * @layer_index: specific layer to extract (-1 for all layers)
-+ * @layer_digest: specific layer digest to extract (NULL for all layers)
-+ * @layer_index: specific layer index to extract (negative for all layers)
-  *
-  * Configuration structure for OCI image parameters including registry
-  * location, image identification, platform specification, and authentication
-@@ -32,6 +33,7 @@ struct ocierofs_config {
- 	char *platform;
- 	char *username;
- 	char *password;
-+	char *layer_digest;
- 	int layer_index;
- };
+diff --git a/include/erofs/tar.h b/include/erofs/tar.h
+index 3bd4b15..cdaef31 100644
+--- a/include/erofs/tar.h
++++ b/include/erofs/tar.h
+@@ -24,12 +24,17 @@ struct erofs_pax_header {
+ #define EROFS_IOS_DECODER_NONE		0
+ #define EROFS_IOS_DECODER_GZIP		1
+ #define EROFS_IOS_DECODER_LIBLZMA	2
++#define EROFS_IOS_DECODER_GZRAN		3
  
-@@ -51,7 +53,7 @@ struct ocierofs_ctx {
- 	char *tag;
- 	char *manifest_digest;
- 	struct ocierofs_layer_info **layers;
--	int layer_index;
-+	char *layer_digest;
- 	int layer_count;
- };
+ struct erofs_iostream_liblzma;
++struct erofs_gzran_builder;
  
-diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index 26aec27..d22aa2e 100644
---- a/lib/remotes/oci.c
-+++ b/lib/remotes/oci.c
-@@ -898,6 +898,21 @@ static int ocierofs_prepare_auth(struct ocierofs_ctx *ctx,
- 	return 0;
- }
- 
-+static int ocierofs_find_layer_by_digest(struct ocierofs_ctx *ctx, const char *digest)
+ struct erofs_iostream {
+ 	union {
+-		struct erofs_vfile vf;
++		struct {
++			struct erofs_vfile vf;
++			struct erofs_gzran_builder *gb;
++		};
+ 		void *handler;
+ #ifdef HAVE_LIBLZMA
+ 		struct erofs_iostream_liblzma *lzma;
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index daf937c..72aa0e8 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -31,6 +31,7 @@ noinst_HEADERS = $(top_srcdir)/include/erofs_fs.h \
+       $(top_srcdir)/lib/liberofs_cache.h \
+       $(top_srcdir)/lib/liberofs_private.h \
+       $(top_srcdir)/lib/liberofs_xxhash.h \
++      $(top_srcdir)/lib/liberofs_gzran.h \
+       $(top_srcdir)/lib/liberofs_metabox.h \
+       $(top_srcdir)/lib/liberofs_nbd.h \
+       $(top_srcdir)/lib/liberofs_s3.h
+@@ -86,3 +87,4 @@ endif
+ liberofs_la_SOURCES += remotes/oci.c
+ liberofs_la_CFLAGS += ${libcurl_CFLAGS} ${json_c_CFLAGS}
+ liberofs_la_LDFLAGS += ${libcurl_LIBS} ${json_c_LIBS}
++liberofs_la_SOURCES += gzran.c
+diff --git a/lib/gzran.c b/lib/gzran.c
+new file mode 100644
+index 0000000..ce2759b
+--- /dev/null
++++ b/lib/gzran.c
+@@ -0,0 +1,216 @@
++// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
++/*
++ * Copyright (C) 2025 Alibaba Cloud
++ */
++#include "erofs/list.h"
++#include "erofs/err.h"
++#include "liberofs_gzran.h"
++#include <stdlib.h>
++#include <zlib.h>
++
++#ifdef HAVE_ZLIB
++struct erofs_gzran_cutpoint {
++	u8	window[EROFS_GZRAN_WINSIZE];	/* preceding 32K of uncompressed data */
++	u64	outpos;			/* corresponding offset in uncompressed data */
++	u64	in_bitpos;		/* bit offset in input file of first full byte */
++};
++
++struct erofs_gzran_cutpoint_item {
++	struct erofs_gzran_cutpoint	cp;
++	struct list_head		list;
++};
++
++struct erofs_gzran_builder {
++	struct list_head items;
++	struct erofs_vfile *vf;
++	z_stream strm;
++	u64 totout, totin;
++	u32 entries;
++	u32 span_size;
++	u8 window[EROFS_GZRAN_WINSIZE];
++	u8 src[1 << 14];
++};
++
++struct erofs_gzran_builder *erofs_gzran_builder_init(struct erofs_vfile *vf,
++						     u32 span_size)
 +{
-+	int i;
++	struct erofs_gzran_builder *gb;
++	z_stream *strm;
++	int ret;
 +
-+	if (!digest || !ctx->layers)
-+		return -1;
-+
-+	for (i = 0; i < ctx->layer_count; i++) {
-+		if (ctx->layers[i] && ctx->layers[i]->digest &&
-+		    !strcmp(ctx->layers[i]->digest, digest))
-+			return i;
-+	}
-+	return -1;
++	gb = malloc(sizeof(*gb));
++	if (!gb)
++		return ERR_PTR(-ENOMEM);
++	strm = &gb->strm;
++	/* initialize inflate */
++	strm->zalloc = Z_NULL;
++	strm->zfree = Z_NULL;
++	strm->opaque = Z_NULL;
++	strm->avail_in = 0;
++	strm->next_in = Z_NULL;
++	ret = inflateInit2(strm, 47);	/* automatic zlib or gzip decoding */
++	if (ret != Z_OK)
++		return ERR_PTR(-EFAULT);
++	gb->vf = vf;
++	gb->span_size = span_size;
++	gb->totout = gb->totin = 0;
++	gb->entries = 0;
++	init_list_head(&gb->items);
++	return gb;
 +}
 +
- static int ocierofs_prepare_layers(struct ocierofs_ctx *ctx,
- 				   const struct ocierofs_config *config)
- {
-@@ -925,16 +940,35 @@ static int ocierofs_prepare_layers(struct ocierofs_ctx *ctx,
- 		goto out_manifest;
- 	}
- 
--	if (ctx->layer_index >= ctx->layer_count) {
--		erofs_err("layer index %d exceeds available layers (%d)",
--			  ctx->layer_index, ctx->layer_count);
--		ret = -EINVAL;
--		goto out_layers;
-+	if (config->layer_index >= 0) {
-+		if (config->layer_index >= ctx->layer_count) {
-+			erofs_err("layer index %d out of range (0..%d)",
-+				  config->layer_index, ctx->layer_count - 1);
-+			ret = -EINVAL;
-+			goto out_layers;
-+		}
-+		if (!ctx->layers[config->layer_index] ||
-+		    !ctx->layers[config->layer_index]->digest) {
-+			ret = -EINVAL;
-+			goto out_layers;
-+		}
-+		ctx->layer_digest = strdup(ctx->layers[config->layer_index]->digest);
-+		if (!ctx->layer_digest) {
-+			ret = -ENOMEM;
-+			goto out_layers;
-+		}
-+	} else if (ctx->layer_digest) {
-+		if (ocierofs_find_layer_by_digest(ctx, ctx->layer_digest) < 0) {
-+			erofs_err("layer digest %s not found in image layers",
-+				  ctx->layer_digest);
-+			ret = -ENOENT;
-+			goto out_layers;
-+		}
- 	}
- 	return 0;
- 
- out_layers:
--	free(ctx->layers);
-+	ocierofs_free_layers_info(ctx->layers, ctx->layer_count);
- 	ctx->layers = NULL;
- out_manifest:
- 	free(ctx->manifest_digest);
-@@ -1054,10 +1088,10 @@ static int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config
- 	if (ocierofs_curl_setup_common_options(ctx->curl))
- 		return -EIO;
- 
--	if (config->layer_index >= 0)
--		ctx->layer_index = config->layer_index;
-+	if (config->layer_digest)
-+		ctx->layer_digest = strdup(config->layer_digest);
- 	else
--		ctx->layer_index = -1;
-+		ctx->layer_digest = NULL;
- 	ctx->registry = strdup("registry-1.docker.io");
- 	ctx->tag = strdup("latest");
- 	if (config->platform)
-@@ -1190,6 +1224,7 @@ static void ocierofs_ctx_cleanup(struct ocierofs_ctx *ctx)
- 	free(ctx->tag);
- 	free(ctx->platform);
- 	free(ctx->manifest_digest);
-+	free(ctx->layer_digest);
- }
- 
- int ocierofs_build_trees(struct erofs_importer *importer,
-@@ -1204,8 +1239,13 @@ int ocierofs_build_trees(struct erofs_importer *importer,
- 		return ret;
- 	}
- 
--	if (ctx.layer_index >= 0) {
--		i = ctx.layer_index;
-+	if (ctx.layer_digest) {
-+		i = ocierofs_find_layer_by_digest(&ctx, ctx.layer_digest);
-+		if (i < 0) {
-+			erofs_err("layer digest %s not found", ctx.layer_digest);
-+			ret = -ENOENT;
-+			goto out;
-+		}
- 		end = i + 1;
- 	} else {
- 		i = 0;
-@@ -1215,25 +1255,26 @@ int ocierofs_build_trees(struct erofs_importer *importer,
- 	while (i < end) {
- 		char *trimmed = erofs_trim_for_progressinfo(ctx.layers[i]->digest,
- 				sizeof("Extracting layer  ...") - 1);
--		erofs_update_progressinfo("Extracting layer %d: %s ...", i,
--				  trimmed);
-+		erofs_update_progressinfo("Extracting layer %s ...", trimmed);
- 		free(trimmed);
- 		fd = ocierofs_extract_layer(&ctx, ctx.layers[i]->digest,
- 					    ctx.auth_header);
- 		if (fd < 0) {
--			erofs_err("failed to extract layer %d: %s", i,
--				  erofs_strerror(fd));
-+			erofs_err("failed to extract layer %s: %s",
-+				  ctx.layers[i]->digest, erofs_strerror(fd));
-+			ret = fd;
- 			break;
- 		}
- 		ret = ocierofs_process_tar_stream(importer, fd);
- 		close(fd);
- 		if (ret) {
--			erofs_err("failed to process tar stream for layer %d: %s", i,
--				  erofs_strerror(ret));
-+			erofs_err("failed to process tar stream for layer %s: %s",
-+				  ctx.layers[i]->digest, erofs_strerror(ret));
- 			break;
- 		}
- 		i++;
- 	}
-+out:
- 	ocierofs_ctx_cleanup(&ctx);
- 	return ret;
- }
-@@ -1246,12 +1287,18 @@ static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset,
- 	const char *api_registry;
- 	char rangehdr[64];
- 	long http_code = 0;
--	int ret;
--	int index = ctx->layer_index;
--	u64 blob_size = ctx->layers[index]->size;
-+	int ret, index;
-+	const char *digest;
-+	u64 blob_size;
- 	size_t available;
- 	size_t copy_size;
- 
-+	index = ocierofs_find_layer_by_digest(ctx, ctx->layer_digest);
-+	if (index < 0)
-+		return -ENOENT;
-+	digest = ctx->layer_digest;
-+	blob_size = ctx->layers[index]->size;
++/* return up to 32K of data at once */
++int erofs_gzran_builder_read(struct erofs_gzran_builder *gb, char *window)
++{
++	struct erofs_gzran_cutpoint_item *ci;
++	struct erofs_gzran_cutpoint *cp;
++	z_stream *strm = &gb->strm;
++	struct erofs_vfile *vf = gb->vf;
++	int read, ret;
++	u64 last;
 +
- 	if (offset < 0)
- 		return -EINVAL;
++	strm->avail_out = sizeof(gb->window);
++	strm->next_out = gb->window;
++	do {
++
++		if (!strm->avail_in) {
++			read = erofs_io_read(vf, gb->src, sizeof(gb->src));
++			if (read <= 0)
++				return read;
++			strm->avail_in = read;
++			strm->next_in = gb->src;
++		}
++		gb->totin += strm->avail_in;
++		gb->totout += strm->avail_out;
++
++		ret = inflate(strm, Z_BLOCK);	/* return at end of block */
++		gb->totin -= strm->avail_in;
++		gb->totout -= strm->avail_out;
++
++		if (ret == Z_NEED_DICT)
++			ret = Z_DATA_ERROR;
++		if (ret == Z_MEM_ERROR || ret == Z_DATA_ERROR)
++			return -EIO;
++		if (ret == Z_STREAM_END)
++			break;
++
++		ci = list_empty(&gb->items) ? NULL :
++			list_last_entry(&gb->items,
++					struct erofs_gzran_cutpoint_item,
++					list);
++		last = ci ? ci->cp.outpos : 0;
++		if ((strm->data_type & 128) && !(strm->data_type & 64) &&
++		    (gb->totout == 0 || gb->totout - last > gb->span_size)) {
++			ci = malloc(sizeof(*ci));
++			if (!ci)
++				return -ENOMEM;
++			init_list_head(&ci->list);
++			cp = &ci->cp;
++
++			cp->in_bitpos = (gb->totin << 3) | (strm->data_type & 7);
++			cp->outpos = gb->totout;
++			read = sizeof(gb->window) - strm->avail_out;
++			if (strm->avail_out)
++				memcpy(cp->window, gb->window + read, strm->avail_out);
++			if (read)
++				memcpy(cp->window + strm->avail_out, gb->window, read);
++			list_add_tail(&ci->list, &gb->items);
++			gb->entries++;
++		}
++	} while (strm->avail_out);
++
++	read = sizeof(gb->window) - strm->avail_out;
++	memcpy(window, gb->window, read);
++	return read;
++}
++
++struct aws_soci_zinfo_header {
++	__le32 have;
++	__le64 span_size;
++} __packed;
++
++struct aws_soci_zinfo_ckpt {
++	__le64 in;
++	__le64 out;
++	__u8 bits;
++	u8 window[EROFS_GZRAN_WINSIZE];
++} __packed;
++
++/* Generate AWS SOCI-compatible on-disk zinfo version 2 */
++int erofs_gzran_builder_export_zinfo(struct erofs_gzran_builder *gb,
++				     struct erofs_vfile *zinfo_vf)
++{
++	union {
++		struct aws_soci_zinfo_header h;
++		struct aws_soci_zinfo_ckpt c;
++	} u;
++	struct erofs_gzran_cutpoint_item *ci;
++	u64 pos;
++	int ret;
++
++	BUILD_BUG_ON(sizeof(u.h) != 12);
++	u.h = (struct aws_soci_zinfo_header) {
++		.have = cpu_to_le32(gb->entries),
++		.span_size = cpu_to_le64(gb->span_size),
++	};
++	ret = erofs_io_pwrite(zinfo_vf, &u.h, 0, sizeof(u.h));
++	if (ret < 0)
++		return ret;
++	if (ret != sizeof(u.h))
++		return -EIO;
++
++	pos = sizeof(u.h);
++	list_for_each_entry(ci, &gb->items, list) {
++		BUILD_BUG_ON(sizeof(u.c) != 17 + EROFS_GZRAN_WINSIZE);
++		u.c.in = cpu_to_le64(ci->cp.in_bitpos >> 3);
++		u.c.out = cpu_to_le64(ci->cp.outpos);
++		u.c.bits = cpu_to_le64(ci->cp.in_bitpos & 7);
++		memcpy(u.c.window, ci->cp.window, EROFS_GZRAN_WINSIZE);
++
++		ret = erofs_io_pwrite(zinfo_vf, &u.c, pos, sizeof(u.c));
++		if (ret < 0)
++			return ret;
++		if (ret != sizeof(u.c))
++			return -EIO;
++		pos += sizeof(u.c);
++	}
++	return 0;
++}
++
++int erofs_gzran_builder_final(struct erofs_gzran_builder *gb)
++{
++	struct erofs_gzran_cutpoint_item *ci, *n;
++	int ret;
++
++	ret = inflateEnd(&gb->strm);
++	if (ret != Z_OK)
++		return -EFAULT;
++	list_for_each_entry_safe(ci, n, &gb->items, list) {
++		list_del(&ci->list);
++		free(ci);
++		--gb->entries;
++	}
++	DBG_BUGON(gb->entries);
++	free(gb);
++	return 0;
++}
++#else
++struct erofs_gzran_builder *erofs_gzran_builder_init(struct erofs_vfile *vf,
++						     u32 span_size)
++{
++	return ERR_PTR(-EOPNOTSUPP);
++}
++int erofs_gzran_builder_read(struct erofs_gzran_builder *gb, char *window)
++{
++	return 0;
++}
++int erofs_gzran_builder_export_zinfo(struct erofs_gzran_builder *gb,
++				     struct erofs_vfile *zinfo_vf)
++{
++	return -EOPNOTSUPP;
++}
++int erofs_gzran_builder_final(struct erofs_gzran_builder *gb)
++{
++	return 0;
++}
++#endif
+diff --git a/lib/liberofs_gzran.h b/lib/liberofs_gzran.h
+new file mode 100644
+index 0000000..4764506
+--- /dev/null
++++ b/lib/liberofs_gzran.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
++/*
++ * Copyright (C) 2025 Alibaba Cloud
++ */
++#ifndef __EROFS_LIB_LIBEROFS_GZRAN_H
++#define __EROFS_LIB_LIBEROFS_GZRAN_H
++
++#include "erofs/io.h"
++
++#define EROFS_GZRAN_WINSIZE	32768
++
++struct erofs_gzran_builder;
++
++struct erofs_gzran_builder *erofs_gzran_builder_init(struct erofs_vfile *vf,
++						     u32 span_size);
++int erofs_gzran_builder_read(struct erofs_gzran_builder *gb, char *window);
++int erofs_gzran_builder_export_zinfo(struct erofs_gzran_builder *gb,
++				     struct erofs_vfile *zinfo_vf);
++int erofs_gzran_builder_final(struct erofs_gzran_builder *gb);
++
++#endif
+diff --git a/lib/tar.c b/lib/tar.c
+index 687da6c..8d068cb 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -17,6 +17,7 @@
+ #endif
+ #include "liberofs_base64.h"
+ #include "liberofs_cache.h"
++#include "liberofs_gzran.h"
  
-@@ -1265,7 +1312,7 @@ static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset,
- 
- 	api_registry = ocierofs_get_api_registry(ctx->registry);
- 	if (asprintf(&req.url, "https://%s/v2/%s/blobs/%s",
--	     api_registry, ctx->repository, ctx->layers[index]->digest) == -1)
-+	     api_registry, ctx->repository, digest) == -1)
- 		return -ENOMEM;
- 
- 	if (length)
+ /* This file is a tape/volume header.  Ignore it on extraction.  */
+ #define GNUTYPE_VOLHDR 'V'
+@@ -65,6 +66,9 @@ void erofs_iostream_close(struct erofs_iostream *ios)
+ 		free(ios->lzma);
+ #endif
+ 		return;
++	} else if (ios->decoder == EROFS_IOS_DECODER_GZRAN) {
++		erofs_gzran_builder_final(ios->gb);
++		return;
+ 	}
+ 	erofs_io_close(&ios->vf);
+ }
+@@ -105,6 +109,14 @@ int erofs_iostream_open(struct erofs_iostream *ios, int fd, int decoder)
+ #else
+ 		return -EOPNOTSUPP;
+ #endif
++	} else if (decoder == EROFS_IOS_DECODER_GZRAN) {
++		ios->vf.fd = fd;
++		ios->feof = false;
++		ios->sz = 0;
++		ios->bufsize = EROFS_GZRAN_WINSIZE * 2;
++		ios->gb = erofs_gzran_builder_init(&ios->vf, 4194304);
++		if (IS_ERR(ios->gb))
++			return PTR_ERR(ios->gb);
+ 	} else {
+ 		ios->vf.fd = fd;
+ 		fsz = lseek(fd, 0, SEEK_END);
+@@ -204,6 +216,14 @@ int erofs_iostream_read(struct erofs_iostream *ios, void **buf, u64 bytes)
+ #else
+ 			return -EOPNOTSUPP;
+ #endif
++		} else if (ios->decoder == EROFS_IOS_DECODER_GZRAN) {
++			ret = erofs_gzran_builder_read(ios->gb, ios->buffer + rabytes);
++			if (ret < 0)
++				return ret;
++			ios->tail += ret;
++			DBG_BUGON(ios->tail > ios->bufsize);
++			if (!ret)
++				ios->feof = true;
+ 		} else {
+ 			ret = erofs_io_read(&ios->vf, ios->buffer + rabytes,
+ 					    ios->bufsize - rabytes);
 diff --git a/mkfs/main.c b/mkfs/main.c
-index a8208d4..09d77d6 100644
+index a8208d4..3cf30c6 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -213,7 +213,7 @@ static void usage(int argc, char **argv)
+@@ -33,6 +33,7 @@
+ #include "../lib/liberofs_metabox.h"
+ #include "../lib/liberofs_s3.h"
+ #include "../lib/liberofs_oci.h"
++#include "../lib/liberofs_gzran.h"
+ #include "../lib/compressor.h"
+ 
+ static struct option long_options[] = {
+@@ -72,6 +73,7 @@ static struct option long_options[] = {
+ #ifdef HAVE_ZLIB
+ 	{"gzip", no_argument, NULL, 518},
+ 	{"ungzip", optional_argument, NULL, 518},
++	{"gzinfo", optional_argument, NULL, 535},
  #endif
- #ifdef OCIEROFS_ENABLED
- 		" --oci[=platform=X]    X=platform (default: linux/amd64)\n"
--		"   [,layer=Y]          Y=layer index to extract (0-based; omit to extract all layers)\n"
-+		"   [,layer=Y]          Y=layer digest to extract (omit to extract all layers)\n"
- 		"   [,username=Z]       Z=username for authentication (optional)\n"
- 		"   [,password=W]       W=password for authentication (optional)\n"
+ #ifdef HAVE_LIBLZMA
+ 	{"unlzma", optional_argument, NULL, 519},
+@@ -233,6 +235,9 @@ static void usage(int argc, char **argv)
+ #ifdef HAVE_LIBLZMA
+ 		" --unxz[=X]            try to filter the tarball stream through xz/lzma/lzip\n"
+ 		"                       (and optionally dump the raw stream to X together)\n"
++#endif
++#ifdef HAVE_ZLIB
++		" --gzinfo[=X]          generate AWS SOCI-compatible zinfo in order to support random gzip access\n"
  #endif
-@@ -700,13 +700,14 @@ static int mkfs_parse_s3_cfg(char *cfg_str)
-  * @options_str: comma-separated options string
-  *
-  * Parse OCI options string containing comma-separated key=value pairs.
-- * Supported options include platform, layer, username, and password.
-+ * Supported options include platform, layer_digest, layer_index, username, and password.
-  *
-  * Return: 0 on success, negative errno on failure
-  */
- static int mkfs_parse_oci_options(struct ocierofs_config *oci_cfg, char *options_str)
- {
- 	char *opt, *q, *p;
-+	long idx;
+ 		" --vmdk-desc=X         generate a VMDK descriptor file to merge sub-filesystems\n"
+ #ifdef EROFS_MT_ENABLED
+@@ -298,6 +303,7 @@ static bool valid_fixeduuid;
+ static unsigned int dsunit;
+ static int tarerofs_decoder;
+ static FILE *vmdk_dcf;
++static char *mkfs_aws_zinfo_file;
  
- 	if (!options_str)
- 		return 0;
-@@ -725,40 +726,59 @@ static int mkfs_parse_oci_options(struct ocierofs_config *oci_cfg, char *options
- 			if (!oci_cfg->platform)
- 				return -ENOMEM;
- 		} else {
--			p = strstr(opt, "layer=");
-+			p = strstr(opt, "layer_digest=");
- 			if (p) {
--				p += strlen("layer=");
--				{
--					char *endptr;
--					unsigned long v = strtoul(p, &endptr, 10);
--
--					if (endptr == p || *endptr != '\0') {
--						erofs_err("invalid layer index %s",
--						  p);
--						return -EINVAL;
--					}
--					oci_cfg->layer_index = (int)v;
-+				p += strlen("layer_digest=");
-+				free(oci_cfg->layer_digest);
-+
-+				if (oci_cfg->layer_index >= 0) {
-+					erofs_err("invalid --oci: layer_digest and layer_index cannot be set together");
-+					return -EINVAL;
-+				}
-+
-+				if (strncmp(p, "sha256:", 7) != 0) {
-+					if (asprintf(&oci_cfg->layer_digest, "sha256:%s", p) < 0)
-+						return -ENOMEM;
-+				} else {
-+					oci_cfg->layer_digest = strdup(p);
-+					if (!oci_cfg->layer_digest)
-+						return -ENOMEM;
- 				}
- 			} else {
--				p = strstr(opt, "username=");
-+				p = strstr(opt, "layer_index=");
- 				if (p) {
--					p += strlen("username=");
--					free(oci_cfg->username);
--					oci_cfg->username = strdup(p);
--					if (!oci_cfg->username)
--						return -ENOMEM;
-+					p += strlen("layer_index=");
-+					if (oci_cfg->layer_digest) {
-+						erofs_err("invalid --oci: layer_index and layer_digest cannot be set together");
-+						return -EINVAL;
-+					}
-+					idx = strtol(p, NULL, 10);
-+					if (idx < 0)
-+						return -EINVAL;
-+					oci_cfg->layer_index = (int)idx;
- 				} else {
-+					p = strstr(opt, "username=");
-+					if (p) {
-+						p += strlen("username=");
-+						free(oci_cfg->username);
-+						oci_cfg->username = strdup(p);
-+						if (!oci_cfg->username)
-+							return -ENOMEM;
-+						goto next_opt;
-+					}
-+
- 					p = strstr(opt, "password=");
- 					if (p) {
- 						p += strlen("password=");
--					free(oci_cfg->password);
--					oci_cfg->password = strdup(p);
--					if (!oci_cfg->password)
--						return -ENOMEM;
--					} else {
--						erofs_err("mkfs: invalid --oci value %s", opt);
--						return -EINVAL;
-+						free(oci_cfg->password);
-+						oci_cfg->password = strdup(p);
-+						if (!oci_cfg->password)
-+							return -ENOMEM;
-+						goto next_opt;
- 					}
-+
-+					erofs_err("mkfs: invalid --oci value %s", opt);
-+					return -EINVAL;
- 				}
- 			}
- 		}
-@@ -1838,6 +1858,7 @@ int main(int argc, char **argv)
- #endif
- #ifdef OCIEROFS_ENABLED
- 		} else if (source_mode == EROFS_MKFS_SOURCE_OCI) {
-+			ocicfg.layer_digest = NULL;
- 			ocicfg.layer_index = -1;
- 
- 			err = mkfs_parse_oci_options(&ocicfg, mkfs_oci_options);
-diff --git a/mount/main.c b/mount/main.c
-index f368746..9ab8b23 100644
---- a/mount/main.c
-+++ b/mount/main.c
-@@ -81,51 +81,76 @@ static int erofsmount_parse_oci_option(const char *option)
- {
- 	struct ocierofs_config *oci_cfg = &nbdsrc.ocicfg;
- 	char *p;
-+	long idx;
- 
--	p = strstr(option, "oci.layer=");
-+	if (oci_cfg->layer_index == 0 && !oci_cfg->layer_digest &&
-+	    !oci_cfg->platform && !oci_cfg->username && !oci_cfg->password)
-+		oci_cfg->layer_index = -1;
-+
-+	p = strstr(option, "oci.layer_digest=");
- 	if (p != NULL) {
--		p += strlen("oci.layer=");
--		{
--			char *endptr;
--			unsigned long v = strtoul(p, &endptr, 10);
-+		p += strlen("oci.layer_digest=");
-+		free(oci_cfg->layer_digest);
- 
--			if (endptr == p || *endptr != '\0')
--				return -EINVAL;
--			oci_cfg->layer_index = (int)v;
-+		if (oci_cfg->layer_index >= 0) {
-+			erofs_err("invalid options: oci.layer_digest and oci.layer_index cannot be set together");
-+			return -EINVAL;
-+		}
-+
-+		if (strncmp(p, "sha256:", 7) != 0) {
-+			if (asprintf(&oci_cfg->layer_digest, "sha256:%s", p) < 0)
-+				return -ENOMEM;
-+		} else {
-+			oci_cfg->layer_digest = strdup(p);
-+			if (!oci_cfg->layer_digest)
-+				return -ENOMEM;
- 		}
- 	} else {
--		p = strstr(option, "oci.platform=");
-+		p = strstr(option, "oci.layer_index=");
- 		if (p != NULL) {
--			p += strlen("oci.platform=");
--			free(oci_cfg->platform);
--			oci_cfg->platform = strdup(p);
--			if (!oci_cfg->platform)
--				return -ENOMEM;
-+			p += strlen("oci.layer_index=");
-+			if (oci_cfg->layer_digest) {
-+				erofs_err("invalid options: oci.layer_index and oci.layer_digest cannot be set together");
-+				return -EINVAL;
-+			}
-+			idx = strtol(p, NULL, 10);
-+			if (idx < 0)
-+				return -EINVAL;
-+			oci_cfg->layer_index = (int)idx;
- 		} else {
--			p = strstr(option, "oci.username=");
-+			p = strstr(option, "oci.platform=");
- 			if (p != NULL) {
--				p += strlen("oci.username=");
--				free(oci_cfg->username);
--				oci_cfg->username = strdup(p);
--				if (!oci_cfg->username)
-+				p += strlen("oci.platform=");
-+				free(oci_cfg->platform);
-+				oci_cfg->platform = strdup(p);
-+				if (!oci_cfg->platform)
- 					return -ENOMEM;
- 			} else {
--				p = strstr(option, "oci.password=");
-+				p = strstr(option, "oci.username=");
- 				if (p != NULL) {
--					p += strlen("oci.password=");
--					free(oci_cfg->password);
--					oci_cfg->password = strdup(p);
--					if (!oci_cfg->password)
-+					p += strlen("oci.username=");
-+					free(oci_cfg->username);
-+					oci_cfg->username = strdup(p);
-+					if (!oci_cfg->username)
- 						return -ENOMEM;
- 				} else {
--					return -EINVAL;
-+					p = strstr(option, "oci.password=");
-+					if (p != NULL) {
-+						p += strlen("oci.password=");
-+						free(oci_cfg->password);
-+						oci_cfg->password = strdup(p);
-+						if (!oci_cfg->password)
-+							return -ENOMEM;
-+					} else {
-+						return -EINVAL;
-+					}
- 				}
- 			}
- 		}
- 	}
- 
- 	if (oci_cfg->platform || oci_cfg->username || oci_cfg->password ||
--	    oci_cfg->layer_index)
-+	    oci_cfg->layer_digest || oci_cfg->layer_index >= 0)
- 		nbdsrc.type = EROFSNBD_SOURCE_OCI;
- 	return 0;
- }
-@@ -215,15 +240,21 @@ static int erofsmount_parse_options(int argc, char **argv)
- 	char *dot;
- 	int opt;
- 
-+	nbdsrc.ocicfg.layer_index = -1;
-+
- 	while ((opt = getopt_long(argc, argv, "Nfno:st:uv",
- 				  long_options, NULL)) != -1) {
- 		switch (opt) {
--		case 'o':
-+		case 'o': {
-+			long r;
- 			mountcfg.full_options = optarg;
--			mountcfg.flags =
--				erofsmount_parse_flagopts(optarg, mountcfg.flags,
--							  &mountcfg.options);
-+			r = erofsmount_parse_flagopts(optarg, mountcfg.flags,
-+						      &mountcfg.options);
-+			if (r < 0)
-+				return (int)r;
-+			mountcfg.flags = r;
+ static int erofs_mkfs_feat_set_legacy_compress(bool en, const char *val,
+ 					       unsigned int vallen)
+@@ -1338,6 +1344,11 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+ 			source_mode = EROFS_MKFS_SOURCE_OCI;
  			break;
-+		}
- 		case 't':
- 			dot = strchr(optarg, '.');
- 			if (dot) {
-@@ -406,6 +437,7 @@ static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *sourc
- {
- 	char *b64cred = NULL;
- 	int ret;
-+	char *layer_field = NULL;
- 
- 	if (source->ocicfg.username || source->ocicfg.password) {
- 		b64cred = ocierofs_encode_userpass(source->ocicfg.username,
-@@ -413,11 +445,29 @@ static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *sourc
- 		if (IS_ERR(b64cred))
- 			return PTR_ERR(b64cred);
- 	}
--	ret = fprintf(f, "OCI_LAYER %s %s %d %s\n",
-+	if (source->ocicfg.layer_digest && *source->ocicfg.layer_digest) {
-+		if (asprintf(&layer_field, "digest:%s", source->ocicfg.layer_digest) < 0) {
-+			free(b64cred);
-+			return -ENOMEM;
-+		}
-+	} else if (source->ocicfg.layer_index >= 0) {
-+		if (asprintf(&layer_field, "index:%d", source->ocicfg.layer_index) < 0) {
-+			free(b64cred);
-+			return -ENOMEM;
-+		}
-+	} else {
-+		layer_field = strdup("");
-+		if (!layer_field) {
-+			free(b64cred);
-+			return -ENOMEM;
-+		}
-+	}
-+	ret = fprintf(f, "OCI_LAYER %s %s %s %s\n",
- 		       source->ocicfg.image_ref ?: "",
- 		       source->ocicfg.platform ?: "",
--		       source->ocicfg.layer_index,
-+		       layer_field,
- 		       b64cred ?: "");
-+	free(layer_field);
- 	free(b64cred);
- 	return ret < 0 ? -ENOMEM : 0;
- }
-@@ -477,7 +527,12 @@ static char *erofsmount_write_recovery_info(struct erofs_nbd_source *source)
- }
- 
- #ifdef OCIEROFS_ENABLED
--/* Parse input string in format: "image_ref platform layer [b64cred]" */
-+/* Parse input string in format: "image_ref platform layer [b64cred]"
-+ * where layer is one of:
-+ *   - "digest:<sha256...>" (layer_digest)
-+ *   - "index:<N>"          (layer_index)
-+ *   - ""                   (no specific layer)
-+ */
- static int erofsmount_parse_recovery_ocilayer(struct ocierofs_config *oci_cfg,
- 					      char *source)
- {
-@@ -485,8 +540,8 @@ static int erofsmount_parse_recovery_ocilayer(struct ocierofs_config *oci_cfg,
- 	int token_count = 0;
- 	char *p = source;
- 	int err;
--	char *endptr;
--	unsigned long v;
-+	long idx;
-+	const char *val;
- 
- 	while (token_count < 4 && (p = strchr(p, ' ')) != NULL) {
- 		*p++ = '\0';
-@@ -503,14 +558,39 @@ static int erofsmount_parse_recovery_ocilayer(struct ocierofs_config *oci_cfg,
- 	oci_cfg->image_ref = source;
- 	oci_cfg->platform = tokens[0];
- 
--	v = strtoul(tokens[1], &endptr, 10);
--	if (endptr == tokens[1] || *endptr != '\0')
--		return -EINVAL;
--	oci_cfg->layer_index = (int)v;
-+	if (tokens[1] && strlen(tokens[1]) > 0) {
-+		if (!strncmp(tokens[1], "index:", 6)) {
-+			idx = strtol(tokens[1] + 6, NULL, 10);
+ #endif
++		case 535:
++			if (optarg)
++				mkfs_aws_zinfo_file = strdup(optarg);
++			tarerofs_decoder = EROFS_IOS_DECODER_GZRAN;
++			break;
+ 		case 'V':
+ 			version();
+ 			exit(0);
+@@ -1920,6 +1931,18 @@ exit:
+ 	erofs_rebuild_cleanup();
+ 	erofs_diskbuf_exit();
+ 	if (source_mode == EROFS_MKFS_SOURCE_TAR) {
++		if (mkfs_aws_zinfo_file) {
++			struct erofs_vfile vf;
++			int fd;
 +
-+			if (idx < 0)
-+				return -EINVAL;
-+			oci_cfg->layer_index = (int)idx;
-+			free(oci_cfg->layer_digest);
-+			oci_cfg->layer_digest = NULL;
-+		} else if (!strncmp(tokens[1], "digest:", 7)) {
-+			val = tokens[1] + 7;
-+
-+			free(oci_cfg->layer_digest);
-+			if (strncmp(val, "sha256:", 7) != 0) {
-+				if (asprintf(&oci_cfg->layer_digest, "sha256:%s", val) < 0)
-+					return -ENOMEM;
++			fd = open(mkfs_aws_zinfo_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
++			if (fd < 0) {
++				err = -errno;
 +			} else {
-+				oci_cfg->layer_digest = strdup(val);
-+				if (!oci_cfg->layer_digest)
-+					return -ENOMEM;
++				vf = (struct erofs_vfile){ .fd = fd };
++				err = erofs_gzran_builder_export_zinfo(erofstar.ios.gb, &vf);
 +			}
-+			oci_cfg->layer_index = -1;
-+		} else {
-+			return -EINVAL;
 +		}
-+	} else {
-+		oci_cfg->layer_digest = NULL;
-+		oci_cfg->layer_index = -1;
-+	}
- 
- 	if (token_count > 2) {
- 		err = ocierofs_decode_userpass(tokens[2], &oci_cfg->username,
--					       &oci_cfg->password);
-+				       &oci_cfg->password);
- 		if (err)
- 			return err;
- 	}
+ 		erofs_iostream_close(&erofstar.ios);
+ 		if (erofstar.ios.dumpfd >= 0)
+ 			close(erofstar.ios.dumpfd);
 -- 
-2.47.1
+2.43.5
 
 
