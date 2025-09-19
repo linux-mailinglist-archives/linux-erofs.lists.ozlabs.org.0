@@ -1,61 +1,43 @@
-Return-Path: <linux-erofs+bounces-1048-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1049-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 555B8B85879
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Sep 2025 17:21:01 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6BE5B87ECB
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Sep 2025 07:41:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cSK8q0dq8z2xgX;
-	Fri, 19 Sep 2025 01:20:59 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cShFl1c1nz2yrK;
+	Fri, 19 Sep 2025 15:41:31 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.191
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758208859;
-	cv=none; b=CHaSNOuUkiviIQ0cZrTESYxapEz4gkUwneKZJ0wvQDTRTwhpWqEgLpKJ8mN+iWyabL7Tl0vbD+HMNVi6t52+exy8ZLVsXSJM+LinmUR0X3EhuEzP0dBEyp3lZA53LvEgHwMdFflSfaqlqOb+Jc4ZbFLO7EOMlpQcjEnAbTTTZrUfwvXTguXWBPkoisyJ7XazGdNWnc4vyT/FF4WX9UhLEQ+KDKL17htgP0u2ZwKH+RaBv3BC9NJOa91i4WWBbSeTKiHnVjXlVyKhiXg7nWXFscU9ioHEHITI29Et5ht+RoFyUY2bQuoPMNMm2cbkkBvo7C4kGdDvB7iTLoRx56uDbw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.99
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758260491;
+	cv=none; b=CCMnoUzoKdAnlc26d/Dc8h44Yp/MTHqJa/A905sRB1YSoseuFZ+DCxFJYize0+majjpMsFmXZ9tGIINyjwIpmAG8ahivc2S7W6KZetFV7QVUpWs6AhLdKh8aY7hdjHKUvwh4CsxvvSHX0ssdO9NPUdD2wuI99qvNgDxhQgC1FL4PdP7zhsbrUQa2t9fcxiM1SRw3XIWEbsP9riDLPx2OkKVINPWdDpSLfbv2IP5uwg+nr8NO8EwSiSPcjEac7++eTNyvrTXxeEglR3FDMtCh8x4n/b9OHRxnix7jwsbJebJFUSPaNLNszHgkXhtvT4JoljhC3rqW4P1LsWh0s7CWaA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1758208859; c=relaxed/relaxed;
-	bh=pMt6SMe63cPbNZLSqNEzu5F1TljN70T837PEZhgSfBw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=S57iRb/qPDemrAOmauljGRO0nXkzdJC2n3AEAHriqmq5IH/nwprDN7iIsg7I9l+1LIn/FM7OfFGL2StqdHwsVy6KfSUU9ub2c32XpvCjEG0i/2H1ytjSVhah9exrg14tTt/PclyqjOfpEtBUc7dT0rKy14EGpupnwG85teKQUuE10zNADE7b1nI12f/lEXwiYdxyjYe7NaYEWUwfGemnvYc8hyqgSC8NyVBB6tgg/3eDiCgk/KBEnLst3+uiebjOSu0L6anvqIYr3qEbMzO0tTrvUWvtQR7MeZFSSicOViveMTAs+yYUdlZEmQN+ol+q5Hs+bODroUsVo6eh4RU5sQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1758260491; c=relaxed/relaxed;
+	bh=wPINJ4gIbW/ZAUs3cT5T6J+gpqiJy6X3GSNT/shpx14=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YuHa7H0lnPZ0dDWogbiG+b/DgfBIqWUrWuugHvJJg3p1JG2QK0WQJhniChKtryq6ZDzvyVk5HfwYHs7axRcttH6+SfXyPK3LqREjlGM5SUgCRJckYF7koweFucSjEEWEEHSUJUjxYgz1aAlcFeuoNJwyICrOgNgA4xAC/we/RuJRyssnyHYDiBCsR/iDpDpgKbXaH5ITOBOmsLpQvSzfvIqVGKjpZaLcuRm8E5WdjdrQNmfoYEvBwtWhJ0xTXKjkzJpel+IocxSBRIcmvU6+0OEM/yDsMK7Bw/0431/9stoFPU8imhJ77hwTA6lVNcT02tCQJVUdrCWReFIHz97a+g==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ufHV0x1o; dkim-atps=neutral; spf=pass (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ufHV0x1o;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cSK8n1wGnz2xcB
-	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Sep 2025 01:20:57 +1000 (AEST)
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4cSK580Vhjz1R9Vl
-	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Sep 2025 23:17:48 +0800 (CST)
-Received: from dggpemf500001.china.huawei.com (unknown [7.185.36.173])
-	by mail.maildlp.com (Postfix) with ESMTPS id 597181A0188
-	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Sep 2025 23:20:54 +0800 (CST)
-Received: from kwepemp500007.china.huawei.com (7.202.195.151) by
- dggpemf500001.china.huawei.com (7.185.36.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 18 Sep 2025 23:20:53 +0800
-Received: from kwepemp500007.china.huawei.com ([7.202.195.151]) by
- kwepemp500007.china.huawei.com ([7.202.195.151]) with mapi id 15.02.1544.011;
- Thu, 18 Sep 2025 23:20:53 +0800
-From: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
-To: "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
-CC: "Lihongbo(hb-lee,OS Lab)" <lihongbo22@huawei.com>, jingrui
-	<jingrui@huawei.com>, "Mawen (Wayne)" <wayne.ma@huawei.com>
-Subject: RE: [PATCH 0/3] erofs-utils: mkfs: s3: switch to libcurl multiplexing
- api
-Thread-Topic: [PATCH 0/3] erofs-utils: mkfs: s3: switch to libcurl
- multiplexing api
-Thread-Index: AQHcKK7NZU5em99aO0GiuSxrzZAUGLSZDkjC
-Date: Thu, 18 Sep 2025 15:20:53 +0000
-Message-ID: WeLink-17582088524901&sendType=REPLY_WITHOUT_ATTACHMENTS-openHarmony
-References: <20250918151245.58786-1-zhaoyifan28@huawei.com>
-In-Reply-To: <20250918151245.58786-1-zhaoyifan28@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: multipart/alternative;
-	boundary="_000_WeLink17582088524901sendTypeREPLYWITHOUTATTACHMENTSopen_"
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cShFj3pjNz2yQH
+	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Sep 2025 15:41:27 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1758260483; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=wPINJ4gIbW/ZAUs3cT5T6J+gpqiJy6X3GSNT/shpx14=;
+	b=ufHV0x1oz2MmIPlxZVBqA9fSZNb4xd1KWqu3rB/6A5tMvKxupsuqMBeQ/AK/96I1qXGIyiZT0bDMGG7rjIngT2eCQEonBMUlSrPbCDLOyJ3lyiftPD3EzVGU3bW82jCKcuXOdRooyHNmdrMAtfnWwoSWCoLimqXXwRZXv9J3D78=
+Received: from 30.221.133.89(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WoIoRAA_1758260481 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 19 Sep 2025 13:41:22 +0800
+Message-ID: <4da3115f-c09a-4c69-aeb6-763c6f1d1e76@linux.alibaba.com>
+Date: Fri, 19 Sep 2025 13:41:21 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -67,114 +49,36 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-Spam-Status: No, score=-1.1 required=3.0 tests=HTML_MESSAGE,INVALID_MSGID,
-	RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] erofs-utils: lib: avoid using lseek in diskbuf
+To: Yifan Zhao <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
+Cc: lihongbo22@huawei.com, jingrui@huawei.com, wayne.ma@huawei.com
+References: <20250918151245.58786-1-zhaoyifan28@huawei.com>
+ <20250918151245.58786-3-zhaoyifan28@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250918151245.58786-3-zhaoyifan28@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
---_000_WeLink17582088524901sendTypeREPLYWITHOUTATTACHMENTSopen_
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 
-c3J5IHRoZSB3b3JrbG9hZCBBIGFuZCBCIGhlcmUgd2VyZSBtaXN0YWtlbHkgc3dhcHBlZC4uLg0K
-DQoNCg0K5Y+R5Lu25Lq677yaWWlmYW4gWmhhbyA8emhhb3lpZmFuMjhAaHVhd2VpLmNvbTxtYWls
-dG86emhhb3lpZmFuMjhAaHVhd2VpLmNvbT4+DQrmlLbku7bkurrvvJpsaW51eC1lcm9mc0BsaXN0
-cy5vemxhYnMub3JnIDxsaW51eC1lcm9mc0BsaXN0cy5vemxhYnMub3JnPG1haWx0bzpsaW51eC1l
-cm9mc0BsaXN0cy5vemxhYnMub3JnPj4NCuaKhOKAg+mAge+8mkxpaG9uZ2JvKGhiLWxlZSxPUyBM
-YWIpIDxsaWhvbmdibzIyQGh1YXdlaS5jb208bWFpbHRvOmxpaG9uZ2JvMjJAaHVhd2VpLmNvbT4+
-OyBqaW5ncnVpIDxqaW5ncnVpQGh1YXdlaS5jb208bWFpbHRvOmppbmdydWlAaHVhd2VpLmNvbT4+
-OyBNYXdlbiAoV2F5bmUpIDx3YXluZS5tYUBodWF3ZWkuY29tPG1haWx0bzp3YXluZS5tYUBodWF3
-ZWkuY29tPj4NCuS4u+KAg+mimO+8mltQQVRDSCAwLzNdIGVyb2ZzLXV0aWxzOiBta2ZzOiBzMzog
-c3dpdGNoIHRvIGxpYmN1cmwgbXVsdGlwbGV4aW5nIGFwaQ0K5pe24oCD6Ze077yaMjAyNS0wOS0x
-OOOAgDIzOjEzOjM0DQoNCkZyb206IHpoYW95aWZhbiA8emhhb3lpZmFuMjhAaHVhd2VpLmNvbT4N
-Cg0KVGhpcyBwYXRjaHNldCB1c2UgY3VybF9tdWx0aSogQVBJIGluIHMzZXJvZnMgdG8gaW1wcm92
-ZSBwZXJmb3JtYW5jZSB3aGlsZQ0KaW50ZXJhY3Rpbmcgd2l0aCBhIGxhcmdlIG51bWJlciBvZiBm
-aWxlcy4NCg0KRTJFIG1rZnMuZXJvZnMgaW1hZ2UgYnVpbGRpbmcgdGltZSBjb21wYXJpc29uOg0K
-LSBXb3JrbG9hZCBBOiBCdWlsZGluZyBmcm9tIDMwMDAgZW1wdHkgZmlsZXMNCi0gV29ya2xvYWQg
-QjogQnVpbGRpbmcgZnJvbSAzMDAwIGZpbGVzIHdpdGggc2l6ZSBpbiAyfjUgQnl0ZXMNCg0KKy0t
-LS0tLS0tLS0tLSstLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKw0KfCAgICAgICAgICAgIHwgQmFz
-ZWxpbmUgICB8IE9wdGltaXplZCAgfA0KKy0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0rLS0tLS0t
-LS0tLS0tKw0KfCBXb3JrbG9hZCBBIHwgNzIuMjRzICAgICB8IDUuMDhzICAgICAgfA0KKy0tLS0t
-LS0tLS0tLSstLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tKw0KfCBXb3JrbG9hZCBCIHwgMzQuMzFz
-ICAgICB8IDAuNjFzICAgICAgfA0KKy0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0rLS0tLS0tLS0t
-LS0tKw0KDQp6aGFveWlmYW4gKDMpOg0KICBlcm9mcy11dGlsczogYWRkIG1vdW50L21vdW50LmVy
-b2ZzIHRvIC5naXRpZ25vcmUNCiAgZXJvZnMtdXRpbHM6IGxpYjogYXZvaWQgdXNpbmcgbHNlZWsg
-aW4gZGlza2J1Zg0KICBlcm9mcy11dGlsczogbWtmczogdXNlIGxpYmN1cmwgbXVsdGlwbGV4aW5n
-IGFwaSB0byBvcHRpbWl6ZSBTMw0KICAgIGludGVyYWN0aW9uDQoNCiAuZ2l0aWdub3JlICAgICAg
-IHwgICAxICsNCiBsaWIvZGlza2J1Zi5jICAgIHwgICA3ICstDQogbGliL3JlbW90ZXMvczMuYyB8
-IDQwMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLQ0KIGxp
-Yi90YXIuYyAgICAgICAgfCAgIDIgKy0NCiA0IGZpbGVzIGNoYW5nZWQsIDI4NCBpbnNlcnRpb25z
-KCspLCAxMjYgZGVsZXRpb25zKC0pDQoNCi0tDQoyLjQ2LjANCg0KDQoNCg==
 
---_000_WeLink17582088524901sendTypeREPLYWITHOUTATTACHMENTSopen_
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: base64
+On 2025/9/18 23:12, Yifan Zhao wrote:
+> From: zhaoyifan <zhaoyifan28@huawei.com>
+> 
+> The current `diskbuf` implementation uses `lseek` to operate file offset,
+> preventing multiple streams from writing to the same file. Let's replace
+> `write` + `lseek` with `pwrite` to enable this use pattern.
+> 
+> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
 
-PGh0bWw+DQo8aGVhZD4NCjxtZXRhIGh0dHAtZXF1aXY9IkNvbnRlbnQtVHlwZSIgY29udGVudD0i
-dGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxtZXRhIG5hbWU9IkdlbmVyYXRvciIgY29udGVu
-dD0iTWljcm9zb2Z0IEV4Y2hhbmdlIFNlcnZlciI+DQo8IS0tIGNvbnZlcnRlZCBmcm9tIHRleHQg
-LS0+PHN0eWxlPjwhLS0gLkVtYWlsUXVvdGUgeyBtYXJnaW4tbGVmdDogMXB0OyBwYWRkaW5nLWxl
-ZnQ6IDRwdDsgYm9yZGVyLWxlZnQ6ICM4MDAwMDAgMnB4IHNvbGlkOyB9IC0tPjwvc3R5bGU+DQo8
-L2hlYWQ+DQo8Ym9keT4NCjxkaXYgc3R5bGU9ImZvbnQtZmFtaWx5OkNhbGlicmksSGVsdmV0aWNh
-IWltcG9ydGFudDsgZm9udC1zaXplOjE3LjBweDsgY29sb3I6IzMzMzMzMyI+DQo8c3BhbiBzdHls
-ZT0iY29sb3I6IzAwMDAwMDtmb250LXNpemU6MTRweDsiPnNyeTwvc3Bhbj48c3BhbiBzdHlsZT0i
-Y29sb3I6IzAwMDAwMDtmb250LXNpemU6MTRweDsiPg0KPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xv
-cjojMDAwMDAwO2ZvbnQtc2l6ZToxNHB4OyI+dGhlIDwvc3Bhbj48c3BhbiBzdHlsZT0iY29sb3I6
-IzAwMDAwMDtmb250LXNpemU6MTRweDsiPndvcmtsb2FkPC9zcGFuPjxzcGFuIHN0eWxlPSJjb2xv
-cjojMDAwMDAwO2ZvbnQtc2l6ZToxNHB4OyI+IEEgYW5kIEIgaGVyZSB3ZXJlIG1pc3Rha2U8L3Nw
-YW4+PHNwYW4gc3R5bGU9ImNvbG9yOiMwMDAwMDA7Zm9udC1zaXplOjE0cHg7Ij5seQ0KPC9zcGFu
-PjxzcGFuIHN0eWxlPSJjb2xvcjojMDAwMDAwO2ZvbnQtc2l6ZToxNHB4OyI+c3dhcHBlZC4uLjwv
-c3Bhbj48YnI+DQo8YnI+DQo8YnI+DQo8YnI+DQo8L2Rpdj4NCjxkaXYgbmFtZT0iQW55T2ZmaWNl
-LUJhY2tncm91bmQtSW1hZ2UiIHN0eWxlPSJib3JkZXItdG9wOjFweCBzb2xpZCAjQjVDNERGO3Bh
-ZGRpbmc6OHB4OyBiYWNrZ3JvdW5kLXJlcGVhdDogcmVwZWF0LXg7Ij4NCjxkaXYgc3R5bGU9Indv
-cmQtYnJlYWs6YnJlYWstYWxsOyI+PGI+5Y+R5Lu25Lq677yaPC9iPllpZmFuIFpoYW8gJmx0Ozxh
-IGhyZWY9Im1haWx0bzp6aGFveWlmYW4yOEBodWF3ZWkuY29tIj56aGFveWlmYW4yOEBodWF3ZWku
-Y29tPC9hPiZndDs8L2Rpdj4NCjxkaXYgc3R5bGU9IndvcmQtYnJlYWs6YnJlYWstYWxsOyI+PGI+
-5pS25Lu25Lq677yaPC9iPmxpbnV4LWVyb2ZzQGxpc3RzLm96bGFicy5vcmcgJmx0OzxhIGhyZWY9
-Im1haWx0bzpsaW51eC1lcm9mc0BsaXN0cy5vemxhYnMub3JnIj5saW51eC1lcm9mc0BsaXN0cy5v
-emxhYnMub3JnPC9hPiZndDs8L2Rpdj4NCjxkaXYgc3R5bGU9IndvcmQtYnJlYWs6YnJlYWstYWxs
-OyI+PGI+5oqE4oCD6YCB77yaPC9iPkxpaG9uZ2JvKGhiLWxlZSxPUyBMYWIpICZsdDs8YSBocmVm
-PSJtYWlsdG86bGlob25nYm8yMkBodWF3ZWkuY29tIj5saWhvbmdibzIyQGh1YXdlaS5jb208L2E+
-Jmd0OzsgamluZ3J1aSAmbHQ7PGEgaHJlZj0ibWFpbHRvOmppbmdydWlAaHVhd2VpLmNvbSI+amlu
-Z3J1aUBodWF3ZWkuY29tPC9hPiZndDs7IE1hd2VuIChXYXluZSkgJmx0OzxhIGhyZWY9Im1haWx0
-bzp3YXluZS5tYUBodWF3ZWkuY29tIj53YXluZS5tYUBodWF3ZWkuY29tPC9hPiZndDs8L2Rpdj4N
-CjxkaXYgc3R5bGU9IndvcmQtYnJlYWs6YnJlYWstYWxsOyI+PGI+5Li74oCD6aKY77yaPC9iPltQ
-QVRDSCAwLzNdIGVyb2ZzLXV0aWxzOiBta2ZzOiBzMzogc3dpdGNoIHRvIGxpYmN1cmwgbXVsdGlw
-bGV4aW5nIGFwaTwvZGl2Pg0KPGRpdiBzdHlsZT0id29yZC1icmVhazpicmVhay1hbGw7Ij48Yj7m
-l7bigIPpl7TvvJo8L2I+MjAyNS0wOS0xOOOAgDIzOjEzOjM0PC9kaXY+DQo8ZGl2Pjxicj4NCjwv
-ZGl2Pg0KPGZvbnQgc2l6ZT0iMiI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZToxMHB0OyI+DQo8ZGl2
-IGNsYXNzPSJQbGFpblRleHQiPkZyb206IHpoYW95aWZhbiAmbHQ7emhhb3lpZmFuMjhAaHVhd2Vp
-LmNvbSZndDs8YnI+DQo8YnI+DQpUaGlzIHBhdGNoc2V0IHVzZSBjdXJsX211bHRpKiBBUEkgaW4g
-czNlcm9mcyB0byBpbXByb3ZlIHBlcmZvcm1hbmNlIHdoaWxlPGJyPg0KaW50ZXJhY3Rpbmcgd2l0
-aCBhIGxhcmdlIG51bWJlciBvZiBmaWxlcy48YnI+DQo8YnI+DQpFMkUgbWtmcy5lcm9mcyBpbWFn
-ZSBidWlsZGluZyB0aW1lIGNvbXBhcmlzb246PGJyPg0KLSBXb3JrbG9hZCBBOiBCdWlsZGluZyBm
-cm9tIDMwMDAgZW1wdHkgZmlsZXM8YnI+DQotIFdvcmtsb2FkIEI6IEJ1aWxkaW5nIGZyb20gMzAw
-MCBmaWxlcyB3aXRoIHNpemUgaW4gMn41IEJ5dGVzPGJyPg0KPGJyPg0KJiM0MzstLS0tLS0tLS0t
-LS0mIzQzOy0tLS0tLS0tLS0tLSYjNDM7LS0tLS0tLS0tLS0tJiM0Mzs8YnI+DQp8Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-IHwgQmFzZWxpbmUmbmJzcDsmbmJzcDsgfCBPcHRpbWl6ZWQmbmJzcDsgfDxicj4NCiYjNDM7LS0t
-LS0tLS0tLS0tJiM0MzstLS0tLS0tLS0tLS0mIzQzOy0tLS0tLS0tLS0tLSYjNDM7PGJyPg0KfCBX
-b3JrbG9hZCBBIHwgNzIuMjRzJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHwgNS4wOHMmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgfDxicj4NCiYjNDM7LS0tLS0tLS0tLS0tJiM0MzstLS0t
-LS0tLS0tLS0mIzQzOy0tLS0tLS0tLS0tLSYjNDM7PGJyPg0KfCBXb3JrbG9hZCBCIHwgMzQuMzFz
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHwgMC42MXMmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
-bmJzcDsgfDxicj4NCiYjNDM7LS0tLS0tLS0tLS0tJiM0MzstLS0tLS0tLS0tLS0mIzQzOy0tLS0t
-LS0tLS0tLSYjNDM7PGJyPg0KPGJyPg0Kemhhb3lpZmFuICgzKTo8YnI+DQombmJzcDsgZXJvZnMt
-dXRpbHM6IGFkZCBtb3VudC9tb3VudC5lcm9mcyB0byAuZ2l0aWdub3JlPGJyPg0KJm5ic3A7IGVy
-b2ZzLXV0aWxzOiBsaWI6IGF2b2lkIHVzaW5nIGxzZWVrIGluIGRpc2tidWY8YnI+DQombmJzcDsg
-ZXJvZnMtdXRpbHM6IG1rZnM6IHVzZSBsaWJjdXJsIG11bHRpcGxleGluZyBhcGkgdG8gb3B0aW1p
-emUgUzM8YnI+DQombmJzcDsmbmJzcDsmbmJzcDsgaW50ZXJhY3Rpb248YnI+DQo8YnI+DQombmJz
-cDsuZ2l0aWdub3JlJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IHwmbmJzcDsm
-bmJzcDsgMSAmIzQzOzxicj4NCiZuYnNwO2xpYi9kaXNrYnVmLmMmbmJzcDsmbmJzcDsmbmJzcDsg
-fCZuYnNwOyZuYnNwOyA3ICYjNDM7LTxicj4NCiZuYnNwO2xpYi9yZW1vdGVzL3MzLmMgfCA0MDAg
-JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYj
-NDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQz
-OyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7JiM0MzsmIzQzOyYjNDM7LS0tLS0t
-LS0tLS0tLS08YnI+DQombmJzcDtsaWIvdGFyLmMmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
-cDsmbmJzcDsmbmJzcDsgfCZuYnNwOyZuYnNwOyAyICYjNDM7LTxicj4NCiZuYnNwOzQgZmlsZXMg
-Y2hhbmdlZCwgMjg0IGluc2VydGlvbnMoJiM0MzspLCAxMjYgZGVsZXRpb25zKC0pPGJyPg0KPGJy
-Pg0KLS0gPGJyPg0KMi40Ni4wPGJyPg0KPGJyPg0KPGJyPg0KPGJyPg0KPC9kaXY+DQo8L3NwYW4+
-PC9mb250PjwvZGl2Pg0KPC9ib2R5Pg0KPC9odG1sPg0K
+The first two patches look good to me, I will apply them first.
 
---_000_WeLink17582088524901sendTypeREPLYWITHOUTATTACHMENTSopen_--
+Thanks,
+Gao Xiang
+
 
