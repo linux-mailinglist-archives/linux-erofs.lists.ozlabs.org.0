@@ -1,43 +1,43 @@
-Return-Path: <linux-erofs+bounces-1058-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1059-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB2E8B8FC12
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Sep 2025 11:29:53 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB2B9B8FC75
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Sep 2025 11:39:16 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cVd9q5pT1z2xdg;
-	Mon, 22 Sep 2025 19:29:51 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cVdNf2Xn7z2xdg;
+	Mon, 22 Sep 2025 19:39:14 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=210.51.26.145
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758533391;
-	cv=none; b=NKHF8jjCWr2RY1vVqhkQgCR8yMcDdCHAtfArXBPdOtV3+x4a5qGbC4FoRn6u07TkUqzmfiG4q2pbWrLPMKQaqLXmPj3MU9efHUkdePoHY3DySfvlby8CD9Y2shoojNKylDI9bTwwxmkv5+I/ynEY3+mxSgo+r8mzu3c/KGU8Hls+F2rMekmSobHtDcbTO2q5H7GUtxz1D7pUYAPpitsZrhG2mGaraQDmBb7z8edK5SXqTtnXpnz6Q1tU2g3BbWgThBX0voT6eR8LzXIeqYSFOThpconyVnqXSoGYNN0RecqAycN98YuNzey+ir9dD0w89y2ethJi3OJs9L8agcSE3w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758533954;
+	cv=none; b=ifrIx3WA4eTLITiCo57ECLIAYCa2dom9m9WI/2geNihxPczt/vBqMK3DgX8zSYCj0PYriWlMhaJVov/9BRakYoEzblZsN/XByiEVaKQfxOcz3gUxRibsRP/BvrVTqtlsn9YvQ5JiKWL+b9vIoaLwgoRzHh0jK4A+R4A4LD17iiO7G9mAjcpWzbQBb+UgUhY9OMvZr/8lrybSNES7bxlRU/zt3FY7Nce31WoJjfY5jpRtDpzgP1wG5rRbcytUMj0HMtXH8Jidk2U66h28fhf672RlRAyRLBn9jnfe6BvwZN72QKCLI+5uEmMb1NmbCIIbkWAskGp+FT5C2DBFr2gJCQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1758533391; c=relaxed/relaxed;
-	bh=WPToKkryoIBeIjoudMOuACzKSTGDfOZbtOudMSPhtwU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Dfzj3RWKhimNdGtFaZtbKZWcZzvTBq9VdFQUE6phIGF717ABx/ctBLb3rHh1Bpg+o798I57SSartgSCdY1N6IQUzGK/o8I9TI6+S1kVNTdCVNJSTeDDBelV+7+jaa30jMe0/PzleB8hsc1EBwnY6ilk7z2ewyyBvJXHJzYQPXKPZHJB6KFZ40YjpCIZlE/Md+RcdCfRmLvYfvnaN8N1bbPy9YwT4W3ELjGzIxIlSp12NIYZsWiB1U7iIejAVoe7l5vhKjCuGOy4t/Qj8HM+kR+zoKKPLUypReHrTqseOdWEX2Dqh6c+vrNieTXBzU+5a3QCamCPoWeuh1FNxgD0joQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass (client-ip=210.51.26.145; helo=unicom145.biz-email.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org) smtp.mailfrom=inspur.com
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=inspur.com (client-ip=210.51.26.145; helo=unicom145.biz-email.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org)
-Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1758533954; c=relaxed/relaxed;
+	bh=VMTFYI9vtwS1lrOKpDkvU2sRpGsH6MvSV4MjItMsv0g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hIaAiQLufEouN//s3ogbqgc1wLOA1KPXM1uqyNCcae6U754mcMrxdbX0F4rznoQA4WVxT9mn8UjL8b8ZHor9UWywwMPF8fNtHYt3c6EZNfaRL8sKE2qsDDiZLSruWqQ7rSQAnsA7/p36lA0H330+xJBvcBO1wAqnH15HnHATDnKlGg13h278TuNxCvv5o/89ZUtj79jUMqpK16DfqzHhRhEsEVal1w/JkWfayWHYkU7o7KrX03Dqs/bM1rs9VRnP8hFVxKt4e/7Hzpyj3z4qVG3P27gP6ZXXySn8M0t7Rms0vpzi4OxMmnQHkgxfeX4CBr/jghP88HhpoJtqr17Vdg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=PNU8W85N; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=PNU8W85N;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cVd9p54txz2xck
-	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Sep 2025 19:29:50 +1000 (AEST)
-Received: from jtjnmail201622.home.langchao.com
-        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202509221729462433;
-        Mon, 22 Sep 2025 17:29:46 +0800
-Received: from localhost.localdomain (10.94.21.18) by
- jtjnmail201622.home.langchao.com (10.100.2.22) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.58; Mon, 22 Sep 2025 17:29:45 +0800
-From: Bo Liu <liubo03@inspur.com>
-To: <xiang@kernel.org>, <chao@kernel.org>
-CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
-	<liubo03@inspur.com>
-Subject: [PATCH v4] erofs: Add support for FS_IOC_GETFSLABEL
-Date: Mon, 22 Sep 2025 17:29:36 +0800
-Message-ID: <20250922092937.2055-1-liubo03@inspur.com>
-X-Mailer: git-send-email 2.43.7
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cVdNc3XKxz2xck
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Sep 2025 19:39:11 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1758533947; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=VMTFYI9vtwS1lrOKpDkvU2sRpGsH6MvSV4MjItMsv0g=;
+	b=PNU8W85NKqXV7iP4JmQ4PBgLWz4N2VvKiE3ZDu5NIT1WjfyR9vHtVGRAZhkkAkixbuARpF8AZrVhhoh1qAcJ9/xrcVhr0aEMGbjDQebX1CO2cxDfwtRq8ZqG/Y5Vns7JvIETB6lvQ6BNi6Bxy8nBi/8mrfgWipMfJv6ay8Bg9Ns=
+Received: from 30.221.131.10(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WoVFgT1_1758533944 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 22 Sep 2025 17:39:05 +0800
+Message-ID: <f8d9a52f-0e06-4ed2-9729-db4658992fae@linux.alibaba.com>
+Date: Mon, 22 Sep 2025 17:39:04 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,181 +49,33 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.94.21.18]
-X-ClientProxiedBy: Jtjnmail201615.home.langchao.com (10.100.2.15) To
- jtjnmail201622.home.langchao.com (10.100.2.22)
-tUid: 2025922172946b58c7f6b1bce8db6fc89e7e6a4367736
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
-X-Spam-Status: No, score=-0.7 required=3.0 tests=RCVD_IN_DNSWL_LOW,
-	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] erofs: Add support for FS_IOC_GETFSLABEL
+To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org, chao@kernel.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20250922092937.2055-1-liubo03@inspur.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250922092937.2055-1-liubo03@inspur.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Bo Liu (OpenAnolis) <liubo03@inspur.com>
 
-Add support for reading to the erofs volume label from the
-FS_IOC_GETFSLABEL ioctls.
 
-Signed-off-by: Bo Liu (OpenAnolis) <liubo03@inspur.com>
----
+On 2025/9/22 17:29, Bo Liu wrote:
+> From: Bo Liu (OpenAnolis) <liubo03@inspur.com>
+> 
+> Add support for reading to the erofs volume label from the
+> FS_IOC_GETFSLABEL ioctls.
+> 
+> Signed-off-by: Bo Liu (OpenAnolis) <liubo03@inspur.com>
 
-v1: https://lore.kernel.org/linux-erofs/20250825120617.19746-1-liubo03@inspur.com/
-v2: https://lore.kernel.org/linux-erofs/20250826103926.4424-1-liubo03@inspur.com/
-v3: https://lore.kernel.org/linux-erofs/20250920060455.24002-1-liubo03@inspur.com/
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-change since v3:
-- move functions into inode.
-- remove useless comment.
-
- fs/erofs/data.c     |  4 ++++
- fs/erofs/dir.c      |  4 ++++
- fs/erofs/inode.c    | 40 ++++++++++++++++++++++++++++++++++++----
- fs/erofs/internal.h |  6 ++++++
- fs/erofs/super.c    |  8 ++++++++
- 5 files changed, 58 insertions(+), 4 deletions(-)
-
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index 3b1ba571c728..8ca29962a3dd 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -475,6 +475,10 @@ static loff_t erofs_file_llseek(struct file *file, loff_t offset, int whence)
- const struct file_operations erofs_file_fops = {
- 	.llseek		= erofs_file_llseek,
- 	.read_iter	= erofs_file_read_iter,
-+	.unlocked_ioctl = erofs_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl   = erofs_compat_ioctl,
-+#endif
- 	.mmap_prepare	= erofs_file_mmap_prepare,
- 	.get_unmapped_area = thp_get_unmapped_area,
- 	.splice_read	= filemap_splice_read,
-diff --git a/fs/erofs/dir.c b/fs/erofs/dir.c
-index debf469ad6bd..32b4f5aa60c9 100644
---- a/fs/erofs/dir.c
-+++ b/fs/erofs/dir.c
-@@ -123,4 +123,8 @@ const struct file_operations erofs_dir_fops = {
- 	.llseek		= generic_file_llseek,
- 	.read		= generic_read_dir,
- 	.iterate_shared	= erofs_readdir,
-+	.unlocked_ioctl = erofs_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl   = erofs_compat_ioctl,
-+#endif
- };
-diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
-index 9a2f59721522..7a9a9081f890 100644
---- a/fs/erofs/inode.c
-+++ b/fs/erofs/inode.c
-@@ -213,10 +213,7 @@ static int erofs_fill_inode(struct inode *inode)
- 	switch (inode->i_mode & S_IFMT) {
- 	case S_IFREG:
- 		inode->i_op = &erofs_generic_iops;
--		if (erofs_inode_is_data_compressed(vi->datalayout))
--			inode->i_fop = &generic_ro_fops;
--		else
--			inode->i_fop = &erofs_file_fops;
-+		inode->i_fop = &erofs_file_fops;
- 		break;
- 	case S_IFDIR:
- 		inode->i_op = &erofs_dir_iops;
-@@ -341,6 +338,41 @@ int erofs_getattr(struct mnt_idmap *idmap, const struct path *path,
- 	return 0;
- }
- 
-+static int erofs_ioctl_get_volume_label(struct inode *inode, void __user *arg)
-+{
-+	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
-+	int ret;
-+
-+	if (!sbi->volume_name)
-+		ret = clear_user(arg, 1);
-+	else
-+		ret = copy_to_user(arg, sbi->volume_name,
-+				   strlen(sbi->volume_name));
-+
-+	return ret ? -EFAULT : 0;
-+}
-+
-+long erofs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
-+{
-+	struct inode *inode = file_inode(filp);
-+	void __user *argp = (void __user *)arg;
-+
-+	switch (cmd) {
-+	case FS_IOC_GETFSLABEL:
-+		return erofs_ioctl_get_volume_label(inode, argp);
-+	default:
-+		return -ENOTTY;
-+	}
-+}
-+
-+#ifdef CONFIG_COMPAT
-+long erofs_compat_ioctl(struct file *filp, unsigned int cmd,
-+			unsigned long arg)
-+{
-+	return erofs_ioctl(filp, cmd, (unsigned long)compat_ptr(arg));
-+}
-+#endif
-+
- const struct inode_operations erofs_generic_iops = {
- 	.getattr = erofs_getattr,
- 	.listxattr = erofs_listxattr,
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index 4ccc5f0ee8df..b70902e00586 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -166,6 +166,8 @@ struct erofs_sb_info {
- 	struct erofs_domain *domain;
- 	char *fsid;
- 	char *domain_id;
-+
-+	char *volume_name;
- };
- 
- #define EROFS_SB(sb) ((struct erofs_sb_info *)(sb)->s_fs_info)
-@@ -535,6 +537,10 @@ static inline struct bio *erofs_fscache_bio_alloc(struct erofs_map_dev *mdev) {
- static inline void erofs_fscache_submit_bio(struct bio *bio) {}
- #endif
- 
-+long erofs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
-+long erofs_compat_ioctl(struct file *filp, unsigned int cmd,
-+			unsigned long arg);
-+
- #define EFSCORRUPTED    EUCLEAN         /* Filesystem is corrupted */
- 
- #endif	/* __EROFS_INTERNAL_H */
-diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 1b529ace4db0..f1535ebe03ec 100644
---- a/fs/erofs/super.c
-+++ b/fs/erofs/super.c
-@@ -343,6 +343,13 @@ static int erofs_read_superblock(struct super_block *sb)
- 	sbi->fixed_nsec = le32_to_cpu(dsb->fixed_nsec);
- 	super_set_uuid(sb, (void *)dsb->uuid, sizeof(dsb->uuid));
- 
-+	if (dsb->volume_name[0]) {
-+		sbi->volume_name = kstrndup(dsb->volume_name,
-+					    sizeof(dsb->volume_name), GFP_KERNEL);
-+		if (!sbi->volume_name)
-+			return -ENOMEM;
-+	}
-+
- 	/* parse on-disk compression configurations */
- 	ret = z_erofs_parse_cfgs(sb, dsb);
- 	if (ret < 0)
-@@ -822,6 +829,7 @@ static void erofs_sb_free(struct erofs_sb_info *sbi)
- 	kfree(sbi->domain_id);
- 	if (sbi->dif0.file)
- 		fput(sbi->dif0.file);
-+	kfree(sbi->volume_name);
- 	kfree(sbi);
- }
- 
--- 
-2.31.1
-
+Thanks,
+Gao Xiang
 
