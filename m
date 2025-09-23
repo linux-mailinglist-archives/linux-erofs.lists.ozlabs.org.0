@@ -1,43 +1,48 @@
-Return-Path: <linux-erofs+bounces-1067-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1068-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10C71B94033
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Sep 2025 04:34:37 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B69D0B940AE
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Sep 2025 04:46:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cW3wB73z5z3cYN;
-	Tue, 23 Sep 2025 12:34:34 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cW49y1yxlz3cYR;
+	Tue, 23 Sep 2025 12:46:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758594874;
-	cv=none; b=K47Tol1oCBJ8LzGYqugNHYw52VROrGNIlkioMok2RIBpFNG2v0o2bz3TLL8ctjSPpsWgP/pMd+aWWWsPLCvO8f1yEQ5np3OWz+M/z0TGOMhvZexubFADkNZx7WdAhAQATHrHd6nIiE470jUDzlCW05JI0EvXDdFFPpsllt8UJPYdyUB2G+D/vTjY+88zBWrzEj2G6+42jE5msarJpiQUaEHQ5tPaIpbcLO5k/KJas2yDgr4+GUljmPI9OOqgWIB0LHsQOQdOobYRRzfaoXhAxnu46wVUcCvz6hsrCQVMHaSVNtUoqU5sArtW65xPHJ5e4SS/XS9yijbek0KHVRsa1w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=45.249.212.191
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758595590;
+	cv=none; b=a9V2CTrtq5qIQD8CRLTXPGKJVuARDm36HPVH3+TfUqC7+FsPHgRmog245WmRAlPbgWsVP4o7z98e1wiMZWKaoXOaltmbj+alK3xYApV8Nrs1hP2u2X4Sg8otLpG5ZpJX8U2q/MtSqhzQ7CjzUEmTZFsK/7jho+edf9SnL4OIO9ltxwoxWE79/TnZaSeT5cDy7O163y2REyF7O9es9eYjJCCLFBEiyHZk4jas1qJSVYD024rSFdrUBS7AHpA8tdZlB5XAOLlludFsXbjRil02MTHoG/582PxMFrbKZHhBCS3BcOPuefJtIIFJxHMgZEyjE3KlE3r/j+aIMUbncxWO9Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1758594874; c=relaxed/relaxed;
-	bh=DvgLv2W5sn5O7MiD/dFRPsjAH496hntEQ0i1HALiM5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G1jhFXWNBqPfoaaiQW+9+2mCuvqn84zbZZN0rEvn7FV6POo7lEC7xMBkP9BcX/0oy8RmJW4265U0mS51LyCawi8U8iNYxE1M8kvh8UTdMpADjW1DVzl3dWUoxBbgYHjzeUTsUZqTdnR0VScpDiC3pI9afLBDpiM7bJw62C8/KWOQ6zO/cyeQQmWiZkskhfLMeHahNoSPsAK4SBHl971/rSO1zWcruOKmCm798WJgoULkyNSr6UV2QK0QdH4dZOHAEH9gchEoCbhweqZjpyQ43oa0clvpg8eojV0SHRtaHi0/eq2iXuQ4vQ8ieMR0h5eKBkDuT4zZuiJNB4n5U4jxMw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IMQHdetu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IMQHdetu;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	t=1758595590; c=relaxed/relaxed;
+	bh=++fiM0d6QAEWnkOieII6dlTnRPGKmx9xWxfgMURWdkc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mvK8SK7MbMrN99dyouVZaRQKL39ABfvsb7pDqQ8hOSuA9pX9TGvuOdobYvdspxo8CdrmA2PhCZF5Ryq81YK78OvP2elVMU+aUvyl3J8J7/6jVRX1s1TqFJNLmEt4WW13hpQXSd5v/DTo5UoXfT38Qr9Lf07AGCETBNjluNSntIy2ObBMXVIn6qB3WKZaZhb2nUp3Fm8gTJNLdlFyNss8DIdbkOhzilVCwBviC3Sg2ONW28vJsdVTNUYrYSgaOeKVC7T6MOjafpjFwBJZ9pG8FkIl8hgV4h3nUw3HUaXpZAqLNoUrefNmMTfVWlsHG3frC5UqTuMOjDR52GiyiC3QUA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=45.249.212.191; helo=szxga05-in.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cW3w90s9Tz2yqq
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Sep 2025 12:34:32 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1758594867; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=DvgLv2W5sn5O7MiD/dFRPsjAH496hntEQ0i1HALiM5Q=;
-	b=IMQHdetus7VOrH96nMazzkgen0vuIOf35jVgmO+w9c2HKLWGamMx8WQUJPpW8TqxyY0ajqUbw9lD4vgySJ9Hji7rlgz9LDVznfWI78vGGUUT/rgPc2U5syCuoUYaZ1pCcH9JewPuc7hNGyTKG0v3zEANHNHwqae9ZLsEDMeIdr8=
-Received: from 30.221.131.45(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wod5Xby_1758594865 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Sep 2025 10:34:26 +0800
-Message-ID: <85be6910-3aa2-4e88-ac16-989fde00c38e@linux.alibaba.com>
-Date: Tue, 23 Sep 2025 10:34:23 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cW49x2BLrz3cYP
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Sep 2025 12:46:27 +1000 (AEST)
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4cW46C2KxLz1R93B;
+	Tue, 23 Sep 2025 10:43:15 +0800 (CST)
+Received: from kwepemp500007.china.huawei.com (unknown [7.202.195.151])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9C3A0140298;
+	Tue, 23 Sep 2025 10:46:23 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by kwepemp500007.china.huawei.com
+ (7.202.195.151) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 23 Sep
+ 2025 10:46:23 +0800
+From: Yifan Zhao <zhaoyifan28@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>
+CC: <hsiangkao@linux.alibaba.com>
+Subject: [v2 PATCH 2/3] erofs-utils: lib: avoid using lseek in diskbuf
+Date: Tue, 23 Sep 2025 10:46:07 +0800
+Message-ID: <20250923024607.90686-1-zhaoyifan28@huawei.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <53801295-8085-4237-85f7-c97181ed1954@linux.alibaba.com>
+References: <53801295-8085-4237-85f7-c97181ed1954@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,57 +54,80 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] erofs: Add support for FS_IOC_GETFSLABEL
-To: Chao Yu <chao@kernel.org>, Bo Liu <liubo03@inspur.com>, xiang@kernel.org
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20250922092937.2055-1-liubo03@inspur.com>
- <906f54dd-5c7d-47b3-b591-50197786cf33@kernel.org>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <906f54dd-5c7d-47b3-b591-50197786cf33@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.27]
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemp500007.china.huawei.com (7.202.195.151)
+X-Spam-Status: No, score=-2.3 required=3.0 tests=RCVD_IN_DNSWL_MED,
+	RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Chao,
+From: zhaoyifan <zhaoyifan28@huawei.com>
 
-On 2025/9/23 10:23, Chao Yu wrote:
-> On 9/22/25 17:29, Bo Liu wrote:
->> From: Bo Liu (OpenAnolis) <liubo03@inspur.com>
->>
->> Add support for reading to the erofs volume label from the
->> FS_IOC_GETFSLABEL ioctls.
->>
->> Signed-off-by: Bo Liu (OpenAnolis) <liubo03@inspur.com>
->> ---
+The current `diskbuf` implementation uses `lseek` to operate file offset,
+preventing multiple streams from writing to the same file. Let's replace
+`write` + `lseek` with `pwrite` to enable this use pattern.
 
-...
+Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+---
+update since v1:
+- missing `off += nread;` in v1, add it.
 
->>   
->> +long erofs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
-> 
-> #ifdef CONFIG_COMPAT
-> 
->> +long erofs_compat_ioctl(struct file *filp, unsigned int cmd,
->> +			unsigned long arg);
+ lib/diskbuf.c | 7 +------
+ lib/tar.c     | 3 ++-
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-Since it's a function declaration, when CONFIG_COMPAT is not defined,
-there is no user to use erofs_compat_ioctl(), so I think it is fine
-to just leave the declaration here?
-
-Thanks,
-Gao Xiang
-
-> 
-> #endif
-> 
-> Thanks,
-> 
->> +
-> 
+diff --git a/lib/diskbuf.c b/lib/diskbuf.c
+index 3789654..0bf42da 100644
+--- a/lib/diskbuf.c
++++ b/lib/diskbuf.c
+@@ -36,9 +36,6 @@ int erofs_diskbuf_reserve(struct erofs_diskbuf *db, int sid, u64 *off)
+ 
+ 	if (strm->tailoffset & (strm->alignsize - 1)) {
+ 		strm->tailoffset = round_up(strm->tailoffset, strm->alignsize);
+-		if (lseek(strm->fd, strm->tailoffset + strm->devpos,
+-			  SEEK_SET) != strm->tailoffset + strm->devpos)
+-			return -EIO;
+ 	}
+ 	db->offset = strm->tailoffset;
+ 	if (off)
+@@ -108,9 +105,6 @@ int erofs_diskbuf_init(unsigned int nstrms)
+ 			strm->devpos = 1ULL << 40;
+ 			if (!ftruncate(g_sbi.bdev.fd, strm->devpos << 1)) {
+ 				strm->fd = dup(g_sbi.bdev.fd);
+-				if (lseek(strm->fd, strm->devpos,
+-					  SEEK_SET) != strm->devpos)
+-					return -EIO;
+ 				goto setupone;
+ 			}
+ 		}
+@@ -141,4 +135,5 @@ void erofs_diskbuf_exit(void)
+ 		close(strm->fd);
+ 		strm->fd = -1;
+ 	}
++	free(dbufstrm);
+ }
+diff --git a/lib/tar.c b/lib/tar.c
+index 8d068cb..b778081 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -675,11 +675,12 @@ static int tarerofs_write_file_data(struct erofs_inode *inode,
+ 		nread = erofs_iostream_read(&tar->ios, &buf, j);
+ 		if (nread < 0)
+ 			break;
+-		if (write(fd, buf, nread) != nread) {
++		if (pwrite(fd, buf, nread, off) != nread) {
+ 			nread = -EIO;
+ 			break;
+ 		}
+ 		j -= nread;
++		off += nread;
+ 	}
+ 	erofs_diskbuf_commit(inode->i_diskbuf, inode->i_size);
+ 	inode->datasource = EROFS_INODE_DATA_SOURCE_DISKBUF;
+-- 
+2.46.0
 
 
