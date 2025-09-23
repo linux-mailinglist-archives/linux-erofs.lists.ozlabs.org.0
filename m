@@ -1,41 +1,41 @@
-Return-Path: <linux-erofs+bounces-1074-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1075-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A185B941F6
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Sep 2025 05:39:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 11E5EB94223
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Sep 2025 05:43:53 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cW5Ln0Pmhz3cYP;
-	Tue, 23 Sep 2025 13:39:13 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cW5S64ZTvz3cYP;
+	Tue, 23 Sep 2025 13:43:50 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.62
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758598752;
-	cv=none; b=lWWcpq5rslhj6kkdU8Ix7fGsfd24fMMubqpMJf3nrRZ9CPCFklvpGRX11yVUYlbH0abYpDWx8+WszWbK8k79Q0CB0L48cVNeZOy9l2xpsHcbfs0rdC1pVsdQEIixYL691Iv70C28ozoWBirCr1KCfiBjwVZcljUvsiOXLX47pbCcxa/5NvYbrh68luVEn+pjhB7bpaHaQMhWt2OfznfclmO3OyA56agplEGd1OGjjVX71nO1D0nLGYxnjMtXN+qwVmPwTjeDtn29fc7i9n6KoyChMMt0ZX8knrDercOCuZTfxoN9yeAWUoxpoczMqEus7nqAEbeprDkVJs5xhhL2wQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.57
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758599030;
+	cv=none; b=eGTEmXj02SQNAeQcYmHctCAjjetBEirFOx4pDw/rNaxOYiDaUk4ZAE6wlCvmuhRot2WLw+RkQTP+7mAPKD9L25xvTi/DeQr5e16bLb59hQ/dyR1ye2yqtjwYP4yxgvIKkuGb/SDDr3Kt7XFB8Csl5idP4IDJZaS5juXdQTkhvzmLxXE5yds0d4WpTtjF3uDuuK4mM1R1zZ2fk5UTH5kmNw8zy8nE/4fgcJAXUdCbiY5KirkXvWpXTVh6ly067PRKHzAMcAvwn+MJDhiX57juq/9PCuvMxzhFIpnGNjZvvIhfW7fP1OHMuEc7grW+TVVn4SjZpKDsBMveHzqWzhT+yQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1758598752; c=relaxed/relaxed;
-	bh=EHouCiG2jPOrkPSwD0VZIG3uMWec4NjU9931kn3NY3E=;
+	t=1758599030; c=relaxed/relaxed;
+	bh=13pMCjCxJOD9ZMicEB6Kr5iX72rUu0/0iH5Kyq1kWWI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=od1uPpfOV19MYqjui9esJxKiOjzjFO1q9PXSuyHY4SPzuFbvjQbJWmepf69sb+2ge7I4zoMJnBfYJxWnLnt0NHBgsphyQRUf6wzIyb8ZB7DS8Ul1+P1wx+iqDEP+LgDWGZ0RxYCN4r1iOEEHM4tJ8g9DAdIkPXM2V0OKy3BW1VrvY1zO+hLljvdyqYAKLn5tOUmywybC/20wK2LsyZmsn5ghmtkjQTXqVFIMUy8xojs4mbrfeH3a2vntXyGpSfNnUdHqGLZ6WyZqyGLkOuja+2VUwO42YquCxSW5p7hh9KrDUle+UjZHzPiYZNJSslH0g9V7s9+MhlHmlhtIMcJn8g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.62; helo=out28-62.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	 MIME-Version; b=bb+zP9k0U4OKAo8WVPAub7sa3mx/xyi/xaAkbsPjixyw8G4gM9zxuu9Wh5mL+PAJOWodyGlL0jaJFP2t0KaPAUIab3EtRNrGxLWkdk/JWXlxvu3aPFfjIvSESQ1JLwAzYCbiPwOdOR0L6DxSTPUxUSruGAzATqYvPC2OEMpTOJQZvAOeBzRUgDOZWXsoxWfJxVajFgCFuj0x2/DeTXuol7/y/SHW+T0mDzuLRiBFoy5C0LhMgrA5E59wwyYPQlfmQa9NQ1tGOw2/nvvG8dfZ3q9L2kRSjHht7WvBaPKdbgXdFAQvPs9lRszoPQfp4TVrUgLuhcWTedD9fNUrrPcrYA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.57; helo=out28-57.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.62; helo=out28-62.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-62.mail.aliyun.com (out28-62.mail.aliyun.com [115.124.28.62])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.57; helo=out28-57.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-57.mail.aliyun.com (out28-57.mail.aliyun.com [115.124.28.57])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cW5Ll510zz2yr9
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Sep 2025 13:39:11 +1000 (AEST)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.elL2Yaw_1758598746 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cW5S500Tzz2yr9
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Sep 2025 13:43:48 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.elBkR3._1758599022 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Tue, 23 Sep 2025 11:39:07 +0800
+          Tue, 23 Sep 2025 11:43:43 +0800
 From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
 	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v5] erofs-utils: oci: add support for indexing by layer digest
-Date: Tue, 23 Sep 2025 11:39:05 +0800
-Message-ID: <20250923033905.86265-1-hudson@cyzhu.com>
+Subject: [PATCH v5-changed] erofs-utils: oci: add support for indexing by layer digest
+Date: Tue, 23 Sep 2025 11:43:42 +0800
+Message-ID: <20250923034342.89531-1-hudson@cyzhu.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250916153415.93839-1-hudson@cyzhu.com>
 References: <20250916153415.93839-1-hudson@cyzhu.com>
@@ -71,7 +71,7 @@ Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
  4 files changed, 227 insertions(+), 95 deletions(-)
 
 diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
-index aa41141..00d7724 100644
+index aa41141..71c8879 100644
 --- a/lib/liberofs_oci.h
 +++ b/lib/liberofs_oci.h
 @@ -21,7 +21,8 @@ struct erofs_importer;
@@ -97,12 +97,12 @@ index aa41141..00d7724 100644
  	char *manifest_digest;
  	struct ocierofs_layer_info **layers;
 -	int layer_index;
-+	char *layer_digest;
++	char *blob_digest;
  	int layer_count;
  };
  
 diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index 26aec27..c0ff447 100644
+index 26aec27..b2f1f59 100644
 --- a/lib/remotes/oci.c
 +++ b/lib/remotes/oci.c
 @@ -898,6 +898,20 @@ static int ocierofs_prepare_auth(struct ocierofs_ctx *ctx,
@@ -135,7 +135,7 @@ index 26aec27..c0ff447 100644
 -			  ctx->layer_index, ctx->layer_count);
 -		ret = -EINVAL;
 -		goto out_layers;
-+	if (!ctx->layer_digest && config->layer_index >= 0) {
++	if (!ctx->blob_digest && config->layer_index >= 0) {
 +		if (config->layer_index >= ctx->layer_count) {
 +			erofs_err("layer index %d out of range (0..%d)",
 +				  config->layer_index, ctx->layer_count - 1);
@@ -144,17 +144,17 @@ index 26aec27..c0ff447 100644
 +		}
 +		DBG_BUGON(!ctx->layers[config->layer_index]);
 +		DBG_BUGON(!ctx->layers[config->layer_index]->digest);
-+		ctx->layer_digest = strdup(ctx->layers[config->layer_index]->digest);
-+		if (!ctx->layer_digest) {
++		ctx->blob_digest = strdup(ctx->layers[config->layer_index]->digest);
++		if (!ctx->blob_digest) {
 +			ret = -ENOMEM;
 +			goto out_layers;
 +		}
 +	}
 +
-+	if (ctx->layer_digest) {
-+		if (ocierofs_find_layer_by_digest(ctx, ctx->layer_digest) < 0) {
++	if (ctx->blob_digest) {
++		if (ocierofs_find_layer_by_digest(ctx, ctx->blob_digest) < 0) {
 +			erofs_err("layer digest %s not found in image layers",
-+				  ctx->layer_digest);
++				  ctx->blob_digest);
 +			ret = -ENOENT;
 +			goto out_layers;
 +		}
@@ -174,10 +174,10 @@ index 26aec27..c0ff447 100644
 -	if (config->layer_index >= 0)
 -		ctx->layer_index = config->layer_index;
 +	if (config->blob_digest)
-+		ctx->layer_digest = strdup(config->blob_digest);
++		ctx->blob_digest = strdup(config->blob_digest);
  	else
 -		ctx->layer_index = -1;
-+		ctx->layer_digest = NULL;
++		ctx->blob_digest = NULL;
  	ctx->registry = strdup("registry-1.docker.io");
  	ctx->tag = strdup("latest");
  	if (config->platform)
@@ -185,7 +185,7 @@ index 26aec27..c0ff447 100644
  	free(ctx->tag);
  	free(ctx->platform);
  	free(ctx->manifest_digest);
-+	free(ctx->layer_digest);
++	free(ctx->blob_digest);
  }
  
  int ocierofs_build_trees(struct erofs_importer *importer,
@@ -195,10 +195,10 @@ index 26aec27..c0ff447 100644
  
 -	if (ctx.layer_index >= 0) {
 -		i = ctx.layer_index;
-+	if (ctx.layer_digest) {
-+		i = ocierofs_find_layer_by_digest(&ctx, ctx.layer_digest);
++	if (ctx.blob_digest) {
++		i = ocierofs_find_layer_by_digest(&ctx, ctx.blob_digest);
 +		if (i < 0) {
-+			erofs_err("layer digest %s not found", ctx.layer_digest);
++			erofs_err("layer digest %s not found", ctx.blob_digest);
 +			ret = -ENOENT;
 +			goto out;
 +		}
@@ -251,10 +251,10 @@ index 26aec27..c0ff447 100644
  	size_t available;
  	size_t copy_size;
  
-+	index = ocierofs_find_layer_by_digest(ctx, ctx->layer_digest);
++	index = ocierofs_find_layer_by_digest(ctx, ctx->blob_digest);
 +	if (index < 0)
 +		return -ENOENT;
-+	digest = ctx->layer_digest;
++	digest = ctx->blob_digest;
 +	blob_size = ctx->layers[index]->size;
 +
  	if (offset < 0)
