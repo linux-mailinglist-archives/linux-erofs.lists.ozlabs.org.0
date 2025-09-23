@@ -1,73 +1,50 @@
-Return-Path: <linux-erofs+bounces-1063-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1064-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CA92B93FB8
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Sep 2025 04:20:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AE9C7B93FBE
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Sep 2025 04:21:13 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cW3cK25XZz3cYN;
-	Tue, 23 Sep 2025 12:20:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cW3cl4HStz3cYP;
+	Tue, 23 Sep 2025 12:21:11 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.13
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758594049;
-	cv=none; b=QAy8bq57yLDfadzRZtKpkIHoXxt5U8HP4GgzRD7XUfB/kyfugIoIZOJRnsUkFIpadoM1GFR473N5YqgDJvl8cnDS8p2TNorDmT+waoU7crYi+9p2dixi2mKSffcpdBbZL4l4IIn9HgjO/AA1gW8s1LET0fT6RRGbJt+wK1Gq01TU+CUVLdGWyW5MEXUCkcJ1YhpxP1U6Ff20GiM761O7dB8R1b17UZNp0fc0JuP1alUs8q/42NSzxn2w/E1luZ5pp7fweoGHz8JqoosQB4Hwb6a56tlQSJZ2So87UIRcxj2TW+UCEADNMjD8yoGhjGhkRiqnYFGrTPZ2WmFHHFFrHw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758594071;
+	cv=none; b=I/PwtNWd8IVmzLlua7J6XCUkJ59P3g28hbkKv6Fq0fqaQiE3CgTBvIFiVkOsd0TrNBmM/DDM7ozcv+4U2e5o9oECUB8qHsnUQabRT4JjagDUZ47uBWueTVgwwTysfrT5iX7UaGMyU3uAPwSSUQD97WZ52qSFDFUqSWEJgZRVQ3JpJGjnny5bokOS5dMlbcg26dfaKqX6mBG10mBiZvRdRM7bPGKLp5ytDFYO1NiAVx4RGQps/fh0mBKqKUr9VcybQcrdO91Zfv0UyAytoVMB8rtrGOOh3JH1ZpxiNsNnvPF7s3HAkujUDG6YaBBi5+bs+PsJslhmgrx4R5x/bnxGeg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1758594049; c=relaxed/relaxed;
-	bh=ltbylFxGwowtYtzfUb+YN+K2SmrxKfRwWAXJcG8r8n8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jcZARh8Su4KIWP9mfrzLOcEhp/6lsSntagVgiil5EYW0rzvlCmh+gjEC2lFLNxQoCN+0Uv6bYR03ej8JISs+GG19IgoZccLAB8nNCql8H8y6ImEKUaj+iYfvL3ymy4biiPdoaqd+dDzjcExXFbTuY/Ff6xkZVEBzQ6bmrknrKofibIMcz+CkivCFtEa6d6WX+v8I0Ja8Gqh/KAkZ6wyiL1ksRyjfXMF6xN9JNvS+Knum+NrGWoPx54SDILzAdEISA7odUA1SEsyWJv0otanXIohgAR4dga368EjSEyHFwVqASraTkW7iyVYRzzbtMBxP4/dwe3c6inhCDMyn2jhBqA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=h3HrUp5T; dkim-atps=neutral; spf=pass (client-ip=198.175.65.13; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1758594071; c=relaxed/relaxed;
+	bh=wpseOVdNRukzXLP4zkQiHQBoy9AAz0IJrT30IJtuzIA=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=D34kmlJ+L76kJ/bcs6VcN1JP+mInAl8aK1c8skXVIhl2+hzkEgV8CxaPvbntfcoLkNA03hPk2Gnbg+iJZqG7REHD1cRqMLZ+eUmdYrI1a5juqa4EQbUAQiYfr4k90i0cC0YDa5DW6xCZ+TzWRQlzGWehR1Fpy4+UQ1DwjcUb33VhHZ/3yiElzwIACVc5MY38VQJ/fcRr34ZTAXeM50KKqJeLYL4ockQNTPpruaBXPamjoJogFmLbVwmOL19PtmwYa8QJL+A7a7J5RlSCPWm39ufb5FPb91UNj0gm/VMtCPOYGZEzYpEr7lNUG3V164XPFdKYAI3mwW/wozJH2lX1yA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=tPLe37hy; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=h3HrUp5T;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=tPLe37hy;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.13; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cW3cH5B2qz2yqq
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Sep 2025 12:20:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1758594048; x=1790130048;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ppX3DTmVDiyyr1YGHONK8vTnmyN+WSZqP4NnFiZKc+M=;
-  b=h3HrUp5TrmrBc2RmjtzJmVvsVO6AzsIj9dPxsYD4DXt96pHym+vnXB7Q
-   QmhrjzQtweTm0VZwjLHmllHco7IHvTgo6r9zay5X0vKjygXpWZE/aK/j4
-   ieg5qTHA3zj/yUt94R+KYpYSmCY+9L6kF593WJthJAVdWlvPwPThwJh4U
-   m2PurtPMOx2xz03l/Xay312Crwtxuqg4Cnl06Bn6eUtBWd/uC5J1M8Xs4
-   cHo3l9Iy2/msbAbBU4g/H+VIWAXDooxTZHtlJXitQbkn33+XrxU6w4nUb
-   MGLv5ll+7bEa+gbn1gyXSpctIR31uHlLKl68rJ9PnN44nx6hKnQ4t9wjG
-   w==;
-X-CSE-ConnectionGUID: aBEcgWluTueQfTEA/rywww==
-X-CSE-MsgGUID: 2kP5jUMcQQ+wgrhHP2u53Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11561"; a="71972508"
-X-IronPort-AV: E=Sophos;i="6.18,286,1751266800"; 
-   d="scan'208";a="71972508"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 19:20:45 -0700
-X-CSE-ConnectionGUID: ynn7v8pBR7moPg6dTZZ77g==
-X-CSE-MsgGUID: lIbWXvhuQTKl85MlpyWPAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,286,1751266800"; 
-   d="scan'208";a="177080456"
-Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 22 Sep 2025 19:20:42 -0700
-Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v0se0-0002fR-0x;
-	Tue, 23 Sep 2025 02:20:40 +0000
-Date: Tue, 23 Sep 2025 10:20:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Chunhai Guo <guochunhai@vivo.com>, xiang@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, chao@kernel.org,
-	zbestahu@gmail.com, jefflexu@linux.alibaba.com, dhavale@google.com,
-	lihongbo22@huawei.com, linux-erofs@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org, Chunhai Guo <guochunhai@vivo.com>
-Subject: Re: [PATCH] erofs: add direct I/O support for compressed data
-Message-ID: <202509231034.jXPbkvNB-lkp@intel.com>
-References: <20250922124304.489419-1-guochunhai@vivo.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cW3ck5PqNz2yqq
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Sep 2025 12:21:10 +1000 (AEST)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 4A00C42BA0;
+	Tue, 23 Sep 2025 02:21:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 249D5C4CEF0;
+	Tue, 23 Sep 2025 02:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1758594068;
+	bh=0hXC7tPYAh+1iRQxPqrJA311n1IPVWOkt0Jji5o5zgY=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=tPLe37hyszN/6vsShhItZIqV9Rha/mmdWznfuahzt0G7DnP90pFxgk7t+Nys4I9uD
+	 EzIAGy+cu+mbWAlhT0+BGf1hkIgQbIpGtePC8YWgcZxxnlK4MfzN14bqyAOUpiQmAF
+	 HvhJSMPD6FSc5W5FbbBtjHTdaIFOwC1cF8Ecf5Gv5dRYIPNFxs0aysmPYnt78F7lwo
+	 9d74wARbt2bQCXKOB46dqccJQstQkxQ9qo0tPWzCxCe6dhhCjLfRYeOrwI3uZr0oMT
+	 szBn8c6NNSJH1XkRRs2Bz1GlWunFMROhFesHFEzX6nKjRWO2wxNbLoyG0yvAe+bBHr
+	 1ikGQPZSG0bpA==
+Message-ID: <338fd84f-80fd-4ec7-b87e-64e76015b8f4@kernel.org>
+Date: Tue, 23 Sep 2025 10:21:05 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -79,42 +56,44 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250922124304.489419-1-guochunhai@vivo.com>
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ syzbot+1a9af3ef3c84c5e14dcc@syzkaller.appspotmail.com
+Subject: Re: [PATCH] erofs: avoid reading more for fragment maps
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+References: <68c8583d.050a0220.2ff435.03a3.GAE@google.com>
+ <20250916084851.1759111-1-hsiangkao@linux.alibaba.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250916084851.1759111-1-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Chunhai,
+On 9/16/25 16:48, Gao Xiang wrote:
+> Since all real encoded extents (directly handled by the decompression
+> subsystem) have a sane, limited maximum decoded length
+> (Z_EROFS_PCLUSTER_MAX_DSIZE), and the read‑more policy is only applied
+> if needed.
+> 
+> However, it makes no sense to read more for non‑encoded maps, such as
+> fragment extents, since such extents can be huge (up to i_size) and
+> there is no benefit to reading more at this layer.
+> 
+> For normal images, it does not really matter, but for crafted images
+> generated by syzbot, excessively large fragment extents can cause
+> read‑more to run for an overly long time.
+> 
+> Reported-by: syzbot+1a9af3ef3c84c5e14dcc@syzkaller.appspotmail.com
+> Closes: https://lore.kernel.org/r/68c8583d.050a0220.2ff435.03a3.GAE@google.com
+> Fixes: b44686c8391b ("erofs: fix large fragment handling")
+> Fixes: b15b2e307c3a ("erofs: support on-disk compressed fragments data")
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-kernel test robot noticed the following build errors:
+Reviewed-by: Chao Yu <chao@kernel.org>
 
-[auto build test ERROR on xiang-erofs/dev-test]
-[also build test ERROR on xiang-erofs/dev xiang-erofs/fixes linus/master v6.17-rc7 next-20250922]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Chunhai-Guo/erofs-add-direct-I-O-support-for-compressed-data/20250922-204843
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-patch link:    https://lore.kernel.org/r/20250922124304.489419-1-guochunhai%40vivo.com
-patch subject: [PATCH] erofs: add direct I/O support for compressed data
-config: i386-buildonly-randconfig-003-20250923 (https://download.01.org/0day-ci/archive/20250923/202509231034.jXPbkvNB-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250923/202509231034.jXPbkvNB-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202509231034.jXPbkvNB-lkp@intel.com/
-
-All errors (new ones prefixed by >>, old ones prefixed by <<):
-
->> ERROR: modpost: "z_erofs_file_fops" [fs/erofs/erofs.ko] undefined!
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
 
