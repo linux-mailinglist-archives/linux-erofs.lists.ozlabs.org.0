@@ -1,41 +1,41 @@
-Return-Path: <linux-erofs+bounces-1081-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1082-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13872B94A2E
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Sep 2025 09:00:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 354ADB94A52
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Sep 2025 09:01:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cW9pl4TxTz2ysc;
-	Tue, 23 Sep 2025 17:00:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cW9r96cfQz3cYP;
+	Tue, 23 Sep 2025 17:01:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=210.51.26.146
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758610815;
-	cv=none; b=jBhPz6wpAU5UxX8BTsfstvJ7/kqEZxHVcLf6Y8cfBKmu7s3gRaUfe7hDztFsF5ovOEJDAypZS7pK6VrethU5Axt8aShvBAcZX06fQ5iZIfWME8MfsrNVnRl0vlTJv9XQG9e1xw6niHtBzmXiCCFGnzBrDaDCbH3fnKYue1gB2FS1og6gZYtoTLjweP+sk+QfscuJ5WKbo3XcthP+6QEYy2sa85UrCH2zUHkQzCzzmQ/oquwwGEro+cOYsXp9cFJhaDrsS91UwhfDtHvV62XELxAnD5NgnK1DttQcoDbrO8ZUvCuV/NeHHSQbH1Kagw1N0jkCbUoDvzMvKEwqlZD23w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=210.51.26.145
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758610889;
+	cv=none; b=Qr+/f8DZ0sZzcBYGkcCAf13gBXr2I7PZWe4reAUSIbq22NFwAxjT88aNe8u8v6xmaur38nh4YEodhnbFnE8FS5O35NwaD2p0UhgE14/HKF608g13oKycxRu9TVpMdRGYvl7AIjBTU6Us/ZIQD7jq3lpwya4fyX1Ni8F3E4JOF+6OUFX+myNlPMujK+zd2hhJRINkhwgIElUEGhe/YYg2ky5xQ2b4GLIa6iMFBkIel9O+cNY9Z5oVX62nNZaHEADbMntPGURX+8O6M9uMLsM+f3uwPLDoh7WQCscRt/uTT3GxrLhx5kF6HywwuGN3SOCTl42f2ti1wqYHjXWToNW2PQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1758610815; c=relaxed/relaxed;
-	bh=cqY+nrAtxgx9IXXIvHbLTOO6/WcXM1KLdLuYSD0nov0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fx5hJdBTF6xqfH9wuHGJ6WD1a+3kPEzn9j7HZbWW+Nem8i0ZLgzVimmeolO2p26uJpmFeHnvrdJ9CVJrUdnmldamQYtU4CCurtG+12qnaPfR9QardY6DJYjwGtWlm9xwldeuLFbuRZSJCaIcYqR+ojKngYW4wdwcDiOJwh6ibPw1gzBie/WkOfISm07Xc7bu7vJIQNDmWLzynu1WQkJmGsWdiUslZjN8Zt3J14eJIPJ4an9GJ6H76ykoffg+47niTNXBtOr2A1nuZNjYaOeHzQGigcHnpyX6yJU/7bsDk2VLDEo3ZnAEEQevFcKzSReDnvMVuC0rNVmcIp7KE50+8g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass (client-ip=210.51.26.146; helo=unicom146.biz-email.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org) smtp.mailfrom=inspur.com
+	t=1758610889; c=relaxed/relaxed;
+	bh=b99jtqCRzgI14pb+VFmDsuYTSOwb5cUK+ScxM83ZV/g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fcr2jktO3o32sCiOTfugnAMk4pj7/p7LnbenlWbNknkczjlEmc6irKy0V9ZBWXOI8pY60Whm3EGMtseKAN86q+LjL6H82IN8Q0vy2+MFr65oVVPd64lvMPSwrANbKeBrARqC1D21007jjgvTA9E8zt3zjsqpzl+O7M9qDj6WREGPDuD9OiVoIu0SIC4i8zSyRsOlIT3M+DMH4thCoI60jx+f8YHtKjLOFVkz10jVNlXIB0YrHqk9Xf1fbArxN4DN5O7pjbPr/XhWSL5LY6gHah0SVyu7D5dp0eEto2zWCBmz4S8/9Dyl0TBCeqlXXEZqW8TEpb7v06ZIQF9E4YtvZQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass (client-ip=210.51.26.145; helo=unicom145.biz-email.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org) smtp.mailfrom=inspur.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=inspur.com (client-ip=210.51.26.146; helo=unicom146.biz-email.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org)
-Received: from unicom146.biz-email.net (unicom146.biz-email.net [210.51.26.146])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=inspur.com (client-ip=210.51.26.145; helo=unicom145.biz-email.net; envelope-from=liubo03@inspur.com; receiver=lists.ozlabs.org)
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cW9pk0NXxz2yqg
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Sep 2025 17:00:09 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cW9r854Ztz2yqg
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Sep 2025 17:01:28 +1000 (AEST)
 Received: from jtjnmail201610.home.langchao.com
-        by unicom146.biz-email.net ((D)) with ASMTP (SSL) id 202509231500006238;
-        Tue, 23 Sep 2025 15:00:00 +0800
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202509231501193791;
+        Tue, 23 Sep 2025 15:01:19 +0800
 Received: from localhost.localdomain.com (10.94.12.225) by
  jtjnmail201610.home.langchao.com (10.100.2.10) with Microsoft SMTP Server id
- 15.1.2507.58; Tue, 23 Sep 2025 15:00:01 +0800
+ 15.1.2507.58; Tue, 23 Sep 2025 15:01:18 +0800
 From: Bo Liu <liubo03@inspur.com>
 To: <xiang@kernel.org>, <chao@kernel.org>
-CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liui
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>, Bo Liu
 	<liubo03@inspur.com>, Gao Xiang <hsiangkao@linux.alibaba.com>
 Subject: [PATCH v5] erofs: Add support for FS_IOC_GETFSLABEL
-Date: Tue, 23 Sep 2025 14:59:48 +0800
-Message-ID: <20250923065948.16149-1-liubo03@inspur.com>
+Date: Tue, 23 Sep 2025 15:01:12 +0800
+Message-ID: <20250923070112.16644-1-liubo03@inspur.com>
 X-Mailer: git-send-email 2.43.7
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -51,7 +51,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-Originating-IP: [10.94.12.225]
-tUid: 202592315000012fb6a94e70ad676943dae2aa122e530
+tUid: 2025923150119d4a4ee5aa66719bd4aef14354bb679d1
 X-Abuse-Reports-To: service@corp-email.com
 Abuse-Reports-To: service@corp-email.com
 X-Complaints-To: service@corp-email.com
@@ -61,7 +61,7 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=RCVD_IN_DNSWL_LOW,
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Bo Liui (OpenAnolis) <liubo03@inspur.com>
+From: Bo Liu (OpenAnolis) <liubo03@inspur.com>
 
 Add support for reading to the erofs volume label from the
 FS_IOC_GETFSLABEL ioctls.
