@@ -1,43 +1,73 @@
-Return-Path: <linux-erofs+bounces-1061-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1062-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5EB3B91C63
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Sep 2025 16:43:42 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3405FB93F5A
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Sep 2025 04:09:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cVm7w3VXfz2yrr;
-	Tue, 23 Sep 2025 00:43:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cW3MH00ktz3cYN;
+	Tue, 23 Sep 2025 12:09:31 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758552220;
-	cv=none; b=H6ujlGQVR31gg97mkbXqou1cIjK97/hk2O7HxHQ2SYOU5E+n7c+aERkDVt+Va6j4R/xbVPde9Pw0JIxXtiv3p5kwzw5LedaCO0zdIU7Wg83kbmkTe6N7AZY61sgg9GKD0a5+5rhqY8mNxy5i14N+7sab7nF9JcwboD4QCdjcSWNbPWf1H0E9PzDxDJz8fOuWo8gbI0sazarHy9UFN88iFh6YfBO2H8/se+3dYC3kWQG849XVlFJKy6fVMyA9tf3HsyzbRQvvRLmesBt8JCAV//NnBpJM2D0zGNFb5QwOtFnuNnScCe/uhdQQEasbbCSxW/3cqfe11qAqHNv8nvrbEw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.21
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758593370;
+	cv=none; b=Yd4GJkjfGZi3ZfHC2bds67oaF8gZGQ9FhHMWmJJzC9IS7LwIssT28oAYsEnyM3Y2N75Ss0ttvfX7lAynvCOEBAFTUezxyLcIhQO4Qf5B704H0lyNNsR/vobKq89BjidiIrxJyBY/ZHILTA+ysCInh1OR/Jd3pNNmaVFD5x17RA955bg9b8y5CevrYEjXCtjuAbH1WKUM+y7JphCHbFNT6v/ALtsKKxm6pXRA7t4VlL9ezda/ncyyORIIMtsHEY1Wjz1DIiNG6xcXEElVKCiAh2xOFaDjAoIbGds+7M92TsB6HHBapM8FQWVaNS7ir6CLLPFc6pmR7TPXDFRrF2mZcg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1758552220; c=relaxed/relaxed;
-	bh=tKRMGh/qtU8jojR46arwg1WPw+eqAIS0mauPXhHXKBc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NOanzRGrDenmNZDkTcc67DOkuuK+XyYevhxow886C6r3jCZCzZXKsXasBPYr5fXz7iGtvoqjpXqIPD7HuV5/1Qp3IMS5ljZxLO2tdoUBOL7oFQ0d4w3/jHC2n3dAZNqpnOc+P0uckAM46/ikHMhjeHrTCtp/Ffs17mO4XJua2W/OYzR5kE9eTtLzJ5OOqc/MIfXNb4aOJtTdjOLsGw86aHaghkbtVxp9J+4f0H9jbTJJJZELta3Adouug1b3KrGkV08rh2ZJMz9F29FeQiXOUTbXjpUc9RexaiGKDSN9btFy+2G4QiktQ9cEEd8pjSCYAUGRDfs99+oxlVxPX1SM4w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=moY8sQCJ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1758593370; c=relaxed/relaxed;
+	bh=8UFdBtUM1tjbXJvNs2hlz5aplHcQLW9Q43Hy1beDqoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cz1pRo2KTLCtS+SKBckpqS/SoGK+be2veM1ZABar7IVfAUe7vPmaKa/OqTprdOl8uZk4zzkbObzWl4K6LKJclHEthnwW5qv3TVDlADXaVUlQFAX9ctmuEGLxBGNbmKZ3TsORFlS7j3ZXd//B5uQ4Fk/zyOo8RXeGEJWhPSHUiNaomfgHGwA24swH3YA9CPOUO5BGsBBvL+WK21II1L7n7OaxIAWslcY7pPHMM/LeydH4WLKwpbbImwajbCHQFA3sd3Wo2V5SOt4rAxRjK9YE/T+uk5+x4I2Q4SjRu6gyG7b2oCVG21m2sb8O53xmnnV8Zu9zu+yduEbhEyhSP2iIow==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=BgjZISx6; dkim-atps=neutral; spf=pass (client-ip=198.175.65.21; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=moY8sQCJ;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=BgjZISx6;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.21; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cVm7t2SsVz2yr1
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Sep 2025 00:43:36 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1758552212; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=tKRMGh/qtU8jojR46arwg1WPw+eqAIS0mauPXhHXKBc=;
-	b=moY8sQCJineIXyc6GX0tY8VfGUOMC41vNqmv4ZHe0LicOFegw3Tr5QjUe29JXIaO8ryTL5URK7vb3nAKUZjF66a+oQ0zKsfsd+5btrmcCI9ZKRHnH33EKOGKjLYTv4YuxvXzYxwKJANw+JZDKEliSN6cdVtM4jmoHWcOgpHzowQ=
-Received: from 30.180.0.242(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WoZpElR_1758552209 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 22 Sep 2025 22:43:30 +0800
-Message-ID: <7f41c935-c352-45c5-8a24-d690755d67d3@linux.alibaba.com>
-Date: Mon, 22 Sep 2025 22:43:29 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cW3MD5FSSz2yqq
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Sep 2025 12:09:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1758593369; x=1790129369;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=g7DmpIPs15UHBB9LtMIq6t6tGz0g4/OwnNpVLGfrMDs=;
+  b=BgjZISx6b7FTQ3XBaww+nBzhydRtqbmC5PkDkyjtFKI9SoIZwg9SORYz
+   clh0jdOz1/nxvOBDe7AiJfapqV+vhyzNVSMJTliD+prFM4NzAa4tcKP3N
+   PBzxoAhEU+YsjBDEQHNwIcvENyEnrMpZPBiWnsrd4ug5Cl24bmSrmb1XH
+   ySflHptTNetISz5AmYIIFciHovcyhdUX34/354HtEMyjqjT/8WRi83x4r
+   7BtMh1wzQ4cHQ0P5Nm/AW3Ir4RKUr5RQaIc70Af5TpN/4iIGyGp+SEiw+
+   WpA1R3ZVIiNndMag5dsr6gHijAyJ4gQ2QEpA+5SkrQiXV6mtqKulLBMsB
+   Q==;
+X-CSE-ConnectionGUID: mmzst9oeSoeqyXQLqsntfg==
+X-CSE-MsgGUID: s5w/a5e0Sqyb5tYYqpP0sg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11531"; a="60780565"
+X-IronPort-AV: E=Sophos;i="6.17,312,1747724400"; 
+   d="scan'208";a="60780565"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2025 19:09:22 -0700
+X-CSE-ConnectionGUID: sorZ0l60T5WHS+bcQyMbHQ==
+X-CSE-MsgGUID: 2X2TVSbzRm+e8OQWXwzEVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,286,1751266800"; 
+   d="scan'208";a="180632784"
+Received: from lkp-server02.sh.intel.com (HELO 84c55410ccf6) ([10.239.97.151])
+  by orviesa003.jf.intel.com with ESMTP; 22 Sep 2025 19:09:19 -0700
+Received: from kbuild by 84c55410ccf6 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1v0sSz-0002ef-06;
+	Tue, 23 Sep 2025 02:09:17 +0000
+Date: Tue, 23 Sep 2025 10:08:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Chunhai Guo <guochunhai@vivo.com>, xiang@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, chao@kernel.org, zbestahu@gmail.com,
+	jefflexu@linux.alibaba.com, dhavale@google.com,
+	lihongbo22@huawei.com, linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, Chunhai Guo <guochunhai@vivo.com>
+Subject: Re: [PATCH] erofs: add direct I/O support for compressed data
+Message-ID: <202509231206.6HNck2h0-lkp@intel.com>
+References: <20250922124304.489419-1-guochunhai@vivo.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,66 +79,159 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: add direct I/O support for compressed data
-To: Chunhai Guo <guochunhai@vivo.com>, xiang@kernel.org
-Cc: chao@kernel.org, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
- dhavale@google.com, lihongbo22@huawei.com, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-References: <20250922124304.489419-1-guochunhai@vivo.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20250922124304.489419-1-guochunhai@vivo.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 Hi Chunhai,
 
-On 2025/9/22 20:43, Chunhai Guo wrote:
-> Direct I/O is particularly useful in memory-sensitive scenarios, as it
-> provides more predictable performance by avoiding unnecessary page cache
-> overheads. For example, when accessing large files such as AI model files
-> that are typically read only once, buffered I/O introduces redundant page
-> cache usage and extra page copies, leading to unstable performance and
-> increased CPU load due to memory reclaim. While Direct I/O can avoid these.
-> 
-> The table below shows that the performance of direct I/O is up to 54.6%
-> higher than buffered I/O in the low-memory scenario. The results were
-> obtained using the fio benchmark with 8 threads, each thread read a 2.5GB
-> file, on ARM64 Android devices running the 6.6 kernel with an 8-core CPU
-> and 12GB of memory.
-> 
-> +--------------------------------------------------------------------------+
-> | fio benchmark       | buffered I/O (MiB/s) | direct I/O (MiB/s) |  diff  |
-> |---------------------+----------------------+--------------------+--------|
-> | normal scenario     |        2629.8        |       3648.7       | +38.7% |
-> |---------------------+----------------------+--------------------+--------|
-> | low memory scenario |        2350.0        |       3633.9       | +54.6% |
-> +--------------------------------------------------------------------------+
+kernel test robot noticed the following build warnings:
 
-Thanks for your patch!
+[auto build test WARNING on xiang-erofs/dev-test]
+[also build test WARNING on xiang-erofs/dev xiang-erofs/fixes linus/master v6.17-rc7 next-20250922]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Yes, avoid page cache by using direct I/O for read-once data (e.g.
-distributing huge LLM model) actually makes sense on my side and your test
-result is impressive.
+url:    https://github.com/intel-lab-lkp/linux/commits/Chunhai-Guo/erofs-add-direct-I-O-support-for-compressed-data/20250922-204843
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+patch link:    https://lore.kernel.org/r/20250922124304.489419-1-guochunhai%40vivo.com
+patch subject: [PATCH] erofs: add direct I/O support for compressed data
+config: loongarch-randconfig-r072-20250923 (https://download.01.org/0day-ci/archive/20250923/202509231206.6HNck2h0-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project cafc064fc7a96b3979a023ddae1da2b499d6c954)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250923/202509231206.6HNck2h0-lkp@intel.com/reproduce)
 
-I will look into your implementation later, since it's too late for v6.18.
-Let's address this feature for the v6.19 cycle.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202509231206.6HNck2h0-lkp@intel.com/
 
-Thanks,
-Gao Xiang
+All warnings (new ones prefixed by >>):
 
-> 
-> This patch does not support the following two cases. They will fall back to
-> buffered I/O:
-> (1) large folios, which will be supported in a follow-up patch.
-> (2) folios with private data attached, as the private data is required by
-> this direct I/O implementation.
-> 
-> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
+>> fs/erofs/zdata.c:2069:6: warning: variable 'tmp_cnt' set but not used [-Wunused-but-set-variable]
+    2069 |         int tmp_cnt = 0;
+         |             ^
+   1 warning generated.
 
+
+vim +/tmp_cnt +2069 fs/erofs/zdata.c
+
+  2056	
+  2057	static ssize_t z_erofs_dio_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+  2058	{
+  2059		struct inode *inode = file_inode(iocb->ki_filp);
+  2060		Z_EROFS_DEFINE_FRONTEND(f, inode, iocb->ki_pos);
+  2061		ssize_t err, off0;
+  2062		loff_t offset = iocb->ki_pos;
+  2063		unsigned int i = 0, total_pages, nr_pages = 0;
+  2064		struct folio *head = NULL, *folio;
+  2065		struct dio_erofs dio;
+  2066		struct page **pages;
+  2067		loff_t i_size;
+  2068		struct iov_iter iter_saved = *iter;
+> 2069		int tmp_cnt = 0;
+  2070	
+  2071		if (!iov_iter_count(iter))
+  2072			return 0;
+  2073	
+  2074		i_size = i_size_read(inode);
+  2075		if (offset >= i_size)
+  2076			return 0;
+  2077	
+  2078		memset(&dio, 0, offsetof(struct dio_erofs, pages));
+  2079		atomic_set(&dio.ref, 1);
+  2080		dio.should_dirty = user_backed_iter(iter) && iov_iter_rw(iter) == READ;
+  2081		dio.iocb = iocb;
+  2082		dio.pos = ALIGN(min(iocb->ki_pos + (loff_t)iov_iter_count(iter),
+  2083					i_size), PAGE_SIZE);
+  2084		dio.is_pinned = iov_iter_extract_will_pin(iter);
+  2085		dio.waiter = current;
+  2086		f.dio = &dio;
+  2087		iter_saved = *iter;
+  2088		inode_dio_begin(inode);
+  2089		pages = dio.pages;
+  2090		total_pages = DIV_ROUND_UP(dio.pos - iocb->ki_pos, PAGE_SIZE);
+  2091		for (; total_pages > 0; total_pages -= nr_pages) {
+  2092			err = iov_iter_extract_pages(iter, &pages, LONG_MAX,
+  2093					min(ARRAY_SIZE(dio.pages), total_pages), 0,
+  2094					&off0);
+  2095			if (err <= 0) {
+  2096				err = -EFAULT;
+  2097				goto fail_dio;
+  2098			}
+  2099			DBG_BUGON(off0);
+  2100			iov_iter_revert(iter, err & ~PAGE_MASK);
+  2101			nr_pages = DIV_ROUND_UP(err, PAGE_SIZE);
+  2102			tmp_cnt += nr_pages;
+  2103			for (i = 0; i < nr_pages; i++) {
+  2104				folio = page_folio(pages[i]);
+  2105				if (folio_test_large(folio) ||
+  2106						folio_test_private(folio)) {
+  2107					err = -EFAULT;
+  2108					goto fail_dio;
+  2109				}
+  2110				folio->private = head;
+  2111				head = folio;
+  2112			}
+  2113		}
+  2114	
+  2115		z_erofs_pcluster_readmore(&f, NULL, true);
+  2116		while (head) {
+  2117			folio = head;
+  2118			head = folio_get_private(folio);
+  2119			dio.pos -= folio_size(folio);
+  2120			err = z_erofs_scan_folio(&f, folio, false);
+  2121			if (err && err != -EINTR)
+  2122				erofs_err(inode->i_sb, "readahead error at folio %lu @ nid %llu",
+  2123					  folio->index, EROFS_I(inode)->nid);
+  2124		}
+  2125		z_erofs_pcluster_end(&f);
+  2126	
+  2127		err = z_erofs_runqueue(&f, 0);
+  2128		erofs_put_metabuf(&f.map.buf);
+  2129		erofs_release_pages(&f.pagepool);
+  2130	
+  2131		if (!atomic_dec_and_test(&dio.ref)) {
+  2132			for (;;) {
+  2133				set_current_state(TASK_UNINTERRUPTIBLE);
+  2134				if (!READ_ONCE(dio.waiter))
+  2135					break;
+  2136	
+  2137				blk_io_schedule();
+  2138			}
+  2139			__set_current_state(TASK_RUNNING);
+  2140		}
+  2141	
+  2142		err = err ?: dio.eio;
+  2143		if (likely(!err)) {
+  2144			err = dio.size;
+  2145			if (offset + dio.size > i_size) /* check for short read */
+  2146				err = i_size - offset;
+  2147			iocb->ki_pos += err;
+  2148		}
+  2149		inode_dio_end(inode);
+  2150		return err;
+  2151	
+  2152	fail_dio:
+  2153		if (dio.is_pinned) {
+  2154			while (head) {
+  2155				folio = head;
+  2156				head = folio_get_private(folio);
+  2157				unpin_user_page(folio_page(folio, 0));
+  2158			}
+  2159			for (; i < nr_pages; i++)
+  2160				unpin_user_page(dio.pages[i]);
+  2161		}
+  2162		*iter = iter_saved;
+  2163		return err;
+  2164	}
+  2165	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
