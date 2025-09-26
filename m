@@ -1,104 +1,68 @@
-Return-Path: <linux-erofs+bounces-1115-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1116-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 814AABA2D6F
-	for <lists+linux-erofs@lfdr.de>; Fri, 26 Sep 2025 09:41:05 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B74D2BA4FA3
+	for <lists+linux-erofs@lfdr.de>; Fri, 26 Sep 2025 21:36:35 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cY2ZR29fFz300F;
-	Fri, 26 Sep 2025 17:41:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cYLS13ZkRz2xjv;
+	Sat, 27 Sep 2025 05:36:33 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c001::2" arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758872463;
-	cv=pass; b=jjZk4nj4Gm1ghEMiCK/WwnWvkPHS0lupXSW8ZBIKIgzUzE4X6n2TKK/UPoT8Jg1Gj1l4tAZNVcZcyTiywxz4+JAGKuW+Q3qmwEx35CCDY3dpchJvr0iX3lADxBdnHGdPprd27AM7EDnvuCdDkOww6R6hm/FXHKYnr7JYGugegIfxeR1JcQBKKZlAAIds8Vpl1Cw4XB3lLnGFuuCHHFEV4WGVNuNA55ihOmyJ9ZaAgWOrZcgsjm4+oIH/En1KxAlDQes6xxWT1Q7+fXPSGAHctbzioi1W2MhcbQddNWQ6fIpmig0hqJcu/OWOwJT4YuCQ/J3bwZoAayy8zFzBtrWMmA==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1758872463; c=relaxed/relaxed;
-	bh=9nO6v1jBPXrL9qfNdMcZLxyETTA/u3Yf9lFrozO5XKw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=M0CdHoyuVpEX5NqumeTLe5JeZhOjx03RZyq7IoxPCoCN5TPLEULyxBgKlV/ESotSC/jRxRyW3XAjrbDpiR5u6DrQtkWelemsbgeXOR1yC+ZGoGDfDoxjHloHSL48YPhQu+VV5ySzfIS9Ek8y6JzfstKLcBX+vmJO1WhBiSTF1K1oU9AiN5ZJAMKDylAuUpDtTqyy8DjDqJL6I8NxihkJQ9z0LAWJJb7Qj3iREU81ez11WgQXdkwgyrStqoFe0+qebeVah1plHqxiiw+uDzZYv6KiJRH83GIvuGKevibeYUQDMkQKhtYB3XH5F0STR73o0xp8wN2KlIVcAELwCovqAw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; dkim=pass (1024-bit key; unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=eyYKDUg1; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c001::2; helo=sj2pr03cu001.outbound.protection.outlook.com; envelope-from=shivankg@amd.com; receiver=lists.ozlabs.org) smtp.mailfrom=amd.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::104a"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1758915393;
+	cv=none; b=AOFFEl81tbQiB6fOwP1zi5ID6t0cgvNCJ3SxO3ubPDe5iyEPQiUSMJyADNnbLFpzm/8wEWX+k9NQ84tBnZM8AoL9Ba+5FmdpSlyvaXxyUW5Ikv8zP4oul5GJSyV69wK8LfAze4pMKAVFRerURRM4YDeox47TrWtBTz1M4QWvurOlKigKYokSJFWWYXX8cXCtLImFNcblBFZrjxUbHmqxy94dskC24Ml7cUNYTR7yDf1hvChWoX6iZEQavGGAnXNDeMfd/ik5a/4wE6OCNdhnJZDkx0JLtC0/VcTAjfbzEpW7Jz/PBeO8bFQ1g6iqiTs/q08xxYwdYE6vE4Q1BKSQaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1758915393; c=relaxed/relaxed;
+	bh=Ob/iOTJHVtIxulD10+qfYKaLq05XmILMIQZZtCe3LNU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Cw3mrOgDiT3iD0flwhCZqXBk968xfp9qxhJ37jHd5x11IC+5NGg0XObMXio9DaZOc/NwCbhUsyNbKKpopkNaYf/ycGUNpwSEut8NHp42MuqoZDJ76o4c6CojmEiGI71XUpNKop6yPuO0XEOxqcxNEfjhg1CVTLAIMtM3X/Lut4qPhglCR+n3vG5V2RSbN/pbpV5CvIhJVGTx6xvvvReSBmSksdZlU3QR7rFBcUqq3AQCuZ7r4rrrWvYshdQTtSrhqbZcVYBVm/eA6J7u7PmzPThLxOAVLa6DyxmLQgv5FbSS9gZsXos6ciqyrigYYkl+tfeb3rxtvUL490sSB4Du3Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=cETO3gsD; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::104a; helo=mail-pj1-x104a.google.com; envelope-from=3povwaaykc7stfbokdhpphmf.dpnmjovy-fspgtmjtut.p0mbct.psh@flex--seanjc.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=eyYKDUg1;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=cETO3gsD;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=amd.com (client-ip=2a01:111:f403:c001::2; helo=sj2pr03cu001.outbound.protection.outlook.com; envelope-from=shivankg@amd.com; receiver=lists.ozlabs.org)
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazlp170120002.outbound.protection.outlook.com [IPv6:2a01:111:f403:c001::2])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--seanjc.bounces.google.com (client-ip=2607:f8b0:4864:20::104a; helo=mail-pj1-x104a.google.com; envelope-from=3povwaaykc7stfbokdhpphmf.dpnmjovy-fspgtmjtut.p0mbct.psh@flex--seanjc.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cY2ZP1Dm1z2ySm
-	for <linux-erofs@lists.ozlabs.org>; Fri, 26 Sep 2025 17:41:00 +1000 (AEST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yVOYIbQqfMUx3/6ZPoak37c28QM2MyI1jpWOpcR2IBoWfwtlGfFb1mDe1vxsLCe+V7bjrmRYOO4QCEwij9eOxIYEoUTbyJ9ZJVteDcNJs2zNAGe/Sojf1i1c1A6wMhA7a2vnkJsN5jXHTQlK8UbX4wTM7s1osh9rQMTSvG34lR8UIzz4uSS5QF6wup2WRJikysBz/6tielaPcrTzKv/krRYweZB2oSBpZFVeM16rIK/ZfNVOW1leNQ6Y6MMuXjcN3dTkcQHqKnp0g2pCOCJC0i3EEgoFaQNh2LAormoThLzvFlirj5wvGqpgotpfum6wjIDPNyi0DbVKAzU2ArfgIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9nO6v1jBPXrL9qfNdMcZLxyETTA/u3Yf9lFrozO5XKw=;
- b=exjy5DTx3WMe3VNAthT65JIOchcWqanLq+xBW0Weluu1yb9rLZ/Mgrn/6xlufw8nu+L6uQa9BwRmig7IeFSEeAFL4y2rNcGFVbdEOiAxvBVae7uACUf29N1ZHRKBe8IttLmDsqPgJSZ61I3pK8PUHRMGFQcJ2j63n72UkNt4g+OoWcFamj+EWVGCeXtYN6w+k0ZjpFqTgeApGYEPKSGZ1aWmSQ+cIApE+MipJGK62M4W+qJ98V5rWJRgNS4jDyT81LOCqsmLLhlTJ13Q0qa+g0Itw+FqSZR9sHkQnNa5yHmW6lsashnhObTpaRb8YzD3GR3wTFp2SonTSw7YhoKjdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9nO6v1jBPXrL9qfNdMcZLxyETTA/u3Yf9lFrozO5XKw=;
- b=eyYKDUg1Vcce3H74yR4y6l94iMdafVA6VM32B3gkZ5y5DSr9JsjwIKDTzsGHxhF1JbujsHRoG9+r13VtSS3StpKl48SVW/mHcGvQ+7j9HD84m1JHAeCeoPbywBz5RFmI5onCWwDFEsCtUcUV986GLJA8gXw6S9XVefRDRQy+2/4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA0PR12MB8301.namprd12.prod.outlook.com (2603:10b6:208:40b::13)
- by PH7PR12MB9068.namprd12.prod.outlook.com (2603:10b6:510:1f4::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9137.18; Fri, 26 Sep
- 2025 07:38:27 +0000
-Received: from IA0PR12MB8301.namprd12.prod.outlook.com
- ([fe80::e929:57f5:f4db:5823]) by IA0PR12MB8301.namprd12.prod.outlook.com
- ([fe80::e929:57f5:f4db:5823%4]) with mapi id 15.20.9160.008; Fri, 26 Sep 2025
- 07:38:27 +0000
-Message-ID: <0e986bdb-7d1b-4c14-932e-771a87532947@amd.com>
-Date: Fri, 26 Sep 2025 13:07:57 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH kvm-next V11 7/7] KVM: guest_memfd: selftests: Add tests
- for mmap and NUMA policy support
-To: David Hildenbrand <david@redhat.com>,
- Sean Christopherson <seanjc@google.com>
-Cc: willy@infradead.org, akpm@linux-foundation.org, pbonzini@redhat.com,
- shuah@kernel.org, vbabka@suse.cz, brauner@kernel.org,
- viro@zeniv.linux.org.uk, dsterba@suse.com, xiang@kernel.org,
- chao@kernel.org, jaegeuk@kernel.org, clm@fb.com, josef@toxicpanda.com,
- kent.overstreet@linux.dev, zbestahu@gmail.com, jefflexu@linux.alibaba.com,
- dhavale@google.com, lihongbo22@huawei.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, rppt@kernel.org, surenb@google.com,
- mhocko@suse.com, ziy@nvidia.com, matthew.brost@intel.com,
- joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com,
- gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com,
- tabba@google.com, ackerleytng@google.com, paul@paul-moore.com,
- jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com,
- vannapurve@google.com, chao.gao@intel.com, bharata@amd.com, nikunj@amd.com,
- michael.day@amd.com, shdhiman@amd.com, yan.y.zhao@intel.com,
- Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, michael.roth@amd.com,
- aik@amd.com, jgg@nvidia.com, kalyazin@amazon.com, peterx@redhat.com,
- jack@suse.cz, hch@infradead.org, cgzones@googlemail.com,
- ira.weiny@intel.com, rientjes@google.com, roypat@amazon.co.uk,
- chao.p.peng@intel.com, amit@infradead.org, ddutile@redhat.com,
- dan.j.williams@intel.com, ashish.kalra@amd.com, gshan@redhat.com,
- jgowans@amazon.com, pankaj.gupta@amd.com, papaluri@amd.com,
- yuzhao@google.com, suzuki.poulose@arm.com, quic_eberman@quicinc.com,
- linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-coco@lists.linux.dev
-References: <20250827175247.83322-2-shivankg@amd.com>
- <20250827175247.83322-10-shivankg@amd.com> <aNW1l-Wdk6wrigM8@google.com>
- <95ace421-36d2-48af-b527-7e799722eb17@redhat.com>
-Content-Language: en-US
-From: "Garg, Shivank" <shivankg@amd.com>
-In-Reply-To: <95ace421-36d2-48af-b527-7e799722eb17@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0187.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e8::14) To IA0PR12MB8301.namprd12.prod.outlook.com
- (2603:10b6:208:40b::13)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cYLS02gtXz2xK5
+	for <linux-erofs@lists.ozlabs.org>; Sat, 27 Sep 2025 05:36:31 +1000 (AEST)
+Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-33428befc3aso2809331a91.2
+        for <linux-erofs@lists.ozlabs.org>; Fri, 26 Sep 2025 12:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1758915389; x=1759520189; darn=lists.ozlabs.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ob/iOTJHVtIxulD10+qfYKaLq05XmILMIQZZtCe3LNU=;
+        b=cETO3gsDcHAu5fY5fDZQWapc1oJGhrYEQQBsZtdbtjatU28hZRJf1EN6fzg6HvyTZp
+         LAEmKAzBChNSUuxi5pboC3ip44Mg7FJ/aGf/+xQshI6eS3StQUc0PiGVl/P0ZqyPskEZ
+         tvrPLGEQR7+Fy09cXlbCXkobas09WUgv1GahJoGEnMFLvT3v0Wq4VM1Uv3fWEeLWhx6X
+         ELdVkzENo+8Z0B1lWfbsO8fasPkdQ4Uc24FFNCW2oqTFb7Go/hk/w3a6sdyp/cdRbO6m
+         vqeti0tmaBY47T3kKHwn10Q32ow8gRyEIY1+p0dTjpIghoFy4lbkl4K2pUJsC06aCAtc
+         6QpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1758915389; x=1759520189;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ob/iOTJHVtIxulD10+qfYKaLq05XmILMIQZZtCe3LNU=;
+        b=pnO7MLMEaOfG4L5DTVRa8nB7LBqnsyYQxCZBjRTG/1TrT0MnnL9WsHnjgM8YN9Txq6
+         ZbB001+kqlHJV/VG0/Sh96gIqIPNBAorlYshcb1CY704TVly+sh642RLXY8wv3Yp0rva
+         u+d1bkBdrRkfgRA7jwiFPmsdA9Z16wghaJU78PA0nq8Zz1PJrE+J7Ye867wQ38vjz1GH
+         oH3CQcfYogoqrieE0DqHvthmEd1XG+oJOIOWe43MBex5yCU/p7emSuBLl8Zy4d/SE4a1
+         aTDgZq9k9/5MTMZ9OvikYj0Iu92DFlCjY7/lwwZ9izsGZZCKnT8rRmKcqWcvR+BBX5re
+         TkCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSyJt3Cios5ciO0Ov43qWFgnA9P91KqDFKHtgWQBAjNP7rWFAp4QzYnVBwxdMZ25c/aK33dx7U/E2NZw==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YwH/e7DN59hkvQoLuZQ4bX8U/GzfM7O1ggPEqsW5hNk9DI0QntA
+	W9+aBU6XP3w96hY58liPscMfnYW2sXF2ZuHaQGr43nom868F49F4BKKJee635bP9GGorGoHjkGi
+	hFy3pug==
+X-Google-Smtp-Source: AGHT+IFDksLZfiXKr/BILK4eWMYTpySqi06A6DOxX2zeNKzHO6pmJyAGRZ48y/vvPgWC6WRjoIw3qUZ+1+0=
+X-Received: from pjbaz14.prod.google.com ([2002:a17:90b:28e:b0:32d:e264:a78e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1808:b0:32b:d8bf:c785
+ with SMTP id 98e67ed59e1d1-3342a2c3979mr8949944a91.20.1758915388771; Fri, 26
+ Sep 2025 12:36:28 -0700 (PDT)
+Date: Fri, 26 Sep 2025 12:36:27 -0700
+In-Reply-To: <aNVQJqYLX17v-fsf@google.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -109,279 +73,188 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA0PR12MB8301:EE_|PH7PR12MB9068:EE_
-X-MS-Office365-Filtering-Correlation-Id: 94d3eeee-162b-4ee2-bff9-08ddfccfae33
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?K094SHRzZVpMVGNpYVFmdU5BcTQwcXJTTC9DQUVabXc4cUtScCtHYkxPcGFo?=
- =?utf-8?B?RElyaS83REZIdlIrV2RzOG1zSmNwWkNhUytwOFVqNGNDOW9ETGdxTjQ5d2JJ?=
- =?utf-8?B?Vk5TQ0JxWW0wSkRaK2x6b2wzNHdlcmNBdExpbEljOWl0RzBKNzI4YlFXVHgz?=
- =?utf-8?B?UXBTMU5GY2VoOGUrZUliSVFlcWVUdG93K0YyT0FQRXA1RVQ3Y0QzUDNBZWp4?=
- =?utf-8?B?SXZzcUFva3RwZThZNUQ0ckxRNXNad21MNWJ4L29SeWlzTnB6U1hobUlUZTV1?=
- =?utf-8?B?VnFYMExTVXFZcGhCOEdhOU5wd0Rtcm9RTmNLb2JKaFljODRUQ1FhS1VneHhh?=
- =?utf-8?B?aU5pMk9ybURMTmpudkdjSFBaUXpMbndTUTc4L2RVdWV5SzRSUFc4aFlLL1kz?=
- =?utf-8?B?Ujhib3U2V25wcElYWklsanlreEh4ZEQvUFdvWFBydHVWa0p0emZJUzBxZkhU?=
- =?utf-8?B?TmxhYUJSWHJDeCtsZzRJWGlVbXJXVVdVU1dvUi9sR1A3bUdUSnFFM1FKL0tr?=
- =?utf-8?B?SFVpMUk0RkkyU0FmR1BLQm4rWVNDUEJ4cmVqcGwzUDg2TlZKNnVSbjRvL1Av?=
- =?utf-8?B?dENjUWR3U0FvMmQzSGw4YitaTTIvU2lYLzFQUkxubm9CSW5FdDhyTWh6VjlP?=
- =?utf-8?B?YkFvVjJRSFdMTjFZOHpnbS9hSTVEQUN6L3lLQ3Npd1Zmb0pqRHNTdDVsN2NR?=
- =?utf-8?B?K01jOFBhQ1hCS1pYbUNScDgvbnMwR2pmWlZsakRsVTJRVCtYWmhUQ1lRVXFo?=
- =?utf-8?B?cTFwbFdlMWV3VWcxU05PUzMvSXJsZTQ0YjlPYTRSMGs2ZHk4blprY1NoMHRL?=
- =?utf-8?B?dmNQWjlUVzEwUE5rOTgvWExwSXB4STBlUXlXWWwxczFjajRVeW40c3hkcmZK?=
- =?utf-8?B?YWZuaXFZNElJUk41MEpwczJGdit1akJFamV3TW9YN0w2RUVTMFVZc3ZtbFZV?=
- =?utf-8?B?SEx0ZDExL2NhWFFCdFc2cFJscHFNLzloRzMwRkRCeXJvQ09PVDU2U1RJd0Zy?=
- =?utf-8?B?THpFSHVwV1Z5Y05zSStmUWRuNERiMWkrYW00S0lWcDJHNkk2QU5xMGRuR1Vw?=
- =?utf-8?B?TmYybThvMUtUalpINjZlSzN6ekt5Qk1FbWtsQzdOL1lSVElaVUNRb2xmWUlt?=
- =?utf-8?B?VkdhMWtEejNlQVlJNzFGNzdubUlKZU1MU3phalA0Vy9PVHpDN21Ba1BOcjJu?=
- =?utf-8?B?UFZXSlFTVzFTUGpPS3ZGT3VHcExuakxaK0tzYXNOYy9jYjhXVmJndGlVc2li?=
- =?utf-8?B?SENHVVlhd2U4aitra3pMMno5b1llYTdJWE9vTHFHcTNQRnBSZzhjSnZlcFdl?=
- =?utf-8?B?TitkMnpUUVJ5bGZNMDBDQzhpQksxUTI5eGpLUEgzU0s2cXV5Y2tqUEpGN01t?=
- =?utf-8?B?YUNaSFhzNU9WZUhTRk91aThObmYyVnljeEtTQzFqNWtUMS9oa3N4ZDh1a0ow?=
- =?utf-8?B?R3NaK1h1WnBHR2w1MHRGTTBzR3UzY1YxajdRL2tWdDdZdWJQcmlwUEdxSDRR?=
- =?utf-8?B?VTVrdGpOYUVDZDRmeWNnMm1CaDVJSkJkWUhtK0wyMDZiR1BERnR0WTZtV3RS?=
- =?utf-8?B?SE5YSjludWVEdDlOTWplcTNPbWNxNVpONFRkMkR2SmhCOEtNYVVWZFJOTXAr?=
- =?utf-8?B?OHovMlpnWXQxUm5KNFVJM1dTbEVCTzJhdFlBU2lXM0pqdHVwa052ODFtc3Vh?=
- =?utf-8?B?OWJENi9WUEloT2psZUVYZGxxcEJzbmVZUWVXSU5PSVZoYTgvaExoVTlHNnk5?=
- =?utf-8?B?UGhLTWhqTXlNRFlERHQ3blJobGdGMUVCT0h1Rm1CWUJmMmxOaUR1TXN0NnAr?=
- =?utf-8?B?SGkxaHZqSjhuY3VHSFNQb1d5RC9OeVVGOXFPNHdFbWwvdEpOY0dUYXpWSEJt?=
- =?utf-8?B?TWxkdk4xTXo3T3AvanJPZHNmenU0YVZHQ1Axa1I3QWo1aXFaOU1XR0hIeW1V?=
- =?utf-8?Q?uyn4ioYfTnZ9jmnje/2WgMXE68bRDrcZ?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8301.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bmxmdzE5UXdWT0lyblR5OHpHUmlBUEYzSDBvRHR2dEllZ1hGTmgyeTQ3RUdq?=
- =?utf-8?B?L05mcXFULzdmRlpldU1NNWR0eVQ4MVlkTXhVZVJQVmJxU2lQUXM4allhRVNK?=
- =?utf-8?B?UDFHWlRNOFlaaFRtblcxWW1nYWtMNG8wZDlpT2FhYjZHbkJiQUZ0Uk1mRjFw?=
- =?utf-8?B?dFpLelJMbHFza2J1M0NNd0k5L1Vxak5iV2hpMlVHeXQwUE1senpja3VEekhH?=
- =?utf-8?B?ZnB1d0labXowQ3AvSWhBMUxvOGdUeFZxTEdXSlZHSk81M1ZCa01GRU9XSTlM?=
- =?utf-8?B?Y0Y3YmdMdzJXZlgzM1VQcGVPYUY3cVpSemRBeTNFOXFMZDZmbmkwQ2FOSzdt?=
- =?utf-8?B?Uk5rZ0ZxcTM2ZlI4Yk5SUXZiMWUrVFNLa1d1eENWTGkwY01rZU5XR3lYUld5?=
- =?utf-8?B?T28xM2FxK1c3a1ZxNkxTNUN4Tm1TNCtIdmRVQXpQOVhkWFg5NlVZaUNZelBQ?=
- =?utf-8?B?TFJPVDYyRUJSR0ZzWnphRG9GMzJhNUk4TktvWUZBZlpDMzNCZ09xYTdmZFBY?=
- =?utf-8?B?c0loN1BZTDJPV2lxVkd5TWszZEw1bW9PZ2lrTXh4QmNNNGdoY0lsd1VUMU9T?=
- =?utf-8?B?Zk8zbEZIZ2pKcTdHTGl3OW9SUTlKenNYM2Q5ekNua0szOVFUaHdvYzlpOGMz?=
- =?utf-8?B?Tk1EMFBjMUhoaTU2SHpwWjBaNklZSVJ0ZkJma3BVN2ErbG1uWlkvb1NUUHFy?=
- =?utf-8?B?UlZUajRVNWhYRm10ekZLRS9mK2ZCb0tSaXNTVllLemxJWXdzRmZQSmlkZDFU?=
- =?utf-8?B?QjFhWWZlV0ZKNU5aNDRXMjFtRDRpM0dxZXBYclRQeVBJbTZPTWV3Vm9tNDRU?=
- =?utf-8?B?cEd0NjEydjdRb2RWY0Y1RnpsbmdPR3hVR3VmTlptdU1SUjdobGJVQm9xQmtQ?=
- =?utf-8?B?Mll1UVBxc0d3ODVCMWJVWnJ6Nm12M1dpMXd1WVo2RUpzUGFOZWJTeHN6Wk9h?=
- =?utf-8?B?Y2hEb0xQWWpjRzFZMnVHcHEzK0hmU3VaSnZlOWF5M1BOWHcyZzdySEJRcW5P?=
- =?utf-8?B?YmVWVG42c09PTXphbk82bXRFU1FXWGVlQXI5MWFCcUgzUEhocEVlTXBYeDIy?=
- =?utf-8?B?dmh0MG1KZTc1UTVYa3JjaTYycnpUemluQ0ErSEI0V1lUZ09ZUkVWMlhlVE1B?=
- =?utf-8?B?Tm4rWUtpNjlXMWI5VUt0b0F4YXpiSmFKVGZram1Ta2ZPWVYydzFaRkhKZ3J6?=
- =?utf-8?B?SHZMK0czcVMrNDJ3YTVycFE2cnl0enIyOG1ZUk1DeDBsZnZIMVNlQ29CMS9w?=
- =?utf-8?B?WGE0OTF4RG03eHk5MWtIU1J1MzNSZkZjVGZZaWVRZDJsWDNGZWNCWnozWkli?=
- =?utf-8?B?ckw3aTZQNXB4UkJNTGtHMDIyUFFsMGdMSGdPbU9ENUdoU1JSdHZOQksvZHpz?=
- =?utf-8?B?NkUyeDNJZzJaWnF5TlEvZ1JzTC9pZVk1aDV1M216bURKNmZWTVlZUWtrSk9r?=
- =?utf-8?B?VEltVU5ERFlOMThQWElzYkdvL3JvM1EvTE8rQlVYblphUWxqSUtFS1RVVURU?=
- =?utf-8?B?Ui9TV1hzc3Nva05RcDFrVnh5UjczUHhNekNXSXVsWkUyV3J5dXNJSXQyZjda?=
- =?utf-8?B?QWJYV3FZSm1WeXRyYXlOSmEySHU0N0xaRzc0RU1mWDdJa2srTEwvUy9QSFVn?=
- =?utf-8?B?akhWTDQwS0N6ZWJxYUU4bC8rdGtvNWdNN1BrS2xtQ0w5aHBMT0xzTlpEb1oz?=
- =?utf-8?B?eDllQVM0UjExeGZZRWVGL2lQanVJeC9LSkh0UnUxdFArSDQxdkwxUnhDbTB2?=
- =?utf-8?B?QlhuRzNNUE41eE1DQThoUFVrNUZkSU56WUpVQk1vT29NVkVpM1hKcU5EMnNw?=
- =?utf-8?B?VVR6aDJNY0VtVThIcENFZDl4WGo4VUZ2N3BycHBtSzJTTzdRQUtrRzlqWEdn?=
- =?utf-8?B?U1RqS1haSnBzbG9jcWJhVnZMNmpoZlpIaXA2d0N2NG5oTzhpV0g2UDMvNEtK?=
- =?utf-8?B?T3RwWDl0MTBwZk5veVFrbTBmL0gvRDJiVUUvK05PYXRiVG02elhraEJzKyt2?=
- =?utf-8?B?TUhaSEhNZ1NqZDBqazRwY0hnbks3cTA3dVVzcFNFaHRxV0pKSmpGOUxQckFL?=
- =?utf-8?B?WmM3eTNrb3JOWHdhNzZ1ZEtzYU1yRGdFYW5pZnppODJIOTBSU0x3VjhFbWZ2?=
- =?utf-8?Q?9OsjLMHb9IDzFFJhMHIaCRTOm?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94d3eeee-162b-4ee2-bff9-08ddfccfae33
-X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8301.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2025 07:38:27.2978
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qERhmwqEDTTUsf8EY331X197pDmRa9i4UjRzF5ANHDGMG30Nz9UbWrBu+vEtGiFy3YjCGFJaVXGiSwvWxOrrow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9068
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.1
+Mime-Version: 1.0
+References: <20250827175247.83322-2-shivankg@amd.com> <20250827175247.83322-9-shivankg@amd.com>
+ <aNVQJqYLX17v-fsf@google.com>
+Message-ID: <aNbrO7A7fSjb4W84@google.com>
+Subject: Re: [PATCH kvm-next V11 6/7] KVM: guest_memfd: Enforce NUMA mempolicy
+ using shared policy
+From: Sean Christopherson <seanjc@google.com>
+To: Shivank Garg <shivankg@amd.com>
+Cc: willy@infradead.org, akpm@linux-foundation.org, david@redhat.com, 
+	pbonzini@redhat.com, shuah@kernel.org, vbabka@suse.cz, brauner@kernel.org, 
+	viro@zeniv.linux.org.uk, dsterba@suse.com, xiang@kernel.org, chao@kernel.org, 
+	jaegeuk@kernel.org, clm@fb.com, josef@toxicpanda.com, 
+	kent.overstreet@linux.dev, zbestahu@gmail.com, jefflexu@linux.alibaba.com, 
+	dhavale@google.com, lihongbo22@huawei.com, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, rppt@kernel.org, surenb@google.com, mhocko@suse.com, 
+	ziy@nvidia.com, matthew.brost@intel.com, joshua.hahnjy@gmail.com, 
+	rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net, 
+	ying.huang@linux.alibaba.com, apopple@nvidia.com, tabba@google.com, 
+	ackerleytng@google.com, paul@paul-moore.com, jmorris@namei.org, 
+	serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com, vannapurve@google.com, 
+	chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, michael.day@amd.com, 
+	shdhiman@amd.com, yan.y.zhao@intel.com, Neeraj.Upadhyay@amd.com, 
+	thomas.lendacky@amd.com, michael.roth@amd.com, aik@amd.com, jgg@nvidia.com, 
+	kalyazin@amazon.com, peterx@redhat.com, jack@suse.cz, hch@infradead.org, 
+	cgzones@googlemail.com, ira.weiny@intel.com, rientjes@google.com, 
+	roypat@amazon.co.uk, chao.p.peng@intel.com, amit@infradead.org, 
+	ddutile@redhat.com, dan.j.williams@intel.com, ashish.kalra@amd.com, 
+	gshan@redhat.com, jgowans@amazon.com, pankaj.gupta@amd.com, papaluri@amd.com, 
+	yuzhao@google.com, suzuki.poulose@arm.com, quic_eberman@quicinc.com, 
+	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-
-
-On 9/26/2025 1:01 PM, David Hildenbrand wrote:
-> On 25.09.25 23:35, Sean Christopherson wrote:
->> On Wed, Aug 27, 2025, Shivank Garg wrote:
->>> Add tests for NUMA memory policy binding and NUMA aware allocation in
->>> guest_memfd. This extends the existing selftests by adding proper
->>> validation for:
->>> - KVM GMEM set_policy and get_policy() vm_ops functionality using
->>>    mbind() and get_mempolicy()
->>> - NUMA policy application before and after memory allocation
->>>
->>> These tests help ensure NUMA support for guest_memfd works correctly.
->>>
->>> Signed-off-by: Shivank Garg <shivankg@amd.com>
->>> ---
->>>   tools/testing/selftests/kvm/Makefile.kvm      |   1 +
->>>   .../testing/selftests/kvm/guest_memfd_test.c  | 121 ++++++++++++++++++
->>>   2 files changed, 122 insertions(+)
->>>
->>> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
->>> index 90f03f00cb04..c46cef2a7cd7 100644
->>> --- a/tools/testing/selftests/kvm/Makefile.kvm
->>> +++ b/tools/testing/selftests/kvm/Makefile.kvm
->>> @@ -275,6 +275,7 @@ pgste-option = $(call try-run, echo 'int main(void) { return 0; }' | \
->>>       $(CC) -Werror -Wl$(comma)--s390-pgste -x c - -o "$$TMP",-Wl$(comma)--s390-pgste)
->>>     LDLIBS += -ldl
->>> +LDLIBS += -lnuma
->>
->> Hrm, this is going to be very annoying.  I don't have libnuma-dev installed on
->> any of my <too many> systems, and I doubt I'm alone.  Installing the package is
->> trivial, but I'm a little wary of foisting that requirement on all KVM developers
->> and build bots.
->>
->> I'd be especially curious what ARM and RISC-V think, as NUMA is likely a bit less
->> prevelant there.
+On Thu, Sep 25, 2025, Sean Christopherson wrote:
+> On Wed, Aug 27, 2025, Shivank Garg wrote:
+> > @@ -26,6 +28,9 @@ static inline struct kvm_gmem_inode_info *KVM_GMEM_I(struct inode *inode)
+> >  	return container_of(inode, struct kvm_gmem_inode_info, vfs_inode);
+> >  }
+> >  
+> > +static struct mempolicy *kvm_gmem_get_pgoff_policy(struct kvm_gmem_inode_info *info,
+> > +						   pgoff_t index);
+> > +
+> >  /**
+> >   * folio_file_pfn - like folio_file_page, but return a pfn.
+> >   * @folio: The folio which contains this index.
+> > @@ -112,7 +117,25 @@ static int kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
+> >  static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
+> >  {
+> >  	/* TODO: Support huge pages. */
+> > -	return filemap_grab_folio(inode->i_mapping, index);
+> > +	struct mempolicy *policy;
+> > +	struct folio *folio;
+> > +
+> > +	/*
+> > +	 * Fast-path: See if folio is already present in mapping to avoid
+> > +	 * policy_lookup.
+> > +	 */
+> > +	folio = __filemap_get_folio(inode->i_mapping, index,
+> > +				    FGP_LOCK | FGP_ACCESSED, 0);
+> > +	if (!IS_ERR(folio))
+> > +		return folio;
+> > +
+> > +	policy = kvm_gmem_get_pgoff_policy(KVM_GMEM_I(inode), index);
+> > +	folio = __filemap_get_folio_mpol(inode->i_mapping, index,
+> > +					 FGP_LOCK | FGP_ACCESSED | FGP_CREAT,
+> > +					 mapping_gfp_mask(inode->i_mapping), policy);
+> > +	mpol_cond_put(policy);
+> > +
+> > +	return folio;
+> >  }
+> >  
+> >  static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t start,
+> > @@ -372,8 +395,45 @@ static vm_fault_t kvm_gmem_fault_user_mapping(struct vm_fault *vmf)
+> >  	return ret;
+> >  }
+> >  
+> > +#ifdef CONFIG_NUMA
+> > +static int kvm_gmem_set_policy(struct vm_area_struct *vma, struct mempolicy *mpol)
+> > +{
+> > +	struct inode *inode = file_inode(vma->vm_file);
+> > +
+> > +	return mpol_set_shared_policy(&KVM_GMEM_I(inode)->policy, vma, mpol);
+> > +}
+> > +
+> > +static struct mempolicy *kvm_gmem_get_policy(struct vm_area_struct *vma,
+> > +					     unsigned long addr, pgoff_t *pgoff)
+> > +{
+> > +	struct inode *inode = file_inode(vma->vm_file);
+> > +
+> > +	*pgoff = vma->vm_pgoff + ((addr - vma->vm_start) >> PAGE_SHIFT);
+> > +	return mpol_shared_policy_lookup(&KVM_GMEM_I(inode)->policy, *pgoff);
+> > +}
+> > +
+> > +static struct mempolicy *kvm_gmem_get_pgoff_policy(struct kvm_gmem_inode_info *info,
+> > +						   pgoff_t index)
 > 
-> We unconditionally use it in the mm tests for ksm and migration tests, so it's not particularly odd to require it here as well.
+> I keep reading this is "page offset policy", as opposed to "policy given a page
+> offset".  Another oddity that is confusing is that this helper explicitly does
+> get_task_policy(current), while kvm_gmem_get_policy() lets the caller do that.
+> The end result is the same, but I think it would be helpful for gmem to be
+> internally consistent.
 > 
-> What we do with liburing in mm selftests is to detect presence at compile time and essentially make the tests behave differently based on availability (see check_config.sh).
+> If we have kvm_gmem_get_policy() use this helper, then we can kill two birds with
+> one stone:
 > 
+> static struct mempolicy *__kvm_gmem_get_policy(struct gmem_inode *gi,
+> 					       pgoff_t index)
+> {
+> 	struct mempolicy *mpol;
+> 
+> 	mpol = mpol_shared_policy_lookup(&gi->policy, index);
+> 	return mpol ? mpol : get_task_policy(current);
+> }
+> 
+> static struct mempolicy *kvm_gmem_get_policy(struct vm_area_struct *vma,
+> 					     unsigned long addr, pgoff_t *pgoff)
+> {
+> 	*pgoff = vma->vm_pgoff + ((addr - vma->vm_start) >> PAGE_SHIFT);
+> 
+> 	return __kvm_gmem_get_policy(GMEM_I(file_inode(vma->vm_file)), *pgoff);
 
-I have an alternative that drops libnuma entirely.
-If this approach looks reasonable, could we potentially factor these out into a
-common test utility for other selftests that currently depend on libnuma?
+Argh!!!!!  This breaks the selftest because do_get_mempolicy() very specifically
+falls back to the default_policy, NOT to the current task's policy.  That is
+*exactly* the type of subtle detail that needs to be commented, because there's
+no way some random KVM developer is going to know that returning NULL here is
+important with respect to get_mempolicy() ABI.
 
-What are your thoughts on this?
+On a happier note, I'm very glad you wrote a testcase :-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
-index c46cef2a7cd7..90f03f00cb04 100644
---- a/tools/testing/selftests/kvm/Makefile.kvm
-+++ b/tools/testing/selftests/kvm/Makefile.kvm
-@@ -275,7 +275,6 @@ pgste-option = $(call try-run, echo 'int main(void) { return 0; }' | \
- 	$(CC) -Werror -Wl$(comma)--s390-pgste -x c - -o "$$TMP",-Wl$(comma)--s390-pgste)
- 
- LDLIBS += -ldl
--LDLIBS += -lnuma
- LDFLAGS += -pthread $(no-pie-option) $(pgste-option)
- 
- LIBKVM_C := $(filter %.c,$(LIBKVM))
-diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
-index 9640d04ec293..12ce91950c44 100644
---- a/tools/testing/selftests/kvm/guest_memfd_test.c
-+++ b/tools/testing/selftests/kvm/guest_memfd_test.c
-@@ -7,8 +7,6 @@
- #include <stdlib.h>
- #include <string.h>
- #include <unistd.h>
--#include <numa.h>
--#include <numaif.h>
- #include <errno.h>
- #include <stdio.h>
- #include <fcntl.h>
-@@ -75,9 +73,6 @@ static void test_mmap_supported(int fd, size_t page_size, size_t total_size)
- 	TEST_ASSERT(!ret, "munmap() should succeed.");
+I've got this as fixup-to-the-fixup:
+
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index e796cc552a96..61130a52553f 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -114,8 +114,8 @@ static int kvm_gmem_prepare_folio(struct kvm *kvm, struct kvm_memory_slot *slot,
+        return r;
  }
  
--#define TEST_REQUIRE_NUMA_MULTIPLE_NODES()	\
--	TEST_REQUIRE(numa_available() != -1 && numa_max_node() >= 1)
--
- static void test_mbind(int fd, size_t page_size, size_t total_size)
+-static struct mempolicy *__kvm_gmem_get_policy(struct gmem_inode *gi,
+-                                              pgoff_t index)
++static struct mempolicy *kvm_gmem_get_folio_policy(struct gmem_inode *gi,
++                                                  pgoff_t index)
  {
- 	unsigned long nodemask = 1; /* nid: 0 */
-@@ -87,7 +82,8 @@ static void test_mbind(int fd, size_t page_size, size_t total_size)
- 	char *mem;
- 	int ret;
+ #ifdef CONFIG_NUMA
+        struct mempolicy *mpol;
+@@ -151,7 +151,7 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
+        if (!IS_ERR(folio))
+                return folio;
  
--	TEST_REQUIRE_NUMA_MULTIPLE_NODES();
-+	if (!is_multi_numa_node_system())
-+		return;
+-       policy = __kvm_gmem_get_policy(GMEM_I(inode), index);
++       policy = kvm_gmem_get_folio_policy(GMEM_I(inode), index);
+        folio = __filemap_get_folio_mpol(inode->i_mapping, index,
+                                         FGP_LOCK | FGP_ACCESSED | FGP_CREAT,
+                                         mapping_gfp_mask(inode->i_mapping), policy);
+@@ -431,9 +431,18 @@ static int kvm_gmem_set_policy(struct vm_area_struct *vma, struct mempolicy *mpo
+ static struct mempolicy *kvm_gmem_get_policy(struct vm_area_struct *vma,
+                                              unsigned long addr, pgoff_t *pgoff)
+ {
++       struct inode *inode = file_inode(vma->vm_file);
++
+         *pgoff = vma->vm_pgoff + ((addr - vma->vm_start) >> PAGE_SHIFT);
  
- 	mem = mmap(NULL, total_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
- 	TEST_ASSERT(mem != MAP_FAILED, "mmap for mbind test should succeed");
-@@ -136,7 +132,8 @@ static void test_numa_allocation(int fd, size_t page_size, size_t total_size)
- 	char *mem;
- 	int ret, i;
- 
--	TEST_REQUIRE_NUMA_MULTIPLE_NODES();
-+	if (!is_multi_numa_node_system())
-+		return;
- 
- 	/* Clean slate: deallocate all file space, if any */
- 	ret = fallocate(fd, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE, 0, total_size);
-diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-index 23a506d7eca3..ba4c316f4fef 100644
---- a/tools/testing/selftests/kvm/include/kvm_util.h
-+++ b/tools/testing/selftests/kvm/include/kvm_util.h
-@@ -12,6 +12,7 @@
- #include "linux/list.h"
- #include <linux/kernel.h>
- #include <linux/kvm.h>
-+#include <linux/mempolicy.h>
- #include "linux/rbtree.h"
- #include <linux/types.h>
- 
-@@ -20,6 +21,7 @@
- 
- #include <sys/eventfd.h>
- #include <sys/ioctl.h>
-+#include <sys/syscall.h>
- 
- #include <pthread.h>
- 
-@@ -633,6 +635,50 @@ static inline bool is_smt_on(void)
- 	return false;
+-        return __kvm_gmem_get_policy(GMEM_I(file_inode(vma->vm_file)), *pgoff);
++       /*
++        * Note!  Directly return whatever the lookup returns, do NOT return
++        * the current task's policy as is done when looking up the policy for
++        * a specific folio.  Kernel ABI for get_mempolicy() is to return
++        * MPOL_DEFAULT when there is no defined policy, not whatever the
++        * default policy resolves to.
++        */
++        return mpol_shared_policy_lookup(&GMEM_I(inode)->policy, *pgoff);
  }
+ #endif /* CONFIG_NUMA */
  
-+#include <dirent.h>
-+static int numa_max_node(void)
-+{
-+	DIR *d;
-+	struct dirent *de;
-+	int max_node = 0;
-+
-+	d = opendir("/sys/devices/system/node");
-+	if (!d) {
-+		/* No NUMA support or no nodes found, assume single node */
-+		return 0;
-+	}
-+
-+	while ((de = readdir(d)) != NULL) {
-+		int node_id;
-+		char *endptr;
-+
-+		if (strncmp(de->d_name, "node", 4) != 0)
-+			continue;
-+
-+		node_id = strtol(de->d_name + 4, &endptr, 10);
-+		if (*endptr != '\0')
-+			continue;
-+
-+		if (node_id > max_node)
-+			max_node = node_id;
-+	}
-+	closedir(d);
-+
-+	return max_node;
-+}
-+
-+static int numa_available(void)
-+{
-+	if (syscall(__NR_get_mempolicy, NULL, NULL, 0, 0, 0) < 0 && (errno == ENOSYS || errno == EPERM))
-+		return -1;
-+	return 0;
-+}
-+
-+static inline bool is_multi_numa_node_system(void)
-+{
-+	return numa_available() != -1 && numa_max_node() >= 1;
-+}
-+
- void vm_create_irqchip(struct kvm_vm *vm);
- 
- static inline int __vm_create_guest_memfd(struct kvm_vm *vm, uint64_t size,
-
-
-
 
 
