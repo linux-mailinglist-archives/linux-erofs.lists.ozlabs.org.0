@@ -1,41 +1,41 @@
-Return-Path: <linux-erofs+bounces-1128-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1129-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1755BA6B64
-	for <lists+linux-erofs@lfdr.de>; Sun, 28 Sep 2025 10:29:35 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id EDBBDBA6D42
+	for <lists+linux-erofs@lfdr.de>; Sun, 28 Sep 2025 11:25:32 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cZHYS6xf9z3cYr;
-	Sun, 28 Sep 2025 18:29:32 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cZJp158Y1z3cYr;
+	Sun, 28 Sep 2025 19:25:29 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.69
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759048172;
-	cv=none; b=H9QNGyFVUF5ZQnthfJLRvIqenwWjzo/H2/BqoxRjcZESkOXq4BZICah5G425tmiWZ/WFJH6ALieQh8R5zxJKnOZr4ws1fxmXaJdTNiw0UwTNILAdVYYze2Al29+giowOfTQDhaqyGlqOaWOGMiiHH7u+FTq8RUUHxb+PgmFAfg0K45KxYSKnh+X7h00CjNkClF0lVqthrEWXGV9yGcjuF4Ldp2ktl0/CGdjHR36y9sLNMS8iz/ELZ92w8XvgcRSj79eY4UTy/6GC+/ZCXlrIa/CBzGrfE95nuGQ5c4bxctWpwm5oC38BAWhv2geHzHYWbKdkDmAUGXlQj18Gn9SByw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.42
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759051529;
+	cv=none; b=TkCujb1pWnx1YRxsTR/SW8Ugrkl1ibvMkAmY3sASzOUCPmcIr5kgdD0yjkqhRFxAVenRN14zvrqklu/rFZ4EaJDV7iZg1p7wLVO15KNV03qX3ljZov3ks4YaxeeFyg2NJRMXqqBmOqzF4cgF4BEFOmwF8vAlzYcM0Lsv2eBGFhLFANIO1xmEWnRH972YtVVwBK89FHIftYUh53SWL91aw70aaCCOwx9r9UF/isEBtm4gyGNs1JjzWtLFwevdGC9qe6EResAxt8TkVCChP+4iqOo8wBWdGYhSSMUT011dUyWvvewJ6qN/uScvPbWzK6om7ThJ2v77YY6SB3qF8zub0Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1759048172; c=relaxed/relaxed;
-	bh=mXuDKFM7FApdhSRmn8LAykxWv+rR6mwHaNzWpI/Q/1o=;
+	t=1759051529; c=relaxed/relaxed;
+	bh=WKePfj5SrfPdkXadbFEEoSc9zVou0vyorErsgp3W44o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZkDQExDPg5D8gbH4rgYAk5lgZ3W74G9FdpGY61dzKZrVSjbiseN6tRsY82oLPAKGuZI4JlJDGV4tTW9zLcx7Et6mPBv98RXSSRme3V0z1A865ppAe8f++CvtO7gEz+dPKsPyaB/SpLgAfpsLTLP2T/DbVje1WR0kUMRsQCW1+l1JCR2lMGgr3ax4bRcpe+dXfpPluhkY6EwoJAYmkNstYb76+Ggz+A3VdRlo7CpwRO8LAMvXbQFCklpQF3qHvzj/j03DaRgJ2jxn+44W+oUeFhPqqChsXQ8FVHFtXq7nhez3xiPPdhzUyPrXihzX90BFerNPF0jH/drBHIDrpeXs0A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.69; helo=out28-69.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	 MIME-Version; b=nW/yiI15Up5Wu7H3dukNPuqsr2nMC0bzaDU6tX5FlxNeHsvYiN6/Njo7dUA1ClFhKwYb8AWuQzCvTxNLO+ul5ELESx/sW7921fUBTjmA9wWO7trx3ueYv1ICoMbCW16B48Xlzoq4BgwCDHMQ388+28W3xnsm+o++PjVgn9Y0GKupVY+gFWzs/H/rMuGoZ+x30ctLB1DuXXawg1NuGd39ShHXNykYd5qwp7LBiX+LnwcbtzRvkUffh+mru82eZCokXF2h4+qtG9+DTBAsV66J8gJYeQJc9C17eJ5i7OgQTJxhTndFXuUC7F8mJR+e7qbyAvtNnWNO+mPIWsXh/AagwQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.42; helo=out28-42.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.69; helo=out28-69.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-69.mail.aliyun.com (out28-69.mail.aliyun.com [115.124.28.69])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.42; helo=out28-42.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-42.mail.aliyun.com (out28-42.mail.aliyun.com [115.124.28.42])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cZHYQ5bJsz3cYR
-	for <linux-erofs@lists.ozlabs.org>; Sun, 28 Sep 2025 18:29:28 +1000 (AEST)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.ep8TvjD_1759048163 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cZJp00V2Pz3cYR
+	for <linux-erofs@lists.ozlabs.org>; Sun, 28 Sep 2025 19:25:25 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.ep8GRB1_1759051519 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Sun, 28 Sep 2025 16:29:24 +0800
+          Sun, 28 Sep 2025 17:25:20 +0800
 From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
 	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v3] erofs-utils: add source support for tarindex and gzran
-Date: Sun, 28 Sep 2025 16:29:22 +0800
-Message-ID: <20250928082922.56930-1-hudson@cyzhu.com>
+Subject: [PATCH v3-changed] erofs-utils: add source support for tarindex and gzran
+Date: Sun, 28 Sep 2025 17:25:18 +0800
+Message-ID: <20250928092518.83524-1-hudson@cyzhu.com>
 X-Mailer: git-send-email 2.51.0
 In-Reply-To: <20250928033957.23867-1-hudson@cyzhu.com>
 References: <20250928033957.23867-1-hudson@cyzhu.com>
@@ -75,8 +75,8 @@ Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 ---
  lib/liberofs_oci.h |   2 +
  lib/remotes/oci.c  |  20 ---
- mount/main.c       | 406 ++++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 399 insertions(+), 29 deletions(-)
+ mount/main.c       | 407 ++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 400 insertions(+), 29 deletions(-)
 
 diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
 index 71c8879..5298f18 100644
@@ -130,7 +130,7 @@ index b2f1f59..b25e0b2 100644
  	if (!oci_iostream) {
  		ocierofs_ctx_cleanup(ctx);
 diff --git a/mount/main.c b/mount/main.c
-index eb0dd01..f7c63ff 100644
+index eb0dd01..47e0db3 100644
 --- a/mount/main.c
 +++ b/mount/main.c
 @@ -16,6 +16,8 @@
@@ -519,14 +519,15 @@ index eb0dd01..f7c63ff 100644
  	if (source->ocicfg.blob_digest && *source->ocicfg.blob_digest) {
  		ret = fprintf(f, "OCI_NATIVE_BLOB %s %s %s %s\n",
  			      source->ocicfg.image_ref ?: "",
-@@ -635,6 +957,60 @@ static int erofsmount_reattach_oci(struct erofs_vfile *vf,
+@@ -635,6 +957,61 @@ static int erofsmount_reattach_oci(struct erofs_vfile *vf,
  }
  #endif
  
 +static int erofsmount_reattach_gzran_oci(struct erofsmount_nbd_ctx *ctx,
 +					 char *source)
 +{
-+	char *tokens[6] = {0}, *p = source, *space, *oci_source, *meta_path, *zinfo_path;
++	char *tokens[6] = {0}, *p = source, *space, *oci_source;
++	char *meta_path = NULL, *zinfo_path = NULL;
 +	int token_count = 0, err;
 +	const char *b64cred;
 +	struct erofs_vfile temp_vd;
@@ -542,7 +543,7 @@ index eb0dd01..f7c63ff 100644
 +		tokens[token_count++] = p;
 +	}
 +
-+	if (token_count < 5)
++	if (token_count < 4)
 +		return -EINVAL;
 +
 +	b64cred = (token_count > 2 && tokens[2]) ? tokens[2] : "";
@@ -580,7 +581,7 @@ index eb0dd01..f7c63ff 100644
  static int erofsmount_nbd_fix_backend_linkage(int num, char **recp)
  {
  	char *newrecp;
-@@ -679,9 +1055,17 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
+@@ -679,9 +1056,17 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
  			exit(EXIT_FAILURE);
  
  		if (source->type == EROFSNBD_SOURCE_OCI) {
@@ -601,7 +602,7 @@ index eb0dd01..f7c63ff 100644
  		} else {
  			err = open(source->device_path, O_RDONLY);
  			if (err < 0)
-@@ -695,7 +1079,7 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
+@@ -695,7 +1080,7 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
  		}
  
  		num = -1;
@@ -610,7 +611,7 @@ index eb0dd01..f7c63ff 100644
  		if (err >= 0) {
  			ctx.sk.fd = err;
  			err = erofsmount_nbd_fix_backend_linkage(num, &recp);
-@@ -794,6 +1178,10 @@ static int erofsmount_reattach(const char *target)
+@@ -794,6 +1179,10 @@ static int erofsmount_reattach(const char *target)
  			goto err_line;
  		}
  		ctx.vd.fd = err;
