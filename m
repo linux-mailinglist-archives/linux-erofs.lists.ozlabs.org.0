@@ -1,40 +1,40 @@
-Return-Path: <linux-erofs+bounces-1120-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1121-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB426BA6724
-	for <lists+linux-erofs@lfdr.de>; Sun, 28 Sep 2025 05:32:45 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79D4DBA6727
+	for <lists+linux-erofs@lfdr.de>; Sun, 28 Sep 2025 05:40:09 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cZ8yw6YMPz3cQx;
-	Sun, 28 Sep 2025 13:32:40 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cZ97V3b58z3cQx;
+	Sun, 28 Sep 2025 13:40:06 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.57
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759030360;
-	cv=none; b=W28lgNYsSV2IwkT6B5HdvfnVHjigoz8e7eCUL2oYqhgR6t3mgv+wIza/F9Zlhx35aNmADTabUk+GYbj3lwOC0PmwHy/YbPARMsH3Ci8fstEb4gP8k7NjANWxzfv/KqWrHZ2go1NmTiwo1VehAylXljIgxiOJD16PF5B3r8LJdipWhmkTcY0CMdRQYlurdLrnwYAvT6tAb2znUELKrYOVWIzJxjN9HAWOnkH1wZ50o7Q8iZyIay8lZIkND7pn9ziqPeU8/Xqqpu2nT4giHvbnQ3tWlZYN4JWcs215Oq78e3gEgN20nn7eO5oVi7j6ViqEDp6uZAmgAwsafMFD9rJmvw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.86
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759030806;
+	cv=none; b=UM5g7QEzKl5XUDgNofSdA1SuMt8bkyRHnM8FIgNP/hSP+toopbLurwJ3/GES7+P+lO5RCp6GPre0gXLrWV/VSsXkDaW/VR7x1ajRXLMz+8gSeEo+1TjsQbnDm4Mj1u/Hj0sUk4p+EVRbvGjqrpV/JL8eXdCaCU6qDuJg/kctYic+BFpICGuESIJxYInQjaLIEBTfNSiJ24ArjoSF7tTZ4GSfVLCtn1D9EC5y1fBbddNymUT0ltSL3qZh8zhSc1W9ROZmJP37TFcnFQd34nGC0HK5k71f0UXHlzh5HaBAYJc7EB/OOmviYYKHa1GfaQZagX+OtRmOpDdNMUIIYZjJmw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1759030360; c=relaxed/relaxed;
-	bh=KWkNAn76Cvlk+aPSB955YTSIOnn0z3ydLtjn02/MeQE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VOuyM1xCooju81Jy3ymnrz6SPQyiGdqU2UTEFHXdo16m+7YVPa6W9+aocOB5dc7iZ1+OM5w9UItj6RfCMVn385X3ZBU4JPgiZbm/nOE6G9W9C7aV9evBNcln9CmSwC5NbhLZi4iQHl7TRxCLggyygo5db23+/LYOX0UPywM0f5+y8TigxPX0LvROlMYFEfC579cnrkRXxXjhb+jjhLIW4wTQx873w9ye6oIDyV7wn4hEmemobWIywtYUQugsIzqk5EJlDmDnHCgp5thMAELscgOYwDlANe3QtAqAx5C22aauj8cKnWBMEe35nVTi9qeovqTncbfRMdgP8kz0pbrgXw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.57; helo=out28-57.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	t=1759030806; c=relaxed/relaxed;
+	bh=QOAly4+9eO7x6mdSB9kI96Y7dM8yz8eBYBY5hoSvdF0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dVXWn2nlNtCQydgrU/SWCj9ArRXVLMFvo6eVsAi4E/34MUzlJPzaxGM1nQbGZh3fXt50kJhO5ROC7GfnRadOBorsjKD0nBg8gy+Z3CRgKa8UgMpyTPC9xX1KmZnt4NRdsvbEYH8YWxxmCpmWGO5Vfk9VA0CZL4T5Hbmaaa74AtMMOfhJiuZp2uotNqpLikDRIh67FnCCsTynkhCQ6DzCx8hdcIUldXkfuTV13VYlpoRzIo2Jesu7alVXd0sKzZxuVySbVrXO3u4ce+jZ0dA1LtqZrDkzzelLZ3iMw3BxO4YA1jsyvKQwJ3kUfFyqrDMIArFetGebnUYwEJMDFCBAHQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.86; helo=out28-86.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.57; helo=out28-57.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-57.mail.aliyun.com (out28-57.mail.aliyun.com [115.124.28.57])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.86; helo=out28-86.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-86.mail.aliyun.com (out28-86.mail.aliyun.com [115.124.28.86])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cZ8yv3nzlz302l
-	for <linux-erofs@lists.ozlabs.org>; Sun, 28 Sep 2025 13:32:36 +1000 (AEST)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eosayx5_1759030348 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cZ97S6RB2z3bvd
+	for <linux-erofs@lists.ozlabs.org>; Sun, 28 Sep 2025 13:40:04 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.eotkmgg_1759030798 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Sun, 28 Sep 2025 11:32:30 +0800
+          Sun, 28 Sep 2025 11:39:59 +0800
 From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
 	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v1] erofs-utils: add hybrid source support for local metadata and gzran
-Date: Sun, 28 Sep 2025 11:32:27 +0800
-Message-ID: <20250928033227.18870-1-hudson@cyzhu.com>
+Subject: [PATCH v1-changed] erofs-utils: add hybrid source support for local metadata and gzran
+Date: Sun, 28 Sep 2025 11:39:57 +0800
+Message-ID: <20250928033957.23867-1-hudson@cyzhu.com>
 X-Mailer: git-send-email 2.51.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -63,8 +63,8 @@ Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 ---
  lib/liberofs_oci.h |   2 +
  lib/remotes/oci.c  |  20 ---
- mount/main.c       | 370 ++++++++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 364 insertions(+), 28 deletions(-)
+ mount/main.c       | 374 ++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 369 insertions(+), 27 deletions(-)
 
 diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
 index 71c8879..a818003 100644
@@ -118,7 +118,7 @@ index b2f1f59..b25e0b2 100644
  	if (!oci_iostream) {
  		ocierofs_ctx_cleanup(ctx);
 diff --git a/mount/main.c b/mount/main.c
-index eb0dd01..fd5736d 100644
+index eb0dd01..811732a 100644
 --- a/mount/main.c
 +++ b/mount/main.c
 @@ -16,6 +16,7 @@
@@ -463,7 +463,68 @@ index eb0dd01..fd5736d 100644
  	if (source->ocicfg.blob_digest && *source->ocicfg.blob_digest) {
  		ret = fprintf(f, "OCI_NATIVE_BLOB %s %s %s %s\n",
  			      source->ocicfg.image_ref ?: "",
-@@ -679,9 +973,17 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
+@@ -635,6 +929,60 @@ static int erofsmount_reattach_oci(struct erofs_vfile *vf,
+ }
+ #endif
+ 
++static int erofsmount_reattach_gzran_oci(struct erofsmount_nbd_ctx *ctx,
++					 char *source)
++{
++	char *tokens[6] = {0}, *p = source, *space, *oci_source, *meta_path, *zinfo_path;
++	int token_count = 0, err;
++	const char *b64cred;
++	struct erofs_vfile temp_vd;
++	struct ocierofs_config oci_cfg = {};
++
++	while (token_count < 5) {
++		space = strchr(p, ' ');
++		if (!space)
++			break;
++
++		*space = '\0';
++		p = space + 1;
++		tokens[token_count++] = p;
++	}
++
++	if (token_count < 5)
++		return -EINVAL;
++
++	b64cred = (token_count > 2 && tokens[2]) ? tokens[2] : "";
++
++	err = asprintf(&oci_source, "%s %s %s %s",
++		       source, tokens[0], tokens[1], b64cred);
++	if (err < 0)
++		return -ENOMEM;
++
++	err = erofsmount_reattach_oci(&ctx->vd, "OCI_NATIVE_BLOB", oci_source);
++	free(oci_source);
++	if (err)
++		return err;
++
++	temp_vd = ctx->vd;
++	oci_cfg.image_ref = strdup(source);
++	if (!oci_cfg.image_ref) {
++		erofs_io_close(&temp_vd);
++		return -ENOMEM;
++	}
++
++	if (token_count > 3 && tokens[3] && strlen(tokens[3]) > 0)
++		meta_path = tokens[3];
++	if (token_count > 4 && tokens[4] && strlen(tokens[4]) > 0)
++		zinfo_path = tokens[4];
++
++	err = erofs_create_hybrid_source(&ctx->vd, &oci_cfg,
++					meta_path, zinfo_path);
++	free(oci_cfg.image_ref);
++	erofs_io_close(&temp_vd);
++
++	return err;
++}
++
+ static int erofsmount_nbd_fix_backend_linkage(int num, char **recp)
+ {
+ 	char *newrecp;
+@@ -679,9 +1027,17 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
  			exit(EXIT_FAILURE);
  
  		if (source->type == EROFSNBD_SOURCE_OCI) {
@@ -484,74 +545,12 @@ index eb0dd01..fd5736d 100644
  		} else {
  			err = open(source->device_path, O_RDONLY);
  			if (err < 0)
-@@ -729,12 +1031,13 @@ out_fork:
- 
- static int erofsmount_reattach(const char *target)
- {
--	char *identifier, *line, *source, *recp = NULL;
-+	char *identifier, *line, *source, *recp = NULL, *space;
- 	struct erofsmount_nbd_ctx ctx = {};
- 	int nbdnum, err;
- 	struct stat st;
- 	size_t n;
- 	FILE *f;
-+	char *meta_path, *zinfo_path;
- 
- 	err = lstat(target, &st);
- 	if (err < 0)
-@@ -794,6 +1097,57 @@ static int erofsmount_reattach(const char *target)
+@@ -794,6 +1150,10 @@ static int erofsmount_reattach(const char *target)
  			goto err_line;
  		}
  		ctx.vd.fd = err;
 +	} else if (!strcmp(line, "GZRAN_OCI_BLOB")) {
-+		char *tokens[6] = {0};
-+		char *p = source;
-+		int token_count = 0;
-+
-+		while (token_count < 5) {
-+			space = strchr(p, ' ');
-+			if (!space)
-+				break;
-+
-+			*space = '\0';
-+			p = space + 1;
-+			tokens[token_count++] = p;
-+		}
-+
-+		if (token_count < 5) {
-+			err = -EINVAL;
-+			goto err_line;
-+		}
-+
-+		const char *b64cred = (token_count > 2 && tokens[2]) ? tokens[2] : "";
-+		char *oci_source;
-+
-+		err = asprintf(&oci_source, "%s %s %s %s",
-+			       source, tokens[0], tokens[1], b64cred);
-+		if (err < 0) {
-+			err = -ENOMEM;
-+			goto err_line;
-+		}
-+
-+		err = erofsmount_reattach_oci(&ctx.vd, "OCI_NATIVE_BLOB", oci_source);
-+		free(oci_source);
-+		if (err)
-+			goto err_line;
-+
-+		struct erofs_vfile temp_vd = ctx.vd;
-+		struct ocierofs_config oci_cfg = {};
-+
-+		oci_cfg.image_ref = strdup(source);
-+
-+		if (token_count > 3 && tokens[3] && strlen(tokens[3]) > 0)
-+			meta_path = tokens[3];
-+		if (token_count > 4 && tokens[4] && strlen(tokens[4]) > 0)
-+			zinfo_path = tokens[4];
-+
-+		err = erofs_create_hybrid_source(&ctx.vd, &oci_cfg,
-+						meta_path, zinfo_path);
-+		free(oci_cfg.image_ref);
-+		erofs_io_close(&temp_vd);
++		err = erofsmount_reattach_gzran_oci(&ctx, source);
 +		if (err)
 +			goto err_line;
  	} else if (!strcmp(line, "OCI_LAYER") || !strcmp(line, "OCI_NATIVE_BLOB")) {
