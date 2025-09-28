@@ -1,50 +1,44 @@
-Return-Path: <linux-erofs+bounces-1125-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1126-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36BC4BA6909
-	for <lists+linux-erofs@lfdr.de>; Sun, 28 Sep 2025 08:32:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 90EDFBA6A7F
+	for <lists+linux-erofs@lfdr.de>; Sun, 28 Sep 2025 10:02:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cZDym6pZZz2yrW;
-	Sun, 28 Sep 2025 16:32:48 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cZGyG4VS0z3cYr;
+	Sun, 28 Sep 2025 18:02:30 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759041168;
-	cv=none; b=ZbPL4IqaFvauZKKFEHI/z1wRjZiefLlluglhHpvWWUD/JXA5VeIbxWipHVhsjkatFVAU2ZcsY4btYwS2TqoUAjt7D4U6y8tbXKZq0y34H/Hgg3GCavhX74SQzmzYVqtISwViTTyHwu8WTIJ+/3pL3FWZzGN3rR5XlMcygR0Adj9UWlgbKF0b6Ide/EPtrCNu+0YL5H3pqQ+IPfRA0aKTv8g7ltU0maAj/KW1TRf5H/noQxSaUW4d9BMX0WmKBfr8LYNCR/QnpR1g3/v0nGYbKevIC5UoUNKtKnxA9EdiXZm+RF2KVS0v4/neHcraVvdksghMK/89g0JTrus8CQtayg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.56
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759046550;
+	cv=none; b=YHa+fZoXA01AZ1EUO4H+kDNmuiZbWrMCamDte2+lAmSD/88givnS8yOSFRfV7BoMIjG1L80845kf9ZITpW07miYb7302RRtVOp4DY3pxSN9WZVriZHWSJmmkfcuULUsqqS+zQLi5RTos0MH81rU7kD0S/jfTxldOo9hYGhNBan2sil/jRCp1j4rakMYqcoKVsalHgLBmjSc/npEfgTO8oiz9J0eiNgl+sBcGMkc9BFJM4lnYpjjmIOQyxwf43tCUFOFAjCoOk6S4it5X6NkqEqnMg48djSm/pNz0SpZAAneSO/6wbo1wyVtxFAXVyDQCmLsYyO29rQP5PV09hS91xw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1759041168; c=relaxed/relaxed;
-	bh=ByYujNwFl5LlKwMfv5xXnNXFDoqhDYujyK6qeqLIlko=;
+	t=1759046550; c=relaxed/relaxed;
+	bh=ojjPi8PV+UBDoZ09iyu2ciQS0Ugk/rsnOpaISajzRgU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dNXs6ZijjDKsqxjdZgTPevP0rVWXxkfzVmGm0w0fiP23/XuGVxAORUd3d00vkZLaEtl07U19ip4A7HQiaLATzmn0x63A/i9i8NcKR9736kk8Po3olNNDnGBnsWsl/LK6McwqpY5wJUqRKGMp8Yu0TnY9W8NyHt3ZDEHXu7CiUHGn/bahSSAfWEzgnc3fVs5zz8zlACCa9i7JfHxrsZD2C3lMXtNVDrwHQj36JLBKaZj3MNyYPi6hNKwZ+cx3SvzvTC3b+U2pTsl1ICwcfLI9ET78H3laBAU0kn8Vflb/xeouWMQu4lt2juvOJsKtAjHKZ7DD4eJ7B5Ai7piyIarH3g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=i6gA6tWQ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=i6gA6tWQ;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+	 MIME-Version; b=R50w0WNol6Ycm5WdwrcuzQS0+4pqW8YqQI6Chm1uawqSPxrp6KL2PuT2c3uuGc0gTUaNBwRuN96QiDEhxYzYnM/x/nzVoVY27MuUSlX0/pWYwSACvHeYPr/fQ5ckmZ/KFO1dtV/8AlM6fZvli5CXvpmwxxdGp/oFoGngCvJRv5zoS5ZRpAsAmy7KrOSpPXOtdwyFl4e5fFQrCSk3KBWkRugK9uEjpa+m5aTjswyjbvASO+xR7LyS8zbe1ehvR+7TeNtb8Xb4RJ90hkl7V8zoBRK3aIF3BtBVL8t4vqJvemeQhPQWNlpdBJhZAHko0tfy5IGXToNDzHOYwOHliTYsvQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.56; helo=out28-56.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.56; helo=out28-56.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-56.mail.aliyun.com (out28-56.mail.aliyun.com [115.124.28.56])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cZDyk1pf1z3cYN
-	for <linux-erofs@lists.ozlabs.org>; Sun, 28 Sep 2025 16:32:44 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1759041161; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=ByYujNwFl5LlKwMfv5xXnNXFDoqhDYujyK6qeqLIlko=;
-	b=i6gA6tWQV8Db6d0MHQlqFXRjNUdWtzgIUhynn4fddpH3yMz8pSMuJFRuZ2MI56QHKuxGSu/ezE8MF9xazzZIG2eSHqAh0LLxnRDdvkxjYjR3oyICzm3mqQymEJreo/+Q4XZy/f13H48p/B/QFThO4OAvYR8VYqVHeHUBVls6G7U=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Woy6mLW_1759041159 cluster:ay36)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cZGyD6D5mz2yrW
+	for <linux-erofs@lists.ozlabs.org>; Sun, 28 Sep 2025 18:02:26 +1000 (AEST)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.ep2aYzK_1759046538 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Sun, 28 Sep 2025 14:32:39 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+          Sun, 28 Sep 2025 16:02:19 +0800
+From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 3/3] erofs-utils: mkfs: enable incremental builds for local files
-Date: Sun, 28 Sep 2025 14:32:32 +0800
-Message-ID: <20250928063232.2613721-3-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250928063232.2613721-1-hsiangkao@linux.alibaba.com>
-References: <20250928063232.2613721-1-hsiangkao@linux.alibaba.com>
+Cc: xiang@kernel.org,
+	hsiangkao@linux.alibaba.com,
+	Chengyu Zhu <hudsonzhu@tencent.com>
+Subject: [PATCH v2] erofs-utils: add source support for tarindex and gzran
+Date: Sun, 28 Sep 2025 16:02:17 +0800
+Message-ID: <20250928080217.43021-1-hudson@cyzhu.com>
+X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20250928033957.23867-1-hudson@cyzhu.com>
+References: <20250928033957.23867-1-hudson@cyzhu.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -57,260 +51,551 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-EROFS supports incremental-style builds without rewriting the entire
-filesystem metadata, since it does not have classic centralized inode
-tables or SquashFS-style directory tables.
+From: Chengyu Zhu <hudsonzhu@tencent.com>
 
-This commit adds incremental build support for local files:
- $ mkfs.erofs foo.erofs layer0/
- $ mkfs.erofs --incremental=data foo.erofs layer1/
- ...
+Add support for combining tarindex files with remote OCI blobs
+through a new source mechanism. This enables local metadata
+storage while keeping blob data in remote registries.
 
-OverlayFS whiteouts are supported for replacing specific directory
-entries. Additionally, these extra whiteouts can be dropped from the
-final image using `--ovlfs-strip`
+e.g.:
+mount.erofs -t erofs.nbd -o \
+'oci.blob=13b7e9...,oci.platform=linux/amd64,\
+oci.tarindex=ubuntu.erofs,oci.zinfo=ubuntu.zinfo' \
+ubuntu:20.04 /mnt
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 ---
- lib/inode.c            | 54 +++++++++++++++++++++++++++---------------
- lib/liberofs_rebuild.h |  4 ++--
- lib/rebuild.c          | 26 +++++++++++++-------
- mkfs/main.c            |  1 -
- 4 files changed, 54 insertions(+), 31 deletions(-)
+ lib/liberofs_oci.h |   2 +
+ lib/remotes/oci.c  |  20 ---
+ mount/main.c       | 397 ++++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 392 insertions(+), 27 deletions(-)
 
-diff --git a/lib/inode.c b/lib/inode.c
-index 810ffc2..74c9645 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -1294,6 +1294,7 @@ struct erofs_inode *erofs_new_inode(struct erofs_sb_info *sbi)
- static struct erofs_inode *erofs_iget_from_local(struct erofs_importer *im,
- 						 const char *path)
- {
-+	const struct erofs_importer_params *params = im->params;
- 	struct erofs_sb_info *sbi = im->sbi;
- 	struct erofs_inode *inode;
- 	struct stat st;
-@@ -1308,7 +1309,7 @@ static struct erofs_inode *erofs_iget_from_local(struct erofs_importer *im,
- 	 * hard-link, just return it. Also don't lookup for directories
- 	 * since hard-link directory isn't allowed.
- 	 */
--	if (!S_ISDIR(st.st_mode) && !im->params->hard_dereference) {
-+	if (!S_ISDIR(st.st_mode) && !params->hard_dereference) {
- 		inode = erofs_iget(st.st_dev, st.st_ino);
- 		if (inode)
- 			return inode;
-@@ -1669,6 +1670,8 @@ static int erofs_mkfs_import_localdir(struct erofs_importer *im, struct erofs_in
- 			ret = PTR_ERR(inode);
- 			goto err_closedir;
- 		}
-+		if (!dir->whiteouts && erofs_inode_is_whiteout(inode))
-+			dir->whiteouts = true;
- 		d->inode = inode;
- 		d->type = erofs_mode_to_ftype(inode->i_mode);
- 		__nlink += S_ISDIR(inode->i_mode);
-@@ -1712,16 +1715,15 @@ static void erofs_dentry_kill(struct erofs_dentry *d)
- 	free(d);
- }
- 
--static int erofs_mkfs_handle_directory(struct erofs_importer *im,
--				       struct erofs_inode *dir,
--				       bool rebuild,
--				       bool incremental)
-+static int erofs_prepare_dir_inode(struct erofs_importer *im,
-+				   struct erofs_inode *dir,
-+				   bool rebuild,
-+				   bool incremental)
- {
- 	struct erofs_sb_info *sbi = im->sbi;
- 	struct erofs_dentry *d, *n;
- 	unsigned int i_nlink;
- 	u64 nr_subdirs;
--	bool delwht = im->params->ovlfs_strip && dir->whiteouts;
- 	int ret;
- 
- 	nr_subdirs = 0;
-@@ -1733,11 +1735,6 @@ static int erofs_mkfs_handle_directory(struct erofs_importer *im,
- 			erofs_dentry_kill(d);
- 			continue;
- 		}
--		if (delwht && erofs_dentry_is_wht(sbi, d)) {
--			erofs_dbg("remove whiteout %s", d->inode->i_srcpath);
--			erofs_dentry_kill(d);
--			continue;
--		}
- 		i_nlink += (d->type == EROFS_FT_DIR);
- 		++nr_subdirs;
- 	}
-@@ -1749,6 +1746,22 @@ static int erofs_mkfs_handle_directory(struct erofs_importer *im,
- 			return ret;
- 	}
- 
-+	if (incremental && dir->dev == sbi->dev && !dir->opaque) {
-+		ret = erofs_rebuild_load_basedir(dir, &nr_subdirs, &i_nlink);
-+		if (ret)
-+			return ret;
-+	}
-+	if (im->params->ovlfs_strip && dir->whiteouts) {
-+		list_for_each_entry_safe(d, n, &dir->i_subdirs, d_child) {
-+			if (erofs_dentry_is_wht(sbi, d)) {
-+				erofs_dbg("remove whiteout %s",
-+					  d->inode->i_srcpath);
-+				erofs_dentry_kill(d);
-+				--nr_subdirs;
-+				continue;
-+			}
-+		}
-+	}
- 	DBG_BUGON(nr_subdirs + 2 < i_nlink);
- 	ret = erofs_prepare_dir_file(im, dir, nr_subdirs);
- 	if (ret)
-@@ -1769,8 +1782,7 @@ static int erofs_mkfs_handle_directory(struct erofs_importer *im,
- 		else
- 			dir->i_nlink = 1;
- 	}
--
--	return erofs_mkfs_go(im, EROFS_MKFS_JOB_DIR, &dir, sizeof(dir));
-+	return 0;
- }
- 
- static int erofs_mkfs_begin_nondirectory(struct erofs_importer *im,
-@@ -1830,10 +1842,9 @@ static int erofs_mkfs_handle_inode(struct erofs_importer *im,
- 		inode->inode_isize = sizeof(struct erofs_inode_compact);
- 	}
- 
--	if (incremental && S_ISDIR(inode->i_mode) &&
--	    inode->dev == inode->sbi->dev && !inode->opaque) {
--		ret = erofs_rebuild_load_basedir(inode);
--		if (ret)
-+	if (S_ISDIR(inode->i_mode)) {
-+		ret = erofs_prepare_dir_inode(im, inode, rebuild, incremental);
-+		if (ret < 0)
- 			return ret;
- 	}
- 
-@@ -1856,8 +1867,8 @@ static int erofs_mkfs_handle_inode(struct erofs_importer *im,
- 	if (!S_ISDIR(inode->i_mode)) {
- 		ret = erofs_mkfs_begin_nondirectory(im, inode);
- 	} else {
--		ret = erofs_mkfs_handle_directory(im, inode,
--						  rebuild, incremental);
-+		ret = erofs_mkfs_go(im, EROFS_MKFS_JOB_DIR, &inode,
-+				    sizeof(inode));
- 	}
- 	erofs_info("file %s dumped (mode %05o)", *relpath ? relpath : "/",
- 		   inode->i_mode);
-@@ -2071,6 +2082,11 @@ fail:
- int erofs_importer_load_tree(struct erofs_importer *im, bool rebuild,
- 			     bool incremental)
- {
-+	if (__erofs_unlikely(incremental && erofs_sb_has_metabox(im->sbi))) {
-+		erofs_err("Metadata-compressed filesystems don't support incremental builds for now");
-+		return -EOPNOTSUPP;
-+	}
-+
- 	return erofs_mkfs_build_tree(&((struct erofs_mkfs_buildtree_ctx) {
- 		.im = im,
- 		.rebuild = rebuild,
-diff --git a/lib/liberofs_rebuild.h b/lib/liberofs_rebuild.h
-index 1eb79cf..69802fb 100644
---- a/lib/liberofs_rebuild.h
-+++ b/lib/liberofs_rebuild.h
-@@ -16,6 +16,6 @@ struct erofs_dentry *erofs_rebuild_get_dentry(struct erofs_inode *pwd,
- int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
- 			    enum erofs_rebuild_datamode mode);
- 
--int erofs_rebuild_load_basedir(struct erofs_inode *dir);
--
-+int erofs_rebuild_load_basedir(struct erofs_inode *dir, u64 *nr_subdirs,
-+			       unsigned int *i_nlink);
- #endif
-diff --git a/lib/rebuild.c b/lib/rebuild.c
-index 83e30fd..c5b44d5 100644
---- a/lib/rebuild.c
-+++ b/lib/rebuild.c
-@@ -274,15 +274,18 @@ static int erofs_rebuild_update_inode(struct erofs_sb_info *dst_sb,
- 	return err;
- }
- 
--/*
-- * @mergedir: parent directory in the merged tree
-- * @ctx.dir:  parent directory when itering erofs_iterate_dir()
-- * @datamode: indicate how to import inode data
-- */
- struct erofs_rebuild_dir_context {
-+	/* @ctx.dir:  parent directory when itering erofs_iterate_dir() */
- 	struct erofs_dir_context ctx;
--	struct erofs_inode *mergedir;
--	enum erofs_rebuild_datamode datamode;
-+	struct erofs_inode *mergedir;	/* parent directory in the merged tree */
-+	union {
-+		/* indicate how to import inode data */
-+		enum erofs_rebuild_datamode datamode;
-+		struct {
-+			u64 *nr_subdirs;
-+			unsigned int *i_nlink;
-+		};
-+	};
+diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
+index 71c8879..5298f18 100644
+--- a/lib/liberofs_oci.h
++++ b/lib/liberofs_oci.h
+@@ -35,6 +35,8 @@ struct ocierofs_config {
+ 	char *password;
+ 	char *blob_digest;
+ 	int layer_index;
++	char *tarindex_path;
++	char *zinfo_path;
  };
  
- static int erofs_rebuild_dirent_iter(struct erofs_dir_context *ctx)
-@@ -458,8 +461,8 @@ int erofs_rebuild_load_tree(struct erofs_inode *root, struct erofs_sb_info *sbi,
- static int erofs_rebuild_basedir_dirent_iter(struct erofs_dir_context *ctx)
- {
- 	struct erofs_rebuild_dir_context *rctx = (void *)ctx;
--	struct erofs_inode *dir = ctx->dir;
- 	struct erofs_inode *mergedir = rctx->mergedir;
-+	struct erofs_inode *dir = ctx->dir;
- 	struct erofs_dentry *d;
- 	char *dname;
- 	bool dumb;
-@@ -484,6 +487,8 @@ static int erofs_rebuild_basedir_dirent_iter(struct erofs_dir_context *ctx)
- 		d->validnid = true;
- 		if (!mergedir->whiteouts && erofs_dentry_is_wht(dir->sbi, d))
- 			mergedir->whiteouts = true;
-+		*rctx->i_nlink += (ctx->de_ftype == EROFS_FT_DIR);
-+		++*rctx->nr_subdirs;
- 	} else if (__erofs_unlikely(d->validnid)) {
- 		/* The base image appears to be corrupted */
- 		DBG_BUGON(1);
-@@ -508,7 +513,8 @@ out:
- 	return ret;
+ struct ocierofs_layer_info {
+diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
+index b2f1f59..b25e0b2 100644
+--- a/lib/remotes/oci.c
++++ b/lib/remotes/oci.c
+@@ -1461,19 +1461,6 @@ static void ocierofs_io_close(struct erofs_vfile *vfile)
+ 	*(struct ocierofs_iostream **)vfile->payload = NULL;
  }
  
--int erofs_rebuild_load_basedir(struct erofs_inode *dir)
-+int erofs_rebuild_load_basedir(struct erofs_inode *dir, u64 *nr_subdirs,
-+			       unsigned int *i_nlink)
- {
- 	struct erofs_inode fakeinode = {
- 		.sbi = dir->sbi,
-@@ -540,6 +546,8 @@ int erofs_rebuild_load_basedir(struct erofs_inode *dir)
- 		.ctx.dir = &fakeinode,
- 		.ctx.cb = erofs_rebuild_basedir_dirent_iter,
- 		.mergedir = dir,
-+		.nr_subdirs = nr_subdirs,
-+		.i_nlink = i_nlink,
- 	};
- 	return erofs_iterate_dir(&ctx.ctx, false);
+-static int ocierofs_is_erofs_native_image(struct ocierofs_ctx *ctx)
+-{
+-	if (ctx->layer_count > 0 && ctx->layers[0] &&
+-	    ctx->layers[0]->media_type) {
+-		const char *media_type = ctx->layers[0]->media_type;
+-		size_t len = strlen(media_type);
+-
+-		if (len >= 6 && strcmp(media_type + len - 6, ".erofs") == 0)
+-			return 0;
+-	}
+-	return -ENOENT;
+-}
+-
+ static struct erofs_vfops ocierofs_io_vfops = {
+ 	.pread = ocierofs_io_pread,
+ 	.read = ocierofs_io_read,
+@@ -1497,13 +1484,6 @@ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cf
+ 		return err;
+ 	}
+ 
+-	err = ocierofs_is_erofs_native_image(ctx);
+-	if (err) {
+-		ocierofs_ctx_cleanup(ctx);
+-		free(ctx);
+-		return err;
+-	}
+-
+ 	oci_iostream = calloc(1, sizeof(*oci_iostream));
+ 	if (!oci_iostream) {
+ 		ocierofs_ctx_cleanup(ctx);
+diff --git a/mount/main.c b/mount/main.c
+index eb0dd01..619bf13 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -16,6 +16,8 @@
+ #include "erofs/io.h"
+ #include "../lib/liberofs_nbd.h"
+ #include "../lib/liberofs_oci.h"
++#include "../lib/liberofs_gzran.h"
++
+ #ifdef HAVE_LINUX_LOOP_H
+ #include <linux/loop.h>
+ #else
+@@ -35,6 +37,9 @@ struct loop_info {
+ #include <sys/sysmacros.h>
+ #endif
+ 
++/* Device boundary probe */
++#define EROFS_IS_DEVICE_PROBE(off) ((off) >= (INT64_MAX >> 9))
++
+ enum erofs_backend_drv {
+ 	EROFSAUTO,
+ 	EROFSLOCAL,
+@@ -141,7 +146,25 @@ static int erofsmount_parse_oci_option(const char *option)
+ 						if (!oci_cfg->password)
+ 							return -ENOMEM;
+ 					} else {
+-						return -EINVAL;
++						p = strstr(option, "oci.tarindex=");
++						if (p != NULL) {
++							p += strlen("oci.tarindex=");
++							free(oci_cfg->tarindex_path);
++							oci_cfg->tarindex_path = strdup(p);
++							if (!oci_cfg->tarindex_path)
++								return -ENOMEM;
++						} else {
++							p = strstr(option, "oci.zinfo=");
++							if (p != NULL) {
++								p += strlen("oci.zinfo=");
++								free(oci_cfg->zinfo_path);
++								oci_cfg->zinfo_path = strdup(p);
++								if (!oci_cfg->zinfo_path)
++									return -ENOMEM;
++							} else {
++								return -EINVAL;
++							}
++						}
+ 					}
+ 				}
+ 			}
+@@ -332,11 +355,284 @@ static int erofsmount_fuse(const char *source, const char *mountpoint,
+ 	return 0;
  }
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 7a538bd..f3cf24e 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -1835,7 +1835,6 @@ int main(int argc, char **argv)
- 			err = PTR_ERR(root);
- 			goto exit;
- 		}
--		incremental_mode = false;
+ 
++struct erofsmount_tarindex_source {
++	struct erofs_vfile *tarindex_vf;
++	struct erofs_vfile *zinfo_vf;
++	u64 tarindex_size;
++};
++
+ struct erofsmount_nbd_ctx {
+ 	struct erofs_vfile vd;		/* virtual device */
+ 	struct erofs_vfile sk;		/* socket file */
+ };
+ 
++static ssize_t erofs_tarindex_pread(struct erofs_vfile *vf, void *buf,
++				  size_t count, u64 offset)
++{
++	struct erofsmount_tarindex_source *hs;
++	ssize_t local_read, remote_read;
++	u64 local_part, remote_part, remote_offset;
++
++	hs = *(struct erofsmount_tarindex_source **)vf->payload;
++	if (!hs)
++		return -EINVAL;
++
++	/* Handle device boundary probe requests */
++	if (EROFS_IS_DEVICE_PROBE(offset))
++		return 0;
++
++	if (offset >= hs->tarindex_size) {
++		remote_offset = offset - hs->tarindex_size;
++
++		return hs->zinfo_vf->ops->pread(hs->zinfo_vf, buf, count, remote_offset);
++	}
++
++	if (offset + count <= hs->tarindex_size)
++		return erofs_io_pread(hs->tarindex_vf, buf, count, offset);
++
++	local_part = hs->tarindex_size - offset;
++	remote_part = count - local_part;
++
++	local_read = erofs_io_pread(hs->tarindex_vf, buf, local_part, offset);
++	if (local_read < 0)
++		return local_read;
++
++	remote_read = hs->zinfo_vf->ops->pread(hs->zinfo_vf,
++					      (char *)buf + local_read,
++					      remote_part, 0);
++	if (remote_read < 0)
++		return remote_read;
++	return local_read + remote_read;
++}
++
++static void erofs_tarindex_close(struct erofs_vfile *vf)
++{
++	struct erofsmount_tarindex_source *hs;
++
++	if (!vf)
++		return;
++
++	hs = *(struct erofsmount_tarindex_source **)vf->payload;
++	if (!hs)
++		return;
++
++	if (hs->tarindex_size > 0) {
++		erofs_io_close(hs->tarindex_vf);
++		free(hs->tarindex_vf);
++	}
++
++	if (hs->zinfo_vf)
++		erofs_io_close(hs->zinfo_vf);
++
++	free(hs);
++}
++
++static int load_file_to_buf(const char *path, void **out, unsigned int *out_len)
++{
++	FILE *fp = NULL;
++	void *buf = NULL;
++	int ret = 0;
++	long sz;
++	size_t num;
++
++	fp = fopen(path, "rb");
++	if (!fp)
++		return -errno;
++
++	if (fseek(fp, 0, SEEK_END) != 0) {
++		ret = -errno;
++		goto out;
++	}
++	sz = ftell(fp);
++	if (sz < 0) {
++		ret = -errno;
++		goto out;
++	}
++	if (fseek(fp, 0, SEEK_SET) != 0) {
++		ret = -errno;
++		goto out;
++	}
++	if (sz == 0) {
++		ret = -EINVAL;
++		goto out;
++	}
++
++	buf = malloc((size_t)sz);
++	if (!buf) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	num = fread(buf, 1, (size_t)sz, fp);
++	if (num != (size_t)sz) {
++		ret = -EIO;
++		goto out;
++	}
++
++	*out = buf;
++	*out_len = (unsigned int)sz;
++	buf = NULL;
++
++out:
++	if (fp)
++		fclose(fp);
++	if (ret < 0 && buf)
++		free(buf);
++	return ret;
++}
++
++static int erofsmount_init_gzran(struct erofs_vfile **zinfo_vf,
++				  const struct ocierofs_config *oci_cfg,
++				  const char *zinfo_path)
++{
++	int err = 0;
++	void *zinfo_data = NULL;
++	unsigned int zinfo_len = 0;
++	struct erofs_vfile *oci_vf = NULL;
++
++	oci_vf = malloc(sizeof(*oci_vf));
++	if (!oci_vf) {
++		err = -ENOMEM;
++		goto cleanup;
++	}
++
++	err = ocierofs_io_open(oci_vf, oci_cfg);
++	if (err) {
++		free(oci_vf);
++		goto cleanup;
++	}
++
++	/* If no zinfo_path, return oci_vf directly for tar format */
++	if (!zinfo_path) {
++		*zinfo_vf = oci_vf;
++		return 0;
++	}
++
++	err = load_file_to_buf(zinfo_path, &zinfo_data, &zinfo_len);
++	if (err) {
++		erofs_io_close(oci_vf);
++		free(oci_vf);
++		return err;
++	}
++
++	*zinfo_vf = erofs_gzran_zinfo_open(oci_vf, zinfo_data, zinfo_len);
++	if (IS_ERR(*zinfo_vf)) {
++		err = PTR_ERR(*zinfo_vf);
++		*zinfo_vf = NULL;
++		erofs_io_close(oci_vf);
++		free(oci_vf);
++		goto cleanup;
++	}
++
++	free(zinfo_data);
++	return 0;
++
++cleanup:
++	if (zinfo_data)
++		free(zinfo_data);
++	return err;
++}
++
++static ssize_t erofs_tarindex_sendfile(struct erofs_vfile *vout, struct erofs_vfile *vin,
++				      off_t *pos, size_t count)
++{
++	static char buf[32768];
++	ssize_t total_written = 0, ret = 0, written;
++	size_t to_read;
++	u64 read_offset;
++
++	while (count > 0) {
++		to_read = min_t(size_t, count, sizeof(buf));
++		read_offset = pos ? *pos : 0;
++
++		ret = erofs_tarindex_pread(vin, buf, to_read, read_offset);
++		if (ret <= 0) {
++			if (ret < 0 && total_written == 0)
++				return ret;
++			break;
++		}
++
++		written = __erofs_io_write(vout->fd, buf, ret);
++		if (written < 0) {
++			ret = -errno;
++			break;
++		}
++		if (written != ret)
++			ret = written;
++
++		total_written += ret;
++		count -= ret;
++		if (pos)
++			*pos += ret;
++	}
++	return count;
++}
++
++static struct erofs_vfops tarindex_vfile_ops = {
++	.pread = erofs_tarindex_pread,
++	.sendfile = erofs_tarindex_sendfile,
++	.close = erofs_tarindex_close,
++};
++
++/*
++ * Create tarindex source for gzran+oci hybrid mode with three scenarios:
++ * 1. tarindex + zinfo: Remote data is tar.gzip format
++ * 2. tarindex only: Remote data is tar format
++ */
++static int erofs_create_tarindex_source(struct erofs_vfile *out_vf,
++				      const struct ocierofs_config *oci_cfg,
++				      const char *tarindex_path,
++				      const char *zinfo_path)
++{
++	struct erofsmount_tarindex_source *hs;
++	int err;
++	struct stat st;
++
++	hs = calloc(1, sizeof(*hs));
++	if (!hs)
++		return -ENOMEM;
++
++	if (tarindex_path) {
++		hs->tarindex_vf = malloc(sizeof(*hs->tarindex_vf));
++		if (!hs->tarindex_vf) {
++			err = -ENOMEM;
++			goto cleanup;
++		}
++
++		hs->tarindex_vf->fd = open(tarindex_path, O_RDONLY);
++		if (hs->tarindex_vf->fd < 0) {
++			err = -errno;
++			goto cleanup;
++		}
++
++		hs->tarindex_vf->ops = NULL;
++		hs->tarindex_vf->offset = 0;
++
++		if (fstat(hs->tarindex_vf->fd, &st) < 0) {
++			err = -errno;
++			goto cleanup;
++		}
++		hs->tarindex_size = st.st_size;
++	}
++
++	err = erofsmount_init_gzran(&hs->zinfo_vf, oci_cfg, zinfo_path);
++	if (err)
++		goto cleanup;
++
++	out_vf->ops = &tarindex_vfile_ops;
++	out_vf->fd = 0;
++	out_vf->offset = 0;
++	*(struct erofsmount_tarindex_source **)out_vf->payload = hs;
++
++	return 0;
++cleanup:
++	if (tarindex_path && hs->tarindex_vf && hs->tarindex_vf->fd >= 0)
++		close(hs->tarindex_vf->fd);
++	free(hs->tarindex_vf);
++	free(hs);
++	return err;
++}
++
+ static void *erofsmount_nbd_loopfn(void *arg)
+ {
+ 	struct erofsmount_nbd_ctx *ctx = arg;
+@@ -388,9 +684,17 @@ static int erofsmount_startnbd(int nbdfd, struct erofs_nbd_source *source)
+ 	int err, err2;
+ 
+ 	if (source->type == EROFSNBD_SOURCE_OCI) {
+-		err = ocierofs_io_open(&ctx.vd, &source->ocicfg);
+-		if (err)
+-			goto out_closefd;
++		if (source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) {
++			err = erofs_create_tarindex_source(&ctx.vd, &source->ocicfg,
++							source->ocicfg.tarindex_path,
++							source->ocicfg.zinfo_path);
++			if (err)
++				goto out_closefd;
++		} else {
++			err = ocierofs_io_open(&ctx.vd, &source->ocicfg);
++			if (err)
++				goto out_closefd;
++		}
  	} else {
- 		root = erofs_rebuild_make_root(&g_sbi);
- 		if (IS_ERR(root)) {
+ 		err = open(source->device_path, O_RDONLY);
+ 		if (err < 0) {
+@@ -440,6 +744,19 @@ static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *sourc
+ 			return PTR_ERR(b64cred);
+ 	}
+ 
++	if ((source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) &&
++	    source->ocicfg.blob_digest && *source->ocicfg.blob_digest) {
++		ret = fprintf(f, "TARINDEX_OCI_BLOB %s %s %s %s %s %s\n",
++			      source->ocicfg.image_ref ?: "",
++			      source->ocicfg.platform ?: "",
++			      source->ocicfg.blob_digest,
++			      b64cred ?: "",
++			      source->ocicfg.tarindex_path ?: "",
++			      source->ocicfg.zinfo_path ?: "");
++		free(b64cred);
++		return ret < 0 ? -ENOMEM : 0;
++	}
++
+ 	if (source->ocicfg.blob_digest && *source->ocicfg.blob_digest) {
+ 		ret = fprintf(f, "OCI_NATIVE_BLOB %s %s %s %s\n",
+ 			      source->ocicfg.image_ref ?: "",
+@@ -635,6 +952,60 @@ static int erofsmount_reattach_oci(struct erofs_vfile *vf,
+ }
+ #endif
+ 
++static int erofsmount_reattach_gzran_oci(struct erofsmount_nbd_ctx *ctx,
++					 char *source)
++{
++	char *tokens[6] = {0}, *p = source, *space, *oci_source, *meta_path, *zinfo_path;
++	int token_count = 0, err;
++	const char *b64cred;
++	struct erofs_vfile temp_vd;
++	struct ocierofs_config oci_cfg = {};
++
++	while (token_count < 5) {
++		space = strchr(p, ' ');
++		if (!space)
++			break;
++
++		*space = '\0';
++		p = space + 1;
++		tokens[token_count++] = p;
++	}
++
++	if (token_count < 5)
++		return -EINVAL;
++
++	b64cred = (token_count > 2 && tokens[2]) ? tokens[2] : "";
++
++	err = asprintf(&oci_source, "%s %s %s %s",
++		       source, tokens[0], tokens[1], b64cred);
++	if (err < 0)
++		return -ENOMEM;
++
++	err = erofsmount_reattach_oci(&ctx->vd, "OCI_NATIVE_BLOB", oci_source);
++	free(oci_source);
++	if (err)
++		return err;
++
++	temp_vd = ctx->vd;
++	oci_cfg.image_ref = strdup(source);
++	if (!oci_cfg.image_ref) {
++		erofs_io_close(&temp_vd);
++		return -ENOMEM;
++	}
++
++	if (token_count > 3 && tokens[3] && strlen(tokens[3]) > 0)
++		meta_path = tokens[3];
++	if (token_count > 4 && tokens[4] && strlen(tokens[4]) > 0)
++		zinfo_path = tokens[4];
++
++	err = erofs_create_tarindex_source(&ctx->vd, &oci_cfg,
++					meta_path, zinfo_path);
++	free(oci_cfg.image_ref);
++	erofs_io_close(&temp_vd);
++
++	return err;
++}
++
+ static int erofsmount_nbd_fix_backend_linkage(int num, char **recp)
+ {
+ 	char *newrecp;
+@@ -679,9 +1050,17 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
+ 			exit(EXIT_FAILURE);
+ 
+ 		if (source->type == EROFSNBD_SOURCE_OCI) {
+-			err = ocierofs_io_open(&ctx.vd, &source->ocicfg);
+-			if (err)
+-				exit(EXIT_FAILURE);
++			if (source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) {
++				err = erofs_create_tarindex_source(&ctx.vd, &source->ocicfg,
++								source->ocicfg.tarindex_path,
++								source->ocicfg.zinfo_path);
++				if (err)
++					exit(EXIT_FAILURE);
++			} else {
++				err = ocierofs_io_open(&ctx.vd, &source->ocicfg);
++				if (err)
++					exit(EXIT_FAILURE);
++			}
+ 		} else {
+ 			err = open(source->device_path, O_RDONLY);
+ 			if (err < 0)
+@@ -794,6 +1173,10 @@ static int erofsmount_reattach(const char *target)
+ 			goto err_line;
+ 		}
+ 		ctx.vd.fd = err;
++	} else if (!strcmp(line, "TARINDEX_OCI_BLOB")) {
++		err = erofsmount_reattach_gzran_oci(&ctx, source);
++		if (err)
++			goto err_line;
+ 	} else if (!strcmp(line, "OCI_LAYER") || !strcmp(line, "OCI_NATIVE_BLOB")) {
+ 		err = erofsmount_reattach_oci(&ctx.vd, line, source);
+ 		if (err)
 -- 
-2.43.5
+2.51.0
 
 
