@@ -1,43 +1,78 @@
-Return-Path: <linux-erofs+bounces-1131-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1132-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB2FABA7C35
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Sep 2025 03:39:32 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C726CBA95BA
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Sep 2025 15:32:46 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cZkPs5LpHz300F;
-	Mon, 29 Sep 2025 11:39:29 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cb2Dq0HzSz304x;
+	Mon, 29 Sep 2025 23:32:43 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.97
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759109969;
-	cv=none; b=b1pCtdYn+g/baTOTZ10T+BID8BI5oTn9Po7tImVsSeZoRKpR6plDefUhoCrXVBBZxbr/S7pm2F3rfRUUR5qu4tVv+fly9MPczSuRLBqPenhv3AEHANYCnZdX1Wv3cXK6eqUWXYPJrmipRe4v+dveyrOwLZiNcheN1RE/HRwHDrYD7Wij2XZgZLqDNv6Dy8+qVR3olnr7cnftgqjOZk/2lrznPpGA4TPyQuB7fTebWWHNSZe/Hl9I4E7U7wum2j73XQP02CTgEkiw1gdrmJIFIwk0BFNnnfEqKSPLOgY2+ES3u7TJ7Ujjk+SpJz5WtJK1Nwds5kUD2s8OF59WHRQicg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a00:1450:4864:20::141"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759152762;
+	cv=none; b=mwv4jHtGUEwlDsPlVEDRK+KJicdriY9V6JuxG93jfud7TzkXEisUXi2GikSR3x71vBhb2hUjQqcTa4DeNYAnUnImuit4UBCV9hzjtEudVmxf52pdSEzpiwatSj+BxxFNIqhxBu8ZBZy2YOalUiSup77xpUGBKuL1Nts+SW6UIUPeKUvaD/c61f0EVHNllN9QxQPViXUeqO0R2m2VjDNvjX+u8Ptn9z1drhmpRkBrCAwwPqZSRbNoNHRdYXMG0x6V6R4PKnIEax0QStibyInEKTH1+NCJGL6nC/2sXN06Gm9FARIUtkjoL1Ia6zdvzfUTduN+NHoPPBFCFtFFk/0mlA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1759109969; c=relaxed/relaxed;
-	bh=zpT3mVHW65YreI0nAwmRx9QW4vxSXT2mntKY1fqxq4Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fKFLBeeL++vdw94P338rBarI5Nr9PKwULH7Hu9r/HCLlNH2poaDlRMwMROiCF4SCf+t/8xWwBF/NZZY7e5NzhZ5a/mPaTc5/hN/ZvVPkUkO7lI/TQkyPFVt6LRSbXpO7yN4nyfBpddIZZ/llX2UbX9+ye0s6jQ7Qz1k6bCvpHNb9WyRSYY2pKK/g+aFB/LR7aT5/7NkrIc40D0D75eTfzsj3KJVHqwZ+U+JL6JU8BpHyCQq/GbgkrseNqZMQ67xG9QCOVVF3Ya9Fxn6mUvgtawBhyYnX4G1AuRD1TB/ydrVqbWSjBNK03NByKDSxBP2ktJbdmQi6p3iQW19RPAqopQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=U43x+eNu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1759152762; c=relaxed/relaxed;
+	bh=KGJjhOIsEilWBIsauSMMh3DuNE8KwjiCUcHodhYlLVM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fjIyxcDW+ww874T8QOPFYANUX34MSIE7U/olPF5xFrAqFuQeyeSxgMdid6anPQcQ1nViWtde++GzdDrKjoUYhJQcG13XUaN3bndoGJvdAM3s/WQl7LS3PAlDwCzNMuT4vTz0FpDvh0Wx7/k2ae7NlV1MG+1Ev49O9DuB4/xrmxkqRlM/VAo1KKomCjJbr8LSXLNwbrHlGttlki4KxNE1c4f6ONF7bvxutg+GOSCowg5SC5nLd/55ovOBPJOfawisVdGVunLBhrds1MDhkM9Wjj7vKmdDAg1AXlWZb5/hQ9zfZrxO3nM2D2TIYw1EnboPPaQ+QvXEMCqkLX1bsewN5w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=flant.com; dkim=pass (1024-bit key; unprotected) header.d=flant.com header.i=@flant.com header.a=rsa-sha256 header.s=google header.b=cvVw0Nsw; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::141; helo=mail-lf1-x141.google.com; envelope-from=ivan.mikheykin@flant.com; receiver=lists.ozlabs.org) smtp.mailfrom=flant.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=flant.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=U43x+eNu;
+	dkim=pass (1024-bit key; unprotected) header.d=flant.com header.i=@flant.com header.a=rsa-sha256 header.s=google header.b=cvVw0Nsw;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.97; helo=out30-97.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flant.com (client-ip=2a00:1450:4864:20::141; helo=mail-lf1-x141.google.com; envelope-from=ivan.mikheykin@flant.com; receiver=lists.ozlabs.org)
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cZkPq4BJyz2yrW
-	for <linux-erofs@lists.ozlabs.org>; Mon, 29 Sep 2025 11:39:26 +1000 (AEST)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1759109961; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=zpT3mVHW65YreI0nAwmRx9QW4vxSXT2mntKY1fqxq4Y=;
-	b=U43x+eNu5aXToPWNOmKBN/kLERnthZeUoyd4rYs1AqjtnukZcCYg4Oic56Jp/qkK3kpSMjc/8cERkEPWzFH8ChvRFyJeETQpEvqTT0upKA+RALIZFhXMSppOs/cvV8klvM93ZrcwWvGkHNYczRp4d64sflE34/ZX5WZmDdDboS0=
-Received: from 30.221.130.7(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WozqW0M_1759109959 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 29 Sep 2025 09:39:19 +0800
-Message-ID: <9b2716ae-c5c7-4a81-9313-91d1f2998b87@linux.alibaba.com>
-Date: Mon, 29 Sep 2025 09:39:18 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cb2Dl1qJhz2xgp
+	for <linux-erofs@lists.ozlabs.org>; Mon, 29 Sep 2025 23:32:34 +1000 (AEST)
+Received: by mail-lf1-x141.google.com with SMTP id 2adb3069b0e04-57a604fecb4so5622254e87.1
+        for <linux-erofs@lists.ozlabs.org>; Mon, 29 Sep 2025 06:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flant.com; s=google; t=1759152748; x=1759757548; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KGJjhOIsEilWBIsauSMMh3DuNE8KwjiCUcHodhYlLVM=;
+        b=cvVw0Nswp/sOPReNwsqXWWhDC3IxTjHoICb4TSpYywf57bYMkhrXGuGIwOEXw1ubWH
+         M39bOLZ1fLqQwx2TNrngaKKGGZxgGhbzkSNM5DiNo3QPfj0vA++fz9l+p+9+IS3+ORAr
+         7sbDgXTt4CKgyIayWL2qoz1qiFFAJmIUmu26c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1759152748; x=1759757548;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KGJjhOIsEilWBIsauSMMh3DuNE8KwjiCUcHodhYlLVM=;
+        b=ifPM8AsaBcMjTCc+WmHfQsmADA22w6YESHzfcDrgrXoV3+xf4eon3XioDyNgPmAV2t
+         v169ec5wYK/0w47an7dSXGnG4g+rbA48X+Q3F5TMD9wpREhQytnyq4sqEEnlvMBDe0Ek
+         XSsNvbExhAHiBhDpDAQwC4xB5g/RDITI6LqZO7Wo3udI93ip2tn/tYnAEblKAQDHeGd/
+         cSqCSF3VEfU/CAcIsQkjtmRHJs0fXjdgUu0tOIfv+/66/LUPlN6/en5OBuFfQ65flUGR
+         DTBlXXX9TRIyfiLhj2t0+3JhqEh6UGzl487soFzRYpIHXGqaTGQjhs+4qSLgr5DXuEBk
+         drrA==
+X-Gm-Message-State: AOJu0YxfAeesK3a2X7vJ69ijYSWPPjPqRqx/GZaSysTR1RWaDT7N5XTU
+	cVInfzmVNI7jvXei+l3qzL8KmWLFEzX/7Tuzv+h/YlN8flcqs4j5ekjZdr4BCo+D61nH1XCQkze
+	kSafEEWY7IvJDgUSh6Q3POrF07V0ZUhiRK+NBQSTU9R3MJ5hN1vV3ipJ1vgn5Hbb65uIjrE5AjV
+	zMM7rH6wH7RJO4AQzsnjjRU8d81m2Z1M41s5Y2Eu1R22ovtgHrlmYABimZzJio
+X-Gm-Gg: ASbGnctoesyO6KPpIqJnQtp571hb8RU8cZkGAyvptEmx2oYScGaDTlS5G65g6wsfKzF
+	n9oerpoQTLvcdLXMx5/efamulD19ctJrPP2Y8pikJR5tUj6hAhyw4s+c+4x6CV3uOrNJnC/x4CB
+	994sGrd/zHjiLrTiG445MgVzWmsd52HXhyK3n28PEl7DKl+1nnGrhT+3DNZuh9AqpouPobnL06V
+	LWtIPkqmgC84J9qmc7uPo7Nti0zpAptwg5SWIiBCR9jx1i/sQk34ai3gVVpnIHOIQvvJ8PAxcEA
+	v4MU4SrKSuooQ3qQh+V3d0hYWVfv19wYeUUQL0eWPjnmUUKbqE+ojHasu3PGGASraHL7Ss2UzFS
+	+3n4uoK3X1em/NLd8ykexT3ApKLkjncmS0bkDRglQeCuDqA==
+X-Google-Smtp-Source: AGHT+IH4WyOcG41P+p5Je6WUYDMc8YgAWI1XhQIk/c06tZ5EeA+PYoW1lZTPQ9e1GKyieTk2fNYJmg==
+X-Received: by 2002:a05:6512:a8e:b0:577:1168:5e44 with SMTP id 2adb3069b0e04-582d3111855mr4909404e87.38.1759152747777;
+        Mon, 29 Sep 2025 06:32:27 -0700 (PDT)
+Received: from localhost ([91.188.191.17])
+        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-583134310bfsm4171816e87.26.2025.09.29.06.32.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Sep 2025 06:32:27 -0700 (PDT)
+From: Ivan Mikheykin <ivan.mikheykin@flant.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: Ivan Mikheykin <ivan.mikheykin@flant.com>
+Subject: [PATCH] erofs-utils: tar: support archives without end-of-archive entry
+Date: Mon, 29 Sep 2025 16:32:22 +0300
+Message-Id: <20250929133222.38815-1-ivan.mikheykin@flant.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,45 +84,59 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] erofs-utils: mount: add support for standard OCI targz
- blob access
-To: ChengyuZhu6 <hudson@cyzhu.com>, linux-erofs@lists.ozlabs.org
-Cc: xiang@kernel.org, Chengyu Zhu <hudsonzhu@tencent.com>
-References: <20250928033957.23867-1-hudson@cyzhu.com>
- <20250928101530.13744-1-hudson@cyzhu.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250928101530.13744-1-hudson@cyzhu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+Tar standard https://www.gnu.org/software/tar/manual/html_node/Standard.html
+says that archive "terminated by an end-of-archive entry,
+which consists of two 512 blocks of zero bytes".
 
+Is also says:
 
-On 2025/9/28 18:15, ChengyuZhu6 wrote:
-> From: Chengyu Zhu <hudsonzhu@tencent.com>
-> 
-> Add support for combining tarindex files with remote OCI blobs
-> through a new source mechanism. This allows local metadata
-> storage while keeping OCI tgz blob data in remote registries
-> 
-> e.g.:
->   $ mkfs.erofs --tar=i --gzinfo=ubuntu.zinfo ubuntu.erofs \
->     13b7e9....tgz
-> 
->   $ mount.erofs -t erofs.nbd -o oci.blob=13b7e9..., \
->      oci.platform=linux/amd64,oci.tarindex=ubuntu.erofs, \
->      oci.zinfo=ubuntu.zinfo ubuntu:20.04 mnt
-> 
-> Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+"A reasonable system should write such end-of-file marker at the end
+of an archive, but must not assume that such a block exists when
+reading an archive. In particular, GNU tar does not treat missing
+end-of-file marker as an error and silently ignores the fact."
 
-Applied now.
+It is rare for erofs to encounter such problem, as images are mostly
+built with docker or buildah. But if you create image using tar library
+in Golang directly uploading layers to registry, you'll get tar layers
+without end-of-archive block. Running containers with such images will
+trigger this error during extraction:
 
-Thanks,
-Gao Xiang
+mkfs.erofs --tar=f --aufs --quiet -Enoinline_data test.erofs test-no-end.tar
+<E> erofs: failed to read header block @ 42496
+<E> erofs: 	Could not format the device : [Error 5] Input/output error
+
+This patch fixes the problem by assuming that eof is equal to the end-of-archive.
+
+Reproducible tar without end-of-archive (base64-encoded gzipped blob):
+H4sICKVi2mgAA3Rlc3QtMTAtMi1ibG9ja3MudGFyAAtzDQr29PdjoCUwAAIzExMwbW5mCqYN
+jQzANBgYGTEYmhqYmpqamRoaGTMYGBqaGJkyKBjQ1FVQUFpcklikoMCQkpmYll9ahFNdYkpu
+Zh49HERfYKhnoWdowGVkYGSqa2Cua2jKNdAuGgX0BADwFwqsAAQAAA==
+
+Signed-off-by: Ivan Mikheykin <ivan.mikheykin@flant.com>
+---
+ lib/tar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/tar.c b/lib/tar.c
+index 72c12ed..128f8b0 100644
+--- a/lib/tar.c
++++ b/lib/tar.c
+@@ -740,7 +740,7 @@ restart:
+ 	tar_offset = tar->offset;
+ 	ret = erofs_iostream_read(&tar->ios, (void **)&th, sizeof(*th));
+ 	if (ret != sizeof(*th)) {
+-		if (tar->headeronly_mode || tar->ddtaridx_mode) {
++		if (tar->headeronly_mode || tar->ddtaridx_mode || tar->ios.feof) {
+ 			ret = 1;
+ 			goto out;
+ 		}
+-- 
+2.39.3 (Apple Git-146)
+
 
