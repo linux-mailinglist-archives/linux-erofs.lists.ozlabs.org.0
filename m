@@ -1,60 +1,58 @@
-Return-Path: <linux-erofs+bounces-1133-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1134-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 459FBBA999B
-	for <lists+linux-erofs@lfdr.de>; Mon, 29 Sep 2025 16:35:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CA2EDBA9B2D
+	for <lists+linux-erofs@lfdr.de>; Mon, 29 Sep 2025 16:50:49 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cb3cz03VQz304x;
-	Tue, 30 Sep 2025 00:35:15 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cb3yv3sn9z304x;
+	Tue, 30 Sep 2025 00:50:47 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759156514;
-	cv=none; b=YLLlHgwd2BR2+kmWGnASChC89yML09g4SWdudKlG1BpsUiEgxpnWwRffSao3wU165fkF1qPUfFUK142u+F2OESWwrz9mnXwFKvw1RvgvLdEM5S7INajN2lz1pBIwcL9TaJneHFRxqGMEi8cqWsMYPO0O/IIbQNsZLsWPO0tq7N0DgHlFc+XFwKi7L8tPMj2nkrkgkinrMOJj56GqJ1Y64/gSSDV5c9CpJn63waogLDMrsitMpX2360qbEQipJ1PxjFBWTxRjqu4uzadps30U7esuxJP6nI6DdCRLC82Bhua/Z61U1MyV1XVvjUVlSuGd4Cwt+clqvZ0qUk4TIveKlg==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759157447;
+	cv=none; b=NQUY5yS8iSYH/+j4yMfWKzDBfjKeQbS3J77GNJ8MWhTTHDEkeXQdEIs9Y62CfCKxzct3aLJB7XP1jg5mGKo6FGMWftVrJwRvwY5gg9rtrq0sbIZ398V0xeS5dgBIAWQ1S/IL/zKrZQLTVxBOZbztOnIcn+mGOfCkbMHi5ZDCRyeEbqmnEojWRsrEt44uuGKa3pKfC4LgkSe6+Y4WmRRKsGVV3y2EJC5si+S7d9IemGhYDHkwH2dpwj7E/Xj8svqDVZllHdVaZvPHxpVm2vo56S+2iWRIX6UXzPAaGJyv6Wgx8g0wz7Dm6hHmNK3sVcxv1yX+ZBdtClyTzRBdW+ws9g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1759156514; c=relaxed/relaxed;
-	bh=JhfHreEaYLKuMCbi7DRxhEyE5p8scgM7V6dy2dLX/aA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=aKZjZ60xYW+fEkMiNLA5FrRxCD7wNSGQPTLfzQsFZ7fqdsjhdxVwZkh25qthjSm76uHinlvE/6mEUlET1cvu5jSlMMyrUUwhsThNKinDglEjtgy65j52LOQVHRZYKlVjpFFDJwvRPw1yG0LEXPzSaAtyTp74ys6oQEkvxn5lGDWoW+jdLQCI1aAEX2WMO9uvkOMB6JBbwBsiFgRHRoiS6YJ82y9GMvzsS6cw8OY4UXuLOSR+OPxM1alpHXCtILVgsBPbGYP+a6wZST6WwlfanJOgTj/tNNIYpBo8GGRMSfttW54lvJa3MdNWoKXIIn4gW0ZNaWW2gq+TzfZvKEW/Ew==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=F3vVNnhO; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	t=1759157447; c=relaxed/relaxed;
+	bh=BoxyQo54wSa7ax1hRoxmrhHFftll/zXntLA40GYPQfs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ibm2CflTt2N/VH8cOWa1yiN/zo8SjZgG+mn57h5ugGMBFz2pglNvCFtS2hx6wfCvQAUb59Br6zHK54bHSuY+dA14ZOHURgdxSrzPNWfkARkX85MgWCSGeB9FgdukQz0I5mpOB0xbsaH6UEOKnOlNMEpgKh16aO3fOe3F6cY4ELagQYnuBnq6c19Vr9IJzoeHEXztA914q7H/+4xU2tBFjKajaqFwvf1M6sdpQpJBCKv75S0zOVyXHuf4FpWBPRf5xTYF7MeSAQgKS6r/uoe12b78GHTqDCZsfaGkh+FHJxPzVdQeWBh8/swKbFrwm9GlN8L6x7MOj3uFhCXYW4DgIg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=R7ESU4Xg; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=F3vVNnhO;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=R7ESU4Xg;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
 Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cb3cw3gF1z2ynf
-	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Sep 2025 00:35:11 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cb3yr2v7pz2xQ5
+	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Sep 2025 00:50:43 +1000 (AEST)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 99B8140B70;
-	Mon, 29 Sep 2025 14:35:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5EFFC4CEF7;
-	Mon, 29 Sep 2025 14:35:05 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 8CE14458B0;
+	Mon, 29 Sep 2025 14:50:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4CA8C4CEF4;
+	Mon, 29 Sep 2025 14:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759156508;
-	bh=DRSihkHoMG81fVQdMHQHT+bezqKWPcqqJdII+FwnuCM=;
-	h=Date:From:To:Cc:Subject:From;
-	b=F3vVNnhONYoBUjn+EAL66VwRehAnkHJF+jLdZoi44sIK7DSBu98nkX4IlYnSn156B
-	 EwD6yJCad7V/zjuXY5WSbxHd930TIqIGGKX1992hdX3ASfwjm9KFq/OIQjxAqtspTL
-	 8HGPyaP8B6mrO7VFMfe1r2FPtMlRUHR4lKP16FODsTzq7y0TjVrqy7S/nLh59V2rjb
-	 sEsv2EXwn6CTWv1NsRn2F5vDWrCHB960wc0fAjYqgJdZIrNrvmuqMWYpuYNctSDqjw
-	 cglP55NaAFo0m78GZfy3mZt/cdbIJkEsj8PqPF7CiOzzTRm6OZmVqLFTTkCSJahU4t
-	 ygWoA+JzhDBiA==
-Date: Mon, 29 Sep 2025 22:34:59 +0800
+	s=k20201202; t=1759157441;
+	bh=jJLcX+SzRPpAhcWwG22sNpQE6rOdnRWnbTB0ROWvQaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R7ESU4XgSZyuQkLKFXWuwBp2S5dmvs+SKWQybSFfl5Vtbu+e1unXbX+knbuARQ/6O
+	 XtrDy7+HEk4TzxaHZfz6rShM2PqswcCgcOgg6fanPNoASHJIPhWtWcWBqlMBE+F8ux
+	 tVks/DjxgH6LKja24qJFbQQOkUmyenfFMZlosoGHvFj7Z1eQFTq7OkV5mo1so/MsfO
+	 z6vKU3XbhIHNUgSAGIzgQrqQGt4LBj0x5J8UGNPukcM7s3GMXAjfQd9W/5MK62Swkl
+	 2/Jhl4AN8mXLxEHb3uuksMVX4LIITQCRdqx/CLe3qq3g9xxQXFk9DaoZ9q01+VCGn+
+	 jUwXLgZabaeng==
+Date: Mon, 29 Sep 2025 22:50:36 +0800
 From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Bo Liu <liubo03@inspur.com>, Chao Yu <chao@kernel.org>,
-	Hongbo Li <lihongbo22@huawei.com>
-Subject: [GIT PULL] erofs updates for 6.18-rc1
-Message-ID: <aNqZE+ex0ci1etXU@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Bo Liu <liubo03@inspur.com>, Chao Yu <chao@kernel.org>,
-	Hongbo Li <lihongbo22@huawei.com>
+To: Ivan Mikheykin <ivan.mikheykin@flant.com>
+Cc: linux-erofs@lists.ozlabs.org
+Subject: Re: [PATCH] erofs-utils: tar: support archives without
+ end-of-archive entry
+Message-ID: <aNqcvDiftM3ST7Mn@debian>
+Mail-Followup-To: Ivan Mikheykin <ivan.mikheykin@flant.com>,
+	linux-erofs@lists.ozlabs.org
+References: <20250929133222.38815-1-ivan.mikheykin@flant.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -68,59 +66,58 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20250929133222.38815-1-ivan.mikheykin@flant.com>
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Linus,
+Hi Ivan,
 
-Could you consider this pull request for 6.18-rc1?
+On Mon, Sep 29, 2025 at 04:32:22PM +0300, Ivan Mikheykin wrote:
+> Tar standard https://www.gnu.org/software/tar/manual/html_node/Standard.html
+> says that archive "terminated by an end-of-archive entry,
+> which consists of two 512 blocks of zero bytes".
+> 
+> Is also says:
+> 
+> "A reasonable system should write such end-of-file marker at the end
+> of an archive, but must not assume that such a block exists when
+> reading an archive. In particular, GNU tar does not treat missing
+> end-of-file marker as an error and silently ignores the fact."
+> 
+> It is rare for erofs to encounter such problem, as images are mostly
+> built with docker or buildah. But if you create image using tar library
+> in Golang directly uploading layers to registry, you'll get tar layers
+> without end-of-archive block. Running containers with such images will
+> trigger this error during extraction:
+> 
+> mkfs.erofs --tar=f --aufs --quiet -Enoinline_data test.erofs test-no-end.tar
+> <E> erofs: failed to read header block @ 42496
+> <E> erofs: 	Could not format the device : [Error 5] Input/output error
+> 
+> This patch fixes the problem by assuming that eof is equal to the end-of-archive.
+> 
+> Reproducible tar without end-of-archive (base64-encoded gzipped blob):
+> H4sICKVi2mgAA3Rlc3QtMTAtMi1ibG9ja3MudGFyAAtzDQr29PdjoCUwAAIzExMwbW5mCqYN
+> jQzANBgYGTEYmhqYmpqamRoaGTMYGBqaGJkyKBjQ1FVQUFpcklikoMCQkpmYll9ahFNdYkpu
+> Zh49HERfYKhnoWdowGVkYGSqa2Cua2jKNdAuGgX0BADwFwqsAAQAAA==
 
-There is no outstanding feature for this cycle.  One change adds
-support for FS_IOC_GETFSLABEL, and the others are fixes and cleanups.
+Thanks for the patch!
 
-All commits have been in -next for a while and no potential merge
-conflict is observed.
+Could you confirm how docker/containerd or podman parses such image?
+
+Because the POSIX standard says:
+https://pubs.opengroup.org/onlinepubs/9699919799/utilities/pax.html
+"At the end of the archive file there shall be two 512-byte blocks filled
+with binary zeros, interpreted as an end-of-archive indicator."
+
+So such tar layers will be non-standard, I wonder we need at least
+a erofs_warn() message for such tars at least.
 
 Thanks,
 Gao Xiang
 
-The following changes since commit f83ec76bf285bea5727f478a68b894f5543ca76e:
-
-  Linux 6.17-rc6 (2025-09-14 14:21:14 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.18-rc1
-
-for you to fetch changes up to e2d3af0d64e5fe2ee269e8f082642f82bcca3903:
-
-  erofs: drop redundant sanity check for ztailpacking inline (2025-09-25 11:26:39 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Support FS_IOC_GETFSLABEL ioctl;
-
- - Stop meaningless read-more policy on fragment extents;
-
- - Remove a duplicate check for ztailpacking inline.
-
-----------------------------------------------------------------
-Bo Liu (OpenAnolis) (1):
-      erofs: Add support for FS_IOC_GETFSLABEL
-
-Gao Xiang (2):
-      erofs: avoid reading more for fragment maps
-      erofs: drop redundant sanity check for ztailpacking inline
-
- fs/erofs/data.c     |  4 ++++
- fs/erofs/dir.c      |  4 ++++
- fs/erofs/inode.c    | 40 ++++++++++++++++++++++++++++++++++++----
- fs/erofs/internal.h |  5 +++++
- fs/erofs/super.c    |  8 ++++++++
- fs/erofs/zdata.c    |  7 ++-----
- fs/erofs/zmap.c     |  4 ++--
- 7 files changed, 61 insertions(+), 11 deletions(-)
+> 
+> Signed-off-by: Ivan Mikheykin <ivan.mikheykin@flant.com>
 
