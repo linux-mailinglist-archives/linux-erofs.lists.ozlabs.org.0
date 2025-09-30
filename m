@@ -1,69 +1,47 @@
-Return-Path: <linux-erofs+bounces-1135-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1136-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 183FABAABCF
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Sep 2025 01:23:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 96F93BABAC4
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Sep 2025 08:39:06 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cbHKz5qMqz3057;
-	Tue, 30 Sep 2025 09:23:03 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cbT122JJ8z3cZx;
+	Tue, 30 Sep 2025 16:39:02 +1000 (AEST)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759188183;
-	cv=none; b=SFRfXoidpw4K+zoU8qC1SuUpG7IM6VLSYYcyN34P6k/6kiEUjh6GPKg7p6dr2a1c8VzDLxLuwcEI0NswWjyYK4HbYo+ZiptoX+CJlPu3r6UG39bqvgLjXbKmo0aIukrcCkuzEon9EfYPXPVOe6IN2malH20Zlopbakoe00FEaH8IrDWMsK1ZaWOT7y7Ij+XyfrShTlek5+aJ9e6o1C7W0fR6uu3WCBH6+ApXSQ8juzSwMPemuhql01m70Y5K3KWiaeAV3/5KU3vq2n703PDX+g0YAbrAcB6xS6w1eHhnuijo6+lgMBxnPHIjtbNw2Y/SwzHFNk6ySa8A1OlXPiNrxA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759214342;
+	cv=none; b=D7m+0JBLpmOxe7z4Sw7rdssisr3Htvj/QAjRZ64EtwPxfpLwrknWRLG3icc5FX44708iDPc5Y7e/73GAIERuFvz8kJ2SweDDoVSxRbGuV21iFN/0mVqH3jLZ98tcsqesiKg1oI+/Od5sJyv8S/DdmVP58lX5JZ5jA4aF5ACOvxK5GVCAce3KF5DkRFGYMoSOpZh0YfAFuVM9T89CwbpvGSL+FiJqNg7bK06Yrt9pDnAoN1VS+O6S6Qw8GilH2QLI1qPBEcx5jGa4ul+Xu++rk8D73CcpDVmV7BJNarfM0Ol0pTcCSqzFNDI+uiWQr9PfzCWG/N/CUy+IPl14jOAqkg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1759188183; c=relaxed/relaxed;
-	bh=HfGNu6wdrmhy9xqDAKVYeoWCcqYNykq1jVU1afJeYKs=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=X3odYtPb7eauPjpdjtKrUISkbZO6SxbUUYWANH20z9yFQte/Rp3UdcleVuDbsxWhazBW4EJqtcF7+zf/pO9eRT08NfbDdZg5czsj90pu0L0NLba47sKcG0ZsklquIp51jgQHsAwNmlSHenLWaZyGBCRCpemedwyFbICpS6ml6ROF/6zBT8XgqaX+CRBBruCaQBEotcqq6lJ0QWkd+LdrdbaemqWOW4S0rOO5YLmVPXWpzZ5r221VsTegVBDT60LAFOyZ8IIDgEQkccyEwVj9bR7wWIW4VhELCVXSTpPLIDYKgfLS5U0Wu3lnKDfmOGNAa0lXePK+Y8UPOlkqZCCsfQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=H+EP6hyT; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1759214342; c=relaxed/relaxed;
+	bh=HjUYKMOXqPjeOuz19mPykrt8vxFzlSgtXFznV1pgqjc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l2tPxVNFmUARhE/y7fFCDvamO/86BezwI7cy943uLT5cgbHjlUvb0KyHqg8sAwjcqUOQyEuSSzoIrD5hqh3BSbGkjv+4sOKRarKWHZ8OkKnNyYItnLXHMMaBPfFhJKyJc/ElaSJClwy19iizM8U0tuqf4++eFkXX016bW3W+44vnZ9jF6wmueF/8rZuVE29F8mNIJUqWkhBt3VJ3Q5cJS6M3Ylian1wbvDxpL1Rp+nW/36yiHIWTHv/x41whRdz17MKh4BUZLrM2Use1Y50qIwDB8355iyX6DC+GND4Cz+zYSD1dGiJqvn9EkiJiSJInttN9Tzd9A3+6ZmJkE4IkJA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IigQ+Ym1; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=H+EP6hyT;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=IigQ+Ym1;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cbHKy3T7nz2xnM
-	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Sep 2025 09:23:01 +1000 (AEST)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 9E96C48C4D;
-	Mon, 29 Sep 2025 23:22:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7691AC4CEF4;
-	Mon, 29 Sep 2025 23:22:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1759188178;
-	bh=mRXmguWRKqQeBkWx0PpUv1EQNoYuDPaQjTmU8rHZpS8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=H+EP6hyT17VCAipO1qpt8o3LCzwOzM2DgLOq/w+b4xEKfD08S/CRzHNt0rGgvYcqV
-	 Qz0VObHdiU3VH1omUxeU2ISBFlJmKLzqglmPohOnJVs3bXEbUcyy5IqWmOxFhO9Blz
-	 ZySnp0Qnenn8VujcZCFlo+EC/zjhXKfsXWRDxT1rHohRFfs2cx7Qo2hZbWM9EWBK1V
-	 RbzB+g5IWT1hnMTbBjnSLpSbsVoyKxt4FgiO5DLgQGITcQYlWUF40wYpR122A6YojK
-	 eK7HAdDCBxeDWeqeW4UCxTqtduSWk4wJQ7pdvCn2p83Vr3xb7GUNdCo7/B9BRzRQ8I
-	 /wDBtI7EOOx0g==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DBF39D0C1A;
-	Mon, 29 Sep 2025 23:22:53 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs updates for 6.18-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aNqZE+ex0ci1etXU@debian>
-References: <aNqZE+ex0ci1etXU@debian>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aNqZE+ex0ci1etXU@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.18-rc1
-X-PR-Tracked-Commit-Id: e2d3af0d64e5fe2ee269e8f082642f82bcca3903
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5928397f5739fb94559350575826d94fa8c35929
-Message-Id: <175918817183.1748288.12528740975921892274.pr-tracker-bot@kernel.org>
-Date: Mon, 29 Sep 2025 23:22:51 +0000
-To: Gao Xiang <xiang@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Bo Liu <liubo03@inspur.com>, Chao Yu <chao@kernel.org>, Hongbo Li <lihongbo22@huawei.com>
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cbT101f41z2yPd
+	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Sep 2025 16:38:58 +1000 (AEST)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1759214334; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=HjUYKMOXqPjeOuz19mPykrt8vxFzlSgtXFznV1pgqjc=;
+	b=IigQ+Ym1fu1arAeS1DShO6A2p+191tZ1Cgz4GQdUWea56Zb/HOGeVuXWX2mg3IyolAickEeEb5jvv48DsWm7JkA4S9JMT9e+P8OCncuLKu3u+5XmBwgoMBWagIuI+NePae8cB3u1xKh4bBcaBVqLesLRCtfgK1b4GXaCegHE++s=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WpARbj5_1759214328 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 30 Sep 2025 14:38:52 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH 1/5] erofs-utils: lib: migrate and split `c_legacy_compress`
+Date: Tue, 30 Sep 2025 14:38:43 +0800
+Message-ID: <20250930063847.2143732-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -74,17 +52,102 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-The pull request you sent on Mon, 29 Sep 2025 22:34:59 +0800:
+Split it into `no_zcompact` and `no_lz4_0padding` meta-switches.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.18-rc1
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ include/erofs/config.h   | 1 -
+ include/erofs/importer.h | 2 ++
+ lib/compress.c           | 5 +++--
+ mkfs/main.c              | 4 ++--
+ 4 files changed, 7 insertions(+), 5 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5928397f5739fb94559350575826d94fa8c35929
-
-Thank you!
-
+diff --git a/include/erofs/config.h b/include/erofs/config.h
+index 3b1438f..153315b 100644
+--- a/include/erofs/config.h
++++ b/include/erofs/config.h
+@@ -39,7 +39,6 @@ struct erofs_configure {
+ 	const char *c_version;
+ 	int c_dbg_lvl;
+ 	bool c_dry_run;
+-	bool c_legacy_compress;
+ 	char c_timeinherit;
+ 	char c_chunkbits;
+ 	bool c_showprogress;
+diff --git a/include/erofs/importer.h b/include/erofs/importer.h
+index 3153732..dbb87be 100644
+--- a/include/erofs/importer.h
++++ b/include/erofs/importer.h
+@@ -41,6 +41,8 @@ struct erofs_importer_params {
+ 	bool hard_dereference;
+ 	bool ovlfs_strip;
+ 	bool dot_omitted;
++	bool no_zcompact;
++	bool no_lz4_0padding;
+ 	bool ztailpacking;
+ 	bool dedupe;
+ 	bool fragments;
+diff --git a/lib/compress.c b/lib/compress.c
+index f879d3e..b7ca3ad 100644
+--- a/lib/compress.c
++++ b/lib/compress.c
+@@ -1144,6 +1144,7 @@ static void *z_erofs_write_extents(struct z_erofs_compress_ictx *ctx)
+ 
+ static void *z_erofs_write_indexes(struct z_erofs_compress_ictx *ctx)
+ {
++	const struct erofs_importer_params *params = ctx->im->params;
+ 	struct erofs_inode *inode = ctx->inode;
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 	struct z_erofs_extent_item *ei, *n;
+@@ -1165,7 +1166,7 @@ static void *z_erofs_write_indexes(struct z_erofs_compress_ictx *ctx)
+ 	 */
+ 	if (inode->fragment_size && inode->fragmentoff >> 32) {
+ 		inode->datalayout = EROFS_INODE_COMPRESSED_FULL;
+-	} else if (!cfg.c_legacy_compress && !ctx->dedupe &&
++	} else if (!params->no_zcompact && !ctx->dedupe &&
+ 		   inode->z_lclusterbits <= 14) {
+ 		if (inode->z_lclusterbits <= 12)
+ 			inode->z_advise |= Z_EROFS_ADVISE_COMPACTED_2B;
+@@ -2120,7 +2121,7 @@ int z_erofs_compress_init(struct erofs_importer *im)
+ 	} else {
+ 		sbi->available_compr_algs = available_compr_algs;
+ 
+-		if (!cfg.c_legacy_compress)
++		if (!params->no_lz4_0padding)
+ 			erofs_sb_set_lz4_0padding(sbi);
+ 		if (available_compr_algs & ~(1 << Z_EROFS_COMPRESSION_LZ4))
+ 			erofs_sb_set_compr_cfgs(sbi);
+diff --git a/mkfs/main.c b/mkfs/main.c
+index f3cf24e..25f28ee 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -312,7 +312,8 @@ static int erofs_mkfs_feat_set_legacy_compress(struct erofs_importer_params *par
+ 	if (vallen)
+ 		return -EINVAL;
+ 	/* disable compacted indexes and 0padding */
+-	cfg.c_legacy_compress = en;
++	params->no_zcompact = true;
++	params->no_lz4_0padding = true;
+ 	return 0;
+ }
+ 
+@@ -1501,7 +1502,6 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+ static void erofs_mkfs_default_options(struct erofs_importer_params *params)
+ {
+ 	cfg.c_showprogress = true;
+-	cfg.c_legacy_compress = false;
+ 	cfg.c_xattr_name_filter = true;
+ #ifdef EROFS_MT_ENABLED
+ 	cfg.c_mt_workers = erofs_get_available_processors();
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.43.5
+
 
