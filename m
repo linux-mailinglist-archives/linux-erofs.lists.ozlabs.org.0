@@ -1,43 +1,48 @@
-Return-Path: <linux-erofs+bounces-1158-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1159-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AEF1BB3863
-	for <lists+linux-erofs@lfdr.de>; Thu, 02 Oct 2025 11:56:51 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66ABCBC0159
+	for <lists+linux-erofs@lfdr.de>; Tue, 07 Oct 2025 05:22:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ccnJK0P8Qz30NF;
-	Thu,  2 Oct 2025 19:56:49 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cghK76YNgz2yqW;
+	Tue,  7 Oct 2025 14:22:35 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759399009;
-	cv=none; b=jwI+wbq5Bf0ZrJtHK6FlAKsUyyj3JWgMXU93tfA+6fqsyNlbkNZtnAy1CbczVmHpo3JoWReOrEiDib0Ib196r+MhUUkGktwtIvoyKr7t+HijwXI3xBG59jBKoVOCpvJ/QK3e6BjB3OmJ1FBwt7ihthJMNNw2RGuavjWrAsOR0UjMejf5X6ornANrNvIg94gQ5ePTX4q+pPMIQzM1UVkE2WTOyYIp/D54sCOvPPjKp68mL80tW4RWMWqlJkSRQPquqbh6IKSFZbPkbCHZI7CB25uS46XCzhR1hag5ISjkKQ00pJmWQN+QmDWszBBHu5VSjw5r2sKvXekgA5imIhk1NA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759807355;
+	cv=none; b=HhrmSG2L/2Z1JLbc6hi3x59L1y3nLZEFW+AXJgdd9782uYiry2PxIHl06zGr6LzJj425vvBI2BjvkWX8ECG8+914VR/jt56DW6fflgnViDai90KRx81whNNxz5TeuUzv/vvzex2+W4alWAeRfJHMVLPQLwWVat/ukddhn6/o/xBte/5uOFxDxQG/J0n81adCgDCnZS7a0la90NlO63sU7f/SURBj7NXvb+l/RVsgd/UGjUX3/YwUTK0wqIBxNrZY3RpSYfaEfZTaqJyHPN4eyh6NrnI8QtiTDerlRxuiEO8LajGf2QHrY0kUku7EClavlXaBXrNA4+4PjKYF0FAB5g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1759399009; c=relaxed/relaxed;
-	bh=zU/ZYJ+D2n8/dVgVgaXyjGrPm+1HugcI+uSWE2FIKfs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ODcBNImnnm0s4I8WABJokrgFq4MAhn5QF0OXYUruZvTD1+jSp/OwG5qpMOIlE30NxPST/TIYx9Y4p9HLKcNvCu9Nz9QGasiaiIgcy4dr5QYuA+bqUuGzGiGDm+j6ya1PG2UBqXz2pkq3p4ey3boX7x9fmRNbD/slEA5a5QrcpCL7bCxz2QlgFcexWhcft5aTAlBKEf8RW2gkDd4ZorH8vhCbhLsy2qvAQd5jJHL/edmwCnTszRk3cCm0h7DJqqvoxRjvHsJ0vnKzMKnfOj0CR2NDZAuoirVwlow62q2z9gqZI8Ob6IS8FeG5Ig/qkQFSu/2b1GVJTUNq7U8BJFFUuQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KM+GoRoI; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1759807355; c=relaxed/relaxed;
+	bh=Z9VjBgCm2WJY9mogjDeUZ6HhhPwfNE++N4EQSzfXlxo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SU5DcmgbxU8eK2sYJjXbqIuePOgYggFI6y0WV671Q8UpwWzt4wbUXxcQ+ELk8JVcl4/bwtMFoKqcA0u1vp0SrSqE1VaZ46JwaiI1b7TVQmoJMocwg2kouLVql08kZyGelc/8vmt/0tU8FI8b4RgJOYy6emL4b+drL4+X8SHxJx+mini8iSXG+GcUdmJkSFHtW/CKylR61vupzPTHaCxUK5D/vf1nupyUWfXOcI1fEdyLKfEpBRpp3koEhaeWFFg+1jOv3P5PBlkqkhDkHuqJu5MRzHm+/i/JIf4r9cLoJTVhIME+f745Q7lao4ubGlqnsXOnIF3w0nbyL/d/mpcZMg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=SEAZeor6; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KM+GoRoI;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=SEAZeor6;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ccnJH0tRhz3069
-	for <linux-erofs@lists.ozlabs.org>; Thu,  2 Oct 2025 19:56:45 +1000 (AEST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cghK60fJ3z2yGM
+	for <linux-erofs@lists.ozlabs.org>; Tue,  7 Oct 2025 14:22:32 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1759399001; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=zU/ZYJ+D2n8/dVgVgaXyjGrPm+1HugcI+uSWE2FIKfs=;
-	b=KM+GoRoImOcbeSFnQbXojadc7/Qs2Q4qODD1EFFaqVJXVODNOTGTVVmJV+gkXdGSoB1gOvZToOzxxYtXt55BfmB108Rzj9Us2WjzK0Z5v/zdw059NnNdyW2QnkLGQuX9jYV8nNIyW/81ElwqouFsSC4TC61SEjj/OvYq77AeRAw=
-Received: from 30.180.0.242(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WpHewx5_1759398998 cluster:ay36)
+	t=1759807348; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Z9VjBgCm2WJY9mogjDeUZ6HhhPwfNE++N4EQSzfXlxo=;
+	b=SEAZeor6tagJUE+pmWBmixsNWtfzK7zCaYJBn4OwhZnvXet1yK5UGyxA/S2HsLs0QXkU5TG/glM4Ye3jOoMVUk4tbvPtqaJlgl94xrbnDJsup8zNCNY2cD8wtyWFRjROzX5kC25hgZPpVd+7RICcf5IufWdLf957VH2Ag07PoXw=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WpagAxr_1759807341 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 02 Oct 2025 17:56:39 +0800
-Message-ID: <68b155c5-65b2-4b03-a8a3-69dffc41dd1c@linux.alibaba.com>
-Date: Thu, 2 Oct 2025 17:56:37 +0800
+          Tue, 07 Oct 2025 11:22:26 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Chengyu Zhu <hudsonzhu@tencent.com>
+Subject: [PATCH] erofs-utils: mount: don't overwrite layer_index with -1 again
+Date: Tue,  7 Oct 2025 11:22:20 +0800
+Message-ID: <20251007032220.1860559-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,63 +54,62 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dax: fix assertion in dax_iomap_rw()
-To: Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-fsdevel@vger.kernel.org,
- Matthew Wilcox <willy@infradead.org>, chao@kernel.org,
- linux-erofs@lists.ozlabs.org,
- syzbot+47680984f2d4969027ea@syzkaller.appspotmail.com,
- Yuezhang Mo <yuezhang.mo@sony.com>
-References: <20251002081311.10488-2-jack@suse.cz>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20251002081311.10488-2-jack@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Jan,
+Initialize ocicfg only when nbdsrc.type changes to
+EROFSNBD_SOURCE_OCI.
 
-On 2025/10/2 16:13, Jan Kara wrote:
-> dax_iomap_rw() asserts that inode lock is held when reading from it. The
-> assert triggers on erofs as it indeed doesn't hold any locks in this
-> case - naturally because there's nothing to race against when the
-> filesystem is read-only. Check the locking only if the filesystem is
-> actually writeable.
-> 
-> Reported-by: syzbot+47680984f2d4969027ea@syzkaller.appspotmail.com
-> Signed-off-by: Jan Kara <jack@suse.cz>
-> ---
->   fs/dax.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 20ecf652c129..187f8c325744 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -1752,7 +1752,7 @@ dax_iomap_rw(struct kiocb *iocb, struct iov_iter *iter,
->   	if (iov_iter_rw(iter) == WRITE) {
->   		lockdep_assert_held_write(&iomi.inode->i_rwsem);
->   		iomi.flags |= IOMAP_WRITE;
-> -	} else {
-> +	} else if (!IS_RDONLY(iomi.inode)) {
+Fixes: 6a7cfdb9cd66 ("erofs-utils: oci: add support for indexing by layer digest")
+Cc: Chengyu Zhu <hudsonzhu@tencent.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ mount/main.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-Thanks, Yuezheng also wrote a similiar patch
-days ago (but it seems he didn't cc more related
-people),
-https://lore.kernel.org/r/20250930054256.2461984-2-Yuezhang.Mo@sony.com
-
-both patches look good to me, thanks for the fix.
-
-Thanks,
-Gao Xiang
-
->   		lockdep_assert_held(&iomi.inode->i_rwsem);
->   	}
->   
+diff --git a/mount/main.c b/mount/main.c
+index eb0dd01..e2443f8 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -83,10 +83,6 @@ static int erofsmount_parse_oci_option(const char *option)
+ 	char *p;
+ 	long idx;
+ 
+-	if (oci_cfg->layer_index == 0 && !oci_cfg->blob_digest &&
+-	    !oci_cfg->platform && !oci_cfg->username && !oci_cfg->password)
+-		oci_cfg->layer_index = -1;
+-
+ 	p = strstr(option, "oci.blob=");
+ 	if (p != NULL) {
+ 		p += strlen("oci.blob=");
+@@ -147,10 +143,6 @@ static int erofsmount_parse_oci_option(const char *option)
+ 			}
+ 		}
+ 	}
+-
+-	if (oci_cfg->platform || oci_cfg->username || oci_cfg->password ||
+-	    oci_cfg->blob_digest || oci_cfg->layer_index >= 0)
+-		nbdsrc.type = EROFSNBD_SOURCE_OCI;
+ 	return 0;
+ }
+ #else
+@@ -191,6 +183,11 @@ static long erofsmount_parse_flagopts(char *s, long flags, char **more)
+ 			*comma = '\0';
+ 
+ 		if (strncmp(s, "oci", 3) == 0) {
++			/* Initialize ocicfg here iff != EROFSNBD_SOURCE_OCI */
++			if (nbdsrc.type != EROFSNBD_SOURCE_OCI) {
++				nbdsrc.type = EROFSNBD_SOURCE_OCI;
++				nbdsrc.ocicfg.layer_index = -1;
++			}
+ 			err = erofsmount_parse_oci_option(s);
+ 			if (err < 0)
+ 				return err;
+-- 
+2.43.5
 
 
