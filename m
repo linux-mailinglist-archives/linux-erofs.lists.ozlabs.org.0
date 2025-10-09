@@ -1,41 +1,44 @@
-Return-Path: <linux-erofs+bounces-1161-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1162-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45F31BC7BDC
-	for <lists+linux-erofs@lfdr.de>; Thu, 09 Oct 2025 09:42:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B0406BC7BDF
+	for <lists+linux-erofs@lfdr.de>; Thu, 09 Oct 2025 09:42:05 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cj1zX09K4z300F;
-	Thu,  9 Oct 2025 18:42:00 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cj1zb3wmFz3cDN;
+	Thu,  9 Oct 2025 18:42:03 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.54
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759995719;
-	cv=none; b=l8+tcZM2zabFBysTV0l5125TASEp3SIymrHgeiOvdSETqzLCmdLhPtROFZW6BCnJaG9dYFR6lwSczBqx6PpUeJETjyDmHlRfgwV9ucAteOHa+YOjPoOpSp5bPeoTczXRvphS+whPHKRGC83j4f7VFZXU+XmdXo1+x1SL1ruYBpr2M3Wrc86Ki19XHwIBuSfDbba9eupoYnxXK9DVsCwP1pk8meucLom/gowKbHdti4kgS5+LaRjXI4/I4fkYl0djqcAuFR3DDgpjeZPJGiMre0jL//a4U3jkHsEI7yEzIxSu9OEbfYTw3g1mi/e6d5CiJKXrxNpUI54YCuJXddk5/Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.78
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1759995723;
+	cv=none; b=dVy7p4sTQZySo6kV9s2dkjSE2qCATAolz+beahDuoNn+ziBd6wxqPmRI6wOnD2WOvFK3WjoMyKY4qltrkS/iRIKz55bqb319vWYr+bpkXE9v5v6ZOVCaHR8nOtB2+GdLgwJLnMxJtHKLhij3blfUh2OQA62G6hxKxKrM06ssrm/FDLEA4HldRgnbZsecIeC2BQXVVUou9lZ9Ro8TZsAL0lPJtHo52b1iScUxxksoPqdUheu5lvwwkLp1Er+v5eERnqroZSBS58OOm/65gF/AEOwPfHXnVZZ9X6kviopL0Er/zIFSIV8/gjzERy2OpNjh3P8xAtvjwDnBJgJDtZL6Bw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1759995719; c=relaxed/relaxed;
-	bh=wKnM3Tx2dKl5IQsklO24y9kyAsAZnqOUSP0Zpt1Br0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gxtAUyjO8Ru81yZM/bpSpiUWq/Ky8pgXZhCEZiHzU1n+KFBoNb//a5aTjQS3a1Zu0AMqX+j4jDmLUTOusiAkUrXipxg+umBHE4MTALFXrV4agFfBmA1nOqxOx0TBtM707t9tYtoIk2KZ95GGiwkUV3pcmJ3l6KDiPMFsNfSiyYWtl4MSW4BlWcYT/L0xoWCdGZjK7rlMMQ46B/bwkTFE0RzIzoKlIkEeaJPIfYWak7Howp5nl1nS8nCPeFFqmeGUJK0HikiCxnrBhYMDGgbwDyp66jslGVEkti0FXcAV0cea7mQebBIksu/0EF/292mIHM+PCagi7cvfa9KxSzz6cQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.54; helo=out28-54.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	t=1759995723; c=relaxed/relaxed;
+	bh=0Cp/IxPk9rbHCsBFRH6LgYNOJc+rFnDJV5Aalc+gvWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K288pJotiNUl4+roSTxWA4Mw8x+hLE9Wh8uJsTOpE+XPEpWOYObTkoo3yKaQ2fs9o2lYSKkHavWGVqrxlHqtVGBoAcnrW8R6hX66HR9Hgo9+Pws3uDwPPrpBgGVDb108kZBEc+l0tTrnhZzS4Xxaz283WfOQS4+jTgV8KUql+r5PbbabXaC5Ng5Rmucpcxn3Mkg3M8uLo82huTRUlVbp7lftRpqAucUxEtpy/Ozrww/t2VIDGxM+j0cNE4rNCRFoLtFpG0Av+pzLJyVNwq6cDticj03SyCQEgoB7Yh1pcW9YvUtfn+FWZyI94UvGAEJDXODzGWPCJPpLz6GIYVVVow==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.78; helo=out28-78.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.54; helo=out28-54.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-54.mail.aliyun.com (out28-54.mail.aliyun.com [115.124.28.54])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.78; helo=out28-78.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-78.mail.aliyun.com (out28-78.mail.aliyun.com [115.124.28.78])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cj1zV28VLz2xQ0
-	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Oct 2025 18:41:55 +1100 (AEDT)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.evurv88_1759995708 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cj1zZ1hX2z2xQ0
+	for <linux-erofs@lists.ozlabs.org>; Thu,  9 Oct 2025 18:42:01 +1100 (AEDT)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.evurv9t_1759995709 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Thu, 09 Oct 2025 15:41:49 +0800
+          Thu, 09 Oct 2025 15:41:56 +0800
 From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: xiang@kernel.org,
 	hsiangkao@linux.alibaba.com,
 	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v1 1/2] erofs-utils: mkfs,oci: support tarindex mode with zinfo for OCI
-Date: Thu,  9 Oct 2025 15:41:45 +0800
-Message-ID: <20251009074146.52884-1-hudson@cyzhu.com>
+Subject: [PATCH v1 2/2] erofs-utils: mount: add support for standard OCI targz blob access
+Date: Thu,  9 Oct 2025 15:41:46 +0800
+Message-ID: <20251009074146.52884-2-hudson@cyzhu.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <20251009074146.52884-1-hudson@cyzhu.com>
+References: <20251009074146.52884-1-hudson@cyzhu.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,299 +58,522 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 From: Chengyu Zhu <hudsonzhu@tencent.com>
 
-Introduce OCI tarindex mode and optional zinfo generation.
+Add support for combining tarindex files with remote OCI blobs
+through a new source mechanism. This allows local metadata
+storage while keeping OCI tgz blob data in remote registries.
 
 e.g.:
-$ mkfs.erofs --oci=i,platform=linux/amd64,layer=3 \
-   --gzinfo=golang.zinfo golang.erofs golang:1.22.8
+ $ mkfs.erofs --oci=i,platform=linux/amd64,layer=0 \
+    --gzinfo=ubuntu.zinfo ubuntu.erofs ubuntu:20.04
+
+ $ mount.erofs -t erofs.nbd -o oci.layer=0,\
+    oci.platform=linux/amd64,oci.tarindex=ubuntu.erofs,\
+    oci.zinfo=ubuntu.zinfo ubuntu:20.04 mnt
 
 Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/liberofs_oci.h |  2 ++
- lib/remotes/oci.c  | 57 ++++++++++++++++++++++++++++++++---
- mkfs/main.c        | 74 +++++++++++++++++++++++++++++-----------------
- 3 files changed, 102 insertions(+), 31 deletions(-)
+ lib/remotes/oci.c |  20 ---
+ mount/main.c      | 378 ++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 369 insertions(+), 29 deletions(-)
 
-diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
-index 71c8879..5298f18 100644
---- a/lib/liberofs_oci.h
-+++ b/lib/liberofs_oci.h
-@@ -35,6 +35,8 @@ struct ocierofs_config {
- 	char *password;
- 	char *blob_digest;
- 	int layer_index;
-+	char *tarindex_path;
-+	char *zinfo_path;
- };
- 
- struct ocierofs_layer_info {
 diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index b2f1f59..d5ae4d8 100644
+index d5ae4d8..25f991d 100644
 --- a/lib/remotes/oci.c
 +++ b/lib/remotes/oci.c
-@@ -27,6 +27,7 @@
- #include "liberofs_base64.h"
- #include "liberofs_oci.h"
- #include "liberofs_private.h"
-+#include "liberofs_gzran.h"
- 
- #ifdef OCIEROFS_ENABLED
- 
-@@ -840,14 +841,33 @@ out:
- 	return ret;
+@@ -1510,19 +1510,6 @@ static void ocierofs_io_close(struct erofs_vfile *vfile)
+ 	*(struct ocierofs_iostream **)vfile->payload = NULL;
  }
  
--static int ocierofs_process_tar_stream(struct erofs_importer *importer, int fd)
-+static int ocierofs_process_tar_stream(struct erofs_importer *importer, int fd,
-+				       const struct ocierofs_config *config,
-+				       u64 *tar_offset_out)
- {
- 	struct erofs_tarfile tarfile = {};
--	int ret;
-+	int ret, decoder, zinfo_fd;
-+	struct erofs_vfile vf;
- 
- 	init_list_head(&tarfile.global.xattrs);
- 
--	ret = erofs_iostream_open(&tarfile.ios, fd, EROFS_IOS_DECODER_GZIP);
-+	/*
-+	 * Choose decoder based on config:
-+	 * - tarindex + zinfo -> tar.gzip (GZRAN decoder)
-+	 * - tarindex only -> tar (no decoder, raw)
-+	 * - neither -> default gzip decoder
-+	 */
-+	if (config && config->tarindex_path) {
-+		tarfile.index_mode = true;
-+		if (config->zinfo_path)
-+			decoder = EROFS_IOS_DECODER_GZRAN;
-+		else
-+			decoder = EROFS_IOS_DECODER_NONE;
-+	} else {
-+		decoder = EROFS_IOS_DECODER_GZIP;
-+	}
-+
-+	ret = erofs_iostream_open(&tarfile.ios, fd, decoder);
- 	if (ret) {
- 		erofs_err("failed to initialize tar stream: %s",
- 			  erofs_strerror(ret));
-@@ -858,6 +878,25 @@ static int ocierofs_process_tar_stream(struct erofs_importer *importer, int fd)
- 		ret = tarerofs_parse_tar(importer, &tarfile);
- 		/* Continue parsing until end of archive */
- 	} while (!ret);
-+
-+	if (decoder == EROFS_IOS_DECODER_GZRAN) {
-+		zinfo_fd = open(config->zinfo_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-+		if (zinfo_fd < 0) {
-+			ret = -errno;
-+		} else {
-+			vf = (struct erofs_vfile){ .fd = zinfo_fd };
-+			ret = erofs_gzran_builder_export_zinfo(tarfile.ios.gb, &vf);
-+			close(zinfo_fd);
-+			if (ret < 0) {
-+				erofs_err("failed to export zinfo: %s",
-+					  erofs_strerror(ret));
-+			}
-+		}
-+	}
-+
-+	if (tar_offset_out)
-+		*tar_offset_out = tarfile.offset;
-+
- 	erofs_iostream_close(&tarfile.ios);
- 
- 	if (ret < 0 && ret != -ENODATA) {
-@@ -1230,6 +1269,7 @@ int ocierofs_build_trees(struct erofs_importer *importer,
- {
- 	struct ocierofs_ctx ctx = {};
- 	int ret, i, end, fd;
-+	u64 tar_offset = 0;
- 
- 	ret = ocierofs_init(&ctx, config);
- 	if (ret) {
-@@ -1250,6 +1290,12 @@ int ocierofs_build_trees(struct erofs_importer *importer,
- 		end = ctx.layer_count;
+-static int ocierofs_is_erofs_native_image(struct ocierofs_ctx *ctx)
+-{
+-	if (ctx->layer_count > 0 && ctx->layers[0] &&
+-	    ctx->layers[0]->media_type) {
+-		const char *media_type = ctx->layers[0]->media_type;
+-		size_t len = strlen(media_type);
+-
+-		if (len >= 6 && strcmp(media_type + len - 6, ".erofs") == 0)
+-			return 0;
+-	}
+-	return -ENOENT;
+-}
+-
+ static struct erofs_vfops ocierofs_io_vfops = {
+ 	.pread = ocierofs_io_pread,
+ 	.read = ocierofs_io_read,
+@@ -1546,13 +1533,6 @@ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cf
+ 		return err;
  	}
  
-+	if (config->tarindex_path && (end - i) != 1) {
-+		erofs_err("tarindex mode requires exactly one layer (use blob= or layer= option)");
+-	err = ocierofs_is_erofs_native_image(ctx);
+-	if (err) {
+-		ocierofs_ctx_cleanup(ctx);
+-		free(ctx);
+-		return err;
+-	}
+-
+ 	oci_iostream = calloc(1, sizeof(*oci_iostream));
+ 	if (!oci_iostream) {
+ 		ocierofs_ctx_cleanup(ctx);
+diff --git a/mount/main.c b/mount/main.c
+index e2443f8..fa4c322 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -16,6 +16,8 @@
+ #include "erofs/io.h"
+ #include "../lib/liberofs_nbd.h"
+ #include "../lib/liberofs_oci.h"
++#include "../lib/liberofs_gzran.h"
++
+ #ifdef HAVE_LINUX_LOOP_H
+ #include <linux/loop.h>
+ #else
+@@ -35,6 +37,9 @@ struct loop_info {
+ #include <sys/sysmacros.h>
+ #endif
+ 
++/* Device boundary probe */
++#define EROFSMOUNT_NBD_DISK_SIZE	(INT64_MAX >> 9)
++
+ enum erofs_backend_drv {
+ 	EROFSAUTO,
+ 	EROFSLOCAL,
+@@ -137,7 +142,25 @@ static int erofsmount_parse_oci_option(const char *option)
+ 						if (!oci_cfg->password)
+ 							return -ENOMEM;
+ 					} else {
+-						return -EINVAL;
++						p = strstr(option, "oci.tarindex=");
++						if (p != NULL) {
++							p += strlen("oci.tarindex=");
++							free(oci_cfg->tarindex_path);
++							oci_cfg->tarindex_path = strdup(p);
++							if (!oci_cfg->tarindex_path)
++								return -ENOMEM;
++						} else {
++							p = strstr(option, "oci.zinfo=");
++							if (p != NULL) {
++								p += strlen("oci.zinfo=");
++								free(oci_cfg->zinfo_path);
++								oci_cfg->zinfo_path = strdup(p);
++								if (!oci_cfg->zinfo_path)
++									return -ENOMEM;
++							} else {
++								return -EINVAL;
++							}
++						}
+ 					}
+ 				}
+ 			}
+@@ -329,6 +352,256 @@ static int erofsmount_fuse(const char *source, const char *mountpoint,
+ 	return 0;
+ }
+ 
++struct erofsmount_tarindex_priv {
++	struct erofs_vfile tarindex_vf;
++	struct erofs_vfile *zinfo_vf;
++	u64 tarindex_size;
++};
++
++static ssize_t erofsmount_tarindex_pread(struct erofs_vfile *vf, void *buf,
++					 size_t count, u64 offset)
++{
++	struct erofsmount_tarindex_priv *tp;
++	ssize_t local_read = 0, remote_read = 0;
++	u64 index_part, tardata_part, remote_offset;
++
++	tp = *(struct erofsmount_tarindex_priv **)vf->payload;
++	DBG_BUGON(!tp);
++
++	/* Handle device boundary probe requests */
++	if (offset >= EROFSMOUNT_NBD_DISK_SIZE)
++		return 0;
++
++	if (offset > tp->tarindex_size) {
++		remote_offset = offset - tp->tarindex_size;
++		index_part = 0;
++	} else {
++		index_part = min(count, tp->tarindex_size - offset);
++		remote_offset = 0;
++	}
++	tardata_part = count - index_part;
++	if (index_part) {
++		local_read = erofs_io_pread(&tp->tarindex_vf, buf,
++					    index_part, offset);
++		if (local_read < 0)
++			return local_read;
++	}
++	if (tardata_part) {
++		remote_read = erofs_io_pread(tp->zinfo_vf, buf + local_read,
++					     tardata_part, remote_offset);
++		if (remote_read < 0)
++			return remote_read;
++	}
++	return local_read + remote_read;
++}
++
++static void erofsmount_tarindex_close(struct erofs_vfile *vf)
++{
++	struct erofsmount_tarindex_priv *tp;
++
++	tp = *(struct erofsmount_tarindex_priv **)vf->payload;
++	DBG_BUGON(!tp);
++
++	if (tp->tarindex_size > 0)
++		erofs_io_close(&tp->tarindex_vf);
++	if (tp->zinfo_vf)
++		erofs_io_close(tp->zinfo_vf);
++	free(tp);
++}
++
++static ssize_t erofsmount_tarindex_sendfile(struct erofs_vfile *vout,
++					    struct erofs_vfile *vin,
++					    off_t *pos, size_t count)
++{
++	static char buf[32768];
++	ssize_t total_written = 0, ret = 0, written;
++	size_t to_read;
++	u64 read_offset;
++
++	while (count > 0) {
++		to_read = min_t(size_t, count, sizeof(buf));
++		read_offset = pos ? *pos : 0;
++
++		ret = erofsmount_tarindex_pread(vin, buf, to_read, read_offset);
++		if (ret <= 0) {
++			if (ret < 0 && total_written == 0)
++				return ret;
++			break;
++		}
++
++		written = __erofs_io_write(vout->fd, buf, ret);
++		if (written < 0) {
++			ret = -errno;
++			break;
++		}
++		if (written != ret)
++			ret = written;
++
++		total_written += ret;
++		count -= ret;
++		if (pos)
++			*pos += ret;
++	}
++	return count;
++}
++
++static struct erofs_vfops tarindex_vfile_ops = {
++	.pread = erofsmount_tarindex_pread,
++	.sendfile = erofsmount_tarindex_sendfile,
++	.close = erofsmount_tarindex_close,
++};
++
++static int load_file_to_buf(const char *path, void **out, unsigned int *out_len)
++{
++	void *buf = NULL;
++	FILE *fp;
++	int ret = 0;
++	long sz;
++	size_t num;
++
++	fp = fopen(path, "rb");
++	if (!fp)
++		return -errno;
++
++	if (fseek(fp, 0, SEEK_END) != 0) {
++		ret = -errno;
++		goto out;
++	}
++	sz = ftell(fp);
++	if (sz < 0) {
++		ret = -errno;
++		goto out;
++	}
++	rewind(fp);
++	if (!sz) {
 +		ret = -EINVAL;
 +		goto out;
 +	}
 +
- 	while (i < end) {
- 		char *trimmed = erofs_trim_for_progressinfo(ctx.layers[i]->digest,
- 				sizeof("Extracting layer  ...") - 1);
-@@ -1263,7 +1309,7 @@ int ocierofs_build_trees(struct erofs_importer *importer,
- 			ret = fd;
- 			break;
- 		}
--		ret = ocierofs_process_tar_stream(importer, fd);
-+		ret = ocierofs_process_tar_stream(importer, fd, config, &tar_offset);
- 		close(fd);
- 		if (ret) {
- 			erofs_err("failed to process tar stream for layer %s: %s",
-@@ -1273,6 +1319,9 @@ int ocierofs_build_trees(struct erofs_importer *importer,
- 		i++;
- 	}
- out:
-+	if (config->tarindex_path && importer->sbi)
-+		importer->sbi->devs[0].blocks = BLK_ROUND_UP(importer->sbi, tar_offset);
-+
- 	ocierofs_ctx_cleanup(&ctx);
- 	return ret;
- }
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 1c37576..5657b1d 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -213,7 +213,8 @@ static void usage(int argc, char **argv)
- 		"   [,sig=<2,4>]        S3 API signature version (default: 2)\n"
- #endif
- #ifdef OCIEROFS_ENABLED
--		" --oci[=platform=X]    X=platform (default: linux/amd64)\n"
-+		" --oci=[f|i]           generate a full (f) or index-only (i) image from OCI remote source\n"
-+		"   [,=platform=X]      X=platform (default: linux/amd64)\n"
- 		"   [,layer=#]          #=layer index to extract (0-based; omit to extract all layers)\n"
- 		"   [,blob=Y]           Y=blob digest to extract (omit to extract all layers)\n"
- 		"   [,username=Z]       Z=username for authentication (optional)\n"
-@@ -285,8 +286,8 @@ static struct erofs_s3 s3cfg;
- 
- #ifdef OCIEROFS_ENABLED
- static struct ocierofs_config ocicfg;
--static char *mkfs_oci_options;
- #endif
-+static bool mkfs_oci_tarindex_mode;
- 
- enum {
- 	EROFS_MKFS_DATA_IMPORT_DEFAULT,
-@@ -727,7 +728,9 @@ static int mkfs_parse_s3_cfg(char *cfg_str)
-  * @options_str: comma-separated options string
-  *
-  * Parse OCI options string containing comma-separated key=value pairs.
-- * Supported options include platform, blob, layer, username, and password.
-+ *
-+ * Supported options include f|i, platform, blob|layer, username, password,
-+ * and zinfo.
-  *
-  * Return: 0 on success, negative errno on failure
-  */
-@@ -740,11 +743,22 @@ static int mkfs_parse_oci_options(struct ocierofs_config *oci_cfg, char *options
- 		return 0;
- 
- 	opt = options_str;
-+	q = strchr(opt, ',');
-+	if (q)
-+		*q = '\0';
-+	if (!strcmp(opt, "i") || !strcmp(opt, "f")) {
-+		mkfs_oci_tarindex_mode = (*opt == 'i');
-+		opt = q ? q + 1 : NULL;
-+	} else if (q) {
-+		*q = ',';
++	buf = malloc((size_t)sz);
++	if (!buf) {
++		ret = -ENOMEM;
++		goto out;
 +	}
 +
- 	while (opt) {
- 		q = strchr(opt, ',');
- 		if (q)
- 			*q = '\0';
- 
++	num = fread(buf, 1, (size_t)sz, fp);
++	if (num != (size_t)sz) {
++		ret = -EIO;
++		goto out;
++	}
++	*out = buf;
++	*out_len = (unsigned int)sz;
++	buf = NULL;
++out:
++	if (ret < 0 && buf)
++		free(buf);
++	fclose(fp);
++	return ret;
++}
 +
- 		p = strstr(opt, "platform=");
- 		if (p) {
- 			p += strlen("platform=");
-@@ -790,19 +804,19 @@ static int mkfs_parse_oci_options(struct ocierofs_config *oci_cfg, char *options
- 						oci_cfg->username = strdup(p);
- 						if (!oci_cfg->username)
- 							return -ENOMEM;
-+					} else {
-+						p = strstr(opt, "password=");
-+						if (p) {
-+							p += strlen("password=");
-+							free(oci_cfg->password);
-+							oci_cfg->password = strdup(p);
-+							if (!oci_cfg->password)
-+								return -ENOMEM;
-+						} else {
-+							erofs_err("mkfs: invalid --oci value %s", opt);
-+							return -EINVAL;
-+						}
- 					}
--
--					p = strstr(opt, "password=");
--					if (p) {
--						p += strlen("password=");
--						free(oci_cfg->password);
--						oci_cfg->password = strdup(p);
--						if (!oci_cfg->password)
--							return -ENOMEM;
--					}
--
--					erofs_err("mkfs: invalid --oci value %s", opt);
--					return -EINVAL;
- 				}
- 			}
- 		}
-@@ -1378,10 +1392,13 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
- 			break;
- #endif
- #ifdef OCIEROFS_ENABLED
--		case 534:
--			mkfs_oci_options = optarg;
-+		case 534: {
- 			source_mode = EROFS_MKFS_SOURCE_OCI;
-+			err = mkfs_parse_oci_options(&ocicfg, optarg);
-+			if (err)
-+				return err;
- 			break;
++static int erofsmount_init_gzran(struct erofs_vfile **zinfo_vf,
++				  const struct ocierofs_config *oci_cfg,
++				  const char *zinfo_path)
++{
++	int err = 0;
++	void *zinfo_data = NULL;
++	unsigned int zinfo_len = 0;
++	struct erofs_vfile *oci_vf = NULL;
++
++	oci_vf = malloc(sizeof(*oci_vf));
++	if (!oci_vf) {
++		err = -ENOMEM;
++		goto cleanup;
++	}
++
++	err = ocierofs_io_open(oci_vf, oci_cfg);
++	if (err) {
++		free(oci_vf);
++		goto cleanup;
++	}
++
++	/* If no zinfo_path, return oci_vf directly for tar format */
++	if (!zinfo_path) {
++		*zinfo_vf = oci_vf;
++		return 0;
++	}
++
++	err = load_file_to_buf(zinfo_path, &zinfo_data, &zinfo_len);
++	if (err) {
++		erofs_io_close(oci_vf);
++		free(oci_vf);
++		return err;
++	}
++
++	*zinfo_vf = erofs_gzran_zinfo_open(oci_vf, zinfo_data, zinfo_len);
++	if (IS_ERR(*zinfo_vf)) {
++		err = PTR_ERR(*zinfo_vf);
++		*zinfo_vf = NULL;
++		erofs_io_close(oci_vf);
++		free(oci_vf);
++		goto cleanup;
++	}
++
++	free(zinfo_data);
++	return 0;
++
++cleanup:
++	if (zinfo_data)
++		free(zinfo_data);
++	return err;
++}
++
++/*
++ * Create tarindex source for gzran+oci hybrid mode with three scenarios:
++ * 1. tarindex + zinfo: Remote data is tar.gzip format
++ * 2. tarindex only: Remote data is tar format
++ */
++static int erofsmount_tarindex_open(struct erofs_vfile *out_vf,
++				    const struct ocierofs_config *oci_cfg,
++				    const char *tarindex_path,
++				    const char *zinfo_path)
++{
++	struct erofsmount_tarindex_priv *tp;
++	int err;
++	struct stat st;
++	struct erofs_vfile *vf;
++
++	tp = calloc(1, sizeof(*tp));
++	if (!tp)
++		return -ENOMEM;
++	vf = &tp->tarindex_vf;
++	vf->fd = -1;
++
++	if (tarindex_path) {
++		err = open(tarindex_path, O_RDONLY);
++		if (err < 0) {
++			err = -errno;
++			goto err_out;
 +		}
- #endif
- 		case 535:
- 			if (optarg)
-@@ -1757,6 +1774,9 @@ int main(int argc, char **argv)
- 			goto exit;
- 		}
- 		mkfs_blkszbits = src->blkszbits;
-+	} else if (mkfs_oci_tarindex_mode) {
-+		mkfs_blkszbits = 9;
-+		tar_index_512b = true;
++		vf->fd = err;
++		if (fstat(vf->fd, &st) < 0) {
++			err = -errno;
++			goto err_out;
++		}
++		tp->tarindex_size = st.st_size;
++	}
++
++	err = erofsmount_init_gzran(&tp->zinfo_vf, oci_cfg, zinfo_path);
++	if (err)
++		goto err_out;
++	out_vf->ops = &tarindex_vfile_ops;
++	out_vf->fd = 0;
++	out_vf->offset = 0;
++	*(struct erofsmount_tarindex_priv **)out_vf->payload = tp;
++	return 0;
++
++err_out:
++	if (vf->fd >= 0)
++		close(vf->fd);
++	free(tp);
++	return err;
++}
++
+ struct erofsmount_nbd_ctx {
+ 	struct erofs_vfile vd;		/* virtual device */
+ 	struct erofs_vfile sk;		/* socket file */
+@@ -385,9 +658,17 @@ static int erofsmount_startnbd(int nbdfd, struct erofs_nbd_source *source)
+ 	int err, err2;
+ 
+ 	if (source->type == EROFSNBD_SOURCE_OCI) {
+-		err = ocierofs_io_open(&ctx.vd, &source->ocicfg);
+-		if (err)
+-			goto out_closefd;
++		if (source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) {
++			err = erofsmount_tarindex_open(&ctx.vd, &source->ocicfg,
++						       source->ocicfg.tarindex_path,
++						       source->ocicfg.zinfo_path);
++			if (err)
++				goto out_closefd;
++		} else {
++			err = ocierofs_io_open(&ctx.vd, &source->ocicfg);
++			if (err)
++				goto out_closefd;
++		}
+ 	} else {
+ 		err = open(source->device_path, O_RDONLY);
+ 		if (err < 0) {
+@@ -397,7 +678,7 @@ static int erofsmount_startnbd(int nbdfd, struct erofs_nbd_source *source)
+ 		ctx.vd.fd = err;
  	}
  
- 	if (!incremental_mode)
-@@ -1883,13 +1903,11 @@ int main(int argc, char **argv)
+-	err = erofs_nbd_connect(nbdfd, 9, INT64_MAX >> 9);
++	err = erofs_nbd_connect(nbdfd, 9, EROFSMOUNT_NBD_DISK_SIZE);
+ 	if (err < 0) {
+ 		erofs_io_close(&ctx.vd);
+ 		goto out_closefd;
+@@ -437,6 +718,19 @@ static int erofsmount_write_recovery_oci(FILE *f, struct erofs_nbd_source *sourc
+ 			return PTR_ERR(b64cred);
+ 	}
+ 
++	if ((source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) &&
++	    source->ocicfg.blob_digest && *source->ocicfg.blob_digest) {
++		ret = fprintf(f, "TARINDEX_OCI_BLOB %s %s %s %s %s %s\n",
++			      source->ocicfg.image_ref ?: "",
++			      source->ocicfg.platform ?: "",
++			      source->ocicfg.blob_digest,
++			      b64cred ?: "",
++			      source->ocicfg.tarindex_path ?: "",
++			      source->ocicfg.zinfo_path ?: "");
++		free(b64cred);
++		return ret < 0 ? -ENOMEM : 0;
++	}
++
+ 	if (source->ocicfg.blob_digest && *source->ocicfg.blob_digest) {
+ 		ret = fprintf(f, "OCI_NATIVE_BLOB %s %s %s %s\n",
+ 			      source->ocicfg.image_ref ?: "",
+@@ -632,6 +926,60 @@ static int erofsmount_reattach_oci(struct erofs_vfile *vf,
+ }
  #endif
- #ifdef OCIEROFS_ENABLED
- 		} else if (source_mode == EROFS_MKFS_SOURCE_OCI) {
--			ocicfg.blob_digest = NULL;
--			ocicfg.layer_index = -1;
--
--			err = mkfs_parse_oci_options(&ocicfg, mkfs_oci_options);
+ 
++static int erofsmount_reattach_gzran_oci(struct erofsmount_nbd_ctx *ctx,
++					 char *source)
++{
++	char *tokens[6] = {0}, *p = source, *space, *oci_source;
++	char *meta_path = NULL, *zinfo_path = NULL;
++	int token_count = 0, err;
++	const char *b64cred;
++	struct erofs_vfile temp_vd;
++	struct ocierofs_config oci_cfg = {};
++
++	while (token_count < 5) {
++		space = strchr(p, ' ');
++		if (!space)
++			break;
++
++		*space = '\0';
++		p = space + 1;
++		tokens[token_count++] = p;
++	}
++
++	if (token_count < 4)
++		return -EINVAL;
++
++	b64cred = (token_count > 2 && tokens[2]) ? tokens[2] : "";
++
++	err = asprintf(&oci_source, "%s %s %s %s",
++		       source, tokens[0], tokens[1], b64cred);
++	if (err < 0)
++		return -ENOMEM;
++
++	err = erofsmount_reattach_oci(&ctx->vd, "OCI_NATIVE_BLOB", oci_source);
++	free(oci_source);
++	if (err)
++		return err;
++
++	temp_vd = ctx->vd;
++	oci_cfg.image_ref = strdup(source);
++	if (!oci_cfg.image_ref) {
++		erofs_io_close(&temp_vd);
++		return -ENOMEM;
++	}
++
++	if (token_count > 3 && tokens[3] && *tokens[3])
++		meta_path = tokens[3];
++	if (token_count > 4 && tokens[4] && *tokens[4])
++		zinfo_path = tokens[4];
++
++	err = erofsmount_tarindex_open(&ctx->vd, &oci_cfg,
++				       meta_path, zinfo_path);
++	free(oci_cfg.image_ref);
++	erofs_io_close(&temp_vd);
++	return err;
++}
++
+ static int erofsmount_nbd_fix_backend_linkage(int num, char **recp)
+ {
+ 	char *newrecp;
+@@ -676,9 +1024,17 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
+ 			exit(EXIT_FAILURE);
+ 
+ 		if (source->type == EROFSNBD_SOURCE_OCI) {
+-			err = ocierofs_io_open(&ctx.vd, &source->ocicfg);
 -			if (err)
--				goto exit;
- 			ocicfg.image_ref = cfg.c_src_path;
-+			if (mkfs_oci_tarindex_mode)
-+				ocicfg.tarindex_path = strdup(cfg.c_src_path);
-+			if (!ocicfg.zinfo_path)
-+				ocicfg.zinfo_path = mkfs_aws_zinfo_file;
- 
- 			if (incremental_mode ||
- 			    dataimport_mode == EROFS_MKFS_DATA_IMPORT_RVSP ||
-@@ -1914,10 +1932,12 @@ int main(int argc, char **argv)
- 		if (!g_sbi.extra_devices) {
- 			DBG_BUGON(1);
- 		} else {
--			if (cfg.c_src_path)
--				g_sbi.devs[0].src_path = strdup(cfg.c_src_path);
--			g_sbi.devs[0].blocks =
--				BLK_ROUND_UP(&g_sbi, erofstar.offset);
-+			if (source_mode != EROFS_MKFS_SOURCE_OCI) {
-+				if (cfg.c_src_path)
-+					g_sbi.devs[0].src_path = strdup(cfg.c_src_path);
-+				g_sbi.devs[0].blocks =
-+					BLK_ROUND_UP(&g_sbi, erofstar.offset);
+-				exit(EXIT_FAILURE);
++			if (source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) {
++				err = erofsmount_tarindex_open(&ctx.vd, &source->ocicfg,
++							       source->ocicfg.tarindex_path,
++							       source->ocicfg.zinfo_path);
++				if (err)
++					exit(EXIT_FAILURE);
++			} else {
++				err = ocierofs_io_open(&ctx.vd, &source->ocicfg);
++				if (err)
++					exit(EXIT_FAILURE);
 +			}
+ 		} else {
+ 			err = open(source->device_path, O_RDONLY);
+ 			if (err < 0)
+@@ -692,7 +1048,7 @@ static int erofsmount_startnbd_nl(pid_t *pid, struct erofs_nbd_source *source)
  		}
- 	}
  
+ 		num = -1;
+-		err = erofs_nbd_nl_connect(&num, 9, INT64_MAX >> 9, recp);
++		err = erofs_nbd_nl_connect(&num, 9, EROFSMOUNT_NBD_DISK_SIZE, recp);
+ 		if (err >= 0) {
+ 			ctx.sk.fd = err;
+ 			err = erofsmount_nbd_fix_backend_linkage(num, &recp);
+@@ -791,6 +1147,10 @@ static int erofsmount_reattach(const char *target)
+ 			goto err_line;
+ 		}
+ 		ctx.vd.fd = err;
++	} else if (!strcmp(line, "TARINDEX_OCI_BLOB")) {
++		err = erofsmount_reattach_gzran_oci(&ctx, source);
++		if (err)
++			goto err_line;
+ 	} else if (!strcmp(line, "OCI_LAYER") || !strcmp(line, "OCI_NATIVE_BLOB")) {
+ 		err = erofsmount_reattach_oci(&ctx.vd, line, source);
+ 		if (err)
 -- 
 2.51.0
 
