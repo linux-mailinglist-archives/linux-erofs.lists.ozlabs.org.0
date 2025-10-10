@@ -1,57 +1,47 @@
-Return-Path: <linux-erofs+bounces-1165-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1167-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D7E1BCB600
-	for <lists+linux-erofs@lfdr.de>; Fri, 10 Oct 2025 03:53:22 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 998C3BCB946
+	for <lists+linux-erofs@lfdr.de>; Fri, 10 Oct 2025 05:49:38 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cjVBl3q6lz2yrT;
-	Fri, 10 Oct 2025 12:53:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cjXmv47jJz2xPy;
+	Fri, 10 Oct 2025 14:49:35 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.69.209.167
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760061199;
-	cv=none; b=eGWZXw5CYZQqY3kuSDZqHN2XdB8iUP+SZlqdaBxMJ9PCpAokCj2eaGmDhQm3R5pjKSVnmGu7N1xBSElbxKqVrzG8qTR6c3gxyPHnfjGkTn+3N0N7l2NualRkE/iTNd6opeoc4s3mZDiS/57F4IWxCaDkfIJOZ2EbHisM7n9Ge+pOOm951RfiOQiRHYGeG8x7B4XzGwl5/KKgUftfh75XnnwLKyNgXBbw5/0JPeMaSuiG4CvWz3ZhUQ1c1aBxlOOFw8bb1ZgAS3aq4Q8RptXXB6VeXKJ1HmgsHFgjB0Wb+XYcHYJY7R6bAA1F7uroP7fEV2GMOLo9I608ttxvXoXHVw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760068175;
+	cv=none; b=REQORYiS82N2a9OLFWFM8SxQ/1bHYicBkMLgaBqfvg3z1hDPEIz3CVTIHazNprfimyTp7bk4DMAsqxaXfrHKVemgHIuPyWTI6KNUpchtaoyVc3RK8d8MgbTo+zCKN97J+p3t/qkHm+BoQR/9BwZwpBxidJ1u9gGbTgyBJNan5WVPaSBNuwqzzjbcCm3svXnmbsAw94ehv2255/sUl8PsIK/36WtmHqFgCsupHcSWOrOdI8VpHRU11J9YNgC02GkmuLKJDbjRHGAOoFnq8l90gAy6+fZ232RH3BnttwxJXp4p1mFVwvqD0xWZRccl6N0nbYEHzjoIIb62d5R+IneK5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760061199; c=relaxed/relaxed;
-	bh=MsmS3qXUa1oBBGiJ2yNc5LQza5NPnJrt2vBAKL5AR50=;
-	h=From:To:Subject:Message-ID:Date:MIME-Version:Content-Type; b=IddTx29hVnNjytykwhy8FRBQ27CfSxMI7iyyJthXUbo0arF+aM6EwboOggLtfBGQM1c5759pRR+4gQzMjet7B10gZBlIY84TlGjZ4P0c9QCEnsOCcjMTzx8+TF95aP13ogMMBvkMTRcrE5WJ85hAVg7qFCJBJdIJJKF5YnQtPEzFOVWNmRGd+Wngp71ux8tPTfYu9dAyXBiIdFGlKdYNo/GTqd0L0YAqml06FT+vCEl5PnICwxazT984zM/6IgMLEOq9XOu6utM6Xdmw98n72g4WCieOvNxAiDJVtUAvathZhccwk9Cc5PzTfQcHQzkhe/0wZl6P0mBzPE01iXAQxA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net; dkim=pass (2048-bit key; unprotected) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.a=rsa-sha256 header.s=s2 header.b=Tp9o8xV4; dkim-atps=neutral; spf=pass (client-ip=203.69.209.167; helo=cmsr-t-8.hinet.net; envelope-from=linux-erofs@ms29.hinet.net; receiver=lists.ozlabs.org) smtp.mailfrom=ms29.hinet.net
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=ms29.hinet.net
+	t=1760068175; c=relaxed/relaxed;
+	bh=wUeW2xU+2n5/OLHAwP5FQfuJ3L1/wx/DLBWkP7zk+5g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m1xfgKOEVCjDqya1MhfKwEu7+uOEmz7CYAlGhlgnqhHlSs+CHhPkjCpWl5x+fEhggJGzGhXTBKQ73uztq3spi+c0yLAmjsZX1/qY5M2oqzkpOG0g46M4wPa3GnRrIGZjYR+m6YVzZ8DDKJr3fd1XBJ84uvBbhrBj42RavC0kY/vPOwsVvk04q1jci0N0AT6Z1XNmJN9QQL/jETVl8qZqPpK8sGr1idbSwa2p03FFsXe7Ao8ec5FBbY3vxUMHvPAKaNkbO68E6GCFT5BhX7LMHivj+czjQM/fMtSgIzlOYHvg4wmBCTYuwf9GVhPq1TK0nhsqIOSVagibYeQW/jSCFw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=a38Hw7eB; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=ms29.hinet.net header.i=@ms29.hinet.net header.a=rsa-sha256 header.s=s2 header.b=Tp9o8xV4;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=a38Hw7eB;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=ms29.hinet.net (client-ip=203.69.209.167; helo=cmsr-t-8.hinet.net; envelope-from=linux-erofs@ms29.hinet.net; receiver=lists.ozlabs.org)
-X-Greylist: delayed 3065 seconds by postgrey-1.37 at boromir; Fri, 10 Oct 2025 12:53:17 AEDT
-Received: from cmsr-t-8.hinet.net (cmsr-t-8.hinet.net [203.69.209.167])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cjVBj4fsSz2xQD
-	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Oct 2025 12:53:17 +1100 (AEDT)
-Received: from cmsr5.hinet.net ([10.199.216.84])
-	by cmsr-t-8.hinet.net (8.15.2/8.15.2) with ESMTPS id 59A128IC400745
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
-	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Oct 2025 09:02:08 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ms29.hinet.net;
-	s=s2; t=1760058128; bh=MsmS3qXUa1oBBGiJ2yNc5LQza5NPnJrt2vBAKL5AR50=;
-	h=From:To:Subject:Date;
-	b=Tp9o8xV4UI2FH7weSalzS320aMgGMNl+O14yi+UZw3O0EN33aE804mlc7CVUptdJ6
-	 2Itkimqs9fRrhg9DJMIKMO8Jvxs6I1hGEHD9Q80hwRGc3QSXMVEvo2jok4qWsgTiek
-	 ZvVuPbWbYUuxgo9koeWWF+RIkqkXOiKmT5JPgXonWmc9pm2i7/JRQSueNXi4GwY8RG
-	 p4Y1OTnavoR/iMod1HfTma4uGo0nuck6EY6vnQ2Iw0BqLf5W3w2dNoAJp9zlF+OII+
-	 IXaC3QE14qj3v1YlYFiGvzIn21JDn4yjhPilOTJi6NgFOtroYcDFspXf9tMiqnH+aO
-	 p64LR1ETENESw==
-Received: from [127.0.0.1] (111-249-177-126.dynamic-ip.hinet.net [111.249.177.126])
-	by cmsr5.hinet.net (8.15.2/8.15.2) with ESMTPS id 59A0rlpX436907
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
-	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Oct 2025 09:01:48 +0800
-From: "Block - Muller" <Linux-erofs@ms29.hinet.net>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cjXms4gxGz2xPx
+	for <linux-erofs@lists.ozlabs.org>; Fri, 10 Oct 2025 14:49:32 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1760068167; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=wUeW2xU+2n5/OLHAwP5FQfuJ3L1/wx/DLBWkP7zk+5g=;
+	b=a38Hw7eBkHEIdbeHasZyKWGdvW7LwPXwmz8QuNG01ankzTLB3O7hmOuLJ0I0YxmZ3t/2W50Ew5bhWaSvrNsk4lyyg0HYMvbLJrwfHj+BeBaATdR3gB6jK/CDdwh+DA3WTr2qMh0/vE2t4kCnTPr1WLVnzHcd1fONIGPbUVXHvZc=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WprwzmE_1760068162 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 10 Oct 2025 11:49:26 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
-Reply-To: Procurement <mr00@usa.com>
-Subject: =?UTF-8?B?TFBPIDcxOTQ3IEZyaWRheSwgT2N0b2JlciAxMCwgMjAyNSBhdCAwMzowMTo0MyBBTQ==?=
-Message-ID: <ca10f883-c936-0ba5-7dc7-9d95a867a21f@ms29.hinet.net>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 10 Oct 2025 01:01:44 +0000
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH 1/2] erofs-utils: lib: fix erofs_io_sendfile()
+Date: Fri, 10 Oct 2025 11:49:21 +0800
+Message-ID: <20251010034922.1534943-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -63,35 +53,92 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=eJKwj2p1 c=1 sm=1 tr=0 ts=68e85b10
-	a=MuNfr0PJkKhTTJ+wBupL8w==:117 a=lmFmFWn-aroA:10 a=IkcTkHD0fZMA:10
-	a=5KLPUuaC_9wA:10 a=x7bEGLp0ZPQA:10 a=dFwqHLXSQQoT74FyTesA:9
-	a=QEXdDO2ut3YA:10 a=zY0JdQc1-4EAyPf5TuXT:22
-X-Spam-Status: No, score=1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-	FREEMAIL_REPLYTO_END_DIGIT,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
-X-Spam-Level: *
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Dear Linux-erofs,
+The fallback logic was incomplete and has been fixed.
 
-I hope this email finds you well. I am interested in obtaining more =
-information about the following attached products:
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ include/erofs/io.h |  1 +
+ lib/io.c           | 29 ++++++++++++++++++++++-------
+ 2 files changed, 23 insertions(+), 7 deletions(-)
 
-Could you please provide me with details such as price, availability, =
-specifications, and any applicable promotions? Additionally, I would =
-appreciate information regarding shipping options and the estimated =
-delivery time.
+diff --git a/include/erofs/io.h b/include/erofs/io.h
+index a9f6d2e..4bc216a 100644
+--- a/include/erofs/io.h
++++ b/include/erofs/io.h
+@@ -35,6 +35,7 @@ struct erofs_vfops {
+ 	int (*fallocate)(struct erofs_vfile *vf, u64 offset, size_t len, bool pad);
+ 	int (*ftruncate)(struct erofs_vfile *vf, u64 length);
+ 	ssize_t (*read)(struct erofs_vfile *vf, void *buf, size_t len);
++	ssize_t (*write)(struct erofs_vfile *vf, void *buf, size_t len);
+ 	off_t (*lseek)(struct erofs_vfile *vf, u64 offset, int whence);
+ 	int (*fstat)(struct erofs_vfile *vf, struct stat *buf);
+ 	ssize_t (*sendfile)(struct erofs_vfile *vout, struct erofs_vfile *vin,
+diff --git a/lib/io.c b/lib/io.c
+index 664dd8d..d4cfbef 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -558,6 +558,13 @@ ssize_t erofs_io_read(struct erofs_vfile *vf, void *buf, size_t bytes)
+         return i;
+ }
+ 
++ssize_t erofs_io_write(struct erofs_vfile *vf, void *buf, size_t len)
++{
++	if (vf->ops)
++		return vf->ops->write(vf, buf, len);
++	return __erofs_io_write(vf->fd, buf, len);
++}
++
+ #ifdef HAVE_SYS_SENDFILE_H
+ #include <sys/sendfile.h>
+ #endif
+@@ -573,7 +580,7 @@ off_t erofs_io_lseek(struct erofs_vfile *vf, u64 offset, int whence)
+ ssize_t erofs_io_sendfile(struct erofs_vfile *vout, struct erofs_vfile *vin,
+ 			  off_t *pos, size_t count)
+ {
+-	ssize_t written;
++	ssize_t read, written;
+ 
+ 	if (vin->ops || vout->ops) {
+ 		if (vin->ops)
+@@ -597,16 +604,24 @@ ssize_t erofs_io_sendfile(struct erofs_vfile *vout, struct erofs_vfile *vin,
+ 	while (count) {
+ 		char buf[EROFS_MAX_BLOCK_SIZE];
+ 
+-		written = min_t(u64, count, sizeof(buf));
++		read = min_t(u64, count, sizeof(buf));
+ 		if (pos)
+-			written = erofs_io_pread(vin, buf, written, *pos);
++			read = erofs_io_pread(vin, buf, read, *pos);
+ 		else
+-			written = erofs_io_read(vin, buf, written);
+-		if (written <= 0)
++			read = erofs_io_read(vin, buf, read);
++		if (read <= 0) {
++			written = read;
+ 			break;
+-		count -= written;
++		}
++		count -= read;
+ 		if (pos)
+-			*pos += written;
++			*pos += read;
++		do {
++			written = erofs_io_write(vout, buf, read);
++			if (written < 0)
++				break;
++			read -= written;
++		} while (read);
+ 	}
+ 	return written < 0 ? written : count;
+ }
+-- 
+2.43.5
 
-You can reach us on WhatsApp at +15043731130.
-
-Thank you for your assistance. I look forward to your prompt response.
-
-Best regards,
-
-Nora Pagac
-Head of Procurement
 
