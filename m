@@ -1,73 +1,68 @@
-Return-Path: <linux-erofs+bounces-1181-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1182-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6357BD5FAE
-	for <lists+linux-erofs@lfdr.de>; Mon, 13 Oct 2025 21:39:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C422BDFFC3
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Oct 2025 20:06:03 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4clnjp3n0Vz30P3;
-	Tue, 14 Oct 2025 06:39:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cmzXm5dTyz3dSj;
+	Thu, 16 Oct 2025 05:06:00 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.13
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760384382;
-	cv=none; b=hSkGbMJjy7CYAb2OGAkKe1BQErGXDy1uP1vp+vSCH2RS0AFYUdudoz6gKkXcKR/mhM7u4EWtia+PksVxpdPwSSgNHwNFcIhxBKwVLVk3FRY652mgBK5WTy1tfhFaZHZTs9DMYjg/D1yedKl7B+fFYFsVpraT7TwCfppFoNDApGG9f4qwpO4zfR7lg8tGuN5TtZUtZFh8Cx7bh10ucZdJoBQ4m0/3tIOmO8H9GiebqDsrzoXDiZKhyZ0VzNIq1sIwIzyINouSZsSPO81QzqK4C03/7qsfpz/ApKsFfxg+MgDwlNNd7XzMD+SWH5tk+aMqDM+vRbgOEoEww0yiBxkVOg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::649"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760551560;
+	cv=none; b=cDEcAbugLL5cNLoqPQUPhRqBiDzw0RTxTmsjBG7V0F3nldnIdOTQuSiG4ogexDBFvYbt5X0XG5KpTX86W38u5PHqvBvEpyakt3MJthh19Tr9YYgb6jk3+2P/Rfy1Yc2dz+hOgKr8NTIcvXErZ+Ja0ylsFScf0DCGlenH+edAaM03mEdl+DFXIJGFx4iN9UHQVj0Ylwlkkx4B2FxlkHA5uKY6QqWZcacFg/WgYwd3BWvnPLMzkD9vB2nx8k4w7dZQtLPFCtDEIrrvIxDMTID2S+UFoeG5Sf0e+Saeq0XJEztl3c+ejWfahO8sYTmStxGXCxYtli0fe07WH3VLqjkGWA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760384382; c=relaxed/relaxed;
-	bh=0ZV/3x+cZXoHtOQzDMNicmQL8qDjd7ndw+sTSYlGsiY=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=iWZ7+K54XjFB8ctROjJus3DWZ9rE7xs2onw74XMrKjim32i79MhTyo96Ypyt8hnMNdcLgoFubN2ASiliUUmu+ln9EnywgXxB0xpfoFxIvbbM3avX9r4bwd2Xik2WRon7+mR75jSoIHLI+RZuc8vSTL5gONI9MiVmbiniDew8GJ6hMyT8vkjglcn+CddFvaE9SOfSYFZWBIakC4WD3BcP2NIrqF++iL8KEmDmou3u/3zlETbLlshxYKw5NZygcpXFMSfd8GJVyu2/5dljeYutwmhx7IkWQySN6GJZ7C5NTgJ7C25LIVVUbUFbYVzfDpTFtBUB5wZN682DCzyBtWU+/Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Sh90fN0x; dkim-atps=neutral; spf=pass (client-ip=192.198.163.13; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1760551560; c=relaxed/relaxed;
+	bh=wj/ujD0eXtGvKYdVuuqLrx+hKA4SG0aPTcTudPvMU20=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PSM3Xq+2hVlVI7a686I/Eb+Sqnt+NLW9WFnOa2kbeGkDoQ8sdUwDLbNE5a6J+CldB5vhqrRPIPZhLF6Evp3KeUfKSVklW4XrMgf3rmWTqQbz1kqbCvK2GtY68p5s4s60PHsnZR/qzisyuBFr7AOHNlViIXdY6NNcUe4GcH9uhHVMYQkN0KPAjSQY5c/pHPylm5bFBn6RsTD8Ty4bVANNn49coz2SmLEkhOoxuxiHvVIRFS07KtNQWtuy1ILoZF0zZ3jyK/Pq1AcP1OtSB7E1V3G4PkA7hiHA0hIEft0LN7DbS3mmBTT+K2aISs6Cxz55CDYQDgC4qZeW4xzTImO83A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=TQKY/9dt; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::649; helo=mail-pl1-x649.google.com; envelope-from=3g-lvaaykc1yg2yb704cc492.0ca96bil-2fc3g96ghg.cn9yzg.cf4@flex--seanjc.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Sh90fN0x;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=TQKY/9dt;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.13; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--seanjc.bounces.google.com (client-ip=2607:f8b0:4864:20::649; helo=mail-pl1-x649.google.com; envelope-from=3g-lvaaykc1yg2yb704cc492.0ca96bil-2fc3g96ghg.cn9yzg.cf4@flex--seanjc.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4clnjm1kw2z2xQ6
-	for <linux-erofs@lists.ozlabs.org>; Tue, 14 Oct 2025 06:39:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1760384380; x=1791920380;
-  h=date:from:to:cc:subject:message-id;
-  bh=DK9VlbKiXHU9jJuxM81c6qSR8g6vfo/MPzgUYD0E5DU=;
-  b=Sh90fN0xC6AjLw1aWPDgvfK6DGNBP1CPxKZ+uICKMVMQQ0Lxv8iFkg9g
-   9MEFgA3ikLslhy4J6swW7BkCKQtFGv6SoW7a9i0imLTVjC3NTodkfj57g
-   JBZdK2/TV0hpLkEtZt6N9yCasa9dBULMNpwUUAooGE0Gqp8O7adUdILv6
-   vaUmCdGUokqdocpfOXD7fIPBewiDyeDGczAIuSfd3WAwS1Crlsw5b9w0q
-   Iy5Yh+VBUfTSkUSfxzDTTbXURYQgCLeg5GjdJN4q23tUIcekGWul8yyG4
-   QW68+qr9eOcadQjCcrOq61vXGj6xZPDlxV4mQKb3H1tjrlBgvZ9P1kBF1
-   w==;
-X-CSE-ConnectionGUID: WfmG+cw8Trm7EBip6rG0Jw==
-X-CSE-MsgGUID: KrcZNbtlRsy40WikE1zOpg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11581"; a="65154346"
-X-IronPort-AV: E=Sophos;i="6.19,226,1754982000"; 
-   d="scan'208";a="65154346"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Oct 2025 12:39:35 -0700
-X-CSE-ConnectionGUID: j3ORBDelQM+uC2bs96QVWg==
-X-CSE-MsgGUID: orD3C+5xQdqrjQ7N5lFIEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,226,1754982000"; 
-   d="scan'208";a="186089767"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 13 Oct 2025 12:39:33 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1v8OOJ-00020N-1w;
-	Mon, 13 Oct 2025 19:39:31 +0000
-Date: Tue, 14 Oct 2025 03:38:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 959c58491d04e9611fcc58d209f05795975816d7
-Message-ID: <202510140327.ARoqHOKl-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cmzXl3P68z3d44
+	for <linux-erofs@lists.ozlabs.org>; Thu, 16 Oct 2025 05:05:58 +1100 (AEDT)
+Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-2904e9e0ef9so145739725ad.3
+        for <linux-erofs@lists.ozlabs.org>; Wed, 15 Oct 2025 11:05:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1760551557; x=1761156357; darn=lists.ozlabs.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wj/ujD0eXtGvKYdVuuqLrx+hKA4SG0aPTcTudPvMU20=;
+        b=TQKY/9dtGk0gQkGozLPJIWevwqOk9ThCK0HBglPJAD8WgmqJ/YacU39j76h2JXAKnf
+         159668XO3DsLpC1sKLrPgG3fGzGPNrw6ogoCNY1wseIF8e5xcWU6UBmGlfadGjRuXXin
+         Zxo5pjW4SfIeALFrS7ij5adauuRP2kD6SxoVxNSw/6kbJfycHsTwOdGBJmfH76X1FXk7
+         k2ewYolK2qwysToQoNKVCSbx/Wqd1VkBHAbMkitcjTNFLmGeLUEfz5ScMqE4rTEfa20D
+         V2PRcL96Op9UOdOxZNz3KDee/gaWfgMOTxPzR2fO2prjnJnE01b+zm98lHB7oSPXdm7K
+         MwAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760551557; x=1761156357;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wj/ujD0eXtGvKYdVuuqLrx+hKA4SG0aPTcTudPvMU20=;
+        b=hL5mtKDBGUfSS8X7qPs/3dsam6dxfg9FIfv0ouScyyu9muqUrGOnyjMYFrRSQmLthQ
+         G4hQChkaOPngayJyajz4PENpvqnlm4T9BFj8/PNbnSWoHPzqJvtiDnlv+XQpcUcy25QA
+         oWcb53cPIDd8F7Lc9xAVW6D11sEraRJDfa8xWsmXn41VsVIAPr4xNCGtRynznxtI6IjP
+         CHODUbP2aEbOU/QFREHNM5TuL94aC+DQ0WuIo5barbDoqo/oN0wtl98FlavrZiMh7lcd
+         HSo+OTNt9lIRQXRZCrZuUgLi394oGHP53yKRlz5b9TeGN2PsCZnG4KXTtnpAbsAKheOr
+         LsxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNZ9LOJWYcOuBW7C1tJYLpXuBG7fedFGt+OFpZR7DSTRSYhQe3e4yVTWNankVg/EocoOutqbMl712seg==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0Yx4YXVNZ0Y5k6p9H+s2Z92jUMO96Db5w6xpidTHNbC/tUCU3TXu
+	JxgE2idmLLZAWTFBwKhjJailVUcxiJhPKUtHfuHckUZ/Tje61mNNUnBiMGhK6QtQvQuh0sx1uF8
+	E4XICUA==
+X-Google-Smtp-Source: AGHT+IH/Mc5bux0nHPu+CkauZuwZIYiV046udmQ4p4yB6kgoXdVfplmR64sQJckJg1s2r9B+yaVqVDHEGb8=
+X-Received: from pjrv8.prod.google.com ([2002:a17:90a:bb88:b0:32e:b34b:92eb])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3d05:b0:26e:49e3:55f1
+ with SMTP id d9443c01a7336-29027373d9amr366930845ad.18.1760551555936; Wed, 15
+ Oct 2025 11:05:55 -0700 (PDT)
+Date: Wed, 15 Oct 2025 11:02:44 -0700
+In-Reply-To: <20250827175247.83322-2-shivankg@amd.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -78,148 +73,78 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+Mime-Version: 1.0
+References: <20250827175247.83322-2-shivankg@amd.com>
+X-Mailer: git-send-email 2.51.0.788.g6d19910ace-goog
+Message-ID: <176055105546.1527431.3611256810380818215.b4-ty@google.com>
+Subject: Re: [PATCH kvm-next V11 0/7] Add NUMA mempolicy support for KVM guest-memfd
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, willy@infradead.org, akpm@linux-foundation.org, 
+	david@redhat.com, pbonzini@redhat.com, shuah@kernel.org, vbabka@suse.cz, 
+	Shivank Garg <shivankg@amd.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, dsterba@suse.com, 
+	xiang@kernel.org, chao@kernel.org, jaegeuk@kernel.org, clm@fb.com, 
+	josef@toxicpanda.com, kent.overstreet@linux.dev, zbestahu@gmail.com, 
+	jefflexu@linux.alibaba.com, dhavale@google.com, lihongbo22@huawei.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org, 
+	surenb@google.com, mhocko@suse.com, ziy@nvidia.com, matthew.brost@intel.com, 
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
+	gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com, 
+	tabba@google.com, ackerleytng@google.com, paul@paul-moore.com, 
+	jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com, 
+	vannapurve@google.com, chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, 
+	michael.day@amd.com, shdhiman@amd.com, yan.y.zhao@intel.com, 
+	Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, michael.roth@amd.com, 
+	aik@amd.com, kalyazin@amazon.com, peterx@redhat.com, jack@suse.cz, 
+	hch@infradead.org, cgzones@googlemail.com, ira.weiny@intel.com, 
+	rientjes@google.com, roypat@amazon.co.uk, chao.p.peng@intel.com, 
+	amit@infradead.org, ddutile@redhat.com, dan.j.williams@intel.com, 
+	ashish.kalra@amd.com, gshan@redhat.com, jgowans@amazon.com, 
+	pankaj.gupta@amd.com, papaluri@amd.com, yuzhao@google.com, 
+	suzuki.poulose@arm.com, quic_eberman@quicinc.com, 
+	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-coco@lists.linux.dev, Jason Gunthorpe <jgg@ziepe.ca>
+Content-Type: text/plain; charset="utf-8"
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 959c58491d04e9611fcc58d209f05795975816d7  erofs: fix crafted invalid cases for encoded extents
+On Wed, 27 Aug 2025 17:52:41 +0000, Shivank Garg wrote:
+> This series introduces NUMA-aware memory placement support for KVM guests
+> with guest_memfd memory backends. It builds upon Fuad Tabba's work (V17)
+> that enabled host-mapping for guest_memfd memory [1] and can be applied
+> directly applied on KVM tree [2] (branch kvm-next, base commit: a6ad5413,
+> Merge branch 'guest-memfd-mmap' into HEAD)
+> 
+> == Background ==
+> KVM's guest-memfd memory backend currently lacks support for NUMA policy
+> enforcement, causing guest memory allocations to be distributed across host
+> nodes  according to kernel's default behavior, irrespective of any policy
+> specified by the VMM. This limitation arises because conventional userspace
+> NUMA control mechanisms like mbind(2) don't work since the memory isn't
+> directly mapped to userspace when allocations occur.
+> Fuad's work [1] provides the necessary mmap capability, and this series
+> leverages it to enable mbind(2).
+> 
+> [...]
 
-elapsed time: 724m
+Applied the non-KVM change to kvm-x86 gmem.  We're still tweaking and iterating
+on the KVM changes, but I fully expect them to land in 6.19.
 
-configs tested: 127
-configs skipped: 4
+Holler if you object to taking these through the kvm tree.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                   randconfig-001-20251013    gcc-8.5.0
-arc                   randconfig-002-20251013    gcc-13.4.0
-arm                              allmodconfig    gcc-15.1.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                          gemini_defconfig    clang-20
-arm                        mvebu_v5_defconfig    gcc-15.1.0
-arm                   randconfig-001-20251013    gcc-10.5.0
-arm                   randconfig-002-20251013    clang-22
-arm                   randconfig-003-20251013    gcc-12.5.0
-arm                   randconfig-004-20251013    clang-22
-arm                         vf610m4_defconfig    gcc-15.1.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20251013    clang-19
-arm64                 randconfig-002-20251013    gcc-8.5.0
-arm64                 randconfig-003-20251013    clang-22
-arm64                 randconfig-004-20251013    gcc-8.5.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20251013    gcc-15.1.0
-csky                  randconfig-002-20251013    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20251013    clang-22
-hexagon               randconfig-002-20251013    clang-22
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20251013    gcc-13
-i386        buildonly-randconfig-002-20251013    clang-20
-i386        buildonly-randconfig-003-20251013    gcc-14
-i386        buildonly-randconfig-004-20251013    clang-20
-i386        buildonly-randconfig-005-20251013    gcc-14
-i386        buildonly-randconfig-006-20251013    gcc-14
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20251013    clang-18
-loongarch             randconfig-002-20251013    gcc-13.4.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                          eyeq6_defconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251013    gcc-8.5.0
-nios2                 randconfig-002-20251013    gcc-8.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                generic-64bit_defconfig    gcc-15.1.0
-parisc                randconfig-001-20251013    gcc-12.5.0
-parisc                randconfig-002-20251013    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    clang-22
-powerpc                      arches_defconfig    gcc-15.1.0
-powerpc                     asp8347_defconfig    clang-22
-powerpc                       ebony_defconfig    clang-22
-powerpc                          g5_defconfig    gcc-15.1.0
-powerpc                     mpc512x_defconfig    clang-22
-powerpc                 mpc832x_rdb_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20251013    clang-22
-powerpc               randconfig-002-20251013    clang-18
-powerpc               randconfig-003-20251013    clang-22
-powerpc64             randconfig-001-20251013    gcc-10.5.0
-powerpc64             randconfig-002-20251013    gcc-15.1.0
-powerpc64             randconfig-003-20251013    clang-20
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20251013    clang-22
-riscv                 randconfig-002-20251013    clang-22
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                  randconfig-001-20251013    gcc-8.5.0
-s390                  randconfig-002-20251013    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                            migor_defconfig    gcc-15.1.0
-sh                    randconfig-001-20251013    gcc-10.5.0
-sh                    randconfig-002-20251013    gcc-15.1.0
-sh                            shmin_defconfig    gcc-15.1.0
-sh                             shx3_defconfig    gcc-15.1.0
-sh                          urquell_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251013    gcc-8.5.0
-sparc                 randconfig-002-20251013    gcc-8.5.0
-sparc64               randconfig-001-20251013    clang-20
-sparc64               randconfig-002-20251013    gcc-14.3.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                    randconfig-001-20251013    gcc-14
-um                    randconfig-002-20251013    gcc-14
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251013    gcc-13
-x86_64      buildonly-randconfig-002-20251013    clang-20
-x86_64      buildonly-randconfig-003-20251013    clang-20
-x86_64      buildonly-randconfig-004-20251013    gcc-14
-x86_64      buildonly-randconfig-005-20251013    clang-20
-x86_64      buildonly-randconfig-006-20251013    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                randconfig-001-20251013    gcc-11.5.0
-xtensa                randconfig-002-20251013    gcc-11.5.0
+[1/7] mm/filemap: Add NUMA mempolicy support to filemap_alloc_folio()
+      https://github.com/kvm-x86/linux/commit/601aa29f762f
+[2/7] mm/filemap: Extend __filemap_get_folio() to support NUMA memory policies
+      https://github.com/kvm-x86/linux/commit/2bb25703e5bd
+[3/7] mm/mempolicy: Export memory policy symbols
+      https://github.com/kvm-x86/linux/commit/e1b4cf7d6be3
 
 --
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+https://github.com/kvm-x86/linux/tree/next
 
