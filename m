@@ -1,68 +1,116 @@
-Return-Path: <linux-erofs+bounces-1182-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1183-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C422BDFFC3
-	for <lists+linux-erofs@lfdr.de>; Wed, 15 Oct 2025 20:06:03 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B9CBBE0DAB
+	for <lists+linux-erofs@lfdr.de>; Wed, 15 Oct 2025 23:46:12 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cmzXm5dTyz3dSj;
-	Thu, 16 Oct 2025 05:06:00 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cn4Qp0Krlz2xQ5;
+	Thu, 16 Oct 2025 08:46:10 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::649"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760551560;
-	cv=none; b=cDEcAbugLL5cNLoqPQUPhRqBiDzw0RTxTmsjBG7V0F3nldnIdOTQuSiG4ogexDBFvYbt5X0XG5KpTX86W38u5PHqvBvEpyakt3MJthh19Tr9YYgb6jk3+2P/Rfy1Yc2dz+hOgKr8NTIcvXErZ+Ja0ylsFScf0DCGlenH+edAaM03mEdl+DFXIJGFx4iN9UHQVj0Ylwlkkx4B2FxlkHA5uKY6QqWZcacFg/WgYwd3BWvnPLMzkD9vB2nx8k4w7dZQtLPFCtDEIrrvIxDMTID2S+UFoeG5Sf0e+Saeq0XJEztl3c+ejWfahO8sYTmStxGXCxYtli0fe07WH3VLqjkGWA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::72a"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760564769;
+	cv=none; b=F/jidiLiDFu+/X9293Mz/c0KS16yaUGacgOmt4vmyEx7uAksub76KxTZq4Ow98ul++oqJ+oDLOpXqPeTPQTwPpQqEXDFZVr3uRZoKN1XEi8W9ER8kOLtAgf3Zm8kzatDZOL4s/gMIJML7JSIzxTONpn7v+iUhyJSE0Pm19ywuPxnHgK44RQTVGOgRryyp9hEMyBEdHahoSHj363Phbe2n+tB6xB+78mmYVLYgqsJrPYgG5ZoaTo0TPeMFDlfUsc16CglXSThYNABr+5tImLBm2ntKNsd3suKkb263BWGYbyGWJtf/D1ojuIE85qnwtlPo0DTaLMcwe2ISEa16ZwEVA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760551560; c=relaxed/relaxed;
-	bh=wj/ujD0eXtGvKYdVuuqLrx+hKA4SG0aPTcTudPvMU20=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PSM3Xq+2hVlVI7a686I/Eb+Sqnt+NLW9WFnOa2kbeGkDoQ8sdUwDLbNE5a6J+CldB5vhqrRPIPZhLF6Evp3KeUfKSVklW4XrMgf3rmWTqQbz1kqbCvK2GtY68p5s4s60PHsnZR/qzisyuBFr7AOHNlViIXdY6NNcUe4GcH9uhHVMYQkN0KPAjSQY5c/pHPylm5bFBn6RsTD8Ty4bVANNn49coz2SmLEkhOoxuxiHvVIRFS07KtNQWtuy1ILoZF0zZ3jyK/Pq1AcP1OtSB7E1V3G4PkA7hiHA0hIEft0LN7DbS3mmBTT+K2aISs6Cxz55CDYQDgC4qZeW4xzTImO83A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=TQKY/9dt; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::649; helo=mail-pl1-x649.google.com; envelope-from=3g-lvaaykc1yg2yb704cc492.0ca96bil-2fc3g96ghg.cn9yzg.cf4@flex--seanjc.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
+	t=1760564769; c=relaxed/relaxed;
+	bh=L3FMg1FEv7ZUbFziIBjfrlMH5r4d6/IdcxKlJL9nOzQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NicBUAnC3jXlWKVxrCi1oM56Ss03yrUk+0jgg/RrkGitNFOAe7nFbnyGCtr2+9Zb1BQfSYqktxWvvgKnUAmfcZTmC1S1EWjSrkI3iNg0pIHKgN49YDdwb4NgZgZ1sa1ZH4ASaCAG4ap11bB5nVdfPBzAu/hIvlamJvabFuC1u+/8Evz+D0Og1CifJ8ipoZvztEItVPt2SN/aNfBSR8Ey5LPwnJeDBkmJskMxiRZuJMb+anx6eIttvS/QzpnQPhhVT1OGXbySehXuJ95tiz/2KG+zLU/T2UvNcRBdeF9UqdpSt8P98aqRT6d9XbG34X7Tiq+EQ2LSpJ6BXC9fKgbAhA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=gourry.net; dkim=pass (2048-bit key; unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=YGEZBkBV; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::72a; helo=mail-qk1-x72a.google.com; envelope-from=gourry@gourry.net; receiver=lists.ozlabs.org) smtp.mailfrom=gourry.net
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=TQKY/9dt;
+	dkim=pass (2048-bit key; unprotected) header.d=gourry.net header.i=@gourry.net header.a=rsa-sha256 header.s=google header.b=YGEZBkBV;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--seanjc.bounces.google.com (client-ip=2607:f8b0:4864:20::649; helo=mail-pl1-x649.google.com; envelope-from=3g-lvaaykc1yg2yb704cc492.0ca96bil-2fc3g96ghg.cn9yzg.cf4@flex--seanjc.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gourry.net (client-ip=2607:f8b0:4864:20::72a; helo=mail-qk1-x72a.google.com; envelope-from=gourry@gourry.net; receiver=lists.ozlabs.org)
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cmzXl3P68z3d44
-	for <linux-erofs@lists.ozlabs.org>; Thu, 16 Oct 2025 05:05:58 +1100 (AEDT)
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-2904e9e0ef9so145739725ad.3
-        for <linux-erofs@lists.ozlabs.org>; Wed, 15 Oct 2025 11:05:58 -0700 (PDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cn4Qj1jVxz2xQ4
+	for <linux-erofs@lists.ozlabs.org>; Thu, 16 Oct 2025 08:46:04 +1100 (AEDT)
+Received: by mail-qk1-x72a.google.com with SMTP id af79cd13be357-85a4ceb4c3dso6347185a.3
+        for <linux-erofs@lists.ozlabs.org>; Wed, 15 Oct 2025 14:46:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1760551557; x=1761156357; darn=lists.ozlabs.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wj/ujD0eXtGvKYdVuuqLrx+hKA4SG0aPTcTudPvMU20=;
-        b=TQKY/9dtGk0gQkGozLPJIWevwqOk9ThCK0HBglPJAD8WgmqJ/YacU39j76h2JXAKnf
-         159668XO3DsLpC1sKLrPgG3fGzGPNrw6ogoCNY1wseIF8e5xcWU6UBmGlfadGjRuXXin
-         Zxo5pjW4SfIeALFrS7ij5adauuRP2kD6SxoVxNSw/6kbJfycHsTwOdGBJmfH76X1FXk7
-         k2ewYolK2qwysToQoNKVCSbx/Wqd1VkBHAbMkitcjTNFLmGeLUEfz5ScMqE4rTEfa20D
-         V2PRcL96Op9UOdOxZNz3KDee/gaWfgMOTxPzR2fO2prjnJnE01b+zm98lHB7oSPXdm7K
-         MwAQ==
+        d=gourry.net; s=google; t=1760564762; x=1761169562; darn=lists.ozlabs.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L3FMg1FEv7ZUbFziIBjfrlMH5r4d6/IdcxKlJL9nOzQ=;
+        b=YGEZBkBV7O30KW/gYcsy0T+mk8919SgAuOTqD6myuki0JjB7k+aFIIe32CZ4lYkNnE
+         hWUQLx3gnZu+qps7V+1QQdBiataKfHRTjAHEWcx2gqmtZ+H9GBGry508Ig2DqJDk+u5j
+         fgkf28rjjHjOKP71xABshyUq3ei5B46JWeojuu87Q/7WePtGNxagiJw6i8y01hOhpdAh
+         KgbJwYDNJt0lq1lnfhIAatC5DPJckpGXQxrQuMLQkpOlMtt2XCNvxw5RnFCq2HCLr5B+
+         e6qfPHIWL0Xlb2s0zBLnGX1gaJkiljc9D1btlLVELzyi2i9PKV6gIP+RL0ZCq/yDuJQN
+         31OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760551557; x=1761156357;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wj/ujD0eXtGvKYdVuuqLrx+hKA4SG0aPTcTudPvMU20=;
-        b=hL5mtKDBGUfSS8X7qPs/3dsam6dxfg9FIfv0ouScyyu9muqUrGOnyjMYFrRSQmLthQ
-         G4hQChkaOPngayJyajz4PENpvqnlm4T9BFj8/PNbnSWoHPzqJvtiDnlv+XQpcUcy25QA
-         oWcb53cPIDd8F7Lc9xAVW6D11sEraRJDfa8xWsmXn41VsVIAPr4xNCGtRynznxtI6IjP
-         CHODUbP2aEbOU/QFREHNM5TuL94aC+DQ0WuIo5barbDoqo/oN0wtl98FlavrZiMh7lcd
-         HSo+OTNt9lIRQXRZCrZuUgLi394oGHP53yKRlz5b9TeGN2PsCZnG4KXTtnpAbsAKheOr
-         LsxA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNZ9LOJWYcOuBW7C1tJYLpXuBG7fedFGt+OFpZR7DSTRSYhQe3e4yVTWNankVg/EocoOutqbMl712seg==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0Yx4YXVNZ0Y5k6p9H+s2Z92jUMO96Db5w6xpidTHNbC/tUCU3TXu
-	JxgE2idmLLZAWTFBwKhjJailVUcxiJhPKUtHfuHckUZ/Tje61mNNUnBiMGhK6QtQvQuh0sx1uF8
-	E4XICUA==
-X-Google-Smtp-Source: AGHT+IH/Mc5bux0nHPu+CkauZuwZIYiV046udmQ4p4yB6kgoXdVfplmR64sQJckJg1s2r9B+yaVqVDHEGb8=
-X-Received: from pjrv8.prod.google.com ([2002:a17:90a:bb88:b0:32e:b34b:92eb])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3d05:b0:26e:49e3:55f1
- with SMTP id d9443c01a7336-29027373d9amr366930845ad.18.1760551555936; Wed, 15
- Oct 2025 11:05:55 -0700 (PDT)
-Date: Wed, 15 Oct 2025 11:02:44 -0700
-In-Reply-To: <20250827175247.83322-2-shivankg@amd.com>
+        d=1e100.net; s=20230601; t=1760564762; x=1761169562;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L3FMg1FEv7ZUbFziIBjfrlMH5r4d6/IdcxKlJL9nOzQ=;
+        b=ESKe7kzDvo8zBnGBVDUU+uVDnf7mzAaFwf2Gk3Mt1hlBrmAqcdxtzN3WuLCFIe/621
+         1Yr88Bre9H0j17DJbWmLJvb+8XHRXZ+o8nd2OCyu4278qiFUjtPWM6d0AWEKWiRC/6jk
+         jLS1xhsdO3QtiUixd/h2knRzsTOhqH0U1gM1Sl8CqR1mYzLLan28IjZuin1x35JbUYFV
+         +QfYEAebTQLY199ssUg62xtH16qNVHy8Ry4U+zTnFRcEOiciPs9ZJcyjc3J+1J/m1qRW
+         OGADdcFzPkF8S07Wucz65Dcqn5Z8V88E5SM6rmhvG9KBTQ9LPpfwgb5In4xtZ8eoV/Dn
+         pNhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVyqLSSXGFQNTb9NY1oXNWL409VdQP2QDM3mRvfDoiF9CWKsPpYeuaIzOxpa3D4BpNTIelqzqya5x+y5g==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YycyPhjFpLVFxD8EMYw/KULgRnpmn0xsRQpb9CuIw9kSbimzXkv
+	NH2ubLBVplYJjSVYLTvEAZVepK2TSUrotkV2yEebypT2G7sqYi1lkpmhckdy5BDdZnk=
+X-Gm-Gg: ASbGncvsrjS9IyVvaeyM+MflZLtD5T8umI0bRlD7nJCCtCC7YHxXqwYoItcRHuve28N
+	txdkz0XPxq9PejQogyt10QecgkLVlaBliQNCAH046QVvqxeQKN7r4o8WvaJy5xoweddNn6IE4UE
+	ScQ3vgSYP5Q42rCSPIqUu9hUzIYxttxXu92bxUrXJGTf24K5xV/LyIuhFw66p7TQyqjvOYcXE01
+	KHKSyQJ1GubNOj1E6vz9Fx1clZZcsHDih2O5sLVQ2S9za+Cx2BXA1HVk5aknSdYGirYvQD5jQQn
+	EnjvpOY8NGrfD6DzAKMBvH3fRQ8pmspsdXq607Rniz2OXfQUH/Cw9oIhqcfmtyMO/p/OHXTtEPW
+	S/rMOG5A9cJCBT+t3rnR29CUfguiaYE3mK1Ker3KwJIrSPk1SSdZji4tn8oTLMe3OmJwBvFJVDH
+	qROSOF0RMtDXczX1jfpcKbdAgEZVlwVMvVOdER8rJJO09vxKT7BufjUBFReLijRhM6IlsfWg==
+X-Google-Smtp-Source: AGHT+IGFaJmIXEF9qOWREfnISohaPtcOawCiX32gOo0axLN0cRb3DCKNrFn66v9UE7KAPGfO0N4wTQ==
+X-Received: by 2002:a05:620a:1a02:b0:88e:86a3:98f1 with SMTP id af79cd13be357-88e86a39b78mr380325385a.45.1760564761659;
+        Wed, 15 Oct 2025 14:46:01 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F (pool-96-255-20-138.washdc.ftas.verizon.net. [96.255.20.138])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-88f37e50ebasm56360985a.31.2025.10.15.14.45.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Oct 2025 14:46:00 -0700 (PDT)
+Date: Wed, 15 Oct 2025 17:45:57 -0400
+From: Gregory Price <gourry@gourry.net>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Shivank Garg <shivankg@amd.com>, jgowans@amazon.com, mhocko@suse.com,
+	jack@suse.cz, kvm@vger.kernel.org, david@redhat.com,
+	linux-btrfs@vger.kernel.org, aik@amd.com, papaluri@amd.com,
+	kalyazin@amazon.com, peterx@redhat.com, linux-mm@kvack.org,
+	clm@fb.com, ddutile@redhat.com, linux-kselftest@vger.kernel.org,
+	shdhiman@amd.com, gshan@redhat.com, ying.huang@linux.alibaba.com,
+	shuah@kernel.org, roypat@amazon.co.uk, matthew.brost@intel.com,
+	linux-coco@lists.linux.dev, zbestahu@gmail.com,
+	lorenzo.stoakes@oracle.com, linux-bcachefs@vger.kernel.org,
+	ira.weiny@intel.com, dhavale@google.com, jmorris@namei.org,
+	willy@infradead.org, hch@infradead.org, chao.gao@intel.com,
+	tabba@google.com, ziy@nvidia.com, rientjes@google.com,
+	yuzhao@google.com, xiang@kernel.org, nikunj@amd.com,
+	serge@hallyn.com, amit@infradead.org, thomas.lendacky@amd.com,
+	ashish.kalra@amd.com, chao.p.peng@intel.com, yan.y.zhao@intel.com,
+	byungchul@sk.com, michael.day@amd.com, Neeraj.Upadhyay@amd.com,
+	michael.roth@amd.com, bfoster@redhat.com, bharata@amd.com,
+	josef@toxicpanda.com, Liam.Howlett@oracle.com,
+	ackerleytng@google.com, dsterba@suse.com, viro@zeniv.linux.org.uk,
+	jefflexu@linux.alibaba.com, jaegeuk@kernel.org,
+	dan.j.williams@intel.com, surenb@google.com, vbabka@suse.cz,
+	paul@paul-moore.com, joshua.hahnjy@gmail.com, apopple@nvidia.com,
+	brauner@kernel.org, quic_eberman@quicinc.com, rakie.kim@sk.com,
+	cgzones@googlemail.com, pvorel@suse.cz,
+	linux-erofs@lists.ozlabs.org, kent.overstreet@linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net, pankaj.gupta@amd.com,
+	linux-security-module@vger.kernel.org, lihongbo22@huawei.com,
+	linux-fsdevel@vger.kernel.org, pbonzini@redhat.com,
+	akpm@linux-foundation.org, vannapurve@google.com,
+	suzuki.poulose@arm.com, rppt@kernel.org, jgg@nvidia.com
+Subject: Re: [f2fs-dev] [PATCH kvm-next V11 6/7] KVM: guest_memfd: Enforce
+ NUMA mempolicy using shared policy
+Message-ID: <aPAWFQyFLK4EKWVK@gourry-fedora-PF4VCD3F>
+References: <20250827175247.83322-2-shivankg@amd.com>
+ <20250827175247.83322-9-shivankg@amd.com>
+ <aNVQJqYLX17v-fsf@google.com>
+ <aNbrO7A7fSjb4W84@google.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -73,78 +121,66 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-Mime-Version: 1.0
-References: <20250827175247.83322-2-shivankg@amd.com>
-X-Mailer: git-send-email 2.51.0.788.g6d19910ace-goog
-Message-ID: <176055105546.1527431.3611256810380818215.b4-ty@google.com>
-Subject: Re: [PATCH kvm-next V11 0/7] Add NUMA mempolicy support for KVM guest-memfd
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, willy@infradead.org, akpm@linux-foundation.org, 
-	david@redhat.com, pbonzini@redhat.com, shuah@kernel.org, vbabka@suse.cz, 
-	Shivank Garg <shivankg@amd.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, dsterba@suse.com, 
-	xiang@kernel.org, chao@kernel.org, jaegeuk@kernel.org, clm@fb.com, 
-	josef@toxicpanda.com, kent.overstreet@linux.dev, zbestahu@gmail.com, 
-	jefflexu@linux.alibaba.com, dhavale@google.com, lihongbo22@huawei.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org, 
-	surenb@google.com, mhocko@suse.com, ziy@nvidia.com, matthew.brost@intel.com, 
-	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
-	gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com, 
-	tabba@google.com, ackerleytng@google.com, paul@paul-moore.com, 
-	jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com, 
-	vannapurve@google.com, chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, 
-	michael.day@amd.com, shdhiman@amd.com, yan.y.zhao@intel.com, 
-	Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, michael.roth@amd.com, 
-	aik@amd.com, kalyazin@amazon.com, peterx@redhat.com, jack@suse.cz, 
-	hch@infradead.org, cgzones@googlemail.com, ira.weiny@intel.com, 
-	rientjes@google.com, roypat@amazon.co.uk, chao.p.peng@intel.com, 
-	amit@infradead.org, ddutile@redhat.com, dan.j.williams@intel.com, 
-	ashish.kalra@amd.com, gshan@redhat.com, jgowans@amazon.com, 
-	pankaj.gupta@amd.com, papaluri@amd.com, yuzhao@google.com, 
-	suzuki.poulose@arm.com, quic_eberman@quicinc.com, 
-	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-coco@lists.linux.dev, Jason Gunthorpe <jgg@ziepe.ca>
-Content-Type: text/plain; charset="utf-8"
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=disabled version=4.0.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aNbrO7A7fSjb4W84@google.com>
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Wed, 27 Aug 2025 17:52:41 +0000, Shivank Garg wrote:
-> This series introduces NUMA-aware memory placement support for KVM guests
-> with guest_memfd memory backends. It builds upon Fuad Tabba's work (V17)
-> that enabled host-mapping for guest_memfd memory [1] and can be applied
-> directly applied on KVM tree [2] (branch kvm-next, base commit: a6ad5413,
-> Merge branch 'guest-memfd-mmap' into HEAD)
+On Fri, Sep 26, 2025 at 12:36:27PM -0700, Sean Christopherson via Linux-f2fs-devel wrote:
+> > 
+> > static struct mempolicy *kvm_gmem_get_policy(struct vm_area_struct *vma,
+> > 					     unsigned long addr, pgoff_t *pgoff)
+> > {
+> > 	*pgoff = vma->vm_pgoff + ((addr - vma->vm_start) >> PAGE_SHIFT);
+> > 
+> > 	return __kvm_gmem_get_policy(GMEM_I(file_inode(vma->vm_file)), *pgoff);
 > 
-> == Background ==
-> KVM's guest-memfd memory backend currently lacks support for NUMA policy
-> enforcement, causing guest memory allocations to be distributed across host
-> nodes  according to kernel's default behavior, irrespective of any policy
-> specified by the VMM. This limitation arises because conventional userspace
-> NUMA control mechanisms like mbind(2) don't work since the memory isn't
-> directly mapped to userspace when allocations occur.
-> Fuad's work [1] provides the necessary mmap capability, and this series
-> leverages it to enable mbind(2).
+> Argh!!!!!  This breaks the selftest because do_get_mempolicy() very specifically
+> falls back to the default_policy, NOT to the current task's policy.  That is
+> *exactly* the type of subtle detail that needs to be commented, because there's
+> no way some random KVM developer is going to know that returning NULL here is
+> important with respect to get_mempolicy() ABI.
 > 
-> [...]
 
-Applied the non-KVM change to kvm-x86 gmem.  We're still tweaking and iterating
-on the KVM changes, but I fully expect them to land in 6.19.
+Do_get_mempolicy was designed to be accessed by the syscall, not as an in-kernel ABI.
 
-Holler if you object to taking these through the kvm tree.
+get_task_policy also returns the default policy if there's nothing
+there, because that's what applies.
 
-[1/7] mm/filemap: Add NUMA mempolicy support to filemap_alloc_folio()
-      https://github.com/kvm-x86/linux/commit/601aa29f762f
-[2/7] mm/filemap: Extend __filemap_get_folio() to support NUMA memory policies
-      https://github.com/kvm-x86/linux/commit/2bb25703e5bd
-[3/7] mm/mempolicy: Export memory policy symbols
-      https://github.com/kvm-x86/linux/commit/e1b4cf7d6be3
+I have dangerous questions:
 
---
-https://github.com/kvm-x86/linux/tree/next
+why is __kvm_gmem_get_policy using
+	mpol_shared_policy_lookup()
+instead of
+	get_vma_policy()
+
+get_vma_policy does this all for you
+
+struct mempolicy *get_vma_policy(struct vm_area_struct *vma,
+                                 unsigned long addr, int order, pgoff_t *ilx)
+{
+        struct mempolicy *pol;
+
+        pol = __get_vma_policy(vma, addr, ilx);
+        if (!pol)
+                pol = get_task_policy(current);
+        if (pol->mode == MPOL_INTERLEAVE ||
+            pol->mode == MPOL_WEIGHTED_INTERLEAVE) {
+                *ilx += vma->vm_pgoff >> order;
+                *ilx += (addr - vma->vm_start) >> (PAGE_SHIFT + order);
+        }
+        return pol;
+}
+
+Of course you still have the same issue: get_task_policy will return the
+default, because that's what applies.
+
+do_get_mempolicy just seems like the completely incorrect interface to
+be using here.
+
+~Gregory
 
