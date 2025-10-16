@@ -1,50 +1,103 @@
-Return-Path: <linux-erofs+bounces-1191-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1192-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 734E3BE1504
-	for <lists+linux-erofs@lfdr.de>; Thu, 16 Oct 2025 04:48:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 15152BE38D2
+	for <lists+linux-erofs@lfdr.de>; Thu, 16 Oct 2025 14:59:26 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cnC7g4T8vz306d;
-	Thu, 16 Oct 2025 13:48:31 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cnShV5TPsz30Vl;
+	Thu, 16 Oct 2025 23:59:22 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760582911;
-	cv=none; b=Kv7v2NL2vhAQKF8numluxxFJmbVWQNAA5uI/wRbsFV3+00ZpISEtVu+lto0pWnaoeaFq9KW31WXcZYBXL7zPAyFVpvdUGXZ9pfMuJfkxK2AWt8XUL1LhA475s0YxzTwHJEeHu9Wzb8swLQpdlV9RfLFiP23Aodk31vEPS/3yw5YbjsYjOGKZRNc+VCkX961O187gYbRi4FHex7AlSISsnroTFe3cs9fs4orzyQwL2A8fLrTpBwEWoc953tzzBsqd5gM+Ii8ZJwxOe2Lk3r7WuwFFWx/3m6FfoH4SyStBX0dNnQxPN4kB1auqB25CWFPXhgwTTA/qJAineVLt5W6pCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760582911; c=relaxed/relaxed;
-	bh=gZIG05n5QXaTZ/2KSv40ccCRoSyvyQhhSnw4GSIhD8c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ze64+hUrEKDuBzCxrAmCLz7n0wb2G80nOdUGV7G4dbfVsDErHi6R8P8YGz/5BEQt+6CrI5lQbeiQJ7M8WbNNMEIFBoL1fW9kpge1WCa958zcIjgH1OK4/WtnHgihcDycz7L+CRpMCvCf2tRNhP+Moi5YFztmkADO5Q9Ag5qk1enN6zw35ikvQZ2fnTLS6uKbZrU2nBAA+njicUQlgrFDWNrZ++Gaf+zIo5urv5VjYyRcUFkFIIeWpM0y8HzfSgxsMCAIRKCu3ib+mfX7XPdGJsNfrCH5cPJEJDjySnyciz6Hdn+QlAIsAa4S6nPssJoQx+MMstg5FDKB4pYYH2eXRQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZGJT9ter; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c007::2" arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760619562;
+	cv=pass; b=fjuFCw8O/K9a9l5rDLL2y7o7lFwFBbwLUc3dumLnX2rM+EUmxM/G9s8UZdRmyuSMkzSDAm3lybTC1TjWpNlUcouwEs15AdrH6GudQF/YXyK4G0TYzYKZHbtyEwIL0YeWflK0DpswrpCk3eKgwk5VqF3xBxGHhjqPLqxwtup/a+dZL2ZHCAhgdyhHcf6y3dUYoTEk2pccMEMJYJCWHJC7cNRss2iAJkTOUJN/pNu+duZW/wBtK2xUTqycINXzeEG1ifwfRce19AJ+qK62H1y7JKtKa3qDzKbZOzYCW03AstgKgpq3IqHTkT9+zOMIw/c8bYEPABuRKYA31XaULi1jOA==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1760619562; c=relaxed/relaxed;
+	bh=M30CxV1aMi0FtJXMJ7c5OlauVYlqHgXAHk6l6IIqHqI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DYtqreH7EQceiNuz8rdbgvlrxtKKIIaxbxjqXzY5kF+UhooeSgAJQM/g83eW6DBgj8IcfurPdxBU4xuRVjmSGogtE9dxaBmnzyNzO4P9oiEthL1aIWC4wth5fIW3zqDxC9wPgrFYcd5WlNJ+ZECvh4yGQkszJ2/i9a1SOqCbd0OC4mhd/48JXcXECntETp90iZCFDkPsxP6v3ieRcKMM/oH/znY9aNmHD4dPgE+R080tYEYADZBKZIOmV4XL01JUG0d/kcuB1Ev6VdK+wWlXwgNPWVrN4aBo6ULGGbTFZHdw0t60IEtHrZ7oHzFy5BPE9IUdGHPldwaXUT0TP/TAFw==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; dkim=pass (1024-bit key; unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=L4CJtmvl; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c007::2; helo=mw6pr02cu001.outbound.protection.outlook.com; envelope-from=shivankg@amd.com; receiver=lists.ozlabs.org) smtp.mailfrom=amd.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ZGJT9ter;
+	dkim=pass (1024-bit key; unprotected) header.d=amd.com header.i=@amd.com header.a=rsa-sha256 header.s=selector1 header.b=L4CJtmvl;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=amd.com (client-ip=2a01:111:f403:c007::2; helo=mw6pr02cu001.outbound.protection.outlook.com; envelope-from=shivankg@amd.com; receiver=lists.ozlabs.org)
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azlp170120002.outbound.protection.outlook.com [IPv6:2a01:111:f403:c007::2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cnC7f2S65z2yqq
-	for <linux-erofs@lists.ozlabs.org>; Thu, 16 Oct 2025 13:48:29 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1760582906; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=gZIG05n5QXaTZ/2KSv40ccCRoSyvyQhhSnw4GSIhD8c=;
-	b=ZGJT9terY1aase6MCro+LBt0RZt1jcRN9wNxtZjm75S/2VuSNmC3IfhNUbLeXXImRR5WzkLcPnBZ0Q/bF8BknRSUTNSum061Xz0S3MG0ZRpKmwmyxNJY3PpfK1TPkva3sVug6YQDGZcjq/+81ZrUoWY2YA3cAH6JzlLeALkvr/Y=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WqIZVkb_1760582904 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 16 Oct 2025 10:48:25 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 7/7] erofs-utils: lib: introduce directory writer
-Date: Thu, 16 Oct 2025 10:48:15 +0800
-Message-ID: <20251016024815.2750927-7-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20251016024815.2750927-1-hsiangkao@linux.alibaba.com>
-References: <20251016024815.2750927-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cnShS54yTz306d
+	for <linux-erofs@lists.ozlabs.org>; Thu, 16 Oct 2025 23:59:19 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NZdAHuitmV1WlU3CkoKSv80zsS4Z4kTIyg2259aDECkzZUZq1pvyAkPyFq5A9Di03DLzIcJ7rR+sRMBgItzfhmq1YTSsg8/GIunDucrIlA4IaYXfsvQWCU8RhuHP0f7Oa28iHh/6Z+0fdINSUP6LSCIxNIUKJsYd3vEWc2cxM/QIdDAOlUpUlB6hm2pExdH4vOUPHcvKlgCMKTmAFv7+oz1Xq9Y73G0lNE+NP9flN/QmCF+8p0w1E/PmYdEI7WdwvHp1FjYo7Q+z6ZisRf6UHL3U8/iexSrvK6N4HLirhf6qS0amBlN3CVRynK9ZRLjy7eZatzxOztu2NgwvfR9v8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=M30CxV1aMi0FtJXMJ7c5OlauVYlqHgXAHk6l6IIqHqI=;
+ b=hRa2RcMwfOXrRTG2AXKzxG2h/M7bdvS9oZ542OT1oECTO5+AkO/N07FJItsEOHD5kEpFasgbpj/wQSdeoSEzhgQDPu621bCRjkkNZzT7EDKhCrDZwtPypTYa0Mz9Jq7AK6JBzCrau1UYUGiQ92SmGHnzZwvVdVMEM1wBdadvTJLN8WJsCw63iSZw/8FYpi3+ZT5jJjva4ZgpDCRYdMfnKg8w69Io+LhUSE7U1oQ4RAAouZ7wqP4P2nN1nwxm69O7TYw2XXpmEcao17aBzTMbepYhD6QR9/0QixlDOQ3SloBGyvr+D4JsUlaSqDfShgt/sOmU2M+xiOrROsAWvonb+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M30CxV1aMi0FtJXMJ7c5OlauVYlqHgXAHk6l6IIqHqI=;
+ b=L4CJtmvlamsNzDZBY/0lzCl/+b2ybf5XfxMKIenDBx9Yhyw1paJwd4O7QLhrcFXxeAUIjNvSnXx17OtDJEhwxQC0B6HkBasRWlRp+ai5vZ5bZZOoGaQKAKAt01H3EgdPwcNYkCjj2vUNZ4esUbViqAbde3Z9n7Ag6mp5ky1zVN8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA0PR12MB8301.namprd12.prod.outlook.com (2603:10b6:208:40b::13)
+ by LV3PR12MB9215.namprd12.prod.outlook.com (2603:10b6:408:1a0::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9228.11; Thu, 16 Oct
+ 2025 12:58:54 +0000
+Received: from IA0PR12MB8301.namprd12.prod.outlook.com
+ ([fe80::e929:57f5:f4db:5823]) by IA0PR12MB8301.namprd12.prod.outlook.com
+ ([fe80::e929:57f5:f4db:5823%4]) with mapi id 15.20.9228.011; Thu, 16 Oct 2025
+ 12:58:54 +0000
+Message-ID: <6c2c92eb-1699-4256-ab67-7c4dcee4e547@amd.com>
+Date: Thu, 16 Oct 2025 18:28:26 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [f2fs-dev] [PATCH kvm-next V11 6/7] KVM: guest_memfd: Enforce
+ NUMA mempolicy using shared policy
+To: Sean Christopherson <seanjc@google.com>, Gregory Price <gourry@gourry.net>
+Cc: jgowans@amazon.com, mhocko@suse.com, jack@suse.cz, kvm@vger.kernel.org,
+ david@redhat.com, linux-btrfs@vger.kernel.org, aik@amd.com,
+ papaluri@amd.com, kalyazin@amazon.com, peterx@redhat.com,
+ linux-mm@kvack.org, clm@fb.com, ddutile@redhat.com,
+ linux-kselftest@vger.kernel.org, shdhiman@amd.com, gshan@redhat.com,
+ ying.huang@linux.alibaba.com, shuah@kernel.org, roypat@amazon.co.uk,
+ matthew.brost@intel.com, linux-coco@lists.linux.dev, zbestahu@gmail.com,
+ lorenzo.stoakes@oracle.com, linux-bcachefs@vger.kernel.org,
+ ira.weiny@intel.com, dhavale@google.com, jmorris@namei.org,
+ willy@infradead.org, hch@infradead.org, chao.gao@intel.com,
+ tabba@google.com, ziy@nvidia.com, rientjes@google.com, yuzhao@google.com,
+ xiang@kernel.org, nikunj@amd.com, serge@hallyn.com, amit@infradead.org,
+ thomas.lendacky@amd.com, ashish.kalra@amd.com, chao.p.peng@intel.com,
+ yan.y.zhao@intel.com, byungchul@sk.com, michael.day@amd.com,
+ Neeraj.Upadhyay@amd.com, michael.roth@amd.com, bfoster@redhat.com,
+ bharata@amd.com, josef@toxicpanda.com, Liam.Howlett@oracle.com,
+ ackerleytng@google.com, dsterba@suse.com, viro@zeniv.linux.org.uk,
+ jefflexu@linux.alibaba.com, jaegeuk@kernel.org, dan.j.williams@intel.com,
+ surenb@google.com, vbabka@suse.cz, paul@paul-moore.com,
+ joshua.hahnjy@gmail.com, apopple@nvidia.com, brauner@kernel.org,
+ quic_eberman@quicinc.com, rakie.kim@sk.com, cgzones@googlemail.com,
+ pvorel@suse.cz, linux-erofs@lists.ozlabs.org, kent.overstreet@linux.dev,
+ linux-kernel@vger.kernel.org, pankaj.gupta@amd.com,
+ linux-security-module@vger.kernel.org, lihongbo22@huawei.com,
+ linux-fsdevel@vger.kernel.org, pbonzini@redhat.com,
+ akpm@linux-foundation.org, vannapurve@google.com, suzuki.poulose@arm.com,
+ rppt@kernel.org, jgg@nvidia.com, linux-f2fs-devel@lists.sourceforge.net
+References: <20250827175247.83322-2-shivankg@amd.com>
+ <20250827175247.83322-9-shivankg@amd.com> <aNVQJqYLX17v-fsf@google.com>
+ <aNbrO7A7fSjb4W84@google.com> <aPAWFQyFLK4EKWVK@gourry-fedora-PF4VCD3F>
+ <aPAkxp67-R9aQ8oN@google.com>
+Content-Language: en-US
+From: "Garg, Shivank" <shivankg@amd.com>
+In-Reply-To: <aPAkxp67-R9aQ8oN@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5P287CA0025.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:17a::15) To IA0PR12MB8301.namprd12.prod.outlook.com
+ (2603:10b6:208:40b::13)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -56,204 +109,189 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB8301:EE_|LV3PR12MB9215:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5180484c-5108-4c57-c889-08de0cb3c28a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UDJnaUJEL2V3K1hNUXlyb1VtV0FYN3Jla0JtOEVEVDJ4SVc2UmtyMkdsSldP?=
+ =?utf-8?B?QWJuNXh0Z25PdW9LQlB0NFIwbTdCalQzb1ZXZmVlRTl4Nkx4UFJMSmJ1RU9q?=
+ =?utf-8?B?YzZaTmZYOFNqN2NFeEgrRFhFamNJSzRsWnJMaVdSWFAzcHFpSTRKRTZ2ajVo?=
+ =?utf-8?B?Yk5Pc0JkKzdidWFIV2NPeXYwcUp4V0UxODVGeUpyWXJKWkpPcVRJY3lhNlJa?=
+ =?utf-8?B?VkVyVGF5bWxOdEM3RGFHZjNSa0o0WFUrMC9LR1VyZlFLTEVydVpGNEhTM0FN?=
+ =?utf-8?B?QlhqT0hCVlpUaFhWQVR2d0lMZFVXSUpJUll6a2tObWFGRjZidFZtNTNwWTZs?=
+ =?utf-8?B?TE5KS1lOY1NDdDFVRUFGUDUzMDRVQVFmaFVGQzdVWWtSTUQzQzlwdFNUY2g5?=
+ =?utf-8?B?cmwwYWFWeEZEck1oQmFrYmQ4c1R1QkhrYjV0anRERTE4L3Bic05vVEZzdGt4?=
+ =?utf-8?B?MXkxVlBheEhuRSs4aTZvWFY2SWNuSWNvYU92T0p3K3VBc0ZBSlJ0V2pYWldw?=
+ =?utf-8?B?dU15WjFQVnc0YVBCeHV0dnVaSWpxSGZGT0tCUHlod1Azd1RKMXhmT3ZCTExy?=
+ =?utf-8?B?Z1htOHpWdEJTcEFiWFdxZFZka2xCYWJnd1VMbzdMclRpU1E3VkxSK1Awd093?=
+ =?utf-8?B?TXVYZWRHVHI0RDkrUWxZQU5vUHMyNjhFVW5RR2gyL1NmTlNnVkV1TGdkQmVX?=
+ =?utf-8?B?UDJXSXNpbERSVDA0WlpkSUVoRmNEalRmdE1uaGd4ZDM5RnVXZkNiemdHM1M0?=
+ =?utf-8?B?L3Fqa2pmN25yQ0dJNkREVUFzZmgxL2I4eldWSU5OMEZQRzgyaHI1MUM4cXN6?=
+ =?utf-8?B?R040UW4wSGxKZ1V6ZGRLa1ZjK0c5ZkptSHFiNkU1OEVMMXNXVUk4M2VhNFA1?=
+ =?utf-8?B?ZEJJblVQNmVSdHFwdzNla0NKa0RRdk92aTUrUEhobWQ1NW9sV1MzQUVTa21F?=
+ =?utf-8?B?czZVZDZwRHBhTGtrMWpoNlpCQnNZcnd6OHh1TUExeXJhSU5heUNvaUs3QUFu?=
+ =?utf-8?B?MDhQL04wam02dm5GQ3M1SUpPbVoxdUlXYWV3TGIrTnM5VE5vUS9pOXpFVnNR?=
+ =?utf-8?B?K1ZvMDVMdFJCSU5NV1hGT3BhSmZoS2pnUWZFd3ZOZ2hRczFLbllSOEpVUU5t?=
+ =?utf-8?B?bGFYUlFRZGZEV01NMSt0ME5Lb2djRlNQdFVIcHBwWTVGbXc2akd0UWVJL1F0?=
+ =?utf-8?B?TkJYMTFCanFJVVM0STFYMmtIWFJVckI5cjlUT2Q4OUFKWUJwRFVzRCtVY2Rr?=
+ =?utf-8?B?RlMrbUtmNUZDUS9XaUpjUnl5MXpxcnAzUW1WUm5aUzcrbnJXZGNTLzVMSG81?=
+ =?utf-8?B?dXNPK0hLS2ptajBMQW15Z1k3QmVQZlNhWmRZMVhmRE10UDdWU21WaktiK0NJ?=
+ =?utf-8?B?Zk1iRi9aVXdFZXRVNWNBdmkrZ1lTMmZsWThYUTBmQlJIbVEyUUZSQW96RS9k?=
+ =?utf-8?B?d2hzbXpmazhOVEVMVUtUTmZnOTE5SHZtaVdBQlRicndiSkRpN2d0VldPUXQ3?=
+ =?utf-8?B?dzVuVmZoU0piNWREV1lQbDBBcFU2cXhONmRoTFYvSmZTNERYNUFVaSttVmFo?=
+ =?utf-8?B?SkJtWmJLWXFnSEsrdzJVa0VYNU51aVNpK0JmZEJnUHNhWGlVSGFKa1Nvc2E4?=
+ =?utf-8?B?TzNPL2FSZGNFQitmZlMyT2RRNW14UFVVOTRiVjZDODlmWWYwWmJuRmNPK0Vt?=
+ =?utf-8?B?MnlxQ2IvaERERVI0Y0l2TmVxNE16dy8zSHd1aDNuWXR3Z1dMQjh5QkNsK1hY?=
+ =?utf-8?B?RHA0bVFKbFBLTU96OVQ4YUdaYjJGbFhnTkFMNVBTdlFvbWNUeTcxazMrd2Nw?=
+ =?utf-8?B?Yk4wTXRHV09jYXJWdExha1JrcVhSNEVwRVlyZ1Q0Ym1jbEVYaExWd3NKNXYy?=
+ =?utf-8?B?aEs5aDNJam5pSjlWT3lUQk5HR3NLUkh3aGU4MTV4Q0ZMZ001Sjc4em9POTFw?=
+ =?utf-8?Q?I5mxNc4U42eLVUVJIGu6def+Jj97h+V+?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB8301.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cFhLM3lWUW4zTWZVMk1YaXZHTFZtd0hybDVHcWRDaFB1Q05VamZUYVRKNDcz?=
+ =?utf-8?B?MkRtSFJ1d2xwd0xCN2V2Vk5LV1IrL1JpQ0RWMWFDdTN4dVN1T2hPWSs1QXZi?=
+ =?utf-8?B?azVydnRiVGJmNG94Y0hMdlBkblVoeVJHeldQVmNsekQxRzRKQ1gzQ0ZEUm1i?=
+ =?utf-8?B?eHRhM0VGRFdVZzZVVTJXemlMbjhSOGdoUmdtMml3SVcyeWRJMUJ4UHZoMExY?=
+ =?utf-8?B?Z1lDVWlFeHVBNTBoNDJaV2Jtb2U5VnRoalBaWGRUL1ZrOHNIQ2lsYTgrc0xL?=
+ =?utf-8?B?Y2pTUVcyWDRqU2FQbHUweDE1Umlqb0pQaGtkTW54dmloTGlFNW1IZ3NDWHVi?=
+ =?utf-8?B?Sk9sR01aZGlvZXd6ZFdCcE5lWVFIbCt4UVQ1UlByM3JYOVA4ZkF1TnBqcjBN?=
+ =?utf-8?B?dHVqRENtZlVlN2syTmVXRFdwYk5CMjZ0NzNJdjdBenlLQ0NpNG1CbUgvWkpU?=
+ =?utf-8?B?aXRDVjZ0RWxIN2ZrV2NrYlYwcFJNcHVKVkI5LzFSTVBMOWtONlkzMU4xZUVL?=
+ =?utf-8?B?SW50SWFkM0Naak5vTGRNV1RFUWxQZTBhdzhvRHlJQ0REbmlXbWxjVFNSeG94?=
+ =?utf-8?B?ZmhJR2xqL2JJaCtGN1JiT285cTRuZlpDakk2YzR1bE9WR2VKdVc1bzZOSENW?=
+ =?utf-8?B?M1lyaEF3ZDBkaDhyQUJzV2xpRGVJNUk1aW93K2twUENIMjZydVdOMGN4alAz?=
+ =?utf-8?B?MU9haVgvblJTaWxOaVlMVEkxL202WThRVG5nMmJKdkRqWmJuMUQ0YktIcjRs?=
+ =?utf-8?B?M2duVkZ4Y0I5NHloV2FVSEFvRXpGaXhrNDd0Rjd4ZlNBdER4RUlJL1d5M3li?=
+ =?utf-8?B?TEZJQkl0TndvUVNVOW1SQjNKSVhaR2E0aVVnYWZPNFRGVjNGQVRPVy9sSWFP?=
+ =?utf-8?B?QTJwVFpzNDFTNFVWUjRIMFdTUkNKL0ZySDIrSVg0TXpVN1lOQStvMEVNU29n?=
+ =?utf-8?B?MWw4REhDL1NMemxEUkhKZithMldTOFRuaE9BUHRtemhnb2I0Yy9pQVJERUFv?=
+ =?utf-8?B?NWZubTZ5d0tXZFFTTEdpOFRkRCtubHRVSmhFVmpvcGFnVWxaOURacFY0TWVz?=
+ =?utf-8?B?RE0va2x4eEtWUTZIK0c5TXdDR2t4NkhlVUI5ZzBJNE5Udk13NmUxaDBnbXMy?=
+ =?utf-8?B?YjNCdnlCQzl0eHA3QzJva2JFeHc4aUY5UWh4Q1ZHVFNBS01hSWYxakloMUxE?=
+ =?utf-8?B?R0ZkMDR5Qm9vR0g1VkJLY0hsSlR0NmJoT2tPcXpWNThMOHZlaHVqZWIxZ0dK?=
+ =?utf-8?B?b1RnWmppQURWdElHUGgrYXRCQ2JRMG1RUno0ZWNHWjlFK044TEJPRFlnZ1F3?=
+ =?utf-8?B?ME1pNUtVejc3S3FnaDBYMGFOSW5Fd0lSdGhEMUhsN0RkbkJEVzdYU0sva2Jr?=
+ =?utf-8?B?dUxtYldrY1RWdWptdjZYRE12VHdQSER0KzRlcFZNc2NiSUx3YkhsSU9paUgy?=
+ =?utf-8?B?Z1ZnYzVhekhBbURuU2YwbitiOVJCV3lwS2FXdUs0QVd2SWxueVkvb2w3K20y?=
+ =?utf-8?B?NlVseEJ1aks2QUFDK1ZXbE55Ukt2ZEJwRjdyZEVrcmVvdHI3WlQvT2doTzll?=
+ =?utf-8?B?d3c5L1lKL0cyVXdFajVLT0ZNazM1c3FmVlUwYzRCSkJsZlo1ZGVRYjd2QnZL?=
+ =?utf-8?B?REhZLzkzT05ZQUtmTzF6L29pMmxoV2FVSnZTT0drVW5XaVBSZjBodURxaDBx?=
+ =?utf-8?B?YnZPaUdVZHNadHVaL3l4TGNQMGpVS2gyMklpZ0hac3hvZ0krRllHd1I2eDlM?=
+ =?utf-8?B?RGpkWWh0dGdLcE1jZUdMUFcvZENTN0pDZnBkOURuWkpHc3ZVMEE4SHVzZ1B0?=
+ =?utf-8?B?OHBqc2VWY3FJcEE2RWlLZEs1dktiQms2ajVEMmtQb1VUVXhXcFQwZitIOTlQ?=
+ =?utf-8?B?eVhaakk2SEtncUZ0UEJDV3VGUEdXTUs5NWdyYThIS1UzSUR0M2hDelBZSEFI?=
+ =?utf-8?B?VTFJN0lZMVVQZXIvWXJpQTdGeGo2VjBERDNISktpRHhuNnVUY1RNS2NhWWk3?=
+ =?utf-8?B?SnZ2ei9IUVNJUWF3RnJER1dBc1JoU2llNUp3N3cxWGc5SEFsN25mR2ZyS0Zw?=
+ =?utf-8?B?cVRnS0dGMDloYnJ3dHlJeWdOUEMyOTZ2Rm9IV2FtOG9BSmhTdFhJQWZPU3Fp?=
+ =?utf-8?Q?mrX2vF5ctdZ5qNx93Wgkw6qJ/?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5180484c-5108-4c57-c889-08de0cb3c28a
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB8301.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Oct 2025 12:58:54.0523
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1NhayZ0ER9p0NW1qe6sBl5WY9DuKaD1jfZKh+e9g2HbktKtCOfo5fuTZbQx2k+QPaEpiccJDkpeMj4dYNL5FXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9215
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Directories are now written to disk using virtual files too.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- lib/inode.c | 153 ++++++++++++++++++++++++++++++----------------------
- 1 file changed, 90 insertions(+), 63 deletions(-)
 
-diff --git a/lib/inode.c b/lib/inode.c
-index 264c4ae..7587248 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -377,16 +377,6 @@ static void fill_dirblock(char *buf, unsigned int size, unsigned int q,
- 	memset(buf + q, 0, size - q);
- }
- 
--static int write_dirblock(struct erofs_sb_info *sbi,
--			  unsigned int q, struct erofs_dentry *head,
--			  struct erofs_dentry *end, erofs_blk_t blkaddr)
--{
--	char buf[EROFS_MAX_BLOCK_SIZE];
--
--	fill_dirblock(buf, erofs_blksiz(sbi), q, head, end);
--	return erofs_blk_write(sbi, buf, blkaddr, 1);
--}
--
- erofs_nid_t erofs_lookupnid(struct erofs_inode *inode)
- {
- 	struct erofs_buffer_head *const bh = inode->bh;
-@@ -515,64 +505,85 @@ static int erofs_rebuild_inode_fix_pnid(struct erofs_inode *parent,
- 	return -EFSCORRUPTED;
- }
- 
--static int erofs_write_dir_file(struct erofs_inode *dir)
--{
--	struct erofs_dentry *head = list_first_entry(&dir->i_subdirs,
--						     struct erofs_dentry,
--						     d_child);
--	struct erofs_sb_info *sbi = dir->sbi;
--	struct erofs_dentry *d;
--	int ret;
--	unsigned int q, used, blkno;
--
--	q = used = blkno = 0;
--
--	/* allocate dir main data */
--	ret = erofs_allocate_inode_bh_data(dir, erofs_blknr(sbi, dir->i_size));
--	if (ret)
--		return ret;
--
--	list_for_each_entry(d, &dir->i_subdirs, d_child) {
--		unsigned int len = d->namelen + sizeof(struct erofs_dirent);
--
--		/* XXX: a bit hacky, but to avoid another traversal */
--		if (d->flags & EROFS_DENTRY_FLAG_FIXUP_PNID) {
--			ret = erofs_rebuild_inode_fix_pnid(dir, d->nid);
--			if (ret)
--				return ret;
--		}
--
--		erofs_d_invalidate(d);
--		if (used + len > erofs_blksiz(sbi)) {
--			ret = write_dirblock(sbi, q, head, d,
--					     dir->u.i_blkaddr + blkno);
--			if (ret)
--				return ret;
-+struct erofs_dirwriter_vf {
-+	struct erofs_vfile vf;
-+	struct erofs_inode *dir;
-+	struct list_head *head;
-+	erofs_off_t offset;
-+	char dirdata[];
-+};
- 
--			head = d;
-+static ssize_t erofs_dirwriter_vfread(struct erofs_vfile *vf,
-+				      void *buf, size_t len)
-+{
-+	struct erofs_dirwriter_vf *dwv = (struct erofs_dirwriter_vf *)vf;
-+	struct erofs_inode *dir = dwv->dir;
-+	unsigned int bsz = erofs_blksiz(dir->sbi);
-+	size_t processed = 0;
-+
-+	if (len > dir->i_size - dwv->offset)
-+		len = dir->i_size - dwv->offset;
-+	while (processed < len) {
-+		unsigned int off, dblen, count;
-+
-+		off = dwv->offset & (bsz - 1);
-+		dblen = min_t(u64, dir->i_size - dwv->offset + off, bsz);
-+		/* generate a directory block to `dwv->dirdata` */
-+		if (!off) {
-+			struct erofs_dentry *head, *d;
-+			unsigned int q, used, len;
-+			int err;
-+
-+			d = head = list_entry(dwv->head,
-+					      struct erofs_dentry, d_child);
- 			q = used = 0;
--			++blkno;
-+			do {
-+				/* XXX: a bit hacky, but avoids another traversal */
-+				if (d->flags & EROFS_DENTRY_FLAG_FIXUP_PNID) {
-+					err = erofs_rebuild_inode_fix_pnid(dir, d->nid);
-+					if (err)
-+						return err;
-+				}
-+				len = d->namelen + sizeof(struct erofs_dirent);
-+				erofs_d_invalidate(d);
-+				if ((used += len) > bsz)
-+					break;
-+				d = list_next_entry(d, d_child);
-+				q += sizeof(struct erofs_dirent);
-+			} while (&d->d_child != &dir->i_subdirs);
-+			fill_dirblock(dwv->dirdata, dblen, q, head, d);
-+			dwv->head = &d->d_child;
- 		}
--		used += len;
--		q += sizeof(struct erofs_dirent);
-+		count = min_t(size_t, dblen - off, len - processed);
-+		memcpy(buf + processed, dwv->dirdata + off, count);
-+		processed += count;
-+		dwv->offset += count;
- 	}
-+	return processed;
-+}
- 
--	DBG_BUGON(used > erofs_blksiz(sbi));
--	if (used == erofs_blksiz(sbi)) {
--		DBG_BUGON(dir->i_size % erofs_blksiz(sbi));
--		DBG_BUGON(dir->idata_size);
--		return write_dirblock(sbi, q, head, d, dir->u.i_blkaddr + blkno);
--	}
--	DBG_BUGON(used != dir->i_size % erofs_blksiz(sbi));
--	if (used) {
--		/* fill tail-end dir block */
--		dir->idata = malloc(used);
--		if (!dir->idata)
--			return -ENOMEM;
--		DBG_BUGON(used != dir->idata_size);
--		fill_dirblock(dir->idata, dir->idata_size, q, head, d);
--	}
--	return 0;
-+void erofs_dirwriter_vfclose(struct erofs_vfile *vf)
-+{
-+	free((void *)vf);
-+}
-+
-+static struct erofs_vfops erofs_dirwriter_vfops = {
-+	.read = erofs_dirwriter_vfread,
-+	.close = erofs_dirwriter_vfclose,
-+};
-+
-+static struct erofs_vfile *erofs_dirwriter_open(struct erofs_inode *dir)
-+{
-+	struct erofs_dirwriter_vf *dwv;
-+
-+	dwv = malloc(sizeof(*dwv) + erofs_blksiz(dir->sbi));
-+	if (!dwv)
-+		return ERR_PTR(-ENOMEM);
-+	dwv->vf.ops = &erofs_dirwriter_vfops;
-+	dwv->dir = dir;
-+	dwv->head = dir->i_subdirs.next;
-+	dwv->offset = 0;
-+	return (struct erofs_vfile *)dwv;
- }
- 
- int erofs_write_file_from_buffer(struct erofs_inode *inode, char *buf)
-@@ -686,6 +697,22 @@ int erofs_write_unencoded_file(struct erofs_inode *inode, int fd, u64 fpos)
- 			inode->datasource == EROFS_INODE_DATA_SOURCE_DISKBUF);
- }
- 
-+static int erofs_write_dir_file(struct erofs_inode *dir)
-+{
-+	unsigned int bsz = erofs_blksiz(dir->sbi);
-+	struct erofs_vfile *vf;
-+	int err;
-+
-+	DBG_BUGON(dir->idata_size != (dir->i_size & (bsz - 1)));
-+	vf = erofs_dirwriter_open(dir);
-+	if (IS_ERR(vf))
-+		return PTR_ERR(vf);
-+
-+	err = erofs_write_unencoded_data(dir, vf, 0, true);
-+	erofs_io_close(vf);
-+	return err;
-+}
-+
- int erofs_iflush(struct erofs_inode *inode)
- {
- 	u16 icount = EROFS_INODE_XATTR_ICOUNT(inode->xattr_isize);
--- 
-2.43.5
+On 10/16/2025 4:18 AM, Sean Christopherson wrote:
+> On Wed, Oct 15, 2025, Gregory Price wrote:
+>> On Fri, Sep 26, 2025 at 12:36:27PM -0700, Sean Christopherson via Linux-f2fs-devel wrote:
+>>>>
+>>>> static struct mempolicy *kvm_gmem_get_policy(struct vm_area_struct *vma,
+>>>> 					     unsigned long addr, pgoff_t *pgoff)
+>>>> {
+>>>> 	*pgoff = vma->vm_pgoff + ((addr - vma->vm_start) >> PAGE_SHIFT);
+>>>>
+>>>> 	return __kvm_gmem_get_policy(GMEM_I(file_inode(vma->vm_file)), *pgoff);
+>>>
+>>> Argh!!!!!  This breaks the selftest because do_get_mempolicy() very specifically
+>>> falls back to the default_policy, NOT to the current task's policy.  That is
+>>> *exactly* the type of subtle detail that needs to be commented, because there's
+>>> no way some random KVM developer is going to know that returning NULL here is
+>>> important with respect to get_mempolicy() ABI.
+>>>
+>>
+>> Do_get_mempolicy was designed to be accessed by the syscall, not as an
+>> in-kernel ABI.
+> 
+> Ya, by "get_mempolicy() ABI" I meant the uABI for the get_mempolicy syscall.
+> 
+>> get_task_policy also returns the default policy if there's nothing
+>> there, because that's what applies.
+>>
+>> I have dangerous questions:
+> 
+> Not dangerous at all, I find them very helpful!
+> 
+>> why is __kvm_gmem_get_policy using
+>> 	mpol_shared_policy_lookup()
+>> instead of
+>> 	get_vma_policy()
+> 
+> With the disclaimer that I haven't followed the gory details of this series super
+> closely, my understanding is...
+> 
+> Because the VMA is a means to an end, and we want the policy to persist even if
+> the VMA goes away.
+> 
+> With guest_memfd, KVM effectively inverts the standard MMU model.  Instead of mm/
+> being the primary MMU and KVM being a secondary MMU, guest_memfd is the primary
+> MMU and any VMAs are secondary (mostly; it's probably more like 1a and 1b).  This
+> allows KVM to map guest_memfd memory into a guest without a VMA, or with more
+> permissions than are granted to host userspace, e.g. guest_memfd memory could be
+> writable by the guest, but read-only for userspace.
+> 
+> But we still want to support things like mbind() so that userspace can ensure
+> guest_memfd allocations align with the vNUMA topology presented to the guest,
+> or are bound to the NUMA node where the VM will run.  We considered adding equivalent
+> file-based syscalls, e.g. fbind(), but IIRC the consensus was that doing so was
+> unnecessary (and potentially messy?) since we were planning on eventually adding
+> mmap() support to guest_memfd anyways.
+> 
+>> get_vma_policy does this all for you
+> 
+> I assume that doesn't work if the intent is for new VMAs to pick up the existing
+> policy from guest_memfd?  And more importantly, guest_memfd needs to hook
+> ->set_policy so that changes through e.g. mbind() persist beyond the lifetime of
+> the VMA.
+> 
+Additionally, the shared_policy based design enables range-based policies via its RB-tree
+implementation. IIUC, this will not work with VMA-specific policy design.
+
+>> struct mempolicy *get_vma_policy(struct vm_area_struct *vma,
+>>                                  unsigned long addr, int order, pgoff_t *ilx)
+>> {
+>>         struct mempolicy *pol;
+>>
+>>         pol = __get_vma_policy(vma, addr, ilx);
+>>         if (!pol)
+>>                 pol = get_task_policy(current);
+>>         if (pol->mode == MPOL_INTERLEAVE ||
+>>             pol->mode == MPOL_WEIGHTED_INTERLEAVE) {
+>>                 *ilx += vma->vm_pgoff >> order;
+>>                 *ilx += (addr - vma->vm_start) >> (PAGE_SHIFT + order);
+>>         }
+>>         return pol;
+>> }
+>>
+>> Of course you still have the same issue: get_task_policy will return the
+>> default, because that's what applies.
+>>
+>> do_get_mempolicy just seems like the completely incorrect interface to
+>> be using here.
 
 
