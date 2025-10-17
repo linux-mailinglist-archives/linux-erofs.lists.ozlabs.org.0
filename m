@@ -1,66 +1,65 @@
-Return-Path: <linux-erofs+bounces-1243-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1246-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25760BE905A
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 15:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FCC7BE907B
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 15:49:33 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cp5lg65xtz3cgB;
-	Sat, 18 Oct 2025 00:49:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cp5lt5wyDz3cgV;
+	Sat, 18 Oct 2025 00:49:30 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760708959;
-	cv=none; b=UUwZmH/qWJgRIbwafyRKTSTf8cYp6BChckHCKe/kbRmLOTUq0Wx9L9GltlcXgaoUpwLt2tbotNzB+l61+0rOrMrGt1OsdzkDA+ge15YGOIAkqis0HjmFrtO6/qhmfp6iIsmS0Q6sUlLHSce35SpiktdU9eeDlYZVza+8g8tEqVbb8T0Ik5Z6xeovZnMtoh74axg66+QrFbGpx0X05CWu5S9hXxQo4S9piY8ym/L2IGiptZTWQCN7oC6fvPqWXKhpetVXz/yZk/bOIQpoL+WhP8dYZUZIbS49CMyMtuJuCJWUjojYsMyCH3TtNcPHjfMWuShdxcgp7gitQYuI0HIL2g==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760708970;
+	cv=none; b=QKDpHC+fxp7Os6SJtRWwJ5vMtkaf3/Zx2on3bBTgbADNRKBz0/ivccLA+K0sQFl/CxTsRu6JNujA51XKZx29RWQEw0wSTfg5cAcq/jCQhFmL7IoP8g3Wn2/YVlEMhZ5fFKgFOCHRXxuWdSWs3DoHqUozYXyL50R8gOBzkrr0ChdtG3TEMHFSsXWPzE2zJWJVn1Oah0WLGSX3Ngl5OeSDPXL064AtVxgaM18nCjTukitkjAcOWJL/guE2P+CasGFFZ9HdsO1xy8ImTZ078cvKZtv4m+p4kDG54d7UAowPI+MKFkkroADbacgG8facUrG3gCAbZCPhqaFCvKMTdZtG9g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760708959; c=relaxed/relaxed;
-	bh=hkRQvs+tjcaMr/Brm/MFRXAK5Oqsqkw9vFrK+/9N43M=;
+	t=1760708970; c=relaxed/relaxed;
+	bh=b/WKteETKlx4UVPhThMSLhvGVPiy33dH8OLrdpXYLYA=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=eT4XjXogZIcck9cb8IR7uP4S8cA2ylTXoX43Yi3oWwRFUs9pnOXpMUU+0gavT/p9sPKkdNPJzneW6ZKAgUHKMm7p9D46eDPVmBSDbvVHAsQISfdQbqSbpQZ2zOP9D3unbwFvZfh88zRVNfILECvX0X9m0afMA2IVg5VO751MDU2Ef1wCE2A04M5ZaB5A0vtYNN9XCm6pPVjXrCqr5OERrB6KgupLb2fY8VXe8ZeqHQHJUVrAs3A5GH3dDSi8gJmB9qZrsN5o7uZVzo8VifZyB8Mkh122QHF95K5cpD+vfgSNXVXbk3cwT+GNnOYWNN8DgRC8YNi1kprp/sKZYCkMwQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=fail (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=Z4Tv667f reason="signature verification failed"; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+	 Content-Type; b=hEA34wLq+lZCWQG37CQMwCfijSi2OI3rq7+b3wkMY0jT4Cl7saxwDmNxYOH+6QNq4R55dEeFmYVQ/ne+/OJigI69MpvSbyPXWYydEVbX0/wAlFZgdMHH9IZQEcW2AFBkx5VxI0OvEpUJVG3ruNi1kYZuxqS4uBYPX6f2xWKHIfC+ExBXgqe2grEtNKdTHCP+2dJLFkOd2glc1hz3BoaO2suQLAw/4n1iPZbJZcJ9QUUpZll+SMVSpnGm9Su3YmgOTGCboogh04t4E7kH4+XKqC8SrkzB1TkKgrGltC9VlIj/KMzzAyZgGzWHuFVkpuUrjMEzASxoG3FTN8CaHYEh0w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=fail (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=yqxmbqhU reason="signature verification failed"; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=Z4Tv667f;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=yqxmbqhU;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
 Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cp5lg1DGZz3cfx
-	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Oct 2025 00:49:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cp5lt0xr7z3cgT
+	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Oct 2025 00:49:30 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 83C8F448C2;
-	Fri, 17 Oct 2025 13:49:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C146DC116B1;
-	Fri, 17 Oct 2025 13:49:15 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 85ADF440F3;
+	Fri, 17 Oct 2025 13:49:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C9BDC4CEFE;
+	Fri, 17 Oct 2025 13:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760708957;
-	bh=Ua7vCzS3o009KwoPLTQB4DGIeRIPg7Y50HxDIYzrkHY=;
+	s=korg; t=1760708968;
+	bh=AXLQbIpyqBEyGxGkGpyjpB8PhkgTtFqjbG86wloeB2M=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=Z4Tv667f5UNsoyLfrw8kT7YN68oXeKQt6imFGs/Kn9Gn+qDiFqGAGFVqsG0aPf1EL
-	 9T/5lD4QTM19vxB9s6LQp6/mpKzrJcj4f8NKn+85bbDL2Kmx2L73KEzP8pFO9JUsFU
-	 GiujvVza0TVDfwa22jt1Ague8WXkgNrILyzqRHzM=
-Subject: Patch "minmax: Introduce {min,max}_array()" has been added to the 5.10-stable tree
-To: David.Laight@ACULAB.COM, Jason@zx2c4.com,
-	adilger.kernel@dilger.ca, agk@redhat.com, airlied@linux.ie,
-	akpm@linux-foundation.org, alexander.deucher@amd.com,
-	alexandre.torgue@st.com, amd-gfx@lists.freedesktop.org,
-	andriy.shevchenko@linux.intel.com, andy.shevchenko@gmail.com,
+	b=yqxmbqhU7Dn2HCy1bkSgzeLXKO4ric/nqqoNtScWtY2TiedRGdgf80qDK/YCbLrvW
+	 IfY1WEOiCiL8yfo5PoNzofMqcGQu/GZcXm7b3J/KOIjhfnMNX5k26xlfcaQlJ9I/ot
+	 aMXMN7ghK0WAjsQI71lH1wvqQb4ZGI2z8dhWEx6c=
+Subject: Patch "minmax: make generic MIN() and MAX() macros available everywhere" has been added to the 5.10-stable tree
+To: David.Laight@ACULAB.COM, David.Laight@aculab.com,
+	Jason@zx2c4.com, adilger.kernel@dilger.ca, agk@redhat.com,
+	airlied@linux.ie, akpm@linux-foundation.org,
+	alexander.deucher@amd.com, alexandre.torgue@st.com,
+	amd-gfx@lists.freedesktop.org, andriy.shevchenko@linux.intel.com,
 	anton.ivanov@cambridgegreys.com, artur.paszkiewicz@intel.com,
-	bp@alien8.de, brian.starkey@arm.com, broonie@kernel.org,
-	bvanassche@acm.org, chao@kernel.org, christian.koenig@amd.com,
-	christophe.leroy@csgroup.eu, clm@fb.com, coreteam@netfilter.org,
-	daniel@ffwll.ch, dave.hansen@linux.intel.com, davem@davemloft.net,
-	dm-devel@redhat.com, dmitry.torokhov@gmail.com,
+	bp@alien8.de, brian.starkey@arm.com, bvanassche@acm.org,
+	chao@kernel.org, christian.koenig@amd.com, clm@fb.com,
+	coreteam@netfilter.org, daniel@ffwll.ch, dave.hansen@linux.intel.com,
+	davem@davemloft.net, dm-devel@redhat.com, dmitry.torokhov@gmail.com,
 	dri-devel@lists.freedesktop.org, dsterba@suse.com, dushistov@mail.ru,
 	evan.quan@amd.com, farbere@amazon.com, fery@cypress.com,
 	freedreno@lists.freedesktop.org, fw@strlen.de,
 	gregkh@linuxfoundation.org, harry.wentland@amd.com,
 	hdegoede@redhat.com, herve.codina@bootlin.com, hpa@zytor.com,
 	intel-linux-scu@intel.com, jack@suse.com, james.morse@arm.com,
-	james.qian.wang@arm.com, jdelvare@suse.com, jdike@ad,
-	dtoit.com@lists.ozlabs.org, jejb@linux.ibm.com, jmaloy@redhat.com,
-	joabreu@synopsys.com, josef@toxicpanda.com, kadlec@netfilter.org,
+	james.qian.wang@arm.com, jdelvare@suse.com, jdike@addtoit.com,
+	jejb@linux.ibm.com, jmaloy@redhat.com, jo@lists.ozlabs.org,
+	abreu@synopsys.com, josef@toxicpanda.com, kadlec@netfilter.org,
 	kbusch@kernel.org, keescook@chromium.org, kuba@kernel.org,
 	kuznet@ms2.inr.ac.ru, linux-arm-kernel@lists.infradead.org,
 	linux-erofs@lists.ozlabs.org, linux-mm@kvack.org,
@@ -68,9 +67,9 @@ To: David.Laight@ACULAB.COM, Jason@zx2c4.com,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-um@lists.infradead.org, linux@armlinux.org.uk,
 	linux@rasmusvillemoes.dk, linux@roeck-us.net, liviu.dudau@arm.com,
-	luc.vanoostenryck@gmail.com, luto@kernel.org,
-	maarten.lankhorst@linux.intel.com, malattia@linux.it,
-	martin.petersen@oracle.com, mchehab@kernel.org,
+	lorenzo.stoakes@oracle.com, luc.vanoostenryck@gmail.com,
+	luto@kernel.org, maarten.lankhorst@linux.intel.com,
+	malattia@linux.it, martin.petersen@oracle.com, mchehab@kernel.org,
 	mcoquelin.stm32@gmail.com, mgross@linux.intel.com,
 	mihail.atanassov@arm.com, minchan@kernel.org, mingo@redhat.com,
 	mripard@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
@@ -78,17 +77,18 @@ To: David.Laight@ACULAB.COM, Jason@zx2c4.com,
 	peterz@infradead.org, pmladek@suse.com, qiuxu.zhuo@intel.com,
 	rajur@chelsio.com, richard@nod.at, robdclark@gmail.com,
 	rostedt@goodmis.org, rric@kernel.org, ruanjinjie@huawei.com,
-	sakari.ailus@linux.intel.com, sashal@kernel.org, sean@poorly.run,
-	sergey.senozhatsky@gmail.com, snitzer@redhat.com, sunpeng.li@amd.com,
-	tglx@linutronix.de, tipc-discussion@lists.sourceforge.net,
-	tony.luck@intel.com, tytso@mit.edu, tzimmermann@suse.de,
+	sakari.ailus@linu, x.intel.com@lists.ozlabs.org, sashal@kernel.org,
+	sean@poorly.run, sergey.senozhatsky@gmail.com, snitzer@redhat.com,
+	sunpeng.li@amd.com, tglx@linutronix.de,
+	tipc-discussion@lists.sourceforge.net, tony.luck@intel.com,
+	torvalds@linux-foundation.org, tytso@mit.edu, tzimmermann@suse.de,
 	willy@infradead.org, x86@kernel.org, xiang@kernel.org,
 	ying.xue@windriver.com, yoshfuji@linux-ipv6.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Fri, 17 Oct 2025 15:48:30 +0200
-In-Reply-To: <20251017090519.46992-7-farbere@amazon.com>
-Message-ID: <2025101730-mumps-protozoan-aca4@gregkh>
+Date: Fri, 17 Oct 2025 15:48:31 +0200
+In-Reply-To: <20251017090519.46992-17-farbere@amazon.com>
+Message-ID: <2025101731-gong-handrail-375e@gregkh>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -111,121 +111,364 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 This is a note to let you know that I've just added the patch titled
 
-    minmax: Introduce {min,max}_array()
+    minmax: make generic MIN() and MAX() macros available everywhere
 
 to the 5.10-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     minmax-introduce-min-max-_array.patch
+     minmax-make-generic-min-and-max-macros-available-everywhere.patch
 and it can be found in the queue-5.10 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From prvs=378230090=farbere@amazon.com Fri Oct 17 11:07:34 2025
+From prvs=378230090=farbere@amazon.com Fri Oct 17 11:10:56 2025
 From: Eliav Farber <farbere@amazon.com>
-Date: Fri, 17 Oct 2025 09:04:58 +0000
-Subject: minmax: Introduce {min,max}_array()
+Date: Fri, 17 Oct 2025 09:05:08 +0000
+Subject: minmax: make generic MIN() and MAX() macros available everywhere
 To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>, <linux@armlinux.org.uk>, <jdike@addtoit.com>, <richard@nod.at>, <anton.ivanov@cambridgegreys.com>, <dave.hansen@linux.intel.com>, <luto@kernel.org>, <peterz@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>, <tony.luck@intel.com>, <qiuxu.zhuo@intel.com>, <mchehab@kernel.org>, <james.morse@arm.com>, <rric@kernel.org>, <harry.wentland@amd.com>, <sunpeng.li@amd.com>, <alexander.deucher@amd.com>, <christian.koenig@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>, <evan.quan@amd.com>, <james.qian.wang@arm.com>, <liviu.dudau@arm.com>, <mihail.atanassov@arm.com>, <brian.starkey@arm.com>, <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>, <tzimmermann@suse.de>, <robdclark@gmail.com>, <sean@poorly.run>, <jdelvare@suse.com>, <linux@roeck-us.net>, <fery@cypress.com>, <dmitry.torokhov@gmail.com>, <agk@redhat.com>, <snitzer@redhat.com>, <dm-devel@redhat.com>, <rajur@chelsio
  .com>, <davem@davemloft.net>, <kuba@kernel.org>, <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>, <joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>, <malattia@linux.it>, <hdegoede@redhat.com>, <mgross@linux.intel.com>, <intel-linux-scu@intel.com>, <artur.paszkiewicz@intel.com>, <jejb@linux.ibm.com>, <martin.petersen@oracle.com>, <sakari.ailus@linux.intel.com>, <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>, <xiang@kernel.org>, <chao@kernel.org>, <jack@suse.com>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <dushistov@mail.ru>, <luc.vanoostenryck@gmail.com>, <rostedt@goodmis.org>, <pmladek@suse.com>, <sergey.senozhatsky@gmail.com>, <andriy.shevchenko@linux.intel.com>, <linux@rasmusvillemoes.dk>, <minchan@kernel.org>, <ngupta@vflare.org>, <akpm@linux-foundation.org>, <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>, <pablo@netfilter.org>, <kadlec@netfilter.org>, <fw@strlen.de>, <jmaloy@redhat.com>, <ying.xue@windriver.com>, <willy@infradead.org>, <farbere@amazon.com>,
   <sashal@kernel.org>, <ruanjinjie@huawei.com>, <David.Laight@ACULAB.COM>, <herve.codina@bootlin.com>, <Jason@zx2c4.com>, <keescook@chromium.org>, <kbusch@kernel.org>, <nathan@kernel.org>, <bvanassche@acm.org>, <ndesaulniers@google.com>, <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>, <linux-um@lists.infradead.org>, <linux-edac@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>, <linux-hwmon@vger.kernel.org>, <linux-input@vger.kernel.org>, <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>, <platform-driver-x86@vger.kernel.org>, <linux-scsi@vger.kernel.org>, <linux-staging@lists.linux.dev>, <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>, <linux-sparse@vger.kernel.org>, <linux-mm@kvack.org>, <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>, <tipc-discussion@
  lists.sourceforge.net>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <20251017090519.46992-7-farbere@amazon.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, David Laight <David.Laight@aculab.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Message-ID: <20251017090519.46992-17-farbere@amazon.com>
 
-From: Herve Codina <herve.codina@bootlin.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit c952c748c7a983a8bda9112984e6f2c1f6e441a5 ]
+[ Upstream commit 1a251f52cfdc417c84411a056bc142cbd77baef4 ]
 
-Introduce min_array() (resp max_array()) in order to get the
-minimal (resp maximum) of values present in an array.
+This just standardizes the use of MIN() and MAX() macros, with the very
+traditional semantics.  The goal is to use these for C constant
+expressions and for top-level / static initializers, and so be able to
+simplify the min()/max() macros.
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Link: https://lore.kernel.org/r/20230623085830.749991-8-herve.codina@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+These macro names were used by various kernel code - they are very
+traditional, after all - and all such users have been fixed up, with a
+few different approaches:
+
+ - trivial duplicated macro definitions have been removed
+
+   Note that 'trivial' here means that it's obviously kernel code that
+   already included all the major kernel headers, and thus gets the new
+   generic MIN/MAX macros automatically.
+
+ - non-trivial duplicated macro definitions are guarded with #ifndef
+
+   This is the "yes, they define their own versions, but no, the include
+   situation is not entirely obvious, and maybe they don't get the
+   generic version automatically" case.
+
+ - strange use case #1
+
+   A couple of drivers decided that the way they want to describe their
+   versioning is with
+
+	#define MAJ 1
+	#define MIN 2
+	#define DRV_VERSION __stringify(MAJ) "." __stringify(MIN)
+
+   which adds zero value and I just did my Alexander the Great
+   impersonation, and rewrote that pointless Gordian knot as
+
+	#define DRV_VERSION "1.2"
+
+   instead.
+
+ - strange use case #2
+
+   A couple of drivers thought that it's a good idea to have a random
+   'MIN' or 'MAX' define for a value or index into a table, rather than
+   the traditional macro that takes arguments.
+
+   These values were re-written as C enum's instead. The new
+   function-line macros only expand when followed by an open
+   parenthesis, and thus don't clash with enum use.
+
+Happily, there weren't really all that many of these cases, and a lot of
+users already had the pattern of using '#ifndef' guarding (or in one
+case just using '#undef MIN') before defining their own private version
+that does the same thing. I left such cases alone.
+
+Cc: David Laight <David.Laight@aculab.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Eliav Farber <farbere@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/minmax.h |   64 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ arch/um/drivers/mconsole_user.c                                       |    2 
+ drivers/edac/skx_common.h                                             |    1 
+ drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c                   |    2 
+ drivers/gpu/drm/amd/pm/powerplay/hwmgr/ppevvmath.h                    |   14 ++++-
+ drivers/gpu/drm/radeon/evergreen_cs.c                                 |    2 
+ drivers/hwmon/adt7475.c                                               |   24 +++++-----
+ drivers/media/dvb-frontends/stv0367_priv.h                            |    3 +
+ drivers/net/fjes/fjes_main.c                                          |    4 -
+ drivers/nfc/pn544/i2c.c                                               |    2 
+ drivers/platform/x86/sony-laptop.c                                    |    1 
+ drivers/scsi/isci/init.c                                              |    6 --
+ drivers/staging/media/atomisp/pci/hive_isp_css_include/math_support.h |    5 --
+ include/linux/minmax.h                                                |    2 
+ kernel/trace/preemptirq_delay_test.c                                  |    2 
+ lib/btree.c                                                           |    1 
+ lib/decompress_unlzma.c                                               |    2 
+ lib/zstd/zstd_internal.h                                              |    2 
+ mm/zsmalloc.c                                                         |    1 
+ 18 files changed, 37 insertions(+), 39 deletions(-)
 
+--- a/arch/um/drivers/mconsole_user.c
++++ b/arch/um/drivers/mconsole_user.c
+@@ -71,7 +71,9 @@ static struct mconsole_command *mconsole
+ 	return NULL;
+ }
+ 
++#ifndef MIN
+ #define MIN(a,b) ((a)<(b) ? (a):(b))
++#endif
+ 
+ #define STRINGX(x) #x
+ #define STRING(x) STRINGX(x)
+--- a/drivers/edac/skx_common.h
++++ b/drivers/edac/skx_common.h
+@@ -36,7 +36,6 @@
+ #define I10NM_NUM_CHANNELS	2
+ #define I10NM_NUM_DIMMS		2
+ 
+-#define MAX(a, b)	((a) > (b) ? (a) : (b))
+ #define NUM_IMC		MAX(SKX_NUM_IMC, I10NM_NUM_IMC)
+ #define NUM_CHANNELS	MAX(SKX_NUM_CHANNELS, I10NM_NUM_CHANNELS)
+ #define NUM_DIMMS	MAX(SKX_NUM_DIMMS, I10NM_NUM_DIMMS)
+--- a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c
++++ b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_ddc.c
+@@ -25,7 +25,9 @@
+ 
+ #include "hdcp.h"
+ 
++#ifndef MIN
+ #define MIN(a, b) ((a) < (b) ? (a) : (b))
++#endif
+ #define HDCP_I2C_ADDR 0x3a	/* 0x74 >> 1*/
+ #define KSV_READ_SIZE 0xf	/* 0x6803b - 0x6802c */
+ #define HDCP_MAX_AUX_TRANSACTION_SIZE 16
+--- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/ppevvmath.h
++++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/ppevvmath.h
+@@ -22,12 +22,18 @@
+  */
+ #include <asm/div64.h>
+ 
+-#define SHIFT_AMOUNT 16 /* We multiply all original integers with 2^SHIFT_AMOUNT to get the fInt representation */
++enum ppevvmath_constants {
++	/* We multiply all original integers with 2^SHIFT_AMOUNT to get the fInt representation */
++	SHIFT_AMOUNT	= 16,
+ 
+-#define PRECISION 5 /* Change this value to change the number of decimal places in the final output - 5 is a good default */
++	/* Change this value to change the number of decimal places in the final output - 5 is a good default */
++	PRECISION	=  5,
+ 
+-#define SHIFTED_2 (2 << SHIFT_AMOUNT)
+-#define MAX (1 << (SHIFT_AMOUNT - 1)) - 1 /* 32767 - Might change in the future */
++	SHIFTED_2	= (2 << SHIFT_AMOUNT),
++
++	/* 32767 - Might change in the future */
++	MAX		= (1 << (SHIFT_AMOUNT - 1)) - 1,
++};
+ 
+ /* -------------------------------------------------------------------------------
+  * NEW TYPE - fINT
+--- a/drivers/gpu/drm/radeon/evergreen_cs.c
++++ b/drivers/gpu/drm/radeon/evergreen_cs.c
+@@ -32,8 +32,10 @@
+ #include "evergreen_reg_safe.h"
+ #include "cayman_reg_safe.h"
+ 
++#ifndef MIN
+ #define MAX(a,b)                   (((a)>(b))?(a):(b))
+ #define MIN(a,b)                   (((a)<(b))?(a):(b))
++#endif
+ 
+ #define REG_SAFE_BM_SIZE ARRAY_SIZE(evergreen_reg_safe_bm)
+ 
+--- a/drivers/hwmon/adt7475.c
++++ b/drivers/hwmon/adt7475.c
+@@ -23,23 +23,23 @@
+ #include <linux/util_macros.h>
+ 
+ /* Indexes for the sysfs hooks */
+-
+-#define INPUT		0
+-#define MIN		1
+-#define MAX		2
+-#define CONTROL		3
+-#define OFFSET		3
+-#define AUTOMIN		4
+-#define THERM		5
+-#define HYSTERSIS	6
+-
++enum adt_sysfs_id {
++	INPUT		= 0,
++	MIN		= 1,
++	MAX		= 2,
++	CONTROL		= 3,
++	OFFSET		= 3,	// Dup
++	AUTOMIN		= 4,
++	THERM		= 5,
++	HYSTERSIS	= 6,
+ /*
+  * These are unique identifiers for the sysfs functions - unlike the
+  * numbers above, these are not also indexes into an array
+  */
++	ALARM		= 9,
++	FAULT		= 10,
++};
+ 
+-#define ALARM		9
+-#define FAULT		10
+ 
+ /* 7475 Common Registers */
+ 
+--- a/drivers/media/dvb-frontends/stv0367_priv.h
++++ b/drivers/media/dvb-frontends/stv0367_priv.h
+@@ -25,8 +25,11 @@
+ #endif
+ 
+ /* MACRO definitions */
++#ifndef MIN
+ #define MAX(X, Y) ((X) >= (Y) ? (X) : (Y))
+ #define MIN(X, Y) ((X) <= (Y) ? (X) : (Y))
++#endif
++
+ #define INRANGE(X, Y, Z) \
+ 	((((X) <= (Y)) && ((Y) <= (Z))) || \
+ 	(((Z) <= (Y)) && ((Y) <= (X))) ? 1 : 0)
+--- a/drivers/net/fjes/fjes_main.c
++++ b/drivers/net/fjes/fjes_main.c
+@@ -14,9 +14,7 @@
+ #include "fjes.h"
+ #include "fjes_trace.h"
+ 
+-#define MAJ 1
+-#define MIN 2
+-#define DRV_VERSION __stringify(MAJ) "." __stringify(MIN)
++#define DRV_VERSION "1.2"
+ #define DRV_NAME	"fjes"
+ char fjes_driver_name[] = DRV_NAME;
+ char fjes_driver_version[] = DRV_VERSION;
+--- a/drivers/nfc/pn544/i2c.c
++++ b/drivers/nfc/pn544/i2c.c
+@@ -126,8 +126,6 @@ struct pn544_i2c_fw_secure_blob {
+ #define PN544_FW_CMD_RESULT_COMMAND_REJECTED 0xE0
+ #define PN544_FW_CMD_RESULT_CHUNK_ERROR 0xE6
+ 
+-#define MIN(X, Y) ((X) < (Y) ? (X) : (Y))
+-
+ #define PN544_FW_WRITE_BUFFER_MAX_LEN 0x9f7
+ #define PN544_FW_I2C_MAX_PAYLOAD PN544_HCI_I2C_LLC_MAX_SIZE
+ #define PN544_FW_I2C_WRITE_FRAME_HEADER_LEN 8
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -757,7 +757,6 @@ static union acpi_object *__call_snc_met
+ 	return result;
+ }
+ 
+-#define MIN(a, b)	(a > b ? b : a)
+ static int sony_nc_buffer_call(acpi_handle handle, char *name, u64 *value,
+ 		void *buffer, size_t buflen)
+ {
+--- a/drivers/scsi/isci/init.c
++++ b/drivers/scsi/isci/init.c
+@@ -65,11 +65,7 @@
+ #include "task.h"
+ #include "probe_roms.h"
+ 
+-#define MAJ 1
+-#define MIN 2
+-#define BUILD 0
+-#define DRV_VERSION __stringify(MAJ) "." __stringify(MIN) "." \
+-	__stringify(BUILD)
++#define DRV_VERSION "1.2.0"
+ 
+ MODULE_VERSION(DRV_VERSION);
+ 
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_include/math_support.h
++++ b/drivers/staging/media/atomisp/pci/hive_isp_css_include/math_support.h
+@@ -31,11 +31,6 @@
+ /* A => B */
+ #define IMPLIES(a, b)        (!(a) || (b))
+ 
+-/* for preprocessor and array sizing use MIN and MAX
+-   otherwise use min and max */
+-#define MAX(a, b)            (((a) > (b)) ? (a) : (b))
+-#define MIN(a, b)            (((a) < (b)) ? (a) : (b))
+-
+ #define ROUND_DIV(a, b)      (((b) != 0) ? ((a) + ((b) >> 1)) / (b) : 0)
+ #define CEIL_DIV(a, b)       (((b) != 0) ? ((a) + (b) - 1) / (b) : 0)
+ #define CEIL_MUL(a, b)       (CEIL_DIV(a, b) * (b))
 --- a/include/linux/minmax.h
 +++ b/include/linux/minmax.h
-@@ -151,6 +151,70 @@
+@@ -277,6 +277,8 @@ static inline bool in_range32(u32 val, u
+  * Use these carefully: no type checking, and uses the arguments
+  * multiple times. Use for obvious constants only.
   */
- #define max_t(type, x, y)	__careful_cmp((type)(x), (type)(y), >)
++#define MIN(a,b) __cmp(min,a,b)
++#define MAX(a,b) __cmp(max,a,b)
+ #define MIN_T(type,a,b) __cmp(min,(type)(a),(type)(b))
+ #define MAX_T(type,a,b) __cmp(max,(type)(a),(type)(b))
  
-+/*
-+ * Remove a const qualifier from integer types
-+ * _Generic(foo, type-name: association, ..., default: association) performs a
-+ * comparison against the foo type (not the qualified type).
-+ * Do not use the const keyword in the type-name as it will not match the
-+ * unqualified type of foo.
-+ */
-+#define __unconst_integer_type_cases(type)	\
-+	unsigned type:  (unsigned type)0,	\
-+	signed type:    (signed type)0
-+
-+#define __unconst_integer_typeof(x) typeof(			\
-+	_Generic((x),						\
-+		char: (char)0,					\
-+		__unconst_integer_type_cases(char),		\
-+		__unconst_integer_type_cases(short),		\
-+		__unconst_integer_type_cases(int),		\
-+		__unconst_integer_type_cases(long),		\
-+		__unconst_integer_type_cases(long long),	\
-+		default: (x)))
-+
-+/*
-+ * Do not check the array parameter using __must_be_array().
-+ * In the following legit use-case where the "array" passed is a simple pointer,
-+ * __must_be_array() will return a failure.
-+ * --- 8< ---
-+ * int *buff
-+ * ...
-+ * min = min_array(buff, nb_items);
-+ * --- 8< ---
-+ *
-+ * The first typeof(&(array)[0]) is needed in order to support arrays of both
-+ * 'int *buff' and 'int buff[N]' types.
-+ *
-+ * The array can be an array of const items.
-+ * typeof() keeps the const qualifier. Use __unconst_integer_typeof() in order
-+ * to discard the const qualifier for the __element variable.
-+ */
-+#define __minmax_array(op, array, len) ({				\
-+	typeof(&(array)[0]) __array = (array);				\
-+	typeof(len) __len = (len);					\
-+	__unconst_integer_typeof(__array[0]) __element = __array[--__len]; \
-+	while (__len--)							\
-+		__element = op(__element, __array[__len]);		\
-+	__element; })
-+
-+/**
-+ * min_array - return minimum of values present in an array
-+ * @array: array
-+ * @len: array length
-+ *
-+ * Note that @len must not be zero (empty array).
-+ */
-+#define min_array(array, len) __minmax_array(min, array, len)
-+
-+/**
-+ * max_array - return maximum of values present in an array
-+ * @array: array
-+ * @len: array length
-+ *
-+ * Note that @len must not be zero (empty array).
-+ */
-+#define max_array(array, len) __minmax_array(max, array, len)
-+
- /**
-  * clamp_t - return a value clamped to a given range using a given type
-  * @type: the type of variable to use
+--- a/kernel/trace/preemptirq_delay_test.c
++++ b/kernel/trace/preemptirq_delay_test.c
+@@ -31,8 +31,6 @@ MODULE_PARM_DESC(burst_size, "The size o
+ 
+ static struct completion done;
+ 
+-#define MIN(x, y) ((x) < (y) ? (x) : (y))
+-
+ static void busy_wait(ulong time)
+ {
+ 	u64 start, end;
+--- a/lib/btree.c
++++ b/lib/btree.c
+@@ -43,7 +43,6 @@
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ 
+-#define MAX(a, b) ((a) > (b) ? (a) : (b))
+ #define NODESIZE MAX(L1_CACHE_BYTES, 128)
+ 
+ struct btree_geo {
+--- a/lib/decompress_unlzma.c
++++ b/lib/decompress_unlzma.c
+@@ -37,7 +37,9 @@
+ 
+ #include <linux/decompress/mm.h>
+ 
++#ifndef MIN
+ #define	MIN(a, b) (((a) < (b)) ? (a) : (b))
++#endif
+ 
+ static long long INIT read_int(unsigned char *ptr, int size)
+ {
+--- a/lib/zstd/zstd_internal.h
++++ b/lib/zstd/zstd_internal.h
+@@ -36,8 +36,6 @@
+ /*-*************************************
+ *  shared macros
+ ***************************************/
+-#define MIN(a, b) ((a) < (b) ? (a) : (b))
+-#define MAX(a, b) ((a) > (b) ? (a) : (b))
+ #define CHECK_F(f)                       \
+ 	{                                \
+ 		size_t const errcod = f; \
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -126,7 +126,6 @@
+ #define ISOLATED_BITS	3
+ #define MAGIC_VAL_BITS	8
+ 
+-#define MAX(a, b) ((a) >= (b) ? (a) : (b))
+ /* ZS_MIN_ALLOC_SIZE must be multiple of ZS_ALIGN */
+ #define ZS_MIN_ALLOC_SIZE \
+ 	MAX(32, (ZS_MAX_PAGES_PER_ZSPAGE << PAGE_SHIFT >> OBJ_INDEX_BITS))
 
 
 Patches currently in stable-queue which might be from farbere@amazon.com are
