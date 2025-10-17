@@ -1,46 +1,46 @@
-Return-Path: <linux-erofs+bounces-1237-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1239-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id D18D9BE9021
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 15:48:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 690B6BE9033
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 15:49:07 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cp5lD5FwBz3cbt;
-	Sat, 18 Oct 2025 00:48:56 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cp5lP2V6Yz3cdV;
+	Sat, 18 Oct 2025 00:49:05 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760708936;
-	cv=none; b=HKbn3kkZW88Tiu6QqLA5fI2fZFgVvUYVQKOSrZVbbbUnJ0ODrGOAcEr4Du3+2/xq9b9JmPmbclVKFXa2Oun9Vq0ZUgIyF4bxBNOoGvVIoIBJ/lXGD13ljSZOz1REZaxR80DEB5syAlG3vFJlmjx41R3n8rNClsG+Pv/pWB6F0b4JCj2joaG6ShStlWRQvWXA+0cZ3CjcKk8y1krArL7WTjej7RUzTel58IVmNkrc+l8DwqlxtBwt3Pw2nMypajV1AJimdi1zcZ/Y8OsblTgJ2bvLCEQUFVV69DmRfmuKhotKm8MOUJV+0JqGP1zRrHLrW6fy6RTUSpTtZk8yYYMrJA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760708945;
+	cv=none; b=PZLQeIKlgCZI2UR4baj2PBO1klesksZbnnOLPseZtslDkxetU1WbbpdAqI+AnzNM1NPeXqGoTJHyOh1sHTEGj3dsw9fsHgmpaC/mXcktRm5ifEu7mCtQe2lzjKv2yJCfrBx8rn+k3oWm10uzlnK3OUh/TexqER3vAbxeeBBUG1jJK/3P1iIwVk7QlkCJ0bSqrCoUOtaIsQd5z1EW+iulzkAgU8M0W39bv9cLQhf1NbpfSLKMbm/91jaJnoL8qnrTa1B14MzxUlCA6PPelEwJQ+EOM0ZKIv1nCqVJuYXGzm4grbKXCTDFtuVaA9NnlOLH9p3ozioZhH+QgagUXTsoZA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760708936; c=relaxed/relaxed;
-	bh=Z+nCDkpUmOiyvyC+3FWkYZOq/vDObvQWNwUdH2Ay4V0=;
+	t=1760708945; c=relaxed/relaxed;
+	bh=U8uI3irMc21KXnyDZVuPJT0aSh0IRadWAJ6vHMjtRig=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=jFsuE5VWyAHvRl8bFyOrdPHYqahCcW4U5Y1vZ9PiHIobOxneoqVd0pIasYDj0OuI8I3AWBDfpbte66HPGELaU81mdP1FoIGpS1y3RKPvxWOKjqf8B0lH/f8TnrEs6TjkKhQppqCk7jqhkDe/ZkleiLF4WYzLpn+/OSQc0B4Tcc3NmXVjZCWqUq3XAXXT1NnxjoLnM22qWkRWOWORCQhe4xrOc+NsIqv3cMbM9nTgdm1HTQRgx7pzpTD8wAgt2AZjFpEpW9V/FdBp+ziMjvwwhJY0onp8N3uGnbL79MfCkn+JzUFZZbmWr/PqlWwlTypb6EfMOaC5m1Vwq0oKCVF5yg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=fail (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=VAGVlPZh reason="signature verification failed"; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+	 Content-Type; b=A6iUWWomNTZPhnw7Bs24oprjfigrXBpOv74anhsY9Z4J6V58XdDseisL751HAdYRT6kM365gOMIqvqjx8Mze5IXm8iyJAG6wUlBRDf5zBAZXAEzYcItEdk/1i2qGCfy0xed/naKqBGpBJp04Y/9/o0YXiSGVkvflwn/OTTgs39jG4+mFtm1zmBMCVOkEJF1Ke47GB5hXMkDx0e+t853Z0Fu/qWcWdE5oHX2KyUnCDymZr0D4KpqtGxNVChwtMxYqbyBW0oKEF4zfE1Yu5YoHGZWK5MaoZRUEO4zSJUu2oVMRUJe7Fz/TmI9fHCxa9vFmYa6XzFZhZvIHgrhpkILS5g==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=fail (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=sGHlqpNC reason="signature verification failed"; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=VAGVlPZh;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=sGHlqpNC;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
 Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cp5lC6qbnz3cbg
-	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Oct 2025 00:48:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cp5lN41x3z3cdG
+	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Oct 2025 00:49:04 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1C91064377;
-	Fri, 17 Oct 2025 13:48:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C25FC16AAE;
-	Fri, 17 Oct 2025 13:48:52 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 99B506437C;
+	Fri, 17 Oct 2025 13:49:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C27ADC4CEF9;
+	Fri, 17 Oct 2025 13:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760708933;
-	bh=5Po0jPJuYXl4UtKLQzL3J5oqgd696Ng56D52ztzrN4Q=;
+	s=korg; t=1760708942;
+	bh=ywoIoTQPJihrdgM5VHryYn1SAz5PWHvRXI+LMWpHDzA=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=VAGVlPZhSU55SWD6d8vTrJjWDjWo+VcWtuR4/3aFhCVTFzdc3YOAL53ZH0X4huMb6
-	 WtCREdJOglX1WiGPbXSWDbOsDfHn2nIfk2vURwACSxs4UGSa9rgJlbrAJdmPZavaFf
-	 mlAAzAvF2W+mckc+bEKDEMYxl7HvR3zQBOZ0ryeQ=
-Subject: Patch "minmax: deduplicate __unconst_integer_typeof()" has been added to the 5.10-stable tree
+	b=sGHlqpNCTaWpThOhLkiPmT+5JamWTA9ZTHhjaKQMzLaWaFL09I2VbBdpSyowlJ8kf
+	 NjHTI/QszjDCGnSUt32YkQ74ZFu/vm95iTbAPjIi+HtvG5rARduNTerfBnXNj4QLSj
+	 W0lj/N9be/EBqLOVsfkr0FsBCmxE5i6i+jObqRow=
+Subject: Patch "minmax: fix header inclusions" has been added to the 5.10-stable tree
 To: David.Laight@ACULAB.COM, Jason@zx2c4.com,
 	adilger.kernel@dilger.ca, agk@redhat.com, airlied@linux.ie,
 	akpm@linux-foundation.org, alexander.deucher@amd.com,
@@ -86,8 +86,8 @@ To: David.Laight@ACULAB.COM, Jason@zx2c4.com,
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Fri, 17 Oct 2025 15:48:29 +0200
-In-Reply-To: <20251017090519.46992-8-farbere@amazon.com>
-Message-ID: <2025101729-boogieman-eatable-8d3e@gregkh>
+In-Reply-To: <20251017090519.46992-9-farbere@amazon.com>
+Message-ID: <2025101729-anyhow-embargo-b20b@gregkh>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -110,101 +110,61 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 This is a note to let you know that I've just added the patch titled
 
-    minmax: deduplicate __unconst_integer_typeof()
+    minmax: fix header inclusions
 
 to the 5.10-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     minmax-deduplicate-__unconst_integer_typeof.patch
+     minmax-fix-header-inclusions.patch
 and it can be found in the queue-5.10 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From prvs=378230090=farbere@amazon.com Fri Oct 17 11:07:56 2025
+From prvs=378230090=farbere@amazon.com Fri Oct 17 11:08:16 2025
 From: Eliav Farber <farbere@amazon.com>
-Date: Fri, 17 Oct 2025 09:04:59 +0000
-Subject: minmax: deduplicate __unconst_integer_typeof()
+Date: Fri, 17 Oct 2025 09:05:00 +0000
+Subject: minmax: fix header inclusions
 To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>, <linux@armlinux.org.uk>, <jdike@addtoit.com>, <richard@nod.at>, <anton.ivanov@cambridgegreys.com>, <dave.hansen@linux.intel.com>, <luto@kernel.org>, <peterz@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>, <tony.luck@intel.com>, <qiuxu.zhuo@intel.com>, <mchehab@kernel.org>, <james.morse@arm.com>, <rric@kernel.org>, <harry.wentland@amd.com>, <sunpeng.li@amd.com>, <alexander.deucher@amd.com>, <christian.koenig@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>, <evan.quan@amd.com>, <james.qian.wang@arm.com>, <liviu.dudau@arm.com>, <mihail.atanassov@arm.com>, <brian.starkey@arm.com>, <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>, <tzimmermann@suse.de>, <robdclark@gmail.com>, <sean@poorly.run>, <jdelvare@suse.com>, <linux@roeck-us.net>, <fery@cypress.com>, <dmitry.torokhov@gmail.com>, <agk@redhat.com>, <snitzer@redhat.com>, <dm-devel@redhat.com>, <rajur@chelsio
  .com>, <davem@davemloft.net>, <kuba@kernel.org>, <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>, <joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>, <malattia@linux.it>, <hdegoede@redhat.com>, <mgross@linux.intel.com>, <intel-linux-scu@intel.com>, <artur.paszkiewicz@intel.com>, <jejb@linux.ibm.com>, <martin.petersen@oracle.com>, <sakari.ailus@linux.intel.com>, <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>, <xiang@kernel.org>, <chao@kernel.org>, <jack@suse.com>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <dushistov@mail.ru>, <luc.vanoostenryck@gmail.com>, <rostedt@goodmis.org>, <pmladek@suse.com>, <sergey.senozhatsky@gmail.com>, <andriy.shevchenko@linux.intel.com>, <linux@rasmusvillemoes.dk>, <minchan@kernel.org>, <ngupta@vflare.org>, <akpm@linux-foundation.org>, <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>, <pablo@netfilter.org>, <kadlec@netfilter.org>, <fw@strlen.de>, <jmaloy@redhat.com>, <ying.xue@windriver.com>, <willy@infradead.org>, <farbere@amazon.com>,
   <sashal@kernel.org>, <ruanjinjie@huawei.com>, <David.Laight@ACULAB.COM>, <herve.codina@bootlin.com>, <Jason@zx2c4.com>, <keescook@chromium.org>, <kbusch@kernel.org>, <nathan@kernel.org>, <bvanassche@acm.org>, <ndesaulniers@google.com>, <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>, <linux-um@lists.infradead.org>, <linux-edac@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>, <linux-hwmon@vger.kernel.org>, <linux-input@vger.kernel.org>, <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>, <platform-driver-x86@vger.kernel.org>, <linux-scsi@vger.kernel.org>, <linux-staging@lists.linux.dev>, <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>, <linux-sparse@vger.kernel.org>, <linux-mm@kvack.org>, <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>, <tipc-discussion@
  lists.sourceforge.net>
-Message-ID: <20251017090519.46992-8-farbere@amazon.com>
+Message-ID: <20251017090519.46992-9-farbere@amazon.com>
 
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit 5e57418a2031cd5e1863efdf3d7447a16a368172 ]
+[ Upstream commit f6e9d38f8eb00ac8b52e6d15f6aa9bcecacb081b ]
 
-It appears that compiler_types.h already have an implementation of the
-__unconst_integer_typeof() called __unqual_scalar_typeof().  Use it
-instead of the copy.
+BUILD_BUG_ON*() macros are defined in build_bug.h.  Include it.  Replace
+compiler_types.h by compiler.h, which provides the former, to have a
+definition of the __UNIQUE_ID().
 
-Link: https://lkml.kernel.org/r/20230911154913.4176033-1-andriy.shevchenko@linux.intel.com
+Link: https://lkml.kernel.org/r/20230912092355.79280-1-andriy.shevchenko@linux.intel.com
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Herve Codina <herve.codina@bootlin.com>
+Reviewed-by: Herve Codina <herve.codina@bootlin.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Eliav Farber <farbere@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/minmax.h |   26 +++-----------------------
- 1 file changed, 3 insertions(+), 23 deletions(-)
+ include/linux/minmax.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 --- a/include/linux/minmax.h
 +++ b/include/linux/minmax.h
-@@ -2,6 +2,7 @@
+@@ -2,7 +2,8 @@
  #ifndef _LINUX_MINMAX_H
  #define _LINUX_MINMAX_H
  
-+#include <linux/compiler_types.h>
+-#include <linux/compiler_types.h>
++#include <linux/build_bug.h>
++#include <linux/compiler.h>
  #include <linux/const.h>
  #include <linux/types.h>
  
-@@ -152,27 +153,6 @@
- #define max_t(type, x, y)	__careful_cmp((type)(x), (type)(y), >)
- 
- /*
-- * Remove a const qualifier from integer types
-- * _Generic(foo, type-name: association, ..., default: association) performs a
-- * comparison against the foo type (not the qualified type).
-- * Do not use the const keyword in the type-name as it will not match the
-- * unqualified type of foo.
-- */
--#define __unconst_integer_type_cases(type)	\
--	unsigned type:  (unsigned type)0,	\
--	signed type:    (signed type)0
--
--#define __unconst_integer_typeof(x) typeof(			\
--	_Generic((x),						\
--		char: (char)0,					\
--		__unconst_integer_type_cases(char),		\
--		__unconst_integer_type_cases(short),		\
--		__unconst_integer_type_cases(int),		\
--		__unconst_integer_type_cases(long),		\
--		__unconst_integer_type_cases(long long),	\
--		default: (x)))
--
--/*
-  * Do not check the array parameter using __must_be_array().
-  * In the following legit use-case where the "array" passed is a simple pointer,
-  * __must_be_array() will return a failure.
-@@ -186,13 +166,13 @@
-  * 'int *buff' and 'int buff[N]' types.
-  *
-  * The array can be an array of const items.
-- * typeof() keeps the const qualifier. Use __unconst_integer_typeof() in order
-+ * typeof() keeps the const qualifier. Use __unqual_scalar_typeof() in order
-  * to discard the const qualifier for the __element variable.
-  */
- #define __minmax_array(op, array, len) ({				\
- 	typeof(&(array)[0]) __array = (array);				\
- 	typeof(len) __len = (len);					\
--	__unconst_integer_typeof(__array[0]) __element = __array[--__len]; \
-+	__unqual_scalar_typeof(__array[0]) __element = __array[--__len];\
- 	while (__len--)							\
- 		__element = op(__element, __array[__len]);		\
- 	__element; })
 
 
 Patches currently in stable-queue which might be from farbere@amazon.com are
