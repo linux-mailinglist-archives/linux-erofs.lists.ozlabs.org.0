@@ -1,46 +1,46 @@
-Return-Path: <linux-erofs+bounces-1252-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1253-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7E865BE90B7
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 15:49:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 94623BE90C0
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 15:49:59 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cp5mK2n59z3chq;
-	Sat, 18 Oct 2025 00:49:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cp5mP3jw8z3chv;
+	Sat, 18 Oct 2025 00:49:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760708993;
-	cv=none; b=JqncoQF5U3+uoPM+TStZNp3r4nO+C1eFlTYCX8WkNyzLjjGEux7aJsZ7MDPpax60WSRzlJczrwfXmpgQaoKiPlqCxbnUTtv00VDKxUglXE8zfdEji7BSt67tQ0wsa5SwRmudSzX2/WYfNX79hnSEzbCn1JSQ6eFoZ2hOeOkqCARm/6Md5U/HSgm8O97RwIQX65SqXCnLjIbumfQpJaEFoeXnFOzEXTVLTUy2Jbl7VmAKVBJi1ekdUVGyLGOk2UACrTGzN89lk7nHDKLqjgt+uOULlmUAeOkaUb0PZ0LNEe7OVC64Su3pxrJ1ak0NGy4pJM09vSd+qkJqlEbUsnJa5Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760708997;
+	cv=none; b=nrFTgXrmFGHZZ9BZGU1enXXyQG4+GNJRJd71laF9FjTxlAFq+ETh7hznL/h7hAe1JTpGWMFH6cRFQNFPweW/wkhnaCmuXBNQXoIELHM8QdsLGDYsAyNDI5EKS8aR96zhBIFlnM5AvboiliFA0pnS1CfrJ33E/AoxP6W5zsY26GxPN9SkY6opHWplOrs5iwK6u2VxoNcYs2zLrUEIPqMQLDkRtngUUu7fVgnGZ8HvNxkY7sXvFr0s5jYq8DpTu53HxLY3j70+S/Xm/Q8mzI0eDoynOyy8NIqS7fAECwx4mA9ka8n6yjSUlxpjtYcvKsgEgEERwMYNp0WX6QWwlxkiLg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760708993; c=relaxed/relaxed;
-	bh=mc1Z2x7kFL0ZXjEiguVPj6RVeojrQqjIJTgEHoUdZ6w=;
+	t=1760708997; c=relaxed/relaxed;
+	bh=fGLjEyziNQY0t8OuTOf14gTDEe9OuRJYmVpLqP1D/bQ=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=Rc5pHrIooQkwbHbqSG80Gf1BetukysqI9vpWfExi5bOlOkjVV4BowsMtZganawgjr/PIcMFsWd3TElSc9UVFAww7q4fignRcqPkEoC0qee3y2ncC+8QA8GtCkPbkwtUc8h1imuXiT2ju4T0eFXtCe822b8pQi1B2VNpnX1jhk6zI/qsaG6J/GFxZeDiasfj1KWJciKOK86mFwTLzj+gQWaFjxn7Ja3gwci3p3CIwAhwpsCsMRdMnrA+4dHYux+xR3s23WniCmLnLuQmIau7PdXuWD6pQK4JhFqYgBOPD4+jmM8tnOqEoahv1nrXDJ0GFH+bMpeoIoDY7yvoAAufpzg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=fail (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=O6H3nYZu reason="signature verification failed"; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+	 Content-Type; b=MJzyLT21tyf3Y4YMojU3Lc/oHL1ZsORYMe7zxIamzTwpVgE7O2D15Q4kSv9uDFainiD/t4st4S10u1RXsB/oLrjUHpNk8WmGIjgzkU4dy5Vl1zXinA0BQMwJk2Gm15WZw9mDKzfzSMzJ9aYILDukY/v11XZrlEsgQn7OvrcZucXFYCxQoSwArn5ZgAwDTCEOmN7OD8hNgeqkfNrOPskLh6WGMdo3xhnT407fQ4qQY+YKBAiokeXzZf5eD72/D808JLRu7AHxSHBvWFiWpi4JW2Zx90yjTT9qZ700BQJMX+3eWdn6SbnbcXf/SLMU0abpj2IFUluX/CMygahZiwGepQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=fail (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=C10tlWho reason="signature verification failed"; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=O6H3nYZu;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=C10tlWho;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cp5mJ4lgTz3chc
-	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Oct 2025 00:49:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cp5mN254sz3cht
+	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Oct 2025 00:49:56 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 055924B42C;
-	Fri, 17 Oct 2025 13:49:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B40A6C4CEE7;
-	Fri, 17 Oct 2025 13:49:49 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id A12294B441;
+	Fri, 17 Oct 2025 13:49:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3DBC4CEF9;
+	Fri, 17 Oct 2025 13:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760708990;
-	bh=2AL82Tx8Rdq/52T3TJ4cC7XpFGFqeD4+6tAruhybAuU=;
+	s=korg; t=1760708994;
+	bh=F9kKa6fDv6W6DAexXH+72tvBSrNTOp0cDLlFnkl5LpM=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=O6H3nYZuSN2+aZUpkC78xIr7fqsasj3G0l1TIeCUvJHvo60qGySNg+ebN2C3yhiqg
-	 daTJSwJ4ba7/zdJlZiA+50vstfQ2kFouA1hOO2Sg9KMppX2ApJ8y/c+89w2KXGSkUT
-	 Anm8AcLYfmLUNPO89SY3LtuVi1KYI6WFjoDzVk08=
-Subject: Patch "minmax.h: remove some #defines that are only expanded once" has been added to the 5.10-stable tree
+	b=C10tlWholbNt7hAMJQkwYG1//GR7rnXYOHf2JPpSCGbvRlge0OcxtPgF8WcoDwuN4
+	 +Llji6TepGPPrE9qAHX+CJUwpY8kpbnq0XwoKazDqb/Rvm5t22BPHjRo/BlCDR4YGn
+	 o3KyxMNbGaCQGid3u12ArUsgCX2hBmVKxfV5f36U=
+Subject: Patch "minmax.h: simplify the variants of clamp()" has been added to the 5.10-stable tree
 To: David.Laight@ACULAB.COM, Jason@zx2c4.com,
 	adilger.kernel@dilger.ca, agk@redhat.com, airlied@linux.ie,
 	akpm@linux-foundation.org, alexander.deucher@amd.com,
@@ -90,8 +90,8 @@ To: David.Laight@ACULAB.COM, Jason@zx2c4.com,
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Fri, 17 Oct 2025 15:48:33 +0200
-In-Reply-To: <20251017090519.46992-28-farbere@amazon.com>
-Message-ID: <2025101733-volatile-vertical-2f0d@gregkh>
+In-Reply-To: <20251017090519.46992-27-farbere@amazon.com>
+Message-ID: <2025101733-suitably-supervise-b758@gregkh>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -114,46 +114,41 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 This is a note to let you know that I've just added the patch titled
 
-    minmax.h: remove some #defines that are only expanded once
+    minmax.h: simplify the variants of clamp()
 
 to the 5.10-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     minmax.h-remove-some-defines-that-are-only-expanded-once.patch
+     minmax.h-simplify-the-variants-of-clamp.patch
 and it can be found in the queue-5.10 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From prvs=378230090=farbere@amazon.com Fri Oct 17 11:14:00 2025
+From prvs=378230090=farbere@amazon.com Fri Oct 17 11:13:55 2025
 From: Eliav Farber <farbere@amazon.com>
-Date: Fri, 17 Oct 2025 09:05:19 +0000
-Subject: minmax.h: remove some #defines that are only expanded once
+Date: Fri, 17 Oct 2025 09:05:18 +0000
+Subject: minmax.h: simplify the variants of clamp()
 To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>, <linux@armlinux.org.uk>, <jdike@addtoit.com>, <richard@nod.at>, <anton.ivanov@cambridgegreys.com>, <dave.hansen@linux.intel.com>, <luto@kernel.org>, <peterz@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>, <tony.luck@intel.com>, <qiuxu.zhuo@intel.com>, <mchehab@kernel.org>, <james.morse@arm.com>, <rric@kernel.org>, <harry.wentland@amd.com>, <sunpeng.li@amd.com>, <alexander.deucher@amd.com>, <christian.koenig@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>, <evan.quan@amd.com>, <james.qian.wang@arm.com>, <liviu.dudau@arm.com>, <mihail.atanassov@arm.com>, <brian.starkey@arm.com>, <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>, <tzimmermann@suse.de>, <robdclark@gmail.com>, <sean@poorly.run>, <jdelvare@suse.com>, <linux@roeck-us.net>, <fery@cypress.com>, <dmitry.torokhov@gmail.com>, <agk@redhat.com>, <snitzer@redhat.com>, <dm-devel@redhat.com>, <rajur@chelsio
  .com>, <davem@davemloft.net>, <kuba@kernel.org>, <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>, <joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>, <malattia@linux.it>, <hdegoede@redhat.com>, <mgross@linux.intel.com>, <intel-linux-scu@intel.com>, <artur.paszkiewicz@intel.com>, <jejb@linux.ibm.com>, <martin.petersen@oracle.com>, <sakari.ailus@linux.intel.com>, <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>, <xiang@kernel.org>, <chao@kernel.org>, <jack@suse.com>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <dushistov@mail.ru>, <luc.vanoostenryck@gmail.com>, <rostedt@goodmis.org>, <pmladek@suse.com>, <sergey.senozhatsky@gmail.com>, <andriy.shevchenko@linux.intel.com>, <linux@rasmusvillemoes.dk>, <minchan@kernel.org>, <ngupta@vflare.org>, <akpm@linux-foundation.org>, <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>, <pablo@netfilter.org>, <kadlec@netfilter.org>, <fw@strlen.de>, <jmaloy@redhat.com>, <ying.xue@windriver.com>, <willy@infradead.org>, <farbere@amazon.com>,
   <sashal@kernel.org>, <ruanjinjie@huawei.com>, <David.Laight@ACULAB.COM>, <herve.codina@bootlin.com>, <Jason@zx2c4.com>, <keescook@chromium.org>, <kbusch@kernel.org>, <nathan@kernel.org>, <bvanassche@acm.org>, <ndesaulniers@google.com>, <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>, <linux-um@lists.infradead.org>, <linux-edac@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>, <linux-hwmon@vger.kernel.org>, <linux-input@vger.kernel.org>, <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>, <platform-driver-x86@vger.kernel.org>, <linux-scsi@vger.kernel.org>, <linux-staging@lists.linux.dev>, <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>, <linux-sparse@vger.kernel.org>, <linux-mm@kvack.org>, <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>, <tipc-discussion@
  lists.sourceforge.net>
 Cc: Arnd Bergmann <arnd@kernel.org>, Christoph Hellwig <hch@infradead.org>, Dan Carpenter <dan.carpenter@linaro.org>, Jens Axboe <axboe@kernel.dk>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Mateusz Guzik <mjguzik@gmail.com>, Pedro Falcato <pedro.falcato@gmail.com>
-Message-ID: <20251017090519.46992-28-farbere@amazon.com>
+Message-ID: <20251017090519.46992-27-farbere@amazon.com>
 
 From: David Laight <David.Laight@ACULAB.COM>
 
-[ Upstream commit 2b97aaf74ed534fb838d09867d09a3ca5d795208 ]
+[ Upstream commit 495bba17cdf95e9703af1b8ef773c55ef0dfe703 ]
 
-The bodies of __signed_type_use() and __unsigned_type_use() are much the
-same size as their names - so put the bodies in the only line that expands
-them.
+Always pass a 'type' through to __clamp_once(), pass '__auto_type' from
+clamp() itself.
 
-Similarly __signed_type() is defined separately for 64bit and then used
-exactly once just below.
+The expansion of __types_ok3() is reasonable so it isn't worth the added
+complexity of avoiding it when a fixed type is used for all three values.
 
-Change the test for __signed_type from CONFIG_64BIT to one based on gcc
-defined macros so that the code is valid if it gets used outside of a
-kernel build.
-
-Link: https://lkml.kernel.org/r/9386d1ebb8974fbabbed2635160c3975@AcuMS.aculab.com
+Link: https://lkml.kernel.org/r/8f69f4deac014f558bab186444bac2e8@AcuMS.aculab.com
 Signed-off-by: David Laight <david.laight@aculab.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Arnd Bergmann <arnd@kernel.org>
@@ -169,49 +164,69 @@ Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Eliav Farber <farbere@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/minmax.h |   14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ include/linux/minmax.h |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
 --- a/include/linux/minmax.h
 +++ b/include/linux/minmax.h
-@@ -46,10 +46,8 @@
-  * comparison, and these expressions only need to be careful to not cause
-  * warnings for pointer use.
+@@ -183,29 +183,29 @@
+ #define __clamp(val, lo, hi)	\
+ 	((val) >= (hi) ? (hi) : ((val) <= (lo) ? (lo) : (val)))
+ 
+-#define __clamp_once(val, lo, hi, uval, ulo, uhi) ({				\
+-	__auto_type uval = (val);						\
+-	__auto_type ulo = (lo);							\
+-	__auto_type uhi = (hi);							\
++#define __clamp_once(type, val, lo, hi, uval, ulo, uhi) ({			\
++	type uval = (val);							\
++	type ulo = (lo);							\
++	type uhi = (hi);							\
+ 	BUILD_BUG_ON_MSG(statically_true(ulo > uhi),				\
+ 		"clamp() low limit " #lo " greater than high limit " #hi);	\
+ 	BUILD_BUG_ON_MSG(!__types_ok3(uval, ulo, uhi),				\
+ 		"clamp("#val", "#lo", "#hi") signedness error");		\
+ 	__clamp(uval, ulo, uhi); })
+ 
+-#define __careful_clamp(val, lo, hi) \
+-	__clamp_once(val, lo, hi, __UNIQUE_ID(v_), __UNIQUE_ID(l_), __UNIQUE_ID(h_))
++#define __careful_clamp(type, val, lo, hi) \
++	__clamp_once(type, val, lo, hi, __UNIQUE_ID(v_), __UNIQUE_ID(l_), __UNIQUE_ID(h_))
+ 
+ /**
+- * clamp - return a value clamped to a given range with strict typechecking
++ * clamp - return a value clamped to a given range with typechecking
+  * @val: current value
+  * @lo: lowest allowable value
+  * @hi: highest allowable value
+  *
+- * This macro does strict typechecking of @lo/@hi to make sure they are of the
+- * same type as @val.  See the unnecessary pointer comparisons.
++ * This macro checks @val/@lo/@hi to make sure they have compatible
++ * signedness.
   */
--#define __signed_type_use(ux) (2 + __is_nonneg(ux))
--#define __unsigned_type_use(ux) (1 + 2 * (sizeof(ux) < 4))
- #define __sign_use(ux) (is_signed_type(typeof(ux)) ? \
--	__signed_type_use(ux) : __unsigned_type_use(ux))
-+	(2 + __is_nonneg(ux)) : (1 + 2 * (sizeof(ux) < 4)))
+-#define clamp(val, lo, hi) __careful_clamp(val, lo, hi)
++#define clamp(val, lo, hi) __careful_clamp(__auto_type, val, lo, hi)
+ 
+ /**
+  * clamp_t - return a value clamped to a given range using a given type
+@@ -217,7 +217,7 @@
+  * This macro does no typechecking and uses temporary variables of type
+  * @type to make all the comparisons.
+  */
+-#define clamp_t(type, val, lo, hi) __careful_clamp((type)(val), (type)(lo), (type)(hi))
++#define clamp_t(type, val, lo, hi) __careful_clamp(type, val, lo, hi)
+ 
+ /**
+  * clamp_val - return a value clamped to a given range using val's type
+@@ -230,7 +230,7 @@
+  * type and @lo and @hi are literals that will otherwise be assigned a signed
+  * integer type.
+  */
+-#define clamp_val(val, lo, hi) clamp_t(typeof(val), val, lo, hi)
++#define clamp_val(val, lo, hi) __careful_clamp(typeof(val), val, lo, hi)
  
  /*
-  * Check whether a signed value is always non-negative.
-@@ -57,7 +55,7 @@
-  * A cast is needed to avoid any warnings from values that aren't signed
-  * integer types (in which case the result doesn't matter).
-  *
-- * On 64-bit any integer or pointer type can safely be cast to 'long'.
-+ * On 64-bit any integer or pointer type can safely be cast to 'long long'.
-  * But on 32-bit we need to avoid warnings about casting pointers to integers
-  * of different sizes without truncating 64-bit values so 'long' or 'long long'
-  * must be used depending on the size of the value.
-@@ -66,12 +64,12 @@
-  * them, but we do not use s128 types in the kernel (we do use 'u128',
-  * but they are handled by the !is_signed_type() case).
-  */
--#ifdef CONFIG_64BIT
--  #define __signed_type(ux) long
-+#if __SIZEOF_POINTER__ == __SIZEOF_LONG_LONG__
-+#define __is_nonneg(ux) statically_true((long long)(ux) >= 0)
- #else
--  #define __signed_type(ux) typeof(__builtin_choose_expr(sizeof(ux) > 4, 1LL, 1L))
-+#define __is_nonneg(ux) statically_true( \
-+	(typeof(__builtin_choose_expr(sizeof(ux) > 4, 1LL, 1L)))(ux) >= 0)
- #endif
--#define __is_nonneg(ux) statically_true((__signed_type(ux))(ux) >= 0)
- 
- #define __types_ok(ux, uy) \
- 	(__sign_use(ux) & __sign_use(uy))
+  * Do not check the array parameter using __must_be_array().
 
 
 Patches currently in stable-queue which might be from farbere@amazon.com are
