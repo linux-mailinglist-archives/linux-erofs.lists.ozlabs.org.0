@@ -1,97 +1,99 @@
-Return-Path: <linux-erofs+bounces-1254-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1256-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73A3CBE90C9
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 15:50:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C5CE2BE90ED
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 15:50:17 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cp5mT0x7Zz3cj3;
-	Sat, 18 Oct 2025 00:50:01 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cp5mc6PPKz3ckl;
+	Sat, 18 Oct 2025 00:50:08 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760709001;
-	cv=none; b=M7M1vbEKYfj4j/biNvtjQDOIbQjjzpL3KI3OmDlbf0PtKcy1oDkgxR6qi88U3c3eU3erdUMlMB9adCpz7RGnZCekxf3mookC4i9UgZO9zzxvBFIly5Ew5k6qY4cQtGm9BkrxFSCvPGlPidVOiEm98R5Pq8ES0VsfwT6sqGrK7WUKYv0EVOt6trFYzGEo82xWmMFl/SyKH1IwpciGaQNurJPyqcFoFmifuTwLPYu+Gw4xoUznbf93UBZPIIGTIFQHix2UaLNjOqdM3fU8vttUD7D+aggrw54CEfvgvz++t+Am+1jc6hQqQDxzQFmOoqA8QjBjkrMRvIWTNB/eyDekfw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760709008;
+	cv=none; b=Fuw6obYVQGJj1HvDwv0vZNvbX0gpVFxUP0ZFRkE3GXjQPXt6kaXGsTR6615hUSHhVrKaQPsQMemtG3QDX2rqwcgc5DLWBmUraTPrIjLYLhIq5W+gxDDHPRON3Q47NPRwlRmr9tCPKDl1QTvM6LvoTt9JCBmSWz9KhvbbJQnGVTGJHuCz3wos4KeLYvB8/Zdcz+93/08C+3Kn8W47evWQbLMpfD2ZFvukMP82KX45SaJiMN41YEeRyQhZrJ9mf+EvVgfrWbsOhgn2pkdkidXwYNxckW2n9sh8yCkozwIcFrC4Mr2atpti9w34Ajivz4f2C0plrQqHLFc7zDoyqquNsw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760709001; c=relaxed/relaxed;
-	bh=gw7v4qg4E0WdorUdtRwqhYqRkvxLn0OnDHb/6VbJHug=;
+	t=1760709008; c=relaxed/relaxed;
+	bh=8qH74T/unu+vyyxcXmOmm9hgYi9a+jF2BcueMkCbFM0=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=kXQp9JImdL3U2FDWTbnvMzcISPYMwxXbGsUzquo6PSE8BJ4GALlJW0L1bUFbJYc3i91kcnXityIRsVsqtbBnBhWTSay4KU1ERdibjxgyiHvWNnp+5Y+h/zaFfWsZ7fFa2enhjCfOTYyIxyVhlCmSOkCjiPdtwXzklz04s+chFh+iNZqqi0FQ+LsCLhfWSpUbtmy9iD2BBxLAmhdw8ox3wrOergNNjq9JPe0yMVC9xhCSdMzau8gJP5Jmf6x+NnnbgPlv9eJjgLYF6ghXTwcZRZGb4hAAfQmc5s6Smz/GtN+osQ9LOP7XIe4Tq5RQf51+0dx+S94scnYTndZ2LW5L3g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=fail (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=GdFnBKLq reason="signature verification failed"; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+	 Content-Type; b=ajG/Qw92f/bfjddWP5UujiOpcNdfFtVEXtDhfQoL2JWMdGgAtOak2kYfB3TKQ9R/sx6TxWtZn0AMgz6u4yWubgdYjmEtOMVMh0X1zovtuThCPmeNp6LHgzXpcBiRGKU/pCKfjygmthauy9c7/Ofp6dyzUX5IWMRs8Oc/SVx3+VUHsSk7vvHJuP0/icwmctV/UIU+36IDyNP+ZbQ5ZrIIxU2dyiQgzh/N1hus6imYpvmpdp19LoK63MAaEMOXRb3JkPd0x7+LUtDfvQvSOKseyq9PQUVCD/TIOMX0/EiuzkCdLDImCz5b2OWpy/TQBnLYXJqiYK6H8ei9XSuOnMXPvg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=fail (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=GnSRlmd0 reason="signature verification failed"; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=GdFnBKLq;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=GnSRlmd0;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cp5mS2nyjz3cj1
-	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Oct 2025 00:50:00 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cp5mb5lzBz3cjG
+	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Oct 2025 00:50:07 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 70BC46439D;
-	Fri, 17 Oct 2025 13:49:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 133B9C4CEF9;
-	Fri, 17 Oct 2025 13:49:57 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id C994F643A4;
+	Fri, 17 Oct 2025 13:50:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 428C7C4CEF9;
+	Fri, 17 Oct 2025 13:50:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760708998;
-	bh=JbeTxONLotsoUmGtlE2ZrdbmSRZbe9l8UZPkeUV3olA=;
+	s=korg; t=1760709005;
+	bh=dmLSOb2GYlnT9o1IkzmIVv/9ztWuUVzDp82QHtRSSS8=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=GdFnBKLqHQxvvfCRS1tGiWNmdF45QR+5n7uf4kfPOU5GYBP/qILxzCeToRALQL8MS
-	 m+zYFVkpdBHkUgOXssgxOUwGkkVGfNVpBKtqameWvt5NQbO7qWrkuza+nSukckry2b
-	 JX2ay7ftEAMBlmpMnwVBHOKhgC3CpPNVh9CZd9Xo=
-Subject: Patch "minmax.h: update some comments" has been added to the 5.10-stable tree
+	b=GnSRlmd0RtwXk/OVucv97XC2fxDtarMsik6x8upmP4o2u+cekk7MY6s05aPjBeFFp
+	 h/4X3h3X9WtLvRI9Scrx2awB4Y6i95XAs6CRIzzTr+coAWKcQM5/+HnmipPa1yqZxv
+	 YFKLIh7u92D3jKwiQ9EUaSnbdBWSj8l3R2t2eUwk=
+Subject: Patch "overflow, tracing: Define the is_signed_type() macro once" has been added to the 5.10-stable tree
 To: David.Laight@ACULAB.COM, Jason@zx2c4.com,
 	adilger.kernel@dilger.ca, agk@redhat.com, airlied@linux.ie,
 	akpm@linux-foundation.org, alexander.deucher@amd.com,
 	alexandre.torgue@st.com, amd-gfx@lists.freedesktop.org,
 	andriy.shevchenko@linux.intel.com, anton.ivanov@cambridgegreys.com,
-	arnd@kernel.org, artur.paszkiewicz@intel.com, axboe@kernel.dk,
-	bp@alien8.de, brian.starkey@arm.com, bvanassche@acm.org,
-	chao@kernel.org, christian.koenig@amd.com, clm@fb.com,
-	coreteam@netfilter.org, dan.carpenter@linaro.org, daniel@ffwll.ch,
+	arnd@arndb.de, artur.paszkiewicz@intel.com, bp@alien8.de,
+	brian.starkey@arm.com, bvanassche@acm.org, chao@kernel.org,
+	christian.koenig@amd.com, clm@fb.com, coreteam@netfilter.org,
+	dan.j.williams@intel.com, daniel@ffwll.ch,
 	dave.hansen@linux.intel.com, davem@davemloft.net,
-	david.laight@aculab.com, dm-devel@redhat.com,
-	dmitry.torokhov@gmail.com, dri-devel@lists.freedesktop.org,
-	dsterba@suse.com, dushistov@mail.ru, evan.quan@amd.com,
-	farbere@amazon.com, fery@cypress.com,
-	freedreno@lists.freedesktop.org, fw@strlen.de,
+	dm-devel@redhat.com, dmitry.torokhov@gmail.com,
+	dri-devel@lists.freedesktop.org, dsterba@suse.com, dushistov@mail.ru,
+	edumazet@google.com, evan.quan@amd.com, farbere@amazon.com,
+	fery@cypress.com, freedreno@lists.freedesktop.org, fw@strlen.de,
 	gregkh@linuxfoundation.org, harry.wentland@amd.com,
-	hch@infradead.org, hdegoede@redhat.com, herve.codina@bootlin.com,
-	hpa@zytor.com, intel-linux-scu@intel.com, jack@suse.com,
+	hdegoede@redhat.com, herve.codina@bootlin.com, hpa@zytor.com,
+	intel-linux-scu@intel.com, isabbasso@riseup.net, jack@suse.com,
 	james.morse@arm.com, james.qian.wang@arm.com, jdelvare@suse.com,
-	jdike@addtoit.com, jejb@linux.ibm.com, jmaloy@redhat.com,
-	joabreu@synopsys.com, josef@toxicpanda.com, kadlec@netfilter.org,
-	kbusch@kernel.org, keescook@chromium.org, kuba@kernel.org,
-	kuznet@ms2.inr.ac.ru, linux-arm-kernel@lists.infradead.org,
-	linux-erofs@lists.ozlabs.org, linux-mm@kvack.org,
-	linux-staging@lists.linux.dev,
+	j@lists.ozlabs.org, dike@addtoit.com, jejb@linux.ibm.com,
+	jmaloy@redhat.com, joabreu@synopsys.com, josef@toxicpanda.com,
+	jpoimboe@kernel.org, kadlec@netfilter.org, kbusch@kernel.org,
+	keescook@chromium.org, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+	linux-arm-kernel@lists.infradead.org, linux-erofs@lists.ozlabs.org,
+	linux-mm@kvack.org, linux-staging@lists.linux.dev,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-um@lists.infradead.org, linux@armlinux.org.uk,
 	linux@rasmusvillemoes.dk, linux@roeck-us.net, liviu.dudau@arm.com,
-	lorenzo.stoakes@oracle.com, luc.vanoostenryck@gmail.com,
-	luto@kernel.org, maarten.lankhorst@linux.intel.com,
-	malattia@linux.it, martin.petersen@oracle.com, mchehab@kernel.org,
+	luc.vanoostenryck@gmail.com, luto@kernel.org,
+	maarten.lankhorst@linux.intel.com, malattia@linux.it,
+	martin.petersen@oracle.com, mchehab@kernel.org,
 	mcoquelin.stm32@gmail.com, mgross@linux.intel.com,
-	mihail.atanassov@arm.com, minchan@kernel.org, mingo@redhat.com,
-	mjguzik@gmail.com, mripard@kernel.org, nathan@kernel.org,
+	mhiramat@kernel.org, mihail.atanassov@arm.com, minchan@kernel.org,
+	mingo@redhat.com, mripard@kernel.org, nathan@kernel.org,
 	ndesaulniers@google.com, ngupta@vflare.org, pablo@netfilter.org,
-	pedro.falcato@gmail.com, peppe.cavallaro@st.com,
-	peterz@infradead.org, pmladek@suse.com, qiuxu.zhuo@intel.com,
-	rajur@chels, io.com@lists.ozlabs.org, richard@nod.at,
-	robdclark@gmail.com, rostedt@goodmis.org, rric@kernel.org,
-	ruanjinjie@huawei.com, sakari.ailus@linux.intel.com,
-	sashal@kernel.org, sean@poorly.run, sergey.senozhatsky@gmail.com,
-	snitzer@redhat.com, sunpeng.li@amd.com, tglx@linutronix.de,
-	tipc-discussion@lists.sourceforge.net, tony.luck@intel.com,
-	tytso@mit.edu, tzimmermann@suse.de, willy@infradead.org,
+	peppe.cavallaro@st.com, peterz@infradead.org, pmladek@suse.com,
+	qiuxu.zhuo@intel.com, rajur@chelsio.com, richard@nod.at,
+	robdclark@gmail.com, rosted@lists.ozlabs.org, t@goodmis.org,
+	rric@kernel.org, ruanjinjie@huawei.com, sakari.ailus@linux.intel.com,
+	sander@svanheule.net, sashal@kernel.org, sean@poorly.run,
+	sergey.senozhatsky@gmail.com, snitzer@redhat.com, sunpeng.li@amd.com,
+	tglx@linutronix.de, tipc-discussion@lists.sourceforge.net,
+	tony.luck@intel.com, tytso@mit.edu, tzimmermann@suse.de,
+	vbabka@suse.cz,
+	whjH6p+qzwUdx5SOVVHjS3WvzJQr6mDUwhEyTf6pJWzaQ@mail.gmail.com,
+	willy@infradead.org,
+	wjQGnVfb4jehFR0XyZikdQvCZouE96xR_nnf5kqaM5qqQ@mail.gmail.com,
 	x86@kernel.org, xiang@kernel.org, ying.xue@windriver.com,
-	yoshfuji@linux-ipv6.org
+	yoshfuji@linux-ipv6.org, yury.norov@gmail.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Fri, 17 Oct 2025 15:48:33 +0200
-In-Reply-To: <20251017090519.46992-23-farbere@amazon.com>
-Message-ID: <2025101733-emission-backed-1098@gregkh>
+Date: Fri, 17 Oct 2025 15:48:34 +0200
+In-Reply-To: <20251017090519.46992-2-farbere@amazon.com>
+Message-ID: <2025101734-uncertain-tragedy-c5de@gregkh>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -114,150 +116,109 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 This is a note to let you know that I've just added the patch titled
 
-    minmax.h: update some comments
+    overflow, tracing: Define the is_signed_type() macro once
 
 to the 5.10-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     minmax.h-update-some-comments.patch
+     overflow-tracing-define-the-is_signed_type-macro-once.patch
 and it can be found in the queue-5.10 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From prvs=378230090=farbere@amazon.com Fri Oct 17 11:12:31 2025
+From linux-staging+bounces-34939-greg=kroah.com@lists.linux.dev Fri Oct 17 11:09:40 2025
 From: Eliav Farber <farbere@amazon.com>
-Date: Fri, 17 Oct 2025 09:05:14 +0000
-Subject: minmax.h: update some comments
+Date: Fri, 17 Oct 2025 09:04:53 +0000
+Subject: overflow, tracing: Define the is_signed_type() macro once
 To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>, <linux@armlinux.org.uk>, <jdike@addtoit.com>, <richard@nod.at>, <anton.ivanov@cambridgegreys.com>, <dave.hansen@linux.intel.com>, <luto@kernel.org>, <peterz@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>, <tony.luck@intel.com>, <qiuxu.zhuo@intel.com>, <mchehab@kernel.org>, <james.morse@arm.com>, <rric@kernel.org>, <harry.wentland@amd.com>, <sunpeng.li@amd.com>, <alexander.deucher@amd.com>, <christian.koenig@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>, <evan.quan@amd.com>, <james.qian.wang@arm.com>, <liviu.dudau@arm.com>, <mihail.atanassov@arm.com>, <brian.starkey@arm.com>, <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>, <tzimmermann@suse.de>, <robdclark@gmail.com>, <sean@poorly.run>, <jdelvare@suse.com>, <linux@roeck-us.net>, <fery@cypress.com>, <dmitry.torokhov@gmail.com>, <agk@redhat.com>, <snitzer@redhat.com>, <dm-devel@redhat.com>, <rajur@chelsio
  .com>, <davem@davemloft.net>, <kuba@kernel.org>, <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>, <joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>, <malattia@linux.it>, <hdegoede@redhat.com>, <mgross@linux.intel.com>, <intel-linux-scu@intel.com>, <artur.paszkiewicz@intel.com>, <jejb@linux.ibm.com>, <martin.petersen@oracle.com>, <sakari.ailus@linux.intel.com>, <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>, <xiang@kernel.org>, <chao@kernel.org>, <jack@suse.com>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <dushistov@mail.ru>, <luc.vanoostenryck@gmail.com>, <rostedt@goodmis.org>, <pmladek@suse.com>, <sergey.senozhatsky@gmail.com>, <andriy.shevchenko@linux.intel.com>, <linux@rasmusvillemoes.dk>, <minchan@kernel.org>, <ngupta@vflare.org>, <akpm@linux-foundation.org>, <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>, <pablo@netfilter.org>, <kadlec@netfilter.org>, <fw@strlen.de>, <jmaloy@redhat.com>, <ying.xue@windriver.com>, <willy@infradead.org>, <farbere@amazon.com>,
   <sashal@kernel.org>, <ruanjinjie@huawei.com>, <David.Laight@ACULAB.COM>, <herve.codina@bootlin.com>, <Jason@zx2c4.com>, <keescook@chromium.org>, <kbusch@kernel.org>, <nathan@kernel.org>, <bvanassche@acm.org>, <ndesaulniers@google.com>, <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>, <linux-um@lists.infradead.org>, <linux-edac@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>, <linux-hwmon@vger.kernel.org>, <linux-input@vger.kernel.org>, <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>, <platform-driver-x86@vger.kernel.org>, <linux-scsi@vger.kernel.org>, <linux-staging@lists.linux.dev>, <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>, <linux-sparse@vger.kernel.org>, <linux-mm@kvack.org>, <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>, <tipc-discussion@
  lists.sourceforge.net>
-Cc: Arnd Bergmann <arnd@kernel.org>, Christoph Hellwig <hch@infradead.org>, Dan Carpenter <dan.carpenter@linaro.org>, Jens Axboe <axboe@kernel.dk>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Mateusz Guzik <mjguzik@gmail.com>, Pedro Falcato <pedro.falcato@gmail.com>
-Message-ID: <20251017090519.46992-23-farbere@amazon.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Dan Williams <dan.j.williams@intel.com>, Eric Dumazet <edumazet@google.com>, Isabella Basso <isabbasso@riseup.net>, Josh Poimboeuf <jpoimboe@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Sander Vanheule <sander@svanheule.net>, Vlastimil Babka <vbabka@suse.cz>, Yury Norov <yury.norov@gmail.com>
+Message-ID: <20251017090519.46992-2-farbere@amazon.com>
 
-From: David Laight <David.Laight@ACULAB.COM>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit 10666e99204818ef45c702469488353b5bb09ec7 ]
+[ Upstream commit 92d23c6e94157739b997cacce151586a0d07bb8a ]
 
-- Change three to several.
-- Remove the comment about retaining constant expressions, no longer true.
-- Realign to nearer 80 columns and break on major punctiation.
-- Add a leading comment to the block before __signed_type() and __is_nonneg()
-  Otherwise the block explaining the cast is a bit 'floating'.
-  Reword the rest of that comment to improve readability.
+There are two definitions of the is_signed_type() macro: one in
+<linux/overflow.h> and a second definition in <linux/trace_events.h>.
 
-Link: https://lkml.kernel.org/r/85b050c81c1d4076aeb91a6cded45fee@AcuMS.aculab.com
-Signed-off-by: David Laight <david.laight@aculab.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Arnd Bergmann <arnd@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Jason A. Donenfeld <Jason@zx2c4.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Mateusz Guzik <mjguzik@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Pedro Falcato <pedro.falcato@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+As suggested by Linus Torvalds, move the definition of the
+is_signed_type() macro into the <linux/compiler.h> header file. Change
+the definition of the is_signed_type() macro to make sure that it does
+not trigger any sparse warnings with future versions of sparse for
+bitwise types. See also:
+https://lore.kernel.org/all/CAHk-=whjH6p+qzwUdx5SOVVHjS3WvzJQr6mDUwhEyTf6pJWzaQ@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wjQGnVfb4jehFR0XyZikdQvCZouE96xR_nnf5kqaM5qqQ@mail.gmail.com/
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Isabella Basso <isabbasso@riseup.net>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sander Vanheule <sander@svanheule.net>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20220826162116.1050972-3-bvanassche@acm.org
 Signed-off-by: Eliav Farber <farbere@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/minmax.h |   61 ++++++++++++++++++++++---------------------------
- 1 file changed, 28 insertions(+), 33 deletions(-)
+ include/linux/compiler.h     |    6 ++++++
+ include/linux/overflow.h     |    1 -
+ include/linux/trace_events.h |    2 --
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
---- a/include/linux/minmax.h
-+++ b/include/linux/minmax.h
-@@ -8,13 +8,10 @@
- #include <linux/types.h>
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -246,6 +246,12 @@ static inline void *offset_to_ptr(const
+ #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
  
  /*
-- * min()/max()/clamp() macros must accomplish three things:
-+ * min()/max()/clamp() macros must accomplish several things:
-  *
-  * - Avoid multiple evaluations of the arguments (so side-effects like
-  *   "x++" happen only once) when non-constant.
-- * - Retain result as a constant expressions when called with only
-- *   constant expressions (to avoid tripping VLA warnings in stack
-- *   allocation usage).
-  * - Perform signed v unsigned type-checking (to generate compile
-  *   errors instead of nasty runtime surprises).
-  * - Unsigned char/short are always promoted to signed int and can be
-@@ -31,25 +28,23 @@
-  *   bit #0 set if ok for unsigned comparisons
-  *   bit #1 set if ok for signed comparisons
-  *
-- * In particular, statically non-negative signed integer
-- * expressions are ok for both.
-+ * In particular, statically non-negative signed integer expressions
-+ * are ok for both.
-  *
-- * NOTE! Unsigned types smaller than 'int' are implicitly
-- * converted to 'int' in expressions, and are accepted for
-- * signed conversions for now. This is debatable.
-- *
-- * Note that 'x' is the original expression, and 'ux' is
-- * the unique variable that contains the value.
-- *
-- * We use 'ux' for pure type checking, and 'x' for when
-- * we need to look at the value (but without evaluating
-- * it for side effects! Careful to only ever evaluate it
-- * with sizeof() or __builtin_constant_p() etc).
-- *
-- * Pointers end up being checked by the normal C type
-- * rules at the actual comparison, and these expressions
-- * only need to be careful to not cause warnings for
-- * pointer use.
-+ * NOTE! Unsigned types smaller than 'int' are implicitly converted to 'int'
-+ * in expressions, and are accepted for signed conversions for now.
-+ * This is debatable.
-+ *
-+ * Note that 'x' is the original expression, and 'ux' is the unique variable
-+ * that contains the value.
-+ *
-+ * We use 'ux' for pure type checking, and 'x' for when we need to look at the
-+ * value (but without evaluating it for side effects!
-+ * Careful to only ever evaluate it with sizeof() or __builtin_constant_p() etc).
-+ *
-+ * Pointers end up being checked by the normal C type rules at the actual
-+ * comparison, and these expressions only need to be careful to not cause
-+ * warnings for pointer use.
++ * Whether 'type' is a signed type or an unsigned type. Supports scalar types,
++ * bool and also pointer types.
++ */
++#define is_signed_type(type) (((type)(-1)) < (__force type)1)
++
++/*
+  * This is needed in functions which generate the stack canary, see
+  * arch/x86/kernel/smpboot.c::start_secondary() for an example.
   */
- #define __signed_type_use(x, ux) (2 + __is_nonneg(x, ux))
- #define __unsigned_type_use(x, ux) (1 + 2 * (sizeof(ux) < 4))
-@@ -57,19 +52,19 @@
- 	__signed_type_use(x, ux) : __unsigned_type_use(x, ux))
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -29,7 +29,6 @@
+  * https://mail-index.netbsd.org/tech-misc/2007/02/05/0000.html -
+  * credit to Christian Biere.
+  */
+-#define is_signed_type(type)       (((type)(-1)) < (type)1)
+ #define __type_half_max(type) ((type)1 << (8*sizeof(type) - 1 - is_signed_type(type)))
+ #define type_max(T) ((T)((__type_half_max(T) - 1) + __type_half_max(T)))
+ #define type_min(T) ((T)((T)-type_max(T)-(T)1))
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -700,8 +700,6 @@ extern int trace_add_event_call(struct t
+ extern int trace_remove_event_call(struct trace_event_call *call);
+ extern int trace_event_get_offsets(struct trace_event_call *call);
  
- /*
-- * To avoid warnings about casting pointers to integers
-- * of different sizes, we need that special sign type.
-+ * Check whether a signed value is always non-negative.
-  *
-- * On 64-bit we can just always use 'long', since any
-- * integer or pointer type can just be cast to that.
-+ * A cast is needed to avoid any warnings from values that aren't signed
-+ * integer types (in which case the result doesn't matter).
-  *
-- * This does not work for 128-bit signed integers since
-- * the cast would truncate them, but we do not use s128
-- * types in the kernel (we do use 'u128', but they will
-- * be handled by the !is_signed_type() case).
-- *
-- * NOTE! The cast is there only to avoid any warnings
-- * from when values that aren't signed integer types.
-+ * On 64-bit any integer or pointer type can safely be cast to 'long'.
-+ * But on 32-bit we need to avoid warnings about casting pointers to integers
-+ * of different sizes without truncating 64-bit values so 'long' or 'long long'
-+ * must be used depending on the size of the value.
-+ *
-+ * This does not work for 128-bit signed integers since the cast would truncate
-+ * them, but we do not use s128 types in the kernel (we do use 'u128',
-+ * but they are handled by the !is_signed_type() case).
-  */
- #ifdef CONFIG_64BIT
-   #define __signed_type(ux) long
+-#define is_signed_type(type)	(((type)(-1)) < (type)1)
+-
+ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
+ int trace_set_clr_event(const char *system, const char *event, int set);
+ int trace_array_set_clr_event(struct trace_array *tr, const char *system,
 
 
 Patches currently in stable-queue which might be from farbere@amazon.com are
