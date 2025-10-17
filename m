@@ -1,64 +1,64 @@
-Return-Path: <linux-erofs+bounces-1200-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1201-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFCBFBE75DA
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 11:06:17 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFA56BE75E6
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 11:06:31 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cnzT362MRz3bW7;
-	Fri, 17 Oct 2025 20:06:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cnzTK3S7tz3bW7;
+	Fri, 17 Oct 2025 20:06:29 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=52.26.1.71
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760691975;
-	cv=none; b=QKqLeZpcmg4OhDi5O9fKf5tfEAhEA0QV7JOWtXTzfa1YuoHVjEtBmeP/Xi28saoWbyMg+eYUGKpvlqMk1sFM+g5AqmnM+qh0nEPZP3DHMuxXgO950gJNC/lLMjZY5Ln6QJUpuyaS6yyiZ6k/doFyfsACKF4qoE7SK5ieQ0ArtVgYA0OipYbvVKmUi02ud7b/qzIfq5AysetwgT7p+Q8Qf3RrKQFtBQIyQvrIuQgzg7OeUGdKQDXUcEx10FU7x8inZkaeQBQ9eqxdtvDt3tRopQGTB7OOMVIv+tRc17gR54DJBNS7jfw1s7rfUvtzF38uw/VJdG6D8a/euZkB6zb2BA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=52.13.214.179
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760691989;
+	cv=none; b=dTRT6AClaI16MY4VlqyzS5NLt27ksjLIFLY/WIoL9crfqjsUIHnAGTC59flJsNuWcn8Jve1raXkaItsvCtcea7bi1APshH5suR1fNCym374bO0dHqenxjwJ/j/xKDtlrNEWnWtpG33bp+IR31TI1jqPuoGQ7ElhK6VAa7C+MVq9SQkbmaBLgFTya9/6MlS+0aFABZEbfm8xbeRd6UQbKYsXJVpU5pvNbafiN5qYOox9Ej5HPX7e4icThxKGJVpChBFxhELK5bRm2ov50hIg3GlHwZ5YW7yDcxwD2Usu9Yfd/bt/skZeVONM6uWI1HZ7ak7sKzXVRQET+8vVywdQgAw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760691975; c=relaxed/relaxed;
-	bh=LUfhSEtyrzlTvFjtMARdG8e1ebgK9JT+esac/DH/XMI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L6zYM82d9bIY9DvV775ijy9wBP87bKHBkjJ+4uuFnMwQo73vC4QdpNeckfqP22/vECuAB743koPuiuqtoUiap1NnMfh8cE94jCGlFH7SyHkc5RuiGk4jFm5vnZWr1v/LXMwHab0lXJ1/JrVHsqF9Y73pnG6y3TCkUm6FU7ASSmEX/Wd0K5nUbcrJ7jbnVStXx//pV883jgCPCU0fWtOPzYWyR+KkKMAQRZMxZ1rd93AYwmv4kP5IWP5Jqq6fQ/s4CZM234okcelXVdjgISBOms06AYTdkNP9qEzVU8sVDbFb6+le+YPuhIXvC+gXTYfap+vvz/52d1iNYb0f2O3Njg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; dkim=pass (2048-bit key; unprotected) header.d=amazon.com header.i=@amazon.com header.a=rsa-sha256 header.s=amazoncorp2 header.b=Bi0Uyztz; dkim-atps=neutral; spf=pass (client-ip=52.26.1.71; helo=pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com; envelope-from=prvs=378230090=farbere@amazon.com; receiver=lists.ozlabs.org) smtp.mailfrom=amazon.com
+	t=1760691989; c=relaxed/relaxed;
+	bh=LF9YnUdrpKxMSkc+LEc4zqlPhsgbROXsY4bZTz/lajY=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GklWV0EstjZMktCWqaJPvplkR6HTvxMhBlulN7plQ9UFzmQFXI5qr5kjCcmaZVoYWx8mTQDn1iSqkl5EprY5A5CcJVwOf+hH94dgqJocVWntoBS8IfkPPEhmQKbi4podiH07CdvzV1qNOpgMK3cBruWxDht2kipySxME297WZ+YCEHClWn7ROMDm42EA+YyyoI7mddiWk2M20+ypvejAQ/vw1FqPXD1mgb7e3d/Uc/sX6pg18BUMVsfJHjc4YNeXDFlWCeZLrgLyFmY4xm4jMdZQcGhqEEn935cIR6ATscCeEAkn2FqOAgcGeU/kXK2vfPixqCu7GmUwx4Awn4Ei6Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; dkim=pass (2048-bit key; unprotected) header.d=amazon.com header.i=@amazon.com header.a=rsa-sha256 header.s=amazoncorp2 header.b=VkQDlrIR; dkim-atps=neutral; spf=pass (client-ip=52.13.214.179; helo=pdx-out-005.esa.us-west-2.outbound.mail-perimeter.amazon.com; envelope-from=prvs=378230090=farbere@amazon.com; receiver=lists.ozlabs.org) smtp.mailfrom=amazon.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=amazon.com header.i=@amazon.com header.a=rsa-sha256 header.s=amazoncorp2 header.b=Bi0Uyztz;
+	dkim=pass (2048-bit key; unprotected) header.d=amazon.com header.i=@amazon.com header.a=rsa-sha256 header.s=amazoncorp2 header.b=VkQDlrIR;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=amazon.com (client-ip=52.26.1.71; helo=pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com; envelope-from=prvs=378230090=farbere@amazon.com; receiver=lists.ozlabs.org)
-Received: from pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.26.1.71])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=amazon.com (client-ip=52.13.214.179; helo=pdx-out-005.esa.us-west-2.outbound.mail-perimeter.amazon.com; envelope-from=prvs=378230090=farbere@amazon.com; receiver=lists.ozlabs.org)
+Received: from pdx-out-005.esa.us-west-2.outbound.mail-perimeter.amazon.com (pdx-out-005.esa.us-west-2.outbound.mail-perimeter.amazon.com [52.13.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cnzT26tf7z2xcB
-	for <linux-erofs@lists.ozlabs.org>; Fri, 17 Oct 2025 20:06:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cnzTJ4BVcz2xcB
+	for <linux-erofs@lists.ozlabs.org>; Fri, 17 Oct 2025 20:06:28 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1760691975; x=1792227975;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LUfhSEtyrzlTvFjtMARdG8e1ebgK9JT+esac/DH/XMI=;
-  b=Bi0UyztzDu+LV8UUmgJvjXYupp49FA6O4TNj4+0VY2RziLJNz7US4GHD
-   KYSz26t0+KOQndk8fkG3KB8gD37npvfcXQ8lqG/Tshllu8XRniD9kvroJ
-   I+UvN0aB6mmS7a1GeJMG8551EzqQ9Ckr9E4vZ9XgJ/Hp04/9sooO5zHN+
-   rHs7nJ5lAWWNPQVLmf7WvsWWGR4QDxMHMz7qALxgEqq95cHDwysZyeOf7
-   ewt2jLKRMQHUQR/3/qxHgbWitFvy7WCL8z39ptNYwJwZwY2vmPv6TWivC
-   sWwHjLS+jSjmBhovLEjMWe+fBhbws7uzPHNErvzMH0DhsPSvQrxsT8HIG
-   A==;
-X-CSE-ConnectionGUID: 81vXbaCaRnGCbaxjqgyfrw==
-X-CSE-MsgGUID: HnF/i6jVSpy9xn0uhETRhA==
-X-IronPort-AV: E=Sophos;i="6.18,281,1751241600"; 
-   d="scan'208";a="5073896"
-Received: from ip-10-5-0-115.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.0.115])
-  by internal-pdx-out-006.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 09:06:10 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [205.251.233.236:20862]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.18.50:2525] with esmtp (Farcaster)
- id 7be30397-534c-444c-a389-19ecfbe849c7; Fri, 17 Oct 2025 09:06:10 +0000 (UTC)
-X-Farcaster-Flow-ID: 7be30397-534c-444c-a389-19ecfbe849c7
+  t=1760691988; x=1792227988;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=LF9YnUdrpKxMSkc+LEc4zqlPhsgbROXsY4bZTz/lajY=;
+  b=VkQDlrIRQI3G5ymSnyLw71FBwXsd+kSnFiyF+ylVBi6pEMF92CXmDSm0
+   mA4AzvhyP37kWCbgmjEaQV8FrSBDv/B2paNzUV8e5A1+PwnG46etxY7xo
+   PhzzXqlDbo4t90H/FgN5QmPI5wmorce9wEeqCDB7x1YEAlIkTe6Od1t9I
+   OPR7MqQNu7FxMZ4gkEJeUb/+DCoyR7x4Pmwnx3KOxLXh8WaX8kuiKnwn+
+   g8JcTW9WRTJ1+RZ7FXVXrJHDqB5EcLc/yyu/1VLZC1AalFotK2DJS6Atk
+   mBVzkeZUrnTqjssAwGS5FUrR6vI172OxZbHiUfsrkrTQjf8lk8vR7HFCt
+   g==;
+X-CSE-ConnectionGUID: 5Ag1YOJ9QUe3HoWK3ykUZw==
+X-CSE-MsgGUID: SCV5PFljR42xA+XpgG/CcA==
+X-IronPort-AV: E=Sophos;i="6.19,236,1754956800"; 
+   d="scan'208";a="5072643"
+Received: from ip-10-5-6-203.us-west-2.compute.internal (HELO smtpout.naws.us-west-2.prod.farcaster.email.amazon.dev) ([10.5.6.203])
+  by internal-pdx-out-005.esa.us-west-2.outbound.mail-perimeter.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2025 09:06:24 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [205.251.233.105:13608]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.42.150:2525] with esmtp (Farcaster)
+ id c710c685-0588-4c81-b341-b34011b0873c; Fri, 17 Oct 2025 09:06:24 +0000 (UTC)
+X-Farcaster-Flow-ID: c710c685-0588-4c81-b341-b34011b0873c
 Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20;
- Fri, 17 Oct 2025 09:06:09 +0000
+ Fri, 17 Oct 2025 09:06:23 +0000
 Received: from dev-dsk-farbere-1a-46ecabed.eu-west-1.amazon.com
  (172.19.116.181) by EX19D001UWA001.ant.amazon.com (10.13.138.214) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.2562.20; Fri, 17 Oct 2025
- 09:05:54 +0000
+ 09:06:09 +0000
 From: Eliav Farber <farbere@amazon.com>
 To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>,
 	<linux@armlinux.org.uk>, <jdike@addtoit.com>, <richard@nod.at>,
@@ -107,10 +107,9 @@ To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>,
 	<linux-sparse@vger.kernel.org>, <linux-mm@kvack.org>,
 	<netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
 	<tipc-discussion@lists.sourceforge.net>
-CC: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH v2 02/27 5.10.y] btrfs: remove duplicated in_range() macro
-Date: Fri, 17 Oct 2025 09:04:54 +0000
-Message-ID: <20251017090519.46992-3-farbere@amazon.com>
+Subject: [PATCH v2 03/27 5.10.y] minmax: sanity check constant bounds when clamping
+Date: Fri, 17 Oct 2025 09:04:55 +0000
+Message-ID: <20251017090519.46992-4-farbere@amazon.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20251017090519.46992-1-farbere@amazon.com>
 References: <20251017090519.46992-1-farbere@amazon.com>
@@ -135,75 +134,78 @@ X-Spam-Status: No, score=-7.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-[ Upstream commit cea628008fc8c6c9c7b53902f6659e040f33c790 ]
+[ Upstream commit 5efcecd9a3b18078d3398b359a84c83f549e22cf ]
 
-The in_range() macro is defined twice in btrfs' source, once in ctree.h
-and once in misc.h.
+The clamp family of functions only makes sense if hi>=lo.  If hi and lo
+are compile-time constants, then raise a build error.  Doing so has
+already caught buggy code.  This also introduces the infrastructure to
+improve the clamping function in subsequent commits.
 
-Remove the definition in ctree.h and include misc.h in the files depending
-on it.
-
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+[akpm@linux-foundation.org: coding-style cleanups]
+[akpm@linux-foundation.org: s@&&\@&& \@]
+Link: https://lkml.kernel.org/r/20220926133435.1333846-1-Jason@zx2c4.com
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Eliav Farber <farbere@amazon.com>
 ---
- fs/btrfs/ctree.h     | 2 --
- fs/btrfs/extent_io.c | 1 +
- fs/btrfs/file-item.c | 1 +
- fs/btrfs/raid56.c    | 1 +
- 4 files changed, 3 insertions(+), 2 deletions(-)
+ include/linux/minmax.h | 26 ++++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index d9d6a57acafe..a9926fb10c49 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -3597,8 +3597,6 @@ static inline int btrfs_defrag_cancelled(struct btrfs_fs_info *fs_info)
- 	return signal_pending(current);
- }
+diff --git a/include/linux/minmax.h b/include/linux/minmax.h
+index 1aea34b8f19b..8b092c66c5aa 100644
+--- a/include/linux/minmax.h
++++ b/include/linux/minmax.h
+@@ -37,6 +37,28 @@
+ 		__cmp(x, y, op), \
+ 		__cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
  
--#define in_range(b, first, len) ((b) >= (first) && (b) < (first) + (len))
--
- /* Sanity test specific functions */
- #ifdef CONFIG_BTRFS_FS_RUN_SANITY_TESTS
- void btrfs_test_destroy_inode(struct inode *inode);
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 8498994ef5c6..489d370ddd60 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -13,6 +13,7 @@
- #include <linux/pagevec.h>
- #include <linux/prefetch.h>
- #include <linux/cleancache.h>
-+#include "misc.h"
- #include "extent_io.h"
- #include "extent-io-tree.h"
- #include "extent_map.h"
-diff --git a/fs/btrfs/file-item.c b/fs/btrfs/file-item.c
-index cbea4f572155..6e46da3ee433 100644
---- a/fs/btrfs/file-item.c
-+++ b/fs/btrfs/file-item.c
-@@ -9,6 +9,7 @@
- #include <linux/highmem.h>
- #include <linux/sched/mm.h>
- #include <crypto/hash.h>
-+#include "misc.h"
- #include "ctree.h"
- #include "disk-io.h"
- #include "transaction.h"
-diff --git a/fs/btrfs/raid56.c b/fs/btrfs/raid56.c
-index 9678d7fa4dcc..ed3e40a4a3cb 100644
---- a/fs/btrfs/raid56.c
-+++ b/fs/btrfs/raid56.c
-@@ -13,6 +13,7 @@
- #include <linux/list_sort.h>
- #include <linux/raid/xor.h>
- #include <linux/mm.h>
-+#include "misc.h"
- #include "ctree.h"
- #include "disk-io.h"
- #include "volumes.h"
++#define __clamp(val, lo, hi)	\
++	__cmp(__cmp(val, lo, >), hi, <)
++
++#define __clamp_once(val, lo, hi, unique_val, unique_lo, unique_hi) ({	\
++		typeof(val) unique_val = (val);				\
++		typeof(lo) unique_lo = (lo);				\
++		typeof(hi) unique_hi = (hi);				\
++		__clamp(unique_val, unique_lo, unique_hi); })
++
++#define __clamp_input_check(lo, hi)					\
++        (BUILD_BUG_ON_ZERO(__builtin_choose_expr(			\
++                __is_constexpr((lo) > (hi)), (lo) > (hi), false)))
++
++#define __careful_clamp(val, lo, hi) ({					\
++	__clamp_input_check(lo, hi) +					\
++	__builtin_choose_expr(__typecheck(val, lo) && __typecheck(val, hi) && \
++			      __typecheck(hi, lo) && __is_constexpr(val) && \
++			      __is_constexpr(lo) && __is_constexpr(hi),	\
++		__clamp(val, lo, hi),					\
++		__clamp_once(val, lo, hi, __UNIQUE_ID(__val),		\
++			     __UNIQUE_ID(__lo), __UNIQUE_ID(__hi))); })
++
+ /**
+  * min - return minimum of two values of the same or compatible types
+  * @x: first value
+@@ -103,7 +125,7 @@
+  * This macro does strict typechecking of @lo/@hi to make sure they are of the
+  * same type as @val.  See the unnecessary pointer comparisons.
+  */
+-#define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
++#define clamp(val, lo, hi) __careful_clamp(val, lo, hi)
+ 
+ /*
+  * ..and if you can't take the strict
+@@ -138,7 +160,7 @@
+  * This macro does no typechecking and uses temporary variables of type
+  * @type to make all the comparisons.
+  */
+-#define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
++#define clamp_t(type, val, lo, hi) __careful_clamp((type)(val), (type)(lo), (type)(hi))
+ 
+ /**
+  * clamp_val - return a value clamped to a given range using val's type
 -- 
 2.47.3
 
