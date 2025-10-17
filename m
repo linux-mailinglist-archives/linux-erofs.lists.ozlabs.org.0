@@ -1,46 +1,46 @@
-Return-Path: <linux-erofs+bounces-1235-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1238-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48672BE9009
-	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 15:48:51 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FE47BE902A
+	for <lists+linux-erofs@lfdr.de>; Fri, 17 Oct 2025 15:49:03 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cp5l518wFz3cZn;
-	Sat, 18 Oct 2025 00:48:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cp5lK25JVz3cd6;
+	Sat, 18 Oct 2025 00:49:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760708929;
-	cv=none; b=Mn4Rw+9SSjjORDEvuSe9HAHXbYku010jYqyiOws6uWmOd6qDZQ8hi0rg4GZHFea2ciBE/SPHDSxgBMTG18T14CNmTJx/9ToG3K1S8qzI8we25IVAsFULo/B838ZlHWdfnWrMWasGPIOQxJuaNFGvUOMrOQBAdQsEp3jXJqYH82aA+ZvNPq6niXHJz59xY+OVEoM4nce3lblDqgOqOTJxfuIzNICn9Bjjru4rHm8TgMbAsoJPrLd7gvTkOdqdZyKcdjecMHcBVQof6cHr2+gpKUzusplL+Yu7GDP4B7YegRvT+/fOygHVUizAfHV73jydBmEKTmCKB7dhsmClphwpDg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760708941;
+	cv=none; b=ZL2oNJpbqPIWhRzp8Zfhs84h4miZCnReNx9EgFV0E8PM66z4SqCh/nz3DDr56NNFfYydFEmtIbDwIg12/lrlQGfiMsKXYu2nlQqsXogUPzjWNmqozqMpTQ+J/5mYfUK5V0iFdh/FeA4cjpshDkRHZ/HWJIk8XFMiqPnUz5cbKPXUGfv+qKOpxMLskPUu+MAwp8dcWEWMwydCBkPvlwbj3+no/l9BvZx+CUBBQW0vWY+0C4wTR5FDZkkqm3mluE0BXEnn2vk7YGaL42PSvdj7L55FiSK1Kk7pngCcfORy1kg2y4wdXgdUQjs/lCrwuMnnrbp0RrF/uaJVFE6YKAzHWw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760708929; c=relaxed/relaxed;
-	bh=LIfQAWc6iDxUrEKLw7kUhty1bGxVVMj2qynqDt7n1IE=;
+	t=1760708941; c=relaxed/relaxed;
+	bh=o8YaNhybsgzuKxoDUBW5CiCnV6/oBDNn9TKdX56gyqk=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=fiOatnkFMOhj+hBXJmD3Fg6o/jUW9NFLWwYXgqHiPINpB8/nZT/qE5vyWYQVtLMFKYiOpS7I/IQYG8hay//CYxneaiD63ysFm2mRR8oGVC6Gb7sSc6wi7ibxKf6S1VT3vJ4vJdy4Lyoob18ptRIx6EsiutyG8FSEMBDIXS6G/mRskKGzlWxs0dmbkNqLgdWgUlmW2AW3C+gmOBSaKmiqbg1XIeSKgBb0tTmQLG4L53EUv/8zMlCvl+9LVavAsoBHO/9dlLZkvmcCOeExI9xtJZ8auz3wqDaIJ6pwBL5pvp+L0igFY7zq2+s704nbWvWhcPnRlgYfcfAdQT5SN1SS7g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=fail (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=ZUiTpU27 reason="signature verification failed"; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
+	 Content-Type; b=EYoYuG8mrW+AMBH9fSGueroEfmHyp8bSNq5fQFziA7fMfKCOGKA/5Jjxu9r+7fZh3OEYLh+WOy/r9v8llhEkgqIS/y+2yS2swNyRJW7PEeqkpQk6Dk4kuxuA499MR0/nx7IZ6Z07pfdYohXhyaH8Fig4QOocQDto5SZ4JU7NKQnLxFDLSQW78lXpIN9oYL0IU6dc2Z9Qqz0CRrjc/b4Tc/qOp8PpKOg/tUlVYHM6oie9tbw3c3b/MHakZizvSXLs4Rd7kgpOzFw8piNDlhxwS0WhYzkKfPPqw95f7bal9jE0Ti7bXGs95KzE0OxLgRGa5VQetjQcBewGLvDfKFj4og==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=fail (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=y4KcmjmU reason="signature verification failed"; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=ZUiTpU27;
+	dkim=fail reason="signature verification failed" (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=y4KcmjmU;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cp5l357nSz3cZN
-	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Oct 2025 00:48:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cp5lJ3rPBz3ccf
+	for <linux-erofs@lists.ozlabs.org>; Sat, 18 Oct 2025 00:49:00 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id DB95A41790;
-	Fri, 17 Oct 2025 13:48:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92BA7C116D0;
-	Fri, 17 Oct 2025 13:48:44 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 7018A6436B;
+	Fri, 17 Oct 2025 13:48:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7553DC16AAE;
+	Fri, 17 Oct 2025 13:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760708925;
-	bh=10r9Xtz1rDNNvILUwyhaJv5e8XY9QMUCuk0X3ZFE0ok=;
+	s=korg; t=1760708938;
+	bh=K3Vod72wndBL8Jl9osf6Sjco5Cz5wu2HiJRhWmdhj5g=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=ZUiTpU27mOB3KjcvoO0braTUaFH4ae5yNaSKeLT0nR1Ya//9fJCcTVe6EcRHp6Xe4
-	 V+mr9MlnOz1AsaKy4RgcHmsmpF7LGkzbasqgw12Bcb+CvCd2ba7CmuHXwcVTq1KJEu
-	 m47X1B6Y5tJKREw9hbVGvnHkMwTy4hbkls7NECgI=
-Subject: Patch "minmax: avoid overly complicated constant expressions in VM code" has been added to the 5.10-stable tree
+	b=y4KcmjmUQZDYHmcorELuXEr4C7NJFHRVibhvAkRjP2jc3VZmvGmMTOrXYFez2zBRr
+	 wVFQ3WD3KsNqO7f1K1B+Y91RI3LhjX9rueeCuGzIEP5IYCYnwnGmVA63UbJWqGWnox
+	 OE+uvduOhKz9cpAM7VTqHG5VYts8ZZy1R3RnLqwE=
+Subject: Patch "minmax: don't use max() in situations that want a C constant expression" has been added to the 5.10-stable tree
 To: David.Laight@ACULAB.COM, David.Laight@aculab.com,
 	Jason@zx2c4.com, adilger.kernel@dilger.ca, agk@redhat.com,
 	airlied@linux.ie, akpm@linux-foundation.org,
@@ -86,9 +86,9 @@ To: David.Laight@ACULAB.COM, David.Laight@aculab.com,
 	ying.xue@windriver.com, yoshfuji@linux-ipv6.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Fri, 17 Oct 2025 15:48:28 +0200
-In-Reply-To: <20251017090519.46992-14-farbere@amazon.com>
-Message-ID: <2025101728-trickle-valid-0eb9@gregkh>
+Date: Fri, 17 Oct 2025 15:48:29 +0200
+In-Reply-To: <20251017090519.46992-18-farbere@amazon.com>
+Message-ID: <2025101729-blubber-blinks-3a79@gregkh>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -111,88 +111,106 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 This is a note to let you know that I've just added the patch titled
 
-    minmax: avoid overly complicated constant expressions in VM code
+    minmax: don't use max() in situations that want a C constant expression
 
 to the 5.10-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     minmax-avoid-overly-complicated-constant-expressions-in-vm-code.patch
+     minmax-don-t-use-max-in-situations-that-want-a-c-constant-expression.patch
 and it can be found in the queue-5.10 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From prvs=378230090=farbere@amazon.com Fri Oct 17 11:09:55 2025
+From prvs=378230090=farbere@amazon.com Fri Oct 17 11:11:06 2025
 From: Eliav Farber <farbere@amazon.com>
-Date: Fri, 17 Oct 2025 09:05:05 +0000
-Subject: minmax: avoid overly complicated constant expressions in VM code
+Date: Fri, 17 Oct 2025 09:05:09 +0000
+Subject: minmax: don't use max() in situations that want a C constant expression
 To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>, <linux@armlinux.org.uk>, <jdike@addtoit.com>, <richard@nod.at>, <anton.ivanov@cambridgegreys.com>, <dave.hansen@linux.intel.com>, <luto@kernel.org>, <peterz@infradead.org>, <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>, <x86@kernel.org>, <hpa@zytor.com>, <tony.luck@intel.com>, <qiuxu.zhuo@intel.com>, <mchehab@kernel.org>, <james.morse@arm.com>, <rric@kernel.org>, <harry.wentland@amd.com>, <sunpeng.li@amd.com>, <alexander.deucher@amd.com>, <christian.koenig@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>, <evan.quan@amd.com>, <james.qian.wang@arm.com>, <liviu.dudau@arm.com>, <mihail.atanassov@arm.com>, <brian.starkey@arm.com>, <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>, <tzimmermann@suse.de>, <robdclark@gmail.com>, <sean@poorly.run>, <jdelvare@suse.com>, <linux@roeck-us.net>, <fery@cypress.com>, <dmitry.torokhov@gmail.com>, <agk@redhat.com>, <snitzer@redhat.com>, <dm-devel@redhat.com>, <rajur@chelsio
  .com>, <davem@davemloft.net>, <kuba@kernel.org>, <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>, <joabreu@synopsys.com>, <mcoquelin.stm32@gmail.com>, <malattia@linux.it>, <hdegoede@redhat.com>, <mgross@linux.intel.com>, <intel-linux-scu@intel.com>, <artur.paszkiewicz@intel.com>, <jejb@linux.ibm.com>, <martin.petersen@oracle.com>, <sakari.ailus@linux.intel.com>, <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>, <xiang@kernel.org>, <chao@kernel.org>, <jack@suse.com>, <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <dushistov@mail.ru>, <luc.vanoostenryck@gmail.com>, <rostedt@goodmis.org>, <pmladek@suse.com>, <sergey.senozhatsky@gmail.com>, <andriy.shevchenko@linux.intel.com>, <linux@rasmusvillemoes.dk>, <minchan@kernel.org>, <ngupta@vflare.org>, <akpm@linux-foundation.org>, <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>, <pablo@netfilter.org>, <kadlec@netfilter.org>, <fw@strlen.de>, <jmaloy@redhat.com>, <ying.xue@windriver.com>, <willy@infradead.org>, <farbere@amazon.com>,
   <sashal@kernel.org>, <ruanjinjie@huawei.com>, <David.Laight@ACULAB.COM>, <herve.codina@bootlin.com>, <Jason@zx2c4.com>, <keescook@chromium.org>, <kbusch@kernel.org>, <nathan@kernel.org>, <bvanassche@acm.org>, <ndesaulniers@google.com>, <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>, <linux-um@lists.infradead.org>, <linux-edac@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>, <linux-arm-msm@vger.kernel.org>, <freedreno@lists.freedesktop.org>, <linux-hwmon@vger.kernel.org>, <linux-input@vger.kernel.org>, <linux-media@vger.kernel.org>, <netdev@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>, <platform-driver-x86@vger.kernel.org>, <linux-scsi@vger.kernel.org>, <linux-staging@lists.linux.dev>, <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>, <linux-sparse@vger.kernel.org>, <linux-mm@kvack.org>, <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>, <tipc-discussion@
  lists.sourceforge.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, David Laight <David.Laight@aculab.com>
-Message-ID: <20251017090519.46992-14-farbere@amazon.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, David Laight <David.Laight@aculab.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Message-ID: <20251017090519.46992-18-farbere@amazon.com>
 
 From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 3a7e02c040b130b5545e4b115aada7bacd80a2b6 ]
+[ Upstream commit cb04e8b1d2f24c4c2c92f7b7529031fc35a16fed ]
 
-The minmax infrastructure is overkill for simple constants, and can
-cause huge expansions because those simple constants are then used by
-other things.
+We only had a couple of array[] declarations, and changing them to just
+use 'MAX()' instead of 'max()' fixes the issue.
 
-For example, 'pageblock_order' is a core VM constant, but because it was
-implemented using 'min_t()' and all the type-checking that involves, it
-actually expanded to something like 2.5kB of preprocessor noise.
+This will allow us to simplify our min/max macros enormously, since they
+can now unconditionally use temporary variables to avoid using the
+argument values multiple times.
 
-And when that simple constant was then used inside other expansions:
-
-  #define pageblock_nr_pages      (1UL << pageblock_order)
-  #define pageblock_start_pfn(pfn)  ALIGN_DOWN((pfn), pageblock_nr_pages)
-
-and we then use that inside a 'max()' macro:
-
-	case ISOLATE_SUCCESS:
-		update_cached = false;
-		last_migrated_pfn = max(cc->zone->zone_start_pfn,
-			pageblock_start_pfn(cc->migrate_pfn - 1));
-
-the end result was that one statement expanding to 253kB in size.
-
-There are probably other cases of this, but this one case certainly
-stood out.
-
-I've added 'MIN_T()' and 'MAX_T()' macros for this kind of "core simple
-constant with specific type" use.  These macros skip the type checking,
-and as such need to be very sparingly used only for obvious cases that
-have active issues like this.
-
-Reported-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Link: https://lore.kernel.org/all/36aa2cad-1db1-4abf-8dd2-fb20484aabc3@lucifer.local/
 Cc: David Laight <David.Laight@aculab.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Eliav Farber <farbere@amazon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/minmax.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/input/touchscreen/cyttsp4_core.c |    2 +-
+ drivers/md/dm-integrity.c                |    4 ++--
+ fs/btrfs/tree-checker.c                  |    2 +-
+ lib/vsprintf.c                           |    2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/include/linux/minmax.h
-+++ b/include/linux/minmax.h
-@@ -270,4 +270,11 @@ static inline bool in_range32(u32 val, u
- #define swap(a, b) \
- 	do { typeof(a) __tmp = (a); (a) = (b); (b) = __tmp; } while (0)
+--- a/drivers/input/touchscreen/cyttsp4_core.c
++++ b/drivers/input/touchscreen/cyttsp4_core.c
+@@ -857,7 +857,7 @@ static void cyttsp4_get_mt_touches(struc
+ 	struct cyttsp4_touch tch;
+ 	int sig;
+ 	int i, j, t = 0;
+-	int ids[max(CY_TMA1036_MAX_TCH, CY_TMA4XX_MAX_TCH)];
++	int ids[MAX(CY_TMA1036_MAX_TCH, CY_TMA4XX_MAX_TCH)];
  
-+/*
-+ * Use these carefully: no type checking, and uses the arguments
-+ * multiple times. Use for obvious constants only.
-+ */
-+#define MIN_T(type,a,b) __cmp(min,(type)(a),(type)(b))
-+#define MAX_T(type,a,b) __cmp(max,(type)(a),(type)(b))
-+
- #endif	/* _LINUX_MINMAX_H */
+ 	memset(ids, 0, si->si_ofs.tch_abs[CY_TCH_T].max * sizeof(int));
+ 	for (i = 0; i < num_cur_tch; i++) {
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -1600,7 +1600,7 @@ static void integrity_metadata(struct wo
+ 		struct bio *bio = dm_bio_from_per_bio_data(dio, sizeof(struct dm_integrity_io));
+ 		char *checksums;
+ 		unsigned extra_space = unlikely(digest_size > ic->tag_size) ? digest_size - ic->tag_size : 0;
+-		char checksums_onstack[max((size_t)HASH_MAX_DIGESTSIZE, MAX_TAG_SIZE)];
++		char checksums_onstack[MAX(HASH_MAX_DIGESTSIZE, MAX_TAG_SIZE)];
+ 		sector_t sector;
+ 		unsigned sectors_to_process;
+ 
+@@ -1882,7 +1882,7 @@ retry_kmap:
+ 				} while (++s < ic->sectors_per_block);
+ #ifdef INTERNAL_VERIFY
+ 				if (ic->internal_hash) {
+-					char checksums_onstack[max((size_t)HASH_MAX_DIGESTSIZE, MAX_TAG_SIZE)];
++					char checksums_onstack[MAX(HASH_MAX_DIGESTSIZE, MAX_TAG_SIZE)];
+ 
+ 					integrity_sector_checksum(ic, logical_sector, mem + bv.bv_offset, checksums_onstack);
+ 					if (unlikely(memcmp(checksums_onstack, journal_entry_tag(ic, je), ic->tag_size))) {
+--- a/fs/btrfs/tree-checker.c
++++ b/fs/btrfs/tree-checker.c
+@@ -587,7 +587,7 @@ static int check_dir_item(struct extent_
+ 		 */
+ 		if (key->type == BTRFS_DIR_ITEM_KEY ||
+ 		    key->type == BTRFS_XATTR_ITEM_KEY) {
+-			char namebuf[max(BTRFS_NAME_LEN, XATTR_NAME_MAX)];
++			char namebuf[MAX(BTRFS_NAME_LEN, XATTR_NAME_MAX)];
+ 
+ 			read_extent_buffer(leaf, namebuf,
+ 					(unsigned long)(di + 1), name_len);
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -1078,7 +1078,7 @@ char *resource_string(char *buf, char *e
+ #define FLAG_BUF_SIZE		(2 * sizeof(res->flags))
+ #define DECODED_BUF_SIZE	sizeof("[mem - 64bit pref window disabled]")
+ #define RAW_BUF_SIZE		sizeof("[mem - flags 0x]")
+-	char sym[max(2*RSRC_BUF_SIZE + DECODED_BUF_SIZE,
++	char sym[MAX(2*RSRC_BUF_SIZE + DECODED_BUF_SIZE,
+ 		     2*RSRC_BUF_SIZE + FLAG_BUF_SIZE + RAW_BUF_SIZE)];
+ 
+ 	char *p = sym, *pend = sym + sizeof(sym);
 
 
 Patches currently in stable-queue which might be from farbere@amazon.com are
