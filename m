@@ -1,99 +1,68 @@
-Return-Path: <linux-erofs+bounces-1263-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1264-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B548FBEE4FA
-	for <lists+linux-erofs@lfdr.de>; Sun, 19 Oct 2025 14:38:35 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08636BF238D
+	for <lists+linux-erofs@lfdr.de>; Mon, 20 Oct 2025 17:52:14 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cqJ554SSyz2xxR;
-	Sun, 19 Oct 2025 23:38:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cr0L32s5Cz3020;
+	Tue, 21 Oct 2025 02:52:11 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760877513;
-	cv=none; b=LV7JdrEpmgKVlKAeLHxODIDUUqbea1nywk7sLRB0I5JKZePtNXHrw67pLtMBLrxW3dv7pmjEEVdwAtoENTAhpzrAs4RJ/SvO0tEIIyRGrIgSStQVAtM9sDEKeqtLD9eaGQjExKFSpMYbXCj+yb02X7H1Z7lTr9aEPP574aBhNW/MfZ4jrv2o0/SxxqqXuvrifa0Fjlq81QVj9uADnUsnsHhOgWXy2IFnYLO7Y7wtGVbHw28BfLsOf2inNn2gp7cMSCNwWiJfd8K7ugQF8wgGStjAaQfs50Ick1YGo5vBVAKU/nCYXREILYotN31bwx9Utdrrv9mtt3aQJhNpG5ZU4Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::1049"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1760975531;
+	cv=none; b=RYGOAjE9uZsW2l2YP+Popi4SYCmIhtxT/So8mmrcAL9GTMJobs4dC4zoCciXX1XIE1kXXBIoN2GBLqyD5lgSGtCtCQukOSzZZTUjwIVBxcmq4YEUw52nCVhDMIy3mhInQwB0uYyfx+n1fqZbcGkd3CgMzCJEnpLzP0RHGpVOcBURxcvWKRMxGPtdopgmAnjv/VN6AdcybT8/enqdrcHuPm2kLM0T2y/AQax4reYuN2z4G4wJuvvra1O5nEsFgyGcmxSakM/SusFsqB14WL0U2QnFqtqCnAXNuhuuavROMKg+1QmEcCkF8SfdWTBtscSAijzzosM4ZJkatHVw0cQN1g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1760877513; c=relaxed/relaxed;
-	bh=ikD2kzN+q0cZ+A+hpvPS0b6qB0klIxQK1wnjtsaF4E4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KFzq89wKflec9tTjuVaBdQ/1tEzosVn0KFdziLiTL9xcSvpygxCWyTxxtCbCNYWgkg5xYJ9CRGyuVOkbEV4LnvlDAQIFaVo6sQcoJO2hmpWuH4twlymuNR7/9mrTHyngoYrE64tw7h5PP0Z2yQOVFJGoof1MJp8hEL7YMKCl/GpP7zet+tuhu9rjSP7S1fd0BQ+4BXw42NGh/X97d1eesERG9O3lA0qx+EZkc53kx437tJy3Cmw+sn6kxtc4wOiqot2qwNOWF9KQEdXe8/SCMeu2is2EQfuzamECMfV0/oSFgW1ND68dubVufsuCFBC4E+CKw3eMEie5EjFSw+i1zQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=nPSmMhj3; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+	t=1760975531; c=relaxed/relaxed;
+	bh=YUxEjev6w4f1umuBxGfAcuaZR32QUUEbuSMBs3oceNE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SdbcUw08hYUZ34OJgwZ++WqeV0vE9Zskz7Z1xQJxi+hePsEXM4m7yUbkabE0/61uQxzEjCp9pWFjxjk0dN/47WXnGh98oIWQEGQ4TGhENEyZcGLup2MZZnP/FrQ8SWnl175Oqd/aF44ETnQ93xZGwG59NT+b/eb6tYi+yG7sannXJONZIpjmPJ4jgZEavOxXDpXzFqi3QSywrFFp4RlC1A/Qiky5TYLJFdTyIFmiXtkxuzQFKCAX9ljtuuBzkEgLQsJJ8ucDEOxyBy3GK98CDX7YoO2yUb/YJldG+puXKioIFse6JG9/6QcdurMGfhBDuf3+yxTjHV/GVI11gaBtYA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=CELqp/XI; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1049; helo=mail-pj1-x1049.google.com; envelope-from=3plr2aaykc4mzlhuqjnvvnsl.jvtspu14-lyvmzspz0z.v6shiz.vyn@flex--seanjc.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=nPSmMhj3;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=CELqp/XI;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--seanjc.bounces.google.com (client-ip=2607:f8b0:4864:20::1049; helo=mail-pj1-x1049.google.com; envelope-from=3plr2aaykc4mzlhuqjnvvnsl.jvtspu14-lyvmzspz0z.v6shiz.vyn@flex--seanjc.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cqJ5450Wyz2xR4
-	for <linux-erofs@lists.ozlabs.org>; Sun, 19 Oct 2025 23:38:32 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 408344079E;
-	Sun, 19 Oct 2025 12:38:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2363C4CEE7;
-	Sun, 19 Oct 2025 12:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1760877510;
-	bh=oGwiDB09ge0ciPiwd9WRh3Y/M8CeD9dHfclvYoY7FBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nPSmMhj3TEXZoJrVWpARUkUyuGqk5lSFTPPoq1ZLeK3fCa9fne3RGlMO8KN1UE5lj
-	 ujRuOzzKq00FxR8F6wzbmtZQ/5O3ZNw8lG3lB3NfHxm+YwEDzwS2JsXmf0Ca6p4Frl
-	 ca5FOfnjYZ+gRAebgpsYtYTlOl8nww3/qAlyQSN0=
-Date: Sun, 19 Oct 2025 14:38:26 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Eliav Farber <farbere@amazon.com>, stable@vger.kernel.org,
-	linux@armlinux.org.uk, jdike@addtoit.com, richard@nod.at,
-	anton.ivanov@cambridgegreys.com, dave.hansen@linux.intel.com,
-	luto@kernel.org, peterz@infradead.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-	tony.luck@intel.com, qiuxu.zhuo@intel.com, mchehab@kernel.org,
-	james.morse@arm.com, rric@kernel.org, harry.wentland@amd.com,
-	sunpeng.li@amd.com, alexander.deucher@amd.com,
-	christian.koenig@amd.com, airlied@linux.ie, daniel@ffwll.ch,
-	evan.quan@amd.com, james.qian.wang@arm.com, liviu.dudau@arm.com,
-	mihail.atanassov@arm.com, brian.starkey@arm.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, robdclark@gmail.com, sean@poorly.run,
-	jdelvare@suse.com, linux@roeck-us.net, fery@cypress.com,
-	dmitry.torokhov@gmail.com, agk@redhat.com, snitzer@redhat.com,
-	dm-devel@redhat.com, rajur@chelsio.com, davem@davemloft.net,
-	kuba@kernel.org, peppe.cavallaro@st.com, alexandre.torgue@st.com,
-	joabreu@synopsys.com, mcoquelin.stm32@gmail.com, malattia@linux.it,
-	hdegoede@redhat.com, mgross@linux.intel.com,
-	intel-linux-scu@intel.com, artur.paszkiewicz@intel.com,
-	jejb@linux.ibm.com, martin.petersen@oracle.com,
-	sakari.ailus@linux.intel.com, clm@fb.com, josef@toxicpanda.com,
-	dsterba@suse.com, xiang@kernel.org, chao@kernel.org, jack@suse.com,
-	tytso@mit.edu, adilger.kernel@dilger.ca, dushistov@mail.ru,
-	luc.vanoostenryck@gmail.com, rostedt@goodmis.org, pmladek@suse.com,
-	sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
-	linux@rasmusvillemoes.dk, minchan@kernel.org, ngupta@vflare.org,
-	akpm@linux-foundation.org, kuznet@ms2.inr.ac.ru,
-	yoshfuji@linux-ipv6.org, pablo@netfilter.org, kadlec@netfilter.org,
-	fw@strlen.de, jmaloy@redhat.com, ying.xue@windriver.com,
-	willy@infradead.org, sashal@kernel.org, ruanjinjie@huawei.com,
-	David.Laight@aculab.com, herve.codina@bootlin.com, Jason@zx2c4.com,
-	keescook@chromium.org, kbusch@kernel.org, bvanassche@acm.org,
-	ndesaulniers@google.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-edac@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-	freedreno@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-	platform-driver-x86@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-staging@lists.linux.dev, linux-btrfs@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-	linux-sparse@vger.kernel.org, linux-mm@kvack.org,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	tipc-discussion@lists.sourceforge.net
-Subject: Re: [PATCH v2 00/27 5.10.y] Backport minmax.h updates from v6.17-rc7
-Message-ID: <2025101905-matter-freezable-39e5@gregkh>
-References: <20251017090519.46992-1-farbere@amazon.com>
- <2025101704-rumble-chatroom-60b5@gregkh>
- <20251017160924.GA2728735@ax162>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cr0L16vbnz300M
+	for <linux-erofs@lists.ozlabs.org>; Tue, 21 Oct 2025 02:52:09 +1100 (AEDT)
+Received: by mail-pj1-x1049.google.com with SMTP id 98e67ed59e1d1-32ee157b9c9so3699750a91.2
+        for <linux-erofs@lists.ozlabs.org>; Mon, 20 Oct 2025 08:52:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1760975527; x=1761580327; darn=lists.ozlabs.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YUxEjev6w4f1umuBxGfAcuaZR32QUUEbuSMBs3oceNE=;
+        b=CELqp/XIFx0fvhl3VALL3Waxg0cfdPO87AaCPKMCrCqqxyOquqbE5HWNn33cLmVngA
+         4//I8xVlyYDyQad8f9TODMsJ8tY1jfWiUJnw7F1GyFooqs14addBjswCi6Hzz3Wcewge
+         KUtCGpBIHftqgjQsk12+A2yAYXYXDF68xICz51M3ThM02zi3QtxIeikypNmX73sl8o72
+         ejr+5W3H9JJa6CD2HfaCJe/aW4W47yhgHqMBHlfXnDyVx3n2Jy5czlBos6LgyeyiPbGm
+         YdQ6LhK+GgNFmlmzGPpI/J15bSU8d1F06CY3nnvVPsUepAhFH0qaMSxUU/m2QaOczmBc
+         n00w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760975527; x=1761580327;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YUxEjev6w4f1umuBxGfAcuaZR32QUUEbuSMBs3oceNE=;
+        b=a43x1M0DSy1x0IQ6EvH/IoTySfQuxLiUrXqUkyKwg/+G01wNkfa1sVHjIDvvhua+Bl
+         VogmqtfjssAS/VUejdviK24O5KO9PnbK+QaYoL3s0ph21r3j7sS9mhSyZXBZclGfUElu
+         cY1XufaORuSNa5WWEixIVj6MRuM6hu3g+mutJVZ+4j1zoWRH/RTmocGfpSNf/B0gCPp5
+         KpBAIVJVdvwqssGHJVwGbKhR1+ys9vTJcyrN2oigtXSo9GvzueOVY1uSYHeVzg8wE4OC
+         EDxwUidnjIdpFJqIEVTct89qvOfsdd7eAtJNK+qH26mHRLVpSM3VCPkiwvzu7eq1HYu7
+         52eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGSj8vfil8BvM1gseB/Gwh8JisnX432PMGRIRN7wvZgcEnILapz71WboX/buRgHND7u20/amOhe5l/TA==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YzIBvVOYZyqyCONOhkQSqzlAdOxotXKTmRkwmOnJvMop2+EeZND
+	3Am7SaRD3ycg8RMkhIzzvcqkKQEIAQmR45Wz8ta6dkoll9W6yU4rtAiLe9QFPExg3p8YP9+gQqM
+	PQOb98Q==
+X-Google-Smtp-Source: AGHT+IHcZobfkAMYLqgP+952/xufHk4lZqraqyIEs0BsZFGgLzowAsqRVArAQbVQNZgQWXn7bmNPNT9qaaI=
+X-Received: from pjbds19.prod.google.com ([2002:a17:90b:8d3:b0:33b:51fe:1a84])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4d85:b0:330:4a1d:223c
+ with SMTP id 98e67ed59e1d1-33bcf87f421mr15625676a91.15.1760975526813; Mon, 20
+ Oct 2025 08:52:06 -0700 (PDT)
+Date: Mon, 20 Oct 2025 08:52:05 -0700
+In-Reply-To: <176055105546.1527431.3611256810380818215.b4-ty@google.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -104,81 +73,84 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20251017160924.GA2728735@ax162>
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+Mime-Version: 1.0
+References: <20250827175247.83322-2-shivankg@amd.com> <176055105546.1527431.3611256810380818215.b4-ty@google.com>
+Message-ID: <aPZapWWFGyqjA2e3@google.com>
+Subject: Re: [PATCH kvm-next V11 0/7] Add NUMA mempolicy support for KVM guest-memfd
+From: Sean Christopherson <seanjc@google.com>
+To: willy@infradead.org, akpm@linux-foundation.org, david@redhat.com, 
+	pbonzini@redhat.com, shuah@kernel.org, vbabka@suse.cz, 
+	Shivank Garg <shivankg@amd.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, dsterba@suse.com, 
+	xiang@kernel.org, chao@kernel.org, jaegeuk@kernel.org, clm@fb.com, 
+	josef@toxicpanda.com, kent.overstreet@linux.dev, zbestahu@gmail.com, 
+	jefflexu@linux.alibaba.com, dhavale@google.com, lihongbo22@huawei.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, rppt@kernel.org, 
+	surenb@google.com, mhocko@suse.com, ziy@nvidia.com, matthew.brost@intel.com, 
+	joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, 
+	gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com, 
+	tabba@google.com, ackerleytng@google.com, paul@paul-moore.com, 
+	jmorris@namei.org, serge@hallyn.com, pvorel@suse.cz, bfoster@redhat.com, 
+	vannapurve@google.com, chao.gao@intel.com, bharata@amd.com, nikunj@amd.com, 
+	michael.day@amd.com, shdhiman@amd.com, yan.y.zhao@intel.com, 
+	Neeraj.Upadhyay@amd.com, thomas.lendacky@amd.com, michael.roth@amd.com, 
+	aik@amd.com, kalyazin@amazon.com, peterx@redhat.com, jack@suse.cz, 
+	hch@infradead.org, cgzones@googlemail.com, ira.weiny@intel.com, 
+	rientjes@google.com, roypat@amazon.co.uk, chao.p.peng@intel.com, 
+	amit@infradead.org, ddutile@redhat.com, dan.j.williams@intel.com, 
+	ashish.kalra@amd.com, gshan@redhat.com, jgowans@amazon.com, 
+	pankaj.gupta@amd.com, papaluri@amd.com, yuzhao@google.com, 
+	suzuki.poulose@arm.com, quic_eberman@quicinc.com, 
+	linux-bcachefs@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-f2fs-devel@lists.sourceforge.net, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-coco@lists.linux.dev, Jason Gunthorpe <jgg@ziepe.ca>
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Fri, Oct 17, 2025 at 05:09:24PM +0100, Nathan Chancellor wrote:
-> On Fri, Oct 17, 2025 at 05:03:02PM +0200, Greg KH wrote:
-> > On Fri, Oct 17, 2025 at 09:04:52AM +0000, Eliav Farber wrote:
-> > > This series backports 27 patches to update minmax.h in the 5.10.y
-> > > branch, aligning it with v6.17-rc7.
-> > > 
-> > > The ultimate goal is to synchronize all long-term branches so that they
-> > > include the full set of minmax.h changes.
-> > > 
-> > > - 6.12.y has already been backported; the changes are included in
-> > >   v6.12.49.
-> > > - 6.6.y has already been backported; the changes are included in
-> > >   v6.6.109.
-> > > - 6.1.y has already been backported; the changes are currently in the
-> > >   6.1-stable tree.
-> > > - 5.15.y has already been backported; the changes are currently in the
-> > >   5.15-stable tree.
+On Wed, Oct 15, 2025, Sean Christopherson wrote:
+> On Wed, 27 Aug 2025 17:52:41 +0000, Shivank Garg wrote:
+> > This series introduces NUMA-aware memory placement support for KVM guests
+> > with guest_memfd memory backends. It builds upon Fuad Tabba's work (V17)
+> > that enabled host-mapping for guest_memfd memory [1] and can be applied
+> > directly applied on KVM tree [2] (branch kvm-next, base commit: a6ad5413,
+> > Merge branch 'guest-memfd-mmap' into HEAD)
 > > 
-> > With this series applied, on an arm64 server, building 'allmodconfig', I
-> > get the following build error.
+> > == Background ==
+> > KVM's guest-memfd memory backend currently lacks support for NUMA policy
+> > enforcement, causing guest memory allocations to be distributed across host
+> > nodes  according to kernel's default behavior, irrespective of any policy
+> > specified by the VMM. This limitation arises because conventional userspace
+> > NUMA control mechanisms like mbind(2) don't work since the memory isn't
+> > directly mapped to userspace when allocations occur.
+> > Fuad's work [1] provides the necessary mmap capability, and this series
+> > leverages it to enable mbind(2).
 > > 
-> > Oddly I don't see it on my x86 server, perhaps due to different compiler
-> > versions?
-> > 
-> > Any ideas?
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> > ------------------------
-> > 
-> > In function ‘rt2800_txpower_to_dev’,
-> >     inlined from ‘rt2800_config_channel’ at ../drivers/net/wireless/ralink/rt2x00/rt2800lib.c:4022:25:
-> > ./../include/linux/compiler_types.h:309:45: error: call to ‘__compiletime_assert_1168’ declared with attribute error: clamp() low limit -7 greater than high limit 15
-> >   309 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> >       |                                             ^
-> > ./../include/linux/compiler_types.h:290:25: note: in definition of macro ‘__compiletime_assert’
-> >   290 |                         prefix ## suffix();                             \
-> >       |                         ^~~~~~
-> > ./../include/linux/compiler_types.h:309:9: note: in expansion of macro ‘_compiletime_assert’
-> >   309 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
-> >       |         ^~~~~~~~~~~~~~~~~~~
-> > ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
-> >    39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-> >       |                                     ^~~~~~~~~~~~~~~~~~
-> > ../include/linux/minmax.h:188:9: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-> >   188 |         BUILD_BUG_ON_MSG(statically_true(ulo > uhi),                            \
-> >       |         ^~~~~~~~~~~~~~~~
-> > ../include/linux/minmax.h:195:9: note: in expansion of macro ‘__clamp_once’
-> >   195 |         __clamp_once(type, val, lo, hi, __UNIQUE_ID(v_), __UNIQUE_ID(l_), __UNIQUE_ID(h_))
-> >       |         ^~~~~~~~~~~~
-> > ../include/linux/minmax.h:218:36: note: in expansion of macro ‘__careful_clamp’
-> >   218 | #define clamp_t(type, val, lo, hi) __careful_clamp(type, val, lo, hi)
-> >       |                                    ^~~~~~~~~~~~~~~
-> > ../drivers/net/wireless/ralink/rt2x00/rt2800lib.c:3980:24: note: in expansion of macro ‘clamp_t’
-> >  3980 |                 return clamp_t(char, txpower, MIN_A_TXPOWER, MAX_A_TXPOWER);
-> >       |                        ^~~~~~~
+> > [...]
 > 
-> Missing commit 3bc753c06dd0 ("kbuild: treat char as always unsigned")?
+> Applied the non-KVM change to kvm-x86 gmem.  We're still tweaking and iterating
+> on the KVM changes, but I fully expect them to land in 6.19.
+> 
+> Holler if you object to taking these through the kvm tree.
+> 
+> [1/7] mm/filemap: Add NUMA mempolicy support to filemap_alloc_folio()
+>       https://github.com/kvm-x86/linux/commit/601aa29f762f
+> [2/7] mm/filemap: Extend __filemap_get_folio() to support NUMA memory policies
+>       https://github.com/kvm-x86/linux/commit/2bb25703e5bd
+> [3/7] mm/mempolicy: Export memory policy symbols
+>       https://github.com/kvm-x86/linux/commit/e1b4cf7d6be3
 
-That's going to be messy to backport, it's not even in 6.1.y, so let's
-leave that alone if at all possible.
+FYI, I rebased these onto 6.18-rc2 to avoid a silly merge.  New hashes:
 
-thanks,
-
-greg k-h
+[1/3] mm/filemap: Add NUMA mempolicy support to filemap_alloc_folio()
+      https://github.com/kvm-x86/linux/commit/7f3779a3ac3e
+[2/3] mm/filemap: Extend __filemap_get_folio() to support NUMA memory policies
+      https://github.com/kvm-x86/linux/commit/16a542e22339
+[3/3] mm/mempolicy: Export memory policy symbols
+      https://github.com/kvm-x86/linux/commit/f634f10809ec
 
