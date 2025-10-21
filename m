@@ -1,43 +1,52 @@
-Return-Path: <linux-erofs+bounces-1276-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1277-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13315BF6A6C
-	for <lists+linux-erofs@lfdr.de>; Tue, 21 Oct 2025 15:05:05 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0BC8BF6AEA
+	for <lists+linux-erofs@lfdr.de>; Tue, 21 Oct 2025 15:12:01 +0200 (CEST)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4crXZk6Pf8z30N8;
-	Wed, 22 Oct 2025 00:05:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4crXkl4mJFz30D3;
+	Wed, 22 Oct 2025 00:11:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1761051902;
-	cv=none; b=Yu5iil2PPgNJCg1dUeeGgPQR+IoP5JNzF8E4M5l+wWOf7PCkXQImzU/QWbaIulc/xs95M272IggqTdUo2C9+dEWH7R5q57zuW02p0e5UHS/k2JXa3kr5MyArECCLMmhzs4JkbRL/xnK/mCMwCU+Q4nRlppmyVc3VMYZ4A0UffrOhC27gXo0JU8E2bZSrHNw1LhvtsHsa2cGJK/0hhbSofqWZJUEvREtRQKcne96dDG6Em8NyIeZWN+1PpmEy5LaTTIpo5BIdPmjGjdc8nS4cxwKtP7KrIs+BOvgKwmT2OKTpHBdU8BgEx+7mq9CZdK7GjquYcxdBYdY+cYoVwFmejQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.218
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1761052319;
+	cv=none; b=mP8EYzmXxLQfoiFaN61XxukZ7I90gfwVrA1GH5QLUMnXe52KBMme9KbzgP1ByZoHWWuIdVXkYTPvCAcarDU3hGusj4S6OhUAsL6cFSslA+/vh3TyUcfizKbFfIWNTQr12GxdqrdKACV1MtRJ70UwH40awKcnFCf3MABR4eEGSN16ondI9AS45pcauqkWKKDcp44fJkvwquYL6nNnv+4sD8YlO7NBfQVSG7qP1uTXhx29etKipfLAe5h+ILDik28U3Y4eDH07uN47aG7q9LFmg/uuIugASmiKYzv9VtcEOra4kFf+d2qsh8dQYOYT+Kgj2gCJBvFATmbQVPmOREoK5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1761051902; c=relaxed/relaxed;
-	bh=xk4YkpDtkRwE4PUZPah0Zwsy5p2MWglbmcvU9sX6M2k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BwJNt5XLucIhdlayGp+h3jzrnPkMA34EJb7ZH8mFhG4TMwbYNbNgiFBVn61PYjgMAnos732g31srllQhAGb5WSZ0LQDt7Hch6OjmJlgNZ3oMctcVbJQDUfvs9zdUUi2Ltdxg/RMiUm9DwJQcAlgn9FIRBPIxJDAetx9yO1rAH4CdP92+pT3XxsLB7UZBjvB7hgVetp7T3GyxCyaHgNgAkE6328dzUug4yu9pXigqZ38gmfrGAdHyWYIGxtNA1Shm1REZUgSwVuJ+S7xQDR7o+S/s+BgqWxlW4PkR+qceFnRMBZsWJWQtpa8ymqQQe5CflqdC5/xiKsJ1AD5pwUlqpw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MG63UsEJ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1761052319; c=relaxed/relaxed;
+	bh=VCTByEwFWcJXhery7PDfneEHZPqB+EV0usD/LLGzEQQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=LDcrIDRGwrF7v8p4LlmZt6A970NrU5lOf7raQEGIJVktunmmflEqXXxUR7JtK/t6E6nscTsblQl8teAh1bzi5OU1mU3sFUTRsyVkNcqdWv7Hv025LwMoSyfTQsRP4iWLlCG0DZlvUMIz2vXZ7KVMIuO96u2Dls+OjoGTt1Rrpvq6LV/+KHWAEmFAda7qWmYkDaj5K3LLfhfTRH6IgMYTR2szmwtqE45DwAKDJsQIAECkhhBsg9AysWh9sxmgEIbEgUNXuhLEwL14n66WmSiWpi5JtZj31BUw3uXreSP9ako0b+kaeuM7HuX2IOCpr7c8cnXhM0gjAIkVGp/8K0YLsA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=GOZ4OFP1; dkim-atps=neutral; spf=pass (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MG63UsEJ;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=GOZ4OFP1;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4crXZj2MD7z2ymg
-	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Oct 2025 00:05:00 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1761051897; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=xk4YkpDtkRwE4PUZPah0Zwsy5p2MWglbmcvU9sX6M2k=;
-	b=MG63UsEJXuo2OWqZKVc4y3hUaIWJkjGdrk3/e9+eM05SBT4nHaG3a1MBxt5+lniBfTJ9bhlqxOQPxBW8p0m69U817ogQcccDqsIb8P4gY/SGapJ7SebU4Ch8CA2JUvkEas1j78Nt4YIE6I7MDw7NY0l6P5vlqvIJ8Koe0Ctihkw=
-Received: from 30.180.79.37(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wqj2stc_1761051895 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 21 Oct 2025 21:04:55 +0800
-Message-ID: <6f4086fd-97de-49d4-8de8-424eaa4fdba5@linux.alibaba.com>
-Date: Tue, 21 Oct 2025 21:04:54 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4crXkh01NMz2yFq
+	for <linux-erofs@lists.ozlabs.org>; Wed, 22 Oct 2025 00:11:55 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=VCTByEwFWcJXhery7PDfneEHZPqB+EV0usD/LLGzEQQ=;
+	b=GOZ4OFP1CvQxgY+YN5FGWG79AGtRxC+9DZI0mAryh/sAbZ+QGEwMki45kPzJbEQf6uvjRc7ob
+	7R2Bct6uTqls8CXzcfkOdBTw5/BXSUF6lalNOWuzZ5er6auPwaCn1vLpobEKDKsKAEAY4qgmXFp
+	2YuMsRh0Ms2/oEvRxIa8I8w=
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4crXjH2yDrzpT0r
+	for <linux-erofs@lists.ozlabs.org>; Tue, 21 Oct 2025 21:10:43 +0800 (CST)
+Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8810518007F
+	for <linux-erofs@lists.ozlabs.org>; Tue, 21 Oct 2025 21:11:48 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 21 Oct 2025 21:11:48 +0800
+Message-ID: <4c3fa7c4-a919-425b-9745-e8798dbf8296@huawei.com>
+Date: Tue, 21 Oct 2025 21:11:50 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,373 +59,111 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v7 0/7] erofs: inode page cache share feature
-To: Hongbo Li <lihongbo22@huawei.com>, chao@kernel.org, brauner@kernel.org,
- hongzhen@linux.alibaba.com
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20251021104815.70662-1-lihongbo22@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20251021104815.70662-1-lihongbo22@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Subject: Re: [PATCH 1/2] erofs: avoid infinite loops due to corrupted subpage
+ compact indexes
+Content-Language: en-US
+To: <linux-erofs@lists.ozlabs.org>
+References: <20251017070539.901367-1-hsiangkao@linux.alibaba.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20251017070539.901367-1-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemr500015.china.huawei.com (7.202.195.162)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Hongbo,
 
-On 2025/10/21 18:48, Hongbo Li wrote:
-> Enabling page cahe sharing in container scenarios has become increasingly
-> crucial, as it can significantly reduce memory usage. In previous efforts,
-> Hongzhen has done substantial work to push this feature into the EROFS
-> mainline. Due to other commitments, he hasn't been able to continue his
-> work recently, and I'm very pleased to build upon his work and continue
-> to refine this implementation.
-> 
-> This is a forward-port of Hongzhen's original erofs shared pagecache
-> posted a half yeas ago at (the latest):
-> https://lore.kernel.org/all/20250301145002.2420830-1-hongzhen@linux.alibaba.com/T/#u
-> 
-> In addition to the forward-port, I have also fixed a couple bugs and
-> some minor cleanup during the migration.
-> 
-> Notes: Currently, only compilation tests and basic function have been
-> verified. Validation for the shared page cache feature is pending until
-> the erofs-utils tool is complete.
-> 
-> (A recap of Hongzhen's original cover letter is below, edited slightly
-> for this serise:)
 
-I'm still left behind of this (currently heavily working on erofs-utils
-and containerd), but could we have a workable erofs-utils implementation
-first?
+On 2025/10/17 15:05, Gao Xiang wrote:
+> Robert reported an infinite loop observed by two crafted images.
+> 
+> The root cause is that `clusterofs` can be larger than `lclustersize`
+> for !NONHEAD `lclusters` in corrupted subpage compact indexes, e.g.:
+> 
+>    blocksize = lclustersize = 512   lcn = 6   clusterofs = 515
+> 
+> Move the corresponding check for full compress indexes to
+> `z_erofs_load_lcluster_from_disk()` to also cover subpage compact
+> compress indexes.
+> 
+> It also fixes the position of `m->type >= Z_EROFS_LCLUSTER_TYPE_MAX`
+> check, since it should be placed right after
+> `z_erofs_load_{compact,full}_lcluster()`.
+> 
+> Fixes: 8d2517aaeea3 ("erofs: fix up compacted indexes for block size < 4096")
+> Fixes: 1a5223c182fd ("erofs: do sanity check on m->type in z_erofs_load_compact_lcluster()")
+> Reported-by: Robert Morris <rtm@csail.mit.edu>
+> Closes: https://lore.kernel.org/r/35167.1760645886@localhost
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Also, Amir's previous suggestion needs to be resolved too..
-https://lore.kernel.org/r/CAOQ4uxjFcw7+w4jfjRKZRDitaXmgK1WhFbidPUFjXFt_6Kew5A@mail.gmail.com
+The clusterofs is unused in NONHEAD lcluster, so it is easy to understand.
 
-Finally, thanks for remaining Hongzhen's email (but he was already
-left, thanks for remaining our credits).
+Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
 
 Thanks,
-Gao Xiang
+Hongbo
 
-
+> ---
+>   fs/erofs/zmap.c | 32 ++++++++++++++++++--------------
+>   1 file changed, 18 insertions(+), 14 deletions(-)
 > 
-> Background
-> ==============
-> Currently, reading files with different paths (or names) but the same
-> content can consume multiple copies of the page cache, even if the
-> content of these caches is identical. For example, reading identical
-> files (e.g., *.so files) from two different minor versions of container
-> images can result in multiple copies of the same page cache, since
-> different containers have different mount points. Therefore, sharing
-> the page cache for files with the same content can save memory.
-> 
-> Proposal
-> ==============
-> 
-> 1. determining file identity
-> ----------------------------
-> First, a way needs to be found to check whether the content of two files
-> is the same. Here, the xattr values associated with the file
-> fingerprints are assessed for consistency. When creating the EROFS
-> image, users can specify the name of the xattr for file fingerprints,
-> and the corresponding name will be stored in the packfile. The on-disk
-> `ishare_key_start` indicates the offset of the xattr's name within the
-> packfile:
-> 
-> ```
-> struct erofs_super_block {
-> 	__le32 build_time;      /* seconds added to epoch for mkfs time */
-> 	__le64 rootnid_8b;      /* (48BIT on) nid of root directory */
-> -	__le64 reserved2;
-> +	__le32 ishare_key_start;        /* start of ishare key */
-> +	__le32 reserved2;
-> 	__le64 metabox_nid;     /* (METABOX on) nid of the metabox inode */
-> 	__le64 reserved3;       /* [align to extslot 1] */
-> };
-> ```
-> 
-> For example, users can specify the first long prefix as the name for the
-> file fingerprint as follows:
-> 
-> ```
-> mkfs.erofs  --ishare_key=trusted.erofs.fingerprint  erofs.img ./dir
-> ```
-> 
-> In this way, `trusted.erofs.fingerprint` serves as the name of the xattr
-> for the file fingerprint. The relevant patches for erofs-utils will be
-> released later.
-> 
-> At the same time, for security reasons, this patch series only shares
-> files within the same domain, which is achieved by adding
-> "-o domain_id=xxxx" during the mounting process:
-> 
-> ```
-> mount -t erofs -o domain_id=xxx erofs.img /mnt
-> ```
-> 
-> If no domain ID is specified, it will fall back to the non-page cache
-> sharing mode.
-> 
-> 2. whose page cache is shared?
-> ------------------------------
-> 
-> 2.1. share the page cache of inode_A or inode_B
-> -----------------------------------------------
-> For example, we can share the page cache of inode_A, referred to as
-> PGCache_A. When reading file B, we read the contents from PGCache_A to
-> achieve memory savings. Furthermore, if we need to read another file C
-> with the same content, we will still read from PGCache_A. In this way,
-> we fulfill multiple read requests with just a single page cache.
-> 
-> 2.2. share the de-duplicated inode's page cache
-> -----------------------------------------------
-> Unlike in 2.1, we allocate an internal deduplicated inode and use its
-> page cache as shared. Reads for files with identical content will
-> ultimately be routed to the page cache of the deduplicated inode. In
-> this way, a single page cache satisfies multiple read requests for
-> different files with the same contents.
-> 
-> 2.3. discussion of the two solutions
-> -----------------------------------------------
-> Although the solution in 2.1 allows for page cache sharing, it has
-> inherent drawbacks. The creation and destruction of inode nodes in the
-> file system mean that when inode_A is destroyed, PGCache_A is also
-> released. Consequently, if we need to read the file content afterward,
-> we must retrieve the data from the disk again. This conflicts with the
-> design philosophy of page cache (caching contents from the disk).
-> 
-> Therefore, I choose to implement the solution in 2.2, which is to
-> allocate an internal deduplicated inode and use its page cache as
-> shared.
-> 
-> 3. Implementation
-> ==================
-> 
-> 3.1. file open & close
-> ----------------------
-> When the file is opened, the ->private_data field of file A or file B is
-> set to point to an internal deduplicated file. When the actual read
-> occurs, the page cache of this deduplicated file will be accessed.
-> 
-> When the file is opened, if the corresponding erofs inode is newly
-> created, then perform the following actions:
-> 1. add the erofs inode to the backing list of the deduplicated inode;
-> 2. increase the reference count of the deduplicated inode.
-> 
-> The purpose of step 1 above is to ensure that when a real I/O operation
-> occurs, the deduplicated inode can locate one of the disk devices
-> (as the deduplicated inode itself is not bound to a specific device).
-> Step 2 is for managing the lifecycle of the deduplicated inode.
-> 
-> When the erofs inode is destroyed, the opposite actions mentioned above
-> will be taken.
-> 
-> 3.2. file reading
-> -----------------
-> Assuming the deduplication inode's page cache is PGCache_dedup, there
-> are two possible scenarios when reading a file:
-> 1) the content being read is already present in PGCache_dedup;
-> 2) the content being read is not present in PGCache_dedup.
-> 
-> In the second scenario, it involves the iomap operation to read from the
-> disk.
-> 
-> 3.2.1. reading existing data in PGCache_dedup
-> -------------------------------------------
-> In this case, the overall read flowchart is as follows (take ksys_read()
-> for example):
-> 
->           ksys_read
->               │
->               │
->               ▼
->              ...
->               │
->               │
->               ▼
-> erofs_ishare_file_read_iter (switch to backing deduplicated file)
->               │
->               │
->               ▼
-> 
->   read PGCache_dedup & return
-> 
-> At this point, the content in PGCache_dedup will be read directly and
-> returned.
-> 
-> 3.2.2 reading non-existent content in PGCache_dedup
-> ---------------------------------------------------
-> In this case, disk I/O operations will be involved. Taking the reading
-> of an uncompressed file as an example, here is the reading process:
-> 
->           ksys_read
->               │
->               │
->               ▼
->              ...
->               │
->               │
->               ▼
-> erofs_ishare_file_read_iter (switch to backing deduplicated file)
->               │
->               │
->               ▼
->              ... (allocate pages)
->               │
->               │
->               ▼
-> erofs_read_folio/erofs_readahead
->               │
->               │
->               ▼
->              ... (iomap)
->               │
->               │
->               ▼
->          erofs_iomap_begin
->               │
->               │
->               ▼
->              ...
-> 
-> Iomap and the layers below will involve disk I/O operations. As
-> described in 3.1, the deduplicated inode itself is not bound to a
-> specific device. The deduplicated inode will select an erofs inode from
-> the backing list (by default, the first one) to complete the
-> corresponding iomap operation.
-> 
-> 3.2.3 optimized inode selection
-> -------------------------------
-> The inode selection method described in 3.2.2 may select an "inactive"
-> inode. An inactive inode indicates that there may have been no read
-> operations on the inode's device for a long time, and there is a high
-> likelihood that the device may be unmounted. In this case, unmounting
-> the device may experience a slight delay due to other read requests
-> being routed to that device. Therefore, we need to select some "active"
-> inodes for the iomap operation.
-> 
-> To achieve optimized inode selection, an additional `processing` list
-> has been added. At the beginning of erofs_{read_folio,readahead}(), the
-> corresponding erofs inode will be added to the `processing` list
-> (because they are active). And it is removed at the end of
-> erofs_{read_folio,readahead}(). In erofs_iomap_begin(), the selected
-> erofs inode's count is incremented, and in erofs_iomap_end(), the count
-> is decremented.
-> 
-> In this way, even after the erofs inode is removed from the `processing`
-> list, the increment in the reference count can ensure the integrity of
-> the data reading process. This is somewhat similar to RCU (not exactly
-> the same, but similar).
-> 
-> 3.3. release page cache
-> -----------------------
-> Similar to overlayfs, when dropping the page cache via .fadvise, erofs
-> locates the deduplicated file and applies vfs_fadvise to that specific
-> file.
-> 
-> Effect
-> ==================
-> I conducted experiments on two aspects across two different minor
-> versions of container images:
-> 
-> 1. reading all files in two different minor versions of container images
-> 
-> 2. run workloads or use the default entrypoint within the containers^[1]
-> 
-> Below is the memory usage for reading all files in two different minor
-> versions of container images:
-> 
-> +-------------------+------------------+-------------+---------------+
-> |       Image       | Page Cache Share | Memory (MB) |    Memory     |
-> |                   |                  |             | Reduction (%) |
-> +-------------------+------------------+-------------+---------------+
-> |                   |        No        |     241     |       -       |
-> |       redis       +------------------+-------------+---------------+
-> |   7.2.4 & 7.2.5   |        Yes       |     163     |      33%      |
-> +-------------------+------------------+-------------+---------------+
-> |                   |        No        |     872     |       -       |
-> |      postgres     +------------------+-------------+---------------+
-> |    16.1 & 16.2    |        Yes       |     630     |      28%      |
-> +-------------------+------------------+-------------+---------------+
-> |                   |        No        |     2771    |       -       |
-> |     tensorflow    +------------------+-------------+---------------+
-> |  2.11.0 & 2.11.1  |        Yes       |     2340    |      16%      |
-> +-------------------+------------------+-------------+---------------+
-> |                   |        No        |     926     |       -       |
-> |       mysql       +------------------+-------------+---------------+
-> |  8.0.11 & 8.0.12  |        Yes       |     735     |      21%      |
-> +-------------------+------------------+-------------+---------------+
-> |                   |        No        |     390     |       -       |
-> |       nginx       +------------------+-------------+---------------+
-> |   7.2.4 & 7.2.5   |        Yes       |     219     |      44%      |
-> +-------------------+------------------+-------------+---------------+
-> |       tomcat      |        No        |     924     |       -       |
-> | 10.1.25 & 10.1.26 +------------------+-------------+---------------+
-> |                   |        Yes       |     474     |      49%      |
-> +-------------------+------------------+-------------+---------------+
-> 
-> Additionally, the table below shows the runtime memory usage of the
-> container:
-> 
-> +-------------------+------------------+-------------+---------------+
-> |       Image       | Page Cache Share | Memory (MB) |    Memory     |
-> |                   |                  |             | Reduction (%) |
-> +-------------------+------------------+-------------+---------------+
-> |                   |        No        |     34.9    |       -       |
-> |       redis       +------------------+-------------+---------------+
-> |   7.2.4 & 7.2.5   |        Yes       |     33.6    |       4%      |
-> +-------------------+------------------+-------------+---------------+
-> |                   |        No        |    149.1    |       -       |
-> |      postgres     +------------------+-------------+---------------+
-> |    16.1 & 16.2    |        Yes       |      95     |      37%      |
-> +-------------------+------------------+-------------+---------------+
-> |                   |        No        |    1027.9   |       -       |
-> |     tensorflow    +------------------+-------------+---------------+
-> |  2.11.0 & 2.11.1  |        Yes       |    934.3    |      10%      |
-> +-------------------+------------------+-------------+---------------+
-> |                   |        No        |    155.0    |       -       |
-> |       mysql       +------------------+-------------+---------------+
-> |  8.0.11 & 8.0.12  |        Yes       |    139.1    |      11%      |
-> +-------------------+------------------+-------------+---------------+
-> |                   |        No        |     25.4    |       -       |
-> |       nginx       +------------------+-------------+---------------+
-> |   7.2.4 & 7.2.5   |        Yes       |     18.8    |      26%      |
-> +-------------------+------------------+-------------+---------------+
-> |       tomcat      |        No        |     186     |       -       |
-> | 10.1.25 & 10.1.26 +------------------+-------------+---------------+
-> |                   |        Yes       |      99     |      47%      |
-> +-------------------+------------------+-------------+---------------+
-> 
-> It can be observed that when reading all the files in the image, the
-> reduced memory usage varies from 16% to 49%, depending on the specific
-> image. Additionally, the container's runtime memory usage reduction
-> ranges from 4% to 47%.
-> 
-> [1] Below are the workload for these images:
->        - redis: redis-benchmark
->        - postgres: sysbench
->        - tensorflow: app.py of tensorflow.python.platform
->        - mysql: sysbench
->        - nginx: wrk
->        - tomcat: default entrypoint
-> 
-> The patch in this version has made the following changes compared to
-> the previous versionv(patch v5):
-> 
-> - support user-defined fingerprint name;
-> - support domain-specific page cache share;
-> - adjusted the code style;
-> - adjustments in code implementation, etc.
-> 
-> v5: https://lore.kernel.org/all/20250105151208.3797385-1-hongzhen@linux.alibaba.com/
-> v4: https://lore.kernel.org/all/20240902110620.2202586-1-hongzhen@linux.alibaba.com/
-> v3: https://lore.kernel.org/all/20240828111959.3677011-1-hongzhen@linux.alibaba.com/
-> v2: https://lore.kernel.org/all/20240731080704.678259-1-hongzhen@linux.alibaba.com/
-> v1: https://lore.kernel.org/all/20240722065355.1396365-1-hongzhen@linux.alibaba.com/
-> 
-
+> diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+> index e5581dbeb4c2..6aca228cd2a5 100644
+> --- a/fs/erofs/zmap.c
+> +++ b/fs/erofs/zmap.c
+> @@ -55,10 +55,6 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
+>   	} else {
+>   		m->partialref = !!(advise & Z_EROFS_LI_PARTIAL_REF);
+>   		m->clusterofs = le16_to_cpu(di->di_clusterofs);
+> -		if (m->clusterofs >= 1 << vi->z_lclusterbits) {
+> -			DBG_BUGON(1);
+> -			return -EFSCORRUPTED;
+> -		}
+>   		m->pblk = le32_to_cpu(di->di_u.blkaddr);
+>   	}
+>   	return 0;
+> @@ -240,21 +236,29 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
+>   static int z_erofs_load_lcluster_from_disk(struct z_erofs_maprecorder *m,
+>   					   unsigned int lcn, bool lookahead)
+>   {
+> +	struct erofs_inode *vi = EROFS_I(m->inode);
+> +	int err;
+> +
+> +	if (vi->datalayout == EROFS_INODE_COMPRESSED_COMPACT) {
+> +		err = z_erofs_load_compact_lcluster(m, lcn, lookahead);
+> +	} else {
+> +		DBG_BUGON(vi->datalayout != EROFS_INODE_COMPRESSED_FULL);
+> +		err = z_erofs_load_full_lcluster(m, lcn);
+> +	}
+> +	if (err)
+> +		return err;
+> +
+>   	if (m->type >= Z_EROFS_LCLUSTER_TYPE_MAX) {
+>   		erofs_err(m->inode->i_sb, "unknown type %u @ lcn %u of nid %llu",
+> -				m->type, lcn, EROFS_I(m->inode)->nid);
+> +			  m->type, lcn, EROFS_I(m->inode)->nid);
+>   		DBG_BUGON(1);
+>   		return -EOPNOTSUPP;
+> +	} else if (m->type != Z_EROFS_LCLUSTER_TYPE_NONHEAD &&
+> +		   m->clusterofs >= (1 << vi->z_lclusterbits)) {
+> +		DBG_BUGON(1);
+> +		return -EFSCORRUPTED;
+>   	}
+> -
+> -	switch (EROFS_I(m->inode)->datalayout) {
+> -	case EROFS_INODE_COMPRESSED_FULL:
+> -		return z_erofs_load_full_lcluster(m, lcn);
+> -	case EROFS_INODE_COMPRESSED_COMPACT:
+> -		return z_erofs_load_compact_lcluster(m, lcn, lookahead);
+> -	default:
+> -		return -EINVAL;
+> -	}
+> +	return 0;
+>   }
+>   
+>   static int z_erofs_extent_lookback(struct z_erofs_maprecorder *m,
 
