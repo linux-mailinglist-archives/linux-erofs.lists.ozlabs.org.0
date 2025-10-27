@@ -1,112 +1,76 @@
-Return-Path: <linux-erofs+bounces-1287-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1288-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78D06C099E6
-	for <lists+linux-erofs@lfdr.de>; Sat, 25 Oct 2025 18:41:28 +0200 (CEST)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93D3EC0BB7C
+	for <lists+linux-erofs@lfdr.de>; Mon, 27 Oct 2025 03:53:49 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cv5BZ1Gd2z2xnk;
-	Sun, 26 Oct 2025 03:41:26 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cvykf5Xtcz2yyx;
+	Mon, 27 Oct 2025 13:53:46 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::831"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1761410486;
-	cv=none; b=kyoCOr6UqkbsjXN3CrIrKR2CTGMMII+Sm1wGrbm0NGGuk+abTys9zo9YcimFEu+K6OG2NED/HeCN2w3pQzyplj0yge36QnK9jNmPBSzDo5Lhki0Nt/ZVmGABLHKc8sNLjutl5jspcvXJVHX0o5kTXOtxv4nEzuykn0XzygXegR55mhZOoVBVfba8hlJBXuDFJy0QEknyw/gDlW4F1b8xpHgx1pfyXMrFNs93Ly9Ahi/Dq+KwK0bOmrA+Sxij1ATQM8SONFIcW8pTirbO61QSkqR0K1d0FSrYlLVXfg3qZn8fqGOyHd9r60H2OyG/eX3RUXERo31bX+6B38XlL66xwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1761410486; c=relaxed/relaxed;
-	bh=v+kdgwxqgLpSk+BXagyhyh0KizQR0PlmXlxRpNRvoio=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R2fChPjOQsPfH0zb/amuRj16xhwOAzR+kE9761Mmsv8bXnEs4UN9wxzSFGDE3dXj4ucf8Jx2xgj0g0XV7pPPnnZ39aXGw26By9Vrj5Kc3mSKyMdilI82tWec2IWo5wIGRIeR279HPS7GZvgHLSaukah0a4KuRaf+JC6jCkWuDgLG2JcB4wal4H2uRrDT29VXDYGAX0BRpI8JCn45gTRwsCb9wloLVufi10Mt+SJ+L6hZ4Q9AQqaEs4JfjL2hvkJj9GJk3TOBVcpuIJDOBbTXVP2g9xHsI23pjEHjwZhE95W4JnGj0DYDcdzqzx0GoMerk4H+PZVV4R820kCXy1UduA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=BvqO9qbV; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::831; helo=mail-qt1-x831.google.com; envelope-from=yury.norov@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c406::3" arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1761533626;
+	cv=pass; b=YFiF7/lLEG4UW9sSG5UsIu75a0MYyUcMM2XMEHfReCuKQAnrkGjF2Bfge3I9DibjZwsK6oc5T8+wWo+cds17jLfzIUVVmN5urZmva5mLXLfxHjhZIJvH2PQTMdMlWfdGfxd2N1jL3WtY2vW8t5zRb+3TzB/Og+GcCn4TZvVtyUfgHbAfPSlD+nMgwRgEfgvC+4Luo32KYpznFgmsQ3BfjTzfMCaRFU+epFbY3vc9u2whP5dOgSLYJWWL3DO8LLzehZNM1dGKWK0fOmhFYMysRXXjReJW1KX8wElkM9twq33F1DXhVYxMVcW04dXSTUH6xgsayKWoBFNoR1l6Apt9lg==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1761533626; c=relaxed/relaxed;
+	bh=MAigSYP/7V/vwZso128EJah6PEk3Pqg2U6kD1317gnE=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=iZX5tpgV2oo6SS2Rw+wOUv/iNEiVQKbNquABN7F74Hkoda7K4tj8fo0MPJUbUVTZNZ95pHc9fYOzvq48zVdSoRWZjeUr83YDsRUx67XBvog0NzniUio6TMeSZbjkwr8A02wDFQ6q24Ots04dmKeYEX/e2RyFIPIAAnxBZS3+Y7DrM08DSnndSWOHs5490Ph9vREz4pMurFLD+ZgLRO1PGu1kpdGU7GsomYLSMdRmF7kLbyJm1Fw3KB5jaLDgK3tyic5kj0T+8EKt5IQlG3JsL3ZdIyrzM/afdezbQgMj7GYyj0X2eWl+zeG6DGp87wqigLj978HmrkGlDdZ9X3H3Tg==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=cRKI0+el; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c406::3; helo=os8pr02cu002.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org) smtp.mailfrom=vivo.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=BvqO9qbV;
+	dkim=pass (2048-bit key; unprotected) header.d=vivo.com header.i=@vivo.com header.a=rsa-sha256 header.s=selector2 header.b=cRKI0+el;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::831; helo=mail-qt1-x831.google.com; envelope-from=yury.norov@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=vivo.com (client-ip=2a01:111:f403:c406::3; helo=os8pr02cu002.outbound.protection.outlook.com; envelope-from=guochunhai@vivo.com; receiver=lists.ozlabs.org)
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazlp170120003.outbound.protection.outlook.com [IPv6:2a01:111:f403:c406::3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cv5BY24LMz2xnM
-	for <linux-erofs@lists.ozlabs.org>; Sun, 26 Oct 2025 03:41:24 +1100 (AEDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-4eb861a8e66so26223731cf.2
-        for <linux-erofs@lists.ozlabs.org>; Sat, 25 Oct 2025 09:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1761410481; x=1762015281; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v+kdgwxqgLpSk+BXagyhyh0KizQR0PlmXlxRpNRvoio=;
-        b=BvqO9qbVGrj/3UjILOPCfmIiY2fyD/ZfmVDDLbSnjR19DxAhiDhVLXoWUxTQfPokQu
-         XoyrBwwcf+8CtPGfsvG6/jVKzah4/jMyhHZ7IesceJMpVTAUv80lTKd43SqYJv07bQRe
-         bThoBLlRaYINxdu9qqNI10aNv1PkfPYWNaipUky8xYKICzSRw18tw+Cp6TJqomdk+1Nq
-         wLg6TDc77lmIt/4yiySfRbJMkAVSEdNAByEoPLKusFZfftl79PVkj7d+X2UYMUab97ZG
-         j2ockfUD1PuuB5JgDw4UhSXv0+WHf11d6Iw2w21we9jDdXuw/gYMqreJJFh4P/pG1DjD
-         P6mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761410481; x=1762015281;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v+kdgwxqgLpSk+BXagyhyh0KizQR0PlmXlxRpNRvoio=;
-        b=KrM6W+W/EhOhx9S8fYHbtMaYLSkhmtDQAy5BLj+IyO8p+DWbLsvETTf8iHCYKRSSw7
-         CqN+V7r1c5HHROu9A3dmVtOa5O4Pn7IPbF0GR/lRVWqjSOuNm2a5JAuYBBlD2R92abz4
-         0g4M6Wpb0EptYAdIWM/p/CDH+jn7P7mHlCFFpBEsqJ5EKORhcJ9M4ZKd7a77n2q740yM
-         9WHA+7G+u6GxvPEjm3eFO9jvg2qc/NEdx4KZgtQWCiA1Jszyf0dZN57eYl6iZqDKjLK/
-         h6j7Vaorhyi0SMsZxa+dhbAsdyDi5DYpzZLQrNfTVuLqsOgYeWIncYrP8bEUqeJFjqaZ
-         QGJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHnXYcIf4QXsrnnMGKQagUX50uybtVXEk6oLvbtKN06iv/21Vp5axkzJTrtXsfi5myefyrfs5pPONquw==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YxAesDkuGcmaji7aDleEICKx9RaPjcaxIlLWqIEaJGnI3J9nPih
-	yvR9bEcJMBujvwxVjztsrtgFyXwtpCenJPnjXhJcCMLGQJMgOkz1GX5z
-X-Gm-Gg: ASbGncsZnFtDQnrkk0mHJg3Py5S+DfQkrLc6D6mPZSLD885l7m6q6fuOm9mlbLhdZ4q
-	RgwsdcvKh8JLMIk4rj9qV4OJy+lezh1XtoIWX1SHid5yR4uiKqNo7dTj0AuQx24BzXY82UEdvQE
-	YUx4yFWIoiqTNxdqyMU+g2HOdLEsE95VWg7AMovaMfds4+7zCZuxASZIKIkxn7jzFlIyXYmA5QR
-	3Pfv+MG2ygiMeglt/0xW8bNAL7MCWe0YHkijKEhbl/L/58TuDjXEv7jPfzlzdt+wsNsrIpoKcR6
-	315eBixpQiHoFDX5CSTLmzAFVnQ1nBx0vEUWAz+Ed5atCYDspjFIrw77hG4hE5KuZ7pP74d3qd0
-	asL2lGvC53ZzdzHtOop67itDEgA1VQZSb2sbgC5lDZdDqn9HfriN/YEJZ1eYt8lg/x4jDLIuy
-X-Google-Smtp-Source: AGHT+IEbSTHOPYn/ssbsalfndo2SE/aquOPMKCRUcU70dpCWt75EhJinxXayNqNWEpmv6XMRvXc8Dg==
-X-Received: by 2002:a05:622a:48f:b0:4e8:aad2:391c with SMTP id d75a77b69052e-4e8aad23e00mr349567941cf.1.1761410481317;
-        Sat, 25 Oct 2025 09:41:21 -0700 (PDT)
-Received: from localhost ([12.22.141.131])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4eba3858f1esm15257191cf.29.2025.10.25.09.41.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Oct 2025 09:41:20 -0700 (PDT)
-From: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	James Morse <james.morse@arm.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Jinjiang Tu <tujinjiang@huawei.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Andrei Vagin <avagin@gmail.com>,
-	linux-erofs@lists.ozlabs.org,
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cvykc58cGz2yrl
+	for <linux-erofs@lists.ozlabs.org>; Mon, 27 Oct 2025 13:53:43 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cAR1hVUPDmB7cGzQLSrsX86m1Vnd6jka4+HYVTUavJPzFHyYuIyAZ8eUN6aAXj0URo7a58nS5Q2+c2Nry+a0YtJcbBw0O71o4GzwGKU3J7mQABuInUH5jpFJjGsjn8hP2zMZBo/JMpSsM+tiRh1P3odNgUwg7Fv59KqlHQUIPNWF+As01i8D18dMB+/AhHUj/SzyxzdClvjadwsFQyCxTdsTLKE+hJafV+aQDXbZ9gg7a0jDHw2cbQ+qtWdoLvZW3L7mkJYkDKDeoUiTzG2Lx73NYm1hpFhKCN0INaAKsVAwa2hjoe+LGNucWjiy2iVlzBTsJHFc5JBVkGmkdoXapw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MAigSYP/7V/vwZso128EJah6PEk3Pqg2U6kD1317gnE=;
+ b=ar5LcGnyM9aFASFF1cVcRCZ8+a4pXQQiQkhqWqLlXajLB7ibXlJNL8wO0JIba922SraAPjniQyK5qiM5fpoIkFbKqPN4Slh0daE4njWEEdIfzB6PgbGHvYFslk9rUeKCbSNnNdjCqEN2EwrMJuUQ9B7fpFWOzLUI+zYbKfow//CpBqRMnDOqhoVjvz7LazQyeThj8Iou7xam9fhEg+hcnYXRhK+47+kuRUKiDsJxiCFk6SL1Q7IklgSt7Lw1qooc5akflBgZJd/Tmke3FOQIjV8P+CqFYOkhOx0lvbUNr6tx/Hx5MqKY4titV1HePk8xb07D2A02fTyyFaj9Ur/MdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MAigSYP/7V/vwZso128EJah6PEk3Pqg2U6kD1317gnE=;
+ b=cRKI0+elxQedthfp8Tx3ZzfcJGtPpYlSscxiWaiCbHqxRmdzK8P91EpUf8etDrF+g104qnEFEdx7VdY/9VxvOJ84MsFmJSnlqBCqk4Aw/974S16pgv1n8MD1jMEgRNIuaDdgG+94Eu56XiFihZnFi90kZaFB9lW8rpovl+wSICyzk0Sb2jfH7aoA2hEXbEvNUei3m6GRhc5ICU4ddcWoJKImdswcRyAO9oF9xqGiq3d92g0Al4RIc5ClV421qvY1tpzM7dCVG+YBBaBcdjSlpDP61U77hJwTMv9zV/L/PsdiIYQQTsTlTFNzuEjCgj3OSxuHHNkqA8wF/w1YrseNNw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from TY1PPF33E28B4E6.apcprd06.prod.outlook.com (2603:1096:408::90e)
+ by TYUPR06MB6028.apcprd06.prod.outlook.com (2603:1096:400:35f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9253.12; Mon, 27 Oct
+ 2025 02:53:19 +0000
+Received: from TY1PPF33E28B4E6.apcprd06.prod.outlook.com
+ ([fe80::5425:6b05:78fe:259c]) by TY1PPF33E28B4E6.apcprd06.prod.outlook.com
+ ([fe80::5425:6b05:78fe:259c%7]) with mapi id 15.20.9253.011; Mon, 27 Oct 2025
+ 02:53:19 +0000
+From: Chunhai Guo <guochunhai@vivo.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	zbestahu@gmail.com,
+	jefflexu@linux.alibaba.com,
+	dhavale@google.com,
+	lihongbo22@huawei.com
+Cc: linux-erofs@lists.ozlabs.org,
 	linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-fsdevel@vger.kernel.org
-Cc: "Yury Norov (NVIDIA)" <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH 19/21] fs: don't use GENMASK()
-Date: Sat, 25 Oct 2025 12:40:18 -0400
-Message-ID: <20251025164023.308884-20-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20251025164023.308884-1-yury.norov@gmail.com>
-References: <20251025164023.308884-1-yury.norov@gmail.com>
+	Chunhai Guo <guochunhai@vivo.com>
+Subject: [PATCH] MAINTAINERS: erofs: add myself as reviewer
+Date: Mon, 27 Oct 2025 10:52:06 +0800
+Message-Id: <20251027025206.56082-1-guochunhai@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYWP286CA0029.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:262::17) To TY1PPF33E28B4E6.apcprd06.prod.outlook.com
+ (2603:1096:408::90e)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -118,132 +82,111 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TY1PPF33E28B4E6:EE_|TYUPR06MB6028:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8ab192b7-5239-4c66-0e19-08de1503fbfc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|1800799024|376014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0uOgac+TmwPJZ5VMRniX0RuU4dIbJ3cTnyny8WpKkycBaU2y6tN/0hwAwMZ8?=
+ =?us-ascii?Q?pyi/sOQSgwirlaCa3gIJOcKiGsYbuivrNovJbs5AYYCMqmRAdcHbmqOsuJ70?=
+ =?us-ascii?Q?pPQrESwM/5C8X6DbQqhWaM4CQyemfrs6p5SujsP8ld5gk0JO3FqEx0IAbvrZ?=
+ =?us-ascii?Q?Qp4JSqjO0RIq3CYEq8626voNSem2ulqnCYD14keDrSrVMRY7FAHqhv6uoAPZ?=
+ =?us-ascii?Q?pHMxwGNBdsXWTCCJilk3ne5I2k7J/+IjW/5pv8SU+ZnEVd2cP2dmAEMt/TSK?=
+ =?us-ascii?Q?dAv2dDDdxHveC2dWvMCJGZwCKnkat7rEpvVm0GgWq1FOHXHDpcQCn3ZvL5ut?=
+ =?us-ascii?Q?u/2IPGT6njtqXed1Ljdx0QRvU4iRnddXANNLdU3kKWR8CAp7CnKzzXlg2VUk?=
+ =?us-ascii?Q?vHj9sjgtfi3BnG4kq3auJWUVGXaGSBUh1GEjRgq20aqjJp6TubetxrrGH0XA?=
+ =?us-ascii?Q?EPBJRL7+E1Dooo9bpezGHEThxJtrQ8UCR+pf4qKGp0DnIh8ZLiCdsm9stD7V?=
+ =?us-ascii?Q?loBYFkMURg16efKU/gJ2XlKylDcAvzTqXkeahycz2sZ7wzowE2J8iHK/t7lu?=
+ =?us-ascii?Q?8q42Lu3ST8i46ls5Dda5pr45PEVJgw0fzCvK7bFkmF6DnLA/UHVGtWe+sZSN?=
+ =?us-ascii?Q?5n/O2fF15+O3XHSYn69HMS0JnZAe5Z+bO3Jd8y/jTmGjed466r31rs89hLRi?=
+ =?us-ascii?Q?znz91/ru0/VCv/OkbvSrBlbqCYxhaOoJOf+EF1d/ZWeG5QmU4WLfWhQJyw6g?=
+ =?us-ascii?Q?G9FpvLIlEN/wM1pYSoie7o5/JFelznmLyHohUKhpGT2qHHcylk+tnPtxx6hg?=
+ =?us-ascii?Q?QZ8mZpynHYiSaqAyGjGJKDO/YNfwTn+WhDHeD3UtP9aGwXwx6Czbj0dCWimR?=
+ =?us-ascii?Q?+L0Oya5AFDHrsGIEaJS9h5hriv78HR3Zt5b11CD821ymsid3umNPd2BNbQ+/?=
+ =?us-ascii?Q?rdDjZM1W/6QNKokK8qbfu8J6bfKcbxrl6KqdMsfLovl4pUU67s3azgNoLlmK?=
+ =?us-ascii?Q?CF/y8l5uv3KoFSI5b/zl2fzLO9KxbuPunqLKdSTJoCnzHuhf6yehuSpnO6Z7?=
+ =?us-ascii?Q?qF/gBp2eN04MlbkwWtK3jm7ia4R8paFV3yZjgj1+xLzltBCmUKeDmQ6KoRmS?=
+ =?us-ascii?Q?xhtYue6lZU13N9qUHpXzxoitgFKzpj72z5BLK/nntAFjTrawt/t3KfZkkKJ8?=
+ =?us-ascii?Q?XG1h0rygtil8OqzXPocolJimfsketpK4jH834PkyO5LzOd8xxExkG5bhRqof?=
+ =?us-ascii?Q?/SK8eOAvFpvsbeBjSEmpz6VNKnbdqJbh3Gi9Y5+3tq6ElTy0KQhovyjRhtlG?=
+ =?us-ascii?Q?sPOzSszsCuCmewCjGwgQVGF4J3laeWmEKsspNRhpJDqcmYX64yQGBvNEDlD+?=
+ =?us-ascii?Q?DG0Lcf4GDfy0AdgbZCHGPZVR5CkJ4qTqFHa7P5/P1SeHB5QntC+87Ua8EO/P?=
+ =?us-ascii?Q?omdXuRB1kT+8Bqfe0/hjyW3/RXAbVp5M?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY1PPF33E28B4E6.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KsM051teG/lAeMnuOPE+6USqwb/Vxgysj6Wbnd6XXcQzTxNcoo1XDDWVXtcT?=
+ =?us-ascii?Q?aP15yauZKKYfP8JCHV6vzPfZa86BM8ZxvCY+W6B+3Yxkl7KAkv+VgYEIoL6e?=
+ =?us-ascii?Q?yffoRIO21c/Dp9Twf60s1BgMcwqkNjibDBXvlCpSFSSPxiuDrRg5lfBotY8P?=
+ =?us-ascii?Q?vEz0c8RQZJEDPbicLgYQ4mFZcrO+oBP1US2sNoMyCjcEFqlvjW+qVHqwqHI4?=
+ =?us-ascii?Q?CK6vaSjNtCYdLbJG197XxfYn4SxV1lstTyDIxTimMszd/ozuHnRwYpeL8Pov?=
+ =?us-ascii?Q?jXWK9MRHicHzYugbC8ZxFYKTojgPD1xr7KeFao9q8PCtxBv7+siPN+oy/vy8?=
+ =?us-ascii?Q?mIXjHcm8vxllnlZ3ebZi/hJ7soA6j8FFSKAKP2OodfTsBjHQvgnMzwcTDPG+?=
+ =?us-ascii?Q?/Z2wvBuC+cLXyIdCE40pY2D2hwdqSu4DY9QYqI4+Z7vvjEIX0ripfLeRKDFC?=
+ =?us-ascii?Q?PkTx3CFYsoV8p1qiPAVBKDz1nrdzDfgWWwNQUpA8AFoBHPpGBCrw98OdIXZx?=
+ =?us-ascii?Q?P2VQv13OTlBxsWg/G2DHhURL6MwhL8l2lggarwpoNbMzTD5XB5jTpzWQqD+o?=
+ =?us-ascii?Q?RC/wFJLix3TBHAMNVKSzFGHhjbQ0YnxrbqTNSsOzMvMQKjh81onQEybi3tyu?=
+ =?us-ascii?Q?BR4mvDdj4QHGMMtcMUqYRHY1xkVS42Sai8UlCloO6DLBihM8uRoSqwoVxGFb?=
+ =?us-ascii?Q?wbQOuMSonAteDW1u9MYuAf5xYU9QTuPh28+DoBkMMwo1Bvualy8s+6wQFLAh?=
+ =?us-ascii?Q?v2L3LtoCQpTAru/vYMIMxTtb1V8jSmH2IbcCYkuAYMUNCYKtOaYAFLgAT7YC?=
+ =?us-ascii?Q?ZvlsXqiPAohgTTsSm2/wD85SHCYbnq69dvP+ubb11pBLZ0ktV2DWU66ECMwJ?=
+ =?us-ascii?Q?X4GJTDgPEzG4AYl5Luw30lPxqtVczNqo5ouUlBJqb60k6VcXH2CchSheNwx8?=
+ =?us-ascii?Q?XaBFc6DYB3PVM98W4uJIyavSdODLg3wgHK3Iir1F+A8y6sXxW0+Liz5XsEkL?=
+ =?us-ascii?Q?oJJfdI93xVAt+0FY5X5CGO6HoqxPsIb3py3kwtFmaLPz5U2+zygK8K0TrpCw?=
+ =?us-ascii?Q?qxvOwtfcyHFKoTkDGFjxpUVP1nvmz5OsTbkmhjc/Ay9jlnVbN9s1NDi/cuWH?=
+ =?us-ascii?Q?Sf9AfHOW9MLv/5oHwHUPOMGeZOYPOxyKOQcG21znCVN9v948WBBeMpkdn9fs?=
+ =?us-ascii?Q?K/nK7GZxuCCtmmiNG6j3zzfVJTasdmtbY9LdRSDEM4zX5cNDJ7AXXjDME0B6?=
+ =?us-ascii?Q?++mwj20yzwFS/VRiNtpnhPPd2QwdomPG8SWpd/7P6e337MnSNwJRPNWXyNw9?=
+ =?us-ascii?Q?3ekoPIGd3tfZ4YcOOG5YpDtrIBnz3sXvkDf/vuvOvkeY89ttCIPBN/OPbrkG?=
+ =?us-ascii?Q?Tf+L7fi0gD1s/Uo4jk7ZKOkjOy3l5pMzeDzztC30pgFoMMV5LxtjI3mONbf/?=
+ =?us-ascii?Q?IcS5fJmFmOiocXqtssZOpB7kR/C316S8/AcyHGn3LeK62tWqawSvNyxGQEJy?=
+ =?us-ascii?Q?2ikdE2zZ4LHz5QaxtFT+BEFKo+SeIzUiRzMkKPjPSFLy0vPgvXW2F/R/dwYk?=
+ =?us-ascii?Q?lX75p0i94jSy6qswyaGJXsIGQ+zB+l3n2y3ASiBf?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ab192b7-5239-4c66-0e19-08de1503fbfc
+X-MS-Exchange-CrossTenant-AuthSource: TY1PPF33E28B4E6.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2025 02:53:19.2776
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: l3+Qh1iQImieKOjsewDp4oK31ThuIIZ06NIm3LqiPgC7Kgv4Oel4vZ0dt3BLK8GMhivgU++dAwBML671u1VN2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYUPR06MB6028
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-GENMASK(high, low) notation is confusing. FIRST/LAST_BITS() are
-more appropriate.
+In the past two years, I have focused on EROFS and contributed features
+including the reserved buffer pool, configurable global buffer pool, and
+the ongoing direct I/O support for compressed data.
 
-Signed-off-by: Yury Norov (NVIDIA) <yury.norov@gmail.com>
+I would like to continue contributing to EROFS and help with code
+reviews. Please CC me on EROFS-related changes.
+
+Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
 ---
- fs/erofs/internal.h      | 2 +-
- fs/f2fs/data.c           | 2 +-
- fs/f2fs/inode.c          | 2 +-
- fs/f2fs/segment.c        | 2 +-
- fs/f2fs/super.c          | 2 +-
- fs/proc/task_mmu.c       | 2 +-
- fs/resctrl/pseudo_lock.c | 2 +-
- include/linux/f2fs_fs.h  | 2 +-
- 8 files changed, 8 insertions(+), 8 deletions(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-index f7f622836198..6e0f03092c52 100644
---- a/fs/erofs/internal.h
-+++ b/fs/erofs/internal.h
-@@ -250,7 +250,7 @@ static inline u64 erofs_nid_to_ino64(struct erofs_sb_info *sbi, erofs_nid_t nid)
- 	 * Note: on-disk NIDs remain unchanged as they are primarily used for
- 	 * compatibility with non-LFS 32-bit applications.
- 	 */
--	return ((nid << 1) & GENMASK_ULL(63, 32)) | (nid & GENMASK(30, 0)) |
-+	return ((nid << 1) & LAST_BITS_ULL(32)) | (nid & FIRST_BITS(31)) |
- 		((nid >> EROFS_DIRENT_NID_METABOX_BIT) << 31);
- }
- 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 775aa4f63aa3..ef08464e003f 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -416,7 +416,7 @@ int f2fs_target_device_index(struct f2fs_sb_info *sbi, block_t blkaddr)
- 
- static blk_opf_t f2fs_io_flags(struct f2fs_io_info *fio)
- {
--	unsigned int temp_mask = GENMASK(NR_TEMP_TYPE - 1, 0);
-+	unsigned int temp_mask = FIRST_BITS(NR_TEMP_TYPE);
- 	unsigned int fua_flag, meta_flag, io_flag;
- 	blk_opf_t op_flags = 0;
- 
-diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
-index 8c4eafe9ffac..42a43f558136 100644
---- a/fs/f2fs/inode.c
-+++ b/fs/f2fs/inode.c
-@@ -524,7 +524,7 @@ static int do_read_inode(struct inode *inode)
- 			fi->i_compress_level = compress_flag >>
- 						COMPRESS_LEVEL_OFFSET;
- 			fi->i_compress_flag = compress_flag &
--					GENMASK(COMPRESS_LEVEL_OFFSET - 1, 0);
-+						FIRST_BITS(COMPRESS_LEVEL_OFFSET);
- 			fi->i_cluster_size = BIT(fi->i_log_cluster_size);
- 			set_inode_flag(inode, FI_COMPRESSED_FILE);
- 		}
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index b45eace879d7..64433d3b67d4 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -5425,7 +5425,7 @@ static int do_fix_curseg_write_pointer(struct f2fs_sb_info *sbi, int type)
- 		wp_block = zbd->start_blk + (zone.wp >> log_sectors_per_block);
- 		wp_segno = GET_SEGNO(sbi, wp_block);
- 		wp_blkoff = wp_block - START_BLOCK(sbi, wp_segno);
--		wp_sector_off = zone.wp & GENMASK(log_sectors_per_block - 1, 0);
-+		wp_sector_off = zone.wp & FIRST_BITS(log_sectors_per_block);
- 
- 		if (cs->segno == wp_segno && cs->next_blkoff == wp_blkoff &&
- 				wp_sector_off == 0)
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index db7afb806411..96621fd45cdc 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -4501,7 +4501,7 @@ static void save_stop_reason(struct f2fs_sb_info *sbi, unsigned char reason)
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&sbi->error_lock, flags);
--	if (sbi->stop_reason[reason] < GENMASK(BITS_PER_BYTE - 1, 0))
-+	if (sbi->stop_reason[reason] < FIRST_BITS(BITS_PER_BYTE))
- 		sbi->stop_reason[reason]++;
- 	spin_unlock_irqrestore(&sbi->error_lock, flags);
- }
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index fc35a0543f01..71de487b244c 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -1845,7 +1845,7 @@ struct pagemapread {
- 
- #define PM_ENTRY_BYTES		sizeof(pagemap_entry_t)
- #define PM_PFRAME_BITS		55
--#define PM_PFRAME_MASK		GENMASK_ULL(PM_PFRAME_BITS - 1, 0)
-+#define PM_PFRAME_MASK		FIRST_BITS_ULL(PM_PFRAME_BITS)
- #define PM_SOFT_DIRTY		BIT_ULL(55)
- #define PM_MMAP_EXCLUSIVE	BIT_ULL(56)
- #define PM_UFFD_WP		BIT_ULL(57)
-diff --git a/fs/resctrl/pseudo_lock.c b/fs/resctrl/pseudo_lock.c
-index 87bbc2605de1..45703bbd3bca 100644
---- a/fs/resctrl/pseudo_lock.c
-+++ b/fs/resctrl/pseudo_lock.c
-@@ -30,7 +30,7 @@
-  */
- static unsigned int pseudo_lock_major;
- 
--static unsigned long pseudo_lock_minor_avail = GENMASK(MINORBITS, 0);
-+static unsigned long pseudo_lock_minor_avail = FIRST_BITS(MINORBITS + 1);
- 
- static char *pseudo_lock_devnode(const struct device *dev, umode_t *mode)
- {
-diff --git a/include/linux/f2fs_fs.h b/include/linux/f2fs_fs.h
-index 6afb4a13b81d..9996356b79e0 100644
---- a/include/linux/f2fs_fs.h
-+++ b/include/linux/f2fs_fs.h
-@@ -356,7 +356,7 @@ enum {
- 	OFFSET_BIT_SHIFT
- };
- 
--#define OFFSET_BIT_MASK		GENMASK(OFFSET_BIT_SHIFT - 1, 0)
-+#define OFFSET_BIT_MASK		FIRST_BITS(OFFSET_BIT_SHIFT)
- 
- struct f2fs_node {
- 	/* can be one of three types: inode, direct, and indirect types */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 46126ce2f968..f482c7631dae 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9201,6 +9201,7 @@ R:	Yue Hu <zbestahu@gmail.com>
+ R:	Jeffle Xu <jefflexu@linux.alibaba.com>
+ R:	Sandeep Dhavale <dhavale@google.com>
+ R:	Hongbo Li <lihongbo22@huawei.com>
++R:	Chunhai Guo <guochunhai@vivo.com>
+ L:	linux-erofs@lists.ozlabs.org
+ S:	Maintained
+ W:	https://erofs.docs.kernel.org
 -- 
-2.43.0
+2.34.1
 
 
