@@ -1,73 +1,52 @@
-Return-Path: <linux-erofs+bounces-1300-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1301-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CD58C1788E
-	for <lists+linux-erofs@lfdr.de>; Wed, 29 Oct 2025 01:26:47 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A78FC1A714
+	for <lists+linux-erofs@lfdr.de>; Wed, 29 Oct 2025 13:58:53 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cx7N52cHrz2yyx;
-	Wed, 29 Oct 2025 11:26:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cxS3t4V1Tz3bfV;
+	Wed, 29 Oct 2025 23:58:50 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.14
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1761697605;
-	cv=none; b=CgbAQ0uWawH9ID/n6tZ2Q/OT6vMqw6wKxherlcQwaZTD+6+Vnb8RW3CVH8hyoEhO0RYWIl/gG88z7PvEYuX6GRRFrvCUNznwakXD54JqNe+QTT5ThMG4PKVk8QFizyNkIL8Bye4MQTXRSCNwQAC/xyOZfxjUoN5si7gOTuCjNKogRMpArkQO+f6oNyjPXssJSYA7PSpCXSO9dlhMngPguRj+1X1011Ea6Ct0Kk7vGYWmCcKGlRA90GFdp8OafdF/C4tgvUluWFS4OxLK3Ev8v+T9UhrclXcUbsWa1uzOCJFVkjgDilmQbE7VLw4V7n2rB5DvQKxWZTBVAOT4OOyP0Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.219
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1761742730;
+	cv=none; b=md2e/UeCBm5Ld9ZsAiUv+FlMiCUqd9ctVoHBrl7taTh4WoVJhM447YA0Rwursdq+RZDzyZG9t7R9GzrVHjg9UFHGxd39rvTMQScj/w0zKhjTCw9DVXDnJ4LU4aK5hwUHDjkhRdOrSOzd2hq5FMChinO1woOAowKo3LytrDhuHNMy8F3aoL/ARqrITeXzWpiQBprddDjQ1dmDrIyRTPmLS0c5MadMqQhInW/2qG4zELZI5omhTcJ0DCbR9GiZGIbnSGJF50/enr9YsMthNZZ2/xJcM90E/e4Xbn8GtzgiSKcsO2DfLhF0ARzKB/eOgybUfPFwqTA7AmO4KTT3R4hPrA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1761697605; c=relaxed/relaxed;
-	bh=HOzKwnKmyg1HMPlwN2QXaVBltp7oxmMeZxNcYgHQfuI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=BMCK8U3tRpvFnf8VquksJtzkFAbJBRay+EyVirUffcjrdl8lOL3PbDgkeo1X2KE4hg7wTQ10f6Y+pwOf2JUsb4JHEaPV2z1cKh/WMJ7X44kgfTzCF3IQWCD5fW5dxQ70rG0XAc+hKfQjDZSnU2zO9YGVwfbv9VX7hzCxWegrTX/r7P7q/Iwv6WQZEDqy85To5VWZ82yuo49nGbDaCQ692ACbzV8G0mFK6oG8FNq4YPIImonERJHkQH5htls8n99yo9GfPTW+PdeK5USCZ0enWHrSoTpNMaE0Tbu6eWMB4mIbt/Qsafj4KtYFjhNXj9FZBO5XzuNxnl6CM7CF4Zlrag==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dT6DQX05; dkim-atps=neutral; spf=pass (client-ip=192.198.163.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1761742730; c=relaxed/relaxed;
+	bh=9BzrX0O8ESOuDbM3g5UW8lKiQkiSPq85xOnGilDOBH8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=oMczA/ZdK71sdkIjaIGDC0FNKaykykkCeFtqJy6Y4YvX//kzYyODpcAr+51AIUyB0VvNdgvOybJnqjTwx5i1vFjYn3XIdHPVDuaJoNcY+r7aVlXwN7IBYujLbgIZh7Vc3qk0x503mG+/0rGLlRARx43qeWvUhavsH09W5LehLuuTv6Dxzypa8XzYN5v9dJGqc/E0OElbDIcBxfPrUqEEfS9Uw+BmQpHm2usOj79dBVejXlqdKCX5F2jHGANsuBx6ZmQLeom7g+w1mnmpQ/skjAOTOP53s33Bnj8/Z10gNy1z5NzliShz6Bsi96ccocaRvNE35twsI93qO96sHFCQZA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=gtzejsd5; dkim-atps=neutral; spf=pass (client-ip=113.46.200.219; helo=canpmsgout04.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=dT6DQX05;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=gtzejsd5;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.14; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.219; helo=canpmsgout04.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cx7N236rwz2xsq
-	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Oct 2025 11:26:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761697602; x=1793233602;
-  h=date:from:to:cc:subject:message-id;
-  bh=oZtMU+F34cA0Fmr0B8Ss6kufBarcBjfQmuKMdkJf+Dk=;
-  b=dT6DQX0538rcicSukwAVc3+0abSZfu49qEsdDWaEaT+roHqDb+LxDK9a
-   LCOm6XBZn8neg6v11SuG4CXagP2Usbf+HII5MkWaskVtVTKwIJGy1cgGA
-   AClEVHbndUIWe3Ci/nyI9j6wmN6n1XEawjpMecrj6RFe06SPxcDjnYI4o
-   cQXpGQbwf9tTJxsM1VdMcwYdNwf2frZvaktRDXX/3/KiR7iXEglZG5RT7
-   E56BGwLIHqhm9SedQmXGZWDoP3B/ymXuIL1MvaNiPhPL5ND1s9ICmIfvB
-   fqxGyEWOQqjGrQySECXxKFh507LVbca+ssa34YC6P+rz2fIqSREwLYfKh
-   A==;
-X-CSE-ConnectionGUID: oeeKmB7GT0u1AZ8iUt8qIQ==
-X-CSE-MsgGUID: jb9qAhFOSVqzwSSykid0MQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="63846701"
-X-IronPort-AV: E=Sophos;i="6.19,262,1754982000"; 
-   d="scan'208";a="63846701"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2025 17:26:38 -0700
-X-CSE-ConnectionGUID: 5We7Z8woT+6kAyUcuII+XQ==
-X-CSE-MsgGUID: utx1sBNrQjyJg9Kcozy/Qg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,262,1754982000"; 
-   d="scan'208";a="185964622"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 28 Oct 2025 17:26:36 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vDu1K-000Jvo-1X;
-	Wed, 29 Oct 2025 00:26:34 +0000
-Date: Wed, 29 Oct 2025 08:26:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- fa9bb305791513e7763fd557ba4344e1d1c1d59c
-Message-ID: <202510290821.FOcQY416-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cxS3q3QCYz3bfN
+	for <linux-erofs@lists.ozlabs.org>; Wed, 29 Oct 2025 23:58:44 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=9BzrX0O8ESOuDbM3g5UW8lKiQkiSPq85xOnGilDOBH8=;
+	b=gtzejsd53Nce94Gss1t9gNzIPSDEv/UkXA1fRz0NbsMPhIQ0iR/3+xbRO/nyDf6l0vH+VMaSy
+	Zr3uprDBDKeVBq/jXtdck37Bg9YpxKyOyrWh1wq2rRTDMI4OHPfUQS34LsdED6J5nc/aoFcXRp0
+	Z6inYuM07ouKE5Z1Zu4I80Q=
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4cxS351y9mz1prLt;
+	Wed, 29 Oct 2025 20:58:09 +0800 (CST)
+Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
+	by mail.maildlp.com (Postfix) with ESMTPS id A0C181402DF;
+	Wed, 29 Oct 2025 20:58:38 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 29 Oct 2025 20:58:38 +0800
+Message-ID: <1137d069-6f19-471e-ac4d-ae5d9ee8407f@huawei.com>
+Date: Wed, 29 Oct 2025 20:58:37 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -78,193 +57,395 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v7 0/7] erofs: inode page cache share feature
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, <chao@kernel.org>,
+	<brauner@kernel.org>, <hongzhen@linux.alibaba.com>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+References: <20251021104815.70662-1-lihongbo22@huawei.com>
+ <6f4086fd-97de-49d4-8de8-424eaa4fdba5@linux.alibaba.com>
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <6f4086fd-97de-49d4-8de8-424eaa4fdba5@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemr500015.china.huawei.com (7.202.195.162)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: fa9bb305791513e7763fd557ba4344e1d1c1d59c  MAINTAINERS: erofs: add myself as reviewer
+Hi Xiang,
 
-elapsed time: 1178m
+On 2025/10/21 21:04, Gao Xiang wrote:
+> Hi Hongbo,
+> 
+> On 2025/10/21 18:48, Hongbo Li wrote:
+>> Enabling page cahe sharing in container scenarios has become increasingly
+>> crucial, as it can significantly reduce memory usage. In previous 
+>> efforts,
+>> Hongzhen has done substantial work to push this feature into the EROFS
+>> mainline. Due to other commitments, he hasn't been able to continue his
+>> work recently, and I'm very pleased to build upon his work and continue
+>> to refine this implementation.
+>>
+>> This is a forward-port of Hongzhen's original erofs shared pagecache
+>> posted a half yeas ago at (the latest):
+>> https://lore.kernel.org/all/20250301145002.2420830-1-hongzhen@linux.alibaba.com/T/#u
+>>
+>> In addition to the forward-port, I have also fixed a couple bugs and
+>> some minor cleanup during the migration.
+>>
+>> Notes: Currently, only compilation tests and basic function have been
+>> verified. Validation for the shared page cache feature is pending until
+>> the erofs-utils tool is complete.
+>>
+>> (A recap of Hongzhen's original cover letter is below, edited slightly
+>> for this serise:)
+> 
+> I'm still left behind of this (currently heavily working on erofs-utils
+> and containerd), but could we have a workable erofs-utils implementation
+> first?
+> 
 
-configs tested: 172
-configs skipped: 3
+Understood, I will implement a simple debug version first and will send 
+the revised code later to address the noted issues.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thanks,
+Hongbo
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    clang-19
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    clang-19
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    clang-19
-arc                                 defconfig    gcc-15.1.0
-arc                        nsimosci_defconfig    clang-22
-arc                   randconfig-001-20251028    gcc-8.5.0
-arc                   randconfig-002-20251028    gcc-13.4.0
-arc                   randconfig-002-20251028    gcc-8.5.0
-arm                              allmodconfig    clang-19
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    clang-19
-arm                                 defconfig    gcc-15.1.0
-arm                   randconfig-001-20251028    clang-22
-arm                   randconfig-001-20251028    gcc-8.5.0
-arm                   randconfig-002-20251028    clang-22
-arm                   randconfig-002-20251028    gcc-8.5.0
-arm                   randconfig-003-20251028    clang-22
-arm                   randconfig-003-20251028    gcc-8.5.0
-arm                   randconfig-004-20251028    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                            allyesconfig    gcc-15.1.0
-arm64                               defconfig    gcc-15.1.0
-csky                             allmodconfig    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                             allyesconfig    gcc-15.1.0
-csky                                defconfig    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    clang-19
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-19
-hexagon                          allyesconfig    clang-22
-hexagon                             defconfig    gcc-15.1.0
-i386                             allmodconfig    clang-20
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    clang-20
-i386        buildonly-randconfig-001-20251028    gcc-14
-i386        buildonly-randconfig-002-20251028    gcc-14
-i386        buildonly-randconfig-003-20251028    gcc-14
-i386        buildonly-randconfig-004-20251028    gcc-14
-i386        buildonly-randconfig-005-20251028    gcc-14
-i386        buildonly-randconfig-006-20251028    gcc-14
-i386                                defconfig    gcc-15.1.0
-i386                  randconfig-011-20251028    gcc-14
-i386                  randconfig-012-20251028    clang-20
-i386                  randconfig-012-20251028    gcc-14
-i386                  randconfig-013-20251028    clang-20
-i386                  randconfig-013-20251028    gcc-14
-i386                  randconfig-014-20251028    clang-20
-i386                  randconfig-014-20251028    gcc-14
-i386                  randconfig-015-20251028    clang-20
-i386                  randconfig-015-20251028    gcc-14
-i386                  randconfig-016-20251028    gcc-14
-i386                  randconfig-017-20251028    gcc-14
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                        allyesconfig    gcc-15.1.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                           sun3_defconfig    clang-22
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-mips                             allmodconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.1.0
-mips                      maltaaprp_defconfig    clang-22
-nios2                            allmodconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                            allyesconfig    clang-22
-openrisc                         allmodconfig    clang-22
-openrisc                          allnoconfig    clang-22
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    clang-22
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    clang-22
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                          allyesconfig    gcc-15.1.0
-powerpc                 mpc8313_rdb_defconfig    clang-22
-powerpc                    socrates_defconfig    clang-22
-powerpc                     tqm8541_defconfig    clang-22
-riscv                            allmodconfig    clang-22
-riscv                            allmodconfig    gcc-15.1.0
-riscv                             allnoconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                            allyesconfig    gcc-15.1.0
-riscv                               defconfig    gcc-15.1.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    gcc-15.1.0
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    gcc-15.1.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-14
-sh                          r7785rp_defconfig    clang-22
-sparc                            alldefconfig    clang-22
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                            allyesconfig    clang-22
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251028    gcc-9.5.0
-sparc                 randconfig-002-20251028    gcc-9.5.0
-sparc64                          allmodconfig    clang-22
-sparc64                          allyesconfig    clang-22
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20251028    gcc-9.5.0
-sparc64               randconfig-002-20251028    gcc-9.5.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    clang-19
-um                               allyesconfig    gcc-14
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251028    gcc-9.5.0
-um                    randconfig-002-20251028    gcc-9.5.0
-um                           x86_64_defconfig    gcc-14
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                            allnoconfig    clang-22
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251028    clang-20
-x86_64      buildonly-randconfig-002-20251028    clang-20
-x86_64      buildonly-randconfig-003-20251028    clang-20
-x86_64      buildonly-randconfig-004-20251028    clang-20
-x86_64      buildonly-randconfig-005-20251028    clang-20
-x86_64      buildonly-randconfig-006-20251028    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20251028    clang-20
-x86_64                randconfig-002-20251028    clang-20
-x86_64                randconfig-003-20251028    clang-20
-x86_64                randconfig-004-20251028    clang-20
-x86_64                randconfig-005-20251028    clang-20
-x86_64                randconfig-006-20251028    clang-20
-x86_64                randconfig-011-20251028    clang-20
-x86_64                randconfig-012-20251028    clang-20
-x86_64                randconfig-013-20251028    clang-20
-x86_64                randconfig-014-20251028    clang-20
-x86_64                randconfig-015-20251028    clang-20
-x86_64                randconfig-016-20251028    clang-20
-x86_64                randconfig-071-20251028    clang-20
-x86_64                randconfig-072-20251028    clang-20
-x86_64                randconfig-073-20251028    clang-20
-x86_64                randconfig-074-20251028    clang-20
-x86_64                randconfig-075-20251028    clang-20
-x86_64                randconfig-076-20251028    clang-20
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-22
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                           allyesconfig    clang-22
-xtensa                randconfig-001-20251028    gcc-9.5.0
-xtensa                randconfig-002-20251028    gcc-9.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Also, Amir's previous suggestion needs to be resolved too..
+> https://lore.kernel.org/r/CAOQ4uxjFcw7+w4jfjRKZRDitaXmgK1WhFbidPUFjXFt_6Kew5A@mail.gmail.com
+> 
+> Finally, thanks for remaining Hongzhen's email (but he was already
+> left, thanks for remaining our credits).
+> 
+> Thanks,
+> Gao Xiang
+> 
+> 
+>>
+>> Background
+>> ==============
+>> Currently, reading files with different paths (or names) but the same
+>> content can consume multiple copies of the page cache, even if the
+>> content of these caches is identical. For example, reading identical
+>> files (e.g., *.so files) from two different minor versions of container
+>> images can result in multiple copies of the same page cache, since
+>> different containers have different mount points. Therefore, sharing
+>> the page cache for files with the same content can save memory.
+>>
+>> Proposal
+>> ==============
+>>
+>> 1. determining file identity
+>> ----------------------------
+>> First, a way needs to be found to check whether the content of two files
+>> is the same. Here, the xattr values associated with the file
+>> fingerprints are assessed for consistency. When creating the EROFS
+>> image, users can specify the name of the xattr for file fingerprints,
+>> and the corresponding name will be stored in the packfile. The on-disk
+>> `ishare_key_start` indicates the offset of the xattr's name within the
+>> packfile:
+>>
+>> ```
+>> struct erofs_super_block {
+>>     __le32 build_time;      /* seconds added to epoch for mkfs time */
+>>     __le64 rootnid_8b;      /* (48BIT on) nid of root directory */
+>> -    __le64 reserved2;
+>> +    __le32 ishare_key_start;        /* start of ishare key */
+>> +    __le32 reserved2;
+>>     __le64 metabox_nid;     /* (METABOX on) nid of the metabox inode */
+>>     __le64 reserved3;       /* [align to extslot 1] */
+>> };
+>> ```
+>>
+>> For example, users can specify the first long prefix as the name for the
+>> file fingerprint as follows:
+>>
+>> ```
+>> mkfs.erofs  --ishare_key=trusted.erofs.fingerprint  erofs.img ./dir
+>> ```
+>>
+>> In this way, `trusted.erofs.fingerprint` serves as the name of the xattr
+>> for the file fingerprint. The relevant patches for erofs-utils will be
+>> released later.
+>>
+>> At the same time, for security reasons, this patch series only shares
+>> files within the same domain, which is achieved by adding
+>> "-o domain_id=xxxx" during the mounting process:
+>>
+>> ```
+>> mount -t erofs -o domain_id=xxx erofs.img /mnt
+>> ```
+>>
+>> If no domain ID is specified, it will fall back to the non-page cache
+>> sharing mode.
+>>
+>> 2. whose page cache is shared?
+>> ------------------------------
+>>
+>> 2.1. share the page cache of inode_A or inode_B
+>> -----------------------------------------------
+>> For example, we can share the page cache of inode_A, referred to as
+>> PGCache_A. When reading file B, we read the contents from PGCache_A to
+>> achieve memory savings. Furthermore, if we need to read another file C
+>> with the same content, we will still read from PGCache_A. In this way,
+>> we fulfill multiple read requests with just a single page cache.
+>>
+>> 2.2. share the de-duplicated inode's page cache
+>> -----------------------------------------------
+>> Unlike in 2.1, we allocate an internal deduplicated inode and use its
+>> page cache as shared. Reads for files with identical content will
+>> ultimately be routed to the page cache of the deduplicated inode. In
+>> this way, a single page cache satisfies multiple read requests for
+>> different files with the same contents.
+>>
+>> 2.3. discussion of the two solutions
+>> -----------------------------------------------
+>> Although the solution in 2.1 allows for page cache sharing, it has
+>> inherent drawbacks. The creation and destruction of inode nodes in the
+>> file system mean that when inode_A is destroyed, PGCache_A is also
+>> released. Consequently, if we need to read the file content afterward,
+>> we must retrieve the data from the disk again. This conflicts with the
+>> design philosophy of page cache (caching contents from the disk).
+>>
+>> Therefore, I choose to implement the solution in 2.2, which is to
+>> allocate an internal deduplicated inode and use its page cache as
+>> shared.
+>>
+>> 3. Implementation
+>> ==================
+>>
+>> 3.1. file open & close
+>> ----------------------
+>> When the file is opened, the ->private_data field of file A or file B is
+>> set to point to an internal deduplicated file. When the actual read
+>> occurs, the page cache of this deduplicated file will be accessed.
+>>
+>> When the file is opened, if the corresponding erofs inode is newly
+>> created, then perform the following actions:
+>> 1. add the erofs inode to the backing list of the deduplicated inode;
+>> 2. increase the reference count of the deduplicated inode.
+>>
+>> The purpose of step 1 above is to ensure that when a real I/O operation
+>> occurs, the deduplicated inode can locate one of the disk devices
+>> (as the deduplicated inode itself is not bound to a specific device).
+>> Step 2 is for managing the lifecycle of the deduplicated inode.
+>>
+>> When the erofs inode is destroyed, the opposite actions mentioned above
+>> will be taken.
+>>
+>> 3.2. file reading
+>> -----------------
+>> Assuming the deduplication inode's page cache is PGCache_dedup, there
+>> are two possible scenarios when reading a file:
+>> 1) the content being read is already present in PGCache_dedup;
+>> 2) the content being read is not present in PGCache_dedup.
+>>
+>> In the second scenario, it involves the iomap operation to read from the
+>> disk.
+>>
+>> 3.2.1. reading existing data in PGCache_dedup
+>> -------------------------------------------
+>> In this case, the overall read flowchart is as follows (take ksys_read()
+>> for example):
+>>
+>>           ksys_read
+>>               │
+>>               │
+>>               ▼
+>>              ...
+>>               │
+>>               │
+>>               ▼
+>> erofs_ishare_file_read_iter (switch to backing deduplicated file)
+>>               │
+>>               │
+>>               ▼
+>>
+>>   read PGCache_dedup & return
+>>
+>> At this point, the content in PGCache_dedup will be read directly and
+>> returned.
+>>
+>> 3.2.2 reading non-existent content in PGCache_dedup
+>> ---------------------------------------------------
+>> In this case, disk I/O operations will be involved. Taking the reading
+>> of an uncompressed file as an example, here is the reading process:
+>>
+>>           ksys_read
+>>               │
+>>               │
+>>               ▼
+>>              ...
+>>               │
+>>               │
+>>               ▼
+>> erofs_ishare_file_read_iter (switch to backing deduplicated file)
+>>               │
+>>               │
+>>               ▼
+>>              ... (allocate pages)
+>>               │
+>>               │
+>>               ▼
+>> erofs_read_folio/erofs_readahead
+>>               │
+>>               │
+>>               ▼
+>>              ... (iomap)
+>>               │
+>>               │
+>>               ▼
+>>          erofs_iomap_begin
+>>               │
+>>               │
+>>               ▼
+>>              ...
+>>
+>> Iomap and the layers below will involve disk I/O operations. As
+>> described in 3.1, the deduplicated inode itself is not bound to a
+>> specific device. The deduplicated inode will select an erofs inode from
+>> the backing list (by default, the first one) to complete the
+>> corresponding iomap operation.
+>>
+>> 3.2.3 optimized inode selection
+>> -------------------------------
+>> The inode selection method described in 3.2.2 may select an "inactive"
+>> inode. An inactive inode indicates that there may have been no read
+>> operations on the inode's device for a long time, and there is a high
+>> likelihood that the device may be unmounted. In this case, unmounting
+>> the device may experience a slight delay due to other read requests
+>> being routed to that device. Therefore, we need to select some "active"
+>> inodes for the iomap operation.
+>>
+>> To achieve optimized inode selection, an additional `processing` list
+>> has been added. At the beginning of erofs_{read_folio,readahead}(), the
+>> corresponding erofs inode will be added to the `processing` list
+>> (because they are active). And it is removed at the end of
+>> erofs_{read_folio,readahead}(). In erofs_iomap_begin(), the selected
+>> erofs inode's count is incremented, and in erofs_iomap_end(), the count
+>> is decremented.
+>>
+>> In this way, even after the erofs inode is removed from the `processing`
+>> list, the increment in the reference count can ensure the integrity of
+>> the data reading process. This is somewhat similar to RCU (not exactly
+>> the same, but similar).
+>>
+>> 3.3. release page cache
+>> -----------------------
+>> Similar to overlayfs, when dropping the page cache via .fadvise, erofs
+>> locates the deduplicated file and applies vfs_fadvise to that specific
+>> file.
+>>
+>> Effect
+>> ==================
+>> I conducted experiments on two aspects across two different minor
+>> versions of container images:
+>>
+>> 1. reading all files in two different minor versions of container images
+>>
+>> 2. run workloads or use the default entrypoint within the containers^[1]
+>>
+>> Below is the memory usage for reading all files in two different minor
+>> versions of container images:
+>>
+>> +-------------------+------------------+-------------+---------------+
+>> |       Image       | Page Cache Share | Memory (MB) |    Memory     |
+>> |                   |                  |             | Reduction (%) |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     241     |       -       |
+>> |       redis       +------------------+-------------+---------------+
+>> |   7.2.4 & 7.2.5   |        Yes       |     163     |      33%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     872     |       -       |
+>> |      postgres     +------------------+-------------+---------------+
+>> |    16.1 & 16.2    |        Yes       |     630     |      28%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     2771    |       -       |
+>> |     tensorflow    +------------------+-------------+---------------+
+>> |  2.11.0 & 2.11.1  |        Yes       |     2340    |      16%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     926     |       -       |
+>> |       mysql       +------------------+-------------+---------------+
+>> |  8.0.11 & 8.0.12  |        Yes       |     735     |      21%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     390     |       -       |
+>> |       nginx       +------------------+-------------+---------------+
+>> |   7.2.4 & 7.2.5   |        Yes       |     219     |      44%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |       tomcat      |        No        |     924     |       -       |
+>> | 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+>> |                   |        Yes       |     474     |      49%      |
+>> +-------------------+------------------+-------------+---------------+
+>>
+>> Additionally, the table below shows the runtime memory usage of the
+>> container:
+>>
+>> +-------------------+------------------+-------------+---------------+
+>> |       Image       | Page Cache Share | Memory (MB) |    Memory     |
+>> |                   |                  |             | Reduction (%) |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     34.9    |       -       |
+>> |       redis       +------------------+-------------+---------------+
+>> |   7.2.4 & 7.2.5   |        Yes       |     33.6    |       4%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |    149.1    |       -       |
+>> |      postgres     +------------------+-------------+---------------+
+>> |    16.1 & 16.2    |        Yes       |      95     |      37%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |    1027.9   |       -       |
+>> |     tensorflow    +------------------+-------------+---------------+
+>> |  2.11.0 & 2.11.1  |        Yes       |    934.3    |      10%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |    155.0    |       -       |
+>> |       mysql       +------------------+-------------+---------------+
+>> |  8.0.11 & 8.0.12  |        Yes       |    139.1    |      11%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |                   |        No        |     25.4    |       -       |
+>> |       nginx       +------------------+-------------+---------------+
+>> |   7.2.4 & 7.2.5   |        Yes       |     18.8    |      26%      |
+>> +-------------------+------------------+-------------+---------------+
+>> |       tomcat      |        No        |     186     |       -       |
+>> | 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+>> |                   |        Yes       |      99     |      47%      |
+>> +-------------------+------------------+-------------+---------------+
+>>
+>> It can be observed that when reading all the files in the image, the
+>> reduced memory usage varies from 16% to 49%, depending on the specific
+>> image. Additionally, the container's runtime memory usage reduction
+>> ranges from 4% to 47%.
+>>
+>> [1] Below are the workload for these images:
+>>        - redis: redis-benchmark
+>>        - postgres: sysbench
+>>        - tensorflow: app.py of tensorflow.python.platform
+>>        - mysql: sysbench
+>>        - nginx: wrk
+>>        - tomcat: default entrypoint
+>>
+>> The patch in this version has made the following changes compared to
+>> the previous versionv(patch v5):
+>>
+>> - support user-defined fingerprint name;
+>> - support domain-specific page cache share;
+>> - adjusted the code style;
+>> - adjustments in code implementation, etc.
+>>
+>> v5: 
+>> https://lore.kernel.org/all/20250105151208.3797385-1-hongzhen@linux.alibaba.com/
+>> v4: 
+>> https://lore.kernel.org/all/20240902110620.2202586-1-hongzhen@linux.alibaba.com/
+>> v3: 
+>> https://lore.kernel.org/all/20240828111959.3677011-1-hongzhen@linux.alibaba.com/
+>> v2: 
+>> https://lore.kernel.org/all/20240731080704.678259-1-hongzhen@linux.alibaba.com/
+>> v1: 
+>> https://lore.kernel.org/all/20240722065355.1396365-1-hongzhen@linux.alibaba.com/
+>>
+> 
 
