@@ -1,50 +1,50 @@
-Return-Path: <linux-erofs+bounces-1303-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1304-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38B4DC1E551
-	for <lists+linux-erofs@lfdr.de>; Thu, 30 Oct 2025 05:13:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E38EC1E566
+	for <lists+linux-erofs@lfdr.de>; Thu, 30 Oct 2025 05:15:35 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cxrMc4BRdz2yvv;
-	Thu, 30 Oct 2025 15:13:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4cxrPc6Wv0z2xR3;
+	Thu, 30 Oct 2025 15:15:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1761797628;
-	cv=none; b=P2Ewh43T6iGypeZHVTn71V/P2TK8JFCRZubBYpIxlvtm7phqd50Hipn74jYehxrri1NCfcBkjgOcdBJXNEJb/JpYwW286XUcwGygArPyRp7dejW4D1hKMbHE3uVwwJ+FBrYVwKpYEeGz+/V4oxMXv1nuDRPxm9WAC8aAF6jCI9KDircD5sgB9afg/ZEHkHbpKFJU4yxGdLYunWRqPwZFcmdM83luQM2yCyWKSSovhB1Tr6JK2xgzO5UjxjY1EKLu37H2Nhbml39B7FOjwcVjHRH72kcN+AkM0WiwcgNKMDqlpnCG30KnhtaZbGNAVlBQVjXoXRfgSZHIGeumhqudLA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1761797732;
+	cv=none; b=SSR47WyeqPI/KQYJCtxPD2Bso3Fq96lsX7PgpkSh5BpGIy6iaS6OaatekjsLWHva/GQxObbMRNC2xg9YTaX6mMtwHqsx/75zM8C2G3WhLbhKqoX75vNByWwyf4suz7wtWICBB5umhM0ISsUUYepYeiQgq4FLFgrWYSKSZZ23DzptQlnkJQdUaBxVq73+zXsCkVQyyp7tkDigndxNOb4k9erx1XAqo9thMlM1b45pUteosyg8S30QMBRMkPYa4kBCkXD1/1uyUhe/BVYKOGEX1JYCLAOADbkikTb8ySkTY679/dxUTv+KzC/xZfOZYWKzVSzv87IQgiVqmMwIKzAZeg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1761797628; c=relaxed/relaxed;
-	bh=7cr6Ma9YCr2H+S6pVoqZyu2oPQOcIEYf3hghtTHT3i4=;
+	t=1761797732; c=relaxed/relaxed;
+	bh=XOCf76X+wp5tM2a1EaL2D8hC3PbgT3ib9KdfvCbv5qI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CYi0VMz1vZtBYJjhldALplUXDwL3Qny6i+GaYVsTJEbRW8HWfgVqf04UkregJ2TXsTVQjKWPpNt0zivtEbzJLEfTtHJ0MNGu5+9b61FIn6QBLI0IBgLyQ2eYK+e2iTAvx5YCjpY6IjSBU1CvUCytohDlbNmA4/30T6fOg7+1g3ovTJ/OdhIPPEp0A7/3nH6ZpLAkaZKHzuKBI9hgJjir0L51FAoQuo7HPD3q1PUm3n+dAyn9I45Oebrnk6lcYHL04pNSAS3h3Fu2T5jz9kgze3Tna3Btkd7QeXql+a1K67+iwOcXcC52ggMuDtm7xBaF/Mtad9YlCdZ4NFBL9ZQlWg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wp43gY2m; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=UZO+qcZAVI6nNB+8hbSXS6g7NMQ5MA9yDFWKuz2T6eWXBfb7L3+Ut96A83Z8I7mjjK+a4fm7/+eV941aHnBV+Rd9vmdJKr0DDmjI8kXKiVsKQTcCp/KkgU4WdE3doVG9PwOgXiV07UlEkQNUZMNv+kubU08V8a0eHkRPKehO0CGnzBNGmZGcoHjCyCtWpsI7oogSTYjLDvm5DRhXsnBKweu0P41c4YLnn3xQ+IDwEKe1o2ei0RhhfnyOwoozUzTnTn8096K4y8RlX19mMKGmRmWvM+qIZaF9OmyEwn1B3cE2uorSCjx3HtEOuw9LM2O7aJ0qa7w3pqQzmqhEhBpNIA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=i3uNS0zy; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wp43gY2m;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=i3uNS0zy;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cxrMZ5Wqpz2xxS
-	for <linux-erofs@lists.ozlabs.org>; Thu, 30 Oct 2025 15:13:44 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4cxrPc03d7z2xR2
+	for <linux-erofs@lists.ozlabs.org>; Thu, 30 Oct 2025 15:15:31 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1761797621; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=7cr6Ma9YCr2H+S6pVoqZyu2oPQOcIEYf3hghtTHT3i4=;
-	b=wp43gY2mZSy9kOl+c4rwWJuVqyFSl6xFepZKuX2lY9Y0AyOHF9KKP9AJeeR9ALly9STAPAfDQXds04R0hS9c2xqk7D3H10xAVKgCb+MY19UVdKVx5u6+hDn1QlfoUazlLurjFJwFmYV6FJgZgdR4O1vojUBx+02qvNpUpZgc5IU=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WrIe8-X_1761797615 cluster:ay36)
+	t=1761797727; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=XOCf76X+wp5tM2a1EaL2D8hC3PbgT3ib9KdfvCbv5qI=;
+	b=i3uNS0zyRfF6qcLjF/weozvRqGmkhrba6y4dAAkw8+7nNPiF9D7MfKwsVnXiwNGUxfy2E3FgHtNjxe5yonV29mq6LePKWvzlPiNh8v21ZOFUhjxwtSHnMrHZgSIjVIrAfGTDIOs5suZXQqniERfIyIMUMhJVoStOKM9E017ApPc=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WrIYZaq_1761797726 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 30 Oct 2025 12:13:38 +0800
+          Thu, 30 Oct 2025 12:15:26 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Friendy Su <friendy.su@sony.com>,
 	Yuezhang Mo <Yuezhang.Mo@sony.com>,
 	Daniel Palmer <daniel.palmer@sony.com>,
 	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH v3] erofs-utils: mkfs: Turn off deduplication under chunk mode with '-E^dedupe'
-Date: Thu, 30 Oct 2025 12:13:34 +0800
-Message-ID: <20251030041334.2092102-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v3 RESEND] erofs-utils: mkfs: Turn off deduplication under chunk mode with '-E^dedupe'
+Date: Thu, 30 Oct 2025 12:15:25 +0800
+Message-ID: <20251030041525.2094223-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <20251028032809.1371395-1-friendy.su@sony.com>
 References: <20251028032809.1371395-1-friendy.su@sony.com>
@@ -222,7 +222,7 @@ index 1a68841..c90369f 100644
  	if (ptotal)
  		(void)erofs_bh_balloon(bh, ptotal);
 -	else if (!params->fragments && !params->dedupe)
-+	else if (!params->fragments && params->dedupe != EROFS_DEDUPE_FORCE_OFF)
++	else if (!params->fragments && params->dedupe == EROFS_DEDUPE_FORCE_OFF)
  		DBG_BUGON(!inode->idata_size);
  
  	erofs_info("compressed %s (%llu bytes) into %llu bytes",
@@ -240,7 +240,7 @@ index 1a68841..c90369f 100644
  		cfg.c_max_decompressed_extent_bytes <=
  			z_erofs_get_pclustersize(ictx);
 -	if (params->fragments && !params->dedupe && !ictx->data_unaligned)
-+	if (params->fragments && params->dedupe != EROFS_DEDUPE_FORCE_OFF &&
++	if (params->fragments && params->dedupe == EROFS_DEDUPE_FORCE_OFF &&
 +	    !ictx->data_unaligned)
  		inode->z_advise |= Z_EROFS_ADVISE_INTERLACED_PCLUSTER;
  
