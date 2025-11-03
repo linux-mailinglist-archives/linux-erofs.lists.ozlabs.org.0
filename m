@@ -1,51 +1,51 @@
-Return-Path: <linux-erofs+bounces-1340-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1341-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24CBFC2C83A
-	for <lists+linux-erofs@lfdr.de>; Mon, 03 Nov 2025 15:58:24 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AD33C2C840
+	for <lists+linux-erofs@lfdr.de>; Mon, 03 Nov 2025 15:58:27 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4d0ZTV13pDz3bf2;
-	Tue,  4 Nov 2025 01:58:22 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4d0ZTY4PSNz3bf3;
+	Tue,  4 Nov 2025 01:58:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1762181902;
-	cv=none; b=PkooymQtltHqrwfpG9lMpW9hgEZRjeT556chMFViSQn/y79SewRv0tRhf0i05+lE+WvmWFlo1xI/53AfIjclGEFgUE1OGNJHq9t8t+jOz2TwLBBIw7amL0prqjScYdq1C7V6UhMBlD4M7ZULKn2ufRnv2eoShH3arGSJTRRFgsa547Qbbrvz0KHH6wJe7gUkj55B9vsecruAGCtTsvTPs0XRtLuivxU5BWbyTmn+vISKYPjOadG4lBexmQlw2iXdYFuLZLoH+MpRKtCixyaqsC9l7m1d2CH3BRY5Vu7jA14mrGULzOZ7PDAxHoR4Ji9Pr/rxPUPtjA6y/6TsI7/L2Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1762181905;
+	cv=none; b=XN9flCoMs/Rd5oPs7LzMnjaxDWTZtKowN9XOBm46IKneLm0lPIntVnNDT27UkOVpU8M2pnGwdENUFcWuesI7AtbfsjEOm8mVgQ/AKbCzZdMzgPdZVQEIWQTlO6cInHwyIICJwlCm94UgRScrDHT+M3X6OEODkQDCMersS+eg+6kDnAKOWXPElXxttgE80a9bLtGJFXpKeKMDFjGYfSvRB/ln/MTyuKPjLtywPWJnrlAiKXKOcDbBGlE+1JJwLYLwiy+k02fgZ3sy/OSf+lE8mAHP7l5bw9vmnjqGbDH1TLrbwnz7FqDHwC/F6hLE5rHnaf6HNpcXZt1V+JUFeHTgew==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1762181902; c=relaxed/relaxed;
-	bh=0mPa2sIh4tMLW13TMUdtGm7gD5tTB5IKncItLGBqzcA=;
+	t=1762181905; c=relaxed/relaxed;
+	bh=jhyNcU45PddyG6NY5QYYlCxnoDT1LIXJQcp1Oi81baQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YgauVUUxaLKbF3+eV4DewE8fEUH0OF4Aq6GWoWzLRjtydvfSW1G9gnRRW4Sr9+iClNcDszocrF5ix/e47aGyDLqyVdf0xebvRU6/8yQ+/de4n55Nbc3HLgADNAfRmNMqfFnAmOLHVvnEsnELWsRwQafk4j0S5p0UnjtmUSvufLthPUot2W4TAWVDrVHR99ZZDgjBru/UGFhXTExXfEpQHzryNGR4xEZTuAqC4m2M/0pgWR+9OM/tTUrKtQz/W2VShEfLEbTi1QJ8v/UWWzeW530GeEjJvPclX2HIYlTPs8avKXnQxAYuMfYZDyQMSLczgxTEdEsDadETg3e+HSFMvw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=FfjNIE12; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:To:Cc; b=aSpDpGkdZEchH6t8Z7T785L8tU92/STRvIzBskzR9YjAw4+Eu8srkBFvd7so59wDCB6LwtZgTappAqKRvh4JeL3X9hPR69mgIPN9dy3FbRaESvvzbonJaNiEVX6I7Jxje7llRnMapD05UMgWwympQlh7U/Bde4DWgN5zI7VRwWO2AMCxsxw6+z/qFAFEw5tJOF7H8gmVtQLVTRaPJ3v+iypxMdibcRrtC7p3eWG90eXShpcLbf/F0FD1EPrriPXdr7HnM4Tb1+nozdp59on3eMLIeDY1deJQBc5RI3KxwSE9NbUA09yl0ZJgTz36cGjlNpuHtmUaKzyTRaJCx0hDwA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UnuQoRf/; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=FfjNIE12;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UnuQoRf/;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4d0ZTT4786z2xnx
-	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Nov 2025 01:58:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4d0ZTY0P66z2xnx
+	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Nov 2025 01:58:25 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 7BA6043317;
+	by tor.source.kernel.org (Postfix) with ESMTP id 32B68601BB;
+	Mon,  3 Nov 2025 14:58:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC91CC116C6;
 	Mon,  3 Nov 2025 14:58:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E440C113D0;
-	Mon,  3 Nov 2025 14:58:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762181899;
-	bh=c3MjjxCah9rBlJv8gEbIO0Wdkh/B50Fpv0CEVpSv9OE=;
+	s=k20201202; t=1762181902;
+	bh=owV/Eekd/Ucg3vFKIrGEVlXyUSEK1yiGGOB8cDqW0Rk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=FfjNIE12fBDXyCnPG4LOVn61IOGzDAi39xv0r51APjfXkGOj6cWQuTRlUj604/ozo
-	 Povw9myNuMm1ljtrRCkTqyVh4bFAPTCs5loqrX+7/37CHb+NUsq0s7uHoOpCs/m3ti
-	 UMqw0xVtyhjapiaEcXLbqp2RqzD3u0CtRHDEDIvOkmpRwmmku8bQNDtEWl8XEbjf2T
-	 uytPDnZZvyinUEWfIBgWUwOxEbJECZAr+mDAzOqt7nIz9SlJctuUzP8lcmv0ZygBRe
-	 kouePD9U+wkCEQO5Ou2rYrGTTAZ8uDp3fShajHO2qMGWXF00JVj0vAHAIwmJPM3Bg+
-	 yEwQK9iS9JPCQ==
+	b=UnuQoRf/PeJwNPDSGCW5mXyEpJLYPzFpeFhGdPnORVWh9sUnFHudllQ2hCaEiSieE
+	 sQnAMSiLhBe/vmsUDa5iNxOiGFFVOSJEZKtdfxAiuCdHHuhcswxKiFHvKjxgxnmAWu
+	 nSKDXMMfW64z3Xzp8RDcImZQNaMF2egtEHfPntmsGgAO4fU1HdFij85WQePDZrqgSm
+	 IoEvuRDLjlgYchNMe0/g6aolzcal0Zrpkkrid8v/zHOIYeI32EQv+GYeq/0/uJFtWN
+	 kgcpZ12d40QJ1Y609PLC0HH122AaBxWx/ovfUwUvL/L5/0x59a1/4gakZQSfpepqK+
+	 2B3sUf9scN0Eg==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 03 Nov 2025 15:57:35 +0100
-Subject: [PATCH 09/12] coredump: use prepare credential guard
+Date: Mon, 03 Nov 2025 15:57:36 +0100
+Subject: [PATCH 10/12] coredump: use override credential guard
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -59,7 +59,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251103-work-creds-guards-prepare_creds-v1-9-b447b82f2c9b@kernel.org>
+Message-Id: <20251103-work-creds-guards-prepare_creds-v1-10-b447b82f2c9b@kernel.org>
 References: <20251103-work-creds-guards-prepare_creds-v1-0-b447b82f2c9b@kernel.org>
 In-Reply-To: <20251103-work-creds-guards-prepare_creds-v1-0-b447b82f2c9b@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
@@ -71,12 +71,12 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-crypto@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  Christian Brauner <brauner@kernel.org>
 X-Mailer: b4 0.15-dev-96507
-X-Developer-Signature: v=1; a=openpgp-sha256; l=873; i=brauner@kernel.org;
- h=from:subject:message-id; bh=c3MjjxCah9rBlJv8gEbIO0Wdkh/B50Fpv0CEVpSv9OE=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRyHHopwsuxvjlnd5bB3CqvS4ZW7CvfJnLHFto9bkkv1
- M8+UL+xo5SFQYyLQVZMkcWh3SRcbjlPxWajTA2YOaxMIEMYuDgFYCIS6owMN9/rS7u0KCxf8ePA
- njVZXecXJj7JeVewWaYwJ7E4WXtFJcM/O6HUn0onP1l6aYpFnFo2/3lXNdNb1hCRqWYmcfwm2wu
- 5AQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1086; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=owV/Eekd/Ucg3vFKIrGEVlXyUSEK1yiGGOB8cDqW0Rk=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRyHHrJHLgt8mK/gm2Pdu3sfU8ef16VdHmq4JPOMMWFb
+ 5faX6/83lHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCROzcY/idvX1jNd5BRW/f2
+ F4dktuv/bzTfmXf9EgtL0ge5zQ1nL9oz/GL+lVZz5LsjL1eit9uyJ8sy75sE7j4qdm9aTZlPq5S
+ fMgMA
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -84,35 +84,40 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Use the prepare credential guard for allocating a new set of
-credentials.
+Use override credential guards for scoped credential override with
+automatic restoration on scope exit.
 
 Signed-off-by: Christian Brauner <brauner@kernel.org>
 ---
- fs/coredump.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/coredump.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/fs/coredump.c b/fs/coredump.c
-index 79c681f1d647..5424a6c4e360 100644
+index 5424a6c4e360..fe4099e0530b 100644
 --- a/fs/coredump.c
 +++ b/fs/coredump.c
-@@ -1155,7 +1155,6 @@ static void do_coredump(struct core_name *cn, struct coredump_params *cprm,
- 
- void vfs_coredump(const kernel_siginfo_t *siginfo)
- {
--	struct cred *cred __free(put_cred) = NULL;
- 	size_t *argv __free(kfree) = NULL;
- 	struct core_state core_state;
+@@ -1160,7 +1160,6 @@ void vfs_coredump(const kernel_siginfo_t *siginfo)
  	struct core_name cn;
-@@ -1183,7 +1182,7 @@ void vfs_coredump(const kernel_siginfo_t *siginfo)
- 	if (coredump_skip(&cprm, binfmt))
+ 	const struct mm_struct *mm = current->mm;
+ 	const struct linux_binfmt *binfmt = mm->binfmt;
+-	const struct cred *old_cred;
+ 	int argc = 0;
+ 	struct coredump_params cprm = {
+ 		.siginfo = siginfo,
+@@ -1197,11 +1196,8 @@ void vfs_coredump(const kernel_siginfo_t *siginfo)
+ 	if (coredump_wait(siginfo->si_signo, &core_state) < 0)
  		return;
  
--	cred = prepare_creds();
-+	CLASS(prepare_creds, cred)();
- 	if (!cred)
- 		return;
- 	/*
+-	old_cred = override_creds(cred);
+-
+-	do_coredump(&cn, &cprm, &argv, &argc, binfmt);
+-
+-	revert_creds(old_cred);
++	scoped_with_creds(cred)
++		do_coredump(&cn, &cprm, &argv, &argc, binfmt);
+ 	coredump_cleanup(&cn, &cprm);
+ 	return;
+ }
 
 -- 
 2.47.3
