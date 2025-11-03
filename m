@@ -1,73 +1,51 @@
-Return-Path: <linux-erofs+bounces-1310-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1311-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCDC4C278F7
-	for <lists+linux-erofs@lfdr.de>; Sat, 01 Nov 2025 08:18:11 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D015BC2B521
+	for <lists+linux-erofs@lfdr.de>; Mon, 03 Nov 2025 12:27:13 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4cz8MP2W5Yz3bW7;
-	Sat,  1 Nov 2025 18:18:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4d0Tnp6QQfz2ygD;
+	Mon,  3 Nov 2025 22:27:10 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.11
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1761981489;
-	cv=none; b=PPcEYp2HJ8LC2NRuyrIVEVkS/31gPVPYJl6Aj50IN/sN0ZNwjMMywmU8UeYRSZnjZj8nGEP/2eTWoYwDgv6wS1PWi+4YJGoOeqoHInqUpOdPNpTBf7O3ubA9gxwyqJ7VE6FhZ6v9v3keJlCmBgOdTh/rDiscPhyzTIaUNQtNHksoYZDtqV3x2axbahljvWfXQ5GlCVXCBSlcGu6Cbyz5yGlu+yvqfi6PRnPXmJX20Bb10ILr0rXG8J9IkRN4FI7+ogUWo5TRmlOhX1iP2wnIEHZiQa6vfxpNDhyFFDY6gnequ5oJSJs43rnoEld5nBdNHkc67y7akM4qJOWGJBZNkQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1762169230;
+	cv=none; b=Jpkx7r8KN1lO6g5Ir8lBjWf+V/XRBiChIyM2vZ8NFRjDVlmftAvxQB16RB5xhdi/4hxZ95oKB63nEYG0OQHbnSqV8nCcI4aR7BXiE5GrcumFkz1dml7pvQk2O+ukTZjrNnOlEjNmujLQOr4tByPyq+QjobmEzO3g0Zb3GU+uicZDqz3OMdfHzTVWMAf1y60diy7msvMlwEifbkiAtkd4WcGgkB6bRAMbfFmXi+PifrL3fNnL12jqdE3KzzebxuMK17wz999WrO0UzDzuZbL2z5RW0+iyt5azxsr29vgRrQHxi/fbUKZ+hxup5WM1aZ7yt4/UCj6hkW72P7ay0Sdd6w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1761981489; c=relaxed/relaxed;
-	bh=bCc22ZFXXaAetuj/pTVQdEOrJd3tylvTW4QNubFKhVo=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=TngKp475jVOQld0dMfnkp99RWK4JfZHy//KFpmWS8/2RW2idh/KTRnbHTzDvWvxqpDMZTu0ORseMcC8QqU7NBSTuZmfxamGG6MyhBnuAnV2/RWMJhK+V+YtAHouoU8OIKaHGPVIVhzZU1u9IgdRYZVx6cHDw2htZkk9UVgpwtIAFaRkblvnGfAruBeC4zyt3jbPHOv3fYEb4lYrecJbLTyNfclg82V67Io1Xu8DHIoyW0MDrN9U4F/ClMClLsGoTvFPAuelRg7QMdTmI2Hrywr1AK6qL53d6bDrDCag9uwwbx+G5ARAys15lG4l3aUEPWMhODddHUjPVa/GRhNHYPA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XyDpMlWj; dkim-atps=neutral; spf=pass (client-ip=192.198.163.11; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1762169230; c=relaxed/relaxed;
+	bh=fHJ7QjW7mKlAjBSNqYKoWotiuGCkV811q86OwFkE3Po=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kq3d5B5TiRRzdGX4n497LK2ZDefWndhIyzwr1lcjEMF44Bmbf49z50oIBzU/XX/aW75IcivGs69pwTlOivV0a5oIbA7/+zN0Ts2Uf2Jk8DyIQmgKqOzwM9Bx3UVU6IzvKD9HHhCY7g1ORdMSa1aWrHDrTwttEnfbeBiIzZnvYTFLXdCHkk0NXbevOTjTgJckc7cRa+HQEXJoc9jjuCc3a4CAvyTSEiLnoNXtif0ZNNpEVN+d5QJGXqmr6Cv0IGxmiJ9R0fHbrX75h78pfRE2S9hp9GGTmGEVrhrGyxtzu241l+KM5QfuHMqORJrgF1YjP5zoAyKgTrCwLh4NQ1B7zg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=tOCc3t6S; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=XyDpMlWj;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=tOCc3t6S;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.11; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4cz8MM0YjBz2yrX
-	for <linux-erofs@lists.ozlabs.org>; Sat,  1 Nov 2025 18:18:05 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761981487; x=1793517487;
-  h=date:from:to:cc:subject:message-id;
-  bh=hCH4kV+Yu4hJBG5+ktGAc0TRq74lLEyXounFth317cU=;
-  b=XyDpMlWjNaJq7YEin2+usr3SUODwsalxPn/OLZ1BDjscD3ljne2u9O2T
-   KdXtIlH86xMTaCl2UEkEmkP+UdZBHnswymYm1uJH/65zZut4NOHd298eX
-   4k7Jv+b7XN332opoG6xwiV+6LOkC4syP5IcR/ZQnrhGwM4eyGN0tz7M7T
-   s46L1j1Ed+iQr7+MnN4A+yBrXSi23aozeTSedsiBNA7ZwiR9kAtxJOuvF
-   dLhXAK2R6/gmvS8cUtkHOtsh6ymARxoBuiHOsErLlSo1fUntYpmUpKGBo
-   /VwKjUrWK/grDfhTv+0piRKFAFmMc+vJIaxMU9q5AgTSBM/kaUybQhejd
-   Q==;
-X-CSE-ConnectionGUID: /l6aZX8hTHWvO9NAgtv+7Q==
-X-CSE-MsgGUID: tfVlWPXlTM6d/+KDRVYwFg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11599"; a="74740105"
-X-IronPort-AV: E=Sophos;i="6.19,271,1754982000"; 
-   d="scan'208";a="74740105"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2025 00:18:03 -0700
-X-CSE-ConnectionGUID: S+gW+LzJQhW38tmqC+fItg==
-X-CSE-MsgGUID: zQ5/WTjPQTKkmCzuiP7a5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,271,1754982000"; 
-   d="scan'208";a="217254237"
-Received: from lkp-server02.sh.intel.com (HELO 66d7546c76b2) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 01 Nov 2025 00:18:01 -0700
-Received: from kbuild by 66d7546c76b2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1vF5s3-000NzI-0H;
-	Sat, 01 Nov 2025 07:17:56 +0000
-Date: Sat, 01 Nov 2025 15:17:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test] BUILD REGRESSION
- 3bf692888f2707392872a69cd125c800778e72e2
-Message-ID: <202511011535.jwKGGzRN-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4d0Tnn4Krtz2xS9
+	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Nov 2025 22:27:09 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 6C6CE60010;
+	Mon,  3 Nov 2025 11:27:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC19C4CEE7;
+	Mon,  3 Nov 2025 11:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762169227;
+	bh=lhzfkd31EG7n+Ixv/igI3+Gf703FGmQM7qRQJFJp0Qw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=tOCc3t6STGGHOu4PLoLSVcx2ZERkZuOWSvzibGMT41ZGBRpIxlVE2zM1wLM+azWtH
+	 CXXQGIJgbXlc4pcoRZtrzPJBiRn2hNf2/PbT/iNXFU2YIyvK0O7lN6n7fqiQQYTO2r
+	 S56nbKvJ4HDD/uhFYpS26gFpe/IhaVKOKNlTiWp0aqWh4hwlqba2gsW6PZDF6KkHdI
+	 E+oJviYEkXUIXAHGonrWTVUJv1hwTKl6B8YFLz0kRGg15k9tggVBLQa7N3uhapM5Nc
+	 viKpN5F642JfzfFux44DBO5hMf/JMg3KDrCcXbNBHWJEt2O66oU42LbKV3hFGWzv9A
+	 wqaRHQ0v5Nj0Q==
+From: Christian Brauner <brauner@kernel.org>
+Subject: [PATCH 00/16] credentials guards: the easy cases
+Date: Mon, 03 Nov 2025 12:26:48 +0100
+Message-Id: <20251103-work-creds-guards-simple-v1-0-a3e156839e7f@kernel.org>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -78,198 +56,73 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHiRCGkC/x3MywqDMBCF4VeRWXdsklLBvkrpIiZjHEyjzNALi
+ O/e2NXhW5x/AyVhUrg1Gwi9WXkpFfbUQJh8SYQcq8EZd7XWXPCzyIxBKCqml5c6ys81E3a2p9E
+ 5Y6JzUO+r0Mjff/r+qB68Eg7iS5iO4CKcuKDP+TyTFMrYtbZvjzLs+w9xb521mAAAAA==
+X-Change-ID: 20251103-work-creds-guards-simple-619ef2200d22
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-aio@kvack.org, linux-unionfs@vger.kernel.org, 
+ linux-erofs@lists.ozlabs.org, linux-nfs@vger.kernel.org, 
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+ cgroups@vger.kernel.org, netdev@vger.kernel.org, 
+ Christian Brauner <brauner@kernel.org>
+X-Mailer: b4 0.15-dev-96507
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1846; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=lhzfkd31EG7n+Ixv/igI3+Gf703FGmQM7qRQJFJp0Qw=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRyTGznOJ82MaJ8XWnoh3/NO3lLb6h8yImtPLv/+h1jC
+ e5mxnVzO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACby8TrDP6sCI8VCs9D/G65P
+ bPwsuGZ70B29nREygeYBau+6rjhq8jL8r3xlPHfHIidL93WWJ/7kuJ6X7QrbtfGkzHO7T3IHEh6
+ 85QAA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 3bf692888f2707392872a69cd125c800778e72e2  erofs: avoid infinite loop due to incomplete zstd-compressed data
+This converts all users of override_creds() to rely on credentials
+guards. Leave all those that do the prepare_creds() + modify creds +
+override_creds() dance alone for now. Some of them qualify for their own
+variant.
 
-Error/Warning (recently discovered and may have been fixed):
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+Christian Brauner (16):
+      cred: add {scoped_}with_creds() guards
+      aio: use credential guards
+      backing-file: use credential guards for reads
+      backing-file: use credential guards for writes
+      backing-file: use credential guards for splice read
+      backing-file: use credential guards for splice write
+      backing-file: use credential guards for mmap
+      binfmt_misc: use credential guards
+      erofs: use credential guards
+      nfs: use credential guards in nfs_local_call_read()
+      nfs: use credential guards in nfs_local_call_write()
+      nfs: use credential guards in nfs_idmap_get_key()
+      smb: use credential guards in cifs_get_spnego_key()
+      act: use credential guards in acct_write_process()
+      cgroup: use credential guards in cgroup_attach_permissions()
+      net/dns_resolver: use credential guards in dns_query()
 
-    https://lore.kernel.org/oe-kbuild-all/202511010331.SSF687V8-lkp@intel.com
+ fs/aio.c                     |   6 +-
+ fs/backing-file.c            | 147 ++++++++++++++++++++++---------------------
+ fs/binfmt_misc.c             |   7 +--
+ fs/erofs/fileio.c            |   6 +-
+ fs/nfs/localio.c             |  59 +++++++++--------
+ fs/nfs/nfs4idmap.c           |   7 +--
+ fs/smb/client/cifs_spnego.c  |   6 +-
+ include/linux/cred.h         |  12 ++--
+ kernel/acct.c                |   6 +-
+ kernel/cgroup/cgroup.c       |  10 ++-
+ net/dns_resolver/dns_query.c |   6 +-
+ 11 files changed, 133 insertions(+), 139 deletions(-)
+---
+base-commit: fea79c89ff947a69a55fed5ce86a70840e6d719c
+change-id: 20251103-work-creds-guards-simple-619ef2200d22
 
-    ld.lld: error: relocation R_PPC_ADDR16_HI cannot be used against local symbol; recompile with -fPIC
-
-Error/Warning ids grouped by kconfigs:
-
-recent_errors
-`-- powerpc-randconfig-002-20251101
-    `-- ld.lld:error:relocation-R_PPC_ADDR16_HI-cannot-be-used-against-local-symbol-recompile-with-fPIC
-
-elapsed time: 1468m
-
-configs tested: 168
-configs skipped: 3
-
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-alpha                               defconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                                 defconfig    gcc-15.1.0
-arc                   randconfig-001-20251031    gcc-8.5.0
-arc                   randconfig-002-20251031    gcc-8.5.0
-arm                               allnoconfig    clang-22
-arm                   randconfig-001-20251031    gcc-14.3.0
-arm                   randconfig-002-20251031    clang-22
-arm                   randconfig-003-20251031    gcc-11.5.0
-arm                   randconfig-004-20251031    clang-22
-arm                          sp7021_defconfig    gcc-15.1.0
-arm64                             allnoconfig    gcc-15.1.0
-arm64                            allyesconfig    clang-22
-arm64                 randconfig-001-20251101    gcc-8.5.0
-arm64                 randconfig-002-20251101    clang-22
-arm64                 randconfig-003-20251101    clang-17
-arm64                 randconfig-004-20251101    gcc-14.3.0
-csky                             allmodconfig    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                             allyesconfig    gcc-15.1.0
-csky                  randconfig-001-20251101    gcc-15.1.0
-csky                  randconfig-002-20251101    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon                          allyesconfig    clang-22
-hexagon               randconfig-001-20251031    clang-22
-hexagon               randconfig-002-20251031    clang-22
-i386                             alldefconfig    gcc-14
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20251101    clang-20
-i386        buildonly-randconfig-002-20251101    gcc-13
-i386        buildonly-randconfig-003-20251101    clang-20
-i386        buildonly-randconfig-004-20251101    gcc-14
-i386        buildonly-randconfig-005-20251101    clang-20
-i386        buildonly-randconfig-006-20251101    clang-20
-i386                  randconfig-001-20251101    clang-20
-i386                  randconfig-002-20251101    gcc-14
-i386                  randconfig-003-20251101    gcc-14
-i386                  randconfig-004-20251101    clang-20
-i386                  randconfig-005-20251101    clang-20
-i386                  randconfig-006-20251101    clang-20
-i386                  randconfig-007-20251101    gcc-14
-i386                  randconfig-011-20251101    gcc-14
-i386                  randconfig-012-20251101    clang-20
-i386                  randconfig-013-20251101    gcc-14
-i386                  randconfig-014-20251101    clang-20
-i386                  randconfig-015-20251101    clang-20
-i386                  randconfig-016-20251101    gcc-14
-i386                  randconfig-017-20251101    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                        allyesconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251031    gcc-15.1.0
-loongarch             randconfig-002-20251031    gcc-14.3.0
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-m68k                       m5249evb_defconfig    gcc-15.1.0
-microblaze                       allmodconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                             allmodconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.1.0
-mips                        bcm63xx_defconfig    clang-22
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                            allyesconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251031    gcc-9.5.0
-nios2                 randconfig-002-20251031    gcc-11.5.0
-openrisc                         allmodconfig    gcc-15.1.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                         allyesconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                randconfig-001-20251101    gcc-11.5.0
-parisc                randconfig-002-20251101    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                 linkstation_defconfig    clang-20
-powerpc               randconfig-001-20251101    gcc-11.5.0
-powerpc               randconfig-002-20251101    clang-22
-powerpc64             randconfig-001-20251101    gcc-11.5.0
-powerpc64             randconfig-002-20251101    clang-20
-riscv                             allnoconfig    gcc-15.1.0
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251031    gcc-8.5.0
-riscv                 randconfig-002-20251031    clang-17
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20251031    clang-16
-s390                  randconfig-002-20251031    gcc-12.5.0
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20251031    gcc-14.3.0
-sh                    randconfig-002-20251031    gcc-14.3.0
-sh                   secureedge5410_defconfig    gcc-15.1.0
-sparc                            allmodconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                            allyesconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251101    gcc-15.1.0
-sparc                 randconfig-002-20251101    gcc-14.3.0
-sparc64                          allmodconfig    clang-22
-sparc64                          allyesconfig    gcc-15.1.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251101    gcc-15.1.0
-sparc64               randconfig-002-20251101    clang-22
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251101    clang-16
-um                    randconfig-002-20251101    gcc-14
-um                           x86_64_defconfig    clang-22
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251101    clang-20
-x86_64      buildonly-randconfig-002-20251101    gcc-14
-x86_64      buildonly-randconfig-003-20251101    gcc-13
-x86_64      buildonly-randconfig-004-20251101    clang-20
-x86_64      buildonly-randconfig-005-20251101    gcc-13
-x86_64      buildonly-randconfig-006-20251101    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20251101    clang-20
-x86_64                randconfig-002-20251101    gcc-14
-x86_64                randconfig-003-20251101    gcc-14
-x86_64                randconfig-004-20251101    gcc-14
-x86_64                randconfig-005-20251101    clang-20
-x86_64                randconfig-006-20251101    clang-20
-x86_64                randconfig-011-20251101    clang-20
-x86_64                randconfig-012-20251101    gcc-14
-x86_64                randconfig-013-20251101    clang-20
-x86_64                randconfig-014-20251101    gcc-14
-x86_64                randconfig-015-20251101    clang-20
-x86_64                randconfig-016-20251101    gcc-14
-x86_64                randconfig-071-20251101    clang-20
-x86_64                randconfig-072-20251101    clang-20
-x86_64                randconfig-073-20251101    gcc-14
-x86_64                randconfig-074-20251101    clang-20
-x86_64                randconfig-075-20251101    clang-20
-x86_64                randconfig-076-20251101    clang-20
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                           allyesconfig    gcc-15.1.0
-xtensa                  cadence_csp_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20251101    gcc-13.4.0
-xtensa                randconfig-002-20251101    gcc-12.5.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
