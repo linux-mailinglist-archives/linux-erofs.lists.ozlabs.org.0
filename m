@@ -1,60 +1,51 @@
-Return-Path: <linux-erofs+bounces-1330-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1331-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DF90C2C7C5
-	for <lists+linux-erofs@lfdr.de>; Mon, 03 Nov 2025 15:53:52 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A95CAC2C813
+	for <lists+linux-erofs@lfdr.de>; Mon, 03 Nov 2025 15:57:54 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4d0ZNG0gRFz2yrm;
-	Tue,  4 Nov 2025 01:53:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4d0ZSw3SJnz2yrm;
+	Tue,  4 Nov 2025 01:57:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1762181630;
-	cv=none; b=c98Wdi8+T1IFmodE2S5x9VG2AoIa3DGu52CnPAytS+H3k9PRx1qACjuUjEYpNoRRKKA+BY/NNoKkwdLjGdTiEjTb20UKMLNLzgA9H7NIeOYCRc0F2Tzup+ESjF/tM0lw3H+4t9pXNr56yvJuLfGbL62YNIx8NfLY1vMFDkTGtwRF9WE43d2duIgmXvTKefDPY76UufenqTc7oNElM8lFNIbZIg0ztFyaOxBK5/loqAcETRslpKxEUH1PoXPdXcH4YbPSp0HkMjgoAlo3ad9pm1WMRsu2QRxZDyP5GkBliHjTqpEY1BXdn5/6ShUAmOlgtCdGbavPJvu8eTJwp7kGLw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1762181872;
+	cv=none; b=mP+imhbguF2E+XrHn7jK5MEgBOt2wEV5DitfZ4GVwhRa1e3Vo2chEeoEniBpFv8yKe98COg4+tP1fa42KIEDRSWivTb4HeNkH4QjpukyCdDhr3hUt+YnTXtFVKi0X9WA7wfAclq0U1/wgPOU1/cu1PpKtQuhfoZmGaKQEKmLJddcyeV/qXml+x9m9ZQLuAuyPid7mvyO1VdnUhRevStPXmYfXdIqxNZsamTnEnn5Hb4VbK3Q0UmWPVolFnMM59JPbpHmfYGyj89zNjTVsWd1QB7/o/zkUU93tA7pxCW3QA53y1CaCKbWYEdUyiLsX7FaJjrd6Fslr0tp1hDTK4Yw4g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1762181630; c=relaxed/relaxed;
-	bh=no0N6VDnDXRSGJ/eJArH631z09KDwVeHeiWa2BoyXSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nVuh6ZUoOVGWvvFPG+fCAhuKBBHmQ9I1FpkGD4VJrDi+Dhk38bBPsQI+mveXCqdUwckrxGvUqKRwTJ3JBqSqn7H3T9LEyABDgM5CnfUtQugL6MWH8S9zG0fBH6BoC0yaRxWiL9PeSe+b8ugcOf7/Fq7W3XnlVwYovcB2tig2SaL5FA7EjfC7fuhhOTrvv2Nd5tfUh7gofAp0D7qEUEGMlqYDIsafAoY0n7judVxebTsyWe6QgNnKhSichWIpntj52AlWIUpB5nVCj6ubl1tAKkA4CeIHBIjqeSWKXF8BLcVd0bcKX+ynH91LDyx4jcZIiU9Tx5HsyRy/h1Y8Aai3IQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ePqVIqG4; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	t=1762181872; c=relaxed/relaxed;
+	bh=5l4ptmGTWprb5gI9LjUp2bi7HAOFs4nxbgDjjfM4Cjc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ddzPf/gd6k1UqYaJvR4C50Rdmv7qqBpHMAiMXpP1opo9QcbqvZ4UZgLp+F4GYusTMB2dKDv+XO1t9TGtSvWk4FL5e1YJPVlBJtkprH5PsTjM2nO+twHPCTXxAiZdDKNWYodbZDHBHUpoml+sD4XUjkEcsIDWbIsukLRLc4vk157Wbf04Dw2vq0/6/w7LcQDfgZaNT010Ste0taO0/ouL2lrPU0o6qT1mR+/NUsOJjH3im5np0SNhYI1oZ8ctrrMeoFBWzrou08jZkUGRa4KLJsAxYnl/iJ45ZrzsAkRQOtIsfAkEnr/qdEq6WQJTrGeOMGfUwFBNxTcqU1/loXmyGA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JopLWCYf; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=ePqVIqG4;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=JopLWCYf;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4d0ZNF28Q4z2xnx
-	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Nov 2025 01:53:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4d0ZSv6KB3z2xnx
+	for <linux-erofs@lists.ozlabs.org>; Tue,  4 Nov 2025 01:57:51 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id CF000437F6;
-	Mon,  3 Nov 2025 14:53:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E10D9C4CEE7;
-	Mon,  3 Nov 2025 14:53:43 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id F375B6013E;
+	Mon,  3 Nov 2025 14:57:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5322C4CEE7;
+	Mon,  3 Nov 2025 14:57:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762181626;
-	bh=Ri6OYBYHckwm0+mp0un6shuRJsNaNIpkth772AmzDvQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ePqVIqG4hgdozY8I2Dt8f9GBLcNVnwR0Jgb3e3j7tGtxsgJpAH8iLGHXZyk9mpAE2
-	 jH8KR23qmbyXMGzJG1SLbp3KTRDsxctPEu6L3NIFpuAcPkWBTlBCHA44h963/Zp9MY
-	 cVMe/ZnwEOW71v+qasSEqLSoboeasIJTn6N0ZNjv3h9e9Wq8wnThxxTQq7z5LVg7Yt
-	 FNHNeOAuFOhl1xoFkYg33SiMz9z8Lxyu1iChCLxLP8a3Zsr2IkEjjO65wX+iamxuVV
-	 c6iv3khLyHyPmgNaDWT5k4N3doojjX49b95YAjOQvyDZ7EJMDC5v3M1lyWS+apD6ql
-	 hqi0UoeJnpgGQ==
-Date: Mon, 3 Nov 2025 15:53:41 +0100
+	s=k20201202; t=1762181868;
+	bh=JXDW7P6E9z56BXNMj15VvrGXF4N3b0bWA60p7x5LQqQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=JopLWCYfHSrSbznS4ihVysckhWf8JMMnvb0Hif1kKondAOJjQ7Dx9G54BJiNcd7Gk
+	 posKi1BWWDrqStGY2hjE0V6DFH6kMtLNhkV4B/AAD4UYY6OyUwvS4wD35v4tNtmaiD
+	 ipRNu81q3J8lI/vplWFqmt9nFmbF4qsfRvCnusKA+V1QsubpfvUPNGiTPMvXXkvJuV
+	 mlkbBMGP3lw4PtpfZIRCWEQ9J6HtSx5euh/4C7ZgjXTgZ6Lu+defSs/qcl9qf614CH
+	 Y3X4gKIE3YNdRZ4yRQdz0GHPX2F1rJ5vniRDrpdKKBxW5M6TFIr8pxL+ePvuJofZDw
+	 tvyGE00aHeqbw==
 From: Christian Brauner <brauner@kernel.org>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aio@kvack.org, 
-	linux-unionfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-nfs@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, cgroups@vger.kernel.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH 00/16] credentials guards: the easy cases
-Message-ID: <20251103-studien-anwalt-1991078e7e12@brauner>
-References: <20251103-work-creds-guards-simple-v1-0-a3e156839e7f@kernel.org>
- <CAOQ4uxgr33rf1tzjqdJex_tzNYDqj45=qLzi3BkMUaezgbJqoQ@mail.gmail.com>
+Subject: [PATCH 00/12] credential guards: credential preparation
+Date: Mon, 03 Nov 2025 15:57:26 +0100
+Message-Id: <20251103-work-creds-guards-prepare_creds-v1-0-b447b82f2c9b@kernel.org>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -66,109 +57,68 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxgr33rf1tzjqdJex_tzNYDqj45=qLzi3BkMUaezgbJqoQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANbCCGkC/yWN3QqDMAyFX0VyvZa2wwl7lTGk1qhhWy0J+wHx3
+ Rf1KnzncL4sIMiEAtdqAcYPCc1ZwZ8qSFPMIxrqlSG4UHvvzuY788Mkxl7M+I6spzCWyNgeoXc
+ emzqEy9A4UIu2A/32D7e7chcFTccxp2nzbjq7L+2hs0Kv8kRY1z94xaNanAAAAA==
+X-Change-ID: 20251103-work-creds-guards-prepare_creds-101e75226f70
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-aio@kvack.org, linux-unionfs@vger.kernel.org, 
+ linux-erofs@lists.ozlabs.org, linux-nfs@vger.kernel.org, 
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+ cgroups@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-crypto@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ Christian Brauner <brauner@kernel.org>
+X-Mailer: b4 0.15-dev-96507
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1265; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=JXDW7P6E9z56BXNMj15VvrGXF4N3b0bWA60p7x5LQqQ=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRyHHrxnWHFbIufseyLvsUV3/KtOvVs2ZUXuhP130w9/
+ OjalYgl0R2lLAxiXAyyYoosDu0m4XLLeSo2G2VqwMxhZQIZwsDFKQATec/KyHCk5pabi6vlwvDm
+ zWt6LZ5XsX/bt7b9z+eMy6su+d3YGf2IkWH/e4HWO9eVNx054XPncMgJvXWqtV6zU2Sn7oiMFP+
+ 9S4sVAA==
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Nov 03, 2025 at 02:29:40PM +0100, Amir Goldstein wrote:
-> On Mon, Nov 3, 2025 at 12:28 PM Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > This converts all users of override_creds() to rely on credentials
-> > guards. Leave all those that do the prepare_creds() + modify creds +
-> > override_creds() dance alone for now. Some of them qualify for their own
-> > variant.
-> 
-> Nice!
-> 
-> What about with_ovl_creator_cred()/scoped_with_ovl_creator_cred()?
-> Is there any reason not to do it as well?
+This converts most users combining
 
-No, I don't think there is other than that the complexity of it warrants
-a separate patch series.
+* prepare_creds()
+* modify new creds
+* override_creds()
+* revert_creds()
+* put_cred()
 
-When override_creds()/revert_creds() still was a reference count
-bonanza, we struggled with two issues related to overlayfs:
+to rely on credentials guards.
 
-(1) reference counting was sometimes very non-obvious
-    (think:
-    cred = get_cred(creator_cred);
-    old_cred = override_cred(cred);
-    put_cred(revert_creds(old_cred));
-    put_cred(cred); or worse )
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+---
+Christian Brauner (12):
+      cred: add prepare credential guard
+      sev-dev: use guard for path
+      sev-dev: use prepare credential guard
+      sev-dev: use override credential guards
+      coredump: move revert_cred() before coredump_cleanup()
+      coredump: pass struct linux_binfmt as const
+      coredump: mark struct mm_struct as const
+      coredump: split out do_coredump() from vfs_coredump()
+      coredump: use prepare credential guard
+      coredump: use override credential guard
+      trace: use prepare credential guard
+      trace: use override credential guard
 
-    and thus the credential override logic when creating files where you
-    change the fsuid and you essentially override credentials _twice_
-    lead to pretty twisted logic that wasn't necessarily clarified by
-    the scope-based semantics.
+ drivers/crypto/ccp/sev-dev.c     |  15 ++---
+ fs/coredump.c                    | 142 +++++++++++++++++++--------------------
+ include/linux/cred.h             |   5 ++
+ include/linux/sched/coredump.h   |   2 +-
+ kernel/trace/trace_events_user.c |  15 ++---
+ 5 files changed, 86 insertions(+), 93 deletions(-)
+---
+base-commit: bcbcea89c608394efecb35237fa9fc1bf5f349d1
+change-id: 20251103-work-creds-guards-prepare_creds-101e75226f70
 
-    This problem is now resolved since my prior rework.
-
-(2) The scope based cleanup did struggle in switch() statements that
-    messed with the scope-based logic iirc. I don't have the details in
-    my head right now anymore but basically this is why we originally
-    punted on the original conversion so we wouldn't end up chasing bugs
-    in two semantic changes done at the same time.
-
-    I think we're ready to do (2) now.
-
-What I tried in this series is to reduce the amount of scope switching
-due to gotos and that's why I also moved some code around. It also helps
-to visually clarify the guards when the scope is reduced by moving large
-portions where work is done under a guard out to a helper. That's
-especially true when the guard overrides credentials imho. That's
-something I already aimed for during the first conversion.
-
-> 
-> I can try to clear some time for this cleanup.
-> 
-> For this series, feel free to add:
-> 
-> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> 
-> Thanks,
-> Amir.
-> 
-> >
-> > Signed-off-by: Christian Brauner <brauner@kernel.org>
-> > ---
-> > Christian Brauner (16):
-> >       cred: add {scoped_}with_creds() guards
-> >       aio: use credential guards
-> >       backing-file: use credential guards for reads
-> >       backing-file: use credential guards for writes
-> >       backing-file: use credential guards for splice read
-> >       backing-file: use credential guards for splice write
-> >       backing-file: use credential guards for mmap
-> >       binfmt_misc: use credential guards
-> >       erofs: use credential guards
-> >       nfs: use credential guards in nfs_local_call_read()
-> >       nfs: use credential guards in nfs_local_call_write()
-> >       nfs: use credential guards in nfs_idmap_get_key()
-> >       smb: use credential guards in cifs_get_spnego_key()
-> >       act: use credential guards in acct_write_process()
-> >       cgroup: use credential guards in cgroup_attach_permissions()
-> >       net/dns_resolver: use credential guards in dns_query()
-> >
-> >  fs/aio.c                     |   6 +-
-> >  fs/backing-file.c            | 147 ++++++++++++++++++++++---------------------
-> >  fs/binfmt_misc.c             |   7 +--
-> >  fs/erofs/fileio.c            |   6 +-
-> >  fs/nfs/localio.c             |  59 +++++++++--------
-> >  fs/nfs/nfs4idmap.c           |   7 +--
-> >  fs/smb/client/cifs_spnego.c  |   6 +-
-> >  include/linux/cred.h         |  12 ++--
-> >  kernel/acct.c                |   6 +-
-> >  kernel/cgroup/cgroup.c       |  10 ++-
-> >  net/dns_resolver/dns_query.c |   6 +-
-> >  11 files changed, 133 insertions(+), 139 deletions(-)
-> > ---
-> > base-commit: fea79c89ff947a69a55fed5ce86a70840e6d719c
-> > change-id: 20251103-work-creds-guards-simple-619ef2200d22
-> >
-> >
 
