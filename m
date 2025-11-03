@@ -1,51 +1,51 @@
-Return-Path: <linux-erofs+bounces-1316-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1317-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E41BEC2B530
-	for <lists+linux-erofs@lfdr.de>; Mon, 03 Nov 2025 12:27:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CA5DC2B533
+	for <lists+linux-erofs@lfdr.de>; Mon, 03 Nov 2025 12:27:29 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4d0Tp36VLhz30T8;
-	Mon,  3 Nov 2025 22:27:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4d0Tp73bLYz30Vl;
+	Mon,  3 Nov 2025 22:27:27 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1762169243;
-	cv=none; b=eJFC9v+5j+ca1+EJOr5NwSVTHJ1HE+lcPiT3BmItp+pKZgokrY2hm//hiJ7rkq04IoK9syjAKFb7dWUD8zRwh3MScNQUduRH1Uo5T4pgDC/KQmQ+wpxsAuR+BGknE4diVzliSdR3ZUS0hC9RdV4Te/hVvKxwVzrSIzQSr5cUsp5UyY5aDv0anWggszmvT/+T9yo68GI5YBZLq5Ir0ZPl71ndDJsl1g/6oQC9Ian9mEp61YeSNVnqhREIcKKIGCvaHLOl9f8+qE8gEsfNSBrFuJlFRYIooUflG8z+tyt5my9iF0yD5viH0EG3hvfzsNBXVRCKLv0O3evLZySuA2UiPQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1762169247;
+	cv=none; b=FsyxZunktl9EQz67zyfMidro+YWluHnHnWt/AjfFW4A5dsCuNk0l0trr5pHRaWPd/kvtE/QuFtUXuB6VYcEo5A91UheN5q7B7RI7teUuCDY/5/OWkAbZsWVNPUxRwNkLa+slI0xKRULQuZ6OTjrnABPrcJNomZN7GIyo6e1UHuFBBOSLVy5giHtsxgH5s83jXpdXtt0sNkMHk3pCrmAduAmmaXolL2xHDYPS+wAYsVp9LRG3rN7Wlhna2ui8XfD9scccTXsLp4ASzQO4zbIi/Rz0ApxCtpvS9Zf7ZUUdUgiFoiE4EEyKvg4f7u15NprAWo71wHL1jfXdr7FbOsD6CA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1762169243; c=relaxed/relaxed;
-	bh=QELcS/TU1nH+Kj85USV3+titHj2/Bem9Xto05EsbVt8=;
+	t=1762169247; c=relaxed/relaxed;
+	bh=Ptqk+diTu9jxGJHMh+ATfEQK7n5JXYsnpnjcgxr580I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ct1V3MkctVWD8hOeWXesYdZJA9pnMzyahMX61SAJwxtYa1YZ6jFUUAFtHpu4DN4B+P7jp6OElGX2gSojp4T/XBTMVYwoJdXP0nNLgSij9KtNt6K5aAVYATY3ZvamdgCNwUTnj9J5FEVkKgUqRcGXE35YhUFUOdZRDWfiNTbC4lJPvk+7TZ7xrjgm1gPFZ+2W58KzAXkB5FQFyXPMin/nM/qSKSBrK8tKJQb7u2O4lVa2053LpyHEJEHnHt2/dwwuDlPhmcxExRLSyvymhwuATbj8VGRF6iAXRtadheeYZ3tOMHVdvIxwEOr8MjDkCTnIVKF0MoC1d95XvAIQyckdMw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mwSwtBJN; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:To:Cc; b=mZK7xkWUtIxKTy4EPWPtqGaELliAJz0/gW9GZnl+13TvJ+RGjZPnVjsku4IIwp2h4nafy+7xVGaVo9Lr9h8qjL8uS7+qBIAXEsL7ANN7o9BM//byjLCOt0Jyzaxq50tjKMV+4lcy2gB1wQQc87NbheOQ80YDNCaAnxxJmhvsMrx1E2Vq9o7dy+TigPjbqNow++y1j1743wZcj3hxlCXVA9/jVxgI+PqXlnKrbMvPJgIBnx+eO97PSczMujHjMtO3dpfKMI3tOU6EMJOFJBwKBmidXlm9qNYui+jfLIvuQ1ihS8jKaVacsWrDFpE9dcErX28JwOEDUhq4MQwCMykv9A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dSJOLdYs; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=mwSwtBJN;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dSJOLdYs;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4d0Tp33frCz2xS9
-	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Nov 2025 22:27:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4d0Tp66r9qz2xS9
+	for <linux-erofs@lists.ozlabs.org>; Mon,  3 Nov 2025 22:27:26 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id E878B4347E;
-	Mon,  3 Nov 2025 11:27:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C4BFC116C6;
-	Mon,  3 Nov 2025 11:27:19 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 0C32B6013B;
+	Mon,  3 Nov 2025 11:27:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4214FC4CEF8;
+	Mon,  3 Nov 2025 11:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762169241;
-	bh=AQ/Nv+Gm1iyA4MT1Cr+T/3KGkzWrrlBvcUFCgBNnIOc=;
+	s=k20201202; t=1762169244;
+	bh=mlLhVVRd/xxD3/60oVSWrFdPcpqIel0cuCN6B/lJA2U=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mwSwtBJNrczmBeLlfXA5znjbKF562UqPh69bEu98DZ5XRywF891sJAKAL7N7Gg2+w
-	 DB1h3pjxaVeeJBv3r961WONcu6m9YzhdpFb7vuefHWS16ZOhQCejJwH4OWnG4vBduW
-	 6pPLAELxrWssqj4wrKct4I6KpAjrWpFyXBP0vXWhUSUCbOZT0a0GyBd0qaL6w4heK1
-	 IMjF0/0GbHnKk9wL2jspcIyNQr2koBxUd5HJSK0KfPYo+CZkTCzzp7QYZZ+XQU+/YF
-	 sGtJimvYvKECLQII6gkpylUAUqISFS62sDoYUuyQfOWLqmxpuxV3VL1B6MaRsGpLMM
-	 uqMEtsDtsY3Vg==
+	b=dSJOLdYsbOtv8x75jqQRz94Oo7UCb7902vSZu0lMMEMCXX/RorZSIkWG8wMed0DWX
+	 Ouy8AGG2Fk4WbaOjNzHC2oj3oZgQz3oknW5LY+JpTrie1MhL2dYKPeI8Z/JKT6rbIF
+	 Xdn+JLAllNO5yjbH+XulE9RPblj14m06XiM6A7MA3VtBbJYHXSWd58SvLppxpaWaxc
+	 SPZ5UeZvxHBPP6kfNsq/eg4oSKVdePHLrKMEM9nYnEEzvLs9V7QIEX9/NqClTOITqR
+	 HJQqn+BrCZ8jtneil1XvrBoe6VXIjMjfOLZWm7vksU/vRSN03kt5Vs3y4oZqk2pw9Z
+	 He0fs7fz/JbSw==
 From: Christian Brauner <brauner@kernel.org>
-Date: Mon, 03 Nov 2025 12:26:53 +0100
-Subject: [PATCH 05/16] backing-file: use credential guards for splice read
+Date: Mon, 03 Nov 2025 12:26:54 +0100
+Subject: [PATCH 06/16] backing-file: use credential guards for splice write
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -59,7 +59,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251103-work-creds-guards-simple-v1-5-a3e156839e7f@kernel.org>
+Message-Id: <20251103-work-creds-guards-simple-v1-6-a3e156839e7f@kernel.org>
 References: <20251103-work-creds-guards-simple-v1-0-a3e156839e7f@kernel.org>
 In-Reply-To: <20251103-work-creds-guards-simple-v1-0-a3e156839e7f@kernel.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
@@ -70,12 +70,12 @@ Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
  cgroups@vger.kernel.org, netdev@vger.kernel.org, 
  Christian Brauner <brauner@kernel.org>
 X-Mailer: b4 0.15-dev-96507
-X-Developer-Signature: v=1; a=openpgp-sha256; l=970; i=brauner@kernel.org;
- h=from:subject:message-id; bh=AQ/Nv+Gm1iyA4MT1Cr+T/3KGkzWrrlBvcUFCgBNnIOc=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRyTGw/4lX90OxD2/XgZRU3XBsyapnSRLz73uuFJzSdy
- FHuyTvXUcrCIMbFICumyOLQbhIut5ynYrNRpgbMHFYmkCEMXJwCMJFTLxgZTr4N3npssUFilvmv
- iJMN6fdkjL//OFtaeaP49bfWg7u58xj+iuVXbjG7k7XtT/70zS/bDXP36c1mMZ+1PyBx08u41wn
- GnAA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1206; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=mlLhVVRd/xxD3/60oVSWrFdPcpqIel0cuCN6B/lJA2U=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRyTGzXdZtwz9bEwErmpcLqufXHk27pXpnv09HpmZD0Y
+ Y6C+a20jlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIlMlmT4Z7vMQkfcbFZTvPjK
+ Ewmagtc3vf6j5+nFsSeJ/4GEQ3oNDyPDlF/cWhO2zF8gfDJJW6Ut7fjsf/KJewqqFmuk6rpyt3j
+ yAAA=
 X-Developer-Key: i=brauner@kernel.org; a=openpgp;
  fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -88,31 +88,38 @@ restoration on scope exit.
 
 Signed-off-by: Christian Brauner <brauner@kernel.org>
 ---
- fs/backing-file.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/backing-file.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/fs/backing-file.c b/fs/backing-file.c
-index 9bea737d5bef..8ebc62f49bad 100644
+index 8ebc62f49bad..9c63a3368b66 100644
 --- a/fs/backing-file.c
 +++ b/fs/backing-file.c
-@@ -283,15 +283,13 @@ ssize_t backing_file_splice_read(struct file *in, struct kiocb *iocb,
- 				 unsigned int flags,
- 				 struct backing_file_ctx *ctx)
+@@ -303,7 +303,6 @@ ssize_t backing_file_splice_write(struct pipe_inode_info *pipe,
+ 				  size_t len, unsigned int flags,
+ 				  struct backing_file_ctx *ctx)
  {
 -	const struct cred *old_cred;
  	ssize_t ret;
  
- 	if (WARN_ON_ONCE(!(in->f_mode & FMODE_BACKING)))
- 		return -EIO;
+ 	if (WARN_ON_ONCE(!(out->f_mode & FMODE_BACKING)))
+@@ -316,11 +315,11 @@ ssize_t backing_file_splice_write(struct pipe_inode_info *pipe,
+ 	if (ret)
+ 		return ret;
  
 -	old_cred = override_creds(ctx->cred);
--	ret = vfs_splice_read(in, &iocb->ki_pos, pipe, len, flags);
+-	file_start_write(out);
+-	ret = out->f_op->splice_write(pipe, out, &iocb->ki_pos, len, flags);
+-	file_end_write(out);
 -	revert_creds(old_cred);
-+	scoped_with_creds(ctx->cred)
-+		ret = vfs_splice_read(in, &iocb->ki_pos, pipe, len, flags);
++	scoped_with_creds(ctx->cred) {
++		file_start_write(out);
++		ret = out->f_op->splice_write(pipe, out, &iocb->ki_pos, len, flags);
++		file_end_write(out);
++	}
  
- 	if (ctx->accessed)
- 		ctx->accessed(iocb->ki_filp);
+ 	if (ctx->end_write)
+ 		ctx->end_write(iocb, ret);
 
 -- 
 2.47.3
