@@ -1,43 +1,52 @@
-Return-Path: <linux-erofs+bounces-1360-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1361-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 074E9C45435
-	for <lists+linux-erofs@lfdr.de>; Mon, 10 Nov 2025 08:55:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A7ECC4B229
+	for <lists+linux-erofs@lfdr.de>; Tue, 11 Nov 2025 03:02:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4d4hlr5Jqsz2xqM;
-	Mon, 10 Nov 2025 18:55:04 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4d58t41Zrhz2ySq;
+	Tue, 11 Nov 2025 13:02:04 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1762761304;
-	cv=none; b=R8J0bsxIB8bNYt9gwSITELoytTU7a9TKDVp2NdhfLrhRhtiSSOD56h9rUvflzS/6wzEP79DxBfRVTLgjL0tNrMf4iDLPGMu3VLTTyIcGgwUAC9XaAFxmy6vYxjmSIpLgjSq6weLTk0Ge9RTkIw+J8mJlcdMeQ+nWJoWPBUtdgZpkUX+i0WX//fkNrhzRKH23IE1fi6vFdRqtbXtm3sOvwOEG7B0C7o2BqueNL5skxIrEfA1+PQqkm7LgO8GvbZCMQ4vnVyGyLLkGLKGfUCgacCSGnm2lJuXAWq0PbiNuH7b6Yura56r9VeoUhgqMHklqPrBRogZvnQv1Ny/c/NLc8w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.224
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1762826524;
+	cv=none; b=n1culeka+fNb4Vs/3hbXV+pPqBlZTjG24ScZd6vcTA+NgEvpbp5ezei0jPLvgFaBvruAOHjajdsX1R6GOrRK5YhorhJm7+siV3LEyx+3gR3VQ6VnIv2djC88GQPTLvUGTIrOFOPbL7oTxDqOdf9820SdgSIIR+0wqVSiqh8AUUEoo2Y8WQzp9/JLYEjbngOvRkRS2+bljc1dksOqWvfVxZOaZVI3JCnALaECQ0PM6N/6qgykLTSs4/1YxBFbW9xf//eaCNliuaBGXU1bVJgC5ZPhiyfg3ZaqzM1lYHQN62w4nKQESqYL6SM4WkxS/zv+8EoN4J50rLMYK5oe0A0Zfg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1762761304; c=relaxed/relaxed;
-	bh=dFM/54hxaCRY3ZnvzdZBMCtN3nXXUz9KkiOhUWdu39Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=HcLpY5YuTSWBBsdYIv9ExQ3YB4MoLoH2js+lUQs2dUVM1mkphLnB9fopw2Uu3l8QPtXK7BlSfKX5/tU4D9CXnmiJHvnuDu+hTgpxnMY4eloojEEHvPv6S8jhXKYqXrJtiuOmDTbrM30AlqweWjlaex2f/u52UFxY8EAkNo9glQb3mFIrKOodjH+25/cf72sS+YSA6tj8OIbE+Tt5EAPEhusJxPDsoiCrbl5CjGt24TATRyUhiI3kZdnnJxivFN4Xw89D6MqGodhpdeOUYwdwgjMnEP+QmGg3Oq0YFKVbHy3ohQreNP89i4sR2zKsRXaHhuBgzPewnqFKIuT2BfUUTw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=F+X7PKoe; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1762826524; c=relaxed/relaxed;
+	bh=xXWj2lYQWVwDOadOGHrZLyW7TDRaqhHP9ClRejotOTg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JyqPv4FMwb1grY0S+tbkeNqnd2nWh1NEB5K5xqJ58pDp/Akl54X4YtbbM2VQLedjBQsHioOjcAWEZTlXgJudHTPG2uc30MbdO0+0PCw4gfZ1lu4wgBQfBhY+7BSBcbwfPJXGKsOL9OkdQddVVesd7Nsi977C0/ZvaELNToZVQ6nTvsXHK/Wr/lpol2vWhRHeXISj3nycgt7zTzcgfuZxrF/8/pokCL4c0+dUq6wh1NDmWWrvyM++sQWGWRJksWCTePPjCEUglhXQvv0QgtDopBOoCA+ZQkKD2OyAu/FPsW6+8ugDDCOsAtedkKcu21UGG+i9WpkQAg9N0jU8Er8SMw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=KL/dwKLI; dkim-atps=neutral; spf=pass (client-ip=113.46.200.224; helo=canpmsgout09.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=F+X7PKoe;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=KL/dwKLI;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.224; helo=canpmsgout09.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4d4hlp4648z2xqL
-	for <linux-erofs@lists.ozlabs.org>; Mon, 10 Nov 2025 18:55:01 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1762761296; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=dFM/54hxaCRY3ZnvzdZBMCtN3nXXUz9KkiOhUWdu39Q=;
-	b=F+X7PKoeX1rxEMyludk2wiq7heU/WjtvDjxcnYEZvhJHdAQgwfHlTlOU2G5OyxOc6vMC6/INutFY3FEUCEFF9OEaDEHcNHaOyVejsttX4y8xaWb3evNr6e57TaPbS+8vNB3O3HV5mjeCm/sxH9WmwbTOMhxmcyCdFA6Hzw9RHro=
-Received: from 30.221.130.10(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Ws0OpN2_1762761294 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Nov 2025 15:54:54 +0800
-Message-ID: <5512892b-2e76-47d6-9b79-597b96809520@linux.alibaba.com>
-Date: Mon, 10 Nov 2025 15:54:53 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4d58t152d1z2yGM
+	for <linux-erofs@lists.ozlabs.org>; Tue, 11 Nov 2025 13:01:59 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=xXWj2lYQWVwDOadOGHrZLyW7TDRaqhHP9ClRejotOTg=;
+	b=KL/dwKLIFi1itKj2nE4Tw8yAlzMEx9Rp3tfw4V6iljZGfZh176Ud+H+W5xMP/ghW5doNlKNDR
+	t2//x252UE6TkDMHM80MFkNkNpygcULwYzbLbmb1euhqA9rK5oLfL3uSq2FM3jGfh9yXQmK/DcM
+	6rjh0Xq02TupSYumlb7AX/g=
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4d58qz1r41z1cyTg
+	for <linux-erofs@lists.ozlabs.org>; Tue, 11 Nov 2025 10:00:15 +0800 (CST)
+Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
+	by mail.maildlp.com (Postfix) with ESMTPS id 47B191A016C
+	for <linux-erofs@lists.ozlabs.org>; Tue, 11 Nov 2025 10:01:54 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 11 Nov 2025 10:01:53 +0800
+Message-ID: <4d91ca1b-6ac8-481a-9355-df5093cccaec@huawei.com>
+Date: Tue, 11 Nov 2025 10:01:53 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,94 +59,79 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: fscache vs fanotify behavior difference
-To: David Reiss <dnr@dnr.im>, linux-erofs@lists.ozlabs.org
-References: <7d348e6e-d151-4a0f-af86-5ebac804e57d@betaapp.fastmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Christian Brauner <brauner@kernel.org>,
- "zhiche.yy@alibaba-inc.com" <zhiche.yy@alibaba-inc.com>, derek@mcg.dev
-In-Reply-To: <7d348e6e-d151-4a0f-af86-5ebac804e57d@betaapp.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Subject: Re: [PATCH 2/3] erofs-utils: lib: ibmgr should be assigned in advance
+To: <linux-erofs@lists.ozlabs.org>
+References: <20251107100609.2917122-1-hsiangkao@linux.alibaba.com>
+ <20251107100609.2917122-2-hsiangkao@linux.alibaba.com>
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20251107100609.2917122-2-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemr500015.china.huawei.com (7.202.195.162)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi David,
 
-On 2025/11/10 14:59, David Reiss wrote:
-> Hi,
+
+On 2025/11/7 18:06, Gao Xiang wrote:
+> Otherwise, metabox won't keep several types of inodes.
 > 
-> I've been using erofs with the (deprecated) fscache integration in a project. I recently tried to switch it to use the new fanotify pre-content mechanism, but I'm running into differences in behavior.
+> Fixes: 7928074b7643 ("erofs-utils: introduce metadata compression [metabox]")
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-In brief, we currently have very limited development resources.
-I had intended to demo fanotify hooks in erofs-utils, but there
-are always higher-priority tasks on my side (e.g. containerd
-improvements, native microVM support, etc.)
-  > 
-> Here's the basic architecture: It's very similar to a container image distribution use case, with chunk-based deduplication across images. I have erofs images which contain metadata and small inline data. Larger data uses chunk format inodes, and points to chunks in a different "device". The chunked data device is shared by all images.
-> 
-> With fscache, I use one fsid per image, and one fsid for all of the chunked data. In the read hook for the images, I write the whole erofs image. In the read hook for the data, I fetch just the requested chunk (plus some readahead) and write that to fscache. Once the data is present on disk, fscache just uses it and never sends another read hook.
-
-Yes, fscache seems more efficient in this regard, but we've mainly
-encountered three issues with this approach:
-
-  - Since fscache is not part of the EROFS filesystem, and the
-    fscache/cachefiles maintainers pay little attention to "EROFS
-    over fscache,” new features or optimizations are often not
-    accepted in a timely manner (lagging).  In addition, fscache is
-    now tied to netfs (as per the fscache maintainer's plan), which
-    makes EROFS further fscache integration more awkward.
-
-  - fscache relies on a fixed tree hierarchy, which makes userspace
-    programs inflexible.
-
-  - The fscache maintainer intends to remove sparse detection and
-     introduce another mechanism (possibly incompatible), which
-     would make this feature even more inflexible.
-
-> 
-> With fanotify+pre-content, I'm noticing that my pre-content hook is called any time data is not in the page cache, even if the offset being read is already mapped on disk. This kind of defeats the purpose of on-demand fetching if it has to go to userspace for most reads. The goal would be to keep the read path in the kernel and only go to userspace to fetch data that isn't present on disk.
-I think your understanding is correct - if you hook an underlay EROFS
-file and use file-backed mounts to mount the file.
-
-   - If the page cache is invalid, it will trigger the underlay fsnotify
-   hook anyway, which is different from the previous fscache approach.
-
-   - The reason is that the kernel can't tell whether the exact part of
-   the underlay file is valid, so it simply upcalls into userspace
-   unconditionally. I wonder if it’s possible to introduce some BPF
-   hooks to conditionally notify userspace, but I’ve never found time to
-   look into that.
-
-In any case, unless we introduce a new in-house kernel caching mechanism
-dedicated for EROFS (of course which could be controversial), those
-generic "pre-content fanotify hooks" would really help clean up the
-EROFS overall codebase.   But again, I've never evaluated those new
-hooks, so fscache interfaces have not been removed yet.
-
-That's the current status.  Also, some off topic: the current mature
-approach is to use virtual block devices (such as NBD or UBLK) if
-they meet your requirements too.  I know it's not perfect, but at
-least it’s an alternative for now.
-
-> 
-> Could you advise on how to achieve this goal with the new fanotify mechanism?
-> 
-> If you're interested you can find all the code here: https://github.com/dnr/styx/
-
-Although I'm very interested in this, my own time is fragmented,
-so many TODOs on my own side and I have to resolve our own
-erofs-unrelated internal storage/filesystem issues.  I do hope I
-could form an official "fanotify support" at least in erofs-utils
-later but it needs more my extra personal time.
+Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
 
 Thanks,
-Gao Xiang
+Hongbo
 
+> ---
+>   lib/inode.c | 16 ++++++++--------
+>   1 file changed, 8 insertions(+), 8 deletions(-)
 > 
-> Thanks,
-> David
+> diff --git a/lib/inode.c b/lib/inode.c
+> index f9b5ee997877..09b2e507c609 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -903,8 +903,7 @@ static int erofs_prepare_inode_buffer(struct erofs_importer *im,
+>   {
+>   	const struct erofs_importer_params *params = im->params;
+>   	struct erofs_sb_info *sbi = im->sbi;
+> -	struct erofs_bufmgr *bmgr = sbi->bmgr;
+> -	struct erofs_bufmgr *ibmgr = bmgr;
+> +	struct erofs_bufmgr *ibmgr;
+>   	unsigned int inodesize;
+>   	struct erofs_buffer_head *bh, *ibh;
+>   
+> @@ -922,6 +921,13 @@ static int erofs_prepare_inode_buffer(struct erofs_importer *im,
+>   	if (inode->extent_isize)
+>   		inodesize = roundup(inodesize, 8) + inode->extent_isize;
+>   
+> +	if (!erofs_is_special_identifier(inode->i_srcpath) &&
+> +	    erofs_metabox_bmgr(sbi))
+> +		inode->in_metabox = true;
+> +
+> +	if (inode->in_metabox)
+> +		ibmgr = erofs_metabox_bmgr(sbi) ?: sbi->bmgr;
+> +
+>   	if (inode->datalayout == EROFS_INODE_FLAT_PLAIN)
+>   		goto noinline;
+>   
+> @@ -942,12 +948,6 @@ static int erofs_prepare_inode_buffer(struct erofs_importer *im,
+>   			inode->datalayout = EROFS_INODE_FLAT_PLAIN;
+>   	}
+>   
+> -	if (!erofs_is_special_identifier(inode->i_srcpath) &&
+> -	    erofs_metabox_bmgr(sbi))
+> -		inode->in_metabox = true;
+> -
+> -	if (inode->in_metabox)
+> -		ibmgr = erofs_metabox_bmgr(sbi) ?: bmgr;
+>   	bh = erofs_balloc(ibmgr, INODE, inodesize, inode->idata_size);
+>   	if (bh == ERR_PTR(-ENOSPC)) {
+>   		int ret;
 
