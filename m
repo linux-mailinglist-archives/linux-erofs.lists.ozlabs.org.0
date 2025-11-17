@@ -1,52 +1,43 @@
-Return-Path: <linux-erofs+bounces-1379-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1380-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83CA3C62066
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Nov 2025 02:45:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E4CDC6229E
+	for <lists+linux-erofs@lfdr.de>; Mon, 17 Nov 2025 03:55:11 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4d8rDK474qz2yFy;
-	Mon, 17 Nov 2025 12:45:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4d8smY38GSz2yx7;
+	Mon, 17 Nov 2025 13:55:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.216
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763343937;
-	cv=none; b=DmnE/VbhbgVedXeKpwDDlQrOc+NlbAfTni11Ee/U5XYYjE1KDQNyp5xIX23jSi9vssVRKhUQjd+lFsVGcHhMczcVV+vdWlGM75/hXfabpQfaeB/hvq6muWQvADRW8XiurWEFWmtABa36WIxFKPvJJCS0uiGCfq98/n5xyhK0tXQYusKQuipGuz1YBCqHKIQOWbMhNxzB+vXPDRHbd9hDpWbdKd3s9sfYPkQyFg2/5b/PGOO0u4VpxVAah8tYnJCDc/R81dqG6QTrqeudoQhVbryBI6FM69WDxgEBJNh8AlGlijMHINTNrwEUvT5t3T5o3gQQa2GZymIBvntBPfqbuw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763348109;
+	cv=none; b=SilzKV0221fZ4oVHhbQxHUG0YIHcQGd02AxLTOGEGfy0xirOdBAntSnB6LgxkZ5pNYr9Tv29hbouIezbzkaZJeHTrLLITUeC5kaymeHCl+D6QHmD2O3Ivlhqr6MaeKsffUZFKuK4oyGxfl+TuiqIZiQTYpyE7VHaNCpQyKMdqn/qxPuT6mTj2x/MH9aAt6QDFqMGJcqArmbW+qQNuNu//PySxYFdELZk/QgD4vFN4VmdOgxBmzV1gZNT6ZasHGwkOECEFYa2gTk96zisSCjnkMclObQ3dhBmabF7s41hlm2Sa7WJoR8V7/wNf2QhWZw+cEVILqGHmeS92MNC8AW+XA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1763343937; c=relaxed/relaxed;
-	bh=FuG5ZFIMPnpMFGvhLCDkKKPsJcNw/LoD6bJD83gzIZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=S8E4Ki1QUceXuuU3q8BVE0go7dhLLw1WWubTnppDceUYWEYGu29DBMQ+efjXoYCosNgvZsJgl4kpgS1mZD/mFgx6x4BMOVmTqMeiHkZUcOaMio9YBpTZA/k4paI4D2bW1p9PPji3Ktydx4XxbpnzvcqlUN5toN3Wf8Rr791IWLV/M8tLYANSPowawWan1HWzyEYuQGh8EcM4UAPCD+LiUYwH2p+wkdHFc+MOM1BOO6f11eu62/xJnw8gsVtq76ggTkHAVDatVG2Fz5doeJ4BfYlgr7jWScyECAn4NpD4Nrsgf00Fq0JkFM6vojsCeJB17NINiUB3z18w7+KhnJCa1g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=dyzgxSYS; dkim-atps=neutral; spf=pass (client-ip=113.46.200.216; helo=canpmsgout01.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1763348109; c=relaxed/relaxed;
+	bh=bM0pzBOedq7loaoI6fMCzbNwCpdPGiGv5NHJEFsZE28=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m18YuJiqcsTEx1sQrW9DNluBjftk8jzCVgkYDikhruWPiON75voytyTjGHKsMOgOTiG4PSX1CDhqMm56d/rgCxpqrqgrhdvuP1+FSxQV3Lm1ti5FrM6uWUesE218AC1uxTwd2XNXJN+tz8y+6D9WspprKY+PKBdlI7cBodQDwPdr8/G/ETFdApyyBI6jrknhC5qdkVnS0fjadstcqre3INXoXa4R8978bg/LzYOHnbslJx6A213V+PPk6eWI3uVOYafSpk2Ur7+PJl7QUqU1HiyeJXSri4wcMSzpxWXyd4hWiwfO8y/d7xfSWd1EeJBBBhFTz3VJgq3ujfeFYA+YiQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=RFngd7OB; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=dyzgxSYS;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=RFngd7OB;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.216; helo=canpmsgout01.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4d8rDG3wGjz2y7c
-	for <linux-erofs@lists.ozlabs.org>; Mon, 17 Nov 2025 12:45:32 +1100 (AEDT)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=FuG5ZFIMPnpMFGvhLCDkKKPsJcNw/LoD6bJD83gzIZQ=;
-	b=dyzgxSYSzURMtGG4Wt8H4XVmPTKbEK0U2aqQ2QKnIFFKXOGo6MXJc93yo7ump0IblB75kMmsw
-	pFydBAovYfDWQtYuLYuXyIi3u0T/eBA11x63/HkykHWbpfzh9CE45Bf3+lOK5s320fZoo4dqLDI
-	Jy9qZb7IGHrT5ASW69CEHfU=
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4d8rBN3T9Nz1T4Fq;
-	Mon, 17 Nov 2025 09:43:56 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4E1CA140132;
-	Mon, 17 Nov 2025 09:45:26 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 17 Nov 2025 09:45:25 +0800
-Message-ID: <d2f9f55d-1112-4252-b662-a36398f88aaa@huawei.com>
-Date: Mon, 17 Nov 2025 09:45:25 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4d8smV3d2zz2yw7
+	for <linux-erofs@lists.ozlabs.org>; Mon, 17 Nov 2025 13:55:05 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1763348100; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=bM0pzBOedq7loaoI6fMCzbNwCpdPGiGv5NHJEFsZE28=;
+	b=RFngd7OBcyrQPlBHJqdhNK/Oa7N/WLjRdTuEgEdItcwEgPLD8eL5MTgUG95znHowWLZu8K0hSEYczK6MAzGsgXnMGI37QcB2osqMi2D9jasBRRaU77Z2MxXowJ9hhW34ElVeq/rvSY3yiZCYxt4DmpvWKCB5WiieTQD6dNVbuvI=
+Received: from 30.221.131.30(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WsTm8Wr_1763348098 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 17 Nov 2025 10:54:58 +0800
+Message-ID: <a3b0bac9-d08f-44dc-8adb-7cc85cae7b13@linux.alibaba.com>
+Date: Mon, 17 Nov 2025 10:54:57 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -59,228 +50,227 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/9] erofs: hold read context in iomap_iter if needed
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <chao@kernel.org>,
-	<brauner@kernel.org>, <djwong@kernel.org>, <amir73il@gmail.com>,
-	<joannelkoong@gmail.com>
-CC: <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 4/9] erofs: support user-defined fingerprint name
+To: Hongbo Li <lihongbo22@huawei.com>, chao@kernel.org, brauner@kernel.org,
+ djwong@kernel.org, amir73il@gmail.com, joannelkoong@gmail.com
+Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
 References: <20251114095516.207555-1-lihongbo22@huawei.com>
- <20251114095516.207555-3-lihongbo22@huawei.com>
- <f714479d-703c-4fc6-ad5a-b18d92f0a9b7@linux.alibaba.com>
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <f714479d-703c-4fc6-ad5a-b18d92f0a9b7@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemr500015.china.huawei.com (7.202.195.162)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+ <20251114095516.207555-5-lihongbo22@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20251114095516.207555-5-lihongbo22@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Xiang,
 
-On 2025/11/16 20:01, Gao Xiang wrote:
-> 
-> 
-> On 2025/11/14 17:55, Hongbo Li wrote:
->> Uncoming page cache sharing needs pass read context to iomap_iter,
->> here we unify the way of passing the read context in EROFS. Moreover,
->> bmap and fiemap don't need to map the inline data.
->>
->> Note that we keep `struct page *` in `struct erofs_iomap_iter_ctx` as
->> well to avoid bogus kmap_to_page usage.
->>
->> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
->> ---
->>   fs/erofs/data.c | 79 ++++++++++++++++++++++++++++++++++++-------------
->>   1 file changed, 59 insertions(+), 20 deletions(-)
->>
->> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
->> index bb13c4cb8455..bd3d85c61341 100644
->> --- a/fs/erofs/data.c
->> +++ b/fs/erofs/data.c
->> @@ -266,14 +266,23 @@ void erofs_onlinefolio_end(struct folio *folio, 
->> int err, bool dirty)
->>       folio_end_read(folio, !(v & BIT(EROFS_ONLINEFOLIO_EIO)));
->>   }
->> +struct erofs_iomap_iter_ctx {
->> +    struct page *page;
->> +    void *base;
->> +};
->> +
->>   static int erofs_iomap_begin(struct inode *inode, loff_t offset, 
->> loff_t length,
->>           unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
->>   {
->>       int ret;
->> +    struct erofs_iomap_iter_ctx *ctx;
->>       struct super_block *sb = inode->i_sb;
->>       struct erofs_map_blocks map;
->>       struct erofs_map_dev mdev;
->> +    struct iomap_iter *iter;
->> +    iter = container_of(iomap, struct iomap_iter, iomap);
->> +    ctx = iter->private;
-> 
-> Can you just rearrange it as:
-> 
->      struct iomap_iter *iter = container_of(iomap, struct iomap_iter, 
-> iomap);
->      struct erofs_iomap_iter_ctx *ctx = iter->private;
-> 
-> ?
-> 
 
-Thanks for your through review. The points you raised are quite 
-reasonable, and I will address them in later version.
+On 2025/11/14 17:55, Hongbo Li wrote:
+> From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+> 
+> When creating the EROFS image, users can specify the fingerprint name.
+> This is to prepare for the upcoming inode page cache share.
+> 
+> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> ---
+>   fs/erofs/Kconfig    |  9 +++++++++
+>   fs/erofs/erofs_fs.h |  6 ++++--
+>   fs/erofs/internal.h |  6 ++++++
+>   fs/erofs/super.c    |  5 ++++-
+>   fs/erofs/xattr.c    | 26 ++++++++++++++++++++++++++
+>   fs/erofs/xattr.h    |  6 ++++++
+>   6 files changed, 55 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+> index d81f3318417d..1b5c0cd99203 100644
+> --- a/fs/erofs/Kconfig
+> +++ b/fs/erofs/Kconfig
+> @@ -194,3 +194,12 @@ config EROFS_FS_PCPU_KTHREAD_HIPRI
+>   	  at higher priority.
+>   
+>   	  If unsure, say N.
+> +
+> +config EROFS_FS_INODE_SHARE
+> +	bool "EROFS inode page cache share support (experimental)"
+> +	depends on EROFS_FS && EROFS_FS_XATTR && !EROFS_FS_ONDEMAND
+> +	help
+> +	  This permits EROFS to share page cache for files with same
+> +	  fingerprints.
+
+I tend to use "EROFS_FS_PAGE_CACHE_SHARE" since it's closer to
+user impact definition (inode sharing is ambiguious), but we
+could leave "ishare.c" since it's closer to the implementation
+details.
+
+And how about:
+
+config EROFS_FS_PAGE_CACHE_SHARE
+	bool "EROFS page cache share support (experimental)"
+	depends on EROFS_FS && EROFS_FS_XATTR && !EROFS_FS_ONDEMAND
+	help
+	  This enables page cache sharing among inodes with identical
+	  content fingerprints on the same device.
+
+	  If unsure, say N.
+
+> +
+> +	  If unsure, say N.
+> \ No newline at end of file
+
+"\ No newline at end of file" should be fixed.
+
+> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+> index 3d5738f80072..104518cd161d 100644
+> --- a/fs/erofs/erofs_fs.h
+> +++ b/fs/erofs/erofs_fs.h
+> @@ -35,8 +35,9 @@
+>   #define EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES	0x00000040
+>   #define EROFS_FEATURE_INCOMPAT_48BIT		0x00000080
+>   #define EROFS_FEATURE_INCOMPAT_METABOX		0x00000100
+> +#define EROFS_FEATURE_INCOMPAT_ISHARE_KEY	0x00000200
+
+I do think it should be a compatible feature since images can be
+mounted in the old kernels without any issue, and it should be
+renamed as
+
+EROFS_FEATURE_COMPAT_ISHARE_XATTRS
+
+>   #define EROFS_ALL_FEATURE_INCOMPAT		\
+> -	((EROFS_FEATURE_INCOMPAT_METABOX << 1) - 1)
+> +	((EROFS_FEATURE_INCOMPAT_ISHARE_KEY << 1) - 1)
+>   
+>   #define EROFS_SB_EXTSLOT_SIZE	16
+>   
+> @@ -83,7 +84,8 @@ struct erofs_super_block {
+>   	__le32 xattr_prefix_start;	/* start of long xattr prefixes */
+>   	__le64 packed_nid;	/* nid of the special packed inode */
+>   	__u8 xattr_filter_reserved; /* reserved for xattr name filter */
+> -	__u8 reserved[3];
+> +	__u8 ishare_key_start;	/* start of ishare key */
+
+ishare_xattr_prefix_id; ?
+
+> +	__u8 reserved[2];
+>   	__le32 build_time;	/* seconds added to epoch for mkfs time */
+>   	__le64 rootnid_8b;	/* (48BIT on) nid of root directory */
+>   	__le64 reserved2;
+> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+> index e80b35db18e4..3ebbb7c5d085 100644
+> --- a/fs/erofs/internal.h
+> +++ b/fs/erofs/internal.h
+> @@ -167,6 +167,11 @@ struct erofs_sb_info {
+>   	struct erofs_domain *domain;
+>   	char *fsid;
+>   	char *domain_id;
+> +
+> +	/* inode page cache share support */
+> +	u8 ishare_key_start;
+
+	u8 ishare_xattr_pfx;
+
+> +	u8 ishare_key_idx;
+
+why need this, considering we could just use
+
+sbi->xattr_prefixes[sbi->ishare_xattr_pfx]
+
+to get this.
+
+> +	char *ishare_key;
+>   };
+>   
+>   #define EROFS_SB(sb) ((struct erofs_sb_info *)(sb)->s_fs_info)
+> @@ -236,6 +241,7 @@ EROFS_FEATURE_FUNCS(dedupe, incompat, INCOMPAT_DEDUPE)
+>   EROFS_FEATURE_FUNCS(xattr_prefixes, incompat, INCOMPAT_XATTR_PREFIXES)
+>   EROFS_FEATURE_FUNCS(48bit, incompat, INCOMPAT_48BIT)
+>   EROFS_FEATURE_FUNCS(metabox, incompat, INCOMPAT_METABOX)
+> +EROFS_FEATURE_FUNCS(ishare_key, incompat, INCOMPAT_ISHARE_KEY)
+>   EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
+>   EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
+>   EROFS_FEATURE_FUNCS(shared_ea_in_metabox, compat, COMPAT_SHARED_EA_IN_METABOX)
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index 0d88c04684b9..3561473cb789 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -339,7 +339,7 @@ static int erofs_read_superblock(struct super_block *sb)
+>   			return -EFSCORRUPTED;	/* self-loop detection */
+>   	}
+>   	sbi->inos = le64_to_cpu(dsb->inos);
+> -
+> +	sbi->ishare_key_start = dsb->ishare_key_start;
+>   	sbi->epoch = (s64)le64_to_cpu(dsb->epoch);
+>   	sbi->fixed_nsec = le32_to_cpu(dsb->fixed_nsec);
+>   	super_set_uuid(sb, (void *)dsb->uuid, sizeof(dsb->uuid));
+> @@ -738,6 +738,9 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>   	if (err)
+>   		return err;
+>   
+> +	err = erofs_xattr_set_ishare_key(sb);
+
+I don't think it's necessary to duplicate the copy, just use
+"sbi->xattr_prefixes[sbi->ishare_xattr_pfx]" directly.
 
 Thanks,
-Hongbo
+Gao Xiang
 
->>       map.m_la = offset;
->>       map.m_llen = length;
->>       ret = erofs_map_blocks(inode, &map);
->> @@ -283,7 +292,8 @@ static int erofs_iomap_begin(struct inode *inode, 
->> loff_t offset, loff_t length,
->>       iomap->offset = map.m_la;
->>       iomap->length = map.m_llen;
->>       iomap->flags = 0;
->> -    iomap->private = NULL;
->> +    if (ctx)
->> +        ctx->base = NULL;
-> 
-> I think this line is unnecessary if iter->private == ctx;
-> 
->>       iomap->addr = IOMAP_NULL_ADDR;
->>       if (!(map.m_flags & EROFS_MAP_MAPPED)) {
->>           iomap->type = IOMAP_HOLE;
->> @@ -309,16 +319,20 @@ static int erofs_iomap_begin(struct inode 
->> *inode, loff_t offset, loff_t length,
->>       }
->>       if (map.m_flags & EROFS_MAP_META) {
->> -        void *ptr;
->> -        struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
->> -
->>           iomap->type = IOMAP_INLINE;
->> -        ptr = erofs_read_metabuf(&buf, sb, map.m_pa,
->> -                     erofs_inode_in_metabox(inode));
->> -        if (IS_ERR(ptr))
->> -            return PTR_ERR(ptr);
->> -        iomap->inline_data = ptr;
->> -        iomap->private = buf.base;
->> +        /* read context should read the inlined data */
->> +        if (ctx) {
->> +            void *ptr;
->> +            struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-> 
-> better to resort them as:
->              struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
->              void *ptr;
-> 
->> +
->> +            ptr = erofs_read_metabuf(&buf, sb, map.m_pa,
->> +                         erofs_inode_in_metabox(inode));
->> +            if (IS_ERR(ptr))
->> +                return PTR_ERR(ptr);
->> +            iomap->inline_data = ptr;
->> +            ctx->page = buf.page;
->> +            ctx->base = buf.base;
->> +        }
->>       } else {
->>           iomap->type = IOMAP_MAPPED;
->>       }
->> @@ -328,18 +342,19 @@ static int erofs_iomap_begin(struct inode 
->> *inode, loff_t offset, loff_t length,
->>   static int erofs_iomap_end(struct inode *inode, loff_t pos, loff_t 
->> length,
->>           ssize_t written, unsigned int flags, struct iomap *iomap)
->>   {
->> -    void *ptr = iomap->private;
->> +    struct erofs_iomap_iter_ctx *ctx;
->> +    struct iomap_iter *iter;
->> -    if (ptr) {
->> +    iter = container_of(iomap, struct iomap_iter, iomap);
->> +    ctx = iter->private;
->> +    if (ctx && ctx->base) {
->>           struct erofs_buf buf = {
->> -            .page = kmap_to_page(ptr),
->> -            .base = ptr,
->> +            .page = ctx->page,
->> +            .base = ctx->base,
->>           };
->>           DBG_BUGON(iomap->type != IOMAP_INLINE);
->>           erofs_put_metabuf(&buf);
-> 
-> so need to nullify ctx->base here:
-> 
->          ctx->base = NULL;
-> 
->> -    } else {
->> -        DBG_BUGON(iomap->type == IOMAP_INLINE);
->>       }
->>       return written;
->>   }
->> @@ -369,18 +384,36 @@ int erofs_fiemap(struct inode *inode, struct 
->> fiemap_extent_info *fieinfo,
->>    */
->>   static int erofs_read_folio(struct file *file, struct folio *folio)
->>   {
->> +    struct iomap_read_folio_ctx read_ctx = {
->> +        .ops        = &iomap_bio_read_ops,
->> +        .cur_folio    = folio,
->> +    };
->> +    struct erofs_iomap_iter_ctx iter_ctx = {
->> +        .page        = NULL,
->> +        .base        = NULL,
->> +    };
-> 
-> it can be initialized just by:
->      struct erofs_iomap_iter_ctx iter_ctx = {};
-> 
->> +
->>       trace_erofs_read_folio(folio, true);
->> -    iomap_bio_read_folio(folio, &erofs_iomap_ops);
->> +    iomap_read_folio(&erofs_iomap_ops, &read_ctx, &iter_ctx);
->>       return 0;
->>   }
->>   static void erofs_readahead(struct readahead_control *rac)
->>   {
->> +    struct iomap_read_folio_ctx read_ctx = {
->> +        .ops        = &iomap_bio_read_ops,
->> +        .rac        = rac,
->> +    };
->> +    struct erofs_iomap_iter_ctx iter_ctx = {
->> +        .page        = NULL,
->> +        .base        = NULL,
->> +    };
-> 
-> Same here.
-> 
->> +
->>       trace_erofs_readahead(rac->mapping->host, readahead_index(rac),
->>                       readahead_count(rac), true);
->> -    iomap_bio_readahead(rac, &erofs_iomap_ops);
->> +    iomap_readahead(&erofs_iomap_ops, &read_ctx, &iter_ctx);
->>   }
->>   static sector_t erofs_bmap(struct address_space *mapping, sector_t 
->> block)
->> @@ -400,9 +433,15 @@ static ssize_t erofs_file_read_iter(struct kiocb 
->> *iocb, struct iov_iter *to)
->>       if (IS_DAX(inode))
->>           return dax_iomap_rw(iocb, to, &erofs_iomap_ops);
->>   #endif
->> -    if ((iocb->ki_flags & IOCB_DIRECT) && inode->i_sb->s_bdev)
->> +    if ((iocb->ki_flags & IOCB_DIRECT) && inode->i_sb->s_bdev) {
->> +        struct erofs_iomap_iter_ctx iter_ctx = {
->> +            .page = NULL,
->> +            .base = NULL,
->> +        };
-> 
-> Same here again.
-> 
-> Thanks,
-> Gao Xiang
+> +	if (err)
+> +		return err;
+>   	erofs_set_sysfs_name(sb);
+>   	err = erofs_register_sysfs(sb);
+>   	if (err)
+> diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+> index 396536d9a862..3c99091f39a5 100644
+> --- a/fs/erofs/xattr.c
+> +++ b/fs/erofs/xattr.c
+> @@ -564,3 +564,29 @@ struct posix_acl *erofs_get_acl(struct inode *inode, int type, bool rcu)
+>   	return acl;
+>   }
+>   #endif
+> +
+> +#ifdef CONFIG_EROFS_FS_INODE_SHARE
+> +int erofs_xattr_set_ishare_key(struct super_block *sb)
+> +{
+> +	struct erofs_sb_info *sbi = EROFS_SB(sb);
+> +	struct erofs_xattr_prefix_item *pf;
+> +	char *ishare_key;
+> +
+> +	if (!sbi->xattr_prefixes ||
+> +	    !(sbi->ishare_key_start & EROFS_XATTR_LONG_PREFIX))
+> +		return 0;
+> +
+> +	pf = sbi->xattr_prefixes +
+> +		(sbi->ishare_key_start & EROFS_XATTR_LONG_PREFIX_MASK);
+> +	if (!pf || pf >= sbi->xattr_prefixes + sbi->xattr_prefix_count)
+> +		return 0;
+> +	ishare_key = kmalloc(pf->infix_len + 1, GFP_KERNEL);
+> +	if (!ishare_key)
+> +		return -ENOMEM;
+> +	memcpy(ishare_key, pf->prefix->infix, pf->infix_len);
+> +	ishare_key[pf->infix_len] = '\0';
+> +	sbi->ishare_key = ishare_key;
+> +	sbi->ishare_key_idx = pf->prefix->base_index;
+> +	return 0;
+> +}
+> +#endif
+> diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
+> index 6317caa8413e..21684359662c 100644
+> --- a/fs/erofs/xattr.h
+> +++ b/fs/erofs/xattr.h
+> @@ -67,4 +67,10 @@ struct posix_acl *erofs_get_acl(struct inode *inode, int type, bool rcu);
+>   #define erofs_get_acl	(NULL)
+>   #endif
+>   
+> +#ifdef CONFIG_EROFS_FS_INODE_SHARE
+> +int erofs_xattr_set_ishare_key(struct super_block *sb);
+> +#else
+> +static inline int erofs_xattr_set_ishare_key(struct super_block *sb) { return 0; }
+> +#endif
+> +
+>   #endif
+
 
