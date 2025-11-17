@@ -1,43 +1,43 @@
-Return-Path: <linux-erofs+bounces-1384-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1385-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B390FC623EA
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Nov 2025 04:30:27 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CD84C62432
+	for <lists+linux-erofs@lfdr.de>; Mon, 17 Nov 2025 04:44:29 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4d8tYF46Qnz2xQq;
-	Mon, 17 Nov 2025 14:30:25 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4d8tsR1Pv8z2xS2;
+	Mon, 17 Nov 2025 14:44:27 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763350225;
-	cv=none; b=mKtC96ZP5mLcGwLDvCoXZy6odH3ullE3pjzsMH0B446WOXcgM73jFyQY3j3BJJTxJWKcC4MDNphwqJ0IAUq41enVyzlDjolpLsGX5pN4qTN8NQrIy8yq01JUbzUNoWCGsfHbivGTe6LoTlXxXlcHxR2NfXEfbdgLsZngir6orh9+1RB9NZXzCSlFjGiYV7HYyqduVScCA0LrSTe31+qIrUitp/GngHHtNrdzkVqTe+jyquAoJ0vNTKdnq+LLncN7zOJNg5jGkq1cxeFAwoQeDxD00DrotU2uWxtf9brze0ATiHX+ic+iGwMVPr036SYXQB4nDejVA+6A8MbCGo/B3A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763351067;
+	cv=none; b=HJm/YxCchS8ZJEVcqHiM4TjI0yQ/JqF3ugaS2nqZX3I85/BJwoK6nZ9BivsSaasnsowLj74KUM4yI82KekBeXAaPjcGtg1Sh3evA15c2zWyjJQJqwsA5cuG1MkkTPUNm/DsTK+e9+va5kVJ9OfgwfU2Ar8/wI6+2aCp8Ykx60RJ4VYTRra7m+s6hYeAu3H16vdCk7ljzFg4ECLOloZ/zE1iGut/KYqkDJmPhwPq6eXPZYo3Y4kl5Li0Y2qodOKTI6U2oBJlVYHyqbaH8RjrTrJ51U0dFbnNUi5XsChZoFReprCRRA9WUvbdKV6nx/p0oKEkReIkyqGj2kA9/rvzWSg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1763350225; c=relaxed/relaxed;
-	bh=77VBZxawPoiblVroVwdi0fB2t1X1ZR/kaNSvk7n/vPE=;
+	t=1763351067; c=relaxed/relaxed;
+	bh=xM/7SlXR05QhJ9/aqpWKEmKID+CL6RpEJ9yf+AkBzU8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hsrf3FXuqVCsRlIpKoUuapK7i33HEkqYVyz1OK7OmYO2MLriVG0q2yjBmOkGGKXfA7Zbcw1U8gHDf0FMwTi0VGVWfgKKritGfdrZTPah/7mLVEoFeUttn1xy/2bpMj+ZXJhhShFlhBmAuxJBnvheIe+NKOxWUk0LW8Spn9pK5O68QBMZIKgUp4lVmefQidpNy0VDuNKvPru1Ui5aXMVoPwDCWRUuDw5w5m6zh7Tx+7WUUvDyh8MF175tgj9OOGcB5pGy08Nfe9zHVbqM22hFkIrmF7/Z9wlYetx/U10CZx/MDXX4e0tHBHQfHmLVd7jI6ndVyXXQyFNG1Uk9pFDeGA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=g88jXh6T; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=Ff+Ra9Gf+T9YTyhPvd97Kp+e4WvbfqFjN0V68FC3AahSp6KyN3yBLOfOP609s1+rk7b1OgGciW6aMiqiBBuoE9bDQPVKm6TtkITshcI/dFCyIA5vsxdmLaiS/gjtdwh3c5wteQjqzRaM6gZVxE1MClnwNmlHvcrCj1DQV4ZRnU/kls9e1k5xwyhma32bWbKG7WehCfDSwk13WxTSNiEV11BFcl+OQK7PbMjyHzAgzRQTDaeSHOoobvL7Gffh/8J4gkxoqJ1mvp19a2MTNwK6cyKpsG8fn6R+cn0HWg3Fdn0uGcDVtSalkuWeJmNeZarCApW0J4kTV22wRdHMjCZHtg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Kcy0hMvJ; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=g88jXh6T;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Kcy0hMvJ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4d8tYC3JSfz2xQD
-	for <linux-erofs@lists.ozlabs.org>; Mon, 17 Nov 2025 14:30:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4d8tsN6B1tz2xQr
+	for <linux-erofs@lists.ozlabs.org>; Mon, 17 Nov 2025 14:44:22 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1763350216; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=77VBZxawPoiblVroVwdi0fB2t1X1ZR/kaNSvk7n/vPE=;
-	b=g88jXh6Tf/6/5yvD4XAuq5J0Lq/HTIfyYqUxE0wRvI7cIidDm+yrg6guR/UHyOh4h/wbAwiyHPx2S+fIZ0nSkIQbYyfee4mhDEcDY/KeHrJyWWkU1t5L6HOfQDLSyBnI6GrE2vHz2vHSYlEnfT+oDSEzqgZ2cM8codutXu6T30c=
-Received: from 30.221.131.30(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WsTuAU5_1763350214 cluster:ay36)
+	t=1763351058; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=xM/7SlXR05QhJ9/aqpWKEmKID+CL6RpEJ9yf+AkBzU8=;
+	b=Kcy0hMvJf6qLPwl35JJSXafm0mcN9MWnV/AUlrt3gPBEnFu0M0oM9SGJtICZKJ1+bJms5yT/ZwSi5PD4V/4tJAql0DdJkuDoOWH7BWdVKSQLEhI/49P/zWoS+mJhErtk1iWgDqw1HmOAKhKkcz+wREXdq9livGjZ5xFSE0ypHMw=
+Received: from 30.221.131.30(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WsU-ZOC_1763351056 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 17 Nov 2025 11:30:14 +0800
-Message-ID: <4a6164d9-7959-4ce8-97b4-5a5154a3f037@linux.alibaba.com>
-Date: Mon, 17 Nov 2025 11:30:13 +0800
+          Mon, 17 Nov 2025 11:44:17 +0800
+Message-ID: <40b291a4-ea32-4450-ab67-0c9c96a3d601@linux.alibaba.com>
+Date: Mon, 17 Nov 2025 11:44:16 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,19 +50,18 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 6/9] erofs: introduce the page cache share feature
+Subject: Re: [PATCH v8 7/9] erofs: support unencoded inodes for page cache
+ share
 To: Hongbo Li <lihongbo22@huawei.com>, chao@kernel.org, brauner@kernel.org,
  djwong@kernel.org, amir73il@gmail.com, joannelkoong@gmail.com
 Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
  linux-kernel@vger.kernel.org
 References: <20251114095516.207555-1-lihongbo22@huawei.com>
- <20251114095516.207555-7-lihongbo22@huawei.com>
- <ac1b5431-e71f-430d-8309-8d007dc449b9@linux.alibaba.com>
- <cb040afb-a025-4dbb-9866-4772b24a3b8e@huawei.com>
+ <20251114095516.207555-8-lihongbo22@huawei.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <cb040afb-a025-4dbb-9866-4772b24a3b8e@huawei.com>
+In-Reply-To: <20251114095516.207555-8-lihongbo22@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
@@ -71,96 +70,191 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 
 
-On 2025/11/17 11:14, Hongbo Li wrote:
-> Hi Xiang
+On 2025/11/14 17:55, Hongbo Li wrote:
+> This patch adds inode page cache sharing functionality for unencoded
+> files.
 > 
-> On 2025/11/17 11:06, Gao Xiang wrote:
->>
->>
->> On 2025/11/14 17:55, Hongbo Li wrote:
->>> From: Hongzhen Luo <hongzhen@linux.alibaba.com>
->>>
->>> Currently, reading files with different paths (or names) but the same
->>> content will consume multiple copies of the page cache, even if the
->>> content of these page caches is the same. For example, reading
->>> identical files (e.g., *.so files) from two different minor versions of
->>> container images will cost multiple copies of the same page cache,
->>> since different containers have different mount points. Therefore,
->>> sharing the page cache for files with the same content can save memory.
->>>
->>> This introduces the page cache share feature in erofs. It allocate a
->>> deduplicated inode and use its page cache as shared. Reads for files
->>> with identical content will ultimately be routed to the page cache of
->>> the deduplicated inode. In this way, a single page cache satisfies
->>> multiple read requests for different files with the same contents.
->>>
->>> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
->>> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
->>> ---
->>
->> ...
->>
->>
->>> +
->>> +static int erofs_ishare_file_open(struct inode *inode, struct file *file)
->>> +{
->>> +    struct file *realfile;
->>> +    struct inode *dedup;
->>> +
->>> +    dedup = EROFS_I(inode)->ishare;
->>> +    if (!dedup)
->>> +        return -EINVAL;
->>> +
->>> +    realfile = alloc_file_pseudo(dedup, erofs_ishare_mnt, "erofs_ishare_file",
->>> +                     O_RDONLY, &erofs_file_fops);
->>> +    if (IS_ERR(realfile))
->>> +        return PTR_ERR(realfile);
->>> +
->>> +    file_ra_state_init(&realfile->f_ra, file->f_mapping);
->>> +    realfile->private_data = EROFS_I(inode);
->>> +    file->private_data = realfile;
->>> +    return 0;
->>
+> I conducted experiments in the container environment. Below is the
+> memory usage for reading all files in two different minor versions
+> of container images:
 > 
-> My apologies, I got it wrong. The latest code wasn't synced. The most current version should be this one.
+> +-------------------+------------------+-------------+---------------+
+> |       Image       | Page Cache Share | Memory (MB) |    Memory     |
+> |                   |                  |             | Reduction (%) |
+> +-------------------+------------------+-------------+---------------+
+> |                   |        No        |     241     |       -       |
+> |       redis       +------------------+-------------+---------------+
+> |   7.2.4 & 7.2.5   |        Yes       |     163     |      33%      |
+> +-------------------+------------------+-------------+---------------+
+> |                   |        No        |     872     |       -       |
+> |      postgres     +------------------+-------------+---------------+
+> |    16.1 & 16.2    |        Yes       |     630     |      28%      |
+> +-------------------+------------------+-------------+---------------+
+> |                   |        No        |     2771    |       -       |
+> |     tensorflow    +------------------+-------------+---------------+
+> |  2.11.0 & 2.11.1  |        Yes       |     2340    |      16%      |
+> +-------------------+------------------+-------------+---------------+
+> |                   |        No        |     926     |       -       |
+> |       mysql       +------------------+-------------+---------------+
+> |  8.0.11 & 8.0.12  |        Yes       |     735     |      21%      |
+> +-------------------+------------------+-------------+---------------+
+> |                   |        No        |     390     |       -       |
+> |       nginx       +------------------+-------------+---------------+
+> |   7.2.4 & 7.2.5   |        Yes       |     219     |      44%      |
+> +-------------------+------------------+-------------+---------------+
+> |       tomcat      |        No        |     924     |       -       |
+> | 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+> |                   |        Yes       |     474     |      49%      |
+> +-------------------+------------------+-------------+---------------+
 > 
-> static int erofs_ishare_file_open(struct inode *inode, struct file *file)
-> {
->      struct file *realfile;
->      struct inode *dedup;
->      char *buf, *filepath;
+> Additionally, the table below shows the runtime memory usage of the
+> container:
 > 
->      dedup = EROFS_I(inode)->ishare;
->      if (!dedup)
->          return -EINVAL;
+> +-------------------+------------------+-------------+---------------+
+> |       Image       | Page Cache Share | Memory (MB) |    Memory     |
+> |                   |                  |             | Reduction (%) |
+> +-------------------+------------------+-------------+---------------+
+> |                   |        No        |      35     |       -       |
+> |       redis       +------------------+-------------+---------------+
+> |   7.2.4 & 7.2.5   |        Yes       |      28     |      20%      |
+> +-------------------+------------------+-------------+---------------+
+> |                   |        No        |     149     |       -       |
+> |      postgres     +------------------+-------------+---------------+
+> |    16.1 & 16.2    |        Yes       |      95     |      37%      |
+> +-------------------+------------------+-------------+---------------+
+> |                   |        No        |     1028    |       -       |
+> |     tensorflow    +------------------+-------------+---------------+
+> |  2.11.0 & 2.11.1  |        Yes       |     930     |      10%      |
+> +-------------------+------------------+-------------+---------------+
+> |                   |        No        |     155     |       -       |
+> |       mysql       +------------------+-------------+---------------+
+> |  8.0.11 & 8.0.12  |        Yes       |     132     |      15%      |
+> +-------------------+------------------+-------------+---------------+
+> |                   |        No        |      25     |       -       |
+> |       nginx       +------------------+-------------+---------------+
+> |   7.2.4 & 7.2.5   |        Yes       |      20     |      20%      |
+> +-------------------+------------------+-------------+---------------+
+> |       tomcat      |        No        |     186     |       -       |
+> | 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+> |                   |        Yes       |      98     |      48%      |
+> +-------------------+------------------+-------------+---------------+
 > 
->      buf = kmalloc(PATH_MAX, GFP_KERNEL);
->      if (!buf)
->          return -ENOMEM;
->      filepath = file_path(file, buf, PATH_MAX);
->      if (IS_ERR(filepath)) {
->          kfree(buf);
->          return -PTR_ERR(filepath);
->      }
->      realfile = alloc_file_pseudo(dedup, erofs_ishare_mnt, filepath + 1,
->                       O_RDONLY, &erofs_file_fops);
->      kfree(buf);
->      if (IS_ERR(realfile))
->          return PTR_ERR(realfile);
+> Co-developed-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> ---
+>   fs/erofs/data.c     | 38 +++++++++++++++---
+>   fs/erofs/inode.c    |  5 +++
+>   fs/erofs/internal.h |  4 ++
+>   fs/erofs/ishare.c   | 98 ++++++++++++++++++++++++++++++++++++++++++++-
+>   fs/erofs/ishare.h   | 18 +++++++++
+>   fs/erofs/super.c    | 11 +++--
+>   6 files changed, 163 insertions(+), 11 deletions(-)
 > 
->      file_ra_state_init(&realfile->f_ra, file->f_mapping);
->      ihold(dedup);
->      realfile->private_data = EROFS_I(inode);
->      file->private_data = realfile;
->      return 0;
-> }
-> 
-> I changed the "erofs_ishare_file" with filepath + 1 to display the realpath of the original file.
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index bd3d85c61341..c459104e4734 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -5,6 +5,7 @@
+>    * Copyright (C) 2021, Alibaba Cloud
+>    */
+>   #include "internal.h"
+> +#include "ishare.h"
 
-Although it could work for file_user_path() [but it's unclean on my side],
-but file_user_inode() still doesn't work.
+Can we just get rid of another "ishare.h", these can be moved into
+internal.h:
 
-You should adapt backing_file infrastructure instead.
+#ifdef CONFIG_EROFS_FS_INODE_SHARE
+
+int erofs_ishare_init(struct super_block *sb);
+void erofs_ishare_exit(struct super_block *sb);
+bool erofs_ishare_fill_inode(struct inode *inode);
+void erofs_ishare_free_inode(struct inode *inode);
+
+#else
+
+static inline int erofs_ishare_init(struct super_block *sb) { return 0; }
+static inline void erofs_ishare_exit(struct super_block *sb) {}
+static inline bool erofs_ishare_fill_inode(struct inode *inode) { return false; }
+static inline void erofs_ishare_free_inode(struct inode *inode) {}
+
+#endif // CONFIG_EROFS_FS_INODE_SHARE
+
+>   #include <linux/sched/mm.h>
+>   #include <trace/events/erofs.h>
+>   
+> @@ -269,23 +270,27 @@ void erofs_onlinefolio_end(struct folio *folio, int err, bool dirty)
+>   struct erofs_iomap_iter_ctx {
+>   	struct page *page;
+>   	void *base;
+> +	struct inode *realinode;
+>   };
+>   
+>   static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>   		unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
+>   {
+> -	int ret;
+>   	struct erofs_iomap_iter_ctx *ctx;
+> -	struct super_block *sb = inode->i_sb;
+>   	struct erofs_map_blocks map;
+>   	struct erofs_map_dev mdev;
+>   	struct iomap_iter *iter;
+> +	struct inode *realinode;
+> +	struct super_block *sb;
+
+	struct inode *realinode = ctx ? ctx->realinode : inode;
+	struct super_block *sb = realinode->i_sb;
+
+> +	int ret;
+>   
+>   	iter = container_of(iomap, struct iomap_iter, iomap);
+>   	ctx = iter->private;
+> +	realinode = ctx ? ctx->realinode : inode;
+> +	sb = realinode->i_sb;
+>   	map.m_la = offset;
+>   	map.m_llen = length;
+> -	ret = erofs_map_blocks(inode, &map);
+> +	ret = erofs_map_blocks(realinode, &map);
+>   	if (ret < 0)
+>   		return ret;
+>   
+> @@ -300,7 +305,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>   		return 0;
+>   	}
+>   
+> -	if (!(map.m_flags & EROFS_MAP_META) || !erofs_inode_in_metabox(inode)) {
+> +	if (!(map.m_flags & EROFS_MAP_META) || !erofs_inode_in_metabox(realinode)) {
+>   		mdev = (struct erofs_map_dev) {
+>   			.m_deviceid = map.m_deviceid,
+>   			.m_pa = map.m_pa,
+> @@ -326,7 +331,7 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>   			struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+>   
+>   			ptr = erofs_read_metabuf(&buf, sb, map.m_pa,
+> -						 erofs_inode_in_metabox(inode));
+> +						 erofs_inode_in_metabox(realinode));
+>   			if (IS_ERR(ptr))
+>   				return PTR_ERR(ptr);
+>   			iomap->inline_data = ptr;
+
+...
+
+>   
+> @@ -234,3 +248,83 @@ const struct file_operations erofs_ishare_fops = {
+>   	.get_unmapped_area = thp_get_unmapped_area,
+>   	.splice_read	= filemap_splice_read,
+>   };
+> +
+> +void erofs_read_begin(struct erofs_read_ctx *rdctx)
+
+I think if backing_head, backing_link (although I don't like
+the naming) is valid, erofs_read_begin() and erofs_read_end()
+is unneeded here.
+
+Since we maintain the backing validity using .open() and
+.release() hooks.
+
+the odd erofs_read_{begin,end} can be avoided then...
 
 Thanks,
 Gao Xiang
