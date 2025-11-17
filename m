@@ -1,52 +1,121 @@
-Return-Path: <linux-erofs+bounces-1387-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1388-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8E66C62C62
-	for <lists+linux-erofs@lfdr.de>; Mon, 17 Nov 2025 08:42:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B1671C6370F
+	for <lists+linux-erofs@lfdr.de>; Mon, 17 Nov 2025 11:11:42 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4d907g4L7yz2ynC;
-	Mon, 17 Nov 2025 18:42:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4d93SD3vxbz2yw7;
+	Mon, 17 Nov 2025 21:11:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.216
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763365327;
-	cv=none; b=V769YRujJqVVMn9iY26+ycHkhd3FWVjA3VXwjxMbGRpcWCOLFcMUM86BAte/sFj+QjMFkjSY7JFl6XLMiJZexdlOpEzZQODiedqfiFSYsuGFHveffWQm8Dsg8+hJ8gRHcHEiaoQ4nruBVwxA+SdQZYGNeQUWrQiCitAvCaKX8VeQ2svwdsNIIcIz9pN/Gc2jkL5gf4HHQ9KEqCz8n0Ie35G3NMuiVr2T7+7Dz5cobx4imMdX7iEMrmuv+eioOYU48q4kQ4YL51cCv7TB7GjLPSoqt7ErVQ2cE8vudrHE8tclf0xQaYrfS55uJSL7IuyP5HcC/GelPLoLv7EAIfvaGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1763365327; c=relaxed/relaxed;
-	bh=gGtZe6aUNhI/+lLCQkV3ulj8qdpXHe/N2oVbKgeo9F4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OKZeWcHgIMaAzk5bmx2xn3/+ghKtQUrWcCN85BWnWrTLOcEyUvPkIdb1NagEA8eGur82xFQs3Vik+NWm85JIriVYmYjvZlEp8VWpFJQLDn9BNC0DV7K+2kU8AN95BCl5a5VLFUdkGslKL1gN3f/BNAKy4j0jh+rBZS5ZAPReja7Ts5rsqlEw/PK2mNW8obQL9xkDDWSTYsmK1kNYr1OESTgIfEa2eeBXCRsQAgB9+AMZUqO+PO9OX2ovbhmszRu9Ky6P4wRnq3LvdyxowgChmODiP+NpALU23RmSgPZqa0yr/6c8k0wLF7P1/jrkfhRPJBGKb/hlLlHLL9eWkAI7TA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=VR8ideB7; dkim-atps=neutral; spf=pass (client-ip=113.46.200.216; helo=canpmsgout01.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:d200::" arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763374300;
+	cv=pass; b=NUF+UMAMxOsGvm5/N4tuPftXJLof5nX1ZOUNipyDll2OIUsswgS/floZ4IkwAZXO8udAkzG4HURH+dj4vvx/LCqxSxgz89XJFsikpFjglhsSzB9lH4H59LVGD2l9ZXQQT1O1BAYwCtgDCqnzzmutRs6Q3qKnGxtMfA/ug+Lav1zpKDM7Vf/UyC+WomG9oTbTcCtZ/TJFg7AfpZIRP5WOMJKRggHUjoKigwt7iLegUk09x2E3/fuRsv9jN4hLPMzzCdLgbziyI6QOlaeCXaLAQkUSsHBvukfVvm2phdaMLFZpGv/X+ldNIOgoP+73GN+yAUWmSA38ix6HpLHhiS4Gvg==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1763374300; c=relaxed/relaxed;
+	bh=64RYkOs6d2tMwAqBS8XYEJW2qeHY5v8BtzYmdoBTxdY=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Ly01qke9RgtQ2NgUySNVQmpsNYSl0QhRKL3bJzQUmZKSM09ULZxdx6GSUUV7hRUVAb9kVnH13MAZLj5zqxKubmwScx6sLtGL9bCkt67h5jfn2g8RyeUjvlAemLhfm9APKpISsz+2vMIXPzTXx+umt0NLYg0NeJdOSaWhXg+yOBs30LHH7pTRDaBOxdfaCBOCSZtzZIQq7wz8sS9QEmo6Jk6UxcHVWnIU0wTuZb+jxDoygWP+ogq8JHxAC9HwGtyr9k55w7swdQCJFUwZO0qYRSavB5kZNk6KD6MwdTU3uljSRSmxKKw2mXFHHhv0qNlzgvRAx0KFI0oXrs/GkPWzRw==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=outlook.com; dkim=pass (2048-bit key; unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=uXVx4gy3; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:d200::; helo=db3pr0202cu003.outbound.protection.outlook.com; envelope-from=freya.doria76@outlook.com; receiver=lists.ozlabs.org) smtp.mailfrom=outlook.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=VR8ideB7;
+	dkim=pass (2048-bit key; unprotected) header.d=outlook.com header.i=@outlook.com header.a=rsa-sha256 header.s=selector1 header.b=uXVx4gy3;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.216; helo=canpmsgout01.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=outlook.com (client-ip=2a01:111:f403:d200::; helo=db3pr0202cu003.outbound.protection.outlook.com; envelope-from=freya.doria76@outlook.com; receiver=lists.ozlabs.org)
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazolkn190100000.outbound.protection.outlook.com [IPv6:2a01:111:f403:d200::])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange secp256r1 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4d907c59Zpz2xQr
-	for <linux-erofs@lists.ozlabs.org>; Mon, 17 Nov 2025 18:42:02 +1100 (AEDT)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=gGtZe6aUNhI/+lLCQkV3ulj8qdpXHe/N2oVbKgeo9F4=;
-	b=VR8ideB7WJpp6R/VqhF/68ghpS4DJgDdVfQmUGL6gwVChmwlsrIYsyj+BEViYDYLcaXN33O3q
-	xmTsrB8SA0aBmz9eA9n3lqLHkYW7bu2FyiYREFyor3D40AP+ireedZTFPgqx0zp8TYsE1GvF63x
-	g3/0gT/ST1XpMNoKfo2L3Ts=
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4d905j6WTkz1T4Fq;
-	Mon, 17 Nov 2025 15:40:25 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id 11352180B6B;
-	Mon, 17 Nov 2025 15:41:56 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 17 Nov 2025 15:41:55 +0800
-Message-ID: <df86044f-b192-492a-99f2-bad019570f9d@huawei.com>
-Date: Mon, 17 Nov 2025 15:41:54 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4d93S94zRGz2yvM
+	for <linux-erofs@lists.ozlabs.org>; Mon, 17 Nov 2025 21:11:37 +1100 (AEDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TdvPTvbCYBnqBkw/21wW+CdPjX1CBjVsJRHyYl4YlU+VbsIF+CDw/EWVIlAAwuPyKwW6SEXCUDTfNvIf8wCvDyRc4x992H/C4LG/RK0+MIikhxIuKmo5XqSgwIY7D8odGOmPLYib9VIkYJOuX0a8kT/eN3ptJRT8rWqB/xfpY+tsmV/j1YTzhlo19iQdcD7fS3Q3SSnHE2YMfBE3JyGbliFH/lztRI71+zsbiXkVpnUAZDcawru+OxKx6RaOFS2Ghqget5C0Raypk9WJOH2ohChKTfN6mEj9GamfRlXGm51/6wmxX9m98ksxysaHhvsG/Ubz9so1hIm0u5Wv/NQFEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=64RYkOs6d2tMwAqBS8XYEJW2qeHY5v8BtzYmdoBTxdY=;
+ b=Vg8JfwneKxFl3ua1j9jda4CYPcSYWQ3w8PXZqTa9RlqH2JUov0Ei35SSo2PfyKpBGrZ7xHE6A1gkwtjRZ2K5+UuYldK3cyPxoyOMCAvZ62gLHLFx4ViztDoJe3MAuFNAvxzRk1OD5YS9BbJN52KkOxAQ4oWqerjA2K8u216LKBvtUXjxhuUERjB/nPjJC42gLXPurOZJsMIx/zp3Ymf5sRfpVYaNU0pM7zN7i+JovMuNiJU3zV4bqVhAfmvdrqTlDgQk9pWxRWtbFij1aWrCB+3SzRArDxoW+20CUjZEBEz+PoVK0kGSnDIx6ZlUGgpJGW8GLVxg3QHQFQ1qNLh36w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=64RYkOs6d2tMwAqBS8XYEJW2qeHY5v8BtzYmdoBTxdY=;
+ b=uXVx4gy3ou1pO98LdeSMFm/uRS7bT2uJUdQvsD5KK4SuQnim5Qxv09+WHR0yVPhbpTdIxgIUE34B7Nw8nlB+oyHjxMXNokVGcPgn/y7hlll9nJ5hV4oABhtwEmqTNzytBboBZB1G1fXtln0MJ2KVf1IBGRol51oZbEOY32J7MuT2XCtOhx7qX/QkAE0Hwa+o2jjgbRN/R2RNhi81nCIvpH2nBpnOT/GBBb9I63MvHYS9q8VFiI0wksTbOoJchaobcXTOwrfqB3zvPb/zO52YfDCWBLFtfkhpS9EL/ECNpiNHMzvEFySNuXOgJ1qhr5ssju1pd2NImjbXgnea/5tdVg==
+Received: from DU0P195MB1626.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:3a6::7) by
+ AS2P195MB2323.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:590::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9320.17; Mon, 17 Nov 2025 10:11:13 +0000
+Received: from DU0P195MB1626.EURP195.PROD.OUTLOOK.COM
+ ([fe80::a90d:995d:dcbb:14f9]) by DU0P195MB1626.EURP195.PROD.OUTLOOK.COM
+ ([fe80::a90d:995d:dcbb:14f9%7]) with mapi id 15.20.9320.013; Mon, 17 Nov 2025
+ 10:11:13 +0000
+From: Freya Doria <freya.doria76@outlook.com>
+To: "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>
+Subject: Reminder: Your Response Needed 
+Thread-Topic: Reminder: Your Response Needed 
+Thread-Index: AdxXqa6bZtrT9kS0SI+TLznOfI4gdw==
+Disposition-Notification-To: Freya Doria <freya.doria76@outlook.com>
+Date: Mon, 17 Nov 2025 10:11:13 +0000
+Message-ID:
+ <DU0P195MB1626BF6C17FC7DD8519EC886EBC9A@DU0P195MB1626.EURP195.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0P195MB1626:EE_|AS2P195MB2323:EE_
+x-ms-office365-filtering-correlation-id: c647b845-a54c-4b9d-eef6-08de25c1a345
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|31061999003|461199028|10092599007|8062599012|13091999003|19110799012|8060799015|15080799012|39105399006|3412199025|440099028|40105399003|19111999003|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?yNnke9iqwxlOda1xSVBF67dNbK1DSWVPKJUZFH2ed6zQW/aSjN/AhxpB19LE?=
+ =?us-ascii?Q?FN0+48jewjGWLt1v4tu4ts7SzKFUUo5IHzIb6X7Ua/QttSEy986ltXruRe0w?=
+ =?us-ascii?Q?RpEBS5CyOlphA4II6EphWqq3snSdo61ExEgjumOXqOf3FGQG/fQZBK40GV/x?=
+ =?us-ascii?Q?lftcUVwucbpU2qrfO0QA5RkWfGVieomgoAQNvXlD9z5TlOTp+wplk+kqEaL/?=
+ =?us-ascii?Q?IXypB2e4ZLhrns3zyNO/hYy5r2euiEKDPaGc6sIwmVL2M18si0B3fg0FvQ9E?=
+ =?us-ascii?Q?keAlvrQ0ZdcXP9WLQE5VLiav6W/tvxeW92G46QRlBIArX9wFjia9npMyrANq?=
+ =?us-ascii?Q?iQ7s0p8MnKrvl4T6TU7/CjVEo4aPdiBb+Hrnu4i0Khn8tVKwRs9B9Gi+tr/J?=
+ =?us-ascii?Q?3hiClVmZGbtBlc8WuC8NZspBYEsSKGywFYZ5XyOd9IgTYvRl7dcBLapf9oJA?=
+ =?us-ascii?Q?aUbOWYfJ15kRF7QG3nIu/iRbeHfw7rUcuVISUbxIGp4l40851Zo01rUAwYhY?=
+ =?us-ascii?Q?tXSvu11tZp+38R2XPjTjaLQehw1WSujqRUmA0+ddW2z45NhWj8/yiPSv7GEn?=
+ =?us-ascii?Q?ayvpYvA07axtQmuFNTO0YP3DgWibFRFQUr1bETWvZ5NsByDlmVWv98n/shfX?=
+ =?us-ascii?Q?gf2HDFx5wIzp8Z7DSdsewdWdpKTpItyD+1gl2Nimkt74H150T29+l5sNjVLd?=
+ =?us-ascii?Q?k4lk1/WAzgUcDsLc3LZSqqCkEprrnUT6GllC6LWehMdZNnG1aqkcEtG+Ra4e?=
+ =?us-ascii?Q?/Fi7j5NNuEtVnlCwcnHTaRoKxk5lz6w9GSbswIG3WS9N0DHWPj5+I8KNWloy?=
+ =?us-ascii?Q?ORMTvYFbofSbmHkLPXrrjnedFyOoruCGt1N1X58YD7gmQX5mtVvZKv3Adrsn?=
+ =?us-ascii?Q?4Zzwc+vuWujJWPCjItN7ztyM+HbCBFd5Wd/Q3xWjAZTz9QAZGv4pRM5xN68R?=
+ =?us-ascii?Q?SqSqlZxTD/mWDoxwdpjDG+9ABzmwZFnMH8t6WOVSW2V+ldE4H1ZYp28c3D7G?=
+ =?us-ascii?Q?DBRtvCgXPewAOXtQdkAdfs7yo2UQPPDnPRVvXBFLW8gJPHaK/bf8OvlbMnwr?=
+ =?us-ascii?Q?qd01dfFmRNXeLRX9BP8GhDOa2dY5TCiF0kcpzGE5B5khQYvg4oHpGGoXz5Vu?=
+ =?us-ascii?Q?vPbnp/QeuWzhsndVrIgmpdIhgrCYPDZwiL7VAazq7EXem1mzaxsFCvIB9s/w?=
+ =?us-ascii?Q?F+QLLsxFKTBxQISswUcS9KEZCZTxe7uRxfnpukWsD+qZ6DWCu0woo87eZT5A?=
+ =?us-ascii?Q?xzhJm8IiZTaPUh2IECpeiz2HAuuvrwWHta2F/7Bk2w=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?tyzRrncZ3flC1lT8MEOtVGh1z76tsnIcutB5cPS5KIkInbDtPzBUFC0fdprC?=
+ =?us-ascii?Q?Ee7wmi9oXlfIX16JxqALoHfyBS0zslF2KeKKZ8EtW5PerWeAxgfqxQScVrhh?=
+ =?us-ascii?Q?AJlsD14tI6CCH2BqfqmBnltue1B67pZti5ToJ/JSNPdK9FYZ0HJ2EdmUZybI?=
+ =?us-ascii?Q?C3d3aH0GUynMAYiUvx3VQUczxhGcZIJUrBcikr4tZT/u0On3uMtg/gv/wnmY?=
+ =?us-ascii?Q?qD1yThTYvf5buOkgbokau7B8T0C69lSMYGfGACz2VFVQtYq0b54ZDQyXR+0T?=
+ =?us-ascii?Q?bzg7Z63UJ2ZsExxmb/VyjOdxXULc/NRDvmt08ra3Dl9M1cw+v5IHF9eD/vOx?=
+ =?us-ascii?Q?3tbnGmXXUx/DlCCk+ErkuyMwx83Dkzm97YF+7rbY+0ef5OG7s+xX0tqI6p2p?=
+ =?us-ascii?Q?3JhbxVhmdlFG2HyURRccOVW2d1488o0WYtsgEvA1FVdtLSDB0NGbA6b+Hn33?=
+ =?us-ascii?Q?3+08K179RPOzaQbtsYzWRzmzIuHUCUvoWYDq56eAY15nsnAf083OOvk/s438?=
+ =?us-ascii?Q?ndnI0NOmyiBbf3xrX7dhF3Ip8YTocqEM7CrrkzMLjyr+EQZole6zq2gsCSCJ?=
+ =?us-ascii?Q?LJ+yqaMqJzZ/rsCnyBbFMXtbfXHNovs+GI/V+j2ObZ4CCYrJxJ7dxgJ8CGWD?=
+ =?us-ascii?Q?RekQNQnwrPwCztYhdO1bPjd2meHm7zSNP+E/TZDCVovmHhQl+wV6Kou2Aalx?=
+ =?us-ascii?Q?nAMbRhl1WG+ZSgkmUT3IIdcvj0hLyTVLGrACYCV0xWDBsGTwLRmmzeTt+0Gg?=
+ =?us-ascii?Q?2AyjnYXS6A0scUtnJHSJLkQJCRfIi2XyMB4+eQXKkdRlSB5JVWhlgBjB9QNd?=
+ =?us-ascii?Q?9rXgvYZ9QfMQbUq5P5b1wimDazveDXX9udpcEjVpKeZ7fsbnnnCnOAlAg0td?=
+ =?us-ascii?Q?5Ch5FnsSVJ4M3XFNhEPhLX5SY66c0H8r5FxZi5LPtCKCaXZMlAmS9XuDUekA?=
+ =?us-ascii?Q?qSuDC6GyuwQ1UIPmWq+VknPFZmpZizIyduPGB9kR0lINOfkVdBYGqQoalUJL?=
+ =?us-ascii?Q?wBdpQXn5nXIg9w3reByE8WCpM19IrgMly5SqGBdVGMJuVJxXvadq/8gcDIqe?=
+ =?us-ascii?Q?DLS7WVRscaQyZx/L0M0ZMfAFcyIUtN5F73a/KKPkPSoYXe6JFM4PL4W2yGzL?=
+ =?us-ascii?Q?sG8Ax+ZSjJqW75v810nBdqG6CnCNN5+K9pEOLxV92A3ysfNqT2mtCC6NASU2?=
+ =?us-ascii?Q?KSNQ7mrxcBbTRGaVYQp7tQ4HBIbFNFXKucLuHA2ZhTC1CrTH7cso4MGHQNo?=
+ =?us-ascii?Q?=3D?=
+Content-Type: multipart/alternative;
+	boundary="_000_DU0P195MB1626BF6C17FC7DD8519EC886EBC9ADU0P195MB1626EURP_"
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -58,246 +127,71 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/9] erofs: support user-defined fingerprint name
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <chao@kernel.org>,
-	<brauner@kernel.org>, <djwong@kernel.org>, <amir73il@gmail.com>,
-	<joannelkoong@gmail.com>
-CC: <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20251114095516.207555-1-lihongbo22@huawei.com>
- <20251114095516.207555-5-lihongbo22@huawei.com>
- <a3b0bac9-d08f-44dc-8adb-7cc85cae7b13@linux.alibaba.com>
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <a3b0bac9-d08f-44dc-8adb-7cc85cae7b13@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemr500015.china.huawei.com (7.202.195.162)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0P195MB1626.EURP195.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: c647b845-a54c-4b9d-eef6-08de25c1a345
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Nov 2025 10:11:13.1215
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2P195MB2323
+X-Spam-Status: No, score=0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,GB_FREEMAIL_DISPTO,
+	HTML_MESSAGE,SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Xiang,
+--_000_DU0P195MB1626BF6C17FC7DD8519EC886EBC9ADU0P195MB1626EURP_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/11/17 10:54, Gao Xiang wrote:
-> 
-> 
-> On 2025/11/14 17:55, Hongbo Li wrote:
->> From: Hongzhen Luo <hongzhen@linux.alibaba.com>
->>
->> When creating the EROFS image, users can specify the fingerprint name.
->> This is to prepare for the upcoming inode page cache share.
->>
->> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
->> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
->> ---
->>   fs/erofs/Kconfig    |  9 +++++++++
->>   fs/erofs/erofs_fs.h |  6 ++++--
->>   fs/erofs/internal.h |  6 ++++++
->>   fs/erofs/super.c    |  5 ++++-
->>   fs/erofs/xattr.c    | 26 ++++++++++++++++++++++++++
->>   fs/erofs/xattr.h    |  6 ++++++
->>   6 files changed, 55 insertions(+), 3 deletions(-)
->>
->> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
->> index d81f3318417d..1b5c0cd99203 100644
->> --- a/fs/erofs/Kconfig
->> +++ b/fs/erofs/Kconfig
->> @@ -194,3 +194,12 @@ config EROFS_FS_PCPU_KTHREAD_HIPRI
->>         at higher priority.
->>         If unsure, say N.
->> +
->> +config EROFS_FS_INODE_SHARE
->> +    bool "EROFS inode page cache share support (experimental)"
->> +    depends on EROFS_FS && EROFS_FS_XATTR && !EROFS_FS_ONDEMAND
->> +    help
->> +      This permits EROFS to share page cache for files with same
->> +      fingerprints.
-> 
-> I tend to use "EROFS_FS_PAGE_CACHE_SHARE" since it's closer to
-> user impact definition (inode sharing is ambiguious), but we
-> could leave "ishare.c" since it's closer to the implementation
-> details.
-> 
-> And how about:
-> 
-> config EROFS_FS_PAGE_CACHE_SHARE
->      bool "EROFS page cache share support (experimental)"
->      depends on EROFS_FS && EROFS_FS_XATTR && !EROFS_FS_ONDEMAND
->      help
->        This enables page cache sharing among inodes with identical
->        content fingerprints on the same device.
-> 
->        If unsure, say N.
-> 
->> +
->> +      If unsure, say N.
->> \ No newline at end of file
-> 
-> "\ No newline at end of file" should be fixed.
-> 
->> diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
->> index 3d5738f80072..104518cd161d 100644
->> --- a/fs/erofs/erofs_fs.h
->> +++ b/fs/erofs/erofs_fs.h
->> @@ -35,8 +35,9 @@
->>   #define EROFS_FEATURE_INCOMPAT_XATTR_PREFIXES    0x00000040
->>   #define EROFS_FEATURE_INCOMPAT_48BIT        0x00000080
->>   #define EROFS_FEATURE_INCOMPAT_METABOX        0x00000100
->> +#define EROFS_FEATURE_INCOMPAT_ISHARE_KEY    0x00000200
-> 
-> I do think it should be a compatible feature since images can be
-> mounted in the old kernels without any issue, and it should be
-> renamed as
-> 
-> EROFS_FEATURE_COMPAT_ISHARE_XATTRS
-> 
->>   #define EROFS_ALL_FEATURE_INCOMPAT        \
->> -    ((EROFS_FEATURE_INCOMPAT_METABOX << 1) - 1)
->> +    ((EROFS_FEATURE_INCOMPAT_ISHARE_KEY << 1) - 1)
->>   #define EROFS_SB_EXTSLOT_SIZE    16
->> @@ -83,7 +84,8 @@ struct erofs_super_block {
->>       __le32 xattr_prefix_start;    /* start of long xattr prefixes */
->>       __le64 packed_nid;    /* nid of the special packed inode */
->>       __u8 xattr_filter_reserved; /* reserved for xattr name filter */
->> -    __u8 reserved[3];
->> +    __u8 ishare_key_start;    /* start of ishare key */
-> 
-> ishare_xattr_prefix_id; ?
-> 
->> +    __u8 reserved[2];
->>       __le32 build_time;    /* seconds added to epoch for mkfs time */
->>       __le64 rootnid_8b;    /* (48BIT on) nid of root directory */
->>       __le64 reserved2;
->> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
->> index e80b35db18e4..3ebbb7c5d085 100644
->> --- a/fs/erofs/internal.h
->> +++ b/fs/erofs/internal.h
->> @@ -167,6 +167,11 @@ struct erofs_sb_info {
->>       struct erofs_domain *domain;
->>       char *fsid;
->>       char *domain_id;
->> +
->> +    /* inode page cache share support */
->> +    u8 ishare_key_start;
-> 
->      u8 ishare_xattr_pfx;
-> 
->> +    u8 ishare_key_idx;
-> 
-> why need this, considering we could just use
-> 
-> sbi->xattr_prefixes[sbi->ishare_xattr_pfx]
-> 
-> to get this.
-> 
->> +    char *ishare_key;
->>   };
->>   #define EROFS_SB(sb) ((struct erofs_sb_info *)(sb)->s_fs_info)
->> @@ -236,6 +241,7 @@ EROFS_FEATURE_FUNCS(dedupe, incompat, 
->> INCOMPAT_DEDUPE)
->>   EROFS_FEATURE_FUNCS(xattr_prefixes, incompat, INCOMPAT_XATTR_PREFIXES)
->>   EROFS_FEATURE_FUNCS(48bit, incompat, INCOMPAT_48BIT)
->>   EROFS_FEATURE_FUNCS(metabox, incompat, INCOMPAT_METABOX)
->> +EROFS_FEATURE_FUNCS(ishare_key, incompat, INCOMPAT_ISHARE_KEY)
->>   EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
->>   EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
->>   EROFS_FEATURE_FUNCS(shared_ea_in_metabox, compat, 
->> COMPAT_SHARED_EA_IN_METABOX)
->> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
->> index 0d88c04684b9..3561473cb789 100644
->> --- a/fs/erofs/super.c
->> +++ b/fs/erofs/super.c
->> @@ -339,7 +339,7 @@ static int erofs_read_superblock(struct 
->> super_block *sb)
->>               return -EFSCORRUPTED;    /* self-loop detection */
->>       }
->>       sbi->inos = le64_to_cpu(dsb->inos);
->> -
->> +    sbi->ishare_key_start = dsb->ishare_key_start;
->>       sbi->epoch = (s64)le64_to_cpu(dsb->epoch);
->>       sbi->fixed_nsec = le32_to_cpu(dsb->fixed_nsec);
->>       super_set_uuid(sb, (void *)dsb->uuid, sizeof(dsb->uuid));
->> @@ -738,6 +738,9 @@ static int erofs_fc_fill_super(struct super_block 
->> *sb, struct fs_context *fc)
->>       if (err)
->>           return err;
->> +    err = erofs_xattr_set_ishare_key(sb);
-> 
-> I don't think it's necessary to duplicate the copy, just use
-> "sbi->xattr_prefixes[sbi->ishare_xattr_pfx]" directly.
-> 
+Greetings Linuxerofs,
 
-Thanks for review, but here we should pass the char * to erofs_getxattr 
-to obtain the xattr length and value. And xattr_prefixes packed all 
-entries together so we cannot tranform 
-sbi->xattr_prefixes[sbi->ishare_xattr_pfx] into char * directly.
+I hope you're doing well. A friend of mine is giving away her late husband'=
+s Yamaha piano to an instrument lover. It's a special piece with a lot of m=
+eaning, and she'd be so happy if it went to someone who truly appreciates m=
+usic.
 
-Thanks,
-Hongbo
+Please let me know if you're interested or know someone who might be.
 
-> Thanks,
-> Gao Xiang
-> 
->> +    if (err)
->> +        return err;
->>       erofs_set_sysfs_name(sb);
->>       err = erofs_register_sysfs(sb);
->>       if (err)
->> diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
->> index 396536d9a862..3c99091f39a5 100644
->> --- a/fs/erofs/xattr.c
->> +++ b/fs/erofs/xattr.c
->> @@ -564,3 +564,29 @@ struct posix_acl *erofs_get_acl(struct inode 
->> *inode, int type, bool rcu)
->>       return acl;
->>   }
->>   #endif
->> +
->> +#ifdef CONFIG_EROFS_FS_INODE_SHARE
->> +int erofs_xattr_set_ishare_key(struct super_block *sb)
->> +{
->> +    struct erofs_sb_info *sbi = EROFS_SB(sb);
->> +    struct erofs_xattr_prefix_item *pf;
->> +    char *ishare_key;
->> +
->> +    if (!sbi->xattr_prefixes ||
->> +        !(sbi->ishare_key_start & EROFS_XATTR_LONG_PREFIX))
->> +        return 0;
->> +
->> +    pf = sbi->xattr_prefixes +
->> +        (sbi->ishare_key_start & EROFS_XATTR_LONG_PREFIX_MASK);
->> +    if (!pf || pf >= sbi->xattr_prefixes + sbi->xattr_prefix_count)
->> +        return 0;
->> +    ishare_key = kmalloc(pf->infix_len + 1, GFP_KERNEL);
->> +    if (!ishare_key)
->> +        return -ENOMEM;
->> +    memcpy(ishare_key, pf->prefix->infix, pf->infix_len);
->> +    ishare_key[pf->infix_len] = '\0';
->> +    sbi->ishare_key = ishare_key;
->> +    sbi->ishare_key_idx = pf->prefix->base_index;
->> +    return 0;
->> +}
->> +#endif
->> diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
->> index 6317caa8413e..21684359662c 100644
->> --- a/fs/erofs/xattr.h
->> +++ b/fs/erofs/xattr.h
->> @@ -67,4 +67,10 @@ struct posix_acl *erofs_get_acl(struct inode 
->> *inode, int type, bool rcu);
->>   #define erofs_get_acl    (NULL)
->>   #endif
->> +#ifdef CONFIG_EROFS_FS_INODE_SHARE
->> +int erofs_xattr_set_ishare_key(struct super_block *sb);
->> +#else
->> +static inline int erofs_xattr_set_ishare_key(struct super_block *sb) 
->> { return 0; }
->> +#endif
->> +
->>   #endif
-> 
+Thank you for considering this, any help or advice is appreciated.
+
+Regards,
+Freya
+
+--_000_DU0P195MB1626BF6C17FC7DD8519EC886EBC9ADU0P195MB1626EURP_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"MS Exchange Server version 16.0.19328.2=
+0190">
+<title></title>
+</head>
+<body>
+<!-- Converted from text/rtf format -->
+<p><font face=3D"Aptos">Greetings Linuxerofs,</font> </p>
+<p><font face=3D"Aptos">I hope you're doing well. A friend of mine is givin=
+g away her late husband&#8217;s Yamaha piano to an instrument lover. It&#82=
+17;s a special piece with a lot of meaning, and she&#8217;d be so happy if =
+it went to someone who truly appreciates music.</font></p>
+<p><font face=3D"Aptos">Please let me know if you&#8217;re interested or kn=
+ow someone who might be.</font>
+</p>
+<p><font face=3D"Aptos">Thank you for considering this, any help or advice =
+is appreciated.</font>
+</p>
+<p><font face=3D"Aptos">Regards,</font> <br>
+<font face=3D"Aptos">Freya</font> </p>
+</body>
+</html>
+
+--_000_DU0P195MB1626BF6C17FC7DD8519EC886EBC9ADU0P195MB1626EURP_--
 
