@@ -1,43 +1,73 @@
-Return-Path: <linux-erofs+bounces-1407-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1408-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B70EC67FC4
-	for <lists+linux-erofs@lfdr.de>; Tue, 18 Nov 2025 08:35:59 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 079BAC6994A
+	for <lists+linux-erofs@lfdr.de>; Tue, 18 Nov 2025 14:23:42 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4d9by52dgKz308g;
-	Tue, 18 Nov 2025 18:35:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4d9lgH6Gxsz2yv9;
+	Wed, 19 Nov 2025 00:23:39 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763451357;
-	cv=none; b=YiI2oIrbTwBRUc3vPX3Os6xt1Yh2x2cx8nf4POQ0cqp7ObjKVX/9wdAgcZzOrK9FCA4blDl0qKVhP14rzHI4omrYLnsiPiFuVpwUDgaeOAR1Bm7tQgnlZXfBaoFCDzBmsULfv1Sjip7wiOux70zqb+ZPewVLvSUCjWwo0CJM+l9boObXYrZMZMUfXy4D7KFYALlwvGdHRC/RPeGs+9xy01fLmW+zx8xPM1KjNESTN7FCKORtqrv0JY8qCysttTiJjQ/x0jqI5qYExWOVgssYvfpHUL5g2uwaUm7xcobx+iH97Nf2lOHuAmHiwjJ9rSB0Zvaovwae9uc3zslV2MpyRw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.16
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763472219;
+	cv=none; b=gzM49C55WgIb8DnyHBWKptSOdlSZsv+vEQU3lts4l/mqzqBsjhI0H2RnJku+xpRKKJFE+uEVEb/iYsYtYRCiws4YByGqFkGvlygCrSurN4sBQJixi1xrrdINqO1YysB8ge+QYsdhUOo6l795uB1Rpr+CK/0Thj0Fvz7FEVxNM7dPn1r56UgchZ4T/zmBYKhFSdLhzgs6mXZiaKe+Lzdwz9vDJabDn/XcnAp+ZggcNdSsyYGYlsvBBa48yHC4967CnHN9FNyfdSX50DpqNxnmAfSar2Lz8rDTgZdQBH/GIOEpCU4E4Fyvh78miGXrFQ4cmhChB9b0fFCCMPweYjR1tA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1763451357; c=relaxed/relaxed;
-	bh=UnsKcX6SJf5cwGhxDgVLSUzRD0ZhhZ/01A1WzVuNbgQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=S8CL73Mb31rpeCUZJtTZ3R8ZIQWyLtYgTrVUP+Ux+QUo7u+aSePMEVE+GXd6D7hjaJ/Qp/tYyii9XSCIYkb2zTh0iauI5LiDXlAyWqpxFKhnEiDTKfUjM1bjdneCVXiVXUeGhiINU2j5PTfgogM1UlxDEFn5PQmHe5TXR30EIrDTFoqyDzrgdjwNA5U+vjD2NczpZWVM92Jkwo65AaiJuczqMl6CEjU6D33ZiMhwVJ6pbrYOi0oppvbXlQL5czTJ6CTdoPaZn6t/ek/G31/f5/YoRZI5ZvVQyNKpTDG19QZhPD5DtIga84iQwk0ieJuvc9IdvSmhqOHe+uOF2LjpIw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gjPkxwl1; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1763472219; c=relaxed/relaxed;
+	bh=aug+qZz0DdRqGwp3/30c3L5VlxJNyA4VBnhsmPiYTXI=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=OPRLvthv+Z/N13jNJS51TFmJxbJmatewMQgXpPCos9D5+5ITZ4rDYDxp6bZhQuee26OTE88vkbpnN10X99PSgvuJNk7gSt3LhWce3BurmegUvL8drgd+w1YQWdmCJyr9lf2TM4FoAuvbW1zMjEWmzDxD2iIDQMK4UU7xNxR18+g4yQELEPfZ+3imKNWT7/uYPl/2UVDH1YTI0PreNn3FwdiP2m4dG37gBsq4tmpDPE/pEtE/N0C0nBT+hVbzhSLs+2e2EX+l11GkolcBSHHDNueNavnQf207KXlI+PmjjOwhoV1FtYHxXPe6/efxhpZR/ZAszaBbQxtDfu8X+8UGJQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=iV6vAI3i; dkim-atps=neutral; spf=pass (client-ip=192.198.163.16; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gjPkxwl1;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=iV6vAI3i;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.16; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4d9by30HlRz2yv6
-	for <linux-erofs@lists.ozlabs.org>; Tue, 18 Nov 2025 18:35:52 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1763451348; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=UnsKcX6SJf5cwGhxDgVLSUzRD0ZhhZ/01A1WzVuNbgQ=;
-	b=gjPkxwl1ii9deSc9ouVuu1/ogAEgl4S0ObFB2719vpPuFOnk/GIKc7crrSXB7GIflMBJ0u9Ef5W/419258ea36uORAcDfiCu4r2uPgCFlN/RaG88Pq4Huql1gg5wAkwxP8a353l3wqWsWOzsVp2KewQe9lbjS1upw3qdgzLbcKw=
-Received: from 30.170.82.147(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wsiew2h_1763451346 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 18 Nov 2025 15:35:46 +0800
-Message-ID: <add21bbf-1359-4659-9518-bdb1ef34ea48@linux.alibaba.com>
-Date: Tue, 18 Nov 2025 15:35:45 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4d9lgF0sJkz2yrg
+	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Nov 2025 00:23:35 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763472217; x=1795008217;
+  h=date:from:to:cc:subject:message-id;
+  bh=tfIg43mUJs0lfK7LqSg2uhjWxK4A8h4Lpsrdwo+R6Ec=;
+  b=iV6vAI3iF6Mtde3eFGlh0B6H4Xa45aXyVAUW+j+Me12ZuEaPR3Qclv95
+   ZD3cxfeAVhJK5DLwBm7ju7w5Zg0VNtNi0qbhDFLPbGc87yuS8TKy9BJzw
+   4Bx3xJmyuEZv7TACzlUorWj5oJ3qQh68UFntmpvzF3Iy83pUfW5SMIWGW
+   jzb9iQA7yEG4EmoJOSEOR+gCvFR7pQrIc3yjl3OddO0gFSe69A/N/1ZrT
+   YhEZmYcdWMywNPMFE89BJGqrMwBLTogd+pQuEOwGGzgSj8klqbWE4twrE
+   uEq1CkWKjeu4vp8dCflf1Z6tEcqm2/93gXFNEa9gOE3p0iBlVCNu6McGm
+   w==;
+X-CSE-ConnectionGUID: EePKHErbQti2DqLYNmI/OA==
+X-CSE-MsgGUID: ng8mJQXKRO+j4f6YkjlZlA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11616"; a="53062124"
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="53062124"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2025 05:23:32 -0800
+X-CSE-ConnectionGUID: y+YSQDWiSgqstJ/P42qRiw==
+X-CSE-MsgGUID: Uay7M4vBRKOm2euP2CFcaA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.19,314,1754982000"; 
+   d="scan'208";a="190020000"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by orviesa006.jf.intel.com with ESMTP; 18 Nov 2025 05:23:31 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vLLg8-0001lH-30;
+	Tue, 18 Nov 2025 13:23:28 +0000
+Date: Tue, 18 Nov 2025 21:23:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Subject: [xiang-erofs:dev-test] BUILD SUCCESS
+ 3027b141cbeb759f0310bb56de7d4da3a9eb511f
+Message-ID: <202511182122.93JvXE5C-lkp@intel.com>
+User-Agent: s-nail v14.9.25
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -48,93 +78,130 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 01/10] iomap: stash iomap read ctx in the private field
- of iomap_iter
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: brauner@kernel.org, djwong@kernel.org, Christoph Hellwig <hch@lst.de>
-Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Chao Yu <chao@kernel.org>,
- Amir Goldstein <amir73il@gmail.com>, Joanne Koong <joannelkoong@gmail.com>,
- Hongbo Li <lihongbo22@huawei.com>
-References: <20251117132537.227116-1-lihongbo22@huawei.com>
- <20251117132537.227116-2-lihongbo22@huawei.com>
- <f3938037-1292-470d-aace-e5c620428a1d@linux.alibaba.com>
-In-Reply-To: <f3938037-1292-470d-aace-e5c620428a1d@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-(... try to add Christoph..)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+branch HEAD: 3027b141cbeb759f0310bb56de7d4da3a9eb511f  erofs: correct FSDAX detection
 
-On 2025/11/18 01:08, Gao Xiang wrote:
-> Hi Darrick, Christian,
-> 
-> On 2025/11/17 21:25, Hongbo Li wrote:
->> It's useful to get filesystem-specific information using the
->> existing private field in the @iomap_iter passed to iomap_{begin,end}
->> for advanced usage for iomap buffered reads, which is much like the
->> current iomap DIO.
->>
->> For example, EROFS needs it to:
->>
->>   - implement an efficient page cache sharing feature, since iomap
->>     needs to apply to anon inode page cache but we'd like to get the
->>     backing inode/fs instead, so filesystem-specific private data is
->>     needed to keep such information;
->>
->>   - pass in both struct page * and void * for inline data to avoid
->>     kmap_to_page() usage (which is bogus).
->>
->> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
-> 
-> Could you help review this iomap change, since erofs uses iomap
-> and erofs page cache sharing needs this change, as I told
-> Joanne months ago.
-> 
-> Even without the page cache sharing feature, introducing
-> iomap_iter_ctx for .iomap_{begin,end}, like the current DIO
-> does, is still useful for erofs, as patch 2 mentioned.
+elapsed time: 1510m
 
-I know it could be somewhat too late to introduce the entire
-feature for 6.19, but could we consider the first two patches
-(patch 1 and 2) if possible? because:
+configs tested: 109
+configs skipped: 3
 
-  - patch 1 just adds a way to specify iter->private for buffered
-    read since there was no way to pass on-stack fs-specific
-    contexts from .iomap_begin() to .iomap_end() for iomap
-    buffered read.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-    Actually patch 1 doesn't introduce any new logic or behavior
-    to iomap itself, just add a way to specify iter->private, I
-    think it does no harm to the iomap stability.
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                   randconfig-001-20251118    gcc-14.3.0
+arc                   randconfig-002-20251118    gcc-15.1.0
+arm                               allnoconfig    clang-22
+arm                   randconfig-001-20251118    gcc-8.5.0
+arm                   randconfig-002-20251118    gcc-10.5.0
+arm                   randconfig-003-20251118    clang-22
+arm                   randconfig-004-20251118    clang-22
+arm                       versatile_defconfig    gcc-15.1.0
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20251118    clang-20
+arm64                 randconfig-002-20251118    clang-22
+arm64                 randconfig-003-20251118    clang-19
+arm64                 randconfig-004-20251118    clang-17
+csky                              allnoconfig    gcc-15.1.0
+csky                  randconfig-001-20251118    gcc-10.5.0
+csky                  randconfig-002-20251118    gcc-15.1.0
+hexagon                           allnoconfig    clang-22
+hexagon               randconfig-001-20251118    clang-16
+hexagon               randconfig-002-20251118    clang-22
+i386                              allnoconfig    gcc-14
+i386        buildonly-randconfig-001-20251118    clang-20
+i386        buildonly-randconfig-002-20251118    clang-20
+i386        buildonly-randconfig-003-20251118    clang-20
+i386        buildonly-randconfig-004-20251118    clang-20
+i386        buildonly-randconfig-005-20251118    gcc-13
+i386        buildonly-randconfig-006-20251118    clang-20
+i386                  randconfig-001-20251118    clang-20
+i386                  randconfig-002-20251118    clang-20
+i386                  randconfig-003-20251118    gcc-14
+i386                  randconfig-004-20251118    gcc-14
+i386                  randconfig-005-20251118    clang-20
+i386                  randconfig-006-20251118    gcc-14
+i386                  randconfig-007-20251118    gcc-14
+i386                  randconfig-011-20251118    gcc-14
+i386                  randconfig-012-20251118    gcc-12
+i386                  randconfig-013-20251118    clang-20
+i386                  randconfig-014-20251118    gcc-14
+i386                  randconfig-015-20251118    gcc-14
+i386                  randconfig-016-20251118    gcc-14
+i386                  randconfig-017-20251118    clang-20
+loongarch                         allnoconfig    clang-22
+loongarch                           defconfig    clang-19
+loongarch             randconfig-001-20251118    gcc-15.1.0
+loongarch             randconfig-002-20251118    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                                defconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                          defconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+mips                        bcm47xx_defconfig    clang-18
+mips                           gcw0_defconfig    clang-22
+nios2                             allnoconfig    gcc-11.5.0
+nios2                               defconfig    gcc-11.5.0
+nios2                 randconfig-001-20251118    gcc-11.5.0
+nios2                 randconfig-002-20251118    gcc-8.5.0
+openrisc                          allnoconfig    gcc-15.1.0
+openrisc                            defconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+parisc                              defconfig    gcc-15.1.0
+parisc                randconfig-001-20251118    gcc-14.3.0
+parisc                randconfig-002-20251118    gcc-12.5.0
+parisc64                            defconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+powerpc               randconfig-001-20251118    clang-22
+powerpc               randconfig-002-20251118    clang-22
+powerpc                         wii_defconfig    gcc-15.1.0
+powerpc64             randconfig-001-20251118    gcc-13.4.0
+powerpc64             randconfig-002-20251118    gcc-8.5.0
+riscv                             allnoconfig    gcc-15.1.0
+riscv                               defconfig    clang-22
+s390                              allnoconfig    clang-22
+s390                                defconfig    clang-22
+s390                  randconfig-001-20251117    gcc-14.3.0
+sh                                allnoconfig    gcc-15.1.0
+sh                                  defconfig    gcc-15.1.0
+sh                    randconfig-001-20251117    gcc-15.1.0
+sh                   rts7751r2dplus_defconfig    gcc-15.1.0
+sh                           se7750_defconfig    gcc-15.1.0
+sh                     sh7710voipgw_defconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+sparc                               defconfig    gcc-15.1.0
+sparc                 randconfig-001-20251118    gcc-8.5.0
+sparc                 randconfig-002-20251118    gcc-8.5.0
+sparc64                             defconfig    clang-20
+sparc64               randconfig-001-20251118    clang-22
+sparc64               randconfig-002-20251118    clang-22
+um                                allnoconfig    clang-22
+um                                  defconfig    clang-22
+um                             i386_defconfig    gcc-14
+um                    randconfig-002-20251118    clang-22
+um                           x86_64_defconfig    clang-22
+x86_64                            allnoconfig    clang-20
+x86_64      buildonly-randconfig-001-20251118    clang-20
+x86_64      buildonly-randconfig-002-20251118    gcc-14
+x86_64      buildonly-randconfig-003-20251118    clang-20
+x86_64      buildonly-randconfig-004-20251118    clang-20
+x86_64      buildonly-randconfig-005-20251118    clang-20
+x86_64      buildonly-randconfig-006-20251118    clang-20
+x86_64                              defconfig    gcc-14
+x86_64                randconfig-013-20251118    gcc-14
+x86_64                randconfig-071-20251118    gcc-13
+x86_64                randconfig-072-20251118    clang-20
+x86_64                randconfig-073-20251118    gcc-14
+x86_64                randconfig-074-20251118    gcc-13
+x86_64                randconfig-075-20251118    gcc-14
+x86_64                randconfig-076-20251118    clang-20
+xtensa                            allnoconfig    gcc-15.1.0
 
-  - patch 2 tries to avoid kmap_to_page() usage since previously
-    there is no way to pass both `void *` and `struct page *`
-    from .iomap_begin() to .iomap_end() because inline data
-    handling needs both.
-
-    Actually people would like to get rid of kmap_to_page(), for
-    example:
-    https://lore.kernel.org/r/Y5u+oOLkJs6jehik@iweiny-desk3
-
-    So I wonder if patch 1 and 2 can be considered as an
-    individual improvement for 6.19.
-
-  - Currently the page cache sharing series is coupled with iomap,
-    but the main change is still in erofs itself.  If the first
-    two patches can be applied in advance, that would make the
-    remaining part through erofs tree without treewide conflict
-    like this.
-
-Just my two cents.
-
-Thanks,
-Gao Xiang
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
