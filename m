@@ -1,43 +1,56 @@
-Return-Path: <linux-erofs+bounces-1412-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1413-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee1:b9f1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40A87C6DB77
-	for <lists+linux-erofs@lfdr.de>; Wed, 19 Nov 2025 10:28:41 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 787E5C731E2
+	for <lists+linux-erofs@lfdr.de>; Thu, 20 Nov 2025 10:26:30 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dBGPg11DSz3bps;
-	Wed, 19 Nov 2025 20:28:39 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dBtJd6ktRz2yr9;
+	Thu, 20 Nov 2025 20:26:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763544519;
-	cv=none; b=fW4EkIcMPM3FrQ92QGNXhOUbIQqYx8ssMIPM7SywQ6kBAspQKTO8UXnRTSbUUdzTox/TRWAbs4PrI0O7F0ZSgD4uiGN5AP6FP7XhNllyn2V/06gNlYJQm4gtOF95y3LaQ1RNmC1tf9n3hNTNh10KXoQlCLWXL/ySrNLKbdGB/9SZCbUUOzRBInBO+Nan3iOsH+f/S0T5ecGPVytkUUBXbMx1lxbIFKErS6S9udFUrW4vrFu+oaU7YCbpMyocQi1IIsFTIVrc98DIEXemJPFwN/wtSDhXzudWCB7BI3OuIflr5Z+ZrDLRzuiZO+LRjqm8pzYOnbImOtcLbfOK8/LS0g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.224
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763630785;
+	cv=none; b=oUevpDBOl/BqotTdDItzHE6eGgdviyghjCA+GKYwyyk3yiP3pb3Ns8DUp2FwAKZTgKfQtVfNJ0+TG/T6b1do2u+Ym5otgRHhbw+Z+Kh9ilgOJJYKEYlYkk5VrZ8uU+YCUPosjeKoQ3GYjGVLN0KbHKsurrFSDYGE73MqBGXWAk74hm8FFJjlfcy9JRTuP85qQAqokWfZDpJ8xoDxNmVIO44wW0TWqT65K2dq2Wn2JZB8JFFslZr8zyn+heTA+oImphjegTIR9tGHIQ2GZBXEGEFUJKSxjX5YOP5GPdR6a+5fFIyXllGAefMvLDQKJCUnBeKa2Wrm0cmxMkbWSWrJBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1763544519; c=relaxed/relaxed;
-	bh=i6/vAufc4D2l5WEhS+pcUMoKXwjumMPqeZkC60gdnbs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=USg2tKv0/uGv2XiGw2fNcmWlF6FfxC0scia1UWrQg9SD3ceml+F2dMfXKsYConVOpfleep02lGuogOSDxRT/wdJMaCZY5cCOiDzL/zIYMLwgMCw1O9uFTxVE4zFi8oBiVSeiY/1kem4pHgrX2QTON3v8pnE4AytfVxylcrfGQ2bcFyzQWAH97Nt/LUK4VUwJNMApPjveGyxGY0BpDyp3sjpW9jpQHkw2eWaiQenYRhuDH2yDr6Sd6z1A7xZsfuR64BwXy9+IgrntI673M8z9icAx3Ql/HsvD+uCM0EeeWq6rnH1V7yz72rOA24/KplzCzng5ZJk7f/2XfG1evvbwqg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KtqwIYLo; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1763630785; c=relaxed/relaxed;
+	bh=YuXOMExEGLmU3ZU/nkr8Dkjyi8E1Cb5gTcqdkaiCp6U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hW/79pHscfc2j1KJ+ZW8vc8JtSrYC5n8XFZal+jhhR2ZXbX/Ht8II840DJS823D9w0wT8UExrEK1H/nwwzAKVqmz5UJpoLFckccEb83xuKd3OUP9cibl46/5M0hDVr6HQHKBtWdEOKfB9tAFB2ZWwJmLPgOKKw4vo1BSv3EyzytewSNmhz9BPywZy5OlP/AzE+AbZ4g66RtQIO+ARbao7Kts93vL/TLYe1dKXOMC/A3sDMgj5u1LviYcVUUIlHr4nJEdIptv6zVFw/n48cZ09kTtAPuSlNZFCWJLvj2k1NEc6UMcc/MIHomXs8voT1LunUX53p9Iv2IeLbr+a9D2ng==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=vyyudY5p; dkim-atps=neutral; spf=pass (client-ip=113.46.200.224; helo=canpmsgout09.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=KtqwIYLo;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=vyyudY5p;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.224; helo=canpmsgout09.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dBGPc2Zwbz3bkd
-	for <linux-erofs@lists.ozlabs.org>; Wed, 19 Nov 2025 20:28:34 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1763544509; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=i6/vAufc4D2l5WEhS+pcUMoKXwjumMPqeZkC60gdnbs=;
-	b=KtqwIYLooczrHDkC0u8kU0sBtIR6THjn9/nQBFEwLgllMlE0ORj9VfMxOgWZ7dOGEwetIQe5M2P3T8x859FwfDXjOa9v2/hHIzOcM87JGCaah+e22zxG2f8r6/6iX5H/+E4Y0b8CJ/7GsuM/kUfcwa601mygJWlkytQTk2ld4zI=
-Received: from 30.221.131.104(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WsoC-64_1763544507 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 19 Nov 2025 17:28:28 +0800
-Message-ID: <2ec53eec-12c5-45f9-bd7d-03f98d03a384@linux.alibaba.com>
-Date: Wed, 19 Nov 2025 17:28:27 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dBtJb1l1dz2ypW
+	for <linux-erofs@lists.ozlabs.org>; Thu, 20 Nov 2025 20:26:21 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=YuXOMExEGLmU3ZU/nkr8Dkjyi8E1Cb5gTcqdkaiCp6U=;
+	b=vyyudY5pw4gVbFoW0VDKxGoDUr2hSxlri+YwMVyzFw25cOHSX6vD/Mse+tm9Tkfwuo20UNf8h
+	BjKx64Wz1gpfhdRt3C6AS/i9VwE1BtWues2fbc1SbhXfAnAvgrzqos1b+OmTDZMS+kPTVR/8YZx
+	wHQ0rXrg03vHBlj4PTeGK4w=
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4dBtGQ5ZfPz1cypF
+	for <linux-erofs@lists.ozlabs.org>; Thu, 20 Nov 2025 17:24:30 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id 78E9C140155
+	for <linux-erofs@lists.ozlabs.org>; Thu, 20 Nov 2025 17:26:15 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
+ (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 20 Nov
+ 2025 17:26:14 +0800
+From: Yifan Zhao <zhaoyifan28@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>
+CC: <wayne.ma@huawei.com>, <jingrui@huawei.com>
+Subject: [PATCH 1/2] erofs-utils: mkfs: fix memleak in error exit path
+Date: Thu, 20 Nov 2025 17:22:14 +0800
+Message-ID: <20251120092215.3635202-1-zhaoyifan28@huawei.com>
+X-Mailer: git-send-email 2.33.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,67 +62,46 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 01/10] iomap: stash iomap read ctx in the private field
- of iomap_iter
-To: Christoph Hellwig <hch@lst.de>
-Cc: brauner@kernel.org, djwong@kernel.org, linux-fsdevel@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- Chao Yu <chao@kernel.org>, Amir Goldstein <amir73il@gmail.com>,
- Joanne Koong <joannelkoong@gmail.com>, Hongbo Li <lihongbo22@huawei.com>
-References: <20251117132537.227116-1-lihongbo22@huawei.com>
- <20251117132537.227116-2-lihongbo22@huawei.com>
- <f3938037-1292-470d-aace-e5c620428a1d@linux.alibaba.com>
- <add21bbf-1359-4659-9518-bdb1ef34ea48@linux.alibaba.com>
- <20251119054946.GA20142@lst.de>
- <e572c851-fcbb-4814-b24e-5e0e2e67c732@linux.alibaba.com>
- <20251119091254.GA24902@lst.de>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20251119091254.GA24902@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+Cleanup functions `erofs_put_super()` and `liberofs_global_exit()` are
+not executed if mkfs.erofs encounts an error. Fix it.
 
+Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+---
+ mkfs/main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-On 2025/11/19 17:12, Christoph Hellwig wrote:
-> On Wed, Nov 19, 2025 at 02:17:07PM +0800, Gao Xiang wrote:
->> Hongbo didn't Cc you on this thread (I think he just added
->> recipients according to MAINTAINERS), but I know you played
->> a key role in iomap development, so I think you should be
->> in the loop about the iomap change too.
->>
->> Could you give some comments (maybe review) on this patch
->> if possible?  My own opinion is that if the first two
->> patches can be applied in the next cycle (6.19) (I understand
->> it will be too late for the whole feature into 6.19) , it
->> would be very helpful to us so at least the vfs iomap branch
->> won't be coupled anymore if the first two patch can be landed
->> in advance.
-> 
-> The patch itself looks fine.  But as Darrick said we really need
-> to get our house in order for the iomap branch so that it actually
-> works this close to the merge window.
-
-Sigh.. I'm sorry to hear about that.
-
-Anyway, personally I think patch 1 makes no change to iomap logic
-(so I think it definitely does no harm to iomap stability), but
-opens a chance for iomap users to control iter->private and pass
-fs-specific contexts from iomap_begin to end (and patch 2 uses
-this to get rid of kmap_to_page()). So honestly I'm eager to get
-patches 1 and 2 merged.
-
-However, it's really up to the iomap maintainers. Yet, if delayed
-to the next development cycle, it might still need to resolve
-cross-branch conflicts, and it could still causes some churn,
-anyway...
-
-Thanks,
-Gao Xiang
+diff --git a/mkfs/main.c b/mkfs/main.c
+index 76bf843..5937027 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -2024,11 +2024,12 @@ exit:
+ 	if (err) {
+ 		erofs_err("\tCould not format the device : %s\n",
+ 			  erofs_strerror(err));
+-		return 1;
++		err = 1;
++	} else {
++		erofs_update_progressinfo("Build completed.\n");
++		erofs_mkfs_showsummaries();
+ 	}
+-	erofs_update_progressinfo("Build completed.\n");
+-	erofs_mkfs_showsummaries();
+ 	erofs_put_super(&g_sbi);
+ 	liberofs_global_exit();
+-	return 0;
++	return err;
+ }
+-- 
+2.33.0
 
 
