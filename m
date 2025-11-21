@@ -1,47 +1,43 @@
-Return-Path: <linux-erofs+bounces-1420-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1421-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6428C77C4F
-	for <lists+linux-erofs@lfdr.de>; Fri, 21 Nov 2025 08:58:01 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54C3BC78077
+	for <lists+linux-erofs@lfdr.de>; Fri, 21 Nov 2025 10:00:58 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dCSJ75kRpz2yD5;
-	Fri, 21 Nov 2025 18:57:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dCThk4Vvpz2yD5;
+	Fri, 21 Nov 2025 20:00:54 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763711879;
-	cv=none; b=EKNMJoQumlL4JtrJz28LR+b453Z+ykL7zwXSEeAvHh1Ue+P/rH8H33CVGAIRg16zov054kJ2f241IuI9ztrUw1/dDXQFRv0LwpWjcofA4bT0U96AVKZDBnJiCZlZhhX3TmsiVrBh+Nlr3OvGyDeeH1K/D02E4WZfDtqtsmNt9c5eJGFpawCtNvHOewirzoLinQs9OpWFxc9+jHPKY/06ctMXOolP92brk3BE1XmlskPs6V1BNCSbSkb2gzRYJw1oacewfXqkEQj3gfmErDAeTk6w0y1mSmyEQlEr+zHnL08Dy6/hc60RhS0dGMnMqLv7JYqumYOymwJQU66+ccSXsg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763715654;
+	cv=none; b=iu0LMg0kK+KNDBsVHCIJpez66vn41nChNAHwMz9ZdnVpkx9gx9A5Rr+IKB3efufIPYNVnPT0dSvxChNkwlcGCOJy/R+0437mMAi2ZOCShQRAP90QeP1eW6kbNSai8Bx8ssNUnJOfDZu1UzsjhRWMB7O2+8LaJeds+iphjUf4fM1NiWhjbLs7VDjfJBhQeue7IoV5FEv0/Bu/rCRdXYIqPsAhKwoD+mAVfnywDDhUvIR+/JQoLXs6t5wYI4cOr+NjzCq4po8edDaJSckZllacFX3OC/to6pvZI7+uP8SVIvvAnVH7Q6x/iV3wkkNIj8XEJEekS93aWIGBwHs17lJHZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1763711879; c=relaxed/relaxed;
-	bh=ZcOdTkejjAZ3vBBBtCufWKj8bfiLWB2nxXGHzIy7zL8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iUxBLhjs/L/XXqJ4FmPJ/tj+pk13KtzY1qbE8KxDLXCmVtqgdCe0G8my+b575TNGAbYEQuUh7yLXBetVm3F1svDpIOSb5C5VtYZ31SOTj1uZpO8Go//Cw0IKb6nugincGzbLyrMviFFZvJhl9GTCq60aMQkQU9FqOgCPiP0ixWdMVR2QKWCxE7WGDETwo2oUuJMygZCaQ6ULG2LL4/zRfm22rsJas3DGfOG+RZAtswvPPMz42QGCX4ol//Lyl9rE382jxKvyFhZM3dx91TCYgYzpZznNNONdUnWivb2c5IoEjQzzBf9vpvGo7zHjKMOB4i/9X/JCaCIOQ1Lihv+mGA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=LW5A+10u; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1763715654; c=relaxed/relaxed;
+	bh=ODX3SHQPkSNNyJwFmjPAzgmz+3TssL6//RA4ovQTtr0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bXPIPZoRzhzHBAhpjZmePzlm9F+CtXDGIWtAuc1bbjntCM6oORNATsvYrCkUn7cbXwXX01i15S1BIMuSag6C6a6dJDIGzSG8UTs2HgRDr02AuULJ/mf+s1PP2RGPA5AblYB7ZACec6ab0pNek/JvdvNv3MiXzWzSizMzTme1zdVSuNvpY/7phgZxpJA6jZkwn8/57SuYBCY4GHVFqEsjloJ/CeezudfVydddTbecuuSMhQUFciq6yI4I2aij9gMN3BXv5hpgn6bw0HEqW2mbkhRCxtcwESGP/Hbuu4oRZ1FpQWy9Xn0JYLDxa0UFfumW62N5jc/CiCEBshebb+nK3w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=j5C61iNS; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=LW5A+10u;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=j5C61iNS;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dCSJ45vcCz2y5T
-	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Nov 2025 18:57:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dCThg6FBxz2xqh
+	for <linux-erofs@lists.ozlabs.org>; Fri, 21 Nov 2025 20:00:49 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1763711870; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=ZcOdTkejjAZ3vBBBtCufWKj8bfiLWB2nxXGHzIy7zL8=;
-	b=LW5A+10uRP6rlaPmOxft73YD7/j8wfiii+JyUFlLo4BR2sMM/EiY5s6cF3vSI3nrqNfOw0sGvC5f3WdmlwzkhA2lPj7J5N9Umpyq2/2rG3Fz6WZj4XXxqx0/2oI2Hr9Ax+L5eOVftkcoYeFHGUijfaJmygiR9GFYHXJI4QRd39Q=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wt-lqgF_1763711865 cluster:ay36)
+	t=1763715644; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=ODX3SHQPkSNNyJwFmjPAzgmz+3TssL6//RA4ovQTtr0=;
+	b=j5C61iNS9P77xZpJ4QXYGJXt8lIVxUhL1joDmulsybOI9Vt0exs9M4T+/kjEYOclOr5n8bW/pPc/0/uCfJjN7pjwFBTD2EGjYr29nEVYczIZUE6lsCdFCs9j94zADzFbanee3RD8EyUKGxZc+zDrs2rg8CvAM0J1ppZOJl8NiT4=
+Received: from 30.221.131.79(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wt..9lz_1763715642 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Fri, 21 Nov 2025 15:57:49 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs-utils: mkfs: add support to issue directory data separately
-Date: Fri, 21 Nov 2025 15:57:44 +0800
-Message-ID: <20251121075744.3773724-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+          Fri, 21 Nov 2025 17:00:43 +0800
+Message-ID: <9c78f293-9536-4463-9c25-817937e40cc2@linux.alibaba.com>
+Date: Fri, 21 Nov 2025 17:00:42 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -53,166 +49,203 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] erofs-utils: lib: support AWS SigV4 for S3 backend
+To: Yifan Zhao <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
+Cc: wayne.ma@huawei.com, jingrui@huawei.com
+References: <20251120092215.3635202-1-zhaoyifan28@huawei.com>
+ <20251120092215.3635202-2-zhaoyifan28@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20251120092215.3635202-2-zhaoyifan28@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Especially since compressed directory data could be in the packing
-inode, it would be better to compress them together.
+Hi Yifan,
 
-It improves the overall compressed directory access performance.
+On 2025/11/20 17:22, Yifan Zhao wrote:
+> This patch introduces support for AWS Signature Version 4 for s3erofs
+> remote backend.
+> 
+> Now users can specify the folowing options:
+>   - passwd_file=Y, S3 credentials file in the format $ak:$sk (optional);
+>   - urlstyle=<vhost, path>, S3 API calling style (optional);
+>   - sig=<2,4>, S3 API signature version (optional);
+>   - region=W, region code for S3 endpoint (required for sig=4).
+> 
+> e.g.:
+> mkfs.erofs \
+>      --s3=s3.us-east-1.amazonaws.com,sig=4,region=us-east-1 \
+>      output.img some_bucket/path/to/object
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- include/erofs/importer.h |  2 ++
- lib/inode.c              | 68 ++++++++++++++++++++++++++++++++++++----
- mkfs/main.c              |  6 ++--
- 3 files changed, 68 insertions(+), 8 deletions(-)
+Thanks for the effort!
 
-diff --git a/include/erofs/importer.h b/include/erofs/importer.h
-index e1734b995ae8..a9d9c569d157 100644
---- a/include/erofs/importer.h
-+++ b/include/erofs/importer.h
-@@ -44,6 +44,8 @@ struct erofs_importer_params {
- 	char force_inodeversion;
- 	bool ignore_mtime;
- 	bool no_datainline;
-+	/* Issue directory data (except inline data) separately from regular inodes */
-+	bool grouped_dirdata;
- 	bool hard_dereference;
- 	bool ovlfs_strip;
- 	bool dot_omitted;
-diff --git a/lib/inode.c b/lib/inode.c
-index d993c8fd7428..1d08e39317c0 100644
---- a/lib/inode.c
-+++ b/lib/inode.c
-@@ -1494,6 +1494,7 @@ enum erofs_mkfs_jobtype {	/* ordered job types */
- 
- struct erofs_mkfs_jobitem {
- 	enum erofs_mkfs_jobtype type;
-+	unsigned int _usize;
- 	union {
- 		struct erofs_inode *inode;
- 		struct erofs_mkfs_job_ndir_ctx ndir;
-@@ -1529,6 +1530,11 @@ static int erofs_mkfs_jobfn(struct erofs_importer *im,
- 		if (inode->datalayout == EROFS_INODE_FLAT_INLINE)
- 			inode->idata_size = inode->i_size & (bsz - 1);
- 
-+		/*
-+		 * Directory on-disk inodes should be close to other inodes
-+		 * in the parent directory since parent directories should
-+		 * generally be prioritized.
-+		 */
- 		ret = erofs_prepare_inode_buffer(im, inode);
- 		if (ret)
- 			return ret;
-@@ -1657,6 +1663,48 @@ static void erofs_mkfs_flushjobs(struct erofs_sb_info *sbi)
- }
- #endif
- 
-+struct erofs_mkfs_pending_jobitem {
-+	struct list_head list;
-+	struct erofs_mkfs_jobitem item;
-+};
-+
-+int erofs_mkfs_push_pending_job(struct list_head *pending,
-+				enum erofs_mkfs_jobtype type,
-+				void *elem, int size)
-+{
-+	struct erofs_mkfs_pending_jobitem *pji;
-+
-+	pji = malloc(sizeof(*pji));
-+	if (!pji)
-+		return -ENOMEM;
-+
-+	pji->item.type = type;
-+	if (size)
-+		memcpy(&pji->item.u, elem, size);
-+	pji->item._usize = size;
-+	list_add_tail(&pji->list, pending);
-+	return 0;
-+}
-+
-+int erofs_mkfs_flush_pending_jobs(struct erofs_importer *im,
-+				  struct list_head *q)
-+{
-+	struct erofs_mkfs_pending_jobitem *pji, *n;
-+	int err2, err;
-+
-+	err = 0;
-+	list_for_each_entry_safe(pji, n, q, list) {
-+		list_del(&pji->list);
-+
-+		err2 = erofs_mkfs_go(im, pji->item.type, &pji->item.u,
-+				     pji->item._usize);
-+		free(pji);
-+		if (!err)
-+			err = err2;
-+	}
-+	return err;
-+}
-+
- static int erofs_mkfs_import_localdir(struct erofs_importer *im, struct erofs_inode *dir,
- 				      u64 *nr_subdirs, unsigned int *i_nlink)
- {
-@@ -1943,6 +1991,8 @@ static int erofs_mkfs_dump_tree(struct erofs_importer *im, bool rebuild,
- 	struct erofs_inode *root = im->root;
- 	struct erofs_sb_info *sbi = root->sbi;
- 	struct erofs_inode *dumpdir = erofs_igrab(root);
-+	bool grouped_dirdata = im->params->grouped_dirdata;
-+	LIST_HEAD(pending_dirs);
- 	int err, err2;
- 
- 	erofs_mark_parent_inode(root, root);	/* rootdir mark */
-@@ -2009,13 +2059,19 @@ static int erofs_mkfs_dump_tree(struct erofs_importer *im, bool rebuild,
- 		}
- 		*last = dumpdir;	/* fixup the last (or the only) one */
- 		dumpdir = head;
--		err2 = erofs_mkfs_go(im, EROFS_MKFS_JOB_DIR_BH,
--				     &dir, sizeof(dir));
--		if (err || err2)
--			return err ? err : err2;
-+		err2 = grouped_dirdata ?
-+			erofs_mkfs_push_pending_job(&pending_dirs,
-+				EROFS_MKFS_JOB_DIR_BH, &dir, sizeof(dir)) :
-+			erofs_mkfs_go(im, EROFS_MKFS_JOB_DIR_BH,
-+				      &dir, sizeof(dir));
-+		if (err || err2) {
-+			if (!err)
-+				err = err2;
-+			break;
-+		}
- 	} while (dumpdir);
--
--	return err;
-+	err2 = erofs_mkfs_flush_pending_jobs(im, &pending_dirs);
-+	return err ? err : err2;
- }
- 
- struct erofs_mkfs_buildtree_ctx {
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 76bf84348364..9719aec7952e 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -1410,10 +1410,12 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
- 			tarerofs_decoder = EROFS_IOS_DECODER_GZRAN;
- 			break;
- 		case 536:
--			if (!optarg || strcmp(optarg, "1"))
-+			if (!optarg || strcmp(optarg, "1")) {
- 				params->compress_dir = true;
--			else
-+				params->grouped_dirdata = true;
-+			} else {
- 				params->compress_dir = false;
-+			}
- 			break;
- 		case 537:
- 			if (!optarg || strcmp(optarg, "1"))
--- 
-2.43.5
+Could we find a public s3 bucket and post here as an example?
 
+> 
+> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+> ---
+>   lib/liberofs_s3.h |   1 +
+>   lib/remotes/s3.c  | 567 +++++++++++++++++++++++++++++++++++++---------
+>   mkfs/main.c       |  14 +-
+>   3 files changed, 471 insertions(+), 111 deletions(-)
+> 
+> diff --git a/lib/liberofs_s3.h b/lib/liberofs_s3.h
+> index f2ec822..f4886cd 100644
+> --- a/lib/liberofs_s3.h
+> +++ b/lib/liberofs_s3.h
+> @@ -27,6 +27,7 @@ enum s3erofs_signature_version {
+>   struct erofs_s3 {
+>   	void *easy_curl;
+>   	const char *endpoint;
+> +	const char *region;
+>   	char access_key[S3_ACCESS_KEY_LEN + 1];
+>   	char secret_key[S3_SECRET_KEY_LEN + 1];
+>   
+> diff --git a/lib/remotes/s3.c b/lib/remotes/s3.c
+> index 0f7e1a9..3263dd7 100644
+> --- a/lib/remotes/s3.c
+> +++ b/lib/remotes/s3.c
+> @@ -23,7 +23,8 @@
+>   #define S3EROFS_PATH_MAX		1024
+>   #define S3EROFS_MAX_QUERY_PARAMS	16
+>   #define S3EROFS_URL_LEN			8192
+> -#define S3EROFS_CANONICAL_QUERY_LEN	2048
+> +#define S3EROFS_CANONICAL_URI_LEN	1024
+
+Is there a spec to document that?
+
+> +#define S3EROFS_CANONICAL_QUERY_LEN	S3EROFS_URL_LEN
+>   
+>   #define BASE64_ENCODE_LEN(len)	(((len + 2) / 3) * 4)
+>   
+> @@ -34,52 +35,142 @@ struct s3erofs_query_params {
+>   };
+>   
+>   struct s3erofs_curl_request {
+> -	const char *method;
+
+It seems it's removed... S3 only allows `GET` method?
+
+>   	char url[S3EROFS_URL_LEN];
+> +	char canonical_uri[S3EROFS_CANONICAL_URI_LEN];
+>   	char canonical_query[S3EROFS_CANONICAL_QUERY_LEN];
+>   };
+>   
+> +static const char *s3erofs_parse_host(const char *endpoint, const char **schema) {
+
+K&R style is:
+
+static const char *s3erofs_parse_host()
+{
+	if (!tmp) {
+		...
+	} else {
+		...
+	}
+
+}
+
+> +	const char *tmp = strstr(endpoint, "://");
+> +	const char *host;
+> +
+> +	if (!tmp) {
+> +		host = endpoint;
+> +		if (schema)
+> +			*schema = NULL;
+> +	} else {
+> +		host = tmp + sizeof("://") - 1;
+> +		if (schema) {
+> +			*schema = strndup(endpoint, host - endpoint);
+> +			if (!*schema)
+> +				return ERR_PTR(-ENOMEM);
+> +		}
+> +	}
+> +
+> +	return host;
+> +}
+> +
+> +static int s3erofs_urlencode(const char *input, char **output)
+> +{
+
+static void *s3erofs_urlencode(const char *input)
+{
+	char *output;
+
+	output = malloc(strlen(input) * 3 + 1);
+	if (!output)
+		return ERR_PTR(-ENOMEM);
+
+	...
+
+	return output;
+
+}
+
+> +	static const char hex[] = "0123456789ABCDEF";
+> +	int i;
+> +	char c, *p;
+> +
+> +	*output = malloc(strlen(input) * 3 + 1);
+> +	if (!*output)
+> +		return -ENOMEM;
+> +
+> +	p = *output;
+> +	for (i = 0; i < strlen(input); ++i) {
+> +		c = (unsigned char)input[i];
+> +
+> +		// Unreserved characters: A-Z a-z 0-9 - . _ ~
+> +		if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
+> +		    (c >= '0' && c <= '9') || c == '-' || c == '.' || c == '_' ||
+> +		    c == '~') {
+> +			*p++ = c;
+> +		} else {
+> +			*p++ = '%';
+> +			*p++ = hex[c >> 4];
+> +			*p++ = hex[c & 0x0F];
+> +		}
+> +	}
+> +	*p = '\0';
+> +
+> +	return 0;
+> +}
+> +
+> +struct kv_pair {
+> +	char *key;
+> +	char *value;
+> +};
+> +
+> +static int compare_kv_pair(const void *a, const void *b)
+> +{
+> +	return strcmp(((const struct kv_pair *)a)->key, ((const struct kv_pair *)b)->key);
+> +}
+> +
+> +static int s3erofs_prepare_canonical_query(struct s3erofs_curl_request *req,
+> +					   struct s3erofs_query_params *params)
+> +{
+> +	struct kv_pair *pairs;
+> +	int i, pos = 0, ret = 0;
+> +
+> +	if (params->num == 0)
+
+	if (!params->num) {
+	}
+
+> +		return 0;
+> +
+> +	pairs = malloc(sizeof(struct kv_pair) * params->num);
+> +	for (i = 0; i < params->num; i++) {
+> +		ret = s3erofs_urlencode(params->key[i], &pairs[i].key);
+> +		if (ret < 0)
+> +			goto out;
+> +		ret = s3erofs_urlencode(params->value[i], &pairs[i].value);
+
+Why we use urlencoding now?
+
+Thanks,
+Gao Xiang
 
