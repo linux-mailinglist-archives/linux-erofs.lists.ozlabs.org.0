@@ -1,79 +1,54 @@
-Return-Path: <linux-erofs+bounces-1423-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1424-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E4FDC7C398
-	for <lists+linux-erofs@lfdr.de>; Sat, 22 Nov 2025 03:56:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BDA99C7C894
+	for <lists+linux-erofs@lfdr.de>; Sat, 22 Nov 2025 07:23:58 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dCxYk19TBz2yvH;
-	Sat, 22 Nov 2025 13:56:26 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dD29830xpz30B7;
+	Sat, 22 Nov 2025 17:23:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::62f"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763780186;
-	cv=none; b=R+msIUXJ0KbAgO2bmIWxGX8ZaWsV8YvMmKLynSOOy6y0LELZqb5BV+59qSZmdADLaSuNQWFZiHrAbo34WAS9Kb5OIiPqWbqgRME/3ijI2v4sgsgXoC3rFE4hmgAEMCl5SgDq/FRudlLWRrY5RDx5dnuYcZkqp27XCskrX+o+8Y5Xwsu8PrY1eaLZ+UYU3pcnXDF4KAulKnikjr0bKLjgS7hcmxkKyTZU9KtFi2siaRAscEpAbjnUnKT2QDc87v225La6Wvc/U/c1hQUAy07ugLSqUw5fZyPoptK74Pj5CA+oNBFkrwQMrKK3PEFJpe51rEnF1vSjQWG7lUI9+iq1Xw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1763792636;
+	cv=none; b=oJeZz+w1W09xmues7I+FX0x1/kGZkY7SSY+l191L6pE1Ejz9SsPbO4AFi95l+EBeGUm9yxNfLl8NakaCgunEh9h2P3hmzK9fQ9pJY3cUEQwXmK3takyYPfnN/Izv5CYVjxBj5CVd83tJ+ib7MZRTC1EAmC7tpODG4IUAbRlOWWMhFfmA8xLmYiF6jW4zM73w2IBttHiXoT2J4/KaxryQj89kkI41ayng0GT/1rfcaiYJOeDDIjZuey86JgXq/M6r7wOPT02keulVI75vHpfwDxt5HtWEgdgG5pGiyKrK9b0faJrzT3ebgGMUA0UPcbB1D1DN5AZrCVtTOjAUBgu2Ig==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1763780186; c=relaxed/relaxed;
-	bh=vVzCQt1OvXOVG5elbM2Cc5hlhwvn3nh74c9NdSA5XE0=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=A2HxEKOtQ7hecc+9IeEAS8rwtN5x547PzxdVeaCiHNvDv212EARZ6s7vx+QSykfUJBrYPt1ZvRLrVo1cnohB3FG2SvL4MXZ+n3RKf+XfZfT/DtJB6SLiSCVwouOYkMIcCqJV+RU5aX1CfGa98gdklnhLMElP5514DMUppeK2w/kV0DBquR7ApOwp/FjHR1geGBSlGf5oekfTuyd0110pl/WWIgSg+Qol+TVdyK/BVLrIoC502dYkzUC8ed5f3Y4bSGKXDfxboOupVD79WlpS3gd2q/UaVp7Pbpk/A/n689d+jMQA3eI9SIyHIKldnPK6KKu6do6yAj7sxHklsT0+Aw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=hHwDm7bF; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::62f; helo=mail-pl1-x62f.google.com; envelope-from=shengyong2021@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	t=1763792636; c=relaxed/relaxed;
+	bh=BtUfsyquN9hxwRTgOZsv8MVWTwMe9z1a+cT1ilPEt98=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ni5ikij+CC6gOW71UzqME1uU11Vnw0Zuj6Ft2ClQzdCO3Ks0ov0H6bYs68AbH5dPH/V/vhfGYG980HRjYJ3WpaBfDvZDJ6+6b3zbvA8eo+nAek59i06fPR+QZfH8sw4s87fNzaMloquX/mdMG8I2XiJxBPyE+c346l/QB/McrdpIUGckFMX4RQV8Fo9rWelAWBKOhTfVd9oZ2ytGPrLTpELhQr30yP1FySlLUr4D+lKOu1bHmdyklXbvEtk1GuMUA+j4UcrxxSZgeqhBPoBZ7ExKPcPTrnfGgGeP9+qpsVob2w11QxL+aa2pU5CC+EcAlhTTLDIfkM3EbHQ/hA/KtA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=R58u5pJ5; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=hHwDm7bF;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=R58u5pJ5;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::62f; helo=mail-pl1-x62f.google.com; envelope-from=shengyong2021@gmail.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dCxYj1kHhz2yFJ
-	for <linux-erofs@lists.ozlabs.org>; Sat, 22 Nov 2025 13:56:24 +1100 (AEDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-2984dfae043so24039015ad.0
-        for <linux-erofs@lists.ozlabs.org>; Fri, 21 Nov 2025 18:56:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763780182; x=1764384982; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:cc:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vVzCQt1OvXOVG5elbM2Cc5hlhwvn3nh74c9NdSA5XE0=;
-        b=hHwDm7bFvvuG7E/CFfNIZXgRqoo30vUS3qlmuArxVMwKCvXiqDoyBCOx987cLg4AdW
-         Tq7fzr8jXmv3O3qEj4gn0vSF/vu/Mfx0fH0xkQ1e7tZ6zsk0duI85fmHGrk9iwxf8u6w
-         66Y1xXYswlFJhQlIVsEtg0oi1RqZwhM6oc8kyDOFdMfBtwwb0mm7k5S8TZ3k25ypKoIf
-         hURN8/MIUoYF5hV6+efUmm3TpZsddIOY0/7+Vyg2EmgoocEOQ5Js6zpOv5lSDeUQr9S/
-         pBe63aQntefa8YGBslm4yyIW6suftQt7e1nxEd0IaLLKpczllPwIFvbxpUD3Pq0qW1tS
-         dgSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763780182; x=1764384982;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:cc:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vVzCQt1OvXOVG5elbM2Cc5hlhwvn3nh74c9NdSA5XE0=;
-        b=pM/GcPB+bnpStx4C3nVpNULmJk1805nzVACN66Hn3SGBdK+CA+AUwp/+uTMqUeRBwR
-         AdRLUEsB2jr0pWVZBh+F7Tz/NNxgduqIPhRn1guOTHHbescBmrwzd8voPgk2MgdjYXK3
-         yM6ihW93cu0+22TKPdWC190ClEfPcogNXk9aiR3ezU9MMxr2RoyRu05TB+Xml08OwWfk
-         amL5RRaiBykIBMD4JMLrShzV3MNTSrwJmDClKUGCI9VcLBVrX60eSxNEzqEzfbMwtDq9
-         /MDiJHPy7yoVG7Yz8Yn/1KxXLAExC+PyyEZC7Awu20HD3/3eXTwU/CsSCRBOh0Mcy2m2
-         kAjw==
-X-Forwarded-Encrypted: i=1; AJvYcCXfyR55VuviKaAPAA4fms9vD9K2JLlaidCVJXOQFgGxlwL0ZoN9PcruH08gw8wx9Kma24lILmeJMLOggw==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YyEXcxBrsJiz9LIn73YFYZjZk4im5svIjvRVhP4colI3nMaqO1Z
-	+2qxhlSN8cTRcKN9xtJ9zr+heuaE/0uJ6y0aYXI4uQHDjieQmjvad49W
-X-Gm-Gg: ASbGncul1jEdXwll4SYoEZXn8jkMO1i8hAtsdE5/wdGx37OzoPr5H4JTctN/VRQcr+u
-	3kH9MrO1dP0Xyo1W+JBanRj5r5IatkYj58//vGnRc8pG4d8mqEWtQnfSpq4LT5cKCEfZO7ELFdK
-	JaOw0w+8I04SOtciEgkEef9jV7Dl4W/QVsrGAiPuYzjIgsGBS3DgSiB/j/3YdCvCljjQs7e1DEM
-	YM/rONxnBsP96v4QdQGUw62Kxwd2P+/MQQ67Mgq0wvXz7zumHmDmXEIJGbZuYBq8uFDArkiTW6c
-	RySXJNbWxeEDwhEE5vc3XuphWG564rlt4BXFd2ExzYnXUcSWGGjAotoSr80ZUpss2WMD2JDBi5I
-	NPTpSejmiExbxoAt+TWhZP4mptq9/RPh5yQ60bVid1Y3hGuLU6KET4mDpNEmeOnb+/fimdh86ZW
-	/Tz5wHbV76eUtoX8W76fkwuA==
-X-Google-Smtp-Source: AGHT+IFypSPO+8tyG8O7rhbI6ZBjPFH8FLfZ3baMfPqC6nsdAvQHwI4c6Lf5fdSNx4GMQOOHZe9cIQ==
-X-Received: by 2002:a17:903:38cd:b0:295:8a21:155a with SMTP id d9443c01a7336-29b6c572aeemr52246825ad.35.1763780181607;
-        Fri, 21 Nov 2025 18:56:21 -0800 (PST)
-Received: from [10.189.144.225] ([43.224.245.249])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b2809b6sm69827855ad.76.2025.11.21.18.56.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Nov 2025 18:56:21 -0800 (PST)
-Message-ID: <bb3101cb-21cf-4f36-9130-4482a531c344@gmail.com>
-Date: Sat, 22 Nov 2025 10:56:18 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dD2954zR8z2yv8
+	for <linux-erofs@lists.ozlabs.org>; Sat, 22 Nov 2025 17:23:50 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1763792625; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=BtUfsyquN9hxwRTgOZsv8MVWTwMe9z1a+cT1ilPEt98=;
+	b=R58u5pJ5Trepnu++I6PBEdtB5sPDX/LlDJmTsq0xGtRLZwTqUGVmYbPeKwxSQuwwKC5Weq1bV1kqh7DTil7raYOTLLIdgU/5ezM5lsgDwJCmtK+YVlGaXTlG87NKw4Nk7ROI0luqirvaslyLAK/13aowyuBQvW5GMj481w+EpzY=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wt3AgA3_1763792614 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sat, 22 Nov 2025 14:23:40 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Sheng Yong <shengyong1@xiaomi.com>
+Subject: [PATCH v2] erofs: limit the level of fs stacking for file-backed mounts
+Date: Sat, 22 Nov 2025 14:23:32 +0800
+Message-ID: <20251122062332.1408580-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20251121134647.104354-1-hsiangkao@linux.alibaba.com>
+References: <20251121134647.104354-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -85,33 +60,58 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: shengyong2021@gmail.com, shengyong1@xiaomi.com,
- LKML <linux-kernel@vger.kernel.org>, Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH] erofs: limit the level of fs stacking for file-backed
- mounts
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20251121134647.104354-1-hsiangkao@linux.alibaba.com>
-Content-Language: en-US, fr-CH
-From: Sheng Yong <shengyong2021@gmail.com>
-In-Reply-To: <20251121134647.104354-1-hsiangkao@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On 11/21/25 21:46, Gao Xiang wrote:
-> Otherwise, it could cause potential kernel stack overflow (e.g., EROFS
-> mounting itself).
-> 
-> Fixes: fb176750266a ("erofs: add file-backed mount support")
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Otherwise, it could cause potential kernel stack overflow (e.g., EROFS
+mounting itself).
 
 Reviewed-by: Sheng Yong <shengyong1@xiaomi.com>
+Fixes: fb176750266a ("erofs: add file-backed mount support")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+Change since v1:
+ - Return -ENOTBLK instead of -EINVAL since userspace tools like
+   util-linux will fall back to using loop to mount again.
 
-thanks,
-shengyong
+   Don't use -ELOOP compared to other stacked fses, since -ENOTBLK is
+   more suitable: it means the kernel can't handle it anymore.
+
+ fs/erofs/super.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index f3f8d8c066e4..2db534f76464 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -639,6 +639,22 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+ 
+ 	sbi->blkszbits = PAGE_SHIFT;
+ 	if (!sb->s_bdev) {
++		/*
++		 * (File-backed mounts) EROFS claims it's safe to nest other
++		 * fs contexts (including its own) due to self-controlled RO
++		 * accesses/contexts and no side-effect changes that need to
++		 * context save & restore so it can reuse the current thread
++		 * context.  However, it still needs to bump `s_stack_depth` to
++		 * avoid kernel stack overflow from nested filesystems.
++		 */
++		if (erofs_is_fileio_mode(sbi)) {
++			sb->s_stack_depth =
++				file_inode(sbi->dif0.file)->i_sb->s_stack_depth + 1;
++			if (sb->s_stack_depth > FILESYSTEM_MAX_STACK_DEPTH) {
++				erofs_err(sb, "maximum fs stacking depth exceeded");
++				return -ENOTBLK;
++			}
++		}
+ 		sb->s_blocksize = PAGE_SIZE;
+ 		sb->s_blocksize_bits = PAGE_SHIFT;
+ 
+-- 
+2.43.5
+
 
