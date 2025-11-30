@@ -1,40 +1,40 @@
-Return-Path: <linux-erofs+bounces-1453-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1454-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B3D2C95133
-	for <lists+linux-erofs@lfdr.de>; Sun, 30 Nov 2025 16:16:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2679AC95139
+	for <lists+linux-erofs@lfdr.de>; Sun, 30 Nov 2025 16:16:48 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dK9c86dGZz2yvV;
-	Mon, 01 Dec 2025 02:16:40 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dK9c94HY8z2yvL;
+	Mon, 01 Dec 2025 02:16:41 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.61
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764515800;
-	cv=none; b=EWvSRSdynkn1ufTOw6mQYGq6LTiR9bQySytmkr1sLlQOzTD2qj6c4RPwRy9ZFGqb9u9h5EdNKTrtOoUx5/Trb/PQ1GQEixEg5y9bRD6avs5TCdbh5lPmM+hg2gKoMmvn7n1nngkupUMvnSOE95K3CSV995haoQ6e/GueYTYl+r0Miv0P5HBMbssYuf9BXeY8df6/uHko8F2wBLm8ISwFIf2WDJrqbWq51Uf07VvcK7sj7SOleXaA4PMv669zeZFjavbIpDOsCBAyEw2brNuloIl5woEceBUqWOwrl0E1DFBEVRMjSPT3vK3a47qa/KNTaunzauwACa8r179s4XIikw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.83
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764515801;
+	cv=none; b=PEf/fhjHtD+EESvK5AYhtJmIMXe9QAWtcRL5pdrfdhv+VtJz6EHXiKT+vww5ilc9Rnhm9ck4EEtnsY1u2kolI2Smx4L10MIbG9eKBrMhfe4RU6rM5CY1wUcAISNwMlglQOYe5FvemsV7IjD5BUExnxKYe2dxIC0d7Y5RMOiUOwoFmcozK5fKjHlx0FPwRFvBGxXWpX43OVkvoGUCJ/TUSb4soGnoZmPzeSmQhX/759Rzyce8g+gDVtlXc2/2G3ayikk0zu+u7D6QSdBPn8zZYsre0HuPJJov/Gu1/6hcoePjYb6N+VRymYlA6MW67mRkUicFcawvZhK0TpmaHADBPw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1764515800; c=relaxed/relaxed;
-	bh=zwAnf5Ls1c8Nt8+uiaEbIUISmCKQLm6cTO4AkoWyXEA=;
+	t=1764515801; c=relaxed/relaxed;
+	bh=bldEJlke/EZcHGEzEFz7AVYVlXSQc/SQPykl8ywxJNM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AhAVYnvWD4i5OUw0/RVeYIC1d6QoB0pF+FqJwDQTkrYklCD5X+COf6ygzYvxKPgy/jM3tGNzWsQ7siVBXfCLoJamUgTgBMjwk8KiEBD8Kg2AowrXIeIjtCOksfchbHHggX1jFh4h05N+WjAaGNyEMt5dWrGzTisjuxhv4qPBCMj3WWf8mU9AOFAf6hmzxWruW1i1cy5urL3PX7AcYRO/+MpR75xSWZhSmWGYQIvmxk/YHzQRu1752NO9L2FfkS6Z5+ttM+PKUWdJL+fScPnJCZgI08wUbnXcCx8eYAauidnR93TloOhbZEEgn/daoCuDxST98yyR/DBb/86crq6n6w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.61; helo=out28-61.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+	 MIME-Version; b=JglE4w7rga7ezsbLMGloADBXl0E/a9urCmL2wwu02ImlBSixBRk8amJzDD0Qe9/ZRnnZ1pGNDVitW0V1e/b5Fo8dB0Kqz1DvikcP2QupvSz4EI6INgOE4R2LuBiN3qhm9TUlGdoIBqS3fNsZUmD9d5hYStGFrDdU+G9uzA0MKOByiaawrlXoZfcnGjW+0zHCQJusUKqJ2LCGDiWMpmlwlRyI+TeuEqgjPL3zN3npffjeuQjcS8BzsPUVnVexLAoLB4bZWyYm3RLrslrMffWIODeLixVFD8QCcr+eT2PZcMGuyH/LhTr9QXJhrth5UjHPwyhNOgcxTuWZVDcU3XI6LQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.83; helo=out28-83.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.61; helo=out28-61.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-61.mail.aliyun.com (out28-61.mail.aliyun.com [115.124.28.61])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.83; helo=out28-83.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-83.mail.aliyun.com (out28-83.mail.aliyun.com [115.124.28.83])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dK9c65HdMz2yvL
-	for <linux-erofs@lists.ozlabs.org>; Mon, 01 Dec 2025 02:16:37 +1100 (AEDT)
-Received: from HUDSONZHU-MB0.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.fZiFcST_1764515787 cluster:ay29)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dK9c65llPz2yvR
+	for <linux-erofs@lists.ozlabs.org>; Mon, 01 Dec 2025 02:16:36 +1100 (AEDT)
+Received: from HUDSONZHU-MB0.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.fZiFcSr_1764515787 cluster:ay29)
           by smtp.aliyun-inc.com;
           Sun, 30 Nov 2025 23:16:27 +0800
 From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: hsiangkao@linux.alibaba.com,
 	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH 1/2] erofs-utils: lib: oci: add on-demand blob cache
-Date: Sun, 30 Nov 2025 23:16:25 +0800
-Message-ID: <20251130151626.95009-2-hudson@cyzhu.com>
+Subject: [PATCH 2/2] erofs-utils: lib: oci: write downloaded data directly to fd
+Date: Sun, 30 Nov 2025 23:16:26 +0800
+Message-ID: <20251130151626.95009-3-hudson@cyzhu.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20251130151626.95009-1-hudson@cyzhu.com>
 References: <20251130151626.95009-1-hudson@cyzhu.com>
@@ -57,308 +57,339 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 From: Chengyu Zhu <hudsonzhu@tencent.com>
 
-Add an on-disk cache for OCI blobs and hook it into the
-ocierofs_iostream backend. The cache file is created under
-/var/run/erofs/cache/oci/ and sized to the blob length.
-
-Reads probe the local sparse file with SEEK_HOLE and only download
-missing regions. This avoids redundant downloads and improves
-random access performance for remote images.
+Avoid buffering downloaded OCI blobs in memory. Instead, write the
+received data directly to the target file descriptor within the curl
+write callback.
 
 Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 ---
- lib/liberofs_oci.h |   1 +
- lib/remotes/oci.c  | 212 +++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 205 insertions(+), 8 deletions(-)
+ lib/remotes/oci.c | 198 +++++++++++++---------------------------------
+ 1 file changed, 55 insertions(+), 143 deletions(-)
 
-diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
-index 5298f18..f7b26b6 100644
---- a/lib/liberofs_oci.h
-+++ b/lib/liberofs_oci.h
-@@ -62,6 +62,7 @@ struct ocierofs_ctx {
- struct ocierofs_iostream {
- 	struct ocierofs_ctx *ctx;
- 	u64 offset;
-+	int cache_fd;
- };
- 
- /*
 diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index ac8d495..8b253a3 100644
+index 8b253a3..a3efd77 100644
 --- a/lib/remotes/oci.c
 +++ b/lib/remotes/oci.c
-@@ -5,6 +5,7 @@
-  */
- #define _GNU_SOURCE
- #include "erofs/internal.h"
-+#include "erofs/defs.h"
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-@@ -12,6 +13,9 @@
- #include <fcntl.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-+#ifdef HAVE_SYS_SENDFILE_H
-+#include <sys/sendfile.h>
-+#endif
- #include <errno.h>
- #ifdef HAVE_CURL_CURL_H
- #include <curl/curl.h>
-@@ -29,6 +33,10 @@
- #include "liberofs_private.h"
- #include "liberofs_gzran.h"
+@@ -64,10 +64,8 @@ struct ocierofs_response {
+ 	long http_code;
+ };
  
-+#ifndef SEEK_HOLE
-+#define SEEK_HOLE 4
-+#endif
+-struct ocierofs_stream {
+-	const char *digest;
+-	int blobfd;
+-};
++static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, const char *digest,
++					off_t offset, size_t length, int fd);
+ 
+ static inline const char *ocierofs_get_api_registry(const char *registry)
+ {
+@@ -125,26 +123,42 @@ static size_t ocierofs_write_callback(void *contents, size_t size,
+ 	return realsize;
+ }
+ 
+-static size_t ocierofs_layer_write_callback(void *contents, size_t size,
+-					    size_t nmemb, void *userp)
++struct ocierofs_write_ctx {
++	int fd;
++	off_t offset;
++	CURL *curl;
++	bool range_req;
++};
 +
- #ifdef OCIEROFS_ENABLED
++static size_t ocierofs_fd_write_callback(void *contents, size_t size,
++					 size_t nmemb, void *userp)
+ {
+-	struct ocierofs_stream *stream = userp;
+ 	size_t realsize = size * nmemb;
++	struct ocierofs_write_ctx *wctx = userp;
+ 	const char *buf = contents;
+ 	size_t written = 0;
++	long http_code = 0;
  
- #define DOCKER_REGISTRY "docker.io"
-@@ -1425,25 +1433,208 @@ out:
+-	if (stream->blobfd < 0)
+-		return 0;
++	if (wctx->curl) {
++		curl_easy_getinfo(wctx->curl, CURLINFO_RESPONSE_CODE, &http_code);
++		if (wctx->range_req && http_code == 200) {
++			erofs_err("server returned 200 OK for Range request, aborting");
++			return 0;
++		}
++		wctx->curl = NULL;
++	}
+ 
+ 	while (written < realsize) {
+-		ssize_t n = write(stream->blobfd, buf + written, realsize - written);
++		ssize_t n = pwrite(wctx->fd, buf + written, realsize - written, wctx->offset);
+ 
+ 		if (n < 0) {
+-			erofs_err("failed to write layer data for layer %s",
+-				  stream->digest);
++			if (errno == EINTR)
++				continue;
++			erofs_err("failed to write cache data: %s", strerror(errno));
+ 			return 0;
+ 		}
+ 		written += n;
++		wctx->offset += n;
+ 	}
+ 	return realsize;
+ }
+@@ -1157,89 +1171,33 @@ static int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config
+ 	return 0;
+ }
+ 
+-static int ocierofs_download_blob_to_fd(struct ocierofs_ctx *ctx,
+-					const char *digest,
+-					const char *auth_header,
+-					int outfd)
+-{
+-	struct ocierofs_request req = {};
+-	struct ocierofs_stream stream = {};
+-	const char *api_registry;
+-	long http_code;
+-	int ret;
+-
+-	stream = (struct ocierofs_stream) {
+-		.digest = digest,
+-		.blobfd = outfd,
+-	};
+-
+-	api_registry = ocierofs_get_api_registry(ctx->registry);
+-	if (asprintf(&req.url, "https://%s/v2/%s/blobs/%s",
+-	     api_registry, ctx->repository, digest) == -1)
+-		return -ENOMEM;
+-
+-	if (auth_header && strstr(auth_header, "Bearer"))
+-		req.headers = curl_slist_append(req.headers, auth_header);
+-
+-	curl_easy_reset(ctx->curl);
+-
+-	ret = ocierofs_curl_setup_common_options(ctx->curl);
+-	if (ret)
+-		goto out;
+-
+-	ret = ocierofs_curl_setup_rq(ctx->curl, req.url, OCIEROFS_HTTP_GET,
+-				     req.headers,
+-				     ocierofs_layer_write_callback,
+-				     &stream, NULL, NULL);
+-	if (ret)
+-		goto out;
+-
+-	ret = ocierofs_curl_perform(ctx->curl, &http_code);
+-	if (ret)
+-		goto out;
+-
+-	if (http_code < 200 || http_code >= 300) {
+-		erofs_err("HTTP request failed with code %ld", http_code);
+-		ret = -EIO;
+-		goto out;
+-	}
+-	ret = 0;
+-out:
+-	ocierofs_request_cleanup(&req);
+-	return ret;
+-}
+-
+ static int ocierofs_extract_layer(struct ocierofs_ctx *ctx,
+ 				  const char *digest, const char *auth_header)
+ {
+-	struct ocierofs_stream stream = {};
+-	int ret;
++	int fd, ret;
+ 
+-	stream = (struct ocierofs_stream) {
+-		.digest = digest,
+-		.blobfd = erofs_tmpfile(),
+-	};
+-	if (stream.blobfd < 0) {
++	fd = erofs_tmpfile();
++	if (fd < 0) {
+ 		erofs_err("failed to create temporary file for %s", digest);
+ 		return -errno;
+ 	}
+ 
+-	ret = ocierofs_download_blob_to_fd(ctx, digest, auth_header, stream.blobfd);
++	ret = ocierofs_download_blob_range(ctx, digest, 0, 0, fd);
+ 	if (ret)
+ 		goto out;
+ 
+-	if (lseek(stream.blobfd, 0, SEEK_SET) < 0) {
++	if (lseek(fd, 0, SEEK_SET) < 0) {
+ 		erofs_err("failed to seek to beginning of temp file: %s",
+ 			  strerror(errno));
+ 		ret = -errno;
+ 		goto out;
+ 	}
+ 
+-	return stream.blobfd;
++	return fd;
+ 
+ out:
+-	if (stream.blobfd >= 0)
+-		close(stream.blobfd);
++	if (fd >= 0)
++		close(fd);
  	return ret;
  }
  
--static ssize_t ocierofs_io_pread(struct erofs_vfile *vf, void *buf, size_t len, u64 offset)
-+static int ocierofs_cache(struct ocierofs_iostream *oci_iostream, off_t offset, size_t needed)
- {
--	struct ocierofs_iostream *oci_iostream = *(struct ocierofs_iostream **)vf->payload;
-+	struct ocierofs_ctx *ctx = oci_iostream->ctx;
- 	void *download_buf = NULL;
- 	size_t download_size = 0;
--	ssize_t ret;
-+	int ret = 0;
-+	off_t hole, align_offset;
-+	size_t download_len;
-+	int layer_idx;
-+
-+	if (oci_iostream->cache_fd < 0) {
-+		char *path;
-+
-+		mkdir("/var/run/erofs", 0777);
-+		mkdir("/var/run/erofs/cache", 0777);
-+		mkdir("/var/run/erofs/cache/oci", 0777);
-+
-+		if (asprintf(&path, "/var/run/erofs/cache/oci/%s",
-+			     ctx->blob_digest ?: "erofs_oci_unknown") < 0)
-+			return -ENOMEM;
-+
-+		oci_iostream->cache_fd = open(path, O_RDWR | O_CREAT, 0666);
-+		free(path);
-+
-+		if (oci_iostream->cache_fd < 0)
-+			return -errno;
-+
-+		layer_idx = ocierofs_find_layer_by_digest(ctx, ctx->blob_digest);
-+		if (layer_idx >= 0) {
-+			if (ftruncate(oci_iostream->cache_fd, ctx->layers[layer_idx]->size) < 0)
-+				return -errno;
-+		}
-+	}
-+
-+	hole = lseek(oci_iostream->cache_fd, offset, SEEK_HOLE);
-+	if (hole < 0) {
-+		if (errno == ENXIO)
-+			return 0;
-+		return -errno;
-+	}
-+	if (hole >= offset + needed)
-+		return 0;
- 
--	ret = ocierofs_download_blob_range(oci_iostream->ctx, offset, len,
-+	align_offset = round_down(hole, OCIEROFS_IO_CHUNK_SIZE);
-+	download_len = max_t(size_t, offset + needed - align_offset, OCIEROFS_IO_CHUNK_SIZE);
-+
-+	ret = ocierofs_download_blob_range(ctx, align_offset, download_len,
- 					   &download_buf, &download_size);
- 	if (ret < 0)
- 		return ret;
- 
- 	if (download_buf && download_size > 0) {
--		memcpy(buf, download_buf, download_size);
--		free(download_buf);
--		return download_size;
-+		char *p = download_buf;
-+		size_t to_write = download_size;
-+		ssize_t written = 0;
-+
-+		while (to_write > 0) {
-+			ssize_t w = pwrite(oci_iostream->cache_fd, p, to_write, align_offset + written);
-+			if (w < 0) {
-+				if (errno == EINTR)
-+					continue;
-+				ret = -errno;
-+				goto out_free;
-+			}
-+			written += w;
-+			p += w;
-+			to_write -= w;
-+		}
- 	}
- 
--	return 0;
-+out_free:
-+	free(download_buf);
-+	return ret;
-+}
-+
-+static ssize_t ocierofs_io_sendfile(struct erofs_vfile *vout, struct erofs_vfile *vin,
-+				    off_t *pos, size_t count)
-+{
-+	struct ocierofs_iostream *oci_iostream = *(struct ocierofs_iostream **)vin->payload;
-+	off_t offset;
-+	size_t remaining = count;
-+	ssize_t total_written = 0;
-+	int ret;
-+
-+	if (!pos)
-+		offset = oci_iostream->offset;
-+	else
-+		offset = *pos;
-+
-+	ret = ocierofs_cache(oci_iostream, offset, count);
-+	if (ret < 0)
-+		return ret;
-+
-+	while (remaining > 0) {
-+		struct stat st;
-+
-+		if (fstat(oci_iostream->cache_fd, &st) < 0)
-+			return -errno;
-+
-+		if (offset >= st.st_size)
-+			break;
-+
-+		size_t available = st.st_size - offset;
-+		size_t chunk = min_t(size_t, remaining, available);
-+
-+		if (chunk == 0) {
-+			chunk = min_t(size_t, remaining, OCIEROFS_IO_CHUNK_SIZE);
-+		}
-+
-+#if defined(HAVE_SYS_SENDFILE_H) && defined(HAVE_SENDFILE)
-+		off_t in_offset = offset;
-+		ssize_t sent;
-+
-+		sent = sendfile(vout->fd, oci_iostream->cache_fd, &in_offset, chunk);
-+		if (sent < 0) {
-+			if (errno == EINTR || errno == EAGAIN)
-+				continue;
-+			if (total_written > 0)
-+				goto out;
-+			return -errno;
-+		}
-+		if (sent == 0)
-+			break;
-+
-+		total_written += sent;
-+		remaining -= sent;
-+		offset += sent;
-+#else
-+		chunk = min_t(size_t, remaining, available);
-+		if (chunk == 0)
-+			break;
-+
-+		char buf[32768];
-+		size_t to_read = min_t(size_t, chunk, sizeof(buf));
-+		ssize_t read_len, write_len;
-+
-+		read_len = pread(oci_iostream->cache_fd, buf, to_read, offset);
-+		if (read_len < 0)
-+			return -errno;
-+		if (read_len == 0)
-+			break;
-+
-+		char *p = buf;
-+		size_t to_write = read_len;
-+		while (to_write > 0) {
-+			write_len = write(vout->fd, p, to_write);
-+			if (write_len < 0) {
-+				if (errno == EINTR)
-+					continue;
-+				return -errno;
-+			}
-+			p += write_len;
-+			to_write -= write_len;
-+		}
-+
-+		total_written += read_len;
-+		offset += read_len;
-+		remaining -= read_len;
-+#endif
-+	}
-+
-+out:
-+	if (pos)
-+		*pos = offset;
-+	else
-+		oci_iostream->offset = offset;
-+
-+	return total_written;
-+}
-+
-+static ssize_t ocierofs_io_pread(struct erofs_vfile *vf, void *buf, size_t len, u64 offset)
-+{
-+	struct ocierofs_iostream *oci_iostream = *(struct ocierofs_iostream **)vf->payload;
-+	size_t remaining = len;
-+	char *p = buf;
-+	ssize_t total_read = 0;
-+	int ret;
-+
-+	ret = ocierofs_cache(oci_iostream, offset, len);
-+	if (ret < 0)
-+		return ret;
-+
-+	while (remaining > 0) {
-+		size_t chunk = min_t(size_t, remaining, OCIEROFS_IO_CHUNK_SIZE);
-+		ssize_t n;
-+
-+		n = pread(oci_iostream->cache_fd, p, chunk, offset);
-+		if (n < 0)
-+			return -errno;
-+		if (n == 0)
-+			break;
-+
-+		p += n;
-+		offset += n;
-+		remaining -= n;
-+		total_read += n;
-+
-+		if (n < chunk)
-+			break;
-+	}
-+
-+	return total_read;
+@@ -1334,33 +1292,32 @@ out:
+ 	return ret;
  }
  
- static ssize_t ocierofs_io_read(struct erofs_vfile *vf, void *buf, size_t len)
-@@ -1462,6 +1653,9 @@ static void ocierofs_io_close(struct erofs_vfile *vfile)
+-static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset, size_t length,
+-					void **out_buf, size_t *out_size)
++static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, const char *digest,
++					off_t offset, size_t length, int fd)
  {
- 	struct ocierofs_iostream *oci_iostream = *(struct ocierofs_iostream **)vfile->payload;
+ 	struct ocierofs_request req = {};
+-	struct ocierofs_response resp = {};
++	struct ocierofs_write_ctx wctx = {
++		.fd = fd,
++		.offset = offset,
++		.curl = ctx->curl,
++		.range_req = (length != 0),
++	};
+ 	const char *api_registry;
+ 	char rangehdr[64];
+ 	long http_code = 0;
+ 	int ret, index;
+-	const char *digest;
+ 	u64 blob_size;
+-	size_t available;
+-	size_t copy_size;
  
-+	if (oci_iostream->cache_fd >= 0)
-+		close(oci_iostream->cache_fd);
+-	index = ocierofs_find_layer_by_digest(ctx, ctx->blob_digest);
++	index = ocierofs_find_layer_by_digest(ctx, digest);
+ 	if (index < 0)
+ 		return -ENOENT;
+-	digest = ctx->blob_digest;
+ 	blob_size = ctx->layers[index]->size;
+ 
+ 	if (offset < 0)
+ 		return -EINVAL;
+ 
+-	if (offset >= blob_size) {
+-		*out_size = 0;
++	if (offset >= blob_size)
+ 		return 0;
+-	}
+ 
+ 	if (length && offset + length > blob_size)
+ 		length = (size_t)(blob_size - offset);
+@@ -1373,13 +1330,15 @@ static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset,
+ 	if (length)
+ 		snprintf(rangehdr, sizeof(rangehdr), "Range: bytes=%lld-%lld",
+ 			 (long long)offset, (long long)(offset + (off_t)length - 1));
+-	else
++	else if (offset > 0)
+ 		snprintf(rangehdr, sizeof(rangehdr), "Range: bytes=%lld-",
+ 			 (long long)offset);
+ 
+ 	if (ctx->auth_header && strstr(ctx->auth_header, "Bearer"))
+ 		req.headers = curl_slist_append(req.headers, ctx->auth_header);
+-	req.headers = curl_slist_append(req.headers, rangehdr);
 +
- 	ocierofs_ctx_cleanup(oci_iostream->ctx);
- 	free(oci_iostream->ctx);
- 	free(oci_iostream);
-@@ -1472,6 +1666,7 @@ static struct erofs_vfops ocierofs_io_vfops = {
- 	.pread = ocierofs_io_pread,
- 	.read = ocierofs_io_read,
- 	.close = ocierofs_io_close,
-+	.sendfile = ocierofs_io_sendfile,
- };
++	if (wctx.range_req || offset > 0)
++		req.headers = curl_slist_append(req.headers, rangehdr);
  
- int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cfg)
-@@ -1499,6 +1694,7 @@ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cf
+ 	curl_easy_reset(ctx->curl);
  
- 	oci_iostream->ctx = ctx;
- 	oci_iostream->offset = 0;
-+	oci_iostream->cache_fd = -1;
- 	*vfile = (struct erofs_vfile){.ops = &ocierofs_io_vfops};
- 	*(struct ocierofs_iostream **)vfile->payload = oci_iostream;
- 	return 0;
+@@ -1389,8 +1348,8 @@ static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset,
+ 
+ 	ret = ocierofs_curl_setup_rq(ctx->curl, req.url, OCIEROFS_HTTP_GET,
+ 				     req.headers,
+-				     ocierofs_write_callback,
+-				     &resp, NULL, NULL);
++				     ocierofs_fd_write_callback,
++				     &wctx, NULL, NULL);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -1398,30 +1357,10 @@ static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset,
+ 	if (ret)
+ 		goto out;
+ 
+-	ret = 0;
+-	if (http_code == 206) {
+-		*out_buf = resp.data;
+-		*out_size = resp.size;
+-		resp.data = NULL;
+-	} else if (http_code == 200) {
+-		if (!offset) {
+-			*out_buf = resp.data;
+-			*out_size = resp.size;
+-			resp.data = NULL;
+-		} else if (offset < resp.size) {
+-			available = resp.size - offset;
+-			copy_size = length ? min_t(size_t, length, available) : available;
+-
+-			*out_buf = malloc(copy_size);
+-			if (!*out_buf) {
+-				ret = -ENOMEM;
+-				goto out;
+-			}
+-			memcpy(*out_buf, resp.data + offset, copy_size);
+-			*out_size = copy_size;
+-		}
++	if (http_code == 206 || (http_code == 200 && !wctx.range_req && offset == 0)) {
++		ret = 0;
+ 	} else {
+-		erofs_err("HTTP range request failed with code %ld", http_code);
++		erofs_err("HTTP request failed with code %ld", http_code);
+ 		ret = -EIO;
+ 	}
+ 
+@@ -1429,15 +1368,12 @@ out:
+ 	if (req.headers)
+ 		curl_slist_free_all(req.headers);
+ 	free(req.url);
+-	free(resp.data);
+ 	return ret;
+ }
+ 
+ static int ocierofs_cache(struct ocierofs_iostream *oci_iostream, off_t offset, size_t needed)
+ {
+ 	struct ocierofs_ctx *ctx = oci_iostream->ctx;
+-	void *download_buf = NULL;
+-	size_t download_size = 0;
+ 	int ret = 0;
+ 	off_t hole, align_offset;
+ 	size_t download_len;
+@@ -1479,32 +1415,8 @@ static int ocierofs_cache(struct ocierofs_iostream *oci_iostream, off_t offset,
+ 	align_offset = round_down(hole, OCIEROFS_IO_CHUNK_SIZE);
+ 	download_len = max_t(size_t, offset + needed - align_offset, OCIEROFS_IO_CHUNK_SIZE);
+ 
+-	ret = ocierofs_download_blob_range(ctx, align_offset, download_len,
+-					   &download_buf, &download_size);
+-	if (ret < 0)
+-		return ret;
+-
+-	if (download_buf && download_size > 0) {
+-		char *p = download_buf;
+-		size_t to_write = download_size;
+-		ssize_t written = 0;
+-
+-		while (to_write > 0) {
+-			ssize_t w = pwrite(oci_iostream->cache_fd, p, to_write, align_offset + written);
+-			if (w < 0) {
+-				if (errno == EINTR)
+-					continue;
+-				ret = -errno;
+-				goto out_free;
+-			}
+-			written += w;
+-			p += w;
+-			to_write -= w;
+-		}
+-	}
+-
+-out_free:
+-	free(download_buf);
++	ret = ocierofs_download_blob_range(ctx, ctx->blob_digest, align_offset, download_len,
++					   oci_iostream->cache_fd);
+ 	return ret;
+ }
+ 
 -- 
 2.47.1
 
