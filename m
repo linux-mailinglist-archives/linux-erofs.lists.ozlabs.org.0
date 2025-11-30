@@ -1,40 +1,57 @@
-Return-Path: <linux-erofs+bounces-1450-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1451-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24E46C94B2E
-	for <lists+linux-erofs@lfdr.de>; Sun, 30 Nov 2025 04:35:34 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B1CBC94DE8
+	for <lists+linux-erofs@lfdr.de>; Sun, 30 Nov 2025 11:44:09 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dJt376S5bz2yql;
-	Sun, 30 Nov 2025 14:35:31 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dK3Yd4kjwz2yvR;
+	Sun, 30 Nov 2025 21:44:05 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.58
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764473731;
-	cv=none; b=dR0ijdEEIWRJeHg2pjWXbjK3+zb/CNWKBXYP8hn4SatM6bdtBsxURW5o2xiCLItEJGOFMOiAOegCz2KkfUbacVK6urTk5JE3CxlDKIglGrkIr0HLaaklsQMHyiiuJgT9Qb6FdPL1ThnQobdm8xZejFZ+5DKJSjNm8Wpd1ZQdaMCWzHSH1+nTSfPZje2pRb0QKstT/QwjeIq1WJDquvAX6L32FvoHHbe3X7Xm+W/IQ6Cw0MPwXYaCrZj3CwRR4VoMiLYjK246/pjysSEPkRMtfbyLrWkRQKNufI0YY3qRopno1KHWAO7UXZN9B4g8mnwz7STOYJWP56ufSLSxRHBbtg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.220
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764499445;
+	cv=none; b=NM07UV0T8c0b7vLNFdaS59JtdhQIgqOCkKoFoTjR94KcHbdPWe5Hy6PyS5MkMCz4LWN+NZLhZ9P0kXwBEFZ1jo5TjEHPK+g5aRZfDf8ETOL8C2dT3JctGT/op4VoT4RbMMiqMMQtcdC60Dd3OGuFYPl+MXc5JlzATb6L6EL7e6lCFHpxjKryO7IhKRN3R0u39AENfTiXwpD6VHzZXUt8Wp+JRXxJq8T2v8W1MiUY6tRHWZJPM94f+T9nntrXDDCL3DE3c9DvzDEXd9hW2ZOOoqW+ET4D4LxY3RmckmxKXjYQQL8qD7aDc8tB8y0WRftPEBvJ2kEnOMU+LdMzn0YBUg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1764473731; c=relaxed/relaxed;
-	bh=BIVrccbzM7Y7aGD5YuG81fuJiBJ6QHhdsgDYKq/adEY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XePdIu2RZNGM/m1aJLb8dG7Oxb5x13Ghnn3vgyTH4DrYO59UIqw25ux/qFhujV4zBOQpD1TnXdUg/XnJvU305J4DTUix7XrsJgNdA/afQaIeoQJuswxnDPyAAPrsHzRKK1AAOfqGanGyYGK3mvazc2/8fjDYg1o753Dp32zqSZN+n9IipNqlu5iOuTAROxA0X+j1UdUEvc3P3n89+YdEcwSDTWNh0GnOXHbeDZQ87eXwOeT9W4xJr61vrmdNt1ZZaEHOBq0N5+Lp6UMs8zYAU/vB1CRNsZitC+Re24JZ3HcjRL4MgRlh/ZC1MpyIjPY4Tqj0Y1JWOQHdUwbQnbbk6Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.58; helo=out28-58.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.58; helo=out28-58.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-58.mail.aliyun.com (out28-58.mail.aliyun.com [115.124.28.58])
+	t=1764499445; c=relaxed/relaxed;
+	bh=4WteNzg/kcu4blxw2mExBUg0rmxoQ9m9N/6Suyjk96A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=meWN6C0q5KQ6ne+Iwu5feqgva3+4NEi/EWDoso0ob3gBGyyaYQ4I3Prxozq7K8XCKvbuvt/1twgA/j92sA+N27Sm4HbUtmwMYz8Bf2wQDyk7503cTd2LgqI6Z0CrBQC5UQsYmoTJ9G1Wd5qlbau0BBtN3TKWBGZ2kw8Qs/+AN+1Hk7J+waGTaA27UUOWpblJJaMoX9SIlve2fuUPzM5hDTL+1iW6UKsmp0HjGiIicR105iyJ44u37bhZOJVBlI5GesVM6RBUm+E78RxkDtBuk7cRq6lIPGZ14WQvmT2GPY+d4hPKUeQEcmGTxVhbEw8ji2WVhHil2dXd4qMpp3EEsg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=4nlfCXqN; dkim-atps=neutral; spf=pass (client-ip=113.46.200.220; helo=canpmsgout05.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=4nlfCXqN;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.220; helo=canpmsgout05.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dJt353MFZz2xqm
-	for <linux-erofs@lists.ozlabs.org>; Sun, 30 Nov 2025 14:35:26 +1100 (AEDT)
-Received: from HUDSONZHU-MB0.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.fZMAXAA_1764473716 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Sun, 30 Nov 2025 11:35:17 +0800
-From: ChengyuZhu6 <hudson@cyzhu.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: hsiangkao@linux.alibaba.com,
-	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v1] erofs-utils: mount: add manpage and usage information
-Date: Sun, 30 Nov 2025 11:35:16 +0800
-Message-ID: <20251130033516.86065-1-hudson@cyzhu.com>
-X-Mailer: git-send-email 2.47.1
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dK3YY4TJZz2ynW
+	for <linux-erofs@lists.ozlabs.org>; Sun, 30 Nov 2025 21:43:59 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=4WteNzg/kcu4blxw2mExBUg0rmxoQ9m9N/6Suyjk96A=;
+	b=4nlfCXqN4oh65nn6QNjlvueLxPp87HVOq5Z4VZtNk3TRd1uiJklOAhsoWtiW/7t+Tpq7MpgJJ
+	rJiVly5DHIBL7FRnXj0afaN7VTkUYsJk3OSI2HyhAC5gOXA3RCKPkC2xNNmPIXNKnuZdXf6F/jJ
+	TEPLwuqWNaFNI2a/sKMiVPw=
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4dK3Vc3zbcz12LDK;
+	Sun, 30 Nov 2025 18:41:28 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id F2D441804F9;
+	Sun, 30 Nov 2025 18:43:51 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
+ (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Sun, 30 Nov
+ 2025 18:43:51 +0800
+From: Yifan Zhao <zhaoyifan28@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>
+CC: <hsiangkao@linux.alibaba.com>, <hudsonzhu@tencent.com>,
+	<wayne.ma@huawei.com>, <jingrui@huawei.com>
+Subject: [PATCH 1/2] erofs-utils: lib: oci: fix a corner-case in `ocierofs_parse_ref()`
+Date: Sun, 30 Nov 2025 18:42:56 +0800
+Message-ID: <20251130104257.877660-1-zhaoyifan28@huawei.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -47,358 +64,306 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Chengyu Zhu <hudsonzhu@tencent.com>
+Currently, `ocierofs_parse_ref()` fails to correctly parse OCI
+reference strings of the form "localhost:5000/myapp:latest", as it
+assumes a valid registry name must contain '.', which is not the case.
 
-Add manpage, command-line usage help, and README for
-mount.erofs tool.
+Let's also treat `ref_str` with a colon before slash (i.e., containing a
+port number) as valid registry names.
 
-Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
+This patch also adds unit tests for `ocierofs_parse_ref()`.
+
+This patch also removes repeated codes in `ocierofs_parse_ref()`.
+
+Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
 ---
- README            |  26 ++++++
- man/Makefile.am   |   2 +-
- man/mount.erofs.1 | 202 ++++++++++++++++++++++++++++++++++++++++++++++
- mount/main.c      |  41 +++++++++-
- 4 files changed, 269 insertions(+), 2 deletions(-)
- create mode 100644 man/mount.erofs.1
+ lib/Makefile.am   |   9 +-
+ lib/remotes/oci.c | 220 +++++++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 194 insertions(+), 35 deletions(-)
 
-diff --git a/README b/README
-index b885fa8..784bd50 100644
---- a/README
-+++ b/README
-@@ -4,6 +4,7 @@ erofs-utils
- Userspace tools for EROFS filesystem, currently including:
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 4d31f6a..1721039 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -95,8 +95,15 @@ liberofs_la_LDFLAGS += ${json_c_LIBS}
+ liberofs_la_SOURCES += gzran.c
  
-   mkfs.erofs    filesystem formatter
-+  mount.erofs   mount helper for EROFS
-   erofsfuse     FUSE daemon alternative
-   dump.erofs    filesystem analyzer
-   fsck.erofs    filesystem compatibility & consistency checker as well
-@@ -206,6 +207,31 @@ git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b obsoleted
- PLEASE NOTE: This version is highly _NOT recommended_ now.
+ if ENABLE_S3
+-noinst_PROGRAMS  = s3erofs_test
++noinst_PROGRAMS = s3erofs_test
+ s3erofs_test_SOURCES = remotes/s3.c
+ s3erofs_test_CFLAGS = -Wall -I$(top_srcdir)/include ${libxml2_CFLAGS} ${openssl_CFLAGS} -DTEST
+ s3erofs_test_LDADD = liberofs.la
+ endif
++
++if ENABLE_OCI
++noinst_PROGRAMS = ocierofs_test
++ocierofs_test_SOURCES = remotes/oci.c
++ocierofs_test_CFLAGS = -Wall -I$(top_srcdir)/include ${json_c_CFLAGS} -DTEST
++ocierofs_test_LDADD = liberofs.la
++endif
+diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
+index ac8d495..c1d6cae 100644
+--- a/lib/remotes/oci.c
++++ b/lib/remotes/oci.c
+@@ -1038,7 +1038,9 @@ static int ocierofs_parse_ref(struct ocierofs_ctx *ctx, const char *ref_str)
+ 	slash = strchr(ref_str, '/');
+ 	if (slash) {
+ 		dot = strchr(ref_str, '.');
+-		if (dot && dot < slash) {
++		colon = strchr(ref_str, ':');
++		/* a dot or colon before the slash indicating a registry */
++		if ((dot && dot < slash) || (colon && colon < slash)) {
+ 			len = slash - ref_str;
+ 			tmp = strndup(ref_str, len);
+ 			if (!tmp)
+@@ -1057,48 +1059,32 @@ static int ocierofs_parse_ref(struct ocierofs_ctx *ctx, const char *ref_str)
+ 	if (colon) {
+ 		len = colon - repo_part;
+ 		tmp = strndup(repo_part, len);
+-		if (!tmp)
+-			return -ENOMEM;
++	} else {
++		tmp = strdup(repo_part);
++	}
++	if (!tmp)
++		return -ENOMEM;
  
+-		if (!strchr(tmp, '/') &&
+-		    (!strcmp(ctx->registry, DOCKER_API_REGISTRY) ||
+-		     !strcmp(ctx->registry, DOCKER_REGISTRY))) {
+-			char *full_repo;
++	if (!strchr(tmp, '/') &&
++	    (!strcmp(ctx->registry, DOCKER_API_REGISTRY) ||
++	     !strcmp(ctx->registry, DOCKER_REGISTRY))) {
++		char *full_repo;
  
-+mount.erofs
-+-----------
-+
-+mount.erofs is a mount helper for EROFS filesystem, which can be used
-+to mount EROFS images with various backends including direct kernel
-+mount, FUSE-based mount, and NBD for remote sources like OCI images.
-+
-+How to mount an EROFS image
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+To mount an EROFS image directly:
-+ $ mount.erofs foo.erofs.img /mnt
-+
-+To mount with FUSE backend:
-+ $ mount.erofs -t erofs.fuse foo.erofs.img /mnt
-+
-+To mount from OCI image with NBD backend:
-+ $ mount.erofs -t erofs.nbd -o oci.blob=sha256:... image:tag /mnt
-+
-+To unmount:
-+ $ mount.erofs -u /mnt
-+
-+For more details, see mount.erofs(1) manpage.
-+
-+
- erofsfuse
- ---------
+-			if (asprintf(&full_repo, "library/%s", tmp) == -1) {
+-				free(tmp);
+-				return -ENOMEM;
+-			}
++		if (asprintf(&full_repo, "library/%s", tmp) == -1) {
+ 			free(tmp);
+-			tmp = full_repo;
++			return -ENOMEM;
+ 		}
+-		free(ctx->repository);
+-		ctx->repository = tmp;
++		free(tmp);
++		tmp = full_repo;
++	}
++	free(ctx->repository);
++	ctx->repository = tmp;
  
-diff --git a/man/Makefile.am b/man/Makefile.am
-index 4628b85..2990e77 100644
---- a/man/Makefile.am
-+++ b/man/Makefile.am
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0+
- 
--dist_man_MANS = mkfs.erofs.1 dump.erofs.1 fsck.erofs.1
-+dist_man_MANS = mkfs.erofs.1 dump.erofs.1 fsck.erofs.1 mount.erofs.1
- 
- EXTRA_DIST = erofsfuse.1
- if ENABLE_FUSE
-diff --git a/man/mount.erofs.1 b/man/mount.erofs.1
-new file mode 100644
-index 0000000..6eeb48c
---- /dev/null
-+++ b/man/mount.erofs.1
-@@ -0,0 +1,202 @@
-+.\" Copyright (c) 2025 Chengyu Zhu <hudsonzhu@tencent.com>
-+.\"
-+.TH MOUNT.EROFS 1
-+.SH NAME
-+mount.erofs \- manage EROFS filesystem
-+.SH SYNOPSIS
-+\fBmount.erofs\fR [\fIOPTIONS\fR] \fISOURCE\fR \fIMOUNTPOINT\fR
-+.br
-+\fBmount.erofs\fR \fB\-u\fR \fITARGET\fR
-+.br
-+\fBmount.erofs\fR \fB\-\-reattach\fR \fITARGET\fR
-+.SH DESCRIPTION
-+EROFS is an enhanced lightweight read-only filesystem with modern designs
-+for scenarios which need high-performance read-only requirements.
-+.PP
-+\fBmount.erofs\fR is used to mount an EROFS filesystem from \fISOURCE\fR
-+(which can be an image file or block device) to a \fIMOUNTPOINT\fR. It supports multiple backends including
-+direct kernel mount, FUSE-based mount, and NBD (Network Block Device) for
-+remote sources like OCI images.
-+.SH OPTIONS
-+.TP
-+.B \-h, \-\-help
-+Display help message and exit.
-+.TP
-+.B \-V, \-\-version
-+Display version information and exit.
-+.TP
-+.BI "\-o " options
-+Comma-separated list of mount options. See \fBMOUNT OPTIONS\fR below.
-+.TP
-+.BI "\-t " type[.subtype]
-+Specify the filesystem type and optional subtype. The type should be
-+\fBerofs\fR. Available subtypes are:
-+.RS
-+.TP
-+.B fuse
-+Use FUSE-based mount via \fBerofsfuse\fR.
-+.TP
-+.B local
-+Force direct kernel mount (default if available).
-+.TP
-+.B nbd
-+Use NBD backend for remote sources (e.g., OCI images).
-+.RE
-+.TP
-+.B \-u
-+Unmount the filesystem at the specified target.
-+.TP
-+.B \-\-reattach
-+Reattach to an existing NBD device and restart the NBD service.
-+.SH MOUNT OPTIONS
-+Standard mount options:
-+.TP
-+.B ro
-+Mount the filesystem read-only (default).
-+.TP
-+.B rw
-+Mount the filesystem read-write (not supported for EROFS).
-+.TP
-+.B nosuid
-+Do not honor set-user-ID and set-group-ID bits.
-+.TP
-+.B suid
-+Honor set-user-ID and set-group-ID bits (default).
-+.TP
-+.B nodev
-+Do not interpret character or block special devices.
-+.TP
-+.B dev
-+Interpret character or block special devices (default).
-+.TP
-+.B noexec
-+Do not allow direct execution of any binaries.
-+.TP
-+.B exec
-+Allow execution of binaries (default).
-+.TP
-+.B noatime
-+Do not update inode access times.
-+.TP
-+.B atime
-+Update inode access times (default).
-+.TP
-+.B nodiratime
-+Do not update directory inode access times.
-+.TP
-+.B diratime
-+Update directory inode access times (default).
-+.TP
-+.B relatime
-+Update inode access times relative to modify or change time.
-+.TP
-+.B norelatime
-+Do not use relative atime updates.
-+.SH OCI-SPECIFIC OPTIONS
-+The following OCI-specific options are available:
-+.TP
-+.BI "oci.blob=" digest
-+Specify the OCI blob digest to mount. The digest should be in the format
-+\fBsha256:...\fR. Cannot be used together with \fBoci.layer\fR.
-+.TP
-+.BI "oci.layer=" index
-+Specify the OCI layer index to mount (0-based). Cannot be used together
-+with \fBoci.blob\fR.
-+.TP
-+.BI "oci.platform=" platform
-+Specify the target platform (default: \fBlinux/amd64\fR).
-+.TP
-+.BI "oci.username=" username
-+Username for OCI registry authentication.
-+.TP
-+.BI "oci.password=" password
-+Password for OCI registry authentication.
-+.TP
-+.BI "oci.tarindex=" path
-+Path to a tarball index file for hybrid tar+OCI mode.
-+.TP
-+.BI "oci.zinfo=" path
-+Path to a gzip zinfo file for random access to gzip-compressed tar layers.
-+.SH EXAMPLES
-+Mount a local EROFS image:
-+.PP
-+.nf
-+.RS
-+mount.erofs image.erofs /mnt
-+.RE
-+.fi
-+.PP
-+Mount using FUSE backend:
-+.PP
-+.nf
-+.RS
-+mount.erofs \-t erofs.fuse image.erofs /mnt
-+.RE
-+.fi
-+.PP
-+Mount an OCI blob via NBD:
-+.PP
-+.nf
-+.RS
-+mount.erofs \-t erofs.nbd \\
-+    \-o oci.blob=sha256:abc123...,oci.username=user,oci.password=pass \\
-+    docker.io/library/image:tag /mnt
-+.RE
-+.fi
-+.PP
-+Mount an OCI layer by index:
-+.PP
-+.nf
-+.RS
-+mount.erofs \-t erofs.nbd \-o oci.layer=0 \\
-+    docker.io/library/image:tag /mnt
-+.RE
-+.fi
-+.PP
-+Mount with tarball index and gzip support:
-+.PP
-+.nf
-+.RS
-+mount.erofs \-t erofs.nbd \\
-+    \-o oci.blob=sha256:abc...,oci.tarindex=/path/to/index,oci.zinfo=/path/to/zinfo \\
-+    docker.io/library/image:tag /mnt
-+.RE
-+.fi
-+.PP
-+Unmount a filesystem:
-+.PP
-+.nf
-+.RS
-+mount.erofs \-u /mnt
-+.RE
-+.fi
-+.PP
-+Reattach to an NBD device:
-+.PP
-+.nf
-+.RS
-+mount.erofs \-\-reattach /dev/nbd0
-+.RE
-+.fi
-+.SH NOTES
-+.IP \(bu 2
-+EROFS filesystems are read-only by nature. The \fBrw\fR option will be ignored.
-+.IP \(bu 2
-+When mounting OCI images via NBD, the mount process creates a background
-+daemon to serve the NBD device. The daemon will automatically clean up when
-+the filesystem is unmounted.
-+.IP \(bu 2
-+The \fB\-\-reattach\fR option is useful for recovering NBD mounts after a
-+system crash or when the NBD daemon was terminated unexpectedly.
-+.IP \(bu 2
-+Loop device mounting is automatically used when mounting a regular file
-+without specifying a backend type.
-+.SH SEE ALSO
-+.BR mkfs.erofs (1),
-+.BR erofsfuse (1),
-+.BR dump.erofs (1),
-+.BR fsck.erofs (1),
-+.BR mount (8),
-+.BR umount (8)
-+.SH AVAILABILITY
-+\fBmount.erofs\fR is part of erofs-utils.
-diff --git a/mount/main.c b/mount/main.c
-index e25134c..3c5e657 100644
---- a/mount/main.c
-+++ b/mount/main.c
-@@ -81,6 +81,38 @@ static struct erofs_nbd_source {
- 	};
- } nbdsrc;
- 
-+static void usage(int argc, char **argv)
++	if (colon) {
+ 		free(ctx->tag);
+ 		ctx->tag = strdup(colon + 1);
+ 		if (!ctx->tag)
+ 			return -ENOMEM;
+-	} else {
+-		tmp = strdup(repo_part);
+-		if (!tmp)
+-			return -ENOMEM;
+-
+-		if (!strchr(tmp, '/') &&
+-		    (!strcmp(ctx->registry, DOCKER_API_REGISTRY) ||
+-		     !strcmp(ctx->registry, DOCKER_REGISTRY))) {
+-
+-			char *full_repo;
+-
+-			if (asprintf(&full_repo, "library/%s", tmp) == -1) {
+-				free(tmp);
+-				return -ENOMEM;
+-			}
+-			free(tmp);
+-			tmp = full_repo;
+-		}
+-		free(ctx->repository);
+-		ctx->repository = tmp;
+ 	}
+ 	return 0;
+ }
+@@ -1575,3 +1561,169 @@ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cf
+ 	return -EOPNOTSUPP;
+ }
+ #endif
++
++#if defined(OCIEROFS_ENABLED) && defined(TEST)
++struct ocierofs_parse_ref_testcase {
++	const char *name;
++	const char *ref_str;
++	const char *expected_registry;
++	const char *expected_repository;
++	const char *expected_tag;
++};
++
++static bool run_ocierofs_parse_ref_test(const struct ocierofs_parse_ref_testcase *tc)
 +{
-+	printf("Usage: %s [OPTIONS] SOURCE [MOUNTPOINT]\n"
-+	       "Manage EROFS filesystem.\n"
-+	       "\n"
-+	       "General options:\n"
-+	       " -V, --version         print the version number of mount.erofs and exit\n"
-+	       " -h, --help            display this help and exit\n"
-+	       " -o options            comma-separated list of mount options\n"
-+	       " -t type[.subtype]     filesystem type (and optional subtype)\n"
-+	       "                       subtypes: fuse, local, nbd\n"
-+	       " -u                    unmount the filesystem\n"
-+	       "    --reattach         reattach to an existing NBD device\n"
-+#ifdef OCIEROFS_ENABLED
-+	       "\n"
-+	       "OCI-specific options (with -o):\n"
-+	       "   oci.blob=<digest>   specify OCI blob digest (sha256:...)\n"
-+	       "   oci.layer=<index>   specify OCI layer index (0-based)\n"
-+	       "   oci.platform=<name> specify platform (default: linux/amd64)\n"
-+	       "   oci.username=<user> username for authentication (optional)\n"
-+	       "   oci.password=<pass> password for authentication (optional)\n"
-+	       "   oci.tarindex=<path> path to tarball index file (optional)\n"
-+	       "   oci.zinfo=<path>    path to gzip zinfo file (optional)\n"
++	struct ocierofs_ctx ctx = {};
++	int ret;
++
++	printf("Running test: %s\n", tc->name);
++
++	/* Initialize with default values */
++	ctx.registry = strdup(DOCKER_API_REGISTRY);
++	ctx.tag = strdup("latest");
++	if (!ctx.registry || !ctx.tag) {
++		printf("  FAILED: memory allocation error during setup\n");
++		free(ctx.registry);
++		free(ctx.tag);
++		return false;
++	}
++
++	ret = ocierofs_parse_ref(&ctx, tc->ref_str);
++	if (ret < 0) {
++		printf("  FAILED: ocierofs_parse_ref returned %d\n", ret);
++		goto cleanup;
++	}
++
++	if (tc->expected_registry && strcmp(ctx.registry, tc->expected_registry) != 0) {
++		printf("  FAILED: registry mismatch\n");
++		printf("    Expected: %s\n", tc->expected_registry);
++		printf("    Got:      %s\n", ctx.registry);
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	if (tc->expected_repository && strcmp(ctx.repository, tc->expected_repository) != 0) {
++		printf("  FAILED: repository mismatch\n");
++		printf("    Expected: %s\n", tc->expected_repository);
++		printf("    Got:      %s\n", ctx.repository);
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	if (tc->expected_tag && strcmp(ctx.tag, tc->expected_tag) != 0) {
++		printf("  FAILED: tag mismatch\n");
++		printf("    Expected: %s\n", tc->expected_tag);
++		printf("    Got:      %s\n", ctx.tag);
++		ret = -EINVAL;
++		goto cleanup;
++	}
++
++	printf("  PASSED\n");
++	printf("    Registry:   %s\n", ctx.registry);
++	printf("    Repository: %s\n", ctx.repository);
++	printf("    Tag:        %s\n", ctx.tag);
++
++cleanup:
++	free(ctx.registry);
++	free(ctx.repository);
++	free(ctx.tag);
++	return ret == 0;
++}
++
++static int test_ocierofs_parse_ref(void)
++{
++	struct ocierofs_parse_ref_testcase tests[] = {
++		{
++			.name = "Simple image name (Docker Hub library)",
++			.ref_str = "nginx",
++			.expected_registry = DOCKER_API_REGISTRY,
++			.expected_repository = "library/nginx",
++			.expected_tag = "latest",
++		},
++		{
++			.name = "Image with tag (Docker Hub library)",
++			.ref_str = "nginx:1.21",
++			.expected_registry = DOCKER_API_REGISTRY,
++			.expected_repository = "library/nginx",
++			.expected_tag = "1.21",
++		},
++		{
++			.name = "User repository without tag",
++			.ref_str = "user/myapp",
++			.expected_registry = DOCKER_API_REGISTRY,
++			.expected_repository = "user/myapp",
++			.expected_tag = "latest",
++		},
++		{
++			.name = "User repository with tag",
++			.ref_str = "user/myapp:v2.0",
++			.expected_registry = DOCKER_API_REGISTRY,
++			.expected_repository = "user/myapp",
++			.expected_tag = "v2.0",
++		},
++		{
++			.name = "Custom registry without tag",
++			.ref_str = "registry.example.com/myapp",
++			.expected_registry = "registry.example.com",
++			.expected_repository = "myapp",
++			.expected_tag = "latest",
++		},
++		{
++			.name = "Custom registry with tag",
++			.ref_str = "registry.example.com/myapp:v1.0",
++			.expected_registry = "registry.example.com",
++			.expected_repository = "myapp",
++			.expected_tag = "v1.0",
++		},
++		{
++			.name = "Custom registry with port",
++			.ref_str = "localhost:5000/myapp:latest",
++			.expected_registry = "localhost:5000",
++			.expected_repository = "myapp",
++			.expected_tag = "latest",
++		},
++		{
++			.name = "Custom registry with ip & port",
++			.ref_str = "127.0.0.1:5000/myapp:latest",
++			.expected_registry = "127.0.0.1:5000",
++			.expected_repository = "myapp",
++			.expected_tag = "latest",
++		},
++		{
++			.name = "Custom registry with nested repository",
++			.ref_str = "registry.example.com/org/project/app:dev",
++			.expected_registry = "registry.example.com",
++			.expected_repository = "org/project/app",
++			.expected_tag = "dev",
++		},
++		{
++			.name = "Tag with digest-like format",
++			.ref_str = "myapp:sha256-abc123",
++			.expected_registry = DOCKER_API_REGISTRY,
++			.expected_repository = "library/myapp",
++			.expected_tag = "sha256-abc123",
++		},
++		{
++			.name = "Multi-level path without registry",
++			.ref_str = "org/team/app:v1",
++			.expected_registry = DOCKER_API_REGISTRY,
++			.expected_repository = "org/team/app",
++			.expected_tag = "v1",
++		},
++	};
++	int i, pass = 0;
++
++	for (i = 0; i < ARRAY_SIZE(tests); ++i) {
++		pass += run_ocierofs_parse_ref_test(&tests[i]);
++		putc('\n', stdout);
++	}
++
++	printf("Run all %d tests with %d PASSED\n", i, pass);
++	return ARRAY_SIZE(tests) == pass;
++}
++
++int main(int argc, char *argv[])
++{
++	exit(test_ocierofs_parse_ref() ? EXIT_SUCCESS : EXIT_FAILURE);
++}
 +#endif
-+	       , argv[0]);
-+}
-+
-+static void version(void)
-+{
-+	printf("mount.erofs (erofs-utils) %s\n", cfg.c_version);
-+}
-+
- #ifdef OCIEROFS_ENABLED
- static int erofsmount_parse_oci_option(const char *option)
- {
-@@ -253,6 +285,7 @@ static int erofsmount_parse_options(int argc, char **argv)
- {
- 	static const struct option long_options[] = {
- 		{"help", no_argument, 0, 'h'},
-+		{"version", no_argument, 0, 'V'},
- 		{"reattach", no_argument, 0, 512},
- 		{0, 0, 0, 0},
- 	};
-@@ -261,9 +294,15 @@ static int erofsmount_parse_options(int argc, char **argv)
- 
- 	nbdsrc.ocicfg.layer_index = -1;
- 
--	while ((opt = getopt_long(argc, argv, "Nfno:st:uv",
-+	while ((opt = getopt_long(argc, argv, "hVNfno:st:uv",
- 				  long_options, NULL)) != -1) {
- 		switch (opt) {
-+		case 'h':
-+			usage(argc, argv);
-+			exit(0);
-+		case 'V':
-+			version();
-+			exit(0);
- 		case 'o':
- 			mountcfg.full_options = optarg;
- 			mountcfg.flags =
+\ No newline at end of file
 -- 
-2.47.1
+2.43.0
 
 
