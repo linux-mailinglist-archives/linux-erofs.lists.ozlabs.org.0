@@ -1,43 +1,58 @@
-Return-Path: <linux-erofs+bounces-1454-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1456-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2679AC95139
-	for <lists+linux-erofs@lfdr.de>; Sun, 30 Nov 2025 16:16:48 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EBD1C951FD
+	for <lists+linux-erofs@lfdr.de>; Sun, 30 Nov 2025 16:54:36 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dK9c94HY8z2yvL;
-	Mon, 01 Dec 2025 02:16:41 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dKBRr4fsjz2yvL;
+	Mon, 01 Dec 2025 02:54:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.83
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764515801;
-	cv=none; b=PEf/fhjHtD+EESvK5AYhtJmIMXe9QAWtcRL5pdrfdhv+VtJz6EHXiKT+vww5ilc9Rnhm9ck4EEtnsY1u2kolI2Smx4L10MIbG9eKBrMhfe4RU6rM5CY1wUcAISNwMlglQOYe5FvemsV7IjD5BUExnxKYe2dxIC0d7Y5RMOiUOwoFmcozK5fKjHlx0FPwRFvBGxXWpX43OVkvoGUCJ/TUSb4soGnoZmPzeSmQhX/759Rzyce8g+gDVtlXc2/2G3ayikk0zu+u7D6QSdBPn8zZYsre0HuPJJov/Gu1/6hcoePjYb6N+VRymYlA6MW67mRkUicFcawvZhK0TpmaHADBPw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764518072;
+	cv=none; b=ArpU3BkDbO7KlBdlMBEchOCJWHZgu3Qm6rexkOShmRP0DfxelXoJZWjFCDXjMDPaqb5p9t3OVgWmvfRv+dRaM3tUkalKkH384L27ag5ygDJL+t4n+wCTXBn+b2UU8ddIGm20ZYieWmioOPFd5FQeiNcuydCjOqlXjDHui+rOg+6raZCIO/cYV6MPY1Qju4eUC7XH6btZjaOBbmsaQhsDU5pWiRp0fFz4sn1l+PIvGOjHSDng/oxozU2+6M++tS+u6mao1Ap9Jmx55O8ye91GlKMqBI9cJ6Fakpjhs+eyRD1r1LaD7c+obrbisVgCH0MJQB61GqWHjarLJSFkdeBSfA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1764515801; c=relaxed/relaxed;
-	bh=bldEJlke/EZcHGEzEFz7AVYVlXSQc/SQPykl8ywxJNM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JglE4w7rga7ezsbLMGloADBXl0E/a9urCmL2wwu02ImlBSixBRk8amJzDD0Qe9/ZRnnZ1pGNDVitW0V1e/b5Fo8dB0Kqz1DvikcP2QupvSz4EI6INgOE4R2LuBiN3qhm9TUlGdoIBqS3fNsZUmD9d5hYStGFrDdU+G9uzA0MKOByiaawrlXoZfcnGjW+0zHCQJusUKqJ2LCGDiWMpmlwlRyI+TeuEqgjPL3zN3npffjeuQjcS8BzsPUVnVexLAoLB4bZWyYm3RLrslrMffWIODeLixVFD8QCcr+eT2PZcMGuyH/LhTr9QXJhrth5UjHPwyhNOgcxTuWZVDcU3XI6LQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.83; helo=out28-83.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.83; helo=out28-83.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-83.mail.aliyun.com (out28-83.mail.aliyun.com [115.124.28.83])
+	t=1764518072; c=relaxed/relaxed;
+	bh=ethj5625gCPyVpGqCOwfmpElVhC6VJwiLvqgUHKBeRE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=PInBgzv2+ZzdUg3x6+9UYg1uJLPz2WNstt5UmUmGKdmVZASHII1Cq0FQmpMeAsxOVdV9wfhM2JyufBCg9b5Z7pOFMjWgUIRHj4IVOOoYoDrVRbI5MyBZlch0I9eXUpBeHaeKsVsjz3lvXXOzRlftwNoPb0Mcb/NKI8zwU9qL4JdUOLTMf9mK6dDqdpwDKQC96ckIWurOs9D1rrRwsAb2NuevIMTCVhhMNiZtUtecgBgCMVs+//+hUwuz3lvilj6PE4WxFLGBx+CiMN2x+0L/Phz19jG9kQ+1LhMrxa3it7lg1NRpKwPiUN84nYRGR6l5KYoKIKiGWLqc1FvNJBIslg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=U/HcV24u; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=U/HcV24u;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dK9c65llPz2yvR
-	for <linux-erofs@lists.ozlabs.org>; Mon, 01 Dec 2025 02:16:36 +1100 (AEDT)
-Received: from HUDSONZHU-MB0.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.fZiFcSr_1764515787 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Sun, 30 Nov 2025 23:16:27 +0800
-From: ChengyuZhu6 <hudson@cyzhu.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dKBRq34lMz2ynW
+	for <linux-erofs@lists.ozlabs.org>; Mon, 01 Dec 2025 02:54:31 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id F29F560007;
+	Sun, 30 Nov 2025 15:54:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FBA8C4CEF8;
+	Sun, 30 Nov 2025 15:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764518068;
+	bh=GrluOcWGm5wmpX2Dc8MkVir3inWL74EVxKHLm8x77Uc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=U/HcV24uZVZ/y8lcsJW+6u1xS3NmWV0idKQ2bCeu8nNTPlpWObVanlQIcdbh2pNx+
+	 3TMmRB7LxynzAArau6NJKJotDkbPPPH4ggdR++LP1pcxdwV22VVMkrYtFJe3z+n3vr
+	 ZGoq1N7eeMPnbx4Qctu1psNw3UWQdjnEImLB5jXrtkAe1sFEezUTeObgsDLT79GwVb
+	 H+NRE7MYw/AUZmeYbHZvteUxN2OHHVbAd8uy6iwjM9CERDwZxppOHxmxzpURi4xOZO
+	 R5MXG6mPLQRNGOeu7VFx/RsoL6DpbXEMk+AQKKAdHhl3i57Sl/6TOajVjAlVOS5Ylu
+	 XaGmnhcyjLcNw==
+From: Gao Xiang <xiang@kernel.org>
 To: linux-erofs@lists.ozlabs.org
-Cc: hsiangkao@linux.alibaba.com,
-	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH 2/2] erofs-utils: lib: oci: write downloaded data directly to fd
-Date: Sun, 30 Nov 2025 23:16:26 +0800
-Message-ID: <20251130151626.95009-3-hudson@cyzhu.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20251130151626.95009-1-hudson@cyzhu.com>
-References: <20251130151626.95009-1-hudson@cyzhu.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 4/4] erofs: enable error reporting for z_erofs_fixup_insize()
+Date: Sun, 30 Nov 2025 23:53:42 +0800
+Message-Id: <20251130155342.1416-1-xiang@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20251127073122.2542542-4-hsiangkao@linux.alibaba.com>
+References: <20251127073122.2542542-4-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,347 +65,265 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
-	version=4.0.1
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-From: Chengyu Zhu <hudsonzhu@tencent.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Avoid buffering downloaded OCI blobs in memory. Instead, write the
-received data directly to the target file descriptor within the curl
-write callback.
+Enable propagation of detailed errors to callers.
 
-Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- lib/remotes/oci.c | 198 +++++++++++++---------------------------------
- 1 file changed, 55 insertions(+), 143 deletions(-)
+v2:
+ - fix sparse warning:
+    "Using plain integer as NULL pointer"
 
-diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index 8b253a3..a3efd77 100644
---- a/lib/remotes/oci.c
-+++ b/lib/remotes/oci.c
-@@ -64,10 +64,8 @@ struct ocierofs_response {
- 	long http_code;
- };
+ fs/erofs/compress.h             |  4 ++--
+ fs/erofs/decompressor.c         | 21 +++++++++++----------
+ fs/erofs/decompressor_crypto.c  |  7 ++++---
+ fs/erofs/decompressor_deflate.c | 19 +++++++++----------
+ fs/erofs/decompressor_lzma.c    | 11 +++++------
+ fs/erofs/decompressor_zstd.c    | 14 +++++++-------
+ 6 files changed, 38 insertions(+), 38 deletions(-)
+
+diff --git a/fs/erofs/compress.h b/fs/erofs/compress.h
+index 91dbc8bb5ddf..84c8e52581f4 100644
+--- a/fs/erofs/compress.h
++++ b/fs/erofs/compress.h
+@@ -72,8 +72,8 @@ struct z_erofs_stream_dctx {
  
--struct ocierofs_stream {
--	const char *digest;
--	int blobfd;
--};
-+static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, const char *digest,
-+					off_t offset, size_t length, int fd);
- 
- static inline const char *ocierofs_get_api_registry(const char *registry)
- {
-@@ -125,26 +123,42 @@ static size_t ocierofs_write_callback(void *contents, size_t size,
- 	return realsize;
+ const char *z_erofs_stream_switch_bufs(struct z_erofs_stream_dctx *dctx,
+ 				void **dst, void **src, struct page **pgpl);
+-int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
+-			 unsigned int padbufsize);
++const char *z_erofs_fixup_insize(struct z_erofs_decompress_req *rq,
++				 const char *padbuf, unsigned int padbufsize);
+ int __init z_erofs_init_decompressor(void);
+ void z_erofs_exit_decompressor(void);
+ int z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index 638b5f87bd0c..d5d090276391 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -178,21 +178,21 @@ static void *z_erofs_lz4_handle_overlap(const struct z_erofs_decompress_req *rq,
  }
  
--static size_t ocierofs_layer_write_callback(void *contents, size_t size,
--					    size_t nmemb, void *userp)
-+struct ocierofs_write_ctx {
-+	int fd;
-+	off_t offset;
-+	CURL *curl;
-+	bool range_req;
-+};
-+
-+static size_t ocierofs_fd_write_callback(void *contents, size_t size,
-+					 size_t nmemb, void *userp)
+ /*
+- * Get the exact inputsize with zero_padding feature.
+- *  - For LZ4, it should work if zero_padding feature is on (5.3+);
+- *  - For MicroLZMA, it'd be enabled all the time.
++ * Get the exact on-disk size of the compressed data:
++ *  - For LZ4, it should apply if the zero_padding feature is on (5.3+);
++ *  - For others, zero_padding is enabled all the time.
+  */
+-int z_erofs_fixup_insize(struct z_erofs_decompress_req *rq, const char *padbuf,
+-			 unsigned int padbufsize)
++const char *z_erofs_fixup_insize(struct z_erofs_decompress_req *rq,
++				 const char *padbuf, unsigned int padbufsize)
  {
--	struct ocierofs_stream *stream = userp;
- 	size_t realsize = size * nmemb;
-+	struct ocierofs_write_ctx *wctx = userp;
- 	const char *buf = contents;
- 	size_t written = 0;
-+	long http_code = 0;
+ 	const char *padend;
  
--	if (stream->blobfd < 0)
--		return 0;
-+	if (wctx->curl) {
-+		curl_easy_getinfo(wctx->curl, CURLINFO_RESPONSE_CODE, &http_code);
-+		if (wctx->range_req && http_code == 200) {
-+			erofs_err("server returned 200 OK for Range request, aborting");
-+			return 0;
-+		}
-+		wctx->curl = NULL;
-+	}
+ 	padend = memchr_inv(padbuf, 0, padbufsize);
+ 	if (!padend)
+-		return -EFSCORRUPTED;
++		return "compressed data start not found";
+ 	rq->inputsize -= padend - padbuf;
+ 	rq->pageofs_in += padend - padbuf;
+-	return 0;
++	return NULL;
+ }
  
- 	while (written < realsize) {
--		ssize_t n = write(stream->blobfd, buf + written, realsize - written);
-+		ssize_t n = pwrite(wctx->fd, buf + written, realsize - written, wctx->offset);
+ static int z_erofs_lz4_decompress_mem(struct z_erofs_decompress_req *rq, u8 *dst)
+@@ -200,6 +200,7 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_decompress_req *rq, u8 *dst
+ 	bool support_0padding = false, may_inplace = false;
+ 	unsigned int inputmargin;
+ 	u8 *out, *headpage, *src;
++	const char *reason;
+ 	int ret, maptype;
  
- 		if (n < 0) {
--			erofs_err("failed to write layer data for layer %s",
--				  stream->digest);
-+			if (errno == EINTR)
-+				continue;
-+			erofs_err("failed to write cache data: %s", strerror(errno));
- 			return 0;
+ 	DBG_BUGON(*rq->in == NULL);
+@@ -208,12 +209,12 @@ static int z_erofs_lz4_decompress_mem(struct z_erofs_decompress_req *rq, u8 *dst
+ 	/* LZ4 decompression inplace is only safe if zero_padding is enabled */
+ 	if (erofs_sb_has_zero_padding(EROFS_SB(rq->sb))) {
+ 		support_0padding = true;
+-		ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
++		reason = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
+ 				min_t(unsigned int, rq->inputsize,
+ 				      rq->sb->s_blocksize - rq->pageofs_in));
+-		if (ret) {
++		if (reason) {
+ 			kunmap_local(headpage);
+-			return ret;
++			return IS_ERR(reason) ? PTR_ERR(reason) : -EFSCORRUPTED;
  		}
- 		written += n;
-+		wctx->offset += n;
- 	}
- 	return realsize;
- }
-@@ -1157,89 +1171,33 @@ static int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config
- 	return 0;
- }
+ 		may_inplace = !((rq->pageofs_in + rq->inputsize) &
+ 				(rq->sb->s_blocksize - 1));
+diff --git a/fs/erofs/decompressor_crypto.c b/fs/erofs/decompressor_crypto.c
+index 97b77ab64432..5ef6f71d3b7f 100644
+--- a/fs/erofs/decompressor_crypto.c
++++ b/fs/erofs/decompressor_crypto.c
+@@ -9,16 +9,17 @@ static int __z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
+ 	struct sg_table st_src, st_dst;
+ 	struct acomp_req *req;
+ 	struct crypto_wait wait;
++	const char *reason;
+ 	u8 *headpage;
+ 	int ret;
  
--static int ocierofs_download_blob_to_fd(struct ocierofs_ctx *ctx,
--					const char *digest,
--					const char *auth_header,
--					int outfd)
--{
--	struct ocierofs_request req = {};
--	struct ocierofs_stream stream = {};
--	const char *api_registry;
--	long http_code;
--	int ret;
--
--	stream = (struct ocierofs_stream) {
--		.digest = digest,
--		.blobfd = outfd,
--	};
--
--	api_registry = ocierofs_get_api_registry(ctx->registry);
--	if (asprintf(&req.url, "https://%s/v2/%s/blobs/%s",
--	     api_registry, ctx->repository, digest) == -1)
--		return -ENOMEM;
--
--	if (auth_header && strstr(auth_header, "Bearer"))
--		req.headers = curl_slist_append(req.headers, auth_header);
--
--	curl_easy_reset(ctx->curl);
--
--	ret = ocierofs_curl_setup_common_options(ctx->curl);
+ 	headpage = kmap_local_page(*rq->in);
+-	ret = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
++	reason = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
+ 				min_t(unsigned int, rq->inputsize,
+ 				      rq->sb->s_blocksize - rq->pageofs_in));
+ 	kunmap_local(headpage);
 -	if (ret)
--		goto out;
--
--	ret = ocierofs_curl_setup_rq(ctx->curl, req.url, OCIEROFS_HTTP_GET,
--				     req.headers,
--				     ocierofs_layer_write_callback,
--				     &stream, NULL, NULL);
--	if (ret)
--		goto out;
--
--	ret = ocierofs_curl_perform(ctx->curl, &http_code);
--	if (ret)
--		goto out;
--
--	if (http_code < 200 || http_code >= 300) {
--		erofs_err("HTTP request failed with code %ld", http_code);
--		ret = -EIO;
--		goto out;
--	}
--	ret = 0;
--out:
--	ocierofs_request_cleanup(&req);
--	return ret;
--}
--
- static int ocierofs_extract_layer(struct ocierofs_ctx *ctx,
- 				  const char *digest, const char *auth_header)
- {
--	struct ocierofs_stream stream = {};
--	int ret;
-+	int fd, ret;
- 
--	stream = (struct ocierofs_stream) {
--		.digest = digest,
--		.blobfd = erofs_tmpfile(),
--	};
--	if (stream.blobfd < 0) {
-+	fd = erofs_tmpfile();
-+	if (fd < 0) {
- 		erofs_err("failed to create temporary file for %s", digest);
- 		return -errno;
- 	}
- 
--	ret = ocierofs_download_blob_to_fd(ctx, digest, auth_header, stream.blobfd);
-+	ret = ocierofs_download_blob_range(ctx, digest, 0, 0, fd);
- 	if (ret)
- 		goto out;
- 
--	if (lseek(stream.blobfd, 0, SEEK_SET) < 0) {
-+	if (lseek(fd, 0, SEEK_SET) < 0) {
- 		erofs_err("failed to seek to beginning of temp file: %s",
- 			  strerror(errno));
- 		ret = -errno;
- 		goto out;
- 	}
- 
--	return stream.blobfd;
-+	return fd;
- 
- out:
--	if (stream.blobfd >= 0)
--		close(stream.blobfd);
-+	if (fd >= 0)
-+		close(fd);
- 	return ret;
- }
- 
-@@ -1334,33 +1292,32 @@ out:
- 	return ret;
- }
- 
--static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset, size_t length,
--					void **out_buf, size_t *out_size)
-+static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, const char *digest,
-+					off_t offset, size_t length, int fd)
- {
- 	struct ocierofs_request req = {};
--	struct ocierofs_response resp = {};
-+	struct ocierofs_write_ctx wctx = {
-+		.fd = fd,
-+		.offset = offset,
-+		.curl = ctx->curl,
-+		.range_req = (length != 0),
-+	};
- 	const char *api_registry;
- 	char rangehdr[64];
- 	long http_code = 0;
- 	int ret, index;
--	const char *digest;
- 	u64 blob_size;
--	size_t available;
--	size_t copy_size;
- 
--	index = ocierofs_find_layer_by_digest(ctx, ctx->blob_digest);
-+	index = ocierofs_find_layer_by_digest(ctx, digest);
- 	if (index < 0)
- 		return -ENOENT;
--	digest = ctx->blob_digest;
- 	blob_size = ctx->layers[index]->size;
- 
- 	if (offset < 0)
- 		return -EINVAL;
- 
--	if (offset >= blob_size) {
--		*out_size = 0;
-+	if (offset >= blob_size)
- 		return 0;
--	}
- 
- 	if (length && offset + length > blob_size)
- 		length = (size_t)(blob_size - offset);
-@@ -1373,13 +1330,15 @@ static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset,
- 	if (length)
- 		snprintf(rangehdr, sizeof(rangehdr), "Range: bytes=%lld-%lld",
- 			 (long long)offset, (long long)(offset + (off_t)length - 1));
--	else
-+	else if (offset > 0)
- 		snprintf(rangehdr, sizeof(rangehdr), "Range: bytes=%lld-",
- 			 (long long)offset);
- 
- 	if (ctx->auth_header && strstr(ctx->auth_header, "Bearer"))
- 		req.headers = curl_slist_append(req.headers, ctx->auth_header);
--	req.headers = curl_slist_append(req.headers, rangehdr);
-+
-+	if (wctx.range_req || offset > 0)
-+		req.headers = curl_slist_append(req.headers, rangehdr);
- 
- 	curl_easy_reset(ctx->curl);
- 
-@@ -1389,8 +1348,8 @@ static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset,
- 
- 	ret = ocierofs_curl_setup_rq(ctx->curl, req.url, OCIEROFS_HTTP_GET,
- 				     req.headers,
--				     ocierofs_write_callback,
--				     &resp, NULL, NULL);
-+				     ocierofs_fd_write_callback,
-+				     &wctx, NULL, NULL);
- 	if (ret)
- 		goto out;
- 
-@@ -1398,30 +1357,10 @@ static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset,
- 	if (ret)
- 		goto out;
- 
--	ret = 0;
--	if (http_code == 206) {
--		*out_buf = resp.data;
--		*out_size = resp.size;
--		resp.data = NULL;
--	} else if (http_code == 200) {
--		if (!offset) {
--			*out_buf = resp.data;
--			*out_size = resp.size;
--			resp.data = NULL;
--		} else if (offset < resp.size) {
--			available = resp.size - offset;
--			copy_size = length ? min_t(size_t, length, available) : available;
--
--			*out_buf = malloc(copy_size);
--			if (!*out_buf) {
--				ret = -ENOMEM;
--				goto out;
--			}
--			memcpy(*out_buf, resp.data + offset, copy_size);
--			*out_size = copy_size;
--		}
-+	if (http_code == 206 || (http_code == 200 && !wctx.range_req && offset == 0)) {
-+		ret = 0;
- 	} else {
--		erofs_err("HTTP range request failed with code %ld", http_code);
-+		erofs_err("HTTP request failed with code %ld", http_code);
- 		ret = -EIO;
- 	}
- 
-@@ -1429,15 +1368,12 @@ out:
- 	if (req.headers)
- 		curl_slist_free_all(req.headers);
- 	free(req.url);
--	free(resp.data);
- 	return ret;
- }
- 
- static int ocierofs_cache(struct ocierofs_iostream *oci_iostream, off_t offset, size_t needed)
- {
- 	struct ocierofs_ctx *ctx = oci_iostream->ctx;
--	void *download_buf = NULL;
--	size_t download_size = 0;
- 	int ret = 0;
- 	off_t hole, align_offset;
- 	size_t download_len;
-@@ -1479,32 +1415,8 @@ static int ocierofs_cache(struct ocierofs_iostream *oci_iostream, off_t offset,
- 	align_offset = round_down(hole, OCIEROFS_IO_CHUNK_SIZE);
- 	download_len = max_t(size_t, offset + needed - align_offset, OCIEROFS_IO_CHUNK_SIZE);
- 
--	ret = ocierofs_download_blob_range(ctx, align_offset, download_len,
--					   &download_buf, &download_size);
--	if (ret < 0)
 -		return ret;
--
--	if (download_buf && download_size > 0) {
--		char *p = download_buf;
--		size_t to_write = download_size;
--		ssize_t written = 0;
--
--		while (to_write > 0) {
--			ssize_t w = pwrite(oci_iostream->cache_fd, p, to_write, align_offset + written);
--			if (w < 0) {
--				if (errno == EINTR)
--					continue;
--				ret = -errno;
--				goto out_free;
--			}
--			written += w;
--			p += w;
--			to_write -= w;
--		}
--	}
--
--out_free:
--	free(download_buf);
-+	ret = ocierofs_download_blob_range(ctx, ctx->blob_digest, align_offset, download_len,
-+					   oci_iostream->cache_fd);
- 	return ret;
++	if (reason)
++		return IS_ERR(reason) ? PTR_ERR(reason) : -EFSCORRUPTED;
+ 
+ 	req = acomp_request_alloc(tfm);
+ 	if (!req)
+diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
+index afc73abd8db5..3fb73000ed27 100644
+--- a/fs/erofs/decompressor_deflate.c
++++ b/fs/erofs/decompressor_deflate.c
+@@ -103,16 +103,16 @@ static const char *__z_erofs_deflate_decompress(struct z_erofs_decompress_req *r
+ 	struct super_block *sb = rq->sb;
+ 	struct z_erofs_stream_dctx dctx = { .rq = rq, .no = -1, .ni = 0 };
+ 	struct z_erofs_deflate *strm;
+-	const char *reason = NULL;
+-	int zerr, err;
++	const char *reason;
++	int zerr;
+ 
+ 	/* 1. get the exact DEFLATE compressed size */
+ 	dctx.kin = kmap_local_page(*rq->in);
+-	err = z_erofs_fixup_insize(rq, dctx.kin + rq->pageofs_in,
++	reason = z_erofs_fixup_insize(rq, dctx.kin + rq->pageofs_in,
+ 			min(rq->inputsize, sb->s_blocksize - rq->pageofs_in));
+-	if (err) {
++	if (reason) {
+ 		kunmap_local(dctx.kin);
+-		return ERR_PTR(err);
++		return reason;
+ 	}
+ 
+ 	/* 2. get an available DEFLATE context */
+@@ -130,7 +130,7 @@ static const char *__z_erofs_deflate_decompress(struct z_erofs_decompress_req *r
+ 	/* 3. multi-call decompress */
+ 	zerr = zlib_inflateInit2(&strm->z, -MAX_WBITS);
+ 	if (zerr != Z_OK) {
+-		err = -EINVAL;
++		reason = ERR_PTR(-EINVAL);
+ 		goto failed_zinit;
+ 	}
+ 
+@@ -161,12 +161,11 @@ static const char *__z_erofs_deflate_decompress(struct z_erofs_decompress_req *r
+ 			reason = (zerr == Z_DATA_ERROR ?
+ 				"corrupted compressed data" :
+ 				"unexpected end of stream");
+-			err = -EFSCORRUPTED;
+ 			break;
+ 		}
+ 	}
+-	if (zlib_inflateEnd(&strm->z) != Z_OK && !err)
+-		err = -EIO;
++	if (zlib_inflateEnd(&strm->z) != Z_OK && !reason)
++		reason = ERR_PTR(-EIO);
+ 	if (dctx.kout)
+ 		kunmap_local(dctx.kout);
+ failed_zinit:
+@@ -177,7 +176,7 @@ static const char *__z_erofs_deflate_decompress(struct z_erofs_decompress_req *r
+ 	z_erofs_deflate_head = strm;
+ 	spin_unlock(&z_erofs_deflate_lock);
+ 	wake_up(&z_erofs_deflate_wq);
+-	return reason ?: ERR_PTR(err);
++	return reason;
  }
  
+ static const char *z_erofs_deflate_decompress(struct z_erofs_decompress_req *rq,
+diff --git a/fs/erofs/decompressor_lzma.c b/fs/erofs/decompressor_lzma.c
+index 0161f3375efd..b4ea6978faae 100644
+--- a/fs/erofs/decompressor_lzma.c
++++ b/fs/erofs/decompressor_lzma.c
+@@ -154,16 +154,15 @@ static const char *z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+ 	struct xz_buf buf = {};
+ 	struct z_erofs_lzma *strm;
+ 	enum xz_ret xz_err;
+-	const char *reason = NULL;
+-	int err;
++	const char *reason;
+ 
+ 	/* 1. get the exact LZMA compressed size */
+ 	dctx.kin = kmap_local_page(*rq->in);
+-	err = z_erofs_fixup_insize(rq, dctx.kin + rq->pageofs_in,
++	reason = z_erofs_fixup_insize(rq, dctx.kin + rq->pageofs_in,
+ 			min(rq->inputsize, sb->s_blocksize - rq->pageofs_in));
+-	if (err) {
++	if (reason) {
+ 		kunmap_local(dctx.kin);
+-		return ERR_PTR(err);
++		return reason;
+ 	}
+ 
+ 	/* 2. get an available lzma context */
+@@ -224,7 +223,7 @@ static const char *z_erofs_lzma_decompress(struct z_erofs_decompress_req *rq,
+ 	z_erofs_lzma_head = strm;
+ 	spin_unlock(&z_erofs_lzma_lock);
+ 	wake_up(&z_erofs_lzma_wq);
+-	return reason ?: ERR_PTR(err);
++	return reason;
+ }
+ 
+ const struct z_erofs_decompressor z_erofs_lzma_decomp = {
+diff --git a/fs/erofs/decompressor_zstd.c b/fs/erofs/decompressor_zstd.c
+index ae51faeb504d..beae49165c69 100644
+--- a/fs/erofs/decompressor_zstd.c
++++ b/fs/erofs/decompressor_zstd.c
+@@ -143,17 +143,17 @@ static const char *z_erofs_zstd_decompress(struct z_erofs_decompress_req *rq,
+ 	zstd_in_buffer in_buf = { NULL, 0, 0 };
+ 	zstd_out_buffer out_buf = { NULL, 0, 0 };
+ 	struct z_erofs_zstd *strm;
+-	const char *reason = NULL;
+ 	zstd_dstream *stream;
+-	int zerr, err;
++	const char *reason;
++	int zerr;
+ 
+ 	/* 1. get the exact compressed size */
+ 	dctx.kin = kmap_local_page(*rq->in);
+-	err = z_erofs_fixup_insize(rq, dctx.kin + rq->pageofs_in,
++	reason = z_erofs_fixup_insize(rq, dctx.kin + rq->pageofs_in,
+ 			min(rq->inputsize, sb->s_blocksize - rq->pageofs_in));
+-	if (err) {
++	if (reason) {
+ 		kunmap_local(dctx.kin);
+-		return ERR_PTR(err);
++		return reason;
+ 	}
+ 
+ 	/* 2. get an available ZSTD context */
+@@ -162,7 +162,7 @@ static const char *z_erofs_zstd_decompress(struct z_erofs_decompress_req *rq,
+ 	/* 3. multi-call decompress */
+ 	stream = zstd_init_dstream(z_erofs_zstd_max_dictsize, strm->wksp, strm->wkspsz);
+ 	if (!stream) {
+-		err = -ENOMEM;
++		reason = ERR_PTR(-ENOMEM);
+ 		goto failed_zinit;
+ 	}
+ 
+@@ -208,7 +208,7 @@ static const char *z_erofs_zstd_decompress(struct z_erofs_decompress_req *rq,
+ 	z_erofs_zstd_head = strm;
+ 	spin_unlock(&z_erofs_zstd_lock);
+ 	wake_up(&z_erofs_zstd_wq);
+-	return reason ?: ERR_PTR(err);
++	return reason;
+ }
+ 
+ const struct z_erofs_decompressor z_erofs_zstd_decomp = {
 -- 
-2.47.1
+2.30.2
 
 
