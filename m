@@ -1,73 +1,40 @@
-Return-Path: <linux-erofs+bounces-1449-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1450-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A1B0C94078
-	for <lists+linux-erofs@lfdr.de>; Sat, 29 Nov 2025 16:11:23 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24E46C94B2E
+	for <lists+linux-erofs@lfdr.de>; Sun, 30 Nov 2025 04:35:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dJYXR4M4Dz2yvc;
-	Sun, 30 Nov 2025 02:11:19 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dJt376S5bz2yql;
+	Sun, 30 Nov 2025 14:35:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.7
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764429079;
-	cv=none; b=e/NZzhiF9LLyv2Q0yX3UzLkZomTHLeAkR9Cd6DqdJ9BvKnWNODRzYZn+Z01+VmCGK0QlWG0Em1kBwAKsfOx+UbScd0EsNgcK2a0CTGHfK/7nQxoipSUChayEZ4XP5QjwfqiztPwRbRdnU5atMyFyUpmouYIS4TEGkW7VlHJ2OhRp/GsQxzybi0W5YmmGYN6/eAX7xBIl6hKMYrqpdtHAkJMtX/NErlOS1imaaTHEO96s/ZkGu7Oj+4zSenxo9/nZr5IG3Rtyk45F8bXE7Uzref6brernWES7xch3PfOr2FGEmbr/rEspHl3UbOvqPWNQykAKnLl+JfZhPjzu2xJZ6Q==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.58
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764473731;
+	cv=none; b=dR0ijdEEIWRJeHg2pjWXbjK3+zb/CNWKBXYP8hn4SatM6bdtBsxURW5o2xiCLItEJGOFMOiAOegCz2KkfUbacVK6urTk5JE3CxlDKIglGrkIr0HLaaklsQMHyiiuJgT9Qb6FdPL1ThnQobdm8xZejFZ+5DKJSjNm8Wpd1ZQdaMCWzHSH1+nTSfPZje2pRb0QKstT/QwjeIq1WJDquvAX6L32FvoHHbe3X7Xm+W/IQ6Cw0MPwXYaCrZj3CwRR4VoMiLYjK246/pjysSEPkRMtfbyLrWkRQKNufI0YY3qRopno1KHWAO7UXZN9B4g8mnwz7STOYJWP56ufSLSxRHBbtg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1764429079; c=relaxed/relaxed;
-	bh=QN9qued6re2oxpSKTaxtaTW9FniAxHBI4kLNP5Il0Nk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=SN2GXdWRx9dQkx8q9iAGs0nBXVLo0lOiSFhPztSZfedbAZ1RaF1+511MhOzjgxY4doqNhjIUXLedv/NFRadjEKtNDXkQ/nh9V4AhH5Ihk2TCYlZeMBW9bWuOeZGox65DYUX4lgQYlhOd/fCdoZW9eYWD5NwDfQYGGgFNXtLX6Ezw3H5OdqFzbTw17kr0K64ZbE2zGSu6kK2/J90wW7oSCveezvVSCOPB7kW3CQdYCxo8s9B1pdwqkZXLMbp4bpMf6MTLhObhEs7CF+cNO8iEuVm0EaoKgpFjgfHg7h+w2oi1DksZtda2Xw3oFrvCu01UYZBYuqT9hhbS7mXDjnf6aA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Bc9woKoK; dkim-atps=neutral; spf=pass (client-ip=192.198.163.7; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=Bc9woKoK;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.7; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	t=1764473731; c=relaxed/relaxed;
+	bh=BIVrccbzM7Y7aGD5YuG81fuJiBJ6QHhdsgDYKq/adEY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XePdIu2RZNGM/m1aJLb8dG7Oxb5x13Ghnn3vgyTH4DrYO59UIqw25ux/qFhujV4zBOQpD1TnXdUg/XnJvU305J4DTUix7XrsJgNdA/afQaIeoQJuswxnDPyAAPrsHzRKK1AAOfqGanGyYGK3mvazc2/8fjDYg1o753Dp32zqSZN+n9IipNqlu5iOuTAROxA0X+j1UdUEvc3P3n89+YdEcwSDTWNh0GnOXHbeDZQ87eXwOeT9W4xJr61vrmdNt1ZZaEHOBq0N5+Lp6UMs8zYAU/vB1CRNsZitC+Re24JZ3HcjRL4MgRlh/ZC1MpyIjPY4Tqj0Y1JWOQHdUwbQnbbk6Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.58; helo=out28-58.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.58; helo=out28-58.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-58.mail.aliyun.com (out28-58.mail.aliyun.com [115.124.28.58])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dJYXN6bbxz2yvb
-	for <linux-erofs@lists.ozlabs.org>; Sun, 30 Nov 2025 02:11:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764429077; x=1795965077;
-  h=date:from:to:cc:subject:message-id;
-  bh=jl4T6j/sw+AjzENBgYfV0OsEYfVwFDbn4UsuUIszuWg=;
-  b=Bc9woKoKt49jKJaxqJwMC+VFjFWuWG2wDznOA4xcZs+lscOLqwfNeeka
-   D2u74bAFSHUl0/7TySG/0jyJrix52kmIF+QkMOdl3lsSyv7obGPARp+tf
-   XrwFF6ApnFGWCk5Cr5kAg+wPmj5ZjO0SXfbsNsHKPADPkjsTux9O7y4ah
-   cCOPEBs6MdSh2hgIFJeOF5TFEf7luUiAgRQIdkHy+0RQSNkYT2p9CpjKZ
-   qeAh66iV2jCcjTm+cDNRH1PwprkYni+31Uz0Y1iHeVfyhMoWwWdbpmmEq
-   woq3ucwzSmAovL/rVex/ezBkZzzY69ZE/T+2aHwGJdKcGMDowbIhl/La1
-   w==;
-X-CSE-ConnectionGUID: XmLn8SEeTmauwpcKKRypMw==
-X-CSE-MsgGUID: 0hYxh62PREaZC7VOK9uASA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11627"; a="91895741"
-X-IronPort-AV: E=Sophos;i="6.20,236,1758610800"; 
-   d="scan'208";a="91895741"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2025 07:11:12 -0800
-X-CSE-ConnectionGUID: og/8Kf6rSuCntq0avfq6iA==
-X-CSE-MsgGUID: KAHXTJ9oSsOY0jQOiPM5hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,236,1758610800"; 
-   d="scan'208";a="224373614"
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 29 Nov 2025 07:11:10 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vPMbL-000000007H6-2o0i;
-	Sat, 29 Nov 2025 15:11:07 +0000
-Date: Sat, 29 Nov 2025 23:10:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- 7f5b9d4481173634aa53a6cb7d0f7b66bcd85ab6
-Message-ID: <202511292314.6pJB1svu-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dJt353MFZz2xqm
+	for <linux-erofs@lists.ozlabs.org>; Sun, 30 Nov 2025 14:35:26 +1100 (AEDT)
+Received: from HUDSONZHU-MB0.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.fZMAXAA_1764473716 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Sun, 30 Nov 2025 11:35:17 +0800
+From: ChengyuZhu6 <hudson@cyzhu.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: hsiangkao@linux.alibaba.com,
+	Chengyu Zhu <hudsonzhu@tencent.com>
+Subject: [PATCH v1] erofs-utils: mount: add manpage and usage information
+Date: Sun, 30 Nov 2025 11:35:16 +0800
+Message-ID: <20251130033516.86065-1-hudson@cyzhu.com>
+X-Mailer: git-send-email 2.47.1
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -78,138 +45,360 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
+	version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: 7f5b9d4481173634aa53a6cb7d0f7b66bcd85ab6  erofs: get rid of raw bi_end_io() usage
+From: Chengyu Zhu <hudsonzhu@tencent.com>
 
-elapsed time: 1449m
+Add manpage, command-line usage help, and README for
+mount.erofs tool.
 
-configs tested: 117
-configs skipped: 2
+Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
+---
+ README            |  26 ++++++
+ man/Makefile.am   |   2 +-
+ man/mount.erofs.1 | 202 ++++++++++++++++++++++++++++++++++++++++++++++
+ mount/main.c      |  41 +++++++++-
+ 4 files changed, 269 insertions(+), 2 deletions(-)
+ create mode 100644 man/mount.erofs.1
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/README b/README
+index b885fa8..784bd50 100644
+--- a/README
++++ b/README
+@@ -4,6 +4,7 @@ erofs-utils
+ Userspace tools for EROFS filesystem, currently including:
+ 
+   mkfs.erofs    filesystem formatter
++  mount.erofs   mount helper for EROFS
+   erofsfuse     FUSE daemon alternative
+   dump.erofs    filesystem analyzer
+   fsck.erofs    filesystem compatibility & consistency checker as well
+@@ -206,6 +207,31 @@ git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b obsoleted
+ PLEASE NOTE: This version is highly _NOT recommended_ now.
+ 
+ 
++mount.erofs
++-----------
++
++mount.erofs is a mount helper for EROFS filesystem, which can be used
++to mount EROFS images with various backends including direct kernel
++mount, FUSE-based mount, and NBD for remote sources like OCI images.
++
++How to mount an EROFS image
++~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++To mount an EROFS image directly:
++ $ mount.erofs foo.erofs.img /mnt
++
++To mount with FUSE backend:
++ $ mount.erofs -t erofs.fuse foo.erofs.img /mnt
++
++To mount from OCI image with NBD backend:
++ $ mount.erofs -t erofs.nbd -o oci.blob=sha256:... image:tag /mnt
++
++To unmount:
++ $ mount.erofs -u /mnt
++
++For more details, see mount.erofs(1) manpage.
++
++
+ erofsfuse
+ ---------
+ 
+diff --git a/man/Makefile.am b/man/Makefile.am
+index 4628b85..2990e77 100644
+--- a/man/Makefile.am
++++ b/man/Makefile.am
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0+
+ 
+-dist_man_MANS = mkfs.erofs.1 dump.erofs.1 fsck.erofs.1
++dist_man_MANS = mkfs.erofs.1 dump.erofs.1 fsck.erofs.1 mount.erofs.1
+ 
+ EXTRA_DIST = erofsfuse.1
+ if ENABLE_FUSE
+diff --git a/man/mount.erofs.1 b/man/mount.erofs.1
+new file mode 100644
+index 0000000..6eeb48c
+--- /dev/null
++++ b/man/mount.erofs.1
+@@ -0,0 +1,202 @@
++.\" Copyright (c) 2025 Chengyu Zhu <hudsonzhu@tencent.com>
++.\"
++.TH MOUNT.EROFS 1
++.SH NAME
++mount.erofs \- manage EROFS filesystem
++.SH SYNOPSIS
++\fBmount.erofs\fR [\fIOPTIONS\fR] \fISOURCE\fR \fIMOUNTPOINT\fR
++.br
++\fBmount.erofs\fR \fB\-u\fR \fITARGET\fR
++.br
++\fBmount.erofs\fR \fB\-\-reattach\fR \fITARGET\fR
++.SH DESCRIPTION
++EROFS is an enhanced lightweight read-only filesystem with modern designs
++for scenarios which need high-performance read-only requirements.
++.PP
++\fBmount.erofs\fR is used to mount an EROFS filesystem from \fISOURCE\fR
++(which can be an image file or block device) to a \fIMOUNTPOINT\fR. It supports multiple backends including
++direct kernel mount, FUSE-based mount, and NBD (Network Block Device) for
++remote sources like OCI images.
++.SH OPTIONS
++.TP
++.B \-h, \-\-help
++Display help message and exit.
++.TP
++.B \-V, \-\-version
++Display version information and exit.
++.TP
++.BI "\-o " options
++Comma-separated list of mount options. See \fBMOUNT OPTIONS\fR below.
++.TP
++.BI "\-t " type[.subtype]
++Specify the filesystem type and optional subtype. The type should be
++\fBerofs\fR. Available subtypes are:
++.RS
++.TP
++.B fuse
++Use FUSE-based mount via \fBerofsfuse\fR.
++.TP
++.B local
++Force direct kernel mount (default if available).
++.TP
++.B nbd
++Use NBD backend for remote sources (e.g., OCI images).
++.RE
++.TP
++.B \-u
++Unmount the filesystem at the specified target.
++.TP
++.B \-\-reattach
++Reattach to an existing NBD device and restart the NBD service.
++.SH MOUNT OPTIONS
++Standard mount options:
++.TP
++.B ro
++Mount the filesystem read-only (default).
++.TP
++.B rw
++Mount the filesystem read-write (not supported for EROFS).
++.TP
++.B nosuid
++Do not honor set-user-ID and set-group-ID bits.
++.TP
++.B suid
++Honor set-user-ID and set-group-ID bits (default).
++.TP
++.B nodev
++Do not interpret character or block special devices.
++.TP
++.B dev
++Interpret character or block special devices (default).
++.TP
++.B noexec
++Do not allow direct execution of any binaries.
++.TP
++.B exec
++Allow execution of binaries (default).
++.TP
++.B noatime
++Do not update inode access times.
++.TP
++.B atime
++Update inode access times (default).
++.TP
++.B nodiratime
++Do not update directory inode access times.
++.TP
++.B diratime
++Update directory inode access times (default).
++.TP
++.B relatime
++Update inode access times relative to modify or change time.
++.TP
++.B norelatime
++Do not use relative atime updates.
++.SH OCI-SPECIFIC OPTIONS
++The following OCI-specific options are available:
++.TP
++.BI "oci.blob=" digest
++Specify the OCI blob digest to mount. The digest should be in the format
++\fBsha256:...\fR. Cannot be used together with \fBoci.layer\fR.
++.TP
++.BI "oci.layer=" index
++Specify the OCI layer index to mount (0-based). Cannot be used together
++with \fBoci.blob\fR.
++.TP
++.BI "oci.platform=" platform
++Specify the target platform (default: \fBlinux/amd64\fR).
++.TP
++.BI "oci.username=" username
++Username for OCI registry authentication.
++.TP
++.BI "oci.password=" password
++Password for OCI registry authentication.
++.TP
++.BI "oci.tarindex=" path
++Path to a tarball index file for hybrid tar+OCI mode.
++.TP
++.BI "oci.zinfo=" path
++Path to a gzip zinfo file for random access to gzip-compressed tar layers.
++.SH EXAMPLES
++Mount a local EROFS image:
++.PP
++.nf
++.RS
++mount.erofs image.erofs /mnt
++.RE
++.fi
++.PP
++Mount using FUSE backend:
++.PP
++.nf
++.RS
++mount.erofs \-t erofs.fuse image.erofs /mnt
++.RE
++.fi
++.PP
++Mount an OCI blob via NBD:
++.PP
++.nf
++.RS
++mount.erofs \-t erofs.nbd \\
++    \-o oci.blob=sha256:abc123...,oci.username=user,oci.password=pass \\
++    docker.io/library/image:tag /mnt
++.RE
++.fi
++.PP
++Mount an OCI layer by index:
++.PP
++.nf
++.RS
++mount.erofs \-t erofs.nbd \-o oci.layer=0 \\
++    docker.io/library/image:tag /mnt
++.RE
++.fi
++.PP
++Mount with tarball index and gzip support:
++.PP
++.nf
++.RS
++mount.erofs \-t erofs.nbd \\
++    \-o oci.blob=sha256:abc...,oci.tarindex=/path/to/index,oci.zinfo=/path/to/zinfo \\
++    docker.io/library/image:tag /mnt
++.RE
++.fi
++.PP
++Unmount a filesystem:
++.PP
++.nf
++.RS
++mount.erofs \-u /mnt
++.RE
++.fi
++.PP
++Reattach to an NBD device:
++.PP
++.nf
++.RS
++mount.erofs \-\-reattach /dev/nbd0
++.RE
++.fi
++.SH NOTES
++.IP \(bu 2
++EROFS filesystems are read-only by nature. The \fBrw\fR option will be ignored.
++.IP \(bu 2
++When mounting OCI images via NBD, the mount process creates a background
++daemon to serve the NBD device. The daemon will automatically clean up when
++the filesystem is unmounted.
++.IP \(bu 2
++The \fB\-\-reattach\fR option is useful for recovering NBD mounts after a
++system crash or when the NBD daemon was terminated unexpectedly.
++.IP \(bu 2
++Loop device mounting is automatically used when mounting a regular file
++without specifying a backend type.
++.SH SEE ALSO
++.BR mkfs.erofs (1),
++.BR erofsfuse (1),
++.BR dump.erofs (1),
++.BR fsck.erofs (1),
++.BR mount (8),
++.BR umount (8)
++.SH AVAILABILITY
++\fBmount.erofs\fR is part of erofs-utils.
+diff --git a/mount/main.c b/mount/main.c
+index e25134c..3c5e657 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -81,6 +81,38 @@ static struct erofs_nbd_source {
+ 	};
+ } nbdsrc;
+ 
++static void usage(int argc, char **argv)
++{
++	printf("Usage: %s [OPTIONS] SOURCE [MOUNTPOINT]\n"
++	       "Manage EROFS filesystem.\n"
++	       "\n"
++	       "General options:\n"
++	       " -V, --version         print the version number of mount.erofs and exit\n"
++	       " -h, --help            display this help and exit\n"
++	       " -o options            comma-separated list of mount options\n"
++	       " -t type[.subtype]     filesystem type (and optional subtype)\n"
++	       "                       subtypes: fuse, local, nbd\n"
++	       " -u                    unmount the filesystem\n"
++	       "    --reattach         reattach to an existing NBD device\n"
++#ifdef OCIEROFS_ENABLED
++	       "\n"
++	       "OCI-specific options (with -o):\n"
++	       "   oci.blob=<digest>   specify OCI blob digest (sha256:...)\n"
++	       "   oci.layer=<index>   specify OCI layer index (0-based)\n"
++	       "   oci.platform=<name> specify platform (default: linux/amd64)\n"
++	       "   oci.username=<user> username for authentication (optional)\n"
++	       "   oci.password=<pass> password for authentication (optional)\n"
++	       "   oci.tarindex=<path> path to tarball index file (optional)\n"
++	       "   oci.zinfo=<path>    path to gzip zinfo file (optional)\n"
++#endif
++	       , argv[0]);
++}
++
++static void version(void)
++{
++	printf("mount.erofs (erofs-utils) %s\n", cfg.c_version);
++}
++
+ #ifdef OCIEROFS_ENABLED
+ static int erofsmount_parse_oci_option(const char *option)
+ {
+@@ -253,6 +285,7 @@ static int erofsmount_parse_options(int argc, char **argv)
+ {
+ 	static const struct option long_options[] = {
+ 		{"help", no_argument, 0, 'h'},
++		{"version", no_argument, 0, 'V'},
+ 		{"reattach", no_argument, 0, 512},
+ 		{0, 0, 0, 0},
+ 	};
+@@ -261,9 +294,15 @@ static int erofsmount_parse_options(int argc, char **argv)
+ 
+ 	nbdsrc.ocicfg.layer_index = -1;
+ 
+-	while ((opt = getopt_long(argc, argv, "Nfno:st:uv",
++	while ((opt = getopt_long(argc, argv, "hVNfno:st:uv",
+ 				  long_options, NULL)) != -1) {
+ 		switch (opt) {
++		case 'h':
++			usage(argc, argv);
++			exit(0);
++		case 'V':
++			version();
++			exit(0);
+ 		case 'o':
+ 			mountcfg.full_options = optarg;
+ 			mountcfg.flags =
+-- 
+2.47.1
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                   randconfig-001-20251129    gcc-8.5.0
-arc                   randconfig-002-20251129    gcc-8.5.0
-arm                               allnoconfig    clang-22
-arm                         axm55xx_defconfig    clang-22
-arm                        keystone_defconfig    gcc-15.1.0
-arm                   randconfig-001-20251129    clang-20
-arm                   randconfig-002-20251129    gcc-10.5.0
-arm                   randconfig-003-20251129    gcc-13.4.0
-arm                   randconfig-004-20251129    gcc-8.5.0
-arm                             rpc_defconfig    clang-18
-arm                        spear3xx_defconfig    clang-17
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20251129    clang-22
-arm64                 randconfig-002-20251129    clang-22
-arm64                 randconfig-003-20251129    gcc-8.5.0
-arm64                 randconfig-004-20251129    clang-22
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20251129    gcc-15.1.0
-csky                  randconfig-002-20251129    gcc-15.1.0
-hexagon                           allnoconfig    clang-22
-hexagon               randconfig-001-20251129    clang-22
-hexagon               randconfig-002-20251129    clang-22
-i386                              allnoconfig    gcc-14
-i386        buildonly-randconfig-001-20251129    clang-20
-i386        buildonly-randconfig-002-20251129    clang-20
-i386        buildonly-randconfig-003-20251129    gcc-14
-i386        buildonly-randconfig-004-20251129    gcc-12
-i386        buildonly-randconfig-005-20251129    gcc-14
-i386        buildonly-randconfig-006-20251129    clang-20
-i386                  randconfig-001-20251129    gcc-14
-i386                  randconfig-002-20251129    gcc-12
-i386                  randconfig-003-20251129    clang-20
-i386                  randconfig-004-20251129    gcc-14
-i386                  randconfig-005-20251129    clang-20
-i386                  randconfig-006-20251129    clang-20
-i386                  randconfig-007-20251129    gcc-14
-loongarch                         allnoconfig    clang-22
-loongarch             randconfig-001-20251129    gcc-15.1.0
-loongarch             randconfig-002-20251129    gcc-14.3.0
-m68k                              allnoconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                         rt305x_defconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                 randconfig-001-20251129    gcc-11.5.0
-nios2                 randconfig-002-20251129    gcc-11.5.0
-openrisc                          allnoconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                randconfig-001-20251129    gcc-10.5.0
-parisc                randconfig-002-20251129    gcc-13.4.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc                       ebony_defconfig    clang-22
-powerpc                 mpc832x_rdb_defconfig    gcc-15.1.0
-powerpc               randconfig-001-20251129    gcc-8.5.0
-powerpc               randconfig-002-20251129    clang-22
-powerpc                     tqm8555_defconfig    gcc-15.1.0
-powerpc                     tqm8560_defconfig    gcc-15.1.0
-powerpc64             randconfig-001-20251129    gcc-8.5.0
-powerpc64             randconfig-002-20251129    gcc-13.4.0
-riscv                             allnoconfig    gcc-15.1.0
-riscv                 randconfig-001-20251129    gcc-8.5.0
-riscv                 randconfig-002-20251129    gcc-11.5.0
-s390                              allnoconfig    clang-22
-s390                  randconfig-001-20251129    clang-22
-s390                  randconfig-002-20251129    gcc-8.5.0
-sh                                allnoconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20251129    gcc-12.5.0
-sh                    randconfig-002-20251129    gcc-15.1.0
-sh                   rts7751r2dplus_defconfig    gcc-15.1.0
-sh                   sh7724_generic_defconfig    gcc-15.1.0
-sh                            shmin_defconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                 randconfig-001-20251129    gcc-8.5.0
-sparc                 randconfig-002-20251129    gcc-8.5.0
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251129    gcc-8.5.0
-sparc64               randconfig-002-20251129    gcc-14.3.0
-um                                allnoconfig    clang-22
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251129    clang-22
-um                    randconfig-002-20251129    gcc-14
-um                           x86_64_defconfig    clang-22
-x86_64                            allnoconfig    clang-20
-x86_64      buildonly-randconfig-001-20251129    gcc-14
-x86_64      buildonly-randconfig-002-20251129    clang-20
-x86_64      buildonly-randconfig-003-20251129    clang-20
-x86_64      buildonly-randconfig-004-20251129    gcc-14
-x86_64      buildonly-randconfig-005-20251129    gcc-14
-x86_64      buildonly-randconfig-006-20251129    gcc-14
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20251129    clang-20
-x86_64                randconfig-002-20251129    clang-20
-x86_64                randconfig-003-20251129    clang-20
-x86_64                randconfig-004-20251129    clang-20
-x86_64                randconfig-005-20251129    gcc-14
-x86_64                randconfig-006-20251129    clang-20
-x86_64                randconfig-011-20251129    gcc-14
-x86_64                randconfig-012-20251129    gcc-14
-x86_64                randconfig-013-20251129    gcc-14
-x86_64                randconfig-014-20251129    clang-20
-x86_64                randconfig-015-20251129    gcc-12
-x86_64                randconfig-016-20251129    clang-20
-x86_64                randconfig-071-20251129    gcc-14
-x86_64                randconfig-072-20251129    clang-20
-x86_64                randconfig-073-20251129    gcc-14
-x86_64                randconfig-074-20251129    gcc-12
-x86_64                randconfig-075-20251129    gcc-14
-x86_64                randconfig-076-20251129    gcc-14
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                  nommu_kc705_defconfig    gcc-15.1.0
-xtensa                randconfig-001-20251129    gcc-10.5.0
-xtensa                randconfig-002-20251129    gcc-14.3.0
-xtensa                    smp_lx200_defconfig    gcc-15.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
