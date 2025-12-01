@@ -1,48 +1,40 @@
-Return-Path: <linux-erofs+bounces-1458-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1459-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78269C95985
-	for <lists+linux-erofs@lfdr.de>; Mon, 01 Dec 2025 03:38:33 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C9EBC95991
+	for <lists+linux-erofs@lfdr.de>; Mon, 01 Dec 2025 03:40:16 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dKSkv2NHFz2yv1;
-	Mon, 01 Dec 2025 13:38:31 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dKSmr5Cdsz2ypW;
+	Mon, 01 Dec 2025 13:40:12 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764556711;
-	cv=none; b=OpUNxX2do0xrk/LdV0MD9ZmJjMUJveQmVX+FWVoDtx3mKzlL0DcBlIXpABLGZUcsi8+quYU68sMn+Zn3/N8FIMujd8i74LImpQaWiNSTqTBFTw9+rJrI6eIz2HPULWxH4/dQWQf3vEmNMMWPflpHkEx2zy0rMzisdVbdEHj6eRGaU3+uitOEVANt3UnebKJP44QLIwXNOSTLdCv6ldbVW7p8tx1gvv+4Ach6XdHpZLUFBYUMLmEQpbBY2WlswyUDkM4OxdTdPXVjf7oeQw1+ujhTxmhig4J0T3wT66npwR6aaDn0tDB2+Mz4qjV3AWLOYpQNIbykwbbKZ70w7jUDgg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.57
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764556812;
+	cv=none; b=BGKultUesAqBtminiKrXDtIrrajr6ckuiL0XrpHYT+s2AeTFsYENQsZf95KNZlDDKJUNhvFWGZguKDX09TC6P5nd4o/kjpIvi4nPu7g3XpGCC2L7ElFdNE0mS1WNkfDNx2Oh0hl/tPRx/2VLjA7FD1t923sT4dU9uX2c2ocX4tzcaWf6r5Iz9tx83regwn2X0GTcb2SSzNVpppQl07EXWZaaJYm5WEZDzE2pYqNzJseICLcz90HJsXRPnp3T+Tj2G3St791J1m3lLZWyjcIZbjrCODF6dZrSvJ84WwnTlcp5/eixckh8oEVgGF6mkDiRsyLLj3YUiQNQczL/dLppxw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1764556711; c=relaxed/relaxed;
-	bh=dGMuG/uhfFS031kWTMc0pshBSmQ8+D9uJQLSsOT9IGs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mTHfU+i8mUWhgCRIuLuSd7BAMhgWmR0MzeIZC2e0kWJXgD+T87tqxeFKI7m8UNMzF9rP3Bupn2H7p8aJIa2uS/hn+dnXNKeOTy3pbvBCLJRhORZS26Yg4LF8rySC5qqI6Qg3LgtdOIj8R+ExqSIDd83Pfup0SFkC2yGzuATtG/upIgO2/LJY2KYxI6AEGYmyy58+mlvLS0VqVO/uAH9QrWvEWgNcjiKMQ516znfKlVQCukcwJf1z8vFQVk8cw1dxAsI+w/Vn8JjmlAiBGTSq+yGjTjQ2SoTKkUK/ZUbjHhEuAy9OJRmydZV6Lm1EueQ+C24itYnce68L6Pmj4GgrxA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=M75Cpv9v; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=M75Cpv9v;
-	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+	t=1764556812; c=relaxed/relaxed;
+	bh=FO8baG8KV35M7Grbg9BLFDK8Hig/pNt0Z2EMffgBSwM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ezZ35WamUhJKQUQg1tKlgUgvGq+ekm07NC8A6tAu8Wu7dlK9PllXxH/vlxcMamJpACpWRfpIGThgsw0RNsduKFawrc4MAcd60fSoXALQhHXSJJjPPih9+YfduDxmhJcO29UkdDuiE8d2QJ93kFkH3e7vcll7Qg0SnkBBH6LeDEwWZe4ERuRbyMa/nDpw6RnlMZD3EO6N5AzypPC1U2FovyncN01bwdhCCwNC3X5zgBSXzlW3/QPU1ZGYzdyCze/JO5GJ1CeOde0Vq1RHlt335CqoBKQJwY8yemxkqznv5SC113VV5R28q/sO1xhakUG7QunZG1+mW9kf98nZcH9tnA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.57; helo=out28-57.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.57; helo=out28-57.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
+Received: from out28-57.mail.aliyun.com (out28-57.mail.aliyun.com [115.124.28.57])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dKSkr4BC1z2ypW
-	for <linux-erofs@lists.ozlabs.org>; Mon, 01 Dec 2025 13:38:26 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1764556702; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=dGMuG/uhfFS031kWTMc0pshBSmQ8+D9uJQLSsOT9IGs=;
-	b=M75Cpv9v6laxTS6lWRyWwLtQrpbGVefzpOM9C/poamIivITpRNFqtbiyhXxKINGyOGyAzf6zvxmPlnzScxTDJBwnulvXFytjeYTQ3nu2qy0vfrC4Dz1MWrKLRzWNGqSY986WUt0eSBf09sh7Y2HYcrXuooSAvAZLqRJiz+YTd9M=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WtkUtv7_1764556697 cluster:ay36)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dKSmp6R1Lz2yG3
+	for <linux-erofs@lists.ozlabs.org>; Mon, 01 Dec 2025 13:40:09 +1100 (AEDT)
+Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.fZwP0eH_1764556802 cluster:ay29)
           by smtp.aliyun-inc.com;
-          Mon, 01 Dec 2025 10:38:21 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
+          Mon, 01 Dec 2025 10:40:03 +0800
+From: ChengyuZhu6 <hudson@cyzhu.com>
 To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs: switch on-disk header `erofs_fs.h` to MIT license
-Date: Mon,  1 Dec 2025 10:38:16 +0800
-Message-ID: <20251201023816.1045273-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+Cc: hsiangkao@linux.alibaba.com,
+	Chengyu Zhu <hudsonzhu@tencent.com>
+Subject: [PATCH v1] erofs-utils: add myself to AUTHORS
+Date: Mon,  1 Dec 2025 10:39:59 +0800
+Message-ID: <20251201023959.6767-1-hudson@cyzhu.com>
+X-Mailer: git-send-email 2.51.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -54,35 +46,40 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Switch to the permissive MIT license to make the EROFS on-disk format
-more interoperable across various use cases.
+From: Chengyu Zhu <hudsonzhu@tencent.com>
 
-It was previously recommended by the Composefs folks, for example:
-https://github.com/composefs/composefs/pull/216#discussion_r1356409501
+Since this year, I have been working on erofs-utils mainly on OCI support,
+including OCI registry and tarindex+zinfo support, NBD-backed OCI mounting
+and recovery, as well as on-demand blob cache and direct-to-fd download.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+I’d like to continue contributing to erofs-utils in general, including
+new features, bug fixes and reviews.
+
+Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
 ---
- fs/erofs/erofs_fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ AUTHORS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 3d5738f80072..e24268acdd62 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0-only OR Apache-2.0 */
-+/* SPDX-License-Identifier: MIT */
- /*
-  * EROFS (Enhanced ROM File System) on-disk format definition
-  *
+diff --git a/AUTHORS b/AUTHORS
+index bc67a65..c04d068 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -2,6 +2,7 @@ EROFS USERSPACE UTILITIES
+ M: Li Guifu <bluce.lee@aliyun.com>
+ M: Gao Xiang <xiang@kernel.org>
+ M: Huang Jianan <jnhuang95@gmail.com>
++M: Chengyu Zhu <hudsonzhu@tencent.com>
+ R: Chao Yu <chao@kernel.org>
+ R: Miao Xie <miaoxie@huawei.com>
+ R: Fang Wei <fangwei1@huawei.com>
 -- 
-2.43.5
+2.51.0
 
 
