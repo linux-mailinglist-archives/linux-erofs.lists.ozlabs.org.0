@@ -1,56 +1,54 @@
-Return-Path: <linux-erofs+bounces-1469-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1470-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D711CC9718D
-	for <lists+linux-erofs@lfdr.de>; Mon, 01 Dec 2025 12:46:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BCD28C97BBE
+	for <lists+linux-erofs@lfdr.de>; Mon, 01 Dec 2025 14:54:43 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dKhvR53mYz2yv6;
-	Mon, 01 Dec 2025 22:46:43 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dKll40MpGz2ynC;
+	Tue, 02 Dec 2025 00:54:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764589603;
-	cv=none; b=Ej9G+dnTtZoUsm8NF2JxFs0fJL3FpVxdP9OVBBoijUHDWZCgDCHW6VO0sxAmVt2mt4cyNtr/rNiSHm1Mku6cZebbuDd5GOq4CI9bHsbmYZDRCn9FShNJMEMenfU+rTbjFKRCS1Tsvof1pdUt2gATKVhBZoH7ywpMV6xdawlftg8XMj8hd9L9lsk/T8iks95PYmPXL26WZVybOHtcMUMJD8GpSVXklJsozmxAPq0pB/7fqi7WRVwlssH95tHCyTWazPlFcWcgTv20BGi9qUOjO7E5ZppggrKx0UXIKY6jin5Mp6125R+XuKY4lVRT37+KaIzNeYzwcdna+QlLavUFPw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.221
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764597279;
+	cv=none; b=hErtioI+67gPcEmx+cmFOG2orZfYamz6rJ+HtnMF/7E7228Av2C++IvHFc/YUH0s7eJJcu1jmLZiecOyrWMYoZLZ8PXAzi8neMGniXk+V9duz7c6hQj2BEDyu5XH8mf6YpWg10JbOuk1n/HihFWLQyREA74HvrbrzQTOip9Ie2QKpB0mrgQ9PdAJPPY9OsGiStzWs05Gil6IH6xFFxgnw74kW/j0QrhrXQ6kR1vUxQhU6by0lYKGbmW+20MCynZtph9pMkXnC2f8NnHoMQY7FGPnPLuoXjNYdEeC3OvLaST0EPC3OUwoqMHCaCLqUxtKGkDsPdP2KkOUGTcaoC4kjw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1764589603; c=relaxed/relaxed;
-	bh=0rzOR5Zwq1r//bF++zOYN4PN/JyLeIAZJ0wJDoLCpdo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=D2oh9QP0waoxqtzurFuZzNLoGEqV0qaru1e05EHzE7MyHrcc7fcg/5cwVSk3ACgwGG9vwBUCRKx+LRYCMKHahXjNgbHG0h5W79kttEah6QSS/Oew+CZVLr+GO7ghMD5mKfLsFFXDVDMdXZbGCJIaaaj8gbQ1mauSFNrh7YQ47cLGjXmfpEOTBGhhkWDJ6ZrzUV8Lr7gw3i9oGX8U9m5svNHSaFCXMRfw4N9benhVDHU0EhNno9oE+rYvC3UtASMaqIOhoT4800XTZYfFq51NF8ehpehIsELiun5MEUoYhGfKhJdtorzf/s9B78fsQgn7u7td5515xdX7SR4RpYZS/A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=NPuzx0yc; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1764597279; c=relaxed/relaxed;
+	bh=jIpCx/UzENqw/NKwz0ctWSHWYucNFXIvWjap00njcnQ=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:CC:
+	 References:From:In-Reply-To; b=n6rUndNOKt1uaEemMZYHAEqCXoz/c/5kjJ81YV0VROxCTTnHlXKAmrSQ92szNaVMbHfoDQyBO7wl0tAUKff/wbOHdggXeGCzZOT65gGZgNnYrY0km/vBRq3J/LlRPjgDf1SdwKk6NFGY4/NqwBKwrILLGqqsWrfJrvuQr1gx4IMgr06uJ8vpm7D0n+MYAzFj4bDpcdUgKLST36vurwAz4kc5Ei+TjwggdDIteBuzoBk0mB0KY4YtAdmEOEJCRA04Y0xbgvVGIzEw4bH0sYfSmu70XTHhe3BFMoeUusXWjmTIJTqUca6Bxm9CJtbnTzCveo15DYiQKN+NecPDoPaRIQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=iSfjZpsh; dkim-atps=neutral; spf=pass (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=NPuzx0yc;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=iSfjZpsh;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dKhvR0Kllz2ypW
-	for <linux-erofs@lists.ozlabs.org>; Mon, 01 Dec 2025 22:46:42 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 21BF06016D;
-	Mon,  1 Dec 2025 11:46:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8305AC4CEF1;
-	Mon,  1 Dec 2025 11:46:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764589599;
-	bh=7EB4Rd3pkGw8QEChascC+nBCjID/lLRY4OUdtCovZhE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=NPuzx0ycrKcc7Nbjm09kLqBQJT2QewxzKwvfYr5w0m1NuADAqQmHIF5TtB4TgdINz
-	 gQms2wOGVYO/kkirgvQ3yeNSZlqofFU1BoG8CI4x7q4kCF0aDaexOefVHexB6YtP5L
-	 IPgzH0ZAX9+tifL0xxts/PwFfzysbEhoJs1YM1MEMru6ZcL79Bou/AiAm2p5Gdlqjx
-	 caQxkU70bpEZyv7R1mbqT9gT7KB+Sq1OfuLcfcnZ5JYY2Qywx9BrkGBCuoVDQuVDHM
-	 3OgCMP8xrNEoDD70JXI+EI33cDEHd44/jxlJtmEzDQbl7BxHoDg6lyvEmQV+Aldqtn
-	 OunQhmZBd0uHA==
-Date: Mon, 1 Dec 2025 19:46:30 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] erofs updates for 6.19-rc1
-Message-ID: <aS2AFm3vf2aJWJCB@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dKll00CThz2yqP
+	for <linux-erofs@lists.ozlabs.org>; Tue, 02 Dec 2025 00:54:33 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=jIpCx/UzENqw/NKwz0ctWSHWYucNFXIvWjap00njcnQ=;
+	b=iSfjZpshmfyAFPRqytDuoPzZszsiVhlAeNr2xgHrtnSbEPYQL+rGSrgv3kPJAV+kSu8VScES7
+	fxJxvehyF+N4De/nK7tVB+yFLN3O7jY96dL3/Br8gRexAzDVpRY6K7lLDOZSFpN0fCFlCWoWRbk
+	UeGgv/iG8xb/C/e9uW52ztM=
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4dKlhg73dtzRhQw;
+	Mon,  1 Dec 2025 21:52:35 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id 379801402ED;
+	Mon,  1 Dec 2025 21:54:27 +0800 (CST)
+Received: from [100.103.109.96] (100.103.109.96) by
+ kwepemr100010.china.huawei.com (7.202.195.125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Mon, 1 Dec 2025 21:54:26 +0800
+Content-Type: multipart/alternative;
+	boundary="------------gldoKLftK2X8nWOE0b8IHn0u"
+Message-ID: <204548c7-3c09-4e05-aa44-9abf00f4009d@huawei.com>
+Date: Mon, 1 Dec 2025 21:54:26 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -62,74 +60,101 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] erofs-utils: mount: add manpage and usage information
+To: ChengyuZhu6 <hudson@cyzhu.com>, <linux-erofs@lists.ozlabs.org>
+CC: <hsiangkao@linux.alibaba.com>, Chengyu Zhu <hudsonzhu@tencent.com>
+References: <20251130033516.86065-1-hudson@cyzhu.com>
+From: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
+In-Reply-To: <20251130033516.86065-1-hudson@cyzhu.com>
+X-Originating-IP: [100.103.109.96]
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,HTML_MESSAGE,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Linus,
+--------------gldoKLftK2X8nWOE0b8IHn0u
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Could you consider this pull request for 6.19-rc1?
 
-There is still no outstanding feature for this cycle
-since page cache sharing feature is still under review.
+On 2025/11/30 11:35, ChengyuZhu6 wrote:
+> +static void usage(int argc, char **argv)
+> +{
+> +	printf("Usage: %s [OPTIONS] SOURCE [MOUNTPOINT]\n"
+> +	       "Manage EROFS filesystem.\n"
+> +	       "\n"
+> +	       "General options:\n"
+> +	       " -V, --version         print the version number of mount.erofs and exit\n"
+> +	       " -h, --help            display this help and exit\n"
+> +	       " -o options            comma-separated list of mount options\n"
+> +	       " -t type[.subtype]     filesystem type (and optional subtype)\n"
+> +	       "                       subtypes: fuse, local, nbd\n"
+> +	       " -u                    unmount the filesystem\n"
+> +	       "    --reattach         reattach to an existing NBD device\n"
 
-All commits have been in -next except for the obvious
-license change one and no potential merge conflict is
-observed.
+Hi Chengyu,
+
+Seems wrong indent here.
+
 
 Thanks,
-Gao Xiang
+Yifan Zhao
 
-The following changes since commit 6a23ae0a96a600d1d12557add110e0bb6e32730c:
 
-  Linux 6.18-rc6 (2025-11-16 14:25:38 -0800)
+> +#ifdef OCIEROFS_ENABLED
+>
+--------------gldoKLftK2X8nWOE0b8IHn0u
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-are available in the Git repository at:
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">On 2025/11/30 11:35, ChengyuZhu6 wrote:<span
+      style="white-space: pre-wrap">
+</span><span style="white-space: pre-wrap">
+</span></div>
+    <blockquote type="cite"
+      cite="mid:20251130033516.86065-1-hudson@cyzhu.com">
+      <pre wrap="" class="moz-quote-pre">+static void usage(int argc, char **argv)
++{
++	printf("Usage: %s [OPTIONS] SOURCE [MOUNTPOINT]\n"
++	       "Manage EROFS filesystem.\n"
++	       "\n"
++	       "General options:\n"
++	       " -V, --version         print the version number of mount.erofs and exit\n"
++	       " -h, --help            display this help and exit\n"
++	       " -o options            comma-separated list of mount options\n"
++	       " -t type[.subtype]     filesystem type (and optional subtype)\n"
++	       "                       subtypes: fuse, local, nbd\n"
++	       " -u                    unmount the filesystem\n"
++	       "    --reattach         reattach to an existing NBD device\n"</pre>
+    </blockquote>
+    <p>Hi Chengyu,</p>
+    <p>Seems wrong indent here.</p>
+    <p><br>
+    </p>
+    <p>Thanks,<br>
+      Yifan Zhao</p>
+    <p><br>
+    </p>
+    <blockquote type="cite"
+      cite="mid:20251130033516.86065-1-hudson@cyzhu.com">
+      <pre wrap="" class="moz-quote-pre">
++#ifdef OCIEROFS_ENABLED
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.19-rc1
+</pre>
+    </blockquote>
+  </body>
+</html>
 
-for you to fetch changes up to 0bdbf89a8bbeb155644b69dc2d071a1ce23414f8:
-
-  erofs: switch on-disk header `erofs_fs.h` to MIT license (2025-12-01 15:25:43 +0800)
-
-----------------------------------------------------------------
-Changes since last update:
-
- - Fix a WARNING caused by a recent FSDAX misdetection regression
-
- - Fix the filesystem stacking limit for file-backed mounts
-
- - Print more informative diagnostics on decompression errors
-
- - Switch the on-disk definition `erofs_fs.h` to the MIT license
-
- - Minor cleanups
-
-----------------------------------------------------------------
-Gao Xiang (9):
-      erofs: correct FSDAX detection
-      erofs: limit the level of fs stacking for file-backed mounts
-      erofs: tidy up z_erofs_lz4_handle_overlap()
-      erofs: improve decompression error reporting
-      erofs: improve Zstd, LZMA and DEFLATE error strings
-      erofs: enable error reporting for z_erofs_stream_switch_bufs()
-      erofs: enable error reporting for z_erofs_fixup_insize()
-      erofs: get rid of raw bi_end_io() usage
-      erofs: switch on-disk header `erofs_fs.h` to MIT license
-
- fs/erofs/compress.h             |  12 ++--
- fs/erofs/decompressor.c         | 149 ++++++++++++++++++++--------------------
- fs/erofs/decompressor_crypto.c  |   7 +-
- fs/erofs/decompressor_deflate.c |  37 +++++-----
- fs/erofs/decompressor_lzma.c    |  26 +++----
- fs/erofs/decompressor_zstd.c    |  28 ++++----
- fs/erofs/erofs_fs.h             |   2 +-
- fs/erofs/fileio.c               |   2 +-
- fs/erofs/fscache.c              |   4 +-
- fs/erofs/super.c                |  38 +++++++---
- fs/erofs/zdata.c                |  21 ++++--
- 11 files changed, 178 insertions(+), 148 deletions(-)
+--------------gldoKLftK2X8nWOE0b8IHn0u--
 
