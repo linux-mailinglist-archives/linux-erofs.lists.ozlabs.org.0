@@ -1,43 +1,43 @@
-Return-Path: <linux-erofs+bounces-1475-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1476-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 385C5C99F3A
-	for <lists+linux-erofs@lfdr.de>; Tue, 02 Dec 2025 04:18:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 81B43C9A7E0
+	for <lists+linux-erofs@lfdr.de>; Tue, 02 Dec 2025 08:40:29 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dL5Zv0JnTz3blC;
-	Tue, 02 Dec 2025 14:18:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dLCNn6xtGz3bnv;
+	Tue, 02 Dec 2025 18:40:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764645526;
-	cv=none; b=ZtjGx7gizoN58g2dHOSvWGVH/YMlXMKl8RrLwmvxuwg9QiIWlPHDYWgxbYHej7RrgYJviZUxfus8VBABwxYxjf4NHzOWSWGhTmOLa5Jdt1T4joJOB+GV0lHR2QnU8ffmoAW5FGrZ4R8WIr5w0VNeMj4mS4XD+hutiP3nw3h7NYqM5wyLdt23iW1aT3U3oyfRfvTrJSlqfTsi9KqxSJRJhRzydGxxyj2jwni2EMCIpFWSbCyXbtsjc8Z6rJBEIHYyd29sEpOMbA9k8b2h1qsn5OLZeI0Pdys7I+CczLnTjhMCnW9qJ8E3q4k+jElxYdsuRq0NUqXakpBDD02SMvmySg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764661225;
+	cv=none; b=hnV8jDUyR4dQsgdiJUyRpG0MYB/SwYSsUayh/JMCVQiLSnDjJty3226XHlClZ6ZdFz+WI/bIAzgyOyMHTdlC/FwqQ/DP8vlKyfILnnjMXvmx8rmFx1ysOK7MZIPsogaDqZAM01uKTK8K//+W82NIQfZZHzVy6sKeH43P2PtZ3SRNC1GM9j6wXMb16S7ZKgdbbjFxnXRhiBw8ZQNWyYKpI0Oc+wxnCnFPWbvpaOkjmIMGziqu2en9/0A0KYMXxCMLo59aBHL/4f3V57Y66x/nLNnSwJJCX8IFPEFa04Vpkf19ui8tR1gjF7hqAfX0w9Cl1+jCCD1vcp4w/Lqw10kdcw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1764645526; c=relaxed/relaxed;
-	bh=Hxqn43FB22SlYYWeNWWpT8g7jD0BerLBvTO/Za22ZJ8=;
+	t=1764661225; c=relaxed/relaxed;
+	bh=MKAMq9WhDMk2lRJN0y4KQzYBUOpgwPfwnZVRTjPe8oU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fyWZNrjP6KnAj7WabwnrbCYO1aoiSyt1UVMtQgCaT4ARXZezG2cl6KsrMlb24aiyu9TIT7LsaM5wei3L2orjA+ng6wdMWlTEwx8UXcvwVYW5ZpFnZD3iBMz57ereNWmllfYlXtSnPQ1sKUIyABhagfyT7YPGxL7M4ex7wuJTPWI3fMlepnCbCmi3nezlojmm2UeRzdKb7YaFhZBAtZhfmFfKkt8+VoQkZsvrwPkHPuNrRmhSoCGJBVProIiT5fsmPTEMasqu5R1lOiNd/EaSERMyyOkBIpq+EO3d6Z6G8v93FmOlgpgqDfPSQwtvEDvykSnbpwrX+AjD662a4jMXQQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yrvtZFj2; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=Om8A1JhE4lvVMPWEkOrJQfO1kFkpew+KCIWvAOB/jZ+U3SOnlP/8baUU6Z/3xZEbyPzfblg6Lx2c69Tb56WHh9gHyUrTMKKGBEBhKYv6k7Vvq8vHv4sV4CY2AkDPmLmPPNuFMmPd20s82T5vhcieg2A5k2YTYXGVbL0e8CnAIqGsLjeKRPvnBesU1J0qNRwh1Ffyk8qDTn07DppZS/6OU0pc9BiXl+ti+bj4zbiBHOoPqRYc0zvL6mzmAiR0CPbDBd2+iUU0sy8p0bgqBWrvLPgVfrMBfSviXQRULo627v+hfMTcYrREpifX9bvwNOHkgnUir97yKGdF8v1EDS+URg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=oh8svMpA; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=yrvtZFj2;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=oh8svMpA;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dL5Zq72Vtz3bfR
-	for <linux-erofs@lists.ozlabs.org>; Tue, 02 Dec 2025 14:18:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dLCNl4Y1wz3bnL
+	for <linux-erofs@lists.ozlabs.org>; Tue, 02 Dec 2025 18:40:21 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1764645518; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Hxqn43FB22SlYYWeNWWpT8g7jD0BerLBvTO/Za22ZJ8=;
-	b=yrvtZFj2IHySx+zUvwTDhROlQQSjHoUUDOaMnV0OeapqM8BAKJ2wJM/wpkTPVf0g+KfpW0XPfR36RmvxB4/OYVqwA5dMG74prK7oHdOKJUNYdTdgDmlVl7EaB8NfpPEKSm5cLQ9kjhu1zJOl3FS59/Th8gsTjfYh1kWtvTQxIwo=
-Received: from 30.221.131.182(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WtudE1o_1764645516 cluster:ay36)
+	t=1764661217; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=MKAMq9WhDMk2lRJN0y4KQzYBUOpgwPfwnZVRTjPe8oU=;
+	b=oh8svMpAOoeUMT24iSYw2ogulkNQNiCWPdFr9VmZr+Vi7HZFvdzjv2OplZZFMoWUt/dehmzJk7uo7IeBQ2YVBKj+dNdmOOryWGT7CTn1TG8UbAe9ka2hQEKZwdodfW9lc8b5RlcLTO4O2UiPNmgCSeSSRLNXkT0m+1zo2uvyznE=
+Received: from 30.221.131.182(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WtvdWw._1764661216 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 02 Dec 2025 11:18:37 +0800
-Message-ID: <2d40e3f6-a290-4a8b-8e64-f3bc870e917d@linux.alibaba.com>
-Date: Tue, 2 Dec 2025 11:18:36 +0800
+          Tue, 02 Dec 2025 15:40:16 +0800
+Message-ID: <65b4743c-8720-4493-aff1-8cc73e606f53@linux.alibaba.com>
+Date: Tue, 2 Dec 2025 15:40:15 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,295 +50,347 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] mount.erofs: add manpage and usage information
-To: ChengyuZhu6 <hudson@cyzhu.com>, linux-erofs@lists.ozlabs.org
-Cc: Chengyu Zhu <hudsonzhu@tencent.com>
-References: <20251130033516.86065-1-hudson@cyzhu.com>
- <20251202030807.55673-1-hudson@cyzhu.com>
+Subject: Re: [PATCH 2/2] erofs-utils: lib: oci: allow HTTP connections to
+ registry
+To: "zhaoyifan (H)" <zhaoyifan28@huawei.com>, hudsonZhu <hudson@cyzhu.com>
+Cc: linux-erofs@lists.ozlabs.org, hudsonzhu@tencent.com, wayne.ma@huawei.com,
+ jingrui@huawei.com
+References: <20251130104257.877660-1-zhaoyifan28@huawei.com>
+ <20251130104257.877660-2-zhaoyifan28@huawei.com>
+ <812452D6-5119-46D0-B173-C65291D16307@cyzhu.com>
+ <2d654f7f-86d0-485a-814f-1edf02caa16b@huawei.com>
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20251202030807.55673-1-hudson@cyzhu.com>
+In-Reply-To: <2d654f7f-86d0-485a-814f-1edf02caa16b@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+Hi Yifan,
 
-
-On 2025/12/2 11:08, ChengyuZhu6 wrote:
-> From: Chengyu Zhu <hudsonzhu@tencent.com>
-> 
-> Add manpage, command-line usage help, and README for
-> mount.erofs tool.
-> 
-> Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
-> ---
->   README            |  26 ++++++
->   man/Makefile.am   |   2 +-
->   man/mount.erofs.1 | 202 ++++++++++++++++++++++++++++++++++++++++++++++
->   mount/main.c      |  41 +++++++++-
->   4 files changed, 269 insertions(+), 2 deletions(-)
->   create mode 100644 man/mount.erofs.1
-> 
-> diff --git a/README b/README
-> index b885fa8..784bd50 100644
-> --- a/README
-> +++ b/README
-> @@ -4,6 +4,7 @@ erofs-utils
->   Userspace tools for EROFS filesystem, currently including:
->   
->     mkfs.erofs    filesystem formatter
-> +  mount.erofs   mount helper for EROFS
->     erofsfuse     FUSE daemon alternative
->     dump.erofs    filesystem analyzer
->     fsck.erofs    filesystem compatibility & consistency checker as well
-> @@ -206,6 +207,31 @@ git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b obsoleted
->   PLEASE NOTE: This version is highly _NOT recommended_ now.
->   
->   
-> +mount.erofs
-> +-----------
-> +
-> +mount.erofs is a mount helper for EROFS filesystem, which can be used
-> +to mount EROFS images with various backends including direct kernel
-> +mount, FUSE-based mount, and NBD for remote sources like OCI images.
-> +
-> +How to mount an EROFS image
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +To mount an EROFS image directly:
-> + $ mount.erofs foo.erofs.img /mnt
-
-$ mount.erofs foo.erofs mnt
-
-> +
-> +To mount with FUSE backend:
-> + $ mount.erofs -t erofs.fuse foo.erofs.img /mnt
-
-$ mount.erofs -t erofs.fuse foo.erofs mnt
-
-> +
-> +To mount from OCI image with NBD backend:
-> + $ mount.erofs -t erofs.nbd -o oci.blob=sha256:... image:tag /mnt
-
-$ mount.erofs -t erofs.nbd -o oci.blob=sha256:... <IMAGE>:<TAG> mnt
-
-> +
-> +To unmount:
-
-To unmount an EROFS filesystem:
-
-> + $ mount.erofs -u /mnt
-
-$ mount.erofs -u mnt
-
-> +
-> +For more details, see mount.erofs(1) manpage.
-> +
-> +
->   erofsfuse
->   ---------
->   
-> diff --git a/man/Makefile.am b/man/Makefile.am
-> index 4628b85..2990e77 100644
-> --- a/man/Makefile.am
-> +++ b/man/Makefile.am
-> @@ -1,6 +1,6 @@
->   # SPDX-License-Identifier: GPL-2.0+
->   
-> -dist_man_MANS = mkfs.erofs.1 dump.erofs.1 fsck.erofs.1
-> +dist_man_MANS = mkfs.erofs.1 dump.erofs.1 fsck.erofs.1 mount.erofs.1
->   
->   EXTRA_DIST = erofsfuse.1
->   if ENABLE_FUSE
-> diff --git a/man/mount.erofs.1 b/man/mount.erofs.1
-> new file mode 100644
-> index 0000000..6eeb48c
-> --- /dev/null
-> +++ b/man/mount.erofs.1
-> @@ -0,0 +1,202 @@
-> +.\" Copyright (c) 2025 Chengyu Zhu <hudsonzhu@tencent.com>
-> +.\"
-> +.TH MOUNT.EROFS 1
-> +.SH NAME
-> +mount.erofs \- manage EROFS filesystem
-> +.SH SYNOPSIS
-> +\fBmount.erofs\fR [\fIOPTIONS\fR] \fISOURCE\fR \fIMOUNTPOINT\fR
-> +.br
-> +\fBmount.erofs\fR \fB\-u\fR \fITARGET\fR
-> +.br
-> +\fBmount.erofs\fR \fB\-\-reattach\fR \fITARGET\fR
-> +.SH DESCRIPTION
-> +EROFS is an enhanced lightweight read-only filesystem with modern designs
-> +for scenarios which need high-performance read-only requirements.
-> +.PP
-> +\fBmount.erofs\fR is used to mount an EROFS filesystem from \fISOURCE\fR
-> +(which can be an image file or block device) to a \fIMOUNTPOINT\fR. It supports multiple backends including
-> +direct kernel mount, FUSE-based mount, and NBD (Network Block Device) for
-> +remote sources like OCI images.
-> +.SH OPTIONS
-> +.TP
-> +.B \-h, \-\-help
-> +Display help message and exit.
-> +.TP
-> +.B \-V, \-\-version
-> +Display version information and exit.
-> +.TP
-> +.BI "\-o " options
-> +Comma-separated list of mount options. See \fBMOUNT OPTIONS\fR below.
-> +.TP
-> +.BI "\-t " type[.subtype]
-> +Specify the filesystem type and optional subtype. The type should be
-> +\fBerofs\fR. Available subtypes are:
-> +.RS
-> +.TP
-> +.B fuse
-> +Use FUSE-based mount via \fBerofsfuse\fR.
-> +.TP
-> +.B local
-> +Force direct kernel mount (default if available).
-> +.TP
-> +.B nbd
-> +Use NBD backend for remote sources (e.g., OCI images).
-> +.RE
-> +.TP
-> +.B \-u
-> +Unmount the filesystem at the specified target.
-> +.TP
-> +.B \-\-reattach
-> +Reattach to an existing NBD device and restart the NBD service.
-> +.SH MOUNT OPTIONS
-> +Standard mount options:
-> +.TP
-> +.B ro
-> +Mount the filesystem read-only (default).
-> +.TP
-> +.B rw
-> +Mount the filesystem read-write (not supported for EROFS).
-> +.TP
-> +.B nosuid
-> +Do not honor set-user-ID and set-group-ID bits.
-> +.TP
-> +.B suid
-> +Honor set-user-ID and set-group-ID bits (default).
-> +.TP
-> +.B nodev
-> +Do not interpret character or block special devices.
-> +.TP
-> +.B dev
-> +Interpret character or block special devices (default).
-> +.TP
-> +.B noexec
-> +Do not allow direct execution of any binaries.
-> +.TP
-> +.B exec
-> +Allow execution of binaries (default).
-> +.TP
-> +.B noatime
-> +Do not update inode access times.
-> +.TP
-> +.B atime
-> +Update inode access times (default).
-> +.TP
-> +.B nodiratime
-> +Do not update directory inode access times.
-> +.TP
-> +.B diratime
-> +Update directory inode access times (default).
-> +.TP
-> +.B relatime
-> +Update inode access times relative to modify or change time.
-> +.TP
-> +.B norelatime
-> +Do not use relative atime updates.
-> +.SH OCI-SPECIFIC OPTIONS
-> +The following OCI-specific options are available:
-> +.TP
-> +.BI "oci.blob=" digest
-> +Specify the OCI blob digest to mount. The digest should be in the format
-> +\fBsha256:...\fR. Cannot be used together with \fBoci.layer\fR.
-> +.TP
-> +.BI "oci.layer=" index
-> +Specify the OCI layer index to mount (0-based). Cannot be used together
-> +with \fBoci.blob\fR.
-> +.TP
-> +.BI "oci.platform=" platform
-> +Specify the target platform (default: \fBlinux/amd64\fR).
-> +.TP
-> +.BI "oci.username=" username
-> +Username for OCI registry authentication.
-> +.TP
-> +.BI "oci.password=" password
-> +Password for OCI registry authentication.
-> +.TP
-> +.BI "oci.tarindex=" path
-> +Path to a tarball index file for hybrid tar+OCI mode.
-> +.TP
-> +.BI "oci.zinfo=" path
-> +Path to a gzip zinfo file for random access to gzip-compressed tar layers.
-> +.SH EXAMPLES
-
-Maybe just drop this part "EXAMPLES" since I'm not sure it
-should be in the manpage.
-
-> +.SH NOTES
-> +.IP \(bu 2
-> +EROFS filesystems are read-only by nature. The \fBrw\fR option will be ignored.
-> +.IP \(bu 2
-> +When mounting OCI images via NBD, the mount process creates a background
-> +daemon to serve the NBD device. The daemon will automatically clean up when
-> +the filesystem is unmounted.
-> +.IP \(bu 2
-> +The \fB\-\-reattach\fR option is useful for recovering NBD mounts after a
-> +system crash or when the NBD daemon was terminated unexpectedly.
-> +.IP \(bu 2
-> +Loop device mounting is automatically used when mounting a regular file
-> +without specifying a backend type.
-
-Kernel direct mount is used when mounting a regular file without
-specifying a backend type. If file-based mounts is unsupported,
-loop devices will be set up automatically.
-
-> +.SH SEE ALSO
-> +.BR mkfs.erofs (1),
-> +.BR erofsfuse (1),
-> +.BR dump.erofs (1),
-> +.BR fsck.erofs (1),
-> +.BR mount (8),
-> +.BR umount (8)
-> +.SH AVAILABILITY
-> +\fBmount.erofs\fR is part of erofs-utils.
-> diff --git a/mount/main.c b/mount/main.c
-> index e25134c..4dfa1d1 100644
-> --- a/mount/main.c
-> +++ b/mount/main.c
-> @@ -81,6 +81,38 @@ static struct erofs_nbd_source {
->   	};
->   } nbdsrc;
->   
-> +static void usage(int argc, char **argv)
-> +{
-> +	printf("Usage: %s [OPTIONS] SOURCE [MOUNTPOINT]\n"
-> +		"Manage EROFS filesystem.\n"
-> +		"\n"
-> +		"General options:\n"
-> +		" -V, --version		print the version number of mount.erofs and exit\n"
-> +		" -h, --help		display this help and exit\n"
-> +		" -o options		comma-separated list of mount options\n"
-> +		" -t type[.subtype]	filesystem type (and optional subtype)\n"
-> +		" 			subtypes: fuse, local, nbd\n"
-> +		" -u 			unmount the filesystem\n"
-> +		"    --reattach		reattach to an existing NBD device\n"
-> +#ifdef OCIEROFS_ENABLED
-> +		"\n"
-> +		"OCI-specific options (with -o):\n"
-> +		"   oci.blob=<digest>   specify OCI blob digest (sha256:...)\n"
-> +		"   oci.layer=<index>   specify OCI layer index (0-based)\n"
-
-0-based sounds odd, maybe find a better representation.
+Would you mind updating mkfs.erofs manpage too?
 
 Thanks,
 Gao Xiang
+
+On 2025/12/1 19:15, zhaoyifan (H) wrote:
+> Hi Chengyu,
+> 
+> Thanks for your review. I will try to deal with `mount.erofs` later.
+> 
+> 
+> Thanks,
+> 
+> Yifan Zhao
+> 
+> 
+> On 2025/12/1 17:25, hudsonZhu wrote:
+>> Thanks for this patch, Yifan !
+>>
+>> It looks good to me. I have tested the patch and it works as expected.
+>> One suggestion: it would be nice to have similar functionality in
+>> mount.erofs as well, for consistency across the toolkit.
+>>
+>> Reviewed-and-tested-by: Chengyu Zhu <hudsonzhu@tencent.com>
+>>
+>> Thanks,
+>> Chengyu
+>>
+>>> 2025年11月30日 18:42，Yifan Zhao <zhaoyifan28@huawei.com> 写道：
+>>>
+>>> Currently, the URL used to send requests to the registry is hardcoded
+>>> with "https://". This patch introduces an optional insecure option for
+>>> `--oci`, enabling registry access via the HTTP protocol.
+>>>
+>>> Also, this patch refactors the deeply nested logic in the `--oci`
+>>> argument parsing.
+>>>
+>>> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+>>> ---
+>>> lib/liberofs_oci.h |  3 ++
+>>> lib/remotes/oci.c  | 40 +++++++++++--------
+>>> mkfs/main.c        | 97 ++++++++++++++++++++--------------------------
+>>> 3 files changed, 70 insertions(+), 70 deletions(-)
+>>>
+>>> diff --git a/lib/liberofs_oci.h b/lib/liberofs_oci.h
+>>> index 5298f18..9e0571f 100644
+>>> --- a/lib/liberofs_oci.h
+>>> +++ b/lib/liberofs_oci.h
+>>> @@ -23,6 +23,7 @@ struct erofs_importer;
+>>>   * @password: password for authentication (optional)
+>>>   * @blob_digest: specific blob digest to extract (NULL for all layers)
+>>>   * @layer_index: specific layer index to extract (negative for all layers)
+>>> + * @insecure: use HTTP for registry communication (optional)
+>>>   *
+>>>   * Configuration structure for OCI image parameters including registry
+>>>   * location, image identification, platform specification, and authentication
+>>> @@ -37,6 +38,7 @@ struct ocierofs_config {
+>>>     int layer_index;
+>>>     char *tarindex_path;
+>>>     char *zinfo_path;
+>>> +    bool insecure;
+>>> };
+>>>
+>>> struct ocierofs_layer_info {
+>>> @@ -57,6 +59,7 @@ struct ocierofs_ctx {
+>>>     struct ocierofs_layer_info **layers;
+>>>     char *blob_digest;
+>>>     int layer_count;
+>>> +    const char *schema;
+>>> };
+>>>
+>>> struct ocierofs_iostream {
+>>> diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
+>>> index c1d6cae..d5afd6a 100644
+>>> --- a/lib/remotes/oci.c
+>>> +++ b/lib/remotes/oci.c
+>>> @@ -496,8 +496,8 @@ static char *ocierofs_discover_auth_endpoint(struct ocierofs_ctx *ctx,
+>>>
+>>>     api_registry = ocierofs_get_api_registry(registry);
+>>>
+>>> -    if (asprintf(&test_url, "https://%s/v2/%s/manifests/nonexistent",
+>>> -         api_registry, repository) < 0)
+>>> +    if (asprintf(&test_url, "%s%s/v2/%s/manifests/nonexistent",
+>>> +         ctx->schema, api_registry, repository) < 0)
+>>>         return NULL;
+>>>
+>>>     curl_easy_reset(ctx->curl);
+>>> @@ -528,9 +528,9 @@ static char *ocierofs_get_auth_token(struct ocierofs_ctx *ctx, const char *regis
+>>>                      const char *password)
+>>> {
+>>>     static const char * const auth_patterns[] = {
+>>> -        "https://%s/v2/auth",
+>>> -        "https://auth.%s/token",
+>>> -        "https://%s/token",
+>>> +        "%s%s/v2/auth",
+>>> +        "%sauth.%s/token",
+>>> +        "%s%s/token",
+>>>         NULL,
+>>>     };
+>>>     char *auth_header = NULL;
+>>> @@ -561,8 +561,8 @@ static char *ocierofs_get_auth_token(struct ocierofs_ctx *ctx, const char *regis
+>>>
+>>>         api_registry = ocierofs_get_api_registry(registry);
+>>>
+>>> -        if (asprintf(&test_url, "https://%s/v2/%s/manifests/nonexistent",
+>>> -             api_registry, repository) >= 0) {
+>>> +        if (asprintf(&test_url, "%s%s/v2/%s/manifests/nonexistent",
+>>> +             ctx->schema, api_registry, repository) >= 0) {
+>>>             curl_easy_reset(ctx->curl);
+>>>             ocierofs_curl_setup_common_options(ctx->curl);
+>>>
+>>> @@ -598,7 +598,7 @@ static char *ocierofs_get_auth_token(struct ocierofs_ctx *ctx, const char *regis
+>>>     for (i = 0; auth_patterns[i]; i++) {
+>>>         char *auth_url;
+>>>
+>>> -        if (asprintf(&auth_url, auth_patterns[i], registry) < 0)
+>>> +        if (asprintf(&auth_url, auth_patterns[i], ctx->schema, registry) < 0)
+>>>             continue;
+>>>
+>>>         auth_header = ocierofs_get_auth_token_with_url(ctx, auth_url,
+>>> @@ -629,8 +629,8 @@ static char *ocierofs_get_manifest_digest(struct ocierofs_ctx *ctx,
+>>>     int ret = 0, len, i;
+>>>
+>>>     api_registry = ocierofs_get_api_registry(registry);
+>>> -    if (asprintf(&req.url, "https://%s/v2/%s/manifests/%s",
+>>> -         api_registry, repository, tag) < 0)
+>>> +    if (asprintf(&req.url, "%s%s/v2/%s/manifests/%s",
+>>> +         ctx->schema, api_registry, repository, tag) < 0)
+>>>         return ERR_PTR(-ENOMEM);
+>>>
+>>>     if (auth_header && strstr(auth_header, "Bearer"))
+>>> @@ -749,8 +749,8 @@ static int ocierofs_fetch_layers_info(struct ocierofs_ctx *ctx)
+>>>     ctx->layer_count = 0;
+>>>     api_registry = ocierofs_get_api_registry(registry);
+>>>
+>>> -    if (asprintf(&req.url, "https://%s/v2/%s/manifests/%s",
+>>> -             api_registry, repository, digest) < 0)
+>>> +    if (asprintf(&req.url, "%s%s/v2/%s/manifests/%s",
+>>> +             ctx->schema, api_registry, repository, digest) < 0)
+>>>         return -ENOMEM;
+>>>
+>>>     if (auth_header && strstr(auth_header, "Bearer"))
+>>> @@ -1124,10 +1124,18 @@ static int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config
+>>>     if (!ctx->registry || !ctx->tag || !ctx->platform)
+>>>         return -ENOMEM;
+>>>
+>>> +    ctx->schema = config->insecure ? "http://" : "https://";
+>>> +
+>>>     ret = ocierofs_parse_ref(ctx, config->image_ref);
+>>>     if (ret)
+>>>         return ret;
+>>>
+>>> +    if (config->insecure && (!strcmp(ctx->registry, DOCKER_API_REGISTRY) ||
+>>> +                 !strcmp(ctx->registry, DOCKER_REGISTRY))) {
+>>> +        erofs_err("Insecure connection to Docker registry is not allowed");
+>>> +        return -EINVAL;
+>>> +    }
+>>> +
+>>>     ret = ocierofs_prepare_layers(ctx, config);
+>>>     if (ret)
+>>>         return ret;
+>>> @@ -1152,8 +1160,8 @@ static int ocierofs_download_blob_to_fd(struct ocierofs_ctx *ctx,
+>>>     };
+>>>
+>>>     api_registry = ocierofs_get_api_registry(ctx->registry);
+>>> -    if (asprintf(&req.url, "https://%s/v2/%s/blobs/%s",
+>>> -         api_registry, ctx->repository, digest) == -1)
+>>> +    if (asprintf(&req.url, "%s%s/v2/%s/blobs/%s",
+>>> +         ctx->schema, api_registry, ctx->repository, digest) == -1)
+>>>         return -ENOMEM;
+>>>
+>>>     if (auth_header && strstr(auth_header, "Bearer"))
+>>> @@ -1344,8 +1352,8 @@ static int ocierofs_download_blob_range(struct ocierofs_ctx *ctx, off_t offset,
+>>>         length = (size_t)(blob_size - offset);
+>>>
+>>>     api_registry = ocierofs_get_api_registry(ctx->registry);
+>>> -    if (asprintf(&req.url, "https://%s/v2/%s/blobs/%s",
+>>> -         api_registry, ctx->repository, digest) == -1)
+>>> +    if (asprintf(&req.url, "%s%s/v2/%s/blobs/%s",
+>>> +         ctx->schema, api_registry, ctx->repository, digest) == -1)
+>>>         return -ENOMEM;
+>>>
+>>>     if (length)
+>>> diff --git a/mkfs/main.c b/mkfs/main.c
+>>> index 7aa8eae..5710948 100644
+>>> --- a/mkfs/main.c
+>>> +++ b/mkfs/main.c
+>>> @@ -218,11 +218,12 @@ static void usage(int argc, char **argv)
+>>> #endif
+>>> #ifdef OCIEROFS_ENABLED
+>>>         " --oci=[f|i]           generate a full (f) or index-only (i) image from OCI remote source\n"
+>>> -        "   [,=platform=X]      X=platform (default: linux/amd64)\n"
+>>> +        "   [,platform=X]       X=platform (default: linux/amd64)\n"
+>>>         "   [,layer=#]          #=layer index to extract (0-based; omit to extract all layers)\n"
+>>>         "   [,blob=Y]           Y=blob digest to extract (omit to extract all layers)\n"
+>>>         "   [,username=Z]       Z=username for authentication (optional)\n"
+>>>         "   [,password=W]       W=password for authentication (optional)\n"
+>>> +        "   [,insecure]         use HTTP instead of HTTPS (optional)\n"
+>>> #endif
+>>>         " --tar=X               generate a full or index-only image from a tarball(-ish) source\n"
+>>>         "                       (X = f|i|headerball; f=full mode, i=index mode,\n"
+>>> @@ -744,7 +745,7 @@ static int mkfs_parse_s3_cfg(char *cfg_str)
+>>>   * Parse OCI options string containing comma-separated key=value pairs.
+>>>   *
+>>>   * Supported options include f|i, platform, blob|layer, username, password,
+>>> - * and zinfo.
+>>> + * and insecure.
+>>>   *
+>>>   * Return: 0 on success, negative errno on failure
+>>>   */
+>>> @@ -772,67 +773,55 @@ static int mkfs_parse_oci_options(struct ocierofs_config *oci_cfg, char *options
+>>>         if (q)
+>>>             *q = '\0';
+>>>
+>>> -
+>>> -        p = strstr(opt, "platform=");
+>>> -        if (p) {
+>>> +        if ((p = strstr(opt, "platform="))) {
+>>>             p += strlen("platform=");
+>>>             free(oci_cfg->platform);
+>>>             oci_cfg->platform = strdup(p);
+>>>             if (!oci_cfg->platform)
+>>>                 return -ENOMEM;
+>>> -        } else {
+>>> -            p = strstr(opt, "blob=");
+>>> -            if (p) {
+>>> -                p += strlen("blob=");
+>>> -                free(oci_cfg->blob_digest);
+>>> +        } else if ((p = strstr(opt, "blob="))) {
+>>> +            p += strlen("blob=");
+>>> +            free(oci_cfg->blob_digest);
+>>>
+>>> -                if (oci_cfg->layer_index >= 0) {
+>>> -                    erofs_err("invalid --oci: blob and layer cannot be set together");
+>>> -                    return -EINVAL;
+>>> -                }
+>>> +            if (oci_cfg->layer_index >= 0) {
+>>> +                erofs_err("invalid --oci: blob and layer cannot be set together");
+>>> +                return -EINVAL;
+>>> +            }
+>>>
+>>> -                if (!strncmp(p, "sha256:", 7)) {
+>>> -                    oci_cfg->blob_digest = strdup(p);
+>>> -                    if (!oci_cfg->blob_digest)
+>>> -                        return -ENOMEM;
+>>> -                } else if (asprintf(&oci_cfg->blob_digest, "sha256:%s", p) < 0) {
+>>> +            if (!strncmp(p, "sha256:", 7)) {
+>>> +                oci_cfg->blob_digest = strdup(p);
+>>> +                if (!oci_cfg->blob_digest)
+>>>                     return -ENOMEM;
+>>> -                }
+>>> -            } else {
+>>> -                p = strstr(opt, "layer=");
+>>> -                if (p) {
+>>> -                    p += strlen("layer=");
+>>> -                    if (oci_cfg->blob_digest) {
+>>> -                        erofs_err("invalid --oci: layer and blob cannot be set together");
+>>> -                        return -EINVAL;
+>>> -                    }
+>>> -                    idx = strtol(p, NULL, 10);
+>>> -                    if (idx < 0)
+>>> -                        return -EINVAL;
+>>> -                    oci_cfg->layer_index = (int)idx;
+>>> -                } else {
+>>> -                    p = strstr(opt, "username=");
+>>> -                    if (p) {
+>>> -                        p += strlen("username=");
+>>> -                        free(oci_cfg->username);
+>>> -                        oci_cfg->username = strdup(p);
+>>> -                        if (!oci_cfg->username)
+>>> -                            return -ENOMEM;
+>>> -                    } else {
+>>> -                        p = strstr(opt, "password=");
+>>> -                        if (p) {
+>>> -                            p += strlen("password=");
+>>> -                            free(oci_cfg->password);
+>>> -                            oci_cfg->password = strdup(p);
+>>> -                            if (!oci_cfg->password)
+>>> -                                return -ENOMEM;
+>>> -                        } else {
+>>> -                            erofs_err("mkfs: invalid --oci value %s", opt);
+>>> -                            return -EINVAL;
+>>> -                        }
+>>> -                    }
+>>> -                }
+>>> +            } else if (asprintf(&oci_cfg->blob_digest, "sha256:%s", p) < 0) {
+>>> +                return -ENOMEM;
+>>>             }
+>>> +        } else if ((p = strstr(opt, "layer="))) {
+>>> +            p += strlen("layer=");
+>>> +            if (oci_cfg->blob_digest) {
+>>> +                erofs_err("invalid --oci: layer and blob cannot be set together");
+>>> +                return -EINVAL;
+>>> +            }
+>>> +            idx = strtol(p, NULL, 10);
+>>> +            if (idx < 0)
+>>> +                return -EINVAL;
+>>> +            oci_cfg->layer_index = (int)idx;
+>>> +        } else if ((p = strstr(opt, "username="))) {
+>>> +            p += strlen("username=");
+>>> +            free(oci_cfg->username);
+>>> +            oci_cfg->username = strdup(p);
+>>> +            if (!oci_cfg->username)
+>>> +                return -ENOMEM;
+>>> +        } else if ((p = strstr(opt, "password="))) {
+>>> +            p += strlen("password=");
+>>> +            free(oci_cfg->password);
+>>> +            oci_cfg->password = strdup(p);
+>>> +            if (!oci_cfg->password)
+>>> +                return -ENOMEM;
+>>> +        } else if ((p = strstr(opt, "insecure"))) {
+>>> +            oci_cfg->insecure = true;
+>>> +        } else {
+>>> +            erofs_err("mkfs: invalid --oci value %s", opt);
+>>> +            return -EINVAL;
+>>>         }
+>>>
+>>>         opt = q ? q + 1 : NULL;
+>>> -- 
+>>> 2.43.0
+>>>
+
 
