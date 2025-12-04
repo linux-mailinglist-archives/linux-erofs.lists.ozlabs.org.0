@@ -1,69 +1,57 @@
-Return-Path: <linux-erofs+bounces-1483-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1484-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51223CA259D
-	for <lists+linux-erofs@lfdr.de>; Thu, 04 Dec 2025 05:51:24 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FA48CA2A20
+	for <lists+linux-erofs@lfdr.de>; Thu, 04 Dec 2025 08:28:19 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dMMXn51Lsz2xC3;
-	Thu, 04 Dec 2025 15:51:21 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dMR1r4yH0z2xC3;
+	Thu, 04 Dec 2025 18:28:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764823881;
-	cv=none; b=iH6LTdG8J53uvQlqhMlpGSdyIwXCahKN5Xq6jy8/xDLGe3ZS9xk9YQ5KDeCIrIPSgWYPt419lkzn+yvfYK0RIKD00ivl6Fbh3V511FtGtGsD5MXEYGCjqtry7ZgKBppOXfWnS/7kjkoquCI3tBjgrQmIR9Qdydsoj5xddiRVtp/UD3Y9FoY/nDdwgFH8j3zBcSZBBEd8hj4XsI1FlyFS6+kipopT+OgWTyb3MF6ewTsKyz7/OaNoSe7h6CJOgXjxufMK+HsJgRWDHmSpNEUbZyBSTvzEZg3qEYf0q8mWZfWv91sfj4zmkdaDbnSYfPI87dqV0lk+6Ry315jUHW9GKA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.217
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1764833296;
+	cv=none; b=HqlDcHTBbL/LPJ2tpuZ+6VfDl7bUUPIivL+yolNMO5RUA5JCUfN93gEBayJaDK199JhqJRxg0sK2Sn8ZI55pIiVv6Jccl/6B/gEoZx8BsC3okuUxBOIapniVi3QHaRw7fo+a8sojEMzr+ChsQ5aVZIM6aukn0ZZU1/Oldyq273j5SFaklCjVLyy8EPZII5Yo/KwYiZb1kZmK9N4m/NJA07j5011obLOBtYIvicyTE9w7mCDcIdwrMLbQnRsSLW/qa4+TEelHtzVMuknvvBXkgisUf+3OzFLT0MFVqsRCm1E4Rxui4GLk4uMABnPGi8/CfBiIm4vQnldFHZvcgI1Eww==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1764823881; c=relaxed/relaxed;
-	bh=CH3+h6QPM9TjhGdW+hR5LZ2u0pLnwcQwZhtc700qSQo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jH5IG+0xJCDbJ6WdyyHzYDvQL39g0PkzJG7toMxAPxWyzEaoR0h8LWeU+F0kHo7UcVB+qjXE5mJyNIQvXeNBnPvJeAcbNlYcFERviBdIoyq1YuHIRHQ3jLiOQgORmF3S9WQDnSkvLW50h9nF8VxEuU/D/20B6LvTxR0vIkL4M2OQLXfZmt2PPV/bU9lzQeP1nRQhLz+w2t9n7YWVXfxeF1lmdEW4SImueauwvO8g9fdwb89NekBZdweDR3AqlzMBouTAAKHjbeGpOUbtEGMMTY8mqJwiMdZJmzNdLIkA7ybd5McRx3MA86OjxU8X+9Ri5E5gyq7tvZiKENtonJ49qw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=g9VuuXie; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1764833296; c=relaxed/relaxed;
+	bh=sL2fGuvY17T95CIsO/+LfxhHdezSnRF5itTzudRhq4M=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KSU7qtX8t3y9jbrzzGBD2LxL3YjiCkczaUyIokw97bIw8g5WdQPdUppgEpfQCHY3iSzAsENFcV4mR0MH1EFz1ImcwCGmDdWOXuJnc2i8ijnl7GusR83ydxAERBtuROvLRNOaduIyLwn130ge2Af04kxZWAMeF3cvo2+cTSWju59HmyDj2KNR6bAwzB/RrdA1Z66Hy02J2OyX6p4wFjG3GKzegjGLwp3atHQqL+cGOFxmPPG+UP7HDHrdmyzFr+KHN6AmNCLsrm8XB4VmzlRUvQoe3zZF3EUIOH8qjL9nZLM44RzMYd7NBDlk6mJK3NFfA0C4Ih7607WkZRyUEOs+4Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=l7PbcEDe; dkim-atps=neutral; spf=pass (client-ip=113.46.200.217; helo=canpmsgout02.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=g9VuuXie;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=l7PbcEDe;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=pr-tracker-bot@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.217; helo=canpmsgout02.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dMMXm3tHJz2xBV
-	for <linux-erofs@lists.ozlabs.org>; Thu, 04 Dec 2025 15:51:20 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id D2FDE442DE;
-	Thu,  4 Dec 2025 04:51:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B28F5C113D0;
-	Thu,  4 Dec 2025 04:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764823876;
-	bh=giz+C39eNneeBABy+c6qEetaLaq6QDSpIMrr7wQNKpw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=g9VuuXiezy+vVS0sCqZ1FXw/Npno0SsFW75N+JcAov47DJzar5dFUiSltWAnZ4Qz1
-	 QX4ejJAY7rhZG9R4Zw8+oaxsumzjZPaCu1htqlWAYfz7F0Zv8sYAx8McCnALmQWXl+
-	 2hyDFO56BF2+4X+6o4yf4iS7SnDBGZasvSSENGIy8FAkpQubbUPgwVL286/pGK8yxg
-	 bTuMQZ+iB77/WV3UEIy5C/MzggtDrT5ErSpOuu35sMQlcxCHgZAiUHF8/+QrokNbUt
-	 7xYzNGRwdy66AI4k88FZfgxjfbvu8rozz8ETgOzaTiQc3F5kC64q7Hfgee9t7aax55
-	 4JOt6UhT2ZE+A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 789473AA9A8A;
-	Thu,  4 Dec 2025 04:48:16 +0000 (UTC)
-Subject: Re: [GIT PULL] erofs updates for 6.19-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <aS2AFm3vf2aJWJCB@debian>
-References: <aS2AFm3vf2aJWJCB@debian>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <aS2AFm3vf2aJWJCB@debian>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.19-rc1
-X-PR-Tracked-Commit-Id: 0bdbf89a8bbeb155644b69dc2d071a1ce23414f8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 477e31fd1e81ef925ce55931bcdbf609ba2207c8
-Message-Id: <176482369510.238370.5157840103634230103.pr-tracker-bot@kernel.org>
-Date: Thu, 04 Dec 2025 04:48:15 +0000
-To: Gao Xiang <xiang@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dMR1n0MYNz2x99
+	for <linux-erofs@lists.ozlabs.org>; Thu, 04 Dec 2025 18:28:11 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=sL2fGuvY17T95CIsO/+LfxhHdezSnRF5itTzudRhq4M=;
+	b=l7PbcEDeIIUzOMKtHtiIkc33bSd+ZEDtsuLYFWJRZ9ZeF8LweXQjpvZwZPfFe3NSZ8M8xmmHQ
+	c8r/eNeFvjphbNWYf3e6S/PD3ucsqAchg7MHDextDSpYYQS7GeQXdJT0dmQeGfQLmPS9+S60mP0
+	+0vJ9u4xcI5vKeoVrank3Us=
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4dMQyb3pxHzcb07;
+	Thu,  4 Dec 2025 15:25:27 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id 15D261401F2;
+	Thu,  4 Dec 2025 15:27:57 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
+ (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 4 Dec
+ 2025 15:27:56 +0800
+From: Yifan Zhao <zhaoyifan28@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>
+CC: <hsiangkao@linux.alibaba.com>, <jingrui@huawei.com>,
+	<wayne.ma@huawei.com>, <zhaoyifan28@huawei.com>
+Subject: [BUGFIX] [PATCH] erofs-utils: lib: fix erofs_io_sendfile() once more
+Date: Thu, 4 Dec 2025 15:26:57 +0800
+Message-ID: <20251204072657.1017332-1-zhaoyifan28@huawei.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -74,17 +62,40 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-The pull request you sent on Mon, 1 Dec 2025 19:46:30 +0800:
+Misuse of constant parameter `count` leads to an infinite loop in
+`erofs_io_sendfile()`. Fix it.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.19-rc1
+Fixes: 53255c7 ("erofs-utils: lib: fix erofs_io_sendfile() again")
+Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+---
+ lib/io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/477e31fd1e81ef925ce55931bcdbf609ba2207c8
-
-Thank you!
-
+diff --git a/lib/io.c b/lib/io.c
+index 90d2e54..37a74f6 100644
+--- a/lib/io.c
++++ b/lib/io.c
+@@ -592,7 +592,7 @@ ssize_t erofs_io_sendfile(struct erofs_vfile *vout, struct erofs_vfile *vin,
+ 	}
+ #if defined(HAVE_SYS_SENDFILE_H) && defined(HAVE_SENDFILE)
+ 	else do {
+-		written = sendfile(vout->fd, vin->fd, pos, count);
++		written = sendfile(vout->fd, vin->fd, pos, rem);
+ 		if (written <= 0) {
+ 			if (written < 0) {
+ 				written = -errno;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.43.0
+
 
