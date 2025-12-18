@@ -1,43 +1,71 @@
-Return-Path: <linux-erofs+bounces-1509-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1511-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 345C1CCA207
-	for <lists+linux-erofs@lfdr.de>; Thu, 18 Dec 2025 04:03:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D653CCA2BB
+	for <lists+linux-erofs@lfdr.de>; Thu, 18 Dec 2025 04:26:33 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dWwTV6LL8z2xpg;
-	Thu, 18 Dec 2025 14:03:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dWx0R2CnVz2xpg;
+	Thu, 18 Dec 2025 14:26:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.110
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766026990;
-	cv=none; b=RKJGmk2WClTyUlLxG7EOv2Rl1G60lSIPHOGfzNFcp87J/IVhtlAYLgy6+KeYgrFPNnMHAUnFLvv2hQwFmDe8IkI1eCKvWuxoI+QtdPmReU9bZeiR/HPClN8wV1JIXT5D1urQMYilJubboJWjW5VLpaLKMwuK1bhOMkBFZUVBADkK0NsViOM+LtSzQB4KKA54FJOtdaUx/mwHvAFKbdy90XgQBNoqSfWAby5/YOaCSyOZNTMImlI1Ysd+Hvdd1znQv2mxzyvoFkQjEHW6FTtcJkKUUFD0rcSpAAsfnh2T96hr4VFlD6INwNH+8kTx+7xVtsVKVykw3l1hs6P5iTa/5w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=162.62.57.49
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766028391;
+	cv=none; b=IlpErTnTR8aiRiVkeMCdzELf8k3RkFeiB6jE6ZLg455p4WdcFQwV7jeHTe7S3o2HUDMBfZUWZOW87Q2FlEUzOfrPen3BqLdhDaMpICf1th8c71YpRfbItmAI7K2pKDODjsf04kjH0C43v3jUq5BBLjtK/KEDO4MzbrWuqaW3tkszSW0D232kx/C9xHUoH1DfqXVjIxIcBuCqPiBQq1aqQjcPfqg+IHQHoOJnfaIcNkTyXSJjEM1HGccMMTcHbLfZitJdHR/b3IMfG2UdX+AAQ/zaakNRQgQd6hcNiB+Ya2R65sRc9UdbAqNx1iWaY3ZakQXcZ9en3OiW1Glrjueu1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1766026990; c=relaxed/relaxed;
-	bh=/p9v/7P8G2nkpG33YfeBu+GqgEjXSnj2Lz7Bm8EiiFs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XJVlhFcEdYO6CY9J5LX8Hh5zzDXwh6bvvI8tTIccXvXRWsqO1FEXh5PeTGaFfFX5x3lAuxstFkFyBp0kMcmajf3gIDtz5En8BipZFHJ686f8KQ8e+wT6Qqd7B3tWpTpSer533FWHULs1eZPssMiK+5SL72PcdCLf5aDIZ7++6fht7YyD1diHwbWUiaYH1oiv3+Es6z6CdCoaXjyGAnA0qUw0t9ORQ1X2iD4HPR0LB7ieBYCUneI42JDc3lrgYcYJl0iRQ10aj0JBQM5G8Q3l8NGX7uLMyFwq9fGxD+ebrWMzrOCz2tfprGSG+iPPjpUq3BfT9A7onzSQ5HTNHSbH7A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=aqf1iPxe; dkim-atps=neutral; spf=pass (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1766028391; c=relaxed/relaxed;
+	bh=bAdcmA8CvwRhTQpBhq5+riI/wTamEHCQOUhPZkS0JVc=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=XY7KgWIc8gLUB8hzyc3TAv9qD5Gn0QthN65KPqnWsITP+iaLPVb35Ot5RTgy9+smimJMWx4VIkHCG8WIgi3L9qPT9yc8TCZSC1buqS1ku+ty/M0FmM+Wq3/TPGflQXg1gHcKlo7vsJLNtEdJ99TC2jb8wgLKetQ8ORG/hdflBLz3+F6mmQH3fMaff5DawhBpCphLWoj7QWOOdJWsP3iLnTC0pQeVRDIiCZhODiDGC9I9oaIltz7/D4cVlvEMbqzuHzRc5SkWUCFWfIx9xo/COLezGbvbGC+b4ewgiTy81/GleUFA4DBGL5599ql7XR+5S49cF3mr3KXTuyt/N14BwA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=uAcNiqLn; dkim-atps=neutral; spf=pass (client-ip=162.62.57.49; helo=out162-62-57-49.mail.qq.com; envelope-from=ywen.chen@foxmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=foxmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=aqf1iPxe;
+	dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=uAcNiqLn;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.110; helo=out30-110.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=foxmail.com (client-ip=162.62.57.49; helo=out162-62-57-49.mail.qq.com; envelope-from=ywen.chen@foxmail.com; receiver=lists.ozlabs.org)
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dWwTS3J3Yz2xDD
-	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Dec 2025 14:03:07 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1766026976; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=/p9v/7P8G2nkpG33YfeBu+GqgEjXSnj2Lz7Bm8EiiFs=;
-	b=aqf1iPxeX1lF/o3ToPOllklwB46ihPtoRY2jH4jiyEo3Jxd0Cjw1c3b+IT7At1A8wnNKor6LkZ5MntZdBgU5Wz0xwwga2lFRqaCDSgJ57uNtk/h8UXjd4nIxnIEXDnIUBlnuMRqNfGsE2rrGqY4HHjQsttLlt03OaO7o8Vz8I0M=
-Received: from 30.221.132.6(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wv6Uryb_1766026972 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 18 Dec 2025 11:02:53 +0800
-Message-ID: <d4a41ddd-726c-4dee-a563-12b2b83d071c@linux.alibaba.com>
-Date: Thu, 18 Dec 2025 11:02:52 +0800
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4dWx0N16p7z2xDD
+	for <linux-erofs@lists.ozlabs.org>; Thu, 18 Dec 2025 14:26:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1766028382;
+	bh=bAdcmA8CvwRhTQpBhq5+riI/wTamEHCQOUhPZkS0JVc=;
+	h=From:To:Cc:Subject:Date;
+	b=uAcNiqLnMRy6HKVlQVn8GyV6UHjXpoIsSsPX1WyKGGGJTPUkqPvX+KBdp6PSMWDtp
+	 Yb3/kdiTuoEIVx5rsLjxIEIUTKihg58Berc09w8J5HaOwQSAA1GUDguWNBxfb0D8qL
+	 iMNtL0Lmp8KFwxmyVoBz7/iQBQQNjjCjF6aFHmfU=
+Received: from meizu-Precision-3660.meizu.com ([14.21.33.152])
+	by newxmesmtplogicsvrszb51-0.qq.com (NewEsmtp) with SMTP
+	id 4BB1741C; Thu, 18 Dec 2025 11:18:59 +0800
+X-QQ-mid: xmsmtpt1766027939tkg226rvk
+Message-ID: <tencent_D4F8982BC9797B5EE01759574F512CF7E506@qq.com>
+X-QQ-XMAILINFO: ON4JYNczNu10xLni2mZ47bEz3+euTrmIk4DBqL8MooDVnGqNfWNTJ8Z/GrBizZ
+	 1l0Jr5nv8kMMLat8zGlknmpHHM0Dw212Z+H1G1so/4CrSWsyeZ3QjLGI+ubdv2a7i9O3eo9Gw4NV
+	 4bgMj5z5N05CfkRDjlGMMW7wavlAhRkMT/Tg1INdp6o7bS6I+kIHynn3uSn9LEXyDRvVr1xIhlCy
+	 WD307IFVGSCLnRNFiMQH+omgEiYbzH+uccohqqy9cFCnXHsBCi3s0KMFuh0WEjN74P7G8Z6bhlsn
+	 4EmhAzsjQisEuV8gaAyZJuS29VSg4iFhhlcm68/e/z17aroeIhE93hhnqgBX3n2c1/Dh+GRsDu8M
+	 e7MAn6fS40VAazxOTfL0EpFs4xv52pPsQzZfk3WsFGQPcFqmrgyy2vBdqmwUhMjxAvzvjcVdmHuG
+	 TpixJ8C/ChencTa56eByrOOY2XnLNy10KOYfnYnyzRwAw7LOnoN0XlovwKmcrL43Fwu8LFnkcUwz
+	 Pp7KZU4k3dg3tp8qvcVGUobkBqnn7UGt9xG7YocyL0x5dH372XBu+2iEW+tfIFKJkMWt2acUYii7
+	 yAKkECY+TAcr6f8cRG5Yjz7Wmyy5GDClxBNE5y9+XxFQ7VExQ+TDikaDcatuOx0XbIJWE3bS8Ap8
+	 OHdQHBGv9XZBrGtE99y5iezLe6oTgkAEGJAGIimlfGKAS6kwsGBpZLW6Kf/oB9wZb26t4WGo1LTN
+	 hwgkAz/oLBv7zOH+s8g8uxDB5zKifJ4R4MD3P+CuCdbFMkilh11cWkjCFZZGN/4FRzX0CQBktk+G
+	 u9HoRCU9j9cIglte4Q7kZFgaioGe1r5APEJi3lSElE3nUM5/D7+drqsDmKuw5xPadoDaLlOJSe9r
+	 IHW0TGj7MOYo5s5me6BQYKUjS1v74GbTSLrt7h0ZpBH2es7b8mRzEpSWihmbIB322LopQn+NqRfh
+	 IizOXiEVs+ZbojZh8jAfiyLnNOaalMovC4v/aXMDY9HAHEO13WI+QnlQsI+K6S8VSJXKJ/v3ZMhJ
+	 WtJn4AEC0E4PvSuh6MP7QY5q5V7zPFnYjwHOGtbOQHQWJAIxsda7DPkcfGa8119Q6R2Q8FKg==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Yuwen Chen <ywen.chen@foxmail.com>
+To: xiang@kernel.org
+Cc: chao@kernel.org,
+	huyue2@coolpad.com,
+	jefflexu@linux.alibaba.com,
+	linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	Yuwen Chen <ywen.chen@foxmail.com>
+Subject: [PATCH] erofs: print the names of unsupported compression algorithms
+Date: Thu, 18 Dec 2025 11:18:58 +0800
+X-OQ-MSGID: <20251218031858.2864347-1-ywen.chen@foxmail.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,63 +77,91 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: simplify the code using for_each_set_bit
-To: Yuwen Chen <ywen.chen@foxmail.com>, xiang@kernel.org
-Cc: chao@kernel.org, huyue2@coolpad.com, jefflexu@linux.alibaba.com,
- linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <tencent_9E5D8E4520DCDEE3CBAE5BE70D79F95FFD08@qq.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <tencent_9E5D8E4520DCDEE3CBAE5BE70D79F95FFD08@qq.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: YES
+X-Spam-Status: Yes, score=3.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HELO_DYNAMIC_IPADDR,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,RDNS_DYNAMIC,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Report: 
+	* -0.0 SPF_PASS SPF: sender matches SPF record
+	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+	*      envelope-from domain
+	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+	*      valid
+	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
+	*       domain
+	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+	*  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail provider
+	*      [ywen.chen(at)foxmail.com]
+	*  0.4 RDNS_DYNAMIC Delivered to internal network by host with
+	*      dynamic-looking rDNS
+	*  3.2 HELO_DYNAMIC_IPADDR Relay HELO'd using suspicious hostname (IP addr
+	*      1)
+	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
+	*      trust
+	*      [162.62.57.49 listed in list.dnswl.org]
+	*  0.0 RCVD_IN_MSPIKE_H2 RBL: Average reputation (+2)
+	*      [162.62.57.49 listed in wl.mailspike.net]
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+After simplifying the implementation of z_erofs_parse_cfgs, the
+names of unsupported algorithms can now be directly output.
+Moreover, some unnecessary additional judgments can be removed.
 
+Signed-off-by: Yuwen Chen <ywen.chen@foxmail.com>
+---
+ fs/erofs/decompressor.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-On 2025/12/18 10:57, Yuwen Chen wrote:
-> When mounting the EROFS file system, it is necessary to check the
-> available compression algorithms. At this time, the for_each_set_bit
-> function can be used to simplify the code logic.
-> 
-> Signed-off-by: Yuwen Chen <ywen.chen@foxmail.com>
-> ---
-> 
-> v1 -> v2:
->      - revert the modifications to the fs/erofs/internal.h
-> 
->   fs/erofs/decompressor.c | 11 ++++-------
->   1 file changed, 4 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-> index 2ec9b2bb628d6..be1e19b620523 100644
-> --- a/fs/erofs/decompressor.c
-> +++ b/fs/erofs/decompressor.c
-> @@ -405,7 +405,7 @@ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
->   {
->   	struct erofs_sb_info *sbi = EROFS_SB(sb);
->   	struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-> -	unsigned int algs, alg;
-> +	unsigned long algs, alg;
->   	erofs_off_t offset;
->   	int size, ret = 0;
->   
-> @@ -423,13 +423,10 @@ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
->   
->   	erofs_init_metabuf(&buf, sb);
->   	offset = EROFS_SUPER_OFFSET + sbi->sb_size;
-> -	alg = 0;
-> -	for (algs = sbi->available_compr_algs; algs; algs >>= 1, ++alg) {
-> +	algs = sbi->available_compr_algs;
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index be1e19b620523..866bd9158615b 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -385,21 +385,22 @@ const struct z_erofs_decompressor erofs_decompressors[] = {
+ 		.decompress = z_erofs_lz4_decompress,
+ 		.name = "lz4"
+ 	},
+-#ifdef CONFIG_EROFS_FS_ZIP_LZMA
+ 	[Z_EROFS_COMPRESSION_LZMA] = {
++#ifdef CONFIG_EROFS_FS_ZIP_LZMA
+ 		.config = z_erofs_load_lzma_config,
+ 		.decompress = z_erofs_lzma_decompress,
++#endif
+ 		.name = "lzma"
+ 	},
+-#endif
+-#ifdef CONFIG_EROFS_FS_ZIP_DEFLATE
+ 	[Z_EROFS_COMPRESSION_DEFLATE] = {
++#ifdef CONFIG_EROFS_FS_ZIP_DEFLATE
+ 		.config = z_erofs_load_deflate_config,
+ 		.decompress = z_erofs_deflate_decompress,
++#endif
+ 		.name = "deflate"
+ 	},
+-#endif
+ };
++static_assert(Z_EROFS_COMPRESSION_RUNTIME_MAX == ARRAY_SIZE(erofs_decompressors));
+ 
+ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
+ {
+@@ -433,10 +434,9 @@ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
+ 			break;
+ 		}
+ 
+-		if (alg >= ARRAY_SIZE(erofs_decompressors) ||
+-		    !erofs_decompressors[alg].config) {
+-			erofs_err(sb, "algorithm %ld isn't enabled on this kernel",
+-				  alg);
++		if (!erofs_decompressors[alg].config) {
++			erofs_err(sb, "algorithm %s isn't enabled on this kernel",
++				  erofs_decompressors[alg].name);
+ 			ret = -EOPNOTSUPP;
+ 		} else {
+ 			ret = erofs_decompressors[alg].config(sb,
+-- 
+2.34.1
 
-Can you update as what I suggested?
-
-Assign `algs` first, and then assign sbi->available_compr_algs.
-
-Thanks,
-Gao Xiang
 
