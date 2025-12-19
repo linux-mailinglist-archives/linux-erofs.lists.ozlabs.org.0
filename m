@@ -1,43 +1,67 @@
-Return-Path: <linux-erofs+bounces-1521-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1522-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EE9BCCF3A1
-	for <lists+linux-erofs@lfdr.de>; Fri, 19 Dec 2025 10:54:40 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3AC6CCFD4A
+	for <lists+linux-erofs@lfdr.de>; Fri, 19 Dec 2025 13:41:01 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dXjYn6l96z2yFW;
-	Fri, 19 Dec 2025 20:54:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dXnFl2GzGz2yFW;
+	Fri, 19 Dec 2025 23:40:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766138077;
-	cv=none; b=XP0Tj+92oX1fs0Gqrnd/4cEOJ8DDUzrpQMZ0IFRzHqmZwJXOlrRUTCr9iTvNgUjiIfT6O6SPg49iReLnpvAMCerrIkQmyvSrRaxc3EvLnpUCYM0QagbaAzG5AbU5KbYpCpvo2hihi7+cl2M9+sINrtqtRxfO5jbGnSj+edQmyPO8DYthGmq+76S1v3b7xTy1Gfdp+wtOEMSYB4jmwcf2+iEpXyN7kBanKGoywltOkBYbCYkPStzHWGeqFvONkAVxLRtMizAzkppUheXkWhOhZtiaBMju7yQCm7UlUyB8+CZ5Lj6fOxtKsvCZlkTpB35+LCxSGx/JGmIZlcgwXVBhSg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.254.224.25
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766148059;
+	cv=none; b=TDm2tD/BjjBKO8AaBedSv53hODloHEJd6Go1caqBqN1nvppif5NrwlksEZE4iXrDHjOHVsY5AWVs/w3+VFAMrdP+qsGPPVo0wMUlN68m+i0LzFtPSB30s+yNAqgRYZYKU7IA1g6to+XRYd/syUYt7Bm6KWhQtVvM9S8+jbpuy7hvScF8JEL5o2OyTgDKTI9Ob8Wo5uNPQHYI0txgqwGyipCT4nWeCp/GJv7YyH02TG7Earyyr8N/oYfMKUQiuZYAO4COQEtXufzcpGBDbrKy0rQftj8ZK8jBIhQ+zCUTpTxJmsG7+o8d3HK6RPTgthzBGNgtKejbUBZZOHZzCclhvA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1766138077; c=relaxed/relaxed;
-	bh=XgQizcauHnh/ysYzDZP7I8/fUHcU7RgcJ9ws2O2qYhk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=krgfAytKdhkSkWMfEne5pCTs+7x63jpx1ELSDGfKwdFiSnci01mBUyumYEF6w/qlcI4N3JbzZAGjrYsb1xQoCc/5bbRn1nEZ2cPW/y7h653ITVE1iZNcbsZ1G3B9NkwoO/YKjDlF58K1iWP+HTWLsba8tlqZfoZGszUsB84i96w4RzcOxY383xlQX/NmJJblf1R6wWG/mHITv4Wv0r3uSsRzP1z9Z+GsPtPJVtcfee5WrbXyoRPZtUnTa8584vPS0hAk2A8g8fQEZWP/TbriUfakybKtUeEAYOmEC2rS9CXEq4+PJBFMXS8sGSEOnIod6UbdKmy27YfGsY7ecdV87A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qIj52rtb; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1766148059; c=relaxed/relaxed;
+	bh=jMDcKQ9i6N+1e+bXvO2dHhPmBoF8oPQlpRZ6OtKYHpE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=b21hF96AFytxFQIsQXtChRLrAFPii/jyCOSPiVANH3Dem0wJUtMFzECA6yojCszKiswD3+1DjTGad4EU7JfRbeOW2PiieUaCImjG4s+NBZyTvv2iJu6+r8m+JlDnZVxrwMX0LHaMrgANuwEFQ/gtmtZBUmopT4Ix3edYEBvQqLEWguGR+MDfeSSIdwI9RQ9pFR8QErYoxa5wMuBMhOKa0eBfE9KrYeMA/J2hc8Qv0g+1D01B97Xoj5DvTEX3YMWJ8SOw1MQm2zdNnUrvl/pC+sfsE/4dYN6fa1sRkajoCEjrF7dSXWyzuYNC0yGKiVERsZ6aPReG0rfDPTiLgXufkA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=samsung.com; dkim=pass (1024-bit key; unprotected) header.d=samsung.com header.i=@samsung.com header.a=rsa-sha256 header.s=mail20170921 header.b=uP1LZs4W; dkim-atps=neutral; spf=pass (client-ip=203.254.224.25; helo=mailout2.samsung.com; envelope-from=junbeom.yeom@samsung.com; receiver=lists.ozlabs.org) smtp.mailfrom=samsung.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qIj52rtb;
+	dkim=pass (1024-bit key; unprotected) header.d=samsung.com header.i=@samsung.com header.a=rsa-sha256 header.s=mail20170921 header.b=uP1LZs4W;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=samsung.com (client-ip=203.254.224.25; helo=mailout2.samsung.com; envelope-from=junbeom.yeom@samsung.com; receiver=lists.ozlabs.org)
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dXjYk62yqz2xqm
-	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Dec 2025 20:54:32 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1766138066; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=XgQizcauHnh/ysYzDZP7I8/fUHcU7RgcJ9ws2O2qYhk=;
-	b=qIj52rtbI32ejRQZngcGHaj8jF8Rke2lv9schj0ItTKzDKu8TlIZBkq4EKe1+WwQtPCjnBS/MC5TgHFP/jKRfnvEP33K6QReOCTFrRaQXg/e2LljNN02zRYaphTbwdsVcfTZCyj1Tw1ivM4HJcNDlaEChCpMPJlCQ0jiB6WfD98=
-Received: from 30.221.131.220(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WvCXM1G_1766138062 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 19 Dec 2025 17:54:23 +0800
-Message-ID: <9cc27554-740b-461d-a550-3d8af63a2b94@linux.alibaba.com>
-Date: Fri, 19 Dec 2025 17:54:22 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dXnFh5J9Yz2xfK
+	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Dec 2025 23:40:55 +1100 (AEDT)
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20251219124045epoutp02be5069f04d00701abde73a7c3aff6014~Cnko2PNG00121701217epoutp02q
+	for <linux-erofs@lists.ozlabs.org>; Fri, 19 Dec 2025 12:40:45 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20251219124045epoutp02be5069f04d00701abde73a7c3aff6014~Cnko2PNG00121701217epoutp02q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1766148045;
+	bh=jMDcKQ9i6N+1e+bXvO2dHhPmBoF8oPQlpRZ6OtKYHpE=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=uP1LZs4WnnbhlA8C+a3q3yqbvuNDWe3HBAxjgxZsLCatucoI8EkJLVQy8pVf3Y0ww
+	 9LfIiGnqk7WjPuKmA3akBWiLbCgbd065UR3s1g7uVxO/bx6MuVv/e6G5ctwWhR42eV
+	 mS1o9hpyuoVtCY1FhxY2B/njbDyo02Ism3v3Ch44=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas1p4.samsung.com (KnoxPortal) with ESMTPS id
+	20251219124044epcas1p476be6abc6c9af383dbc8890a9d13b57e~CnkoYAh-I0384603846epcas1p4q;
+	Fri, 19 Dec 2025 12:40:44 +0000 (GMT)
+Received: from epcas1p2.samsung.com (unknown [182.195.38.115]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4dXnFS5DRVz3hhT7; Fri, 19 Dec
+	2025 12:40:44 +0000 (GMT)
+Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
+	epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+	20251219124044epcas1p3df48558b10b0540c2ea1ec65779c261d~Cnknu9BCT2398323983epcas1p3R;
+	Fri, 19 Dec 2025 12:40:44 +0000 (GMT)
+Received: from junbeom.yeom (unknown [10.253.99.78]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20251219124044epsmtip13b608729c8bb9b8f4cdab1cef393a8b7~CnknsFj5O2626826268epsmtip14;
+	Fri, 19 Dec 2025 12:40:44 +0000 (GMT)
+From: Junbeom Yeom <junbeom.yeom@samsung.com>
+To: xiang@kernel.org, chao@kernel.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, Junbeom Yeom
+	<junbeom.yeom@samsung.com>, stable@vger.kernel.org, Jaewook Kim
+	<jw5454.kim@samsung.com>, Sungjong Seo <sj1557.seo@samsung.com>
+Subject: [PATCH v2] erofs: fix unexpected EIO under memory pressure
+Date: Fri, 19 Dec 2025 21:40:31 +0900
+Message-Id: <20251219124031.2731710-1-junbeom.yeom@samsung.com>
+X-Mailer: git-send-email 2.34.1
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,175 +73,142 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: fix unexpected EIO under memory pressure
-To: Junbeom Yeom <junbeom.yeom@samsung.com>, xiang@kernel.org, chao@kernel.org
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, 'Jaewook Kim' <jw5454.kim@samsung.com>,
- 'Sungjong Seo' <sj1557.seo@samsung.com>
-References: <CGME20251219071140epcas1p35856372483a973806c5445fa3d2d260b@epcas1p3.samsung.com>
- <20251219071034.2399153-1-junbeom.yeom@samsung.com>
- <6a9737d3-1ecd-4105-ad8d-8379cb35bfc7@linux.alibaba.com>
- <000001dc70cc$6cc150c0$4643f240$@samsung.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <000001dc70cc$6cc150c0$4643f240$@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20251219124044epcas1p3df48558b10b0540c2ea1ec65779c261d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+cpgsPolicy: CPGSC10-711,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20251219124044epcas1p3df48558b10b0540c2ea1ec65779c261d
+References: <CGME20251219124044epcas1p3df48558b10b0540c2ea1ec65779c261d@epcas1p3.samsung.com>
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,
+	RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+erofs readahead could fail with ENOMEM under the memory pressure because
+it tries to alloc_page with GFP_NOWAIT | GFP_NORETRY, while GFP_KERNEL
+for a regular read. And if readahead fails (with non-uptodate folios),
+the original request will then fall back to synchronous read, and
+`.read_folio()` should return appropriate errnos.
 
+However, in scenarios where readahead and read operations compete,
+read operation could return an unintended EIO because of an incorrect
+error propagation.
 
-On 2025/12/19 17:47, Junbeom Yeom wrote:
-> Hi Xiang,
-> 
->>
->> Hi Junbeom,
->>
->> On 2025/12/19 15:10, Junbeom Yeom wrote:
->>> erofs readahead could fail with ENOMEM under the memory pressure
->>> because it tries to alloc_page with GFP_NOWAIT | GFP_NORETRY, while
->>> GFP_KERNEL for a regular read. And if readahead fails (with
->>> non-uptodate folios), the original request will then fall back to
->>> synchronous read, and `.read_folio()` should return appropriate errnos.
->>>
->>> However, in scenarios where readahead and read operations compete,
->>> read operation could return an unintended EIO because of an incorrect
->>> error propagation.
->>>
->>> To resolve this, this patch modifies the behavior so that, when the
->>> PCL is for read(which means pcl.besteffort is true), it attempts
->>> actual decompression instead of propagating the privios error except initial EIO.
->>>
->>> - Page size: 4K
->>> - The original size of FileA: 16K
->>> - Compress-ratio per PCL: 50% (Uncompressed 8K -> Compressed 4K)
->>> [page0, page1] [page2, page3] [PCL0]---------[PCL1]
->>>
->>> - functions declaration:
->>>     . pread(fd, buf, count, offset)
->>>     . readahead(fd, offset, count)
->>> - Thread A tries to read the last 4K
->>> - Thread B tries to do readahead 8K from 4K
->>> - RA, besteffort == false
->>> - R, besteffort == true
->>>
->>>           <process A>                   <process B>
->>>
->>> pread(FileA, buf, 4K, 12K)
->>>     do readahead(page3) // failed with ENOMEM
->>>     wait_lock(page3)
->>>       if (!uptodate(page3))
->>>         goto do_read
->>>                                  readahead(FileA, 4K, 8K)
->>>                                  // Here create PCL-chain like below:
->>>                                  // [null, page1] [page2, null]
->>>                                  //   [PCL0:RA]-----[PCL1:RA]
->>> ...
->>>     do read(page3)        // found [PCL1:RA] and add page3 into it,
->>>                           // and then, change PCL1 from RA to R ...
->>>                                  // Now, PCL-chain is as below:
->>>                                  // [null, page1] [page2, page3]
->>>                                  //   [PCL0:RA]-----[PCL1:R]
->>>
->>>                                    // try to decompress PCL-chain...
->>>                                    z_erofs_decompress_queue
->>>                                      err = 0;
->>>
->>>                                      // failed with ENOMEM, so page 1
->>>                                      // only for RA will not be uptodated.
->>>                                      // it's okay.
->>>                                      err = decompress([PCL0:RA], err)
->>>
->>>                                      // However, ENOMEM propagated to next
->>>                                      // PCL, even though PCL is not only
->>>                                      // for RA but also for R. As a result,
->>>                                      // it just failed with ENOMEM without
->>>                                      // trying any decompression, so page2
->>>                                      // and page3 will not be uptodated.
->>>                   ** BUG HERE ** --> err = decompress([PCL1:R], err)
->>>
->>>                                      return err as ENOMEM ...
->>>       wait_lock(page3)
->>>         if (!uptodate(page3))
->>>           return EIO      <-- Return an unexpected EIO!
->>> ...
->>
->> Many thanks for the report!
->> It's indeed a new issue to me.
->>
->>>
->>> Fixes: 2349d2fa02db ("erofs: sunset unneeded NOFAILs")
->>> Cc: stable@vger.kernel.org
->>> Reviewed-by: Jaewook Kim <jw5454.kim@samsung.com>
->>> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
->>> Signed-off-by: Junbeom Yeom <junbeom.yeom@samsung.com>
->>> ---
->>>    fs/erofs/zdata.c | 6 +++++-
->>>    1 file changed, 5 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c index
->>> 27b1f44d10ce..86bf6e087d34 100644
->>> --- a/fs/erofs/zdata.c
->>> +++ b/fs/erofs/zdata.c
->>> @@ -1414,11 +1414,15 @@ static int z_erofs_decompress_queue(const struct
->> z_erofs_decompressqueue *io,
->>>    	};
->>>    	struct z_erofs_pcluster *next;
->>>    	int err = io->eio ? -EIO : 0;
->>> +	int io_err = err;
->>>
->>>    	for (; be.pcl != Z_EROFS_PCLUSTER_TAIL; be.pcl = next) {
->>> +		int propagate_err;
->>> +
->>>    		DBG_BUGON(!be.pcl);
->>>    		next = READ_ONCE(be.pcl->next);
->>> -		err = z_erofs_decompress_pcluster(&be, err) ?: err;
->>> +		propagate_err = READ_ONCE(be.pcl->besteffort) ? io_err : err;
->>> +		err = z_erofs_decompress_pcluster(&be, propagate_err) ?: err;
->>
->> I wonder if it's just possible to decompress each pcluster according to io
->> status only (but don't bother with previous pcluster status), like:
->>
->> 		err = z_erofs_decompress_pcluster(&be, io->eio) ?: err;
->>
->> and change the second argument of
->> z_erofs_decompress_pcluster() to bool.
->>
->> So that we could leverage the successful i/o as much as possible.
-> 
-> Oh, I thought you were intending to address error propagation.
+To resolve this, this patch modifies the behavior so that, when the
+PCL is for read(which means pcl.besteffort is true), it attempts actual
+decompression instead of propagating the privios error except initial EIO.
 
-We could still propagate errors (-ENOMEM) to the callers, but for
-the case you mentioned, I still think it's useful to handle the
-following pclusters if the disk I/Os are successful.
+- Page size: 4K
+- The original size of FileA: 16K
+- Compress-ratio per PCL: 50% (Uncompressed 8K -> Compressed 4K)
+[page0, page1] [page2, page3]
+[PCL0]---------[PCL1]
 
-and it still addresses the issue you mentioned, I think it's also
-cleaner.
+- functions declaration:
+  . pread(fd, buf, count, offset)
+  . readahead(fd, offset, count)
+- Thread A tries to read the last 4K
+- Thread B tries to do readahead 8K from 4K
+- RA, besteffort == false
+- R, besteffort == true
 
-> If that's not the case, I also believe the approach you're suggesting is better.
-> I'll send the next version.
+        <process A>                   <process B>
 
-Thank you for the effort!
+pread(FileA, buf, 4K, 12K)
+  do readahead(page3) // failed with ENOMEM
+  wait_lock(page3)
+    if (!uptodate(page3))
+      goto do_read
+                               readahead(FileA, 4K, 8K)
+                               // Here create PCL-chain like below:
+                               // [null, page1] [page2, null]
+                               //   [PCL0:RA]-----[PCL1:RA]
+...
+  do read(page3)        // found [PCL1:RA] and add page3 into it,
+                        // and then, change PCL1 from RA to R
+...
+                               // Now, PCL-chain is as below:
+                               // [null, page1] [page2, page3]
+                               //   [PCL0:RA]-----[PCL1:R]
 
-Thanks,
-Gao Xiang
+                                 // try to decompress PCL-chain...
+                                 z_erofs_decompress_queue
+                                   err = 0;
 
-> 
-> Thanks,
-> Junbeom Yeom
-> 
->>
->> Thanks,
->> Gao Xiang
->>
->>>    	}
->>>    	return err;
->>>    }
->>
-> 
+                                   // failed with ENOMEM, so page 1
+                                   // only for RA will not be uptodated.
+                                   // it's okay.
+                                   err = decompress([PCL0:RA], err)
+
+                                   // However, ENOMEM propagated to next
+                                   // PCL, even though PCL is not only
+                                   // for RA but also for R. As a result,
+                                   // it just failed with ENOMEM without
+                                   // trying any decompression, so page2
+                                   // and page3 will not be uptodated.
+                ** BUG HERE ** --> err = decompress([PCL1:R], err)
+
+                                   return err as ENOMEM
+...
+    wait_lock(page3)
+      if (!uptodate(page3))
+        return EIO      <-- Return an unexpected EIO!
+...
+
+Fixes: 2349d2fa02db ("erofs: sunset unneeded NOFAILs")
+Cc: stable@vger.kernel.org
+Reviewed-by: Jaewook Kim <jw5454.kim@samsung.com>
+Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
+Signed-off-by: Junbeom Yeom <junbeom.yeom@samsung.com>
+---
+v2:
+ - If disk I/Os are successful, handle to decompress each pcluster.
+
+ fs/erofs/zdata.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 27b1f44d10ce..70e1597dec8a 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1262,7 +1262,7 @@ static int z_erofs_parse_in_bvecs(struct z_erofs_backend *be, bool *overlapped)
+ 	return err;
+ }
+ 
+-static int z_erofs_decompress_pcluster(struct z_erofs_backend *be, int err)
++static int z_erofs_decompress_pcluster(struct z_erofs_backend *be, bool eio)
+ {
+ 	struct erofs_sb_info *const sbi = EROFS_SB(be->sb);
+ 	struct z_erofs_pcluster *pcl = be->pcl;
+@@ -1270,7 +1270,7 @@ static int z_erofs_decompress_pcluster(struct z_erofs_backend *be, int err)
+ 	const struct z_erofs_decompressor *alg =
+ 				z_erofs_decomp[pcl->algorithmformat];
+ 	bool try_free = true;
+-	int i, j, jtop, err2;
++	int i, j, jtop, err2, err = eio ? -EIO : 0;
+ 	struct page *page;
+ 	bool overlapped;
+ 	const char *reason;
+@@ -1413,12 +1413,12 @@ static int z_erofs_decompress_queue(const struct z_erofs_decompressqueue *io,
+ 		.pcl = io->head,
+ 	};
+ 	struct z_erofs_pcluster *next;
+-	int err = io->eio ? -EIO : 0;
++	int err = 0;
+ 
+ 	for (; be.pcl != Z_EROFS_PCLUSTER_TAIL; be.pcl = next) {
+ 		DBG_BUGON(!be.pcl);
+ 		next = READ_ONCE(be.pcl->next);
+-		err = z_erofs_decompress_pcluster(&be, err) ?: err;
++		err = z_erofs_decompress_pcluster(&be, io->eio) ?: err;
+ 	}
+ 	return err;
+ }
+-- 
+2.34.1
 
 
