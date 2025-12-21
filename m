@@ -1,73 +1,43 @@
-Return-Path: <linux-erofs+bounces-1523-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1524-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 00370CD29EA
-	for <lists+linux-erofs@lfdr.de>; Sat, 20 Dec 2025 08:43:56 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 711D1CD42A2
+	for <lists+linux-erofs@lfdr.de>; Sun, 21 Dec 2025 17:00:29 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dYGcV33WDz2y6G;
-	Sat, 20 Dec 2025 18:43:54 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dZ5Zy5vMDz2yFQ;
+	Mon, 22 Dec 2025 03:00:26 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.18
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766216634;
-	cv=none; b=HyggYQ344+vR8KK1v8xa8nkXvgK/M6GuUDjd+cJMmtZc/YNWQLNFSvG36pNYfIx0DhqKqnAeMc1ruc5O5iF59kkH+tyzvvXzr5pbL608DR5eQuAzKemUPRE9j/QdKeBwkzJLeoM7mRU/Kf8u4h6BkdziW+nrkHoAiYFq6ZNtsY3lLtZFq/KtDoEDOJTR9VPG89XBxZXoes73c4uxpvaX319HJ/fTOYYRn7UpWrCr2730uQnhX1c+tzrBlgzR/IEQk8OTupzGoLOS0yR6zwRD/cwOu4VAPIFF0QgbT0DdO6ckgkOjWLFF5F2tp+56p2Nwwbldp7/ColbObl7Iu3fJUQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766332826;
+	cv=none; b=ZJSBy1BpLVFmTXuIYf/eGOo4uDhBo+6m8Sp20LhCaj5/ZkuVXVt+zzGZ3kiMv2bL0js94w0BTqvHsicLhwHSuxu1qpbeFAgEMhDI+7t/+PwusdxRQgrdYK1Xsgui9Un7kyVCsFUDakgE1eGLr7LMe1fPIWQDWrFQVNPm/2cj++YogV60QZ03lo4ZXavPKYvGZLK22zCLTa3U/i+j5/xw+xwprngVBpjH25QjjFtarMexZlmnjg2Re4TdIHvxP93/4zW2GhaejF7/kP7mgF6OBrF11TxmDG7SZDU4QoprO09kM2ET5uNqiMBtBjzs+cRg96v9PdefWkTE3tVpvGjAyg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1766216634; c=relaxed/relaxed;
-	bh=+RgEuPCB5+/pfWtxKdufnhMnEz8pWLpCmc2pHPWaddA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Tg5vVLjRtnWd8bB+vEDfCz0QBu3Fz0jUQ0RHrvChHAPkz9fvzY/QhhV6vKz2ld56r0aDp3eQQdTjAlMQtuwoZm2H3tyx8oPaPzf/Vvrh/7q6lJmvn5+o34UQgNmkBi/vu7dtw+///Wm8f9CcNuOAIqNNJQIiZl7qwZA0LRdtrSSTsLqO00C3kKp1eHixhCu34XBoWQKBVjVvWGbMvD7JS/XB+uOADntqf2wFuAGj0IRMQV8tKSRjeBvmqPEWWI99ImtURba9I2sdKg+0ehJY2weuTgYfTIRYD5j7Tc6PtW/KI5Dz1/cxnxCFYt2DpOX17PwTyqsHIR8wowsUI+I8Ag==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JdUj/Gk2; dkim-atps=neutral; spf=pass (client-ip=198.175.65.18; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1766332826; c=relaxed/relaxed;
+	bh=sK5t599nMi0FN+wbtrBnMxUfbuG0tOLHfE9SiH9PK3I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QfE6HcQzZ9wpgemLOHpHWARVwCjNnKpIiZOi0ci7XN6WVEVWMU8PQVRoZmeswSKzCLNDUUKOECJs93CrYdskPH619yqjBX/dLcdiDBbm8tqT/DmkyF0M9FHL6vG8VRLUsK6lcAKHnWz07x+ppeGq+fqbLu31JNuphlC7TmsNweuzmsfkqauMa8nO2Cia0Eq/qeFTay1APKr/mOdBIY5gZbDQ62caLTlrWfZ/3GkYnVAXLJkRR5jpVwsLP0+1HxcNmK7PWT+xrwMPMhOphR28TR7Kv9oADyG6esst/vAQfrZM8yj2O3K2ha6DXL/zMAyg27rNZczKHF3nWwfBtFmVjQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MQ0YrHOh; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=JdUj/Gk2;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MQ0YrHOh;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.18; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dYGcR12GYz2xc8
-	for <linux-erofs@lists.ozlabs.org>; Sat, 20 Dec 2025 18:43:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766216631; x=1797752631;
-  h=date:from:to:cc:subject:message-id;
-  bh=1NDSAFhSdxDRqCIpHRyispy6oGof5umabD+4KVy/L+I=;
-  b=JdUj/Gk2FeHaop8hnNscQfL2bs0D0UqZCA1DfR4zHH4azMkDZqd1UgLa
-   qgS9zg9wWMCPIBXJfyjwTT/xLNelupVTBaq+vjtATiq0Og4fIxoyfeGLa
-   QGfcBsZKA1C9UUU6w4LeLTvvONjmKde0h863x/VE7gNTsBeWlGAO6pnT5
-   quxfe9lWZU/puQJvWDhauMk0XzwOkP3tDoTe5X2AOJF2npCeB/7RLZ62d
-   l9suKtd0YhwEGzyKHO9QKcSQSID1+M5g61cHL388dhB0rwkLgjoOC+zDV
-   arHo2uMz/sQCpj9d+0Q5ti4Frd09SHKd+OTC3/MuqNH2G39NwCu4JWVmn
-   Q==;
-X-CSE-ConnectionGUID: PnurHOiETPCMVLxDJaRQqw==
-X-CSE-MsgGUID: 6r+/6sOzTlK/z8fKdbCnwA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11647"; a="68211665"
-X-IronPort-AV: E=Sophos;i="6.21,162,1763452800"; 
-   d="scan'208";a="68211665"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2025 23:43:46 -0800
-X-CSE-ConnectionGUID: fUvutz5CTc6L10YnyX2vCw==
-X-CSE-MsgGUID: 2c3RbUwWT0yVKs/mWuHryA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,162,1763452800"; 
-   d="scan'208";a="198314245"
-Received: from lkp-server01.sh.intel.com (HELO 0d09efa1b85f) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 19 Dec 2025 23:43:45 -0800
-Received: from kbuild by 0d09efa1b85f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vWrcs-000000004P1-0YmO;
-	Sat, 20 Dec 2025 07:43:42 +0000
-Date: Sat, 20 Dec 2025 15:42:56 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 5da7eab185b4386ce6a909a946fe28c134350253
-Message-ID: <202512201542.p7Po4w6x-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dZ5Zw1pJQz2xQB
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Dec 2025 03:00:20 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1766332812; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=sK5t599nMi0FN+wbtrBnMxUfbuG0tOLHfE9SiH9PK3I=;
+	b=MQ0YrHOhLtzcoNbPOk9ic2++EC8yY3lqDbOARU5KWFKv34v6Dqq4YIH8Gz07YlT/s9dxgHmQFKSjzndWeL2FXFQm7HpFyDCENjPxccK8p8NVl3W8c9obRPqRtnABUTimJlFP9AvQXwePRps0gz6btdr8SG7q0TLFag/zutaPqtg=
+Received: from 30.69.38.206(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WvJ9WZt_1766332801 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 22 Dec 2025 00:00:09 +0800
+Message-ID: <b0a8a71e-f232-4555-9e5b-e62e21b93b5d@linux.alibaba.com>
+Date: Mon, 22 Dec 2025 00:00:00 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -78,67 +48,107 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] erofs: fix unexpected EIO under memory pressure
+To: Junbeom Yeom <junbeom.yeom@samsung.com>, xiang@kernel.org, chao@kernel.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Jaewook Kim <jw5454.kim@samsung.com>,
+ Sungjong Seo <sj1557.seo@samsung.com>
+References: <CGME20251219124044epcas1p3df48558b10b0540c2ea1ec65779c261d@epcas1p3.samsung.com>
+ <20251219124031.2731710-1-junbeom.yeom@samsung.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20251219124031.2731710-1-junbeom.yeom@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 5da7eab185b4386ce6a909a946fe28c134350253  erofs: improve LZ4 error strings
 
-elapsed time: 1474m
 
-configs tested: 46
-configs skipped: 0
+On 2025/12/19 20:40, Junbeom Yeom wrote:
+> erofs readahead could fail with ENOMEM under the memory pressure because
+> it tries to alloc_page with GFP_NOWAIT | GFP_NORETRY, while GFP_KERNEL
+> for a regular read. And if readahead fails (with non-uptodate folios),
+> the original request will then fall back to synchronous read, and
+> `.read_folio()` should return appropriate errnos.
+> 
+> However, in scenarios where readahead and read operations compete,
+> read operation could return an unintended EIO because of an incorrect
+> error propagation.
+> 
+> To resolve this, this patch modifies the behavior so that, when the
+> PCL is for read(which means pcl.besteffort is true), it attempts actual
+> decompression instead of propagating the privios error except initial EIO.
+> 
+> - Page size: 4K
+> - The original size of FileA: 16K
+> - Compress-ratio per PCL: 50% (Uncompressed 8K -> Compressed 4K)
+> [page0, page1] [page2, page3]
+> [PCL0]---------[PCL1]
+> 
+> - functions declaration:
+>    . pread(fd, buf, count, offset)
+>    . readahead(fd, offset, count)
+> - Thread A tries to read the last 4K
+> - Thread B tries to do readahead 8K from 4K
+> - RA, besteffort == false
+> - R, besteffort == true
+> 
+>          <process A>                   <process B>
+> 
+> pread(FileA, buf, 4K, 12K)
+>    do readahead(page3) // failed with ENOMEM
+>    wait_lock(page3)
+>      if (!uptodate(page3))
+>        goto do_read
+>                                 readahead(FileA, 4K, 8K)
+>                                 // Here create PCL-chain like below:
+>                                 // [null, page1] [page2, null]
+>                                 //   [PCL0:RA]-----[PCL1:RA]
+> ...
+>    do read(page3)        // found [PCL1:RA] and add page3 into it,
+>                          // and then, change PCL1 from RA to R
+> ...
+>                                 // Now, PCL-chain is as below:
+>                                 // [null, page1] [page2, page3]
+>                                 //   [PCL0:RA]-----[PCL1:R]
+> 
+>                                   // try to decompress PCL-chain...
+>                                   z_erofs_decompress_queue
+>                                     err = 0;
+> 
+>                                     // failed with ENOMEM, so page 1
+>                                     // only for RA will not be uptodated.
+>                                     // it's okay.
+>                                     err = decompress([PCL0:RA], err)
+> 
+>                                     // However, ENOMEM propagated to next
+>                                     // PCL, even though PCL is not only
+>                                     // for RA but also for R. As a result,
+>                                     // it just failed with ENOMEM without
+>                                     // trying any decompression, so page2
+>                                     // and page3 will not be uptodated.
+>                  ** BUG HERE ** --> err = decompress([PCL1:R], err)
+> 
+>                                     return err as ENOMEM
+> ...
+>      wait_lock(page3)
+>        if (!uptodate(page3))
+>          return EIO      <-- Return an unexpected EIO!
+> ...
+> 
+> Fixes: 2349d2fa02db ("erofs: sunset unneeded NOFAILs")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Jaewook Kim <jw5454.kim@samsung.com>
+> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
+> Signed-off-by: Junbeom Yeom <junbeom.yeom@samsung.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-tested configs:
-alpha          allnoconfig    gcc-15.1.0
-alpha         allyesconfig    gcc-15.1.0
-arc            allnoconfig    gcc-15.1.0
-arc           allyesconfig    clang-22
-arm            allnoconfig    gcc-15.1.0
-arm64         allmodconfig    clang-22
-arm64          allnoconfig    gcc-15.1.0
-csky          allmodconfig    gcc-15.1.0
-csky           allnoconfig    gcc-15.1.0
-hexagon       allmodconfig    gcc-15.1.0
-hexagon        allnoconfig    gcc-15.1.0
-i386          allmodconfig    clang-20
-i386           allnoconfig    gcc-15.1.0
-i386          allyesconfig    clang-20
-loongarch     allmodconfig    clang-22
-loongarch      allnoconfig    gcc-15.1.0
-m68k          allmodconfig    gcc-15.1.0
-m68k           allnoconfig    gcc-15.1.0
-microblaze     allnoconfig    gcc-15.1.0
-microblaze    allyesconfig    gcc-15.1.0
-mips           allnoconfig    gcc-15.1.0
-mips          allyesconfig    gcc-15.1.0
-nios2         allmodconfig    clang-22
-nios2          allnoconfig    clang-22
-openrisc      allmodconfig    clang-22
-openrisc       allnoconfig    clang-22
-parisc         allnoconfig    clang-22
-powerpc        allnoconfig    clang-22
-riscv         allmodconfig    clang-22
-riscv          allnoconfig    clang-22
-s390           allnoconfig    clang-22
-sh            allmodconfig    gcc-15.1.0
-sh             allnoconfig    clang-22
-sparc          allnoconfig    clang-22
-sparc64       allmodconfig    clang-22
-um             allnoconfig    clang-22
-um            allyesconfig    gcc-15.1.0
-x86_64        allmodconfig    clang-20
-x86_64         allnoconfig    clang-22
-x86_64        allyesconfig    clang-20
-x86_64        rhel-9.4-bpf    gcc-14
-x86_64      rhel-9.4-kunit    gcc-14
-x86_64        rhel-9.4-ltp    gcc-14
-x86_64       rhel-9.4-rust    clang-20
-xtensa         allnoconfig    clang-22
-xtensa        allyesconfig    clang-22
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Gao Xiang
 
