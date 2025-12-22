@@ -1,50 +1,57 @@
-Return-Path: <linux-erofs+bounces-1530-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1531-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AF27CD4E50
-	for <lists+linux-erofs@lfdr.de>; Mon, 22 Dec 2025 08:47:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CE3ABCD4EA1
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Dec 2025 08:55:29 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dZVbF6jMBz2xFn;
-	Mon, 22 Dec 2025 18:47:05 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dZVmv1dBGz2xpm;
+	Mon, 22 Dec 2025 18:55:27 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766389625;
-	cv=none; b=NFvASMnWUpfTrLqhzN8q2OnlPxQkZhqs9K25A0vmmi7vDjT8wDzIvy/rHzFXXyyDonQfXdlV6bdrhPxq2hswV3yRm8SV5j2ai9apATt4LI2vU2pAbulo9caCVxyMVjc04CNHBrkFaLSG1JcTkPso8JqnD+HJvizUS6TUXgwlU/sCQESOmdNzhxaS+uchpi3zEK0D3lPesIpgZhF0K9k7fpOJzmXINABxhTxJjNYuFfEDSlN3k+A7/s5d3zu4WCBryafjHSBY0GH2h6i3N2pwWlvUFT8nZd4ICpLUW/40nZhtqWFslbrd+x68KZwSl7AagH9WdlFgExZG1kEva3aicA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.221
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766390127;
+	cv=none; b=k1zUOmKXK2tljYH8cSAt1nOWKzVB5Mzhjgn7iPBhpNGMQmOLoPRXjDj5/LcN2Ta3dJon6ivCliHIlGr7ljoFHGvF2ke6nhuINIXwY35TL1BlIv1gQ86uNp6mnkX48UwYSomHOuWR1DOwV32rYRj4Kfet3TsI6PPnE5+NcOt5u4xDJ6IMsBDUBU0nsZ79D9a7w8QkxdNunMlLaCbNQ8vhd2DjHctSHP8Z3BGgiEqIXoE++643MlveUTzJlUYkYDx74GpHiDqoZRzXHxAWPRBSenhNFkIlGAwrlAkRLal09cBs1I2A2gI7qqWtD4gKsY7HZo4H6HHtmo/Xmavke2fALw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1766389625; c=relaxed/relaxed;
-	bh=Q6om1Wp2psDwTXoGTSxFGwsXGX3BUSA6jyBNuJMffzw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lRE7nrEf/2UENn/yAOm5BgGb4FpvdJrd9j1g9AQpJ7WQb/hqz//goRrI8ZeRpMDIVXWQwD0vs1YC6MtpmeZyaoFTbs9KlZBNzZiceO6dJNWoykRD7CiEgFenFdYttGI/Lvo+zt8XAg9frf7iBc58rdz1j0pFRaMk9uZ+iSyiTNt6asxkMOWEqrvcg/T56oCabSrRGa/qrCtl+kqe2Iy3f0f35GB35VhixcxElIXesoW9CoesBBoMM+8d4Zr/QGHdj/k61190+AhXCJmuWbkrZlHw5fwWifOZBq4AJYMTxkRppmoQlm8o5GVwFi6MkU8sGvN2PIrQyV9vfGLwEyyXBw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=HqREb++c; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1766390127; c=relaxed/relaxed;
+	bh=44bxGW6dS2vZLLTyKlY9Pnbuw6GoVR34QeyINzfiBuo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YbMi7SA3geqeiK95eG4J2dfCdxNwEbzkkeuTHN38DodHIVibi3XLhpheqZJXwTTd50wu6ImwEXMDTKPspcYpQzTNJHwY2280sHbryZq9rHDXk1EMfILq79/XFk07jrpLTEzmApB+ACb9+ydqNdl4RaDj5ZsIjD1Izg3tbX2/UEaacFCm25PtYjLxyVT+c8GTfn5RWBxhKBhb3mZwc1LztIfO+ggIt2e3BntOGf8816xvL+ufKwI9Q9dGZMxQLCt4v9sYFPR/MZ58GdypcXNiLRc7Ysdt5JS2UnuvY149CrvDadEYOu0JYggqkuaXtZ28vqOcbzan41ahNtOekJdgOg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=HgOzAMnX; dkim-atps=neutral; spf=pass (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=HqREb++c;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=HgOzAMnX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dZVbD1j2Fz2xpt
-	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Dec 2025 18:47:02 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1766389618; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=Q6om1Wp2psDwTXoGTSxFGwsXGX3BUSA6jyBNuJMffzw=;
-	b=HqREb++ck1vY66iAfkgVoVe832YDrj7qIaUDhvaDJBxtpJBHaS9KwnOldpM6Ozipc7ZhzLiUo5crChFX7NX1r4qYuf/9G0QLOshYbl5RoQ0kX+tXpSgG1jzAuH9/pHI1GCYNBNKubTbtVnxGdJiMYxMGIjIw7rNbXwQ/WuMr4Us=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WvMyarm_1766389616 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 22 Dec 2025 15:46:57 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 2/2] erofs-utils: mount: add `--disconnect` command
-Date: Mon, 22 Dec 2025 15:46:52 +0800
-Message-ID: <20251222074652.1947729-2-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20251222074652.1947729-1-hsiangkao@linux.alibaba.com>
-References: <20251222074652.1947729-1-hsiangkao@linux.alibaba.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dZVmr2RSzz2xFn
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Dec 2025 18:55:23 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=44bxGW6dS2vZLLTyKlY9Pnbuw6GoVR34QeyINzfiBuo=;
+	b=HgOzAMnXODteD/lglAWUrIhRJOY8KJ/tEEXw42mNhV+UnyACUY4HTM69im4mhoU4vug5brA5d
+	QIOqNaSZIhYZIzjK80ZtBZybDvmjA/1+Fuq0aR6tkos8LhJSNxGgx2jj2RA+WFB9LqqWX1gGGZ3
+	+A0DZj+h/nKh1lOjlFFzKkA=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4dZVj84jcXzRhS6;
+	Mon, 22 Dec 2025 15:52:12 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id AD7E54056C;
+	Mon, 22 Dec 2025 15:55:18 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
+ (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Mon, 22 Dec
+ 2025 15:55:18 +0800
+From: Yifan Zhao <zhaoyifan28@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>
+CC: <hsiangkao@linux.alibaba.com>, <hudson@cyzhu.com>, <jingrui@huawei.com>,
+	<wayne.ma@huawei.com>, <zhaoyifan28@huawei.com>
+Subject: [PATCH] erofs-utils: mount: add manpage and usage info for oci.insecure option
+Date: Mon, 22 Dec 2025 15:54:21 +0800
+Message-ID: <20251222075421.171161-1-zhaoyifan28@huawei.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -57,122 +64,60 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Users can use the new `--disconnect` option to forcibly disconnect or
-abort NBD block devices.
+Add manpage and cmdline usage help for the newly introduced
+`oci.insecure` option in mount.erofs. Also fix an indent error.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
 ---
- mount/main.c | 55 +++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 48 insertions(+), 7 deletions(-)
+ man/mount.erofs.8 | 3 +++
+ mount/main.c      | 3 ++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/man/mount.erofs.8 b/man/mount.erofs.8
+index 6b3a32b..856e07f 100644
+--- a/man/mount.erofs.8
++++ b/man/mount.erofs.8
+@@ -117,6 +117,9 @@ Path to a tarball index file for hybrid tar+OCI mode.
+ .TP
+ .BI "oci.zinfo=" path
+ Path to a gzip zinfo file for random access to gzip-compressed tar layers.
++.TP
++.BI "oci.insecure"
++Use HTTP instead of HTTPS to access the image registry.
+ .SH NOTES
+ .IP \(bu 2
+ EROFS filesystems are read-only by nature. The \fBrw\fR option will be ignored.
 diff --git a/mount/main.c b/mount/main.c
-index b3b2e0fc33e0..693dba2dc78d 100644
+index ed6bcdc..1463dee 100644
 --- a/mount/main.c
 +++ b/mount/main.c
-@@ -51,6 +51,7 @@ enum erofs_backend_drv {
- enum erofsmount_mode {
- 	EROFSMOUNT_MODE_MOUNT,
- 	EROFSMOUNT_MODE_UMOUNT,
-+	EROFSMOUNT_MODE_DISCONNECT,
- 	EROFSMOUNT_MODE_REATTACH,
- };
- 
-@@ -88,13 +89,14 @@ static void usage(int argc, char **argv)
- 		"Manage EROFS filesystem.\n"
- 		"\n"
- 		"General options:\n"
--		" -V, --version		print the version number of mount.erofs and exit\n"
--		" -h, --help		display this help and exit\n"
--		" -o options		comma-separated list of mount options\n"
--		" -t type[.subtype]	filesystem type (and optional subtype)\n"
--		" 			subtypes: fuse, local, nbd\n"
--		" -u 			unmount the filesystem\n"
+@@ -94,7 +94,7 @@ static void usage(int argc, char **argv)
+ 		" -t type[.subtype]	filesystem type (and optional subtype)\n"
+ 		" 			subtypes: fuse, local, nbd\n"
+ 		" -u 			unmount the filesystem\n"
 -		"    --reattach		reattach to an existing NBD device\n"
-+		" -V, --version         print the version number of mount.erofs and exit\n"
-+		" -h, --help            display this help and exit\n"
-+		" -o options            comma-separated list of mount options\n"
-+		" -t type[.subtype]     filesystem type (and optional subtype)\n"
-+		"                       subtypes: fuse, local, nbd\n"
-+		" -u                    unmount the filesystem\n"
-+		"    --disconnect       abort an existing NBD device forcibly\n"
-+		"    --reattach         reattach to an existing NBD device\n"
++		" --reattach		reattach to an existing NBD device\n"
  #ifdef OCIEROFS_ENABLED
  		"\n"
  		"OCI-specific options (with -o):\n"
-@@ -271,6 +273,7 @@ static int erofsmount_parse_options(int argc, char **argv)
- 		{"help", no_argument, 0, 'h'},
- 		{"version", no_argument, 0, 'V'},
- 		{"reattach", no_argument, 0, 512},
-+		{"disconnect", no_argument, 0, 513},
- 		{0, 0, 0, 0},
- 	};
- 	char *dot;
-@@ -316,6 +319,9 @@ static int erofsmount_parse_options(int argc, char **argv)
- 		case 512:
- 			mountcfg.mountmode = EROFSMOUNT_MODE_REATTACH;
- 			break;
-+		case 513:
-+			mountcfg.mountmode = EROFSMOUNT_MODE_DISCONNECT;
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
-@@ -1415,6 +1421,33 @@ err_out:
- 	return err < 0 ? err : 0;
+@@ -105,6 +105,7 @@ static void usage(int argc, char **argv)
+ 		"   oci.password=<pass> password for authentication (optional)\n"
+ 		"   oci.tarindex=<path> path to tarball index file (optional)\n"
+ 		"   oci.zinfo=<path>    path to gzip zinfo file (optional)\n"
++		"   oci.insecure        use HTTP instead of HTTPS (optional)\n"
+ #endif
+ 		, argv[0]);
  }
- 
-+static int erofsmount_disconnect(const char *target)
-+{
-+	int nbdnum, err, fd;
-+	struct stat st;
-+
-+	err = lstat(target, &st);
-+	if (err < 0)
-+		return -errno;
-+
-+	if (!S_ISBLK(st.st_mode) || major(st.st_rdev) != EROFS_NBD_MAJOR)
-+		return -ENOTBLK;
-+
-+	nbdnum = erofs_nbd_get_index_from_minor(minor(st.st_rdev));
-+	err = erofs_nbd_nl_disconnect(nbdnum);
-+	if (err == -EOPNOTSUPP) {
-+		fd = open(target, O_RDWR);
-+		if (fd < 0) {
-+			err = -errno;
-+			goto err_out;
-+		}
-+		err = erofs_nbd_disconnect(fd);
-+		close(fd);
-+	}
-+err_out:
-+	return err < 0 ? err : 0;
-+}
-+
- int main(int argc, char *argv[])
- {
- 	int err;
-@@ -1443,6 +1476,14 @@ int main(int argc, char *argv[])
- 		return err ? EXIT_FAILURE : EXIT_SUCCESS;
- 	}
- 
-+	if (mountcfg.mountmode == EROFSMOUNT_MODE_DISCONNECT) {
-+		err = erofsmount_disconnect(mountcfg.target);
-+		if (err < 0)
-+			fprintf(stderr, "Failed to disconnect %s: %s\n",
-+				mountcfg.target, erofs_strerror(err));
-+		return err ? EXIT_FAILURE : EXIT_SUCCESS;
-+	}
-+
- 	if (mountcfg.backend == EROFSFUSE) {
- 		err = erofsmount_fuse(mountcfg.device, mountcfg.target,
- 				      mountcfg.fstype, mountcfg.full_options);
 -- 
-2.43.5
+2.43.0
 
 
