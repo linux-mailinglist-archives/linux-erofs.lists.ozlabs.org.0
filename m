@@ -1,43 +1,60 @@
-Return-Path: <linux-erofs+bounces-1524-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1525-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 711D1CD42A2
-	for <lists+linux-erofs@lfdr.de>; Sun, 21 Dec 2025 17:00:29 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EB92FCD4DA5
+	for <lists+linux-erofs@lfdr.de>; Mon, 22 Dec 2025 08:17:52 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dZ5Zy5vMDz2yFQ;
-	Mon, 22 Dec 2025 03:00:26 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dZTxS6Hbzz2xl0;
+	Mon, 22 Dec 2025 18:17:48 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766332826;
-	cv=none; b=ZJSBy1BpLVFmTXuIYf/eGOo4uDhBo+6m8Sp20LhCaj5/ZkuVXVt+zzGZ3kiMv2bL0js94w0BTqvHsicLhwHSuxu1qpbeFAgEMhDI+7t/+PwusdxRQgrdYK1Xsgui9Un7kyVCsFUDakgE1eGLr7LMe1fPIWQDWrFQVNPm/2cj++YogV60QZ03lo4ZXavPKYvGZLK22zCLTa3U/i+j5/xw+xwprngVBpjH25QjjFtarMexZlmnjg2Re4TdIHvxP93/4zW2GhaejF7/kP7mgF6OBrF11TxmDG7SZDU4QoprO09kM2ET5uNqiMBtBjzs+cRg96v9PdefWkTE3tVpvGjAyg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.221
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766387868;
+	cv=none; b=kcSBSvlsfP9PNROKQ0ZvUbesAUhNbn8WLDoGqd025BepLEDJkp2+A1GuL33xrihHSW9+A3yu2mP/QqliyXe/K6FmX0syNKsLJQJUPH7FdaN7lwHheRiBPIl+HcBHlB8QQrbkghKDpAUwk6tekenbHbjNMGpKcMYzGljoDvZ4f1IjWD6uXEkicssvbqNh0PPCQJ4CbQqtAhH7a7xTYzEpo0eWCmaIyy16jc58/PP/kS/Ymss2ouyAioBRw8QHDYeLDtwjlWRGEz4eClTS2B57AF1NgzHdZvlxtbITYSJNU+CBXfo6XYmepFC76guwidd9M47Hq8iQdKbMdEqw1f7t6A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1766332826; c=relaxed/relaxed;
-	bh=sK5t599nMi0FN+wbtrBnMxUfbuG0tOLHfE9SiH9PK3I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QfE6HcQzZ9wpgemLOHpHWARVwCjNnKpIiZOi0ci7XN6WVEVWMU8PQVRoZmeswSKzCLNDUUKOECJs93CrYdskPH619yqjBX/dLcdiDBbm8tqT/DmkyF0M9FHL6vG8VRLUsK6lcAKHnWz07x+ppeGq+fqbLu31JNuphlC7TmsNweuzmsfkqauMa8nO2Cia0Eq/qeFTay1APKr/mOdBIY5gZbDQ62caLTlrWfZ/3GkYnVAXLJkRR5jpVwsLP0+1HxcNmK7PWT+xrwMPMhOphR28TR7Kv9oADyG6esst/vAQfrZM8yj2O3K2ha6DXL/zMAyg27rNZczKHF3nWwfBtFmVjQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MQ0YrHOh; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1766387868; c=relaxed/relaxed;
+	bh=5bnqP9dmkSA6GRzIvKlb1m5HaG/eJyN778wqyIe7iXQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AGa+hqtbOePWe3vSPdGrOH8krcH4CqiwdfGnZt8hQ4+3lCRdrCP/hv3L2nGyE/tJ1kLZ5JAScbQ7ImhNrfDzs+gbkGnEQl9MDy1guSvL4vhPH2vLmlgBccGKbzLIy1nQB7Z7y/BZ+FDnz3pBBEfn6lBp5rd4TpNP1l5XyLeZA0qmfruKqMFGkoPPUFzUauWlshM0UF2wdOEKL6IxLz+8RLe53pWzkLBuKIP9rV3m3h3FPqWx+Iibo4CzadmJh+dDK20DbicIo10/ur82yqBGx2QixNc/Io2+knZY4NsDh+3IJ5aIylnIZXo8m06q2psFtXl4vtZBDK2dzjC2bSQpAQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=cNn7rrOz; dkim-atps=neutral; spf=pass (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MQ0YrHOh;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=cNn7rrOz;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dZ5Zw1pJQz2xQB
-	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Dec 2025 03:00:20 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1766332812; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=sK5t599nMi0FN+wbtrBnMxUfbuG0tOLHfE9SiH9PK3I=;
-	b=MQ0YrHOhLtzcoNbPOk9ic2++EC8yY3lqDbOARU5KWFKv34v6Dqq4YIH8Gz07YlT/s9dxgHmQFKSjzndWeL2FXFQm7HpFyDCENjPxccK8p8NVl3W8c9obRPqRtnABUTimJlFP9AvQXwePRps0gz6btdr8SG7q0TLFag/zutaPqtg=
-Received: from 30.69.38.206(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WvJ9WZt_1766332801 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 22 Dec 2025 00:00:09 +0800
-Message-ID: <b0a8a71e-f232-4555-9e5b-e62e21b93b5d@linux.alibaba.com>
-Date: Mon, 22 Dec 2025 00:00:00 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dZTxP3G0fz2xg3
+	for <linux-erofs@lists.ozlabs.org>; Mon, 22 Dec 2025 18:17:42 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=5bnqP9dmkSA6GRzIvKlb1m5HaG/eJyN778wqyIe7iXQ=;
+	b=cNn7rrOzsGMHa2Q2lOAPyzDCF1hDYzGGQiFVpnbdMbt0LSW+NmxbboFvXbxV93datDh8y9DXe
+	lvPD9D424xEyvPvudXY8KoJ0Ko1BmhQE5N+2Ir3kdi4IMUZyu2rMuHxarts4C9cBlfpEmDzaFFc
+	AZdSPKlyi0EobOb7iUhfvnM=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4dZTsZ6qWkzRhVs;
+	Mon, 22 Dec 2025 15:14:26 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id F0B7A40363;
+	Mon, 22 Dec 2025 15:17:32 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
+ (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Mon, 22 Dec
+ 2025 15:17:32 +0800
+From: Yifan Zhao <zhaoyifan28@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>
+CC: <hsiangkao@linux.alibaba.com>, <hudson@cyzhu.com>, <jingrui@huawei.com>,
+	<wayne.ma@huawei.com>, <zhaoyifan28@huawei.com>
+Subject: [PATCH v4] erofs-utils: mount: add manpage and usage information
+Date: Mon, 22 Dec 2025 15:16:35 +0800
+Message-ID: <20251222071635.169262-1-zhaoyifan28@huawei.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251130033516.86065-1-hudson@cyzhu.com>
+References: <20251130033516.86065-1-hudson@cyzhu.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,106 +66,347 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs: fix unexpected EIO under memory pressure
-To: Junbeom Yeom <junbeom.yeom@samsung.com>, xiang@kernel.org, chao@kernel.org
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Jaewook Kim <jw5454.kim@samsung.com>,
- Sungjong Seo <sj1557.seo@samsung.com>
-References: <CGME20251219124044epcas1p3df48558b10b0540c2ea1ec65779c261d@epcas1p3.samsung.com>
- <20251219124031.2731710-1-junbeom.yeom@samsung.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20251219124031.2731710-1-junbeom.yeom@samsung.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+From: Chengyu Zhu <hudsonzhu@tencent.com>
 
+Add manpage, command-line usage help, and README for
+mount.erofs tool.
 
-On 2025/12/19 20:40, Junbeom Yeom wrote:
-> erofs readahead could fail with ENOMEM under the memory pressure because
-> it tries to alloc_page with GFP_NOWAIT | GFP_NORETRY, while GFP_KERNEL
-> for a regular read. And if readahead fails (with non-uptodate folios),
-> the original request will then fall back to synchronous read, and
-> `.read_folio()` should return appropriate errnos.
-> 
-> However, in scenarios where readahead and read operations compete,
-> read operation could return an unintended EIO because of an incorrect
-> error propagation.
-> 
-> To resolve this, this patch modifies the behavior so that, when the
-> PCL is for read(which means pcl.besteffort is true), it attempts actual
-> decompression instead of propagating the privios error except initial EIO.
-> 
-> - Page size: 4K
-> - The original size of FileA: 16K
-> - Compress-ratio per PCL: 50% (Uncompressed 8K -> Compressed 4K)
-> [page0, page1] [page2, page3]
-> [PCL0]---------[PCL1]
-> 
-> - functions declaration:
->    . pread(fd, buf, count, offset)
->    . readahead(fd, offset, count)
-> - Thread A tries to read the last 4K
-> - Thread B tries to do readahead 8K from 4K
-> - RA, besteffort == false
-> - R, besteffort == true
-> 
->          <process A>                   <process B>
-> 
-> pread(FileA, buf, 4K, 12K)
->    do readahead(page3) // failed with ENOMEM
->    wait_lock(page3)
->      if (!uptodate(page3))
->        goto do_read
->                                 readahead(FileA, 4K, 8K)
->                                 // Here create PCL-chain like below:
->                                 // [null, page1] [page2, null]
->                                 //   [PCL0:RA]-----[PCL1:RA]
-> ...
->    do read(page3)        // found [PCL1:RA] and add page3 into it,
->                          // and then, change PCL1 from RA to R
-> ...
->                                 // Now, PCL-chain is as below:
->                                 // [null, page1] [page2, page3]
->                                 //   [PCL0:RA]-----[PCL1:R]
-> 
->                                   // try to decompress PCL-chain...
->                                   z_erofs_decompress_queue
->                                     err = 0;
-> 
->                                     // failed with ENOMEM, so page 1
->                                     // only for RA will not be uptodated.
->                                     // it's okay.
->                                     err = decompress([PCL0:RA], err)
-> 
->                                     // However, ENOMEM propagated to next
->                                     // PCL, even though PCL is not only
->                                     // for RA but also for R. As a result,
->                                     // it just failed with ENOMEM without
->                                     // trying any decompression, so page2
->                                     // and page3 will not be uptodated.
->                  ** BUG HERE ** --> err = decompress([PCL1:R], err)
-> 
->                                     return err as ENOMEM
-> ...
->      wait_lock(page3)
->        if (!uptodate(page3))
->          return EIO      <-- Return an unexpected EIO!
-> ...
-> 
-> Fixes: 2349d2fa02db ("erofs: sunset unneeded NOFAILs")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Jaewook Kim <jw5454.kim@samsung.com>
-> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
-> Signed-off-by: Junbeom Yeom <junbeom.yeom@samsung.com>
+Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
+Link: https://lore.kernel.org/r/20251202110315.14656-1-hudson@cyzhu.com
+[ Gao Xiang: change the section number of the manpage to 8. ]
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+Hi Xiang,
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Note that you have merged this patch. Could you consider merging this
+patch instead for the experimental branch? The only difference is that
+it also covers the newly added `oci.insecure` documents, see below.
 
 Thanks,
-Gao Xiang
+Yifan Zhao
+
+Interdiff against experimental:
+  diff --git a/man/mount.erofs.8 b/man/mount.erofs.8
+  index 6b3a32b..856e07f 100644
+  --- a/man/mount.erofs.8
+  +++ b/man/mount.erofs.8
+  @@ -117,6 +117,9 @@ Path to a tarball index file for hybrid tar+OCI mode.
+   .TP
+   .BI "oci.zinfo=" path
+   Path to a gzip zinfo file for random access to gzip-compressed tar layers.
+  +.TP
+  +.BI "oci.insecure"
+  +Use HTTP instead of HTTPS to access the image registry.
+   .SH NOTES
+   .IP \(bu 2
+   EROFS filesystems are read-only by nature. The \fBrw\fR option will be ignored.
+  diff --git a/mount/main.c b/mount/main.c
+  index ed6bcdc..6652cf5 100644
+  --- a/mount/main.c
+  +++ b/mount/main.c
+  @@ -105,6 +105,7 @@ static void usage(int argc, char **argv)
+   		"   oci.password=<pass> password for authentication (optional)\n"
+   		"   oci.tarindex=<path> path to tarball index file (optional)\n"
+   		"   oci.zinfo=<path>    path to gzip zinfo file (optional)\n"
+  +		"   oci.insecure        use HTTP instead of HTTPS (optional)\n"
+   #endif
+   		, argv[0]);
+   }
+
+ README            |  26 +++++++++
+ man/Makefile.am   |   2 +-
+ man/mount.erofs.8 | 145 ++++++++++++++++++++++++++++++++++++++++++++++
+ mount/main.c      |  42 +++++++++++++-
+ 4 files changed, 213 insertions(+), 2 deletions(-)
+ create mode 100644 man/mount.erofs.8
+
+diff --git a/README b/README
+index b885fa8..1ca376f 100644
+--- a/README
++++ b/README
+@@ -4,6 +4,7 @@ erofs-utils
+ Userspace tools for EROFS filesystem, currently including:
+ 
+   mkfs.erofs    filesystem formatter
++  mount.erofs   mount helper for EROFS
+   erofsfuse     FUSE daemon alternative
+   dump.erofs    filesystem analyzer
+   fsck.erofs    filesystem compatibility & consistency checker as well
+@@ -206,6 +207,31 @@ git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b obsoleted
+ PLEASE NOTE: This version is highly _NOT recommended_ now.
+ 
+ 
++mount.erofs
++-----------
++
++mount.erofs is a mount helper for EROFS filesystem, which can be used
++to mount EROFS images with various backends including direct kernel
++mount, FUSE-based mount, and NBD for remote sources like OCI images.
++
++How to mount an EROFS image
++~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
++To mount an EROFS image directly:
++ $ mount.erofs foo.erofs /mnt
++
++To mount with FUSE backend:
++ $ mount.erofs -t erofs.fuse foo.erofs /mnt
++
++To mount from OCI image with NBD backend:
++ $ mount.erofs -t erofs.nbd -o oci.blob=sha256:... <IMAGE>:<TAG> mnt
++
++To unmount an EROFS filesystem:
++ $ mount.erofs -u mnt
++
++For more details, see mount.erofs(8) manpage.
++
++
+ erofsfuse
+ ---------
+ 
+diff --git a/man/Makefile.am b/man/Makefile.am
+index 4628b85..b76b457 100644
+--- a/man/Makefile.am
++++ b/man/Makefile.am
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0+
+ 
+-dist_man_MANS = mkfs.erofs.1 dump.erofs.1 fsck.erofs.1
++dist_man_MANS = mkfs.erofs.1 dump.erofs.1 fsck.erofs.1 mount.erofs.8
+ 
+ EXTRA_DIST = erofsfuse.1
+ if ENABLE_FUSE
+diff --git a/man/mount.erofs.8 b/man/mount.erofs.8
+new file mode 100644
+index 0000000..856e07f
+--- /dev/null
++++ b/man/mount.erofs.8
+@@ -0,0 +1,145 @@
++.\" Copyright (c) 2025 Chengyu Zhu <hudsonzhu@tencent.com>
++.\"
++.TH MOUNT.EROFS 8
++.SH NAME
++mount.erofs \- manage EROFS filesystem
++.SH SYNOPSIS
++\fBmount.erofs\fR [\fIOPTIONS\fR] \fISOURCE\fR \fIMOUNTPOINT\fR
++.br
++\fBmount.erofs\fR \fB\-u\fR \fITARGET\fR
++.br
++\fBmount.erofs\fR \fB\-\-reattach\fR \fITARGET\fR
++.SH DESCRIPTION
++EROFS is an enhanced lightweight read-only filesystem with modern designs
++for scenarios which need high-performance read-only requirements.
++.PP
++\fBmount.erofs\fR is used to mount an EROFS filesystem from \fISOURCE\fR
++(which can be an image file or block device) to a \fIMOUNTPOINT\fR. It supports multiple backends including
++direct kernel mount, FUSE-based mount, and NBD (Network Block Device) for
++remote sources like OCI images.
++.SH OPTIONS
++.TP
++.B \-h, \-\-help
++Display help message and exit.
++.TP
++.B \-V, \-\-version
++Display version information and exit.
++.TP
++.BI "\-o " options
++Comma-separated list of mount options. See \fBMOUNT OPTIONS\fR below.
++.TP
++.BI "\-t " type[.subtype]
++Specify the filesystem type and optional subtype. The type should be
++\fBerofs\fR. Available subtypes are:
++.RS
++.TP
++.B fuse
++Use FUSE-based mount via \fBerofsfuse\fR.
++.TP
++.B local
++Force direct kernel mount (default if available).
++.TP
++.B nbd
++Use NBD backend for remote sources (e.g., OCI images).
++.RE
++.TP
++.B \-u
++Unmount the filesystem at the specified target.
++.TP
++.B \-\-reattach
++Reattach to an existing NBD device and restart the NBD service.
++.SH MOUNT OPTIONS
++Standard mount options:
++.TP
++.B ro
++Mount the filesystem read-only (default).
++.TP
++.B rw
++Mount the filesystem read-write (not supported for EROFS).
++.TP
++.B nosuid
++Do not honor set-user-ID and set-group-ID bits.
++.TP
++.B suid
++Honor set-user-ID and set-group-ID bits (default).
++.TP
++.B nodev
++Do not interpret character or block special devices.
++.TP
++.B dev
++Interpret character or block special devices (default).
++.TP
++.B noexec
++Do not allow direct execution of any binaries.
++.TP
++.B exec
++Allow execution of binaries (default).
++.TP
++.B noatime
++Do not update inode access times.
++.TP
++.B atime
++Update inode access times (default).
++.TP
++.B nodiratime
++Do not update directory inode access times.
++.TP
++.B diratime
++Update directory inode access times (default).
++.TP
++.B relatime
++Update inode access times relative to modify or change time.
++.TP
++.B norelatime
++Do not use relative atime updates.
++.SH OCI-SPECIFIC OPTIONS
++The following OCI-specific options are available:
++.TP
++.BI "oci.blob=" digest
++Specify the OCI blob digest to mount. The digest should be in the format
++\fBsha256:...\fR. Cannot be used together with \fBoci.layer\fR.
++.TP
++.BI "oci.layer=" index
++Specify the OCI layer index to mount (0-based). Cannot be used together
++with \fBoci.blob\fR.
++.TP
++.BI "oci.platform=" platform
++Specify the target platform (default: \fBlinux/amd64\fR).
++.TP
++.BI "oci.username=" username
++Username for OCI registry authentication.
++.TP
++.BI "oci.password=" password
++Password for OCI registry authentication.
++.TP
++.BI "oci.tarindex=" path
++Path to a tarball index file for hybrid tar+OCI mode.
++.TP
++.BI "oci.zinfo=" path
++Path to a gzip zinfo file for random access to gzip-compressed tar layers.
++.TP
++.BI "oci.insecure"
++Use HTTP instead of HTTPS to access the image registry.
++.SH NOTES
++.IP \(bu 2
++EROFS filesystems are read-only by nature. The \fBrw\fR option will be ignored.
++.IP \(bu 2
++When mounting OCI images via NBD, the mount process creates a background
++daemon to serve the NBD device. The daemon will automatically clean up when
++the filesystem is unmounted.
++.IP \(bu 2
++The \fB\-\-reattach\fR option is useful for recovering NBD mounts after a
++system crash or when the NBD daemon was terminated unexpectedly.
++.IP \(bu 2
++Kernel direct mount is used when mounting a regular file without
++specifying a backend type. If file-based mounts is unsupported,
++loop devices will be set up automatically.
++.SH SEE ALSO
++.BR mkfs.erofs (1),
++.BR erofsfuse (1),
++.BR dump.erofs (1),
++.BR fsck.erofs (1),
++.BR mount (8),
++.BR umount (8)
++.SH AVAILABILITY
++\fBmount.erofs\fR is part of erofs-utils.
+diff --git a/mount/main.c b/mount/main.c
+index 893daf9..6652cf5 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -82,6 +82,39 @@ static struct erofs_nbd_source {
+ 	};
+ } nbdsrc;
+ 
++static void usage(int argc, char **argv)
++{
++	printf("Usage: %s [OPTIONS] SOURCE [MOUNTPOINT]\n"
++		"Manage EROFS filesystem.\n"
++		"\n"
++		"General options:\n"
++		" -V, --version		print the version number of mount.erofs and exit\n"
++		" -h, --help		display this help and exit\n"
++		" -o options		comma-separated list of mount options\n"
++		" -t type[.subtype]	filesystem type (and optional subtype)\n"
++		" 			subtypes: fuse, local, nbd\n"
++		" -u 			unmount the filesystem\n"
++		"    --reattach		reattach to an existing NBD device\n"
++#ifdef OCIEROFS_ENABLED
++		"\n"
++		"OCI-specific options (with -o):\n"
++		"   oci.blob=<digest>   specify OCI blob digest (sha256:...)\n"
++		"   oci.layer=<index>   specify OCI layer index\n"
++		"   oci.platform=<name> specify platform (default: linux/amd64)\n"
++		"   oci.username=<user> username for authentication (optional)\n"
++		"   oci.password=<pass> password for authentication (optional)\n"
++		"   oci.tarindex=<path> path to tarball index file (optional)\n"
++		"   oci.zinfo=<path>    path to gzip zinfo file (optional)\n"
++		"   oci.insecure        use HTTP instead of HTTPS (optional)\n"
++#endif
++		, argv[0]);
++}
++
++static void version(void)
++{
++	printf("mount.erofs (erofs-utils) %s\n", cfg.c_version);
++}
++
+ #ifdef OCIEROFS_ENABLED
+ static int erofsmount_parse_oci_option(const char *option)
+ {
+@@ -237,6 +270,7 @@ static int erofsmount_parse_options(int argc, char **argv)
+ {
+ 	static const struct option long_options[] = {
+ 		{"help", no_argument, 0, 'h'},
++		{"version", no_argument, 0, 'V'},
+ 		{"reattach", no_argument, 0, 512},
+ 		{0, 0, 0, 0},
+ 	};
+@@ -245,9 +279,15 @@ static int erofsmount_parse_options(int argc, char **argv)
+ 
+ 	nbdsrc.ocicfg.layer_index = -1;
+ 
+-	while ((opt = getopt_long(argc, argv, "Nfno:st:uv",
++	while ((opt = getopt_long(argc, argv, "VNfhno:st:uv",
+ 				  long_options, NULL)) != -1) {
+ 		switch (opt) {
++		case 'h':
++			usage(argc, argv);
++			exit(0);
++		case 'V':
++			version();
++			exit(0);
+ 		case 'o':
+ 			mountcfg.full_options = optarg;
+ 			mountcfg.flags =
+-- 
+2.43.0
+
 
