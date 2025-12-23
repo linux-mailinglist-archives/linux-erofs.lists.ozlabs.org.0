@@ -1,46 +1,46 @@
-Return-Path: <linux-erofs+bounces-1563-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1562-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B044CD8B76
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Dec 2025 11:06:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 10C64CD8B73
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Dec 2025 11:06:00 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4db9d148KBz2yFY;
+	by lists.ozlabs.org (Postfix) with ESMTP id 4db9d10ynhz2yFW;
 	Tue, 23 Dec 2025 21:05:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.223
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.221
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766484357;
-	cv=none; b=I3K7C4E1edg3ubTqIARBRNHdQjlSOPEW02Mjlo1Xv36buw/jeka+cMIFt/2nuuhGMczrv8itkIpNxBgxqENfj9nNAh/vh+mAhKZNi5I4vfY80H4OU1COGqaR6eaxsCyjRg2/Vjs2vM/wdDr5Cq4e9TkDg14jpbmHkSyZx+17NqRZnkdCM7hppxOHL55k8pfT2fWPnvjvIx8zwXRu7Mad8CstdWSEkbjyByuOHSnCQIX1cZFNanPd3yqy1TNYgfS/7De0CHArE+OamnQ6kycDtB4cC7wTaSwT4LI8necvZ4hHi+tgrGYIN6ouMkRs2awRgiorrtf3fNgS8UpqikRy5g==
+	cv=none; b=XuV/qOzIPojA7ScMPrC1euy7cGvVHhLEVoyFRXma4rFzGGQQF0nY2xD2AqD0kgRmivWQ6OILtmeNd/rUVQkcsQL3zNrTVasN/KlfaHrSj61EnATgOyNANkp7OMqnBPMraujnYGQGTloz3rCqiKtHHvn1adbCil8l51+4VphR+r6hN2CWD73FjeNnsPSBYCuz4dQPJdtus5drQP1m9qp+Wb/IpVqrj2zHdC7znPPs7F0MH1MwVeETYlW/nki//h6HYURk6aKHH4ahB8CVO8GoxMb8XXTRfNRzso8GuzWPrFgf73RT2ZZ9CSeBQo6iWlxginxhXv5t4TJbzBmjTRDapw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1766484357; c=relaxed/relaxed;
-	bh=5TMo1L7ZFy5gjv1HGjj1aH6PN49wPWFHWPQ0jN/4uLs=;
+	bh=WFuNpb3+fgZ5ZvCZ8ijiTpmzk1TpgTF6uxHNGhljDrE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jyGQN+NxnCt3fHnC9vkxMSvmbPH153S2qHrpQfTHPqQzrVVVDiOllWA3sZ5/9ERfFpoqW2eDCIOIzogeD6hMwWg15++fZmv5yO3pW7BOZcvaNUQZD8nojMpTAPvP6sd9GT+emWCL9OrimYYqgx/67p6XhIk5osRZhv4bgBuNlEyZtskFzU7ZNzUdpi+t2eBLDoMwYjqPBnnkyws8zRbjlmaS4lKqWnN4/d1mEDGoce/Is1+YMr2MkhomQKSMSFvPCLvPOvv9aGytcIjhPnfIPuxq6ljVbiLsrVwQVT7WHWA14/K8duEhLShbrBqOs2/IIFu6RfVVzU7JgeHFZ4j28g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=KMiQ+WLA; dkim-atps=neutral; spf=pass (client-ip=113.46.200.223; helo=canpmsgout08.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+	 MIME-Version:Content-Type; b=IABNWn6knv2DRs4VXaKghnKuYqxDr4t3UkzpIkYhJReYsEvsJk9SFrFJo/MhxfsryL/t6d2E1C5rvo45tUe2FM8v2LhO+UO78DVfyObDzyctV7foXFnRqsEfNkGeobjMRRHha8cj/QGFKskeNwaSULo41Qi2SfwrTGyL/hVyb++u24GUEjI2jF/i2+WaJUsNqBt2fCKjcmsWcEKgD+vJJRvrr2koV97X5ciSV2hQgM/wFeEWvop7gYznYwF3ppARBqxTiHgrkOx8qTws3O269440Qkh4UNkHoTnTDWV25asC9+uDWinok5W/icmZKbI7MNNYDNHUHWGaG67CJYZmHw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=NFQJnZD7; dkim-atps=neutral; spf=pass (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=KMiQ+WLA;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=NFQJnZD7;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.223; helo=canpmsgout08.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4db9d05ByHz2xlP
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4db9d028xvz2xQK
 	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Dec 2025 21:05:56 +1100 (AEDT)
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=5TMo1L7ZFy5gjv1HGjj1aH6PN49wPWFHWPQ0jN/4uLs=;
-	b=KMiQ+WLAaG+eSgwcoFLnnvhCSpakYB6f3OKxTcLs0/IJRKiK0bzVqzoRkAFxY4Ry8lpK2hoS3
-	hPLfP+dv7adHmpP1S9XJg9frk5WpjdizCDXLLeLdxj1HyDRL+Poqlz6ewmYeAkTSgnqHr+5IAh/
-	+clcQEoJ7eQvWITp8KNkCHk=
-Received: from mail.maildlp.com (unknown [172.19.163.127])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4db9YJ5vNPzmVVR
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Dec 2025 18:02:44 +0800 (CST)
+	bh=WFuNpb3+fgZ5ZvCZ8ijiTpmzk1TpgTF6uxHNGhljDrE=;
+	b=NFQJnZD7mca4V7dmwrPyow9V/dWTJ87srEb18bV41ofhayq09NhebmGx8wZfNQCcZ57RW1qw1
+	VsYgVs27AFxlF4klERVumh9PR58cu88Db5vlkGdQpiqvD6jjiBVy52DZoaa7TzB0ftvx/yT5uV0
+	ViEg9cgzkpNOcPknpOoRJkA=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4db9YK4KRPzRhRm
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Dec 2025 18:02:45 +0800 (CST)
 Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
-	by mail.maildlp.com (Postfix) with ESMTPS id C41844056B
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Dec 2025 18:05:51 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 4C92040567
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Dec 2025 18:05:52 +0800 (CST)
 Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
  (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 23 Dec
@@ -48,9 +48,9 @@ Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
 From: Yifan Zhao <zhaoyifan28@huawei.com>
 To: <linux-erofs@lists.ozlabs.org>
 CC: <jingrui@huawei.com>, <wayne.ma@huawei.com>, <zhaoyifan28@huawei.com>
-Subject: [PATCH 3/5] erofs-utils: lib: oci: restrict `ocierofs_io_open()` to single-layer images
-Date: Tue, 23 Dec 2025 18:04:50 +0800
-Message-ID: <20251223100452.229684-2-zhaoyifan28@huawei.com>
+Subject: [PATCH 4/5] erofs-utils: mount: gracefully exit when `erofsmount_nbd()` encounts an error
+Date: Tue, 23 Dec 2025 18:04:51 +0800
+Message-ID: <20251223100452.229684-3-zhaoyifan28@huawei.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251223100452.229684-1-zhaoyifan28@huawei.com>
 References: <20251223100452.229684-1-zhaoyifan28@huawei.com>
@@ -65,8 +65,8 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-Originating-IP: [10.50.159.234]
 X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
  kwepemr100010.china.huawei.com (7.202.195.125)
@@ -75,72 +75,56 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-When mounting an OCI image with `mount.erofs -t erofs.nbd` without
-specifying either `oci.layer=` or `oci.blob=`, a segfault occurs in the
-`ocierofs_download_blob_range() → ocierofs_find_layer_by_digest()` call
-path due to an empty `ctx->blob_digest`.
+If the main process of `erofsmount_nbd()` encounters an error after the
+nbd device has been successfully set up, it fails to disconnect it
+before exiting, resulting in the subprocess not being cleaned up and
+keeping its connection with NBD device.
 
-As mounting multi-layer OCI images is not yet supported, let's exit
-early in `ocierofs_io_open()` with an error in this case.
+This patch resolves the issue by disconnecting NBD device before exiting
+on error.
 
 Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
 ---
- lib/remotes/oci.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+Note:
+- I believe directly killing the child process is unsafe, as it may leave
+in-flight NBD requests from the kernel unhandled, causing soft lockup.
+- And I believe using nbdpath here is safe, as the child process maintains
+the NBD device connection throughout, preventing concurrent access by other
+actors.
 
-diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index f29c344..88c1282 100644
---- a/lib/remotes/oci.c
-+++ b/lib/remotes/oci.c
-@@ -1468,7 +1468,7 @@ static struct erofs_vfops ocierofs_io_vfops = {
- 	.close = ocierofs_io_close,
- };
+ mount/main.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/mount/main.c b/mount/main.c
+index 2a21979..d2d4815 100644
+--- a/mount/main.c
++++ b/mount/main.c
+@@ -1287,10 +1287,23 @@ static int erofsmount_nbd(struct erofs_nbd_source *source,
  
--int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cfg)
-+int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *config)
- {
- 	struct ocierofs_ctx *ctx;
- 	struct ocierofs_iostream *oci_iostream = NULL;
-@@ -1478,17 +1478,20 @@ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cf
- 	if (!ctx)
- 		return -ENOMEM;
- 
--	err = ocierofs_init(ctx, cfg);
--	if (err) {
--		free(ctx);
--		return err;
-+	err = ocierofs_init(ctx, config);
-+	if (err)
-+		goto out;
+ 	if (!err) {
+ 		err = mount(nbdpath, mountpoint, fstype, flags, options);
+-		if (err < 0)
++		if (err < 0) {
+ 			err = -errno;
++			if (msg.is_netlink) {
++				erofs_nbd_nl_disconnect(msg.nbdnum);
++			} else {
++				int nbdfd;
 +
-+	if (!ctx->blob_digest) {
-+		erofs_err("please specify exactly one layer (use blob= or layer= option)");
-+		err = -EINVAL;
-+		goto out;
- 	}
++				nbdfd = open(nbdpath, O_RDWR);
++				if (nbdfd > 0) {
++					erofs_nbd_disconnect(nbdfd);
++					close(nbdfd);
++				}
++			}
++			return err;
++		}
  
- 	oci_iostream = calloc(1, sizeof(*oci_iostream));
- 	if (!oci_iostream) {
--		ocierofs_ctx_cleanup(ctx);
--		free(ctx);
--		return -ENOMEM;
-+		err = -ENOMEM;
-+		goto out;
- 	}
+-		if (!err && msg.is_netlink) {
++		if (msg.is_netlink) {
+ 			id = erofs_nbd_get_identifier(msg.nbdnum);
  
- 	oci_iostream->ctx = ctx;
-@@ -1496,6 +1499,11 @@ int ocierofs_io_open(struct erofs_vfile *vfile, const struct ocierofs_config *cf
- 	*vfile = (struct erofs_vfile){.ops = &ocierofs_io_vfops};
- 	*(struct ocierofs_iostream **)vfile->payload = oci_iostream;
- 	return 0;
-+
-+out:
-+	ocierofs_ctx_cleanup(ctx);
-+	free(ctx);
-+	return err;
- }
- 
- char *ocierofs_encode_userpass(const char *username, const char *password)
+ 			err = IS_ERR(id) ? PTR_ERR(id) :
 -- 
 2.43.0
 
