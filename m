@@ -1,47 +1,72 @@
-Return-Path: <linux-erofs+bounces-1567-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1568-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9A1DCD8BD9
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Dec 2025 11:12:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 94BB3CD954C
+	for <lists+linux-erofs@lfdr.de>; Tue, 23 Dec 2025 13:42:06 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4db9mg3gKJz2yF1;
-	Tue, 23 Dec 2025 21:12:35 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dbF565zF3z2xlP;
+	Tue, 23 Dec 2025 23:42:02 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766484755;
-	cv=none; b=lWSrBu8Udva4bsofQ5YbYcsjXe2fleC7uVJziHcdH+25ZFL/rzYV8WbLUYTnA0fQJQTm880mFa/JGcBbjGFoKv/C0/1PhTC5xjG0fycprNKQUjuoXFy01tk/2wz1mRb8gIaOs4zdfT+rfx1jzWOCe0aJ0CSlzcnjsGi7Fw2XjF/2J15UVJeowkPwKaW0I7OiuCZy/P5KSpSR2aGoQRsYzGAKSTurq1BqCR4np4dkeG9R6hy5hSAlISSKdMtr/t1eatHXhy+YhCQxtmnZTsy4SnFPr1lMEfHd2CUAeKT2/9IZNcI14dQcDaqz6jStYGUQ6j0Iff2mmhUt+9TjIAMZkA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.208.51
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766493722;
+	cv=none; b=A5vwbjSQ+E2vbNoXzdW+iiO43prH9nHP4/AM1WhN+/8jMb1a+Knh06f6bfVNERKPpD2uizJsgshEjiarfDJSSE2AIlnG5YoENWbeuThwMT4JFMALNy5ezVrGfhMpgdIHTDV5eM1IaVJ4hkCIswGzjn9P/1zCeYLsWqe6G/fwMEM78PK1pA7rr96rPgOR1Bhnsf71Z+o5q55hfG01dXArCwM8berCSE9v2mTAobgijUZA2cXlEi48nMhn3MfIEW3CzHuxSNbRqLaqaxqajOWPzh/QSLsD67VLIFSBNrszv+UxoNzvUQm6J6VY4WYnyy0j/BPZWb8UUO68szBxJVuxVQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1766484755; c=relaxed/relaxed;
-	bh=dUe2siZ8O2PorqO97QPnQPbjFuPy385JoHe37pveCeY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Iw+tAk9l3W7MIw5HKGopjivxDqCsvCvFp0UGseWxZ5aPkK5Djfdp7yL+OpUr9lD5n/Hsin4kkhnCvdZiZRLYDefRpw3zXluz6Ea3Zy4RCZdTLb86xPa6xDeFFRspd7xLdeJWCQ9xVMIqSx09yy2B+2jl51KD5Q5+06ZLRbJ3a+7r7oKMXhzwJS1HBCk3+WoGHdsqwFWcoWJAq2/id59zRfl7AW3/KvA5gCuGt94HRR4K1BlKmoEsgexAbCOlchMRXnQMbInEtLetJ0WUHvVxusrPsIVJwUDNMJTXvmTHfABMiZn9h6qcvx9IfqWGy7VTxCZXVLUendayXj6lpsOxRw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Ym44sdry; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1766493722; c=relaxed/relaxed;
+	bh=V/94jwXt2/VaN6/conir65fhVEvy3Y293/LXtBDIEZI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aY2vTlPptf1vZ9Iqk6Z/eNjHpAdIYgRwKmHAHTt+KzEiqAdSUMRAyXBRcP+ncZq9XvKvx1/FWjVrUMDQhdrHF0kDfsiLDa24k4W3xhaIGYnJLfVBV3YMJmKJ0Y3vXLUbccMM5L0r/VVMLM7yqWkL8YTgfCt3BN0P6JfgwaNGMPhV3AbPQ0MhjfRwXJQJixJyEyxkj35D4J2lxaxtRjHGox5hl+/d1kArRduTCAulmFSLstuy7dIbOVRseN8PPCEOdgeSr8U2KWWhh1mlh9FrZXw8yqzKJXMaVVUDrEnDpND7/WK2Ragh1xeHnCKvBV5/gXTOSgR+S18D3VXifTaipg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=WtbHjBRU; dkim-atps=neutral; spf=pass (client-ip=209.85.208.51; helo=mail-ed1-f51.google.com; envelope-from=amir73il@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Ym44sdry;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=WtbHjBRU;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=209.85.208.51; helo=mail-ed1-f51.google.com; envelope-from=amir73il@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4db9md3zMjz2xQK
-	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Dec 2025 21:12:32 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1766484746; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=dUe2siZ8O2PorqO97QPnQPbjFuPy385JoHe37pveCeY=;
-	b=Ym44sdrygtRie5I2bFLcF9N0d7CZo6jFaJCJyzOa+880/psGYPrHmWGsV4y13owyY09GiKXMxKw8QG6DaB5BeDdItYieuXvj1h3E1jL2F5lS3GF509rg8RTDI5UO+8YuyN4faM6re74T0cbP7oWvynH83xtiiiAcS4qmOaNg1ZM=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WvXP6a2_1766484741 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Dec 2025 18:12:25 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs-utils: mkfs: forget all dirty buffers on failure
-Date: Tue, 23 Dec 2025 18:12:21 +0800
-Message-ID: <20251223101221.3995330-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dbF5523f6z2xQK
+	for <linux-erofs@lists.ozlabs.org>; Tue, 23 Dec 2025 23:42:00 +1100 (AEDT)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-64b4f730a02so7992958a12.0
+        for <linux-erofs@lists.ozlabs.org>; Tue, 23 Dec 2025 04:42:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1766493657; x=1767098457; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V/94jwXt2/VaN6/conir65fhVEvy3Y293/LXtBDIEZI=;
+        b=WtbHjBRUwExg/H7k+34ZFP+40gsjU9pM9tyu9AAqurLLB1Hpnb5LGIDZsp4xrp4ASP
+         zrHlYeCIxcVvXty4131+jgILFDvCMQ+aVeviOAyfCr3vPyVaV+jbb9bVrFs8P8XLFC5e
+         /4epuupIz1bhrd6+Wp1EnQmLwanMuCwDZSFPTl4WTswBNgvRM7VESvUJ/43VpcpqEk9B
+         AkeJDeah6OEDdzuGvJaUQQ52kabZGe1vyNhqXxfHLQcYhvd19ti9JMb72j4r82eZVo4c
+         ynXgEVMcuiK+irekgck0fr5rjaZsApilKLt/XG8ghYDE2Gy3Vwh4/oPClj0VvlsWJEtt
+         9iFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1766493657; x=1767098457;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=V/94jwXt2/VaN6/conir65fhVEvy3Y293/LXtBDIEZI=;
+        b=IyT4D6dj/GvY9CoBNh21R/r+H79L+Z8VqA06DEgF2NKftJSBDT58nqgYRITepIDukt
+         RjT5bOkfujDFACMgLUQlhxc+hSYufP5qRPA4d36dINNBGuki6KuGU09OAV7p9/WBIfzm
+         /fxRgLP7g2LNhCI+ffRXBlndBVuXB5V6pJ0TJH1Lc6ejFvLmtCWbRoDh4eJf6bcA8yZo
+         gynbD7Yo/gT5a4bv8VINNHW9SY8GggCb8P1lWIxccCI387zqjotSpew7qUF/L+koSyKN
+         86yQjnGojvuYtDFAoYujoqjBCdm2kEpFXCljRQAn71dnWGcyvBcwGcJvxMT3ke+4zNpg
+         rZHg==
+X-Forwarded-Encrypted: i=1; AJvYcCWqOKduxnfVls++JHxaEh6Z02GfumM1owco+MiriK4A5ub1HWbNEdzwBhDojE4YEW08vvt1yiSaKeusMQ==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YxOxpYjx8BoEArf8ppiz9/nMi3qNjLpg0U1qx6XFkxCcBiuYvmd
+	mhsRE+5MPfEYkSH3OVRwwNqfXZOt/NWUY5VY4rnB3gYiAfOAovR6tjKPmWzOHZBEPQX1SiNEyFt
+	TPgNTdBOoNUsGitfmzcnRdHTeUdxH5zY=
+X-Gm-Gg: AY/fxX7ybWbxPmhyDQm/cBVUnaNl+ZQNKU3vme7OxGe472kLcsk9iYS41D6lKCNnUU7
+	OtA/G9GIVzDbAaMUmwWcBClW9BFaAjmKFVMp4YlIkVjXRE/SO1sS2wRmrCGZucndt9Mu+VfjM2u
+	ahzzYiyXnOsGlEcU2VmlsMgKxS5fxiS0paTPBX5WwQJYxbIa3l1+RX2QBoa/gQ5xaqF5jRbQR6/
+	Vw9TdRqWhd8UJxELCj6xoP8vRnEuRkwV5R+RrizcJKpVbudhZQgTsiByBerUn83zBLdso+42IbJ
+	EvYYw3udq3SRD0YrYPvRMmruagXyOQ==
+X-Google-Smtp-Source: AGHT+IEhHo/hN4J9FTc1P4sGEYhA78bE8EllUl442/57HCgAcjltBYKaHTxZkZCcOdqcGslEVHdOWBuZgmToXvnbfII=
+X-Received: by 2002:a05:6402:3591:b0:64d:ab6b:17e0 with SMTP id
+ 4fb4d7f45d1cf-64dab6b199dmr2135230a12.27.1766493656805; Tue, 23 Dec 2025
+ 04:40:56 -0800 (PST)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -53,100 +78,52 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+References: <20251223015618.485626-1-lihongbo22@huawei.com>
+ <20251223015618.485626-4-lihongbo22@huawei.com> <e143fe52-d704-46d3-9389-21645bb19059@linux.alibaba.com>
+In-Reply-To: <e143fe52-d704-46d3-9389-21645bb19059@linux.alibaba.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Tue, 23 Dec 2025 13:40:48 +0100
+X-Gm-Features: AQt7F2qBtYIkh7GKPTQm5R_Zd5bGQq3KAbZ7Z9YPLbkt7T3I1moSNvGdJ6tD4Nk
+Message-ID: <CAOQ4uxjH3JmNd8yiBwz11+j_t=PArPGeGUHCukiNpw9L1BUp6A@mail.gmail.com>
+Subject: Re: [PATCH v10 03/10] fs: Export alloc_empty_backing_file
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Hongbo Li <lihongbo22@huawei.com>, linux-fsdevel@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+	Chao Yu <chao@kernel.org>, Christian Brauner <brauner@kernel.org>, 
+	"Darrick J. Wong" <djwong@kernel.org>, Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-When mkfs fails (e.g., due to network or I/O errors), dirty buffers may
-still be queued for write:
-```
-<E> erofs: s3erofs_request_perform() Line[605] curl_easy_perform() failed: SSL peer certificate or SSH remote key was not OK
-<E> erofs: s3erofs_build_trees() Line[1076] failed to get next object: [Error 5] Input/output error
-<E> erofs: main() Line[2029]    Could not format the device : [Error 5] Input/output error
+On Tue, Dec 23, 2025 at 10:31=E2=80=AFAM Gao Xiang <hsiangkao@linux.alibaba=
+.com> wrote:
+>
+>
+>
+> On 2025/12/23 09:56, Hongbo Li wrote:
+> > There is no need to open nonexistent real files if backing files
+> > couldn't be backed by real files (e.g., EROFS page cache sharing
+> > doesn't need typical real files to open again).
+> >
+> > Therefore, we export the alloc_empty_backing_file() helper, allowing
+> > filesystems to dynamically set the backing file without real file
+> > open. This is particularly useful for obtaining the correct @path
+> > and @inode when calling file_user_path() and file_user_inode().
+> >
+> > Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+>
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+>
+> (I hope Amir could ack this particular patch too..)
 
-mkfs.erofs: cache.c:536: void erofs_buffer_exit(struct erofs_bufmgr *): Assertion `!(!list_empty(&bmgr->blkh.list))' failed.
-```
+As long as Chritian is ok with this, I don't mind.
 
-Fixes: a482ef7d1fdf ("erofs-utils: mkfs: fix memleak in error exit path")
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
- lib/cache.c | 17 +++++++++++++----
- mkfs/main.c |  2 +-
- 2 files changed, 14 insertions(+), 5 deletions(-)
+Acked-by: Amir Goldstein <amir73il@gmail.com>
 
-diff --git a/lib/cache.c b/lib/cache.c
-index 24449f221317..a87575ad74d1 100644
---- a/lib/cache.c
-+++ b/lib/cache.c
-@@ -448,8 +448,8 @@ static void erofs_bfree(struct erofs_buffer_block *bb)
- 	free(bb);
- }
- 
--int erofs_bflush(struct erofs_bufmgr *bmgr,
--		 struct erofs_buffer_block *bb)
-+static int __erofs_bflush(struct erofs_bufmgr *bmgr,
-+			  struct erofs_buffer_block *bb, bool forget)
- {
- 	struct erofs_sb_info *sbi = bmgr->sbi;
- 	const unsigned int blksiz = erofs_blksiz(sbi);
-@@ -470,8 +470,11 @@ int erofs_bflush(struct erofs_bufmgr *bmgr,
- 
- 		list_for_each_entry_safe(bh, nbh, &p->buffers.list, list) {
- 			if (bh->op == &erofs_skip_write_bhops) {
--				skip = true;
--				continue;
-+				if (!forget) {
-+					skip = true;
-+					continue;
-+				}
-+				bh->op = &erofs_drop_directly_bhops;
- 			}
- 
- 			/* flush and remove bh */
-@@ -501,6 +504,11 @@ int erofs_bflush(struct erofs_bufmgr *bmgr,
- 	return 0;
- }
- 
-+int erofs_bflush(struct erofs_bufmgr *bmgr, struct erofs_buffer_block *bb)
-+{
-+	return __erofs_bflush(bmgr, bb, false);
-+}
-+
- void erofs_bdrop(struct erofs_buffer_head *bh, bool tryrevoke)
- {
- 	struct erofs_buffer_block *const bb = bh->block;
-@@ -533,6 +541,7 @@ erofs_blk_t erofs_total_metablocks(struct erofs_bufmgr *bmgr)
- 
- void erofs_buffer_exit(struct erofs_bufmgr *bmgr)
- {
-+	DBG_BUGON(__erofs_bflush(bmgr, NULL, true));
- 	DBG_BUGON(!list_empty(&bmgr->blkh.list));
- 	free(bmgr);
- }
-diff --git a/mkfs/main.c b/mkfs/main.c
-index 22201d35dedf..aaa0300bca1b 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -1997,7 +1997,6 @@ exit:
- 	blklst = erofs_blocklist_close();
- 	if (blklst)
- 		fclose(blklst);
--	erofs_dev_close(&g_sbi);
- 	erofs_cleanup_compress_hints();
- 	erofs_cleanup_exclude_rules();
- 	if (cfg.c_chunkbits || source_mode == EROFS_MKFS_SOURCE_REBUILD)
-@@ -2033,6 +2032,7 @@ exit:
- 		erofs_mkfs_showsummaries();
- 	}
- 	erofs_put_super(&g_sbi);
-+	erofs_dev_close(&g_sbi);
- 	liberofs_global_exit();
- 	return err;
- }
--- 
-2.43.5
-
+Thanks,
+Amir.
 
