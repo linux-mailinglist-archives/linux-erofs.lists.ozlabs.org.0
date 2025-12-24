@@ -1,43 +1,48 @@
-Return-Path: <linux-erofs+bounces-1591-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1592-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2953DCDBE46
-	for <lists+linux-erofs@lfdr.de>; Wed, 24 Dec 2025 11:05:25 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30564CDCFF6
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Dec 2025 19:31:54 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dbnYt6dpLz2yFp;
-	Wed, 24 Dec 2025 21:05:22 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dc0pG2gjKz2ySB;
+	Thu, 25 Dec 2025 05:31:50 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766570722;
-	cv=none; b=gSJiRtn6aND7gpsjnHs/eNxHaFxn1cMJzldG7xMnfo69YUie+/G0nq+vGLwOeefba/maECVXV7FYIS2W47VwlJewQxk/hCPxqyXK/PqzFBFADq232BUPR541fgWptTfH5iOxd06ZVbSvFE/pt4U6XK873Z0DocwnSccBrJaTInWjNBs9deqYu8p5sLVtNfP6HF5hn7YjUo0INhEcBh/J7fas7rGqiknRW57HeFn77nGz3nMmGngsRI+KgNR5ZlyCxxVW2eRG70vlV0LEyCJ9/D88AwELI9r+dzTR42zOhheIIlE/fru+JQ0/5KjWFFI4ngTlILHKYiYV7N6m7jZjmg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766601110;
+	cv=none; b=C0adPbHoxB6U7QCP4+OJUhjknoZ6vT6wtS5n+0KrdCC53fovdzjjas5QDLNYHeOyG46CB/ah53EM0ls7/hhD8aZgm+T2no0maAZWEAzafq5kVTdavKAgw3QbqVCnrOFRgL26tQU2FPWLW3lDTIazzTyVJUZ3Elour5spWQKjF/lFzalUKY0ppQc3pe0sixV+GLeB6NV+NYaImx/Paj9JcD89Y+ZsRK2LGn9AxVZBDABvaWIbmUqKt0L9LvOG3TBo//BpJS971XL1lG3jlp5ZobC4By8yIYX7PD/P+xgci332BGFePmbvzSerqoK5TpNj8NmaNzKmZN98N3P4NAawWA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1766570722; c=relaxed/relaxed;
-	bh=XjvaNCV6Fp280Tqzr2xLCA4/k9qavfxoZEOqMUBS/KM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X6H50g4d2Qrk0ea18o+JJ2LN4MA8K0mSucy/O+lD6MnyxfETOfPeBCF4+q1kEUvq/HuoHTtoEIUWxNaC4BkjiBYxi53w1wcJK4iqD5dH9DQZUlRwqFKXogixRuIxXIC2SySYrsfcb63WuIlkWgfJ8UefszhG0IOPz4T1tvCJnU8RIyAnDtgGV5U7VvCYIN6YVtP6i6/lL2n9JclUADuhadMDjAiUCBopMKwlEMIS74RkGkhLTj+YwgCwZCq3KV9GiX1YS6IROeuvVJZjjxggFdz2/RXSfCdp1sDBq6bXvgTXL4iqKiLigltd0Dho/G4mT48RrWdCCxWnvs73Xy0LQg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=dOpnCXWW; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1766601110; c=relaxed/relaxed;
+	bh=nzfc7idTh55tsmh8cbwaxcCnsTLX7AKTXGIOgo0vCkQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dq2fLXNqsE6NVUs4iYvrP2q4RHLAELHCushxfGr1Ylk/+lSBiqji/muqafSXFWNChv0N0mrKk4rp31aEsdgupYzhX+PzBl9OZS4Asb8PUc3TiUfP1AN/hLM106NLsdLasI5nKiYsGZoVwAy6WJkXATrRix6Cd1VvsmI7bUt0mMa7AFErRd3Qdh2zpFhx299FfOoOBRXn2tsXtIs/zieiqecPHvIqq3vAH2Ih3zQW0EGDRmIOP1jySfK9y/yUcue8r3H0YmFc2EN5Gy5KztStsuETWqkTiottO3FOSPN+sUKPIp9o95Uchx4qzeLWDPb/MEnP7yBYCYiZSSZVUsZ6hw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=the7L06R; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=dOpnCXWW;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=the7L06R;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dbnYr2H0vz2yFd
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Dec 2025 21:05:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dc0pC2gGNz2yPq
+	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Dec 2025 05:31:45 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1766570713; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=XjvaNCV6Fp280Tqzr2xLCA4/k9qavfxoZEOqMUBS/KM=;
-	b=dOpnCXWWC0r6LXU/qSHYR60uADo1l8OaHeRL2YLqjI/7rMHz0jMtq+saNBkJ2WzkmO50U2+2paoKvX1H2I8nlFrDJtEm7hbyx4dnI1ZKvBPWLvHPqOXrAV4xoI5Tafc4kIrqisorYHD7otgFNx1lK0I2Tu7rTNDWFXKnt+/xRmU=
-Received: from 30.221.133.159(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wvard6C_1766570711 cluster:ay36)
+	t=1766601100; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=nzfc7idTh55tsmh8cbwaxcCnsTLX7AKTXGIOgo0vCkQ=;
+	b=the7L06RxiSsRgGdO3FARitwfZ5oIulWCrpqLUq5Wx+E03/YLztRZhJNyWc0y0LbASL6zQGLW+7dK+78y7EDJAsTN2sI6bXgnt5FOcvU5C7YelfJ/VGHmk9wGy9wSJGcOM5md74TmjLtFxjZDITRCSmlxbegadDEJ7QdhfhByxA=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wvc810y_1766601092 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 24 Dec 2025 18:05:12 +0800
-Message-ID: <84328aa9-5b84-4433-83ce-7147c100f5d2@linux.alibaba.com>
-Date: Wed, 24 Dec 2025 18:05:11 +0800
+          Thu, 25 Dec 2025 02:31:39 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Huang Jianan <jnhuang95@gmail.com>
+Subject: [PATCH 1/9] erofs-utils: lib: fix erofs_listxattr()
+Date: Thu, 25 Dec 2025 02:31:23 +0800
+Message-ID: <20251224183131.2302377-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,21 +54,6 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 07/10] erofs: introduce the page cache share feature
-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Chao Yu <chao@kernel.org>,
- Christian Brauner <brauner@kernel.org>, "Darrick J. Wong"
- <djwong@kernel.org>, Amir Goldstein <amir73il@gmail.com>,
- Christoph Hellwig <hch@lst.de>
-References: <20251224040932.496478-1-lihongbo22@huawei.com>
- <20251224040932.496478-8-lihongbo22@huawei.com>
- <64b03916-7b57-4719-bb2c-8f15ae333330@linux.alibaba.com>
- <5aad8772-458d-4040-a8b6-feff924c1d30@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <5aad8772-458d-4040-a8b6-feff924c1d30@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
@@ -71,34 +61,29 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+A long-standing porting bug.
 
+Fixes: c47df5aa2d16 ("erofs-utils: fuse: introduce xattr support")
+Cc: Huang Jianan <jnhuang95@gmail.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ lib/xattr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 2025/12/24 17:26, Hongbo Li wrote:
-> 
-> Hi, Xiang
-> On 2025/12/24 16:09, Gao Xiang wrote:
->>
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 68236690d5b3..4ef27d446bb8 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -1637,7 +1637,7 @@ int erofs_listxattr(struct erofs_inode *vi, char *buffer, size_t buffer_size)
+ 	it.buffer_ofs = 0;
+ 
+ 	ret = inline_listxattr(vi, &it);
+-	if (ret < 0 && ret != -ENOATTR)
++	if (ret >= 0 || ret == -ENOATTR)
+ 		ret = shared_listxattr(vi, &it);
+ 	erofs_put_metabuf(&it.it.buf);
+ 	return ret;
+-- 
+2.43.5
 
-...
-
->>
->> why return `struct erofs_inode_fingerprint` instead of:
->>
->> int erofs_xattr_get_ishare_fp(struct erofs_inode_fingerprint *fp,
->>                    struct inode *inode, const char *domain_id)
->>
->> instead?
->>
-> 
-> How about declaring this as void erofs_xattr_fill_ishare_fp(struct erofs_inode_fingerprint *fp, struct inode *inode, const char *domain_id)? Because the return value seems useless.
-
-I still perfer to return different values for this helper
-even the final user doesn't use this.
-
-Thanks,
-Gao Xiang
-
-> 
-> Thanks,
-> Hongbo
 
