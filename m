@@ -1,58 +1,47 @@
-Return-Path: <linux-erofs+bounces-1569-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1570-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id B90B1CD9B81
-	for <lists+linux-erofs@lfdr.de>; Tue, 23 Dec 2025 15:49:50 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6299CDB4A2
+	for <lists+linux-erofs@lfdr.de>; Wed, 24 Dec 2025 05:00:18 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dbHwX0h4Mz2xlP;
-	Wed, 24 Dec 2025 01:49:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dbdSb0yrcz2xnl;
+	Wed, 24 Dec 2025 15:00:15 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766501388;
-	cv=none; b=irRmRZT5tfMj6rAH+jTIzJ5ZFZFmcn8LHyZqKPr+5G/cqXuseVl5yvgqmFBKC9WlIC/9Z/3KqkIKg0R3MMbpNgKrFzcs1aYZCcIE0F6a+Ehq1GJP2R/mbelaBLiaMBB5jXsBGol1NU0M0zoOfs0GTmWIzI9y/XtXeaFpT4MrnDhQi40w64LX/ebz4vRUuvq/jRGJXi/7CRkE0UyBFBbEo1yK2SmnuHlhCUKRs7DCl26NDyUjKroHQT1olieRmsByRs053RHRCZNV2t4D8C58EG2ovC1Dhglx371cT//x8PmZU04PcX5BG+AXUcDwod7iibH+HVSBNwPgYr59BRN1WQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.98
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766548815;
+	cv=none; b=KJUT+dMnGlMzHlsS0S49zU7B4Bc2N1DnKxVwKCv6K1CLTR4Sy8bQcUmZTG4PJXmukJhW5Fq+Adwzh4+jeVj5y4ciZKVZ80gBIDYyGcpx6GbvbyPqwlnTQt+++zsDyDzudq3Kyep3rSaiI+p7BQ2xh6G2m99hAkp5On2gmJ5Z1l0W1JeF+48YNr3sNrX/NGdJx0cgZGIh5QC52cE0Tu+VBzMWTHGyqKcICUXxN5mjECUOjf/VA4yABekLNwlOcH7oSTLnTzmDOseUikGG75hoie9V0oCsVtDdfO9iMPToxVg9I1/KQBgHsNbqe8naEIxvgGo+qG5/+yQmMC+Pr4Lu7A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1766501388; c=relaxed/relaxed;
-	bh=sGBxZRoj/z5YK5kVQwVByCOiouYitfFOUuzE6yAIxSQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=FrtMGX4sjbJm5qvRLZgABKcxD2VUiqEOM8av3SZm+HS1kuUbkBRg1MPZ32JWLBobv52zYIl6U0vQe1xdhLBDxtOIo5fIGgZTm8YyPLD/gQXD7oAveaPVRefkm0KaCP6bVoTLnut12Xio6yUmuy53w5YIWBcvjn5X7LVJqPwrU2ZdAgSqVenI4PxSF0nhBte+Gqvsv7q311LRFZJEqRtN5B+sq4VLgXZCl9cT/vdn85bu8eUf8IcGtPOH9V7FGp/5mOGa7CkbjkU5UlsuYuFEVn7/TntXGUGBot18UWHbzzniV6VaR5lldEVDxQ7YViQPSZS3HuX+GaYoDP0wH7I75g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=GOAzHfzL; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1766548815; c=relaxed/relaxed;
+	bh=8jak7Gj9K4NB3R86iZ/fS4v6vR8Kqxv5lMrgATWjK1o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JEfhTe4zvCo8nNhz61twgpmYNh6va2T8ytvemv/OmizbF8RL+Q9tjsRJiEz3EZyj87zVWY87m5jlWdIa2F113SAHnpgZ4hgrgog86eSZyhnF4J/hoBcXuHvMjitzYDwGvM2/6iH9VIEeE4J1sPAVQgyPazoVZjOaMuI65iiDqMXZ8WpgyF8BQVthCEVVotRtxjJmzvU8brdoBVTMVN9+O3zVeiV7iSouMySv7iiD2z33UltJoH3ZBRenSUrWz7b6PiMZzvjCZFZHjZNfTdoIVZcbyfF9CgzR5/9zw1+miF0oCG9xaOAQgp6vgPwZ91mes5H++nSDKzWkEAgzcrnldA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=W9COODF4; dkim-atps=neutral; spf=pass (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=GOAzHfzL;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=W9COODF4;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=xiang@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.98; helo=out30-98.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dbHwW1x7Zz2xdY
-	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Dec 2025 01:49:47 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id E7A1960123;
-	Tue, 23 Dec 2025 14:49:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23C27C113D0;
-	Tue, 23 Dec 2025 14:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1766501354;
-	bh=V8otbR5wN/LW90Vi/sr/EVRCZfPErAzcyVaSdwl6DWQ=;
-	h=Date:From:To:Cc:Subject:From;
-	b=GOAzHfzLto6vAp6SZ/TjZzdJcxsNQE5or7D3DJGf7Bmv+k1FWhJ8N0nN4Ik0F+qOO
-	 D2xmHHJc/pQ+/D/TE9lRFe9yyXT/vJe/pD6515mbYBsmdu8/BRW+b+R+Qvm3WR7xxJ
-	 c39ALj3X22BTqLV09QwqfS3+c0PCXxSSOmsuspsAlVl4n2eZI44HGr5mbOvkB7UM2O
-	 Heaj6E6UNr+K5nrqxaAqxqLe+RTnmHoJhStIdz5QWjQ7GwCNP5Zw8WRC4t3ksKRnZc
-	 faYRe1bhIVqnssUG9VFxRkzMymY+iuEX1S4Mgs3OS0Ys2GLyHNowImWk++hAoIfr1/
-	 fTV9UOvfuMiGw==
-Date: Tue, 23 Dec 2025 22:49:07 +0800
-From: Gao Xiang <xiang@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Junbeom Yeom <junbeom.yeom@samsung.com>
-Subject: [GIT PULL] erofs fix for 6.19-rc3
-Message-ID: <aUqr46Y+AqmkowXu@debian>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-	Junbeom Yeom <junbeom.yeom@samsung.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dbdSX2WFCz2xlM
+	for <linux-erofs@lists.ozlabs.org>; Wed, 24 Dec 2025 15:00:10 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1766548805; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=8jak7Gj9K4NB3R86iZ/fS4v6vR8Kqxv5lMrgATWjK1o=;
+	b=W9COODF4Kd3+SlX+tXsvvAPV33MHyvWCCzLiXdXNDnu/VbHV/Ui/fraOWFe4Qyd0Zk4Eb7ejQ6iTP46RIQSOF3nRg+y1Q3umn935mihjI4INEdjE//LPoGc8koepqqbbNlGe5ABLoXSVcGiHmyco9M/0qFkI+h/ccjjVTDw+dWA=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WvZiqG-_1766548800 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 24 Dec 2025 12:00:04 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: lib: introduce erofs_sys_lsetxattr()
+Date: Wed, 24 Dec 2025 11:59:59 +0800
+Message-ID: <20251224035959.1142350-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -64,53 +53,96 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Linus,
+To wrap raw function calls for better portability.
 
-Could you consider this fix for 6.19-rc3?
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fsck/main.c           | 12 ++----------
+ include/erofs/xattr.h |  3 +++
+ lib/xattr.c           | 18 ++++++++++++++++++
+ 3 files changed, 23 insertions(+), 10 deletions(-)
 
-Junbeom reported that synchronous reads could hit unintended EIOs
-under memory pressure due to incorrect error propagation in
-z_erofs_decompress_queue(), where earlier physical clusters in
-the same decompression queue may be served for another readahead.
+diff --git a/fsck/main.c b/fsck/main.c
+index 8aba964ceff1..ab697bed20c6 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -9,7 +9,6 @@
+ #include <utime.h>
+ #include <unistd.h>
+ #include <sys/stat.h>
+-#include <sys/xattr.h>
+ #include "erofs/print.h"
+ #include "erofs/decompress.h"
+ #include "erofs/dir.h"
+@@ -457,15 +456,8 @@ static int erofsfsck_dump_xattrs(struct erofs_inode *inode)
+ 			break;
+ 		}
+ 		if (fsckcfg.extract_path)
+-#ifdef HAVE_LSETXATTR
+-			ret = lsetxattr(fsckcfg.extract_path, key, value, size,
+-					0);
+-#elif defined(__APPLE__)
+-			ret = setxattr(fsckcfg.extract_path, key, value, size,
+-				       0, XATTR_NOFOLLOW);
+-#else
+-			ret = -EOPNOTSUPP;
+-#endif
++			ret = erofs_sys_lsetxattr(fsckcfg.extract_path, key,
++						  value, size);
+ 		else
+ 			ret = 0;
+ 		free(value);
+diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+index ef80123fd9c8..4e74cc523dae 100644
+--- a/include/erofs/xattr.h
++++ b/include/erofs/xattr.h
+@@ -45,6 +45,9 @@ static inline unsigned int xattrblock_offset(struct erofs_inode *vi,
+ 
+ struct erofs_importer;
+ 
++ssize_t erofs_sys_lsetxattr(const char *path, const char *name,
++			    void *value, size_t size);
++
+ int erofs_xattr_init(struct erofs_sb_info *sbi);
+ int erofs_scan_file_xattrs(struct erofs_inode *inode);
+ int erofs_prepare_xattr_ibody(struct erofs_inode *inode, bool noroom);
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 8f0332b44a02..68236690d5b3 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -99,6 +99,24 @@ static ssize_t erofs_sys_lgetxattr(const char *path, const char *name,
+ 	return -1;
+ }
+ 
++ssize_t erofs_sys_lsetxattr(const char *path, const char *name,
++			    void *value, size_t size)
++{
++	int ret;
++
++#ifdef HAVE_LSETXATTR
++	ret = lsetxattr(path, name, value, size, 0);
++#elif defined(__APPLE__)
++	ret = setxattr(path, name, value, size, 0, XATTR_NOFOLLOW);
++#else
++	ret = -1;
++	errno = ENODATA;
++#endif
++	if (ret < 0)
++		return errno;
++	return ret;
++}
++
+ /* one extra byte for the trailing `\0` of attribute name */
+ #define EROFS_XATTR_KSIZE(kvlen)	(kvlen[0] + 1)
+ #define EROFS_XATTR_KVSIZE(kvlen)	(EROFS_XATTR_KSIZE(kvlen) + kvlen[1])
+-- 
+2.43.5
 
-This patch addresses the issue by decompressing each physical cluster
-independently as long as disk I/Os succeed, rather than being impacted
-by the error status of previous physical clusters in the same queue.
-
-Happy Xmas and new year in advance!
-
-Thanks,
-Gao Xiang
-
-The following changes since commit 8f0b4cce4481fb22653697cced8d0d04027cb1e8:
-
-  Linux 6.19-rc1 (2025-12-14 16:05:07 +1200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git tags/erofs-for-6.19-rc3-fixes
-
-for you to fetch changes up to 4012d78562193ef5eb613bad4b0c0fa187637cfe:
-
-  erofs: fix unexpected EIO under memory pressure (2025-12-22 00:18:53 +0800)
-
-----------------------------------------------------------------
-Change since last update:
-
- - Fix unexpected EIOs under memory pressure caused by recent
-   incorrect error propagation logic
-
-----------------------------------------------------------------
-Junbeom Yeom (1):
-      erofs: fix unexpected EIO under memory pressure
-
- fs/erofs/zdata.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
