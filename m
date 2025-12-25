@@ -1,73 +1,73 @@
-Return-Path: <linux-erofs+bounces-1603-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1604-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05D16CDD3EA
-	for <lists+linux-erofs@lfdr.de>; Thu, 25 Dec 2025 04:18:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EB578CDD489
+	for <lists+linux-erofs@lfdr.de>; Thu, 25 Dec 2025 05:09:42 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dcDVB2j8yz2yG5;
-	Thu, 25 Dec 2025 14:18:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dcFd0487Qz2yG5;
+	Thu, 25 Dec 2025 15:09:40 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.10
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766632722;
-	cv=none; b=GJZG6nmt12xPqdEbYVA+45xMB/LptAjbwXwcITZYTEWNVea08PzTqFjejLD3EMLVh7sNU+I6d+JPGtMZurA8SSukh2JM4EFpBerpvsehOuJj8sEJsaqR0mTUxvuXaT56GTfeGhk9o7hD7dlIZejHTJDCZrhTHtEPL3AFT8mu+t0tDS76nLkEVXQOx62/RzxmkrUvgXk56Z/7tl4RAtvQ61JYHm1rlBmP99ZElQKoAZpAQuT1T4Q/B6Gd3hJYiUUfgTsoA8CG3YBGM3LJC8h8jmyoS+cevfz0OkeALioLtDisFv8tjlClxwv8Epp5vywcOb2TiBxOqqohW7jbbCmebA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.175.65.11
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766635780;
+	cv=none; b=mqlQxCgZzgwodj6lzzZFyBLbycLvw/J0BVmvCWS1irlQZxTw3WcA94729WCUsoK2yjYw1vpvOTKnhQraPgynLUc7aLLbT4KVKZ/5Bh8eG/q/7+Hu7Pq3B5px9tpJuAf9Ea91RZ9Lyujy4V3pgScyR5p94IFbLTUqNPg+OJ5WJfkHktIe905GD/zOLxC1ewoATs+p5C0GJRQ2bK677POldY6IKuUBxp9/hsH6SccL/UQbrzqO+iVIkq6i312VONwxFhL3Fz/T0xofXVs3CAg8Y4d+lgFnVZtLIGycFf695Qe6xswwjYH8VqEBEtQ82E4j0+GoWEg3/KBVYJ/5NElxGA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1766632722; c=relaxed/relaxed;
-	bh=kY8ISpbzkA+kmhtVNu0FnsgfQj3OZ27TnfGu87JDolo=;
+	t=1766635780; c=relaxed/relaxed;
+	bh=E/FVGKnOuOlFutlk020B8jyaJBPqEw2EBwBHZceXm+I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M4TwvimVFPVmSXvJd6voUanhTKUn+xzUr2t3CFKk5+o6iLiJcWlL2TOTz6qKLoTgd3OlkXMw/X7EnVYshm4hSx6c+DVt4o68YmMqPhm21mbt9BN8/ze+OgrHlX4PcF5y3Z/M+0U8LURZQvYCEFyKQ+SkLgbBDYFQKH3jQkXlFoQ0YB/KVy+jmyCdp26ZQ/fnkbjcIjAJFYrv4MIW4devk1nmX20z3ptfNopmC7ddQfbYE4WZu0aq8FoDQ5/S0VvKOn/1bg7TXb9p9W6D3rMLtoA3mjjzUtvG/GErddlinLLbBnHOhlLlwIXBxYiw2zujqSYjzyg7TQfM0CTGTgh/fA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AMIU4Agx; dkim-atps=neutral; spf=pass (client-ip=192.198.163.10; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=i/fDBV5CvMCYgcZgy2wc7s7/ZXQ3E5lPv/lmCo+4vjeW6gIJViBzcqIR+OPEs5S8/k7DbDIku9qLe+Qb5PqSjTdmswAsqUQOKGx61gRJfTn+NdB8SF2EQDjuFVXXcCKK0hpUeJXSEP3l7T+qCGh80lyAA+NB6MNgOkb7q/jE5YYkTQjD1i8PozzbI3H8Sp22nm8xRAK2fqoTCJM/bmtAnOm8sveFnf9NAcSNmJNV4qul1srMCq/7KFfVQTKBsZs8r8SF/XxuMf4qtWZ83p6RLidmHl9UFb+yneqETDHa3G4w9As0MNQiJnqsSQEwejRCNTJyLW5Dh81bLfmLqgPvLA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=c083g5q/; dkim-atps=neutral; spf=pass (client-ip=198.175.65.11; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=AMIU4Agx;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=c083g5q/;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.10; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=198.175.65.11; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dcDV50Qkbz2xTh
-	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Dec 2025 14:18:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dcFcy1FZbz2xrL
+	for <linux-erofs@lists.ozlabs.org>; Thu, 25 Dec 2025 15:09:36 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1766632717; x=1798168717;
+  t=1766635778; x=1798171778;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=UhH2roQaIORKlAWJx4LLpOinOzu1elW+yrcxpjEzyHw=;
-  b=AMIU4AgxqoVAvj0QUSRDjXiROsm2V9uRc6BJtCf9CBhGIg1co/bZqLy7
-   2nGAMcZil0YidtkJ2i1aXZZGrstrYIlp9NDp7jLWTC+nnOFs2CFdAeakQ
-   6P/YvR0SKM5hAlG3iXUQ3o7aLKnPhdZM3eMryPDa885ePRbspgLuWo/Lw
-   Kz/T+I7g0pOyWUti+wBbjqIU3gWGzXw3HmmrzFRxAjinZlSPah3vI29/u
-   MmmRzy0suuBawizPnZKPZ6Ue7WWIs5Lnw0hsHHuwumAAx3fq6YCR4vVOi
-   eYPJn4Zkq1CI42rw6ycvx9lEOM61EGBqUS9cywwb9VTto4NTh6LJ9qQXj
-   A==;
-X-CSE-ConnectionGUID: QFOv97b1TZSwF/mW/rwe3g==
-X-CSE-MsgGUID: mUNwjpXBQiu1/mWGd/ZU9A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11652"; a="79813750"
+  bh=usci4oWgBXO6Khv7C0L0mAXCj79IKm97m8nFeRZ4CsE=;
+  b=c083g5q/NbK0XU5+wtZOmM3Q4FZqwSnv+/a0frqf0KAKPpNLeOXvpsZl
+   N2c1Fk+2o/79LtWX3x5Am840DFs5Vf7Apb46Kb0I58xCAweP1vU4K5eaN
+   6TXGsNogxmNLqpdYnofJQrQtQYVMeGvwN518e02Tw+a0pglC3WbbUenSh
+   9XVqUFY6gwQU5kVXgHBaKgRO/sF2W0wVe8/RanAkpKKMJuhQ6IpFkAgaN
+   CfqD3WTo+p0HG9P5vM9Az/zFnEylxjUrPGZ4M4MTP2kYBvA66EpSe5XFv
+   OYlkjo24Ek1HqJNWN5qOkernjvN2QL+UK77WsHT51yeXqrmzsXdTps3bu
+   g==;
+X-CSE-ConnectionGUID: fZ9iGmhiRSK02DRUnKkPVg==
+X-CSE-MsgGUID: Y8GNuiwMQvqo83A3b4sdHQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11652"; a="78758167"
 X-IronPort-AV: E=Sophos;i="6.21,175,1763452800"; 
-   d="scan'208";a="79813750"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2025 19:18:30 -0800
-X-CSE-ConnectionGUID: eil06ZHzQ6mCSWS3LVhJFg==
-X-CSE-MsgGUID: gL86m4FtSj+3r/t0CTxMvg==
+   d="scan'208";a="78758167"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Dec 2025 20:09:32 -0800
+X-CSE-ConnectionGUID: f9VP/PgWTvCURk+tklKXXA==
+X-CSE-MsgGUID: q/L62GGxS060Bx2vW0qdKA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.21,175,1763452800"; 
-   d="scan'208";a="200111036"
+   d="scan'208";a="200634034"
 Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
-  by orviesa007.jf.intel.com with ESMTP; 24 Dec 2025 19:18:27 -0800
+  by fmviesa009.fm.intel.com with ESMTP; 24 Dec 2025 20:09:28 -0800
 Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vYbrs-000000003gt-3bWg;
-	Thu, 25 Dec 2025 03:18:24 +0000
-Date: Thu, 25 Dec 2025 11:17:42 +0800
+	id 1vYcfG-000000003il-2377;
+	Thu, 25 Dec 2025 04:09:26 +0000
+Date: Thu, 25 Dec 2025 12:08:44 +0800
 From: kernel test robot <lkp@intel.com>
 To: Hongbo Li <lihongbo22@huawei.com>, hsiangkao@linux.alibaba.com,
 	chao@kernel.org, brauner@kernel.org, djwong@kernel.org,
 	amir73il@gmail.com, hch@lst.de
-Cc: oe-kbuild-all@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	lihongbo22@huawei.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, lihongbo22@huawei.com
 Subject: Re: [PATCH v11 05/10] erofs: support user-defined fingerprint name
-Message-ID: <202512251005.yZVSPUOm-lkp@intel.com>
+Message-ID: <202512251143.WPBiiQZA-lkp@intel.com>
 References: <20251224040932.496478-6-lihongbo22@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -103,27 +103,21 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Hongbo-Li/iomap-stash-iom
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
 patch link:    https://lore.kernel.org/r/20251224040932.496478-6-lihongbo22%40huawei.com
 patch subject: [PATCH v11 05/10] erofs: support user-defined fingerprint name
-config: nios2-randconfig-r071-20251225 (https://download.01.org/0day-ci/archive/20251225/202512251005.yZVSPUOm-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251225/202512251005.yZVSPUOm-lkp@intel.com/reproduce)
+config: powerpc-randconfig-001-20251225 (https://download.01.org/0day-ci/archive/20251225/202512251143.WPBiiQZA-lkp@intel.com/config)
+compiler: clang version 22.0.0git (https://github.com/llvm/llvm-project 4ef602d446057dabf5f61fb221669ecbeda49279)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251225/202512251143.WPBiiQZA-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512251005.yZVSPUOm-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202512251143.WPBiiQZA-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   fs/erofs/super.c: In function 'erofs_read_superblock':
->> fs/erofs/super.c:302:20: error: 'struct erofs_sb_info' has no member named 'ishare_xattr_pfx'
+>> fs/erofs/super.c:302:8: error: no member named 'ishare_xattr_pfx' in 'struct erofs_sb_info'
      302 |                 sbi->ishare_xattr_pfx =
-         |                    ^~
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for CAN_DEV
-   Depends on [n]: NETDEVICES [=n] && CAN [=m]
-   Selected by [m]:
-   - CAN [=m] && NET [=y]
+         |                 ~~~  ^
+   1 error generated.
 
 
 vim +302 fs/erofs/super.c
