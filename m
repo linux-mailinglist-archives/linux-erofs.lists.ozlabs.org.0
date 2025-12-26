@@ -1,43 +1,54 @@
-Return-Path: <linux-erofs+bounces-1613-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1614-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EF56CDE752
-	for <lists+linux-erofs@lfdr.de>; Fri, 26 Dec 2025 08:51:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C88F6CDE76A
+	for <lists+linux-erofs@lfdr.de>; Fri, 26 Dec 2025 08:54:57 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dcyVs3Rmzz2xg9;
-	Fri, 26 Dec 2025 18:51:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dcyZR1nznz2yFQ;
+	Fri, 26 Dec 2025 18:54:55 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766735509;
-	cv=none; b=D6/eoNvU+FY/MHIE+QEC2IdhUe3F3fPYSY5FSDg5EQKWUT2Xs/901xI3vAwdAEq6/Mr8/wlhwdTvLBxBP3upTyuMNPqkQ8ZtRH7qq46n6ZYgFr5sSyG0bAnhERKcqAwojQ2bgDZQm6rflGz67kVfBjtnenxYojlowdco4MFokSJvJQ0GtIpq16GTPC6+hETgZ8ZrQjNPn0s5vkm3ykQtchC0qo+Zt4hLLGW8lThfSEAPvZdqDH9c5Hctn1+LJrzuU/Ehb1OnDvbT34PG4cUqoApgsmBlWps5A0Alv0zR+Wnxs5EWb28aLsAvJc5VmcdbCUUydOhD4pOOODz7qdqOLw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.222
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766735695;
+	cv=none; b=lDYdXZxcvTJTISoGVk472X+ExdNf4Oc5Uz3AdqHhjpzMOAqyzWtgJ+48h5Dq4xn8FVNW64PyJWLSTT/WeVYIWnT11rOtQjZ0A3l1RFTQHlcZpCp7S3t7Dpqy5uCVJSf4UHcjPwyMK4TVs86xDF0aN9SP2KLYnoWhK5jQPvn7aYuZO7dj8Dt6tXMWsrD1DjU1f+Oe9SWELO3mNvEFcQX00SCNJ0pEadX10O+TyyQ7kEzh5XrgU75UU3mSXlwmk5lAqNf2p7CbepUh1CbcNN41mqmNwOq8CSImYQsvhLrCQguSZzpDOvzhKmVOS1bZw5vJVrH84Ef8kCHZhodtiHlDXA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1766735509; c=relaxed/relaxed;
-	bh=Qd9rfpmNR9JZnpm0KlG2esdNFpGHbXKboYyu5igtky0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gE0krFXFtUiKU6kApb5Aa78YvZ0PFjve72ohYYHU1jiBw5R4p47ImEFXuAPgNVTh9RENfx63aikvqGm9QdcfTFAX5w2LevHDpGWfkxPKIpBws36QN06gm0CDs79C7SeqcHOizstYjyPYbaWtI/ONwgvgg3qJxsO74RfllaVBSPjBsldAyVM3oh5D65Gho+paaMHa7RzdMC8ai0snJs9KQyCbJuAch0rdeiOs7mCG8o6ZDDTzL6DCbsxl+WpkxqjTSzchkIQA7Ch+cyrafUJXJODUiUQPeVZeR7c0GHHXpXi98I7W/I6wjcrI3xgfUdmzhM0blUSE5xFQHOVXiMyQUQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Pqt2Hp7B; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1766735695; c=relaxed/relaxed;
+	bh=lDkkUp7mGO4pNa0uamBBvac1uq7Dml7wCrsXtOCSNl8=;
+	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:CC:
+	 References:From:In-Reply-To; b=A1/PeWyZwXOgAhooN7az5ddJ7Em+Dzp9PtmKZxo+zY3JQXgIws5QfWD1ilKPW2hxlUQ1mk5Id9iexZ9K0y5YjsvL3kY6Qwgvl70FN2dIJn4IOLrxLOLWUDdlLPy7TWIkI8WNZHC8UFK850ZpIHSarkH/40s7rogf9Ny92aMdjLd8P6MNWWhvNi75ylMIAmQRCQsjmf8RZYOYvH0ykxSo8cxYIhbZ6b7fI010a/Qf8iwQVztetUA0HeB3v62iZCf66qBofIuNRgj87lzBPYNBsSZwKbG8t+6pyQso4HYUBFD1qlkeZXGKn2qxKmxaEVIK9037f5nPM3lCQJXhXWkd8A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=Zh+MrGhG; dkim-atps=neutral; spf=pass (client-ip=113.46.200.222; helo=canpmsgout07.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=Pqt2Hp7B;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=Zh+MrGhG;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.222; helo=canpmsgout07.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dcyVp3Mx6z2xcB
-	for <linux-erofs@lists.ozlabs.org>; Fri, 26 Dec 2025 18:51:43 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1766735494; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Qd9rfpmNR9JZnpm0KlG2esdNFpGHbXKboYyu5igtky0=;
-	b=Pqt2Hp7Bt4rBEAA+x4sQJq3pSCai3VTMQRSA2uAY2DDV44rnskS9r+4uF386PWsBcl9jNT24w+xtNg1xsWdQUB8u32tagfcyBFpPwNH97OBy9iw4MgT+OqFunHi++D2BarEJ6aaQ/M3209Zj9XgDj02jpSxRtW0Wqh+rQpKVZAc=
-Received: from 30.221.133.83(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wvgwauo_1766735492 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 26 Dec 2025 15:51:33 +0800
-Message-ID: <7f954197-0027-4a4d-b237-ba5a0f09fe8f@linux.alibaba.com>
-Date: Fri, 26 Dec 2025 15:51:32 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dcyZN4vDxz2xcB
+	for <linux-erofs@lists.ozlabs.org>; Fri, 26 Dec 2025 18:54:51 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=lDkkUp7mGO4pNa0uamBBvac1uq7Dml7wCrsXtOCSNl8=;
+	b=Zh+MrGhGI6Q338VGihTzM1wCtHSgheMFc0io2/07APZhbmOAJpw2sfGhRR7Sml/zCnAPCsYH6
+	F0AFLimCdBWC2AQWq104MwaI0VLt4ni7mVJ4UaYEGBpf3fM5nSJ+SqYsK53uLoulVbUXCWkT+4C
+	hJIYCzhJ/hT7EmYIigNNlhU=
+Received: from mail.maildlp.com (unknown [172.19.163.200])
+	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4dcyVd2s4XzLlXm;
+	Fri, 26 Dec 2025 15:51:37 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id D1B2F40563;
+	Fri, 26 Dec 2025 15:54:44 +0800 (CST)
+Received: from [100.103.109.96] (100.103.109.96) by
+ kwepemr100010.china.huawei.com (7.202.195.125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.36; Fri, 26 Dec 2025 15:54:44 +0800
+Content-Type: multipart/alternative;
+	boundary="------------B0i5MkXSrRBdO60HXfjNolTR"
+Message-ID: <7c5a6710-5ebf-42f8-b35f-b5f2ae120a2d@huawei.com>
+Date: Fri, 26 Dec 2025 15:54:43 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -50,104 +61,402 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] erofs-utils: mount: gracefully exit when
- `erofsmount_nbd()` encounts an error
-To: "zhaoyifan (H)" <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
-Cc: jingrui@huawei.com, wayne.ma@huawei.com
+Subject: Re: [PATCH 5/5] erofs-utils: mount: stop checking
+ `/sys/block/nbdX/pid`
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
+CC: <jingrui@huawei.com>, <wayne.ma@huawei.com>
 References: <20251223100452.229684-1-zhaoyifan28@huawei.com>
- <20251223100452.229684-3-zhaoyifan28@huawei.com>
- <6571a348-0e96-4c79-91fc-278dbfb2a54a@linux.alibaba.com>
- <ab5d631a-ec99-4c1b-a071-e1b5168880d9@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <ab5d631a-ec99-4c1b-a071-e1b5168880d9@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+ <20251223100452.229684-4-zhaoyifan28@huawei.com>
+ <ba3929d3-b8f3-4027-bfa1-5ade5ec348f2@linux.alibaba.com>
+From: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
+In-Reply-To: <ba3929d3-b8f3-4027-bfa1-5ade5ec348f2@linux.alibaba.com>
+X-Originating-IP: [100.103.109.96]
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,HTML_MESSAGE,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+--------------B0i5MkXSrRBdO60HXfjNolTR
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-On 2025/12/26 15:43, zhaoyifan (H) wrote:
-> 
-> On 2025/12/26 14:49, Gao Xiang wrote:
->>
->>
->> On 2025/12/23 18:04, Yifan Zhao wrote:
->>> If the main process of `erofsmount_nbd()` encounters an error after the
->>> nbd device has been successfully set up, it fails to disconnect it
->>> before exiting, resulting in the subprocess not being cleaned up and
->>> keeping its connection with NBD device.
->>>
->>> This patch resolves the issue by disconnecting NBD device before exiting
->>> on error.
->>>
->>> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
->>> ---
->>> Note:
->>> - I believe directly killing the child process is unsafe, as it may leave
->>> in-flight NBD requests from the kernel unhandled, causing soft lockup.
->>> - And I believe using nbdpath here is safe, as the child process maintains
->>> the NBD device connection throughout, preventing concurrent access by other
->>> actors.
->>
->> What if the child process is already exited earlier, and the current NBD
->> device is reused for others?
->>
->> How about keeping the previous nbdfd for ioctl interfaces instead to
->> avoid nbd device reuse.
->>
-> OK, I will try this way.
+On 2025/12/26 14:51, Gao Xiang wrote:
+> Hi Yifan,
+>
+> On 2025/12/23 18:04, Yifan Zhao wrote:
+>> The `current erofsmount_nbd()` implementation verifies that the value in
+>> `/sys/block/nbdX/pid`` matches the PID of the process executing
+>> `erofsmount_nbd_loopfn()`, using this as an indicator that the NBD
+>> device is ready. This check is incorrect, as the PID recorded in the
+>> aforementioned sysfs file may belong to a kernel thread rather than a
+>> userspace process (see [1]).
+>
+> Do you have a way to reproduce that?
 
-Can you move small fixes in advance, and leave refactering at last?
+This issue is consistently reproducible in my WSL2 environment (kernel 
+version 6.6.87.2-microsoft-standard-WSL2),
 
-Thus we could address these small fixes first.
+but works correctly in other environments (e.g., openEuler 24.03 SP2). 
+The finer-grained difference
+
+between these 2 environments remains unclear.
+
+>
+>>
+>> Moreover, since this verification only occurs after the child process
+>> has successfully issued and returned from the NBD connect request,
+>> removing it introduces no risk of NBD device hijacking by malicious
+>> actors. This patch removes the erroneous check.
+>
+> It's not used to avoid device hijacking by malicious actors but
+> detecting if the NBD device is reused by another daemon.
+>
+ok. I believe under the ioctl interface, there is indeed no reliable way 
+to determine exactly whether the current daemon
+
+is the one holding the NBD device open (unlike with netlink, where 
+|/sys/block/nbdX/backend|can be used for such verification).
+
+This is indeed a genuine limitation.
 
 Thanks,
-Gao Xiang
 
-> 
-> 
+Yifan
+
 > Thanks,
-> 
-> Yifan
-> 
->> Thanks,
->> Gao Xiang
+> Gao Xiang
+>
 >>
->>>
->>>   mount/main.c | 17 +++++++++++++++--
->>>   1 file changed, 15 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/mount/main.c b/mount/main.c
->>> index 2a21979..d2d4815 100644
->>> --- a/mount/main.c
->>> +++ b/mount/main.c
->>> @@ -1287,10 +1287,23 @@ static int erofsmount_nbd(struct erofs_nbd_source *source,
->>>         if (!err) {
->>>           err = mount(nbdpath, mountpoint, fstype, flags, options);
->>> -        if (err < 0)
->>> +        if (err < 0) {
->>>               err = -errno;
->>> +            if (msg.is_netlink) {
->>> +                erofs_nbd_nl_disconnect(msg.nbdnum);
->>> +            } else {
->>> +                int nbdfd;
->>> +
->>> +                nbdfd = open(nbdpath, O_RDWR);
->>> +                if (nbdfd > 0) {
->>> +                    erofs_nbd_disconnect(nbdfd);
->>> +                    close(nbdfd);
->>> +                }
->>> +            }
->>> +            return err;
->>> +        }
->>>   -        if (!err && msg.is_netlink) {
->>> +        if (msg.is_netlink) {
->>>               id = erofs_nbd_get_identifier(msg.nbdnum);
->>>                 err = IS_ERR(id) ? PTR_ERR(id) :
+>> [1] 
+>> https://elixir.bootlin.com/linux/latest/source/drivers/block/nbd.c#L1501
 >>
+>> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+>> ---
+>>   lib/backends/nbd.c | 16 +++++-----------
+>>   lib/liberofs_nbd.h |  2 +-
+>>   mount/main.c       |  5 ++---
+>>   3 files changed, 8 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/lib/backends/nbd.c b/lib/backends/nbd.c
+>> index 46e75cd..2d941a9 100644
+>> --- a/lib/backends/nbd.c
+>> +++ b/lib/backends/nbd.c
+>> @@ -52,7 +52,8 @@ struct nbd_reply {
+>>       };
+>>   } __packed;
+>>   -long erofs_nbd_in_service(int nbdnum)
+>> +/* Return: 0 while nbd is in service, <0 otherwise */
+>> +int erofs_nbd_in_service(int nbdnum)
+>>   {
+>>       int fd, err;
+>>       char s[32];
+>> @@ -72,17 +73,10 @@ long erofs_nbd_in_service(int nbdnum)
+>>           return -ENOTCONN;
+>>         (void)snprintf(s, sizeof(s), "/sys/block/nbd%d/pid", nbdnum);
+>> -    fd = open(s, O_RDONLY);
+>> -    if (fd < 0)
+>> +    if (access(s, F_OK) < 0)
+>>           return -errno;
+>> -    err = read(fd, s, sizeof(s));
+>> -    if (err < 0) {
+>> -        err = -errno;
+>> -        close(fd);
+>> -        return err;
+>> -    }
+>> -    close(fd);
+>> -    return strtol(s, NULL, 10);
+>> +
+>> +    return 0;
+>>   }
+>>     int erofs_nbd_devscan(void)
+>> diff --git a/lib/liberofs_nbd.h b/lib/liberofs_nbd.h
+>> index 78c8af5..b719d80 100644
+>> --- a/lib/liberofs_nbd.h
+>> +++ b/lib/liberofs_nbd.h
+>> @@ -34,7 +34,7 @@ struct erofs_nbd_request {
+>>   /* 30-day timeout for NBD recovery */
+>>   #define EROFS_NBD_DEAD_CONN_TIMEOUT    (3600 * 24 * 30)
+>>   -long erofs_nbd_in_service(int nbdnum);
+>> +int erofs_nbd_in_service(int nbdnum);
+>>   int erofs_nbd_devscan(void);
+>>   int erofs_nbd_connect(int nbdfd, int blkbits, u64 blocks);
+>>   char *erofs_nbd_get_identifier(int nbdnum);
+>> diff --git a/mount/main.c b/mount/main.c
+>> index d2d4815..f6cba33 100644
+>> --- a/mount/main.c
+>> +++ b/mount/main.c
+>> @@ -1270,6 +1270,8 @@ static int erofsmount_nbd(struct 
+>> erofs_nbd_source *source,
+>>         while (1) {
+>>           err = erofs_nbd_in_service(msg.nbdnum);
+>> +        if (!err)
+>> +            break;
+>>           if (err == -ENOENT || err == -ENOTCONN) {
+>>               err = waitpid(child, &child_status, WNOHANG);
+>>               if (err < 0)
+>> @@ -1280,9 +1282,6 @@ static int erofsmount_nbd(struct 
+>> erofs_nbd_source *source,
+>>               usleep(50000);
+>>               continue;
+>>           }
+>> -        if (err >= 0)
+>> -            err = (err != child ? -EBUSY : 0);
+>> -        break;
+>>       }
+>>         if (!err) {
+>
+--------------B0i5MkXSrRBdO60HXfjNolTR
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">On 2025/12/26 14:51, Gao Xiang wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:ba3929d3-b8f3-4027-bfa1-5ade5ec348f2@linux.alibaba.com">Hi
+      Yifan,
+      <br>
+      <br>
+      On 2025/12/23 18:04, Yifan Zhao wrote:
+      <br>
+      <blockquote type="cite">The `current erofsmount_nbd()`
+        implementation verifies that the value in
+        <br>
+        `/sys/block/nbdX/pid`` matches the PID of the process executing
+        <br>
+        `erofsmount_nbd_loopfn()`, using this as an indicator that the
+        NBD
+        <br>
+        device is ready. This check is incorrect, as the PID recorded in
+        the
+        <br>
+        aforementioned sysfs file may belong to a kernel thread rather
+        than a
+        <br>
+        userspace process (see [1]).
+        <br>
+      </blockquote>
+      <br>
+      Do you have a way to reproduce that? <br>
+    </blockquote>
+    <p><span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">This issue is consistently reproducible in my WSL2 environment (kernel version 6.6.87.2-microsoft-standard-WSL2),</span></p>
+    <p><span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">but works correctly in other environments (e.g., openEuler 24.03 SP2). The finer-grained difference</span></p>
+    <p><span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">between these 2 environments remains unclear.</span></p>
+    <blockquote type="cite"
+      cite="mid:ba3929d3-b8f3-4027-bfa1-5ade5ec348f2@linux.alibaba.com"><br>
+      <blockquote type="cite">
+        <br>
+        Moreover, since this verification only occurs after the child
+        process
+        <br>
+        has successfully issued and returned from the NBD connect
+        request,
+        <br>
+        removing it introduces no risk of NBD device hijacking by
+        malicious
+        <br>
+        actors. This patch removes the erroneous check.
+        <br>
+      </blockquote>
+      <br>
+      It's not used to avoid device hijacking by malicious actors but
+      <br>
+      detecting if the NBD device is reused by another daemon. <br>
+      <br>
+    </blockquote>
+    <p>ok. <span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">I believe under the ioctl interface, there is indeed no reliable way to determine exactly </span><span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">whether the current daemon</span></p>
+    <p><span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">is the one holding the NBD device open (unlike with netlink, where </span><code
+      class="qwen-markdown-codespan"
+style="margin: 0px; padding: 0px 0.25rem; box-sizing: border-box; border-width: 0px; border-style: solid; border-color: rgb(227, 227, 227); display: inline-block; font-size: 0.875rem; line-height: 1.375rem; letter-spacing: -0.04em; color: rgb(97, 92, 237); border-radius: 0.25rem; background: none 0% 0% / auto repeat scroll padding-box border-box rgb(239, 238, 255); word-break: break-word; font-family: ui-monospace, SFMono-Regular, &quot;SF Mono&quot;, Menlo, Consolas, &quot;Liberation Mono&quot;, monospace !important; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; cursor: pointer;">/sys/block/nbdX/backend</code><span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;"> can be used for such verification).</span></p>
+    <p><span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">This is indeed a genuine limitation.</span></p>
+    <p><span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">
+</span></p>
+    <p><span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Thanks,</span></p>
+    <p><span
+style="color: rgb(29, 29, 31); font-family: system-ui, ui-sans-serif, -apple-system, BlinkMacSystemFont, Inter, NotoSansHans, sans-serif; font-size: 16px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: pre-line; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Yifan</span></p>
+    <blockquote type="cite"
+      cite="mid:ba3929d3-b8f3-4027-bfa1-5ade5ec348f2@linux.alibaba.com">Thanks,
+      <br>
+      Gao Xiang
+      <br>
+      <br>
+      <blockquote type="cite">
+        <br>
+        [1]
+        <a class="moz-txt-link-freetext" href="https://elixir.bootlin.com/linux/latest/source/drivers/block/nbd.c#L1501">https://elixir.bootlin.com/linux/latest/source/drivers/block/nbd.c#L1501</a>
+        <br>
+        <br>
+        Signed-off-by: Yifan Zhao <a class="moz-txt-link-rfc2396E" href="mailto:zhaoyifan28@huawei.com">&lt;zhaoyifan28@huawei.com&gt;</a>
+        <br>
+        ---
+        <br>
+          lib/backends/nbd.c | 16 +++++-----------
+        <br>
+          lib/liberofs_nbd.h |  2 +-
+        <br>
+          mount/main.c       |  5 ++---
+        <br>
+          3 files changed, 8 insertions(+), 15 deletions(-)
+        <br>
+        <br>
+        diff --git a/lib/backends/nbd.c b/lib/backends/nbd.c
+        <br>
+        index 46e75cd..2d941a9 100644
+        <br>
+        --- a/lib/backends/nbd.c
+        <br>
+        +++ b/lib/backends/nbd.c
+        <br>
+        @@ -52,7 +52,8 @@ struct nbd_reply {
+        <br>
+              };
+        <br>
+          } __packed;
+        <br>
+          -long erofs_nbd_in_service(int nbdnum)
+        <br>
+        +/* Return: 0 while nbd is in service, &lt;0 otherwise */
+        <br>
+        +int erofs_nbd_in_service(int nbdnum)
+        <br>
+          {
+        <br>
+              int fd, err;
+        <br>
+              char s[32];
+        <br>
+        @@ -72,17 +73,10 @@ long erofs_nbd_in_service(int nbdnum)
+        <br>
+                  return -ENOTCONN;
+        <br>
+                (void)snprintf(s, sizeof(s), "/sys/block/nbd%d/pid",
+        nbdnum);
+        <br>
+        -    fd = open(s, O_RDONLY);
+        <br>
+        -    if (fd &lt; 0)
+        <br>
+        +    if (access(s, F_OK) &lt; 0)
+        <br>
+                  return -errno;
+        <br>
+        -    err = read(fd, s, sizeof(s));
+        <br>
+        -    if (err &lt; 0) {
+        <br>
+        -        err = -errno;
+        <br>
+        -        close(fd);
+        <br>
+        -        return err;
+        <br>
+        -    }
+        <br>
+        -    close(fd);
+        <br>
+        -    return strtol(s, NULL, 10);
+        <br>
+        +
+        <br>
+        +    return 0;
+        <br>
+          }
+        <br>
+            int erofs_nbd_devscan(void)
+        <br>
+        diff --git a/lib/liberofs_nbd.h b/lib/liberofs_nbd.h
+        <br>
+        index 78c8af5..b719d80 100644
+        <br>
+        --- a/lib/liberofs_nbd.h
+        <br>
+        +++ b/lib/liberofs_nbd.h
+        <br>
+        @@ -34,7 +34,7 @@ struct erofs_nbd_request {
+        <br>
+          /* 30-day timeout for NBD recovery */
+        <br>
+          #define EROFS_NBD_DEAD_CONN_TIMEOUT    (3600 * 24 * 30)
+        <br>
+          -long erofs_nbd_in_service(int nbdnum);
+        <br>
+        +int erofs_nbd_in_service(int nbdnum);
+        <br>
+          int erofs_nbd_devscan(void);
+        <br>
+          int erofs_nbd_connect(int nbdfd, int blkbits, u64 blocks);
+        <br>
+          char *erofs_nbd_get_identifier(int nbdnum);
+        <br>
+        diff --git a/mount/main.c b/mount/main.c
+        <br>
+        index d2d4815..f6cba33 100644
+        <br>
+        --- a/mount/main.c
+        <br>
+        +++ b/mount/main.c
+        <br>
+        @@ -1270,6 +1270,8 @@ static int erofsmount_nbd(struct
+        erofs_nbd_source *source,
+        <br>
+                while (1) {
+        <br>
+                  err = erofs_nbd_in_service(msg.nbdnum);
+        <br>
+        +        if (!err)
+        <br>
+        +            break;
+        <br>
+                  if (err == -ENOENT || err == -ENOTCONN) {
+        <br>
+                      err = waitpid(child, &amp;child_status, WNOHANG);
+        <br>
+                      if (err &lt; 0)
+        <br>
+        @@ -1280,9 +1282,6 @@ static int erofsmount_nbd(struct
+        erofs_nbd_source *source,
+        <br>
+                      usleep(50000);
+        <br>
+                      continue;
+        <br>
+                  }
+        <br>
+        -        if (err &gt;= 0)
+        <br>
+        -            err = (err != child ? -EBUSY : 0);
+        <br>
+        -        break;
+        <br>
+              }
+        <br>
+                if (!err) {
+        <br>
+      </blockquote>
+      <br>
+    </blockquote>
+  </body>
+</html>
+
+--------------B0i5MkXSrRBdO60HXfjNolTR--
 
