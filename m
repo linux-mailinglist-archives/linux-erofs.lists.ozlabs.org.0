@@ -1,44 +1,45 @@
-Return-Path: <linux-erofs+bounces-1621-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1622-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAFEDCDF921
+	by mail.lfdr.de (Postfix) with ESMTPS id 2464ECDF91E
 	for <lists+linux-erofs@lfdr.de>; Sat, 27 Dec 2025 12:40:51 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4ddgXc2xd0z2y8c;
+	by lists.ozlabs.org (Postfix) with ESMTP id 4ddgXc2nymz2xpg;
 	Sat, 27 Dec 2025 22:40:48 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.223
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.218
 ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1766835648;
-	cv=none; b=lu6cFeSjyD+o3qDyt31WfXXevYE4Iq/eelGLxJO+8ow8TQc9x00DBT0EeHnXHTvZ8HaLRgv4a/fWSYTzKWJF5ZX/GGpWhBLjsdN+jDgpgrfToS3eU7T7NTWmuJu6yoa6tC5hrh1I1coTehPIBw2OdGVkTskjlrYFKFsj9Xm6Es6uJ9yfJjPd13tJ7tj6BsxVO0cnKS5G8R9JCXmwUOIiGgokQ80NfDbk7oliWJ5HYZIDcSsW5AEDY/XP3jEFRUEr4F78bZxI1vsz3ulGI/m+MMKm1J+jQMLnYpjCodaTIvKpSTjGiWSJlvItqioTcEL8aG7sAvr2MWbIYX+ZB5PCfA==
+	cv=none; b=DG9nwmU7V9UUN6eedGpMBYZOFA161TN/yjGVY2u/GDSas4/zPydkBNP7DvmTeiqt0Hl4JZ5/rAIROvAhqJVMuwewl09Fm6laU/4RbZL5bq7RJiXOjcKp0l90xsaOthG5bPuG+bxIXD0YTmXrfM0W9JrwZUvah4ncBoO8jVtWRw8FJIj+rnywayqYtNkZogkP6t1F+iKQLml436ByAX6k+IheAqKIyQStxZ2+GjBBWWWhqxHTkt4EtFX5668iSJL9JdUkk7cHLp4at2mdr97lmGujvIy4tcK3Y/nnv4j/LyHSQ93BwG4HCORmfq9ymUR2pOP5T0iI5Q4eRLykRoq9sA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
 	t=1766835648; c=relaxed/relaxed;
-	bh=hSKBA2VtQjgDI1COUm8U/n4ooXPTNlszYJW3CJEAtOc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M0TWOZKEt3usaqAKC8xrpNL2vd7P8PvanA1semMr3GHwGCHPE9xjmcOjAoyqoifHobFo06AUYaVIg6eOR16CvoHJoMM2rw4OdeE1Eip1CfmrWMTmAuWcSBIvjpGYV3kS4cx0oPnY0Lzjwpa0An/fKO+FDdwq9ZGSBb8QXI+ZhzaTERHWTF/ix/hp5FlrspWl/CgQgV8dMtDRQ0/R4GcnQeyfJUTLg0LCeHyxNSioJHifaRFzcJOuWOphuFqfs+6MsC2ioEqQf9lETfVzN8zL6ZrDMaZ26AdZMPr3q2X7uLz6JdEjEkx+ovXdrZbI0JhMoJj7i1UWS4MPA7wmnm2EVg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=J+INrXua; dkim-atps=neutral; spf=pass (client-ip=113.46.200.223; helo=canpmsgout08.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+	bh=sD7ZFu9LwR/y3vzt7IIbOvUItYZ1RnfTy9cI8xmwVv8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=echWgmUytfjLghGW77x0FyuwlQAuCEhmfpSw04oEO/KCSugZEWN4t3wzToaFuBCBEHMtvjlaqbDjhXNxQqUeni0zfrTayjmo/GmV/67atgD48VgLHB4/SF6fQoDDKjPxIIljZLtsDHZQuuJpo9FC2LooU9zeC4krZyOJbVpcVcE+2fy/DauyBx2RlqSqu222SgiYSV8W/TEMy5aPFx3GpulNAJ+PXlls+fh2n1t88FGjIO4ku5DW6h3Liw0Gswvs4Ykjm1yQbFBaVsqh/vHVK16UP8/NgFsDF/FFdJWLKkjIq0c2oobi5f0mlLweYE5K8WILca19eVKYdLuDadKACg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=gebJjKvN; dkim-atps=neutral; spf=pass (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=J+INrXua;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=gebJjKvN;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.223; helo=canpmsgout08.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4ddgXY4xZlz2xlP
-	for <linux-erofs@lists.ozlabs.org>; Sat, 27 Dec 2025 22:40:43 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4ddgXY4RS1z2xQK
+	for <linux-erofs@lists.ozlabs.org>; Sat, 27 Dec 2025 22:40:44 +1100 (AEDT)
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=hSKBA2VtQjgDI1COUm8U/n4ooXPTNlszYJW3CJEAtOc=;
-	b=J+INrXuaO9Yf8aqgFiK3PJE0ANLiNqEEWrw/toy9VVEDz1N/dVGy1QOTLJ7uSUracio9BvpKl
-	vFJh5Is6xihVDcr2n0JzZ7WMEXs6nY+PTyz1LzXVXJTYr2abwEXRz6JtDSEZrm6qfuoUP6Cqn5K
-	ZSzZzzEdK4pf8Nl4YUFWv9A=
-Received: from mail.maildlp.com (unknown [172.19.163.163])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4ddgSl18B1zmV6l
-	for <linux-erofs@lists.ozlabs.org>; Sat, 27 Dec 2025 19:37:27 +0800 (CST)
+	bh=sD7ZFu9LwR/y3vzt7IIbOvUItYZ1RnfTy9cI8xmwVv8=;
+	b=gebJjKvNgibkkhgF39JSj1kYy5qOksTcH7869cb0+hltzB54D4ry2YNgwTvzQUq1Za2CkgKln
+	2HLqETZrGlPye3cQm/Q7zCGmkJEEAWEwMWyO7OqS/0jH0bsQNVXh53Y+0XG7vuwyJ0ngE6lUx6j
+	wSbx1FN4nxzVpReJaD70708=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4ddgSt6lTrzpSx3
+	for <linux-erofs@lists.ozlabs.org>; Sat, 27 Dec 2025 19:37:34 +0800 (CST)
 Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
-	by mail.maildlp.com (Postfix) with ESMTPS id 974F240565
+	by mail.maildlp.com (Postfix) with ESMTPS id DFA6040363
 	for <linux-erofs@lists.ozlabs.org>; Sat, 27 Dec 2025 19:40:36 +0800 (CST)
 Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
  (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
@@ -47,10 +48,12 @@ Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
 From: Yifan Zhao <zhaoyifan28@huawei.com>
 To: <linux-erofs@lists.ozlabs.org>
 CC: <jingrui@huawei.com>, <wayne.ma@huawei.com>, <zhaoyifan28@huawei.com>
-Subject: [PATCH 1/2] erofs-utils: mount: gracefully exit when `erofsmount_nbd()` encounts an error
-Date: Sat, 27 Dec 2025 19:39:32 +0800
-Message-ID: <20251227113933.45791-1-zhaoyifan28@huawei.com>
+Subject: [PATCH 2/2] erofs-utils: mount: fix ioctl-based NBD disconnect behavior
+Date: Sat, 27 Dec 2025 19:39:33 +0800
+Message-ID: <20251227113933.45791-2-zhaoyifan28@huawei.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20251227113933.45791-1-zhaoyifan28@huawei.com>
+References: <20251227113933.45791-1-zhaoyifan28@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -72,88 +75,59 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-If the main process of `erofsmount_nbd()` encounters an error after the
-nbd device has been successfully set up, it fails to disconnect it
-before exiting, resulting in the subprocess not being cleaned up and
-keeping its connection with NBD device.
-
-This patch resolves the issue by disconnecting NBD device before exiting
-on error.
+Currently erofsmount_startnbd() doesn't ignore SIGPIPE, causing
+erofsmount_nbd_loopfn() to be killed abruptly without clean up during
+disconnect. Moreover, -EPIPE from NBD socket I/O is expected while
+disconnecting, and erofsmount_startnbd() treats it as error, leading to
+redundant print:
+```
+<E> erofs: NBD worker failed with [Error 32] Broken pipe
+```
 
 Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
 ---
- mount/main.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ mount/main.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/mount/main.c b/mount/main.c
-index 02a7962..5ba2e0a 100644
+index 5ba2e0a..965b0b8 100644
 --- a/mount/main.c
 +++ b/mount/main.c
-@@ -1194,7 +1194,7 @@ static int erofsmount_nbd(struct erofs_nbd_source *source,
- {
- 	bool is_netlink = false;
- 	char nbdpath[32], *id;
--	int num, nbdfd;
-+	int num, nbdfd = -1;
- 	pid_t pid = 0;
- 	long err;
+@@ -621,11 +621,8 @@ static void *erofsmount_nbd_loopfn(void *arg)
+ 		off_t pos;
  
-@@ -1220,7 +1220,6 @@ static int erofsmount_nbd(struct erofs_nbd_source *source,
- 		if ((pid = fork()) == 0)
- 			return erofsmount_startnbd(nbdfd, source) ?
- 				EXIT_FAILURE : EXIT_SUCCESS;
--		close(nbdfd);
- 	} else {
- 		num = err;
- 		(void)snprintf(nbdpath, sizeof(nbdpath), "/dev/nbd%d", num);
-@@ -1230,13 +1229,15 @@ static int erofsmount_nbd(struct erofs_nbd_source *source,
- 	while (1) {
- 		err = erofs_nbd_in_service(num);
- 		if (err == -ENOENT || err == -ENOTCONN) {
--			int status;
--
--			err = waitpid(pid, &status, WNOHANG);
--			if (err < 0)
--				return -errno;
--			else if (err > 0)
--				return status ? -EIO : 0;
-+			err = waitpid(pid, NULL, WNOHANG);
-+			if (err < 0) {
-+				err = -errno;
-+				break;
-+			} else if (err > 0) {
-+				/* child process exited unexpectedly */
-+				err = -EIO;
-+				break;
-+			}
+ 		err = erofs_nbd_get_request(ctx->sk.fd, &rq);
+-		if (err < 0) {
+-			if (err == -EPIPE)
+-				err = 0;
++		if (err < 0)
+ 			break;
+-		}
  
- 			usleep(50000);
- 			continue;
-@@ -1246,9 +1247,13 @@ static int erofsmount_nbd(struct erofs_nbd_source *source,
- 		break;
- 	}
- 	if (!err) {
--		err = mount(nbdpath, mountpoint, fstype, flags, options);
--		if (err < 0)
-+		if (mount(nbdpath, mountpoint, fstype, flags, options) < 0) {
- 			err = -errno;
-+			if (is_netlink)
-+				erofs_nbd_nl_disconnect(num);
-+			else
-+				erofs_nbd_disconnect(nbdfd);
-+		}
- 
- 		if (!err && is_netlink) {
- 			id = erofs_nbd_get_identifier(num);
-@@ -1262,6 +1267,8 @@ static int erofsmount_nbd(struct erofs_nbd_source *source,
- 				free(id);
- 		}
- 	}
-+	if (!is_netlink)
-+		close(nbdfd);
- 	return err;
+ 		if (rq.type != EROFS_NBD_CMD_READ) {
+ 			err = erofs_nbd_send_reply_header(ctx->sk.fd,
+@@ -653,6 +650,8 @@ static void *erofsmount_nbd_loopfn(void *arg)
+ out:
+ 	erofs_io_close(&ctx->vd);
+ 	erofs_io_close(&ctx->sk);
++	if (err == -EPIPE)
++		err = 0;
+ 	return (void *)(uintptr_t)err;
  }
  
+@@ -663,6 +662,12 @@ static int erofsmount_startnbd(int nbdfd, struct erofs_nbd_source *source)
+ 	pthread_t th;
+ 	int err, err2;
+ 
++	/* Otherwise, NBD disconnect sends SIGPIPE, skipping cleanup */
++	if (signal(SIGPIPE, SIG_IGN) == SIG_ERR) {
++		err = -errno;
++		goto out_closefd;
++	}
++
+ 	if (source->type == EROFSNBD_SOURCE_OCI) {
+ 		if (source->ocicfg.tarindex_path || source->ocicfg.zinfo_path) {
+ 			err = erofsmount_tarindex_open(&ctx.vd, &source->ocicfg,
 -- 
 2.43.0
 
