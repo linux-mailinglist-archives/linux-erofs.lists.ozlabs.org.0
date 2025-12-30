@@ -1,52 +1,52 @@
-Return-Path: <linux-erofs+bounces-1650-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1651-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8509DCE8977
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Dec 2025 03:46:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A5B9BCE89A1
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Dec 2025 03:56:12 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dgHYC6rvgz2yDk;
-	Tue, 30 Dec 2025 13:46:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dgHlt09Lkz2yDk;
+	Tue, 30 Dec 2025 13:56:10 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.218
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767062815;
-	cv=none; b=m5T551yna8uGGYb/UXEzGfi84HIpaFL50EeCS785w1JOrz/K/6fVkzHkGnrTzgsVlN0a+/g/2zPfx0KnX7wZzahbPE2+RLDV6Ptwx9IBtmWzutKVovIs6Ez2H1j8dIleVPKsnSJQirtqKqEOJBGljrMKEz2HlBQDNh0/PjB3EAR2ZSRNg54uoffnHFOBjDiPE6oGcoZu+p5mhGxvo0p8Jikv9wbOoybt6ttvB1jS3zNJ1W5tAkEKEL4WVHvy1c8UVSshFjtE35AfXXp68IotUAXx2FxVh1DNaqV/VrG0L5VkOXysKbZCqujifmJuW6CNBtCFzyMJUusOZwGt16oAMg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.221
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767063369;
+	cv=none; b=Boz/7oh4LwkrlNErppD7b98yYP4ZuF7a8kKZwjqg5KEA+sjnHdZG4Zy31xQ2RsbXpXtd96X2fXrKhKTg87z0nMIZIVg/tuGNGK4N62ru2KkZL8iLtplnVE+tFC1Qc3WccJMI5Wi5yDVGB4ASAhGrI9q1tSb/CxWA3sprZHryLJ1725nSBGXJO90jrytFjh/1wD5nO8CzPTY7shIHsIWGWTYquNXrFCbqj1QfJduB23jgb+/Z/6bS6suFa/z8Z727bc8WYa8kDuxBq87tEUYDdRfQ/kbD4PD5vNIaitx0RaezYFgVei0yxGrXZFABj2L9GO9lG/CCu1KTgFJW+7MX3Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767062815; c=relaxed/relaxed;
-	bh=QnyklycO/B/8QU0ypBXf9S76mTpZkjpjnxNcfGHCo14=;
+	t=1767063369; c=relaxed/relaxed;
+	bh=074gn06uNtdmByYR2SmRHJXJeIRXTvyZchhu+C8etF0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=J/HnZjx6CYz4hfYGYaX+/FK2HCgzpd86q8fGdsfqbkLWiTPXFt7Yv2VvJp2GKjb4kd4UjjZIpIFkYSPaecnivKVH68VFeCVSlh4kneSFQoQDB3005POwQRZX9uBpUEoUWOO53IYmFKp2umPmyrdwu1b4SXXRtKJoK4IRlKITuzO8g8SCr4Zw9c0cJbgRvZVIWd39pQNYiNjsUua0WhOV6FHnF+AgKAiOoJBWDd0DemP5YF+ctupqNJZGByIC3Qze/VqXyqprIO9+tfFXqSWMdcLIjBfPBxhTYs1jofPrBG2f33oONqJZAP0l3+h8OHgELMcgk1Ix0HtFbL+aQPAJYQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=iCaJL2yj; dkim-atps=neutral; spf=pass (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+	 In-Reply-To:Content-Type; b=n9bSPCVFPk0FR68Vp0IodgtwKD0z+8JDQMZ4jBaaq10J0mWyMcD+qVYN6YIIWqV+rvnqN3q69BmjWKczGzdtAkgahg77oe5whlFkNYV9zdWFhz1eQzYagF6o+PJ2Q6OdPcnZYIaBy32AgnBCgwc7PFJy+yIvZm5NTrJsCL5PKDVoX3yi3AHdq2fS3JdDdeh8ZaMa0UtMBCrD+J8ymfOJ+IYUWGzZ8piAIm18N6YaUXVobLidD33++ZEu5iqrcJLOAryOwJlLhh66U2yqtSfvAjzMjcjoVVl0d+IiN6uYaYyH+DH/9eaAqAbF/7rFg2ayUfiXz2OIrk0W7n2TRGmOpw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=jpqF/5mk; dkim-atps=neutral; spf=pass (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=iCaJL2yj;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=jpqF/5mk;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dgHY86LpRz2yD4
-	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Dec 2025 13:46:52 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dgHlr4vXcz2yD4
+	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Dec 2025 13:56:07 +1100 (AEDT)
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=QnyklycO/B/8QU0ypBXf9S76mTpZkjpjnxNcfGHCo14=;
-	b=iCaJL2yj+vXaBRS9WdO09qvDxglAbaLF7Yaxc82viv/eHmAotH5wf+ZEB6r9y6FsqpBX+tQln
-	JGsCi5j4O4w1bl/adspY7EQcVVF+il/YsuR6YthtSgT5O77amfCydR9myLQLrc9IYw2bjsngVhV
-	GxPg5SJys1+956KJC26MoVw=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4dgHTR4BQczpSvm
-	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Dec 2025 10:43:39 +0800 (CST)
+	bh=074gn06uNtdmByYR2SmRHJXJeIRXTvyZchhu+C8etF0=;
+	b=jpqF/5mkLcOanSJpxtzE6Y3G7Ojlu04oW94JhMsotclYNWcGJOAjdC7UcVTsCzLVx9f5F6cEg
+	+N/Hl/OuDnTBH/LrJpgc8/XwpzwnjoS//I48I+caIE2KecLKIzykBnlojsP5ZgtMiBC09Mscxwa
+	18ZIIuy5UVAVdoBHG1YwRc4=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4dgHh26hK9zRhvJ
+	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Dec 2025 10:52:50 +0800 (CST)
 Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id 33B9F2016A
-	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Dec 2025 10:46:46 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id A18F640605
+	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Dec 2025 10:56:01 +0800 (CST)
 Received: from [10.67.111.104] (10.67.111.104) by
  kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 30 Dec 2025 10:46:45 +0800
-Message-ID: <3224fc3b-9fa0-4de5-8734-d34034116237@huawei.com>
-Date: Tue, 30 Dec 2025 10:46:45 +0800
+ 15.2.1544.11; Tue, 30 Dec 2025 10:56:01 +0800
+Message-ID: <2c6148b0-568c-4cc0-9b4d-d753c0fe92cf@huawei.com>
+Date: Tue, 30 Dec 2025 10:56:00 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -59,13 +59,13 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] erofs: unexport erofs_getxattr()
+Subject: Re: [PATCH 4/4] erofs: unexport erofs_xattr_prefix()
+Content-Language: en-US
 To: <linux-erofs@lists.ozlabs.org>
 References: <20251229092949.2316075-1-hsiangkao@linux.alibaba.com>
- <20251229092949.2316075-3-hsiangkao@linux.alibaba.com>
-Content-Language: en-US
+ <20251229092949.2316075-4-hsiangkao@linux.alibaba.com>
 From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20251229092949.2316075-3-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20251229092949.2316075-4-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.67.111.104]
@@ -79,173 +79,104 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 
 On 2025/12/29 17:29, Gao Xiang wrote:
-> No external users other than those in xattr.c.
+> It can be simply in xattr.c due to no external users.
 > 
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
 
 Thanks,
 Hongbo
 
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 > ---
->   fs/erofs/xattr.c | 108 +++++++++++++++++++++++------------------------
->   fs/erofs/xattr.h |   7 ---
->   2 files changed, 54 insertions(+), 61 deletions(-)
+>   fs/erofs/xattr.c | 27 +++++++++++++++++++++++++++
+>   fs/erofs/xattr.h | 30 ------------------------------
+>   2 files changed, 27 insertions(+), 30 deletions(-)
 > 
 > diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
-> index 396536d9a862..972941ecb71c 100644
+> index 972941ecb71c..d25c1cc1940c 100644
 > --- a/fs/erofs/xattr.c
 > +++ b/fs/erofs/xattr.c
-> @@ -125,58 +125,6 @@ static int erofs_init_inode_xattrs(struct inode *inode)
->   	return ret;
->   }
+> @@ -25,6 +25,8 @@ struct erofs_xattr_iter {
+>   	struct dentry *dentry;
+>   };
 >   
-> -static bool erofs_xattr_user_list(struct dentry *dentry)
-> -{
-> -	return test_opt(&EROFS_SB(dentry->d_sb)->opt, XATTR_USER);
-> -}
-> -
-> -static bool erofs_xattr_trusted_list(struct dentry *dentry)
-> -{
-> -	return capable(CAP_SYS_ADMIN);
-> -}
-> -
-> -static int erofs_xattr_generic_get(const struct xattr_handler *handler,
-> -				   struct dentry *unused, struct inode *inode,
-> -				   const char *name, void *buffer, size_t size)
-> -{
-> -	if (handler->flags == EROFS_XATTR_INDEX_USER &&
-> -	    !test_opt(&EROFS_I_SB(inode)->opt, XATTR_USER))
-> -		return -EOPNOTSUPP;
-> -
-> -	return erofs_getxattr(inode, handler->flags, name, buffer, size);
-> -}
-> -
-> -const struct xattr_handler erofs_xattr_user_handler = {
-> -	.prefix	= XATTR_USER_PREFIX,
-> -	.flags	= EROFS_XATTR_INDEX_USER,
-> -	.list	= erofs_xattr_user_list,
-> -	.get	= erofs_xattr_generic_get,
-> -};
-> -
-> -const struct xattr_handler erofs_xattr_trusted_handler = {
-> -	.prefix	= XATTR_TRUSTED_PREFIX,
-> -	.flags	= EROFS_XATTR_INDEX_TRUSTED,
-> -	.list	= erofs_xattr_trusted_list,
-> -	.get	= erofs_xattr_generic_get,
-> -};
-> -
-> -#ifdef CONFIG_EROFS_FS_SECURITY
-> -const struct xattr_handler __maybe_unused erofs_xattr_security_handler = {
-> -	.prefix	= XATTR_SECURITY_PREFIX,
-> -	.flags	= EROFS_XATTR_INDEX_SECURITY,
-> -	.get	= erofs_xattr_generic_get,
-> -};
-> -#endif
-> -
-> -const struct xattr_handler * const erofs_xattr_handlers[] = {
-> -	&erofs_xattr_user_handler,
-> -	&erofs_xattr_trusted_handler,
-> -#ifdef CONFIG_EROFS_FS_SECURITY
-> -	&erofs_xattr_security_handler,
-> -#endif
-> -	NULL,
-> -};
-> -
->   static int erofs_xattr_copy_to_buffer(struct erofs_xattr_iter *it,
->   				      unsigned int len)
+> +static const char *erofs_xattr_prefix(unsigned int idx, struct dentry *dentry);
+> +
+>   static int erofs_init_inode_xattrs(struct inode *inode)
 >   {
-> @@ -391,8 +339,8 @@ static int erofs_xattr_iter_shared(struct erofs_xattr_iter *it,
->   	return i ? ret : -ENODATA;
->   }
+>   	struct erofs_inode *const vi = EROFS_I(inode);
+> @@ -462,6 +464,31 @@ const struct xattr_handler * const erofs_xattr_handlers[] = {
+>   	NULL,
+>   };
 >   
-> -int erofs_getxattr(struct inode *inode, int index, const char *name,
-> -		   void *buffer, size_t buffer_size)
-> +static int erofs_getxattr(struct inode *inode, int index, const char *name,
-> +			  void *buffer, size_t buffer_size)
->   {
->   	int ret;
->   	unsigned int hashbit;
-> @@ -462,6 +410,58 @@ ssize_t erofs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
->   	return ret ? ret : it.buffer_ofs;
->   }
->   
-> +static bool erofs_xattr_user_list(struct dentry *dentry)
+> +static const char *erofs_xattr_prefix(unsigned int idx, struct dentry *dentry)
 > +{
-> +	return test_opt(&EROFS_SB(dentry->d_sb)->opt, XATTR_USER);
-> +}
+> +	const struct xattr_handler *handler = NULL;
 > +
-> +static bool erofs_xattr_trusted_list(struct dentry *dentry)
-> +{
-> +	return capable(CAP_SYS_ADMIN);
-> +}
-> +
-> +static int erofs_xattr_generic_get(const struct xattr_handler *handler,
-> +				   struct dentry *unused, struct inode *inode,
-> +				   const char *name, void *buffer, size_t size)
-> +{
-> +	if (handler->flags == EROFS_XATTR_INDEX_USER &&
-> +	    !test_opt(&EROFS_I_SB(inode)->opt, XATTR_USER))
-> +		return -EOPNOTSUPP;
-> +
-> +	return erofs_getxattr(inode, handler->flags, name, buffer, size);
-> +}
-> +
-> +const struct xattr_handler erofs_xattr_user_handler = {
-> +	.prefix	= XATTR_USER_PREFIX,
-> +	.flags	= EROFS_XATTR_INDEX_USER,
-> +	.list	= erofs_xattr_user_list,
-> +	.get	= erofs_xattr_generic_get,
-> +};
-> +
-> +const struct xattr_handler erofs_xattr_trusted_handler = {
-> +	.prefix	= XATTR_TRUSTED_PREFIX,
-> +	.flags	= EROFS_XATTR_INDEX_TRUSTED,
-> +	.list	= erofs_xattr_trusted_list,
-> +	.get	= erofs_xattr_generic_get,
-> +};
-> +
-> +#ifdef CONFIG_EROFS_FS_SECURITY
-> +const struct xattr_handler __maybe_unused erofs_xattr_security_handler = {
-> +	.prefix	= XATTR_SECURITY_PREFIX,
-> +	.flags	= EROFS_XATTR_INDEX_SECURITY,
-> +	.get	= erofs_xattr_generic_get,
-> +};
+> +	static const struct xattr_handler * const xattr_handler_map[] = {
+> +		[EROFS_XATTR_INDEX_USER] = &erofs_xattr_user_handler,
+> +#ifdef CONFIG_EROFS_FS_POSIX_ACL
+> +		[EROFS_XATTR_INDEX_POSIX_ACL_ACCESS] = &nop_posix_acl_access,
+> +		[EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT] = &nop_posix_acl_default,
 > +#endif
-> +
-> +const struct xattr_handler * const erofs_xattr_handlers[] = {
-> +	&erofs_xattr_user_handler,
-> +	&erofs_xattr_trusted_handler,
+> +		[EROFS_XATTR_INDEX_TRUSTED] = &erofs_xattr_trusted_handler,
 > +#ifdef CONFIG_EROFS_FS_SECURITY
-> +	&erofs_xattr_security_handler,
+> +		[EROFS_XATTR_INDEX_SECURITY] = &erofs_xattr_security_handler,
 > +#endif
-> +	NULL,
-> +};
+> +	};
+> +
+> +	if (idx && idx < ARRAY_SIZE(xattr_handler_map))
+> +		handler = xattr_handler_map[idx];
+> +
+> +	if (!xattr_handler_can_list(handler, dentry))
+> +		return NULL;
+> +
+> +	return xattr_prefix(handler);
+> +}
 > +
 >   void erofs_xattr_prefixes_cleanup(struct super_block *sb)
 >   {
 >   	struct erofs_sb_info *sbi = EROFS_SB(sb);
 > diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
-> index 6317caa8413e..ee1d8c310d97 100644
+> index ee1d8c310d97..36f2667afc2d 100644
 > --- a/fs/erofs/xattr.h
 > +++ b/fs/erofs/xattr.h
-> @@ -45,17 +45,10 @@ extern const struct xattr_handler * const erofs_xattr_handlers[];
+> @@ -11,36 +11,6 @@
+>   #include <linux/xattr.h>
+>   
+>   #ifdef CONFIG_EROFS_FS_XATTR
+> -extern const struct xattr_handler erofs_xattr_user_handler;
+> -extern const struct xattr_handler erofs_xattr_trusted_handler;
+> -extern const struct xattr_handler erofs_xattr_security_handler;
+> -
+> -static inline const char *erofs_xattr_prefix(unsigned int idx,
+> -					     struct dentry *dentry)
+> -{
+> -	const struct xattr_handler *handler = NULL;
+> -
+> -	static const struct xattr_handler * const xattr_handler_map[] = {
+> -		[EROFS_XATTR_INDEX_USER] = &erofs_xattr_user_handler,
+> -#ifdef CONFIG_EROFS_FS_POSIX_ACL
+> -		[EROFS_XATTR_INDEX_POSIX_ACL_ACCESS] = &nop_posix_acl_access,
+> -		[EROFS_XATTR_INDEX_POSIX_ACL_DEFAULT] = &nop_posix_acl_default,
+> -#endif
+> -		[EROFS_XATTR_INDEX_TRUSTED] = &erofs_xattr_trusted_handler,
+> -#ifdef CONFIG_EROFS_FS_SECURITY
+> -		[EROFS_XATTR_INDEX_SECURITY] = &erofs_xattr_security_handler,
+> -#endif
+> -	};
+> -
+> -	if (idx && idx < ARRAY_SIZE(xattr_handler_map))
+> -		handler = xattr_handler_map[idx];
+> -
+> -	if (!xattr_handler_can_list(handler, dentry))
+> -		return NULL;
+> -
+> -	return xattr_prefix(handler);
+> -}
+> -
+>   extern const struct xattr_handler * const erofs_xattr_handlers[];
 >   
 >   int erofs_xattr_prefixes_init(struct super_block *sb);
->   void erofs_xattr_prefixes_cleanup(struct super_block *sb);
-> -int erofs_getxattr(struct inode *, int, const char *, void *, size_t);
->   ssize_t erofs_listxattr(struct dentry *, char *, size_t);
->   #else
->   static inline int erofs_xattr_prefixes_init(struct super_block *sb) { return 0; }
->   static inline void erofs_xattr_prefixes_cleanup(struct super_block *sb) {}
-> -static inline int erofs_getxattr(struct inode *inode, int index,
-> -				 const char *name, void *buffer,
-> -				 size_t buffer_size)
-> -{
-> -	return -EOPNOTSUPP;
-> -}
->   
->   #define erofs_listxattr (NULL)
->   #define erofs_xattr_handlers (NULL)
 
