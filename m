@@ -1,73 +1,56 @@
-Return-Path: <linux-erofs+bounces-1646-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1647-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23E08CE8771
-	for <lists+linux-erofs@lfdr.de>; Tue, 30 Dec 2025 02:11:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6505ECE8904
+	for <lists+linux-erofs@lfdr.de>; Tue, 30 Dec 2025 03:31:12 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dgFQj3Nb2z2yDk;
-	Tue, 30 Dec 2025 12:11:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dgHC15XVsz2yDk;
+	Tue, 30 Dec 2025 13:31:09 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.15
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767057069;
-	cv=none; b=bUMKL3PfWW3YE4t4xU2CIa9iF4MkMk8eHKr8i6AYxca37vYb3VaJVzMLT29moN5Te/Ier+wV+sQJ8iKnlxhbHa1k2GWoGNSpRLR1JNsq77aFqqFWDL/Y0+O0Qd06/I+FCweT+cUZTMxhtEiXMF4s6uCWZ+3VNKqzOh5iNkuZDIKM4KtvmnkNX8WRAGC6/bfJDaF7cUBq8ykoBeKyXJbL/yYyKTPt4i9/+A3wQtjzninxgldP4Q8WTB1+uLnn50bXgC9lWfHYJT1UvHTsu1RlOWpd5y8VOdF2LRrht2Pq/BpalrSR3pRrnzju4E8gErro88BZ5zySBWbljbkcfCCfmg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767061869;
+	cv=none; b=D4e51zIDTIpBh4ypOA9iQs8fIwGB/1QIhFDL7owSqwWXRZQzo2dph4f2XYubgrVivz6By6K0O2Os5S7mKM9AlWFPTdY91GWaHAjahj9ySx5LDLdEhydoGwsRZ33YFks5GWHdc+6CL86tooqZNl/qNpj4k5FmTqZz+0S9X80HFhgF7leOIgZKLYLZXTV8InSBrTpGEIT/rvRnCNLPtDO0jo6S1Tmm+wpuLzTUUop0Tv9PkTIcP5/k5KcekLecgIqbZrocHM/CiHlaNTbL8SDBnvE/xT8ux9ITsqvV1I7WOF4nfLI01PLXmVrTDKrLYjVczrYCmGgo3lCNfYfMyfkuag==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767057069; c=relaxed/relaxed;
-	bh=twVfvLB5OXGrAL+zhqWcBgV+EmWuXtnhUBceKHtpm1s=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=iQn6jsQTgLQiPH7fkGVMQnBnps+2ThYok7oZJVmyvRsjsXQjvrkzu/lP/zCyukggQeOOFnMvY9CltPpzvRNRD+eyzrDGuWqFb4Ots5uvUmVeCtcBGT6kNTGb4oRdRyVmy/lr+42BqbEUiXrG3l4ZNS/rBGHwjnCdqHVCQdnotnkJdiJ6wxVtac19X4SUChdNS/7lN2C5HGXV4GgQwIHQHd747wonI13dr1Tt32U5OqeFIeRjuu4d06EwOj3AWv413X7BlbPuCy2SQlul8Gdufe+Rd4JoGgCvZd8E/Or0JmwpmiWt9bs1iOQ280rWLsgcgOWjCyY1zadNSJIRE0Hi8A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gBohfbGq; dkim-atps=neutral; spf=pass (client-ip=192.198.163.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1767061869; c=relaxed/relaxed;
+	bh=jffYoQ/hbMXywNMgqFPKngokhp/eErJsRHR1Kywn7AA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oQRgK2yoG+/nRPj1q8pQtERPdlbJZ+7dpMaPp0MzmqvOgxvMsFH0dWdlKy8D5G0ivStNjQVUtaoqXQKSKEH6bw5UmWxQtTPrEo6WeoSVBOOkTDsmLf/9cooqqSSfcSrvx5wAUStrHBMEt+0JoL2c9MXPA1RrOkX7vhD243GfMJqYQ8ZwronKbzqEQZEuJnNyjKWCZFiL3a2KRXybzQdDPG8XiMwLUX1R/EGp9R/Xu+qW/JkD83f5HxuKn2tnrVCJgWhCbforl/Zpk9NJdInnKxB5k9Ka5s8b5Ods+g40DFpfWxzx2s4xOGF3beNRDXKL5zHy7wMu5aB63p/1RkfEGA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=p9+O6yrX; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=gBohfbGq;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=p9+O6yrX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dgFQf3RTsz2xgX
-	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Dec 2025 12:11:04 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1767057067; x=1798593067;
-  h=date:from:to:cc:subject:message-id;
-  bh=fLGXjYkm1ek9dyupiPffoxzW4Js3d+GeAma2QsSI/Wc=;
-  b=gBohfbGqCBfRc7fFgOVwItW4W74lyJ4KMjsKeWeCnD2assN37bzDDhww
-   XxUPtXfiM552qsb+uHsOBaCxCOXsSZwOvFPesb7n1dAzZH85iW9rYKiW2
-   2DjR4wfxq70I+9xK+u3IlLxppw8qByGjpv+98NbfBX2yPUCe85cvqnWlq
-   zJUyakF6jc+0Y0hriPhiS51pJYjUzOTANup75JupAm27OkRajYdMTJyQS
-   20TXXWMcg+8zsyGB5xssMMcJOtL9dvu1dZuUYrKKgDHwQ0hYakjSWGQKE
-   glrXafai584g+spQn4jQrORSNw84jKdWYzzJWchXXun7NO1XT9VmUsYKf
-   Q==;
-X-CSE-ConnectionGUID: rK1Ak0lLS+yzePxSfshFuA==
-X-CSE-MsgGUID: rk0ZxmSmSQeBMP50DdpTyg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11656"; a="68730689"
-X-IronPort-AV: E=Sophos;i="6.21,187,1763452800"; 
-   d="scan'208";a="68730689"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2025 17:11:01 -0800
-X-CSE-ConnectionGUID: PKc0EEXtSnGbJTqudBdDXw==
-X-CSE-MsgGUID: UGpxAXBATSCmsjsnWCYPQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,187,1763452800"; 
-   d="scan'208";a="232139187"
-Received: from lkp-server02.sh.intel.com (HELO dd3453e2b682) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 29 Dec 2025 17:10:59 -0800
-Received: from kbuild by dd3453e2b682 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vaOGH-000000008AY-2ZsA;
-	Tue, 30 Dec 2025 01:10:57 +0000
-Date: Tue, 30 Dec 2025 09:10:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test] BUILD SUCCESS
- 272246418f02ca7627d5c2bb35906bc341cd438b
-Message-ID: <202512300905.463Tp02G-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dgHBz1zjRz2yD4
+	for <linux-erofs@lists.ozlabs.org>; Tue, 30 Dec 2025 13:31:05 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1767061860; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=jffYoQ/hbMXywNMgqFPKngokhp/eErJsRHR1Kywn7AA=;
+	b=p9+O6yrXPZq9sa6THG6u/vSx3goA9mcwP5gYyFcHYT3AgwN5az3MkZbq0DqbpGQ85ZXP9pbeGlYDJsMtQUfQMq+tuCAnOw0iPKzIj2SbQmut9xeznSMBhAXvf7QtdDPkuEGJWBA6ywiA0Au4Q5/B/S5m4tvArn8n53H+nkBJbMU=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WvyTNWw_1767061854 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 30 Dec 2025 10:30:58 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	Sasha Levin <sashal@kernel.org>
+Cc: linux-erofs@lists.ozlabs.org,
+	Junbeom Yeom <junbeom.yeom@samsung.com>,
+	Jaewook Kim <jw5454.kim@samsung.com>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH 6.18.y v2] erofs: fix unexpected EIO under memory pressure
+Date: Tue, 30 Dec 2025 10:30:53 +0800
+Message-ID: <20251230023053.3682970-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20251229185432.1616355-2-sashal@kernel.org>
+References: <20251229185432.1616355-2-sashal@kernel.org>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -78,187 +61,148 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-branch HEAD: 272246418f02ca7627d5c2bb35906bc341cd438b  erofs: remove useless src in erofs_xattr_copy_to_buffer()
+From: Junbeom Yeom <junbeom.yeom@samsung.com>
 
-elapsed time: 735m
+erofs readahead could fail with ENOMEM under the memory pressure because
+it tries to alloc_page with GFP_NOWAIT | GFP_NORETRY, while GFP_KERNEL
+for a regular read. And if readahead fails (with non-uptodate folios),
+the original request will then fall back to synchronous read, and
+`.read_folio()` should return appropriate errnos.
 
-configs tested: 166
-configs skipped: 2
+However, in scenarios where readahead and read operations compete,
+read operation could return an unintended EIO because of an incorrect
+error propagation.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+To resolve this, this patch modifies the behavior so that, when the
+PCL is for read(which means pcl.besteffort is true), it attempts actual
+decompression instead of propagating the privios error except initial EIO.
 
-tested configs:
-alpha                             allnoconfig    gcc-15.1.0
-alpha                            allyesconfig    gcc-15.1.0
-arc                              allmodconfig    gcc-15.1.0
-arc                               allnoconfig    gcc-15.1.0
-arc                              allyesconfig    gcc-15.1.0
-arc                        nsim_700_defconfig    gcc-15.1.0
-arc                   randconfig-001-20251230    gcc-12.5.0
-arc                   randconfig-002-20251230    gcc-9.5.0
-arm                               allnoconfig    clang-22
-arm                              allyesconfig    gcc-15.1.0
-arm                          collie_defconfig    gcc-15.1.0
-arm                        neponset_defconfig    gcc-15.1.0
-arm                   randconfig-001-20251230    gcc-8.5.0
-arm                   randconfig-002-20251230    gcc-8.5.0
-arm                   randconfig-003-20251230    gcc-10.5.0
-arm                   randconfig-004-20251230    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-15.1.0
-arm64                 randconfig-001-20251230    gcc-15.1.0
-arm64                 randconfig-002-20251230    gcc-14.3.0
-arm64                 randconfig-003-20251230    clang-22
-arm64                 randconfig-004-20251230    clang-20
-csky                             allmodconfig    gcc-15.1.0
-csky                              allnoconfig    gcc-15.1.0
-csky                  randconfig-001-20251230    gcc-15.1.0
-csky                  randconfig-002-20251230    gcc-15.1.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-22
-hexagon               randconfig-001-20251230    clang-22
-hexagon               randconfig-002-20251230    clang-18
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20251230    gcc-14
-i386        buildonly-randconfig-002-20251230    clang-20
-i386        buildonly-randconfig-003-20251230    clang-20
-i386        buildonly-randconfig-004-20251230    clang-20
-i386        buildonly-randconfig-005-20251230    clang-20
-i386        buildonly-randconfig-006-20251230    clang-20
-i386                  randconfig-001-20251229    gcc-14
-i386                  randconfig-001-20251230    gcc-14
-i386                  randconfig-002-20251229    clang-20
-i386                  randconfig-002-20251230    clang-20
-i386                  randconfig-003-20251229    clang-20
-i386                  randconfig-003-20251230    clang-20
-i386                  randconfig-004-20251229    clang-20
-i386                  randconfig-004-20251230    clang-20
-i386                  randconfig-005-20251229    clang-20
-i386                  randconfig-005-20251230    clang-20
-i386                  randconfig-006-20251230    clang-20
-i386                  randconfig-007-20251230    clang-20
-i386                  randconfig-011-20251230    gcc-14
-i386                  randconfig-012-20251230    gcc-14
-i386                  randconfig-013-20251230    clang-20
-i386                  randconfig-014-20251230    gcc-12
-i386                  randconfig-015-20251230    gcc-14
-i386                  randconfig-016-20251230    gcc-14
-i386                  randconfig-017-20251230    gcc-12
-loongarch                        allmodconfig    clang-19
-loongarch                         allnoconfig    clang-22
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20251230    gcc-15.1.0
-loongarch             randconfig-002-20251230    clang-22
-m68k                             allmodconfig    gcc-15.1.0
-m68k                              allnoconfig    gcc-15.1.0
-m68k                             allyesconfig    gcc-15.1.0
-m68k                                defconfig    gcc-15.1.0
-m68k                        stmark2_defconfig    gcc-15.1.0
-microblaze                        allnoconfig    gcc-15.1.0
-microblaze                       allyesconfig    gcc-15.1.0
-microblaze                          defconfig    gcc-15.1.0
-mips                             allmodconfig    gcc-15.1.0
-mips                              allnoconfig    gcc-15.1.0
-mips                             allyesconfig    gcc-15.1.0
-mips                          eyeq5_defconfig    gcc-15.1.0
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20251230    gcc-8.5.0
-nios2                 randconfig-002-20251230    gcc-9.5.0
-openrisc                         allmodconfig    gcc-15.1.0
-openrisc                          allnoconfig    gcc-15.1.0
-openrisc                            defconfig    gcc-15.1.0
-parisc                           allmodconfig    gcc-15.1.0
-parisc                            allnoconfig    gcc-15.1.0
-parisc                           allyesconfig    gcc-15.1.0
-parisc                              defconfig    gcc-15.1.0
-parisc                generic-64bit_defconfig    gcc-15.1.0
-parisc                randconfig-001-20251230    gcc-15.1.0
-parisc                randconfig-002-20251230    gcc-8.5.0
-parisc64                            defconfig    gcc-15.1.0
-powerpc                     akebono_defconfig    clang-22
-powerpc                          allmodconfig    gcc-15.1.0
-powerpc                           allnoconfig    gcc-15.1.0
-powerpc               randconfig-001-20251230    gcc-10.5.0
-powerpc               randconfig-002-20251230    gcc-12.5.0
-powerpc64             randconfig-001-20251230    gcc-14.3.0
-powerpc64             randconfig-002-20251230    clang-22
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    gcc-15.1.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                 randconfig-001-20251230    gcc-15.1.0
-riscv                 randconfig-002-20251230    gcc-15.1.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.1.0
-s390                                defconfig    clang-22
-s390                  randconfig-001-20251230    gcc-14.3.0
-s390                  randconfig-002-20251230    clang-22
-sh                               allmodconfig    gcc-15.1.0
-sh                                allnoconfig    gcc-15.1.0
-sh                               allyesconfig    gcc-15.1.0
-sh                                  defconfig    gcc-15.1.0
-sh                    randconfig-001-20251230    gcc-13.4.0
-sh                    randconfig-002-20251230    gcc-12.5.0
-sh                   secureedge5410_defconfig    gcc-15.1.0
-sparc                             allnoconfig    gcc-15.1.0
-sparc                               defconfig    gcc-15.1.0
-sparc                 randconfig-001-20251230    gcc-8.5.0
-sparc                 randconfig-002-20251230    gcc-11.5.0
-sparc64                          allmodconfig    clang-22
-sparc64                             defconfig    clang-20
-sparc64               randconfig-001-20251230    clang-22
-sparc64               randconfig-002-20251230    clang-20
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                                  defconfig    clang-22
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20251230    gcc-13
-um                    randconfig-002-20251230    clang-18
-um                           x86_64_defconfig    clang-22
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20251230    gcc-14
-x86_64      buildonly-randconfig-002-20251230    gcc-14
-x86_64      buildonly-randconfig-003-20251230    clang-20
-x86_64      buildonly-randconfig-004-20251230    clang-20
-x86_64      buildonly-randconfig-005-20251230    clang-20
-x86_64      buildonly-randconfig-006-20251230    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                randconfig-001-20251230    gcc-14
-x86_64                randconfig-002-20251230    clang-20
-x86_64                randconfig-003-20251230    clang-20
-x86_64                randconfig-004-20251230    clang-20
-x86_64                randconfig-005-20251230    clang-20
-x86_64                randconfig-006-20251230    gcc-14
-x86_64                randconfig-011-20251230    gcc-14
-x86_64                randconfig-012-20251230    gcc-14
-x86_64                randconfig-013-20251230    gcc-14
-x86_64                randconfig-014-20251230    clang-20
-x86_64                randconfig-015-20251230    clang-20
-x86_64                randconfig-016-20251230    clang-20
-x86_64                randconfig-071-20251230    clang-20
-x86_64                randconfig-072-20251230    clang-20
-x86_64                randconfig-073-20251230    gcc-14
-x86_64                randconfig-074-20251230    clang-20
-x86_64                randconfig-075-20251230    clang-20
-x86_64                randconfig-076-20251230    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    gcc-15.1.0
-xtensa                           allyesconfig    gcc-15.1.0
-xtensa                randconfig-001-20251230    gcc-8.5.0
-xtensa                randconfig-002-20251230    gcc-8.5.0
+- Page size: 4K
+- The original size of FileA: 16K
+- Compress-ratio per PCL: 50% (Uncompressed 8K -> Compressed 4K)
+[page0, page1] [page2, page3]
+[PCL0]---------[PCL1]
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+- functions declaration:
+  . pread(fd, buf, count, offset)
+  . readahead(fd, offset, count)
+- Thread A tries to read the last 4K
+- Thread B tries to do readahead 8K from 4K
+- RA, besteffort == false
+- R, besteffort == true
+
+        <process A>                   <process B>
+
+pread(FileA, buf, 4K, 12K)
+  do readahead(page3) // failed with ENOMEM
+  wait_lock(page3)
+    if (!uptodate(page3))
+      goto do_read
+                               readahead(FileA, 4K, 8K)
+                               // Here create PCL-chain like below:
+                               // [null, page1] [page2, null]
+                               //   [PCL0:RA]-----[PCL1:RA]
+...
+  do read(page3)        // found [PCL1:RA] and add page3 into it,
+                        // and then, change PCL1 from RA to R
+...
+                               // Now, PCL-chain is as below:
+                               // [null, page1] [page2, page3]
+                               //   [PCL0:RA]-----[PCL1:R]
+
+                                 // try to decompress PCL-chain...
+                                 z_erofs_decompress_queue
+                                   err = 0;
+
+                                   // failed with ENOMEM, so page 1
+                                   // only for RA will not be uptodated.
+                                   // it's okay.
+                                   err = decompress([PCL0:RA], err)
+
+                                   // However, ENOMEM propagated to next
+                                   // PCL, even though PCL is not only
+                                   // for RA but also for R. As a result,
+                                   // it just failed with ENOMEM without
+                                   // trying any decompression, so page2
+                                   // and page3 will not be uptodated.
+                ** BUG HERE ** --> err = decompress([PCL1:R], err)
+
+                                   return err as ENOMEM
+...
+    wait_lock(page3)
+      if (!uptodate(page3))
+        return EIO      <-- Return an unexpected EIO!
+...
+
+Fixes: 2349d2fa02db ("erofs: sunset unneeded NOFAILs")
+Cc: stable@vger.kernel.org
+Reviewed-by: Jaewook Kim <jw5454.kim@samsung.com>
+Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
+Signed-off-by: Junbeom Yeom <junbeom.yeom@samsung.com>
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+Hi Greg and Sasha,
+
+Let's just merge this directly.
+No need to backport commit 831faabed812 ("erofs: improve decompression error reporting")
+for now.
+
+Thanks,
+Gao Xiang
+
+ fs/erofs/zdata.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index bc80cfe482f7..683703aee5ef 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -1262,17 +1262,17 @@ static int z_erofs_parse_in_bvecs(struct z_erofs_backend *be, bool *overlapped)
+ 	return err;
+ }
+ 
+-static int z_erofs_decompress_pcluster(struct z_erofs_backend *be, int err)
++static int z_erofs_decompress_pcluster(struct z_erofs_backend *be, bool eio)
+ {
+ 	struct erofs_sb_info *const sbi = EROFS_SB(be->sb);
+ 	struct z_erofs_pcluster *pcl = be->pcl;
+ 	unsigned int pclusterpages = z_erofs_pclusterpages(pcl);
+ 	const struct z_erofs_decompressor *decomp =
+ 				z_erofs_decomp[pcl->algorithmformat];
+-	int i, j, jtop, err2;
++	bool try_free = true;
++	int i, j, jtop, err2, err = eio ? -EIO : 0;
+ 	struct page *page;
+ 	bool overlapped;
+-	bool try_free = true;
+ 
+ 	mutex_lock(&pcl->lock);
+ 	be->nr_pages = PAGE_ALIGN(pcl->length + pcl->pageofs_out) >> PAGE_SHIFT;
+@@ -1400,12 +1400,12 @@ static int z_erofs_decompress_queue(const struct z_erofs_decompressqueue *io,
+ 		.pcl = io->head,
+ 	};
+ 	struct z_erofs_pcluster *next;
+-	int err = io->eio ? -EIO : 0;
++	int err = 0;
+ 
+ 	for (; be.pcl != Z_EROFS_PCLUSTER_TAIL; be.pcl = next) {
+ 		DBG_BUGON(!be.pcl);
+ 		next = READ_ONCE(be.pcl->next);
+-		err = z_erofs_decompress_pcluster(&be, err) ?: err;
++		err = z_erofs_decompress_pcluster(&be, io->eio) ?: err;
+ 	}
+ 	return err;
+ }
+-- 
+2.43.5
+
 
