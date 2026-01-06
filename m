@@ -1,57 +1,57 @@
-Return-Path: <linux-erofs+bounces-1682-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1683-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3F364CF3FC5
-	for <lists+linux-erofs@lfdr.de>; Mon, 05 Jan 2026 14:57:10 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20A24CF68C1
+	for <lists+linux-erofs@lfdr.de>; Tue, 06 Jan 2026 04:02:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dlG7l4f77z2xqk;
-	Tue, 06 Jan 2026 00:57:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dlbZ23HZ2z2xqr;
+	Tue, 06 Jan 2026 14:02:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767621427;
-	cv=none; b=dtOuQcMjKH9T7lO9TsNsbabgUuiwayMg3t1p8lmdKXXm4oMWtf1c94GJgbHGNIHuBrJn0sCcnXggoV4Q1pG3O4nq7ttuzfZMIfuMtXBrkqZ/Do4Oq1uhtgs+5yat2K21TyaxUBeGi3Sl6LmgCt8Qjyl33E8gWknopvU5JdCb1qSR0n5tNLvD2zTvNrXPDIXpc4asNbs8R36lGMxCmFBuUQ8FghFKFBm2btfcbIcttMJo9DvtTdeI9XhvhlEKkk/nXNb0jBoJlXyH8uOmTASqhbWNF2MfRf3S9nnJ8/epYoqmXmnsAQTBCy3Trl+SuLXTVJ8oNS/OzjK0ufZegStbzQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=220.197.31.4
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767668554;
+	cv=none; b=gYHx4KZKcIFcjmi9S+umvvLNla7t8fcH6CdMtJlCB8kuYNfP2qriNRbLYEajnr8GbQBhNL/sLMw4qL4x0p0unFqTSTZwKuymTkvAEyoq6uxwGj2eEuZpyveuznCWUsbyO84mn8a0UZ5ljopQAaQS0CtVBA6K3Gw2ktDvEMj/q+nSGbo7z6W5VYkEhx0s1ELTPJ1cb3YwJTlxK3FYvRDpJmsxuEZ3hLakKmZbENNJ6+amu9MVnK7T9nlRjflr4zfFEx8SnPdsiQB5UkI9aaZS6nVGQ7t4OvscujHGyd+N5VjiF/KB+gRSqqf0xYS3YzhvoACwpJURqJ9zMHaFhE5fLg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767621427; c=relaxed/relaxed;
-	bh=oUKfjr+HZsGqa9M/2SRDiMxuXYEcc2N94w03h4x5jlg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=err+pyKGiZ/7dGxHeoB6pvtvmoxzXc3+TaBVGqLcEtgtGSz76RrDMf0KmA7TrVij97B097ArhTU65ZHOMpKgYIZdN4gGUikHixJthmgIddT/iLDogtjQkAXomkHZpoudZt/7ofcBPiGlIgj3LfqRglSsjbMdaL8ZYJBmjdcA23908chcKV+D7cqjrDhu6sM3Vg7wkF+zO8VUBle2q/TrNMqyqw1ObSneXKGdkr7mpADd7/TRN9uJqiUq7OvQrSRAkRFXQVr9qfTr51R7AKFzZJSD+RMxBFiq3TBt4hq6wPVEbOc1zZpdzWaiLerHXflPP3lIpKCh1dD3gjd3MmFYnA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=NSv2eP/K; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org) smtp.mailfrom=linuxfoundation.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+	t=1767668554; c=relaxed/relaxed;
+	bh=20nfw3Plmnsmkkkz6LG9IBFsg+zccJwfHvu7Z9UX6fs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=b3wWdGAsSb8b6oKFV9cgT1AZ0++iJ7sQIESGqGCXCkFPfHRBOBgLrdiw10EJgS+cti5UnrtOe19J1yTgPjBVEvibd16ieJ+qW69PjfyBByDjrYS1RdmO0c+ML/xgofRD4s/TxEGk3pLmlmM9wtDQE4Zu6H10omiimKJ5noMt3mHYFW8Hh5sugTC4vbsd+Yn/+IfNEJRdXzXJsS3AowFFZ13Waf59r76Em30ua1vdstGud7i7tvvF5f/DtDBBSfg+mT6tciEEv87BOCRKoqqhCemz+v0TIipOAPcAwiDnnE4QVvt09Mjst2m85F6WPKZDvFLpN+VucHFUS4ibulRXng==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=163.com; dkim=pass (1024-bit key; unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=HbuXaH2X; dkim-atps=neutral; spf=pass (client-ip=220.197.31.4; helo=m16.mail.163.com; envelope-from=liubaolin12138@163.com; receiver=lists.ozlabs.org) smtp.mailfrom=163.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.a=rsa-sha256 header.s=korg header.b=NSv2eP/K;
+	dkim=pass (1024-bit key; unprotected) header.d=163.com header.i=@163.com header.a=rsa-sha256 header.s=s110527 header.b=HbuXaH2X;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linuxfoundation.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=gregkh@linuxfoundation.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=163.com (client-ip=220.197.31.4; helo=m16.mail.163.com; envelope-from=liubaolin12138@163.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 251 seconds by postgrey-1.37 at boromir; Tue, 06 Jan 2026 14:02:31 AEDT
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dlG7j4s4jz2xGY
-	for <linux-erofs@lists.ozlabs.org>; Tue, 06 Jan 2026 00:57:05 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 1CA7D60010;
-	Mon,  5 Jan 2026 13:56:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EB79C116D0;
-	Mon,  5 Jan 2026 13:56:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1767621391;
-	bh=exf/ch0MIW7+QupHXcxhIWfeHbtq+6PKpQdBxOEUCvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NSv2eP/K6FmZx7gH9HYHTTslJS5KltgSZCPtDXLo/ScMY7RNyD5w7v7b3KBSdPWWW
-	 e+btA5pYqNmFlJkBUOQOlTb3Fixa0xcHfgewYzajUZNVLInnDdCCBptlDdXFj2MkC/
-	 06s4qhSRmh4XXdyFV4scC7M22WsASXQ18Ct91IFk=
-Date: Mon, 5 Jan 2026 14:56:28 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dlbYz0GcDz2xRv
+	for <linux-erofs@lists.ozlabs.org>; Tue, 06 Jan 2026 14:02:29 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=20
+	nfw3Plmnsmkkkz6LG9IBFsg+zccJwfHvu7Z9UX6fs=; b=HbuXaH2Xp0d0DMmk7i
+	TGK17vqglg/HjWQIjSl0Ip/S7XJgjmJHjiUqMTNRIZiHpcmnCl92URQFxCa+SlnU
+	aeKojGlK38BrbItFy+h4I7PACJkR7o5SG6WsON+yRnIy/jC6N6/bxnNANn7HgbQq
+	VSvsvswWc6llYC+rlceKuCcz8=
+Received: from liubaolin-VMware-Virtual-Platform.localdomain (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgDXX4+OeVxpsvBmKQ--.146S2;
+	Tue, 06 Jan 2026 10:55:15 +0800 (CST)
+From: Baolin Liu <liubaolin12138@163.com>
+To: xiang@kernel.org,
+	chao@kernel.org
+Cc: zbestahu@gmail.com,
+	jefflexu@linux.alibaba.com,
+	dhavale@google.com,
+	lihongbo22@huawei.com,
+	guochunhai@vivo.com,
 	linux-erofs@lists.ozlabs.org,
-	Junbeom Yeom <junbeom.yeom@samsung.com>,
-	Jaewook Kim <jw5454.kim@samsung.com>,
-	Sungjong Seo <sj1557.seo@samsung.com>
-Subject: Re: [PATCH 6.18.y v2] erofs: fix unexpected EIO under memory pressure
-Message-ID: <2026010521-snout-handheld-98f3@gregkh>
-References: <20251229185432.1616355-2-sashal@kernel.org>
- <20251230023053.3682970-1-hsiangkao@linux.alibaba.com>
+	linux-kernel@vger.kernel.org,
+	Baolin Liu <liubaolin@kylinos.cn>
+Subject: [PATCH v1] erofs: Fix state inconsistency when updating fsid/domain_id
+Date: Tue,  6 Jan 2026 10:55:02 +0800
+Message-Id: <20260106025502.133470-1-liubaolin12138@163.com>
+X-Mailer: git-send-email 2.39.2
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -63,103 +63,68 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251230023053.3682970-1-hsiangkao@linux.alibaba.com>
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:QCgvCgDXX4+OeVxpsvBmKQ--.146S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uF1DCr4fJFWfKFWfKw4kWFg_yoW8GF4rpF
+	93K3WFy3y7Aw1UXF92gF48Xr98C340ya48Kws5Kws7X345JF4vgrWSqF1jkryfZrZ3Jw40
+	qFnFqw48uryUAa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbZ2-UUUUU=
+X-Originating-IP: [223.70.160.239]
+X-CM-SenderInfo: xolxutxrol0iasrtmqqrwthudrp/xtbC6RPzvmlceZOuDQAA3L
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Tue, Dec 30, 2025 at 10:30:53AM +0800, Gao Xiang wrote:
-> From: Junbeom Yeom <junbeom.yeom@samsung.com>
-> 
-> erofs readahead could fail with ENOMEM under the memory pressure because
-> it tries to alloc_page with GFP_NOWAIT | GFP_NORETRY, while GFP_KERNEL
-> for a regular read. And if readahead fails (with non-uptodate folios),
-> the original request will then fall back to synchronous read, and
-> `.read_folio()` should return appropriate errnos.
-> 
-> However, in scenarios where readahead and read operations compete,
-> read operation could return an unintended EIO because of an incorrect
-> error propagation.
-> 
-> To resolve this, this patch modifies the behavior so that, when the
-> PCL is for read(which means pcl.besteffort is true), it attempts actual
-> decompression instead of propagating the privios error except initial EIO.
-> 
-> - Page size: 4K
-> - The original size of FileA: 16K
-> - Compress-ratio per PCL: 50% (Uncompressed 8K -> Compressed 4K)
-> [page0, page1] [page2, page3]
-> [PCL0]---------[PCL1]
-> 
-> - functions declaration:
->   . pread(fd, buf, count, offset)
->   . readahead(fd, offset, count)
-> - Thread A tries to read the last 4K
-> - Thread B tries to do readahead 8K from 4K
-> - RA, besteffort == false
-> - R, besteffort == true
-> 
->         <process A>                   <process B>
-> 
-> pread(FileA, buf, 4K, 12K)
->   do readahead(page3) // failed with ENOMEM
->   wait_lock(page3)
->     if (!uptodate(page3))
->       goto do_read
->                                readahead(FileA, 4K, 8K)
->                                // Here create PCL-chain like below:
->                                // [null, page1] [page2, null]
->                                //   [PCL0:RA]-----[PCL1:RA]
-> ...
->   do read(page3)        // found [PCL1:RA] and add page3 into it,
->                         // and then, change PCL1 from RA to R
-> ...
->                                // Now, PCL-chain is as below:
->                                // [null, page1] [page2, page3]
->                                //   [PCL0:RA]-----[PCL1:R]
-> 
->                                  // try to decompress PCL-chain...
->                                  z_erofs_decompress_queue
->                                    err = 0;
-> 
->                                    // failed with ENOMEM, so page 1
->                                    // only for RA will not be uptodated.
->                                    // it's okay.
->                                    err = decompress([PCL0:RA], err)
-> 
->                                    // However, ENOMEM propagated to next
->                                    // PCL, even though PCL is not only
->                                    // for RA but also for R. As a result,
->                                    // it just failed with ENOMEM without
->                                    // trying any decompression, so page2
->                                    // and page3 will not be uptodated.
->                 ** BUG HERE ** --> err = decompress([PCL1:R], err)
-> 
->                                    return err as ENOMEM
-> ...
->     wait_lock(page3)
->       if (!uptodate(page3))
->         return EIO      <-- Return an unexpected EIO!
-> ...
-> 
-> Fixes: 2349d2fa02db ("erofs: sunset unneeded NOFAILs")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Jaewook Kim <jw5454.kim@samsung.com>
-> Reviewed-by: Sungjong Seo <sj1557.seo@samsung.com>
-> Signed-off-by: Junbeom Yeom <junbeom.yeom@samsung.com>
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> ---
-> Hi Greg and Sasha,
-> 
-> Let's just merge this directly.
-> No need to backport commit 831faabed812 ("erofs: improve decompression error reporting")
-> for now.
+From: Baolin Liu <liubaolin@kylinos.cn>
 
-Now taken, thanks!
+When updating fsid or domain_id, the code frees the old pointer before
+allocating a new one. If allocation fails, the pointer becomes NULL
+while the old value is already freed, causing state inconsistency.
 
-greg k-h
+Fix by allocating the new value first, and only freeing the old value
+on success.
+
+Signed-off-by: Baolin Liu <liubaolin@kylinos.cn>
+---
+ fs/erofs/super.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 937a215f626c..6e083d7e634c 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -509,16 +509,22 @@ static int erofs_fc_parse_param(struct fs_context *fc,
+ 		break;
+ #ifdef CONFIG_EROFS_FS_ONDEMAND
+ 	case Opt_fsid:
+-		kfree(sbi->fsid);
+-		sbi->fsid = kstrdup(param->string, GFP_KERNEL);
+-		if (!sbi->fsid)
++		char *new_fsid;
++
++		new_fsid = kstrdup(param->string, GFP_KERNEL);
++		if (!new_fsid)
+ 			return -ENOMEM;
++		kfree(sbi->fsid);
++		sbi->fsid = new_fsid;
+ 		break;
+ 	case Opt_domain_id:
+-		kfree(sbi->domain_id);
+-		sbi->domain_id = kstrdup(param->string, GFP_KERNEL);
+-		if (!sbi->domain_id)
++		char *new_domain_id;
++
++		new_domain_id = kstrdup(param->string, GFP_KERNEL);
++		if (!new_domain_id)
+ 			return -ENOMEM;
++		kfree(sbi->domain_id);
++		sbi->domain_id = new_domain_id;
+ 		break;
+ #else
+ 	case Opt_fsid:
+-- 
+2.39.2
+
 
