@@ -1,52 +1,95 @@
-Return-Path: <linux-erofs+bounces-1700-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1701-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DE81CFCAF0
-	for <lists+linux-erofs@lfdr.de>; Wed, 07 Jan 2026 09:52:01 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3231CFE40B
+	for <lists+linux-erofs@lfdr.de>; Wed, 07 Jan 2026 15:21:14 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dmMGk4Srxz2xbQ;
-	Wed, 07 Jan 2026 19:51:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dmVZb74mgz2xbQ;
+	Thu, 08 Jan 2026 01:21:11 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.224
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767775918;
-	cv=none; b=ko+Z1f4507zvwQu8h/bU/ykIIAdI663Yl938+fYsRBLs71GFBdJsE/+83xgiv9cl2ccTAqzBN2iktxFsMO7K59OkZogTEg9tiyMmMzybM7Boe0qgvPLCg1/jB5HwdgjTDZf6bg7OAZbW53f9uAEK9M+p4wF1X2yZd/+Jx22B4eQRmxoI9fV5m7tMUeQCzGVczjJgshbLv8VaZrN3R6T4yVBLarexfIZCwJwUg+Slk1TlRlcI+ToyUFgqxKDuqlnuGijRSnNrEYRiMbNpGPaLH2de/Ovb7fzpSjrgWR6geVGHbJh6FCTA1j2XggeTeetc/o6U2+y4b/99XUkE191BsA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=103.168.172.145
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767795671;
+	cv=none; b=gFPDCXmP8Oc5hB/Ku8T0+aeUtdxnFv8aDKdKfQDcIwsZnuTIZudPDKMQKqhZxUrsIhJ7/R0BmFejkUzZivYuwsMyQFgqUhnWdD8mgJEhp0aZP4GPdIjfcFfIs8ZyAvf7kxI8H04evmINNQjiJ0lMfLqdhDEne2kshnMTw0UW9TbgYJr6GVWYQQJWEgpSGM0z3bu81U7dYVTR+sbuIgk2EjM8NZ7WOMzRxiQvHD8zKCPa6OotPDdGbmBcoKOpdL4jZ4bvvn7H6Ugr4atFCMP3LAy4ZfRjzEov01Lh65S5sxP9dRkBrGO2jFFMKxSWbZqGJVZDGVcLIL9ObVGlCBn/pg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767775918; c=relaxed/relaxed;
-	bh=108JVCh9GjW5xEolruiVkAuLbJubn8gbsNhgLVBoKqk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WE2t3LDwDOtg8LOnQsuGCb60XZxKSW/wtzAHA8BT0/0YnaFY2K6oV+P6Xo6VWBis+/iMMZWFJIW4VxjjtTLeAPWpBVd/hazvF9rFenuf8SMnKksW3/eg1IDdcs8PyYzfUgwnxJD7hUiKauwkGVSWxqYuPhS3IURY8qlmUXKUU69jzlLJGSyNot6/z++ufZKQ35neuL51zyzdYJfCJ9rFAh8Em12+/ja25Z1whIPYusHem2I+vdwxRaJA6FuZwP9f9lJl4fK3qmSJ68iEBn8aEf4+RKjQCHJiK3NKUfKpmRKS0x/pC4E9KN9pY8BEU/1Bv9CGjGqZ6SamIdH7jljQwg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=TC6Orfwj; dkim-atps=neutral; spf=pass (client-ip=113.46.200.224; helo=canpmsgout09.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1767795671; c=relaxed/relaxed;
+	bh=dOKD9JMTnRtbOxhVDcnF3A5ak+ih4nA3hWhXQ0/WKc4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pe+u+zwQ9+hDFn6x5MHQrNUf+CBbrhwevuMT7CDkILdYaJ0bKq4KDK0i7qxKm+BK9cZiG64l7fbVZu66CEV/EDz6pz2/3uU8hkHU4HeTYH0ytMoFxlZknKC0A/NVPWycoYUdsK0fnCM5zRvvWSPlKjmvRF79VAYnP8WSNxUaxGDLTsDAM2xfpt6RJxPJJgGA430shCJ5HyJ+S+v5Xepe13RuijTjLJAUhr/NBkV1NkJJt5UHXcMqvTmHoj0NizKLowHMJGZ7MQPPmtCW21SSisuoP+IW+GuVdIx3YiL2L2g55id046taa8WnbE2L1MvXCEomC3LFQmHQmn3zFXt9bg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=dustymabe.com; dkim=pass (2048-bit key; unprotected) header.d=dustymabe.com header.i=@dustymabe.com header.a=rsa-sha256 header.s=fm3 header.b=z/GaYuPU; dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=pVx+QKPX; dkim-atps=neutral; spf=pass (client-ip=103.168.172.145; helo=fout-a2-smtp.messagingengine.com; envelope-from=dusty@dustymabe.com; receiver=lists.ozlabs.org) smtp.mailfrom=dustymabe.com
+Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=dustymabe.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=TC6Orfwj;
+	dkim=pass (2048-bit key; unprotected) header.d=dustymabe.com header.i=@dustymabe.com header.a=rsa-sha256 header.s=fm3 header.b=z/GaYuPU;
+	dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=pVx+QKPX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.224; helo=canpmsgout09.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=dustymabe.com (client-ip=103.168.172.145; helo=fout-a2-smtp.messagingengine.com; envelope-from=dusty@dustymabe.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 593 seconds by postgrey-1.37 at boromir; Thu, 08 Jan 2026 01:21:08 AEDT
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dmMGg2xbGz2xLR
-	for <linux-erofs@lists.ozlabs.org>; Wed, 07 Jan 2026 19:51:53 +1100 (AEDT)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=108JVCh9GjW5xEolruiVkAuLbJubn8gbsNhgLVBoKqk=;
-	b=TC6OrfwjILeUR0KaiqaMcbO4w48VARs0s030Z2ePHb4C042l+lNMSEY4UOVf3It7FQzoGUqwE
-	lGF4NhoysCpulm2w2SyOkk+vfiIymdRLydvpPBDq8pHNoIEk+f2HcqZJEnuLWP/0bj4NCYNPujK
-	N/37crmhGe9aPhZEIh1vFIo=
-Received: from mail.maildlp.com (unknown [172.19.163.214])
-	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4dmMBp21pBz1cyQn;
-	Wed,  7 Jan 2026 16:48:34 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2989E40539;
-	Wed,  7 Jan 2026 16:51:49 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 7 Jan 2026 16:51:48 +0800
-Message-ID: <eeb5efea-aa9c-449b-b2f8-157130b02aed@huawei.com>
-Date: Wed, 7 Jan 2026 16:51:47 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dmVZX731sz2xZK
+	for <linux-erofs@lists.ozlabs.org>; Thu, 08 Jan 2026 01:21:08 +1100 (AEDT)
+Received: from phl-compute-01.internal (phl-compute-01.internal [10.202.2.41])
+	by mailfout.phl.internal (Postfix) with ESMTP id 600D7EC008C;
+	Wed,  7 Jan 2026 09:11:12 -0500 (EST)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Wed, 07 Jan 2026 09:11:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dustymabe.com;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm3;
+	 t=1767795072; x=1767881472; bh=dOKD9JMTnRtbOxhVDcnF3A5ak+ih4nA3
+	hWhXQ0/WKc4=; b=z/GaYuPU3WkHTw6BIu8x4ibkRiKb+Bs8z7PuJcMVCM1uqJ2G
+	kLbqEceqAlV0FVbnLH1ZG9WO3Y6rOROZI5lk2pXPyZuG+99T0ZrUFOAGk/Mrmd+p
+	0hE6buJUtaTtxM9AgR1ur40ZB/zndqBkCcXcy38ynQh/GJCAmLxRSflWQOp1PGhs
+	6P91rQwKp0+Q89cXrRlfhOzAoQ7NLywpUeAiWI/0ym2JqapyfexGjeG9plGqBQgz
+	+qLFAbUU8BHtoxs+HUsGzeeP/4duSeB2ExtMIBAI7eC6WM733o5FuzNvOvwTpqv9
+	SbArT31ibYXzCG5mUeptju1QXZLQBNGBQO5Mwg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1767795072; x=
+	1767881472; bh=dOKD9JMTnRtbOxhVDcnF3A5ak+ih4nA3hWhXQ0/WKc4=; b=p
+	Vx+QKPXnKQeYDYlFo3HgeFCT1BTr05iIAPBHxr1xJgq1MyAv7u7naSC2HLEpNhfj
+	FZ7Lf0i5iYcp+T6sHM1kLyG2hdLTQ/lPk3yex8vlupQ4HN/T3FzB0rxY3EXXNLgR
+	LP7gndJSqXSGGZuCQq4ePr5aNggckzUKImOPCaqdx2n8wfKROD7DkTevxJ6lo3R2
+	l6+Dktr2glc2EzNg0tGk/9kGvdfilF4CMbI5tjzYV0QMl14IvH5Qr9r9aTvRuyZ3
+	rsJQXr8/ZP/GfDAWFQix37eL/xs7uFDVa1FKN2oJFTjsoG/OQHOp8qZjiLOenXrA
+	MMDjLlrmLdQDrQhfSxpCA==
+X-ME-Sender: <xms:f2leaRsG3FVO-zEVMkl0Owquz7WO907OZGLvKVE8cg2xbxuhfsAQ_w>
+    <xme:f2leaQ1aeZldWdlQF92Tmyx1S5vjXFljhQH4etm-uibK7npZ1hu5QIOZNluvl3ICa
+    g4DzPLOt-BfYwKTu0wrx2XSHcegEnoZrDKgXFNwxcFrNlLk38pgew>
+X-ME-Received: <xmr:f2leaRAnfyZJqeyqKQV6nQWLI5pSqeeHuye847KKDUvCrHFqd6dEXQVcmbjP4g7P7nSw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddutdefvdekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
+    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
+    gurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeffuhhsthih
+    ucforggsvgcuoeguuhhsthihseguuhhsthihmhgrsggvrdgtohhmqeenucggtffrrghtth
+    gvrhhnpeetjedvueevfeehhfeuteeufedukeeugeethfetueekfeehfedvieevtdeffeei
+    vdenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeguuhhsthihsegu
+    uhhsthihmhgrsggvrdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggvpehsmhhtph
+    houhhtpdhrtghpthhtohephhhsihgrnhhgkhgroheslhhinhhugidrrghlihgsrggsrgdr
+    tghomhdprhgtphhtthhopehlihhnuhigqdgvrhhofhhssehlihhsthhsrdhoiihlrggssh
+    drohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgv
+    lhdrohhrghdprhgtphhtthhopehlihhnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrh
+    hnvghlrdhorhhgpdhrtghpthhtohepthhimhesshhiohhsmhdrfhhrpdhrtghpthhtohep
+    rghnseguihhgihhtrghlthhiuggvrdhiohdprhgtphhtthhopegrmhhirhejfehilhesgh
+    hmrghilhdrtghomhdprhgtphhtthhopegrlhgvgihlsehrvgguhhgrthdrtghomhdprhgt
+    phhtthhopegsrhgruhhnvghrsehkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:f2leaWChaemY0tI97gN2-LLQzg4NKU3LbpHqqjTQOEShedrroJYhzg>
+    <xmx:f2leaakAYOb2RaUnDhYspT7rVTzSbXKmfuo2_QnqV6Zx2-PxnEZw0w>
+    <xmx:f2leaehp7o57w-PD3ZZDEy0wlF0O6ZJKWbfCW6lZEuxRJ4Jdw1zanA>
+    <xmx:f2leachqd1pQOnYWzlVpLdPlztvUJEJ1oxb0X2yBhEXFzv3YZmHuEQ>
+    <xmx:gGleaUXaqskCkLBRAtRikoNbx18my_IQhGQiiBF-vCBHVADA3IvS38_E>
+Feedback-ID: i13394474:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 7 Jan 2026 09:11:10 -0500 (EST)
+Message-ID: <6b5047ca-b6f5-4959-80d0-227f735f61dc@dustymabe.com>
+Date: Wed, 7 Jan 2026 09:11:10 -0500
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -59,107 +102,84 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 07/10] erofs: introduce the page cache share feature
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-CC: <djwong@kernel.org>, <amir73il@gmail.com>, <hch@lst.de>,
-	<linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>, Chao Yu <chao@kernel.org>,
-	<brauner@kernel.org>
-References: <20251231090118.541061-1-lihongbo22@huawei.com>
- <20251231090118.541061-8-lihongbo22@huawei.com>
- <99a517aa-744b-487b-bce8-294b69a0cd50@linux.alibaba.com>
- <b690d435-7e9c-4424-a681-d3f798176202@huawei.com>
- <df2889c0-6027-4f42-a013-b01357fd0005@linux.alibaba.com>
- <07212138-c0fc-4a64-a323-9cab978bf610@huawei.com>
- <9bacd58e-40be-4250-9fab-7fb8e2606ad8@linux.alibaba.com>
- <48755c73-323d-469e-9125-07051daf7c19@huawei.com>
- <d82c60eb-a170-48fe-9e50-e64c80681cb6@linux.alibaba.com>
+Subject: Re: [PATCH v2] erofs: don't bother with s_stack_depth increasing for
+ now
+To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>, =?UTF-8?Q?Timoth=C3=A9e_Ravi?=
+ =?UTF-8?Q?er?= <tim@siosm.fr>, =?UTF-8?B?QWxla3PDqWkgTmFpZMOpbm92?=
+ <an@digitaltide.io>, Amir Goldstein <amir73il@gmail.com>,
+ Alexander Larsson <alexl@redhat.com>, Christian Brauner
+ <brauner@kernel.org>, Miklos Szeredi <mszeredi@redhat.com>,
+ Sheng Yong <shengyong1@xiaomi.com>, Zhiguo Niu <niuzhiguo84@gmail.com>
+References: <0c34f3fa-c573-4343-b8ea-6832530f0069@linux.alibaba.com>
+ <20260106170504.674070-1-hsiangkao@linux.alibaba.com>
 Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <d82c60eb-a170-48fe-9e50-e64c80681cb6@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Dusty Mabe <dusty@dustymabe.com>
+In-Reply-To: <20260106170504.674070-1-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemr500015.china.huawei.com (7.202.195.162)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,
+	SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 
 
-On 2026/1/7 15:53, Gao Xiang wrote:
+On 1/6/26 12:05 PM, Gao Xiang wrote:
+> Previously, commit d53cd891f0e4 ("erofs: limit the level of fs stacking
+> for file-backed mounts") bumped `s_stack_depth` by one to avoid kernel
+> stack overflow when stacking an unlimited number of EROFS on top of
+> each other.
 > 
+> This fix breaks composefs mounts, which need EROFS+ovl^2 sometimes
+> (and such setups are already used in production for quite a long time).
 > 
-> On 2026/1/7 15:32, Hongbo Li wrote:
->>
->>
->> On 2026/1/7 15:27, Gao Xiang wrote:
->>>
->>>
->>> On 2026/1/7 15:17, Hongbo Li wrote:
->>>> Hi, Xiang
->>>>
->>>
->>> ...
->>>
->>>>>>>> +
->>>>>>>> +bool erofs_ishare_fill_inode(struct inode *inode)
->>>>>>>> +{
->>>>>>>> +    struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
->>>>>>>> +    struct erofs_inode *vi = EROFS_I(inode);
->>>>>>>> +    struct erofs_inode_fingerprint fp;
->>>>>>>> +    struct inode *sharedinode;
->>>>>>>> +    unsigned long hash;
->>>>>>>> +
->>>>>>>> +    if (!test_opt(&sbi->opt, INODE_SHARE))
->>>>>>>> +        return false;
->>>>>>>> +    (void)erofs_xattr_fill_ishare_fp(&fp, inode, sbi->domain_id);
->>>>>>>> +    if (!fp.size)
->>>>>>>> +        return false;
->>>>>>>
->>>>>>> Why not just:
->>>>>>>
->>>>>>>      if (erofs_xattr_fill_ishare_fp(&fp, inode, sbi->domain_id))
->>>>>>>          return false;
->>>>>>>
->>>>>>
->>>>>> When erofs_sb_has_ishare_xattrs returns false, 
->>>>>> erofs_xattr_fill_ishare_fp also considers success.
->>>>>
->>>>> Then why !test_opt(&sbi->opt, INODE_SHARE) didn't return?
->>>>>
->>>>
->>>> The MOUNT_INODE_SHARE flag is passed from user's mount option. And 
->>>> it is controllered by CONFIG_EROFS_FS_PAGE_CACHE_SHARE. I doesn't do 
->>>> the check when the superblock without ishare_xattrs. (It seems the 
->>>> mount options is static, although it is useless for mounting with 
->>>> inode_share on one EROFS image without ishare_xattrs).
->>>> So should we check that if the superblock has not ishare_xattrs 
->>>> feature, and we return -ENOSUPP?
->>>
->>> I think you should just mask off the INODE_SHARE if the on-disk
->>> compat feature is unavailable, and print a warning just like
->>> FSDAX fallback.
->>>
->>
->> Ok, it seems reasonable, and also can remove the check logic in 
->> erofs_xattr_fill_ishare_fp. I will change in next version.
+> One way to fix this regression is to bump FILESYSTEM_MAX_STACK_DEPTH
+> from 2 to 3, but proving that this is safe in general is a high bar.
 > 
-> I think you should move
+> After a long discussion on GitHub issues [1] about possible solutions,
+> one conclusion is that there is no need to support nesting file-backed
+> EROFS mounts on stacked filesystems, because there is always the option
+> to use loopback devices as a fallback.
 > 
-> if (!test_opt(&sbi->opt, INODE_SHARE))
->      return -EOPNOTSUPP;
+> As a quick fix for the composefs regression for this cycle, instead of
+> bumping `s_stack_depth` for file backed EROFS mounts, we disallow
+> nesting file-backed EROFS over EROFS and over filesystems with
+> `s_stack_depth` > 0.
 > 
-> into erofs_xattr_fill_inode_fingerprint() directly.
+> This works for all known file-backed mount use cases (composefs,
+> containerd, and Android APEX for some Android vendors), and the fix is
+> self-contained.
 > 
+> Essentially, we are allowing one extra unaccounted fs stacking level of
+> EROFS below stacking filesystems, but EROFS can only be used in the read
+> path (i.e. overlayfs lower layers), which typically has much lower stack
+> usage than the write path.
+> 
+> We can consider increasing FILESYSTEM_MAX_STACK_DEPTH later, after more
+> stack usage analysis or using alternative approaches, such as splitting
+> the `s_stack_depth` limitation according to different combinations of
+> stacking.
+> 
+> Fixes: d53cd891f0e4 ("erofs: limit the level of fs stacking for file-backed mounts")
+> Reported-by: Dusty Mabe <dusty@dustymabe.com>
+> Reported-by: Timothée Ravier <tim@siosm.fr>
+> Closes: https://github.com/coreos/fedora-coreos-tracker/issues/2087 [1]
+> Reported-by: "Alekséi Naidénov" <an@digitaltide.io>
+> Closes: https://lore.kernel.org/r/CAFHtUiYv4+=+JP_-JjARWjo6OwcvBj1wtYN=z0QXwCpec9sXtg@mail.gmail.com
+> Acked-by: Amir Goldstein <amir73il@gmail.com>
+> Cc: Alexander Larsson <alexl@redhat.com>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Miklos Szeredi <mszeredi@redhat.com>
+> Cc: Sheng Yong <shengyong1@xiaomi.com>
+> Cc: Zhiguo Niu <niuzhiguo84@gmail.com>
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-Ok.
 
-Thanks,
-Hongbo
 
-> Thanks,
-> Gao Xiang
+Tested-by: Dusty Mabe <dusty@dustymabe.com>
+
+I tested this fixed the problem we observed in our Fedora CoreOS CI documented over in
+https://github.com/coreos/fedora-coreos-tracker/issues/2087
 
