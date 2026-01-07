@@ -1,52 +1,43 @@
-Return-Path: <linux-erofs+bounces-1694-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1695-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B03D3CFC3D8
-	for <lists+linux-erofs@lfdr.de>; Wed, 07 Jan 2026 07:50:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E721ECFC414
+	for <lists+linux-erofs@lfdr.de>; Wed, 07 Jan 2026 07:56:52 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dmJZw67Tbz2yFq;
-	Wed, 07 Jan 2026 17:50:48 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dmJjt3b5Hz2xbQ;
+	Wed, 07 Jan 2026 17:56:50 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.227
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767768648;
-	cv=none; b=G7SkyIUaOvW0wrQ7Yf9dKanY/yddNcEvJ6DtnMXaAQnJtFf8f/AMwkH8a1Qqrwxdk+GaSPHG8PpV3/vjGo/Vpu1L+ECUoR3IeM3mQQ5TiDc4fHTiPXT2h+xABHT694r7FtFxD5PICmCmohTm9WItX7JHL8bG5heWjSEW7o+AfdnrdzKNUH6j+iO05JSlT2T1mtbvrwhkQJ2y5ixt4G3gN6cORWmZe7BxKGKgkb9XlurFK1c0T/bPxyhN8akaUo93MXZivmqz7vLYc0q+jKaAyLQt5iHI1flQxqDwl87sXGLDuxuBnVqey/7UIBvB2Rj1IIHaNZZCNVnY7n2twnmuig==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767769010;
+	cv=none; b=oRn3fam4prQYuBPskkEvy43J/cPSmRnhjyETEa9KhHRWSQAyMe+Np4pOb6u278SGaEgt/7vHnMh1kD5zVA/Zfbl03CVBjeZ0Ui8EnnuI1WSCWn8ltMT2r9JsnDyqICBkz0hLwDEq5DN8Rfd5NZ+3P79QoEw3kKIFRHW5O7c2X7GXkfjuE6uHRlvupgmFy3G8HrJHS9mmeTFmDJ2COmbYE9pN/CZxZuk4dly9Fh9jfPZZtw7aGOljj7VT5eOplRyDZfvUL7mEjE1XE5s9YNKwZjE0wJdszlYe/0+aZovimmyOttGHiJd9pmNGqiqjjCtOG2x41zVbhQwUQW3wwWHvkA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767768648; c=relaxed/relaxed;
-	bh=zcA78h/25ZcOE+V2h5pq/ndroGIocBHBYMTcRCRbx5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nLGx06tN29BZCacjg0KrkgBELAbqFAFBu3LmGL1qAW+QNJ60Y478x2fqJcRzugHOwDr6ORXogd+BRSx0jicDFpmRJBJ7VXHgYXzgOYENOeTdExBlBkRbEPnp6P8hRoi9ZJ/GDUpty0TlS7m3szi99/0zFYe8oyCIz0FLXkLBHXJSlkvqb7lvjLg+iERvTLkf1xH84usFPdmSnstXt84LyLDOiIMpdMjVL/6YvslTd+hBbaD5v/HHcRI8cqAhQBf0KHROS31Cefg6utE8PWkN7MZas4ImvRGTcSJ1N5lQUct4hbA0vY4RFNGhlPUcwB1/SehYWDje53ShY8vysrpgAg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=ZsRk2j1D; dkim-atps=neutral; spf=pass (client-ip=113.46.200.227; helo=canpmsgout12.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1767769010; c=relaxed/relaxed;
+	bh=uxQJ/2PmUTK2PkMYEMI1zPFooDQNSjqfmXM9b4dv9MU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eFYPxo9xTBMHSqOGSOafiIpjIi3xOXUqYkSS9fd9N+T02yTdt5ypkuwpC1sPYAFm0vnyauun3lKYpgnT+r6AeNWq9Gg4O+BRedpNzcBQgLLLUbki7QPCM+nNiaAP5HnryD3S/BEW7HCk2K9Y3RKzdwhywBjtrLr3bCQfYYL37pxjaXll8HaQ3eujbXda3+gkRXvdOHJzDeWjgvUPxP0zqr4VYtOwUnkhdOuz9SkdzDhzhRbxbhQcTH63DPdl9vkynXF+zATr/bf4PK037/0W3W6fDTgsKqn7rBOsooHR6JxGUu1ngK03lmcZ7cdmzu8yMGRBg0Bf9YUd3JYwLmuO5A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=hyEG9ty8; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=ZsRk2j1D;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=hyEG9ty8;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.227; helo=canpmsgout12.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dmJZv5jS5z2yFh
-	for <linux-erofs@lists.ozlabs.org>; Wed, 07 Jan 2026 17:50:47 +1100 (AEDT)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=zcA78h/25ZcOE+V2h5pq/ndroGIocBHBYMTcRCRbx5Q=;
-	b=ZsRk2j1DfZzYuOUGL3eiFpxqKeKbwNFYdcEoE7y/u+lCDVk0kPJ+6rK1KDG7tf9NWOneR3fVN
-	+Caa0PoKqh/0MJqeEO0hawqo4aeRNp+3WLkHniQat1xtRxI36EcD4FQTknFru9NvKKFQL8F6uud
-	vMy7FAqu1+QhM7zDBvfowVg=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dmJWH2s4jznTY4;
-	Wed,  7 Jan 2026 14:47:39 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id B7C434055B;
-	Wed,  7 Jan 2026 14:50:43 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 7 Jan 2026 14:50:43 +0800
-Message-ID: <06419d60-1fe9-4fcc-9d14-2751e12b6f7a@huawei.com>
-Date: Wed, 7 Jan 2026 14:50:42 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dmJjq4hNtz2xHP
+	for <linux-erofs@lists.ozlabs.org>; Wed, 07 Jan 2026 17:56:45 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1767768999; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=uxQJ/2PmUTK2PkMYEMI1zPFooDQNSjqfmXM9b4dv9MU=;
+	b=hyEG9ty8K7Y45Mlhta69Eb2yCGOFRzvIbfna3AXQo0XIBdhf0sD9ktiDDwDCAnGhMhB2JdDnRe7q5e1hy4CKqs68c2nLsua0gz/1NjEETw2lc5D6kjjUhtSRvi4dW+4We6dj9kY6k6uhw45VNr4PHkRoFS3N6zg5K/IJ7FaZBz8=
+Received: from 30.221.132.240(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WwXwQlH_1767768997 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 07 Jan 2026 14:56:37 +0800
+Message-ID: <df2889c0-6027-4f42-a013-b01357fd0005@linux.alibaba.com>
+Date: Wed, 7 Jan 2026 14:56:35 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -59,240 +50,216 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 08/10] erofs: support unencoded inodes for page cache
- share
-Content-Language: en-US
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-CC: <djwong@kernel.org>, <amir73il@gmail.com>, <hch@lst.de>,
-	<linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>, Chao Yu <chao@kernel.org>, Christian Brauner
-	<brauner@kernel.org>
+Subject: Re: [PATCH v12 07/10] erofs: introduce the page cache share feature
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: djwong@kernel.org, amir73il@gmail.com, hch@lst.de,
+ linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, Chao Yu <chao@kernel.org>, brauner@kernel.org
 References: <20251231090118.541061-1-lihongbo22@huawei.com>
- <20251231090118.541061-9-lihongbo22@huawei.com>
- <d31cd92b-56ba-4798-bc88-5bf4999a2437@linux.alibaba.com>
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <d31cd92b-56ba-4798-bc88-5bf4999a2437@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+ <20251231090118.541061-8-lihongbo22@huawei.com>
+ <99a517aa-744b-487b-bce8-294b69a0cd50@linux.alibaba.com>
+ <b690d435-7e9c-4424-a681-d3f798176202@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <b690d435-7e9c-4424-a681-d3f798176202@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemr500015.china.huawei.com (7.202.195.162)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 
 
-On 2026/1/7 14:12, Gao Xiang wrote:
+On 2026/1/7 14:48, Hongbo Li wrote:
+> Hi, Xiang
 > 
+> On 2026/1/7 14:08, Gao Xiang wrote:
+>>
+>>
+>> On 2025/12/31 17:01, Hongbo Li wrote:
+>>> From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+>>>
+>>> Currently, reading files with different paths (or names) but the same
+>>> content will consume multiple copies of the page cache, even if the
+>>> content of these page caches is the same. For example, reading
+>>> identical files (e.g., *.so files) from two different minor versions of
+>>> container images will cost multiple copies of the same page cache,
+>>> since different containers have different mount points. Therefore,
+>>> sharing the page cache for files with the same content can save memory.
+>>>
+>>> This introduces the page cache share feature in erofs. It allocate a
+>>> deduplicated inode and use its page cache as shared. Reads for files
+>>> with identical content will ultimately be routed to the page cache of
+>>> the deduplicated inode. In this way, a single page cache satisfies
+>>> multiple read requests for different files with the same contents.
+>>>
+>>> We introduce inode_share mount option to enable the page sharing mode
+>>> during mounting.
+>>>
+>>> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
+>>> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+>>> ---
+>>>   Documentation/filesystems/erofs.rst |   5 +
+>>>   fs/erofs/Makefile                   |   1 +
+>>>   fs/erofs/internal.h                 |  31 +++++
+>>>   fs/erofs/ishare.c                   | 170 ++++++++++++++++++++++++++++
+>>>   fs/erofs/super.c                    |  55 ++++++++-
+>>>   fs/erofs/xattr.c                    |  34 ++++++
+>>>   fs/erofs/xattr.h                    |   3 +
+>>>   7 files changed, 297 insertions(+), 2 deletions(-)
+>>>   create mode 100644 fs/erofs/ishare.c
+>>>
+>>> diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
+>>> index 08194f194b94..27d3caa3c73c 100644
+>>> --- a/Documentation/filesystems/erofs.rst
+>>> +++ b/Documentation/filesystems/erofs.rst
+>>> @@ -128,7 +128,12 @@ device=%s              Specify a path to an extra device to be used together.
+>>>   fsid=%s                Specify a filesystem image ID for Fscache back-end.
+>>>   domain_id=%s           Specify a domain ID in fscache mode so that different images
+>>>                          with the same blobs under a given domain ID can share storage.
+>>> +                       Also used for inode page sharing mode which defines a sharing
+>>> +                       domain.
+>>>   fsoffset=%llu          Specify block-aligned filesystem offset for the primary device.
+>>> +inode_share            Enable inode page sharing for this filesystem.  Inodes with
+>>> +                       identical content within the same domain ID can share the
+>>> +                       page cache.
+>>>   =================== =========================================================
+>>>   Sysfs Entries
+>>> diff --git a/fs/erofs/Makefile b/fs/erofs/Makefile
+>>> index 549abc424763..a80e1762b607 100644
+>>> --- a/fs/erofs/Makefile
+>>> +++ b/fs/erofs/Makefile
+>>> @@ -10,3 +10,4 @@ erofs-$(CONFIG_EROFS_FS_ZIP_ZSTD) += decompressor_zstd.o
+>>>   erofs-$(CONFIG_EROFS_FS_ZIP_ACCEL) += decompressor_crypto.o
+>>>   erofs-$(CONFIG_EROFS_FS_BACKED_BY_FILE) += fileio.o
+>>>   erofs-$(CONFIG_EROFS_FS_ONDEMAND) += fscache.o
+>>> +erofs-$(CONFIG_EROFS_FS_PAGE_CACHE_SHARE) += ishare.o
+>>> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+>>> index ec79e8b44d3b..6ef1cdd9d651 100644
+>>> --- a/fs/erofs/internal.h
+>>> +++ b/fs/erofs/internal.h
+>>> @@ -179,6 +179,7 @@ struct erofs_sb_info {
+>>>   #define EROFS_MOUNT_DAX_ALWAYS        0x00000040
+>>>   #define EROFS_MOUNT_DAX_NEVER        0x00000080
+>>>   #define EROFS_MOUNT_DIRECT_IO        0x00000100
+>>> +#define EROFS_MOUNT_INODE_SHARE        0x00000200
+>>>   #define clear_opt(opt, option)    ((opt)->mount_opt &= ~EROFS_MOUNT_##option)
+>>>   #define set_opt(opt, option)    ((opt)->mount_opt |= EROFS_MOUNT_##option)
+>>> @@ -269,6 +270,11 @@ static inline u64 erofs_nid_to_ino64(struct erofs_sb_info *sbi, erofs_nid_t nid)
+>>>   /* default readahead size of directories */
+>>>   #define EROFS_DIR_RA_BYTES    16384
+>>> +struct erofs_inode_fingerprint {
+>>> +    u8 *opaque;
+>>> +    int size;
+>>> +};
+>>> +
+>>>   struct erofs_inode {
+>>>       erofs_nid_t nid;
+>>> @@ -304,6 +310,18 @@ struct erofs_inode {
+>>>           };
+>>>   #endif    /* CONFIG_EROFS_FS_ZIP */
+>>>       };
+>>> +#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
+>>> +    struct list_head ishare_list;
+>>> +    union {
+>>> +        /* for each anon shared inode */
+>>> +        struct {
+>>> +            struct erofs_inode_fingerprint fingerprint;
+>>> +            spinlock_t ishare_lock;
+>>> +        };
+>>> +        /* for each real inode */
+>>> +        struct inode *sharedinode;
+>>> +    };
+>>> +#endif
+>>>       /* the corresponding vfs inode */
+>>>       struct inode vfs_inode;
+>>>   };
+>>> @@ -410,6 +428,7 @@ extern const struct inode_operations erofs_dir_iops;
+>>>   extern const struct file_operations erofs_file_fops;
+>>>   extern const struct file_operations erofs_dir_fops;
+>>> +extern const struct file_operations erofs_ishare_fops;
+>>>   extern const struct iomap_ops z_erofs_iomap_report_ops;
+>>> @@ -541,6 +560,18 @@ static inline struct bio *erofs_fscache_bio_alloc(struct erofs_map_dev *mdev) {
+>>>   static inline void erofs_fscache_submit_bio(struct bio *bio) {}
+>>>   #endif
+>>> +#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
+>>> +int __init erofs_init_ishare(void);
+>>> +void erofs_exit_ishare(void);
+>>> +bool erofs_ishare_fill_inode(struct inode *inode);
+>>> +void erofs_ishare_free_inode(struct inode *inode);
+>>> +#else
+>>> +static inline int erofs_init_ishare(void) { return 0; }
+>>> +static inline void erofs_exit_ishare(void) {}
+>>> +static inline bool erofs_ishare_fill_inode(struct inode *inode) { return false; }
+>>> +static inline void erofs_ishare_free_inode(struct inode *inode) {}
+>>> +#endif // CONFIG_EROFS_FS_PAGE_CACHE_SHARE
+>>> +
+>>>   long erofs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg);
+>>>   long erofs_compat_ioctl(struct file *filp, unsigned int cmd,
+>>>               unsigned long arg);
+>>> diff --git a/fs/erofs/ishare.c b/fs/erofs/ishare.c
+>>> new file mode 100644
+>>> index 000000000000..e93d379d4a3a
+>>> --- /dev/null
+>>> +++ b/fs/erofs/ishare.c
+>>> @@ -0,0 +1,170 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>>> +/*
+>>> + * Copyright (C) 2024, Alibaba Cloud
+>>> + */
+>>> +#include <linux/xxhash.h>
+>>> +#include <linux/mount.h>
+>>> +#include "internal.h"
+>>> +#include "xattr.h"
+>>> +
+>>> +#include "../internal.h"
+>>> +
+>>> +static struct vfsmount *erofs_ishare_mnt;
+>>> +
+>>> +static int erofs_ishare_iget5_eq(struct inode *inode, void *data)
+>>> +{
+>>> +    struct erofs_inode_fingerprint *fp1 = &EROFS_I(inode)->fingerprint;
+>>> +    struct erofs_inode_fingerprint *fp2 = data;
+>>> +
+>>> +    return fp1->size == fp2->size &&
+>>> +        !memcmp(fp1->opaque, fp2->opaque, fp2->size);
+>>> +}
+>>> +
+>>> +static int erofs_ishare_iget5_set(struct inode *inode, void *data)
+>>> +{
+>>> +    struct erofs_inode *vi = EROFS_I(inode);
+>>> +
+>>> +    vi->fingerprint = *(struct erofs_inode_fingerprint *)data;
+>>> +    INIT_LIST_HEAD(&vi->ishare_list);
+>>> +    spin_lock_init(&vi->ishare_lock);
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +bool erofs_ishare_fill_inode(struct inode *inode)
+>>> +{
+>>> +    struct erofs_sb_info *sbi = EROFS_SB(inode->i_sb);
+>>> +    struct erofs_inode *vi = EROFS_I(inode);
+>>> +    struct erofs_inode_fingerprint fp;
+>>> +    struct inode *sharedinode;
+>>> +    unsigned long hash;
+>>> +
+>>> +    if (!test_opt(&sbi->opt, INODE_SHARE))
+>>> +        return false;
+>>> +    (void)erofs_xattr_fill_ishare_fp(&fp, inode, sbi->domain_id);
+>>> +    if (!fp.size)
+>>> +        return false;
+>>
+>> Why not just:
+>>
+>>      if (erofs_xattr_fill_ishare_fp(&fp, inode, sbi->domain_id))
+>>          return false;
+>>
 > 
-> On 2025/12/31 17:01, Hongbo Li wrote:
->> This patch adds inode page cache sharing functionality for unencoded
->> files.
->>
->> I conducted experiments in the container environment. Below is the
->> memory usage for reading all files in two different minor versions
->> of container images:
->>
->> +-------------------+------------------+-------------+---------------+
->> |       Image       | Page Cache Share | Memory (MB) |    Memory     |
->> |                   |                  |             | Reduction (%) |
->> +-------------------+------------------+-------------+---------------+
->> |                   |        No        |     241     |       -       |
->> |       redis       +------------------+-------------+---------------+
->> |   7.2.4 & 7.2.5   |        Yes       |     163     |      33%      |
->> +-------------------+------------------+-------------+---------------+
->> |                   |        No        |     872     |       -       |
->> |      postgres     +------------------+-------------+---------------+
->> |    16.1 & 16.2    |        Yes       |     630     |      28%      |
->> +-------------------+------------------+-------------+---------------+
->> |                   |        No        |     2771    |       -       |
->> |     tensorflow    +------------------+-------------+---------------+
->> |  2.11.0 & 2.11.1  |        Yes       |     2340    |      16%      |
->> +-------------------+------------------+-------------+---------------+
->> |                   |        No        |     926     |       -       |
->> |       mysql       +------------------+-------------+---------------+
->> |  8.0.11 & 8.0.12  |        Yes       |     735     |      21%      |
->> +-------------------+------------------+-------------+---------------+
->> |                   |        No        |     390     |       -       |
->> |       nginx       +------------------+-------------+---------------+
->> |   7.2.4 & 7.2.5   |        Yes       |     219     |      44%      |
->> +-------------------+------------------+-------------+---------------+
->> |       tomcat      |        No        |     924     |       -       |
->> | 10.1.25 & 10.1.26 +------------------+-------------+---------------+
->> |                   |        Yes       |     474     |      49%      |
->> +-------------------+------------------+-------------+---------------+
->>
->> Additionally, the table below shows the runtime memory usage of the
->> container:
->>
->> +-------------------+------------------+-------------+---------------+
->> |       Image       | Page Cache Share | Memory (MB) |    Memory     |
->> |                   |                  |             | Reduction (%) |
->> +-------------------+------------------+-------------+---------------+
->> |                   |        No        |      35     |       -       |
->> |       redis       +------------------+-------------+---------------+
->> |   7.2.4 & 7.2.5   |        Yes       |      28     |      20%      |
->> +-------------------+------------------+-------------+---------------+
->> |                   |        No        |     149     |       -       |
->> |      postgres     +------------------+-------------+---------------+
->> |    16.1 & 16.2    |        Yes       |      95     |      37%      |
->> +-------------------+------------------+-------------+---------------+
->> |                   |        No        |     1028    |       -       |
->> |     tensorflow    +------------------+-------------+---------------+
->> |  2.11.0 & 2.11.1  |        Yes       |     930     |      10%      |
->> +-------------------+------------------+-------------+---------------+
->> |                   |        No        |     155     |       -       |
->> |       mysql       +------------------+-------------+---------------+
->> |  8.0.11 & 8.0.12  |        Yes       |     132     |      15%      |
->> +-------------------+------------------+-------------+---------------+
->> |                   |        No        |      25     |       -       |
->> |       nginx       +------------------+-------------+---------------+
->> |   7.2.4 & 7.2.5   |        Yes       |      20     |      20%      |
->> +-------------------+------------------+-------------+---------------+
->> |       tomcat      |        No        |     186     |       -       |
->> | 10.1.25 & 10.1.26 +------------------+-------------+---------------+
->> |                   |        Yes       |      98     |      48%      |
->> +-------------------+------------------+-------------+---------------+
->>
->> Co-developed-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
->> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
->> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
->> ---
->>   fs/erofs/data.c     | 30 +++++++++++++++++++++++-------
->>   fs/erofs/inode.c    |  4 ++++
->>   fs/erofs/internal.h |  6 ++++++
->>   fs/erofs/ishare.c   | 32 ++++++++++++++++++++++++++++++++
->>   4 files changed, 65 insertions(+), 7 deletions(-)
->>
->> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
->> index 71e23d91123d..5fc8e3ce0d9e 100644
->> --- a/fs/erofs/data.c
->> +++ b/fs/erofs/data.c
->> @@ -269,6 +269,7 @@ void erofs_onlinefolio_end(struct folio *folio, 
->> int err, bool dirty)
->>   struct erofs_iomap_iter_ctx {
->>       struct page *page;
->>       void *base;
->> +    struct inode *realinode;
->>   };
->>   static int erofs_iomap_begin(struct inode *inode, loff_t offset, 
->> loff_t length,
->> @@ -276,14 +277,15 @@ static int erofs_iomap_begin(struct inode 
->> *inode, loff_t offset, loff_t length,
->>   {
->>       struct iomap_iter *iter = container_of(iomap, struct iomap_iter, 
->> iomap);
->>       struct erofs_iomap_iter_ctx *ctx = iter->private;
->> -    struct super_block *sb = inode->i_sb;
->> +    struct inode *realinode = ctx ? ctx->realinode : inode;
->> +    struct super_block *sb = realinode->i_sb;
->>       struct erofs_map_blocks map;
->>       struct erofs_map_dev mdev;
->>       int ret;
->>       map.m_la = offset;
->>       map.m_llen = length;
->> -    ret = erofs_map_blocks(inode, &map);
->> +    ret = erofs_map_blocks(realinode, &map);
->>       if (ret < 0)
->>           return ret;
->> @@ -296,7 +298,7 @@ static int erofs_iomap_begin(struct inode *inode, 
->> loff_t offset, loff_t length,
->>           return 0;
->>       }
->> -    if (!(map.m_flags & EROFS_MAP_META) || 
->> !erofs_inode_in_metabox(inode)) {
->> +    if (!(map.m_flags & EROFS_MAP_META) || 
->> !erofs_inode_in_metabox(realinode)) {
->>           mdev = (struct erofs_map_dev) {
->>               .m_deviceid = map.m_deviceid,
->>               .m_pa = map.m_pa,
->> @@ -322,7 +324,7 @@ static int erofs_iomap_begin(struct inode *inode, 
->> loff_t offset, loff_t length,
->>               void *ptr;
->>               ptr = erofs_read_metabuf(&buf, sb, map.m_pa,
->> -                         erofs_inode_in_metabox(inode));
->> +                         erofs_inode_in_metabox(realinode));
->>               if (IS_ERR(ptr))
->>                   return PTR_ERR(ptr);
->>               iomap->inline_data = ptr;
->> @@ -379,30 +381,42 @@ int erofs_fiemap(struct inode *inode, struct 
->> fiemap_extent_info *fieinfo,
->>    */
->>   static int erofs_read_folio(struct file *file, struct folio *folio)
->>   {
->> +    struct inode *inode = folio_inode(folio);
->>       struct iomap_read_folio_ctx read_ctx = {
->>           .ops        = &iomap_bio_read_ops,
->>           .cur_folio    = folio,
->>       };
->> -    struct erofs_iomap_iter_ctx iter_ctx = {};
->> +    bool need_iput;
->> +    struct erofs_iomap_iter_ctx iter_ctx = {
->> +        .realinode    = erofs_real_inode(inode, &need_iput),
->> +    };
->>       trace_erofs_read_folio(folio, true);
->>       iomap_read_folio(&erofs_iomap_ops, &read_ctx, &iter_ctx);
->> +    if (need_iput)
->> +        iput(iter_ctx.realinode);
->>       return 0;
->>   }
->>   static void erofs_readahead(struct readahead_control *rac)
->>   {
->> +    struct inode *inode = rac->mapping->host;
->>       struct iomap_read_folio_ctx read_ctx = {
->>           .ops        = &iomap_bio_read_ops,
->>           .rac        = rac,
->>       };
->> -    struct erofs_iomap_iter_ctx iter_ctx = {};
->> +    bool need_iput;
->> +    struct erofs_iomap_iter_ctx iter_ctx = {
->> +        .realinode    = erofs_real_inode(inode, &need_iput),
->> +    };
->>       trace_erofs_readahead(rac->mapping->host, readahead_index(rac),
->>                       readahead_count(rac), true);
->>       iomap_readahead(&erofs_iomap_ops, &read_ctx, &iter_ctx);
->> +    if (need_iput)
->> +        iput(iter_ctx.realinode);
->>   }
->>   static sector_t erofs_bmap(struct address_space *mapping, sector_t 
->> block)
->> @@ -423,7 +437,9 @@ static ssize_t erofs_file_read_iter(struct kiocb 
->> *iocb, struct iov_iter *to)
->>           return dax_iomap_rw(iocb, to, &erofs_iomap_ops);
->>   #endif
->>       if ((iocb->ki_flags & IOCB_DIRECT) && inode->i_sb->s_bdev) {
->> -        struct erofs_iomap_iter_ctx iter_ctx = {};
->> +        struct erofs_iomap_iter_ctx iter_ctx = {
->> +            .realinode = inode,
->> +        };
->>           return iomap_dio_rw(iocb, to, &erofs_iomap_ops,
->>                       NULL, 0, &iter_ctx, 0);
->> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
->> index bce98c845a18..8116738fe432 100644
->> --- a/fs/erofs/inode.c
->> +++ b/fs/erofs/inode.c
->> @@ -215,6 +215,10 @@ static int erofs_fill_inode(struct inode *inode)
->>       case S_IFREG:
->>           inode->i_op = &erofs_generic_iops;
->>           inode->i_fop = &erofs_file_fops;
->> +#ifdef CONFIG_EROFS_FS_PAGE_CACHE_SHARE
-> 
-> Is that unnecessary?
-> 
+> When erofs_sb_has_ishare_xattrs returns false, erofs_xattr_fill_ishare_fp also considers success.
 
-Yeah, I will remove it in next version.
+Then why !test_opt(&sbi->opt, INODE_SHARE) didn't return?
 
 Thanks,
-Hongbo
-
-> It seems erofs_ishare_fill_inode() will return false if
-> CONFIG_EROFS_FS_PAGE_CACHE_SHARE is undefined.
-> 
-> Otherwise it looks good to me,
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-> 
-> Thanks,
-> Gao Xiang
+Gao Xiang
 
