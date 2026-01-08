@@ -1,51 +1,51 @@
-Return-Path: <linux-erofs+bounces-1727-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1723-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8B72D04C8A
-	for <lists+linux-erofs@lfdr.de>; Thu, 08 Jan 2026 18:14:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BC79AD04C4F
+	for <lists+linux-erofs@lfdr.de>; Thu, 08 Jan 2026 18:14:10 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dnBN70ndQz2xcB;
-	Fri, 09 Jan 2026 04:14:31 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dnBMh2L81z2yFk;
+	Fri, 09 Jan 2026 04:14:08 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767892471;
-	cv=none; b=mrLB+bbT2qHTtXU2ZWIyEkCf0LUXYLSANRXDeB8YhH33xUTPRwTJ5fVYj5Z5fk8m/rywgZEyx5CePPtjnfCIxjVOh5mXQ0p4YTazrEq0YElqME0FKAapKZiQq3QA2qGc5sRtqDW2TQADfsRzBgSDxYMPBEBeHNh42skh2AuyfJ89QsMxTqz78KzoGBjALXILPJb5DrffbKFBwGAYn4TbtoxmcUokhoYaOlcTAIet5vHAF+tyYBu5CpkVdX3F9NSOd3Qn+mmn7sY9fbigQU2Aqq9m7JbB03dhH1vOzletB32ULtKdjJQUAb2JlDDi+Lxbkc+hSpx7Gu2ZjToSJJ4e9A==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767892448;
+	cv=none; b=dbehWR2B7bF7YbtrdIcqq7nDgQCc3tQ9rOmt+vh2ao3nQDunXsN3f5mqyJXaCYXv98Kpeq+pb90gmFGOxHNMm1zk8/XIr2aTB4bHFa0gYUBXqM1MPAXxuZB/Ej10RSBzvdQU2/EbeN5vj6phMj10r4zMJ5JuqarP+w+DgZSkPdEvqkkoZuaNzC3K8s/KQrSd8bXUxobcjCyK/8VqJ5mh9fWm+e6La2fYWoL9ltTlGDwbQweLzVgWjtoVVqrnGeFqPf5Yp1e3US+T0c4jygre/Xm+/XZCQM1hf73SuxEZ+TbOEr7a7Bojy1esjw4Ug6FqJTFwrAJCXFs697l+G6lkgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767892471; c=relaxed/relaxed;
-	bh=kp0cU5EsDXHx5F5vjjnuc2Y9kqH0FLsz82OIU+nqh4A=;
+	t=1767892448; c=relaxed/relaxed;
+	bh=ommrtXllry4Rl2LM+IwJb1/6AWt5QR3CgIf+tO8IrVU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IQIa9fvEC9AvbsksZftczJMpVd1JfrQWF1fqWAtTkT1211B7G1SthyM1gHls/Kg+dfQNjulfjGx22TUq/Tl9H8ZVumlnK7+oVzVYqgHfDOg531RCCedGX7yFIRJ3aHARB+Mhs1I4FreA+/NsziKf3MOtXdWoH7ZsvXAtCXimK1V/v4uCNnfDzf49jlxY/7lo34ueeGMvVaF39rlG7QcKZTCfx8fCSU8kt8cjn8z5um+yWP7UKoiVJ5wsRGY1y1m3lh4+fRe0Hj+6IiobcUsyuRJRPq7jQmSTS9iHrLIlTn3CQLVYvi6RngrhYnqmOr5Wn97IRAYzlgmXcOiejj3zgw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=M2tNeCP8; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:To:Cc; b=Byu5lob8TkyT9RF/AwGB5uInE+yRJXCPqKXrdCLPmSab1BCbbu0fB7Mz5bsgeUgf3o+p09uwZncSk+EKkYCRGseVGgbZFZohC8nqvtRXTkSr+rXhIVshMC+eB/KZKtFX5/hWIy5ODMyNKCo5XI+Pm9lXJtOGHYIDETR+CsThfRHU4Qy0+jOYR8sjnKXLCzUVmijAxOMfWTezbljrtkyB9zmtPmuXyeMzQWWKPA8pYuE8nRTZbZkEFVJ7jCgFNrzM1rNACfW2VLPMnbn6Q8V2Pcmqnx7mVPFsy0v+dKjp1NgIx1+bS3sN5pabiwA+VH53BcHC/Ws2vyfn+otrha1EjA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Qr7TVxvj; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=M2tNeCP8;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Qr7TVxvj;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
 Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnBN62M3mz2yFk
-	for <linux-erofs@lists.ozlabs.org>; Fri, 09 Jan 2026 04:14:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnBMg42STz2xcB
+	for <linux-erofs@lists.ozlabs.org>; Fri, 09 Jan 2026 04:14:07 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id BB9F660133;
+	by tor.source.kernel.org (Postfix) with ESMTP id 4C6A06012B;
+	Thu,  8 Jan 2026 17:14:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8029C116D0;
 	Thu,  8 Jan 2026 17:13:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FFF7C2BCB2;
-	Thu,  8 Jan 2026 17:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767892437;
-	bh=Pwijv5Tuh+c+DiE+MHlFZRInxzA5YXBkChKqagFjptw=;
+	s=k20201202; t=1767892445;
+	bh=r6yK8bK+kkMgdLh1w8q65yIEqjkb/IjmfMvjzt63UDI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=M2tNeCP8JvCAJC9IUlu2e0zizZP6ZQBZzWNHPfmEbBZ0zetXBKM296NJhSU7YqSpn
-	 LteILbCxA57A7S+IeYEMwiideMe3sfW/5gv7fDscFgTzPh5AYvo8Ujt78vUZkXiSAq
-	 m50i91DWk2yAUn0Wttdfcm4F0FCACyOm4gftTSpYTz65kZKap5L1nyrcppapkoefLG
-	 6fC+lCadiEiJ+EQxkokfsvynFT8eNPgBYsf4u+HfENvfgtRSO1SFmQrfASP2UE3kgZ
-	 ZPn7g9odE8Y1aCsATQnyJnrCkGD+QdO7d41CD4Pf0PJGo4XJP2HaCvnDm6S43fg6rg
-	 Tht7Vqc7FmdcQ==
+	b=Qr7TVxvjzjLDifiDNwgbz5Utlv1xXYOFRFXz45doMG8Cdh5Klxpemaa34l6LJokhA
+	 LFa84+w6J2qISvcYOsLfUBUSL9MwYOCY+AMEM0SAde8YfqlKywdQkHZSg+Ogf9pjzQ
+	 aFpq+UOCKzyyuR2vxCOphzBHlhmhgOw3MDspuwMRqEYAJz9tNnga4+EJpK1D2ociJW
+	 SANMkPyTno9YLvlxnw/Lsx6RGruAjUhICO986WMabplDp+6TiuUuX2xPPwNcBFGQfF
+	 69HtUgtVBqbMsF7uMl1/aNC1vnXN6NRGfWYioeAlTU2AE6rPRYyHHQqJes8E1lstCt
+	 KWb4D2+xXXgCQ==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 08 Jan 2026 12:12:57 -0500
-Subject: [PATCH 02/24] affs: add setlease file operation
+Date: Thu, 08 Jan 2026 12:12:58 -0500
+Subject: [PATCH 03/24] btrfs: add setlease file operation
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -59,7 +59,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260108-setlease-6-20-v1-2-ea4dec9b67fa@kernel.org>
+Message-Id: <20260108-setlease-6-20-v1-3-ea4dec9b67fa@kernel.org>
 References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
 In-Reply-To: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
 To: Luis de Bethencourt <luisbg@kernel.org>, 
@@ -116,20 +116,20 @@ Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
  linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1645; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=Pwijv5Tuh+c+DiE+MHlFZRInxzA5YXBkChKqagFjptw=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpX+W5Y9ye+Dm/rtqwxFL2Hdd+tE3YmpGaoSkLN
- ZcMw6xn0rGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaV/luQAKCRAADmhBGVaC
- FeCBEACsTpjyfgcjG/GsZ4xzpgWq74Juli0DXZ1WVIUf0ss6GvOpMkY+uxFacz45n1ArzsjFBYA
- qSoTluOJD41qHwdDKGAdhFEsGj26fA3v7FUhqoN+IA0XCM7Q5JilKfVic1Jb7GnApj7qMRdR6gU
- B5xmOIsaXas0JxxmsF6a74mqSRmXo3ohjUjkSGHB0dYxgwAhQl6frG8PJmO6BmdhMf6j+Qcvjf4
- +pWs8jy2sS+8Vn5ZYPzH46DiFJ6bNqoETmBwWpG9FTmQ8zzlV8lq+QBuQTPpg9JMmE87T3mY79A
- PB3woVowC2Voz820ZEbCuByTzSYq3zU+nMBlhGuaAtPjtqF2/6aP1yCzRxJ8VoiE4KO0gyHUkFs
- 84qO4+ZPqv/lRUPEXn+z28VYVWtzy6SV9Bxwx1K4iIKZLcwHj03Tk5Ay3OwbUdHHvmJea70tKU/
- Pnd8p8r3Zh3wZ0Zm3SHFL7CyUryOZe3NayKJMBsSodI8c6BqEpcbGSM/IwmjtuuuSt9aFAENA/t
- LqZWDcQTC8onUUXMCy0ila0bxBHfF2VUouHTVvO47koLUMpxSRy/v4XjRZyRDFIyv21c3Ja9RFB
- SSA/Pejl2la0pHZH2Ld420/K4HhPpbvOeD+lB6GWqkw69u+rZ5I9HhHwUM2EGpaC9H305b1sO18
- jw5ReV+iUjgSjOQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1874; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=r6yK8bK+kkMgdLh1w8q65yIEqjkb/IjmfMvjzt63UDI=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpX+W59KQJzkynnqRywsxn8vf6E7WkYLaalZHcn
+ hqXE1iesQmJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaV/luQAKCRAADmhBGVaC
+ FaJdD/4l9fv7mklHKjKkjTHpTVCuJPpIKuHhUtEoAqSprUNpwgQfDYLR6f54jMEQA9jS1LBj+Dy
+ QyeVCVp55DoP+wWIXayOwD+klKX2cjtKHEwQH5WNOE+citJTM6zNMzIBsDuWMPletL+BrqbrBxR
+ HQDrOyGoBCNw3T1Y3bJodEqe17RMpbrM5KQW+uFl//FLm8KIwd3cLbRjHZuex9cILVJooiBg9l7
+ hUE52fcXEYxfjxHGR+zyVf6kogJj4y74vQx4i8b8B2Ji0IdoaBOVwiZpxIuDdQRGx00T4PkN5pE
+ bI0JaolvkVkIP58mQT0gLpRrctVhJ7Fm0DRISz+BmhTcfaaeTwcgO2m35EL5Df2ExhjnuyRvPIR
+ 79MM+Z+RIyV4mUCgXq2Ew49Qxpsd50AoG1moCPbZ/o5bQwqkL1OW1HDV8svhp7gU1n4Pmsf5he6
+ U8/NR75X8fqtFciebf0UxTzmneWSw0zcIw2QKAsBUmQukDXYH/gJYnWSF9UAj/JrIC3fNunArUq
+ llAH6702SuQcGU6kAt4IxAZNCFIjdu1g5UiVgOaxJcCh3emmvOFhVMzCWpAuGiOFbdbwEed/7pH
+ iNMhOMoloJOXkThvtx3egvJavKsX+vhYLTgSnhPuQ83dhuILLuHFQaySEbcaXOac64sdVpwJc3b
+ Yr+dTsCBfX540XQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -137,58 +137,59 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Add the setlease file_operation to affs_file_operations and
-affs_dir_operations, pointing to generic_setlease.  A future patch will
-change the default behavior to reject lease attempts with -EINVAL when
-there is no setlease file operation defined. Add generic_setlease to
-retain the ability to set leases on this filesystem.
+Add the setlease file_operation to btrfs_file_operations and
+btrfs_dir_file_operations, pointing to generic_setlease.  A future
+patch will change the default behavior to reject lease attempts with
+-EINVAL when there is no setlease file operation defined. Add
+generic_setlease to retain the ability to set leases on this
+filesystem.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/affs/dir.c  | 2 ++
- fs/affs/file.c | 2 ++
+ fs/btrfs/file.c  | 2 ++
+ fs/btrfs/inode.c | 2 ++
  2 files changed, 4 insertions(+)
 
-diff --git a/fs/affs/dir.c b/fs/affs/dir.c
-index bd40d5f0881042e7e6b15b09a76a1793169a1d50..fe18caaf4d6557c67f5c0542ad86a6fe4c512aaf 100644
---- a/fs/affs/dir.c
-+++ b/fs/affs/dir.c
-@@ -15,6 +15,7 @@
-  */
- 
- #include <linux/iversion.h>
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 1abc7ed2990e0e956dc0550cba8b0cfc90109e65..aca2b541e72df3638bdc6cd7551a018ae959039b 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -10,6 +10,7 @@
+ #include <linux/string.h>
+ #include <linux/backing-dev.h>
+ #include <linux/falloc.h>
 +#include <linux/filelock.h>
- #include "affs.h"
+ #include <linux/writeback.h>
+ #include <linux/compat.h>
+ #include <linux/slab.h>
+@@ -3867,6 +3868,7 @@ const struct file_operations btrfs_file_operations = {
+ 	.remap_file_range = btrfs_remap_file_range,
+ 	.uring_cmd	= btrfs_uring_cmd,
+ 	.fop_flags	= FOP_BUFFER_RASYNC | FOP_BUFFER_WASYNC,
++	.setlease	= generic_setlease,
+ };
  
- struct affs_dir_data {
-@@ -55,6 +56,7 @@ const struct file_operations affs_dir_operations = {
- 	.iterate_shared	= affs_readdir,
- 	.fsync		= affs_file_fsync,
- 	.release	= affs_dir_release,
+ int btrfs_fdatawrite_range(struct btrfs_inode *inode, loff_t start, loff_t end)
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 599c03a1c5737ee4129c0bc1743b345847fa5dfc..5d1bdc862ed2711e349af085512f3bda6cb63278 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -8,6 +8,7 @@
+ #include <linux/bio.h>
+ #include <linux/blk-cgroup.h>
+ #include <linux/file.h>
++#include <linux/filelock.h>
+ #include <linux/fs.h>
+ #include <linux/fs_struct.h>
+ #include <linux/pagemap.h>
+@@ -10573,6 +10574,7 @@ static const struct file_operations btrfs_dir_file_operations = {
+ #endif
+ 	.release        = btrfs_release_file,
+ 	.fsync		= btrfs_sync_file,
 +	.setlease	= generic_setlease,
  };
  
  /*
-diff --git a/fs/affs/file.c b/fs/affs/file.c
-index 765c3443663e6f542dce2ad5d9e055e14b0574e3..6c9258359ddb9ba344976dd5a9a435f71f3fabc1 100644
---- a/fs/affs/file.c
-+++ b/fs/affs/file.c
-@@ -15,6 +15,7 @@
- 
- #include <linux/uio.h>
- #include <linux/blkdev.h>
-+#include <linux/filelock.h>
- #include <linux/mpage.h>
- #include "affs.h"
- 
-@@ -1008,6 +1009,7 @@ const struct file_operations affs_file_operations = {
- 	.release	= affs_file_release,
- 	.fsync		= affs_file_fsync,
- 	.splice_read	= filemap_splice_read,
-+	.setlease	= generic_setlease,
- };
- 
- const struct inode_operations affs_file_inode_operations = {
 
 -- 
 2.52.0
