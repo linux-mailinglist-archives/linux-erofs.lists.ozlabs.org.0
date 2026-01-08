@@ -1,52 +1,43 @@
-Return-Path: <linux-erofs+bounces-1719-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1720-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFF19D0292F
-	for <lists+linux-erofs@lfdr.de>; Thu, 08 Jan 2026 13:20:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EF88FD02A2C
+	for <lists+linux-erofs@lfdr.de>; Thu, 08 Jan 2026 13:30:23 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dn3rh1l8Pz2yGL;
-	Thu, 08 Jan 2026 23:20:20 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dn44F471Fz2yGl;
+	Thu, 08 Jan 2026 23:30:21 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.221
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767874820;
-	cv=none; b=LyuG4KYy4y0SAuo0ITOsRSj1cAfpIBMsnDlTvU6lcDMIiq3dHB9BOxFhFgaGF/78HKxsZpUvPAVLZ79PdId6e+xDM4BeIFtsJSHZA+gFj8etGH1cpHcTuTp4Gd7w/CkUXaNogEKhaRb6ipQNq7Zlsyu/thdUVIjr8Esncx7MS+ZfStVdAKvjiBN5Z+XP1VXCWXxiHbEuDkVG7JOiB9jB700CT0GIlpXOR3ooQDUeghZzPv+/bNu0k69+cfHoSC4AF966LraS3WphGvix9y6D8m/ke6vZAkzFpIsPMPX95YtYmocqRdSE5CLi9402FEm1au37bamb0zYkELTbI0o9xA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767875421;
+	cv=none; b=UReNXOZ6U1NV7WtPlIqBTCTFaxw6pj6R/adi40SBgsFbZkQkWqPzY8PrLQekHFEdAdD9/qfLutQBCJXDLq5k5mbXfJppgiH4Gwoq6tdiBJJ/P8VMcRhsTZnewy58x6NwoUsl9k7vdGI0K2rVIpSLQcciAO3TdU6OeTYQXfkJ+59mnnVtVPkDlFMnvfk7xMiyxIuWGo0dx5oMe+NHIjC8kuxjHKx9xemedwlCS6KyiB3wlrkZh4aBh964IXMc11M0Gf58mQNywmtjsNPMqqrp2P7YLT6e6MKd5ubYU+t1TnmWH1LcjGTWNkiTp1DcoCcaq6/zSdYzRXzZS8Me36TOHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767874820; c=relaxed/relaxed;
-	bh=DokPCpI+DXeppXDY77AhxNya3KTD8hrJouXcEIui7k0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MLgCK7RWCZjY1uCRv3JE6ZjkHotdBOFUmvx6KN0oMs2lOHzXR7KwFgyCcR3Dh52M52KNU1EDEz7q1700NDCIc4VWl5ilVdgAL43wcu/p40CrsIXsSEW5wAK34EzxrkQiUFYtZUFyBC1jhMEXNoDGLShKFKJMpJsvD+9IYMmRt/GoiUql0PRmeqdt7bUKmK39MBrLrbG5qDjQnN7TBvg8GWg4JlT7LYEPK2MQbxtIdZynv0ZnXRxtQWNstljiErUdMCmv26TdD4wFhoL9i9REYyQNjyV+HJszsQlOMmbqBsZMXNkXucsih9FyfZKvy9tEHj1NWC20ocpibsljOkjDfQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=GIpn2P3f; dkim-atps=neutral; spf=pass (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1767875421; c=relaxed/relaxed;
+	bh=rpTnL+IU5xSnUkIXNyhmHEj7xuQTvMOaA3Ro0rIO+c8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=evOOIIlAPEW+1Dq5419C6K6m/eC4CyMIwV/mhr4eUp3aHLTF+wMYV5Lf1xxOSVM0LxtnG3oiBwTSjWcS7wVGrBUNf5AL4/n3YhwirDfAPUPdr9idSky9hEHGQh2FGy9ziihT49debEBvIvsUqHnKViu2ctpyw+/1SlOkVMTvwJvYbhXlhr7lMeYOh4S+HdAeGda6yKzm+OzkdpG26D/ClhNKscPRkJ2Thqtn87QN2MAJWnu0fTtZ5eBqYA6/CK5supt8cgoSkcDYoZ/6A0U7Slk7VrZieHUy3AZealj8knTIiTBTa6cPhdJpMdMBQU2ezMuyo44zloRwQP5qSJdLPA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=SJQrSbfl; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=GIpn2P3f;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=SJQrSbfl;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dn3rd4HkYz2xjN
-	for <linux-erofs@lists.ozlabs.org>; Thu, 08 Jan 2026 23:20:16 +1100 (AEDT)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=DokPCpI+DXeppXDY77AhxNya3KTD8hrJouXcEIui7k0=;
-	b=GIpn2P3f0KYTczqlD5hfRTSljCiL0x5m4qHG3fqaAdXJNYsPunVQIu5oZNpKUbDElhXnflxh9
-	eT9s5UfISoOb7shIwIbx8F3mG9VFrvezUZEQnV6VU8poNouPmFEexhq393oezRnTDO/p0Ky0Og/
-	FRVsZPzngqetCFpCkNIxcWk=
-Received: from mail.maildlp.com (unknown [172.19.162.140])
-	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4dn3mj70FGzRhQT;
-	Thu,  8 Jan 2026 20:16:53 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id 520062012A;
-	Thu,  8 Jan 2026 20:20:10 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 8 Jan 2026 20:20:09 +0800
-Message-ID: <bb8e14f4-dbab-4974-a180-b436a00625d1@huawei.com>
-Date: Thu, 8 Jan 2026 20:20:08 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dn44C1cyHz2yGL
+	for <linux-erofs@lists.ozlabs.org>; Thu, 08 Jan 2026 23:30:16 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1767875411; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=rpTnL+IU5xSnUkIXNyhmHEj7xuQTvMOaA3Ro0rIO+c8=;
+	b=SJQrSbflQafUyBDi15TKZwsizGEmmyJWv0K0zCdLFU8DhDFYnsk1/PynsUtCfjaBeptwoEjCFc3U1MlBiTaCJvtnCgamA60xTPRIC95aLLNXMExLWH30yHOchXuFVemzn1RiViens6xQPIcwk6wyJJJLN7B8XiZQXLejIFuA+S8=
+Received: from 30.251.32.236(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WwcgDrv_1767875409 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 08 Jan 2026 20:30:10 +0800
+Message-ID: <c805ff35-654f-44e2-92ce-0e2c367ac377@linux.alibaba.com>
+Date: Thu, 8 Jan 2026 20:30:08 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -59,133 +50,141 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 07/10] erofs: introduce the page cache share feature
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-CC: <djwong@kernel.org>, <amir73il@gmail.com>, <hch@lst.de>,
-	<linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>, Chao Yu <chao@kernel.org>,
-	<brauner@kernel.org>
-References: <20251231090118.541061-1-lihongbo22@huawei.com>
- <20251231090118.541061-8-lihongbo22@huawei.com>
- <99a517aa-744b-487b-bce8-294b69a0cd50@linux.alibaba.com>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <99a517aa-744b-487b-bce8-294b69a0cd50@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH v2] erofs: don't bother with s_stack_depth increasing for
+ now
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Amir Goldstein <amir73il@gmail.com>, Sheng Yong
+ <shengyong2021@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Dusty Mabe <dusty@dustymabe.com>, =?UTF-8?Q?Timoth=C3=A9e_Ravier?=
+ <tim@siosm.fr>, =?UTF-8?B?QWxla3PDqWkgTmFpZMOpbm92?= <an@digitaltide.io>,
+ Alexander Larsson <alexl@redhat.com>, Christian Brauner
+ <brauner@kernel.org>, Miklos Szeredi <mszeredi@redhat.com>,
+ Zhiguo Niu <niuzhiguo84@gmail.com>, shengyong1@xiaomi.com,
+ linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
+References: <0c34f3fa-c573-4343-b8ea-6832530f0069@linux.alibaba.com>
+ <20260106170504.674070-1-hsiangkao@linux.alibaba.com>
+ <3acec686-4020-4609-aee4-5dae7b9b0093@gmail.com>
+ <41b8a0bb-96d3-4eba-a5b8-77b0b0ed4730@linux.alibaba.com>
+ <121cb490-f13a-4957-97be-ea87baa10827@linux.alibaba.com>
+ <CAOQ4uxg14FYhZvdjZ-9UT3jVyLCbM1ReUdESSXgAbezsQx7rqQ@mail.gmail.com>
+ <4b427f6f-3b26-4dc8-bf6f-79eeabf6ba84@linux.alibaba.com>
+ <20260108102613.33bbc6d4@pumpkin>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260108102613.33bbc6d4@pumpkin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemr500015.china.huawei.com (7.202.195.162)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi, Xiang
+Hi David,
 
-On 2026/1/7 14:08, Gao Xiang wrote:
+On 2026/1/8 18:26, David Laight wrote:
+> On Thu, 8 Jan 2026 16:05:03 +0800
+> Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 > 
+>> Hi Amir,
+>>
+>> On 2026/1/8 16:02, Amir Goldstein wrote:
+>>> On Thu, Jan 8, 2026 at 4:10 AM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
+>>
+>> ...
+>>
+>>>>>>
+>>>>>> Hi, Xiang
+>>>>>>
+>>>>>> In Android APEX scenario, apex images formatted as EROFS are packed in
+>>>>>> system.img which is also EROFS format. As a result, it will always fail
+>>>>>> to do APEX-file-backed mount since `inode->i_sb->s_op == &erofs_sops'
+>>>>>> is true.
+>>>>>> Any thoughts to handle such scenario?
+>>>>>
+>>>>> Sorry, I forgot this popular case, I think it can be simply resolved
+>>>>> by the following diff:
+>>>>>
+>>>>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+>>>>> index 0cf41ed7ced8..e93264034b5d 100644
+>>>>> --- a/fs/erofs/super.c
+>>>>> +++ b/fs/erofs/super.c
+>>>>> @@ -655,7 +655,7 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+>>>>>                     */
+>>>>>                    if (erofs_is_fileio_mode(sbi)) {
+>>>>>                            inode = file_inode(sbi->dif0.file);
+>>>>> -                       if (inode->i_sb->s_op == &erofs_sops ||
+>>>>> +                       if ((inode->i_sb->s_op == &erofs_sops && !sb->s_bdev) ||
+>>>>
+>>>> Sorry it should be `!inode->i_sb->s_bdev`, I've
+>>>> fixed it in v3 RESEND:
+>>>
+>>> A RESEND implies no changes since v3, so this is bad practice.
+>>>    
+>>>> https://lore.kernel.org/r/20260108030709.3305545-1-hsiangkao@linux.alibaba.com
+>>>>   
+>>>
+>>> Ouch! If the erofs maintainer got this condition wrong... twice...
+>>> Maybe better using the helper instead of open coding this non trivial check?
+>>>
+>>> if ((inode->i_sb->s_op == &erofs_sops &&
+>>>         erofs_is_fileio_mode(EROFS_I_SB(inode)))
+>>
+>> I was thought to use that, but it excludes fscache as the
+>> backing fs.. so I suggest to use !s_bdev directly to
+>> cover both file-backed mounts and fscache cases directly.
 > 
-> On 2025/12/31 17:01, Hongbo Li wrote:
+> Is it worth just allocating each fs a 'stack needed' value and then
+> allowing the mount if the total is low enough.
+> This is equivalent to counting the recursion depth, but lets erofs only
+> add (say) 0.5.
+> Ideally you'd want to do static analysis to find the value to add,
+> but 'inspired guesswork' is probably good enough.
 
-...
+That is a good alternative way but I could also use some
+realistic issue such as how to evaluate stack usage under
+the block layer.
 
->> +
->> +static int erofs_ishare_file_release(struct inode *inode, struct file 
->> *file)
->> +{
->> +    struct file *realfile = file->private_data;
->> +
->> +    iput(realfile->f_inode);
->> +    fput(realfile);
->> +    file->private_data = NULL;
->> +    return 0;
->> +}
->> +
->> +static ssize_t erofs_ishare_file_read_iter(struct kiocb *iocb,
->> +                       struct iov_iter *to)
->> +{
->> +    struct file *realfile = iocb->ki_filp->private_data;
->> +    struct kiocb dedup_iocb;
->> +    ssize_t nread;
->> +
->> +    if (!iov_iter_count(to))
->> +        return 0;
->> +
->> +    /* fallback to the original file in DIRECT mode */
->> +    if (iocb->ki_flags & IOCB_DIRECT)
->> +        realfile = iocb->ki_filp;
->> +
->> +    kiocb_clone(&dedup_iocb, iocb, realfile);
->> +    nread = filemap_read(&dedup_iocb, to, 0);
->> +    iocb->ki_pos = dedup_iocb.ki_pos;
-> 
-> I think it will not work for the AIO cases.
-> 
-> In order to make it simplified, how about just
-> allowing sync and non-direct I/O first, and
-> defering DIO/AIO support later?
-> 
-
-Ok, but what about doing the fallback logic:
-
-1. For direct io: fallback to the original file.
-2. For AIO: initialize the sync io by init_sync_kiocb (May be we can 
-just replace kiocb_clone with init_sync_kiocb).
-
-Thanks,
-Hongbo
-
->> +    file_accessed(iocb->ki_filp);
-> 
-> I don't think it's useful in practice.
-> 
-
-Just keep in consistent with filemap_read?
+And the rule exposing to userspace becomes complex if we
+do in such way.
 
 > 
->> +    return nread;
->> +}
->> +
->> +static int erofs_ishare_mmap(struct file *file, struct vm_area_struct 
->> *vma)
->> +{
->> +    struct file *realfile = file->private_data;
->> +
->> +    vma_set_file(vma, realfile);
->> +    return generic_file_readonly_mmap(file, vma);
->> +}
->> +
+> Isn't there also a big difference between recursive mounts (which need
+> to do read/write on the underlying file) and overlay mounts (which just
+> pass the request onto the lower filesystem).
 
-...
+As for EROFS, we only care read since it's safe enough
+but I won't speak of write paths (like sb_writers and
+journal nesting for example, and I don't want to spread
+the discussion since it's much unrelated to the topic).
 
->> @@ -649,6 +659,16 @@ static int erofs_fc_fill_super(struct super_block 
->> *sb, struct fs_context *fc)
->>       sb->s_maxbytes = MAX_LFS_FILESIZE;
->>       sb->s_op = &erofs_sops;
->> +    if (sbi->domain_id &&
->> +        (!sbi->fsid && !test_opt(&sbi->opt, INODE_SHARE))) {
->> +        errorfc(fc, "domain_id should be with fsid or inode_share 
->> option");
->> +        return -EINVAL;
->> +    }
-> 
-> Is that really needed?
-> 
+I agree but as I said above, it makes the rule more
+complex and users have no idea when it can mount and
+when it cannot mount.
 
-Ok, I will remove it in next version.
+Anyway, I think for the current 16k kernel stack,
+FILESYSTEM_MAX_STACK_DEPTH = 3 is safe enough to provide
+an abundant margin for the underlay storage stack.
+I have no idea how to prove it strictly but I think it's
+roughly provable to show the stack usages when reaching
+the real backing fs (e.g. the remaining stack size when
+reaching the real backing fs) and
+FILESYSTEM_MAX_STACK_DEPTH 2 was an arbitary one too.
 
 Thanks,
-Hongbo
+Gao Xiang
 
 > 
+> 	David
 > 
->> +    if (test_opt(&sbi->opt, DAX_ALWAYS) && test_opt(&sbi->opt, 
->> INODE_SHARE)) {
->> +        errorfc(fc, "dax is not allowed when inode_share is on");
-> 
->          errorfc(fc, "FSDAX is not allowed when inode_share is on");
-> 
-> Thanks,
-> Gao Xiang
+>>
+>> Thanks,
+>> Gao Xiang
+>>
+>>>
+>>> Thanks,
+>>> Amir.
+>>
+>>
+
 
