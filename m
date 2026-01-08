@@ -1,133 +1,159 @@
-Return-Path: <linux-erofs+bounces-1755-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1756-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA368D05170
-	for <lists+linux-erofs@lfdr.de>; Thu, 08 Jan 2026 18:40:15 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A78CD05710
+	for <lists+linux-erofs@lfdr.de>; Thu, 08 Jan 2026 19:19:07 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dnBxn1V2Hz2xGY;
-	Fri, 09 Jan 2026 04:40:13 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dnCpZ70bFz2xcB;
+	Fri, 09 Jan 2026 05:19:02 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767894013;
-	cv=none; b=YoEKBuUWJIbVzmCAQD2BM3F3dMb4mAdsbmG9Q66nDBVaCMHkygftnrAYb5Slyw1NxOqa1B5NE7uqUwRvV5NYpHSk/t+EIKv5IdRRPLIBtqgiwYaUZL58cijhf1k95oXNqflTD570Dw/gW2EfJQwelUyI4zJ3QzjI6J4VVUq2ku+Y5u9TgG5PS7GHnwGyVDmblX9a1OORFRZMEQKwhG5je6sxnBiCAladQX/kj6jQjJSnyHE4d2JDrQ4jPKygz1QorXNPdgHMEDwduOqNo3yoJB22QT5QsHux4v5XI2c9iQQTATAs2NPH/777sWk9YY9aVe/VCoteq27DI+FtBx7Vzw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=210.171.160.6
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767896342;
+	cv=none; b=bA2voX/9XxZMttJgS3jBxd5nEwvvm9qQHPrF03zJOVsP6fKZZSVczbdlFiIoWfThupSF0o4uUkQ9fV90EHeszMmTymEBet/oAszyM+m1784M41DP6r6uiDlI0zWqRbDoAb6oWlkV1dD1bfUUVojOQh9fjPP/C5CbmrvCyy3cuyHxwNIw6PlYt9fuDx1AaA1+ZCQ0VN4i4F/twsodQ9NgXmbcklC/J80wWvzyTACcHFe32YKtVKzP0T2q7k32qAzV6hCFA+9QlinH4KkRuU12oMqN+NsnzvlbMtQKeUR5ameiuAmX2LwINEFzO1rxtYLI9E4B0DkviFutOXylZnLA9w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767894013; c=relaxed/relaxed;
-	bh=pbYulziCehk0+dq0CXHXUlJblsepps/x0pBz736+F88=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OETc2hOMWpBfC+wQoWU2P1ReRVWkEjZLPYuXJ+OOKljNTXbzhpPZ9VgPdzfafEHOZihG6aVcH26yPZJmTMAyLRcTxB1uGwsOVmu9C7jF2P5pRwgiksyJjoY8hHgaaJGMVqTTCVB3TUb5sGJ65AcCQeN8c/8LaHgGSNYOK991JU5QISTLGGpBtKq7QO2xL/m0Sf6EP1iCf3HwYstMZ8A9XaztKtW7d9YjTaMtgnN9O/protOCdo1z0lUN8YOTfDoD3LumHkQjV6RMPnWI8UcxPvZFYeYwqW5ay5U46nH78y7JnibtWr5Fjw3zbRVxxi9ZVl4TT+/ko41dpVXNF6nmVA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz; dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=v6o0xZII; dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=iQxzzizV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=v6o0xZII; dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=iQxzzizV; dkim-atps=neutral; spf=pass (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org) smtp.mailfrom=suse.cz
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz
+	t=1767896342; c=relaxed/relaxed;
+	bh=VE+eLbPxS+2/NxdS4iC5ykEp/h4Ri6SH4uWUI0CKCww=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Upj3IQ3cMONviIkbwKlXq4vTZ82yc37HZOTMVoC9n1ZgqOrnBhMrBBTZuWz9hrGDShzm0S/a0rj3FGFdsdF517AO4hs/e8QQXfGDUh3wWTu0CcVdDqHoNcHl8+/WqdkqjlLDV2c4/6WOxsfjTywBuercDl8LaIAXYO6CWPORnjyQqaaWCYUvvpjba4Ud+LDxS2pcYqYhS39i1Q0wlopQZPOp+D7kaQNyxeTjIlb2lgGQ9V4HzW/Fc5cQu7FRw2GrJVbOhVVeGFS5UNT4ezRawUuOdqw0phKTKRarhpqGIR68iTpRDYFSDwa9dciMX/qt+gzywrjTlFGtCicNMCV1Vg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp; dkim=pass (2048-bit key; unprotected) header.d=parknet.co.jp header.i=@parknet.co.jp header.a=rsa-sha256 header.s=20250114 header.b=gca1nAhL; dkim=pass header.d=parknet.co.jp header.i=@parknet.co.jp header.a=ed25519-sha256 header.s=20250114-ed25519 header.b=dpcKqiHv; dkim-atps=neutral; spf=pass (client-ip=210.171.160.6; helo=mail.parknet.co.jp; envelope-from=hirofumi@parknet.co.jp; receiver=lists.ozlabs.org) smtp.mailfrom=parknet.co.jp
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=v6o0xZII;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=iQxzzizV;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=v6o0xZII;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=iQxzzizV;
+	dkim=pass (2048-bit key; unprotected) header.d=parknet.co.jp header.i=@parknet.co.jp header.a=rsa-sha256 header.s=20250114 header.b=gca1nAhL;
+	dkim=pass header.d=parknet.co.jp header.i=@parknet.co.jp header.a=ed25519-sha256 header.s=20250114-ed25519 header.b=dpcKqiHv;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=parknet.co.jp (client-ip=210.171.160.6; helo=mail.parknet.co.jp; envelope-from=hirofumi@parknet.co.jp; receiver=lists.ozlabs.org)
+X-Greylist: delayed 383 seconds by postgrey-1.37 at boromir; Fri, 09 Jan 2026 05:19:00 AEDT
+Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnBxl5MqRz2xGF
-	for <linux-erofs@lists.ozlabs.org>; Fri, 09 Jan 2026 04:40:11 +1100 (AEDT)
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 60DD85CBEA;
-	Thu,  8 Jan 2026 17:40:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1767894008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnCpX3Smcz2xZK
+	for <linux-erofs@lists.ozlabs.org>; Fri, 09 Jan 2026 05:19:00 +1100 (AEDT)
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+	by mail.parknet.co.jp (Postfix) with ESMTPSA id 4677D26F765D;
+	Fri,  9 Jan 2026 03:12:33 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parknet.co.jp;
+	s=20250114; t=1767895953;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pbYulziCehk0+dq0CXHXUlJblsepps/x0pBz736+F88=;
-	b=v6o0xZIIolBq3Kc+VF6+9Ya5E6t2G34FsAJ4qlruIPlrp3yRFZ1mosmLKssOtf8GopFPv6
-	pdM5KNdg6uqkpzJC2OCiQs93p2MdVtM1C1AsH2TngC8tV9OjZ7anbkGl2iE3fhCSU9mvhX
-	K1VxnfPudBQRQJ1Q1ovU0oM49Yj5Rmo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1767894008;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	bh=VE+eLbPxS+2/NxdS4iC5ykEp/h4Ri6SH4uWUI0CKCww=;
+	b=gca1nAhL0iYeKhrMxVW/YkNVQGsmR2FtA0K2e0pt9zd3L8VZwxpcEfUTVG6wgn+2tFPTSO
+	HeW+ni5Q59lRV2kUjNcId9ow+1k5DhIo1N5oAHHp1l0frRz0p+GdCrJ5yDI66gxE8KEOn7
+	v8zc7gU5ici9xYmL+L7s3KQ9RND4Zj9v/GNEYNheUomswbwI2MAFPIY0boWLymkQQnV9lD
+	55Q1xjqtAMVsY4vr4S+L3pqkV4l+GHZ+5Sx/JiLr+J5yUBW4ypUc8Y8oNHBEL1KgKVh31j
+	qSpaEXlZVcdannHzIb1g2WajxumAtmJFSTEQRXXN49o5ilDnu6uppAB9swxKLA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=parknet.co.jp;
+	s=20250114-ed25519; t=1767895953;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pbYulziCehk0+dq0CXHXUlJblsepps/x0pBz736+F88=;
-	b=iQxzzizVuPHl0WVwxtpKrivs8r+dbY1HBg67emHdQ+8PTu3CciNeemY/i1L/NaN8QOR0LX
-	w4waIzEE2aIOLGCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1767894008; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pbYulziCehk0+dq0CXHXUlJblsepps/x0pBz736+F88=;
-	b=v6o0xZIIolBq3Kc+VF6+9Ya5E6t2G34FsAJ4qlruIPlrp3yRFZ1mosmLKssOtf8GopFPv6
-	pdM5KNdg6uqkpzJC2OCiQs93p2MdVtM1C1AsH2TngC8tV9OjZ7anbkGl2iE3fhCSU9mvhX
-	K1VxnfPudBQRQJ1Q1ovU0oM49Yj5Rmo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1767894008;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pbYulziCehk0+dq0CXHXUlJblsepps/x0pBz736+F88=;
-	b=iQxzzizVuPHl0WVwxtpKrivs8r+dbY1HBg67emHdQ+8PTu3CciNeemY/i1L/NaN8QOR0LX
-	w4waIzEE2aIOLGCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4927E3EA63;
-	Thu,  8 Jan 2026 17:40:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MFPYEfjrX2kUBAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Thu, 08 Jan 2026 17:40:08 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 0782CA0B23; Thu,  8 Jan 2026 18:40:08 +0100 (CET)
-Date: Thu, 8 Jan 2026 18:40:07 +0100
-From: Jan Kara <jack@suse.cz>
+	bh=VE+eLbPxS+2/NxdS4iC5ykEp/h4Ri6SH4uWUI0CKCww=;
+	b=dpcKqiHv5kPZON+sXPbBLz5lebhV2Omji1CcWNcfUdqkirKgF5cr6kEKLmZbrHERXCyoN2
+	F8vLjq1Lz09KhaCQ==
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+	by ibmpc.myhome.or.jp (8.18.1/8.18.1/Debian-7) with ESMTPS id 608ICUsL013625
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 9 Jan 2026 03:12:31 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+	by devron.myhome.or.jp (8.18.1/8.18.1/Debian-7) with ESMTPS id 608ICTic019851
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Fri, 9 Jan 2026 03:12:29 +0900
+Received: (from hirofumi@localhost)
+	by devron.myhome.or.jp (8.18.1/8.18.1/Submit) id 608ICKe4019849;
+	Fri, 9 Jan 2026 03:12:20 +0900
+From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 To: Jeff Layton <jlayton@kernel.org>
-Cc: Luis de Bethencourt <luisbg@kernel.org>, 
-	Salah Triki <salah.triki@gmail.com>, Nicolas Pitre <nico@fluxnic.net>, 
-	Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>, Anders Larsen <al@alarsen.net>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>, Gao Xiang <xiang@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, 
-	Dave Kleikamp <shaggy@kernel.org>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall <hubcap@omnibond.com>, 
-	Martin Brandenburg <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Amir Goldstein <amir73il@gmail.com>, Phillip Lougher <phillip@squashfs.org.uk>, 
-	Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, 
-	Yuezhang Mo <yuezhang.mo@sony.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	Alexander Aring <alex.aring@gmail.com>, Andreas Gruenbacher <agruenba@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev, 
-	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, linux-unionfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-mm@kvack.org, gfs2@lists.linux.dev, 
-	linux-doc@vger.kernel.org, v9fs@lists.linux.dev, ceph-devel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
-Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
- lease support
-Message-ID: <m3mywef74xhcakianlrovrnaadnhzhfqjfusulkcnyioforfml@j2xnk7dzkmv4>
+Cc: Luis de Bethencourt <luisbg@kernel.org>,
+        Salah Triki
+ <salah.triki@gmail.com>, Nicolas Pitre <nico@fluxnic.net>,
+        Christoph
+ Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        Anders Larsen
+ <al@alarsen.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian
+ Brauner <brauner@kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris
+ Mason <clm@fb.com>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu
+ <chao@kernel.org>,
+        Yue Hu <zbestahu@gmail.com>, Jeffle Xu
+ <jefflexu@linux.alibaba.com>,
+        Sandeep Dhavale <dhavale@google.com>,
+        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
+        Jan Kara <jack@suse.com>, "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger
+ <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        David
+ Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>,
+        Ryusuke Konishi
+ <konishi.ryusuke@gmail.com>,
+        Viacheslav Dubeyko <slava@dubeyko.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mark
+ Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi
+ <joseph.qi@linux.alibaba.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Miklos Szeredi
+ <miklos@szeredi.hu>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Phillip
+ Lougher <phillip@squashfs.org.uk>,
+        Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>,
+        Baolin Wang
+ <baolin.wang@linux.alibaba.com>,
+        Andrew Morton
+ <akpm@linux-foundation.org>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Yuezhang Mo
+ <yuezhang.mo@sony.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Alexander
+ Aring <alex.aring@gmail.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>,
+        Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet
+ <asmadeus@codewreck.org>,
+        Christian Schoenebeck
+ <linux_oss@crudebyte.com>,
+        Xiubo Li <xiubli@redhat.com>, Ilya Dryomov
+ <idryomov@gmail.com>,
+        Trond Myklebust <trondmy@kernel.org>,
+        Anna
+ Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>,
+        Paulo
+ Alcantara <pc@manguebit.org>,
+        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+        Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+        Bharath SM <bharathsm@microsoft.com>, Hans de Goede <hansg@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+        linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+        ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+        linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, gfs2@lists.linux.dev, linux-doc@vger.kernel.org,
+        v9fs@lists.linux.dev, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: Re: [PATCH 09/24] fat: add setlease file operation
+In-Reply-To: <20260108-setlease-6-20-v1-9-ea4dec9b67fa@kernel.org>
 References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
+	<20260108-setlease-6-20-v1-9-ea4dec9b67fa@kernel.org>
+Date: Fri, 09 Jan 2026 03:12:20 +0900
+Message-ID: <875x9c3rej.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -139,177 +165,72 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	R_RATELIMIT(0.00)[to_ip_from(RL6z1i6dkhnac7oamujmo9nifa)];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,fluxnic.net,infradead.org,suse.cz,alarsen.net,zeniv.linux.org.uk,suse.com,fb.com,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,mail.parknet.co.jp,nod.at,dubeyko.com,paragon-software.com,fasheh.com,evilplan.org,omnibond.com,szeredi.hu,squashfs.org.uk,linux-foundation.org,samsung.com,sony.com,oracle.com,redhat.com,lwn.net,ionkov.net,codewreck.org,crudebyte.com,samba.org,manguebit.org,microsoft.com,talpey.com,vger.kernel.org,lists.ozlabs.org,lists.sourceforge.net,lists.infradead.org,lists.linux.dev,lists.orangefs.org,kvack.org,lists.samba.org];
-	RCPT_COUNT_GT_50(0.00)[86];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Score: -2.30
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+Content-Type: text/plain
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Thu 08-01-26 12:12:55, Jeff Layton wrote:
-> Yesterday, I sent patches to fix how directory delegation support is
-> handled on filesystems where the should be disabled [1]. That set is
-> appropriate for v6.19. For v7.0, I want to make lease support be more
-> opt-in, rather than opt-out:
-> 
-> For historical reasons, when ->setlease() file_operation is set to NULL,
-> the default is to use the kernel-internal lease implementation. This
-> means that if you want to disable them, you need to explicitly set the
-> ->setlease() file_operation to simple_nosetlease() or the equivalent.
-> 
-> This has caused a number of problems over the years as some filesystems
-> have inadvertantly allowed leases to be acquired simply by having left
-> it set to NULL. It would be better if filesystems had to opt-in to lease
-> support, particularly with the advent of directory delegations.
-> 
-> This series has sets the ->setlease() operation in a pile of existing
-> local filesystems to generic_setlease() and then changes
-> kernel_setlease() to return -EINVAL when the setlease() operation is not
-> set.
-> 
-> With this change, new filesystems will need to explicitly set the
-> ->setlease() operations in order to provide lease and delegation
-> support.
-> 
-> I mainly focused on filesystems that are NFS exportable, since NFS and
-> SMB are the main users of file leases, and they tend to end up exporting
-> the same filesystem types. Let me know if I've missed any.
+Jeff Layton <jlayton@kernel.org> writes:
 
-So, what about kernfs and fuse? They seem to be exportable and don't have
-.setlease set...
-
-								Honza
-
-> 
-> [1]: https://lore.kernel.org/linux-fsdevel/20260107-setlease-6-19-v1-0-85f034abcc57@kernel.org/
-> 
+> Add the setlease file_operation to fat_file_operations and
+> fat_dir_operations, pointing to generic_setlease.  A future patch will
+> change the default behavior to reject lease attempts with -EINVAL when
+> there is no setlease file operation defined. Add generic_setlease to
+> retain the ability to set leases on this filesystem.
+>
 > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+
+Looks good.
+
+Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+
 > ---
-> Jeff Layton (24):
->       fs: add setlease to generic_ro_fops and read-only filesystem directory operations
->       affs: add setlease file operation
->       btrfs: add setlease file operation
->       erofs: add setlease file operation
->       ext2: add setlease file operation
->       ext4: add setlease file operation
->       exfat: add setlease file operation
->       f2fs: add setlease file operation
->       fat: add setlease file operation
->       gfs2: add a setlease file operation
->       jffs2: add setlease file operation
->       jfs: add setlease file operation
->       nilfs2: add setlease file operation
->       ntfs3: add setlease file operation
->       ocfs2: add setlease file operation
->       orangefs: add setlease file operation
->       overlayfs: add setlease file operation
->       squashfs: add setlease file operation
->       tmpfs: add setlease file operation
->       udf: add setlease file operation
->       ufs: add setlease file operation
->       xfs: add setlease file operation
->       filelock: default to returning -EINVAL when ->setlease operation is NULL
->       fs: remove simple_nosetlease()
-> 
->  Documentation/filesystems/porting.rst |  9 +++++++++
->  Documentation/filesystems/vfs.rst     |  9 ++++++---
->  fs/9p/vfs_dir.c                       |  2 --
->  fs/9p/vfs_file.c                      |  2 --
->  fs/affs/dir.c                         |  2 ++
->  fs/affs/file.c                        |  2 ++
->  fs/befs/linuxvfs.c                    |  2 ++
->  fs/btrfs/file.c                       |  2 ++
->  fs/btrfs/inode.c                      |  2 ++
->  fs/ceph/dir.c                         |  2 --
->  fs/ceph/file.c                        |  1 -
->  fs/cramfs/inode.c                     |  2 ++
->  fs/efs/dir.c                          |  2 ++
->  fs/erofs/data.c                       |  2 ++
->  fs/erofs/dir.c                        |  2 ++
->  fs/exfat/dir.c                        |  2 ++
->  fs/exfat/file.c                       |  2 ++
->  fs/ext2/dir.c                         |  2 ++
->  fs/ext2/file.c                        |  2 ++
->  fs/ext4/dir.c                         |  2 ++
->  fs/ext4/file.c                        |  2 ++
->  fs/f2fs/dir.c                         |  2 ++
->  fs/f2fs/file.c                        |  2 ++
->  fs/fat/dir.c                          |  2 ++
->  fs/fat/file.c                         |  2 ++
->  fs/freevxfs/vxfs_lookup.c             |  2 ++
->  fs/fuse/dir.c                         |  1 -
->  fs/gfs2/file.c                        |  3 +--
->  fs/isofs/dir.c                        |  2 ++
->  fs/jffs2/dir.c                        |  2 ++
->  fs/jffs2/file.c                       |  2 ++
->  fs/jfs/file.c                         |  2 ++
->  fs/jfs/namei.c                        |  2 ++
->  fs/libfs.c                            | 20 ++------------------
->  fs/locks.c                            |  3 +--
->  fs/nfs/dir.c                          |  1 -
->  fs/nfs/file.c                         |  1 -
->  fs/nilfs2/dir.c                       |  3 ++-
->  fs/nilfs2/file.c                      |  2 ++
->  fs/ntfs3/dir.c                        |  3 +++
->  fs/ntfs3/file.c                       |  3 +++
->  fs/ocfs2/file.c                       |  5 +++++
->  fs/orangefs/dir.c                     |  4 +++-
->  fs/orangefs/file.c                    |  1 +
->  fs/overlayfs/file.c                   |  2 ++
->  fs/overlayfs/readdir.c                |  2 ++
->  fs/qnx4/dir.c                         |  2 ++
->  fs/qnx6/dir.c                         |  2 ++
->  fs/read_write.c                       |  2 ++
->  fs/smb/client/cifsfs.c                |  1 -
->  fs/squashfs/dir.c                     |  2 ++
->  fs/squashfs/file.c                    |  4 +++-
->  fs/udf/dir.c                          |  2 ++
->  fs/udf/file.c                         |  2 ++
->  fs/ufs/dir.c                          |  2 ++
->  fs/ufs/file.c                         |  2 ++
->  fs/vboxsf/dir.c                       |  1 -
->  fs/vboxsf/file.c                      |  1 -
->  fs/xfs/xfs_file.c                     |  3 +++
->  include/linux/fs.h                    |  1 -
->  mm/shmem.c                            |  2 ++
->  61 files changed, 116 insertions(+), 42 deletions(-)
-> ---
-> base-commit: 731ce71a6c8adb8b8f873643beacaeedc1564500
-> change-id: 20260107-setlease-6-20-299eb5695c5a
-> 
-> Best regards,
-> -- 
-> Jeff Layton <jlayton@kernel.org>
-> 
+>  fs/fat/dir.c  | 2 ++
+>  fs/fat/file.c | 2 ++
+>  2 files changed, 4 insertions(+)
+>
+> diff --git a/fs/fat/dir.c b/fs/fat/dir.c
+> index 92b091783966af6a9e6f5ead1a382a98dd92bba0..807bc8b1bc145a9f15765920670c6233f7e87e55 100644
+> --- a/fs/fat/dir.c
+> +++ b/fs/fat/dir.c
+> @@ -16,6 +16,7 @@
+>  
+>  #include <linux/slab.h>
+>  #include <linux/compat.h>
+> +#include <linux/filelock.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/iversion.h>
+>  #include "fat.h"
+> @@ -876,6 +877,7 @@ const struct file_operations fat_dir_operations = {
+>  	.compat_ioctl	= fat_compat_dir_ioctl,
+>  #endif
+>  	.fsync		= fat_file_fsync,
+> +	.setlease	= generic_setlease,
+>  };
+>  
+>  static int fat_get_short_entry(struct inode *dir, loff_t *pos,
+> diff --git a/fs/fat/file.c b/fs/fat/file.c
+> index 4fc49a614fb8fd64e219db60c6d9e7dd100aea1c..d50a6d8bfaae0c75b2dbe838d108135206d0f123 100644
+> --- a/fs/fat/file.c
+> +++ b/fs/fat/file.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/mount.h>
+>  #include <linux/blkdev.h>
+>  #include <linux/backing-dev.h>
+> +#include <linux/filelock.h>
+>  #include <linux/fsnotify.h>
+>  #include <linux/security.h>
+>  #include <linux/falloc.h>
+> @@ -212,6 +213,7 @@ const struct file_operations fat_file_operations = {
+>  	.splice_read	= filemap_splice_read,
+>  	.splice_write	= iter_file_splice_write,
+>  	.fallocate	= fat_fallocate,
+> +	.setlease	= generic_setlease,
+>  };
+>  
+>  static int fat_cont_expand(struct inode *inode, loff_t size)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
 
