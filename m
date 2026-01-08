@@ -1,41 +1,41 @@
-Return-Path: <linux-erofs+bounces-1705-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1706-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6E13D00B14
-	for <lists+linux-erofs@lfdr.de>; Thu, 08 Jan 2026 03:38:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 73CB1D00C8C
+	for <lists+linux-erofs@lfdr.de>; Thu, 08 Jan 2026 04:07:28 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dmpxg165zz2yG3;
-	Thu, 08 Jan 2026 13:38:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dmqZj6BSGz2yFq;
+	Thu, 08 Jan 2026 14:07:25 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767839927;
-	cv=none; b=DKAGd3yrMtyxAcIPpHNdQ4WVUjDIPMml3NS0wNPU+OxYrMdxKLDYWf6BiJp7NimQJyvzgKMb5CavDcLZ4jhdvRDWt9VwTlNihX3Vzv0TnbHRuuHjjoxESihZuMA9FErzuA6Fs+aeXndUuLBJBy5MUzmMKy3ESe4uqVlHMdvzd19pZN89nb69rdueVuj0CyxdOaevHJen/S2ZEB2i2WZVsW70gGSTDeazbeFzP9peFPD7ZRAbzr6qjT/qaKJ4GAEnApySHu/TyoOy0mi5zZw4C/FzfQzmi1Z3IgKGYntvHne5uhIFxTSfjWB3X7Ca+mbOZHfJZfLGFzXYA/6tFR+wOQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.118
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767841645;
+	cv=none; b=EJ9qTQVqmA7W/W2aoz3e7bPJ2aH0XDwP1n5DUcBEBkwgSuU6t5TjL109ft2i545e5eZuHp/2vC/40Ucy4paXkdWjpffeSlFYQkAnkbQZRrJR1vlKmZNrHJd0p7MzIyrAQd7sEE0XP+4hXS5RfTuLqPplEN9sMlkWbtIsPP44C4cJ/jQZqLLUetLLPbOkB75/WVNZUAG+iQwjWy/2uJoasrR8XhXho6IGiqCPMTYuesoEQZ391SRXhzyqJ+SpMyeic0Kgf3zylAm6R1eql66JnQoHalTH7NVi7wCuQasJ4wQmQW2AdOrSM0TSdGaWT1zm43BcHzZuYueU7RaSn4C/HQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767839927; c=relaxed/relaxed;
-	bh=W7nr+reNeMmKn20VCZiGbi5+jcRMYMQEwOTPVt+E9Ok=;
+	t=1767841645; c=relaxed/relaxed;
+	bh=oQheF5fgsLWjFmn4sCy3TBSdl1g+pvd4CN8mZqdibpE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JHaXuIh8dmKDT2LuwyfvPOB4drXlReeoYhaCCSLeZSfD0Tt/K72pXGmMG+H7GNYyofO+kq4nMFu257If4THV4rzJtEziW1SwNcWURKNv/+7Mt7sZNSHR4W2yaPgPCVNozMwqrUmgn3zLfzFi2YhQCFiM75JHN6blay+cR/auSL/fJ8zRg1rENdZBWh3hr6sgdZmP9QCBNRFOTCYLFwORPRn9Te+PiNYhiCLCMsZ084bVBNFCynbPjDl6OLL89T4lsanLvYnpavtIzIFT9S6LP/pkI2ph6SPad31xWQQVroqzSAl89I3w6jH59L07Ug1rjGAp3Ni85vCeH3XqwEcEQw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ThnY7Svn; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version:Content-Type; b=QoNRgjOuLB2tSEewk55UOTluG1c9aWFjwHz5Xznfiyy/MJk1ktmAiM2YtR9JTYeNqI6rF+00mBySiaxU24MYDMWUHod4aJ10+92O0n7L7Ou+P7og//qDVpSfyuvEVLrKxE16Jl3/tmzdD+bw7mM+ipqwSzSUEb+6lfn6XzNgnzvUpEXcnECRZ+w4qcrnzq+tQ4zhNZyIkJiUpQtDP3C1HjhGFDx0xTLNJElty4Bo4oXi/dSFi5bEY06AHchUlmyhLg9JwPNKFoGMe2PBdno5MiGrEyO+K2A5cb4g89PWf2BB4eIR91d7kfnuPH/R3AZoIfG/KVk8q/gsOOxzcrCwZQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MvF2hgrW; dkim-atps=neutral; spf=pass (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ThnY7Svn;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MvF2hgrW;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.118; helo=out30-118.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dmpxc13HTz2yFq
-	for <linux-erofs@lists.ozlabs.org>; Thu, 08 Jan 2026 13:38:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dmqZg30Glz2yF1
+	for <linux-erofs@lists.ozlabs.org>; Thu, 08 Jan 2026 14:07:21 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1767839918; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=W7nr+reNeMmKn20VCZiGbi5+jcRMYMQEwOTPVt+E9Ok=;
-	b=ThnY7Svn1yzrM+b0972N39X0m2+AJbYk1vAuvpqJjLNCEouI1ATUyZ+ksmdFp7RsT1XOkXZBt3LUct7cTnCOt5mVDeoGgApWYjfr3uwRHYMuioVL4iFrx31/fGQQzID+uNhlWGrVQ8eYZsDm09pCDPQPQwn27uVZeZxthZAqzE0=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wwaxb7U_1767839912 cluster:ay36)
+	t=1767841637; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=oQheF5fgsLWjFmn4sCy3TBSdl1g+pvd4CN8mZqdibpE=;
+	b=MvF2hgrWTSQPFckj0AlfeKh7td3IrlNgf1NAfZepRrnm3r6YUO1WIFIaikez7N18mb1xJG7ashrId5i1nsnH/JT0MiXMetg8PJCifpI8iDxJHsdKkF4S2GPQtzzaNeFeVrmHLuRfuvXkAbrSK6XOci0vp37FXGkZXlmlDC4U/30=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wwb0Z-x_1767841631 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 08 Jan 2026 10:38:37 +0800
+          Thu, 08 Jan 2026 11:07:15 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: LKML <linux-kernel@vger.kernel.org>,
@@ -50,9 +50,9 @@ Cc: LKML <linux-kernel@vger.kernel.org>,
 	Miklos Szeredi <mszeredi@redhat.com>,
 	Sheng Yong <shengyong1@xiaomi.com>,
 	Zhiguo Niu <niuzhiguo84@gmail.com>
-Subject: [PATCH v3] erofs: don't bother with s_stack_depth increasing for now
-Date: Thu,  8 Jan 2026 10:38:31 +0800
-Message-ID: <20260108023831.3263544-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v3 RESEND] erofs: don't bother with s_stack_depth increasing for now
+Date: Thu,  8 Jan 2026 11:07:09 +0800
+Message-ID: <20260108030709.3305545-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <3acec686-4020-4609-aee4-5dae7b9b0093@gmail.com>
 References: <3acec686-4020-4609-aee4-5dae7b9b0093@gmail.com>
@@ -124,19 +124,20 @@ Cc: Sheng Yong <shengyong1@xiaomi.com>
 Cc: Zhiguo Niu <niuzhiguo84@gmail.com>
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
-v3:
+v2->v3 RESEND:
  - Exclude bdev-backed EROFS mounts since it will be a real terminal fs
    as pointed out by Sheng Yong (APEX will rely on this);
+
  - Preserve previous "Acked-by:" and "Tested-by:" since it's trivial.
 
- fs/erofs/super.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ fs/erofs/super.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
 diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-index 937a215f626c..e93264034b5d 100644
+index 937a215f626c..5136cda5972a 100644
 --- a/fs/erofs/super.c
 +++ b/fs/erofs/super.c
-@@ -644,14 +644,20 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
+@@ -644,14 +644,21 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
  		 * fs contexts (including its own) due to self-controlled RO
  		 * accesses/contexts and no side-effect changes that need to
  		 * context save & restore so it can reuse the current thread
@@ -157,7 +158,8 @@ index 937a215f626c..e93264034b5d 100644
 -			if (sb->s_stack_depth > FILESYSTEM_MAX_STACK_DEPTH) {
 -				erofs_err(sb, "maximum fs stacking depth exceeded");
 +			inode = file_inode(sbi->dif0.file);
-+			if ((inode->i_sb->s_op == &erofs_sops && !sb->s_bdev) ||
++			if ((inode->i_sb->s_op == &erofs_sops &&
++			     !inode->i_sb->s_bdev) ||
 +			    inode->i_sb->s_stack_depth) {
 +				erofs_err(sb, "file-backed mounts cannot be applied to stacked fses");
  				return -ENOTBLK;
