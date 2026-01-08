@@ -1,43 +1,100 @@
-Return-Path: <linux-erofs+bounces-1717-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1718-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0E48D01D83
-	for <lists+linux-erofs@lfdr.de>; Thu, 08 Jan 2026 10:31:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 84CE4D028B2
+	for <lists+linux-erofs@lfdr.de>; Thu, 08 Jan 2026 13:10:02 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dn06G1B91z2yGD;
-	Thu, 08 Jan 2026 20:31:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dn3cl6RqRz2yGL;
+	Thu, 08 Jan 2026 23:09:59 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767864710;
-	cv=none; b=gux6AavZ6FYYUwzY9djxXEj86Hi49L5g9qcgt6Sn+KzsOWPaE9ums+hVlS44iekEcv8WuliUFWzIexjqw15lWHuR4QZ/5ZGCCC5v0BJYnu1rus6fw3IdsV0R7Ht7C9nDvFVDTbd05Vri7B+dlJ3xoy6F0obXv6f2dzm/JYjY8jCyq6LyclvP/dYfR/PyVaTFvBF9O3P4/Wf0+jAv3vqxsJwzgBJNJToN6Qg2QeNu2p2oK7atzMa6ImBpPho0W/nEdD7tE+KGZTryiq33U6xTmxCeWcduoRbgcvHAd+Yzy9l29ddZLy60TjiFgwCD/h82xqy3PwDfjowPGvqWjAbfZg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.208.181
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767874199;
+	cv=none; b=PMwhGgq05yUCNPsTm/VbUGKJo8hCpYE7dAjRAKVAqemsYypSYASzw0NAIqRlvk2HOThj2WuXBTHkU0/43xr/8naPdpZnOL65yomHSaEetpBAilw8IqpLZKFgJj30nePblCBC5kU4dgaaKjA9NjgGxllvdpHcN6x7rjy6Y6w18Evz0xUyHmUmGl3PrYV/65RCoUSwGgPtXA4TOoFCZQcYxQ2SkjVtnEhfNuxglg+Sx2yWR+2MgqoppKPxpaKOX8VxMNPKKuwO+T7MNBYnxDAGHSJtpAOFcfVXBEOgVtSB3TLqvL9jgmg+NYTM0xb1AWFBBIVZcY1L/j1qJaug4NNBOQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767864710; c=relaxed/relaxed;
-	bh=e8PS9uOvkWCdWHFIecWXheJ0mUjj4ZF8NqftcmWhWH8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TpXcd5Veq+oDMlv+wQrD295C+inV1mxahvegtHODwqSc8GQY/gKK/ADIpJIDy2eWiVEYmxGzlMAsPB6YOAJ3WcHCCKX0PXZ+kl91ajkmaOr5JnqxnYkPuj/m1wMD+rEHLKTs46z3HQw101qvtNhZgyl0+VfRr+LGpw8fCYJN7tjWiTDiESwfRG/wamsfg+xA5huprRg2CPW0NA51D8Mzr7Al8L6P8G3pqWkUDo8EUR/cZiZgyNh7IqW6YWARH/dTmmouJhBtW77V4SYs+SUch9WcoOdS/uQbUyTscdXcvo0WBHG1wtq0Ve1juHHrTA0iVNCi3ITkoErEPaXTxqMZ9g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=HgU7FgAb; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1767874199; c=relaxed/relaxed;
+	bh=xWXsVjPSBACvOUrTWUoZ6i3cfhSX/bnB+GsdyHt4Nog=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Im84spNag4UKqVk0GAkbLJKtW+vgwHbd27Cw/RXSvhb39sTOObERmPUF+h1Wc/02QYEgwcD96OAIE2US1a3eCZScpy4a3PnsZfeSMRtShGw/uF5wza+xZOZ7makhfXG+g9X6JUVZHE5nnYPTbnR/pBZIbjYTh3+g6o88+gRdJAJhs5Gmg985UKYB3e3bdvukGgs6RRq6PyiIu9bgfRAvxIWtZkN3J7exzyNybVj0zj/6MQNMA73H9KGbZlkMxXGG+eNUqa7J625FssTtZl3A9Jec+wRVGQhgi8btNVWStaycQKwUqnHM8oOlTVW23Dkr3CeOhrYJw8uJ69665Gk7eg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=LchZbn4q; dkim-atps=neutral; spf=pass (client-ip=209.85.208.181; helo=mail-lj1-f181.google.com; envelope-from=david.laight.linux@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=HgU7FgAb;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=LchZbn4q;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=209.85.208.181; helo=mail-lj1-f181.google.com; envelope-from=david.laight.linux@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dn06C6mDYz2yG7
-	for <linux-erofs@lists.ozlabs.org>; Thu, 08 Jan 2026 20:31:46 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1767864702; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=e8PS9uOvkWCdWHFIecWXheJ0mUjj4ZF8NqftcmWhWH8=;
-	b=HgU7FgAbNZzHRCe4L6a0SdkiNhGH/eaovvnFPpG6Aj4pcLMM0aLF/1Bh1Aya2cb65EMt5ApG413iuz0DNHibpwv4mlcFudKusxl7G3HMYw078iAZegukPTGuERAHPMuvxZdfAG1clIshVg8Aq8uUX7FkiDDLj9y/YGX5ZUFFN1o=
-Received: from 30.221.132.104(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wwc9TIX_1767864696 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 08 Jan 2026 17:31:41 +0800
-Message-ID: <a8bc6938-84d9-42d6-9928-7cdd13e3a4c8@linux.alibaba.com>
-Date: Thu, 8 Jan 2026 17:31:40 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dn3cj6nn9z2xjN
+	for <linux-erofs@lists.ozlabs.org>; Thu, 08 Jan 2026 23:09:56 +1100 (AEDT)
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-382fb535b73so18356151fa.0
+        for <linux-erofs@lists.ozlabs.org>; Thu, 08 Jan 2026 04:09:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767874132; x=1768478932; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xWXsVjPSBACvOUrTWUoZ6i3cfhSX/bnB+GsdyHt4Nog=;
+        b=LchZbn4qfXu+3OP8oR762xHFEVS4/FOy7n7XOWNxm0kd/JT7bL601VwD4KDOxMN/82
+         WSS4ZQZrgFcCTMwjdR2eHIHnQQhx1ORZpzIwWptoOIz9YEEH6FZTWwGmyfFG400U9aN5
+         PKhlyWl0Ao40qSXliNiMJDVcCYSC2zTPPlC+B1Ug/9tso2Zfbr3+IyfAL5CWdULL4h+i
+         pk3xZcaTSh/hDLE0USQobisJxMAvc07ynb41VrrcCoPXzLnvFxTLJ0vhSXe9/LzdmSbb
+         3ngkE4dLLzAL2GcoHDf5seki6Nr9bG71MpS06LZVGkc9Q0nSzaW7GukGrOxFq3K+3wxr
+         uKcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767874132; x=1768478932;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xWXsVjPSBACvOUrTWUoZ6i3cfhSX/bnB+GsdyHt4Nog=;
+        b=USyPoBPrQ3UdmxFinP2ONKQXzi5uENk87AK+y756YUViCZL6+E7NJ+TrkuvIt1QO5g
+         vUgfKdIpxyCEckNc7mG73uQe7VX1J+bFm+v8byokz8oQSKSwTFxwjWF2SOMgc0CggwMu
+         zJ83GcJ0/06iNdC7N91/9JoH02ItR6XLSMvHFJ6YtTs/ZCVoZPrYYvh+s1O19VGPbsV9
+         qabUxU0WwOITItbOiiPx9YxYNJB8FVdp8+tb9b961LX9aJ4c+0tF+OrtyfBaeFPnieA8
+         S20UQ98p2Yuq7QXoQGVUOlePw6fHvYX1OkrQj03dzXuNjT8fiUkfDNgv1fJ3AOk9F+zZ
+         U14w==
+X-Forwarded-Encrypted: i=1; AJvYcCVPsnkrlMPA+CTl5U2gJXB7YVhmzrjrNn3Ez7HR+LNYA0y119COWw9d27a8EaETTXPbymPPz8ONVpsd7Q==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YxFMjnpzu85C07MoD+fBzT0GWBZUvKWaFuwcOa/R/1i1+4d3szH
+	h8GzinF1MNOD3QfzPfNu3lhwdf7TElufUa8TyyY3F36JyclutswDUtY0wWvjTg==
+X-Gm-Gg: AY/fxX4h+pI8hm3RbiD2CxDZpna2AIRxQricYjH0qMJLGYKTvbGH0ujgN5FXYvEbPDZ
+	5MP56CzUCN791i6F3sIuU8dMEdKkoMdCI0/7xiQ1jlblaGV/dsritowpAsdRYguCeAWAqtZ9whk
+	DizFU3P/wKVJMui0HVlfBT/CraaPc/RuXzBDUN80h7XNBvkahO6wC5V99bj7wMGILHAo+jGGJvm
+	ocsfAcfpRPhR505uJu41BMtEdLklyEQMrtE2DwBcO89oq9u7qJUiuvC+z255hSOcB+JhBpopblw
+	O9TRITrAnsbqjz8gyjrN95QjlLxCzbUa2mwdZwJMVme1gORHjnNFxwwMNVAceXlbJ4HpBOAjS/p
+	YZ+6pygr47yP2ndlxWlAX0FJGbLeCZLr5TVt39o/x2U47GSpwDLwTmeqENb4v2/pm6C8HuV4R+q
+	cBqpH9xqyiQLcLzzrHqt2fWVGEKVWSdrxAmXkgdB85/WwGl95GN9Ql
+X-Google-Smtp-Source: AGHT+IFmC/s2zmdOBadT/g4NYT+5EdU6A/sY6V1s9b9j38zaQ6W1AyyE0nBMoGSOz8ZyH3UraVUgxg==
+X-Received: by 2002:a05:600c:4f53:b0:477:7991:5d1e with SMTP id 5b1f17b1804b1-47d84b3860fmr58019005e9.25.1767867978798;
+        Thu, 08 Jan 2026 02:26:18 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-432bd5ee870sm15478511f8f.36.2026.01.08.02.26.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jan 2026 02:26:18 -0800 (PST)
+Date: Thu, 8 Jan 2026 10:26:13 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Amir Goldstein <amir73il@gmail.com>, Sheng Yong
+ <shengyong2021@gmail.com>, LKML <linux-kernel@vger.kernel.org>,
+ linux-fsdevel <linux-fsdevel@vger.kernel.org>, Dusty Mabe
+ <dusty@dustymabe.com>, =?UTF-8?B?VGltb3Row6ll?= Ravier <tim@siosm.fr>,
+ =?UTF-8?B?QWxla3PDqWkgTmFpZMOpbm92?= <an@digitaltide.io>, Alexander Larsson
+ <alexl@redhat.com>, Christian Brauner <brauner@kernel.org>, Miklos Szeredi
+ <mszeredi@redhat.com>, Zhiguo Niu <niuzhiguo84@gmail.com>,
+ shengyong1@xiaomi.com, linux-erofs mailing list
+ <linux-erofs@lists.ozlabs.org>
+Subject: Re: [PATCH v2] erofs: don't bother with s_stack_depth increasing
+ for now
+Message-ID: <20260108102613.33bbc6d4@pumpkin>
+In-Reply-To: <4b427f6f-3b26-4dc8-bf6f-79eeabf6ba84@linux.alibaba.com>
+References: <0c34f3fa-c573-4343-b8ea-6832530f0069@linux.alibaba.com>
+	<20260106170504.674070-1-hsiangkao@linux.alibaba.com>
+	<3acec686-4020-4609-aee4-5dae7b9b0093@gmail.com>
+	<41b8a0bb-96d3-4eba-a5b8-77b0b0ed4730@linux.alibaba.com>
+	<121cb490-f13a-4957-97be-ea87baa10827@linux.alibaba.com>
+	<CAOQ4uxg14FYhZvdjZ-9UT3jVyLCbM1ReUdESSXgAbezsQx7rqQ@mail.gmail.com>
+	<4b427f6f-3b26-4dc8-bf6f-79eeabf6ba84@linux.alibaba.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,145 +106,94 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 RESEND] erofs: don't bother with s_stack_depth
- increasing for now
-To: Zhiguo Niu <niuzhiguo84@gmail.com>
-Cc: linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
- linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Dusty Mabe <dusty@dustymabe.com>, =?UTF-8?Q?Timoth=C3=A9e_Ravier?=
- <tim@siosm.fr>, =?UTF-8?B?QWxla3PDqWkgTmFpZMOpbm92?= <an@digitaltide.io>,
- Amir Goldstein <amir73il@gmail.com>, Alexander Larsson <alexl@redhat.com>,
- Christian Brauner <brauner@kernel.org>, Miklos Szeredi
- <mszeredi@redhat.com>, Sheng Yong <shengyong1@xiaomi.com>
-References: <3acec686-4020-4609-aee4-5dae7b9b0093@gmail.com>
- <20260108030709.3305545-1-hsiangkao@linux.alibaba.com>
- <CAHJ8P3LMqKYZjmMdSWyKv5EQvWvvycfidJiTi02UUBoEhgtXzQ@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAHJ8P3LMqKYZjmMdSWyKv5EQvWvvycfidJiTi02UUBoEhgtXzQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+On Thu, 8 Jan 2026 16:05:03 +0800
+Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
 
+> Hi Amir,
+>=20
+> On 2026/1/8 16:02, Amir Goldstein wrote:
+> > On Thu, Jan 8, 2026 at 4:10=E2=80=AFAM Gao Xiang <hsiangkao@linux.aliba=
+ba.com> wrote: =20
+>=20
+> ...
+>=20
+> >>>>
+> >>>> Hi, Xiang
+> >>>>
+> >>>> In Android APEX scenario, apex images formatted as EROFS are packed =
+in
+> >>>> system.img which is also EROFS format. As a result, it will always f=
+ail
+> >>>> to do APEX-file-backed mount since `inode->i_sb->s_op =3D=3D &erofs_=
+sops'
+> >>>> is true.
+> >>>> Any thoughts to handle such scenario? =20
+> >>>
+> >>> Sorry, I forgot this popular case, I think it can be simply resolved
+> >>> by the following diff:
+> >>>
+> >>> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> >>> index 0cf41ed7ced8..e93264034b5d 100644
+> >>> --- a/fs/erofs/super.c
+> >>> +++ b/fs/erofs/super.c
+> >>> @@ -655,7 +655,7 @@ static int erofs_fc_fill_super(struct super_block=
+ *sb, struct fs_context *fc)
+> >>>                    */
+> >>>                   if (erofs_is_fileio_mode(sbi)) {
+> >>>                           inode =3D file_inode(sbi->dif0.file);
+> >>> -                       if (inode->i_sb->s_op =3D=3D &erofs_sops ||
+> >>> +                       if ((inode->i_sb->s_op =3D=3D &erofs_sops && =
+!sb->s_bdev) || =20
+> >>
+> >> Sorry it should be `!inode->i_sb->s_bdev`, I've
+> >> fixed it in v3 RESEND: =20
+> >=20
+> > A RESEND implies no changes since v3, so this is bad practice.
+> >  =20
+> >> https://lore.kernel.org/r/20260108030709.3305545-1-hsiangkao@linux.ali=
+baba.com
+> >> =20
+> >=20
+> > Ouch! If the erofs maintainer got this condition wrong... twice...
+> > Maybe better using the helper instead of open coding this non trivial c=
+heck?
+> >=20
+> > if ((inode->i_sb->s_op =3D=3D &erofs_sops &&
+> >        erofs_is_fileio_mode(EROFS_I_SB(inode))) =20
+>=20
+> I was thought to use that, but it excludes fscache as the
+> backing fs.. so I suggest to use !s_bdev directly to
+> cover both file-backed mounts and fscache cases directly.
 
-On 2026/1/8 17:28, Zhiguo Niu wrote:
-> Gao Xiang <hsiangkao@linux.alibaba.com> 于2026年1月8日周四 11:07写道：
->>
->> Previously, commit d53cd891f0e4 ("erofs: limit the level of fs stacking
->> for file-backed mounts") bumped `s_stack_depth` by one to avoid kernel
->> stack overflow when stacking an unlimited number of EROFS on top of
->> each other.
->>
->> This fix breaks composefs mounts, which need EROFS+ovl^2 sometimes
->> (and such setups are already used in production for quite a long time).
->>
->> One way to fix this regression is to bump FILESYSTEM_MAX_STACK_DEPTH
->> from 2 to 3, but proving that this is safe in general is a high bar.
->>
->> After a long discussion on GitHub issues [1] about possible solutions,
->> one conclusion is that there is no need to support nesting file-backed
->> EROFS mounts on stacked filesystems, because there is always the option
->> to use loopback devices as a fallback.
->>
->> As a quick fix for the composefs regression for this cycle, instead of
->> bumping `s_stack_depth` for file backed EROFS mounts, we disallow
->> nesting file-backed EROFS over EROFS and over filesystems with
->> `s_stack_depth` > 0.
->>
->> This works for all known file-backed mount use cases (composefs,
->> containerd, and Android APEX for some Android vendors), and the fix is
->> self-contained.
->>
->> Essentially, we are allowing one extra unaccounted fs stacking level of
->> EROFS below stacking filesystems, but EROFS can only be used in the read
->> path (i.e. overlayfs lower layers), which typically has much lower stack
->> usage than the write path.
->>
->> We can consider increasing FILESYSTEM_MAX_STACK_DEPTH later, after more
->> stack usage analysis or using alternative approaches, such as splitting
->> the `s_stack_depth` limitation according to different combinations of
->> stacking.
->>
->> Fixes: d53cd891f0e4 ("erofs: limit the level of fs stacking for file-backed mounts")
->> Reported-and-tested-by: Dusty Mabe <dusty@dustymabe.com>
->> Reported-by: Timothée Ravier <tim@siosm.fr>
->> Closes: https://github.com/coreos/fedora-coreos-tracker/issues/2087 [1]
->> Reported-by: "Alekséi Naidénov" <an@digitaltide.io>
->> Closes: https://lore.kernel.org/r/CAFHtUiYv4+=+JP_-JjARWjo6OwcvBj1wtYN=z0QXwCpec9sXtg@mail.gmail.com
->> Acked-by: Amir Goldstein <amir73il@gmail.com>
->> Acked-by: Alexander Larsson <alexl@redhat.com>
->> Cc: Christian Brauner <brauner@kernel.org>
->> Cc: Miklos Szeredi <mszeredi@redhat.com>
->> Cc: Sheng Yong <shengyong1@xiaomi.com>
->> Cc: Zhiguo Niu <niuzhiguo84@gmail.com>
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->> ---
->> v2->v3 RESEND:
->>   - Exclude bdev-backed EROFS mounts since it will be a real terminal fs
->>     as pointed out by Sheng Yong (APEX will rely on this);
->>
->>   - Preserve previous "Acked-by:" and "Tested-by:" since it's trivial.
->>
->>   fs/erofs/super.c | 19 +++++++++++++------
->>   1 file changed, 13 insertions(+), 6 deletions(-)
->>
->> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
->> index 937a215f626c..5136cda5972a 100644
->> --- a/fs/erofs/super.c
->> +++ b/fs/erofs/super.c
->> @@ -644,14 +644,21 @@ static int erofs_fc_fill_super(struct super_block *sb, struct fs_context *fc)
->>                   * fs contexts (including its own) due to self-controlled RO
->>                   * accesses/contexts and no side-effect changes that need to
->>                   * context save & restore so it can reuse the current thread
->> -                * context.  However, it still needs to bump `s_stack_depth` to
->> -                * avoid kernel stack overflow from nested filesystems.
->> +                * context.
->> +                * However, we still need to prevent kernel stack overflow due
->> +                * to filesystem nesting: just ensure that s_stack_depth is 0
->> +                * to disallow mounting EROFS on stacked filesystems.
->> +                * Note: s_stack_depth is not incremented here for now, since
->> +                * EROFS is the only fs supporting file-backed mounts for now.
->> +                * It MUST change if another fs plans to support them, which
->> +                * may also require adjusting FILESYSTEM_MAX_STACK_DEPTH.
->>                   */
->>                  if (erofs_is_fileio_mode(sbi)) {
->> -                       sb->s_stack_depth =
->> -                               file_inode(sbi->dif0.file)->i_sb->s_stack_depth + 1;
->> -                       if (sb->s_stack_depth > FILESYSTEM_MAX_STACK_DEPTH) {
->> -                               erofs_err(sb, "maximum fs stacking depth exceeded");
->> +                       inode = file_inode(sbi->dif0.file);
->> +                       if ((inode->i_sb->s_op == &erofs_sops &&
->> +                            !inode->i_sb->s_bdev) ||
->> +                           inode->i_sb->s_stack_depth) {
->> +                               erofs_err(sb, "file-backed mounts cannot be applied to stacked fses");
-> Hi Xiang
-> Do we need to print s_stack_depth here to distinguish which specific
-> problem case it is?
+Is it worth just allocating each fs a 'stack needed' value and then
+allowing the mount if the total is low enough.
+This is equivalent to counting the recursion depth, but lets erofs only
+add (say) 0.5.
+Ideally you'd want to do static analysis to find the value to add,
+but 'inspired guesswork' is probably good enough.
 
-.. I don't want to complex it (since it's just a short-term
-solution and erofs is unaccounted so s_stack_depth really
-mean nothing) unless it's really needed for Android vendors?
+Isn't there also a big difference between recursive mounts (which need
+to do read/write on the underlying file) and overlay mounts (which just
+pass the request onto the lower filesystem).
 
-> Other LGTM based on my basic test. so
-> 
-> Reviewed-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+	David
 
-Thanks for this too.
-
-Thanks,
-Gao Xiang
-
-> Thanks！
->>                                  return -ENOTBLK;
->>                          }
->>                  }
->> --
->> 2.43.5
->>
+>=20
+> Thanks,
+> Gao Xiang
+>=20
+> >=20
+> > Thanks,
+> > Amir. =20
+>=20
+>=20
 
 
