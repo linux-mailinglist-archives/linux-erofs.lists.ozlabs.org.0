@@ -1,45 +1,45 @@
-Return-Path: <linux-erofs+bounces-1783-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1784-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F57AD07F16
-	for <lists+linux-erofs@lfdr.de>; Fri, 09 Jan 2026 09:48:56 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D267D07F4C
+	for <lists+linux-erofs@lfdr.de>; Fri, 09 Jan 2026 09:49:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dnb6F6ltXz2xc8;
-	Fri, 09 Jan 2026 19:48:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dnb745cmFz2xQK;
+	Fri, 09 Jan 2026 19:49:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=116.203.167.152
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767948533;
-	cv=none; b=SBcacZXseCSw4l80r185cKn9Ok+9VHw5vRxpVXyT1OuVJZ9gUwJxyWFp1VUyQ7ks42lyIFdWG6Yy1o6NubVsBWgiQ/GvFh8lWbGw6UjshZIEc1pZhJRHIQbYJMKTC21eEGQv88akKtdU04vsaDmX4XZu9oAAe+FAii4H52ewe7Htns+xFXkC6odH7cDturjZgrc6bF6lzz/nCiRsHcYDdCv/wQKl9LSxBD/tzcUziOhTRTOM0ndOyM6z6qzyflAseES03ondnRbw3L2hCyWEndmWUiuw6HqgxUHkvI74nvwJ6cS8WEr5NPqtYVmUcIXwXRrRsHBNQFS8DpmAqX+GhA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767948576;
+	cv=none; b=hfWXDMHu6p7613ldXaP29QGWi5po5PXkQyOzC8pq+Yul4YP86YAeq0h/l3zdgn3F+2imwq+CwmyaS+1YG74q3CzvK2xRaz7ZYehXeOrKG6dceCjf7/9xf/opizSrjiF0/oasGhaNfg8+dI5w28XCYLcnxwrf4xr5Stgw5WfM+s7rml0n9I7/ALco/Yc5eQcxP5GcJ8ej+tvf5gvXyAzyQpssN82R8zQX4OWC0Q4j6526gfqyDHR5xp9MqX80s5WUvDTT+bdQUSy1zWMx1sCICkHvfQIrJultSjcfhGSAnjZYhE/Sp3EsVT+KdkDQNzbdYaTl6FBgAhk8rdy7mhUTrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767948533; c=relaxed/relaxed;
-	bh=hi6ZwA10nQeVVLVHSSKeYbeNuIjA/FZtJQ9gk2yneq8=;
+	t=1767948576; c=relaxed/relaxed;
+	bh=N/41tXXyY58j/0Q0aF6dwot8qrNnnx5K4/PUFO5dd2g=;
 	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=D9DgYZ6OWMi4lmkfjVXk9dG+Q6ZH1g/OvK9fq0v9Vc/s8+oyKWIcRBFdU+2tzooSYlNLSpyziC2CYb6ltGXKzNZ4vK6t65/Q6QpdO77HQLRkSlHhLpnh+x5Em8eml45MGTHIe0+qSsZOXoxV9hjD4P1ZEE0dVfmMjVf6kw/NGvjGYwpWCoMl9iLwy/N5q92GoWMUqIIbXoyvhBUnjOizcqZKDjJKuCevURNp+ypAwRMwHber0BKVWB622b8nDhfQCe3v49c66CC73F6zmwBq+WXE2T/Alb/mhc0n7u172CK0GpRMeFsBNBfslG18C306xDy1Mh4ww8B+0q4AvSQ+Xw==
+	 MIME-Version:Content-Type; b=OpPxSpaWX+731g/wugKiAbwjW2D0QSQXV9uS3uIf1m9zRJZA3l9Qm3Ar8PDuNklLligYcCq9HWEB0oPXJrjG+bo76kSihiij34z341EbbShmUC5G5kem2gylLDsJ5DYohWcVN/M92oUlTK/yq+7XJOhLpoZ3N3umrtowwDw9C+KPGWvqBko0TcDgF0dhXkP2p5l2bBZsWaxr4ptWck3NjoIoI68ThvSQUQ1C+6UiWkEOTSN1Oi7Y6VJaAJJPx9F0N1RHa061UmR78suApEalER6h4Q8FvO3eiad5x2VAz5Dz8p2o3SgNtb4TrFVSB2l1hN02moPN7nbRhTVRsyAvOA==
 ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=permerror (client-ip=116.203.167.152; helo=lithops.sigma-star.at; envelope-from=richard@nod.at; receiver=lists.ozlabs.org) smtp.mailfrom=nod.at
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=nod.at
 Authentication-Results: lists.ozlabs.org; spf=permerror (SPF Permanent Error: Unknown mechanism found: ipv4:195.201.40.130) smtp.mailfrom=nod.at (client-ip=116.203.167.152; helo=lithops.sigma-star.at; envelope-from=richard@nod.at; receiver=lists.ozlabs.org)
 Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnb6D3Hsvz2xQK
-	for <linux-erofs@lists.ozlabs.org>; Fri, 09 Jan 2026 19:48:50 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnb735fT2z2xJ6
+	for <linux-erofs@lists.ozlabs.org>; Fri, 09 Jan 2026 19:49:35 +1100 (AEDT)
 Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id A047A29ABD6;
-	Fri,  9 Jan 2026 09:48:46 +0100 (CET)
+	by lithops.sigma-star.at (Postfix) with ESMTP id 13ABC29ABD6;
+	Fri,  9 Jan 2026 09:49:33 +0100 (CET)
 Received: from lithops.sigma-star.at ([127.0.0.1])
 	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id PY1yWc1jnPcz; Fri,  9 Jan 2026 09:48:46 +0100 (CET)
+	with ESMTP id ATPC6i9pWXNZ; Fri,  9 Jan 2026 09:49:32 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id E0C0628F9E9;
-	Fri,  9 Jan 2026 09:48:45 +0100 (CET)
+	by lithops.sigma-star.at (Postfix) with ESMTP id A870929ABDC;
+	Fri,  9 Jan 2026 09:49:32 +0100 (CET)
 Received: from lithops.sigma-star.at ([127.0.0.1])
 	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id BZO6SamqYTTM; Fri,  9 Jan 2026 09:48:45 +0100 (CET)
+	with ESMTP id 50WQivczX82j; Fri,  9 Jan 2026 09:49:32 +0100 (CET)
 Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 30C7B29859D;
-	Fri,  9 Jan 2026 09:48:45 +0100 (CET)
-Date: Fri, 9 Jan 2026 09:48:45 +0100 (CET)
+	by lithops.sigma-star.at (Postfix) with ESMTP id 2BED829ABCA;
+	Fri,  9 Jan 2026 09:49:32 +0100 (CET)
+Date: Fri, 9 Jan 2026 09:49:32 +0100 (CET)
 From: Richard Weinberger <richard@nod.at>
 To: Jeff Layton <jlayton@kernel.org>
 Cc: Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, 
@@ -110,10 +110,10 @@ Cc: Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>
 	linux-nfs <linux-nfs@vger.kernel.org>, 
 	linux-cifs <linux-cifs@vger.kernel.org>, 
 	samba-technical <samba-technical@lists.samba.org>
-Message-ID: <393733638.88534.1767948525135.JavaMail.zimbra@nod.at>
-In-Reply-To: <218403128.88322.1767944438487.JavaMail.zimbra@nod.at>
-References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org> <20260108-setlease-6-20-v1-12-ea4dec9b67fa@kernel.org> <218403128.88322.1767944438487.JavaMail.zimbra@nod.at>
-Subject: Re: [PATCH 12/24] jfs: add setlease file operation
+Message-ID: <235309114.88543.1767948572101.JavaMail.zimbra@nod.at>
+In-Reply-To: <20260108-setlease-6-20-v1-11-ea4dec9b67fa@kernel.org>
+References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org> <20260108-setlease-6-20-v1-11-ea4dec9b67fa@kernel.org>
+Subject: Re: [PATCH 11/24] jffs2: add setlease file operation
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -129,22 +129,20 @@ Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 X-Originating-IP: [195.201.40.130]
 X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF146 (Linux)/8.8.12_GA_3809)
-Thread-Topic: add setlease file operation
-Thread-Index: Ijb4veyM6wDb0tIeqxd8skdz5qkIYBNsmijj
+Thread-Topic: jffs2: add setlease file operation
+Thread-Index: 1XfajkHy73ekR8RzfIWJ5jINW3wE1g==
 X-Spam-Status: No, score=0.0 required=3.0 tests=SPF_HELO_NONE,T_SPF_PERMERROR
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 ----- Urspr=C3=BCngliche Mail -----
-> Von: "richard" <richard@nod.at>
->> ---
->> fs/jfs/file.c  | 2 ++
->> fs/jfs/namei.c | 2 ++
->> 2 files changed, 4 insertions(+)
->=20
-> Acked-by: Richard Weinberger <richard@nod.at>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> fs/jffs2/dir.c  | 2 ++
+> fs/jffs2/file.c | 2 ++
+> 2 files changed, 4 insertions(+)
 
-Whoops! I meant to reply to the jffs2 patch...
+Acked-by: Richard Weinberger <richard@nod.at>
 
 Thanks,
 //richard
