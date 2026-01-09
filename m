@@ -1,59 +1,72 @@
-Return-Path: <linux-erofs+bounces-1799-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1800-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 613D8D0BCDE
-	for <lists+linux-erofs@lfdr.de>; Fri, 09 Jan 2026 19:15:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 40F78D0BF69
+	for <lists+linux-erofs@lfdr.de>; Fri, 09 Jan 2026 19:54:31 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dnqgm3L4Zz2xc8;
-	Sat, 10 Jan 2026 05:15:16 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dnrXn0ML7z2xc8;
+	Sat, 10 Jan 2026 05:54:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767982516;
-	cv=none; b=F6bsOH0JuXUhZ6Qv+qpaUsGywDt5bZW57EVFBEboZQ6P53FZYOt702l9mkvlL1JxSWPbVBqefULs4vsnkAH7OuNOrM8pfpdEC3wTS7GaS0h2pp1QwrDE1qgjbyE4RP5OYJx/vcEngIyKeAKKjt24I0WHneXnXnJofumy7t2+Tvb37+Y9F6i8D0CzgUgSXMNYO+rpFWIpH3aEXJTCcjsMKEduACT04oMl+ky/UACR5pvjf6vN5izJA9Wc5veEMxfqKhtRIP5+4fHoohrJI9zHqKQpIe2E7PVyI/ElJxX/IXwqIP0YsKDpM07KX1WcUxf7FzAZbYFOoTp1bqk7K2R/Ew==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.208.47
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767984856;
+	cv=none; b=iWE503vFGzHOoOgKep0IXmhRd1pWyVtnt5yoOaURl8gnmnOFKonE1E5s7qqdjmDmH0X2WoQQ7xubAaGBWR71AKRBGuCOg885z+M1YqpFMzOxu1im91FUcXBfKLsT+YUjG28SmaIhOgk7PD8VH79QuEuBNalmfrjhrDhqG4GOoQthM7r31Qqdrik+S+Cky2AQg/RruaXmKulXSe6AhSH2gXLBLJ3Y24COgb8MQ8QY8ezyawBfVBfDpXCz3RkhsK1tq/s8aKra1b5lCBESvhz2Jzbf6n/56oqJFCcPCo8zX92QBVMhZC5mXKUfmyFFvZwQzGKb2WrxGNoICrDijDCWzg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767982516; c=relaxed/relaxed;
-	bh=abYKL2ARZU3YkuhtGK1e9VGMgLcXpSTTftXQqbffd6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cviHxiN5lSJl9xGPagTBlqlRzl0ODzqwTVox0V9KuMwwwkF79DK2dBEt1aaDrBcWzzkTtWmpj5hBP5IGJJEIphLO9WzQ4pzVgO0UrzLuVPUwDvAZ1bLKq7MmSyp5zJFgYTBSn0SGYLTCevNx8dqxFm4oMHP0WvSgRwaCX2mLfHf0P3xO0TuZry9CRmTLAWKVXB95u+Up5T7XoMkWvZklAYzBoz1FFH9jTl1DaBkI0wSOmmJ+nF34e2K1ugWl3Kn1Wcx57QDPxtqXReZZrfG2MErrs4gA4GXVEuWCPrY+z0fofj/aaOGs4QcC4Wvj3MjkTNMNNXoIi/QPSA3idQkI5A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UMumko4L; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=djwong@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1767984856; c=relaxed/relaxed;
+	bh=PEO8wbSaGOwwRv5UKfYcgXejOCV3Kmi4mBiob/Mhc5w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fQIB13UmjUaqUmMyD5rGfAdNbuGFtEzJB+6p3N8w78Zy3klfIJ2Lq69rWVCXJGQcbBiGXCAtaxEGtvdBKxPMY56vWajOGjWs+mSTPhLwONyPUlQiwwC34YPZWa8YxVSuemzunxHEDpCyzHLV8WRK5EW/Tl4V+pqahhfGcZ0ydsun0OhisFdNYSLlwIQENrgsXIdSusAHGLGq8P0+mGLENkTxHy9IKGS8Z8KqEfmRdaFIyZ+/hITr+NNORgd2KpkExVbx0OT6S30xl6YU7a1hypEMNhCJjDtKCKssnzrbsH1ijX6U3xJCXQvDzPhctKbFPh6CKW7TUc1m5C7S73nsZw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=IBiQv60l; dkim-atps=neutral; spf=pass (client-ip=209.85.208.47; helo=mail-ed1-f47.google.com; envelope-from=amir73il@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UMumko4L;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=IBiQv60l;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=djwong@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=209.85.208.47; helo=mail-ed1-f47.google.com; envelope-from=amir73il@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnqgl0P4jz2xQ1
-	for <linux-erofs@lists.ozlabs.org>; Sat, 10 Jan 2026 05:15:14 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 5524740B82;
-	Fri,  9 Jan 2026 18:14:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28C48C4CEF1;
-	Fri,  9 Jan 2026 18:14:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1767982483;
-	bh=D3sAcAQ7a72l6rkZ0vUO4cd30Fr3P4FlXUAXDmvF250=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UMumko4LbvmJitdMGI1Z305NZuO/VqFkUoxywLmzdQvYoQfqYRsT4dmoWb3mtUkmE
-	 MWLTKQx0A2r6o5xK07beirTFpxuZXyZnK18i7DvSp7ncmLl+U9UaWf2IensqNEEzmt
-	 aALnWUzCHmvoQfQZdCmmtPd3OIzsvFBYVkMW7g6HUefOCnBQWYknpRkOWWVXG2JwNT
-	 vNp4AQi2PD8nRM1xe0XK/Qe9LvTezvXicCt8KbTqPI0+sAe8sn2l3t4GZNlzUCjpfj
-	 xHwsqZ88RFZsNIGIezRadirwxZo6LfDIpqud6ZgAXAsARPOf5tQvtA0LmPVw62af2/
-	 7uo2WfqXOkDbQ==
-Date: Fri, 9 Jan 2026 10:14:42 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: hsiangkao@linux.alibaba.com, chao@kernel.org, brauner@kernel.org,
-	amir73il@gmail.com, hch@lst.de, linux-fsdevel@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v14 01/10] iomap: stash iomap read ctx in the private
- field of iomap_iter
-Message-ID: <20260109181442.GA15532@frogsfrogsfrogs>
-References: <20260109102856.598531-1-lihongbo22@huawei.com>
- <20260109102856.598531-2-lihongbo22@huawei.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnrXl0YKXz2xHP
+	for <linux-erofs@lists.ozlabs.org>; Sat, 10 Jan 2026 05:54:13 +1100 (AEDT)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-64b9d01e473so7347706a12.2
+        for <linux-erofs@lists.ozlabs.org>; Fri, 09 Jan 2026 10:54:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767984790; x=1768589590; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PEO8wbSaGOwwRv5UKfYcgXejOCV3Kmi4mBiob/Mhc5w=;
+        b=IBiQv60lqnabrvAuWkStUu7d8Jn7QJ8uMsEaBI9SfdMgnh+YpVMDb6cqXAl5aFLRvR
+         H3D+6629gN55/HyCqKlo98nCPNtS1uH5rXXy6RXPqydQfM6Q6tlVqOGXj2iAXo0GneeP
+         MWflOBlIwyTSzYann7fuy7y3t20gyRm0S4LiTWNR2PO3FkrCpvZHMYj4YL2FRq5S8xjj
+         rb9y2X1clN1aY3Mjjyx7p9ldVx0E9stZCM15IXK/Bfj0pdpoEt8qCLLmZVjr0FnO4l4P
+         YadV79t8WM0NjIgRnN0klXQXImOGjY5jhZIQtf8FhOlUMTyEndhSFXwcERx15RNxPO4/
+         WiBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767984790; x=1768589590;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PEO8wbSaGOwwRv5UKfYcgXejOCV3Kmi4mBiob/Mhc5w=;
+        b=bNWkAd0vBthn8bg6GZcSCRsAOKYu3jWsXwlRWkbkku/oXajhe877GkVg8MQaReMMaC
+         hD65wJ+vOakEo5AQ/et/YYBd8xFNLf+whHJgVmrItgVSjbn1fdAk6SyvQqiGym31SjJc
+         MQiN7BUvb8TolnxtFqMpnbmkhJeW1N4hPL3ijnPDqVwanXMeU2McsHV5bm4lztM7F1T3
+         fVHTmcHCqsDoDW4tZG9oTh+t7rBy0XHW5YbeGQRtWMM8TZkWxbgN6ZhMQiwtXQxtmqQ4
+         4SadzB+HoqjoykIUIYDxZM0lXEozIMhTpAAOb2ZHbYqEQs9rdoo0xhbPpwdOnF9AcKey
+         sQnA==
+X-Forwarded-Encrypted: i=1; AJvYcCX8BoThvGsCf6Gdsq3l/piTvBeoYYaNH5PNibNhyNB+VNHARkXsJhe9eDxWLnF7+Vj23YO5io7N5KctEw==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YxaiEEvpn0qMCgxGnI0relfbWh29UcF2iKt4c5bAFY8rhOZm0Kj
+	pzQlDisghSe4q0yADh9vxCf5HOjQsujLI/6+vwbVcEzDrG1iDwDuXCEZbuG9VLlXqphg98pmCMf
+	W9KukOqL1QinNGsq5aU1+wWqvANG5Iq0=
+X-Gm-Gg: AY/fxX7oY18BBi03Atle7MXPAReWrS2XwcQHyf5kNhU556Kwnv49/88bQ48lzOyv+uG
+	ifug6lf3z4DHryTj4LMiQO88SKSPIsVMbzKa9CajXEXCqiuhiwmrwyricWhvX0CapCO8LiqFLsZ
+	sC9Xa6TMyOkQ97BU4feW3IbZByNyb+eJtOpxQyGWE6m2j1aTZIn6hdR13pSrfzFGJwE60y3uOHX
+	ZtLm9DhqiGzMY3QI/FrgqeMoXAF7Lwy7sQW5jJKFqCebE5NZxzPfgQTujxNR53dvYqMQ7lqV2Gx
+	RyOk3+C+cYs32QGBggsuTufLLhZVtq/VU996XqgB
+X-Google-Smtp-Source: AGHT+IFY7MBbUL67We039/hTqFQidfYCDXoLMKl5hH4eJeY3RDGzxdromP5L0kMZXOGuaChoBhGE8PO55vilYs9+TsQ=
+X-Received: by 2002:a05:6402:278f:b0:64b:4333:1ece with SMTP id
+ 4fb4d7f45d1cf-65097e88af5mr10672063a12.34.1767984790069; Fri, 09 Jan 2026
+ 10:53:10 -0800 (PST)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -65,140 +78,142 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260109102856.598531-2-lihongbo22@huawei.com>
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
+ <m3mywef74xhcakianlrovrnaadnhzhfqjfusulkcnyioforfml@j2xnk7dzkmv4> <8af369636c32b868f83669c49aea708ca3b894ac.camel@kernel.org>
+In-Reply-To: <8af369636c32b868f83669c49aea708ca3b894ac.camel@kernel.org>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 9 Jan 2026 19:52:57 +0100
+X-Gm-Features: AQt7F2pw3gC6snSxmHIFjd46zJk7oZ4nEXaveS8flAw1hsLI4KglAqmZVf1WWIg
+Message-ID: <CAOQ4uxgD+Sgbbg9K2U0SF9TyUOBb==Z6auShUWc4FfPaDCQ=rg@mail.gmail.com>
+Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
+ lease support
+To: Jeff Layton <jlayton@kernel.org>, Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, 
+	Nicolas Pitre <nico@fluxnic.net>, Christoph Hellwig <hch@infradead.org>, Anders Larsen <al@alarsen.net>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>, 
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
+	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
+	Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>, 
+	"Theodore Ts'o" <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
+	Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
+	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Dave Kleikamp <shaggy@kernel.org>, 
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Viacheslav Dubeyko <slava@dubeyko.com>, 
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, 
+	Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Phillip Lougher <phillip@squashfs.org.uk>, 
+	Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Namjae Jeon <linkinjeon@kernel.org>, Sungjong Seo <sj1557.seo@samsung.com>, 
+	Yuezhang Mo <yuezhang.mo@sony.com>, Chuck Lever <chuck.lever@oracle.com>, 
+	Alexander Aring <alex.aring@gmail.com>, Andreas Gruenbacher <agruenba@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
+	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
+	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>, 
+	Paulo Alcantara <pc@manguebit.org>, Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, 
+	Bharath SM <bharathsm@microsoft.com>, Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-mtd@lists.infradead.org, 
+	jfs-discussion@lists.sourceforge.net, linux-nilfs@vger.kernel.org, 
+	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, 
+	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, linux-mm@kvack.org, 
+	gfs2@lists.linux.dev, linux-doc@vger.kernel.org, v9fs@lists.linux.dev, 
+	ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Fri, Jan 09, 2026 at 10:28:47AM +0000, Hongbo Li wrote:
-> It's useful to get filesystem-specific information using the
-> existing private field in the @iomap_iter passed to iomap_{begin,end}
-> for advanced usage for iomap buffered reads, which is much like the
-> current iomap DIO.
-> 
-> For example, EROFS needs it to:
-> 
->  - implement an efficient page cache sharing feature, since iomap
->    needs to apply to anon inode page cache but we'd like to get the
->    backing inode/fs instead, so filesystem-specific private data is
->    needed to keep such information;
-> 
->  - pass in both struct page * and void * for inline data to avoid
->    kmap_to_page() usage (which is bogus).
-> 
-> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
-> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+On Thu, Jan 8, 2026 at 7:57=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
+te:
+>
+> On Thu, 2026-01-08 at 18:40 +0100, Jan Kara wrote:
+> > On Thu 08-01-26 12:12:55, Jeff Layton wrote:
+> > > Yesterday, I sent patches to fix how directory delegation support is
+> > > handled on filesystems where the should be disabled [1]. That set is
+> > > appropriate for v6.19. For v7.0, I want to make lease support be more
+> > > opt-in, rather than opt-out:
+> > >
+> > > For historical reasons, when ->setlease() file_operation is set to NU=
+LL,
+> > > the default is to use the kernel-internal lease implementation. This
+> > > means that if you want to disable them, you need to explicitly set th=
+e
+> > > ->setlease() file_operation to simple_nosetlease() or the equivalent.
+> > >
+> > > This has caused a number of problems over the years as some filesyste=
+ms
+> > > have inadvertantly allowed leases to be acquired simply by having lef=
+t
+> > > it set to NULL. It would be better if filesystems had to opt-in to le=
+ase
+> > > support, particularly with the advent of directory delegations.
+> > >
+> > > This series has sets the ->setlease() operation in a pile of existing
+> > > local filesystems to generic_setlease() and then changes
+> > > kernel_setlease() to return -EINVAL when the setlease() operation is =
+not
+> > > set.
+> > >
+> > > With this change, new filesystems will need to explicitly set the
+> > > ->setlease() operations in order to provide lease and delegation
+> > > support.
+> > >
+> > > I mainly focused on filesystems that are NFS exportable, since NFS an=
+d
+> > > SMB are the main users of file leases, and they tend to end up export=
+ing
+> > > the same filesystem types. Let me know if I've missed any.
+> >
+> > So, what about kernfs and fuse? They seem to be exportable and don't ha=
+ve
+> > .setlease set...
+> >
+>
+> Yes, FUSE needs this too. I'll add a patch for that.
+>
+> As far as kernfs goes: AIUI, that's basically what sysfs and resctrl
+> are built on. Do we really expect people to set leases there?
+>
+> I guess it's technically a regression since you could set them on those
+> sorts of files earlier, but people don't usually export kernfs based
+> filesystems via NFS or SMB, and that seems like something that could be
+> used to make mischief.
+>
+> AFAICT, kernfs_export_ops is mostly to support open_by_handle_at(). See
+> commit aa8188253474 ("kernfs: add exportfs operations").
+>
+> One idea: we could add a wrapper around generic_setlease() for
+> filesystems like this that will do a WARN_ONCE() and then call
+> generic_setlease(). That would keep leases working on them but we might
+> get some reports that would tell us who's setting leases on these files
+> and why.
 
-This looks like a dead simple patch to allow iomap pagecache users to
-set iomap_iter::private, so no objections here:
+IMO, you are being too cautious, but whatever.
 
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+It is not accurate that kernfs filesystems are NFS exportable in general.
+Only cgroupfs has KERNFS_ROOT_SUPPORT_EXPORTOP.
 
---D
+If any application is using leases on cgroup files, it must be some
+very advanced runtime (i.e. systemd), so we should know about the
+regression sooner rather than later.
 
-> ---
->  fs/fuse/file.c         | 4 ++--
->  fs/iomap/buffered-io.c | 6 ++++--
->  include/linux/iomap.h  | 8 ++++----
->  3 files changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-> index 01bc894e9c2b..f5d8887c1922 100644
-> --- a/fs/fuse/file.c
-> +++ b/fs/fuse/file.c
-> @@ -979,7 +979,7 @@ static int fuse_read_folio(struct file *file, struct folio *folio)
->  		return -EIO;
->  	}
->  
-> -	iomap_read_folio(&fuse_iomap_ops, &ctx);
-> +	iomap_read_folio(&fuse_iomap_ops, &ctx, NULL);
->  	fuse_invalidate_atime(inode);
->  	return 0;
->  }
-> @@ -1081,7 +1081,7 @@ static void fuse_readahead(struct readahead_control *rac)
->  	if (fuse_is_bad(inode))
->  		return;
->  
-> -	iomap_readahead(&fuse_iomap_ops, &ctx);
-> +	iomap_readahead(&fuse_iomap_ops, &ctx, NULL);
->  }
->  
->  static ssize_t fuse_cache_read_iter(struct kiocb *iocb, struct iov_iter *to)
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index e5c1ca440d93..5f7dcbabbda3 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -555,13 +555,14 @@ static int iomap_read_folio_iter(struct iomap_iter *iter,
->  }
->  
->  void iomap_read_folio(const struct iomap_ops *ops,
-> -		struct iomap_read_folio_ctx *ctx)
-> +		struct iomap_read_folio_ctx *ctx, void *private)
->  {
->  	struct folio *folio = ctx->cur_folio;
->  	struct iomap_iter iter = {
->  		.inode		= folio->mapping->host,
->  		.pos		= folio_pos(folio),
->  		.len		= folio_size(folio),
-> +		.private	= private,
->  	};
->  	size_t bytes_submitted = 0;
->  	int ret;
-> @@ -620,13 +621,14 @@ static int iomap_readahead_iter(struct iomap_iter *iter,
->   * the filesystem to be reentered.
->   */
->  void iomap_readahead(const struct iomap_ops *ops,
-> -		struct iomap_read_folio_ctx *ctx)
-> +		struct iomap_read_folio_ctx *ctx, void *private)
->  {
->  	struct readahead_control *rac = ctx->rac;
->  	struct iomap_iter iter = {
->  		.inode	= rac->mapping->host,
->  		.pos	= readahead_pos(rac),
->  		.len	= readahead_length(rac),
-> +		.private = private,
->  	};
->  	size_t cur_bytes_submitted;
->  
-> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
-> index 520e967cb501..441d614e9fdf 100644
-> --- a/include/linux/iomap.h
-> +++ b/include/linux/iomap.h
-> @@ -341,9 +341,9 @@ ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
->  		const struct iomap_ops *ops,
->  		const struct iomap_write_ops *write_ops, void *private);
->  void iomap_read_folio(const struct iomap_ops *ops,
-> -		struct iomap_read_folio_ctx *ctx);
-> +		struct iomap_read_folio_ctx *ctx, void *private);
->  void iomap_readahead(const struct iomap_ops *ops,
-> -		struct iomap_read_folio_ctx *ctx);
-> +		struct iomap_read_folio_ctx *ctx, void *private);
->  bool iomap_is_partially_uptodate(struct folio *, size_t from, size_t count);
->  struct folio *iomap_get_folio(struct iomap_iter *iter, loff_t pos, size_t len);
->  bool iomap_release_folio(struct folio *folio, gfp_t gfp_flags);
-> @@ -595,7 +595,7 @@ static inline void iomap_bio_read_folio(struct folio *folio,
->  		.cur_folio	= folio,
->  	};
->  
-> -	iomap_read_folio(ops, &ctx);
-> +	iomap_read_folio(ops, &ctx, NULL);
->  }
->  
->  static inline void iomap_bio_readahead(struct readahead_control *rac,
-> @@ -606,7 +606,7 @@ static inline void iomap_bio_readahead(struct readahead_control *rac,
->  		.rac		= rac,
->  	};
->  
-> -	iomap_readahead(ops, &ctx);
-> +	iomap_readahead(ops, &ctx, NULL);
->  }
->  #endif /* CONFIG_BLOCK */
->  
-> -- 
-> 2.22.0
-> 
-> 
+There are also the recently added nsfs and pidfs export_operations.
+
+I have a recollection about wanting to be explicit about not allowing
+those to be exportable to NFS (nsfs specifically), but I can't see where
+and if that restriction was done.
+
+Christian? Do you remember?
+
+Thanks,
+Amir.
 
