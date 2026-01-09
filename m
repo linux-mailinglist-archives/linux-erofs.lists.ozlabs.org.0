@@ -1,58 +1,58 @@
-Return-Path: <linux-erofs+bounces-1767-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1763-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 44415D06F10
-	for <lists+linux-erofs@lfdr.de>; Fri, 09 Jan 2026 04:15:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C6D97D06EFD
+	for <lists+linux-erofs@lfdr.de>; Fri, 09 Jan 2026 04:15:07 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dnRj63Ms8z2yFq;
-	Fri, 09 Jan 2026 14:15:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dnRj13vVMz2yG2;
+	Fri, 09 Jan 2026 14:15:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.219
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767928506;
-	cv=none; b=C4uLPSTkggK0HXcooTCnIqWczIYC5F0fELnK8phKqdAlSEvsZrexaN7XuzgXGazKY5xpgPAv4dVmU5H5nysBX2plFMYn1oF1wbyroQkMAeU/F2/zPiI81BrapzApe7bd97RwaSWxf5bH2CjKiMJIl5psa1rcrPOWzXp1r1BEhbLICcc99cWEA4MtXu1BGxgCV5V7QUzzKI5LEex2oCsgrVgKvZMwX1H0rethZx847UQofzwNjU/r5ezQwn5yL4amTNxWm/bMntDqNu4K4+mTkEXGOSPLYjqP+dnLLC7u2mNlaibl48Seo9exh5RXy0+eBVJpIu+DlQ5dDDfYHglvvg==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767928501;
+	cv=none; b=f+I+Xy0oh88s9KA/qRPCe5wohbWgmoY9KWSyQg2q1NvFgydEw1QQQxtp3HDRjRJBARMzMMzJBcrIWcGYgd8ETM8hLJJhRx0tAlKfhYfMzNpeJV/CeXZLbWyZViS9fkWU1RqC3POYyYEhgv2kEjgRNMu8BVNmnrpkpsulp9jZvXyMh2S5SU11z9n7ehLwNkVzxf57wAix7DRCtuWRaLUUVqfPm05JBVp4vE4DNc2yND5hB/EUuLsS1KgZqDhma/YFnTzDDzW13OURgWPndbYu624bU8U5m+WBbeS/ALhzucCnziEGTBNO56mqBn7OqgmoI+Cap9s2kds8Pb9SsYADzQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767928506; c=relaxed/relaxed;
-	bh=GMiG3KxyMRrDcExhh2zKYwP+YiMVAseTuuCZp2tTRO0=;
+	t=1767928501; c=relaxed/relaxed;
+	bh=IJqOVDMyH2cU6HZaQ6KGaq7L7r7sGB/NU+oSMo68sYk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mJ1JG5q9mwvzyhl/+4KakpGEttJX9tYmAq5JhjL329S9/rN77AGodDvM/qKGGcEHJygyom+XebRu+WJrX5BbXQJGJU1nGiVZ0MI5XPk7msi+Qa0bnJfqLD3cm6+DLfVp1+xJHh6DH4S9h4Xb+0Sg9m4xl3uHwsnyCeqI7ppOPUpReN3jJE2LyUkrNHgN5WdDAd2dc8nnUTxcuvFg9xJSLhksM/oma1TENmnX5fw/XfMut8XjYJnxC1XzFg+d3Zds4A0fpkKmFidtMszaWjf8/ovalo9nIT6pofuc6b/yVvTLIn4YD69KILxAVUYRTpRWEd/jjvF7BgLrLYMgAmmTKw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=hDPirPbx; dkim-atps=neutral; spf=pass (client-ip=113.46.200.219; helo=canpmsgout04.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+	 MIME-Version:Content-Type; b=dMkTycJPr5rOLUOBRxYpfZ+TgZdsVcZTevvCxGzYjVcElga/F8yqk66h23oxffxvsuLd5Inp7eEVBkEGq7NKslMM6qMjIaKSof5wb78N4ygftHD5JK3172Cxyb9tnR7HT9Kuao7VocEvOEGfOV+EV2ddMP9e+xs1z4k4OhPIZ/tp6F3/qhHjmsFjShyzz78uShh+GDj/fKlVk5T2i8un/FdJWUgy9CMV0RQSZiAzUEZkWgiAgbvzZRpZQ5B+BRqZ1YqHozMj65aZqZj07LZFp4Wm9Di4AAYNano9D0Jq44JuSN9QF3zBCJAyxrdJ2Sy9vVu3yonwvWjI4WU6hvJvPQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=aViTVgKb; dkim-atps=neutral; spf=pass (client-ip=113.46.200.219; helo=canpmsgout04.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=hDPirPbx;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=aViTVgKb;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.219; helo=canpmsgout04.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
 Received: from canpmsgout04.his.huawei.com (canpmsgout04.his.huawei.com [113.46.200.219])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnRhz1BzFz2yFx
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnRhy5Xh0z2yFk
 	for <linux-erofs@lists.ozlabs.org>; Fri, 09 Jan 2026 14:14:57 +1100 (AEDT)
 dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
 	c=relaxed/relaxed; q=dns/txt;
 	h=From;
-	bh=GMiG3KxyMRrDcExhh2zKYwP+YiMVAseTuuCZp2tTRO0=;
-	b=hDPirPbxVDQuKp01p2DNZl+buDOy3ab1lSG7hTWnEYHAoMWsq5JNoa2iAlAKSfml9SRsJQPtD
-	SjjEEa/uVi/RJDqnk5YxToqDDuK0kq9uVDcP+i0eORJ5Abmld7TR/4kKCRQKQN74myXaNF2WDmG
-	m7SA24qGQvEAADFb083dgV8=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4dnRd2055Yz1prKH;
+	bh=IJqOVDMyH2cU6HZaQ6KGaq7L7r7sGB/NU+oSMo68sYk=;
+	b=aViTVgKbU3p9F6fvfb/DRZ9GIhljQ3rKlHQMPA1II5YccTLm1l79Wl8RBcmkkhYNwMzHKxXz0
+	9YV1Y0ow6kq2fONT0jz7uycW8blnvYaMxZYGGACdFOLs9cXkvJ3tWcEIwXSiiP4I/798eIXtO+j
+	kCdEQvGGYPkM65v8oi6/oqU=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout04.his.huawei.com (SkyGuard) with ESMTPS id 4dnRd23Hrxz1prKH;
 	Fri,  9 Jan 2026 11:11:34 +0800 (CST)
 Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6788840567;
+	by mail.maildlp.com (Postfix) with ESMTPS id D6DAB2012A;
 	Fri,  9 Jan 2026 11:14:52 +0800 (CST)
 Received: from huawei.com (10.67.174.162) by kwepemr500015.china.huawei.com
  (7.202.195.162) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 9 Jan
- 2026 11:14:51 +0800
+ 2026 11:14:52 +0800
 From: Hongbo Li <lihongbo22@huawei.com>
 To: <hsiangkao@linux.alibaba.com>, <chao@kernel.org>, <brauner@kernel.org>
 CC: <djwong@kernel.org>, <amir73il@gmail.com>, <hch@lst.de>,
 	<linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
 	<linux-kernel@vger.kernel.org>, <lihongbo22@huawei.com>
-Subject: [PATCH v13 02/10] erofs: hold read context in iomap_iter if needed
-Date: Fri, 9 Jan 2026 03:01:32 +0000
-Message-ID: <20260109030140.594936-3-lihongbo22@huawei.com>
+Subject: [PATCH v13 03/10] fs: Export alloc_empty_backing_file
+Date: Fri, 9 Jan 2026 03:01:33 +0000
+Message-ID: <20260109030140.594936-4-lihongbo22@huawei.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20260109030140.594936-1-lihongbo22@huawei.com>
 References: <20260109030140.594936-1-lihongbo22@huawei.com>
@@ -77,159 +77,34 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Introduce `struct erofs_iomap_iter_ctx` to hold both `struct page *`
-and `void *base`, avoiding bogus use of `kmap_to_page()` in
-`erofs_iomap_end()`.
+There is no need to open nonexistent real files if backing files
+couldn't be backed by real files (e.g., EROFS page cache sharing
+doesn't need typical real files to open again).
 
-With this change, fiemap and bmap no longer need to read inline data.
-
-Additionally, the upcoming page cache sharing mechanism requires
-passing the backing inode pointer to `erofs_iomap_{begin,end}()`, as
-I/O accesses must apply to backing inodes rather than anon inodes.
+Therefore, we export the alloc_empty_backing_file() helper, allowing
+filesystems to dynamically set the backing file without real file
+open. This is particularly useful for obtaining the correct @path
+and @inode when calling file_user_path() and file_user_inode().
 
 Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
 Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Acked-by: Amir Goldstein <amir73il@gmail.com>
 ---
- fs/erofs/data.c | 67 +++++++++++++++++++++++++++++++++----------------
- 1 file changed, 46 insertions(+), 21 deletions(-)
+ fs/file_table.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/erofs/data.c b/fs/erofs/data.c
-index bb13c4cb8455..71e23d91123d 100644
---- a/fs/erofs/data.c
-+++ b/fs/erofs/data.c
-@@ -266,13 +266,20 @@ void erofs_onlinefolio_end(struct folio *folio, int err, bool dirty)
- 	folio_end_read(folio, !(v & BIT(EROFS_ONLINEFOLIO_EIO)));
+diff --git a/fs/file_table.c b/fs/file_table.c
+index cd4a3db4659a..476edfe7d8f5 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -308,6 +308,7 @@ struct file *alloc_empty_backing_file(int flags, const struct cred *cred)
+ 	ff->file.f_mode |= FMODE_BACKING | FMODE_NOACCOUNT;
+ 	return &ff->file;
  }
++EXPORT_SYMBOL_GPL(alloc_empty_backing_file);
  
-+struct erofs_iomap_iter_ctx {
-+	struct page *page;
-+	void *base;
-+};
-+
- static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 		unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
- {
--	int ret;
-+	struct iomap_iter *iter = container_of(iomap, struct iomap_iter, iomap);
-+	struct erofs_iomap_iter_ctx *ctx = iter->private;
- 	struct super_block *sb = inode->i_sb;
- 	struct erofs_map_blocks map;
- 	struct erofs_map_dev mdev;
-+	int ret;
- 
- 	map.m_la = offset;
- 	map.m_llen = length;
-@@ -283,7 +290,6 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	iomap->offset = map.m_la;
- 	iomap->length = map.m_llen;
- 	iomap->flags = 0;
--	iomap->private = NULL;
- 	iomap->addr = IOMAP_NULL_ADDR;
- 	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
- 		iomap->type = IOMAP_HOLE;
-@@ -309,16 +315,20 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- 	}
- 
- 	if (map.m_flags & EROFS_MAP_META) {
--		void *ptr;
--		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
--
- 		iomap->type = IOMAP_INLINE;
--		ptr = erofs_read_metabuf(&buf, sb, map.m_pa,
--					 erofs_inode_in_metabox(inode));
--		if (IS_ERR(ptr))
--			return PTR_ERR(ptr);
--		iomap->inline_data = ptr;
--		iomap->private = buf.base;
-+		/* read context should read the inlined data */
-+		if (ctx) {
-+			struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-+			void *ptr;
-+
-+			ptr = erofs_read_metabuf(&buf, sb, map.m_pa,
-+						 erofs_inode_in_metabox(inode));
-+			if (IS_ERR(ptr))
-+				return PTR_ERR(ptr);
-+			iomap->inline_data = ptr;
-+			ctx->page = buf.page;
-+			ctx->base = buf.base;
-+		}
- 	} else {
- 		iomap->type = IOMAP_MAPPED;
- 	}
-@@ -328,18 +338,18 @@ static int erofs_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
- static int erofs_iomap_end(struct inode *inode, loff_t pos, loff_t length,
- 		ssize_t written, unsigned int flags, struct iomap *iomap)
- {
--	void *ptr = iomap->private;
-+	struct iomap_iter *iter = container_of(iomap, struct iomap_iter, iomap);
-+	struct erofs_iomap_iter_ctx *ctx = iter->private;
- 
--	if (ptr) {
-+	if (ctx && ctx->base) {
- 		struct erofs_buf buf = {
--			.page = kmap_to_page(ptr),
--			.base = ptr,
-+			.page = ctx->page,
-+			.base = ctx->base,
- 		};
- 
- 		DBG_BUGON(iomap->type != IOMAP_INLINE);
- 		erofs_put_metabuf(&buf);
--	} else {
--		DBG_BUGON(iomap->type == IOMAP_INLINE);
-+		ctx->base = NULL;
- 	}
- 	return written;
- }
-@@ -369,18 +379,30 @@ int erofs_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
-  */
- static int erofs_read_folio(struct file *file, struct folio *folio)
- {
-+	struct iomap_read_folio_ctx read_ctx = {
-+		.ops		= &iomap_bio_read_ops,
-+		.cur_folio	= folio,
-+	};
-+	struct erofs_iomap_iter_ctx iter_ctx = {};
-+
- 	trace_erofs_read_folio(folio, true);
- 
--	iomap_bio_read_folio(folio, &erofs_iomap_ops);
-+	iomap_read_folio(&erofs_iomap_ops, &read_ctx, &iter_ctx);
- 	return 0;
- }
- 
- static void erofs_readahead(struct readahead_control *rac)
- {
-+	struct iomap_read_folio_ctx read_ctx = {
-+		.ops		= &iomap_bio_read_ops,
-+		.rac		= rac,
-+	};
-+	struct erofs_iomap_iter_ctx iter_ctx = {};
-+
- 	trace_erofs_readahead(rac->mapping->host, readahead_index(rac),
- 					readahead_count(rac), true);
- 
--	iomap_bio_readahead(rac, &erofs_iomap_ops);
-+	iomap_readahead(&erofs_iomap_ops, &read_ctx, &iter_ctx);
- }
- 
- static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
-@@ -400,9 +422,12 @@ static ssize_t erofs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 	if (IS_DAX(inode))
- 		return dax_iomap_rw(iocb, to, &erofs_iomap_ops);
- #endif
--	if ((iocb->ki_flags & IOCB_DIRECT) && inode->i_sb->s_bdev)
-+	if ((iocb->ki_flags & IOCB_DIRECT) && inode->i_sb->s_bdev) {
-+		struct erofs_iomap_iter_ctx iter_ctx = {};
-+
- 		return iomap_dio_rw(iocb, to, &erofs_iomap_ops,
--				    NULL, 0, NULL, 0);
-+				    NULL, 0, &iter_ctx, 0);
-+	}
- 	return filemap_read(iocb, to, 0);
- }
- 
+ /**
+  * file_init_path - initialize a 'struct file' based on path
 -- 
 2.22.0
 
