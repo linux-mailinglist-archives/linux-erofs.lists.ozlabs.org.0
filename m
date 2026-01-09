@@ -1,117 +1,43 @@
-Return-Path: <linux-erofs+bounces-1779-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1778-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96FC2D074EB
-	for <lists+linux-erofs@lfdr.de>; Fri, 09 Jan 2026 07:03:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 23164D074E8
+	for <lists+linux-erofs@lfdr.de>; Fri, 09 Jan 2026 07:03:47 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dnWRl1jCpz2xJ6;
-	Fri, 09 Jan 2026 17:03:47 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dnWRh52gQz2xQ1;
+	Fri, 09 Jan 2026 17:03:44 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.137.202.133
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767938627;
-	cv=none; b=TGlWqSamX7MJN85f5dIU9anm1HwkYsIN3egienDfAW78s/b+1cDkGrULSwOvLubTbR2IZ2/KF5vVz9upsI0U0SAWrxsnrXJP5ULYlUJRhBwAo15ZD4szmQsAYqVtzz/MJbd3Hh24bMQzt7k7mE43w1USNQ+SUO5sw5SkHF+28zSotfNYABetVNmn+ZU1wGIcY1UgnPV7S+oZHYKVTjrMXMiLe2yIZp6m5xlrMJPjrG/fChFvxvMkpaQoZTmE942eIqSTB2i4yMuOBEuhkgtkNoOR5R2pH1YMcDndy7MlbBSgY1Rm3wD9B0051TU3c6eHuNNt9dRrWPQ55M75B6KBnQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1767938624;
+	cv=none; b=A0aJ2Qvogifex0GaQXUlUW/WvZabq+7AoO9O1ezqv/Cwtj+UH78ONoZ247HQotDIGu/z8uCSamoO08T7r1i1fUPBGYw93wfiSWIH4QknhOazEgIGnkEDmegeaqH337d7N06Z1ZGIZxm7sr3yJNqhYWgcihKWHvrxXjyQvR2QXGHXv59971H1EmLVU2BsgQxJXOyW3ARIFjq350OfcV3/wtGGAVba1s1eXHzNhO6TfeaQWK31ox/7iCBIV6o+FmlGL03zv6ijs6PNUXsUFgRVfPAmkk/2K5zBS3jarA4z4CcnbR5e9O2PkUhudDc4Pq/8TZkF86bmI3bRPtfDsdAVpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1767938627; c=relaxed/relaxed;
-	bh=TVlnT2WiXW5nYG95M0tj3/pwuA98uZmz0fLtRU3VLPA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TMOG5lUCO9pQ/LW8w283O4wV0icocFIsbBpn/a58VYb4xLHT4SN0HnD0DDH1XvqEbfavc961OacDVAbzTiUPzcQi5Fj3yZXLgTTYtC/a3A8X0AlSULE9ZwgNkkyd1S9+I9l+BFig39Cjkt0NLIqWp1B3PhyrgU8QD1suOjWVVz1bwO2HZZsp73Aa9rXSo9RHymt7zZJb83lKvAcfQtQHNUdOnG7os0ENnc09rHlU3VwegHvBnSeLDy4f0j5nd3E1B0QvA+lQ5nbFWrnJZbZyrnUwLXsYM7VD2bpiiKAYv7KpOz4nr3WT9YLsxbGkuqwbiiXaodN7YDFk0Iqkp7YB2Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=nNw+ohOk; dkim-atps=neutral; spf=none (client-ip=198.137.202.133; helo=bombadil.infradead.org; envelope-from=batv+d4639d90bc861be87f98+8174+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+	t=1767938624; c=relaxed/relaxed;
+	bh=WSn8tUN5ji0ImOXN+znur1HXqv1SL9DZ3ghCylvKI/M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Tw4CeaFLDOB+ohNsehSzcYPaCI9xwHUTlRfznc8trCQs8e/NwsRTWV4DzL6Vltpg1kkJxkFhpiQrf1Oo6F0m1AsNtRdQN2JMIFClfhsIAeu+l9FI2NS0PqqCrTY6OmHERvOL3ls/3IYDuBrL99+WX5c2biRo58XKILaDzsv/awK8HiqiPyiDq68mj4YEdOe7ThhE0e+9NiSz65GDh1f21C2dXWdkqWPC6CmUaGKOWCxY3CnwsKX7NyOpn48aBG5TJvzmj6siAc62eXXkuHyQ1lsWIcVYaX2afu/gpUo/dJr4nzJcotvrMqYZ07pbeXmxJOUMeS9oVN5G0iisNDwtPQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=EuEAkh3C; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=nNw+ohOk;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=EuEAkh3C;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=198.137.202.133; helo=bombadil.infradead.org; envelope-from=batv+d4639d90bc861be87f98+8174+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnWRc66Ljz2xPB
-	for <linux-erofs@lists.ozlabs.org>; Fri, 09 Jan 2026 17:03:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=TVlnT2WiXW5nYG95M0tj3/pwuA98uZmz0fLtRU3VLPA=; b=nNw+ohOkHNWpQswvh+NdF9LHsu
-	PJ6XIUFJtAy/341ZJ9J92w/DrPqKhkxz3zTjI/OkCD5uCId/D9WwQgvpVYCFTlMBlisRY+uVtvIRe
-	REPMinKM/zRtj+mAGb6mG8h33I8v4EUxHd7wpMoL0MVUe5QELfPQU02i+BkEkkPD+IWuWUtmR9vj7
-	5PESqXWBa9hJrSIyYBcnAULtN9bqZwa9ct6avHgzAt8PQ8DJwQPVi9fHlBg9V+TF/Bau3F5xfjNlp
-	4gxLTxemKZWrMAqjEIaxZ8E5uEYuSvRgEMvz0VvHRFcwTeD7kP/g3KTcD027gjhOnTRYhsN0CtrV+
-	PA5MAVYw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ve5Y8-00000001VCt-1XPG;
-	Fri, 09 Jan 2026 06:00:40 +0000
-Date: Thu, 8 Jan 2026 22:00:40 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Luis de Bethencourt <luisbg@kernel.org>,
-	Salah Triki <salah.triki@gmail.com>,
-	Nicolas Pitre <nico@fluxnic.net>,
-	Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-	Anders Larsen <al@alarsen.net>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Phillip Lougher <phillip@squashfs.org.uk>,
-	Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Sungjong Seo <sj1557.seo@samsung.com>,
-	Yuezhang Mo <yuezhang.mo@sony.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Andreas Gruenbacher <agruenba@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
-	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
-	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
-	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-mm@kvack.org, gfs2@lists.linux.dev, linux-doc@vger.kernel.org,
-	v9fs@lists.linux.dev, ceph-devel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org
-Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
- lease support
-Message-ID: <aWCZiFOmnY3D4oUl@infradead.org>
-References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dnWRd33S1z2y6G
+	for <linux-erofs@lists.ozlabs.org>; Fri, 09 Jan 2026 17:03:39 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1767938610; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=WSn8tUN5ji0ImOXN+znur1HXqv1SL9DZ3ghCylvKI/M=;
+	b=EuEAkh3Ccqj/4qm0h0Fv3gAjdn+i2N6gPYn6fSLw6EJgTabF2sVbgQqWISqD+NyK8GQGUqWTlzsMfhp8U5WIjuDRzLdMC+LaxSjunhEAEOSuDsURvA/d+rVdbFHbbzywzjWaVeyTTrj6HyFll2ZsRjMIAZO64G01w4uG+3Ns0K4=
+Received: from 30.221.131.232(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wwf8qgt_1767938608 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 09 Jan 2026 14:03:29 +0800
+Message-ID: <d1d84c90-9bca-4f14-a635-6199ce84df48@linux.alibaba.com>
+Date: Fri, 9 Jan 2026 14:03:28 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -123,29 +49,152 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
-	autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 01/10] iomap: stash iomap read ctx in the private
+ field of iomap_iter
+To: Christoph Hellwig <hch@lst.de>, "Darrick J. Wong" <djwong@kernel.org>,
+ Christian Brauner <brauner@kernel.org>
+Cc: amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+ Chao Yu <chao@kernel.org>, Hongbo Li <lihongbo22@huawei.com>
+References: <20260109030140.594936-1-lihongbo22@huawei.com>
+ <20260109030140.594936-2-lihongbo22@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260109030140.594936-2-lihongbo22@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Thu, Jan 08, 2026 at 12:12:55PM -0500, Jeff Layton wrote:
-> I mainly focused on filesystems that are NFS exportable, since NFS and
-> SMB are the main users of file leases, and they tend to end up exporting
-> the same filesystem types. Let me know if I've missed any.
+Hi Christoph, Darrick, Christian,
+
+On 2026/1/9 11:01, Hongbo Li wrote:
+> It's useful to get filesystem-specific information using the
+> existing private field in the @iomap_iter passed to iomap_{begin,end}
+> for advanced usage for iomap buffered reads, which is much like the
+> current iomap DIO.
 > 
-> [1]: https://lore.kernel.org/linux-fsdevel/20260107-setlease-6-19-v1-0-85f034abcc57@kernel.org/
+> For example, EROFS needs it to:
+> 
+>   - implement an efficient page cache sharing feature, since iomap
+>     needs to apply to anon inode page cache but we'd like to get the
+>     backing inode/fs instead, so filesystem-specific private data is
+>     needed to keep such information;
+> 
+>   - pass in both struct page * and void * for inline data to avoid
+>     kmap_to_page() usage (which is bogus).
+> 
+> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
-That seems reasonable, and I like the approach here (without having the
-time to review every change right now):
+Could you help review or ack this patch?
 
-Acked-by: Christoph Hellwig <hch@lst.de>
+This feature is almost in shape for the upcoming cycle,
+I do hope this iomap patch could be reviewed, thanks!
 
-If it turns out we have people use leases on other file systems we'll
-have to wire up a few more instance as needed, but I think your initial
-set makes sense.
+Thanks,
+Gao Xiang
+
+> ---
+>   fs/fuse/file.c         | 4 ++--
+>   fs/iomap/buffered-io.c | 6 ++++--
+>   include/linux/iomap.h  | 8 ++++----
+>   3 files changed, 10 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 01bc894e9c2b..f5d8887c1922 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -979,7 +979,7 @@ static int fuse_read_folio(struct file *file, struct folio *folio)
+>   		return -EIO;
+>   	}
+>   
+> -	iomap_read_folio(&fuse_iomap_ops, &ctx);
+> +	iomap_read_folio(&fuse_iomap_ops, &ctx, NULL);
+>   	fuse_invalidate_atime(inode);
+>   	return 0;
+>   }
+> @@ -1081,7 +1081,7 @@ static void fuse_readahead(struct readahead_control *rac)
+>   	if (fuse_is_bad(inode))
+>   		return;
+>   
+> -	iomap_readahead(&fuse_iomap_ops, &ctx);
+> +	iomap_readahead(&fuse_iomap_ops, &ctx, NULL);
+>   }
+>   
+>   static ssize_t fuse_cache_read_iter(struct kiocb *iocb, struct iov_iter *to)
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index e5c1ca440d93..5f7dcbabbda3 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -555,13 +555,14 @@ static int iomap_read_folio_iter(struct iomap_iter *iter,
+>   }
+>   
+>   void iomap_read_folio(const struct iomap_ops *ops,
+> -		struct iomap_read_folio_ctx *ctx)
+> +		struct iomap_read_folio_ctx *ctx, void *private)
+>   {
+>   	struct folio *folio = ctx->cur_folio;
+>   	struct iomap_iter iter = {
+>   		.inode		= folio->mapping->host,
+>   		.pos		= folio_pos(folio),
+>   		.len		= folio_size(folio),
+> +		.private	= private,
+>   	};
+>   	size_t bytes_submitted = 0;
+>   	int ret;
+> @@ -620,13 +621,14 @@ static int iomap_readahead_iter(struct iomap_iter *iter,
+>    * the filesystem to be reentered.
+>    */
+>   void iomap_readahead(const struct iomap_ops *ops,
+> -		struct iomap_read_folio_ctx *ctx)
+> +		struct iomap_read_folio_ctx *ctx, void *private)
+>   {
+>   	struct readahead_control *rac = ctx->rac;
+>   	struct iomap_iter iter = {
+>   		.inode	= rac->mapping->host,
+>   		.pos	= readahead_pos(rac),
+>   		.len	= readahead_length(rac),
+> +		.private = private,
+>   	};
+>   	size_t cur_bytes_submitted;
+>   
+> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> index 520e967cb501..441d614e9fdf 100644
+> --- a/include/linux/iomap.h
+> +++ b/include/linux/iomap.h
+> @@ -341,9 +341,9 @@ ssize_t iomap_file_buffered_write(struct kiocb *iocb, struct iov_iter *from,
+>   		const struct iomap_ops *ops,
+>   		const struct iomap_write_ops *write_ops, void *private);
+>   void iomap_read_folio(const struct iomap_ops *ops,
+> -		struct iomap_read_folio_ctx *ctx);
+> +		struct iomap_read_folio_ctx *ctx, void *private);
+>   void iomap_readahead(const struct iomap_ops *ops,
+> -		struct iomap_read_folio_ctx *ctx);
+> +		struct iomap_read_folio_ctx *ctx, void *private);
+>   bool iomap_is_partially_uptodate(struct folio *, size_t from, size_t count);
+>   struct folio *iomap_get_folio(struct iomap_iter *iter, loff_t pos, size_t len);
+>   bool iomap_release_folio(struct folio *folio, gfp_t gfp_flags);
+> @@ -595,7 +595,7 @@ static inline void iomap_bio_read_folio(struct folio *folio,
+>   		.cur_folio	= folio,
+>   	};
+>   
+> -	iomap_read_folio(ops, &ctx);
+> +	iomap_read_folio(ops, &ctx, NULL);
+>   }
+>   
+>   static inline void iomap_bio_readahead(struct readahead_control *rac,
+> @@ -606,7 +606,7 @@ static inline void iomap_bio_readahead(struct readahead_control *rac,
+>   		.rac		= rac,
+>   	};
+>   
+> -	iomap_readahead(ops, &ctx);
+> +	iomap_readahead(ops, &ctx, NULL);
+>   }
+>   #endif /* CONFIG_BLOCK */
+>   
 
 
