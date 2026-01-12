@@ -1,183 +1,85 @@
-Return-Path: <linux-erofs+bounces-1828-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1829-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61AD8D134D0
-	for <lists+linux-erofs@lfdr.de>; Mon, 12 Jan 2026 15:51:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 72D83D13E5D
+	for <lists+linux-erofs@lfdr.de>; Mon, 12 Jan 2026 17:09:31 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dqb0q6GKlz2xKh;
-	Tue, 13 Jan 2026 01:51:07 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dqclD497dz2xHP;
+	Tue, 13 Jan 2026 03:09:28 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768229467;
-	cv=none; b=M8zzAvHMhE/yerofGsGLV3oBeF670cnsZAwRQRCIoCU3YHK1MZ3dzyqE0QQ16qSfBGJDOYPxjAQGzcSG0XIFX/oxfFHaV2yQ71UbBMZzRfGm1Oj1G+yvmX5Ff4mzNFVcL1mhl2wYw6ccBEj756RmZtcv67Ai+dE/yG5F/UBbt9P6nosHJSBvS+QjYFQ/ZEG6zm8go05nnuJvJvtJczqUIsFF/dbMI4ZAWEH7jWl8CYGrti9fhQlRrlW1VGyq6Wat8tCLOYHlBNCuvabMC7YrGMNvfBUGZN7Wa0TuvhVpjiJPOAsB3ZXWM2LgvJNXKJ+t4qm+DwdwKZ0fdCF9eG85mQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.208.68
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768234168;
+	cv=none; b=Htp2pXomQMivu2Ta9MtHiNTtBbytobWqzKOKyd3m/Umrm322gbwWsan/SUDmIz8yGNeRCdZD+agLbj+MrLWeZ0ursE2Xr9LMoyC9Z8zWfOHJviwbxuwAVypuekYu4X5hAKlzJhCEWvHLp29kqgE9WW/QKLwz0YEM/ynrbOj6IW1JwMRin3EgTmf00Dzqh8eWeugVTsZIoxLOMis63hZ3b3kKg9d/2BH+mqyAQurSyQT+biM/saN8/n2SwOwDOOuXTu0rMLsO0/QXRTrB9iHWEYQKAYkDXXrXg6iL2Vy1raGSdjInNPF6xrMoM3ic2zUE0PonxK8g5rUjZ5EHbxefMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768229467; c=relaxed/relaxed;
-	bh=cheSnBLxN544y0UKkw10KpgjiO68XnZpyeYuNQCu1SI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DPlo8vuULeGpvWnY0e73jlmlLWV4kEz2p1aE4DPWXHwA++jRPIqJNeKOs0A5Q91sWUZtKlSwV0/soER12X+C1YTp/cdYFiiz/kSwpVuoxOQyhLX+ysIEBSDImRJNif0hn+8Yov0yFoifMKXioUf54obww4H2KZ29AZyFjWKES3WSZrxlXoqWAV6Ds9UFXaQHyj820EYCAq8RkCYx+cHNCnjiwVsDKt0ug3VUtizY3hgDk8UB26bm0wWCVpvfg7OfFwbIk6M3gN7mWhATqGXLqNSYJmws0+CGPVoAZ36GWHYb8FDbx3vjumfKoRSBrTmwA2aj5VzY/E6Wl3W8tlGVFQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UpMEz5TH; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1768234168; c=relaxed/relaxed;
+	bh=rhL4JNvGH/Ad37oTzLQ5PqwjNlackbvAhbcxlZaqeQI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K+CCcC77hxs5i0iqpupjpiObA4zBRHlB3HfZ1ZfHlan1Rj4FkcKu7w5wS0Wt+6pJqLnYGl7EigqEIPE1+XAh3JEMIc1igmXkmor03eBkcAIDkbN1w6LFAP82JgyPH2W1CWSeq14+xGBEOrqKNP8G84h73et4MsH4iecIPM7N0Ukc7cqJe66L3XahUGbGKf2w8PNgR6tbcDq3Smir53h6AksaIKu51XAoFpVeqT4VhJKxo6dlNsvYkDKa2d1a9VD+mzpoQKa9Qhl2JQVziCZRwRZT/EUQkRvZ8LPyJ42mreOjlnn45pUjTrCEB+wlMVpOHKluyYEfCwsII5BRqAdLOA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=dhTEptxr; dkim-atps=neutral; spf=pass (client-ip=209.85.208.68; helo=mail-ed1-f68.google.com; envelope-from=officialnaumansabir@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UpMEz5TH;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=dhTEptxr;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=209.85.208.68; helo=mail-ed1-f68.google.com; envelope-from=officialnaumansabir@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dqb0k1wWDz2xHW
-	for <linux-erofs@lists.ozlabs.org>; Tue, 13 Jan 2026 01:51:02 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 631B7441BF;
-	Mon, 12 Jan 2026 14:50:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E8AEC16AAE;
-	Mon, 12 Jan 2026 14:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768229429;
-	bh=cheSnBLxN544y0UKkw10KpgjiO68XnZpyeYuNQCu1SI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=UpMEz5THVo05QbZ/pAisnu0HRhesOIjE2rYftbA7FBhGQj5tCikdbZP3s9Z/gB+1y
-	 k8fYirWnboJmtXtByE43Gev4eWZMrnZp2xsCYHsMHZKKPwK6nyAzNy2SlEd6q6RdQX
-	 E9BsB3Zeg8leNoOsSqkZw9UMTUfEJ1CwpbuRjO/ZsHVZdkTGXi72eLukzZew16H4By
-	 2V8I14GVLtY2HkAvnbTAdK8f8SFRaA/5FSsShCjCBoX+/4KLO8Va98nCZCU0IF7NSt
-	 5mEIqfFpYxDWcq+lTy0EQTI0buuA/J9QluBW76YeWrm5Yt8NF684D6eD5hHIR3dAHu
-	 cDKQUbKLqjwJw==
-Message-ID: <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
-Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
- lease support
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Amir Goldstein
- <amir73il@gmail.com>,  Christian Brauner	 <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, Luis de Bethencourt <luisbg@kernel.org>, Salah
- Triki <salah.triki@gmail.com>, Nicolas Pitre <nico@fluxnic.net>, Christoph
- Hellwig	 <hch@infradead.org>, Anders Larsen <al@alarsen.net>, Alexander
- Viro	 <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Chris
- Mason	 <clm@fb.com>, Gao Xiang <xiang@kernel.org>, Chao Yu
- <chao@kernel.org>, Yue Hu	 <zbestahu@gmail.com>, Jeffle Xu
- <jefflexu@linux.alibaba.com>, Sandeep Dhavale	 <dhavale@google.com>, Hongbo
- Li <lihongbo22@huawei.com>, Chunhai Guo	 <guochunhai@vivo.com>, Jan Kara
- <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,  Andreas Dilger
- <adilger.kernel@dilger.ca>, Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA
- Hirofumi	 <hirofumi@mail.parknet.co.jp>, David Woodhouse
- <dwmw2@infradead.org>,  Richard Weinberger	 <richard@nod.at>, Dave Kleikamp
- <shaggy@kernel.org>, Ryusuke Konishi	 <konishi.ryusuke@gmail.com>,
- Viacheslav Dubeyko <slava@dubeyko.com>,  Konstantin Komarov
- <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>,
- Joel Becker	 <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Mike Marshall	 <hubcap@omnibond.com>, Martin Brandenburg
- <martin@omnibond.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Phillip Lougher
- <phillip@squashfs.org.uk>, Carlos Maiolino	 <cem@kernel.org>, Hugh Dickins
- <hughd@google.com>, Baolin Wang	 <baolin.wang@linux.alibaba.com>, Andrew
- Morton <akpm@linux-foundation.org>,  Namjae Jeon <linkinjeon@kernel.org>,
- Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo	 <yuezhang.mo@sony.com>,
- Alexander Aring <alex.aring@gmail.com>, Andreas Gruenbacher
- <agruenba@redhat.com>, Jonathan Corbet <corbet@lwn.net>, "Matthew Wilcox
- (Oracle)"	 <willy@infradead.org>, Eric Van Hensbergen <ericvh@kernel.org>,
- Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet
- <asmadeus@codewreck.org>, Christian Schoenebeck	 <linux_oss@crudebyte.com>,
- Xiubo Li <xiubli@redhat.com>, Ilya Dryomov	 <idryomov@gmail.com>, Trond
- Myklebust <trondmy@kernel.org>, Anna Schumaker	 <anna@kernel.org>, Steve
- French <sfrench@samba.org>, Paulo Alcantara	 <pc@manguebit.org>, Ronnie
- Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N	
- <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>, Bharath SM	
- <bharathsm@microsoft.com>, Hans de Goede <hansg@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net, 
-	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
- ocfs2-devel@lists.linux.dev, 	devel@lists.orangefs.org,
- linux-unionfs@vger.kernel.org, 	linux-xfs@vger.kernel.org,
- linux-mm@kvack.org, gfs2@lists.linux.dev, 	linux-doc@vger.kernel.org,
- v9fs@lists.linux.dev, ceph-devel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org
-Date: Mon, 12 Jan 2026 09:50:20 -0500
-In-Reply-To: <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
-References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
-	 <m3mywef74xhcakianlrovrnaadnhzhfqjfusulkcnyioforfml@j2xnk7dzkmv4>
-	 <8af369636c32b868f83669c49aea708ca3b894ac.camel@kernel.org>
-	 <CAOQ4uxgD+Sgbbg9K2U0SF9TyUOBb==Z6auShUWc4FfPaDCQ=rg@mail.gmail.com>
-	 <ec78bf021fa1f6243798945943541ba171e337e7.camel@kernel.org>
-	 <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dqclB2wNjz2xFn
+	for <linux-erofs@lists.ozlabs.org>; Tue, 13 Jan 2026 03:09:25 +1100 (AEDT)
+Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-64b560e425eso9313661a12.1
+        for <linux-erofs@lists.ozlabs.org>; Mon, 12 Jan 2026 08:09:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768234102; x=1768838902; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rhL4JNvGH/Ad37oTzLQ5PqwjNlackbvAhbcxlZaqeQI=;
+        b=dhTEptxrYiSViOMn3OI/iWUKDBuC6hyMBE/EHtpHg92s9PcMOFj/45vPg0aotdqnJc
+         nhvwi1CVXFKCKUuTceXVlPQjxo96mc0QUt5TqAi1XDPxyhW6bRArKHsWzODf06SzE1vV
+         ygDyiyvPL86BrlDaxA/MWBrmX/qtcjH6go3zA2S/mPiK1jeTt4TJciK/4FagxDH+Auxh
+         QIe8A4/dda4kjSLxRX1sb+fHbUI5HP9Kf8pHAITplTiaAhuPoHyBNxF55nfkz+rCMqe5
+         KJtOkAuxpjWKxhiqQHojtWaiWi5EZ8g3Cr2BC3+HkAt/enlajAFc/8OAUumY5Nk5m/RK
+         cPLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768234102; x=1768838902;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rhL4JNvGH/Ad37oTzLQ5PqwjNlackbvAhbcxlZaqeQI=;
+        b=KZ0r5RbTtx4o/W4IzJWEmiNkf8x0tegtPvSaJTZ9oAlu5UEeLc4o9bcXkhiSXaz1ah
+         7okzGODCkUIO6PEJHI7xtwGnVhxVF9lCmtzM5WvZ/peGlOu1V8m1lb8PHfy7+zLu8ftI
+         r70jCFmM67l9auRwC0UZGHup7U6N6UU7yVuNR0Vm4vQB5z13dlrFa5oeuY42lzOFMqGr
+         QefHfT0rHuoxx5wMQkBZgaZyMuX1iX49xXVYMu9LkqkXo4HYyYT5nP0MRj/6s6dpFll6
+         RheuGseVbNJuA6ZuGTWwQEBwSJAU04lY4iGMicdqvf+na+oY2iApW5BmZuHM2FSZw0is
+         F1AA==
+X-Forwarded-Encrypted: i=1; AJvYcCWNetnF6AgUMj91wmIqh2XldsV3y1RwH34QEEj06Bt/Tw8lfWvquMIK72m2ht69KAJB8Oj7feDnYtLDuw==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0Yx7U89PNfN44YD5GQAK7xkjaXSRw90gZiZCpTQE8uSLNotfs7Z0
+	DPsH/7nC7FPatgfQxkokt1gN2P/fx9hkxfQ44mlHOx8xdP79SluT6Gvz
+X-Gm-Gg: AY/fxX5iKdWJNlFej1x4dBsTL1b2XAjdwSFP2kbgME1WVjdvuRTdbwfcLj8xlXWbsYL
+	9elSSqTJ3phs+DpWQMxnlAj9nFOL01U0aBkb8j9h60SMJY/LFIsykiFxsAldn+OQX2bnpGKlmvA
+	GlEeF0FkU4VRT5EWR+tqwNaM+u4Um3gyDjn4IIG09og1R868i0zfES8ykVRzZ8RotJxhVCwW6F5
+	T7czJ1GohLvkZthg+sNlohFeenqf3/L+EYqcDXZuLREVYqr7YhZPjeURLUypaHsArMRqDyM+qb7
+	XKZUuxBgyF6YK4VDWUZ9ztcHGS7bu5+z7nrQU3PoK4kpG00Fg7XRFJX661E4/zk4NUfOIz3Moc2
+	EnAzOVPhQOYkBCoIPQR5aqMMes7LSD5dr4E8OCaXKXwSKNpmN4dDBbvwLISAZEKhSzN6qOCc35I
+	gLSwBL7YgBR6EVT/6gFMR+6pqcRDBVgQrvKA3cImIySOg=
+X-Google-Smtp-Source: AGHT+IFazFrD0ua/D+OyOxZV/TILTiOYzJ/3DUB89wm9e5Xuy/h95OK98M827+C0BmLeSL4ZrMLPsQ==
+X-Received: by 2002:a17:907:1b1d:b0:b73:6c97:af4b with SMTP id a640c23a62f3a-b84453eb56amr1811673766b.45.1768234101567;
+        Mon, 12 Jan 2026 08:08:21 -0800 (PST)
+Received: from MacBookPro ([2a02:8071:2186:3703:6de9:eb98:99c8:7af2])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6507b8c4c15sm17955883a12.4.2026.01.12.08.08.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jan 2026 08:08:21 -0800 (PST)
+From: Nauman Sabir <officialnaumansabir@gmail.com>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org,
+	linux-kbuild@vger.kernel.org,
+	Nauman Sabir <officialnaumansabir@gmail.com>
+Subject: [PATCH v3 3/3] Documentation: Fix typos and grammatical errors
+Date: Mon, 12 Jan 2026 17:08:20 +0100
+Message-ID: <20260112160820.19075-1-officialnaumansabir@gmail.com>
+X-Mailer: git-send-email 2.52.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -189,153 +91,162 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+	RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=disabled
 	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, 2026-01-12 at 09:31 -0500, Chuck Lever wrote:
-> On 1/12/26 8:34 AM, Jeff Layton wrote:
-> > On Fri, 2026-01-09 at 19:52 +0100, Amir Goldstein wrote:
-> > > On Thu, Jan 8, 2026 at 7:57=E2=80=AFPM Jeff Layton <jlayton@kernel.or=
-g> wrote:
-> > > >=20
-> > > > On Thu, 2026-01-08 at 18:40 +0100, Jan Kara wrote:
-> > > > > On Thu 08-01-26 12:12:55, Jeff Layton wrote:
-> > > > > > Yesterday, I sent patches to fix how directory delegation suppo=
-rt is
-> > > > > > handled on filesystems where the should be disabled [1]. That s=
-et is
-> > > > > > appropriate for v6.19. For v7.0, I want to make lease support b=
-e more
-> > > > > > opt-in, rather than opt-out:
-> > > > > >=20
-> > > > > > For historical reasons, when ->setlease() file_operation is set=
- to NULL,
-> > > > > > the default is to use the kernel-internal lease implementation.=
- This
-> > > > > > means that if you want to disable them, you need to explicitly =
-set the
-> > > > > > ->setlease() file_operation to simple_nosetlease() or the equiv=
-alent.
-> > > > > >=20
-> > > > > > This has caused a number of problems over the years as some fil=
-esystems
-> > > > > > have inadvertantly allowed leases to be acquired simply by havi=
-ng left
-> > > > > > it set to NULL. It would be better if filesystems had to opt-in=
- to lease
-> > > > > > support, particularly with the advent of directory delegations.
-> > > > > >=20
-> > > > > > This series has sets the ->setlease() operation in a pile of ex=
-isting
-> > > > > > local filesystems to generic_setlease() and then changes
-> > > > > > kernel_setlease() to return -EINVAL when the setlease() operati=
-on is not
-> > > > > > set.
-> > > > > >=20
-> > > > > > With this change, new filesystems will need to explicitly set t=
-he
-> > > > > > ->setlease() operations in order to provide lease and delegatio=
-n
-> > > > > > support.
-> > > > > >=20
-> > > > > > I mainly focused on filesystems that are NFS exportable, since =
-NFS and
-> > > > > > SMB are the main users of file leases, and they tend to end up =
-exporting
-> > > > > > the same filesystem types. Let me know if I've missed any.
-> > > > >=20
-> > > > > So, what about kernfs and fuse? They seem to be exportable and do=
-n't have
-> > > > > .setlease set...
-> > > > >=20
-> > > >=20
-> > > > Yes, FUSE needs this too. I'll add a patch for that.
-> > > >=20
-> > > > As far as kernfs goes: AIUI, that's basically what sysfs and resctr=
-l
-> > > > are built on. Do we really expect people to set leases there?
-> > > >=20
-> > > > I guess it's technically a regression since you could set them on t=
-hose
-> > > > sorts of files earlier, but people don't usually export kernfs base=
-d
-> > > > filesystems via NFS or SMB, and that seems like something that coul=
-d be
-> > > > used to make mischief.
-> > > >=20
-> > > > AFAICT, kernfs_export_ops is mostly to support open_by_handle_at().=
- See
-> > > > commit aa8188253474 ("kernfs: add exportfs operations").
-> > > >=20
-> > > > One idea: we could add a wrapper around generic_setlease() for
-> > > > filesystems like this that will do a WARN_ONCE() and then call
-> > > > generic_setlease(). That would keep leases working on them but we m=
-ight
-> > > > get some reports that would tell us who's setting leases on these f=
-iles
-> > > > and why.
-> > >=20
-> > > IMO, you are being too cautious, but whatever.
-> > >=20
-> > > It is not accurate that kernfs filesystems are NFS exportable in gene=
-ral.
-> > > Only cgroupfs has KERNFS_ROOT_SUPPORT_EXPORTOP.
-> > >=20
-> > > If any application is using leases on cgroup files, it must be some
-> > > very advanced runtime (i.e. systemd), so we should know about the
-> > > regression sooner rather than later.
-> > >=20
-> >=20
-> > I think so too. For now, I think I'll not bother with the WARN_ONCE().
-> > Let's just leave kernfs out of the set until someone presents a real
-> > use-case.
-> >=20
-> > > There are also the recently added nsfs and pidfs export_operations.
-> > >=20
-> > > I have a recollection about wanting to be explicit about not allowing
-> > > those to be exportable to NFS (nsfs specifically), but I can't see wh=
-ere
-> > > and if that restriction was done.
-> > >=20
-> > > Christian? Do you remember?
-> > >=20
-> >=20
-> > (cc'ing Chuck)
-> >=20
-> > FWIW, you can currently export and mount /sys/fs/cgroup via NFS. The
-> > directory doesn't show up when you try to get to it via NFSv4, but you
-> > can mount it using v3 and READDIR works. The files are all empty when
-> > you try to read them. I didn't try to do any writes.
-> >=20
-> > Should we add a mechanism to prevent exporting these sorts of
-> > filesystems?
-> >=20
-> > Even better would be to make nfsd exporting explicitly opt-in. What if
-> > we were to add a EXPORT_OP_NFSD flag that explicitly allows filesystems
-> > to opt-in to NFS exporting, and check for that in __fh_verify()? We'd
-> > have to add it to a bunch of existing filesystems, but that's fairly
-> > simple to do with an LLM.
->=20
-> What's the active harm in exporting /sys/fs/cgroup ? It has to be done
-> explicitly via /etc/exports, so this is under the NFS server admin's
-> control. Is it an attack surface?
->=20
+Fix various typos and grammatical errors across documentation files:
 
-Potentially?
+- Fix missing preposition 'in' in process/changes.rst
+- Correct 'result by' to 'result from' in admin-guide/README.rst
+- Fix 'before hand' to 'beforehand' in cgroup-v1/hugetlb.rst
+- Correct 'allows to limit' to 'allows limiting' in hugetlb.rst,
+  cgroup-v2.rst, and kconfig-language.rst
+- Fix 'needs precisely know' to 'needs to precisely know'
+- Correct 'overcommited' to 'overcommitted' in hugetlb.rst
+- Fix subject-verb agreement: 'never causes' to 'never cause'
+- Fix 'there is enough' to 'there are enough' in hugetlb.rst
+- Fix 'metadatas' to 'metadata' in filesystems/erofs.rst
+- Fix 'hardwares' to 'hardware' in scsi/ChangeLog.sym53c8xx
 
-I don't see any active harm with exporting cgroupfs. It doesn't work
-right via nfsd, but it's not crashing the box or anything.
+Signed-off-by: Nauman Sabir <officialnaumansabir@gmail.com>
+---
+ Documentation/admin-guide/README.rst           |  2 +-
+ .../admin-guide/cgroup-v1/hugetlb.rst          | 18 +++++++++---------
+ Documentation/admin-guide/cgroup-v2.rst        |  2 +-
+ Documentation/filesystems/erofs.rst            |  2 +-
+ Documentation/kbuild/kconfig-language.rst      |  2 +-
+ Documentation/process/changes.rst              |  2 +-
+ Documentation/scsi/ChangeLog.sym53c8xx         |  2 +-
+ 7 files changed, 15 insertions(+), 15 deletions(-)
 
-At one time, those were only defined by filesystems that wanted to
-allow NFS export. Now we've grown them on filesystems that just want to
-provide filehandles for open_by_handle_at() and the like. nfsd doesn't
-care though: if the fs has export operations, it'll happily use them.
+diff --git a/Documentation/admin-guide/README.rst b/Documentation/admin-guide/README.rst
+index 05301f03b717..77fec1de6dc8 100644
+--- a/Documentation/admin-guide/README.rst
++++ b/Documentation/admin-guide/README.rst
+@@ -53,7 +53,7 @@ Documentation
+    these typically contain kernel-specific installation notes for some
+    drivers for example. Please read the
+    :ref:`Documentation/process/changes.rst <changes>` file, as it
+-   contains information about the problems, which may result by upgrading
++   contains information about the problems which may result from upgrading
+    your kernel.
+ 
+ Installing the kernel source
+diff --git a/Documentation/admin-guide/cgroup-v1/hugetlb.rst b/Documentation/admin-guide/cgroup-v1/hugetlb.rst
+index 493a8e386700..b5f3873b7d3a 100644
+--- a/Documentation/admin-guide/cgroup-v1/hugetlb.rst
++++ b/Documentation/admin-guide/cgroup-v1/hugetlb.rst
+@@ -77,7 +77,7 @@ control group and enforces the limit during page fault. Since HugeTLB
+ doesn't support page reclaim, enforcing the limit at page fault time implies
+ that, the application will get SIGBUS signal if it tries to fault in HugeTLB
+ pages beyond its limit. Therefore the application needs to know exactly how many
+-HugeTLB pages it uses before hand, and the sysadmin needs to make sure that
++HugeTLB pages it uses beforehand, and the sysadmin needs to make sure that
+ there are enough available on the machine for all the users to avoid processes
+ getting SIGBUS.
+ 
+@@ -91,23 +91,23 @@ getting SIGBUS.
+   hugetlb.<hugepagesize>.rsvd.usage_in_bytes
+   hugetlb.<hugepagesize>.rsvd.failcnt
+ 
+-The HugeTLB controller allows to limit the HugeTLB reservations per control
++The HugeTLB controller allows limiting the HugeTLB reservations per control
+ group and enforces the controller limit at reservation time and at the fault of
+ HugeTLB memory for which no reservation exists. Since reservation limits are
+-enforced at reservation time (on mmap or shget), reservation limits never causes
+-the application to get SIGBUS signal if the memory was reserved before hand. For
++enforced at reservation time (on mmap or shget), reservation limits never cause
++the application to get SIGBUS signal if the memory was reserved beforehand. For
+ MAP_NORESERVE allocations, the reservation limit behaves the same as the fault
+ limit, enforcing memory usage at fault time and causing the application to
+ receive a SIGBUS if it's crossing its limit.
+ 
+ Reservation limits are superior to page fault limits described above, since
+ reservation limits are enforced at reservation time (on mmap or shget), and
+-never causes the application to get SIGBUS signal if the memory was reserved
+-before hand. This allows for easier fallback to alternatives such as
++never cause the application to get SIGBUS signal if the memory was reserved
++beforehand. This allows for easier fallback to alternatives such as
+ non-HugeTLB memory for example. In the case of page fault accounting, it's very
+-hard to avoid processes getting SIGBUS since the sysadmin needs precisely know
+-the HugeTLB usage of all the tasks in the system and make sure there is enough
+-pages to satisfy all requests. Avoiding tasks getting SIGBUS on overcommited
++hard to avoid processes getting SIGBUS since the sysadmin needs to precisely know
++the HugeTLB usage of all the tasks in the system and make sure there are enough
++pages to satisfy all requests. Avoiding tasks getting SIGBUS on overcommitted
+ systems is practically impossible with page fault accounting.
+ 
+ 
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 7f5b59d95fce..098d6831b3c0 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -2816,7 +2816,7 @@ DMEM Interface Files
+ HugeTLB
+ -------
+ 
+-The HugeTLB controller allows to limit the HugeTLB usage per control group and
++The HugeTLB controller allows limiting the HugeTLB usage per control group and
+ enforces the controller limit during page fault.
+ 
+ HugeTLB Interface Files
+diff --git a/Documentation/filesystems/erofs.rst b/Documentation/filesystems/erofs.rst
+index 08194f194b94..e61db115e762 100644
+--- a/Documentation/filesystems/erofs.rst
++++ b/Documentation/filesystems/erofs.rst
+@@ -154,7 +154,7 @@ to be as simple as possible::
+   0 +1K
+ 
+ All data areas should be aligned with the block size, but metadata areas
+-may not. All metadatas can be now observed in two different spaces (views):
++may not. All metadata can be now observed in two different spaces (views):
+ 
+  1. Inode metadata space
+ 
+diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+index abce88f15d7c..7067ec3f0011 100644
+--- a/Documentation/kbuild/kconfig-language.rst
++++ b/Documentation/kbuild/kconfig-language.rst
+@@ -216,7 +216,7 @@ applicable everywhere (see syntax).
+ 
+ - numerical ranges: "range" <symbol> <symbol> ["if" <expr>]
+ 
+-  This allows to limit the range of possible input values for int
++  This allows limiting the range of possible input values for int
+   and hex symbols. The user can only input a value which is larger than
+   or equal to the first symbol and smaller than or equal to the second
+   symbol.
+diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
+index 62951cdb13ad..0cf97dbab29d 100644
+--- a/Documentation/process/changes.rst
++++ b/Documentation/process/changes.rst
+@@ -218,7 +218,7 @@ DevFS has been obsoleted in favour of udev
+ Linux documentation for functions is transitioning to inline
+ documentation via specially-formatted comments near their
+ definitions in the source.  These comments can be combined with ReST
+-files the Documentation/ directory to make enriched documentation, which can
++files in the Documentation/ directory to make enriched documentation, which can
+ then be converted to PostScript, HTML, LaTex, ePUB and PDF files.
+ In order to convert from ReST format to a format of your choice, you'll need
+ Sphinx.
+diff --git a/Documentation/scsi/ChangeLog.sym53c8xx b/Documentation/scsi/ChangeLog.sym53c8xx
+index 3435227a2bed..6bca91e03945 100644
+--- a/Documentation/scsi/ChangeLog.sym53c8xx
++++ b/Documentation/scsi/ChangeLog.sym53c8xx
+@@ -3,7 +3,7 @@ Sat May 12 12:00 2001 Gerard Roudier (groudier@club-internet.fr)
+ 	- Ensure LEDC bit in GPCNTL is cleared when reading the NVRAM.
+ 	  Fix sent by Stig Telfer <stig@api-networks.com>.
+ 	- Backport from SYM-2 the work-around that allows to support 
+-	  hardwares that fail PCI parity checking.
++	  hardware that fails PCI parity checking.
+ 	- Check that we received at least 8 bytes of INQUIRY response 
+ 	  for byte 7, that contains device capabilities, to be valid.
+ 	- Define scsi_set_pci_device() as nil for kernel < 2.4.4.
+-- 
+2.52.0
 
-Having an explicit "I want to allow nfsd" flag see ms like it might
-save us some headaches in the future when other filesystems add export
-ops for this sort of filehandle use.
---=20
-Jeff Layton <jlayton@kernel.org>
 
