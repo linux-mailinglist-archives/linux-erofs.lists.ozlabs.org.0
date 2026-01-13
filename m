@@ -1,98 +1,47 @@
-Return-Path: <linux-erofs+bounces-1836-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1837-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE35FD1766B
-	for <lists+linux-erofs@lfdr.de>; Tue, 13 Jan 2026 09:55:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 84E3CD17CB9
+	for <lists+linux-erofs@lfdr.de>; Tue, 13 Jan 2026 10:55:05 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dr33d5rykz2xWJ;
-	Tue, 13 Jan 2026 19:55:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dr4Nk6DMDz2xWJ;
+	Tue, 13 Jan 2026 20:55:02 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768294509;
-	cv=none; b=Xzjp7R+CVbenrPmju8fJGTZ2flPeZoHQpoO8P89CNIrHM+d2+YRhO8Gwp9kcWW8qTJXltW1SCyC2iqZKGyVzoZQ1jUbQrqFih6O+Irjii6DpANYzCgJBPWIxcoBhIW6dMw0cv4SsdxyCT5CTxi/7PMw5p39xUvpbqudJPlqxfONd3KvrVZLs1SlnDzQN/5Wh8L54/vkJsODankKagKM5FR91C8Tu9To6XBV1/wlK59tqRMDdX9s2hoRyAHB+hGcFnlHKO/GdUcfY/YebiHuGh4Qg6kFYpl39yn7Hk/5EMB93vE3J0vYgjrN1y3MX74wtnuXXXfLc5ie5gnnzW02Rog==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.99
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768298102;
+	cv=none; b=SONFyZqiSDjD9m6E/JmIBjlk1n7ffv5eHyeg5tQ14Z6sgcxguazCovpT7BVSQk3mdzTLthdzBCcJbnISFD+KZ52VkEgyfXRXNrurddmCcg5333iqTw0A5v2/yX98n2jheoeLMIf9vkoRZ4aG+vmrWAMNhXkMv/j1rpmsYgbOXOqJQZaiBMRRn8bdgeZB1ClhU2u9Q6VJ7n3Ajkcp+bHlkh77inWIPHQfPKGn46Ud1B6L/5xDVRbm8FuIwItkK7oEI6DEczCHx665BwyZpz7x8IoOHUSNxO+y4WJjorgwPzu6vqi7zDEK9zm64IDJXHfgFOvozm8vVvtRWM09XSlwrw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768294509; c=relaxed/relaxed;
-	bh=3EVqflcatbx4V1B46xWWhgcfIYUol4ag4eDJtKtbMe4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m0MtNxHIWBDTTmvnDOsyH+I4hfXgcnKUZWsV1kUKchHeMnPVGfgbilvGO8I94H/H2YCK3wxM2zaflRThzQm/Uj3ogciXSVGFaD67Vl8fToq+cGNKNzqNc7h/ZO7VjtItXY36mt77CepuVmxmKeTEY9DN+ZY2a7985SXQzOEzQgpQvTsZzfvRC/lBnVHFFOlEnUwkO3xQhrkmYnyBWSF+mI6gwamQ+VWDJVrT7rYAvLca1Qv6H+As4sAGA8n5O7a9N9GF604sqzqy86iUXXJFL3JFB7qu8ogaqDkSU8zSr9iklmicucwDlFg3ptHyAIzYwQR6HLL1pIv3Xu7iy6tViw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VMqw4jfO; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1768298102; c=relaxed/relaxed;
+	bh=SGhe7Th5ldhGMce2qdrOf8GmktXc9aejfOzgKyBbdxg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZBOkMwevASEtGEByL5x7Z+VO8EGJHgjWzt7yq4eNLi0EIK8VWcDgvwp97wAmdV1ndP30Fx8xkt0Yl81w27LWkvuvY9qFOd7C7eFaK+oXbe4dtiq4whEY2fRJPOJuNI0nI2Hdvrr8GTQEH4MBTLhwbKK1lxq2BVpic5uzQJLRV35JkPTIJcluQv8wFHHlQE8wGnX6GPxXp71pZcEbzaViFwn8aPB/33+v43cFFNqNkpS0V4wT3LCzAma4UUrjFLvqvIcv+MVKiC06biBF8CPTT7EKuy6mkBUhcwGoDrh2XMJAXKhsQfMrOwOUgZfNZ+xG2fw8Mb8eJ5AnVUZGBE3AVQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VnznkP9f; dkim-atps=neutral; spf=pass (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VMqw4jfO;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=VnznkP9f;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.99; helo=out30-99.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dr33b2ct3z2xHP
-	for <linux-erofs@lists.ozlabs.org>; Tue, 13 Jan 2026 19:55:07 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 6B157432B5;
-	Tue, 13 Jan 2026 08:54:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A24BC116C6;
-	Tue, 13 Jan 2026 08:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768294474;
-	bh=8pJH5EMsw2Zf/vnxVI5TNW+Tn1VjYrvuVd/4u81hQjw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VMqw4jfOdED4XJIXekFPVJQafNNTl6ZiZA++QmJZRBiaMMpeaGnJz3p4o2lTbIKwN
-	 ZGKZS5HpYR0+N1ii5xC8s/TyQQtV2NHGSS3n0xjeitfnyVlfkGYGF3WN3Zn7pEUn7y
-	 amB5o/YtgvPlamLE3g3COpvYgjvxdfsKYBT2hFD400U3g9OGS1J+dMj0yVSbLkyPHq
-	 +GkCBtTzjYLjVlnxILoQmVvBvvr3BKnDX0iaKwspCd8aN5JnS4IRKaSF02TomWn63P
-	 ouok9TX1G4ku4VsaA4mPbFNSkRS1iOdM6roW82YC7GjR5YxocE6Li41axUo0cFM9rz
-	 CEFrc/zUFpOyw==
-Date: Tue, 13 Jan 2026 09:54:15 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>, 
-	Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, 
-	Nicolas Pitre <nico@fluxnic.net>, Christoph Hellwig <hch@infradead.org>, 
-	Anders Larsen <al@alarsen.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>, Gao Xiang <xiang@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, 
-	Dave Kleikamp <shaggy@kernel.org>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall <hubcap@omnibond.com>, 
-	Martin Brandenburg <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Phillip Lougher <phillip@squashfs.org.uk>, Carlos Maiolino <cem@kernel.org>, 
-	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo <yuezhang.mo@sony.com>, 
-	Alexander Aring <alex.aring@gmail.com>, Andreas Gruenbacher <agruenba@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev, 
-	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, linux-unionfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-mm@kvack.org, gfs2@lists.linux.dev, 
-	linux-doc@vger.kernel.org, v9fs@lists.linux.dev, ceph-devel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
-Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
- lease support
-Message-ID: <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
-References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
- <m3mywef74xhcakianlrovrnaadnhzhfqjfusulkcnyioforfml@j2xnk7dzkmv4>
- <8af369636c32b868f83669c49aea708ca3b894ac.camel@kernel.org>
- <CAOQ4uxgD+Sgbbg9K2U0SF9TyUOBb==Z6auShUWc4FfPaDCQ=rg@mail.gmail.com>
- <ec78bf021fa1f6243798945943541ba171e337e7.camel@kernel.org>
- <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
- <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dr4Nh5SChz2xKx
+	for <linux-erofs@lists.ozlabs.org>; Tue, 13 Jan 2026 20:54:58 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1768298093; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=SGhe7Th5ldhGMce2qdrOf8GmktXc9aejfOzgKyBbdxg=;
+	b=VnznkP9fcSdn8ryJJuU5aUV7Ok77lsnc9qNefIiSSZBBvZCMPbFSUkEiE08KZlwmghs98lpBRqhYueXrpLRyJaNew3kvzxGMPAsLQBMqTHG3sGfVBzuud4FkCmbDJZcdqW3FDofrwJp8aw/A5eYO5pee5FcA+YwhAzc4SBp9njQ=
+Received: from localhost.localdomain(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wx-PM94_1768298088 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 13 Jan 2026 17:54:52 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: lib: ignore xattr_types[0] when matching xattr prefixes
+Date: Tue, 13 Jan 2026 17:54:46 +0800
+Message-ID: <20260113095446.1011168-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -104,146 +53,69 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Jan 12, 2026 at 09:50:20AM -0500, Jeff Layton wrote:
-> On Mon, 2026-01-12 at 09:31 -0500, Chuck Lever wrote:
-> > On 1/12/26 8:34 AM, Jeff Layton wrote:
-> > > On Fri, 2026-01-09 at 19:52 +0100, Amir Goldstein wrote:
-> > > > On Thu, Jan 8, 2026 at 7:57 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > > > > 
-> > > > > On Thu, 2026-01-08 at 18:40 +0100, Jan Kara wrote:
-> > > > > > On Thu 08-01-26 12:12:55, Jeff Layton wrote:
-> > > > > > > Yesterday, I sent patches to fix how directory delegation support is
-> > > > > > > handled on filesystems where the should be disabled [1]. That set is
-> > > > > > > appropriate for v6.19. For v7.0, I want to make lease support be more
-> > > > > > > opt-in, rather than opt-out:
-> > > > > > > 
-> > > > > > > For historical reasons, when ->setlease() file_operation is set to NULL,
-> > > > > > > the default is to use the kernel-internal lease implementation. This
-> > > > > > > means that if you want to disable them, you need to explicitly set the
-> > > > > > > ->setlease() file_operation to simple_nosetlease() or the equivalent.
-> > > > > > > 
-> > > > > > > This has caused a number of problems over the years as some filesystems
-> > > > > > > have inadvertantly allowed leases to be acquired simply by having left
-> > > > > > > it set to NULL. It would be better if filesystems had to opt-in to lease
-> > > > > > > support, particularly with the advent of directory delegations.
-> > > > > > > 
-> > > > > > > This series has sets the ->setlease() operation in a pile of existing
-> > > > > > > local filesystems to generic_setlease() and then changes
-> > > > > > > kernel_setlease() to return -EINVAL when the setlease() operation is not
-> > > > > > > set.
-> > > > > > > 
-> > > > > > > With this change, new filesystems will need to explicitly set the
-> > > > > > > ->setlease() operations in order to provide lease and delegation
-> > > > > > > support.
-> > > > > > > 
-> > > > > > > I mainly focused on filesystems that are NFS exportable, since NFS and
-> > > > > > > SMB are the main users of file leases, and they tend to end up exporting
-> > > > > > > the same filesystem types. Let me know if I've missed any.
-> > > > > > 
-> > > > > > So, what about kernfs and fuse? They seem to be exportable and don't have
-> > > > > > .setlease set...
-> > > > > > 
-> > > > > 
-> > > > > Yes, FUSE needs this too. I'll add a patch for that.
-> > > > > 
-> > > > > As far as kernfs goes: AIUI, that's basically what sysfs and resctrl
-> > > > > are built on. Do we really expect people to set leases there?
-> > > > > 
-> > > > > I guess it's technically a regression since you could set them on those
-> > > > > sorts of files earlier, but people don't usually export kernfs based
-> > > > > filesystems via NFS or SMB, and that seems like something that could be
-> > > > > used to make mischief.
-> > > > > 
-> > > > > AFAICT, kernfs_export_ops is mostly to support open_by_handle_at(). See
-> > > > > commit aa8188253474 ("kernfs: add exportfs operations").
-> > > > > 
-> > > > > One idea: we could add a wrapper around generic_setlease() for
-> > > > > filesystems like this that will do a WARN_ONCE() and then call
-> > > > > generic_setlease(). That would keep leases working on them but we might
-> > > > > get some reports that would tell us who's setting leases on these files
-> > > > > and why.
-> > > > 
-> > > > IMO, you are being too cautious, but whatever.
-> > > > 
-> > > > It is not accurate that kernfs filesystems are NFS exportable in general.
-> > > > Only cgroupfs has KERNFS_ROOT_SUPPORT_EXPORTOP.
-> > > > 
-> > > > If any application is using leases on cgroup files, it must be some
-> > > > very advanced runtime (i.e. systemd), so we should know about the
-> > > > regression sooner rather than later.
-> > > > 
-> > > 
-> > > I think so too. For now, I think I'll not bother with the WARN_ONCE().
-> > > Let's just leave kernfs out of the set until someone presents a real
-> > > use-case.
-> > > 
-> > > > There are also the recently added nsfs and pidfs export_operations.
-> > > > 
-> > > > I have a recollection about wanting to be explicit about not allowing
-> > > > those to be exportable to NFS (nsfs specifically), but I can't see where
-> > > > and if that restriction was done.
-> > > > 
-> > > > Christian? Do you remember?
-> > > > 
-> > > 
-> > > (cc'ing Chuck)
-> > > 
-> > > FWIW, you can currently export and mount /sys/fs/cgroup via NFS. The
-> > > directory doesn't show up when you try to get to it via NFSv4, but you
-> > > can mount it using v3 and READDIR works. The files are all empty when
-> > > you try to read them. I didn't try to do any writes.
-> > > 
-> > > Should we add a mechanism to prevent exporting these sorts of
-> > > filesystems?
-> > > 
-> > > Even better would be to make nfsd exporting explicitly opt-in. What if
-> > > we were to add a EXPORT_OP_NFSD flag that explicitly allows filesystems
-> > > to opt-in to NFS exporting, and check for that in __fh_verify()? We'd
-> > > have to add it to a bunch of existing filesystems, but that's fairly
-> > > simple to do with an LLM.
-> > 
-> > What's the active harm in exporting /sys/fs/cgroup ? It has to be done
-> > explicitly via /etc/exports, so this is under the NFS server admin's
-> > control. Is it an attack surface?
-> > 
-> 
-> Potentially?
-> 
-> I don't see any active harm with exporting cgroupfs. It doesn't work
-> right via nfsd, but it's not crashing the box or anything.
-> 
-> At one time, those were only defined by filesystems that wanted to
-> allow NFS export. Now we've grown them on filesystems that just want to
-> provide filehandles for open_by_handle_at() and the like. nfsd doesn't
-> care though: if the fs has export operations, it'll happily use them.
-> 
-> Having an explicit "I want to allow nfsd" flag see ms like it might
-> save us some headaches in the future when other filesystems add export
-> ops for this sort of filehandle use.
+It's not the preferred prefix to target xattr names, at least.
 
-So we are re-hashing a discussion we had a few months ago (Amir was
-involved at least).
+Fixes: 2faeebb47c68 ("erofs-utils: lib: introduce prefix-aware erofs_setxattr()")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ lib/xattr.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-I don't think we want to expose cgroupfs via NFS that's super weird.
-It's like remote partial resource management and it would be very
-strange if a remote process suddenly would be able to move things around
-in the cgroup tree. So I would prefer to not do this.
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 764aee3..37ce55b 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -213,7 +213,8 @@ bool erofs_xattr_prefix_matches(const char *key, unsigned int *index,
+ 
+ 	*index = 0;
+ 	*len = 0;
+-	for (p = xattr_types; p < xattr_types + ARRAY_SIZE(xattr_types); ++p) {
++	for (p = xattr_types + 1;
++	     p < xattr_types + ARRAY_SIZE(xattr_types); ++p) {
+ 		if (p->prefix && !strncmp(p->prefix, key, p->prefix_len)) {
+ 			*len = p->prefix_len;
+ 			*index = p - xattr_types;
+@@ -506,10 +507,9 @@ int erofs_setxattr(struct erofs_inode *inode, int index,
+ {
+ 	struct erofs_sb_info *sbi = inode->sbi;
+ 	struct erofs_xattritem *item;
+-	struct erofs_xattr_prefix *prefix = NULL;
++	const struct erofs_xattr_prefix *prefix = NULL;
+ 	struct ea_type_node *tnode;
+ 	unsigned int len[2];
+-	int prefix_len;
+ 	char *kvbuf;
+ 
+ 	if (index & EROFS_XATTR_LONG_PREFIX) {
+@@ -526,16 +526,16 @@ int erofs_setxattr(struct erofs_inode *inode, int index,
+ 	if (!prefix)
+ 		return -EINVAL;
+ 
+-	prefix_len = prefix->prefix_len;
+-	len[0] = prefix_len + strlen(name);
++	len[0] = prefix->prefix_len + strlen(name);
+ 	len[1] = size;
+ 
+ 	kvbuf = malloc(EROFS_XATTR_KVSIZE(len));
+ 	if (!kvbuf)
+ 		return -ENOMEM;
+ 
+-	memcpy(kvbuf, prefix->prefix, prefix_len);
+-	memcpy(kvbuf + prefix_len, name, EROFS_XATTR_KSIZE(len) - prefix_len);
++	memcpy(kvbuf, prefix->prefix, prefix->prefix_len);
++	memcpy(kvbuf + prefix->prefix_len, name,
++	       EROFS_XATTR_KSIZE(len) - prefix->prefix_len);
+ 	memcpy(kvbuf + EROFS_XATTR_KSIZE(len), value, size);
+ 
+ 	item = get_xattritem(sbi, kvbuf, len);
+-- 
+2.43.0
 
-So my preference would be to really sever file handles from the export
-mechanism so that we can allow stuff like pidfs and nsfs and cgroupfs to
-use file handles via name_to_handle_at() and open_by_handle_at() without
-making them exportable.
-
-Somehow I thought that Amir had already done that work a while ago but
-maybe it was really just about name_to_handle_at() and not also
-open_by_handle_at()...
 
