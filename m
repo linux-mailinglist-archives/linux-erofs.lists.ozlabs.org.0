@@ -1,56 +1,43 @@
-Return-Path: <linux-erofs+bounces-1851-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1852-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D05F2D1CE02
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 08:38:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A186CD1CEC2
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 08:44:20 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4drdJV2jQBz2x9M;
-	Wed, 14 Jan 2026 18:38:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4drdRQ1qh8z2xlP;
+	Wed, 14 Jan 2026 18:44:18 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.223
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768376298;
-	cv=none; b=N7DHY5n4OqPZNkcibDAh8Cv8XUS4c4PyyxLh9bVmFO80oyRNF25A0OQmteBYQEQI3vi5MVVftDjj73BvAhAs9Lz/fRtf48p1j2RPYlKmmTK6AKuHNl88N4K7dgBkiJr3uXr2bfRM2opSixwVwMPCqawR+bw1pqpfyzbkSPmnRWc9o1rrWj4MhdxWgN3ZzvaBvZ2MR1IzCDCijfXLKSsZ8iLsiBEbywsSlNCK+6IrXhLjug5ymlK68dgFD+rkv1e27HHMauqR0ipNostk2snLrAAop0sBzPqQuGTdEd5Q01OAglWBlGIyQ9Zvp80NRI9nSQ1ildhpM4Xx0X4NVfW2hg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768376658;
+	cv=none; b=iki0MrI2k4PG9Klh0VcS3WbD/PJSmGn1YkXeIdA9uLQYo85NGPBmfHxYcL8lMMrcQGr6W8b+pcoivFU4OFeXagsUfpketzsqzBes1shaOLd4XTsAPM8+UP2aJJVNltUbY4buIuaj+XuZAwu7V8VnE1KqSi+sfBX93QEF9hIbeW6S5SeMfGTb5iw4HAEqfK4mnV2Le4w05fVCNSgCYgUtttgrNmfCRLrWl3/xY14uEhKfkKQ8ksbBcuWOcIZuKxunl2Bk5asuEORLp6ZtlMhytXrZ8gHQlfqxRO/t254Makr/EEKKsftQdJBldTX3Y4I8ZQR8XCjS6xjHh/mfAG9T+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768376298; c=relaxed/relaxed;
-	bh=re1j1HELV+kdRdHkjfZgOsyXqBe7K8JYuWcd9OJpgIM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oLyuJsr1dpF+CfxOz4G0zfJkajVcTD+U5a6w+WGm0fTgs/gAWIh0je1qvzqAvR0xU6u0tMqHpt+7QIthynuwE+6l017sHzvVmCZsh9PybjiWJI1UmKO02nDFX9qHJofcniTVVWtxtlM4U34DBDRgxNaiVphlgiyzkezCNHkWR2KKuQzrzclC1Gwf53hbRLKbPXSRLF+ZSBeKk8dl6yc/VSHmb05QkpWeQDwMlpQqJ6RGBMaanyKVZJfG37ClMLLGkUs7pZsqejrQ1/2dgwUEOOWlKr8x+5NxKMH0uaBJPZABbpZSsxTX42IU4yquZ2kUlNpI7bdOEKgky3prSn6m0w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=FMwTVQS4; dkim-atps=neutral; spf=pass (client-ip=113.46.200.223; helo=canpmsgout08.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1768376658; c=relaxed/relaxed;
+	bh=TvtI70ryHcICP0QWMTEGNkZXIPG/HOIJQ82bqJh6C8s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OCuWF8TwZe8j3ax94Kz72Nl8ILETwKt/leobqVSODPkRI+xy1s+2vzrhQ1qJMnq11MOJ2St0i6gLbLTL6XbYeTbtmHqYkNVj0jxDJ9aaVkLClBgZGcJRCLKF6PZ0F5jDmy9lDXigoeEJ9AxaNNmAqT0hnlWtW6HLBCU7UVH8FksZVZwwfdJNbx4pmKg+/eSEdMibA0Lh9Xo6Zda626ALFrf2+zmseYfokU5MGVqLUy6s73PrdZVIsCueBRYe7r4Fk/qhNe8HFq5RepVLBIMJAvP2loMzS0GnSdY66tDQLHtWFb/e+g5mqmOjrGnNtG4LRojaDYX69KCJFkE/4Jflmg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gYS1CRjU; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=FMwTVQS4;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gYS1CRjU;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.223; helo=canpmsgout08.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4drdJS0GMtz2xlP
-	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Jan 2026 18:38:15 +1100 (AEDT)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=re1j1HELV+kdRdHkjfZgOsyXqBe7K8JYuWcd9OJpgIM=;
-	b=FMwTVQS4Y79HEHZPHl//3MRYQkNp1nLsilTgX/xxbuz+A2p9XXr8e5kKtvK55raQ9xePw0YE3
-	Q9BbXUWURA92xm1qBosHRx6Kyj4JnlMx9bLMN8zJIHu/0jQyP26D1KwcJGh/QbInG9fNjHeXjBt
-	MpOyB0YkKz/LYVJV0j9ykIM=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4drdDN3Cl6zmV69
-	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Jan 2026 15:34:44 +0800 (CST)
-Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
-	by mail.maildlp.com (Postfix) with ESMTPS id 975D640539
-	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Jan 2026 15:38:04 +0800 (CST)
-Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
- (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 14 Jan
- 2026 15:38:03 +0800
-From: Yifan Zhao <zhaoyifan28@huawei.com>
-To: <linux-erofs@lists.ozlabs.org>
-CC: <jingrui@huawei.com>, <wayne.ma@huawei.com>, <zhaoyifan28@huawei.com>
-Subject: [PATCH] erofs-utils: lib: s3: fix SigV4 signature timestamp mismatch
-Date: Wed, 14 Jan 2026 15:38:08 +0800
-Message-ID: <20260114073808.3640696-1-zhaoyifan28@huawei.com>
-X-Mailer: git-send-email 2.47.3
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4drdRM5FGGz2x9M
+	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Jan 2026 18:44:12 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1768376647; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=TvtI70ryHcICP0QWMTEGNkZXIPG/HOIJQ82bqJh6C8s=;
+	b=gYS1CRjUEj1c8/j0VUhTEeOHrQORtWwpg+CPhjMeG3jFxocDCvW2Hb2opz2aVu2wjjaYBfOn+c2ggZNC0JYMLDvjJT6V+nlRWDA1AovnTSUYQIEg3MZFJSwC779p7tBnjbrMlmUSLlFwETD41cOGuqzkoPlquG1jyO5BNKKoXck=
+Received: from 30.221.131.219(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wx1ZL9V_1768376644 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 14 Jan 2026 15:44:05 +0800
+Message-ID: <1e1c7c27-abb5-4f6a-b27c-0f15b9e5da16@linux.alibaba.com>
+Date: Wed, 14 Jan 2026 15:44:04 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -62,116 +49,92 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.50.159.234]
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemr100010.china.huawei.com (7.202.195.125)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] erofs-utils: lib: correctly set {u,g}id in
+ erofs_rebuild_make_root()
+To: Yifan Zhao <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
+Cc: jingrui@huawei.com, wayne.ma@huawei.com
+References: <7db44e77-9256-469d-9845-d40079ab2a5a@linux.alibaba.com>
+ <20260114073806.3640681-1-zhaoyifan28@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260114073806.3640681-1-zhaoyifan28@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-The current SigV4 implementation calls `s3erofs_now()` multiple times
-during the signing process. This can cause inconsistent timestamps if a
-second boundary is crossed, leading to signature verification failure.
 
-Fix this by generating the timestamp once and passing it throughout the
-signing process to ensure consistency.
 
-Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
----
- lib/remotes/s3.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+On 2026/1/14 15:38, Yifan Zhao wrote:
+> In rebuild mode, the {u,g}id of the root inode is currently defaulted
+> to 0 and is not controlled by --force_{u,g}id. This behavior also
+> causes the {u,g}id of intermediate directories created by
+> `erofs_rebuild_mkdir()` to be set to 0.
+> 
+> This patch fixes the behavior by explicitly setting permissions for the
+> root inode:
+> 
+> - If --force-{u,g}id is not specified, it now defaults to the current
+>     user's {u,g}id.
+> - If --force-{u,g}id is specified, it correctly updates the ownership
+>     for all files and directories.
+> 
+> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+> ---
+>   include/erofs/inode.h | 3 ++-
+>   lib/inode.c           | 5 ++++-
+>   mkfs/main.c           | 2 +-
+>   3 files changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+> index 8b91771..2a7af31 100644
+> --- a/include/erofs/inode.h
+> +++ b/include/erofs/inode.h
+> @@ -48,7 +48,8 @@ int erofs_importer_load_tree(struct erofs_importer *im, bool rebuild,
+>   struct erofs_inode *erofs_mkfs_build_special_from_fd(struct erofs_importer *im,
+>   						     int fd, const char *name);
+>   int erofs_fixup_root_inode(struct erofs_inode *root);
+> -struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi);
+> +struct erofs_inode *erofs_rebuild_make_root(struct erofs_importer *im,
+> +					    struct erofs_sb_info *sbi);
+>   
+>   #ifdef __cplusplus
+>   }
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 26fefa2..4f87757 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -2375,7 +2375,8 @@ int erofs_fixup_root_inode(struct erofs_inode *root)
+>   	return err;
+>   }
+>   
+> -struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi)
+> +struct erofs_inode *erofs_rebuild_make_root(struct erofs_importer *im,
+> +					    struct erofs_sb_info *sbi)
+>   {
 
-diff --git a/lib/remotes/s3.c b/lib/remotes/s3.c
-index 223c3e8..97f06b4 100644
---- a/lib/remotes/s3.c
-+++ b/lib/remotes/s3.c
-@@ -315,11 +315,10 @@ enum s3erofs_date_format {
- 	S3EROFS_DATE_YYYYMMDD
- };
- 
--static void s3erofs_now(char *buf, size_t maxlen, enum s3erofs_date_format fmt)
-+static void s3erofs_format_time(time_t t, char *buf, size_t maxlen, enum s3erofs_date_format fmt)
- {
- 	const char *format;
--	time_t now = time(NULL);
--	struct tm *ptm = gmtime(&now);
-+	struct tm *ptm = gmtime(&t);
- 
- 	switch (fmt) {
- 	case S3EROFS_DATE_RFC1123:
-@@ -402,10 +401,9 @@ free_string:
- 
- // See: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-header-based-auth.html
- static char *s3erofs_sigv4_header(const struct curl_slist *headers,
--				  const char *canonical_uri,
--				  const char *canonical_query,
--				  const char *region, const char *ak,
--				  const char *sk)
-+				  time_t request_time, const char *canonical_uri,
-+				  const char *canonical_query, const char *region,
-+				  const char *ak, const char *sk)
- {
- 	u8 ping_buf[EVP_MAX_MD_SIZE], pong_buf[EVP_MAX_MD_SIZE];
- 	char hex_buf[EVP_MAX_MD_SIZE * 2 + 1];
-@@ -423,10 +421,12 @@ static char *s3erofs_sigv4_header(const struct curl_slist *headers,
- 		canonical_query = "";
- 
- 	canonical_headers = get_canonical_headers(headers);
-+	if (!canonical_headers)
-+		return ERR_PTR(-ENOMEM);
- 
- 	// Get current time in required formats
--	s3erofs_now(date_str, sizeof(date_str), S3EROFS_DATE_YYYYMMDD);
--	s3erofs_now(timestamp, sizeof(timestamp), S3EROFS_DATE_ISO8601);
-+	s3erofs_format_time(request_time, date_str, sizeof(date_str), S3EROFS_DATE_YYYYMMDD);
-+	s3erofs_format_time(request_time, timestamp, sizeof(timestamp), S3EROFS_DATE_ISO8601);
- 
- 	// Task 1: Create canonical request
- 	if (asprintf(&canonical_request,
-@@ -530,9 +530,8 @@ static int s3erofs_request_insert_auth_v2(struct curl_slist **request_headers,
- 	char date[64], *sigv2;
- 
- 	memcpy(date, date_prefix, sizeof(date_prefix) - 1);
--	s3erofs_now(date + sizeof(date_prefix) - 1,
--		    sizeof(date) - sizeof(date_prefix) + 1,
--		    S3EROFS_DATE_RFC1123);
-+	s3erofs_format_time(time(NULL), date + sizeof(date_prefix) - 1,
-+			    sizeof(date) - sizeof(date_prefix) + 1, S3EROFS_DATE_RFC1123);
- 
- 	sigv2 = s3erofs_sigv2_header(*request_headers, NULL, NULL,
- 				     date + sizeof(date_prefix) - 1, req->canonical_uri,
-@@ -553,6 +552,7 @@ static int s3erofs_request_insert_auth_v4(struct curl_slist **request_headers,
- {
- 	char timestamp[32], *sigv4, *tmp;
- 	const char *host, *host_end;
-+	time_t request_time = time(NULL);
- 
- 	/* Add following headers for SigV4 in alphabetical order: */
- 	/* 1. host */
-@@ -570,15 +570,15 @@ static int s3erofs_request_insert_auth_v4(struct curl_slist **request_headers,
- 		*request_headers, "x-amz-content-sha256:UNSIGNED-PAYLOAD");
- 
- 	/* 3. x-amz-date */
--	s3erofs_now(timestamp, sizeof(timestamp), S3EROFS_DATE_ISO8601);
-+	s3erofs_format_time(request_time, timestamp, sizeof(timestamp), S3EROFS_DATE_ISO8601);
- 	if (asprintf(&tmp, "x-amz-date:%s", timestamp) < 0)
- 		return -ENOMEM;
- 	*request_headers = curl_slist_append(*request_headers, tmp);
- 	free(tmp);
- 
--	sigv4 = s3erofs_sigv4_header(*request_headers, req->canonical_uri,
--				     req->canonical_query, s3->region, s3->access_key,
--				     s3->secret_key);
-+	sigv4 = s3erofs_sigv4_header(*request_headers, request_time,
-+				     req->canonical_uri, req->canonical_query,
-+				     s3->region, s3->access_key, s3->secret_key);
- 	if (IS_ERR(sigv4))
- 		return PTR_ERR(sigv4);
- 	*request_headers = curl_slist_append(*request_headers, sigv4);
--- 
-2.47.3
+we could support !im, I mean
 
+	struct erofs_importer_params *params = im ? im->params : NULL;
+
+>   	struct erofs_inode *root;
+>   
+> @@ -2384,6 +2385,8 @@ struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi)
+>   		return root;
+>   	root->i_srcpath = strdup("/");
+>   	root->i_mode = S_IFDIR | 0777;
+> +	root->i_uid = im->params->fixed_uid == -1 ? getuid() : im->params->fixed_uid;
+> +	root->i_gid = im->params->fixed_gid == -1 ? getgid() : im->params->fixed_gid;
+
+
+
+	root->i_uid = params && params->fixed_uid < 0 ? getuid() :
+			params->fixed_uid;
+...
+
+Thanks,
+Gao Xiang
 
