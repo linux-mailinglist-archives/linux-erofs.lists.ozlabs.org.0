@@ -1,101 +1,66 @@
-Return-Path: <linux-erofs+bounces-1870-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1871-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A38AAD1FBB2
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 16:26:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BD496D1FC60
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 16:33:49 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4drqhh1xKpz2xT6;
-	Thu, 15 Jan 2026 02:26:28 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4drqs72JQyz2xT6;
+	Thu, 15 Jan 2026 02:33:47 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768404388;
-	cv=none; b=KMpcc6mqtsHcFQpmUmUdH5SWWWBxzkKAag28DlApeY08hg5WxEWzzLZjwaEBYx2A5uKq4FYkwaHHwBJM+QQvvbjnexPWgkMsuZ5UpRpnsbNDoqXB2/sFFGB0i5OY0ndzWvDNUUKzks5Hyku6te+0C6uAyKrOk3iXUkd4N6Ycm6FUZSxHnRJD0sXmMu5a3i/tybrv8BFrxOEb8FadUSEjIt7H5wVMWKUv/8V06/u73Zho4FK07MJsyTDG44GB7JLmugy/w7jbr84PcIcoYc2ORX+9pT3piw8H0UUDQzZ6st2imxXAfZ+Hdm/UL14DUm+xFBk92jEZwED/jHWlBBHR3g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768404827;
+	cv=none; b=KT2A7QSHy756X8LlXICjk7yObSvPw6qSuzOvuCbbvipy4zvcGE3p9OR8dIwiaJKxUTy+Bs6lPoRAA0rJLzOYp/8Gzp6/KNGgsM01Om+2QG43uZbD6XKYBn30IlByfCy+xqpZXsFSuRoFs6qMZ3n0bJbT+nlRVMRH1osW30iZoDYtV5Ry3JBSQAnHXTrU+BtihgwoF+R8grYmlJ1RJPoRIiHW7og/Lnyouh0nNcYez9bt1XbgMPH+fAT4S+9Ny646ECriKrEr0ycOh71wy0J8qPdGkSN23Tx718DZ4wcC+eZJVu/toas4qWMUqg00/YhjsdePY9FRPbbIIKGsT/kCIA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768404388; c=relaxed/relaxed;
-	bh=kvsikAIbl+cEhR2X3kc5+cU8s2nM+gaqydUds7eRyR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FdI1QQFTW1mndnteyWSxoiwbXHPwrL3uiJhPnPvVSCEYPYdt6vehd3XbKfBLvgNpgvjZ1ShT+FLq8Tw/F03EXv4NSZXL7Wyq3W+w+tOyLTQ12ZHXCtVtvXPRw87aGBbVegpyLEews0sfSuJcMwgmkmnByc1C5MXqhUmgFUV+I3zTE+JADjn5CE7ZYO+6+JOeZlxfIoG2HdXhdyyYrf++dViuDi8YB+77O/dvxpO1L0yX61Qf+PNwy8hsnwbwKOAe39FOyu1zDneBkRaF08PQlSfRxw8Zm0qadE9Qpy6Q6SSklo1CRhIpijUYGhcnv4VlEdOJQHjnfa/3zp92cD0svg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UuxL49Up; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	t=1768404827; c=relaxed/relaxed;
+	bh=aE9lodvLCPlAeOGfhXZJ4tH4TS9h+gE2iAhCLk9QB/o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Eg8j6gWSxM3D8iUQViak04LtiqEdQ+4yacd6JAPCEea353f0zal/ktXBm0gxwI/ALhU239qqrIutE4didVH21DGyfCmW4xjjSR1THIQiFSSPi4d9VyoLF7/lDOId2xCoz9g5hRtb39FQxEfbLuJBtoxthYSjKj/iJszKAA3etC3OyNjb+UFc+l0MSCTuM9m2wJ6BnAZnYFF+b5Gzp9I0Ume2d/y0M/hBFzhVYV2dEhPAdLn6NrD75cg7WzzDdL18Na9sNSniKYzq9Wg5hE0aentyfTBtQjnU61bu2ydnvjhzntYk4xqDkcm1gF4b1P8807EZ3dkt14U22LBY7NhQDw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=sdUp5Hdq; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=UuxL49Up;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=sdUp5Hdq;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+X-Greylist: delayed 441 seconds by postgrey-1.37 at boromir; Thu, 15 Jan 2026 02:33:46 AEDT
+Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4drqhg2s7Fz2xNg
-	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jan 2026 02:26:27 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4drqs64lYWz2xNg
+	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jan 2026 02:33:46 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4DA7E6000A;
-	Wed, 14 Jan 2026 15:26:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2C84C4CEF7;
-	Wed, 14 Jan 2026 15:26:05 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 640D16001A;
+	Wed, 14 Jan 2026 15:33:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4DADC4CEF7;
+	Wed, 14 Jan 2026 15:33:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768404382;
-	bh=TJ8HYpqwvKEu5WPBUCmrbZTfwhtmNo45dUDkhLnlTis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UuxL49UpINmE3bPn9I7g1qy3O1U7lEuEQBs6NY4FtevlZRrg+jir4TUf2JL5Et6S/
-	 Wo3Rq7erhsD0wDrAjS0fAwtu2sdM1Ly6eiM6YJ56Efjw7Aqq9ho5u2uVmIb6CLm0qm
-	 DbkRjtkwVuzFS/3LLXXupO+XD87WN1YxMglF8PVz6z7zZF37PIEsEJLTAjeNY90c2+
-	 Is57pvmqsqoUYUcAtHG3VWlWJm+iZsfwi7Dpki4E16iuG5isE531rPd5Kr9GSqblBC
-	 cmcig5bet6G0LrdDdcPVQ26rluu7tPoRJcI1jAeMRFhOX4YrFqzlg3FxIBJw/nlkLZ
-	 OyWqiHYjHhBJQ==
-Date: Wed, 14 Jan 2026 16:26:03 +0100
+	s=k20201202; t=1768404824;
+	bh=eKXn8huwgC3ZEDImWl+HYtwWWnTF2SqBo1ZJ072ZqKE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sdUp5Hdqng72DgawpASzAQd1tQWNDB00unhfFCktVQAtRnLTVA6k4zY4ckwXGF0mO
+	 IIfqIuPqVJ52KKXk+GnyBaae1MFSd6blVN8jDW15BukAc7hmSYwdYz9z8xPp5Q53Ld
+	 VrrFo1Fg4WEMr6amjuhJiGeXJZIFbs4lB9CZLFTPy+XyixLJpvnYh8iBBzIg+Zo1Wq
+	 t9tITlmpFoU8Tg6XKw5eRnpgni3mhVq8UxZFMiTr/pqCm8VjNcYG7o6IpGAoY9K3to
+	 bwBjODpefZFmJZhdqdW1mpBXTP9ISTaXg1fue4SHO8V9Qe5xC/ArD6tjVeXJOdNRhG
+	 iLBtccF7U9WRA==
 From: Christian Brauner <brauner@kernel.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	Amir Goldstein <amir73il@gmail.com>, Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>, 
-	Luis de Bethencourt <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, 
-	Nicolas Pitre <nico@fluxnic.net>, Anders Larsen <al@alarsen.net>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>, 
-	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, 
-	Dave Kleikamp <shaggy@kernel.org>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Mike Marshall <hubcap@omnibond.com>, 
-	Martin Brandenburg <martin@omnibond.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Phillip Lougher <phillip@squashfs.org.uk>, Carlos Maiolino <cem@kernel.org>, 
-	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo <yuezhang.mo@sony.com>, 
-	Alexander Aring <alex.aring@gmail.com>, Andreas Gruenbacher <agruenba@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev, 
-	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org, linux-unionfs@vger.kernel.org, 
-	linux-xfs@vger.kernel.org, linux-mm@kvack.org, gfs2@lists.linux.dev, 
-	linux-doc@vger.kernel.org, v9fs@lists.linux.dev, ceph-devel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
-Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
- lease support
-Message-ID: <20260114-blamabel-hanfernte-ea1345885b46@brauner>
-References: <ec78bf021fa1f6243798945943541ba171e337e7.camel@kernel.org>
- <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
- <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
- <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
- <aWZcoyQLvbJKUxDU@infradead.org>
- <ce418800f06aa61a7f47f0d19394988f87a3da07.camel@kernel.org>
- <aWc3mwBNs8LNFN4W@infradead.org>
- <CAOQ4uxhMjitW_DC9WK9eku51gE1Ft+ENhD=qq3uehwrHO=RByA@mail.gmail.com>
- <aWeUv2UUJ_NdgozS@infradead.org>
- <c40862cd65a059ad45fa88f5473722ea5c5f70a5.camel@kernel.org>
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	djwong@kernel.org,
+	amir73il@gmail.com,
+	hch@lst.de,
+	linux-fsdevel@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org,
+	chao@kernel.org,
+	Gao Xiang <xiang@kernel.org>
+Subject: Re: (subset) [PATCH v14 00/10] erofs: Introduce page cache sharing feature
+Date: Wed, 14 Jan 2026 16:33:33 +0100
+Message-ID: <20260114-neufahrzeuge-urfassung-103f4ab953be@brauner>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260109102856.598531-1-lihongbo22@huawei.com>
+References: <20260109102856.598531-1-lihongbo22@huawei.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -107,61 +72,42 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1386; i=brauner@kernel.org; h=from:subject:message-id; bh=eKXn8huwgC3ZEDImWl+HYtwWWnTF2SqBo1ZJ072ZqKE=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSmbw8Ssa3TnqZh/WXGzxvfuGcsWfhY0vNAy5MDeXzHL Vxts/OKO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACZy8xnDX0HVye+mi16T6n7w TP/Ctp6Nlet05xrkHhF5dENy46W01mJGhoUblmjcNL7989Dum3ECEvLT0/z3VmtkzQlx8Pu9Iv/ NFDYA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <c40862cd65a059ad45fa88f5473722ea5c5f70a5.camel@kernel.org>
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Wed, Jan 14, 2026 at 08:41:16AM -0500, Jeff Layton wrote:
-> On Wed, 2026-01-14 at 05:06 -0800, Christoph Hellwig wrote:
-> > On Wed, Jan 14, 2026 at 10:34:04AM +0100, Amir Goldstein wrote:
-> > > On Wed, Jan 14, 2026 at 7:28 AM Christoph Hellwig <hch@infradead.org> wrote:
-> > > > 
-> > > > On Tue, Jan 13, 2026 at 12:06:42PM -0500, Jeff Layton wrote:
-> > > > > Fair point, but it's not that hard to conceive of a situation where
-> > > > > someone inadvertantly exports cgroupfs or some similar filesystem:
-> > > > 
-> > > > Sure.  But how is this worse than accidentally exporting private data
-> > > > or any other misconfiguration?
-> > > > 
-> > > 
-> > > My POV is that it is less about security (as your question implies), and
-> > > more about correctness.
-> > 
-> > I was just replying to Jeff.
-> > 
-> > > The special thing about NFS export, as opposed to, say, ksmbd, is
-> > > open by file handle, IOW, the export_operations.
-> > > 
-> > > I perceive this as a very strange and undesired situation when NFS
-> > > file handles do not behave as persistent file handles.
-> > 
-> > That is not just very strange, but actually broken (discounting the
-> > obscure volatile file handles features not implemented in Linux NFS
-> > and NFSD).  And the export ops always worked under the assumption
-> > that these file handles are indeed persistent.  If they're not we
-> > do have a problem.
-> > 
-> > > 
-> > > cgroupfs, pidfs, nsfs, all gained open_by_handle_at() capability for
-> > > a known reason, which was NOT NFS export.
-> > > 
-> > > If the author of open_by_handle_at() support (i.e. brauner) does not
-> > > wish to imply that those fs should be exported to NFS, why object?
-> > 
-> > Because "want to export" is a stupid category.
-> > 
-> > OTOH "NFS exporting doesn't actually properly work because someone
-> > overloaded export_ops with different semantics" is a valid category.
-> > 
+On Fri, 09 Jan 2026 10:28:46 +0000, Hongbo Li wrote:
+> Enabling page cahe sharing in container scenarios has become increasingly
+> crucial, as it can significantly reduce memory usage. In previous efforts,
+> Hongzhen has done substantial work to push this feature into the EROFS
+> mainline. Due to other commitments, he hasn't been able to continue his
+> work recently, and I'm very pleased to build upon his work and continue
+> to refine this implementation.
 > 
-> cgroupfs definitely doesn't behave as expected when exported via NFS.
-> The files aren't readable, at least. I'd also be surprised if the
-> filehandles were stable across a reboot, which is sort of necessary for
+> [...]
 
-They aren't and it's not desirable.
+Applied to the vfs-7.0.iomap branch of the vfs/vfs.git tree.
+Patches in the vfs-7.0.iomap branch should appear in linux-next soon.
+
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-7.0.iomap
+
+[01/10] iomap: stash iomap read ctx in the private field of iomap_iter
+        https://git.kernel.org/vfs/vfs/c/8806f279244b
+[02/10] erofs: hold read context in iomap_iter if needed
+        https://git.kernel.org/vfs/vfs/c/8d407bb32186
 
