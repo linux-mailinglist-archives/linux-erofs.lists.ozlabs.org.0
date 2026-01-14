@@ -1,125 +1,59 @@
-Return-Path: <linux-erofs+bounces-1849-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1850-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 18F6ED1CAF8
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 07:31:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 37507D1CE00
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 08:38:20 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4drbqj1BnVz2xPB;
-	Wed, 14 Jan 2026 17:31:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4drdJT3lrjz2xpm;
+	Wed, 14 Jan 2026 18:38:17 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.137.202.133
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768372305;
-	cv=none; b=iqgbcQNoY7KlNF8HybM25wq6/B60E6hn/9p5Mvmzr08XXgBsMXPVyfm3W4wyvCEhwxelir4Cd3JODdUe5xg2WHFiUkqI5sKALx9/WrFGSRkEP/tCAs3GiLzvaQ41EpFnD18cobhDSvd/dl71f1M6WsAzTGaBgTUlPUpDUyzURtWPOiy18Np/F9V3e3UC/PBBADSsxDiPcBknAY0qiDHFyd0DBSVBftG16ojPXHGL8DPKMX6tJyAkP4rQHi5e1bdHz6yLRqj76zT1yn2xMXN4F/1YRKOZkpbfQbahTBhsFSWs4YEivqWv1HSJ7B8Fn78w9ufyRWblSzsj+ZSM2byiNg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.218
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768376297;
+	cv=none; b=hsh9wtlScNwNccmnfe2jQAyi+Jc//HtlxfExWMThGkk2PRgwkDLSipXEpwaNLBmrBKqmFIv/ouNIlR8Ia2IBOz2+QHzifpR1xXHsoCEhLSuEzhSS6iKkZU0rPRZDDDY/l+vt4JN+kk8jeE9Oo5U2lwZkvwpsGrFAov7pNZRLNuZO7rDaxZ302jXwO0+l3ZuQRufXNHSuT/FwsjH7B63NtyaxPiM/y1AHvI0hQvl5QgYxEVMmk3oSCp5r/k5DJpxCm4xTJDCUjkW9Sq/+a2Q2IB0KSeSAcnTc2+Fg2b0i30EFkOqF7wpNXjO7JSKmMyvnHrwwY9Nfapi2mXg1r9HtZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768372305; c=relaxed/relaxed;
-	bh=t1lJVfHRx2M73EEQBeyjJ4ZU0g5MJMBt85jgXIscgqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OQmTuDHeezCxgKKWZJuPOkAhz/RhGLUqYzwy5AzlgLOyJkNHk3eaVTBuA43Rl/Bfj4s1ORYducYuB1uj+D95uQQY+b6sh/CyPqdHbHReQIerE6cyyWjZJV+iJuyiWLXuLBsCXBC8wcWmINZz8hWq0kJFGoWb4aY2zfsJE+7E6c9w21d0pkEYHnfWGIwFMsyC8roTz3T2AIJY99m/4+YRhuJzYD0lH4OgFPBIYj3562gDV47Xc1qE9f5pSeqpWPemKXop9TVfQWtZXoQzgO/qtGy5qb0t9Ke5wzJg03h5N/bdWg/hFEVwNAgmdewhgDpeKNYDp8RVtLp8B5rmqkL/5A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=MkKROcR+; dkim-atps=neutral; spf=none (client-ip=198.137.202.133; helo=bombadil.infradead.org; envelope-from=batv+26d5290b15125d0fae64+8179+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+	t=1768376297; c=relaxed/relaxed;
+	bh=baEY6ruWVURF/2VzH/8mbbLS1m9Nxmiurhx4Cw94L80=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BewMPqg63x6Gw+pYkHjHyy11a7DWIM4gYTpoc3ZSLfNZZPw2pws27eu8x/qKk8zTyrhjf6qdRyRZCsXEjqRVOttJWrB+LLveyQuFkN/zO6dejE+haoRagE7NZh/PmcA6RAJnOHWRfSpyM5zMxCW/Va1/zSOuM7yUXRywVfbMmTK8cJ8r3BT237S17wfLFXSjVfqZIubMftlFFn/r0ZkWzhMpkUzKyJoraEP8Dx0J672ZN8ryjLVsli1G6TEMV1bcxoxhDuoKgbLb71rbPLAZvRWiUJ2Z6Ei4ll7VSlbur+9irts3LoATuznsRXIuiSKWILq3fayccswy62u6D8ro6w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=GIRbu6jY; dkim-atps=neutral; spf=pass (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=MkKROcR+;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=GIRbu6jY;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=198.137.202.133; helo=bombadil.infradead.org; envelope-from=batv+26d5290b15125d0fae64+8179+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4drbqd0KH2z2x9M
-	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Jan 2026 17:31:36 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=t1lJVfHRx2M73EEQBeyjJ4ZU0g5MJMBt85jgXIscgqk=; b=MkKROcR+fTRxETHChOoegafJYd
-	rVnSIecuPjzpPHAi79Z/9E8hnQE/6D+duG7uKE8Etw/Bm6dWntrsVhsVurmjDh6xZsV+8pHxkeSoJ
-	ndNxzNYJknNqsW3hr24nqZHB3ULW5yRVpmnifag0V9pVxlQPJMOiWJmWmZkBz5qjZPdJ3c+mjXSGp
-	4Jy+no+6j4YYszNuWSWw4+r+n062YwVhPa2zS+YyqyK8Q1gdzXfH19dNw1oI7HYA5BvmSfu1ZVJSl
-	ACN0osF2p0zrPz6GjW8Z8JvD9QXvhwnkzyztUTe+XucT4knsGMqADhm06qixbeOjah8JvRXTt4+np
-	/3dA1Z+Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1vfuN1-000000087m5-2rva;
-	Wed, 14 Jan 2026 06:28:43 +0000
-Date: Tue, 13 Jan 2026 22:28:43 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>,
-	Luis de Bethencourt <luisbg@kernel.org>,
-	Salah Triki <salah.triki@gmail.com>,
-	Nicolas Pitre <nico@fluxnic.net>, Anders Larsen <al@alarsen.net>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Jaegeuk Kim <jaegeuk@kernel.org>,
-	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Richard Weinberger <richard@nod.at>,
-	Dave Kleikamp <shaggy@kernel.org>,
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Phillip Lougher <phillip@squashfs.org.uk>,
-	Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Namjae Jeon <linkinjeon@kernel.org>,
-	Sungjong Seo <sj1557.seo@samsung.com>,
-	Yuezhang Mo <yuezhang.mo@sony.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Andreas Gruenbacher <agruenba@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Bharath SM <bharathsm@microsoft.com>,
-	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
-	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
-	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
-	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-	linux-mm@kvack.org, gfs2@lists.linux.dev, linux-doc@vger.kernel.org,
-	v9fs@lists.linux.dev, ceph-devel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-	samba-technical@lists.samba.org
-Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
- lease support
-Message-ID: <aWc3mwBNs8LNFN4W@infradead.org>
-References: <20260108-setlease-6-20-v1-0-ea4dec9b67fa@kernel.org>
- <m3mywef74xhcakianlrovrnaadnhzhfqjfusulkcnyioforfml@j2xnk7dzkmv4>
- <8af369636c32b868f83669c49aea708ca3b894ac.camel@kernel.org>
- <CAOQ4uxgD+Sgbbg9K2U0SF9TyUOBb==Z6auShUWc4FfPaDCQ=rg@mail.gmail.com>
- <ec78bf021fa1f6243798945943541ba171e337e7.camel@kernel.org>
- <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
- <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
- <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
- <aWZcoyQLvbJKUxDU@infradead.org>
- <ce418800f06aa61a7f47f0d19394988f87a3da07.camel@kernel.org>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4drdJQ2QqMz2x9M
+	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Jan 2026 18:38:12 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=baEY6ruWVURF/2VzH/8mbbLS1m9Nxmiurhx4Cw94L80=;
+	b=GIRbu6jYidFQtUhgvdblj5z29tD7cI+s0qM+T2S8bHncVlr7/7hbC3YEnFBYkKDKaZklKl82m
+	4tyYOixfmP23efEVolMTYkF+ofwf3SrRxpUnHdMkp4JXOsOBm4G7Xy2UDHwyMRE5cwNVIQSrC8N
+	uTSCghlutgBLiGi7bt3CYiE=
+Received: from mail.maildlp.com (unknown [172.19.162.144])
+	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4drdD43tvWzpSvl;
+	Wed, 14 Jan 2026 15:34:28 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id E8EB940538;
+	Wed, 14 Jan 2026 15:38:01 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
+ (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Wed, 14 Jan
+ 2026 15:38:01 +0800
+From: Yifan Zhao <zhaoyifan28@huawei.com>
+To: <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
+CC: <jingrui@huawei.com>, <wayne.ma@huawei.com>, <zhaoyifan28@huawei.com>
+Subject: [PATCH v2] erofs-utils: lib: correctly set {u,g}id in erofs_rebuild_make_root()
+Date: Wed, 14 Jan 2026 15:38:06 +0800
+Message-ID: <20260114073806.3640681-1-zhaoyifan28@huawei.com>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <7db44e77-9256-469d-9845-d40079ab2a5a@linux.alibaba.com>
+References: <7db44e77-9256-469d-9845-d40079ab2a5a@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -131,20 +65,87 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce418800f06aa61a7f47f0d19394988f87a3da07.camel@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
-	autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Tue, Jan 13, 2026 at 12:06:42PM -0500, Jeff Layton wrote:
-> Fair point, but it's not that hard to conceive of a situation where
-> someone inadvertantly exports cgroupfs or some similar filesystem:
+In rebuild mode, the {u,g}id of the root inode is currently defaulted
+to 0 and is not controlled by --force_{u,g}id. This behavior also
+causes the {u,g}id of intermediate directories created by
+`erofs_rebuild_mkdir()` to be set to 0.
 
-Sure.  But how is this worse than accidentally exporting private data
-or any other misconfiguration?
+This patch fixes the behavior by explicitly setting permissions for the
+root inode:
+
+- If --force-{u,g}id is not specified, it now defaults to the current
+   user's {u,g}id.
+- If --force-{u,g}id is specified, it correctly updates the ownership
+   for all files and directories.
+
+Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
+---
+ include/erofs/inode.h | 3 ++-
+ lib/inode.c           | 5 ++++-
+ mkfs/main.c           | 2 +-
+ 3 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/include/erofs/inode.h b/include/erofs/inode.h
+index 8b91771..2a7af31 100644
+--- a/include/erofs/inode.h
++++ b/include/erofs/inode.h
+@@ -48,7 +48,8 @@ int erofs_importer_load_tree(struct erofs_importer *im, bool rebuild,
+ struct erofs_inode *erofs_mkfs_build_special_from_fd(struct erofs_importer *im,
+ 						     int fd, const char *name);
+ int erofs_fixup_root_inode(struct erofs_inode *root);
+-struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi);
++struct erofs_inode *erofs_rebuild_make_root(struct erofs_importer *im,
++					    struct erofs_sb_info *sbi);
+ 
+ #ifdef __cplusplus
+ }
+diff --git a/lib/inode.c b/lib/inode.c
+index 26fefa2..4f87757 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -2375,7 +2375,8 @@ int erofs_fixup_root_inode(struct erofs_inode *root)
+ 	return err;
+ }
+ 
+-struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi)
++struct erofs_inode *erofs_rebuild_make_root(struct erofs_importer *im,
++					    struct erofs_sb_info *sbi)
+ {
+ 	struct erofs_inode *root;
+ 
+@@ -2384,6 +2385,8 @@ struct erofs_inode *erofs_rebuild_make_root(struct erofs_sb_info *sbi)
+ 		return root;
+ 	root->i_srcpath = strdup("/");
+ 	root->i_mode = S_IFDIR | 0777;
++	root->i_uid = im->params->fixed_uid == -1 ? getuid() : im->params->fixed_uid;
++	root->i_gid = im->params->fixed_gid == -1 ? getgid() : im->params->fixed_gid;
+ 	root->i_parent = root;
+ 	root->i_mtime = root->sbi->epoch + root->sbi->build_time;
+ 	root->i_mtime_nsec = root->sbi->fixed_nsec;
+diff --git a/mkfs/main.c b/mkfs/main.c
+index f709190..e9ae29a 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -1910,7 +1910,7 @@ int main(int argc, char **argv)
+ 			goto exit;
+ 		}
+ 
+-		root = erofs_rebuild_make_root(&g_sbi);
++		root = erofs_rebuild_make_root(&importer, &g_sbi);
+ 		if (IS_ERR(root)) {
+ 			err = PTR_ERR(root);
+ 			goto exit;
+-- 
+2.47.3
 
 
