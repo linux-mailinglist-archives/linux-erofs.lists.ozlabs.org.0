@@ -1,54 +1,43 @@
-Return-Path: <linux-erofs+bounces-1856-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1857-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAC68D1D27E
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 09:38:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 33B87D1D365
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 09:46:51 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4drfdj3yybz2xPB;
-	Wed, 14 Jan 2026 19:38:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4drfqX6pWWz2xPB;
+	Wed, 14 Jan 2026 19:46:48 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.223
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768379897;
-	cv=none; b=Y+wXqcCKZjHpqkKiifcr/Qn7IV8HuUf7BiTIQxhfXtjhflOfFxROBVw6qnelk8P3d4NBZY94NweYVVXNYBQCtHPvSlu1sF7s9kZuPG3/JkkD2KZbAfnvhWQYRFIKpVQiDLHguSYkhEQkAdUuP3USgyFaUo4sWgr+8xeacSqxDmaS1vGzP6oFD3A9EcW/yuzadhFfgWlJRUgdrY5st43sYfqLM0Db1Vbqqsk13RZovF+65cZz1Wv9PKQeJcXDmG8OEUaUt+xGLeKMQBmSlRIkHfz20zjvsovYSTUSFdvD9VUNn1Vm1do8feSVaVZIDLMW3JAWubcnUHyyrged+NcBcg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768380408;
+	cv=none; b=bqjIR9k9miBrut9tVCCiBXbBakBcw6oKkTEcCYps4QSUO/QWDrkq+zR2rjhxgTp7eHeJc1QpvHzah0HpFD6hHAaO3vB2pjDvXSiTiJMPfs4/pcWygekzhTI5qvxtCj8NSfbsH7mhW0DKIhqbqyKkAL6+iFH5pJkOp4Sqgqcg2I2kuaaXHY7WgWaMpdsZ/YaU+xD/RTTbOiMhHk0D+GL5RD2qBPULIGxWwH/Tz/t86cPMt+e+s8HxHRShVjA3Xwops2XLqbgJxyzdAp8eg/JlBYuLXtqW3VEXkeF2oRJbmRYddYrsQP80PP0a15kaKzYLuHCrR8H5ucafHdx9kyjnnA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768379897; c=relaxed/relaxed;
-	bh=MmUL2H2ZZup30W64gzMAnFdGh/d85wBZ7Ks5MAkpU9Q=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:CC:
-	 References:From:In-Reply-To; b=PMzjSiyi9GRCRzB59MrSQPAAZLSqL31T3nPSaWmideIhaN65WV9mcCoUjbkqQ2RRtcRGiw4YfwyLZWNSPjFy42GHNuJ5dU/vqxnV27g/gn1Cjx0Kbpt+wGNPbpA1huGy/SRWdn3ar1woSVyW+5jJh5+WdLP3xVHDtb9K2XFchZAJqzWFGNdJPtSQDUnG4QjOoFA4MDPZkbZAMmCNBDq8hojqF5IS4tdSGWSx6L7pUjvwHOaVBrlqziRui4/LbCxCyX8t8cycaVsj/dx2TVlvThpULqkrs9+xHopxOSr6A+xEtl4VqY87ZpYsit6WtEeL8DKMbuvK6kimy9Y7nFWL8Q==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=wI1FHNS2; dkim-atps=neutral; spf=pass (client-ip=113.46.200.223; helo=canpmsgout08.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1768380408; c=relaxed/relaxed;
+	bh=LDzmLVELuJxPR5htttnP3WjPPjgAPAVLDEPizy2L5gM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ofYd0bgLNXy3Y7bQRYw9YsP8gtnFMw8kObO+bYX3bIRzT68Y86DekbAkhKY983tYGZCq0Itud0tvZ9CIgJCX3412fOjEEnsiSGALztZxXiyB8XoojvwhNkXLeJRCzfH5WTFD1fgyAZzOVLm+1pJQjBhK5pkk+4B2HN29D3nU2H3nPVPpxFRUbLlVG2cudpDTsREEnn9xCQ3UeZiI6wOr0w+9rlspXup+J0eDtJEijGnbusnr7rxDlJSvMbUQaV+zLN9VDMFAMUtqI/bD8GQ16hao528WsbABPCcg3sWVQuhTXtBvXIhuqYz9yL4ab8kFbdX3cqFH9NTCuc9F0n55ZA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=oZGBwZWa; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=wI1FHNS2;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=oZGBwZWa;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.223; helo=canpmsgout08.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout08.his.huawei.com (canpmsgout08.his.huawei.com [113.46.200.223])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4drfdh0MZcz2xFn
-	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Jan 2026 19:38:15 +1100 (AEDT)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=MmUL2H2ZZup30W64gzMAnFdGh/d85wBZ7Ks5MAkpU9Q=;
-	b=wI1FHNS2lMp4rTLTwYqVQyufhj97RdW3/dwcnvTHcr1DHOHqfgJnZqhETNThERBHDkAWxD/Sa
-	RiX7V2CL1OXlRQRgUetli25MIGwBN9sOTY0WNUgm3sFSRNlHGn2QzOj6NXlf4MAZdKLDpj8tU2q
-	XkeG3Q8GerFqYL9BIrm2CoI=
-Received: from mail.maildlp.com (unknown [172.19.163.200])
-	by canpmsgout08.his.huawei.com (SkyGuard) with ESMTPS id 4drfYk65jzzmVCW;
-	Wed, 14 Jan 2026 16:34:50 +0800 (CST)
-Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0A9D24055B;
-	Wed, 14 Jan 2026 16:38:11 +0800 (CST)
-Received: from [100.103.109.96] (100.103.109.96) by
- kwepemr100010.china.huawei.com (7.202.195.125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Wed, 14 Jan 2026 16:38:10 +0800
-Content-Type: multipart/alternative;
-	boundary="------------hTmy2Nv5eCiee8WFIagoW1Yh"
-Message-ID: <47c650f0-feb3-445b-97be-dff04fb6733a@huawei.com>
-Date: Wed, 14 Jan 2026 16:38:09 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4drfqV3tPsz2xHP
+	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Jan 2026 19:46:44 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1768380399; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=LDzmLVELuJxPR5htttnP3WjPPjgAPAVLDEPizy2L5gM=;
+	b=oZGBwZWajtK5l6deY33f+M4dLWnxoH3VbPOsKuinO34IxBsHTG0jNsXpjsi3Exy9VwFf799vLi+YhcmY+2TqF1npVM09gjTFryW/exrzyQJtmcS9SAY51AHMlhdf3nDX4IO37sxID/VSONSGaRfLe81kVC28is5oeCxgFp4ctPg=
+Received: from 30.221.131.219(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wx1kpmi_1768380398 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 14 Jan 2026 16:46:38 +0800
+Message-ID: <6a32c587-c471-4d7a-8e88-3d381d484760@linux.alibaba.com>
+Date: Wed, 14 Jan 2026 16:46:38 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -61,112 +50,39 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs-utils: lib: correctly set {u,g}id in
- erofs_rebuild_make_root()
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <linux-erofs@lists.ozlabs.org>
-CC: <jingrui@huawei.com>, <wayne.ma@huawei.com>
-References: <7db44e77-9256-469d-9845-d40079ab2a5a@linux.alibaba.com>
- <20260114073806.3640681-1-zhaoyifan28@huawei.com>
- <1e1c7c27-abb5-4f6a-b27c-0f15b9e5da16@linux.alibaba.com>
- <0bc1baff-775b-4cf7-89f8-eaa22af10d9f@huawei.com>
- <8cda58e0-e917-4e9c-ae68-d34336deb446@linux.alibaba.com>
-From: "zhaoyifan (H)" <zhaoyifan28@huawei.com>
-In-Reply-To: <8cda58e0-e917-4e9c-ae68-d34336deb446@linux.alibaba.com>
-X-Originating-IP: [100.103.109.96]
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemr100010.china.huawei.com (7.202.195.125)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,HTML_MESSAGE,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+Subject: Re: [PATCH v3] erofs-utils: lib: correctly set {u,g}id in
+ erofs_make_empty_root_inode()
+To: Yifan Zhao <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
+Cc: jingrui@huawei.com, wayne.ma@huawei.com
+References: <8cda58e0-e917-4e9c-ae68-d34336deb446@linux.alibaba.com>
+ <20260114083537.3645314-1-zhaoyifan28@huawei.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260114083537.3645314-1-zhaoyifan28@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
---------------hTmy2Nv5eCiee8WFIagoW1Yh
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-
-On 2026/1/14 16:09, Gao Xiang wrote:
-
->>>     root->i_uid = params && params->fixed_uid < 0 ? getuid() :
->>>             params->fixed_uid;
->>
->> will sigfault if `params == NULL`, how about
->>
->>      root->i_uid = (!params || params->fixed_uid < 0) ? getuid() :
->>                                 params->fixed_uid;
-
-Hi Xiang,
-
-v3 patch sent, however I'm afraid we can't compare fixed_{u,g}id with 0,
-
-as it's of an unsigned type. I've kept ` params->fixed_uid == -1` for now.
 
 
-Thanks,
+On 2026/1/14 16:35, Yifan Zhao wrote:
+> In rebuild mode, the {u,g}id of the root inode is currently defaulted
+> to 0 and is not controlled by --force_{u,g}id. This behavior also causes
+> the {u,g}id of intermediate dir inodes created by
+> `erofs_rebuild_mkdir()` to be set to 0.
+> 
+> This patch fixes the behavior by explicitly setting permissions for the
+> root inode:
+> 
+> - If --force-{u,g}id is not specified, it now defaults to the current
+>     user's {u,g}id.
+> - If --force-{u,g}id is specified, it correctly updates the ownership
+>     for all files and directories.
+> 
+> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
 
-Yifan
-
->
-> Sorry about my braino.
->
-> Thanks,
-> Gao Xiang
-
-
-
---------------hTmy2Nv5eCiee8WFIagoW1Yh
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    <p>On 2026/1/14 16:09, Gao Xiang wrote:</p>
-    <blockquote type="cite"
-      cite="mid:8cda58e0-e917-4e9c-ae68-d34336deb446@linux.alibaba.com">
-      <blockquote type="cite" style="color: #007cff;">
-        <blockquote type="cite" style="color: #007cff;">    root-&gt;i_uid
-          = params &amp;&amp; params-&gt;fixed_uid &lt; 0 ? getuid() :
-          <br>
-                      params-&gt;fixed_uid;
-          <br>
-        </blockquote>
-        <br>
-        will sigfault if `params == NULL`, how about
-        <br>
-        <br>
-             root-&gt;i_uid = (!params || params-&gt;fixed_uid &lt; 0) ?
-        getuid() :
-        <br>
-                                        params-&gt;fixed_uid; <br>
-      </blockquote>
-    </blockquote>
-    <p>Hi Xiang,</p>
-    <p>v3 patch sent, however I'm afraid we can't compare fixed_{u,g}id
-      with 0,</p>
-    <p>as it's of an unsigned type. I've kept ` params-&gt;fixed_uid ==
-      -1` for now.</p>
-    <p><br>
-    </p>
-    <p>Thanks,</p>
-    <p>Yifan</p>
-    <blockquote type="cite"
-      cite="mid:8cda58e0-e917-4e9c-ae68-d34336deb446@linux.alibaba.com">
-      <br>
-      Sorry about my braino.
-      <br>
-      <br>
-      Thanks,
-      <br>
-      Gao Xiang</blockquote>
-    <p><br>
-    </p>
-    <p><br>
-    </p>
-  </body>
-</html>
-
---------------hTmy2Nv5eCiee8WFIagoW1Yh--
+Applied now.
 
