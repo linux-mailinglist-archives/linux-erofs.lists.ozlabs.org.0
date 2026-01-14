@@ -1,43 +1,124 @@
-Return-Path: <linux-erofs+bounces-1867-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1868-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id A711CD1F8D2
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 15:54:04 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CEA7D1F9B0
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 16:06:04 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4drpzG1Dzgz2xT4;
-	Thu, 15 Jan 2026 01:54:02 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4drqF55kBkz2xNT;
+	Thu, 15 Jan 2026 02:06:01 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768402442;
-	cv=none; b=Hx1g8XdPyJylzh+/aOIivJDDrHZezmAWkKjZTrtfwp4YaEO+u6VJxLVji1mUAOH0aY8lZ3N7z3Cc4UZxMrItS889EFI5MmR3jT57fW4dD3BBd4dK8ZD/zpw50OgUi5gc10MT4paSKYt9AJDdkZnbOLvpqk/s7546qXFgXr1wlnIBPDXhOPoG/nsU27NC/1r0zX0UlGdvxKmfxz9dwv/46xWnFZirfyz0OBerwjRStquKvy2Hd4WQOdS0Aa/AcgdVhjZI3Yz+zC1KVC/GgEaplezHXLuR1oW5DN3LIBQthXP98Ok/SBhAf3x/Fw6shFqIadUvxxwNJ2i6rUbRdewhqw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:7c80:54:3::133"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768403161;
+	cv=none; b=Wsxasc1Hnh8I5bVHLO6kldra7pnoH0n+7AtfJ5bCMKujuZFzQJseHx70249SQ8Z5xwr6zhScbo4tpmgXV++xoPJNmQ208n7nhYz05VOsWx6ZFFwRftUOM5jETEJfmTXOYCpd8wHZYA8F1fXBi/BFwrid7gas8u8i8ERqN6dJ4mbEZFuTnI8kLsDTdyTq1coog6Vha/s8cS0WDE273wGRwsfpgk5Eplq5Oqm3o+FEf/qexZ3D9n6hPjkav4OZEPkDHPlESyYb1q2+0fvjl9JKeowHSbjvE/8RG/sHe8K5dydrUMTWa1gWvp1xZ/SJrwfSy8ivnL1d1+NAo99egyPaFA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768402442; c=relaxed/relaxed;
-	bh=NBHzWnw/Bz1netRes1MD8Dx3Xm+VZaSz/9OEB/xBLNA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YEROpWFIfZVRGuXc9NJYWiXeBzNJABKSkeXy2/YeRLpsPdgDeLHJVgtUZR9pOrO0lpi2UdC2FGPiTgXU24OIYjx2bvcSPXwa0rNLOrOnOtUG7lFBI2CAQBON1pZIGlnjZb2dil7buIsW6x5WurlcVivxByX2U2ARB8TeVrXt+UB4ZMVygTmv1+7HE8b7Z++6Qvmb0v/2V8X2da6qAQxXvBxB/viBstzmjup3T5HMDCUW3jFTgI2NfkwMcm8vaHi2vSDXrSe8gJXaXMSQjUxmEIH5geoWo+djgLHZ9TTNcFU5X2U0TD27/pViUDMZLw0sXrIcF+tDoB5JvZj+DNWKFg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qWOSCumL; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1768403161; c=relaxed/relaxed;
+	bh=p/1eVpMenCIWXkmi+LWs4qBDeJZQRhQ1Mo2xBG1d6m0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IdZn9BMdLIVrw/nEH0MFL1pnIUIfIWnAnH91/2zwF8WiozDtjRjA8iot0+VX+G+Uz0QG+OJvL4OHhx5Ymg349OkAfbeZEuJmlZFQVBNumqqriPj1CvC9Z4U43XyveRU6erEH7quK/07aak8wURdMpqlL5mL4hjJ5f90rxydj4nrN8HfRnZd0LFhDoA5k1blcX2aRAKOgV7umTzhWNfbc71f6gkKZnrsMsdCtxpqzEYLCd99FFxs1QrGNuLBnEOKV21967SX9eDZebskRBrSih7Oc6JvZTezrae7zwGFxgucBGmuQpO293Tmv4jG6SBdVYPtgPyCRxhcSc9hRk2fnYw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2aGkR9+G; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+26d5290b15125d0fae64+8179+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=qWOSCumL;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=2aGkR9+G;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+26d5290b15125d0fae64+8179+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4drpzF0bXrz2xNg
-	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jan 2026 01:54:00 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1768402434; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=NBHzWnw/Bz1netRes1MD8Dx3Xm+VZaSz/9OEB/xBLNA=;
-	b=qWOSCumLa86qUI/jd8jcVLFMRe+ni0W9+klAbBAH0UMaglvT/Pke6zsGSi+d6HSZ72gfassk3HINXyzRTMniIXGLUcVq94aa9DvyvWF3Am1Ac3XBRs8+scgUEHok/+3pKJ14QjO539qWaU1PFox8WVe3sIoNSMUWPX8py2NipMk=
-Received: from 30.180.182.138(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wx2jwhk_1768402432 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 14 Jan 2026 22:53:53 +0800
-Message-ID: <615134f7-fcfd-44d0-b895-dd5a4901ea7b@linux.alibaba.com>
-Date: Wed, 14 Jan 2026 22:53:52 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4drqF363kgz2xMt
+	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jan 2026 02:05:57 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=p/1eVpMenCIWXkmi+LWs4qBDeJZQRhQ1Mo2xBG1d6m0=; b=2aGkR9+Gq07Pqsr81YJxBM46lt
+	pC2tFopI1k2CQN/EQyBvUMbN685on8x5U4CpdjMpkFZFWeBtSU1OM84Ciw+y3szFcelfmqTyyg3Vm
+	y2DbB7FtxibRk5XBq6sH9x7jaP/v3yPQ2Ob6mTE3lbJs+jMPsrwoZFGtqfkkexkKI90sVyqCbvrKN
+	zpFbi2ZET+fTj2fii5dhkiKqKWNVPeKcG3n8jccbhPTVNNeRCqGKQRlyNUdLbE0ua8zYfilMENTNi
+	ksLGJd1DFd0SiHbXxA8bZhed6Je0ZmYu3Fr0+QZKywruGLSgXGNe8uS3svWfCZcAVQ+74djzH6mhe
+	QKhXyQqw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vg2Qx-00000009cKq-2YJq;
+	Wed, 14 Jan 2026 15:05:19 +0000
+Date: Wed, 14 Jan 2026 07:05:19 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>,
+	Luis de Bethencourt <luisbg@kernel.org>,
+	Salah Triki <salah.triki@gmail.com>,
+	Nicolas Pitre <nico@fluxnic.net>, Anders Larsen <al@alarsen.net>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Phillip Lougher <phillip@squashfs.org.uk>,
+	Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Yuezhang Mo <yuezhang.mo@sony.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Andreas Gruenbacher <agruenba@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org, gfs2@lists.linux.dev, linux-doc@vger.kernel.org,
+	v9fs@lists.linux.dev, ceph-devel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org
+Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
+ lease support
+Message-ID: <aWewryHrESHgXGoL@infradead.org>
+References: <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
+ <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
+ <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
+ <aWZcoyQLvbJKUxDU@infradead.org>
+ <ce418800f06aa61a7f47f0d19394988f87a3da07.camel@kernel.org>
+ <aWc3mwBNs8LNFN4W@infradead.org>
+ <CAOQ4uxhMjitW_DC9WK9eku51gE1Ft+ENhD=qq3uehwrHO=RByA@mail.gmail.com>
+ <aWeUv2UUJ_NdgozS@infradead.org>
+ <c40862cd65a059ad45fa88f5473722ea5c5f70a5.camel@kernel.org>
+ <CAOQ4uxhDwR7dteLaqURX+9CooGM1hA7PL6KnVmSwX11ZdKxZTA@mail.gmail.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,38 +130,29 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 09/10] erofs: support compressed inodes for page cache
- share
-To: Hongbo Li <lihongbo22@huawei.com>
-Cc: djwong@kernel.org, amir73il@gmail.com, hch@lst.de,
- linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Chao Yu <chao@kernel.org>,
- Christian Brauner <brauner@kernel.org>
-References: <20260109102856.598531-1-lihongbo22@huawei.com>
- <20260109102856.598531-10-lihongbo22@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20260109102856.598531-10-lihongbo22@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxhDwR7dteLaqURX+9CooGM1hA7PL6KnVmSwX11ZdKxZTA@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,SPF_HELO_NONE,SPF_NONE autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
+On Wed, Jan 14, 2026 at 03:14:13PM +0100, Amir Goldstein wrote:
+> Very well then.
+> How about EXPORT_OP_PERSISTENT_HANDLES?
 
+Sure.
 
-On 2026/1/9 18:28, Hongbo Li wrote:
-> From: Hongzhen Luo <hongzhen@linux.alibaba.com>
+> > The problem there is that we very much do want to keep tmpfs
+> > exportable, but it doesn't have stable handles (per-se).
 > 
-> This patch adds page cache sharing functionality for compressed inodes.
-> 
-> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
-> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
+> Thinking out loud -
+> It would be misguided to declare tmpfs as
+> EXPORT_OP_PERSISTENT_HANDLES
+> and regressing exports of tmpfs will surely not go unnoticed.
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+tmpfs handles are stable.  It's the tmpfs files that don't survive an
+unmount or reboot..
 
-Thanks,
-Gao Xiang
 
