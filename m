@@ -1,43 +1,124 @@
-Return-Path: <linux-erofs+bounces-1860-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1861-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3439D1E095
-	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 11:28:47 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86A30D1EFB9
+	for <lists+linux-erofs@lfdr.de>; Wed, 14 Jan 2026 14:08:48 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4drj5925yTz2xFn;
-	Wed, 14 Jan 2026 21:28:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4drmc46Tv0z2xHW;
+	Thu, 15 Jan 2026 00:07:16 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768386525;
-	cv=none; b=FLS3ScUbxEJtmzvm5KXFBcD4iGNGTkZjdy64A8lmG+F/sknQM3DzX8zyzpS15smBwAawG3Aor1AaHHDuHrDkXiHzo8h4SAqzKuXsntxvgMfpdSJsYvf+S6gTDCJ4n7cetndQdd50pUUv2mvFZ2/mWqgCgg6KV0yFGvXRFMxWKIIp5G+CyEl1OdyVzumJyC/1OcR14ZeVsfRkQcopomcW51YGrSjDtIuXNDjBg1GJbTZbIyrCIJLRQa3I1PBiqrajbK8jJ5XF5Od9GiROJDrl7LeMNxFJPf9c2MuAbCAr+ohPUwFKcjO1Z/VS9v/r+YayMMWSFKFcikdg9lxGtBg//A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=198.137.202.133
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768396036;
+	cv=none; b=iHiaPvHmdun78UPDzM66ASBQp0xp5kHJWmiXe8lDjUkhswRFXzQQxXHoMlPKc5TxmkW2h9n75reNOgx5lvCUTvpaVQfpXd/pb2olPLvpfGwHl5XVJZDDn/s2GNi7PsJaTXNTY5pYUVLWCFF+2xNRnrl2xEZsJLYrOUWswWhnk4dQcImnexB4KshTpM4rzupH5wBCKnCVwF2o9VREa4NyX5KjZYkI211kTeK51XClfJBRV61QMye+Yy0iABOAwQLuVFLR0WprUqf7UhjlSCU0uFqPV+sfplTGBLM4/9lPHNl+I8kqxqkZCYzkTgT6/C1/kuamX8B6U+XwmCZPoU6lFg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768386525; c=relaxed/relaxed;
-	bh=X3FIs7A5RvlrrKt9IluVyHYBz5NPE45rqc71MrXC4A0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DCls93WSopbHZ3nDkNu1BeqgNhOMIUM9LTh39T5hrdnqq+/OvGp5fb9XCeGhXAKSs0rb5pH8zcT56JjTKr6qOsd0a3gWcfACDSD4SEdqXVIhtW5iFst+4MFWzFW/tKyLssvJlNigGlqcz0/PufO0Y7kOjvmbCP27ekUe7EH1SqcLToZ8KR33ytVFtj6Yct1CXFAg+DGpONeamdFTQ5rryyd51ld8KCIkE2yo2EM+JXfzpudNKsTShvgAaA21bqSlKNotfyO0NfHhs0ePhAyiqllQ8PD6xOUYCyMrJNgo4Q1regQH12pY1x+BxAxsRPFpyH2QBXbTylkK6LXSSN01Dw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=D7v1wxvu; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1768396036; c=relaxed/relaxed;
+	bh=frpDmmp1i4r1AZelS3CVor2fKx/lP0Tq5j8/mhEG/8s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UzF/SZ77nZ0mJvWCTu7Cf6KfEBRUUNcK47/FaSKja2knILKnJr8IDJpaH6M6LhKzlD+j7wKVMLeCeiLpElfgy5N8n1M8Fs5Gb070f9gltH5kHAJSaj/htXiI5JKXIkO/Ju4xY6V84sLBWy7yjUxAHwRZPiXFwVo2H5r1pskwIhIRGIDV2hFxKE9qqJ+o4teX7hXA6GJwntxjObf1cDsHLWj+auXTHi2OcQY7DeDJQYRJmJFlc+rbvebJA5l/YtwFnuqFZ3MmLkxRv+i5ii10Z/YMZh4VjOisseTyF6ZJYGZQdqXJqY/VgfOO+0wUBs0fkwVM74oB4g/G2cGustei2A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=CsUTToet; dkim-atps=neutral; spf=none (client-ip=198.137.202.133; helo=bombadil.infradead.org; envelope-from=batv+26d5290b15125d0fae64+8179+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=D7v1wxvu;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=CsUTToet;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=198.137.202.133; helo=bombadil.infradead.org; envelope-from=batv+26d5290b15125d0fae64+8179+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4drj5655P8z2x9M
-	for <linux-erofs@lists.ozlabs.org>; Wed, 14 Jan 2026 21:28:40 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1768386516; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=X3FIs7A5RvlrrKt9IluVyHYBz5NPE45rqc71MrXC4A0=;
-	b=D7v1wxvuczsnUpX2x9Sl6mwWlm5tFEQtjvZmUO3HJyA9dBJAo3BLR7iURSNDvsuWdWdJ9OOi2NeFyuTAZF27H2vP7+O8Dcvq0v2OJ8kgRnMBSgUr+bFANJ57bkj5p0KEyeu067O9L7ATJeB8d6Dn62Ji3p+uwLqDgEOlRoB8SYs=
-Received: from 30.221.131.219(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wx26mdT_1768386514 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 14 Jan 2026 18:28:35 +0800
-Message-ID: <0f33bd17-7a03-4c06-a492-e514935faed6@linux.alibaba.com>
-Date: Wed, 14 Jan 2026 18:28:34 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4drmbv3yKpz2xNT
+	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jan 2026 00:07:05 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+	:Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=frpDmmp1i4r1AZelS3CVor2fKx/lP0Tq5j8/mhEG/8s=; b=CsUTToetKF+Id6BSRt8PfLBnAS
+	Y0ul3yOPNvK2EqLosGUY3uqxb0rBGjpkb3pFkF+nzL0tn0KOBAl2xhlehcW9SbJloDYCaYos/fI+R
+	/3mikrJStWJrWeOJzR2PeycF0eBRtBI6m7fleAVeDpZJmAWb5/mhUGXdyVHOSGGKP+FgMpRotCkGe
+	U4rxrSW9vdcoJ/4xvbYl6nQLLy/pVnBBXwulC6bpAsoSvSw4Aw1pxxyPY2C1RxEdi/vm7DGCPqLOa
+	XPJH2SpQwhbv/9XjUm+ADr7Kr9Po4kKl3x0XMHBhpwdVI/FJYFR2ISU4AMVB1IFKkKKX1rv/bPqoF
+	Uf0wlX6w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vg0Zb-00000009Gnt-0ut4;
+	Wed, 14 Jan 2026 13:06:07 +0000
+Date: Wed, 14 Jan 2026 05:06:07 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>, Jeff Layton <jlayton@kernel.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>,
+	Luis de Bethencourt <luisbg@kernel.org>,
+	Salah Triki <salah.triki@gmail.com>,
+	Nicolas Pitre <nico@fluxnic.net>, Anders Larsen <al@alarsen.net>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Phillip Lougher <phillip@squashfs.org.uk>,
+	Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Yuezhang Mo <yuezhang.mo@sony.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Andreas Gruenbacher <agruenba@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org, gfs2@lists.linux.dev, linux-doc@vger.kernel.org,
+	v9fs@lists.linux.dev, ceph-devel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org
+Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
+ lease support
+Message-ID: <aWeUv2UUJ_NdgozS@infradead.org>
+References: <8af369636c32b868f83669c49aea708ca3b894ac.camel@kernel.org>
+ <CAOQ4uxgD+Sgbbg9K2U0SF9TyUOBb==Z6auShUWc4FfPaDCQ=rg@mail.gmail.com>
+ <ec78bf021fa1f6243798945943541ba171e337e7.camel@kernel.org>
+ <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
+ <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
+ <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
+ <aWZcoyQLvbJKUxDU@infradead.org>
+ <ce418800f06aa61a7f47f0d19394988f87a3da07.camel@kernel.org>
+ <aWc3mwBNs8LNFN4W@infradead.org>
+ <CAOQ4uxhMjitW_DC9WK9eku51gE1Ft+ENhD=qq3uehwrHO=RByA@mail.gmail.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,67 +130,66 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 00/10] erofs: Introduce page cache sharing feature
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: chao@kernel.org, djwong@kernel.org, amir73il@gmail.com, hch@lst.de,
- linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, Hongbo Li <lihongbo22@huawei.com>
-References: <20260109102856.598531-1-lihongbo22@huawei.com>
- <20260112-begreifbar-hasten-da396ac2759b@brauner>
- <d6ea54ae-39cf-4842-a808-4741d9c28ddd@linux.alibaba.com>
-In-Reply-To: <d6ea54ae-39cf-4842-a808-4741d9c28ddd@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxhMjitW_DC9WK9eku51gE1Ft+ENhD=qq3uehwrHO=RByA@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Christian,
-
-On 2026/1/12 22:40, Gao Xiang wrote:
-> Hi Christian,
+On Wed, Jan 14, 2026 at 10:34:04AM +0100, Amir Goldstein wrote:
+> On Wed, Jan 14, 2026 at 7:28 AM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > On Tue, Jan 13, 2026 at 12:06:42PM -0500, Jeff Layton wrote:
+> > > Fair point, but it's not that hard to conceive of a situation where
+> > > someone inadvertantly exports cgroupfs or some similar filesystem:
+> >
+> > Sure.  But how is this worse than accidentally exporting private data
+> > or any other misconfiguration?
+> >
 > 
-> On 2026/1/12 17:14, Christian Brauner wrote:
->> On Fri, Jan 09, 2026 at 10:28:46AM +0000, Hongbo Li wrote:
->>> Enabling page cahe sharing in container scenarios has become increasingly
->>> crucial, as it can significantly reduce memory usage. In previous efforts,
->>> Hongzhen has done substantial work to push this feature into the EROFS
->>> mainline. Due to other commitments, he hasn't been able to continue his
->>> work recently, and I'm very pleased to build upon his work and continue
->>> to refine this implementation.
->>
->> I can't vouch for implementation details but I like the idea so +1 from me.
+> My POV is that it is less about security (as your question implies), and
+> more about correctness.
+
+I was just replying to Jeff.
+
+> The special thing about NFS export, as opposed to, say, ksmbd, is
+> open by file handle, IOW, the export_operations.
 > 
-> Thanks, I think it should be fine.
-> Let me finalize the review this week.
+> I perceive this as a very strange and undesired situation when NFS
+> file handles do not behave as persistent file handles.
 
-I wonder if it's possible that you could merge v14
-PATCH 1 and 2 now to the vfs-iomap branch (both
-patches are reviewed or acked):
-https://lore.kernel.org/linux-fsdevel/20260109102856.598531-2-lihongbo22@huawei.com
-https://lore.kernel.org/linux-fsdevel/20260109102856.598531-3-lihongbo22@huawei.com
-
-since these two patches are almost independent to the
-main feature and can be merged independently as I said
-in the previous cycle.
-
-Merging those patches into a vfs branch also avoids
-other iomap conflicts.
-
-For the other patches (since PATCH 3), how about going
-through erofs tree (I will merge your iomap branch),
-since it seems at least it will cause several conflicts
-with my other ongoing work, does it sound good to you?
-
-Thanks,
-Gao Xiang
+That is not just very strange, but actually broken (discounting the
+obscure volatile file handles features not implemented in Linux NFS
+and NFSD).  And the export ops always worked under the assumption
+that these file handles are indeed persistent.  If they're not we
+do have a problem.
 
 > 
-> Thanks,
-> Gao Xiang
+> cgroupfs, pidfs, nsfs, all gained open_by_handle_at() capability for
+> a known reason, which was NOT NFS export.
+> 
+> If the author of open_by_handle_at() support (i.e. brauner) does not
+> wish to imply that those fs should be exported to NFS, why object?
+
+Because "want to export" is a stupid category.
+
+OTOH "NFS exporting doesn't actually properly work because someone
+overloaded export_ops with different semantics" is a valid category.
+
+> We could have the opt-in/out of NFS export fixes per EXPORT_OP_
+> flags and we could even think of allowing admin to make this decision
+> per vfsmount (e.g. for cgroupfs).
+> 
+> In any case, I fail to see how objecting to the possibility of NFS export
+> opt-out serves anyone.
+
+You're still think of it the wrong way.  If we do have file systems
+that break the original exportfs semantics we need to fix that, and
+something like a "stable handles" flag will work well for that.  But
+a totally arbitrary "is exportable" flag is total nonsense.
 
 
