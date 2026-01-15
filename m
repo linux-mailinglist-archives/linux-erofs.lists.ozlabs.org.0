@@ -1,51 +1,51 @@
-Return-Path: <linux-erofs+bounces-1889-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1890-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 53099D26BD2
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jan 2026 18:48:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E7582D26BDB
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jan 2026 18:48:26 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dsVns66Khz309S;
-	Fri, 16 Jan 2026 04:48:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dsVp03Ybjz30BR;
+	Fri, 16 Jan 2026 04:48:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768499297;
-	cv=none; b=gHbUXECqborIdEAp5hc4Evn3aSjbJY6l4m/CvB6J1ymsZulZl+QJNwhLjtGQU0xUb8JiEB/P/ZSdTXvFhprwnLzb2WPIXOfhTv0jzJa2I2VJwh5p/nX0A6mkVhV/2GAQf0Fq/oDTf5dGDrPOJPOmFo7QAS4xsfLCTt5gPT5z3k53rum+ZBD7B4//qU1vNvE1wiKjSL3x1JIR49MRejTc3klCA6tVVy7JjbmMUt2Le7BT+aoIQHACeBlpysxWA4wnV+y16KW5qRAuKG08Vx7NLwoslUY2tVDsOdY2F8QPsIwfXSL4QQI8Rcl30je/uCU6+MvaMZpzGnpikjvvTvq8fA==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768499304;
+	cv=none; b=fp6K2u8ImwlEj26z4iWsTIINBPcac00mll2CYFdrBPvFfPm6LPFfCjwCzid0e5w2VsLusSEl/OotmfU41jN9LBiOJ4BmFXDCWmD/BS6UOsVAjKKVPsnY6O50TLqa22eEv37LnAByM3W34tDnA8Wa5rGCIjbcDkTCpFlVfhR0McYtmYv0kEQFLj/c5dcoDiXawBlNiPL5Nrrln8ryd5TP+q7D/Wv4odGz7u3wPpZEI6g/xx8oZxEWcNOeOSVvb9USDZAwiFqy1NJw/BOMaFGtL/1vcsS19Zd2NRTI2MYQRUcK8R4hp+rDitbXXshgjJXVHFirZNOA8zcDzuDt2WZ5cw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768499297; c=relaxed/relaxed;
-	bh=hoRx4iqvApY4n68S8X82ro128OMPf7po0KQOiKAg9pA=;
+	t=1768499304; c=relaxed/relaxed;
+	bh=zt0OOY8HyG5hoN0E0x8SeNq+jwTJvLea9QHt4A47vpU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QnM3Sf1QeebPtPcfk/7WQNAs5mCFjch6H176FmpCz8OEXvH8dD7EFgPwmnvZRxEvJDrPN7Er7ZlYrgtZRPYm4oCmFD8q7lhBtz+DDk/bfLKiv0Kq6z9ILoAnhYAZPg3TnRS13A62sl6bku8WP81jk81ciBBYpUPvDADk/afDSG/awPYfIvcP/1vaq55s6Vn+jdB8Lpwf0gJMGnGA4T4wIVfJredscmpWjxAKejn2ksx7tG6U7sI5C4zPOyxH/fk0RHjjN08x/mo7aJlcrFKtEbLIbT828Orz631aq9Pcq1S8igtiu2lwn4IzrkZThSR6GOON9+//ABLwuaPtd1Iv7A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=N/aT5jS7; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:To:Cc; b=EZh/AWd5wPHEM0lLU1Id7fkwJCH+6t/0sFIQbQNVchepHO0QEK17+4GXIIrOBG1Voygl/wkiL0C7nLiwSXDkHaxpg4wCfbkk65xn52m7/5NaZ/iAGVHJLTYRELUxvXY+x9pH4CCrpw+0Emlp5EASEpvZAzxgpy5gTgQ8hVEmFyEed1gunI9v3lsgTJZBRlJjI6x6D8AeaY7fRg5hIkHB8aVrJ500ebDAgDY8vNdGI9c89XgfXjounF/inhmNKSgPz7rlH5bI6W8mLqAoc+3c3OaGSBIRC31ow75ub6HJguxKV52qpj7TExehvrB9ozAv7H/RlXgvvgUWQyxs//mLBg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=fu31I0C1; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=N/aT5jS7;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=fu31I0C1;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
 Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dsVns125lz2xNg
-	for <linux-erofs@lists.ozlabs.org>; Fri, 16 Jan 2026 04:48:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dsVnz5dP9z2xNg
+	for <linux-erofs@lists.ozlabs.org>; Fri, 16 Jan 2026 04:48:23 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 88A2B433FC;
+	by sea.source.kernel.org (Postfix) with ESMTP id 2DFF143C8A;
+	Thu, 15 Jan 2026 17:48:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4F22C2BCB2;
 	Thu, 15 Jan 2026 17:48:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11B80C2BC87;
-	Thu, 15 Jan 2026 17:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768499295;
-	bh=eGzcrbK82AAYHA8mp9BK4OkYs2dNeYeCsyAFHAtDQCg=;
+	s=k20201202; t=1768499302;
+	bh=cRlpRhg6xvxKE1542vTz8cBp9dDE4OGqd+9j2b595OM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=N/aT5jS7N6QoemTXHYE0cX8UVkbOu2/wbixgEVBgnGYF7LhX8OhNz4XrWyrjWRC7M
-	 zD29UA1bZK9fVBcd+hA6xYgcgJEJ2sOcHLu62k3G02+2GGzKX/VLC9noXIbXKuuT5K
-	 Nr+33LfHhpTNa+foKCiyUmvvq00e+Du8qeu6aHkC+zm9MykELBvSIJbtqfNnq/OaOK
-	 SF+mPjA+LVjF+9H+bIal6zl1BUwjpoAojxDJr4szcfYTYT5pi3BOBaWc53Pi/XWVcL
-	 UUg6FGToVwTQewnPmGxKUIYtkaiiQBopAjTCdSXAr5q8BAP1a33Gv7jD+4BPFrdlhn
-	 7fI1YzYPg+SYQ==
+	b=fu31I0C1mcdk48lMcGV6EtvSTJtTvS7viT/oyZx3ky95KhA1IgSibc8Tcjmzk5uog
+	 JhOfSN0w8eh5Z08O9hxA03062iTTRyFy4/ENNq/6sLAeHiEPsDHmsbAIgQEI0IjWpV
+	 T/St+kEHBMhdyyRL/SqavuasePDHiTIF3g2iGd/j+IqyY/GUdWdAZidh6pKv4L+QqD
+	 OMgBs/gdxX2ELQ7SDfAgshPh0CFXbDJQc4/Tduuex3ApWZoagP4zA/NahKjB8yVq/x
+	 z2ul5X5032MbJsxbTe9zc46WwFLwjcxopwaev5EqdvJLAaXHPOxDwVojVBE/xr7G9f
+	 0k+rR/8yf65yA==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 15 Jan 2026 12:47:33 -0500
-Subject: [PATCH 02/29] tmpfs: add EXPORT_OP_STABLE_HANDLES flag to export
+Date: Thu, 15 Jan 2026 12:47:34 -0500
+Subject: [PATCH 03/29] ext4: add EXPORT_OP_STABLE_HANDLES flag to export
  operations
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -60,7 +60,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260115-exportfs-nfsd-v1-2-8e80160e3c0c@kernel.org>
+Message-Id: <20260115-exportfs-nfsd-v1-3-8e80160e3c0c@kernel.org>
 References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
 In-Reply-To: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
 To: Christian Brauner <brauner@kernel.org>, 
@@ -108,20 +108,20 @@ Cc: Christoph Hellwig <hch@infradead.org>, linux-nfs@vger.kernel.org,
  linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, 
  linux-f2fs-devel@lists.sourceforge.net, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=687; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=eGzcrbK82AAYHA8mp9BK4OkYs2dNeYeCsyAFHAtDQCg=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpaShEbLwccGXUC5j0WTeZML8RysoPsUjSds8pC
- JZi3m3aO2KJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaWkoRAAKCRAADmhBGVaC
- FVG3EACMORg6FWU2k+gTVXQsRhFWMoWdpO7xBjnubHZheO/O5JyWKYWNPX4sbXBvJB6B7Jk1/b1
- MaY4i/BdFxaDMt69GQfQWSs/ZjgMLW4LaHiT35v+0ApKcyuUcyUpGbePY8Q45RmV6DfOh9whS9I
- t8sVCOKSYWlli98pTJRslgDUbjULTXyaFW3R08JP3i5prQEUPNI85rq3Ia39b/3nRxCeLKaHexo
- Wh8mjzMVA3ncr3QS3JDW8EiM4mJqdcnsG7C0p0NsRXX9Bj1POl4qDX4/A7s0z02kDavF/u2IJaJ
- vzU3qxp6MoJLJtZOYAMJEzw6d2NIMsfFQi8pwo/iMRDwkqxsFpwRvT7h8npYMpXyQRou5PI4d0k
- WHlJK66KpzRjMnk6kiLnVvwtZuUQrYq4oVkkaWTcUB+fY19qVtW1hVVw7scwCIR3paw5NG2hfJd
- yGUZ66kVaTV4kRZIMqbz4YnHGfIFhEP3jeaF0kbPpJ5OOuVTBVgLJoD+69v4diy5ByzJk/ujYyj
- EnGCShycUwb0IGd7r5f1TDdSScJ49Fh85Zg86XLyxoT3TDIvfZG2VWm5VKRN81ifgwd84hYqGHs
- dMhx7JclW4kuJSjtBkrqYaWP3J4TCUaDo3fstC9n+P/mEEHHzveE3Gf/t3MD3vm9L8CDEYfw0rc
- Din5n2xsqXt5kxw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=701; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=cRlpRhg6xvxKE1542vTz8cBp9dDE4OGqd+9j2b595OM=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpaShEgnrZ5MvNZeLKEb4VrTRZtcLcYgm2Rrva6
+ 3/6K7cxfryJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaWkoRAAKCRAADmhBGVaC
+ FVmlD/9gn1qIb6YReb8Ce9KEi8lP9mKlXfsYUelY1yljVioBDtrsj6dPS9mWtSjm8Uo0e8RBQUw
+ 3u+AYBYfiZztHHSK5RCTNlUjYWpIOmHSfhaFA+4R6tA1I1k+wi7KMOlFd56rQZv6qHSt1ux4hQV
+ fOQZ4dgdIp+5Y02KZSKXCJO8T49s7NnWaTpmoqrRPKxAITVwK8tY4j+dYksoEjkWEYlmEseo48A
+ hdWLdh0SSUK/KUBfEg7RBnvNnLiGIhzgdB4vbIZuQnGL7grlU1sE3BKU17GNyLtiCggOZi+ZybD
+ Fw9/2DcXJRON+wjA49hKtjHtEfKG1Y8qAaH3idaqGpnoC8r+m4b79j8mE0sXsSd27plq8MRIOuF
+ pMlERSHj1ExH6xOwzd6jpuVJkfOxWw/bBUNDlNsX+gw041SuiwHaGaMSyESM09G/84gr2guNJkB
+ 7aVdZndIARxy14e/XPziyJG0nJ2et7ls7dVfhAkrcFjxtqtS1qBZDCH+O5EojKDDoQkHXF/56fA
+ kYYYvjqZCke8Jga71v8k+MdprNGd0kb9Cc+lhK3Jw+k7EbYR3AhygOt0L4FjWbOKZNYmJIxuENm
+ J7q3k6kEC1/G0mhmtZHabQpfhJkZJRdW6fzCMS5Q4y3EE9WnfYwtVOrERWZLvlhEohG7qjkztgp
+ GZ0EXfbh6QvTyTA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -129,26 +129,26 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Add the EXPORT_OP_STABLE_HANDLES flag to tmpfs export operations to indicate
+Add the EXPORT_OP_STABLE_HANDLES flag to ext4 export operations to indicate
 that this filesystem can be exported via NFS.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- mm/shmem.c | 1 +
+ fs/ext4/super.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index ec6c01378e9d2bd47db9d7506e4d6a565e092185..c64c4410b4fd9961599a5ea768b469d8184e713e 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -4477,6 +4477,7 @@ static const struct export_operations shmem_export_ops = {
- 	.get_parent     = shmem_get_parent,
- 	.encode_fh      = shmem_encode_fh,
- 	.fh_to_dentry	= shmem_fh_to_dentry,
-+	.flags		= EXPORT_OP_STABLE_HANDLES,
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 87205660c5d026c3a73a64788757c288a03eaa5f..09b4c4bb8e559da087ec957de3115e4f7d450923 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -1651,6 +1651,7 @@ static const struct export_operations ext4_export_ops = {
+ 	.fh_to_parent = ext4_fh_to_parent,
+ 	.get_parent = ext4_get_parent,
+ 	.commit_metadata = ext4_nfs_commit_metadata,
++	.flags = EXPORT_OP_STABLE_HANDLES,
  };
  
- enum shmem_param {
+ enum {
 
 -- 
 2.52.0
