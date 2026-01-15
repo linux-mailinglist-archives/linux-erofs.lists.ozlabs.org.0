@@ -1,49 +1,49 @@
-Return-Path: <linux-erofs+bounces-1883-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1884-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C0AC0D230A2
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jan 2026 09:14:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D2F4D230E7
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jan 2026 09:19:08 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dsG3t2RVnz2xrC;
-	Thu, 15 Jan 2026 19:14:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dsG9603VBz2xrC;
+	Thu, 15 Jan 2026 19:19:06 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768464874;
-	cv=none; b=Q5UUJFmq7V1KzGkzkwvTQZZ+CRm2Bz7BLWCuBnMFVUa5fy/owOHWuxoDym2EgRmSeXGtvqi+9LEE9XdprjTU5Z2OzCzWAGbrSmopWynWUCeY30d+hmP6s4NASvBV2DbIP7IPW5s1FP609ip+9ezTIAb676t0d35MfV3X3mFVyuxpBu9HcSJkJAHYTz6v8xs4n/ENqRZsrRzHHrzUb1pMjzJpShp3SlYJ6PNjKIRpw7OYNnKh20CNEqUTHKyFcoKffZfjevj0oIYPgir/XXFsHxpG2Wb5TnFcUYYwZz9bKvB1VC883bes3NOgJ3uaJVFdj2ilox4e0ANBYDl7I2Zouw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768465145;
+	cv=none; b=ipdyONVUt7/wDXEMRNkR+ceeFDB44TSpLTD/Jub7IXDCzkAQjS6Mrus/BaaGkPzRt6uboGdrj7FNSfl+pM60pTx7rcmpV5yKvv9OFB0+0qjprJioOAPcMdDPfpU9lYDU/l761Z6Ag8htX/yK9DrsPh3F8DRaZ0TAUqaQ6u5VH/8hAYXLydDexpCpeQzo6KW5lm8ohQ6qMW4rP2D5bb63VNLurEwkzWOME4b50B8jGXuJ9VUPKsD4ND9v9tty5KTy0NTo+2Cj8PTObisG9mO7ZscjpaTJT/yLiMS5beswlFWxZW1Ql/YLi/qUd4FowJbGhqJxUtvIuZhkjHo4dwLQcQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768464874; c=relaxed/relaxed;
-	bh=FXFHeU8QpH/lQamvGnH1b8chwcMeSz98NW19o+yr6yo=;
+	t=1768465145; c=relaxed/relaxed;
+	bh=ATQ15qLQkFTNybHKUwOcg7v7b4dVAW6yFiPKJqq/Tnc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=StjS2q/SZMFYz/ZNsrhvHTHiguICgzusSyWlFGzMJiA8bjJnt0cBEyrGt83wlAxt7dRnkTW5aztHzoVCV12JI+KPcyqQJeMLOieTU+RLpznPr2YZrhrguvCXAcUvjqzAaMPuH7bLNnLAWbJRznGBZxyPi36TISOKLjY3JOShMZZmYMkeXiVHptyj6VM9WHPr4DrhGwxFhtue4ELr+xY0kssFVQrRsSm5obxMyZVviMWR4So4SJZ/4Yh1XJ77+6cSVIvY3mFFY5ZSRg/Xkvu3qW0wyoTOoJUo5Eqe0NXf14Y5ULJznNn99KF89Zm+/QYQyTsxgWqKRXulirnnLsx/vw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XnbS2cfp; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ejVVZ3fOE/u+Y3efbBV6LhIKazuFbAEwbQ5ioZX9/l+Rch4Gu5ICroOtYBQA9qRx1WtMPkbMwUcj07vTFahDEDxmcykII9mKcF5Uw9nTrabh+grA1a/HHchkJFJmO9QPcer0/yfZd06x316ktz50ysKpa2NHpMU1Gu8WDb5077P33Ettn6jP24lzm0PLgBh4QAyyvcVHmeR3mrkvSb3Ph/XYOTd4vQEuU3vrPjBpAm/XzNKdBx3nBg+MHsqdqJBaVqAxxpurhJQh1LAWmb07g41W9/YirTetbrt119tFeyN5JKhCwAbN3jvhWHqYcJ4BNHZZEFC3X5Yu4P6HVF9Dgg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VjAZtcoy; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=XnbS2cfp;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=VjAZtcoy;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dsG3s2y0Cz2xqj
-	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jan 2026 19:14:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dsG951Qn6z2xqj
+	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jan 2026 19:19:05 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 3DB4B406A8;
-	Thu, 15 Jan 2026 08:14:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64986C116D0;
-	Thu, 15 Jan 2026 08:14:09 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 75FBB601AF;
+	Thu, 15 Jan 2026 08:19:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 541B5C116D0;
+	Thu, 15 Jan 2026 08:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768464870;
-	bh=WiSNn2zvCUvnX3icYjakRozNqyZdq45DKgsu3cHWUEo=;
+	s=k20201202; t=1768465142;
+	bh=g8fgxkdEmT3gKXWufE7oV9na7UkVXcbj4Z3BE9lnGFI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XnbS2cfpntTwX4GFJAoawDW2AeA5ZSsT+/PONrd75H6dIfGkNvM5vgeSHaOAPv8dM
-	 FrUnVk8caQ2ZgKDdkW59pGpZdLQn5pXMBsCnewkG8ZRPBAs5NmgswKQgR2jlXOGTLH
-	 1XC97DnUwAHpyZvcxc/R/9ANrCDd89hPll0MVVz035TWRgfHi07Ohy3FXm8Oi6cHMd
-	 K1B5BtZtQ3crjd06l/WXb42A7DNOvPmKTEyhkbAB9zRLk0VcQ62qYkO65llb6ehby+
-	 4dGtOQAqLPZ8prbPHH4nyrrHNN5EkPlne7JgZK52gq0fyn0vzFLiAfA69H2k4JHDn4
-	 iObH+Pt4IvcIg==
-Date: Thu, 15 Jan 2026 09:14:06 +0100
+	b=VjAZtcoyRkWMO1uB5ytW9qEsvR5V7Cs30p4xBsOxbZrUvEisSAE2EAo076KOotF78
+	 qEIKjz9ZTs3Sah+mDEl6HKj/6ZFsJhhpdu706ffgp7GsppnNy/6v1rRUieEi0S94hY
+	 gC8UiOPABxtZ5SIRdk6TnqsJ46pJFV01GedBAmQ72u+truEug3h3KyekccB7qCl4DP
+	 95uk0iMVEM0+GLeuGt9ROv/NmuQGtvdz+rOC5qiuMik08aNMJAx9GrhYTNr3cCos8t
+	 Qo4BNTMVBC3PWI/mIp/yopDVejft/5N8xaatqcyNxvAtf/4oY+yxbkUxuUcKT52lNf
+	 EkFY9LJmLUerg==
+Date: Thu, 15 Jan 2026 09:18:41 +0100
 From: Christian Brauner <brauner@kernel.org>
 To: Christoph Hellwig <hch@infradead.org>
 Cc: Amir Goldstein <amir73il@gmail.com>, Jeff Layton <jlayton@kernel.org>, 
@@ -84,17 +84,17 @@ Cc: Amir Goldstein <amir73il@gmail.com>, Jeff Layton <jlayton@kernel.org>,
 	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
 Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
  lease support
-Message-ID: <20260115-inspektion-kochbuch-505d8f94829e@brauner>
-References: <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
- <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
+Message-ID: <20260115-rundgang-leihgabe-12018e93c00c@brauner>
+References: <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
  <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
  <aWZcoyQLvbJKUxDU@infradead.org>
  <ce418800f06aa61a7f47f0d19394988f87a3da07.camel@kernel.org>
  <aWc3mwBNs8LNFN4W@infradead.org>
  <CAOQ4uxhMjitW_DC9WK9eku51gE1Ft+ENhD=qq3uehwrHO=RByA@mail.gmail.com>
  <aWeUv2UUJ_NdgozS@infradead.org>
- <20260114-klarstellen-blamieren-0b7d40182800@brauner>
- <aWiMaMwI6nYGX9Bq@infradead.org>
+ <c40862cd65a059ad45fa88f5473722ea5c5f70a5.camel@kernel.org>
+ <CAOQ4uxhDwR7dteLaqURX+9CooGM1hA7PL6KnVmSwX11ZdKxZTA@mail.gmail.com>
+ <aWewryHrESHgXGoL@infradead.org>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -108,51 +108,18 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aWiMaMwI6nYGX9Bq@infradead.org>
+In-Reply-To: <aWewryHrESHgXGoL@infradead.org>
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Wed, Jan 14, 2026 at 10:42:48PM -0800, Christoph Hellwig wrote:
-> On Wed, Jan 14, 2026 at 04:20:13PM +0100, Christian Brauner wrote:
-> > > You're still think of it the wrong way.  If we do have file systems
-> > > that break the original exportfs semantics we need to fix that, and
-> > > something like a "stable handles" flag will work well for that.  But
-> > > a totally arbitrary "is exportable" flag is total nonsense.
-> > 
-> > File handles can legitimately be conceptualized independently of
-> > exporting a filesystem. If we wanted to tear those concepts apart
-> > implementation wise we could.
-> > 
-> > It is complete nonsense to expect the kernel to support exporting any
-> > arbitrary internal filesystem or to not support file handles at all.
+On Wed, Jan 14, 2026 at 07:05:19AM -0800, Christoph Hellwig wrote:
+> On Wed, Jan 14, 2026 at 03:14:13PM +0100, Amir Goldstein wrote:
+> > Very well then.
+> > How about EXPORT_OP_PERSISTENT_HANDLES?
 > 
-> You are going even further down the path of entirely missing the point
-> (or the two points by now).
+> Sure.
 
-You're arguing for the sake of arguing imho. You're getting exactly what
-we're all saying as evidenced by the last paragraph in your mail: it is
-entirely what this whole thing is about.
-
-> If a file systems meets all technical requirements of being nfsd
-> exportable and the users asks for it, it is not our job to make an
-> arbitrary policy decision to say no.
-
-This is an entirely irrelevant point because we're talking about
-cgroupfs, nsfs, and pidfs. And they don't meet this criteria. cgroupfs
-is a _local resource management filesystem_ why would we ever want to
-support exporting it over the network. It allows to break the local
-delegation model as I've explained. cgroupfs shows _local processes_. So
-a server will see completely nonsensical PID identifiers listed in
-cgroup files and it can fsck around with processes in a remote system.
-Hard NAK. Entirely irrelevant if that filesystem meets the theoretical
-standards.
-
-> If it does not meet the technical requirements it obviously should
-> not be exportable.  And it seems like the spread of file handles
-> beyond nfs exporting created some ambiguity here, which we need to
-> fix.
-
-We are all in agreement here.
+That sounds good to me too.
 
