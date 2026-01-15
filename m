@@ -1,51 +1,51 @@
-Return-Path: <linux-erofs+bounces-1899-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1900-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98A32D26C5C
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jan 2026 18:49:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DF859D26C74
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jan 2026 18:49:33 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dsVq81LJ4z309S;
-	Fri, 16 Jan 2026 04:49:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dsVqH3D76z309y;
+	Fri, 16 Jan 2026 04:49:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768499364;
-	cv=none; b=N94f2CXv8Bv3AJhpK7aidaIC8Bbyxzih1U/tWvwj8r4lY+fgds7vInG2ryK5qDzMm/RZvicfkbOLUp5ASoiH9g8+GctvuGiFn8xVns06llyndw0ulDBPW7IFFQSjF3RNePa4Z8z5qXBFzD4TpxOJA36/Du38YByH749UdyeiCK7vdVofiOx857TqJ3aO+VL9tqiwyJZGcUeSc+AoXoswgSTFGcPSuzambsR5ghva7Si4fKCC2sxdr3gcitmVqvF28CSTJvYscYwzUNtN1jjA9HOVhgFj2m6lo+7HWGEeXQsMdq9Xjm3r32FWQu2GUOVhYerHccb8bvPi0SjCKQCwDQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768499371;
+	cv=none; b=XfA3BMPX2cEVGLsTEfhTFaUr3y/nzXvErupPi3VEvmI8IYC4YCXlMrDHM8P+hrf+gLE9Ztwb6bi2umwOlD+Y0GaGOPSdKeipyoRbW1RPVtZOdr8sclMC2MMsrYxI9nN3Tl+1977JZwPfl5ll8WX8OuWU2uLnEBC2OY/jrsq5e0HFPHMBnJhsfE3+2TmYKvkXd7sm2u1R/b5nQzTwsfeAZfIDjSO3if8AKXeIhneTCRqemUB/ywVncWqCFluj1XXGjh5J4Kb4dYt+LgoYuYmV3+QivW9XYoaeeJ7ZF2vel/eornIIluGytMZ2MPQvsepcPCTeB7LNhlEj0R1RGMseKg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768499364; c=relaxed/relaxed;
-	bh=S+9dqYpkPaX+Jx32+UewuW6FC+I4MhbHQlcF/X9q2rI=;
+	t=1768499371; c=relaxed/relaxed;
+	bh=AYWURcqMUxp9DlYRnvKSwe7IEW9L017mImGJDNWH7a4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Q7kBl1Ba8V8diGsBQY/PJOWihQ112gcscr5+U6U4RrAlg83MyVLAVl8XeWQbbh/6CArpGDsNGkvtq3F5JnpWJHx9iIXOj1ACDaGamPtA2O44Ho8NcgjjJdR9mUw1FknG08D0rDgYHvSNA6E85x5YzjSgOaVe+CvXExpnhV+zu31MwgkKGFs9u8utu/hmQ21wET5uiXKbItzsTIZogpY6nIWgYQdHWVAzIl6tMbev7DqLThAgE04rqiYYasjjdlY1PHGG18jSrEgSMGh02eiIvUPh8e8yz8VoghySgBaBdOvGC+lMVIgPx4RYr8Khs800hkM5RO7wyQlgL70YoKBzbg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=aoVPha7R; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:To:Cc; b=Gt9E/w2gLDOrtFs2W9VEI/dJcS6y+skswU7jRGJv41tQsfwOJ42qtLE5QOCzNwhkxvpeStrtB8a+QsPw1i1Arm63nkptxxwAaUq3oa//+gfFW06MV4A/OX1yF7wT7l12pMtSt0Dgz5VwRND4a4E3EFvePT1QYlzBQ5/wxe8cWck8wl/L84ijEY7U6vlG9msjWxk3DhyaC4A01qbQ6uQhO3cMIn1x0GMFbHBl0+RXRUbEQeeDksda2pbH1aCIYdmtWdVb5JJh/Hp/0f9iXcOaPDCB5BoiKTMP3RuEijbKcJsKalWrcp7t9mKqLlJWn2NL015oOwgI+NjQQbexw3HKLw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=WrC6gPMN; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=aoVPha7R;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=WrC6gPMN;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dsVq73N1Gz309N
-	for <linux-erofs@lists.ozlabs.org>; Fri, 16 Jan 2026 04:49:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dsVqG4rqKz309N
+	for <linux-erofs@lists.ozlabs.org>; Fri, 16 Jan 2026 04:49:30 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id E548544379;
+	by tor.source.kernel.org (Postfix) with ESMTP id B4680601AF;
+	Thu, 15 Jan 2026 17:49:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13C14C19425;
 	Thu, 15 Jan 2026 17:49:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DDF0C116D0;
-	Thu, 15 Jan 2026 17:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768499361;
-	bh=vIHxhWXy09cxwOBR5jwdqwOPX/LuIGbTAXFi0NJ+sEE=;
+	s=k20201202; t=1768499368;
+	bh=eujLaXiTUgNyjxHmQdWX3y0IvgSLWTxRgF6WqDofLiM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=aoVPha7RotP93KFonT0uh/G1PEbUfw5RzccdIbFwSWenDBhTkyRjOJtVzv97+g7Lc
-	 ey8x9BxnX8OrG87Onr98FCMeeFPvzY9mFFWJ1ymiwRuWLGMXivaI0bR4sGFSYPTABe
-	 z+Vl+P07B9BOYnJ46E3xo8EGbkd1+fhpXhG2qNpWFExdd+esO9kHr1jEmpufkm9E+v
-	 QPBOflETm5Ydo0n4CF+1YV5V78GVEx8fbCw3C9LWmfF8KAscJIf3WE9nnTzPh/j5c2
-	 /UHM/HpXTiP1OdEOOgX2+fDNfZD04sq96BNryy9C3J+VVT7VM40RwnkU319j+sj+i8
-	 AkQrkPFtxLQ5w==
+	b=WrC6gPMNbrPphwr9B2OdMVMQWD3w6Mv/nOHw1pbDBE9bxWiXfLBlumR/OK5kPYvhN
+	 apkCGc+VCRQbuTwUzoMWQokSRmciqLfDU1cKQaB0vDgFmguXC/lEKFQuA1jBtQO1aF
+	 nY3Vqv/eIQMRVKyVDelnHsTtCA/b3gjlScr6ZDHjRk3uLay+tzhSV4lLC/9YEnS5PX
+	 mOoXSwKkjcNHnMBAWgQ1xuVpR4uWZcftB/FcM9PxN63hPvsYuMkuUDkxoOxaS/5EE3
+	 hJFC4jBF3M1DIGPw7w+cQqHCLPWAeseUgepLBm2x4n/2+78QiklR79Cs3+JFj4Ixb/
+	 cC6zieYF97tJw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 15 Jan 2026 12:47:43 -0500
-Subject: [PATCH 12/29] udf: add EXPORT_OP_STABLE_HANDLES flag to export
+Date: Thu, 15 Jan 2026 12:47:44 -0500
+Subject: [PATCH 13/29] affs: add EXPORT_OP_STABLE_HANDLES flag to export
  operations
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -60,7 +60,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260115-exportfs-nfsd-v1-12-8e80160e3c0c@kernel.org>
+Message-Id: <20260115-exportfs-nfsd-v1-13-8e80160e3c0c@kernel.org>
 References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
 In-Reply-To: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
 To: Christian Brauner <brauner@kernel.org>, 
@@ -108,20 +108,20 @@ Cc: Christoph Hellwig <hch@infradead.org>, linux-nfs@vger.kernel.org,
  linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, 
  linux-f2fs-devel@lists.sourceforge.net, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=735; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=vIHxhWXy09cxwOBR5jwdqwOPX/LuIGbTAXFi0NJ+sEE=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpaShHxC/QAhbO7mbVrXH1nVia3Hfviv3SDRtnW
- +y+FMiktpyJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaWkoRwAKCRAADmhBGVaC
- FTFZD/9XDkcZd82hmY1yhsac5N/jsQmiIXeuAQ2Mkni6mEVMyB92tEdrk3Gwd8HgDOuWYPHu1Bz
- Z0O/OLUE08CCrAkc+MNTfeih8RKuVwDIW/S8xPrmsI1R7Fph8Qisc4hx8sMoaZ24qkAJ4GU+oMn
- AoBxvXpqJUDPih2yNiXyvrsdIXRJMDr0r+fnffl3Z1G/IYnc+Iom6R8Yi/JxVk1QHyJFKWBpCYv
- 5+H1zVkKmg3n6OW7GXXq4boj+hd+YK3lgDgNTmYMKLeKxWajkeJ5vdqoaJwssSQ643uSWl/54b8
- MJa9r1hdHeR0oIUn8ZhMDFeqUZkVaePVRgmQPmPyZPFlmDdXmpw1wXMz9Li4DP6adL8mdtNl3JE
- OuJPSv7VxvmI7hqt5yO3GtdNn0QyNsEkotek1aAPUvSGFLD6P/OcK+JyysT2cxa11yh/iXUn3jx
- /yTeRPDYoqvBzQU97cd2AKrWp8YZCcJAtiwIvjJOO2jmURfe5Yr2sWLS/XF0Fi8QPKJuth76n6h
- mI71FzBHHxE/RE/lFB27XbFser2x53DCRndN6oMxqvDyZrvGJhlCftA/nu60B3fIFvIIiEWHeil
- wXaDHvjkwLW7kGh0gAkcLiqxiq6ba+YQ1+3OimFS8lE6jElkoDn425GmpS4u9OHc26ZNg28lZP5
- lWOj0uKQEFaRbbw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=733; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=eujLaXiTUgNyjxHmQdWX3y0IvgSLWTxRgF6WqDofLiM=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpaShHf9xsknLmtYtQUrLBjji8uf4+uPYffbqfL
+ wgOw9E+mmaJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaWkoRwAKCRAADmhBGVaC
+ FXbXEAC0895+UA8PrkFaOQufVJ/wApB6ITexKHprwSNunNO41jBbrtLkZkJ2sv0koCiZt90R2ZK
+ lDcmy1jDGxHDAoeS+2s/+Dj1hyXFroy/xyIvQgDKnouziNx5qID1fnGi5BUM0th5keSDytGUuc2
+ t1IfxlsMKP9kq9+tOQHdzMwlju0cH3P5LVsal1qPuxp3wefns1spTXKz8PNsXlSQjqHkFE1i5mM
+ rbyG6PTv08LCt/VcusU6PoZ3u1stNRIt6uKT0vzEnO50P+Yj0sHQxEnoX+Bod6emLLeH2eTMEHN
+ wuEd/bsRVBogUBGLgr68r57KJxfT93SdeBFK+gHvb1jPbAAhh5cGNAJPqzpumHEbLkKMuLd/Ye0
+ nIgKzkZs4U2z5jqviDwSJ6c4wEkvItIzYPZ3PwvGABupEupo5QluuZyftB0AZM0afQWDn08238O
+ qbPIrfeH6fKrGYEVVXUuvVJyBDK4LdBJj9OV9OHOHpv8K2WsopPfKfiZgTXTBmXOnJ1302CZH2Y
+ eX4T3kDcoEe46PYP5+BtNXT4lpKazM99sT7Qh7ingPdHcFB0kcUp2MYsavYRSaGoYKFQ3mjlIWT
+ qXve3+HMCZ60tdt8a0IIZCFnqRO1vasQ9qrLpmhyye3NkmxHM05dXIQjSEO5amwJr/l7RLg/KZt
+ t/2RgC4+1Mljlkg==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -129,26 +129,26 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Add the EXPORT_OP_STABLE_HANDLES flag to udf export operations to indicate
+Add the EXPORT_OP_STABLE_HANDLES flag to affs export operations to indicate
 that this filesystem can be exported via NFS.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/udf/namei.c | 1 +
+ fs/affs/namei.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/fs/udf/namei.c b/fs/udf/namei.c
-index 5f2e9a892bffa9579143cedf71d80efa7ad6e9fb..7b8db8331c77bb43d9a3c4528aee535eac2bbd37 100644
---- a/fs/udf/namei.c
-+++ b/fs/udf/namei.c
-@@ -1012,6 +1012,7 @@ const struct export_operations udf_export_ops = {
- 	.fh_to_dentry   = udf_fh_to_dentry,
- 	.fh_to_parent   = udf_fh_to_parent,
- 	.get_parent     = udf_get_parent,
-+	.flags		= EXPORT_OP_STABLE_HANDLES,
+diff --git a/fs/affs/namei.c b/fs/affs/namei.c
+index f883be50db122d3b09f0ae4d24618bd49b55186b..edea4d868b5131fa69912655879231912ceff168 100644
+--- a/fs/affs/namei.c
++++ b/fs/affs/namei.c
+@@ -569,6 +569,7 @@ const struct export_operations affs_export_ops = {
+ 	.fh_to_dentry = affs_fh_to_dentry,
+ 	.fh_to_parent = affs_fh_to_parent,
+ 	.get_parent = affs_get_parent,
++	.flags = EXPORT_OP_STABLE_HANDLES,
  };
  
- const struct inode_operations udf_dir_inode_operations = {
+ const struct dentry_operations affs_dentry_operations = {
 
 -- 
 2.52.0
