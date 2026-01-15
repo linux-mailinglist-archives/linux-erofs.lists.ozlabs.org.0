@@ -1,43 +1,125 @@
-Return-Path: <linux-erofs+bounces-1881-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1882-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4302AD2269E
-	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jan 2026 06:14:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 28361D2297F
+	for <lists+linux-erofs@lfdr.de>; Thu, 15 Jan 2026 07:43:35 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dsB3b03wBz2xqj;
-	Thu, 15 Jan 2026 16:14:03 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dsD2r5H8yz2xqj;
+	Thu, 15 Jan 2026 17:43:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768454042;
-	cv=none; b=F4ozZEKIAncN5dW2HOvtvmG+uqGXKY58Tnb1nPKKfpWDTilShZoX0MFnSAViitB0FCsapvyz/cDaNRNoretscmeV6yKr+x90+oxJfTBAPULwrrRarWtKsKwhUjnPpgoZFMZcyeMA3r3t3FpRYk7lTyTwxIjpE3ehViZwZLI/DzpLVbLZhrDsSxNIyReIUwqmv4g+6Si9W6NKmWDBgHGBUj2H9QfkDuPqkyQFf6wzfeK2zsHl/9OijDms7Pf5v/GbXTwMe0aW+RZUYjxhmIVQ3YpfpJ+T+niYZ6qdgsLjjYkkGb3jnVw1lfFKdR0leNHE1M1fTtMuyqUUQUBPsKVg5w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:7c80:54:3::133"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768459412;
+	cv=none; b=D5uagFwHL1oy398DZTWyOao45S0CX3VaFA0p3QktPdEqGimsj80fiZtVtMSM+1INyI4grwPQy/82M4iYGVh8tHxhYpJvhK72Je0yR8lbrXnXRmYl307bim7GwfnGO3IIDE7iixVmVPzDhmIN9GDrgAYhTU0jDmHzZa8D2OhRDUH1aO4fXyh7Hse0hKJ5/x/UwiYgxAsxFKC5oj5EiXB731iHaSJojmjudstxp4mHXi2lcMrel/AajgRx4rM60ZHMmxvl22f2Xaw2IqAjfEyi2raVZTc+xOu79WLW4Xu4jpuF2TMAzIWi9v+1BV/C65Bcs8pQB+ghMdj51yZj3dDqUw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768454042; c=relaxed/relaxed;
-	bh=hRvD9DsGHFgK5GDW/ghvk/QGptfNn0aax/xCrYgjFNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HkFD/uh2GFoAjAsr9/77eneDiDcC2Ciw2y2bTlapu8AQwiezwczu509oGsgxOJ/Rs8nCgAzSWCK13HgtdSD+kMY7aijTbR8t2SCWnBQFV/TwtFJZwQE34RcAlrYUBC7S1d4GgqZ2MbvzlsGhlU1ZqEdF4oT8GL22fggig481SGOGsYtGZuFBX1qoVxGJCnJ9DNSHRIUd0b12bT+zL4On2Op+YJV1Mah+RKdV4+Adjr1uMmSTvxVKxKgYN4DBb/G2pVe+yvBzRWdhk4JyEitM8Yh5PHOZpBlVUbGSq76gQ44ef9OG2uKdZZYt31QbBgTEgYJx8yXMTK//dXg4KWjm/w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=F7n1xqst; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1768459412; c=relaxed/relaxed;
+	bh=/I/lmC8LP3DXdryYas7yQPVnLzGMCsU6bnNnqo9iZUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gqIZpiavMmyVqtquPDirHseSTLo9OoM6qhy0/pCV+/LN53gvdlVk2XtnzAUpTpVdktkLg1KHLk1l3pPpkgtbGOIz90xMbRk7drJ2153kcsXZavVDPHxK3NZmEgE8IExJqYCzy92ECuFmpl76b5mTS1im6F9yEo5kkTqfTMNbW75Ry+C7RjWYuxJT3UgvgAM/JqRG7NbCRKDWwVNlvKXjkZZ3ZIw4hyNrOc+Kx+XKnwCSczPFPEg0BAQGprsyRejZ5ksQNgisocPoy9LsQiASENgxjVN4K/3gzqHsRuN1g3VvgkVKt2tg8pXzXfL+gG4HUvvUsL8F3XB3DPqDq2Vuow==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VGObqK5v; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+cdf73ff56b16bd1381a0+8180+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=F7n1xqst;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=VGObqK5v;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+cdf73ff56b16bd1381a0+8180+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dsB3X1RRcz2xHW
-	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jan 2026 16:13:57 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1768454032; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=hRvD9DsGHFgK5GDW/ghvk/QGptfNn0aax/xCrYgjFNo=;
-	b=F7n1xqst48RlFA9lc+7IehM4qm+j6TSUh/5uR8aZ2h2QEpLMYdrKrzIw5WX3B4UZ9tYUoc267ouR8N+k+RIpPn6qxsW43vsDbjZEMhzI5xG58EpfNpp0PYxP3Pd/F3go6tCUisiU7QsD23g/u87hwlQfBMczhfnBnjnlLD8rFYM=
-Received: from 30.221.132.28(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wx5MdXF_1768454030 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 15 Jan 2026 13:13:51 +0800
-Message-ID: <ea8d655c-73f2-45b2-9a1a-1882c414570e@linux.alibaba.com>
-Date: Thu, 15 Jan 2026 13:13:50 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dsD2p3zxjz2xHW
+	for <linux-erofs@lists.ozlabs.org>; Thu, 15 Jan 2026 17:43:27 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=/I/lmC8LP3DXdryYas7yQPVnLzGMCsU6bnNnqo9iZUY=; b=VGObqK5voCZEvaOS2sd8k58SOl
+	1MKXHul0UIxtbNustQjF3TiNBO5A5DEV+7luUQDjVEmdj1o6ZXj7/RHbsW5uQ8FHghSmNa8RGSf/Z
+	lqXP7DBojYS/m9d+kpswr79pVrMANdI/lJ+/vLktuyA9+4LwMwmW4ZudctP5Nn8fgcUOpIxP4H3bZ
+	wZU+Uv2sOpV/KHIJNeQwI3FUfk0W1FapF8T8lBqL+KFM3MrFgZ4F2CMZTLhz100xPKnoPJhHW7ms9
+	sJwJmQ51fc9hgVLMQHKjPH4dx2dyuUWDE38tPmbeAdELv7G3/fIrEXIlcOTJgefaGpHmCuyNcNjpw
+	8JLGu1tA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vgH4C-0000000Brtc-23Ey;
+	Thu, 15 Jan 2026 06:42:48 +0000
+Date: Wed, 14 Jan 2026 22:42:48 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>,
+	Luis de Bethencourt <luisbg@kernel.org>,
+	Salah Triki <salah.triki@gmail.com>,
+	Nicolas Pitre <nico@fluxnic.net>, Anders Larsen <al@alarsen.net>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chunhai Guo <guochunhai@vivo.com>, Jan Kara <jack@suse.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>,
+	Dave Kleikamp <shaggy@kernel.org>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Phillip Lougher <phillip@squashfs.org.uk>,
+	Carlos Maiolino <cem@kernel.org>, Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Sungjong Seo <sj1557.seo@samsung.com>,
+	Yuezhang Mo <yuezhang.mo@sony.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Andreas Gruenbacher <agruenba@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Hans de Goede <hansg@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-mtd@lists.infradead.org, jfs-discussion@lists.sourceforge.net,
+	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+	ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org, gfs2@lists.linux.dev, linux-doc@vger.kernel.org,
+	v9fs@lists.linux.dev, ceph-devel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org
+Subject: Re: [PATCH 00/24] vfs: require filesystems to explicitly opt-in to
+ lease support
+Message-ID: <aWiMaMwI6nYGX9Bq@infradead.org>
+References: <ec78bf021fa1f6243798945943541ba171e337e7.camel@kernel.org>
+ <cb5d2da6-2090-4639-ad96-138342bba56d@oracle.com>
+ <ce700ee20834631eceededc8cd15fc5d00fee28e.camel@kernel.org>
+ <20260113-mondlicht-raven-82fc4eb70e9d@brauner>
+ <aWZcoyQLvbJKUxDU@infradead.org>
+ <ce418800f06aa61a7f47f0d19394988f87a3da07.camel@kernel.org>
+ <aWc3mwBNs8LNFN4W@infradead.org>
+ <CAOQ4uxhMjitW_DC9WK9eku51gE1Ft+ENhD=qq3uehwrHO=RByA@mail.gmail.com>
+ <aWeUv2UUJ_NdgozS@infradead.org>
+ <20260114-klarstellen-blamieren-0b7d40182800@brauner>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,142 +131,37 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] erofs-utils: lib: oci: support auto-detecting host
- platform
-To: ChengyuZhu6 <hudson@cyzhu.com>, linux-erofs@lists.ozlabs.org
-Cc: Chengyu Zhu <hudsonzhu@tencent.com>
-References: <20260110082732.61528-1-hudson@cyzhu.com>
- <20260115033835.81033-1-hudson@cyzhu.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20260115033835.81033-1-hudson@cyzhu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260114-klarstellen-blamieren-0b7d40182800@brauner>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,SPF_HELO_NONE,SPF_NONE autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-
-
-On 2026/1/15 11:38, ChengyuZhu6 wrote:
-> From: Chengyu Zhu <hudsonzhu@tencent.com>
+On Wed, Jan 14, 2026 at 04:20:13PM +0100, Christian Brauner wrote:
+> > You're still think of it the wrong way.  If we do have file systems
+> > that break the original exportfs semantics we need to fix that, and
+> > something like a "stable handles" flag will work well for that.  But
+> > a totally arbitrary "is exportable" flag is total nonsense.
 > 
-> Currently, the platform is hard-coded to "linux/amd64" if not specified.
-> This patch introduces `ocierofs_get_platform_spec` helper to detect the
-> host platform (OS, architecture, and variant) at compile time using
-> preprocessor macros.
+> File handles can legitimately be conceptualized independently of
+> exporting a filesystem. If we wanted to tear those concepts apart
+> implementation wise we could.
 > 
-> Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
-> ---
->   lib/remotes/oci.c | 68 ++++++++++++++++++++++++++++++++++++++++++++---
->   1 file changed, 64 insertions(+), 4 deletions(-)
-> 
-> diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-> index c8711ea..4c4568f 100644
-> --- a/lib/remotes/oci.c
-> +++ b/lib/remotes/oci.c
-> @@ -694,10 +694,20 @@ static char *ocierofs_get_manifest_digest(struct ocierofs_ctx *ctx,
->   		    json_object_object_get_ex(manifest, "digest", &digest_obj)) {
->   			const char *arch = json_object_get_string(arch_obj);
->   			const char *os = json_object_get_string(os_obj);
-> +			json_object *variant_obj;
-> +			const char *variant = NULL;
->   			char manifest_platform[64];
->   
-> -			snprintf(manifest_platform, sizeof(manifest_platform),
-> -				 "%s/%s", os, arch);
-> +			if (json_object_object_get_ex(platform_obj, "variant", &variant_obj))
-> +				variant = json_object_get_string(variant_obj);
-> +
-> +			if (variant)
-> +				snprintf(manifest_platform, sizeof(manifest_platform),
-> +					 "%s/%s/%s", os, arch, variant);
-> +			else
-> +				snprintf(manifest_platform, sizeof(manifest_platform),
-> +					 "%s/%s", os, arch);
-> +
->   			if (!strcmp(manifest_platform, platform)) {
->   				digest = strdup(json_object_get_string(digest_obj));
->   				break;
-> @@ -1089,13 +1099,63 @@ static int ocierofs_parse_ref(struct ocierofs_ctx *ctx, const char *ref_str)
->   	return 0;
->   }
->   
-> +static char *ocierofs_get_platform_spec(void)
-> +{
-> +	const char *os = NULL, *arch = NULL, *variant = NULL;
-> +	char *platform;
-> +
-> +#if defined(__linux__)
-> +	os = "linux";
-> +#elif defined(__APPLE__)
-> +	os = "darwin";
-> +#elif defined(_WIN32)
-> +	os = "windows";
-> +#elif defined(__FreeBSD__)
-> +	os = "freebsd";
-> +#endif
-> +
-> +#if defined(__x86_64__) || defined(__amd64__)
-> +	arch = "amd64";
-> +#elif defined(__aarch64__) || defined(__arm64__)
-> +	arch = "arm64";
-> +	variant = "v8";
-> +#elif defined(__i386__)
-> +	arch = "386";
-> +#elif defined(__arm__)
-> +	arch = "arm";
-> +	variant = "v7";
-> +#elif defined(__riscv) && (__riscv_xlen == 64)
-> +	arch = "riscv64";
-> +#elif defined(__ppc64__)
-> +#if defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-> +	arch = "ppc64le";
-> +#else
-> +	arch = "ppc64";
-> +#endif
-> +#elif defined(__s390x__)
-> +	arch = "s390x";
-> +#endif
-> +
-> +	if (!os || !arch)
-> +		return NULL;
-> +
-> +	if (variant) {
-> +		if (asprintf(&platform, "%s/%s/%s", os, arch, variant) < 0)
-> +			return NULL;
-> +	} else {
-> +		if (asprintf(&platform, "%s/%s", os, arch) < 0)
-> +			return NULL;
-> +	}
-> +	return platform;
-> +}
-> +
->   /**
->    * ocierofs_init - Initialize OCI context
->    * @ctx: OCI context structure to initialize
->    * @config: OCI configuration
->    *
->    * Initialize OCI context structure, set up CURL handle, and configure
-> - * default parameters including platform (linux/amd64), registry
-> + * default parameters including platform (host platform), registry
->    * (registry-1.docker.io), and tag (latest).
->    *
->    * Return: 0 on success, negative errno on failure
-> @@ -1120,7 +1180,7 @@ static int ocierofs_init(struct ocierofs_ctx *ctx, const struct ocierofs_config
->   	if (config->platform)
->   		ctx->platform = strdup(config->platform);
->   	else
-> -		ctx->platform = strdup("linux/amd64");
-> +		ctx->platform = ocierofs_get_platform_spec();
+> It is complete nonsense to expect the kernel to support exporting any
+> arbitrary internal filesystem or to not support file handles at all.
 
-	if (!ctx->platform)
-		return -EOPNOTSUPP;
+You are going even further down the path of entirely missing the point
+(or the two points by now).
 
-I will update this part manually, otherwise it looks good to me.
+If a file systems meets all technical requirements of being nfsd
+exportable and the users asks for it, it is not our job to make an
+arbitrary policy decision to say no.
 
-Thanks,
-Gao Xiang
+If it does not meet the technical requirements it obviously should
+not be exportable.  And it seems like the spread of file handles
+beyond nfs exporting created some ambiguity here, which we need to
+fix.
+
 
