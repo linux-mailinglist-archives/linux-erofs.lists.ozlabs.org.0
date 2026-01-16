@@ -1,90 +1,91 @@
-Return-Path: <linux-erofs+bounces-1954-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1955-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 978E3D2FCB3
-	for <lists+linux-erofs@lfdr.de>; Fri, 16 Jan 2026 11:47:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2737CD2FCD4
+	for <lists+linux-erofs@lfdr.de>; Fri, 16 Jan 2026 11:47:34 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dsxPV5t6rz2xrC;
-	Fri, 16 Jan 2026 21:47:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dsxPv4kj5z2xrC;
+	Fri, 16 Jan 2026 21:47:31 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768560430;
-	cv=none; b=hjKESUdiug397p00zybVtgyC7upiztg+K8MM6ACRlsi8h7dAXwYUZF58Zfd4fOP+ZpA5OtyuU5j/vfEAOhHOas4REPS+LSlYH7MyPF9PLwNWpqca8KdS4hKlldhAMyRwOEnj9Phz4VzLaWRbSzfSgtfZSUmw49lhZ7D4ZyjVg7am1xMbmqXVGbDqAy2sL5j6ihv4L+iz6NLtKsS4GpHEqZDoxxj4+BSFfHI5uOfUr+q94Mwt2gE0tKHdUpiIENMYgsMyQlHK/Uj2QqV97U0QIAmcSVZUm5KdtQh8Zo7ommQtwZ3X3NdhbNGnQ+zrmrnBGYvBCplb7I7AImj4pjVByA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2a07:de40:b251:101:10:150:64:2"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768560451;
+	cv=none; b=Q96W3BEZOcuGaydrreMAEowwFLxOiQ1nPE78FGx7X1tZsTq261pBguvd0VmmRj4u5vXcMF2HR0mrQjSO7lKpLPxfp/nG036kGrCVhr53X/iV5um6Veb0xKZwpoZUOvAMElNK4RYaCL1JyOoNBl6ypOWqllEa3hs18k3Rx4mvn13bSbJHiRVwpCPny0Mk7A8N1T7IQSaeDx1e9elzYksERknXjyabHGQFi4uT5qunJzJJ6IPwVDipRbWDW23Pngtl3PRsXXX3IjuPkTdNKXFWGJqQfUxCI4gL5THeLv9D7YkujRdGHWYTtOAm6iClzaIPRMtKNQgMX/1aEKZTRZnd+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768560430; c=relaxed/relaxed;
-	bh=nhQTtNIBA2tMcAjaR+HOsu/vm0Hf5La0b3bvYJ0Bq0Q=;
+	t=1768560451; c=relaxed/relaxed;
+	bh=2lMC4dV45oi1mlY5BXp8fQKt2SNPdaLd6Ilt8JO+JmQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ToCPqm5vLPuzDFtcpigI4sC+fF956uXpDiwv6dtNMjblen8DeoYJdT6j+8iJw91AMhl+k9Sguvos+I7uCvfIWfTW7wYet89MFjzwnIojuShHKimqIr9aM7/zjaVmaUl5MXGLWRRJ+BgZXbrVC+yS74xs1vNafkNECFGuUC1KmZuXv8YX13fEwjcikOkTQV7JQDC5coh8UtRVVETSXT/HjyxeOxuYuVxusNdpcVpVxlo/b3yGETHEqbl4r7UyuOmFS8knWa2FSuMcgb1es1x34hlBoEkXeVMMZu7s4S0ewyglaPmzcsjir9ozODBQ0sBZlmqB84lVCZvCfPG1sTNUpw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz; dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=2hcr2hsL; dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=yetHVfPV; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=YNI0fP0u; dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=a5rOcxSP; dkim-atps=neutral; spf=pass (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org) smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=VMJsmcvhDdegyXlQqfR93dYySbLBsXYcfmxFwb6bxvVAA6lFrGoIjgDlY1vkJOlSE7z2oT8zOIy/h9ueRiDWQkKykAcMcut2evkbC54VHhZzG/P0s5pzy5Vfj6tmB6XVEVjfLDA/A68tkD1SMIRy4j9chS9a1fUXXg+BTeBvI4kEbdljlnda/ZMZS3+3fyx4nj9EoxyTzd3YpAUYaYoJQnNDoeA/KxoTuR4o5Ijizgn4MTlmlObBQlVT0xWXOfquF0X9A91YWWWV2Ht9bDVXO8ikictGxsZT4t/bAOKeWs5SZ+R8RFBr9SdDmPW3RStLctuJEAt37AQnrwj6w77Ylw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz; dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Ftw/w48A; dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=/0mnXymQ; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Ftw/w48A; dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=/0mnXymQ; dkim-atps=neutral; spf=pass (client-ip=2a07:de40:b251:101:10:150:64:2; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org) smtp.mailfrom=suse.cz
 Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=2hcr2hsL;
-	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=yetHVfPV;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=YNI0fP0u;
-	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=a5rOcxSP;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Ftw/w48A;
+	dkim=pass header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=/0mnXymQ;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.a=rsa-sha256 header.s=susede2_rsa header.b=Ftw/w48A;
+	dkim=neutral header.d=suse.cz header.i=@suse.cz header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=/0mnXymQ;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.cz (client-ip=2a07:de40:b251:101:10:150:64:2; helo=smtp-out2.suse.de; envelope-from=jack@suse.cz; receiver=lists.ozlabs.org)
+X-Greylist: delayed 89 seconds by postgrey-1.37 at boromir; Fri, 16 Jan 2026 21:47:30 AEDT
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2a07:de40:b251:101:10:150:64:2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dsxPV0ZjKz2xnj
-	for <linux-erofs@lists.ozlabs.org>; Fri, 16 Jan 2026 21:47:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dsxPt6wbNz2xnj
+	for <linux-erofs@lists.ozlabs.org>; Fri, 16 Jan 2026 21:47:30 +1100 (AEDT)
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CEAF75BCCD;
-	Fri, 16 Jan 2026 10:47:06 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EF1155BCCB;
+	Fri, 16 Jan 2026 10:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1768560427; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1768560448; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nhQTtNIBA2tMcAjaR+HOsu/vm0Hf5La0b3bvYJ0Bq0Q=;
-	b=2hcr2hsL5eFX1fbXp1esYhEhUHrr21EVahAExf5MvMYukY5mYzW/TEGzFEWyqdRUTE9h3k
-	mL6LVUJ3th5LUIIq7c/DrGjVH01KFmvPxdxN0VEb318letI72UaP8m99FGdVni21nQSf1T
-	vfQjCvR8JpdcwX3xPuiF+zckuiX14LU=
+	bh=2lMC4dV45oi1mlY5BXp8fQKt2SNPdaLd6Ilt8JO+JmQ=;
+	b=Ftw/w48AH2FIze8c5NCpGY+5XO/vnHkjGCmtVV9PTeJB6y2k7VTfqEVHahDLJnyaun4vrT
+	jZwEXiGVCIwZUyt3JbbArZXWmWmE5e5aZEA1Gruu+xovaSyAFw4iXisViVzre8n7BBI/TR
+	X0JT5TV78n0RM2yYJOHbOFg0cunt5rE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1768560427;
+	s=susede2_ed25519; t=1768560448;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nhQTtNIBA2tMcAjaR+HOsu/vm0Hf5La0b3bvYJ0Bq0Q=;
-	b=yetHVfPVsMQQbQ4pwk/qwZxPnG/cgaKCSc+he94LlA5ir/TQMhSt2Mn/ddyQwhde2L0+lB
-	vTNVuJzIa9pkq7DQ==
+	bh=2lMC4dV45oi1mlY5BXp8fQKt2SNPdaLd6Ilt8JO+JmQ=;
+	b=/0mnXymQoI/apVzzXrkGOFLQrtf7ARYoukgV2ygH5/30E/hcAH6PZ8LZ8kwGADlW1g3sJT
+	6D8IQPk6mXId1oDA==
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=YNI0fP0u;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=a5rOcxSP
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="Ftw/w48A";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="/0mnXymQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1768560426; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1768560448; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nhQTtNIBA2tMcAjaR+HOsu/vm0Hf5La0b3bvYJ0Bq0Q=;
-	b=YNI0fP0urTRgtxJoSCfeUDrSdRBDW+XOtZy+WyI6aJLZbveCQ8D9BiVP/Bmp2UpLMEuUdU
-	no9nkHdMplocYIUdSsacluXs7LRoopl9pF7Iw6Sato7ATWNy7CVc27FuQv4/CXzkzwh0JR
-	N1qo4myI2M6eo5/0nbGCZOekXbwmo7k=
+	bh=2lMC4dV45oi1mlY5BXp8fQKt2SNPdaLd6Ilt8JO+JmQ=;
+	b=Ftw/w48AH2FIze8c5NCpGY+5XO/vnHkjGCmtVV9PTeJB6y2k7VTfqEVHahDLJnyaun4vrT
+	jZwEXiGVCIwZUyt3JbbArZXWmWmE5e5aZEA1Gruu+xovaSyAFw4iXisViVzre8n7BBI/TR
+	X0JT5TV78n0RM2yYJOHbOFg0cunt5rE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1768560426;
+	s=susede2_ed25519; t=1768560448;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nhQTtNIBA2tMcAjaR+HOsu/vm0Hf5La0b3bvYJ0Bq0Q=;
-	b=a5rOcxSPDJ+EC0mdImqiF+5FC+KRZ0k75kuCS7KKI8PPCf8uePpaPiihAOCbbNB/esfW/l
-	OfbspTnn3TEZkYDQ==
+	bh=2lMC4dV45oi1mlY5BXp8fQKt2SNPdaLd6Ilt8JO+JmQ=;
+	b=/0mnXymQoI/apVzzXrkGOFLQrtf7ARYoukgV2ygH5/30E/hcAH6PZ8LZ8kwGADlW1g3sJT
+	6D8IQPk6mXId1oDA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BFA523EA63;
-	Fri, 16 Jan 2026 10:47:06 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DF7B83EA63;
+	Fri, 16 Jan 2026 10:47:27 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id paDCLioXamn5CwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Fri, 16 Jan 2026 10:47:06 +0000
+	id sMCYNj8XamkZDAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 16 Jan 2026 10:47:27 +0000
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 850C2A091D; Fri, 16 Jan 2026 11:47:06 +0100 (CET)
-Date: Fri, 16 Jan 2026 11:47:06 +0100
+	id A8D37A091D; Fri, 16 Jan 2026 11:47:27 +0100 (CET)
+Date: Fri, 16 Jan 2026 11:47:27 +0100
 From: Jan Kara <jack@suse.cz>
 To: Jeff Layton <jlayton@kernel.org>
 Cc: Christian Brauner <brauner@kernel.org>, 
@@ -119,11 +120,11 @@ Cc: Christian Brauner <brauner@kernel.org>,
 	ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev, linux-nilfs@vger.kernel.org, 
 	jfs-discussion@lists.sourceforge.net, linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, 
 	linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH 12/29] udf: add EXPORT_OP_STABLE_HANDLES flag to export
+Subject: Re: [PATCH 02/29] tmpfs: add EXPORT_OP_STABLE_HANDLES flag to export
  operations
-Message-ID: <c6qrz6ioenic7y2mxlkkvu4ca26scsjvbn23scgud42fvywvir@udtb4xkl3vfo>
+Message-ID: <epeo3w56c33kgxtx7jj6xyjl2gq3n67y6eqq4jlxfvg2qrgjod@3fn2xqpb66bw>
 References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
- <20260115-exportfs-nfsd-v1-12-8e80160e3c0c@kernel.org>
+ <20260115-exportfs-nfsd-v1-2-8e80160e3c0c@kernel.org>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -137,10 +138,10 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260115-exportfs-nfsd-v1-12-8e80160e3c0c@kernel.org>
+In-Reply-To: <20260115-exportfs-nfsd-v1-2-8e80160e3c0c@kernel.org>
 X-Spam-Score: -2.51
 X-Spamd-Result: default: False [-2.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
+	BAYES_HAM(-3.00)[99.99%];
 	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	MID_RHS_NOT_FQDN(0.50)[];
@@ -148,39 +149,38 @@ X-Spamd-Result: default: False [-2.51 / 50.00];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
 	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_COUNT_THREE(0.00)[3];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,oracle.com,brown.name,redhat.com,talpey.com,gmail.com,google.com,linux.alibaba.com,linux-foundation.org,mit.edu,dilger.ca,suse.com,huawei.com,vivo.com,dubeyko.com,fb.com,squashfs.org.uk,samba.org,manguebit.org,microsoft.com,szeredi.hu,omnibond.com,fasheh.com,evilplan.org,paragon-software.com,infradead.org,nod.at,suse.cz,mail.parknet.co.jp,vger.kernel.org,kvack.org,lists.ozlabs.org,lists.samba.org,lists.orangefs.org,lists.linux.dev,lists.sourceforge.net,lists.infradead.org];
 	DKIM_TRACE(0.00)[suse.cz:+];
-	TO_DN_SOME(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLpnapcpkwxdkc5mopt1ezhhna)];
 	TO_MATCH_ENVRCPT_SOME(0.00)[];
 	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	FROM_EQ_ENVFROM(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,zeniv.linux.org.uk,oracle.com,brown.name,redhat.com,talpey.com,gmail.com,google.com,linux.alibaba.com,linux-foundation.org,mit.edu,dilger.ca,suse.com,huawei.com,vivo.com,dubeyko.com,fb.com,squashfs.org.uk,samba.org,manguebit.org,microsoft.com,szeredi.hu,omnibond.com,fasheh.com,evilplan.org,paragon-software.com,infradead.org,nod.at,suse.cz,mail.parknet.co.jp,vger.kernel.org,kvack.org,lists.ozlabs.org,lists.samba.org,lists.orangefs.org,lists.linux.dev,lists.sourceforge.net,lists.infradead.org];
+	TO_DN_SOME(0.00)[];
 	RCPT_COUNT_GT_50(0.00)[74];
 	TAGGED_RCPT(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLpnapcpkwxdkc5mopt1ezhhna)];
 	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
 	MISSING_XM_UA(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
 X-Spam-Level: 
 X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: CEAF75BCCD
+X-Rspamd-Queue-Id: EF1155BCCB
 X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Thu 15-01-26 12:47:43, Jeff Layton wrote:
-> Add the EXPORT_OP_STABLE_HANDLES flag to udf export operations to indicate
+On Thu 15-01-26 12:47:33, Jeff Layton wrote:
+> Add the EXPORT_OP_STABLE_HANDLES flag to tmpfs export operations to indicate
 > that this filesystem can be exported via NFS.
 > 
 > Signed-off-by: Jeff Layton <jlayton@kernel.org>
@@ -192,21 +192,21 @@ Reviewed-by: Jan Kara <jack@suse.cz>
 								Honza
 
 > ---
->  fs/udf/namei.c | 1 +
+>  mm/shmem.c | 1 +
 >  1 file changed, 1 insertion(+)
 > 
-> diff --git a/fs/udf/namei.c b/fs/udf/namei.c
-> index 5f2e9a892bffa9579143cedf71d80efa7ad6e9fb..7b8db8331c77bb43d9a3c4528aee535eac2bbd37 100644
-> --- a/fs/udf/namei.c
-> +++ b/fs/udf/namei.c
-> @@ -1012,6 +1012,7 @@ const struct export_operations udf_export_ops = {
->  	.fh_to_dentry   = udf_fh_to_dentry,
->  	.fh_to_parent   = udf_fh_to_parent,
->  	.get_parent     = udf_get_parent,
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index ec6c01378e9d2bd47db9d7506e4d6a565e092185..c64c4410b4fd9961599a5ea768b469d8184e713e 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -4477,6 +4477,7 @@ static const struct export_operations shmem_export_ops = {
+>  	.get_parent     = shmem_get_parent,
+>  	.encode_fh      = shmem_encode_fh,
+>  	.fh_to_dentry	= shmem_fh_to_dentry,
 > +	.flags		= EXPORT_OP_STABLE_HANDLES,
 >  };
 >  
->  const struct inode_operations udf_dir_inode_operations = {
+>  enum shmem_param {
 > 
 > -- 
 > 2.52.0
