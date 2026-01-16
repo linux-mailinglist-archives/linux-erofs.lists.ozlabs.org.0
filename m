@@ -1,43 +1,43 @@
-Return-Path: <linux-erofs+bounces-1966-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1967-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 109B8D33809
-	for <lists+linux-erofs@lfdr.de>; Fri, 16 Jan 2026 17:30:21 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 76DD8D338DB
+	for <lists+linux-erofs@lfdr.de>; Fri, 16 Jan 2026 17:43:49 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dt51Q3B7Yz2xm3;
-	Sat, 17 Jan 2026 03:30:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dt5Jz0tS2z2xm3;
+	Sat, 17 Jan 2026 03:43:47 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768581018;
-	cv=none; b=lrK7nrIGnNjkObXds4s3qNdcNubfXt2P79XzZnpSFHK6SohH9ZAdTg6OvbQ9nB9Mf+/hsIGh5HPVJkcKldZcJJ1a2mWiEGNvRGFJeoW1XJIDbGyHi9OERoOxus4KtMa44FkkDNrKMg2mTFV2dekoiHmJyGcz7Qz0N2mHWbImQup8TkzxpuSjdNhz3aKoz8aKPR2WKWgyZeCv7AxzM1qg/wAtLtIMGlgyxar9RAvktK9QLSuH3X5A0wCvJNJB8HoG1udCy7qq0lV21Pn6ASfA3XvH15p0ONdv2d8JF7WJjb6XlkXPzjRKkIqdApioQfWbGctA88GAPkaRPUe+/LuwMQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768581827;
+	cv=none; b=kcX3zu0Ttsp9nNsvV0hmVXzkRqMUmBu1i4Tss/H4W/ztV2f2wiZFAPIpm+fffhx3KaNeF43MZ8bcaA9/QIDcSpJBv/45JpJwQfhoozCCLMyNG05ALLuZajkqQYgPnxFEdYdPkEE+0FFSTjT/aOCYSxK/KfwvxGx5YhdcouBr4EM55TRVby1nQMLRh6BYNC+dQ0F2ls9K6KPaXtNBu2BzAIVG/2C48T74HCgw88UV60jSL92fWVyuySUQTiIVq/SxChkW+56BEoW56KrgiwjsehosWpS5CwKeOFwbM1JV9SVQODswDJEZhZ489MsCerbbZjf3ikOSr5YY0Z0BJqM0mg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768581018; c=relaxed/relaxed;
-	bh=RFWiI0wOR2yk+5/0dINJESRV12gsa36QcDUdOJgcoEs=;
+	t=1768581827; c=relaxed/relaxed;
+	bh=CqdOrZ2fLYyllUFgm+eEnv6iIUPlCxvHxAAq4fRi+uk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m+uUEbCqz6bKF5NkxJrtDPB1OuCyDTRsWwbHy1On4MpXtxjZObv4t8sCxsCpP5tYEfiGcZqxVcCNDkcmKT68PhD2TD5anyz/wbL8Go+a+BLAaoHqp0FVrI0vCssKIQoxOtlH1RBb7x4ZozQ4czmaNPZgDE+Eve1IaS7HazE6gkZ9hwVrlO9yuHevrA0NRVKC3oPTTGXSYx7vv6o42+Z7ESSErldJwetNRdlkU5h5i68Wxl8l7W8KaU6zuF2cE+vN/RK341+Y3MNulJdI/mejkBdaz0giTawg9SRY+opfG5qKqR+qcS44rzcDEB5ElHWAtNOUiYv1GHty4FdM7lUjzw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WopP+0cr; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 In-Reply-To:Content-Type; b=VkCjrmoeAO5YSXhTmcdKdMlWEZII5o9LZqKhpwbV+p4S7ssFs3myzsct9k5pAuP4xJvzDp4lVQq2sQLLVcO3gcysbNu5QpMRklkPp7fcSAITq4vYYPloKgwLnup6kRmRC5WPqJUuFEJO2gXZzVY70thpu3OWlLT1iJGUxDsPiLkmu6oXn/YxGfdDFgzPGekAcPvzDr9mEcN8Pg6drfSFoBuQpfUgrVZsU2YGPgnWB0o6NNAfCMgqAJ9EnVjJacKhRkRk4/udZMk3lD0OaYJ4Ut+XrybTX8+Az8x9YYnMh4gcZNh/cgO0gMw0JQ+LUk5O9U1M4OrtobIAGyDo0QpqQQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MFI8GmJI; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WopP+0cr;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=MFI8GmJI;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dt51M5M6Gz2xS2
-	for <linux-erofs@lists.ozlabs.org>; Sat, 17 Jan 2026 03:30:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dt5Jw6VX0z2xS2
+	for <linux-erofs@lists.ozlabs.org>; Sat, 17 Jan 2026 03:43:42 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1768581010; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=RFWiI0wOR2yk+5/0dINJESRV12gsa36QcDUdOJgcoEs=;
-	b=WopP+0cr68GhfPuyTCPDDmCjM+Que32lyJma36P2r6A6AZFPdgrY19WRH6/2oRhsskxsF3oDZW5SFSTLCDMn4iuDtubFDDruopqm5aKG3/cXQHQ8OXf3b3majPcWOuvWu1IaC09AXs6O+a9xOsdwZITN4K94VQPDQAFMHbKmc7o=
-Received: from 30.180.182.138(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WxAgrWL_1768581008 cluster:ay36)
+	t=1768581817; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=CqdOrZ2fLYyllUFgm+eEnv6iIUPlCxvHxAAq4fRi+uk=;
+	b=MFI8GmJIcybJ2q2Ti09U6oUWDEe3o8HVqbZkOjxDCPnDQzGtaaMKvAeqvgpzr0plKM4QmYKSLFIwkI3VnFcGiIQBl4kb3VAuQfvksv+aATOjRXlxQvsoQenZ54b1AujFTTcbhZznG5oE6hxIoWC1z36XmTsMlUT7qxLmb34kzUU=
+Received: from 30.180.182.138(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WxAj92w_1768581815 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Sat, 17 Jan 2026 00:30:09 +0800
-Message-ID: <96353e77-6118-4272-be8f-ae1ece5b57a4@linux.alibaba.com>
-Date: Sat, 17 Jan 2026 00:30:08 +0800
+          Sat, 17 Jan 2026 00:43:36 +0800
+Message-ID: <e8a5f615-b527-4530-bc3d-0adc4b0b05d6@linux.alibaba.com>
+Date: Sat, 17 Jan 2026 00:43:35 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -70,65 +70,18 @@ X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
 
 On 2026/1/16 23:36, Christoph Hellwig wrote:
-> Sorry, just getting to this from my overful inbox by now.
-> 
-> On Fri, Jan 16, 2026 at 09:55:41AM +0000, Hongbo Li wrote:
->> 2.1. file open & close
->> ----------------------
->> When the file is opened, the ->private_data field of file A or file B is
->> set to point to an internal deduplicated file. When the actual read
->> occurs, the page cache of this deduplicated file will be accessed.
-> 
-> So the first opener wins and others point to it?  That would lead to
-> some really annoying life time rules.  Or you allocate a hidden backing
-> file and have everyone point to it (the backing_file related subject
-> kinda hints at that), which would be much more sensible, but then the
-> above descriptions would not be correct.
-
-Your latter thought is correct, I think the words above
-are ambiguous.
-
-> 
->>
->> When the file is opened, if the corresponding erofs inode is newly
->> created, then perform the following actions:
->> 1. add the erofs inode to the backing list of the deduplicated inode;
->> 2. increase the reference count of the deduplicated inode.
-> 
-> This on the other hand suggests the fist opener is used approach again?
-
-Not quite sure about this part, assuming you read the
-patches, it's just similar to the backing_file approach.
-
-> 
->> Assuming the deduplication inode's page cache is PGCache_dedup, there
-> 
-> What is PGCache_dedup?
-
-Maybe it's just an outdated expression from the older versions
-from Hongzhen.  I think just ignore this part.
-
-> 
->> Iomap and the layers below will involve disk I/O operations. As
->> described in 2.1, the deduplicated inode itself is not bound to a
->> specific device. The deduplicated inode will select an erofs inode from
->> the backing list (by default, the first one) to complete the
->> corresponding iomap operation.
-> 
-> What happens for mmap I/O where folio->mapping is kinda important?
-
-`folio->mapping` will just get the anon inode, but
-(meta)data I/Os will submit to one of the real
-filesystem (that is why a real inode is needed to
-pass into iomap), and use the data to fill the
-anon inode page cache, and the anon inode is like
-backing_file, and vma->vm_file will point to the
-hidden backing file backed by the anon inode .
-
-Thanks,
-Gao Xiang
 
 > 
 > Also do you have a git tree for the whole feature?
 
+I prepared a test tree for Hongbo but it's v14:
+https://git.kernel.org/pub/scm/linux/kernel/git/xiang/linux.git/log/?h=erofs/pagecache-share
+
+I think v15 is almost close to the final status,
+I hope Hongbo addresses your comment and I will
+review the remaining parts too and apply to
+linux-next at the beginning of next week.
+
+Thanks,
+Gao Xiang
 
