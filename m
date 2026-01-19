@@ -1,159 +1,52 @@
-Return-Path: <linux-erofs+bounces-2009-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2011-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABB14D3AFC0
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jan 2026 16:57:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 13916D3B0A4
+	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jan 2026 17:27:27 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dvw7m1kPPz2xT4;
-	Tue, 20 Jan 2026 02:57:08 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dvwph5vTVz2yql;
+	Tue, 20 Jan 2026 03:27:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=205.220.165.32 arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768838228;
-	cv=pass; b=SQm6WaNheKxbJYOcZ5St4g4xO2OQ7/+9dwLFdjQ/PY05C1PcpSJYXArpUX50pRchkNmtiKECbNx0PknpgIOi+G88VHxVJg8iC6BHjGkeq2wDSkAjOJzZJmaC8RKMDS8zJKMxw7SecresTG9uJmxTmtXpdSTlGJ2XABo32jW42AteAXYjcAoqbInrOFuw+zWT273+Z0fjYeJM/7ENqWckCdWnlPIvAUTlKUwlr7UJkeftkIlbmmsH0MHKpesWCIgLUtDCyOd15fG7t+srI1qR3eYeLI9Y9v8QCe6OqgQ0v7UiKdGjNVxRUz34huTGxuJJ6wpj01o7aJeD2ADcya49OQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768838228; c=relaxed/relaxed;
-	bh=t1i9sLRETIT7a1SwHx7sQ7ZWjeDZ2/X/fSP4uH7iUsE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FJlgdLwvOF9qUzVUHI2wBivGrMnwdNu7GgM2WjOflxxDMc++zGShLurYlopVSjtkqFjbxAYkEty+ha1WuoRk49RHM7193FlAWXA31xwyX+VTrgOnmkc2qDXLIP5UmG7L/onK76kTs4VE/jS6ZcvRTlvgE9N8G8l+tytk3Fo72vVA6VQdPenGRq96f9PgSw1t9M6+YhXzGVuQqYK4rxLsJyHhFnid3btsOJmqXrBDcWecv8Shi8KRBWsCfMxJd2LW4RcCryY7hbDGpxlMCv9ptQNl5NbTvlPfiM2Wankwpu0fS458yDtANw2Nf47AepbUrmzpBpMWsJFT88Cd/cLwNw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=CvDGq65H; dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=szfDMNcP; dkim-atps=neutral; spf=pass (client-ip=205.220.165.32; helo=mx0a-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org) smtp.mailfrom=oracle.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768840044;
+	cv=none; b=QDa38ClgQO3KGkFX9qNn71laHbw7+KxV1HVF6hUN27fSxKFUkB8++Zdfjye+5KCpn/Al64fp6JYxiFUeNrRXkMPV0LLrUd4oIB8WqpY1HEjizFdP5xgX24Pd7dqhT62rm+mYC+SxSBUHtMLdCzv6gkyx8rHTB/t4AYbTRyQ/L1Sgma36uS5wIjELVlIytOObXZk0ezu6jWF4bX9hsHWBUMRump6jV1cQ3dkJ3n0tfSTmYe9Dt2eweWpcwEZwLxiEsEIA0abMNh17ctrwdHu+e9caYoU/RnbTuJWxYz4cDUK8YnN0KBOw/FD52FJyM9zH5aYFfJVkSekT5pT+raRIGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1768840044; c=relaxed/relaxed;
+	bh=lW38OPk4PkfErZi0faVwbOax0ytdfzP4ktwM5gCuCJs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FCUj/uY8Hd/fSEDaomJV0P9ZpK071DA3v9tkUGmp9EJkbasnVdsUvajlwOcyeFHlkkQ5xKFtnTG7DcylKWezAlsggR3l7sPXhG5/glgeTqiXkT03MNILNqVUECC1MDZdljlzFH0hMQIg8jM5Z7/laq2izsJnJo6T1cOCMuwTaUvcze2mog4hUAbiOGegg8+LBLvtF+kDCRMEB4wffRBH/owRnxtaDPoE/8EWf1Ch7w2TElIMs9jdOH+hCMSt8dcf3VTlS7N5M1R+xxjBvXZewb24+USzlJt6QwBQlK+Uv7XCLk25jm30Q4fUVn78OJCoRsjCPbLcwxOZq+vk5HHSVg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=f237MPyH; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=CvDGq65H;
-	dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=szfDMNcP;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=f237MPyH;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=oracle.com (client-ip=205.220.165.32; helo=mx0a-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org)
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dvw7k6NPqz2xHW
-	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jan 2026 02:57:05 +1100 (AEDT)
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60JBDRPR1269413;
-	Mon, 19 Jan 2026 14:52:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=t1i9sLRETIT7a1SwHx7sQ7ZWjeDZ2/X/fSP4uH7iUsE=; b=
-	CvDGq65HXb/4we+P0W+JjS7VMQsalTh+3npl/Fo0DIJVfqw6ocrHNsQ0mSWt+6Yv
-	IG6/QpA+QbjLU+u63BFa1ZdMg+kpHjqRCihb0dOMcbWxscHC4hm+Dt2wy5eBkRFb
-	oqZLA6Hnm0No9VAdSdRtbq/DewkyhAXti1g2YH2YL26eAlQTmr23IGnc1xvPME8P
-	ceXVMovSGfj81FW2PH32yQg2H6JGH7ExbwdH2b1pUw76d2K+hZgyfmz8tlHp76eu
-	SSRtz41eC6zDjH2rb08HTSk52/Nw8HLY1z80e/k7j1779y/Isqfx9u6/UorcHGtN
-	5jtPQudDC5cm76RX6DopmQ==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4br1b8ad3q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Jan 2026 14:52:08 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60JDx6SV037634;
-	Mon, 19 Jan 2026 14:52:07 GMT
-Received: from cy7pr03cu001.outbound.protection.outlook.com (mail-westcentralusazon11010022.outbound.protection.outlook.com [40.93.198.22])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4br0v8f76v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Jan 2026 14:52:07 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C6ABsLBEbreMrsemYW3TE+Ir0FqLjA2nkJaMQRA1DYSgYgaMRp7N1uuybjLv+RDbB+pDpvEBp60XtxxjnZvXe2Jo25V5Ln6EJT2/G3OR1DhtlulUCgamJWd9XPNJodtShxpZhISiWHe5SsKuRgqAYSoTdYIH9V50i5Cn+MD3KV8656qMCAISyspbHT/5jF+hmXwiZOz7gWMdjlE7TPUDSO2X1chSvYHZy2UDTJQN4FufEgFblvud4yalaYmPEIvyPJy6A50NTSZaAlIbRHTa6HVZXINah2TD0gkcnePKftz3N+hFyotT3dE9WGGP8oo8vpzxQ4n1Lr8pZctC9sovPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=t1i9sLRETIT7a1SwHx7sQ7ZWjeDZ2/X/fSP4uH7iUsE=;
- b=Op+yrxTUkOTP+jq43PXio4+/7UkAXcSi9Jl7tdnIE5lNLElqRh4mpERcOepRuIp65v+63WNTp1C7scmCRT+dkYFoj8C1IDH8BvLsayt8H54VrpKIN1YIMqZqj3YQ3T7PTW3RJXCnAtjFrXG5K4cQYG4zPv1WvDU6wkyAASH0OumAAxuItKB5zCe8kmwsAWw+hB2V1SDePGhFOvLPccbsGNA/vMu2idQLuUlv8Epiwg5pmLXPOCw59ulFasbqsfP5vcWeeI+IUqaz2YuyrgpvdusuibsMVAtjT5P0m8LrMnDOrqa2u+JIamew2mLoU+/13Qv1Tmjmzytj3mYa5DrZOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t1i9sLRETIT7a1SwHx7sQ7ZWjeDZ2/X/fSP4uH7iUsE=;
- b=szfDMNcPvxry78LAr8+TpXMbHY4ZkKFDbXJcaDp9GCGaJ/WUuNlk/lwJ+5lQuA5enL9NvaIVdtaBUq5g/8RKDswbVppGgjkF1H1Edz854lxdpgA5c1PGJcJ/ZZMTvw9VuLCYqHGZI3j5FYNzgHsbHs/kDiypzf5lgvX3omehsr8=
-Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
- by SJ0PR10MB4767.namprd10.prod.outlook.com (2603:10b6:a03:2d1::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.9; Mon, 19 Jan
- 2026 14:52:02 +0000
-Received: from BL4PR10MB8229.namprd10.prod.outlook.com
- ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
- ([fe80::552b:16d2:af:c582%6]) with mapi id 15.20.9520.005; Mon, 19 Jan 2026
- 14:52:02 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
-        Matthew Brost <matthew.brost@intel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Sandeep Dhavale <dhavale@google.com>,
-        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@kernel.org>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
-        Babu Moger <babu.moger@amd.com>, Carlos Maiolino <cem@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-        Lance Yang <lance.yang@linux.dev>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, David Howells <dhowells@redhat.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-        linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
-        devel@lists.orangefs.org, linux-xfs@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH 12/12] tools/testing/vma: add VMA userland tests for VMA flag functions
-Date: Mon, 19 Jan 2026 14:49:03 +0000
-Message-ID: <2fbe7a18f517d7d8de9157f7f5b7bfc461cb7758.1768834061.git.lorenzo.stoakes@oracle.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1768834061.git.lorenzo.stoakes@oracle.com>
-References: <cover.1768834061.git.lorenzo.stoakes@oracle.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P123CA0433.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a9::6) To BL4PR10MB8229.namprd10.prod.outlook.com
- (2603:10b6:208:4e6::14)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dvwpg61jhz2xKh
+	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jan 2026 03:27:23 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id 8F17860135;
+	Mon, 19 Jan 2026 16:27:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31BF7C116C6;
+	Mon, 19 Jan 2026 16:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768840040;
+	bh=yX5wj9VHSThOjafnyKvHMJdYbGSk/5OP4p9PS/zazFw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=f237MPyHkZbdY+WPcsLBi0kuGtUgJbV4HoKceS3Jz1Lmrv4gP0tgEIWx9faQo//X+
+	 +UUjREu/69qFBMgdHch+q9bk9Ep8RKPHs/QzSabx4v5reJiL9v0kEdJGMeWqOPK39A
+	 0jSEKULtL05hYKWy8N1WS+HOt5YyvBcESAtJ0ZmYc6dhEbBinazAzj9QJSGklzZ9p9
+	 LbTYD833qVCL0hCJmQS+SihR6ziWecIunpgB2VxOhgkmSC9roap7mrwb5zOJntllqQ
+	 se8GRkweMjAwYRoYx2aL3RsVvvEMBUqvD1Pqmz58J3HWTOMdRGmvio/OwXlAFPl4n+
+	 HkGliBF8cqqKg==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 00/31] fs: require filesystems to explicitly opt-in to
+ nfsd export support
+Date: Mon, 19 Jan 2026 11:26:17 -0500
+Message-Id: <20260119-exportfs-nfsd-v2-0-d93368f903bd@kernel.org>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -165,540 +58,182 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|SJ0PR10MB4767:EE_
-X-MS-Office365-Filtering-Correlation-Id: cd0148b8-0feb-426b-41f5-08de576a4de4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rZTvy5pvFIH3iXfS3O7ucuNSrAxqKb7Iusr5k8rDn0YFpOc4CnBaPYscWlw+?=
- =?us-ascii?Q?2VWfPQWWzk8Etw/8t0/lI73SjBHozSnz20jnjIPVhF4REaB8ZYV7J+GQorWO?=
- =?us-ascii?Q?ZbouijsqqFnbdFku//I8NjnvvhZGU33qe+OdKBMy30FJmUc01LwLYEtvz12H?=
- =?us-ascii?Q?83mwMWAsSwFmSGTwZHHqkKdPh8S7GfZqTis7/bGOy3gj4kFxuMyfZ/DcRuHW?=
- =?us-ascii?Q?apzNXO/rpfu7BRAEPy0/EERxAL/H/Eynpt4zt9ULsTRXxGh83QeuEaS0blq3?=
- =?us-ascii?Q?daYsrlhMWRthAcUk77YjNUtDpRiRYmUHQlV/QlzIkL8Q3ehIkXK91Xs+Pzyc?=
- =?us-ascii?Q?+8elpOWiM0XjP6ywXlG4XFovUQD5odc6ztgHv2CZw2mFqdU8LdzOJvzvSVUa?=
- =?us-ascii?Q?zqB6BXoacdyh5MJFjpYgfPecOloPBf2P8yH243pchxlC3puDQVUnjvjeZikn?=
- =?us-ascii?Q?yslkTHkJglIOA/1V7dVOxeePRvCRC04Snnq3JeMbu5NmbZ7d+ts5c5UfK4za?=
- =?us-ascii?Q?lcFEo20X1Uhgi80NC7dpfZnbCFt3c7BHRxaOlzVJwE3RwaWXaz1Zl+2QClxC?=
- =?us-ascii?Q?jg50hn760tPiNIhBV/3rOoupRRfAH5ihuYkB7W6n8fZRwT5AxgiPqZws7xbp?=
- =?us-ascii?Q?GqkdcoN+/BBbwi+civNsowgFLK2I1NYNsP5+2v0OvExpL7pa1pCGxUAWwtbL?=
- =?us-ascii?Q?4UYJIx5b8hD0ftypV1SgpqTU3l96GY/KRVM0KS31CyctKjiwebk5H3ATI2/d?=
- =?us-ascii?Q?5jsEEV2jEfz27191mbvXLS9je97LwJgNqwS7EpI72oKdcPH5aN0o1GZyIjvx?=
- =?us-ascii?Q?drJH+4rhWwu0aYwahlF0QW0dyhF1s08i44dAd6WRphlbrxAbfDX8WPhMzdnX?=
- =?us-ascii?Q?vyqsOFxdPnhP618xD5rb8BM9eMurqUXgx+c20BHWQ6bQLHEN4knSkYAxSmrD?=
- =?us-ascii?Q?WWvJjpldUup8Z3uPcUYbrW+LdxGtL7vOLTmD1VTypAKtCBtl8Dn5t/b4Yf5D?=
- =?us-ascii?Q?kWkZedQdAahpKQtxK1e8pysIm8RiHu4I9xmOUUKWjujV6ZBRZUW0MsLdV2yx?=
- =?us-ascii?Q?K0cUmH9FedhTxtrLkdtRjKz0RAPyDka9o/eoX+UHoz19Fv6atxQkgfygmo0S?=
- =?us-ascii?Q?SJDfpWC/YRDZdug/HXB9Iq/mWBEHhb25tX3+t3h2o8ywG9brgyqUdALa53KX?=
- =?us-ascii?Q?5T935VZUYyIn8+i1gLV5Pxv51wL4y0dmFQyyMOMQGQQ2oYw/FWXUs8jWhbRW?=
- =?us-ascii?Q?dklEwiU5c4aKR3fiJn6NqnPBNdY7/ogCYyqocD/Pbccc5QIlNMExSmLO18XT?=
- =?us-ascii?Q?mk8xbjfJuqeQX3TzGMoA3j6ZMZmc97MMd1tGAaA8a9s6T8vrhDOoRRwOvU0L?=
- =?us-ascii?Q?aOPgaGWjAlk1T2NnvpUStWzHfeyPJKtyWxFAioOqCUY/0RGkWlZei0sjwwwT?=
- =?us-ascii?Q?1iX5yJwpS8ZZGDf6rFRlmW4ZAJfvNfqI4H0ths5j8L9DSrM9w9/waB7blYHX?=
- =?us-ascii?Q?ct/HX2vMsP9VHmiHSzItnQRLi/SjZHhfLxQS7mfL5YtuTccLvnVarb/xSaX/?=
- =?us-ascii?Q?eBXt9SrP+celPoOQ8c8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?hwYbOAmatlThjJDDRxWpnfLOBhXbKjLMV0vF1+ncUnqScJ6oUKPbTOUnHf9K?=
- =?us-ascii?Q?0pIdseQts4pBPDWHMb+dm+135muzGOrBOsA6dGR4CTMCdJEs2uMk/SJXRzva?=
- =?us-ascii?Q?ojKKFTuHSulyJmzlc7h60KVjt/q2cuTNGhDvDZzBsluqrhDJQJkNbbwtxPlp?=
- =?us-ascii?Q?sM8fC7NfpV52N9mMW3sX/Xs81peLCDLTmfg4Hsh+bk49vz74iCs79pdyK+Pd?=
- =?us-ascii?Q?/98nH1wsZ5cKv/MRalkLb84Wedl+8NkzuX0qZAYxnyfquTj6j3a6OmXvE93g?=
- =?us-ascii?Q?svDw7amCwbqI4vqMrs23HOD9fxofIGLw4WiNMxQFPOzAgIagnXBG47aI89SD?=
- =?us-ascii?Q?t4VEbm/zAQgqClr4xd7ETDJAbU5DklyO11vjxWn2hcPzyN0X7kyx5DOCeX4N?=
- =?us-ascii?Q?sTmZx16BeVQMuFinGtMl/VJ9QUYoHdyrWjKu8oLrqOju01WlGzUCEa3TLfG8?=
- =?us-ascii?Q?coLks34rQ2pSqmBGsfVxQXEGUwVtUKaTcjOF0Hu/krhyP45ZUJuxgb6wXKzK?=
- =?us-ascii?Q?h8d7NtqDwbEp4GlrRTWVHRnnQ+0GeNnm81Q8eOpGCwTRIlN5eC+vLdRsKIE+?=
- =?us-ascii?Q?5QihAadZEqyxdRM+qsvVLu1/CS3cf4e1q0/WyTtclzhrywnI6MjTzZRgO28C?=
- =?us-ascii?Q?f2LEiaKkSki3oSfrzk8PiO6d7Wlp5PE/LCWJlyrFoybCi+WmRoIyG8QuO96A?=
- =?us-ascii?Q?1rh3bm+FTPL2Oag2G9g9SKh/MSg5Ht4IODPsnyk8tlxZ3agKVXszwpa4lyP/?=
- =?us-ascii?Q?jzwXciWFdZSAeSpV50v8yYODLWwjWKCRk7PO+M9LyqXkDRp4bx3wlJAzf6+D?=
- =?us-ascii?Q?EaCzqdVcg+Z3/h5fEGZdyRU1+QzR5EvtkJ6y1o6aq1F0tQJuP+OtV9ZWv68M?=
- =?us-ascii?Q?GfJi4WN+xS7r1Xrj1XyC61+8DbVpnKER34wCS2nzlPDPdS5dOywzIR6Bs9le?=
- =?us-ascii?Q?ACnf3vy3q5wBZUcFS/LCfXHdF4UmkAx3UIgiXGx1EgFZcbYJpyYbfybPf0CE?=
- =?us-ascii?Q?Bn5M29jj5/oaKm3C+tD8VBoJHYFnd1N0IcfnuOaxXVu4BRIaDsZfQJmycDXD?=
- =?us-ascii?Q?HxndenU3SdMnB7c191InYKcuObh/faSahvaHF2NC3RaI4Wl1jyEENOx0CVUs?=
- =?us-ascii?Q?Nh0J0drKjMrsp2hei3d5TrI7AdXRvjL5x6H886mUlFhLd6FI5Ojk57vYL+/3?=
- =?us-ascii?Q?Nc1yocFnlervyyJRdUH6b8AUZ70v/R+DXaJfG+N2nKxLttem53qvtekqq0eW?=
- =?us-ascii?Q?4hajHzBT5JJrG1PHDxSe2emkbuKwsaDMFd5KSW8wTW9qR8khsbBqdgwxAKE8?=
- =?us-ascii?Q?XqbM/kJSW0MtzMd1R1m6wdbyTWd27wDHZyicefEEye3ia5lFzeVLyIa7V/Jr?=
- =?us-ascii?Q?kh3lvg9NLYFqRRMiLUhaXwOu79eW/TXwL6d7BHjRpIhdvaEM7dXt6A0xQ95C?=
- =?us-ascii?Q?4suHdENJaF6dqZ2ju8ToGkgec72c24BlAD6S6YU2BjPLrtn0Vg5WcF8X/nk7?=
- =?us-ascii?Q?4AKO3+YMkT6RS7DyaWw9fCl4osn+x/gDzh5GRcxTufPkIGl+oK2SeI5/TSoY?=
- =?us-ascii?Q?C9PYtaOqxl03XAOxwn02ZmE0zzI0abvrVfaRQOQ7gLWTWfPLAOWUhtklXf+2?=
- =?us-ascii?Q?Fr/Jew7xNtrl4YmD4rmxwyaaDnwVzhk6iwceopbRA7kkcljIfSnl34FHXCAd?=
- =?us-ascii?Q?INPagifXWbBlbwCnjAK85RWSf7Sg06sGURGBt+lqDfdxq+0+Muaceml3uoxu?=
- =?us-ascii?Q?rgKeMvhBAIXBCar57vcADMMOWZNtMuk=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	rL53AShvL2vML34AK/WmUo8ldHARQ637jUZygePnbCxrBpx47ZHoi+wq1PQ/V8zcde0K3vwz78YkzrWoe8Jii4t1+Q+vINr14Uo5pxDs/gj44r3yolhMlgKAhHlU2Y1F2hfBPqbsxB9RYY2Oe6Xe8NSrzIEmxcHyjaDwEPATRCdpJTfiH3DN2KspwX/HeUY8wDmx54AI6m4V0T0jUD7DvkaJyE51o20i8y+kfdA34MgMNpKqXmk9UPCEO+g2PkncvIN36at0hvx8+vnomJIf1D7qk7rb9SctVU9uKdnWZ850YTucXC6tb7MG1/QLyd+02wTn3SOKXNJcRbNNfke1OItwIF39tyxUQvXfiSXctmmxW/x4yqCu8JG0YIb94yGs1SJcxGWlbgUBN6SYQ9I6GGdp2VRleci+be9dF910v4L5F9CyC4CfFjkgq3JF/5LBuzZbAYki6erorsrEirew8pti225/qxyaokZ+FYtx7y218L0XDTwe+CTZwBhlFL6hGkecQZIaabsT1ehLzBc7w1a4XV2/rgwTt6cvy9A7bUOd1uYvQ9dof+/VzGiP40TNXlCjfUcGEVipYg6heY7nTt8LS4fJlkIwLZ47sJq+kFI=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd0148b8-0feb-426b-41f5-08de576a4de4
-X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 14:52:02.2293
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0IPVXLRP7YmBW9PvemcPHBBIPqwmpKCfzvgrjnmmhxEn3q6e1Yq5tBWlnslK2R6Qs1w9qMf38Wol+zsGhp9ggTiGOIAf7PkpJbBitHqaDpo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4767
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-19_03,2026-01-19_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 phishscore=0
- malwarescore=0 adultscore=0 mlxlogscore=999 suspectscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
- definitions=main-2601190124
-X-Authority-Analysis: v=2.4 cv=WbcBqkhX c=1 sm=1 tr=0 ts=696e4518 b=1 cx=c_pps
- a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=vUbySO9Y5rIA:10
- a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
- a=wdtOZTiSbmFhyPzmQ0gA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE5MDEyNCBTYWx0ZWRfX5I0xdZYwEz8o
- LJIGZUF91BpdfAoq7O1/R8M9Jb6URvD1olq0MZlpMyruK1jIvk3vBAVTeW3+lc9hZKXHParWn84
- 5LX2wubAuYMjo9VVGZ8V9Y5G6SC2OazAT5/U7/mJ/9kfNvwd59V9dx9PVy0e+HI5Q27rNqEs1Vf
- E5qxvevD9pncqtShycV5ySi7pwSRiEshxqCCQyNf/XnesmJ/nyHrAghiLs0Tpz32W/lWX3mRXJs
- 66bcDojznwz6E8ks4L/GC/v30DWUWwvkwNB2fplowxtKf04KfDXagUs1qEFA5311JaukQnhSrK8
- sCKYip+jNKsW/BwYJdHBPee82SMht6KYZ2fWvAgk8qK2MRYLi9hQVfrG/VE7kFvHRZ95S0if1s3
- GDuFvbKWyDR0AabEFPtL/mwA5HUJEJggJOX8orfsHTBksLL01YDa1Skg5u7hWYxvuR3qQmvjU+Y
- ZUMABpgMAqmkFf0Zk2w==
-X-Proofpoint-ORIG-GUID: Kx8BteBi7exn2E0ZLc4mA1XshhYpOIrz
-X-Proofpoint-GUID: Kx8BteBi7exn2E0ZLc4mA1XshhYpOIrz
-X-Spam-Status: No, score=-0.9 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/13MQQqDMBCF4avIrJsykzZWXfUexYXEUUNLIhMJF
+ vHuTYVuuvwfvG+DyOI4QlNsIJxcdMHn0KcC7NT5kZXrc4NGXSLRVfE6B1mGqPwQe0XakMGb5rq
+ rIX9m4cGth/doc08uLkHeB5/ou/4k8yclUqgqrpBK5ItFe3+yeH6dg4zQ7vv+ATyiSsWrAAAA
+X-Change-ID: 20260114-exportfs-nfsd-12515072e9a9
+To: Christian Brauner <brauner@kernel.org>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Amir Goldstein <amir73il@gmail.com>, 
+ Hugh Dickins <hughd@google.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, Theodore Ts'o <tytso@mit.edu>, 
+ Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, 
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, 
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, 
+ Sandeep Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, 
+ Chunhai Guo <guochunhai@vivo.com>, Carlos Maiolino <cem@kernel.org>, 
+ Ilya Dryomov <idryomov@gmail.com>, Alex Markuze <amarkuze@redhat.com>, 
+ Viacheslav Dubeyko <slava@dubeyko.com>, Chris Mason <clm@fb.com>, 
+ David Sterba <dsterba@suse.com>, Luis de Bethencourt <luisbg@kernel.org>, 
+ Salah Triki <salah.triki@gmail.com>, 
+ Phillip Lougher <phillip@squashfs.org.uk>, Steve French <sfrench@samba.org>, 
+ Paulo Alcantara <pc@manguebit.org>, 
+ Ronnie Sahlberg <ronniesahlberg@gmail.com>, 
+ Shyam Prasad N <sprasad@microsoft.com>, 
+ Bharath SM <bharathsm@microsoft.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+ Mike Marshall <hubcap@omnibond.com>, 
+ Martin Brandenburg <martin@omnibond.com>, Mark Fasheh <mark@fasheh.com>, 
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
+ Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Dave Kleikamp <shaggy@kernel.org>, David Woodhouse <dwmw2@infradead.org>, 
+ Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>, 
+ Andreas Gruenbacher <agruenba@redhat.com>, 
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
+ Jaegeuk Kim <jaegeuk@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: David Laight <david.laight.linux@gmail.com>, 
+ Dave Chinner <david@fromorbit.com>, Christoph Hellwig <hch@infradead.org>, 
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+ linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
+ linux-xfs@vger.kernel.org, ceph-devel@vger.kernel.org, 
+ linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org, 
+ samba-technical@lists.samba.org, linux-unionfs@vger.kernel.org, 
+ devel@lists.orangefs.org, ocfs2-devel@lists.linux.dev, 
+ ntfs3@lists.linux.dev, linux-nilfs@vger.kernel.org, 
+ jfs-discussion@lists.sourceforge.net, linux-mtd@lists.infradead.org, 
+ gfs2@lists.linux.dev, linux-f2fs-devel@lists.sourceforge.net, 
+ linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
+ Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>, 
+ Dave Kleikamp <dave.kleikamp@oracle.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5453; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=yX5wj9VHSThOjafnyKvHMJdYbGSk/5OP4p9PS/zazFw=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpbltSzbGzajTJvmhlV7jB47UePrPRdt3Wu5GHL
+ L1B0sA8PKeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaW5bUgAKCRAADmhBGVaC
+ FXY4D/42rFsMWqLxlGJh5AWMBxSb1l17atmfl6mxPzMfAPokDVOiTK0fNOZalTR4OcT31QZxTed
+ nkOmw7Qd+RTSm3dThDf1+et1RhMguer4Bj1ll4VmaZ/poVmu4fIUqbDcyU54UE4F3/M+fsmJXJF
+ 3s1+tqIyC+7WzF6/x/HWQY9RkQLGkUqkteSCoXdzEDc+WnhRgXntOXZFP/HpDfxG/pkaHnd+RBz
+ 4lFdhCAZ/xSuv67OWqva7ifRVDMiF1E1jM7uLNP2SeE/hd0wYNuORHvkzf0PBL9T0k2Xtf89p3W
+ re4QkZpVZiycpFTZTWt04k1pqWuWK0n8tjfz/V3hdvnGOrpI230p/dDpXhnTN9sdFWylM4U9ya4
+ qshCtu+DBJBGHEinp1+ZpE1k5xl1aig3/uN9f7VhUaZWww3qx9qr4g5LvGXfxxoxzZ9wBjiF9KO
+ N6VxYj2loIjuU0+56wmYIb9mvXWeQ3O5IJtU9xTAV91iUxWYiRU9dcBVDvwk0wF6sm/fKmizn3g
+ YPMFjbuTpkp5VsApqvODwDyEo97gF8luB/qvkGPpxV0AKc1MyfjvFpPOyECG1xpqAW1/f4Iph0F
+ ju2zuNnVWaPFBf5KCowY4rq8s1kCTJxt/dnIpOlxVJ6FNlp9OpxryB048OYYuKuRfAwjC8gjHz+
+ qu3QGNImWfKzpxQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Now we have the capability to test the new helpers for the bitmap VMA flags
-in userland, do so.
+This patchset adds a flag that indicates whether the filesystem supports
+stable filehandles (i.e. that they don't change over the life of the
+file). It then makes any filesystem that doesn't set that flag
+ineligible for nfsd export.
 
-We also update the Makefile such that both VMA (and while we're here)
-mm_struct flag sizes can be customised on build. We default to 128-bit to
-enable testing of flags above word size even on 64-bit systems.
+The main only place I found where this was an issue today is cgroupfs,
+which sane people don't export anyway. So, I don't see this as
+addressing a major problem that we have today. Rather, this patchset
+ensures that new filesystems that are added in the future make export
+eligibility via nfsd a deliberate step, rather than something they've
+inadvertently enabled just by adding filehandle support.
 
-We add userland tests to ensure that we do not regress VMA flag behaviour
-with the introduction when using bitmap VMA flags, nor accidentally
-introduce unexpected results due to for instance higher bit values not
-being correctly cleared/set.
+After some lively bikeshedding on v1, I think the consensus is to stick
+with EXPORT_OP_STABLE_HANDLES as the flag name. Amir is correct that
+checking this in check_export() is the better place to do this, since
+the filehandle can't be decoded without resolving the export first.
 
-As part of this change, make __mk_vma_flags() a custom function so we can
-handle specifying invalid VMA bits. This is purposeful so we can have the
-VMA tests work at lower and higher number of VMA flags without having to
-duplicate code too much.
+There are a few other fixes and cleanups, and some doc updates too.
 
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- tools/testing/vma/Makefile         |   3 +
- tools/testing/vma/include/custom.h |  16 ++
- tools/testing/vma/include/dup.h    |  11 +-
- tools/testing/vma/tests/vma.c      | 300 +++++++++++++++++++++++++++++
- tools/testing/vma/vma_internal.h   |   4 +-
- 5 files changed, 322 insertions(+), 12 deletions(-)
+Changes in v2:
+- don't set flag in ovl_export_fid_operations or fuse_export_fid_operations
+- check for flag in check_export() instead of __fh_verify()
+- document missing flags in exporting.rst
+- convert dprintk() messages in check_export() to static tracepoints
+- Link to v1: https://lore.kernel.org/r/20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org
 
-diff --git a/tools/testing/vma/Makefile b/tools/testing/vma/Makefile
-index 50aa4301b3a6..e72b45dedda5 100644
---- a/tools/testing/vma/Makefile
-+++ b/tools/testing/vma/Makefile
-@@ -9,6 +9,9 @@ include ../shared/shared.mk
- OFILES = $(SHARED_OFILES) main.o shared.o maple-shim.o
- TARGETS = vma
- 
-+# These can be varied to test different sizes.
-+CFLAGS += -DNUM_VMA_FLAG_BITS=128 -DNUM_MM_FLAG_BITS=128
-+
- main.o: main.c shared.c shared.h vma_internal.h tests/merge.c tests/mmap.c tests/vma.c ../../../mm/vma.c ../../../mm/vma_init.c ../../../mm/vma_exec.c ../../../mm/vma.h include/custom.h include/dup.h include/stubs.h
- 
- vma:	$(OFILES)
-diff --git a/tools/testing/vma/include/custom.h b/tools/testing/vma/include/custom.h
-index f567127efba9..802a76317245 100644
---- a/tools/testing/vma/include/custom.h
-+++ b/tools/testing/vma/include/custom.h
-@@ -101,3 +101,19 @@ static inline void vma_lock_init(struct vm_area_struct *vma, bool reset_refcnt)
- 	if (reset_refcnt)
- 		refcount_set(&vma->vm_refcnt, 0);
- }
-+
-+static inline vma_flags_t __mk_vma_flags(size_t count, const vma_flag_t *bits)
-+{
-+	vma_flags_t flags;
-+	int i;
-+
-+	/*
-+	 * For testing purposes: allow invalid bit specification so we can
-+	 * easily test.
-+	 */
-+	vma_flags_clear_all(&flags);
-+	for (i = 0; i < count; i++)
-+		if (bits[i] < NUM_VMA_FLAG_BITS)
-+			vma_flag_set(&flags, bits[i]);
-+	return flags;
-+}
-diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/dup.h
-index 3f4a9dc63fa6..21b4509e2a8b 100644
---- a/tools/testing/vma/include/dup.h
-+++ b/tools/testing/vma/include/dup.h
-@@ -838,16 +838,7 @@ static inline void vm_flags_clear(struct vm_area_struct *vma,
- 	vma_flags_clear_word(&vma->flags, flags);
- }
- 
--static inline vma_flags_t __mk_vma_flags(size_t count, const vma_flag_t *bits)
--{
--	vma_flags_t flags;
--	int i;
--
--	vma_flags_clear_all(&flags);
--	for (i = 0; i < count; i++)
--		vma_flag_set(&flags, bits[i]);
--	return flags;
--}
-+static inline vma_flags_t __mk_vma_flags(size_t count, const vma_flag_t *bits);
- 
- #define mk_vma_flags(...) __mk_vma_flags(COUNT_ARGS(__VA_ARGS__), \
- 					 (const vma_flag_t []){__VA_ARGS__})
-diff --git a/tools/testing/vma/tests/vma.c b/tools/testing/vma/tests/vma.c
-index 6d9775aee243..c47eeeb9d80c 100644
---- a/tools/testing/vma/tests/vma.c
-+++ b/tools/testing/vma/tests/vma.c
-@@ -1,5 +1,25 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- 
-+static bool compare_legacy_flags(vm_flags_t legacy_flags, vma_flags_t flags)
-+{
-+	const unsigned long legacy_val = legacy_flags;
-+	/* The lower word should contain the precise same value. */
-+	const unsigned long flags_lower = flags.__vma_flags[0];
-+#if NUM_VMA_FLAGS > BITS_PER_LONG
-+	int i;
-+
-+	/* All bits in higher flag values should be zero. */
-+	for (i = 1; i < NUM_VMA_FLAGS / BITS_PER_LONG; i++) {
-+		if (flags.__vma_flags[i] != 0)
-+			return false;
-+	}
-+#endif
-+
-+	static_assert(sizeof(legacy_flags) == sizeof(unsigned long));
-+
-+	return legacy_val == flags_lower;
-+}
-+
- static bool test_copy_vma(void)
- {
- 	vm_flags_t vm_flags = VM_READ | VM_WRITE | VM_MAYREAD | VM_MAYWRITE;
-@@ -33,7 +53,287 @@ static bool test_copy_vma(void)
- 	return true;
- }
- 
-+static bool test_vma_flags_unchanged(void)
-+{
-+	vma_flags_t flags = EMPTY_VMA_FLAGS;
-+	vm_flags_t legacy_flags = 0;
-+	int bit;
-+	struct vm_area_struct vma;
-+	struct vm_area_desc desc;
-+
-+
-+	vma.flags = EMPTY_VMA_FLAGS;
-+	desc.vma_flags = EMPTY_VMA_FLAGS;
-+
-+	for (bit = 0; bit < BITS_PER_LONG; bit++) {
-+		vma_flags_t mask = mk_vma_flags(bit);
-+
-+		legacy_flags |= (1UL << bit);
-+
-+		/* Individual flags. */
-+		vma_flags_set(&flags, bit);
-+		ASSERT_TRUE(compare_legacy_flags(legacy_flags, flags));
-+
-+		/* Via mask. */
-+		vma_flags_set_mask(&flags, mask);
-+		ASSERT_TRUE(compare_legacy_flags(legacy_flags, flags));
-+
-+		/* Same for VMA. */
-+		vma_set_flags(&vma, bit);
-+		ASSERT_TRUE(compare_legacy_flags(legacy_flags, vma.flags));
-+		vma_set_flags_mask(&vma, mask);
-+		ASSERT_TRUE(compare_legacy_flags(legacy_flags, vma.flags));
-+
-+		/* Same for VMA descriptor. */
-+		vma_desc_set_flags(&desc, bit);
-+		ASSERT_TRUE(compare_legacy_flags(legacy_flags, desc.vma_flags));
-+		vma_desc_set_flags_mask(&desc, mask);
-+		ASSERT_TRUE(compare_legacy_flags(legacy_flags, desc.vma_flags));
-+	}
-+
-+	return true;
-+}
-+
-+static bool test_vma_flags_cleared(void)
-+{
-+	const vma_flags_t empty = EMPTY_VMA_FLAGS;
-+	vma_flags_t flags;
-+	int i;
-+
-+	/* Set all bits high. */
-+	memset(&flags, 1, sizeof(flags));
-+	/* Try to clear. */
-+	vma_flags_clear_all(&flags);
-+	/* Equal to EMPTY_VMA_FLAGS? */
-+	ASSERT_EQ(memcmp(&empty, &flags, sizeof(flags)), 0);
-+	/* Make sure every unsigned long entry in bitmap array zero. */
-+	for (i = 0; i < sizeof(flags) / BITS_PER_LONG; i++) {
-+		const unsigned long val = flags.__vma_flags[i];
-+
-+		ASSERT_EQ(val, 0);
-+	}
-+
-+	return true;
-+}
-+
-+/*
-+ * Assert that VMA flag functions that operate at the system word level function
-+ * correctly.
-+ */
-+static bool test_vma_flags_word(void)
-+{
-+	vma_flags_t flags = EMPTY_VMA_FLAGS;
-+	const vma_flags_t comparison =
-+		mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT, 64, 65);
-+
-+	/* Set some custom high flags. */
-+	vma_flags_set(&flags, 64, 65);
-+	/* Now overwrite the first word. */
-+	vma_flags_overwrite_word(&flags, VM_READ | VM_WRITE);
-+	/* Ensure they are equal. */
-+	ASSERT_EQ(memcmp(&flags, &comparison, sizeof(flags)), 0);
-+
-+	flags = EMPTY_VMA_FLAGS;
-+	vma_flags_set(&flags, 64, 65);
-+
-+	/* Do the same with the _once() equivalent. */
-+	vma_flags_overwrite_word_once(&flags, VM_READ | VM_WRITE);
-+	ASSERT_EQ(memcmp(&flags, &comparison, sizeof(flags)), 0);
-+
-+	flags = EMPTY_VMA_FLAGS;
-+	vma_flags_set(&flags, 64, 65);
-+
-+	/* Make sure we can set a word without disturbing other bits. */
-+	vma_flags_set(&flags, VMA_WRITE_BIT);
-+	vma_flags_set_word(&flags, VM_READ);
-+	ASSERT_EQ(memcmp(&flags, &comparison, sizeof(flags)), 0);
-+
-+	flags = EMPTY_VMA_FLAGS;
-+	vma_flags_set(&flags, 64, 65);
-+
-+	/* Make sure we can clear a word without disturbing other bits. */
-+	vma_flags_set(&flags, VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT);
-+	vma_flags_clear_word(&flags, VM_EXEC);
-+	ASSERT_EQ(memcmp(&flags, &comparison, sizeof(flags)), 0);
-+
-+	return true;
-+}
-+
-+/* Ensure that vma_flags_test() and friends works correctly. */
-+static bool test_vma_flags_test(void)
-+{
-+	const vma_flags_t flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT,
-+					       VMA_EXEC_BIT, 64, 65);
-+	struct vm_area_struct vma;
-+	struct vm_area_desc desc;
-+
-+	vma.flags = flags;
-+	desc.vma_flags = flags;
-+
-+#define do_test(...)						\
-+	ASSERT_TRUE(vma_flags_test(flags, __VA_ARGS__));	\
-+	ASSERT_TRUE(vma_desc_test_flags(&desc, __VA_ARGS__))
-+
-+#define do_test_all_true(...)					\
-+	ASSERT_TRUE(vma_flags_test_all(flags, __VA_ARGS__));	\
-+	ASSERT_TRUE(vma_test_all_flags(&vma, __VA_ARGS__))
-+
-+#define do_test_all_false(...)					\
-+	ASSERT_FALSE(vma_flags_test_all(flags, __VA_ARGS__));	\
-+	ASSERT_FALSE(vma_test_all_flags(&vma, __VA_ARGS__))
-+
-+	/*
-+	 * Testing for some flags that are present, some that are not - should
-+	 * pass. ANY flags matching should work.
-+	 */
-+	do_test(VMA_READ_BIT, VMA_MAYREAD_BIT, VMA_SEQ_READ_BIT);
-+	/* However, the ...test_all() variant should NOT pass. */
-+	do_test_all_false(VMA_READ_BIT, VMA_MAYREAD_BIT, VMA_SEQ_READ_BIT);
-+	/* But should pass for flags present. */
-+	do_test_all_true(VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT, 64, 65);
-+	/* Also subsets... */
-+	do_test_all_true(VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT, 64);
-+	do_test_all_true(VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT);
-+	do_test_all_true(VMA_READ_BIT, VMA_WRITE_BIT);
-+	do_test_all_true(VMA_READ_BIT);
-+	/*
-+	 * Check _mask variant. We don't need to test extensively as macro
-+	 * helper is the equivalent.
-+	 */
-+	ASSERT_TRUE(vma_flags_test_mask(flags, flags));
-+	ASSERT_TRUE(vma_flags_test_all_mask(flags, flags));
-+
-+	/* Single bits. */
-+	do_test(VMA_READ_BIT);
-+	do_test(VMA_WRITE_BIT);
-+	do_test(VMA_EXEC_BIT);
-+#if NUM_VMA_FLAG_BITS > 64
-+	do_test(64);
-+	do_test(65);
-+#endif
-+
-+	/* Two bits. */
-+	do_test(VMA_READ_BIT, VMA_WRITE_BIT);
-+	do_test(VMA_READ_BIT, VMA_EXEC_BIT);
-+	do_test(VMA_WRITE_BIT, VMA_EXEC_BIT);
-+	/* Ordering shouldn't matter. */
-+	do_test(VMA_WRITE_BIT, VMA_READ_BIT);
-+	do_test(VMA_EXEC_BIT, VMA_READ_BIT);
-+	do_test(VMA_EXEC_BIT, VMA_WRITE_BIT);
-+#if NUM_VMA_FLAG_BITS > 64
-+	do_test(VMA_READ_BIT, 64);
-+	do_test(VMA_WRITE_BIT, 64);
-+	do_test(64, VMA_READ_BIT);
-+	do_test(64, VMA_WRITE_BIT);
-+	do_test(VMA_READ_BIT, 65);
-+	do_test(VMA_WRITE_BIT, 65);
-+	do_test(65, VMA_READ_BIT);
-+	do_test(65, VMA_WRITE_BIT);
-+#endif
-+	/* Three bits. */
-+	do_test(VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT);
-+#if NUM_VMA_FLAG_BITS > 64
-+	/* No need to consider every single permutation. */
-+	do_test(VMA_READ_BIT, VMA_WRITE_BIT, 64);
-+	do_test(VMA_READ_BIT, VMA_WRITE_BIT, 65);
-+
-+	/* Four bits. */
-+	do_test(VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT, 64);
-+	do_test(VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT, 65);
-+
-+	/* Five bits. */
-+	do_test(VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT, 64, 65);
-+#endif
-+
-+#undef do_test
-+#undef do_test_all_true
-+#undef do_test_all_false
-+
-+	return true;
-+}
-+
-+/* Ensure that vma_flags_clear() and friends works correctly. */
-+static bool test_vma_flags_clear(void)
-+{
-+	vma_flags_t flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT,
-+					 VMA_EXEC_BIT, 64, 65);
-+	vma_flags_t mask = mk_vma_flags(VMA_EXEC_BIT, 64);
-+	struct vm_area_struct vma;
-+	struct vm_area_desc desc;
-+
-+	vma.flags = flags;
-+	desc.vma_flags = flags;
-+
-+	/* Cursory check of _mask() variant, as the helper macros imply. */
-+	vma_flags_clear_mask(&flags, mask);
-+	vma_flags_clear_mask(&vma.flags, mask);
-+	vma_desc_clear_flags_mask(&desc, mask);
-+	ASSERT_FALSE(vma_flags_test(flags, VMA_EXEC_BIT, 64));
-+	ASSERT_FALSE(vma_flags_test(vma.flags, VMA_EXEC_BIT, 64));
-+	ASSERT_FALSE(vma_desc_test_flags(&desc, VMA_EXEC_BIT, 64));
-+	/* Reset. */
-+	vma_flags_set(&flags, VMA_EXEC_BIT, 64);
-+	vma_set_flags(&vma, VMA_EXEC_BIT, 64);
-+	vma_desc_set_flags(&desc, VMA_EXEC_BIT, 64);
-+
-+	/*
-+	 * Clear the flags and assert clear worked, then reset flags back to
-+	 * include specified flags.
-+	 */
-+#define do_test_and_reset(...)					\
-+	vma_flags_clear(&flags, __VA_ARGS__);			\
-+	vma_flags_clear(&vma.flags, __VA_ARGS__);		\
-+	vma_desc_clear_flags(&desc, __VA_ARGS__);		\
-+	ASSERT_FALSE(vma_flags_test(flags, __VA_ARGS__));	\
-+	ASSERT_FALSE(vma_flags_test(vma.flags, __VA_ARGS__));	\
-+	ASSERT_FALSE(vma_desc_test_flags(&desc, __VA_ARGS__));	\
-+	vma_flags_set(&flags, __VA_ARGS__);			\
-+	vma_set_flags(&vma, __VA_ARGS__);			\
-+	vma_desc_set_flags(&desc, __VA_ARGS__)
-+
-+	/* Single flags. */
-+	do_test_and_reset(VMA_READ_BIT);
-+	do_test_and_reset(VMA_WRITE_BIT);
-+	do_test_and_reset(VMA_EXEC_BIT);
-+	do_test_and_reset(64);
-+	do_test_and_reset(65);
-+
-+	/* Two flags, in different orders. */
-+	do_test_and_reset(VMA_READ_BIT, VMA_WRITE_BIT);
-+	do_test_and_reset(VMA_READ_BIT, VMA_EXEC_BIT);
-+	do_test_and_reset(VMA_READ_BIT, 64);
-+	do_test_and_reset(VMA_READ_BIT, 65);
-+	do_test_and_reset(VMA_WRITE_BIT, VMA_READ_BIT);
-+	do_test_and_reset(VMA_WRITE_BIT, VMA_EXEC_BIT);
-+	do_test_and_reset(VMA_WRITE_BIT, 64);
-+	do_test_and_reset(VMA_WRITE_BIT, 65);
-+	do_test_and_reset(VMA_EXEC_BIT, VMA_READ_BIT);
-+	do_test_and_reset(VMA_EXEC_BIT, VMA_WRITE_BIT);
-+	do_test_and_reset(VMA_EXEC_BIT, 64);
-+	do_test_and_reset(VMA_EXEC_BIT, 65);
-+	do_test_and_reset(64, VMA_READ_BIT);
-+	do_test_and_reset(64, VMA_WRITE_BIT);
-+	do_test_and_reset(64, VMA_EXEC_BIT);
-+	do_test_and_reset(64, 65);
-+	do_test_and_reset(65, VMA_READ_BIT);
-+	do_test_and_reset(65, VMA_WRITE_BIT);
-+	do_test_and_reset(65, VMA_EXEC_BIT);
-+	do_test_and_reset(65, 64);
-+
-+	/* Three flags. */
-+
-+#undef do_test_some_missing
-+#undef do_test_and_reset
-+
-+	return true;
-+}
-+
- static void run_vma_tests(int *num_tests, int *num_fail)
- {
- 	TEST(copy_vma);
-+	TEST(vma_flags_unchanged);
-+	TEST(vma_flags_cleared);
-+	TEST(vma_flags_word);
-+	TEST(vma_flags_test);
-+	TEST(vma_flags_clear);
- }
-diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_internal.h
-index e3ed05b57819..0e1121e2ef23 100644
---- a/tools/testing/vma/vma_internal.h
-+++ b/tools/testing/vma/vma_internal.h
-@@ -36,11 +36,11 @@
-  * ahead of all other headers.
-  */
- #define __private
--#define NUM_MM_FLAG_BITS (64)
-+/* NUM_MM_FLAG_BITS defined by test code. */
- typedef struct {
- 	__private DECLARE_BITMAP(__mm_flags, NUM_MM_FLAG_BITS);
- } mm_flags_t;
--#define NUM_VMA_FLAG_BITS BITS_PER_LONG
-+/* NUM_VMA_FLAG_BITS defined by test code. */
- typedef struct {
- 	DECLARE_BITMAP(__vma_flags, NUM_VMA_FLAG_BITS);
- } __private vma_flags_t;
+---
+Jeff Layton (31):
+      Documentation: document EXPORT_OP_NOLOCKS
+      exportfs: add new EXPORT_OP_STABLE_HANDLES flag
+      tmpfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ext4: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ext2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      erofs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      efs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      xfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ceph: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      btrfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      befs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ufs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      udf: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      affs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      squashfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      smb/client: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ovl: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      orangefs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ocfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      ntfs3: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      nilfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      nfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      jfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      jffs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      isofs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      gfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      fuse: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      fat: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      f2fs: add EXPORT_OP_STABLE_HANDLES flag to export operations
+      nfsd: only allow filesystems that set EXPORT_OP_STABLE_HANDLES
+      nfsd: convert dprintks in check_export() to tracepoints
+
+ Documentation/filesystems/nfs/exporting.rst | 13 ++++++++
+ fs/affs/namei.c                             |  1 +
+ fs/befs/linuxvfs.c                          |  1 +
+ fs/btrfs/export.c                           |  1 +
+ fs/ceph/export.c                            |  1 +
+ fs/efs/super.c                              |  1 +
+ fs/erofs/super.c                            |  1 +
+ fs/ext2/super.c                             |  1 +
+ fs/ext4/super.c                             |  1 +
+ fs/f2fs/super.c                             |  1 +
+ fs/fat/nfs.c                                |  2 ++
+ fs/fuse/inode.c                             |  1 +
+ fs/gfs2/export.c                            |  1 +
+ fs/isofs/export.c                           |  1 +
+ fs/jffs2/super.c                            |  1 +
+ fs/jfs/super.c                              |  1 +
+ fs/nfs/export.c                             |  3 +-
+ fs/nfsd/export.c                            | 24 ++++++++-----
+ fs/nfsd/trace.h                             | 52 +++++++++++++++++++++++++++++
+ fs/nilfs2/namei.c                           |  1 +
+ fs/ntfs3/super.c                            |  1 +
+ fs/ocfs2/export.c                           |  1 +
+ fs/orangefs/super.c                         |  1 +
+ fs/overlayfs/export.c                       |  1 +
+ fs/smb/client/export.c                      |  1 +
+ fs/squashfs/export.c                        |  3 +-
+ fs/udf/namei.c                              |  1 +
+ fs/ufs/super.c                              |  1 +
+ fs/xfs/xfs_export.c                         |  1 +
+ include/linux/exportfs.h                    | 16 +++++----
+ mm/shmem.c                                  |  1 +
+ 31 files changed, 120 insertions(+), 17 deletions(-)
+---
+base-commit: c537e12daeecaecdcd322c56a5f70659d2de7bde
+change-id: 20260114-exportfs-nfsd-12515072e9a9
+
+Best regards,
 -- 
-2.52.0
+Jeff Layton <jlayton@kernel.org>
 
 
