@@ -1,81 +1,83 @@
-Return-Path: <linux-erofs+bounces-2001-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2004-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id E946FD3ACF6
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jan 2026 15:52:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99FA8D3AD15
+	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jan 2026 15:53:40 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dvtj46FvVz3bZm;
-	Tue, 20 Jan 2026 01:52:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dvtkV1G7bz3bfZ;
+	Tue, 20 Jan 2026 01:53:38 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=205.220.177.32 arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768834344;
-	cv=pass; b=dx6kRPAELGNPpHXpzpDhWvp4fLKBKrq932EbE8WAfqClWOW11ZfSIvmo+5kd3iHnFhqaqswyJyVBCKYRGlxnuV7T1Q0nFixgm92kRSpjHbgocxHeb67oUYcKKYsVcorkb0foYu3lm0ET1V0iVcY5JR6yktNByleIUAtAfLif72KNTshvktuBU72D/+l/4VIGHUK54wrrFOr603c5mR3kQoT7oaIus/rLsd2bcqwjNc8GEwmP7I9uhOt5SR0BYzfp685oPhhlJ5KqM2ZTUpoJV2XYvfvevIN41f/hDejXXJmMaKqOkG3hrX1914Y6upcDKZeJu1bv7kyQDPUFi3piFw==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=205.220.165.32 arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768834418;
+	cv=pass; b=VjSXDs4DYMUhEHGxICvCxoYHzLs214a16Fx2V4X+6z1cz+LBJ6hZFg8+wnI+CT1dbcUr7hHiv7KbkALVPTlF6bLrgpeuumXGg4fHQa0Lal4ykWT64HwIb1gSjEWoxn0R4rpQrthfPg4rVyiTpDMOEgMMvXEBq+85/uDAA4HF9FWAjAi+ZM90xyiHeQyM86o3B01/slZrix2f1Og66cJELH6EhA7hmarMzbrSkeSkYHjo8h4TxnDH8FHh242KaCjdp0nY57AtuYUcBHWZU1vuYFMnDQjfZahqJgsnjTXva1c7n7lscMoSEHJUg3YJfra2yYdoeaMsmJSNPoSXhP86Rw==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768834344; c=relaxed/relaxed;
-	bh=EQRukAxY7x0joQbP8a8sJTsqdNcC8mGLEMp0pqQvg08=;
+	t=1768834418; c=relaxed/relaxed;
+	bh=G0Ed+CmGiK+xS47vCU8yKMPhVcDzm/k76MjEK9Jo+GM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HAyUzs1yVRRZTCIpPRoTndNd+md688Im70MVjOutZ7JV2lJQSc3NlmbJRdpIBorh6A2WYsWTNboffczdreq4a+je72R6h8N2d5DqzBOFKq/6lBtBlrlIzrgsJ2MBY9oKxYk6cTH5gZwqLrLz8Q6tFQomxrEMr8A9v0YgUYn9HJGW5HNpXsnd8+YZeZG+jmqHhdcjxDQ9qj9WgvDjA8nJJqYxBGJA21BENeUvW/x5/STj1cwpSqhlzvNeBRLOOMI6yXSq2dd63nbTTbdWyNw9g9tuKgckhK2Fw6Nye4QiTWoOXEsGHyIjWQkAeLFhWOerHjUUtZYpOG0ZmDQJjJSMBw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=E1o6D89C; dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=XPKfZz2s; dkim-atps=neutral; spf=pass (client-ip=205.220.177.32; helo=mx0b-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org) smtp.mailfrom=oracle.com
+	 Content-Type:MIME-Version; b=kKoQLDhQTun5jsRPpD9Tzjp5ocGDxa0zae7JAFwSI0MYbDQSPd2p9eQ1O0IbdYqNd5fT85mW4GsNWpgiCAyFkO6QHlxNhpdx4Nt8H+JRgw/AhzixQ6/TvA0Vlba+K+LA9ufcmAnhbliSseVz4dC+9WUAp3ruYMzjGWChtVsw2ff+7fNxQRDHxsG50xMisSqzyLoj/CFwnPvhPygCedPaF5pcSGnwsCsnplmn4gagF9o/wPHyG9xB3g+56EfKh/1QZN8pUj9p90gZhvyN0bA6FNRedHtpbrMQI+6JUUm9DsxvQQAAw1vg7PCNDLbuChK8/nFOKEHVLkrF7YFXdHQobQ==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=I8qnO3Pt; dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=HzNmhxzM; dkim-atps=neutral; spf=pass (client-ip=205.220.165.32; helo=mx0a-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org) smtp.mailfrom=oracle.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=E1o6D89C;
-	dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=XPKfZz2s;
+	dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=I8qnO3Pt;
+	dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=HzNmhxzM;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=oracle.com (client-ip=205.220.177.32; helo=mx0b-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org)
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=oracle.com (client-ip=205.220.165.32; helo=mx0a-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org)
+X-Greylist: delayed 76 seconds by postgrey-1.37 at boromir; Tue, 20 Jan 2026 01:53:37 AEDT
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dvtj25fY1z3bf2
-	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jan 2026 01:52:21 +1100 (AEDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60JBDPVc1512391;
-	Mon, 19 Jan 2026 14:51:44 GMT
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dvtkT3cDpz3bTf
+	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jan 2026 01:53:36 +1100 (AEDT)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60JBDQMg1269395;
+	Mon, 19 Jan 2026 14:51:56 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=EQRukAxY7x0joQbP8a8sJTsqdNcC8mGLEMp0pqQvg08=; b=
-	E1o6D89Cnz7K3zF9yx/eLDNlagySWNHnddDs6juXPOjOwXSB4z+n0THry/JhUn+Z
-	GmxGraY01mucfr6nGgN/hm7LXdJ5kZx46VCi5ROSQ5+eHZefEnF3NSdPEnpaUksk
-	V7fYj6csia7BGHEZnNvdjHvcnpElLRbf3P48G4SIMvX1P2QyQTtYSqQhej/IVN7r
-	NwFSTW/RMeW2rLTHJHxHIyB/Pl8/f3qoXM3As8tO94yZ03m93j6S6zoc+UfVtoUC
-	9SSsg7GAzLqra2wHJf8ErFWkULnHf5r96uD/doxuzF1QhEAW4s9fjujdXeVP3fWd
-	2lhibytiNIz7f0fsu2NsRA==
+	corp-2025-04-25; bh=G0Ed+CmGiK+xS47vCU8yKMPhVcDzm/k76MjEK9Jo+GM=; b=
+	I8qnO3Ptxq9D880ywM4Ce9dWr8x7ffryIYZCP1yH6Kkbi81Y3K/PerPRi2MEVPaA
+	YxcRg5uSVDXX2OVCnwUvusxy1b2ONGidcF6yJnjMdF1YbLj+E7GLn53l+5Y+2den
+	d7CDySCrahaQ6cqNJ6pfisSj3vUp/ZU0u2n+Te3lRatr7i9YBEFL4NxtvYDySFfS
+	8WvsSA3Er6aoF/Btaw0Ns+ROQyJf0kayFjj1tKW7rjZyfMVMKqcn+/TuLB5/KW8A
+	6K4WbpLy73wLUjj1dYRAXtPqPQJs/2VyQgRl3pMj8fer670nNX9euSCzDqD7SbiO
+	NJIc65vJp2z/x8Prg8WqeA==
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4br21qacj1-1
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4br1b8ad3b-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Jan 2026 14:51:43 +0000 (GMT)
+	Mon, 19 Jan 2026 14:51:56 +0000 (GMT)
 Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60JD0a8W022493;
-	Mon, 19 Jan 2026 14:51:43 GMT
-Received: from bn1pr04cu002.outbound.protection.outlook.com (mail-eastus2azon11010059.outbound.protection.outlook.com [52.101.56.59])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4br0vc7wef-1
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60JDoPlT022610;
+	Mon, 19 Jan 2026 14:51:55 GMT
+Received: from sj2pr03cu001.outbound.protection.outlook.com (mail-westusazon11012051.outbound.protection.outlook.com [52.101.43.51])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4br0vc7wj3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 19 Jan 2026 14:51:42 +0000
+	Mon, 19 Jan 2026 14:51:55 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DQyqrJteX0yDzh/ongCDOErDqENU/kDKFJvt6NqhumvY4+uRY/byhIZs8Pmr4qjnhaSdOUQZt3KLK9zEuDCaXTVjB7TQkz6ZRXK3zjm0I+8WWvApOhjdEneO6qX512QEjVyLJMgKTyPNp+KteDDnRd7Jr7u2cI3n0EW1/C73lKoo0YLo0/QfmrMfJ/HjKsAE1Ib70mAs/BpRJsXxbUd99DXbKbtIa5Za7rBqb2RioBIjWEj4ibOowMYGSmmxdlK/TXtBc7gawv1Tw1AlYSLLWXGDhuXci6RtecIyzlTGspjRNbdZso2wlClKXqd9syqkqFzW0bnJLt1VGwlHp4e1sg==
+ b=jvzj1NEPk4MTP0T+s/xYjMyeNcGXia+wbvJa5Mhmbo9BGxMpnlfyjxAmsZI8il4xwWwl2NJa9rQ6UYIDy3lgnbhoKNMdya1+/1l9Nj7QCQywBp6m8ojl84M7D6LSzc/JStTztw0bMr5DXnUKUEGhgx8xXlvtNK7ZI/2slbro93gly/OOvirFUVFqxH9YbEs7CXGdo5KULQUFN9OD636M1iMzkX7wD6QztxHFcZAn1ue2KK3mBx9ca/fG6sDkyyg+cX8UdrlSuVU/3FTA6PBiRfYGBamTZ8hAa3RfhyUkn4Q46E4lPXaV05PXOWlVCbfJZEV3dIvb/BZLhodP5b7H/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EQRukAxY7x0joQbP8a8sJTsqdNcC8mGLEMp0pqQvg08=;
- b=aiTDFfro8lxiScTrCI541YRALrkWnYsOD3zmaFn+HwiE9F6upGLuVki23n2JuuhHpKwdZETMSUgI/k7ctVnPfUzxomfnUG/UqU78bvnrLVq6csMeauq2G1uhCVyP++0Iug6YB0CKaa4jRE+u327dnP/W0MFsloxJaMp7eERSh2d2j8nxwqV09VTpzIHSmKsBXo0JoqvoNvO24T4RJyC1i6+6P1zyBc0tjM6poglQVGbrHsiCEGXlHU+Asfq9AYTmnNGqdqFAwIF6WGPKCD1HYfITYiYqwg7yTijf8FqBjQ9T3DzdjewVM9EvSQALUGjCAjGb0BL6/cq4Gwwg77njSQ==
+ bh=G0Ed+CmGiK+xS47vCU8yKMPhVcDzm/k76MjEK9Jo+GM=;
+ b=HMPf7Cp8a+MdAfro9NgoyUixTMrWVHLS29IxGynksco/i2PBK1RVdGdTxYwoPrMne7yv5l4Nno++DWjSJ93cClu0hSKzGDRqlgkzUzw/1V5q6g+8aTkqUxG26gfd2rPaSOFkf13q0xC3IwoGkizudTVVcypbvKPhxc37C/ULt12oveHrFyA7suYQfxbqSmJb3OJPSnDZt9m1YDY47z2IUeteBJbYR8Ve8JvUTVFMcSuTog6NbkBqN5LB7Ijb9RIjC8+WKlNWqj14SZAE1eNW3A5Wiocf9NqiSY4Kl0Q7/ouuf7RquHeuzW+JdtNwvNLwkDZqjMdnxRPo4Ud7xn1rsA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EQRukAxY7x0joQbP8a8sJTsqdNcC8mGLEMp0pqQvg08=;
- b=XPKfZz2sRjdujpPzPJFD3lGak7eblatVtYfw84DJmGFCoD9YUMWyblrkMlOZVZr3IdXqZiut+ce4x4xxh6tmTTdAY70TLvobJMtfsosb64mGg7jMxe3iEJj7cCjq8tlWT9GOPA17ilblw4oO3zNPHmxNiZ7Q1USpr2AfUGgT6mE=
+ bh=G0Ed+CmGiK+xS47vCU8yKMPhVcDzm/k76MjEK9Jo+GM=;
+ b=HzNmhxzM42yB2v4ksW74D1LgG0ezY0A/KkNZiPUSwVERxSSsunooG6AXxHD5eee6xWW+iNbxh7TgWg48EjmbIRGr0Z4ogIFsR+Acf8apMYlmqjknWQDzvdeaQpj9zuAR8OaOTviC53gulkPp2BBUYaSTRXJ5I5bi4wBo5O0IPC8=
 Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
- by DS7PR10MB7300.namprd10.prod.outlook.com (2603:10b6:8:e3::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.12; Mon, 19 Jan 2026 14:51:38 +0000
+ by CH0PR10MB7483.namprd10.prod.outlook.com (2603:10b6:610:18e::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.12; Mon, 19 Jan
+ 2026 14:51:50 +0000
 Received: from BL4PR10MB8229.namprd10.prod.outlook.com
  ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
  ([fe80::552b:16d2:af:c582%6]) with mapi id 15.20.9520.005; Mon, 19 Jan 2026
- 14:51:38 +0000
+ 14:51:50 +0000
 From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jarkko Sakkinen <jarkko@kernel.org>,
@@ -142,16 +144,16 @@ Cc: Jarkko Sakkinen <jarkko@kernel.org>,
         devel@lists.orangefs.org, linux-xfs@vger.kernel.org,
         keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
         Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH 05/12] mm: update hugetlbfs to use VMA flags on mmap_prepare
-Date: Mon, 19 Jan 2026 14:48:56 +0000
-Message-ID: <39343423b10c7b342647af3cdbefc89908b1819e.1768834061.git.lorenzo.stoakes@oracle.com>
+Subject: [PATCH 08/12] mm: update all remaining mmap_prepare users to use vma_flags_t
+Date: Mon, 19 Jan 2026 14:48:59 +0000
+Message-ID: <f4f9bc314c27e8187cb83667b7fd88634f3c27ba.1768834061.git.lorenzo.stoakes@oracle.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1768834061.git.lorenzo.stoakes@oracle.com>
 References: <cover.1768834061.git.lorenzo.stoakes@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: LO4P265CA0042.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2ac::7) To BL4PR10MB8229.namprd10.prod.outlook.com
+X-ClientProxiedBy: LO6P123CA0030.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:313::10) To BL4PR10MB8229.namprd10.prod.outlook.com
  (2603:10b6:208:4e6::14)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
@@ -165,87 +167,87 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|DS7PR10MB7300:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4f9f3bc2-9f10-488d-f773-08de576a3f1e
+X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|CH0PR10MB7483:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8ce291d6-0a2e-4209-8f17-08de576a4709
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NZXjj33KWTC2HcFMsiS8KDoG73I0gk0JrXKM/GYqNezqs/SrQJMEK/0CcLEl?=
- =?us-ascii?Q?rJxh1hHBsLeI5b80eIAIHbceJriQtxfXISLeGg8f4xa0KTsUGdZ/BicZSWeX?=
- =?us-ascii?Q?BUtygkT+DED5RF+rqh1Mq9PjbK0jYmCtkhTDs6gERTFtN+yHNrddjPdNCT7r?=
- =?us-ascii?Q?hbN++cGUc+EGHYD35ZfwWlaWmrcF1Ttr+bjSl9+RZ/8Wyz5wQDAoS6mVft8y?=
- =?us-ascii?Q?HEcpR105NplRDwE34W37AtGcro8P+TTfx1J54ZlsDX/3bXpRSjljLY5DBSGz?=
- =?us-ascii?Q?V6O/wjItCAZCR9G5H6dzymMo0g+XG1edCqO760zEe5Phr8WCfY03oRgeq+FB?=
- =?us-ascii?Q?b4ko48bZICYyt9W8Um5sBUYCLdAN92H4nOljT4S4DFA4Lwd3F4xCpzTR6uNG?=
- =?us-ascii?Q?m6wMhcLXapAoftHUo/6fRzHTuv3mUhYfGlyETN7u909/0MaU8Wp6ucp5J5m6?=
- =?us-ascii?Q?L5miIhLHth/CfshEDdiSLoWh3ooyuFYnEcD6zwYdVaWJwvq0xrTvXD8LQ5Z/?=
- =?us-ascii?Q?V7eTIybExdiJ+X9n88qm0syQxskusddKEyM49xQ0bzcgUDw7ry0ZuEutkDst?=
- =?us-ascii?Q?zNe3n8oA0UaqTMKGyuOSzZz8iMgwwsfW0nNtSHVw52ToJp5il3Wt25lFOm3w?=
- =?us-ascii?Q?+0JySlcuJCP6/RjesaMfdSKdY1kMS3IlXwyK/y/hPuLAN8EuH4IUidRAa31s?=
- =?us-ascii?Q?LaJDBjjtfeme01WrboiZ3gfknoF2lh3beluY00/L63+H8puaTzRNW52f01/R?=
- =?us-ascii?Q?bIdfTvd7xBHKF5EgCTZpIsbp2j77KzVZIOdcoSAPsJmZ/z4NKWaitL5yBP73?=
- =?us-ascii?Q?pFlDHmi4HiTLzxSQ+LUEYTyuuntWAfqXeLsj6Y6KxFQuKMOUvz9G4qLeRkAR?=
- =?us-ascii?Q?hu7x2kO2gOb6Up6rbFk7UUkE+pprV7eMqgyNoGZ24x1r8yO+jlmwe1CmQZfs?=
- =?us-ascii?Q?nbusBbvE7v1K4NCteRC0iA4lsFsMtICp0pV6Fw8bOtea+5SvKWrIuFtgzgpr?=
- =?us-ascii?Q?uGheDUr+bg6EK1hBMZQrua7kUtmOzIw92GH40/2lfNbiivHgqcwPFg6RPN8O?=
- =?us-ascii?Q?3U5fK5rIZKjb2B2XS2269evlcdcG2xwHFkfCTanxhicGziZWiUJO8TaVYT89?=
- =?us-ascii?Q?dJr3mjqUJ6Q+SXAiQH9wadQXbgUf56Kmaq93ayYvA1cplWYtxFaGkRcwt9l4?=
- =?us-ascii?Q?LEePqldzck4x08I0dfnXniqsaibRDBrMlaNN43zTH2xHCDpRjLo9Re+A2UMS?=
- =?us-ascii?Q?TqOgqJbFxTdbSvURZDXTAFyIR0IdPev52nlOqufhDHQ4LItjl1JSGx58VF/2?=
- =?us-ascii?Q?pSAXNwGSvnytXzML9VmKTbci37azH2qUTMlO+/hxSzaST+cbYYIprSXHK4mI?=
- =?us-ascii?Q?Rj5zN8PGp91Xw58WHDjZ/mTuuFMQlXxh1eb66kNeU0u5RtQ5WKiYb/HA+iZu?=
- =?us-ascii?Q?0BU3X3riHk9vN58vNc1LdKtOdJH0aLOpSivW27gtlGTE3GaSXoEVI7L3+kir?=
- =?us-ascii?Q?3RJlIxHNCNaDiHVpU2ioqqnyH4sBM7b3HUtuGtBYEGCXWeEZa8F2e+bFs90g?=
- =?us-ascii?Q?jKs7qjkg4ISyNdSm96U=3D?=
+	=?us-ascii?Q?4gGqHsLqJdfbWQGthL6xmrFv1MyKo4cRKaJRbnkEJjbAIBLPBKSGlVFRnKcF?=
+ =?us-ascii?Q?A4Q+tlQUcNauD4FNKMmEKPFnKb5EtTkYz+l3XUt/4hjF/hC0b4nCdIvVACtB?=
+ =?us-ascii?Q?1/iPLrmihMMItMkChhjQ3iZ26zM/PteNzhbg1oJ1s8WsyRIc05X8Q34XnyRJ?=
+ =?us-ascii?Q?Ekx8kuERfDSGGa6yfqW9rJBx5TfcUXYLPcddbZMdGWFmtw20pO5nYY6Yl+of?=
+ =?us-ascii?Q?Sne4kvzxjmHS1Sgt4UMjWrt0gB+uc6dTF9eufeW766pFoZUVqadZgWvlGn8/?=
+ =?us-ascii?Q?mPWXR7NKHnBZekee2qG3dxYbUHIXsrX38VuJGxLyZRI1fI2853HPs51bYZjR?=
+ =?us-ascii?Q?n+kWxzIqO+8TGLNG81M1cMZP+JQSThNpMkqrfAOoqtD4w8lOUJFIScDPlK6E?=
+ =?us-ascii?Q?Yv0giMa/A9lu32PFD2uA9n0vGy1e/taLQcaikMIHNXewhghucPKXYlKKxcll?=
+ =?us-ascii?Q?fvwiyWxjbhfdspcp3bOS7nOMitDCsAkc0ko2lRkRZSHG896QDfALgZNsYHW0?=
+ =?us-ascii?Q?pul7ejN1qNcj+NGReHlmU/h72yhRfhcSW+SfGkviY3W9uxSLg9VyZm3fh1Bm?=
+ =?us-ascii?Q?fAHtaak7x0Ygt5wHkuXcZ5q3cil6SGM30ZBQEEg058k0RmQuWak6ca1njM34?=
+ =?us-ascii?Q?sAxkzpy9nbkFkb/a7UW0DAJqemFlI9Kj2uOPGEZk9UUp7aVPpmLy+xlICS9+?=
+ =?us-ascii?Q?vCxbjLLuU6fCW6TkQAiOMHYohVKNRNREoUgJo6VqYGFaIkxkPsVm/QL+RZI+?=
+ =?us-ascii?Q?883sXlxJ4/h15/00KwIAbEkDVhW0Q540fsfmsqid2qqfPg0fx6ruk3dMHqtO?=
+ =?us-ascii?Q?rUppdjHSHo10ZmHEYJHuBFfmtcEoxGR0P/LO65237oLdBZjHcUE0RO31VMJ6?=
+ =?us-ascii?Q?jxM7QlAkFIkP9pE3qn1/1JPgT1RlUgilHi9om9UAC1ZRJNBXjsf0+Rsw2Nnv?=
+ =?us-ascii?Q?8+8F1qZPqcMF8HrjYIDm5UygZAn3lnmB648S3CThtGxKyp9LOTzxWtjfyA4N?=
+ =?us-ascii?Q?KYYmsFZAto6JndKjXZbgFe3nUrxmJYOJ/bBYufXvRCOA+J0fE51RXq9amhgm?=
+ =?us-ascii?Q?yHrMy3bgAw4OHe/klYAItR/Kx6bvYylG2zO18DlndTB+ub3lLleGAvfq5+US?=
+ =?us-ascii?Q?Lv0lh/hS0Tc1jn36z8gDAWpHAwUwxi396r1CtaE/t0TriRg/X8Y7cohBcGr2?=
+ =?us-ascii?Q?6KaYpdxIpbOU3IkaeoowyCakUh1OBGNDHlKFKcOdWoXc6Cz4WwoHswWmueBs?=
+ =?us-ascii?Q?YYppxuy5h+Ucmdvjsuy6abEHjLujweNz33HoVAVNj/PV08tejGEWNPMs5FlW?=
+ =?us-ascii?Q?lUjTvnrMKFarcirid5xGmwHmHNl7O959aZTmojzvLBxn9Qm5uGQ/x2yIlhyU?=
+ =?us-ascii?Q?IlAjfErD+g73QlxWKdl0d8D977zNOpnf3iXHcClq7K8ohFnpnjjcvm75d3GT?=
+ =?us-ascii?Q?FmfwFUv52SHcCUg8fG+0X/elY9ZPVNuuWTsvap/47j6TiW6ILQ9ceu24bFQx?=
+ =?us-ascii?Q?+k8GLu4JOzoI3Z/LEic8D6+9tvrGI1nIS4g/KNALDcnnb6ZEM5XrwuonCQgH?=
+ =?us-ascii?Q?roUmM09+hC2H+Jv3f94=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Qiw4Gmpo6coSzcRmXkqKggQKDRXSECs1hqxPbTlCkti53vyw2EKTOLRPngGh?=
- =?us-ascii?Q?1S4fhkEPJIzmkp98hiWT09W/o8/JbfSkV9/BNYWGQ9V5BOkfCHN5Kteqx0FJ?=
- =?us-ascii?Q?ygTxJi/r/JTAFf0aJNck4v90AFg8iqc1C//odygcHgmzW3EGN9xOTO5OzkVc?=
- =?us-ascii?Q?uhh+vHciXnBe5i88him0NKUmBkgHHYH52xrUH8+h9dmsqw38G/nFSKXvoF4g?=
- =?us-ascii?Q?Iq97Wzo8Boc01zQzgXAk1J+xjwxuLKAuqYAByTcKMIIFR6Jk1XR68cfdcC7H?=
- =?us-ascii?Q?/4YSlADtt2xto6vMoHM3osAB2OHHoGzAA+8/ICuRli/lUsys3UMfop1f9LV2?=
- =?us-ascii?Q?K3y/IvXFZXvrbb09rNF3WpPTMtwTWpyIApe7ZEoI6xyVMnW1+ISXb8p+L3+A?=
- =?us-ascii?Q?waybj6DLjpcRwgzbV6FA9FaTKN+44WVx+rceLonxQSKqjOl2b9VWbopAHrnX?=
- =?us-ascii?Q?r4P9qfZiPFpstgwodCK/7EVaX5U5wFOM0ZybxFijnRyiCN4TTOtrfNGLrVD0?=
- =?us-ascii?Q?0iAew/8yhapqS76SkEqob7cJFC02lqR1lWzvpP/pgeQhPOukMgVOXuG3X2+N?=
- =?us-ascii?Q?HtkxM+Tn/ync8JzSAOgSa8alw/TO3iAP1/VdzT1y0eoPPgyvKiwd/ZhDIxKx?=
- =?us-ascii?Q?ylolPtbwRZ642DZHVi0lwJv1bbSU3ExCFCUYSb1ForNstGzg0Qd3Wngy0opr?=
- =?us-ascii?Q?NxOCHIn+T312Y0cXUa055BaWl/MjXSUsDCR8Hm2Xo7QfczMO/xjua0ydMGWU?=
- =?us-ascii?Q?a/R7V1YETEz5IiWp1a1KMcEVGqyiGq91r9bqhRsMqm763M3sTLnV/XcJ63t1?=
- =?us-ascii?Q?QV4JFvab7r6+OZnbyber14bexx+1QwWRyDEMMtEmV+iEHDPwpUHRKNKx/ywK?=
- =?us-ascii?Q?1u4fHvj8BTRXJ0hXSpxMOlHty4+yV/+BieKD5U7Yk/PYjuMOSeNXao5iOES9?=
- =?us-ascii?Q?EUgK73mjHfRIti1gvPEE/0xCq0xPOgaXSkbxY/J0akLTUZaxSYpg5MNml9w0?=
- =?us-ascii?Q?SkXV8IseUz3VzpHCowssPOuh4xg8AhSib66kH+74xDB4lbQAy0HrFOxRgeyM?=
- =?us-ascii?Q?FpBk3L11ivAyXCvXOueQv7eKUYfuTYj+02AqF01CNcwYi9Zu7Ow/6KOIErHN?=
- =?us-ascii?Q?HQ/zXhUcJj3TJtwVrEixZfHEhFBevmm3M5ajkF8Gn0F+Q8swGNuUC2SF+j9d?=
- =?us-ascii?Q?7CLPhwnIf/7jbdbZ4Gwu3hUS/hTCf9S/Il4AdpCCVF3ot8eQLFyOs27YF5DD?=
- =?us-ascii?Q?gvGcrqcf1SkbuJWF7+SJBBmewQ4EGJoF1BKx1ysO+SLdE7yDLqqRQHuAfUx3?=
- =?us-ascii?Q?gKqmgfOPf4eYPYjBu36iDgC0QvQPBCdOsi93qElCqFMfIKKn8AkZU5bxYlBY?=
- =?us-ascii?Q?Y/7vvayBPlxaDTNbSuYCSVI2Z9sL3Jccs2Alblx+W7Ef6bfx+cAR0CATMu0U?=
- =?us-ascii?Q?3aileceW6XlrzRTminPNIFsRf7jyWTNEYfsd9L0HddwZkSFK83yjWsa7zze8?=
- =?us-ascii?Q?W2CLhPI9eCdgpv6P2V0il2MuRZwXOpIPXQHnNG8110Q+esUfpMNme72FRVp9?=
- =?us-ascii?Q?YVt8BkNx+Lg1lxm4FgaKZeJ2JKVeFyidRh+5rnJpn7CKgH1ECoRf964TCQ4E?=
- =?us-ascii?Q?HYpzxDyibOU63SROcWfa4EKz8XN+3YSvdWW1p9RgSIjYEoRzuQnLgqdmurqp?=
- =?us-ascii?Q?Ac1uzP2AQEY/JjqkAKHOf1l2b/mqRwkey/qK8DYXOha2G+HFJcm52fIrubq0?=
- =?us-ascii?Q?L1W3OVBHjAfKITIHh3jjI5QIfkDT/ec=3D?=
+	=?us-ascii?Q?+YNwxy8yizeXVVWPhMvrw2Atv7LpXmS5IlNJhYxriJHalt53badkcittZ9Zn?=
+ =?us-ascii?Q?b8f8Z9AxVPUQPV1Z5zP4eD9+CqmcM9g7nD0kqPrPtoTmfCjebqDJimdBeZdr?=
+ =?us-ascii?Q?6pjnjd1R+tbnKAEP/AIn1Eqa9Tw4+La/qaHoq4HJBPiedCHttWo1vauLGNB8?=
+ =?us-ascii?Q?x6HFQPU97iLmON9zWXNgEIli840LCcLZiINepHfCbtlKbMxExTP9F8FMBXA4?=
+ =?us-ascii?Q?gEAFBsIpGfCSZIpoUUsAmXIx96u4et20wobxQiTypkieNNcBJRtXvI5Cgzfi?=
+ =?us-ascii?Q?drUCmq0KomdN5c/khLXPWs798MAN2e8vi7rAhWi01Dpc+0itKAkdJj/y3SmF?=
+ =?us-ascii?Q?V5XUemmprL9Xe3a8aFzCkBl/ebipJII2I3Shw0uuTczH9F54D5CgK8ul8cQK?=
+ =?us-ascii?Q?PTcnLmx6wt2164I3AauoApFn/hNZvkEVXUAq2khEES0e/70jbE1QAsd3toNx?=
+ =?us-ascii?Q?uXG1vbNYCC/SOnO5HbSKq5bX5Vv8Qhvz66qETylDeYd/lDjp7cCf0Nh11Itz?=
+ =?us-ascii?Q?bh1kcIz5ZZDTEqV77LiuDdFnaxlb8s6TNujOtxOsq8O/+WYiYyKIeKLIzl4s?=
+ =?us-ascii?Q?vkkbcDhP8kcGto7bPecBgvmM3dX7zzOaGxNUZeRi6xo9/1rcq/VPPRxiGZAd?=
+ =?us-ascii?Q?EHgiPYeDpUtJsyQ65+KXNXNFo705c62AO/IsRc/DAwwuqAU1l4RejNbHGgzp?=
+ =?us-ascii?Q?GWCVQKl9vwMaSF21AJ1fRTyAW7Y8FdPv1wY1B4r0EDf4WXPqvH3Ko1uaUL2a?=
+ =?us-ascii?Q?ku8VFpuh3kc0KEWfv66gFsLTfElAi0G+qeC6qMTI0tggiU2V7p3LxpPY2dcT?=
+ =?us-ascii?Q?uvqpluTKkCiH8bWwBDb+S/1CjyDd5oWKBVmwrmpUg5OxM2rqZN1zlKWXj53e?=
+ =?us-ascii?Q?36eqlqjCrQp09yU8gNaA8TIRZF8WBzcw1UgUC7zuJpBJb2zF/6C26b7ekLcM?=
+ =?us-ascii?Q?gB/RAy40BwVdIwyndSCQfQAO644tDWc8W1qk1tNb1skMyganIVLqzWJ81m8Y?=
+ =?us-ascii?Q?vWD2Ux8jONDMhJ/jc348DHTeiMSi5jcfCAZ9W66PQ2jWnU/5nxE35J9CbGpw?=
+ =?us-ascii?Q?50w0wStIZnEXMkr3tAEq7PQv8H8Fqf9RwFh61ov9lbhIWVJr5PnaXq/m6HVb?=
+ =?us-ascii?Q?dyjqHZXZcVe4zxTCT/Uas9WKMj8yM9eJl6jE1zQQ34KeVFUEnR2Kv+hfob9d?=
+ =?us-ascii?Q?tuulZTk4ge64D6f0YCmskkCwyHnp5MHBeayDTFBnCJW88UDPQ+Y49DSNt+hG?=
+ =?us-ascii?Q?SaUCGIBi4v3ur2/XXEayAkaivjyvYeXFRysQPrA+U1x7h4fNEXjS9Ub9Lp68?=
+ =?us-ascii?Q?ooY8GC+51SgY+7JrPIYFe8Nl7KehdCpWAJ/nzSS3RgkI8w4aTmmWHTQh8t0j?=
+ =?us-ascii?Q?TRNSi5dfxwu9m4ZOxYVV0uswBa5M6Ht7VOiqOuJ5SdB6KElv/eOzkzCQNTQw?=
+ =?us-ascii?Q?r9uIARhYvda4NCrHQ6pIRJV403p4O7x7iE4qUIurE5DV91Xr1Jqulmym2h2l?=
+ =?us-ascii?Q?B6KS5sYCbqWm13fCs4NxKFkhXUDdqyZuR2p+JAHyFjce3JWrpxZD6VbjPg/t?=
+ =?us-ascii?Q?R3nTThrM1UesVolI/RgeeW0mvRxwjhMe84YTZOriSMtsrPZB5GJf3yzH6U6J?=
+ =?us-ascii?Q?q+GnI1hqRQp0WXdWpbs1rFpAGwFrjq5wk7kIFyiRKv9sByQ6e6etlBFz52eN?=
+ =?us-ascii?Q?e72r0NqxEcBMQnE4GqSHM0+BTouIHgc7N+NDxMmELk3gQmCzFLyEODZ5a3nb?=
+ =?us-ascii?Q?K7GkMUPAkBpwH4tKXSUwHix6Y/TgxjA=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	bJK/VAdspkGKex3EUO6aWyd6H2MZ+j+mlHZKEKQdwmM+RAUmtQW+aqOWbWDkwmcvb5wMXg0Vpqm7o0Myuif7+MWEc5AU5VXZk+RxTSR3D5QQRPkQ/snzC11C9CSmQ9Q7Af9oLgl6R0xwAt7RPL7MISCJeZf7MSdBqIrkPwNoPAHVb8siEwyEFsZL44B4VICaPfpYMbG5eeKt95upQ5iKvytH3ITelClD8Rg9ntwUyLYWqWPpKtb/ro8BJrcQrl7KF1Dyud7LXTs50eS6SXf35xmW/A7sDURfL/WRPTFnoFZQJktNumf1PfBM01GdDLH5Wz4u3+ijdN3EvGA1wqq5c6v496HUKnXSwmp5vMxe2uqdpYEQEBuwGzkxdBzvbqXSrqstPNwgwfwIkPZVnlOjOoepZst0C8iR7/FN1j/lj161UlecFFtyOcDWhDWvQXxLxp54O8IU/+cyvjAbtqYTbapXUf0lMB1s0aRjYLFq/dt7EbetTatRxmNsnzWXvBaU7ano3c3/LZ0aId38zx4+4qr0vnLgZ5S1FyV3bsAD+hiiOVpcDzNVgD6XTIdUPUkSpYaWUujn2VLg7grkJiDWHwnPP0wG/tn7PJP5WJzYpBM=
+	GXCRdFcVyptyovQvS/dXRpgpYOqQQD1yak8DhjzDYo4UuoK1KxLD2XKDHrQXHYsm+7OOcBopdKiAK0dbzMyEoNj81UZjk/aIEwA9Pk5J+GyDK439/tLhDTlRBqbGUMZjAVKXBtCkYG2DLNgdTmQ3nZ6mvVYmMEfxtB9LotRgOFq3pYjb3gSrS3353V7uP4fN+C9hfB+xwea2Jy3zd34Ep3kwfQMX76aQv7eonNhvGNQpIeikBSx8jofDTmX1hI575Rbwg+xVmAsxxYFDld/ehQxaR8ft8WayAY4MdByY8tSNya/sj5nlW+hG/Ka60GrIqGcsIKHcNsmmflKPWKSQAPvW530jOXYgbXxyRd12BUZcitHEF9/99f6nskuGHhHHab69eMedJYbQ6sQiJ8RCStbef5Xbbp88akEo1+N0KAJrLS1C94IS2SyjuatbEnjPswpnMjiLpXFpwX/RHE3IV5SQJzuK/mUFmwIJ/IfhcuWQQh5jBHemdffs1T1vnnaqqfFFjciponF5ofmC/13y5VEEENuhhpn9hu0cWP3hWUOkJoecYoF7Nw0EMeR51y5RnIhSJQH/G10MjMXDVWt3HVPxggEH6TNur4s+l1janos=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f9f3bc2-9f10-488d-f773-08de576a3f1e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ce291d6-0a2e-4209-8f17-08de576a4709
 X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 14:51:38.0057
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 14:51:50.4627
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ThzWT8mq5yg9ZKSy5iHrPKJfIwuqX/50OLrSM+mH96dOV/4Z++ieDK4m6TQs7+cyzZxolpkENokvEhwaxtr9vrCbKdcFanXQDk73m8pm9do=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7300
+X-MS-Exchange-CrossTenant-UserPrincipalName: DQu3iOtghfRHm4h/kzk3uIMV7cf+N37KSeuawQuxTXsamvQnopfaeuR1f40ojB77B4bWg6ERVZ35ccXtdZ6FWkiyb7L+4D/pZlrguyixN/s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB7483
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
  definitions=2026-01-19_03,2026-01-19_02,2025-10-01_01
@@ -253,337 +255,442 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adult
  phishscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0 suspectscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
  definitions=main-2601190124
-X-Proofpoint-GUID: JXx3glgKwolw9oIoyJdj1W4CZDDb_6SC
-X-Proofpoint-ORIG-GUID: JXx3glgKwolw9oIoyJdj1W4CZDDb_6SC
-X-Authority-Analysis: v=2.4 cv=QdJrf8bv c=1 sm=1 tr=0 ts=696e44ff b=1 cx=c_pps
+X-Authority-Analysis: v=2.4 cv=WbcBqkhX c=1 sm=1 tr=0 ts=696e450c b=1 cx=c_pps
  a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
  a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
  a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=vUbySO9Y5rIA:10
  a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22 a=yPCof4ZbAAAA:8
- a=atHbPFec4puc5jveiVIA:9 cc=ntf awl=host:12109
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE5MDEyNCBTYWx0ZWRfX/AjSDBhmPcDk
- UiXV9Lq4+laoEE/+ivH4MsRtrp2rJS2tdQUYmAaZnmvS+725wSVwHlcpY4niCmkBIvutXPlVrA7
- 0U2LO0XMcw6EwfaHhX/CzAhQQukRsNVnT+JEFdPtcX8AH2tu3vBcai3sohOweGhz7uNg6ElQwiv
- LjMtvJefm6JkqVi1vAu9zBntBgSXaCm/nJobmE2GrKCpv1b1qVFMKkr4GIXKo4PsRTxw6mby44Z
- s/GELSifut1g9ir9f+89zVbv4Md6J57bLPp633FJMtV2ZvTTt1K5e04sLQjq31Xs1hmWbtyflaL
- n+Wq6AVAEUGVHCCo4vDc5TxVVOs24z88GTEXsFNJGXmdVURRdBu0xtbXg0TrR/Gbt+VW41KSut2
- 9tdQGmF6+Xbk3kpKTQNYDOEQU3Y/9knaVAlUn6d29IjBSIsFR9NHLuFKjnGdC8CDFX4OwmInj68
- FjyhSkI1tm8rzQVsGDSu/U3vcDpLrJStq25JSzPg=
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,
-	RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+ a=M5D02GMWgbgMPnxmookA:9 cc=ntf awl=host:12109
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTE5MDEyNCBTYWx0ZWRfX43VvEz8g/Ibw
+ KJX6f7EmFaM5DKMg6B1dtgELgrBGoZLTzT867mg9tNWX0fZIU64urETl5rfVZLz1QiCaaKVM8XZ
+ DKTa3lXxzDTtveB7VUsAVmju3X3n95AKrL/VDrPN4VDOzH0hhWxhB5hxXg9qWFdjPtZ948zYl6r
+ QiRMYLfZJs9ikHUXcWMhgkSF/XAxVp2X6fjbfeVmL1AZTlpxHoKZSVqDVJFe+3ar6aNfxuHtQe9
+ 2fNNOiEwE3vy+oI0T+M2wnw1k5zReYge9ij1sOqyBEi9osH+7YmEAKbXgmNZgOyztJepUYOI/+t
+ gv700SEv4YnMOKBak0Ds2GdR0R3SzVoc21LYVyuuNxfcVaKCFLk+0E3Srp+rCYZ8LEqWecBh3uf
+ ZBo+WF7DMIkkABn68V2fe4IN2mBMxycX1pTQR1qBpGJlkS5vzQ+Z1XvUMmZPwCgm9JUPY7k49k6
+ WxkTC0Yrdk7F8Lo6CAT2UYz+gBelyte605TE9B/M=
+X-Proofpoint-ORIG-GUID: g-siaPHx9-GyDxrpHgJljSDTyjnwp_nq
+X-Proofpoint-GUID: g-siaPHx9-GyDxrpHgJljSDTyjnwp_nq
+X-Spam-Status: No, score=-0.9 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-In order to update all mmap_prepare users to utilising the new VMA flags
-type vma_flags_t and associated helper functions, we start by updating
-hugetlbfs which has a lot of additional logic that requires updating to
-make this change.
+We will be shortly removing the vm_flags_t field from vm_area_desc so we
+need to update all mmap_prepare users to only use the dessc->vma_flags
+field.
 
-This is laying the groundwork for eliminating the vm_flags_t from struct
-vm_area_desc and using vma_flags_t only, which further lays the ground for
-removing the deprecated vm_flags_t type altogether.
+This patch achieves that and makes all ancillary changes required to make
+this possible.
+
+This lays the groundwork for future work to eliminate the use of vm_flags_t
+in vm_area_desc altogether and more broadly throughout the kernel.
+
+While we're here, we take the opportunity to replace VM_REMAP_FLAGS with
+VMA_REMAP_FLAGS, the vma_flags_t equivalent.
 
 No functional changes intended.
 
 Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 ---
- fs/hugetlbfs/inode.c           | 14 +++++++-------
- include/linux/hugetlb.h        |  6 +++---
- include/linux/hugetlb_inline.h | 10 ++++++++++
- ipc/shm.c                      | 12 +++++++-----
- mm/hugetlb.c                   | 22 +++++++++++-----------
- mm/memfd.c                     |  4 ++--
- mm/mmap.c                      |  2 +-
- 7 files changed, 41 insertions(+), 29 deletions(-)
+ drivers/char/mem.c       |  6 +++---
+ drivers/dax/device.c     | 10 +++++-----
+ fs/aio.c                 |  2 +-
+ fs/erofs/data.c          |  5 +++--
+ fs/ext4/file.c           |  4 ++--
+ fs/ntfs3/file.c          |  2 +-
+ fs/orangefs/file.c       |  4 ++--
+ fs/ramfs/file-nommu.c    |  2 +-
+ fs/resctrl/pseudo_lock.c |  2 +-
+ fs/romfs/mmap-nommu.c    |  2 +-
+ fs/xfs/xfs_file.c        |  4 ++--
+ fs/zonefs/file.c         |  3 ++-
+ include/linux/dax.h      |  4 ++--
+ include/linux/mm.h       | 24 +++++++++++++++++++-----
+ kernel/relay.c           |  2 +-
+ mm/memory.c              | 17 ++++++++---------
+ 16 files changed, 54 insertions(+), 39 deletions(-)
 
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 3b4c152c5c73..95a5b23b4808 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -109,7 +109,7 @@ static int hugetlbfs_file_mmap_prepare(struct vm_area_desc *desc)
- 	loff_t len, vma_len;
- 	int ret;
- 	struct hstate *h = hstate_file(file);
--	vm_flags_t vm_flags;
-+	vma_flags_t vma_flags;
- 
- 	/*
- 	 * vma address alignment (but not the pgoff alignment) has
-@@ -119,7 +119,7 @@ static int hugetlbfs_file_mmap_prepare(struct vm_area_desc *desc)
- 	 * way when do_mmap unwinds (may be important on powerpc
- 	 * and ia64).
- 	 */
--	desc->vm_flags |= VM_HUGETLB | VM_DONTEXPAND;
-+	vma_desc_set_flags(desc, VMA_HUGETLB_BIT, VMA_DONTEXPAND_BIT);
- 	desc->vm_ops = &hugetlb_vm_ops;
- 
- 	/*
-@@ -148,23 +148,23 @@ static int hugetlbfs_file_mmap_prepare(struct vm_area_desc *desc)
- 
- 	ret = -ENOMEM;
- 
--	vm_flags = desc->vm_flags;
-+	vma_flags = desc->vma_flags;
- 	/*
- 	 * for SHM_HUGETLB, the pages are reserved in the shmget() call so skip
- 	 * reserving here. Note: only for SHM hugetlbfs file, the inode
- 	 * flag S_PRIVATE is set.
- 	 */
- 	if (inode->i_flags & S_PRIVATE)
--		vm_flags |= VM_NORESERVE;
-+		vma_flags_set(&vma_flags, VMA_NORESERVE_BIT);
- 
- 	if (hugetlb_reserve_pages(inode,
- 			desc->pgoff >> huge_page_order(h),
- 			len >> huge_page_shift(h), desc,
--			vm_flags) < 0)
-+			vma_flags) < 0)
- 		goto out;
- 
- 	ret = 0;
--	if ((desc->vm_flags & VM_WRITE) && inode->i_size < len)
-+	if (vma_desc_test_flags(desc, VMA_WRITE_BIT) && inode->i_size < len)
- 		i_size_write(inode, len);
- out:
- 	inode_unlock(inode);
-@@ -1527,7 +1527,7 @@ static int get_hstate_idx(int page_size_log)
-  * otherwise hugetlb_reserve_pages reserves one less hugepages than intended.
-  */
- struct file *hugetlb_file_setup(const char *name, size_t size,
--				vm_flags_t acctflag, int creat_flags,
-+				vma_flags_t acctflag, int creat_flags,
- 				int page_size_log)
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index 52039fae1594..702d9595a563 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -306,7 +306,7 @@ static unsigned zero_mmap_capabilities(struct file *file)
+ /* can't do an in-place private mapping if there's no MMU */
+ static inline int private_mapping_ok(struct vm_area_desc *desc)
  {
- 	struct inode *inode;
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index 94a03591990c..4e72bf66077e 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -150,7 +150,7 @@ int hugetlb_mfill_atomic_pte(pte_t *dst_pte,
- 			     struct folio **foliop);
- #endif /* CONFIG_USERFAULTFD */
- long hugetlb_reserve_pages(struct inode *inode, long from, long to,
--			   struct vm_area_desc *desc, vm_flags_t vm_flags);
-+			   struct vm_area_desc *desc, vma_flags_t vma_flags);
- long hugetlb_unreserve_pages(struct inode *inode, long start, long end,
- 						long freed);
- bool folio_isolate_hugetlb(struct folio *folio, struct list_head *list);
-@@ -529,7 +529,7 @@ static inline struct hugetlbfs_inode_info *HUGETLBFS_I(struct inode *inode)
+-	return is_nommu_shared_mapping(desc->vm_flags);
++	return is_nommu_shared_vma_flags(desc->vma_flags);
  }
- 
- extern const struct vm_operations_struct hugetlb_vm_ops;
--struct file *hugetlb_file_setup(const char *name, size_t size, vm_flags_t acct,
-+struct file *hugetlb_file_setup(const char *name, size_t size, vma_flags_t acct,
- 				int creat_flags, int page_size_log);
- 
- static inline bool is_file_hugepages(const struct file *file)
-@@ -545,7 +545,7 @@ static inline struct hstate *hstate_inode(struct inode *i)
- 
- #define is_file_hugepages(file)			false
- static inline struct file *
--hugetlb_file_setup(const char *name, size_t size, vm_flags_t acctflag,
-+hugetlb_file_setup(const char *name, size_t size, vma_flags_t acctflag,
- 		int creat_flags, int page_size_log)
- {
- 	return ERR_PTR(-ENOSYS);
-diff --git a/include/linux/hugetlb_inline.h b/include/linux/hugetlb_inline.h
-index a27aa0162918..155d8a5b9790 100644
---- a/include/linux/hugetlb_inline.h
-+++ b/include/linux/hugetlb_inline.h
-@@ -11,6 +11,11 @@ static inline bool is_vm_hugetlb_flags(vm_flags_t vm_flags)
- 	return !!(vm_flags & VM_HUGETLB);
- }
- 
-+static inline bool is_vma_hugetlb_flags(vma_flags_t flags)
-+{
-+	return vma_flags_test(flags, VMA_HUGETLB_BIT);
-+}
-+
  #else
  
- static inline bool is_vm_hugetlb_flags(vm_flags_t vm_flags)
-@@ -18,6 +23,11 @@ static inline bool is_vm_hugetlb_flags(vm_flags_t vm_flags)
- 	return false;
+@@ -360,7 +360,7 @@ static int mmap_mem_prepare(struct vm_area_desc *desc)
+ 
+ 	desc->vm_ops = &mmap_mem_ops;
+ 
+-	/* Remap-pfn-range will mark the range VM_IO. */
++	/* Remap-pfn-range will mark the range with the I/O flag. */
+ 	mmap_action_remap_full(desc, desc->pgoff);
+ 	/* We filter remap errors to -EAGAIN. */
+ 	desc->action.error_hook = mmap_filter_error;
+@@ -520,7 +520,7 @@ static int mmap_zero_prepare(struct vm_area_desc *desc)
+ #ifndef CONFIG_MMU
+ 	return -ENOSYS;
+ #endif
+-	if (desc->vm_flags & VM_SHARED)
++	if (vma_desc_test_flags(desc, VMA_SHARED_BIT))
+ 		return shmem_zero_setup_desc(desc);
+ 
+ 	desc->action.success_hook = mmap_zero_private_success;
+diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+index 22999a402e02..4b2970d6bbee 100644
+--- a/drivers/dax/device.c
++++ b/drivers/dax/device.c
+@@ -13,7 +13,7 @@
+ #include "dax-private.h"
+ #include "bus.h"
+ 
+-static int __check_vma(struct dev_dax *dev_dax, vm_flags_t vm_flags,
++static int __check_vma(struct dev_dax *dev_dax, vma_flags_t flags,
+ 		       unsigned long start, unsigned long end, struct file *file,
+ 		       const char *func)
+ {
+@@ -24,7 +24,7 @@ static int __check_vma(struct dev_dax *dev_dax, vm_flags_t vm_flags,
+ 		return -ENXIO;
+ 
+ 	/* prevent private mappings from being established */
+-	if ((vm_flags & VM_MAYSHARE) != VM_MAYSHARE) {
++	if (!vma_flags_test(flags, VMA_MAYSHARE_BIT)) {
+ 		dev_info_ratelimited(dev,
+ 				"%s: %s: fail, attempted private mapping\n",
+ 				current->comm, func);
+@@ -53,7 +53,7 @@ static int __check_vma(struct dev_dax *dev_dax, vm_flags_t vm_flags,
+ static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+ 		     const char *func)
+ {
+-	return __check_vma(dev_dax, vma->vm_flags, vma->vm_start, vma->vm_end,
++	return __check_vma(dev_dax, vma->flags, vma->vm_start, vma->vm_end,
+ 			   vma->vm_file, func);
  }
  
-+static inline bool is_vma_hugetlb_flags(vma_flags_t flags)
+@@ -306,14 +306,14 @@ static int dax_mmap_prepare(struct vm_area_desc *desc)
+ 	 * fault time.
+ 	 */
+ 	id = dax_read_lock();
+-	rc = __check_vma(dev_dax, desc->vm_flags, desc->start, desc->end, filp,
++	rc = __check_vma(dev_dax, desc->vma_flags, desc->start, desc->end, filp,
+ 			 __func__);
+ 	dax_read_unlock(id);
+ 	if (rc)
+ 		return rc;
+ 
+ 	desc->vm_ops = &dax_vm_ops;
+-	desc->vm_flags |= VM_HUGEPAGE;
++	vma_desc_set_flags(desc, VMA_HUGEPAGE_BIT);
+ 	return 0;
+ }
+ 
+diff --git a/fs/aio.c b/fs/aio.c
+index 0a23a8c0717f..59b67b8da1b2 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -394,7 +394,7 @@ static const struct vm_operations_struct aio_ring_vm_ops = {
+ 
+ static int aio_ring_mmap_prepare(struct vm_area_desc *desc)
+ {
+-	desc->vm_flags |= VM_DONTEXPAND;
++	vma_desc_set_flags(desc, VMA_DONTEXPAND_BIT);
+ 	desc->vm_ops = &aio_ring_vm_ops;
+ 	return 0;
+ }
+diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+index bb13c4cb8455..e7bc29e764c6 100644
+--- a/fs/erofs/data.c
++++ b/fs/erofs/data.c
+@@ -438,11 +438,12 @@ static int erofs_file_mmap_prepare(struct vm_area_desc *desc)
+ 	if (!IS_DAX(file_inode(desc->file)))
+ 		return generic_file_readonly_mmap_prepare(desc);
+ 
+-	if ((desc->vm_flags & VM_SHARED) && (desc->vm_flags & VM_MAYWRITE))
++	if (vma_desc_test_flags(desc, VMA_SHARED_BIT) &&
++	    vma_desc_test_flags(desc, VMA_MAYWRITE_BIT))
+ 		return -EINVAL;
+ 
+ 	desc->vm_ops = &erofs_dax_vm_ops;
+-	desc->vm_flags |= VM_HUGEPAGE;
++	vma_desc_set_flags(desc, VMA_HUGEPAGE_BIT);
+ 	return 0;
+ }
+ #else
+diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+index 7a8b30932189..da3c208e72d1 100644
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -822,13 +822,13 @@ static int ext4_file_mmap_prepare(struct vm_area_desc *desc)
+ 	 * We don't support synchronous mappings for non-DAX files and
+ 	 * for DAX files if underneath dax_device is not synchronous.
+ 	 */
+-	if (!daxdev_mapping_supported(desc->vm_flags, file_inode(file), dax_dev))
++	if (!daxdev_mapping_supported(desc->vma_flags, file_inode(file), dax_dev))
+ 		return -EOPNOTSUPP;
+ 
+ 	file_accessed(file);
+ 	if (IS_DAX(file_inode(file))) {
+ 		desc->vm_ops = &ext4_dax_vm_ops;
+-		desc->vm_flags |= VM_HUGEPAGE;
++		vma_desc_set_flags(desc, VMA_HUGEPAGE_BIT);
+ 	} else {
+ 		desc->vm_ops = &ext4_file_vm_ops;
+ 	}
+diff --git a/fs/ntfs3/file.c b/fs/ntfs3/file.c
+index 2e7b2e566ebe..2902fc6d9a85 100644
+--- a/fs/ntfs3/file.c
++++ b/fs/ntfs3/file.c
+@@ -347,7 +347,7 @@ static int ntfs_file_mmap_prepare(struct vm_area_desc *desc)
+ 	struct inode *inode = file_inode(file);
+ 	struct ntfs_inode *ni = ntfs_i(inode);
+ 	u64 from = ((u64)desc->pgoff << PAGE_SHIFT);
+-	bool rw = desc->vm_flags & VM_WRITE;
++	const bool rw = vma_desc_test_flags(desc, VMA_WRITE_BIT);
+ 	int err;
+ 
+ 	/* Avoid any operation if inode is bad. */
+diff --git a/fs/orangefs/file.c b/fs/orangefs/file.c
+index 919f99b16834..c75aa3f419b1 100644
+--- a/fs/orangefs/file.c
++++ b/fs/orangefs/file.c
+@@ -411,8 +411,8 @@ static int orangefs_file_mmap_prepare(struct vm_area_desc *desc)
+ 		     "orangefs_file_mmap: called on %pD\n", file);
+ 
+ 	/* set the sequential readahead hint */
+-	desc->vm_flags |= VM_SEQ_READ;
+-	desc->vm_flags &= ~VM_RAND_READ;
++	vma_desc_set_flags(desc, VMA_SEQ_READ_BIT);
++	vma_desc_clear_flags(desc, VMA_RAND_READ_BIT);
+ 
+ 	file_accessed(file);
+ 	desc->vm_ops = &orangefs_file_vm_ops;
+diff --git a/fs/ramfs/file-nommu.c b/fs/ramfs/file-nommu.c
+index 77b8ca2757e0..9b955787456e 100644
+--- a/fs/ramfs/file-nommu.c
++++ b/fs/ramfs/file-nommu.c
+@@ -264,7 +264,7 @@ static unsigned long ramfs_nommu_get_unmapped_area(struct file *file,
+  */
+ static int ramfs_nommu_mmap_prepare(struct vm_area_desc *desc)
+ {
+-	if (!is_nommu_shared_mapping(desc->vm_flags))
++	if (!is_nommu_shared_vma_flags(desc->vma_flags))
+ 		return -ENOSYS;
+ 
+ 	file_accessed(desc->file);
+diff --git a/fs/resctrl/pseudo_lock.c b/fs/resctrl/pseudo_lock.c
+index 0bfc13c5b96d..e81d71abfe54 100644
+--- a/fs/resctrl/pseudo_lock.c
++++ b/fs/resctrl/pseudo_lock.c
+@@ -1044,7 +1044,7 @@ static int pseudo_lock_dev_mmap_prepare(struct vm_area_desc *desc)
+ 	 * Ensure changes are carried directly to the memory being mapped,
+ 	 * do not allow copy-on-write mapping.
+ 	 */
+-	if (!(desc->vm_flags & VM_SHARED)) {
++	if (!vma_desc_test_flags(desc, VMA_SHARED_BIT)) {
+ 		mutex_unlock(&rdtgroup_mutex);
+ 		return -EINVAL;
+ 	}
+diff --git a/fs/romfs/mmap-nommu.c b/fs/romfs/mmap-nommu.c
+index 4b77c6dc4418..0271bd8bf676 100644
+--- a/fs/romfs/mmap-nommu.c
++++ b/fs/romfs/mmap-nommu.c
+@@ -63,7 +63,7 @@ static unsigned long romfs_get_unmapped_area(struct file *file,
+  */
+ static int romfs_mmap_prepare(struct vm_area_desc *desc)
+ {
+-	return is_nommu_shared_mapping(desc->vm_flags) ? 0 : -ENOSYS;
++	return is_nommu_shared_vma_flags(desc->vma_flags) ? 0 : -ENOSYS;
+ }
+ 
+ static unsigned romfs_mmap_capabilities(struct file *file)
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index 7874cf745af3..fabea264324a 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -1974,14 +1974,14 @@ xfs_file_mmap_prepare(
+ 	 * We don't support synchronous mappings for non-DAX files and
+ 	 * for DAX files if underneath dax_device is not synchronous.
+ 	 */
+-	if (!daxdev_mapping_supported(desc->vm_flags, file_inode(file),
++	if (!daxdev_mapping_supported(desc->vma_flags, file_inode(file),
+ 				      target->bt_daxdev))
+ 		return -EOPNOTSUPP;
+ 
+ 	file_accessed(file);
+ 	desc->vm_ops = &xfs_file_vm_ops;
+ 	if (IS_DAX(inode))
+-		desc->vm_flags |= VM_HUGEPAGE;
++		vma_desc_set_flags(desc, VMA_HUGEPAGE_BIT);
+ 	return 0;
+ }
+ 
+diff --git a/fs/zonefs/file.c b/fs/zonefs/file.c
+index c1e5e30e90a0..8a7161fc49e5 100644
+--- a/fs/zonefs/file.c
++++ b/fs/zonefs/file.c
+@@ -333,7 +333,8 @@ static int zonefs_file_mmap_prepare(struct vm_area_desc *desc)
+ 	 * ordering between msync() and page cache writeback.
+ 	 */
+ 	if (zonefs_inode_is_seq(file_inode(file)) &&
+-	    (desc->vm_flags & VM_SHARED) && (desc->vm_flags & VM_MAYWRITE))
++	    vma_desc_test_flags(desc, VMA_SHARED_BIT) &&
++	    vma_desc_test_flags(desc, VMA_MAYWRITE_BIT))
+ 		return -EINVAL;
+ 
+ 	file_accessed(file);
+diff --git a/include/linux/dax.h b/include/linux/dax.h
+index 9d624f4d9df6..162c19fe478c 100644
+--- a/include/linux/dax.h
++++ b/include/linux/dax.h
+@@ -65,11 +65,11 @@ size_t dax_recovery_write(struct dax_device *dax_dev, pgoff_t pgoff,
+ /*
+  * Check if given mapping is supported by the file / underlying device.
+  */
+-static inline bool daxdev_mapping_supported(vm_flags_t vm_flags,
++static inline bool daxdev_mapping_supported(vma_flags_t flags,
+ 					    const struct inode *inode,
+ 					    struct dax_device *dax_dev)
+ {
+-	if (!(vm_flags & VM_SYNC))
++	if (!vma_flags_test(flags, VMA_SYNC_BIT))
+ 		return true;
+ 	if (!IS_DAX(inode))
+ 		return false;
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index ea7c210dc684..09e8e3be9a17 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -550,17 +550,18 @@ enum {
+ /*
+  * Physically remapped pages are special. Tell the
+  * rest of the world about it:
+- *   VM_IO tells people not to look at these pages
++ *   IO tells people not to look at these pages
+  *	(accesses can have side effects).
+- *   VM_PFNMAP tells the core MM that the base pages are just
++ *   PFNMAP tells the core MM that the base pages are just
+  *	raw PFN mappings, and do not have a "struct page" associated
+  *	with them.
+- *   VM_DONTEXPAND
++ *   DONTEXPAND
+  *      Disable vma merging and expanding with mremap().
+- *   VM_DONTDUMP
++ *   DONTDUMP
+  *      Omit vma from core dump, even when VM_IO turned off.
+  */
+-#define VM_REMAP_FLAGS (VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP)
++#define VMA_REMAP_FLAGS mk_vma_flags(VMA_IO_BIT, VMA_PFNMAP_BIT,	\
++				     VMA_DONTEXPAND_BIT, VMA_DONTDUMP_BIT)
+ 
+ /* This mask prevents VMA from being scanned with khugepaged */
+ #define VM_NO_KHUGEPAGED (VM_SPECIAL | VM_HUGETLB)
+@@ -1928,6 +1929,14 @@ static inline bool is_cow_mapping(vm_flags_t flags)
+ 	return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
+ }
+ 
++static inline bool vma_desc_is_cow_mapping(struct vm_area_desc *desc)
 +{
-+	return false;
++	const vma_flags_t flags = desc->vma_flags;
++
++	return vma_flags_test(flags, VMA_MAYWRITE_BIT) &&
++		!vma_flags_test(flags, VMA_SHARED_BIT);
 +}
 +
+ #ifndef CONFIG_MMU
+ static inline bool is_nommu_shared_mapping(vm_flags_t flags)
+ {
+@@ -1941,6 +1950,11 @@ static inline bool is_nommu_shared_mapping(vm_flags_t flags)
+ 	 */
+ 	return flags & (VM_MAYSHARE | VM_MAYOVERLAY);
+ }
++
++static inline bool is_nommu_shared_vma_flags(vma_flags_t flags)
++{
++	return vma_flags_test(flags, VMA_MAYSHARE_BIT, VMA_MAYOVERLAY_BIT);
++}
  #endif
  
- static inline bool is_vm_hugetlb_page(struct vm_area_struct *vma)
-diff --git a/ipc/shm.c b/ipc/shm.c
-index 3db36773dd10..2c7379c4c647 100644
---- a/ipc/shm.c
-+++ b/ipc/shm.c
-@@ -707,9 +707,9 @@ static int newseg(struct ipc_namespace *ns, struct ipc_params *params)
- 	int error;
- 	struct shmid_kernel *shp;
- 	size_t numpages = (size + PAGE_SIZE - 1) >> PAGE_SHIFT;
-+	const bool has_no_reserve = shmflg & SHM_NORESERVE;
- 	struct file *file;
- 	char name[13];
--	vm_flags_t acctflag = 0;
- 
- 	if (size < SHMMIN || size > ns->shm_ctlmax)
+ #if defined(CONFIG_SPARSEMEM) && !defined(CONFIG_SPARSEMEM_VMEMMAP)
+diff --git a/kernel/relay.c b/kernel/relay.c
+index e36f6b926f7f..1c8e88259df0 100644
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -92,7 +92,7 @@ static int relay_mmap_prepare_buf(struct rchan_buf *buf,
  		return -EINVAL;
-@@ -738,6 +738,7 @@ static int newseg(struct ipc_namespace *ns, struct ipc_params *params)
  
- 	sprintf(name, "SYSV%08x", key);
- 	if (shmflg & SHM_HUGETLB) {
-+		vma_flags_t acctflag = EMPTY_VMA_FLAGS;
- 		struct hstate *hs;
- 		size_t hugesize;
+ 	desc->vm_ops = &relay_file_mmap_ops;
+-	desc->vm_flags |= VM_DONTEXPAND;
++	vma_desc_set_flags(desc, VMA_DONTEXPAND_BIT);
+ 	desc->private_data = buf;
  
-@@ -749,17 +750,18 @@ static int newseg(struct ipc_namespace *ns, struct ipc_params *params)
- 		hugesize = ALIGN(size, huge_page_size(hs));
- 
- 		/* hugetlb_file_setup applies strict accounting */
--		if (shmflg & SHM_NORESERVE)
--			acctflag = VM_NORESERVE;
-+		if (has_no_reserve)
-+			vma_flags_set(&acctflag, VMA_NORESERVE_BIT);
- 		file = hugetlb_file_setup(name, hugesize, acctflag,
- 				HUGETLB_SHMFS_INODE, (shmflg >> SHM_HUGE_SHIFT) & SHM_HUGE_MASK);
- 	} else {
-+		vm_flags_t acctflag = 0;
-+
- 		/*
- 		 * Do not allow no accounting for OVERCOMMIT_NEVER, even
- 		 * if it's asked for.
- 		 */
--		if  ((shmflg & SHM_NORESERVE) &&
--				sysctl_overcommit_memory != OVERCOMMIT_NEVER)
-+		if  (has_no_reserve && sysctl_overcommit_memory != OVERCOMMIT_NEVER)
- 			acctflag = VM_NORESERVE;
- 		file = shmem_kernel_file_setup(name, size, acctflag);
- 	}
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 4f4494251f5c..edd2cca163e1 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -1193,16 +1193,16 @@ static void set_vma_resv_flags(struct vm_area_struct *vma, unsigned long flags)
- 
- static void set_vma_desc_resv_map(struct vm_area_desc *desc, struct resv_map *map)
- {
--	VM_WARN_ON_ONCE(!is_vm_hugetlb_flags(desc->vm_flags));
--	VM_WARN_ON_ONCE(desc->vm_flags & VM_MAYSHARE);
-+	VM_WARN_ON_ONCE(!is_vma_hugetlb_flags(desc->vma_flags));
-+	VM_WARN_ON_ONCE(vma_desc_test_flags(desc, VMA_MAYSHARE_BIT));
- 
- 	desc->private_data = map;
+ 	return 0;
+diff --git a/mm/memory.c b/mm/memory.c
+index 76e7ee96ddad..d803e0fcefe3 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -2886,7 +2886,7 @@ static inline int remap_p4d_range(struct mm_struct *mm, pgd_t *pgd,
+ 	return 0;
  }
  
- static void set_vma_desc_resv_flags(struct vm_area_desc *desc, unsigned long flags)
+-static int get_remap_pgoff(vm_flags_t vm_flags, unsigned long addr,
++static int get_remap_pgoff(bool is_cow, unsigned long addr,
+ 		unsigned long end, unsigned long vm_start, unsigned long vm_end,
+ 		unsigned long pfn, pgoff_t *vm_pgoff_p)
  {
--	VM_WARN_ON_ONCE(!is_vm_hugetlb_flags(desc->vm_flags));
--	VM_WARN_ON_ONCE(desc->vm_flags & VM_MAYSHARE);
-+	VM_WARN_ON_ONCE(!is_vma_hugetlb_flags(desc->vma_flags));
-+	VM_WARN_ON_ONCE(vma_desc_test_flags(desc, VMA_MAYSHARE_BIT));
+@@ -2896,7 +2896,7 @@ static int get_remap_pgoff(vm_flags_t vm_flags, unsigned long addr,
+ 	 * un-COW'ed pages by matching them up with "vma->vm_pgoff".
+ 	 * See vm_normal_page() for details.
+ 	 */
+-	if (is_cow_mapping(vm_flags)) {
++	if (is_cow) {
+ 		if (addr != vm_start || end != vm_end)
+ 			return -EINVAL;
+ 		*vm_pgoff_p = pfn;
+@@ -2917,7 +2917,7 @@ static int remap_pfn_range_internal(struct vm_area_struct *vma, unsigned long ad
+ 	if (WARN_ON_ONCE(!PAGE_ALIGNED(addr)))
+ 		return -EINVAL;
  
- 	desc->private_data = (void *)((unsigned long)desc->private_data | flags);
+-	VM_WARN_ON_ONCE((vma->vm_flags & VM_REMAP_FLAGS) != VM_REMAP_FLAGS);
++	VM_WARN_ON_ONCE(!vma_test_all_flags_mask(vma, VMA_REMAP_FLAGS));
+ 
+ 	BUG_ON(addr >= end);
+ 	pfn -= addr >> PAGE_SHIFT;
+@@ -3041,9 +3041,9 @@ void remap_pfn_range_prepare(struct vm_area_desc *desc, unsigned long pfn)
+ 	 * check it again on complete and will fail there if specified addr is
+ 	 * invalid.
+ 	 */
+-	get_remap_pgoff(desc->vm_flags, desc->start, desc->end,
++	get_remap_pgoff(vma_desc_is_cow_mapping(desc), desc->start, desc->end,
+ 			desc->start, desc->end, pfn, &desc->pgoff);
+-	desc->vm_flags |= VM_REMAP_FLAGS;
++	vma_desc_set_flags_mask(desc, VMA_REMAP_FLAGS);
  }
-@@ -1216,7 +1216,7 @@ static int is_vma_resv_set(struct vm_area_struct *vma, unsigned long flag)
  
- static bool is_vma_desc_resv_set(struct vm_area_desc *desc, unsigned long flag)
- {
--	VM_WARN_ON_ONCE(!is_vm_hugetlb_flags(desc->vm_flags));
-+	VM_WARN_ON_ONCE(!is_vma_hugetlb_flags(desc->vma_flags));
+ static int remap_pfn_range_prepare_vma(struct vm_area_struct *vma, unsigned long addr,
+@@ -3052,13 +3052,12 @@ static int remap_pfn_range_prepare_vma(struct vm_area_struct *vma, unsigned long
+ 	unsigned long end = addr + PAGE_ALIGN(size);
+ 	int err;
  
- 	return ((unsigned long)desc->private_data) & flag;
+-	err = get_remap_pgoff(vma->vm_flags, addr, end,
+-			      vma->vm_start, vma->vm_end,
+-			      pfn, &vma->vm_pgoff);
++	err = get_remap_pgoff(is_cow_mapping(vma->vm_flags), addr, end,
++			      vma->vm_start, vma->vm_end, pfn, &vma->vm_pgoff);
+ 	if (err)
+ 		return err;
+ 
+-	vm_flags_set(vma, VM_REMAP_FLAGS);
++	vma_set_flags_mask(vma, VMA_REMAP_FLAGS);
+ 	return 0;
  }
-@@ -6564,7 +6564,7 @@ long hugetlb_change_protection(struct vm_area_struct *vma,
- long hugetlb_reserve_pages(struct inode *inode,
- 		long from, long to,
- 		struct vm_area_desc *desc,
--		vm_flags_t vm_flags)
-+		vma_flags_t vma_flags)
- {
- 	long chg = -1, add = -1, spool_resv, gbl_resv;
- 	struct hstate *h = hstate_inode(inode);
-@@ -6585,7 +6585,7 @@ long hugetlb_reserve_pages(struct inode *inode,
- 	 * attempt will be made for VM_NORESERVE to allocate a page
- 	 * without using reserves
- 	 */
--	if (vm_flags & VM_NORESERVE)
-+	if (vma_flags_test(vma_flags, VMA_NORESERVE_BIT))
- 		return 0;
  
- 	/*
-@@ -6594,7 +6594,7 @@ long hugetlb_reserve_pages(struct inode *inode,
- 	 * to reserve the full area even if read-only as mprotect() may be
- 	 * called to make the mapping read-write. Assume !desc is a shm mapping
- 	 */
--	if (!desc || desc->vm_flags & VM_MAYSHARE) {
-+	if (!desc || vma_desc_test_flags(desc, VMA_MAYSHARE_BIT)) {
- 		/*
- 		 * resv_map can not be NULL as hugetlb_reserve_pages is only
- 		 * called for inodes for which resv_maps were created (see
-@@ -6628,7 +6628,7 @@ long hugetlb_reserve_pages(struct inode *inode,
- 	if (err < 0)
- 		goto out_err;
- 
--	if (desc && !(desc->vm_flags & VM_MAYSHARE) && h_cg) {
-+	if (desc && !vma_desc_test_flags(desc, VMA_MAYSHARE_BIT) && h_cg) {
- 		/* For private mappings, the hugetlb_cgroup uncharge info hangs
- 		 * of the resv_map.
- 		 */
-@@ -6665,7 +6665,7 @@ long hugetlb_reserve_pages(struct inode *inode,
- 	 * consumed reservations are stored in the map. Hence, nothing
- 	 * else has to be done for private mappings here
- 	 */
--	if (!desc || desc->vm_flags & VM_MAYSHARE) {
-+	if (!desc || vma_desc_test_flags(desc, VMA_MAYSHARE_BIT)) {
- 		add = region_add(resv_map, from, to, regions_needed, h, h_cg);
- 
- 		if (unlikely(add < 0)) {
-@@ -6729,7 +6729,7 @@ long hugetlb_reserve_pages(struct inode *inode,
- 	hugetlb_cgroup_uncharge_cgroup_rsvd(hstate_index(h),
- 					    chg * pages_per_huge_page(h), h_cg);
- out_err:
--	if (!desc || desc->vm_flags & VM_MAYSHARE)
-+	if (!desc || vma_desc_test_flags(desc, VMA_MAYSHARE_BIT))
- 		/* Only call region_abort if the region_chg succeeded but the
- 		 * region_add failed or didn't run.
- 		 */
-diff --git a/mm/memfd.c b/mm/memfd.c
-index ab5312aff14b..5f95f639550c 100644
---- a/mm/memfd.c
-+++ b/mm/memfd.c
-@@ -87,7 +87,7 @@ struct folio *memfd_alloc_folio(struct file *memfd, pgoff_t idx)
- 		gfp_mask &= ~(__GFP_HIGHMEM | __GFP_MOVABLE);
- 		idx >>= huge_page_order(h);
- 
--		nr_resv = hugetlb_reserve_pages(inode, idx, idx + 1, NULL, 0);
-+		nr_resv = hugetlb_reserve_pages(inode, idx, idx + 1, NULL, EMPTY_VMA_FLAGS);
- 		if (nr_resv < 0)
- 			return ERR_PTR(nr_resv);
- 
-@@ -464,7 +464,7 @@ static struct file *alloc_file(const char *name, unsigned int flags)
- 	int err = 0;
- 
- 	if (flags & MFD_HUGETLB) {
--		file = hugetlb_file_setup(name, 0, VM_NORESERVE,
-+		file = hugetlb_file_setup(name, 0, mk_vma_flags(VMA_NORESERVE_BIT),
- 					HUGETLB_ANONHUGE_INODE,
- 					(flags >> MFD_HUGE_SHIFT) &
- 					MFD_HUGE_MASK);
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 4bdb9ffa9e25..35d11f08005d 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -594,7 +594,7 @@ unsigned long ksys_mmap_pgoff(unsigned long addr, unsigned long len,
- 		 * taken when vm_ops->mmap() is called
- 		 */
- 		file = hugetlb_file_setup(HUGETLB_ANON_FILE, len,
--				VM_NORESERVE,
-+				mk_vma_flags(VMA_NORESERVE_BIT),
- 				HUGETLB_ANONHUGE_INODE,
- 				(flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
- 		if (IS_ERR(file))
 -- 
 2.52.0
 
