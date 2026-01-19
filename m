@@ -1,91 +1,43 @@
-Return-Path: <linux-erofs+bounces-1994-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1995-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3A14D3A2E3
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jan 2026 10:27:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 70A1BD3A33B
+	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jan 2026 10:38:48 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dvlVF445kz2xjb;
-	Mon, 19 Jan 2026 20:27:33 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dvllB0DNVz2xSZ;
+	Mon, 19 Jan 2026 20:38:46 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768814853;
-	cv=none; b=aQfv2pEJTTtIjax0WofRMYAC4yqkMvKUyappRmsI5OW7zqzQ2enUBBEzUsdz/qQR0I3ND8uF8lwCfVozuSAOVc1wtqXAC1x/o6OeENyqbdZhkQy03IpSqZFxjvVuft5WV2NZSqo9LzfYzL8OGWjsYv75rQnNWkx02VhoE//azgRhstYC+g3piU0xog9dpbOs2+/YlL5cB8zyevlqKYa1vBIQSCRtE2Nljobt37e3O3ijUWupipXVGxn7cLlVA5QVZlzFACqlOEHGy17SNt5GR8DylyEGVJLe5xJQGRdrNV7yPgNaBJE+CGm3yuijhA4rSiL+k2NjqEdlOaqX2Zn3sg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.113
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768815525;
+	cv=none; b=jwCFRj0ynH4EpslGx2Nb2sjwpDuu0ccn+hDb0gCRgQMuA8A3a6ywQG868IQ/CuqbRFFcr7LdGvkoaWz3IgsTj5cIh96jh/P9Zn7Rz+L2XDLdP8krtQUvm3NJMpf8PqQMaD0xOx5WH2tPUWgXn3aE/m+AqFCZ+IJ+TLAsp1QJiHtDwzCzj/O5DeKADOGWU1LtJbD4OeTaAjmXaD06p6D84rEyshlQLa78pOPuOmUkuCIR0auizsNQ7gOpnvrkoLD+xIRcZS8zoIjwMI7zpSROp/mXtw7UJ/0THEQFem+3BrNIjqLTWZJTBpKVqkS6Jv33So525rlGbxUQOZIo8yAvHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768814853; c=relaxed/relaxed;
-	bh=48N7Q6quaXG2VUerPh0mhwn+AwJxdPQoMhUkebk+erI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jnPeG21KZ4hFutuVaKF+8iVsUIZ5UxLz6yIzEIlpDBhLSEw+dX9jKo1hE0BiyLgsypw8f1VFyCqcWnhhenRNEIhcsVXuhZJzgh/wTHQXIIVrg4tpeneWzytUHQp9oZcCfd0SDcGSzaKDujozW5na6TzVkolqHswfm4qgDi53mYpoHtCMFiQbmLNR9glEHqi8APVCsbYMPvL8a9gC46W8uvUK5yBAI8Ou9CV9VILeRy33g+bGV5KHinpulA+rtega/fKX1hbp6icyqbRJCFxEHvC5ulD4buy8fMzHldXwzE08YpcGrzRYU5MMbg7M7YPrphWI57tbW7BTZbADA8BTdQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Mu2QXGlU; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1768815525; c=relaxed/relaxed;
+	bh=3oEwfAWlUHgA2grw4AAbMIJcUBA/9GSVEAaHUgNuOoo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k4pWiElxxQ9gaWkZbhnMgXN+FqQDmoKn4NeeB2Ecu/WxtcHVv5QzlK1dkzRMTHM4CKLIj3hgz0Y8zxKw48JY5y1JMdQL2RfQHpPJh0u6/7bRfxaw2RZ/tf4vh5dn44JKcvelZKhx4+wDUci9iFfovwKp/cxN8pdfBIfgZ27O+KNOjse800NJENgydmCP3t0TLCyUrPeG3toKbt5HrOGSa1YXRoaZrQAGvcQjn14hZ74GICr/EhNCgXQkdyZRFGceW5l4WR3QD8DKe+KeclRc/WrHl2CNRuJsKZkOtBpkWpi0G7YvuWkxvROP/QffLCgq0Vvj3HAwBc9hmPufcZPQSA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=SYZYz8yk; dkim-atps=neutral; spf=pass (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Mu2QXGlU;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=SYZYz8yk;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.113; helo=out30-113.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dvlVD54dFz2xHW
-	for <linux-erofs@lists.ozlabs.org>; Mon, 19 Jan 2026 20:27:32 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 393BA60151;
-	Mon, 19 Jan 2026 09:27:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB482C116C6;
-	Mon, 19 Jan 2026 09:27:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768814847;
-	bh=Zn6TWVYgqMMEo3G81dyTmE6wcI+Sd3bTAPgjzlTxSPs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mu2QXGlUo4aerUV1P+3KG6SEVjE4I5PwhJE94jSGcKGFEsi89NRvYzLMGsZyQmRMx
-	 AFrdo2vU9n6IMbv1w/EO9SLvuETafk1mFU5xlxvhkxtXkEJNYxoKBYE396mdxVzJZb
-	 W5ZtaIJuQRCJeroGKA0KDWsJMPfBkIPP+baoniV9KyAuTgFx19+cYmtPt33Z2z6QMh
-	 W/hxfZCWesZN7MEjTCRbAXitVDu+eK0Xl7sEvoG3LmudoMrRbWd+So2BZh0JGzK2g9
-	 bPKHftczmsMNxhRS3WkfraWatirsn1eEv2j+V31oLZsNC4UpAnMV0UccclyHU9DeQT
-	 92D5SL9b9rhFA==
-Date: Mon, 19 Jan 2026 10:27:11 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: NeilBrown <neil@brown.name>
-Cc: Christoph Hellwig <hch@infradead.org>, 
-	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Chuck Lever <chuck.lever@oracle.com>, 
-	Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
-	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Theodore Ts'o <tytso@mit.edu>, 
-	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, Gao Xiang <xiang@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>, 
-	Carlos Maiolino <cem@kernel.org>, Ilya Dryomov <idryomov@gmail.com>, 
-	Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>, Chris Mason <clm@fb.com>, 
-	David Sterba <dsterba@suse.com>, Luis de Bethencourt <luisbg@kernel.org>, 
-	Salah Triki <salah.triki@gmail.com>, Phillip Lougher <phillip@squashfs.org.uk>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Bharath SM <bharathsm@microsoft.com>, Miklos Szeredi <miklos@szeredi.hu>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, 
-	Ryusuke Konishi <konishi.ryusuke@gmail.com>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Dave Kleikamp <shaggy@kernel.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>, 
-	Andreas Gruenbacher <agruenba@redhat.com>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-ext4@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org, ceph-devel@vger.kernel.org, 
-	linux-btrfs@vger.kernel.org, linux-cifs@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	devel@lists.orangefs.org, ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev, 
-	linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net, 
-	linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
- nfsd export support
-Message-ID: <20260119-kanufahren-meerjungfrau-775048806544@brauner>
-References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
- <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
- <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>
- <176877859306.16766.15009835437490907207@noble.neil.brown.name>
- <aW3SAKIr_QsnEE5Q@infradead.org>
- <176880736225.16766.4203157325432990313@noble.neil.brown.name>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dvll73YJhz2xHW
+	for <linux-erofs@lists.ozlabs.org>; Mon, 19 Jan 2026 20:38:41 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1768815515; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=3oEwfAWlUHgA2grw4AAbMIJcUBA/9GSVEAaHUgNuOoo=;
+	b=SYZYz8ykChzr21WI/IVCpD6ybwYPNHJ8eMZ7zpLXVZp/NwsYsrBIWFh5ArMmHl7p5J04azheO0sTL2pN3xSsPTTpZaKpKa5L6SKH8ig8SP1okB4anF7j3Z8Z4Z+GupnVBz893RTmPYqILOzAbB4DRE9eD1hkZbHshbtCCrF5G/k=
+Received: from 30.221.131.184(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WxL7KIk_1768815513 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 19 Jan 2026 17:38:34 +0800
+Message-ID: <73f2c243-e029-4f95-aa8e-285c7affacac@linux.alibaba.com>
+Date: Mon, 19 Jan 2026 17:38:33 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -97,72 +49,138 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <176880736225.16766.4203157325432990313@noble.neil.brown.name>
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 5/9] erofs: introduce the page cache share feature
+To: Christoph Hellwig <hch@lst.de>
+Cc: Hongbo Li <lihongbo22@huawei.com>, chao@kernel.org, brauner@kernel.org,
+ djwong@kernel.org, amir73il@gmail.com, linux-fsdevel@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20260116095550.627082-1-lihongbo22@huawei.com>
+ <20260116095550.627082-6-lihongbo22@huawei.com>
+ <20260116154623.GC21174@lst.de>
+ <af1f3ff6-a163-4515-92bf-44c9cf6c92f3@linux.alibaba.com>
+ <20260119072932.GB2562@lst.de>
+ <8e30bc4b-c97f-4ab2-a7ce-27f399ae7462@linux.alibaba.com>
+ <20260119083251.GA5257@lst.de>
+ <b29b112e-5fe1-414b-9912-06dcd7d7d204@linux.alibaba.com>
+ <20260119092220.GA9140@lst.de>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260119092220.GA9140@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Mon, Jan 19, 2026 at 06:22:42PM +1100, NeilBrown wrote:
-> On Mon, 19 Jan 2026, Christoph Hellwig wrote:
-> > On Mon, Jan 19, 2026 at 10:23:13AM +1100, NeilBrown wrote:
-> > > > This was Chuck's suggested name. His point was that STABLE means that
-> > > > the FH's don't change during the lifetime of the file.
-> > > > 
-> > > > I don't much care about the flag name, so if everyone likes PERSISTENT
-> > > > better I'll roll with that.
-> > > 
-> > > I don't like PERSISTENT.
-> > > I'd rather call a spade a spade.
-> > > 
-> > >   EXPORT_OP_SUPPORTS_NFS_EXPORT
-> > > or
-> > >   EXPORT_OP_NOT_NFS_COMPATIBLE
-> > > 
-> > > The issue here is NFS export and indirection doesn't bring any benefits.
-> > 
-> > No, it absolutely is not.  And the whole concept of calling something
-> > after the initial or main use is a recipe for a mess.
-> 
-> We are calling it for it's only use.  If there was ever another use, we
-> could change the name if that made sense.  It is not a public name, it
-> is easy to change.
-> 
-> > 
-> > Pick a name that conveys what the flag is about, and document those
-> > semantics well.  This flag is about the fact that for a given file,
-> > as long as that file exists in the file system the handle is stable.
-> > Both stable and persistent are suitable for that, nfs is everything
-> > but.
-> 
-> My understanding is that kernfs would not get the flag.
-> kernfs filehandles do not change as long as the file exist.
-> But this is not sufficient for the files to be usefully exported.
-> 
-> I suspect kernfs does re-use filehandles relatively soon after the
-> file/object has been destroyed.  Maybe that is the real problem here:
-> filehandle reuse, not filehandle stability.
-> 
-> Jeff: could you please give details (and preserve them in future cover
-> letters) of which filesystems are known to have problems and what
-> exactly those problems are?
-> 
-> > 
-> > Remember nfs also support volatile file handles, and other applications
-> > might rely on this (I know of quite a few user space applications that
-> > do, but they are kinda hardwired to xfs anyway).
-> 
-> The NFS protocol supports volatile file handles.  knfsd does not.
-> So maybe
->   EXPORT_OP_NOT_NFSD_COMPATIBLE
-> might be better.  or EXPORT_OP_NOT_LINUX_NFSD_COMPATIBLE.
-> (I prefer opt-out rather than opt-in because nfsd export was the
-> original purpose of export_operations, but it isn't something
-> I would fight for)
 
-I prefer one of the variants you proposed here but I don't particularly
-care. It's not a hill worth dying on. So if Christoph insists on the
-other name then I say let's just go with it.
+
+On 2026/1/19 17:22, Christoph Hellwig wrote:
+> On Mon, Jan 19, 2026 at 04:52:54PM +0800, Gao Xiang wrote:
+>>> To me this sounds pretty scary, as we have code in the kernel's trust
+>>> domain that heavily depends on arbitrary userspace policy decisions.
+>>
+>> For example, overlayfs metacopy can also points to
+>> arbitary files, what's the difference between them?
+>> https://docs.kernel.org/filesystems/overlayfs.html#metadata-only-copy-up
+>>
+>> By using metacopy, overlayfs can access arbitary files
+>> as long as the metacopy has the pointer, so it should
+>> be a priviledged stuff, which is similar to this feature.
+> 
+> Sounds scary too.  But overlayfs' job is to combine underlying files, so
+> it is expected.  I think it's the mix of erofs being a disk based file
+
+But you still could point to an arbitary page cache
+if metacopy is used.
+
+> system, and reaching out beyond the device(s) assigned to the file system
+> instance that makes me feel rather uneasy.
+
+You mean the page cache can be shared from other
+filesystems even not backed by these devices/files?
+
+I admitted yes, there could be different: but that
+is why new mount options "inode_share" and the
+"domain_id" mount option are used.
+
+I think they should be regarded as a single super
+filesystem if "domain_id" is the same: From the
+security perspective much like subvolumes of
+a single super filesystem.
+
+And mounting a new filesystem within a "domain_id"
+can be regard as importing data into the super
+"domain_id" filesystem, and I think only trusted
+data within the single domain can be mounted/shared.
+
+> 
+>>>
+>>> Similarly the sharing of blocks between different file system
+>>> instances opens a lot of questions about trust boundaries and life
+>>> time rules.  I don't really have good answers, but writing up the
+>>
+>> Could you give more details about the these? Since you
+>> raised the questions but I have no idea what the threats
+>> really come from.
+> 
+> Right now by default we don't allow any unprivileged mounts.  Now
+> if people thing that say erofs is safe enough and opt into that,
+> it needs to be clear what the boundaries of that are.  For a file
+> system limited to a single block device that boundaries are
+> pretty clear.  For file systems reaching out to the entire system
+> (or some kind of domain), the scope is much wider.
+
+Why multiple device differ for an immutable fses, any
+filesystem instance cannot change the primary or
+external device/blobs. All data are immutable.
+
+> 
+>> As for the lifetime: The blob itself are immutable files,
+>> what the lifetime rules means?
+> 
+> What happens if the blob gets removed, intentionally or accidentally?
+
+The extra device/blob reference is held during
+the whole mount lifetime, much like the primary
+(block) device.
+
+And EROFS is an immutable filesystem, so that
+inner blocks within the blob won't be go away
+by some fs instance too.
+
+> 
+>> And how do you define trust boundaries?  You mean users
+>> have no right to access the data?
+>>
+>> I think it's similar: for blockdevice-based filesystems,
+>> you mount the filesystem with a given source, and it
+>> should have permission to the mounter.
+> 
+> Yes.
+> 
+>> For multiple-blob EROFS filesystems, you mount the
+>> filesystem with multiple data sources, and the blockdevices
+>> and/or backed files should have permission to the
+>> mounters too.
+> 
+> And what prevents other from modifying them, or sneaking
+> unexpected data including unexpected comparison blobs in?
+
+I don't think it's difference from filesystems with single
+device.
+
+First, EROFS instances never modify any underlay
+device/blobs:
+
+If you say some other program modify the device data, yes,
+it can be changed externally, but I think it's just like
+trusted FUSE deamons, untrusted FUSE daemon can return
+arbitary (meta)data at random times too.
+
+Thanks,
+Gao Xiang
+
+
 
