@@ -1,43 +1,109 @@
-Return-Path: <linux-erofs+bounces-1979-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-1980-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88E50D39E3E
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jan 2026 07:07:31 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79C50D39EC7
+	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jan 2026 07:41:43 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dvg3P0Wncz2xjb;
-	Mon, 19 Jan 2026 17:07:29 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dvgps0Ftvz2yql;
+	Mon, 19 Jan 2026 17:41:41 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.101
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768802849;
-	cv=none; b=nCZbnoN00FyNWBisMJyc98FzqshFDQv+4ySOfADfUjitKJ9/4SHvvuECWyrX59Sjl1dECIsUjAAs0BJIhHB+NcDL3eYnCqx5vyyfK3f0GV8bQ7CvoHKrnS6qqS0NEb6ix5RndxcXT3W34rEkWGUiPLotJZ3kDNWs7XmubajcJaYJYgzg4/vozG4GejcJMNDAiyGyXL5aD7SpSWLL6IRPgNMqL0B4NIuEzBTuolmDbwZcwD4xAY01SwQHQC2m3RiNDZbMOveEVgfV14wBxpw5/HumQvQPA6EZ2W+eyoh1osR2fOVAl1QEPIPymt2/tL/QKHhodZGmx0FdxLlaBHh9Rw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:7c80:54:3::133"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768804900;
+	cv=none; b=AicufFJn5Mv7q+3nm2d+mROEyJ2Uv4zrVXGpMO6HVGByIZnvlxDXAFxTkIMibfZxqwiN4Ciwu0MAK2E/ga3I3jpyZHdnIz0YQI7Ro7otJjTrIlU1ccf19htdIRbGd1RVDtED+7bDgXirh6/GvqRtVSvwL0Prrk59RrpTima6uhidSZT2UertVCHkjNW9dEef8JTpHwtbWhBOVKiLTzFQ+C/XKrJO5/X8/qWo7PxjPiunZX9N8yOMm1Brfe+yhp5bcTEU53dWRtaWs5tg/6Y3NElDFFFTnhF0heYd/aJ4mQztjWZe+bUieSISKd0IyQe/TRFtESv5dNXWLrHSeFunRw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768802849; c=relaxed/relaxed;
-	bh=Mtu9BGmiSc6/JI+WWOdFf43Fu2yk/DZstI8QUQWmgso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WrdrEEu6U1MZqtM94JHqwawlrd0bKUu5oPEecABTAIbRfqbzT3cY2apKOgRc4hugbOeTSdWw730quhG1azSd/HWuYUoWRtWr58aNvGWZ9Kx4XZ+s177CGQgJyPnqIxpmU/PUtP8AoIqqg7naDbzAfO/5cPjS9e8UK/7Wm8y/VyqL2caL22h/0tpvL0WadaTerLGcIFsfAOFMtQXarWFZzZkXjL52te1TdZqsrEOZEAmKVcLVLT3Y7VfHLcZmgAqmHn7JlAch42C5tQWGvDY465HqtR9VmcI8uI+NCYBwFAZL9kAwv0Byye/ULUivOOfEgl7yKogKZAEJlGh++DFfYA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=py3WNnIt; dkim-atps=neutral; spf=pass (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+	t=1768804900; c=relaxed/relaxed;
+	bh=SwbeRkUkK9OO/mqWtmzTHxyd7fbhxxJhakqf4s0kNIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C6FJxksFClifuD8dolpS3ONiCLSM4QKPVVwVYtKQiwOTiSMADLVFLiBVcUTdVf30EUIPucTeG1ND8D8dx12iEqhK6H98iC/xa9aaEvWKa6QMYVcJKgTGy9WkAYwuQxG5Olv6Gdar4PswaCk+ajY5eSIlYwcabiEqfLOdePQ23Jzbjf7g+boNT4d4crmos0XcGI0KT8IPWiK4+JFEheUi/IbDB6sheY3aF9lID4mJbZt3YxCXlCEQP6Fu18CaUNQp8FGuo2420TIA5fHcKhkwPOCEBsG2XRJnZpzxA+JsQDbngpiNfYTNEPC9QAllda9yqdv+E5D74mhJ1AgLjwnRuQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org; dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QwGA4hgL; dkim-atps=neutral; spf=none (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+f4f5ba1b7319529cbc9c+8184+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org) smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=py3WNnIt;
+	dkim=pass (2048-bit key; secure) header.d=infradead.org header.i=@infradead.org header.a=rsa-sha256 header.s=bombadil.20210309 header.b=QwGA4hgL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.101; helo=out30-101.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Authentication-Results: lists.ozlabs.org; spf=none (no SPF record) smtp.mailfrom=bombadil.srs.infradead.org (client-ip=2607:7c80:54:3::133; helo=bombadil.infradead.org; envelope-from=batv+f4f5ba1b7319529cbc9c+8184+infradead.org+hch@bombadil.srs.infradead.org; receiver=lists.ozlabs.org)
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dvg3H2LnBz2xSZ
-	for <linux-erofs@lists.ozlabs.org>; Mon, 19 Jan 2026 17:07:21 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1768802834; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Mtu9BGmiSc6/JI+WWOdFf43Fu2yk/DZstI8QUQWmgso=;
-	b=py3WNnItbJtE8CLZ5RPK+W7Dspu4cxiCywpjnPus59+Z/zltWPT9PpULX3Tzv19TYOvgM2jIfGuqoRm3tRdSpXR9kulpOCanAM/ISJ9/wam1r7ZTPIFuHyjcHkbyHv5J7UScZk4lwUkVd55aehNUkJeru5rKRXqkZPIPlaFiVIM=
-Received: from 30.221.131.184(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WxIlwu0_1768802831 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 19 Jan 2026 14:07:12 +0800
-Message-ID: <9c9312c9-1a0e-4c39-aad5-c805e1641a36@linux.alibaba.com>
-Date: Mon, 19 Jan 2026 14:07:11 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dvgpl4Qhpz2yDk
+	for <linux-erofs@lists.ozlabs.org>; Mon, 19 Jan 2026 17:41:33 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SwbeRkUkK9OO/mqWtmzTHxyd7fbhxxJhakqf4s0kNIg=; b=QwGA4hgL9aMV6sQTixPK1n3SnR
+	Zri8G531dV5x98A84aReqp2G6UaHJpN4nTXf/6+Wnxr1XHLmqM3RDH1HwtqEKXYEuQzraEqef4ifS
+	Rfg7JDYGeHeFp5XweYvklrNR0opJLe/tNClTdos3Mg+TXmulpYbbch6WDkxiaD+n25edx4Evpx16K
+	chywKYqiRDwlqzijGrTxiZtG1P3yiRHDEqNuPQfZFCJ+hNE2459H6pBY6SMwsK15gU7luCRmdJNqI
+	wOQgeUtkH/rzLOhP3JaZKrgna/cZqGj1BqYMwYctab45DTy467HukeFKRPuJN1wnShp9GMgFQxNTY
+	QpZdjvWg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1vhiwi-00000001PpP-1B5K;
+	Mon, 19 Jan 2026 06:41:04 +0000
+Date: Sun, 18 Jan 2026 22:41:04 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: NeilBrown <neil@brown.name>
+Cc: Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chunhai Guo <guochunhai@vivo.com>, Carlos Maiolino <cem@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Alex Markuze <amarkuze@redhat.com>,
+	Viacheslav Dubeyko <slava@dubeyko.com>, Chris Mason <clm@fb.com>,
+	David Sterba <dsterba@suse.com>,
+	Luis de Bethencourt <luisbg@kernel.org>,
+	Salah Triki <salah.triki@gmail.com>,
+	Phillip Lougher <phillip@squashfs.org.uk>,
+	Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.org>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Bharath SM <bharathsm@microsoft.com>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>, Dave Kleikamp <shaggy@kernel.org>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Richard Weinberger <richard@nod.at>, Jan Kara <jack@suse.cz>,
+	Andreas Gruenbacher <agruenba@redhat.com>,
+	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Christoph Hellwig <hch@infradead.org>, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-ext4@vger.kernel.org,
+	linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+	linux-unionfs@vger.kernel.org, devel@lists.orangefs.org,
+	ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev,
+	linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net,
+	linux-mtd@lists.infradead.org, gfs2@lists.linux.dev,
+	linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
+ nfsd export support
+Message-ID: <aW3SAKIr_QsnEE5Q@infradead.org>
+References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
+ <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
+ <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>
+ <176877859306.16766.15009835437490907207@noble.neil.brown.name>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -49,196 +115,41 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] erofs-utils: lib: fix incorrect mtime under
- -Edot-omitted
-To: Yifan Zhao <zhaoyifan28@huawei.com>, linux-erofs@lists.ozlabs.org
-Cc: jingrui@huawei.com, wayne.ma@huawei.com, oliver.yang@linux.alibaba.com
-References: <392a98d3-5e31-494c-a013-030f858067ad@linux.alibaba.com>
- <20260117024356.3697202-1-zhaoyifan28@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20260117024356.3697202-1-zhaoyifan28@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <176877859306.16766.15009835437490907207@noble.neil.brown.name>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,SPF_HELO_NONE,SPF_NONE autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-Hi Yifan,
-
-On 2026/1/17 10:43, Yifan Zhao wrote:
-> `-Edot-omitted` enables `-E48bits`, which requires specific
-> configurations for g_sbi.{epoch, build_time}. Currently, the call to
-> `erofs_sb_set_48bit()` occurs too late in the execution flow, causing
-> the aforementioned logic to be bypassed and resulting in incorrect
-> mtimes for all inodes.
+On Mon, Jan 19, 2026 at 10:23:13AM +1100, NeilBrown wrote:
+> > This was Chuck's suggested name. His point was that STABLE means that
+> > the FH's don't change during the lifetime of the file.
+> > 
+> > I don't much care about the flag name, so if everyone likes PERSISTENT
+> > better I'll roll with that.
 > 
-> This patch moves time initialization logic into `erofs_importer_init()`
-> to resolve this issue.
+> I don't like PERSISTENT.
+> I'd rather call a spade a spade.
 > 
-> Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
-Can you confirm if the following patch looks good to you?
-I tried to move c_unix_timestamp into mkfscfg.
+>   EXPORT_OP_SUPPORTS_NFS_EXPORT
+> or
+>   EXPORT_OP_NOT_NFS_COMPATIBLE
+> 
+> The issue here is NFS export and indirection doesn't bring any benefits.
 
- From 11e564767f62d494a7beb100c709655c60eb194a Mon Sep 17 00:00:00 2001
-From: Yifan Zhao <zhaoyifan28@huawei.com>
-Date: Sat, 17 Jan 2026 10:43:56 +0800
-Subject: [PATCH v5] erofs-utils: lib: fix incorrect mtime under -Edot-omitted
+No, it absolutely is not.  And the whole concept of calling something
+after the initial or main use is a recipe for a mess.
 
-`-Edot-omitted` enables `-E48bits`, which requires specific
-configurations for g_sbi.{epoch, build_time}. Currently, the call to
-`erofs_sb_set_48bit()` occurs too late in the execution flow, causing
-the aforementioned logic to be bypassed and resulting in incorrect
-mtimes for all inodes.
+Pick a name that conveys what the flag is about, and document those
+semantics well.  This flag is about the fact that for a given file,
+as long as that file exists in the file system the handle is stable.
+Both stable and persistent are suitable for that, nfs is everything
+but.
 
-This patch moves time initialization logic into `erofs_importer_init()`
-to resolve this issue.
-
-Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-  include/erofs/config.h   |  1 -
-  include/erofs/importer.h |  1 +
-  lib/config.c             |  1 -
-  lib/importer.c           | 11 +++++++++++
-  mkfs/main.c              | 26 +++++++++++---------------
-  5 files changed, 23 insertions(+), 17 deletions(-)
-
-diff --git a/include/erofs/config.h b/include/erofs/config.h
-index 525a8cd5ebfb..2a84fb515868 100644
---- a/include/erofs/config.h
-+++ b/include/erofs/config.h
-@@ -58,7 +58,6 @@ struct erofs_configure {
-  	char c_force_chunkformat;
-  	u8 c_mkfs_metabox_algid;
-  	u32 c_max_decompressed_extent_bytes;
--	u64 c_unix_timestamp;
-  	const char *mount_point;
-  	u32 c_root_xattr_isize;
-  #ifdef EROFS_MT_ENABLED
-diff --git a/include/erofs/importer.h b/include/erofs/importer.h
-index 60160d6bea05..adeea7230447 100644
---- a/include/erofs/importer.h
-+++ b/include/erofs/importer.h
-@@ -41,6 +41,7 @@ struct erofs_importer_params {
-  	u32 pclusterblks_def;
-  	u32 pclusterblks_packed;
-  	s32 pclusterblks_metabox;
-+	s64 build_time;
-  	char force_inodeversion;
-  	bool ignore_mtime;
-  	bool no_datainline;
-diff --git a/lib/config.c b/lib/config.c
-index 16b34fa840d3..5eb0ddeaa851 100644
---- a/lib/config.c
-+++ b/lib/config.c
-@@ -29,7 +29,6 @@ void erofs_init_configure(void)
-  	cfg.c_dbg_lvl  = EROFS_WARN;
-  	cfg.c_version  = PACKAGE_VERSION;
-  	cfg.c_dry_run  = false;
--	cfg.c_unix_timestamp = -1;
-  	cfg.c_max_decompressed_extent_bytes = -1;
-  	erofs_stdout_tty = isatty(STDOUT_FILENO);
-  }
-diff --git a/lib/importer.c b/lib/importer.c
-index 958a433b9eaa..d686c519676b 100644
---- a/lib/importer.c
-+++ b/lib/importer.c
-@@ -23,6 +23,7 @@ void erofs_importer_preset(struct erofs_importer_params *params)
-  		.fixed_uid = -1,
-  		.fixed_gid = -1,
-  		.fsalignblks = 1,
-+		.build_time = -1,
-  	};
-  }
-
-@@ -83,6 +84,16 @@ int erofs_importer_init(struct erofs_importer *im)
-
-  	if (params->dot_omitted)
-  		erofs_sb_set_48bit(sbi);
-+
-+	if (params->build_time != -1) {
-+		if (erofs_sb_has_48bit(sbi)) {
-+			sbi->epoch = max_t(s64, 0, params->build_time - UINT32_MAX);
-+			sbi->build_time = params->build_time - sbi->epoch;
-+		} else {
-+			sbi->epoch = params->build_time;
-+		}
-+	}
-+
-  	return 0;
-
-  out_err:
-diff --git a/mkfs/main.c b/mkfs/main.c
-index bc001a600e7f..1ad610c6b066 100644
---- a/mkfs/main.c
-+++ b/mkfs/main.c
-@@ -277,8 +277,10 @@ static struct erofsmkfs_cfg {
-  	/* < 0, xattr disabled and >= INT_MAX, always use inline xattrs */
-  	long inlinexattr_tolerance;
-  	bool inode_metazone;
-+	u64 unix_timestamp;
-  } mkfscfg = {
-  	.inlinexattr_tolerance = 2,
-+	.unix_timestamp = -1,
-  };
-
-  static unsigned int pclustersize_packed, pclustersize_max;
-@@ -1099,8 +1101,8 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
-  			break;
-
-  		case 'T':
--			cfg.c_unix_timestamp = strtoull(optarg, &endptr, 0);
--			if (cfg.c_unix_timestamp == -1 || *endptr != '\0') {
-+			mkfscfg.unix_timestamp = strtoull(optarg, &endptr, 0);
-+			if (mkfscfg.unix_timestamp == -1 || *endptr != '\0') {
-  				erofs_err("invalid UNIX timestamp %s", optarg);
-  				return -EINVAL;
-  			}
-@@ -1605,7 +1607,7 @@ int parse_source_date_epoch(void)
-  			  source_date_epoch);
-  		return -EINVAL;
-  	}
--	cfg.c_unix_timestamp = epoch;
-+	mkfscfg.unix_timestamp = epoch;
-  	cfg.c_timeinherit = TIMESTAMP_CLAMPING;
-  	return 0;
-  }
-@@ -1731,7 +1733,6 @@ int main(int argc, char **argv)
-  	bool tar_index_512b = false;
-  	struct timeval t;
-  	FILE *blklst = NULL;
--	s64 mkfs_time = 0;
-  	int err;
-  	u32 crc;
-
-@@ -1756,17 +1757,12 @@ int main(int argc, char **argv)
-  	}
-
-  	g_sbi.fixed_nsec = 0;
--	if (cfg.c_unix_timestamp != -1) {
--		mkfs_time = cfg.c_unix_timestamp;
--	} else if (!gettimeofday(&t, NULL)) {
--		mkfs_time = t.tv_sec;
--	}
--	if (erofs_sb_has_48bit(&g_sbi)) {
--		g_sbi.epoch = max_t(s64, 0, mkfs_time - UINT32_MAX);
--		g_sbi.build_time = mkfs_time - g_sbi.epoch;
--	} else {
--		g_sbi.epoch = mkfs_time;
--	}
-+	if (mkfscfg.unix_timestamp != -1)
-+		importer_params.build_time = mkfscfg.unix_timestamp;
-+	else if (!gettimeofday(&t, NULL))
-+		importer_params.build_time = t.tv_sec;
-+	else
-+		importer_params.build_time = 0;
-
-  	err = erofs_dev_open(&g_sbi, cfg.c_img_path, O_RDWR |
-  				(incremental_mode ? 0 : O_TRUNC));
---
-2.43.5
+Remember nfs also support volatile file handles, and other applications
+might rely on this (I know of quite a few user space applications that
+do, but they are kinda hardwired to xfs anyway).
 
 
