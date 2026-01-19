@@ -1,52 +1,51 @@
-Return-Path: <linux-erofs+bounces-2011-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2012-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13916D3B0A4
-	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jan 2026 17:27:27 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE1AFD3B0A6
+	for <lists+linux-erofs@lfdr.de>; Mon, 19 Jan 2026 17:27:32 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dvwph5vTVz2yql;
-	Tue, 20 Jan 2026 03:27:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dvwpp2TfRz30M0;
+	Tue, 20 Jan 2026 03:27:30 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768840044;
-	cv=none; b=QDa38ClgQO3KGkFX9qNn71laHbw7+KxV1HVF6hUN27fSxKFUkB8++Zdfjye+5KCpn/Al64fp6JYxiFUeNrRXkMPV0LLrUd4oIB8WqpY1HEjizFdP5xgX24Pd7dqhT62rm+mYC+SxSBUHtMLdCzv6gkyx8rHTB/t4AYbTRyQ/L1Sgma36uS5wIjELVlIytOObXZk0ezu6jWF4bX9hsHWBUMRump6jV1cQ3dkJ3n0tfSTmYe9Dt2eweWpcwEZwLxiEsEIA0abMNh17ctrwdHu+e9caYoU/RnbTuJWxYz4cDUK8YnN0KBOw/FD52FJyM9zH5aYFfJVkSekT5pT+raRIGw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768840050;
+	cv=none; b=iRN4fznPkUhSUFeZ/QDlre/UBtbZ6WpHt2Rq+aUwWuC4oaPW6k7gJ4wBJNXOFBGlXtc9XUtC+LoOCgW7+eauYHhlE2pV5tNliY1WUIZ5YaacrPPB6ltxaI0xOWDPPpxwUVbOXsUr3xA+84h4U8s7DSifViWYzAqK6dVf6Ae1ZuOBsp+w38q6W26jl4Em+VQ+NM78THc+EJS6qSKS6RNI10qXRgiDvl8u1WDxEYjomcp+TxyOxEIfXW9iPjH6rEXtGzArVWggtKZ7usYyikugIQIylB4CbmK3vAeQGoVoqFyQjAQSYaFV7ZCMEyShhiedwqs0G4zM17WXW14xvYu56A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768840044; c=relaxed/relaxed;
-	bh=lW38OPk4PkfErZi0faVwbOax0ytdfzP4ktwM5gCuCJs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FCUj/uY8Hd/fSEDaomJV0P9ZpK071DA3v9tkUGmp9EJkbasnVdsUvajlwOcyeFHlkkQ5xKFtnTG7DcylKWezAlsggR3l7sPXhG5/glgeTqiXkT03MNILNqVUECC1MDZdljlzFH0hMQIg8jM5Z7/laq2izsJnJo6T1cOCMuwTaUvcze2mog4hUAbiOGegg8+LBLvtF+kDCRMEB4wffRBH/owRnxtaDPoE/8EWf1Ch7w2TElIMs9jdOH+hCMSt8dcf3VTlS7N5M1R+xxjBvXZewb24+USzlJt6QwBQlK+Uv7XCLk25jm30Q4fUVn78OJCoRsjCPbLcwxOZq+vk5HHSVg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=f237MPyH; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	t=1768840050; c=relaxed/relaxed;
+	bh=OdRHeWuTnv3lLxMUOwBSJHWHutyQwfmJkGw3KK+X/ns=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Hxl55ZaMwKkgthU+zeG/pmFIriYBv0KEJQa6sr09L/za+AA/2iSUcXmRqoxgx89tsRdsvkNNZ/1ZqxGLVH/zKpz8nVjDYHDgUo4/b8N50KCEHo6KQb4T5AhfPfCx3Uy0EdDaYmDvetco2IuH39Ni4JZfNFrEABw8UxWKnqToiLSTRE9LwNrPG06ta0j3OWsrcj1fGeWSahvrSHOxVB7sJzxZaA/LhllYvRlaXpC/P5Y3s1Pk2S5iUp5oJlXE/cNfpmWN0T7l41LnqwYTY+30uR26PaaXkH8RMfy9uCNPW7tlY34q7kKeozktL4hMNJHRlCOBzrAUeulnM1mxiyCU9w==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=EZByvzF3; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=f237MPyH;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=EZByvzF3;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
-Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dvwpg61jhz2xKh
-	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jan 2026 03:27:23 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dvwpn3sdsz2xKh
+	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jan 2026 03:27:29 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 8F17860135;
+	by sea.source.kernel.org (Postfix) with ESMTP id 8487F44514;
+	Mon, 19 Jan 2026 16:27:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84ED7C19423;
 	Mon, 19 Jan 2026 16:27:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31BF7C116C6;
-	Mon, 19 Jan 2026 16:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768840040;
-	bh=yX5wj9VHSThOjafnyKvHMJdYbGSk/5OP4p9PS/zazFw=;
-	h=From:Subject:Date:To:Cc:From;
-	b=f237MPyHkZbdY+WPcsLBi0kuGtUgJbV4HoKceS3Jz1Lmrv4gP0tgEIWx9faQo//X+
-	 +UUjREu/69qFBMgdHch+q9bk9Ep8RKPHs/QzSabx4v5reJiL9v0kEdJGMeWqOPK39A
-	 0jSEKULtL05hYKWy8N1WS+HOt5YyvBcESAtJ0ZmYc6dhEbBinazAzj9QJSGklzZ9p9
-	 LbTYD833qVCL0hCJmQS+SihR6ziWecIunpgB2VxOhgkmSC9roap7mrwb5zOJntllqQ
-	 se8GRkweMjAwYRoYx2aL3RsVvvEMBUqvD1Pqmz58J3HWTOMdRGmvio/OwXlAFPl4n+
-	 HkGliBF8cqqKg==
+	s=k20201202; t=1768840047;
+	bh=kHox+Z6m0SGAxt8eN704T4oKG2yhOc62IdYplYhE+GM=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=EZByvzF31znoQEmDHc3SC4xaf0M/35g4xjcVwooMk1FV61HXxLESS5MiLKX6tWFeo
+	 Hv85bBuLMqHqez3qHBscy+CtxbnArxV4QeHTrTHLdSh1NMKPN6CGz094DCBrAFgM+D
+	 AjJf/kL6odSToXoYbC0BwY2wXW9BcS3BGnPOFuFUygBqW+EJJ8lAxaO4a8DC3mSQ8J
+	 aALSFez2K6qCZWewncoJbLr2GlmdBWTKm66qurJ4sNUMMc6kZedy35j6ubnv3HJVKy
+	 Bvebe3CcZHZIgOiFzpF4s1XQUiXn7842k1apwk6XDZswZtqbHhYTTAxje/WAZfxElR
+	 uszu+UWz9bfRg==
 From: Jeff Layton <jlayton@kernel.org>
-Subject: [PATCH v2 00/31] fs: require filesystems to explicitly opt-in to
- nfsd export support
-Date: Mon, 19 Jan 2026 11:26:17 -0500
-Message-Id: <20260119-exportfs-nfsd-v2-0-d93368f903bd@kernel.org>
+Date: Mon, 19 Jan 2026 11:26:18 -0500
+Subject: [PATCH v2 01/31] Documentation: document EXPORT_OP_NOLOCKS
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -60,10 +59,9 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/13MQQqDMBCF4avIrJsykzZWXfUexYXEUUNLIhMJF
- vHuTYVuuvwfvG+DyOI4QlNsIJxcdMHn0KcC7NT5kZXrc4NGXSLRVfE6B1mGqPwQe0XakMGb5rq
- rIX9m4cGth/doc08uLkHeB5/ou/4k8yclUqgqrpBK5ItFe3+yeH6dg4zQ7vv+ATyiSsWrAAAA
-X-Change-ID: 20260114-exportfs-nfsd-12515072e9a9
+Message-Id: <20260119-exportfs-nfsd-v2-1-d93368f903bd@kernel.org>
+References: <20260119-exportfs-nfsd-v2-0-d93368f903bd@kernel.org>
+In-Reply-To: <20260119-exportfs-nfsd-v2-0-d93368f903bd@kernel.org>
 To: Christian Brauner <brauner@kernel.org>, 
  Alexander Viro <viro@zeniv.linux.org.uk>, 
  Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neil@brown.name>, 
@@ -109,24 +107,22 @@ Cc: David Laight <david.laight.linux@gmail.com>,
  ntfs3@lists.linux.dev, linux-nilfs@vger.kernel.org, 
  jfs-discussion@lists.sourceforge.net, linux-mtd@lists.infradead.org, 
  gfs2@lists.linux.dev, linux-f2fs-devel@lists.sourceforge.net, 
- linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>, 
- Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>, 
- Dave Kleikamp <dave.kleikamp@oracle.com>
+ linux-doc@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5453; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=yX5wj9VHSThOjafnyKvHMJdYbGSk/5OP4p9PS/zazFw=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpbltSzbGzajTJvmhlV7jB47UePrPRdt3Wu5GHL
- L1B0sA8PKeJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaW5bUgAKCRAADmhBGVaC
- FXY4D/42rFsMWqLxlGJh5AWMBxSb1l17atmfl6mxPzMfAPokDVOiTK0fNOZalTR4OcT31QZxTed
- nkOmw7Qd+RTSm3dThDf1+et1RhMguer4Bj1ll4VmaZ/poVmu4fIUqbDcyU54UE4F3/M+fsmJXJF
- 3s1+tqIyC+7WzF6/x/HWQY9RkQLGkUqkteSCoXdzEDc+WnhRgXntOXZFP/HpDfxG/pkaHnd+RBz
- 4lFdhCAZ/xSuv67OWqva7ifRVDMiF1E1jM7uLNP2SeE/hd0wYNuORHvkzf0PBL9T0k2Xtf89p3W
- re4QkZpVZiycpFTZTWt04k1pqWuWK0n8tjfz/V3hdvnGOrpI230p/dDpXhnTN9sdFWylM4U9ya4
- qshCtu+DBJBGHEinp1+ZpE1k5xl1aig3/uN9f7VhUaZWww3qx9qr4g5LvGXfxxoxzZ9wBjiF9KO
- N6VxYj2loIjuU0+56wmYIb9mvXWeQ3O5IJtU9xTAV91iUxWYiRU9dcBVDvwk0wF6sm/fKmizn3g
- YPMFjbuTpkp5VsApqvODwDyEo97gF8luB/qvkGPpxV0AKc1MyfjvFpPOyECG1xpqAW1/f4Iph0F
- ju2zuNnVWaPFBf5KCowY4rq8s1kCTJxt/dnIpOlxVJ6FNlp9OpxryB048OYYuKuRfAwjC8gjHz+
- qu3QGNImWfKzpxQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1145; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=kHox+Z6m0SGAxt8eN704T4oKG2yhOc62IdYplYhE+GM=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBpbltZnWuxHPCsFVnqSKxTO4m+b3RG7VE55J4gy
+ EWLrXp3yVmJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaW5bWQAKCRAADmhBGVaC
+ FVjvEADKTq3x5BhOtt6Qj64fRRaPHGOm6Bc07y6w5GpnNyCiIQM6aVpcn4F9ORvzukxMQVO/XqV
+ Gc7pRAymSYI9s+GWvc1x0IU9sGCQpVsndLJ1eMMzaSgzVz8dIezRd7/k/HS4GGz8KNiZ2jDVfnp
+ c7wjN+XdRQXpWC2qRBgezSkBBYO58OTuQjDA0xv+b8CbjqBJCbdapflO/lt7ryNb+3XN8JC5dOQ
+ YIhjhVdYU3nTYtg8Wq9oRME1R8VCziBOEPSM7OnYvrhhboCQUKPUNwsEEk7C876Ssr6Xwhzg2+s
+ rf7n0oAe2dp7xo79Mjf3XuKcCwQcCR0nZmAb0xVbxOvXhbG+BzkFDnwcv6SPu/LgL+Bz3eELxNT
+ IvSpL94cTKsI653HKrBxtZAfiJvm/rxot2mjA7pmc+6jWNOm2djCX+Y0VXRCNe8OqjqjcrEnjQT
+ IkV/uSXMwte2MxayRUcDLG1rzsUFA2DoS4bR5w6/iwIQIQWtu9+KsQ1oV9LMsta1GV4E2apvumM
+ uiSLYCUypySFenb1mq+t71sXvuaLDoDMml58ewc9RqEz+RxUC/4UtXeB2VmTwzcs77p1HyNq6fH
+ inBJXCW40vznVwdr14HUSxVYt3p68U3UNWanqZKW2184K08jTVhLuH2KEneZ9ix1b63/moRMZVz
+ RNyBzV2Fd0KgbIQ==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -134,106 +130,29 @@ X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-This patchset adds a flag that indicates whether the filesystem supports
-stable filehandles (i.e. that they don't change over the life of the
-file). It then makes any filesystem that doesn't set that flag
-ineligible for nfsd export.
-
-The main only place I found where this was an issue today is cgroupfs,
-which sane people don't export anyway. So, I don't see this as
-addressing a major problem that we have today. Rather, this patchset
-ensures that new filesystems that are added in the future make export
-eligibility via nfsd a deliberate step, rather than something they've
-inadvertently enabled just by adding filehandle support.
-
-After some lively bikeshedding on v1, I think the consensus is to stick
-with EXPORT_OP_STABLE_HANDLES as the flag name. Amir is correct that
-checking this in check_export() is the better place to do this, since
-the filehandle can't be decoded without resolving the export first.
-
-There are a few other fixes and cleanups, and some doc updates too.
+This got missed when the flag was added. Document it properly.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-Changes in v2:
-- don't set flag in ovl_export_fid_operations or fuse_export_fid_operations
-- check for flag in check_export() instead of __fh_verify()
-- document missing flags in exporting.rst
-- convert dprintk() messages in check_export() to static tracepoints
-- Link to v1: https://lore.kernel.org/r/20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org
+ Documentation/filesystems/nfs/exporting.rst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
----
-Jeff Layton (31):
-      Documentation: document EXPORT_OP_NOLOCKS
-      exportfs: add new EXPORT_OP_STABLE_HANDLES flag
-      tmpfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      ext4: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      ext2: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      erofs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      efs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      xfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      ceph: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      btrfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      befs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      ufs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      udf: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      affs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      squashfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      smb/client: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      ovl: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      orangefs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      ocfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      ntfs3: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      nilfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      nfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      jfs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      jffs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      isofs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      gfs2: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      fuse: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      fat: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      f2fs: add EXPORT_OP_STABLE_HANDLES flag to export operations
-      nfsd: only allow filesystems that set EXPORT_OP_STABLE_HANDLES
-      nfsd: convert dprintks in check_export() to tracepoints
+diff --git a/Documentation/filesystems/nfs/exporting.rst b/Documentation/filesystems/nfs/exporting.rst
+index de64d2d002a204c5460980c898d4ec41fd43d47a..0583a0516b1e3a3e6a10af95ff88506cf02f7df4 100644
+--- a/Documentation/filesystems/nfs/exporting.rst
++++ b/Documentation/filesystems/nfs/exporting.rst
+@@ -238,3 +238,9 @@ following flags are defined:
+     all of an inode's dirty data on last close. Exports that behave this
+     way should set EXPORT_OP_FLUSH_ON_CLOSE so that NFSD knows to skip
+     waiting for writeback when closing such files.
++
++  EXPORT_OP_NOLOCKS - Disable file locking on this filesystem. Some
++    filesystems cannot properly support file locking as implemented by
++    nfsd. A case in point is reexport of NFS itself, which can't be done
++    safely without coordinating the grace period handling. Other clustered
++    and networked filesystems can be problematic here as well.
 
- Documentation/filesystems/nfs/exporting.rst | 13 ++++++++
- fs/affs/namei.c                             |  1 +
- fs/befs/linuxvfs.c                          |  1 +
- fs/btrfs/export.c                           |  1 +
- fs/ceph/export.c                            |  1 +
- fs/efs/super.c                              |  1 +
- fs/erofs/super.c                            |  1 +
- fs/ext2/super.c                             |  1 +
- fs/ext4/super.c                             |  1 +
- fs/f2fs/super.c                             |  1 +
- fs/fat/nfs.c                                |  2 ++
- fs/fuse/inode.c                             |  1 +
- fs/gfs2/export.c                            |  1 +
- fs/isofs/export.c                           |  1 +
- fs/jffs2/super.c                            |  1 +
- fs/jfs/super.c                              |  1 +
- fs/nfs/export.c                             |  3 +-
- fs/nfsd/export.c                            | 24 ++++++++-----
- fs/nfsd/trace.h                             | 52 +++++++++++++++++++++++++++++
- fs/nilfs2/namei.c                           |  1 +
- fs/ntfs3/super.c                            |  1 +
- fs/ocfs2/export.c                           |  1 +
- fs/orangefs/super.c                         |  1 +
- fs/overlayfs/export.c                       |  1 +
- fs/smb/client/export.c                      |  1 +
- fs/squashfs/export.c                        |  3 +-
- fs/udf/namei.c                              |  1 +
- fs/ufs/super.c                              |  1 +
- fs/xfs/xfs_export.c                         |  1 +
- include/linux/exportfs.h                    | 16 +++++----
- mm/shmem.c                                  |  1 +
- 31 files changed, 120 insertions(+), 17 deletions(-)
----
-base-commit: c537e12daeecaecdcd322c56a5f70659d2de7bde
-change-id: 20260114-exportfs-nfsd-12515072e9a9
-
-Best regards,
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.52.0
 
 
