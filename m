@@ -1,57 +1,185 @@
-Return-Path: <linux-erofs+bounces-2085-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2086-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UHqiKRChb2kLCAAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2085-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jan 2026 16:36:48 +0100
+	id yEYOC8Olb2kfEgAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2086-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jan 2026 16:56:51 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7BE546324
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jan 2026 16:36:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9107046DE1
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jan 2026 16:56:49 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dwRTm3zjWz3bfV;
-	Tue, 20 Jan 2026 23:29:32 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dwRyB5HT0z3bll;
+	Tue, 20 Jan 2026 23:50:42 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.226
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768912172;
-	cv=none; b=SWV9R213FqlAvpvmwDiydqmSq53bfuUXiQVrwTQzD8m7aG/IptDjy1Kd72uUHM28NjuKiFyMuMbZaRvcLXI8KVtqjPtlp9WUt0irR23Ng7Fu3v97/nYMuIMnNCiNA5vWvVKUHS/v9DMUjpfFX2ImAN5tAwxjf2HUqOa77gQfqYxoLtFc8OC5lclQUn7m6TykEWRtzKMcorj+4QKOEtf3KKCz7OANUeyeHqw0QyXCgR4w+Ykzqfex2C+A63XUVXJuRYBrRBnrQD/hkWa28FVGYCpLral3WJBg+GXWgZvcbCvwVG8xIDgfEXbQt1JfsTAyWGwGTNRJVJ5/nk+pzq4KYQ==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768913442;
+	cv=none; b=nzx2GrigIm1y2qvOAQ3BXnvTqL6T2GNa6r7cCgVYvM4Nea8H3UpfHFdLeN4ibkDHmpycogfqyAFqgmCvY2S2t/haswDVdL9KlNLHQEtjt9Mbj2hQvUOEw60p6XaMsruGwBvHGCoUq3IyHxODGvGjxub53UohpO4ODQ/XrNn7UQ4JpwviWZghFTiv8G9+kOKVx8B8EXOFiz3TQzio643k5AirDKlPlez6gWH8BvBLOpIVTMHNz1//x6KhBZSWaL6jrg4iE6jn6ZH54tgakx6YVv8RbMSY3dzLSY0rF4ebXj3OmprmZ0SF2PlQnN09maCzlOHGBCVOpruocfX9/h/kyQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768912172; c=relaxed/relaxed;
-	bh=RHupX/CGLY84XH8APP1wF5McWWipsb20eq77t+n+Xkw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aQq41UCfgHpcuCAZ1Y5VXp+JdHQSG0ZjWwK/f1jZAz48U2T3kTohiYHRWJzPZQbxaPQQfiMQR7aU0v6DF/eSt9gIH6hmj0V1MCltIaxcrO3RZyguDtPRpmPFjDo1zfYnV8LQKmcUNXjEBzisxJLWJ9n9tbGdd1whpxlxQjoFcrCGXE1w3wfy909nNStmez3VHbifEtLVoq9IEtB/srxSQ0Q+9+C60tREf+SVorqGRKzeSkBwIV1o+jbulcroO7zigBt+oLoPw6k51KY5dCrxP8/zy9MB4HoY5QUD4LJSuPvK0XlOuO8eSLtLhaHr8qy7KzHnlOvFafOffMsZ6Jo31A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=bmfDQUpM; dkim-atps=neutral; spf=pass (client-ip=113.46.200.226; helo=canpmsgout11.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1768913442; c=relaxed/relaxed;
+	bh=gO3Dmc96/EjmtjK6IVhEDHlhQcRIlpbkWGT37ZF75JE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UG/Mmuayl78KiKIP/6xxiiOZjrtt0ob2lTYUaatEhsU7/atVuKJgfWI4k/C4jAe/vH4iDmZ2Fw2EN4KGuSVbnG9cJ2nQugj5q136nkxsyX7hmAvAfYkmAQGXq6e/PvjRNp7BAqQUvWxJ27/QjCQpXAQzhia/kfA4KGpl+1QqLW/065RnGepf6h6i5stoFkMZBabTqXm3SFPB5uJWvbyrEqqQ592s/0GACJU4FCctMUx5pClfGoBPPrIEj0HFYb69iM5OPmzd91EN3SIzUerk0PI1N0bhzrCjSj4yhsybKKGOdH2yfKLH75w6b+F1R/iJzrPWs/N5XzCSaxexCahQsQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=e1zT2voc; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=bmfDQUpM;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=e1zT2voc;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.226; helo=canpmsgout11.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout11.his.huawei.com (canpmsgout11.his.huawei.com [113.46.200.226])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dwRTg6b3qz3bfG
-	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jan 2026 23:29:26 +1100 (AEDT)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=RHupX/CGLY84XH8APP1wF5McWWipsb20eq77t+n+Xkw=;
-	b=bmfDQUpMGWMtc+2KYoUEK080qnSyjhKYA5Qz+7QHvfrFjYKpkiYVx6PEJTq5eQsSWu4izlaWD
-	PWG4zceSgQefIZUFhlwO0SAVj3oYK0djRvkpjZh3sa4Qfee4/xCaU+7jOyrklZ3Y8V7ncunFQlv
-	BDIH0aVY5uk7fnfZrwq0Hxs=
-Received: from mail.maildlp.com (unknown [172.19.163.214])
-	by canpmsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4dwRPT4mMLzKm4c;
-	Tue, 20 Jan 2026 20:25:49 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id 984444056C;
-	Tue, 20 Jan 2026 20:29:13 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 20 Jan 2026 20:29:13 +0800
-Message-ID: <5aa7566e-c30c-470a-ab77-8b62a3cdf8c3@huawei.com>
-Date: Tue, 20 Jan 2026 20:29:12 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dwRy96pZJz3bfZ
+	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jan 2026 23:50:41 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id 35EF540DA6;
+	Tue, 20 Jan 2026 12:50:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB6DC19422;
+	Tue, 20 Jan 2026 12:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768913440;
+	bh=vYIy05TFBjkJSOZIJnTTiuPvxldNCSA6NdRoiqFyWpc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=e1zT2vocwF78r7FL+5WzUHXIWy93w1CsZBXidVyUfNwBF1R9uERAYCeSR1I34Y48P
+	 fZA1tCB9PdNKfqEm3Ik3seHCB/fan0+KTHSp4ICQcZWb4Gsp7fA/RoVS82lqp79kRd
+	 W7mln6Md5hIUxVVb8qiRT771zybKHVixN7sK/3MvHcNmuLW8t/T6Y7VNyfw+KedZu2
+	 MWac278JPjkATMe0Lt9fyxkUXmIhbV7lpHHCqOA3jzbt0OyYU8ZgSAhX24ZaUONwTl
+	 Nw2byKXBQA/Ft6+a+bhzFkGe4xozYyiwbpysp6m+qMx0ppPTXrqrWjl6fl5eTnA+Jf
+	 bsFdLxD14gb5w==
+Message-ID: <a35ac736d9ebc6c92a6e7d61aeb5198234102442.camel@kernel.org>
+Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
+ nfsd export support
+From: Jeff Layton <jlayton@kernel.org>
+To: Christian Brauner <brauner@kernel.org>, NeilBrown <neil@brown.name>
+Cc: Christoph Hellwig <hch@infradead.org>, Amir Goldstein
+ <amir73il@gmail.com>,  Alexander Viro <viro@zeniv.linux.org.uk>, Chuck
+ Lever <chuck.lever@oracle.com>, Olga Kornievskaia	 <okorniev@redhat.com>,
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,  Hugh Dickins
+ <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, Andrew
+ Morton	 <akpm@linux-foundation.org>, Theodore Ts'o <tytso@mit.edu>, Andreas
+ Dilger	 <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>, Gao Xiang
+ <xiang@kernel.org>,  Chao Yu <chao@kernel.org>, Yue Hu
+ <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,  Sandeep
+ Dhavale <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>, Chunhai
+ Guo <guochunhai@vivo.com>,  Carlos Maiolino	 <cem@kernel.org>, Ilya Dryomov
+ <idryomov@gmail.com>, Alex Markuze	 <amarkuze@redhat.com>, Viacheslav
+ Dubeyko <slava@dubeyko.com>, Chris Mason	 <clm@fb.com>, David Sterba
+ <dsterba@suse.com>, Luis de Bethencourt	 <luisbg@kernel.org>, Salah Triki
+ <salah.triki@gmail.com>, Phillip Lougher	 <phillip@squashfs.org.uk>, Steve
+ French <sfrench@samba.org>, Paulo Alcantara	 <pc@manguebit.org>, Ronnie
+ Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N	
+ <sprasad@microsoft.com>, Bharath SM <bharathsm@microsoft.com>, Miklos
+ Szeredi	 <miklos@szeredi.hu>, Mike Marshall <hubcap@omnibond.com>, Martin
+ Brandenburg	 <martin@omnibond.com>, Mark Fasheh <mark@fasheh.com>, Joel
+ Becker	 <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
+ Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Ryusuke
+ Konishi <konishi.ryusuke@gmail.com>,  Trond Myklebust <trondmy@kernel.org>,
+ Anna Schumaker <anna@kernel.org>, Dave Kleikamp <shaggy@kernel.org>, David
+ Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Jan
+ Kara <jack@suse.cz>,  Andreas Gruenbacher	 <agruenba@redhat.com>, OGAWA
+ Hirofumi <hirofumi@mail.parknet.co.jp>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-ext4@vger.kernel.org, 	linux-erofs@lists.ozlabs.org,
+ linux-xfs@vger.kernel.org, 	ceph-devel@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, 	linux-cifs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, 	devel@lists.orangefs.org,
+ ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev, 
+	linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net, 
+	linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, 
+	linux-f2fs-devel@lists.sourceforge.net
+Date: Tue, 20 Jan 2026 07:50:32 -0500
+In-Reply-To: <20260120-hacken-revision-88209121ac2c@brauner>
+References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
+	 <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
+	 <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>
+	 <176877859306.16766.15009835437490907207@noble.neil.brown.name>
+	 <aW3SAKIr_QsnEE5Q@infradead.org>
+	 <176880736225.16766.4203157325432990313@noble.neil.brown.name>
+	 <20260119-kanufahren-meerjungfrau-775048806544@brauner>
+	 <176885553525.16766.291581709413217562@noble.neil.brown.name>
+	 <20260120-entmilitarisieren-wanken-afd04b910897@brauner>
+	 <176890211061.16766.16354247063052030403@noble.neil.brown.name>
+	 <20260120-hacken-revision-88209121ac2c@brauner>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -63,87 +191,229 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 5/9] erofs: introduce the page cache share feature
-To: Christoph Hellwig <hch@lst.de>
-CC: <hsiangkao@linux.alibaba.com>, <chao@kernel.org>, <brauner@kernel.org>,
-	<djwong@kernel.org>, <amir73il@gmail.com>, <linux-fsdevel@vger.kernel.org>,
-	<linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-References: <20260116095550.627082-1-lihongbo22@huawei.com>
- <20260116095550.627082-6-lihongbo22@huawei.com>
- <20260116154623.GC21174@lst.de>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <20260116154623.GC21174@lst.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemr500015.china.huawei.com (7.202.195.162)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.20 / 15.00];
+X-Spamd-Result: default: False [-0.70 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[linux.alibaba.com,kernel.org,gmail.com,vger.kernel.org,lists.ozlabs.org];
-	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-2085-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	FORGED_SENDER(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS(0.00)[m:hch@lst.de,m:hsiangkao@linux.alibaba.com,m:chao@kernel.org,m:brauner@kernel.org,m:djwong@kernel.org,m:amir73il@gmail.com,m:linux-fsdevel@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2086-lists,linux-erofs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:brauner@kernel.org,m:neil@brown.name,m:hch@infradead.org,m:amir73il@gmail.com,m:viro@zeniv.linux.org.uk,m:chuck.lever@oracle.com,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:akpm@linux-foundation.org,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:jack@suse.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:cem@kernel.org,m:idryomov@gmail.com,m:amarkuze@redhat.com,m:slava@dubeyko.com,m:clm@fb.com,m:dsterba@suse.com,m:luisbg@kernel.org,m:salah.triki@gmail.com,m:phillip@squashfs.org.uk,m:sfrench@samba.org,m:pc@manguebit.org,m:ronniesahlberg@gmail.com,m:sprasad@microsoft.com,m:bharathsm@microsoft.com,m:miklos@szeredi.hu,m:hubcap@omnibond.com,m:martin@omnibond.com,m:mark@fasheh.com,m:jlbec@evilplan.org,m:joseph.qi@linux.alibaba.com,m:almaz.alexandrovich@paragon-software.com,m:konishi.ryusuk
+ e@gmail.com,m:trondmy@kernel.org,m:anna@kernel.org,m:shaggy@kernel.org,m:dwmw2@infradead.org,m:richard@nod.at,m:jack@suse.cz,m:agruenba@redhat.com,m:hirofumi@mail.parknet.co.jp,m:jaegeuk@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-mm@kvack.org,m:linux-ext4@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-xfs@vger.kernel.org,m:ceph-devel@vger.kernel.org,m:linux-btrfs@vger.kernel.org,m:linux-cifs@vger.kernel.org,m:linux-unionfs@vger.kernel.org,m:devel@lists.orangefs.org,m:ocfs2-devel@lists.linux.dev,m:ntfs3@lists.linux.dev,m:linux-nilfs@vger.kernel.org,m:jfs-discussion@lists.sourceforge.net,m:linux-mtd@lists.infradead.org,m:gfs2@lists.linux.dev,m:linux-f2fs-devel@lists.sourceforge.net,s:lists@lfdr.de];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[infradead.org,gmail.com,zeniv.linux.org.uk,oracle.com,redhat.com,talpey.com,google.com,linux.alibaba.com,linux-foundation.org,mit.edu,dilger.ca,suse.com,kernel.org,huawei.com,vivo.com,dubeyko.com,fb.com,squashfs.org.uk,samba.org,manguebit.org,microsoft.com,szeredi.hu,omnibond.com,fasheh.com,evilplan.org,paragon-software.com,nod.at,suse.cz,mail.parknet.co.jp,vger.kernel.org,kvack.org,lists.ozlabs.org,lists.orangefs.org,lists.linux.dev,lists.sourceforge.net,lists.infradead.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	HAS_XOIP(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_GT_50(0.00)[72];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: B7BE546324
+X-Rspamd-Queue-Id: 9107046DE1
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Tue, 2026-01-20 at 11:31 +0100, Christian Brauner wrote:
+> On Tue, Jan 20, 2026 at 08:41:50PM +1100, NeilBrown wrote:
+> > On Tue, 20 Jan 2026, Christian Brauner wrote:
+> > > On Tue, Jan 20, 2026 at 07:45:35AM +1100, NeilBrown wrote:
+> > > > On Mon, 19 Jan 2026, Christian Brauner wrote:
+> > > > > On Mon, Jan 19, 2026 at 06:22:42PM +1100, NeilBrown wrote:
+> > > > > > On Mon, 19 Jan 2026, Christoph Hellwig wrote:
+> > > > > > > On Mon, Jan 19, 2026 at 10:23:13AM +1100, NeilBrown wrote:
+> > > > > > > > > This was Chuck's suggested name. His point was that STABL=
+E means that
+> > > > > > > > > the FH's don't change during the lifetime of the file.
+> > > > > > > > >=20
+> > > > > > > > > I don't much care about the flag name, so if everyone lik=
+es PERSISTENT
+> > > > > > > > > better I'll roll with that.
+> > > > > > > >=20
+> > > > > > > > I don't like PERSISTENT.
+> > > > > > > > I'd rather call a spade a spade.
+> > > > > > > >=20
+> > > > > > > >   EXPORT_OP_SUPPORTS_NFS_EXPORT
+> > > > > > > > or
+> > > > > > > >   EXPORT_OP_NOT_NFS_COMPATIBLE
+> > > > > > > >=20
+> > > > > > > > The issue here is NFS export and indirection doesn't bring =
+any benefits.
+> > > > > > >=20
+> > > > > > > No, it absolutely is not.  And the whole concept of calling s=
+omething
+> > > > > > > after the initial or main use is a recipe for a mess.
+> > > > > >=20
+> > > > > > We are calling it for it's only use.  If there was ever another=
+ use, we
+> > > > > > could change the name if that made sense.  It is not a public n=
+ame, it
+> > > > > > is easy to change.
+> > > > > >=20
+> > > > > > >=20
+> > > > > > > Pick a name that conveys what the flag is about, and document=
+ those
+> > > > > > > semantics well.  This flag is about the fact that for a given=
+ file,
+> > > > > > > as long as that file exists in the file system the handle is =
+stable.
+> > > > > > > Both stable and persistent are suitable for that, nfs is ever=
+ything
+> > > > > > > but.
+> > > > > >=20
+> > > > > > My understanding is that kernfs would not get the flag.
+> > > > > > kernfs filehandles do not change as long as the file exist.
+> > > > > > But this is not sufficient for the files to be usefully exporte=
+d.
+> > > > > >=20
+> > > > > > I suspect kernfs does re-use filehandles relatively soon after =
+the
+> > > > > > file/object has been destroyed.  Maybe that is the real problem=
+ here:
+> > > > > > filehandle reuse, not filehandle stability.
+> > > > > >=20
+> > > > > > Jeff: could you please give details (and preserve them in futur=
+e cover
+> > > > > > letters) of which filesystems are known to have problems and wh=
+at
+> > > > > > exactly those problems are?
+> > > > > >=20
+> > > > > > >=20
+> > > > > > > Remember nfs also support volatile file handles, and other ap=
+plications
+> > > > > > > might rely on this (I know of quite a few user space applicat=
+ions that
+> > > > > > > do, but they are kinda hardwired to xfs anyway).
+> > > > > >=20
+> > > > > > The NFS protocol supports volatile file handles.  knfsd does no=
+t.
+> > > > > > So maybe
+> > > > > >   EXPORT_OP_NOT_NFSD_COMPATIBLE
+> > > > > > might be better.  or EXPORT_OP_NOT_LINUX_NFSD_COMPATIBLE.
+> > > > > > (I prefer opt-out rather than opt-in because nfsd export was th=
+e
+> > > > > > original purpose of export_operations, but it isn't something
+> > > > > > I would fight for)
+> > > > >=20
+> > > > > I prefer one of the variants you proposed here but I don't partic=
+ularly
+> > > > > care. It's not a hill worth dying on. So if Christoph insists on =
+the
+> > > > > other name then I say let's just go with it.
+> > > > >=20
+> > > >=20
+> > > > This sounds like you are recommending that we give in to bullying.
+> > > > I would rather the decision be made based on the facts of the case,=
+ not
+> > > > the opinions that are stated most bluntly.
+> > > >=20
+> > > > I actually think that what Christoph wants is actually quite differ=
+ent
+> > > > from what Jeff wants, and maybe two flags are needed.  But I don't =
+yet
+> > > > have a clear understanding of what Christoph wants, so I cannot be =
+sure.
+> > >=20
+> > > I've tried to indirectly ask whether you would be willing to compromi=
+se
+> > > here or whether you want to insist on your alternative name. Apparent=
+ly
+> > > that didn't come through.
+> >=20
+> > This would be the "not a hill worthy dying on" part of your statement.
+> > I think I see that implication now.
+> > But no, I don't think compromise is relevant.  I think the problem
+> > statement as originally given by Jeff is misleading, and people have
+> > been misled to an incorrect name.
+> >=20
+> > >=20
+> > > I'm unclear what your goal is in suggesting that I recommend "we" giv=
+e
+> > > into bullying. All it achieved was to further derail this thread.
+> > >=20
+> >=20
+> > The "We" is the same as the "us" in "let's just go with it".
+> >=20
+> >=20
+> > > I also think it's not very helpful at v6 of the discussion to start
+> > > figuring out what the actual key rift between Jeff's and Christoph's
+> > > position is. If you've figured it out and gotten an agreement and thi=
+s
+> > > is already in, send a follow-up series.
+> >=20
+> > v6?  v2 was posted today.  But maybe you are referring the some other
+> > precursors.
+> >=20
+> > The introductory statement in v2 is
+> >=20
+> >    This patchset adds a flag that indicates whether the filesystem supp=
+orts
+> >    stable filehandles (i.e. that they don't change over the life of the
+> >    file). It then makes any filesystem that doesn't set that flag
+> >    ineligible for nfsd export.
+> >=20
+> > Nobody else questioned the validity of that.  I do.
+> > No evidence was given that there are *any* filesystems that don't
+> > support stable filehandles.  The only filesystem mentioned is cgroups
+> > and it DOES provide stable filehandles.
+>=20
 
+Across reboot? Not really.
 
-On 2026/1/16 23:46, Christoph Hellwig wrote:
-> I don't really understand the fingerprint idea.  Files with the
-> same content will point to the same physical disk blocks, so that
-> should be a much better indicator than a finger print?  Also how does
-> the fingerprint guarantee uniqueness?  Is it a cryptographically
-> secure hash?  In here it just seems like an opaque blob.
-> 
->> +static inline int erofs_inode_set_aops(struct inode *inode,
->> +				       struct inode *realinode, bool no_fscache)
-> 
-> Factoring this out first would be a nice little prep patch.
-> Also it would probably be much cleaner using IS_ENABLED.
+It's quite possible that we may end up with the same "id" numbers in
+cgroupfs on a new incarnation of the filesystem after a reboot. The
+files in there are not the same ones as the ones before, but their
+filehandles may match because kernfs doesn't factor in an i_generation
+number.
 
-Ok, Thanks for reviewing. I will refine in next version.
+Could we fix it by adding a random i_generation value or something?
+Possibly, but there really isn't a good use-case that I can see for
+allowing cgroupfs to be exported via nfsd. Best to disallow it until
+someone comes up with one.
 
-Thanks,
-Hongbo
+> Oh yes we did. And this is a merry-go-round.
+>=20
+> It is very much fine for a filesystems to support file handles without
+> wanting to support exporting via NFS. That is especially true for
+> in-kernel pseudo filesystems.
+>=20
+> As I've said before multiple times I want a way to allow filesystems
+> such as pidfs and nsfs to use file handles without supporting export.
+> Whatever that fscking flag is called at this point I fundamentally don't
+> care. And we are reliving the same arguments over and over.
+>=20
+> I will _hard NAK_ anything that starts mandating that export of
+> filesystems must be allowed simply because their file handles fit export
+> criteria. I do not care whether pidfs or nsfs file handles fit the bill.
+> They will not be exported.
 
-> 
->> +static int erofs_ishare_file_open(struct inode *inode, struct file *file)
->> +{
->> +	struct inode *sharedinode = EROFS_I(inode)->sharedinode;
-> 
-> Ok, it looks like this allocates a separate backing file and inode.
-> 
+I don't really care what we call the flag. I do care a little about
+what its semantics are, but the effect should be to ensure that fs
+maintainers make a conscious decision about whether nfsd export should
+be allowed on the filesystem.=C2=A0
+
+At this point, maybe we should just go with Neil's=20
+EXPORT_OP_SUPPORTS_NFS_EXPORT or something. It's much more arbitrary,
+than trying to base this on criteria about filehandle stability, but it
+would give us the effect we want.
+
+--=20
+Jeff Layton <jlayton@kernel.org>
 
