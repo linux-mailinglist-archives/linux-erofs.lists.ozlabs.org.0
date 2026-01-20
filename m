@@ -1,49 +1,49 @@
-Return-Path: <linux-erofs+bounces-2083-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2084-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 X-Original-To: lists+linux-erofs@lfdr.de
 Delivered-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBBF6D3C54B
-	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jan 2026 11:32:19 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2EF2D3C563
+	for <lists+linux-erofs@lfdr.de>; Tue, 20 Jan 2026 11:34:36 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dwNtS0zhVz2x9M;
-	Tue, 20 Jan 2026 21:32:16 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dwNx62tWLz2x9M;
+	Tue, 20 Jan 2026 21:34:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c04:e001:324:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768905136;
-	cv=none; b=Zi8+LtutiuLNMqDggCdwuI2ODKVpDM3GUitRKO2IESRXJz5nwErCIUhEU9GSWhrrcd/N2owns2KUPeuGqxldMsvDHKb08uCJ3S1oRfPq+sxt5fk2coz6AFvU6OLRYWxMCTGwKemHoQUBDlA2TilLXAa+UR5t9hhuwdYZ/z+ZWZGltsQ7LgOIdG6IdzzLkDtOcHNSexG714XShxzuE389zBMTSVqAHpGu00UZhDu3AAWT2e8mS4vMYMgKsWc27BETPM3VlgAvgrk+hcsGFRUTY6niZh1871hptAlzZlzjrQ1dzgv9uZSvge0EjmwW7Zj1Y6h25/NuMBIZThGNs1V1jg==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768905274;
+	cv=none; b=hDsyMnPfQCldUXyX2ZPTFAa6WXYvWbGTCG+GNGXyzF1ER9T5YhQIiCX1MXvJQ3AmLulja9aR8MKvWoUBZbN7DMtEMk/Klj4caucvpXzvmmE0e8txyIV/grdGeF+JITwKnocpSkZvd7r+1TRZwinkDlz65ODWy0LfW9Ccgx9LrT5sqYZa56u1jPDfoBjpr/TWNcVcSLDnEPsF4yE+dQD30DiR39drXtckXRKyKzDuLd1IHs+rAU/fu2P675kLOGrGCgBOdQmmLrsF/A7Zht5Hb+g/BDcemncRpANhG58Y9fsaJGZcyIeKQal1gOktGJ+QKiicve0JUe0ZTlg6mKGvdw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768905136; c=relaxed/relaxed;
-	bh=GIPzDp4//6enUE/aZW6TaDiQzaEzpTggtDW+VnkFMJ8=;
+	t=1768905274; c=relaxed/relaxed;
+	bh=5Yl/Ge/38zmabHKosQXQVrEg+BmTHvglVpqWXSfbn0Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oHeBfdAQa3mPoMMKQLdZ2QN5/3of7m3vxYdQ2b3sO11OcnLEq+HP9rF6SN6d0qk5lRiq6fR5bG5zhExkYvb25R0TwqIz+/9R+4FCoYsPIkxIHt/B1JQC4ZsaypaZk8oZGAzl7d3kU1ltdJpoX8wt0/CPPQyn3nCewq7ozcckmvvWHdVZ2cZHXYkLaTzkeIIqJz3e6pP8LP95h3/+oQbhXTPzVsdVnRIC7F8XkVG/Uq0/sbIPsiDqOmdyGleVoZcOIiBojvVee51w/7Yz0V8HG2AMJQiKVdGPDdN5yN/N8xzoTO7ytGnl98HRAcNUoYKmJvd9J2RpEqQWQBxVvT+k3A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=sYn1JLyP; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=X0qEK7JJQLUn6QXHnky/P+fChu0uLdCKi1qkjTIUVZ0zmCdJC+5v7w/LW5YiYzrTzsZBm4Aga+rocTTpRKNiiguFNq6cu+GXb0V13s+QZVGJdbLJGyr5QGY0MdPQfY9Eg8gdnCJve3AsIR07fEKx/pdfD/0NsCYk0wTr0wha1Glj0FIHmBqS4LE7uIOLCqp6gs8fSf5+FgZNlWkNShNwtGxsJXYe1tsAVGy13l3YnGqIK7zxhfdy2W113ZkmbSn5kbYFA7L4bG0gOAzqG9G11flv/Fmm1KwlmNKfZSHPfG/3wG8tg9QaNTjEivaA8d32pydBsbbi0/K7e3jLdFaxGw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dkYiavwj; dkim-atps=neutral; spf=pass (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=sYn1JLyP;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=dkYiavwj;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c04:e001:324:0:1991:8:25; helo=tor.source.kernel.org; envelope-from=brauner@kernel.org; receiver=lists.ozlabs.org)
 Received: from tor.source.kernel.org (tor.source.kernel.org [IPv6:2600:3c04:e001:324:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dwNtR2PLTz2x99
-	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jan 2026 21:32:15 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dwNx540f0z2x99
+	for <linux-erofs@lists.ozlabs.org>; Tue, 20 Jan 2026 21:34:33 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by tor.source.kernel.org (Postfix) with ESMTP id 4E44E60018;
-	Tue, 20 Jan 2026 10:32:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2A27C16AAE;
-	Tue, 20 Jan 2026 10:31:56 +0000 (UTC)
+	by tor.source.kernel.org (Postfix) with ESMTP id 6D4076011F;
+	Tue, 20 Jan 2026 10:34:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E04B6C16AAE;
+	Tue, 20 Jan 2026 10:34:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768905132;
-	bh=TXpuEn3+iHgMswY7v2yl+yBnFlWexn06CYVhrLra0ps=;
+	s=k20201202; t=1768905271;
+	bh=ofM75JqEotc0v7XRCKkNO2AMeaUn3xH4tlqNjm8W0YQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sYn1JLyPJPiGC80xsPWNxbtykfUUs946DA7esf6l3JMX38rt0GRoNF1cRYsres/wk
-	 PEJViML67kDs58KnQ01Y/RlO5bKq7d0ZXMcSQ/mkeXLjjLZV/fDEUuF8X1z67vGwDl
-	 S4BDLlAOBnwFrMcS0CNaziW6IFGszNB0/JTGCLvnEXaABq+5D8szxy7iodrNzItOUv
-	 lpWjW+neeYAI9cglsT/f5525FKsTcWuHVc8VwgMC9LA2j5BhSVKDtyEXhQPSbOCGl2
-	 KQoI5KR3jG9uCQrTTBeQZHZsxSZCqULdPd8KRVm4QkItj+8BOixBLgQenBp1VoSz3y
-	 OcHgGkgocKzkA==
-Date: Tue, 20 Jan 2026 11:31:54 +0100
+	b=dkYiavwjArBw+8JM3Doyt4vFEjXCjTBOooZATw7ybtJyDWfHOsWo6vfR+lTcrWca0
+	 84g12kcedULlbCjwN3OhgKihsyS+8LP34glFKHjjboChPwnx87Mgd4ye5oYrptvwcU
+	 IR130p8sJwGfsM12J432DDMgzJBXrhBvvtKpy/9JDcG+rvOkHRKRbslb+hAqYozEy4
+	 8HXCy/UDUBGKe0SB1WSHTXCGpraNDHfp54t2En1JQCop3QwMKo4TzMN4znHIRfj92N
+	 0amrFzP0cYXKJTlNdj7dkkgVOhyK03N9xYYfKakG8ehUjpIPXdBq3+jcGxXnzZWvCP
+	 JUo4/sRFClXEw==
+Date: Tue, 20 Jan 2026 11:34:13 +0100
 From: Christian Brauner <brauner@kernel.org>
 To: NeilBrown <neil@brown.name>
 Cc: Christoph Hellwig <hch@infradead.org>, 
@@ -79,7 +79,7 @@ Cc: Christoph Hellwig <hch@infradead.org>,
 	linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, linux-f2fs-devel@lists.sourceforge.net
 Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
  nfsd export support
-Message-ID: <20260120-hacken-revision-88209121ac2c@brauner>
+Message-ID: <20260120-bindung-eselsfell-fadec0d95909@brauner>
 References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
  <CAOQ4uxjOJMwv_hRVTn3tJHDLMQHbeaCGsdLupiZYcwm7M2rm3g@mail.gmail.com>
  <9c99197dde2eafa55a1b55dce2f0d4d02c77340a.camel@kernel.org>
@@ -88,8 +88,8 @@ References: <20260115-exportfs-nfsd-v1-0-8e80160e3c0c@kernel.org>
  <176880736225.16766.4203157325432990313@noble.neil.brown.name>
  <20260119-kanufahren-meerjungfrau-775048806544@brauner>
  <176885553525.16766.291581709413217562@noble.neil.brown.name>
- <20260120-entmilitarisieren-wanken-afd04b910897@brauner>
- <176890211061.16766.16354247063052030403@noble.neil.brown.name>
+ <aW8w2SRyFnmA2uqk@infradead.org>
+ <176890126683.16766.5241619788613840985@noble.neil.brown.name>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -103,137 +103,20 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <176890211061.16766.16354247063052030403@noble.neil.brown.name>
+In-Reply-To: <176890126683.16766.5241619788613840985@noble.neil.brown.name>
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 
-On Tue, Jan 20, 2026 at 08:41:50PM +1100, NeilBrown wrote:
-> On Tue, 20 Jan 2026, Christian Brauner wrote:
-> > On Tue, Jan 20, 2026 at 07:45:35AM +1100, NeilBrown wrote:
-> > > On Mon, 19 Jan 2026, Christian Brauner wrote:
-> > > > On Mon, Jan 19, 2026 at 06:22:42PM +1100, NeilBrown wrote:
-> > > > > On Mon, 19 Jan 2026, Christoph Hellwig wrote:
-> > > > > > On Mon, Jan 19, 2026 at 10:23:13AM +1100, NeilBrown wrote:
-> > > > > > > > This was Chuck's suggested name. His point was that STABLE means that
-> > > > > > > > the FH's don't change during the lifetime of the file.
-> > > > > > > > 
-> > > > > > > > I don't much care about the flag name, so if everyone likes PERSISTENT
-> > > > > > > > better I'll roll with that.
-> > > > > > > 
-> > > > > > > I don't like PERSISTENT.
-> > > > > > > I'd rather call a spade a spade.
-> > > > > > > 
-> > > > > > >   EXPORT_OP_SUPPORTS_NFS_EXPORT
-> > > > > > > or
-> > > > > > >   EXPORT_OP_NOT_NFS_COMPATIBLE
-> > > > > > > 
-> > > > > > > The issue here is NFS export and indirection doesn't bring any benefits.
-> > > > > > 
-> > > > > > No, it absolutely is not.  And the whole concept of calling something
-> > > > > > after the initial or main use is a recipe for a mess.
-> > > > > 
-> > > > > We are calling it for it's only use.  If there was ever another use, we
-> > > > > could change the name if that made sense.  It is not a public name, it
-> > > > > is easy to change.
-> > > > > 
-> > > > > > 
-> > > > > > Pick a name that conveys what the flag is about, and document those
-> > > > > > semantics well.  This flag is about the fact that for a given file,
-> > > > > > as long as that file exists in the file system the handle is stable.
-> > > > > > Both stable and persistent are suitable for that, nfs is everything
-> > > > > > but.
-> > > > > 
-> > > > > My understanding is that kernfs would not get the flag.
-> > > > > kernfs filehandles do not change as long as the file exist.
-> > > > > But this is not sufficient for the files to be usefully exported.
-> > > > > 
-> > > > > I suspect kernfs does re-use filehandles relatively soon after the
-> > > > > file/object has been destroyed.  Maybe that is the real problem here:
-> > > > > filehandle reuse, not filehandle stability.
-> > > > > 
-> > > > > Jeff: could you please give details (and preserve them in future cover
-> > > > > letters) of which filesystems are known to have problems and what
-> > > > > exactly those problems are?
-> > > > > 
-> > > > > > 
-> > > > > > Remember nfs also support volatile file handles, and other applications
-> > > > > > might rely on this (I know of quite a few user space applications that
-> > > > > > do, but they are kinda hardwired to xfs anyway).
-> > > > > 
-> > > > > The NFS protocol supports volatile file handles.  knfsd does not.
-> > > > > So maybe
-> > > > >   EXPORT_OP_NOT_NFSD_COMPATIBLE
-> > > > > might be better.  or EXPORT_OP_NOT_LINUX_NFSD_COMPATIBLE.
-> > > > > (I prefer opt-out rather than opt-in because nfsd export was the
-> > > > > original purpose of export_operations, but it isn't something
-> > > > > I would fight for)
-> > > > 
-> > > > I prefer one of the variants you proposed here but I don't particularly
-> > > > care. It's not a hill worth dying on. So if Christoph insists on the
-> > > > other name then I say let's just go with it.
-> > > > 
-> > > 
-> > > This sounds like you are recommending that we give in to bullying.
-> > > I would rather the decision be made based on the facts of the case, not
-> > > the opinions that are stated most bluntly.
-> > > 
-> > > I actually think that what Christoph wants is actually quite different
-> > > from what Jeff wants, and maybe two flags are needed.  But I don't yet
-> > > have a clear understanding of what Christoph wants, so I cannot be sure.
-> > 
-> > I've tried to indirectly ask whether you would be willing to compromise
-> > here or whether you want to insist on your alternative name. Apparently
-> > that didn't come through.
-> 
-> This would be the "not a hill worthy dying on" part of your statement.
-> I think I see that implication now.
-> But no, I don't think compromise is relevant.  I think the problem
-> statement as originally given by Jeff is misleading, and people have
-> been misled to an incorrect name.
-> 
-> > 
-> > I'm unclear what your goal is in suggesting that I recommend "we" give
-> > into bullying. All it achieved was to further derail this thread.
-> > 
-> 
-> The "We" is the same as the "us" in "let's just go with it".
-> 
-> 
-> > I also think it's not very helpful at v6 of the discussion to start
-> > figuring out what the actual key rift between Jeff's and Christoph's
-> > position is. If you've figured it out and gotten an agreement and this
-> > is already in, send a follow-up series.
-> 
-> v6?  v2 was posted today.  But maybe you are referring the some other
-> precursors.
-> 
-> The introductory statement in v2 is
-> 
->    This patchset adds a flag that indicates whether the filesystem supports
->    stable filehandles (i.e. that they don't change over the life of the
->    file). It then makes any filesystem that doesn't set that flag
->    ineligible for nfsd export.
-> 
-> Nobody else questioned the validity of that.  I do.
-> No evidence was given that there are *any* filesystems that don't
-> support stable filehandles.  The only filesystem mentioned is cgroups
-> and it DOES provide stable filehandles.
+> It took me a while to sift through the code/patches/comments and come to
+> this understanding and I apologise if I wasn't as clear earlier.  But
+> my intuition was always that file handle stability was never the real
+> issue, and maintainer choice was.  Hence my rejection of the
 
-Oh yes we did. And this is a merry-go-round.
+I very much agree with that assessment. Yet we so far have failed to
+even agree that this is an acceptable position. Hence my irritation.
 
-It is very much fine for a filesystems to support file handles without
-wanting to support exporting via NFS. That is especially true for
-in-kernel pseudo filesystems.
-
-As I've said before multiple times I want a way to allow filesystems
-such as pidfs and nsfs to use file handles without supporting export.
-Whatever that fscking flag is called at this point I fundamentally don't
-care. And we are reliving the same arguments over and over.
-
-I will _hard NAK_ anything that starts mandating that export of
-filesystems must be allowed simply because their file handles fit export
-criteria. I do not care whether pidfs or nsfs file handles fit the bill.
-They will not be exported.
+And apologies on my part if I'm curt. I'm simply annoyed by the very
+lengthy and to me somewhat pointless debate here at times.
 
