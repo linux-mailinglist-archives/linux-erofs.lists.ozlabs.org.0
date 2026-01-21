@@ -1,57 +1,54 @@
-Return-Path: <linux-erofs+bounces-2104-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2105-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mMhjMQYscGniWwAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2104-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Jan 2026 02:29:42 +0100
+	id +CDjEuNFcGnXXAAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2105-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Jan 2026 04:20:03 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E48E4F18B
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Jan 2026 02:29:40 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A03350576
+	for <lists+linux-erofs@lfdr.de>; Wed, 21 Jan 2026 04:20:01 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dwmns2Gklz2xqD;
-	Wed, 21 Jan 2026 12:29:37 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dwqF84jGlz2yDY;
+	Wed, 21 Jan 2026 14:19:56 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.218
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768958977;
-	cv=none; b=gK/qElvsDDEmugeeXhCPC7MBMaZ+fD7XfPNOapmEE4lavNRnpX4qv853MmPd3Wyv38bJZyDTunzOf+KQr+cHRZZSIGvSblROZPjmRg7BsGxpjH2Uu313jdglVTrocS+3yWLaCh3CHAm6XwyEb8l3IFVNoRqENFkVKGgMvZcekKE9ZnXLkO4GxSAA8bD/AE/Ww3umS6xqBxqyzIVdMD/Hsr3I6WrAM0NyD4PcI7d+LcPBqvCSS19JP704jW9UhcpWpiGJJYHn+eUp4UyyPgQwQPuz64A9hK6BKwOLcLSiBgA1BOlrEztEWa0GKceOOCXNXkUsqMtzru2CmyKHU2RBVw==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.133
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1768965596;
+	cv=none; b=V8EQyJJ6D9jokjoUl7jG0UGnG1zQnbDimWm/AWK9kCnQkRrIWfVYwSxORQSXU62sUMsPaFNu0jTW3sn+S4og6rnKspwvbwq3/ETukMcyvmJ6OMh2EiDL5+y63hFZbYFaYFNrbqCh1Dc0y8XJ6C9VenwRbFlMj+uCRUJq/jd6rAwMuQBcuYyUBOKEaJUYpYMxR7qXahzhHe02+q/EI5lh2iaA0atUUEl0jMsFK7XLT7GhgodhjLAXlHDU/bp87czae+ks8esIjizZfnrIi1IpbvlaJ5dF97aOsOwlwf5BwyWz/YbfEqca07g5g3Ti6tCWZpUbSJGYWf+Bd3Q3IMyurA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1768958977; c=relaxed/relaxed;
-	bh=4tq8UHj7aVk7k1iPD/wf4mLlV9TgYl5jy5aGiJC9N7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Y4e345G2+AKdYlQDAIbm7qzj6vqI9MsM+9o2+IHGQJILbuwahUtxdImuVhIJNZhSACuj1H81WVWozMDJIeKVvGBYo7q/jjGF75IBLrETq00isK+/Q5SEohbwX30xYWtnXCo6dtiBDGogZC8kI5IenrA1BGs/ejRrMlEkEIwoIeJgz7QXvyvnHSBTDwB5b5mpRJPILtudzRQCfp6gD4ALEhr4VonBUnjYb2e03REYaM7cDbF3N3zTHHB4EEdhAydUScU/QcDop3iSHUW0UQ2RwiS2yuXIMKSgg5a4QlhME1/oMXULIi5mTiWyhJjQysZaxM/g5wv5l9B+wkZzYGrihw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=FXRJFSGm; dkim-atps=neutral; spf=pass (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+	t=1768965596; c=relaxed/relaxed;
+	bh=/5cadmVkeGndEdt4Ke/5nvbOQc5iRd9wZBWQdaQ0oK4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Iqjq3bS89qhDF2IpZIuFCj+SZj39OqDhL3K4ZKbISnk0dAfOoPAze9bDD9ZMi+1vxx+2e7SHcBdltDNcDxQNHu7q+1J3jg/es52Ylr+htMUcyHsu73MuFeZ8UUe4k7qqADkS5QhzwV6WUcMMF+gC6xnsa2zMrL9sImLXy4BA1aS5ZahHqPaT6vFm8mvirl8HgR7R/PlOQXDAsz1fFesoBkkvrT5eQKNoDWmN5gNEtMog1bRXh6e6vb0Dp3RMcDLcQokhpmHiQjuZyK6GB0YmkpCd6OdWsm/PvYLID88tx/FQx8ySJOFO0Z/u7JduplEcQUZVU04XJdHeaAK19/7qHw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=c7vdOXQx; dkim-atps=neutral; spf=pass (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=FXRJFSGm;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=c7vdOXQx;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.218; helo=canpmsgout03.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
-Received: from canpmsgout03.his.huawei.com (canpmsgout03.his.huawei.com [113.46.200.218])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.133; helo=out30-133.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dwmnn4Qntz2xpk
-	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Jan 2026 12:29:31 +1100 (AEDT)
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=4tq8UHj7aVk7k1iPD/wf4mLlV9TgYl5jy5aGiJC9N7M=;
-	b=FXRJFSGmcLcnGjPztrRgauytaQSjWoUYFoweipDZ4ER/5Dl409paUqvCBR2iKRaBGH3As6Ofa
-	bo09ujyT/kibiCLP+9l6zLZtd+1aFjXbSHt3jPwHfIiwwnAtttDee1dpVGTS1k/b38WpHmj43EI
-	6gZHuNF55UKAt341smYucgg=
-Received: from mail.maildlp.com (unknown [172.19.162.144])
-	by canpmsgout03.his.huawei.com (SkyGuard) with ESMTPS id 4dwmjK1PB8zpStY;
-	Wed, 21 Jan 2026 09:25:41 +0800 (CST)
-Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7A1E740567;
-	Wed, 21 Jan 2026 09:29:26 +0800 (CST)
-Received: from [10.67.111.104] (10.67.111.104) by
- kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 21 Jan 2026 09:29:25 +0800
-Message-ID: <45c45182-e0f3-4b69-869f-5a0a90d543f5@huawei.com>
-Date: Wed, 21 Jan 2026 09:29:25 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dwqF61qmlz2xqD
+	for <linux-erofs@lists.ozlabs.org>; Wed, 21 Jan 2026 14:19:52 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1768965587; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=/5cadmVkeGndEdt4Ke/5nvbOQc5iRd9wZBWQdaQ0oK4=;
+	b=c7vdOXQxGPhyU5hCfOuW4MsEu9XiSsA0YEntjCUlOc6nguA4182PGQlkd4t6aUrKCWlpK8NoE9zO4oEgON8jn+sEzqUuIbG8a7BFZoGx2dON0QTU6r2PESC73wKnLK5rBq+jKeEJmCVf5p+KECFzIJkPfg/DYTM2pwZHEHe4HWg=
+Received: from localhost.localdomain(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WxWTwDM_1768965582 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 21 Jan 2026 11:19:46 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: oliver.yang@linux.alibaba.com,
+	Gao Xiang <hsiangkao@linux.alibaba.com>,
+	Hongbo Li <lihongbo22@huawei.com>
+Subject: [PATCH v3] erofs-utils: mkfs: add `--xattr-inode-digest` option
+Date: Wed, 21 Jan 2026 11:19:40 +0800
+Message-ID: <20260121031940.1017-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -63,179 +60,543 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v15 5/9] erofs: introduce the page cache share feature
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, <chao@kernel.org>,
-	<brauner@kernel.org>
-CC: <djwong@kernel.org>, <amir73il@gmail.com>, <hch@lst.de>,
-	<linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20260116095550.627082-1-lihongbo22@huawei.com>
- <20260116095550.627082-6-lihongbo22@huawei.com>
- <3ae9078a-ba5c-460d-89ea-8fdbdf190a10@linux.alibaba.com>
-Content-Language: en-US
-From: Hongbo Li <lihongbo22@huawei.com>
-In-Reply-To: <3ae9078a-ba5c-460d-89ea-8fdbdf190a10@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.104]
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemr500015.china.huawei.com (7.202.195.162)
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
-	version=4.0.1
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
-X-Spamd-Result: default: False [-2.20 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,lst.de,vger.kernel.org,lists.ozlabs.org];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2104-lists,linux-erofs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:chao@kernel.org,m:brauner@kernel.org,m:djwong@kernel.org,m:amir73il@gmail.com,m:hch@lst.de,m:linux-fsdevel@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[huawei.com:+];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	HAS_XOIP(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2105-lists,linux-erofs=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,huawei.com:email,huawei.com:dkim,huawei.com:mid,lists.ozlabs.org:rdns,lists.ozlabs.org:helo]
-X-Rspamd-Queue-Id: 2E48E4F18B
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,alibaba.com:email]
+X-Rspamd-Queue-Id: 4A03350576
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Based on the original Hongbo's version [1], it enables storing the
+SHA-256 digest of each inode as an extended attribute, in preparation
+for the upcoming page cache sharing feature.
 
+Example usage:
+ $ mkfs.erofs --xattr-inode-digest=system.erofs.fingerprint [-zlz4hc] foo.erofs foo/
 
-On 2026/1/20 22:19, Gao Xiang wrote:
-> 
-> 
-> On 2026/1/16 17:55, Hongbo Li wrote:
->> From: Hongzhen Luo <hongzhen@linux.alibaba.com>
->>
->> Currently, reading files with different paths (or names) but the same
->> content will consume multiple copies of the page cache, even if the
->> content of these page caches is the same. For example, reading
->> identical files (e.g., *.so files) from two different minor versions of
->> container images will cost multiple copies of the same page cache,
->> since different containers have different mount points. Therefore,
->> sharing the page cache for files with the same content can save memory.
->>
->> This introduces the page cache share feature in erofs. It allocate a
->> deduplicated inode and use its page cache as shared. Reads for files
->> with identical content will ultimately be routed to the page cache of
->> the deduplicated inode. In this way, a single page cache satisfies
->> multiple read requests for different files with the same contents.
->>
->> We introduce inode_share mount option to enable the page sharing mode
->> during mounting.
->>
->> Signed-off-by: Hongzhen Luo <hongzhen@linux.alibaba.com>
->> Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
->> ---
->>   Documentation/filesystems/erofs.rst |   5 +
->>   fs/erofs/Makefile                   |   1 +
->>   fs/erofs/inode.c                    |  24 +----
->>   fs/erofs/internal.h                 |  57 ++++++++++
->>   fs/erofs/ishare.c                   | 161 ++++++++++++++++++++++++++++
->>   fs/erofs/super.c                    |  56 +++++++++-
->>   fs/erofs/xattr.c                    |  34 ++++++
->>   fs/erofs/xattr.h                    |   3 +
->>   8 files changed, 316 insertions(+), 25 deletions(-)
->>   create mode 100644 fs/erofs/ishare.c
->>
->> diff --git a/Documentation/filesystems/erofs.rst 
->> b/Documentation/filesystems/erofs.rst
->> index 08194f194b94..27d3caa3c73c 100644
->> --- a/Documentation/filesystems/erofs.rst
->> +++ b/Documentation/filesystems/erofs.rst
->> @@ -128,7 +128,12 @@ device=%s              Specify a path to an extra 
->> device to be used together.
->>   fsid=%s                Specify a filesystem image ID for Fscache 
->> back-end.
->>   domain_id=%s           Specify a domain ID in fscache mode so that 
->> different images
->>                          with the same blobs under a given domain ID 
->> can share storage.
->> +                       Also used for inode page sharing mode which 
->> defines a sharing
->> +                       domain.
-> 
-> I think either the existing or the page cache sharing
-> here, `domain_id` should be protected as sensitive
-> information, so it'd be helpful to protect it as a
-> separate patch.
-> 
-> And change the description as below:
->                             Specify a trusted domain ID for fscache mode 
-> so that
->                             different images with the same blobs, 
-> identified by blob IDs,
->                             can share storage within the same trusted 
-> domain.
->                             Also used for different filesystems with 
-> inode page sharing
->                             enabled to share page cache within the 
-> trusted domain.
-> 
-> 
->>   fsoffset=%llu          Specify block-aligned filesystem offset for 
->> the primary device.
->> +inode_share            Enable inode page sharing for this 
->> filesystem.  Inodes with
->> +                       identical content within the same domain ID 
->> can share the
->> +                       page cache.
->>   ===================    
->> =========================================================
-> 
-> ...
-> 
-> 
->>       erofs_exit_shrinker();
->> @@ -1062,6 +1111,8 @@ static int erofs_show_options(struct seq_file 
->> *seq, struct dentry *root)
->>           seq_printf(seq, ",domain_id=%s", sbi->domain_id);
-> 
-> I think we shouldn't show `domain_id` to the userspace
-> entirely.
-> 
-> Also, let's use kfree_sentitive() and no_free_ptr() to
-> replace the following snippet:
-> 
->           case Opt_domain_id:
->                  kfree(sbi->domain_id); -> kfree_sentitive
+[1] https://lore.kernel.org/r/20251118015849.228939-1-lihongbo22@huawei.com
 
-Ok, kfree_sensitive/no_free_ptr looks good, this way makes domain_id 
-more reliable.
+Co-developed-by: Hongbo Li <lihongbo22@huawei.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Tested-by: Hongbo Li <lihongbo22@huawei.com>
+---
+v2: https://lore.kernel.org/r/20251229180646.3017326-4-hsiangkao@linux.alibaba.com
+v3:
+ - Support the hidden xattr namespace, so that user programs cannot
+   access inode fingerprints via normal mounts in any case.
 
-Thanks,
-Hongbo
+ include/erofs/internal.h |   2 +
+ include/erofs/xattr.h    |   2 +
+ include/erofs_fs.h       |   4 +-
+ lib/inode.c              |  46 +++++++++-
+ lib/super.c              |  13 ++-
+ lib/xattr.c              |  19 +++-
+ mkfs/main.c              | 187 ++++++++++++++++++++++-----------------
+ 7 files changed, 182 insertions(+), 91 deletions(-)
 
->                  sbi->domain_id = kstrdup(param->string, GFP_KERNEL);
->                       -> sbi->domain_id = no_free_ptr(param->string);
->                  if (!sbi->domain_id)
->                          return -ENOMEM;
->                  break;
-> 
-> And replace with kfree_sentitive() for domain_id everywhere.
-> 
-> Thanks,
-> Gao Xiang
+diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+index 26bf612..ef019a5 100644
+--- a/include/erofs/internal.h
++++ b/include/erofs/internal.h
+@@ -130,6 +130,7 @@ struct erofs_sb_info {
+ 
+ 	u32 xattr_prefix_start;
+ 	u8 xattr_prefix_count;
++	u8 ishare_xattr_prefix_id;
+ 	struct erofs_xattr_prefix_item *xattr_prefixes;
+ 
+ 	struct erofs_vfile bdev;
+@@ -190,6 +191,7 @@ EROFS_FEATURE_FUNCS(metabox, incompat, INCOMPAT_METABOX)
+ EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
+ EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
+ EROFS_FEATURE_FUNCS(plain_xattr_pfx, compat, COMPAT_PLAIN_XATTR_PFX)
++EROFS_FEATURE_FUNCS(ishare_xattrs, compat, COMPAT_ISHARE_XATTRS)
+ 
+ #define EROFS_I_EA_INITED_BIT	0
+ #define EROFS_I_Z_INITED_BIT	1
+diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+index 941bed7..9654636 100644
+--- a/include/erofs/xattr.h
++++ b/include/erofs/xattr.h
+@@ -33,6 +33,8 @@ char *erofs_export_xattr_ibody(struct erofs_inode *inode);
+ int erofs_load_shared_xattrs_from_path(struct erofs_sb_info *sbi, const char *path,
+ 				       long inlinexattr_tolerance);
+ int erofs_xattr_insert_name_prefix(const char *prefix);
++int erofs_xattr_set_ishare_prefix(struct erofs_sb_info *sbi,
++				  const char *prefix);
+ void erofs_xattr_cleanup_name_prefixes(void);
+ int erofs_xattr_flush_name_prefixes(struct erofs_importer *im, bool plain);
+ int erofs_xattr_prefixes_init(struct erofs_sb_info *sbi);
+diff --git a/include/erofs_fs.h b/include/erofs_fs.h
+index 887f37f..8b0d155 100644
+--- a/include/erofs_fs.h
++++ b/include/erofs_fs.h
+@@ -17,6 +17,7 @@
+ #define EROFS_FEATURE_COMPAT_MTIME              0x00000002
+ #define EROFS_FEATURE_COMPAT_XATTR_FILTER	0x00000004
+ #define EROFS_FEATURE_COMPAT_PLAIN_XATTR_PFX	0x00000010
++#define EROFS_FEATURE_COMPAT_ISHARE_XATTRS	0x00000020
+ 
+ /*
+  * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
+@@ -82,7 +83,8 @@ struct erofs_super_block {
+ 	__le32 xattr_prefix_start;	/* start of long xattr prefixes */
+ 	__le64 packed_nid;	/* nid of the special packed inode */
+ 	__u8 xattr_filter_reserved; /* reserved for xattr name filter */
+-	__u8 reserved[3];
++	__u8 ishare_xattr_prefix_id;
++	__u8 reserved[2];
+ 	__le32 build_time;	/* seconds added to epoch for mkfs time */
+ 	__le64 rootnid_8b;	/* (48BIT on) nid of root directory */
+ 	__le64 reserved2;
+diff --git a/lib/inode.c b/lib/inode.c
+index 299ec46..e3ee79a 100644
+--- a/lib/inode.c
++++ b/lib/inode.c
+@@ -31,6 +31,7 @@
+ #include "liberofs_metabox.h"
+ #include "liberofs_private.h"
+ #include "liberofs_rebuild.h"
++#include "sha256.h"
+ 
+ static inline bool erofs_is_special_identifier(const char *path)
+ {
+@@ -1954,6 +1955,37 @@ static int erofs_prepare_dir_inode(const struct erofs_mkfs_btctx *ctx,
+ 	return 0;
+ }
+ 
++static int erofs_set_inode_fingerprint(struct erofs_inode *inode, int fd,
++				       erofs_off_t pos)
++{
++	u8 ishare_xattr_prefix_id = inode->sbi->ishare_xattr_prefix_id;
++	erofs_off_t remaining = inode->i_size;
++	struct erofs_vfile vf = { .fd = fd };
++	struct sha256_state md;
++	u8 out[32 + sizeof("sha256:") - 1];
++	int ret;
++
++	if (!ishare_xattr_prefix_id)
++		return 0;
++	erofs_sha256_init(&md);
++	do {
++		u8 buf[32768];
++
++		ret = erofs_io_pread(&vf, buf,
++				     min_t(u64, remaining, sizeof(buf)), pos);
++		if (ret < 0)
++			return ret;
++		if (ret > 0)
++			erofs_sha256_process(&md, buf, ret);
++		remaining -= ret;
++		pos += ret;
++	} while (remaining);
++	erofs_sha256_done(&md, out + sizeof("sha256:") - 1);
++	memcpy(out, "sha256:", sizeof("sha256:") - 1);
++	return erofs_setxattr(inode, ishare_xattr_prefix_id, "",
++			      out, sizeof(out));
++}
++
+ static int erofs_mkfs_begin_nondirectory(const struct erofs_mkfs_btctx *btctx,
+ 					 struct erofs_inode *inode)
+ {
+@@ -1973,11 +2005,18 @@ static int erofs_mkfs_begin_nondirectory(const struct erofs_mkfs_btctx *btctx,
+ 			ctx.fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+ 			if (ctx.fd < 0)
+ 				return -errno;
+-			__erofs_fallthrough;
+-		default:
+ 			break;
++		default:
++			goto out;
+ 		}
+-		if (ctx.fd >= 0 && cfg.c_compr_opts[0].alg &&
++
++		if (S_ISREG(inode->i_mode) && inode->i_size) {
++			ret = erofs_set_inode_fingerprint(inode, ctx.fd, ctx.fpos);
++			if (ret < 0)
++				return ret;
++		}
++
++		if (cfg.c_compr_opts[0].alg &&
+ 		    erofs_file_is_compressible(im, inode)) {
+ 			ctx.ictx = erofs_prepare_compressed_file(im, inode);
+ 			if (IS_ERR(ctx.ictx))
+@@ -1989,6 +2028,7 @@ static int erofs_mkfs_begin_nondirectory(const struct erofs_mkfs_btctx *btctx,
+ 				return ret;
+ 		}
+ 	}
++out:
+ 	return erofs_mkfs_go(btctx, EROFS_MKFS_JOB_NDIR, &ctx, sizeof(ctx));
+ }
+ 
+diff --git a/lib/super.c b/lib/super.c
+index a203f96..0180087 100644
+--- a/lib/super.c
++++ b/lib/super.c
+@@ -146,7 +146,15 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
+ 	sbi->build_time = le32_to_cpu(dsb->build_time);
+ 
+ 	memcpy(&sbi->uuid, dsb->uuid, sizeof(dsb->uuid));
+-
++	if (erofs_sb_has_ishare_xattrs(sbi)) {
++		if (dsb->ishare_xattr_prefix_id >= sbi->xattr_prefix_count) {
++			erofs_err("invalid ishare xattr prefix id %d",
++				  dsb->ishare_xattr_prefix_id);
++			return -EFSCORRUPTED;
++		}
++		sbi->ishare_xattr_prefix_id =
++			dsb->ishare_xattr_prefix_id | EROFS_XATTR_LONG_PREFIX;
++	}
+ 	ret = z_erofs_parse_cfgs(sbi, dsb);
+ 	if (ret)
+ 		return ret;
+@@ -160,7 +168,6 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
+ 		free(sbi->devs);
+ 		sbi->devs = NULL;
+ 	}
+-
+ 	sbi->sb_valid = !ret;
+ 	return ret;
+ }
+@@ -206,6 +213,8 @@ int erofs_writesb(struct erofs_sb_info *sbi)
+ 		.extra_devices = cpu_to_le16(sbi->extra_devices),
+ 		.devt_slotoff = cpu_to_le16(sbi->devt_slotoff),
+ 		.packed_nid = cpu_to_le64(sbi->packed_nid),
++		.ishare_xattr_prefix_id = sbi->ishare_xattr_prefix_id &
++			EROFS_XATTR_LONG_PREFIX_MASK,
+ 	};
+ 	char *buf;
+ 	int ret;
+diff --git a/lib/xattr.c b/lib/xattr.c
+index 9b0f2ca..d8c7bff 100644
+--- a/lib/xattr.c
++++ b/lib/xattr.c
+@@ -1483,8 +1483,9 @@ int erofs_xattr_insert_name_prefix(const char *prefix)
+ 
+ 	if (!erofs_xattr_prefix_matches(prefix, &tnode->base_index,
+ 					&tnode->base_len)) {
+-		free(tnode);
+-		return -ENODATA;
++		/* Use internal hidden xattrs */
++		tnode->base_index = 0;
++		tnode->base_len = 0;
+ 	}
+ 
+ 	tnode->type.prefix_len = strlen(prefix);
+@@ -1495,9 +1496,21 @@ int erofs_xattr_insert_name_prefix(const char *prefix)
+ 	}
+ 
+ 	tnode->index = EROFS_XATTR_LONG_PREFIX | ea_prefix_count;
+-	ea_prefix_count++;
+ 	init_list_head(&tnode->list);
+ 	list_add_tail(&tnode->list, &ea_name_prefixes);
++	return ea_prefix_count++;
++}
++
++int erofs_xattr_set_ishare_prefix(struct erofs_sb_info *sbi,
++				  const char *prefix)
++{
++	int err;
++
++	err = erofs_xattr_insert_name_prefix(prefix);
++	if (err < 0)
++		return err;
++	sbi->ishare_xattr_prefix_id = EROFS_XATTR_LONG_PREFIX | err;
++	erofs_sb_set_ishare_xattrs(sbi);
+ 	return 0;
+ }
+ 
+diff --git a/mkfs/main.c b/mkfs/main.c
+index db0f910..1ad610c 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -61,7 +61,6 @@ static struct option long_options[] = {
+ 	{"tar", optional_argument, NULL, 20},
+ 	{"aufs", no_argument, NULL, 21},
+ 	{"mount-point", required_argument, NULL, 512},
+-	{"xattr-prefix", required_argument, NULL, 19},
+ #ifdef WITH_ANDROID
+ 	{"product-out", required_argument, NULL, 513},
+ 	{"fs-config-file", required_argument, NULL, 514},
+@@ -102,6 +101,8 @@ static struct option long_options[] = {
+ #endif
+ 	{"zD", optional_argument, NULL, 536},
+ 	{"MZ", optional_argument, NULL, 537},
++	{"xattr-prefix", required_argument, NULL, 538},
++	{"xattr-inode-digest", required_argument, NULL, 539},
+ 	{0, 0, 0, 0},
+ };
+ 
+@@ -167,95 +168,97 @@ static void usage(int argc, char **argv)
+ 		}
+ 	}
+ 	printf(
+-		" -C#                   specify the size of compress physical cluster in bytes\n"
+-		" -EX[,...]             X=extended options\n"
+-		" -L volume-label       set the volume label (maximum 15 bytes)\n"
+-		" -m#[:X]               enable metadata compression (# = physical cluster size in bytes;\n"
+-		"                                                    X = another compression algorithm for metadata)\n"
+-		" -T#                   specify a fixed UNIX timestamp # as build time\n"
+-		"    --all-time         the timestamp is also applied to all files (default)\n"
+-		"    --mkfs-time        the timestamp is applied as build time only\n"
+-		" -UX                   use a given filesystem UUID\n"
+-		" --zD[=<0|1>]          specify directory compression: 0=disable [default], 1=enable\n"
+-		" --MZ[=<0|[id]>]       put inode metadata ('i') and/or directory data ('d') into the separate metadata zone.\n"
+-		" --all-root            make all files owned by root\n"
++		" -C#                    specify the size of compress physical cluster in bytes\n"
++		" -EX[,...]              X=extended options\n"
++		" -L volume-label        set the volume label (maximum 15 bytes)\n"
++		" -m#[:X]                enable metadata compression (# = physical cluster size in bytes;\n"
++		"                                                     X = another compression algorithm for metadata)\n"
++		" -T#                    specify a fixed UNIX timestamp # as build time\n"
++		"    --all-time          the timestamp is also applied to all files (default)\n"
++		"    --mkfs-time         the timestamp is applied as build time only\n"
++		" -UX                    use a given filesystem UUID\n"
++		" --zD[=<0|1>]           specify directory compression: 0=disable [default], 1=enable\n"
++		" --MZ[=<0|[id]>]        put inode metadata ('i') and/or directory data ('d') into the separate metadata zone.\n"
++		" --ZI[=<0|1>]           specify the separate inode metadata zone availability: 0=disable [default], 1=enable\n"
++		" --all-root             make all files owned by root\n"
+ #ifdef EROFS_MT_ENABLED
+-		" --async-queue-limit=# specify the maximum number of entries in the multi-threaded job queue\n"
++		" --async-queue-limit=#  specify the maximum number of entries in the multi-threaded job queue\n"
+ #endif
+-		" --blobdev=X           specify an extra device X to store chunked data\n"
+-		" --chunksize=#         generate chunk-based files with #-byte chunks\n"
+-		" --clean=X             run full clean build (default) or:\n"
+-		" --incremental=X       run incremental build\n"
+-		"                       X = data|rvsp|0 (data: full data, rvsp: space fallocated\n"
+-		"                                        0: inodes zeroed)\n"
+-		" --compress-hints=X    specify a file to configure per-file compression strategy\n"
+-		" --dsunit=#            align all data block addresses to multiples of #\n"
+-		" --exclude-path=X      avoid including file X (X = exact literal path)\n"
+-		" --exclude-regex=X     avoid including files that match X (X = regular expression)\n"
++		" --blobdev=X            specify an extra device X to store chunked data\n"
++		" --chunksize=#          generate chunk-based files with #-byte chunks\n"
++		" --clean=X              run full clean build (default) or:\n"
++		" --incremental=X        run incremental build\n"
++		"                        X = data|rvsp|0 (data: full data, rvsp: space fallocated\n"
++		"                                         0: inodes zeroed)\n"
++		" --compress-hints=X     specify a file to configure per-file compression strategy\n"
++		" --dsunit=#             align all data block addresses to multiples of #\n"
++		" --exclude-path=X       avoid including file X (X = exact literal path)\n"
++		" --exclude-regex=X      avoid including files that match X (X = regular expression)\n"
+ #ifdef HAVE_LIBSELINUX
+-		" --file-contexts=X     specify a file contexts file to setup selinux labels\n"
++		" --file-contexts=X      specify a file contexts file to setup selinux labels\n"
+ #endif
+-		" --force-uid=#         set all file uids to # (# = UID)\n"
+-		" --force-gid=#         set all file gids to # (# = GID)\n"
+-		" --fsalignblks=#       specify the alignment of the primary device size in blocks\n"
+-		" --uid-offset=#        add offset # to all file uids (# = id offset)\n"
+-		" --gid-offset=#        add offset # to all file gids (# = id offset)\n"
+-		" --hard-dereference    dereference hardlinks, add links as separate inodes\n"
+-		" --ignore-mtime        use build time instead of strict per-file modification time\n"
+-		" --max-extent-bytes=#  set maximum decompressed extent size # in bytes\n"
+-		" --mount-point=X       X=prefix of target fs path (default: /)\n"
+-		" --preserve-mtime      keep per-file modification time strictly\n"
+-		" --offset=#            skip # bytes at the beginning of IMAGE.\n"
+-		" --root-xattr-isize=#  ensure the inline xattr size of the root directory is # bytes at least\n"
+-		" --aufs                replace aufs special files with overlayfs metadata\n"
+-		" --sort=<path,none>    data sorting order for tarballs as input (default: path)\n"
++		" --force-uid=#          set all file uids to # (# = UID)\n"
++		" --force-gid=#          set all file gids to # (# = GID)\n"
++		" --fsalignblks=#        specify the alignment of the primary device size in blocks\n"
++		" --uid-offset=#         add offset # to all file uids (# = id offset)\n"
++		" --gid-offset=#         add offset # to all file gids (# = id offset)\n"
++		" --hard-dereference     dereference hardlinks, add links as separate inodes\n"
++		" --ignore-mtime         use build time instead of strict per-file modification time\n"
++		" --max-extent-bytes=#   set maximum decompressed extent size # in bytes\n"
++		" --mount-point=X        X=prefix of target fs path (default: /)\n"
++		" --preserve-mtime       keep per-file modification time strictly\n"
++		" --offset=#             skip # bytes at the beginning of IMAGE.\n"
++		" --root-xattr-isize=#   ensure the inline xattr size of the root directory is # bytes at least\n"
++		" --aufs                 replace aufs special files with overlayfs metadata\n"
++		" --sort=<path,none>     data sorting order for tarballs as input (default: path)\n"
+ #ifdef S3EROFS_ENABLED
+-		" --s3=X                generate an image from S3-compatible object store\n"
+-		"   [,passwd_file=Y]    X=endpoint, Y=s3fs-compatible password file\n"
+-		"   [,urlstyle=Z]       S3 API calling style (Z = vhost|path) (default: vhost)\n"
+-		"   [,sig=<2,4>]        S3 API signature version (default: 2)\n"
+-		"   [,region=W]         W=region code in which endpoint belongs to (required for sig=4)\n"
++		" --s3=X                 generate an image from S3-compatible object store\n"
++		"   [,passwd_file=Y]     X=endpoint, Y=s3fs-compatible password file\n"
++		"   [,urlstyle=Z]        S3 API calling style (Z = vhost|path) (default: vhost)\n"
++		"   [,sig=<2,4>]         S3 API signature version (default: 2)\n"
++		"   [,region=W]          W=region code in which endpoint belongs to (required for sig=4)\n"
+ #endif
+ #ifdef OCIEROFS_ENABLED
+-		" --oci=[f|i]           generate a full (f) or index-only (i) image from OCI remote source\n"
+-		"   [,platform=X]       X=platform (default: linux/amd64)\n"
+-		"   [,layer=#]          #=layer index to extract (0-based; omit to extract all layers)\n"
+-		"   [,blob=Y]           Y=blob digest to extract (omit to extract all layers)\n"
+-		"   [,username=Z]       Z=username for authentication (optional)\n"
+-		"   [,password=W]       W=password for authentication (optional)\n"
+-		"   [,insecure]         use HTTP instead of HTTPS (optional)\n"
++		" --oci=[f|i]            generate a full (f) or index-only (i) image from OCI remote source\n"
++		"   [,platform=X]        X=platform (default: linux/amd64)\n"
++		"   [,layer=#]           #=layer index to extract (0-based; omit to extract all layers)\n"
++		"   [,blob=Y]            Y=blob digest to extract (omit to extract all layers)\n"
++		"   [,username=Z]        Z=username for authentication (optional)\n"
++		"   [,password=W]        W=password for authentication (optional)\n"
++		"   [,insecure]          use HTTP instead of HTTPS (optional)\n"
+ #endif
+-		" --tar=X               generate a full or index-only image from a tarball(-ish) source\n"
+-		"                       (X = f|i|headerball; f=full mode, i=index mode,\n"
+-		"                                            headerball=file data is omited in the source stream)\n"
+-		" --ovlfs-strip=<0,1>   strip overlayfs metadata in the target image (e.g. whiteouts)\n"
+-		" --quiet               quiet execution (do not write anything to standard output.)\n"
++		" --tar=X                generate a full or index-only image from a tarball(-ish) source\n"
++		"                        (X = f|i|headerball; f=full mode, i=index mode,\n"
++		"                                             headerball=file data is omitted in the source stream)\n"
++		" --ovlfs-strip=<0,1>    strip overlayfs metadata in the target image (e.g. whiteouts)\n"
++		" --quiet                quiet execution (do not write anything to standard output.)\n"
+ #ifndef NDEBUG
+-		" --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
+-		" --random-algorithms   randomize per-file algorithms (debugging only)\n"
++		" --random-pclusterblks  randomize pclusterblks for big pcluster (debugging only)\n"
++		" --random-algorithms    randomize per-file algorithms (debugging only)\n"
+ #endif
+ #ifdef HAVE_ZLIB
+-		" --ungzip[=X]          try to filter the tarball stream through gzip\n"
+-		"                       (and optionally dump the raw stream to X together)\n"
++		" --ungzip[=X]           try to filter the tarball stream through gzip\n"
++		"                        (and optionally dump the raw stream to X together)\n"
+ #endif
+ #ifdef HAVE_LIBLZMA
+-		" --unxz[=X]            try to filter the tarball stream through xz/lzma/lzip\n"
+-		"                       (and optionally dump the raw stream to X together)\n"
++		" --unxz[=X]             try to filter the tarball stream through xz/lzma/lzip\n"
++		"                        (and optionally dump the raw stream to X together)\n"
+ #endif
+ #ifdef HAVE_ZLIB
+-		" --gzinfo[=X]          generate AWS SOCI-compatible zinfo in order to support random gzip access\n"
++		" --gzinfo[=X]           generate AWS SOCI-compatible zinfo in order to support random gzip access\n"
+ #endif
+-		" --vmdk-desc=X         generate a VMDK descriptor file to merge sub-filesystems\n"
++		" --vmdk-desc=X          generate a VMDK descriptor file to merge sub-filesystems\n"
+ #ifdef EROFS_MT_ENABLED
+-		" --workers=#           set the number of worker threads to # (default: %u)\n"
++		" --workers=#            set the number of worker threads to # (default: %u)\n"
+ #endif
+-		" --xattr-prefix=X      X=extra xattr name prefix\n"
+-		" --zfeature-bits=#     toggle filesystem compression features according to given bits #\n"
++		" --xattr-inode-digest=X specify extended attribute name X to record inode digests\n"
++		" --xattr-prefix=X       X=extra xattr name prefix\n"
++		" --zfeature-bits=#      toggle filesystem compression features according to given bits #\n"
+ #ifdef WITH_ANDROID
+ 		"\n"
+ 		"Android-specific options:\n"
+-		" --product-out=X       X=product_out directory\n"
+-		" --fs-config-file=X    X=fs_config file\n"
++		" --product-out=X        X=product_out directory\n"
++		" --fs-config-file=X     X=fs_config file\n"
+ #endif
+ #ifdef EROFS_MT_ENABLED
+ 		, erofs_get_available_processors() /* --workers= */
+@@ -1261,16 +1264,6 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+ 				return -EINVAL;
+ 			}
+ 			break;
+-		case 19:
+-			errno = 0;
+-			opt = erofs_xattr_insert_name_prefix(optarg);
+-			if (opt) {
+-				erofs_err("failed to parse xattr name prefix: %s",
+-					  erofs_strerror(opt));
+-				return opt;
+-			}
+-			cfg.c_extra_ea_name_prefixes = true;
+-			break;
+ 		case 20:
+ 			mkfs_parse_tar_cfg(optarg);
+ 			break;
+@@ -1444,6 +1437,24 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+ 				}
+ 			}
+ 			break;
++		case 538:
++			errno = 0;
++			opt = erofs_xattr_insert_name_prefix(optarg);
++			if (opt < 0) {
++				erofs_err("failed to parse xattr name prefix: %s",
++					  erofs_strerror(opt));
++				return opt;
++			}
++			cfg.c_extra_ea_name_prefixes = true;
++			break;
++		case 539:
++			err = erofs_xattr_set_ishare_prefix(&g_sbi, optarg);
++			if (err < 0) {
++				erofs_err("failed to parse ishare name: %s",
++					  erofs_strerror(err));
++				return err;
++			}
++			break;
+ 		case 'V':
+ 			version();
+ 			exit(0);
+@@ -1892,9 +1903,13 @@ int main(int argc, char **argv)
+ 			goto exit;
+ 		}
+ 
+-		if (cfg.c_extra_ea_name_prefixes)
+-			erofs_xattr_flush_name_prefixes(&importer,
+-							mkfs_plain_xattr_pfx);
++		err = erofs_xattr_flush_name_prefixes(&importer,
++						      mkfs_plain_xattr_pfx);
++		if (err) {
++			erofs_err("failed to flush long xattr prefixes: %s",
++				  erofs_strerror(err));
++			goto exit;
++		}
+ 
+ 		root = erofs_new_inode(&g_sbi);
+ 		if (IS_ERR(root)) {
+@@ -1902,6 +1917,14 @@ int main(int argc, char **argv)
+ 			goto exit;
+ 		}
+ 	} else {
++		err = erofs_xattr_flush_name_prefixes(&importer,
++						      mkfs_plain_xattr_pfx);
++		if (err) {
++			erofs_err("failed to flush long xattr prefixes: %s",
++				  erofs_strerror(err));
++			goto exit;
++		}
++
+ 		root = erofs_make_empty_root_inode(&importer, &g_sbi);
+ 		if (IS_ERR(root)) {
+ 			err = PTR_ERR(root);
+-- 
+2.43.0
+
 
