@@ -1,99 +1,57 @@
-Return-Path: <linux-erofs+bounces-2127-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2128-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8CwaI7VXcWkNEwAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2127-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Jan 2026 23:48:21 +0100
+	id GPRvM5V4cWkJHwAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2128-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Jan 2026 02:08:37 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E70605F061
-	for <lists+linux-erofs@lfdr.de>; Wed, 21 Jan 2026 23:48:19 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7457960301
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Jan 2026 02:08:35 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dxK9F3hqgz2xs1;
-	Thu, 22 Jan 2026 09:48:17 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dxNH46Mvmz2yFm;
+	Thu, 22 Jan 2026 12:08:32 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=202.12.124.141
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769035697;
-	cv=none; b=BrPyzC77Yg+jIp2NTmJ+fAsHTeAYYuF/rWk4Ln2SmxNSMHL0WY0+/hQVxwK1wtOkLEuRcq9n/tMEjsFX0JSLf1oS8+TwFmJYqxt4igbdXOO7dEgf86wVmb8s5EslKkq7Wd5qSGjoczCcmqkbNovdU3fKvrJ1LOaqwjw3+Gh1z16+sUEW6ijXchp4st+YrbRLrFbDeDh8CMBAec92CQWSZ+vb51ipy1z3BDDh02wp2RtHJYPZ9Jeo9y4p9YIEriB1bSVmDNk+08Qnk1Yk4AUDcBtw548JCQMBx9B9pYNcwxxYKOBzGJItA9bnazQkeegLfKkGVsFA0Cs2//T2KwmOlg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.216
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769044112;
+	cv=none; b=klfbtEJ0yyRSGsXHbynbnDti4aqzJgkfB8yFwhnkYGi/QuFzkG66Q/yIMU4z0yaznWDvq78hWmsujf+hdKu6MgTEs6EvCwSa86uJ5mdQLo0GerXndFMow4Z+PhAH9S8c10PGdvpWlhC1UT7CprGTbMZ6wIj7zqLe77YQZGurvkBinuklDQubPqKczFgGcqkq8c0pYXY41nMu1Ln3cYE6Q/XWIy+MErCrUIKBe+Xh8py4qk05uErR0Vvfg5561TExR1m5x5y8MN7Ebqbe1+PwRMX137H1nqclu82wuGqIortM2miMd2icmbl3+h8+IfHI57qJ6eBwKCRPH/SsRq85MA==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769035697; c=relaxed/relaxed;
-	bh=5coOyJl4iosEMxvKLf9pz/D+NbUu48dkiDD9Y2kxJME=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=kIGzixeHHw41YJ0HXGD5t0Jfc6QM+4rJ3XtBqPCbQiB/AQCXhIDdjrgp4AOotFNFa7lBn+GS1yC8xucbg0KdtzjGxNfuu24Sqc1lOwF0kmVNsL7VQ7ZzV3dI3ac47A+utVQmRDMqaj4pJTPGOM2gnvC6RbdwyH7mmzsJVp732Zr0y6t50Ly2Y807xtuHB5NDF2WIi9OZwfhN0MlzAm1vmz4Rc8RzpE3+KnLCa23in56QnifOSPByX3nr1kz51HaER8SCQbz96xBcBkFGpymtkTuPQDxwTK6fp4EzdhzOpi6niaSVko20+oazaEmx596+dWFDKP1fDDKJyIRLWtBEgA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=ownmail.net; dkim=pass (2048-bit key; unprotected) header.d=ownmail.net header.i=@ownmail.net header.a=rsa-sha256 header.s=fm2 header.b=GuovOWXR; dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=GQln8ftB; dkim-atps=neutral; spf=pass (client-ip=202.12.124.141; helo=flow-b6-smtp.messagingengine.com; envelope-from=neilb@ownmail.net; receiver=lists.ozlabs.org) smtp.mailfrom=ownmail.net
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=ownmail.net
+	t=1769044112; c=relaxed/relaxed;
+	bh=oNXCbUe3W8QiAkQzmAGXbPussNUv7C8ZQJB/3NA0Rf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CIIwtQHtJW/Ef5bmCrgCHhlFFRRsU7ITCeSchamuLYaMeRfNdFvT1M3m0qYWGffqqATxi/8+w8XhUu5SFvKItdoWLskoTBiKjrqKoaqps7Ulf188tkgaWjJ0Q1HSVT5t9eBGB0ZkSC9MhrNsxHM/iGWrPEhk9BwI4fBCGZQSGjXZ2HoTozVK90bk7Wg6fLy3+NUdfvKllxV5yEonRbs1/nkDvNcYFsceRFqpUZC7Ll2rmtQCG0sSKYg8p0zA/9M7BAuM272o7Cu9WFHvoJXgTwKbMjbRu5L5gMsjuTI0yLpqnjjQb16I2+CkhvAKlrc6OArqVAum1zb1y4MDewYilg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=lnxaz/mw; dkim-atps=neutral; spf=pass (client-ip=113.46.200.216; helo=canpmsgout01.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=ownmail.net header.i=@ownmail.net header.a=rsa-sha256 header.s=fm2 header.b=GuovOWXR;
-	dkim=pass (2048-bit key; unprotected) header.d=messagingengine.com header.i=@messagingengine.com header.a=rsa-sha256 header.s=fm2 header.b=GQln8ftB;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=lnxaz/mw;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=ownmail.net (client-ip=202.12.124.141; helo=flow-b6-smtp.messagingengine.com; envelope-from=neilb@ownmail.net; receiver=lists.ozlabs.org)
-Received: from flow-b6-smtp.messagingengine.com (flow-b6-smtp.messagingengine.com [202.12.124.141])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.216; helo=canpmsgout01.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dxK9B5XNDz2xl0
-	for <linux-erofs@lists.ozlabs.org>; Thu, 22 Jan 2026 09:48:14 +1100 (AEDT)
-Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
-	by mailflow.stl.internal (Postfix) with ESMTP id 8D6A31300F24;
-	Wed, 21 Jan 2026 17:48:08 -0500 (EST)
-Received: from phl-frontend-04 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Wed, 21 Jan 2026 17:48:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ownmail.net; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to; s=fm2; t=
-	1769035688; x=1769042888; bh=5coOyJl4iosEMxvKLf9pz/D+NbUu48dkiDD
-	9Y2kxJME=; b=GuovOWXRBLUE5OJcSyLnE/2eveX/36uTx36j9P93zjQcQRBZQL2
-	hrnzBjQOgzs/f0q+zVSV1tWHCGJeldpGO5tNxzbNYGAmGERTI/74rC4AhDEcwnbN
-	3EK+IxK9Da7qBxTZ0cL7/5RdElCmK5xx1WEmeVCQTAdbEDCJzhvLIyYH/VUBXRn2
-	h49SQEqoXX9n4peKNOiWNTGeGPiK9qsGhIMzVRsfQ8nV0r0CSHnLs3nYhgIfpNL3
-	aRQdXpKb6VS0ww0j3QddijYoBo1Kwrkcj+Ox1b+DG22Mrte7SY069e+GdbfIhnlj
-	3VqqpOkLrd4aGQop2LrD926E4486pl+anPw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1769035688; x=
-	1769042888; bh=5coOyJl4iosEMxvKLf9pz/D+NbUu48dkiDD9Y2kxJME=; b=G
-	Qln8ftBpavKFAA+sJNEPaaNr8oKurXmo3q4BaVp9GwaWB1fm8C563yxGcgYW93DS
-	2xtNzCjbtolaXD67qz6Qutqe5geB5bsD8Ugeg6j/LWjxuo9XwZj1mmfo4drLgUP2
-	yKqhpGLcalZ4u5NUgfoc97greSYLp54DwzSB4S6wHw4u2msQsbGk5ZA8IJMGNIbQ
-	ngZ+8m6ZYaIowc/dHLMNgP5a1uqvjsJX/qkbUxNoCKOD6a2oW1oaQNc62xAi1nw9
-	1ilzAzJcDO41rfb5T7w8GgYR5Vyc6IoiPl6WjnE4pmvyLFxhbYKi59Pm07XkqffD
-	MH3MYMODbYPIXIIlLoSWg==
-X-ME-Sender: <xms:o1dxaZ-cMFc_o0d43ug7z0kzLEBmcLr7-qnETyPvdBZuqqtXE2bH3w>
-    <xme:o1dxaWu_cgJpAPDvXRifHWGeBvpSKMc12f7rFBgOoG_tMemlpn3xQTXYgCwgfa7tz
-    OXDCzuK93xla979oqbjqOFhStCl3Vabm505SJATmkmL4XzdyA>
-X-ME-Received: <xmr:o1dxaTxZPCOrm1mlblqPiWzOX285XPSCGpXm-fKvOvS9y7eJCkfR7O9aWP_lCWxHfYgXgfjqf3Vws4y9gRuwORW00qGz0381O1TtjVlRJXe1>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefgedrtddtgddugeeghedvucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfurfetoffkrfgpnffqhgenuceu
-    rghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujf
-    gurheptgfgggfhvfevufgjfhffkfhrsehtqhertddttdejnecuhfhrohhmpefpvghilheu
-    rhhofihnuceonhgvihhlsgesohifnhhmrghilhdrnhgvtheqnecuggftrfgrthhtvghrnh
-    epleejtdefgeeukeeiteduveehudevfeffvedutefgteduhfegvdfgtdeigeeuudejnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgvihhlsg
-    esohifnhhmrghilhdrnhgvthdpnhgspghrtghpthhtohepjeejpdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopehvihhrohesiigvnhhivhdrlhhinhhugidrohhrghdruhhkpd
-    hrtghpthhtohepghhuohgthhhunhhhrghisehvihhvohdrtghomhdprhgtphhtthhopehl
-    ihhnuhigqdigfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
-    hugidquhhnihhonhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehl
-    ihhnuhigqdhnihhlfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
-    hinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhn
-    uhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlih
-    hnuhigqdhfshguvghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    lhhinhhugidqvgigthegsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:o1dxabxtlAdkhpwCkINTEBpxmOYNyzwJPUiM41SluU32_hzzNA9XZQ>
-    <xmx:o1dxafCKgd9STI3lGSZvVjQToHTy1h7liCKSrmU9waffzwMuC1NFUA>
-    <xmx:o1dxaY793FR_a6LdPfr_ZHshxnAh_1jwBDA6jddarcyZMxIXycacjw>
-    <xmx:o1dxaRMf9cXehnUejISjAclfFWLd7Zsy6-U0xLPbufXx8cPynQ1yZw>
-    <xmx:qFdxaSd_vulaCSCn1gwPqzAJtzBUIYK-Pjhk-xVuA_6gzPYpL8lA2saQ>
-Feedback-ID: iab3e480c:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 21 Jan 2026 17:47:43 -0500 (EST)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dxNH11ftsz2xm5
+	for <linux-erofs@lists.ozlabs.org>; Thu, 22 Jan 2026 12:08:27 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=oNXCbUe3W8QiAkQzmAGXbPussNUv7C8ZQJB/3NA0Rf4=;
+	b=lnxaz/mwoCH03phQiDP0waDjjTVmwOxCBDLVH21btETb8RkLRPn0jMJcwvnbi6BqFzXFRwnAx
+	iHSrTQS8Yx5LQzJr54xwEanRseTIqXRTUIUE4jrwe+T8mJ7+cwPtEbMNMLBqe3UehCdCeHyoHNF
+	gOY916cgZFYw+4jmhyK/WGk=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4dxNB95HNbz1T4hP;
+	Thu, 22 Jan 2026 09:04:17 +0800 (CST)
+Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
+	by mail.maildlp.com (Postfix) with ESMTPS id C0F96404AD;
+	Thu, 22 Jan 2026 09:08:19 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemr500015.china.huawei.com (7.202.195.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 22 Jan 2026 09:08:19 +0800
+Message-ID: <c459dbda-7050-4bdf-bc8c-5dd98b297298@huawei.com>
+Date: Thu, 22 Jan 2026 09:08:18 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -105,202 +63,569 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-From: NeilBrown <neilb@ownmail.net>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Christoph Hellwig" <hch@infradead.org>,
- "Christian Brauner" <brauner@kernel.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Amir Goldstein" <amir73il@gmail.com>, "Hugh Dickins" <hughd@google.com>,
- "Baolin Wang" <baolin.wang@linux.alibaba.com>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Theodore Ts'o" <tytso@mit.edu>,
- "Andreas Dilger" <adilger.kernel@dilger.ca>, "Jan Kara" <jack@suse.com>,
- "Gao Xiang" <xiang@kernel.org>, "Chao Yu" <chao@kernel.org>,
- "Yue Hu" <zbestahu@gmail.com>, "Jeffle Xu" <jefflexu@linux.alibaba.com>,
- "Sandeep Dhavale" <dhavale@google.com>,
- "Hongbo Li" <lihongbo22@huawei.com>, "Chunhai Guo" <guochunhai@vivo.com>,
- "Carlos Maiolino" <cem@kernel.org>, "Ilya Dryomov" <idryomov@gmail.com>,
- "Alex Markuze" <amarkuze@redhat.com>,
- "Viacheslav Dubeyko" <slava@dubeyko.com>, "Chris Mason" <clm@fb.com>,
- "David Sterba" <dsterba@suse.com>,
- "Luis de Bethencourt" <luisbg@kernel.org>,
- "Salah Triki" <salah.triki@gmail.com>,
- "Phillip Lougher" <phillip@squashfs.org.uk>,
- "Steve French" <sfrench@samba.org>, "Paulo Alcantara" <pc@manguebit.org>,
- "Ronnie Sahlberg" <ronniesahlberg@gmail.com>,
- "Shyam Prasad N" <sprasad@microsoft.com>,
- "Bharath SM" <bharathsm@microsoft.com>,
- "Miklos Szeredi" <miklos@szeredi.hu>,
- "Mike Marshall" <hubcap@omnibond.com>,
- "Martin Brandenburg" <martin@omnibond.com>,
- "Mark Fasheh" <mark@fasheh.com>, "Joel Becker" <jlbec@evilplan.org>,
- "Joseph Qi" <joseph.qi@linux.alibaba.com>,
- "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
- "Ryusuke Konishi" <konishi.ryusuke@gmail.com>,
- "Trond Myklebust" <trondmy@kernel.org>,
- "Anna Schumaker" <anna@kernel.org>, "Dave Kleikamp" <shaggy@kernel.org>,
- "David Woodhouse" <dwmw2@infradead.org>,
- "Richard Weinberger" <richard@nod.at>, "Jan Kara" <jack@suse.cz>,
- "Andreas Gruenbacher" <agruenba@redhat.com>,
- "OGAWA Hirofumi" <hirofumi@mail.parknet.co.jp>,
- "Jaegeuk Kim" <jaegeuk@kernel.org>, "Jonathan Corbet" <corbet@lwn.net>,
- "David Laight" <david.laight.linux@gmail.com>,
- "Dave Chinner" <david@fromorbit.com>, linux-nfs@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-ext4@vger.kernel.org,
- linux-erofs@lists.ozlabs.org, linux-xfs@vger.kernel.org,
- ceph-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
- linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
- linux-unionfs@vger.kernel.org, devel@lists.orangefs.org,
- ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev,
- linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net,
- linux-mtd@lists.infradead.org, gfs2@lists.linux.dev,
- linux-f2fs-devel@lists.sourceforge.net, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 01/31] Documentation: document EXPORT_OP_NOLOCKS
-In-reply-to: <d8d68d1df6838c382799ce58345cfb5366585a8f.camel@kernel.org>
-References: <>, <d8d68d1df6838c382799ce58345cfb5366585a8f.camel@kernel.org>
-Date: Thu, 22 Jan 2026 09:47:41 +1100
-Message-id: <176903566115.16766.12892778448343562390@noble.neil.brown.name>
-Reply-To: NeilBrown <neil@brown.name>
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-	SPF_HELO_PASS,SPF_PASS autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] erofs-utils: mkfs: add `--xattr-inode-digest` option
+Content-Language: en-US
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+CC: <linux-erofs@lists.ozlabs.org>
+References: <20260121031940.1017-1-hsiangkao@linux.alibaba.com>
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20260121031940.1017-1-hsiangkao@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.104]
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemr500015.china.huawei.com (7.202.195.162)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[ownmail.net,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[ownmail.net:s=fm2,messagingengine.com:s=fm2];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	REPLYTO_DN_EQ_FROM_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2127-lists,linux-erofs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[neilb@ownmail.net,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[ownmail.net];
-	FORGED_RECIPIENTS(0.00)[m:jlayton@kernel.org,m:hch@infradead.org,m:brauner@kernel.org,m:viro@zeniv.linux.org.uk,m:chuck.lever@oracle.com,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:amir73il@gmail.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:akpm@linux-foundation.org,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:jack@suse.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:cem@kernel.org,m:idryomov@gmail.com,m:amarkuze@redhat.com,m:slava@dubeyko.com,m:clm@fb.com,m:dsterba@suse.com,m:luisbg@kernel.org,m:salah.triki@gmail.com,m:phillip@squashfs.org.uk,m:sfrench@samba.org,m:pc@manguebit.org,m:ronniesahlberg@gmail.com,m:sprasad@microsoft.com,m:bharathsm@microsoft.com,m:miklos@szeredi.hu,m:hubcap@omnibond.com,m:martin@omnibond.com,m:mark@fasheh.com,m:jlbec@evilplan.org,m:joseph.qi@linux.alibaba.com,m:almaz.alexandrovich@paragon-software.com,m:konishi.ryu
- suke@gmail.com,m:trondmy@kernel.org,m:anna@kernel.org,m:shaggy@kernel.org,m:dwmw2@infradead.org,m:richard@nod.at,m:jack@suse.cz,m:agruenba@redhat.com,m:hirofumi@mail.parknet.co.jp,m:jaegeuk@kernel.org,m:corbet@lwn.net,m:david.laight.linux@gmail.com,m:david@fromorbit.com,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-mm@kvack.org,m:linux-ext4@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-xfs@vger.kernel.org,m:ceph-devel@vger.kernel.org,m:linux-btrfs@vger.kernel.org,m:linux-cifs@vger.kernel.org,m:samba-technical@lists.samba.org,m:linux-unionfs@vger.kernel.org,m:devel@lists.orangefs.org,m:ocfs2-devel@lists.linux.dev,m:ntfs3@lists.linux.dev,m:linux-nilfs@vger.kernel.org,m:jfs-discussion@lists.sourceforge.net,m:linux-mtd@lists.infradead.org,m:gfs2@lists.linux.dev,m:linux-f2fs-devel@lists.sourceforge.net,m:linux-doc@vger.kernel.org,s:lists@lfdr.de];
-	TO_DN_SOME(0.00)[];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[infradead.org,kernel.org,zeniv.linux.org.uk,oracle.com,redhat.com,talpey.com,gmail.com,google.com,linux.alibaba.com,linux-foundation.org,mit.edu,dilger.ca,suse.com,huawei.com,vivo.com,dubeyko.com,fb.com,squashfs.org.uk,samba.org,manguebit.org,microsoft.com,szeredi.hu,omnibond.com,fasheh.com,evilplan.org,paragon-software.com,nod.at,suse.cz,mail.parknet.co.jp,lwn.net,fromorbit.com,vger.kernel.org,kvack.org,lists.ozlabs.org,lists.samba.org,lists.orangefs.org,lists.linux.dev,lists.sourceforge.net,lists.infradead.org];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[ownmail.net:+,messagingengine.com:+];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_GT_50(0.00)[77];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[neilb@ownmail.net,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	HAS_REPLYTO(0.00)[neil@brown.name];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2128-lists,linux-erofs=lfdr.de];
+	RCPT_COUNT_TWO(0.00)[2];
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[messagingengine.com:dkim,ownmail.net:dkim,noble.neil.brown.name:mid,brown.name:replyto,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: E70605F061
+	RCVD_COUNT_FIVE(0.00)[5];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	HAS_XOIP(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:email,huawei.com:dkim,huawei.com:mid,alibaba.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 7457960301
 X-Rspamd-Action: no action
 
-On Wed, 21 Jan 2026, Jeff Layton wrote:
-> On Wed, 2026-01-21 at 20:58 +1100, NeilBrown wrote:
-> > On Wed, 21 Jan 2026, Jeff Layton wrote:
-> > > On Tue, 2026-01-20 at 09:12 -0500, Jeff Layton wrote:
-> > > > On Tue, 2026-01-20 at 08:20 -0500, Jeff Layton wrote:
-> > > > > On Mon, 2026-01-19 at 23:44 -0800, Christoph Hellwig wrote:
-> > > > > > On Mon, Jan 19, 2026 at 11:26:18AM -0500, Jeff Layton wrote:
-> > > > > > > +  EXPORT_OP_NOLOCKS - Disable file locking on this filesystem.=
- Some
-> > > > > > > +    filesystems cannot properly support file locking as implem=
-ented by
-> > > > > > > +    nfsd. A case in point is reexport of NFS itself, which can=
-'t be done
-> > > > > > > +    safely without coordinating the grace period handling. Oth=
-er clustered
-> > > > > > > +    and networked filesystems can be problematic here as well.
-> > > > > >=20
-> > > > > > I'm not sure this is very useful.  It really needs to document wh=
-at
-> > > > > > locking semantics nfs expects, because otherwise no reader will k=
-now
-> > > > > > if they set this or not.
-> > > > >=20
-> > > > > Fair point. I'll see if I can draft something better. Suggestions
-> > > > > welcome.
-> > > >=20
-> > > > How about this?
-> > > >=20
-> > > > +  EXPORT_OP_NOLOCKS - Disable file locking on this filesystem. Files=
-ystems
-> > > > +    that want to support locking over NFS must support POSIX file lo=
-cking
-> > > > +    semantics and must handle lock recovery requests from clients af=
-ter a
-> > > > +    reboot. Most local disk, RAM, or pseudo-filesystems use the gene=
-ric POSIX
-> > > > +    locking support in the kernel and naturally provide this capabil=
-ity. Network
-> > > > +    or clustered filesystems usually need special handling to do thi=
-s properly.
-> > >=20
-> > > Even better, I think?
-> > >=20
-> > > +
-> > > +  EXPORT_OP_NOLOCKS - Disable file locking on this filesystem. Filesys=
-tems
-> > > +    that want to support locking over NFS must support POSIX file lock=
-ing
-> > > +    semantics. When the server reboots, the clients will issue request=
-s to
-> > > +    recover their locks, which nfsd will issue to the filesystem as ne=
-w lock
-> > > +    requests. Those must succeed in order for lock recovery to work. M=
-ost
-> > > +    local disk, RAM, or pseudo-filesystems use the generic POSIX locki=
-ng
-> > > +    support in the kernel and naturally provide this capability. Netwo=
-rk or
-> > > +    clustered filesystems usually need special handling to do this pro=
-perly.
-> > > +    Set this flag on filesystems that can't guarantee the proper seman=
-tics
-> > > +    (e.g. reexported NFS).
-> >=20
-> > I think this is quite thorough, which it good ...  maybe too good :-) It
-> > reminds me that for true NFS compatibility the fs shouldn't allow local
-> > locks (or file opens!) until the grace period has passed.  I don't think
-> > any local filesystems enforce that - it would have to be locks.c that
-> > does I expect.  I doubt there would be much appetite for doing that
-> > though.
-> >=20
->=20
-> Yeah, I don't see us ever doing that. It'd be a tricky chicken-and-egg
-> problem, given the demand-driven way that the mountd upcalls work
-> today. We don't even know that anything is exported until something
-> asks for it.
+Hi, Xiang
 
-statd keeps state in /var/lib/nfs/sm, and nfsd keeps v4 state elsewhere
-in /var/lib/nfs.  This state effectively records if any NFS client might
-try to recover a lock.
-I think the v4 state is granular enough to identify the filesystem.
-lockd could be enhanced to use the same state I suspect.
+On 2026/1/21 11:19, Gao Xiang wrote:
+> Based on the original Hongbo's version [1], it enables storing the
+> SHA-256 digest of each inode as an extended attribute, in preparation
+> for the upcoming page cache sharing feature.
+> 
+> Example usage:
+>   $ mkfs.erofs --xattr-inode-digest=system.erofs.fingerprint [-zlz4hc] foo.erofs foo/
+> 
+> [1] https://lore.kernel.org/r/20251118015849.228939-1-lihongbo22@huawei.com
+> 
+> Co-developed-by: Hongbo Li <lihongbo22@huawei.com>
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Tested-by: Hongbo Li <lihongbo22@huawei.com>
+> ---
+> v2: https://lore.kernel.org/r/20251229180646.3017326-4-hsiangkao@linux.alibaba.com
+> v3:
+>   - Support the hidden xattr namespace, so that user programs cannot
+>     access inode fingerprints via normal mounts in any case.
+> 
+>   include/erofs/internal.h |   2 +
+>   include/erofs/xattr.h    |   2 +
+>   include/erofs_fs.h       |   4 +-
+>   lib/inode.c              |  46 +++++++++-
+>   lib/super.c              |  13 ++-
+>   lib/xattr.c              |  19 +++-
+>   mkfs/main.c              | 187 ++++++++++++++++++++++-----------------
+>   7 files changed, 182 insertions(+), 91 deletions(-)
+> 
+> diff --git a/include/erofs/internal.h b/include/erofs/internal.h
+> index 26bf612..ef019a5 100644
+> --- a/include/erofs/internal.h
+> +++ b/include/erofs/internal.h
+> @@ -130,6 +130,7 @@ struct erofs_sb_info {
+>   
+>   	u32 xattr_prefix_start;
+>   	u8 xattr_prefix_count;
+> +	u8 ishare_xattr_prefix_id;
+>   	struct erofs_xattr_prefix_item *xattr_prefixes;
+>   
+>   	struct erofs_vfile bdev;
+> @@ -190,6 +191,7 @@ EROFS_FEATURE_FUNCS(metabox, incompat, INCOMPAT_METABOX)
+>   EROFS_FEATURE_FUNCS(sb_chksum, compat, COMPAT_SB_CHKSUM)
+>   EROFS_FEATURE_FUNCS(xattr_filter, compat, COMPAT_XATTR_FILTER)
+>   EROFS_FEATURE_FUNCS(plain_xattr_pfx, compat, COMPAT_PLAIN_XATTR_PFX)
+> +EROFS_FEATURE_FUNCS(ishare_xattrs, compat, COMPAT_ISHARE_XATTRS)
+>   
+>   #define EROFS_I_EA_INITED_BIT	0
+>   #define EROFS_I_Z_INITED_BIT	1
+> diff --git a/include/erofs/xattr.h b/include/erofs/xattr.h
+> index 941bed7..9654636 100644
+> --- a/include/erofs/xattr.h
+> +++ b/include/erofs/xattr.h
+> @@ -33,6 +33,8 @@ char *erofs_export_xattr_ibody(struct erofs_inode *inode);
+>   int erofs_load_shared_xattrs_from_path(struct erofs_sb_info *sbi, const char *path,
+>   				       long inlinexattr_tolerance);
+>   int erofs_xattr_insert_name_prefix(const char *prefix);
+> +int erofs_xattr_set_ishare_prefix(struct erofs_sb_info *sbi,
+> +				  const char *prefix);
+>   void erofs_xattr_cleanup_name_prefixes(void);
+>   int erofs_xattr_flush_name_prefixes(struct erofs_importer *im, bool plain);
+>   int erofs_xattr_prefixes_init(struct erofs_sb_info *sbi);
+> diff --git a/include/erofs_fs.h b/include/erofs_fs.h
+> index 887f37f..8b0d155 100644
+> --- a/include/erofs_fs.h
+> +++ b/include/erofs_fs.h
+> @@ -17,6 +17,7 @@
+>   #define EROFS_FEATURE_COMPAT_MTIME              0x00000002
+>   #define EROFS_FEATURE_COMPAT_XATTR_FILTER	0x00000004
+>   #define EROFS_FEATURE_COMPAT_PLAIN_XATTR_PFX	0x00000010
+> +#define EROFS_FEATURE_COMPAT_ISHARE_XATTRS	0x00000020
+>   
+>   /*
+>    * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
+> @@ -82,7 +83,8 @@ struct erofs_super_block {
+>   	__le32 xattr_prefix_start;	/* start of long xattr prefixes */
+>   	__le64 packed_nid;	/* nid of the special packed inode */
+>   	__u8 xattr_filter_reserved; /* reserved for xattr name filter */
+> -	__u8 reserved[3];
+> +	__u8 ishare_xattr_prefix_id;
+> +	__u8 reserved[2];
+>   	__le32 build_time;	/* seconds added to epoch for mkfs time */
+>   	__le64 rootnid_8b;	/* (48BIT on) nid of root directory */
+>   	__le64 reserved2;
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 299ec46..e3ee79a 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -31,6 +31,7 @@
+>   #include "liberofs_metabox.h"
+>   #include "liberofs_private.h"
+>   #include "liberofs_rebuild.h"
+> +#include "sha256.h"
+>   
+>   static inline bool erofs_is_special_identifier(const char *path)
+>   {
+> @@ -1954,6 +1955,37 @@ static int erofs_prepare_dir_inode(const struct erofs_mkfs_btctx *ctx,
+>   	return 0;
+>   }
+>   
+> +static int erofs_set_inode_fingerprint(struct erofs_inode *inode, int fd,
+> +				       erofs_off_t pos)
+> +{
+> +	u8 ishare_xattr_prefix_id = inode->sbi->ishare_xattr_prefix_id;
+> +	erofs_off_t remaining = inode->i_size;
+> +	struct erofs_vfile vf = { .fd = fd };
+> +	struct sha256_state md;
+> +	u8 out[32 + sizeof("sha256:") - 1];
+> +	int ret;
+> +
+> +	if (!ishare_xattr_prefix_id)
+> +		return 0;
+> +	erofs_sha256_init(&md);
+> +	do {
+> +		u8 buf[32768];
+> +
+> +		ret = erofs_io_pread(&vf, buf,
+> +				     min_t(u64, remaining, sizeof(buf)), pos);
+> +		if (ret < 0)
+> +			return ret;
+> +		if (ret > 0)
+> +			erofs_sha256_process(&md, buf, ret);
+> +		remaining -= ret;
+> +		pos += ret;
+> +	} while (remaining);
+> +	erofs_sha256_done(&md, out + sizeof("sha256:") - 1);
+> +	memcpy(out, "sha256:", sizeof("sha256:") - 1);
+> +	return erofs_setxattr(inode, ishare_xattr_prefix_id, "",
+> +			      out, sizeof(out));
+> +}
+> +
+>   static int erofs_mkfs_begin_nondirectory(const struct erofs_mkfs_btctx *btctx,
+>   					 struct erofs_inode *inode)
+>   {
+> @@ -1973,11 +2005,18 @@ static int erofs_mkfs_begin_nondirectory(const struct erofs_mkfs_btctx *btctx,
+>   			ctx.fd = open(inode->i_srcpath, O_RDONLY | O_BINARY);
+>   			if (ctx.fd < 0)
+>   				return -errno;
+> -			__erofs_fallthrough;
+> -		default:
+>   			break;
+> +		default:
+> +			goto out;
+>   		}
+> -		if (ctx.fd >= 0 && cfg.c_compr_opts[0].alg &&
+> +
+> +		if (S_ISREG(inode->i_mode) && inode->i_size) {
+> +			ret = erofs_set_inode_fingerprint(inode, ctx.fd, ctx.fpos);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +
+> +		if (cfg.c_compr_opts[0].alg &&
+>   		    erofs_file_is_compressible(im, inode)) {
+>   			ctx.ictx = erofs_prepare_compressed_file(im, inode);
+>   			if (IS_ERR(ctx.ictx))
+> @@ -1989,6 +2028,7 @@ static int erofs_mkfs_begin_nondirectory(const struct erofs_mkfs_btctx *btctx,
+>   				return ret;
+>   		}
+>   	}
+> +out:
+>   	return erofs_mkfs_go(btctx, EROFS_MKFS_JOB_NDIR, &ctx, sizeof(ctx));
+>   }
+>   
+> diff --git a/lib/super.c b/lib/super.c
+> index a203f96..0180087 100644
+> --- a/lib/super.c
+> +++ b/lib/super.c
+> @@ -146,7 +146,15 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
+>   	sbi->build_time = le32_to_cpu(dsb->build_time);
+>   
+>   	memcpy(&sbi->uuid, dsb->uuid, sizeof(dsb->uuid));
+> -
+> +	if (erofs_sb_has_ishare_xattrs(sbi)) {
+> +		if (dsb->ishare_xattr_prefix_id >= sbi->xattr_prefix_count) {
+> +			erofs_err("invalid ishare xattr prefix id %d",
+> +				  dsb->ishare_xattr_prefix_id);
+> +			return -EFSCORRUPTED;
+> +		}
+> +		sbi->ishare_xattr_prefix_id =
+> +			dsb->ishare_xattr_prefix_id | EROFS_XATTR_LONG_PREFIX;
+> +	}
+>   	ret = z_erofs_parse_cfgs(sbi, dsb);
+>   	if (ret)
+>   		return ret;
+> @@ -160,7 +168,6 @@ int erofs_read_superblock(struct erofs_sb_info *sbi)
+>   		free(sbi->devs);
+>   		sbi->devs = NULL;
+>   	}
+> -
+>   	sbi->sb_valid = !ret;
+>   	return ret;
+>   }
+> @@ -206,6 +213,8 @@ int erofs_writesb(struct erofs_sb_info *sbi)
+>   		.extra_devices = cpu_to_le16(sbi->extra_devices),
+>   		.devt_slotoff = cpu_to_le16(sbi->devt_slotoff),
+>   		.packed_nid = cpu_to_le64(sbi->packed_nid),
+> +		.ishare_xattr_prefix_id = sbi->ishare_xattr_prefix_id &
+> +			EROFS_XATTR_LONG_PREFIX_MASK,
+>   	};
+>   	char *buf;
+>   	int ret;
+> diff --git a/lib/xattr.c b/lib/xattr.c
+> index 9b0f2ca..d8c7bff 100644
+> --- a/lib/xattr.c
+> +++ b/lib/xattr.c
+> @@ -1483,8 +1483,9 @@ int erofs_xattr_insert_name_prefix(const char *prefix)
+>   
+>   	if (!erofs_xattr_prefix_matches(prefix, &tnode->base_index,
+>   					&tnode->base_len)) {
+> -		free(tnode);
+> -		return -ENODATA;
+> +		/* Use internal hidden xattrs */
+> +		tnode->base_index = 0;
+> +		tnode->base_len = 0;
 
-We would need to generalise that state and load it at mount time and
-block new state creation accordingly.
+So, should we add parameter bool hidden to this helper to distinct the 
+cases?
 
-i.e. this would have to be a vfs-level thing which nfsd makes use of.
+Others looks good to me!
 
-Possibly, but there are other things better worth our time.
 
-NeilBrown
+Thanks,
+Hongbo
 
+>   	}
+>   
+>   	tnode->type.prefix_len = strlen(prefix);
+> @@ -1495,9 +1496,21 @@ int erofs_xattr_insert_name_prefix(const char *prefix)
+>   	}
+>   
+>   	tnode->index = EROFS_XATTR_LONG_PREFIX | ea_prefix_count;
+> -	ea_prefix_count++;
+>   	init_list_head(&tnode->list);
+>   	list_add_tail(&tnode->list, &ea_name_prefixes);
+> +	return ea_prefix_count++;
+> +}
+> +
+> +int erofs_xattr_set_ishare_prefix(struct erofs_sb_info *sbi,
+> +				  const char *prefix)
+> +{
+> +	int err;
+> +
+> +	err = erofs_xattr_insert_name_prefix(prefix);
+> +	if (err < 0)
+> +		return err;
+> +	sbi->ishare_xattr_prefix_id = EROFS_XATTR_LONG_PREFIX | err;
+> +	erofs_sb_set_ishare_xattrs(sbi);
+>   	return 0;
+>   }
+>   
+> diff --git a/mkfs/main.c b/mkfs/main.c
+> index db0f910..1ad610c 100644
+> --- a/mkfs/main.c
+> +++ b/mkfs/main.c
+> @@ -61,7 +61,6 @@ static struct option long_options[] = {
+>   	{"tar", optional_argument, NULL, 20},
+>   	{"aufs", no_argument, NULL, 21},
+>   	{"mount-point", required_argument, NULL, 512},
+> -	{"xattr-prefix", required_argument, NULL, 19},
+>   #ifdef WITH_ANDROID
+>   	{"product-out", required_argument, NULL, 513},
+>   	{"fs-config-file", required_argument, NULL, 514},
+> @@ -102,6 +101,8 @@ static struct option long_options[] = {
+>   #endif
+>   	{"zD", optional_argument, NULL, 536},
+>   	{"MZ", optional_argument, NULL, 537},
+> +	{"xattr-prefix", required_argument, NULL, 538},
+> +	{"xattr-inode-digest", required_argument, NULL, 539},
+>   	{0, 0, 0, 0},
+>   };
+>   
+> @@ -167,95 +168,97 @@ static void usage(int argc, char **argv)
+>   		}
+>   	}
+>   	printf(
+> -		" -C#                   specify the size of compress physical cluster in bytes\n"
+> -		" -EX[,...]             X=extended options\n"
+> -		" -L volume-label       set the volume label (maximum 15 bytes)\n"
+> -		" -m#[:X]               enable metadata compression (# = physical cluster size in bytes;\n"
+> -		"                                                    X = another compression algorithm for metadata)\n"
+> -		" -T#                   specify a fixed UNIX timestamp # as build time\n"
+> -		"    --all-time         the timestamp is also applied to all files (default)\n"
+> -		"    --mkfs-time        the timestamp is applied as build time only\n"
+> -		" -UX                   use a given filesystem UUID\n"
+> -		" --zD[=<0|1>]          specify directory compression: 0=disable [default], 1=enable\n"
+> -		" --MZ[=<0|[id]>]       put inode metadata ('i') and/or directory data ('d') into the separate metadata zone.\n"
+> -		" --all-root            make all files owned by root\n"
+> +		" -C#                    specify the size of compress physical cluster in bytes\n"
+> +		" -EX[,...]              X=extended options\n"
+> +		" -L volume-label        set the volume label (maximum 15 bytes)\n"
+> +		" -m#[:X]                enable metadata compression (# = physical cluster size in bytes;\n"
+> +		"                                                     X = another compression algorithm for metadata)\n"
+> +		" -T#                    specify a fixed UNIX timestamp # as build time\n"
+> +		"    --all-time          the timestamp is also applied to all files (default)\n"
+> +		"    --mkfs-time         the timestamp is applied as build time only\n"
+> +		" -UX                    use a given filesystem UUID\n"
+> +		" --zD[=<0|1>]           specify directory compression: 0=disable [default], 1=enable\n"
+> +		" --MZ[=<0|[id]>]        put inode metadata ('i') and/or directory data ('d') into the separate metadata zone.\n"
+> +		" --ZI[=<0|1>]           specify the separate inode metadata zone availability: 0=disable [default], 1=enable\n"
+> +		" --all-root             make all files owned by root\n"
+>   #ifdef EROFS_MT_ENABLED
+> -		" --async-queue-limit=# specify the maximum number of entries in the multi-threaded job queue\n"
+> +		" --async-queue-limit=#  specify the maximum number of entries in the multi-threaded job queue\n"
+>   #endif
+> -		" --blobdev=X           specify an extra device X to store chunked data\n"
+> -		" --chunksize=#         generate chunk-based files with #-byte chunks\n"
+> -		" --clean=X             run full clean build (default) or:\n"
+> -		" --incremental=X       run incremental build\n"
+> -		"                       X = data|rvsp|0 (data: full data, rvsp: space fallocated\n"
+> -		"                                        0: inodes zeroed)\n"
+> -		" --compress-hints=X    specify a file to configure per-file compression strategy\n"
+> -		" --dsunit=#            align all data block addresses to multiples of #\n"
+> -		" --exclude-path=X      avoid including file X (X = exact literal path)\n"
+> -		" --exclude-regex=X     avoid including files that match X (X = regular expression)\n"
+> +		" --blobdev=X            specify an extra device X to store chunked data\n"
+> +		" --chunksize=#          generate chunk-based files with #-byte chunks\n"
+> +		" --clean=X              run full clean build (default) or:\n"
+> +		" --incremental=X        run incremental build\n"
+> +		"                        X = data|rvsp|0 (data: full data, rvsp: space fallocated\n"
+> +		"                                         0: inodes zeroed)\n"
+> +		" --compress-hints=X     specify a file to configure per-file compression strategy\n"
+> +		" --dsunit=#             align all data block addresses to multiples of #\n"
+> +		" --exclude-path=X       avoid including file X (X = exact literal path)\n"
+> +		" --exclude-regex=X      avoid including files that match X (X = regular expression)\n"
+>   #ifdef HAVE_LIBSELINUX
+> -		" --file-contexts=X     specify a file contexts file to setup selinux labels\n"
+> +		" --file-contexts=X      specify a file contexts file to setup selinux labels\n"
+>   #endif
+> -		" --force-uid=#         set all file uids to # (# = UID)\n"
+> -		" --force-gid=#         set all file gids to # (# = GID)\n"
+> -		" --fsalignblks=#       specify the alignment of the primary device size in blocks\n"
+> -		" --uid-offset=#        add offset # to all file uids (# = id offset)\n"
+> -		" --gid-offset=#        add offset # to all file gids (# = id offset)\n"
+> -		" --hard-dereference    dereference hardlinks, add links as separate inodes\n"
+> -		" --ignore-mtime        use build time instead of strict per-file modification time\n"
+> -		" --max-extent-bytes=#  set maximum decompressed extent size # in bytes\n"
+> -		" --mount-point=X       X=prefix of target fs path (default: /)\n"
+> -		" --preserve-mtime      keep per-file modification time strictly\n"
+> -		" --offset=#            skip # bytes at the beginning of IMAGE.\n"
+> -		" --root-xattr-isize=#  ensure the inline xattr size of the root directory is # bytes at least\n"
+> -		" --aufs                replace aufs special files with overlayfs metadata\n"
+> -		" --sort=<path,none>    data sorting order for tarballs as input (default: path)\n"
+> +		" --force-uid=#          set all file uids to # (# = UID)\n"
+> +		" --force-gid=#          set all file gids to # (# = GID)\n"
+> +		" --fsalignblks=#        specify the alignment of the primary device size in blocks\n"
+> +		" --uid-offset=#         add offset # to all file uids (# = id offset)\n"
+> +		" --gid-offset=#         add offset # to all file gids (# = id offset)\n"
+> +		" --hard-dereference     dereference hardlinks, add links as separate inodes\n"
+> +		" --ignore-mtime         use build time instead of strict per-file modification time\n"
+> +		" --max-extent-bytes=#   set maximum decompressed extent size # in bytes\n"
+> +		" --mount-point=X        X=prefix of target fs path (default: /)\n"
+> +		" --preserve-mtime       keep per-file modification time strictly\n"
+> +		" --offset=#             skip # bytes at the beginning of IMAGE.\n"
+> +		" --root-xattr-isize=#   ensure the inline xattr size of the root directory is # bytes at least\n"
+> +		" --aufs                 replace aufs special files with overlayfs metadata\n"
+> +		" --sort=<path,none>     data sorting order for tarballs as input (default: path)\n"
+>   #ifdef S3EROFS_ENABLED
+> -		" --s3=X                generate an image from S3-compatible object store\n"
+> -		"   [,passwd_file=Y]    X=endpoint, Y=s3fs-compatible password file\n"
+> -		"   [,urlstyle=Z]       S3 API calling style (Z = vhost|path) (default: vhost)\n"
+> -		"   [,sig=<2,4>]        S3 API signature version (default: 2)\n"
+> -		"   [,region=W]         W=region code in which endpoint belongs to (required for sig=4)\n"
+> +		" --s3=X                 generate an image from S3-compatible object store\n"
+> +		"   [,passwd_file=Y]     X=endpoint, Y=s3fs-compatible password file\n"
+> +		"   [,urlstyle=Z]        S3 API calling style (Z = vhost|path) (default: vhost)\n"
+> +		"   [,sig=<2,4>]         S3 API signature version (default: 2)\n"
+> +		"   [,region=W]          W=region code in which endpoint belongs to (required for sig=4)\n"
+>   #endif
+>   #ifdef OCIEROFS_ENABLED
+> -		" --oci=[f|i]           generate a full (f) or index-only (i) image from OCI remote source\n"
+> -		"   [,platform=X]       X=platform (default: linux/amd64)\n"
+> -		"   [,layer=#]          #=layer index to extract (0-based; omit to extract all layers)\n"
+> -		"   [,blob=Y]           Y=blob digest to extract (omit to extract all layers)\n"
+> -		"   [,username=Z]       Z=username for authentication (optional)\n"
+> -		"   [,password=W]       W=password for authentication (optional)\n"
+> -		"   [,insecure]         use HTTP instead of HTTPS (optional)\n"
+> +		" --oci=[f|i]            generate a full (f) or index-only (i) image from OCI remote source\n"
+> +		"   [,platform=X]        X=platform (default: linux/amd64)\n"
+> +		"   [,layer=#]           #=layer index to extract (0-based; omit to extract all layers)\n"
+> +		"   [,blob=Y]            Y=blob digest to extract (omit to extract all layers)\n"
+> +		"   [,username=Z]        Z=username for authentication (optional)\n"
+> +		"   [,password=W]        W=password for authentication (optional)\n"
+> +		"   [,insecure]          use HTTP instead of HTTPS (optional)\n"
+>   #endif
+> -		" --tar=X               generate a full or index-only image from a tarball(-ish) source\n"
+> -		"                       (X = f|i|headerball; f=full mode, i=index mode,\n"
+> -		"                                            headerball=file data is omited in the source stream)\n"
+> -		" --ovlfs-strip=<0,1>   strip overlayfs metadata in the target image (e.g. whiteouts)\n"
+> -		" --quiet               quiet execution (do not write anything to standard output.)\n"
+> +		" --tar=X                generate a full or index-only image from a tarball(-ish) source\n"
+> +		"                        (X = f|i|headerball; f=full mode, i=index mode,\n"
+> +		"                                             headerball=file data is omitted in the source stream)\n"
+> +		" --ovlfs-strip=<0,1>    strip overlayfs metadata in the target image (e.g. whiteouts)\n"
+> +		" --quiet                quiet execution (do not write anything to standard output.)\n"
+>   #ifndef NDEBUG
+> -		" --random-pclusterblks randomize pclusterblks for big pcluster (debugging only)\n"
+> -		" --random-algorithms   randomize per-file algorithms (debugging only)\n"
+> +		" --random-pclusterblks  randomize pclusterblks for big pcluster (debugging only)\n"
+> +		" --random-algorithms    randomize per-file algorithms (debugging only)\n"
+>   #endif
+>   #ifdef HAVE_ZLIB
+> -		" --ungzip[=X]          try to filter the tarball stream through gzip\n"
+> -		"                       (and optionally dump the raw stream to X together)\n"
+> +		" --ungzip[=X]           try to filter the tarball stream through gzip\n"
+> +		"                        (and optionally dump the raw stream to X together)\n"
+>   #endif
+>   #ifdef HAVE_LIBLZMA
+> -		" --unxz[=X]            try to filter the tarball stream through xz/lzma/lzip\n"
+> -		"                       (and optionally dump the raw stream to X together)\n"
+> +		" --unxz[=X]             try to filter the tarball stream through xz/lzma/lzip\n"
+> +		"                        (and optionally dump the raw stream to X together)\n"
+>   #endif
+>   #ifdef HAVE_ZLIB
+> -		" --gzinfo[=X]          generate AWS SOCI-compatible zinfo in order to support random gzip access\n"
+> +		" --gzinfo[=X]           generate AWS SOCI-compatible zinfo in order to support random gzip access\n"
+>   #endif
+> -		" --vmdk-desc=X         generate a VMDK descriptor file to merge sub-filesystems\n"
+> +		" --vmdk-desc=X          generate a VMDK descriptor file to merge sub-filesystems\n"
+>   #ifdef EROFS_MT_ENABLED
+> -		" --workers=#           set the number of worker threads to # (default: %u)\n"
+> +		" --workers=#            set the number of worker threads to # (default: %u)\n"
+>   #endif
+> -		" --xattr-prefix=X      X=extra xattr name prefix\n"
+> -		" --zfeature-bits=#     toggle filesystem compression features according to given bits #\n"
+> +		" --xattr-inode-digest=X specify extended attribute name X to record inode digests\n"
+> +		" --xattr-prefix=X       X=extra xattr name prefix\n"
+> +		" --zfeature-bits=#      toggle filesystem compression features according to given bits #\n"
+>   #ifdef WITH_ANDROID
+>   		"\n"
+>   		"Android-specific options:\n"
+> -		" --product-out=X       X=product_out directory\n"
+> -		" --fs-config-file=X    X=fs_config file\n"
+> +		" --product-out=X        X=product_out directory\n"
+> +		" --fs-config-file=X     X=fs_config file\n"
+>   #endif
+>   #ifdef EROFS_MT_ENABLED
+>   		, erofs_get_available_processors() /* --workers= */
+> @@ -1261,16 +1264,6 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+>   				return -EINVAL;
+>   			}
+>   			break;
+> -		case 19:
+> -			errno = 0;
+> -			opt = erofs_xattr_insert_name_prefix(optarg);
+> -			if (opt) {
+> -				erofs_err("failed to parse xattr name prefix: %s",
+> -					  erofs_strerror(opt));
+> -				return opt;
+> -			}
+> -			cfg.c_extra_ea_name_prefixes = true;
+> -			break;
+>   		case 20:
+>   			mkfs_parse_tar_cfg(optarg);
+>   			break;
+> @@ -1444,6 +1437,24 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+>   				}
+>   			}
+>   			break;
+> +		case 538:
+> +			errno = 0;
+> +			opt = erofs_xattr_insert_name_prefix(optarg);
+> +			if (opt < 0) {
+> +				erofs_err("failed to parse xattr name prefix: %s",
+> +					  erofs_strerror(opt));
+> +				return opt;
+> +			}
+> +			cfg.c_extra_ea_name_prefixes = true;
+> +			break;
+> +		case 539:
+> +			err = erofs_xattr_set_ishare_prefix(&g_sbi, optarg);
+> +			if (err < 0) {
+> +				erofs_err("failed to parse ishare name: %s",
+> +					  erofs_strerror(err));
+> +				return err;
+> +			}
+> +			break;
+>   		case 'V':
+>   			version();
+>   			exit(0);
+> @@ -1892,9 +1903,13 @@ int main(int argc, char **argv)
+>   			goto exit;
+>   		}
+>   
+> -		if (cfg.c_extra_ea_name_prefixes)
+> -			erofs_xattr_flush_name_prefixes(&importer,
+> -							mkfs_plain_xattr_pfx);
+> +		err = erofs_xattr_flush_name_prefixes(&importer,
+> +						      mkfs_plain_xattr_pfx);
+> +		if (err) {
+> +			erofs_err("failed to flush long xattr prefixes: %s",
+> +				  erofs_strerror(err));
+> +			goto exit;
+> +		}
+>   
+>   		root = erofs_new_inode(&g_sbi);
+>   		if (IS_ERR(root)) {
+> @@ -1902,6 +1917,14 @@ int main(int argc, char **argv)
+>   			goto exit;
+>   		}
+>   	} else {
+> +		err = erofs_xattr_flush_name_prefixes(&importer,
+> +						      mkfs_plain_xattr_pfx);
+> +		if (err) {
+> +			erofs_err("failed to flush long xattr prefixes: %s",
+> +				  erofs_strerror(err));
+> +			goto exit;
+> +		}
+> +
+>   		root = erofs_make_empty_root_inode(&importer, &g_sbi);
+>   		if (IS_ERR(root)) {
+>   			err = PTR_ERR(root);
 
