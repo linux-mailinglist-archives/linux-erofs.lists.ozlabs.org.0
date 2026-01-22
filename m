@@ -1,55 +1,55 @@
-Return-Path: <linux-erofs+bounces-2135-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2136-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WEQGK//ncWkONAAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2135-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Jan 2026 10:03:59 +0100
+	id +N/HAJTocWkONAAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2136-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Jan 2026 10:06:28 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFE5D642C6
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Jan 2026 10:03:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 57BB164346
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Jan 2026 10:06:26 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dxZqZ5JrVz30Sv;
-	Thu, 22 Jan 2026 20:03:54 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dxZtR6XlPz2yFm;
+	Thu, 22 Jan 2026 20:06:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
 Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769072634;
-	cv=none; b=Xm+8FKdExXpuqvzPEMCn4Vf7hgteJpDFs6DwRa08PsXHwtP0IwAmsZiAltvrmqP58Un4UQaSSZvUmTZ043f09tPqLe89TXrQMCk4ASfz2THpMNDlio/DdP8RZTXBCzUWVn0pPPgYlR247A28CMDMIdNLqsuQoT1blSD9BlKfNuWTpzIbACoxW5t8nojENuTKdNuCh7hYYBCRMZ0d/Zt7vuh3/M5+drShw/IZggg3lU8ciHF9LuQziyhYdcYPHne23QX10ZCeLrARve/wQjjknH1xKIQZ40LZJbGsMk2Tfj8//u+YV6PlIGmGz6HCfpxPjsguDCMCYGNfsNtM+dUuoQ==
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769072783;
+	cv=none; b=kt3V97mDC3ynoZG8PcjuSR3BSyTFgqim1cXiA0upF5u8HN0NgvZiW5TM45NRdNCawHL/oOEIJOxUkaI1Sig4k+deV63Pi0lc1eCINgo4B8V2aFEmDMpLkbAGySue3IaykPIczpCjI2FJvKHdILUXeJMCaMbq3oNt44IoOOdqPHFGZApV0q9/LYWGK9OgmrkqUoCGHqt8+HqesUmiYYkwoQcQcrA5gGKAE21VyKJ04SICsHNVdkphBJiUcajAPw584LZZIvGXFJl5+ChG9ltG6GJAGd2bOj2m7Dx9Djb61lHpR7mNf9ZBLAeh7c6ICk0CeiZWdiuUHyQpQ5xC7Nvjkg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769072634; c=relaxed/relaxed;
-	bh=fLiIg3L5mbty6GrCoTGT0ujnFzpEt/bUEww8Pr9VKc0=;
+	t=1769072783; c=relaxed/relaxed;
+	bh=HbKWeyvTn7QxOcj5u7WlV6pTmyZV8T1oWJcfa2hM10s=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=AdT77rUhVWOrm8gyPijulB4bPHSLV9KxB+hS7F0kSjji6yU0gI9wGBIzq6dT/z4J3j/TcYCUS/vXopMQc44472Tq/AVJYNTYFFk29+3tf/FPwt+Fy81GhaYFAEaCUMbPQKWhKY4K6sIzk3hj33LzKkyd8U/66wHY9k8aUeEQVKQVwoppBxZUH+UYDXA6Spz21sQri9JAkn8/8CqRUn36o6kvt9RK9V0hv6b+RptAxSEGpXAFMPNvrK37xGM9phfrlJMFN6EK9Om3xzbNtSX12XqI2rO+w+F8v0i69Nr5QdJWk9PNPefeiB3HhcW5SjgbWTAQyVQxj9w1ZgTXo9H8+w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BTHau0+w; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 In-Reply-To:Content-Type; b=Odw+HpJ/LiJreKf4XrLlo02DnGX2YCRk3pBhEbdrPurVYIFT6tyGha1jqpcuwVZzzb4Roj1ed/Gudee+v53fxNXQg95RcszxOD8B3Fd9B7tJngYdF6f8Xn3xFE0248YITapuRrX0Wjve3984yWZ8oaKs1AQ1soRNKo/PMU4LjW/8bsUuLOSED4qpuqwb1+IhXPSBnBTeM1abmbFugwDG20Qvc4HnK/Zgcu1dyG6NdEK0gCriBU2WDK1Y5hyGLK1gRDilULfGHYx+Xt1fmlCwWdNEORGRXyDOKM17ghAWC+NzxlxGXDfWNuZSkpdeh7K9orazjF1JfR8CYLOCs9gU3A==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=iwfuEehE; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=BTHau0+w;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=iwfuEehE;
 	dkim-atps=neutral
 Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=chao@kernel.org; receiver=lists.ozlabs.org)
 Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dxZqY601zz2xS5
-	for <linux-erofs@lists.ozlabs.org>; Thu, 22 Jan 2026 20:03:53 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dxZtR0Hd3z2xS5
+	for <linux-erofs@lists.ozlabs.org>; Thu, 22 Jan 2026 20:06:22 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 9D903439FE;
-	Thu, 22 Jan 2026 09:03:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C49C16AAE;
-	Thu, 22 Jan 2026 09:03:49 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 74C7343C51;
+	Thu, 22 Jan 2026 09:06:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19936C116C6;
+	Thu, 22 Jan 2026 09:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769072630;
-	bh=IwmNN/CotEikf4vO0cGIVoOEgPE72A3hg52bQZoAXzE=;
+	s=k20201202; t=1769072780;
+	bh=SSlkbWXs2HBKgVgS0PNBzt2Rl9RgNm6VF2xx6qvdqMg=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=BTHau0+w2IkUSeFjLl1rA67UVL7yGQzOUwq5gRKmsf/T9BApHoZR2A/VeOupoNeT4
-	 6MDrv9YfSbZKBA42gKOgYnRisTnWWGQZlxfzicxCBTin29vV5LHtSqgiRDMzZSU8tM
-	 zXwyx5j8x14RfWQA7vMPrirlF55Wqb/CL64RzxYJDKV1jL4Gjj5d6USlBFcWb/+1e9
-	 cY4CLGEcOEUq4Q82woyeY+GYKCbah52mZQP7I7Ts7gZ0HuIZuZ8+p2b9X4PQ1r8rN7
-	 MkImgPiJg0SYn/cNu3fGLxNU/Ge9+HcKFlSG4LjqeDzDkQ0WG9M9IrPY+aQTuoYCV3
-	 G2iL1dFa5XJfQ==
-Message-ID: <62cc89b9-a70d-4506-826b-28eb4010e372@kernel.org>
-Date: Thu, 22 Jan 2026 17:03:52 +0800
+	b=iwfuEehEn5/me+C5lK/pHv573lXyh8ASZz+dqf6ggc7NHG2Q61KRLzlSe3Ev+xRjJ
+	 KJNnwHzW2B2rLGK0exqGLI8d6oyF1ksNoJuskqE/GrFjRk2FccIXSvjmStE05oFtoc
+	 5sESwl6DE0IOo73Pa8HcW7nintmqL0ueYPlpRGXWpHZimBnNPapaZFScVan+e0K6HE
+	 tDKPOA1rXOOZN2KtHQMq3DfgoWmdQwRN008IIiFNRlEesPLb8qRgolj739utEFVZUw
+	 F+zB81PwwSq6FyCOfpy8r7OyIMlqZaN+KxiSohAAO54iWvqpUIcMUsxY4lowSg+EH7
+	 MSPhvcs5bm9HA==
+Message-ID: <3ade0cad-2053-42e9-b340-2eb2f6066675@kernel.org>
+Date: Thu, 22 Jan 2026 17:06:23 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -63,12 +63,13 @@ Precedence: list
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Cc: chao@kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] erofs: avoid noisy messages for transient -ENOMEM
+Subject: Re: [PATCH 1/4] erofs: fix incorrect early exits for invalid
+ metabox-enabled images
 To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-References: <20251226060945.786901-1-hsiangkao@linux.alibaba.com>
+References: <20251229092949.2316075-1-hsiangkao@linux.alibaba.com>
 Content-Language: en-US
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20251226060945.786901-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20251229092949.2316075-1-hsiangkao@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
@@ -79,13 +80,13 @@ X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2135-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2136-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS(0.00)[m:chao@kernel.org,m:linux-kernel@vger.kernel.org,m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[chao@kernel.org,linux-erofs@lists.ozlabs.org];
@@ -106,27 +107,21 @@ X-Spamd-Result: default: False [-2.20 / 15.00];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,alibaba.com:email]
-X-Rspamd-Queue-Id: EFE5D642C6
+X-Rspamd-Queue-Id: 57BB164346
 X-Rspamd-Action: no action
 
-On 12/26/2025 2:09 PM, Gao Xiang wrote:
-> EROFS may allocate temporary pages using GFP_NOWAIT | GFP_NORETRY
-> when pcl->besteffort is off (e.g., for readahead requests).
+On 12/29/2025 5:29 PM, Gao Xiang wrote:
+> Crafted EROFS images with metadata compression enabled can trigger
+> incorrect early returns, leading to folio reference leaks.
 > 
-> If the allocation fails, the original request will fall back to
-> synchronous read, so the failure is transient.
+> However, this does not cause system crashes or other severe issues.
 > 
-> Such fallback can frequently happen in low memory scenarios, but since
-> these failures are expected and temporary, avoid printing error
-> messages like below:
-> 
-> [ 7425.184264] erofs (device sr0): failed to decompress (lz4) -ENOMEM @ pa 148447232 size 28672 => 26788
-> [ 7426.244267] erofs (device sr0): failed to decompress (lz4) -ENOMEM @ pa 149422080 size 28672 => 15903
-> [ 7426.245508] erofs (device sr0): failed to decompress (lz4) -ENOMEM @ pa 138440704 size 28672 => 39294
-> ...
-> [ 7504.258373] erofs (device sr0): failed to decompress (lz4) -ENOMEM @ pa 93581312 size 20480 => 47366
-> 
-> Fixes: 831faabed812 ("erofs: improve decompression error reporting")
+
+Will be better to add:
+
+Cc: stable@kernel.org
+
+> Fixes: 414091322c63 ("erofs: implement metadata compression")
 > Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
 Reviewed-by: Chao Yu <chao@kernel.org>
