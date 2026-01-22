@@ -1,186 +1,63 @@
-Return-Path: <linux-erofs+bounces-2142-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2151-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KOzfM0YUcmksawAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2142-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Jan 2026 13:12:54 +0100
+	id wGZ8NDUrcmmadwAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2151-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Jan 2026 14:50:45 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAF4C66770
-	for <lists+linux-erofs@lfdr.de>; Thu, 22 Jan 2026 13:12:52 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id E69F86787F
+	for <lists+linux-erofs@lfdr.de>; Thu, 22 Jan 2026 14:50:44 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dxg1Y0jLbz2yFm;
-	Thu, 22 Jan 2026 23:12:49 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dxjBF4CG3z30Lv;
+	Fri, 23 Jan 2026 00:50:29 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769083969;
-	cv=none; b=aeIdX0sikeq9Y1yq6cpn5c38ELpYAYl5UjG3B5KKwSVROUtdXZDghVHoppEdUWI/0c5v6ZnZuzGDqlFuD1zAtgN6ZvVXa3/dWfWkOmIPXeq4rL49QxyUoA9OIl44EH/x1FmniWx5VI/Qpdl8A8jNOSy70YNQKP1F6X8/R55LAPTj3BN+0/fbI5IrmQpp1ohaz0Kfjv9ybY6R3zuokiEnfIJiUrCTJolcyZYoEdDMSWKYPkVo0g5QRRWGWQ/YLkUC3fSA383/sgvVMjFJFNH0cX9arzSNHL3vnNI9BGsHESGofmSkVki9glcabIBtAW1Idxf2noYnh2GgelsVxf4d+g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.227
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769089829;
+	cv=none; b=LXV6pFqjz0u5axE/9MWeGGqmjhRqoncU56QyOaOo3HYCQptqUtvuodJshwBd2oLfZJZTFgvaUycKg9Uy5TJWt/MnSjlLAosLQkMJpLw7rpM2QOLPYpFDiN+kTO+w9KCzUlT2cJ4Xp3CPepFklgK5PZ50paMYpNO3GU4E7eti6kN2OGdiDx+V6I+86Ots7jpX2yINRkE54aayTlxOMyBryzhDRgPhrVjdtIZwFhW0i0CwGwLgB3J4YrVQSYZ9vqZ9YqSeoHatoKGLPa0hIv4OrflKtsQr8QHc4DjQa3q5bYblUymli6quM7ZRo3dEp9CxFNoeqwJ3C+meqckMggKFng==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769083969; c=relaxed/relaxed;
-	bh=x1wNt+ftxXKn853O5pLHNHQjdh/R84hiUBhCzlW0/Xo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hjPaSxtdBK/HtT/oVYm3Ek97F/lPHNu2l26Lw8yVWgHNAgopwYYYxZZbhPLTnqvNSmuRrDkW00eunNoQRcZU4fDRQGPuJieynLivaHTVYtIQFJ/AfCUhby13v3rNgb9t5MGUu1HRZ/4xdqwsVdGb1E2NQzz+12gaIk+epwBMQ/qStuIRqXCAMbyajorlCU0Yo4G2DjJ3wKBD5ChaObomlbo1Qb36aX1fp9F1pAZBqh2yrmbgRJWPoxmG+lqIMsLsZAOcwoYZQuXfYULUH9mc/9pj6GzM9NT7B4zkBWM7L6v5QroeGGtRqPr4PIrYpHnnfhiUL/2sBvWEluuD3N5ygQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=oKYitB6m; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+	t=1769089829; c=relaxed/relaxed;
+	bh=vpYKjl1CGdDKTmvBgA3xAM9DRFwX9Z2uBzl2Oeqcya8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JdZ7CN5jFKbHHzPabdLapEm1xrhvafSdwsKRsAnfvgOi6TEJRsW4NTYr4bR+1+am9DdPqLGejzpSUtcmCT9Wtm9t9WRncGRt62gdGeLMWDx7uzl+lP/JvyrPa74R6i7PEg5eht5OhschCztxMsxx+R7rKh7U3FM7G76WfLsaI352BMVbrHCnr69CT13PHLPFCklYfHeuS4Lm6ADFUzqF2RuOT9Tr/84SkRtMG7p+2ssIWvDZw7PD23iwhiGJ0VBxgLeTD00ZSCv3Y5/shsldfRos/Le7wTclu9TukBIZlQ6ZQ3AzU+Pj7d7sl5dGBpfd8eX65Z1sKlDeIsUHF5b4dQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=bsoTsssX; dkim-atps=neutral; spf=pass (client-ip=113.46.200.227; helo=canpmsgout12.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=oKYitB6m;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=bsoTsssX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=jlayton@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.227; helo=canpmsgout12.his.huawei.com; envelope-from=lihongbo22@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout12.his.huawei.com (canpmsgout12.his.huawei.com [113.46.200.227])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dxg1W61xVz2xS5
-	for <linux-erofs@lists.ozlabs.org>; Thu, 22 Jan 2026 23:12:47 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 4194743D88;
-	Thu, 22 Jan 2026 12:12:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2B24C116C6;
-	Thu, 22 Jan 2026 12:12:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769083964;
-	bh=1EyvdGvFteFxvvwdEjH2p9l5ziZSQoYEArisDE8vElA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=oKYitB6mIx09h9xH28S627/eTtatzeFXSQrYn5yOhkNA+QEyx615WfYUotkkAVvuU
-	 LTATx1HBCykrKukMTUDi7aWs+0fZD4k5EXaYOinUP/XGMu94oKAeFZufjUvDT10ac2
-	 gtDncLpd1Mw6uKvM1TUPD39ZOLfLEUPPPK7tCo3k12YmdCtUgCGr0ncu+R0td/8YGS
-	 UVKHwOfVJN+Qk+wPN/afCe8gE1YU3uKt1OsgumwWbXPUprB1bsa5onv9/dSQntlR8r
-	 VSI78HLGfnbOWEIXaXvgDAYflmBis0SomniOyBCfTvO+pC7iFPfS2oosnX5m081Lcv
-	 xOPqjih3iSw2A==
-Message-ID: <b491335d12e976e1ea1c07b9c14164ac69d22aea.camel@kernel.org>
-Subject: Re: [PATCH 00/29] fs: require filesystems to explicitly opt-in to
- nfsd export support
-From: Jeff Layton <jlayton@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: NeilBrown <neil@brown.name>, Christian Brauner <brauner@kernel.org>, 
- Amir Goldstein <amir73il@gmail.com>, Alexander Viro
- <viro@zeniv.linux.org.uk>, Chuck Lever	 <chuck.lever@oracle.com>, Olga
- Kornievskaia <okorniev@redhat.com>, Dai Ngo	 <Dai.Ngo@oracle.com>, Tom
- Talpey <tom@talpey.com>, Hugh Dickins <hughd@google.com>,  Baolin Wang
- <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>,
- Theodore Ts'o	 <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>,
- Jan Kara	 <jack@suse.com>, Gao Xiang <xiang@kernel.org>, Chao Yu
- <chao@kernel.org>, Yue Hu	 <zbestahu@gmail.com>, Jeffle Xu
- <jefflexu@linux.alibaba.com>, Sandeep Dhavale	 <dhavale@google.com>, Hongbo
- Li <lihongbo22@huawei.com>, Chunhai Guo	 <guochunhai@vivo.com>, Carlos
- Maiolino <cem@kernel.org>, Ilya Dryomov	 <idryomov@gmail.com>, Alex Markuze
- <amarkuze@redhat.com>, Viacheslav Dubeyko	 <slava@dubeyko.com>, Chris Mason
- <clm@fb.com>, David Sterba <dsterba@suse.com>,  Luis de Bethencourt	
- <luisbg@kernel.org>, Salah Triki <salah.triki@gmail.com>, Phillip Lougher	
- <phillip@squashfs.org.uk>, Steve French <sfrench@samba.org>, Paulo
- Alcantara	 <pc@manguebit.org>, Ronnie Sahlberg <ronniesahlberg@gmail.com>,
- Shyam Prasad N	 <sprasad@microsoft.com>, Bharath SM
- <bharathsm@microsoft.com>, Miklos Szeredi	 <miklos@szeredi.hu>, Mike
- Marshall <hubcap@omnibond.com>, Martin Brandenburg	 <martin@omnibond.com>,
- Mark Fasheh <mark@fasheh.com>, Joel Becker	 <jlbec@evilplan.org>, Joseph Qi
- <joseph.qi@linux.alibaba.com>, Konstantin Komarov
- <almaz.alexandrovich@paragon-software.com>, Ryusuke Konishi
- <konishi.ryusuke@gmail.com>,  Trond Myklebust <trondmy@kernel.org>, Anna
- Schumaker <anna@kernel.org>, Dave Kleikamp <shaggy@kernel.org>, David
- Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Jan
- Kara <jack@suse.cz>,  Andreas Gruenbacher	 <agruenba@redhat.com>, OGAWA
- Hirofumi <hirofumi@mail.parknet.co.jp>, Jaegeuk Kim <jaegeuk@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-ext4@vger.kernel.org, 	linux-erofs@lists.ozlabs.org,
- linux-xfs@vger.kernel.org, 	ceph-devel@vger.kernel.org,
- linux-btrfs@vger.kernel.org, 	linux-cifs@vger.kernel.org,
- linux-unionfs@vger.kernel.org, 	devel@lists.orangefs.org,
- ocfs2-devel@lists.linux.dev, ntfs3@lists.linux.dev, 
-	linux-nilfs@vger.kernel.org, jfs-discussion@lists.sourceforge.net, 
-	linux-mtd@lists.infradead.org, gfs2@lists.linux.dev, 
-	linux-f2fs-devel@lists.sourceforge.net
-Date: Thu, 22 Jan 2026 07:12:36 -0500
-In-Reply-To: <aXHFlF1tef68i2HU@infradead.org>
-References: <176880736225.16766.4203157325432990313@noble.neil.brown.name>
-	 <20260119-kanufahren-meerjungfrau-775048806544@brauner>
-	 <176885553525.16766.291581709413217562@noble.neil.brown.name>
-	 <aW8w2SRyFnmA2uqk@infradead.org>
-	 <176890126683.16766.5241619788613840985@noble.neil.brown.name>
-	 <aXCg-MqXH0E6IuwS@infradead.org>
-	 <176899164457.16766.16099772451425825775@noble.neil.brown.name>
-	 <364d2fd98af52a2e2c32ca286decbdc1fe1c80d3.camel@kernel.org>
-	 <aXDm8FPPOHs04w9m@infradead.org>
-	 <3210d04fa2c0b1f4312d10506cac30586cb49a3c.camel@kernel.org>
-	 <aXHFlF1tef68i2HU@infradead.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.2 (3.58.2-1.fc43) 
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dxjB806sWz2xl0
+	for <linux-erofs@lists.ozlabs.org>; Fri, 23 Jan 2026 00:50:23 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=vpYKjl1CGdDKTmvBgA3xAM9DRFwX9Z2uBzl2Oeqcya8=;
+	b=bsoTsssXSiHT1593GX5UcNY7ytx6C1bDq/jn+6bw0Gp/kFgQFFYPmfHatzeXgQdl07tWPMJjX
+	EsWvv+twEK8E0e6DN8LXPIDkAtmhfKyYFqTivdgQvOYohvJ5Yu6iROMa9toGoBNdQkofCJCxtCn
+	uBPug07JnVzK898M/+f+HEY=
+Received: from mail.maildlp.com (unknown [172.19.162.92])
+	by canpmsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4dxj5R0HvDznTV6;
+	Thu, 22 Jan 2026 21:46:19 +0800 (CST)
+Received: from kwepemr500015.china.huawei.com (unknown [7.202.195.162])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5762440562;
+	Thu, 22 Jan 2026 21:50:16 +0800 (CST)
+Received: from huawei.com (10.67.174.162) by kwepemr500015.china.huawei.com
+ (7.202.195.162) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 22 Jan
+ 2026 21:50:15 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <hsiangkao@linux.alibaba.com>, <chao@kernel.org>, <brauner@kernel.org>
+CC: <hch@lst.de>, <djwong@kernel.org>, <amir73il@gmail.com>,
+	<linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>, <lihongbo22@huawei.com>
+Subject: [PATCH v16 00/10] erofs: Introduce page cache sharing feature
+Date: Thu, 22 Jan 2026 13:37:08 +0000
+Message-ID: <20260122133718.658056-1-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.22.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -192,101 +69,442 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.174.162]
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ kwepemr500015.china.huawei.com (7.202.195.162)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2142-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hch@infradead.org,m:neil@brown.name,m:brauner@kernel.org,m:amir73il@gmail.com,m:viro@zeniv.linux.org.uk,m:chuck.lever@oracle.com,m:okorniev@redhat.com,m:Dai.Ngo@oracle.com,m:tom@talpey.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:akpm@linux-foundation.org,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:jack@suse.com,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:cem@kernel.org,m:idryomov@gmail.com,m:amarkuze@redhat.com,m:slava@dubeyko.com,m:clm@fb.com,m:dsterba@suse.com,m:luisbg@kernel.org,m:salah.triki@gmail.com,m:phillip@squashfs.org.uk,m:sfrench@samba.org,m:pc@manguebit.org,m:ronniesahlberg@gmail.com,m:sprasad@microsoft.com,m:bharathsm@microsoft.com,m:miklos@szeredi.hu,m:hubcap@omnibond.com,m:martin@omnibond.com,m:mark@fasheh.com,m:jlbec@evilplan.org,m:joseph.qi@linux.alibaba.com,m:almaz.alexandrovich@paragon-software.com,m:konishi.ryusuk
- e@gmail.com,m:trondmy@kernel.org,m:anna@kernel.org,m:shaggy@kernel.org,m:dwmw2@infradead.org,m:richard@nod.at,m:jack@suse.cz,m:agruenba@redhat.com,m:hirofumi@mail.parknet.co.jp,m:jaegeuk@kernel.org,m:linux-nfs@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-fsdevel@vger.kernel.org,m:linux-mm@kvack.org,m:linux-ext4@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-xfs@vger.kernel.org,m:ceph-devel@vger.kernel.org,m:linux-btrfs@vger.kernel.org,m:linux-cifs@vger.kernel.org,m:linux-unionfs@vger.kernel.org,m:devel@lists.orangefs.org,m:ocfs2-devel@lists.linux.dev,m:ntfs3@lists.linux.dev,m:linux-nilfs@vger.kernel.org,m:jfs-discussion@lists.sourceforge.net,m:linux-mtd@lists.infradead.org,m:gfs2@lists.linux.dev,m:linux-f2fs-devel@lists.sourceforge.net,s:lists@lfdr.de];
-	FREEMAIL_CC(0.00)[brown.name,kernel.org,gmail.com,zeniv.linux.org.uk,oracle.com,redhat.com,talpey.com,google.com,linux.alibaba.com,linux-foundation.org,mit.edu,dilger.ca,suse.com,huawei.com,vivo.com,dubeyko.com,fb.com,squashfs.org.uk,samba.org,manguebit.org,microsoft.com,szeredi.hu,omnibond.com,fasheh.com,evilplan.org,paragon-software.com,infradead.org,nod.at,suse.cz,mail.parknet.co.jp,vger.kernel.org,kvack.org,lists.ozlabs.org,lists.orangefs.org,lists.linux.dev,lists.sourceforge.net,lists.infradead.org];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[jlayton@kernel.org,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	FREEMAIL_CC(0.00)[lst.de,kernel.org,gmail.com,vger.kernel.org,lists.ozlabs.org,huawei.com];
+	TAGGED_FROM(0.00)[bounces-2151-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:chao@kernel.org,m:brauner@kernel.org,m:hch@lst.de,m:djwong@kernel.org,m:amir73il@gmail.com,m:linux-fsdevel@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:lihongbo22@huawei.com,s:lists@lfdr.de];
+	DKIM_TRACE(0.00)[huawei.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_GT_50(0.00)[72];
+	FROM_HAS_DN(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TO_DN_NONE(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jlayton@kernel.org,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FROM_NEQ_ENVFROM(0.00)[lihongbo22@huawei.com,linux-erofs@lists.ozlabs.org];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: CAF4C66770
+	HAS_XOIP(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MIME_TRACE(0.00)[0:+]
+X-Rspamd-Queue-Id: E69F86787F
 X-Rspamd-Action: no action
 
-On Wed, 2026-01-21 at 22:37 -0800, Christoph Hellwig wrote:
-> On Wed, Jan 21, 2026 at 10:18:00AM -0500, Jeff Layton wrote:
-> > > fat seems to be an exception as far as the 'real' file systems go.
-> > > And it did sound to me like some of the synthetic ones had similar
-> > > issues.
-> > >=20
-> >=20
-> > Not sure what we can do about FAT without changing the filehandle
-> > format in some fashion. The export ops just use
-> > generic_encode_ino32_fh, and FAT doesn't have stable inode numbers.
-> > The "nostale" ops seem sane enough but it looks like they only work
-> > with the fs in r/o mode.
->=20
-> Yeah.  I guess we need to ignore this because of <history>
->=20
+Enabling page cahe sharing in container scenarios has become increasingly
+crucial, as it can significantly reduce memory usage. In previous efforts,
+Hongzhen has done substantial work to push this feature into the EROFS
+mainline. Due to other commitments, he hasn't been able to continue his
+work recently, and I'm very pleased to build upon his work and continue
+to refine this implementation.
 
-Yep. This is a case where the handles are not PERSISTENT but I don't
-think we can get away with making FAT unexportable. We're probably
-stuck with it.
+This patch series is based on Hongzhen's original EROFS shared pagecache
+implementation which was posted more than half a year ago:
+https://lore.kernel.org/all/20250301145002.2420830-1-hongzhen@linux.alibaba.com/T/#u
 
-> > > I think Amirs patch would take care of that.  Although userland nfs
-> > > servers or other storage applications using the handle syscalls would
-> > > still see them.  Then again fixing the problem that some handles
-> > > did not fulfill the long standing (but not documented well enough)
-> > > semantics probably is a good fix on it's own.
-> >=20
-> > Agreed. We should try to ensure uniqueness and persistence in all
-> > filehandles both for nfsd and userland applications.
->=20
-> Sounds good to me.
+I have already made several iterations based on this patch set, resolving
+some issues in the code and some pre-requisites.
 
+It should be noted that the two iomap pre-patches from the previous versions
+have already been merged into the vfs/iomap branch, see [1][2]. Therefore,
+the remaining patches here are mainly related to EROFS module.
 
-Unfortunately, there are already exceptions. Apparently pidfs and
-cgroupfs handles (at least) can't be extended because of userspace
-expectations:
+(A recap of Hongzhen's original cover letter is below, edited slightly
+for this serise:)
 
-https://lore.kernel.org/linux-nfs/20260120-irrelevant-zeilen-b3c40a8e6c30@b=
-rauner/
+Background
+==============
+Currently, reading files with different paths (or names) but the same
+content can consume multiple copies of the page cache, even if the
+content of these caches is identical. For example, reading identical
+files (e.g., *.so files) from two different minor versions of container
+images can result in multiple copies of the same page cache, since
+different containers have different mount points. Therefore, sharing
+the page cache for files with the same content can save memory.
 
-My personal take is that we should try to make handle uniqueness a goal
-for most existing filesystems, but we're going to have some that can't
-achieve that. For them we probably want to be able to flag them so they
-can be id'ed by userland.
+Proposal
+==============
 
-So, we will need an export_operations flag of some sort
-(EXPORT_OP_UNIQUE_HANDLES?). At that point, we'll have to decide
-whether to deny nfsd export based on that flag:
+1. determining file identity
+----------------------------
+First, a way needs to be found to check whether the content of two files
+is the same. Here, the xattr values associated with the file
+fingerprints are assessed for consistency. When creating the EROFS
+image, users can specify the name of the xattr for file fingerprints,
+and the corresponding index will be stored in the super block. The on-disk
+`ishare_xattr_prefix_id` indicates the index of the xattr item within the
+prefix xattrs:
 
-We could deny export of any fs that doesn't set the flag, but NFSv4
-actually allows the server to advertise that it can't guarantee handle
-uniqueness. There isn't much guidance for the client on how to handle
-that though and the attribute seems to have the scope of the entire NFS
-server.
+```
+struct erofs_super_block {
+	__u8 xattr_filter_reserved; /* reserved for xattr name filter */
+-	__u8 reserved[3];
++	__u8 ishare_xattr_prefix_id;
++	__u8 reserved[2];
+};
+```
 
---=20
-Jeff Layton <jlayton@kernel.org>
+For example, users can specify the first long prefix as the name for the
+file fingerprint as follows:
+
+```
+mkfs.erofs --xattr-inode-digest=trusted.erofs.fingerprint [-zlz4hc] foo.erofs foo/
+```
+
+In this way, `trusted.erofs.fingerprint` serves as the name of the xattr
+for the file fingerprint. The relevant patch has been supported in erofs-utils
+experimental branch:
+
+```
+git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git -b experimental
+```
+
+At the same time, we introduce a new mount option which is inode_share to
+enable the feature. For security reasons, we allow sharing page cache only
+within the same trusted domain by adding "-o domain_id=xxxx" during the
+mounting process:
+
+```
+mount -t erofs -o inode_share,domain_id=your_shared_domain_id erofs.img /mnt
+```
+
+If no domain ID is specified, page cache sharing is not allowed.
+
+2. Implementation
+==================
+
+2.1. shared inode creation
+When page cache sharing is enabled, the anon inode is created along with
+the original inode if its xattr associated with fingerprint, and the anon
+inode is called sharedinode. Other inode which has the same fingerprint
+(means the same content) will link to the same sharedinode under the same
+trusted domain. The page cache of the anon inode (i_mapping member) is the
+shared page cache and is shared by the other inodes which have the same
+fingerprint and under the same trusted domain.
+
+2.2. file open & close
+----------------------
+When the file is opened, the backing file is allocated and the
+->private_data field of file is set to the backing file. The backing
+file records the shared inode and serves the later read proceedure.
+When the actual read occurs, we can obtain the real inode and the
+shared inode. The location information of real inode is used to
+located the data in disk and the page cache of shared inode will
+be filled.
+
+When the file is close, the backing file is also released, and the
+related reference on real inode and shared inode are also changed.
+
+2.3. file reading
+-----------------
+Only the page cache of shared inode can be shared. When reading
+happened on sharedinode, we should increase the reference of the
+real inode to avoid the disk being released, then to decrease it
+after reading.
+
+There are two possible scenarios when reading a file:
+1) the content being read is already present in sharedinode's page cache.
+2) the content being read is not present in sharedinode's page cache.
+
+In the second scenario, it involves the iomap operation to read from the
+disk.
+
+2.3.1. reading existing data in sharedinode's page cache
+-------------------------------------------
+In this case, the overall read flowchart is as follows (take ksys_read()
+for example):
+
+         ksys_read
+             │
+             │
+             ▼
+            ...
+             │
+             │
+             ▼
+erofs_ishare_file_read_iter (switch to the backing file)
+             │
+             │
+             ▼
+
+ read shared page cache & return
+
+At this point, the content in sharedinode's page cache will be read
+directly and returned.
+
+2.3.2 reading non-existent content in sharedinode's page cache
+---------------------------------------------------
+In this case, disk I/O operations will be involved. Taking the reading
+of an uncompressed file as an example, here is the reading process:
+
+         ksys_read
+             │
+             │
+             ▼
+            ...
+             │
+             │
+             ▼
+erofs_ishare_file_read_iter (switch to the backing file)
+             │
+             │
+             ▼
+            ... (allocate pages)
+             │
+             │
+             ▼
+erofs_read_folio/erofs_readahead (read to shared page cache)
+             │
+             │
+             ▼
+            ... (iomap)
+             │
+             │
+             ▼
+        erofs_iomap_begin (located by real inode)
+             │
+             │
+             ▼
+            ...
+
+Iomap and the below layer will involve disk I/O operations. As
+described in 2.3, reads to the shared inode are not bound to
+specific filesystem instance, it will select an real backing erofs
+inode from the shared list to complete the I/Os.
+
+2.4. release shared page cache
+-----------------------
+Similar to overlayfs, when dropping the shared page cache via .fadvise,
+erofs locates the shared backing file and applies vfs_fadvise to release
+the shared page cache.
+
+Effect
+==================
+I conducted experiments on two aspects across two different minor
+versions of container images:
+
+1. reading all files in two different minor versions of container images
+
+2. run workloads or use the default entrypoint within the containers^[I]
+
+Below is the memory usage for reading all files in two different minor
+versions of container images:
+
++-------------------+------------------+-------------+---------------+
+|       Image       | Page Cache Share | Memory (MB) |    Memory     |
+|                   |                  |             | Reduction (%) |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     241     |       -       |
+|       redis       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |     163     |      33%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     872     |       -       |
+|      postgres     +------------------+-------------+---------------+
+|    16.1 & 16.2    |        Yes       |     630     |      28%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     2771    |       -       |
+|     tensorflow    +------------------+-------------+---------------+
+|  2.11.0 & 2.11.1  |        Yes       |     2340    |      16%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     926     |       -       |
+|       mysql       +------------------+-------------+---------------+
+|  8.0.11 & 8.0.12  |        Yes       |     735     |      21%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     390     |       -       |
+|       nginx       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |     219     |      44%      |
++-------------------+------------------+-------------+---------------+
+|       tomcat      |        No        |     924     |       -       |
+| 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+|                   |        Yes       |     474     |      49%      |
++-------------------+------------------+-------------+---------------+
+
+Additionally, the table below shows the runtime memory usage of the
+container:
+
++-------------------+------------------+-------------+---------------+
+|       Image       | Page Cache Share | Memory (MB) |    Memory     |
+|                   |                  |             | Reduction (%) |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     34.9    |       -       |
+|       redis       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |     33.6    |       4%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |    149.1    |       -       |
+|      postgres     +------------------+-------------+---------------+
+|    16.1 & 16.2    |        Yes       |      95     |      37%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |    1027.9   |       -       |
+|     tensorflow    +------------------+-------------+---------------+
+|  2.11.0 & 2.11.1  |        Yes       |    934.3    |      10%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |    155.0    |       -       |
+|       mysql       +------------------+-------------+---------------+
+|  8.0.11 & 8.0.12  |        Yes       |    139.1    |      11%      |
++-------------------+------------------+-------------+---------------+
+|                   |        No        |     25.4    |       -       |
+|       nginx       +------------------+-------------+---------------+
+|   7.2.4 & 7.2.5   |        Yes       |     18.8    |      26%      |
++-------------------+------------------+-------------+---------------+
+|       tomcat      |        No        |     186     |       -       |
+| 10.1.25 & 10.1.26 +------------------+-------------+---------------+
+|                   |        Yes       |      99     |      47%      |
++-------------------+------------------+-------------+---------------+
+
+It can be observed that when reading all the files in the image, the
+reduced memory usage varies from 16% to 49%, depending on the specific
+image. Additionally, the container's runtime memory usage reduction
+ranges from 4% to 47%.
+
+[I] Below are the workload for these images:
+      - redis: redis-benchmark
+      - postgres: sysbench
+      - tensorflow: app.py of tensorflow.python.platform
+      - mysql: sysbench
+      - nginx: wrk
+      - tomcat: default entrypoint
+
+Changes from v15:
+    - Patch 4: add erofs_inode_set_aops and use IS_ENABLED in seperated patch as
+      suggested by Christoph.
+    - Patch 5: use safer way on domain_id: alloc/free, not show to userspace
+      in sharing case and update notation in doc as suggested by Xiang.
+    - Patch 6: use #ifdef as suggested by Christoph and don't allow empty
+      domain_id when inode_share is on as suggested by Xiang.
+    - Patch 10: remove extra pointer cast as suggested by Christoph.
+
+Changes from v14:
+    - Patch 5: add erofs_inode_set_aops helper to simplify the code and add log
+      when INODE_SHARE is on as suggested by Xiang. Add inode_drop when
+      sharedinode is an orphan and skip fill fingerprint when xattr is not ready.
+    - Patch 6: new added one, to pass inode into tracepoint helper.
+    - Patch 7: move tracepoint related changes out and simplify the code
+      as suggested by Xiang.
+    - Patch 8: the compressed related one, add reviewed-by.
+
+Changes from v13:
+    - Patch 7: do some minor cleanup as suggested by Xiang.
+    - Patch 8,9: use open-code style as suggested by Xiang and pass the
+      realinode to trace_erofs_read_folio.
+
+Changes from v12:
+    - Patch 5: add reviewed-by.
+    - Patch 7: only allow non-direct I/O in open for sharing feature, mask
+      INODE_SHARE if sb without ishare_xattrs, simplify the code and better
+      naming as suggested by Xiang.
+    - Patch 8: remove unuse macro as suggested by Xiang.
+    - Patch 9: minor cleanup as suggested by Xiang.
+
+Changes from v11:
+    - Patch 4: apply with Xiang's patch.
+    - Patch 5: do not mask the xattr_prefix_id in disk and fix the compiling
+      error when disable XATTR config.
+    - Patch 6,10: add reviewed-by.
+    - Patch 7,8: make inode_share excluded with DAX feature, do
+      some cleanup on typo and other code-style as suggested by Xiang.
+    - Patch 9: using realinode and shareinode in compressed case to access
+      metadata and page cache seperately, and remove some useless
+      code as suggested by Xiang.
+
+Changes from v10:
+    - add reviewed-by and acked-by.
+    - do some cleanup on typo, useless code and some helpers' name.
+    - use fingerprint struct and introduce inode_share mount option as
+      suggested by Xiang.
+
+Changes from v9:
+    - make shared page cache as a compatiable feature.
+    - refine code style as suggested by Xiang.
+    - init ishare mnt during the module init as suggested by Xiang.
+    - rebase the latest mainline and fix the comments in cover letter.
+
+Changes from v8:
+    - add review-by in patch 1 and patch 10.
+    - do some clean up in patch 2 and patch 4,6,9 as suggested by Xiang.
+    - add new patch 3 to export alloc_empty_backing_file.
+    - patch 5 only use xattr prefix id to record the ishare info, changed
+      config to EROFS_FS_PAGE_CACHE_SHARE and make it compatible.
+    - patch 7 use backing file helpers to alloc file when ishare file is
+      opened as suggested by Xiang.
+    - patch 8 remove erofs_read_{begin,end} as suggested by Xiang.
+
+v15: https://lore.kernel.org/all/20260116095550.627082-1-lihongbo22@huawei.com/
+v14: https://lore.kernel.org/all/20260109102856.598531-1-lihongbo22@huawei.com/
+v13: https://lore.kernel.org/all/20260109030140.594936-1-lihongbo22@huawei.com/
+v12: https://lore.kernel.org/all/20251231090118.541061-1-lihongbo22@huawei.com/
+v11: https://lore.kernel.org/all/20251224040932.496478-1-lihongbo22@huawei.com/
+v10: https://lore.kernel.org/all/20251223015618.485626-1-lihongbo22@huawei.com/
+v9: https://lore.kernel.org/all/20251117132537.227116-1-lihongbo22@huawei.com/
+v8: https://lore.kernel.org/all/20251114095516.207555-1-lihongbo22@huawei.com/
+v7: https://lore.kernel.org/all/20251021104815.70662-1-lihongbo22@huawei.com/
+v6: https://lore.kernel.org/all/20250301145002.2420830-1-hongzhen@linux.alibaba.com/T/#u
+v5: https://lore.kernel.org/all/20250105151208.3797385-1-hongzhen@linux.alibaba.com/
+v4: https://lore.kernel.org/all/20240902110620.2202586-1-hongzhen@linux.alibaba.com/
+v3: https://lore.kernel.org/all/20240828111959.3677011-1-hongzhen@linux.alibaba.com/
+v2: https://lore.kernel.org/all/20240731080704.678259-1-hongzhen@linux.alibaba.com/
+v1: https://lore.kernel.org/all/20240722065355.1396365-1-hongzhen@linux.alibaba.com/
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?id=8806f279244b
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git/commit/?id=8d407bb32186
+
+Gao Xiang (1):
+  erofs: decouple `struct erofs_anon_fs_type`
+
+Hongbo Li (5):
+  fs: Export alloc_empty_backing_file
+  erofs: add erofs_inode_set_aops helper to set the aops.
+  erofs: using domain_id in the safer way
+  erofs: pass inode to trace_erofs_read_folio
+  erofs: support unencoded inodes for page cache share
+
+Hongzhen Luo (4):
+  erofs: support user-defined fingerprint name
+  erofs: introduce the page cache share feature
+  erofs: support compressed inodes for page cache share
+  erofs: implement .fadvise for page cache share
+
+ Documentation/filesystems/erofs.rst |  10 +-
+ fs/erofs/Kconfig                    |   9 ++
+ fs/erofs/Makefile                   |   1 +
+ fs/erofs/data.c                     |  36 +++--
+ fs/erofs/erofs_fs.h                 |   5 +-
+ fs/erofs/fileio.c                   |  25 ++--
+ fs/erofs/fscache.c                  |  17 +--
+ fs/erofs/inode.c                    |  27 +---
+ fs/erofs/internal.h                 |  64 +++++++++
+ fs/erofs/ishare.c                   | 206 ++++++++++++++++++++++++++++
+ fs/erofs/super.c                    |  89 +++++++++++-
+ fs/erofs/xattr.c                    |  47 +++++++
+ fs/erofs/xattr.h                    |   3 +
+ fs/erofs/zdata.c                    |  38 +++--
+ fs/file_table.c                     |   1 +
+ include/trace/events/erofs.h        |  10 +-
+ 16 files changed, 501 insertions(+), 87 deletions(-)
+ create mode 100644 fs/erofs/ishare.c
+
+-- 
+2.22.0
+
 
