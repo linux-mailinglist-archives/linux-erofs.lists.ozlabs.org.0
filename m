@@ -1,54 +1,54 @@
-Return-Path: <linux-erofs+bounces-2210-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2211-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WFg+L3Ync2kAswAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2210-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Jan 2026 08:47:02 +0100
+	id WD4NKqsnc2kAswAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2211-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 23 Jan 2026 08:47:55 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DAE671F37
-	for <lists+linux-erofs@lfdr.de>; Fri, 23 Jan 2026 08:47:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B4F0971F92
+	for <lists+linux-erofs@lfdr.de>; Fri, 23 Jan 2026 08:47:54 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dy94L6VP3z2xHt;
-	Fri, 23 Jan 2026 18:46:58 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dy95N1RHgz2xJ5;
+	Fri, 23 Jan 2026 18:47:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2600:3c0a:e001:78e:0:1991:8:25"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769154418;
-	cv=none; b=CVZhenGZIkzjlrFkl/KxLbnMvRpYezpqIKhOgOE8jvHWFzVf5w2+UCRcFNOsrdB5JYQRHrNXOdvJH8Hm076ePXA+EystFTOyXuDEfXC+w2JHv/IWzSUuIfrCmSPAewYO7N3+oumEwtNkg/FY3LxXZWmiDse6AED4sKfrXPUuP2jCZJnuJ/iYaenXYWGWwVmNRcMMBZXKZAKBlVIBVyx9pvhW9TuOPwr3RRcGa7rqVlUWBrWu+a5epF6fOVOXs13hki+iwX2rbCM7buFpXVOmCVTgvbd23BaWKf6uTDR0IIj9/mC9YDsUsf4dxiIEMB30jzNBwVFIpdVORV8HUAYwkA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769154472;
+	cv=none; b=CJE1NAEHyqTaIxkNzMgFzGajLdR0eYpzQ/d1PEaMXKJf2GxFYNdwY8qGz2nVMtTa7eBe1i6QRZ3LOq6rg5WfVBRoOVycyvCOo9Sx1K462T8DSNmqR+RL4gnN5h02nKnCcpBx/T0pqLKKUlSgxfrD1ZZqIc5xCuunq0EDfcck1reWFmbrc+zwDyS7nhU61d8uJQZkW1+k84MFOOnzRvQ4SYgaSAzq3kXHWgBDA95eDaYiDUlcq4qbd/qyg4fS8IhQwgpmz63/03ObwZFqblGzO6DVKr4d0k2Qpyxt/Oq7hFS4P2ONHtDBgvZUzgCf2NmkDVIKF0jmKxa1VAR6z1ueow==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769154418; c=relaxed/relaxed;
-	bh=Dn3robGukUhTOXOalWLulDq01xpYbk4pZ/CZENXym0o=;
+	t=1769154472; c=relaxed/relaxed;
+	bh=d7Cved2U0cx1Ah0GRYbOwiLnpALcJilpWIO4L1x9IxU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oEkVriEZrmzzmXAV24Xm3m4nkTclKiz7NAh5awzdvSL6yTPsU7kQhuqQjERV3dixtTutMaCYt5Hl2H2spGJblsVz6owGhoj4MYdQYC4K5YmLEnBxC/R66BzfAFufAjkYmuNwUePgTqJglOPeWWaV+eploQkr9s1tKcIOq2IoDSrqwJJPigfzBCvnxVjU6zvCQy3JkCU1Hz52KhOXga/QuVCT66YFm6XseZ/7UKjrg2LI1glXRgK95ogUgAOG+Nk4rmzIUYE3rtSR7J2HPSAz7Tpl5Zk3MdxdnV7XhQ5nUuHjCG7mVnCVMB+RSnQhrZTzgR2m08RWC5Ltrtap/OTv2w==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gKjzE7cq; dkim-atps=neutral; spf=pass (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=djwong@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=cer0ejgmpnVWFJ9qZpS+ZjB3rsfo04IELd4z8y3qr7S0FNiKE3GayHOXo/HD7GwhAZHhejQuU4uScmtaikbKiIQQCvH5lpPF1WSj+78eWGoRsvBuLp2slZCpQY4HRWE0XRQJVO+Hd2nBLj0Qx4ONvhIL//Z9Jj1mTRl/Y7/VH3xxHBBKrmFpa2496+9kUUK+JcauRPKbNoshP3A8i2Lybeyo6+xIGBKWt1ji1CD63xiQbZqnemxFNdJ1ectufMW+BrWozQW5Zt5An1SMbrNrVocjxT6j+sBdQ82qy+CrKKKMgdc7MOvxdsBB1FCI15BQ81syCiZdHcQXJ311r2AWzA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Dhz6ArAn; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=djwong@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=gKjzE7cq;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=Dhz6ArAn;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=2600:3c0a:e001:78e:0:1991:8:25; helo=sea.source.kernel.org; envelope-from=djwong@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [IPv6:2600:3c0a:e001:78e:0:1991:8:25])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=djwong@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dy94K1Plbz2x9M
-	for <linux-erofs@lists.ozlabs.org>; Fri, 23 Jan 2026 18:46:57 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dy95M3Yhcz2x9M
+	for <linux-erofs@lists.ozlabs.org>; Fri, 23 Jan 2026 18:47:51 +1100 (AEDT)
 Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id 5847842B6E;
-	Fri, 23 Jan 2026 07:46:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CD45C4CEF1;
-	Fri, 23 Jan 2026 07:46:53 +0000 (UTC)
+	by sea.source.kernel.org (Postfix) with ESMTP id 8F53D443C6;
+	Fri, 23 Jan 2026 07:47:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6FAC2BC86;
+	Fri, 23 Jan 2026 07:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769154413;
-	bh=OAD/ygUEOD88K+ggqyDG4ngV41XfzkifYu+rUan4UmY=;
+	s=k20201202; t=1769154469;
+	bh=qZcCh8YaN75BaHxJI3n8DUClBttDVVefL2TarE8x2cs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gKjzE7cqDXZweQuGHrMLnfOMSZf3lh7HGxajgtU/lt8kCe+JBtiVTH7cLgHlNYZDq
-	 /xkI+t4I2UXrUC62zmbj0vZUsBgJVNWHf2u/IB5rVWQ0M92qWVFNAn+aHpwjmatIJJ
-	 42HGEvas39c7oPcKIUvmKiwxdWG6F7op09dvqSnaEPXJxDYV8uNaZg5zuYpCGbPOV2
-	 uECZnk5jJ2EcGxljpENkS6fEZ1z6XTrmkHHGu/DMNaJHL0zQj3FpdgRCKBYhPwGr8Q
-	 PcpeqEt3bPSuwM7nEePid0sJHAvbYps2rpINdGvyHw/B3l0OhLkXuPNse9MoBWxRVu
-	 vChCTt8SYWz8g==
-Date: Thu, 22 Jan 2026 23:46:52 -0800
+	b=Dhz6ArAnF4mrMgD2V9gaW0IOdAyt0UWHdcwmUQgrPBIWvnoaDzJtzmzMJxVck5gv+
+	 zEZgJOeFD/IJQzx2Up99SCKmemnDSbXrWZlm1SAK7ny61M8KuplDc84jbfdlgQwQR6
+	 +8Rb9fJ2j1Dh4UnsHETHjtBawHKcytU2E3ai7JjVMGK0KGDMhhcMz8n/3MAGSNlsTJ
+	 lel+3wVzQK3+jEYSZdvY/T5wo14jtYZ5i4jErLaZOvUngMzlLTTOeS1t4am1xi1tfP
+	 GskVtQYN+cTM93xV5bjb1azN9mPAsYErt+ynoEzLMYagl5talCo4C2ogUWa2ojcK07
+	 lGuDTmdB4UMCw==
+Date: Thu, 22 Jan 2026 23:47:48 -0800
 From: "Darrick J. Wong" <djwong@kernel.org>
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
@@ -120,11 +120,11 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-xfs@vger.kernel.org, keyrings@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 08/13] mm: update shmem_[kernel]_file_*() functions to
+Subject: Re: [PATCH v2 09/13] mm: update all remaining mmap_prepare users to
  use vma_flags_t
-Message-ID: <20260123074652.GW5945@frogsfrogsfrogs>
+Message-ID: <20260123074748.GX5945@frogsfrogsfrogs>
 References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
- <736febd280eb484d79cef5cf55b8a6f79ad832d2.1769097829.git.lorenzo.stoakes@oracle.com>
+ <fb1f55323799f09fe6a36865b31550c9ec67c225.1769097829.git.lorenzo.stoakes@oracle.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -138,7 +138,7 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <736febd280eb484d79cef5cf55b8a6f79ad832d2.1769097829.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <fb1f55323799f09fe6a36865b31550c9ec67c225.1769097829.git.lorenzo.stoakes@oracle.com>
 X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
 	autolearn=disabled version=4.0.1
@@ -150,12 +150,12 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2210-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2211-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS(0.00)[m:lorenzo.stoakes@oracle.com,m:akpm@linux-foundation.org,m:jarkko@kernel.org,m:dave.hansen@linux.intel.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:jani.nikula@linux.intel.com,m:joonas.lahtinen@linux.intel.com,m:rodrigo.vivi@intel.com,m:tursulin@ursulin.net,m:christian.koenig@amd.com,m:ray.huang@amd.com,m:matthew.auld@intel.com,m:matthew.brost@intel.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:bcrl@kvack.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:muchun.song@linux.dev,m:osalvador@suse.de,m:david@kern
  el.org,m:almaz.alexandrovich@paragon-software.com,m:hubcap@omnibond.com,m:martin@omnibond.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:cem@kernel.org,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:Liam.Howlett@oracle.com,m:vbabka@suse.cz,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:ziy@nvidia.com,m:npache@redhat.com,m:ryan.roberts@arm.com,m:dev.jain@arm.com,m:baohua@kernel.org,m:lance.yang@linux.dev,m:jannh@google.com,m:pfalcato@suse.de,m:dhowells@redhat.com,m:paul@paul-moore.com,m:jmorris@namei.org,m:serge@hallyn.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux-sgx@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:intel-gfx@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-aio@kvack.org,m:linux-ero
@@ -173,82 +173,80 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[djwong@kernel.org,linux-erofs@lists.ozlabs.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.400];
+	NEURAL_HAM(-0.00)[-0.458];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 8DAE671F37
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,oracle.com:email]
+X-Rspamd-Queue-Id: B4F0971F92
 X-Rspamd-Action: no action
 
-On Thu, Jan 22, 2026 at 04:06:17PM +0000, Lorenzo Stoakes wrote:
-> In order to be able to use only vma_flags_t in vm_area_desc we must adjust
-> shmem file setup functions to operate in terms of vma_flags_t rather than
-> vm_flags_t.
+On Thu, Jan 22, 2026 at 04:06:18PM +0000, Lorenzo Stoakes wrote:
+> We will be shortly removing the vm_flags_t field from vm_area_desc so we
+> need to update all mmap_prepare users to only use the dessc->vma_flags
+> field.
 > 
-> This patch makes this change and updates all callers to use the new
-> functions.
+> This patch achieves that and makes all ancillary changes required to make
+> this possible.
+> 
+> This lays the groundwork for future work to eliminate the use of vm_flags_t
+> in vm_area_desc altogether and more broadly throughout the kernel.
+> 
+> While we're here, we take the opportunity to replace VM_REMAP_FLAGS with
+> VMA_REMAP_FLAGS, the vma_flags_t equivalent.
 > 
 > No functional changes intended.
 > 
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
->  arch/x86/kernel/cpu/sgx/ioctl.c           |  2 +-
->  drivers/gpu/drm/drm_gem.c                 |  5 +-
->  drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  2 +-
->  drivers/gpu/drm/i915/gem/i915_gem_ttm.c   |  3 +-
->  drivers/gpu/drm/i915/gt/shmem_utils.c     |  3 +-
->  drivers/gpu/drm/ttm/tests/ttm_tt_test.c   |  2 +-
->  drivers/gpu/drm/ttm/ttm_backup.c          |  3 +-
->  drivers/gpu/drm/ttm/ttm_tt.c              |  2 +-
->  fs/xfs/scrub/xfile.c                      |  3 +-
->  fs/xfs/xfs_buf_mem.c                      |  2 +-
->  include/linux/shmem_fs.h                  |  8 ++-
->  ipc/shm.c                                 |  6 +--
->  mm/memfd.c                                |  2 +-
->  mm/memfd_luo.c                            |  2 +-
->  mm/shmem.c                                | 59 +++++++++++++----------
->  security/keys/big_key.c                   |  2 +-
->  16 files changed, 57 insertions(+), 49 deletions(-)
+>  drivers/char/mem.c       |  6 +++---
+>  drivers/dax/device.c     | 10 +++++-----
+>  fs/aio.c                 |  2 +-
+>  fs/erofs/data.c          |  5 +++--
+>  fs/ext4/file.c           |  4 ++--
+>  fs/ntfs3/file.c          |  2 +-
+>  fs/orangefs/file.c       |  4 ++--
+>  fs/ramfs/file-nommu.c    |  2 +-
+>  fs/resctrl/pseudo_lock.c |  2 +-
+>  fs/romfs/mmap-nommu.c    |  2 +-
+>  fs/xfs/xfs_file.c        |  4 ++--
+>  fs/zonefs/file.c         |  3 ++-
+>  include/linux/dax.h      |  8 ++++----
+>  include/linux/mm.h       | 24 +++++++++++++++++++-----
+>  kernel/relay.c           |  2 +-
+>  mm/memory.c              | 17 ++++++++---------
+>  16 files changed, 56 insertions(+), 41 deletions(-)
 > 
 
 <snip to xfs>
 
-> diff --git a/fs/xfs/scrub/xfile.c b/fs/xfs/scrub/xfile.c
-> index c753c79df203..fe0584a39f16 100644
-> --- a/fs/xfs/scrub/xfile.c
-> +++ b/fs/xfs/scrub/xfile.c
-> @@ -61,7 +61,8 @@ xfile_create(
->  	if (!xf)
->  		return -ENOMEM;
+> diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+> index 7874cf745af3..1238ec018bc7 100644
+> --- a/fs/xfs/xfs_file.c
+> +++ b/fs/xfs/xfs_file.c
+> @@ -1974,14 +1974,14 @@ xfs_file_mmap_prepare(
+>  	 * We don't support synchronous mappings for non-DAX files and
+>  	 * for DAX files if underneath dax_device is not synchronous.
+>  	 */
+> -	if (!daxdev_mapping_supported(desc->vm_flags, file_inode(file),
+> +	if (!daxdev_mapping_supported(desc, file_inode(file),
+>  				      target->bt_daxdev))
+>  		return -EOPNOTSUPP;
 >  
-> -	xf->file = shmem_kernel_file_setup(description, isize, VM_NORESERVE);
-> +	xf->file = shmem_kernel_file_setup(description, isize,
-> +					   mk_vma_flags(VMA_NORESERVE_BIT));
+>  	file_accessed(file);
+>  	desc->vm_ops = &xfs_file_vm_ops;
+>  	if (IS_DAX(inode))
+> -		desc->vm_flags |= VM_HUGEPAGE;
+> +		vma_desc_set_flags(desc, VMA_HUGEPAGE_BIT);
 
-Seems fine, macro sorcery aside...
-
->  	if (IS_ERR(xf->file)) {
->  		error = PTR_ERR(xf->file);
->  		goto out_xfile;
-> diff --git a/fs/xfs/xfs_buf_mem.c b/fs/xfs/xfs_buf_mem.c
-> index dcbfa274e06d..fd6f0a5bc0ea 100644
-> --- a/fs/xfs/xfs_buf_mem.c
-> +++ b/fs/xfs/xfs_buf_mem.c
-> @@ -62,7 +62,7 @@ xmbuf_alloc(
->  	if (!btp)
->  		return -ENOMEM;
->  
-> -	file = shmem_kernel_file_setup(descr, 0, 0);
-> +	file = shmem_kernel_file_setup(descr, 0, EMPTY_VMA_FLAGS);
-
-...but does mk_vma_flags() produce the same result?
+Looks good to me,
+Acked-by: "Darrick J. Wong" <djwong@kernel.org>
 
 --D
 
->  	if (IS_ERR(file)) {
->  		error = PTR_ERR(file);
->  		goto out_free_btp;
+>  	return 0;
+>  }
+>  
 
