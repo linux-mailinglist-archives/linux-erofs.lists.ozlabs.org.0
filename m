@@ -1,78 +1,129 @@
-Return-Path: <linux-erofs+bounces-2217-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2218-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id s8wZOvFPdGkX4gAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2217-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sat, 24 Jan 2026 05:52:01 +0100
+	id aMaOOKstdmnEMwEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2218-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Sun, 25 Jan 2026 15:50:19 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC9E77C832
-	for <lists+linux-erofs@lfdr.de>; Sat, 24 Jan 2026 05:51:59 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 858D18112A
+	for <lists+linux-erofs@lfdr.de>; Sun, 25 Jan 2026 15:50:17 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dyj7v3r7zz2xSN;
-	Sat, 24 Jan 2026 15:51:55 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4dzZMl4rg8z2yFm;
+	Mon, 26 Jan 2026 01:50:11 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.7
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769230315;
-	cv=none; b=Xbvw4jeuyAmZ7HyA1WdAQXdQJKQaCFwgVE/mrHFYuojx6Ex33BJG514oKmP0utvlqQGho9NhzjO0+cr37caFrU4ADIWF31MQsLLqmRN8VHJwEl2xLwXAKF+7OYbDP7EqYCXfl1nu+61APWTGdrrjd2vha4z0WNZTdlpJG3KFSz374sAN1GRFVITTvxc7ODxUTYZFFso9TVNPiuHHiffFLSER7sr/eHt/vkhFGgcwfOY4aiwnuE89uMM9uXXf6UbKlMMgK62jf3d1LfFW/0BSbmmO0cEDEg36PU49kK4V0PmkMvOf4h3pDxr8bDhggQGTt6qVnaDvEe3ZBRiuAeFP2A==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769352611;
+	cv=none; b=cpwDnpMlzKo1iDaj+xQid6yeR4YRhBBIJPLnQZ99KQKz4NbceteFLOf6jkiBB7s0pkhQ+e7OP6FK6WhGX7aBtPCjrnbDhT1JSDKenI6aFaSHYWEsFUCGb+98wnuNyY8H/5UXxA5rm7pFoqHiqMegQ3TIgAU91f5eCmX0YTTZrCgXgbBt5XUSrilkUWJ9b3AzovkHEQvf5Bz3nRmf/v1nSgkPaeJlOONT5GfLhsp9knIKbyi+aRgcppqD+h8HqWtqJeBXAPu5QRsfJVrJYrTo2AX2rn3IWLQAuKyWRl49WIlfpuLxvm5nbBwkmeUB9gVUylnui7QYxVFXKXPu3NMz8A==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769230315; c=relaxed/relaxed;
-	bh=6zSJqzHlNgMgMI4rxhjPumDAGEQBTWOY9UJoJzsYWDs=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=X5Ro3X5/VJQb8BRDUX1v0CbsvhlnEj0m4v2si6wF5RHA1mZC58uyh8C3nASB7tkvt3MAjm+OM0z86Iu62q8Uuq3E6+fkpPjMGc773Wn87XLFlqDjDYJkZ+bn6tekUKhd+la91T8G8TI5xl0199aWDAPlhCoL03qJFHOva3swGqTwGDBa30goHThiI8vWN4NtqzV/OVsIjZlJtyRPLIa46ePZ8HPtZ2XQ/DjOvIdrBKQAluoJjQzqwSSNk5EmMxqdPx1pTaVIyM55BhnfFlyq1XiIIFmIS2Fe7wxlVkdoJoRv+S32XpA/lzasJ1m0CqdBo1RzD1oowOI2ve1rnEhHJQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HR/raycv; dkim-atps=neutral; spf=pass (client-ip=192.198.163.7; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1769352611; c=relaxed/relaxed;
+	bh=UzxsqALjIiLfZI++xQ/yx4qRRJSHfymTnea+0CWaolY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KU8BKUYJd1+soP7gWvKTSt4MhBcaHEtZopvIshk0eqP68Q3eSN0p0yTTDfJ/iOWf6bOqJ8cO0erggzuZ+iZrhi1I4yY0XLjufjZJ2CYXoPJXAOJTd8eTEN2EPMzEx9WNtzvpfqaaoX8ZF9VP+YQrIbYnuFgP4+ziQDDpCYIQXPEBciNNvMt9+X8bT6tdKR8Usng3fP3PB32M0GAwJLseb6N8amtlMD21Z9i17KB/FUgVCDfJ6O0HTNkRfBTP/pnd+PnWkOX8mXaDE+fbN+YDyBfvoJFi4Ib8QaBw6N3uXMV84Jtsw2fF/T5Tyz1na5VmxI9nM3reRwBdXSXKCIASjg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=M89xD5TT; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=jarkko@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=HR/raycv;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=M89xD5TT;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.7; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=jarkko@kernel.org; receiver=lists.ozlabs.org)
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dyj7r5649z2x9M
-	for <linux-erofs@lists.ozlabs.org>; Sat, 24 Jan 2026 15:51:50 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769230313; x=1800766313;
-  h=date:from:to:cc:subject:message-id;
-  bh=+VLq1Du/3WZsjWuPmwykGO/IxkWHEEfkRRS0W90z98U=;
-  b=HR/raycvKUkTjU8vnq8g04/EQ2XzsvbpzUddIDcsSS44HNd9cIT4M4Ke
-   3+UwxOXM+U5uxfYpK+TSIYjv7MIS9TsYW0xrAym7fTXw1+GlmgzaSeamW
-   wVwW3KMJEEt9/WMTRwqHAl9HEXZvThRmEgSfOCQyknbdQ42S/bq38BlT8
-   PQxwvO13z46OrHWSl5VKQLAMH9gKgyliow2BzHtiZeRoPavLOBgTNofv2
-   k+eZGrQw+yqhDqVSNv4MSq3R4V0IUrksmM4iHq09sr+GsoEVVY3yBtY0H
-   PF+H+FS8hZlpGrI3iaJEA1YDiI8ZDpvU/RDBAe0XFBZaIXTmRwBnH5cQK
-   A==;
-X-CSE-ConnectionGUID: ege8ok/rR3eAzVX86FMzZg==
-X-CSE-MsgGUID: Js6VfFI6S/CwmX5DNFkChQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11680"; a="95944497"
-X-IronPort-AV: E=Sophos;i="6.21,249,1763452800"; 
-   d="scan'208";a="95944497"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2026 20:51:47 -0800
-X-CSE-ConnectionGUID: nnOnastWQAStRgYqNuf80A==
-X-CSE-MsgGUID: I+2FUSggT2+hrk08593wtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,249,1763452800"; 
-   d="scan'208";a="238453344"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 23 Jan 2026 20:51:46 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vjVcd-00000000UqZ-40RB;
-	Sat, 24 Jan 2026 04:51:43 +0000
-Date: Sat, 24 Jan 2026 12:51:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev] BUILD SUCCESS
- d86d7817c042dd651d47b1873f4b6eaefbedd890
-Message-ID: <202601241257.gClqpHaK-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4dzZMj2QW7z2xqD
+	for <linux-erofs@lists.ozlabs.org>; Mon, 26 Jan 2026 01:50:09 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by sea.source.kernel.org (Postfix) with ESMTP id B0A0743D2F;
+	Sun, 25 Jan 2026 14:50:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70185C19421;
+	Sun, 25 Jan 2026 14:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769352606;
+	bh=Qb77RiWgyHm5SU1GmS1LMhqiQbtCFBFXaWxM/S1HaDo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M89xD5TT4e8L24TFAy59ViAy3loqol6G07UhfkgnivqN0T1QHIeXLK6KufoCrmnXv
+	 kekwqOI8IRA4bMgS3j6olFfRKZTjyIBt4fMtWD+6LFJ0ZGBnPwkx1Vvk3JrvMW2Ll4
+	 zC5Vge1F4V9gjzvpVRyB4bOSiYG1Efwk0TeU8NIXylAL1tIZq8vI4gcuC9uXB2RLeh
+	 JBN9Hl+6DYuHM7nuJ5FN1dElHztg8/NLO1X1HlWuX25qrluftOw7nVx6DrXppnlOtZ
+	 MyTpao/Eq+4i/v4tPdubm9C3tLQzM8HcEkPI3lCw90Wg6LIyuqGLw6gE9EaZT2Y1at
+	 1DQ8tqzm59ruQ==
+Date: Sun, 25 Jan 2026 16:50:01 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chunhai Guo <guochunhai@vivo.com>, Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Zi Yan <ziy@nvidia.com>, Nico Pache <npache@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+	linux-mm@kvack.org, ntfs3@lists.linux.dev, devel@lists.orangefs.org,
+	linux-xfs@vger.kernel.org, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v2 08/13] mm: update shmem_[kernel]_file_*() functions to
+ use vma_flags_t
+Message-ID: <aXYtmbL40r5wLgk2@kernel.org>
+References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
+ <736febd280eb484d79cef5cf55b8a6f79ad832d2.1769097829.git.lorenzo.stoakes@oracle.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -83,359 +134,524 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <736febd280eb484d79cef5cf55b8a6f79ad832d2.1769097829.git.lorenzo.stoakes@oracle.com>
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.70 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-2217-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-2218-lists,linux-erofs=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:lorenzo.stoakes@oracle.com,m:akpm@linux-foundation.org,m:dave.hansen@linux.intel.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:jani.nikula@linux.intel.com,m:joonas.lahtinen@linux.intel.com,m:rodrigo.vivi@intel.com,m:tursulin@ursulin.net,m:christian.koenig@amd.com,m:ray.huang@amd.com,m:matthew.auld@intel.com,m:matthew.brost@intel.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:bcrl@kvack.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:muchun.song@linux.dev,m:osalvador@suse.de,m:david@kernel.org,m:almaz.alexa
+ ndrovich@paragon-software.com,m:hubcap@omnibond.com,m:martin@omnibond.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:cem@kernel.org,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:Liam.Howlett@oracle.com,m:vbabka@suse.cz,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:ziy@nvidia.com,m:npache@redhat.com,m:ryan.roberts@arm.com,m:dev.jain@arm.com,m:baohua@kernel.org,m:lance.yang@linux.dev,m:jannh@google.com,m:pfalcato@suse.de,m:dhowells@redhat.com,m:paul@paul-moore.com,m:jmorris@namei.org,m:serge@hallyn.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux-sgx@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:intel-gfx@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-aio@kvack.org,m:linux-erofs@lists.ozlabs.org,
+ m:linux-ext4@vger.kernel.org,m:linux-mm@kvack.org,m:ntfs3@lists.linux.dev,m:devel@lists.orangefs.org,m:linux-xfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:jgg@nvidia.com,s:lists@lfdr.de];
+	FREEMAIL_CC(0.00)[linux-foundation.org,linux.intel.com,kernel.org,redhat.com,alien8.de,zytor.com,arndb.de,linuxfoundation.org,intel.com,suse.de,gmail.com,ffwll.ch,ursulin.net,amd.com,zeniv.linux.org.uk,suse.cz,kvack.org,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,linux.dev,paragon-software.com,omnibond.com,arm.com,wdc.com,infradead.org,oracle.com,suse.com,nvidia.com,paul-moore.com,namei.org,hallyn.com,rasmusvillemoes.dk,vger.kernel.org,lists.linux.dev,lists.freedesktop.org,lists.ozlabs.org,lists.orangefs.org];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[jarkko@kernel.org,linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	RCVD_COUNT_FIVE(0.00)[5];
-	NEURAL_HAM(-0.00)[-1.000];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	RCPT_COUNT_GT_50(0.00)[93];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jarkko@kernel.org,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:mid,intel.com:dkim]
-X-Rspamd-Queue-Id: DC9E77C832
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email]
+X-Rspamd-Queue-Id: 858D18112A
 X-Rspamd-Action: no action
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev
-branch HEAD: d86d7817c042dd651d47b1873f4b6eaefbedd890  erofs: implement .fadvise for page cache share
+On Thu, Jan 22, 2026 at 04:06:17PM +0000, Lorenzo Stoakes wrote:
+> In order to be able to use only vma_flags_t in vm_area_desc we must adjust
+> shmem file setup functions to operate in terms of vma_flags_t rather than
+> vm_flags_t.
+> 
+> This patch makes this change and updates all callers to use the new
+> functions.
+> 
+> No functional changes intended.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+>  arch/x86/kernel/cpu/sgx/ioctl.c           |  2 +-
+>  drivers/gpu/drm/drm_gem.c                 |  5 +-
+>  drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  2 +-
+>  drivers/gpu/drm/i915/gem/i915_gem_ttm.c   |  3 +-
+>  drivers/gpu/drm/i915/gt/shmem_utils.c     |  3 +-
+>  drivers/gpu/drm/ttm/tests/ttm_tt_test.c   |  2 +-
+>  drivers/gpu/drm/ttm/ttm_backup.c          |  3 +-
+>  drivers/gpu/drm/ttm/ttm_tt.c              |  2 +-
+>  fs/xfs/scrub/xfile.c                      |  3 +-
+>  fs/xfs/xfs_buf_mem.c                      |  2 +-
+>  include/linux/shmem_fs.h                  |  8 ++-
+>  ipc/shm.c                                 |  6 +--
+>  mm/memfd.c                                |  2 +-
+>  mm/memfd_luo.c                            |  2 +-
+>  mm/shmem.c                                | 59 +++++++++++++----------
+>  security/keys/big_key.c                   |  2 +-
+>  16 files changed, 57 insertions(+), 49 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
+> index 9322a9287dc7..0bc36957979d 100644
+> --- a/arch/x86/kernel/cpu/sgx/ioctl.c
+> +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
+> @@ -83,7 +83,7 @@ static int sgx_encl_create(struct sgx_encl *encl, struct sgx_secs *secs)
+>  	encl_size = secs->size + PAGE_SIZE;
+>  
+>  	backing = shmem_file_setup("SGX backing", encl_size + (encl_size >> 5),
+> -				   VM_NORESERVE);
+> +				   mk_vma_flags(VMA_NORESERVE_BIT));
+>  	if (IS_ERR(backing)) {
+>  		ret = PTR_ERR(backing);
+>  		goto err_out_shrink;
 
-elapsed time: 996m
+As per this diff:
 
-configs tested: 305
-configs skipped: 5
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
+> index e4df43427394..be4dca2bc34e 100644
+> --- a/drivers/gpu/drm/drm_gem.c
+> +++ b/drivers/gpu/drm/drm_gem.c
+> @@ -130,14 +130,15 @@ int drm_gem_object_init_with_mnt(struct drm_device *dev,
+>  				 struct vfsmount *gemfs)
+>  {
+>  	struct file *filp;
+> +	const vma_flags_t flags = mk_vma_flags(VMA_NORESERVE_BIT);
+>  
+>  	drm_gem_private_object_init(dev, obj, size);
+>  
+>  	if (gemfs)
+>  		filp = shmem_file_setup_with_mnt(gemfs, "drm mm object", size,
+> -						 VM_NORESERVE);
+> +						 flags);
+>  	else
+> -		filp = shmem_file_setup("drm mm object", size, VM_NORESERVE);
+> +		filp = shmem_file_setup("drm mm object", size, flags);
+>  
+>  	if (IS_ERR(filp))
+>  		return PTR_ERR(filp);
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+> index 26dda55a07ff..fe1843497b27 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+> @@ -496,7 +496,7 @@ static int __create_shmem(struct drm_i915_private *i915,
+>  			  struct drm_gem_object *obj,
+>  			  resource_size_t size)
+>  {
+> -	unsigned long flags = VM_NORESERVE;
+> +	const vma_flags_t flags = mk_vma_flags(VMA_NORESERVE_BIT);
+>  	struct file *filp;
+>  
+>  	drm_gem_private_object_init(&i915->drm, obj, size);
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_ttm.c b/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
+> index f65fe86c02b5..7b1a7d01db2b 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
+> @@ -200,7 +200,8 @@ static int i915_ttm_tt_shmem_populate(struct ttm_device *bdev,
+>  		struct address_space *mapping;
+>  		gfp_t mask;
+>  
+> -		filp = shmem_file_setup("i915-shmem-tt", size, VM_NORESERVE);
+> +		filp = shmem_file_setup("i915-shmem-tt", size,
+> +					mk_vma_flags(VMA_NORESERVE_BIT));
+>  		if (IS_ERR(filp))
+>  			return PTR_ERR(filp);
+>  
+> diff --git a/drivers/gpu/drm/i915/gt/shmem_utils.c b/drivers/gpu/drm/i915/gt/shmem_utils.c
+> index 365c4b8b04f4..5f37c699a320 100644
+> --- a/drivers/gpu/drm/i915/gt/shmem_utils.c
+> +++ b/drivers/gpu/drm/i915/gt/shmem_utils.c
+> @@ -19,7 +19,8 @@ struct file *shmem_create_from_data(const char *name, void *data, size_t len)
+>  	struct file *file;
+>  	int err;
+>  
+> -	file = shmem_file_setup(name, PAGE_ALIGN(len), VM_NORESERVE);
+> +	file = shmem_file_setup(name, PAGE_ALIGN(len),
+> +				mk_vma_flags(VMA_NORESERVE_BIT));
+>  	if (IS_ERR(file))
+>  		return file;
+>  
+> diff --git a/drivers/gpu/drm/ttm/tests/ttm_tt_test.c b/drivers/gpu/drm/ttm/tests/ttm_tt_test.c
+> index 61ec6f580b62..bd5f7d0b9b62 100644
+> --- a/drivers/gpu/drm/ttm/tests/ttm_tt_test.c
+> +++ b/drivers/gpu/drm/ttm/tests/ttm_tt_test.c
+> @@ -143,7 +143,7 @@ static void ttm_tt_fini_shmem(struct kunit *test)
+>  	err = ttm_tt_init(tt, bo, 0, caching, 0);
+>  	KUNIT_ASSERT_EQ(test, err, 0);
+>  
+> -	shmem = shmem_file_setup("ttm swap", BO_SIZE, 0);
+> +	shmem = shmem_file_setup("ttm swap", BO_SIZE, EMPTY_VMA_FLAGS);
+>  	tt->swap_storage = shmem;
+>  
+>  	ttm_tt_fini(tt);
+> diff --git a/drivers/gpu/drm/ttm/ttm_backup.c b/drivers/gpu/drm/ttm/ttm_backup.c
+> index 32530c75f038..6bd4c123d94c 100644
+> --- a/drivers/gpu/drm/ttm/ttm_backup.c
+> +++ b/drivers/gpu/drm/ttm/ttm_backup.c
+> @@ -178,5 +178,6 @@ EXPORT_SYMBOL_GPL(ttm_backup_bytes_avail);
+>   */
+>  struct file *ttm_backup_shmem_create(loff_t size)
+>  {
+> -	return shmem_file_setup("ttm shmem backup", size, 0);
+> +	return shmem_file_setup("ttm shmem backup", size,
+> +				EMPTY_VMA_FLAGS);
+>  }
+> diff --git a/drivers/gpu/drm/ttm/ttm_tt.c b/drivers/gpu/drm/ttm/ttm_tt.c
+> index 611d20ab966d..f73a5ce87645 100644
+> --- a/drivers/gpu/drm/ttm/ttm_tt.c
+> +++ b/drivers/gpu/drm/ttm/ttm_tt.c
+> @@ -330,7 +330,7 @@ int ttm_tt_swapout(struct ttm_device *bdev, struct ttm_tt *ttm,
+>  	struct page *to_page;
+>  	int i, ret;
+>  
+> -	swap_storage = shmem_file_setup("ttm swap", size, 0);
+> +	swap_storage = shmem_file_setup("ttm swap", size, EMPTY_VMA_FLAGS);
+>  	if (IS_ERR(swap_storage)) {
+>  		pr_err("Failed allocating swap storage\n");
+>  		return PTR_ERR(swap_storage);
+> diff --git a/fs/xfs/scrub/xfile.c b/fs/xfs/scrub/xfile.c
+> index c753c79df203..fe0584a39f16 100644
+> --- a/fs/xfs/scrub/xfile.c
+> +++ b/fs/xfs/scrub/xfile.c
+> @@ -61,7 +61,8 @@ xfile_create(
+>  	if (!xf)
+>  		return -ENOMEM;
+>  
+> -	xf->file = shmem_kernel_file_setup(description, isize, VM_NORESERVE);
+> +	xf->file = shmem_kernel_file_setup(description, isize,
+> +					   mk_vma_flags(VMA_NORESERVE_BIT));
+>  	if (IS_ERR(xf->file)) {
+>  		error = PTR_ERR(xf->file);
+>  		goto out_xfile;
+> diff --git a/fs/xfs/xfs_buf_mem.c b/fs/xfs/xfs_buf_mem.c
+> index dcbfa274e06d..fd6f0a5bc0ea 100644
+> --- a/fs/xfs/xfs_buf_mem.c
+> +++ b/fs/xfs/xfs_buf_mem.c
+> @@ -62,7 +62,7 @@ xmbuf_alloc(
+>  	if (!btp)
+>  		return -ENOMEM;
+>  
+> -	file = shmem_kernel_file_setup(descr, 0, 0);
+> +	file = shmem_kernel_file_setup(descr, 0, EMPTY_VMA_FLAGS);
+>  	if (IS_ERR(file)) {
+>  		error = PTR_ERR(file);
+>  		goto out_free_btp;
+> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+> index e2069b3179c4..a8273b32e041 100644
+> --- a/include/linux/shmem_fs.h
+> +++ b/include/linux/shmem_fs.h
+> @@ -102,12 +102,10 @@ static inline struct shmem_inode_info *SHMEM_I(struct inode *inode)
+>  extern const struct fs_parameter_spec shmem_fs_parameters[];
+>  extern void shmem_init(void);
+>  extern int shmem_init_fs_context(struct fs_context *fc);
+> -extern struct file *shmem_file_setup(const char *name,
+> -					loff_t size, unsigned long flags);
+> -extern struct file *shmem_kernel_file_setup(const char *name, loff_t size,
+> -					    unsigned long flags);
+> +struct file *shmem_file_setup(const char *name, loff_t size, vma_flags_t flags);
+> +struct file *shmem_kernel_file_setup(const char *name, loff_t size, vma_flags_t vma_flags);
+>  extern struct file *shmem_file_setup_with_mnt(struct vfsmount *mnt,
+> -		const char *name, loff_t size, unsigned long flags);
+> +		const char *name, loff_t size, vma_flags_t flags);
+>  int shmem_zero_setup(struct vm_area_struct *vma);
+>  int shmem_zero_setup_desc(struct vm_area_desc *desc);
+>  extern unsigned long shmem_get_unmapped_area(struct file *, unsigned long addr,
+> diff --git a/ipc/shm.c b/ipc/shm.c
+> index 2c7379c4c647..e8c7d1924c50 100644
+> --- a/ipc/shm.c
+> +++ b/ipc/shm.c
+> @@ -708,6 +708,7 @@ static int newseg(struct ipc_namespace *ns, struct ipc_params *params)
+>  	struct shmid_kernel *shp;
+>  	size_t numpages = (size + PAGE_SIZE - 1) >> PAGE_SHIFT;
+>  	const bool has_no_reserve = shmflg & SHM_NORESERVE;
+> +	vma_flags_t acctflag = EMPTY_VMA_FLAGS;
+>  	struct file *file;
+>  	char name[13];
+>  
+> @@ -738,7 +739,6 @@ static int newseg(struct ipc_namespace *ns, struct ipc_params *params)
+>  
+>  	sprintf(name, "SYSV%08x", key);
+>  	if (shmflg & SHM_HUGETLB) {
+> -		vma_flags_t acctflag = EMPTY_VMA_FLAGS;
+>  		struct hstate *hs;
+>  		size_t hugesize;
+>  
+> @@ -755,14 +755,12 @@ static int newseg(struct ipc_namespace *ns, struct ipc_params *params)
+>  		file = hugetlb_file_setup(name, hugesize, acctflag,
+>  				HUGETLB_SHMFS_INODE, (shmflg >> SHM_HUGE_SHIFT) & SHM_HUGE_MASK);
+>  	} else {
+> -		vm_flags_t acctflag = 0;
+> -
+>  		/*
+>  		 * Do not allow no accounting for OVERCOMMIT_NEVER, even
+>  		 * if it's asked for.
+>  		 */
+>  		if  (has_no_reserve && sysctl_overcommit_memory != OVERCOMMIT_NEVER)
+> -			acctflag = VM_NORESERVE;
+> +			vma_flags_set(&acctflag, VMA_NORESERVE_BIT);
+>  		file = shmem_kernel_file_setup(name, size, acctflag);
+>  	}
+>  	error = PTR_ERR(file);
+> diff --git a/mm/memfd.c b/mm/memfd.c
+> index 5f95f639550c..f3a8950850a2 100644
+> --- a/mm/memfd.c
+> +++ b/mm/memfd.c
+> @@ -469,7 +469,7 @@ static struct file *alloc_file(const char *name, unsigned int flags)
+>  					(flags >> MFD_HUGE_SHIFT) &
+>  					MFD_HUGE_MASK);
+>  	} else {
+> -		file = shmem_file_setup(name, 0, VM_NORESERVE);
+> +		file = shmem_file_setup(name, 0, mk_vma_flags(VMA_NORESERVE_BIT));
+>  	}
+>  	if (IS_ERR(file))
+>  		return file;
+> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
+> index 4f6ba63b4310..a2629dcfd0f1 100644
+> --- a/mm/memfd_luo.c
+> +++ b/mm/memfd_luo.c
+> @@ -443,7 +443,7 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
+>  	if (!ser)
+>  		return -EINVAL;
+>  
+> -	file = shmem_file_setup("", 0, VM_NORESERVE);
+> +	file = shmem_file_setup("", 0, mk_vma_flags(VMA_NORESERVE_BIT));
+>  
+>  	if (IS_ERR(file)) {
+>  		pr_err("failed to setup file: %pe\n", file);
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 0adde3f4df27..97a8f55c7296 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -3057,9 +3057,9 @@ static struct offset_ctx *shmem_get_offset_ctx(struct inode *inode)
+>  }
+>  
+>  static struct inode *__shmem_get_inode(struct mnt_idmap *idmap,
+> -					     struct super_block *sb,
+> -					     struct inode *dir, umode_t mode,
+> -					     dev_t dev, unsigned long flags)
+> +				       struct super_block *sb,
+> +				       struct inode *dir, umode_t mode,
+> +				       dev_t dev, vma_flags_t flags)
+>  {
+>  	struct inode *inode;
+>  	struct shmem_inode_info *info;
+> @@ -3087,7 +3087,8 @@ static struct inode *__shmem_get_inode(struct mnt_idmap *idmap,
+>  	spin_lock_init(&info->lock);
+>  	atomic_set(&info->stop_eviction, 0);
+>  	info->seals = F_SEAL_SEAL;
+> -	info->flags = (flags & VM_NORESERVE) ? SHMEM_F_NORESERVE : 0;
+> +	info->flags = vma_flags_test(&flags, VMA_NORESERVE_BIT)
+> +		? SHMEM_F_NORESERVE : 0;
+>  	info->i_crtime = inode_get_mtime(inode);
+>  	info->fsflags = (dir == NULL) ? 0 :
+>  		SHMEM_I(dir)->fsflags & SHMEM_FL_INHERITED;
+> @@ -3140,7 +3141,7 @@ static struct inode *__shmem_get_inode(struct mnt_idmap *idmap,
+>  #ifdef CONFIG_TMPFS_QUOTA
+>  static struct inode *shmem_get_inode(struct mnt_idmap *idmap,
+>  				     struct super_block *sb, struct inode *dir,
+> -				     umode_t mode, dev_t dev, unsigned long flags)
+> +				     umode_t mode, dev_t dev, vma_flags_t flags)
+>  {
+>  	int err;
+>  	struct inode *inode;
+> @@ -3166,9 +3167,9 @@ static struct inode *shmem_get_inode(struct mnt_idmap *idmap,
+>  	return ERR_PTR(err);
+>  }
+>  #else
+> -static inline struct inode *shmem_get_inode(struct mnt_idmap *idmap,
+> +static struct inode *shmem_get_inode(struct mnt_idmap *idmap,
+>  				     struct super_block *sb, struct inode *dir,
+> -				     umode_t mode, dev_t dev, unsigned long flags)
+> +				     umode_t mode, dev_t dev, vma_flags_t flags)
+>  {
+>  	return __shmem_get_inode(idmap, sb, dir, mode, dev, flags);
+>  }
+> @@ -3875,7 +3876,8 @@ shmem_mknod(struct mnt_idmap *idmap, struct inode *dir,
+>  	if (!generic_ci_validate_strict_name(dir, &dentry->d_name))
+>  		return -EINVAL;
+>  
+> -	inode = shmem_get_inode(idmap, dir->i_sb, dir, mode, dev, VM_NORESERVE);
+> +	inode = shmem_get_inode(idmap, dir->i_sb, dir, mode, dev,
+> +				mk_vma_flags(VMA_NORESERVE_BIT));
+>  	if (IS_ERR(inode))
+>  		return PTR_ERR(inode);
+>  
+> @@ -3910,7 +3912,8 @@ shmem_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
+>  	struct inode *inode;
+>  	int error;
+>  
+> -	inode = shmem_get_inode(idmap, dir->i_sb, dir, mode, 0, VM_NORESERVE);
+> +	inode = shmem_get_inode(idmap, dir->i_sb, dir, mode, 0,
+> +				mk_vma_flags(VMA_NORESERVE_BIT));
+>  	if (IS_ERR(inode)) {
+>  		error = PTR_ERR(inode);
+>  		goto err_out;
+> @@ -4107,7 +4110,7 @@ static int shmem_symlink(struct mnt_idmap *idmap, struct inode *dir,
+>  		return -ENAMETOOLONG;
+>  
+>  	inode = shmem_get_inode(idmap, dir->i_sb, dir, S_IFLNK | 0777, 0,
+> -				VM_NORESERVE);
+> +				mk_vma_flags(VMA_NORESERVE_BIT));
+>  	if (IS_ERR(inode))
+>  		return PTR_ERR(inode);
+>  
+> @@ -5108,7 +5111,8 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
+>  #endif /* CONFIG_TMPFS_QUOTA */
+>  
+>  	inode = shmem_get_inode(&nop_mnt_idmap, sb, NULL,
+> -				S_IFDIR | sbinfo->mode, 0, VM_NORESERVE);
+> +				S_IFDIR | sbinfo->mode, 0,
+> +				mk_vma_flags(VMA_NORESERVE_BIT));
+>  	if (IS_ERR(inode)) {
+>  		error = PTR_ERR(inode);
+>  		goto failed;
+> @@ -5808,7 +5812,7 @@ static inline void shmem_unacct_size(unsigned long flags, loff_t size)
+>  
+>  static inline struct inode *shmem_get_inode(struct mnt_idmap *idmap,
+>  				struct super_block *sb, struct inode *dir,
+> -				umode_t mode, dev_t dev, unsigned long flags)
+> +				umode_t mode, dev_t dev, vma_flags_t flags)
+>  {
+>  	struct inode *inode = ramfs_get_inode(sb, dir, mode, dev);
+>  	return inode ? inode : ERR_PTR(-ENOSPC);
+> @@ -5819,10 +5823,11 @@ static inline struct inode *shmem_get_inode(struct mnt_idmap *idmap,
+>  /* common code */
+>  
+>  static struct file *__shmem_file_setup(struct vfsmount *mnt, const char *name,
+> -				       loff_t size, unsigned long vm_flags,
+> +				       loff_t size, vma_flags_t flags,
+>  				       unsigned int i_flags)
+>  {
+> -	unsigned long flags = (vm_flags & VM_NORESERVE) ? SHMEM_F_NORESERVE : 0;
+> +	const unsigned long shmem_flags =
+> +		vma_flags_test(&flags, VMA_NORESERVE_BIT) ? SHMEM_F_NORESERVE : 0;
+>  	struct inode *inode;
+>  	struct file *res;
+>  
+> @@ -5835,13 +5840,13 @@ static struct file *__shmem_file_setup(struct vfsmount *mnt, const char *name,
+>  	if (is_idmapped_mnt(mnt))
+>  		return ERR_PTR(-EINVAL);
+>  
+> -	if (shmem_acct_size(flags, size))
+> +	if (shmem_acct_size(shmem_flags, size))
+>  		return ERR_PTR(-ENOMEM);
+>  
+>  	inode = shmem_get_inode(&nop_mnt_idmap, mnt->mnt_sb, NULL,
+> -				S_IFREG | S_IRWXUGO, 0, vm_flags);
+> +				S_IFREG | S_IRWXUGO, 0, flags);
+>  	if (IS_ERR(inode)) {
+> -		shmem_unacct_size(flags, size);
+> +		shmem_unacct_size(shmem_flags, size);
+>  		return ERR_CAST(inode);
+>  	}
+>  	inode->i_flags |= i_flags;
+> @@ -5864,9 +5869,10 @@ static struct file *__shmem_file_setup(struct vfsmount *mnt, const char *name,
+>   *	checks are provided at the key or shm level rather than the inode.
+>   * @name: name for dentry (to be seen in /proc/<pid>/maps)
+>   * @size: size to be set for the file
+> - * @flags: VM_NORESERVE suppresses pre-accounting of the entire object size
+> + * @vma_flags: VMA_NORESERVE_BIT suppresses pre-accounting of the entire object size
+>   */
+> -struct file *shmem_kernel_file_setup(const char *name, loff_t size, unsigned long flags)
+> +struct file *shmem_kernel_file_setup(const char *name, loff_t size,
+> +				     vma_flags_t flags)
+>  {
+>  	return __shmem_file_setup(shm_mnt, name, size, flags, S_PRIVATE);
+>  }
+> @@ -5878,7 +5884,7 @@ EXPORT_SYMBOL_GPL(shmem_kernel_file_setup);
+>   * @size: size to be set for the file
+>   * @flags: VM_NORESERVE suppresses pre-accounting of the entire object size
+>   */
+> -struct file *shmem_file_setup(const char *name, loff_t size, unsigned long flags)
+> +struct file *shmem_file_setup(const char *name, loff_t size, vma_flags_t flags)
+>  {
+>  	return __shmem_file_setup(shm_mnt, name, size, flags, 0);
+>  }
+> @@ -5889,16 +5895,17 @@ EXPORT_SYMBOL_GPL(shmem_file_setup);
+>   * @mnt: the tmpfs mount where the file will be created
+>   * @name: name for dentry (to be seen in /proc/<pid>/maps)
+>   * @size: size to be set for the file
+> - * @flags: VM_NORESERVE suppresses pre-accounting of the entire object size
+> + * @flags: VMA_NORESERVE_BIT suppresses pre-accounting of the entire object size
+>   */
+>  struct file *shmem_file_setup_with_mnt(struct vfsmount *mnt, const char *name,
+> -				       loff_t size, unsigned long flags)
+> +				       loff_t size, vma_flags_t flags)
+>  {
+>  	return __shmem_file_setup(mnt, name, size, flags, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(shmem_file_setup_with_mnt);
+>  
+> -static struct file *__shmem_zero_setup(unsigned long start, unsigned long end, vm_flags_t vm_flags)
+> +static struct file *__shmem_zero_setup(unsigned long start, unsigned long end,
+> +		vma_flags_t flags)
+>  {
+>  	loff_t size = end - start;
+>  
+> @@ -5908,7 +5915,7 @@ static struct file *__shmem_zero_setup(unsigned long start, unsigned long end, v
+>  	 * accessible to the user through its mapping, use S_PRIVATE flag to
+>  	 * bypass file security, in the same way as shmem_kernel_file_setup().
+>  	 */
+> -	return shmem_kernel_file_setup("dev/zero", size, vm_flags);
+> +	return shmem_kernel_file_setup("dev/zero", size, flags);
+>  }
+>  
+>  /**
+> @@ -5918,7 +5925,7 @@ static struct file *__shmem_zero_setup(unsigned long start, unsigned long end, v
+>   */
+>  int shmem_zero_setup(struct vm_area_struct *vma)
+>  {
+> -	struct file *file = __shmem_zero_setup(vma->vm_start, vma->vm_end, vma->vm_flags);
+> +	struct file *file = __shmem_zero_setup(vma->vm_start, vma->vm_end, vma->flags);
+>  
+>  	if (IS_ERR(file))
+>  		return PTR_ERR(file);
+> @@ -5939,7 +5946,7 @@ int shmem_zero_setup(struct vm_area_struct *vma)
+>   */
+>  int shmem_zero_setup_desc(struct vm_area_desc *desc)
+>  {
+> -	struct file *file = __shmem_zero_setup(desc->start, desc->end, desc->vm_flags);
+> +	struct file *file = __shmem_zero_setup(desc->start, desc->end, desc->vma_flags);
+>  
+>  	if (IS_ERR(file))
+>  		return PTR_ERR(file);
+> diff --git a/security/keys/big_key.c b/security/keys/big_key.c
+> index d46862ab90d6..268f702df380 100644
+> --- a/security/keys/big_key.c
+> +++ b/security/keys/big_key.c
+> @@ -103,7 +103,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
+>  					 0, enckey);
+>  
+>  		/* save aligned data to file */
+> -		file = shmem_kernel_file_setup("", enclen, 0);
+> +		file = shmem_kernel_file_setup("", enclen, EMPTY_VMA_FLAGS);
+>  		if (IS_ERR(file)) {
+>  			ret = PTR_ERR(file);
+>  			goto err_enckey;
+> -- 
+> 2.52.0
+> 
 
-tested configs:
-alpha                             allnoconfig    gcc-15.2.0
-alpha                            allyesconfig    gcc-15.2.0
-alpha                               defconfig    gcc-15.2.0
-arc                              allmodconfig    clang-16
-arc                              allmodconfig    gcc-15.2.0
-arc                               allnoconfig    gcc-15.2.0
-arc                              allyesconfig    clang-22
-arc                              allyesconfig    gcc-15.2.0
-arc                      axs103_smp_defconfig    gcc-15.2.0
-arc                                 defconfig    gcc-15.2.0
-arc                        nsim_700_defconfig    gcc-15.2.0
-arc                   randconfig-001-20260124    clang-18
-arc                   randconfig-001-20260124    gcc-14.3.0
-arc                   randconfig-002-20260124    clang-18
-arc                   randconfig-002-20260124    gcc-13.4.0
-arm                               allnoconfig    clang-22
-arm                               allnoconfig    gcc-15.2.0
-arm                              allyesconfig    clang-16
-arm                              allyesconfig    gcc-15.2.0
-arm                                 defconfig    gcc-15.2.0
-arm                          gemini_defconfig    gcc-15.2.0
-arm                       imx_v4_v5_defconfig    gcc-15.2.0
-arm                       multi_v4t_defconfig    clang-16
-arm                          pxa168_defconfig    clang-16
-arm                          pxa168_defconfig    gcc-15.2.0
-arm                   randconfig-001-20260124    clang-18
-arm                   randconfig-001-20260124    gcc-8.5.0
-arm                   randconfig-002-20260124    clang-18
-arm                   randconfig-002-20260124    clang-22
-arm                   randconfig-003-20260124    clang-18
-arm                   randconfig-004-20260124    clang-18
-arm                   randconfig-004-20260124    gcc-15.2.0
-arm                           sama7_defconfig    clang-16
-arm                        spear3xx_defconfig    gcc-15.2.0
-arm                           tegra_defconfig    gcc-15.2.0
-arm                       versatile_defconfig    gcc-15.2.0
-arm                    vt8500_v6_v7_defconfig    gcc-15.2.0
-arm64                            alldefconfig    gcc-15.2.0
-arm64                            allmodconfig    clang-19
-arm64                            allmodconfig    clang-22
-arm64                             allnoconfig    gcc-15.2.0
-arm64                               defconfig    gcc-15.2.0
-arm64                 randconfig-001-20260123    gcc-15.2.0
-arm64                 randconfig-001-20260124    clang-22
-arm64                 randconfig-001-20260124    gcc-15.2.0
-arm64                 randconfig-002-20260123    gcc-13.4.0
-arm64                 randconfig-002-20260124    clang-22
-arm64                 randconfig-002-20260124    gcc-15.2.0
-arm64                 randconfig-003-20260123    gcc-10.5.0
-arm64                 randconfig-003-20260124    clang-22
-arm64                 randconfig-003-20260124    gcc-15.2.0
-arm64                 randconfig-004-20260123    gcc-13.4.0
-arm64                 randconfig-004-20260124    gcc-15.2.0
-arm64                 randconfig-004-20260124    gcc-9.5.0
-csky                             allmodconfig    gcc-15.2.0
-csky                              allnoconfig    gcc-15.2.0
-csky                                defconfig    gcc-15.2.0
-csky                  randconfig-001-20260123    gcc-15.2.0
-csky                  randconfig-001-20260124    gcc-13.4.0
-csky                  randconfig-001-20260124    gcc-15.2.0
-csky                  randconfig-002-20260123    gcc-15.2.0
-csky                  randconfig-002-20260124    gcc-15.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                          allmodconfig    gcc-15.2.0
-hexagon                           allnoconfig    clang-22
-hexagon                           allnoconfig    gcc-15.2.0
-hexagon                             defconfig    gcc-15.2.0
-hexagon               randconfig-001-20260124    gcc-15.2.0
-hexagon               randconfig-002-20260124    gcc-15.2.0
-i386                             alldefconfig    clang-16
-i386                             allmodconfig    clang-20
-i386                             allmodconfig    gcc-14
-i386                              allnoconfig    gcc-14
-i386                              allnoconfig    gcc-15.2.0
-i386                             allyesconfig    clang-20
-i386                             allyesconfig    gcc-14
-i386        buildonly-randconfig-001-20260123    clang-20
-i386        buildonly-randconfig-001-20260124    gcc-14
-i386        buildonly-randconfig-002-20260123    gcc-14
-i386        buildonly-randconfig-002-20260124    gcc-14
-i386        buildonly-randconfig-003-20260123    gcc-14
-i386        buildonly-randconfig-003-20260124    gcc-14
-i386        buildonly-randconfig-004-20260123    gcc-14
-i386        buildonly-randconfig-004-20260124    gcc-14
-i386        buildonly-randconfig-005-20260123    clang-20
-i386        buildonly-randconfig-005-20260124    gcc-14
-i386        buildonly-randconfig-006-20260123    clang-20
-i386        buildonly-randconfig-006-20260124    gcc-14
-i386                                defconfig    gcc-15.2.0
-i386                  randconfig-001-20260124    gcc-14
-i386                  randconfig-002-20260124    gcc-14
-i386                  randconfig-003-20260124    gcc-14
-i386                  randconfig-004-20260124    gcc-14
-i386                  randconfig-005-20260124    gcc-14
-i386                  randconfig-006-20260124    gcc-14
-i386                  randconfig-007-20260124    gcc-14
-i386                  randconfig-011-20260123    clang-20
-i386                  randconfig-011-20260124    clang-20
-i386                  randconfig-012-20260123    gcc-14
-i386                  randconfig-012-20260124    clang-20
-i386                  randconfig-013-20260123    gcc-14
-i386                  randconfig-013-20260124    clang-20
-i386                  randconfig-014-20260123    clang-20
-i386                  randconfig-014-20260124    clang-20
-i386                  randconfig-015-20260123    gcc-14
-i386                  randconfig-015-20260124    clang-20
-i386                  randconfig-016-20260123    clang-20
-i386                  randconfig-016-20260124    clang-20
-i386                  randconfig-017-20260123    gcc-14
-i386                  randconfig-017-20260124    clang-20
-loongarch                        allmodconfig    clang-19
-loongarch                        allmodconfig    clang-22
-loongarch                         allnoconfig    clang-22
-loongarch                         allnoconfig    gcc-15.2.0
-loongarch                           defconfig    clang-19
-loongarch             randconfig-001-20260124    gcc-15.2.0
-loongarch             randconfig-002-20260124    gcc-15.2.0
-m68k                             allmodconfig    gcc-15.2.0
-m68k                              allnoconfig    gcc-15.2.0
-m68k                             allyesconfig    clang-16
-m68k                             allyesconfig    gcc-15.2.0
-m68k                                defconfig    clang-19
-m68k                                defconfig    gcc-15.2.0
-m68k                       m5475evb_defconfig    gcc-15.2.0
-m68k                           virt_defconfig    gcc-15.2.0
-microblaze                        allnoconfig    gcc-15.2.0
-microblaze                       allyesconfig    gcc-15.2.0
-microblaze                          defconfig    clang-19
-microblaze                          defconfig    gcc-15.2.0
-mips                             allmodconfig    gcc-15.2.0
-mips                              allnoconfig    gcc-15.2.0
-mips                             allyesconfig    gcc-15.2.0
-mips                malta_qemu_32r6_defconfig    clang-16
-mips                  maltasmvp_eva_defconfig    gcc-15.2.0
-mips                        maltaup_defconfig    gcc-15.2.0
-mips                    maltaup_xpa_defconfig    gcc-15.2.0
-mips                        qi_lb60_defconfig    clang-16
-nios2                            allmodconfig    clang-22
-nios2                            allmodconfig    gcc-11.5.0
-nios2                             allnoconfig    clang-22
-nios2                             allnoconfig    gcc-11.5.0
-nios2                               defconfig    clang-19
-nios2                               defconfig    gcc-11.5.0
-nios2                 randconfig-001-20260124    gcc-15.2.0
-nios2                 randconfig-002-20260124    gcc-15.2.0
-openrisc                         allmodconfig    clang-22
-openrisc                         allmodconfig    gcc-15.2.0
-openrisc                          allnoconfig    clang-22
-openrisc                          allnoconfig    gcc-15.2.0
-openrisc                            defconfig    gcc-15.2.0
-parisc                           allmodconfig    gcc-15.2.0
-parisc                            allnoconfig    clang-22
-parisc                            allnoconfig    gcc-15.2.0
-parisc                           allyesconfig    clang-19
-parisc                           allyesconfig    gcc-15.2.0
-parisc                              defconfig    gcc-15.2.0
-parisc                randconfig-001-20260123    gcc-12.5.0
-parisc                randconfig-001-20260124    gcc-8.5.0
-parisc                randconfig-002-20260123    gcc-8.5.0
-parisc                randconfig-002-20260124    gcc-8.5.0
-parisc64                            defconfig    clang-19
-parisc64                            defconfig    gcc-15.2.0
-powerpc                          allmodconfig    gcc-15.2.0
-powerpc                           allnoconfig    clang-22
-powerpc                           allnoconfig    gcc-15.2.0
-powerpc                 linkstation_defconfig    gcc-15.2.0
-powerpc                   motionpro_defconfig    gcc-15.2.0
-powerpc                     ppa8548_defconfig    gcc-15.2.0
-powerpc               randconfig-001-20260123    clang-22
-powerpc               randconfig-001-20260124    gcc-8.5.0
-powerpc               randconfig-002-20260123    clang-22
-powerpc               randconfig-002-20260124    gcc-8.5.0
-powerpc64             randconfig-001-20260123    gcc-8.5.0
-powerpc64             randconfig-001-20260124    gcc-8.5.0
-powerpc64             randconfig-002-20260123    gcc-13.4.0
-powerpc64             randconfig-002-20260124    gcc-8.5.0
-riscv                            allmodconfig    clang-22
-riscv                             allnoconfig    clang-22
-riscv                             allnoconfig    gcc-15.2.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-22
-riscv                               defconfig    gcc-15.2.0
-riscv                 randconfig-001-20260124    gcc-8.5.0
-riscv                 randconfig-002-20260124    gcc-8.5.0
-s390                             allmodconfig    clang-18
-s390                             allmodconfig    clang-19
-s390                              allnoconfig    clang-22
-s390                             allyesconfig    gcc-15.2.0
-s390                                defconfig    clang-22
-s390                                defconfig    gcc-15.2.0
-s390                  randconfig-001-20260124    gcc-15.2.0
-s390                  randconfig-001-20260124    gcc-8.5.0
-s390                  randconfig-002-20260124    gcc-15.2.0
-s390                  randconfig-002-20260124    gcc-8.5.0
-sh                               allmodconfig    gcc-15.2.0
-sh                                allnoconfig    clang-22
-sh                                allnoconfig    gcc-15.2.0
-sh                               allyesconfig    clang-19
-sh                               allyesconfig    gcc-15.2.0
-sh                                  defconfig    gcc-14
-sh                                  defconfig    gcc-15.2.0
-sh                        edosk7705_defconfig    gcc-15.2.0
-sh                            migor_defconfig    gcc-15.2.0
-sh                          r7780mp_defconfig    clang-16
-sh                    randconfig-001-20260124    gcc-15.2.0
-sh                    randconfig-001-20260124    gcc-8.5.0
-sh                    randconfig-002-20260124    gcc-13.4.0
-sh                    randconfig-002-20260124    gcc-8.5.0
-sh                   secureedge5410_defconfig    clang-16
-sh                           sh2007_defconfig    gcc-15.2.0
-sparc                             allnoconfig    clang-22
-sparc                             allnoconfig    gcc-15.2.0
-sparc                               defconfig    gcc-15.2.0
-sparc                 randconfig-001-20260124    gcc-13.4.0
-sparc                 randconfig-002-20260124    gcc-13.4.0
-sparc                       sparc64_defconfig    gcc-15.2.0
-sparc64                          allmodconfig    clang-22
-sparc64                             defconfig    clang-20
-sparc64                             defconfig    gcc-14
-sparc64               randconfig-001-20260124    gcc-13.4.0
-sparc64               randconfig-002-20260124    gcc-13.4.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-22
-um                               allyesconfig    gcc-14
-um                               allyesconfig    gcc-15.2.0
-um                                  defconfig    clang-22
-um                                  defconfig    gcc-14
-um                             i386_defconfig    gcc-14
-um                    randconfig-001-20260124    gcc-13.4.0
-um                    randconfig-002-20260124    gcc-13.4.0
-um                           x86_64_defconfig    clang-22
-um                           x86_64_defconfig    gcc-14
-x86_64                           alldefconfig    gcc-15.2.0
-x86_64                           allmodconfig    clang-20
-x86_64                            allnoconfig    clang-20
-x86_64                            allnoconfig    clang-22
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20260123    clang-20
-x86_64      buildonly-randconfig-001-20260124    clang-20
-x86_64      buildonly-randconfig-002-20260123    clang-20
-x86_64      buildonly-randconfig-002-20260124    clang-20
-x86_64      buildonly-randconfig-003-20260123    clang-20
-x86_64      buildonly-randconfig-003-20260124    clang-20
-x86_64      buildonly-randconfig-004-20260123    clang-20
-x86_64      buildonly-randconfig-004-20260124    clang-20
-x86_64      buildonly-randconfig-005-20260123    clang-20
-x86_64      buildonly-randconfig-005-20260124    clang-20
-x86_64      buildonly-randconfig-006-20260123    gcc-14
-x86_64      buildonly-randconfig-006-20260124    clang-20
-x86_64                              defconfig    gcc-14
-x86_64                                  kexec    clang-20
-x86_64                randconfig-001-20260123    clang-20
-x86_64                randconfig-001-20260124    gcc-13
-x86_64                randconfig-002-20260123    gcc-14
-x86_64                randconfig-002-20260124    gcc-13
-x86_64                randconfig-003-20260123    gcc-14
-x86_64                randconfig-003-20260124    gcc-13
-x86_64                randconfig-004-20260123    gcc-14
-x86_64                randconfig-004-20260124    gcc-13
-x86_64                randconfig-005-20260123    gcc-14
-x86_64                randconfig-005-20260124    gcc-13
-x86_64                randconfig-006-20260123    gcc-14
-x86_64                randconfig-006-20260124    gcc-13
-x86_64                randconfig-011-20260123    gcc-13
-x86_64                randconfig-011-20260124    gcc-12
-x86_64                randconfig-011-20260124    gcc-14
-x86_64                randconfig-012-20260123    gcc-14
-x86_64                randconfig-012-20260124    gcc-12
-x86_64                randconfig-012-20260124    gcc-14
-x86_64                randconfig-013-20260123    clang-20
-x86_64                randconfig-013-20260124    clang-20
-x86_64                randconfig-013-20260124    gcc-12
-x86_64                randconfig-014-20260123    gcc-14
-x86_64                randconfig-014-20260124    gcc-12
-x86_64                randconfig-015-20260123    gcc-14
-x86_64                randconfig-015-20260124    gcc-12
-x86_64                randconfig-015-20260124    gcc-14
-x86_64                randconfig-016-20260123    gcc-13
-x86_64                randconfig-016-20260124    gcc-12
-x86_64                randconfig-016-20260124    gcc-14
-x86_64                randconfig-071-20260123    clang-20
-x86_64                randconfig-071-20260124    gcc-14
-x86_64                randconfig-072-20260123    clang-20
-x86_64                randconfig-072-20260124    gcc-14
-x86_64                randconfig-073-20260123    gcc-14
-x86_64                randconfig-073-20260124    gcc-14
-x86_64                randconfig-074-20260123    gcc-13
-x86_64                randconfig-074-20260124    gcc-14
-x86_64                randconfig-075-20260123    clang-20
-x86_64                randconfig-075-20260124    gcc-14
-x86_64                randconfig-076-20260123    gcc-14
-x86_64                randconfig-076-20260124    gcc-14
-x86_64                               rhel-9.4    clang-20
-x86_64                           rhel-9.4-bpf    gcc-14
-x86_64                          rhel-9.4-func    clang-20
-x86_64                    rhel-9.4-kselftests    clang-20
-x86_64                         rhel-9.4-kunit    gcc-14
-x86_64                           rhel-9.4-ltp    gcc-14
-x86_64                          rhel-9.4-rust    clang-20
-xtensa                            allnoconfig    clang-22
-xtensa                            allnoconfig    gcc-15.2.0
-xtensa                           allyesconfig    clang-22
-xtensa                           allyesconfig    gcc-15.2.0
-xtensa                randconfig-001-20260124    gcc-13.4.0
-xtensa                randconfig-002-20260124    gcc-13.4.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+BR, Jarkko
 
