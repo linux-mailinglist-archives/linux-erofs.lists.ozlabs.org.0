@@ -1,164 +1,146 @@
-Return-Path: <linux-erofs+bounces-2221-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2222-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SK8eHASOeGmqqwEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2221-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jan 2026 11:05:56 +0100
+	id 0HzoH5PDeGmltAEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2222-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jan 2026 14:54:27 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 281DE92694
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jan 2026 11:05:55 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1292E952BE
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jan 2026 14:54:26 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4f0gyl1Mgpz2xjP;
-	Tue, 27 Jan 2026 21:05:51 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4f0n2R3WfTz2yGM;
+	Wed, 28 Jan 2026 00:54:23 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=205.220.165.32 arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769508351;
-	cv=pass; b=c3Dd31ruTIQW1ezddI/zh7kw/mNqotoo8aO6lOB9ostmHekfkvG2LsPZxWLow34PHuHdRdUEvGsVwuIntjLNVg/MLKpsBKS0nPLDjYp5t6cvcBycYb6WvGFNeXNHvhC41R1OT52bfD1usQbMv7UV/t++WkosNsYmqAOtP6wbXteajNCTsfpzJcx6SjjqohfEShVcp29bfxjI3iKPerrf6yrT1/Dgpga/Akq9IPls12NMVw+O1fF0pv76kOLyOSgQdJN3XsZQeT3s9FsoeJwO5wf4rK16i9VLIyUdEwJy5RRfrpjeT8hetSMExGJc839STurSarXz/+y4DPRiA/46JA==
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c110::1" arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769522063;
+	cv=pass; b=ewTr1Pa6vP0yZyCt+AcACca+bPr79/GhlEzsexk7nGm+l4+CZsoMiuCxX9lHNk/lWwN7btvS42drictW4Bea8LsBZ7VKc6usgRn7ZbwP169ClPonk2kr8XlowIPf9AIg/JTc/tCSomdVVO3trlfKJolb8rsg06NwN0DclE1xbFcp6rGImjGZYy40gmFH7/6vaKqYsFiqOh/PxHqbvkWe4iBwlHpP63wOIKj7i9qq+ClrbcOXU6TwEc6oKrNrVHXAMP/wYizrOWLOmaIlimsDofAVKkvrObqroKyWHPBoHpZSTuPxHNIUCRfngidU5YA18LDn3VdDJirijCzwiIU/qA==
 ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769508351; c=relaxed/relaxed;
-	bh=ATkijS+oHTz2pkZHnCMPzI1xUVFpO/mP5LSB/y+nhlw=;
+	t=1769522063; c=relaxed/relaxed;
+	bh=zp7r66ObLQb0uIcsfYchKUCHoARYZLzJSdw5YZym29E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=hca0WgjXMogPm6GGWvY16inad//l5zLzdtY6Kfog6y8ja1fWv4+COhhS4V/A0C3WAS+ezmqoBdmkkUF77jqI2/1ETYu4/QRy8ezv3yf/BMZDYA3wRNf3g1JSeo99JEsy0mTowV84+U8WPhlvPnxBFFu6RfX3ArueX4dVipJvtv6X0yonOI7FU4SAraj8eJd6GBzivZ2X29aaMZ0cn34p+kFtxA2JD1oMlJ7/vt2nZNOmPr0xpfF3/S0yodfHP0n4apzZchRLWKDWaxscEoONEchGMBDkbg96xnzpmfABxx7eGMqh3mtUVtqIwbcp9vHOXjUvYwDjr7AkOY9heq9E3A==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=CQg2cwH/; dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=etMvC1X7; dkim-atps=neutral; spf=pass (client-ip=205.220.165.32; helo=mx0a-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org) smtp.mailfrom=oracle.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+	 Content-Disposition:In-Reply-To:MIME-Version; b=WfxEIcKrbxFT9zA9C93u5PL/6UCFhDC5saIxheQmoz3c1kXEjwaNUqPDvFi3lO75U0DNK1ekznxRoBF1lZVB0a6Yq4cHU2avpwhCDtrpkkDDnl8MXrMLn7C0ExMO+T2F7AIUM2PZRiYDkXm6CLvMNftAwkv3TNDgmd+NF4NvYZMdFZ6YPAcuJm1p/9Rly5aaUxm+BqGgnzLIHUJuzAU6DvsAEZmGKtlvQWl+SYdG7iTRXgBkEII0K/aoBwlGbL0YlTmg8Yb51IfImMnYwgzg+I4AbLA1iNycLrYmkOVFZEIg60rnGGF/2P9ZSMAagPJcDXH6g46eTKL3i/39Z+fX7g==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=rEQuxTfL; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c110::1; helo=bn1pr04cu002.outbound.protection.outlook.com; envelope-from=ynorov@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=CQg2cwH/;
-	dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=etMvC1X7;
+	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=rEQuxTfL;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=oracle.com (client-ip=205.220.165.32; helo=mx0a-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org)
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=nvidia.com (client-ip=2a01:111:f403:c110::1; helo=bn1pr04cu002.outbound.protection.outlook.com; envelope-from=ynorov@nvidia.com; receiver=lists.ozlabs.org)
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azlp170100001.outbound.protection.outlook.com [IPv6:2a01:111:f403:c110::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange secp256r1 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4f0gyj0vqhz2xcB
-	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Jan 2026 21:05:47 +1100 (AEDT)
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60QLpcqT247091;
-	Tue, 27 Jan 2026 10:03:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=ATkijS+oHTz2pkZHnC
-	MPzI1xUVFpO/mP5LSB/y+nhlw=; b=CQg2cwH/xYGXWuava+TEocs3/YxG5Mf3y4
-	He3+YJ1bB8/LJwyP8aeAz3+grMXXFDL3rUnSWURspdHN272QueQkNVHGc4Yvoo6n
-	1NEEhmndlWvhHUnZ3692xv5HDrNH7tBEa2Q8t5Y+8IeaBctXWncaJny5JLl+FCw/
-	1WQE35gHfQYl4gill3172EA1ttlkDiuxi71QESmWsx0UaAO1HvHj6og7U3xIa7z7
-	x42OpzAvjhWn0xXd/CQBGdkNvc+/W6mYIlR2rqpFNhzs8z9LVK7i3l5tlWajW44r
-	aR+XdkR2AdEEL72XGe+jHScIpV+ArbDthWCUhC+N8TlagrpI0j2g==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4bvn09ks4a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 Jan 2026 10:03:51 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60R8dRYH010437;
-	Tue, 27 Jan 2026 10:03:51 GMT
-Received: from bl0pr03cu003.outbound.protection.outlook.com (mail-eastusazon11012061.outbound.protection.outlook.com [52.101.53.61])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 4bvmh97a84-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 Jan 2026 10:03:50 +0000
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4f0n2Q0QJVz2xXB
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jan 2026 00:54:20 +1100 (AEDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=F2o7L5KeGZ0p2/pnJpTwQuqMCNIIgDa7i3xIeDE9wkr/hRSXS0v9QORKkSW65nxcdRlKXqc9GFVm9c494XkaVKd8Ktob+2B4oirrcuWHxi6d0ERXeY0fhapUhPFxP+M+LnUcPALeaokWekYfYvRpjJoxNPmd3Q10MIfxfeQU9rZsm1PdcsmAi4FmHpRlZcfU9ljf8RgpXoFSRUyhgVdDXAZnUxDXCGgvcoCby/5X4sppTbN8sFDeMx55qOQxPiTGnFa83o0x2JF8H9B0+sVrYIIN9rUyPwTgzDBSCDs8BSErg5JZ+SqQVlOFw4IqvvSf9e0VESehF5BOmHqDxHQwxQ==
+ b=LoJSBm+KCKFpH+/YERTFRm9qpvrSgblyoWTqR5N4ypYrMyxGsNPuKhw28ga/dQSWFHivndYkGabEyocTpxWeJnDQFpU+UrCUEo3X+1UiXO4wbfKju7caDqEBjEiFfHO2lR7lNMXA7Z7KOaealXoSGh6gt4Idrrh7aoV7tD5LPdeRheuDurTrP0Xb0bZ+otpu/vZ4PvvIpLqVAAqzKWIukUiMTKZHolkbsN1YgXNtTlBIbxvEZW+9wZ4jn1F7+CZU/bmPCkpQZ/8loUJhLBBqNJOWCk368gu1Id6fqXY4H9bmlEgNyWJOMIb+7rNofNhFsj/IE/4uGXydchgBnpWm/g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ATkijS+oHTz2pkZHnCMPzI1xUVFpO/mP5LSB/y+nhlw=;
- b=wQomPcpJRyXwK5mq5OBb3gUyjr2k9YKd9o8ofQnaNNppDLKmQmJMunNElnC53gMqmBZaNucTTB29grNCE0rU1yiWmNR85W8rhf8zFEPpNHgUu1jjzk9ZcTZw3oIkVZ1G2mHzI5ThCQ7ZjA7/oFY4+cD+Ynelh98iHl5TeyIP6jD6XsEEL2IRqOzAXomUsJd8M6L3qZENJIMq/yfUKeXWqrW+1BNtfZalyzbsPi9tA6/22el39U9ryaBuewtw3B68BVtRbgMleb93vlO972MCfxVw0mt7CxL+kX5XxCM4t/ivFXIyE97ERurDSFtrCxKd7nwWKmT24UsCtu5ys5JWvA==
+ bh=zp7r66ObLQb0uIcsfYchKUCHoARYZLzJSdw5YZym29E=;
+ b=yc/McpkpE40/U1EIDkQhwuSazZVcfjtylRVRT67RNC8pxe6WMp4jsDWsqqpGDIdfrB46X5IpEyO9rg5ms0fSxvX4Gc+xMrs64bTiFVOfDX32VTmkGE6mfTXoui4y7vV2G/s7nJnqkg0egXRboYiuOkLsV37tVJudX6jZljihbFtnUPIQ5Nh1QqdMzH1OUnFURBVHlTr/rDzpgjJIlOWBV5aAgpatxKzZ02+nReE23ut9lryj/8nn9m5KpxsYTUcgNvzZ9F1L57NYlqGrVssLQdzYfgb6pQrGXrZsMSe85msXglRgqwbduBlQkg9QsS1k3lN1FyBR6TAeJYfUjI9nfQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ATkijS+oHTz2pkZHnCMPzI1xUVFpO/mP5LSB/y+nhlw=;
- b=etMvC1X7xBEJbu9H9mIxnVclSjxba5LaRE5g9t4ygn1EmuDbuqUOr43fA1cPPAOKTCECOHcJjJrOUVfW3WSLaTvWm8uXgXHLeGqpapqsKIrlRsBVitjJAJC+qYoABEcACGdHUaTYjaTRn5LFY+AidcIt6S3jZGHs0aNsPHAJj4Q=
-Received: from CH3PR10MB8215.namprd10.prod.outlook.com (2603:10b6:610:1f5::7)
- by CH3PR10MB7234.namprd10.prod.outlook.com (2603:10b6:610:128::13) with
+ bh=zp7r66ObLQb0uIcsfYchKUCHoARYZLzJSdw5YZym29E=;
+ b=rEQuxTfLSa3ej3dyz/LwMaY8zCZWuS/7Uj5hrA2fGjIx24GDHRHTaYGKIidmhfn2dnnZ6sOO86SPFxv/wVDMaVhVu+pZT6BxcpZm/aNMffFFeaoMVZqQCawL6sZvQVeBGDaOPTxlnN9p1bpXb1B0eksF6vacn+fC2CkHOWm5iVtAQrDLFmtD0OnOsgFrOBKBic/YTgPEGcdB34nZ+C/DlHDDM/OOSdThSQVToHuU9hQwswOjC70q36PoAKZuvF+XRp4HrtrdjBxVFBG8JX97hOq+3y9Gny7S9vd+FdOxfkiyiZw3wo6tEzHEsARh5NrL/B1txQWbB5mzVvOydnINKw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from PH0PR12MB8800.namprd12.prod.outlook.com (2603:10b6:510:26f::12)
+ by PH8PR12MB6698.namprd12.prod.outlook.com (2603:10b6:510:1cd::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.15; Tue, 27 Jan
- 2026 10:03:40 +0000
-Received: from CH3PR10MB8215.namprd10.prod.outlook.com
- ([fe80::4ef1:fa49:5a08:c1d9]) by CH3PR10MB8215.namprd10.prod.outlook.com
- ([fe80::4ef1:fa49:5a08:c1d9%6]) with mapi id 15.20.9499.005; Tue, 27 Jan 2026
- 10:03:40 +0000
-Date: Tue, 27 Jan 2026 10:03:37 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
-        Matthew Brost <matthew.brost@intel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Sandeep Dhavale <dhavale@google.com>,
-        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@kernel.org>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
-        Babu Moger <babu.moger@amd.com>, Carlos Maiolino <cem@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-        Lance Yang <lance.yang@linux.dev>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, David Howells <dhowells@redhat.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-        linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
-        devel@lists.orangefs.org, linux-xfs@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 12/13] tools/testing/vma: separate out vma_internal.h
- into logical headers
-Message-ID: <1e032732-61c3-485c-9aa7-6a09016fefc1@lucifer.local>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.11; Tue, 27 Jan
+ 2026 13:53:47 +0000
+Received: from PH0PR12MB8800.namprd12.prod.outlook.com
+ ([fe80::f79d:ddc5:2ad7:762d]) by PH0PR12MB8800.namprd12.prod.outlook.com
+ ([fe80::f79d:ddc5:2ad7:762d%4]) with mapi id 15.20.9542.010; Tue, 27 Jan 2026
+ 13:53:47 +0000
+Date: Tue, 27 Jan 2026 08:53:44 -0500
+From: Yury Norov <ynorov@nvidia.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>,
+	Hongbo Li <lihongbo22@huawei.com>,
+	Chunhai Guo <guochunhai@vivo.com>, Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+	Mike Marshall <hubcap@omnibond.com>,
+	Martin Brandenburg <martin@omnibond.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Dave Martin <Dave.Martin@arm.com>,
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
+	Carlos Maiolino <cem@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Naohiro Aota <naohiro.aota@wdc.com>,
+	Johannes Thumshirn <jth@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Zi Yan <ziy@nvidia.com>, Nico Pache <npache@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+	David Howells <dhowells@redhat.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E . Hallyn" <serge@hallyn.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+	linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+	linux-mm@kvack.org, ntfs3@lists.linux.dev, devel@lists.orangefs.org,
+	linux-xfs@vger.kernel.org, keyrings@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v2 00/13] mm: add bitmap VMA flag helpers and convert all
+ mmap_prepare to use them
+Message-ID: <aXjDaN4pwEyyBy-I@yury>
 References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
- <dd57baf5b5986cb96a167150ac712cbe804b63ee.1769097829.git.lorenzo.stoakes@oracle.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dd57baf5b5986cb96a167150ac712cbe804b63ee.1769097829.git.lorenzo.stoakes@oracle.com>
-X-ClientProxiedBy: LO4P265CA0172.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:312::15) To CH3PR10MB8215.namprd10.prod.outlook.com
- (2603:10b6:610:1f5::7)
+In-Reply-To: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
+X-ClientProxiedBy: BN0PR10CA0003.namprd10.prod.outlook.com
+ (2603:10b6:408:143::35) To PH0PR12MB8800.namprd12.prod.outlook.com
+ (2603:10b6:510:26f::12)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -171,192 +153,276 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR10MB8215:EE_|CH3PR10MB7234:EE_
-X-MS-Office365-Filtering-Correlation-Id: 94743a37-0594-4b5a-5764-08de5d8b57ec
+X-MS-TrafficTypeDiagnostic: PH0PR12MB8800:EE_|PH8PR12MB6698:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54efb381-a22a-4dcb-5551-08de5dab7da7
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|10070799003;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EpTqK8Y4hCZxveBKv6z2efVWrjshcUzmIqicGe9gy97r0DM2nASsPqtB+cff?=
- =?us-ascii?Q?zLQ4HCu80W7z+KjuXPTp5m3TfH8A7gzp/Pi6odrpBeNAdFnTJ1rOhV0M6gsN?=
- =?us-ascii?Q?0M/+4i/G2VCKNMa8RrRRM4x6U51apA6YlcNR/LOa5TXeuS+Lzk+Bq33KKEmP?=
- =?us-ascii?Q?INM6pSd3lzXCXCV4QqSeTlQIWEL8l97ML+LadnCcYPrHrOE4PG2Hs8WYb1yh?=
- =?us-ascii?Q?3Hy+OVRXQ70CdIlcxy1nghRNs0myyKVWvHDn0KtyknS4NxxAhp+t8rzfGIPp?=
- =?us-ascii?Q?Nk/MFud3E0iVKY9YHGDtQM8VCYiWh2kAfb4YS+dl16vm001E2jVcaQPVgwp9?=
- =?us-ascii?Q?8xDg6nN4ZxIiI1ajSB5OSJlaYgdqd7PfyTowbk2ykJSCF/DZYstNXRdLmYyK?=
- =?us-ascii?Q?5t/7URtU+bWE53evADzBDbcCqiCCUwZDRpJsv8yYSwMVaWNedpaEhghNsSvE?=
- =?us-ascii?Q?Dils8jGIljzRtdM6mITHdjwyEETkP+j4/YtQXZHT2MgPyAvErmwXxFWmgnxY?=
- =?us-ascii?Q?zaQpgdXBO0nkm68EIl4nBsIgHrpozV+SeRTC/BWQre0kbKatFjep52YKILvV?=
- =?us-ascii?Q?2b6cRsPRuQEFZAPNhoYuQT0ZBdymMxc2+pTxDr/GvyIbRM4lWHzxKhMn/oJ8?=
- =?us-ascii?Q?bQi5AyMW8PbbrXjpiyvgzlsi1fxR25x8hZR4OEoIJKZGceWEU4wrU7QcCP3D?=
- =?us-ascii?Q?JrMQOZ57z7ntPzj2KaAnblfFfCT8UltLD2WQDoLrcr3Bz3v4hjTsqiBvhGSd?=
- =?us-ascii?Q?DhCblgRSu45duXexDrVMyWffZeFrrc4ACtUkP88LvAd0ikkEwS16DHopEhqO?=
- =?us-ascii?Q?v595OE+MwogpPY6EnatN6ClWwEi+IKvI6DX12D06GdOaHLMgWgASz2wKh+YI?=
- =?us-ascii?Q?B5inA+L3pTfRiRV3JAuT+KpDB1ITGEKlnKQMdgiGSCpYv/5yKEeqBTjFcy4N?=
- =?us-ascii?Q?QtBBebgFs1m6At+sXqul/XCVHUn1PU3qLLAXFlLXb45MmpJW8LD1fMaOoAkq?=
- =?us-ascii?Q?1IfL/0HPpL+un3HaqsT2fwmfNz9JEGGQXZWIl2TT3h86QTK8XcfMyclmytEm?=
- =?us-ascii?Q?mikwbS7kfKNK4xeTWYoc42ysGWSk5DyMaD9KSA5yR18lLXdO/XU/kpJvZhlJ?=
- =?us-ascii?Q?l3rjhjaX7ATRaQmzBeLtYBUK5D6F6TPCx+qShOcWwLMtJdiyE8wOipFyYcYa?=
- =?us-ascii?Q?wU/ralMJFjq0U/kezzuuzkEIlHXdjA6GtYaigrZe0Ur0J+6UTB5SaGN1+aPd?=
- =?us-ascii?Q?NiX3bjfD9ygEBUQzuYSJ2aiGN9/JE6jkbrR5aCoTnj5kHqCLVAD6KMOykbLD?=
- =?us-ascii?Q?utnpDtL4FZdEaRpqpbyLXmlz6TatAFwC3R9avAhUdTQcSE1GuD+/VXDhfiSZ?=
- =?us-ascii?Q?5a6KuKJlKvlUYenAI6h7q48d5AWkGAis2STbev100OWQALrirRkigcL9recP?=
- =?us-ascii?Q?nU2Iq3Gpx2AYKQWS8JNUt6eTssRZ+EaPoz+0vi7HMg49F9457qeaXv4skcsr?=
- =?us-ascii?Q?MkCoErwa5bvYN2puPYflzvYqpW/3jg104eNvtpca1jQ8ktp724tAvdtWFOnc?=
- =?us-ascii?Q?oUxXKgQ4EADdukb8hrw=3D?=
+	=?us-ascii?Q?K1Z3sdgypy98NySAh7VUz1YFlwyjsRQpJrTrqge9OT4LxBhFw1ZHWhwA0kn1?=
+ =?us-ascii?Q?EdWdIv9zU1js6p6Pp2iGl4JWRZcrxuwSPLiz1pysjXk0XhR8x6+ODtUcNvUO?=
+ =?us-ascii?Q?QYqkeVk5EuibIcjCueohuHzciywhjCpUuSLFtSiAQth0S2QFfqLVk8epQxlB?=
+ =?us-ascii?Q?P+uNJBRyQKfuPsrOlAnC1mJQKgyWEcbL1omRs9OmRxPB/empTErC2+XMQjf9?=
+ =?us-ascii?Q?viZpoyBhoh8SYLsH39TVxkZ1dlA/8uKvCH3lH96OkFkpnucXxvgfrDrGK93p?=
+ =?us-ascii?Q?QoVbm9hoD3zO0s+FPgcMi2vyeFYoIQL6TepBk2fW45ghkNYjJvm03IZyZd+U?=
+ =?us-ascii?Q?hsaTkus/O2xO5rstKBjQ/VG9fJMPS48nLM8xbitOB2JT3XGUcVIb1Ov48zqN?=
+ =?us-ascii?Q?+YiX9vKbWRibPsF7ypn6cCDkRK+i4PvZWQ9XO0Pk6KqE4rlgiC5XjPWu4TMI?=
+ =?us-ascii?Q?QlkQs4+9PBRMJNhTtpdcLchatsugmyu1I+a5QDijQ/BeO6Xcpx95K8vbTNdL?=
+ =?us-ascii?Q?EUg123AXJNKh/swYOE87Yk06VOX+cUI07BZXOo41ZYXGB9fwQ9Yz8mRheoGW?=
+ =?us-ascii?Q?YLThRouxAjfTrOFJnwYOQu4myR6liFhUEjsBUrCZxp9rbbyDfSb++LNoNeu+?=
+ =?us-ascii?Q?7SA48RlXXBP3ZaGQr1/xYMdob/lyY1k5K7IQOM36vvi4QJpYsm8ZYuZsyXfR?=
+ =?us-ascii?Q?RWF5CyQ5QFHheivpot7YAX5p/FbqiCuTxJU2e/1apVu/c2BwaU7qHds+2GV2?=
+ =?us-ascii?Q?E8Fg4AAre46CRr0YBycL1GnSMfBtakl59DhxM3ObThuJbSqg/NjOUN7uAF9E?=
+ =?us-ascii?Q?2rQnTqF1/Y7h+GhiA20369Mv++0epzdq2y5yF0P9rO9ORWuC/bgSSInm3a5E?=
+ =?us-ascii?Q?aKv5AEgVySzB4jdHnHDmojAoGKQ2FwFM46k5tvEwXRvQNVQNmc7/J7aqbUrT?=
+ =?us-ascii?Q?QBlEr52LXZPjpvUEy7F4rKhqI8fKIa85f2FjYqL31TKyy2Y0l5lKbJGdW+rO?=
+ =?us-ascii?Q?qxMfeLzb6RRN2WA+2JiD/XqQCL+plCFdhn815t/N78+bhkY5qnLaOa5/4ItZ?=
+ =?us-ascii?Q?IjNbQQKguRED7KlFOpVfiYz1Frk47rernMsI3jrLIHqIl4ZXecypKlR5vmXD?=
+ =?us-ascii?Q?ey+2Ru3PPYbxN0KMY7p7KDJQTxFZ03FSG8yluYGtyhDFowL1rl+Bl0RtHS3u?=
+ =?us-ascii?Q?KG7zi+/txZ+JtWsnhOP56mLkt3lY2wLTYQu9ER5jn/9cimUIxjBzIQ7t0ua8?=
+ =?us-ascii?Q?SvUpyozlDeNlSjlKH1u1jp3s/y7iu96fMLEETvrIqAcDUEXuU5MAa695DUU6?=
+ =?us-ascii?Q?w80zgF0Mm8PHW2ScKrgKVY1lJ3N+Kx7W4RUjOjGRxPtKMuS/IBIH07tk0kg9?=
+ =?us-ascii?Q?AwJcx1VEtkd5T4HiypcslGYET99M32oON/n09O0XH/5+5k/CQvuCme7IsvHV?=
+ =?us-ascii?Q?7QfLpwHxYRGXqMK+P+f9pulFKt7Km3ymMz7kQu9M5Jz0FUGFOGy/JSwToDPg?=
+ =?us-ascii?Q?53OQPSw6aYdIrsciIVNmuYaUlVaoW9nOQ8OS72obrDfIyPcpQ7E6Nb57R+4B?=
+ =?us-ascii?Q?H016jP3M7mGMnVfDajw=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB8215.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB8800.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(10070799003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Ui99UDGVonf5yVooQu9qz5XQknsDGbze65WXiZZgErkfPaq4mrkvYY4J9flg?=
- =?us-ascii?Q?PF1CoBpnKFTjD2gxWU6MDpYR9A52zRXW7cxjziTb1GXZfO7rZ646LHiABC/l?=
- =?us-ascii?Q?WR2qQYWMwvAVOYAsuFHhXlknvBTnQfutyBoPsIGRtWF+AwVZykrMtr5B2UHj?=
- =?us-ascii?Q?TOznANoVXc2XzESdqqOY+KThIpA5UCfV6jJqtt6CgUcGeLymP5GQl7h7G0zc?=
- =?us-ascii?Q?LMXmmPqA5vDwAbFh44dwHQWvtvCdxa14++X+IcJ1tPhgO0ZkjCBNdwlp876c?=
- =?us-ascii?Q?7Z/4BoXJmJIdKURA4Hu6SLnLsamBJJkmQGDafTwOEShYecAhjHr9Eehwy1Oy?=
- =?us-ascii?Q?pAVpzStX2hIIceWHj+VKCXuy3HbCoVbSO1EWy50abFY0dInp3JsdmIVTP37M?=
- =?us-ascii?Q?CKxIm5nes7CN+0KKcFJfzNdkKQHjCOY4umXNEHPDK9WddLxPjPuGBi+5JGmo?=
- =?us-ascii?Q?uDWO7K9rMY1wnu2tzN20PtKMiy4zCpEGsQxjVyV5mRxZfNkQejB+9Cz0H0Fp?=
- =?us-ascii?Q?g+KupyexiQyKsx6ki4PJpj7+CQsG7/FT6It/Rd6z3fY0wrOLIIosVVRirxUi?=
- =?us-ascii?Q?B/IPF1hQX0BHyQBkhw+X4wLzNKdXbMoE6ED7AyM5KrkB5MUYQymsKtmI0lPI?=
- =?us-ascii?Q?UnGKamHKrDepn+iaVnwoOSiOFCdB/QWtoek6VHgMBeBsamrl8GxS8jI6mnXk?=
- =?us-ascii?Q?ZdicNOVVYzn5rjnCj0hsQoyeK2CMooBoR97cTaQSkPLN7sujZp3X54QKXqJ8?=
- =?us-ascii?Q?kA+5seynWmLJYFOUcZLNM62IwzQrjQr98cO0Qu6NjWF1hICHgkqkQiKmtbHA?=
- =?us-ascii?Q?D6zfwdGSp3SKgd6XPiA/d2PS0Prv9rEYqYtpGkMsVq/nkPPaICUSUPwB8OSI?=
- =?us-ascii?Q?miEBXJjWDyquQ5fUJ9aXAX6RTqYBSeQ9yr51vwa3779GfW+kI0wo+uPG3z8e?=
- =?us-ascii?Q?uBvP6AhK4MJA5XVX6bpoviqnBg3D28yBkBcjd7tZX6+vsKtgTUIFf/fsMVaA?=
- =?us-ascii?Q?EcM0LykcslsFqGdZgMc7J12ycHpBSuMvxpHk/UXLWhcqbSlZfnTweDtKmNdj?=
- =?us-ascii?Q?FJPj3JRySdpW2TkVok8Pi4SRDUXDy2lN8ZvhyotgpaxCmgbQ/itHeek8cVYF?=
- =?us-ascii?Q?uC3+v8iJt0uyzxk6e6AUlGLNTu2Xz8ob/wQg4aJJ5sClTWBD3gRHXz0JX6hm?=
- =?us-ascii?Q?43wRH+g/GCEb6A0s4tBBJtlmzo8ANKg+9eaMSYK/qLUiXGt6g4MoDQglxasG?=
- =?us-ascii?Q?YF49q734FiJ4cnnqMZQ9H/dyFdC02wvl06XFO6F+1LpAldjd1dBaGNffx53B?=
- =?us-ascii?Q?0GaWcDROFW3vtKVckYqX5wtO0ZBZtlLVkAQITOhmxQhOs15pKTdYgBu9QaJ8?=
- =?us-ascii?Q?bWVyh5jbF6eJ5PeEFuimix1rESkvq/FIkgMOmO4Lzn5H/4UQTpj2lEBfxo5s?=
- =?us-ascii?Q?M6rioDOougdL860CflME7G9c0VSHKWVC8tLK6ssDE+aYD8Rgsj6JZJaTGZoO?=
- =?us-ascii?Q?6LpKkJKaolbZscxr7nwrkr2h1h1FlqXxHO3w2jGriTsq/gxjJpE+9oRSaeX5?=
- =?us-ascii?Q?uKlmXO/mhal02xjdfMBCYP0yr1eSw3WNxYpCsJg/UgEf8hg5lT/brUeH6avc?=
- =?us-ascii?Q?SZu3f8tz2JDPbpzlQLB8ruWbfBQTTIg+AdUV5PmYppSlg9gGWXgjsZGd6paH?=
- =?us-ascii?Q?6yfKj14brhyZjCWkjP1GyH5AxLtdTrjd90o3F22yLUqUwpAEO4xpvrJduwiz?=
- =?us-ascii?Q?pCBCahLXSv5NSZ73Khy5KHGNQkq2Epg=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	AuuP4K6F4M99NqfWIXSqleOqIQD830sB7M7hNDoZ6RY8k2sfBgpUZPaEfqJiVUEsZj7ovST7lbWHJL/L4zfMS8JWVSz+6eDAY6aPcOqyvpXHkyggIXNrDF8Ywvak5DJ5+kEqtUU6HE+7sp84GyEW7hTzRUNGLcZP6NzALl388v8785Bbu3Gz5U1T2D9yvzF+CN169veIZ8RA8r4lF//v98pDP0sDMl9hkVqyYE9bQ47Vys+z9B6DmuziRUnhss4Rzv91ndh4AhDT4aK6yZs4tatvBTVFSHNFbjyGQCPAO+gjC4754Y5Ly71O2sPEi2cuN7acBQUsGrgOStTBTRbgHIvYXeQ/jMPrmp4WwFj4kwTgLaVYXgZlz4rfK91MdcdHAdp+M51TzOQ5jagRnoJLNAqymRM4mTcCiddKeUw5Uh51b7MgM/APoKBiBzLjepQA0ryEo84dVo5wOCPEmGnIDqcmo2MJaJ5T7R4vAGb+vl6Ci9eHHGb+4CiOYqKFrYnW7kzjl2cHfscQzCdljjW+n9UnF57eJ4cFzG5u6BcuNcr0LbiMmuH3pwWdX40UoN+lzuY51WeFa4Htt2mlm4oEtb2op+gEJ/p0W6Qay7H5Jo8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 94743a37-0594-4b5a-5764-08de5d8b57ec
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB8215.namprd10.prod.outlook.com
+	=?us-ascii?Q?o9+6Fz9IQu1u9yFAziFzK3yyroCvzjZUZ91LbxNzlY9aItC4HbHrRA5L/GrL?=
+ =?us-ascii?Q?eBXzf1q15dhNY6aIaeaYq9K1lMkNk4RcSeyDF6C00Z/SSGsMQJlsK6UklzzB?=
+ =?us-ascii?Q?r8FwlqMBcIpKe7YOQ4sF40N3QhOmQRcBo/ayDPJDZwSZL4ZoPSV1Ah4MS9oc?=
+ =?us-ascii?Q?7itM1LSW0lYVeCH/wguHMJu0l3Xf3NDGkY33I4MknGd4Iwod6QzON971rSZQ?=
+ =?us-ascii?Q?aY8p4Bd63rhKwZbOCfEy1spWInuJyRpdNyArgd8lWZ3KzmcXwkwnABQc4Iiw?=
+ =?us-ascii?Q?SaLXhoFwMfJre7B2oOfgtwxbgOnhYeOr/c7oXIJhgbTJK9idx+eEJkmY5F9O?=
+ =?us-ascii?Q?ikuQe6OAvIwQt5A/gdFePo4rEHXbjI4yRCeSSJNVOfSotsYm6/8wjKon3kso?=
+ =?us-ascii?Q?5wdnldELIATp//HBQhwEM+21WESDrUUgREr+xoTRFPn1eDRzyFn/eoEA4+xF?=
+ =?us-ascii?Q?ZveILnVv2YYlB6yqZw6EqM60+VdrhFfEqKWcdUaaoo0gN+KRnkKjAueqBb5l?=
+ =?us-ascii?Q?g9qQhqoAPj9lF9XmhuJJgdUdoRpzMT1JK4Qc1YeiaHo6dgkye1kTsiOPjtEx?=
+ =?us-ascii?Q?KAuJj1iBPcO1PIdYVSKD8SeWs1mDfDmP5GsoWrjaHY2HO6YdgwrVqKFIyzbt?=
+ =?us-ascii?Q?TXrZpvYLzeFlD/tzOlb9B6US/3n3S5hLtkKTWa1b0zV9vV/f/T66eJq8+10Y?=
+ =?us-ascii?Q?/9vjrgu4GmmVul9BW/m8/vC3UD1azefKU4zkHb3tUjp3y73/cbxSjNIFtufz?=
+ =?us-ascii?Q?+nPo8O2PsJ/aXLlkURmNljGfhUL3Ko9T3Q/+By8RcwLat2a/NgbV3BgsCRI/?=
+ =?us-ascii?Q?f5uSBvN7zeMROhDy6Sc92KUfk7rR4GFvFxGXAAs277jXTLPtlss3kJFyZlvK?=
+ =?us-ascii?Q?MahHhH51uz/MEm2hMcpzhfwwtfd+aPcOVItP25UdKBkTP4FBoumS+aGt7Umy?=
+ =?us-ascii?Q?INFGi8JQgYTfEfQnLRQDFH07YEtMMUeqNyjsh0+W5UPWH9ygIHMRHogCCKTv?=
+ =?us-ascii?Q?Ws8i06glyPrB7CzfB9i4iAcnuFreOu8iRusgo3kpPTZrZK90c3odwlHhns6N?=
+ =?us-ascii?Q?vsR3fbHB8tGWmaTYtmPtgI/BMbaamPCAynCGFhzbxzNVt8tAzIt36f1zgvr/?=
+ =?us-ascii?Q?5VjnybLjtoX4bFBDU5uKqyl8BnQzgUWN/UMDqZYEuJY+5XLlKyr7qFEhWzoy?=
+ =?us-ascii?Q?/opH+kNjzMN/pZ9Q1VAcp7+mR6Xoe4GulNm2ID47CbWhe54WDqdgRuJ01xY5?=
+ =?us-ascii?Q?aS7S7MtoMWYzlJfodvUofJjmweshr+HPFB2yJ26YwIAWiE58VnQ6XHo8pumL?=
+ =?us-ascii?Q?Pm1AQQsp76yYfYitM6mpAV1Q5ou/2OfzzmHPLNXcWC/xX4SiGqvjt4VVeYWg?=
+ =?us-ascii?Q?SgL8Tg/u55/hoajnKbRBWURVhmUY1JEO+DlC9TyE7U4qSLlQxKXHW6Hf5+KO?=
+ =?us-ascii?Q?DaFSptzO9A0utOKzeCXepfigOp985wD1jjKV3hJf6Jo4zQ947nn2WzTzitqI?=
+ =?us-ascii?Q?X9iQ2F/ykOC4YSTExqY2YrCQwz8K8NylmwA6WnUBLI5YteIJKxSLlB3SZVm5?=
+ =?us-ascii?Q?tje/gLefKg+VWoqsqXqQdelfw+WHwhUNyXavSNzq/CGd7oMDuN3XQogbljzQ?=
+ =?us-ascii?Q?0XB56sMEwv1NTGayQGu9ibQNXfmQtYLoyds8T9dXzpkTk54Ruhu77zFydOZZ?=
+ =?us-ascii?Q?cj+/e8NwwBpAo0oXEFd2P8xArwe3MDGMsymtbVNFkHbBCBCYiVxkiCudGzmT?=
+ =?us-ascii?Q?UbtUphY1zlA1geR8FyDDB2YyadDjTxZl8qRF2nrqPmv/ueujTMlz?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54efb381-a22a-4dcb-5551-08de5dab7da7
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB8800.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2026 10:03:40.5257
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2026 13:53:46.7166
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0DRc0NQallHrLLPuAJ3mYFq990hxCKNZCcJ5rOrSNt/40Zh6DtZvKxgIGJ36bKVthwKZgC7XW4VU6dHyOE622bubhZu1OImdZQ1qQvBRbUo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7234
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.20,FMLib:17.12.100.49
- definitions=2026-01-27_02,2026-01-26_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 spamscore=0 adultscore=0 mlxscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2601150000 definitions=main-2601270082
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI3MDA4MiBTYWx0ZWRfX7jMY3NqMm+0m
- 7Kyrp+0qdJEE5v+o2XjHqYiHj2I+vkqWK490gJCeEoX73v/1jC0n+SFgqyhgb9PXgRlplfjhxJA
- PAuwiTrfHAXgQJaJfo0zGemQbcglmopw88vfBjpZo+5Yas5eeMGT6gxcc5LQmq6961WkPlPl1A4
- pvoImPeGMKPgypnXPFSjl0K6HaDdXPCIj3/q7KrWLV0IkqGrjAJitH6BWC4SO2SyAC8jQuIV47K
- G2d8CHYvU+oc2tlwREj/eUW5WaGV8E0vnkVgPS/4dys0D3dn7kerTAu2Sl7g9HSAZjEApg2gsCO
- XIXVAl8TXXtQyQEXIlTKbT7O5n8qSeGGHrIwd90yY9bglDFF00QFEfmwjvLC4Me90up3WjJkbMS
- UTJAv+OjejygT2KwUmpcsDbltvPR0Wb2X2dEZ1dWQv+YRqZNjXh0rvH1tJm0XvSdy1+fNWLKbJF
- 9HLB0ptMc68tm/tjjgw==
-X-Proofpoint-ORIG-GUID: 7YLPGiOyk9ytNll2IzsmIMxT5j1wLI6x
-X-Authority-Analysis: v=2.4 cv=Rp7I7SmK c=1 sm=1 tr=0 ts=69788d87 cx=c_pps
- a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=yPCof4ZbAAAA:8 a=xL-mWBlC858c6hyJi6gA:9
- a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: 7YLPGiOyk9ytNll2IzsmIMxT5j1wLI6x
-X-Spam-Status: No, score=-0.9 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7NnDDl3DNBs283dtEngBrphLoIRRxNKNUyR7drzZ0Sm+AZ0f3G/bwfnAnW+UP+fBRdsrWGUZY2LUBFZmPZqp6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6698
+X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.70 / 15.00];
+X-Spamd-Result: default: False [-0.20 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25,oracle.onmicrosoft.com:s=selector2-oracle-onmicrosoft-com];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
+	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2221-lists,linux-erofs=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,redhat.com,alien8.de,zytor.com,arndb.de,linuxfoundation.org,intel.com,suse.de,gmail.com,ffwll.ch,ursulin.net,amd.com,zeniv.linux.org.uk,suse.cz,kvack.org,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,linux.dev,paragon-software.com,omnibond.com,arm.com,wdc.com,infradead.org,oracle.com,suse.com,nvidia.com,paul-moore.com,namei.org,hallyn.com,rasmusvillemoes.dk,vger.kernel.org,lists.linux.dev,lists.freedesktop.org,lists.ozlabs.org,lists.orangefs.org];
+	TAGGED_FROM(0.00)[bounces-2222-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,oracle.com:dkim,lucifer.local:mid];
-	FORGED_SENDER(0.00)[lorenzo.stoakes@oracle.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[ynorov@nvidia.com,linux-erofs@lists.ozlabs.org];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:akpm@linux-foundation.org,m:jarkko@kernel.org,m:dave.hansen@linux.intel.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:jani.nikula@linux.intel.com,m:joonas.lahtinen@linux.intel.com,m:rodrigo.vivi@intel.com,m:tursulin@ursulin.net,m:christian.koenig@amd.com,m:ray.huang@amd.com,m:matthew.auld@intel.com,m:matthew.brost@intel.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:bcrl@kvack.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:muchun.song@linux.dev,m:osalvador@suse.de,m:david@kernel.org,m:almaz.alexandrovich@
- paragon-software.com,m:hubcap@omnibond.com,m:martin@omnibond.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:cem@kernel.org,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:Liam.Howlett@oracle.com,m:vbabka@suse.cz,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:ziy@nvidia.com,m:npache@redhat.com,m:ryan.roberts@arm.com,m:dev.jain@arm.com,m:baohua@kernel.org,m:lance.yang@linux.dev,m:jannh@google.com,m:pfalcato@suse.de,m:dhowells@redhat.com,m:paul@paul-moore.com,m:jmorris@namei.org,m:serge@hallyn.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux-sgx@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:intel-gfx@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-aio@kvack.org,m:linux-erofs@lists.ozlabs.org,m:linux-e
- xt4@vger.kernel.org,m:linux-mm@kvack.org,m:ntfs3@lists.linux.dev,m:devel@lists.orangefs.org,m:linux-xfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:jgg@nvidia.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:lorenzo.stoakes@oracle.com,m:akpm@linux-foundation.org,m:jarkko@kernel.org,m:dave.hansen@linux.intel.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:jani.nikula@linux.intel.com,m:joonas.lahtinen@linux.intel.com,m:rodrigo.vivi@intel.com,m:tursulin@ursulin.net,m:christian.koenig@amd.com,m:ray.huang@amd.com,m:matthew.auld@intel.com,m:matthew.brost@intel.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:bcrl@kvack.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:muchun.song@linux.dev,m:osalvador@suse.de,m:david@kern
+ el.org,m:almaz.alexandrovich@paragon-software.com,m:hubcap@omnibond.com,m:martin@omnibond.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:cem@kernel.org,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:Liam.Howlett@oracle.com,m:vbabka@suse.cz,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:ziy@nvidia.com,m:npache@redhat.com,m:ryan.roberts@arm.com,m:dev.jain@arm.com,m:baohua@kernel.org,m:lance.yang@linux.dev,m:jannh@google.com,m:pfalcato@suse.de,m:dhowells@redhat.com,m:paul@paul-moore.com,m:jmorris@namei.org,m:serge@hallyn.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux-sgx@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:intel-gfx@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-aio@kvack.org,m:linux-ero
+ fs@lists.ozlabs.org,m:linux-ext4@vger.kernel.org,m:linux-mm@kvack.org,m:ntfs3@lists.linux.dev,m:devel@lists.orangefs.org,m:linux-xfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:jgg@nvidia.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[oracle.com:+,oracle.onmicrosoft.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_NEQ_ENVFROM(0.00)[lorenzo.stoakes@oracle.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,linux.intel.com,redhat.com,alien8.de,zytor.com,arndb.de,linuxfoundation.org,intel.com,suse.de,gmail.com,ffwll.ch,ursulin.net,amd.com,zeniv.linux.org.uk,suse.cz,kvack.org,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,linux.dev,paragon-software.com,omnibond.com,arm.com,wdc.com,infradead.org,oracle.com,suse.com,nvidia.com,paul-moore.com,namei.org,hallyn.com,rasmusvillemoes.dk,vger.kernel.org,lists.linux.dev,lists.freedesktop.org,lists.ozlabs.org,lists.orangefs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[93];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_GT_50(0.00)[94];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ynorov@nvidia.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: 281DE92694
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim]
+X-Rspamd-Queue-Id: 1292E952BE
 X-Rspamd-Action: no action
 
-Hi Andrew,
+On Thu, Jan 22, 2026 at 04:06:09PM +0000, Lorenzo Stoakes wrote:
+> We introduced the bitmap VMA type vma_flags_t in the aptly named commit
+> 9ea35a25d51b ("mm: introduce VMA flags bitmap type") in order to permit
+> future growth in VMA flags and to prevent the asinine requirement that VMA
+> flags be available to 64-bit kernels only if they happened to use a bit
+> number about 32-bits.
+> 
+> This is a long-term project as there are very many users of VMA flags
+> within the kernel that need to be updated in order to utilise this new
+> type.
+> 
+> In order to further this aim, this series adds a number of helper functions
+> to enable ordinary interactions with VMA flags - that is testing, setting
+> and clearing them.
+> 
+> In order to make working with VMA bit numbers less cumbersome this series
+> introduces the mk_vma_flags() helper macro which generates a vma_flags_t
+> from a variadic parameter list, e.g.:
+> 
+> 	vma_flags_t flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT,
+> 					 VMA_EXEC_BIT);
 
-Could you apply the attached fix-patch to avoid a duplicate struct define as
-reported by https://lore.kernel.org/all/202601271308.b8d3fcb6-lkp@intel.com/ ?
+This should go on the bitmaps level. There's at least one another
+possible client for this function - mm_flags_t. Maybe another generic
+header bitmap_flags.h?
 
-Thanks, Lorenzo
+> It turns out that the compiler optimises this very well to the point that
+> this is just as efficient as using VM_xxx pre-computed bitmap values.
 
-----8<----
-From d19e621020697b25d70f13ffeb2b0eb46682a60d Mon Sep 17 00:00:00 2001
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Date: Tue, 27 Jan 2026 10:02:00 +0000
-Subject: [PATCH] fix
+It turns out, it's not a compiler - it's people writing code well. :)
+Can you please mention the test_bitmap_const_eval() here and also
+discuss configurations that break compile-time evaluation, like
+KASAN+GCOV?
 
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
----
- tools/testing/vma/include/dup.h | 12 ------------
- 1 file changed, 12 deletions(-)
+> This series then introduces the following functions:
+> 
+> 	bool vma_flags_test_mask(vma_flags_t flags, vma_flags_t to_test);
+> 	bool vma_flags_test_all_mask(vma_flags_t flags, vma_flags_t to_test);
+> 	void vma_flags_set_mask(vma_flags_t *flags, vma_flags_t to_set);
+> 	void vma_flags_clear_mask(vma_flags_t *flags, vma_flags_t to_clear);
+> 
+> Providing means of testing any flag, testing all flags, setting, and clearing a
+> specific vma_flags_t mask.
+> 
+> For convenience, helper macros are provided - vma_flags_test(),
+> vma_flags_set() and vma_flags_clear(), each of which utilise mk_vma_flags()
+> to make these operations easier, as well as an EMPTY_VMA_FLAGS macro to
+> make initialisation of an empty vma_flags_t value easier, e.g.:
+> 
+> 	vma_flags_t flags = EMPTY_VMA_FLAGS;
+> 
+> 	vma_flags_set(&flags, VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT);
+> 	...
+> 	if (vma_flags_test(flags, VMA_READ_BIT)) {
+> 		...
+> 	}
+> 	...
+> 	if (vma_flags_test_all_mask(flags, VMA_REMAP_FLAGS)) {
+> 		...
+> 	}
+> 	...
+> 	vma_flags_clear(&flags, VMA_READ_BIT);
+> 
+> Since callers are often dealing with a vm_area_struct (VMA) or vm_area_desc
+> (VMA descriptor as used in .mmap_prepare) object, this series further
+> provides helpers for these - firstly vma_set_flags_mask() and vma_set_flags() for a
+> VMA:
+> 
+> 	vma_flags_t flags = EMPTY_VMA_FLAGS:
+> 
+> 	vma_flags_set(&flags, VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT);
+> 	...
+> 	vma_set_flags_mask(&vma, flags);
+> 	...
+> 	vma_set_flags(&vma, VMA_DONTDUMP_BIT);
 
-diff --git a/tools/testing/vma/include/dup.h b/tools/testing/vma/include/dup.h
-index ed8708afb7af..0accfc296615 100644
---- a/tools/testing/vma/include/dup.h
-+++ b/tools/testing/vma/include/dup.h
-@@ -1327,15 +1327,3 @@ static inline void vma_set_file(struct vm_area_struct *vma, struct file *file)
- 	swap(vma->vm_file, file);
- 	fput(file);
- }
--
--struct unmap_desc {
--	struct  ma_state *mas;        /* the maple state point to the first vma */
--	struct vm_area_struct *first; /* The first vma */
--	unsigned long pg_start;       /* The first pagetable address to free (floor) */
--	unsigned long pg_end;         /* The last pagetable address to free (ceiling) */
--	unsigned long vma_start;      /* The min vma address */
--	unsigned long vma_end;        /* The max vma address */
--	unsigned long tree_end;       /* Maximum for the vma tree search */
--	unsigned long tree_reset;     /* Where to reset the vma tree walk */
--	bool mm_wr_locked;            /* If the mmap write lock is held */
--};
---
-2.52.0
+Having both vma_set_flags() and vma_flags_set() looks confusing...
+
+> Note that these do NOT ensure appropriate locks are taken and assume the
+> callers takes care of this.
+> 
+> For VMA descriptors this series adds vma_desc_[test, set,
+> clear]_flags_mask() and vma_desc_[test, set, clear]_flags() for a VMA
+> descriptor, e.g.:
+> 
+> 	static int foo_mmap_prepare(struct vm_area_desc *desc)
+> 	{
+> 		...
+> 		vma_desc_set_flags(desc, VMA_SEQ_READ_BIT);
+> 		vma_desc_clear_flags(desc, VMA_RAND_READ_BIT);
+> 		...
+> 		if (vma_desc_test_flags(desc, VMA_SHARED_BIT) {
+> 			...
+> 		}
+> 		...
+> 	}
+> 
+> With these helpers introduced, this series then updates all mmap_prepare
+> users to make use of the vma_flags_t vm_area_desc->vma_flags field rather
+> than the legacy vm_flags_t vm_area_desc->vm_flags field.
+> 
+> In order to do so, several other related functions need to be updated, with
+> separate patches for larger changes in hugetlbfs, secretmem and shmem
+> before finally removing vm_area_desc->vm_flags altogether.
+> 
+> This lays the foundations for future elimination of vm_flags_t and
+> associated defines and functionality altogether in the long run, and
+> elimination of the use of vm_flags_t in f_op->mmap() hooks in the near term
+> as mmap_prepare replaces these.
+> 
+> There is a useful synergy between the VMA flags and mmap_prepare work here
+> as with this change in place, converting f_op->mmap() to f_op->mmap_prepare
+> naturally also converts use of vm_flags_t to vma_flags_t in all drivers
+> which declare mmap handlers.
+> 
+> This accounts for the majority of the users of the legacy vm_flags_*()
+> helpers and thus a large number of drivers which need to interact with VMA
+> flags in general.
+> 
+> This series also updates the userland VMA tests to account for the change,
+> and adds unit tests for these helper functions to assert that they behave
+> as expected.
+> 
+> In order to faciliate this change in a sensible way, the series also
+> separates out the VMA unit tests into - code that is duplicated from the
+> kernel that should be kept in sync, code that is customised for test
+> purposes and code that is stubbed out.
+> 
+> We also separate out the VMA userland tests into separate files to make it
+> easier to manage and to provide a sensible baseline for adding the userland
+> tests for these helpers.
+> 
+> 
+> REVIEWS NOTE: I rebased this on
+> https://lore.kernel.org/linux-mm/cover.1769086312.git.lorenzo.stoakes@oracle.com/
+> in order to make life easier with conflict resolutions.
+
+Before I deep into implementation details, can you share more background?
+
+It seems you're implementing an arbitrary-length flags for VMAs, but the
+length that you actually set is unconditionally 64. So why just not use
+u64 for this?
+
+Even if you expect adding more flags, u128 would double your capacity,
+and people will still be able to use language-supported operation on
+the bits in flag. Which looks simpler to me...
+
+Thanks,
+Yury
 
