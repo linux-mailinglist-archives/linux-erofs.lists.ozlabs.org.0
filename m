@@ -1,129 +1,94 @@
-Return-Path: <linux-erofs+bounces-2218-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2219-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aMaOOKstdmnEMwEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2218-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Sun, 25 Jan 2026 15:50:19 +0100
+	id EJIlJOwyeGlRowEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2219-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jan 2026 04:37:16 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 858D18112A
-	for <lists+linux-erofs@lfdr.de>; Sun, 25 Jan 2026 15:50:17 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A763F8FA59
+	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jan 2026 04:37:15 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4dzZMl4rg8z2yFm;
-	Mon, 26 Jan 2026 01:50:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4f0W2028SJz2xcB;
+	Tue, 27 Jan 2026 14:23:04 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.234.252.31
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769352611;
-	cv=none; b=cpwDnpMlzKo1iDaj+xQid6yeR4YRhBBIJPLnQZ99KQKz4NbceteFLOf6jkiBB7s0pkhQ+e7OP6FK6WhGX7aBtPCjrnbDhT1JSDKenI6aFaSHYWEsFUCGb+98wnuNyY8H/5UXxA5rm7pFoqHiqMegQ3TIgAU91f5eCmX0YTTZrCgXgbBt5XUSrilkUWJ9b3AzovkHEQvf5Bz3nRmf/v1nSgkPaeJlOONT5GfLhsp9knIKbyi+aRgcppqD+h8HqWtqJeBXAPu5QRsfJVrJYrTo2AX2rn3IWLQAuKyWRl49WIlfpuLxvm5nbBwkmeUB9gVUylnui7QYxVFXKXPu3NMz8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769352611; c=relaxed/relaxed;
-	bh=UzxsqALjIiLfZI++xQ/yx4qRRJSHfymTnea+0CWaolY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KU8BKUYJd1+soP7gWvKTSt4MhBcaHEtZopvIshk0eqP68Q3eSN0p0yTTDfJ/iOWf6bOqJ8cO0erggzuZ+iZrhi1I4yY0XLjufjZJ2CYXoPJXAOJTd8eTEN2EPMzEx9WNtzvpfqaaoX8ZF9VP+YQrIbYnuFgP4+ziQDDpCYIQXPEBciNNvMt9+X8bT6tdKR8Usng3fP3PB32M0GAwJLseb6N8amtlMD21Z9i17KB/FUgVCDfJ6O0HTNkRfBTP/pnd+PnWkOX8mXaDE+fbN+YDyBfvoJFi4Ib8QaBw6N3uXMV84Jtsw2fF/T5Tyz1na5VmxI9nM3reRwBdXSXKCIASjg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=M89xD5TT; dkim-atps=neutral; spf=pass (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=jarkko@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::244" arc.chain=google.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769484184;
+	cv=pass; b=gXpAiMjQQclL/E6e9YRzCi0iSa9xgXQs7YulJyPN8Dva3kelNQGbqQ292cEzk/VPxZgqYTjd7cbMW/kXOGtnDsz9YON6dw5sb41tBhlKa5kS03P1LstyizlvICvZOZXSXbRLslpwcYuIAEQfdgQc472yHRE7rbEcF7MSbdXGQYdSM4kuLH391zPyN3GXjE6v7qrykJzEC7ChcApBWHJkJVB0L0xAZODBehNrZdQa6r8/+jKBthPKNbjDYV5TjXgsWzMb5qZx9te5n2boLNZqylSadqOpDqJTwU//vYLYzyQNrxaK6HVfUfLUsi6bDss3utFu8FIWtS9bs6f6UrLCRg==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1769484184; c=relaxed/relaxed;
+	bh=xXDGAwrlFbPhOF7yQzq3sIxpFlr2TpQhUx6aTrtQBbE=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=UY0IuHBM+v0fi+J27VEKtk3sH8aLMgWNo9EXy6s6B4cceafOiGIlTRRLKFoaFsGV1AxHK0zkg9C2gYPn2zItZOV1dTwtqdFcGnkq+DLNJCswJ8LV/oQSoa0MWsUCZpvZRceP1yOBJ+8reQZYGvcHQt92EnYd1bfUQlRD0RvAS5zxAITaMI4rFMGHd1B8HApVsaD/lhebrxnSUp3+UQ9hv54iJzu4PVIFmosvVdmMh4HQ8eVDyIEqUbEbqf1H8j6yhAtQL/4bAyNrfrEk1LcSXRoS3BeMLtoLvh/cJTWNx+cjER/Iq5twtj4CtKS4fwyDrOViu/1hKevBnv+971du6Q==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=RfekXIfR; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::244; helo=mail-oi1-x244.google.com; envelope-from=nelsonmv692d@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=M89xD5TT;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=RfekXIfR;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.234.252.31; helo=sea.source.kernel.org; envelope-from=jarkko@kernel.org; receiver=lists.ozlabs.org)
-Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::244; helo=mail-oi1-x244.google.com; envelope-from=nelsonmv692d@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4dzZMj2QW7z2xqD
-	for <linux-erofs@lists.ozlabs.org>; Mon, 26 Jan 2026 01:50:09 +1100 (AEDT)
-Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
-	by sea.source.kernel.org (Postfix) with ESMTP id B0A0743D2F;
-	Sun, 25 Jan 2026 14:50:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70185C19421;
-	Sun, 25 Jan 2026 14:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769352606;
-	bh=Qb77RiWgyHm5SU1GmS1LMhqiQbtCFBFXaWxM/S1HaDo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M89xD5TT4e8L24TFAy59ViAy3loqol6G07UhfkgnivqN0T1QHIeXLK6KufoCrmnXv
-	 kekwqOI8IRA4bMgS3j6olFfRKZTjyIBt4fMtWD+6LFJ0ZGBnPwkx1Vvk3JrvMW2Ll4
-	 zC5Vge1F4V9gjzvpVRyB4bOSiYG1Efwk0TeU8NIXylAL1tIZq8vI4gcuC9uXB2RLeh
-	 JBN9Hl+6DYuHM7nuJ5FN1dElHztg8/NLO1X1HlWuX25qrluftOw7nVx6DrXppnlOtZ
-	 MyTpao/Eq+4i/v4tPdubm9C3tLQzM8HcEkPI3lCw90Wg6LIyuqGLw6gE9EaZT2Y1at
-	 1DQ8tqzm59ruQ==
-Date: Sun, 25 Jan 2026 16:50:01 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Christian Koenig <christian.koenig@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Chunhai Guo <guochunhai@vivo.com>, Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Carlos Maiolino <cem@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Zi Yan <ziy@nvidia.com>, Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E . Hallyn" <serge@hallyn.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-	linux-mm@kvack.org, ntfs3@lists.linux.dev, devel@lists.orangefs.org,
-	linux-xfs@vger.kernel.org, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 08/13] mm: update shmem_[kernel]_file_*() functions to
- use vma_flags_t
-Message-ID: <aXYtmbL40r5wLgk2@kernel.org>
-References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
- <736febd280eb484d79cef5cf55b8a6f79ad832d2.1769097829.git.lorenzo.stoakes@oracle.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4f0W1x5mydz2xJF
+	for <linux-erofs@lists.ozlabs.org>; Tue, 27 Jan 2026 14:23:00 +1100 (AEDT)
+Received: by mail-oi1-x244.google.com with SMTP id 5614622812f47-45c7f3a9676so4053522b6e.1
+        for <linux-erofs@lists.ozlabs.org>; Mon, 26 Jan 2026 19:23:00 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769484178; cv=none;
+        d=google.com; s=arc-20240605;
+        b=B989Sb7/ipPxD9S8SuBGZAIHsVpLl90s98pGvrV9tfY4aqCB+1WkcEV+vY82qFnimS
+         SRGGaZ7N2Z16hg6iQuCVM1XyfWzHTxYDgOH/ZqVd54WgCRrLFxHdANY3esAvCs6kNxF5
+         PhLDlWwir0MnQkEBvrBDuBsOc01i7LHkYvTJGu7MtIM/SENQKP/JKAGJr0pFPNLYl79E
+         oe/nKo5K7mAzIwsTuyKHwr9Q+1b0uDjcuMX5OIJYehaGC66LMCNrQy73jf4BpUYW6DHh
+         DxORK6GeZL9wzcXXuQfySoMyuKgyGmGxcIRvKbkmcAQv19IE7S2EoYjHNVlujvxWxfgB
+         uzCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=xXDGAwrlFbPhOF7yQzq3sIxpFlr2TpQhUx6aTrtQBbE=;
+        fh=o4M9HsD2NkZUn+xXpryVEPZnqQ3B64SBBz9sPLrYkGc=;
+        b=U9ZWTUPjoGxMX6TFuoAyck5BdryP4H8aBZVC6JNDbvVmlNU06PcHPYCAF0hwdd+aZG
+         QmXV/EU5YIIAfs6MRDCg4tVyJMGDMetmm4EOS4+63NXfkmg+OopxkxFVU0ixfix8zLP6
+         7XT7jAr1LvV05Jht7C3DyCprKKRoomf1QbzqKdtJm3Q8Yw2qIaosNY/FyUS1PagRPOQO
+         GFCW8zsNl8az/a6q9Zieq8vjqn3A55BCgsUz+7AGym7C0hsNDcyli42mueUabibWZEOH
+         2B113U7fecI6zgLGwve+zUxq9IYcNf2wQ9aoJYARNi+Rly1GbqHSAXkVbLlY+gApsVb6
+         vGTA==;
+        darn=lists.ozlabs.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769484178; x=1770088978; darn=lists.ozlabs.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xXDGAwrlFbPhOF7yQzq3sIxpFlr2TpQhUx6aTrtQBbE=;
+        b=RfekXIfR6rt8EPSy9e9qjAYJfDwGaz/4HdW6q8RkLW6DqkBhUw29TaAxWTpp+q8rio
+         i1E6hC9lUaob0LdnckV9uzdKixNxZ09diTHr1mNkfnIhFYN1T50Hf4vIA1uK40rWsc1R
+         m8+s9bNC9OgZFJoAeLuW+9jEj7enkxwkoBHBRC+qwyUBNywOd4MxLP+hRtzsUAVIyBFr
+         cPdywWKeqBFjmjaf9gNCuc/sCyyJg1KMlrAbZnS6ZAkzIimozez5laSIk4cv1GsEg87q
+         2xeDHVCF6x1W+yT1HnVIOP0Upo98WzEyuc6YhWZ8/m5dzu8HweV6PwoLRD1j5Mbfae9x
+         4a7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769484178; x=1770088978;
+        h=to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xXDGAwrlFbPhOF7yQzq3sIxpFlr2TpQhUx6aTrtQBbE=;
+        b=rnFpw9zmb9xF2dsw9sC2xeikdq774JaZmEf1TfhstTBMp8WAP1uFhT40Y7Sy/Mnl51
+         oL45q2unNHAtHDMRBSAppZGgIS/m2H9pt5qyNwA71jfP0I5yDCvPFEa03TSakQmATOJ7
+         oITfihsqpf7syACwYIxhyYJ7jf4aEQxhDxm7XaIpbc2lyuBENh3irH4egC0Y1N6JSo30
+         Z/jjGM6kMsP64m54dtRUsW4j1E3dDUimW3et67BOR7RTtZwbAEaHFjacd/Mw5byXjYdC
+         KZwdTgWfqtx6sp7YyOUMYk+yPvcijcgeeO6R64VrO1ul7j9/bBc3jE1eNvcMxCRKmlj0
+         Gb8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXl3mxfbMkqB4wJYhS6cLPJqeWJd3zEdE51FgFMotxnXoZ/Jf1XzFBYuZsjzO8RmCA/eA5MNuGE8cIVXA==@lists.ozlabs.org
+X-Gm-Message-State: AOJu0YwrexN3sOue7q1B4VXypOn/9eSc8uk5PGgNZvC69AMASoWvxAjc
+	dLFSZzzjsx6iaV2gI6CNR7UPYkKbGvrspB48Bnw06BeJmXxmfRmiZOiUs5Bcl6/kUdjpc/p/yIG
+	4zdKfTSfsSmkTxf0VyCdrSHZFoFdukEA=
+X-Gm-Gg: AZuq6aIkVh8UEw2ONDUKHVIrjYfovHYz36xwyaimHMej77pMFTIr6/GXdblIK/xWslV
+	hiO+4QibocWGgBq3sCjkRbaMGRooz1QrA8Qtu8InNc5jelWoPOVafFzGxDobGRPFSUe9dV2QzZF
+	YrmqbjGdPu1rWtBA9DdgQ1hygVXAtQv+BYMMht1///fe0t+3e5CzYiFpv6f5/tTHQTYmF71X8qi
+	3F+/rNNGjdqsVkZUltvsjDEzrxSitobXBdJ8P31m7eRzh9qr1+BRbLFv9c80AesB41C4TqJt2KV
+	79rmvHtNvc6mlkJjyo86q16QBBeqSprpCoYa/XllkF/af1mSNpic5K3LmA2pCDGZU5btSGuKLX7
+	rw7yfruJDH124Zf9jG+YnvyNjWqO2HMPYMnHXsXQi
+X-Received: by 2002:a05:6808:250b:b0:44f:f025:303e with SMTP id
+ 5614622812f47-45efc123232mr169916b6e.6.1769484177716; Mon, 26 Jan 2026
+ 19:22:57 -0800 (PST)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -135,523 +100,133 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <736febd280eb484d79cef5cf55b8a6f79ad832d2.1769097829.git.lorenzo.stoakes@oracle.com>
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+From: Jose Zhang <nelsonmv692d@gmail.com>
+Date: Tue, 27 Jan 2026 10:22:45 +0700
+X-Gm-Features: AZwV_QjkcXA6wsJU2X6tHkH59vEE8EnebG15ZUDTYHZ4Y9ClJaFEyxX39ntx3CE
+Message-ID: <CABLTnXFpcQJB6iaccarDSC6=f5OUg_ATXTswu4YVR9=BnTZKwg@mail.gmail.com>
+Subject: =?UTF-8?B?5aSn6ZmG5Y+R546w5LqU5Y2B5LqM56eN6Ie055mM5qSN54mp5ZG85ZCB5rCR5LyX5Yqg?=
+	=?UTF-8?B?5Lul5riF55CG?=
+To: gsjingjixueyuan@163.com, linux-erofs@lists.ozlabs.org, 
+	alexander.dahlberg@sigma.se, bshjs@xidian.edu.cn
+Content-Type: multipart/alternative; boundary="000000000000d9399306495623ce"
+X-Spam-Status: No, score=2.3 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+	HTML_MESSAGE,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_DBL_SPAM
 	autolearn=disabled version=4.0.1
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.70 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+X-Spamd-Result: default: False [9.01 / 15.00];
+	FUZZY_DENIED(9.11)[1:787d95bcbb:0.75:txt];
 	MAILLIST(-0.19)[generic];
-	MIME_GOOD(-0.10)[text/plain];
+	BAD_REP_POLICIES(0.10)[];
+	MIME_BASE64_TEXT(0.10)[];
+	MIME_GOOD(-0.10)[multipart/alternative,text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2218-lists,linux-erofs=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:lorenzo.stoakes@oracle.com,m:akpm@linux-foundation.org,m:dave.hansen@linux.intel.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:jani.nikula@linux.intel.com,m:joonas.lahtinen@linux.intel.com,m:rodrigo.vivi@intel.com,m:tursulin@ursulin.net,m:christian.koenig@amd.com,m:ray.huang@amd.com,m:matthew.auld@intel.com,m:matthew.brost@intel.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:bcrl@kvack.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:muchun.song@linux.dev,m:osalvador@suse.de,m:david@kernel.org,m:almaz.alexa
- ndrovich@paragon-software.com,m:hubcap@omnibond.com,m:martin@omnibond.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:cem@kernel.org,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:Liam.Howlett@oracle.com,m:vbabka@suse.cz,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:ziy@nvidia.com,m:npache@redhat.com,m:ryan.roberts@arm.com,m:dev.jain@arm.com,m:baohua@kernel.org,m:lance.yang@linux.dev,m:jannh@google.com,m:pfalcato@suse.de,m:dhowells@redhat.com,m:paul@paul-moore.com,m:jmorris@namei.org,m:serge@hallyn.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux-sgx@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:intel-gfx@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-aio@kvack.org,m:linux-erofs@lists.ozlabs.org,
- m:linux-ext4@vger.kernel.org,m:linux-mm@kvack.org,m:ntfs3@lists.linux.dev,m:devel@lists.orangefs.org,m:linux-xfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:jgg@nvidia.com,s:lists@lfdr.de];
-	FREEMAIL_CC(0.00)[linux-foundation.org,linux.intel.com,kernel.org,redhat.com,alien8.de,zytor.com,arndb.de,linuxfoundation.org,intel.com,suse.de,gmail.com,ffwll.ch,ursulin.net,amd.com,zeniv.linux.org.uk,suse.cz,kvack.org,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,linux.dev,paragon-software.com,omnibond.com,arm.com,wdc.com,infradead.org,oracle.com,suse.com,nvidia.com,paul-moore.com,namei.org,hallyn.com,rasmusvillemoes.dk,vger.kernel.org,lists.linux.dev,lists.freedesktop.org,lists.ozlabs.org,lists.orangefs.org];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[jarkko@kernel.org,linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	R_DKIM_ALLOW(0.00)[gmail.com:s=20230601];
+	TAGGED_FROM(0.00)[bounces-2219-lists,linux-erofs=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FREEMAIL_TO(0.00)[163.com,lists.ozlabs.org,sigma.se,xidian.edu.cn];
+	GREYLIST(0.00)[pass,body];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_RECIPIENTS(0.00)[m:gsjingjixueyuan@163.com,m:linux-erofs@lists.ozlabs.org,m:alexander.dahlberg@sigma.se,m:bshjs@xidian.edu.cn,s:lists@lfdr.de];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER(0.00)[nelsonmv692d@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_GT_50(0.00)[93];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jarkko@kernel.org,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nelsonmv692d@gmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[gmail.com,none];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	R_SPF_ALLOW(0.00)[+ip6:2404:9400:21b9:f100::1:c];
+	RCPT_COUNT_THREE(0.00)[4];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email]
-X-Rspamd-Queue-Id: 858D18112A
-X-Rspamd-Action: no action
+	MISSING_XM_UA(0.00)[];
+	ARC_ALLOW(0.00)[lists.ozlabs.org:s=201707:i=2];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sumo.ad:url]
+X-Rspamd-Queue-Id: A763F8FA59
+X-Rspamd-Action: add header
+X-Spam: Yes
 
-On Thu, Jan 22, 2026 at 04:06:17PM +0000, Lorenzo Stoakes wrote:
-> In order to be able to use only vma_flags_t in vm_area_desc we must adjust
-> shmem file setup functions to operate in terms of vma_flags_t rather than
-> vm_flags_t.
-> 
-> This patch makes this change and updates all callers to use the new
-> functions.
-> 
-> No functional changes intended.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
->  arch/x86/kernel/cpu/sgx/ioctl.c           |  2 +-
->  drivers/gpu/drm/drm_gem.c                 |  5 +-
->  drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  2 +-
->  drivers/gpu/drm/i915/gem/i915_gem_ttm.c   |  3 +-
->  drivers/gpu/drm/i915/gt/shmem_utils.c     |  3 +-
->  drivers/gpu/drm/ttm/tests/ttm_tt_test.c   |  2 +-
->  drivers/gpu/drm/ttm/ttm_backup.c          |  3 +-
->  drivers/gpu/drm/ttm/ttm_tt.c              |  2 +-
->  fs/xfs/scrub/xfile.c                      |  3 +-
->  fs/xfs/xfs_buf_mem.c                      |  2 +-
->  include/linux/shmem_fs.h                  |  8 ++-
->  ipc/shm.c                                 |  6 +--
->  mm/memfd.c                                |  2 +-
->  mm/memfd_luo.c                            |  2 +-
->  mm/shmem.c                                | 59 +++++++++++++----------
->  security/keys/big_key.c                   |  2 +-
->  16 files changed, 57 insertions(+), 49 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/sgx/ioctl.c b/arch/x86/kernel/cpu/sgx/ioctl.c
-> index 9322a9287dc7..0bc36957979d 100644
-> --- a/arch/x86/kernel/cpu/sgx/ioctl.c
-> +++ b/arch/x86/kernel/cpu/sgx/ioctl.c
-> @@ -83,7 +83,7 @@ static int sgx_encl_create(struct sgx_encl *encl, struct sgx_secs *secs)
->  	encl_size = secs->size + PAGE_SIZE;
->  
->  	backing = shmem_file_setup("SGX backing", encl_size + (encl_size >> 5),
-> -				   VM_NORESERVE);
-> +				   mk_vma_flags(VMA_NORESERVE_BIT));
->  	if (IS_ERR(backing)) {
->  		ret = PTR_ERR(backing);
->  		goto err_out_shrink;
+--000000000000d9399306495623ce
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-As per this diff:
+KuS9oOWlvSEqDQoNCuWcqOWutuS4reenjeakjeiKseiKseiNieiNieaAoeaDheWFu+aAp++8jOay
+oeaDs+WIsOWNtOWboOS4uumVv+acn+WQuOWFpeiHtOeZjOeJqei0qOiHtOe9ueeZjOeXh++8jOWk
+p+mZhumihOmYsuWMu+enkemZoueXheavkuaJgOWPkeWHuuitpuiur++8jOWRvOWQgeawkeS8l+mS
+iOWvueWPmOWPtuacqOOAgemTgea1t+ajoOOAgemHkeaenOamhOetieS6lOWNgeS6jOenjeiHtOeZ
+jOakjeeJqe+8jOWwvemAn+KAnOa4heeQhumXqOaIt+KAneiHquS/neOAgg0KDQrmlrDljY7nvZHo
+vazovb3ljJfkuqzmmajmiqXmiqXlr7zmjIflh7rvvIzlpKfpmYbpooTpmLLljLvnp5HpmaLnl4Xm
+r5LmiYDpmaLlo6vmm77mr4Xlr7nigJzmpI3nianmiYDlkKvnianotKjnmoTkv4PnmYzkvZznlKji
+gJ3ov5vooYznoJTnqbbvvIzlnKjkuIDljYPlha3nmb7kuZ3ljYHkuInnp43mpI3nianlj4rkuK3o
+jYnoja/kuK3mo4Dpqozlh7rljYHlhavnp5HjgIHkupTljYHkuoznp43mpI3nianlkKvmnInoh7Tn
+mYznianotKjvvIzov5nkupvmpI3nianlpJrlsZ7lpKfmiJ/np5HjgIHnkZ7pppnnp5HvvIzku6Tk
+urrmg4rorrbnmoTmmK/ljIXmi6zpk4Hmtbfmo6DjgIHlj5jlj7bmnKjjgIHph5HmnpzmpoTov5nn
+sbvlrrbkuK3miJblhazlm63ph4zluLjop4HnmoTop4LotY/mgKfoirHmnKjvvIzkuZ/pg73lkKvm
+nInoh7TnmYznianotKjjgIINCg0K6Ie055mM5qSN54mp6K+x5Y+R6by75ZK955mM5ZKM6aOf566h
+55mM55qE5a6e6aqM5bey5b6X5Yiw6K+B5a6e77yM5a6D5Lus5LiN5LuF5rWR6Lqr5LiK5LiL6YO9
+5bim4oCc5q+S4oCd77yM6ICM5LiU56eN6L+H6L+Z57G75qSN54mp55qE5Zyf5aOk5Lmf6KKr5qOA
+5rWL5Ye65ZCr5pyJ6Ie055mM55eF5q+S5ZKM5YyW5a2m6Ie055mM54mp55qE5r+A5rS754mp6LSo
+44CC5aaC5p6c5a6k5YaF56eN5pyJ6L+Z57G75qSN54mp77yM5Lq65L2T5Y+v6IO95Zug5Li66ZW/
+5pyf5ZC45YWl6Iqx57KJ44CB5bCY5Zyf6aKX57KS562J5Y6f5Zug5byV5Y+R55mM55eH44CCDQoN
+Cui/meS6m+S/oeaBr+WNgeWIhuePjei0te+8jOivt+WKoeW/heafpeeci+WujOaVtOWGheWuue+8
+gQ0KDQpodHRwczovL3N1bW8uYWQvZmF4aWFuLTUyLXpob25nLXpoaWFpLXpoaXd1DQoNCuelneS9
+oOWSjOS9oOeahOWutuS6uuWlvei/kO+8gQ0KDQotLS0NCg0K5Lq65b+D5ZCR5ZaE77yM5pyq5p2l
+5Y+v5pyfDQo=
+--000000000000d9399306495623ce
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-
-> diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-> index e4df43427394..be4dca2bc34e 100644
-> --- a/drivers/gpu/drm/drm_gem.c
-> +++ b/drivers/gpu/drm/drm_gem.c
-> @@ -130,14 +130,15 @@ int drm_gem_object_init_with_mnt(struct drm_device *dev,
->  				 struct vfsmount *gemfs)
->  {
->  	struct file *filp;
-> +	const vma_flags_t flags = mk_vma_flags(VMA_NORESERVE_BIT);
->  
->  	drm_gem_private_object_init(dev, obj, size);
->  
->  	if (gemfs)
->  		filp = shmem_file_setup_with_mnt(gemfs, "drm mm object", size,
-> -						 VM_NORESERVE);
-> +						 flags);
->  	else
-> -		filp = shmem_file_setup("drm mm object", size, VM_NORESERVE);
-> +		filp = shmem_file_setup("drm mm object", size, flags);
->  
->  	if (IS_ERR(filp))
->  		return PTR_ERR(filp);
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> index 26dda55a07ff..fe1843497b27 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> @@ -496,7 +496,7 @@ static int __create_shmem(struct drm_i915_private *i915,
->  			  struct drm_gem_object *obj,
->  			  resource_size_t size)
->  {
-> -	unsigned long flags = VM_NORESERVE;
-> +	const vma_flags_t flags = mk_vma_flags(VMA_NORESERVE_BIT);
->  	struct file *filp;
->  
->  	drm_gem_private_object_init(&i915->drm, obj, size);
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_ttm.c b/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
-> index f65fe86c02b5..7b1a7d01db2b 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
-> @@ -200,7 +200,8 @@ static int i915_ttm_tt_shmem_populate(struct ttm_device *bdev,
->  		struct address_space *mapping;
->  		gfp_t mask;
->  
-> -		filp = shmem_file_setup("i915-shmem-tt", size, VM_NORESERVE);
-> +		filp = shmem_file_setup("i915-shmem-tt", size,
-> +					mk_vma_flags(VMA_NORESERVE_BIT));
->  		if (IS_ERR(filp))
->  			return PTR_ERR(filp);
->  
-> diff --git a/drivers/gpu/drm/i915/gt/shmem_utils.c b/drivers/gpu/drm/i915/gt/shmem_utils.c
-> index 365c4b8b04f4..5f37c699a320 100644
-> --- a/drivers/gpu/drm/i915/gt/shmem_utils.c
-> +++ b/drivers/gpu/drm/i915/gt/shmem_utils.c
-> @@ -19,7 +19,8 @@ struct file *shmem_create_from_data(const char *name, void *data, size_t len)
->  	struct file *file;
->  	int err;
->  
-> -	file = shmem_file_setup(name, PAGE_ALIGN(len), VM_NORESERVE);
-> +	file = shmem_file_setup(name, PAGE_ALIGN(len),
-> +				mk_vma_flags(VMA_NORESERVE_BIT));
->  	if (IS_ERR(file))
->  		return file;
->  
-> diff --git a/drivers/gpu/drm/ttm/tests/ttm_tt_test.c b/drivers/gpu/drm/ttm/tests/ttm_tt_test.c
-> index 61ec6f580b62..bd5f7d0b9b62 100644
-> --- a/drivers/gpu/drm/ttm/tests/ttm_tt_test.c
-> +++ b/drivers/gpu/drm/ttm/tests/ttm_tt_test.c
-> @@ -143,7 +143,7 @@ static void ttm_tt_fini_shmem(struct kunit *test)
->  	err = ttm_tt_init(tt, bo, 0, caching, 0);
->  	KUNIT_ASSERT_EQ(test, err, 0);
->  
-> -	shmem = shmem_file_setup("ttm swap", BO_SIZE, 0);
-> +	shmem = shmem_file_setup("ttm swap", BO_SIZE, EMPTY_VMA_FLAGS);
->  	tt->swap_storage = shmem;
->  
->  	ttm_tt_fini(tt);
-> diff --git a/drivers/gpu/drm/ttm/ttm_backup.c b/drivers/gpu/drm/ttm/ttm_backup.c
-> index 32530c75f038..6bd4c123d94c 100644
-> --- a/drivers/gpu/drm/ttm/ttm_backup.c
-> +++ b/drivers/gpu/drm/ttm/ttm_backup.c
-> @@ -178,5 +178,6 @@ EXPORT_SYMBOL_GPL(ttm_backup_bytes_avail);
->   */
->  struct file *ttm_backup_shmem_create(loff_t size)
->  {
-> -	return shmem_file_setup("ttm shmem backup", size, 0);
-> +	return shmem_file_setup("ttm shmem backup", size,
-> +				EMPTY_VMA_FLAGS);
->  }
-> diff --git a/drivers/gpu/drm/ttm/ttm_tt.c b/drivers/gpu/drm/ttm/ttm_tt.c
-> index 611d20ab966d..f73a5ce87645 100644
-> --- a/drivers/gpu/drm/ttm/ttm_tt.c
-> +++ b/drivers/gpu/drm/ttm/ttm_tt.c
-> @@ -330,7 +330,7 @@ int ttm_tt_swapout(struct ttm_device *bdev, struct ttm_tt *ttm,
->  	struct page *to_page;
->  	int i, ret;
->  
-> -	swap_storage = shmem_file_setup("ttm swap", size, 0);
-> +	swap_storage = shmem_file_setup("ttm swap", size, EMPTY_VMA_FLAGS);
->  	if (IS_ERR(swap_storage)) {
->  		pr_err("Failed allocating swap storage\n");
->  		return PTR_ERR(swap_storage);
-> diff --git a/fs/xfs/scrub/xfile.c b/fs/xfs/scrub/xfile.c
-> index c753c79df203..fe0584a39f16 100644
-> --- a/fs/xfs/scrub/xfile.c
-> +++ b/fs/xfs/scrub/xfile.c
-> @@ -61,7 +61,8 @@ xfile_create(
->  	if (!xf)
->  		return -ENOMEM;
->  
-> -	xf->file = shmem_kernel_file_setup(description, isize, VM_NORESERVE);
-> +	xf->file = shmem_kernel_file_setup(description, isize,
-> +					   mk_vma_flags(VMA_NORESERVE_BIT));
->  	if (IS_ERR(xf->file)) {
->  		error = PTR_ERR(xf->file);
->  		goto out_xfile;
-> diff --git a/fs/xfs/xfs_buf_mem.c b/fs/xfs/xfs_buf_mem.c
-> index dcbfa274e06d..fd6f0a5bc0ea 100644
-> --- a/fs/xfs/xfs_buf_mem.c
-> +++ b/fs/xfs/xfs_buf_mem.c
-> @@ -62,7 +62,7 @@ xmbuf_alloc(
->  	if (!btp)
->  		return -ENOMEM;
->  
-> -	file = shmem_kernel_file_setup(descr, 0, 0);
-> +	file = shmem_kernel_file_setup(descr, 0, EMPTY_VMA_FLAGS);
->  	if (IS_ERR(file)) {
->  		error = PTR_ERR(file);
->  		goto out_free_btp;
-> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-> index e2069b3179c4..a8273b32e041 100644
-> --- a/include/linux/shmem_fs.h
-> +++ b/include/linux/shmem_fs.h
-> @@ -102,12 +102,10 @@ static inline struct shmem_inode_info *SHMEM_I(struct inode *inode)
->  extern const struct fs_parameter_spec shmem_fs_parameters[];
->  extern void shmem_init(void);
->  extern int shmem_init_fs_context(struct fs_context *fc);
-> -extern struct file *shmem_file_setup(const char *name,
-> -					loff_t size, unsigned long flags);
-> -extern struct file *shmem_kernel_file_setup(const char *name, loff_t size,
-> -					    unsigned long flags);
-> +struct file *shmem_file_setup(const char *name, loff_t size, vma_flags_t flags);
-> +struct file *shmem_kernel_file_setup(const char *name, loff_t size, vma_flags_t vma_flags);
->  extern struct file *shmem_file_setup_with_mnt(struct vfsmount *mnt,
-> -		const char *name, loff_t size, unsigned long flags);
-> +		const char *name, loff_t size, vma_flags_t flags);
->  int shmem_zero_setup(struct vm_area_struct *vma);
->  int shmem_zero_setup_desc(struct vm_area_desc *desc);
->  extern unsigned long shmem_get_unmapped_area(struct file *, unsigned long addr,
-> diff --git a/ipc/shm.c b/ipc/shm.c
-> index 2c7379c4c647..e8c7d1924c50 100644
-> --- a/ipc/shm.c
-> +++ b/ipc/shm.c
-> @@ -708,6 +708,7 @@ static int newseg(struct ipc_namespace *ns, struct ipc_params *params)
->  	struct shmid_kernel *shp;
->  	size_t numpages = (size + PAGE_SIZE - 1) >> PAGE_SHIFT;
->  	const bool has_no_reserve = shmflg & SHM_NORESERVE;
-> +	vma_flags_t acctflag = EMPTY_VMA_FLAGS;
->  	struct file *file;
->  	char name[13];
->  
-> @@ -738,7 +739,6 @@ static int newseg(struct ipc_namespace *ns, struct ipc_params *params)
->  
->  	sprintf(name, "SYSV%08x", key);
->  	if (shmflg & SHM_HUGETLB) {
-> -		vma_flags_t acctflag = EMPTY_VMA_FLAGS;
->  		struct hstate *hs;
->  		size_t hugesize;
->  
-> @@ -755,14 +755,12 @@ static int newseg(struct ipc_namespace *ns, struct ipc_params *params)
->  		file = hugetlb_file_setup(name, hugesize, acctflag,
->  				HUGETLB_SHMFS_INODE, (shmflg >> SHM_HUGE_SHIFT) & SHM_HUGE_MASK);
->  	} else {
-> -		vm_flags_t acctflag = 0;
-> -
->  		/*
->  		 * Do not allow no accounting for OVERCOMMIT_NEVER, even
->  		 * if it's asked for.
->  		 */
->  		if  (has_no_reserve && sysctl_overcommit_memory != OVERCOMMIT_NEVER)
-> -			acctflag = VM_NORESERVE;
-> +			vma_flags_set(&acctflag, VMA_NORESERVE_BIT);
->  		file = shmem_kernel_file_setup(name, size, acctflag);
->  	}
->  	error = PTR_ERR(file);
-> diff --git a/mm/memfd.c b/mm/memfd.c
-> index 5f95f639550c..f3a8950850a2 100644
-> --- a/mm/memfd.c
-> +++ b/mm/memfd.c
-> @@ -469,7 +469,7 @@ static struct file *alloc_file(const char *name, unsigned int flags)
->  					(flags >> MFD_HUGE_SHIFT) &
->  					MFD_HUGE_MASK);
->  	} else {
-> -		file = shmem_file_setup(name, 0, VM_NORESERVE);
-> +		file = shmem_file_setup(name, 0, mk_vma_flags(VMA_NORESERVE_BIT));
->  	}
->  	if (IS_ERR(file))
->  		return file;
-> diff --git a/mm/memfd_luo.c b/mm/memfd_luo.c
-> index 4f6ba63b4310..a2629dcfd0f1 100644
-> --- a/mm/memfd_luo.c
-> +++ b/mm/memfd_luo.c
-> @@ -443,7 +443,7 @@ static int memfd_luo_retrieve(struct liveupdate_file_op_args *args)
->  	if (!ser)
->  		return -EINVAL;
->  
-> -	file = shmem_file_setup("", 0, VM_NORESERVE);
-> +	file = shmem_file_setup("", 0, mk_vma_flags(VMA_NORESERVE_BIT));
->  
->  	if (IS_ERR(file)) {
->  		pr_err("failed to setup file: %pe\n", file);
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 0adde3f4df27..97a8f55c7296 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -3057,9 +3057,9 @@ static struct offset_ctx *shmem_get_offset_ctx(struct inode *inode)
->  }
->  
->  static struct inode *__shmem_get_inode(struct mnt_idmap *idmap,
-> -					     struct super_block *sb,
-> -					     struct inode *dir, umode_t mode,
-> -					     dev_t dev, unsigned long flags)
-> +				       struct super_block *sb,
-> +				       struct inode *dir, umode_t mode,
-> +				       dev_t dev, vma_flags_t flags)
->  {
->  	struct inode *inode;
->  	struct shmem_inode_info *info;
-> @@ -3087,7 +3087,8 @@ static struct inode *__shmem_get_inode(struct mnt_idmap *idmap,
->  	spin_lock_init(&info->lock);
->  	atomic_set(&info->stop_eviction, 0);
->  	info->seals = F_SEAL_SEAL;
-> -	info->flags = (flags & VM_NORESERVE) ? SHMEM_F_NORESERVE : 0;
-> +	info->flags = vma_flags_test(&flags, VMA_NORESERVE_BIT)
-> +		? SHMEM_F_NORESERVE : 0;
->  	info->i_crtime = inode_get_mtime(inode);
->  	info->fsflags = (dir == NULL) ? 0 :
->  		SHMEM_I(dir)->fsflags & SHMEM_FL_INHERITED;
-> @@ -3140,7 +3141,7 @@ static struct inode *__shmem_get_inode(struct mnt_idmap *idmap,
->  #ifdef CONFIG_TMPFS_QUOTA
->  static struct inode *shmem_get_inode(struct mnt_idmap *idmap,
->  				     struct super_block *sb, struct inode *dir,
-> -				     umode_t mode, dev_t dev, unsigned long flags)
-> +				     umode_t mode, dev_t dev, vma_flags_t flags)
->  {
->  	int err;
->  	struct inode *inode;
-> @@ -3166,9 +3167,9 @@ static struct inode *shmem_get_inode(struct mnt_idmap *idmap,
->  	return ERR_PTR(err);
->  }
->  #else
-> -static inline struct inode *shmem_get_inode(struct mnt_idmap *idmap,
-> +static struct inode *shmem_get_inode(struct mnt_idmap *idmap,
->  				     struct super_block *sb, struct inode *dir,
-> -				     umode_t mode, dev_t dev, unsigned long flags)
-> +				     umode_t mode, dev_t dev, vma_flags_t flags)
->  {
->  	return __shmem_get_inode(idmap, sb, dir, mode, dev, flags);
->  }
-> @@ -3875,7 +3876,8 @@ shmem_mknod(struct mnt_idmap *idmap, struct inode *dir,
->  	if (!generic_ci_validate_strict_name(dir, &dentry->d_name))
->  		return -EINVAL;
->  
-> -	inode = shmem_get_inode(idmap, dir->i_sb, dir, mode, dev, VM_NORESERVE);
-> +	inode = shmem_get_inode(idmap, dir->i_sb, dir, mode, dev,
-> +				mk_vma_flags(VMA_NORESERVE_BIT));
->  	if (IS_ERR(inode))
->  		return PTR_ERR(inode);
->  
-> @@ -3910,7 +3912,8 @@ shmem_tmpfile(struct mnt_idmap *idmap, struct inode *dir,
->  	struct inode *inode;
->  	int error;
->  
-> -	inode = shmem_get_inode(idmap, dir->i_sb, dir, mode, 0, VM_NORESERVE);
-> +	inode = shmem_get_inode(idmap, dir->i_sb, dir, mode, 0,
-> +				mk_vma_flags(VMA_NORESERVE_BIT));
->  	if (IS_ERR(inode)) {
->  		error = PTR_ERR(inode);
->  		goto err_out;
-> @@ -4107,7 +4110,7 @@ static int shmem_symlink(struct mnt_idmap *idmap, struct inode *dir,
->  		return -ENAMETOOLONG;
->  
->  	inode = shmem_get_inode(idmap, dir->i_sb, dir, S_IFLNK | 0777, 0,
-> -				VM_NORESERVE);
-> +				mk_vma_flags(VMA_NORESERVE_BIT));
->  	if (IS_ERR(inode))
->  		return PTR_ERR(inode);
->  
-> @@ -5108,7 +5111,8 @@ static int shmem_fill_super(struct super_block *sb, struct fs_context *fc)
->  #endif /* CONFIG_TMPFS_QUOTA */
->  
->  	inode = shmem_get_inode(&nop_mnt_idmap, sb, NULL,
-> -				S_IFDIR | sbinfo->mode, 0, VM_NORESERVE);
-> +				S_IFDIR | sbinfo->mode, 0,
-> +				mk_vma_flags(VMA_NORESERVE_BIT));
->  	if (IS_ERR(inode)) {
->  		error = PTR_ERR(inode);
->  		goto failed;
-> @@ -5808,7 +5812,7 @@ static inline void shmem_unacct_size(unsigned long flags, loff_t size)
->  
->  static inline struct inode *shmem_get_inode(struct mnt_idmap *idmap,
->  				struct super_block *sb, struct inode *dir,
-> -				umode_t mode, dev_t dev, unsigned long flags)
-> +				umode_t mode, dev_t dev, vma_flags_t flags)
->  {
->  	struct inode *inode = ramfs_get_inode(sb, dir, mode, dev);
->  	return inode ? inode : ERR_PTR(-ENOSPC);
-> @@ -5819,10 +5823,11 @@ static inline struct inode *shmem_get_inode(struct mnt_idmap *idmap,
->  /* common code */
->  
->  static struct file *__shmem_file_setup(struct vfsmount *mnt, const char *name,
-> -				       loff_t size, unsigned long vm_flags,
-> +				       loff_t size, vma_flags_t flags,
->  				       unsigned int i_flags)
->  {
-> -	unsigned long flags = (vm_flags & VM_NORESERVE) ? SHMEM_F_NORESERVE : 0;
-> +	const unsigned long shmem_flags =
-> +		vma_flags_test(&flags, VMA_NORESERVE_BIT) ? SHMEM_F_NORESERVE : 0;
->  	struct inode *inode;
->  	struct file *res;
->  
-> @@ -5835,13 +5840,13 @@ static struct file *__shmem_file_setup(struct vfsmount *mnt, const char *name,
->  	if (is_idmapped_mnt(mnt))
->  		return ERR_PTR(-EINVAL);
->  
-> -	if (shmem_acct_size(flags, size))
-> +	if (shmem_acct_size(shmem_flags, size))
->  		return ERR_PTR(-ENOMEM);
->  
->  	inode = shmem_get_inode(&nop_mnt_idmap, mnt->mnt_sb, NULL,
-> -				S_IFREG | S_IRWXUGO, 0, vm_flags);
-> +				S_IFREG | S_IRWXUGO, 0, flags);
->  	if (IS_ERR(inode)) {
-> -		shmem_unacct_size(flags, size);
-> +		shmem_unacct_size(shmem_flags, size);
->  		return ERR_CAST(inode);
->  	}
->  	inode->i_flags |= i_flags;
-> @@ -5864,9 +5869,10 @@ static struct file *__shmem_file_setup(struct vfsmount *mnt, const char *name,
->   *	checks are provided at the key or shm level rather than the inode.
->   * @name: name for dentry (to be seen in /proc/<pid>/maps)
->   * @size: size to be set for the file
-> - * @flags: VM_NORESERVE suppresses pre-accounting of the entire object size
-> + * @vma_flags: VMA_NORESERVE_BIT suppresses pre-accounting of the entire object size
->   */
-> -struct file *shmem_kernel_file_setup(const char *name, loff_t size, unsigned long flags)
-> +struct file *shmem_kernel_file_setup(const char *name, loff_t size,
-> +				     vma_flags_t flags)
->  {
->  	return __shmem_file_setup(shm_mnt, name, size, flags, S_PRIVATE);
->  }
-> @@ -5878,7 +5884,7 @@ EXPORT_SYMBOL_GPL(shmem_kernel_file_setup);
->   * @size: size to be set for the file
->   * @flags: VM_NORESERVE suppresses pre-accounting of the entire object size
->   */
-> -struct file *shmem_file_setup(const char *name, loff_t size, unsigned long flags)
-> +struct file *shmem_file_setup(const char *name, loff_t size, vma_flags_t flags)
->  {
->  	return __shmem_file_setup(shm_mnt, name, size, flags, 0);
->  }
-> @@ -5889,16 +5895,17 @@ EXPORT_SYMBOL_GPL(shmem_file_setup);
->   * @mnt: the tmpfs mount where the file will be created
->   * @name: name for dentry (to be seen in /proc/<pid>/maps)
->   * @size: size to be set for the file
-> - * @flags: VM_NORESERVE suppresses pre-accounting of the entire object size
-> + * @flags: VMA_NORESERVE_BIT suppresses pre-accounting of the entire object size
->   */
->  struct file *shmem_file_setup_with_mnt(struct vfsmount *mnt, const char *name,
-> -				       loff_t size, unsigned long flags)
-> +				       loff_t size, vma_flags_t flags)
->  {
->  	return __shmem_file_setup(mnt, name, size, flags, 0);
->  }
->  EXPORT_SYMBOL_GPL(shmem_file_setup_with_mnt);
->  
-> -static struct file *__shmem_zero_setup(unsigned long start, unsigned long end, vm_flags_t vm_flags)
-> +static struct file *__shmem_zero_setup(unsigned long start, unsigned long end,
-> +		vma_flags_t flags)
->  {
->  	loff_t size = end - start;
->  
-> @@ -5908,7 +5915,7 @@ static struct file *__shmem_zero_setup(unsigned long start, unsigned long end, v
->  	 * accessible to the user through its mapping, use S_PRIVATE flag to
->  	 * bypass file security, in the same way as shmem_kernel_file_setup().
->  	 */
-> -	return shmem_kernel_file_setup("dev/zero", size, vm_flags);
-> +	return shmem_kernel_file_setup("dev/zero", size, flags);
->  }
->  
->  /**
-> @@ -5918,7 +5925,7 @@ static struct file *__shmem_zero_setup(unsigned long start, unsigned long end, v
->   */
->  int shmem_zero_setup(struct vm_area_struct *vma)
->  {
-> -	struct file *file = __shmem_zero_setup(vma->vm_start, vma->vm_end, vma->vm_flags);
-> +	struct file *file = __shmem_zero_setup(vma->vm_start, vma->vm_end, vma->flags);
->  
->  	if (IS_ERR(file))
->  		return PTR_ERR(file);
-> @@ -5939,7 +5946,7 @@ int shmem_zero_setup(struct vm_area_struct *vma)
->   */
->  int shmem_zero_setup_desc(struct vm_area_desc *desc)
->  {
-> -	struct file *file = __shmem_zero_setup(desc->start, desc->end, desc->vm_flags);
-> +	struct file *file = __shmem_zero_setup(desc->start, desc->end, desc->vma_flags);
->  
->  	if (IS_ERR(file))
->  		return PTR_ERR(file);
-> diff --git a/security/keys/big_key.c b/security/keys/big_key.c
-> index d46862ab90d6..268f702df380 100644
-> --- a/security/keys/big_key.c
-> +++ b/security/keys/big_key.c
-> @@ -103,7 +103,7 @@ int big_key_preparse(struct key_preparsed_payload *prep)
->  					 0, enckey);
->  
->  		/* save aligned data to file */
-> -		file = shmem_kernel_file_setup("", enclen, 0);
-> +		file = shmem_kernel_file_setup("", enclen, EMPTY_VMA_FLAGS);
->  		if (IS_ERR(file)) {
->  			ret = PTR_ERR(file);
->  			goto err_enckey;
-> -- 
-> 2.52.0
-> 
-
-BR, Jarkko
+PGRpdiBkaXI9Imx0ciI+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUxIiBzdHlsZT0iZm9udC1m
+YW1pbHk6JnF1b3Q7TWljcm9zb2Z0IFlhSGVpJnF1b3Q7O2NvbG9yOnJnYigwLDAsMCk7Zm9udC1z
+aXplOm1lZGl1bSI+PHN0cm9uZz7kvaDlpb0hPC9zdHJvbmc+PC9wPjxwIGNsYXNzPSJnbWFpbC1h
+dXRvLXN0eWxlMSIgc3R5bGU9ImZvbnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhlaSZxdW90
+Oztjb2xvcjpyZ2IoMCwwLDApO2ZvbnQtc2l6ZTptZWRpdW0iPuWcqOWutuS4reenjeakjeiKseiK
+seiNieiNieaAoeaDheWFu+aAp++8jOayoeaDs+WIsOWNtOWboOS4uumVv+acn+WQuOWFpeiHtOeZ
+jOeJqei0qOiHtOe9ueeZjOeXh++8jOWkp+mZhumihOmYsuWMu+enkemZoueXheavkuaJgOWPkeWH
+uuitpuiur++8jOWRvOWQgeawkeS8l+mSiOWvueWPmOWPtuacqOOAgemTgea1t+ajoOOAgemHkeae
+nOamhOetieS6lOWNgeS6jOenjeiHtOeZjOakjeeJqe+8jOWwvemAn+KAnOa4heeQhumXqOaIt+KA
+neiHquS/neOAgjwvcD48cCBjbGFzcz0iZ21haWwtYXV0by1zdHlsZTEiIHN0eWxlPSJmb250LWZh
+bWlseTomcXVvdDtNaWNyb3NvZnQgWWFIZWkmcXVvdDs7Y29sb3I6cmdiKDAsMCwwKTtmb250LXNp
+emU6bWVkaXVtIj7mlrDljY7nvZHovazovb3ljJfkuqzmmajmiqXmiqXlr7zmjIflh7rvvIzlpKfp
+mYbpooTpmLLljLvnp5HpmaLnl4Xmr5LmiYDpmaLlo6vmm77mr4Xlr7nigJzmpI3nianmiYDlkKvn
+ianotKjnmoTkv4PnmYzkvZznlKjigJ3ov5vooYznoJTnqbbvvIzlnKjkuIDljYPlha3nmb7kuZ3l
+jYHkuInnp43mpI3nianlj4rkuK3ojYnoja/kuK3mo4Dpqozlh7rljYHlhavnp5HjgIHkupTljYHk
+uoznp43mpI3nianlkKvmnInoh7TnmYznianotKjvvIzov5nkupvmpI3nianlpJrlsZ7lpKfmiJ/n
+p5HjgIHnkZ7pppnnp5HvvIzku6Tkurrmg4rorrbnmoTmmK/ljIXmi6zpk4Hmtbfmo6DjgIHlj5jl
+j7bmnKjjgIHph5HmnpzmpoTov5nnsbvlrrbkuK3miJblhazlm63ph4zluLjop4HnmoTop4LotY/m
+gKfoirHmnKjvvIzkuZ/pg73lkKvmnInoh7TnmYznianotKjjgII8L3A+PHAgY2xhc3M9ImdtYWls
+LWF1dG8tc3R5bGUxIiBzdHlsZT0iZm9udC1mYW1pbHk6JnF1b3Q7TWljcm9zb2Z0IFlhSGVpJnF1
+b3Q7O2NvbG9yOnJnYigwLDAsMCk7Zm9udC1zaXplOm1lZGl1bSI+6Ie055mM5qSN54mp6K+x5Y+R
+6by75ZK955mM5ZKM6aOf566h55mM55qE5a6e6aqM5bey5b6X5Yiw6K+B5a6e77yM5a6D5Lus5LiN
+5LuF5rWR6Lqr5LiK5LiL6YO95bim4oCc5q+S4oCd77yM6ICM5LiU56eN6L+H6L+Z57G75qSN54mp
+55qE5Zyf5aOk5Lmf6KKr5qOA5rWL5Ye65ZCr5pyJ6Ie055mM55eF5q+S5ZKM5YyW5a2m6Ie055mM
+54mp55qE5r+A5rS754mp6LSo44CC5aaC5p6c5a6k5YaF56eN5pyJ6L+Z57G75qSN54mp77yM5Lq6
+5L2T5Y+v6IO95Zug5Li66ZW/5pyf5ZC45YWl6Iqx57KJ44CB5bCY5Zyf6aKX57KS562J5Y6f5Zug
+5byV5Y+R55mM55eH44CCPC9wPjxwIGNsYXNzPSJnbWFpbC1hdXRvLXN0eWxlMSIgc3R5bGU9ImZv
+bnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhlaSZxdW90Oztjb2xvcjpyZ2IoMCwwLDApO2Zv
+bnQtc2l6ZTptZWRpdW0iPui/meS6m+S/oeaBr+WNgeWIhuePjei0te+8jOivt+WKoeW/heafpeec
+i+WujOaVtOWGheWuue+8gTwvcD48cCBjbGFzcz0iZ21haWwtYXV0by1zdHlsZTEiIHN0eWxlPSJm
+b250LWZhbWlseTomcXVvdDtNaWNyb3NvZnQgWWFIZWkmcXVvdDs7Y29sb3I6cmdiKDAsMCwwKTtm
+b250LXNpemU6bWVkaXVtIj48YSBocmVmPSJodHRwczovL3N1bW8uYWQvZmF4aWFuLTUyLXpob25n
+LXpoaWFpLXpoaXd1IiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly9zdW1vLmFkL2ZheGlhbi01Mi16
+aG9uZy16aGlhaS16aGl3dTwvYT48L3A+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUxIiBzdHls
+ZT0iZm9udC1mYW1pbHk6JnF1b3Q7TWljcm9zb2Z0IFlhSGVpJnF1b3Q7O2NvbG9yOnJnYigwLDAs
+MCk7Zm9udC1zaXplOm1lZGl1bSI+56Wd5L2g5ZKM5L2g55qE5a625Lq65aW96L+Q77yBPC9wPjxw
+IGNsYXNzPSJnbWFpbC1hdXRvLXN0eWxlOSIgc3R5bGU9ImZvbnQtc2l6ZToxMS41cHQ7Y29sb3I6
+cmdiKDkxLDEwMiwxMTYpIj4tLS08L3A+PHAgY2xhc3M9ImdtYWlsLWF1dG8tc3R5bGUxNCIgc3R5
+bGU9ImZvbnQtZmFtaWx5OiZxdW90O01pY3Jvc29mdCBZYUhlaSZxdW90Oztjb2xvcjpyZ2IoMCwx
+MjMsMjU1KTtmb250LXNpemU6bWVkaXVtIj7kurrlv4PlkJHlloTvvIzmnKrmnaXlj6/mnJ88L3A+
+PC9kaXY+DQo=
+--000000000000d9399306495623ce--
 
