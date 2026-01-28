@@ -1,54 +1,57 @@
-Return-Path: <linux-erofs+bounces-2231-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2232-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0NcpJNjkeWl60wEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2231-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 11:28:40 +0100
+	id uFyKBmD0eWnT1AEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2232-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 12:34:56 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7849F9F74F
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 11:28:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 64D29A081A
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 12:34:54 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4f1JQV50phz2xlF;
-	Wed, 28 Jan 2026 21:28:34 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4f1Ktz2YfXz2xjK;
+	Wed, 28 Jan 2026 22:34:51 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.112
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769596114;
-	cv=none; b=nGqdpmQtTnwGfid0HixAyTAJF/J1S3GcKglITiwGaN/Gzo5wRcPQbx+0owEohvDKvJFNk4iHB/TsAKfR8n1xRD5GwSMInj4AAgQD1UCJ8aDcecKCxbgE8tv0op7JfMhVr1Sm/p3n5lPZT+ejitGVzHp4ChA03joO9nLXItIcwxuj9yWAhZe+1QJQG49v7zdD9OFaqUgxhmZN2LZrYIyJR1ADwQY2Is2wrJJPe1iDr9IjMFKT79AtE4gRQZY2UFo4FheLTseDr4CeSdE6+LNjDruZZC0okRj0qPXODSWJH0UazVhvTiGV9CyuRhgze1oLFe9Q2/B8e4kKcWr77IqO2g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769600091;
+	cv=none; b=XtQjKX521Qj8VZ2otGrl0M8TlzU6dNJVIdUmurm8PYgH10OCtE6wlDa3ehihPKmIR43A4BkALQCohSRCgmQfH7xivz2LqnRmyzOpa137tuOBNgD2NhZn181IooHPeL0kAQfM+UoG6UCIhroE6aklDMMSvKbsAUJiAfv5flxUxiYHfC+Rbk69Vkasp5zG76F8prDwRv5qz4R/axxEiDIyu2+lDFxkOxFWj8329VuTNrH3iCh3sIDltaA/dHcFxBsG0w+G2qF6npM3MZZQL57WacKcIz5bv8iWUk5ZX3xIgzllxciG1HTI4dcmUm5OAgwM7nw+vsG6CojnguFVZC+OwQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769596114; c=relaxed/relaxed;
-	bh=2nu8RFU5BNUcT+8a4JveSdtDp1CRKeBf8M1EeoqOamc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bSllODCSZcVWb+HXsbF7zAFjrmzO1PMwdv1O9f9K9uHkRoSed3k7USEVxrCRdeF8fInmKRFY33QUHy/AjlXmDjKWiNQB/yM18gLhF22RtwnG6sqldmgkC+CeWoV5Qf/gULzUjBpA4G6gn5iIs0fVhMBaf61YCSff17ZCWTNh3tUh13aDFnJZwsNY7POfL1/ODvr0G1HTrO0IKdvpA8QNSJqAq5A9tMIyf4jkFzVuOojYWkUTrFXyLBexa/Dr4NiMQ3uBdZ6rwRYFiqbQcxkAz8m9aWjRpOhH3Pb3glsMgRywrr6fLDWPcJUZqLZ4fDc0Lw7WsECp7V2NdsaKkk8i1g==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=oDxUExKc; dkim-atps=neutral; spf=pass (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1769600091; c=relaxed/relaxed;
+	bh=6dOE9mIUSjOFMH3Ap24Mg2xkJuFKjlCz0nlc04sDH74=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=os507XvmIZqLjivxKG1D1IdunyoVbeFJb/bWzn2oF48pyrOnkCI03VWZ51atc3l5EMLPXZSRPNvN713W8501cX6rzbA8zT/Ab/WobhwDPoSi1Op4IHJs6zm+0Kj+J3EZo4izVKzRBPOpNImzxA2inP+8n15ymfauG5ajxWav4GL+GEddnDjM3ILJF7xB8kyKHxGY10S3VYxXd0jvehdVaAKQPBmQsMyAiGZvuXGT79kqoO+Ur5XHMNXLUujz3k/P5UDBYsOXZSWO6bFeMEUIop2rqaz3TtILmnIlix01qfyCx9JWJFz7Qvs+dcdyWuwke4uQH05cDimR8elJL/9osw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gl0le6C7; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=oDxUExKc;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=gl0le6C7;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.112; helo=out30-112.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4f1JQR6ldZz2xT6
-	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jan 2026 21:28:30 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4f1Ktw2My6z2xMY
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jan 2026 22:34:46 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1769596104; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=2nu8RFU5BNUcT+8a4JveSdtDp1CRKeBf8M1EeoqOamc=;
-	b=oDxUExKc53kc14aPnxqmCd5zLCSTlM8hTTcbUpCwbUdBYCKxnyj9mGai2Pb2QH8kaQZoza09qixDJ1ugL9pFadx4re/bx6W8BTmkewS7R7i1aP2F3u4lnWZCHR6pCs/eJGPc3FpMZYhM6W+Is7fgk64UJpfjkqgfQUiOAAA4ZZo=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wy37i6T_1769596097 cluster:ay36)
+	t=1769600081; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=6dOE9mIUSjOFMH3Ap24Mg2xkJuFKjlCz0nlc04sDH74=;
+	b=gl0le6C7W5zypd9lV5cbgItPzCgcAzjku0PqqZCk83qMd5PN2EcJLYeiUMAhHiQjunykZfJuDg9VaWHHno9LryWr7j7nQqZTRRJaDKcylKx/r9h6Uiuvu2kd+iR8kYY6TLkVZ4QKNBqZUzFPggd5i8XxwWwuEXVebGG14BBf+Zw=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wy3CnFx_1769600070 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 28 Jan 2026 18:28:21 +0800
+          Wed, 28 Jan 2026 19:34:39 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: LKML <linux-kernel@vger.kernel.org>,
 	oliver.yang@linux.alibaba.com,
 	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs: separate plain and compressed filesystems formally
-Date: Wed, 28 Jan 2026 18:28:16 +0800
-Message-ID: <20260128102816.2721458-1-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2] erofs: separate plain and compressed filesystems formally
+Date: Wed, 28 Jan 2026 19:34:27 +0800
+Message-ID: <20260128113427.2805446-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20260128102816.2721458-1-hsiangkao@linux.alibaba.com>
+References: <20260128102816.2721458-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -79,21 +82,21 @@ X-Spamd-Result: default: False [-7.70 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
+	RCPT_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2231-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2232-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,linux.alibaba.com:mid,linux.alibaba.com:dkim,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 7849F9F74F
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,alibaba.com:email,oppo.com:email,linux.alibaba.com:mid,linux.alibaba.com:dkim]
+X-Rspamd-Queue-Id: 64D29A081A
 X-Rspamd-Action: no action
 
 The EROFS on-disk format uses a tiny, plain metadata design
@@ -107,7 +110,7 @@ especially LZ4-compressed inodes, from being read in plain filesystems.
 
 Starting with erofs-utils 1.0 and Linux 5.3, LZ4_0PADDING sb feature
 is automatically enabled for LZ4-compressed EROFS images to support
-inplace decompression. Since Linux 5.4 LTS is no longer supported,
+in-place decompression. Since Linux 5.4 LTS is no longer supported,
 we no longer need to handle ancient LZ4-compressed EROFS images.
 
 To formally distinguish different filesystem types for improved
@@ -117,24 +120,29 @@ security:
    `dsb->u1.lz4_max_distance` as a marker for compressed filesystems
    containing LZ4-compressed inodes only;
 
- - For other algorithms, use `dsb->u1.available_compr_algs`.
+ - For other algorithms, use `dsb->u1.available_compr_algs` bitmap.
 
 Note: LZ4_0PADDING has been supported since Linux 5.4 (the first formal
 kernel version), so exposing it via sysfs is no longer necessary and is
-now deprecated (but remain it for five more years until 2031): since
-`dsb->u1.lz4_max_distance` has been non-zero starting with erofs-utils
-v1.3 (Linux 5.13+) and it is actually a much better marker for
-compressed filesystems.
+now deprecated (but remain it for five more years until 2031):
+
+  `dsb->u1` has been non-zero for all compressed images starting with
+  erofs-utils v1.3 and it is actually a much better marker for
+  compressed filesystems.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- Documentation/ABI/testing/sysfs-fs-erofs |  6 +++---
- fs/erofs/decompressor.c                  | 26 +++++++++++-------------
+v2:
+ - should drop `sbi->available_compr_algs = 1 << Z_EROFS_COMPRESSION_LZ4;`
+   in z_erofs_parse_cfgs().
+
+ Documentation/ABI/testing/sysfs-fs-erofs |  6 ++---
+ fs/erofs/decompressor.c                  | 30 ++++++++++--------------
  fs/erofs/erofs_fs.h                      |  2 +-
- fs/erofs/inode.c                         | 14 +++++++++----
+ fs/erofs/inode.c                         | 14 +++++++----
  fs/erofs/internal.h                      |  2 +-
  fs/erofs/sysfs.c                         |  2 --
- 6 files changed, 27 insertions(+), 25 deletions(-)
+ 6 files changed, 28 insertions(+), 28 deletions(-)
 
 diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
 index b9243c7f28d7..e4cf6fc6a106 100644
@@ -154,7 +162,7 @@ index b9243c7f28d7..e4cf6fc6a106 100644
  What:		/sys/fs/erofs/<disk>/sync_decompress
  Date:		November 2021
 diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
-index e9d799a03a91..18f16a876d3e 100644
+index e9d799a03a91..3c54e95964c9 100644
 --- a/fs/erofs/decompressor.c
 +++ b/fs/erofs/decompressor.c
 @@ -34,7 +34,10 @@ static int z_erofs_load_lz4_config(struct super_block *sb,
@@ -213,6 +221,18 @@ index e9d799a03a91..18f16a876d3e 100644
  		ret = LZ4_decompress_safe_partial(src + inputmargin, out,
  				rq->inputsize, rq->outputsize, rq->outputsize);
  	else
+@@ -454,10 +452,8 @@ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
+ 	erofs_off_t offset;
+ 	int size, ret = 0;
+ 
+-	if (!erofs_sb_has_compr_cfgs(sbi)) {
+-		sbi->available_compr_algs = 1 << Z_EROFS_COMPRESSION_LZ4;
++	if (!erofs_sb_has_compr_cfgs(sbi))
+ 		return z_erofs_load_lz4_config(sb, dsb, NULL, 0);
+-	}
+ 
+ 	algs = le16_to_cpu(dsb->u1.available_compr_algs);
+ 	sbi->available_compr_algs = algs;
 diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
 index b30a74d307c5..b80c6bb33a58 100644
 --- a/fs/erofs/erofs_fs.h
