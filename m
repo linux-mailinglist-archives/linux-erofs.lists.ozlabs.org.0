@@ -1,48 +1,167 @@
-Return-Path: <linux-erofs+bounces-2229-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2230-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id oGpkE/W7eWnoygEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2229-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 08:34:13 +0100
+	id wG0fK0HYeWlI0AEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2230-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 10:34:57 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F19B9DC83
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 08:34:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BF8919EDCC
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 10:34:55 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4f1DYF3l9cz2xT6;
-	Wed, 28 Jan 2026 18:34:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4f1HDX1Fdpz2xlF;
+	Wed, 28 Jan 2026 20:34:52 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.111
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769585649;
-	cv=none; b=apMa5H9ec9aq6Ij9xYnKR3Vd9xPHtEsM6rIVta22M/9UxmUtQKwQFbNzYZnX7Q1RZs3LzgYgrYXY/fM4BWRGkPypGOJl6y/m1VdoUEz3sbcvcZqiVyZsTlH0up2EjCjRoJO8NsVbQdAboqAR7ArtEQPCswL9vVICT6Hl/tqqaTNxs9fTtRmm2bu+mm8Mh+WXvYRy6aZKL/PgXuJfLtHpwzpzStN7YKMJCo3E2rZr4FdW5cNN56J+kHijBl/hpnqIIKJ6KVbSkIoN5IWMSTKgJc28mDf8wg8lUAo71duIWQtC2Y/sn41oOFa+UY11OicouiymBCbfVLnspRYQPb5Giw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769585649; c=relaxed/relaxed;
-	bh=d+idU3vVDBTNpjpZb6fDXI/33zTVPVcv5fl07/yf+ak=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aLJLoQjZckskbkDqu7UOTxxMShENSTa0cRN5Ic4q+TRLRJBHohOOk3Xx0M0ofyzkDK5zL2H0qEMPja2dgQY452QTpntdQGdYiwgRx/n8Qmb8kXR2zXPaX6FER4GkFG7zUYC6yBGucEUPY6wDbmUwwuxZTqvylKTqf+qkNkGOD7cNTBPg1CFD4DgQmSXI/aIE5u6rG65q7qcI4tth9Qven1804XKu1mpF7ygs8X9PVA/ej8YPJdB5dgleH+7rkbD9xg4/kGRIi1kfHC3fekFC5KQeNW8RM4VG672DVBDjD9uZ+cPXKOhVpbj0/76ZUFAq6qIq58gB8s74u+5100ux5A==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wTa1fZJx; dkim-atps=neutral; spf=pass (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=205.220.177.32 arc.chain=microsoft.com
+ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769592892;
+	cv=pass; b=APxCSnIh7Bs0v/hXfl1c2Nc1ByZRFOLkqYTbjHQY7/FJUv3YTDcIrzHLPQ026xw1Yl+Xn/J36CuFGoE1HkwLGvRpD58uD8ut/CbG7i6y7JJHzd/Y+Pua0/dpGh2BVx5WCfW4JyjNfQwJkl3rTDvJtP1meHQ+gwcPz1CvYadhYAca0LT/9925ov/e1oIwTRFOWKUnqzUklUSngaPBLfSb6Ncj+Zp0XiUYOToS/Tjp9QT084g1nWF7nXzqmrKMPyAqCktPoLDEuqfamYjsmRd+sf9Po+mJypyArtQWQQauDCib3a43XSeHG2bNGoq/cKpqPi677Ec0dQ3DxvUxle3CqQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1769592892; c=relaxed/relaxed;
+	bh=YGHjczY3H5CEif50pc+MC7/vwrWwAUAaoZhCq6xg1Gg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=D87lLZ8i6Y1qnz0W0J6E6TT8/PW4tggro9lrtgbmLFKkzvQznAgAbD+qo/crZ6r2bUGopXqI8zzqLXsAweEhp1F4jykmk016+vkvYCTNbc6wZO8SKjJ+BdsjqX6lmBDXyuIYEDNYCetBO63uOCaAni/twdVzFf5JdtBv7M8tuKFCl2OlSfouNTKHQYz0uiTU+9MYgASk5DKhL39zqNOyTFvcYBxxzlvccWJIVEAY6FXei7kKCUsv9BNlRP3g62QFppVSnZVAS19Nwnq187XLaSaL7avFeOY04VKjKcJdwK/MBpXHSZbbWd/sNUTPHbSe8wyb6mtKZtmGzkYCdAIEgg==
+ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=FtKnUzRh; dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=WC9CzKkh; dkim-atps=neutral; spf=pass (client-ip=205.220.177.32; helo=mx0b-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org) smtp.mailfrom=oracle.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=wTa1fZJx;
+	dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=FtKnUzRh;
+	dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=WC9CzKkh;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.111; helo=out30-111.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=oracle.com (client-ip=205.220.177.32; helo=mx0b-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org)
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4f1DYB51cGz2xHt
-	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jan 2026 18:34:04 +1100 (AEDT)
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1769585639; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=d+idU3vVDBTNpjpZb6fDXI/33zTVPVcv5fl07/yf+ak=;
-	b=wTa1fZJxKEzpEulsV7G1BroASvNDll/Om5n86cp9MuF2csJRVim0+Y2Zssg9TyEX3gz0KmjwqgHjxmoCyuZhArBGo0CHWiosMcd1G3gF3Zq8EQsSaIyExQsp+kKjiIWjh8h9JlRsgBd0q3BLseuE04bisoHmAbhjMcbBOR7qSpo=
-Received: from 30.221.131.51(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wy2Zs8a_1769585633 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 28 Jan 2026 15:33:54 +0800
-Message-ID: <2fc3eaa7-6361-450a-a1cb-dea5069603fb@linux.alibaba.com>
-Date: Wed, 28 Jan 2026 15:33:52 +0800
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4f1HDT29Jcz2xT6
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jan 2026 20:34:47 +1100 (AEDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60S4BtD51337279;
+	Wed, 28 Jan 2026 09:34:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=YGHjczY3H5CEif50pc
+	+MC7/vwrWwAUAaoZhCq6xg1Gg=; b=FtKnUzRhFMeURcvcrPcWVC4vKL0dcZ+HII
+	xHtM046EQCXGHHTKQTUJq1aEO8YuiA3UBnfIiEo91lMObJOg8wkVph9xqODbjrXH
+	t6W+eXeO50MoKH5+bNnlhhBUP7r+yEYm/nl+x/rTUfGz3T/kJ5fwRBnlB/usVV+9
+	JENl43c57ZMMC3ytnFJ5noUsSQJrvalqyS5h2SB7vB6q8t4MkoihyUmqgFFUbKXc
+	OR26AY5Uj18qz+2XOGo2sjfgWWcMcbIx1VuX0EDSMOkxdy7IlhreM2kQZSeKFMsT
+	eNyzjItgFJAkhu84ieBoxKixO11OUQj3k8QrF8yqj2orTtBex2Tw==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4bxx09hpnc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 Jan 2026 09:34:00 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60S8Abxt019753;
+	Wed, 28 Jan 2026 09:33:59 GMT
+Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11010057.outbound.protection.outlook.com [52.101.61.57])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4bvmhfyvq2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 Jan 2026 09:33:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=twkzIcLBiaYgYHuGWJgf+I3pbOUqHbc4vtH5yqsaxecAk3tL90WsJXHg8dLNSK7pb0adhgPYuozyYuwcupM2/H9KPjiv5dwpBdZTg269OUEQZpZ4rETJa21WMYlBf/9LNSdoiyo+gIjDjBMTBcpExmA5FA388DjrXw3f1P+d6knQ2hzeC+H2Xvj9sVrj1Aauk5KcUGGoVuMlwN68iQIZVr80ROYXuS7S7dpQrhRltx91lMSC4lUQbEP+Fx7ec4v8n+7OZv5pwmJMd7l2iJUG6ieDr+fFJL9HB/MWRKCd9kuuqvVmMPvYa7y1w3a+qrXhoOf3Q1TDkUWsocgMeRO0ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YGHjczY3H5CEif50pc+MC7/vwrWwAUAaoZhCq6xg1Gg=;
+ b=CPtZvLz/ucSGhkYi3GYE9kbIRlyxETLhumXOrYAWUTohnBWo9ESdk5v4DOhskD9nA47HoyoRZN7bGRi7ZeOEf61BW/3lOryizxztn1KdSGGYk+Wa6KfvGOiASqsLV2hjQUJRzuuodTCFPSbAZgRXWV7ydc2M1AHABPu53+KyNzIUo7ZAa4Fg9GRtJqXwh30L67DxFs/A/LtvoWsDTptfqaK6txm6s5DwicB6dcjJKV6bG6RIjrt/VXBjNJf+js2JiPmSY8hE+XLnKgcegVHZiGjQBi8Bw2dTz4Hb1uZ0RzPapZmeQwPrIOxBj7SMHgK+C8oH9VQPxgS/q+BtgKf2og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YGHjczY3H5CEif50pc+MC7/vwrWwAUAaoZhCq6xg1Gg=;
+ b=WC9CzKkh0EOdH1BV0BNCFU7kW7TO5CrxXbMLKx8c1G+I2IEcP2uqmDSS47w/kLZtQnHwEq+DrGmvSRFKn0ZboWA0r+7TyQcaLc57MHPTAws47PV8TvrLSUSV5hv1bSIYuTHxyoucqqaOJLVK0K8ZNnQfghs/kCkj2LqdMs5Gkw8=
+Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
+ by BY5PR10MB4292.namprd10.prod.outlook.com (2603:10b6:a03:20d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Wed, 28 Jan
+ 2026 09:33:49 +0000
+Received: from BL4PR10MB8229.namprd10.prod.outlook.com
+ ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
+ ([fe80::552b:16d2:af:c582%6]) with mapi id 15.20.9520.005; Wed, 28 Jan 2026
+ 09:33:49 +0000
+Date: Wed, 28 Jan 2026 09:33:44 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Yury Norov <ynorov@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
+        Matthew Brost <matthew.brost@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Sandeep Dhavale <dhavale@google.com>,
+        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        David Hildenbrand <david@kernel.org>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
+        Babu Moger <babu.moger@amd.com>, Carlos Maiolino <cem@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
+        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+        Lance Yang <lance.yang@linux.dev>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, David Howells <dhowells@redhat.com>,
+        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+        linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
+        linux-aio@kvack.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
+        devel@lists.orangefs.org, linux-xfs@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v2 00/13] mm: add bitmap VMA flag helpers and convert all
+ mmap_prepare to use them
+Message-ID: <c7452c5f-e42f-4595-8680-bd1d5726be38@lucifer.local>
+References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
+ <aXjDaN4pwEyyBy-I@yury>
+ <5f764622-fd45-4c49-8ecb-7dc4d1fa48d6@lucifer.local>
+ <aXkv7DSUbdY-RD5d@yury>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aXkv7DSUbdY-RD5d@yury>
+X-ClientProxiedBy: LO0P123CA0002.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:354::13) To BL4PR10MB8229.namprd10.prod.outlook.com
+ (2603:10b6:208:4e6::14)
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -54,116 +173,301 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] erofs: mark inodes without acls in erofs_read_inode()
-To: Hongbo Li <lihongbo22@huawei.com>, linux-erofs@lists.ozlabs.org
-References: <20260128035408.2172802-1-hsiangkao@linux.alibaba.com>
- <bac55082-bb1b-4e7c-8a53-95394bb9a5ec@huawei.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <bac55082-bb1b-4e7c-8a53-95394bb9a5ec@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
-	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|BY5PR10MB4292:EE_
+X-MS-Office365-Filtering-Correlation-Id: 214672fe-b46d-4168-a64f-08de5e505795
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?L25IBWIsZSWv+3ZnqvAd9ay15cawbeqOk/s3kCFaXgD/qra1ruIQ0PeV3fAj?=
+ =?us-ascii?Q?SjWE+q/I9txSOW2enfFujt6l3Aqpj+kpDnyrteWhsjhhGMAkd4yzREdnkNGW?=
+ =?us-ascii?Q?MXS8X6/FdOtRk4hJPsnA0kuua1afa56nrCMIaTKvX3pyEWoUUlH8EUSUpgTd?=
+ =?us-ascii?Q?U5dmT+fBPmPibb6+ypAfj7kMg0tsRJXCcTSlnIaAB5tu7lcybK8qEOAIeyDX?=
+ =?us-ascii?Q?WEPr+S2/wKcqCDw7SFkGn+WNZix65eblWfB8FXDFEaXFWPuoWHp/bxAR+RCv?=
+ =?us-ascii?Q?OOmVPfE+l50unKO4YA6Gf/odHTHpe94PXfW5qBNwIBvh1PzzvgO/YEa+lOkC?=
+ =?us-ascii?Q?+k4Ax7S4Q3ia+t/6aG5LQ/61UNWtES+L3vZzjjb1LzUQjBIKbsSu0L46sZbv?=
+ =?us-ascii?Q?rlG15QxWqryr2Ezd76lWL2xfmJe9KTVB9OcP95KjeRYNlPkef3MPw5WN2VZs?=
+ =?us-ascii?Q?vSIvlndXgG9eq1KCpfdN60SeSOyFmEYvXvcdXSpKg8JLV7Y0Z2ltXPjWEQP/?=
+ =?us-ascii?Q?VcxLt0UwVvW3gY7S8yNgtQLx3KLvQgJeUAe+PiMnv6lrqXfQ54SwZgAjhMfD?=
+ =?us-ascii?Q?XpBYt+YZluMq7sbAejImMZWfXfNAz1yEOvhsnr8KOa08tuHJNNVuZ2yxh6YG?=
+ =?us-ascii?Q?WbNJvHvB2tgqMir8jMHomYeOcS3E7Xh6lPolmHvZbp8HZUBH5T4yCZmrBXHt?=
+ =?us-ascii?Q?QX2QuSNtlXVu7WyPEHCLg0oxYK+d+X8r3icKCrnGFRNaT+kNCRgz0cyK8m1d?=
+ =?us-ascii?Q?eD/LdW7U4wrq7cGN129YXC9khxC7+FdZn+GwKQ61u87jZsEEkS+Qa5Ngyx8z?=
+ =?us-ascii?Q?D4/ZAFJTSI0x3wHuXnmYbhMlvGctI+alx/iUEuceKVetc+b+7OKnOkfSxMBw?=
+ =?us-ascii?Q?4pLaxY4G1BBJJ79ZQ3oYAS5AkfoOZb2xjdKYz0Ua+SvOQ1hPEf4CpoZJOO43?=
+ =?us-ascii?Q?62NLGSXZJkYZk8WzUuIXGj5uxHm/Gxezlv8o92K2ebVK+nP8g4gn3OWT4cUN?=
+ =?us-ascii?Q?No4bk0k+l8rJEQlE80SmqkKDgYP/hisatl1epGTmogXsTZ+/yZgdcO/v4QRW?=
+ =?us-ascii?Q?qCNeIEVv4e5ojSQ+LTTTHMvexmQNOzJeZpjEaqNWZF1gNAJHgOQJWWC9VAFR?=
+ =?us-ascii?Q?wzEPQKAKdr0OQv7D6yjW4Vn7ULIxJ3LDcDvhd/Th0kKII9qVLZ3bMJH3f2Y/?=
+ =?us-ascii?Q?Toz88GZGy7Ai7pAiCipUHbsQhKeIFhakT3R9G3MKcbwXgnlJw+lcZuMALHUQ?=
+ =?us-ascii?Q?Uq32aCDdKtZ+o+FSUWAAJ59agUnwDI5OKI64Cd5zZG4wAcS3vnNNnwbxebFl?=
+ =?us-ascii?Q?baC6CGYDShw6CD8pq6uXpaGJj7npZMMRPFy3CgyHAO/kBqgVyQKTyPLBj0LH?=
+ =?us-ascii?Q?zDgxDNi276lChY1cTvuRhtzkjl0DH1knJ4igv3SKm0O5p4dTR71vhtvU0i+t?=
+ =?us-ascii?Q?hb6PzshtRjwOaEdZhN4kYZLoKKMFzWXoY+DS3Oa819ru8vqevifdXy2jOo7P?=
+ =?us-ascii?Q?QZdI/NHszEBEkPyFBfhGJY+uivxL4uv+6JX0mvGEmfJjnkZ1DfOdDWz9Nm9o?=
+ =?us-ascii?Q?G5RLukNUiIoTMUQIVuI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?00y1c5fjRL0s7pYvk8P8bsIOeVEql0Z5KJgWRdDAUS9SslXkc46uxfNUCGqY?=
+ =?us-ascii?Q?1gOUaGrF6Qtxfb7My3jMyBM4DVfskiyb7si1g9hFUK/hwEYqH8GlTMS2DXzw?=
+ =?us-ascii?Q?mTvXzgn9wJR49hjAKvDhsjlsaKe3JdyE9vJUw4MfHnmUSFYjJmmXniUbNdEi?=
+ =?us-ascii?Q?y2y4r+P1cwPdAzDuZIF+kQD3dq4J/pHJq48LhtnIxvDUoluQJlZUDrxwW7KB?=
+ =?us-ascii?Q?iSrB/arbmdsbl8HbINPr8LhW7CFEY7DG5V/191i6FxIYfIg9eLgtRPYaXFDI?=
+ =?us-ascii?Q?ye98IkVIQoc1aT/tIfVHK4x5TqlZ62ucOU/Qn5mENp+xN0ICpHfD2J1L2vrn?=
+ =?us-ascii?Q?Fe2KflNI6F5IWYjjttQXkGLc72VRLF3YQwBKtoo/HSEtSazLAHwXKKO5MyWZ?=
+ =?us-ascii?Q?sWyaumyVP8cdEKjb9Ia7zDFSnOITfZFXaFRhDyP9gUsUlXVisQvCx/efPx5L?=
+ =?us-ascii?Q?AktPPHf7VdREVH1fzR+PLpO6izX7CyuCDb5lsqoRw89T2UQ9HTcuH1DDT2jX?=
+ =?us-ascii?Q?twqmEfdYnaKY2vmHsoUBprWmURo5Cjrf1IlOFlFdt0cZjax6uRAZ2EtUFjXI?=
+ =?us-ascii?Q?UtwgUHPjLuvdmvBkx5aD26OS4VB3La6LWLIeelRq09LsoKTY8kQJ2kwO7VOZ?=
+ =?us-ascii?Q?s2xbg4ioeiqVr0ZMPMlJOg6/dy/Zawx8C6RQf27/QlTYmtVmzz23YTXwglz6?=
+ =?us-ascii?Q?u32xRTj3d6mqvssLNfkGPvIeChdZRr3TzPKyFkiLLTfiQn84TFMyA6orKAmx?=
+ =?us-ascii?Q?7HRBu7X4Wz1azepc51aiLC2/cyWJ982vuY7XWYgEJS5lPqLOHX4UoC21cTtH?=
+ =?us-ascii?Q?ALVIr1Dv5OXR5F+GUulNwUCWB5mcjE3NaDA+w/2gjK22k9cEZOa29PyGCxHi?=
+ =?us-ascii?Q?uWAHDwbEdSV4Q89pJz+AFpFWZgKUtVijvxY//pOA2ulihNRhUKOuuf4TJuXL?=
+ =?us-ascii?Q?gmKQd5sYcZc/eDuTSSJkts8/+u7pjdtuT8I9/JzldVYwmttkOaiGAgh1IhTO?=
+ =?us-ascii?Q?/U4ul05jFWb/NVrLM1TmnZeRAKKF+4NYzsYSBKWM34f98jB63eyE9GiQnKxr?=
+ =?us-ascii?Q?AVFGShfnATGrE1jaGx59zAqqmsIt7apA8vqxaJhPdUmzFAgkFIIJhW2n7wfE?=
+ =?us-ascii?Q?dhu2qqj3W/yeHN7Iqu+zwOaDVwbg2tlEV3FPhcUe5HNwvtrtE+6AFJiWNN6C?=
+ =?us-ascii?Q?+GOhITo8Z+DteZWCXL1TUbB/KZjXHS4w5gpttyvxu+QP/naQ7baAEhOZQAbZ?=
+ =?us-ascii?Q?bQRNnYBvp2EONQleyCD1y/ECDHwMCbk1t3sjY6McxLiyi4uwJzatxp0mV/7g?=
+ =?us-ascii?Q?w6P8m/Hf65rGMrUkb0KPQ7lq9MU4a6tHWHOhG4sDe/MA3bWGdb4qruwEvKfv?=
+ =?us-ascii?Q?9zNrr1TPCGnlB9JHWHk66mxYRM2ofEkwmHjqQAJCj//nXrh/q83u3bj6Q+i3?=
+ =?us-ascii?Q?fnLFBTUt0jB6PK9NsN9LQTkoHKM1r9Az4zyJzUHPduUmh+zodQ8DYCJUMj6W?=
+ =?us-ascii?Q?UIDpaNfeRRbVavx1LKxVZ3Y+2SmE70zA5C9WIZZtTPHfJI76njnOnk86vW0K?=
+ =?us-ascii?Q?lI2O6jVQVhydpKbr756Ujt80s5YttYVZwLQxvcYwo+hY2q1kHv488wE/WPR3?=
+ =?us-ascii?Q?nh1wNx/IL2NNnPwDsF1N41/ySwhHE8zUu4sFRCuAYtWllMVv+MCqYNs5YFWQ?=
+ =?us-ascii?Q?GmX1y/rR07EoFuoZ8caBtkFIu6XtKgd8xyHBroJ+jMNsecFcstDXM+10Hq3h?=
+ =?us-ascii?Q?/moosZQQ68lQGV3cuOmr6D6q2f4ZR9U=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	KFA2258vIh1pAe7XoB8GmVcUSyswXNQlTu2ZAWdCe9bHUcIE1vsnYWhjwDUlc9gpvUPUIdPI2vN5vdTZwF6gluQJXjBfUCo2m6db5zuFxdK7OR1ECmYzFoOruy41BcXx157b8Y6Pe7eBahe7eEpDQ3c1t49g7KmMDzDUK5cLm6kS1rnHF9LAY/gLIo8qs6R1bxs+7hhZkkWeDbkU8z/n4j6uechej7Z7EVO4a048+IOW192yQd2nI8onPrKTsNScmsvQ3sCAvQGLffepG19uZKBEQZyy9VL1KYAUvT5FgziPb3E50numQMQ9OOQLPFP5JwltOFqKwxJ5HBJTUgu/1cXxP2P/WDlFhrBalW2aSFxNSdIAxmt5n/IrcT4erf+a66oGP/yykf9Gq09e6BfsuJ7cWFJh293rm3Y4fN9VgiaNGT6Q1haeUOQVbaaPOCHTF5qaaDVb2qDokZHOuCeis4IrOXavJ7O8UMxnK5f4v5sdS1OHha6KgEj//IobWszymqlJmKkRT8D+w4yu7Je7ojmKPVEplLa63YBdEDo6M3nvmIDMMLHT0pNQI5w0T/qMBr3uYjxQoW9cTgo6YH1Xef3anBjpczgWSQlzyNeBeiQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 214672fe-b46d-4168-a64f-08de5e505795
+X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2026 09:33:49.3849
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1Za9wKJvEWm+K8X0qobDuyA4K8HHfDrVfIz/fiqyMOO1EOWfvjn6A08VC2xOsT9/BDedD5wVzEmxMqXTRONsD4fO+iiT2U/cUayE7PR+52Y=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4292
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-01-28_01,2026-01-27_03,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
+ definitions=main-2601280077
+X-Proofpoint-ORIG-GUID: UXOB_BB_oE_fU6-tgljYg8ZDKO5ERHoc
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI4MDA3NyBTYWx0ZWRfX/PTDi2hS1sda
+ XDJ4FeVYLPvyTR7E9YTFLt7TDT9zHyfxHB1+55eQIrMuzIz2sAW5e8ZYNXcVtkEK7f9cQfJ5yhh
+ MvoptgQHHZ9fx9Nw1ZD/SVcW597FwJ9PvBoBY28xeJrzTfUJviiLMidyo2EFkQ5Xle6cSVmRqOj
+ KMRusb9YHtvOsQ19gbSR/7o59hgiml2ZTJsYZ4xaclhG/Cf8tOxgqmvtUjRg/9C5DdC8MYnQzI3
+ lK5fmrTSp0r5sk6EGf2c7tiH35vS8s1sgfXCwWVb1seMhUPUebfl9bha0Jzbevq50gBGYbXoOlN
+ 0Ew42v2XuRcrj10YXPK585D3gr1mr3qannOA8urwlA9RZD0V0u2tWWgHFxkO7fdfuv8wFb/VNMy
+ AKMsgxiT30AWqF0dHXdnGRbhMF0lhYOY8PXPntD8B7XhYGvQ4hQ1KPCx1KedpP7Ox/BiR9Oa2I9
+ 1kbJDooBmvGLEizeigWombfuO6DCMttDrIaXANaA=
+X-Authority-Analysis: v=2.4 cv=Qe5rf8bv c=1 sm=1 tr=0 ts=6979d808 b=1 cx=c_pps
+ a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=b4LDLZbEAAAA:8 a=kr0W4OSOdv0uQwKPaNgA:9 a=CjuIK1q_8ugA:10 a=4QWRX4Vq8IEA:10
+ a=hslRQ5L8Sz4A:10 a=20T61YgZp4ItGotXEy2O:22 cc=ntf awl=host:12103
+X-Proofpoint-GUID: UXOB_BB_oE_fU6-tgljYg8ZDKO5ERHoc
+X-Spam-Status: No, score=-0.9 required=3.0 tests=ARC_SIGNED,ARC_VALID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-9.20 / 15.00];
-	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
-	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+X-Spamd-Result: default: False [-0.70 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25,oracle.onmicrosoft.com:s=selector2-oracle-onmicrosoft-com];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:ynorov@nvidia.com,m:akpm@linux-foundation.org,m:jarkko@kernel.org,m:dave.hansen@linux.intel.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:jani.nikula@linux.intel.com,m:joonas.lahtinen@linux.intel.com,m:rodrigo.vivi@intel.com,m:tursulin@ursulin.net,m:christian.koenig@amd.com,m:ray.huang@amd.com,m:matthew.auld@intel.com,m:matthew.brost@intel.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:bcrl@kvack.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:muchun.song@linux.dev,m:osalvador@suse.de,m:david@kernel.org,m:
+ almaz.alexandrovich@paragon-software.com,m:hubcap@omnibond.com,m:martin@omnibond.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:cem@kernel.org,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:Liam.Howlett@oracle.com,m:vbabka@suse.cz,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:ziy@nvidia.com,m:npache@redhat.com,m:ryan.roberts@arm.com,m:dev.jain@arm.com,m:baohua@kernel.org,m:lance.yang@linux.dev,m:jannh@google.com,m:pfalcato@suse.de,m:dhowells@redhat.com,m:paul@paul-moore.com,m:jmorris@namei.org,m:serge@hallyn.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux-sgx@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:intel-gfx@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-aio@kvack.org,m:linux-erofs@lists.
+ ozlabs.org,m:linux-ext4@vger.kernel.org,m:linux-mm@kvack.org,m:ntfs3@lists.linux.dev,m:devel@lists.orangefs.org,m:linux-xfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:jgg@nvidia.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:lihongbo22@huawei.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2229-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2230-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[lorenzo.stoakes@oracle.com,linux-erofs@lists.ozlabs.org];
+	FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,linux.intel.com,redhat.com,alien8.de,zytor.com,arndb.de,linuxfoundation.org,intel.com,suse.de,gmail.com,ffwll.ch,ursulin.net,amd.com,zeniv.linux.org.uk,suse.cz,kvack.org,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,linux.dev,paragon-software.com,omnibond.com,arm.com,wdc.com,infradead.org,oracle.com,suse.com,nvidia.com,paul-moore.com,namei.org,hallyn.com,rasmusvillemoes.dk,vger.kernel.org,lists.linux.dev,lists.freedesktop.org,lists.ozlabs.org,lists.orangefs.org];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.onmicrosoft.com:dkim,oracle.com:dkim,open-std.org:url,lists.ozlabs.org:helo,lists.ozlabs.org:rdns];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[linux.alibaba.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	FROM_NEQ_ENVFROM(0.00)[lorenzo.stoakes@oracle.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[oracle.com:+,oracle.onmicrosoft.com:+];
+	RCPT_COUNT_GT_50(0.00)[94];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.alibaba.com:mid,linux.alibaba.com:dkim,alibaba.com:email,huawei.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 2F19B9DC83
+	RCVD_COUNT_SEVEN(0.00)[8]
+X-Rspamd-Queue-Id: BF8919EDCC
 X-Rspamd-Action: no action
 
+On Tue, Jan 27, 2026 at 04:36:44PM -0500, Yury Norov wrote:
+> On Tue, Jan 27, 2026 at 02:40:03PM +0000, Lorenzo Stoakes wrote:
+> > On Tue, Jan 27, 2026 at 08:53:44AM -0500, Yury Norov wrote:
+> > > On Thu, Jan 22, 2026 at 04:06:09PM +0000, Lorenzo Stoakes wrote:
+>
+> ...
+>
+> > > Even if you expect adding more flags, u128 would double your capacity,
+> > > and people will still be able to use language-supported operation on
+> > > the bits in flag. Which looks simpler to me...
+> >
+> > u128 isn't supported on all architectures, VMA flags have to have absolutely
+>
+> What about big integers?
+>
+>         typedef unsigned _BitInt(VMA_FLAGS_COUNT) vma_flags_t
 
+There is no use of _BitInt anywhere in the kernel. That seems to be a
+C23-only feature with limited compiler support that we simply couldn't use
+yet.
 
-On 2026/1/28 15:03, Hongbo Li wrote:
-> Hi, Xiang
-> 
-> On 2026/1/28 11:54, Gao Xiang wrote:
->> Similar to commit 91ef18b567da ("ext4: mark inodes without acls in
->> __ext4_iget()"), the ACL state won't be read when the file owner
->> performs a lookup, and the RCU fast path for lookups won't work
->> because the ACL state remains unknown.
->>
->> If there are no extended attributes, or if the xattr filter
->> indicates that no ACL xattr is present, call cache_no_acl() directly.
->>
->> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
->> ---
->>   fs/erofs/inode.c |  5 +++++
->>   fs/erofs/xattr.c | 20 ++++++++++++++++++++
->>   fs/erofs/xattr.h |  1 +
->>   3 files changed, 26 insertions(+)
->>
->> diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
->> index bce98c845a18..2e02d4b466ce 100644
->> --- a/fs/erofs/inode.c
->> +++ b/fs/erofs/inode.c
->> @@ -137,6 +137,11 @@ static int erofs_read_inode(struct inode *inode)
->>           err = -EFSCORRUPTED;
->>           goto err_out;
->>       }
->> +
->> +    if (IS_ENABLED(CONFIG_EROFS_FS_POSIX_ACL) &&
->> +        erofs_inode_has_noacl(inode, ptr, ofs))
->> +        cache_no_acl(inode);
->> +
->>       switch (inode->i_mode & S_IFMT) {
->>       case S_IFDIR:
->>           vi->dot_omitted = (ifmt >> EROFS_I_DOT_OMITTED_BIT) & 1;
->> diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
->> index 512b998bdfff..14d22adc1476 100644
->> --- a/fs/erofs/xattr.c
->> +++ b/fs/erofs/xattr.c
->> @@ -574,4 +574,24 @@ struct posix_acl *erofs_get_acl(struct inode *inode, int type, bool rcu)
->>       kfree(value);
->>       return acl;
->>   }
->> +
->> +bool erofs_inode_has_noacl(struct inode *inode, void *kaddr, unsigned int ofs)
->> +{
-> 
-> How about put the definition and declare of erofs_inode_has_noacl before the erofs_get_acl helper? Since it is no need to resolved the context conflicts for page sharing.
+https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2025/p3639r0.html tells
+me that it's supported in clang 16+ and gcc 14+.
 
-I've resolved it manually.
+We cannot put such a restriction on compilers in the kernel, obviously.
 
-> 
-> Otherwise it looks good to me:
-> Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
+>
+> > We want to be able to arbitrarily extend this as we please in the future. So
+> > using u64 wouldn't buy us _anything_ except getting the 32-bit kernels in line.
+>
+> So enabling 32-bit arches is a big deal, even if it's a temporary
+> solution. Again, how many flags in your opinion are blocked because of
+> 32-bit integer limitation? How soon 64-bit capacity will get fully
+> used?
 
-Thanks,
-Gao Xiang
+In my opinion? I'm not sure where my opinion comes into this? There are 43 VMA
+flags and 32-bits available in 32-bit kernels.
 
-> 
-> Thanks,
-> Hongbo
+As I said to you before Yury, when adding new flags you have to add a whole
+load of mess of #ifdef CONFIG_64BIT ... #endif etc. around things that have
+nothing to do with 64-bit vs 32-bit architecture as a result.
 
+It's a mess, we've run out.
+
+Also something that might not have occurred to you - there is a chilling
+effect of limited VMA flag availability - the bar to adding flags is
+higher, and features that might have used VMA flags but need general kernel
+support (incl. 32-bit) have to find other ways to store state like this.
+
+>
+> > Using an integral value doesn't give us any kind of type safety, nor does it
+> > give us as easy a means to track what users are doing with flags - both
+> > additional benefits of this change.
+>
+> I tried the below, and it works OK for me with i386:
+>
+> $ cat bi.c
+> #include <stdio.h>
+> #include <limits.h>
+>
+> int main() {
+>     unsigned _BitInt(128) a = (_BitInt(128))1 << 65;
+>     unsigned _BitInt(128) b = (_BitInt(128))1 << 66;
+>
+>     printf("a | b == %llx\n", (unsigned long long)((a | b)>>64));
+>     printf("BITINT_MAXWIDTH ==  0x%x\n", BITINT_MAXWIDTH);
+>
+>     return 0;
+> }
+>
+> $ clang -m32 -std=c2x bi.c
+> $ ./a.out
+> a | b == 6
+> BITINT_MAXWIDTH == 0x800000
+
+I'm not sure why you're replying to my points about type safety,
+traceability with this program but OK?
+
+I mean thanks for that, I wasn't aware of the c23 standard (proposal?)
+_BitInt(). It's useful to know that.
+
+We can't use it right now, but it's good to know for the future.
+
+>
+> I didn't make GCC building it, at least out of the box. So the above
+> question about 64-bit capacity has a practical meaning. If we've got a
+> few years to let GCC fully support big integers as clang does, we don't
+> have to wish anything else.
+
+As long as you assume that all architectures will be supported, all
+compilers used by users to build the kernel will support it, and Linus will
+be fine with us using this.
+
+That could be years, that could be never.
+
+Also - and here's a really important point - the underlying implementation
+_doesn't matter_.
+
+Right now it's bitmaps.
+
+By abstracting the VMA flags into an opaque type and providing helper
+functions we also enable the ability to _change the implementation_.
+
+So if this time comes, we can simply switch everything over. Job done.
+
+Your suggested 'do nothing and hope' approach achieves none of this.
+
+>
+> I'd like to put it right. I maintain bitmaps, and I like it widely
+> adopted. But when it comes to flags, being able to use plain logic
+> operations looks so important to me so I'd like to make sure that
+> switching to bitmaps is the only working option.
+
+I'm not sure you're making a technical argument here?
+
+From the point of view of mm, the ability to arbitrarily manipulate VMA
+flags is a bug not a feature. The other part of this series is to make
+changes to the f_op->mmap_prepare feature, which was explicitly implemented
+in order to avoid such arbitrarily behaviour from drivers.
+
+It's actually hugely valueable to make this change in such a way as we can
+trace, with type safety, VMA flag usage throughout the kernel, and know
+that for instance - on mmap setup - we don't need to worry about VMA
+stabilisation - which feeds into other work re: killable VMA locks.
+
+In summary, this series represents a workable and sensible means of
+addressing all of these issues in one fell swoop, similar to the means
+through which mm flags were extended across both 32-bit and 64-bit kernels.
+
+We can in future choose to use _BitInt(), u128, or whatever we please
+underneath, and which makes sense to use should conditions change and we
+choose to do so for good technical reasons.
+
+Any argument on the basis of 'allow the flags to continue to be manipulated
+as they are' is I think mistaken.
+
+Keep in mind that bitmap VMA flags are _already_ a merged feature in the
+kernel, and this series only works to add sensible helper functions to
+manipulate these flags and moves mmap_prepare to using them exclusively.
+
+If we find cases where somehow the compiler does the wrong thing, we
+already have functions in mm_types.h that allow us to address the first
+system-word bits of the underlying type and can restrict core flags to
+being at system word count or less.
+
+I hope that won't ever be necessary, but we have means of adressing that
+should any issue arise like that.
+
+Thanks, Lorenzo
 
