@@ -1,72 +1,74 @@
-Return-Path: <linux-erofs+bounces-2238-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2239-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wNunNBlSemnk5AEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2238-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 19:14:49 +0100
+	id AHXcIapUemnk5AEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2239-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 19:25:46 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61690A79A8
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 19:14:48 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5F7CCA7BB4
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 19:25:45 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4f1VmP65v5z2xlK;
-	Thu, 29 Jan 2026 05:14:45 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4f1W123jx5z2xpg;
+	Thu, 29 Jan 2026 05:25:42 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.15
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769624085;
-	cv=none; b=JJTafiLcep+d++zG1ovyOAF+K8k3gxsxur29pi20LzorAB4jv3FO/2AjKH7Up9sx3fVThPyUfPyBEURSXXJ9crCRC6euy+WJ4iSQRedFdGt2sxIkMEeoKXTqdHvMZFsUHHeoevtkZr3fNHtHlsvO5SUc+AwcI0hCtKicDBoMZDlYB5viJRUtvpQOnitaoPueb0wSrcXtSW715rjZT3fKvNKje+Jakil5JIcyFAJmDdXQ03K0WmP3/TauanIDXFl2as8J0NwQbJsiL9RpPeqAyMOP5afOHF622uLMbHl/+T6lH+eI+MguvyZPbwui0KCfvDe/2C+U91Ap+hoRPD3XtA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.19
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769624742;
+	cv=none; b=miDZEhQYlEK1mZAgJ7rFz5KrbgsooKA9ZHdAAaYPkZ67C3dXofFLSjw4LYtjqEk1Q5WnSp9/f1bkKZEFjI3e7xf+X4CPod2wq37eJRrBMW/m3k8QzlYufBHK4UetXsbTxNDDpaVwR1XmMghkFJxDU0CdQMxmkSRIAgy9yxFlveaD4de9HauxfixOhDIT107qI4rRki998dkjbSzg0eEkBMaw3n5/D3mIsOdYUHOQcvDSsOUffHN8km/CecrdZ9tPtvyoqj0qVRpK0gydBGXA0XrXZHNBR/fjOqZRjT6lA7a7cAVg0Z/heqiBH0mMCp02eVSop698MFt6RVVPGExr2g==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769624085; c=relaxed/relaxed;
-	bh=3xznZT3TqZfANiFVlVxY6Zi4SUtY7cjyWyuS+hxQAEg=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=iZl2sdQvPla2yAxheUr4cossSn9YGrdGZ75jBPfB27vQhyWkkphDGCt0fPmX33lIKppm4KDMnoUjTlaY4TFl3hCp6/J1i/uQi1UTSNAGc81HUNLF+JdI0//gkN4n5S73j5/7wsR9b2Tp61IzpUlM7MUWp5/RePfWAuQy27iJC+55FtYW6JM5VmTdIQFexS2Tzm23Ur54EFjbqEP/yhgwMmct9IW2LxHMPCkLcxBZwamNLJjXzU4dup1FoWp+n/EvOIAPjcx1bxgaF6BAvPiZmx/Lj3xIN6N0CG4XJA9KK9mDzVH+rdHag/CA6cEG9APUdi4EAjL377KmliqPf2NdHA==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U8wpxPMi; dkim-atps=neutral; spf=pass (client-ip=192.198.163.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+	t=1769624742; c=relaxed/relaxed;
+	bh=Dobr8qF56ahAIpwJk5PQ0IZctSzIItnzqV9I8C66r88=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Tn9xYOq4fYyzF+nP9q03OgnpmFZlgu0TgF8dPCjXYvKkYp2Y601KTrxf+GdvvSYLj5DPeU0sNnr56IV93vIYfGKKmYpvBxrhMqxY+X0ad2eLCd1sEvsMUmGTfOvNhMOY2ZTbdNsKbM1cZoME11OqJxEZdVrGgCXzkReo4fJi8nmCPSwVF95bEdJtbzTmjeu3KgsSy/8zHIC6EykKqdPm4C1dgFLlVPuM5uX1caTsTBktWmtkhMvvr49D/AudN+0KdpGL5tc1tBSSSMa18OWMjBpTG5mgg5rQjfF9TXWbAn7a9VKHLlj5a8wkVMXdylhVrxxJ0meNvi4UD+a8zOOPVw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MgKVqMJz; dkim-atps=neutral; spf=pass (client-ip=192.198.163.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U8wpxPMi;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MgKVqMJz;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4f1VmJ1wPlz2xgv
-	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Jan 2026 05:14:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4f1W113f2tz2xlK
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Jan 2026 05:25:41 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769624080; x=1801160080;
+  t=1769624742; x=1801160742;
   h=date:from:to:cc:subject:message-id;
-  bh=5zl4G6JaD6BY8PsLIpUfJ7O/IiqaMSb3HRxS8lFnPHA=;
-  b=U8wpxPMi+XPDgFAveNQm4UeL6P47HMVVFd1SVOAZZBRpVqLb80tHlmYM
-   hWULUfsbQeuRc83g4qjt70OIK572orb0tW/Kte751605L+1Od6mToPqoQ
-   8PTGEsoG0Ev/wPY87Swrld2hKYKBQnTqF8dhqkpc0UreAaQOZcML0UkQe
-   IsoS+J9dcOyuuXzndxX4coTZzc4BGm2Eh5/pKuZk6PBFdYsShNWw8JJL6
-   DO7Qg2N3HcBZ7AYnuCbWIUvE+CL64icY0R7pPwY+pKkXbXhY6JD8Y+B/o
-   AVHaWcT3gQbNw2/glBQuuOt5iKrsfaVF2UN8a9/IAsG5o+IFldXx0S6Cx
-   w==;
-X-CSE-ConnectionGUID: gBXvsHZnT0C4TD4M+1ckjg==
-X-CSE-MsgGUID: m8WJnyd5Q3+aPynDzUDZNg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11685"; a="70937356"
+  bh=zBDmzMiBBJRmKfwPxi54gkScfvzMSz4FRALJ+ugDFnM=;
+  b=MgKVqMJz926F/e7uNp304whOF2nsGd59PkmeorL4p9mqsSgglz5RWBgC
+   a0hD//KaJQ3Nyj7ahs29/52oa/3+n0qyyGiJaU5xjqABfFcyUHujJQhxD
+   rzqtvm8PaakCrQA4OFZqyOShxk4b5h282df8NuVmQMpqwzhbFowG6sckB
+   TZGxRs2r8Y2zyFnuXZtMnDVJfb5Yxv9YA+vBuFDDaM4pa78xb+7IMJlyK
+   KmVUjehxwYzzx6dS17t+U7cHdq7G+MfzITfGbUZNvA75YCkT6MzbAeksm
+   Cg6HeorDw4PuAfQ10IW/Dgg6Ru8h+D1i5tNE3pUJzzDoKrLaO0KIUrUF7
+   Q==;
+X-CSE-ConnectionGUID: Nh1SfR9sRCm7ASQ9riBhOw==
+X-CSE-MsgGUID: 54z2pM55TNeJrPH3Jfiv9A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11685"; a="69862427"
 X-IronPort-AV: E=Sophos;i="6.21,258,1763452800"; 
-   d="scan'208";a="70937356"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2026 10:14:35 -0800
-X-CSE-ConnectionGUID: XHGAEYBdQga/nudaGt9t3w==
-X-CSE-MsgGUID: QDWYxLw5TRK41QOba3Td4Q==
+   d="scan'208";a="69862427"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2026 10:25:39 -0800
+X-CSE-ConnectionGUID: ZVkQLlfoS8CLz2Rmux+t/w==
+X-CSE-MsgGUID: 3bZxDb1aR7O7qR2LB5oflQ==
 X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,258,1763452800"; 
+   d="scan'208";a="245937771"
 Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 28 Jan 2026 10:14:33 -0800
+  by orviesa001.jf.intel.com with ESMTP; 28 Jan 2026 10:25:36 -0800
 Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1vlA3i-00000000ag0-3Bt9;
-	Wed, 28 Jan 2026 18:14:30 +0000
-Date: Thu, 29 Jan 2026 02:13:42 +0800
+	id 1vlAEP-00000000ags-38M1;
+	Wed, 28 Jan 2026 18:25:33 +0000
+Date: Thu, 29 Jan 2026 02:24:34 +0800
 From: kernel test robot <lkp@intel.com>
 To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: oe-kbuild-all@lists.linux.dev, Xiang Gao <xiang@kernel.org>,
- linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test 27/27] fs/erofs/inode.c:182:24: error:
- 'struct erofs_sb_info' has no member named 'available_compr_algs'
-Message-ID: <202601290220.4nKd6hHT-lkp@intel.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+ Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
+Subject: [xiang-erofs:dev-test 27/27] fs/erofs/inode.c:182:19: error:
+ no member named 'available_compr_algs' in 'struct erofs_sb_info'
+Message-ID: <202601290258.TBdbezPx-lkp@intel.com>
 User-Agent: s-nail v14.9.25
 X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
@@ -88,92 +90,53 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[intel.com:+];
-	TAGGED_FROM(0.00)[bounces-2238-lists,linux-erofs=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:oe-kbuild-all@lists.linux.dev,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_FROM(0.00)[bounces-2239-lists,linux-erofs=lfdr.de];
+	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:llvm@lists.linux.dev,m:oe-kbuild-all@lists.linux.dev,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_THREE(0.00)[4];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	RCPT_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 61690A79A8
+	DBL_BLOCKED_OPENRESOLVER(0.00)[01.org:url,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 5F7CCA7BB4
 X-Rspamd-Action: no action
 
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
 head:   713acdda5f818fb4f2286238a4f9f1f5f519b9da
 commit: 713acdda5f818fb4f2286238a4f9f1f5f519b9da [27/27] erofs: separate plain and compressed filesystems formally
-config: sparc64-randconfig-001-20260128 (https://download.01.org/0day-ci/archive/20260129/202601290220.4nKd6hHT-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 12.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260129/202601290220.4nKd6hHT-lkp@intel.com/reproduce)
+config: i386-buildonly-randconfig-002-20260128 (https://download.01.org/0day-ci/archive/20260129/202601290258.TBdbezPx-lkp@intel.com/config)
+compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260129/202601290258.TBdbezPx-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601290220.4nKd6hHT-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601290258.TBdbezPx-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   In file included from include/asm-generic/div64.h:27,
-                    from ./arch/sparc/include/generated/asm/div64.h:1,
-                    from include/linux/math.h:6,
-                    from include/linux/math64.h:6,
-                    from include/linux/time.h:6,
-                    from include/linux/stat.h:19,
-                    from include/linux/fs_dirent.h:5,
-                    from include/linux/fs/super_types.h:5,
-                    from include/linux/fs/super.h:5,
-                    from include/linux/fs.h:5,
-                    from fs/erofs/internal.h:10,
-                    from fs/erofs/xattr.h:9,
-                    from fs/erofs/inode.c:7:
-   fs/erofs/inode.c: In function 'erofs_read_inode':
->> fs/erofs/inode.c:182:24: error: 'struct erofs_sb_info' has no member named 'available_compr_algs'
+>> fs/erofs/inode.c:182:19: error: no member named 'available_compr_algs' in 'struct erofs_sb_info'
      182 |         } else if (!sbi->available_compr_algs) {
-         |                        ^~
-   include/linux/compiler.h:57:52: note: in definition of macro '__trace_if_var'
-      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-         |                                                    ^~~~
-   fs/erofs/inode.c:182:16: note: in expansion of macro 'if'
-     182 |         } else if (!sbi->available_compr_algs) {
-         |                ^~
->> fs/erofs/inode.c:182:24: error: 'struct erofs_sb_info' has no member named 'available_compr_algs'
-     182 |         } else if (!sbi->available_compr_algs) {
-         |                        ^~
-   include/linux/compiler.h:57:61: note: in definition of macro '__trace_if_var'
-      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-         |                                                             ^~~~
-   fs/erofs/inode.c:182:16: note: in expansion of macro 'if'
-     182 |         } else if (!sbi->available_compr_algs) {
-         |                ^~
->> fs/erofs/inode.c:182:24: error: 'struct erofs_sb_info' has no member named 'available_compr_algs'
-     182 |         } else if (!sbi->available_compr_algs) {
-         |                        ^~
-   include/linux/compiler.h:68:10: note: in definition of macro '__trace_if_value'
-      68 |         (cond) ?                                        \
-         |          ^~~~
-   include/linux/compiler.h:55:28: note: in expansion of macro '__trace_if_var'
-      55 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
-         |                            ^~~~~~~~~~~~~~
-   fs/erofs/inode.c:182:16: note: in expansion of macro 'if'
-     182 |         } else if (!sbi->available_compr_algs) {
-         |                ^~
+         |                     ~~~  ^
+   1 error generated.
 
 
 vim +182 fs/erofs/inode.c
