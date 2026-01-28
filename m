@@ -1,164 +1,77 @@
-Return-Path: <linux-erofs+bounces-2237-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2238-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0DRIEhs9emlB4wEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2237-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 17:45:15 +0100
+	id wNunNBlSemnk5AEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2238-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 19:14:49 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3B8EA6111
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 17:45:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 61690A79A8
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 19:14:48 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4f1Sn30tZtz2xlK;
-	Thu, 29 Jan 2026 03:45:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4f1VmP65v5z2xlK;
+	Thu, 29 Jan 2026 05:14:45 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip=205.220.177.32 arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769618711;
-	cv=pass; b=Sx8xELvuAuUELban8qjd79mGmeTM0V25PNlHNYNDQ7lQ6If28Hd6r2YLp41nGs6R+qpnd/gRvg5AlAUg+k9+mjmYOmGUlhWWPe3x9JVkAhckv7LnxoGmxH1TBrIeg3UbJjR21LZ7Y4lwejY6UjAkC3Kv8Q2FirqcGxAev1IVbFHgRslgbTEx/vOiZWJiAzNeGfDysUJdCYiE1YsT8AtI+zBTx2N3Y06bPR/h9YcjEjZk9csVsmkdb3dEk4YRG1iyXjGVDTqhuph/wFH9KU2Pe5BV6HcbHpsdMhCcHtaR3dyZkcQoJszidzZmXmqxp0M74m4BGt+Dv/JLH5k8KFeC1Q==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769618711; c=relaxed/relaxed;
-	bh=opu0x7FeVMzcAlmS8dPWKS7gc5jBEPD0/D78+u6NWys=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=YORskHhvVWymC2OoVFWMCPdNsAT7sve5710Fehy8NmEM9SqzffERMJ8kA6S5t1QNvzjLIbcjP6K4jWy9wyvOwvVId+c2rEhjAjU6fsYpT1k9MK/3JcT8PmJAjaTudvNYQioyeOBQ5mWaYppSAR0L1+K59+7SBSv0ygNpsoYR4/SC2hYVyCxWOa5EGyJIpxkCHoC3W+84SifOx5tZB6K4jwWD7U6cWueT4Afb7PmW+RJtpW60c7w8bGCiSGXbgg0jXavKVDPANCiIL1oVHkmO3uhxTX8OufMBZLqXHRLCT1VT4+5lGNhXSN0hgj4SVYqj8tFwDTtJmvPILUfrsSDhmg==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=G7PPwhgr; dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=fGnLY0Q5; dkim-atps=neutral; spf=pass (client-ip=205.220.177.32; helo=mx0b-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org) smtp.mailfrom=oracle.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.15
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769624085;
+	cv=none; b=JJTafiLcep+d++zG1ovyOAF+K8k3gxsxur29pi20LzorAB4jv3FO/2AjKH7Up9sx3fVThPyUfPyBEURSXXJ9crCRC6euy+WJ4iSQRedFdGt2sxIkMEeoKXTqdHvMZFsUHHeoevtkZr3fNHtHlsvO5SUc+AwcI0hCtKicDBoMZDlYB5viJRUtvpQOnitaoPueb0wSrcXtSW715rjZT3fKvNKje+Jakil5JIcyFAJmDdXQ03K0WmP3/TauanIDXFl2as8J0NwQbJsiL9RpPeqAyMOP5afOHF622uLMbHl/+T6lH+eI+MguvyZPbwui0KCfvDe/2C+U91Ap+hoRPD3XtA==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1769624085; c=relaxed/relaxed;
+	bh=3xznZT3TqZfANiFVlVxY6Zi4SUtY7cjyWyuS+hxQAEg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=iZl2sdQvPla2yAxheUr4cossSn9YGrdGZ75jBPfB27vQhyWkkphDGCt0fPmX33lIKppm4KDMnoUjTlaY4TFl3hCp6/J1i/uQi1UTSNAGc81HUNLF+JdI0//gkN4n5S73j5/7wsR9b2Tp61IzpUlM7MUWp5/RePfWAuQy27iJC+55FtYW6JM5VmTdIQFexS2Tzm23Ur54EFjbqEP/yhgwMmct9IW2LxHMPCkLcxBZwamNLJjXzU4dup1FoWp+n/EvOIAPjcx1bxgaF6BAvPiZmx/Lj3xIN6N0CG4XJA9KK9mDzVH+rdHag/CA6cEG9APUdi4EAjL377KmliqPf2NdHA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U8wpxPMi; dkim-atps=neutral; spf=pass (client-ip=192.198.163.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=oracle.com header.i=@oracle.com header.a=rsa-sha256 header.s=corp-2025-04-25 header.b=G7PPwhgr;
-	dkim=pass (1024-bit key; unprotected) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.a=rsa-sha256 header.s=selector2-oracle-onmicrosoft-com header.b=fGnLY0Q5;
+	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=U8wpxPMi;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=oracle.com (client-ip=205.220.177.32; helo=mx0b-00069f02.pphosted.com; envelope-from=lorenzo.stoakes@oracle.com; receiver=lists.ozlabs.org)
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.15; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4f1Sn15CSfz2xgv
-	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Jan 2026 03:45:07 +1100 (AEDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60S4C6fC1432082;
-	Wed, 28 Jan 2026 16:44:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=opu0x7FeVMzcAlmS8d
-	PWKS7gc5jBEPD0/D78+u6NWys=; b=G7PPwhgrLKw8QEMf5XWD7w3MJbyJxiUq1W
-	+JXWNq7MBozkvpQldYDKVmynYdLZ/1oZaivUpfEx8AnN2R4ZHd7r4xH+g05EGO67
-	f4rhssNNT8xssUIieKgYwUWUykxUXrcGI7ZeIZdyXy0KcoVSkjbY7GuW4yW7UB/x
-	XcZvtmaDSeIquxKHPv9/VAMAl+AloKezTRK+/OEnSWEVUHJlZpuW/xz30zth8wh5
-	I+B5cy2FMeyUCmKqG7rdqGPd/SqTJPd/eeTV/sU+4XpVR43kn7OWaMBJ5bhbsZzm
-	seu0VzVVycUiUEnG/tb0rKd2rGiWf/iWE8oRPnlUeVUGwGJjsNgg==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4by5dj1cah-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 Jan 2026 16:44:24 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 60SFNTUZ020001;
-	Wed, 28 Jan 2026 16:44:24 GMT
-Received: from sn4pr2101cu001.outbound.protection.outlook.com (mail-southcentralusazon11012040.outbound.protection.outlook.com [40.93.195.40])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 4bvmhgf1xf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 Jan 2026 16:44:23 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rgbnES/GllpFsPIcUf2ZE+8NUlvVBLHN+iiqs17JnhoTnSm6bkYMDLby5ohGsY4W+/hcVEHOprDuzPsWs4TG7PbVIbYAaRJSdSgu38My+bYFEMRhrgG52BrLo8pvFLU9e4f3waaQzLRDGJOiL6a2tgl9t9e9WeOCaKN3D91FZ5ulmToeqsl80vXarfwRmGP0TngWW1jtaZ5/5BobLUEWccpzxYlQl7gO3iH1q97Y01xNDSEOAJ8uwW+4IsFir3I373dTYcy+5Stji+cKHHzmpzdP/R2eGRGNCJNXsExeggD2KVePbI2s00yyWGPw4pCSSST4UUkSVKuHt74YertU1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=opu0x7FeVMzcAlmS8dPWKS7gc5jBEPD0/D78+u6NWys=;
- b=XJCmWpo0h3xO91lLF3YTtium4zRa0h+KrAjwEPjSarfES+Rexcfs+h0d7tgpTjsBfmfMQfpm87uW+CkSGhHKE5Zc0fOiLBw0jystcJn4QRv3Wqhmg5Emv15PS3URuTiLEuPr2rETj/rpQAbXk3D7sA8xxI/KxzgpNXtbTc0USzGLysL6lLBUjsWrI/h9X0/NwWoyYFBSC09KeQkil4uDBoMuOSpJ9ya3q5BN2j2tNXiOKLrRQbisXplcxFXdPdob0ICdnqXF4gvVlQabu8z87jWnwhf2FvT+4okXcFynwxa7k3bPMBBnNVmmjfr1kyqoqky7TrCvYkGiAz4bIqmCpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=opu0x7FeVMzcAlmS8dPWKS7gc5jBEPD0/D78+u6NWys=;
- b=fGnLY0Q5nmwq0s7XFHIg9VFkzWvpWWBCUtHfhTG1cQ5w74T/6O6QLTTK7P42qDvUDnG1pLcJs3YmUZB1mMIrTwKMSDM4DPJDZXdksvFxY03iRr17IkMLH+s11Avb6eszc3yfCgsv7WRkWLgD8FTOBnZcFnW/0YyA5MnB4Hv3htg=
-Received: from BL4PR10MB8229.namprd10.prod.outlook.com (2603:10b6:208:4e6::14)
- by IA1PR10MB7198.namprd10.prod.outlook.com (2603:10b6:208:3f3::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.8; Wed, 28 Jan
- 2026 16:44:15 +0000
-Received: from BL4PR10MB8229.namprd10.prod.outlook.com
- ([fe80::552b:16d2:af:c582]) by BL4PR10MB8229.namprd10.prod.outlook.com
- ([fe80::552b:16d2:af:c582%6]) with mapi id 15.20.9520.005; Wed, 28 Jan 2026
- 16:44:15 +0000
-Date: Wed, 28 Jan 2026 16:44:12 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
-        Matthew Brost <matthew.brost@intel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-        Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Sandeep Dhavale <dhavale@google.com>,
-        Hongbo Li <lihongbo22@huawei.com>, Chunhai Guo <guochunhai@vivo.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>,
-        David Hildenbrand <david@kernel.org>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>,
-        Babu Moger <babu.moger@amd.com>, Carlos Maiolino <cem@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>, Zi Yan <ziy@nvidia.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-        Lance Yang <lance.yang@linux.dev>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, David Howells <dhowells@redhat.com>,
-        Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
-        linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, linux-fsdevel@vger.kernel.org,
-        linux-aio@kvack.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev,
-        devel@lists.orangefs.org, linux-xfs@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 07/13] mm: update secretmem to use VMA flags on
- mmap_prepare
-Message-ID: <3aab9ab1-74b4-405e-9efb-08fc2500c06e@lucifer.local>
-References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
- <a243a09b0a5d0581e963d696de1735f61f5b2075.1769097829.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a243a09b0a5d0581e963d696de1735f61f5b2075.1769097829.git.lorenzo.stoakes@oracle.com>
-X-ClientProxiedBy: LO4P265CA0238.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:350::11) To BL4PR10MB8229.namprd10.prod.outlook.com
- (2603:10b6:208:4e6::14)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4f1VmJ1wPlz2xgv
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Jan 2026 05:14:38 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769624080; x=1801160080;
+  h=date:from:to:cc:subject:message-id;
+  bh=5zl4G6JaD6BY8PsLIpUfJ7O/IiqaMSb3HRxS8lFnPHA=;
+  b=U8wpxPMi+XPDgFAveNQm4UeL6P47HMVVFd1SVOAZZBRpVqLb80tHlmYM
+   hWULUfsbQeuRc83g4qjt70OIK572orb0tW/Kte751605L+1Od6mToPqoQ
+   8PTGEsoG0Ev/wPY87Swrld2hKYKBQnTqF8dhqkpc0UreAaQOZcML0UkQe
+   IsoS+J9dcOyuuXzndxX4coTZzc4BGm2Eh5/pKuZk6PBFdYsShNWw8JJL6
+   DO7Qg2N3HcBZ7AYnuCbWIUvE+CL64icY0R7pPwY+pKkXbXhY6JD8Y+B/o
+   AVHaWcT3gQbNw2/glBQuuOt5iKrsfaVF2UN8a9/IAsG5o+IFldXx0S6Cx
+   w==;
+X-CSE-ConnectionGUID: gBXvsHZnT0C4TD4M+1ckjg==
+X-CSE-MsgGUID: m8WJnyd5Q3+aPynDzUDZNg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11685"; a="70937356"
+X-IronPort-AV: E=Sophos;i="6.21,258,1763452800"; 
+   d="scan'208";a="70937356"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2026 10:14:35 -0800
+X-CSE-ConnectionGUID: XHGAEYBdQga/nudaGt9t3w==
+X-CSE-MsgGUID: QDWYxLw5TRK41QOba3Td4Q==
+X-ExtLoop1: 1
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 28 Jan 2026 10:14:33 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vlA3i-00000000ag0-3Bt9;
+	Wed, 28 Jan 2026 18:14:30 +0000
+Date: Thu, 29 Jan 2026 02:13:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: oe-kbuild-all@lists.linux.dev, Xiang Gao <xiang@kernel.org>,
+ linux-erofs@lists.ozlabs.org
+Subject: [xiang-erofs:dev-test 27/27] fs/erofs/inode.c:182:24: error:
+ 'struct erofs_sb_info' has no member named 'available_compr_algs'
+Message-ID: <202601290220.4nKd6hHT-lkp@intel.com>
+User-Agent: s-nail v14.9.25
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -169,189 +82,292 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL4PR10MB8229:EE_|IA1PR10MB7198:EE_
-X-MS-Office365-Filtering-Correlation-Id: f93b3cd6-62bd-4e6c-3ecc-08de5e8c78ec
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Nfd4jrR37+I4JjuqOag+LkVrWVENa9nJNfakhfix+8ewq7mrgPq8XnusvV24?=
- =?us-ascii?Q?ajV1BW9RDrAV0hP6YX8lOV+l8Rel3uPN62kWxiN8Jo5dpMv1/B2vpk/4GMHA?=
- =?us-ascii?Q?hoATZ6aa1UR/WeSccQZSjYpBs51/HhixSyIsys0LCD99PxTvkfcqg4GVBsAL?=
- =?us-ascii?Q?sva79tXOiYvX8IjXv+nt3E8wxBJrVimBMnQWqa9akHji7McHnK8l1cS2C3R7?=
- =?us-ascii?Q?a1mM2we5LQKULQIVo5wHSFVvDrgAM+PKDa3LqBhbNYaE/NzDEH9+QbIFcieL?=
- =?us-ascii?Q?5VCm/ZCrS214WKw1es1SPCWoMmDmhkNhG/MwdYLg3Hj83iZqYhTajWmnnqGR?=
- =?us-ascii?Q?gBXiAcnWeIyBroCmvV4xdU1ytQAWFtfGDZFCMRkV0WX7I3A5hF4bseOjGWQ8?=
- =?us-ascii?Q?qIG8aP9diiO10c1j0d09E72thGwJWNbNwJjC2E7L6kCCl//ZGAUVaz2s89sl?=
- =?us-ascii?Q?vAjbqSFjLzO9F6/C3lCrDf+mwumPyh0rvp2aRzBbdtov+zdkHOYhnkrdnjo8?=
- =?us-ascii?Q?/NkhQsm0iGZD6kSfeVYyTGTriVQ0MyhrdacH/RkcbvjKYb+RJAw87Y4/7pBS?=
- =?us-ascii?Q?rIl+aurA7XeM5tTO5ZRxWaal6I7o+qKRXC1ESMATH00301SpfSsjQaROcHu2?=
- =?us-ascii?Q?DLXMKn0UVxfMDrSmOO6itAzo/7TDs6Ap0271TXbLl2M9Z8iOh06DzbQihebR?=
- =?us-ascii?Q?SFGLcuLRn7WrkuftFGybtdCAnssL4QB/lNBG9vx2wzM7OovcurKm+92O44Fu?=
- =?us-ascii?Q?ETXC035vlwbAEfsR4Zde63XXRywvDpP6URPWTzmFEUnGP18KbO/pKRSAOMpC?=
- =?us-ascii?Q?imSW0yVpxaYeJlXo0tt/aJtZ+QBcILWn01ygX51cwf9WWlNvZcZ2qfhIhJE2?=
- =?us-ascii?Q?Hb5IJGDCqqP7L2ZOuNPUlkHoT1N3DitdTaOrcE4IleUDJgQ8CwF81ZjVfqg/?=
- =?us-ascii?Q?Coij5W7OwA20zAgFiFXsKWODMFPfkXOHyDV85LUWxnADG60f2thmaOuPK/Re?=
- =?us-ascii?Q?XeX1BMc3kZ5ByrpPxQ6AdCs/KYggAOfaLsrQceYKqVpLYqaQTEICBI0pQbO7?=
- =?us-ascii?Q?NBToZho1vaDJ9QjWmlccYeS6qsUbQPI/+UPj/E79xcPzUwl0zMJHhadGOOpH?=
- =?us-ascii?Q?80fK8d58Ru5yCPxInGcRoEqx9rqUah9RO4Joryxladp0waT2Q0nPJVvg7JpK?=
- =?us-ascii?Q?ILcI6XQzgGUCWl+4QsKifkhg+Wmv6bRjI/0eAeUA4BNyfFYO3bE/EcssheUC?=
- =?us-ascii?Q?iR8kBDJ6fuESnVjuCZ6E0L4JYkR2HrBdsBP9hGDLXUJO8ZlEpHtrVpsr/ha2?=
- =?us-ascii?Q?6IH1xYlIldo57Vj4+3r4fdAxANXTvtX9wpYSowPwjfdJIQKxtlW3qw94yr7K?=
- =?us-ascii?Q?9QBPdy7dUywsNZVLYWZnjwLa6gV8wYN4DdNL6l+N7WePPmISoMvjWglxQpQC?=
- =?us-ascii?Q?LRLYBXft420t2yovf+5iVxkhbfsxUyBez8RlBBjYvCE3VJXwdypAHptjzjxM?=
- =?us-ascii?Q?33dWXHkFCLK107O9RzCn3jDn7XcUIo/7uYZkziNa7NzF7tFJZQzEUXMMRvrT?=
- =?us-ascii?Q?uJucOKlyZ5Z2fRDSrnM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL4PR10MB8229.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Q4G/hEbqprUEaZgXH65Ikvwor0IWWvhxOyThD2pNGHWD6eZDd4zb98gzFXNT?=
- =?us-ascii?Q?XV7JlUTyj1vyDsta3ST2vloDfDF2+LQViGFQ4D68YY+uUIbI4iDgrWWaJEsZ?=
- =?us-ascii?Q?iTMzNMdVADQ9QHHIzhp7o5JPJF87POYZ5wavHhdToCF8MlJzMoPnJVCKtuwG?=
- =?us-ascii?Q?3tLe+Y2QMvdQKxOTJkKzVOh/9QD5VCG8Q61eXc/I2EPxGY1wS2yVFCq3jGou?=
- =?us-ascii?Q?5/egDA5Ip69H8jC7/6HXTJFB+GzWa7kfARLPezGXEhJDdhE4zEwdHNgxcsM6?=
- =?us-ascii?Q?HHAifDzXcp2YQZUmHt8ecFcATzhige1uYAywB2112CHDNZW2FuSOs4OaTd30?=
- =?us-ascii?Q?ruGEbXh++H6TL9XSxMR1a2xesdbRmbndCPBVrsGOjbKc/R1jWzCgxlhS/BYQ?=
- =?us-ascii?Q?Ac1ufAH7BlhBhdISw/ZJ07Ux91UunmAfc6aVrCxCRHpAzo08u1SIGEyBZsN6?=
- =?us-ascii?Q?MPteu9wuGX5GCDrwIOUNAJ6F0v6eAnYJzCu0CHEojQh1K2qc2EZGcw2FFU3d?=
- =?us-ascii?Q?oOzdev+8cxtuIZZNlM71iTSIrYQIwBh6YRsfCu6U9AlqFk6vBLeYLprW+0y2?=
- =?us-ascii?Q?ODBVS99AWIIMS67rk9id+NVL9q7/fSgpMoVXL+Gjs+fEJkdiqiTIxI2vwIzo?=
- =?us-ascii?Q?kjzSBTEfF6SPw+b+hwRQW0dw94elC9yS+mx8tqCwgnhSWth4MBixn2Jzsc56?=
- =?us-ascii?Q?p77saWxXySUcVtxwOCdMOt+8zsJn6DpZA0R78QunFBPZoEt4o3RxG+bcU2C9?=
- =?us-ascii?Q?Cen7ZE1WGLPs/e/KsPd4mQHWrZ9mQr2Isu2715UZcS1y6KtyPDUZjRL4uOFH?=
- =?us-ascii?Q?elA5s/5HFsTpKy1VZuL3y+5Sjw9RBMaGXLsReNKkxDEDKh90j+G/MIaYPx7m?=
- =?us-ascii?Q?98uYFebyKez8LvVVOc11LMt2HgbjPKyyWKhC384vTvbMPZ12S9Y7QEFrZKYQ?=
- =?us-ascii?Q?Uo3cyV5vSpNS3sqRfJ3X2MXnG81PW/aK88lFmfXxzD4QH6TSqQUu+7hEj5hG?=
- =?us-ascii?Q?gFTMFTG7TnHhhXUKDG6eQULlnarFtiYsbb42C2Rxk7aj0n9y0DAG+9gV4HlG?=
- =?us-ascii?Q?7xeoCNAsuAO90fKTSJ93op1o635zcVNWnJjQQS3MIpWr9WLEJAgMkANnO6zZ?=
- =?us-ascii?Q?S9fslqu1q/lF/3SF004ixL1tU4Q3Q+cWw/7KQC0E2Az3t7rmNTRoUX55Hkbk?=
- =?us-ascii?Q?HNYBYs3hL6RlLaxT9S7cEJjO5jgGNaaya6VErIGdAixfWbTsaiIj2eNNX2Ww?=
- =?us-ascii?Q?H4spZlyvk97G6Eed2t6hT0KOXf9BZPFyh1o1JkXg5oeEsvAYKGJnqJ1G9ffM?=
- =?us-ascii?Q?kwiGiHpRbgDyIMec3f+bRNz2EgkKJ2hCOVDZLJzk6pMzN5w7iKEUx0bQyXmo?=
- =?us-ascii?Q?gyiTDL61tLJsNcTyDxAG6v3j3HwGyn8D9rpbA2MP9DYCqqbnAgjG/BvWZURg?=
- =?us-ascii?Q?vYoiqgZTWUJr66m5sSZKXL/SPCXsXFGAbd9c9br0eRrN2SCTkUgmWb7lkcF/?=
- =?us-ascii?Q?zJebMEhSQ8sOtB9DpJaQa9OaB9m0kRU29MA3tzBlc6E6mgycXH9OI7YbFtyV?=
- =?us-ascii?Q?GVopTtKJAOItYFpP/oc/of7TkVoEe2BY0MKnUue6Yzr8/wRWzxRTpe0RbUNa?=
- =?us-ascii?Q?sSASe8EmRQu2CoRXk1vE9IeYF/4JXzvEJJMzAuJgRgSDXo0aaTSSsPoMN2ne?=
- =?us-ascii?Q?xp8jF8cYzeN7I8WpeCCRUuAeE6tinmra1Dxav9wMSmAiID6RQVDgWRWlN1qe?=
- =?us-ascii?Q?lr0O5FlheMIgYhmzK0L2LsnUyIdhRlg=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	UIMhI4yE04TGD8YouozrZ0ciab4Kwj7mhubXi8fwxyCUi0OyK4Ac96RARKQcQyKgkpv9K1tu1Ys6K2p5cXNGeboxLhOeZrf8tJ0xC459En3FdBf0S8/gjJdnqefxtjx8SHc3vREd0hopdHYt4s7FwBpkMNegW9b1MvnkY+ygw6/7xfZmLfK5xlAp0SAIukLkplvnvKuBMwLQV0n5Qm6W6gYZ0F00W59NHjhdCwvne11BVS3+RKeLSVS1Gm163svdKq2Zk3DQ3wqtiK1o4APg/B4NL9VvqkPoNP43HQM6OswYur0MrIOdCOVCQ7lCoeQsJzGNuA2Cw3SULNJm5UYRjCu3PpDwGQPzNglMhiWlLkSGfpe+h9mLOI4+qUeeDDrN9ygIMymBcLJ6vUKDJd3sZ5nE0espktBUGTRPsSvJkIM1C97eBwXyuxZchuYzE7mXdIQlgYpWyqm8lUBBKPncBkRB1U2lL0wEKP94EHb63JRCpgl2aqWwuaskP45t4BWOU/WwfJz3AYlhPLcHVUGcb4KdEfB6rMGlTvGSAuEwo3fid4m/vX9rSXcM0Pm29+ssidYy9yrSdovvhde1/3cd3PS4M23COXsi6y8BMuSdyyM=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f93b3cd6-62bd-4e6c-3ecc-08de5e8c78ec
-X-MS-Exchange-CrossTenant-AuthSource: BL4PR10MB8229.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jan 2026 16:44:15.2130
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t3ma2GMRC6GWNaDE1YJ81RbNfpAVtVWo+6eTvANoLL2VB6UACrpNKM/7LthpEXUB7TLJ21BsLQPCBKQYoQce4DmEj9jvUL/vFryHNIldlgg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7198
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-01-28_03,2026-01-28_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2601150000
- definitions=main-2601280138
-X-Proofpoint-ORIG-GUID: FlZPLo73qH5dlmnq9SqtNdXqvFhWjvGL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTI4MDEzNyBTYWx0ZWRfXz3JaJCLZI9Yh
- plFd4btUPADJWMSeUglpMWbTzcrt8ZxW6+LJZ55Pu38vougQ5HCzmNiqnsOfi1f44ZzEC0hawkH
- Y9camBZlXXVAU8o/o3VwO7/EbeykxXxpXOUaS8MofhlRVfN8nUvnSWSn8vfFs+ZKY5AUHWoWj/K
- kRGeEuXkNtZQQSlr8sjGeU4oO6cm5/BPPgQl+497PaFevnqQ0KqbSBKg+6z7Rk1JBLWw6CHHW6l
- wu8AeKGlqtN7FRLvVG4W50j2aW5+K6RnjVFX83L9+zkQSP6AEIxZ+z2ZQIgL68c52nOaH74RqEp
- T87CqNtkOKAUU09G+mBMozlbmxmxC6VDv049EU+IdclzjMJqxaRZvS6xGryQgbACmVQtOX/1061
- ITvT8CfiFk2skfqEg9fEFlx7yWc5f2TXKoQ2S+7Tn7tPElw0flb+omqLlWYwo9oXhN03zCUgapM
- hKD3gh5Hl0MiLlrBrX+StKLm6ZCit3mb3G23XlKo=
-X-Authority-Analysis: v=2.4 cv=IrsTsb/g c=1 sm=1 tr=0 ts=697a3ce8 b=1 cx=c_pps
- a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=vUbySO9Y5rIA:10 a=GoEa3M9JfhUA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=yPCof4ZbAAAA:8 a=REBL0svVakopdHju3rAA:9 a=CjuIK1q_8ugA:10 cc=ntf
- awl=host:12103
-X-Proofpoint-GUID: FlZPLo73qH5dlmnq9SqtNdXqvFhWjvGL
-X-Spam-Status: No, score=-0.9 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-	RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-	autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.70 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[oracle.com,reject];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
-	R_DKIM_ALLOW(-0.20)[oracle.com:s=corp-2025-04-25,oracle.onmicrosoft.com:s=selector2-oracle-onmicrosoft-com];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2237-lists,linux-erofs=lfdr.de];
-	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,redhat.com,alien8.de,zytor.com,arndb.de,linuxfoundation.org,intel.com,suse.de,gmail.com,ffwll.ch,ursulin.net,amd.com,zeniv.linux.org.uk,suse.cz,kvack.org,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,linux.dev,paragon-software.com,omnibond.com,arm.com,wdc.com,infradead.org,oracle.com,suse.com,nvidia.com,paul-moore.com,namei.org,hallyn.com,rasmusvillemoes.dk,vger.kernel.org,lists.linux.dev,lists.freedesktop.org,lists.ozlabs.org,lists.orangefs.org];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.onmicrosoft.com:dkim,oracle.com:email,oracle.com:dkim,lists.ozlabs.org:helo,lists.ozlabs.org:rdns];
-	FORGED_SENDER(0.00)[lorenzo.stoakes@oracle.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	TAGGED_FROM(0.00)[bounces-2238-lists,linux-erofs=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:akpm@linux-foundation.org,m:jarkko@kernel.org,m:dave.hansen@linux.intel.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:jani.nikula@linux.intel.com,m:joonas.lahtinen@linux.intel.com,m:rodrigo.vivi@intel.com,m:tursulin@ursulin.net,m:christian.koenig@amd.com,m:ray.huang@amd.com,m:matthew.auld@intel.com,m:matthew.brost@intel.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:bcrl@kvack.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:muchun.song@linux.dev,m:osalvador@suse.de,m:david@kernel.org,m:almaz.alexandrovich@
- paragon-software.com,m:hubcap@omnibond.com,m:martin@omnibond.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:cem@kernel.org,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:Liam.Howlett@oracle.com,m:vbabka@suse.cz,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:ziy@nvidia.com,m:npache@redhat.com,m:ryan.roberts@arm.com,m:dev.jain@arm.com,m:baohua@kernel.org,m:lance.yang@linux.dev,m:jannh@google.com,m:pfalcato@suse.de,m:dhowells@redhat.com,m:paul@paul-moore.com,m:jmorris@namei.org,m:serge@hallyn.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux-sgx@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:intel-gfx@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-aio@kvack.org,m:linux-erofs@lists.ozlabs.org,m:linux-e
- xt4@vger.kernel.org,m:linux-mm@kvack.org,m:ntfs3@lists.linux.dev,m:devel@lists.orangefs.org,m:linux-xfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:jgg@nvidia.com,s:lists@lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[oracle.com:+,oracle.onmicrosoft.com:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FROM_NEQ_ENVFROM(0.00)[lorenzo.stoakes@oracle.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:oe-kbuild-all@lists.linux.dev,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[93];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	RCVD_COUNT_SEVEN(0.00)[8]
-X-Rspamd-Queue-Id: B3B8EA6111
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 61690A79A8
 X-Rspamd-Action: no action
 
-Hi Andrew,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
+head:   713acdda5f818fb4f2286238a4f9f1f5f519b9da
+commit: 713acdda5f818fb4f2286238a4f9f1f5f519b9da [27/27] erofs: separate plain and compressed filesystems formally
+config: sparc64-randconfig-001-20260128 (https://download.01.org/0day-ci/archive/20260129/202601290220.4nKd6hHT-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 12.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260129/202601290220.4nKd6hHT-lkp@intel.com/reproduce)
 
-Could you apply the below fix-patch to resolve the issue Chris's AI checks
-detected, I missed out one caller of mlock_future_ok() (a very human mistake
-;)).
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601290220.4nKd6hHT-lkp@intel.com/
 
-Cheers, Lorenzo
+All errors (new ones prefixed by >>):
 
-----8<----
-From 652146b4d93a31bb6f9da9428ddaab8a4a53e170 Mon Sep 17 00:00:00 2001
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Date: Wed, 28 Jan 2026 16:41:55 +0000
-Subject: [PATCH] fix
+   In file included from include/asm-generic/div64.h:27,
+                    from ./arch/sparc/include/generated/asm/div64.h:1,
+                    from include/linux/math.h:6,
+                    from include/linux/math64.h:6,
+                    from include/linux/time.h:6,
+                    from include/linux/stat.h:19,
+                    from include/linux/fs_dirent.h:5,
+                    from include/linux/fs/super_types.h:5,
+                    from include/linux/fs/super.h:5,
+                    from include/linux/fs.h:5,
+                    from fs/erofs/internal.h:10,
+                    from fs/erofs/xattr.h:9,
+                    from fs/erofs/inode.c:7:
+   fs/erofs/inode.c: In function 'erofs_read_inode':
+>> fs/erofs/inode.c:182:24: error: 'struct erofs_sb_info' has no member named 'available_compr_algs'
+     182 |         } else if (!sbi->available_compr_algs) {
+         |                        ^~
+   include/linux/compiler.h:57:52: note: in definition of macro '__trace_if_var'
+      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+         |                                                    ^~~~
+   fs/erofs/inode.c:182:16: note: in expansion of macro 'if'
+     182 |         } else if (!sbi->available_compr_algs) {
+         |                ^~
+>> fs/erofs/inode.c:182:24: error: 'struct erofs_sb_info' has no member named 'available_compr_algs'
+     182 |         } else if (!sbi->available_compr_algs) {
+         |                        ^~
+   include/linux/compiler.h:57:61: note: in definition of macro '__trace_if_var'
+      57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+         |                                                             ^~~~
+   fs/erofs/inode.c:182:16: note: in expansion of macro 'if'
+     182 |         } else if (!sbi->available_compr_algs) {
+         |                ^~
+>> fs/erofs/inode.c:182:24: error: 'struct erofs_sb_info' has no member named 'available_compr_algs'
+     182 |         } else if (!sbi->available_compr_algs) {
+         |                        ^~
+   include/linux/compiler.h:68:10: note: in definition of macro '__trace_if_value'
+      68 |         (cond) ?                                        \
+         |          ^~~~
+   include/linux/compiler.h:55:28: note: in expansion of macro '__trace_if_var'
+      55 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
+         |                            ^~~~~~~~~~~~~~
+   fs/erofs/inode.c:182:16: note: in expansion of macro 'if'
+     182 |         } else if (!sbi->available_compr_algs) {
+         |                ^~
 
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
----
- mm/mmap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 354479c95896..5dfe57b6d69a 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -108,7 +108,8 @@ static int check_brk_limits(unsigned long addr, unsigned long len)
- 	if (IS_ERR_VALUE(mapped_addr))
- 		return mapped_addr;
+vim +182 fs/erofs/inode.c
 
--	return mlock_future_ok(current->mm, current->mm->def_flags, len)
-+	return mlock_future_ok(current->mm,
-+			      current->mm->def_flags & VM_LOCKED, len)
- 		? 0 : -EAGAIN;
- }
+    29	
+    30	static int erofs_read_inode(struct inode *inode)
+    31	{
+    32		struct super_block *sb = inode->i_sb;
+    33		erofs_blk_t blkaddr = erofs_blknr(sb, erofs_iloc(inode));
+    34		unsigned int ofs = erofs_blkoff(sb, erofs_iloc(inode));
+    35		bool in_mbox = erofs_inode_in_metabox(inode);
+    36		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
+    37		struct erofs_sb_info *sbi = EROFS_SB(sb);
+    38		erofs_blk_t addrmask = BIT_ULL(48) - 1;
+    39		struct erofs_inode *vi = EROFS_I(inode);
+    40		struct erofs_inode_extended *die, copied;
+    41		struct erofs_inode_compact *dic;
+    42		unsigned int ifmt;
+    43		void *ptr;
+    44		int err = 0;
+    45	
+    46		ptr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr), in_mbox);
+    47		if (IS_ERR(ptr)) {
+    48			err = PTR_ERR(ptr);
+    49			erofs_err(sb, "failed to read inode meta block (nid: %llu): %d",
+    50				  vi->nid, err);
+    51			goto err_out;
+    52		}
+    53	
+    54		dic = ptr + ofs;
+    55		ifmt = le16_to_cpu(dic->i_format);
+    56		if (ifmt & ~EROFS_I_ALL) {
+    57			erofs_err(sb, "unsupported i_format %u of nid %llu",
+    58				  ifmt, vi->nid);
+    59			err = -EOPNOTSUPP;
+    60			goto err_out;
+    61		}
+    62	
+    63		vi->datalayout = erofs_inode_datalayout(ifmt);
+    64		if (vi->datalayout >= EROFS_INODE_DATALAYOUT_MAX) {
+    65			erofs_err(sb, "unsupported datalayout %u of nid %llu",
+    66				  vi->datalayout, vi->nid);
+    67			err = -EOPNOTSUPP;
+    68			goto err_out;
+    69		}
+    70	
+    71		switch (erofs_inode_version(ifmt)) {
+    72		case EROFS_INODE_LAYOUT_EXTENDED:
+    73			vi->inode_isize = sizeof(struct erofs_inode_extended);
+    74			/* check if the extended inode acrosses block boundary */
+    75			if (ofs + vi->inode_isize <= sb->s_blocksize) {
+    76				ofs += vi->inode_isize;
+    77				die = (struct erofs_inode_extended *)dic;
+    78				copied.i_u = die->i_u;
+    79				copied.i_nb = die->i_nb;
+    80			} else {
+    81				const unsigned int gotten = sb->s_blocksize - ofs;
+    82	
+    83				memcpy(&copied, dic, gotten);
+    84				ptr = erofs_read_metabuf(&buf, sb,
+    85						erofs_pos(sb, blkaddr + 1), in_mbox);
+    86				if (IS_ERR(ptr)) {
+    87					err = PTR_ERR(ptr);
+    88					erofs_err(sb, "failed to read inode payload block (nid: %llu): %d",
+    89						  vi->nid, err);
+    90					goto err_out;
+    91				}
+    92				ofs = vi->inode_isize - gotten;
+    93				memcpy((u8 *)&copied + gotten, ptr, ofs);
+    94				die = &copied;
+    95			}
+    96			vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
+    97	
+    98			inode->i_mode = le16_to_cpu(die->i_mode);
+    99			i_uid_write(inode, le32_to_cpu(die->i_uid));
+   100			i_gid_write(inode, le32_to_cpu(die->i_gid));
+   101			set_nlink(inode, le32_to_cpu(die->i_nlink));
+   102			inode_set_mtime(inode, le64_to_cpu(die->i_mtime),
+   103					le32_to_cpu(die->i_mtime_nsec));
+   104	
+   105			inode->i_size = le64_to_cpu(die->i_size);
+   106			break;
+   107		case EROFS_INODE_LAYOUT_COMPACT:
+   108			vi->inode_isize = sizeof(struct erofs_inode_compact);
+   109			ofs += vi->inode_isize;
+   110			vi->xattr_isize = erofs_xattr_ibody_size(dic->i_xattr_icount);
+   111	
+   112			inode->i_mode = le16_to_cpu(dic->i_mode);
+   113			copied.i_u = dic->i_u;
+   114			i_uid_write(inode, le16_to_cpu(dic->i_uid));
+   115			i_gid_write(inode, le16_to_cpu(dic->i_gid));
+   116			if (!S_ISDIR(inode->i_mode) &&
+   117			    ((ifmt >> EROFS_I_NLINK_1_BIT) & 1)) {
+   118				set_nlink(inode, 1);
+   119				copied.i_nb = dic->i_nb;
+   120			} else {
+   121				set_nlink(inode, le16_to_cpu(dic->i_nb.nlink));
+   122				copied.i_nb.startblk_hi = 0;
+   123				addrmask = BIT_ULL(32) - 1;
+   124			}
+   125			inode_set_mtime(inode, sbi->epoch + le32_to_cpu(dic->i_mtime),
+   126					sbi->fixed_nsec);
+   127	
+   128			inode->i_size = le32_to_cpu(dic->i_size);
+   129			break;
+   130		default:
+   131			erofs_err(sb, "unsupported on-disk inode version %u of nid %llu",
+   132				  erofs_inode_version(ifmt), vi->nid);
+   133			err = -EOPNOTSUPP;
+   134			goto err_out;
+   135		}
+   136	
+   137		if (unlikely(inode->i_size < 0)) {
+   138			erofs_err(sb, "negative i_size @ nid %llu", vi->nid);
+   139			err = -EFSCORRUPTED;
+   140			goto err_out;
+   141		}
+   142	
+   143		if (IS_ENABLED(CONFIG_EROFS_FS_POSIX_ACL) &&
+   144		    erofs_inode_has_noacl(inode, ptr, ofs))
+   145			cache_no_acl(inode);
+   146	
+   147		switch (inode->i_mode & S_IFMT) {
+   148		case S_IFDIR:
+   149			vi->dot_omitted = (ifmt >> EROFS_I_DOT_OMITTED_BIT) & 1;
+   150			fallthrough;
+   151		case S_IFREG:
+   152		case S_IFLNK:
+   153			vi->startblk = le32_to_cpu(copied.i_u.startblk_lo) |
+   154				((u64)le16_to_cpu(copied.i_nb.startblk_hi) << 32);
+   155			if (vi->datalayout == EROFS_INODE_FLAT_PLAIN &&
+   156			    !((vi->startblk ^ EROFS_NULL_ADDR) & addrmask))
+   157				vi->startblk = EROFS_NULL_ADDR;
+   158	
+   159			if(S_ISLNK(inode->i_mode)) {
+   160				err = erofs_fill_symlink(inode, ptr, ofs);
+   161				if (err)
+   162					goto err_out;
+   163			}
+   164			break;
+   165		case S_IFCHR:
+   166		case S_IFBLK:
+   167			inode->i_rdev = new_decode_dev(le32_to_cpu(copied.i_u.rdev));
+   168			break;
+   169		case S_IFIFO:
+   170		case S_IFSOCK:
+   171			inode->i_rdev = 0;
+   172			break;
+   173		default:
+   174			erofs_err(sb, "bogus i_mode (%o) @ nid %llu", inode->i_mode,
+   175				  vi->nid);
+   176			err = -EFSCORRUPTED;
+   177			goto err_out;
+   178		}
+   179	
+   180		if (!erofs_inode_is_data_compressed(vi->datalayout)) {
+   181			inode->i_blocks = round_up(inode->i_size, sb->s_blocksize) >> 9;
+ > 182		} else if (!sbi->available_compr_algs) {
+   183			erofs_err(sb, "compressed inode (nid %llu) is invalid in a plain filesystem",
+   184				  vi->nid);
+   185			err = -EFSCORRUPTED;
+   186			goto err_out;
+   187		} else {
+   188			inode->i_blocks = le32_to_cpu(copied.i_u.blocks_lo) <<
+   189					(sb->s_blocksize_bits - 9);
+   190		}
+   191	
+   192		if (vi->datalayout == EROFS_INODE_CHUNK_BASED) {
+   193			/* fill chunked inode summary info */
+   194			vi->chunkformat = le16_to_cpu(copied.i_u.c.format);
+   195			if (vi->chunkformat & ~EROFS_CHUNK_FORMAT_ALL) {
+   196				erofs_err(sb, "unsupported chunk format %x of nid %llu",
+   197					  vi->chunkformat, vi->nid);
+   198				err = -EOPNOTSUPP;
+   199				goto err_out;
+   200			}
+   201			vi->chunkbits = sb->s_blocksize_bits +
+   202				(vi->chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
+   203		}
+   204		inode_set_atime_to_ts(inode,
+   205				      inode_set_ctime_to_ts(inode, inode_get_mtime(inode)));
+   206	
+   207		inode->i_flags &= ~S_DAX;
+   208		if (test_opt(&sbi->opt, DAX_ALWAYS) && S_ISREG(inode->i_mode) &&
+   209		    (vi->datalayout == EROFS_INODE_FLAT_PLAIN ||
+   210		     vi->datalayout == EROFS_INODE_CHUNK_BASED))
+   211			inode->i_flags |= S_DAX;
+   212	err_out:
+   213		erofs_put_metabuf(&buf);
+   214		return err;
+   215	}
+   216	
 
---
-2.52.0
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
