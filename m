@@ -1,148 +1,53 @@
-Return-Path: <linux-erofs+bounces-2224-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2225-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aDJnEhwweWlovwEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2224-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jan 2026 22:37:32 +0100
+	id cLfeHHWIeWkQxgEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2225-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 04:54:29 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CEA59ABEC
-	for <lists+linux-erofs@lfdr.de>; Tue, 27 Jan 2026 22:37:27 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 701F99CE23
+	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 04:54:27 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4f0zJh6CrYz2xS2;
-	Wed, 28 Jan 2026 08:37:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4f17gh6027z2xT6;
+	Wed, 28 Jan 2026 14:54:24 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a01:111:f403:c107::3" arc.chain=microsoft.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769549844;
-	cv=pass; b=n2LLOI/yDXLzmA7BEzhDpByvyGy0ms+MDD2g5DOR2TLCMbSQnR/YAmUgwExda9OzRSe6c7nlJLMr3G58STEzoZZEVzPeEzQQhPM/RETlZeOlptfypKSFQROqg4cNHr+7lYsVoGY2FSxrEFtOQN4a2f4ynjlv9vVMp8rSkVz/2U87nTfbL0m/nm6mKxmuhsLCktjP6xoPvLwI4KVrAggd75EJGSD4eFY3o2p22MIkAYzM6wVs8UxDU3FpQ5pKCV2Dd77C7aMFzu1HtpiJZO0H7/9Ux3bROsfzEuemGblWoN5sewt+1/EOBP+hLYUDn/XNEPjgbCQEKXxWj+7u4t8Umw==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769549844; c=relaxed/relaxed;
-	bh=+qv8p9swejJ40jcF2xi9qe5Fp2Kt5Ct6peel7ONdu54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=HohJCEf3q6RvAWUfJew0tbVx4KW6CnZkl6GYZSiD3U050qZt+pcTeeQB5hKQ5Nd4A4nH5XzJ4UF+0qBGSTIBCLRI2T1Oe46Hbs63VKFPCrdmI98ngEv3xTPvFlzjjpk6Nw4VbbQabwXlauxfQUu4dshiPyT/nuYYR+PXk9ieamrQJ1YMIbHOyVJeV0TShQmPUFEujDhg/TdnyAg5kpgmtMJbmxE1KL9ulF48lMd+Q+78Yw3cqJZX7gp8ma9OO1TT55iVnmX2ttIff3TEmq0z2orONs91NFWUe1fq3S3C0QtfndXd7fVny6ZyAzipGmgtd7eCh4TiOsBm9RLl/Ldn0A==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=RpMkBW0T; dkim-atps=neutral; spf=pass (client-ip=2a01:111:f403:c107::3; helo=ph0pr06cu001.outbound.protection.outlook.com; envelope-from=ynorov@nvidia.com; receiver=lists.ozlabs.org) smtp.mailfrom=nvidia.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769572464;
+	cv=none; b=XSx0UWcNfC+AOyvhRvRJNkhRnPhj0dvE6SfW/25MC6BPyde0j+ErGTn9+XRzsxGtBSzZeMJnsZ7p6kG3cMSI18auurMIozhvLx7biff4Vh3ScWynXzWB/eoCd5YUG36eo5s6J6k880irgagZAmrwTP+IIFHE407Sb35MAB7QqjqKsvMntV6RQA7JANIH7brPMwY1EOM+a7EQlElUnMFybelLO4KY7qeRFHLy+5PdOesp0NW/hymwwiWtdh18TUUeLs9pJ72M+H2VplfDdVhLhxrtB99iniaKC0PNK27H2UHaf+Ztl6CGiUsemSUnAUelLBZ7V686OqqFNscyVjZgAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1769572464; c=relaxed/relaxed;
+	bh=Ys/bT7Q8nc4Iwjya0jTbe2+fND7tobnZr6Lk8bNOB9M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jXiIn21dEPiJu09BaqUuJslFt25M3ojWz9T78eO674NBtBHjT/BQz/xXWd9MHTJSGdi+7AVN2Qoo7Ct2330hnPNm6Yh2tAJgiZ6CIVj0tdy5mxwd1o5tREyEZ0iCH+Vql9JJTJ/GKtVDy7LDTOFwsSLil06CZleoySTuNNp8sUy9rzPVGG4ydl2U6gFF70MwLjnJoPC7Jd8AM9tYmouE2SSp5TGAx3UhtgS7VrITzOFUSjF81ICQZ8O4HYFbeJOz0wUQJWw5pzgUM2pjHxVMoyvCBlo3+/Be5n1TDprtp76uH+93Uc0uVcVWC+bdoA747ViYmsMBcKzGCYkpn/o9+Q==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=pAQ635Yw; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=Nvidia.com header.i=@Nvidia.com header.a=rsa-sha256 header.s=selector2 header.b=RpMkBW0T;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=pAQ635Yw;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=nvidia.com (client-ip=2a01:111:f403:c107::3; helo=ph0pr06cu001.outbound.protection.outlook.com; envelope-from=ynorov@nvidia.com; receiver=lists.ozlabs.org)
-Received: from PH0PR06CU001.outbound.protection.outlook.com (mail-westus3azlp170110003.outbound.protection.outlook.com [IPv6:2a01:111:f403:c107::3])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4f0zJg1vzqz2xRv
-	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jan 2026 08:37:22 +1100 (AEDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jXNpxYZPw8pXapf+T9FPhcGZWo81ilcCLkKNA1fXrkUisP4wmezqsiygZBn4tjJ85McBX7zoVVyUbyB0jA8udwCXuuW1b2/DyWjQ7+evquA7AgwkiVLMry9NZMsbhIHgcvkmyIIBa8yvPQExws94BLY6KJXl9cBk6fYPgSHKr1WJk6Rbz/h7U7ZyTIPJBQvN37ghVpgIVW55OoCg6kR5pTsy0DXj3+GzLKcMTWI8KnQovtkaNXTs55JV75iQIsbB1vRqTAJGJOnoqPabLcE4VnTNrAFmZbq1eXl2Kle6srukRQs/4DT3sPI2atpHiEY2DK0sEgHa6Qkm3otXyVS+cw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+qv8p9swejJ40jcF2xi9qe5Fp2Kt5Ct6peel7ONdu54=;
- b=kQN89yT0riLtEG9ahpe/BtL7ofgc4VE/SO++HFs0aPWjBUIGUeh5p7csO9dfxSsRcXn+JPFdHY9PKPeoNt1reNpjbNA2wbYdwPQBhSpO/iTSY+YodvcOvjwTakkTbWPCU571iul5FXQaD3Mb669+z4Hd9xlCYOm9pYom/z7rT5RcWxM0GEe4iXueonGsJzhZGTX8vELL0UbwQHWH3Ry5Qxo9j0ahs1js0o7N6odREuiFqtA2fWHW01am6DEm41xSbOl4FbMBDEcroez3hQiPl3xtvEzje1qRykuhgfqCDq0NCMzeyO6uMKcvO2B7Rd9l1fzArC6KvWrwqdc5BFerzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+qv8p9swejJ40jcF2xi9qe5Fp2Kt5Ct6peel7ONdu54=;
- b=RpMkBW0T0y/KsE3WQkthBOhVVtR/hQf+VW8+bHb+Tvn5tH4UD6UezSgDNvw9LmjM9MFzoB3YYKu7CzsR7j0YIIOB0mxV7JPYZwK4R8FTO1IoKEfvMRdhuius6maWGWb39QIQG89FjmSt9E/EwkUZCVqoi2Vhn9X8gzrHvrFKzt9Qp+rYTfokW6TJCFaG62JFckOXaibw6hxFLhSAQM35moJCyHcGcVeHE2F4ZrbMxi5HhMuc45Rm14kNrIyLELR6kfgo8Pkfo6NLtp9AN4DxHZaJKLoDSC0neFPzwgfqhA7iujtIBcIVWJCD0JZf8cqskaUKT2KPNOzZpFYefqWVNA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH0PR12MB8800.namprd12.prod.outlook.com (2603:10b6:510:26f::12)
- by DM4PR12MB6181.namprd12.prod.outlook.com (2603:10b6:8:a9::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9564.7; Tue, 27 Jan
- 2026 21:36:49 +0000
-Received: from PH0PR12MB8800.namprd12.prod.outlook.com
- ([fe80::f79d:ddc5:2ad7:762d]) by PH0PR12MB8800.namprd12.prod.outlook.com
- ([fe80::f79d:ddc5:2ad7:762d%4]) with mapi id 15.20.9542.010; Tue, 27 Jan 2026
- 21:36:49 +0000
-Date: Tue, 27 Jan 2026 16:36:44 -0500
-From: Yury Norov <ynorov@nvidia.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Christian Koenig <christian.koenig@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Benjamin LaHaise <bcrl@kvack.org>, Gao Xiang <xiang@kernel.org>,
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <lihongbo22@huawei.com>,
-	Chunhai Guo <guochunhai@vivo.com>, Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	Mike Marshall <hubcap@omnibond.com>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Dave Martin <Dave.Martin@arm.com>,
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>,
-	Carlos Maiolino <cem@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Naohiro Aota <naohiro.aota@wdc.com>,
-	Johannes Thumshirn <jth@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Zi Yan <ziy@nvidia.com>, Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
-	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E . Hallyn" <serge@hallyn.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-	linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-	linux-mm@kvack.org, ntfs3@lists.linux.dev, devel@lists.orangefs.org,
-	linux-xfs@vger.kernel.org, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 00/13] mm: add bitmap VMA flag helpers and convert all
- mmap_prepare to use them
-Message-ID: <aXkv7DSUbdY-RD5d@yury>
-References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
- <aXjDaN4pwEyyBy-I@yury>
- <5f764622-fd45-4c49-8ecb-7dc4d1fa48d6@lucifer.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5f764622-fd45-4c49-8ecb-7dc4d1fa48d6@lucifer.local>
-X-ClientProxiedBy: BN0PR04CA0183.namprd04.prod.outlook.com
- (2603:10b6:408:e9::8) To PH0PR12MB8800.namprd12.prod.outlook.com
- (2603:10b6:510:26f::12)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4f17gf2dnYz2xHt
+	for <linux-erofs@lists.ozlabs.org>; Wed, 28 Jan 2026 14:54:20 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1769572455; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=Ys/bT7Q8nc4Iwjya0jTbe2+fND7tobnZr6Lk8bNOB9M=;
+	b=pAQ635Yw+GJBjFObuQQAQ2XVtUBEda+ig9D37Qt/rkGGx2pq1UOinFHHBo71XXJQakl2XKzFtqOYSnlfRYERjLtQMIm4cBkjCfs5bPS8zPDMQ/6sgGGHwies1OvntB090aMec2dEIUldMm2jM+Mc2idZABRWLphYcH9uBT6r1oE=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wy20I4Y_1769572449 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 28 Jan 2026 11:54:13 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs: mark inodes without acls in erofs_read_inode()
+Date: Wed, 28 Jan 2026 11:54:08 +0800
+Message-ID: <20260128035408.2172802-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -154,184 +59,113 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR12MB8800:EE_|DM4PR12MB6181:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9715e4eb-27eb-46f4-124e-08de5dec2d78
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/CxFGOmbCbqIf4nVNlqlax8EqAx+3g0xSd7lsfdJekbBxdAXPS7XO7aq5Aa/?=
- =?us-ascii?Q?Fz3XrLTea5juPeYALAIdLfSryni+ZvFO1A6JgvH7pfyLM1eocH/0P/c2LcqK?=
- =?us-ascii?Q?TF2wNlR47IAtORpVVCNwNoyezQxl232MhFdHIA08ROQ3Q2Mt4naD1klB8XqK?=
- =?us-ascii?Q?W6pJUpdod/z1Rmj2BUIzrkkKbz75ckPMHmHS+OVlLLozgO/30jPyWgKxsN72?=
- =?us-ascii?Q?WkgwunEbCfIa16G+cpcoTUFEHwtBwpIKfFOaQc1UEsFPdz+cROavwqJu914/?=
- =?us-ascii?Q?MzUQQ4gj6SgI4sr4TIlHGILs+sPS5M2rNjgo9GWFdLuGfuvrYh3adDe3dgQ7?=
- =?us-ascii?Q?OtioEdB8AYQiijLs+iEx4Ar5BDIK/9fima6bDf+rRIm3iTZtAen7l2LqUzsF?=
- =?us-ascii?Q?bcOp5Fv6EhekEfiXNdnqpe1qJeg6+GjkFVZhCpbhiQ116ZfzQzaqfPzm43e/?=
- =?us-ascii?Q?kExvyrWEryUcTz+v9WwZGBPXSeIybka4f1qkmaIW2kOG+sONJbdr2nhnMwO0?=
- =?us-ascii?Q?hX8Z8Pv6anPYiYeoz/yuGNH+/o4RsCpjtXFU2bdCmlRdZ9U51Si0TwPEjefs?=
- =?us-ascii?Q?sg7gvzQihC4S8HsSAL7UPBJGaty0K0CB1Y3gTszxXUa9xgPbQLMzWf5y3aVx?=
- =?us-ascii?Q?Z7yTgjDsToTGh6uz50HJmZqnc9KeoJOVMlTfGLRvlOF9kpx2UQKO6VHpDv4L?=
- =?us-ascii?Q?UhMTx/o7SvqxavW/oezKQvSRj7Es+wj9rCoVfHuu66ewQX2uM17UhcNJ7umS?=
- =?us-ascii?Q?lorvi0wtzlhrpZj2cpWefb1Ijlnp9gEO78Ru2HTnj2IcEKttGtMA+SVvY8qg?=
- =?us-ascii?Q?OAXPv0I44fEXgaQ7jpC7AL6/ReD2P8KxNJf2D35zXcI5afE2j4yHXjWPLroW?=
- =?us-ascii?Q?l3MtlrgtraS4S5ev+4tpTIGPKyFzvinb35mnyaFKkhlVO/ivMny6IDUepBAV?=
- =?us-ascii?Q?blCrYzGS6YiOdOnRy8zVeBNO0UJKtIlgjUDw3JMrd6kLUdBe9Q8CbndMMcTa?=
- =?us-ascii?Q?BCw2qFy9gb4CH3c3yZKQuKF8Ybw9Xx3uu1wDipQFP9Yq7fY/UfQddW0NcCdf?=
- =?us-ascii?Q?Uha9UJpw75t1oJkVumk5S8+0XyFcWWoq2kNKwXOcbxtww4YlMRhFlB4K8Rzy?=
- =?us-ascii?Q?AXcezYr1yQzBniT+lXwUnO+Oij6E4IY6ZKLGxGSd9vj5cm6zsqxbEXqxmARs?=
- =?us-ascii?Q?+zOp9S1y3uDbY2ojcJSHmZL23O9X1h8GTGmN8s6raLkhtU7IGC9grgw4pqNV?=
- =?us-ascii?Q?yOh08QRCT2pnLfhoXvL1uZpJbKb64LZcqVzvaupRbfcP2m6ArxrSiTPmgVME?=
- =?us-ascii?Q?x6TYoYmTPQxrqaQ72nViEA3VJ5S+luV33Ix64fwWxnbwZw6K/sXmwE+xJZSw?=
- =?us-ascii?Q?zEmywJg3Pzt2bltVvvof3584zlLOKMQ9ZOq8Re2gYszykswkTGRW/GWxJhOh?=
- =?us-ascii?Q?bQWi9IAvjjd8YyrD6eNF7WKJUHH5+G334ug4uqO7FjiAxjYaXjZPqkT9rMvj?=
- =?us-ascii?Q?2hdXMlUhLEe9m4xQjzQftxdg5D/BWdWe7joDKNvQ7gyx5dEl9tAqrmZVMZkA?=
- =?us-ascii?Q?rF7aZYX+AxkDVe9Bn9c=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB8800.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?nVr7vf4K4dD5oV9cnVY2LyP/cQnbgrl/4k7k5SNCjndzCk3ODsBCSvLNneT0?=
- =?us-ascii?Q?MHVVrq8U05fL14fg1qZ/ePW5eAXd0QhqbijK3TfxQFAYxQDv8Av4P2kkjVtP?=
- =?us-ascii?Q?esLecIFlRrj7+uwllckDyzTvoNnltXYtv0a9giyrDj7ea4lv5pMwCzUm80yg?=
- =?us-ascii?Q?vA8JjZVAyBJYTc5QwKtQ5ZoqztIGE+OK5C0ehUqaQ/RHJukz/NRLr92ErW60?=
- =?us-ascii?Q?nyJyMJykBnT8SQv7XVzgRVFCEewY78kKX4UC1nD8WOTZ0zsJ29inMt0kfedP?=
- =?us-ascii?Q?Q4Tohnw9x4D5anQDoynDGC8EaAZ5TzYJkGQ1PJ1OPZYFWHCb3LOoD/hnQ9NN?=
- =?us-ascii?Q?nal46GgENpV0VBjafRfN+0JCFgXvh+bHGaxuMUgl0Pq82My4+RaqjkiG0v+g?=
- =?us-ascii?Q?asFXL5BIKsH6QCYFY5+qkk8sQ1HoWWqhz2v+8APmtsFqNwtIXbgoT8IShJTj?=
- =?us-ascii?Q?T7BjS9+R+QLtvo2klfwOsncZTnodVLi10USkU+Y5yws7GTsy+bbVtLnP3gPD?=
- =?us-ascii?Q?Mc3hbuj4YEE/x2Dt67VL/E+ufl93u5CXmPAqR6HSMh9z4QmUFU7YisAw2Mco?=
- =?us-ascii?Q?qviE20o7ZJ3mWeqD4szpnpr+k7xMBDE0PyKD7Zsr+3c/qR1tPSdYII9e4V03?=
- =?us-ascii?Q?zLlZUitJB6RTVV3KVaBw8B2XSP4VYvdvul5oFfCRR175xuNsn85XH9cwvsle?=
- =?us-ascii?Q?RzH3G9cam9ECRPekQUtvdW4dghZD/biGnuZ50UwtwJPAzq8ySk0gwsHz6Lme?=
- =?us-ascii?Q?UIYiOqo5F897jgCwErUcEO/BjfWffpjQEkvD0vvytSTf939CWWKy9z/W+YVz?=
- =?us-ascii?Q?mMCsF46Q/KZO53dATdRbatRFfxQwpgPmaBEgarRlD8unm2icPK05kLlF0M88?=
- =?us-ascii?Q?/eWHYdfcYAyYqV1j9CwmD2JK3ZMuCR+U6+h5IJdzQQd8OYSliyQsKsuKDe2l?=
- =?us-ascii?Q?xoxwCzRxMrGJ6vjMVsCgJ5IWrEFcdhklsyA7I84X5ugfpVSGeCkeWPETveWm?=
- =?us-ascii?Q?3iUvR1NH+Z10MzLqYMGbONK/Vhozr6nMyWZLosRPPIq6GrvMhxBysFVcBxby?=
- =?us-ascii?Q?dSeoXvQcAUvmk4w1B9VmGu6aFSq7aZZsR2ZcRmBUE+sDNm436W7qIRDDcAzx?=
- =?us-ascii?Q?lHWbdGpu8vmvvofm8Bfzl3+abzt6FPplapMlAbZsRj0zaOgg2OhHJdjmHb7A?=
- =?us-ascii?Q?sSsfP9Q7fcqw2xB8OGjwnfMPZYJUiOGj8KdGCv3y09wHxgHOIFarzxjda8q+?=
- =?us-ascii?Q?IWgxqeOF3ucvO4YaZLCfslnvnmON3MO5pfB7omAQrIr2zm5i8zS5R/kNep8M?=
- =?us-ascii?Q?CkR0Pjh8UR/0a131NKfPrsYUSaQOsgzdH9ytbGoqgOPVUdkas/U2F+/YdfQ1?=
- =?us-ascii?Q?K0B1eh6xiCHpJhuqT+Lxo6mgphnMR7ImcuJTP6geQKgy/Sp4Q8xfyhn7n2pJ?=
- =?us-ascii?Q?gvZUSr3z2EMATrKxrxv1vkG+Dn6HbyBgxeLHeUuJ1SqpRvPyATqfaVxmcc6Q?=
- =?us-ascii?Q?/YURxDwmu9gLa5EvFW1lmq781zUEKX4v76bRAisP9Mu7zLFhaaD1Zit2vJbj?=
- =?us-ascii?Q?ad7w3J7g5ZtdcgJ3r5CV35pu9ytgR0id0DHV/vz9VnGCu8Eca9wDqSNpj+Rk?=
- =?us-ascii?Q?znOA6BVLTS49d6JyOKzXkuB9F4/IzcFf8oVw9/kdIVJUAIScY8+ZE9nH3u/g?=
- =?us-ascii?Q?BjK8dxAQ0HkRg96p/a+qEdjRnwgHv0gwciA3o4DU6NsvOOMuB0/dgGDXrIWE?=
- =?us-ascii?Q?cfHoqYuTMw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9715e4eb-27eb-46f4-124e-08de5dec2d78
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB8800.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2026 21:36:49.2117
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: LJQwMiYJ1JxNiQOeUsQsB3o0tMV1NN87hW/jO/8uLDBsvXWmb3F3KJNuykw328t2Qcr1qGkVlVVw3FAcJeZsmA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6181
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.20 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
+X-Spamd-Result: default: False [-7.70 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2224-lists,linux-erofs=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER(0.00)[ynorov@nvidia.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:lorenzo.stoakes@oracle.com,m:akpm@linux-foundation.org,m:jarkko@kernel.org,m:dave.hansen@linux.intel.com,m:tglx@kernel.org,m:mingo@redhat.com,m:bp@alien8.de,m:x86@kernel.org,m:hpa@zytor.com,m:arnd@arndb.de,m:gregkh@linuxfoundation.org,m:dan.j.williams@intel.com,m:vishal.l.verma@intel.com,m:dave.jiang@intel.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:jani.nikula@linux.intel.com,m:joonas.lahtinen@linux.intel.com,m:rodrigo.vivi@intel.com,m:tursulin@ursulin.net,m:christian.koenig@amd.com,m:ray.huang@amd.com,m:matthew.auld@intel.com,m:matthew.brost@intel.com,m:viro@zeniv.linux.org.uk,m:brauner@kernel.org,m:jack@suse.cz,m:bcrl@kvack.org,m:xiang@kernel.org,m:chao@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,m:tytso@mit.edu,m:adilger.kernel@dilger.ca,m:muchun.song@linux.dev,m:osalvador@suse.de,m:david@kern
- el.org,m:almaz.alexandrovich@paragon-software.com,m:hubcap@omnibond.com,m:martin@omnibond.com,m:tony.luck@intel.com,m:reinette.chatre@intel.com,m:Dave.Martin@arm.com,m:james.morse@arm.com,m:babu.moger@amd.com,m:cem@kernel.org,m:dlemoal@kernel.org,m:naohiro.aota@wdc.com,m:jth@kernel.org,m:willy@infradead.org,m:Liam.Howlett@oracle.com,m:vbabka@suse.cz,m:rppt@kernel.org,m:surenb@google.com,m:mhocko@suse.com,m:hughd@google.com,m:baolin.wang@linux.alibaba.com,m:ziy@nvidia.com,m:npache@redhat.com,m:ryan.roberts@arm.com,m:dev.jain@arm.com,m:baohua@kernel.org,m:lance.yang@linux.dev,m:jannh@google.com,m:pfalcato@suse.de,m:dhowells@redhat.com,m:paul@paul-moore.com,m:jmorris@namei.org,m:serge@hallyn.com,m:yury.norov@gmail.com,m:linux@rasmusvillemoes.dk,m:linux-sgx@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:nvdimm@lists.linux.dev,m:linux-cxl@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:intel-gfx@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-aio@kvack.org,m:linux-ero
- fs@lists.ozlabs.org,m:linux-ext4@vger.kernel.org,m:linux-mm@kvack.org,m:ntfs3@lists.linux.dev,m:devel@lists.orangefs.org,m:linux-xfs@vger.kernel.org,m:keyrings@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:jgg@nvidia.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCPT_COUNT_THREE(0.00)[3];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,linux.intel.com,redhat.com,alien8.de,zytor.com,arndb.de,linuxfoundation.org,intel.com,suse.de,gmail.com,ffwll.ch,ursulin.net,amd.com,zeniv.linux.org.uk,suse.cz,kvack.org,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,linux.dev,paragon-software.com,omnibond.com,arm.com,wdc.com,infradead.org,oracle.com,suse.com,nvidia.com,paul-moore.com,namei.org,hallyn.com,rasmusvillemoes.dk,vger.kernel.org,lists.linux.dev,lists.freedesktop.org,lists.ozlabs.org,lists.orangefs.org];
+	TAGGED_FROM(0.00)[bounces-2225-lists,linux-erofs=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	RCPT_COUNT_GT_50(0.00)[94];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ynorov@nvidia.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim]
-X-Rspamd-Queue-Id: 1CEA59ABEC
+	NEURAL_HAM(-0.00)[-1.000];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,linux.alibaba.com:mid,linux.alibaba.com:dkim,alibaba.com:email]
+X-Rspamd-Queue-Id: 701F99CE23
 X-Rspamd-Action: no action
 
-On Tue, Jan 27, 2026 at 02:40:03PM +0000, Lorenzo Stoakes wrote:
-> On Tue, Jan 27, 2026 at 08:53:44AM -0500, Yury Norov wrote:
-> > On Thu, Jan 22, 2026 at 04:06:09PM +0000, Lorenzo Stoakes wrote:
+Similar to commit 91ef18b567da ("ext4: mark inodes without acls in
+__ext4_iget()"), the ACL state won't be read when the file owner
+performs a lookup, and the RCU fast path for lookups won't work
+because the ACL state remains unknown.
 
-...
+If there are no extended attributes, or if the xattr filter
+indicates that no ACL xattr is present, call cache_no_acl() directly.
 
-> > Even if you expect adding more flags, u128 would double your capacity,
-> > and people will still be able to use language-supported operation on
-> > the bits in flag. Which looks simpler to me...
-> 
-> u128 isn't supported on all architectures, VMA flags have to have absolutely
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ fs/erofs/inode.c |  5 +++++
+ fs/erofs/xattr.c | 20 ++++++++++++++++++++
+ fs/erofs/xattr.h |  1 +
+ 3 files changed, 26 insertions(+)
+
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index bce98c845a18..2e02d4b466ce 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -137,6 +137,11 @@ static int erofs_read_inode(struct inode *inode)
+ 		err = -EFSCORRUPTED;
+ 		goto err_out;
+ 	}
++
++	if (IS_ENABLED(CONFIG_EROFS_FS_POSIX_ACL) &&
++	    erofs_inode_has_noacl(inode, ptr, ofs))
++		cache_no_acl(inode);
++
+ 	switch (inode->i_mode & S_IFMT) {
+ 	case S_IFDIR:
+ 		vi->dot_omitted = (ifmt >> EROFS_I_DOT_OMITTED_BIT) & 1;
+diff --git a/fs/erofs/xattr.c b/fs/erofs/xattr.c
+index 512b998bdfff..14d22adc1476 100644
+--- a/fs/erofs/xattr.c
++++ b/fs/erofs/xattr.c
+@@ -574,4 +574,24 @@ struct posix_acl *erofs_get_acl(struct inode *inode, int type, bool rcu)
+ 	kfree(value);
+ 	return acl;
+ }
++
++bool erofs_inode_has_noacl(struct inode *inode, void *kaddr, unsigned int ofs)
++{
++	static const unsigned int bitmask =
++		BIT(21) |	/* system.posix_acl_default */
++		BIT(30);	/* system.posix_acl_access */
++	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
++	const struct erofs_xattr_ibody_header *ih = kaddr + ofs;
++
++	if (EROFS_I(inode)->xattr_isize < sizeof(*ih))
++		return true;
++
++	if (erofs_sb_has_xattr_filter(sbi) && !sbi->xattr_filter_reserved &&
++	    !check_add_overflow(ofs, sizeof(*ih), &ofs) &&
++	    ofs <= i_blocksize(inode)) {
++		if ((ih->h_name_filter & bitmask) == bitmask)
++			return true;
++	}
++	return false;
++}
+ #endif
+diff --git a/fs/erofs/xattr.h b/fs/erofs/xattr.h
+index 36f2667afc2d..a3ceefa1554d 100644
+--- a/fs/erofs/xattr.h
++++ b/fs/erofs/xattr.h
+@@ -30,4 +30,5 @@ struct posix_acl *erofs_get_acl(struct inode *inode, int type, bool rcu);
+ #define erofs_get_acl	(NULL)
+ #endif
  
-What about big integers?
++bool erofs_inode_has_noacl(struct inode *inode, void *kaddr, unsigned int ofs);
+ #endif
+-- 
+2.43.5
 
-        typedef unsigned _BitInt(VMA_FLAGS_COUNT) vma_flags_t
-
-> We want to be able to arbitrarily extend this as we please in the future. So
-> using u64 wouldn't buy us _anything_ except getting the 32-bit kernels in line.
-
-So enabling 32-bit arches is a big deal, even if it's a temporary
-solution. Again, how many flags in your opinion are blocked because of
-32-bit integer limitation? How soon 64-bit capacity will get fully
-used?
-
-> Using an integral value doesn't give us any kind of type safety, nor does it
-> give us as easy a means to track what users are doing with flags - both
-> additional benefits of this change.
-
-I tried the below, and it works OK for me with i386:
-
-$ cat bi.c
-#include <stdio.h>
-#include <limits.h>
-
-int main() {
-    unsigned _BitInt(128) a = (_BitInt(128))1 << 65;
-    unsigned _BitInt(128) b = (_BitInt(128))1 << 66;
-
-    printf("a | b == %llx\n", (unsigned long long)((a | b)>>64));
-    printf("BITINT_MAXWIDTH ==  0x%x\n", BITINT_MAXWIDTH);
-
-    return 0;
-}
-
-$ clang -m32 -std=c2x bi.c
-$ ./a.out
-a | b == 6
-BITINT_MAXWIDTH == 0x800000
-
-I didn't make GCC building it, at least out of the box. So the above
-question about 64-bit capacity has a practical meaning. If we've got a
-few years to let GCC fully support big integers as clang does, we don't 
-have to wish anything else.
-
-I'd like to put it right. I maintain bitmaps, and I like it widely
-adopted. But when it comes to flags, being able to use plain logic
-operations looks so important to me so I'd like to make sure that
-switching to bitmaps is the only working option.
 
