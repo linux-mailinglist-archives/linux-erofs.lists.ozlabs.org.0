@@ -1,79 +1,57 @@
-Return-Path: <linux-erofs+bounces-2239-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2240-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id AHXcIapUemnk5AEAu9opvQ
-	(envelope-from <linux-erofs+bounces-2239-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 19:25:46 +0100
+	id 2NEUI6jIemk7+gEAu9opvQ
+	(envelope-from <linux-erofs+bounces-2240-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Jan 2026 03:40:40 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F7CCA7BB4
-	for <lists+linux-erofs@lfdr.de>; Wed, 28 Jan 2026 19:25:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 507C0AB34E
+	for <lists+linux-erofs@lfdr.de>; Thu, 29 Jan 2026 03:40:39 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4f1W123jx5z2xpg;
-	Thu, 29 Jan 2026 05:25:42 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4f1k044zJvz2xpn;
+	Thu, 29 Jan 2026 13:40:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=192.198.163.19
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769624742;
-	cv=none; b=miDZEhQYlEK1mZAgJ7rFz5KrbgsooKA9ZHdAAaYPkZ67C3dXofFLSjw4LYtjqEk1Q5WnSp9/f1bkKZEFjI3e7xf+X4CPod2wq37eJRrBMW/m3k8QzlYufBHK4UetXsbTxNDDpaVwR1XmMghkFJxDU0CdQMxmkSRIAgy9yxFlveaD4de9HauxfixOhDIT107qI4rRki998dkjbSzg0eEkBMaw3n5/D3mIsOdYUHOQcvDSsOUffHN8km/CecrdZ9tPtvyoqj0qVRpK0gydBGXA0XrXZHNBR/fjOqZRjT6lA7a7cAVg0Z/heqiBH0mMCp02eVSop698MFt6RVVPGExr2g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.119
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1769654436;
+	cv=none; b=eWHc5Tk9xSH4lOvscm51nKMDBpaZ+BZdsmSjWCziOHXCRvkS5ZDx5gqRFsecbQtJt79FZGyIKAGwoHKUrbXjFmbn8NNHcXo7xE8K2aVvEllYO+1OAs9lIEolrOqwrAgAtlMMTK+GDKv7tj4YiXzuvWAeTAosGBJ5vD17S+N8SVhpfIjZ3yIanMjr5HWTM5sg+HjbOvIRqkveO7aNkfTuZIM3LS7pR4313QNj6QTGQPuV1ss/J2QvxO+GehmZ1ba9ZRiH7v9SzshbukJB1YH2qcKMua4GTqIiL2HMAqtj50Y/j+JVrPmEWBD609Lexf/blOTJh0rbv2X41pnoYh9IKw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1769624742; c=relaxed/relaxed;
-	bh=Dobr8qF56ahAIpwJk5PQ0IZctSzIItnzqV9I8C66r88=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Tn9xYOq4fYyzF+nP9q03OgnpmFZlgu0TgF8dPCjXYvKkYp2Y601KTrxf+GdvvSYLj5DPeU0sNnr56IV93vIYfGKKmYpvBxrhMqxY+X0ad2eLCd1sEvsMUmGTfOvNhMOY2ZTbdNsKbM1cZoME11OqJxEZdVrGgCXzkReo4fJi8nmCPSwVF95bEdJtbzTmjeu3KgsSy/8zHIC6EykKqdPm4C1dgFLlVPuM5uX1caTsTBktWmtkhMvvr49D/AudN+0KdpGL5tc1tBSSSMa18OWMjBpTG5mgg5rQjfF9TXWbAn7a9VKHLlj5a8wkVMXdylhVrxxJ0meNvi4UD+a8zOOPVw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com; dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MgKVqMJz; dkim-atps=neutral; spf=pass (client-ip=192.198.163.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org) smtp.mailfrom=intel.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=intel.com
+	t=1769654436; c=relaxed/relaxed;
+	bh=4z23OpI7ctehs80pZngmxrmxfOH/50/mJSzWJ1KVMps=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=V+RQeMV1Rqgyq+PkO2Otdy9koy+J9+Re89wsf0d+YyW5kqbJVDndLnRII8bewk0Ok7JF5CFfbdm63smzs8uE8JNkYxPycgVUo+ofvHSGHO1H3PNP46qv+HCjk7cqu5+asVI0HnPOX6Dy3Z9SBr8ixx1PkM+wveTsfkUZBnZ98QlllN8ej0hPh15RUnraWG6SZb22BLYIXI2i7tGwFL9KXFsVZ5dKlcrPsCdqTAwuqqGP9VtC82rID4FytfYTp5uRKXWlOSNvB1566Jn1V8feUcces3jIFzUNKR7wV6voCmOkzhtY4YxQSwuH0rqeVyp2x/ACny5AxsCYI5tX3iX2sA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nC4Txt3q; dkim-atps=neutral; spf=pass (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=intel.com header.i=@intel.com header.a=rsa-sha256 header.s=Intel header.b=MgKVqMJz;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=nC4Txt3q;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=intel.com (client-ip=192.198.163.19; helo=mgamail.intel.com; envelope-from=lkp@intel.com; receiver=lists.ozlabs.org)
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.119; helo=out30-119.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4f1W113f2tz2xlK
-	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Jan 2026 05:25:41 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1769624742; x=1801160742;
-  h=date:from:to:cc:subject:message-id;
-  bh=zBDmzMiBBJRmKfwPxi54gkScfvzMSz4FRALJ+ugDFnM=;
-  b=MgKVqMJz926F/e7uNp304whOF2nsGd59PkmeorL4p9mqsSgglz5RWBgC
-   a0hD//KaJQ3Nyj7ahs29/52oa/3+n0qyyGiJaU5xjqABfFcyUHujJQhxD
-   rzqtvm8PaakCrQA4OFZqyOShxk4b5h282df8NuVmQMpqwzhbFowG6sckB
-   TZGxRs2r8Y2zyFnuXZtMnDVJfb5Yxv9YA+vBuFDDaM4pa78xb+7IMJlyK
-   KmVUjehxwYzzx6dS17t+U7cHdq7G+MfzITfGbUZNvA75YCkT6MzbAeksm
-   Cg6HeorDw4PuAfQ10IW/Dgg6Ru8h+D1i5tNE3pUJzzDoKrLaO0KIUrUF7
-   Q==;
-X-CSE-ConnectionGUID: Nh1SfR9sRCm7ASQ9riBhOw==
-X-CSE-MsgGUID: 54z2pM55TNeJrPH3Jfiv9A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11685"; a="69862427"
-X-IronPort-AV: E=Sophos;i="6.21,258,1763452800"; 
-   d="scan'208";a="69862427"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2026 10:25:39 -0800
-X-CSE-ConnectionGUID: ZVkQLlfoS8CLz2Rmux+t/w==
-X-CSE-MsgGUID: 3bZxDb1aR7O7qR2LB5oflQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.21,258,1763452800"; 
-   d="scan'208";a="245937771"
-Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 28 Jan 2026 10:25:36 -0800
-Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vlAEP-00000000ags-38M1;
-	Wed, 28 Jan 2026 18:25:33 +0000
-Date: Thu, 29 Jan 2026 02:24:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
- Xiang Gao <xiang@kernel.org>, linux-erofs@lists.ozlabs.org
-Subject: [xiang-erofs:dev-test 27/27] fs/erofs/inode.c:182:19: error:
- no member named 'available_compr_algs' in 'struct erofs_sb_info'
-Message-ID: <202601290258.TBdbezPx-lkp@intel.com>
-User-Agent: s-nail v14.9.25
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-	SPF_PASS autolearn=disabled version=4.0.1
-X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4f1k021F18z2xNT
+	for <linux-erofs@lists.ozlabs.org>; Thu, 29 Jan 2026 13:40:33 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1769654428; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=4z23OpI7ctehs80pZngmxrmxfOH/50/mJSzWJ1KVMps=;
+	b=nC4Txt3q4ncLCYo5g7Ebvm/bfuoMufX+FF0GHuAnwrKJpK5rdiZcrbNplXtcJQUkWf0eROguRxcstL/fZj/IywLJzKcKO4SrGzfON/49sxapsnqjQtYn7G8oHeRu7Bu0o9fJShL/m2xE61RId5JalGZ8GM1u6wQbjAn5KNzGhjQ=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Wy5edzT_1769654422 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 29 Jan 2026 10:40:27 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	oliver.yang@linux.alibaba.com,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs: separate plain and compressed filesystems formally
+Date: Thu, 29 Jan 2026 10:40:22 +0800
+Message-ID: <20260129024022.3970473-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20260128113427.2805446-1-hsiangkao@linux.alibaba.com>
+References: <20260128113427.2805446-1-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -84,253 +62,325 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
   <mailto:linux-erofs+subscribe-nomail@lists.ozlabs.org>
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.70 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2239-lists,linux-erofs=lfdr.de];
-	FORGED_SENDER(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-2240-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:llvm@lists.linux.dev,m:oe-kbuild-all@lists.linux.dev,m:xiang@kernel.org,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[intel.com:+];
+	TO_DN_SOME(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[01.org:url,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 5F7CCA7BB4
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 507C0AB34E
 X-Rspamd-Action: no action
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-head:   713acdda5f818fb4f2286238a4f9f1f5f519b9da
-commit: 713acdda5f818fb4f2286238a4f9f1f5f519b9da [27/27] erofs: separate plain and compressed filesystems formally
-config: i386-buildonly-randconfig-002-20260128 (https://download.01.org/0day-ci/archive/20260129/202601290258.TBdbezPx-lkp@intel.com/config)
-compiler: clang version 20.1.8 (https://github.com/llvm/llvm-project 87f0227cb60147a26a1eeb4fb06e3b505e9c7261)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260129/202601290258.TBdbezPx-lkp@intel.com/reproduce)
+The EROFS on-disk format uses a tiny, plain metadata design that
+prioritizes performance and minimizes complex inconsistencies against
+common writable disk filesystems (almost all serious metadata
+inconsistency cannot happen in well-designed immutable filesystems like
+EROFS). EROFS deliberately avoids artificial design flaws to eliminate
+serious security risks from untrusted remote sources by design,
+although human-made implementation bugs can still happen sometimes.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202601290258.TBdbezPx-lkp@intel.com/
+Currently, there is no strict check to prevent compressed inodes,
+especially LZ4-compressed inodes, from being read in plain filesystems.
 
-All errors (new ones prefixed by >>):
+Starting with erofs-utils 1.0 and Linux 5.3, LZ4_0PADDING sb feature
+is automatically enabled for LZ4-compressed EROFS images to support
+in-place decompression. Furthermore, since Linux 5.4 LTS is no longer
+supported, we no longer need to handle ancient LZ4-compressed EROFS
+images generated by erofs-utils prior to 1.0.
 
->> fs/erofs/inode.c:182:19: error: no member named 'available_compr_algs' in 'struct erofs_sb_info'
-     182 |         } else if (!sbi->available_compr_algs) {
-         |                     ~~~  ^
-   1 error generated.
+To formally distinguish different filesystem types for improved
+security:
 
+ - Use the presence of LZ4_0PADDING or a non-zero
+   `dsb->u1.lz4_max_distance` as a marker for compressed filesystems
+   containing LZ4-compressed inodes only;
 
-vim +182 fs/erofs/inode.c
+ - For other algorithms, use `dsb->u1.available_compr_algs` bitmap.
 
-    29	
-    30	static int erofs_read_inode(struct inode *inode)
-    31	{
-    32		struct super_block *sb = inode->i_sb;
-    33		erofs_blk_t blkaddr = erofs_blknr(sb, erofs_iloc(inode));
-    34		unsigned int ofs = erofs_blkoff(sb, erofs_iloc(inode));
-    35		bool in_mbox = erofs_inode_in_metabox(inode);
-    36		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
-    37		struct erofs_sb_info *sbi = EROFS_SB(sb);
-    38		erofs_blk_t addrmask = BIT_ULL(48) - 1;
-    39		struct erofs_inode *vi = EROFS_I(inode);
-    40		struct erofs_inode_extended *die, copied;
-    41		struct erofs_inode_compact *dic;
-    42		unsigned int ifmt;
-    43		void *ptr;
-    44		int err = 0;
-    45	
-    46		ptr = erofs_read_metabuf(&buf, sb, erofs_pos(sb, blkaddr), in_mbox);
-    47		if (IS_ERR(ptr)) {
-    48			err = PTR_ERR(ptr);
-    49			erofs_err(sb, "failed to read inode meta block (nid: %llu): %d",
-    50				  vi->nid, err);
-    51			goto err_out;
-    52		}
-    53	
-    54		dic = ptr + ofs;
-    55		ifmt = le16_to_cpu(dic->i_format);
-    56		if (ifmt & ~EROFS_I_ALL) {
-    57			erofs_err(sb, "unsupported i_format %u of nid %llu",
-    58				  ifmt, vi->nid);
-    59			err = -EOPNOTSUPP;
-    60			goto err_out;
-    61		}
-    62	
-    63		vi->datalayout = erofs_inode_datalayout(ifmt);
-    64		if (vi->datalayout >= EROFS_INODE_DATALAYOUT_MAX) {
-    65			erofs_err(sb, "unsupported datalayout %u of nid %llu",
-    66				  vi->datalayout, vi->nid);
-    67			err = -EOPNOTSUPP;
-    68			goto err_out;
-    69		}
-    70	
-    71		switch (erofs_inode_version(ifmt)) {
-    72		case EROFS_INODE_LAYOUT_EXTENDED:
-    73			vi->inode_isize = sizeof(struct erofs_inode_extended);
-    74			/* check if the extended inode acrosses block boundary */
-    75			if (ofs + vi->inode_isize <= sb->s_blocksize) {
-    76				ofs += vi->inode_isize;
-    77				die = (struct erofs_inode_extended *)dic;
-    78				copied.i_u = die->i_u;
-    79				copied.i_nb = die->i_nb;
-    80			} else {
-    81				const unsigned int gotten = sb->s_blocksize - ofs;
-    82	
-    83				memcpy(&copied, dic, gotten);
-    84				ptr = erofs_read_metabuf(&buf, sb,
-    85						erofs_pos(sb, blkaddr + 1), in_mbox);
-    86				if (IS_ERR(ptr)) {
-    87					err = PTR_ERR(ptr);
-    88					erofs_err(sb, "failed to read inode payload block (nid: %llu): %d",
-    89						  vi->nid, err);
-    90					goto err_out;
-    91				}
-    92				ofs = vi->inode_isize - gotten;
-    93				memcpy((u8 *)&copied + gotten, ptr, ofs);
-    94				die = &copied;
-    95			}
-    96			vi->xattr_isize = erofs_xattr_ibody_size(die->i_xattr_icount);
-    97	
-    98			inode->i_mode = le16_to_cpu(die->i_mode);
-    99			i_uid_write(inode, le32_to_cpu(die->i_uid));
-   100			i_gid_write(inode, le32_to_cpu(die->i_gid));
-   101			set_nlink(inode, le32_to_cpu(die->i_nlink));
-   102			inode_set_mtime(inode, le64_to_cpu(die->i_mtime),
-   103					le32_to_cpu(die->i_mtime_nsec));
-   104	
-   105			inode->i_size = le64_to_cpu(die->i_size);
-   106			break;
-   107		case EROFS_INODE_LAYOUT_COMPACT:
-   108			vi->inode_isize = sizeof(struct erofs_inode_compact);
-   109			ofs += vi->inode_isize;
-   110			vi->xattr_isize = erofs_xattr_ibody_size(dic->i_xattr_icount);
-   111	
-   112			inode->i_mode = le16_to_cpu(dic->i_mode);
-   113			copied.i_u = dic->i_u;
-   114			i_uid_write(inode, le16_to_cpu(dic->i_uid));
-   115			i_gid_write(inode, le16_to_cpu(dic->i_gid));
-   116			if (!S_ISDIR(inode->i_mode) &&
-   117			    ((ifmt >> EROFS_I_NLINK_1_BIT) & 1)) {
-   118				set_nlink(inode, 1);
-   119				copied.i_nb = dic->i_nb;
-   120			} else {
-   121				set_nlink(inode, le16_to_cpu(dic->i_nb.nlink));
-   122				copied.i_nb.startblk_hi = 0;
-   123				addrmask = BIT_ULL(32) - 1;
-   124			}
-   125			inode_set_mtime(inode, sbi->epoch + le32_to_cpu(dic->i_mtime),
-   126					sbi->fixed_nsec);
-   127	
-   128			inode->i_size = le32_to_cpu(dic->i_size);
-   129			break;
-   130		default:
-   131			erofs_err(sb, "unsupported on-disk inode version %u of nid %llu",
-   132				  erofs_inode_version(ifmt), vi->nid);
-   133			err = -EOPNOTSUPP;
-   134			goto err_out;
-   135		}
-   136	
-   137		if (unlikely(inode->i_size < 0)) {
-   138			erofs_err(sb, "negative i_size @ nid %llu", vi->nid);
-   139			err = -EFSCORRUPTED;
-   140			goto err_out;
-   141		}
-   142	
-   143		if (IS_ENABLED(CONFIG_EROFS_FS_POSIX_ACL) &&
-   144		    erofs_inode_has_noacl(inode, ptr, ofs))
-   145			cache_no_acl(inode);
-   146	
-   147		switch (inode->i_mode & S_IFMT) {
-   148		case S_IFDIR:
-   149			vi->dot_omitted = (ifmt >> EROFS_I_DOT_OMITTED_BIT) & 1;
-   150			fallthrough;
-   151		case S_IFREG:
-   152		case S_IFLNK:
-   153			vi->startblk = le32_to_cpu(copied.i_u.startblk_lo) |
-   154				((u64)le16_to_cpu(copied.i_nb.startblk_hi) << 32);
-   155			if (vi->datalayout == EROFS_INODE_FLAT_PLAIN &&
-   156			    !((vi->startblk ^ EROFS_NULL_ADDR) & addrmask))
-   157				vi->startblk = EROFS_NULL_ADDR;
-   158	
-   159			if(S_ISLNK(inode->i_mode)) {
-   160				err = erofs_fill_symlink(inode, ptr, ofs);
-   161				if (err)
-   162					goto err_out;
-   163			}
-   164			break;
-   165		case S_IFCHR:
-   166		case S_IFBLK:
-   167			inode->i_rdev = new_decode_dev(le32_to_cpu(copied.i_u.rdev));
-   168			break;
-   169		case S_IFIFO:
-   170		case S_IFSOCK:
-   171			inode->i_rdev = 0;
-   172			break;
-   173		default:
-   174			erofs_err(sb, "bogus i_mode (%o) @ nid %llu", inode->i_mode,
-   175				  vi->nid);
-   176			err = -EFSCORRUPTED;
-   177			goto err_out;
-   178		}
-   179	
-   180		if (!erofs_inode_is_data_compressed(vi->datalayout)) {
-   181			inode->i_blocks = round_up(inode->i_size, sb->s_blocksize) >> 9;
- > 182		} else if (!sbi->available_compr_algs) {
-   183			erofs_err(sb, "compressed inode (nid %llu) is invalid in a plain filesystem",
-   184				  vi->nid);
-   185			err = -EFSCORRUPTED;
-   186			goto err_out;
-   187		} else {
-   188			inode->i_blocks = le32_to_cpu(copied.i_u.blocks_lo) <<
-   189					(sb->s_blocksize_bits - 9);
-   190		}
-   191	
-   192		if (vi->datalayout == EROFS_INODE_CHUNK_BASED) {
-   193			/* fill chunked inode summary info */
-   194			vi->chunkformat = le16_to_cpu(copied.i_u.c.format);
-   195			if (vi->chunkformat & ~EROFS_CHUNK_FORMAT_ALL) {
-   196				erofs_err(sb, "unsupported chunk format %x of nid %llu",
-   197					  vi->chunkformat, vi->nid);
-   198				err = -EOPNOTSUPP;
-   199				goto err_out;
-   200			}
-   201			vi->chunkbits = sb->s_blocksize_bits +
-   202				(vi->chunkformat & EROFS_CHUNK_FORMAT_BLKBITS_MASK);
-   203		}
-   204		inode_set_atime_to_ts(inode,
-   205				      inode_set_ctime_to_ts(inode, inode_get_mtime(inode)));
-   206	
-   207		inode->i_flags &= ~S_DAX;
-   208		if (test_opt(&sbi->opt, DAX_ALWAYS) && S_ISREG(inode->i_mode) &&
-   209		    (vi->datalayout == EROFS_INODE_FLAT_PLAIN ||
-   210		     vi->datalayout == EROFS_INODE_CHUNK_BASED))
-   211			inode->i_flags |= S_DAX;
-   212	err_out:
-   213		erofs_put_metabuf(&buf);
-   214		return err;
-   215	}
-   216	
+Note: LZ4_0PADDING has been supported since Linux 5.4 (the first formal
+kernel version), so exposing it via sysfs is no longer necessary and is
+now deprecated (but remain it for five more years until 2031):
 
+  `dsb->u1` has been strictly non-zero for all EROFS images containing
+  compressed inodes starting with erofs-utils v1.3 and it is actually
+  a much better marker for compressed filesystems.
+
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ Documentation/ABI/testing/sysfs-fs-erofs |  6 ++---
+ fs/erofs/decompressor.c                  | 30 ++++++++++--------------
+ fs/erofs/erofs_fs.h                      |  2 +-
+ fs/erofs/inode.c                         | 14 +++++++----
+ fs/erofs/internal.h                      |  6 ++---
+ fs/erofs/super.c                         | 24 +++++++------------
+ fs/erofs/sysfs.c                         |  2 --
+ 7 files changed, 39 insertions(+), 45 deletions(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
+index b9243c7f28d7..e4cf6fc6a106 100644
+--- a/Documentation/ABI/testing/sysfs-fs-erofs
++++ b/Documentation/ABI/testing/sysfs-fs-erofs
+@@ -3,9 +3,9 @@ Date:		November 2021
+ Contact:	"Huang Jianan" <huangjianan@oppo.com>
+ Description:	Shows all enabled kernel features.
+ 		Supported features:
+-		zero_padding, compr_cfgs, big_pcluster, chunked_file,
+-		device_table, compr_head2, sb_chksum, ztailpacking,
+-		dedupe, fragments, 48bit, metabox.
++		compr_cfgs, big_pcluster, chunked_file, device_table,
++		compr_head2, sb_chksum, ztailpacking, dedupe, fragments,
++		48bit, metabox.
+ 
+ What:		/sys/fs/erofs/<disk>/sync_decompress
+ Date:		November 2021
+diff --git a/fs/erofs/decompressor.c b/fs/erofs/decompressor.c
+index e9d799a03a91..3c54e95964c9 100644
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -34,7 +34,10 @@ static int z_erofs_load_lz4_config(struct super_block *sb,
+ 		}
+ 	} else {
+ 		distance = le16_to_cpu(dsb->u1.lz4_max_distance);
++		if (!distance && !erofs_sb_has_lz4_0padding(sbi))
++			return 0;
+ 		sbi->lz4.max_pclusterblks = 1;
++		sbi->available_compr_algs = 1 << Z_EROFS_COMPRESSION_LZ4;
+ 	}
+ 
+ 	sbi->lz4.max_distance_pages = distance ?
+@@ -198,7 +201,6 @@ const char *z_erofs_fixup_insize(struct z_erofs_decompress_req *rq,
+ static const char *__z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq,
+ 					    u8 *dst)
+ {
+-	bool zeropadded = erofs_sb_has_zero_padding(EROFS_SB(rq->sb));
+ 	bool may_inplace = false;
+ 	unsigned int inputmargin;
+ 	u8 *out, *headpage, *src;
+@@ -206,18 +208,15 @@ static const char *__z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq,
+ 	int ret, maptype;
+ 
+ 	headpage = kmap_local_page(*rq->in);
+-	/* LZ4 decompression inplace is only safe if zero_padding is enabled */
+-	if (zeropadded) {
+-		reason = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
+-				min_t(unsigned int, rq->inputsize,
+-				      rq->sb->s_blocksize - rq->pageofs_in));
+-		if (reason) {
+-			kunmap_local(headpage);
+-			return reason;
+-		}
+-		may_inplace = !((rq->pageofs_in + rq->inputsize) &
+-				(rq->sb->s_blocksize - 1));
++	reason = z_erofs_fixup_insize(rq, headpage + rq->pageofs_in,
++			min_t(unsigned int, rq->inputsize,
++			      rq->sb->s_blocksize - rq->pageofs_in));
++	if (reason) {
++		kunmap_local(headpage);
++		return reason;
+ 	}
++	may_inplace = !((rq->pageofs_in + rq->inputsize) &
++			(rq->sb->s_blocksize - 1));
+ 
+ 	inputmargin = rq->pageofs_in;
+ 	src = z_erofs_lz4_handle_overlap(rq, headpage, dst, &inputmargin,
+@@ -226,8 +225,7 @@ static const char *__z_erofs_lz4_decompress(struct z_erofs_decompress_req *rq,
+ 		return ERR_CAST(src);
+ 
+ 	out = dst + rq->pageofs_out;
+-	/* legacy format could compress extra data in a pcluster. */
+-	if (rq->partial_decoding || !zeropadded)
++	if (rq->partial_decoding)
+ 		ret = LZ4_decompress_safe_partial(src + inputmargin, out,
+ 				rq->inputsize, rq->outputsize, rq->outputsize);
+ 	else
+@@ -454,10 +452,8 @@ int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb)
+ 	erofs_off_t offset;
+ 	int size, ret = 0;
+ 
+-	if (!erofs_sb_has_compr_cfgs(sbi)) {
+-		sbi->available_compr_algs = 1 << Z_EROFS_COMPRESSION_LZ4;
++	if (!erofs_sb_has_compr_cfgs(sbi))
+ 		return z_erofs_load_lz4_config(sb, dsb, NULL, 0);
+-	}
+ 
+ 	algs = le16_to_cpu(dsb->u1.available_compr_algs);
+ 	sbi->available_compr_algs = algs;
+diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
+index b30a74d307c5..b80c6bb33a58 100644
+--- a/fs/erofs/erofs_fs.h
++++ b/fs/erofs/erofs_fs.h
+@@ -23,7 +23,7 @@
+  * Any bits that aren't in EROFS_ALL_FEATURE_INCOMPAT should
+  * be incompatible with this kernel version.
+  */
+-#define EROFS_FEATURE_INCOMPAT_ZERO_PADDING	0x00000001
++#define EROFS_FEATURE_INCOMPAT_LZ4_0PADDING	0x00000001
+ #define EROFS_FEATURE_INCOMPAT_COMPR_CFGS	0x00000002
+ #define EROFS_FEATURE_INCOMPAT_BIG_PCLUSTER	0x00000002
+ #define EROFS_FEATURE_INCOMPAT_CHUNKED_FILE	0x00000004
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 984dfa0c5231..28ac85a35926 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -177,11 +177,17 @@ static int erofs_read_inode(struct inode *inode)
+ 		goto err_out;
+ 	}
+ 
+-	if (erofs_inode_is_data_compressed(vi->datalayout))
+-		inode->i_blocks = le32_to_cpu(copied.i_u.blocks_lo) <<
+-					(sb->s_blocksize_bits - 9);
+-	else
++	if (!erofs_inode_is_data_compressed(vi->datalayout)) {
+ 		inode->i_blocks = round_up(inode->i_size, sb->s_blocksize) >> 9;
++	} else if (!IS_ENABLED(CONFIG_EROFS_FS_ZIP) || !sbi->available_compr_algs) {
++		erofs_err(sb, "compressed inode (nid %llu) is invalid in a plain filesystem",
++			  vi->nid);
++		err = -EFSCORRUPTED;
++		goto err_out;
++	} else {
++		inode->i_blocks = le32_to_cpu(copied.i_u.blocks_lo) <<
++				(sb->s_blocksize_bits - 9);
++	}
+ 
+ 	if (vi->datalayout == EROFS_INODE_CHUNK_BASED) {
+ 		/* fill chunked inode summary info */
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index 3001bfec4e04..6a4802f3fdd8 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -114,7 +114,6 @@ struct erofs_sb_info {
+ 
+ 	unsigned int sync_decompress;	/* strategy for sync decompression */
+ 	unsigned int shrinker_run_no;
+-	u16 available_compr_algs;
+ 
+ 	/* pseudo inode to manage cached pages */
+ 	struct inode *managed_cache;
+@@ -154,6 +153,7 @@ struct erofs_sb_info {
+ 	char *volume_name;
+ 	u32 feature_compat;
+ 	u32 feature_incompat;
++	u16 available_compr_algs;
+ 
+ 	/* sysfs support */
+ 	struct kobject s_kobj;		/* /sys/fs/erofs/<devname> */
+@@ -221,7 +221,7 @@ static inline bool erofs_sb_has_##name(struct erofs_sb_info *sbi) \
+ 	return sbi->feature_##compat & EROFS_FEATURE_##feature; \
+ }
+ 
+-EROFS_FEATURE_FUNCS(zero_padding, incompat, INCOMPAT_ZERO_PADDING)
++EROFS_FEATURE_FUNCS(lz4_0padding, incompat, INCOMPAT_LZ4_0PADDING)
+ EROFS_FEATURE_FUNCS(compr_cfgs, incompat, INCOMPAT_COMPR_CFGS)
+ EROFS_FEATURE_FUNCS(big_pcluster, incompat, INCOMPAT_BIG_PCLUSTER)
+ EROFS_FEATURE_FUNCS(chunked_file, incompat, INCOMPAT_CHUNKED_FILE)
+@@ -530,7 +530,6 @@ void z_erofs_put_gbuf(void *ptr);
+ int z_erofs_gbuf_growsize(unsigned int nrpages);
+ int __init z_erofs_gbuf_init(void);
+ void z_erofs_gbuf_exit(void);
+-int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb);
+ #else
+ static inline void erofs_shrinker_register(struct super_block *sb) {}
+ static inline void erofs_shrinker_unregister(struct super_block *sb) {}
+@@ -540,6 +539,7 @@ static inline int z_erofs_init_subsystem(void) { return 0; }
+ static inline void z_erofs_exit_subsystem(void) {}
+ static inline int z_erofs_init_super(struct super_block *sb) { return 0; }
+ #endif	/* !CONFIG_EROFS_FS_ZIP */
++int z_erofs_parse_cfgs(struct super_block *sb, struct erofs_super_block *dsb);
+ 
+ #ifdef CONFIG_EROFS_FS_BACKED_BY_FILE
+ struct bio *erofs_fileio_bio_alloc(struct erofs_map_dev *mdev);
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index b9ffb3d42bf4..e52c2b528f86 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -122,18 +122,6 @@ void *erofs_read_metadata(struct super_block *sb, struct erofs_buf *buf,
+ 	return buffer;
+ }
+ 
+-#ifndef CONFIG_EROFS_FS_ZIP
+-static int z_erofs_parse_cfgs(struct super_block *sb,
+-			      struct erofs_super_block *dsb)
+-{
+-	if (!dsb->u1.available_compr_algs)
+-		return 0;
+-
+-	erofs_err(sb, "compression disabled, unable to mount compressed EROFS");
+-	return -EOPNOTSUPP;
+-}
+-#endif
+-
+ static int erofs_init_device(struct erofs_buf *buf, struct super_block *sb,
+ 			     struct erofs_device_info *dif, erofs_off_t *pos)
+ {
+@@ -363,10 +351,16 @@ static int erofs_read_superblock(struct super_block *sb)
+ 		}
+ 	}
+ 
+-	/* parse on-disk compression configurations */
+-	ret = z_erofs_parse_cfgs(sb, dsb);
+-	if (ret < 0)
++	if (IS_ENABLED(CONFIG_EROFS_FS_ZIP)) {
++		ret = z_erofs_parse_cfgs(sb, dsb);
++		if (ret < 0)
++			goto out;
++	} else if (dsb->u1.available_compr_algs ||
++		   erofs_sb_has_lz4_0padding(sbi)) {
++		erofs_err(sb, "compression disabled, unable to mount compressed EROFS");
++		ret = -EOPNOTSUPP;
+ 		goto out;
++	}
+ 
+ 	ret = erofs_scan_devices(sb, dsb);
+ 
+diff --git a/fs/erofs/sysfs.c b/fs/erofs/sysfs.c
+index 86b22b9f0c19..3a9a5fa000ae 100644
+--- a/fs/erofs/sysfs.c
++++ b/fs/erofs/sysfs.c
+@@ -86,7 +86,6 @@ static struct attribute *erofs_attrs[] = {
+ ATTRIBUTE_GROUPS(erofs);
+ 
+ /* Features this copy of erofs supports */
+-EROFS_ATTR_FEATURE(zero_padding);
+ EROFS_ATTR_FEATURE(compr_cfgs);
+ EROFS_ATTR_FEATURE(big_pcluster);
+ EROFS_ATTR_FEATURE(chunked_file);
+@@ -100,7 +99,6 @@ EROFS_ATTR_FEATURE(48bit);
+ EROFS_ATTR_FEATURE(metabox);
+ 
+ static struct attribute *erofs_feat_attrs[] = {
+-	ATTR_LIST(zero_padding),
+ 	ATTR_LIST(compr_cfgs),
+ 	ATTR_LIST(big_pcluster),
+ 	ATTR_LIST(chunked_file),
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.5
+
 
