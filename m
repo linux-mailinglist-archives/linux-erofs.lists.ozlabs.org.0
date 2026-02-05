@@ -1,48 +1,52 @@
-Return-Path: <linux-erofs+bounces-2261-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2262-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KGsREIswhGl90gMAu9opvQ
-	(envelope-from <linux-erofs+bounces-2261-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Feb 2026 06:54:19 +0100
+	id YEceA0JYhGl02gMAu9opvQ
+	(envelope-from <linux-erofs+bounces-2262-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Feb 2026 09:43:46 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECE7FEECFF
-	for <lists+linux-erofs@lfdr.de>; Thu, 05 Feb 2026 06:54:16 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B8D4EFFDE
+	for <lists+linux-erofs@lfdr.de>; Thu, 05 Feb 2026 09:43:44 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4f65yC0Dmpz2xrk;
-	Thu, 05 Feb 2026 16:54:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4f69jn4K8Lz2xrk;
+	Thu, 05 Feb 2026 19:43:41 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1770270850;
-	cv=none; b=DQbj/is9HcxIkQrF4L5NzrcK3p0KDD7B5hS+1CYh5cN6I6N4jgPZtnHeWn+Pi4oV45he2DKiB6m4EjXPMmiBY6rUGGJSx7Y8XT/JsVC7+bGwY8hH4ppaYQCtz0qAAHBVT55l3jzZgPIaQubUY0dmPsEOolVxUuB6vP7dS7uXXPPPIWH7Eyg3eHkwctWqkkDTmsanZWTeYQ3XePPfCCp4pwKdozoPzkeADyLSHBKpi4OkQtKLtec2B1EF42eUSfDhCSD81R4NeY1sVs3gTlB3PUvITAOlhfcUtLlFJX7yXB6eaCOLuMUfNfcvXEQfCXuoduhWFhY5lbUjMIpE7bcyZA==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.132
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1770281021;
+	cv=none; b=PLmbNlVNgjPN74tONT+c/TacYsU3d3MOJmC6YCZi0M1+IBaLy8kYham38c+m4npxi6WUI2W7aPnQqbloApbXmuawgbuEwQUOxYZG8VlgxWlMTCyo//g18QpuXdi/xQX8ExLkr14d1DDn2OiPLFMq3/U1JT6bBwhE/vV/WAa2tWaYwx2xgLRSfRevTbk/Dh3Jps2tX0y+KIIM9Kiy6pvNwDwiyUA38eZ8k9m3W0SCZ6/3nJ25L6tgaTvn93xHRo8YIcMW+lJ+CGVz5fZsoEyUHG4RUk9WTPJkVBghBiX9TW1QwKfmBJqHY5OoK0zbgxtrAx0IKT0dm3iaFpCWLOJ0Hw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1770270850; c=relaxed/relaxed;
-	bh=b86ovKP+ab8HMH2dN7Q6T3UeJOE29A7dljYvTF2CV5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=UU1jWgvybPCHAGogiYxHeXiY6iUqSM57UV7LENR/pp0Zq/m6fzhXPLcGVaM8IFEM3h4zdrxfQSPgcKxuAXwwaLkihr3VIUeY9ZYDuYhuZT3t6aBBFr2VEeykkXIEU5EgvTgAUi+FLcVrPHVrmOtFkIUeDFzfOwCazn0sdy5W5Ty1wFAN2r2oqND0z4TONhISFtYzlbStnV8j4hlP9n3UZvbfb99Kt9NgAX6n4z0LeZa6CJYSSN2oF1NHieY9SDu2S9bhjd1sMMzx5duVhPWxi4nAQwbYcXi4f0UwR10SmgogXmbJOg6KbFDEs2a3ktSxbmmAS36qlhHDppTa/ZvoZg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ogf3Ds/X; dkim-atps=neutral; spf=pass (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	t=1770281021; c=relaxed/relaxed;
+	bh=nMHrzzX/KfiQAU8+qPYWNRsiCRn4RCu6xgAqvZHNRCs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X/9MvXauFunO8WxpV4Py0FoUt1+TPNUUOh2to5i5DJDg+MIFvEkOohs3ikLewxzI/tq2nsElgRTOS74cEk4uLdHdSsvmdeALvhZsLP4cvEN5DB2/qtwGSUa+xu6AtUYuzmqhlsTRcE0vnq+/MXJZPMWnv5V00WQtcjwJARhGNwZ8LaBwF/8j+WEfssV09z92a7amvDZ3v88LVfV56qf750pgALLowpDjh1x1DhKPyMv7MDa1myynZZkhe1266cwyDfCb8RTqGgnNwaHCDDlkYfKHzQWL54IY9Z63nkF8rQnj+DOrNpsNGpw1f/0ROzf/kpyCwQPAXmLsXa49tfQ5eQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WXobjL0B; dkim-atps=neutral; spf=pass (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=ogf3Ds/X;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=WXobjL0B;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.131; helo=out30-131.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.132; helo=out30-132.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4f65y80tdVz2xS5
-	for <linux-erofs@lists.ozlabs.org>; Thu, 05 Feb 2026 16:54:06 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4f69jk4psnz2xg9
+	for <linux-erofs@lists.ozlabs.org>; Thu, 05 Feb 2026 19:43:36 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1770270840; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=b86ovKP+ab8HMH2dN7Q6T3UeJOE29A7dljYvTF2CV5s=;
-	b=ogf3Ds/X7U1vrX/kPOjh0KzXsDuS1rOZOhJIAwhpyZcwE0riUEgJIO5qpj5ECP1SgrVsYcFaK3/z1riAKL5B1lR7HggODBuKHJNU2/pSglID83+YoGIstKTpkRHVIE2lPX3UTxiV3801PPikN7JpzfozRqEXYVWqTCDCT2HIOqI=
-Received: from 30.221.130.135(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WyZngzr_1770270838 cluster:ay36)
+	t=1770281011; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=nMHrzzX/KfiQAU8+qPYWNRsiCRn4RCu6xgAqvZHNRCs=;
+	b=WXobjL0B+nMrVtRfOWm2u54qEtuKEyN1jIM4bU802EbcEch3O0aRx7Xj86iNU7CvvbNUd5hPSTIxXHWP4HojsFqIEwN0xWn0rNdi+m4gwv8hUvXAGOA+Att6GkuxBgJ+tIovbjuCJMVqe/WygS8AMvECWFhOq9zxwn9/R4I3VNk=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WyaLsVV_1770281006 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Thu, 05 Feb 2026 13:53:59 +0800
-Message-ID: <f8f431a2-82a5-4f88-884e-71e0b0351328@linux.alibaba.com>
-Date: Thu, 5 Feb 2026 13:53:58 +0800
+          Thu, 05 Feb 2026 16:43:29 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH] erofs-utils: manpage: only install mount.erofs.8 with the command
+Date: Thu,  5 Feb 2026 16:43:22 +0800
+Message-ID: <20260205084322.494282-1-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -54,86 +58,68 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [erofs?] WARNING in erofs_iget (2)
-To: syzbot <syzbot+c2dd47dc153320cc4692@syzkaller.appspotmail.com>,
- linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- syzkaller-bugs@googlegroups.com
-References: <6983fff5.a00a0220.37c87e.0024.GAE@google.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <6983fff5.a00a0220.37c87e.0024.GAE@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
 	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-6.70 / 15.00];
+X-Spamd-Result: default: False [-7.70 / 15.00];
 	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
-	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=2168d83cc33f9cb6];
 	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2261-lists,linux-erofs=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[syzkaller.appspot.com:url,linux.alibaba.com:mid,linux.alibaba.com:dkim];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS(0.00)[m:syzbot+c2dd47dc153320cc4692@syzkaller.appspotmail.com,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:syzkaller-bugs@googlegroups.com,m:syzbot@syzkaller.appspotmail.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-2262-lists,linux-erofs=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWO(0.00)[2];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	TAGGED_RCPT(0.00)[linux-erofs,c2dd47dc153320cc4692];
-	SUBJECT_HAS_QUESTION(0.00)[]
-X-Rspamd-Queue-Id: ECE7FEECFF
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	FROM_HAS_DN(0.00)[]
+X-Rspamd-Queue-Id: 3B8D4EFFDE
 X-Rspamd-Action: no action
 
+Fixes: 6d91a8f11cb7 ("erofs-utils: mount: add manpage and usage information")
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+---
+ man/Makefile.am | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/man/Makefile.am b/man/Makefile.am
+index b76b45714b0d..c951681bd8c7 100644
+--- a/man/Makefile.am
++++ b/man/Makefile.am
+@@ -1,8 +1,12 @@
+ # SPDX-License-Identifier: GPL-2.0+
+ 
+-dist_man_MANS = mkfs.erofs.1 dump.erofs.1 fsck.erofs.1 mount.erofs.8
++dist_man_MANS = mkfs.erofs.1 dump.erofs.1 fsck.erofs.1
+ 
+-EXTRA_DIST = erofsfuse.1
++EXTRA_DIST = erofsfuse.1 mount.erofs.8
+ if ENABLE_FUSE
+ man_MANS = erofsfuse.1
+ endif
++
++if OS_LINUX
++man_MANS = mount.erofs.8
++endif
+-- 
+2.43.5
 
-On 2026/2/5 10:27, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch and the reproducer did not trigger any issue:
-> 
-> Reported-by: syzbot+c2dd47dc153320cc4692@syzkaller.appspotmail.com
-> Tested-by: syzbot+c2dd47dc153320cc4692@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         1ec50c08 erofs: update compression algorithm status
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs.git dev-test
-> console output: https://syzkaller.appspot.com/x/log.txt?x=119f5a5a580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=2168d83cc33f9cb6
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c2dd47dc153320cc4692
-> compiler:       Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-> 
-> Note: no patches were applied.
-> Note: testing is done by a robot and is best-effort only.
-
-#syz invalid
-
-The issue was valid but introduced by a new commit only
-in linux-next:
-erofs: use inode_set_cached_link()
-
-PATCH v2 already fixes this issue.
 
