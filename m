@@ -1,92 +1,93 @@
-Return-Path: <linux-erofs+bounces-2270-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2271-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uKDjGD8fhmnQJwQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2270-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Fri, 06 Feb 2026 18:05:03 +0100
+	id UIocMXAhhmm/JwQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2271-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Fri, 06 Feb 2026 18:14:24 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55DF2100B6E
-	for <lists+linux-erofs@lfdr.de>; Fri, 06 Feb 2026 18:05:02 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1B03100D17
+	for <lists+linux-erofs@lfdr.de>; Fri, 06 Feb 2026 18:14:23 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4f70nl5ZB4z2xqk;
-	Sat, 07 Feb 2026 04:04:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4f710Y44Zwz2xqk;
+	Sat, 07 Feb 2026 04:14:21 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.131
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1770397499;
-	cv=none; b=ju31f68YZqfxk+ztQMgByn3dueXHw6UWIEMISAwLgnozFxjrZntvHZPmyFioUrkcq3Qp4T/Dn2IyfI888J9qWsEE8yo54j6WtBtlJDdujx/V2zKbLtXxnIIQqHlZ0UHnJkIuMbvJgivV+KdWXxbKltX5RP0xkku9g6cf7NzYi1LC4bxA2WvxHpAEmYu6qkb5t0w36gshIbIAMGstAGJTUeaHzbItxC/uqygh1sO1UMFbgpx0GD7Gw9sAqVmlSMql1eMpy18TZ1FkexsegesD1UdY9VTbLACxgjmHD3eR5Zc2PXtzKOM0qabT0ctW5HvS+gHrd3sZL1o5LNa9pJs8Gg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=195.135.223.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1770398061;
+	cv=none; b=ioLeLUmybQ8wzv7rMuTX10zueg1wfLIDof64KMsjxvD7laggGbH9C6gDlZjg2cHih/BvJbV0CftTZ68L/rqJBvgFjh2//cz6ON4dlu1wTIeVArmcsoashM97W0LXlbBcW6AbwAnY+T7eBb/ysS2G+tnHfluWZru9nmk2yy89yiznn+1EELiTf5N7pj8i9F2/JzgcQqAg1W4dG4uChvTP4CK1NjyvCMleLgaPxgcdHStEDtMZsNxamVwktHpgzKsfbVtivnShG2WA8pmFT1GwhFWNexDiSY8+ZD4JVkP+pX6l93hQz9uFYZLU9TEFTee8Mj0Md5cxZLDlXc3rI6/vgg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1770397499; c=relaxed/relaxed;
-	bh=3g+CeqAHKY80QYlzK7Q90kGJJbcwGzuOMv3DI6coiUI=;
+	t=1770398061; c=relaxed/relaxed;
+	bh=Z73YqVi28uxxhcm78/EYnmwbNwCl8FOdS0dwqPt0f7Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AbSqPH7fZeHZGI737SgS8i4WdVdsbl4GIO1NWD7ext2YQYFLsZWJyhcWVgEHyvMI3U5Y0Jt3j4Pm2FujJ11XgO1vqKfybiGO1mZckE7PVbp/2iOqaU2FxgqZAfkao7wViO/1P2D5TJ3YDu11pp9ujkUbxNJCNw7hKGAZB/S33nh/wrQA1C8NtGcs4v+67UuDjGz2f+pG81EIrEkHS5PhrtSQqrLllS9luJGiLzbI0PNqDQ+eWlVz8cV4kTvlA/d4wCLdjaEa6ZlRcCcw95RIKFs2+utoHg9BFYqGIMyTLBVLKFmyvdHHvLSFZb/WnZbh3WGb5eDHkuzkiAx2q/6sMQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de; dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=c0m+A8Cb; dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=9dogZ3on; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=c0m+A8Cb; dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=9dogZ3on; dkim-atps=neutral; spf=pass (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=pfalcato@suse.de; receiver=lists.ozlabs.org) smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=jauT6gtaoTSqqdQbJ2G44Ukq42OTpQuB6flmtpwyTHOqPTMcSyomtBPSsHJEMAmPNeiEj5lY77m3WT9R8klSUZeEHtok2yfOCqnLnQWDpODhGSdxD8KbeGTLjmp7x4lDZPEmFKU+AVtJQA2TbAhpgka3euLZ5CmY+S8QNT/iWqQDJXuqz8Z8kvi+v1SGsEql4SBIa3BqKO1PF1ISDlWy0eZ9Y07hlbYioWBtNG/6tOyTJY1r+rp/Yu26q/Ji1oCS1I+wVUID11KkR3uVgkvfLRvrmnBHwCaBDUDYzA3odJKGHHQZpktTCQnZOW+HOvoKMSElpO0OgofADJOKWIXerA==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de; dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=j6+Jb2DU; dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=+WIS4NGb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=j6+Jb2DU; dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=+WIS4NGb; dkim-atps=neutral; spf=pass (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=pfalcato@suse.de; receiver=lists.ozlabs.org) smtp.mailfrom=suse.de
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=c0m+A8Cb;
-	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=9dogZ3on;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=c0m+A8Cb;
-	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=9dogZ3on;
+	dkim=pass (1024-bit key; unprotected) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=j6+Jb2DU;
+	dkim=pass header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=+WIS4NGb;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.a=rsa-sha256 header.s=susede2_rsa header.b=j6+Jb2DU;
+	dkim=neutral header.d=suse.de header.i=@suse.de header.a=ed25519-sha256 header.s=susede2_ed25519 header.b=+WIS4NGb;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.de (client-ip=195.135.223.131; helo=smtp-out2.suse.de; envelope-from=pfalcato@suse.de; receiver=lists.ozlabs.org)
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=suse.de (client-ip=195.135.223.130; helo=smtp-out1.suse.de; envelope-from=pfalcato@suse.de; receiver=lists.ozlabs.org)
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4f70nk4b9Nz2xpg
-	for <linux-erofs@lists.ozlabs.org>; Sat, 07 Feb 2026 04:04:58 +1100 (AEDT)
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4f710X3czcz2xpg
+	for <linux-erofs@lists.ozlabs.org>; Sat, 07 Feb 2026 04:14:20 +1100 (AEDT)
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 8F01B5BCC5;
-	Fri,  6 Feb 2026 17:04:55 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 150CF3E6C2;
+	Fri,  6 Feb 2026 17:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1770397495; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1770398057; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3g+CeqAHKY80QYlzK7Q90kGJJbcwGzuOMv3DI6coiUI=;
-	b=c0m+A8Cbf+rLZ3szeGwqR0keK2N4x1OkUaeOPTkf3sMJNCpTeUBur5IDP+DKAQ2eQgejrS
-	zIEXRT0ObUT+WOhQz/vocMcAjoOtK+Zb3qEnwu8Gthjmkgjq2Xsl8B20qlBNlf2GpU40xr
-	mQI9AS7BtgLrI9P4+fMTgCEFkGS9Q6I=
+	bh=Z73YqVi28uxxhcm78/EYnmwbNwCl8FOdS0dwqPt0f7Y=;
+	b=j6+Jb2DUNuDTgyLkT8P3dkpO+CJ+tX2ecLNPiO/pp8qkcSVNK3jHeQUyaXVLnlnuRI5B8n
+	0Va0mO+M0DejOC8cpnGzBuSoJ1/HWdb+y9LnG5gNjyig2YXtshRMvCrzsFY6HvX87PYZvf
+	RmxhKvO5BrRs04UEmzHFp1pv1EJEWV8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1770397495;
+	s=susede2_ed25519; t=1770398057;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3g+CeqAHKY80QYlzK7Q90kGJJbcwGzuOMv3DI6coiUI=;
-	b=9dogZ3on7nsX+Y0Jpn32RxODAdydoZXUQ8/EzP5Y+0myTaTkASY5FCgVI2NW4EsJx7Wp53
-	E9r9FSnoaQE1aJBA==
-Authentication-Results: smtp-out2.suse.de;
-	none
+	bh=Z73YqVi28uxxhcm78/EYnmwbNwCl8FOdS0dwqPt0f7Y=;
+	b=+WIS4NGbvV7/KSSc7+n9BNQHqhpKwo39WaYXAKAf/VXJOO7yQy2+H2qFwF+pyT/DpmqW4z
+	KMiDKgBB2zApEGDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=j6+Jb2DU;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=+WIS4NGb
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1770397495; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1770398057; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3g+CeqAHKY80QYlzK7Q90kGJJbcwGzuOMv3DI6coiUI=;
-	b=c0m+A8Cbf+rLZ3szeGwqR0keK2N4x1OkUaeOPTkf3sMJNCpTeUBur5IDP+DKAQ2eQgejrS
-	zIEXRT0ObUT+WOhQz/vocMcAjoOtK+Zb3qEnwu8Gthjmkgjq2Xsl8B20qlBNlf2GpU40xr
-	mQI9AS7BtgLrI9P4+fMTgCEFkGS9Q6I=
+	bh=Z73YqVi28uxxhcm78/EYnmwbNwCl8FOdS0dwqPt0f7Y=;
+	b=j6+Jb2DUNuDTgyLkT8P3dkpO+CJ+tX2ecLNPiO/pp8qkcSVNK3jHeQUyaXVLnlnuRI5B8n
+	0Va0mO+M0DejOC8cpnGzBuSoJ1/HWdb+y9LnG5gNjyig2YXtshRMvCrzsFY6HvX87PYZvf
+	RmxhKvO5BrRs04UEmzHFp1pv1EJEWV8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1770397495;
+	s=susede2_ed25519; t=1770398057;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3g+CeqAHKY80QYlzK7Q90kGJJbcwGzuOMv3DI6coiUI=;
-	b=9dogZ3on7nsX+Y0Jpn32RxODAdydoZXUQ8/EzP5Y+0myTaTkASY5FCgVI2NW4EsJx7Wp53
-	E9r9FSnoaQE1aJBA==
+	bh=Z73YqVi28uxxhcm78/EYnmwbNwCl8FOdS0dwqPt0f7Y=;
+	b=+WIS4NGbvV7/KSSc7+n9BNQHqhpKwo39WaYXAKAf/VXJOO7yQy2+H2qFwF+pyT/DpmqW4z
+	KMiDKgBB2zApEGDA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 517453EA63;
-	Fri,  6 Feb 2026 17:04:50 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CFB943EA63;
+	Fri,  6 Feb 2026 17:14:11 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cV+8EDIfhml0FwAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Fri, 06 Feb 2026 17:04:50 +0000
-Date: Fri, 6 Feb 2026 17:04:44 +0000
+	id ztnsLmMhhmm+LAAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 06 Feb 2026 17:14:11 +0000
+Date: Fri, 6 Feb 2026 17:14:10 +0000
 From: Pedro Falcato <pfalcato@suse.de>
 To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, 
@@ -129,11 +130,10 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-ext4@vger.kernel.org, linux-mm@kvack.org, ntfs3@lists.linux.dev, 
 	devel@lists.orangefs.org, linux-xfs@vger.kernel.org, keyrings@vger.kernel.org, 
 	linux-security-module@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2 02/13] mm: rename vma_flag_test/set_atomic() to
- vma_test/set_atomic_flag()
-Message-ID: <5pqsv3quguk6mwxywdqpvkcxhmqjoupqq44pserucrlelnyvnc@tkwpixdhcw5i>
+Subject: Re: [PATCH v2 03/13] mm: add mk_vma_flags() bitmap flag macro helper
+Message-ID: <mflwgdnyipdf4reufmbx7qarjcgouct5coe2bllticrabcu6rt@vf3bvmpunimw>
 References: <cover.1769097829.git.lorenzo.stoakes@oracle.com>
- <033dcf12e819dee5064582bced9b12ea346d1607.1769097829.git.lorenzo.stoakes@oracle.com>
+ <fde00df6ff7fb8c4b42cc0defa5a4924c7a1943a.1769097829.git.lorenzo.stoakes@oracle.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -147,8 +147,8 @@ Precedence: list
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <033dcf12e819dee5064582bced9b12ea346d1607.1769097829.git.lorenzo.stoakes@oracle.com>
-X-Spam-Score: -2.30
+In-Reply-To: <fde00df6ff7fb8c4b42cc0defa5a4924c7a1943a.1769097829.git.lorenzo.stoakes@oracle.com>
+X-Spam-Score: -2.51
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
@@ -160,12 +160,12 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[suse.de,none];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2270-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2271-lists,linux-erofs=lfdr.de];
 	FREEMAIL_CC(0.00)[linux-foundation.org,kernel.org,linux.intel.com,redhat.com,alien8.de,zytor.com,arndb.de,linuxfoundation.org,intel.com,suse.de,gmail.com,ffwll.ch,ursulin.net,amd.com,zeniv.linux.org.uk,suse.cz,kvack.org,linux.alibaba.com,google.com,huawei.com,vivo.com,mit.edu,dilger.ca,linux.dev,paragon-software.com,omnibond.com,arm.com,wdc.com,infradead.org,oracle.com,suse.com,nvidia.com,paul-moore.com,namei.org,hallyn.com,rasmusvillemoes.dk,vger.kernel.org,lists.linux.dev,lists.freedesktop.org,lists.ozlabs.org,lists.orangefs.org];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -186,23 +186,80 @@ X-Spamd-Result: default: False [-0.20 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCPT_COUNT_GT_50(0.00)[93];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	NEURAL_HAM(-0.00)[-0.998];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,oracle.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 55DF2100B6E
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,nvidia.com:email,suse.de:email,suse.de:dkim]
+X-Rspamd-Queue-Id: D1B03100D17
 X-Rspamd-Action: no action
 
-On Thu, Jan 22, 2026 at 04:06:11PM +0000, Lorenzo Stoakes wrote:
-> In order to stay consistent between functions which manipulate a vm_flags_t
-> argument of the form of vma_flags_...() and those which manipulate a
-> VMA (in this case the flags field of a VMA), rename
-> vma_flag_[test/set]_atomic() to vma_[test/set]_atomic_flag().
+On Thu, Jan 22, 2026 at 04:06:12PM +0000, Lorenzo Stoakes wrote:
+> This patch introduces the mk_vma_flags() macro helper to allow easy
+> manipulation of VMA flags utilising the new bitmap representation
+> implemented of VMA flags defined by the vma_flags_t type.
 > 
-> This lays the groundwork for adding VMA flag manipulation functions in a
-> subsequent commit.
+> It is a variadic macro which provides a bitwise-or'd representation of all
+> of each individual VMA flag specified.
 > 
+> Note that, while we maintain VM_xxx flags for backwards compatibility until
+> the conversion is complete, we define VMA flags of type vma_flag_t using
+> VMA_xxx_BIT to avoid confusing the two.
+> 
+> This helper macro therefore can be used thusly:
+> 
+> vma_flags_t flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT);
+> 
+> We allow for up to 5 flags to specified at a time which should accommodate
+> all current kernel uses of combined VMA flags.
+>
+
+How do you allow up to 5 flags? I don't see any such limitation in the code?
+ 
+> Testing has demonstrated that the compiler optimises this code such that it
+> generates the same assembly utilising this macro as it does if the flags
+> were specified manually, for instance:
+> 
+> vma_flags_t get_flags(void)
+> {
+> 	return mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT, VMA_EXEC_BIT);
+> }
+> 
+> Generates the same code as:
+> 
+> vma_flags_t get_flags(void)
+> {
+> 	vma_flags_t flags;
+> 
+> 	vma_flags_clear_all(&flags);
+> 	vma_flag_set(&flags, VMA_READ_BIT);
+> 	vma_flag_set(&flags, VMA_WRITE_BIT);
+> 	vma_flag_set(&flags, VMA_EXEC_BIT);
+> 
+> 	return flags;
+> }
+> 
+> And:
+> 
+> vma_flags_t get_flags(void)
+> {
+> 	vma_flags_t flags;
+> 	unsigned long *bitmap = ACCESS_PRIVATE(&flags, __vma_flags);
+> 
+> 	*bitmap = 1UL << (__force int)VMA_READ_BIT;
+> 	*bitmap |= 1UL << (__force int)VMA_WRITE_BIT;
+> 	*bitmap |= 1UL << (__force int)VMA_EXEC_BIT;
+> 
+> 	return flags;
+> }
+> 
+> That is:
+> 
+> get_flags:
+>         movl    $7, %eax
+>         ret
+> 
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
 > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
 Reviewed-by: Pedro Falcato <pfalcato@suse.de>
