@@ -1,48 +1,62 @@
-Return-Path: <linux-erofs+bounces-2306-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2307-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id p+ufGxQ1jWl70AAAu9opvQ
-	(envelope-from <linux-erofs+bounces-2306-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Feb 2026 03:04:04 +0100
+	id oKwRH6BFjWlj0gAAu9opvQ
+	(envelope-from <linux-erofs+bounces-2307-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Feb 2026 04:14:40 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 512F0129174
-	for <lists+linux-erofs@lfdr.de>; Thu, 12 Feb 2026 03:04:03 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1B3C129EEE
+	for <lists+linux-erofs@lfdr.de>; Thu, 12 Feb 2026 04:14:38 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fBJWM1fMfz2xcB;
-	Thu, 12 Feb 2026 13:03:59 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fBL4r1V3yz2xcB;
+	Thu, 12 Feb 2026 14:14:36 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.28.60
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1770861839;
-	cv=none; b=X3U6FsmMLhvZPokzaqMzuGjcSlJIWnIOFfnhM3fgJZQgtIAjUGmIM60QVGKkq8MpXhq3AdSXx6ru4Ym8Bem9diWEge8UpgsZyB/pr9WFQ4TpgsjiiXmwWKyExPLdpjbNZcSfU8aY/M2EDvQhwPvPjF+d11RSyM/wy6+ow6eL+DSqeURdG/ERXAMX41b8Bc1WMXyIb+gfxUv+pPPMiZ2CDcErLO3gSSsGjpIIzTFRtnjZp9UuCrrB9VR7aOglASF6vIwAAS8IqhwJ2hv/YCfmvah5sHhDS1Jew9gEN2x710EQ2xXGuvkBNceKvKlsQysWxhy+4FBvAB5/HIFehPcB4g==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=113.46.200.221
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1770866076;
+	cv=none; b=dt9oqu6zbOL9dMLrc7G5Mq8Y9fg+4y3sw4D+j5i7/XQ/RFlpdKPKyAdCUUvdiFdxuYAG6e2Bn1htZMC99cYPN6ZS9C6OC+P7/Q/2ZA/oEgcVAOuYJ9xAkYdlQuHegOHYka/mHXP/ORZKslW6xvAQv15dJr75fH19GPzem6mHIg+RmA7AgCLMBpz33tTqWipfkyvdcjgT8rPc18duojxcO0her11Bp39ZNvC2le7dPqcUq6cMMiJcoEVb8y2Bpu7zMm4CABZh6A9Dp4CMCWOiTd+tr74nZjuRgI0YSCnOcX25eVpYKphqMZybh3Ihy5TQTRiy2vN3okRHPaXg11YAlg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1770861839; c=relaxed/relaxed;
-	bh=CndbhKZXUyrrGNoCtFYsQk8Nwpgq1bNLS14qaTTW2K8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bA8zsKc4NWFBLU1mCQzO7o34T6EbvSE4UC2qiTH80wrORb8Bb38EbTB4I7/3Y7DoqCTuLpApELLvWwbLWtxwIBw/NPfan8j3mBTBEyO/C+zVDMaRNip+zO4/o1uRG8patMP+ZQvHiDQ0arXA+vXadYkAnhbrwvhfoJkM0oBbeoDMm8evSHEd+HFdbeYchoxIUiSh5tL5rCjsPkbl4ddotQ2nssU2NUT6EwYlPz0XjWpj54IuQpQ3baEOqCcb5NevL5jiPe9OqTFmexRfQzbJMq9Ga46XOXVuXltMeywszDqIR6OFMrcKQvaII370Co6wx9CyO2ejnykk67RAMlwWsw==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com; spf=pass (client-ip=115.124.28.60; helo=out28-60.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org) smtp.mailfrom=cyzhu.com
-Authentication-Results: lists.ozlabs.org; dmarc=none (p=none dis=none) header.from=cyzhu.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=cyzhu.com (client-ip=115.124.28.60; helo=out28-60.mail.aliyun.com; envelope-from=hudson@cyzhu.com; receiver=lists.ozlabs.org)
-Received: from out28-60.mail.aliyun.com (out28-60.mail.aliyun.com [115.124.28.60])
+	t=1770866076; c=relaxed/relaxed;
+	bh=vGdp4Bsffo+p1U/bBHOZu9G1+GZPTyDYfUi98jQpLhU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jeea5C5m2HBP8RiM/PC0eu61p1WdXVqgMZP66bhg3r85qsGEznG18WNloYy5O8op9o7+sH7X9329c5NZQ2+UJlyILesmP89od+0u0TJTDdBbdodsG+mr6VaguNAgHkxLwN9/r/Y8NyXa0IPGsJPFrclthBJC1qCGvRg4H7MT1VZ97Ij62mrynWGUC2wD4Gp68CqK3rqs5jeXqUk+v/AbW0zJXlEi0+BXEhMXiT3vsTz43uCcysHpxRkxGrhc3DGZrYhN45B5nWqpZNcgW99bnXJ0WMKGhHnRGqD8eEmEJDpLw27RB2hnhlWcBxceqC7r/qilsCAIiXs06VjS31eOxw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=aVcVBdtT; dkim-atps=neutral; spf=pass (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org) smtp.mailfrom=huawei.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (1024-bit key; unprotected) header.d=huawei.com header.i=@huawei.com header.a=rsa-sha256 header.s=dkim header.b=aVcVBdtT;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=huawei.com (client-ip=113.46.200.221; helo=canpmsgout06.his.huawei.com; envelope-from=zhaoyifan28@huawei.com; receiver=lists.ozlabs.org)
+Received: from canpmsgout06.his.huawei.com (canpmsgout06.his.huawei.com [113.46.200.221])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fBJWJ4L3yz2xHX
-	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Feb 2026 13:03:54 +1100 (AEDT)
-Received: from HUDSONZHU-MC1.tencent.com(mailfrom:hudson@cyzhu.com fp:SMTPD_---.gVKKSVH_1770861827 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Thu, 12 Feb 2026 10:03:48 +0800
-From: ChengyuZhu6 <hudson@cyzhu.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: hsiangkao@linux.alibaba.com,
-	Chengyu Zhu <hudsonzhu@tencent.com>
-Subject: [PATCH v3] erofs-utils: lib: oci: support reading credentials from docker config
-Date: Thu, 12 Feb 2026 10:03:18 +0800
-Message-ID: <20260212020318.41955-1-hudson@cyzhu.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <20260209075355.16969-1-hudson@cyzhu.com>
-References: <20260209075355.16969-1-hudson@cyzhu.com>
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fBL4n1FXYz2xHX
+	for <linux-erofs@lists.ozlabs.org>; Thu, 12 Feb 2026 14:14:30 +1100 (AEDT)
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=vGdp4Bsffo+p1U/bBHOZu9G1+GZPTyDYfUi98jQpLhU=;
+	b=aVcVBdtTHqcn+Uos5UVQjbwE0rNr+rJJRy4mZ+C472g7z7GyRkPhBb35osH9wp4W+f7RoO+fQ
+	1U7irYxw9lP6Poq/3emE3VfKx6s0T1oRpSfyPqIe7ypBNigau1DvZtkPTk3iv3Ge/zvbyRBgqMA
+	ZbCRZlfrZgW56Py9NhsrfGw=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout06.his.huawei.com (SkyGuard) with ESMTPS id 4fBKzG2m5GzRhRT;
+	Thu, 12 Feb 2026 11:09:46 +0800 (CST)
+Received: from kwepemr100010.china.huawei.com (unknown [7.202.195.125])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9A9524056A;
+	Thu, 12 Feb 2026 11:14:24 +0800 (CST)
+Received: from huawei.com (10.50.159.234) by kwepemr100010.china.huawei.com
+ (7.202.195.125) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Thu, 12 Feb
+ 2026 11:14:24 +0800
+From: Yifan Zhao <zhaoyifan28@huawei.com>
+To: <linux-erofs@lists.ozlabs.org>
+CC: <hsiangkao@linux.alibaba.com>, <jingrui@huawei.com>,
+	<wayne.ma@huawei.com>, <zhaoyifan28@huawei.com>
+Subject: [RFC PATCH] erofs-utils: manpage: document missing options for mkfs.erofs
+Date: Thu, 12 Feb 2026 11:14:36 +0800
+Message-ID: <20260212031437.481441-1-zhaoyifan28@huawei.com>
+X-Mailer: git-send-email 2.47.3
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -55,426 +69,399 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.0 required=3.0 tests=RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=disabled
-	version=4.0.1
+Content-Type: text/plain
+X-Originating-IP: [10.50.159.234]
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemr100010.china.huawei.com (7.202.195.125)
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+	T_FILL_THIS_FORM_SHORT autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.00 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
+X-Spamd-Result: default: False [-0.70 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[huawei.com,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	R_DKIM_ALLOW(-0.20)[huawei.com:s=dkim];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	TAGGED_RCPT(0.00)[linux-erofs];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	DMARC_NA(0.00)[cyzhu.com];
-	RCPT_COUNT_THREE(0.00)[3];
-	FROM_NEQ_ENVFROM(0.00)[hudson@cyzhu.com,linux-erofs@lists.ozlabs.org];
-	FROM_HAS_DN(0.00)[];
-	R_DKIM_NA(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_FROM(0.00)[bounces-2306-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tencent.com:url,tencent.com:email,cyzhu.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 512F0129174
+	TAGGED_FROM(0.00)[bounces-2307-lists,linux-erofs=lfdr.de];
+	TO_DN_NONE(0.00)[];
+	SUSPICIOUS_AUTH_ORIGIN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_NEQ_ENVFROM(0.00)[zhaoyifan28@huawei.com,linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	HAS_XOIP(0.00)[];
+	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[huawei.com:+];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[huawei.com:mid,huawei.com:dkim,huawei.com:email,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: A1B3C129EEE
 X-Rspamd-Action: no action
 
-From: Chengyu Zhu <hudsonzhu@tencent.com>
-
-This patch adds support for reading authentication credentials from
-Docker's `config.json` (typically in `~/.docker/config.json` or via
-`DOCKER_CONFIG`).
-
-If no username/password is provided via command-line arguments, the
-implementation will attempt to look up the registry in the docker config
-file and use the stored credentials if found.
-
-Signed-off-by: Chengyu Zhu <hudsonzhu@tencent.com>
+Signed-off-by: Yifan Zhao <zhaoyifan28@huawei.com>
 ---
- include/erofs/internal.h    |  10 ++
- lib/Makefile.am             |   2 +-
- lib/liberofs_dockerconfig.h |  30 +++++
- lib/remotes/docker_config.c | 240 ++++++++++++++++++++++++++++++++++++
- lib/remotes/oci.c           |  18 ++-
- 5 files changed, 295 insertions(+), 5 deletions(-)
- create mode 100644 lib/liberofs_dockerconfig.h
- create mode 100644 lib/remotes/docker_config.c
+The mkfs.erofs documentation has long been overdue for an update.
+This patch attempts to refresh the documentation, but I'm still not
+entirely clear about a significant portion of the options, particularly
+the interactions among the --clean, --incremental, and their interaction
+with rebuild mode. I hope others can help review this patch.
 
-diff --git a/include/erofs/internal.h b/include/erofs/internal.h
-index ef019a5..3f1e4ff 100644
---- a/include/erofs/internal.h
-+++ b/include/erofs/internal.h
-@@ -25,6 +25,8 @@ typedef unsigned short umode_t;
- #ifdef HAVE_PTHREAD_H
- #include <pthread.h>
- #endif
-+#include <stdlib.h>
-+#include <string.h>
- #include "atomic.h"
- #include "io.h"
+ man/mkfs.erofs.1 | 220 +++++++++++++++++++++++++++++++++++++++++++----
+ mkfs/main.c      |   2 +-
+ 2 files changed, 206 insertions(+), 16 deletions(-)
+
+diff --git a/man/mkfs.erofs.1 b/man/mkfs.erofs.1
+index 4316214..eee068d 100644
+--- a/man/mkfs.erofs.1
++++ b/man/mkfs.erofs.1
+@@ -17,7 +17,19 @@ achieve high performance for embedded devices with limited memory since it has
+ unnoticable memory overhead and page cache thrashing.
+ .PP
+ mkfs.erofs is used to create such EROFS filesystem \fIDESTINATION\fR image file
+-from \fISOURCE\fR directory or tarball.
++from various \fISOURCE\fR, where \fISOURCE\fR can be:
++.RS
++.IP \(bu 2
++a local directory
++.IP \(bu 2
++a (zipped) tarball
++.IP \(bu 2
++an S3 bucket or a prefix within it
++.IP \(bu 2
++an OCI image reference
++.IP \(bu 2
++other EROFS image(s), see \fIREBUILD MODE\fR below
++.RE
+ .SH OPTIONS
+ .TP
+ .BI "\-z " compression-algorithm \fR[\fP, # \fR][\fP: ... \fR]\fP
+@@ -52,6 +64,9 @@ feature, usually prefix the extended option name with a caret ('^') character.
+ The following extended options are supported:
+ .RS 1.2i
+ .TP
++.BI 48bit
++Enable 48-bit block addressing to support larger block addresses. (Linux v6.15+)
++.TP
+ .BI all-fragments
+ Forcely record the whole files into a special inode for better compression and
+ it may take an argument as the pcluster size of the packed inode in bytes.
+@@ -63,6 +78,10 @@ the filesystem. May further reduce image size when used with
+ .BR -E\ fragments .
+ (Linux v6.1+)
+ .TP
++.BI dot-omitted
++Omit the "." (dot) directory entry in all directories to reduce metadata
++overhead.
++.TP
+ .BI force-inode-compact
+ Force generation of compact (32-byte) inodes.
+ .TP
+@@ -102,6 +121,15 @@ for those images, however, there could be other use cases too.
+ Disable "inplace decompression" and "compacted indexes",
+ for compatibility with Linux pre-v5.4.
+ .TP
++.BI nosbcrc
++Disable CRC32 checksum for the filesystem superblock.
++.TP
++.BI plain-xattr-prefixes
++Store long extended attribute name prefixes directly on disk rather than in
++special inodes. By default, long xattr name prefixes are placed in metabox_inode
++(if metabox is enabled) or packed_inode (if fragments is enabled). This option
++forces them to be stored as plain on-disk structures.
++.TP
+ .B xattr-name-filter
+ Enable a name filter for extended attributes to optimize negative lookups.
+ (Linux v6.6+).
+@@ -116,12 +144,29 @@ Set the volume label for the filesystem to
+ .IR volume-label .
+ The maximum length of the volume label is 15 bytes.
+ .TP
++.BI "\-m " #\fR[\fP: algorithm \fR]\fP
++Enable metadata compression with #-byte clusters in a metabox inode;
++optionally specify an algorithm (defaults to data compression algorithm if omitted).
++.TP
++.BI "\-\-MZ\fR[\fP=<0|[id]>\fR]\fP"
++Put inode metadata ('i') and/or directory data ('d') into the separate metadata zone.
++This improves spatial locality of metadata layout within the image, which is beneficial
++for on-demand metadata access.
++.TP
+ .BI "\-T " #
+ Specify a UNIX timestamp for image creation time for reproducible builds.
+ If \fI--mkfs-time\fR is not specified, it will behave as \fI--all-time\fR:
+ setting all files to the specified UNIX timestamp instead of using the
+ modification times of the source files.
+ .TP
++.B \-\-all-time
++(used together with \fB-T\fR) set all files to the fixed timestamp. This is the
++default.
++.TP
++.B \-\-mkfs-time
++(used together with \fB-T\fR) the given timestamp is only applied to the build
++time.
++.TP
+ .BI "\-U " UUID
+ Set the universally unique identifier (UUID) of the filesystem to
+ .IR UUID .
+@@ -142,9 +187,11 @@ generate a new randomly-generated UUID
+ .B \-\-all-root
+ Make all files owned by root.
+ .TP
+-.B \-\-all-time
+-(used together with \fB-T\fR) set all files to the fixed timestamp. This is the
+-default.
++.BI "\-\-async-queue-limit=" #
++Specify the maximum number of entries in the multi-threaded job queue.
++.TP
++.BI "\-\-aufs"
++Replace aufs special files with overlayfs metadata.
+ .TP
+ .BI "\-\-blobdev " file
+ Specify an extra blob device to store chunk-based data.
+@@ -152,6 +199,27 @@ Specify an extra blob device to store chunk-based data.
+ .BI "\-\-chunksize " #
+ Generate chunk-based files with #-byte chunks.
+ .TP
++.BI "\-\-clean=" MODE
++Run full clean build (default) with the given \fIMODE\fR:
++
++\fIMODE\fR may be one of \fBdata\fR, \fBrvsp\fR, or \fB0\fR.
++
++\fBdata\fR: Import complete file data from the source into the destination
++image, creating a fully self-contained EROFS image. This mode is useful when
++you need a standalone image that doesn't depend on external blob devices.
++
++\fBrvsp\fR: (Only works with \fI--tar\fR or \fIREBUILD MODE\fR) Reserve space for file data in the destination image without
++copying the actual content. The file data will need to be filled in later
++through other means. This is useful for creating sparse images or when the
++actual data will be populated separately.
++
++\fB0\fR: (Only works with \fI--s3\fR) Fill all inode data with zeros.
++.TP
++.BI "\-\-incremental=" MODE
++Run an incremental build where DESTINATION is an existing EROFS image,
++and the data specified by SOURCE will be incrementally appended to the image.
++\fIMODE\fR has the same meaning as in \fB\-\-clean\fR above.
++.TP
+ .BI "\-\-compress-hints " file
+ Apply a per-file compression strategy. Each line in
+ .I file
+@@ -159,9 +227,11 @@ is defined by
+ tokens separated by spaces in the following form.  Optionally, instead of
+ the given primary algorithm, alternative algorithms can be specified with
+ \fIalgorithm-index\fR explicitly:
+-.RS 1.2i
++.sp
++.in +4n
+ <pcluster-size-in-bytes> [algorithm-index] <match-pattern>
+-.RE
++.in
++.sp
+ .IR match-pattern s
+ are extended regular expressions, matched against absolute paths within
+ the output filesystem, with no leading /.
+@@ -216,11 +286,8 @@ When this option is used together with
+ the final file gids are
+ set to \fIGID\fR + \fIGID-OFFSET\fR.
+ .TP
+-\fB\-V\fR, \fB\-\-version\fR
+-Print the version number and exit.
+-.TP
+-\fB\-h\fR, \fB\-\-help\fR
+-Display help string and exit.
++.BI "\-\-hard-dereference"
++Dereference hardlinks and add links as separate inodes.
+ .TP
+ .B "\-\-ignore-mtime"
+ Ignore the file modification time whenever it would cause \fBmkfs.erofs\fR to
+@@ -231,18 +298,68 @@ can reduce total metadata size. Implied by
+ .BI "\-\-max-extent-bytes " #
+ Specify maximum decompressed extent size in bytes.
+ .TP
+-.B \-\-mkfs-time
+-(used together with \fB-T\fR) the given timestamp is only applied to the build
+-time.
++.BI "\-\-mount-point=" path
++Specify the prefix of target filesystem path (default: /).
++.TP
++.BI "\-\-oci\fR[\fP=<f|i>\fR]\fP"
++Generate a full (f) or index-only (i) image from OCI remote source.
++Additional options can be specified:
++.RS 1.2i
++.TP
++.BI platform= platform
++Specify the platform (default: linux/amd64).
++.TP
++.BI layer= #
++Specify the layer index to extract (0-based; omit to extract all layers).
++.TP
++.BI blob= digest
++Specify the blob digest to extract (omit to extract all layers).
++.TP
++.BI username= username
++Username for authentication (optional).
++.TP
++.BI password= password
++Password for authentication (optional).
++.TP
++.B insecure
++Use HTTP instead of HTTPS (optional).
++.RE
++.TP
++.BI "\-\-offset=" #
++Skip # bytes at the beginning of the image.
++.TP
++.BI "\-\-ovlfs-strip\fR[\fP=<0|1>\fR]\fP"
++Strip overlayfs metadata in the target image (e.g. whiteouts).
+ .TP
+ .B "\-\-preserve-mtime"
+-Use extended inodes instead of compact inodes if the file modification time
++Use extended inodes instead of compact inodes if the file modifi1cation time
+ would overflow compact inodes. This is the default. Overrides
+ .BR --ignore-mtime .
+ .TP
+ .B "\-\-quiet"
+ Quiet execution (do not write anything to standard output.)
+ .TP
++.BI "\-\-root-xattr-isize=" #
++Ensure the inline xattr size of the root directory is # bytes at least.
++.TP
++.BI "\-\-s3=" endpoint
++Generate an image from S3-compatible object store.
++Additional options can be specified:
++.RS 1.2i
++.TP
++.BI passwd_file= file
++S3FS-compatible password file, with the format of "accessKey:secretKey" in the first line.
++.TP
++.BI urlstyle= style
++S3 API calling style (vhost or path) (default: vhost).
++.TP
++.BI sig= version
++S3 API signature version (2 or 4) (default: 2).
++.TP
++.BI region= code
++Region code in which endpoint belongs to (required for sig=4).
++.RE
++.TP
+ .BI "\-\-sort=" MODE
+ Inode data sorting order for tarballs as input.
  
-@@ -542,6 +544,14 @@ static inline int erofs_blk_read(struct erofs_sb_info *sbi, int device_id,
- 			      erofs_pos(sbi, nblocks));
- }
- 
-+static inline void erofs_free_sensitive(void *ptr, size_t len)
-+{
-+	if (!ptr)
-+		return;
-+	memset(ptr, 0, len);
-+	free(ptr);
-+}
+@@ -271,6 +388,10 @@ filesystem with other data-only layers.
+ to a tarball except that file data is not present after each file header.
+ It can improve performance especially when \fISOURCE\fR is not seekable.
+ .TP
++.BI "\-\-gzinfo\fR[\fP=" file \fR]\fP
++(used together with \fI--tar\fR) Generate AWS SOCI-compatible zinfo to support random gzip access.
++Source file must be a gzip-compressed tarball.
++.TP
+ .BI "\-\-uid-offset=" UIDOFFSET
+ Add \fIUIDOFFSET\fR to all file UIDs.
+ When this option is used together with
+@@ -290,11 +411,80 @@ be dumped together.
+ Generate a VMDK descriptor file to merge sub-filesystems, which can be used
+ for tar index or rebuild mode.
+ .TP
++.BI "\-\-workers=" #
++Set the number of worker threads to # (default: 12).
++.TP
++.BI "\-\-xattr-inode-digest=" name
++Specify extended attribute name to record inode digests.
++.TP
+ .BI "\-\-xattr-prefix=" PREFIX
+ Specify a customized extended attribute namespace prefix for space saving,
+ e.g. "trusted.overlay.".  You may give multiple
+ .B --xattr-prefix
+ options (Linux v6.4+).
++.TP
++.BI "\-\-zD\fR[\fP=<0|1>\fR]\fP"
++Specify directory compression: 0=disable [default], 1=enable.
++.TP
++.BI "\-\-zfeature-bits=" #
++Toggle filesystem compression features according to given bits #.
++Each bit in the value corresponds to a specific compression feature:
++.RS 1.2i
++.nf
++.ft CW
++  7 6 5 4 3 2 1 0  (bit position)
++  | | | | | | | |
++  | | | | | | | +-- Bit 0 (1)   : legacy-compress
++  | | | | | | +---- Bit 1 (2)   : ztailpacking
++  | | | | | +------ Bit 2 (4)   : fragments
++  | | | | +-------- Bit 3 (8)   : all-fragments
++  | | | +---------- Bit 4 (16)  : dedupe
++  | | +------------ Bit 5 (32)  : fragdedupe
++  | +-------------- Bit 6 (64)  : 48bit
++  +---------------- Bit 7 (128) : dot-omitted
++.ft
++.fi
++.RE
++.IP
++For example,
++.B --zfeature-bits=6
++(binary: 0000 0110) enables ztailpacking (bit 1) and fragments (bit 2).
++.TP
++\fB\-V\fR, \fB\-\-version\fR
++Print the version number and exit.
++.TP
++\fB\-h\fR, \fB\-\-help\fR
++Display help string and exit.
++.TP
++.B REBUILD MODE
++.B Rebuild mode
++is an experimental feature that allows
++.B mkfs.erofs
++to generate a new EROFS image from one or more existing EROFS images passed as
++\fISOURCE\fR(s).
++This mode is particularly useful for merging multiple EROFS images or creating
++index-only metadata images that reference data in the source images.
 +
- /* vmdk.c */
- int erofs_dump_vmdk_desc(FILE *f, struct erofs_sb_info *sbi);
- 
-diff --git a/lib/Makefile.am b/lib/Makefile.am
-index 1721039..77f6fd8 100644
---- a/lib/Makefile.am
-+++ b/lib/Makefile.am
-@@ -89,7 +89,7 @@ liberofs_la_CFLAGS += ${libnl3_CFLAGS}
- liberofs_la_LDFLAGS += ${libnl3_LIBS}
- liberofs_la_SOURCES += backends/nbd.c
- endif
--liberofs_la_SOURCES += remotes/oci.c
-+liberofs_la_SOURCES += remotes/oci.c remotes/docker_config.c
- liberofs_la_CFLAGS += ${json_c_CFLAGS}
- liberofs_la_LDFLAGS += ${json_c_LIBS}
- liberofs_la_SOURCES += gzran.c
-diff --git a/lib/liberofs_dockerconfig.h b/lib/liberofs_dockerconfig.h
-new file mode 100644
-index 0000000..1580e1c
---- /dev/null
-+++ b/lib/liberofs_dockerconfig.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0 */
-+/*
-+ * Copyright (C) 2026 Tencent, Inc.
-+ *             http://www.tencent.com/
-+ */
-+#ifndef __EROFS_DOCKER_CONFIG_H
-+#define __EROFS_DOCKER_CONFIG_H
-+
-+#include "erofs/internal.h"
-+
-+#define DOCKER_REGISTRY "docker.io"
-+#define DOCKER_API_REGISTRY "registry-1.docker.io"
-+#define DOCKER_HUB_AUTH_KEY "https://index.docker.io/v1/"
-+
-+struct erofs_docker_credential {
-+	char *username;
-+	char *password;
-+};
-+
-+/**
-+ * erofs_docker_config_lookup - look up registry credentials from Docker config
-+ * @registry: the registry hostname (e.g. "index.docker.io")
-+ * @cred: output credential structure
-+ */
-+int erofs_docker_config_lookup(const char *registry,
-+			       struct erofs_docker_credential *cred);
-+
-+void erofs_docker_credential_free(struct erofs_docker_credential *cred);
-+
-+#endif
-diff --git a/lib/remotes/docker_config.c b/lib/remotes/docker_config.c
-new file mode 100644
-index 0000000..89fb826
---- /dev/null
-+++ b/lib/remotes/docker_config.c
-@@ -0,0 +1,240 @@
-+// SPDX-License-Identifier: GPL-2.0+ OR Apache-2.0
-+/*
-+ * Copyright (C) 2026 Tencent, Inc.
-+ *             http://www.tencent.com/
-+ */
-+#ifdef HAVE_CONFIG_H
-+#include "config.h"
-+#endif
-+
-+#include <errno.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/stat.h>
-+
-+#ifdef HAVE_JSON_C_JSON_H
-+#include <json-c/json.h>
-+#endif
-+
-+#include "erofs/defs.h"
-+#include "erofs/print.h"
-+#include "liberofs_base64.h"
-+#include "liberofs_dockerconfig.h"
-+
-+#ifndef HAVE_JSON_C_JSON_H
-+
-+int erofs_docker_config_lookup(const char *registry,
-+			       struct erofs_docker_credential *cred)
-+{
-+	(void)registry;
-+	(void)cred;
-+	return -EOPNOTSUPP;
-+}
-+
-+void erofs_docker_credential_free(struct erofs_docker_credential *cred)
-+{
-+	(void)cred;
-+}
-+
-+#else /* HAVE_JSON_C_JSON_H */
-+
-+static char *docker_config_path(void)
-+{
-+	const char *dir;
-+	char *path = NULL;
-+
-+	dir = getenv("DOCKER_CONFIG");
-+	if (dir) {
-+		if (!*dir)
-+			return NULL;
-+		if (asprintf(&path, "%s/config.json", dir) < 0)
-+			return NULL;
-+		return path;
-+	}
-+
-+	dir = getenv("HOME");
-+	if (!dir || !*dir) {
-+		erofs_dbg("HOME is not set, cannot locate docker config");
-+		return NULL;
-+	}
-+
-+	if (asprintf(&path, "%s/.docker/config.json", dir) < 0)
-+		return NULL;
-+	return path;
-+}
-+
-+static char *read_file_to_string(const char *path)
-+{
-+	FILE *fp;
-+	struct stat st;
-+	char *buf;
-+	size_t nread;
-+
-+	if (stat(path, &st) < 0)
-+		return NULL;
-+
-+	if (st.st_size <= 0 || st.st_size > (1 << 22))
-+		return NULL;
-+
-+	fp = fopen(path, "r");
-+	if (!fp)
-+		return NULL;
-+
-+	buf = malloc(st.st_size + 1);
-+	if (!buf) {
-+		fclose(fp);
-+		return NULL;
-+	}
-+
-+	nread = fread(buf, 1, st.st_size, fp);
-+	fclose(fp);
-+
-+	if ((off_t)nread != st.st_size) {
-+		free(buf);
-+		return NULL;
-+	}
-+	buf[nread] = '\0';
-+	return buf;
-+}
-+
-+/*
-+ * Check if @key (an auths entry key) matches @registry.
-+ *
-+ * For Docker Hub: @registry is docker.io or registry-1.docker.io.
-+ * The auths key in config.json is always "https://index.docker.io/v1/".
-+ * For other registries: the auths key is an exact match against @registry.
-+ */
-+static bool registry_match(const char *key, const char *registry)
-+{
-+	if (!key || !registry)
-+		return false;
-+
-+	if (!strcasecmp(registry, DOCKER_REGISTRY) ||
-+	    !strcasecmp(registry, DOCKER_API_REGISTRY))
-+		return !strcmp(key, DOCKER_HUB_AUTH_KEY);
-+
-+	return !strcasecmp(key, registry);
-+}
-+
-+static int decode_auth_field(const char *b64, char **out_user, char **out_pass)
-+{
-+	int b64_len = strlen(b64);
-+	int decoded_max = b64_len;
-+	u8 *decoded;
-+	int decoded_len;
-+	char *colon;
-+
-+	decoded = malloc(decoded_max + 1);
-+	if (!decoded)
-+		return -ENOMEM;
-+
-+	decoded_len = erofs_base64_decode(b64, b64_len, decoded);
-+	if (decoded_len <= 0) {
-+		free(decoded);
-+		return -EINVAL;
-+	}
-+	decoded[decoded_len] = '\0';
-+
-+	colon = strchr((char *)decoded, ':');
-+	if (!colon) {
-+		erofs_free_sensitive(decoded, decoded_len);
-+		return -EINVAL;
-+	}
-+
-+	*colon = '\0';
-+	*out_user = strdup((char *)decoded);
-+	*out_pass = strdup(colon + 1);
-+
-+	erofs_free_sensitive(decoded, decoded_len);
-+
-+	if (!*out_user || !*out_pass) {
-+		free(*out_user);
-+		free(*out_pass);
-+		*out_user = NULL;
-+		*out_pass = NULL;
-+		return -ENOMEM;
-+	}
-+	return 0;
-+}
-+
-+int erofs_docker_config_lookup(const char *registry,
-+			       struct erofs_docker_credential *cred)
-+{
-+	char *path = NULL;
-+	char *content = NULL;
-+	struct json_object *root = NULL, *auths_obj = NULL;
-+	int ret = -ENOENT;
-+
-+	memset(cred, 0, sizeof(*cred));
-+
-+	path = docker_config_path();
-+	if (!path)
-+		return -ENOENT;
-+
-+	content = read_file_to_string(path);
-+	if (!content) {
-+		erofs_dbg("cannot read docker config: %s", path);
-+		free(path);
-+		return -ENOENT;
-+	}
-+	free(path);
-+
-+	root = json_tokener_parse(content);
-+	erofs_free_sensitive(content, strlen(content));
-+
-+	if (!root) {
-+		erofs_warn("failed to parse docker config.json");
-+		return -EINVAL;
-+	}
-+
-+	if (!json_object_object_get_ex(root, "auths", &auths_obj)) {
-+		erofs_dbg("no \"auths\" in docker config.json");
-+		json_object_put(root);
-+		return -ENOENT;
-+	}
-+
-+	struct json_object_iterator it = json_object_iter_begin(auths_obj);
-+	struct json_object_iterator end = json_object_iter_end(auths_obj);
-+
-+	while (!json_object_iter_equal(&it, &end)) {
-+		const char *key = json_object_iter_peek_name(&it);
-+		struct json_object *entry, *auth_field;
-+		const char *b64;
-+
-+		if (!registry_match(key, registry)) {
-+			json_object_iter_next(&it);
-+			continue;
-+		}
-+
-+		entry = json_object_iter_peek_value(&it);
-+		if (json_object_object_get_ex(entry, "auth", &auth_field)) {
-+			b64 = json_object_get_string(auth_field);
-+			if (b64 && *b64) {
-+				ret = decode_auth_field(b64, &cred->username,
-+							&cred->password);
-+				if (!ret)
-+					erofs_dbg("found docker credentials for %s",
-+						  registry);
-+			}
-+		}
-+		break;
-+	}
-+
-+	json_object_put(root);
-+	return ret;
-+}
-+
-+void erofs_docker_credential_free(struct erofs_docker_credential *cred)
-+{
-+	if (cred->username) {
-+		erofs_free_sensitive(cred->username, strlen(cred->username));
-+		cred->username = NULL;
-+	}
-+	if (cred->password) {
-+		erofs_free_sensitive(cred->password, strlen(cred->password));
-+		cred->password = NULL;
-+	}
-+}
-+
-+#endif /* HAVE_JSON_C_JSON_H */
-diff --git a/lib/remotes/oci.c b/lib/remotes/oci.c
-index 4c4568f..193464b 100644
---- a/lib/remotes/oci.c
-+++ b/lib/remotes/oci.c
-@@ -26,14 +26,12 @@
- #include "erofs/tar.h"
- #include "liberofs_base64.h"
- #include "liberofs_oci.h"
-+#include "liberofs_dockerconfig.h"
- #include "liberofs_private.h"
- #include "liberofs_gzran.h"
- 
- #ifdef OCIEROFS_ENABLED
- 
--#define DOCKER_REGISTRY "docker.io"
--#define DOCKER_API_REGISTRY "registry-1.docker.io"
--
- #define DOCKER_MEDIATYPE_MANIFEST_V2 \
- 	"application/vnd.docker.distribution.manifest.v2+json"
- #define DOCKER_MEDIATYPE_MANIFEST_V1 \
-@@ -964,9 +962,21 @@ static int ocierofs_find_layer_by_digest(struct ocierofs_ctx *ctx, const char *d
- static int ocierofs_prepare_layers(struct ocierofs_ctx *ctx,
- 				   const struct ocierofs_config *config)
- {
-+	struct erofs_docker_credential dcred = { NULL, NULL };
-+	const char *username = config->username;
-+	const char *password = config->password;
- 	int ret;
- 
--	ret = ocierofs_prepare_auth(ctx, config->username, config->password);
-+	/* Fallback to Docker config.json if no CLI credentials provided */
-+	if ((!username || !*username) && (!password || !*password)) {
-+		if (!erofs_docker_config_lookup(ctx->registry, &dcred)) {
-+			username = dcred.username;
-+			password = dcred.password;
-+		}
-+	}
-+
-+	ret = ocierofs_prepare_auth(ctx, username, password);
-+	erofs_docker_credential_free(&dcred);
- 	if (ret)
- 		return ret;
- 
++When SOURCE contains one or more EROFS image files,
++.B mkfs.erofs
++automatically enters rebuild mode. The behavior is controlled by the
++.B \-\-clean
++or
++.B \-\-incremental
++options, which determine how file data is handled:
++.RS 1.2i
++.TP
++.I Default mode (blob index)
++The generated image contains only metadata (inodes, dentries, and xattrs).
++File data is referenced through chunk-based indexes pointing to the original
++source images, which act as external blob devices. This creates a compact
++metadata layer suitable for layered filesystem scenarios, similar to container
++image layers.
++.TP
++.I rvsp mode
++\fB\-\-clean=rvsp\fR or \fB\-\-incremental=rvsp\fR: Reserve space for file
++data without copying actual content, useful for creating sparse images.
++.RE
+ .SH AUTHOR
+ This version of \fBmkfs.erofs\fR is written by Li Guifu <blucerlee@gmail.com>,
+ Miao Xie <miaoxie@huawei.com> and Gao Xiang <xiang@kernel.org> with
+diff --git a/mkfs/main.c b/mkfs/main.c
+index a948b2e..2cb1c6d 100644
+--- a/mkfs/main.c
++++ b/mkfs/main.c
+@@ -169,7 +169,7 @@ static void usage(int argc, char **argv)
+ 	}
+ 	printf(
+ 		" -C#                    specify the size of compress physical cluster in bytes\n"
+-		" -EX[,...]              X=extended options\n"
++		" -EX[,...]              X=extended options, see mkfs.erofs(1) manual for details\n"
+ 		" -L volume-label        set the volume label (maximum 15 bytes)\n"
+ 		" -m#[:X]                enable metadata compression (# = physical cluster size in bytes;\n"
+ 		"                                                     X = another compression algorithm for metadata)\n"
 -- 
-2.51.0
+2.47.3
 
 
