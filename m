@@ -1,56 +1,56 @@
-Return-Path: <linux-erofs+bounces-2326-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2328-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YN5lLgZGlWnPNwIAu9opvQ
-	(envelope-from <linux-erofs+bounces-2326-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Feb 2026 05:54:30 +0100
+	id IwF7IZ9HlWkLOAIAu9opvQ
+	(envelope-from <linux-erofs+bounces-2328-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Feb 2026 06:01:19 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDE8D153135
-	for <lists+linux-erofs@lfdr.de>; Wed, 18 Feb 2026 05:54:28 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8156D153154
+	for <lists+linux-erofs@lfdr.de>; Wed, 18 Feb 2026 06:01:18 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fG41D58Wfz2yr6;
-	Wed, 18 Feb 2026 15:54:24 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fG4971DPMz2yr6;
+	Wed, 18 Feb 2026 16:01:15 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.124
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1771390464;
-	cv=none; b=AhjZhlJvorXcQyjy+Jtw7PYkpKyI3zT6boLbn8r0P0MUegMlk9R/lq1GOf4r8LyZkvD250FI1owJw1K6XGC2+0+iFGbJIR67AUVe5RvmCN3NdZm/+gVIhg9EsUSzC+wFtOwqxeZb2nKaV0R6WF6sMPgzsm4L8SjYdGzuAQ6jPiaogCqV0W/Uea7xumfunNxET4PdVoN5ykLME8Is4HMe4LacmbOpxgScvR0H8JpAynZ9q3aUvUcz1JSkfD4yu9AgEjkaSVFvYWIoltHUxpB6tEKWBeZNu7Wa8U/WBXHZLwBlaBd0OI88xHzzOnLYbSV2O8DfcNOnpRARS5Sfz3Or5w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.130
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1771390875;
+	cv=none; b=ZE8aPo3+UXKmpV3apGQA3+mSPjNbG69TPUghsvb7AE72EOEfskl1dfoKcTjbLGOdPh9qT7WMuQ7qosGuVRxKNfv9t2PAxv/PUyz1imRFUqVE6z74X9pBah8rh+aRhmwC8rz5sF7zCyga42oeYA8eYO1k0Xprq9ZO3n6Lx10eUVIKdMfEyTMcctzEsAgl4o5TOq72T2EqNBlR/4EU0csJ7AUhLO58id7uS0PaGEjRuVE3nnzRnz4tiFxE8PhyGqSvbHj0AAsbwjj1hAHqMbkvdtTHtxgJbYnlDrqweFUW66oO4W0s2tRNddz6rjNGx64Ucy7HrwcKyXL1GJ0XQQuJXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1771390464; c=relaxed/relaxed;
-	bh=x/RLCqZGNr1CrYlE9r/PxFgsFaRi6SQuTZXNkPWtX7I=;
+	t=1771390875; c=relaxed/relaxed;
+	bh=MlqbCgBVsjXCrWfG0k7wDgBaLUQCc7YudU4Q0qzBc9Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MPEwellPPT7l6kUkDeEOZ9moOlTYC6tXegjUZc/81OxAgAL4Fj4/hJ8sexnps+CbH/IvR1RsmB8GzV4Ul63u6yTZw0O3jhheqoWnzKsQfVrBTwqRnJJ6j56cEoXxpO33E+QJHz1W0NCl62gPaaLEZlZYC16S6jmLM7dWXcGHqrUNY2ZCbtcDwriElBgTwcdU58VWffxIHYhRWdiTxB2OxrwgG/pILoA4i2KMuBzx5gfKnOhbpIDpqvxXoQ1lcBcPwOT62YQdDIy02Rx/TFfiv9Sprc2fex2o43xIjlV/RKzE9ZIsvYbO7bbw09HdhICkJ5qrynKuMDqyiF8b7F2OWg==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=mWho948J; dkim-atps=neutral; spf=pass (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+	 MIME-Version; b=LvLju6ewy6VYgm+sxiqFy0CUhqDR6br14H0N+WECgawEFyCbDJ14BH+J895VDgyca/+2G/sxI4VtNUd28D/OnAoVPjMbvyVNyQe8H5w45/n6Q39UyVNenVgxStWUyIqtlKDWsfO3HlhYAHBRmOXlEYJ633IoiloOPse7ja6rSnAcs+I5RzlGDMJTrETdRp1UpaFhcWZhCZtSZ9B8P5cdXtBWU6j+ryD7Kd9tmomZ6KuN6PaWpuCZW0ZBQafbVnqMeWXgimq+ij2//Ru/ALRYsb1XDUD5aDqE54B23d2HuixloB7ByXUYCC3WLO9aJ+Pa1tG5y7/sunLKwwkH4VeMFw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=cwlmKbT4; dkim-atps=neutral; spf=pass (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=mWho948J;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=cwlmKbT4;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.124; helo=out30-124.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.130; helo=out30-130.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fG41901Gqz2yFc
-	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Feb 2026 15:54:18 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fG4953X5wz2xSG
+	for <linux-erofs@lists.ozlabs.org>; Wed, 18 Feb 2026 16:01:12 +1100 (AEDT)
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1771390454; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=x/RLCqZGNr1CrYlE9r/PxFgsFaRi6SQuTZXNkPWtX7I=;
-	b=mWho948Jo3pvrSi1sUpcm1CzTgy4veciDwrxRV82P6AY3vmHLO9sqyFyIgINaWggSPDb2ZIqEJdYwQzIUoMuyIlDFLneIBDTCcmB/aj4Ox2AQiSf5ZzZTVsTAJbaw3rHlxRHXTdAMFUeh+DaXP2FMOUdP7CFXfW2keZ6cQRmmyY=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WzRkwOQ_1771390452 cluster:ay36)
+	t=1771390867; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=MlqbCgBVsjXCrWfG0k7wDgBaLUQCc7YudU4Q0qzBc9Q=;
+	b=cwlmKbT4MukKa53/a86+RIruRpVRlfS3RQZ034W2dfci7O4Oqv5HPqb5O9FlQ27qjyeqe169W2m2ihcrPaRM0f/SBaeeoqKs23+XL1znNRz+Vc9DWfP/SGWPte1CktvuHxXMXLvhr7vxP6lSRbaodDuOIYMq4sqDPmD2XkNecrU=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WzRl-28_1771390865 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 18 Feb 2026 12:54:13 +0800
+          Wed, 18 Feb 2026 13:01:06 +0800
 From: Gao Xiang <hsiangkao@linux.alibaba.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: oliver.yang@linux.alibaba.com,
 	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH 2/2] erofs-utils: mkfs: allow multiplier suffixes ('K', 'M', 'G')
-Date: Wed, 18 Feb 2026 12:54:07 +0800
-Message-ID: <20260218045407.3783915-2-hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 2/2] erofs-utils: mkfs: allow multiplier suffixes ('K', 'M', 'G')
+Date: Wed, 18 Feb 2026 13:01:04 +0800
+Message-ID: <20260218050104.3796451-1-hsiangkao@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20260218045407.3783915-1-hsiangkao@linux.alibaba.com>
-References: <20260218045407.3783915-1-hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260218045407.3783915-2-hsiangkao@linux.alibaba.com>
+References: <20260218045407.3783915-2-hsiangkao@linux.alibaba.com>
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -76,13 +76,13 @@ X-Spamd-Result: default: False [-7.70 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2326-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2328-lists,linux-erofs=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
@@ -92,24 +92,72 @@ X-Spamd-Result: default: False [-7.70 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email]
-X-Rspamd-Queue-Id: CDE8D153135
+	DBL_BLOCKED_OPENRESOLVER(0.00)[alibaba.com:email,linux.alibaba.com:mid,linux.alibaba.com:dkim,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: 8156D153154
 X-Rspamd-Action: no action
 
 Apply to common arguments such as `-b`, `-C` and `-m`.
 
 Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- mkfs/main.c | 111 +++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 96 insertions(+), 15 deletions(-)
+v2:
+ - also convert erofs_mkfs_feat_set_fragments().
+
+ mkfs/main.c | 117 ++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 100 insertions(+), 17 deletions(-)
 
 diff --git a/mkfs/main.c b/mkfs/main.c
-index fb51cf87ef48..d909ef1a5834 100644
+index fb51cf87ef48..7333f1f03146 100644
 --- a/mkfs/main.c
 +++ b/mkfs/main.c
-@@ -748,6 +748,82 @@ static int mkfs_parse_s3_cfg(char *cfg_str)
+@@ -354,6 +354,29 @@ static int erofs_mkfs_feat_set_ztailpacking(struct erofs_importer_params *params
+ 	return 0;
+ }
+ 
++static int erofs_mkfs_strtoull(const char *nptr, char **endptr,
++			       unsigned long long *res, int base)
++{
++	char *end;
++	unsigned long long number;
++
++	errno = 0;
++	number = strtoull(nptr, &end, base);
++	if (errno)
++		return -errno;
++
++	if (*end == 'k' || *end == 'K')
++		number <<= 10, ++end;
++	else if (*end == 'm' || *end == 'M')
++		number <<= 20, ++end;
++	else if (*end == 'g' || *end == 'G')
++		number <<= 30, ++end;
++	*res = number;
++	if (endptr)
++		*endptr = end;
++	return 0;
++}
++
+ static int erofs_mkfs_feat_set_fragments(struct erofs_importer_params *params,
+ 					 bool en, const char *val,
+ 					 unsigned int vallen)
+@@ -366,10 +389,12 @@ static int erofs_mkfs_feat_set_fragments(struct erofs_importer_params *params,
+ 	}
+ 
+ 	if (vallen) {
++		unsigned long long i;
+ 		char *endptr;
+-		u64 i = strtoull(val, &endptr, 0);
++		int err;
+ 
+-		if (endptr - val != vallen) {
++		err = erofs_mkfs_strtoull(val, &endptr, &i, 0);
++		if (err || endptr - val != vallen) {
+ 			erofs_err("invalid pcluster size %s for the packed file", val);
+ 			return -EINVAL;
+ 		}
+@@ -748,6 +773,59 @@ static int mkfs_parse_s3_cfg(char *cfg_str)
  }
  #endif
  
@@ -151,29 +199,6 @@ index fb51cf87ef48..d909ef1a5834 100644
 +	return 0;
 +}
 +
-+static int erofs_mkfs_strtoull(const char *nptr, char **endptr,
-+			       unsigned long long *res, int base)
-+{
-+	char *end;
-+	unsigned long long number;
-+
-+	errno = 0;
-+	number = strtoull(nptr, &end, base);
-+	if (errno)
-+		return -errno;
-+
-+	if (*end == 'k' || *end == 'K')
-+		number <<= 10, ++end;
-+	else if (*end == 'm' || *end == 'M')
-+		number <<= 20, ++end;
-+	else if (*end == 'g' || *end == 'G')
-+		number <<= 30, ++end;
-+	*res = number;
-+	if (endptr)
-+		*endptr = end;
-+	return 0;
-+}
-+
 +static int erofs_mkfs_strtou32(const char *nptr, char **endptr,
 +			       u32 *res, int base)
 +{
@@ -192,7 +217,7 @@ index fb51cf87ef48..d909ef1a5834 100644
  #ifdef OCIEROFS_ENABLED
  /*
   * mkfs_parse_oci_options - Parse comma-separated OCI options string
-@@ -765,6 +841,7 @@ static int mkfs_parse_oci_options(struct ocierofs_config *oci_cfg, char *options
+@@ -765,6 +843,7 @@ static int mkfs_parse_oci_options(struct ocierofs_config *oci_cfg, char *options
  {
  	char *opt, *q, *p;
  	long idx;
@@ -200,7 +225,7 @@ index fb51cf87ef48..d909ef1a5834 100644
  
  	if (!options_str)
  		return 0;
-@@ -815,8 +892,8 @@ static int mkfs_parse_oci_options(struct ocierofs_config *oci_cfg, char *options
+@@ -815,8 +894,8 @@ static int mkfs_parse_oci_options(struct ocierofs_config *oci_cfg, char *options
  				erofs_err("invalid --oci: layer and blob cannot be set together");
  				return -EINVAL;
  			}
@@ -211,7 +236,7 @@ index fb51cf87ef48..d909ef1a5834 100644
  				return -EINVAL;
  			oci_cfg->layer_index = (int)idx;
  		} else if ((p = strstr(opt, "username="))) {
-@@ -890,12 +967,8 @@ static int mkfs_parse_one_compress_alg(char *alg)
+@@ -890,12 +969,8 @@ static int mkfs_parse_one_compress_alg(char *alg)
  					}
  				} else if ((p = strstr(opt, "dictsize="))) {
  					p += strlen("dictsize=");
@@ -226,7 +251,7 @@ index fb51cf87ef48..d909ef1a5834 100644
  						erofs_err("invalid compression dictsize %s", p);
  						return -EINVAL;
  					}
-@@ -1069,8 +1142,9 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+@@ -1069,8 +1144,9 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
  			break;
  
  		case 'b':
@@ -238,7 +263,7 @@ index fb51cf87ef48..d909ef1a5834 100644
  				erofs_err("invalid block size %s", optarg);
  				return -EINVAL;
  			}
-@@ -1179,8 +1253,9 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+@@ -1179,8 +1255,9 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
  			break;
  #endif
  		case 9:
@@ -250,7 +275,7 @@ index fb51cf87ef48..d909ef1a5834 100644
  				erofs_err("invalid maximum compressed extent size %s",
  					  optarg);
  				return -EINVAL;
-@@ -1206,8 +1281,8 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+@@ -1206,8 +1283,8 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
  			break;
  #endif
  		case 'C':
@@ -261,7 +286,7 @@ index fb51cf87ef48..d909ef1a5834 100644
  				erofs_err("invalid physical clustersize %s",
  					  optarg);
  				return -EINVAL;
-@@ -1228,7 +1303,13 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
+@@ -1228,7 +1305,13 @@ static int mkfs_parse_options_cfg(struct erofs_importer_params *params,
  					metabox_algorithmid = err;
  				}
  			}
