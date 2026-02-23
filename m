@@ -1,52 +1,55 @@
-Return-Path: <linux-erofs+bounces-2360-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2361-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SKPCAXMSnGkc/gMAu9opvQ
-	(envelope-from <linux-erofs+bounces-2360-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Feb 2026 09:40:19 +0100
+	id mB+hGrwfnGkZ/wMAu9opvQ
+	(envelope-from <linux-erofs+bounces-2361-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Feb 2026 10:37:00 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B40E17328A
-	for <lists+linux-erofs@lfdr.de>; Mon, 23 Feb 2026 09:40:17 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 889C4174021
+	for <lists+linux-erofs@lfdr.de>; Mon, 23 Feb 2026 10:36:59 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fKDnV2mBpz2yDk;
-	Mon, 23 Feb 2026 19:40:14 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fKG2x0KXlz2yDk;
+	Mon, 23 Feb 2026 20:36:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=209.85.161.72
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1771836014;
-	cv=none; b=ZH0btfznG73c+hv+0BCh4FBZtRhKBeMEPhFn52ADoWp+RPV93EGQjb6vt8H7QpzYZIa0UJovFrxXwID/k9ZGH0i1RJPHr2PkzvLD4WKx96e5mxNi0764Xg/KI4PEsghX1NKGTxLCxGb2TNVMLhea30OR18cFjPf9DOQxqgGqRLSPSzot4YZYB0xjCWMp0Wglfs1vB3fcGjD86Jt+XFrrZvzzrBE/ztopBiuaOo3Fe4DanD2TjyrOBJIL8JuVo13ge0ynzTOafqHDzy06xIkPSURH+YijIIkZpEpcIdxZVRmig1+jDOqXm2oL0hXptPcNpJMDX8hILg72P7JHK7g26w==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=172.105.4.254
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1771839416;
+	cv=none; b=FPTZBRW+w9tiG3q2S4EEOhARxJWZt68ETfDxpA+mfPcvIbmZEZ7WhdjWPzEHokOwidUe6hDXXQNAWIE6chKA7JGQyhvhm3gVasABMi7GSldY+kLeX5Ahtz49ZmoJeobtlFPv8A9lTjpaiOCq8Z+tTyVT/Kv3w+6O/g4UdHabpt+a8gVf76m00Os/SG0WhkDtxYl+wwivreFLA6WvdevBiDuFhpFj45/SoRvIeA49+cZ0I8/m3gfgFMplAijlZIqHJHv5UydGL1VYRgYdG9jA8Eey6evlazfSysv62+5VpRV0w4ExRv38u8Rz6Kspsg/E19y7rVTmj8mJ/YG7ENhHGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1771836014; c=relaxed/relaxed;
-	bh=nUp2sLsTQG2be743RxBuEK2iTbA/TXBt6KIKc8LeryU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=NjJolF8XhBeMRRYe5OmFLHdq00hVQ5sGHJdtXkY5WzUXF6WMP7ZXbj/T4a7oEhGmmPMbvEMknw3182lz5yL7PpntaK07ct2aHHsOhxfW5rUwff11hBmqMEGiRjdimHL3FXsDH2r2boHXvOMBFDEx5g9vmhNr/z7BSZ83H2ijZgx1o9duux6z0I03WkDkGl5kO95j0cNW2OV4CYB0lnMHkLOx20gLfYFOZEq0f0BhPAPoWcug/qMXC+OOx/akecmAh1lp2mDmFOucPQErbNtuyUZhDYfAMtdr5HMtjfVbcOh5WBkLMeAR0I9j8yoqlAuiH9fC9FoIG2Kw/oTgzFjFHQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass (client-ip=209.85.161.72; helo=mail-oo1-f72.google.com; envelope-from=3abkcaqkbafebhi3t44xat881w.z77z4xdbxav76cx6c.v75@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com
-Authentication-Results: lists.ozlabs.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com (client-ip=209.85.161.72; helo=mail-oo1-f72.google.com; envelope-from=3abkcaqkbafebhi3t44xat881w.z77z4xdbxav76cx6c.v75@m3kw2wvrgufz5godrsrytgd7.apphosting.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com [209.85.161.72])
+	t=1771839416; c=relaxed/relaxed;
+	bh=gT5iInjxDhSQB4omwEw633TVDuZHS7fTWQCIfSqEbeE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=namOOsJdx0VRRzXpPI8PffUuz5ciRihXh1CV9rSvoHMYqOn+UeQc4SUCdqXl1pHemVgqdBnnu3osWExdH+rJ1DtDKVpNcgU/J5nyIOTiGzOVKcXarRIWfces/FsRQEqKMahoSgYVRBvCtn4RFESM/BSvBnNENPol6U3vZjZi5yfYL8/gZLitq8W9VEd0V3rz9TrGKWX0JkWBRLHLptDD8XkiNsqXo9eU+I5e24Gs6acIU3HK3Y3X+r7vYaq/0IiNCzRtYEesGG90GaKG8lcCx5F23+a/GnznYxDJWpNEit/3a/MtIBM5+lR398LtuqrhkHOLP7odjeIxBJ7LxATe5g==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org; dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OCS/Oxe+; dkim-atps=neutral; spf=pass (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=david@kernel.org; receiver=lists.ozlabs.org) smtp.mailfrom=kernel.org
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: lists.ozlabs.org;
+	dkim=pass (2048-bit key; unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256 header.s=k20201202 header.b=OCS/Oxe+;
+	dkim-atps=neutral
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=kernel.org (client-ip=172.105.4.254; helo=tor.source.kernel.org; envelope-from=david@kernel.org; receiver=lists.ozlabs.org)
+Received: from tor.source.kernel.org (tor.source.kernel.org [172.105.4.254])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fKDnS3Jkjz2xN8
-	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Feb 2026 19:40:11 +1100 (AEDT)
-Received: by mail-oo1-f72.google.com with SMTP id 006d021491bc7-676c2e00f3fso65033831eaf.0
-        for <linux-erofs@lists.ozlabs.org>; Mon, 23 Feb 2026 00:40:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771836008; x=1772440808;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nUp2sLsTQG2be743RxBuEK2iTbA/TXBt6KIKc8LeryU=;
-        b=kEMvRdZyQfQ4yMtkBkgAXun366iXmioYSzXkz1376/sN/6jbCIcMLat1ZpyH8tu1ru
-         mJewKMYlbKEU8CMW+cJRHJxOgrEbY4DGw25eI6K7HoJz4R1bTZVNCb1X+SVbeLv0yprP
-         qYJ2WtcYx5SO4sOH0JtIVet/b6D+OxRFpnw5fND/SfjxrWAm4nOCnb4zhyhr2VS3tMcJ
-         zkzgagZP81xWrKHe7/7xadWioUc5RLoLiokcQliyXqjl3iTDGTlKzIBfW4yn6y9l6l1h
-         Ux80jyUGCptS6KsAbYtDpfkuTV/Sf898hMlPTeUjQ9rdeK6vWo+dS5HDIZw+G0EqRhhf
-         W4mg==
-X-Forwarded-Encrypted: i=1; AJvYcCU5mYmm5vEOaYff6ZoJQokuh56sjcDhcpc9XN1QDk6y9rNx6Q7cBY59gRUR7gloIru3LDpHcfj0sMwJ+A==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YwRYA44CoJz9RycbYb6bMmntx6ecCM4W4T4njfDXwLx+K7Q7Flu
-	hQM3GUjywrULAlX75DPYWTuhxmtzTFCcpJY2pAgcGfl5+G5usBS/IHlgCmEyjoHedpl8K/Ongdq
-	dgCQH7WIl7chRX+wASJjbFaOIcTR6Gcu6bn54dFecx1WgpqaSlCyVoXbl1b4=
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fKG2w1Cj2z2xN8
+	for <linux-erofs@lists.ozlabs.org>; Mon, 23 Feb 2026 20:36:56 +1100 (AEDT)
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+	by tor.source.kernel.org (Postfix) with ESMTP id A65D960054;
+	Mon, 23 Feb 2026 09:36:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB8EC19424;
+	Mon, 23 Feb 2026 09:36:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1771839413;
+	bh=0jMHGP/ybufSz9lSb0ZxZMotoqEwnfv1L084yPjko08=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OCS/Oxe+Dxgz+x+xdUK/MYBO0KYN9A8SZFhWmTCCYz09A6lLOmm0uN5o6h7jMzG2Q
+	 jRFenKp9st0gV3TjgABTQgDrtgQ4hthtQYeoS8BvjHkxFb9TZa+DzTqltblbK0bnZj
+	 PTURObvt0rZihgvX4BA4ptBpDGCg21GZiA8k6fRayqylGJCXCLs+FligqQjx4JlxJ8
+	 wtf6nUlUn96LYP8M84pt9Zs2vz1o92hBGuSRYaOBpe7yA9Nxf547jnW90lIsB1uO9R
+	 TW30TzjPUMgqMt/5wwjjya/3hUZIk5rkroJnbqCWY1RiILUhVwYeJVt9SE06Rrnl22
+	 BMoG/sCdcY2zA==
+Message-ID: <492f2fdd-3f1f-4303-b512-ef90b649910a@kernel.org>
+Date: Mon, 23 Feb 2026 10:36:36 +0100
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -58,195 +61,183 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-X-Received: by 2002:a05:6820:468c:b0:679:c41f:edf with SMTP id
- 006d021491bc7-679c41f0fcdmr3630394eaf.29.1771836008198; Mon, 23 Feb 2026
- 00:40:08 -0800 (PST)
-Date: Mon, 23 Feb 2026 00:40:08 -0800
-In-Reply-To: <20260223032641.1859381-1-ziy@nvidia.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <699c1268.050a0220.340abe.0d38.GAE@google.com>
-Subject: [syzbot ci] Re: Zero page->private when freeing pages
-From: syzbot ci <syzbot+cid1b0d4bbb448f87c@syzkaller.appspotmail.com>
-To: airlied@gmail.com, akpm@linux-foundation.org, aliceryhl@google.com, 
-	arve@android.com, axboe@kernel.dk, baohua@kernel.org, 
-	baolin.wang@linux.alibaba.com, brauner@kernel.org, christian.koenig@amd.com, 
-	cl@gentwo.org, cmllamas@google.com, dave@stgolabs.net, david@kernel.org, 
-	dennis@kernel.org, dev.jain@arm.com, dhavale@google.com, dlemoal@kernel.org, 
-	dri-devel@lists.freedesktop.org, gregkh@linuxfoundation.org, 
-	guochunhai@vivo.com, hannes@cmpxchg.org, harry.yoo@oracle.com, 
-	jackmanb@google.com, jefflexu@linux.alibaba.com, johannes.thumshirn@wdc.com, 
-	katrinzhou@tencent.com, kernelxing@tencent.com, kprateek.nayak@amd.com, 
-	lance.yang@linux.dev, liam.howlett@oracle.com, lihongbo22@huawei.com, 
-	linux-block@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
-	maarten.lankhorst@linux.intel.com, matthew.auld@intel.com, 
-	matthew.brost@intel.com, mhiramat@kernel.org, mhocko@suse.com, 
-	mripard@kernel.org, npache@redhat.com, ray.huang@amd.com, rientjes@google.com, 
-	roman.gushchin@linux.dev, ryan.roberts@arm.com, sandeen@redhat.com, 
-	simona@ffwll.ch, surenb@google.com, tj@kernel.org, tkjos@android.com, 
-	tzimmermann@suse.de, vbabka@kernel.org, xiang@kernel.org, zbestahu@gmail.com, 
-	ziy@nvidia.com
-Cc: syzbot@lists.linux.dev, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.3 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 00/11] Zero page->private when freeing pages
+To: Matthew Wilcox <willy@infradead.org>, Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ linux-erofs@lists.ozlabs.org, linux-block@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Vlastimil Babka <vbabka@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
+ Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>,
+ Matthew Auld <matthew.auld@intel.com>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Jens Axboe <axboe@kernel.dk>, Christian Brauner <brauner@kernel.org>,
+ K Prateek Nayak <kprateek.nayak@amd.com>, Davidlohr Bueso
+ <dave@stgolabs.net>, Eric Sandeen <sandeen@redhat.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+ Todd Kjos <tkjos@android.com>, Carlos Llamas <cmllamas@google.com>,
+ Alice Ryhl <aliceryhl@google.com>, Damien Le Moal <dlemoal@kernel.org>,
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+ Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+ Gao Xiang <xiang@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+ Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale
+ <dhavale@google.com>, Hongbo Li <lihongbo22@huawei.com>,
+ Chunhai Guo <guochunhai@vivo.com>
+References: <20260223032641.1859381-1-ziy@nvidia.com>
+ <aZvXevheBMQ6LuUu@casper.infradead.org>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <aZvXevheBMQ6LuUu@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+	autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.40 / 15.00];
+X-Spamd-Result: default: False [-2.20 / 15.00];
 	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.19)[generic];
-	DMARC_POLICY_SOFTFAIL(0.10)[appspotmail.com : SPF not aligned (relaxed), No valid DKIM,none];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-2361-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-2360-lists,linux-erofs=lfdr.de,cid1b0d4bbb448f87c];
+	FREEMAIL_CC(0.00)[kvack.org,linux-foundation.org,lists.ozlabs.org,vger.kernel.org,lists.freedesktop.org,oracle.com,linux.alibaba.com,redhat.com,arm.com,kernel.org,linux.dev,google.com,suse.com,cmpxchg.org,tencent.com,gentwo.org,amd.com,intel.com,linux.intel.com,suse.de,gmail.com,ffwll.ch,kernel.dk,stgolabs.net,linuxfoundation.org,android.com,wdc.com,huawei.com,vivo.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:willy@infradead.org,m:ziy@nvidia.com,m:linux-mm@kvack.org,m:akpm@linux-foundation.org,m:linux-erofs@lists.ozlabs.org,m:linux-block@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-kernel@vger.kernel.org,m:lorenzo.stoakes@oracle.com,m:baolin.wang@linux.alibaba.com,m:Liam.Howlett@oracle.com,m:npache@redhat.com,m:ryan.roberts@arm.com,m:dev.jain@arm.com,m:baohua@kernel.org,m:lance.yang@linux.dev,m:surenb@google.com,m:mhocko@suse.com,m:jackmanb@google.com,m:hannes@cmpxchg.org,m:kernelxing@tencent.com,m:katrinzhou@tencent.com,m:mhiramat@kernel.org,m:vbabka@kernel.org,m:cl@gentwo.org,m:rientjes@google.com,m:roman.gushchin@linux.dev,m:harry.yoo@oracle.com,m:christian.koenig@amd.com,m:ray.huang@amd.com,m:matthew.auld@intel.com,m:matthew.brost@intel.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:axboe@kernel.dk,m:brauner@kernel.org,m:kprateek.nayak@amd.com,m:dave@stgolabs.net,m:sande
+ en@redhat.com,m:gregkh@linuxfoundation.org,m:arve@android.com,m:tkjos@android.com,m:cmllamas@google.com,m:aliceryhl@google.com,m:dlemoal@kernel.org,m:johannes.thumshirn@wdc.com,m:dennis@kernel.org,m:tj@kernel.org,m:xiang@kernel.org,m:zbestahu@gmail.com,m:jefflexu@linux.alibaba.com,m:dhavale@google.com,m:lihongbo22@huawei.com,m:guochunhai@vivo.com,s:lists@lfdr.de];
 	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FREEMAIL_TO(0.00)[gmail.com,linux-foundation.org,google.com,android.com,kernel.dk,kernel.org,linux.alibaba.com,amd.com,gentwo.org,stgolabs.net,arm.com,lists.freedesktop.org,linuxfoundation.org,vivo.com,cmpxchg.org,oracle.com,wdc.com,tencent.com,linux.dev,huawei.com,vger.kernel.org,lists.ozlabs.org,kvack.org,linux.intel.com,intel.com,suse.com,redhat.com,ffwll.ch,suse.de,nvidia.com];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[syzbot@syzkaller.appspotmail.com,linux-erofs@lists.ozlabs.org];
-	RCVD_COUNT_THREE(0.00)[3];
-	FORGED_RECIPIENTS(0.00)[m:airlied@gmail.com,m:akpm@linux-foundation.org,m:aliceryhl@google.com,m:arve@android.com,m:axboe@kernel.dk,m:baohua@kernel.org,m:baolin.wang@linux.alibaba.com,m:brauner@kernel.org,m:christian.koenig@amd.com,m:cl@gentwo.org,m:cmllamas@google.com,m:dave@stgolabs.net,m:david@kernel.org,m:dennis@kernel.org,m:dev.jain@arm.com,m:dhavale@google.com,m:dlemoal@kernel.org,m:dri-devel@lists.freedesktop.org,m:gregkh@linuxfoundation.org,m:guochunhai@vivo.com,m:hannes@cmpxchg.org,m:harry.yoo@oracle.com,m:jackmanb@google.com,m:jefflexu@linux.alibaba.com,m:johannes.thumshirn@wdc.com,m:katrinzhou@tencent.com,m:kernelxing@tencent.com,m:kprateek.nayak@amd.com,m:lance.yang@linux.dev,m:liam.howlett@oracle.com,m:lihongbo22@huawei.com,m:linux-block@vger.kernel.org,m:linux-erofs@lists.ozlabs.org,m:linux-kernel@vger.kernel.org,m:linux-mm@kvack.org,m:lorenzo.stoakes@oracle.com,m:maarten.lankhorst@linux.intel.com,m:matthew.auld@intel.com,m:matthew.brost@intel.com,m:mhiramat@kernel.org
- ,m:mhocko@suse.com,m:mripard@kernel.org,m:npache@redhat.com,m:ray.huang@amd.com,m:rientjes@google.com,m:roman.gushchin@linux.dev,m:ryan.roberts@arm.com,m:sandeen@redhat.com,m:simona@ffwll.ch,m:surenb@google.com,m:tj@kernel.org,m:tkjos@android.com,m:tzimmermann@suse.de,m:vbabka@kernel.org,m:xiang@kernel.org,m:zbestahu@gmail.com,m:ziy@nvidia.com,m:syzbot@lists.linux.dev,m:syzkaller-bugs@googlegroups.com,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[david@kernel.org,linux-erofs@lists.ozlabs.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	TO_DN_NONE(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	RCPT_COUNT_GT_50(0.00)[57];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[syzbot@syzkaller.appspotmail.com,linux-erofs@lists.ozlabs.org];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
-	RCPT_COUNT_GT_50(0.00)[59];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.907];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FROM_NEQ_ENVFROM(0.00)[david@kernel.org,linux-erofs@lists.ozlabs.org];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
+	NEURAL_HAM(-0.00)[-1.000];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[googlesource.com:url]
-X-Rspamd-Queue-Id: 1B40E17328A
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 889C4174021
 X-Rspamd-Action: no action
 
-syzbot ci has tested the following series
+On 2/23/26 05:28, Matthew Wilcox wrote:
+> On Sun, Feb 22, 2026 at 10:26:30PM -0500, Zi Yan wrote:
+>> Based on a recent discussion with David Hildenbrand on page->private
+>> is not zero when a page is freed[1], this patchset is trying to fix all
+>> users do not zero ->private when freeing a page and add checks to make
+>> sure all freed pages have ->private set to zero. For compound pages,
+>> both head page and tail pages need to have ->private set to zero.
+> 
+> Sorry, I didn't notice this conversation.  It seems entirely unnecessary
+> to me to zero out page->private before freeing.
+> 
+> I'm a bit confused that ac1ea219590c was needed too; I thought we
+> cleared page->private in the allocation path, and I don't see why
+> it needs to be cleared in the freeing path.  split_page() should be
+> clearing page->private.
 
-[v1] Zero page->private when freeing pages
-https://lore.kernel.org/all/20260223032641.1859381-1-ziy@nvidia.com
-* [PATCH v1 01/11] relay: zero page->private when freeing pages
-* [PATCH v1 02/11] mm/slub: zero page->private when freeing pages
-* [PATCH v1 03/11] drm/ttm: zero page->private when freeing pages
-* [PATCH v1 04/11] blk-mq: zero page->private when freeing pages
-* [PATCH v1 05/11] watch_queue: zero page->private when freeing pages
-* [PATCH v1 06/11] binder: zero page->private when freeing pages
-* [PATCH v1 07/11] null_blk: zero page->private when freeing pages
-* [PATCH v1 08/11] percpu: zero page->private when freeing pages
-* [PATCH v1 09/11] erofs: zero page->private when freeing pages
-* [PATCH v1 10/11] mm/huge_memory: add page->private check back in __split_folio_to_order()
-* [PATCH v1 11/11] mm/page_alloc: check page->private upon page free
+See discussion at 
+https://lore.kernel.org/linux-mm/cbc3b5b3-09b5-4e3c-99f0-a1f67582afff@kernel.org/
 
-and found the following issue:
-WARNING in __free_frozen_pages
+> 
+> Can we discuss this at the THP Cabal meeting on Wednesday?  I don't
+> think that introducing this new rule that page->private must be cleared
+> by the users is a good idea.
 
-Full report is available here:
-https://ci.syzbot.org/series/10f470ac-46ac-4e38-902d-dc86ae743494
+The benefit is that only the users that really use page->private will 
+also zero it out.
 
-***
+This implies that all pages that enter+leave the page allocator will 
+have page->private initialized and we can also likely do:
 
-WARNING in __free_frozen_pages
+diff --git a/mm/internal.h b/mm/internal.h
+index 9e0577413087..4ecdae78e0d2 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -724,7 +724,6 @@ static inline void prep_compound_tail(struct page 
+*head, int tail_idx)
 
-tree:      mm-new
-URL:       https://kernel.googlesource.com/pub/scm/linux/kernel/git/akpm/mm.git
-base:      a6fdc327de4678e54b5122441c970371014117b0
-arch:      amd64
-compiler:  Debian clang version 21.1.8 (++20251221033036+2078da43e25a-1~exp1~20251221153213.50), Debian LLD 21.1.8
-config:    https://ci.syzbot.org/builds/0586347c-8ef1-427f-8a9c-7f6c08b616a9/config
+         p->mapping = TAIL_MAPPING;
+         set_compound_head(p, head);
+-       set_page_private(p, 0);
+  }
 
-Bluetooth: RFCOMM ver 1.11
-Bluetooth: BNEP (Ethernet Emulation) ver 1.3
-Bluetooth: BNEP filters: protocol multicast
-Bluetooth: BNEP socket layer initialized
-Bluetooth: HIDP (Human Interface Emulation) ver 1.2
-Bluetooth: HIDP socket layer initialized
-NET: Registered PF_RXRPC protocol family
-Key type rxrpc registered
-Key type rxrpc_s registered
-NET: Registered PF_KCM protocol family
-lec:lane_module_init: lec.c: initialized
-mpoa:atm_mpoa_init: mpc.c: initialized
-l2tp_core: L2TP core driver, V2.0
-l2tp_ppp: PPPoL2TP kernel driver, V2.0
-l2tp_ip: L2TP IP encapsulation support (L2TPv3)
-l2tp_netlink: L2TP netlink interface
-l2tp_eth: L2TP ethernet pseudowire support (L2TPv3)
-l2tp_ip6: L2TP IP encapsulation support for IPv6 (L2TPv3)
-NET: Registered PF_PHONET protocol family
-8021q: 802.1Q VLAN Support v1.8
-sctp: Hash tables configured (bind 32/56)
-NET: Registered PF_RDS protocol family
-Registered RDS/infiniband transport
-Registered RDS/tcp transport
-tipc: Activated (version 2.0.0)
-NET: Registered PF_TIPC protocol family
-tipc: Started in single node mode
-smc: adding smcd device lo without pnetid
-NET: Registered PF_SMC protocol family
-9pnet: Installing 9P2000 support
-NET: Registered PF_CAIF protocol family
-NET: Registered PF_IEEE802154 protocol family
-Key type dns_resolver registered
-Key type ceph registered
-libceph: loaded (mon/osd proto 15/24)
-batman_adv: B.A.T.M.A.N. advanced 2025.5 (compatibility version 15) loaded
-openvswitch: Open vSwitch switching datapath
-NET: Registered PF_VSOCK protocol family
-mpls_gso: MPLS GSO support
-IPI shorthand broadcast: enabled
-sched_clock: Marking stable (19970046340, 93374727)->(20073238384, -9817317)
-registered taskstats version 1
-Loading compiled-in X.509 certificates
-Loaded X.509 cert 'Build time autogenerated kernel key: 98092a222e11368da223b039d625e21c3e2e069c'
-zswap: loaded using pool 842
-Demotion targets for Node 0: null
-Demotion targets for Node 1: null
-debug_vm_pgtable: [debug_vm_pgtable         ]: Validating architecture page table helpers
-------------[ cut here ]------------
-page->private
-WARNING: mm/page_alloc.c:1433 at __free_frozen_pages+0x78e/0xe10, CPU#0: swapper/0/1
-Modules linked in:
-CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted syzkaller #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-RIP: 0010:__free_frozen_pages+0x78e/0xe10
-Code: 5f 5d e9 05 1e 00 00 48 b8 00 00 00 00 00 fc ff df 0f b6 44 05 00 84 c0 0f 85 d7 02 00 00 c7 03 ff ff ff ff e9 22 fc ff ff 90 <0f> 0b 90 e9 8d fc ff ff bd 01 00 00 00 83 f8 05 0f 85 bb fe ff ff
-RSP: 0000:ffffc900000676e0 EFLAGS: 00010282
-RAX: 1ffffd4000bad935 RBX: ffffea0005d6c9a8 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffea0005d6c9b4
-RBP: ffffea0005d6c9b8 R08: ffffea0005d6c9b7 R09: 1ffffd4000bad936
-R10: dffffc0000000000 R11: fffff94000bad937 R12: ffffea0005d6c980
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff88818de64000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff88823ffff000 CR3: 000000000e54c000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- destroy_args+0x15d/0x570
- debug_vm_pgtable+0x3f8/0x410
- do_one_initcall+0x250/0x8d0
- do_initcall_level+0x104/0x190
- do_initcalls+0x59/0xa0
- kernel_init_freeable+0x2a6/0x3e0
- kernel_init+0x1d/0x1d0
- ret_from_fork+0x51e/0xb90
- ret_from_fork_asm+0x1a/0x30
- </TASK>
+  extern void prep_compound_page(struct page *page, unsigned int order);
 
 
-***
+Which is rather nice.
 
-If these findings have caused you to resend the series or submit a
-separate fix, please add the following tag to your commit message:
-  Tested-by: syzbot@syzkaller.appspotmail.com
+-- 
+Cheers,
 
----
-This report is generated by a bot. It may contain errors.
-syzbot ci engineers can be reached at syzkaller@googlegroups.com.
+David
 
