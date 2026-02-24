@@ -1,98 +1,48 @@
-Return-Path: <linux-erofs+bounces-2399-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2400-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eNHnI6DZnWk0SQQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2399-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Feb 2026 18:02:24 +0100
+	id 8FtuLHPjnWnpSQQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2400-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Feb 2026 18:44:19 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E237718A3E2
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Feb 2026 18:02:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 235F818AAEB
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Feb 2026 18:44:18 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fL3t90Y57z3cZH;
-	Wed, 25 Feb 2026 04:02:09 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fL4pk0WRxz3cZm;
+	Wed, 25 Feb 2026 04:44:14 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::829" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1771952529;
-	cv=pass; b=AxbMKuJK5evbmREQpIcyn0qTSK8hHVkLewkccZSRacKU0AOIj7smvyLy1y3eFQ5mSTIhePdcqtZPDVk9bhaD3h9rdE1W6HLwhGd0thBQSF14ecxZpU5+g+bDNzvxY3NBASVbXzaKJAc4hvF3w5moAGHPrYDESL2cXx+dtZ2ZEkxT3AsIfrbttheeVX0Ba3S2zjqQCIHpcbta0Ia996mDKB8sAS5v13KhFhui59uxusyOUN3gZ4kR6AzaQSKLhb91EH2D44x3THx8fzAF23NCv3W6G2rildtRL13m7vwSy0nkR9/xuxqjxCDo7BCKmcCoGCRlb6NQl5ni3/Ko3Qy6SQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1771952529; c=relaxed/relaxed;
-	bh=4Gg4RV1H3ROtXnBW1YCCHo6i4I+MEGN0xjahTIuDqoo=;
-	h=From:MIME-Version:Date:Message-ID:Subject:To:Cc:Content-Type; b=BWQw0KTirNMtRC4IpFzKCFszdnQ1P7X+XFTR+45/9FG9/TBfnhWeFoURhU00Zs1SWlAombO++ZmBItMAImJ2oIOrdrZwS/gf9yfaBfSQVuce/s46Svp6IwPXd7F46eoIcBc8TwnzbJB2z/4XXcadC2iQ+JIrMg87luUupgN/3G9DRLIYt/soEBRlkZ4bNanHsXUg3yN4ToSl9y+0VW+xJ/gKAAa3SDlac2uLScH7VvrsQYtK4Wmw6v861rSX62Wn+gE5FLwtsWv5rbJFjZkrv3J6zm+3f0toaFniO665NbDZdz8X51Rs8IBPag4iFZ7Y0KZ6xFjMkN87LGvH40qdWQ==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; dkim=pass (2048-bit key; unprotected) header.d=raspberrypi.com header.i=@raspberrypi.com header.a=rsa-sha256 header.s=google header.b=Jlstoqsn; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::829; helo=mail-qt1-x829.google.com; envelope-from=matthew.lear@raspberrypi.com; receiver=lists.ozlabs.org) smtp.mailfrom=raspberrypi.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=115.124.30.100
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1771955054;
+	cv=none; b=WVwe7QSAN0AdL1sY1qCEet4WLMXgqEUkES9FzER2j4600u1EM91731HlGJhGlCpzwJ9WKNvbmzXXaHNGcsiUMJe2jTMohVHL34b5DFrO8mhyTSUJAzQPTA93xD1nDQ8GLFGSRmIVf1OOzJkbf+MQ8AAL57616iZGsApflbmdivrxWfhOtJvWi9vo4P1Ny3ZjN4N7XXG/wl3q/o3IeWxd+dlJxn/+Y63IDePwRjI53AykJFRUJ6xkfnkV5EGD2dBxQHNV8LCX4fFMzseP8SrCdPebBYoV4aMlIORr6d1OVK6I0TOzeCJbuDb20gQfsCLz9wiSUXGwNdxCpS/YRYXSvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1771955054; c=relaxed/relaxed;
+	bh=Tw+NmTCqEfOHBqomAcum57X9jmNMQYT79GYN+Bq7GQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=nwfQaUByLyx2N3IASSEU1aX5zKc6cza2aV50Gez8zIdyIlyuj+2G94lhGEtVX0ibZ10LXTuCAEBRfpvhwRlLHLtR5OfM5HyamBNV2WykpiIxt1YY7ta6AocX47uGB9ht1kgwRuhfM81LVvHBhlkVEK/Ix12ThsvF8DzWY0OKIR2CxbsgVqByMCK8GYCn82H/WjGTqxGSVOZdOIQPdAlDfrGti34n+AWmpLhi1Q2iN3i8bYDZ9TyC4Ns2woAtVDDvuhafSgtbhcPRezTPzFKl4LMi8bDhuQGfDotnwRa463V6tUOMP4AyMv3A9Ai1zn9Dh3NA+BTij1HW9eDkDyscUQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=K64YccBR; dkim-atps=neutral; spf=pass (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org) smtp.mailfrom=linux.alibaba.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=raspberrypi.com header.i=@raspberrypi.com header.a=rsa-sha256 header.s=google header.b=Jlstoqsn;
+	dkim=pass (1024-bit key; unprotected) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.a=rsa-sha256 header.s=default header.b=K64YccBR;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=raspberrypi.com (client-ip=2607:f8b0:4864:20::829; helo=mail-qt1-x829.google.com; envelope-from=matthew.lear@raspberrypi.com; receiver=lists.ozlabs.org)
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=linux.alibaba.com (client-ip=115.124.30.100; helo=out30-100.freemail.mail.aliyun.com; envelope-from=hsiangkao@linux.alibaba.com; receiver=lists.ozlabs.org)
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fL3t719vVz3cZG
-	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Feb 2026 04:02:06 +1100 (AEDT)
-Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-50697d6a69cso31690041cf.2
-        for <linux-erofs@lists.ozlabs.org>; Tue, 24 Feb 2026 09:02:06 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771952524; cv=none;
-        d=google.com; s=arc-20240605;
-        b=Bo6PatjYtAugKU5X0EqO9zFpgp4U42qVLC6rlcKEiqZos5RqUfqhYuBbzmuyr7Mg/k
-         ofLG39MHElNFJdCe3POLGm48F2ur7a73hDkX/Ny31kAm8MTp2XTz/RdDAnvdJPPhRv6d
-         hO3SQTK8O5tgwKSFldPuZjVsb1gJFFXRGUOaudF6KHj1YwWvZ7//DEwxqpz1h3c6csCB
-         wMS88ik1T5KhpdRisV8hy537oG8ykjGBXRvb4ly6UHs618ppAWTrbDKmYGn29tdyQajd
-         tKeYsBASHAPQy9CPrgVpVJYIJZeNhhqCOokukzzXzTD7nJGqjoOCpws71NFyuvfeXbke
-         5QxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=cc:to:subject:message-id:date:mime-version:from:dkim-signature;
-        bh=4Gg4RV1H3ROtXnBW1YCCHo6i4I+MEGN0xjahTIuDqoo=;
-        fh=QUVm9qy9xw/vH5FkdNybmOglH9Yo1FLRstF7uaj7WSs=;
-        b=CzY1bVqZcjE6BeicJ3D1uqF02x6hpZKNmUCPJv3SzqYhVUZC56lbYOIpS4+m6tm6U2
-         4gADKDxTjk1cB1LRPfWo0sWqNLEO2oCoYFD/fDUyyChDrl3630rJObfoBiM6gKq4xhjy
-         TUXh9SN2jM/FQkr39SueL/887hhuuYluotIvB68Z+hPukJEiQ3KeERnIQBDfH3kNPw6Y
-         CTVLLibltDRHuwBMi95QAF7pP3tJbn6/Xhf8+E5L2BG2b4ZEgulqVled23zH21HsJQ4k
-         na3wNGBKSy8g0diEf/J3D4LwOOO1pKoVrJg4hobjH7rMbzQNJ0BVrw5BgjrrjmPj4FJz
-         utVA==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1771952524; x=1772557324; darn=lists.ozlabs.org;
-        h=cc:to:subject:message-id:date:mime-version:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=4Gg4RV1H3ROtXnBW1YCCHo6i4I+MEGN0xjahTIuDqoo=;
-        b=Jlstoqsnt9k0NA2LUVDTtUke0KqLEJS/Ftwnw/xIOJuuHN2UygQMOfZ2sg1dMoiL0z
-         8ov6QYZ8/g+I8p+yEyjq1t9stAx8FeFPRajMRT9sa6tdKidKy3Gn4deNgClPZRyzOGUG
-         ArlOofb81FI23Yo3ROVPRWF2rZF9UDq6FemNkxnc5qa3ckgjx+ZB2bmCYj/s3Uky4OGZ
-         tY8TWKnEjxmulbSOTjs0eDrrfp4GT2xPanJCy9NRQsl4OFE6OsK/syZOn/qPY+nLjk5l
-         WFs6gcCC6XcJojLhH4OwYpNr78/T+lOMwr+GoiHBZy2BBR/LMZt+d+XIsJ3LIsHeSK7i
-         webg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771952524; x=1772557324;
-        h=cc:to:subject:message-id:date:mime-version:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Gg4RV1H3ROtXnBW1YCCHo6i4I+MEGN0xjahTIuDqoo=;
-        b=J8j1KxU1OymwxjAw02DE57OdoR7sdjBwTxJnvcUVdtryrC/av+X+nm5xTIJgQ/rnMb
-         6Vmywfn7GuW3VZdzjFHKOmEGg8UYuV2OUKNaVTiroqFbpIi07ry4Nsy2rOOOKBPqYzge
-         5ebv+0rvOCF2akyLBUli1iljmVOub/IIqfilYz9E0DaLJCNHwSeciijN0hO6AU56NbhO
-         jsOTKCYXFwHI9yE9eF6Y2lJzAE3MAh8CwTUXgit0G/5r5q4HNt4EPD/b7XiOuFNDXgS2
-         6lqqd/v2+IlfxOIcpiOaaz8xxT696pbt3Il14pd1S4Gu0filH1I90GneS1qUFLN9eo/y
-         df/w==
-X-Gm-Message-State: AOJu0Yz9qnHlBhPg9lkGIpz4mMZ/D+5v8F6al+rmgtpkezneGobS0WPC
-	ZafDBPok1swZsvnh9v7T2lft5MGOtoCK/tqa2/h5aA8L45iUYsgv212aT/VTmPjLuU1Qz733XfK
-	ecMy+qEYtpsbRMSAqfygYaWI3e6Rqumh6phiNAPN0Wt6rk7hdmsZl
-X-Gm-Gg: AZuq6aK9BJWnPuS1WSTvsQrJzsbDrrVc+V5g/9E9cwYqwIDSTqjFxBJ9Xk8+cWZm5rq
-	Zvm0kMAU703/CIBeNUi6+7jk+1+uI1aLUnSwtzM1HNlcANLjis9fgEHF5amU8BcjpDnZi1VWZKu
-	iLTduDuJNkwzXhYv8domOaIBCSr4o58akPr/Q6R4LUI93Odx6RKMJHYRGVBESBxmmi8yflJ4RM0
-	nCGafAG+XtaWj9Gya4PP8TSwYOjYeBJmFhQjP82XotX6Em9db8RSbQww0Xs5+3HmDxmyL7pgVRq
-	7P4mpCvs
-X-Received: by 2002:a05:622a:1208:b0:501:4703:3b6a with SMTP id
- d75a77b69052e-5070bba1423mr164660781cf.9.1771952524089; Tue, 24 Feb 2026
- 09:02:04 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 24 Feb 2026 18:02:03 +0100
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 24 Feb 2026 18:02:03 +0100
-From: Matthew Lear <matthew.lear@raspberrypi.com>
-X-Mailer: git-send-email 2.43.0
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fL4pg29y8z3cZj
+	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Feb 2026 04:44:09 +1100 (AEDT)
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1771955045; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Tw+NmTCqEfOHBqomAcum57X9jmNMQYT79GYN+Bq7GQ4=;
+	b=K64YccBRqxxRVXjIvcGgqeXAExRmAbW9ukBCcn50ZISEAQIBejMLIbUJSxZQPgeoVWFr0lf/8B8OLQESgl8qpkJIU6wAbqAy4cP5R8gYjyJekD7pvNTUat1FsAAWgSmpAK7dyATp1jJAqMQfJJupG+Lp3sUdYVuGjjMT6ItbYvY=
+Received: from 30.42.59.174(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WzjvpCA_1771955043 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 25 Feb 2026 01:44:04 +0800
+Message-ID: <e6abf29f-db3f-40f0-8504-0c987db0ebcd@linux.alibaba.com>
+Date: Wed, 25 Feb 2026 01:44:03 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -104,69 +54,146 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Date: Tue, 24 Feb 2026 18:02:03 +0100
-X-Gm-Features: AaiRm52PhjL91INs14zgyftZC8_DCtqFkvmdkpkF2-EUUuTqVtl9JL3UlhfmxzA
-Message-ID: <CAPrOGNB56AjZ8C8fRChucWHHhLHQoim7xPpz3eyFXwDCPJ02YA@mail.gmail.com>
-Subject: [PATCH] erofs-utils: Raise maximum block size for aarch64
-To: linux-erofs@lists.ozlabs.org
-Cc: Matthew Lear <matthew.lear@raspberrypi.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] erofs-utils: lib: fix 48bit addressing detection for
+ chunk-based format
+To: puneeth_aditya_5656 <myakampuneeth@gmail.com>,
+ linux-erofs@lists.ozlabs.org
+References: <20260224055712.14110-1-myakampuneeth@gmail.com>
+ <20260224163749.32581-1-myakampuneeth@gmail.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20260224163749.32581-1-myakampuneeth@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-15.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_DKIM_WL,
+	USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[raspberrypi.com,reject];
-	R_DKIM_ALLOW(-0.20)[raspberrypi.com:s=google];
+X-Spamd-Result: default: False [-9.20 / 15.00];
+	WHITELIST_DMARC(-7.00)[alibaba.com:D:+];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[linux.alibaba.com,none];
+	R_DKIM_ALLOW(-0.20)[linux.alibaba.com:s=default];
 	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RSPAMD_URIBL_FAIL(0.00)[configure.ac:query timed out,raspberrypi.com:query timed out];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
 	RCPT_COUNT_TWO(0.00)[2];
-	ASN_FAIL(0.00)[1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1.f.9.b.1.2.0.0.4.9.4.0.4.2.asn6.rspamd.com:query timed out];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-2399-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2400-lists,linux-erofs=lfdr.de];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	FORGED_RECIPIENTS(0.00)[m:myakampuneeth@gmail.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,lists.ozlabs.org];
+	FORGED_SENDER(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FROM_NEQ_ENVFROM(0.00)[matthew.lear@raspberrypi.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[raspberrypi.com:+];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hsiangkao@linux.alibaba.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[linux.alibaba.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[configure.ac:url,mail.gmail.com:mid,lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: E237718A3E2
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_RCPT(0.00)[linux-erofs];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 235F818AAEB
 X-Rspamd-Action: no action
 
-Ensure MAX_BLOCK_SIZE is at least 16384 on aarch64 so that native block
-sizes can be used without the sub-page fallback.
 
-Signed-off-by: Matthew Lear <matthew.lear@raspberrypi.com>
----
- configure.ac | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/configure.ac b/configure.ac
-index cf4de99..8a8e9b3 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -322,6 +322,10 @@ AS_IF([test "x$MAX_BLOCK_SIZE" = "x"], [
-                              [erofs_cv_max_block_size=`cat conftest.out`],
-                              [erofs_cv_max_block_size=4096],
-                              [erofs_cv_max_block_size=4096]))
-+  dnl Ensure aarch64 supports at least 16K
-+  AS_CASE([$build_cpu],
-+    [aarch64*], [AS_IF([test "$erofs_cv_max_block_size" -lt 16384],
-+                   [erofs_cv_max_block_size=16384])])
- ], [erofs_cv_max_block_size=$MAX_BLOCK_SIZE])
+On 2026/2/25 00:37, puneeth_aditya_5656 wrote:
+> The 48-bit chunk format flag was being set inside
+> erofs_blob_write_chunked_file right after erofs_blob_getchunk returns.
+> At that point chunk->blkaddr is the chunk's offset in the temporary
+> blob buffer, not the final image address. The real address is only
+> known after erofs_mkfs_dump_blobs applies remapped_base.
+> 
+> This means the detection was unreliable in both directions: a chunk
+> whose blob offset looks large but fits in 32-bits after remapping gets
+> flagged unnecessarily, and worse, a chunk that lands above UINT32_MAX
+> after remapping may not get flagged at all, producing a corrupt image.
+> 
+> Fix this by introducing erofs_inode_fixup_chunkformat() which walks
+> the chunk array after remapped_base is finalized and sets the 48-bit
+> flag if any chunk address exceeds UINT32_MAX. The fixup is called from
+> erofs_bh_flush_write_inode before erofs_iflush so that the correct
+> chunkformat is written into the on-disk inode header. Both blob chunks
+> (remapped_base + chunk->blkaddr) and device chunks (chunk->blkaddr
+> directly) are handled.
 
- # Configure multi-threading support
--- 
-2.43.0
+Closes: https://github.com/erofs/erofs-utils/issues/39
+
+Also, a proper Signed-off-by: is needed.
+
+> ---
+>   include/erofs/blobchunk.h |  1 +
+>   lib/blobchunk.c           | 40 +++++++++++++++++++++++++++++++++++----
+>   lib/inode.c               |  3 +++
+>   3 files changed, 40 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/erofs/blobchunk.h b/include/erofs/blobchunk.h
+> index ef06773..48fca63 100644
+> --- a/include/erofs/blobchunk.h
+> +++ b/include/erofs/blobchunk.h
+> @@ -16,6 +16,7 @@ extern "C"
+>   
+>   struct erofs_blobchunk *erofs_get_unhashed_chunk(unsigned int device_id,
+>   		erofs_blk_t blkaddr, erofs_off_t sourceoffset);
+> +void erofs_inode_fixup_chunkformat(struct erofs_inode *inode);
+>   int erofs_write_chunk_indexes(struct erofs_inode *inode, struct erofs_vfile *vf,
+>   			      erofs_off_t off);
+>   int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd,
+> diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+> index a051904..96c161b 100644
+> --- a/lib/blobchunk.c
+> +++ b/lib/blobchunk.c
+> @@ -136,6 +136,42 @@ static int erofs_blob_hashmap_cmp(const void *a, const void *b,
+>   		      sizeof(ec1->sha256));
+>   }
+>   
+
+...
+
+
+>   int erofs_write_chunk_indexes(struct erofs_inode *inode, struct erofs_vfile *vf,
+>   			      erofs_off_t off)
+>   {
+> @@ -380,10 +416,6 @@ int erofs_blob_write_chunked_file(struct erofs_inode *inode, int fd,
+>   			goto err;
+>   		}
+>   
+> -		/* FIXME! `chunk->blkaddr` is not the final blkaddr here */
+> -		if (chunk->blkaddr != EROFS_NULL_ADDR &&
+> -		    chunk->blkaddr >= UINT32_MAX)
+> -			inode->u.chunkformat |= EROFS_CHUNK_FORMAT_48BIT;
+>   		if (!erofs_blob_can_merge(sbi, lastch, chunk)) {
+>   			erofs_update_minextblks(sbi, interval_start, pos,
+>   						&minextblks);
+> diff --git a/lib/inode.c b/lib/inode.c
+> index 4a214f9..7a1d982 100644
+> --- a/lib/inode.c
+> +++ b/lib/inode.c
+> @@ -908,6 +908,9 @@ static int erofs_bh_flush_write_inode(struct erofs_buffer_head *bh, bool abort)
+>   
+>   	DBG_BUGON(inode->bh != bh);
+>   	if (!abort) {
+> +		if (inode->datalayout == EROFS_INODE_CHUNK_BASED &&
+> +		    inode->chunkindexes)
+> +			erofs_inode_fixup_chunkformat(inode);
+
+How about moving this into erofs_iflush() rather than here?
+
+Thanks,
+Gao Xiang
+
+>   		ret = erofs_iflush(inode);
+>   		if (ret)
+>   			return ret;
+
 
