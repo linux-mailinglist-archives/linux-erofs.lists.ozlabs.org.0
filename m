@@ -1,106 +1,85 @@
-Return-Path: <linux-erofs+bounces-2396-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2397-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SG3+N9rRnWn4SAQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2396-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Feb 2026 17:29:14 +0100
+	id CDkZAKrSnWk0SQQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2397-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Feb 2026 17:32:42 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBF21189CE0
-	for <lists+linux-erofs@lfdr.de>; Tue, 24 Feb 2026 17:29:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id BCABA189D17
+	for <lists+linux-erofs@lfdr.de>; Tue, 24 Feb 2026 17:32:40 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fL3870Z5Tz3cYX;
-	Wed, 25 Feb 2026 03:29:11 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fL3D55jlrz3cYh;
+	Wed, 25 Feb 2026 03:32:37 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2607:f8b0:4864:20::832" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1771950551;
-	cv=pass; b=HDKcdKztbx/1aOsLv+VW5FF//HTdDd3ZXx8hmCrwUkKyyrWgAn35VX+AXbpYn6v6FnAOFQD0rrCbV1S0qH6ciNrxIfCyMyUCYPUc5VB1MDIo3/m3aiQjPE2XGYA0sE1zPLYFJ0e7KnBgmspqNep5ktuJW78tZ1fL14l0qyaaFuL8IzrKF0EbFEeqLdcNJONlB6aiyqDOggauE8A0jVZ1Gzjg7KF46uTbxNBTwSb4M6LeE4MOsDyERrKlQH0z+A2fi/ohwh6XekBfXI/BVl4wahaM8HL9QBxlNcIG1cKiui2YaoSUdm9Fp8aFfaU0YcrOfY90quTiupMCmzWPMWDPew==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1771950551; c=relaxed/relaxed;
-	bh=GtfVzYq8sfA7g6nq+lCh5G93MoAXi/0tZYLn/0PN2Q0=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Content-Type; b=g1ffJjHJ9ylctz6M1JjQ8Gw0fnwiomDtJNX1xaOrIWeSOd1PmvwKpVXxAoZz4omPPgIir1JGAQ7TJmnOehgxyrd5o/w0rHrHYfuUv4gGlqgOb7NrnzRRlL84TYvPwfvmlBPNxoUVB2Ow6KOMbtdbI2D8qjBFCBKYIUt1YT5A0z36Wfr64A7j610WI53z0veRPWQNyQEQMdP6uNUMYyhcbHEXw7tInUjsH3jDpKQFW8h/jtRfkDMBQxenKtqziwlV6b/VZQzq3z4prdrdlUc9pPIOMtAL2F7HJ/a1dZh2ZAZm5Ba1sVMQ7Nk+AS6k+qfJQ8pJHOIFhxkUMFG9sUWeJA==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; dkim=pass (2048-bit key; unprotected) header.d=raspberrypi.com header.i=@raspberrypi.com header.a=rsa-sha256 header.s=google header.b=fVPnSDxj; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::832; helo=mail-qt1-x832.google.com; envelope-from=matthew.lear@raspberrypi.com; receiver=lists.ozlabs.org) smtp.mailfrom=raspberrypi.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::1231"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1771950757;
+	cv=none; b=e/mtSj3pDtr907yHWfLp86N/9bpcgdTuall5YzWcRO8CAkyhdbVVAksASN5DBH6l6r+vTE3MPrdi7ygYBbImvme8aqgagiooCo9HMZQ0Q0xGHy6NPahvYKzBQpr7fqWwML2KR+fLVILDS5lLDrV21c3gPJS34aYhKBFia7cNCGwRrvPacyotMo4kOiqdKQeanTqYP176vluPHtV1YfJ2Mj0iqhkqfyN7DzLsUSu61zLXCFRfOZqv5MMYN7cZQCUM92YizJWwGgkNI5bPmRXz23qdjPSfyWR3VTfSyYk4aAOerR4MmWUHYl+zQrMb7FMsslsf4KMWM/tqEF59ZScdcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1771950757; c=relaxed/relaxed;
+	bh=8xugeUJMa7+Ivtgc79qfyWPvr49/iomwZ5d4Y3d701w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gLqcRmXvJzKcd4zl8j7yjBQnWWEnYL2+CrjVA55Yhr2n0CbdDWCKKCepKe2OViVr2jmMZXW6iLvKiZbuN00ppCa77IzX0poIRT6vdrUJQme2J1pn5C0xzRzDClZmYt8SuF4/GARU5X6F5dYTHlVfIELR82jwNjLJkuVRauIOcJJCppNYPpIWQF6m+1qZgI6t9m+iGNRU+90G7TE1ZMrpEPjGp9w07AOtkWzDDKsWL3HxV3gKVN65HW8WDYpdFSevHUsfwXcgN9gEMEUD+ykgh/JCKPCpsUXHOzZS5dKu/fhLWl9Rc/gofH4vwFnw8GAMi1WsnVu3ySr7Zs9SKjPzjQ==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com; dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=e9avvm2X; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::1231; helo=mail-dl1-x1231.google.com; envelope-from=yester1324@gmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=gmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=raspberrypi.com header.i=@raspberrypi.com header.a=rsa-sha256 header.s=google header.b=fVPnSDxj;
+	dkim=pass (2048-bit key; unprotected) header.d=gmail.com header.i=@gmail.com header.a=rsa-sha256 header.s=20230601 header.b=e9avvm2X;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=raspberrypi.com (client-ip=2607:f8b0:4864:20::832; helo=mail-qt1-x832.google.com; envelope-from=matthew.lear@raspberrypi.com; receiver=lists.ozlabs.org)
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=gmail.com (client-ip=2607:f8b0:4864:20::1231; helo=mail-dl1-x1231.google.com; envelope-from=yester1324@gmail.com; receiver=lists.ozlabs.org)
+Received: from mail-dl1-x1231.google.com (mail-dl1-x1231.google.com [IPv6:2607:f8b0:4864:20::1231])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fL3846d11z3cYG
-	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Feb 2026 03:29:07 +1100 (AEDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-5069ad750b7so50319321cf.2
-        for <linux-erofs@lists.ozlabs.org>; Tue, 24 Feb 2026 08:29:07 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1771950544; cv=none;
-        d=google.com; s=arc-20240605;
-        b=ajizvpHkEvg+m/32UKoD12afWnXkBTBN6nrV1e9aR0F/PiaUwfG48+xsDuEcUWm1EV
-         q2cMUPoxmSKNmIhWeCpAkPIyxTIL/JdPmmDt1x3j/dFkTb9qu7nkpfI6lGezkhMOmVG2
-         b2VImO4Z4OqZ81cDRKwux8ig3zpFqVz4YyM2ucCZQmXN9nN3tVQvX9W4cR1+zDZBjcfl
-         +VfeQupW1WhqEewChpRXXAuTt9FW1n/g6Mg4AO45LUl8DNCj31lMQ9aJ9qivmZataZzb
-         YrW0pikMXezJEZrqQmDHD+Smng63LvYncCwSabj/UHtTVbOhITvrmojwaxU7z8k13ws5
-         M1zA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=to:subject:message-id:date:mime-version:user-agent:references
-         :in-reply-to:from:dkim-signature;
-        bh=GtfVzYq8sfA7g6nq+lCh5G93MoAXi/0tZYLn/0PN2Q0=;
-        fh=utONbU7d+l7qEhlPylNGoqFbEyvb8LrAzj4wiOPz160=;
-        b=FFfiIlTbEgmqptQkMOnBbkpHb95+6DJsUr8hRDnhu7CnIWOOfadr0cXNs7d3NT3bbU
-         2XjVodC+ymCuy/7nYP+eLe+W4rMd4FCtfcJte5twImZymFRat9JKZ9B+Vc8jQ41Hci1o
-         3l+sJ5hIJaniwH9hE8jw00kY7d2944vVi8UMTYmXHZ0ns93FNyCDUP7bLFGPvMkV7O+0
-         y4pQVJWOZxNnytYtXJ0Kp6K+7sxsK25ngTXkFOoorfJGNbUZBHu3HwS7rzB4kCVN/KDV
-         JKU7/FblQC3UlLgS5HCeYZcOhnjJ8cdh8jKTZzqkiO87MyZ57PGygQ7RckOhiKyi804k
-         HUcQ==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fL3D41HZCz3cYb
+	for <linux-erofs@lists.ozlabs.org>; Wed, 25 Feb 2026 03:32:35 +1100 (AEDT)
+Received: by mail-dl1-x1231.google.com with SMTP id a92af1059eb24-1275750cf9cso4699323c88.0
+        for <linux-erofs@lists.ozlabs.org>; Tue, 24 Feb 2026 08:32:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1771950544; x=1772555344; darn=lists.ozlabs.org;
-        h=to:subject:message-id:date:mime-version:user-agent:references
-         :in-reply-to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GtfVzYq8sfA7g6nq+lCh5G93MoAXi/0tZYLn/0PN2Q0=;
-        b=fVPnSDxjxwI2H9El19EcpjKFYpdOehlU5rzvCdKAWDw/uBo7TVcvAwq0s4q22W6AGF
-         l1+LemXCzqy/OoaIFlHS0aM2AQrHT0GADuLpSCKTmYMU6OCsVIVroMtToqiAS+KgxxgR
-         PACrYsNYirUrZ2OnNt4asVtoCzOm/ir/ExOoZo1DeS4Kigv9PgzVroglfpKeBknWJpzz
-         POVlbUTTp0zt18Y3gY4Cw6YMQcu+Jp14rIvcUFCi+IQHIKRYqNu/1LXTOHy1eTGsnoYX
-         KIzu4R4/C0AAjLtG283evKU2ZdkS3NIiK4/OYOxZJL0LnrnbYq9ZfBgqx1aYNwMoDM8O
-         IRvg==
+        d=gmail.com; s=20230601; t=1771950753; x=1772555553; darn=lists.ozlabs.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8xugeUJMa7+Ivtgc79qfyWPvr49/iomwZ5d4Y3d701w=;
+        b=e9avvm2XYO03WPw0lppw2d5Cxzd/S0Bmb1gXhKNB8rBzy7nS6yDuhvPyYFR5fbvukK
+         tW0IPZNFielU7WT65pCQ2bpEM7puJTe9ea1TZRWiXXUTknYF45xwjgjYADvNnTwap//n
+         jJQZBfr2P/9gCfSY2ZZ7WpG3iArg4BmP8GfHDJxx8Akli110mywx9dJIEQCztQx6Da8+
+         46lou75T18tsnshhLMRWX5bpQqkbMsbrXc8NFd/vppCIWXui/Eh7I2vJgGLKwbImy+PY
+         G/l4E+2eN9nAcgKVoTB61IiIqaT/E/dk538Cjaz1oymeLaLJx1tJ3zpqwQp14h4uSRAj
+         3dwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771950544; x=1772555344;
-        h=to:subject:message-id:date:mime-version:user-agent:references
-         :in-reply-to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1771950753; x=1772555553;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GtfVzYq8sfA7g6nq+lCh5G93MoAXi/0tZYLn/0PN2Q0=;
-        b=gBbd6qe/ID+bYKtzMW0OyWdQVHp3lnvR2PmL2dM+iWcZ8OvDNmE09cjL9qarQvz+GO
-         gO0NXhUwCMqxRL/1NN6SC0gj38ro+RA7mQlF5zSd/JSaO1e8ifSWlbwX8g9IpmFdit/S
-         MlJAXoGN5HUp6xI5NLccsVSuQ7PCj4yjyWoZN01KVtq33HVP4JE93PhQKWbbWFtApXy7
-         3Ovz/JSTpP+Fkei563u0yOJbMSEvxEHm9MPydRfuz7zsPqceqeO3WyRftKymxTLnlmFC
-         FUbQm5RhXMfW/tU8Cu6vLw7RP/Ewma7R76TxDMOA8AFVGwh6grQQ30Zk31nu6muYCLAn
-         Df7g==
-X-Forwarded-Encrypted: i=1; AJvYcCW7aclvr06PWzvIxx5G8iYeI8kQ8ORhSemxkxVaBuCZ2EENdbP/rXfYZp/Io2V1lieEWD2IEvT9JBVsPQ==@lists.ozlabs.org
-X-Gm-Message-State: AOJu0YwPQ9KXTtBGwSGkDdgJLlzRFuNk611gQAaBGp3OnqzUpx7rdDiJ
-	zczGfQFxeHTSJ7xmhmbqATUtC3sWrcDg7bneE1HdW2wtHUZQC6aDGarUHW5QiMug9FU/cwBUSBS
-	EX9OOfrJdNCx8OxnROX00akLe+s+t8AnlqhVpeJQXoQ==
-X-Gm-Gg: AZuq6aIS4806SH3FKWiKWShbU2l25SHpnK36oVAqEtqnwXK3OmJy+VIRMGpQivmnnCZ
-	r37w61xIhJa1LPHbaoP6etw1H34HADNfl/ePgtmr8rqAaMjXresyJ+zRk7pbGvgONANrx6cBuBn
-	4rGfK1VSyYhmMMWY4HPkHyss+WTQsAc5SmQ3B5DMAHGVFOYs4+ONdYyTMcaWadY4lHDuwoQgpEP
-	OaDURaYzdwYhdeS9rn7RDbxT2nLk/DwQM4xmAMjAjgQN388CNHcn/pmOaDqBmCxaJ/h9aUEirgC
-	KhTIlmMD
-X-Received: by 2002:a05:622a:102:b0:502:e1ed:c352 with SMTP id
- d75a77b69052e-5070bc6b51emr167219661cf.45.1771950543838; Tue, 24 Feb 2026
- 08:29:03 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 24 Feb 2026 11:29:03 -0500
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 24 Feb 2026 11:29:03 -0500
-From: Matthew Lear <matthew.lear@raspberrypi.com>
-In-Reply-To: <450ee7cb-8c30-420f-a7f0-c29238e2ae90@linux.alibaba.com>
-References: <CAPrOGNDb=Y1yt_m=NgMSj01Np0yCDF2TYTV_dY_nV585=eX6aA@mail.gmail.com>
- <feb908c4-5e9c-4ba8-9818-6b6b66e9b4ff@linux.alibaba.com> <CAPrOGNDnCBYdUjOiXBiVKSmLcPW_jxZbHXLdgMgj-T6LnXo0ig@mail.gmail.com>
- <450ee7cb-8c30-420f-a7f0-c29238e2ae90@linux.alibaba.com>
-User-Agent: Notmuch/0.38.3 (https://notmuchmail.org)
+        bh=8xugeUJMa7+Ivtgc79qfyWPvr49/iomwZ5d4Y3d701w=;
+        b=QB0O4g9mhpjKug5MvWu5ur+lp82c23dovgv4tKAYUQ737/6IclKdYW5YxOS9F034Mu
+         sRT1mWc30dAnwzhD3WdatB8XgP6cPaBVx3FzEJyIwm3JwX70KrJdsJvVojezjmlVeFya
+         3Zoo3aj3gJrlhRrqJdTwXFhqAXduDT21P+3RvmV82r3mIwWw48JSzoeAz9Droqtkbafo
+         9ZW7sdXsM/aLEUQbhXtNIiLjJyqvT1mXa1LncWez/haN9asW5pw0D48U4zDJs96Jp6hp
+         poLLuyOOO3XHLB6vH9kwbvpDt+1BPsnisf5Hfv7Z+DPfhTkUJqN7J4wrKV1hQ6+lwjYA
+         5Z+w==
+X-Gm-Message-State: AOJu0YwlH5EsLi31k/VBc11c3RC9jWxvK9KoSPv9plgu/bJkG6VnY4q4
+	EBTW6HFfZJOHSo6a4Ky99cBw5ztRScKcuYys8iiCZZw437XxWgPmXHpj666ZdcL/
+X-Gm-Gg: AZuq6aJHcTntu7bUG9HdE7N2pNqVicxz/fktkbmBHLUvbSogirOm+tWQ6Ca8OOAbWpb
+	jIqY0cv7l4fOnMcjLAsj40YE7JxrthIibomDxipkHHeX/Za1ZsduO20kGzhaMPcn+QG1Gd6NM5o
+	fmC4nz10OumP6KZjfHrtY0hG4oO/OQ13kEsEdIHj4tUGuT1s4usPZrSHmpLqzdz+Uz4b5Dl1wef
+	xEmhwal3dQ0H96K8899GMFuMNbbUqxXUrhW+BvPjetCLiDDb0FYPqVduM7h6mFB25aE27QbBg+L
+	EmKauJGQMp+8olbn3r08RFK1OslzQ5saYwC/4JJgEchLI9opEdewE6Lj+W/g5TA7lGjR/ViuTvA
+	UAmqL9xa2E8tAGCY0YG1SxZyvdbKM/Ty+Ita0cZOwQlRQWM1PRt2QRp8ljz1+qDGy0ueERN9TLF
+	aCRmREHuki7bkjxmzCnfbWJcUMaA==
+X-Received: by 2002:a05:7022:2214:b0:11a:273c:dd98 with SMTP id a92af1059eb24-1276acc4db8mr5376446c88.20.1771950752873;
+        Tue, 24 Feb 2026 08:32:32 -0800 (PST)
+Received: from cptpc.hsd1.ca.comcast.net ([2601:207:380:51c0::3c2c])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1276af8c936sm11488274c88.14.2026.02.24.08.32.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Feb 2026 08:32:32 -0800 (PST)
+From: Ashley Lee <yester1324@gmail.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: hsiangkao@linux.alibaba.com,
+	yester1324@gmail.com
+Subject: [PATCH] erofs-utils: lib: converted division to shift in z_erofs_load_compact_lcluster
+Date: Tue, 24 Feb 2026 08:30:28 -0800
+Message-ID: <20260224163149.60016-1-yester1324@gmail.com>
+X-Mailer: git-send-email 2.53.0
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -112,64 +91,117 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-Date: Tue, 24 Feb 2026 11:29:03 -0500
-X-Gm-Features: AaiRm51KFnujPsoTKhqWDuIYaiGjSEEX0uFxRCSEpEHN5dyHWCxBJr9GPRfz4Ho
-Message-ID: <CAPrOGNBnKj37HBav+jGAVGk2xiz2DY5kOPO8usDU2KPEwcJLxw@mail.gmail.com>
-Subject: Re: mkfs.erofs: should MAX_BLOCK_SIZE be tied to build host page size?
-To: Gao Xiang <hsiangkao@linux.alibaba.com>, linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-	SPF_HELO_NONE,SPF_PASS autolearn=disabled version=4.0.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
+	RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=disabled
+	version=4.0.1
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-1.20 / 15.00];
-	SUBJECT_ENDS_QUESTION(1.00)[];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[raspberrypi.com,reject];
+	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
-	R_DKIM_ALLOW(-0.20)[raspberrypi.com:s=google];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_SENDER(0.00)[matthew.lear@raspberrypi.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-2396-lists,linux-erofs=lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	FREEMAIL_CC(0.00)[linux.alibaba.com,gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[matthew.lear@raspberrypi.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[raspberrypi.com:+];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-2397-lists,linux-erofs=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_THREE(0.00)[3];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[yester1324@gmail.com,linux-erofs@lists.ozlabs.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-erofs];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,mail.gmail.com:mid,alibaba.com:email]
-X-Rspamd-Queue-Id: EBF21189CE0
+	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
+X-Rspamd-Queue-Id: BCABA189D17
 X-Rspamd-Action: no action
 
-On Wed, Feb 25 2026 at 12:09:07 am +08, Gao Xiang
-<hsiangkao@linux.alibaba.com> wrote:
->> With 64K, the memory footprint would be significantly larger.
->> What do you think?
->
-> I understand your concern although I think they are just
-> for temporary use, and 64k is still not too huge and
-> the userspace stack is less worried.
->
-> Or how about just use max(PAGE_SIZE, 16k) instead for
-> aarch64? then you will get 16k for most of the time
-> unless PAGE_SIZE > 16k.
+perf on fsck.erofs reports that z_erofs_load_compact_lcluster was 
+spending 20% of its time doing the div instruction. While the function
+itself is ~40% of the fsck.erofs runtime. In the source code, it seems 
+that the compiler can't optimize the division by vcnt despite it only 
+holding powers of two.
 
-That seems a good solution, and I imagine we'd want to retain the
-existing configure switch. I'll work on a patch for submission.
---  Matt
+Running a benchmark on a lzma compressed freebsd source tree 
+on x86 yields a ~3% increase in performance. The following 
+test was run locally on an x86 machine.
+
+$ hyperfine -w 10 -p "echo 3 > /proc/sys/vm/drop_caches; sleep 1" \
+  "./fsck.erofs ./bsd.erofs.lzma"
+
+With shift optimization
+Time (mean ± σ):     360.0 ms ±  12.0 ms    \
+  [User: 236.3 ms, System: 120.6 ms]
+Range (min … max):   342.3 ms … 379.8 ms    10 runs
+
+Original Dev Branch
+Time (mean ± σ):     371.1 ms ±  16.1 ms    \
+  [User: 254.8 ms, System: 115.0 ms]
+Range (min … max):   354.8 ms … 404.4 ms    10 runs
+
+Signed-off-by: Ashley Lee <yester1324@gmail.com>
+
+---
+ lib/zmap.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/lib/zmap.c b/lib/zmap.c
+index baec278..1ba52b5 100644
+--- a/lib/zmap.c
++++ b/lib/zmap.c
+@@ -112,7 +112,7 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
+ 	const unsigned int lclusterbits = vi->z_lclusterbits;
+ 	const unsigned int totalidx = BLK_ROUND_UP(sbi, vi->i_size);
+ 	unsigned int compacted_4b_initial, compacted_2b, amortizedshift;
+-	unsigned int vcnt, lo, lobits, encodebits, nblk, bytes;
++	unsigned int vcnt, vdiv, lo, lobits, encodebits, nblk, bytes;
+ 	bool big_pcluster = vi->z_advise & Z_EROFS_ADVISE_BIG_PCLUSTER_1;
+ 	erofs_off_t pos;
+ 	u8 *in, type;
+@@ -144,13 +144,16 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
+ 	pos += lcn * (1 << amortizedshift);
+ 
+ 	/* figure out the lcluster count in this pack */
+-	if (1 << amortizedshift == 4 && lclusterbits <= 14)
++	if (1 << amortizedshift == 4 && lclusterbits <= 14) {
+ 		vcnt = 2;
+-	else if (1 << amortizedshift == 2 && lclusterbits <= 12)
++		vdiv = 1;
++	} else if (1 << amortizedshift == 2 && lclusterbits <= 12) {
+ 		vcnt = 16;
+-	else
++		vdiv = 4;
++	} else {
+ 		return -EOPNOTSUPP;
+-
++	}
++
+ 	in = erofs_read_metabuf(&m->map->buf, sbi, pos,
+ 				erofs_inode_in_metabox(vi));
+ 	if (IS_ERR(in))
+@@ -160,7 +163,7 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
+ 	m->nextpackoff = round_down(pos, vcnt << amortizedshift) +
+ 			 (vcnt << amortizedshift);
+ 	lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1U);
+-	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
++	encodebits = (((vcnt << amortizedshift) - sizeof(__le32)) * 8) >> vdiv;
+ 	bytes = pos & ((vcnt << amortizedshift) - 1);
+ 	in -= bytes;
+ 	i = bytes >> amortizedshift;
+-- 
+2.53.0
 
