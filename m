@@ -1,70 +1,70 @@
-Return-Path: <linux-erofs+bounces-2428-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2429-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8I7JERLFn2kRdwQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2428-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Feb 2026 04:59:14 +0100
+	id KBD0BWbFn2kRdwQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2429-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Feb 2026 05:00:38 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
-Received: from lists.ozlabs.org (lists.ozlabs.org [112.213.38.117])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49A141A0B98
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Feb 2026 04:59:13 +0100 (CET)
+Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DFBA1A0BBF
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Feb 2026 05:00:37 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fLyPp40kzz2yFb;
-	Thu, 26 Feb 2026 14:59:10 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fLyRQ5Fjfz2yFb;
+	Thu, 26 Feb 2026 15:00:34 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::649"
-ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772078350;
-	cv=none; b=NwpfMG//DJ3fFtopaxxZ98nmwheM330Kk/8jCxTwxoe9galvhZ/MXGpntR7HzoqopTJLWajTLD3gRkEhwRdcM2s7MzfxrixN1gdNK5wHifctCC4HtV/vFmhnf/teFndf4TZK44EgHQm27ACsc2NyEIyKAxgp287cXaR+Q0kALTIMXhErJ/WuphlcBDhax7ZMKzmD4x/obUSr27vzUpZtt8J3W4qn2iGSV5oH2oZkJEh2PwzMhHoKO5cY2CwRRGLARBB6HX+GdCGMSmTmmzYQqgF4rwSVPP1F/jTv4ow0eNPxlWH/vBX7X/hdu0i+hCE7OP79xC6kb3O4J75am3a4Sg==
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip="2607:f8b0:4864:20::104a"
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772078434;
+	cv=none; b=SyQcQhByBTlPlj6URZzaX+f31W7+E8WVUZDIht9Kg/ixImgyR+3A9/n16dyCH2qyMxki8Gla4QzEzIRUwr7aQqc+L/Zt1zuybU2a4z/1wFnOCDPFoUh/EFagkh8SsGTHfUIIV5CZ6Lmo7YC5TmeqHHOon5I2a6bPW1BDStWHWLhUJhzqSTlcsBk8gGxhp7ZQmu76AHDHLe26TTACmbHX0fRLIPwOa3kW9strPRIL5iasLKIkO1+tMfLlpYqUGosFAjoFdoyx6RtlRB58IY5jYvMBqSh1FaYDWz2jyjYqrxkvYZ/w3TKcVEWFl+Te+2ZVfuoeykg4w0O3bNIwWjUgYg==
 ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772078350; c=relaxed/relaxed;
+	t=1772078434; c=relaxed/relaxed;
 	bh=X3z1s4R7WGggWbLTlFKPe7EWqNP/ePaVH5AZfRJoXLY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BfT0kgB5cHch96gvBZAzm1Fxjs/TZ2TVXEMbYTAI6RG6XRpAw3oIKHbowqR8dyppOH4e08MhX25sxTtNl8qW+QbfxBH+KOaF5yDhCp1BFG4qGpv1XU3SqSe8zkTkOuzqogLNaqwLo/rVL5mpvmgeB2VMoaNdhDdfbzy/7uDsBSw6XkBcCgvN2JbK/kt+kLFiCO0ource9VifZp8N02Kz477rkhCV4xyQP4zxickbVac0zQn+3rCxEHYY44WClil7sKuKnNBkFe7KrFj5yENO6bhBC3TT67SgRolXjplXOAA937w016iDkqvx9ZiBx4ziqsCmbWOkaraX3PUzDSPDfQ==
-ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=LEj/F51A; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::649; helo=mail-pl1-x649.google.com; envelope-from=3cswfaqykc2cnsxjtglttlqj.htrqnszc-jwtkxqnxyx.teqfgx.twl@flex--inseob.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=flex--inseob.bounces.google.com
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Jj2AKQlYYuNVEl1Ctqf32j5ePCXZwWxPtHXEdpcIO+qmGo5KT3rW8r+ufgcQtbfYZyaVUVAMHSifE7wea6k3A34hoEIpObJmiBIcyGTWfc9UTrdMgN0bheqRVED7QPkoaBUww8srvIdA6OQ/N54hnpjAQzKRN8Q1cIAHuRgi9vxx6gYE5hp4PLSWcamsrCGCT80GxCPDwiDjfwjvMZDi8iAbcZB84a+WoLpl0kdknqGDiiauQwzt+o1ayGzwnxNN2W3A7u9ZylmkE/P/CvWfo4uOi/B43oloJJbqKdtvKslL9T7NbR8aDaeBWKSXhWW8onwN3B1v/47awYdj7oQWMw==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=Vts/YnTX; dkim-atps=neutral; spf=pass (client-ip=2607:f8b0:4864:20::104a; helo=mail-pj1-x104a.google.com; envelope-from=3x8wfaqykc7wkpugqdiqqing.eqonkpwz-gtqhunkuvu.q1ncdu.qti@flex--inseob.bounces.google.com; receiver=lists.ozlabs.org) smtp.mailfrom=flex--inseob.bounces.google.com
 Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=LEj/F51A;
+	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=Vts/YnTX;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--inseob.bounces.google.com (client-ip=2607:f8b0:4864:20::649; helo=mail-pl1-x649.google.com; envelope-from=3cswfaqykc2cnsxjtglttlqj.htrqnszc-jwtkxqnxyx.teqfgx.twl@flex--inseob.bounces.google.com; receiver=lists.ozlabs.org)
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=flex--inseob.bounces.google.com (client-ip=2607:f8b0:4864:20::104a; helo=mail-pj1-x104a.google.com; envelope-from=3x8wfaqykc7wkpugqdiqqing.eqonkpwz-gtqhunkuvu.q1ncdu.qti@flex--inseob.bounces.google.com; receiver=lists.ozlabs.org)
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fLyPn4PCRz2xQs
-	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Feb 2026 14:59:09 +1100 (AEDT)
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-2aad5fec176so3466165ad.2
-        for <linux-erofs@lists.ozlabs.org>; Wed, 25 Feb 2026 19:59:09 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with ESMTPS id 4fLyRQ0mPBz2xQs
+	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Feb 2026 15:00:34 +1100 (AEDT)
+Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-358e95e81aeso1606821a91.0
+        for <linux-erofs@lists.ozlabs.org>; Wed, 25 Feb 2026 20:00:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772078346; x=1772683146; darn=lists.ozlabs.org;
+        d=google.com; s=20230601; t=1772078432; x=1772683232; darn=lists.ozlabs.org;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
         bh=X3z1s4R7WGggWbLTlFKPe7EWqNP/ePaVH5AZfRJoXLY=;
-        b=LEj/F51AXEnTU37mOr+W63Q0JxIBrv94yW9W085O3jQcwpLsD8DwUK74+2eh9jGhm5
-         nV5MnQoQHHRUl2GR4wmhcHTumI26AdVsPZmEMXtDnL9DFABKH3SWLU1sZx0TmUrQFGYX
-         b3oHwncgQcM1J+EOZNQnxNN3fw7I/g4O/TTZ8vIjyLAkY3wipoZucLqwKHEzNizFd/zh
-         SIWB3gPAXZ3HBhk/6icb2XI5FLaKP9yV1pLQgV4S4wDaLK6Z+nd7M/WPZf39MdkWnjVp
-         587pXuv2QSjMFDWr/s4yjT8jPDhdrKgDX6ql2qyWFh3EzlqWNXgN4qH08xYi+9YfDEJs
-         FG7Q==
+        b=Vts/YnTXue2jrSspUaSsm0odf+sV95C6QmP+chWUHvwKyXcshkiLlqyZMbctpFgTIc
+         RPW3YVBdYB8cmTabzu5VqnM52T7msPF0f+AQAntyneBu51onLxMeoAtAwxP+/wxShAJ5
+         /uSN4HVrcgeErShtFmxgjXGbcQrzCC8nUJtwlXlO60T+p/zJv4Ww/B993T6EY3yhhi3o
+         +gXyp0w1XwQAUc97N2VaJYeZekJaiGlENzHPLc6xeo0zS5Ig7Nz2ZK8wJCC6HQ0+7Lsq
+         WIljiJzCig8+RQEu0KNSw6BFpyLDbry8QY3JPuOe+XeYgi/eXi97ST5cRJp59ALSnaoo
+         ACIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772078346; x=1772683146;
+        d=1e100.net; s=20230601; t=1772078432; x=1772683232;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
         bh=X3z1s4R7WGggWbLTlFKPe7EWqNP/ePaVH5AZfRJoXLY=;
-        b=SzcWZG8Yxd+dLIeYdTqXK2qBIkC3zwl/usMRnksCaa7567sXxmbUo84xSmbE/sbV1J
-         ZI62CvzxcmwKXJupPNTXil+RAj6+Y+jJ2qvIKOvJXZR7isE3Pqxa0Kl0tz010E3mG0Lc
-         wdBFV7k6r7z1vdKfBBWIekjt+KzlFOncPwd9TMao3czwLAhyDbJnt2gvgML9xI/tz/w6
-         b7gXIQc06q3w+OO2pBsiuatc3oma4YgEiPhKg8GIR1BWxlrJeqd1E6/n77dGduFCfnUH
-         PpW54+CsmF/Pv/7DOM+U7eWMJsFbXuhrEQDhYbpLpG8rcCMqtiZbRwVDVhQZzrZcL+h9
-         4PZA==
-X-Gm-Message-State: AOJu0Yx2cUKsc1aoW7bVveor3L1wZoZXcz4EQhpuaSAoLkopQ/ZS6ACN
-	9OwI07fuFvZrdNm/ozMjsyQIswTLW+O6KtyUlPn+ULiMAUnKdWS57VTgotJXiVPIpPOTEch8VDt
-	nePWi/5pYIp/XHZkgGwA2LDuAEmdPQkCCBfUZIvDcfLMX/LcMCYA+LnS9/Dj+czeXd02h2MA+6u
-	20cAi3m4XrHBrjHtQ/zvyE34usQgJuVW9I7YmrNv6emFzM
-X-Received: from pgeh20.prod.google.com ([2002:a05:6a02:53d4:b0:c16:9e46:4810])
- (user=inseob job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:9147:b0:366:584c:62ef
- with SMTP id adf61e73a8af0-39545fb9331mr15588552637.65.1772078346327; Wed, 25
- Feb 2026 19:59:06 -0800 (PST)
-Date: Thu, 26 Feb 2026 12:58:58 +0900
+        b=Eq8kfAwKbr9jaTP+FiD/3dQu0NtGntMCCMDmJXfEVf8i1IRjb19KRLjm7JBZ8xx9fz
+         eR8sRGwGsgc/VZBnJXaCkXr12Q5ccNmU529NVqJT6mD/+8C9BCv5SpGQJRws+gT32Ub5
+         4mZDC4C/BiQvGG5t/9iIxZIFp5pIj75rTW99lU9AL1sEjYWf4cJWEL8JRNlBeLlkfSiD
+         fgIVoCaSeKxYCjgZiTjT48lgLyfpbtMBcrfO6m0tcnd/5gtt3xzt7Lc8i83t/jjvdFY7
+         IIYSztOyFeCZo1XAEcZSdGDBG+5HoUFUgZIYMDnAHQtBuPquIthAg3x3uFl8NzvDFN2L
+         vCMA==
+X-Gm-Message-State: AOJu0YwoUzDm3UhCbAMJvUss1M3FX4qmoUYxEuK5y2EQfM05Ge5iO/2V
+	AHSr2A2ThKfSPsQnL3saF+sVIO+W04J9ue+sL+V3FUJQizpWO4EMg2Bz9I/AQmTkJqRhZXK205p
+	3kJ3OUEOEy/D9zdivPIeP0I47/egtm63c6NQdesb/WwSA55HSVndFnUQL/tMimKumo44eyoxPfe
+	2819S9Xfgw2VGlTpa66GS9bxI1ozav7EpGniq+3KORSWlo
+X-Received: from pgac23.prod.google.com ([2002:a05:6a02:2957:b0:c6e:2252:1740])
+ (user=inseob job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:4801:b0:394:f99a:2aaa
+ with SMTP id adf61e73a8af0-395b492f3b3mr971076637.40.1772078431833; Wed, 25
+ Feb 2026 20:00:31 -0800 (PST)
+Date: Thu, 26 Feb 2026 13:00:24 +0900
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -77,8 +77,8 @@ List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.53.0.414.gf7e9f6c205-goog
-Message-ID: <20260226035858.3914840-1-inseob@google.com>
-Subject: [PATCH] erofs-utils: fsck: support extracting subtrees
+Message-ID: <20260226040024.3917012-1-inseob@google.com>
+Subject: [PATCH v2] erofs-utils: fsck: support extracting subtrees
 From: Inseob Kim <inseob@google.com>
 To: linux-erofs@lists.ozlabs.org
 Cc: Inseob Kim <inseob@google.com>
@@ -94,11 +94,11 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
 	R_DKIM_ALLOW(-0.20)[google.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:112.213.38.117:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-2428-lists,linux-erofs=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-2429-lists,linux-erofs=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCPT_COUNT_TWO(0.00)[2];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -110,11 +110,11 @@ X-Spamd-Result: default: False [-0.70 / 15.00];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
 	FROM_NEQ_ENVFROM(0.00)[inseob@google.com,linux-erofs@lists.ozlabs.org];
 	DKIM_TRACE(0.00)[google.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:133159, ipnet:112.213.32.0/21, country:AU];
+	NEURAL_HAM(-0.00)[-0.999];
+	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
 	TAGGED_RCPT(0.00)[linux-erofs];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns]
-X-Rspamd-Queue-Id: 49A141A0B98
+X-Rspamd-Queue-Id: 2DFBA1A0BBF
 X-Rspamd-Action: no action
 
 Add --nid and --path options to fsck.erofs to allow users to check
