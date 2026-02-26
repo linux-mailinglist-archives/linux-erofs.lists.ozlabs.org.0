@@ -1,96 +1,67 @@
-Return-Path: <linux-erofs+bounces-2421-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
+Return-Path: <linux-erofs+bounces-2424-lists+linux-erofs=lfdr.de@lists.ozlabs.org>
 Delivered-To: lists+linux-erofs@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KOLpAYOtn2ngdAQAu9opvQ
-	(envelope-from <linux-erofs+bounces-2421-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Feb 2026 03:18:43 +0100
+	id 2HqiLbyyn2kpdQQAu9opvQ
+	(envelope-from <linux-erofs+bounces-2424-lists+linux-erofs=lfdr.de@lists.ozlabs.org>)
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Feb 2026 03:41:00 +0100
 X-Original-To: lists+linux-erofs@lfdr.de
 Received: from lists.ozlabs.org (lists.ozlabs.org [IPv6:2404:9400:21b9:f100::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6179A1A011C
-	for <lists+linux-erofs@lfdr.de>; Thu, 26 Feb 2026 03:18:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CD3D71A02BD
+	for <lists+linux-erofs@lfdr.de>; Thu, 26 Feb 2026 03:40:59 +0100 (CET)
 Received: from boromir.ozlabs.org (localhost [127.0.0.1])
-	by lists.ozlabs.org (Postfix) with ESMTP id 4fLw9p6BBpz30BR;
-	Thu, 26 Feb 2026 13:18:38 +1100 (AEDT)
+	by lists.ozlabs.org (Postfix) with ESMTP id 4fLwgY2x3rz309S;
+	Thu, 26 Feb 2026 13:40:57 +1100 (AEDT)
 X-Original-To: linux-erofs@lists.ozlabs.org
-Authentication-Results: lists.ozlabs.org; arc=pass smtp.remote-ip="2a00:1450:4864:20::529" arc.chain=google.com
-ARC-Seal: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772072318;
-	cv=pass; b=Bm/bjEBVYxLLD6w1d5ngw6kbk6REb9/HwfzKdhbfR1yLt02LPcd0s/o1HMmDUJtfm3AOOZKS9mNOUS5lnXmBo316TpvspHEWLxu5zG9S4VqUvpEUF+G8lCxK/L/xgYf+PC2/r7hOrxA2i0J0s436Q1H/P72XYBQgxLHhM5/Dw64zd03wTMHdrjOA9rqh+siu3nr5DuPq6xaYYdltiVFhJRVT8VJbYaTADzU0YE1Hxjz3skdxL+CX2cVxCdUu0YYagfnHZ2RsH2kU/REYYeGaLLVttKIPwt7rpK7rsTO1L/LSlu0m7jS522D833TyoAnA1svFqN39mrS9H44kSG/fBA==
-ARC-Message-Signature: i=2; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
-	t=1772072318; c=relaxed/relaxed;
-	bh=Pj4iPG4SesBLhTNjSDoXy5lY28inJzx+uZM/UiK/Qng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZrZDXBBcYZ2dN84o4tD/i8fXaSX+jPoJ0vzj4Mf9YDL7ZHYKb+HPCsAfGXfHqJzK7zsNdlyUThflp1hzqG513BpYtoMwnlf1eqlQRY9XA1Hahuuduo3bNQ+Gn4lmaUFSNaKdcXU+SNELkFDJEpcCao0eRhJ7bsLamYxO7nAsCdG32ZUCT6FOlDctesUnAEAPQ+iblNWqTUeIIxoOhyjzFXxToqsLJEaUHdWpufVjHSNgyN50EoI9pdlZyU0jAoF7a/CAUg/nCzIWEgGE57th0u1/nBC6Aq/qLZx75e8TiHNvhtXzg65zHVxeBLvZHknsPG0qYx8ULjsfyyiMCWs7Bw==
-ARC-Authentication-Results: i=2; lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com; dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=a3VjOp8g; dkim-atps=neutral; spf=pass (client-ip=2a00:1450:4864:20::529; helo=mail-ed1-x529.google.com; envelope-from=inseob@google.com; receiver=lists.ozlabs.org) smtp.mailfrom=google.com
-Authentication-Results: lists.ozlabs.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: lists.ozlabs.org; arc=none smtp.remote-ip=203.205.221.240
+ARC-Seal: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707; t=1772073356;
+	cv=none; b=jwYNi9C1fqdQDKmc4vqPbvwS+yAgQHCtc5EseEiBHwKOrJ7bn1JqvtYMGnB8URgvO3rbYxkxVK77bOujQ16oUoJTL3iFH2wDQV9DM02rui0BogE8t/eZ6CtcfFvw9m8CdJGapm62RF7pxLYSmEsRVraprwlY6dOZyx3FmpS5iG1PxqgwnyznBZdl3EQT1PEn0AO0/X+zImXVepJUpJzMaCHjkDNxXL5gA1YNHGWVTDGJgcgwgaar1L+/vJOgXnODJgnvDXBgYenEGMrfrEX3Nf6fWywYyWUO2ezjy8spEAZgI3/nSKVoyTFHF/uhgeU0s+lcZT9ePnMVkQBM0GxQxw==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=lists.ozlabs.org; s=201707;
+	t=1772073356; c=relaxed/relaxed;
+	bh=T52PzzBvd4ygBeYqQ87reXWNaO9BJX+Y6D4YvYuu4AU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J4s8f75WACo999NmNLZhzrumn1hm89fe9yB7eANMBR9CdLWRL4CqahzxJ+CNJe+EjrxnXBk27ckddKvE+iMfoiFhLKgXACmr8bYEf9zW5Yvkk3PeNlBRWhfhgQX8iKZUEReV//g8MprxqGReXnsENrLI9vjemefu/rtuZe6Hr3XJy+rU33klqh5A3Ej13xGmB2tPi/SnnKGYGrvNKbhxz3PmdLrNU5kRy+I68GpUM2cQKSCmZzlceLWNIQ7rBiw9Zp8ThmKC8QDQkrzxnikYOF5imUvNiPYyTxJ6hdXhiwuKuiefv3mRh958MdlPOmbI7lqKWIalE+pk+MgJdiCNAg==
+ARC-Authentication-Results: i=1; lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=Cha8Wo6r; dkim-atps=neutral; spf=pass (client-ip=203.205.221.240; helo=out203-205-221-240.mail.qq.com; envelope-from=yifan.yfzhao@foxmail.com; receiver=lists.ozlabs.org) smtp.mailfrom=foxmail.com
+Authentication-Results: lists.ozlabs.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
 Authentication-Results: lists.ozlabs.org;
-	dkim=pass (2048-bit key; unprotected) header.d=google.com header.i=@google.com header.a=rsa-sha256 header.s=20230601 header.b=a3VjOp8g;
+	dkim=pass (1024-bit key; unprotected) header.d=foxmail.com header.i=@foxmail.com header.a=rsa-sha256 header.s=s201512 header.b=Cha8Wo6r;
 	dkim-atps=neutral
-Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=google.com (client-ip=2a00:1450:4864:20::529; helo=mail-ed1-x529.google.com; envelope-from=inseob@google.com; receiver=lists.ozlabs.org)
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Authentication-Results: lists.ozlabs.org; spf=pass (sender SPF authorized) smtp.mailfrom=foxmail.com (client-ip=203.205.221.240; helo=out203-205-221-240.mail.qq.com; envelope-from=yifan.yfzhao@foxmail.com; receiver=lists.ozlabs.org)
+Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by lists.ozlabs.org (Postfix) with ESMTPS id 4fLw9n1Xvpz309y
-	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Feb 2026 13:18:36 +1100 (AEDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-65f3a35ff13so5803a12.0
-        for <linux-erofs@lists.ozlabs.org>; Wed, 25 Feb 2026 18:18:36 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1772072312; cv=none;
-        d=google.com; s=arc-20240605;
-        b=FEGCJ7n1S381n5MxlMBO8TuSBo0NtbSileKWEUDi3iOQwCVVuuKqZYum2JNWouYy4i
-         /TKLnMCK3joE/gtm7/ZTJd2O9zt2nfT69c6o2GYuj0VbiF5WgQo6KH0622c4URhGR3Ft
-         nYj36QYBsw+m9vBI7xBPGUmqlYTyPBrlrJnm+dd1N5x4a5/2S9ZiOGebwQHN02R7BGgy
-         lhAI3iTgnPqx99voi9BiKnJipeOnObdSjzaLUpruUdHJOBiTc021a/Ed8cmRYJmZsXLr
-         iE0o8BTbos3uD8ttSpFwyJtlrqjw3cF7F9niUc0uqHNxC18NCBda7RNsW5NmSDttPByE
-         TR+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Pj4iPG4SesBLhTNjSDoXy5lY28inJzx+uZM/UiK/Qng=;
-        fh=WJhIciIiNZdDmLC1ZQ8ngNos9wKcoX5v3UjHHDA3Xes=;
-        b=Uj/dMPL1MLk1JtqkjOAWBhXd72zlKAJbXL4aeWSBBhStYJk05X7PdcN0t0wkEutEps
-         Ugu7JMpvD6p6Ez8A1AAxzkwG3veGuDVSC2tpYDNyKykAm3eFApufbl4gbzq/a3OO9cXB
-         lRUlF2PJtEv+0VDiz1CxEIggf+8MYJ70nnEY896+UP0kOMBw+55h6Pm0O3x6mRsTYSDT
-         k32yYwaXkTvpzut+NTzbHTlJPXGEpTxO775pF1IL+Pl9G3U7WIUeWR4J4cVYUsFRZNbj
-         ZgzFdGYfN8X70h/Rd6cihVFzxpu0NocB04i70S1LTENkb248r+32XbKPpBy9McPz//U7
-         vgNg==;
-        darn=lists.ozlabs.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1772072312; x=1772677112; darn=lists.ozlabs.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pj4iPG4SesBLhTNjSDoXy5lY28inJzx+uZM/UiK/Qng=;
-        b=a3VjOp8gHzWXP8pYYuJJ3Dm7bYv7/d4MQtySli1NdfbGPepo2Vy+fdLrJc7c6aqX+z
-         FQ4YOXtlN0A8piswWioC6EcYSGnulCU8XykBJn9zDLVb495MGrprwLdugxgsjVIR5edt
-         A9KY9WBLj03JLv+0NJCsR2wl7oV9e5QwHi52EPfaLSqge+wO8uqzvdQVneTf2TlHEAMg
-         aOYB07MzsZ6QiPJX4jULBjJMqcwnDiD4hgW1aJs6Z8HfOImSZJ+sL/YW6zQE6McqQmCe
-         qCQlenwbVjEUqagPH/0pMV9aBXUGxbw6wHGog+IZ/3XFDncSFmwHGcZXOFOAKhJT2Z8m
-         SIEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772072312; x=1772677112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Pj4iPG4SesBLhTNjSDoXy5lY28inJzx+uZM/UiK/Qng=;
-        b=c1qau3g40JKgoVwqrbMM1XsgIiRyx6fmE+WHqcuhl2sqIHSpV2sY2a9Uckek8cU8tA
-         4bKogXZSeY4gfkL+sTlVHE2Ep3AyTAu/NFTk4tPzC4c2qrKiK75mS0T7LyGFI+nresJJ
-         ueBnq1Nla3NpdlBu0zBBFformPTaLWYGGEIc3CNnIsE+lx3MOFtOhpKUNDTM3aUZvjqy
-         Y6V8JtZbfB3Sd+GvrsSJfZPLKtORECEdBjFEIvFjVy+5qyV1iCdx+nI3z8HP9walnFMX
-         zlNnHChQ0nV5+2nhd8yf+pXRsLt7paV9yRcMp566A6ERzLd9j0dlUixB3Dnn0La9x5TA
-         FsBA==
-X-Gm-Message-State: AOJu0YxsdzMuQZowZzO+J3hknZxbJC01cUUX2nxaK+mEG0ZRKyhWb85Y
-	gvUNG/oQlFpcItvuOJwYppICtb04txNvaFJnntxgYcRmgkCiBumxF/jAwLpVjXzdJNmxDWGpOw8
-	Q4fxKpcqutzZH0DjNpk8tD27vNjI+djq0awbcn+iF7zIDNMUv3LPgkG3mtMo=
-X-Gm-Gg: ATEYQzwZ4KF8BTFrJ+6Qst6khvEqgKFd6U7NYPQdI1wM23sVYm/dCbiovpVWLBiCv0y
-	j6kST9W+GYvL9xGzkav0OIR/5Q/wQYxLq6qWPuvcxSVj4QOo2IDAMUBE2yw9Jbu0qbybVfFguXK
-	I7lU+KPk9/nmyVLzapGLBCWh+FNpHQ50OC6Mt9sQ/yvzcWylrqYchG0p+uf6TOXEsQ/lt1FZi2E
-	goCZ6YbPDpp/1PxzgOBaHpd/ZgIPcdYs3VuE5cWhirhL2jcVjufPOxwnnmlTadQO4bZ+KKzPEtV
-	kVrGQuEnGlDuiCr7IgB61wWoOk+3FdrdI6/S2g==
-X-Received: by 2002:a05:6402:5d4:b0:65b:e9ae:5fe5 with SMTP id
- 4fb4d7f45d1cf-65fb02981b1mr15070a12.5.1772072311808; Wed, 25 Feb 2026
- 18:18:31 -0800 (PST)
+	by lists.ozlabs.org (Postfix) with UTF8SMTPS id 4fLwYh3pY2z2xQs
+	for <linux-erofs@lists.ozlabs.org>; Thu, 26 Feb 2026 13:35:51 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1772073349;
+	bh=T52PzzBvd4ygBeYqQ87reXWNaO9BJX+Y6D4YvYuu4AU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Cha8Wo6r6pHmD++6mAEq2jh/I4f+Fc/WtpM/a4l9H+cpP44K68NQXOOELmTvlcLM/
+	 aH/4VVh2b3Kips+pLtF7F8SBnKfl8towGeZ4BfsTx/0xoaR9wzObNpobKgKI49Ul+1
+	 4vXjwJuke5OGFL9XZ18jJpihAStNImpEmXTeDjDk=
+Received: from [100.125.4.233] ([124.70.231.43])
+	by newxmesmtplogicsvrsza53-0.qq.com (NewEsmtp) with SMTP
+	id 81C08CAC; Thu, 26 Feb 2026 10:32:28 +0800
+X-QQ-mid: xmsmtpt1772073148tj0o6qvrm
+Message-ID: <tencent_E8B3BD7F4663756DD9915EF539DC95AB1805@qq.com>
+X-QQ-XMAILINFO: NMGzQWUSIfvTsQAsPapjIdbYacErVhddVb07YxJJCrEzrkhne9HoKZ/4oO9l26
+	 0BPI8Q8I//bvPr4Vi9HfKLbvhWmwBAb53hQmhRvjxYQTjGtjWgbLn/Qo+In9bdb+o0O5ttyV8ULt
+	 M9qKB0DQ92MrB7t7a0pa7lLahWdp8Qb6whBEjxmxrfcfIhXGcrdbRQCpu/g4Wkj4UKjKbfZWdOXl
+	 SWuL1oUdTmsJZ9myAJT9VRFQVsVgciF1iDCqV2cRMjNr8BHrN+93SqhbLHqAbtHs2A5NxYqYk5DK
+	 LQ2f43cmW5v+A9h2zZKe+Et6QD3p45sVTz7ISOAO+8wOcsas8g795WPb89uyk3z5hgpSLxEQuFTc
+	 1uJt6vCS3Wkb7DEWzLT58QHte+ET6reChueFOE469/Z++YiiP1v1qFzOTFCh9vqdtKW8X5j/zHHE
+	 CoorhJYKm0jkviJk5vM/B5p9yqvwJuZABky06OGWiDW2P1/Z52cwS75Fbn03t6cMDzzmRSR5WIJ5
+	 fuEOjZRstdsvcozOh6Hd4fyNNf6+OaCVxNBa+4LRmsljAChcDy7h2RJ5Z6zC1skXYzU8o1DAN8sP
+	 37YTxzd+WwPptGVozg4pp0kSr6UgTNibYiVcNF5XRRNjVvfcBPnPp7ONiFd8rtjqbxbmjaedRZ5A
+	 WCpOe3K4VGxDS7tjvjjNQwxK5hbC3DVddxdaz5x3VVYZOoNdBtm2NoFZFZOPbpbenz9E/7dZHlMh
+	 qICxVvtkaRT8JBmXhdkRz9dC/CaER/BLVDYQoopZxTdX6WU47UZGu1IXTe8figT3DecjEw2/yN47
+	 Qd4y9fXXNni4wbxObaMagozahobYRWB/j7Ll8ZZ81ES6mwTaTfg2erAzA58TtBY/i3MW/nUKmqui
+	 WHclGxHNmYln+u+v6ACrbcmuSJtKQ55AD3I2IQ+shBMVoYq9kOQUiAu2DJOMisCvPU6ASWkUWjm/
+	 slDho2JHRgFFZCvYICtqPNjlsGAS1JM9PMuR9sGufDyY/le72QQZ0ZT3+D8bBSCXX02WVvZ3N0mn
+	 mGf0dsOJJJUX8nW/3kRFTokcq09jJBpF9P07eo2ck+tSgc1NSr
+X-QQ-XMRINFO: OWPUhxQsoeAVwkVaQIEGSKwwgKCxK/fD5g==
+X-OQ-MSGID: <03856d6f-205d-4092-b4c5-16195e5e2e6f@foxmail.com>
+Date: Thu, 26 Feb 2026 10:32:33 +0800
 X-Mailing-List: linux-erofs@lists.ozlabs.org
 List-Id: <linux-erofs.lists.ozlabs.org>
 List-Help: <mailto:linux-erofs+help@lists.ozlabs.org>
@@ -102,235 +73,157 @@ List-Subscribe: <mailto:linux-erofs+subscribe@lists.ozlabs.org>,
 List-Unsubscribe: <mailto:linux-erofs+unsubscribe@lists.ozlabs.org>
 Precedence: list
 MIME-Version: 1.0
-References: <20260226005913.3703242-1-inseob@google.com> <de02ce86-c2dd-491d-b418-087ddde5b31c@linux.alibaba.com>
-In-Reply-To: <de02ce86-c2dd-491d-b418-087ddde5b31c@linux.alibaba.com>
-From: Inseob Kim <inseob@google.com>
-Date: Thu, 26 Feb 2026 11:18:16 +0900
-X-Gm-Features: AaiRm53VQBYfYGBSkKpNmQkbtydaNVB5sLxbzTRst6-OeVvzVkeDLkx9qa6c1Ao
-Message-ID: <CA+QFDKmznnFDVM7OBVWNQdTzXUu3o1vq0ALZjq54Nb530tpL6w@mail.gmail.com>
-Subject: Re: [PATCH] erofs-utils: fsck: support extracting subtrees
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: linux-erofs@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-15.7 required=3.0 tests=ARC_SIGNED,ARC_VALID,
-	DKIMWL_WL_MED,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-	ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=disabled version=4.0.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] erofs-utils: lib: converted division to shift in
+ z_erofs_load_compact_lcluster
+To: Ashley Lee <yester1324@gmail.com>, linux-erofs@lists.ozlabs.org
+Cc: hsiangkao@linux.alibaba.com
+References: <20260225173036.194311-1-yester1324@gmail.com>
+Content-Language: en-US
+From: Yifan Zhao <yifan.yfzhao@foxmail.com>
+In-Reply-To: <20260225173036.194311-1-yester1324@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Flag: YES
+X-Spam-Status: Yes, score=5.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,DKIM_VALID_EF,FORGED_MUA_MOZILLA,FREEMAIL_FROM,
+	HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_NONE,RDNS_DYNAMIC,SPF_HELO_NONE,
+	SPF_PASS autolearn=disabled version=4.0.1
+X-Spam-Report: 
+	* -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at https://www.dnswl.org/, no
+	*      trust
+	*      [203.205.221.240 listed in list.dnswl.org]
+	* -0.0 SPF_PASS SPF: sender matches SPF record
+	*  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+	* -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+	*      envelope-from domain
+	*  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+	*      valid
+	* -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from author's
+	*       domain
+	* -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+	*  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail provider
+	*      [yifan.yfzhao(at)foxmail.com]
+	*  0.4 RDNS_DYNAMIC Delivered to internal network by host with
+	*      dynamic-looking rDNS
+	*  3.2 HELO_DYNAMIC_IPADDR Relay HELO'd using suspicious hostname (IP addr
+	*      1)
+	*  1.6 FORGED_MUA_MOZILLA Forged mail pretending to be from Mozilla
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 4.0.1 (2024-03-25) on lists.ozlabs.org
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.20 / 15.00];
-	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
-	R_DKIM_ALLOW(-0.20)[google.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1];
+X-Spamd-Result: default: False [2.80 / 15.00];
+	SPAM_FLAG(5.00)[];
+	ARC_ALLOW(-1.00)[lists.ozlabs.org:s=201707:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[foxmail.com,none];
+	R_DKIM_ALLOW(-0.20)[foxmail.com:s=s201512];
+	R_SPF_ALLOW(-0.20)[+ip6:2404:9400:21b9:f100::1:c];
 	MAILLIST(-0.19)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:yester1324@gmail.com,m:linux-erofs@lists.ozlabs.org,m:hsiangkao@linux.alibaba.com,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[3];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:hsiangkao@linux.alibaba.com,m:linux-erofs@lists.ozlabs.org,s:lists@lfdr.de];
-	RCPT_COUNT_TWO(0.00)[2];
-	FORGED_SENDER(0.00)[inseob@google.com,linux-erofs@lists.ozlabs.org];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-2421-lists,linux-erofs=lfdr.de];
-	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,lists.ozlabs.org];
+	FORGED_SENDER(0.00)[yifan.yfzhao@foxmail.com,linux-erofs@lists.ozlabs.org];
 	TO_DN_SOME(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[linux-erofs@lists.ozlabs.org];
+	TAGGED_FROM(0.00)[bounces-2424-lists,linux-erofs=lfdr.de];
+	RCPT_COUNT_THREE(0.00)[3];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PREVIOUSLY_DELIVERED(0.00)[linux-erofs@lists.ozlabs.org];
+	NEURAL_HAM(-0.00)[-0.425];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[inseob@google.com,linux-erofs@lists.ozlabs.org];
-	DKIM_TRACE(0.00)[google.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-erofs];
+	FROM_NEQ_ENVFROM(0.00)[yifan.yfzhao@foxmail.com,linux-erofs@lists.ozlabs.org];
+	FORGED_MUA_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:133159, ipnet:2404:9400:2000::/36, country:AU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,alibaba.com:email,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: 6179A1A011C
+	TAGGED_RCPT(0.00)[linux-erofs];
+	FREEMAIL_FROM(0.00)[foxmail.com];
+	DKIM_TRACE(0.00)[foxmail.com:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[lists.ozlabs.org:helo,lists.ozlabs.org:rdns,foxmail.com:dkim]
+X-Rspamd-Queue-Id: CD3D71A02BD
 X-Rspamd-Action: no action
 
-On Thu, Feb 26, 2026 at 10:50=E2=80=AFAM Gao Xiang <hsiangkao@linux.alibaba=
-.com> wrote:
->
-> Hi Inseob,
->
-> On 2026/2/26 08:59, Inseob Kim wrote:
-> > Add --nid and --path options to fsck.erofs to allow users to check
-> > or extract specific sub-directories or files instead of the entire
-> > filesystem.
-> >
-> > This is useful for targeted data recovery or verifying specific
-> > image components without the overhead of a full traversal.
->
-> Thanks for the patch!
+Hi Lee,
 
-Thank *you* for quick response!
 
->
-> >
-> > Signed-off-by: Inseob Kim <inseob@google.com>
-> > ---
-> >   fsck/main.c | 50 ++++++++++++++++++++++++++++++++++++++++----------
-> >   1 file changed, 40 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/fsck/main.c b/fsck/main.c
-> > index ab697be..a7d9f46 100644
-> > --- a/fsck/main.c
-> > +++ b/fsck/main.c
-> > @@ -39,6 +39,8 @@ struct erofsfsck_cfg {
-> >       bool preserve_owner;
-> >       bool preserve_perms;
-> >       bool dump_xattrs;
-> > +     erofs_nid_t nid;
-> > +     const char *inode_path;
-> >       bool nosbcrc;
-> >   };
-> >   static struct erofsfsck_cfg fsckcfg;
-> > @@ -59,6 +61,8 @@ static struct option long_options[] =3D {
-> >       {"offset", required_argument, 0, 12},
-> >       {"xattrs", no_argument, 0, 13},
-> >       {"no-xattrs", no_argument, 0, 14},
-> > +     {"nid", required_argument, 0, 15},
-> > +     {"path", required_argument, 0, 16},
-> >       {"no-sbcrc", no_argument, 0, 512},
-> >       {0, 0, 0, 0},
-> >   };
-> > @@ -110,6 +114,8 @@ static void usage(int argc, char **argv)
-> >               " --extract[=3DX]          check if all files are well en=
-coded, optionally\n"
-> >               "                        extract to X\n"
-> >               " --offset=3D#             skip # bytes at the beginning =
-of IMAGE\n"
-> > +             " --nid=3D#                check or extract from the targ=
-et inode of nid #\n"
-> > +             " --path=3DX               check or extract from the targ=
-et inode of path X\n"
-> >               " --no-sbcrc             bypass the superblock checksum v=
-erification\n"
-> >               " --[no-]xattrs          whether to dump extended attribu=
-tes (default off)\n"
-> >               "\n"
-> > @@ -245,6 +251,12 @@ static int erofsfsck_parse_options_cfg(int argc, c=
-har **argv)
-> >               case 14:
-> >                       fsckcfg.dump_xattrs =3D false;
-> >                       break;
-> > +             case 15:
-> > +                     fsckcfg.nid =3D (erofs_nid_t)atoll(optarg);
-> > +                     break;
-> > +             case 16:
-> > +                     fsckcfg.inode_path =3D optarg;
-> > +                     break;
-> >               case 512:
-> >                       fsckcfg.nosbcrc =3D true;
-> >                       break;
-> > @@ -981,7 +993,8 @@ static int erofsfsck_check_inode(erofs_nid_t pnid, =
-erofs_nid_t nid)
-> >
-> >       if (S_ISDIR(inode.i_mode)) {
-> >               struct erofs_dir_context ctx =3D {
-> > -                     .flags =3D EROFS_READDIR_VALID_PNID,
-> > +                     .flags =3D (pnid =3D=3D nid && nid !=3D g_sbi.roo=
-t_nid) ?
->
-> Does it relax the validatation check?
->
-> and does (nid =3D=3D pnid && nid =3D=3D fsckcfg.nid) work?
+A quick search shows that x86 kernel implementation also use `div` 
+instruction
 
-It shouldn't relax the existing validation check.
-`erofsfsck_check_inode` is called with `err =3D
-erofsfsck_check_inode(fsckcfg.nid, fsckcfg.nid);`.
+under Linux v6.19 and GCC 15.2.1, add GCC correctly generate shift 
+instruction
 
-* If a given path is not the root, `nid`'s parent `..` will differ
-from `pnid`, causing failure. This condition only relaxes the starting
-directory.
-* In the case of the root, `nid`'s parent `..` should indeed be
-itself. So we can still validate.
+in my arm64 machine with GCC 14.2.0.
 
-If you have any better suggestions, I'll follow them.
+Could you also consider evaluate this optimization in kernel?
 
+
+Thanks,
+
+Yifan
+
+On 2/26/2026 1:30 AM, Ashley Lee wrote:
+> perf on fsck.erofs in gcc reports that z_erofs_load_compact_lcluster
+> was spending 20% of its time doing the div instruction. While the
+> function itself is ~40% of user runtime. In the source code, it seems
+> that dividing by vcnt doesn't optimize to a shift despite the two
+> possible states being powers of 2.
 >
-> > +                             0 : EROFS_READDIR_VALID_PNID,
-> >                       .pnid =3D pnid,
-> >                       .dir =3D &inode,
-> >                       .cb =3D erofsfsck_dirent_iter,
-> > @@ -1033,6 +1046,8 @@ int main(int argc, char *argv[])
-> >       fsckcfg.preserve_owner =3D fsckcfg.superuser;
-> >       fsckcfg.preserve_perms =3D fsckcfg.superuser;
-> >       fsckcfg.dump_xattrs =3D false;
-> > +     fsckcfg.nid =3D 0;
-> > +     fsckcfg.inode_path =3D NULL;
-> >
-> >       err =3D erofsfsck_parse_options_cfg(argc, argv);
-> >       if (err) {
-> > @@ -1068,22 +1083,37 @@ int main(int argc, char *argv[])
-> >       if (fsckcfg.extract_path)
-> >               erofsfsck_hardlink_init();
-> >
-> > -     if (erofs_sb_has_fragments(&g_sbi) && g_sbi.packed_nid > 0) {
-> > -             err =3D erofs_packedfile_init(&g_sbi, false);
-> > +     if (fsckcfg.inode_path) {
-> > +             struct erofs_inode inode =3D { .sbi =3D &g_sbi };
-> > +
-> > +             err =3D erofs_ilookup(fsckcfg.inode_path, &inode);
-> >               if (err) {
-> > -                     erofs_err("failed to initialize packedfile: %s",
-> > -                               erofs_strerror(err));
-> > +                     erofs_err("failed to lookup %s", fsckcfg.inode_pa=
-th);
-> >                       goto exit_hardlink;
-> >               }
+> Changing the division into a ilog2() function call encourages the
+> compiler to recognize it as a power of 2. Thus performing a shift.
 >
-> It would be better to check if it's a directory.
+> Running a benchmark on lzma compressed freebsd code on x86, shows
+> there is a ~4% increase in performance in gcc. While clang shows
+> virtually no regression in performance. The tradeoff is slightly
+> obfuscated source code.
+>
+> The following command was run locally on x86.
+>
+> $ hyperfine -w 5 -m 30 "./fsck.erofs ./bsd.erofs.lzma"
+>
+> patch on gcc 15.2.1
+> Time (mean ± σ):     354.8 ms ±   6.0 ms    \
+>    [User: 227.8 ms, System: 126.1 ms]
+> Range (min … max):   345.8 ms … 366.2 ms    30 runs
+>
+> dev on gcc 15.2.1
+> Time (mean ± σ):     370.7 ms ±   6.7 ms    \
+>    [User: 246.5 ms, System: 123.4 ms]
+> Range (min … max):   362.7 ms … 390.7 ms    30 runs
+>
+> patch on clang 21.1.8
+> Time (mean ± σ):     371.9 ms ±   2.4 ms    \
+>    [User: 247.2 ms, System: 123.9 ms]
+> Range (min … max):   369.1 ms … 380.0 ms    30 runs
+>
+> dev on clang 21.1.8
+> Time (mean ± σ):     371.0 ms ±   1.9 ms    \
+>    [User: 245.5 ms, System: 124.5 ms]
+> Range (min … max):   368.4 ms … 377.7 ms    30 runs
+>
+> Signed-off-by: Ashley Lee <yester1324@gmail.com>
+> ---
+> v2: changed vdiv to ilog2 call
+>
+>   lib/zmap.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/lib/zmap.c b/lib/zmap.c
+> index baec278..3ac7fe9 100644
+> --- a/lib/zmap.c
+> +++ b/lib/zmap.c
+> @@ -160,7 +160,7 @@ static int z_erofs_load_compact_lcluster(struct z_erofs_maprecorder *m,
+>   	m->nextpackoff = round_down(pos, vcnt << amortizedshift) +
+>   			 (vcnt << amortizedshift);
+>   	lobits = max(lclusterbits, ilog2(Z_EROFS_LI_D0_CBLKCNT) + 1U);
+> -	encodebits = ((vcnt << amortizedshift) - sizeof(__le32)) * 8 / vcnt;
+> +	encodebits = (((vcnt << amortizedshift) - sizeof(__le32)) * 8) >> ilog2(vcnt);
+>   	bytes = pos & ((vcnt << amortizedshift) - 1);
+>   	in -= bytes;
+>   	i = bytes >> amortizedshift;
 
-My intention was that we support both directories and files. Or should
-I create a separate flag like `--cat` in dump.erofs?
-
->
-> Thanks,
-> Gao Xiang
->
-> > +             fsckcfg.nid =3D inode.nid;
-> > +     } else if (!fsckcfg.nid) {
-> > +             fsckcfg.nid =3D g_sbi.root_nid;
-> > +     }
-> >
-> > -             err =3D erofsfsck_check_inode(g_sbi.packed_nid, g_sbi.pac=
-ked_nid);
-> > -             if (err) {
-> > -                     erofs_err("failed to verify packed file");
-> > -                     goto exit_packedinode;
-> > +     if (!fsckcfg.inode_path && fsckcfg.nid =3D=3D g_sbi.root_nid) {
-> > +             if (erofs_sb_has_fragments(&g_sbi) && g_sbi.packed_nid > =
-0) {
-> > +                     err =3D erofs_packedfile_init(&g_sbi, false);
-> > +                     if (err) {
-> > +                             erofs_err("failed to initialize packedfil=
-e: %s",
-> > +                                       erofs_strerror(err));
-> > +                             goto exit_hardlink;
-> > +                     }
-> > +
-> > +                     err =3D erofsfsck_check_inode(g_sbi.packed_nid, g=
-_sbi.packed_nid);
-> > +                     if (err) {
-> > +                             erofs_err("failed to verify packed file")=
-;
-> > +                             goto exit_packedinode;
-> > +                     }
-> >               }
-> >       }
-> >
-> > -     err =3D erofsfsck_check_inode(g_sbi.root_nid, g_sbi.root_nid);
-> > +     err =3D erofsfsck_check_inode(fsckcfg.nid, fsckcfg.nid);
-> >       if (fsckcfg.corrupted) {
-> >               if (!fsckcfg.extract_path)
-> >                       erofs_err("Found some filesystem corruption");
->
-
---=20
-Inseob Kim | Software Engineer | inseob@google.com
 
